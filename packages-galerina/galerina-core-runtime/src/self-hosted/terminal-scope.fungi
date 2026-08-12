@@ -1,0 +1,14 @@
+@version 1
+
+/// Identify only the four terminal structured-await scope states.
+pure flow isTerminalScope(status: String) -> Bool
+contract { intent { "Recognize only a terminal structured-await scope state." } }
+{
+  match status {
+    "succeeded" => return true
+    "failed" => return true
+    "timed_out" => return true
+    "cancelled" => return true
+    _ => return false
+  }
+}

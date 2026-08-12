@@ -4,6 +4,11 @@
   "license": "Apache-2.0",
   "description": "Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .fungi source. 98% token reduction vs raw source while preserving full architectural intent.",
   "type": "module",
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/builtin-name.fungi"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

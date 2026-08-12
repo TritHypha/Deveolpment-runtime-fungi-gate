@@ -48,6 +48,21 @@ contract { intent { "numeric-looking string patterns still compare by string val
   }
 }
 
+// Quoted text that is also a language pattern keyword must remain text.
+pure flow reservedPattern(s: String) -> Int
+contract { intent { "quoted reserved pattern names remain String literals" } }
+{
+  match s {
+    "None" => { return 1 }
+    "Some" => { return 2 }
+    "Ok" => { return 3 }
+    "Err" => { return 4 }
+    "true" => { return 5 }
+    "false" => { return 6 }
+    _ => { return 0 }
+  }
+}
+
 record Tok { kind: String; text: String }
 
 // The CHECKER-STAGE shape: the subject is a record FIELD (t.kind), not an identifier. inferExprType
@@ -94,7 +109,7 @@ function callWasm(ctx, fn, s) {
   return Number(ctx.instance.exports[fn](h));
 }
 
-const PARAM = { opcodeOf: "op", numericPattern: "s", fieldDispatch: "k" };
+const PARAM = { opcodeOf: "op", numericPattern: "s", reservedPattern: "s", fieldDispatch: "k" };
 async function callInterp(prog, fn, s) {
   const args = new Map([[PARAM[fn], { __tag: "string", value: s }]]);
   const r = await L.executeFlow(fn, args, prog.ast, prog.flows, undefined, undefined, { pureFastPath: true });
@@ -121,6 +136,14 @@ describe("#160 String-subject match compares by VALUE, not by interned handle (W
     assert.equal(callWasm(ctx, "numericPattern", "3"), 0, '"3" → `_` ⇒ 0');
   });
 
+  it("quoted reserved pattern names remain String values", async () => {
+    const ctx = await instantiate();
+    for (const [value, expected] of [["None", 1], ["Some", 2], ["Ok", 3], ["Err", 4], ["true", 5], ["false", 6]]) {
+      assert.equal(await callInterp(ctx.prog, "reservedPattern", value), expected, `interpreter ${value}`);
+      assert.equal(callWasm(ctx, "reservedPattern", value), expected, `Wasm ${value}`);
+    }
+  });
+
   it("match on a record FIELD (t.kind) dispatches by value — the checker-stage shape", async () => {
     const ctx = await instantiate();
     // inferExprType is undefined for a memberExpr subject; the quoted-pattern signal must carry it.
@@ -133,6 +156,7 @@ describe("#160 String-subject match compares by VALUE, not by interned handle (W
     const ctx = await instantiate();
     for (const [fn, s] of [["opcodeOf", "add"], ["opcodeOf", "sub"], ["opcodeOf", "mul"], ["opcodeOf", "zzz"],
                            ["numericPattern", "1"], ["numericPattern", "2"], ["numericPattern", "9"],
+                           ["reservedPattern", "None"], ["reservedPattern", "true"], ["reservedPattern", "other"],
                            ["fieldDispatch", "id"], ["fieldDispatch", "num"], ["fieldDispatch", "zz"]]) {
       const i = await callInterp(ctx.prog, fn, s);
       const w = callWasm(ctx, fn, s);

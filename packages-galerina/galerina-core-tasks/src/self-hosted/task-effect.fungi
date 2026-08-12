@@ -1,0 +1,18 @@
+@version 1
+
+/// Preserve the exact task-manifest effect vocabulary.
+pure flow isTaskEffect(value: String) -> Bool
+contract { intent { "Recognize only a canonical task effect name." } }
+{
+  match value {
+    "filesystem" => return true
+    "network" => return true
+    "database" => return true
+    "environment" => return true
+    "shell" => return true
+    "compiler" => return true
+    "reports" => return true
+    "crypto" => return true
+    _ => return false
+  }
+}

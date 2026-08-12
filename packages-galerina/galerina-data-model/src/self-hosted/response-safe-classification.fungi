@@ -1,0 +1,11 @@
+@version 1
+
+/// Public is the only model-field classification safe for a response.
+pure flow isResponseSafeClassification(classification: String) -> Bool
+contract { intent { "Admit only the public model-field classification for responses." } }
+{
+  match classification {
+    "public" => return true
+    _ => return false
+  }
+}

@@ -8,6 +8,7 @@
   "packageGraph": {
     "loadedAssets": [
       "src/self-hosted/passive-plan-replay-admission.fungi",
+      "src/self-hosted/terminal-scope.fungi",
       "src/self-hosted/vok-authority-admission.fungi"
     ]
   },

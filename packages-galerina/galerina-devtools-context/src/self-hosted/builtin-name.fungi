@@ -1,0 +1,28 @@
+@version 1
+
+/// Preserve the exact callee names suppressed as language or platform builtins.
+pure flow isBuiltin(name: String) -> Bool
+contract { intent { "Recognize only an exact context-receipt builtin name." } }
+{
+  match name {
+    "AuditLog" => return true
+    "Secrets" => return true
+    "Crypto" => return true
+    "Database" => return true
+    "Http" => return true
+    "File" => return true
+    "Auth" => return true
+    "Session" => return true
+    "validate" => return true
+    "redact" => return true
+    "emit" => return true
+    "return" => return true
+    "Ok" => return true
+    "Err" => return true
+    "Some" => return true
+    "None" => return true
+    "true" => return true
+    "false" => return true
+    _ => return false
+  }
+}

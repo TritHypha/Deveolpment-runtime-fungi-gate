@@ -3163,7 +3163,8 @@ function matchPattern(
   // `"literal"` (9 chars) never equals the string `literal` (7 chars) and every
   // string-literal arm silently falls through to `_`.
   if (pattern.length >= 2 && pattern.startsWith("\"") && pattern.endsWith("\"")) {
-    pattern = stripStringQuotes(pattern);
+    const literal = stripStringQuotes(pattern);
+    return { matches: subject.__tag === "string" && subject.value === literal };
   }
   if (pattern === "_") return { matches: true };
   if (pattern === "None") return { matches: subject.__tag === "none" };
