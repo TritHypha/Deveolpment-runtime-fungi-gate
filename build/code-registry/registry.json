@@ -7264,7 +7264,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 5,
+      "tests": 7,
       "docs": 0
     },
     {
@@ -7280,7 +7280,7 @@
       ],
       "defs": 0,
       "emits": 2,
-      "tests": 5,
+      "tests": 7,
       "docs": 0
     },
     {
@@ -10725,8 +10725,8 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 12,
-      "docs": 1
+      "tests": 15,
+      "docs": 8
     },
     {
       "code": "FUNGI-TYPE-017",
@@ -10926,8 +10926,8 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 22,
-      "docs": 2
+      "tests": 25,
+      "docs": 6
     },
     {
       "code": "FUNGI-TYPE-031",

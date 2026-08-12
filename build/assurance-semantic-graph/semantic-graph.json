@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "d7afb6a75501d8d1471d42d5c389a7b7e56666391beec5e08f8b5ec545207997",
+  "authoritativeInputsDigest": "b58487b5d1286184cf78d66e8788fed0fa2f8ff1e4a667d65ab2cc7f72f39dca",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -3440,6 +3440,13 @@
       "id": "test:auto-9bf3e4d4fa3693e68cf1650c",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/tainted-param-34a.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-431d980ef6c00831b8d88cf7",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/tensor-dimension-count-compatibility-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7175,6 +7182,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-e3858a8890101b0f52161b40",
+      "kind": "test",
+      "evidencePath": "scripts/tests/tensor-dimension-count-compatibility-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-d18ad07b3bde04630a447878",
       "kind": "test",
       "evidencePath": "scripts/tests/tensor-element-type-compatibility-fungi-slide.integration.test.mjs",
@@ -9157,6 +9171,11 @@
     },
     {
       "from": "test:auto-9bf3e4d4fa3693e68cf1650c",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-431d980ef6c00831b8d88cf7",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11826,6 +11845,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-e3858a8890101b0f52161b40",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-d18ad07b3bde04630a447878",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11966,9 +11990,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 912,
+    "tests": 914,
     "detectors": 6,
-    "executableFamily": 1435,
+    "executableFamily": 1436,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

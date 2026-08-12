@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 124
-- Flows: 837
-- Bytes: 1122174
-- Retirement graph: `sha256:93d040aed55f0ec2f45a40b86b0448ccdc167c862f8cc83e45f1c493fd2e3de8`
+- Files: 125
+- Flows: 838
+- Bytes: 1122604
+- Retirement graph: `sha256:2f5599ecafe09fe7c9d81b1e35a8d0e0489eaaeac6fbeefc6978ab4f9d5a1e15`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18884 |
-| `callExpr` | 7244 |
-| `binaryExpr` | 6035 |
+| `identifier` | 18886 |
+| `callExpr` | 7246 |
+| `binaryExpr` | 6036 |
 | `numberLiteral` | 5712 |
-| `block` | 5019 |
+| `block` | 5021 |
 | `stringLiteral` | 4820 |
 | `memberExpr` | 4682 |
-| `returnStmt` | 2994 |
-| `paramDecl` | 2790 |
-| `typeRef` | 2467 |
-| `ifStmt` | 2265 |
+| `returnStmt` | 2996 |
+| `paramDecl` | 2792 |
+| `typeRef` | 2470 |
+| `ifStmt` | 2266 |
 | `assignStmt` | 2120 |
 | `letDecl` | 1857 |
-| `boolLiteral` | 1580 |
+| `boolLiteral` | 1582 |
 | `matchArm` | 1219 |
-| `contractDecl` | 830 |
-| `intentDecl` | 830 |
-| `pureFlowDecl` | 825 |
+| `contractDecl` | 831 |
+| `intentDecl` | 831 |
+| `pureFlowDecl` | 826 |
 | `mutDecl` | 810 |
 | `matchExpr` | 373 |
 | `whileStmt` | 340 |
 | `checkArm` | 312 |
 | `unaryExpr` | 251 |
 | `recordDecl` | 206 |
-| `program` | 124 |
+| `program` | 125 |
 | `listLiteral` | 115 |
 | `checkExpr` | 104 |
 | `trapDecl` | 50 |
@@ -60,14 +60,14 @@ admission, execution parity, retirement credit or production authority.
 |---|---:|
 | `Int` | 525 |
 | `String` | 437 |
-| `Bool` | 388 |
+| `Bool` | 389 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
 | `SLIDEV2AImportCursor` | 36 |
 | `Verdict` | 35 |
+| `Array<Int>` | 22 |
 | `SLIDER1ImportCursor` | 21 |
-| `Array<Int>` | 20 |
 | `GIRStmt` | 20 |
 | `Array<FlowDecl>` | 19 |
 | `RtValue` | 19 |
@@ -304,7 +304,7 @@ admission, execution parity, retirement credit or production authority.
 | Method | Count |
 |---|---:|
 | `append` | 707 |
-| `count` | 560 |
+| `count` | 562 |
 | `empty` | 503 |
 | `get` | 254 |
 | `length` | 176 |
@@ -345,7 +345,7 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1846 |
+| `==` | 1847 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 747 |

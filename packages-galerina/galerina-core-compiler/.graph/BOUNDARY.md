@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 183 |
+| Files | 184 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -122,6 +122,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-v2e-frontend-validator.fungi`
 - `src/self-hosted/slide-v2e-signature-evidence.fungi`
 - `src/self-hosted/slide-vok-authority-types.fungi`
+- `src/self-hosted/tensor-dimension-count-compatibility.fungi`
 - `src/self-hosted/tensor-element-type-compatibility.fungi`
 - `src/self-hosted/type-checker.fungi`
 - `src/self-hosted/verified-loop-envelope.fungi`
