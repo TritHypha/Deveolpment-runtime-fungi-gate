@@ -94,7 +94,7 @@ repository-wide closure remains `UNKNOWN`.
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 142 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 956 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Public Fungi skill repositories | `DONE` (`15c70bd` translation skill; Slice 62 `NO_SKILL_UPDATE`) |
-| Final codebase graph and Myco navigation refresh | `IN_PROGRESS` |
+| Final codebase graph and Myco navigation refresh | `DONE` at 51,502/51,502 nodes, 137,475/137,475 edges and 5,167 Myco files; Slice 62 is queryable in both |
 
 ## Verified refusal retained outside the batch
 

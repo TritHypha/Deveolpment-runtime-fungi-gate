@@ -184,6 +184,6 @@ checkboxes remain intentionally unmet.
 - [x] Run the focused candidate checks and owning package suites; do not run
   the crash-linked canonical aggregate lane.
 - [x] Run bounded owners in dependency order, including roadmap and subway.
-- [ ] Refresh the codebase graph and Myco once at final HEAD and verify the
+- [x] Refresh the codebase graph and Myco once at final owner HEAD and verify the
   bounded source symbols, admitted flows and queue candidates are queryable.
-- [ ] Verify clean tracked worktrees and local commits; do not push.
+- [x] Verify clean tracked worktrees and local commits; do not push.
