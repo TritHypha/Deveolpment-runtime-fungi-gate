@@ -38,3 +38,19 @@ contract { intent { "Compare two exact residency ceilings without admitting unkn
   }
   return rankAtMost(tierRank, floorRank)
 }
+
+/// Return the stricter of two exact residency ceilings. Unknown text cannot
+/// escape as a residency value and collapses to the strictest canonical tier.
+pure flow stricterResidencyFungi(left: String, right: String) -> String
+contract { intent { "Tighten two exact residency ceilings and fail closed for unknown text." } }
+{
+  let leftRank: Int = residencyRank(left)
+  let rightRank: Int = residencyRank(right)
+  if leftRank >= 5 or rightRank >= 5 {
+    return "register_only"
+  }
+  if leftRank <= rightRank {
+    return left
+  }
+  return right
+}
