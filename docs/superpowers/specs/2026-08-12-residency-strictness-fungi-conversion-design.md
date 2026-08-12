@@ -1,0 +1,76 @@
+# Residency strictness Fungi conversion design
+
+## Decision
+
+Express the exported TypeScript `atLeastAsStrict` predicate as a package-owned
+pure Fungi module whose public flow is named `atLeastAsStrictFungi`. The module
+contains two closed helpers: one admits only the five canonical residency tiers
+and one maps those tiers to the exact TypeScript ranks `0..4`. The public flow
+rejects either non-member before comparing ranks with `<=`.
+
+This is a reference-only conversion slice. TypeScript, `reconcileExplicit` and
+every production caller remain active until consumer-switch, bootstrap-fixpoint
+and retirement gates are independently proved.
+
+## Source and compatibility boundary
+
+The source domain is the total order:
+
+| Tier | Rank |
+|---|---:|
+| `register_only` | 0 |
+| `no_dram_spill` | 1 |
+| `no_swap` | 2 |
+| `no_disk` | 3 |
+| `unrestricted` | 4 |
+
+For canonical tiers the result is exactly `rank(tier) <= rank(floor)`. Although
+TypeScript declares both parameters as `ResidencyTier`, emitted JavaScript can
+still receive hostile Strings. Its missing record lookups make every comparison
+with an unknown tier evaluate to `false`. The Fungi boundary preserves that
+observable behavior explicitly: any unknown, empty, case-altered, whitespace,
+NUL-containing, prototype-like or Unicode String returns `false`.
+
+The helpers each contain no more than five non-wildcard String match arms, which
+is the selected SLIDE bounded-wide-control-flow ceiling. Every match ends in a
+terminal `_ =>` arm. The module contains no null, NaN, `else if`, `else`,
+exceptions, host APIs or loop forms. It is pure and releases no authority.
+
+## Decision and effect ledger
+
+| Source | Decision or operation | Proven subject | Fungi construct | Effects | Failure exit |
+|---|---|---|---|---|---|
+| `hardening-residency.ts:156-162` | map `tier` to a rank | closed `ResidencyTier` / boundary `String` | exhaustive `match` | none | wildcard returns sentinel used only after membership proof |
+| `hardening-residency.ts:156-164` | validate `tier` | exact `String` membership | exhaustive `match` | none | wildcard returns `false` |
+| `hardening-residency.ts:175-176` | reject an invalid left input | `Bool` | `if` | none | returns `false` |
+| `hardening-residency.ts:175-176` | reject an invalid floor input | `Bool` | `if` | none | returns `false` |
+| `hardening-residency.ts:175-176` | compare proven ranks | finite `Int` values `0..4` | `<=` | none | returns exact `Bool` |
+
+No typed failure is erased: the TypeScript function returns only `boolean`, and
+all values outside its declared closed domain already produce `false` at the
+JavaScript runtime seam.
+
+## Verification
+
+1. RED requires the governed package asset before it exists.
+2. Differential vectors compare literal expectations, exported TypeScript and
+   the typed Fungi interpreter across the complete 25-pair canonical matrix and
+   hostile values in either position.
+3. Strict type/governance checking must return zero errors and zero warnings.
+4. Independent SLIDE compilation, physical publication, VOK re-admission and
+   typed Bool receipt verification must execute with zero skips. Wrong
+   arity/type, invalid Unicode, inadequate work and mutated bytes must refuse.
+5. Full compiler and canonical package owners update their exact counts, while
+   crash-linked full tooling, normal phase-close and whole-memory evaluation
+   remain excluded and repository-wide closure remains `UNKNOWN`.
+
+## Alternatives rejected
+
+- A nested-match matrix avoids rank arithmetic but duplicates the lattice in
+  several helpers and increases review and mutation risk.
+- An enum-typed public input would make invalid values unrepresentable in the
+  language, but the selected independent SLIDE String ABI has not proved enum
+  parameter marshalling or physical execution.
+- Converting `stricterResidency` in the same slice would add a String-returning
+  choice with different hostile-runtime behavior. It remains a separate row so
+  this security predicate stays one independently reviewable decision.
