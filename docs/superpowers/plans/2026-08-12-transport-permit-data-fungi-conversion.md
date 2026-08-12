@@ -57,10 +57,10 @@ executing differential layer.
 
 ### Task 4: Bounded owner closure
 
-- [ ] Run the Tower-Citizen package and canonical 100-package owner as isolated
+- [x] Run the Tower-Citizen package and canonical 100-package owner as isolated
   monitored processes.
-- [ ] Regenerate only owners whose exact checks refuse as stale.
-- [ ] Update TODO, active roadmap, subway SVG, and a focused report with exact
+- [x] Regenerate only owners whose exact checks refuse as stale.
+- [x] Update TODO, active roadmap, subway SVG, and a focused report with exact
   counts and non-authority boundaries.
 - [ ] Run the bounded final matrix without crash-linked aggregate wrappers.
 - [ ] Commit locally, refresh the primary graph and Myco, verify exact HEAD and
