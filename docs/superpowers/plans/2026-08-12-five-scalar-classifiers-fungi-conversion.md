@@ -1,5 +1,8 @@
 # Five Scalar Classifiers Fungi Conversion Batch Plan
 
+Live per-file status:
+[`../../reports/fungi-conversion-batch-33-42-file-status.md`](../../reports/fungi-conversion-batch-33-42-file-status.md).
+
 **Goal:** Complete Slices 33–37 as five independent String-to-Bool `.fungi`
 twins with physical SLIDE/VOK evidence, then perform one shared governed
 closure.
