@@ -79,23 +79,22 @@ The active roadmap is updated once at the bounded batch exit.
 
 ## Shared closure status
 
-The bounded batch exit is in progress. The authored TODO and active roadmap
-are updated; retirement, queue, package, project, KB, dev-tool and Fungi-source
-owners are regenerated and independently current. Semantic, percentage,
-status, code-index, subway and final navigation-index publication remain in
-dependency order. The excluded aggregate lanes are not substitutes for these
-bounded owners.
+The bounded batch owner exit is complete. The authored TODO and active roadmap
+are updated; every listed generated owner is regenerated and independently
+current. Final navigation-index publication remains in dependency order. The
+excluded aggregate lanes are not substitutes for these bounded owners, so
+repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
 | `docs/TODO.md` | `DONE` |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section; generated subway block pending) |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section and generated subway block) |
 | Retirement and conversion queue | `DONE` at 1,458/1,458, seven scoped candidates and 829 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 142 Fungi files |
-| Semantic, percentage, status, code-index and subway owners | `IN_PROGRESS` |
+| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 956 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Public Fungi skill repositories | `DONE` (`15c70bd` translation skill; Slice 62 `NO_SKILL_UPDATE`) |
-| Final codebase graph and Myco navigation refresh | `PENDING` |
+| Final codebase graph and Myco navigation refresh | `IN_PROGRESS` |
 
 ## Verified refusal retained outside the batch
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "d1afc3a55e301e23c4b430a37f4e7e55fd22bcf30b7a96f103b010e626fcebd4",
+  "authoritativeInputsDigest": "3f2246df47b3c29204b568059afc13a4b1cff91ba96a9a7f3dc3247ff5304795",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -4319,6 +4319,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-bca5cd0180af2ce606d2fa79",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-9fef911c4fcd1118be05a4da",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-config/tests/governance.test.mjs",
@@ -4357,6 +4364,13 @@
       "id": "test:auto-f5d3590e436fefe8cd54237d",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7d30c4394ad17ff4b61b2547",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -4546,6 +4560,13 @@
       "id": "test:auto-bb0004aa14286afbae8ae555",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f4e50ecf8ef90da81cc90e76",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -4865,6 +4886,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-dccf9a6ade6ab64b4883798d",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-2010dcc92f653da96e9b740f",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-vector/tests/vector-contracts.test.mjs",
@@ -4938,6 +4966,13 @@
       "id": "test:auto-8f94cc7eae82cf28859ca6ac",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-data-model/tests/model-contracts.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-93be78ce42a3bc9e6f0643d8",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -5120,6 +5155,13 @@
       "id": "test:auto-63b145e3dd8772374600d469",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/verified-native-operation-report.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0ff72fb81d1d3fa908e37be5",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -5309,6 +5351,13 @@
       "id": "test:auto-6e0bd13c924bf34b143f4dc0",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-project-graph/tests/reporting.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-5bc7c12ed8092151879d3fc2",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6933,6 +6982,13 @@
       "id": "test:auto-80e2b49d5afc36749514fca7",
       "kind": "test",
       "evidencePath": "scripts/tests/export-slide-checked-decision-receipt.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9f1717c2a1ae0770f101cbd2",
+      "kind": "test",
+      "evidencePath": "scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10038,6 +10094,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-bca5cd0180af2ce606d2fa79",
+      "to": "package:galerina-core-config",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-9fef911c4fcd1118be05a4da",
       "to": "package:galerina-core-config",
       "type": "CLASSIFIES"
@@ -10064,6 +10125,11 @@
     },
     {
       "from": "test:auto-f5d3590e436fefe8cd54237d",
+      "to": "package:galerina-core-logic",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7d30c4394ad17ff4b61b2547",
       "to": "package:galerina-core-logic",
       "type": "CLASSIFIES"
     },
@@ -10199,6 +10265,11 @@
     },
     {
       "from": "test:auto-bb0004aa14286afbae8ae555",
+      "to": "package:galerina-core-runtime",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f4e50ecf8ef90da81cc90e76",
       "to": "package:galerina-core-runtime",
       "type": "CLASSIFIES"
     },
@@ -10428,6 +10499,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-dccf9a6ade6ab64b4883798d",
+      "to": "package:galerina-core-tasks",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-2010dcc92f653da96e9b740f",
       "to": "package:galerina-core-vector",
       "type": "CLASSIFIES"
@@ -10479,6 +10555,11 @@
     },
     {
       "from": "test:auto-8f94cc7eae82cf28859ca6ac",
+      "to": "package:galerina-data-model",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-93be78ce42a3bc9e6f0643d8",
       "to": "package:galerina-data-model",
       "type": "CLASSIFIES"
     },
@@ -10613,6 +10694,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-0ff72fb81d1d3fa908e37be5",
+      "to": "package:galerina-devtools-context",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-38795df2adab7da2729b2bf0",
       "to": "package:galerina-devtools-context",
       "type": "CLASSIFIES"
@@ -10744,6 +10830,11 @@
     },
     {
       "from": "test:auto-6e0bd13c924bf34b143f4dc0",
+      "to": "package:galerina-devtools-project-graph",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-5bc7c12ed8092151879d3fc2",
       "to": "package:galerina-devtools-project-graph",
       "type": "CLASSIFIES"
     },
@@ -11908,6 +11999,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-9f1717c2a1ae0770f101cbd2",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-d44d1166317bb97047d9abd0",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -12398,9 +12494,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 948,
+    "tests": 956,
     "detectors": 6,
-    "executableFamily": 1451,
+    "executableFamily": 1458,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

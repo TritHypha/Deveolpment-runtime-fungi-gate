@@ -183,7 +183,7 @@ checkboxes remain intentionally unmet.
   subway block remains owned by its dependency-ordered generator.
 - [x] Run the focused candidate checks and owning package suites; do not run
   the crash-linked canonical aggregate lane.
-- [ ] Run bounded owners in dependency order, including roadmap and subway.
+- [x] Run bounded owners in dependency order, including roadmap and subway.
 - [ ] Refresh the codebase graph and Myco once at final HEAD and verify the
   bounded source symbols, admitted flows and queue candidates are queryable.
 - [ ] Verify clean tracked worktrees and local commits; do not push.
