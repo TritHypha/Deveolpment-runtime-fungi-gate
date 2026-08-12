@@ -299,6 +299,35 @@ test("a zero-test summary is refused rather than treated as an empty pass", () =
   assert.equal(report.results[0].failureCode, "TEST-SUMMARY-EMPTY");
 });
 
+test("a failed package retains bounded, digest-bound diagnostic evidence", () => {
+  const root = workspaceFixture("diagnostic-failure", {
+    name: "@galerina/diagnostic-failure",
+    scripts: { test: "node diagnostic-failure.mjs" },
+  }, {
+    "diagnostic-failure.mjs": [
+      "console.log('tests 1\\npass 0\\nfail 1');",
+      "console.error('not ok 1 - planted package failure');",
+      "console.error('Error: exact planted diagnostic');",
+      "process.exit(7);",
+    ].join("\n") + "\n",
+  });
+
+  const result = run(root, "--json");
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  const evidence = report.results[0].failureEvidence;
+  assert.equal(evidence.schemaVersion, 1);
+  assert.equal(evidence.exitCode, 7);
+  assert.match(evidence.outputSha256, /^[0-9a-f]{64}$/u);
+  assert.deepEqual(evidence.diagnosticLines, [
+    "fail 1",
+    "not ok 1 - planted package failure",
+    "Error: exact planted diagnostic",
+  ]);
+  assert.equal(Object.hasOwn(evidence, "rawOutput"), false);
+});
+
 test("--emit-counts replaces stale package-count narrative with derived scope", () => {
   const root = workspaceFixture("counted", {
     name: "@galerina/counted",

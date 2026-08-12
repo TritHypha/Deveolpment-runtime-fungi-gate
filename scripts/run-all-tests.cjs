@@ -4,6 +4,7 @@
 
 "use strict";
 
+const { createHash } = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
@@ -28,6 +29,25 @@ const CORE = Object.freeze([
 const RUN_FIRST = new Set(["galerina-core-compiler"]);
 const RUN_LAST = new Set(["galerina-devtools-graph-project"]);
 const TIMEOUT_MS = 600_000;
+const MAX_DIAGNOSTIC_LINES = 32;
+const MAX_DIAGNOSTIC_LINE_LENGTH = 1024;
+
+function failureEvidence(child, output) {
+  const diagnosticLines = output
+    .split(/\r?\n/u)
+    .map((line) => line.trim())
+    .filter((line) => /not ok|Error:|fail \d/iu.test(line))
+    .slice(0, MAX_DIAGNOSTIC_LINES)
+    .map((line) => line.slice(0, MAX_DIAGNOSTIC_LINE_LENGTH));
+  return Object.freeze({
+    schemaVersion: 1,
+    exitCode: typeof child.status === "number" ? child.status : null,
+    signal: child.signal ?? null,
+    outputBytes: Buffer.byteLength(output, "utf8"),
+    outputSha256: createHash("sha256").update(output, "utf8").digest("hex"),
+    diagnosticLines,
+  });
+}
 
 function parseArguments(argv) {
   const options = {
@@ -231,7 +251,11 @@ async function runPackage(record, testConcurrency) {
     durationMs,
     ...(failure === null
       ? {}
-      : { failureCode: failure[0], detail: failure[1] }),
+      : {
+        failureCode: failure[0],
+        detail: failure[1],
+        failureEvidence: failureEvidence(child, output),
+      }),
     _output: output,
   };
   process.stderr.write(
