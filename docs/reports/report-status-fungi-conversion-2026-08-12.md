@@ -84,6 +84,13 @@ Full tooling, `graph-all`, normal phase-close and
 monolithic memory evaluation remain deliberately excluded because those lanes
 are crash-linked; repository-wide closure remains `UNKNOWN`.
 
+## Slice-close receipt
+
+Skill disposition: SKILL_UPDATE f92c5ab25771d6164cd800b4b5619318edc823e3
+Threadability: PARALLEL_PURE
+Source classification: CANDIDATE
+Bounded closure: COMPLETE
+
 ## Error-reporting boundary
 
 Galerina and SLIDE share a versioned error/diagnostic contract, not ambient

@@ -52,6 +52,8 @@ self-tests.
 
 Each candidate is classified before authoring:
 
+- `PARALLEL_PURE`: immutable, deterministic leaf compute with no shared
+  mutation or authority release;
 - `ASYNC_HAPPY_PATH`: independently scheduled work with typed completion,
   cancellation and failure;
 - `ISOLATED_SERVICE`: a separately running service with a closed message and
