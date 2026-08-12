@@ -388,14 +388,14 @@ export function resolveHost(name: string | undefined): HostResidencyCapability {
  * REJECTED (never silently spilled). `unrestricted` is always honourable (no guarantee needed).
  */
 export function canHonour(ceiling: ResidencyTier, host: HostResidencyCapability): { ok: boolean; rejection?: Rejection } {
-  const need: Record<ResidencyTier, boolean> = {
-    register_only: host.canRegisterPin,
-    no_dram_spill: host.canNoDramSpill,
-    no_swap: host.canNoSwap,
-    no_disk: host.canNoDisk,
-    unrestricted: true,
-  };
-  if (need[ceiling]) return { ok: true };
+  const need: ReadonlyMap<ResidencyTier, boolean> = new Map([
+    ["register_only", host.canRegisterPin],
+    ["no_dram_spill", host.canNoDramSpill],
+    ["no_swap", host.canNoSwap],
+    ["no_disk", host.canNoDisk],
+    ["unrestricted", true],
+  ]);
+  if (need.get(ceiling) === true) return { ok: true };
   return {
     ok: false,
     rejection: {

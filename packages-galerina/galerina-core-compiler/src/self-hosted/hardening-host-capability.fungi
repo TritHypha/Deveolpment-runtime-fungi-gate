@@ -49,3 +49,25 @@ contract { intent { "Resolve only exact declared host profiles and fail closed t
     }
   }
 }
+
+/// Decide only whether supplied capability facts honour an exact residency
+/// ceiling. Capability provenance and diagnostic construction stay outside
+/// this pure decision; every unknown ceiling fails closed.
+pure flow canHonourFungi(
+  ceiling: String,
+  canRegisterPin: Bool,
+  canNoDramSpill: Bool,
+  canNoSwap: Bool,
+  canNoDisk: Bool
+) -> Bool
+contract { intent { "Honour only exact residency ceilings backed by the corresponding capability fact." } }
+{
+  match ceiling {
+    "register_only" => return canRegisterPin
+    "no_dram_spill" => return canNoDramSpill
+    "no_swap" => return canNoSwap
+    "no_disk" => return canNoDisk
+    "unrestricted" => return true
+    _ => return false
+  }
+}
