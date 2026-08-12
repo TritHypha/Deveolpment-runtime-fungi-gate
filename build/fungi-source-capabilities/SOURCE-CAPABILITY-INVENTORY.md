@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 132
-- Flows: 857
-- Bytes: 1132968
-- Retirement graph: `sha256:dd986ca292e5bf743881f174e78d833a19e785ec3d0172d9b99967719296585e`
+- Files: 133
+- Flows: 859
+- Bytes: 1134068
+- Retirement graph: `sha256:32b377eb65c3e5ead487c4073181c3df1f967be21468f94fc4527de542718c09`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18994 |
-| `callExpr` | 7264 |
-| `binaryExpr` | 6064 |
-| `numberLiteral` | 5727 |
-| `block` | 5068 |
-| `stringLiteral` | 4853 |
-| `memberExpr` | 4683 |
-| `returnStmt` | 3062 |
-| `paramDecl` | 2846 |
-| `typeRef` | 2526 |
-| `ifStmt` | 2291 |
+| `identifier` | 19004 |
+| `callExpr` | 7266 |
+| `binaryExpr` | 6067 |
+| `numberLiteral` | 5730 |
+| `block` | 5073 |
+| `stringLiteral` | 4857 |
+| `memberExpr` | 4686 |
+| `returnStmt` | 3067 |
+| `paramDecl` | 2853 |
+| `typeRef` | 2532 |
+| `ifStmt` | 2294 |
 | `assignStmt` | 2120 |
-| `letDecl` | 1864 |
+| `letDecl` | 1865 |
 | `boolLiteral` | 1624 |
 | `matchArm` | 1244 |
-| `contractDecl` | 846 |
-| `intentDecl` | 846 |
-| `pureFlowDecl` | 845 |
+| `contractDecl` | 848 |
+| `intentDecl` | 848 |
+| `pureFlowDecl` | 847 |
 | `mutDecl` | 810 |
 | `matchExpr` | 378 |
 | `whileStmt` | 340 |
 | `checkArm` | 315 |
 | `unaryExpr` | 251 |
-| `recordDecl` | 209 |
-| `program` | 132 |
+| `recordDecl` | 210 |
+| `program` | 133 |
 | `listLiteral` | 115 |
 | `checkExpr` | 105 |
 | `trapDecl` | 50 |
@@ -58,8 +58,8 @@ admission, execution parity, retirement credit or production authority.
 
 | Type | Count |
 |---|---:|
-| `Int` | 539 |
-| `String` | 458 |
+| `Int` | 542 |
+| `String` | 460 |
 | `Bool` | 404 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
@@ -258,6 +258,7 @@ admission, execution parity, retirement credit or production authority.
 | `MMCPEntry` | 1 |
 | `PluginEvictionSignal` | 1 |
 | `RecordDeclParse` | 1 |
+| `ReportStatusCounts` | 1 |
 | `Result<Array<Token>,LexError>` | 1 |
 | `RunResult` | 1 |
 | `SinkScanResult` | 1 |
@@ -355,7 +356,7 @@ admission, execution parity, retirement credit or production authority.
 | `<` | 503 |
 | `&&` | 439 |
 | `-` | 426 |
-| `>` | 177 |
+| `>` | 180 |
 | `>=` | 67 |
 | `*` | 42 |
 | `/` | 26 |
