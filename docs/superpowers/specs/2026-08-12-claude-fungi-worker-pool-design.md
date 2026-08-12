@@ -31,6 +31,8 @@ The fifth wave covers Slices 50-52 and tests exact record/array and wide
 JavaScript numeric boundaries.
 The sixth wave covers Slices 53-55 and tests host-module inspection,
 crypto/codec/JSON proof validation, and recursive AST text analysis.
+The seventh wave covers Slices 56-58 and tests open-untrusted tagged input,
+structural platform validation, and shared Unicode text normalisation.
 
 ## Mandatory scope preflight
 
@@ -67,6 +69,12 @@ repository explicitly mounted. `AGENTS.md`, the exact TypeScript source,
 callers, tests, package manifest, live compiler and selected physical profile
 remain the source of truth.
 
+For non-interactive Claude, place the prompt argument before the variadic
+`--add-dir` option, mount the public skills root, and run a read-only preflight
+that returns the YAML names `translating-typescript-to-fungi` and
+`writing-fungi`. A prompt that merely names inaccessible paths does not satisfy
+the skill requirement; refuse that dossier and keep it advisory.
+
 ## Initial independent scopes
 
 | Slice | Exact scope | Floor at selection |
@@ -90,6 +98,9 @@ remain the source of truth.
 | 53 | `packages-galerina/galerina-core-runtime-wasm/src/seam-adapters.ts#moduleDefinesExport` | none; owned by the approved post-beta compatibility-engine sequence |
 | 54 | `packages-galerina/galerina-ext-proof-snarkjs/src/circuit.ts#verifyPhase1Proof` | none |
 | 55 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#isPaymentFlow` | none |
+| 56 | `packages-galerina/galerina-core-config/src/posture.ts#isSecurityPosture` | none |
+| 57 | `packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts#isPlatform` | none |
+| 58 | `packages-galerina/galerina-db-mysql/src/index.ts#isLocalhostHost` | none; shared decision family with PostgreSQL and OpenSearch |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.

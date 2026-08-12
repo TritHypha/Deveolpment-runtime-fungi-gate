@@ -44,7 +44,8 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Read: `build/ts-retirement/ts-retirement.json`
 
 **Produces:** three independent dossier results per wave. Slices 38-40 and
-Slices 41-43, 44-46, 47-49, 50-52 and 53-55 have completed their product-owner gates.
+Slices 41-43, 44-46, 47-49, 50-52, 53-55 and 56-58 have completed their
+product-owner gates.
 
 - [x] Start three background sessions with the exact Slice 38-40 scopes in the
   design.
@@ -56,6 +57,9 @@ Slices 41-43, 44-46, 47-49, 50-52 and 53-55 have completed their product-owner g
 - [x] Correct the preflight after duplicate-selection pressure: require the
   live register, retirement floor, every package loaded asset, exact/sibling
   Fungi assets and governed mirrors before a worker is launched.
+- [x] Correct the non-interactive skill mount after Slices 56-58: prompt first,
+  then `--add-dir` for the public skills root, with a two-name read preflight.
+  The affected dossiers remain advice and Codex independently owns the checks.
 
 ### Task 2: Product-owner admission
 

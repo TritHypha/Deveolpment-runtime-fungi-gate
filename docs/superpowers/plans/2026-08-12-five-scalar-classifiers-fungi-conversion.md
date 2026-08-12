@@ -125,6 +125,18 @@ checkboxes remain intentionally unmet.
 - [x] Create no placeholder asset or candidate authority and record
   `NO_SKILL_UPDATE` for both public skills.
 
+## Task 3F: Settle Slices 56-58
+
+- [x] Reject duplicate and bootstrap-floored proposed scopes before assignment.
+- [x] Refuse Slices 56-57 at the open `unknown` and untrusted structural ingress
+  boundaries; the existing broader Fungi folds do not supersede them.
+- [x] Refuse Slice 58 at the host-authoritative Unicode trim/case-fold boundary
+  and bind its three database copies as one governed decision family.
+- [x] Record the missing TypeScript-oracle vectors and create no placeholder
+  asset or candidate authority.
+- [x] Repair the future Claude skill mount/argument order and record
+  `NO_SKILL_UPDATE` for both public skills.
+
 ## Task 4: Per-slice skill review
 
 - [ ] Review both public Fungi skills after each slice.

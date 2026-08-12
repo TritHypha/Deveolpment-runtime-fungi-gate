@@ -4,7 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-55 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-58 - 2026-08-12
+
+- [x] Settle Slices 56-58 as `BLOCKED` without placeholder assets. Slices 56
+  and 57 cannot preserve their open JavaScript `unknown` rejection domains on
+  a String-only physical boundary. Slice 58 needs exact ECMAScript trim and
+  full Unicode lowercase without transferring the TLS-bypass decision to a
+  host import. Packages pass **54/54**, **231/231**, and **24/24**.
+- [ ] Add direct unsupported-platform vectors for Slice 57 and complete
+  trim/case-fold oracle vectors across the identical MySQL, PostgreSQL and
+  OpenSearch localhost decisions before any re-admission.
+- [x] Correct the Claude worker launch: put the prompt before `--add-dir`, mount
+  the public skills root, and require both skill YAML names before analysis.
+  The first 56-58 consultant wave is advisory only because it could not read
+  those external skills; Codex independently applied them.
+- [x] Reject duplicate `isValidStrategy` and `powerRank` scopes and the
+  bootstrap-floored `isHighRiskPermissionAction` before worker assignment.
 
 - [x] Settle Slices 53-55 as `BLOCKED` without placeholder assets. Slice 53
   remains inside the approved post-beta narrow Fungi Wasm compatibility-engine
