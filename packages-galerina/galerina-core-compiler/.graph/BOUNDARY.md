@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 186 |
+| Files | 187 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -66,6 +66,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/gir-emitter.fungi`
 - `src/self-hosted/governance-qualifier-escalation.fungi`
 - `src/self-hosted/governance-verifier.fungi`
+- `src/self-hosted/hardening-host-capability.fungi`
 - `src/self-hosted/hardening-trust-boundary.fungi`
 - `src/self-hosted/lexer.fungi`
 - `src/self-hosted/package-scalar-quote-stripping.fungi`
