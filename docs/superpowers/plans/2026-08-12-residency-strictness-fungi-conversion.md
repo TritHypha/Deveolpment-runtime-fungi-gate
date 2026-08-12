@@ -6,8 +6,9 @@
 exported TypeScript `atLeastAsStrict` predicate without switching or retiring
 its TypeScript consumers.
 
-**Architecture:** Admit the exact five-member String domain before mapping it
-to ranks `0..4`; compare ranks only after both membership checks succeed. Keep
+**Architecture:** Map the exact five-member String domain to ranks `0..4` and
+all other text to sentinel rank `5`; compare ranks only after one combined
+sentinel guard succeeds. Keep
 the TypeScript implementation as the differential oracle and independently
 compile, publish, re-admit and execute the Fungi flow through SLIDE/VOK.
 
@@ -63,10 +64,12 @@ independent SLIDE checked-package compilation and VOK typed receipts.
 
 - [ ] **Step 1: Add the minimal source**
 
-  Implement `isResidencyTier` and `residencyRank` as exhaustive five-arm
-  String matches with terminal wildcards. In the public flow, return `false`
-  if either membership check is false; otherwise return
-  `residencyRank(tier) <= residencyRank(floor)`.
+  Implement `residencyRank` as an exhaustive five-arm String match whose
+  terminal wildcard returns sentinel `5`. Implement `rankAtMost` with a
+  Boolean `if left <= right` and terminal false return because the selected
+  physical profile does not admit a directly returned comparison. In the
+  public flow, derive both ranks, return `false` when either is `>= 5` through
+  one combined `or` guard, then call `rankAtMost` with both admitted ranks.
 
 - [ ] **Step 2: Register the package asset**
 
@@ -99,8 +102,10 @@ independent SLIDE checked-package compilation and VOK typed receipts.
 
 - [ ] **Step 2: Add refusal vectors**
 
-  Require refusal for wrong arity/type, invalid Unicode, inadequate work,
-  source mutation and publication mutation.
+  Require refusal for wrong arity/type, invalid Unicode, inadequate step fuel,
+  source mutation and publication mutation. Do not claim a text-comparison
+  budget for the bounded-wide-control-flow registry when its receipt reports
+  zero separately-metered text work.
 
 - [ ] **Step 3: Run physical GREEN**
 

@@ -1,22 +1,9 @@
 @version 1
 
-/// Admit only the five exact memory-residency ceiling names.
-pure flow isResidencyTier(value: String) -> Bool
-contract { intent { "Recognize one exact residency tier without normalization or defaults." } }
-{
-  match value {
-    "register_only" => return true
-    "no_dram_spill" => return true
-    "no_swap" => return true
-    "no_disk" => return true
-    "unrestricted" => return true
-    _ => return false
-  }
-}
-
-/// Map an already-admitted residency tier to its strictness rank.
+/// Map an exact residency tier to its strictness rank. Unknown text maps to
+/// the closed sentinel rank 5, which the public flow must reject.
 pure flow residencyRank(value: String) -> Int
-contract { intent { "Map an admitted residency tier to its closed strictness rank." } }
+contract { intent { "Map an exact residency tier to a rank and isolate unknown text as a sentinel." } }
 {
   match value {
     "register_only" => return 0
@@ -28,16 +15,26 @@ contract { intent { "Map an admitted residency tier to its closed strictness ran
   }
 }
 
+/// Compare two already-bounded ranks using the physical profile's admitted
+/// conditional form.
+pure flow rankAtMost(left: Int, right: Int) -> Bool
+contract { intent { "Return whether one admitted residency rank is no greater than another." } }
+{
+  if left <= right {
+    return true
+  }
+  return false
+}
+
 /// Return true only when both exact tiers are admitted and the first tier is
 /// at least as strict as the required floor. Unknown text fails closed.
 pure flow atLeastAsStrictFungi(tier: String, floor: String) -> Bool
 contract { intent { "Compare two exact residency ceilings without admitting unknown tiers." } }
 {
-  if isResidencyTier(tier) == false {
+  let tierRank: Int = residencyRank(tier)
+  let floorRank: Int = residencyRank(floor)
+  if tierRank >= 5 or floorRank >= 5 {
     return false
   }
-  if isResidencyTier(floor) == false {
-    return false
-  }
-  return residencyRank(tier) <= residencyRank(floor)
+  return rankAtMost(tierRank, floorRank)
 }
