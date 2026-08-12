@@ -17,7 +17,7 @@
       "ref packages-galerina/galerina-ext-bridge-cpp/src/addon-loader.ts:96",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:58",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:63",
-      "doc docs/TODO.md:7468"
+      "doc docs/TODO.md:7493"
     ]
   },
   {
@@ -39,7 +39,7 @@
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:53",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:68",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:74",
-      "doc docs/TODO.md:7467"
+      "doc docs/TODO.md:7492"
     ]
   },
   {
@@ -107,7 +107,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/compiled-policy.test.mjs:56",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:209",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:215",
-      "doc docs/TODO.md:7789"
+      "doc docs/TODO.md:7814"
     ]
   },
   {
@@ -322,7 +322,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:158",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:177",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:183",
-      "doc docs/TODO.md:7786"
+      "doc docs/TODO.md:7811"
     ]
   },
   {
@@ -544,8 +544,8 @@
       "emit packages-galerina/galerina-tower-citizen/src/hybrid-engine.ts:1085",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:53",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:113",
-      "doc docs/TODO.md:7381",
-      "doc docs/TODO.md:7756"
+      "doc docs/TODO.md:7406",
+      "doc docs/TODO.md:7781"
     ]
   },
   {
@@ -567,8 +567,8 @@
       "ref packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:65",
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:95",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:159",
-      "doc docs/TODO.md:7381",
-      "doc docs/TODO.md:7776"
+      "doc docs/TODO.md:7406",
+      "doc docs/TODO.md:7801"
     ]
   },
   {
@@ -1080,7 +1080,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/governance-hardening.test.mjs:38",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:199",
       "doc docs/reports/galerina-ground-up-security-architectural-audit-report.md:625",
-      "doc docs/TODO.md:7787"
+      "doc docs/TODO.md:7812"
     ]
   },
   {
@@ -2803,7 +2803,7 @@
       "ref packages-galerina/galerina-core-runtime/src/structured-await.ts:585",
       "test packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs:333",
       "doc docs/reports/full-gate-and-host-floor-reconciliation-2026-08-03.md:17",
-      "doc docs/TODO.md:2288"
+      "doc docs/TODO.md:2313"
     ]
   },
   {
@@ -3365,7 +3365,7 @@
       "doc docs/paper/defensive-papers/dp-rd-0271-secure-by-omission-contract-field-defaults.md:62",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:96",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:35",
-      "doc docs/TODO.md:7342"
+      "doc docs/TODO.md:7367"
     ]
   },
   {
@@ -3434,7 +3434,7 @@
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:63",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:73",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:84",
-      "doc docs/TODO.md:6885"
+      "doc docs/TODO.md:6910"
     ]
   },
   {
@@ -3594,7 +3594,7 @@
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:169",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:346",
       "doc docs/superpowers/specs/2026-08-02-generic-runtime-authority-type-design.md:54",
-      "doc docs/TODO.md:3774"
+      "doc docs/TODO.md:3799"
     ]
   },
   {
@@ -3629,7 +3629,7 @@
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:219",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:234",
       "doc docs/superpowers/specs/2026-08-02-generic-runtime-authority-type-design.md:55",
-      "doc docs/TODO.md:3775"
+      "doc docs/TODO.md:3800"
     ]
   },
   {
@@ -3666,7 +3666,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs:121",
       "test packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs:131",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:178",
-      "doc docs/TODO.md:3776"
+      "doc docs/TODO.md:3801"
     ]
   },
   {
@@ -3874,7 +3874,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:77",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:90",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:170",
-      "doc docs/TODO.md:7768",
+      "doc docs/TODO.md:7793",
       "ref scripts/audit-import-governance.mjs:20"
     ]
   },
@@ -3896,7 +3896,7 @@
     "allSites": [
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:165",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:97",
-      "doc docs/TODO.md:7770"
+      "doc docs/TODO.md:7795"
     ]
   },
   {
@@ -4048,7 +4048,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/index.ts:2153",
       "def packages-galerina/galerina-core-compiler/src/index.ts:2169",
-      "doc docs/TODO.md:7290"
+      "doc docs/TODO.md:7315"
     ]
   },
   {
@@ -4072,7 +4072,7 @@
     ],
     "allSites": [
       "def packages-galerina/galerina-core-compiler/src/index.ts:2180",
-      "doc docs/TODO.md:7201"
+      "doc docs/TODO.md:7226"
     ]
   },
   {
@@ -4191,8 +4191,8 @@
       "def packages-galerina/galerina-core-compiler/src/attribute-checker.ts:45",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:101",
-      "doc docs/TODO.md:7613",
-      "doc docs/TODO.md:7627"
+      "doc docs/TODO.md:7638",
+      "doc docs/TODO.md:7652"
     ]
   },
   {
@@ -4442,7 +4442,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-conformance/monkey-patch.test.mjs:12",
       "doc docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md:40",
       "doc docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md:71",
-      "doc docs/TODO.md:4617",
+      "doc docs/TODO.md:4642",
       "ref galerina.mjs:61"
     ]
   },
@@ -5367,8 +5367,8 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/cli.ts:664",
-      "doc docs/TODO.md:7614",
-      "doc docs/TODO.md:7618"
+      "doc docs/TODO.md:7639",
+      "doc docs/TODO.md:7643"
     ]
   },
   {
@@ -7130,7 +7130,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:54",
-      "doc docs/TODO.md:6900",
+      "doc docs/TODO.md:6925",
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
       "ref scripts/audit-artifact-drift.mjs:172",
@@ -7794,7 +7794,7 @@
       "doc docs/patterns/applications/01-crud-resource.md:94",
       "doc docs/reference/effects.md:67",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:16",
-      "doc docs/TODO.md:7007",
+      "doc docs/TODO.md:7032",
       "ref scripts/audit-corpus-effect-names.mjs:15",
       "ref scripts/audit-corpus-effect-names.mjs:17",
       "ref scripts/audit-muted-diagnostics.mjs:46",
@@ -7986,7 +7986,7 @@
       "doc docs/reference/effects.md:438",
       "doc docs/reference/effects.md:447",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:193",
-      "doc docs/TODO.md:7557",
+      "doc docs/TODO.md:7582",
       "ref scripts/audit-codes-full.mjs:90",
       "ref scripts/audit-codes-full.mjs:93",
       "ref scripts/audit-corpus-effect-names.mjs:134",
@@ -8713,7 +8713,7 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:53",
       "doc docs/reference/dss-wasm-runtime-errors.md:57",
       "doc docs/reference/dss-wasm-runtime-errors.md:94",
-      "doc docs/TODO.md:6988",
+      "doc docs/TODO.md:7013",
       "ref scripts/audit-artifact-drift.mjs:68"
     ]
   },
@@ -9634,7 +9634,7 @@
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:155",
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:158",
       "doc docs/architecture/gate-cutset-version-gating-decision-2026-07-11.md:42",
-      "doc docs/TODO.md:7439"
+      "doc docs/TODO.md:7464"
     ]
   },
   {
@@ -9690,10 +9690,10 @@
       "doc docs/language/gate/07-cheatsheet-and-gotchas.md:186",
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:999",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1021",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
-      "doc docs/TODO.md:1601",
-      "doc docs/TODO.md:7443",
+      "doc docs/TODO.md:1626",
+      "doc docs/TODO.md:7468",
       "test scripts/tests/gate-admission-envelope.test.mjs:103",
       "test scripts/tests/gate-admission-envelope.test.mjs:298",
       "test scripts/tests/helpers/gate-admission-fixture.mjs:83",
@@ -9857,7 +9857,7 @@
       "doc docs/examples/README.md:130",
       "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:194",
-      "doc docs/TODO.md:7003",
+      "doc docs/TODO.md:7028",
       "ref scripts/audit-mutation.mjs:626",
       "ref scripts/audit-mutation.mjs:630",
       "ref scripts/audit-muted-diagnostics.mjs:49",
@@ -9989,8 +9989,8 @@
       "doc docs/language/fungi/05-bindings-taint-privacy.md:268",
       "doc docs/language/fungi/DO-DONT-TERNARY.md:18",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:36",
-      "doc docs/TODO.md:7657",
-      "doc docs/TODO.md:7714",
+      "doc docs/TODO.md:7682",
+      "doc docs/TODO.md:7739",
       "ref scripts/audit-registry-fixtures.mjs:204",
       "ref scripts/audit-stdlib-gates-parity.mjs:138"
     ]
@@ -10115,7 +10115,7 @@
       "doc docs/examples/README.md:139",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:93",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:101",
-      "doc docs/TODO.md:6893",
+      "doc docs/TODO.md:6918",
       "ref scripts/audit-diagnostic-code-collisions.mjs:76"
     ]
   },
@@ -10222,7 +10222,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:15",
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1722",
-      "doc docs/TODO.md:6893"
+      "doc docs/TODO.md:6918"
     ]
   },
   {
@@ -10709,7 +10709,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1092",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1095",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1096",
-      "doc docs/TODO.md:7494"
+      "doc docs/TODO.md:7519"
     ]
   },
   {
@@ -10898,8 +10898,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1920",
       "doc docs/examples/README.md:25",
       "doc docs/examples/README.md:138",
-      "doc docs/TODO.md:7300",
-      "doc docs/TODO.md:7305",
+      "doc docs/TODO.md:7325",
+      "doc docs/TODO.md:7330",
       "ref scripts/audit-codes-full.mjs:50",
       "ref scripts/audit-muted-diagnostics.mjs:53"
     ]
@@ -10944,7 +10944,7 @@
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:5",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:12",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:34",
-      "doc docs/TODO.md:5461"
+      "doc docs/TODO.md:5486"
     ]
   },
   {
@@ -11161,7 +11161,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:49",
       "doc docs/roadmap-2026-07-15.md:117",
-      "doc docs/TODO.md:6864",
+      "doc docs/TODO.md:6889",
       "ref galerina.mjs:131",
       "ref galerina.mjs:164"
     ]
@@ -11226,7 +11226,7 @@
       "emit packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:56",
       "ref packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:57",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:39",
-      "doc docs/TODO.md:7759"
+      "doc docs/TODO.md:7784"
     ]
   },
   {
@@ -11860,10 +11860,10 @@
       "doc docs/reference/hardening.md:59",
       "doc docs/reference/hardening.md:84",
       "doc docs/reference/trust-trit.md:93",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:115",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:137",
       "doc docs/superpowers/plans/2026-08-12-spill-retype-fungi-conversion.md:80",
       "doc docs/superpowers/specs/2026-08-12-spill-retype-fungi-conversion-design.md:30",
-      "doc docs/TODO.md:105",
+      "doc docs/TODO.md:130",
       "ref scripts/audit-reference-doc-drift.mjs:59",
       "test scripts/tests/spill-retype-fungi-slide.integration.test.mjs:24"
     ]
@@ -12688,8 +12688,8 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:58",
       "doc docs/reference/dss-wasm-runtime-errors.md:90",
       "doc docs/reports/slide-v2-g1-capability-probe-2026-07-29.md:73",
-      "doc docs/TODO.md:6746",
-      "doc docs/TODO.md:7085"
+      "doc docs/TODO.md:6771",
+      "doc docs/TODO.md:7110"
     ]
   },
   {
@@ -12747,7 +12747,7 @@
       "doc packages-galerina/galerina-core-compiler/TODO.md:18",
       "ref packages-galerina/galerina-devtools-wasmtime-oracle/tools/export-corpus-differential.mjs:116",
       "doc docs/reference/dss-wasm-runtime-errors.md:50",
-      "doc docs/TODO.md:7031"
+      "doc docs/TODO.md:7056"
     ]
   },
   {
@@ -12902,7 +12902,7 @@
       "doc docs/examples/README.md:24",
       "doc docs/examples/README.md:150",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
-      "doc docs/TODO.md:7350",
+      "doc docs/TODO.md:7375",
       "ref galerina.mjs:134",
       "ref galerina.mjs:164"
     ]
@@ -13483,7 +13483,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:392",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:393",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:398",
-      "doc docs/TODO.md:7598"
+      "doc docs/TODO.md:7623"
     ]
   },
   {
@@ -14468,9 +14468,9 @@
       "doc docs/SYNTAX_UPDATE_PLAN.md:29",
       "doc docs/SYNTAX_UPDATE_PLAN.md:60",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:33",
-      "doc docs/TODO.md:7172",
-      "doc docs/TODO.md:7338",
-      "doc docs/TODO.md:7450"
+      "doc docs/TODO.md:7197",
+      "doc docs/TODO.md:7363",
+      "doc docs/TODO.md:7475"
     ]
   },
   {
@@ -14947,7 +14947,7 @@
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:45",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:109",
-      "doc docs/TODO.md:6900"
+      "doc docs/TODO.md:6925"
     ]
   },
   {
@@ -15038,8 +15038,8 @@
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:42",
       "doc docs/superpowers/plans/2026-08-04-canonical-records-and-call-resolution.md:29",
       "doc docs/superpowers/plans/2026-08-04-canonical-records-and-call-resolution.md:72",
-      "doc docs/TODO.md:7618",
-      "doc docs/TODO.md:7710"
+      "doc docs/TODO.md:7643",
+      "doc docs/TODO.md:7735"
     ]
   },
   {
@@ -16070,9 +16070,9 @@
       "doc docs/language/fungi/07-control-flow.md:321",
       "doc docs/language/fungi/README.md:78",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:6901",
-      "doc docs/TODO.md:7003",
-      "doc docs/TODO.md:7026",
+      "doc docs/TODO.md:6926",
+      "doc docs/TODO.md:7028",
+      "doc docs/TODO.md:7051",
       "ref scripts/audit-syntax.mjs:4",
       "ref scripts/rebuild-fusable-packages.mjs:133",
       "ref galerina.mjs:1182"
@@ -16152,7 +16152,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:127",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:131",
       "doc docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md:450",
-      "doc docs/TODO.md:6552"
+      "doc docs/TODO.md:6577"
     ]
   },
   {
@@ -16249,7 +16249,7 @@
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:59",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:90",
-      "doc docs/TODO.md:6818"
+      "doc docs/TODO.md:6843"
     ]
   },
   {
@@ -16304,8 +16304,8 @@
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:268",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:397",
       "doc docs/language/fungi/04-types-and-values.md:74",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1064",
-      "doc docs/TODO.md:1771"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1086",
+      "doc docs/TODO.md:1796"
     ]
   },
   {
@@ -16369,7 +16369,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/affine-passport-typestate-0111.test.mjs:36",
       "doc docs/reference/value-states.md:118",
       "doc docs/reference/value-states.md:134",
-      "doc docs/TODO.md:7726"
+      "doc docs/TODO.md:7751"
     ]
   },
   {
@@ -17889,10 +17889,10 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:113",
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:117",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:71",
-      "doc docs/TODO.md:7482",
-      "doc docs/TODO.md:7614",
-      "doc docs/TODO.md:7629",
-      "doc docs/TODO.md:7644"
+      "doc docs/TODO.md:7507",
+      "doc docs/TODO.md:7639",
+      "doc docs/TODO.md:7654",
+      "doc docs/TODO.md:7669"
     ]
   },
   {
@@ -17984,10 +17984,10 @@
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:62",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:102",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:129",
-      "doc docs/TODO.md:1601",
-      "doc docs/TODO.md:7443",
-      "doc docs/TODO.md:7817",
-      "doc docs/TODO.md:7824",
+      "doc docs/TODO.md:1626",
+      "doc docs/TODO.md:7468",
+      "doc docs/TODO.md:7842",
+      "doc docs/TODO.md:7849",
       "ref scripts/audit-muted-diagnostics.mjs:44",
       "ref scripts/code-index.mjs:150",
       "ref scripts/kb-index.mjs:9",
@@ -19423,7 +19423,7 @@
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:31",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:85",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:139",
-      "doc docs/TODO.md:7705"
+      "doc docs/TODO.md:7730"
     ]
   },
   {
@@ -19691,8 +19691,8 @@
       "doc docs/patterns/applications/08-secrets.md:14",
       "doc docs/patterns/applications/08-secrets.md:38",
       "doc docs/reference/value-states.md:93",
-      "doc docs/TODO.md:7595",
-      "doc docs/TODO.md:7723",
+      "doc docs/TODO.md:7620",
+      "doc docs/TODO.md:7748",
       "ref scripts/audit-muted-diagnostics.mjs:42",
       "ref scripts/audit-registry-fixtures.mjs:26"
     ]
@@ -19918,7 +19918,7 @@
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:12",
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:30",
       "doc docs/examples/Level-7-AI/358-ai-secure-string-in-ai/notes.md:5",
-      "doc docs/TODO.md:5456"
+      "doc docs/TODO.md:5481"
     ]
   },
   {
@@ -20380,7 +20380,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:46",
-      "doc docs/TODO.md:6900"
+      "doc docs/TODO.md:6925"
     ]
   },
   {
@@ -21289,7 +21289,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:89",
       "doc docs/roadmap-2026-07-15.md:164",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:7339",
+      "doc docs/TODO.md:7364",
       "ref scripts/audit-fungi-corpus-check.mjs:8",
       "ref scripts/audit-fungi-corpus-check.mjs:194",
       "ref scripts/audit-fungi-corpus-check.mjs:251",
@@ -21315,7 +21315,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:137",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:7340"
+      "doc docs/TODO.md:7365"
     ]
   },
   {
@@ -21349,7 +21349,7 @@
       "test packages-galerina/galerina-core-compiler/tests/version-header.test.mjs:69",
       "doc docs/examples/README.md:25",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:37",
-      "doc docs/TODO.md:7343"
+      "doc docs/TODO.md:7368"
     ]
   },
   {
@@ -21841,7 +21841,7 @@
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:42",
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:51",
       "doc docs/examples/Level-9-Enterprise/AI_SUMMARY.md:63",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:2441"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:2463"
     ]
   },
   {
@@ -21883,8 +21883,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tenant-isolation.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/leak-proof.test.mjs:55",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:57",
-      "doc docs/TODO.md:7149",
-      "doc docs/TODO.md:7279"
+      "doc docs/TODO.md:7174",
+      "doc docs/TODO.md:7304"
     ]
   },
   {
@@ -22129,7 +22129,7 @@
       "doc docs/reference/effects.md:91",
       "doc docs/reference/effects.md:163",
       "doc docs/roadmap-2026-07-25-cycle2.md:107",
-      "doc docs/TODO.md:6902",
+      "doc docs/TODO.md:6927",
       "ref scripts/audit-example-diagnostics.mjs:230",
       "ref scripts/audit-example-diagnostics.mjs:232",
       "ref scripts/audit-twin-differential.mjs:26",
@@ -24006,12 +24006,12 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-checker-tensor.test.mjs:88",
       "doc docs/AI/DO_NOT_USE_YET.md:165",
       "doc docs/reports/tensor-dimension-count-compatibility-fungi-conversion-2026-08-12.md:37",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:419",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:441",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:53",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:116",
       "doc docs/superpowers/specs/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion-design.md:28",
       "doc docs/superpowers/specs/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion-design.md:78",
-      "doc docs/TODO.md:174",
+      "doc docs/TODO.md:199",
       "ref scripts/audit-codes-full.mjs:83"
     ]
   },
@@ -24556,8 +24556,8 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:645",
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:246",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:648",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1092",
-      "doc docs/TODO.md:1814"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1114",
+      "doc docs/TODO.md:1839"
     ]
   },
   {
@@ -24629,9 +24629,9 @@
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:1143",
       "doc docs/reports/tensor-element-type-compatibility-fungi-conversion-2026-08-12.md:26",
       "doc docs/roadmap-2026-07-15.md:53",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:362",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:384",
       "doc docs/superpowers/specs/2026-08-12-tensor-element-type-compatibility-fungi-conversion-design.md:27",
-      "doc docs/TODO.md:189"
+      "doc docs/TODO.md:214"
     ]
   },
   {
@@ -24967,7 +24967,7 @@
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:573",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:574",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:7003",
+      "doc docs/TODO.md:7028",
       "ref scripts/audit-codes-full.mjs:91",
       "ref scripts/audit-diagnostic-code-collisions.mjs:179",
       "ref scripts/audit-examples-vs-declared.mjs:94",
@@ -25451,7 +25451,7 @@
       "doc docs/reference/value-states.md:56",
       "doc docs/reference/value-states.md:128",
       "doc docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md:305",
-      "doc docs/TODO.md:7685",
+      "doc docs/TODO.md:7710",
       "ref scripts/audit-mutation.mjs:205",
       "ref scripts/audit-mutation.mjs:212",
       "ref scripts/audit-reference-doc-drift.mjs:65",
@@ -25736,7 +25736,7 @@
       "doc docs/reference/value-states.md:131",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:87",
       "doc docs/security/slsa-deep-bola-pass-2026-07-09.md:45",
-      "doc docs/TODO.md:7724",
+      "doc docs/TODO.md:7749",
       "ref scripts/audit-example-diagnostics.mjs:9",
       "ref scripts/audit-example-diagnostics.mjs:225",
       "ref scripts/audit-muted-diagnostics.mjs:63",
@@ -25896,7 +25896,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
       "doc docs/roadmap-2026-07-25-cycle2.md:109",
-      "doc docs/TODO.md:6902",
+      "doc docs/TODO.md:6927",
       "ref scripts/audit-codes-full.mjs:53",
       "ref scripts/audit-muted-diagnostics.mjs:55",
       "ref galerina.mjs:1381",
@@ -25995,7 +25995,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
       "doc docs/roadmap-2026-07-24.md:16",
-      "doc docs/TODO.md:6961"
+      "doc docs/TODO.md:6986"
     ]
   },
   {
@@ -26168,7 +26168,7 @@
       "doc docs/language/fungi/03-effects-and-capabilities.md:69",
       "doc docs/reference/effects.md:148",
       "doc docs/reference/effects.md:149",
-      "doc docs/TODO.md:6901",
+      "doc docs/TODO.md:6926",
       "ref scripts/audit-example-diagnostics.mjs:125"
     ]
   },
@@ -26289,7 +26289,7 @@
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5922",
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5938",
       "doc docs/roadmap-2026-07-25-cycle2.md:86",
-      "doc docs/TODO.md:6902",
+      "doc docs/TODO.md:6927",
       "ref scripts/audit-diagnostic-code-collisions.mjs:56"
     ]
   },
@@ -26307,7 +26307,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/TODO.md:7693"
+      "doc docs/TODO.md:7718"
     ]
   },
   {
@@ -27782,7 +27782,7 @@
       "doc docs/examples/gate/GATEREGEX.md:325",
       "doc docs/examples/gate/RULES.md:23",
       "doc docs/examples/gate/SEMANTICS.md:53",
-      "doc docs/TODO.md:1566"
+      "doc docs/TODO.md:1591"
     ]
   },
   {
@@ -27944,7 +27944,7 @@
     "allSites": [
       "emit packages-galerina/galerina-core-compiler/src/gate-v3-registry.ts:29",
       "doc docs/examples/gate/CODES.md:60",
-      "doc docs/TODO.md:1567"
+      "doc docs/TODO.md:1592"
     ]
   },
   {
@@ -28822,7 +28822,7 @@
       "doc docs/examples/gate/SEMANTICS.md:274",
       "doc docs/examples/gate/SEMANTICS.md:365",
       "doc docs/examples/gate/SEMANTICS.md:398",
-      "doc docs/TODO.md:1571",
+      "doc docs/TODO.md:1596",
       "test scripts/tests/gate-result-shape.test.mjs:14"
     ]
   },
