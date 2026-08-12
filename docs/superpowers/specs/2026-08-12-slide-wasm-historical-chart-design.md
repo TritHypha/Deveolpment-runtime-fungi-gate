@@ -1,9 +1,9 @@
-# Galerina/SLIDE and Galerina/Wasm historical chart design
+# Galerina/SLIDE and Galerina/WASM historical chart design
 
 ## Goal
 
 Publish a second, offline benchmark chart containing only Galerina/SLIDE and
-Galerina/Wasm, derived from the retained JSON benchmark records without
+Galerina/WASM, derived from the retained JSON benchmark records without
 manufacturing a production SLIDE measurement.
 
 ## Evidence boundary
@@ -16,7 +16,7 @@ authority.
 
 The chart therefore reports measurement coverage rather than a speed ratio:
 
-- Galerina/Wasm is a historic measured lane.
+- Galerina/WASM is a historic measured lane.
 - Galerina/SLIDE is shown as production-unmeasured, with its one reference-only
   observation disclosed separately.
 - No winner, place, percentage improvement, or cross-unit comparison is

@@ -1,8 +1,8 @@
-# Galerina/SLIDE and Galerina/Wasm Historical Chart Implementation Plan
+# Galerina/SLIDE and Galerina/WASM Historical Chart Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build one provenance-bound historical HTML chart containing only Galerina/SLIDE and Galerina/Wasm without claiming a comparison the JSON evidence cannot support.
+**Goal:** Build one provenance-bound historical HTML chart containing only Galerina/SLIDE and Galerina/WASM without claiming a comparison the JSON evidence cannot support.
 
 **Architecture:** A small pure model/renderer reads admitted benchmark arrays and metadata supplied by a publication entry point. The model counts exact lane observations and refuses lane promotion; the renderer publishes a two-row evidence chart with no speed ratio when there is no shared production workload.
 
