@@ -2,14 +2,14 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: Galerina pins the remediated SLIDE implementation
-`ac8a041`, its **91-file** tool manifest at `e0e5dd5d...202e48`, and a closed
-contract catalog of **95 files in two partitions**. Complete SLIDE passes
-**986/986 tests across 97 suites**; forbidden-state audit is zero across all 91
-executable files, path hygiene covers **767 targets**, and sealed scan
-`7263c63e` is retained only as older evidence because it predates the typed
-Verdict-constant change. Fresh security closure is therefore `UNKNOWN`, while
-contract consistency remains non-authorizing at K3 `0`.
+Current checkpoint: the twenty-second conversion slice uses local SLIDE
+`42b94af`. It adds basic-block-local reuse of immutable Boolean and integer
+constants without raising the fixed instruction ceiling or widening a registry;
+the affected pure-scalar, external-record, and transitive-work neighborhood is
+**27/27**. The last complete SLIDE evidence remains the earlier `ac8a041`
+checkpoint (**986/986 across 97 suites**, 91-file tool manifest, 95-file closed
+contract catalog). Complete current-SLIDE and fresh security closure therefore
+remain `UNKNOWN`; contract consistency remains non-authorizing at K3 `0`.
 
 Both Galerina source manifests are now bound to the exact current portable-VEO
 policy and verifier context, and both committed physical `.slide` publications
@@ -29,6 +29,27 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-second physical conversion slice 2026-08-12: exported `resolveHost` now
+has exact package-owned pure `resolveHostFungi` in a dedicated one-record Fungi
+asset. The physical adapter maps TypeScript absence to `"<undeclared>"`; the
+three declared names preserve every exact Boolean and custody String, while all
+other Strings return the no-capability record. These are capability claims, not
+live platform attestation. Declared, absent, unknown, prototype-shaped,
+whitespace, case, Unicode and embedded-NUL differential vectors pass **1/1**.
+The first physical RED exposed repeated literal lowering over the fixed
+32-instruction ceiling. SLIDE `42b94af` now reuses immutable Boolean and integer
+constants only inside their owning basic block; it raises no limit and widens no
+registry, with the affected neighborhood **27/27**. Independent SLIDE publishes
+and re-admits one physical `.slide`, then verifies thirteen typed VOK record
+receipts (**1/1**, zero skips). Wrong type/arity, invalid Unicode, inadequate
+fuel and source, receipt, envelope or artifact mutation refuse. Strict Fungi
+checking is clean, compiler is **6,376/6,376**, Golden Pack is **11/11**, and
+the canonical owner passes **100/100 packages and 9,596 tests in 274.9s**.
+Retirement records **1,442** executable-family paths and **128** source Fungi
+assets. TypeScript, the host registry and all consumers remain active;
+repository-wide closure remains **UNKNOWN** because crash-linked full tooling,
+normal phase-close and monolithic memory evaluation remain excluded.
 
 Twenty-first physical conversion slice 2026-08-12: exported `dischargeTrust`
 now has exact package-owned pure `dischargeTrustFungi` in the governed
@@ -2939,6 +2960,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,595 tests** in 277.2 seconds. The normal custody close remains fail-closed:
+9,596 tests** in 274.9 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.

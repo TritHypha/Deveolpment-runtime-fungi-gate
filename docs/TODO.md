@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-second physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `resolveHost` as package-owned pure
+  `resolveHostFungi(name: String) -> HostResidencyCapabilityFungi` in a
+  dedicated one-record Fungi asset.
+- [x] Preserve the three exact declared host profiles and every camelCase
+  record field. Map TypeScript absence through the explicit `"<undeclared>"`
+  adapter String; make every absent, unknown, malformed, or hostile name return
+  the no-capability record. The differential proof passes **1/1**.
+- [x] Fix the physical SLIDE blocker without raising a limit or widening a
+  registry: repeated immutable Boolean and integer constants are reused only
+  within their owning basic block. The affected SLIDE neighborhood passes
+  **27/27** at `42b94af`.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  thirteen typed VOK record receipts (**1/1**, zero skips). Wrong type/arity,
+  invalid Unicode, inadequate fuel, source, receipt, envelope, and artifact
+  mutation all refuse under pinned registry and record-descriptor identities.
+- [x] Pass strict Fungi checking with zero errors/warnings, compiler
+  **6,376/6,376**, Golden Pack **11/11**, and the canonical owner **100/100
+  packages and 9,596 tests in 274.9s**. Retirement records **1,442**
+  executable-family paths and **128** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Keep TypeScript, the host registry, and every consumer active; grant no
+  consumer-switch, platform-attestation, production, release, or retirement
+  authority.
+
 ### Twenty-first physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `dischargeTrust` as package-owned pure
@@ -575,8 +601,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the latest complete package lane passes **100/100 packages and 9,595 tests**
-  in 277.2 seconds. These are verification evidence, not release authority.
+  the latest complete package lane passes **100/100 packages and 9,596 tests**
+  in 274.9 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
