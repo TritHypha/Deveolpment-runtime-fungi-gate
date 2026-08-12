@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 34 |
+| Files | 35 |
 | Internal edges | 54 |
 | External dependencies | 3 |
 | ├─ Node core | 1 |
@@ -43,6 +43,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 ## Loaded Assets
 - `src/self-hosted/fuse-admission.fungi`
 - `src/self-hosted/kernel.fungi`
+- `src/self-hosted/literal-verification-success.fungi`
 - `src/self-hosted/package-admission.fungi`
 - `src/self-hosted/registry-activation-terminal.fungi`
 - `src/self-hosted/registry-durability-admission.fungi`

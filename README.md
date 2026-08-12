@@ -321,14 +321,14 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 <sub>generated from the closed assurance dependency DAG + component-health + the RD-0528/RD-0361 authority ledgers; exact producer identities are in focused provenance sidecars · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
 <!-- SUBWAY:END -->
 
-**v1.0.0-beta.2 · full suite 100/100 packages · 9,610 tests · 0 failures.**
+**v1.0.0-beta.2 · full suite 100/100 packages · 9,612 tests · 0 failures.**
 
 | Layer | Status | Note |
 |---|---|---|
 | **Compiler pipeline** (lexer → parser → checkers → governance → GIR) | ✅ complete | full pipeline, fail-closed diagnostics |
 | **Type / effect checkers** | ✅ complete | full TYPE/EFFECT diagnostic charter, twin-parity verified |
 | **WAT / WASM backend** | ✅ complete | lowering audit `VIOLATIONS: 0`; Decimal (bignum) + higher-order closures are deliberate fail-closed feature-flags |
-| **Tests** | ✅ green | 100/100 · 9,610 · 0 fail |
+| **Tests** | ✅ green | 100/100 · 9,612 · 0 fail |
 | **Stage-B self-hosting** (the compiler rewritten in `.fungi`) | ✅ authoritative specifications | **all 7 stages proven byte-identical** to the reference compiler as signed, admission-gated WASM (R3) and recorded as the deciders of record; TypeScript remains the executing differential/bootstrap layer |
 | **Execution cutover** (governed decision surfaces → signed WASM/SLIDE) | ◑ bounded authority | **29 authoritative** `.fungi` specifications · 7 differential candidates · bounded independent SLIDE execution at 866/866 · mandatory `restoreVerdict` consumer switch 4/4 (reference-only) · TypeScript retained until production composition and terminal retirement gates close |
 | **Optional Wasm compatibility oracle** | ◑ retained for beta | development-only independent evidence; no production-sidecar or memory authority. A narrowly admitted `.fungi` compatibility engine is planned after beta and executable SLIDE, with the current path retained until its full replacement gate passes |

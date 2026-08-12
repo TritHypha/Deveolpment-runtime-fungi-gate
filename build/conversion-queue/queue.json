@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "c2bb392004eed8b0563d46832b85e03b69b94dc9b31a636a334efddfd9f6399d",
+  "sourceDigest": "34d2260815f53aabd7872562ecf8aa2958da75186a070de755cd75d754d648b0",
   "decisionsDigest": "f5d3568952a2ce4cffa4e742d68815f4d096ae5de2aeb694717b6ebac40b3d52",
   "counts": {
-    "total": 1450,
+    "total": 1451,
     "CANDIDATE": 0,
-    "BLOCKED": 821,
+    "BLOCKED": 822,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
@@ -9679,6 +9679,14 @@
     },
     {
       "path": "packages-galerina/galerina-framework-app-kernel/tests/kernel.test.mjs",
+      "package": "galerina-framework-app-kernel",
+      "tranche": "T1-trust-root",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-framework-app-kernel/tests/literal-verification-success-fungi-conversion.test.mjs",
       "package": "galerina-framework-app-kernel",
       "tranche": "T1-trust-root",
       "classification": "BLOCKED",
