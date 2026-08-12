@@ -92,9 +92,19 @@ Crash-linked full tooling, normal phase-close, `graph-all` and monolithic
 memory evaluation remain excluded. Repository-wide closure therefore remains
 `UNKNOWN` even when every bounded owner is current.
 
+The individual owner matrix is current: Golden **11/11 checked + 11/11
+execution**, retirement **1,451 executable-family paths / 135 source Fungi**,
+queue **1,451/1,451** with **629** bootstrap floors, **822** file-level blocked
+paths, zero whole-file candidates and one scoped candidate, package graph
+**100 packages / 201 outputs**, project graph **5/5**, KB graph **4/4**, Fungi
+inventory **135**, semantic graph **3/3 with 948 test nodes**, code index
+**974**, canonical owner **100/100 packages and 9,612 tests in 284.5 seconds**,
+canonical rendered claims **7/7**, and roadmap/subway **5/5**. Percent, status
+and each owner self-test used in this slice pass.
+
 ## Slice-close receipt
 
 Skill disposition: SKILL_UPDATE 0b60eb77ed4091dc27542dcf07450cc1c89f5abc
 Threadability: PARALLEL_PURE
 Source classification: CANDIDATE
-Bounded closure: PENDING
+Bounded closure: COMPLETE

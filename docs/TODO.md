@@ -24,7 +24,7 @@ counts or open items that a newer section explicitly supersedes.
   closed-union ABI-tag rule at commit `0b60eb7`. `writing-fungi` needs no
   change because exhaustive `match` and surplus wildcard denial are already
   binding.
-- [ ] Refresh all individual bounded owners, roadmap/subway and both indexes;
+- [x] Refresh all individual bounded owners, roadmap/subway and both indexes;
   do not run crash-linked full tooling, normal phase-close, `graph-all` or the
   monolithic memory evaluator.
 - [x] Keep TypeScript and both callers active. This grants no consumer switch,

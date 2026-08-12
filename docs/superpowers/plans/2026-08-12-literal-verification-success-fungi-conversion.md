@@ -51,9 +51,9 @@ VOK.
 ## Task 4: Governed closure
 
 - [x] Register the physical test in the governed tooling manifest.
-- [ ] Update TODOs, active roadmap, subway and a dated report.
+- [x] Update TODOs, active roadmap, subway and a dated report.
 - [x] Review both public Fungi skills and record the exact disposition.
-- [ ] Run only bounded package/physical and owner checks.
+- [x] Run only bounded package/physical and owner checks.
 - [ ] Refresh primary graph and Myco at the final commit and verify the symbol
   and scoped queue are queryable.
 - [ ] Verify a clean tracked worktree and local commits; do not push.
