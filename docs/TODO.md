@@ -37,7 +37,9 @@ counts or open items that a newer section explicitly supersedes.
   graph **100 packages / 201 outputs**, project graph **5/5**, KB graph **4/4**,
   Fungi inventory **133**, semantic graph **3/3 with 940 test nodes**, code
   index **974**, canonical claims **7/7**, roadmap/subway **5/5**, and the
-  path-leak audit clean. Refresh both indexes at the final local commit.
+  path-leak audit clean. The primary graph conserves **51,014 nodes / 51,013
+  expected** and **136,201 edges / 136,200 expected**; Myco indexes **5,107
+  files / 77,818 terms** and directly returns the new `.fungi` flow.
 - [x] Keep TypeScript, `selectReportStatus`, `summarizeDiagnostics`, and every
   consumer active. This grants no consumer-switch, production, release,
   durability, or retirement authority; repository-wide closure remains

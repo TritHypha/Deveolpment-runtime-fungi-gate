@@ -74,6 +74,11 @@ Hallmark, border grant or host API.
   claims **7/7**, and roadmap/subway **5/5**.
 - Hygiene: the bounded path-leak audit is clean. Its documented unmodelled and
   binary exclusions remain exclusions, not an absence claim.
+- Indexes: the primary codebase graph conserves **51,014 nodes / 51,013
+  expected** and **136,201 edges / 136,200 expected** at the exact indexed
+  head; its query finds the new report-status proof surface. Myco indexes
+  **5,107 files / 77,818 terms** and directly returns the `.fungi` flow.
+  Neither index supplies execution or retirement authority.
 
 Full tooling, `graph-all`, normal phase-close and
 monolithic memory evaluation remain deliberately excluded because those lanes

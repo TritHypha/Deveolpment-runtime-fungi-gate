@@ -66,6 +66,10 @@ package graph **100 packages / 201 outputs**, project graph **5/5**, KB graph
 code index **974**, canonical rendered claims **7/7**, roadmap/subway **5/5**,
 and the path-leak audit clean. The semantic graph's local K3 `1` is navigation
 and assurance evidence only; it grants no production authority.
+The primary codebase graph conserves **51,014 nodes / 51,013 expected** and
+**136,201 edges / 136,200 expected** at its exact indexed head. Myco indexes
+**5,107 files / 77,818 terms** and directly locates the package-owned
+`selectReportStatus` flow. Both indexes remain navigation, not authority.
 
 Twenty-ninth physical conversion slice 2026-08-12: CPU kernels' exported
 `requiresLowBitKernel` decision now has exact package-owned pure

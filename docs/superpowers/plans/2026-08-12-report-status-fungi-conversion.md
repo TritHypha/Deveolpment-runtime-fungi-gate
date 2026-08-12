@@ -55,8 +55,8 @@ verify them independently through VOK.
 - [x] Refresh Golden, retirement, semantic, package/project/KB/Fungi/code
   graphs, canonical counts, percentage status and roadmap/subway through their
   owners.
-- [ ] Refresh the primary codebase graph and Myco index at the final commit and
+- [x] Refresh the primary codebase graph and Myco index at the final commit and
   verify the new report-status flow is queryable.
 - [x] Review both public Fungi skills, commit reusable exact-record, reporting,
   text-budget and slice-close guidance, and verify each skill independently.
-- [ ] Verify the final local commit and a clean tracked worktree; do not push.
+- [x] Verify the final local commit and a clean tracked worktree; do not push.
