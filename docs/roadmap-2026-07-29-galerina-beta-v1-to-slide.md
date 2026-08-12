@@ -256,6 +256,19 @@ tests in 274.8s**. Retirement records **1,434** executable-family paths,
 **489** source `.ts` paths and **123** source `.fungi` assets. TypeScript and
 every consumer remain active; repository-wide closure remains **UNKNOWN**.
 
+Fifteenth physical conversion slice 2026-08-12: exported
+`tensorElementTypesCompatible` now has exact package-owned
+`tensorElementTypesCompatibleFungi`. Typed parity and the real
+`FUNGI-TYPE-030` caller pass **3/3**. Independent SLIDE `053cc75` uses the
+frozen immutable-text-trim registry to publish and independently re-admit one
+physical `.slide` with typed Bool receipts (**1/1**, zero skips); wrong
+arguments, invalid UTF-16, work exhaustion and source/artifact mutations
+refuse. The focused neighborhood is **44/44**, compiler **6,366/6,366**, and
+the canonical owner **100/100 packages and 9,586 tests in 279.6s**. Retirement
+records **1,435** executable-family paths and **124** source Fungi assets.
+TypeScript and every consumer remain active; repository-wide closure remains
+**UNKNOWN**.
+
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
@@ -2831,6 +2844,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,583 tests** in 274.8 seconds. The normal custody close remains fail-closed:
+9,586 tests** in 279.6 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
