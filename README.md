@@ -293,11 +293,16 @@ Benchmark publication follows three rules:
 
 Current views:
 
-- [SLIDE-zero cross-runtime chart](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-latest.html) — Galerina/SLIDE is zero; faster results are positive and slower results negative.
-- [SLIDE-zero HTML table](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-table-latest.html) — the same admitted facts in table form.
-- [Historic Galerina/WASM reference](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html) — one row per archived WASM workload, with the old WASM value at zero. SLIDE remains “not measured” until a like-for-like production lane exists.
+- [Production SLIDE-zero chart](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-latest.html) — deliberately reports “not measured” because no admitted production SLIDE lane exists.
+- [Production SLIDE-zero HTML table](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-table-latest.html) — the same fail-closed production status in table form.
+- [Verified SLIDE reference and historic WASM page](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html) — the upper chart and table put the non-authorizing Galerina/SLIDE reference at zero and show faster peers as positive and slower peers as negative. The lower chart retains the archived Galerina/WASM results with old WASM at zero for each workload.
 
-The benchmark truth audit excludes diagnostic interpreters from production rankings and refuses ratios for mismatched work or units.
+On the exact one-million-element reference workload, Rust AVX2 wins and the
+Galerina/SLIDE reference is fourth of six, ahead of Go and Python. This is
+bounded reference evidence only: it does not release authority or fill the
+unmeasured production SLIDE lane. The benchmark truth audit excludes diagnostic
+interpreters from production rankings and refuses ratios for mismatched work or
+units.
 
 ## Graphs and developer tools
 

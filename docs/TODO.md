@@ -8284,3 +8284,25 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
   mappings, detector liveness and complete executable-family coverage.
 - [ ] Chapter 4: add transitive tool indexing, execution deduplication, legacy
   replacement lifecycle and the reviewed authority transition.
+
+## Benchmark publication checkpoint - 2026-08-12
+
+- [x] Regenerate all tracked benchmark-native Rust controls and run the full
+  non-quick benchmark suite with Node, Python, Rust and the available Go peer.
+- [x] Publish the date-stamped raw result, Markdown report, cross-runtime chart,
+  HTML table and exact toolchain/source provenance.
+- [x] Publish a separate bounded comparison with the verified Galerina/SLIDE
+  reference at zero, faster peers positive and slower peers negative; retain
+  the archived Galerina/WASM values in the same page as a separate historic
+  WASM-zero panel.
+- [x] Record the winner and place without promoting reference evidence: Rust
+  AVX2 wins the exact one-million-element workload and the non-authorizing
+  Galerina/SLIDE reference places fourth of six.
+- [x] Pass 71/71 focused benchmark tests, the six-workload checksum audit, all
+  18 comparable unit checks and the freshness audit.
+- [ ] Add a real admitted production SLIDE lane. Until then the production
+  chart and table must remain `DEFERRED_NO_SLIDE_LANE`, with K3 authority `0`.
+- [ ] Repeat the historic matrix-multiply/Python outlier in a matched pinned
+  environment before assigning a cause or making a performance claim.
+- [ ] Expand Go beyond the single verified-native-operation control and add a
+  C++ lane only when an exact recorded compiler is available.
