@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-first physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `dischargeTrust` as package-owned pure
+  `dischargeTrustFungi(current: Verdict, verification: Verdict) -> Verdict`.
+  The typed verification input maps TypeScript `false`, `undefined`, and
+  `true` to Deny, Unknown, and Allow without an absence sentinel.
+- [x] Preserve sticky refutation: current Deny always returns Deny; current
+  Unknown or Allow returns the exact typed verification verdict. The complete
+  3 x 3 differential table passes **1/1**.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  nine typed VOK receipts (**1/1**, zero skips). Wrong type/arity, inadequate
+  fuel, source, receipt, envelope, and artifact mutation all refuse. No
+  registry-set authority was required or widened.
+- [x] Pass strict Fungi checking with zero errors/warnings, compiler
+  **6,375/6,375**, Golden Pack **11/11**, and the canonical owner **100/100
+  packages and 9,595 tests in 277.2s**. Retirement records **1,441**
+  executable-family paths and **127** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Keep TypeScript and every consumer active; grant no consumer-switch,
+  production, release, or retirement authority.
+
 ### Twentieth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `spillRetype` as package-owned pure
@@ -554,8 +575,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the latest complete package lane passes **100/100 packages and 9,594 tests**
-  in 290.2 seconds. These are verification evidence, not release authority.
+  the latest complete package lane passes **100/100 packages and 9,595 tests**
+  in 277.2 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 

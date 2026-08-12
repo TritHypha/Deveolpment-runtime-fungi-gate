@@ -30,6 +30,23 @@ one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
 
+Twenty-first physical conversion slice 2026-08-12: exported `dischargeTrust`
+now has exact package-owned pure `dischargeTrustFungi` in the governed
+hardening trust module. The physical boundary replaces TypeScript's optional
+Boolean with typed K3 verification evidence: false maps to Deny, absence maps
+to Unknown, and true maps to Allow. Current Deny is sticky; otherwise the
+verification verdict is returned. The complete 3 x 3 differential table passes
+**1/1**. Independent SLIDE publishes and re-admits one physical `.slide`, then
+verifies all nine typed VOK Verdict receipts (**1/1**, zero skips). Wrong
+type/arity, inadequate fuel and source, receipt, envelope or artifact mutation
+refuse. The flow requires no registry-set authority. Strict Fungi checking is
+clean, compiler is **6,375/6,375**, Golden Pack is **11/11**, and the canonical
+owner passes **100/100 packages and 9,595 tests in 277.2s**. Retirement records
+**1,441** executable-family paths and **127** source Fungi assets. TypeScript
+and all consumers remain active; repository-wide closure remains **UNKNOWN**
+because crash-linked full tooling, normal phase-close and monolithic memory
+evaluation remain excluded.
+
 Twentieth physical conversion slice 2026-08-12: exported `spillRetype` now has
 the exact package-owned pure `spillRetypeFungi` decision in the governed
 hardening trust module. It returns a closed record whose `retypedTo` field is
@@ -2922,6 +2939,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,594 tests** in 290.2 seconds. The normal custody close remains fail-closed:
+9,595 tests** in 277.2 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
