@@ -26,7 +26,7 @@ counts or open items that a newer section explicitly supersedes.
   **6,363/6,363**, and canonical owner **100/100 packages and 9,583 tests in
   274.8s**. Retirement records **1,434** executable-family paths, **489**
   source `.ts` paths and **123** source `.fungi` assets.
-- [ ] Publish the bounded fourteenth-slice graph, semantic, component-health,
+- [x] Publish the bounded fourteenth-slice graph, semantic, component-health,
   status, roadmap, canonical-count, Golden, code-index, pinned-SLIDE and path
   owners. Keep full tooling, normal phase-close, graph-all after roadmap
   publication and whole-memory evaluation excluded.
