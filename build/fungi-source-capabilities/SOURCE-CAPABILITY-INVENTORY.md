@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 123
-- Flows: 836
-- Bytes: 1121754
-- Retirement graph: `sha256:fc71bbc8269cf684d52571f90551dda1d7b69c8ab7037dbdc705193be223682e`
+- Files: 124
+- Flows: 837
+- Bytes: 1122174
+- Retirement graph: `sha256:93d040aed55f0ec2f45a40b86b0448ccdc167c862f8cc83e45f1c493fd2e3de8`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18882 |
-| `callExpr` | 7242 |
-| `binaryExpr` | 6034 |
+| `identifier` | 18884 |
+| `callExpr` | 7244 |
+| `binaryExpr` | 6035 |
 | `numberLiteral` | 5712 |
-| `block` | 5017 |
+| `block` | 5019 |
 | `stringLiteral` | 4820 |
 | `memberExpr` | 4682 |
-| `returnStmt` | 2992 |
-| `paramDecl` | 2788 |
-| `typeRef` | 2464 |
-| `ifStmt` | 2264 |
+| `returnStmt` | 2994 |
+| `paramDecl` | 2790 |
+| `typeRef` | 2467 |
+| `ifStmt` | 2265 |
 | `assignStmt` | 2120 |
 | `letDecl` | 1857 |
-| `boolLiteral` | 1578 |
+| `boolLiteral` | 1580 |
 | `matchArm` | 1219 |
-| `contractDecl` | 829 |
-| `intentDecl` | 829 |
-| `pureFlowDecl` | 824 |
+| `contractDecl` | 830 |
+| `intentDecl` | 830 |
+| `pureFlowDecl` | 825 |
 | `mutDecl` | 810 |
 | `matchExpr` | 373 |
 | `whileStmt` | 340 |
 | `checkArm` | 312 |
 | `unaryExpr` | 251 |
 | `recordDecl` | 206 |
-| `program` | 123 |
+| `program` | 124 |
 | `listLiteral` | 115 |
 | `checkExpr` | 104 |
 | `trapDecl` | 50 |
@@ -59,8 +59,8 @@ admission, execution parity, retirement credit or production authority.
 | Type | Count |
 |---|---:|
 | `Int` | 525 |
-| `String` | 435 |
-| `Bool` | 387 |
+| `String` | 437 |
+| `Bool` | 388 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -326,8 +326,8 @@ admission, execution parity, retirement credit or production authority.
 | `isLetter` | 6 |
 | `last` | 6 |
 | `startsWith` | 6 |
+| `trim` | 5 |
 | `slice` | 4 |
-| `trim` | 3 |
 | `charCount` | 2 |
 | `decode` | 2 |
 | `endsWith` | 2 |
@@ -345,7 +345,7 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1845 |
+| `==` | 1846 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 747 |
