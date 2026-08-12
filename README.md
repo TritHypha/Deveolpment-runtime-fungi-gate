@@ -1,433 +1,281 @@
 # Galerina
 
-**A governance-first programming language and runtime for high-assurance software.**
+**A governance-first application language for high-assurance software.**
 
-Galerina is a **Governed Application Language for High-Assurance Systems** — part of a wider **zero-trust ecosystem** for projects that must handle PII or other sensitive information in high-compliance environments. It is built for organisations where software failure is not acceptable — financial platforms, healthcare systems, government services, and regulated enterprise: every execution is **declared, verified, and audited** by design, not by convention. It is not a systems language, not a scripting language, not general-purpose; the classification is narrow by design.
+Galerina is designed for application logic where authority, effects, data handling and failure behaviour must be explicit before execution. Developers write `.fungi`; the compiler checks types, effects, value state and governance, then emits a governed intermediate representation (GIR) and auditable evidence.
 
-> **New here?** → [**SETUP.md**](SETUP.md) — install · run your first benchmark · Hello World with full governance comments
+The project is in beta. The compiler and governance model are substantial and tested. The current CLI still uses WAT/WASM as its compatibility and bootstrap execution path. Independent SLIDE can execute bounded admitted Fungi families through physical `.slide`, independent re-admission and VOK, but that evidence does **not** establish a general production backend, platform durability or release authority.
 
-| Word | What it means |
+> New here? Start with [SETUP.md](SETUP.md), then use the strict [Executable Fungi Golden Pack](docs/examples/golden/README.md) as the smallest current-language lookup surface.
+
+## At a glance
+
+| Area | Current position |
 |---|---|
-| **Governed** | Governance is not a library bolted on top — it is the compiler's primary output. Every flow has a `contract {}` block verified at build time. Effects, capabilities, boundaries, and invariants are declared in source and proven before execution begins. There is no "ungoverned mode". |
-| **Application** | Galerina writes application logic — API routes, payment flows, medical record handlers, governed data pipelines, authentication decisions. Not device drivers, kernel modules, or memory allocators. |
-| **Language** | `.fungi` is a proper programming language: defined syntax, type system, effect system, value-state checker, and a verified compiler pipeline to GIR → WASM. Not a DSL or policy format. |
-| **High-Assurance** | Failure modes are exhaustively declared and fail-closed. The audit trail is cryptographic. Supply-chain provenance is enforced. Security properties are compile-time proofs, not runtime detections. |
+| Language | `.fungi` with typed flows, contracts, explicit effects, K3 verdicts, value-state tracking, Hallmarks and exhaustive decisions |
+| Compiler | Lexer → parser → resolution → type/effect/value-state checks → governance verification → canonical GIR |
+| Compiler authority | All seven canonical `.fungi` compiler stages are authoritative specifications; TypeScript remains the executing differential/bootstrap layer |
+| Current CLI target | WAT/WASM compatibility artifacts and governed execution |
+| Forward execution target | Bounded checked Fungi → GIR → physical `.slide` → independent re-admission → affine VOK |
+| Production authority | Not yet released; external authentication, platform evidence, durability, broader language families and retirement gates remain open |
+| Security posture | Deny by default, fail closed, verify rather than trust; no evidence Boolean is accepted without its underlying proof |
 
-## What can you do with Galerina
+## What Galerina is for
 
-- **Write governed application logic** — API routes, payment flows, medical-record handlers, authentication decisions, governed data pipelines — with intent, effects, and invariants declared in a `contract {}` block the compiler proves at build time.
-- **Author fail-closed authorisation** on the K3 verdict lattice (`ALLOW / INDETERMINATE / DENY`) — an unknown input can only *lower* a verdict, never manufacture an ALLOW.
-- **Handle PII / PHI safely** — protected types and type-level `redact()`, enforced before anything reaches an audit sink.
-- **Mint hallmark types of your own** — developer-defined nominal types with a **mandatory assay gate**: nothing becomes an `Email`, `AccountId`, or `Iban` without passing its assay first, so stringly-typed domain bugs cannot compile.
-- **Defend every border** — external input arrives `unsafe` and cannot be used until it is gated (`Border.validate()`); plugins, packages, and apps cross **deny-by-default admission borders** — nothing is trusted by import.
-- **Ship signed WASM** — `galerina build` produces one signed `.wasm` + `.lmanifest`; a deny-by-default kernel admits it (hash-pin · signature · capability mask) before a single instruction runs.
-- **Produce compliance evidence as a by-product** — cryptographic receipts, append-only audit events, the ProofGraph; PCI DSS auditing built in.
-- **Govern compute you don't trust** — AI inference, native bridges, and the photonic-emulated numeric lane participate at the border, degrade-only, never inside the trusted base *(today: one attested reference bridge + governed simulators)*.
-- *Deliberately not for:* kernel drivers, quick scripts, or theorem proving — see *Honest scope* below.
+Galerina targets governed application logic rather than low-level systems programming:
 
-## What is under the hood
+- authorisation and admission decisions;
+- API and service flows;
+- payment, healthcare and regulated-data workflows;
+- governed data pipelines;
+- package, plugin and application borders;
+- auditable use of secrets, native adapters and untrusted compute;
+- deterministic security decisions that must remain deny-by-default.
 
-- **A verified compiler pipeline** — lexer → parser → symbol resolver → type checker → value-state → effect checker → governance verifier → GIR → WASM (diagram below).
-- **K3 ternary verdict algebra** — three-valued authorization with No-Coercion `min` composition; boolean gates cannot express "unknown", Galerina's can.
-- **A deny-by-default effect + capability system** — `database.write`, `network.outbound`, … refused unless declared in the contract and granted at admission.
-- **Value-state and taint tracking** — `UNSAFE → VALIDATED → PROTECTED → REDACTED` transitions checked at compile time; secrets and PII cannot silently cross a boundary.
-- **Cryptographic outputs** — the ProofGraph, Epilogue Receipts, and the signed `.lmanifest` (Ed25519; the certified profile mandates hybrid +ML-DSA-65).
-- **A signed admission border** — packages and apps enter only through hash-pin + signature + revocation + closed capability masks.
-- **The governed runtime** — the K3 algebra, bridge attestation, and DSS/V_DPM decision model. The decision core is differential-proven through the optional Wasmtime oracle; current WAT/Wasm remains the compatibility/bootstrap path while independent SLIDE/VOK production authority is built.
-- **Zero middleware** — governance is compiled *into* the binary, not stacked around it. What is middleware elsewhere (authorisation, audit, redaction, rate-limits) is a compile-time property of the flow itself — there is no auth wrapper, logging layer, or policy sidecar in the request path to misconfigure or bypass. The target-neutral transport boundary admits only typed, bounded encrypted-byte movement and never treats an external sidecar as authority.
-- **Design lineage** — Ada/SPARK's contracts-for-regulated-domains, Rust's no-silent-failure, Erlang's structured fault handling — retargeted at modern API/web workloads, shipping to WASM.
+It is deliberately not a kernel language, device-driver language, quick scripting language or theorem prover.
 
-## How your data is protected
+## What the language makes explicit
 
-- **Memory-safe by construction.** There are no raw pointers and no pointer arithmetic in `.fungi`; values are immutable by default, and production code executes inside the WASM sandbox — bounds-checked linear memory, nothing reachable outside it. The memory boundary itself is actively governed: the alignment, pool-exhaustion, segmentation, and corruption-sentinel decision guards are `.fungi` programs, five of them now running **authoritative as signed WASM** — and uncontrolled spill to host memory is a deny-only effect (`memory.spill`), refused at compile time.
-- **The OS is assumed already compromised.** Galerina extends no trust to the machine it runs on. Native OS capabilities are denied by default, the host is treated as a dumb byte-mover, and every authorisation folds through the fail-closed K3 gate. The transport design (TLSTP) completes the posture: raw encrypted packets enter WASM linear memory as unparsed bytes and **decryption happens inside the sandbox — the kernel never sees plaintext**. *(The K3 gate and denied-by-default capabilities are shipped; full in-sandbox decryption is the target architecture, embedder in progress.)*
-- **Secrets are sealed, never compiled in.** `env.spore` replaces the plaintext `.env` file with sealed, encrypted-at-rest credentials (the `.spore` capsule's KEM-DEM engine, opt-in package). Secrets are injected at runtime — never compiled into the binary — the compiler's secret-taint checks stop a credential from reaching a log, response, or audit sink, and a route that declares `secrets.require` is refused fail-closed **before any side effect runs** when its secret is unavailable.
-- The other half of the story — PII/PHI typing with enforced `redact()`, and the cryptographic audit trail every flow emits — is under *What can you do* above and *Native properties* below.
+### Authority and effects
 
-## Who it is for
+Flows declare intent and required effects. An effect such as `database.write`, `network.outbound`, `secret.read` or `vault.write` does not exist merely because host code can perform it: it must be declared, checked and admitted at the relevant border.
 
-| Sector | Why Galerina |
-|---|---|
-| **Financial platforms** | Every payment flow declares and enforces its effects. Audit trail by default. PCI DSS governance built in (`galerina-devtools-pci`). |
-| **Healthcare systems** | PII/PHI is typed and tracked. Redaction is enforced at the type level before data reaches any audit sink. |
-| **Government / defence** | Designed for air-gapped deployment, no cloud dependency. Governed BitNet CPU inference in early integration. |
-| **Enterprise regulated** | OWASP attack vectors blocked at the compiler. Supply-chain provenance via signed manifests (Ed25519 default; opt-in hybrid Ed25519+ML-DSA-65 certified profile). |
+### K3 verdicts
 
----
+Security decisions use a three-state lattice rather than coercing uncertainty into a Boolean:
 
-## The Zero-Trust thesis
+- `ALLOW` (`+1`)
+- `INDETERMINATE` (`0`)
+- `DENY` (`-1`)
 
-Galerina optimises for **compile-time-verified governance and fail-closed Zero-Trust containment**: an ecosystem that trusts **no one by default — not the developer, not the network, not the host OS.** Every boundary is treated as already hostile, and the boundary's contract is verified at compile time (a checked property, not an absolute-security guarantee).
+Composition is degrade-only. Missing or unknown evidence cannot manufacture authority.
 
-| Boundary | Galerina's mandate | Status |
-|---|---|---|
-| **Compiler** | Verifies the pre-resolved policy + execution DAG for deterministic, reproducible correctness — the contract is proven at build time. | ✅ shipped |
-| **I/O — the OS kernel** | The kernel is assumed hostile. Native capabilities **denied by default**; the host is a dumb byte-mover; authorisation is the fail-closed **`vAnd` Kleene-K3 gate**. | ◑ K3 gate shipped · full kernel bypass = target architecture |
-| **Packages** | A **signed admission border** with fail-closed kernel verification: cryptographic manifests, content-addressed hash-pinning, transitive capability masks. | ✅ shipped + decision surfaces execute as signed WASM |
-| **Memory** | An actively-governed, hostile physical boundary — network memory is governed directly (TLSTP), never handed to shared host state. | ◑ governed surfaces twinned · residency hardening merged · runtime isolation = target architecture |
-| **TLSTP — zero-middleware** | Keeps plaintext outside ambient middleware: encrypted input remains untrusted until a typed, bounded admitted execution boundary validates and processes it. | ◑ all 6 border decision surfaces twinned · admission fold executes on the current compatibility path · target-neutral isolation and in-boundary decryption remain SLIDE/VOK work |
+### Typed failure and exhaustive control flow
 
-> **Honest line — shipped vs. target architecture.** The compiler, K3 authorisation gate, signed package admission and S1 cert/channel gate are shipped and tested. The live execution ledger records **29 authoritative** governed `.fungi` specifications and **7 differential** candidates. Independent SLIDE is executable for bounded admitted families, and the real `restoreVerdict` source now has a receipt-bound source-free package candidate; its Galerina consumer has not switched. TypeScript remains the executing/bootstrap layer until exact consumer switches and retirement gates close. The DSS decision core has a 386-point interpreter/Node-Wasm/Wasmtime differential, but the Wasmtime lane is a development oracle, not a production TCB. The former production DSS sidecar is retired. General target-neutral isolation, typed traps and production admission remain open SLIDE/VOK work.
+The governed authoring model has no `null`, NaN, `throw`, `try/catch` or `else if`. Failures use types such as `Result<T, E>` and `Option<T>`. Decisions use:
 
----
+- `if` for a genuine `Bool`;
+- `check` for a typed K3 `Verdict`;
+- exhaustive `match` for other branching, with an explicit terminal `_ =>` arm where the domain is open;
+- `while` for bounded Boolean-guarded iteration in the current authoring profile.
 
-## What makes it different
+There is no implicit success path. A missing case, effect, permission or piece of evidence must have a closed exit.
 
-| Traditional | Galerina |
-|---|---|
-| Errors as exceptions | Explicit `Result<T, E>` — no silent failure |
-| Mutation is silent | `let` = immutable · `mut` = explicit · `readonly` = view |
-| Side-effects hidden | Effects declared: `contract { effects { database.write } }` |
-| Boundary data silently typed | `unsafe let raw` — untrusted until gated |
-| AI guesses at structure | Machine-readable ProofGraph + intent manifests |
-| Security checked at runtime | Compile-time: taint, secrets, PCI DSS, governance proofs |
-| Dependencies trusted by import | **Signed admission border** — hash-pin · signature · revocation · capability mask before a package runs |
-| Fixed hardware | Declared targets: CPU · WASM · GPU · JS · native · AI-accelerator · Photonic — WASM is the production path; the rest are governed contract adapters (photonic = simulation, native execution planned) |
+### Values, Hallmarks and borders
 
-## Native properties
+External values enter as untrusted. Value-state qualifiers track their movement through validation, protection and redaction. Developer-defined Hallmarks add nominal meaning and a mandatory assay gate, preventing an arbitrary string from silently becoming an `Email`, `AccountId` or other governed domain value.
 
-Properties of the **language itself** — not libraries, not middleware, not configuration. Enforced by the compiler and runtime for every flow, not opted into.
+Packages, plugins, applications, native adapters and vault access cross explicit borders. Import is not trust; possession of a host capability is not language authority.
 
-| Property | What it means |
-|---|---|
-| **Fail-Closed by Default** | Every unhandled case **denies** — `match` requires an exhaustive arm or explicit wildcard (`FUNGI-MATCH-001`), unhandled `Result` propagates as an error, every unhandled fault trap fires `halt`. There is no path to silent pass. |
-| **Declared Authority** | Effects, capabilities, and boundaries are declared in `contract {}` and **verified at compile time**. A flow without authority cannot acquire it. |
-| **Zero-Trust Boundaries** | Every boundary is hostile at compile time — plugin inputs require `Border.validate()`, untrusted data is `unsafe let raw` until gated, and the K3 lattice (`ALLOW / INDETERMINATE / DENY`) can only be lowered by an unknown input, never raised. |
-| **Structured Fault Handling** | No exceptions. Faults surface as explicit `Result<T, E>` with `?` propagation, or as audited `fault` channel entries. The fault channel is append-only and cryptographically sealed. |
-| **Deterministic Execution** | Same source → same verified contract → same cryptographic receipt. The pre-resolved policy DAG is deterministic by construction; no runtime configuration changes what a flow may do. |
-| **Supply-Chain Provenance** | Dependencies enter only through the **signed admission border** — hash-pin · Ed25519 signature · revocation check · closed capability mask — before a single instruction runs. |
-| **Post-Quantum Ready** | Hybrid **Ed25519 + ML-DSA-65** (NIST FIPS 204) signing shipped on attestation, proof-graph, and bridge surfaces. Certified mode **mandates** both halves — no post-quantum downgrade path. |
-| **Data Security** | PII/PHI types tracked end-to-end; `redact()` enforced at the type level **before** data reaches any audit sink. Taint, secret isolation, and OWASP guards are compile-time checks. |
-| **Reproducibility** | The signed `.lmanifest` is the machine-readable proof that a given WASM binary came from a given source under a given policy. The ProofGraph captures the full decision DAG and authority chain. |
-| **Auditing** | Every governed execution emits an **Epilogue Receipt** (sha256_seal today; zk_snark planned) and appends a structured AuditEvent (CBOR Tag 410) to an append-only log. |
+### Valid flow forms
 
----
-
-## Honest scope — what it can and cannot do
-
-**1) The governance `contract {}` block** *(shipped, production-grade)* — declares a flow's intent, effects, capability boundaries, and invariants; the compiler proves them at build time. Strongest for: fail-closed authorisation (the K3 gate — an unknown input can only *lower* a verdict, never manufacture an ALLOW) · effect & capability control (everything denied by default) · intelligent API routing (`+1` allow / `0` step-up / `-1` deny) · PII/PHI safety · supply-chain provenance · regulated audit.
-
-**2) Governed tolerant compute** *(real, but emulated today)* — Galerina can govern a deny-by-default, untrusted **compute-only numeric lane** (a CPU photonic **emulator** today, cheap-verified, degrade-only) while every decision stays bit-exact on the digital core. Fits the tolerant-MAC half of: weather-model surrogates · covariance MVM in finance · tolerant render/physics · similarity/embedding inner-products · MD non-bonded forces · low-precision GEMM. **Honest fence:** the optics is a precision-limited analog accelerator (~8-bit), latency ≠ work (~1.9× emulated, never "instant/free/O(1)"), and the analog lane can only **False-DENY, never False-ALLOW**.
-
-**3) The hard boundary** *(by design)* — bit-exact maths never runs on the analog lane (number theory, symbolic algebra, DFT cores stay digital) · crypto on a noisy/photonic lane is denied (`FUNGI-SUBSTRATE-001`) no matter how much voting is stacked · AI may *propose* but can never *lift* a security verdict · "instant optical compute" is refuted (light transit is N-independent in latency; the work is still Θ(N²)). **Roadmap, not "cannot":** real photonic hardware, the SLIDE bootstrap fixpoint, and target-neutral SLIDE/VOK isolation.
-
----
-
-## Code examples
-
-> **Three-block structure:** `flow name(params) -> ReturnType` (signature) · `contract { ... }` (compile-time governance, *outside* the body) · optional `policy { ... }` (runtime monotonic overlay) · `{ body }`.
+The current v0.1 flow qualifiers are:
 
 ```galerina
-// ── Governed secure flow: PII handling ───────────────────────────────────────
-;; Creates a patient record with protected PII — email is validated, stored, then REDACTED
-;; before it can reach the audit log; raw PII never crosses the audit boundary.
-;; V_DPM capability required: database.write, audit.write
-// @cause  [HTTP route POST /patients] -> clinician submits the new-patient form.
-// @effect [Patients DB + audit log] -> new patient row; PII-redacted audit event appended.
-secure flow createPatient(readonly request: CreatePatientRequest) -> CreatePatientResult
-contract {
-  types   { type CreatePatientResult = Result<Response, ApiError> }
-  intent  { "Create a patient record with protected PII handling." }
-  effects { database.write  audit.write }
-  privacy { contains PII  require redaction before audit.write }
-}
-{
-  unsafe let rawEmail: String = request.body.email
-  let email: protected Email  = validate.email(rawEmail)?
-  let saved = PatientsDB.insert({ email: email })?
-  AuditLog.write({ event: "PatientCreated", patientId: saved.id, email: redact(email) })
-  return Ok(Response.created(saved.id))
-}
+flow add(a: Int, b: Int) -> Int { ... }
 
-// ── Pure flow: zero side effects, compiler-proved ────────────────────────────
-;; Computes 20% GBP VAT — a pure calculation with no runtime authority.
-pure flow calculateVat(price: Money<GBP>) -> Money<GBP>
-contract { intent { "Calculate 20% VAT on a GBP price." } }
-{
-  return price * Decimal("0.20")
-}
+secure flow processPayment(order: Order) -> Result<PaymentReceipt, PaymentError>
+effects [network.outbound, secret.read] { ... }
 
-// ── Match: exhaustive by default ─────────────────────────────────────────────
-;; Maps a Status enum to a display string — the wildcard is fail-closed.
-pure flow describeStatus(s: Status) -> String
-contract { intent { "Map a status enum to a display string." } }
-{
-  match s {
-    Active    => { return "live" }
-    Suspended => { return "paused" }
-    Deleted   => { return "removed" }
-    _         => { return "unknown" }   // compulsory wildcard — FUNGI-MATCH-001
+pure flow calculateVat(amount: Money<GBP>) -> Money<GBP> { ... }
+```
+
+`safe flow`, `unsafe flow` and `guard flow` are not v0.1 syntax. `safe` and `unsafe` describe values inside a flow body.
+
+## A checker-proven example
+
+This example is copied from the Golden Pack. It demonstrates the required three-way handling of a typed `Verdict`:
+
+```galerina
+@version 1
+
+pure flow durabilityEvidence(
+  evidenceVerdict: Verdict,
+  shapeValid: Bool,
+  authorityReleased: Bool
+) -> Int {
+  check(evidenceVerdict) {
+    deny: { return 0 - 1 }
+    ambig: { return 0 }
+    if: {
+      if shapeValid == false { return 0 - 1 }
+      if authorityReleased == true { return 0 - 1 }
+      return 0
+    }
   }
 }
 ```
 
-> **Comments carry governance.** `;;` lines are **govComments** — preserved into the signed `.lmanifest` as the security record. `//` and `/* */` are ordinary notes, discarded after parse — including the structured GSCM tags (`// @cause`, `// @effect`, `// @todo`) that document trigger and outcome for humans and AI without entering the signed record. Full language reference: [`docs/language/fungi/`](docs/language/fungi/README.md) · [`docs/language/gate/`](docs/language/gate/README.md).
+Verify the exact tracked source:
 
----
+```powershell
+node galerina.mjs check docs/examples/golden/004-k3-check.fungi --strict-types --strict-governance
+```
+
+The Golden Pack distinguishes checker proof from executable parity. A checker-clean construct is not automatically evidence that every target executes it.
 
 ## Architecture
 
-### Compiler pipeline
-```
+### Governed compilation and execution
+
+```text
 .fungi source
-  ↓ lexer          — tokenise, FUNGI-LEX-001..006
-  ↓ parser         — AST: flow/contract/match/record/for/import
-  ↓ symbol resolver — FUNGI-NAME-001..003
-  ↓ type checker   — FUNGI-TYPE-001..023
-  ↓ value-state    — FUNGI-VALUESTATE/SECRET/TAINT/GATE
-  ↓ effect checker — FUNGI-EFFECT-001..005
-  ↓ governance     — FUNGI-GOV-001..020, FUNGI-TERM-001, ProofGraph
-  ↓ GIR emitter    — Governed Intermediate Representation
-  ↓ tiered runtime — cache · bytecode VM · sync · WASM · tree-walker
+  ↓ scan / lex / parse
+  ↓ resolve names and types
+  ↓ check value state, effects and governance
+  ↓ emit canonical GIR and proof evidence
+  ├─ current CLI/bootstrap lane → WAT/WASM → governed compatibility runtime
+  └─ bounded independent lane  → physical .slide → re-admission → affine VOK
 ```
 
-### Five-layer execution stack
-```
-Layer 1: Galerina Source (.fungi)     — what the developer writes
-Layer 2: Governed IR (GIR)            — verified governance contract
-Layer 3: WASM / bytecode              — compiled execution (WASM = production path; native target planned)
-Layer 4: RunResult                    — retVal + auditLog (observable effects)
-Layer 5: ProofGraph + .lmanifest      — cryptographic audit proof (Ed25519; certified profile = hybrid +ML-DSA-65)
-```
+GIR is a governed intermediate representation, not a global interpreter lock. It carries the verified plan between source checking and target execution. Parallelism is permitted only where dependency, authority and effect ordering prove it safe; active shared state, authority transitions and non-commutative effects remain ordered.
 
-```text
-intent  →  governed execution plan  →  coordinated compute  →  audit proof
-```
+### The SLIDE/VOK boundary
 
-> **SLIDE v2 status:** Substrate Layout Interconnect Deterministic Engine is a
-> specified forward target with an independent implementation lane, not an
-> implemented production backend. The independent repository currently passes
-> 30/30 tests; Galerina's separately named exact SLIDE corpus passes 477/477.
-> Those results prove bounded decode/validation/execution contracts, not native
-> safety, release admission, performance, or backend completion. Galerina
-> currently emits no production `.slide` artifact and has no general native
-> runner or SLIDE benchmark. The exact done/not-done ledger and
-> implementation sequence are maintained in
-> [`docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`](docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md).
+Independent SLIDE proves a bounded path from checked Fungi through canonical GIR to a source-free `.slide` package, followed by independent re-admission and VOK execution. VOK is the verified operation kernel at the final execution boundary. It validates the admitted shape, resource and authority evidence rather than trusting a compiler success flag.
 
-### Package architecture
+Current evidence is intentionally narrow. It does not yet prove:
 
-97 registered package directories organised into **families by prefix**, with two hard rules at the boundaries.
+- every `.fungi` construct or package family;
+- general effects, callbacks, initialisers or manual-memory families;
+- production authentication or release signing;
+- hostile-platform durability across the supported OS matrix;
+- terminal TypeScript/MJS and package-dependency retirement.
 
-| Family | Role | Trust |
+The active implementation and refusal gates are maintained in the [beta-v1 to SLIDE roadmap](docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md).
+
+### WASM and the retired DSS sidecar
+
+WASM remains a real, tested compatibility/bootstrap lane in the live CLI. It is not the intended final production authority model. The former production DSS host sidecar is retired; retained Wasmtime use is optional development evidence, not a production trusted computing base.
+
+### Admission fabric
+
+No binary reaches an admitted substrate merely because it was built. Package identity, signatures, revocation state, closed capabilities, resource evidence and platform evidence are checked at the relevant borders. Lyth-Weaver is the admission-fabric direction for converging re-derivable and re-admittable candidates; it remains laboratory work and carries no production-performance claim.
+
+## Data and secret protection
+
+- No raw pointers or pointer arithmetic are exposed in governed `.fungi` source.
+- Values are immutable unless mutation is declared.
+- Untrusted input remains unsafe until a named gate proves the required shape.
+- PII/PHI and secret taint are tracked across effects and sinks.
+- Redaction is required before protected data reaches an audit surface that cannot receive it.
+- Vault reads and writes require explicit contract effects and admission permission.
+- A missing secret, capability, signature, receipt or evidence field refuses before the protected side effect.
+- Audit and proof artifacts are evidence outputs; they do not grant authority merely by existing.
+
+Galerina's zero-trust claim is a design and verification discipline, not a claim that any operating system or deployment is absolutely secure.
+
+## Package architecture
+
+The workspace is organised into explicit package families:
+
+| Family | Role | Boundary |
 |---|---|---|
-| `galerina-core-*` | Governance/compiler/runtime **core** — compiler, security, network (TLSTP), economics, logic. | **TCB** |
-| `galerina-tower-citizen` | The **governed runtime** — K3 verdict algebra, bridge attestation, revocation, substrate model. | **TCB** |
-| `galerina-framework-*` | The **application layer** — app-kernel admission/fusion border, api-server adapter, example app. | governed host |
-| `galerina-ext-*` | **Govern-Don't-Absorb border extensions** — the `.spore` trust engine, secrets vault, native bridges (BitNet · quantum · C++). | governed at the border |
-| `galerina-devtools-*` | Dev/audit **tooling** — security + PCI auditors, benchmarks, graph generators. | host-side tools |
-| `galerina-target-*` | **Target adapters** — cpu · wasm · gpu · js · native · ai-accelerator · photonic, each deny-by-default capability-gated. | governed contracts |
-| `galerina-data-*` · `-db-*` · `-web-*` · `-registry` | Data engine, database adapters, web governance, signed package registry. | data/db/web shipped · registry planned |
+| `galerina-core-*` | Language, compiler, security, runtime and shared contracts | Core trusted surface, kept narrow |
+| `galerina-tower-citizen` | K3 verdict algebra, leases, admission and substrate decisions | Core governed decision surface |
+| `galerina-framework-*` | App kernel, API adapter, scaffolding and examples | Governed host/application border |
+| `galerina-ext-*` | Secrets, native bridges and optional engines | Govern-don't-absorb border |
+| `galerina-target-*` | CPU, WASM, GPU, JS, native, AI and photonic target contracts | Capability-gated target adapters |
+| `galerina-data-*`, `-db-*`, `-web-*` | Data, database and web governance | Domain packages behind explicit effects |
+| `galerina-devtools-*` | Tests, audits, graphs, benchmarks and evidence generation | Host-side non-authorizing tools |
 
-**Two rules hold it together:**
+The core governs; optional engines do their work at a verified border. A dependency is not absorbed into the trusted base simply because it is useful.
 
-1. **Govern-Don't-Absorb.** The core **governs**; the `ext` packages do the heavy lifting (cryptography, native compute, file formats) *at the border* — never absorbed into the TCB. A bridge or codec is a governed participant, not part of the trusted base.
-2. **Self-contained packages, explicit boundaries.** No npm workspaces — every package installs and builds independently via `file:../` deps, and a package enters an app **only across the signed admission border**, never by ambient import.
+## Build and run today
 
-> **Licensing model (planned):** `core` = Apache-2.0 (free forever); an enterprise tier under BSL for compliance/reporting packages. A recorded design decision, not yet a physical split.
+Install the workspace command:
 
-### Architecture patterns
-
-Nine canonical patterns; 1–6 compile today (`drcm_stable_v0`); 7–9 require the DRCM core profile (`drcm_core_v1` — planned). Patterns 1–6 have verified `.fungi` examples in `tests/patterns/`.
-
-| # | Pattern | Profile | When to use |
-|---|---|---|---|
-| 1 | Pure Transform | stable | Math, string transforms — no I/O |
-| 2 | Governed API Route | stable | HTTP routes, webhooks — external ingress |
-| 3 | High-Trust Mutation | stable | Payments, medical, government data |
-| 4 | Cross-Boundary Workflow | stable | External APIs |
-| 5 | Secret-Using Flow | stable | Reads a credential — `secrets {}` + taint guards |
-| 6 | Multi-Tier Service | stable | API → business → data, three governed flows |
-| 7 | Governed WASM Module | `drcm_core_v1` | DSS decision semantics and optional compatibility-oracle evidence; production isolation is SLIDE/VOK-owned |
-| 8 | Emergency Policy Overlay | `drcm_core_v1` | Auto-tightening `policy {}` |
-| 9 | .lmanifest Compliance | `drcm_core_v1` | PCI DSS / SOC 2 artifact |
-
-> In-repo pattern examples: [`docs/patterns/`](docs/patterns/) + `tests/patterns/`
-
-### Building an application
-
-A Galerina app is **compile-time conventions + signed governed packages fused at declared seams — not runtime middleware.** Scaffold with `galerina new app`:
-
-```text
-my-orders-app/
-├── App.fungi        composition-root flow (the app entry)
-├── App.manifest     declarative descriptor → folded into the SIGNED build/App.lmanifest
-├── flows/           your governed business logic
-├── deps/            signed governed components admitted at the fuse border
-├── proofs/          contract-driven generated tests
-└── .gitignore       build/ output + .env secrets are never committed
+```powershell
+npm install
+npm link
+galerina version
 ```
 
-`galerina build App.fungi` produces **one signed `build/App.wasm` + `build/App.lmanifest`**. A host **App Kernel** admits that wasm at a deny-by-default **fuse border** — three fail-closed gates — before it runs a single instruction:
+Check and run a Golden Pack flow:
 
-1. **hash-pin** — the `.wasm` sha256 must equal the signed descriptor.
-2. **signature + revocation** — a valid Ed25519 signature from a non-revoked key.
-3. **closed capabilities** — a declared capability with no host shim is refused (link-time `LinkError → CRITICAL_SECURITY_VIOLATION`).
+```powershell
+galerina check docs/examples/golden/003-result-match.fungi --strict-types --strict-governance
+galerina run docs/examples/golden/003-result-match.fungi --invoke selectModeResult 9 --governed
+```
 
-At runtime the app reaches the world **only** through the deny-by-default **Capability Host** (network · db · secrets), with governance compiled *into* the wasm rather than wrapped around it. `.env` secrets are injected at runtime, never compiled in.
+Build through the current compatibility lane:
 
-> Framework designs: [`docs/framework/`](docs/framework/)
+```powershell
+galerina build docs/examples/golden/001-bool-if.fungi
+```
 
----
+The live `build` command emits WAT/WASM and manifest artifacts. That command proves the current compatibility path; it should not be described as the final SLIDE production release path.
+
+Useful checks:
+
+```powershell
+npm run audit:fungi-golden
+node galerina.mjs border-check
+node scripts/status.mjs
+node scripts/component-health.mjs --table
+```
 
 ## Where the project is
 
 <!-- SUBWAY:BEGIN (generated by scripts/gen-roadmap-subway.mjs — do not edit; run `node scripts/gen-roadmap-subway.mjs --write`) -->
-**v1.0.0-beta.2 · 100 packages · 9612 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%**
-
-**Assurance DAG: UNKNOWN** · root `aed2902c487935fe781de417364b65462154cf1858256e1f5b2791cf3efa1016` · non-authorizing.
-
-![Galerina roadmap — subway map](build/component-health/roadmap-subway.svg)
-
-**Self-hosting line (RD-0528).** 7 of 7 compiler stages are AUTHORITATIVE — the `.fungi` stage is the decider of record and the co-located `.ts` is retained as a running differential shadow. All 7 are byte-pinned in the stage-hash baseline.
-
-| stage | lexer | parser | type-checker | effect-checker | gir-emitter | governance-verifier | runtime |
-|---|---|---|---|---|---|---|---|
-| authority | ● | ● | ● | ● | ● | ● | ● |
-
-**Kernel cutover line (RD-0361).** 29 sentinel twins are authoritative in the ledger. The differential remainder is not counted here — no ledger records a denominator, and inventing one would be a hand-typed number.
-
-| Zero-Trust boundary | % | evidence |
-|---|--:|---|
-| Compiler | 100% | **asserted** |
-| I/O — OS kernel | 72% | **asserted** |
-| Packages | 98% | **asserted** |
-| Memory | 62% | **asserted** |
-| TLSTP — zero-middleware | 56% | **asserted** |
-
-| Build-progress layer | % | evidence |
-|---|--:|---|
-| Specification / KB | 100% | **asserted** |
-| Lexer / Parser / Verifier / Contract / Value-state | 100% | **asserted** |
-| DRCM Phases 1-7 (Stage-A simulation) | 100% | **asserted** |
-| CBOR Manifests (RFC 8949) | 100% | **asserted** |
-| Tests — full suite | 100% | measured |
-| Stage-B self-hosting — interpreter parity | 100% | **asserted** |
-| Type checker / Effect checker | 94% | measured |
-| WAT emitter | 89% | **asserted** |
-| Runtime interpreter | 87% | **asserted** |
-| Application-framework layer | 72% | **asserted** |
-| Post-Quantum & Hardware Security | 40% | **asserted** |
-| Passive Execution Plans & Target Bridges | 35% | **asserted** |
-| AI Inference Tower (BitNet/Groq/NVFP4) | 30% | **asserted** |
-| Photonic / Ternary Computing | 3% | **asserted** |
-
-**No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP) · Lyth/Weaver Verified Admission Fabric.
-
-**Tracking registry (31):** shipped 16 · building 11 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
-
-> **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
-
-<sub>generated from the closed assurance dependency DAG + component-health + the RD-0528/RD-0361 authority ledgers; exact producer identities are in focused provenance sidecars · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
 <!-- SUBWAY:END -->
 
-**v1.0.0-beta.2 · full suite 100/100 packages · 9,612 tests · 0 failures.**
+### Honest current boundary
 
-| Layer | Status | Note |
-|---|---|---|
-| **Compiler pipeline** (lexer → parser → checkers → governance → GIR) | ✅ complete | full pipeline, fail-closed diagnostics |
-| **Type / effect checkers** | ✅ complete | full TYPE/EFFECT diagnostic charter, twin-parity verified |
-| **WAT / WASM backend** | ✅ complete | lowering audit `VIOLATIONS: 0`; Decimal (bignum) + higher-order closures are deliberate fail-closed feature-flags |
-| **Tests** | ✅ green | 100/100 · 9,612 · 0 fail |
-| **Stage-B self-hosting** (the compiler rewritten in `.fungi`) | ✅ authoritative specifications | **all 7 stages proven byte-identical** to the reference compiler as signed, admission-gated WASM (R3) and recorded as the deciders of record; TypeScript remains the executing differential/bootstrap layer |
-| **Execution cutover** (governed decision surfaces → signed WASM/SLIDE) | ◑ bounded authority | **29 authoritative** `.fungi` specifications · 7 differential candidates · bounded independent SLIDE execution at 866/866 · mandatory `restoreVerdict` consumer switch 4/4 (reference-only) · TypeScript retained until production composition and terminal retirement gates close |
-| **Optional Wasm compatibility oracle** | ◑ retained for beta | development-only independent evidence; no production-sidecar or memory authority. A narrowly admitted `.fungi` compatibility engine is planned after beta and executable SLIDE, with the current path retained until its full replacement gate passes |
-| **Post-quantum signing** | ◑ shipped surfaces | hybrid Ed25519+ML-DSA-65 on attestation/proof/bridge; opt-in certified `.lmanifest` profile (both halves required, fail-closed) |
-| **`.spore` trust-capsule format** | ◑ slices 1–3 | TMX-256 + container + KEM-DEM golden-verified; ML-DSA root signing next. `env.spore` sealed secrets shipped |
-| **Application framework** (app-kernel · api-server · scaffolder) | ◑ building | admission/fusion border + scaffolder + governed resolver real + tested; servable api-server the remaining gap |
-| **B8 governed HTTP transport (TLSTP)** | ◑ building | S1 cert gate + admission fold execution-proven; raw-byte shim · recovering-FSM · ECH/OHTTP · in-sandbox isolation remain |
-| **Passive execution plans · AI inference tower** | ◑ building | decision surfaces authored in `.fungi` and executing through admission; host wiring increments remain |
-| **Photonic / ternary computing** | early | software simulation only (not hardware) |
+- The compiler and all canonical self-hosted stage specifications are established.
+- Independent SLIDE/VOK executes bounded, admitted source families and mutation-refusal tests.
+- Most workspace implementation still includes TypeScript/MJS and host-language dependencies.
+- The conversion ledger is reference evidence only until a consumer switches and its old path is retired.
+- Production authentication, cross-platform durability, release evidence and the full platform matrix remain owner/external-evidence gates.
+- Repository-wide closure is not inferred from focused package or chart checks.
 
-**Benchmarks (honest numbers).** WASM remains the current compatibility/production path; SLIDE is executable for bounded reference profiles but has no production authority. Certified cross-runtime lanes measure **WASM at 30–59% of native Rust, memory ~0 B/op** (2026-07-18 refresh); WASM won 3 workloads outright in the last full truth-audited run (binary-trees · hardware-targets · fibonacci, 2026-07-12); governance tax measured at ~27.7% on the governed-flow view. Interpreter tiers are diagnostic (the WASM parity oracle), excluded from winning by the scoreboard standard. Lanes without work-equivalence carry **no** cross-runtime ratio. Canonical view: `npm run compare` §1.5 in `packages-galerina/galerina-devtools-benchmarks`.
+For exact open tasks, use the [roadmap](docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md), [root TODO](docs/TODO.md) and live status command rather than copying their changing detail into this file.
 
-**Live status tools:** `node scripts/status.mjs` (bounded `governance/status-ledger.json`; malformed, oversized, duplicate-field or traversal-bearing authority refuses without historical fallback) · `node scripts/component-health.mjs --table` (per-component readiness, Tests row sourced from `version.json`) · in-repo audit: [component-readiness-honest-audit-2026-07-10.md](docs/architecture/component-readiness-honest-audit-2026-07-10.md).
+## Benchmarks
 
----
+Benchmark publication follows three rules:
 
-## Diagrams
+1. compare only admitted, work-equivalent measurements with the same metric class and unit;
+2. derive the winner, sign and rank from the recorded measurements;
+3. publish “not measured” rather than converting a reference-only lane into production evidence.
 
-![Galerina — governance-first compute pipeline](docs/diagrams/galerina-mechanics.svg)
+Current views:
 
-**Governance-first compute pipeline**
+- [SLIDE-zero cross-runtime chart](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-latest.html) — Galerina/SLIDE is zero; faster results are positive and slower results negative.
+- [SLIDE-zero HTML table](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-table-latest.html) — the same admitted facts in table form.
+- [Historic Galerina/WASM reference](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html) — one row per archived WASM workload, with the old WASM value at zero. SLIDE remains “not measured” until a like-for-like production lane exists.
 
-![Galerina — the K3 verdict lattice](docs/diagrams/galerina-k3-verdict-lattice.svg)
+The benchmark truth audit excludes diagnostic interpreters from production rankings and refuses ratios for mismatched work or units.
 
-**The K3 verdict lattice (deny-by-default, No-Coercion min)**
+## Graphs and developer tools
 
-![Galerina — capability radar: Security & Governance](docs/diagrams/radar-1-security-governance.svg)
+Use generated indexes rather than crawling the repository:
 
-**Capability radar 1 · Security & Governance**
+| Need | Index or command |
+|---|---|
+| Architecture and package graph | [`build/graph/Galerina_GRAPH_REPORT.md`](build/graph/Galerina_GRAPH_REPORT.md) |
+| Diagnostic definition, emit, test and docs sites | [`build/code-index/CODE_INDEX.md`](build/code-index/CODE_INDEX.md) |
+| Available repository tools | [`build/dev-tool-index/INDEX.md`](build/dev-tool-index/INDEX.md) |
+| Minimal current `.fungi` constructs | [`docs/examples/golden/README.md`](docs/examples/golden/README.md) |
+| Component and conversion status | `node scripts/component-health.mjs --table` |
+| Current milestone and blockers | `node scripts/status.mjs` |
 
-![Galerina — capability radar: Language & Type System](docs/diagrams/radar-11-language-type-system.svg)
-
-**Capability radar 11 · Language & Type System**
-
-The other nine capability radars:
-[2 · Raw Performance & Systems](docs/diagrams/radar-2-performance-systems.svg) ·
-[3 · Developer Experience & Ecosystem](docs/diagrams/radar-3-devx-ecosystem.svg) ·
-[4 · Governed Chaos & Multi-Substrate](docs/diagrams/radar-4-governed-chaos.svg) ·
-[5 · CI/CD & Developer Support](docs/diagrams/radar-5-cicd-devsupport.svg) ·
-[6 · Tri / Ternary Logic](docs/diagrams/radar-6-tri-ternary.svg) ·
-[7 · Web App / API / Secure Web](docs/diagrams/radar-7-web-api-secure.svg) ·
-[8 · Databasing — over SQL vs native TritMesh](docs/diagrams/radar-8-databasing.svg) ·
-[9 · Data Science](docs/diagrams/radar-9-data-science.svg) ·
-[10 · AI / ML / Neural Nets](docs/diagrams/radar-10-AI-ML-NuroNet.svg)
-
-![Galerina — the breach that can't compile](docs/diagrams/galerina-ungoverned-vs-governed-breach.svg)
-
-**The breach that can't compile (ungoverned vs governed)**
-
-> **16 more** concept maps (trust-state lifecycle · govern-don't-absorb · privacy-cut authoring · governed healthcare + payment lanes …) — in [`docs/diagrams/`](docs/diagrams/).
-
----
-
-## Running the tools
-
-```bash
-# Tests — core suite (4 packages) / full suite (95 packages)
-node scripts/run-all-tests.cjs --core
-npm test
-
-# Scaffold a new governed app (deny-by-default)
-galerina new app my-orders-app
-
-# Compile a .fungi program to WASM and run it
-galerina build examples/auth-service/sovereignTransaction.fungi
-galerina run   examples/auth-service/verifyPassword.fungi --invoke verifyPassword
-galerina check examples/auth-service/verifyPassword.fungi
-
-# Run a .wasm binary without Node.js
-wasmtime --invoke main build/benchmark.wasm
-
-# Benchmarks (~5–10 min), then the canonical comparison
-cd packages-galerina/galerina-devtools-benchmarks && npm run run && npm run compare
-
-# Plugin border check (fail-closed admission)
-node galerina.mjs border-check
-
-# Security + PCI audit sweep
-node packages-galerina/galerina-devtools-security/dist/cli.js audit examples/auth-service/verifyPassword.fungi
-node packages-galerina/galerina-devtools-pci/dist/cli.js audit examples/auth-service/
-```
-
----
+Generated artifacts are bounded evidence. Their freshness and build point must be checked before they are used as authority.
 
 ## Key documents
 
-| Document | What it covers |
+| Document | Purpose |
 |---|---|
-| [SETUP.md](SETUP.md) | Install on Windows / Linux / macOS, benchmarks, Hello World |
-| [`docs/paper/`](docs/paper/) | Publishing standard (defensive-pub + measured-negative only, no flagship by design) — **43 defensive-publication notes + 8 scientific papers** + UK/US/EU compliance checklist |
-| [`AGENTS.md`](AGENTS.md) | The AI-agent entry point — authoritative sources, package map, conventions |
-| [component-readiness-honest-audit](docs/architecture/component-readiness-honest-audit-2026-07-10.md) | Per-component readiness — the in-repo honest status view |
-| [`docs/rules/`](docs/rules/) | Design principles, boundary safety, governance doctrine, non-negotiables |
-| [`docs/framework/`](docs/framework/) | App kernel, HTTP transport, MCP/AI tool boundaries |
-| [`docs/security/`](docs/security/) | Security passes + runbooks — key ceremony, MCP tool-poisoning, SLSA/BOLA |
-| Internal engineering KB *(separate private repository, ~1,550 docs)* | Master index · roadmaps + % audits · concept specs · numbered FUNGI rule registry · fail-open taxonomy · DRCM · architecture patterns |
-
----
+| [SETUP.md](SETUP.md) | Installation and first use |
+| [AGENTS.md](AGENTS.md) | Repository rules and authoritative source map |
+| [Beta-v1 to SLIDE roadmap](docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md) | Active implementation and evidence gates |
+| [Executable Fungi Golden Pack](docs/examples/golden/README.md) | Smallest strict-checker-proven construct lookup |
+| [`docs/language/fungi/`](docs/language/fungi/README.md) | Fungi language documentation |
+| [`docs/contracts/`](docs/contracts/) | Contract and permission documentation |
+| [`docs/security/`](docs/security/) | Security designs, checks and runbooks |
+| [`docs/framework/`](docs/framework/) | App-kernel and framework boundaries |
+| [`docs/diagrams/`](docs/diagrams/) | Architecture and concept diagrams |
 
 ## Licence
 
-Galerina is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE), [`NOTICE.md`](packages-galerina/galerina-core/NOTICE.md), and [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) (all third-party dependencies are permissively licensed and free for commercial use).
+Galerina is licensed under the [Apache License 2.0](LICENSE). See [NOTICE.md](packages-galerina/galerina-core/NOTICE.md) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for attribution and dependency notices.
