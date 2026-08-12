@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-55 File Status
+# Fungi Conversion Batch 33-61 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -47,6 +47,9 @@ The active roadmap is updated once at the bounded batch exit.
 | 56 | `packages-galerina/galerina-core-config/src/posture.ts#isSecurityPosture` | not created | not created | The source is total over open JavaScript `unknown`; a String-only twin deletes the non-String `false` domain. Core Config remains green **54/54**. | `BLOCKED` |
 | 57 | `packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts#isPlatform` | not created | not created | The open `unknown` predicate is part of exact descriptor/host validation. The existing broader Fungi fold accepts precomputed Booleans and does not supersede the untrusted structural ingress. App Kernel remains green **231/231**. | `BLOCKED` |
 | 58 | `packages-galerina/galerina-db-mysql/src/index.ts#isLocalhostHost` | not created | not created | JavaScript trim plus full Unicode lowercase has no admitted non-host-authoritative physical profile. The identical MySQL/PostgreSQL/OpenSearch TLS-bypass decision must remain one governed family. MySQL remains green **24/24**. | `BLOCKED` |
+| 59 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriTrue` | not created | not created | The leaf comparison is pure, but the public input is the canonical heterogeneous `TriState` record union. A scalar String, enum or i32 tag would not prove that record boundary. Core Logic remains green **57/57**. | `BLOCKED` |
+| 60 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriFalse` | not created | not created | Same exact record-union and TypeScript type-predicate boundary as Slice 59; no host-side discriminant projection is authorized. Core Logic remains green **57/57**. | `BLOCKED` |
+| 61 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriUnknown` | not created | not created | The unknown variant additionally carries `Array<UnknownReason>` with an optional source field. No exact physical admission exists for the complete union. Core Logic remains green **57/57**. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -59,6 +62,7 @@ The active roadmap is updated once at the bounded batch exit.
 | `docs/superpowers/specs/2026-08-12-slices-50-52-wide-boundary-adjudication.md` | Product-owner negative adjudication and R&D triggers for the record/array and wide-number boundaries in Slices 50-52. | `DONE` |
 | `docs/superpowers/specs/2026-08-12-slices-53-55-host-and-recursive-boundary-adjudication.md` | Product-owner negative adjudication and existing/future implementation routes for Slices 53-55. | `DONE` |
 | `docs/superpowers/specs/2026-08-12-slices-56-58-tagged-input-and-normalisation-adjudication.md` | Product-owner negative adjudication for open-untrusted and Unicode-normalisation boundaries in Slices 56-58. | `DONE` |
+| `docs/superpowers/specs/2026-08-12-slices-59-61-tristate-record-union-adjudication.md` | Product-owner negative adjudication for the canonical TriState heterogeneous record-union boundary in Slices 59-61. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
@@ -125,6 +129,12 @@ not one of Slices 33–43 and no Fungi asset was produced.
   mirrors.
 - Preflight rejected `isValidStrategy` and `powerRank` as duplicates and
   `isHighRiskPermissionAction` at its declared bootstrap floor.
+- Slices 59-61 remain blocked without placeholder assets. Their shared Core
+  Logic lane passes **57/57**. The three leaves are `PARALLEL_PURE`, but no
+  exact physical `TriState` record-union admission exists and a scalar/tag
+  shortcut would move projection authority into the host.
+- Preflight rejected `isI32Trap` and `getStdlibModuleKind` at the compiler
+  bootstrap floor before the replacement wave was assigned.
 - A generated one-flow probe establishes the current flat-match boundary:
   seven explicit String labels compile; eight and above refuse.
 - Slice 35's four-plus-four helper decomposition compiled to the bounded

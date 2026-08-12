@@ -33,6 +33,8 @@ The sixth wave covers Slices 53-55 and tests host-module inspection,
 crypto/codec/JSON proof validation, and recursive AST text analysis.
 The seventh wave covers Slices 56-58 and tests open-untrusted tagged input,
 structural platform validation, and shared Unicode text normalisation.
+The eighth wave covers Slices 59-61 and tests the canonical `TriState`
+heterogeneous record-union and TypeScript type-predicate boundary.
 
 ## Mandatory scope preflight
 
@@ -101,9 +103,17 @@ the skill requirement; refuse that dossier and keep it advisory.
 | 56 | `packages-galerina/galerina-core-config/src/posture.ts#isSecurityPosture` | none |
 | 57 | `packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts#isPlatform` | none |
 | 58 | `packages-galerina/galerina-db-mysql/src/index.ts#isLocalhostHost` | none; shared decision family with PostgreSQL and OpenSearch |
+| 59 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriTrue` | none |
+| 60 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriFalse` | none |
+| 61 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriUnknown` | none |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.
+
+`galerina-core-compiler/src/i32-arith.ts#isI32Trap` and
+`galerina-core-compiler/src/stdlib-registry.ts#getStdlibModuleKind` are also
+excluded from the eighth wave because both source files are on the compiler
+bootstrap floor.
 
 `requiresLowBitKernel` must not be reconverted. The current repository already
 contains the package-owned asset, differential test and physical Slice 29

@@ -4,7 +4,18 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-58 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-61 - 2026-08-12
+
+- [x] Settle Slices 59-61 as `BLOCKED` without placeholder assets. All three
+  guards are pure, but the canonical input is a heterogeneous `TriState`
+  record union. A scalar String, enum or i32 tag cannot prove the exact record
+  boundary. Core Logic passes **57/57**.
+- [ ] R&D and admit an exact heterogeneous-record-union SLIDE/VOK boundary,
+  or approve one canonical whole-family `TriState` representation change,
+  before revisiting Slices 59-61. Include nested reasons, optional source,
+  hostile record shapes and the TypeScript type-predicate replacement.
+- [x] Reject `isI32Trap` and `getStdlibModuleKind` at the compiler bootstrap
+  floor before assigning their replacement scopes.
 
 - [x] Settle Slices 56-58 as `BLOCKED` without placeholder assets. Slices 56
   and 57 cannot preserve their open JavaScript `unknown` rejection domains on
@@ -95,7 +106,7 @@ counts or open items that a newer section explicitly supersedes.
   replacement Slice 42 is blocked by the missing physical regular-language
   iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
   folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
-- [ ] Select the following three scopes only after the Slice 53-55
+- [ ] Select the following three scopes only after the Slice 59-61
   product-owner gate.
   Continue the bounded pipeline for at most 30 slices, recording every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or

@@ -137,6 +137,20 @@ checkboxes remain intentionally unmet.
 - [x] Repair the future Claude skill mount/argument order and record
   `NO_SKILL_UPDATE` for both public skills.
 
+## Task 3G: Settle Slices 59-61
+
+- [x] Reject the initial `isI32Trap` and `getStdlibModuleKind` scopes at the
+  compiler bootstrap floor before worker assignment.
+- [x] Preflight the three `TriState` type guards against the live graph,
+  retirement ledger, package exports/assets, Golden record evidence and
+  current physical profile.
+- [x] Refuse a scalar String, enum or i32-tag shortcut because it cannot prove
+  the canonical heterogeneous record-union input boundary.
+- [x] Record all three leaves as logically `PARALLEL_PURE` while keeping
+  physical admission and conversion `BLOCKED`.
+- [x] Create no placeholder asset or candidate authority and record
+  `NO_SKILL_UPDATE` for both public skills.
+
 ## Task 4: Per-slice skill review
 
 - [ ] Review both public Fungi skills after each slice.
