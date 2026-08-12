@@ -177,7 +177,7 @@ Stage only Task 3 source, tests and generated outputs; commit `publish pin-bound
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
-- Modify: `C:/Users/phill/Documents/GitHub/skills/translating-typescript-to-fungi/SKILL.md` only if a fresh no-skill baseline misses the pin/composition rule
+- Modify: `../skills/translating-typescript-to-fungi/SKILL.md` only if a fresh no-skill baseline misses the pin/composition rule
 - Test: `scripts/tests/slide-capability-matrix.integration.test.mjs`
 
 **Interfaces:**
