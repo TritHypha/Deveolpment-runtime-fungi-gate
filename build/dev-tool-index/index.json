@@ -3,7 +3,7 @@
   "totals": {
     "packages": 100,
     "testBearing": 100,
-    "tests": 9566,
+    "tests": 9574,
     "devTools": 170,
     "auditTools": 89,
     "toolsInCadence": 117,
@@ -500,10 +500,10 @@
       "name": "galerina-tower-citizen",
       "kind": "tower",
       "description": "Galerina Tower Citizen — TowerRuntime + AuditLogger + PluginSandbox for governed AI inference",
-      "tests": 501,
+      "tests": 505,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 37,
+      "files": 38,
       "deps": [
         "@galerina/inference-bridge-contract",
         "@galerina/substrate-math"
@@ -688,10 +688,10 @@
       "name": "galerina-devtools-naming",
       "kind": "devtools",
       "description": "Naming standard enforcer for Galerina: detects abbreviations, implicit types, missing intent. Promotes Zero-Am",
-      "tests": 15,
+      "tests": 19,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 5,
+      "files": 6,
       "deps": [
         "@galerina/core-compiler"
       ]

@@ -3,42 +3,42 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 118
-- Flows: 829
-- Bytes: 1118483
-- Retirement graph: `sha256:9bea620a2007708363b25c4c441ca7860aa52818ce066450b9865896f9eb9c97`
+- Files: 120
+- Flows: 832
+- Bytes: 1119843
+- Retirement graph: `sha256:9c03494a6022c367b55c318c83f424ceb19d66900af65856175f6e59b700da67`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18862 |
-| `callExpr` | 7234 |
-| `binaryExpr` | 6031 |
+| `identifier` | 18868 |
+| `callExpr` | 7235 |
+| `binaryExpr` | 6034 |
 | `numberLiteral` | 5708 |
-| `block` | 4985 |
-| `stringLiteral` | 4802 |
+| `block` | 4997 |
+| `stringLiteral` | 4808 |
 | `memberExpr` | 4682 |
-| `returnStmt` | 2965 |
-| `paramDecl` | 2780 |
-| `typeRef` | 2449 |
-| `ifStmt` | 2257 |
+| `returnStmt` | 2975 |
+| `paramDecl` | 2783 |
+| `typeRef` | 2455 |
+| `ifStmt` | 2260 |
 | `assignStmt` | 2120 |
-| `letDecl` | 1855 |
-| `boolLiteral` | 1569 |
+| `letDecl` | 1856 |
+| `boolLiteral` | 1576 |
 | `matchArm` | 1207 |
-| `contractDecl` | 823 |
-| `intentDecl` | 823 |
-| `pureFlowDecl` | 817 |
+| `contractDecl` | 825 |
+| `intentDecl` | 825 |
+| `pureFlowDecl` | 820 |
 | `mutDecl` | 810 |
 | `matchExpr` | 371 |
 | `whileStmt` | 340 |
-| `checkArm` | 306 |
+| `checkArm` | 312 |
 | `unaryExpr` | 249 |
 | `recordDecl` | 206 |
-| `program` | 118 |
+| `program` | 120 |
 | `listLiteral` | 115 |
-| `checkExpr` | 102 |
+| `checkExpr` | 104 |
 | `trapDecl` | 50 |
 | `importDecl` | 22 |
 | `charLiteral` | 15 |
@@ -59,13 +59,13 @@ admission, execution parity, retirement credit or production authority.
 | Type | Count |
 |---|---:|
 | `Int` | 525 |
-| `String` | 425 |
-| `Bool` | 384 |
+| `String` | 427 |
+| `Bool` | 386 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
 | `SLIDEV2AImportCursor` | 36 |
-| `Verdict` | 33 |
+| `Verdict` | 35 |
 | `SLIDER1ImportCursor` | 21 |
 | `Array<Int>` | 20 |
 | `GIRStmt` | 20 |
@@ -333,19 +333,19 @@ admission, execution parity, retirement credit or production authority.
 | `scan` | 2 |
 | `slice` | 2 |
 | `split` | 2 |
+| `trim` | 2 |
 | `endsWith` | 1 |
 | `fromCode` | 1 |
 | `generate_monotonic_id` | 1 |
 | `toHex` | 1 |
 | `toLower` | 1 |
-| `trim` | 1 |
 | `write` | 1 |
 
 ## Operators
 
 | Operator | Count |
 |---|---:|
-| `==` | 1842 |
+| `==` | 1845 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 747 |

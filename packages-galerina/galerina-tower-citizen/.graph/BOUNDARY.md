@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 37 |
+| Files | 38 |
 | Internal edges | 79 |
 | External dependencies | 7 |
 | ├─ Node core | 4 |
@@ -44,6 +44,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/authorization-boundary.fungi`
 - `src/self-hosted/governance-decisions.fungi`
 - `src/self-hosted/inference-governance.fungi`
 - `src/self-hosted/pq-admission-policy.fungi`

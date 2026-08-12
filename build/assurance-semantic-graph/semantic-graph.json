@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "1a12b504fbc0486540f2c8163d8e93eebd790e4c153bd3594772bd6f8b87edef",
+  "authoritativeInputsDigest": "9cff17d37baf44cd119d0cde9dbfc5ffeb188919804958f6cf5531206ef248fb",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -5103,6 +5103,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-baf92e41d6669a0340c5c31d",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-naming/tests/generic-type-name-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-3a5fb34a374283ea9d453fcf",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-naming/tests/implicit-return-type-fungi-conversion.test.mjs",
@@ -5894,6 +5901,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-b4628702f6fc8e01fb3af4f5",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-tower-citizen/tests/authorization-boundary-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-0b365f129753319229ea22cd",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-tower-citizen/tests/brain-brawn.test.mjs",
@@ -5932,6 +5946,13 @@
       "id": "test:auto-8161372ae3c268fc01dd5e2c",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-596446b5f3f0906d5947f4a0",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-tower-citizen/tests/collapse-boundary-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6538,6 +6559,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-18f796cb39dd8bf3d0ed37a1",
+      "kind": "test",
+      "evidencePath": "scripts/tests/authorization-boundary-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-7e3a6dce31e101e0e445d241",
       "kind": "test",
       "evidencePath": "scripts/tests/beta-release-evidence-envelope.test.mjs",
@@ -6604,6 +6632,13 @@
       "id": "test:auto-b37f3c31c75accc20cf34528",
       "kind": "test",
       "evidencePath": "scripts/tests/codes.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-fe268f6d58a5cde7cf59239a",
+      "kind": "test",
+      "evidencePath": "scripts/tests/collapse-boundary-fungi-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6779,6 +6814,13 @@
       "id": "test:auto-fe38aefbf3f0be8e2f05b063",
       "kind": "test",
       "evidencePath": "scripts/tests/generator-contract.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-3e6ce887e8c848619cf491d4",
+      "kind": "test",
+      "evidencePath": "scripts/tests/generic-type-name-fungi-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10241,6 +10283,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-baf92e41d6669a0340c5c31d",
+      "to": "package:galerina-devtools-naming",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-3a5fb34a374283ea9d453fcf",
       "to": "package:galerina-devtools-naming",
       "type": "CLASSIFIES"
@@ -10806,6 +10853,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-b4628702f6fc8e01fb3af4f5",
+      "to": "package:galerina-tower-citizen",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-0b365f129753319229ea22cd",
       "to": "package:galerina-tower-citizen",
       "type": "CLASSIFIES"
@@ -10832,6 +10884,11 @@
     },
     {
       "from": "test:auto-8161372ae3c268fc01dd5e2c",
+      "to": "package:galerina-tower-citizen",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-596446b5f3f0906d5947f4a0",
       "to": "package:galerina-tower-citizen",
       "type": "CLASSIFIES"
     },
@@ -11266,6 +11323,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-18f796cb39dd8bf3d0ed37a1",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-7e3a6dce31e101e0e445d241",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11312,6 +11374,11 @@
     },
     {
       "from": "test:auto-b37f3c31c75accc20cf34528",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-fe268f6d58a5cde7cf59239a",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -11437,6 +11504,11 @@
     },
     {
       "from": "test:auto-fe38aefbf3f0be8e2f05b063",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-3e6ce887e8c848619cf491d4",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -11786,9 +11858,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 897,
+    "tests": 903,
     "detectors": 6,
-    "executableFamily": 1427,
+    "executableFamily": 1430,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
