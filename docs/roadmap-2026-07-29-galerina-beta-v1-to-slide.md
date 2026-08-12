@@ -231,7 +231,12 @@ verifies typed String receipts (**1/1**, zero skips). Malformed arguments,
 invalid UTF-16, work exhaustion and source/artifact mutations refuse. The first
 aggregate failed closed at final count publication; an unchanged-tree retry
 passes **100/100 packages and 9,581 tests in 280.1s**. TypeScript and every
-consumer remain active; repository-wide closure remains **UNKNOWN**.
+consumer remain active. The shared twelfth/thirteenth bounded owner wave is
+current: graph **7/7**, semantic **3/3** with 908 test nodes, roadmap **5/5**,
+canonical **7/7** plus self-test, Golden **11/11 checked + 11/11 execution**,
+and retirement, percentage, status, code-index, pinned SLIDE, path-leak and
+private-document checks all pass. Crash-linked full tooling and normal
+phase-close remain excluded, so repository-wide closure remains **UNKNOWN**.
 
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

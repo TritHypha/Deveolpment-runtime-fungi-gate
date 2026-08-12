@@ -25,9 +25,14 @@ counts or open items that a newer section explicitly supersedes.
   `UNKNOWN`. An exact unchanged-tree retry passed **100/100 packages and 9,581
   tests in 280.1s** with exit code 0. Retirement tracks **1,433**
   executable-family paths and **122** `.fungi` source assets.
-- [ ] Close the shared twelfth/thirteenth generated owner wave. Full tooling,
-  normal phase-close, graph-all after roadmap publication and whole-memory
-  evaluation stay excluded.
+- [x] Close the shared twelfth/thirteenth bounded owner wave: graph generation
+  is **7/7**, semantic outputs are **3/3** with **908** test nodes, roadmap is
+  **5/5**, canonical counts are **7/7** plus self-test, Golden is **11/11
+  checked + 11/11 execution vectors**, and retirement, percentage, status,
+  code-index, pinned SLIDE, path-leak and private-document checks are current.
+  Full tooling, normal phase-close, graph-all after roadmap publication and
+  whole-memory evaluation stay excluded; repository-wide closure remains
+  **UNKNOWN**.
 - [x] Keep `capability-types.ts`, `normaliseFloor`, `verifyGovernedFlows` and
   every caller active. This reference-only proof grants no consumer-switch,
   production, release or retirement authority.
@@ -54,9 +59,8 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Run the bounded complete package owner: **100/100 packages and 9,577
   tests** pass in **274.0s** with captured exit code 0. Retirement now tracks
   **1,431** executable-family paths and **121** `.fungi` source assets.
-- [ ] Close the twelfth slice's generated owner wave after the next bounded
-  conversion decision. Full tooling, normal phase-close, graph-all after
-  roadmap publication and whole-memory evaluation stay excluded.
+- [x] Close the twelfth slice's generated owners in the shared bounded wave
+  recorded by the thirteenth checkpoint above.
 - [x] Keep `capability-types.ts`, `normalizeCapability`,
   `isAdmissibleCapability` and every caller active. This reference-only proof
   grants no consumer-switch, production, release or retirement authority.
