@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Fourteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the package resolver's private `stripQuotes` decision as
+  package-owned `src/self-hosted/package-scalar-quote-stripping.fungi` while
+  retaining the TypeScript helper and all callers.
+- [x] Prove the real `loadPackageManifest` caller and typed Fungi candidate
+  agree over balanced, unbalanced and mixed quotes, empty quoted values,
+  prototype names, Unicode normalization variants and embedded NUL (**2/2**).
+  The Fungi source contains no null, NaN, `else if`, exception syntax, `for`,
+  `while`, or `loop`.
+- [x] Add independent SLIDE Contract 84 as a successor registry for canonical
+  `\\uXXXX` source escapes and immutable UTF-16 text slicing. The predecessor
+  registry remains frozen and refuses opcode 44; splitting a surrogate pair,
+  malformed input, work exhaustion and source/artifact mutations all refuse.
+- [x] Publish and independently re-admit one physical `.slide` through VOK with
+  typed String receipts (**1/1**, zero skips). The exact Contract 84 registry is
+  1,036 bytes with SHA-256
+  `2c316a990c2eb08f565bbea774ed623f5412985c31e37182412eacaf1ab0ffa8`.
+- [x] Pass the resolver/physical neighborhood **70/70**, compiler package
+  **6,363/6,363**, and canonical owner **100/100 packages and 9,583 tests in
+  274.8s**. Retirement records **1,434** executable-family paths, **489**
+  source `.ts` paths and **123** source `.fungi` assets.
+- [ ] Publish the bounded fourteenth-slice graph, semantic, component-health,
+  status, roadmap, canonical-count, Golden, code-index, pinned-SLIDE and path
+  owners. Keep full tooling, normal phase-close, graph-all after roadmap
+  publication and whole-memory evaluation excluded.
+- [x] Grant no consumer-switch, production, release, signing, platform or
+  terminal-retirement authority. Repository-wide closure remains **UNKNOWN**.
+
 ### Thirteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Repair exported TypeScript `normaliseFloor` so only own entries in the

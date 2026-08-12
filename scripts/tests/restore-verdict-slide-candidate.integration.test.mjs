@@ -422,7 +422,7 @@ async function authority() {
   assert.equal(`${JSON.stringify(manifest, null, 2)}\n`, manifestBytes.toString("utf8"));
   assert.equal(exactKeys(pin, ["schema", "repositoryCommit", "toolManifestDigest", "toolFileCount"]), true);
   assert.equal(pin.schema, "galerina.slide.reference-tool-pin.v1");
-  assert.equal(pin.repositoryCommit, "eed124974b6ddf6cd54e14d48e4b36996ed59f57");
+  assert.equal(pin.repositoryCommit, "053cc7573c7b035ab532a9bb69532276981aac96");
   assert.equal(pin.toolFileCount, 91);
   assert.equal(exactKeys(manifest, ["schema", "context", "packages"]), true);
   assert.equal(manifest.schema, "slide.checked-fungi.source-manifest.v1");

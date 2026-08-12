@@ -238,6 +238,24 @@ and retirement, percentage, status, code-index, pinned SLIDE, path-leak and
 private-document checks all pass. Crash-linked full tooling and normal
 phase-close remain excluded, so repository-wide closure remains **UNKNOWN**.
 
+Fourteenth physical conversion slice 2026-08-12: the package resolver's private
+`stripQuotes` helper now has exact package-owned
+`stripPackageScalarQuotes` in
+`galerina-core-compiler/src/self-hosted/package-scalar-quote-stripping.fungi`.
+The real `loadPackageManifest` caller and typed Fungi candidate agree over
+balanced, unbalanced and mixed quotes, empty quoted values, prototype names,
+Unicode normalization variants and embedded NUL (**2/2**). Independent SLIDE
+`053cc75` adds Contract 84 as a successor registry with canonical `\\uXXXX`
+source escapes and immutable UTF-16 text slicing; the frozen predecessor
+refuses opcode 44. One physical `.slide` is independently re-admitted through
+VOK with typed String receipts (**1/1**, zero skips), while malformed input,
+surrogate-splitting boundaries, work exhaustion and source/artifact mutations
+refuse. The focused neighborhood passes **70/70**, the compiler package passes
+**6,363/6,363**, and the canonical owner passes **100/100 packages and 9,583
+tests in 274.8s**. Retirement records **1,434** executable-family paths,
+**489** source `.ts` paths and **123** source `.fungi` assets. TypeScript and
+every consumer remain active; repository-wide closure remains **UNKNOWN**.
+
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
