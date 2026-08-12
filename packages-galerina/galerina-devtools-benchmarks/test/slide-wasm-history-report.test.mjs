@@ -68,8 +68,11 @@ test("historical chart has exactly two products and keeps SLIDE reference eviden
   assert.match(page, /Reference-only observation; production SLIDE is unmeasured/u);
   assert.match(page, /Historic measured lane/u);
   assert.match(page, /Evidence coverage, not a speed comparison/u);
+  assert.match(page, /WASM = 0 baseline/u);
+  assert.match(page, /faster \+/u);
+  assert.match(page, /slower −/u);
   assert.doesNotMatch(page, /<script|https?:\/\//iu);
-  assert.doesNotMatch(page, /winner|faster|slower|speed percentage/iu);
+  assert.doesNotMatch(page, /winner|ranked [0-9]|performance ratio: [+-]?[0-9]/iu);
   assert.match(page, /results\/archive\/2026-08-02_galerina-wasm-before-slide\/results\.json/u);
   assert.match(page, new RegExp("d{64}"));
   assert.match(page, /2026-08-12T17:19:05\.632Z/u);
