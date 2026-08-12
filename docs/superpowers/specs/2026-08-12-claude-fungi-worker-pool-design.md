@@ -84,4 +84,3 @@ profile domains, binds the accepted design and queue decisions, and runs all
 focused checks. Claude output is advice or an isolated patch, never authority.
 Unknown evidence remains blocked. Integration uses explicit paths and local
 commits only; the owner performs all pushes.
-
