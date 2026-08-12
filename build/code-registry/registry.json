@@ -5637,7 +5637,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 7,
-      "docs": 10
+      "docs": 12
     },
     {
       "code": "FUNGI-HARDEN-006",

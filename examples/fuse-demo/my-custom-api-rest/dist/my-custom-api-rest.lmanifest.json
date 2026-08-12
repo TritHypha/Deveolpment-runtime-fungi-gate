@@ -1,13 +1,14 @@
 {
   "schemaVersion": "fungi.manifest.v1",
-  "sourceHash": "sha256:a7772a5658b3dd464e6dbc9efb1ff9dc6bfda8869a0f5dddba47b2f18f699803",
+  "sourceHash": "sha256:f0f46216f19e1203e179d17a2f2ca90a527760c0c43199ee17e8e2ab2a779ecf",
   "sourceFile": "examples/fuse-demo/my-custom-api-rest/src/index.fungi",
   "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
   "policyResolutionDag": {
     "allowedEffects": 0,
     "deniedEffects": 0,
     "conflictsResolved": 0,
-    "resolvedAt": "2026-06-14T22:37:46.250Z"
+    "resolvedAt": "2026-08-12T17:08:45.662Z"
   },
   "behavioralFingerprint": "sha256:0b634eb7be2a1ad02da52d8c56c79c045598d675521a54ac821b5e023c7c7667",
   "derivedConstraints": [
@@ -21,12 +22,17 @@
       "verified": "static"
     }
   ],
-  "generatedAt": "2026-06-14T22:37:46.250Z",
+  "governanceAnnotations": [
+    "Minimal fusable entry proving the /src -> governed .wasm pipeline for the REST adapter.",
+    "Pure — no runtime authority / no effects."
+  ],
+  "generatedAt": "2026-08-12T17:08:45.662Z",
   "governanceSignature": {
-    "algorithm": "Ed25519+ML-DSA-65",
-    "ed25519": "placeholder:sha256:dbc2a5a8c5cf33bc342f6fd882d4290c49af3a1559f355d54105b3fb4b579f77",
-    "mlDsa65": "placeholder:sha256:dbc2a5a8c5cf33bc342f6fd882d4290c49af3a1559f355d54105b3fb4b579f77",
-    "signerNote": "Placeholder signatures — real ML-DSA-65 signing requires key custody spec (DRCM task #34). The canonical JSON body hash above is stable and verifiable today."
+    "algorithm": "Ed25519",
+    "keyId": "6c68dd67b19a8d84",
+    "signature": "6ycs94w4n7TYeVZR1m5X1i3CkkMrxeG/BTQ9dEsf7EunVOibnUTLESFRJIBA8XbLxVXnr2ZSup/grpH/2lmGAA==",
+    "canon": "jcs",
+    "signedAt": "2026-08-12T17:08:45.672Z"
   },
   "fuse": {
     "schemaVersion": "fungi.fuse.v1",

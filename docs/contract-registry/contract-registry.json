@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-11T17:47:50.000Z",
-  "sha": "3b8bd76b",
-  "contracts": 1471,
-  "parsed": 536,
+  "generatedAt": "2026-08-12T17:07:14.000Z",
+  "sha": "f24f4534",
+  "contracts": 1519,
+  "parsed": 565,
   "rows": [
     {
       "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
@@ -4073,6 +4073,14 @@
       "intent": "Balanced-ternary NOR = NOT(OR(a, b))."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/capability-normalization.fungi",
+      "name": "normalizeCapability",
+      "qualifier": "pure",
+      "signature": "pure flow normalizeCapability(name: String) -> String",
+      "effects": [],
+      "intent": "Normalize only an explicitly governed capability alias."
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi",
       "name": "compilerAllowedCapabilities",
       "qualifier": "pure",
@@ -4135,6 +4143,30 @@
       "signature": "pure flow capabilityClass(name: String) -> Int",
       "effects": [],
       "intent": "Return the governance class for a named capability."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/decimal-round-mode.fungi",
+      "name": "isRoundModeGroupOne",
+      "qualifier": "pure",
+      "signature": "pure flow isRoundModeGroupOne(mode: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize the first bounded set of exact decimal rounding modes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/decimal-round-mode.fungi",
+      "name": "isRoundModeGroupTwo",
+      "qualifier": "pure",
+      "signature": "pure flow isRoundModeGroupTwo(mode: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize the second bounded set of exact decimal rounding modes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/decimal-round-mode.fungi",
+      "name": "isRoundModeFungi",
+      "qualifier": "pure",
+      "signature": "pure flow isRoundModeFungi(mode: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize exact decimal rounding modes without normalization or defaults."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi",
@@ -4321,6 +4353,22 @@
       "intent": "Run effect checks across all flows from the Stage B ParseResult."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/effect-mask-subset.fungi",
+      "name": "effectsSubsetFungi",
+      "qualifier": "pure",
+      "signature": "pure flow effectsSubsetFungi(required: Int, declared: Int) -> Bool",
+      "effects": [],
+      "intent": "Require every bit in the required effect mask to be present in the declared mask."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/floor-normalisation.fungi",
+      "name": "normaliseFloor",
+      "qualifier": "pure",
+      "signature": "pure flow normaliseFloor(name: String) -> String",
+      "effects": [],
+      "intent": "Normalize only an explicitly governed floor alias."
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/gir-emitter.fungi",
       "name": "emitFlowGIRNode",
       "qualifier": "pure",
@@ -4433,6 +4481,46 @@
       "intent": "Build Array<FlowEntry> { name, params: Array<String>, body: Array<GIRStmt> } from parser flows."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-qualifier-escalation.fungi",
+      "name": "qualifierRank",
+      "qualifier": "pure",
+      "signature": "pure flow qualifierRank(qualifier: String) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-qualifier-escalation.fungi",
+      "name": "qualifierEscalated",
+      "qualifier": "pure",
+      "signature": "pure flow qualifierEscalated(before: String, after: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-qualifier-escalation.fungi",
+      "name": "normalizeChangeClass",
+      "qualifier": "pure",
+      "signature": "pure flow normalizeChangeClass(value: String) -> String",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-qualifier-escalation.fungi",
+      "name": "changeClassRank",
+      "qualifier": "pure",
+      "signature": "pure flow changeClassRank(value: String) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-qualifier-escalation.fungi",
+      "name": "maxChangeClass",
+      "qualifier": "pure",
+      "signature": "pure flow maxChangeClass(left: String, right: String) -> String",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi",
       "name": "hasEffect",
       "qualifier": "pure",
@@ -4537,6 +4625,22 @@
       "intent": "FUNGI-GOV-005: guard permitted_effects must all be known capability tokens."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-host-capability.fungi",
+      "name": "resolveHostFungi",
+      "qualifier": "pure",
+      "signature": "pure flow resolveHostFungi(name: String) -> HostResidencyCapabilityFungi",
+      "effects": [],
+      "intent": "Resolve only exact declared host profiles and fail closed to no capabilities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-host-capability.fungi",
+      "name": "canHonourFungi",
+      "qualifier": "pure",
+      "signature": "pure flow canHonourFungi(ceiling: String, canRegisterPin: Bool, canNoDramSpill: Bool, canNoSwap: Bool, canNoDisk: Bool) -> Bool",
+      "effects": [],
+      "intent": "Honour only exact residency ceilings backed by the corresponding capability fact."
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
       "name": "combineTrust",
       "qualifier": "pure",
@@ -4551,6 +4655,38 @@
       "signature": "pure flow boundaryTrusted(trust: Verdict) -> Bool",
       "effects": [],
       "intent": "Release only a proven Allow verdict; Unknown and Deny remain closed."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
+      "name": "trustName",
+      "qualifier": "pure",
+      "signature": "pure flow trustName(trust: Verdict) -> String",
+      "effects": [],
+      "intent": "Name every closed K3 trust state without coercion or fallthrough."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
+      "name": "refute",
+      "qualifier": "pure",
+      "signature": "pure flow refute() -> Verdict",
+      "effects": [],
+      "intent": "Return the sticky hard-negative trust state."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
+      "name": "dischargeTrustFungi",
+      "qualifier": "pure",
+      "signature": "pure flow dischargeTrustFungi(current: Verdict, verification: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Discharge trust from typed verification evidence without resurrecting a refutation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
+      "name": "spillRetypeFungi",
+      "qualifier": "pure",
+      "signature": "pure flow spillRetypeFungi() -> SpillOutcomeFungi",
+      "effects": [],
+      "intent": "Return the exact governed spill downgrade as a closed record."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
@@ -4647,6 +4783,22 @@
       "signature": "guarded flow tokenize(source: String) -> TokenizeResult",
       "effects": [],
       "intent": "Tokenise Galerina source text into a stream of tokens. Single-pass, bounded by source length."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/package-scalar-quote-stripping.fungi",
+      "name": "hasBalancedOuterQuotes",
+      "qualifier": "pure",
+      "signature": "pure flow hasBalancedOuterQuotes(value: String, quote: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact balanced outer quote pair."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/package-scalar-quote-stripping.fungi",
+      "name": "stripPackageScalarQuotes",
+      "qualifier": "pure",
+      "signature": "pure flow stripPackageScalarQuotes(value: String) -> String",
+      "effects": [],
+      "intent": "Remove only one balanced package-scalar quote pair."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
@@ -4991,6 +5143,70 @@
       "signature": "pure flow parseFlows(tokens: Array<Token>) -> ParseResult",
       "effects": [],
       "intent": "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/plugin-type-compatibility.fungi",
+      "name": "isCompatibleType",
+      "qualifier": "pure",
+      "signature": "pure flow isCompatibleType(actual: String, expected: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/proof-execution-signature.fungi",
+      "name": "computeExecutionSignatureFungi",
+      "qualifier": "pure",
+      "signature": "pure flow computeExecutionSignatureFungi(effectMask: Int, governanceMask: Int, inputVsFlags: Int, outputVsFlags: Int, nodeFlagsMask: Int, effectCount: Int, capabilityCallCount: Int, hasBoundaryCrossings: Bool) -> ExecutionSignatureFungi",
+      "effects": [],
+      "intent": "Preserve eight caller-derived execution-signature facts without interpreting or authenticating them."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/proof-governance-shape.fungi",
+      "name": "sharesGovernanceShapeFungi",
+      "qualifier": "pure",
+      "signature": "pure flow sharesGovernanceShapeFungi(leftSignatureHash: String, rightSignatureHash: String) -> Bool",
+      "effects": [],
+      "intent": "Compare exact governance-shape identity Strings without normalizing or authenticating them."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/residency-strictness.fungi",
+      "name": "residencyRank",
+      "qualifier": "pure",
+      "signature": "pure flow residencyRank(value: String) -> Int",
+      "effects": [],
+      "intent": "Map an exact residency tier to a rank and isolate unknown text as a sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/residency-strictness.fungi",
+      "name": "rankAtMost",
+      "qualifier": "pure",
+      "signature": "pure flow rankAtMost(left: Int, right: Int) -> Bool",
+      "effects": [],
+      "intent": "Return whether one admitted residency rank is no greater than another."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/residency-strictness.fungi",
+      "name": "atLeastAsStrictFungi",
+      "qualifier": "pure",
+      "signature": "pure flow atLeastAsStrictFungi(tier: String, floor: String) -> Bool",
+      "effects": [],
+      "intent": "Compare two exact residency ceilings without admitting unknown tiers."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/residency-strictness.fungi",
+      "name": "stricterResidencyFungi",
+      "qualifier": "pure",
+      "signature": "pure flow stricterResidencyFungi(left: String, right: String) -> String",
+      "effects": [],
+      "intent": "Tighten two exact residency ceilings and fail closed for unknown text."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/retry-strategy.fungi",
+      "name": "isValidRetryStrategy",
+      "qualifier": "pure",
+      "signature": "pure flow isValidRetryStrategy(strategy: String) -> Bool",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
@@ -8857,6 +9073,22 @@
       "intent": "Bind exact typed hybrid-verifier evidence to an independently verified receipt."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/tensor-dimension-count-compatibility.fungi",
+      "name": "tensorDimensionCountsCompatibleFungi",
+      "qualifier": "pure",
+      "signature": "pure flow tensorDimensionCountsCompatibleFungi(expected: Array<Int>, actual: Array<Int>) -> Bool",
+      "effects": [],
+      "intent": "Compare tensor ranks without interpreting dimension tokens."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/tensor-element-type-compatibility.fungi",
+      "name": "tensorElementTypesCompatibleFungi",
+      "qualifier": "pure",
+      "signature": "pure flow tensorElementTypesCompatibleFungi(expected: String, actual: String) -> Bool",
+      "effects": [],
+      "intent": "Compare two tensor element-type names without widening identity."
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
       "name": "isKnownType",
       "qualifier": "pure",
@@ -9257,6 +9489,14 @@
       "intent": "Recheck one registered bounded checked-read proposal without granting authority."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/wat-64-bit-type.fungi",
+      "name": "is64BitWatType",
+      "qualifier": "pure",
+      "signature": "pure flow is64BitWatType(base: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-g4-checked-source.fungi",
       "name": "slide_g4_checked_increment",
       "qualifier": "pure",
@@ -9355,12 +9595,28 @@
       "intent": ""
     },
     {
+      "file": "packages-galerina/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "name": "isEnvironmentMode",
+      "qualifier": "pure",
+      "signature": "pure flow isEnvironmentMode(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only a canonical Galerina environment mode."
+    },
+    {
       "file": "packages-galerina/galerina-core-logic/examples/compute-mix-throughput-benchmark.fungi",
       "name": "computeMixRequestAllowed",
       "qualifier": "pure",
       "signature": "pure flow computeMixRequestAllowed(request: ComputeMixBenchmarkRequest) -> Bool",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+      "name": "isOmniUncertain",
+      "qualifier": "pure",
+      "signature": "pure flow isOmniUncertain(state: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only an uncertain Omni state."
     },
     {
       "file": "packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi",
@@ -9667,6 +9923,22 @@
       "intent": "Deny an unparseable rate limit, then admit only a fresh window or remaining bounded capacity."
     },
     {
+      "file": "packages-galerina/galerina-core-reports/src/self-hosted/report-status.fungi",
+      "name": "selectReportStatus",
+      "qualifier": "pure",
+      "signature": "pure flow selectReportStatus(input: ReportStatusCounts) -> String",
+      "effects": [],
+      "intent": "Select the highest report status represented by the admitted counts."
+    },
+    {
+      "file": "packages-galerina/galerina-core-reports/src/self-hosted/report-status.fungi",
+      "name": "selectReportStatusCounts",
+      "qualifier": "pure",
+      "signature": "pure flow selectReportStatusCounts(warnings: Int, errors: Int, critical: Int) -> String",
+      "effects": [],
+      "intent": "Construct the exact report-count record and select its status."
+    },
+    {
       "file": "packages-galerina/galerina-core-runtime/src/self-hosted/passive-plan-replay-admission.fungi",
       "name": "admissionVerdict",
       "qualifier": "pure",
@@ -9713,6 +9985,14 @@
       "signature": "pure flow planReplayVerdict(signedOk: Bool, hashMatch: Bool, capabilityCurrent: Bool, fresh: Bool, targetBound: Bool, stepContained: Bool, qualifierCoherent: Bool) -> Int",
       "effects": [],
       "intent": "Deny-by-default passive-plan replay admission: ALLOW only if signature+hash, current authority, freshness, target binding, and step/qualifier containment ALL hold (RD-0363 2)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "name": "isTerminalScope",
+      "qualifier": "pure",
+      "signature": "pure flow isTerminalScope(status: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only a terminal structured-await scope state."
     },
     {
       "file": "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
@@ -10192,6 +10472,14 @@
     },
     {
       "file": "packages-galerina/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi",
+      "name": "powerRank",
+      "qualifier": "pure",
+      "signature": "pure flow powerRank(kernel: String) -> Int",
+      "effects": [],
+      "intent": "Map a kernel tier name to its fixed power rank; return -1 for a non-member."
+    },
+    {
+      "file": "packages-galerina/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi",
       "name": "powerStateVerdict",
       "qualifier": "pure",
       "signature": "pure flow powerStateVerdict(atOrAboveCritical: Bool, atOrAboveSafe: Bool, atOrAboveThrottle: Bool) -> Int",
@@ -10277,6 +10565,14 @@
       "signature": "pure flow taskOutputRoot(taskName: String) -> String",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "name": "isTaskEffect",
+      "qualifier": "pure",
+      "signature": "pure flow isTaskEffect(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only a canonical task effect name."
     },
     {
       "file": "packages-galerina/galerina-core/examples/ai-context.fungi",
@@ -10605,6 +10901,22 @@
       "signature": "pure flow orderAction(order: OrderEvent) -> String",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-cpu-kernels/src/self-hosted/low-bit-kernel-routing.fungi",
+      "name": "requiresLowBitKernel",
+      "qualifier": "pure",
+      "signature": "pure flow requiresLowBitKernel(inputType: String, operation: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "name": "isResponseSafeClassification",
+      "qualifier": "pure",
+      "signature": "pure flow isResponseSafeClassification(classification: String) -> Bool",
+      "effects": [],
+      "intent": "Admit only the public model-field classification for responses."
     },
     {
       "file": "packages-galerina/galerina-devtools-benchmarks/benchmarks/arithmetic-threshold/benchmark.fungi",
@@ -11205,6 +11517,38 @@
       "intent": ""
     },
     {
+      "file": "packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi",
+      "name": "isBuiltin",
+      "qualifier": "pure",
+      "signature": "pure flow isBuiltin(name: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only an exact context-receipt builtin name."
+    },
+    {
+      "file": "packages-galerina/galerina-devtools-naming/src/self-hosted/generic-type-name.fungi",
+      "name": "isGenericTypeName",
+      "qualifier": "pure",
+      "signature": "pure flow isGenericTypeName(typeName: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-devtools-naming/src/self-hosted/implicit-return-type.fungi",
+      "name": "isImplicitReturnType",
+      "qualifier": "pure",
+      "signature": "pure flow isImplicitReturnType(returnType: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi",
+      "name": "validateTransition",
+      "qualifier": "pure",
+      "signature": "pure flow validateTransition(from: String, to: String) -> Bool",
+      "effects": [],
+      "intent": "Admit only a declared resource lifecycle transition."
+    },
+    {
       "file": "packages-galerina/galerina-framework-app-kernel/examples/job.fungi",
       "name": "mayRetryVideoJob",
       "qualifier": "pure",
@@ -11315,6 +11659,14 @@
       "signature": "pure flow authGateVerdict(authMode: String, hasChannelVerdict: Bool, channelVerdictAuthorized: Bool) -> String",
       "effects": [],
       "intent": "Fail-closed kernel auth gate 6: any supplied channel verdict constrains every route; required auth admits only on an explicit ALLOW, and header presence never authenticates."
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/literal-verification-success.fungi",
+      "name": "isLiteralVerificationSuccess",
+      "qualifier": "pure",
+      "signature": "pure flow isLiteralVerificationSuccess(resultTag: Int) -> Bool",
+      "effects": [],
+      "intent": "Admit only the literal successful verification tag."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi",
@@ -11653,6 +12005,14 @@
       "intent": "Return the HTTP 200 status for the hello-world greeting served at GET /hello."
     },
     {
+      "file": "packages-galerina/galerina-test/src/self-hosted/test-marker.fungi",
+      "name": "mark",
+      "qualifier": "pure",
+      "signature": "pure flow mark(ok: Bool) -> String",
+      "effects": [],
+      "intent": "Render the exact human test marker for a Boolean result."
+    },
+    {
       "file": "packages-galerina/galerina-tools-benchmark/examples/benchmark.config.fungi",
       "name": "defaultBenchmarkRequest",
       "qualifier": "pure",
@@ -11667,6 +12027,22 @@
       "signature": "pure flow benchmarkRequestAllowed(request: BenchmarkRequest) -> Bool",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi",
+      "name": "authorizeVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow authorizeVerdict(candidateVerdict: Verdict) -> Bool",
+      "effects": [],
+      "intent": "Release only a proven Allow verdict."
+    },
+    {
+      "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi",
+      "name": "collapseVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow collapseVerdict(candidateVerdict: Verdict) -> String",
+      "effects": [],
+      "intent": "Name the fail-closed binary boundary decision."
     },
     {
       "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/governance-decisions.fungi",
@@ -11803,6 +12179,14 @@
       "signature": "pure flow s4NextEnteredAt(state: Int, hasKeys: Bool, enteredAt: Int, kind: Int, g: Int, nowMs: Int, timeoutMs: Int) -> Int",
       "effects": [],
       "intent": "S4 clock projection: -1 outside Recovering; entering Recovering stamps nowMs; staying keeps the original entry (cumulative timeout)."
+    },
+    {
+      "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/transport-fsm.fungi",
+      "name": "s4PermitData",
+      "qualifier": "pure",
+      "signature": "pure flow s4PermitData(state: Int) -> Bool",
+      "effects": [],
+      "intent": "Permit transport data only in the Established state."
     },
     {
       "file": "tests/owasp/owasp-a01-broken-access-control.fungi",

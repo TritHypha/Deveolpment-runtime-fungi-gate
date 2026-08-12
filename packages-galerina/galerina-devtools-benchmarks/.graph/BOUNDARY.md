@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 34 |
-| Internal edges | 19 |
+| Files | 36 |
+| Internal edges | 22 |
 | External dependencies | 9 |
 | ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 0 |
@@ -61,6 +61,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/report.mjs`
 - `src/runner.mjs`
 - `src/slide-vade-adapter.mjs`
+- `src/slide-zero-publication.mjs`
+- `src/slide-zero-report.mjs`
 - `src/snapshot.mjs`
 - `src/variance.mjs`
 - `src/verified-native-operation-adapter.mjs`
