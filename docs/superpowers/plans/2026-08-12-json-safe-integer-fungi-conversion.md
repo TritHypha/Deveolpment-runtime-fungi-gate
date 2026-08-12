@@ -9,6 +9,11 @@ while recording exact symbol candidates. Add two pure, bounded integer flows,
 bind them to the private TypeScript source and public JSON validators, then
 compile the exact bytes into a physical `.slide` and re-admit through VOK.
 
+**Status:** BLOCKED before implementation. Current SLIDE admits `Int` as i32
+and does not provide the typed `Int64` border required to prove JavaScript's
+full safe-integer domain. The queue-hardening task was completed separately;
+no JSON `.fungi` source was created.
+
 ## Constraints
 
 - [ ] Keep all 1,449 executable-family paths in the file-level denominator.

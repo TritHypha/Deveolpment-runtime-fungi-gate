@@ -147,3 +147,14 @@ This is a reference-only symbol conversion proof. It does not authorize the
 rest of `index.ts`, switch a consumer, retire TypeScript/MJS, widen a grant,
 parallelise JSON active compute, release authority, or claim bootstrap,
 production, hardware, signing, release or durability evidence.
+
+## Adjudication after live SLIDE inspection
+
+Status: `BLOCKED` before implementation.
+
+The current SLIDE checked-Fungi typed boundary maps Galerina `Int` to `i32`
+and does not admit `Int64`. The TypeScript predicates accept safe integers up
+to `2^53 - 1`, so an i32-only physical proof cannot establish the design's
+required full-domain parity. No `.fungi` source or conversion test was added.
+Resume only after a separately reviewed typed `Int64` SLIDE/VOK boundary can
+admit, execute and independently verify the required edge values.
