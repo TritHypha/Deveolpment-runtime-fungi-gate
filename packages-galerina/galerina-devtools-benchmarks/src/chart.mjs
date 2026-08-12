@@ -201,9 +201,8 @@ function wasmRelativeChart(crossLanguage) {
   const isGov = (r) => (r.metricClass ?? "") === "governance";
   const hasWasm = (r) => typeof r.wasm === "number" && r.wasm > 0;
   const peersOf = (r) => PEERS.filter(([k]) => typeof r[k] === "number" && r[k] > 0);
+  if (!all.length) return { svg: `<p class="empty">no benchmark data to chart</p>`, caption: "" };
   const plottable = all.filter((r) => !isGov(r) && hasWasm(r) && peersOf(r).length);
-  const noBase = all.filter((r) => !isGov(r) && !hasWasm(r));
-  if (!plottable.length) return { svg: `<p class="empty">no benchmark carries a WASM baseline with a comparable peer runtime</p>`, caption: "" };
 
   const W = 860, LEFT = 132, RIGHT = 18, plotW = W - LEFT - RIGHT, MID = LEFT + plotW / 2;
   const CAP = 2.3;                                                     // log10 domain: ~0.005× … ~200×
@@ -211,11 +210,12 @@ function wasmRelativeChart(crossLanguage) {
   const subH = 15, laneGap = 12, axisH = 34, padTop = 8;
   const fmtMul = (m) => (m >= 100 ? Math.round(m) : m >= 10 ? m.toFixed(0) : m.toFixed(1)) + "×";
   const classOrder = { "cpu-throughput": 0, gpu: 1, io: 2, memory: 3 };
-  const rows = [...plottable].sort((a, b) =>
+  const rows = [...all].sort((a, b) =>
     (classOrder[a.metricClass] ?? 9) - (classOrder[b.metricClass] ?? 9) || String(a.benchmark).localeCompare(String(b.benchmark)));
 
   const bodyTop = padTop + axisH;
-  const H = Math.round(bodyTop + rows.reduce((s, r) => s + peersOf(r).length * subH + laneGap, 0) + 22);
+  const laneHeight = (row) => Math.max(1, peersOf(row).length) * subH;
+  const H = Math.round(bodyTop + rows.reduce((sum, row) => sum + laneHeight(row) + laneGap, 0) + 22);
   const gridBottom = H - 16;
 
   let body = `<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#ffffff" stroke-width="2" stroke-opacity="0.5"/></pattern></defs>`;
@@ -232,25 +232,34 @@ function wasmRelativeChart(crossLanguage) {
 
   let y = bodyTop;
   for (const r of rows) {
-    const peers = peersOf(r), laneH = peers.length * subH, aligned = r.aligned !== false;
+    const peers = peersOf(r), laneH = laneHeight(r), aligned = r.aligned !== false;
+    body += `<g data-benchmark-row="${esc(r.benchmark)}">`;
     body += `<line x1="${LEFT}" y1="${y.toFixed(1)}" x2="${(W - RIGHT).toFixed(0)}" y2="${y.toFixed(1)}" class="tram"/>`;
     body += `<line x1="${LEFT}" y1="${(y + laneH).toFixed(1)}" x2="${(W - RIGHT).toFixed(0)}" y2="${(y + laneH).toFixed(1)}" class="tram"/>`;
     body += `<text x="${(LEFT - 6).toFixed(0)}" y="${(y + laneH / 2 + 3).toFixed(1)}" class="lbl" text-anchor="end">${esc(r.benchmark)}${aligned ? "" : " ≈"}</text>`;
-    peers.forEach(([k, name], i) => {
-      const ratio = r[k] / r.wasm, faster = ratio >= 1, bx = x(ratio);
-      const bl = Math.min(MID, bx), bw = Math.max(1, Math.abs(bx - MID)), ry = y + i * subH;
-      body += `<rect x="${bl.toFixed(1)}" y="${(ry + 2).toFixed(1)}" width="${bw.toFixed(1)}" height="${subH - 4}" rx="2" fill="${faster ? "#1a9e75" : "#d06a35"}"${aligned ? "" : ' fill-opacity="0.5"'}/>`;
-      if (!aligned) body += `<rect x="${bl.toFixed(1)}" y="${(ry + 2).toFixed(1)}" width="${bw.toFixed(1)}" height="${subH - 4}" rx="2" fill="url(#hatch)"/>`;
-      body += `<text x="${(faster ? bx + 4 : bx - 4).toFixed(1)}" y="${(ry + subH / 2 + 2).toFixed(1)}" class="val" text-anchor="${faster ? "start" : "end"}">${faster ? "+" : "−"}${fmtMul(faster ? ratio : 1 / ratio)}</text>`;
-      body += `<text x="${(MID + (faster ? -4 : 4)).toFixed(1)}" y="${(ry + subH / 2 + 2).toFixed(1)}" class="rt" text-anchor="${faster ? "end" : "start"}">${name}</text>`;
-    });
+    if (isGov(r)) {
+      body += `<text x="${MID + 8}" y="${(y + laneH / 2 + 3).toFixed(1)}" class="note">internal governance metric - no cross-runtime baseline</text>`;
+    } else if (!hasWasm(r)) {
+      body += `<text x="${MID + 8}" y="${(y + laneH / 2 + 3).toFixed(1)}" class="note">no historic WASM baseline - current result retained, ratio unavailable</text>`;
+    } else if (peers.length === 0) {
+      body += `<text x="${MID + 8}" y="${(y + laneH / 2 + 3).toFixed(1)}" class="note">historic WASM recorded - no comparable peer runtime</text>`;
+    } else {
+      peers.forEach(([k, name], i) => {
+        const ratio = r[k] / r.wasm, faster = ratio >= 1, bx = x(ratio);
+        const bl = Math.min(MID, bx), bw = Math.max(1, Math.abs(bx - MID)), ry = y + i * subH;
+        body += `<rect x="${bl.toFixed(1)}" y="${(ry + 2).toFixed(1)}" width="${bw.toFixed(1)}" height="${subH - 4}" rx="2" fill="${faster ? "#1a9e75" : "#d06a35"}"${aligned ? "" : ' fill-opacity="0.5"'}/>`;
+        if (!aligned) body += `<rect x="${bl.toFixed(1)}" y="${(ry + 2).toFixed(1)}" width="${bw.toFixed(1)}" height="${subH - 4}" rx="2" fill="url(#hatch)"/>`;
+        body += `<text x="${(faster ? bx + 4 : bx - 4).toFixed(1)}" y="${(ry + subH / 2 + 2).toFixed(1)}" class="val" text-anchor="${faster ? "start" : "end"}">${faster ? "+" : "−"}${fmtMul(faster ? ratio : 1 / ratio)}</text>`;
+        body += `<text x="${(MID + (faster ? -4 : 4)).toFixed(1)}" y="${(ry + subH / 2 + 2).toFixed(1)}" class="rt" text-anchor="${faster ? "end" : "start"}">${name}</text>`;
+      });
+    }
+    body += `</g>`;
     y += laneH + laneGap;
   }
 
   const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Each language runtime's throughput relative to the legacy WASM lane, per benchmark; right of the dashed WASM=0 line is faster than WASM and left is slower, on a log scale, with each test in its own tramlined lane">${body}</svg>`;
-  const excl = noBase.length ? ` ${noBase.length} benchmark(s) carry no WASM value and are omitted here (${noBase.slice(0, 6).map((r) => r.benchmark).join(", ")}${noBase.length > 6 ? ", …" : ""}).` : "";
-  const caption = `WASM is the 0 line. A bar to the RIGHT (teal, +) is that runtime FASTER than Galerina's WASM path; to the LEFT (orange, −) is SLOWER — log scale, so +10× and −10× sit symmetrically. Each test is its own tramlined lane. Governance is internal-only and excluded; a hatched bar with a trailing "≈" is work-UNALIGNED (the ratio is not yet a certified work-equivalent comparison — read it against the noise floor).${excl}`;
-  return { svg, caption };
+  const completeCaption = `Historic WASM is the 0 line only where an admitted baseline exists. A bar to the right is an archived peer faster than the legacy WASM path; a bar to the left is slower. Every benchmark group is retained: ${plottable.length} carry a plotted WASM comparison and ${rows.length - plottable.length} carry an explicit unavailable reason. Hatched bars are work-unaligned and are not certified comparisons.`;
+  return { svg, caption: completeCaption };
 }
 
 export function buildChartHtml(report) {
@@ -262,20 +271,21 @@ export function buildChartHtml(report) {
   // theme — no prefers-color-scheme flip — so it renders identically wherever it is embedded/published.
   const style = `<style>
   html,body{background:#000000;margin:0}
-  .bench-chart{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;max-width:920px;margin:0 auto;padding:1.5rem 1.75rem;color:#ebeae2;background:#000000;border-radius:14px}
+  .bench-chart{font-family:Roboto,Arial,sans-serif;max-width:920px;margin:0 auto;padding:1.5rem 1.75rem;color:#ebeae2;background:#000000;border-radius:14px}
   .bench-chart h1{font-size:20px;font-weight:500;margin:0 0 4px;color:#f5f4ed}.bench-chart h2{font-size:16px;font-weight:500;margin:1.7rem 0 2px;color:#f5f4ed}
-  .bench-chart .sub{font-size:13px;color:#a5a49a;margin:0 0 10px}.bench-chart .empty{color:#8f8e85;font-size:13px}
+  .bench-chart .sub{font-size:13px;color:#a5a49a;margin:0 0 10px}.bench-chart .empty{color:#8f8e85;font-size:13px}.bench-chart a{color:#d5ff5c}
   .bench-chart svg .grid{stroke:#413f37;stroke-width:1}.bench-chart svg .tick{fill:#a5a49a;font-size:11px}
   .bench-chart svg .lbl{fill:#dbdad1;font-size:12px}.bench-chart svg .val{fill:#c4c3b9;font-size:11px;font-weight:500}
   .bench-chart svg .mh{fill:#f5f4ed;font-size:14px;font-weight:600}.bench-chart svg .sum{fill:#a5a49a;font-size:11px}
   .bench-chart svg .note{fill:#8f8e85;font-size:11px;font-style:italic}
   .bench-chart svg .tram{stroke:#4d4b43;stroke-width:1;stroke-opacity:0.75}.bench-chart svg .rt{fill:#8f8e85;font-size:9px}
   </style>`;
-  return `<!doctype html><meta charset="utf-8"><title>Galerina benchmark chart</title>${style}
+  return `<!doctype html><meta charset="utf-8"><title>Galerina historic runtime control archive</title>${style}
 <div class="bench-chart">
-  <h1>Galerina benchmark — runtimes vs the WASM baseline</h1>
-  <p class="sub">Baseline: ${esc(report.baseline ?? "none")}. Pre-rendered SVG · no external dependency · opens offline.</p>
-  <h2>Every runtime relative to WASM (0 = the legacy WASM lane)</h2>
+  <h1>Historic runtime control archive</h1>
+  <p class="sub">This is retained Galerina/WASM history, not the current Galerina/SLIDE runtime. Archive baseline: ${esc(report.baseline ?? "none")}. Pre-rendered SVG · no external dependency · opens offline.</p>
+  <p class="sub"><a href="benchmark-slide-vs-wasm-history-latest.html">Open the current Galerina/SLIDE transition evidence</a></p>
+  <h2>Archived runtimes relative to historic WASM</h2>
   <p class="sub">${esc(v0.caption ?? "")}</p>
   ${v0.svg ?? v0}
   <h2>Results by metric class</h2>

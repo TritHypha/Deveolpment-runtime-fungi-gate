@@ -105,6 +105,9 @@ function indexAdmitted(entries, lane, label) {
       if (key.toLowerCase().startsWith("slide") && key !== "slide" && key !== "slideReference") {
         throw new TypeError(`unexpected SLIDE-like lane: ${key}`);
       }
+      if (entry.results[key] !== null) {
+        plainRecord(entry.results[key], `${label}[${index}].results.${key}`);
+      }
     }
     if (!Object.hasOwn(entry.results, lane)) continue;
     if (entry.units?.comparable !== true || entry.units?.status !== "PASS" || entry.metricClass === "governance") continue;
@@ -282,7 +285,7 @@ function signedFactor(value, baseline) {
   return value > baseline ? value / baseline : -(baseline / value);
 }
 
-function buildWasmZeroComparisons(entries) {
+function buildCallChainWasmZeroComparisons(entries) {
   const matches = entries.filter((entry) => entry?.benchmark === CALL_CHAIN_ID);
   if (matches.length === 0) return Object.freeze([]);
   if (matches.length !== 1) throw new TypeError("duplicate call-chain workload");
@@ -346,6 +349,76 @@ function buildWasmZeroComparisons(entries) {
   })]);
 }
 
+function buildHistoricWasmComparison(entry) {
+  plainRecord(entry, `historic ${entry?.benchmark ?? "benchmark"} workload`);
+  plainRecord(entry.results, `historic ${entry.benchmark} workload results`);
+  if (
+    entry.units?.comparable !== true
+    || entry.units?.status !== "PASS"
+    || entry.metricClass === "governance"
+  ) return undefined;
+  const wasmValue = measuredValue(entry, "wasm");
+  if (wasmValue === undefined) return undefined;
+  const baseline = Object.freeze({
+    product: "Galerina/WASM (legacy)",
+    value: wasmValue,
+    factor: 0,
+    deltaPct: 0,
+  });
+  const entries = [baseline];
+  const unavailable = [];
+  for (const peer of WASM_ZERO_PEERS) {
+    const value = measuredValue(entry, peer.lane);
+    if (value === undefined) {
+      unavailable.push(peer.product);
+      continue;
+    }
+    entries.push(Object.freeze({
+      product: peer.product,
+      value,
+      factor: signedFactor(value, wasmValue),
+      deltaPct: ((value - wasmValue) * 100) / wasmValue,
+    }));
+  }
+  unavailable.push("Galerina/SLIDE");
+  const ranking = [...entries]
+    .sort((left, right) => right.value - left.value || left.product.localeCompare(right.product));
+  return Object.freeze({
+    status: "HISTORIC_CONTROL_ONLY",
+    evidenceK3: 0,
+    authorityReleased: false,
+    benchmark: entry.benchmark,
+    unit: requiredText(entry.units.unit, `historic ${entry.benchmark} workload unit`),
+    baseline,
+    entries: Object.freeze(entries),
+    unavailable: Object.freeze(unavailable),
+    winner: ranking[0].product,
+    galerinaPlace: null,
+  });
+}
+
+function buildWasmZeroComparisons(currentEntries, archiveEntries) {
+  if (!Array.isArray(archiveEntries) || types.isProxy(archiveEntries)) {
+    throw new TypeError("historic Wasm results must be an array");
+  }
+  const suiteIds = new Set(SLIDE_REFERENCE_SUITE_IDS);
+  const comparisons = new Map();
+  const seen = new Set();
+  for (const entry of archiveEntries) {
+    plainRecord(entry, "historic Wasm workload");
+    if (!suiteIds.has(entry.benchmark)) continue;
+    if (seen.has(entry.benchmark)) throw new TypeError(`duplicate historic suite workload: ${entry.benchmark}`);
+    seen.add(entry.benchmark);
+    const comparison = buildHistoricWasmComparison(entry);
+    if (comparison !== undefined) comparisons.set(comparison.benchmark, comparison);
+  }
+  const callChain = buildCallChainWasmZeroComparisons(currentEntries)[0];
+  if (callChain !== undefined) comparisons.set(callChain.benchmark, callChain);
+  return Object.freeze(SLIDE_REFERENCE_SUITE_IDS
+    .map((benchmark) => comparisons.get(benchmark))
+    .filter((comparison) => comparison !== undefined));
+}
+
 export function buildSlideWasmHistoryModel(input) {
   plainRecord(input, "history input");
   const metadata = validateMetadata(input.metadata);
@@ -368,7 +441,7 @@ export function buildSlideWasmHistoryModel(input) {
   const slide = indexAdmitted(suiteEntries, "slide", "current results");
   const slideReference = indexAdmitted(suiteEntries, "slideReference", "current results");
   const slideReferenceComparison = buildSlideReferenceComparison(suiteEntries);
-  const wasmZeroComparisons = buildWasmZeroComparisons(suiteEntries);
+  const wasmZeroComparisons = buildWasmZeroComparisons(suiteEntries, input.wasmArchive);
   const comparableGroups = suiteEntries.filter((entry) => (
     entry.units?.comparable === true
     && entry.units?.status === "PASS"
@@ -394,12 +467,25 @@ export function buildSlideWasmHistoryModel(input) {
       slideDeltaPct: aligned ? ((candidate.value - baseline.value) * 100) / baseline.value : null,
     });
   });
+  const suiteCoverage = SLIDE_REFERENCE_SUITE_IDS.map((benchmark) => {
+    const currentEntry = suiteEntries.find((entry) => entry.benchmark === benchmark);
+    let currentState = "CURRENT_RESULT_MISSING";
+    if (currentEntry !== undefined) currentState = "NO_SLIDE_MEASUREMENT";
+    if (slideReference.has(benchmark)) currentState = "MEASURED_REFERENCE";
+    if (slide.has(benchmark)) currentState = "MEASURED_PRODUCTION";
+    return Object.freeze({
+      benchmark,
+      currentState,
+      historicWasmState: wasm.has(benchmark) ? "MEASURED_HISTORIC_WASM" : "NO_HISTORIC_WASM",
+    });
+  });
 
   return Object.freeze({
     status: slide.size === 0 ? "REFERENCE_ONLY_NO_PRODUCTION_SLIDE" : "COMPARABLE_PRODUCTION_HISTORY",
     sharedProductionWorkloads,
     slideReferenceComparison,
     wasmZeroComparisons,
+    suiteCoverage: Object.freeze(suiteCoverage),
     coverage: Object.freeze({
       benchmarkGroups: suiteEntries.length,
       comparableGroups,
@@ -499,7 +585,13 @@ export function buildSlideWasmHistoryHtml(model) {
     const unavailable = comparison.unavailable.length === 0
       ? "All requested comparison runtimes measured"
       : comparison.unavailable.map((product) => `${product}: not measured`).join(" · ");
-    return `<section class="reference-panel wasm-zero-panel"><div class="panel-heading"><div><p class="eyebrow">WASM-zero same-work comparison</p><h2>${html(comparison.benchmark)}</h2><p>${comparison.iterations.toLocaleString("en-GB")} chains, ${comparison.callsPerIteration} calls per chain, exact checksum ${comparison.result.toLocaleString("en-GB")}.</p></div><strong>${html(comparison.status)} · K3 0</strong></div><div class="chart-inner"><div class="axis"><div class="axis-copy">${html(unavailable)}</div><div class="axis-plot"><strong>WASM = 0 baseline</strong><span class="slower">← slower −</span><span class="faster">faster + →</span></div></div>${chartRows}</div><table class="comparison-table"><thead><tr><th>Product</th><th>Throughput</th><th>Relative to WASM</th><th>Rank</th></tr></thead><tbody>${tableRows}</tbody></table><p class="summary"><strong>Winner: ${html(comparison.winner)}</strong> · Galerina/SLIDE place: ${comparison.galerinaPlace} of ${comparison.entries.length}. Galerina/SLIDE is a measured reference lane, remains K3 0 and releases no production authority.</p></section>`;
+    const detail = comparison.status === "HISTORIC_CONTROL_ONLY"
+      ? "Archived same-run controls. No production SLIDE measurement exists for this workload."
+      : `${comparison.iterations.toLocaleString("en-GB")} chains, ${comparison.callsPerIteration} calls per chain, exact checksum ${comparison.result.toLocaleString("en-GB")}.`;
+    const place = comparison.galerinaPlace === null
+      ? "Galerina/SLIDE: not measured."
+      : `Galerina/SLIDE place: ${comparison.galerinaPlace} of ${comparison.entries.length}. The measured reference remains K3 0 and releases no production authority.`;
+    return `<section class="reference-panel wasm-zero-panel" data-wasm-zero-panel="${html(comparison.benchmark)}"><div class="panel-heading"><div><p class="eyebrow">Historic WASM-zero comparison</p><h2>${html(comparison.benchmark)}</h2><p>${html(detail)}</p></div><strong>${html(comparison.status)} · K3 0</strong></div><div class="chart-inner"><div class="axis"><div class="axis-copy">${html(unavailable)}</div><div class="axis-plot"><strong>WASM = 0 baseline</strong><span class="slower">← slower −</span><span class="faster">faster + →</span></div></div>${chartRows}</div><table class="comparison-table"><thead><tr><th>Product</th><th>Throughput</th><th>Relative to WASM</th><th>Rank</th></tr></thead><tbody>${tableRows}</tbody></table><p class="summary"><strong>Winner: ${html(comparison.winner)}</strong> · ${html(place)}</p></section>`;
   }).join("");
   const reference = model.slideReferenceComparison;
   plainRecord(reference, "verified SLIDE reference comparison");
@@ -547,7 +639,17 @@ export function buildSlideWasmHistoryHtml(model) {
   const coverage = model.coverage;
   const missingReferenceGroups = coverage.expectedProductionSlideGroups - coverage.referenceSlideGroups;
   const coveragePanel = `<section class="coverage" aria-label="Benchmark coverage"><article><strong>${coverage.benchmarkGroups}</strong><span>${coverage.benchmarkGroups === 1 ? "benchmark group run" : "benchmark groups run"}</span></article><article><strong>${coverage.comparableGroups}</strong><span>${coverage.comparableGroups === 1 ? "comparable group expected" : "comparable groups expected"} for full production SLIDE coverage</span></article><article><strong>${coverage.productionSlideGroups} of ${coverage.expectedProductionSlideGroups}</strong><span>production SLIDE ${coverage.expectedProductionSlideGroups === 1 ? "group" : "groups"} measured</span></article><article><strong>${coverage.referenceSlideGroups} of ${coverage.expectedProductionSlideGroups}</strong><span>SLIDE reference ${coverage.referenceSlideGroups === 1 ? "group" : "groups"} measured; ${missingReferenceGroups} not measured</span></article><article><strong>${coverage.historicWasmGroups}</strong><span>historic WASM ${coverage.historicWasmGroups === 1 ? "group" : "groups"} recorded</span></article></section>`;
-  referencePanel = `${coveragePanel}${wasmZeroPanels}${referencePanel}`;
+  if (
+    !Array.isArray(model.suiteCoverage)
+    || types.isProxy(model.suiteCoverage)
+    || model.suiteCoverage.length !== coverage.expectedProductionSlideGroups
+  ) throw new TypeError("complete suite coverage is required");
+  const suiteCoverageRows = model.suiteCoverage.map((row) => {
+    plainRecord(row, "suite coverage row");
+    return `<tr data-suite-coverage-row="${html(row.benchmark)}" data-current-state="${html(row.currentState)}"><td>${html(row.benchmark)}</td><td>${html(row.currentState)}</td><td>${html(row.historicWasmState)}</td></tr>`;
+  }).join("");
+  const suiteCoveragePanel = `<section class="reference-panel suite-coverage"><p class="eyebrow">Complete registered coverage</p><h2>All 18 SLIDE migration benchmark groups</h2><p>Every registered SLIDE migration benchmark is listed. Missing measurements remain explicit and receive no ratio, rank or authority.</p><table class="comparison-table"><thead><tr><th>Benchmark</th><th>Current SLIDE state</th><th>Historic WASM state</th></tr></thead><tbody>${suiteCoverageRows}</tbody></table></section>`;
+  referencePanel = `${coveragePanel}${suiteCoveragePanel}${wasmZeroPanels}${referencePanel}`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Galerina/SLIDE and Galerina/WASM benchmark evidence</title><style>
   .coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;background:#0a0d0b;border:1px solid #323733;padding:24px;margin-bottom:18px}.coverage article{border-left:3px solid #d5ff5c;padding:2px 12px}.coverage strong{display:block;font-size:1.45rem}.coverage span{color:#9da39f;font-size:.82rem}
   :root{color-scheme:dark;--bg:#050706;--panel:#0a0d0b;--ink:#f2f4f2;--muted:#9da39f;--line:#323733;--line-soft:#202521;--slide:#20ae89;--slow:#d96d34;--zero:#c7cbc8;--accent:#d5ff5c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Roboto,Arial,sans-serif;line-height:1.45}main{width:min(1440px,100%);margin:auto;padding:28px 18px 64px}header,.reference-panel,.chart,.notice,.sources{background:var(--panel);border:1px solid var(--line);padding:24px;margin-bottom:18px}header,.panel-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end}h1,h2,p{margin-top:0}h1{font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.02;margin-bottom:14px}h2{font-size:1.3rem;margin-bottom:8px}.eyebrow{font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}.lede,.notice p,.workload-copy p,.panel-heading p,.summary{color:var(--muted)}.status,.panel-heading>strong{font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.04em;text-align:right}.chart,.reference-panel{overflow-x:auto}.chart-inner{min-width:1020px}.axis,.workload{display:grid;grid-template-columns:260px minmax(700px,1fr)}.axis{align-items:end;padding-bottom:14px;border-bottom:1px solid var(--line)}.axis-copy{color:var(--muted);font-size:.9rem}.axis-plot{position:relative;height:54px}.axis-plot strong{position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:1.15rem;white-space:nowrap}.axis-plot .slower,.axis-plot .faster{position:absolute;bottom:0;color:var(--muted)}.axis-plot .slower{left:0}.axis-plot .faster{right:0}.workload{min-height:86px;border-bottom:1px solid var(--line);align-items:stretch}.workload-copy{padding:18px 20px 14px 0;text-align:right}.workload-copy h2{font-size:1.05rem;margin-bottom:4px}.workload-copy p{font-size:.82rem;margin:0}.plot{position:relative;min-height:86px;background:linear-gradient(to right,transparent 24.9%,var(--line-soft) 25%,transparent 25.1%,transparent 49.9%,var(--line) 50%,transparent 50.1%,transparent 74.9%,var(--line-soft) 75%,transparent 75.1%)}.zero{position:absolute;left:50%;top:27px;width:3px;height:32px;background:var(--zero);transform:translateX(-1px)}.bar{position:absolute;top:31px;height:22px}.bar.positive{background:var(--slide)}.bar.negative{background:var(--slow)}.result{position:absolute;top:32px;font-size:.88rem;white-space:nowrap}.result.positive,.result.unmeasured{color:#d7ded9;margin-left:10px}.result.negative{color:#f1c5ae;margin-right:10px}.comparison-table{min-width:760px;margin-top:22px}.comparison-table tbody tr:first-child td{color:var(--accent);font-weight:700}.summary{margin:18px 0 0}.summary strong{color:var(--ink)}.notice{border-color:#3f4c43}.notice code{color:var(--accent)}table{border-collapse:collapse;width:100%;font-size:.86rem}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:500}code{overflow-wrap:anywhere;color:#c9d2cc}dl{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:6px 18px;margin-bottom:0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}@media(max-width:720px){main{padding:10px 8px 32px}header,.reference-panel,.chart,.notice,.sources{padding:16px}header,.panel-heading{grid-template-columns:1fr}.status,.panel-heading>strong{text-align:left}.sources{overflow:auto}.sources table{min-width:760px}dl{grid-template-columns:1fr}dd{margin-bottom:8px}}

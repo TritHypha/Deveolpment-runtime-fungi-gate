@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T21:14:08.756Z",
+  "generatedAt": "2026-08-12T22:00:09.654Z",
   "references": {
     "generatedAt": "2026-08-12T20:57:50.457Z",
     "resultSha256": "af0f681b2c4264b3ad85b0c549a1937fa679da99bc79d9b8062e69f50a6130b2",
@@ -12,8 +12,8 @@
       "rust": "rustc 1.96.1 (31fca3adb 2026-06-26)"
     },
     "publication": {
-      "generatedAt": "2026-08-12T21:14:08.756Z",
-      "galerinaCommit": "dce73386f8c4ec4c826edf6f584dc9b88623db9e",
+      "generatedAt": "2026-08-12T22:00:09.654Z",
+      "galerinaCommit": "af03572131c9ea4a0f4bc4849ff0ec85802bbe33",
       "slideCommit": "c908d891efc06b409e16d2ce31fad56f6e469f4a"
     },
     "wasmReference": {

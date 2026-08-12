@@ -38,6 +38,24 @@ const html = buildChartHtml(fixture);
 ok(typeof html === "string" && html.length > 500, "produces a non-trivial HTML string");
 ok((html.match(/<svg/g) || []).length === 3, "renders THREE views as SVG (WASM-relative + metric-grouped + diff)");
 ok((html.match(/<rect/g) || []).length >= 6, "renders bars (>=6 <rect>) for the fixture rows");
+ok(
+  (html.match(/data-benchmark-row=/g) || []).length === fixture.crossLanguage.length,
+  "historic control view accounts for every benchmark group exactly once",
+);
+for (const row of fixture.crossLanguage) {
+  ok(
+    html.includes(`data-benchmark-row="${row.benchmark}"`),
+    `historic control view keeps an explicit row for ${row.benchmark}`,
+  );
+}
+ok(
+  html.includes("Historic runtime control archive") && html.includes("not the current Galerina/SLIDE runtime"),
+  "labels WASM as a historic control instead of the current Galerina runtime",
+);
+ok(
+  html.includes('href="benchmark-slide-vs-wasm-history-latest.html"'),
+  "routes readers to the current SLIDE transition evidence",
+);
 
 // VIEW 0 (owner-requested 2026-07-19): every runtime RELATIVE TO WASM — WASM is the 0 line, a runtime
 // faster than WASM is a teal (+) bar to the RIGHT, slower is an orange (−) bar to the LEFT, and each

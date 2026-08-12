@@ -161,6 +161,41 @@ test("call-chain comparison uses legacy Wasm as zero and derives signed factors"
   assert.equal(comparison.entries.find((entry) => entry.product === "Rust").factor > 2.8, true);
 });
 
+test("historic WASM panels include every admitted archived suite group with real peer measurements", () => {
+  const input = fixture();
+  input.wasmArchive.push({
+    benchmark: "compute-mix",
+    metricClass: "cpu-throughput",
+    units: { comparable: true, status: "PASS", unit: "mix-ops/s" },
+    results: {
+      wasm: { normThroughput: 100 },
+      rust: { normThroughput: 250 },
+      nodejs: { normThroughput: 80 },
+      python: { normThroughput: 5 },
+    },
+  });
+
+  const model = buildSlideWasmHistoryModel(input);
+  const comparison = model.wasmZeroComparisons.find((row) => row.benchmark === "compute-mix");
+
+  assert.equal(comparison.status, "HISTORIC_CONTROL_ONLY");
+  assert.equal(comparison.baseline.product, "Galerina/WASM (legacy)");
+  assert.equal(comparison.entries.find((row) => row.product === "Rust").factor, 2.5);
+  assert.equal(comparison.entries.find((row) => row.product === "Node.js").factor, -1.25);
+  assert.equal(comparison.entries.some((row) => row.product.includes("SLIDE")), false);
+  assert.equal(comparison.winner, "Rust");
+  assert.equal(comparison.galerinaPlace, null);
+});
+
+test("an explicit null runtime slot remains an unavailable measurement", () => {
+  const input = fixture();
+  input.wasmArchive[0].results.cpp = null;
+
+  const model = buildSlideWasmHistoryModel(input);
+
+  assert.equal(model.coverage.historicWasmGroups, 2);
+});
+
 test("verified SLIDE reference comparison refuses authority-bearing or malformed evidence", () => {
   const authorityBearing = fixture();
   authorityBearing.current[0].results.slideReference.authorityReleased = true;
@@ -223,6 +258,12 @@ test("history page renders the approved SLIDE-zero reference panel without weake
 test("history page states the complete benchmark and SLIDE coverage counts", () => {
   const model = buildSlideWasmHistoryModel(fixture());
   const page = buildSlideWasmHistoryHtml(model);
+
+  assert.equal(model.suiteCoverage.length, 18);
+  assert.equal((page.match(/data-suite-coverage-row=/gu) ?? []).length, 18);
+  assert.match(page, /data-suite-coverage-row="verified-native-operation"[^>]*data-current-state="MEASURED_REFERENCE"/u);
+  assert.match(page, /data-suite-coverage-row="spectral-norm"[^>]*data-current-state="CURRENT_RESULT_MISSING"/u);
+  assert.match(page, /Every registered SLIDE migration benchmark is listed/u);
 
   assert.deepEqual(model.coverage, {
     benchmarkGroups: 2,
@@ -306,6 +347,17 @@ test("malformed provenance and disguised lane names refuse", () => {
   });
   assert.throws(() => buildSlideWasmHistoryModel(proxiedEntry), /must be plain data/u);
   assert.equal(proxyReads, 0);
+
+  let archiveProxyReads = 0;
+  const proxiedArchiveLane = fixture();
+  proxiedArchiveLane.wasmArchive[0].results.wasm = new Proxy({}, {
+    get() {
+      archiveProxyReads += 1;
+      throw new Error("must not execute");
+    },
+  });
+  assert.throws(() => buildSlideWasmHistoryModel(proxiedArchiveLane), /must be plain data/u);
+  assert.equal(archiveProxyReads, 0);
 
   const duplicate = fixture();
   duplicate.current.push({ ...duplicate.current[1] });

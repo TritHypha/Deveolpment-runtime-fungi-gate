@@ -35,7 +35,7 @@ writeFileSync(join(ROOT, "report.md"), run(["src/compare.mjs"]));
 run(["src/report.mjs"]);
 // 3. artifact-ready standalone: the same self-contained chart, doctype stripped so it publishes/embeds directly.
 const full = readFileSync(join(ROOT, "results/benchmark-chart-latest.html"), "utf8");
-const frag = full.replace(/^<!doctype html><meta[^>]*><title>[^<]*<\/title>/i, "<title>Galerina benchmark — runtimes vs the WASM baseline</title>");
+const frag = full.replace(/^<!doctype html><meta[^>]*><title>[^<]*<\/title>/i, "<title>Galerina historic runtime control archive</title>");
 writeFileSync(join(ROOT, "results/benchmark-chart-standalone.html"), frag);
 
 console.log("✅ benchmark UI built:");

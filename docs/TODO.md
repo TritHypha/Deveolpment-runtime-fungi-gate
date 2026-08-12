@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Complete benchmark publication coverage - 2026-08-12
+
+- [x] Correct the general benchmark chart so its historic WASM control view
+  accounts for all **30/30** recorded benchmark groups exactly once. The **17**
+  groups with admitted WASM and Node measurements retain real signed factors;
+  every other group now carries an explicit no-baseline, no-peer or
+  internal-governance reason instead of disappearing.
+- [x] Relabel `benchmark-chart-latest.html` as the **Historic runtime control
+  archive**, state that WASM is not the current Galerina/SLIDE runtime, and add
+  a repository-relative route to the current SLIDE transition evidence.
+- [x] Correct the SLIDE transition page so all **18/18** registered migration
+  benchmark groups appear in a closed coverage table and all **12** admitted
+  historic WASM groups have detailed zero-baseline charts and HTML result
+  tables. Missing SLIDE or WASM measurements receive no synthetic factor,
+  winner, rank or authority.
+- [ ] Production Galerina/SLIDE remains **0/18**. Two bounded
+  `slideReference` groups are measured and non-authorizing; they must not be
+  promoted to production results. The remaining benchmark work is execution
+  coverage, not a chart-publication omission.
+
 ### Deferred SLIDE call-chain performance investigation - 2026-08-12
 
 - [ ] Investigate why the exact **50,000-chain / seven-calls-per-chain**
@@ -8335,8 +8355,8 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
   18 comparable unit checks and the freshness audit.
 - [ ] Add a real admitted production SLIDE lane. Until then the production
   chart and table must remain `DEFERRED_NO_SLIDE_LANE`, with K3 authority `0`.
-  Current coverage is **0/18** comparable production SLIDE groups; the one
-  measured `slideReference` group remains separate and non-authorizing.
+  Current coverage is **0/18** comparable production SLIDE groups; the two
+  measured `slideReference` groups remain separate and non-authorizing.
 - [ ] Expand the bounded SLIDE compiler/executor profile for the benchmark
   corpus. A direct current-profile probe refused all 14 comparable workloads
   that already have `benchmark.fungi` with `SLIDE-CHECKED-PURE-SCALAR-001`;
