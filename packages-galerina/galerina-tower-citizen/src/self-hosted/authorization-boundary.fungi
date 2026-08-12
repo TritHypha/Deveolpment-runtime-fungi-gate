@@ -12,3 +12,15 @@ contract { intent { "Release only a proven Allow verdict." } }
     if: { return true }
   }
 }
+
+/// Collapse a closed K3 Verdict to its binary boundary label.
+/// Unknown is never promoted: both Unknown and Deny collapse to "deny".
+pure flow collapseVerdict(candidateVerdict: Verdict) -> String
+contract { intent { "Name the fail-closed binary boundary decision." } }
+{
+  check(candidateVerdict) {
+    deny: { return "deny" }
+    ambig: { return "deny" }
+    if: { return "allow" }
+  }
+}
