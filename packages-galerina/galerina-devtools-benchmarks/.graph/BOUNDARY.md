@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 36 |
-| Internal edges | 22 |
+| Files | 38 |
+| Internal edges | 25 |
 | External dependencies | 9 |
 | ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 0 |
@@ -51,6 +51,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/bench-guard.mjs`
 - `src/build-chart.mjs`
 - `src/build-native.mjs`
+- `src/build-slide-wasm-history.mjs`
 - `src/chart.mjs`
 - `src/compare-chart.mjs`
 - `src/compare.mjs`
@@ -61,6 +62,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/report.mjs`
 - `src/runner.mjs`
 - `src/slide-vade-adapter.mjs`
+- `src/slide-wasm-history-report.mjs`
 - `src/slide-zero-publication.mjs`
 - `src/slide-zero-report.mjs`
 - `src/snapshot.mjs`
