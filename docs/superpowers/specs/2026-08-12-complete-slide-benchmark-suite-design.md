@@ -60,15 +60,22 @@ digest bind each observation.
 
 ### 2. Composable checked-Fungi lowering
 
-SLIDE will select capabilities from the complete lowered module rather than
-choosing one mutually exclusive registry by precedence. The compiler derives a
-canonical registry-set identity, refuses unsupported combinations, and emits a
-reference-only `.slide` bundle. Each new capability combination begins with a
-RED compiler test, then a GREEN positive vector and mutation/refusal vectors.
+SLIDE's append-only successor registries already compose straight-line checked
+calls, multiplication, division, remainder and subtraction. Fresh physical
+execution proves that combination under the checked-remainder successor, so a
+new composite registry identity would add churn without closing a capability
+gap. Preserve the existing append-only contract: select the smallest registered
+successor that contains every required operation, independently inspect the
+emitted module, and refuse any operation absent from that successor.
+
+The first open compiler boundary is bounded mutable `while` control composed
+with those already-proved operations. Each new control or value-shape
+combination begins with a RED compiler test, then a GREEN positive vector and
+mutation/refusal vectors.
 
 Compiler support will be added in the smallest dependency order:
 
-1. bounded scalar loops, calls and checked arithmetic in one registry set;
+1. bounded scalar loops composed with calls and checked arithmetic;
 2. nested bounded loops and wider function/block sets;
 3. bounded recursion with explicit depth and execution budgets;
 4. immutable text/array/Option operations composed with loops and calls;

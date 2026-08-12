@@ -35,29 +35,29 @@
 - Consumes: the canonical `BENCHMARKS` entries and `benchmarkSpec(id)` unit definitions.
 - Produces: `readSlideReferenceSuite()` returning a deeply frozen 18-entry exact object; `auditSlideReferenceSuite()` returning `{ verdict, status, failureId, expected, measured }`.
 
-- [ ] **Step 1: Write the RED manifest tests**
+- [x] **Step 1: Write the RED manifest tests**
 
 Assert the exact ordered 18 IDs, exact-object parsing, duplicate/surplus/missing refusal, canonical unit agreement, tracked source ownership, and failure when the runner or report claims a different denominator. Include one mutation per field class.
 
-- [ ] **Step 2: Prove RED**
+- [x] **Step 2: Prove RED**
 
 Run `node --test packages-galerina/galerina-devtools-benchmarks/test/slide-reference-suite.test.mjs`. Require failure because the reader and contract do not exist.
 
-- [ ] **Step 3: Implement the minimum closed reader**
+- [x] **Step 3: Implement the minimum closed reader**
 
 Parse UTF-8 bytes with duplicate-key detection, compare exact keys, freeze nested entries, and cross-check identity/unit/source facts against live imported owners. Do not accept an arbitrary manifest path.
 
-- [ ] **Step 4: Wire coverage without adding measurements**
+- [x] **Step 4: Wire coverage without adding measurements**
 
 Make the runner and history model derive the expected count from the closed suite. Existing output must remain `0/18` production and `1/18` reference until later tasks add admitted observations.
 
-- [ ] **Step 5: Prove GREEN and commit**
+- [x] **Step 5: Prove GREEN and commit**
 
 Run the focused manifest and history-report tests, then the 72-test benchmark package. Commit only Task 1 files.
 
 ---
 
-### Task 2: Composable checked-Fungi scalar capability sets
+### Task 2: Prove the successor registry and close bounded scalar loops
 
 **Files:**
 - Modify: `../SLIDE/src/checked-fungi-pure-scalar-compiler.mjs`
@@ -67,28 +67,36 @@ Run the focused manifest and history-report tests, then the 72-test benchmark pa
 - Test its registered owner under `../SLIDE/tests/`
 
 **Interfaces:**
-- Consumes: the existing lowered-module capability flags and checked V2-C registry compilers.
-- Produces: one canonical composite registry-set selection whose digest is derived from the sorted required capability IDs, never precedence order.
+- Consumes: the existing lowered-module capability flags, append-only checked V2-C successor registries and bounded-loop certificate.
+- Produces: proof that the smallest containing successor composes straight-line checked operations, then bounded mutable `while` lowering composed with that successor.
 
-- [ ] **Step 1: Write a RED composite-profile test**
+- [x] **Step 1: Prove the existing straight-line successor composition**
 
-Use a fixed Fungi fixture containing a bounded `while`, a transitive flow call, checked multiplication, division, remainder and subtraction. Assert compile verdict `1`, physical bytes, reference-only flags, exact result and mutation refusal. Name the production change: removing any required registry component must make this test refuse.
+Use fixed Fungi source with a transitive flow call, checked multiplication, division, remainder and subtraction. Assert compile verdict `1`, the exact checked-remainder successor registry, physical bytes, reference-only flags, exact result and zero-divisor refusal. This proof is committed in SLIDE as `1a3f3e8`; it demonstrates that no new composite registry ID is required.
 
-- [ ] **Step 2: Prove RED with the current generic refusal**
+- [x] **Step 2: Write and prove RED for bounded mutable `while` composition**
 
-Run only `node --test tests/checked-fungi-pure-scalar-compiler.test.mjs` in SLIDE and record `SLIDE-CHECKED-PURE-SCALAR-001` for the new vector.
+Use a fixed Fungi fixture containing a canonical bounded `while`, mutable induction/state, a transitive flow call and the already-proved checked arithmetic combination. Assert the current generic source compiler refuses this exact vector before implementation.
 
-- [ ] **Step 3: Implement canonical capability composition**
+- [x] **Step 3: Implement the minimum bounded-loop composition**
 
-Replace mutually exclusive registry precedence with an exact supported-set compiler. Preserve all existing single-capability registry IDs and reject unknown combinations. Derive the registry-set digest from domain-framed sorted identifiers and bind it into inspection and bundle evidence.
+Reuse the existing certified counted-control successor and loop certificate. Add only the source/IR bridge needed for canonical mutable `while` state, exact induction progress and the existing arithmetic/call operations. Preserve every existing registry ID and reject unsupported source or registry combinations.
 
-- [ ] **Step 4: Add hostile combinations**
+- [x] **Step 4: Add hostile combinations**
 
 Test missing component, reordered flags, surplus registry, altered digest, excessive blocks, excessive calls, overflow, division by zero and remainder by zero. Every hostile case must refuse without authority release.
 
-- [ ] **Step 5: Prove GREEN and commit SLIDE**
+- [x] **Step 5: Prove GREEN and commit SLIDE**
 
 Run the focused compiler, reference compiler, executor, bundle and admission tests. Commit the exact SLIDE paths locally.
+
+Task 2 closed at SLIDE `5108cb0`. The admitted source shape is deliberately
+narrow: one canonical constant-bound loop (`1..8`), exact zero start, unit
+induction progress, unique mutable Int state, and no conditional/nested loop
+body. It composes transitive calls and checked arithmetic through the existing
+certified-counted-control successor. Focused compiler, executor, bundle,
+contract, forbidden-state, path-leak and 93-test regression evidence passed;
+the result remains reference-only and releases no authority.
 
 ---
 
