@@ -38,6 +38,32 @@
     },
     {
       "astKinds": {
+        "block": 7,
+        "contractDecl": 1,
+        "identifier": 2,
+        "intentDecl": 1,
+        "matchArm": 6,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 6,
+        "stringLiteral": 5,
+        "typeRef": 2
+      },
+      "byteLength": 571,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-core-compiler/src/self-hosted/capability-normalization.fungi",
+      "sourceSha256": "sha256:8a0bb2a2ec4cc512cb984d773b4b3cbe672929cbce513d813a7b151a0386d0d4",
+      "typeRefs": {
+        "String": 2
+      }
+    },
+    {
+      "astKinds": {
         "binaryExpr": 1,
         "block": 28,
         "boolLiteral": 11,
@@ -130,6 +156,32 @@
         "Expr": 2,
         "Int": 2,
         "String": 18
+      }
+    },
+    {
+      "astKinds": {
+        "block": 7,
+        "contractDecl": 1,
+        "identifier": 2,
+        "intentDecl": 1,
+        "matchArm": 6,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 6,
+        "stringLiteral": 5,
+        "typeRef": 2
+      },
+      "byteLength": 532,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-core-compiler/src/self-hosted/floor-normalisation.fungi",
+      "sourceSha256": "sha256:c868880147f2e5d83504d934e9ed60533cf911c92705926ff95cbadfa78178d6",
+      "typeRefs": {
+        "String": 2
       }
     },
     {
@@ -5352,20 +5404,20 @@
   "schema": "galerina.fungi-source-capability-inventory.v1",
   "source": {
     "retirementField": "unexecutedFungiPaths",
-    "retirementGraphSha256": "sha256:9c03494a6022c367b55c318c83f424ceb19d66900af65856175f6e59b700da67"
+    "retirementGraphSha256": "sha256:88490a73a383073b30f725d4d2d33ecc8d548937b02af6d42a6543d8506dcd78"
   },
   "totals": {
     "astKinds": {
       "assignStmt": 2120,
       "binaryExpr": 6034,
       "bitfieldDecl": 1,
-      "block": 4997,
+      "block": 5011,
       "boolLiteral": 1576,
       "callExpr": 7235,
       "charLiteral": 15,
       "checkArm": 312,
       "checkExpr": 104,
-      "contractDecl": 825,
+      "contractDecl": 827,
       "contractSetDecl": 1,
       "ensureDecl": 11,
       "enumDecl": 1,
@@ -5373,34 +5425,34 @@
       "forEachStmt": 8,
       "governedFlowDecl": 8,
       "guardedFlowDecl": 3,
-      "identifier": 18868,
+      "identifier": 18872,
       "ifStmt": 2260,
       "importDecl": 22,
-      "intentDecl": 825,
+      "intentDecl": 827,
       "letDecl": 1856,
       "listLiteral": 115,
-      "matchArm": 1207,
-      "matchExpr": 371,
+      "matchArm": 1219,
+      "matchExpr": 373,
       "memberExpr": 4682,
       "mutDecl": 810,
       "numberLiteral": 5708,
-      "paramDecl": 2783,
-      "program": 120,
-      "pureFlowDecl": 820,
+      "paramDecl": 2785,
+      "program": 122,
+      "pureFlowDecl": 822,
       "recordDecl": 206,
-      "returnStmt": 2975,
+      "returnStmt": 2987,
       "secureFlowDecl": 1,
       "staticDecl": 15,
-      "stringLiteral": 4808,
+      "stringLiteral": 4818,
       "trapDecl": 50,
       "typeDecl": 3,
-      "typeRef": 2455,
+      "typeRef": 2459,
       "unaryExpr": 249,
       "whileStmt": 340
     },
-    "bytes": 1119843,
-    "files": 120,
-    "flows": 832,
+    "bytes": 1120946,
+    "files": 122,
+    "flows": 834,
     "memberCalls": {
       "append": 707,
       "bitAnd": 12,
@@ -5687,7 +5739,7 @@
       "StaticEnv": 2,
       "Stmt": 5,
       "StmtParse": 1,
-      "String": 427,
+      "String": 431,
       "TierDecision": 1,
       "TokenizeResult": 1,
       "TrapSignal": 2,

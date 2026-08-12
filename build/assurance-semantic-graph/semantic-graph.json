@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "9cff17d37baf44cd119d0cde9dbfc5ffeb188919804958f6cf5531206ef248fb",
+  "authoritativeInputsDigest": "a8c50fe07766831efefd6c60be3294c1a33db82efad4303bd782cc4e4d99f2c8",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -1288,6 +1288,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-b82562bba1fed5e479f417cf",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/capability-normalization-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-10440d251d36f47120ef2015",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs",
@@ -1683,6 +1690,20 @@
       "id": "test:auto-d4bc385bacf0bdef5c70fa53",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/float-nonfinite-wasm-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8594f885511b989240da1497",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/floor-normalisation-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-919a513d68daa490b3837e07",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/floor-normalisation.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6601,6 +6622,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-8bca0208a49977c9949d8c17",
+      "kind": "test",
+      "evidencePath": "scripts/tests/capability-normalization-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-d2650e279c18b06ad34e9d72",
       "kind": "test",
       "evidencePath": "scripts/tests/cg4-signing-boundary.test.mjs",
@@ -6737,6 +6765,13 @@
       "id": "test:auto-1879ba5b44f19cd5cd6ac60d",
       "kind": "test",
       "evidencePath": "scripts/tests/flat-package-root-lock.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-65bd31327723f32565b2f0cd",
+      "kind": "test",
+      "evidencePath": "scripts/tests/floor-normalisation-fungi-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7558,6 +7593,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-b82562bba1fed5e479f417cf",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-10440d251d36f47120ef2015",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -7839,6 +7879,16 @@
     },
     {
       "from": "test:auto-d4bc385bacf0bdef5c70fa53",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8594f885511b989240da1497",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-919a513d68daa490b3837e07",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11353,6 +11403,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-8bca0208a49977c9949d8c17",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-d2650e279c18b06ad34e9d72",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11449,6 +11504,11 @@
     },
     {
       "from": "test:auto-1879ba5b44f19cd5cd6ac60d",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-65bd31327723f32565b2f0cd",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -11858,9 +11918,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 903,
+    "tests": 908,
     "detectors": 6,
-    "executableFamily": 1430,
+    "executableFamily": 1433,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
