@@ -2,10 +2,9 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-second conversion slice uses local SLIDE
-`42b94af`. It adds basic-block-local reuse of immutable Boolean and integer
-constants without raising the fixed instruction ceiling or widening a registry;
-the affected pure-scalar, external-record, and transitive-work neighborhood is
+Current checkpoint: the twenty-third conversion slice continues to use local
+SLIDE `42b94af`; it requires no new SLIDE change or registry widening. The
+affected pure-scalar, external-record, and transitive-work neighborhood remains
 **27/27**. The last complete SLIDE evidence remains the earlier `ac8a041`
 checkpoint (**986/986 across 97 suites**, 91-file tool manifest, 95-file closed
 contract catalog). Complete current-SLIDE and fresh security closure therefore
@@ -29,6 +28,28 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-third physical conversion slice 2026-08-12: the Boolean authority
+decision inside exported `canHonour` now has exact package-owned pure
+`canHonourFungi`. Four restricted ceiling names return only their corresponding
+capability Bool, `unrestricted` returns true, and the terminal wildcard returns
+false. The RED differential proof found that the TypeScript `Record` lookup
+treated hostile `"__proto__"` as a truthy inherited object and therefore
+returned success. The live TypeScript adapter now uses a prototype-free `Map`
+lookup, so the Fungi and TypeScript boundaries both deny it. The complete
+declared, absent, unknown and hostile differential matrix passes in the focused
+**20/20** lane. Independent SLIDE publishes and re-admits one physical
+`.slide`, then verifies **56** typed VOK Bool receipts (**2/2** combined
+physical tests, zero skips). Wrong type/arity, invalid Unicode, inadequate fuel
+and source, receipt, envelope or artifact mutation refuse under pinned registry
+`slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1`. Strict Fungi
+checking is clean, compiler is **6,377/6,377**, Golden Pack is **11/11**, and
+the canonical owner passes **100/100 packages and 9,597 tests in 275.7s**.
+Retirement remains **1,442** executable-family paths and **128** source Fungi
+assets. TypeScript retains diagnostic construction, host resolution and all
+consumers; repository-wide closure remains **UNKNOWN** because crash-linked
+full tooling, normal phase-close and monolithic memory evaluation remain
+excluded.
 
 Twenty-second physical conversion slice 2026-08-12: exported `resolveHost` now
 has exact package-owned pure `resolveHostFungi` in a dedicated one-record Fungi

@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-third physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the security-authorizing Boolean inside exported `canHonour` as
+  package-owned pure `canHonourFungi(ceiling: String, canRegisterPin: Bool,
+  canNoDramSpill: Bool, canNoSwap: Bool, canNoDisk: Bool) -> Bool`.
+- [x] Make the terminal String match fail closed for every unknown ceiling.
+  The RED differential matrix exposed a live TypeScript prototype lookup:
+  `"__proto__"` inherited a truthy object from `Record` and returned success.
+  Replace it with an exact prototype-free `Map` lookup; the focused host and
+  differential lane passes **20/20**.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  **56** canonical/hostile typed VOK Bool receipts (**2/2** combined physical
+  tests, zero skips). Wrong type/arity, invalid Unicode, inadequate fuel,
+  source, receipt, envelope, and artifact mutation all refuse under the pinned
+  bounded-wide-control-flow registry.
+- [x] Pass strict Fungi checking with zero errors/warnings, compiler
+  **6,377/6,377**, Golden Pack **11/11**, and the canonical owner **100/100
+  packages and 9,597 tests in 275.7s**. Retirement remains **1,442**
+  executable-family paths and **128** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Keep TypeScript diagnostic construction, host resolution and every consumer
+  active; grant no consumer-switch, platform-attestation, production, release,
+  or retirement authority.
+
 ### Twenty-second physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `resolveHost` as package-owned pure
