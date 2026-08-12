@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Eighteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `atLeastAsStrict` as package-owned pure
+  `atLeastAsStrictFungi` over the exact five-tier residency lattice, with
+  unknown runtime Strings isolated as a rejected sentinel.
+- [x] Prove the complete 25-pair canonical matrix plus hostile String parity
+  (**1/1**) and physical SLIDE/VOK Bool receipts (**1/1**, zero skips). Wrong
+  ABI shape, invalid Unicode, inadequate step fuel and source/artifact mutation
+  refuse.
+- [x] Pass the focused hardening neighborhood **31/31**, compiler
+  **6,372/6,372**, Golden Pack **11/11**, and canonical owner **100/100 packages
+  and 9,592 tests in 278.3s**. Retirement records **1,438** executable-family
+  paths and **127** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Grant no consumer-switch, production, runtime-residency, release or
+  retirement authority.
+
 ### Seventeenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `isRoundMode` as package-owned pure
@@ -501,8 +518,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the latest complete package lane passes **100/100 packages and 9,591 tests**
-  in 275.4 seconds. These are verification evidence, not release authority.
+  the latest complete package lane passes **100/100 packages and 9,592 tests**
+  in 278.3 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 

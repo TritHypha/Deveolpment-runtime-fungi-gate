@@ -269,6 +269,21 @@ records **1,435** executable-family paths and **124** source Fungi assets.
 TypeScript and every consumer remain active; repository-wide closure remains
 **UNKNOWN**.
 
+Eighteenth physical conversion slice 2026-08-12: exported `atLeastAsStrict`
+now has exact package-owned `atLeastAsStrictFungi`. The candidate maps the five
+closed residency tiers to ranks `0..4`, maps every other String to sentinel
+`5`, rejects either sentinel in one combined guard, then evaluates the exact
+lower-rank-is-stricter relation. The complete 25-pair matrix plus hostile
+Strings passes typed parity (**1/1**). Independent SLIDE `053cc75` publishes
+and independently re-admits one physical `.slide` under the frozen bounded-
+wide-control-flow registry with typed Bool receipts (**1/1**, zero skips);
+wrong ABI shape, invalid Unicode, step exhaustion and source/artifact mutations
+refuse. The focused hardening neighborhood is **31/31**, Golden Pack **11/11**,
+compiler **6,372/6,372**, and the canonical owner **100/100 packages and 9,592
+tests in 278.3s**. Retirement records **1,438** executable-family paths and
+**127** source Fungi assets. TypeScript, reconciliation and all consumers remain
+active; repository-wide closure remains **UNKNOWN**.
+
 Seventeenth physical conversion slice 2026-08-12: exported `isRoundMode` now
 has exact package-owned `isRoundModeFungi`. Two closed helper matches partition
 the seven canonical policies within SLIDE's five-branch bound; their wildcards
@@ -2870,6 +2885,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,591 tests** in 275.4 seconds. The normal custody close remains fail-closed:
+9,592 tests** in 278.3 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
