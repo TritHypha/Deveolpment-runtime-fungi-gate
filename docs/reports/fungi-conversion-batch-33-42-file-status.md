@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-61 File Status
+# Fungi Conversion Batch 33-62 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -50,6 +50,7 @@ The active roadmap is updated once at the bounded batch exit.
 | 59 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriTrue` | not created | not created | The leaf comparison is pure, but the public input is the canonical heterogeneous `TriState` record union. A scalar String, enum or i32 tag would not prove that record boundary. Core Logic remains green **57/57**. | `BLOCKED` |
 | 60 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriFalse` | not created | not created | Same exact record-union and TypeScript type-predicate boundary as Slice 59; no host-side discriminant projection is authorized. Core Logic remains green **57/57**. | `BLOCKED` |
 | 61 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriUnknown` | not created | not created | The unknown variant additionally carries `Array<UnknownReason>` with an optional source field. No exact physical admission exists for the complete union. Core Logic remains green **57/57**. | `BLOCKED` |
+| 62 | `packages-galerina/galerina-core-sentinel-state/src/state-serializer.ts#isWeakKey` | not created | not created | Exact parity requires `Option<Bytes>`, the 32-byte threshold and a bounded all-zero byte scan. The selected physical profile admits `Bytes` equality and `Option<Int>`, but no Bytes length/index/traversal route. Sentinel State passes **26/26**. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -63,6 +64,7 @@ The active roadmap is updated once at the bounded batch exit.
 | `docs/superpowers/specs/2026-08-12-slices-53-55-host-and-recursive-boundary-adjudication.md` | Product-owner negative adjudication and existing/future implementation routes for Slices 53-55. | `DONE` |
 | `docs/superpowers/specs/2026-08-12-slices-56-58-tagged-input-and-normalisation-adjudication.md` | Product-owner negative adjudication for open-untrusted and Unicode-normalisation boundaries in Slices 56-58. | `DONE` |
 | `docs/superpowers/specs/2026-08-12-slices-59-61-tristate-record-union-adjudication.md` | Product-owner negative adjudication for the canonical TriState heterogeneous record-union boundary in Slices 59-61. | `DONE` |
+| `docs/superpowers/specs/2026-08-12-slice-62-weak-key-bytes-adjudication.md` | Product-owner negative adjudication for the optional Bytes, bounded traversal and key-custody boundary in Slice 62. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
@@ -135,6 +137,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   shortcut would move projection authority into the host.
 - Preflight rejected `isI32Trap` and `getStdlibModuleKind` at the compiler
   bootstrap floor before the replacement wave was assigned.
+- Slice 62 closes the exact 30-slice run as blocked without a placeholder
+  asset. Sentinel State passes **26/26**; the current physical profile cannot
+  conserve `Option<Bytes>`, byte length, bounded byte traversal or immutable
+  key custody.
 - A generated one-flow probe establishes the current flat-match boundary:
   seven explicit String labels compile; eight and above refuse.
 - Slice 35's four-plus-four helper decomposition compiled to the bounded

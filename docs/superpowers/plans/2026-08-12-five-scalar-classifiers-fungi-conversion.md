@@ -151,23 +151,38 @@ checkboxes remain intentionally unmet.
 - [x] Create no placeholder asset or candidate authority and record
   `NO_SKILL_UPDATE` for both public skills.
 
+## Task 3H: Settle final Slice 62
+
+- [x] Select one final non-bootstrap scope so the bounded run closes at
+  exactly 30 slices rather than silently extending to another three-slice wave.
+- [x] Prove the exact `Uint8Array | undefined` domain, three production callers,
+  queue and retirement state, loaded asset and **26/26** package baseline.
+- [x] Refuse a Bytes-only or host-precomputed shortcut because the physical
+  profile lacks `Option<Bytes>` and bounded Bytes length/index/traversal.
+- [x] Classify the signing-key admission path as `SERIAL_HARD_PATH` until
+  immutable custody from validation through HMAC use is proved.
+- [x] Create no placeholder asset or candidate authority.
+
 ## Task 4: Per-slice skill review
 
-- [ ] Review both public Fungi skills after each slice.
+- [x] Review both public Fungi skills after each slice.
 - [x] Record reusable lessons for bootstrap-floor authority and exact record-
   union ABI conservation.
 - [x] Add the proved duplicate-conversion preflight covering live registers,
   retirement floors, package loaded assets, exact/sibling assets and mirrors.
 - [x] Apply and validate the compatible translation-skill changes.
-- [ ] Run the skill validation and public-artifact checks.
+- [x] Record `NO_SKILL_UPDATE` for Slice 62 after a fresh-context no-skill
+  baseline independently refused the unsupported Bytes/Option profile; preserve
+  unrelated writing-skill worktree changes.
 
 ## Task 5: One shared governed closure
 
-- [ ] Write one report with five independent slice receipts.
+- [x] Maintain one linked live register and independent receipts for all 30
+  bounded slices.
 - [ ] Update TODO and the active roadmap.
-- [ ] Run all five candidate tests, all five package suites and the canonical
-  100-package suite once.
+- [ ] Run the focused candidate checks and owning package suites; do not run
+  the crash-linked canonical aggregate lane.
 - [ ] Run bounded owners in dependency order, including roadmap and subway.
-- [ ] Refresh the codebase graph and Myco once at final HEAD and verify all
-  five source symbols, flows and queue candidates are queryable.
+- [ ] Refresh the codebase graph and Myco once at final HEAD and verify the
+  bounded source symbols, admitted flows and queue candidates are queryable.
 - [ ] Verify clean tracked worktrees and local commits; do not push.

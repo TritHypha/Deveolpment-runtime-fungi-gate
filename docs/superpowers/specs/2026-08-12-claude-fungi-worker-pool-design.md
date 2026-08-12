@@ -106,6 +106,7 @@ the skill requirement; refuse that dossier and keep it advisory.
 | 59 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriTrue` | none |
 | 60 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriFalse` | none |
 | 61 | `packages-galerina/galerina-core-logic/src/tri/tri-state.ts#isTriUnknown` | none |
+| 62 | `packages-galerina/galerina-core-sentinel-state/src/state-serializer.ts#isWeakKey` | none; existing `cold-boot.fungi` leaves serializer byte/crypto substance on the host floor |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.

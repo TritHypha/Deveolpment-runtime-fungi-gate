@@ -45,7 +45,8 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 
 **Produces:** three independent dossier results per wave. Slices 38-40 and
 Slices 41-43, 44-46, 47-49, 50-52, 53-55, 56-58 and 59-61 have completed their
-product-owner gates.
+product-owner gates. One final read-only Slice 62 review closes the exact
+30-slice run before shared closure.
 
 - [x] Start three background sessions with the exact Slice 38-40 scopes in the
   design.

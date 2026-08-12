@@ -4,7 +4,16 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-61 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
+
+- [x] Complete the bounded 30-slice run with Slice 62 recorded as `BLOCKED`,
+  without a placeholder asset. `isWeakKey` requires exact `Option<Bytes>`,
+  byte length and bounded byte traversal; the current physical profile proves
+  `Bytes` equality and `Option<Int>` only. Sentinel State passes **26/26**.
+- [ ] R&D exact `Option<Bytes>` admission, bounded Bytes length/index
+  operations, immutable key custody and a formal byte/crypto host-floor
+  decision before revisiting Slice 62. Add direct short-key and shared-backing
+  mutation vectors.
 
 - [x] Settle Slices 59-61 as `BLOCKED` without placeholder assets. All three
   guards are pure, but the canonical input is a heterogeneous `TriState`
@@ -106,16 +115,16 @@ counts or open items that a newer section explicitly supersedes.
   replacement Slice 42 is blocked by the missing physical regular-language
   iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
   folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
-- [ ] Select the following three scopes only after the Slice 59-61
-  product-owner gate.
-  Continue the bounded pipeline for at most 30 slices, recording every symbol
+- [x] Close candidate selection after the Slice 59-61 product-owner gate with
+  exactly one final scope, Slice 62, so the bounded run contains 30 slices.
+  Record every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or
   `SUPERSEDED_BY_EXISTING_FUNGI`.
 - [x] Reject `requiresLowBitKernel` as a new Slice 42 candidate: the exact
   symbol already has package-owned `low-bit-kernel-routing.fungi`, focused
   differential coverage and physical SLIDE/VOK evidence from Slice 29. Keep it
   as `SUPERSEDED_BY_EXISTING_FUNGI`, not a second conversion claim.
-- [ ] After each admitted slice, review both public Fungi skills and record a
+- [x] After each admitted or blocked slice, review both public Fungi skills and record a
   verified skill commit or `NO_SKILL_UPDATE`. Refresh shared owners, roadmap,
   subway and indexes once at the bounded batch exit, not after each slice.
 - [x] Regenerate the TypeScript-retirement owner after the active three-worker
