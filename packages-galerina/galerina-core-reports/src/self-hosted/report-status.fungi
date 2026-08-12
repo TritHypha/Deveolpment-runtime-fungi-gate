@@ -1,0 +1,32 @@
+@version 1
+/// Package-owned semantic twin for the deterministic report-status priority
+/// decision. Exact-object admission and numeric type validation stay at the
+/// caller border; this pure flow grants no authority.
+
+record ReportStatusCounts {
+  warnings: Int
+  errors: Int
+  critical: Int
+}
+
+pure flow selectReportStatus(input: ReportStatusCounts) -> String
+contract { intent { "Select the highest report status represented by the admitted counts." } }
+{
+  if input.critical > 0 { return "critical" }
+  if input.errors > 0 { return "error" }
+  if input.warnings > 0 { return "warning" }
+  return "ok"
+}
+
+/// Scalar wrapper for the signed bootstrap differential. The physical
+/// SLIDE/VOK proof invokes selectReportStatus through the nominal record ABI.
+pure flow selectReportStatusCounts(warnings: Int, errors: Int, critical: Int) -> String
+contract { intent { "Construct the exact report-count record and select its status." } }
+{
+  let input: ReportStatusCounts = ReportStatusCounts {
+    warnings: warnings
+    errors: errors
+    critical: critical
+  }
+  return selectReportStatus(input)
+}
