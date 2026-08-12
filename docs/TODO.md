@@ -32,8 +32,12 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Review and independently verify both public Fungi skills; record reusable
   exact-record, reporting-boundary, text-budget and slice-close guidance at
   skills commit `f92c5ab`.
-- [ ] Refresh all bounded generated owners, graphs, indexes and roadmap/subway
-  evidence, then record the final local commit.
+- [x] Refresh all bounded generated owners and graphs: Golden **11/11 +
+  11/11**, retirement **1,449 executable-family / 133 source Fungi**, package
+  graph **100 packages / 201 outputs**, project graph **5/5**, KB graph **4/4**,
+  Fungi inventory **133**, semantic graph **3/3 with 940 test nodes**, code
+  index **974**, canonical claims **7/7**, roadmap/subway **5/5**, and the
+  path-leak audit clean. Refresh both indexes at the final local commit.
 - [x] Keep TypeScript, `selectReportStatus`, `summarizeDiagnostics`, and every
   consumer active. This grants no consumer-switch, production, release,
   durability, or retirement authority; repository-wide closure remains
@@ -814,8 +818,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the latest complete package lane passes **100/100 packages and 9,606 tests**
-  in 287 seconds. These are verification evidence, not release authority.
+  the latest complete package lane passes **100/100 packages and 9,608 tests**
+  in 442.6 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 

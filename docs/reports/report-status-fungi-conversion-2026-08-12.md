@@ -62,8 +62,19 @@ Hallmark, border grant or host API.
   independently RED/GREEN audited and validated at skills commit `f92c5ab`.
   Slice close now requires a skill update or an explicit `NO_SKILL_UPDATE`
   record.
+- Golden owner: **11/11 checked examples and 11/11 execution vectors**.
+- Retirement owner: **1,449 executable-family paths**, **30 same-stem twins**,
+  and **133 source Fungi assets**; its staged-index conservation self-test
+  passes.
+- Graph owners: package **100 packages / 201 outputs**, project **5/5**, KB
+  **4/4**, Fungi capability inventory **133 files**, and semantic assurance
+  **3/3 with 0 routes / 100 packages / 940 tests**.
+- Index and status owners: code index **974**, percent evidence
+  **78% zero-trust thesis / 75% build / 31 tracked items**, canonical rendered
+  claims **7/7**, and roadmap/subway **5/5**.
+- Hygiene: the bounded path-leak audit is clean. Its documented unmodelled and
+  binary exclusions remain exclusions, not an absence claim.
 
-Generated owners, graphs and indexes are recorded after their bounded refresh.
 Full tooling, `graph-all`, normal phase-close and
 monolithic memory evaluation remain deliberately excluded because those lanes
 are crash-linked; repository-wide closure remains `UNKNOWN`.
