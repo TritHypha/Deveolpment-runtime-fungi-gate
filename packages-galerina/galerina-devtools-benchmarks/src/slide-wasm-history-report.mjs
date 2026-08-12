@@ -1,6 +1,7 @@
 import { types } from "node:util";
 
 import { normalizeThroughput } from "./throughput-units.mjs";
+import { SLIDE_REFERENCE_SUITE_IDS } from "./slide-reference-suite.mjs";
 
 const HEX_40 = /^[0-9a-f]{40}$/u;
 const HEX_64 = /^[0-9a-f]{64}$/u;
@@ -257,7 +258,7 @@ export function buildSlideWasmHistoryModel(input) {
     coverage: Object.freeze({
       benchmarkGroups: input.current.length,
       comparableGroups,
-      expectedProductionSlideGroups: comparableGroups,
+      expectedProductionSlideGroups: SLIDE_REFERENCE_SUITE_IDS.length,
       productionSlideGroups: slide.size,
       referenceSlideGroups: slideReference.size,
       historicWasmGroups: wasm.size,

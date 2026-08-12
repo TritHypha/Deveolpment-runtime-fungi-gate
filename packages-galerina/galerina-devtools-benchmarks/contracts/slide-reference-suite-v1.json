@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "galerina-slide-reference-suite-v1",
+  "benchmarks": [
+    { "id": "compute-mix", "cohort": "scalar", "sourcePath": "benchmarks/compute-mix/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "mix-ops/s", "workCount": 50000, "workPolicy": "EXACT" },
+    { "id": "record-allocation", "cohort": "record", "sourcePath": "benchmarks/record-allocation/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "memory", "unit": "records/s", "workCount": 10000, "workPolicy": "REAL_RECORD_REQUIRED" },
+    { "id": "tower-of-hanoi", "cohort": "recursion", "sourcePath": "benchmarks/tower-of-hanoi/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "moves/s", "workCount": 65535, "workPolicy": "EXACT" },
+    { "id": "collection-pipeline", "cohort": "scalar", "sourcePath": "benchmarks/collection-pipeline/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "memory", "unit": "elements/s", "workCount": 10000, "workPolicy": "OPTIMIZED_FUSED" },
+    { "id": "low-memory", "cohort": "scalar", "sourcePath": "benchmarks/low-memory/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "memory", "unit": "items/s", "workCount": 10000, "workPolicy": "EXACT" },
+    { "id": "gpu-compute", "cohort": "scalar", "sourcePath": "benchmarks/gpu-compute/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "gpu", "unit": "kernel-evals/s", "workCount": 100000, "workPolicy": "EXACT" },
+    { "id": "matrix-multiply", "cohort": "scalar", "sourcePath": "benchmarks/matrix-multiply/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "mul-adds/s", "workCount": 32768, "workPolicy": "EXACT" },
+    { "id": "tri-logic", "cohort": "scalar", "sourcePath": "benchmarks/tri-logic/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "trit-ops/s", "workCount": 300000, "workPolicy": "EXACT" },
+    { "id": "verified-native-operation", "cohort": "verified", "sourcePath": "evidence/slide-verified-native-operation-reference.json", "sourceState": "BOUND_EVIDENCE", "entryFlow": "verifiedLoop", "metricClass": "cpu-throughput", "unit": "element-reads/s", "workCount": 1000000, "workPolicy": "EXACT" },
+    { "id": "data-query", "cohort": "scalar", "sourcePath": "benchmarks/data-query/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "record-scans/s", "workCount": 10000, "workPolicy": "EXACT" },
+    { "id": "call-chain", "cohort": "scalar", "sourcePath": "benchmarks/call-chain/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "chains/s", "workCount": 50000, "workPolicy": "EXACT" },
+    { "id": "nbody", "cohort": "scalar", "sourcePath": "benchmarks/nbody/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "force-evals/s", "workCount": 32768, "workPolicy": "EXACT" },
+    { "id": "json-parse", "cohort": "text-array", "sourcePath": "benchmarks/json-parse/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "io", "unit": "records/s", "workCount": 500, "workPolicy": "EXACT" },
+    { "id": "mandelbrot", "cohort": "scalar", "sourcePath": "benchmarks/mandelbrot/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "pixels/s", "workCount": 16384, "workPolicy": "EXACT" },
+    { "id": "spectral-norm", "cohort": "scalar", "sourcePath": "benchmarks/spectral-norm/benchmark.fungi", "sourceState": "MISSING", "entryFlow": "main", "metricClass": "cpu-throughput", "unit": "A-evals/s", "workCount": 200000, "workPolicy": "EXACT" },
+    { "id": "binary-trees", "cohort": "recursion-record", "sourcePath": "benchmarks/binary-trees/benchmark.fungi", "sourceState": "PRESENT", "entryFlow": "main", "metricClass": "memory", "unit": "nodes/s", "workCount": 135854, "workPolicy": "REAL_TREE_REQUIRED" },
+    { "id": "spore-container", "cohort": "package", "sourcePath": "benchmarks/spore-container/benchmark.fungi", "sourceState": "MISSING", "entryFlow": "main", "metricClass": "io", "unit": "containers/s", "workCount": 1, "workPolicy": "PACKAGE_EXACT" },
+    { "id": "framework-pipeline", "cohort": "package", "sourcePath": "benchmarks/framework-pipeline/benchmark.fungi", "sourceState": "MISSING", "entryFlow": "main", "metricClass": "io", "unit": "requests/s", "workCount": 1, "workPolicy": "PACKAGE_EXACT" }
+  ]
+}

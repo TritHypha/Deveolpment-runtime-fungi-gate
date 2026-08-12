@@ -35,6 +35,7 @@
       "src/noise-gate.mjs",
       "src/report.mjs",
       "src/runner.mjs",
+      "src/slide-reference-suite.mjs",
       "src/slide-vade-adapter.mjs",
       "src/slide-zero-publication.mjs",
       "src/slide-zero-report.mjs",
@@ -48,6 +49,7 @@
       "contracts/galerina-slide-transition-v1.json",
       "contracts/slide-v2g-vade-admission-v1.json",
       "contracts/slide-verified-native-operation-admission-v1.json",
+      "contracts/slide-reference-suite-v1.json",
       "evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json",
       "evidence/slide-verified-native-operation-reference.json",
       "src/wasm-runner.mjs"
