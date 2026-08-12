@@ -80,8 +80,9 @@ describe("galerina-test package-owned Fungi human marker", () => {
     const packageJson = JSON.parse(readFileSync(PACKAGE, "utf8"));
     assert.deepEqual(packageJson.packageGraph?.loadedAssets, ["src/self-hosted/test-marker.fungi"]);
     const executableFungi = compiled.source.replace(/^\s*\/\/\/.*$/gmu, "");
+    const syntaxOnly = executableFungi.replace(/"(?:\\.|[^"\\])*"/gu, '""');
     assert.doesNotMatch(
-      executableFungi,
+      syntaxOnly,
       /\b(?:null|NaN|else|throw|try|catch|for|while|loop)\b/u,
     );
     const reference = readFileSync(REFERENCE_SOURCE, "utf8").replace(/^\uFEFF/u, "");

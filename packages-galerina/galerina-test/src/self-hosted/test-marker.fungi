@@ -1,0 +1,11 @@
+@version 1
+/// @file: test-marker.fungi
+/// @purpose: Reference-only semantic twin of cli.ts mark.
+/// @status: package-owned conversion proof; TypeScript remains active.
+
+pure flow mark(ok: Bool) -> String
+contract { intent { "Render the exact human test marker for a Boolean result." } }
+{
+  if ok { return "✅" }
+  return "❌"
+}
