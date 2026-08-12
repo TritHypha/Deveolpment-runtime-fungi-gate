@@ -11,6 +11,17 @@ no SLIDE contract, registry, or limit. SLIDE passes
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
 Complete current security closure remains non-authorizing at K3 `0`.
 
+Before Slice 31, the conversion lane now has a fail-closed reusable hardening
+gate. Failed package children retain bounded digest-bound evidence; Galerina
+and SLIDE share the exact non-authorizing `zt.error-envelope.v1` data contract
+rather than ambient logging authority; every new conversion report requires a
+machine-checked skill/threadability/classification/closure receipt; and bounded
+closure receipts validate evidence without relaunching the crash-linked
+aggregates. The conserved queue accounts for **1,449/1,449** executable-family
+paths: **629** are bootstrap floors, **820** remain blocked pending exact
+dossiers or consumer-authority evidence, and **0** are currently admitted
+candidates. Slice 31 cannot start until one exact queue decision is added.
+
 Both Galerina source manifests are now bound to the exact current portable-VEO
 policy and verifier context, and both committed physical `.slide` publications
 were regenerated through the pinned tool. Contract 85 source-free execution
@@ -53,8 +64,9 @@ The serial canonical owner passes **100/100 packages and 9,608 tests in
 442.6s** with count publication; the exact compiler rerun is **6,382/6,382**.
 The earlier package-concurrent attempt's single compiler child refusal remains
 in the record. Both public Fungi skills were reviewed and independently
-verified at skills commit `f92c5ab`; the translation workflow now requires a
-skill update or explicit `NO_SKILL_UPDATE` record at every slice close.
+verified at translation-skill commit `4fe934a` and writing-skill commit
+`f92c5ab`; the translation workflow now requires a skill update or explicit
+`NO_SKILL_UPDATE` record at every slice close.
 Generated-owner closure is refreshed below before this slice is called
 complete; crash-linked full tooling, normal phase-close, graph-all, and
 monolithic memory evaluation remain excluded.

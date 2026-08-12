@@ -1052,6 +1052,138 @@
       }
     },
     {
+      "id": "audit:conversion-slice-close",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-CONVERSION-SLICE-CLOSE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-CONVERSION-SLICE-CLOSE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-conversion-slice-close.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-CONVERSION-SLICE-CLOSE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "hostile receipt cases are covered by the registered tooling test"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:conversion-queue",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-CONVERSION-QUEUE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-CONVERSION-QUEUE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/conversion-queue.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-CONVERSION-QUEUE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [
+        "build/conversion-queue/queue.json",
+        "build/conversion-queue/QUEUE.md"
+      ],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "hostile decision cases are covered by the registered tooling test"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
       "id": "code-registry",
       "requirementId": "REQ-PHASE-CLOSE-CODE-REGISTRY",
       "satisfies": [

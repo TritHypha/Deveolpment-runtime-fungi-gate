@@ -59,7 +59,8 @@ Hallmark, border grant or host API.
 - Canonical package owner: the serial, count-publishing run passes **100/100
   packages and 9,608 tests in 442.6s** with exit code 0.
 - Public skills: `translating-typescript-to-fungi` and `writing-fungi` were
-  independently RED/GREEN audited and validated at skills commit `f92c5ab`.
+  independently RED/GREEN audited and validated at translation-skill commit
+  `4fe934a` and writing-skill commit `f92c5ab`.
   Slice close now requires a skill update or an explicit `NO_SKILL_UPDATE`
   record.
 - Golden owner: **11/11 checked examples and 11/11 execution vectors**.
@@ -86,7 +87,7 @@ are crash-linked; repository-wide closure remains `UNKNOWN`.
 
 ## Slice-close receipt
 
-Skill disposition: SKILL_UPDATE f92c5ab25771d6164cd800b4b5619318edc823e3
+Skill disposition: SKILL_UPDATE 4fe934a85afed7c6a78ef4af08b578f0ccd9a8cc
 Threadability: PARALLEL_PURE
 Source classification: CANDIDATE
 Bounded closure: COMPLETE

@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Pre-Slice-31 zero-trust hardening gate - 2026-08-12
+
+- [x] Retain every failed package child's bounded exit/signal, byte count,
+  SHA-256 and capped diagnostic excerpt without publishing its raw output.
+- [x] Define and test the exact `zt.error-envelope.v1` Galerina/SLIDE boundary.
+  It carries stable typed identity and evidence with `authorityReleased: false`;
+  it is not an ambient global logger or authority service.
+- [x] Require a machine-checked slice-close receipt for every new conversion
+  report. The 29 earlier reports are a frozen exact baseline; no new filename
+  can enter that exception implicitly.
+- [x] Add the RD-0796 threadability classes `PARALLEL_PURE`,
+  `ASYNC_HAPPY_PATH`, `ISOLATED_SERVICE`, `SERIAL_HARD_PATH`, and fail-closed
+  `UNKNOWN` to the public translation skill and the repository gate.
+- [x] Conserve all **1,449/1,449** executable-family paths in a generated queue:
+  **629** remain `BOOTSTRAP_FLOOR`, **820** remain evidence-blocked, and **0**
+  are admitted candidates until an exact evidence-bound decision is recorded.
+- [x] Define and hostile-test `zt.bounded-closure.v1`. It validates a fixed
+  gate set and explicit crash-linked exclusions without launching an aggregate
+  process or claiming repository-wide closure.
+- [ ] Select the next source only after recording its evidence-bound queue
+  decision. This is the intentional exit before Slice 31.
+
 ### Thirtieth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express the reports package's private `selectReportStatus` priority
@@ -31,7 +53,7 @@ counts or open items that a newer section explicitly supersedes.
   **6,382/6,382**, so the refusal remains recorded rather than relabelled.
 - [x] Review and independently verify both public Fungi skills; record reusable
   exact-record, reporting-boundary, text-budget and slice-close guidance at
-  skills commit `f92c5ab`.
+  translation-skill commit `4fe934a` and writing-skill commit `f92c5ab`.
 - [x] Refresh all bounded generated owners and graphs: Golden **11/11 +
   11/11**, retirement **1,449 executable-family / 133 source Fungi**, package
   graph **100 packages / 201 outputs**, project graph **5/5**, KB graph **4/4**,
