@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Nineteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `stricterResidency` as package-owned pure
+  `stricterResidencyFungi` over the exact five-tier lattice, preserving all 25
+  canonical pairs and the left-biased equal case.
+- [x] Make the physical String boundary fail closed: any unknown tier returns
+  strictest `register_only` instead of escaping as a residency value.
+- [x] Prove typed parity and hostile-boundary behavior (**1/1**) plus physical
+  SLIDE/VOK String receipts (**1/1**, zero skips). Wrong ABI shape, invalid
+  Unicode, inadequate step fuel and source/artifact mutation refuse.
+- [x] Pass compiler **6,373/6,373**, Golden Pack **11/11**, and canonical owner
+  **100/100 packages and 9,593 tests in 272.8s**. Retirement records **1,439**
+  executable-family paths and **127** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Grant no consumer-switch, production, runtime-residency, release or
+  retirement authority.
+
 ### Eighteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `atLeastAsStrict` as package-owned pure
@@ -518,8 +535,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the latest complete package lane passes **100/100 packages and 9,592 tests**
-  in 278.3 seconds. These are verification evidence, not release authority.
+  the latest complete package lane passes **100/100 packages and 9,593 tests**
+  in 272.8 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 

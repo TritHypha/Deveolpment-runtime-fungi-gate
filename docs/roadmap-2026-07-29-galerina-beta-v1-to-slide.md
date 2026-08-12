@@ -269,6 +269,22 @@ records **1,435** executable-family paths and **124** source Fungi assets.
 TypeScript and every consumer remain active; repository-wide closure remains
 **UNKNOWN**.
 
+Nineteenth physical conversion slice 2026-08-12: exported
+`stricterResidency` now has exact package-owned `stricterResidencyFungi` in
+the governed residency lattice module. All 25 typed pairs preserve the exact
+lower-rank and left-biased-equal behavior. At the physical String boundary,
+either unknown tier maps to sentinel `5` and returns strictest
+`register_only`; hostile text cannot escape as a residency value or default
+loose. Typed parity and hostile-boundary evidence passes **1/1**. Independent
+SLIDE `053cc75` publishes and re-admits one physical `.slide` under the frozen
+bounded-wide-control-flow registry with typed String receipts (**1/1**, zero
+skips); wrong ABI shape, invalid Unicode, step exhaustion and source/artifact
+mutations refuse. Golden Pack is **11/11**, compiler **6,373/6,373**, and the
+canonical owner is **100/100 packages and 9,593 tests in 272.8s**. Retirement
+records **1,439** executable-family paths and **127** source Fungi assets.
+TypeScript, reconciliation and all consumers remain active; repository-wide
+closure remains **UNKNOWN**.
+
 Eighteenth physical conversion slice 2026-08-12: exported `atLeastAsStrict`
 now has exact package-owned `atLeastAsStrictFungi`. The candidate maps the five
 closed residency tiers to ranks `0..4`, maps every other String to sentinel
@@ -2885,6 +2901,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,592 tests** in 278.3 seconds. The normal custody close remains fail-closed:
+9,593 tests** in 272.8 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
