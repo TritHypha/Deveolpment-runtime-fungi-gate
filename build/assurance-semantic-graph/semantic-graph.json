@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "3f2246df47b3c29204b568059afc13a4b1cff91ba96a9a7f3dc3247ff5304795",
+  "authoritativeInputsDigest": "22535ed0a9ced7b22d911c3000defcaf53928d9dfb364c8fb04918d8536d52af",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -5120,6 +5120,13 @@
       "id": "test:auto-2acb2de8d1947f1fef0bc555",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/slide-vade-audit.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7bb6f00a604722b7d4ed77c3",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/slide-zero-report.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10669,6 +10676,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-7bb6f00a604722b7d4ed77c3",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-211d31b9fb42ba46e1cfb8ca",
       "to": "package:galerina-devtools-benchmarks",
       "type": "CLASSIFIES"
@@ -12494,9 +12506,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 956,
+    "tests": 957,
     "detectors": 6,
-    "executableFamily": 1458,
+    "executableFamily": 1461,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
