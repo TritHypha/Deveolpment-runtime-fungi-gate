@@ -49,5 +49,5 @@ through independent SLIDE/VOK and retain TypeScript as the executing layer.
 - [x] Run the compiler package and monitored canonical owner.
 - [x] Regenerate only owners whose exact checks refuse stale.
 - [x] Update TODO, active roadmap, subway, and a focused report.
-- [ ] Run the bounded matrix without crash-linked aggregate wrappers.
-- [ ] Commit locally, refresh both indexes at exact final HEAD, and do not push.
+- [x] Run the bounded matrix without crash-linked aggregate wrappers.
+- [x] Commit locally, refresh both indexes at exact final HEAD, and do not push.
