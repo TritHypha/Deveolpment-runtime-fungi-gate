@@ -8,21 +8,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          791100,
-          790100,
-          780600,
-          779500,
-          777000,
-          762100,
-          800300,
-          934900,
-          904100
+          516400,
+          508500,
+          502500,
+          504200,
+          505900,
+          517000,
+          506100,
+          507400,
+          503100
         ],
-        "medianNs": 790100,
-        "operationsPerSecond": 1265662574,
+        "medianNs": 506100,
+        "operationsPerSecond": 1975894092,
         "unit": "element-reads/s",
         "antiElision": "returned-last-value-and-iteration-count",
-        "normThroughput": 1265662574,
+        "normThroughput": 1975894092,
         "throughputUnit": "element-reads/s"
       },
       "python": {
@@ -30,21 +30,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          106947000,
-          114234100,
-          110914800,
-          111905800,
-          108944700,
-          115299300,
-          118472300,
-          106184200,
-          113965200
+          67221100,
+          111598200,
+          112093200,
+          113186200,
+          99690200,
+          114322000,
+          111985500,
+          110075300,
+          110144800
         ],
-        "medianNs": 111905800,
-        "operationsPerSecond": 8936087,
+        "medianNs": 111598200,
+        "operationsPerSecond": 8960718,
         "unit": "element-reads/s",
         "antiElision": "interpreter-observes-returned-last-value-and-iteration-count",
-        "normThroughput": 8936087,
+        "normThroughput": 8960718,
         "throughputUnit": "element-reads/s"
       },
       "rust": {
@@ -52,21 +52,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          278200,
-          273200,
-          375700,
-          424400,
-          424900,
-          424300,
-          425200,
-          426200,
-          455800
+          433500,
+          438100,
+          433000,
+          432300,
+          429400,
+          430700,
+          432400,
+          429900,
+          432000
         ],
-        "medianNs": 424400,
-        "operationsPerSecond": 2356267672,
+        "medianNs": 432300,
+        "operationsPerSecond": 2313208420,
         "unit": "element-reads/s",
         "antiElision": "std::hint::black_box-per-index",
-        "normThroughput": 2356267672,
+        "normThroughput": 2313208420,
         "throughputUnit": "element-reads/s"
       },
       "rustAvx2": {
@@ -74,21 +74,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          284200,
-          275200,
-          277600,
-          277500,
-          275700,
-          274900,
-          276900,
-          274500,
-          273700
+          377200,
+          337200,
+          325500,
+          310900,
+          309000,
+          339900,
+          305500,
+          403200,
+          388300
         ],
-        "medianNs": 275700,
-        "operationsPerSecond": 3627130939,
+        "medianNs": 337200,
+        "operationsPerSecond": 2965599051,
         "unit": "element-reads/s",
         "antiElision": "std::hint::black_box-per-index",
-        "normThroughput": 3627130939,
+        "normThroughput": 2965599051,
         "throughputUnit": "element-reads/s"
       },
       "go": {
@@ -96,21 +96,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          891100,
-          1070400,
-          1180100,
-          1022800,
-          1020000,
-          1023300,
-          1218100,
-          1540500,
-          1018100
+          1018800,
+          1535700,
+          1021700,
+          1024300,
+          1022300,
+          1022500,
+          1129500,
+          1025500,
+          1023500
         ],
-        "medianNs": 1023300,
-        "operationsPerSecond": 977230528,
+        "medianNs": 1023500,
+        "operationsPerSecond": 977039570,
         "unit": "element-reads/s",
         "antiElision": "noinline-observed-read-per-index-and-observed-last-value",
-        "normThroughput": 977230528,
+        "normThroughput": 977039570,
         "throughputUnit": "element-reads/s"
       },
       "checkedReference": {
@@ -185,6 +185,41 @@
         "normThroughput": 1529285823,
         "throughputUnit": "element-reads/s"
       }
+    },
+    "sourcePair": {
+      "schema": "galerina.benchmark.million-iteration-source-pair-receipt.v1",
+      "verdict": 1,
+      "status": "VERIFIED_NON_AUTHORIZING",
+      "benchmark": "verified-native-operation",
+      "flowName": "readMillionValues",
+      "iterations": 1000000,
+      "expectedResult": 999999,
+      "subjects": [
+        {
+          "role": "checked",
+          "path": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
+          "sha256": "a3156f896f163db38f99fada4b14ae8c61351d05a42f95de8e9659d4111a4421",
+          "bytes": 815,
+          "candidate": false,
+          "k3": -1,
+          "failureIds": [
+            "VERIFIED_NATIVE_PERMISSION_MISSING"
+          ]
+        },
+        {
+          "role": "verified",
+          "path": "docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi",
+          "sha256": "07844b5dd9ea561f482e5f591d676e6fef43c2c0c1aeeba762138096362dc764",
+          "bytes": 932,
+          "candidate": true,
+          "k3": 0,
+          "failureIds": [
+            "INDEPENDENT_VERIFIER_UNAVAILABLE"
+          ]
+        }
+      ],
+      "referenceOnly": true,
+      "authorityReleased": false
     },
     "units": {
       "benchId": "verified-native-operation",

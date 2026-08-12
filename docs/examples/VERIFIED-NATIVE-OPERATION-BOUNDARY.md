@@ -107,6 +107,17 @@ benchmark adapter and remains `referenceOnly: true` with
 
 ### Focused benchmark evidence
 
+The benchmark now admits its two source roles only after checking the exact
+manifest at
+`packages-galerina/galerina-devtools-benchmarks/contracts/million-iteration-source-pair-v1.json`.
+That gate binds both repository-relative paths and SHA-256 digests, reruns the
+production parser/type/value-state/effect/governance gates, proves the parsed
+flow signature and executable body are equal, and re-derives the closed role
+split. Digest drift, permission drift, loop-body drift, bound drift, duplicate
+or surplus manifest facts, hostile JavaScript object shapes and non-single-link
+source files refuse. Its receipt remains `referenceOnly: true` and
+`authorityReleased: false`.
+
 The focused report is
 [Verified native-operation benchmark](../../packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.md),
 with an accompanying
@@ -114,10 +125,10 @@ with an accompanying
 It compares the same one-million-element traversal and the same final value
 `999999`:
 
-- checked reference, permission absent: `584.2M element-reads/s`, `1.712 ms`;
-- SLIDE reference demand, permission present: `1.606B element-reads/s`,
-  `0.623 ms`;
-- measured reference demand ratio: `2.749x`.
+- checked reference, permission absent: `583.7M element-reads/s`, `1.713 ms`;
+- SLIDE reference demand, permission present: `1.529B element-reads/s`,
+  `0.654 ms`;
+- measured reference demand ratio: `2.620x`.
 
 Higher throughput is better; lower phase time is better. Preparation and
 compilation remain visible in the phase table. Both Galerina/SLIDE lanes are

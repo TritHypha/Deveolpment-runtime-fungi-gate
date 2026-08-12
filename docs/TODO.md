@@ -8325,7 +8325,13 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
 - [x] Record the winner and place without promoting reference evidence: Rust
   AVX2 wins the exact one-million-element workload and the non-authorizing
   Galerina/SLIDE reference places fourth of six.
-- [x] Pass 71/71 focused benchmark tests, the six-workload checksum audit, all
+- [x] Bind the exact checked and verified million-iteration `.fungi` subjects
+  into the existing `verified-native-operation` benchmark without adding a
+  duplicate performance group. The gate verifies byte identity, full
+  production compiler gates, executable-body equivalence and the closed K3
+  role split; eight hostile source/manifest/input cases refuse and neither role
+  releases authority.
+- [x] Pass 94/94 benchmark-package tests, the six-workload checksum audit, all
   18 comparable unit checks and the freshness audit.
 - [ ] Add a real admitted production SLIDE lane. Until then the production
   chart and table must remain `DEFERRED_NO_SLIDE_LANE`, with K3 authority `0`.

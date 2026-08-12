@@ -1,26 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="538" viewBox="0 0 960 538" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="582" viewBox="0 0 960 582" role="img" aria-labelledby="title description">
   <title id="title">Verified native-operation one-million traversal</title>
   <desc id="description">Throughput in element reads per second; higher is better. Checked and SLIDE lanes are reference only.</desc>
-  <rect width="960" height="538" fill="#0b1220"/>
+  <rect width="960" height="582" fill="#0b1220"/>
   <text x="32" y="48" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="26" font-weight="700">One-million verified operation</text>
   <text x="32" y="78" fill="#99f6e4" font-family="Segoe UI,Arial,sans-serif" font-size="15">element-reads/s - higher is better</text>
   <text x="32" y="102" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="13">Blue/purple lanes are reference only and cannot establish a production winner.</text>
-  <text x="32" y="147" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Rust AVX2</text>
-  <rect x="310" y="130" width="520" height="28" rx="5" fill="#34d399"/>
-  <text x="840" y="149" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">2.350B</text>
-  <text x="32" y="205" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Rust</text>
-  <rect x="310" y="188" width="520" height="28" rx="5" fill="#34d399"/>
-  <text x="840" y="207" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">2.350B</text>
-  <text x="32" y="263" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Node.js</text>
-  <rect x="310" y="246" width="439" height="28" rx="5" fill="#34d399"/>
-  <text x="759" y="265" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">1.985B</text>
-  <text x="32" y="321" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Python</text>
-  <rect x="310" y="304" width="2" height="28" rx="5" fill="#34d399"/>
-  <text x="322" y="323" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">10.7M</text>
-  <text x="32" y="379" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Checked ref - no permission</text>
-  <rect x="310" y="362" width="129" height="28" rx="5" fill="#60a5fa"/>
-  <text x="449" y="381" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">584.2M</text>
-  <text x="32" y="437" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">SLIDE ref - permission present</text>
-  <rect x="310" y="420" width="355" height="28" rx="5" fill="#a78bfa"/>
-  <text x="675" y="439" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">1.606B</text>
+  <text x="32" y="126" fill="#93c5fd" font-family="Segoe UI,Arial,sans-serif" font-size="12">CHECKED-MILLION-ITERATION-LOOP.fungi - permission absent, K3 -1</text>
+  <text x="32" y="148" fill="#c4b5fd" font-family="Segoe UI,Arial,sans-serif" font-size="12">VERIFIED-MILLION-ITERATION-LOOP.fungi - permission present, K3 0</text>
+  <text x="32" y="191" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Rust AVX2</text>
+  <rect x="310" y="174" width="520" height="28" rx="5" fill="#34d399"/>
+  <text x="840" y="193" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">2.966B</text>
+  <text x="32" y="249" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Rust</text>
+  <rect x="310" y="232" width="406" height="28" rx="5" fill="#34d399"/>
+  <text x="726" y="251" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">2.313B</text>
+  <text x="32" y="307" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Node.js</text>
+  <rect x="310" y="290" width="346" height="28" rx="5" fill="#34d399"/>
+  <text x="666" y="309" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">1.976B</text>
+  <text x="32" y="365" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Python</text>
+  <rect x="310" y="348" width="2" height="28" rx="5" fill="#34d399"/>
+  <text x="322" y="367" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">9.0M</text>
+  <text x="32" y="423" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Checked ref - no permission</text>
+  <rect x="310" y="406" width="102" height="28" rx="5" fill="#60a5fa"/>
+  <text x="422" y="425" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">583.7M</text>
+  <text x="32" y="481" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">SLIDE ref - permission present</text>
+  <rect x="310" y="464" width="268" height="28" rx="5" fill="#a78bfa"/>
+  <text x="588" y="483" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">1.529B</text>
 </svg>
