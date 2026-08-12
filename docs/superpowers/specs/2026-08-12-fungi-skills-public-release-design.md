@@ -2,7 +2,12 @@
 
 ## Status
 
-Approved under the owner's standing full-auto, zero-trust direction on 2026-08-12. Conversion slices remain paused until both skill repositories are independently release-ready and their GitHub visibility is verified.
+**Superseded by owner correction.** The owner clarified on 2026-08-12 that
+both skills are repositories but are not public. GitHub now reports
+`writing-fungi` and `translating-typescript-to-fungi` as `PRIVATE`. The
+security-hardening work in this design remains adopted; its publication and
+public-visibility directions are historical only and grant no publication
+authority. Conversion slices remain paused.
 
 ## Problem
 

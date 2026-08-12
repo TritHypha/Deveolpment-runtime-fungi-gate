@@ -1,5 +1,16 @@
 # Fungi Skills Public Release Implementation Plan
 
+## Owner correction - superseded
+
+The owner clarified on 2026-08-12 that both skills are repositories but are
+not public. The temporary visibility change made under the mistaken
+publication interpretation was reversed. GitHub now reports `writing-fungi`
+at `d2d955e` and `translating-typescript-to-fungi` at `9654753` as `PRIVATE`.
+The history scanners, validators, private workflows and branch protections
+remain adopted. Every public-publication instruction below is retained only as
+historical execution evidence and grants no present or future publication
+authority.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make the `writing-fungi` and `translating-typescript-to-fungi` repositories independently safe, verified, and publicly accessible without resuming Galerina conversion slices.
@@ -183,9 +194,9 @@ Preserve the unrelated untracked SLIDE capability plan. Commit only the public-r
 
 ## Execution result
 
-All five tasks are complete. `writing-fungi` is public at `d2d955e` and
-`translating-typescript-to-fungi` is public at `9654753`. Both exact GitHub
-workflows passed; both default branches require the `verify` context and deny
-force-push, deletion and administrative bypass. Anonymous public-page checks
-show the audited files, Apache-2.0 licence, contribution and security policies.
-Conversion Slice 63 remains unstarted.
+The owner correction supersedes the publication result. `writing-fungi` is
+private at `d2d955e` and `translating-typescript-to-fungi` is private at
+`9654753`; GitHub reports `PRIVATE` for both. Their exact private workflows
+passed, both default branches require the `verify` context and deny force-push,
+deletion and administrative bypass, and their Apache-2.0 licence, contribution
+and security files remain in place. Conversion Slice 63 remains unstarted.

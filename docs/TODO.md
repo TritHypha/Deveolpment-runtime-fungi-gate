@@ -4,23 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Public Fungi skill release custody - 2026-08-12
+### Private Fungi skill repository custody - 2026-08-12
 
-- [x] Publish `writing-fungi` at `d2d955e` and
-  `translating-typescript-to-fungi` at `9654753`. Both repositories are
-  anonymously visible, retain Apache-2.0 ownership notices and expose only
-  the audited public skill corpus.
+- [x] Keep `writing-fungi` at `d2d955e` and
+  `translating-typescript-to-fungi` at `9654753` as private repositories.
+  Both GitHub repositories report `PRIVATE`; neither is anonymously visible.
+  Apache-2.0 ownership notices remain part of each private repository.
 - [x] Add independent removed-history refusal tests and bounded reachable-Git
-  scans. Both local tests pass **1/1**, both public-release audits pass, and
+  scans. Both local tests pass **1/1**, both repository audits pass, and
   both Codex and pinned Agent Skills validators accept the exact repositories.
-- [x] Require the public `verify` workflow on protected `main`. Both published
+- [x] Require the private `verify` workflow on protected `main`. Both private
   workflows are green on their exact commits; force-push and branch deletion
   are disabled, linear history and resolved conversations are required, and
   administrators cannot bypass the check.
-- [x] Enable private vulnerability reporting and complete each repository's
-  public description and topics.
+- [x] Enable private vulnerability reporting and retain the repository
+  descriptions and topics as internal discovery metadata.
 - [ ] Keep Slice 63 paused until the pin-bound SLIDE capability reconciliation
-  matrix is complete. Public skill custody does not authorize conversion,
+  matrix is complete. Private skill custody does not authorize conversion,
   retirement, signing, production admission or release.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
@@ -54,7 +54,7 @@ counts or open items that a newer section explicitly supersedes.
   trim/case-fold oracle vectors across the identical MySQL, PostgreSQL and
   OpenSearch localhost decisions before any re-admission.
 - [x] Correct the Claude worker launch: put the prompt before `--add-dir`, mount
-  the public skills root, and require both skill YAML names before analysis.
+  the private skills root, and require both skill YAML names before analysis.
   The first 56-58 consultant wave is advisory only because it could not read
   those external skills; Codex independently applied them.
 - [x] Reject duplicate `isValidStrategy` and `powerRank` scopes and the
@@ -101,7 +101,7 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Extend the focused physical lane to **8/8** with four admitted proofs,
   three conserved compile refusals and one executable profile-boundary check.
   A refusal is evidence, not conversion success.
-- [x] Correct the public translation skill preflight: inspect the live register,
+- [x] Correct the private translation skill preflight: inspect the live register,
   retirement floor, every owning-package `packageGraph.loadedAssets` entry,
   exact and sibling Fungi assets/tests, and governed mirrors before selecting a
   scope. A missing graph result does not prove absence.
@@ -112,7 +112,7 @@ counts or open items that a newer section explicitly supersedes.
   receipts; Slices 35 and 37 retain exact profile refusals and are not counted
   as converted.
 - [x] Operate external dossier workers as read-only groundwork: at most three
-  Claude Opus/high sessions at once, each supplied both public Fungi skills and
+  Claude Opus/high sessions at once, each supplied both private Fungi skills and
   one exact symbol. Codex retains source verification, admission, integration,
   physical proof and completion authority between every three-worker wave.
 - [x] Settle Slice 38 as `BLOCKED`: its exact 28-name membership decision
@@ -143,7 +143,7 @@ counts or open items that a newer section explicitly supersedes.
   symbol already has package-owned `low-bit-kernel-routing.fungi`, focused
   differential coverage and physical SLIDE/VOK evidence from Slice 29. Keep it
   as `SUPERSEDED_BY_EXISTING_FUNGI`, not a second conversion claim.
-- [x] After each admitted or blocked slice, review both public Fungi skills and record a
+- [x] After each admitted or blocked slice, review both private Fungi skills and record a
   verified skill commit or `NO_SKILL_UPDATE`. Refresh shared owners, roadmap,
   subway and indexes once at the bounded batch exit, not after each slice.
 - [x] Regenerate the TypeScript-retirement owner after the active three-worker
@@ -170,7 +170,7 @@ counts or open items that a newer section explicitly supersedes.
   **28/28** with zero skips.
 - [x] Pass the canonical package owner **100/100 packages and 9,612 tests in
   284.5 seconds**, exit 0.
-- [x] Update and independently verify the public translation skill's reusable
+- [x] Update and independently verify the private translation skill's reusable
   closed-union ABI-tag rule at commit `0b60eb7`. `writing-fungi` needs no
   change because exhaustive `match` and surplus wildcard denial are already
   binding.
@@ -222,7 +222,7 @@ counts or open items that a newer section explicitly supersedes.
   can enter that exception implicitly.
 - [x] Add the RD-0796 threadability classes `PARALLEL_PURE`,
   `ASYNC_HAPPY_PATH`, `ISOLATED_SERVICE`, `SERIAL_HARD_PATH`, and fail-closed
-  `UNKNOWN` to the public translation skill and the repository gate.
+  `UNKNOWN` to the private translation skill and the repository gate.
 - [x] Conserve all **1,449/1,449** executable-family paths in a generated queue:
   **629** remain `BOOTSTRAP_FLOOR`, **820** remain evidence-blocked, and **0**
   are admitted candidates until an exact evidence-bound decision is recorded.
@@ -257,7 +257,7 @@ counts or open items that a newer section explicitly supersedes.
   442.6s** with count publication. The earlier package-concurrent attempt
   retained one compiler child refusal; the exact named rerun then passed
   **6,382/6,382**, so the refusal remains recorded rather than relabelled.
-- [x] Review and independently verify both public Fungi skills; record reusable
+- [x] Review and independently verify both private Fungi skills; record reusable
   exact-record, reporting-boundary, text-budget and slice-close guidance at
   translation-skill commit `4fe934a` and writing-skill commit `f92c5ab`.
 - [x] Refresh all bounded generated owners and graphs: Golden **11/11 +

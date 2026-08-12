@@ -26,18 +26,19 @@ wide closure is **UNKNOWN**. The last published canonical aggregate remains
 **100/100 packages and 9,612 tests**; it is historical evidence, not a fresh
 batch-wide rerun.
 
-Conversion slices were then paused for the public-skill custody gate. The
-`writing-fungi` repository is publicly verified at `d2d955e`; the
-`translating-typescript-to-fungi` repository is publicly verified at
-`9654753`. Each repository now scans its current corpus and every bounded
-reachable Git blob, carries an independent removed-history refusal test, runs
-the pinned public `verify` workflow, exposes private vulnerability reporting,
-and protects `main` with the required green check, linear history, resolved
-conversations and no administrative bypass. Both public workflows pass on the
-named commits. This closes repository publication custody only: Slice 63 has
-not started, and no TypeScript retirement, SLIDE/VOK admission, signing,
-production or release authority follows. The next permitted activity is the
-pin-bound SLIDE capability reconciliation matrix before any further slice.
+Conversion slices were then paused for the private-skill repository custody
+gate. The `writing-fungi` repository is privately verified at `d2d955e`; the
+`translating-typescript-to-fungi` repository is privately verified at
+`9654753`. Each repository scans its current corpus and every bounded reachable
+Git blob, carries an independent removed-history refusal test, runs its pinned
+private `verify` workflow, exposes private vulnerability reporting, and
+protects `main` with the required green check, linear history, resolved
+conversations and no administrative bypass. Both private workflows pass on the
+named commits, and GitHub reports both repositories as `PRIVATE`. This closes
+private repository custody only: Slice 63 has not started, and no TypeScript
+retirement, SLIDE/VOK admission, signing, production or release authority
+follows. The next permitted activity is the pin-bound SLIDE capability
+reconciliation matrix before any further slice.
 
 The prior thirty-second conversion slice uses local SLIDE `6de4d91` to
 publish, independently re-admit, and execute the app-kernel's exact private
@@ -60,7 +61,7 @@ i32 without truthiness or coercion. Strict checking is clean, differential
 parity is **2/2**, app-kernel is **231/231**, and independent SLIDE/VOK is
 **1/1** with zero skips. The governed manifest focus is **28/28**, while the
 canonical owner passes **100/100 packages and 9,612 tests in 284.5 seconds**.
-The public translation skill records the reusable closed-union ABI rule at
+The private translation skill records the reusable closed-union ABI rule at
 `0b60eb7`; `writing-fungi` needs no duplicate change. TypeScript, signature
 verification, registry admission and both callers remain active. Crash-linked
 full tooling, normal phase-close, graph-all and monolithic memory evaluation
@@ -102,7 +103,7 @@ SLIDE publishes and re-admits one physical `.slide`, verifies both typed VOK
 String receipts (**1/1**, zero skips), and refuses missing, surplus, wrong-
 typed and non-Boolean arguments, insufficient work, source, receipt, every
 safe-value envelope byte and artifact mutation. The governed manifest focus
-passes **35/35** with zero skips. The public translation skill now conserves
+passes **35/35** with zero skips. The private translation skill now conserves
 symbol-vs-file authority and requires source-domain-to-physical-width checks
 at commit `c06c72b`; the writing skill needs no change. TypeScript, `mark`,
 `printHuman` and all consumers remain active. Crash-linked full tooling,
@@ -151,7 +152,7 @@ tooling-contract and runner-policy proof passes **27/27**. TypeScript,
 The serial canonical owner passes **100/100 packages and 9,608 tests in
 442.6s** with count publication; the exact compiler rerun is **6,382/6,382**.
 The earlier package-concurrent attempt's single compiler child refusal remains
-in the record. Both public Fungi skills were reviewed and independently
+in the record. Both private Fungi skills were reviewed and independently
 verified at translation-skill commit `4fe934a` and writing-skill commit
 `f92c5ab`; the translation workflow now requires a skill update or explicit
 `NO_SKILL_UPDATE` record at every slice close.

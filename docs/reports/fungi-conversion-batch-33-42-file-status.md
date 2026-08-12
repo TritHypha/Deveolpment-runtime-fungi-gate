@@ -74,8 +74,8 @@ The active roadmap is updated once at the bounded batch exit.
 | `packages-galerina/galerina-core-compiler/tests/wat-string-match.test.mjs` | Interpreter/Wasm regression for quoted reserved names. | `DONE` |
 | `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34, 36 and 44; exact compile-refusal evidence for Slices 35, 37 and 45; executable seven-pass/eight-refuse profile boundary. | `DONE` |
 | `governance/phase-close-commands.json` | Register the physical batch test in the governed test inventory. | `DONE` |
-| Public `translating-typescript-to-fungi` skill | Duplicate-conversion preflight remains binding; public release custody, bounded reachable-history scanning, pinned CI and protected `main` are verified at `9654753`. | `DONE` |
-| Public `writing-fungi` skill | The batch-level semantic result remains `NO_SKILL_UPDATE`; later binding authoring rules and public release custody are verified at `d2d955e`. | `DONE` |
+| Private `translating-typescript-to-fungi` skill repository | Duplicate-conversion preflight remains binding; private repository custody, bounded reachable-history scanning, pinned CI and protected `main` are verified at `9654753`. | `DONE` |
+| Private `writing-fungi` skill repository | The batch-level semantic result remains `NO_SKILL_UPDATE`; later binding authoring rules and private repository custody are verified at `d2d955e`. | `DONE` |
 
 ## Shared closure status
 
@@ -93,7 +93,7 @@ repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 142 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 956 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Public Fungi skill repositories | `DONE` (`d2d955e` writing skill; `9654753` translation skill; both public workflows green and protected `main` requires `verify`) |
+| Private Fungi skill repositories | `DONE` (`d2d955e` writing skill; `9654753` translation skill; both private workflows green, protected `main` requires `verify`, and GitHub reports `PRIVATE`) |
 | Final codebase graph and Myco navigation refresh | `UNKNOWN` for exact-HEAD graph freshness: content is complete at 51,502/51,502 nodes and 137,475/137,475 edges and Slice 62 is queryable, but the index retained build point `e40f63ba` after later excluded-only documentation/output commits. Myco is current at 5,167 files and Slice 62 is queryable. |
 
 ## Verified refusal retained outside the batch
