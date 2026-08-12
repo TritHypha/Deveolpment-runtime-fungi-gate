@@ -62,4 +62,3 @@ This is reference-only. `permitData`, `step`, state construction, key erasure,
 timeouts, K3 folding, and every consumer remain TypeScript-executed. The proof
 does not authorize a consumer switch, key use, transport admission, source
 retirement, production, signing, release, or durability.
-
