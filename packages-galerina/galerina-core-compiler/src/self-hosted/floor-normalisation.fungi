@@ -1,0 +1,16 @@
+@version 1
+
+/// Normalize the five closed governance-floor aliases without prototype lookup.
+/// Every non-alias String is returned byte-for-byte unchanged.
+pure flow normaliseFloor(name: String) -> String
+contract { intent { "Normalize only an explicitly governed floor alias." } }
+{
+  match name {
+    "execution" => { return "floor_1" }
+    "containment" => { return "floor_2" }
+    "proof" => { return "floor_3" }
+    "proof_zone" => { return "floor_3" }
+    "attestation" => { return "floor_4" }
+    _ => { return name }
+  }
+}
