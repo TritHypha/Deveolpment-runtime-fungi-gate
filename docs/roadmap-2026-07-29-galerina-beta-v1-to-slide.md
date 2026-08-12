@@ -200,6 +200,39 @@ code 0. Retirement records **1,430** executable-family paths and **120**
 `.fungi` source assets. TypeScript and every consumer remain active;
 repository-wide closure remains **UNKNOWN**.
 
+Twelfth physical conversion slice 2026-08-12: the compiler's exported
+`normalizeCapability` admission helper now has exact package-owned
+`normalizeCapability` in
+`galerina-core-compiler/src/self-hosted/capability-normalization.fungi`.
+Before translation, hostile regression evidence exposed and closed a
+prototype-inheritance defect in the retained TypeScript lookup: only five own
+alias entries can now normalize, while every other String remains exact.
+Typed Fungi and the real public admission caller agree across 18 canonical and
+hostile Strings (**10/10** combined), and the compiler package is
+**6,357/6,357**. Independent SLIDE `dc1add7` selects the pinned bounded
+wide-control registry, publishes one physical `.slide`, independently re-admits
+it through VOK and verifies typed String receipts (**1/1**, zero skips).
+Malformed arguments, invalid UTF-16, work exhaustion and source/artifact
+mutations refuse. The complete owner passes **100/100 packages and 9,577 tests
+in 274.0s**. TypeScript and every consumer remain active; repository-wide
+closure remains **UNKNOWN**.
+
+Thirteenth physical conversion slice 2026-08-12: exported `normaliseFloor` now
+has exact package-owned `normaliseFloor` in
+`galerina-core-compiler/src/self-hosted/floor-normalisation.fungi`. A hostile
+test first exposed and closed the retained TypeScript helper's prototype-
+inheritance defect; only five own aliases can normalize and every other String
+remains exact. Typed Fungi agrees over 18 canonical and hostile Strings, while
+the real governance verifier emits the canonical `dag_check` obligation for
+each alias (**4/4**). The compiler package passes **6,361/6,361**. Independent
+SLIDE `dc1add7` uses the unchanged pinned bounded-wide-control registry,
+publishes one physical `.slide`, independently re-admits it through VOK and
+verifies typed String receipts (**1/1**, zero skips). Malformed arguments,
+invalid UTF-16, work exhaustion and source/artifact mutations refuse. The first
+aggregate failed closed at final count publication; an unchanged-tree retry
+passes **100/100 packages and 9,581 tests in 280.1s**. TypeScript and every
+consumer remain active; repository-wide closure remains **UNKNOWN**.
+
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
@@ -2775,6 +2808,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,574 tests** in 277.8 seconds. The normal custody close remains fail-closed:
+9,581 tests** in 280.1 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.

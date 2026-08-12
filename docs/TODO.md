@@ -4,6 +4,63 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Thirteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Repair exported TypeScript `normaliseFloor` so only own entries in the
+  five-alias table can normalize. Prototype names previously returned inherited
+  non-String values; the test-first regression now passes **1/1**.
+- [x] Express the repaired decision as package-owned
+  `src/self-hosted/floor-normalisation.fungi`. Every non-alias String is returned
+  byte-for-byte unchanged through exhaustive `match`; the source contains no
+  null, NaN, `else if`, exception syntax, `for`, `while`, or `loop`.
+- [x] Prove exact parity across 18 canonical and hostile Strings plus the real
+  governance-verifier `dag_check` obligation for all five aliases (**4/4**),
+  then run the complete compiler package at **6,361/6,361**.
+- [x] Publish one physical `.slide` through independent SLIDE `dc1add7`, pin
+  the unchanged executable registry and digest, independently re-admit through
+  VOK, verify typed String receipts, and refuse malformed arguments, work
+  exhaustion plus source/artifact mutations (**1/1**, zero skips).
+- [x] Preserve the failed evidence: the first complete aggregate passed package
+  execution but refused at final `version.json` publication with Windows
+  `UNKNOWN`. An exact unchanged-tree retry passed **100/100 packages and 9,581
+  tests in 280.1s** with exit code 0. Retirement tracks **1,433**
+  executable-family paths and **122** `.fungi` source assets.
+- [ ] Close the shared twelfth/thirteenth generated owner wave. Full tooling,
+  normal phase-close, graph-all after roadmap publication and whole-memory
+  evaluation stay excluded.
+- [x] Keep `capability-types.ts`, `normaliseFloor`, `verifyGovernedFlows` and
+  every caller active. This reference-only proof grants no consumer-switch,
+  production, release or retirement authority.
+
+### Twelfth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Repair the retained TypeScript `normalizeCapability` reference so only
+  own entries in the five-alias table can normalize. Hostile prototype names
+  previously returned inherited non-String values; the focused RED/GREEN
+  regression now passes **8/8**.
+- [x] Express the repaired five-alias decision as package-owned
+  `src/self-hosted/capability-normalization.fungi`. Every non-alias String is
+  returned byte-for-byte unchanged through exhaustive `match`; the source
+  contains no null, NaN, `else if`, exception syntax, `for`, `while`, or
+  `loop`.
+- [x] Prove parity across 18 canonical and hostile Strings through the typed
+  interpreter and public `isAdmissibleCapability` caller (**10/10** combined),
+  then run the complete compiler package at **6,357/6,357**.
+- [x] Publish one physical `.slide` through independent SLIDE `dc1add7`, pin
+  executable registry `slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1`
+  and its exact digest, independently re-admit through VOK, verify typed String
+  receipts, and refuse malformed arguments, work exhaustion plus source and
+  artifact mutations (**1/1**, zero skips).
+- [x] Run the bounded complete package owner: **100/100 packages and 9,577
+  tests** pass in **274.0s** with captured exit code 0. Retirement now tracks
+  **1,431** executable-family paths and **121** `.fungi` source assets.
+- [ ] Close the twelfth slice's generated owner wave after the next bounded
+  conversion decision. Full tooling, normal phase-close, graph-all after
+  roadmap publication and whole-memory evaluation stay excluded.
+- [x] Keep `capability-types.ts`, `normalizeCapability`,
+  `isAdmissibleCapability` and every caller active. This reference-only proof
+  grants no consumer-switch, production, release or retirement authority.
+
 ### Eleventh physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express Tower-Citizen's exported `collapse` K3 trust-boundary decision
@@ -367,8 +424,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the current complete package lane passes **100/100 packages and 9,574 tests**
-  in 277.8 seconds. These are verification evidence, not release authority.
+  the current complete package lane passes **100/100 packages and 9,581 tests**
+  in 280.1 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
