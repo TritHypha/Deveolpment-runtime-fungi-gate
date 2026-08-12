@@ -1,5 +1,21 @@
 # Boundary Authentication Requirement Fungi Conversion Design
 
+## Adjudication status
+
+`BLOCKED_BY_BOOTSTRAP_FLOOR`
+
+The design is semantically expressible and the independent physical profile
+can preserve its String-to-Bool boundary. It is nevertheless **not an
+authorized conversion slice**. The owning source file is declared
+`bounded-bootstrap-floor` in the retirement ledger, and the conversion queue
+correctly refuses a symbol override for any floor file. No `.fungi` asset,
+consumer switch, retirement evidence or physical candidate was produced.
+
+This document is retained as a negative authority record. Its syntax and
+proof shape may inform a future floor-replacement design only after a separate
+governance decision changes the bootstrap dependency, never as evidence that
+the present file is queue-admissible.
+
 ## Objective
 
 Translate only the private `requiresAuth` decision in
@@ -25,7 +41,7 @@ coercion, scheduling, partial progress or ambient authority.
 
 ## Considered approaches
 
-1. **Exhaustive String selector (selected).** Preserve each source literal as
+1. **Exhaustive String selector (semantically preferred, not authorized).** Preserve each source literal as
    itself and use an exhaustive `match` with a terminal wildcard. This avoids
    a translation-only numeric ABI and the current physical SLIDE profile
    independently supports String match parsing, validation, evaluation and
@@ -87,7 +103,8 @@ parallel execution.
 
 ## Proof shape
 
-1. Bind an exact symbol-scoped queue decision to this committed design.
+1. A symbol-scoped queue decision was attempted and correctly refused because
+   the source file is a declared bootstrap floor.
 2. RED-test the absent package-owned Fungi asset and exact flow.
 3. Compare the live TypeScript caller surface, typed Fungi interpretation and
    signed Galerina Wasm for all six union members plus hostile surplus Strings.
@@ -96,13 +113,14 @@ parallel execution.
    receipts.
 5. Refuse missing, surplus and wrong-type arguments; invalid UTF-16; source,
    receipt, safe-value and physical artifact mutations; and exhausted work.
-6. Refresh only bounded owners and indexes. Full tooling, `graph-all`, normal
+6. If the floor is governed away in future, refresh only bounded owners and
+   indexes. Full tooling, `graph-all`, normal
    phase-close and monolithic memory evaluation remain excluded because those
    aggregate lanes are crash-linked.
 
 ## Authority boundary
 
-This is a reference-only symbol proof. It does not switch `buildBoundaryGraph`,
+This is a refused design record, not a symbol proof. It does not switch `buildBoundaryGraph`,
 retire TypeScript/MJS, perform authentication, admit a crossing, mutate a graph,
 widen a grant, release authority, or claim bootstrap, production, hardware,
 signing, release or durability evidence.

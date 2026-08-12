@@ -1,5 +1,15 @@
 # Boundary Authentication Requirement Fungi Conversion Implementation Plan
 
+## Disposition
+
+`CANCELLED — BLOCKED_BY_BOOTSTRAP_FLOOR`
+
+The conversion queue refused the proposed symbol because
+`boundary-graph.ts` is a declared `bounded-bootstrap-floor` file. That refusal
+is the intended zero-trust result. None of the implementation tasks below are
+authorized, and they must not be used as a work queue unless a later binding
+governance decision first removes the floor dependency.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > `superpowers:subagent-driven-development` or `superpowers:executing-plans` to
 > implement this plan task-by-task. Steps use checkbox syntax for tracking.
@@ -32,7 +42,7 @@ GIR/WAT/Wasm proof, independent SLIDE package compiler and VOK receipt verifier.
 
 ---
 
-### Task 1: Exact queue admission
+### Task 1: Exact queue admission — cancelled
 
 **Files:**
 - Modify: `governance/conversion-queue-decisions.json`
@@ -42,12 +52,12 @@ GIR/WAT/Wasm proof, independent SLIDE package compiler and VOK receipt verifier.
 **Produces:** one `SYMBOLS`-scoped candidate for
 `boundary-graph.ts#requiresAuth`, bound to this committed design digest.
 
-- [ ] Commit this design and plan before granting candidate authority.
-- [ ] Replace the completed Slice 32 decision with exactly `requiresAuth`.
-- [ ] Regenerate and check the queue.
-- [ ] Verify zero whole-file and one scoped candidate, then commit.
+- [x] Commit the design before requesting candidate authority.
+- [x] Attempt the exact symbol-scoped decision.
+- [x] Observe the queue's fail-closed bootstrap-floor refusal.
+- [x] Restore the last completed queue decision; grant no candidate authority.
 
-### Task 2: Differential RED/GREEN
+### Task 2: Differential RED/GREEN — not authorized
 
 **Files:**
 - Create: `packages-galerina/galerina-devtools-graph-algorithms/tests/boundary-auth-requirement-fungi-conversion.test.mjs`
@@ -65,7 +75,7 @@ complete six-value and hostile-surplus differential proof.
   all six union members plus empty, case-changed, padded, NUL and unknown text.
 - [ ] Run the owning package and commit.
 
-### Task 3: Physical SLIDE/VOK proof
+### Task 3: Physical SLIDE/VOK proof — not authorized
 
 **Files:**
 - Create: `scripts/tests/boundary-auth-requirement-fungi-slide.integration.test.mjs`
@@ -81,7 +91,7 @@ typed Boolean receipts and fail-closed mutation evidence.
 - [ ] Refuse source, receipt, safe-value and physical artifact mutations.
 - [ ] Register the focused physical test, run with zero skips, and commit.
 
-### Task 4: Governed closure
+### Task 4: Governed closure — replaced by refusal record
 
 **Files:**
 - Create: `docs/reports/boundary-auth-requirement-fungi-conversion-2026-08-12.md`
