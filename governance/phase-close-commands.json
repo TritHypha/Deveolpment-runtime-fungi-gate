@@ -5356,7 +5356,7 @@
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 133
+        "expectedCount": 134
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,

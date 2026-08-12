@@ -128,9 +128,9 @@ counts or open items that a newer section explicitly supersedes.
   verified skill commit or `NO_SKILL_UPDATE`. Refresh shared owners, roadmap,
   subway and indexes once at the bounded batch exit, not after each slice.
 - [x] Regenerate the TypeScript-retirement owner after the active three-worker
-  dossier wave: **1,456** executable-family paths and **140** source Fungi
-  assets. Refresh its dependent conversion queue to **1,456/1,456** classified,
-  zero whole-file candidates, five scoped candidates and **827** blocked.
+  dossier wave: **1,458** executable-family paths and **142** source Fungi
+  assets. Refresh its dependent conversion queue to **1,458/1,458** classified,
+  zero whole-file candidates, seven scoped candidates and **829** blocked.
 - [x] Keep all TypeScript/MJS sources and consumers active. No item in this
   batch authorizes a consumer switch, retirement, production, signing, release
   or push; repository-wide closure remains `UNKNOWN`.

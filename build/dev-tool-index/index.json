@@ -3,10 +3,10 @@
   "totals": {
     "packages": 100,
     "testBearing": 100,
-    "tests": 9604,
-    "devTools": 170,
-    "auditTools": 89,
-    "toolsInCadence": 117,
+    "tests": 9612,
+    "devTools": 172,
+    "auditTools": 90,
+    "toolsInCadence": 119,
     "proofs": 40
   },
   "packages": [
@@ -77,7 +77,7 @@
       "tests": 17,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 1,
+      "files": 2,
       "deps": []
     },
     {
@@ -327,7 +327,7 @@
       "tests": 52,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 3,
+      "files": 4,
       "deps": []
     },
     {
@@ -347,7 +347,7 @@
       "tests": 55,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 22,
+      "files": 23,
       "deps": []
     },
     {
@@ -376,10 +376,10 @@
       "name": "galerina-core-reports",
       "kind": "core",
       "description": "Shared Galerina report schemas and report-writing contracts.",
-      "tests": 15,
+      "tests": 17,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 1,
+      "files": 2,
       "deps": []
     },
     {
@@ -389,7 +389,7 @@
       "tests": 51,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 4,
+      "files": 5,
       "deps": []
     },
     {
@@ -481,7 +481,7 @@
       "tests": 7,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 8,
+      "files": 9,
       "deps": [
         "@galerina/devtools-project-graph"
       ]
@@ -552,10 +552,10 @@
       "name": "galerina-framework-app-kernel",
       "kind": "framework",
       "description": "Optional Galerina secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default rout",
-      "tests": 229,
+      "tests": 231,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 34,
+      "files": 35,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"
@@ -591,7 +591,7 @@
       "tests": 35,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 5,
+      "files": 6,
       "deps": [
         "@galerina/core-compiler"
       ]
@@ -725,7 +725,7 @@
       "tests": 90,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 20,
+      "files": 21,
       "deps": []
     },
     {
@@ -991,10 +991,10 @@
       "name": "galerina-cpu-kernels",
       "kind": "cpu",
       "description": "Galerina optimized CPU kernel contracts for scalar, vector, matrix and low-bit workloads.",
-      "tests": 3,
+      "tests": 5,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 1,
+      "files": 2,
       "deps": []
     },
     {
@@ -1064,10 +1064,10 @@
       "name": "galerina-test",
       "kind": "test",
       "description": "The consolidated Galerina test harness for unit, e2e, R6 conformance, fidelity-differential, and exact SLIDE c",
-      "tests": 41,
+      "tests": 43,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 7,
+      "files": 8,
       "deps": []
     },
     {
@@ -1292,6 +1292,20 @@
         "doc-drift",
         "graph/index",
         "proofs"
+      ]
+    },
+    {
+      "name": "audit-conversion-slice-close.mjs",
+      "category": "audit",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "governance",
+        "source-hygiene",
+        "doc-drift",
+        "graph/index"
       ]
     },
     {
@@ -2782,6 +2796,8 @@
       "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
+        "diagnostics",
+        "source-hygiene",
         "graph/index"
       ]
     },
@@ -3001,6 +3017,19 @@
         "coverage",
         "secrets/privacy",
         "package-border",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "conversion-queue.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "governance",
+        "source-hygiene",
         "graph/index"
       ]
     },
@@ -3593,6 +3622,7 @@
       "verify-registry-static-host-source.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
+      "run-all-tests.cjs",
       "run-core-tests.cjs",
       "run-impact-check.mjs",
       "run-phase-close-legacy.mjs",
@@ -3642,6 +3672,7 @@
       "audit-code-catalog-coverage.mjs",
       "audit-codes-full.mjs",
       "audit-compiler-stage-twins.mjs",
+      "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
       "audit-diagnostic-codes.mjs",
@@ -3715,6 +3746,7 @@
       "build-core-chain.mjs",
       "build-receipt-bound-slide-package.mjs",
       "check-gate-injection.mjs",
+      "conversion-queue.mjs",
       "debug-compiler-globs.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
@@ -3901,6 +3933,7 @@
       "audit-codes-full.mjs",
       "audit-compiler-stage-hashes.mjs",
       "audit-compiler-stage-twins.mjs",
+      "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
       "audit-diagnostic-code-collisions.mjs",
@@ -3968,6 +4001,7 @@
       "audit-checker-wiring.mjs",
       "audit-codes-full.mjs",
       "audit-compiler-stage-twins.mjs",
+      "audit-conversion-slice-close.mjs",
       "audit-coverage.mjs",
       "audit-diagnostic-code-collisions.mjs",
       "audit-diagnostic-doc-drift.mjs",
@@ -4008,6 +4042,7 @@
       "run-phase-close-special.mjs",
       "status.mjs",
       "beta-v1-release-admission.mjs",
+      "conversion-queue.mjs",
       "debug-compiler-globs.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "flat-package-root-lock.mjs",
@@ -4025,6 +4060,7 @@
       "audit-cast-hygiene.mjs",
       "audit-claim-hygiene.mjs",
       "audit-codes-full.mjs",
+      "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-generator-contract.mjs",
@@ -4045,6 +4081,7 @@
       "verify-registry-static-host-build-recipe.mjs",
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
+      "run-all-tests.cjs",
       "run-assurance-shadow.mjs",
       "run-generator-contract-cadence.mjs",
       "run-impact-check.mjs",
@@ -4053,6 +4090,7 @@
       "bench-startup.mjs",
       "brand-audit.mjs",
       "build-process-warden.mjs",
+      "conversion-queue.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
@@ -4469,6 +4507,24 @@
       "tool": "audit-compiler-stage-twins.mjs",
       "directEntryIds": [
         "compiler-stage-twins"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-conversion-slice-close.mjs",
+      "directEntryIds": [
+        "audit:conversion-slice-close"
       ],
       "transitiveEntryIds": [],
       "via": [],
@@ -5617,6 +5673,24 @@
       "directEntryIds": [
         "audit:percent-fresh",
         "audit:sections"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "conversion-queue.mjs",
+      "directEntryIds": [
+        "audit:conversion-queue"
       ],
       "transitiveEntryIds": [],
       "via": [],

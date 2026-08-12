@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "35af1aa19a4f3911e71617f2570ac456aa66fad82a471924433371c213e244c1",
+  "sourceDigest": "6f6cf8187e2b0a7049ec27c4a3de0a62044f424923bac401ccbeade323cf2646",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1456,
+    "total": 1458,
     "CANDIDATE": 0,
-    "BLOCKED": 827,
+    "BLOCKED": 829,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
@@ -5498,6 +5498,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "package": "galerina-core-logic",
+      "tranche": "T2-runtime-core",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
       "package": "galerina-core-logic",
       "tranche": "T2-runtime-core",
@@ -8707,6 +8715,14 @@
     },
     {
       "path": "packages-galerina/galerina-devtools-project-graph/tests/reporting.test.mjs",
+      "package": "galerina-devtools-project-graph",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs",
       "package": "galerina-devtools-project-graph",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",

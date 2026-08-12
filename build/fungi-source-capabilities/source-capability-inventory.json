@@ -3858,6 +3858,60 @@
     },
     {
       "astKinds": {
+        "block": 1,
+        "boolLiteral": 5,
+        "contractDecl": 1,
+        "identifier": 1,
+        "intentDecl": 1,
+        "matchArm": 5,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 5,
+        "typeRef": 2
+      },
+      "byteLength": 385,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "sourceSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 1
+      }
+    },
+    {
+      "astKinds": {
+        "block": 1,
+        "boolLiteral": 7,
+        "contractDecl": 1,
+        "identifier": 1,
+        "intentDecl": 1,
+        "matchArm": 7,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 7,
+        "typeRef": 2
+      },
+      "byteLength": 416,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+      "sourceSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 1
+      }
+    },
+    {
+      "astKinds": {
         "block": 19,
         "callExpr": 2,
         "checkArm": 15,
@@ -4180,6 +4234,33 @@
       "typeRefs": {
         "Bool": 14,
         "Int": 6
+      }
+    },
+    {
+      "astKinds": {
+        "block": 1,
+        "boolLiteral": 5,
+        "contractDecl": 1,
+        "identifier": 1,
+        "intentDecl": 1,
+        "matchArm": 5,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 5,
+        "typeRef": 2
+      },
+      "byteLength": 379,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "sourceSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 1
       }
     },
     {
@@ -5027,6 +5108,33 @@
     },
     {
       "astKinds": {
+        "block": 1,
+        "boolLiteral": 9,
+        "contractDecl": 1,
+        "identifier": 1,
+        "intentDecl": 1,
+        "matchArm": 9,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 9,
+        "typeRef": 2
+      },
+      "byteLength": 469,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "sourceSha256": "sha256:7c769e41b408af15e9fe96e5bcdd97e9889349fd7b924c358bad1945bcc26ad9",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 1
+      }
+    },
+    {
+      "astKinds": {
         "binaryExpr": 4,
         "block": 5,
         "boolLiteral": 5,
@@ -5051,6 +5159,60 @@
       "typeRefs": {
         "Bool": 1,
         "String": 2
+      }
+    },
+    {
+      "astKinds": {
+        "block": 1,
+        "boolLiteral": 2,
+        "contractDecl": 1,
+        "identifier": 1,
+        "intentDecl": 1,
+        "matchArm": 2,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 2,
+        "typeRef": 2
+      },
+      "byteLength": 327,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "sourceSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 1
+      }
+    },
+    {
+      "astKinds": {
+        "block": 1,
+        "boolLiteral": 19,
+        "contractDecl": 1,
+        "identifier": 1,
+        "intentDecl": 1,
+        "matchArm": 19,
+        "matchExpr": 1,
+        "paramDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 19,
+        "typeRef": 2
+      },
+      "byteLength": 750,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi",
+      "sourceSha256": "sha256:fe6be087673df88b75c6eacb091ade8b2ed3f85718df72a4d542283422b44cc1",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 1
       }
     },
     {
@@ -5115,6 +5277,38 @@
       "typeRefs": {
         "Bool": 1,
         "String": 1
+      }
+    },
+    {
+      "astKinds": {
+        "binaryExpr": 6,
+        "block": 7,
+        "boolLiteral": 18,
+        "contractDecl": 1,
+        "identifier": 12,
+        "ifStmt": 6,
+        "intentDecl": 1,
+        "matchArm": 17,
+        "matchExpr": 6,
+        "paramDecl": 2,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 18,
+        "stringLiteral": 6,
+        "typeRef": 3
+      },
+      "byteLength": 1037,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {
+        "==": 6
+      },
+      "path": "packages-galerina/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi",
+      "sourceSha256": "sha256:2dbc316a00a190598f19b1244a76c6509116ab27ba40c8e35ecc495be63f5d0b",
+      "typeRefs": {
+        "Bool": 1,
+        "String": 2
       }
     },
     {
@@ -5812,20 +6006,20 @@
   "schema": "galerina.fungi-source-capability-inventory.v1",
   "source": {
     "retirementField": "unexecutedFungiPaths",
-    "retirementGraphSha256": "sha256:34d2260815f53aabd7872562ecf8aa2958da75186a070de755cd75d754d648b0"
+    "retirementGraphSha256": "sha256:6f6cf8187e2b0a7049ec27c4a3de0a62044f424923bac401ccbeade323cf2646"
   },
   "totals": {
     "astKinds": {
       "assignStmt": 2120,
-      "binaryExpr": 6067,
+      "binaryExpr": 6073,
       "bitfieldDecl": 1,
-      "block": 5076,
-      "boolLiteral": 1626,
+      "block": 5089,
+      "boolLiteral": 1691,
       "callExpr": 7266,
       "charLiteral": 15,
       "checkArm": 315,
       "checkExpr": 105,
-      "contractDecl": 850,
+      "contractDecl": 857,
       "contractSetDecl": 1,
       "ensureDecl": 11,
       "enumDecl": 1,
@@ -5833,34 +6027,34 @@
       "forEachStmt": 8,
       "governedFlowDecl": 8,
       "guardedFlowDecl": 3,
-      "identifier": 19006,
-      "ifStmt": 2295,
+      "identifier": 19024,
+      "ifStmt": 2301,
       "importDecl": 22,
-      "intentDecl": 850,
+      "intentDecl": 857,
       "letDecl": 1865,
       "listLiteral": 115,
-      "matchArm": 1246,
-      "matchExpr": 379,
+      "matchArm": 1310,
+      "matchExpr": 391,
       "memberExpr": 4686,
       "mutDecl": 810,
       "numberLiteral": 5730,
-      "paramDecl": 2855,
-      "program": 135,
-      "pureFlowDecl": 849,
+      "paramDecl": 2863,
+      "program": 142,
+      "pureFlowDecl": 856,
       "recordDecl": 210,
-      "returnStmt": 3071,
+      "returnStmt": 3136,
       "secureFlowDecl": 1,
       "staticDecl": 15,
-      "stringLiteral": 4859,
+      "stringLiteral": 4865,
       "trapDecl": 50,
       "typeDecl": 3,
-      "typeRef": 2536,
+      "typeRef": 2551,
       "unaryExpr": 251,
       "whileStmt": 340
     },
-    "bytes": 1134776,
-    "files": 135,
-    "flows": 861,
+    "bytes": 1138539,
+    "files": 142,
+    "flows": 868,
     "memberCalls": {
       "append": 707,
       "bitAnd": 13,
@@ -5911,7 +6105,7 @@
       "/": 26,
       "<": 503,
       "<=": 25,
-      "==": 1867,
+      "==": 1873,
       ">": 180,
       ">=": 67,
       "||": 749
@@ -5971,7 +6165,7 @@
       "Auto": 2,
       "BitfieldEnv": 2,
       "BlockParse": 1,
-      "Bool": 406,
+      "Bool": 413,
       "Bytes": 143,
       "Char": 3,
       "CheckArmsResult": 1,
@@ -6151,7 +6345,7 @@
       "StaticEnv": 2,
       "Stmt": 5,
       "StmtParse": 1,
-      "String": 461,
+      "String": 469,
       "TierDecision": 1,
       "TokenizeResult": 1,
       "TrapSignal": 2,

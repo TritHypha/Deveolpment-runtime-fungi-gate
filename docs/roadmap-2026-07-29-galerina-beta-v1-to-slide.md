@@ -2,11 +2,35 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the thirty-second conversion slice uses local SLIDE
-`6de4d91` to publish, independently re-admit, and execute the app-kernel's
-exact private literal-verification decision through a typed Boolean boundary.
-It changes no SLIDE contract, registry, or limit. SLIDE passes
-**1,006/1,006 across 101 suites**; its 91-file tool manifest is
+Current checkpoint: the bounded thirty-slice batch through Slice 62 is fully
+adjudicated and recorded in
+[`docs/reports/fungi-conversion-batch-33-42-file-status.md`](reports/fungi-conversion-batch-33-42-file-status.md).
+Slices 33, 34, 36 and 44 have complete physical `.slide` publication,
+independent VOK re-admission and hostile-boundary evidence. Slice 42 is
+superseded by the already-proved Slice 29 asset. Slice 35 remains an incomplete
+helper decomposition; Slice 45 has reference differential evidence but no
+two-argument physical admission; every other Slice 37-62 scope is explicitly
+blocked at a verified language, physical ABI, host-authority, source-domain or
+custody boundary. No blocked scope has a placeholder `.fungi` asset and no
+refusal is counted as conversion success.
+
+The conserved queue accounts for **1,458/1,458** executable-family paths with
+zero whole-file candidates, seven symbol-scoped candidates and **829**
+file-level blockers. The batch closure receipts pass **3/3**, Golden remains
+**11/11 checked + 11/11 execution**, and the newest owning-package check is
+Sentinel State **26/26**. TypeScript/MJS sources and consumers remain active;
+literal retirement, consumer switching, production admission, signing and
+release are not authorized. Crash-linked full tooling, normal phase-close,
+`graph-all` and monolithic memory evaluation remain excluded, so repository-
+wide closure is **UNKNOWN**. The last published canonical aggregate remains
+**100/100 packages and 9,612 tests**; it is historical evidence, not a fresh
+batch-wide rerun.
+
+The prior thirty-second conversion slice uses local SLIDE `6de4d91` to
+publish, independently re-admit, and execute the app-kernel's exact private
+literal-verification decision through a typed Boolean boundary. It changes no
+SLIDE contract, registry, or limit. SLIDE passes **1,006/1,006 across 101
+suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
 Complete current security closure remains non-authorizing at K3 `0`.

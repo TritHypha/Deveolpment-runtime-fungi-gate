@@ -77,16 +77,25 @@ The active roadmap is updated once at the bounded batch exit.
 | Public `translating-typescript-to-fungi` skill | Duplicate-conversion preflight now binds the live register, retirement floor, package loaded assets, exact/sibling assets and governed mirrors; local skill commit `15c70bd`. | `DONE` |
 | Public `writing-fungi` skill | `NO_SKILL_UPDATE`: the new lessons concern candidate discovery and physical arity, while its syntax, exhaustive-exit and typed-boundary rules already cover the emitted source. | `DONE` |
 
-## Deferred shared closure files
+## Shared closure status
 
-These remain `NOT_STARTED` until the bounded batch exit:
+The bounded batch exit is in progress. The authored TODO and active roadmap
+are updated; retirement, queue, package, project, KB, dev-tool and Fungi-source
+owners are regenerated and independently current. Semantic, percentage,
+status, code-index, subway and final navigation-index publication remain in
+dependency order. The excluded aggregate lanes are not substitutes for these
+bounded owners.
 
-- `docs/TODO.md`
-- `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
-- `build/component-health/roadmap-subway.svg`
-- generated package, project, KB, inventory, semantic, status, percentage and
-  code-index outputs
-- final batch-level review of both public Fungi skill repositories
+| Closure item | Status |
+|---|---|
+| `docs/TODO.md` | `DONE` |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section; generated subway block pending) |
+| Retirement and conversion queue | `DONE` at 1,458/1,458, seven scoped candidates and 829 blockers |
+| Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
+| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 142 Fungi files |
+| Semantic, percentage, status, code-index and subway owners | `IN_PROGRESS` |
+| Public Fungi skill repositories | `DONE` (`15c70bd` translation skill; Slice 62 `NO_SKILL_UPDATE`) |
+| Final codebase graph and Myco navigation refresh | `PENDING` |
 
 ## Verified refusal retained outside the batch
 

@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 22 |
+| Files | 23 |
 | Internal edges | 43 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -44,6 +44,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/tri/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/omni-uncertain.fungi`
 - `src/self-hosted/tri-ops.fungi`
 
 ## Allowed Orphans

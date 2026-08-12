@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 4 |
+| Files | 5 |
 | Internal edges | 1 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -41,6 +41,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/passive-plan-replay-admission.fungi`
+- `src/self-hosted/terminal-scope.fungi`
 - `src/self-hosted/vok-authority-admission.fungi`
 
 ## Allowed Orphans

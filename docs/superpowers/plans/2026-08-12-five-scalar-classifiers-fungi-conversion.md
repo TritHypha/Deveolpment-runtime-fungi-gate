@@ -179,8 +179,9 @@ checkboxes remain intentionally unmet.
 
 - [x] Maintain one linked live register and independent receipts for all 30
   bounded slices.
-- [ ] Update TODO and the active roadmap.
-- [ ] Run the focused candidate checks and owning package suites; do not run
+- [x] Update TODO and the authored section of the active roadmap; the generated
+  subway block remains owned by its dependency-ordered generator.
+- [x] Run the focused candidate checks and owning package suites; do not run
   the crash-linked canonical aggregate lane.
 - [ ] Run bounded owners in dependency order, including roadmap and subway.
 - [ ] Refresh the codebase graph and Myco once at final HEAD and verify the

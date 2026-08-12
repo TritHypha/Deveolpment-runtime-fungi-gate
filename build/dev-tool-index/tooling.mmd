@@ -106,6 +106,11 @@ flowchart LR
   T_audit_compiler_stage_twins_mjs --> C_doc_drift
   T_audit_compiler_stage_twins_mjs --> C_graph_index
   T_audit_compiler_stage_twins_mjs --> C_proofs
+  T_audit_conversion_slice_close_mjs["audit-conversion-slice-close.mjs"]
+  T_audit_conversion_slice_close_mjs --> C_governance
+  T_audit_conversion_slice_close_mjs --> C_source_hygiene
+  T_audit_conversion_slice_close_mjs --> C_doc_drift
+  T_audit_conversion_slice_close_mjs --> C_graph_index
   T_audit_corpus_effect_names_mjs["audit-corpus-effect-names.mjs"]
   T_audit_corpus_effect_names_mjs --> C_effects
   T_audit_corpus_effect_names_mjs --> C_gate_wiring
@@ -660,6 +665,8 @@ flowchart LR
   T_component_health_mjs --> C_doc_drift
   T_run_all_tests_cjs["run-all-tests.cjs"]
   T_run_all_tests_cjs --> C_signing_fusion
+  T_run_all_tests_cjs --> C_diagnostics
+  T_run_all_tests_cjs --> C_source_hygiene
   T_run_all_tests_cjs --> C_graph_index
   T_run_assurance_shadow_mjs["run-assurance-shadow.mjs"]
   T_run_assurance_shadow_mjs --> C_signing_fusion
@@ -736,6 +743,10 @@ flowchart LR
   T_check_gate_injection_mjs --> C_secrets_privacy
   T_check_gate_injection_mjs --> C_package_border
   T_check_gate_injection_mjs --> C_graph_index
+  T_conversion_queue_mjs["conversion-queue.mjs"]
+  T_conversion_queue_mjs --> C_governance
+  T_conversion_queue_mjs --> C_source_hygiene
+  T_conversion_queue_mjs --> C_graph_index
   T_debug_compiler_globs_mjs["debug-compiler-globs.mjs"]
   T_debug_compiler_globs_mjs --> C_effects
   T_debug_compiler_globs_mjs --> C_governance
