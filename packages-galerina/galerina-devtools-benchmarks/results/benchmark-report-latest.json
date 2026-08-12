@@ -1,15 +1,20 @@
 {
-  "generatedAt": "2026-08-12T20:57:50.457Z",
+  "generatedAt": "2026-08-12T21:14:08.756Z",
   "references": {
     "generatedAt": "2026-08-12T20:57:50.457Z",
     "resultSha256": "af0f681b2c4264b3ad85b0c549a1937fa679da99bc79d9b8062e69f50a6130b2",
     "galerinaCommit": "55fe5eea614cbfc8149916607ac55b8ea1ac3c3a",
     "slideCommit": "c908d891efc06b409e16d2ce31fad56f6e469f4a",
     "toolchains": {
+      "go": "go version go1.26.5 windows/amd64",
       "node": "v24.18.0",
       "python": "Python 3.14.6",
-      "rust": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-      "go": "go version go1.26.5 windows/amd64"
+      "rust": "rustc 1.96.1 (31fca3adb 2026-06-26)"
+    },
+    "publication": {
+      "generatedAt": "2026-08-12T21:14:08.756Z",
+      "galerinaCommit": "dce73386f8c4ec4c826edf6f584dc9b88623db9e",
+      "slideCommit": "c908d891efc06b409e16d2ce31fad56f6e469f4a"
     },
     "wasmReference": {
       "archiveDirectory": "2026-08-02_galerina-wasm-before-slide",
@@ -23,7 +28,7 @@
     "Rust",
     "C++",
     "Node.js",
-    "Galerina/Wasm production",
+    "Galerina/Wasm legacy lane",
     "Checked reference - no permission",
     "SLIDE reference - permission present",
     "Galerina governed diagnostic",
@@ -56,9 +61,9 @@
     },
     {
       "key": "wasm",
-      "label": "Galerina/Wasm production",
+      "label": "Galerina/Wasm legacy lane",
       "ranked": true,
-      "productionGalerina": true
+      "productionGalerina": false
     },
     {
       "key": "checkedReference",
@@ -326,7 +331,7 @@
     },
     {
       "benchmark": "hardware-targets",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 38420830.95,
       "post": 36318622.29,
       "deltaPct": -5.471533561405193
@@ -354,7 +359,7 @@
     },
     {
       "benchmark": "compute-mix",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 78313000,
       "post": 75038500,
       "deltaPct": -4.1812981241939395
@@ -424,14 +429,14 @@
     },
     {
       "benchmark": "low-memory",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 459060300,
       "post": 469033900,
       "deltaPct": 2.1726121818854733
     },
     {
       "benchmark": "call-chain",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 55187000,
       "post": 54119000,
       "deltaPct": -1.935238371355573
@@ -473,7 +478,7 @@
     },
     {
       "benchmark": "nbody",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 29297869,
       "post": 28895150,
       "deltaPct": -1.374567549605741
@@ -508,7 +513,7 @@
     },
     {
       "benchmark": "gpu-compute",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 472776000,
       "post": 467310000,
       "deltaPct": -1.1561500583785977
@@ -536,7 +541,7 @@
     },
     {
       "benchmark": "record-allocation",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 536475400,
       "post": 542575400,
       "deltaPct": 1.1370512049573942
@@ -557,14 +562,14 @@
     },
     {
       "benchmark": "binary-trees",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 591100754,
       "post": 584530855,
       "deltaPct": -1.1114685534642372
     },
     {
       "benchmark": "governance-cost",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 2898640.54,
       "post": 2867650.72,
       "deltaPct": -1.0691156620613549
@@ -599,7 +604,7 @@
     },
     {
       "benchmark": "collection-pipeline",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 420973500,
       "post": 416737500,
       "deltaPct": -1.0062391100627475
@@ -641,14 +646,14 @@
     },
     {
       "benchmark": "arithmetic-threshold",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 493793580.48,
       "post": 489533195.2,
       "deltaPct": -0.8627866882875744
     },
     {
       "benchmark": "tri-logic",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 463593000,
       "post": 467190000,
       "deltaPct": 0.7758960985174496
@@ -676,14 +681,14 @@
     },
     {
       "benchmark": "fibonacci-recursive",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 17085.93,
       "post": 17199.86,
       "deltaPct": 0.6668059625668622
     },
     {
       "benchmark": "six-digit-guess",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 36202898.64,
       "post": 36433016.07,
       "deltaPct": 0.6356326113228586
@@ -711,7 +716,7 @@
     },
     {
       "benchmark": "matrix-multiply",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 441902367,
       "post": 439655793,
       "deltaPct": -0.508386957791516
@@ -732,7 +737,7 @@
     },
     {
       "benchmark": "mandelbrot",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 9064940,
       "post": 9025290,
       "deltaPct": -0.4373994753412599
@@ -837,7 +842,7 @@
     },
     {
       "benchmark": "tower-of-hanoi",
-      "runtime": "Galerina/Wasm production",
+      "runtime": "Galerina/Wasm legacy lane",
       "pre": 121727986,
       "post": 121545143,
       "deltaPct": -0.15020621469905862
@@ -912,7 +917,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
-        "galerinaPlace": "4th of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -983,8 +988,8 @@
       "python": 3567911.63,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
-        "winner": "Galerina/Wasm production",
-        "galerinaPlace": "1st of 3",
+        "winner": "Galerina/Wasm legacy lane",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
           "nodejs": 0.5080654584734755,
@@ -1037,7 +1042,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust",
-        "galerinaPlace": "4th of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1060,8 +1065,8 @@
       "python": 9488200,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
-        "winner": "Galerina/Wasm production",
-        "galerinaPlace": "1st of 3",
+        "winner": "Galerina/Wasm legacy lane",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
           "nodejs": 0.1628913262854101,
@@ -1137,8 +1142,8 @@
       "python": 2630500,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
-        "winner": "Rust AVX2 + Rust + Node.js + Galerina/Wasm production (tie)",
-        "galerinaPlace": "joint 1st of 5",
+        "winner": "Rust AVX2 + Rust + Node.js + Galerina/Wasm legacy lane (tie)",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
           "rustAvx2": 0,
@@ -1169,7 +1174,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust",
-        "galerinaPlace": "4th of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1193,7 +1198,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Python",
-        "galerinaPlace": "5th of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1265,7 +1270,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust AVX2",
-        "galerinaPlace": "4th of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1337,7 +1342,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust AVX2",
-        "galerinaPlace": "3rd of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1361,7 +1366,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
-        "galerinaPlace": "2nd of 3",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1409,7 +1414,7 @@
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust AVX2",
-        "galerinaPlace": "3rd of 5",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
       }
@@ -1457,7 +1462,7 @@
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
         "winner": "Python",
-        "galerinaPlace": "2nd of 3",
+        "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
           "nodejs": 3.15,
