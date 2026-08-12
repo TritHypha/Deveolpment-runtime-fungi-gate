@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "ed81ff31",
+    "sha": "90ada6b0",
     "detached": false,
     "dirty": true
   },
@@ -20,7 +20,7 @@
         {
           "label": "Compiler",
           "pct": 100,
-          "note": "✅ shipped — complete compiler 6,374/6,374; all 7 self-hosted stages are authoritative and byte-pinned",
+          "note": "✅ shipped — complete compiler 6,375/6,375; all 7 self-hosted stages are authoritative and byte-pinned",
           "evidence": {
             "asserted": "no countable ladder — 'shipped' is a judgement over the twin corpus; candidate ladder = per-stage twin checker-clean + RD-0361 differential ≡"
           }
@@ -291,7 +291,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "100/100 component families green; 100 workspace packages, 9,594 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "100/100 component families green; 100 workspace packages, 9,595 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",
