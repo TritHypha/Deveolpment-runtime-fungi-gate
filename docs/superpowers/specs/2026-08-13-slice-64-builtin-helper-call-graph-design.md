@@ -23,28 +23,31 @@ new pinned call-chain capability and do not count as current physical proof.
 
 ## Approaches considered
 
-1. **Three six-name pure helpers plus one exported composition (selected).**
-   Every leaf remains below the proved seven-arm flat String-match ceiling.
-   The exported flow checks the first helper, then the second, and returns the
-   third. This minimizes calls while preserving all eighteen exact names.
-2. **Six three-name helpers.** This stays below the leaf ceiling but adds
-   unnecessary call and control edges, increasing physical proof cost without
-   improving semantics.
+1. **Five bounded pure helpers plus one shallow Boolean composition
+   (selected after RED diagnosis).** Four leaves own four exact names and the
+   fifth owns two. The exported flow combines the five pure results with one
+   `or` expression. This keeps every function at or below the narrow
+   eight-block ceiling, uses the bounded wide-function registry and keeps the
+   call graph at depth one.
+2. **Three six-name helpers.** Rejected after a valid RED run. Six-name leaf
+   matches exceed the narrow block ceiling, selecting the wide-control profile
+   before the wide-function profile; the combined graph is therefore refused.
 3. **One flat eighteen-arm match or a runtime ceiling increase.** Rejected.
    The flat form has an exact compile refusal, and this slice has no authority
    to change a SLIDE registry ceiling.
 
 ## Exact behavior
 
-The first helper owns `AuditLog`, `Secrets`, `Crypto`, `Database`, `Http` and
-`File`. The second owns `Auth`, `Session`, `validate`, `redact`, `emit` and
-`return`. The third owns `Ok`, `Err`, `Some`, `None`, `true` and `false`.
+The helpers own, in order: `AuditLog`/`Secrets`/`Crypto`/`Database`;
+`Http`/`File`/`Auth`/`Session`; `validate`/`redact`/`emit`/`return`;
+`Ok`/`Err`/`Some`/`None`; and `true`/`false`.
 
 Every helper uses an exhaustive `match` with terminal `_ => return false`.
-The exported `isBuiltin` returns `true` after a successful first or second
-helper and otherwise returns the third helper's Boolean. It contains no null,
-NaN, `else if`, exception syntax, iteration, effect, host API, authority grant,
-Hallmark, border or vault access.
+The exported `isBuiltin` returns the Boolean `or` of all five pure helper
+results. The source decision is pure and has no observable evaluation-order or
+short-circuit effect to preserve. It contains no null, NaN, `else if`,
+exception syntax, iteration, effect, host API, authority grant, Hallmark,
+border or vault access.
 
 All other Strings return `false`. Missing, surplus-argument, non-String,
 invalid-text, exhausted-work and mutated-artifact physical inputs must refuse,
@@ -55,7 +58,7 @@ not coerce.
 1. RED: change the focused physical expectation from compile refusal to proof
    while retaining the current flat candidate; require the test to fail at the
    physical compile boundary.
-2. GREEN: replace only the Fungi body with the three-by-six helper graph.
+2. GREEN: replace only the Fungi body with the five-leaf shallow helper graph.
 3. Strict-check the exact asset and run its package parity proof over all
    eighteen names plus hostile surplus text.
 4. Publish one physical `.slide`, independently re-admit it through VOK and

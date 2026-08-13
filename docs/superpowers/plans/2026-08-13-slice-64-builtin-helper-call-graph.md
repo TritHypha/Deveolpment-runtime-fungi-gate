@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Physically admit the exact eighteen-name `isBuiltin` Fungi decision through a bounded three-by-six pure helper graph while retaining TypeScript and every consumer.
+**Goal:** Physically admit the exact eighteen-name `isBuiltin` Fungi decision through five bounded pure leaves and one shallow Boolean composition while retaining TypeScript and every consumer.
 
-**Architecture:** Three pure leaf flows each own six exact String labels and an exhaustive wildcard. The exported `isBuiltin` composes those leaves with two Boolean early returns and one terminal Boolean return; the existing physical harness publishes and independently re-admits that exact graph.
+**Architecture:** Four pure leaf flows each own four exact String labels, a fifth owns two, and every leaf has an exhaustive wildcard. The exported `isBuiltin` combines the five results with one Boolean `or` expression; the existing physical harness publishes and independently re-admits that exact graph.
 
 **Tech Stack:** Galerina `.fungi`, Node.js `node:test`, independent SLIDE/VOK, Git.
 
@@ -48,7 +48,7 @@ Remove-Item Env:GALERINA_SLIDE_REPO
 Expected: FAIL only because the flat eighteen-arm `isBuiltin` physical compile
 is refused. A missing repository, stale pin or unrelated failure is not valid RED.
 
-### Task 2: Implement and prove the bounded helper graph
+### Task 2: Diagnose the failed three-by-six graph and implement the bounded shallow helper graph
 
 **Files:**
 - Modify: `packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi`
@@ -72,8 +72,6 @@ contract { intent { "Recognize an exact platform builtin name." } }
     "Secrets" => return true
     "Crypto" => return true
     "Database" => return true
-    "Http" => return true
-    "File" => return true
     _ => return false
   }
 }
@@ -82,8 +80,18 @@ pure flow isBuiltinRuntime(name: String) -> Bool
 contract { intent { "Recognize an exact runtime builtin name." } }
 {
   match name {
+    "Http" => return true
+    "File" => return true
     "Auth" => return true
     "Session" => return true
+    _ => return false
+  }
+}
+
+pure flow isBuiltinOperation(name: String) -> Bool
+contract { intent { "Recognize an exact operation builtin name." } }
+{
+  match name {
     "validate" => return true
     "redact" => return true
     "emit" => return true
@@ -100,6 +108,14 @@ contract { intent { "Recognize an exact value builtin name." } }
     "Err" => return true
     "Some" => return true
     "None" => return true
+    _ => return false
+  }
+}
+
+pure flow isBuiltinBoolean(name: String) -> Bool
+contract { intent { "Recognize an exact Boolean builtin name." } }
+{
+  match name {
     "true" => return true
     "false" => return true
     _ => return false
@@ -109,13 +125,11 @@ contract { intent { "Recognize an exact value builtin name." } }
 pure flow isBuiltin(name: String) -> Bool
 contract { intent { "Recognize only an exact context-receipt builtin name." } }
 {
-  if isBuiltinPlatform(name) {
-    return true
-  }
-  if isBuiltinRuntime(name) {
-    return true
-  }
-  return isBuiltinValue(name)
+  return isBuiltinPlatform(name)
+    or isBuiltinRuntime(name)
+    or isBuiltinOperation(name)
+    or isBuiltinValue(name)
+    or isBuiltinBoolean(name)
 }
 ```
 
