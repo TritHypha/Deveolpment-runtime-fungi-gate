@@ -3574,7 +3574,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 35,
-      "docs": 11
+      "docs": 12
     },
     {
       "code": "FUNGI-CONTRACT-003",
@@ -4955,7 +4955,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 60,
-      "docs": 25
+      "docs": 26
     },
     {
       "code": "FUNGI-GOV-004",
@@ -5711,7 +5711,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 29,
-      "docs": 11
+      "docs": 12
     },
     {
       "code": "FUNGI-HW-001",
@@ -6943,7 +6943,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 5,
-      "docs": 24
+      "docs": 26
     },
     {
       "code": "FUNGI-MEMORY-001",
@@ -9340,7 +9340,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 14,
-      "docs": 9
+      "docs": 10
     },
     {
       "code": "FUNGI-SECRET-004",
@@ -10495,7 +10495,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 236,
-      "docs": 23
+      "docs": 24
     },
     {
       "code": "FUNGI-TYPE-002",
@@ -10516,7 +10516,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 96,
-      "docs": 8
+      "docs": 9
     },
     {
       "code": "FUNGI-TYPE-003",
@@ -10624,7 +10624,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 99,
-      "docs": 16
+      "docs": 17
     },
     {
       "code": "FUNGI-TYPE-010",
@@ -11203,7 +11203,7 @@
       "defs": 0,
       "emits": 2,
       "tests": 22,
-      "docs": 15
+      "docs": 16
     },
     {
       "code": "FUNGI-VALUESTATE-005",
