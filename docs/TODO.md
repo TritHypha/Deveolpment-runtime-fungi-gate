@@ -61,9 +61,16 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Retain TypeScript and every logger/kernel consumer until each exact active
   ABI and physical SLIDE/VOK proof exists. Focused evidence grants no whole-file
   retirement, production, release or push authority.
-- [ ] Run registered graph/index/roadmap/subway and other maintenance owners
-  individually at Slice 247, then refresh Myco once. Do not run crash-linked
-  aggregates; repository-wide closure remains `UNKNOWN`.
+- [x] Run registered graph/index/roadmap/subway and other maintenance owners
+  individually at Slice 247. The settled matrix reports 1,486/1,486 paths,
+  100/201 package outputs, project 5/5, KB 4/4, semantic 3/3, 9,690 graph
+  nodes / 9,898 edges with zero violations, 172 tools / 40 proofs, 147 Fungi
+  files, 974 codes, 187/187 receipts, canonical counts 7/7 at 9,612, Golden
+  11/11 and zero leak violations. Owner outputs are committed at `dba898ac`.
+  Myco then indexed **5,542 files / 83,411 terms** and proves Slice 247 plus
+  the audit-adapter blocker queryable. Codebase-memory remains `UNKNOWN` after
+  `Transport closed`. Crash-linked aggregates were not run, so repository-wide
+  closure remains `UNKNOWN`.
 
 ### Slices 218-222 text rendering and maintenance boundary - 2026-08-13
 

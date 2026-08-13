@@ -51,6 +51,6 @@ tests, remains the sole writer, and admits only source-conserving outcomes.
   push.
 - [x] Publish 25 governed receipts, update the live register, TODO and roadmap,
   and pass receipt/leak/freshness checks.
-- [ ] At the Slice 247 maintenance boundary, run registered owners individually,
+- [x] At the Slice 247 maintenance boundary, run registered owners individually,
   commit their exact outputs, refresh Myco once, and keep unavailable exact
   codebase-memory freshness `UNKNOWN`.

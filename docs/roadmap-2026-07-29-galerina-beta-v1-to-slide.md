@@ -68,10 +68,14 @@ retirement gates say otherwise. Repository-wide closure remains **UNKNOWN**
 until the crash-linked monolithic lane is replaced by a bounded, resumable
 owner; no production, release, signing or push authority is inferred.
 
-Slice 247 is the next scheduled maintenance boundary. Its source receipts and
-focused observability evidence are complete; the individual generated-owner
-chain and final Myco refresh remain required before the roadmap/subway build
-point advances from the preceding Slice 222 maintenance evidence.
+Slice 247 is now the current bounded maintenance boundary. The independently
+run owner matrix reports 9,690 graph nodes / 9,898 edges with zero integrity
+violations, 187/187 governed receipts, current package/project/KB/semantic,
+inventory/index/status/roadmap outputs, canonical counts 7/7 at 9,612 and
+Golden 11/11. Owner outputs are committed at `dba898ac`; Myco indexed 5,542
+files / 83,411 terms and proves the checkpoint and audit-adapter blocker
+queryable. Exact codebase-memory graph-HEAD freshness remains `UNKNOWN` after
+`Transport closed`; crash-linked aggregates remain excluded.
 
 Historical checkpoint through Slice 122: the governed campaign was accounted
 through **Slice 122**, with the exact status and R&D intake recorded in

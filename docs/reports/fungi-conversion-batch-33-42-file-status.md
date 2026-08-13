@@ -5,8 +5,8 @@ design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
 [`../superpowers/plans/2026-08-13-slices-223-247-logger-and-kernel-observability.md`](../superpowers/plans/2026-08-13-slices-223-247-logger-and-kernel-observability.md).
-Slices 223-247 are source-accounted; Slice 247 is the scheduled
-graph/index/roadmap boundary. Crash-linked aggregate lanes remain excluded.
+Slices 223-247 and the Slice 247 graph/index/roadmap maintenance boundary are
+complete. Crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -298,23 +298,25 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 222 bounded decision, individual maintenance owner chain and complete
-freshness matrix are committed at `26223fa6`. A post-commit Myco refresh indexed
-5,516 files / 83,388 terms and proves Slice 222 queryable in seven governed
-files. Codebase-memory still returns `Transport closed`, so its exact graph-HEAD
+The Slice 247 bounded decision and converged individual maintenance owner chain
+are committed through `dba898ac`. The final matrix reports 9,690 graph nodes /
+9,898 edges with zero violations, 187/187 governed receipts and every named
+bounded owner current. A post-commit Myco refresh indexed 5,542 files / 83,411
+terms and proves Slice 247 plus the audit-adapter blocker queryable.
+Codebase-memory still returns `Transport closed`, so its exact graph-HEAD
 freshness remains `UNKNOWN`. The excluded aggregate lanes are not substitutes,
 so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
-| `docs/TODO.md` | `DONE` for the authored Slice 222 status, individual owner results and post-commit Myco proof |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for the authored Slice 222 narrative and generated subway block |
+| `docs/TODO.md` | `DONE` for the authored Slice 247 status, defects, individual owner results and post-commit Myco proof |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for the authored Slice 247 narrative and generated subway block |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`dcd99f8` writing skill; `ed2cc43` translation skill; both remain private custody and unpushed; Slices 223-247 triggered and passed the slice-end update hook) |
-| Codebase graph and Myco navigation | `PARTIAL`: Myco indexed 5,516 files / 83,388 terms and proves Slice 222 queryable in seven governed files. Codebase-memory returned `Transport closed`, so no exact final-HEAD structural-navigation receipt exists; do not substitute generated package/project/KB graphs for it. |
+| Codebase graph and Myco navigation | `PARTIAL`: Myco indexed 5,542 files / 83,411 terms and proves Slice 247 plus the audit-adapter blocker queryable. Codebase-memory returned `Transport closed`, so no exact final-HEAD structural-navigation receipt exists; do not substitute generated package/project/KB graphs for it. |
 
 ## Verified refusal retained outside the batch
 
