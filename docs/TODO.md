@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 133-142 TPL introspection and audit adjudication - 2026-08-13
+
+- [x] Classify `TPLSimulator.snapshot` and `packedByteLength` at their exact
+  authenticated packed-memory, array-allocation and mutable-instance exits.
+- [x] Classify the `AuditLogger` constructor, `append`, `flush` and
+  `pendingCount` at their clock, callback, JSON, filesystem, governed-egress,
+  durability, buffer-ordering and live-object boundaries.
+- [x] Classify `load`, `exec`, `trap` and `erase` at their exact audit-record,
+  open-record spread/collision, optional-property/wire and append-effect exits.
+- [x] Verify the pinned SLIDE surface honestly: bounded immutable `Array<Int>`
+  and records exist, but do not authorize mutable state or effects.
+- [x] Prove TypeScript typecheck, five focused files **63/63**, and complete
+  Tower-Citizen **515/515** with zero skips.
+- [x] Update both private Fungi skills with the reusable immutable-transport
+  versus active-authority rule; 3/3 tests, release audits and structure checks
+  pass at `1480843` and `b21ff6e`, with no push.
+- [ ] Add explicit mutable-object, authenticated clock/sequence, callback,
+  JSON/wire, filesystem-durability and governed-egress ABIs before reopening.
+- [ ] Decide whether `trap`'s caller-supplied details are intentionally allowed
+  to overwrite fixed `violation`/`rollbackStatus`; any contract change needs
+  its own security review and differential tests.
+- [ ] Keep TypeScript and every caller active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+- [ ] Defer aggregate roadmap, subway, project-graph, code-index and re-index
+  owners to Slice 147 under the owner-approved 25-slice cadence.
+
 ### Slices 123-132 TPL support and bulk-operation adjudication - 2026-08-13
 
 - [x] Classify `SecurityTrap` and `TPLIntegrityFault` as

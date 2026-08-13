@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-132 File Status
+# Fungi Conversion Batch 33-142 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-123-132-tpl-support-bulk.md`](../superpowers/plans/2026-08-13-slices-123-132-tpl-support-bulk.md).
+[`../superpowers/plans/2026-08-13-slices-133-142-introspection-audit.md`](../superpowers/plans/2026-08-13-slices-133-142-introspection-audit.md).
 The active roadmap is updated once at the bounded batch exit.
 
 ## Slice 63 entry gate
@@ -133,6 +133,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 130 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.tmacVector` | not created | vector/state/T-MAC proof retained | Stateful typed-array traversal and mutation, retained scale and exact output identity have no admitted physical transaction. | `BLOCKED_BY_TYPED_ARRAY_STATEFUL_TMAC_ABI` |
 | 131 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.loadWeights` | not created | load/mutation/failure proof retained | JavaScript number-array validation and active packed-memory mutation cannot be projected through the host without changing semantics. | `BLOCKED_BY_NUMBER_ARRAY_MUTATION_ABI` |
 | 132 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.erase` | not created | erase/reset proof retained | Packed state, canaries, binary64 scale and live governance reset form one observable cleanup transaction. | `BLOCKED_BY_TYPED_MEMORY_RESET_CAPABILITY_ABI` |
+| 133 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.snapshot` | not created | snapshot/packing proof retained | Reads live integrity-checked packed memory and allocates an ordered number array; immutable array transport is not active-state authority. | `BLOCKED_BY_TYPED_MEMORY_ARRAY_SNAPSHOT_ABI` |
+| 134 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.packedByteLength` | not created | packing-size proof retained | Observes retained instance layout; a host-derived scalar would prove a different program. | `BLOCKED_BY_MUTABLE_INSTANCE_SIZE_ABI` |
+| 135 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.constructor` | not created | audit modes/tick/egress proof retained | Constructs a mutable audit object with binary64 normalization, callback/capability identity, host directory effect, buffer and sequence state. | `BLOCKED_BY_HOST_AUDIT_OBJECT_ABI` |
+| 136 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.append` | not created | event/tick/egress proof retained | Clock, sequence, record, JSON and selected memory/buffer/filesystem/egress effect form one observable transaction. | `BLOCKED_BY_CLOCK_RECORD_EGRESS_TRANSACTION_ABI` |
+| 137 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.flush` | not created | batch/egress flush proof retained | Retained capability invocation and durable ordered write must complete before buffer clear; partial failure cannot be projected. | `BLOCKED_BY_ACTIVE_EGRESS_DURABILITY_ABI` |
+| 138 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.pendingCount` | not created | pending-before/after-flush proof retained | Reads live mutable buffer length; a host-supplied count loses instance provenance and ordering. | `BLOCKED_BY_MUTABLE_INSTANCE_OBSERVATION_ABI` |
+| 139 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.load` | not created | LOAD/lifecycle proof retained | Exact LOAD record construction delegates to the active append transaction. | `BLOCKED_BY_AUDIT_RECORD_APPEND_ABI` |
+| 140 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.exec` | not created | EXEC/lifecycle proof retained | Exact EXEC record construction, including input hash, delegates to active append. | `BLOCKED_BY_AUDIT_RECORD_APPEND_ABI` |
+| 141 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.trap` | not created | TRAP detail/governance proof retained | Open record spread and collision precedence plus denied active append are not a closed-record ABI. | `BLOCKED_BY_DYNAMIC_RECORD_AUDIT_APPEND_ABI` |
+| 142 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.erase` | not created | ERASE/lifecycle proof retained | Optional property/wire state, conditional severity/authority and active append must remain exact. | `BLOCKED_BY_OPTION_RECORD_AUDIT_APPEND_ABI` |
 
 ## Shared implementation and governance files
 
@@ -384,3 +394,9 @@ not one of Slices 33–43 and no Fungi asset was produced.
   erase/reset effects. TypeScript typecheck, the five focused files **56/56**
   and complete Tower-Citizen **515/515** pass with zero skips. The reusable
   JavaScript Error-identity rule is verified in both private Fungi skills.
+- Slices 133-142 remain blocked without placeholder assets. Immutable array and
+  record envelopes exist at the pinned SLIDE build point, but they do not admit
+  mutable instance state, clocks, callbacks, JSON, filesystem durability or
+  governed egress effects. TypeScript typecheck, focused **63/63** and complete
+  Tower-Citizen **515/515** pass with zero skips. Both private skills now state
+  the reusable immutable-transport versus active-authority boundary.
