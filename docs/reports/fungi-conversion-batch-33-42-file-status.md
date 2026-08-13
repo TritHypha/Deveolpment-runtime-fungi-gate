@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-98 File Status
+# Fungi Conversion Batch 33-102 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -97,6 +97,10 @@ still requires its own strict, physical, VOK and differential proof.
 | 96 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#collapse` | existing `packages-galerina/galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi#collapseVerdict` | `packages-galerina/galerina-tower-citizen/tests/collapse-boundary-fungi-conversion.test.mjs` | The existing direct proof passes all three K3 rows; the physical `.slide`/VOK String lane passes 1/1 with zero skips and hostile/mutation refusal. Tower-Citizen passes **515/515**. TypeScript remains active. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
 | 97 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#authorize` | existing `packages-galerina/galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi#authorizeVerdict` | `packages-galerina/galerina-tower-citizen/tests/authorization-boundary-fungi-conversion.test.mjs` | The existing direct proof passes all three K3 rows; the physical `.slide`/VOK Bool lane passes 1/1 with zero skips and hostile/mutation refusal. Tower-Citizen passes **515/515**. TypeScript remains active. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
 | 98 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#decideAtBoundary` | not created | existing complete Tower-Citizen lane retained | Exact parity requires the complete boundary record, an absent/present structured diagnostic and optional exactly-once callback effect. The current physical profile has no corresponding Option/record/callback ABI; host reassembly is refused. Tower-Citizen passes **515/515**. | `BLOCKED_BY_OPTION_RECORD_CALLBACK_ABI` |
+| 99 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vAndTensor` | not created | `packages-galerina/galerina-tower-citizen/tests/vand-tensor.test.mjs` | Exact parity requires two `Int8Array` inputs, equal-length and per-element validation, bounded index traversal, result allocation and typed-array output. Scalar K3 minimum is not the container boundary. | `BLOCKED_BY_TYPED_ARRAY_TRAVERSAL_ABI` |
+| 100 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vAndTensor2D` | not created | `packages-galerina/galerina-tower-citizen/tests/vand-tensor.test.mjs` | The Slice 99 boundary additionally requires full JavaScript-number integer/non-negative shape validation and binary64 multiplication. Signed-i32 narrowing is refused. The shared focused file passes **8/8**. | `BLOCKED_BY_TYPED_ARRAY_BINARY64_SHAPE_ABI` |
+| 101 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#consensusTritN` | not created | `packages-galerina/galerina-tower-citizen/tests/consensus-confidence.test.mjs` | Exact parity requires arbitrary Verdict-array traversal, malformed-element refusal, signed accumulation and empty/tie→Unknown behavior. Fixed-arity/scalar proof is insufficient. | `BLOCKED_BY_VERDICT_ARRAY_ACCUMULATOR_ABI` |
+| 102 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#collapseConfidence` | not created | `packages-galerina/galerina-tower-citizen/tests/consensus-confidence.test.mjs` | Exact parity requires a three-binary64-field record, optional threshold, finite/NaN/range/normalization/tolerance and strict-argmax semantics. The physical profile has no source-equivalent binary64 record ABI. The shared focused file passes **7/7**. | `BLOCKED_BY_BINARY64_CONFIDENCE_RECORD_ABI` |
 
 ## Shared implementation and governance files
 
@@ -318,3 +322,13 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Slice 98 remains blocked without a placeholder asset. The scalar collapse
   and authorize flows do not conserve the nullable structured diagnostic,
   complete boundary record or optional exactly-once callback effect.
+- Slices 99 and 100 remain blocked without placeholder assets. The scalar K3
+  minimum proof does not conserve exact `Int8Array` traversal/allocation, and
+  the 2-D wrapper additionally requires full binary64 shape semantics.
+- Slice 101 remains blocked at the arbitrary Verdict-array plus signed
+  accumulator boundary. Fixed triples do not prove arbitrary length, malformed
+  inputs or empty/tie behavior.
+- Slice 102 remains blocked at the binary64 confidence-record boundary. Fungi
+  must not carry NaN, while host refusal is not the source's typed Unknown
+  result. The shared focused files pass **15/15** and Tower-Citizen remains
+  **515/515**.

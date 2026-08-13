@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 99-102 tensor, consensus and confidence adjudication - 2026-08-13
+
+- [x] Classify `vAndTensor` as
+  `BLOCKED_BY_TYPED_ARRAY_TRAVERSAL_ABI`; preserve exact `Int8Array` identity,
+  length, indexed validation, allocation and typed-array output.
+- [x] Classify `vAndTensor2D` as
+  `BLOCKED_BY_TYPED_ARRAY_BINARY64_SHAPE_ABI`; do not narrow JavaScript-number
+  shape validation and multiplication to signed i32.
+- [x] Classify `consensusTritN` as
+  `BLOCKED_BY_VERDICT_ARRAY_ACCUMULATOR_ABI`; preserve arbitrary length,
+  malformed-element refusal, signed accumulation and empty/tie→Unknown.
+- [x] Classify `collapseConfidence` as
+  `BLOCKED_BY_BINARY64_CONFIDENCE_RECORD_ABI`; keep NaN out of Fungi source and
+  do not relabel host rejection as the source's typed Unknown result.
+- [x] Verify the two focused files at 15/15 and retain the fresh complete
+  Tower-Citizen result at 515/515 with zero skips.
+- [x] Review both private Fungi skills; `NO_SKILL_UPDATE` is correct at
+  `dc2ef82f` and `30eb4dd3` because their existing container, numeric-domain,
+  no-NaN and no-host-projection rules already cover this group.
+- [ ] Reopen individual scopes only after their exact physical container or
+  binary64 ABI exists and passes independent SLIDE/VOK proof.
+- [ ] Keep TypeScript and all callers active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+
 ### Slices 96-98 verdict-boundary adjudication - 2026-08-13
 
 - [x] Classify Tower-Citizen `collapse` and `authorize` as

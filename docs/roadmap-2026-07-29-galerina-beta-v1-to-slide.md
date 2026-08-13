@@ -3,11 +3,11 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 98**, with the exact status and R&D intake recorded in
+through **Slice 102**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
-blockers; **38/38** governed slice receipts pass. Slices 84-88 conserve five
+blockers; **42/42** governed slice receipts pass. Slices 84-88 conserve five
 additional exact ABI/authority/custody refusals. Slice 88 proves that the Myco
 search-outcome guard cannot move into a read-only mirror or cross the current
 exact-record profile without deleting dynamic property behavior. Slice 89 adds
@@ -34,6 +34,10 @@ their independent physical SLIDE/VOK lanes; no duplicate asset is admitted.
 Slice 98 keeps the complete `decideAtBoundary` record, absent/present
 diagnostic and optional exactly-once callback effect blocked until an exact
 physical Option/record/callback ABI exists. Host reassembly is refused.
+Slices 99-102 retain the two typed-array tensor helpers, N-way Verdict
+consensus and binary64 confidence collapse at their exact container/numeric
+ABI exits. Scalar K3 proof is not container parity; signed-i32 narrowing,
+NaN-bearing Fungi source and host-projected folds are refused.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic

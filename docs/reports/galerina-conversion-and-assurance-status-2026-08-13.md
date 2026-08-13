@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 98**. Slices
+The current conversion campaign is complete through **Slice 102**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -70,6 +70,15 @@ equivalent to the two scalar flows, and the pinned physical profile has no
 exact Option/record/callback ABI. Host reassembly or precomputed callback
 routing is refused.
 
+Slices 99-102 retain four larger Tower-Citizen boundaries in TypeScript. The
+two tensor helpers require exact typed-array traversal/allocation and, for 2-D,
+full binary64 shape semantics. N-way consensus requires an arbitrary
+Verdict-array plus a signed accumulator. Confidence collapse requires a
+three-binary64-field record, optional threshold, finite/non-finite,
+normalization tolerance and strict-argmax behavior. Scalar K3 evidence is not
+container parity, NaN remains forbidden in Fungi source, and host-projected
+folds or rejection are refused.
+
 ## Current evidence
 
 - Slice 92 physical-proof build point: `a7258cef` on
@@ -81,7 +90,7 @@ routing is refused.
   and 147 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 856
   file-level blockers.
-- Slice receipts: **38/38** governed receipts pass after Slices 96-98.
+- Slice receipts: **42/42** governed receipts pass after Slices 99-102.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   974 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **515/515**, direct Slice 93
@@ -103,7 +112,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 98 decision boundary is complete. Literal
+The Slice 102 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed
