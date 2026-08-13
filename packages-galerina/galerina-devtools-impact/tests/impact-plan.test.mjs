@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 
 import { buildImpactPlan } from "../src/impact-plan.mjs";
+import { DOCUMENTATION_PATH_CASES } from "./documentation-path-cases.mjs";
 
 async function write(root, relativePath, contents) {
   const absolute = join(root, ...relativePath.split("/"));
@@ -69,6 +70,27 @@ test("documentation changes select only the bounded documentation gates", async 
     "docs:private-leak",
     "docs:drift",
   ]);
+});
+
+test("documentation path classification preserves every fixed root and prefix boundary", async () => {
+  const root = await fixture();
+  const documentationCommands = Object.freeze([
+    "docs:path-leak",
+    "docs:private-leak",
+    "docs:drift",
+  ]);
+
+  for (const { path, expected } of DOCUMENTATION_PATH_CASES) {
+    const plan = buildImpactPlan({ root, changedPaths: [path] });
+    const selected = documentationCommands.every((id) =>
+      plan.commands.some((command) => command.id === id));
+    assert.equal(selected, expected, path);
+    if (expected) {
+      assert.equal(plan.status, "AFFECTED_SCOPE", path);
+      assert.deepEqual(plan.affectedPackages, [], path);
+      assert.deepEqual(plan.commands.map((command) => command.id), documentationCommands, path);
+    }
+  }
 });
 
 test("compiler and package-manifest changes require a full scan", async () => {
