@@ -175,6 +175,17 @@ checkboxes remain intentionally unmet.
   baseline independently refused the unsupported Bytes/Option profile; preserve
   unrelated writing-skill worktree changes.
 
+## Task 3I: Settle Slices 84-87
+
+- [x] Reject the already-converted `isLiteralVerificationSuccess` and
+  `isImplicitReturnType` scopes before assignment.
+- [x] Reject `isSensitiveHeaderName` at the Core Security bootstrap floor.
+- [x] Refuse Slice 84 at the executable case-insensitive regex/text boundary.
+- [x] Refuse Slice 85 at the private affine authenticated-profile seal.
+- [x] Refuse Slice 86 at the heterogeneous binary64 finite-number guard.
+- [x] Refuse Slice 87 at the active host-object method-identity boundary.
+- [x] Create no placeholder assets and record one governed receipt per slice.
+
 ## Task 5: One shared governed closure
 
 - [x] Maintain one linked live register and independent receipts for all 30

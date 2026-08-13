@@ -12,7 +12,10 @@ counts or open items that a newer section explicitly supersedes.
   executable-family paths classified and 23/23 governed slice receipts valid.
 - [x] Record RD-0802..0808 (excluding category guards) and RD-0810 as accepted
   evidence, with RD-0799 limited and RD-0797/0798/0800/0801/0809 non-authorizing.
-- [ ] Complete Slices 84-87; run aggregate conversion closure at Slice 87.
+- [x] Complete Slices 84-87 as four exact fail-closed boundary adjudications;
+  no placeholder Fungi assets were created and 27/27 governed receipts pass.
+- [ ] Complete the Slice 87 dependency-ordered aggregate owner, roadmap,
+  subway and final index refresh before calling the bounded wave closed.
 - [ ] Close the six shared ABI/authority blockers listed in the current status
   report before claiming literal TypeScript/MJS retirement.
 - [ ] Treat lower dated count and checkpoint statements as historical unless a
@@ -211,8 +214,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Adjudicate Slice 83 `isProductionAdmittedRegistryGeneration` as
   `BLOCKED_BY_COMPOSITE_AFFINE_PRODUCTION_ADMISSION_ABI`; it composes three
   private identities with linked identity or a governed adapter allow-list.
-- [ ] Continue Slices 84-87 with non-floor candidates and focused evidence;
-  defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
+- [x] Settle Slices 84-87 with non-floor candidates and focused evidence. The
+  exact regex/case-fold, affine profile seal, binary64 `unknown` and active TLS
+  object boundaries remain blocked without placeholder assets.
+- [ ] Run aggregate roadmap, graph and index closure at the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
 

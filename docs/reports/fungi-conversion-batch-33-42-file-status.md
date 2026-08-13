@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-83 File Status
+# Fungi Conversion Batch 33-87 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -82,6 +82,10 @@ still requires its own strict, physical, VOK and differential proof.
 | 81 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#isVerifiedRegistryGeneration` | not created | fresh complete App Kernel lane retained | The guard accepts only exact object identity minted into a module-private `WeakSet`; equal or copied records remain false. Current Fungi/SLIDE/VOK values cannot preserve that non-copyable authority provenance. App Kernel passes **231/231**. | `BLOCKED_BY_AFFINE_WEAK_IDENTITY_RECEIPT_ABI` |
 | 82 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#isPersistedRegistryGeneration` | not created | fresh complete App Kernel lane retained | The exact object must be minted into both private verified and durable WeakSets; verified-only restored generations remain false. Current Fungi/SLIDE/VOK values cannot preserve the dual non-copyable authority provenance. App Kernel passes **231/231**. | `BLOCKED_BY_DUAL_AFFINE_WEAK_IDENTITY_RECEIPT_ABI` |
 | 83 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#isProductionAdmittedRegistryGeneration` | not created | fresh complete App Kernel lane retained | The guard composes verified, durable and production exact identities with linked-production identity or the governed adapter digest allow-list. Current Fungi/SLIDE/VOK cannot preserve this composite authority graph. App Kernel passes **231/231**. | `BLOCKED_BY_COMPOSITE_AFFINE_PRODUCTION_ADMISSION_ABI` |
+| 84 | `packages-galerina/galerina-core-config/src/index.ts#isLoPackageGraphAlias` | not created | fresh complete Core Config lane retained | Anchored ECMAScript `/i` matching is live in host-manifest validation. Physical execution has no regex or case-fold operation; enumerating canonical labels or host normalization changes the accepted domain. Core Config passes **54/54**. | `BLOCKED_BY_CASE_INSENSITIVE_REGEX_TEXT_ABI` |
+| 85 | `packages-galerina/galerina-framework-app-kernel/src/production-slide-restore-admission.ts#isAuthenticatedSlideRestoreProfile` | not created | fresh complete App Kernel lane retained | The exact object must be minted into a module-private authenticated-profile WeakSet; an equal spread copy is refused. Current Fungi/SLIDE/VOK cannot preserve this issuer-bound affine seal. App Kernel passes **231/231**. | `BLOCKED_BY_AFFINE_AUTHENTICATED_PROFILE_SEAL_ABI` |
+| 86 | `packages-galerina/galerina-governance-telemetry/src/exposition.ts#isFiniteNum` | not created | fresh complete Governance Telemetry lane retained | The total `unknown` guard admits every finite binary64 number and refuses non-numbers, NaN and infinities. The physical surface has neither heterogeneous ingress nor exact binary64. Governance Telemetry passes **21/21**. | `BLOCKED_BY_UNKNOWN_BINARY64_FINITE_GUARD_ABI` |
+| 87 | `packages-galerina/galerina-framework-api-server/src/index.ts#isTlsSocket` | not created | fresh complete API Server lane retained | The duck-type guard observes an active object's function-valued property, including possible accessor/proxy behavior. Exact physical records refuse those shapes before Fungi runs and expose no host method-identity ABI. API Server passes **26/26**. | `BLOCKED_BY_HOST_DUCK_TYPED_METHOD_IDENTITY_ABI` |
 
 ## Shared implementation and governance files
 
@@ -98,6 +102,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/specs/2026-08-12-slice-62-weak-key-bytes-adjudication.md` | Product-owner negative adjudication for the optional Bytes, bounded traversal and key-custody boundary in Slice 62. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slice-63-bootstrap-floor-adjudication.md` | Fail-closed bootstrap-floor adjudication for core-security's otherwise scalar-compatible decision. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
+| `docs/superpowers/specs/2026-08-13-slices-84-87-boundary-adjudication.md` | Product-owner negative adjudication for the regex/case-fold, affine profile, binary64 `unknown`, and active TLS-object boundaries. | `DONE` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
 | `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
@@ -238,3 +243,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   denial. Physical `Verdict` or `Int` parameters narrow that source domain,
   while boundary refusal is not the same Boolean result. Tower-Citizen passes
   **507/507**.
+- Slices 84-87 remain blocked without placeholder assets. Duplicate preflight
+  rejected `isLiteralVerificationSuccess` and `isImplicitReturnType` because
+  their exact package-owned Fungi proofs already exist; Core Security's
+  `isSensitiveHeaderName` was rejected at its bootstrap floor. The four
+  admitted scopes retain exact regex/case-fold, affine authenticated-profile,
+  heterogeneous binary64 and active host-object boundaries. Their package
+  lanes pass **54/54**, **231/231**, **21/21** and **26/26** respectively.

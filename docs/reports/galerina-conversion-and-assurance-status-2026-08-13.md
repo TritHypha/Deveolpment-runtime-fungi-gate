@@ -8,11 +8,12 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 83**. Slices
-79-83 were correctly blocked rather than narrowed: two open JavaScript
-`unknown`/array ingress guards and three progressively stronger private receipt
-identity gates cannot be represented by the pinned physical profile without
-moving authority into TypeScript or turning non-copyable provenance into data.
+The current conversion campaign is complete through **Slice 87**. Slices
+84-87 were correctly blocked rather than narrowed: exact case-insensitive regex
+semantics, an affine authenticated-profile seal, a heterogeneous binary64
+finite-number guard and an active TLS-object method boundary cannot be
+represented by the pinned physical profile without moving authority into
+TypeScript or deleting observable source behavior.
 
 ## Current evidence
 
@@ -24,8 +25,9 @@ moving authority into TypeScript or turning non-copyable provenance into data.
   and 143 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 850
   file-level blockers.
-- Slice receipts: **23/23** governed post-baseline receipts valid.
-- Latest affected owner lane: App Kernel **231/231**.
+- Slice receipts: **27/27** governed post-baseline receipts valid.
+- Latest affected owner lanes: Core Config **54/54**, App Kernel **231/231**,
+  Governance Telemetry **21/21** and API Server **26/26**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
   owner. This housekeeping does not relabel that historic aggregate as a fresh
   whole-repository test run.
@@ -42,8 +44,8 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-Slices 84-87 remain the bounded next queue. Slice 87 is the aggregate boundary
-for roadmap, graph and index closure. Literal TypeScript/MJS retirement remains
+The Slice 87 decision boundary is complete and triggers the aggregate roadmap,
+graph and index owner refresh. Literal TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed
 retirement gate all agree.
@@ -84,6 +86,8 @@ signing or push authority follows from this report.
 5. Authenticated platform durability and production admission evidence.
 6. A complete source-to-SLIDE self-hosting fixpoint followed by literal
    consumer switching and retirement proof.
+7. Executable ECMAScript-compatible case-insensitive regex/text semantics and
+   a governed active host-object/method capability boundary.
 
 ## Housekeeping rule
 

@@ -3,12 +3,13 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 83**, with the exact status and R&D intake recorded in
+through **Slice 87**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,480/1,480** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **850** file-level
-blockers; **23/23** governed slice receipts pass. Slices 84-87 are next, with
-aggregate conversion closure at Slice 87. TypeScript/MJS consumers remain
+blockers; **27/27** governed slice receipts pass. Slices 84-87 conserve four
+additional exact ABI/authority refusals and trigger aggregate bounded closure.
+TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the requested bounded graph,
 index and owner checks below finish; no production, release, signing or push
