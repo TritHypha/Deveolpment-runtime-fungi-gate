@@ -8,12 +8,15 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 87**. Slices
-84-87 were correctly blocked rather than narrowed: exact case-insensitive regex
+The current conversion campaign is complete through **Slice 88**. Slices
+84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
 represented by the pinned physical profile without moving authority into
-TypeScript or deleting observable source behavior.
+TypeScript or deleting observable source behavior. Slice 88 adds a read-only
+Myco vendor boundary and a heterogeneous property-presence decision whose
+inherited, accessor and proxy observations are deliberately refused by the
+exact physical record ABI.
 
 ## Current evidence
 
@@ -25,7 +28,8 @@ TypeScript or deleting observable source behavior.
   and 143 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 850
   file-level blockers.
-- Slice receipts: **27/27** governed post-baseline receipts valid.
+- Slice receipts: **28/28** governed post-baseline receipts valid after Slice
+  88 publication.
 - Latest affected owner lanes: Core Config **54/54**, App Kernel **231/231**,
   Governance Telemetry **21/21** and API Server **26/26**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
@@ -44,7 +48,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 87 decision boundary and bounded owner refresh are complete. Literal
+The Slice 88 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed
@@ -91,6 +95,9 @@ signing or push authority follows from this report.
 8. A chunked, resumable repository-wide closure owner that replaces the
    crash-linked monolithic lane while proving every registered test ran exactly
    once with retained exit/error receipts and bounded resources.
+9. An upstream Myco discriminated-result contract plus a closed heterogeneous
+   SLIDE/VOK variant ABI that preserves exact payloads and refuses surplus tags
+   without host-projected branch authority.
 
 ## Housekeeping rule
 

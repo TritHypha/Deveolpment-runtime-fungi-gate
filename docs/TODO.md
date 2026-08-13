@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 88 Myco search-outcome adjudication - 2026-08-13
+
+- [x] Reconcile the generated seven-candidate queue against the live register;
+  all seven are previously adjudicated, so none was reused as a false new
+  conversion.
+- [x] Adjudicate `galerina-tools-myco/src/query/search.ts#isError` as
+  `BLOCKED_BY_VENDOR_CUSTODY_AND_DYNAMIC_PROPERTY_PRESENCE_ABI`. No placeholder
+  `.fungi` asset was created; Myco passes 80/80 and the exact SLIDE record ABI
+  passes 4/4.
+- [x] Update and verify the private translation skill at `2902c2a` with
+  reusable read-only mirror and dynamic property-presence rules. The writing
+  skill needs no change because no Fungi source was authored.
+- [ ] Rework Myco upstream to an explicit discriminated result, re-vendor the
+  exact governed revision, and admit a closed heterogeneous variant ABI before
+  reopening Slice 88.
+
 ### Slice 83 status, R&D intake and housekeeping - 2026-08-13
 
 - [x] Publish the current conversion/assurance write-up at
@@ -14,6 +30,8 @@ counts or open items that a newer section explicitly supersedes.
   evidence, with RD-0799 limited and RD-0797/0798/0800/0801/0809 non-authorizing.
 - [x] Complete Slices 84-87 as four exact fail-closed boundary adjudications;
   no placeholder Fungi assets were created and 27/27 governed receipts pass.
+- [x] Complete Slice 88 as an exact fail-closed vendor-custody and dynamic
+  object-union adjudication; 28/28 governed receipts pass after publication.
 - [x] Complete the Slice 87 dependency-ordered aggregate owners, roadmap,
   subway and final index refresh. Repository-wide closure remains `UNKNOWN`;
   the excluded monolithic lanes were not treated as substitutes.

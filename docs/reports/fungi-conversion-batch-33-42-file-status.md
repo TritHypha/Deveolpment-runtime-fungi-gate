@@ -86,6 +86,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 85 | `packages-galerina/galerina-framework-app-kernel/src/production-slide-restore-admission.ts#isAuthenticatedSlideRestoreProfile` | not created | fresh complete App Kernel lane retained | The exact object must be minted into a module-private authenticated-profile WeakSet; an equal spread copy is refused. Current Fungi/SLIDE/VOK cannot preserve this issuer-bound affine seal. App Kernel passes **231/231**. | `BLOCKED_BY_AFFINE_AUTHENTICATED_PROFILE_SEAL_ABI` |
 | 86 | `packages-galerina/galerina-governance-telemetry/src/exposition.ts#isFiniteNum` | not created | fresh complete Governance Telemetry lane retained | The total `unknown` guard admits every finite binary64 number and refuses non-numbers, NaN and infinities. The physical surface has neither heterogeneous ingress nor exact binary64. Governance Telemetry passes **21/21**. | `BLOCKED_BY_UNKNOWN_BINARY64_FINITE_GUARD_ABI` |
 | 87 | `packages-galerina/galerina-framework-api-server/src/index.ts#isTlsSocket` | not created | fresh complete API Server lane retained | The duck-type guard observes an active object's function-valued property, including possible accessor/proxy behavior. Exact physical records refuse those shapes before Fungi runs and expose no host method-identity ABI. API Server passes **26/26**. | `BLOCKED_BY_HOST_DUCK_TYPED_METHOD_IDENTITY_ABI` |
+| 88 | `packages-galerina/galerina-tools-myco/src/query/search.ts#isError` | not created | fresh complete Myco and SLIDE record-ABI lanes retained | The source distinguishes a heterogeneous one-field error/twelve-field result union through JavaScript property presence, including inherited, accessor and proxy observations. The package source is also a read-only mirror whose current upstream bytes differ. Myco passes **80/80** and the exact SLIDE record ABI passes **4/4**. | `BLOCKED_BY_VENDOR_CUSTODY_AND_DYNAMIC_PROPERTY_PRESENCE_ABI` |
 
 ## Shared implementation and governance files
 
@@ -103,6 +104,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/specs/2026-08-13-slice-63-bootstrap-floor-adjudication.md` | Fail-closed bootstrap-floor adjudication for core-security's otherwise scalar-compatible decision. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
 | `docs/superpowers/specs/2026-08-13-slices-84-87-boundary-adjudication.md` | Product-owner negative adjudication for the regex/case-fold, affine profile, binary64 `unknown`, and active TLS-object boundaries. | `DONE` |
+| `docs/reports/slice-88-myco-search-outcome-guard-fungi-conversion-2026-08-13.md` | Product-owner negative adjudication for the Myco vendor-custody and dynamic object-union boundary. | `DONE` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
 | `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
@@ -116,12 +118,11 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 87 bounded owner exit is complete. The authored TODO and active
-roadmap are updated; every listed generated owner is regenerated and
-independently current. The final codebase graph and Myco navigation indexes
-are refreshed and are reverified at the last owned output commit. The excluded
-aggregate lanes are not substitutes for these bounded owners, so
-repository-wide closure remains `UNKNOWN`.
+The Slice 88 bounded decision is complete. The authored TODO, active roadmap
+and live conversion register are updated. Focused source and physical boundary
+checks are current; generated owners and navigation indexes must be refreshed
+at the final Slice 88 commit. The excluded aggregate lanes are not substitutes
+for these bounded owners, so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
@@ -131,7 +132,7 @@ repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 143 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 966 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`d2d955e` writing skill; `9654753` translation skill; both private workflows green, protected `main` requires `verify`, and GitHub reports `PRIVATE`) |
+| Private Fungi skill repositories | `DONE` (`938a71b` writing skill; `2902c2a` translation skill; both remain private custody and the changed translation skill passes its adversarial suite and release audit) |
 | Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
 ## Verified refusal retained outside the batch
