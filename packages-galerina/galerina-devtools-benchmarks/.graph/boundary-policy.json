@@ -9,7 +9,8 @@
     "node:path",
     "node:perf_hooks",
     "node:url",
-    "node:util"
+    "node:util",
+    "@galerina/core-compiler"
   ],
-  "note": "Reviewed baseline (RD-0348 plus the 2026-08-01 governed VADE adapter). The package graph scans its JavaScript, Fungi and governed JSON assets. The allowlist remains Node builtins only: child_process spawns compared runtimes; crypto pins evidence bytes; fs and fs/promises provide bounded fixed-handle evidence and ordinary benchmark I/O; os/path/url/perf_hooks support platform detection, paths and timing; util rejects proxy-bearing programmatic input. There is no third-party or @galerina reach-through, and --check fails closed on any new external import."
+  "note": "Reviewed baseline (RD-0348, the 2026-08-01 governed VADE adapter, and the 2026-08-12 million-iteration source-pair verifier). The package graph scans its JavaScript, Fungi and governed JSON assets. Node builtins remain bounded: child_process spawns compared runtimes; crypto pins evidence bytes; fs and fs/promises provide bounded fixed-handle evidence and ordinary benchmark I/O; os/path/url/perf_hooks support platform detection, paths and timing; util rejects proxy-bearing programmatic input. The sole workspace edge is @galerina/core-compiler, used to strict-check and execute the exact paired checked/verified Fungi benchmark subjects before publication. There is no third-party reach-through, and --check fails closed on any new external import."
 }

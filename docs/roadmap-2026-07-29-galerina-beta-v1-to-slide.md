@@ -1,8 +1,21 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-12
+Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the bounded thirty-slice batch through Slice 62 is fully
+Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
+through **Slice 83**, with the exact status and R&D intake recorded in
+[`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
+The conserved queue accounts for **1,480/1,480** executable-family paths, zero
+whole-file candidates, seven symbol-scoped candidates and **850** file-level
+blockers; **23/23** governed slice receipts pass. Slices 84-87 are next, with
+aggregate conversion closure at Slice 87. TypeScript/MJS consumers remain
+active unless their individual physical/VOK and retirement gates say otherwise.
+Repository-wide closure remains **UNKNOWN** until the requested bounded graph,
+index and owner checks below finish; no production, release, signing or push
+authority is inferred.
+
+Historical checkpoint (superseded for current routing): the bounded
+thirty-slice batch through Slice 62 is fully
 adjudicated and recorded in
 [`docs/reports/fungi-conversion-batch-33-42-file-status.md`](reports/fungi-conversion-batch-33-42-file-status.md).
 Slices 33, 34, 36 and 44 have complete physical `.slide` publication,

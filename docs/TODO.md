@@ -4,6 +4,20 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 83 status, R&D intake and housekeeping - 2026-08-13
+
+- [x] Publish the current conversion/assurance write-up at
+  `docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`.
+- [x] Reconcile the live conversion register through Slice 83: 1,480/1,480
+  executable-family paths classified and 23/23 governed slice receipts valid.
+- [x] Record RD-0802..0808 (excluding category guards) and RD-0810 as accepted
+  evidence, with RD-0799 limited and RD-0797/0798/0800/0801/0809 non-authorizing.
+- [ ] Complete Slices 84-87; run aggregate conversion closure at Slice 87.
+- [ ] Close the six shared ABI/authority blockers listed in the current status
+  report before claiming literal TypeScript/MJS retirement.
+- [ ] Treat lower dated count and checkpoint statements as historical unless a
+  current section or generated owner independently confirms them.
+
 ### Benchmark run-to-graph automation - 2026-08-13
 
 - [x] Add one closed `npm run benchmark:publish` owner that performs the next
