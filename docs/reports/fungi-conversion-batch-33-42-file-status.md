@@ -135,7 +135,7 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Retirement and conversion queue | `DONE` at 1,482/1,482, seven scoped candidates and 850 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 144 Fungi files |
-| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 966 test nodes, three sections, current status blocks, 974 codes and 5/5 |
+| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 967 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`938a71b` writing skill; `2902c2a` translation skill; both remain private custody and need no Slice 89 change) |
 | Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
