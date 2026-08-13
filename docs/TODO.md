@@ -576,6 +576,38 @@ counts or open items that a newer section explicitly supersedes.
   untracked KB file is committed and passes the KB preflight; until then it is
   visible external drift, not an adopted Galerina input.
 
+### RD-0843 virtual-trit representation sandbox - post-.fungi R&D - 2026-08-13
+
+- [ ] Start this programme only after the `.fungi` conversion has completed and
+  its ternary semantic baseline is frozen. Treat every width and encoding as a
+  sandbox candidate; do not preselect 256, 512 or any other winner.
+- [ ] Preserve one invariant logical domain and the existing Verdict/Trit brand
+  separation across every candidate. Retain a scalar reference implementation
+  and require differential equivalence for values, refusal behaviour, evidence
+  behaviour and illegal-state handling before an accelerated lane can qualify.
+- [ ] Benchmark logical and physical widths **1, 32, 64, 128, 256, 512 and
+  adaptive/vector-length** across scalar, packed, two-bit/bit-plane, base-3
+  packed and balanced-ternary encodings. Keep logical width distinct from the
+  CPU, GPU or accelerator carrier used to execute it.
+- [ ] Exercise scalar CPU, CPU SIMD, GPU and NPU/AI-accelerator targets under
+  matched workloads. Measure throughput, latency, memory density and footprint,
+  alignment and encode/decode cost, L1/L2/L3 behavior, bandwidth and energy so
+  a fast lane cannot hide a movement, cache or conversion penalty.
+- [ ] Run a paired security matrix for each representation: sensitive-copy and
+  temporary-state lifetime, protected-memory interaction, zeroisation cost and
+  completeness, constant-time behavior, fault propagation and recovery, and
+  MAC/AEAD, symmetric and post-quantum/hybrid crypto boundary interactions.
+- [ ] Make representation selection capability-, workload-, security-policy-
+  and crypto-policy-aware. Bind the selected representation and target profile
+  into its evidence, and require safe **64 then 32** fallback (ultimately the
+  scalar reference) with identical ternary, governance and security semantics;
+  unsupported capabilities or policies must refuse rather than silently weaken
+  or reinterpret those semantics.
+- [ ] Keep the open RD-0840 `enforceDrift(physicalMs, ticksPerMs)` fourth-erasure
+  cell separate: an omitted/`undefined` or `NaN` rate makes drift `NaN`, so the
+  strict `Math.abs(drift) > max` test can allow a large divergence. It is related
+  typed-above/open-below R&D context, not evidence for or part of RD-0843.
+
 ### Slices 143-147 audit closure and 25-slice maintenance boundary - 2026-08-13
 
 - [x] Classify `AuditLogger.query`, `logTransition` and `getLifecycle` at their
