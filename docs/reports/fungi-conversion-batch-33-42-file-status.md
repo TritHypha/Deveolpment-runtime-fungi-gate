@@ -150,10 +150,10 @@ bounded owners, so repository-wide closure remains `UNKNOWN`.
 |---|---|
 | `docs/TODO.md` | `DONE` |
 | `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section and generated subway block) |
-| Retirement and conversion queue | `DONE` at 1,485/1,485, seven scoped candidates and 855 blockers |
+| Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
-| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 973 test nodes, three sections, current status blocks, 974 codes and 5/5 |
+| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody; Slice 93 required no skill update) |
 | Final codebase graph and Myco navigation refresh | `UNKNOWN`: two moderate code-graph refresh attempts returned `Transport closed`, so no final-HEAD graph receipt exists. Myco remains readable at 5,354 files / 83,226 terms, but its status does not prove Git-HEAD equivalence. Retry the bounded graph refresh after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
 

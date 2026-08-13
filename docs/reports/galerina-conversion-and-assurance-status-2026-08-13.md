@@ -53,15 +53,15 @@ This is semantic supersession, not TypeScript retirement.
 - Slice 92 physical-proof build point: `a7258cef` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
-- Conversion census: **1,485/1,485** executable-family paths classified;
-  519 TypeScript-family, 954 MJS and 12 JS.
+- Conversion census: **1,486/1,486** executable-family paths classified;
+  519 TypeScript-family, 955 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins
   and 147 Fungi sources in package `src` trees.
-- Queue: zero whole-file candidates, seven governed symbol candidates and 855
+- Queue: zero whole-file candidates, seven governed symbol candidates and 856
   file-level blockers.
-- Slice receipts: **32/32** governed receipts pass after Slice 92 publication.
+- Slice receipts: **33/33** governed receipts pass after Slice 93 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
-  973 test nodes and non-authorizing local K3 evidence `1`.
+  974 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **513/513** and the dedicated
   two-Verdict physical SLIDE/VOK lane **1/1**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded

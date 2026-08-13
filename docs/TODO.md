@@ -14,6 +14,9 @@ counts or open items that a newer section explicitly supersedes.
   direct proof passes 2/2.
 - [x] Rerun the existing physical SLIDE/VOK minimum proof with the pinned
   sibling SLIDE path: 1/1 with zero skips.
+- [x] Refresh the bounded Slice 93 owners: 1,486/1,486 executable-family
+  paths, 147 Fungi sources, seven scoped candidates, 856 blockers, 33/33
+  governed receipts and 974 semantic test nodes.
 - [x] Review both private Fungi skills at `dc2ef82f` and `30eb4dd3`.
   `NO_SKILL_UPDATE` is correct because duplicate-search, typed-K3,
   exhaustive-vector and supersession guidance already cover this result.
