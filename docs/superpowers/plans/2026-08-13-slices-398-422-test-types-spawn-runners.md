@@ -95,10 +95,14 @@ SLIDE/VOK, Myco and codebase-memory.
   classifications, blockers, threadability, skills and physical refusals.
 - [ ] Commit authored evidence separately from generated owners.
 
-### Task 4: Individual owner close
+### Task 4: Fifty-slice maintenance boundary
 
-- [ ] Regenerate registered owners individually in dependency order.
-- [ ] Run the 19-check bounded owner matrix; do not substitute aggregates.
-- [ ] Commit final generated build point, refresh Myco and codebase-memory, and
-  prove exact indexed HEAD plus a named symbol lookup.
+- [ ] Commit the Slice 398-422 receipts after focused checks and review, but
+  defer registered owner regeneration to the Slice 447 boundary.
+- [ ] Complete Slices 423-447 as the second 25-slice wave.
+- [ ] After Slice 447, regenerate registered owners individually in dependency
+  order and run the 19-check bounded owner matrix for all 50 slices; do not
+  substitute aggregates.
+- [ ] Commit the final generated build point, refresh Myco and codebase-memory,
+  and prove exact indexed HEAD plus a named symbol lookup at Slice 447.
 - [ ] Keep repository closure `UNKNOWN` unless every separate exit is proved.
