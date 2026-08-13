@@ -53,12 +53,12 @@ Galerina owner tools, Markdown slice receipts.
 
 ### Task 4: Individual 25-slice maintenance
 
-- [ ] Run registered graph generators one at a time and their exact checks;
+- [x] Run registered graph generators one at a time and their exact checks;
   do not run `graph-all`.
 - [ ] Refresh code/dev-tool/Fungi inventories and Myco through their owners.
-- [ ] Refresh component health, status, roadmap Markdown and subway SVG through
+- [x] Refresh component health, status, roadmap Markdown and subway SVG through
   their registered owners; verify freshness independently.
-- [ ] Record codebase-memory transport failure as `UNKNOWN`; do not force the
+- [x] Record codebase-memory transport failure as `UNKNOWN`; do not force the
   crash-linked or monolithic re-index lane.
 - [ ] Commit generated-owner outputs separately and prove a clean tracked tree.
 

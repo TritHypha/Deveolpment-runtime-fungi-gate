@@ -26,10 +26,17 @@ counts or open items that a newer section explicitly supersedes.
   or explicitly version a new typed failure contract with differential proof.
 - [ ] Retain TypeScript and every consumer. No declaration accounting, focused
   test or immutable record grants retirement, production or release authority.
-- [ ] Run the registered graph/index/roadmap owners individually at this
-  25-slice boundary. Do not substitute crash-linked `graph-all`, full tooling,
-  normal phase-close or monolithic memory evaluation for bounded evidence;
+- [x] Run the registered retirement/queue, package/project/KB/semantic graph,
+  dev-tool/Fungi inventory, code-index, component-health, status and
+  roadmap/subway owners individually at this 25-slice boundary. Current checks
+  pass at 1,486/1,486 retirement paths, 100/201 package outputs, 5/5 project
+  outputs, 4/4 KB outputs, 3/3 semantic outputs, 147 Fungi files, 974 codes and
+  5/5 subway outputs. Crash-linked `graph-all`, full tooling, normal
+  phase-close and monolithic memory evaluation were not invoked;
   repository-wide closure remains `UNKNOWN`.
+- [ ] Refresh Myco after the generated-owner commit. Codebase-memory returned
+  `Transport closed`; its exact final-HEAD freshness remains `UNKNOWN` and no
+  retry storm is authorized.
 
 ### Slices 158-167 hybrid and neutral bridge types - 2026-08-13
 
