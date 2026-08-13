@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 142
-- Flows: 868
-- Bytes: 1138539
-- Retirement graph: `sha256:6f6cf8187e2b0a7049ec27c4a3de0a62044f424923bac401ccbeade323cf2646`
+- Files: 143
+- Flows: 871
+- Bytes: 1140181
+- Retirement graph: `sha256:b4028a82c4f16175a982e4e0c0b157f1ffc056a9335dcc8176f2e128581c5537`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 19024 |
-| `callExpr` | 7266 |
-| `binaryExpr` | 6073 |
+| `identifier` | 19048 |
+| `callExpr` | 7268 |
+| `binaryExpr` | 6106 |
 | `numberLiteral` | 5730 |
-| `block` | 5089 |
-| `stringLiteral` | 4865 |
+| `block` | 5095 |
+| `stringLiteral` | 4885 |
 | `memberExpr` | 4686 |
-| `returnStmt` | 3136 |
-| `paramDecl` | 2863 |
-| `typeRef` | 2551 |
-| `ifStmt` | 2301 |
+| `returnStmt` | 3145 |
+| `paramDecl` | 2867 |
+| `typeRef` | 2558 |
+| `ifStmt` | 2304 |
 | `assignStmt` | 2120 |
 | `letDecl` | 1865 |
-| `boolLiteral` | 1691 |
-| `matchArm` | 1310 |
-| `contractDecl` | 857 |
-| `intentDecl` | 857 |
-| `pureFlowDecl` | 856 |
+| `boolLiteral` | 1694 |
+| `matchArm` | 1315 |
+| `contractDecl` | 860 |
+| `intentDecl` | 860 |
+| `pureFlowDecl` | 859 |
 | `mutDecl` | 810 |
-| `matchExpr` | 391 |
+| `matchExpr` | 393 |
 | `whileStmt` | 340 |
 | `checkArm` | 315 |
 | `unaryExpr` | 251 |
 | `recordDecl` | 210 |
-| `program` | 142 |
+| `program` | 143 |
 | `listLiteral` | 115 |
 | `checkExpr` | 105 |
 | `trapDecl` | 50 |
@@ -59,8 +59,8 @@ admission, execution parity, retirement credit or production authority.
 | Type | Count |
 |---|---:|
 | `Int` | 543 |
-| `String` | 469 |
-| `Bool` | 413 |
+| `String` | 473 |
+| `Bool` | 416 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -349,10 +349,10 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1873 |
+| `==` | 1893 |
 | `+` | 1009 |
 | `!=` | 979 |
-| `\|\|` | 749 |
+| `\|\|` | 762 |
 | `<` | 503 |
 | `&&` | 439 |
 | `-` | 426 |

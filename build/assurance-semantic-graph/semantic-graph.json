@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "9b42084c06add10c0ba091c7b678dea77ed86346f9fe1352e196328aa1a7b5c2",
+  "authoritativeInputsDigest": "b52bb354d60be05fdeb211e617aaa1d5f1ddce74ce241dd40d99da8cf86ce2ce",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -122,9 +122,9 @@
       "id": "package:galerina-core-compiler",
       "kind": "package",
       "evidencePath": "packages-galerina/galerina-core-compiler/package.json",
-      "declaredFanIn": 8,
+      "declaredFanIn": 9,
       "declaredFanOut": 6,
-      "derivedFanIn": 8,
+      "derivedFanIn": 9,
       "derivedFanOut": 6
     },
     {
@@ -456,9 +456,9 @@
       "kind": "package",
       "evidencePath": "packages-galerina/galerina-devtools-benchmarks/package.json",
       "declaredFanIn": 0,
-      "declaredFanOut": 0,
+      "declaredFanOut": 1,
       "derivedFanIn": 0,
-      "derivedFanOut": 0
+      "derivedFanOut": 1
     },
     {
       "id": "package:galerina-devtools-context",
@@ -5061,6 +5061,20 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-732edadeca4b5c0d82bee012",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/call-chain-slide-reference.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d6418184e967e2f0c9194996",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/call-chain-work-equivalence.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-4741ddf5e0d484405ef6f7d3",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/chart.test.mjs",
@@ -5082,6 +5096,20 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-10ade68e8dae10da7e8f2821",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/measurement-provenance.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f339cba162ef278e96aa727b",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/million-iteration-source-pair.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-a76950eccfdcc1a2dda8ce4f",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/noise-gate.test.mjs",
@@ -5096,9 +5124,30 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-73604e0763f66b86210813ba",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/run-to-graph.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-7d8e29891a6651648b5810d8",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/runner-output.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c830cf3eb000053c40e74bc1",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/slide-reference-runner.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-e56e8edaa40a6555a81b4b30",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-benchmarks/test/slide-reference-suite.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -5204,6 +5253,13 @@
       "id": "test:auto-aa1e1321d6ed56cc9eda4f64",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-graph-algorithms/tests/algorithms.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-defc7e6fde994d988eec6c58",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-graph-algorithms/tests/boundary-crossing-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10638,6 +10694,16 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-732edadeca4b5c0d82bee012",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d6418184e967e2f0c9194996",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-4741ddf5e0d484405ef6f7d3",
       "to": "package:galerina-devtools-benchmarks",
       "type": "CLASSIFIES"
@@ -10653,6 +10719,16 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-10ade68e8dae10da7e8f2821",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f339cba162ef278e96aa727b",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-a76950eccfdcc1a2dda8ce4f",
       "to": "package:galerina-devtools-benchmarks",
       "type": "CLASSIFIES"
@@ -10663,7 +10739,22 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-73604e0763f66b86210813ba",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-7d8e29891a6651648b5810d8",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c830cf3eb000053c40e74bc1",
+      "to": "package:galerina-devtools-benchmarks",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-e56e8edaa40a6555a81b4b30",
       "to": "package:galerina-devtools-benchmarks",
       "type": "CLASSIFIES"
     },
@@ -10739,6 +10830,11 @@
     },
     {
       "from": "test:auto-aa1e1321d6ed56cc9eda4f64",
+      "to": "package:galerina-devtools-graph-algorithms",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-defc7e6fde994d988eec6c58",
       "to": "package:galerina-devtools-graph-algorithms",
       "type": "CLASSIFIES"
     },
@@ -12518,9 +12614,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 958,
+    "tests": 966,
     "detectors": 6,
-    "executableFamily": 1464,
+    "executableFamily": 1480,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

@@ -581,8 +581,10 @@
       "tests": 57,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 38,
-      "deps": []
+      "files": 45,
+      "deps": [
+        "@galerina/core-compiler"
+      ]
     },
     {
       "name": "galerina-devtools-context",
@@ -627,7 +629,7 @@
       "tests": 95,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 15,
+      "files": 16,
       "deps": []
     },
     {

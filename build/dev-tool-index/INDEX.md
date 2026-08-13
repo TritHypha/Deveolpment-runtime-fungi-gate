@@ -89,7 +89,7 @@
 | `galerina-framework-api-server` | framework | 26 | PASS | 3 | Galerina HTTP API-server adapter: a thin node:http transport that buffers the request body under a hard DoS ca |
 | `galerina-framework-app-kernel` | framework | 231 | PASS | 2 | Optional Galerina secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default rout |
 | `galerina-framework-example-app` | framework | 7 | PASS | 2 | The canonical runnable 'hello, governed world' Galerina app: a governed flow compiled to a signed .wasm, fused |
-| `galerina-devtools-benchmarks` | devtools | 57 | PASS | 0 | Runtime comparison benchmarks: Python · Node.js · C++ · Rust · Galerina (governed + manifest) |
+| `galerina-devtools-benchmarks` | devtools | 57 | PASS | 1 | Runtime comparison benchmarks: Python · Node.js · C++ · Rust · Galerina (governed + manifest) |
 | `galerina-devtools-context` | devtools | 35 | PASS | 1 | Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .fungi source |
 | `galerina-devtools-flowgraph` | devtools | 36 | PASS | 1 | Flow graph analysis for Galerina — finds cycles, dead flows, authority escalation, PII leakage paths, and miss |
 | `galerina-devtools-fungi-scan` | devtools | 25 | PASS | 1 | Syntax-migration corpus scanner: walks every .fungi/.gate file and reports old-form usage, @version headers, m |

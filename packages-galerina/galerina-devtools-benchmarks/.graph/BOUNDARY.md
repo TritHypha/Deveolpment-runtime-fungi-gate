@@ -11,11 +11,11 @@
 
 | Metric | Count |
 |---|---|
-| Files | 38 |
-| Internal edges | 25 |
-| External dependencies | 9 |
+| Files | 45 |
+| Internal edges | 29 |
+| External dependencies | 10 |
 | ├─ Node core | 9 |
-| ├─ Workspace (@galerina/*) | 0 |
+| ├─ Workspace (@galerina/*) | 1 |
 | └─ Third-party | 0 |
 | Orphan files | 0 |
 
@@ -33,7 +33,7 @@
 - `node:util`
 
 ### Workspace (@galerina/*)
-_none_
+- `@galerina/core-compiler`
 
 ### Third-party
 _none_
@@ -58,9 +58,13 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/diagnostic-runner.mjs`
 - `src/gpu-detect.mjs`
 - `src/history.mjs`
+- `src/million-iteration-source-pair.mjs`
 - `src/noise-gate.mjs`
 - `src/report.mjs`
+- `src/run-to-graph.mjs`
 - `src/runner.mjs`
+- `src/slide-reference-runner.mjs`
+- `src/slide-reference-suite.mjs`
 - `src/slide-vade-adapter.mjs`
 - `src/slide-wasm-history-report.mjs`
 - `src/slide-zero-publication.mjs`
@@ -72,6 +76,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `contracts/galerina-slide-transition-v1.json`
+- `contracts/million-iteration-source-pair-v1.json`
+- `contracts/slide-reference-suite-v1.json`
 - `contracts/slide-v2g-vade-admission-v1.json`
 - `contracts/slide-verified-native-operation-admission-v1.json`
 - `evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json`
