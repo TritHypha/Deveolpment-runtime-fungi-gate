@@ -5,13 +5,13 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`, `bin`] · extensions [`.mjs`]
+**Scanned scope:** roots [`src`, `bin`] · extensions [`.mjs`, `.fungi`]
 
 ## Summary
 
 | Metric | Count |
 |---|---|
-| Files | 3 |
+| Files | 4 |
 | Internal edges | 2 |
 | External dependencies | 5 |
 | ├─ Node core | 5 |
@@ -44,7 +44,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `bin/galerina-impact.mjs`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/documentation-path.fungi`
 
 ## Allowed Orphans
 _none declared_
