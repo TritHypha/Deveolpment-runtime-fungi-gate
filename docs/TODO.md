@@ -4,6 +4,20 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 89 documentation path conversion - 2026-08-13
+
+- [x] Add the package-owned reference candidate
+  `galerina-devtools-impact/src/self-hosted/documentation-path.fungi` without
+  changing the MJS export surface or production caller.
+- [x] Prove the fixed `docs/` prefix and three exact root-file rules through
+  the live MJS oracle, checked Fungi, GIR, signed Wasm and physical SLIDE/VOK.
+  Impact passes 9/9 and the governed physical lane passes 10/10.
+- [x] Review both private Fungi skills. No update is required because their
+  existing prefix, exhaustive-match, physical-proof and retirement rules cover
+  the candidate.
+- [ ] Keep the MJS source and `buildImpactPlan` consumer active until an
+  explicit consumer-switch and retirement proof authorizes removal.
+
 ### Slice 88 Myco search-outcome adjudication - 2026-08-13
 
 - [x] Reconcile the generated seven-candidate queue against the live register;
@@ -32,6 +46,8 @@ counts or open items that a newer section explicitly supersedes.
   no placeholder Fungi assets were created and 27/27 governed receipts pass.
 - [x] Complete Slice 88 as an exact fail-closed vendor-custody and dynamic
   object-union adjudication; 28/28 governed receipts pass after publication.
+- [x] Complete Slice 89 as a reference-only physical candidate; 29/29 governed
+  receipts pass after publication and no consumer-switch authority is inferred.
 - [x] Complete the Slice 87 dependency-ordered aggregate owners, roadmap,
   subway and final index refresh. Repository-wide closure remains `UNKNOWN`;
   the excluded monolithic lanes were not treated as substitutes.

@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 88**. Slices
+The current conversion campaign is complete through **Slice 89**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -18,9 +18,14 @@ Myco vendor boundary and a heterogeneous property-presence decision whose
 inherited, accessor and proxy observations are deliberately refused by the
 exact physical record ABI.
 
+Slice 89 is the next successful reference candidate. The impact planner's
+fixed documentation-path decision passes the live MJS oracle, checked Fungi,
+GIR, signed Wasm and physical `.slide` publication with independent VOK
+re-admission. Its MJS caller remains active, so it is not retirement.
+
 ## Current evidence
 
-- Slice 88 authored build point: `cc136ff5` on
+- Slice 89 physical-proof build point: `8d0aa574` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
 - Conversion census: **1,480/1,480** executable-family paths classified;
@@ -29,10 +34,10 @@ exact physical record ABI.
   and 143 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 850
   file-level blockers.
-- Slice receipts: **28/28** governed post-baseline receipts valid after Slice
-  88 publication.
-- Latest affected owner lanes: Core Config **54/54**, App Kernel **231/231**,
-  Governance Telemetry **21/21** and API Server **26/26**.
+- Slice receipts: **29/29** governed post-baseline receipts valid after Slice
+  89 publication.
+- Latest affected owner lanes: Impact **9/9** and the governed physical
+  SLIDE/VOK lane **10/10**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
   owner. This housekeeping does not relabel that historic aggregate as a fresh
   whole-repository test run.
@@ -49,7 +54,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 88 decision boundary is complete. Literal
+The Slice 89 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed

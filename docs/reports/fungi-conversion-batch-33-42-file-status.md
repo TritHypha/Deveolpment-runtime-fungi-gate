@@ -87,6 +87,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 86 | `packages-galerina/galerina-governance-telemetry/src/exposition.ts#isFiniteNum` | not created | fresh complete Governance Telemetry lane retained | The total `unknown` guard admits every finite binary64 number and refuses non-numbers, NaN and infinities. The physical surface has neither heterogeneous ingress nor exact binary64. Governance Telemetry passes **21/21**. | `BLOCKED_BY_UNKNOWN_BINARY64_FINITE_GUARD_ABI` |
 | 87 | `packages-galerina/galerina-framework-api-server/src/index.ts#isTlsSocket` | not created | fresh complete API Server lane retained | The duck-type guard observes an active object's function-valued property, including possible accessor/proxy behavior. Exact physical records refuse those shapes before Fungi runs and expose no host method-identity ABI. API Server passes **26/26**. | `BLOCKED_BY_HOST_DUCK_TYPED_METHOD_IDENTITY_ABI` |
 | 88 | `packages-galerina/galerina-tools-myco/src/query/search.ts#isError` | not created | fresh complete Myco and SLIDE record-ABI lanes retained | The source distinguishes a heterogeneous one-field error/twelve-field result union through JavaScript property presence, including inherited, accessor and proxy observations. The package source is also a read-only mirror whose current upstream bytes differ. Myco passes **80/80** and the exact SLIDE record ABI passes **4/4**. | `BLOCKED_BY_VENDOR_CUSTODY_AND_DYNAMIC_PROPERTY_PRESENCE_ABI` |
+| 89 | `packages-galerina/galerina-devtools-impact/src/impact-plan.mjs#isDocumentation` | `packages-galerina/galerina-devtools-impact/src/self-hosted/documentation-path.fungi` | `packages-galerina/galerina-devtools-impact/tests/documentation-path-fungi-conversion.test.mjs` | The exact `docs/` prefix plus three root-file rules pass the live MJS oracle, checked Fungi, GIR, signed Wasm and physical `.slide` publication with independent VOK re-admission and hostile-boundary refusal. Impact passes **9/9** and the governed physical lane passes **10/10**. MJS remains active. | `DONE` (`CANDIDATE`) |
 
 ## Shared implementation and governance files
 
@@ -105,6 +106,8 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
 | `docs/superpowers/specs/2026-08-13-slices-84-87-boundary-adjudication.md` | Product-owner negative adjudication for the regex/case-fold, affine profile, binary64 `unknown`, and active TLS-object boundaries. | `DONE` |
 | `docs/reports/slice-88-myco-search-outcome-guard-fungi-conversion-2026-08-13.md` | Product-owner negative adjudication for the Myco vendor-custody and dynamic object-union boundary. | `DONE` |
+| `docs/superpowers/specs/2026-08-13-slice-89-documentation-path-fungi-conversion-design.md` | Bound design for the reference-only documentation-path candidate. | `DONE` |
+| `docs/superpowers/plans/2026-08-13-slice-89-documentation-path-fungi-conversion.md` | Test-first implementation and physical-proof plan for Slice 89. | `DONE` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
 | `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
@@ -118,7 +121,7 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 88 bounded decision is complete. The authored TODO, active roadmap
+The Slice 89 bounded decision is complete. The authored TODO, active roadmap
 and live conversion register are updated. Focused source, physical boundary,
 roadmap, graph and generated-owner checks are current at their relevant input
 build points. The final navigation index is independently refreshed after the
@@ -133,7 +136,7 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 143 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 966 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`938a71b` writing skill; `2902c2a` translation skill; both remain private custody and the changed translation skill passes its adversarial suite and release audit) |
+| Private Fungi skill repositories | `DONE` (`938a71b` writing skill; `2902c2a` translation skill; both remain private custody and need no Slice 89 change) |
 | Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
 ## Verified refusal retained outside the batch
@@ -253,3 +256,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   admitted scopes retain exact regex/case-fold, affine authenticated-profile,
   heterogeneous binary64 and active host-object boundaries. Their package
   lanes pass **54/54**, **231/231**, **21/21** and **26/26** respectively.
+- Slice 89 is a complete reference candidate, not a consumer switch. The exact
+  fixed documentation-path decision passes Impact **9/9** and the governed
+  physical SLIDE/VOK lane **10/10**; MJS remains active pending retirement
+  authority.
