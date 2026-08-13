@@ -3705,3 +3705,25 @@ violations**, semantic **3/3** with **976** tests, code index **975**, canonical
 **9,612**, receipts **437/437**, roadmap **5/5**, Golden **11/11**, and both
 leak audits. The final provenance commit and post-commit Myco/codebase-memory
 exact-head readback remain pending.
+
+## Fungi conversion checkpoint through Slice 547 - 2026-08-13
+
+The next 50 scopes cover Myco persistence, indexing, filesystem walking,
+rendering, path filtering and the regex-worker boundary. Thirteen erased
+declarations are `NO_RUNTIME_BEHAVIOR`; 32 runtime scopes remain `BLOCKED`;
+five exact closed constants/records are `CANDIDATE` under read-only mirror
+custody. No candidate asset or execution/retirement authority was created.
+
+The pinned package typecheck and **80/80** source-driven tests pass, but fresh
+review proves silent traversal narrowing, terminal-control passthrough,
+mutable defaults/Sets, mirror version/walk/store/indexer drift including
+`contentSkip` persistence and large/binary name-indexing, mutable path-filter
+reporting, unbudgeted generated regexes, an undeclared runtime worker asset,
+surplus worker response identity, unvalidated limits and incomplete close/error
+state. These defects override nominal green tests for conversion authority.
+
+Private translation `de53025` and authoring `554609e` bind typed filesystem
+absence and coverage, terminal egress controls, dynamic runtime assets and the
+complete worker lifecycle. The Slice-547 three-review, owner publication,
+closure commit and dual-index exact-head proof remain pending. Repository-wide
+closure remains `UNKNOWN`.

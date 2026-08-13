@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 498-547 Myco persistence, ingest, output and regex - 2026-08-13
+
+- [x] Account 50 unique scopes: 13 erased declarations, 32 blocked runtime
+  scopes and five mirror-held candidates. No placeholder Fungi, consumer
+  switch or retirement was created.
+- [x] Prove fresh Myco no-emit typecheck and **80/80** source-driven tests;
+  retain all physical and repository-wide authority as `UNKNOWN`/absent.
+- [x] Update both private skills at translation `de53025` and authoring
+  `554609e`: only proved not-found may become absence; skipped filesystem work
+  must be loud; terminal payload controls need an egress policy; dynamic worker
+  assets and their full lifecycle plus generated main-thread work must be bound.
+- [ ] Replace filesystem catch-all absence/skip behavior with typed not-found,
+  permission, I/O, cancellation and race outcomes and truthful coverage
+  receipts; reconcile current-upstream walk/version plus store/indexer
+  `contentSkip`, large/binary name-indexing and role-reclassification changes.
+- [ ] Sanitize or encode hostile terminal path/content controls while keeping
+  renderer ANSI separate; add direct group/highlight/render/JSON hostile KATs.
+- [ ] Make path-filter enforcement/reporting one immutable snapshot and put
+  generated glob matching under a non-backtracking or bounded execution policy.
+- [ ] Declare and content-bind `regex-worker.js` through source-to-dist assets;
+  validate worker messages and numeric limits; separate startup, clone/schema,
+  deadline, error, exit and close; settle pending scans exactly once.
+- [ ] Run three independent receipt reviews, commit authored evidence, publish
+  every registered owner, pass the bounded close matrix, then commit and refresh
+  Myco plus codebase-memory at the exact Slice-547 HEAD.
+- [ ] Keep repository-wide closure `UNKNOWN` and continue with Slice 548.
+
 ### Slices 448-497 Myco foundations - 2026-08-13
 
 - [x] Account 50 unique scopes: nine erased declarations, 32 blocked runtime

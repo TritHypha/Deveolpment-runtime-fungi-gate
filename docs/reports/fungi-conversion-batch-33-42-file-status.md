@@ -931,3 +931,64 @@ declarations byte-identical across the three identities. The vendored
 `86a82be205d444ea4bc4fa4ce4ac940a29d9bf6a`. Whole-file bytes differ; the
 nine scoped store declarations/bodies are text-identical at current upstream.
 This reconciles classification only; it grants no local authoring authority.
+
+## Slices 498-547 - Myco persistence, ingest, output, and regex
+
+The next 50 unique source-order scopes are fully adjudicated: 13 erased
+declarations are `NO_RUNTIME_BEHAVIOR`, 32 runtime scopes remain `BLOCKED`,
+and five closed constants/records are `CANDIDATE` under non-authoring mirror
+custody. No candidate, consumer switch, physical `.slide`, independent
+re-admission, VOK authority, or TypeScript retirement was authored.
+
+Fresh package no-emit typecheck and the complete source-driven **80/80** suite
+pass at the pinned bytes. Hostile review nevertheless proves that filesystem
+catch-alls silently narrow the advertised loud traversal, indexed paths and
+content can emit terminal control bytes, default objects and skip Sets remain
+mutable state, and JSON/rendering retain active host semantics. Path-filter
+reporting can diverge from its compiled closure after mutation, generated glob
+regexes run without the worker budget, and the dynamic `regex-worker.js` asset
+is absent from package loaded-asset accounting. Worker success leaks surplus
+request `id`; stopped/error/deadline states collapse; numeric limits and close
+races remain untyped. Current upstream changes version and walk metadata, and
+materially changes store/indexer behavior: it persists and reloads
+`contentSkip`, name-indexes large/binary files and reclassifies role changes.
+Vendored/current `store.ts` blobs are `44399204622860da4ea4ea6a0d75f5a639080d98`/
+`86a82be205d444ea4bc4fa4ce4ac940a29d9bf6a`; vendored/current `indexer.ts`
+are `be4d266cceeb6bd7cfc260f51d3f856b8c3c7216`/
+`d207346d9f50285616573f5383e99915a6643c1a`. The mirror must be reconciled
+upstream or through a governed overlay before authoring.
+
+Private translation `de53025` and authoring `554609e` now require typed
+filesystem absence and loud partial-traversal receipts, terminal-control egress
+policy, and complete dynamic-worker asset/lifecycle custody including bounded
+main-thread generated-regex work. Both remain private and unpushed.
+
+Exact wave evidence: focused test SHA-256 values are store
+`EA2A436EFDA30C79678A9C60133887DA29412FCBCC292D4CA1DF40EB9D0C27C9`,
+index-ceiling
+`E21DC3A2D1D8997EB6A1015AC3BDB3EE03EE599CD7443D31F525571B542991E8`,
+tokenize
+`90D1C680AFB350FF1A05B6F834CDAD9CE9398D6F5C2F24DC28BFBBFD6C7DFDB2`,
+version
+`B94489C035A73A8CAEC639A3ADC51316436C686A1E326D3E05F5183C22F1665A`,
+walk
+`CA6EC908E3408AC4CEC2269C0E6FBEB6072406BE628B45154A11EB66C9552CCF`,
+walk-completeness
+`FC4AF6E5F5BC37B47B0C0DC11D5308160DC1A20BE6BB02D0705D69A3F445AA4A`,
+path-filter
+`0745D2520AC944B9637D2CDA5C6083710C00F41FCEA878F26F2B4ADA1A11AFB6`,
+regex-guard
+`C3F787933D5477DC6218640983A2D51EF4E0BE223E2F1C84701B4CD81B6D5142`
+and search
+`BA0B4B510BF4D7FCCEA712A56A86DD91A7E910D62474E541187F4537ECE52CD3`.
+Vendored and declared `walk.ts` share blob
+`604a574a76f30d6f50218e4bd0a5817c0f6e3ba8`; current upstream is
+`1675d53fef9770d1ac9987465d1f98d0fdc6eb02`. All three `output.ts`
+identities share `ce59d838db3768817ce2d13fdf87739bc774d031`.
+Vendored/declared/current path-filter, regex-executor, regex-guard and worker
+each share, respectively, `fa6fa6a6f01d2afd4e05af55008b4ad1934d4d71`,
+`4db9d9172f89e472f170a06b787cd901ab82b5a8`,
+`fcebc145c481c6082d7d33c264ca5a4a9bddc55e` and
+`cedfd480ee1067eb2c7c1ad4fa46ab33653ef3d5`. Runtime worker SHA-256 is
+`FE5B52FCF67FFD42228C29F16FE6A6574EEFCCE98F4B6DDAFC78D5F82554464E`;
+the current package boundary incorrectly reports `Loaded Assets: none`.

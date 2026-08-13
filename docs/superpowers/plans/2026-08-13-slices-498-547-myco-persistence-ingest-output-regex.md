@@ -88,10 +88,10 @@
 - Read: `packages-galerina/galerina-tools-myco/src/ingest/tokenize.ts`
 - Read: focused persistence, indexing, tokenization, and package-boundary evidence.
 
-- [ ] Pin source/test identities, toolchain, callers, queue/retirement state, mirror custody, and physical evidence.
-- [ ] Record save/load wire bytes, filesystem containment and write effects, mutable graph aliases, time/number/JSON behavior, public declaration retention, indexing races, bounded-work ceilings, and tokenization semantics.
-- [ ] Run read-only hostile probes that distinguish nominal TypeScript types from the live JavaScript boundary.
-- [ ] Return exact classifications, blocker/exit, threadability, vectors, defects, and both skill dispositions for Slices 498-508.
+- [x] Pin source/test identities, toolchain, callers, queue/retirement state, mirror custody, and physical evidence.
+- [x] Record save/load wire bytes, filesystem containment and write effects, mutable graph aliases, time/number/JSON behavior, public declaration retention, indexing races, bounded-work ceilings, and tokenization semantics.
+- [x] Run read-only hostile probes that distinguish nominal TypeScript types from the live JavaScript boundary.
+- [x] Return exact classifications, blocker/exit, threadability, vectors, defects, and both skill dispositions for Slices 498-508.
 
 ### Task 2: Pin and adjudicate Slices 509-530
 
@@ -100,10 +100,10 @@
 - Read: `packages-galerina/galerina-tools-myco/src/output.ts`
 - Read: focused walk/output tests and package-boundary evidence.
 
-- [ ] Pin source/test identities and all callers.
-- [ ] Record ignore-rule parsing, nested filesystem traversal, symlink/file-kind behavior, ordering and coverage caps, mutable output aliases, UTF-16 spans, ANSI rendering, JSON serialization, and exact summary text.
-- [ ] Exercise hostile paths, ignore files, getters/proxies, sparse arrays, overlapping spans, control text, non-finite numbers, and stream-visible bytes without mutating the repository.
-- [ ] Return exact classifications, blocker/exit, threadability, vectors, defects, and both skill dispositions for Slices 509-530.
+- [x] Pin source/test identities and all callers.
+- [x] Record ignore-rule parsing, nested filesystem traversal, symlink/file-kind behavior, ordering and coverage caps, mutable output aliases, UTF-16 spans, ANSI rendering, JSON serialization, and exact summary text.
+- [x] Exercise hostile paths, ignore files, getters/proxies, sparse arrays, overlapping spans, control text, non-finite numbers, and stream-visible bytes without mutating the repository.
+- [x] Return exact classifications, blocker/exit, threadability, vectors, defects, and both skill dispositions for Slices 509-530.
 
 ### Task 3: Pin and adjudicate Slices 531-547
 
@@ -113,10 +113,12 @@
 - Read: `packages-galerina/galerina-tools-myco/src/query/regex-guard.ts`
 - Read: focused path-filter, regex-worker, regex-guard, and search tests.
 
-- [ ] Pin source/test identities, callers, worker boundary, mirror custody, and physical evidence.
-- [ ] Record glob/regex compilation, path normalization, sparse/active records, worker lifecycle, IDs/listeners/timers, timeout/error conflation, termination, line/hit ceilings, numeric coercion, and optional-result semantics.
-- [ ] Exercise malformed patterns, empty/wrong-class inputs, getter/proxy/array mutation, worker error/timeout/races, numeric extrema, Unicode/surrogate paths, and exact refusal/output ordering.
-- [ ] Return exact classifications, blocker/exit, threadability, vectors, defects, and both skill dispositions for Slices 531-547.
+- [x] Pin source/test identities, callers, worker boundary, mirror custody, and physical evidence.
+- [x] Record glob/regex compilation, path normalization, sparse/active records, worker lifecycle, IDs/listeners/timers, timeout/error conflation, termination, line/hit ceilings, numeric coercion, and optional-result semantics.
+- [ ] Add durable KATs for malformed and wrong-class patterns, getter/proxy/array
+  mutation, worker error/close races, numeric extrema, Unicode/surrogate paths,
+  and exact refusal/output ordering after upstream or overlay ownership is set.
+- [x] Return exact classifications, blocker/exit, threadability, vectors, defects, and both skill dispositions for Slices 531-547.
 
 ### Task 4: Author, review, and publish the wave
 
@@ -126,7 +128,7 @@
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
+- [x] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
 - [ ] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
 - [ ] Commit authored evidence separately from registered owner outputs.
 - [ ] Run all registered graph/owner publishers and the bounded close matrix.
