@@ -76,9 +76,10 @@ counts or open items that a newer section explicitly supersedes.
   count, path-leak and private-document owners. Current checks pass: retirement
   and queue 1,486/1,486; semantic 3/3; project 5/5; package 100/201; KB 4/4;
   roadmap 5/5; canonical 7/7 at 9,612; receipts 87/87; path/private leaks zero.
-- [ ] After the generated owner commit, refresh Myco and attempt one moderate
-  codebase-memory refresh. Verify indexed HEAD plus a new Slice 147 symbol when
-  available; retain `UNKNOWN` without retry storms on `Transport closed`.
+- [x] After the generated owner commit, refresh Myco: **5,432 files / 83,327
+  terms**, with the Slice 147 blocker queryable. One moderate codebase-memory
+  refresh returned `Transport closed`; exact graph-HEAD freshness therefore
+  remains `UNKNOWN` without a retry storm.
 - [ ] Dev-tool ergonomics: give registered owners a consistent non-mutating
   `--help` contract. Several currently reject it, while retirement/code-index
   interpret a no-mode invocation as generation; add CLI tests before changing.
