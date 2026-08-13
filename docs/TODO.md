@@ -14,7 +14,7 @@ counts or open items that a newer section explicitly supersedes.
   placeholder Fungi was created.
 - [x] Repair the slice-close audit so `UNKNOWN` is a valid fail-closed
   threadability result and erased declarations can truthfully record `N/A`;
-  focused audit tests pass **5/5** and existing receipts remain green.
+  focused audit tests pass **6/6** and existing receipts remain green.
 - [ ] **Priority JS fail-closed repair:** validate one exact immutable plan,
   module and adapter snapshot; positively prove every named check executed;
   cover bare builtin subpaths, module-import evidence, repeated getters,
