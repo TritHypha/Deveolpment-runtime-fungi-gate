@@ -23,8 +23,12 @@ counts or open items that a newer section explicitly supersedes.
   reconcile module imports with plan imports, and bind immutable typed receipts.
 - [ ] Give adjacent package test `.mjs` files a governed harness classification
   or exclusion before literal all-TS/MJS closure can be claimed.
-- [ ] Complete the individual Slice 322 graph/index/roadmap owner matrix;
-  repository-wide closure remains `UNKNOWN` and aggregate crash lanes stay out.
+- [x] Complete the individual Slice 322 owner matrix: queue 1,486/1,486;
+  package 100/201; KB 4/4; project 5/5; graph 9,768 nodes / 9,903 edges /
+  zero violations; 172 tools / 40 proofs; 147 Fungi files; semantic 3/3 with
+  974 tests; code index 974; canonical 7/7 at 9,612; receipts 262/262;
+  roadmap 5/5 and Golden 11/11. Repository-wide closure remains `UNKNOWN` and
+  aggregate crash lanes stay out.
 
 ### Slices 273-297 accelerator and CPU declarations - 2026-08-13
 
