@@ -1,7 +1,7 @@
 {
   "tool": "dev-tool-index",
   "authority": "NONE",
-  "gitCommit": "19f2416953e13b17f93884865d36b66130176653",
-  "builtAt": "2026-08-13T18:35:47.000Z",
+  "gitCommit": "93b934fbbae27c3a4fee925a6ca0e0a93710153b",
+  "builtAt": "2026-08-13T19:03:39.000Z",
   "node": "v24.18.0"
 }
