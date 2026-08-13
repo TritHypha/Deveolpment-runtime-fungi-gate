@@ -37,9 +37,10 @@ counts or open items that a newer section explicitly supersedes.
   974 codes, three percentage sections, 5/5 subway outputs, 7/7 canonical
   consumers at 9,612 tests, 162/162 receipts and Golden 11/11. The crash-linked
   aggregate lanes were not run; repository-wide closure remains `UNKNOWN`.
-- [ ] Commit the exact owner outputs, rerun freshness checks, refresh Myco once
-  and prove Slice 222 queryable. Codebase-memory remains `UNKNOWN` while its
-  transport is unavailable.
+- [x] Commit the exact owner outputs at `26223fa6` after the complete bounded
+  freshness matrix passed. Refresh Myco once after that commit: **5,516 files /
+  83,388 terms**, with Slice 222 queryable in seven governed files.
+  Codebase-memory remains `UNKNOWN` while its transport is unavailable.
 
 ### Slices 208-217 metrics collector state - 2026-08-13
 

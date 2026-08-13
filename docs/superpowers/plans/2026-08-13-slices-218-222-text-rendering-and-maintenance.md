@@ -96,8 +96,8 @@ private Fungi skills and governed owner scripts.
   invoke `graph-all`.
 - [x] Run dev-tool/Fungi inventories, code-index, component-health, status,
   roadmap/subway, canonical counts, receipts, Golden and leak guards.
-- [ ] Commit registered owner outputs and rerun exact freshness checks.
-- [ ] Refresh Myco once after the final commit and prove Slice 222 queryable.
+- [x] Commit registered owner outputs and rerun exact freshness checks.
+- [x] Refresh Myco once after the final commit and prove Slice 222 queryable.
 - [x] Record codebase-memory as `UNKNOWN` while its transport is unavailable.
 
 ## Self-review
