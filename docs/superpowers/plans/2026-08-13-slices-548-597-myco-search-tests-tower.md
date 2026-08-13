@@ -87,9 +87,9 @@
 - Read: `packages-galerina/galerina-tools-myco/src/query/search.ts`
 - Read: focused regex/search tests and package boundary evidence.
 
-- [ ] Pin source, worker asset, focused tests, callers, mirror custody, package assets, physical evidence, and both skill commits.
-- [ ] Record static-regex parsing, module bootstrap, Worker message/structured-clone behavior, search records, JS coercion and exact String/RegExp semantics.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 548-566.
+- [x] Pin source, worker asset, focused tests, callers, mirror custody, package assets, physical evidence, and both skill commits.
+- [x] Record static-regex parsing, module bootstrap, Worker message/structured-clone behavior, search records, JS coercion and exact String/RegExp semantics.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 548-566.
 
 ### Task 2: Adjudicate Slices 567-582
 
@@ -99,9 +99,9 @@
 - Read: `packages-galerina/galerina-tools-myco/src/util/normalize.ts`
 - Read: focused search/tokenization and mirror evidence.
 
-- [ ] Pin exact ranges, callers, source/test digests, mirror relationships, and physical evidence.
-- [ ] Record active Map/Set/Array behavior, filesystem failure paths, worker delegation, ranking/order, limits and clocks, Buffer bytes, Unicode normalization/case/regex semantics.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 567-582.
+- [x] Pin exact ranges, callers, source/test digests, mirror relationships, and physical evidence.
+- [x] Record active Map/Set/Array behavior, filesystem failure paths, worker delegation, ranking/order, limits and clocks, Buffer bytes, Unicode normalization/case/regex semantics.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 567-582.
 
 ### Task 3: Adjudicate Slices 583-597
 
@@ -113,9 +113,9 @@
 - Read: `packages-galerina/galerina-tower-citizen/src/ai-governance.ts`
 - Read: owning manifests, boundaries, callers and focused tests.
 
-- [ ] Pin every module/source/test identity and distinguish test evidence from production authority.
-- [ ] Record top-level test/benchmark discovery, subprocess/clock/output effects, environment and failure semantics, and the erased `AiActionProposal` public contract.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 583-597.
+- [x] Pin every module/source/test identity and distinguish test evidence from production authority.
+- [x] Record top-level test/benchmark discovery, subprocess/clock/output effects, environment and failure semantics, and the erased `AiActionProposal` public contract.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 583-597.
 
 ### Task 4: Author, verify, review, and publish the wave
 
@@ -125,7 +125,7 @@
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
+- [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
 - [ ] Run focused Myco and Tower checks, receipt audit, leak checks, and three independent read-only reviews.
 - [ ] Commit authored evidence separately from registered owner outputs.
 - [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.

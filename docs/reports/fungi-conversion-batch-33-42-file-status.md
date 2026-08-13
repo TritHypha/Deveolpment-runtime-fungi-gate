@@ -992,3 +992,37 @@ each share, respectively, `fa6fa6a6f01d2afd4e05af55008b4ad1934d4d71`,
 `cedfd480ee1067eb2c7c1ad4fa46ab33653ef3d5`. Runtime worker SHA-256 is
 `FE5B52FCF67FFD42228C29F16FE6A6574EEFCCE98F4B6DDAFC78D5F82554464E`;
 the current package boundary incorrectly reports `Loaded Assets: none`.
+
+## Slices 548-597 - Myco search, executable tests, and Tower evidence
+
+At source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`,
+seven erased declarations are `NO_RUNTIME_BEHAVIOR`, 41 executable scopes are
+`BLOCKED`, and two primitive leaves are `CANDIDATE` under non-authoring mirror
+custody. No scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK
+replacement, consumer switch or TypeScript/JavaScript retirement exists.
+
+Fresh evidence is Myco no-emit typecheck plus **80/80** tests and Tower no-emit
+typecheck plus **515/515** existing tests. These are regression checks only.
+The receipt audit passes **537/537** governed receipts with 29 frozen legacy
+reports. Runtime worker SHA-256 is
+`FE5B52FCF67FFD42228C29F16FE6A6574EEFCCE98F4B6DDAFC78D5F82554464E`;
+the package boundary still incorrectly declares no loaded assets.
+
+Material blockers include one-sided regex screening, unvalidated worker schemas
+and budgets, collapsed lifecycle states, a single-file filename-regex route
+outside the worker deadline, false-complete filesystem misses, malformed search
+numbers, and current-upstream `contentSkip` drift. ECMAScript NFC, lowercase,
+smart-case and Unicode regex behavior remain versioned physical-profile
+obligations; the comment claiming `Cafe` finds `café` contradicts implementation.
+
+Executable tests retain node:test, filesystem, subprocess, worker, clock,
+assertion and cleanup effects; two suites leak temporary roots and the Git
+completeness test uses newline-framed paths. Tower benchmarks execute unbound
+artifacts, overstate proof, omit visible correctness oracles, compare unlike
+units and do not run the advertised C++ bridge. `AiActionProposal` is erased,
+but its owning runtime must not trust caller-controlled `coreVerdict` authority.
+
+Private translation `7383e523b0b87c32c3ae0a8338c65b124d8c1fe0` and authoring
+`44f24850cfc814e163600357c9d57daffabe6cbb` bind versioned Unicode,
+route-complete regex budgets, `KnownUnsafe | Unassessed` screening and separate
+provenance-bound trusted authority. Both remain private, clean and unpushed.

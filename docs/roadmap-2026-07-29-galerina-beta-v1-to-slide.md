@@ -3730,3 +3730,27 @@ nodes / 10,141 edges / zero violations**, semantic **3/3**, code index **975**,
 canonical **9,612**, receipts **487/487**, Golden **11/11**, and both leak
 audits. The final provenance commit and dual-index exact-head proof remain
 pending; repository-wide closure remains `UNKNOWN`.
+
+## Fungi conversion checkpoint through Slice 597 - 2026-08-13
+
+The next 50 scopes cover Myco regex/search helpers, active search execution,
+all source-driven Myco test modules, three Tower benchmark entry modules and
+the `AiActionProposal` declaration. Seven declarations are
+`NO_RUNTIME_BEHAVIOR`, 41 executable scopes remain `BLOCKED`, and two exact
+primitive constants are `CANDIDATE` under non-authoring mirror custody. No
+Fungi/GIR/physical `.slide`/independent re-admission/VOK authority, consumer
+switch or source retirement is claimed.
+
+Fresh Myco typecheck and **80/80** tests plus Tower typecheck and **515/515**
+existing tests pass. They do not close untyped worker lifecycle/schema states,
+false-complete filesystem misses, malformed numeric options, main-thread
+filename-regex boundedness, upstream `contentSkip` drift, versioned Unicode
+semantics, executable test effects or unbound benchmark artifacts and timing
+claims. The AI-governance runtime must also separate caller proposal data from
+provenance-bound core authority; caller-controlled `coreVerdict` cannot
+authorize itself.
+
+Private translation `7383e52` and authoring `44f2485` bind these reusable
+rules. Three independent reviews, the bounded owner matrix, authored evidence
+commit and post-commit dual-index proof remain pending. Repository-wide closure
+remains `UNKNOWN`; Slice 598 is next.

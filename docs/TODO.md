@@ -4,6 +4,29 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 548-597 Myco search, tests and Tower evidence - 2026-08-13
+
+- [x] Account 50 unique scopes: seven erased declarations, 41 blocked
+  executable scopes and two mirror-held primitive candidates. No placeholder
+  Fungi, consumer switch or retirement was created.
+- [x] Prove fresh Myco typecheck and **80/80** tests plus Tower typecheck and
+  **515/515** existing tests; retain physical and repository-wide authority as
+  absent/`UNKNOWN`.
+- [x] Update both private skills at translation `7383e52` and authoring
+  `44f2485`: bind versioned ECMAScript/Unicode normalization and case mapping,
+  one-sided regex screening, route-complete budgets and separate trusted authority.
+- [ ] Repair typed filesystem results, runtime numeric admission, the
+  single-file filename-regex budget, worker asset/schema/lifecycle custody and
+  current-upstream `contentSkip` drift.
+- [ ] Correct accent-folding documentation, clean leaked test fixtures, adopt
+  byte-safe Git paths, and bind Tower artifacts, correctness and timing units.
+- [ ] Split untrusted `AiActionProposal` data from provenance-bound core
+  authority with forged, mismatch and replay negatives.
+- [ ] Complete three reviews, commit authored evidence, publish all owners and
+  pass the bounded close matrix.
+- [ ] Commit the Slice-597 provenance build point, refresh both indexes at that
+  exact clean HEAD, keep repository closure `UNKNOWN`, and continue Slice 598.
+
 ### Slices 498-547 Myco persistence, ingest, output and regex - 2026-08-13
 
 - [x] Account 50 unique scopes: 13 erased declarations, 32 blocked runtime
@@ -31,9 +54,9 @@ counts or open items that a newer section explicitly supersedes.
   paths, **149** source Fungi, graph **10,002 nodes / 10,141 edges / 0
   violations**, semantic **3/3**, code index **975**, canonical **9,612**,
   receipts **487/487**, Golden **11/11**, and both leak audits green.
-- [ ] Commit the final Slice-547 provenance build point, then refresh Myco and
-  codebase-memory at that exact clean HEAD.
-- [ ] Keep repository-wide closure `UNKNOWN` and continue with Slice 548.
+- [x] Commit the final Slice-547 provenance build point and refresh Myco and
+  codebase-memory at exact clean HEAD `0afd1653968b0aa8b85f5a6bcaa02a7edc9fac85`.
+- [x] Keep repository-wide closure `UNKNOWN` and continue with Slice 548.
 
 ### Slices 448-497 Myco foundations - 2026-08-13
 
