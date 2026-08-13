@@ -28,10 +28,10 @@ re-admission. Its MJS caller remains active, so it is not retirement.
 - Slice 89 physical-proof build point: `8d0aa574` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
-- Conversion census: **1,480/1,480** executable-family paths classified;
-  519 TypeScript-family, 949 MJS and 12 JS.
+- Conversion census: **1,482/1,482** executable-family paths classified;
+  519 TypeScript-family, 951 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins
-  and 143 Fungi sources in package `src` trees.
+  and 144 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 850
   file-level blockers.
 - Slice receipts: **29/29** governed post-baseline receipts valid after Slice
