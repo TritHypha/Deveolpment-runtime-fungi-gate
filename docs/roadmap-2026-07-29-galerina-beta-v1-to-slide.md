@@ -3449,3 +3449,30 @@ outputs, KB 4/4, project 5/5, 9,716 graph nodes / 9,900 edges with zero
 violations, semantic 3/3 with 974 tests, code index 974, canonical 7/7 at 9,612,
 212/212 governed receipts, Golden 11/11 and roadmap 5/5. Crash-linked aggregate
 lanes remain excluded and repository-wide closure stays `UNKNOWN`.
+
+## Fungi conversion checkpoint through Slice 297 - 2026-08-13
+
+The governed ledger now accounts Slices 33-297. Slices 273-289 finish every
+symbol in the planning-only AI accelerator source; Slices 290-297 begin the CPU
+target declarations. Nineteen erased aliases/interfaces are
+`NO_RUNTIME_BEHAVIOR`. The two mutable profile constants and four active
+accelerator functions retain exact blockers; no placeholder Fungi or physical
+authority was manufactured.
+
+Focused accelerator **5/5** and CPU **3/3** evidence is green. No scoped package
+owns an exact Fungi/GIR/physical `.slide`/re-admission/VOK twin. Fresh hostile
+vectors show rogue kind/format/precision/adapter and wrong-class collections can
+still produce `safe: true`; on-device and other literal policy fields are
+ignored; missing compatibility evidence fails open; invalid output shapes pass;
+mutable exported profiles and report aliases allow post-decision evidence drift.
+
+The private skills now require explicit mutation/alias proof before mapping an
+exported `const`/`readonly` object to immutable Fungi and forbid authority from a
+derived Boolean whose evidence remains caller-mutable. Translation commit is
+`597d1ba`; authoring commit is `d58dae2`; both are private and unpushed.
+
+The maintained all-TS/MJS queue also lists package test `.mjs` files between
+production sources. Those harnesses require an explicit governed classification
+or exclusion before literal repository closure can be claimed. Slice 297 owner
+maintenance is pending; crash-linked aggregate lanes are not substitutes and
+repository-wide closure remains `UNKNOWN`.

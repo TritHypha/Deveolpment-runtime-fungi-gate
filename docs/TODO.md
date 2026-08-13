@@ -4,6 +4,41 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 273-297 accelerator and CPU declarations - 2026-08-13
+
+- [x] Account the remaining 17 accelerator symbols and first eight CPU
+  declarations against HEAD `83e40089`, exact SHA-256 source identities and
+  focused accelerator **5/5** / CPU **3/3** package evidence.
+- [x] Classify Slices 273-283 and 290-297 as erased
+  `NO_RUNTIME_BEHAVIOR`; retain Slices 284-289 at their exact mutable profile,
+  nested record/array, fail-open policy, aliasing, UTF-16, bounded-validation
+  and optional-evidence blockers. No placeholder Fungi was created.
+- [x] Update both private skills: translation `597d1ba` and authoring
+  `d58dae2` require mutation/alias vectors for exported `const`/`readonly` and
+  bind derived decisions to one immutable evidence snapshot. Both pass 5/5
+  release tests/audits and remain private and unpushed.
+- [ ] **Priority accelerator fail-closed repair:** exact-decode every nested
+  record and vocabulary; enforce on-device, fallback/reporting and memory
+  policy; treat absent format/operator/dynamic evidence as incompatible; reject
+  wrong-class collections and rogue diagnostic severities.
+- [ ] **Priority accelerator snapshot repair:** validate both input and output
+  tensor dimensions under explicit bounds, capture host fields once, freeze or
+  copy profiles under an approved semantic contract, and return one deep exact
+  report snapshot whose decision is derived from that same evidence.
+- [ ] Add hostile accelerator vectors for getters/proxies, repeated-read A/B,
+  mutable exported profiles, report alias mutation, sparse/oversized arrays,
+  every vocabulary, non-finite/unsafe dimensions and firing work limits.
+- [ ] Add closed CPU ingress for architecture, SIMD, workload, threading,
+  capability, plan, report and probe records before later executable CPU
+  scopes can claim these erased declarations as physical types.
+- [ ] **Queue-accounting fix:** give adjacent package test `.mjs` files an
+  explicit governed test-harness classification or exclusion. They are literal
+  entries in the all-TS/MJS queue and cannot be silently counted as converted
+  merely because numbered production-source slices use them as evidence.
+- [ ] Complete the individually registered Slice 297 graph/index/roadmap
+  maintenance matrix. Crash-linked aggregate lanes remain excluded and
+  repository-wide closure remains `UNKNOWN`.
+
 ### Slices 248-272 observability, substrate and accelerator - 2026-08-13
 
 - [x] Account the remaining observability route/composition symbols, the

@@ -1,12 +1,13 @@
-# Fungi Conversion Batch 33-272 File Status
+# Fungi Conversion Batch 33-297 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md`](../superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md).
-Slices 248-272 and the Slice 272 individual graph/index/roadmap maintenance
-boundary are complete. Crash-linked aggregate lanes remain excluded.
+[`../superpowers/plans/2026-08-13-slices-273-297-accelerator-cpu.md`](../superpowers/plans/2026-08-13-slices-273-297-accelerator-cpu.md).
+Slices 273-297 are accounted; the Slice 297 individual
+graph/index/roadmap maintenance boundary remains pending. Crash-linked
+aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -274,6 +275,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 270 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorFramework` | not created | declaration accounted | Erased framework vocabulary performs no runtime validation. | `NO_RUNTIME_BEHAVIOR` |
 | 271 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorModelFormat` | not created | declaration accounted | Erased format vocabulary does not refuse unknown runtime formats. | `NO_RUNTIME_BEHAVIOR` |
 | 272 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorAdapterId` | not created | declaration accounted | Erased adapter vocabulary neither binds a capability nor refuses rogue values. | `NO_RUNTIME_BEHAVIOR` |
+| 273 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorDiagnosticSeverity` | not created | declaration accounted | Erased severity vocabulary; rogue values can bypass exact-error safety folding. | `NO_RUNTIME_BEHAVIOR` |
+| 274 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorDiagnostic` | not created | declaration accounted | Erased open diagnostic record supplies no grammar, bounds, redaction or snapshot. | `NO_RUNTIME_BEHAVIOR` |
+| 275 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorTopology` | not created | declaration accounted | Erased topology claim supplies no physical evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 276 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorMemoryProfile` | not created | declaration accounted | Erased numeric record validates no finite units, ranges or relations. | `NO_RUNTIME_BEHAVIOR` |
+| 277 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorBackendProfile` | not created | declaration accounted | Erased nested profile supplies no identity, provenance or immutable snapshot. | `NO_RUNTIME_BEHAVIOR` |
+| 278 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorCapability` | not created | declaration accounted | Erased capability leaves precision open and supplies no on-device or memory proof. | `NO_RUNTIME_BEHAVIOR` |
+| 279 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorModelProfile` | not created | declaration accounted | Erased model/tensor record performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 280 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorTargetPreference` | not created | declaration accounted | Erased literal policy fields are not enforced at runtime. | `NO_RUNTIME_BEHAVIOR` |
+| 281 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorTargetSelection` | not created | declaration accounted | Erased `safe` Boolean is transport data, not admitted authority. | `NO_RUNTIME_BEHAVIOR` |
+| 282 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorPlan` | not created | declaration accounted | Erased plan binds no model, capability, effects or target receipt. | `NO_RUNTIME_BEHAVIOR` |
+| 283 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorReport` | not created | declaration accounted | Erased report supplies no deep snapshot or evidence derivation. | `NO_RUNTIME_BEHAVIOR` |
+| 284 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#INTEL_GAUDI3_HL338_PROFILE` | not created | exact blocker retained | Shared mutable singleton, nested records/arrays and wide-number ABI lack physical parity. | `BLOCKED_BY_SHARED_MUTABLE_PROFILE_RECORD_ARRAY_AND_WIDE_NUMBER_ABI` |
+| 285 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#GENERIC_ONNX_NPU_PROFILE` | not created | exact blocker retained | Shared mutable singleton and nested record/array ABI lack physical parity. | `BLOCKED_BY_SHARED_MUTABLE_PROFILE_RECORD_ARRAY_ABI` |
+| 286 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#selectAiAcceleratorTarget` | not created | exact blocker retained | Unvalidated host records, fail-open policy/evidence and unbounded arrays can return rogue `safe: true`. | `BLOCKED_BY_UNVALIDATED_NESTED_RECORD_ARRAY_POLICY_AND_BOUNDED_ITERATION_ABI` |
+| 287 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#createAiAcceleratorTargetReport` | not created | exact blocker retained | Caller-aliased mutable arrays and warning snapshot diverge; text/record ABI absent. | `BLOCKED_BY_ALIASED_MUTABLE_REPORT_RECORD_ARRAY_AND_UTF16_TEXT_ABI` |
+| 288 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#validateAiAcceleratorModel` | not created | exact blocker retained | UTF-16 path semantics, hostile records and bounded nested validation lack physical proof. | `BLOCKED_BY_JS_UTF16_PATH_AND_UNBOUNDED_NESTED_ARRAY_VALIDATION_ABI` |
+| 289 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#isCapabilityCompatible` | not created | exact blocker retained | Optional evidence fails open and array membership ABI is unproved. | `BLOCKED_BY_FAIL_OPEN_OPTIONAL_EVIDENCE_AND_ARRAY_MEMBERSHIP_ABI` |
+| 290 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuArchitecture` | not created | declaration accounted | Erased four-string alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 291 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuSimdFeature` | not created | declaration accounted | Erased SIMD vocabulary supplies no hardware proof. | `NO_RUNTIME_BEHAVIOR` |
+| 292 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuWorkloadClass` | not created | declaration accounted | Erased workload vocabulary performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 293 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuThreadingPolicy` | not created | declaration accounted | Erased policy validates no thread bound or Boolean class. | `NO_RUNTIME_BEHAVIOR` |
+| 294 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetCapability` | not created | declaration accounted | Erased nested capability supplies no exact numeric, array or physical proof. | `NO_RUNTIME_BEHAVIOR` |
+| 295 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetPlan` | not created | declaration accounted | Erased plan validates no workload, features, threading, memory or fallback. | `NO_RUNTIME_BEHAVIOR` |
+| 296 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetReport` | not created | declaration accounted | Erased report supplies no nested consistency, snapshot or provenance. | `NO_RUNTIME_BEHAVIOR` |
+| 297 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuFeatureProbe` | not created | declaration accounted | Erased probe supplies no source, timestamp or capability provenance. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -606,7 +632,14 @@ not one of Slices 33–43 and no Fungi asset was produced.
   Accelerator contracts pass **5/5**, but fresh runtime evidence accepts rogue
   values and still reports `safe: true`; executable ingress validation remains
   separate priority debt. No Fungi, GIR, physical `.slide` or VOK twin exists.
-- Both private skills now cover erased TypeScript spread authority and
-  capture-once hostile-field validation at translation commits `965388e` and
-  `38c3b15` and authoring commits `5547295` and `c2ae041`. Both remain private
-  and unpushed. Repository-wide closure remains `UNKNOWN`.
+- Slices 273-283 and 290-297 are erased accelerator/CPU declarations with
+  `NO_RUNTIME_BEHAVIOR`. Slices 284-289 retain exact mutable-singleton,
+  nested-record, fail-open-policy, aliasing, UTF-16, bounded-work and optional-
+  evidence blockers; no placeholder Fungi was made. Accelerator **5/5** and
+  CPU **3/3** pass, but supply no physical conversion authority.
+- Both private skills now also forbid treating exported `const`/`readonly` as
+  frozen evidence or deriving authority from mutable aliased evidence, at
+  translation commit `597d1ba` and authoring commit `d58dae2`. Both remain
+  private and unpushed. The literal queue still contains adjacent test `.mjs`
+  files that need a governed harness classification; repository-wide closure
+  remains `UNKNOWN`.
