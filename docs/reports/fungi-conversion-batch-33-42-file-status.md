@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-82 File Status
+# Fungi Conversion Batch 33-83 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -81,6 +81,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 80 | `packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts#stringArrayIsCanonical` | not created | existing complete App Kernel lane retained | The source validates an untrusted dynamic Array with String type, ASCII label, platform allow-list and strict-order checks. The physical profile has no immutable `Array<String>` ingress/traversal boundary, and host scalarization would retain authority. App Kernel passes **231/231**. | `BLOCKED_BY_UNKNOWN_STRING_ARRAY_CANONICALITY_ABI` |
 | 81 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#isVerifiedRegistryGeneration` | not created | fresh complete App Kernel lane retained | The guard accepts only exact object identity minted into a module-private `WeakSet`; equal or copied records remain false. Current Fungi/SLIDE/VOK values cannot preserve that non-copyable authority provenance. App Kernel passes **231/231**. | `BLOCKED_BY_AFFINE_WEAK_IDENTITY_RECEIPT_ABI` |
 | 82 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#isPersistedRegistryGeneration` | not created | fresh complete App Kernel lane retained | The exact object must be minted into both private verified and durable WeakSets; verified-only restored generations remain false. Current Fungi/SLIDE/VOK values cannot preserve the dual non-copyable authority provenance. App Kernel passes **231/231**. | `BLOCKED_BY_DUAL_AFFINE_WEAK_IDENTITY_RECEIPT_ABI` |
+| 83 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#isProductionAdmittedRegistryGeneration` | not created | fresh complete App Kernel lane retained | The guard composes verified, durable and production exact identities with linked-production identity or the governed adapter digest allow-list. Current Fungi/SLIDE/VOK cannot preserve this composite authority graph. App Kernel passes **231/231**. | `BLOCKED_BY_COMPOSITE_AFFINE_PRODUCTION_ADMISSION_ABI` |
 
 ## Shared implementation and governance files
 

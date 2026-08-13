@@ -194,7 +194,10 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_DUAL_AFFINE_WEAK_IDENTITY_RECEIPT_ABI`. The exact object must be
   present in both private verified and durable identity sets; collapsing those
   distinct authority facts into host data is refused.
-- [ ] Continue Slices 83-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 83 `isProductionAdmittedRegistryGeneration` as
+  `BLOCKED_BY_COMPOSITE_AFFINE_PRODUCTION_ADMISSION_ABI`; it composes three
+  private identities with linked identity or a governed adapter allow-list.
+- [ ] Continue Slices 84-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
