@@ -4,6 +4,57 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 248-272 observability, substrate and accelerator - 2026-08-13
+
+- [x] Account the remaining observability route/composition symbols, the
+  complete substrate-math symbol surface and the first six accelerator
+  vocabularies against exact source digests and current package boundaries.
+- [x] Classify Slices 248, 249, 255, 259 and 267-272 as erased
+  `NO_RUNTIME_BEHAVIOR`. Retain every active observability scope at its exact
+  capability/async/text/wire blocker and every executable substrate scope at
+  the authoritative `bounded-bootstrap-floor`. No placeholder Fungi was made.
+- [x] Prove focused packages green: observability **36/36**, substrate math
+  **6/6**, and accelerator contracts **5/5**, with zero failures and skips.
+- [x] Update and verify both private skills. Translation commits `965388e` and
+  `38c3b15` cover erased TypeScript spread authority and capture-once hostile
+  field validation; authoring commits are `5547295` and `c2ae041`. Both
+  repositories remain private and unpushed; independent forward-use probes
+  correctly refused both unsafe shapes.
+- [ ] **Priority observability authority fix:** validate `opts.routes` as an
+  exact inert own-data schema and inject trusted `registry`/`metrics` last.
+  Current JavaScript can overwrite those fields after injection, so returned
+  trusted objects differ from the objects retained by route closures.
+- [ ] **Priority public-health confidentiality fix:** liveness/readiness/health
+  routes are public and return arbitrary component `detail` verbatim. Publish a
+  closed status-only schema; retain diagnostic detail behind authenticated,
+  redacted access.
+- [ ] Refuse ambiguous observability base paths. `//actuator//` and `///`
+  currently produce repeated-slash routes despite the single-leading and
+  no-trailing contract. Cover dot segments, controls, query/fragment, backslash,
+  Unicode and physical text limits.
+- [ ] Enforce the documented mutual exclusion between `auditSink` and
+  `instrument`; the current active bundle exposes both and can double-count.
+  Stabilize `failSafe` to one tagged public response schema.
+- [ ] **Priority substrate numerical/termination fix:** cap accepted odd `N`
+  or replace the current recurrence with an independently verified stable
+  algorithm. Current accepted inputs include `nmr(0.25,1021) == 1` and
+  `nmr(0.25,1023) == NaN`, and larger values admit unbounded CPU work.
+- [ ] Close substrate host ingress: validate exported `flipProbability`, capture
+  each ordinary own-data field once, reject coercion/accessors/proxies/non-finite
+  values, and use fixed typed failure codes rather than coercing rejected values
+  while formatting errors. Add exact-bit, negative-zero, envelope and mutation
+  KATs plus the Tower-Citizen/emulator drift gates.
+- [ ] **Priority accelerator ingress fix:** validate all model, capability,
+  preference, plan and adapter records at runtime. A fresh vector supplied rogue
+  kind, format, precision, adapter, workload and framework strings; selection
+  still returned `safe: true` and report construction preserved them.
+- [ ] Keep substrate TypeScript until an exact physical replacement and
+  bootstrap/fixpoint proof exist. The quarantined staging Fungi candidate is
+  non-authorizing and bit-different; checker tolerance is not parity.
+- [ ] Complete the individually registered Slice 272 graph/index/roadmap/subway
+  maintenance matrix. Do not substitute crash-linked aggregate lanes;
+  repository-wide closure remains `UNKNOWN`.
+
 ### Slices 223-247 logger and kernel observability - 2026-08-13
 
 - [x] Account `LogSink`, every `MemoryLogSink`/`JsonLineSink` operation,

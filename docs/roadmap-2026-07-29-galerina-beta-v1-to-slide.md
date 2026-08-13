@@ -3416,3 +3416,33 @@ family is **74/74**, and the complete package lane is **100/100 packages and
 9,612 tests** in 284.5 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
+
+## Fungi conversion checkpoint through Slice 272 - 2026-08-13
+
+The governed conversion ledger now accounts Slices 33-272. The latest 25-slice
+wave covers remaining observability composition, substrate-math and six
+accelerator vocabularies. No placeholder Fungi was created: nine declarations
+plus the substrate parameter interface are erased `NO_RUNTIME_BEHAVIOR`; active
+observability scopes remain blocked on exact callbacks, routes, records, text,
+metrics and capability identity; executable substrate math remains inside its
+declared bounded bootstrap floor.
+
+Focused current evidence is green: observability **36/36**, substrate math
+**6/6**, accelerator contracts **5/5**. This is source behavior evidence, not
+conversion authority. No scoped package owns an exact Fungi/GIR/physical
+`.slide`/VOK replacement. The quarantined substrate reference is non-authorizing
+and bit-different from JavaScript; it cannot close the package fixpoint.
+
+Zero-trust probes added priority debt rather than hiding it: observability
+options can substitute trusted registry/metrics identities, public health routes
+can disclose arbitrary detail, repeated slashes violate the documented path
+shape, substrate NMR can return false `1` and forbidden NaN over accepted input,
+and accelerator execution accepts rogue vocabulary while reporting `safe: true`.
+The TODO owns each repair and its hostile vectors.
+
+Both private skills now require exact runtime validation where TypeScript
+`Omit`/readonly shapes erase, trusted fields injected last, and hostile fields
+captured once from inert own data before validation and use. Skill custody
+remains private and unpushed. The Slice 272 registered owner refresh is pending;
+crash-linked aggregate lanes remain excluded and repository-wide closure stays
+`UNKNOWN`.

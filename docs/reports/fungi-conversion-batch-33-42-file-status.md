@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-247 File Status
+# Fungi Conversion Batch 33-272 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-223-247-logger-and-kernel-observability.md`](../superpowers/plans/2026-08-13-slices-223-247-logger-and-kernel-observability.md).
-Slices 223-247 and the Slice 247 graph/index/roadmap maintenance boundary are
-complete. Crash-linked aggregate lanes remain excluded.
+[`../superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md`](../superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md).
+Slices 248-272 are admitted; Slice 272 graph/index/roadmap maintenance is the
+active close boundary. Crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -249,6 +249,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 245 | `packages-galerina/galerina-observability/src/kernel-integration.ts#instrumentDispatch` | not created | async-wrapper proof retained | Active async handlers, rejection identity, clock observation and a serialized metrics mutation are coupled. | `BLOCKED_BY_ASYNC_HANDLER_CALLBACK_CLOCK_METRICS_TRANSACTION_ABI` |
 | 246 | `packages-galerina/galerina-observability/src/kernel-integration.ts#safeNow` | not created | clock proof retained | Host callback plus full finite binary64 and failure normalization lack one typed physical boundary. | `BLOCKED_BY_HOST_CLOCK_CALLBACK_BINARY64_FAILURE_ABI` |
 | 247 | `packages-galerina/galerina-observability/src/kernel-integration.ts#recordRequest` | not created | metrics-transaction proof retained | Reads active context, computes binary64 duration and mutates a shared collector while suppressing failure. | `BLOCKED_BY_CLOCK_CONTEXT_METRICS_RECORD_TRANSACTION_ABI` |
+| 248 | `packages-galerina/galerina-observability/src/kernel-integration.ts#MetricsAuth` | not created | declaration accounted | Erased two-string alias validates no auth value or default. | `NO_RUNTIME_BEHAVIOR` |
+| 249 | `packages-galerina/galerina-observability/src/kernel-integration.ts#ObservabilityRouteOptions` | not created | declaration accounted | Erased options validate no active objects, paths, auth or Boolean controls. | `NO_RUNTIME_BEHAVIOR` |
+| 250 | `packages-galerina/galerina-observability/src/kernel-integration.ts#ObservabilitySurface` | not created | active-dispatch proof retained | Route data and retained callback capabilities lack one admitted identity/lifecycle ABI. | `BLOCKED_BY_ACTIVE_ROUTE_DISPATCH_CAPABILITY_ABI` |
+| 251 | `packages-galerina/galerina-observability/src/kernel-integration.ts#reportToResult` | not created | open-report proof retained | Open component map, arbitrary detail, unknown body and exact object identity lack a physical ABI. | `BLOCKED_BY_OPEN_HEALTH_REPORT_HANDLER_RESULT_IDENTITY_ABI` |
+| 252 | `packages-galerina/galerina-observability/src/kernel-integration.ts#observabilityRoutes` | not created | async-route proof retained | Async health, mutable dispatch, metrics wire and public response policy remain coupled. | `BLOCKED_BY_ASYNC_HEALTH_ROUTE_DISPATCH_METRICS_WIRE_ABI` |
+| 253 | `packages-galerina/galerina-observability/src/kernel-integration.ts#failSafe` | not created | async-failure proof retained | Arbitrary callback throw/rejection collapses to a different fixed body without timeout/cancellation. | `BLOCKED_BY_ASYNC_CALLBACK_FAILURE_COLLAPSE_ABI` |
+| 254 | `packages-galerina/galerina-observability/src/kernel-integration.ts#normaliseBase` | not created | path-text proof retained | JavaScript UTF-16, text concatenation and canonical path policy lack one physical boundary. | `BLOCKED_BY_JS_UTF16_PATH_NORMALISATION_AND_TEXT_CONCAT_ABI` |
+| 255 | `packages-galerina/galerina-observability/src/observability.ts#CreateObservabilityOptions` | not created | declaration accounted | Erased `Omit`/readonly shape does not prevent trusted-field substitution. | `NO_RUNTIME_BEHAVIOR` |
+| 256 | `packages-galerina/galerina-observability/src/observability.ts#Observability` | not created | composite-capability proof retained | Mutable components, callbacks, audit and instrumentation form an authority bundle, not value transport. | `BLOCKED_BY_COMPOSITE_OBSERVABILITY_CAPABILITY_ABI` |
+| 257 | `packages-galerina/galerina-observability/src/observability.ts#createObservability` | not created | construction proof retained | Active construction and later untrusted spread can split returned and retained trusted identities. | `BLOCKED_BY_ACTIVE_COMPONENT_CONSTRUCTION_AND_DISPATCH_COMPOSITION_ABI` |
+| 258 | `packages-galerina/galerina-substrate-math/src/index.ts#SubstrateMathError` | not created | bootstrap-floor proof retained | Exact JS Error identity is absent and the whole source is an explicit bounded bootstrap floor. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 259 | `packages-galerina/galerina-substrate-math/src/index.ts#SubstrateNoiseParams` | not created | declaration accounted | Erased readonly record validates no finite Float or inert own-data boundary. | `NO_RUNTIME_BEHAVIOR` |
+| 260 | `packages-galerina/galerina-substrate-math/src/index.ts#clamp01` | not created | bootstrap-floor proof retained | Passes NaN through, clamps infinities and preserves negative zero under an explicit floor. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 261 | `packages-galerina/galerina-substrate-math/src/index.ts#assertProb` | not created | bootstrap-floor proof retained | Thrown Error and hostile failure-string coercion lack a typed physical replacement. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 262 | `packages-galerina/galerina-substrate-math/src/index.ts#assertOddPositive` | not created | bootstrap-floor proof retained | Accepted positive odd safe integers create unbounded work and lack a physical width/cap. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 263 | `packages-galerina/galerina-substrate-math/src/index.ts#flipProbability` | not created | bootstrap-floor proof retained | Raw open record accepts coercion and can produce forbidden NaN. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 264 | `packages-galerina/galerina-substrate-math/src/index.ts#singleLaneErrorProbability` | not created | bootstrap-floor proof retained | Re-reading getter/proxy fields after validation permits a validation-to-use NaN race. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 265 | `packages-galerina/galerina-substrate-math/src/index.ts#binom` | not created | bootstrap-floor proof retained | Unbounded recurrence and exact binary64 operation order lack a physical proof. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 266 | `packages-galerina/galerina-substrate-math/src/index.ts#nmrFailureProbability` | not created | bootstrap-floor proof retained | Unbounded work and numerical overflow yield false 1/NaN over accepted inputs. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 267 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorKind` | not created | declaration accounted | Erased eight-string alias performs no runtime validation. | `NO_RUNTIME_BEHAVIOR` |
+| 268 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorWorkloadKind` | not created | declaration accounted | Erased seven-string alias performs no runtime validation. | `NO_RUNTIME_BEHAVIOR` |
+| 269 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorPrecision` | not created | declaration accounted | Erased precision vocabulary does not close consumer string arrays. | `NO_RUNTIME_BEHAVIOR` |
+| 270 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorFramework` | not created | declaration accounted | Erased framework vocabulary performs no runtime validation. | `NO_RUNTIME_BEHAVIOR` |
+| 271 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorModelFormat` | not created | declaration accounted | Erased format vocabulary does not refuse unknown runtime formats. | `NO_RUNTIME_BEHAVIOR` |
+| 272 | `packages-galerina/galerina-target-ai-accelerator/src/index.ts#AiAcceleratorAdapterId` | not created | declaration accounted | Erased adapter vocabulary neither binds a capability nor refuses rogue values. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -267,6 +292,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
 | `docs/superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md` | Fail-closed plan for audit configuration and classical/hybrid attestation boundaries. | `DONE` |
 | `docs/superpowers/plans/2026-08-13-slices-158-167-hybrid-and-neutral-bridge-types.md` | Fail-closed plan for remaining hybrid functions and neutral Brain/Brawn declarations. | `DONE` |
+| `docs/superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md` | Fail-closed plan and admitted result for observability composition, substrate math and accelerator declarations. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slices-84-87-boundary-adjudication.md` | Product-owner negative adjudication for the regex/case-fold, affine profile, binary64 `unknown`, and active TLS-object boundaries. | `DONE` |
 | `docs/reports/slice-88-myco-search-outcome-guard-fungi-conversion-2026-08-13.md` | Product-owner negative adjudication for the Myco vendor-custody and dynamic object-union boundary. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slice-89-documentation-path-fungi-conversion-design.md` | Bound design for the reference-only documentation-path candidate. | `DONE` |
@@ -565,3 +591,22 @@ not one of Slices 33–43 and no Fungi asset was produced.
   **36/36** and focused health/kernel consumers **19/19**, both with zero skips.
   Skill review is `NO_SKILL_UPDATE`; current active-state, async, bounded-loop,
   retained-capability and cleanup rules cover the group.
+- Slices 248-257 account three erased declarations and retain seven active
+  observability scopes at their exact callback, route, record, text, metrics and
+  composite-capability boundaries. Fresh probes prove trusted-field substitution,
+  public health-detail disclosure and repeated-slash route ambiguity.
+  Observability passes **36/36** and focused kernel integration **10/10**.
+- Slices 258-266 retain the substrate-math executable surface at its explicit
+  bounded bootstrap floor; only the erased parameter interface is
+  `NO_RUNTIME_BEHAVIOR`. Fresh KATs prove NaN/false-one numerical envelopes,
+  unbounded work, getter/proxy validation-to-use races and hostile error
+  coercion. Substrate math passes its existing **6/6**; that does not close the
+  missing exact Float/record/Error/SLIDE/VOK/fixpoint proof.
+- Slices 267-272 are erased accelerator aliases with `NO_RUNTIME_BEHAVIOR`.
+  Accelerator contracts pass **5/5**, but fresh runtime evidence accepts rogue
+  values and still reports `safe: true`; executable ingress validation remains
+  separate priority debt. No Fungi, GIR, physical `.slide` or VOK twin exists.
+- Both private skills now cover erased TypeScript spread authority and
+  capture-once hostile-field validation at translation commits `965388e` and
+  `38c3b15` and authoring commits `5547295` and `c2ae041`. Both remain private
+  and unpushed. Repository-wide closure remains `UNKNOWN`.
