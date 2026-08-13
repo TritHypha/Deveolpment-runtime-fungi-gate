@@ -162,7 +162,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_GENERIC_TAGGED_UNION_ABI`. The exported custom structural union
   cannot be specialized to `Option<Int>` or reduced to a host-owned tag; the
   physical surface has no generic arbitrary-payload tagged-union parameter.
-- [ ] Continue Slices 75-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 75 `isSourceFile` as
+  `BLOCKED_BY_DYNAMIC_STRING_ARRAY_SUFFIX_ABI`. Exact physical two-String
+  suffix execution exists, but the configured dynamic `Array<String>` and
+  complete JavaScript UTF-16 input behavior are not admitted.
+- [ ] Continue Slices 76-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
