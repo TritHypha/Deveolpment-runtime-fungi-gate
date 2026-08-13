@@ -190,7 +190,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_AFFINE_WEAK_IDENTITY_RECEIPT_ABI`. Its authority is exact object
   identity minted into a module-private `WeakSet`; copied fields, a host
   Boolean or a serialized bearer token cannot replace that provenance.
-- [ ] Continue Slices 82-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 82 `isPersistedRegistryGeneration` as
+  `BLOCKED_BY_DUAL_AFFINE_WEAK_IDENTITY_RECEIPT_ABI`. The exact object must be
+  present in both private verified and durable identity sets; collapsing those
+  distinct authority facts into host data is refused.
+- [ ] Continue Slices 83-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
