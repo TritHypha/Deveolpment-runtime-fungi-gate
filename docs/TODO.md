@@ -24,8 +24,11 @@ counts or open items that a newer section explicitly supersedes.
   schemas plus the conflicting amplitude-zero rule across photonic packages.
 - [ ] Replace legacy `Galerina_PHOTONIC_*` codes with owned live
   `FUNGI-CATEGORY-NNN` registry entries before these helpers can be promoted.
-- [ ] Complete the individual Slice 372 owner matrix, update roadmap/subway and
-  refresh both indexes. Crash-linked aggregates remain excluded and
+- [x] Complete the individual Slice 372 owner matrix: queue 1,486/1,486;
+  package 100/201; KB 4/4; project 5/5; graph 9,820 nodes / 9,957 edges /
+  zero violations; 172 tools / 40 proofs; 147 Fungi files; semantic 3/3 with
+  974 tests; code index 974; canonical 7/7 at 9,612; receipts 312/312;
+  roadmap 5/5 and Golden 11/11. Crash-linked aggregates remain excluded and
   repository-wide closure remains `UNKNOWN`.
 
 ### Slices 323-347 JS, native and photonic targets - 2026-08-13

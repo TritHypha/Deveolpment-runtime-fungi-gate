@@ -3558,6 +3558,8 @@ packages. These are recorded as repair work, not translated into Fungi.
 All three read-only reviews agree that the existing private skills already
 cover the reusable exact-record, capture-once, binary64, dense-array,
 bounded-while, immutable-evidence and physical-profile rules, so the wave is
-`NO_SKILL_UPDATE`. The Slice 372 individual owner refresh remains pending;
-adjacent test `.mjs` queue entries and excluded crash-linked aggregate lanes
-keep repository-wide closure `UNKNOWN`.
+`NO_SKILL_UPDATE`. The Slice 372 individual owner matrix is current: queue
+1,486/1,486; graph 9,820 nodes / 9,957 edges / zero violations; semantic 3/3
+with 974 tests; receipts 312/312; roadmap 5/5 and Golden 11/11. Adjacent test
+`.mjs` queue entries and excluded crash-linked aggregate lanes keep
+repository-wide closure `UNKNOWN`.

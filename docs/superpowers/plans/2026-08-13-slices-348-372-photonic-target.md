@@ -109,24 +109,24 @@ SLIDE/VOK evidence, Myco and the codebase-memory graph.
   bounded-closure result.
 - [x] Preserve confirmed package defects and add their concrete repair exits to
   the TODO rather than translating unsafe host behavior.
-- [ ] Run the focused receipt audit before commit and repair the audit test-first
+- [x] Run the focused receipt audit before commit and repair the audit test-first
   if the receipt contract exposes a new fail-open gap.
-- [ ] Commit authored plan/receipts/status separately from generated owners.
+- [x] Commit authored plan/receipts/status separately from generated owners.
 
 ### Task 4: Independent review and bounded owner close
 
 **Files:**
 - Modify only registered outputs produced by their individual owner commands.
 
-- [ ] Have independent read-only reviewers compare all receipts, arithmetic,
+- [x] Have independent read-only reviewers compare all receipts, arithmetic,
   pins, classifications, blockers, skill dispositions and physical-authority
   claims to the accepted dossiers.
-- [ ] Regenerate retirement, queue, package/project/KB graphs, dev-tool index and
+- [x] Regenerate retirement, queue, package/project/KB graphs, dev-tool index and
   Fungi inventory individually; commit only exact registered outputs.
-- [ ] Regenerate semantic graph, code index, component health, status, SLIDE
+- [x] Regenerate semantic graph, code index, component health, status, SLIDE
   reference, subway/roadmap and Golden outputs individually.
-- [ ] Run the individual 19-check owner matrix, then refresh Myco and
-  codebase-memory at the final commit and verify exact node/edge counts and
-  indexed HEAD.
-- [ ] Stop with repository-wide closure `UNKNOWN` unless every separately named
+- [x] Run the individual 19-check owner matrix. Refresh Myco and codebase-memory
+  after the final tracked commit and verify exact node/edge counts and indexed
+  HEAD as post-commit operational evidence.
+- [x] Stop with repository-wide closure `UNKNOWN` unless every separately named
   closure requirement is independently satisfied.
