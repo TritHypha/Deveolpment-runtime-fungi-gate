@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-217 File Status
+# Fungi Conversion Batch 33-222 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-208-217-metrics-collector-state.md`](../superpowers/plans/2026-08-13-slices-208-217-metrics-collector-state.md).
-Slice 197 closed the last approved graph/index/roadmap boundary. Slice 222 is
-the next boundary; crash-linked aggregate lanes remain excluded.
+The current five-slice decision and maintenance plan is
+[`../superpowers/plans/2026-08-13-slices-218-222-text-rendering-and-maintenance.md`](../superpowers/plans/2026-08-13-slices-218-222-text-rendering-and-maintenance.md).
+Slice 222 is the current graph/index/roadmap boundary; crash-linked aggregate
+lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -219,6 +219,11 @@ still requires its own strict, physical, VOK and differential proof.
 | 215 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.record` | not created | mutation-transaction proof retained | Open hostile property access and contained failures feed ordered global/per-route counter and histogram mutations. | `BLOCKED_BY_OPEN_HOST_RECORD_MUTABLE_METRICS_TRANSACTION_ABI` |
 | 216 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.#routeAccumulator` | not created | dynamic-cardinality proof retained | Dynamic method keys create retained per-method overflow state; `maxRoutes: 1` plus 100 methods yields 101 series, so the claimed global bound is false. | `BLOCKED_BY_DYNAMIC_METHOD_KEY_MUTABLE_CARDINALITY_ABI` |
 | 217 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.snapshot` | not created | collector-snapshot proof retained | Live map materialization/sorting, nested state snapshots, cloned counters and binary64 rate remain one active graph. | `BLOCKED_BY_MUTABLE_METRICS_SNAPSHOT_SORT_ABI` |
+| 218 | `packages-galerina/galerina-observability/src/metrics.ts#cmp` | not created | string-order proof retained | Exact JavaScript UTF-16 relational ordering and `-1/0/+1` result lack selected physical-profile proof. | `BLOCKED_BY_UTF16_STRING_ORDER_PHYSICAL_ABI` |
+| 219 | `packages-galerina/galerina-observability/src/metrics.ts#promLabel` | not created | label-escape proof retained | Global JavaScript regex replacement over backslash/newline/quote lacks one admitted UTF-16 text boundary. | `BLOCKED_BY_REGEX_UTF16_LABEL_ESCAPE_ABI` |
+| 220 | `packages-galerina/galerina-observability/src/metrics.ts#renderMetricsPrometheus` | not created | Prometheus-wire proof retained | Nested record/array traversal, label filtering/escaping, numeric rendering, conditional series and exact wire order lack one admitted graph. | `BLOCKED_BY_PROMETHEUS_RECORD_ARRAY_TEXT_WIRE_ABI` |
+| 221 | `packages-galerina/galerina-observability/src/logger.ts#LogLevel` | not created | declaration accounted | Erased four-string vocabulary performs no validation, ordering, filtering or sink authorization. | `NO_RUNTIME_BEHAVIOR` |
+| 222 | `packages-galerina/galerina-observability/src/logger.ts#LogRecord` | not created | declaration accounted | Erased record validates no level, binary64 clock provenance, optional name, open fields, redaction state or JSON bytes. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -268,18 +273,16 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 217 bounded decision is complete. The last scheduled maintenance
-boundary was Slice 197; its owners remained current at `691bd33f`. The
-post-commit Myco refresh indexed 5,488 files / 83,364 terms and finds Slice 197
-in four governed files. Codebase-memory still returns `Transport closed`, so
-its exact graph-HEAD freshness remains `UNKNOWN`. Aggregate owners are deferred
-to Slice 222 and the excluded aggregate lanes are not substitutes, so
-repository-wide closure remains `UNKNOWN`.
+The Slice 222 bounded decision is complete and its scheduled maintenance owner
+chain is pending this authored commit. The last owner outputs remain the Slice
+197 checkpoint at `691bd33f`. Codebase-memory still returns `Transport closed`,
+so its exact graph-HEAD freshness remains `UNKNOWN`. The excluded aggregate
+lanes are not substitutes, so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
-| `docs/TODO.md` | `DONE` through the authored Slice 217 status and Slice 222 queue |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` at the last scheduled Slice 197 maintenance boundary; next refresh Slice 222 |
+| `docs/TODO.md` | `DONE` for the authored Slice 222 status; maintenance owner refresh pending |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `PENDING` Slice 222 registered owner refresh |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |

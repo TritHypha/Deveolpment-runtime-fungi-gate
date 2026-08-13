@@ -4,6 +4,38 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 218-222 text rendering and maintenance boundary - 2026-08-13
+
+- [x] Retain private `cmp` at JavaScript UTF-16 String ordering and exact
+  `-1/0/+1` return semantics. Frontend String comparison is not physical-profile
+  parity.
+- [x] Retain private `promLabel` at global JavaScript regex replacement over
+  backslash, newline and quote code units.
+- [x] Retain `renderMetricsPrometheus` at nested record/array traversal, exact
+  label filtering/escaping, conditional series, binary64/counter rendering and
+  deterministic Prometheus wire ordering/newlines. No placeholder Fungi asset
+  was created.
+- [x] Account `LogLevel` and `LogRecord` as erased
+  `NO_RUNTIME_BEHAVIOR` declarations. They grant no filtering, redaction,
+  clock provenance, open-field validation, JSON or sink authority.
+- [x] Prove observability **36/36** and focused metrics/logger/kernel consumers
+  **27/27**, both with zero failures and zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct because
+  their exact-text, regex, physical-profile, exact-record, binary64, Option,
+  open-value, provenance and wire-parity rules cover all five scopes.
+- [ ] Define exact UTF-16 comparison/regex, external metric-label,
+  binary64-to-text, nested record/array and Prometheus wire ABIs before
+  reopening Slices 218-220.
+- [ ] Retain TypeScript and every renderer/logger consumer. Focused evidence
+  grants no whole-file retirement, production, release or push authority.
+- [ ] Run the registered retirement/queue, graph, inventory, index,
+  component-health, status, roadmap/subway, count, receipt, Golden and leak
+  owners individually at this Slice 222 boundary. Do not run the crash-linked
+  aggregate lanes; repository-wide closure remains `UNKNOWN`.
+- [ ] Commit the exact owner outputs, rerun freshness checks, refresh Myco once
+  and prove Slice 222 queryable. Codebase-memory remains `UNKNOWN` while its
+  transport is unavailable.
+
 ### Slices 208-217 metrics collector state - 2026-08-13
 
 - [x] Retain `emptyStatusClasses`, `RouteAccumulator.constructor` and
