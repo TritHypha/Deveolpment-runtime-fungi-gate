@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-192 File Status
+# Fungi Conversion Batch 33-197 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-183-192-observability-health-ingress.md`](../superpowers/plans/2026-08-13-slices-183-192-observability-health-ingress.md).
-Aggregate graph, index and roadmap owners run at the next approved 25-slice
-boundary; crash-linked aggregate lanes remain excluded.
+The current five-slice decision and maintenance plan is
+[`../superpowers/plans/2026-08-13-slices-193-197-health-execution-and-maintenance.md`](../superpowers/plans/2026-08-13-slices-193-197-health-execution-and-maintenance.md).
+Slice 197 is the next approved 25-slice graph/index/roadmap boundary;
+crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -194,6 +194,11 @@ still requires its own strict, physical, VOK and differential proof.
 | 190 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.constructor` | not created | construction/timeout proof retained | Two mutable maps, binary64 timeout validation and retained injected or ambient timer callbacks form an active object. | `BLOCKED_BY_MUTABLE_MAP_TIMER_CALLBACK_BINARY64_ABI` |
 | 191 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.registerLiveness` | not created | registry mutation proof retained | Arbitrary-key callback retention/replacement, private mutation and exact `this` identity require an affine registry ABI. | `BLOCKED_BY_MUTABLE_CALLBACK_REGISTRY_AND_THIS_IDENTITY_ABI` |
 | 192 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.registerReadiness` | not created | registry mutation proof retained | Same active semantics as liveness registration on a distinct readiness map. | `BLOCKED_BY_MUTABLE_CALLBACK_REGISTRY_AND_THIS_IDENTITY_ABI` |
+| 193 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.unregister` | not created | dual-map deletion proof retained | Both private maps mutate for one arbitrary key and the identical registry object returns for chaining. | `BLOCKED_BY_DUAL_MUTABLE_MAP_DELETE_AND_THIS_IDENTITY_ABI` |
+| 194 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.liveness` | not created | active liveness route proof retained | The method selects the liveness map/kind and delegates to callback/timer evaluation returning a complete asynchronous report. | `BLOCKED_BY_ACTIVE_ASYNC_HEALTH_REGISTRY_ABI` |
+| 195 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.readiness` | not created | active readiness route proof retained | The independent readiness map/kind drives traffic-shedding report behavior through the same active evaluator. | `BLOCKED_BY_ACTIVE_ASYNC_HEALTH_REGISTRY_ABI` |
+| 196 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.#evaluate` | not created | async aggregation proof retained | Ordered Map snapshot, all-check scheduling, order-preserving completion, open component-map mutation and fail-closed fold lack one admitted ABI. | `BLOCKED_BY_ASYNC_CALLBACK_MAP_AGGREGATION_ABI` |
+| 197 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.#runOne` | not created | timeout/failure/cleanup proof retained | Callback invocation races an injected timer; callback failures map to DOWN, losing work is not cancelled, and a throwing cleanup currently rejects direct evaluation. | `BLOCKED_BY_TIMER_RACE_CALLBACK_CLEANUP_TRANSACTION_ABI` |
 
 ## Shared implementation and governance files
 
@@ -501,3 +506,13 @@ not one of Slices 33–43 and no Fungi asset was produced.
   Observability passes **36/36** and focused health/kernel consumers **19/19**,
   both with zero skips. Skill review is `NO_SKILL_UPDATE`; current open-value,
   no-null, text, active-capability and mutable-object rules cover the group.
+- Slices 193-197 remain blocked without placeholder assets. Unregister requires
+  dual mutable-map deletion plus exact registry identity; liveness/readiness
+  retain distinct active maps; evaluation preserves Map order, all-check async
+  completion and an open component record; run-one retains callback/timer race,
+  fixed callback-failure mapping and cleanup-before-completion. A narrow probe
+  proves injected cleanup failure currently rejects direct evaluation, so the
+  file-level never-throw claim is separately queued for repair. Observability passes
+  **36/36** and focused health/kernel consumers **19/19**, both with zero skips.
+  Skill review is `NO_SKILL_UPDATE`; current active-state, async, bounded-loop,
+  retained-capability and cleanup rules cover the group.

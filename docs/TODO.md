@@ -4,6 +4,39 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 193-197 health execution and 25-slice maintenance - 2026-08-13
+
+- [x] Retain `HealthRegistry.unregister` at both private mutable-map deletions,
+  absent-key semantics and exact returned `this` identity.
+- [x] Retain `liveness` and `readiness` at their distinct active maps/kinds and
+  the complete asynchronous evaluation boundary.
+- [x] Retain private `#evaluate` at ordered Map snapshot, all-check scheduling,
+  order-preserving completion, open component-map construction and fail-closed
+  aggregation.
+- [x] Retain private `#runOne` at callback invocation, injected timer handle,
+  Promise race, sync/async failure mapping and mandatory timer cleanup. No
+  placeholder Fungi asset was created for any slice.
+- [x] Prove observability **36/36** and focused health/kernel consumers
+  **19/19**, both with zero failures and zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct because
+  current mutable-object, active-capability, async-failure, bounded-iteration,
+  Error-identity and cleanup-before-failure rules cover all five methods.
+- [ ] Define an affine health-registry ABI with exact callback/key ownership,
+  dual-map mutation, ordered snapshots, open component records, typed
+  completion, timeout/cancellation, losing-work policy, exactly-once timer
+  cleanup and registry identity before reopening Slices 193-197.
+- [ ] Priority health-contract defect: reconcile the file-level “evaluation
+  never throws” claim with injected `clearTimer` failure. Add a hostile cleanup
+  test, choose an explicit typed cleanup-failure outcome, preserve route-level
+  503 behavior, and prevent cleanup from silently overriding an already
+  derived health result.
+- [ ] Retain TypeScript and every route/consumer. Focused evidence grants no
+  whole-file retirement, production, release or push authority.
+- [ ] Run retirement/queue, graph, inventory, index, component-health, status,
+  roadmap/subway and canonical-count owners individually at this Slice 197
+  boundary. Do not invoke crash-linked aggregate lanes; repository-wide
+  closure remains `UNKNOWN`.
+
 ### Slices 183-192 observability health ingress - 2026-08-13
 
 - [x] Account `HealthStatus`, `HealthKind`, `ComponentHealth`, `HealthCheck`,
