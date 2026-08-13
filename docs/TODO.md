@@ -26,9 +26,13 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Declare and content-bind `regex-worker.js` through source-to-dist assets;
   validate worker messages and numeric limits; separate startup, clone/schema,
   deadline, error, exit and close; settle pending scans exactly once.
-- [ ] Run three independent receipt reviews, commit authored evidence, publish
-  every registered owner, pass the bounded close matrix, then commit and refresh
-  Myco plus codebase-memory at the exact Slice-547 HEAD.
+- [x] Run three independent receipt reviews, commit authored evidence, publish
+  every registered owner and pass the bounded close matrix: **1,488/1,488**
+  paths, **149** source Fungi, graph **10,002 nodes / 10,141 edges / 0
+  violations**, semantic **3/3**, code index **975**, canonical **9,612**,
+  receipts **487/487**, Golden **11/11**, and both leak audits green.
+- [ ] Commit the final Slice-547 provenance build point, then refresh Myco and
+  codebase-memory at that exact clean HEAD.
 - [ ] Keep repository-wide closure `UNKNOWN` and continue with Slice 548.
 
 ### Slices 448-497 Myco foundations - 2026-08-13

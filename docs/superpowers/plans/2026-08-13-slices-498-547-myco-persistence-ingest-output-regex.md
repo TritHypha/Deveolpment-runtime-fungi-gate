@@ -129,8 +129,8 @@
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
 - [x] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
-- [ ] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
-- [ ] Commit authored evidence separately from registered owner outputs.
-- [ ] Run all registered graph/owner publishers and the bounded close matrix.
+- [x] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
+- [x] Commit authored evidence separately from registered owner outputs.
+- [x] Run all registered graph/owner publishers and the bounded close matrix.
 - [ ] Commit the final provenance build point, then refresh Myco and codebase-memory with exact-head readback at Slice 547.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 548 after the bounded close.

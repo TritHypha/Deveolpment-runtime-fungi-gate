@@ -3724,6 +3724,9 @@ state. These defects override nominal green tests for conversion authority.
 
 Private translation `de53025` and authoring `554609e` bind typed filesystem
 absence and coverage, terminal egress controls, dynamic runtime assets and the
-complete worker lifecycle. The Slice-547 three-review, owner publication,
-closure commit and dual-index exact-head proof remain pending. Repository-wide
-closure remains `UNKNOWN`.
+complete worker lifecycle. All three independent reviews pass. The bounded
+matrix is green at **1,488/1,488** paths, **149** source Fungi, graph **10,002
+nodes / 10,141 edges / zero violations**, semantic **3/3**, code index **975**,
+canonical **9,612**, receipts **487/487**, Golden **11/11**, and both leak
+audits. The final provenance commit and dual-index exact-head proof remain
+pending; repository-wide closure remains `UNKNOWN`.
