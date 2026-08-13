@@ -13,7 +13,7 @@
   },
   "packageGraph": {
     "roots": ["src", "bin"],
-    "extensions": [".mjs"],
+    "extensions": [".mjs", ".fungi"],
     "entryPoints": ["bin/galerina-impact.mjs"],
     "loadedAssets": ["src/self-hosted/documentation-path.fungi"]
   },
