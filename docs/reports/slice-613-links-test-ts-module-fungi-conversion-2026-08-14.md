@@ -6,8 +6,8 @@ Scope: `packages-galerina/galerina-tools-myco/tests/links.test.ts#module`.
 
 Minimum vectors: all registrations fire; import/assertion failure; repeated load and shared state; malformed URI; placeholder collision; stale-write and CLI-output cases.
 
-Evidence: source build point `674aad9d956acc67eafceb5497cf97c7a0ab96ec`;
-source SHA-256 `70D4533B2638878803928841EAC288FFBB351C6A4FEF8D0A820E824F09457B9D`; live scoped bytes remain identical through the authored plan. Fresh Myco no-emit typecheck and 105/105 source-driven tests pass. These checks are regression evidence only. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement, consumer switch or TypeScript/JavaScript retirement exists.
+Evidence: source build point `7405e970d22e4365355dfcab5ba61af8aa359cc2`;
+source SHA-256 `4A305AD24F523CCCBAAD3CEFA9B25B0C4A22AAD066ECCE7D821D07B12BCDD96C`; the fixture constructs its imaginary private marker without naming a never-public document in tracked source. Fresh focused 25/25 and complete Myco 105/105 tests pass, and the private-document leak audit reports zero. These checks are regression evidence only. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement, consumer switch or TypeScript/JavaScript retirement exists.
 
 ## Slice-close receipt
 

@@ -27,7 +27,7 @@
 
 - `packages-galerina/galerina-tools-myco/src/query/links.ts` SHA-256 `62F0D434B1B7D004785CA40D04B9E0C9C2E49DC7FD1CAE39E03FFF7E0BD4D82C`
 - `packages-galerina/galerina-tools-myco/src/cli.ts` SHA-256 `3DEFAB980880B677875BE2258A40414B581E9FF395E370F02831574850204187`
-- `packages-galerina/galerina-tools-myco/tests/links.test.ts` SHA-256 `70D4533B2638878803928841EAC288FFBB351C6A4FEF8D0A820E824F09457B9D`
+- `packages-galerina/galerina-tools-myco/tests/links.test.ts` SHA-256 `4A305AD24F523CCCBAAD3CEFA9B25B0C4A22AAD066ECCE7D821D07B12BCDD96C` at fixture-hygiene commit `7405e970d22e4365355dfcab5ba61af8aa359cc2`; production sources remain at the predecessor pin.
 - `packages-galerina/galerina-tower-citizen/src/ai-governance.ts` SHA-256 `E1CEA2EFD8230787E9C237712082B7B6755ADF9E67820EF97B545FA0EB40C834`
 - `packages-galerina/galerina-tower-citizen/src/audit-logger.ts` SHA-256 `2DE052C255E5806915825339928D95E05CCF35084680D3F0A2FD00EE8C50A86D`
 - `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts` SHA-256 `91C72D7F43E110680885C11EE1C7AE02F4E2C660CFA67ACB066EB5DC6FA01D02`
