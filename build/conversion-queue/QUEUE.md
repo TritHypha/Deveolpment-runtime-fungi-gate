@@ -1,15 +1,15 @@
 # Conserved TypeScript/MJS Conversion Queue
 
-Source digest: `a7f63acd5f970d790ecde9b92630e386ebdbae1a2da1040e7275b9cae6c93c77`
+Source digest: `ae74644205b84ae79ac3e1c1445e17911d856390555a0b5b317ce729e89c9fee`
 
 | Classification | Count |
 |---|---:|
 | CANDIDATE | 0 |
-| BLOCKED | 854 |
+| BLOCKED | 855 |
 | NO_RUNTIME_BEHAVIOR | 0 |
 | SUPERSEDED_BY_EXISTING_FUNGI | 0 |
 | BOOTSTRAP_FLOOR | 630 |
-| TOTAL | 1484 |
+| TOTAL | 1485 |
 
 Scoped symbol candidates: **7** across **7** files.
 
