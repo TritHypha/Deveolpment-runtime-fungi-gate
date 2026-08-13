@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "222e8e5d331d153898af8c008afdbe1da91da327274763c3ebf787126dd9011d",
+  "authoritativeInputsDigest": "3eb56619200c06227b54450b85b179649e5a3772f4ce1c141b35abc24e6baf78",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6076,6 +6076,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-8bc6d66bce5d805a90d6ad70",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/workspace-marker-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-3c1c873d33d4e336a2e3cfc1",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-tools-benchmark/tests/benchmark-contracts.test.mjs",
@@ -11475,6 +11482,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-8bc6d66bce5d805a90d6ad70",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-3c1c873d33d4e336a2e3cfc1",
       "to": "package:galerina-tools-benchmark",
       "type": "CLASSIFIES"
@@ -12710,9 +12722,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 974,
+    "tests": 975,
     "detectors": 6,
-    "executableFamily": 1486,
+    "executableFamily": 1487,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

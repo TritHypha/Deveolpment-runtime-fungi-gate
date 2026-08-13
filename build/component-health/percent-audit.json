@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "33604e0d",
+    "sha": "6a58c499",
     "detached": false,
     "dirty": true
   },
@@ -36,7 +36,7 @@
         {
           "label": "Packages",
           "pct": 98,
-          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 519 tracked package TypeScript paths, 147 unexecuted .fungi sources, 54 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
+          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 519 tracked package TypeScript paths, 148 unexecuted .fungi sources, 54 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
           "evidence": {
             "asserted": "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger"
           }
@@ -341,7 +341,7 @@
         {
           "item": "Package retirement",
           "state": "building",
-          "detail": "519 tracked package TypeScript paths · 147/147 .fungi sources unexecuted · 0/54 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
+          "detail": "519 tracked package TypeScript paths · 148/148 .fungi sources unexecuted · 0/54 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
         },
         {
           "item": "Value-unit types (RD-0349)",
