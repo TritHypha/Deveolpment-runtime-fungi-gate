@@ -83,6 +83,29 @@ Fail-closed and topological (leaves first); a build failure aborts the whole cha
 
 ### Run all benchmarks
 
+For the next publication-quality run, use the repository-owned automation:
+
+```powershell
+npm run benchmark:publish
+```
+
+This is the full measurement-to-graph path. It runs the unfiltered benchmark,
+fresh noise measurement, SLIDE and truth audits, all current report/chart/table
+owners, the historic WASM-zero page, history snapshot and regression guard in
+one fail-closed order. The first failed or stale stage stops publication. A
+successful run writes `results/benchmark-run-to-graph-latest.json` as an
+orchestration receipt; the receipt is non-authorizing and does not promote a
+SLIDE reference into the production lane. Expect the command to take several
+minutes.
+
+To test only the automation contract without running any benchmark:
+
+```powershell
+npm run benchmark:publish:selftest
+```
+
+The individual owner commands remain available for focused development:
+
 ```
 npm run run          # full suite, publication-fidelity timing
 npm run run:quick    # full suite, reduced iteration counts for the time-based benchmarks (faster)

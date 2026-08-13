@@ -35,6 +35,7 @@
       "src/million-iteration-source-pair.mjs",
       "src/noise-gate.mjs",
       "src/report.mjs",
+      "src/run-to-graph.mjs",
       "src/runner.mjs",
       "src/slide-reference-runner.mjs",
       "src/slide-reference-suite.mjs",
@@ -99,7 +100,9 @@
     "run:diagnostic-suite": "node --expose-gc src/runner.mjs --diagnostic",
     "run:fault-injection": "node src/diagnostic-runner.mjs --benchmark toxic-input --benchmark governance-violation",
     "history": "node src/history.mjs",
-    "bench:guard": "node src/bench-guard.mjs"
+    "bench:guard": "node src/bench-guard.mjs",
+    "benchmark:publish": "node src/run-to-graph.mjs",
+    "benchmark:publish:selftest": "node src/run-to-graph.mjs --self-test"
   },
   "dependencies": {
     "@galerina/core-compiler": "file:../galerina-core-compiler"

@@ -33,7 +33,7 @@
 - Consumes: the fixed package root, Node executable and existing owner scripts.
 - Produces: `runBenchmarkToGraph(adapters)` returning a frozen receipt and CLI `--self-test`; normal CLI writes `results/benchmark-run-to-graph-latest.json`.
 
-- [ ] **Step 1: Write the failing orchestration tests**
+- [x] **Step 1: Write the failing orchestration tests**
 
 Create injected fake process/filesystem adapters and assert the exact ordered
 stage IDs: `measure`, `noise`, `audit-vade`, `audit-truth`, `render`,
@@ -44,7 +44,7 @@ first-failure stop, signalled/timeout refusal, and missing/empty required-output
 refusal. Assert the final receipt has exact keys, all status values `PASS`,
 `authorityReleased: false`, and no caller path fields.
 
-- [ ] **Step 2: Prove RED**
+- [x] **Step 2: Prove RED**
 
 Run:
 
@@ -54,7 +54,7 @@ node --test packages-galerina/galerina-devtools-benchmarks/test/run-to-graph.tes
 
 Expected: failure because `src/run-to-graph.mjs` does not exist.
 
-- [ ] **Step 3: Implement the closed stage table and runner**
+- [x] **Step 3: Implement the closed stage table and runner**
 
 Define one frozen stage table whose commands are fixed relative paths. Use
 `spawnSync(process.execPath, args, { cwd: PACKAGE_ROOT, shell: false,
@@ -64,7 +64,7 @@ regular non-empty file. Throw `BENCHMARK_RUN_TO_GRAPH_REFUSED:<STAGE>:<CAUSE>`
 on the first failure. Only after all eight stages pass, atomically publish the
 bounded JSON receipt.
 
-- [ ] **Step 4: Add the safe self-test and package command**
+- [x] **Step 4: Add the safe self-test and package command**
 
 `--self-test` must use injected fake adapters and must never spawn the real
 runner. Add `src/run-to-graph.mjs` to `packageGraph.entryPoints` and add:
@@ -77,7 +77,7 @@ runner. Add `src/run-to-graph.mjs` to `packageGraph.entryPoints` and add:
 Document that `benchmark:publish` is the next-run entry point and normally
 takes several minutes; `--self-test` is the only fast orchestration check.
 
-- [ ] **Step 5: Prove GREEN and close benchmark housekeeping**
+- [x] **Step 5: Prove GREEN and close benchmark housekeeping**
 
 Run:
 
@@ -94,3 +94,8 @@ Update `docs/TODO.md` with the automation command and explicitly state that the
 full owner was not rerun during automation implementation. Commit the exact
 Task 1 paths locally, refresh the code index, and verify its indexed commit or
 record freshness as `UNKNOWN`.
+
+Closure evidence: the focused orchestration suite is 6/6, its hermetic
+self-test reports eight stages and no real benchmark spawn, the complete
+benchmark package is 106/106, the truth/SLIDE audit is clean, and the scoped
+path-leak and diff checks pass. The several-minute benchmark was not rerun.

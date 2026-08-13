@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Benchmark run-to-graph automation - 2026-08-13
+
+- [x] Add one closed `npm run benchmark:publish` owner that performs the next
+  unfiltered measurement, noise-floor capture, SLIDE/truth audits, report and
+  chart/table publication, historic WASM-zero publication, history snapshot and
+  regression guard in dependency order.
+- [x] Fail closed on a nonzero, signalled or timed-out child and on every
+  missing, non-regular, empty or stale stage-owned output. The command accepts
+  no caller-selected script, path or benchmark subset and uses no shell.
+- [x] Add `npm run benchmark:publish:selftest` so the orchestration can be
+  checked without starting the several-minute benchmark. The expensive full
+  owner was deliberately not rerun while implementing this automation; the
+  last admitted full result and graphs remain the 2026-08-12 evidence below.
+- [ ] Use `npm run benchmark:publish` for the next requested full measurement.
+  A successful receipt proves only ordered tool completion and releases no
+  production or runtime authority.
+
 ### Complete benchmark publication coverage - 2026-08-12
 
 - [x] Correct the general benchmark chart so its historic WASM control view
