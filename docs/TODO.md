@@ -21,8 +21,9 @@ counts or open items that a newer section explicitly supersedes.
   check, physical-proof and hostile-input rules already cover this result.
 - [x] Refresh the bounded retirement and queue owners after Slice 92:
   1,485/1,485 executable-family paths, 147 Fungi sources, seven scoped
-  candidates, 855 blockers and 32/32 governed receipts. These focused facts do
-  not replace the still-UNKNOWN repository-wide closure lane.
+  candidates, 855 blockers, 32/32 governed receipts and 973 semantic test
+  nodes. These focused facts do not replace the still-UNKNOWN repository-wide
+  closure lane.
 - [ ] Keep TypeScript and its consumers active until an explicit consumer
   switch, whole-file accounting and retirement proof authorizes removal.
 - [ ] Replace the crash-linked monolithic repository lane with a bounded,

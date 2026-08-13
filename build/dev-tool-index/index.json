@@ -503,7 +503,7 @@
       "tests": 507,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 38,
+      "files": 41,
       "deps": [
         "@galerina/inference-bridge-contract",
         "@galerina/substrate-math"

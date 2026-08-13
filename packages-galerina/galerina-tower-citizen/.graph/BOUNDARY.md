@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 40 |
+| Files | 41 |
 | Internal edges | 79 |
 | External dependencies | 7 |
 | ├─ Node core | 4 |
@@ -51,6 +51,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/pq-admission-policy.fungi`
 - `src/self-hosted/transport-fsm.fungi`
 - `src/self-hosted/verdict-not.fungi`
+- `src/self-hosted/verdict-or.fungi`
 - `src/trit-brand.type-guard.ts`
 
 ## Allowed Orphans

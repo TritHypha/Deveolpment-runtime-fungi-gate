@@ -55,7 +55,7 @@ caller remain active.
   file-level blockers.
 - Slice receipts: **32/32** governed receipts pass after Slice 92 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
-  971 test nodes and non-authorizing local K3 evidence `1`.
+  973 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **513/513** and the dedicated
   two-Verdict physical SLIDE/VOK lane **1/1**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
