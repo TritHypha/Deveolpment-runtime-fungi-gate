@@ -166,7 +166,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_DYNAMIC_STRING_ARRAY_SUFFIX_ABI`. Exact physical two-String
   suffix execution exists, but the configured dynamic `Array<String>` and
   complete JavaScript UTF-16 input behavior are not admitted.
-- [ ] Continue Slices 76-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 76 `isTrit` as
+  `BLOCKED_BY_UNKNOWN_VERDICT_GUARD_ABI`. Physical `Verdict` removes the
+  malformed negative domain, `Int` narrows it, and boundary refusal cannot be
+  substituted for the source false that drives explicit DENY.
+- [ ] Continue Slices 77-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

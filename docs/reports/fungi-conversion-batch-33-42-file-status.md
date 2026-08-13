@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-75 File Status
+# Fungi Conversion Batch 33-76 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -74,6 +74,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 73 | `packages-galerina/galerina-core-logic/src/index.ts#isSafeGalerinaame` | not created | existing complete core-logic package lane retained | The open anchored identifier regex needs exact JavaScript UTF-16 length, code-unit access and traversal, or an admitted regex opcode. Frontend `matchesPattern` is not physical execution and the bounded well-formed text ingress narrows the source domain. Core Logic passes **57/57**. | `BLOCKED_BY_REGEX_TEXT_CHARACTER_ABI` |
 | 74 | `packages-galerina/galerina-data-query/src/index.ts#isSome` | not created | existing complete Data Query package lane retained | The exported generic type guard consumes the custom structural `QueryOption<T>` union. Frontend `Option<T>` is not the same API, and the physical surface has no generic arbitrary-payload tagged-union parameter. Data Query passes **19/19**. | `BLOCKED_BY_GENERIC_TAGGED_UNION_ABI` |
 | 75 | `packages-galerina/galerina-devtools-package-graph/src/scanner.ts#isSourceFile` | not created | existing complete Package Graph lane retained | Physical two-String suffix execution exists, but the source also consumes configuration-derived dynamic `Array<String>` and the full JavaScript UTF-16 String domain. The physical profile has neither that array parameter nor source-equivalent hostile/oversized behavior. Package Graph passes **28/28**. | `BLOCKED_BY_DYNAMIC_STRING_ARRAY_SUFFIX_ABI` |
+| 76 | `packages-galerina/galerina-tower-citizen/src/ai-governance.ts#isTrit` | not created | existing complete Tower-Citizen lane retained | The live type guard accepts JavaScript `unknown`, returns true only for numeric `-1/0/1`, and lets the caller map every malformed value explicitly to DENY. Physical `Verdict` removes the negative domain; signed-i32 `Int` narrows it; boundary refusal is not source false. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_VERDICT_GUARD_ABI` |
 
 ## Shared implementation and governance files
 
@@ -225,3 +226,8 @@ not one of Slices 33–43 and no Fungi asset was produced.
   `Array<String>` parameter or the source's unbounded JavaScript UTF-16 domain.
   Hard-coding default extensions would discard live package configuration.
   Package Graph passes **28/28**.
+- Slice 76 remains blocked without a placeholder asset. `isTrit` is a live
+  heterogeneous type guard whose false result drives explicit malformed-input
+  denial. Physical `Verdict` or `Int` parameters narrow that source domain,
+  while boundary refusal is not the same Boolean result. Tower-Citizen passes
+  **507/507**.
