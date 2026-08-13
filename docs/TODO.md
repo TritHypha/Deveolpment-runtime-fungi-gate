@@ -23,10 +23,11 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Split untrusted `AiActionProposal` data from provenance-bound core
   authority with forged, mismatch and replay negatives.
 - [x] Complete three reviews and commit authored evidence; all re-reviews pass.
-- [ ] Republish all owners and the bounded close matrix after concurrent Myco
-  source changes reach a clean committed boundary.
-- [ ] Commit the Slice-597 provenance build point, refresh both indexes at that
-  exact clean HEAD, keep repository closure `UNKNOWN`, and continue Slice 598.
+- [x] Republish all owners and the bounded close matrix at the clean committed
+  Slice-597 boundary.
+- [x] Commit the Slice-597 provenance build point and prove both indexes exact at
+  `674aad9d956acc67eafceb5497cf97c7a0ab96ec`; repository closure remains
+  `UNKNOWN` and Slice 598 is active.
 
 ### Slices 498-547 Myco persistence, ingest, output and regex - 2026-08-13
 

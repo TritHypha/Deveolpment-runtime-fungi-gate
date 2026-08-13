@@ -3752,6 +3752,8 @@ authorize itself.
 
 Private translation `7383e52` and authoring `44f2485` bind these reusable
 rules. All three independent re-reviews pass and authored evidence is committed.
-The final owner republish and post-commit dual-index proof remain pending while
-concurrent Myco source work is dirty. Repository-wide closure remains
-`UNKNOWN`; Slice 598 is next.
+The final owner republish and bounded graph close pass at the clean Slice-597
+boundary. Myco was refreshed to 6,206 files / 83,813 terms and codebase-memory
+to 27,031 nodes / 63,873 edges; independent readback proves both exact at
+`674aad9d956acc67eafceb5497cf97c7a0ab96ec` with codebase-memory `stale:false`.
+Repository-wide closure remains `UNKNOWN`; Slice 598 is active.

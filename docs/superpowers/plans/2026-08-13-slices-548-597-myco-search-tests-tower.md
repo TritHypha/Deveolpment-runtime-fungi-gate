@@ -130,5 +130,5 @@
 - [x] Resolve three independent read-only reviews and record the final PASS.
 - [x] Commit authored evidence separately from registered owner outputs.
 - [x] Run all graph/owner publishers and the bounded 50-slice close matrix.
-- [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
-- [ ] Keep repository closure `UNKNOWN` and continue with Slice 598.
+- [x] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points at `674aad9d956acc67eafceb5497cf97c7a0ab96ec`.
+- [x] Keep repository closure `UNKNOWN` and continue with Slice 598.
