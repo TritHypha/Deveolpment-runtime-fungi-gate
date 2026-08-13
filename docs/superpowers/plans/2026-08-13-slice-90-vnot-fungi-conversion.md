@@ -14,6 +14,7 @@
 - Preserve the exact table `-1 -> 1`, `0 -> 0`, `1 -> -1` as typed `Verdict` values.
 - Never emit `null`, `NaN`, `else if`, `throw`, `try`, `catch`, `for`, or `loop` in the candidate.
 - Use one `pure flow`, one exhaustive `check`, and explicit returns from `deny`, `ambig`, and `if`.
+- Record that canonical Galerina `flip(expr)` exists but is not accepted by the pinned SLIDE checked-Fungi frontend; do not claim direct physical `flip` support.
 - Do not use an Int/Bool bridge, host projection, widened SLIDE limit or new authority.
 - Retain TypeScript, the package export and all consumers; this slice grants no production, release, signing, retirement or push authority.
 - If physical compilation, admission or execution refuses, remove the candidate and close the slice as `BLOCKED` with the exact receipt.
@@ -132,4 +133,3 @@ Run the governed slice-receipt audit and self-test, canonical count owner/self-t
 - [ ] **Step 5: Commit authored documents, regenerate registered owners, and refresh indexes**
 
 Commit authored Slice 90 documents first. Regenerate roadmap/subway and project graph owners against that exact commit, verify their checks, and commit only registered outputs. At final HEAD, run moderate codebase-memory indexing and require `nodes == expected_nodes`, exact `indexed_head_sha`, `stale: false`, and a queryable Slice 90 symbol. Re-index Myco and report its bounded file/term counts.
-

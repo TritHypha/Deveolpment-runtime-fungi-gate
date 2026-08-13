@@ -29,13 +29,23 @@ returns the opposite closed constructor for `deny` and `if`, while `ambig`
 returns `Verdict.Unknown`. This preserves the branded K3 input and output and
 maps directly to the independently proved SLIDE checked-Fungi shape.
 
-### 2. `Int -> Int` arithmetic bridge - rejected
+### 2. Canonical `flip(candidateVerdict)` - deferred at the physical boundary
+
+Galerina's language source of truth defines `flip(expr)` as the dedicated K3
+negation operator, and it is the preferred compact surface once the physical
+pipeline proves it. The pinned SLIDE checked-Fungi frontend does not currently
+parse or lower `flip`. Using it in this slice would therefore produce a known
+physical refusal. The selected exhaustive `check` is the exact closed
+desugaring, preserves typed `Verdict` at both boundaries and does not widen
+SLIDE. This slice must not claim that direct `flip` is physically supported.
+
+### 3. `Int -> Int` arithmetic bridge - rejected
 
 Encoding the decision as an integer would reproduce the three numbers but
 discard the `Verdict` contract and permit non-K3 integers at the interface.
 It would be representation laundering, not a faithful conversion.
 
-### 3. Host-side tag conversion - rejected
+### 4. Host-side tag conversion - rejected
 
 Mapping a host integer or Boolean to a precomputed result before invoking
 Fungi would leave the decision in the host code and could not prove that the
@@ -97,4 +107,3 @@ record either the exact private-skill commit or `NO_SKILL_UPDATE`. Update the
 conversion register, TODO, status report and active roadmap, then run only
 bounded registered owners. Repository-wide closure remains `UNKNOWN` until the
 crash-linked monolithic lane has a chunked resumable replacement.
-
