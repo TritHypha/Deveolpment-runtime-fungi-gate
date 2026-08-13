@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 103-112 arithmetic-Trit brand adjudication - 2026-08-13
+
+- [x] Classify `asTrit` as
+  `BLOCKED_BY_ARITH_TRIT_BRAND_BINARY64_ABI`; preserve its sole-mint role,
+  complete JavaScript-number guard and distinct arithmetic identity.
+- [x] Classify raw internal `negTrit`, `minTrit` and `maxTrit` as
+  `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI`; existing typed Verdict proof is not
+  parity for their binary64 validation and shared-face contract.
+- [x] Classify branded `negT`, `sumTrit`, `xorTrit`, `carryTrit` and `mulTrit`
+  as `BLOCKED_BY_ARITH_TRIT_BRAND_ABI`; plain Int erases identity and Verdict
+  crosses an authority boundary.
+- [x] Classify `addTrit` as `BLOCKED_BY_ARITH_TRIT_RECORD_ABI`; preserve exact
+  `{ sum: Trit; carry: Trit }` shape and member identities without host packing.
+- [x] Prove the authority hazard: arithmetic `sumTrit(-1,-1)` returns `+1`, so
+  arithmetic Trit must never be substituted for governance Verdict.
+- [x] Verify TypeScript typecheck, focused arithmetic/governance **19/19**,
+  direct branded-entry probe **7/7**, and Tower-Citizen **515/515** with zero
+  skips.
+- [x] Update both private Fungi skills with the reusable semantic-brand rule;
+  private audits pass at `4079723` and `1d22556`, with no push.
+- [ ] Add a nominal arithmetic-Trit Fungi/GIR/SLIDE/VOK ABI with distinct
+  physical type identity, then reopen the branded operations individually.
+- [ ] Add source-equivalent binary64 guard admission and an exact branded
+  two-member record ABI before reopening the raw guards or `addTrit`.
+- [ ] Keep TypeScript and all callers active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+
 ### Slices 99-102 tensor, consensus and confidence adjudication - 2026-08-13
 
 - [x] Classify `vAndTensor` as

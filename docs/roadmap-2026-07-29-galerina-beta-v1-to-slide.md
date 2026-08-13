@@ -3,11 +3,11 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 102**, with the exact status and R&D intake recorded in
+through **Slice 112**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
-blockers; **42/42** governed slice receipts pass. Slices 84-88 conserve five
+blockers; **52/52** governed slice receipts pass. Slices 84-88 conserve five
 additional exact ABI/authority/custody refusals. Slice 88 proves that the Myco
 search-outcome guard cannot move into a read-only mirror or cross the current
 exact-record profile without deleting dynamic property behavior. Slice 89 adds
@@ -38,6 +38,15 @@ Slices 99-102 retain the two typed-array tensor helpers, N-way Verdict
 consensus and binary64 confidence collapse at their exact container/numeric
 ABI exits. Scalar K3 proof is not container parity; signed-i32 narrowing,
 NaN-bearing Fungi source and host-projected folds are refused.
+Slices 103-112 preserve the nominal boundary between arithmetic Trit and
+governance Verdict. The equal numeric representation does not grant equal
+authority: balanced-ternary SUM maps `-1 + -1` to `+1`. Physical Int erases
+the arithmetic brand; physical Verdict launders it. The raw shared helpers
+also retain binary64 validation, and the half-adder requires an exact branded
+record. All ten scopes remain blocked without placeholder assets; focused
+arithmetic/governance proof passes **19/19**, a direct branded-entry probe
+passes **7/7**, TypeScript typecheck is clean and Tower-Citizen remains
+**515/515**.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic

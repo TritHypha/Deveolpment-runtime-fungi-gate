@@ -1,8 +1,10 @@
-# Fungi Conversion Batch 33-102 File Status
+# Fungi Conversion Batch 33-112 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
+The current ten-slice decision plan is
+[`../superpowers/plans/2026-08-13-slices-103-112-arithmetic-trit.md`](../superpowers/plans/2026-08-13-slices-103-112-arithmetic-trit.md).
 The active roadmap is updated once at the bounded batch exit.
 
 ## Slice 63 entry gate
@@ -101,6 +103,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 100 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vAndTensor2D` | not created | `packages-galerina/galerina-tower-citizen/tests/vand-tensor.test.mjs` | The Slice 99 boundary additionally requires full JavaScript-number integer/non-negative shape validation and binary64 multiplication. Signed-i32 narrowing is refused. The shared focused file passes **8/8**. | `BLOCKED_BY_TYPED_ARRAY_BINARY64_SHAPE_ABI` |
 | 101 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#consensusTritN` | not created | `packages-galerina/galerina-tower-citizen/tests/consensus-confidence.test.mjs` | Exact parity requires arbitrary Verdict-array traversal, malformed-element refusal, signed accumulation and empty/tie→Unknown behavior. Fixed-arity/scalar proof is insufficient. | `BLOCKED_BY_VERDICT_ARRAY_ACCUMULATOR_ABI` |
 | 102 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#collapseConfidence` | not created | `packages-galerina/galerina-tower-citizen/tests/consensus-confidence.test.mjs` | Exact parity requires a three-binary64-field record, optional threshold, finite/NaN/range/normalization/tolerance and strict-argmax semantics. The physical profile has no source-equivalent binary64 record ABI. The shared focused file passes **7/7**. | `BLOCKED_BY_BINARY64_CONFIDENCE_RECORD_ABI` |
+| 103 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#asTrit` | not created | existing arithmetic/governance proof retained | The sole number-to-arithmetic-Trit mint validates the complete JavaScript binary64 domain. Physical Int narrows that domain and erases the brand; Verdict assigns governance authority. | `BLOCKED_BY_ARITH_TRIT_BRAND_BINARY64_ABI` |
+| 104 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#negTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/ternary-ops.test.mjs` | The internal raw-number helper validates full binary64 input, normalises negative zero and is shared by separate arithmetic/governance faces. Signed i32 narrows the guard. | `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI` |
+| 105 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#negT` | not created | direct branded-entry probe retained | The public arithmetic face requires a distinct nominal Trit in source and physical receipts; Int erases it and Verdict crosses an authority boundary. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 106 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#sumTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/governance-algebra-binding.test.mjs` | Balanced-ternary SUM is not K3 governance: `-1 + -1 -> +1`. Treating arithmetic Trit as Verdict could mint Allow-shaped authority. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 107 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#xorTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/ternary-ops.test.mjs` | The arithmetic SUM alias inherits the distinct nominal Trit boundary and complete balanced-ternary table. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 108 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#carryTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/ternary-ops.test.mjs` | The carry digit is arithmetic data, not a governance Verdict; the physical profile cannot preserve that nominal distinction. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 109 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#addTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/ternary-ops.test.mjs` | Exact parity needs `{ sum: Trit; carry: Trit }` with member names and arithmetic type identity. Host packing or scalar decomposition moves record assembly outside the source. | `BLOCKED_BY_ARITH_TRIT_RECORD_ABI` |
+| 110 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#mulTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/ternary-ops.test.mjs` | Balanced-ternary multiplication returns arithmetic Trit; it is not governance conjunction and cannot use physical Verdict identity. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 111 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#minTrit` | not created | existing arithmetic/governance proof retained | The internal raw-number primitive validates two binary64 values before serving separately typed faces. Existing K3 minimum proves only the Verdict face. | `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI` |
+| 112 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#maxTrit` | not created | existing arithmetic/governance proof retained | The symmetric raw-number primitive retains the same binary64 guard and shared-face boundary. Existing K3 maximum is not internal-source parity. | `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI` |
 
 ## Shared implementation and governance files
 
@@ -332,3 +344,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   must not carry NaN, while host refusal is not the source's typed Unknown
   result. The shared focused files pass **15/15** and Tower-Citizen remains
   **515/515**.
+- Slices 103-112 remain blocked without placeholder assets. Arithmetic Trit
+  and governance Verdict share the values `-1/0/+1` but not authority: the
+  SUM counterexample maps `-1 + -1` to `+1`. Physical Int erases the brand,
+  physical Verdict launders it, and the raw-number helpers additionally retain
+  binary64 guard behavior. `addTrit` also needs an exact two-member branded
+  record. The focused lane passes **19/19**, the direct branded probe **7/7**,
+  TypeScript typecheck passes and Tower-Citizen remains **515/515**.
