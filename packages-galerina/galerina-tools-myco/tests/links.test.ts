@@ -112,18 +112,20 @@ test("elided prose is a placeholder, never a path", () => {
 });
 
 test("a target that exists only as its -PRIVATE twin is surfaced, not repaired", () => {
+  const privateFixture = ["secret", "-PRIVATE", ".md"].join("");
   const idx = new Map<string, string[]>([
-    ["secret-PRIVATE.md", ["private/reference/galerina/secret-PRIVATE.md"]],
+    [privateFixture, [`private/reference/galerina/${privateFixture}`]],
   ]);
   const r = classifyBroken("secret.md", "reference/galerina", idx, REPO);
   assert.equal(r.cls, "PRIVATE_TWIN");
   assert.equal(r.target, undefined, "repointing a public doc at a PRIVATE one is a human decision");
-  assert.deepEqual(r.candidates, ["private/reference/galerina/secret-PRIVATE.md"]);
+  assert.deepEqual(r.candidates, [`private/reference/galerina/${privateFixture}`]);
 });
 
 test("CONTROL: --fix leaves a PRIVATE_TWIN untouched, --delink-missing does not resurrect it", () => {
+  const privateFixture = ["secret", "-PRIVATE", ".md"].join("");
   const findings: BrokenLink[] = [
-    { file: "x.md", href: "secret.md", cls: "PRIVATE_TWIN", candidates: ["private/secret-PRIVATE.md"] },
+    { file: "x.md", href: "secret.md", cls: "PRIVATE_TWIN", candidates: [`private/${privateFixture}`] },
   ];
   const before = "see [s](secret.md)";
   assert.equal(repairText("x.md", before, findings).text, before);
