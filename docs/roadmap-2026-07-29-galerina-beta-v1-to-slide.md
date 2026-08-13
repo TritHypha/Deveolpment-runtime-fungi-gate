@@ -4,12 +4,12 @@ Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is accounted
-through **Slice 222**. The exact per-symbol results, blockers, threadability and
+through **Slice 247**. The exact per-symbol results, blockers, threadability and
 skill dispositions are in the live
 [`Fungi conversion register`](reports/fungi-conversion-batch-33-42-file-status.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
-blockers; **162/162** governed slice receipts pass, with 29 frozen legacy
+blockers; **187/187** governed slice receipts pass, with 29 frozen legacy
 reports outside that governed denominator.
 
 Slices 123-172 retain JavaScript Error identity, arithmetic-Trit branding,
@@ -41,6 +41,19 @@ Slices 218-222 retain JavaScript UTF-16 ordering, Prometheus label escaping and
 the exact metrics text wire; the first logger declarations remain erased
 `NO_RUNTIME_BEHAVIOR` descriptions with no redaction, clock or sink authority.
 
+Slices 223-247 account the complete logger and adjacent kernel instrumentation
+surface. Two option interfaces are erased `NO_RUNTIME_BEHAVIOR`; all active
+logger/store/sink/clock/JSON/audit/metrics scopes remain blocked at exact
+identity, alias, callback, binary64, wire and affine-effect boundaries. The
+async handler wrapper is an `ASYNC_HAPPY_PATH` with one mandatory serialized
+metrics-state sub-edge. Hostile probes also establish repair work rather than
+conversion authority: mutable log-storage aliases, direct writer throws,
+invalid-level fail-open behavior, mutable base fields, nested secret leakage,
+mixed failure counters, dynamic `__proto__` hazards, non-string JSON output and
+a lossy authority-bearing metrics audit adapter. Both private Fungi skills now
+carry the reusable prototype-safe record and JSON-wire discriminators; their
+repositories remain private and unpushed.
+
 At the Slice 222 maintenance boundary, the individual retirement/queue,
 package/project/KB/semantic graph, graph-integrity, dev-tool/Fungi inventory,
 code-index, component-health, status, roadmap/subway and canonical-count owners
@@ -54,6 +67,11 @@ TypeScript/MJS consumers remain active unless their individual physical/VOK and
 retirement gates say otherwise. Repository-wide closure remains **UNKNOWN**
 until the crash-linked monolithic lane is replaced by a bounded, resumable
 owner; no production, release, signing or push authority is inferred.
+
+Slice 247 is the next scheduled maintenance boundary. Its source receipts and
+focused observability evidence are complete; the individual generated-owner
+chain and final Myco refresh remain required before the roadmap/subway build
+point advances from the preceding Slice 222 maintenance evidence.
 
 Historical checkpoint through Slice 122: the governed campaign was accounted
 through **Slice 122**, with the exact status and R&D intake recorded in

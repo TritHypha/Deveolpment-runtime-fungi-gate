@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-222 File Status
+# Fungi Conversion Batch 33-247 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current five-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-218-222-text-rendering-and-maintenance.md`](../superpowers/plans/2026-08-13-slices-218-222-text-rendering-and-maintenance.md).
-Slice 222 is the current graph/index/roadmap boundary; crash-linked aggregate
-lanes remain excluded.
+The current 25-slice decision and maintenance plan is
+[`../superpowers/plans/2026-08-13-slices-223-247-logger-and-kernel-observability.md`](../superpowers/plans/2026-08-13-slices-223-247-logger-and-kernel-observability.md).
+Slices 223-247 are source-accounted; Slice 247 is the scheduled
+graph/index/roadmap boundary. Crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -224,6 +224,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 220 | `packages-galerina/galerina-observability/src/metrics.ts#renderMetricsPrometheus` | not created | Prometheus-wire proof retained | Nested record/array traversal, label filtering/escaping, numeric rendering, conditional series and exact wire order lack one admitted graph. | `BLOCKED_BY_PROMETHEUS_RECORD_ARRAY_TEXT_WIRE_ABI` |
 | 221 | `packages-galerina/galerina-observability/src/logger.ts#LogLevel` | not created | declaration accounted | Erased four-string vocabulary performs no validation, ordering, filtering or sink authorization. | `NO_RUNTIME_BEHAVIOR` |
 | 222 | `packages-galerina/galerina-observability/src/logger.ts#LogRecord` | not created | declaration accounted | Erased record validates no level, binary64 clock provenance, optional name, open fields, redaction state or JSON bytes. | `NO_RUNTIME_BEHAVIOR` |
+| 223 | `packages-galerina/galerina-observability/src/logger.ts#LogSink` | not created | capability boundary retained | An arbitrary synchronous sink needs identity, effect, ordering, failure and revocation authority. | `BLOCKED_BY_ACTIVE_LOG_SINK_CAPABILITY_ABI` |
+| 224 | `packages-galerina/galerina-observability/src/logger.ts#MemoryLogSink.write` | not created | mutable-store proof retained | Appends the exact record reference into retained mutable array state. | `BLOCKED_BY_MUTABLE_LOG_ARRAY_APPEND_ABI` |
+| 225 | `packages-galerina/galerina-observability/src/logger.ts#MemoryLogSink.records` | not created | hostile-alias proof retained | Returns the identical live backing array; TypeScript readonly is erased at runtime. | `BLOCKED_BY_MUTABLE_LOG_ARRAY_ALIAS_ABI` |
+| 226 | `packages-galerina/galerina-observability/src/logger.ts#MemoryLogSink.clear` | not created | alias-clear proof retained | In-place truncation observably changes every previously returned alias. | `BLOCKED_BY_MUTABLE_LOG_ARRAY_CLEAR_ALIAS_ABI` |
+| 227 | `packages-galerina/galerina-observability/src/logger.ts#JsonLineSink.constructor` | not created | writer-custody proof retained | Retains an unrestricted caller-supplied output callback. | `BLOCKED_BY_RETAINED_LINE_WRITER_CAPABILITY_ABI` |
+| 228 | `packages-galerina/galerina-observability/src/logger.ts#JsonLineSink.write` | not created | JSON/egress proof retained | Host JSON behavior and synchronous callback egress lack one admitted typed effect boundary. | `BLOCKED_BY_JSON_LINE_CALLBACK_EGRESS_ABI` |
+| 229 | `packages-galerina/galerina-observability/src/logger.ts#LoggerOptions` | not created | declaration accounted | Erased options validate no sink, level, clock, fields, redaction or callback authority. | `NO_RUNTIME_BEHAVIOR` |
+| 230 | `packages-galerina/galerina-observability/src/logger.ts#Logger.constructor` | not created | active-object proof retained | Creates mutable state and retains sink, clock and base-field identities. | `BLOCKED_BY_MUTABLE_LOGGER_SINK_CLOCK_CALLBACK_ABI` |
+| 231 | `packages-galerina/galerina-observability/src/logger.ts#Logger.debug` | not created | active-emission proof retained | The fixed-level wrapper still needs private Logger identity and the complete emit transaction. | `BLOCKED_BY_ACTIVE_STRUCTURED_LOG_EMISSION_AND_THIS_IDENTITY_ABI` |
+| 232 | `packages-galerina/galerina-observability/src/logger.ts#Logger.info` | not created | active-emission proof retained | Delegates to open-field, redaction, clock, sink and mutable failure effects. | `BLOCKED_BY_ACTIVE_STRUCTURED_LOG_EMISSION_AND_THIS_IDENTITY_ABI` |
+| 233 | `packages-galerina/galerina-observability/src/logger.ts#Logger.warn` | not created | active-emission proof retained | A fixed level does not remove the active identity and effect graph. | `BLOCKED_BY_ACTIVE_STRUCTURED_LOG_EMISSION_AND_THIS_IDENTITY_ABI` |
+| 234 | `packages-galerina/galerina-observability/src/logger.ts#Logger.error` | not created | active-emission proof retained | Observed sink isolation and failure-counter mutation remain active effects. | `BLOCKED_BY_ACTIVE_STRUCTURED_LOG_EMISSION_AND_THIS_IDENTITY_ABI` |
+| 235 | `packages-galerina/galerina-observability/src/logger.ts#Logger.child` | not created | child-capability proof retained | Derives a new logger while retaining sink/clock identity, merging open fields and resetting local failure state. | `BLOCKED_BY_SHARED_SINK_CLOCK_CHILD_LOGGER_CAPABILITY_ABI` |
+| 236 | `packages-galerina/galerina-observability/src/logger.ts#Logger.sinkFailures` | not created | mutable-counter proof retained | Reads live per-instance state whose provenance and ordering cannot be host-projected. | `BLOCKED_BY_MUTABLE_LOG_FAILURE_COUNTER_OBSERVATION_ABI` |
+| 237 | `packages-galerina/galerina-observability/src/logger.ts#Logger.#emit` | not created | transaction proof retained | Ordered hostile-record, redaction, coercion, clock, sink, failure suppression and counter mutation remain one graph. | `BLOCKED_BY_ORDERED_LOG_REDACTION_CLOCK_SINK_FAILURE_TRANSACTION_ABI` |
+| 238 | `packages-galerina/galerina-observability/src/logger.ts#Logger.#safeNow` | not created | clock proof retained | Retained callback and complete finite binary64/failure-to-zero semantics lack one physical profile. | `BLOCKED_BY_RETAINED_CLOCK_CALLBACK_BINARY64_NORMALISATION_ABI` |
+| 239 | `packages-galerina/galerina-observability/src/logger.ts#Logger.#redactFields` | not created | hostile-record proof retained | Dynamic keys can invoke host behavior; own `__proto__` can mutate the output prototype and disappear. | `BLOCKED_BY_OPEN_HOST_RECORD_REDACTION_PROTO_UTF16_ABI` |
+| 240 | `packages-galerina/galerina-observability/src/logger.ts#levelName` | not created | number-domain proof retained | Pure table lookup still accepts the complete JavaScript-number domain and defaults every unmatched value to info. | `BLOCKED_BY_BINARY64_LOG_LEVEL_LOOKUP_ABI` |
+| 241 | `packages-galerina/galerina-observability/src/logger.ts#safeStringify` | not created | JSON-wire proof retained | Serialization invokes host code and can return undefined without throwing, violating its declared String result. | `BLOCKED_BY_HOST_JSON_STRINGIFY_WIRE_ABI` |
+| 242 | `packages-galerina/galerina-observability/src/logger.ts#createLogger` | not created | active-object proof retained | Returns a logger carrying retained sink, clock, field, redaction and mutable counter authority. | `BLOCKED_BY_ACTIVE_LOGGER_OBJECT_CAPABILITY_ABI` |
+| 243 | `packages-galerina/galerina-observability/src/kernel-integration.ts#metricsAuditSink` | not created | affine-audit proof retained | A lossy metrics adapter can satisfy mandatory audit admission while discarding most evidence fields. | `BLOCKED_BY_AFFINE_AUDIT_RESERVATION_WEAKSET_METRICS_ABI` |
+| 244 | `packages-galerina/galerina-observability/src/kernel-integration.ts#InstrumentOptions` | not created | declaration accounted | Erased optional callback record validates no clock or timing authority. | `NO_RUNTIME_BEHAVIOR` |
+| 245 | `packages-galerina/galerina-observability/src/kernel-integration.ts#instrumentDispatch` | not created | async-wrapper proof retained | Active async handlers, rejection identity, clock observation and a serialized metrics mutation are coupled. | `BLOCKED_BY_ASYNC_HANDLER_CALLBACK_CLOCK_METRICS_TRANSACTION_ABI` |
+| 246 | `packages-galerina/galerina-observability/src/kernel-integration.ts#safeNow` | not created | clock proof retained | Host callback plus full finite binary64 and failure normalization lack one typed physical boundary. | `BLOCKED_BY_HOST_CLOCK_CALLBACK_BINARY64_FAILURE_ABI` |
+| 247 | `packages-galerina/galerina-observability/src/kernel-integration.ts#recordRequest` | not created | metrics-transaction proof retained | Reads active context, computes binary64 duration and mutates a shared collector while suppressing failure. | `BLOCKED_BY_CLOCK_CONTEXT_METRICS_RECORD_TRANSACTION_ABI` |
 
 ## Shared implementation and governance files
 
@@ -268,8 +293,8 @@ still requires its own strict, physical, VOK and differential proof.
 | `packages-galerina/galerina-core-compiler/tests/wat-string-match.test.mjs` | Interpreter/Wasm regression for quoted reserved names. | `DONE` |
 | `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34, 35, 36 and 44; exact compile-refusal evidence for Slices 37 and 65; executable seven-pass/eight-refuse flat-match boundary. | `DONE` |
 | `governance/phase-close-commands.json` | Register the physical batch test in the governed test inventory. | `DONE` |
-| Private `translating-typescript-to-fungi` skill repository | Duplicate-conversion preflight remains binding; private repository custody, bounded reachable-history scanning, pinned CI and protected `main` are verified at `9654753`. | `DONE` |
-| Private `writing-fungi` skill repository | The batch-level semantic result remains `NO_SKILL_UPDATE`; later binding authoring rules and private repository custody are verified at `d2d955e`. | `DONE` |
+| Private `translating-typescript-to-fungi` skill repository | Dynamic-key prototype and host-JSON wire discriminators are verified at `ed2cc43`; private custody remains unpushed. | `DONE` |
+| Private `writing-fungi` skill repository | Prototype-safe record admission and non-string JSON refusal rules are verified at `dcd99f8`; private custody remains unpushed. | `DONE` |
 
 ## Shared closure status
 
@@ -288,7 +313,7 @@ so repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`96054a97` writing skill; `1bd80388` translation skill; both remain private custody and unpushed; Slices 193-197 required no skill update) |
+| Private Fungi skill repositories | `DONE` (`dcd99f8` writing skill; `ed2cc43` translation skill; both remain private custody and unpushed; Slices 223-247 triggered and passed the slice-end update hook) |
 | Codebase graph and Myco navigation | `PARTIAL`: Myco indexed 5,516 files / 83,388 terms and proves Slice 222 queryable in seven governed files. Codebase-memory returned `Transport closed`, so no exact final-HEAD structural-navigation receipt exists; do not substitute generated package/project/KB graphs for it. |
 
 ## Verified refusal retained outside the batch

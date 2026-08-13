@@ -4,6 +4,67 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 223-247 logger and kernel observability - 2026-08-13
+
+- [x] Account `LogSink`, every `MemoryLogSink`/`JsonLineSink` operation,
+  `LoggerOptions`, `Logger` construction/emission/child/counter/clock/redaction,
+  `safeStringify`, `createLogger`, `metricsAuditSink`, `InstrumentOptions`,
+  `instrumentDispatch`, kernel `safeNow` and `recordRequest` at their exact
+  object, alias, callback, clock, binary64, JSON, async and effect boundaries.
+- [x] Classify `LoggerOptions` and `InstrumentOptions` as erased
+  `NO_RUNTIME_BEHAVIOR`; retain the other 23 active/pure scopes at their named
+  blockers. No placeholder Fungi asset was created.
+- [x] Treat `instrumentDispatch` as `ASYNC_HAPPY_PATH` with a mandatory
+  serialized MetricsCollector sub-edge. It is neither parallel-pure nor one
+  globally serial hard path.
+- [x] Prove observability **36/36**, focused logger/kernel consumers **17/17**
+  and TypeScript typecheck with zero failures and zero skips.
+- [x] Update and verify both private skills after fresh negative probes proved
+  two reusable hazards: dynamic `__proto__` assignment into `{}` is not exact
+  record copying, and `JSON.stringify` can return `undefined` without throwing.
+  Translation commit `ed2cc43` and authoring commit `dcd99f8` remain private
+  and unpushed.
+- [ ] Priority logger integrity fix: `MemoryLogSink.records()` exposes the
+  live backing array and `clear()` mutates every held alias. Return a proved
+  immutable snapshot or define an explicitly governed inspection capability;
+  add hostile injection, deletion and retained-alias tests.
+- [ ] Priority logger contract fix: direct `JsonLineSink.write()` propagates a
+  throwing writer despite the `LogSink.write MUST NOT throw` contract. Choose
+  and test one exact typed failure/isolation contract rather than relying on
+  `Logger.#emit` to hide the mismatch.
+- [ ] Priority logger fail-closed fix: an invalid runtime `minLevel` indexes to
+  `undefined`, so debug records pass the filter. Validate the complete runtime
+  options boundary and refuse or select a named conservative default.
+- [ ] Snapshot or explicitly govern retained `baseFields`; post-construction
+  caller mutation currently changes later log output.
+- [ ] Replace shallow exact-key redaction with a bounded, cycle-safe policy for
+  nested records/arrays, or explicitly refuse nested protected values. Current
+  nested `{ credentials: { password: ... } }` reaches the sink unchanged.
+- [ ] Separate sink-write failures from record-construction/redaction failures;
+  the current `sinkFailures()` counter increments for both. Define clock policy
+  for negative, fractional and signed-zero timestamps and add direct vectors.
+- [ ] Make logger redaction and handler-dispatch construction prototype-safe.
+  Own enumerable `__proto__` input can change a plain `{}` output prototype and
+  disappear as an own field. Refuse hostile descriptors/proxies and add the
+  discriminating negative vectors now required by the private skills.
+- [ ] Fix `safeStringify`'s declared `string` contract: top-level `undefined`
+  and `toJSON() => undefined` return JavaScript `undefined` without entering
+  its catch fallback. Define an inert bounded JSON algebra and canonical wire,
+  or expose a truthful typed serialization result.
+- [ ] Security boundary: do not use lossy `metricsAuditSink` as the kernel's
+  mandatory evidence sink. It can reserve/commit successfully while discarding
+  requestId, errorCode, defaults, relaxations, timestamp and posture. Introduce
+  a non-authorizing metrics observer or tee behind a real receipt-preserving
+  evidence sink; correct the false “off critical path/can never delay” wording
+  because required commit occurs synchronously and can replace the response
+  with 503.
+- [ ] Retain TypeScript and every logger/kernel consumer until each exact active
+  ABI and physical SLIDE/VOK proof exists. Focused evidence grants no whole-file
+  retirement, production, release or push authority.
+- [ ] Run registered graph/index/roadmap/subway and other maintenance owners
+  individually at Slice 247, then refresh Myco once. Do not run crash-linked
+  aggregates; repository-wide closure remains `UNKNOWN`.
+
 ### Slices 218-222 text rendering and maintenance boundary - 2026-08-13
 
 - [x] Retain private `cmp` at JavaScript UTF-16 String ordering and exact
