@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "b52bb354d60be05fdeb211e617aaa1d5f1ddce74ce241dd40d99da8cf86ce2ce",
+  "authoritativeInputsDigest": "da1b529c5be62237b3aaceaf3e8a26246f1c48d11a0daa71ce04770f6f0d0ca3",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -5302,6 +5302,13 @@
       "id": "test:auto-21bffe1ff211b884d7632881",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-devtools-hypha/tests/hypha-devtool.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7e8123e2811d9f98de26f297",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-devtools-impact/tests/documentation-path-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10869,6 +10876,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-7e8123e2811d9f98de26f297",
+      "to": "package:galerina-devtools-impact",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-6a71ab5eac7fc5571b8d2239",
       "to": "package:galerina-devtools-impact",
       "type": "CLASSIFIES"
@@ -12614,9 +12626,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 966,
+    "tests": 967,
     "detectors": 6,
-    "executableFamily": 1480,
+    "executableFamily": 1482,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
