@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "ae74644205b84ae79ac3e1c1445e17911d856390555a0b5b317ce729e89c9fee",
+  "sourceDigest": "3e53c27cee9926cea93e3eb89e4a4e660c6d0e492c255953ec4a196be90414e6",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1485,
+    "total": 1486,
     "CANDIDATE": 0,
-    "BLOCKED": 855,
+    "BLOCKED": 856,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 630
@@ -11627,6 +11627,14 @@
     },
     {
       "path": "packages-galerina/galerina-tower-citizen/tests/vand-tensor.test.mjs",
+      "package": "galerina-tower-citizen",
+      "tranche": "T2-runtime-core",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-tower-citizen/tests/verdict-and-fungi-supersession.test.mjs",
       "package": "galerina-tower-citizen",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
