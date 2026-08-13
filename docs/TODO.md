@@ -4,6 +4,39 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 158-167 hybrid and neutral bridge types - 2026-08-13
+
+- [x] Classify `signManifestHybrid`, `verifyAttestationHybrid` and
+  `attestBridgeHybrid` at the canonical-byte, Ed25519/ML-DSA-65, context,
+  dynamic-loader, async-failure, key-custody and active bridge-lease exits. No
+  placeholder Fungi asset was created.
+- [x] Follow the Tower compatibility shim to the neutral contract owner and
+  account `PrecisionTechnique`, `QuantizationMethod`, `SchedulingTechnique`,
+  `InferenceOpClass`, `FixedScale`, `BridgeOp` and `BridgeResult` as erased
+  `NO_RUNTIME_BEHAVIOR` declarations rather than fabricated executable work.
+- [x] Prove both package typechecks, neutral contract **12/12**, focused
+  consumers **37/37**, and complete Tower-Citizen **515/515** with zero skips.
+- [x] Apply the RD-0826 skill-review hook. The private translation skill now
+  enforces fixed-work/time-boxed separation, two-point parity, injective VOK
+  evidence and Lyth/SLIDE admission at `1bd80388`; the writing skill now
+  enforces wraparound/float/constant-flow cautions, discriminating KATs and K3
+  AND-first mandatory authority folds at `96054a97`. Both hostile suites pass
+  **5/5** and both release audits pass; neither repository was pushed.
+- [ ] Define one exact neutral Fungi ABI for the string vocabularies and bridge
+  records before converting their consumers: preserve external spelling,
+  exhaustive injective tags, terminal surplus refusal, binary64, integer width,
+  typed-array/handle ownership, Option/property absence and record shape.
+- [ ] Add isolated hybrid signing/verifier services and affine bridge leases
+  with canonical bytes, registered suites/context, key custody, revocation,
+  freshness, cancellation and typed failure receipts before reopening Slices
+  158-160.
+- [ ] Retain TypeScript and every consumer. Declarations marked
+  `NO_RUNTIME_BEHAVIOR` are accounted scope, not proof that their containing
+  TypeScript files or external ABI can retire.
+- [ ] Defer aggregate graph/index, roadmap/subway, retirement and queue owners
+  until Slice 172. Repository-wide closure remains `UNKNOWN`; crash-linked
+  aggregate lanes remain excluded.
+
 ### Slices 148-157 audit options and attestation boundary - 2026-08-13
 
 - [x] Classify `AuditFilter` and `AuditLoggerOptions` at their optional-record,
@@ -72,10 +105,10 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Finish the parked measured-work follow-ups independently of conversion:
   rebuild the C++ control, re-pin SLIDE, split the chart, obtain second-machine
   parity, and add PLU/NTT/matching gates only when matching kernels exist.
-- [ ] Review the RD-0826 skill suggestions at the next slice-close skill hook.
+- [x] Review the RD-0826 skill suggestions at the next slice-close skill hook.
   Do not teach an unbuilt optimization as current `.fungi` syntax, semantics
-  or authority. Update the private skills only for a reusable, source-proven
-  conversion or authoring rule, with their own tests and no push.
+  or authority. Reusable source-proven rules were added with hostile tests at
+  `1bd80388` and `96054a97`; both repositories remain private and unpushed.
 - [ ] Admit the separate RD-0837 maths companion only after its current
   untracked KB file is committed and passes the KB preflight; until then it is
   visible external drift, not an adopted Galerina input.

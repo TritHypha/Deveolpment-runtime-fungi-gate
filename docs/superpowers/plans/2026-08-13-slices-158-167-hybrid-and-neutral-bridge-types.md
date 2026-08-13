@@ -30,40 +30,40 @@ VOK contracts, Myco, Markdown slice receipts.
 
 ### Task 1: Bind the exact owners
 
-- [ ] Bind Slices 158-160 to `signManifestHybrid`,
+- [x] Bind Slices 158-160 to `signManifestHybrid`,
   `verifyAttestationHybrid` and `attestBridgeHybrid` in Tower-Citizen.
-- [ ] Treat `bridge/interface.ts` only as a compatibility re-export and follow
+- [x] Treat `bridge/interface.ts` only as a compatibility re-export and follow
   it to the neutral contract owner.
-- [ ] Bind Slices 161-164 to `PrecisionTechnique`, `QuantizationMethod`,
+- [x] Bind Slices 161-164 to `PrecisionTechnique`, `QuantizationMethod`,
   `SchedulingTechnique` and `InferenceOpClass`.
-- [ ] Bind Slices 165-167 to `FixedScale`, `BridgeOp` and `BridgeResult`.
+- [x] Bind Slices 165-167 to `FixedScale`, `BridgeOp` and `BridgeResult`.
 
 ### Task 2: Classify semantic exits
 
-- [ ] Audit hybrid signing, verification and delegation for canonical bytes,
+- [x] Audit hybrid signing, verification and delegation for canonical bytes,
   Ed25519/ML-DSA-65, context, base64, dynamic import, async failure, key custody,
   no-downgrade and active bridge behavior.
-- [ ] Audit every string union for exact external spelling, exhaustive mapping,
+- [x] Audit every string union for exact external spelling, exhaustive mapping,
   injectivity and terminal surplus refusal.
-- [ ] Audit bridge records for binary64, integer intent without runtime proof,
+- [x] Audit bridge records for binary64, integer intent without runtime proof,
   typed arrays, number unions, optional fields and exact JavaScript object shape.
-- [ ] Search existing Fungi assets and refuse duplicates or narrower policy
+- [x] Search existing Fungi assets and refuse duplicates or narrower policy
   twins as complete replacements.
 
 ### Task 3: Bounded verification
 
-- [ ] Run neutral-contract and Tower-Citizen typechecks.
-- [ ] Run the complete neutral-contract package suite.
-- [ ] Run the focused hybrid-attestation and bridge-contract consumer tests.
-- [ ] Run complete Tower-Citizen; require zero failures and zero skips.
+- [x] Run neutral-contract and Tower-Citizen typechecks.
+- [x] Run the complete neutral-contract package suite.
+- [x] Run the focused hybrid-attestation and bridge-contract consumer tests.
+- [x] Run complete Tower-Citizen; require zero failures and zero skips.
 
 ### Task 4: Publish and review
 
-- [ ] Create ten Slice 158-167 receipts and append the live register.
-- [ ] Review both private Fungi skills against RD-0826. Adopt only reusable,
+- [x] Create ten Slice 158-167 receipts and append the live register.
+- [x] Review both private Fungi skills against RD-0826. Adopt only reusable,
   source-proven rules and pass each skill's hostile/release checks.
-- [ ] Update `docs/TODO.md` with exact reopen conditions.
-- [ ] Run the slice-close receipt owner plus staged path/private-document guards
+- [x] Update `docs/TODO.md` with exact reopen conditions.
+- [x] Run the slice-close receipt owner plus staged path/private-document guards
   and commit bounded files only.
 
 ## Self-review

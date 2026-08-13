@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-157 File Status
+# Fungi Conversion Batch 33-167 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md`](../superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md).
+[`../superpowers/plans/2026-08-13-slices-158-167-hybrid-and-neutral-bridge-types.md`](../superpowers/plans/2026-08-13-slices-158-167-hybrid-and-neutral-bridge-types.md).
 Aggregate graph, index and roadmap owners run at the next 25-slice boundary.
 
 ## Slice 63 entry gate
@@ -158,6 +158,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 155 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#generateAttestationKeypair` | not created | keygen/wrong-key proof retained | Host entropy, Ed25519 key objects and private PKCS8 export require isolated key custody and lifecycle receipts. | `BLOCKED_BY_ED25519_KEYGEN_PRIVATE_CUSTODY_ABI` |
 | 156 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#attestBridge` | not created | signed-bridge/delegation proof retained | Missing-manifest Error identity, getters and lifecycle method delegation require an active leased bridge object. | `BLOCKED_BY_ACTIVE_BRIDGE_DELEGATION_OBJECT_ABI` |
 | 157 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#generateHybridAttestationKeypair` | not created | hybrid/no-downgrade proof retained | Async dynamic ML-DSA import, random seed, two keygens, PEM and mutable key arrays lack a hybrid custody transaction. | `BLOCKED_BY_HYBRID_KEYGEN_RANDOM_CUSTODY_ABI` |
+| 158 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#signManifestHybrid` | not created | hybrid signing proof retained | Canonical bytes, Ed25519/ML-DSA-65, context, private keys, dynamic import, base64 and async failure need one isolated signing ABI. | `BLOCKED_BY_HYBRID_SIGNING_ASYNC_CRYPTO_ABI` |
+| 159 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#verifyAttestationHybrid` | not created | hybrid verifier/no-downgrade proof retained | Classical plus PQ verification, optional hash, context, caught errors and dynamic import require an independent hybrid verifier receipt. | `BLOCKED_BY_HYBRID_CRYPTO_VERIFIER_ASYNC_ABI` |
+| 160 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#attestBridgeHybrid` | not created | active bridge delegation proof retained | Hybrid signing, missing-manifest Error, getters and lifecycle delegation require an affine active bridge lease. | `BLOCKED_BY_HYBRID_ACTIVE_BRIDGE_DELEGATION_ABI` |
+| 161 | `packages-galerina/galerina-inference-bridge-contract/src/precision-types.ts#PrecisionTechnique` | not created | declaration accounted | Erased four-string vocabulary has no runtime body; its future Fungi ABI needs injective exhaustive mapping and surplus refusal. | `NO_RUNTIME_BEHAVIOR` |
+| 162 | `packages-galerina/galerina-inference-bridge-contract/src/precision-types.ts#QuantizationMethod` | not created | declaration accounted | Erased seven-string vocabulary has no runtime body; manifest consumers own validation and behavior. | `NO_RUNTIME_BEHAVIOR` |
+| 163 | `packages-galerina/galerina-inference-bridge-contract/src/precision-types.ts#SchedulingTechnique` | not created | declaration accounted | Erased two-string vocabulary names scheduling modes but implements no scheduling behavior. | `NO_RUNTIME_BEHAVIOR` |
+| 164 | `packages-galerina/galerina-inference-bridge-contract/src/precision-types.ts#InferenceOpClass` | not created | declaration accounted | Erased six-string vocabulary has no body; callers own the unknown-class full-precision floor. | `NO_RUNTIME_BEHAVIOR` |
+| 165 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#FixedScale` | not created | declaration accounted | Erased record accepts binary64 numbers despite integer intent and performs no width/range validation. | `NO_RUNTIME_BEHAVIOR` |
+| 166 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#BridgeOp` | not created | declaration accounted | Erased object combines typed-array/number union, binary64 and optional fields; producers/consumers own the live boundary. | `NO_RUNTIME_BEHAVIOR` |
+| 167 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#BridgeResult` | not created | declaration accounted | Erased object validates neither binary64 results nor native/determinism claims; consumers own verification. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -175,6 +185,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/specs/2026-08-13-slice-63-bootstrap-floor-adjudication.md` | Fail-closed bootstrap-floor adjudication for core-security's otherwise scalar-compatible decision. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
 | `docs/superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md` | Fail-closed plan for audit configuration and classical/hybrid attestation boundaries. | `DONE` |
+| `docs/superpowers/plans/2026-08-13-slices-158-167-hybrid-and-neutral-bridge-types.md` | Fail-closed plan for remaining hybrid functions and neutral Brain/Brawn declarations. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slices-84-87-boundary-adjudication.md` | Product-owner negative adjudication for the regex/case-fold, affine profile, binary64 `unknown`, and active TLS-object boundaries. | `DONE` |
 | `docs/reports/slice-88-myco-search-outcome-guard-fungi-conversion-2026-08-13.md` | Product-owner negative adjudication for the Myco vendor-custody and dynamic object-union boundary. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slice-89-documentation-path-fungi-conversion-design.md` | Bound design for the reference-only documentation-path candidate. | `DONE` |
@@ -431,3 +442,11 @@ not one of Slices 33–43 and no Fungi asset was produced.
   never crypto verification. Focused **67/67**, TypeScript typecheck and complete
   Tower-Citizen **515/515** pass with zero skips. Both private skills now forbid
   caller/host-projected cryptographic verdicts at `b53365f` and `b01d64e`.
+- Slices 158-160 remain blocked without placeholder assets at the hybrid
+  signing, verification and active delegation boundary. Slices 161-167 are
+  erased TypeScript declarations with `NO_RUNTIME_BEHAVIOR`; their exact Fungi
+  string/record ABI remains prerequisite work for later consumers and file
+  retirement. Both package typechecks, neutral contract **12/12**, focused
+  consumers **37/37**, and Tower-Citizen **515/515** pass with zero skips. The
+  private skills incorporate the approved numeric, benchmark, VOK and
+  Lyth/SLIDE evidence rules at `1bd80388` and `96054a97`.
