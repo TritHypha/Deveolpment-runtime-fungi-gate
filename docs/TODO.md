@@ -133,7 +133,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_LOCALE_PATH_SEMANTICS`. The live trust-root decision needs exact
   Windows-drive detection and explicit-locale Unicode case folding; host-side
   normalization is not accepted as Fungi parity.
-- [ ] Continue Slices 68-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 68 `selectVectorTier` as
+  `BLOCKED_BY_HARDWARE_PROFILE_RECORD_ABI`. The exact exported boundary is a
+  five-field record with two JavaScript `number` values; signed-i32 `Int`, a
+  partial record or a host-projected selector would narrow or move authority.
+- [ ] Continue Slices 69-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

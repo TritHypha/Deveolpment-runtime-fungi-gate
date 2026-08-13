@@ -8,7 +8,7 @@ path semantics.
 - [x] Compare JavaScript drive detection and explicit-locale case folding with
   the pinned physical text surface.
 - [x] Refuse host-precomputed or ASCII-only substitutes.
-- [ ] Run the focused registry-generation package test.
-- [ ] Update the live register, Slice 67 report and TODO.
-- [ ] Review both private skills, run queue/path/whitespace checks and commit
+- [x] Run the focused registry-generation package test.
+- [x] Update the live register, Slice 67 report and TODO.
+- [x] Review both private skills, run queue/path/whitespace checks and commit
   the exact adjudication locally without pushing.

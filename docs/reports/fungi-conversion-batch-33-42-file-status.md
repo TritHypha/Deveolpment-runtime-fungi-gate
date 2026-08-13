@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-67 File Status
+# Fungi Conversion Batch 33-68 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -182,3 +182,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Slice 67 remains blocked without a placeholder asset. Its platform/locale
   path identity is live on registry load, persistence and bootstrap paths; no
   ASCII-only or host-precomputed substitute is authorized.
+- Slice 68 remains blocked without a placeholder asset. The exported
+  `HardwareProfile` projection crosses a complete record boundary containing
+  two JavaScript `number` fields; the pinned physical profile has signed-i32
+  `Int` and no binary64 `Float`. A host-projected String is not record parity.
