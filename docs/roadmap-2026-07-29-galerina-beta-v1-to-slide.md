@@ -3751,6 +3751,7 @@ provenance-bound core authority; caller-controlled `coreVerdict` cannot
 authorize itself.
 
 Private translation `7383e52` and authoring `44f2485` bind these reusable
-rules. Three independent reviews, the bounded owner matrix, authored evidence
-commit and post-commit dual-index proof remain pending. Repository-wide closure
-remains `UNKNOWN`; Slice 598 is next.
+rules. All three independent re-reviews pass and authored evidence is committed.
+The final owner republish and post-commit dual-index proof remain pending while
+concurrent Myco source work is dirty. Repository-wide closure remains
+`UNKNOWN`; Slice 598 is next.

@@ -4,7 +4,7 @@ Scope: `packages-galerina/galerina-tools-myco/tests/cli-epipe.test.ts#module`.
 
 `BLOCKED` (BLOCKER-S583-NODE-TEST-EPIPE-SUBPROCESS): The exact named boundary remains unproved. Exit requires exact admitted inputs, state/effect/failure and cleanup order, finite work, GIR, physical .slide, independent re-admission, VOK, consumer switch and hostile differential proof.
 
-Minimum vectors cover nominal and failing assertions, subprocess or filesystem refusal, cleanup failure, signal/error identity, hostile Unicode/control paths and proof that the test fires.
+Minimum vectors: First/late stdout close, EPIPE/other error, spawn failure, signal/null exit, chunks and cleanup failure.
 
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `43798268318C701565583E11CCC8E10807F46FBE78116DE7EBF37E4E4376EF14`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: ASYNC_HAPPY_PATH
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-

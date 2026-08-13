@@ -10,8 +10,8 @@
 
 ## Global Constraints
 
-- Source build point is the clean, independently indexed Slice 547 commit `0afd1653968b0aa8b85f5a6bcaa02a7edc9fac85`; pin every scoped source/test SHA-256 and recheck live bytes before authoring.
-- Use codebase-memory first. Its independently read-back index is exact at the source build point; bounded Myco `--no-refresh` and exact reads remain secondary evidence.
+- The independently indexed predecessor is Slice 547 commit `0afd1653968b0aa8b85f5a6bcaa02a7edc9fac85`. The receipt/source dossier build point is the plan-only commit `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`; every scoped source/test blob is byte-identical across those commits and was rechecked before authoring.
+- Use codebase-memory first. Its predecessor index was exact at `0afd1653`; graph freshness after the plan commit is `UNKNOWN` until the final post-commit refresh. Bounded Myco and exact reads remain secondary evidence.
 - Root is the sole writer, tester, stager, and committer; workers are strictly read-only.
 - Never write placeholder `.fungi`; retain TypeScript/JavaScript and declaration contracts until the complete retirement gate passes.
 - Never author `null`, `NaN`, `else if`, `throw`, `try`, `catch`, `for`, or `loop`; admitted iteration is bounded Boolean `while` only.
@@ -126,8 +126,9 @@
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
 - [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
-- [ ] Run focused Myco and Tower checks, receipt audit, leak checks, and three independent read-only reviews.
-- [ ] Commit authored evidence separately from registered owner outputs.
-- [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.
+- [x] Run focused Myco and Tower checks, receipt audit and leak checks.
+- [x] Resolve three independent read-only reviews and record the final PASS.
+- [x] Commit authored evidence separately from registered owner outputs.
+- [x] Run all graph/owner publishers and the bounded 50-slice close matrix.
 - [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 598.

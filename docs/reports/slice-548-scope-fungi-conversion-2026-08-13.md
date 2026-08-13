@@ -4,7 +4,7 @@ Scope: `packages-galerina/galerina-tools-myco/src/query/regex-guard.ts#assessReg
 
 `BLOCKED` (BLOCKED_ONE_SIDED_REGEX_HEURISTIC_UTF16_PARSER_AND_PHYSICAL_ABI): The exact named boundary remains unproved. Exit requires exact admitted inputs, state/effect/failure and cleanup order, finite work, GIR, physical .slide, independent re-admission, VOK, consumer switch and hostile differential proof.
 
-Minimum vectors cover empty and boundary inputs, malformed/wrong-class data, NaN/Infinity/fractional limits, Unicode/surrogate text, active RegExp state, worker error/exit/close ordering and exact refusal bytes.
+Minimum vectors: Known nested expansions; accepted overlap `(a|aa)+$` as Unassessed; 999/1000/1001 bounds; malformed braces, escapes, lone surrogates and exact reasons.
 
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `D06BFC0458F6BDA0F4295E3FD2F307B27A2204E97EECC87CE0B02FE0DD4B0E05`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: PARALLEL_PURE
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-

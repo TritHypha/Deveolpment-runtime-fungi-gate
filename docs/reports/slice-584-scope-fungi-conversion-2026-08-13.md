@@ -4,7 +4,7 @@ Scope: `packages-galerina/galerina-tools-myco/tests/cli-streams.test.ts#module`.
 
 `BLOCKED` (BLOCKER-S584-NODE-TEST-CLI-STREAMS): The exact named boundary remains unproved. Exit requires exact admitted inputs, state/effect/failure and cleanup order, finite work, GIR, physical .slide, independent re-admission, VOK, consumer switch and hostile differential proof.
 
-Minimum vectors cover nominal and failing assertions, subprocess or filesystem refusal, cleanup failure, signal/error identity, hostile Unicode/control paths and proof that the test fires.
+Minimum vectors: Success/failure streams and exits; file/dir/missing; dot literal; static refusal/dynamic timeout; spawn/signal/cleanup.
 
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `A75FCF56BE851BC9AD4F34869CC9BC6CBF604B781FB6E6F416669F1E565DB9C9`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: ASYNC_HAPPY_PATH
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-

@@ -4,7 +4,7 @@ Scope: `packages-galerina/galerina-tools-myco/src/query/regex-guard.ts#selfTest`
 
 `BLOCKED` (BLOCKED_SELFTEST_CORPUS_LOOP_STRING_ARRAY_FAILURE_ABI): The exact named boundary remains unproved. Exit requires exact admitted inputs, state/effect/failure and cleanup order, finite work, GIR, physical .slide, independent re-admission, VOK, consumer switch and hostile differential proof.
 
-Minimum vectors cover empty and boundary inputs, malformed/wrong-class data, NaN/Infinity/fractional limits, Unicode/surrogate text, active RegExp state, worker error/exit/close ordering and exact refusal bytes.
+Minimum vectors: Baseline empty failures; force one bad accepted and one good refused; conserve corpus order, duplicates and exact failure text.
 
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `D06BFC0458F6BDA0F4295E3FD2F307B27A2204E97EECC87CE0B02FE0DD4B0E05`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: PARALLEL_PURE
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-

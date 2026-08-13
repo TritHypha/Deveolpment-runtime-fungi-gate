@@ -4,7 +4,7 @@ Scope: `packages-galerina/galerina-tools-myco/tests/store.test.ts#module`.
 
 `BLOCKED` (BLOCKER-S589-NODE-TEST-STORE-JSON-SYMLINK): The exact named boundary remains unproved. Exit requires exact admitted inputs, state/effect/failure and cleanup order, finite work, GIR, physical .slide, independent re-admission, VOK, consumer switch and hostile differential proof.
 
-Minimum vectors cover nominal and failing assertions, subprocess or filesystem refusal, cleanup failure, signal/error identity, hostile Unicode/control paths and proof that the test fires.
+Minimum vectors: Traversal/malformed rows; platform paths; ceilings, duplicate JSON, ordering, link swap, torn writes and I/O failures.
 
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `EA2A436EFDA30C79678A9C60133887DA29412FCBCC292D4CA1DF40EB9D0C27C9`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: ASYNC_HAPPY_PATH
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-

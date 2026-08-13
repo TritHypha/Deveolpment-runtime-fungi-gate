@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-497 File Status
+# Fungi Conversion Batch 33-597 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 50-slice decision and maintenance route is
-[`../superpowers/plans/2026-08-13-slices-448-497-myco-foundations.md`](../superpowers/plans/2026-08-13-slices-448-497-myco-foundations.md).
-Slices 448-497 are adjudicated; individual owner publication, graphs and both
-indexes close at the Slice 497 fifty-slice boundary.
+[`../superpowers/plans/2026-08-13-slices-548-597-myco-search-tests-tower.md`](../superpowers/plans/2026-08-13-slices-548-597-myco-search-tests-tower.md).
+Slices 548-597 are adjudicated; final review reconciliation and exact-head
+dual-index proof close at the Slice 597 fifty-slice boundary.
 Prior plans remain in repository history. Crash-linked aggregate lanes remain
 excluded.
 

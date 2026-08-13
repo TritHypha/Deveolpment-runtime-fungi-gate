@@ -22,8 +22,9 @@ counts or open items that a newer section explicitly supersedes.
   byte-safe Git paths, and bind Tower artifacts, correctness and timing units.
 - [ ] Split untrusted `AiActionProposal` data from provenance-bound core
   authority with forged, mismatch and replay negatives.
-- [ ] Complete three reviews, commit authored evidence, publish all owners and
-  pass the bounded close matrix.
+- [x] Complete three reviews and commit authored evidence; all re-reviews pass.
+- [ ] Republish all owners and the bounded close matrix after concurrent Myco
+  source changes reach a clean committed boundary.
 - [ ] Commit the Slice-597 provenance build point, refresh both indexes at that
   exact clean HEAD, keep repository closure `UNKNOWN`, and continue Slice 598.
 

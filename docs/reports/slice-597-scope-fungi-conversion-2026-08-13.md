@@ -9,7 +9,7 @@ Minimum vectors cover missing, surplus, inherited, accessor and proxy fields; fo
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `E1CEA2EFD8230787E9C237712082B7B6755ADF9E67820EF97B545FA0EB40C834`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
 
-Mirror custody is non-authoring for Myco: metadata declares upstream `a48d2c3b5c508ce35346a4dd7aac0278606d10f6`; current sibling is `db901e1096fb69ea23f6d3f42199dac784ec3bc1`. Runtime worker, focused-test, mirror-drift and Tower benchmark identities are pinned in the live register. Any candidate requires upstream or governed-overlay custody plus exact physical proof and consumer switch.
+Tower-Citizen is directly repository-owned, not part of the Myco mirror. Its benchmark/source identity is pinned in the live register; conversion still requires the stated physical, consumer-switch or declaration-contract exit.
 
 ## Slice-close receipt
 
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: N/A
 Source classification: NO_RUNTIME_BEHAVIOR
 Bounded closure: COMPLETE
-

@@ -4,7 +4,7 @@ Scope: `packages-galerina/galerina-tools-myco/tests/walk-completeness.test.ts#mo
 
 `BLOCKED` (BLOCKER-S592-NODE-TEST-GIT-WALK-COVERAGE): The exact named boundary remains unproved. Exit requires exact admitted inputs, state/effect/failure and cleanup order, finite work, GIR, physical .slide, independent re-admission, VOK, consumer switch and hostile differential proof.
 
-Minimum vectors cover nominal and failing assertions, subprocess or filesystem refusal, cleanup failure, signal/error identity, hostile Unicode/control paths and proof that the test fires.
+Minimum vectors: Detector/tiny ceiling; Git failure; legal newline filename with byte-safe framing; tracked races, ignored scope and partial traversal.
 
 Evidence: source build point `89d9dca65c2e26fe9dfc1479e1054d4c32a5e850`;
 source SHA-256 `FC4AF6E5F5BC37B47B0C0DC11D5308160DC1A20BE6BB02D0705D69A3F445AA4A`; live bytes are pinned at this plan commit. Fresh Myco no-emit typecheck and **80/80** source-driven tests pass; fresh Tower no-emit typecheck and **515/515** existing tests pass where adjacent. These checks are regression evidence, not physical conversion authority. No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement exists; TypeScript or JavaScript remains.
@@ -18,4 +18,3 @@ Authoring skill disposition: SKILL_UPDATE 44f24850cfc814e163600357c9d57daffabe6c
 Threadability: SERIAL_HARD_PATH
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-
