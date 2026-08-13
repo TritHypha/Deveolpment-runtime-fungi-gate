@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "998261ec",
+    "sha": "162168d9",
     "detached": false,
-    "dirty": false
+    "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
@@ -36,7 +36,7 @@
         {
           "label": "Packages",
           "pct": 98,
-          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 519 tracked package TypeScript paths, 146 unexecuted .fungi sources, 54 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
+          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 519 tracked package TypeScript paths, 147 unexecuted .fungi sources, 54 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
           "evidence": {
             "asserted": "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger"
           }
@@ -331,7 +331,7 @@
         {
           "item": "Execution-cutover (RD-0361)",
           "state": "building",
-          "detail": "41/41 governed twins checker-clean; 0 shadow · 12 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
+          "detail": "42/42 governed twins checker-clean; 0 shadow · 13 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
         },
         {
           "item": "Independent SLIDE backend",
@@ -341,7 +341,7 @@
         {
           "item": "Package retirement",
           "state": "building",
-          "detail": "519 tracked package TypeScript paths · 146/146 .fungi sources unexecuted · 0/54 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
+          "detail": "519 tracked package TypeScript paths · 147/147 .fungi sources unexecuted · 0/54 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
         },
         {
           "item": "Value-unit types (RD-0349)",
