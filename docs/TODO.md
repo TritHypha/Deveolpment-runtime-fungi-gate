@@ -19,6 +19,11 @@ counts or open items that a newer section explicitly supersedes.
   the excluded monolithic lanes were not treated as substitutes.
 - [ ] Close the six shared ABI/authority blockers listed in the current status
   report before claiming literal TypeScript/MJS retirement.
+- [ ] Replace the crash-linked monolithic repository closure lane with a
+  chunked, resumable owner: bounded package groups, resource ceilings, exact
+  exit/error receipts, every registered test executed once, and one final
+  fail-closed conservation check. Repository-wide closure stays `UNKNOWN`
+  until that owner passes at the final commit.
 - [ ] Treat lower dated count and checkpoint statements as historical unless a
   current section or generated owner independently confirms them.
 

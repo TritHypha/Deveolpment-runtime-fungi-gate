@@ -88,6 +88,9 @@ signing or push authority follows from this report.
    consumer switching and retirement proof.
 7. Executable ECMAScript-compatible case-insensitive regex/text semantics and
    a governed active host-object/method capability boundary.
+8. A chunked, resumable repository-wide closure owner that replaces the
+   crash-linked monolithic lane while proving every registered test ran exactly
+   once with retained exit/error receipts and bounded resources.
 
 ## Housekeeping rule
 
