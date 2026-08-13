@@ -186,7 +186,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_UNKNOWN_STRING_ARRAY_CANONICALITY_ABI`. The physical profile has
   no immutable `Array<String>` ingress/traversal contract for the untrusted
   nested array, label validation, allow-list membership and strict ordering.
-- [ ] Continue Slices 81-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 81 `isVerifiedRegistryGeneration` as
+  `BLOCKED_BY_AFFINE_WEAK_IDENTITY_RECEIPT_ABI`. Its authority is exact object
+  identity minted into a module-private `WeakSet`; copied fields, a host
+  Boolean or a serialized bearer token cannot replace that provenance.
+- [ ] Continue Slices 82-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
