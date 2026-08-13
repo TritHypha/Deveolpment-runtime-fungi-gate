@@ -41,11 +41,11 @@ type ID `3`. The TypeScript source and consumers remain active.
 - Slice 91 physical-proof build point: `ecab9742` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
-- Conversion census: **1,483/1,483** executable-family paths classified;
-  519 TypeScript-family, 952 MJS and 12 JS.
+- Conversion census: **1,484/1,484** executable-family paths classified;
+  519 TypeScript-family, 953 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins
   and 146 Fungi sources in package `src` trees.
-- Queue: zero whole-file candidates, seven governed symbol candidates and 853
+- Queue: zero whole-file candidates, seven governed symbol candidates and 854
   file-level blockers.
 - Slice receipts: **31/31** governed receipts pass after Slice 91 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,

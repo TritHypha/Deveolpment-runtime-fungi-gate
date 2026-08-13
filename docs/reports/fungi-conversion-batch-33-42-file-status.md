@@ -139,7 +139,7 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 |---|---|
 | `docs/TODO.md` | `DONE` |
 | `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section and generated subway block) |
-| Retirement and conversion queue | `DONE` at 1,483/1,483, seven scoped candidates and 853 blockers |
+| Retirement and conversion queue | `DONE` at 1,484/1,484, seven scoped candidates and 854 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 146 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 971 test nodes, three sections, current status blocks, 974 codes and 5/5 |

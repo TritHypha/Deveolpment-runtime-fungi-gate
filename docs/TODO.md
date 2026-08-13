@@ -19,6 +19,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Review both private Fungi skills at `dc2ef82f` and `30eb4dd3`.
   `NO_SKILL_UPDATE` is correct because their existing typed-K3, exhaustive
   check, physical-proof and hostile-input rules already cover this result.
+- [x] Refresh the bounded owners after Slice 91: 1,484/1,484 executable-family
+  paths, 146 Fungi sources, seven scoped candidates, 854 blockers, 31/31
+  governed receipts and 971 semantic test nodes. These focused facts do not
+  replace the still-UNKNOWN repository-wide closure lane.
 - [ ] Keep TypeScript and its consumers active until an explicit consumer
   switch, whole-file accounting and retirement proof authorizes removal.
 - [ ] Replace the crash-linked monolithic repository lane with a bounded,

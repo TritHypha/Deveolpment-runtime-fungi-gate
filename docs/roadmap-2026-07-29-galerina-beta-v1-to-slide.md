@@ -5,8 +5,8 @@ Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
 through **Slice 91**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
-The conserved queue accounts for **1,483/1,483** executable-family paths, zero
-whole-file candidates, seven symbol-scoped candidates and **853** file-level
+The conserved queue accounts for **1,484/1,484** executable-family paths, zero
+whole-file candidates, seven symbol-scoped candidates and **854** file-level
 blockers; **31/31** governed slice receipts pass. Slices 84-88 conserve five
 additional exact ABI/authority/custody refusals. Slice 88 proves that the Myco
 search-outcome guard cannot move into a read-only mirror or cross the current
