@@ -6,6 +6,8 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, it } from "node:test";
 
+import { DOCUMENTATION_PATH_CASES } from "../../packages-galerina/galerina-devtools-impact/tests/documentation-path-cases.mjs";
+
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const SLIDE_AVAILABLE =
@@ -158,6 +160,17 @@ const CANDIDATES = Object.freeze([
     physicalExpectation: "REFUSE_COMPILE",
     usesTextComparisonBudget: true,
     values: boundaryCrossingCases(),
+  }),
+  Object.freeze({
+    slice: 89,
+    packageIdentity: "@galerina/devtools-impact",
+    packageDirectory: "galerina-devtools-impact",
+    sourceFile: "documentation-path.fungi",
+    flowName: "isDocumentationPath",
+    physicalExpectation: "PROVE",
+    usesTextComparisonBudget: true,
+    values: Object.freeze(DOCUMENTATION_PATH_CASES.map(({ path, expected }) =>
+      Object.freeze({ value: path, expected }))),
   }),
 ]);
 
