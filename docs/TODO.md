@@ -4,6 +4,53 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Compute-mix, verification and unimprovable-core R&D intake - 2026-08-13
+
+- [x] Index the owner-adjudicated RD-0811..RD-0836 compute-mix programme as
+  planning evidence. This intake does not turn a benchmark, Grok review,
+  mathematical identity or recommendation into compiler/runtime authority.
+- [ ] Build the proof-licensed lowering backlog behind admitted VPEG rule
+  schemas and per-instance certificates: modulo-2^32 `Math.imul`, range-proven
+  float-to-uint32 coercions, the four-way branchless select and fixed-work
+  contracts. Preserve exact JavaScript binary64 behavior outside every proven
+  domain; never generalize the `Math.floor` result to arbitrary values.
+- [ ] Prototype the RD-0822 emitter strength reduction only after its exact
+  semantic/profile/toolchain/target/policy identity, independent oracle,
+  hostile witnesses, differential parity and rollback path are specified.
+  The measured **1.435x** headroom is an R&D result, not a production promise.
+- [ ] Apply the RD-0832 redundant-verification ladder to future numeric work:
+  at least two independent methods for numeric claims, three for parity
+  contracts, exhaustive proof for a bounded uint32 domain when practicable,
+  and an independently derived second equation when a cheap checker exists.
+  Use an independent specification reading or evaluator such as SoftFloat to
+  address common-mode interpretation risk rather than adding same-library
+  implementations.
+- [ ] Add compute-then-verify gates only where verification is genuinely
+  cheaper and preserves the stated error model: Freivalds for eligible matrix
+  products, exact `Ax=b`, and sort-plus-permutation checking. Price the
+  Freivalds round count from claim volume and error budget; never relabel its
+  one-sided probabilistic acceptance as deterministic proof.
+- [ ] Keep learned DFE/GNN components proposal-only. A statistical result may
+  suggest a schedule or lowering but cannot issue a certificate, authorize an
+  effect or bypass VOK/Lyth-Weaver. Require bit-reproducible construction or an
+  independent exact verifier before any proposed result is reused.
+- [ ] Treat RD-0836 theorem, forced-soundness, open-problem, current-physics and
+  governance-freeze rows as separate guard classes. In particular retain
+  Verdict/Trit brand separation, no governance XOR, boundary-only `0 -> deny`,
+  complete mediation and fail-closed gates. A proposed improvement to those
+  rows requires a re-derived theorem, extraordinary open-problem evidence,
+  new hardware evidence or owner ceremony as appropriate.
+- [ ] Finish the parked measured-work follow-ups independently of conversion:
+  rebuild the C++ control, re-pin SLIDE, split the chart, obtain second-machine
+  parity, and add PLU/NTT/matching gates only when matching kernels exist.
+- [ ] Review the RD-0826 skill suggestions at the next slice-close skill hook.
+  Do not teach an unbuilt optimization as current `.fungi` syntax, semantics
+  or authority. Update the private skills only for a reusable, source-proven
+  conversion or authoring rule, with their own tests and no push.
+- [ ] Admit the separate RD-0837 maths companion only after its current
+  untracked KB file is committed and passes the KB preflight; until then it is
+  visible external drift, not an adopted Galerina input.
+
 ### Slices 143-147 audit closure and 25-slice maintenance boundary - 2026-08-13
 
 - [x] Classify `AuditLogger.query`, `logTransition` and `getLifecycle` at their
