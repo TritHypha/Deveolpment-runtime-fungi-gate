@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 598-647 Myco links and Tower authority borders - 2026-08-14
+
+- [x] Account 50 unique scopes after refusing prior Slice 76, 135-160
+  duplicate credit: 14 erased declarations, 31 blocked runtime scopes and five
+  primitive policy-bit candidates. No placeholder Fungi, consumer switch or
+  retirement was created.
+- [x] Prove fresh Myco typecheck and **105/105** source-driven tests plus Tower
+  typecheck and **515/515** existing tests; retain physical and repository-wide
+  authority as absent/`UNKNOWN`.
+- [x] Update both private skills at translation `a313867` and authoring
+  `844376b`: heuristic classification never authorizes structured-document
+  repair without exact occurrence/preimage identity, atomic no-follow
+  publication and typed partial-commit recovery evidence.
+- [ ] Replace Myco's regex-only Markdown scan and heuristic mutation path with
+  governed upstream/overlay custody, typed filesystem coverage, immutable
+  preimages, exact grammar and atomic publication; keep terminal/JSON output
+  machine-readable and control-safe.
+- [ ] Split caller AI proposals from core authority; return verified immutable
+  capability-grant receipts; prevent active CompiledPolicy alias mutation and
+  preserve exact failures/ordering.
+- [ ] Close inherited registry/fake-scope authority, freeze or replace the
+  dead-zone default singleton, and validate bounded callback/readings plus exact
+  typed trap identity.
+- [ ] Complete three independent reviews, commit evidence, publish owners and
+  graphs, then prove both indexes exact at the final Slice-647 commit.
+
 ### Slices 548-597 Myco search, tests and Tower evidence - 2026-08-13
 
 - [x] Account 50 unique scopes: seven erased declarations, 41 blocked

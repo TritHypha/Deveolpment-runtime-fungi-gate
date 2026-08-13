@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Account for the next 50 unique conversion scopes across the new Myco broken-link scanner/repair command and tests, Tower AI-governance and audit class boundaries, capability grants, compiled policy, the uncredited bridge delegation/context scopes, and the data-plane border.
+**Goal:** Account for the next 50 unique conversion scopes across the new Myco broken-link scanner/repair command and tests, Tower AI-governance, capability grants, compiled policy, dead-zone policy/failure scopes, the uncredited bridge context, and the data-plane border.
 
 **Architecture:** Three read-only workers produce pinned source dossiers in parallel while the root agent alone writes receipts, runs focused checks, reconciles independent reviews, publishes owners, commits, and refreshes both indexes. Nested scopes are used only where they own separately observable callback, capability, or wrapper behavior.
 
@@ -61,7 +61,7 @@
 | 614 | `AiActionDecision` |
 | 615 | `AiGovernanceResult` |
 | 616 | `governAiProposal` |
-| 617 | `AuditLogger` class boundary |
+| 617 | `OnIndeterminate` |
 | 618 | `CapabilityGrant` |
 | 619 | `SignedCapabilityGrant` |
 | 620 | `CAP_MLDSA_CONTEXT` |
@@ -78,9 +78,9 @@
 | 631 | `PolicyTrap` |
 | 632 | `CompiledPolicy` |
 | 633 | `compilePolicy` |
-| 634 | nested `attestBridge` delegating wrapper |
+| 634 | `DEFAULT_ON_INDETERMINATE` |
 | 635 | `BRIDGE_MLDSA_CONTEXT` |
-| 636 | nested `attestBridgeHybrid` delegating wrapper |
+| 636 | `SubstrateDeadZoneTrap` |
 | 637 | `VaultManifestEntry` |
 | 638 | `VaultRegistry` |
 | 639 | `DataRow` |
@@ -96,9 +96,10 @@
 Queue reconciliation: graph-first review proved that the initially proposed
 attestation symbols were already governed as Slices 150-160 and most audit
 members as Slices 135-149. They are dependencies only and receive no duplicate
-credit. `isTrit` remains governed as Slice 76. Slices 634-636 are the three
-genuinely uncredited attestation scopes; Slice 647 replaces the duplicate guard
-with the previously uncredited `dispatchDeadZone` runtime.
+credit. `isTrit` remains governed as Slice 76. Exact re-review also proved the
+attestBridge wrappers and AuditLogger class boundary were already included in
+Slices 135-160; Slices 617, 634 and 636 therefore use the uncredited dead-zone
+policy type, mutable default and Error subclass, with Slice 647 its runtime.
 
 ### Task 1: Adjudicate Slices 598-613
 
@@ -108,9 +109,9 @@ with the previously uncredited `dispatchDeadZone` runtime.
 - Read: `packages-galerina/galerina-tools-myco/tests/links.test.ts`
 - Read: package boundary, manifest, callers and mirror evidence.
 
-- [ ] Pin source/test ranges, callers, mirror custody, package assets, physical evidence, and both skill commits.
-- [ ] Record exact Markdown-link grammar, classification/repair order, filesystem/path/Map/RegExp semantics, CLI output/exit and test-runner effects.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 598-613.
+- [x] Pin source/test ranges, callers, mirror custody, package assets, physical evidence, and both skill commits.
+- [x] Record exact Markdown-link grammar, classification/repair order, filesystem/path/Map/RegExp semantics, CLI output/exit and test-runner effects.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 598-613.
 
 ### Task 2: Adjudicate Slices 614-633
 
@@ -121,9 +122,9 @@ with the previously uncredited `dispatchDeadZone` runtime.
 - Read: `packages-galerina/galerina-tower-citizen/src/compiled-policy.ts`
 - Read: owning manifests, exports, callers and focused tests.
 
-- [ ] Pin exact ranges, callers, source/test digests, direct Tower custody, and physical evidence.
-- [ ] Record verdict provenance, active logger state, capability grant schemas/canonicalization/signatures, compiled Set/bit-table state and exact trap precedence.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 614-633.
+- [x] Pin exact symbol scopes, owning source digests, caller families, the focused Tower test-manifest digest, direct Tower custody, and physical evidence.
+- [x] Record verdict provenance, capability grant schemas/canonicalization/signatures, compiled Set/bit-table state, dead-zone policy declaration and exact trap precedence.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 614-633.
 
 ### Task 3: Adjudicate Slices 634-647
 
@@ -133,9 +134,9 @@ with the previously uncredited `dispatchDeadZone` runtime.
 - Read: `packages-galerina/galerina-tower-citizen/src/deadzone-dispatcher.ts`
 - Read: bridge-contract declarations, package boundary, callers and focused attestation tests.
 
-- [ ] Pin exact ranges, crypto/runtime dependencies, callers, test identities, direct Tower custody, and physical evidence.
-- [ ] Record wrapper delegation/context identity plus exact record, registry, Set, K3 admission, callback and ordered filtering semantics.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 634-647.
+- [x] Pin exact symbol scopes, crypto/runtime dependencies, caller families, the focused Tower test-manifest digest, direct Tower custody, and physical evidence.
+- [x] Record bridge-context identity, mutable default policy and Error-subclass behavior plus exact record, registry, Set, K3 admission, callback and ordered filtering semantics.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 634-647.
 
 ### Task 4: Author, verify, review, and publish the wave
 
@@ -145,9 +146,9 @@ with the previously uncredited `dispatchDeadZone` runtime.
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
-- [ ] Run focused Myco and Tower checks, receipt audit and leak checks.
-- [ ] Resolve three independent read-only reviews and record the final PASS.
+- [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
+- [x] Run focused Myco and Tower checks and the receipt audit: Myco typecheck plus 105/105, Tower typecheck plus 515/515, audit tests 9/9 and 587/587 governed receipts.
+- [x] Resolve three independent read-only reviews and record the final PASS.
 - [ ] Commit authored evidence separately from registered owner outputs.
 - [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.
 - [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.

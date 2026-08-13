@@ -1026,3 +1026,45 @@ Private translation `7383e523b0b87c32c3ae0a8338c65b124d8c1fe0` and authoring
 `44f24850cfc814e163600357c9d57daffabe6cbb` bind versioned Unicode,
 route-complete regex budgets, `KnownUnsafe | Unassessed` screening and separate
 provenance-bound trusted authority. Both remain private, clean and unpushed.
+
+## Slices 598-647 - Myco links and Tower authority borders
+
+The next 50 unique source scopes are reconciled against the live receipt
+register: prior Slice 76 `isTrit`, Slices 135-149 AuditLogger members and Slices
+150-160 attestation functions remain dependencies and receive no duplicate
+credit. Re-review also refused duplicate bridge-wrapper and AuditLogger-class
+credit. The resulting arithmetic is 14 `NO_RUNTIME_BEHAVIOR`, 31 `BLOCKED`
+and five primitive `CANDIDATE` policy-bit constants.
+
+Fresh Myco typecheck and **105/105** tests plus Tower typecheck and **515/515**
+tests pass. They do not authorize conversion. Myco's new links family is absent
+from its declared/current upstream while vendored CLI bytes diverge; the mirror
+must be reconciled upstream or through a governed overlay. Its regex is not a
+complete Markdown parser, filesystem failures are silently omitted, and a
+one-sided PLACEHOLDER heuristic can authorize destructive de-linking from a
+stale scan through an in-place non-atomic write. JSON-plus-fix output is not one
+JSON document and human output carries untrusted controls.
+
+The Tower focused-test corpus is pinned at source build point
+`674aad9d956acc67eafceb5497cf97c7a0ab96ec`: the 58 tracked files under
+`packages-galerina/galerina-tower-citizen/tests/`, sorted by repository-relative
+path and encoded as `path NUL uppercase-SHA256 LF`, have combined SHA-256
+`FC5C1909D9FBEC185D60E42052BF0B8162E7E313470AFE1868C06D3F23884D3C`.
+This binds the exact 515/515 test corpus without treating it as physical or
+retirement authority.
+
+Tower remains directly owned. `governAiProposal` still lets the caller mint
+`coreVerdict`; capability-grant hashing/signing/verification rereads active
+records and can diverge across hash, signature and later authority use;
+CompiledPolicy exposes identity-bearing mutable state. Data-plane declarations do not prove cryptographic scope,
+inherited registry entries can become public, and dead-zone dispatch accepts
+unbounded or malformed callback results without a closed runtime decoder; its
+exported default is mutable and its Error subclass lacks a typed physical ABI.
+
+Private translation `a313867e93b3228fcc7b04e775d20a4fd0939f51` and authoring
+`844376b4acc99b5c807f2c5aa34c0c892b0e1461` now bind structured-rewrite
+authority to exact grammar/occurrence, immutable preimage and file identity,
+immediate revalidation, atomic no-follow publication, and typed rollback or
+loud partial-commit evidence. Both remain private and unpushed. No exact scoped
+Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement, consumer
+switch or source retirement is claimed; repository-wide closure is `UNKNOWN`.

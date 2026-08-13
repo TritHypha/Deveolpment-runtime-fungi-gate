@@ -3757,3 +3757,23 @@ boundary. Myco was refreshed to 6,206 files / 83,813 terms and codebase-memory
 to 27,031 nodes / 63,873 edges; independent readback proves both exact at
 `674aad9d956acc67eafceb5497cf97c7a0ab96ec` with codebase-memory `stale:false`.
 Repository-wide closure remains `UNKNOWN`; Slice 598 is active.
+
+## Fungi conversion checkpoint through Slice 647 - 2026-08-14
+
+Fifty unique scopes cover Myco link diagnosis/repair, Tower AI governance,
+capability grants, compiled policy bits/state, the uncredited bridge context,
+dead-zone policy/failure boundaries, the data-plane border and dead-zone
+dispatch. Exact prior-credit reconciliation refuses duplicate Slices 76 and
+135-160, including the class/wrapper behavior found on review. Fourteen declarations are `NO_RUNTIME_BEHAVIOR`, 31 runtime scopes are
+`BLOCKED`, and five exact bit constants are `CANDIDATE`; no physical authority,
+consumer switch or retirement is claimed.
+
+Fresh evidence is Myco typecheck plus **105/105** tests and Tower typecheck plus
+**515/515** tests. The decisive open work is a grammar-aware immutable-preimage
+rewrite transaction for Myco; provenance-bound core and capability receipts;
+non-aliasing compiled state; authenticated
+prototype-neutral registries/scopes; and a closed bounded dead-zone callback
+ABI. Private skills `a313867` and `844376b` now explicitly refuse heuristic or
+stale-scan repair authority without atomic publication and typed partial-state
+evidence. Repository-wide closure remains `UNKNOWN`; review, owner, graph and
+dual-index closure remain pending at this 50-slice boundary.
