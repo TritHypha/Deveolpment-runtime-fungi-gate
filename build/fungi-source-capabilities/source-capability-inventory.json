@@ -5900,6 +5900,28 @@
     },
     {
       "astKinds": {
+        "block": 1,
+        "contractDecl": 1,
+        "intentDecl": 1,
+        "program": 1,
+        "pureFlowDecl": 1,
+        "returnStmt": 1,
+        "stringLiteral": 1,
+        "typeRef": 1
+      },
+      "byteLength": 347,
+      "diagnosticCodes": [],
+      "flowCount": 1,
+      "memberCalls": {},
+      "operators": {},
+      "path": "packages-galerina/galerina-test/src/self-hosted/workspace-marker.fungi",
+      "sourceSha256": "sha256:805f06d61708c60408d906cbfd77ec981bab7d21626a16d832a518b09f4c57ae",
+      "typeRefs": {
+        "String": 1
+      }
+    },
+    {
+      "astKinds": {
         "block": 8,
         "boolLiteral": 3,
         "checkArm": 6,
@@ -6143,20 +6165,20 @@
   "schema": "galerina.fungi-source-capability-inventory.v1",
   "source": {
     "retirementField": "unexecutedFungiPaths",
-    "retirementGraphSha256": "sha256:3e53c27cee9926cea93e3eb89e4a4e660c6d0e492c255953ec4a196be90414e6"
+    "retirementGraphSha256": "sha256:8d2842b79e751e4f0df242c89700f66a59efdd994b8de72dd5b580ba841aed01"
   },
   "totals": {
     "astKinds": {
       "assignStmt": 2120,
       "binaryExpr": 6106,
       "bitfieldDecl": 1,
-      "block": 5115,
+      "block": 5116,
       "boolLiteral": 1699,
       "callExpr": 7269,
       "charLiteral": 15,
       "checkArm": 330,
       "checkExpr": 110,
-      "contractDecl": 860,
+      "contractDecl": 861,
       "contractSetDecl": 1,
       "ensureDecl": 11,
       "enumDecl": 1,
@@ -6167,7 +6189,7 @@
       "identifier": 19068,
       "ifStmt": 2305,
       "importDecl": 22,
-      "intentDecl": 860,
+      "intentDecl": 861,
       "letDecl": 1865,
       "listLiteral": 115,
       "matchArm": 1319,
@@ -6176,22 +6198,22 @@
       "mutDecl": 810,
       "numberLiteral": 5730,
       "paramDecl": 2873,
-      "program": 147,
-      "pureFlowDecl": 863,
+      "program": 148,
+      "pureFlowDecl": 864,
       "recordDecl": 210,
-      "returnStmt": 3163,
+      "returnStmt": 3164,
       "secureFlowDecl": 1,
       "staticDecl": 15,
-      "stringLiteral": 4886,
+      "stringLiteral": 4887,
       "trapDecl": 50,
       "typeDecl": 3,
-      "typeRef": 2568,
+      "typeRef": 2569,
       "unaryExpr": 251,
       "whileStmt": 340
     },
-    "bytes": 1141312,
-    "files": 147,
-    "flows": 875,
+    "bytes": 1141659,
+    "files": 148,
+    "flows": 876,
     "memberCalls": {
       "append": 707,
       "bitAnd": 13,
@@ -6482,7 +6504,7 @@
       "StaticEnv": 2,
       "Stmt": 5,
       "StmtParse": 1,
-      "String": 474,
+      "String": 475,
       "TierDecision": 1,
       "TokenizeResult": 1,
       "TrapSignal": 2,
