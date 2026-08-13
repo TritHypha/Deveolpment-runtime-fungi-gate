@@ -6,13 +6,14 @@
 //   myco search <pattern> ..  explicit form (use when the pattern is a command)
 //   myco index [path]         (re)build the graph index
 //   myco status [path]        show index stats
+//   myco links [path]         find broken markdown links, classified by cause
 //
 // By default a search does a cheap incremental refresh first, so results are
 // never stale — unchanged files are only stat()'d, not re-read. Pass
 // --no-refresh to search the existing index as-is for maximum speed.
 
 import { parseArgs } from "node:util";
-import { promises as fs } from "node:fs";
+import { promises as fs, existsSync } from "node:fs";
 import * as path from "node:path";
 
 import { buildIndex, DEFAULT_INDEX_OPTIONS } from "./ingest/indexer.ts";
@@ -20,9 +21,13 @@ import type { IndexOptions } from "./ingest/indexer.ts";
 import { loadGraph, loadGraphOutcome } from "./graph/store.ts";
 import type { SaveOutcome } from "./graph/store.ts";
 import { buildPathFilter } from "./query/path-filter.ts";
+import type { PathFilter } from "./query/path-filter.ts";
 import { search, searchFile, isError, detectRegexIntent } from "./query/search.ts";
 import type { MatchMode, SearchOptions, SearchOutcome } from "./query/search.ts";
 import { render, summaryLine } from "./output.ts";
+import { walk } from "./ingest/walk.ts";
+import { scanText, repairText } from "./query/links.ts";
+import type { BrokenLink, LinkClass } from "./query/links.ts";
 import { VERSION } from "./index.ts";
 
 const HELP = `myco ${VERSION} — grep, but it grows a graph.
@@ -32,6 +37,20 @@ USAGE
   myco search <pattern> [path] explicit search (when pattern is a command name)
   myco index [path]            build/refresh the graph index
   myco status [path]           show index statistics
+  myco links [path]            find broken markdown links, classified by cause
+
+LINKS
+      --fix              repair only the classes that resolve without guessing
+                         (SELF_PREFIX, MOVED, PLACEHOLDER). AMBIGUOUS, PRIVATE_TWIN
+                         and MISSING are reported and left alone — a repairer that
+                         picks between two candidate documents is wrong half the
+                         time, and a wrong link that resolves is invisible.
+      --delink-missing   turn MISSING links into code spans: the path stays readable,
+                         it just stops claiming to be navigable. For absorbed
+                         documents whose links point into a repository that is not
+                         checked out here, the path IS the provenance. Scope it with
+                         --in; --in never affects which files count as EXISTING.
+                    Exit: 0 = no broken links · 1 = broken links found · 2 = error
 
 MATCHING
   (default)        whole-word match  (search "cat" ignores "concatenate")
@@ -188,6 +207,156 @@ async function cmdStatus(root: string): Promise<number> {
   return 0;
 }
 
+const REPAIRABLE: ReadonlySet<LinkClass> = new Set<LinkClass>(["SELF_PREFIX", "MOVED", "PLACEHOLDER"]);
+
+async function cmdLinks(
+  root: string,
+  values: Record<string, unknown>,
+  index: IndexOptions,
+): Promise<number> {
+  if (!(await fs.stat(root).catch(() => undefined))) {
+    process.stderr.write(`myco: path not found: ${root}\n`);
+    return 2;
+  }
+  const files = await walk(root, {
+    maxFileSize: index.maxFileSize,
+    useGitignore: index.useGitignore,
+    includeVendored: index.includeVendored,
+  });
+
+  // Two derived views: an existence set covering EVERY walked file (links point at images
+  // and scripts too, not only markdown), and a basename index for classification.
+  //
+  // DIRECTORIES COUNT. `[research/rd/](research/rd/)` is a valid link, and a set built from
+  // file paths alone reports every one of them missing — 17 false positives in this repo's
+  // own README on the first run, which is exactly how a real finding gets buried.
+  const present = new Set<string>(files.map((f) => f.relPath));
+  for (const f of files) {
+    const parts = f.relPath.split("/");
+    for (let i = 1; i < parts.length; i++) present.add(parts.slice(0, i).join("/"));
+  }
+  const nameIndex = new Map<string, string[]>();
+  for (const f of files) {
+    const base = f.relPath.split("/").pop() ?? "";
+    const list = nameIndex.get(base);
+    if (list) list.push(f.relPath);
+    else nameIndex.set(base, [f.relPath]);
+  }
+  const repoName = path.basename(root);
+  // --in scopes which files are SCANNED, never which files count as existing: a scoped run
+  // must not turn an out-of-scope target into a false "missing".
+  // A bad --in pattern must exit, never silently widen to the whole tree: the worst
+  // outcome is a user who believes they scoped and gets tree-wide results as evidence.
+  const inPatterns = values["in"] as string[] | undefined;
+  let scope: PathFilter | undefined;
+  if (inPatterns !== undefined) {
+    const built = buildPathFilter(inPatterns);
+    if (typeof built === "string") {
+      process.stderr.write(`myco: ${built}\n`);
+      return 2;
+    }
+    scope = built;
+  }
+  const markdown = files.filter(
+    (f) => /\.md$/i.test(f.relPath) && (scope === undefined || scope.test(f.relPath)),
+  );
+
+  // A link may legitimately point OUTSIDE the scanned root — sibling repositories in the
+  // same workspace are linked this way constantly. The walked file set cannot see there, so
+  // an index-only predicate reports every such link missing. That is a fact about the
+  // instrument, not the tree: on this estate it produced 125 false positives, and acting on
+  // them would have destroyed 125 working cross-repo links. Escapes are resolved against the
+  // real filesystem instead.
+  const outOfRootCache = new Map<string, boolean>();
+  const exists = (p: string): boolean => {
+    if (!p.startsWith("../")) return present.has(p);
+    const cached = outOfRootCache.get(p);
+    if (cached !== undefined) return cached;
+    const real = existsSync(path.resolve(root, p));
+    outOfRootCache.set(p, real);
+    return real;
+  };
+
+  const scanAll = async (): Promise<BrokenLink[]> => {
+    const acc: BrokenLink[] = [];
+    for (const f of markdown) {
+      const text = await fs.readFile(f.absPath, "utf8").catch(() => undefined);
+      if (text === undefined) continue;
+      acc.push(...scanText(f.relPath, text, exists, nameIndex, repoName));
+    }
+    return acc;
+  };
+
+  let findings = await scanAll();
+
+  const delinkMissing = Boolean(values["delink-missing"]);
+  if (values["fix"] || delinkMissing) {
+    const byFile = new Map<string, BrokenLink[]>();
+    for (const f of findings) {
+      if (!REPAIRABLE.has(f.cls) && !(delinkMissing && f.cls === "MISSING")) continue;
+      const list = byFile.get(f.file);
+      if (list) list.push(f);
+      else byFile.set(f.file, [f]);
+    }
+    let repaired = 0;
+    let delinked = 0;
+    for (const [rel, fs_] of byFile) {
+      const abs = path.join(root, rel);
+      const text = await fs.readFile(abs, "utf8");
+      const r = repairText(rel, text, fs_, delinkMissing);
+      if (r.repaired > 0 || r.delinked > 0) await fs.writeFile(abs, r.text);
+      repaired += r.repaired;
+      delinked += r.delinked;
+    }
+    const before = findings.length;
+    // RE-SCAN before reporting. Printing the pre-fix findings after writing repairs would
+    // state a count that is no longer true, which is the one thing a checker must never do.
+    findings = await scanAll();
+    process.stdout.write(
+      `repaired ${repaired} link(s), de-linked ${delinked} placeholder(s) across ${byFile.size} file(s)\n`
+        + `broken links: ${before} -> ${findings.length}\n`,
+    );
+  }
+
+  const counts = new Map<LinkClass, number>();
+  for (const f of findings) counts.set(f.cls, (counts.get(f.cls) ?? 0) + 1);
+
+  if (values["json"]) {
+    process.stdout.write(JSON.stringify({ scanned: markdown.length, findings }, null, 2) + "\n");
+    return findings.length > 0 ? 1 : 0;
+  }
+
+  process.stdout.write(
+    `${findings.length} broken link(s) in ${markdown.length} markdown file(s) `
+      + `(${files.length} files indexed for existence)\n`,
+  );
+  const ORDER: LinkClass[] = ["SELF_PREFIX", "MOVED", "PLACEHOLDER", "PRIVATE_TWIN", "AMBIGUOUS", "MISSING"];
+  for (const cls of ORDER) {
+    const n = counts.get(cls) ?? 0;
+    if (n === 0) continue;
+    const note = REPAIRABLE.has(cls)
+      ? "repairable with --fix"
+      : cls === "MISSING"
+        ? "no target anywhere — --delink-missing keeps the path as text"
+        : cls === "PRIVATE_TWIN"
+          ? "target exists only as -PRIVATE — a publication-scope decision"
+          : "needs a decision";
+    process.stdout.write(`  ${cls.padEnd(13)} ${String(n).padStart(5)}  ${note}\n`);
+  }
+  // No silent caps: the classes --fix will never touch are listed in full, because those
+  // are exactly the ones a human has to act on.
+  for (const cls of ["PRIVATE_TWIN", "AMBIGUOUS"] as LinkClass[]) {
+    const sub = findings.filter((f) => f.cls === cls);
+    if (sub.length === 0) continue;
+    process.stdout.write(`\n${cls}:\n`);
+    for (const f of sub) {
+      process.stdout.write(`  ${f.file}\n      -> ${f.href}`);
+      process.stdout.write(f.candidates ? `   [${f.candidates.length} candidates]\n` : "\n");
+    }
+  }
+  return findings.length > 0 ? 1 : 0;
+}
+
 async function cmdSearch(
   pattern: string | undefined,
   root: string,
@@ -339,6 +508,8 @@ async function run(argv: string[]): Promise<number> {
       "max-size": { type: "string" },
       in: { type: "string", multiple: true },
       vendored: { type: "boolean" },
+      fix: { type: "boolean" },
+      "delink-missing": { type: "boolean" },
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "v" },
     },
@@ -361,6 +532,8 @@ async function run(argv: string[]): Promise<number> {
       return cmdIndex(path.resolve(rest[0] ?? "."), iOpts);
     case "status":
       return cmdStatus(path.resolve(rest[0] ?? "."));
+    case "links":
+      return cmdLinks(path.resolve(rest[0] ?? "."), values, iOpts);
     case "help":
       process.stdout.write(HELP + "\n");
       return 0;
