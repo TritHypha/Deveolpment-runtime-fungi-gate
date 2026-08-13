@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 423-447 runners and benchmark declarations - 2026-08-13
+
+- [x] Account 25 unique scopes: 13 erased benchmark declarations and 12 blocked
+  runtime scopes. No placeholder, duplicate Slice-46 credit or retirement claim
+  was created.
+- [x] Prove fresh typecheck plus harness **47/47** and benchmark **9/9** focused
+  existing-dist evidence. These lanes do not prove host/physical admission.
+- [x] Update both private skills at translation `3f11c32` and authoring
+  `bd258b6`: spawned-command provenance must retain a typed argv vector or
+  domain-separated length-prefixed bytes; `argv.join(" ")` is display only.
+- [ ] Extend the slice-close audit beyond 40-hex syntax: verify every
+  `SKILL_UPDATE` commit exists in the named private skill repository (or in one
+  independently pinned skill-head receipt). Three reviews caught and corrected
+  invented full hashes that the current structural audit accepted.
+- [ ] Repair exported mutable defaults: decide deep-freeze/copy/factory versus
+  shared-state compatibility for `DEFAULT_E2E_EXAMPLES` and
+  `DEFAULT_BENCHMARK_CONFIG`; add exact mutation/identity vectors.
+- [ ] Repair runner evidence: canonical argv, exact corpus/content provenance,
+  exhaustive process causes, output/backpressure/callback failures, bounded
+  Boolean-while aggregation, monotonic timing and typed results/counts.
+- [ ] Harden benchmark config/report borders: reject missing/surplus/hostile
+  records, non-finite numbers and unknown target keys; reconcile `opticalIo:null`,
+  validate every literal/privacy field, and rule whether `shareable:false` must
+  be binding.
+- [ ] Complete the 50-slice close: publish all registered owners individually,
+  run the 19-check matrix, commit generated outputs, refresh Myco and
+  codebase-memory and prove exact indexed HEAD. Repository closure remains
+  `UNKNOWN`; excluded aggregates are not substitutes.
+
 ### Slices 398-422 test types, spawn and freshness foundations - 2026-08-13
 
 - [x] Account 25 unique scopes: 13 erased public declarations, nine exact

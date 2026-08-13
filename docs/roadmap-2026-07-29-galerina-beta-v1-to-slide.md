@@ -3635,3 +3635,26 @@ directly through Slices 423-447. In accordance with the owner-approved
 50-slice cadence, registered owner publication, graph regeneration and both
 indexes occur at Slice 447 rather than here. Excluded crash-linked aggregate
 lanes remain unsubstituted, so repository-wide closure remains `UNKNOWN`.
+
+## Fungi conversion checkpoint through Slice 447 - 2026-08-13
+
+The second 25-slice wave accounts the remaining test-runner foundation and the
+first benchmark public-contract surface. Thirteen benchmark declarations are
+`NO_RUNTIME_BEHAVIOR`; their public `.d.ts` contracts remain active. Twelve
+runtime scopes remain `BLOCKED` at mutable singleton, host process/filesystem,
+callback, corpus provenance, aggregation and physical record/array boundaries.
+
+Fresh focused typechecks plus harness **47/47** and benchmark **9/9** pass.
+Those results are existing-dist regression evidence, not conversion authority.
+Hostile probes show the exported default E2E corpus and benchmark config can be
+mutated process-wide, an unrelated caller-supplied SLIDE corpus can pass, a
+callback throw rejects instead of returning a typed result, Infinity/surplus
+benchmark inputs pass validation, and joined command strings lose argv identity.
+
+Private translation `3f11c32` and authoring `bd258b6` now bind executable plus
+ordered typed argv, or canonical domain-separated length-prefixed bytes, and
+make human command rendering supplemental only. No new Fungi execution
+candidate or TypeScript retirement is authorized. This Slice 447 boundary now
+enters the deferred individual owner, graph and dual-index close for the full
+50 slices. Repository-wide closure remains `UNKNOWN` because the excluded
+aggregate lanes are not substituted.

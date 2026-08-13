@@ -64,27 +64,27 @@ SLIDE/VOK, Myco and codebase-memory.
 
 ### Task 1: Pin sources and evidence
 
-- [ ] Pin `runners.ts` SHA-256
+- [x] Pin `runners.ts` SHA-256
   `A9F7395D08F1DDC97087B8E8BBF163EE10C3C72684B4FB889BB0F456B13FD645`.
-- [ ] Pin benchmark `index.ts` SHA-256
+- [x] Pin benchmark `index.ts` SHA-256
   `5C472FBC5723A5D50D824542C7258092A9048109D1800EBD9895333BBA1F932A`.
-- [ ] Establish focused typecheck/tests and distinguish existing-dist evidence.
-- [ ] Reconcile prior receipts, callers, assets and physical evidence.
+- [x] Establish focused typecheck/tests and distinguish existing-dist evidence.
+- [x] Reconcile prior receipts, callers, assets and physical evidence.
 
 ### Task 2: Produce independent dossiers
 
-- [ ] Record runner ordering, boundedness, child processes, filesystem, clocks,
+- [x] Record runner ordering, boundedness, child processes, filesystem, clocks,
   callbacks, aggregation, bail behavior, partial results and failure routes.
-- [ ] Record benchmark erasure, exact record/array/Option/number/text domains,
+- [x] Record benchmark erasure, exact record/array/Option/number/text domains,
   aliasing, literal fields and any runtime constant identity.
-- [ ] Give every scope an exact classification, threadability, blocker/exit,
+- [x] Give every scope an exact classification, threadability, blocker/exit,
   hostile vectors and evidence-based skill disposition.
 
 ### Task 3: Publish and review the 50-slice boundary
 
-- [ ] Create 25 receipts and update register, TODO and roadmap.
-- [ ] Run focused checks and receipt audit; obtain three read-only reviews.
-- [ ] Commit authored evidence separately from generated owners.
+- [x] Create 25 receipts and update register, TODO and roadmap.
+- [x] Run focused checks and receipt audit; obtain three read-only reviews.
+- [x] Commit authored evidence separately from generated owners.
 - [ ] Regenerate all registered owners individually for Slices 398-447.
 - [ ] Run the 19-check bounded owner matrix, commit the final build point, and
   refresh Myco plus codebase-memory at exact HEAD.

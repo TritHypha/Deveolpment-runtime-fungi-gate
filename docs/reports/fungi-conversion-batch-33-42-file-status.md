@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-422 File Status
+# Fungi Conversion Batch 33-447 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -7,8 +7,8 @@ The current 50-slice decision and maintenance route is split across
 [`../superpowers/plans/2026-08-13-slices-398-422-test-types-spawn-runners.md`](../superpowers/plans/2026-08-13-slices-398-422-test-types-spawn-runners.md)
 and
 [`../superpowers/plans/2026-08-13-slices-423-447-test-runners-benchmark-types.md`](../superpowers/plans/2026-08-13-slices-423-447-test-runners-benchmark-types.md).
-Slices 398-422 are adjudicated; individual owner publication, graphs and both
-indexes are deliberately deferred to the Slice 447 fifty-slice boundary.
+Slices 398-447 are adjudicated; individual owner publication, graphs and both
+indexes now close at the Slice 447 fifty-slice boundary.
 Prior plans remain in repository history. Crash-linked aggregate lanes remain
 excluded.
 
@@ -428,6 +428,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 420 | `packages-galerina/galerina-test/src/runners.ts#COMPILER_EVIDENCE_SCHEMA` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin does not prove canonical schema handling. | `SUPERSEDED_BY_EXISTING_FUNGI` |
 | 421 | `packages-galerina/galerina-test/src/runners.ts#compilerFreshnessFailure` | not created | not created | Inputs/output/snapshot/canonical evidence and host effects are unproved. | `BLOCKED` |
 | 422 | `packages-galerina/galerina-test/src/runners.ts#gitPaths` | not created | not created | Git path bytes/status/bounds/config snapshot lack admission. | `BLOCKED` |
+| 423 | `packages-galerina/galerina-test/src/runners.ts#DEFAULT_E2E_EXAMPLES` | not created | not created | Exported mutable default corpus identity lacks physical state parity. | `BLOCKED` |
+| 424 | `packages-galerina/galerina-test/src/runners.ts#targetMissing` | not created | not created | Exact mutable CheckResult record/String/absence ABI is unproved. | `BLOCKED` |
+| 425 | `packages-galerina/galerina-test/src/runners.ts#runUnit` | not created | not created | Process, argv, counts, streams and result effects remain blocked. | `BLOCKED` |
+| 426 | `packages-galerina/galerina-test/src/runners.ts#runE2e` | not created | not created | Ordered corpus, filesystem, process, callback and child evidence remain blocked. | `BLOCKED` |
+| 427 | `packages-galerina/galerina-test/src/runners.ts#runConformance` | not created | not created | Corpus identity, process argv/counts and callbacks remain blocked. | `BLOCKED` |
+| 428 | `packages-galerina/galerina-test/src/runners.ts#runFidelity` | not created | not created | Freshness, target, process, count and physical execution remain blocked. | `BLOCKED` |
+| 429 | `packages-galerina/galerina-test/src/runners.ts#discoverExactTests` | not created | not created | Directory/Dirent/regex/locale/path snapshot ABI remains blocked. | `BLOCKED` |
+| 430 | `packages-galerina/galerina-test/src/runners.ts#runExactNodeCorpus` | not created | not created | Corpus/process/stream/count/callback completion remains blocked. | `BLOCKED` |
+| 431 | `packages-galerina/galerina-test/src/runners.ts#onOutput` | not created | not created | Output buffer/stdout/backpressure/callback ordering remains blocked. | `BLOCKED` |
+| 432 | `packages-galerina/galerina-test/src/runners.ts#runSlide` | not created | not created | Corpus provenance, independence and physical admission remain blocked. | `BLOCKED` |
+| 433 | `packages-galerina/galerina-test/src/runners.ts#runAll` | not created | not created | Ordered five-runner bail/clock/child authority remains blocked. | `BLOCKED` |
+| 434 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkMode` | not created | declaration accounted | Erased public mode union retains `.d.ts` custody. | `NO_RUNTIME_BEHAVIOR` |
+| 435 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkTrigger` | not created | declaration accounted | Erased public trigger union retains `.d.ts` custody. | `NO_RUNTIME_BEHAVIOR` |
+| 436 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkTarget` | not created | declaration accounted | Erased ten-label target union performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 437 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkStatus` | not created | declaration accounted | Erased status union performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 438 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkPrivacyPolicy` | not created | declaration accounted | Erased literal-false privacy record performs no runtime validation. | `NO_RUNTIME_BEHAVIOR` |
+| 439 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkConfig` | not created | declaration accounted | Erased nested config performs no finite-number or exact-record admission. | `NO_RUNTIME_BEHAVIOR` |
+| 440 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkSystemInfo` | not created | declaration accounted | Erased optional telemetry record performs no PII admission. | `NO_RUNTIME_BEHAVIOR` |
+| 441 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkTestResult` | not created | declaration accounted | Erased optional numeric result performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 442 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkScores` | not created | declaration accounted | Erased numeric score record retains null/non-finite contract debt. | `NO_RUNTIME_BEHAVIOR` |
+| 443 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkReport` | not created | declaration accounted | Erased nested report is not superseded by prior helper Slice 46. | `NO_RUNTIME_BEHAVIOR` |
+| 444 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkSubmitPayload` | not created | declaration accounted | Erased submit record performs no PII or schema admission. | `NO_RUNTIME_BEHAVIOR` |
+| 445 | `packages-galerina/galerina-tools-benchmark/src/index.ts#DEFAULT_BENCHMARK_CONFIG` | not created | not created | Exported mutable config/targets/privacy singleton lacks state parity. | `BLOCKED` |
+| 446 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkDiagnosticSeverity` | not created | declaration accounted | Erased severity union performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 447 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkDiagnostic` | not created | declaration accounted | Erased optional diagnostic performs no exact-record admission. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -827,3 +852,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   completion, duplicate-rejecting canonical evidence, exact output identity and
   one immutable snapshot through consumption. The 19-owner matrix, graph and
   both indexes are intentionally deferred to Slice 447.
+- Slices 423-447 close the second wave with 13 erased benchmark declarations and
+  12 blocked runtime scopes. Harness **47/47** and benchmark **9/9** pass, but
+  mutable default corpora/configs, exact argv, process/filesystem/callback
+  effects, corpus provenance, typed counts and physical record/array evidence
+  remain open. Translation `3f11c32` and authoring `bd258b6` now require typed
+  argv or canonical length-prefixed command provenance; joined display strings
+  cannot authorize execution parity.
