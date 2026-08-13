@@ -34,6 +34,7 @@ permission.
 ## Verification
 
 - Direct supersession proof: **2/2**, zero skips.
+- Complete Tower-Citizen package: **515/515**, zero skips.
 - Existing physical SLIDE/VOK K3-minimum proof: **1/1**, zero skips.
 - The literal nine-row oracle is not derived through `Math.min`, `minTrit`,
   `vAnd`, `effectiveVerdict` or the Fungi implementation.

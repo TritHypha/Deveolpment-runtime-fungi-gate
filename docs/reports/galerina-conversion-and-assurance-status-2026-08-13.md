@@ -62,8 +62,9 @@ This is semantic supersession, not TypeScript retirement.
 - Slice receipts: **33/33** governed receipts pass after Slice 93 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   974 test nodes and non-authorizing local K3 evidence `1`.
-- Latest affected owner lanes: Tower-Citizen **513/513** and the dedicated
-  two-Verdict physical SLIDE/VOK lane **1/1**.
+- Latest affected owner lanes: Tower-Citizen **515/515**, direct Slice 93
+  supersession **2/2**, and the inherited two-Verdict physical SLIDE/VOK lane
+  **1/1**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
   owner. This housekeeping does not relabel that historic aggregate as a fresh
   whole-repository test run.

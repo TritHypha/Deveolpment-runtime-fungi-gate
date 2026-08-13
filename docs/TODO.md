@@ -11,7 +11,7 @@ counts or open items that a newer section explicitly supersedes.
   `verdict-and.fungi` implementation.
 - [x] Bind the exact exported helper and compare it plus the existing
   `effective-verdict.fungi` flow against all nine literal K3-minimum rows. The
-  direct proof passes 2/2.
+  direct proof passes 2/2 and Tower-Citizen passes 515/515 with zero skips.
 - [x] Rerun the existing physical SLIDE/VOK minimum proof with the pinned
   sibling SLIDE path: 1/1 with zero skips.
 - [x] Refresh the bounded Slice 93 owners: 1,486/1,486 executable-family
