@@ -129,7 +129,11 @@ counts or open items that a newer section explicitly supersedes.
   `moneyDecimals` leaf is pure and its file ledger row has no explicit floor,
   but the conversion queue derives the `T0-compiler` floor and refused the
   exact symbol override. No asset or test was created.
-- [ ] Continue Slices 67-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 67 `samePath` as
+  `BLOCKED_BY_LOCALE_PATH_SEMANTICS`. The live trust-root decision needs exact
+  Windows-drive detection and explicit-locale Unicode case folding; host-side
+  normalization is not accepted as Fungi parity.
+- [ ] Continue Slices 68-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

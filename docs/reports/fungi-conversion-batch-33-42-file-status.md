@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-66 File Status
+# Fungi Conversion Batch 33-67 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -65,6 +65,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 64 | `packages-galerina/galerina-devtools-context/src/receipt-generator.ts#isBuiltin` | existing flat asset retained | existing package proof retained | Re-tested under the reconciled pin. Three bounded shapes refuse: flat width, three six-name helpers, and five narrow helpers with shallow composition. No current composite physical profile admits String comparison plus the required function/call graph. | `BLOCKED_BY_COMPOSITE_PHYSICAL_PROFILE` |
 | 65 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | existing exact asset retained | existing package proof and focused physical refusal retained | The reconciled pin accepts the two-String signature, correcting the stale Slice 45 diagnosis. The unchanged decision and two bounded equivalent shapes all refuse at `SLIDE-REF-LIMIT-002`; no current profile admits the complete transition graph within its physical block ceiling. | `BLOCKED_BY_PHYSICAL_BLOCK_CEILING` |
 | 66 | `packages-galerina/galerina-core-compiler/src/stdlib.ts#moneyDecimals` | not created | not created | The leaf is pure and total, and its file ledger row has no explicit declared floor. The authoritative queue nevertheless derives the `T0-compiler` bootstrap floor and refused the exact symbol override. The attempted decision was removed before implementation. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
+| 67 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#samePath` | not created | existing registry-generation package test retained | The live trust-root decision combines ASCII Windows-drive detection with explicit `en-US` Unicode locale case folding. The current physical text surface cannot conserve the complete source domain, and host-precomputed normalization would move path identity authority across the border. | `BLOCKED_BY_LOCALE_PATH_SEMANTICS` |
 
 ## Shared implementation and governance files
 
@@ -178,3 +179,6 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Slice 66 stopped before implementation. The authoritative queue derives the
   compiler bootstrap floor even though the file ledger row has no explicit
   `declaredFloor`; no candidate, asset or test was retained.
+- Slice 67 remains blocked without a placeholder asset. Its platform/locale
+  path identity is live on registry load, persistence and bootstrap paths; no
+  ASCII-only or host-precomputed substitute is authorized.
