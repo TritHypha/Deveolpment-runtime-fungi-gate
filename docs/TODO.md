@@ -15,6 +15,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Review both private Fungi skills at `dc2ef82f` and `30eb4dd3`;
   `NO_SKILL_UPDATE` is correct because their container-ABI and
   no-host-projection rules already require this refusal.
+- [x] Verify 34/34 governed receipts while the generated census remains
+  1,486/1,486 paths, 147 Fungi sources, seven scoped candidates, 856 blockers
+  and 974 semantic test nodes.
 - [ ] Add and independently admit a bounded physical `Array<Verdict>` ABI with
   exact length/index semantics and resource limits before reopening `allOf`.
 - [ ] Keep TypeScript and every caller active; host-precomputed empty/minimum

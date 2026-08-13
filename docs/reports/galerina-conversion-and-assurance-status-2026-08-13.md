@@ -65,7 +65,7 @@ would move authority. No placeholder Fungi asset was created.
   and 147 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 856
   file-level blockers.
-- Slice receipts: **33/33** governed receipts pass after Slice 93 publication.
+- Slice receipts: **34/34** governed receipts pass after Slice 94 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   974 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **515/515**, direct Slice 93
