@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 91**. Slices
+The current conversion campaign is complete through **Slice 92**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -36,21 +36,27 @@ contract and all nine Kleene-minimum rows through nested exhaustive typed
 `check`. The physical proof binds both parameters and the result to Verdict
 type ID `3`. The TypeScript source and consumers remain active.
 
+Slice 92 adds the complementary typed K3 maximum for Tower-Citizen's exported
+`vOr`. Its complete nine-row `Verdict x Verdict -> Verdict` table passes the
+independent TypeScript oracle, checked Fungi and the same exact two-Verdict
+physical SLIDE/VOK profile. It releases no authority; TypeScript and every
+caller remain active.
+
 ## Current evidence
 
-- Slice 91 physical-proof build point: `ecab9742` on
+- Slice 92 physical-proof build point: `a7258cef` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
-- Conversion census: **1,484/1,484** executable-family paths classified;
-  519 TypeScript-family, 953 MJS and 12 JS.
+- Conversion census: **1,485/1,485** executable-family paths classified;
+  519 TypeScript-family, 954 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins
-  and 146 Fungi sources in package `src` trees.
-- Queue: zero whole-file candidates, seven governed symbol candidates and 854
+  and 147 Fungi sources in package `src` trees.
+- Queue: zero whole-file candidates, seven governed symbol candidates and 855
   file-level blockers.
-- Slice receipts: **31/31** governed receipts pass after Slice 91 publication.
+- Slice receipts: **32/32** governed receipts pass after Slice 92 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   971 test nodes and non-authorizing local K3 evidence `1`.
-- Latest affected owner lanes: Tower-Citizen **511/511** and the dedicated
+- Latest affected owner lanes: Tower-Citizen **513/513** and the dedicated
   two-Verdict physical SLIDE/VOK lane **1/1**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
   owner. This housekeeping does not relabel that historic aggregate as a fresh
@@ -68,7 +74,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 91 decision boundary is complete. Literal
+The Slice 92 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed
