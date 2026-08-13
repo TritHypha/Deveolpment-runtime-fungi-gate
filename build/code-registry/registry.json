@@ -1,10 +1,10 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 974,
+  "total": 975,
   "counts": {
     "ref": 214,
     "inline": 364,
-    "phantom": 113,
+    "phantom": 114,
     "live": 170,
     "referenced": 100,
     "dead": 13
@@ -1533,6 +1533,18 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
+    },
+    {
+      "code": "ERR_STDOUT_EXIT_ORDER_ABI",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "phantom",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 1
     },
     {
       "code": "ERR_STRING_TOO_LONG",
@@ -5301,7 +5313,7 @@
       "defs": 1,
       "emits": 2,
       "tests": 36,
-      "docs": 11
+      "docs": 12
     },
     {
       "code": "FUNGI-GOV-3VL-003",
@@ -6469,7 +6481,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "FUNGI-LOGIC-002",
@@ -6517,7 +6529,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "FUNGI-LOGIC-005",
