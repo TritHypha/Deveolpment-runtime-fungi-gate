@@ -4,6 +4,36 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 173-182 manifest and oracle boundary - 2026-08-13
+
+- [x] Account `BridgeDomain`, `ToleranceWitness`, `BridgeManifest`,
+  `BridgeAttestation` and `TernaryOracle` as erased `NO_RUNTIME_BEHAVIOR`
+  declarations. No record or interface is treated as validation, cryptographic
+  evidence, hardware proof or an active oracle capability.
+- [x] Retain private `canonNum`, `canonicalManifestString` and
+  `validateManifestShape` at their exact binary64/non-finite, optional-record,
+  JSON pre-image, regex, nested-witness and typed failure-result exits.
+- [x] Retain `oracleAgrees` at JavaScript ToInt32 over complete result records;
+  ordinary Fungi integer equality is not equivalent.
+- [x] Retain `src/index.ts` until its four runtime exports and consumers move
+  through an admitted Fungi/SLIDE public module identity.
+- [x] Prove neutral contract **12/12**, Tower-Citizen **515/515**, C++ bridge
+  **21/21** and BitNet bridge **7/7**, all with zero failures and zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct: current
+  exact-wire, no-NaN, numeric-coercion, cryptographic-evidence,
+  active-capability and whole-file consumer-switch rules cover all ten slices.
+- [ ] Define an exact manifest wire/profile with property absence, ordered
+  extension tiers, binary64, regex, nested witness, JSON text and typed failure
+  identity before reopening Slices 177-179.
+- [ ] Define exact ToInt32 and complete `BridgeResult` admission before
+  reopening Slice 181; include fractions, signed zero, large magnitudes,
+  infinities and NaN at the host boundary without admitting NaN into Fungi.
+- [ ] Retain all TypeScript and consumers. No declaration accounting or focused
+  evidence grants whole-file retirement, production or release authority.
+- [ ] Defer graph/index/roadmap owners until the next approved 25-slice
+  boundary. Repository-wide closure remains `UNKNOWN`; crash-linked aggregate
+  lanes remain excluded.
+
 ### Slices 168-172 neutral bridge boundary - 2026-08-13
 
 - [x] Classify `InferenceBridge`, `BridgeRegistry`, `DeterminismMode` and

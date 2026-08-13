@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-172 File Status
+# Fungi Conversion Batch 33-182 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current five-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-168-172-neutral-bridge-boundary.md`](../superpowers/plans/2026-08-13-slices-168-172-neutral-bridge-boundary.md).
-Individual graph, index and roadmap owners run after the bounded Slice 172
-commit; crash-linked aggregate lanes remain excluded.
+The current ten-slice decision plan is
+[`../superpowers/plans/2026-08-13-slices-173-182-manifest-and-oracle-boundary.md`](../superpowers/plans/2026-08-13-slices-173-182-manifest-and-oracle-boundary.md).
+Aggregate graph, index and roadmap owners run at the next approved 25-slice
+boundary; crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -174,6 +174,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 170 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#assertDeterminism` | not created | determinism/error proof retained | Exact parity needs the complete binary64/string result object, independently grounded determinism evidence and observable JavaScript Error identity. | `BLOCKED_BY_TYPED_BRIDGE_RESULT_AND_ERROR_IDENTITY_ABI` |
 | 171 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#DeterminismMode` | not created | declaration accounted | Erased four-string vocabulary is part of the signed pre-image but proves no determinism evidence; future mapping must be injective and exhaustive. | `NO_RUNTIME_BEHAVIOR` |
 | 172 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#CertificationProfile` | not created | declaration accounted | Erased two-string vocabulary grants no certified authority; exact signed-pre-image spelling and surplus refusal remain mandatory. | `NO_RUNTIME_BEHAVIOR` |
+| 173 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#BridgeDomain` | not created | declaration accounted | Erased two-string vocabulary performs no validation; future mapping must preserve exact spellings and refuse surplus values. | `NO_RUNTIME_BEHAVIOR` |
+| 174 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#ToleranceWitness` | not created | declaration accounted | Erased binary64/string record validates no sample, residual, noise identity or measured provenance. | `NO_RUNTIME_BEHAVIOR` |
+| 175 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#BridgeManifest` | not created | declaration accounted | Erased required/optional record grants no signature, hardware or certification authority. | `NO_RUNTIME_BEHAVIOR` |
+| 176 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#BridgeAttestation` | not created | declaration accounted | Erased manifest/signature transport performs no decoding, verification, freshness or revocation. | `NO_RUNTIME_BEHAVIOR` |
+| 177 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#canonNum` | not created | injectivity proof retained | Exact finite binary64 plus distinct NaN/infinity sentinels cannot cross the current no-NaN Fungi boundary without host projection. | `BLOCKED_BY_BINARY64_NONFINITE_SENTINEL_WIRE_ABI` |
+| 178 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#canonicalManifestString` | not created | canonical-preimage proof retained | Ordered optional tiers, nested witness encoding, binary64 and exact `JSON.stringify` bytes form signing authority. | `BLOCKED_BY_EXACT_JSON_BINARY64_OPTION_RECORD_ABI` |
+| 179 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#validateManifestShape` | not created | structural-negative proof retained | Complete optional manifest, SHA-256 regex, binary64 ranges, nested invariants and exact reason object lack one admitted boundary. | `BLOCKED_BY_OPEN_MANIFEST_REGEX_BINARY64_RESULT_ABI` |
+| 180 | `packages-galerina/galerina-inference-bridge-contract/src/oracle.ts#TernaryOracle` | not created | declaration accounted | Erased interface implements no oracle, authentication or ground-truth proof; execution is an active capability. | `NO_RUNTIME_BEHAVIOR` |
+| 181 | `packages-galerina/galerina-inference-bridge-contract/src/oracle.ts#oracleAgrees` | not created | numeric/oracle proof retained | JavaScript ToInt32 over two complete binary64 result records is not ordinary Fungi integer equality. | `BLOCKED_BY_BINARY64_TOINT32_BRIDGE_RESULT_ABI` |
+| 182 | `packages-galerina/galerina-inference-bridge-contract/src/index.ts` | not created | public consumer proof retained | Type exports erase, but runtime re-exports and package export-map identity remain a live public ESM boundary. | `BLOCKED_BY_PUBLIC_ESM_EXPORT_AND_MODULE_IDENTITY_ABI` |
 
 ## Shared implementation and governance files
 
@@ -466,3 +476,11 @@ not one of Slices 33–43 and no Fungi asset was produced.
   Tower-Citizen **515/515** pass with zero skips. Skill review is
   `NO_SKILL_UPDATE`; existing exact-record, injective-vocabulary,
   active-capability and Error-identity rules cover the group.
+- Slices 173-176 and 180 account erased manifest/oracle declarations as
+  `NO_RUNTIME_BEHAVIOR`. Slices 177-179 and 181-182 remain blocked without
+  placeholders at exact binary64/non-finite, signed JSON pre-image,
+  optional-manifest validation, ToInt32 and public ESM module boundaries.
+  Neutral contract **12/12**, Tower-Citizen **515/515**, C++ bridge **21/21**
+  and BitNet bridge **7/7** pass with zero skips. Skill review is
+  `NO_SKILL_UPDATE`; current exact-wire, numeric-coercion, crypto evidence,
+  active-capability and consumer-switch rules cover the group.

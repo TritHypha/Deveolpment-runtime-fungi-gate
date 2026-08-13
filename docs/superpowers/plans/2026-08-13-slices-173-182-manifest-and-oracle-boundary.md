@@ -29,33 +29,33 @@ evidence, Myco, private Fungi skills and Markdown slice receipts.
 
 ### Task 1: Bind Slices 173-182
 
-- [ ] Classify `BridgeDomain`, `ToleranceWitness`, `BridgeManifest`,
+- [x] Classify `BridgeDomain`, `ToleranceWitness`, `BridgeManifest`,
   `BridgeAttestation` and `TernaryOracle` at their erased declaration boundary.
-- [ ] Classify private `canonNum`, `canonicalManifestString` and
+- [x] Classify private `canonNum`, `canonicalManifestString` and
   `validateManifestShape` at their complete binary64, optional-record, JSON,
   regex and exact failure-result boundary.
-- [ ] Classify `oracleAgrees` at the complete `BridgeResult` and JavaScript
+- [x] Classify `oracleAgrees` at the complete `BridgeResult` and JavaScript
   signed-32-bit coercion boundary.
-- [ ] Classify `src/index.ts` at its exact public ESM type/runtime re-export and
+- [x] Classify `src/index.ts` at its exact public ESM type/runtime re-export and
   module-resolution boundary.
-- [ ] Search exact consumers and existing Fungi assets before deciding.
+- [x] Search exact consumers and existing Fungi assets before deciding.
 
 ### Task 2: Bounded verification
 
-- [ ] Run neutral-contract, Tower-Citizen and directly affected bridge-package
+- [x] Run neutral-contract, Tower-Citizen and directly affected bridge-package
   typechecks.
-- [ ] Run the complete neutral contract suite and focused Tower
+- [x] Run the complete neutral contract suite and focused Tower
   manifest/attestation/oracle consumers.
-- [ ] Run complete Tower-Citizen and the affected bridge-package suites;
+- [x] Run complete Tower-Citizen and the affected bridge-package suites;
   require zero failures and zero skips.
-- [ ] Review both private skills and record a governed disposition for every
+- [x] Review both private skills and record a governed disposition for every
   receipt.
 
 ### Task 3: Publish and verify
 
-- [ ] Create Slice 173-182 receipts, append the live register and update TODO.
-- [ ] Run the slice-close receipt owner and staged path/private-document guards.
-- [ ] Commit only the bounded documents and keep the tracked tree clean.
+- [x] Create Slice 173-182 receipts, append the live register and update TODO.
+- [x] Run the slice-close receipt owner and staged path/private-document guards.
+- [x] Commit only the bounded documents and keep the tracked tree clean.
 - [ ] Defer graph/index/roadmap regeneration to the next approved 25-slice
   boundary unless source, architecture or registered owner inputs change.
 
