@@ -30,9 +30,13 @@ counts or open items that a newer section explicitly supersedes.
   plan treats its six-label TypeScript alias as admitted target evidence.
 - [ ] Give adjacent package test `.mjs` entries a governed harness
   classification or exclusion before literal all-TS/MJS closure can be claimed.
-- [ ] Complete the individual Slice 347 owner matrix, roadmap/subway refresh
-  and post-commit Myco refresh. Crash-linked aggregate lanes remain excluded;
-  repository-wide closure remains `UNKNOWN`.
+- [x] Complete the individual Slice 347 owner matrix: queue 1,486/1,486;
+  package 100/201; KB 4/4; project 5/5; graph 9,794 nodes / 9,930 edges /
+  zero violations; 172 tools / 40 proofs; 147 Fungi files; semantic 3/3 with
+  974 tests; code index 974; canonical 7/7 at 9,612; receipts 287/287;
+  roadmap 5/5 and Golden 11/11. Post-commit Myco refresh remains pending;
+  crash-linked aggregate lanes stay excluded and repository closure remains
+  `UNKNOWN`.
 
 ### Slices 298-322 CPU, GPU and JS target contracts - 2026-08-13
 

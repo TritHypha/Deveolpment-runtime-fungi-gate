@@ -3527,7 +3527,9 @@ The slice-close audit now permits the binding fail-closed `UNKNOWN`
 threadability state and `N/A` for declarations that execute nothing; focused
 audit tests pass **5/5** while unrecognised labels still refuse. Both private
 skills already cover the reusable lessons, so the wave records
-`NO_SKILL_UPDATE`; they remain private and unpushed. Individual owner refresh
-is pending. Adjacent test `.mjs` queue entries remain unresolved and
+`NO_SKILL_UPDATE`; they remain private and unpushed. The individual Slice 347
+owner matrix is current: queue 1,486/1,486; graph 9,794 nodes / 9,930 edges /
+zero violations; semantic 3/3 with 974 tests; receipts 287/287; roadmap 5/5 and
+Golden 11/11. Adjacent test `.mjs` queue entries remain unresolved and
 repository-wide closure remains `UNKNOWN`; excluded crash-linked aggregates
 are not substitutes for the individual evidence matrix.

@@ -712,3 +712,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - The receipt audit now accepts fail-closed `UNKNOWN` and declaration-only
   `N/A` threadability while refusing unknown labels. Skill review is
   `NO_SKILL_UPDATE`; current private rules already cover all reusable findings.
+- The Slice 347 individual owner matrix is current: queue 1,486/1,486; graph
+  9,794 nodes / 9,930 edges / zero violations; semantic 3/3 with 974 tests;
+  receipts 287/287; roadmap 5/5 and Golden 11/11. Crash-linked aggregates
+  remain excluded and repository-wide closure remains `UNKNOWN`.
