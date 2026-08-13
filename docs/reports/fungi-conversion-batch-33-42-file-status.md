@@ -116,22 +116,22 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The bounded batch owner exit is complete. The authored TODO and active roadmap
-are updated; every listed generated owner is regenerated and independently
-current. Final navigation-index publication remains in dependency order. The
-excluded aggregate lanes are not substitutes for these bounded owners, so
-repository-wide closure remains `UNKNOWN`.
+The Slice 87 bounded owner exit is complete. The authored TODO and active
+roadmap are updated; every listed generated owner is regenerated and
+independently current. Final navigation-index publication follows the last
+owned output commit. The excluded aggregate lanes are not substitutes for
+these bounded owners, so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
 | `docs/TODO.md` | `DONE` |
 | `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section and generated subway block) |
-| Retirement and conversion queue | `DONE` at 1,458/1,458, seven scoped candidates and 829 blockers |
+| Retirement and conversion queue | `DONE` at 1,480/1,480, seven scoped candidates and 850 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
-| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 142 Fungi files |
-| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 956 test nodes, three sections, current status blocks, 974 codes and 5/5 |
+| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 143 Fungi files |
+| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 966 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`d2d955e` writing skill; `9654753` translation skill; both private workflows green, protected `main` requires `verify`, and GitHub reports `PRIVATE`) |
-| Final codebase graph and Myco navigation refresh | `UNKNOWN` for exact-HEAD graph freshness: content is complete at 51,502/51,502 nodes and 137,475/137,475 edges and Slice 62 is queryable, but the index retained build point `e40f63ba` after later excluded-only documentation/output commits. Myco is current at 5,167 files and Slice 62 is queryable. |
+| Final codebase graph and Myco navigation refresh | `PENDING` final post-output-commit refresh; do not infer freshness from the superseded Slice 62 build point. |
 
 ## Verified refusal retained outside the batch
 

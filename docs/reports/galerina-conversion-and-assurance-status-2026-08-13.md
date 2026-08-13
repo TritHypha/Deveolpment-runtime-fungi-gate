@@ -44,8 +44,8 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 87 decision boundary is complete and triggers the aggregate roadmap,
-graph and index owner refresh. Literal TypeScript/MJS retirement remains
+The Slice 87 decision boundary and bounded owner refresh are complete. Literal
+TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed
 retirement gate all agree.

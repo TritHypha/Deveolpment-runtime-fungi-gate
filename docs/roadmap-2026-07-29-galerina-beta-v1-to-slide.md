@@ -8,7 +8,8 @@ through **Slice 87**, with the exact status and R&D intake recorded in
 The conserved queue accounts for **1,480/1,480** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **850** file-level
 blockers; **27/27** governed slice receipts pass. Slices 84-87 conserve four
-additional exact ABI/authority refusals and trigger aggregate bounded closure.
+additional exact ABI/authority refusals; their aggregate bounded owners are
+current.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the requested bounded graph,
