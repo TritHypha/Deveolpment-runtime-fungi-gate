@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "b4028a82c4f16175a982e4e0c0b157f1ffc056a9335dcc8176f2e128581c5537",
+  "sourceDigest": "5973c33686e4080ac23d5e8b8854adab2fa8f6df9dc65d532ad647b655738c37",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1480,
+    "total": 1482,
     "CANDIDATE": 0,
-    "BLOCKED": 850,
+    "BLOCKED": 852,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 630
@@ -8387,6 +8387,22 @@
     },
     {
       "path": "packages-galerina/galerina-devtools-impact/src/impact-plan.mjs",
+      "package": "galerina-devtools-impact",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-impact/tests/documentation-path-cases.mjs",
+      "package": "galerina-devtools-impact",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-impact/tests/documentation-path-fungi-conversion.test.mjs",
       "package": "galerina-devtools-impact",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
