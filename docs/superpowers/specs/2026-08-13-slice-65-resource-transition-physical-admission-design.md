@@ -61,3 +61,15 @@ Any frontend, package, physical, re-admission, mutation or exhaustion failure
 closes Slice 65 as blocked at that exact boundary. Do not narrow the pair
 domain, precompute a result in the host or change SLIDE to manufacture a pass.
 
+## Adjudicated outcome
+
+`BLOCKED_BY_PHYSICAL_BLOCK_CEILING`.
+
+The exact existing nested `if`/`match` form strict-checks and passes complete
+package parity, but independent scalar compilation refuses with
+`SLIDE-REF-LIMIT-002`. A shallow six-condition form also exceeds the block
+ceiling after Boolean short-circuit lowering. An outer exhaustive `match` with
+six nested `to` matches conserves the same refusal. After three bounded shapes,
+the original authoritative asset and explicit physical refusal were restored.
+The current pin admits the two-String signature; the blocker is the complete
+decision graph, not parameter count. No SLIDE ceiling was changed.

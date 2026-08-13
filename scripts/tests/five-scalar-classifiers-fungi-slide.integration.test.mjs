@@ -366,7 +366,7 @@ describe("scalar classifiers through physical SLIDE/VOK", () => {
     );
   }
   it(
-    "Slice 45 records the exact two-String physical profile refusal for validateTransition",
+    "Slice 65 conserves the exact two-String physical refusal for validateTransition",
     { skip: !SLIDE_AVAILABLE },
     async () => {
       const slide = await loadSlide();

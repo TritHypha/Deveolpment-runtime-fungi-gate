@@ -37,3 +37,11 @@ two-String `validateTransition` Fungi decision under the reconciled SLIDE pin.
   `git diff --check`.
 - [ ] Commit only the Slice 65 files locally; do not push.
 
+## Execution outcome
+
+Task 1 produced the intended RED. Task 2 stopped fail-closed after the existing
+shape and two bounded rewrites all refused with the physical block-ceiling
+failure. Strict check and package parity remained green, but no physical
+publication or VOK claim is made. The original asset and refusal assertion are
+restored. Task 3 closes Slice 65 as
+`BLOCKED_BY_PHYSICAL_BLOCK_CEILING`; aggregate closure remains deferred.

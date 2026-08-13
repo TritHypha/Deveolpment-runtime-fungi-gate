@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-62 File Status
+# Fungi Conversion Batch 33-65 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -43,7 +43,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 42 replacement | `packages-galerina/galerina-core-tasks/src/check-permissions.ts#isSafeEnvironmentName` | not created | not created | The source is an open regular-language decision over an unbounded JavaScript String. The selected physical profile has no Boolean `while`, text length or character accessor, and its bounded well-formed text admission narrows the source domain. Core-tasks remains green **9/9**. | `BLOCKED` |
 | 43 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#containsCardKeyword` | not created | not created | Physical text containment exists, but exact JavaScript case folding does not; the bounded well-formed physical text domain is narrower too. Devtools-pci remains green **29/29**. | `BLOCKED` |
 | 44 | `packages-galerina/galerina-core-logic/src/omni/omni-state.ts#isOmniUncertain` | `packages-galerina/galerina-core-logic/src/self-hosted/omni-uncertain.fungi` | `packages-galerina/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs` | Full physical publication, VOK re-admission, hostile-input, exhaustion and mutation proof passes. | `DONE` |
-| 45 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | `packages-galerina/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi` | `packages-galerina/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs` | The exact seven-by-seven declared matrix and hostile labels pass interpretation and signed Wasm. Physical publication is blocked because the selected profile accepts one scalar argument, not the required two-String boundary; host-side tuple packing is refused. | `BLOCKED` (physical) |
+| 45 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | `packages-galerina/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi` | `packages-galerina/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs` | The exact seven-by-seven declared matrix and hostile labels pass interpretation and signed Wasm. At the original Slice 45 pin, physical publication refused and host-side tuple packing was rejected. Slice 65 supersedes the old parameter-count diagnosis with exact current-pin block-ceiling evidence. | `BLOCKED` (physical; superseded diagnosis) |
 | 46 | `packages-galerina/galerina-tools-benchmark/src/index.ts#isBenchmarkReportShareable` | not created | not created | The source consumes two nested records, including an eleven-field report. The selected physical profile cannot preserve the exact record boundary; flattening or precomputing would move authority into the host. The owning package remains green **9/9**. | `BLOCKED` |
 | 47 | `packages-galerina/galerina-tower-citizen/src/key-rotation.ts#isWellFormedCommit` | not created | not created | TriRegex certifies the hex alphabet pattern, but the complete source has an unbounded case-insensitive character predicate and a reachable non-String `false` path. Fungi/SLIDE has no exact executable boundary. Tower-Citizen remains green **507/507**. | `BLOCKED` |
 | 48 | `packages-galerina/galerina-governance-telemetry/src/exposition.ts#isSafeLabel` | not created | not created | TriRegex certifies the bounded alphabet pattern, but Fungi `matchesPattern` is not lowered to execution or WAT and SLIDE has no regex/text-character iteration profile. Governance telemetry remains green **21/21**. | `BLOCKED` |
@@ -63,6 +63,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 62 | `packages-galerina/galerina-core-sentinel-state/src/state-serializer.ts#isWeakKey` | not created | not created | Exact parity requires `Option<Bytes>`, the 32-byte threshold and a bounded all-zero byte scan. The selected physical profile admits `Bytes` equality and `Option<Int>`, but no Bytes length/index/traversal route. Sentinel State passes **26/26**. | `BLOCKED` |
 | 63 | `packages-galerina/galerina-core-security/src/index.ts#isHighRiskPermissionAction` | not created | not created | The six-label String decision fits the scalar profile, but its package is a `T1-trust-root` declared `bounded-bootstrap-floor`. The authoritative queue refuses an override; exploratory files were removed. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
 | 64 | `packages-galerina/galerina-devtools-context/src/receipt-generator.ts#isBuiltin` | existing flat asset retained | existing package proof retained | Re-tested under the reconciled pin. Three bounded shapes refuse: flat width, three six-name helpers, and five narrow helpers with shallow composition. No current composite physical profile admits String comparison plus the required function/call graph. | `BLOCKED_BY_COMPOSITE_PHYSICAL_PROFILE` |
+| 65 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | existing exact asset retained | existing package proof and focused physical refusal retained | The reconciled pin accepts the two-String signature, correcting the stale Slice 45 diagnosis. The unchanged decision and two bounded equivalent shapes all refuse at `SLIDE-REF-LIMIT-002`; no current profile admits the complete transition graph within its physical block ceiling. | `BLOCKED_BY_PHYSICAL_BLOCK_CEILING` |
 
 ## Shared implementation and governance files
 
@@ -85,7 +86,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `scripts/lib/scalar-classifier-fungi-proof.mjs` | Shared interpreter and signed-Wasm differential proof helper. | `DONE` |
 | `packages-galerina/galerina-core-compiler/src/interpreter.ts` | Preserve quoted reserved names as String match patterns. | `DONE` |
 | `packages-galerina/galerina-core-compiler/tests/wat-string-match.test.mjs` | Interpreter/Wasm regression for quoted reserved names. | `DONE` |
-| `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34, 35, 36 and 44; exact compile-refusal evidence for Slices 37 and 45; executable seven-pass/eight-refuse flat-match boundary. | `DONE` |
+| `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34, 35, 36 and 44; exact compile-refusal evidence for Slices 37 and 65; executable seven-pass/eight-refuse flat-match boundary. | `DONE` |
 | `governance/phase-close-commands.json` | Register the physical batch test in the governed test inventory. | `DONE` |
 | Private `translating-typescript-to-fungi` skill repository | Duplicate-conversion preflight remains binding; private repository custody, bounded reachable-history scanning, pinned CI and protected `main` are verified at `9654753`. | `DONE` |
 | Private `writing-fungi` skill repository | The batch-level semantic result remains `NO_SKILL_UPDATE`; later binding authoring rules and private repository custody are verified at `d2d955e`. | `DONE` |
@@ -123,9 +124,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   success.
 - Slice 44 proves all eight declared Omni labels plus hostile strings through
   the differential and physical surfaces.
-- Slice 45 proves all 49 declared transition pairs plus hostile labels through
-  interpretation and signed Wasm; its two-argument physical boundary remains
-  an exact refusal.
+- Slice 65 re-tests Slice 45's transition decision. All 49 declared pairs plus
+  hostile labels still pass interpretation and signed Wasm. The pin accepts
+  the two-String signature, but three complete equivalent bodies refuse at the
+  physical function block ceiling; the original asset is restored.
 - Slice 46 remains blocked at the nested-record boundary and has no placeholder
   Fungi asset.
 - Slices 47-49 remain blocked at the executable regex/text boundary. Their
@@ -169,3 +171,6 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Slice 37 remains blocked: both a three-helper flat composition and a bounded
   helper tree refused. Widening a registry ceiling is not authorized by these
   probes.
+- Slice 65 remains blocked: the unchanged transition graph, a shallow Boolean
+  form and an outer nested-match form all refuse with `SLIDE-REF-LIMIT-002`.
+  No parameter packing or SLIDE ceiling change is authorized.

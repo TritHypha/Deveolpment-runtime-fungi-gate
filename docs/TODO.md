@@ -121,7 +121,11 @@ counts or open items that a newer section explicitly supersedes.
   bounded shapes conserve the exact physical refusal; no current composite
   profile admits the String-comparison, wide-function and bounded-call-work
   graph. The flat asset is restored and TypeScript remains active.
-- [ ] Continue Slices 65-87 with non-floor candidates and focused evidence;
+- [x] Re-test Slice 45's `validateTransition` asset as Slice 65. The current
+  pin accepts the exact two-String signature, but the unchanged decision and
+  two bounded equivalent shapes all refuse at `SLIDE-REF-LIMIT-002`. The
+  original asset and TypeScript consumer remain active; no limit was widened.
+- [ ] Continue Slices 66-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
