@@ -1,18 +1,37 @@
 @version 1
 
-/// Preserve the exact task-manifest effect vocabulary.
-pure flow isTaskEffect(value: String) -> Bool
-contract { intent { "Recognize only a canonical task effect name." } }
+/// Preserve the first half of the exact task-manifest effect vocabulary.
+pure flow isTaskEffectCore(value: String) -> Bool
+contract { intent { "Recognize a canonical core task effect name." } }
 {
   match value {
     "filesystem" => return true
     "network" => return true
     "database" => return true
     "environment" => return true
+    _ => return false
+  }
+}
+
+/// Preserve the second half of the exact task-manifest effect vocabulary.
+pure flow isTaskEffectExtended(value: String) -> Bool
+contract { intent { "Recognize a canonical extended task effect name." } }
+{
+  match value {
     "shell" => return true
     "compiler" => return true
     "reports" => return true
     "crypto" => return true
     _ => return false
   }
+}
+
+/// Preserve the exact task-manifest effect vocabulary through bounded helpers.
+pure flow isTaskEffect(value: String) -> Bool
+contract { intent { "Recognize only a canonical task effect name." } }
+{
+  if isTaskEffectCore(value) {
+    return true
+  }
+  return isTaskEffectExtended(value)
 }

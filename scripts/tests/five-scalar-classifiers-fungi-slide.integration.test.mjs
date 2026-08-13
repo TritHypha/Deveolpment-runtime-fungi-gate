@@ -62,7 +62,7 @@ const CANDIDATES = Object.freeze([
     packageDirectory: "galerina-core-tasks",
     sourceFile: "task-effect.fungi",
     flowName: "isTaskEffect",
-    physicalExpectation: "REFUSE_COMPILE",
+    physicalExpectation: "PROVE",
     usesTextComparisonBudget: true,
     values: cases(
       ["filesystem", "network", "database", "environment", "shell", "compiler", "reports", "crypto"],

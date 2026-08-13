@@ -109,9 +109,16 @@ counts or open items that a newer section explicitly supersedes.
   the exact capability ruling in
   `reports/slide-capability-reconciliation-slice-63-2026-08-13.md`. This does
   not authorize retirement, signing, production admission or release.
-- [ ] Resume Slice 63 with a source candidate whose complete boundary fits the
-  reconciled profile; retain focused proof per slice and defer aggregate
-  roadmap, graph and index closure to the next 25-slice boundary.
+- [x] Record Slice 63 as `BLOCKED_BY_BOOTSTRAP_FLOOR`. The selected
+  core-security decision fits the scalar profile, but the authoritative queue
+  correctly refuses an override for its `T1-trust-root` bounded bootstrap
+  floor; exploratory files were removed.
+- [x] Reopen and complete Slice 35 under the reconciled SLIDE call-chain
+  profile. The bounded four-plus-four helper graph passes package proof **2/2**,
+  strict check and physical SLIDE/VOK **8/8**. Both private skills now bind the
+  reusable helper-call proof rule at `938a71b` and `9d46ddc`.
+- [ ] Continue Slices 64-87 with non-floor candidates and focused evidence;
+  defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
 
