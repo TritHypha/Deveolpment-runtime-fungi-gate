@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-93 File Status
+# Fungi Conversion Batch 33-94 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -92,6 +92,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 91 | `packages-galerina/galerina-tower-citizen/src/substrate-model.ts#effectiveVerdict` | `packages-galerina/galerina-tower-citizen/src/self-hosted/effective-verdict.fungi` | `packages-galerina/galerina-tower-citizen/tests/effective-verdict-fungi-conversion.test.mjs` | The complete typed K3 minimum table passes the independent TypeScript oracle, checked Fungi and a dedicated two-Verdict physical `.slide`/VOK lane. Tower-Citizen passes **511/511** and the physical lane passes **1/1**. TypeScript remains active. | `DONE` (`CANDIDATE`) |
 | 92 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vOr` | `packages-galerina/galerina-tower-citizen/src/self-hosted/verdict-or.fungi` | `packages-galerina/galerina-tower-citizen/tests/verdict-or-fungi-conversion.test.mjs` | The complete typed K3 maximum table passes the independent TypeScript oracle, checked Fungi and a dedicated two-Verdict physical `.slide`/VOK lane. Tower-Citizen passes **513/513** and the physical lane passes **1/1**. TypeScript and every caller remain active. | `DONE` (`CANDIDATE`) |
 | 93 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vAnd` | existing `packages-galerina/galerina-tower-citizen/src/self-hosted/effective-verdict.fungi` | `packages-galerina/galerina-tower-citizen/tests/verdict-and-fungi-supersession.test.mjs` | The direct export and existing Fungi flow match all nine literal K3-minimum rows. A duplicate `verdict-and.fungi` is explicitly refused. Tower-Citizen passes **515/515**, the direct proof **2/2**, and the inherited physical SLIDE/VOK proof **1/1** with zero skips. TypeScript remains active. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
+| 94 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#allOf` | not created | existing complete Tower-Citizen lane retained | The arbitrary-length readonly Verdict-array fold includes empty→Unknown, single-element identity, ordered K3 minimum and malformed-element refusal. The selected physical profile admits scalar Bool/Verdict parameters, not `Array<Verdict>` length/index/fold semantics. Host projection is refused. Tower-Citizen passes **515/515**. | `BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI` |
 
 ## Shared implementation and governance files
 
@@ -124,6 +125,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/specs/2026-08-13-slice-93-vand-supersession-design.md` | Exact evidence-reuse and no-duplicate design for Slice 93. | `DONE` |
 | `docs/superpowers/plans/2026-08-13-slice-93-vand-supersession.md` | Focused direct supersession and inherited physical-proof plan. | `DONE` |
 | `packages-galerina/galerina-tower-citizen/tests/verdict-and-fungi-supersession.test.mjs` | Direct nine-row proof that exported `vAnd` is exactly covered by the existing Fungi minimum. | `DONE` |
+| `docs/reports/slice-94-allof-fungi-conversion-2026-08-13.md` | Exact array-fold ABI refusal and required exit for Slice 94. | `DONE` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
 | `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
@@ -137,7 +139,7 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 93 bounded decision is complete. The authored TODO, active roadmap
+The Slice 94 bounded decision is complete. The authored TODO, active roadmap
 and live conversion register are updated. Focused source, physical boundary,
 roadmap, graph and generated-owner checks are current at their relevant input
 build points. The final codebase-memory navigation refresh returned
@@ -154,7 +156,7 @@ bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody; Slice 93 required no skill update) |
+| Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody; Slice 94 required no skill update) |
 | Final codebase graph and Myco navigation refresh | `UNKNOWN`: two moderate code-graph refresh attempts returned `Transport closed`, so no final-HEAD graph receipt exists. Myco remains readable at 5,354 files / 83,226 terms, but its status does not prove Git-HEAD equivalence. Retry the bounded graph refresh after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
 
 ## Verified refusal retained outside the batch
@@ -295,3 +297,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   consumer switch or whole-file proof. The direct export/existing-Fungi lane
   passes **2/2** and the inherited physical minimum lane passes **1/1** with
   zero skips. TypeScript and all callers remain active.
+- Slice 94 is a complete blocked adjudication. No placeholder asset exists.
+  Exact array shape, empty behavior, fold semantics and malformed-element
+  refusal require a physical `Array<Verdict>` ABI that is not currently
+  admitted. Tower-Citizen remains green **515/515**.

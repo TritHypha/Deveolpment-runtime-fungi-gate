@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 94 allOf array-fold adjudication - 2026-08-13
+
+- [x] Adjudicate Tower-Citizen `allOf` as
+  `BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI`; create no placeholder Fungi asset.
+- [x] Preserve the exact blocker: arbitrary-length `readonly Verdict[]`,
+  empty→Unknown, single-element identity, nonempty K3-minimum reduction and
+  malformed-element refusal cannot be represented by the current scalar
+  Bool/Verdict physical profile. Tower-Citizen remains green 515/515.
+- [x] Review both private Fungi skills at `dc2ef82f` and `30eb4dd3`;
+  `NO_SKILL_UPDATE` is correct because their container-ABI and
+  no-host-projection rules already require this refusal.
+- [ ] Add and independently admit a bounded physical `Array<Verdict>` ABI with
+  exact length/index semantics and resource limits before reopening `allOf`.
+- [ ] Keep TypeScript and every caller active; host-precomputed empty/minimum
+  scalars are not source-equivalent and cannot authorize conversion.
+
 ### Slice 93 vAnd supersession - 2026-08-13
 
 - [x] Classify Tower-Citizen `vAnd` as

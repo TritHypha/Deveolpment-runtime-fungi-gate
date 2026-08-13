@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 93**. Slices
+The current conversion campaign is complete through **Slice 94**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -48,6 +48,12 @@ minimum implementation. A direct 2/2 proof binds `vAnd` to the existing Slice
 `verdict-and.fungi`; the inherited physical lane remains 1/1 with zero skips.
 This is semantic supersession, not TypeScript retirement.
 
+Slice 94 refuses `allOf` at the exact array boundary. Binary K3 minimum is
+proved, but the source accepts arbitrary-length readonly Verdict arrays and
+owns empty-array, reduction and malformed-element behavior. The current
+physical profile exposes scalar Bool/Verdict parameters only; host projection
+would move authority. No placeholder Fungi asset was created.
+
 ## Current evidence
 
 - Slice 92 physical-proof build point: `a7258cef` on
@@ -81,7 +87,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 93 decision boundary is complete. Literal
+The Slice 94 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed

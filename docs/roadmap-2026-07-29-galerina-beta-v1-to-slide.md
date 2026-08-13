@@ -3,7 +3,7 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 93**, with the exact status and R&D intake recorded in
+through **Slice 94**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
@@ -23,7 +23,9 @@ Its independent physical proof binds both inputs and the result to Verdict type
 ID `3`, executes all nine rows without fallback, and releases no authority.
 Slice 93 proves exported `vAnd` is exactly superseded by the existing Slice 91
 Fungi minimum and physical proof; a duplicate Fungi asset is refused. All four
-legacy sources and their consumers remain active.
+legacy sources and their consumers remain active. Slice 94 refuses `allOf`:
+the current scalar physical profile cannot preserve its arbitrary-length
+Verdict-array boundary, empty→Unknown rule and malformed-element behavior.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic
