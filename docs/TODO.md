@@ -4,6 +4,43 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 208-217 metrics collector state - 2026-08-13
+
+- [x] Retain `emptyStatusClasses`, `RouteAccumulator.constructor` and
+  `RouteAccumulator.snapshot` at fresh mutable map identity, retained labels,
+  nested histogram state, binary64 rates and ordered snapshot semantics.
+- [x] Retain private `normaliseRoute` at open host input, query stripping,
+  JavaScript-regex whitespace removal and 200 UTF-16-code-unit truncation.
+- [x] Retain private `statusClassOf` at the complete JavaScript-number integer,
+  division/floor, closed selector and absence boundary.
+- [x] Account `MetricsCollectorOptions` as an erased
+  `NO_RUNTIME_BEHAVIOR` declaration; it validates no route cap.
+- [x] Retain `MetricsCollector.constructor`, `record`, `#routeAccumulator` and
+  `snapshot` at their affine private maps/histograms, open observation ingress,
+  multi-object mutation order, dynamic keys, sorting and exact object identity.
+  No placeholder Fungi asset was created.
+- [x] Prove observability **36/36** and focused metrics/kernel consumers
+  **20/20**, both with zero failures and zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct because
+  current exact-record, open-input, binary64, no-`try/catch`, collection-order,
+  boundedness and mutable-state rules cover all ten scopes.
+- [ ] Priority metrics boundedness defect: `#routeAccumulator` does not impose
+  a global route-series cap when method names vary. An exact probe with
+  `maxRoutes: 1`, one base observation and 100 distinct methods produced
+  **101 route series**, including **100 overflow series**. Add a hostile-method
+  regression, choose a single global overflow identity or a separately bounded
+  method vocabulary, conserve total/error/latency accounting and update the
+  file-level bounded-memory claim only after the fixed invariant is proved.
+- [ ] Define one exact external-label/status-map/binary64/Option/record ABI plus
+  an affine metrics capability with ordered multi-object mutation, failure
+  containment, snapshot sorting and retained identity before reopening these
+  slices.
+- [ ] Retain TypeScript and every route/consumer. Focused evidence grants no
+  whole-file retirement, production, release or push authority.
+- [ ] Defer aggregate graph/index/roadmap/subway owners and Myco refresh until
+  Slice 222 under the approved 25-slice cadence. Repository-wide closure
+  remains `UNKNOWN`; crash-linked aggregate lanes remain excluded.
+
 ### Slices 198-207 metrics types and histogram - 2026-08-13
 
 - [x] Account `StatusClass`, `RequestObservation`, `LatencySnapshot`,

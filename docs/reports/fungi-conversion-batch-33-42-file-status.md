@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-207 File Status
+# Fungi Conversion Batch 33-217 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-198-207-metrics-types-and-histogram.md`](../superpowers/plans/2026-08-13-slices-198-207-metrics-types-and-histogram.md).
+[`../superpowers/plans/2026-08-13-slices-208-217-metrics-collector-state.md`](../superpowers/plans/2026-08-13-slices-208-217-metrics-collector-state.md).
 Slice 197 closed the last approved graph/index/roadmap boundary. Slice 222 is
 the next boundary; crash-linked aggregate lanes remain excluded.
 
@@ -209,6 +209,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 205 | `packages-galerina/galerina-observability/src/metrics.ts#Histogram.snapshot` | not created | snapshot proof retained | Ordered cumulative materialization, infinity-sentinel conversion, binary64 rounding and four percentile calls remain bound to mutable state. | `BLOCKED_BY_MUTABLE_BINARY64_HISTOGRAM_SNAPSHOT_ABI` |
 | 206 | `packages-galerina/galerina-observability/src/metrics.ts#clamp` | not created | comparison proof retained | Three JavaScript numbers preserve NaN pass-through and signed-zero identity; signed-i32 comparison is not equivalent. | `BLOCKED_BY_BINARY64_COMPARISON_AND_NAN_ABI` |
 | 207 | `packages-galerina/galerina-observability/src/metrics.ts#round` | not created | rounding proof retained | Multiplication, `Math.round` and division retain binary64 overflow, NaN/infinity, signed-zero and tie-direction behavior. | `BLOCKED_BY_BINARY64_ROUNDING_ABI` |
+| 208 | `packages-galerina/galerina-observability/src/metrics.ts#emptyStatusClasses` | not created | fresh-state proof retained | Each call allocates one independent mutable record with five external status keys and zero counters. | `BLOCKED_BY_MUTABLE_STATUS_CLASS_RECORD_ABI` |
+| 209 | `packages-galerina/galerina-observability/src/metrics.ts#RouteAccumulator.constructor` | not created | object-construction proof retained | Retained labels plus total/status/error/nested-histogram state require one affine mutable identity. | `BLOCKED_BY_MUTABLE_ROUTE_ACCUMULATOR_IDENTITY_ABI` |
+| 210 | `packages-galerina/galerina-observability/src/metrics.ts#RouteAccumulator.snapshot` | not created | route-snapshot proof retained | The method reads live fields, clones status state, derives a binary64 rate and snapshots the nested histogram in order. | `BLOCKED_BY_MUTABLE_ROUTE_METRIC_SNAPSHOT_ABI` |
+| 211 | `packages-galerina/galerina-observability/src/metrics.ts#normaliseRoute` | not created | route-label proof retained | Open host input, query removal, JavaScript whitespace regex and UTF-16 truncation lack one admitted text boundary. | `BLOCKED_BY_OPEN_HOST_STRING_REGEX_UTF16_ABI` |
+| 212 | `packages-galerina/galerina-observability/src/metrics.ts#statusClassOf` | not created | status-class proof retained | Full binary64 integer/floor behavior plus typed absence cannot be narrowed to signed-i32 ingress. | `BLOCKED_BY_BINARY64_HTTP_STATUS_CLASS_ABI` |
+| 213 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollectorOptions` | not created | declaration accounted | Erased optional-number record validates neither the positive integer route cap nor defaulting. | `NO_RUNTIME_BEHAVIOR` |
+| 214 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.constructor` | not created | collector-construction proof retained | Private maps/histograms/counters, optional binary64 validation and retained object identity lack one admitted capability. | `BLOCKED_BY_MUTABLE_METRICS_COLLECTOR_BINARY64_ABI` |
+| 215 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.record` | not created | mutation-transaction proof retained | Open hostile property access and contained failures feed ordered global/per-route counter and histogram mutations. | `BLOCKED_BY_OPEN_HOST_RECORD_MUTABLE_METRICS_TRANSACTION_ABI` |
+| 216 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.#routeAccumulator` | not created | dynamic-cardinality proof retained | Dynamic method keys create retained per-method overflow state; `maxRoutes: 1` plus 100 methods yields 101 series, so the claimed global bound is false. | `BLOCKED_BY_DYNAMIC_METHOD_KEY_MUTABLE_CARDINALITY_ABI` |
+| 217 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsCollector.snapshot` | not created | collector-snapshot proof retained | Live map materialization/sorting, nested state snapshots, cloned counters and binary64 rate remain one active graph. | `BLOCKED_BY_MUTABLE_METRICS_SNAPSHOT_SORT_ABI` |
 
 ## Shared implementation and governance files
 
@@ -258,7 +268,7 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 207 bounded decision is complete. The last scheduled maintenance
+The Slice 217 bounded decision is complete. The last scheduled maintenance
 boundary was Slice 197; its owners remained current at `691bd33f`. The
 post-commit Myco refresh indexed 5,488 files / 83,364 terms and finds Slice 197
 in four governed files. Codebase-memory still returns `Transport closed`, so
@@ -268,7 +278,7 @@ repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
-| `docs/TODO.md` | `DONE` through the authored Slice 207 status and Slice 222 queue |
+| `docs/TODO.md` | `DONE` through the authored Slice 217 status and Slice 222 queue |
 | `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` at the last scheduled Slice 197 maintenance boundary; next refresh Slice 222 |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
