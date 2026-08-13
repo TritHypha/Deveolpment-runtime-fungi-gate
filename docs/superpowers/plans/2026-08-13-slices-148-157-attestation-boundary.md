@@ -31,42 +31,42 @@ VOK contracts, Myco, Markdown slice receipts.
 
 ### Task 1: Exact preflight and duplicate conservation
 
-- [ ] Bind Slices 148-149 to `AuditFilter` and `AuditLoggerOptions`.
-- [ ] Bind Slices 150-157 to `AttestationPolicy`, `AttestationResult`,
+- [x] Bind Slices 148-149 to `AuditFilter` and `AuditLoggerOptions`.
+- [x] Bind Slices 150-157 to `AttestationPolicy`, `AttestationResult`,
   `attestationHash`, `signManifest`, `verifyAttestation`,
   `generateAttestationKeypair`, `attestBridge` and
   `generateHybridAttestationKeypair`.
-- [ ] Search existing package Fungi assets and conserve
+- [x] Search existing package Fungi assets and conserve
   `pq-admission-policy.fungi` as a narrower policy twin, not a duplicate or
   full-source replacement.
 
 ### Task 2: Classify every semantic exit
 
-- [ ] Audit the two configuration records for Option, binary64, callback,
+- [x] Audit the two configuration records for Option, binary64, callback,
   capability and exact JavaScript object-shape requirements.
-- [ ] Audit hash/sign/verify/key-generation surfaces for canonical bytes,
+- [x] Audit hash/sign/verify/key-generation surfaces for canonical bytes,
   Node key objects, base64, randomness, dynamic imports, hybrid no-downgrade,
   revocation and typed failure behavior.
-- [ ] Audit `attestBridge` for getters, prototype/method delegation, lifecycle
+- [x] Audit `attestBridge` for getters, prototype/method delegation, lifecycle
   effects and thrown missing-manifest identity.
-- [ ] Refuse any surface whose complete source domain or effect identity is not
+- [x] Refuse any surface whose complete source domain or effect identity is not
   admitted through Fungi, GIR, physical `.slide` and independent VOK receipts.
 
 ### Task 3: Bounded evidence
 
-- [ ] Run Tower-Citizen typecheck.
-- [ ] Run the focused audit, classical-attestation, hybrid-attestation,
+- [x] Run Tower-Citizen typecheck.
+- [x] Run the focused audit, classical-attestation, hybrid-attestation,
   certified-profile, photonic-admission and PQ policy files; record exact
   pass/skip counts.
-- [ ] Run complete Tower-Citizen; require zero failures and zero skips.
+- [x] Run complete Tower-Citizen; require zero failures and zero skips.
 
 ### Task 4: Publish exact decisions
 
-- [ ] Create ten Slice 148-157 reports and append the live register.
-- [ ] Review both private Fungi skills. Update only for a genuinely missing,
+- [x] Create ten Slice 148-157 reports and append the live register.
+- [x] Review both private Fungi skills. Update only for a genuinely missing,
   reusable, source-proven rule; otherwise record `NO_SKILL_UPDATE`.
-- [ ] Update `docs/TODO.md` with reopen conditions and retain TypeScript.
-- [ ] Run the slice-close receipt owner for the new ten reports and commit
+- [x] Update `docs/TODO.md` with reopen conditions and retain TypeScript.
+- [x] Run the slice-close receipt owner for the new ten reports and commit
   bounded documents only. Do not run crash-linked aggregate lanes.
 
 ## Self-review

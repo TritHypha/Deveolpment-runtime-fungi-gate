@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 148-157 audit options and attestation boundary - 2026-08-13
+
+- [x] Classify `AuditFilter` and `AuditLoggerOptions` at their optional-record,
+  binary64/truthiness/slice, callback, clock and active-egress exits.
+- [x] Classify `AttestationPolicy`, `AttestationResult`, `attestationHash`,
+  `signManifest`, `verifyAttestation`, `generateAttestationKeypair`,
+  `attestBridge` and `generateHybridAttestationKeypair` at their exact
+  manifest/wire, crypto, key-custody, randomness, revocation and active-object
+  exits. No placeholder Fungi asset was created.
+- [x] Conserve the existing `pq-admission-policy.fungi` as a narrower policy
+  twin. It folds already verified facts; it does not implement Ed25519,
+  ML-DSA-65, hashing, key generation, revocation access or bridge delegation.
+- [x] Prove TypeScript typecheck, focused **67/67**, and complete Tower-Citizen
+  **515/515** with zero skips.
+- [x] Update both private Fungi skills with a test-enforced independent
+  cryptographic-evidence boundary at `b53365f` and `b01d64e`. A caller- or
+  host-computed signature-valid Boolean, scalar tag or unsigned record is not
+  cryptographic parity. No skill repository was pushed.
+- [ ] Add exact optional String/binary64 records, authenticated callbacks,
+  canonical manifest bytes, registered hash/signature suites, isolated key
+  custody/entropy, revocation/freshness and leased bridge-capability ABIs before
+  reopening these conversions.
+- [ ] Keep TypeScript and every caller active. No policy twin, focused test,
+  signature-valid Boolean or immutable record grants a consumer switch,
+  retirement, signing, production, release or push authority.
+- [ ] Defer retirement/queue, aggregate graph/index, roadmap/subway and Myco
+  owners until Slice 172 under the approved 25-slice cadence. Repository-wide
+  closure remains `UNKNOWN` and crash-linked aggregate lanes remain excluded.
+
 ### Compute-mix, verification and unimprovable-core R&D intake - 2026-08-13
 
 - [x] Index the owner-adjudicated RD-0811..RD-0836 compute-mix programme as

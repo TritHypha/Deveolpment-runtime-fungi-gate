@@ -1,11 +1,11 @@
-# Fungi Conversion Batch 33-147 File Status
+# Fungi Conversion Batch 33-157 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current five-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-143-147-audit-closure.md`](../superpowers/plans/2026-08-13-slices-143-147-audit-closure.md).
-The active roadmap is updated once at the bounded batch exit.
+The current ten-slice decision plan is
+[`../superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md`](../superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md).
+Aggregate graph, index and roadmap owners run at the next 25-slice boundary.
 
 ## Slice 63 entry gate
 
@@ -148,6 +148,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 145 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.getLifecycle` | not created | lifecycle fold proof retained | Active query, array allocation, unknown-value string coercion and membership folds cannot be host-prepared. | `BLOCKED_BY_AUDIT_ARRAY_FOLD_ABI` |
 | 146 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#TowerAuditEvent` | not created | event shape/consumer proof retained | Complete heterogeneous record includes open unknown details and optional binary64 tick beyond the admitted descriptor. | `BLOCKED_BY_AUDIT_EVENT_RECORD_ABI` |
 | 147 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#EgressSink` | not created | governed egress/chain proof retained | Retained push/flush effect capability requires exact identity, ordering, durability, failure and revocation. | `BLOCKED_BY_ACTIVE_EGRESS_CAPABILITY_ABI` |
+| 148 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditFilter` | not created | query/filter proof retained | Optional strings/unions plus JavaScript binary64 limit and truthy/negative-slice semantics exceed the admitted record/Option profile. | `BLOCKED_BY_OPTION_BINARY64_FILTER_RECORD_ABI` |
+| 149 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLoggerOptions` | not created | construction/tick/egress proof retained | Optional binary64, retained tick callback and active egress capability are construction behavior, not immutable transport. | `BLOCKED_BY_HOST_CALLBACK_EGRESS_OPTIONS_ABI` |
+| 150 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#AttestationPolicy` | not created | policy/key/revocation proof retained | Optional policy fields, hash array, ML-DSA bytes and throwing revocation callback have no exact admitted record/capability ABI. | `BLOCKED_BY_CRYPTO_POLICY_CALLBACK_RECORD_ABI` |
+| 151 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#AttestationResult` | not created | exact result-shape proof retained | Boolean with independently optional reason/hash properties is not the pinned record/Option<String> wire surface and grants no verification authority. | `BLOCKED_BY_OPTIONAL_ATTESTATION_RESULT_RECORD_ABI` |
+| 152 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#attestationHash` | not created | canonical-manifest/hash proof retained | Exact UTF-8 canonicalization, SHA-256 and lowercase hex require an independently admitted crypto/manifest ABI. | `BLOCKED_BY_CANONICAL_MANIFEST_SHA256_HOST_ABI` |
+| 153 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#signManifest` | not created | signing/tamper proof retained | PEM private-key parsing, exact Ed25519 signing, Buffer and base64 cross key-custody and host-crypto boundaries. | `BLOCKED_BY_ED25519_PRIVATE_KEY_SIGNING_ABI` |
+| 154 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#verifyAttestation` | not created | classical verifier proof retained | Shape/hash/pin/key/signature/revocation and caught-failure facts require one independent verifier receipt; the policy twin is narrower. | `BLOCKED_BY_CRYPTOGRAPHIC_ATTESTATION_VERIFIER_ABI` |
+| 155 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#generateAttestationKeypair` | not created | keygen/wrong-key proof retained | Host entropy, Ed25519 key objects and private PKCS8 export require isolated key custody and lifecycle receipts. | `BLOCKED_BY_ED25519_KEYGEN_PRIVATE_CUSTODY_ABI` |
+| 156 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#attestBridge` | not created | signed-bridge/delegation proof retained | Missing-manifest Error identity, getters and lifecycle method delegation require an active leased bridge object. | `BLOCKED_BY_ACTIVE_BRIDGE_DELEGATION_OBJECT_ABI` |
+| 157 | `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts#generateHybridAttestationKeypair` | not created | hybrid/no-downgrade proof retained | Async dynamic ML-DSA import, random seed, two keygens, PEM and mutable key arrays lack a hybrid custody transaction. | `BLOCKED_BY_HYBRID_KEYGEN_RANDOM_CUSTODY_ABI` |
 
 ## Shared implementation and governance files
 
@@ -164,6 +174,7 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/specs/2026-08-12-slice-62-weak-key-bytes-adjudication.md` | Product-owner negative adjudication for the optional Bytes, bounded traversal and key-custody boundary in Slice 62. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slice-63-bootstrap-floor-adjudication.md` | Fail-closed bootstrap-floor adjudication for core-security's otherwise scalar-compatible decision. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
+| `docs/superpowers/plans/2026-08-13-slices-148-157-attestation-boundary.md` | Fail-closed plan for audit configuration and classical/hybrid attestation boundaries. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slices-84-87-boundary-adjudication.md` | Product-owner negative adjudication for the regex/case-fold, affine profile, binary64 `unknown`, and active TLS-object boundaries. | `DONE` |
 | `docs/reports/slice-88-myco-search-outcome-guard-fungi-conversion-2026-08-13.md` | Product-owner negative adjudication for the Myco vendor-custody and dynamic object-union boundary. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slice-89-documentation-path-fungi-conversion-design.md` | Bound design for the reference-only documentation-path candidate. | `DONE` |
@@ -412,3 +423,11 @@ not one of Slices 33–43 and no Fungi asset was produced.
   with zero skips. Skill review is `NO_SKILL_UPDATE`: the current rules already
   cover every reusable boundary. Silent malformed-ledger row loss is separately
   tracked as a priority fail-closed security investigation.
+- Slices 148-157 remain blocked without placeholder assets. The two audit
+  configuration records retain optional binary64, callback and egress behavior;
+  the attestation surfaces retain canonical bytes, key custody, randomness,
+  Ed25519/ML-DSA operations, revocation callbacks and active bridge delegation.
+  The existing checked Fungi PQ policy twin remains narrower policy evidence,
+  never crypto verification. Focused **67/67**, TypeScript typecheck and complete
+  Tower-Citizen **515/515** pass with zero skips. Both private skills now forbid
+  caller/host-projected cryptographic verdicts at `b53365f` and `b01d64e`.
