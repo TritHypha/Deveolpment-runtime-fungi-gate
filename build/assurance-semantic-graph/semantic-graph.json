@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "3eb56619200c06227b54450b85b179649e5a3772f4ce1c141b35abc24e6baf78",
+  "authoritativeInputsDigest": "bfcb8bef2227b51b6778818c229b03b1fd25aa997f3bfb2cd63241dfdf7b7540",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6062,6 +6062,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-187a51226c08b3d3bd1f3de9",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/runner-constants-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-9fa5eeb12cb756b809f8eeb0",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-test/tests/runners.test.mjs",
@@ -11472,6 +11479,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-187a51226c08b3d3bd1f3de9",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-9fa5eeb12cb756b809f8eeb0",
       "to": "package:galerina-test",
       "type": "CLASSIFIES"
@@ -12722,9 +12734,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 975,
+    "tests": 976,
     "detectors": 6,
-    "executableFamily": 1487,
+    "executableFamily": 1488,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
