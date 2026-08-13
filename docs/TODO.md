@@ -35,9 +35,12 @@ counts or open items that a newer section explicitly supersedes.
   explicit governed test-harness classification or exclusion. They are literal
   entries in the all-TS/MJS queue and cannot be silently counted as converted
   merely because numbered production-source slices use them as evidence.
-- [ ] Complete the individually registered Slice 297 graph/index/roadmap
-  maintenance matrix. Crash-linked aggregate lanes remain excluded and
-  repository-wide closure remains `UNKNOWN`.
+- [x] Complete the individually registered Slice 297 maintenance matrix:
+  queue 1,486/1,486; package 100/201; KB 4/4; project 5/5; graph 9,742
+  nodes / 9,902 edges / zero violations; 172 tools / 40 proofs; 147 Fungi
+  files; semantic 3/3 with 974 tests; code index 974; canonical 7/7 at 9,612;
+  receipts 237/237; roadmap 5/5 and Golden 11/11. Crash-linked aggregate lanes
+  remain excluded and repository-wide closure remains `UNKNOWN`.
 
 ### Slices 248-272 observability, substrate and accelerator - 2026-08-13
 
