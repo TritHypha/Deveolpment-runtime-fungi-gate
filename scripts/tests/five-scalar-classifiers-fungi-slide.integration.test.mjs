@@ -29,6 +29,28 @@ function cases(accepted, rejected) {
   ]);
 }
 
+const BOUNDARY_KINDS = Object.freeze(["api", "webhook", "internal", "package", "secure", "public"]);
+const BOUNDARY_TRUST = Object.freeze(["untrusted", "validated", "internal", "privileged"]);
+
+function boundaryCrossingCases() {
+  const rows = [];
+  for (const callerKind of BOUNDARY_KINDS) {
+    for (const calleeTrustLevel of BOUNDARY_TRUST) {
+      const expected = callerKind === "secure"
+        ? calleeTrustLevel === "internal" || calleeTrustLevel === "privileged"
+        : callerKind === "api" || callerKind === "webhook"
+          ? calleeTrustLevel !== "untrusted"
+          : true;
+      rows.push(Object.freeze({ arguments: [callerKind, calleeTrustLevel], expected }));
+    }
+  }
+  rows.push(
+    Object.freeze({ arguments: ["unknown", "internal"], expected: false }),
+    Object.freeze({ arguments: ["api", "unknown"], expected: false }),
+  );
+  return Object.freeze(rows);
+}
+
 const CANDIDATES = Object.freeze([
   Object.freeze({
     slice: 33,
@@ -126,6 +148,16 @@ const CANDIDATES = Object.freeze([
         "unknown\u0000",
       ],
     ),
+  }),
+  Object.freeze({
+    slice: 78,
+    packageIdentity: "@galerina/devtools-graph-algorithms",
+    packageDirectory: "galerina-devtools-graph-algorithms",
+    sourceFile: "boundary-crossing.fungi",
+    flowName: "isCrossingAllowed",
+    physicalExpectation: "REFUSE_COMPILE",
+    usesTextComparisonBudget: true,
+    values: boundaryCrossingCases(),
   }),
 ]);
 
@@ -239,16 +271,17 @@ async function proveCandidate(slide, candidate) {
     assert.equal(slideFiles.length, 1);
 
     let retainedReceipt;
-    for (const { value, expected } of candidate.values) {
+    for (const item of candidate.values) {
+      const args = item.arguments ?? [item.value];
       const receipt = slide.executeTypedCheckedFungiPackagePublication(
         await prepare(slide, candidate, publicationDirectory, context),
-        [value],
+        args,
         executionBudgets(candidate),
       );
       assert.equal(
         receipt.status,
         "SUCCEEDED_PHYSICAL_REFERENCE_ONLY",
-        `${candidate.flowName}(${JSON.stringify(value)}): ${JSON.stringify(receipt)}`,
+        `${candidate.flowName}(${JSON.stringify(args)}): ${JSON.stringify(receipt)}`,
       );
       assert.equal(receipt.safeValueTypeId, slide.SAFE_VALUE_TYPE_IDS.bool);
       const verified = slide.verifyTypedCheckedFungiPackageReceipt(
@@ -256,20 +289,21 @@ async function proveCandidate(slide, candidate) {
         verificationExpectation(receipt),
       );
       assert.equal(verified.verdict, 1, JSON.stringify(verified));
-      assert.equal(verified.value, expected, JSON.stringify(value));
+      assert.equal(verified.value, item.expected, JSON.stringify(args));
       assert.equal(verified.authorityReleased, false);
       retainedReceipt = receipt;
     }
 
-    const validValue = candidate.values[0].value;
-    for (const invalidArguments of [
+    const validArguments = candidate.values[0].arguments ?? [candidate.values[0].value];
+    const invalidCases = candidate.invalidArguments ?? [
       [],
       [1],
       [true],
-      [validValue, "extra"],
+      [...validArguments, "extra"],
       ["\ud800"],
       ["x".repeat(257)],
-    ]) {
+    ];
+    for (const invalidArguments of invalidCases) {
       const refused = slide.executeTypedCheckedFungiPackagePublication(
         await prepare(slide, candidate, publicationDirectory, context),
         invalidArguments,
@@ -281,7 +315,7 @@ async function proveCandidate(slide, candidate) {
 
     const exhausted = slide.executeTypedCheckedFungiPackagePublication(
       await prepare(slide, candidate, publicationDirectory, context),
-      [validValue],
+      validArguments,
       executionBudgets(candidate, 1),
     );
     assert.equal(exhausted.status, "REFUSED", JSON.stringify(exhausted));

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "770cfcdf174b5a888ae05625d53440d59585d6f16be0b2f4d3d45a0f6b28df57",
+  "sourceDigest": "b4028a82c4f16175a982e4e0c0b157f1ffc056a9335dcc8176f2e128581c5537",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1479,
+    "total": 1480,
     "CANDIDATE": 0,
     "BLOCKED": 850,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 629
+    "BOOTSTRAP_FLOOR": 630
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -8251,6 +8251,14 @@
     },
     {
       "path": "packages-galerina/galerina-devtools-graph-algorithms/tests/algorithms.test.mjs",
+      "package": "galerina-devtools-graph-algorithms",
+      "tranche": "T3-package-graph",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-graph-algorithms/tests/boundary-crossing-fungi-conversion.test.mjs",
       "package": "galerina-devtools-graph-algorithms",
       "tranche": "T3-package-graph",
       "classification": "BOOTSTRAP_FLOOR",

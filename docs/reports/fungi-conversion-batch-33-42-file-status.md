@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-77 File Status
+# Fungi Conversion Batch 33-78 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -76,6 +76,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 75 | `packages-galerina/galerina-devtools-package-graph/src/scanner.ts#isSourceFile` | not created | existing complete Package Graph lane retained | Physical two-String suffix execution exists, but the source also consumes configuration-derived dynamic `Array<String>` and the full JavaScript UTF-16 String domain. The physical profile has neither that array parameter nor source-equivalent hostile/oversized behavior. Package Graph passes **28/28**. | `BLOCKED_BY_DYNAMIC_STRING_ARRAY_SUFFIX_ABI` |
 | 76 | `packages-galerina/galerina-tower-citizen/src/ai-governance.ts#isTrit` | not created | existing complete Tower-Citizen lane retained | The live type guard accepts JavaScript `unknown`, returns true only for numeric `-1/0/1`, and lets the caller map every malformed value explicitly to DENY. Physical `Verdict` removes the negative domain; signed-i32 `Int` narrows it; boundary refusal is not source false. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_VERDICT_GUARD_ABI` |
 | 77 | `packages-galerina/galerina-tower-citizen/src/quorum.ts#isValidVote` | not created | existing complete Tower-Citizen lane retained | The source accepts open JavaScript objects and its property reads can execute accessors or proxy traps. Physical exact records instead refuse proxies, accessors, inherited and surplus fields before Fungi runs, so they cannot preserve the Boolean malformed path. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_STRUCTURAL_RECORD_ABI` |
+| 78 | `packages-galerina/galerina-devtools-graph-algorithms/src/graphs/boundary-graph.ts#isCrossingAllowed` | `packages-galerina/galerina-devtools-graph-algorithms/src/self-hosted/boundary-crossing.fungi` | `packages-galerina/galerina-devtools-graph-algorithms/tests/boundary-crossing-fungi-conversion.test.mjs` | The complete six-by-four table passes checker, GIR, interpretation and signed WAT/Wasm, with surplus labels denied. Physical package compilation refuses before a handle or bundle exists. Graph Algorithms passes **97/97**. | `BLOCKED_BY_TWO_STRING_PHYSICAL_PROFILE` |
 
 ## Shared implementation and governance files
 

@@ -174,7 +174,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_UNKNOWN_STRUCTURAL_RECORD_ABI`. The source accepts an open
   JavaScript structural object and can execute accessor/proxy property reads;
   exact physical records refuse those shapes before the Boolean guard runs.
-- [ ] Continue Slices 78-87 with non-floor candidates and focused evidence;
+- [x] Build and adjudicate Slice 78 `isCrossingAllowed`. The complete closed
+  table passes checked Fungi, GIR, interpretation and signed WAT/Wasm, but the
+  physical package compiler refuses before producing a handle or `.slide`.
+  Terminal status is `BLOCKED_BY_TWO_STRING_PHYSICAL_PROFILE`.
+- [ ] Continue Slices 79-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

@@ -1,0 +1,19 @@
+@version 1
+
+/// Preserve the closed boundary-kind and trust-level crossing policy.
+pure flow isCrossingAllowed(callerKind: String, calleeTrustLevel: String) -> Bool
+contract { intent { "Admit only a declared boundary crossing permitted by the trust policy." } }
+{
+  if callerKind == "secure" {
+    return calleeTrustLevel == "internal" or calleeTrustLevel == "privileged"
+  }
+  if callerKind == "api" or callerKind == "webhook" {
+    return calleeTrustLevel == "validated" or calleeTrustLevel == "internal" or calleeTrustLevel == "privileged"
+  }
+  match callerKind {
+    "internal" => return calleeTrustLevel == "untrusted" or calleeTrustLevel == "validated" or calleeTrustLevel == "internal" or calleeTrustLevel == "privileged"
+    "package" => return calleeTrustLevel == "untrusted" or calleeTrustLevel == "validated" or calleeTrustLevel == "internal" or calleeTrustLevel == "privileged"
+    "public" => return calleeTrustLevel == "untrusted" or calleeTrustLevel == "validated" or calleeTrustLevel == "internal" or calleeTrustLevel == "privileged"
+    _ => return false
+  }
+}

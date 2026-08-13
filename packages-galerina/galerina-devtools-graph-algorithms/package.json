@@ -4,6 +4,11 @@
   "description": "Internal graph data structures and algorithms for the Galerina compiler. Designed for future extraction to fungi-graph.",
   "license": "Apache-2.0",
   "type": "commonjs",
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/boundary-crossing.fungi"
+    ]
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
