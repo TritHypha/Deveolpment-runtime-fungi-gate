@@ -34,6 +34,7 @@
 - `packages-galerina/galerina-tower-citizen/src/capability-grant.ts` SHA-256 `B8A90324D9D7F92EEC3BF5EF06B4947C8A4F09FAC144993A3410F807B3757883`
 - `packages-galerina/galerina-tower-citizen/src/compiled-policy.ts` SHA-256 `C0807BACCD00CD8784CCA12156108C5EE5EA8F2BDA4463102F0803AC54E7BDE0`
 - `packages-galerina/galerina-tower-citizen/src/data-plane-border.ts` SHA-256 `16D8E0AB4D9F14144B8EDA2611BA012B4837EAA1DC272D4E403ECE02AD14363D`
+- `packages-galerina/galerina-tower-citizen/src/deadzone-dispatcher.ts` SHA-256 `0810858269EF4734AC32FBA4F1EF3D80A0D296A4D0EAD23706D34F6DB5A168BF`
 
 ---
 
@@ -59,43 +60,45 @@
 | 613 | `links.test.ts module` |
 | 614 | `AiActionDecision` |
 | 615 | `AiGovernanceResult` |
-| 616 | `isTrit` |
-| 617 | `governAiProposal` |
-| 618 | `AuditLogger` class boundary |
-| 619 | `CapabilityGrant` |
-| 620 | `SignedCapabilityGrant` |
-| 621 | `CAP_MLDSA_CONTEXT` |
-| 622 | `canonicalGrantString` |
-| 623 | `capabilityGrantHash` |
-| 624 | `signCapabilityGrant` |
-| 625 | `signCapabilityGrantHybrid` |
-| 626 | `verifyCapabilityGrant` |
-| 627 | `POL_HAS_ALLOWLIST` |
-| 628 | `POL_DENY_HOST_NATIVE` |
-| 629 | `POL_HAS_CALL_BUDGET` |
-| 630 | `POL_HAS_TOKEN_BUDGET` |
-| 631 | `POL_HAS_COST_CEILING` |
-| 632 | `PolicyTrap` |
-| 633 | `CompiledPolicy` |
-| 634 | `compilePolicy` |
-| 635 | nested `attestBridge` delegating wrapper |
-| 636 | `BRIDGE_MLDSA_CONTEXT` |
-| 637 | nested `attestBridgeHybrid` delegating wrapper |
-| 638 | `VaultManifestEntry` |
-| 639 | `VaultRegistry` |
-| 640 | `DataRow` |
-| 641 | `UserScope` |
-| 642 | `BorderPolicy` |
-| 643 | `vaultIsPublic` |
-| 644 | `admitRowVerdict` |
-| 645 | `admitRow` |
-| 646 | `intersectUserScope` |
-| 647 | `EMPTY_SCOPES` |
+| 616 | `governAiProposal` |
+| 617 | `AuditLogger` class boundary |
+| 618 | `CapabilityGrant` |
+| 619 | `SignedCapabilityGrant` |
+| 620 | `CAP_MLDSA_CONTEXT` |
+| 621 | `canonicalGrantString` |
+| 622 | `capabilityGrantHash` |
+| 623 | `signCapabilityGrant` |
+| 624 | `signCapabilityGrantHybrid` |
+| 625 | `verifyCapabilityGrant` |
+| 626 | `POL_HAS_ALLOWLIST` |
+| 627 | `POL_DENY_HOST_NATIVE` |
+| 628 | `POL_HAS_CALL_BUDGET` |
+| 629 | `POL_HAS_TOKEN_BUDGET` |
+| 630 | `POL_HAS_COST_CEILING` |
+| 631 | `PolicyTrap` |
+| 632 | `CompiledPolicy` |
+| 633 | `compilePolicy` |
+| 634 | nested `attestBridge` delegating wrapper |
+| 635 | `BRIDGE_MLDSA_CONTEXT` |
+| 636 | nested `attestBridgeHybrid` delegating wrapper |
+| 637 | `VaultManifestEntry` |
+| 638 | `VaultRegistry` |
+| 639 | `DataRow` |
+| 640 | `UserScope` |
+| 641 | `BorderPolicy` |
+| 642 | `vaultIsPublic` |
+| 643 | `admitRowVerdict` |
+| 644 | `admitRow` |
+| 645 | `intersectUserScope` |
+| 646 | `EMPTY_SCOPES` |
+| 647 | `dispatchDeadZone` |
 
 Queue reconciliation: graph-first review proved that the initially proposed
 attestation symbols were already governed as Slices 150-160 and most audit
 members as Slices 135-149. They are dependencies only and receive no duplicate
-credit. Slices 635-637 are the three genuinely uncredited attestation scopes.
+credit. `isTrit` remains governed as Slice 76. Slices 634-636 are the three
+genuinely uncredited attestation scopes; Slice 647 replaces the duplicate guard
+with the previously uncredited `dispatchDeadZone` runtime.
 
 ### Task 1: Adjudicate Slices 598-613
 
@@ -109,7 +112,7 @@ credit. Slices 635-637 are the three genuinely uncredited attestation scopes.
 - [ ] Record exact Markdown-link grammar, classification/repair order, filesystem/path/Map/RegExp semantics, CLI output/exit and test-runner effects.
 - [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 598-613.
 
-### Task 2: Adjudicate Slices 614-634
+### Task 2: Adjudicate Slices 614-633
 
 **Files:**
 - Read: `packages-galerina/galerina-tower-citizen/src/ai-governance.ts`
@@ -120,18 +123,19 @@ credit. Slices 635-637 are the three genuinely uncredited attestation scopes.
 
 - [ ] Pin exact ranges, callers, source/test digests, direct Tower custody, and physical evidence.
 - [ ] Record verdict provenance, active logger state, capability grant schemas/canonicalization/signatures, compiled Set/bit-table state and exact trap precedence.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 614-634.
+- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 614-633.
 
-### Task 3: Adjudicate Slices 635-647
+### Task 3: Adjudicate Slices 634-647
 
 **Files:**
 - Read: `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts`
 - Read: `packages-galerina/galerina-tower-citizen/src/data-plane-border.ts`
+- Read: `packages-galerina/galerina-tower-citizen/src/deadzone-dispatcher.ts`
 - Read: bridge-contract declarations, package boundary, callers and focused attestation tests.
 
 - [ ] Pin exact ranges, crypto/runtime dependencies, callers, test identities, direct Tower custody, and physical evidence.
 - [ ] Record wrapper delegation/context identity plus exact record, registry, Set, K3 admission, callback and ordered filtering semantics.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 635-647.
+- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 634-647.
 
 ### Task 4: Author, verify, review, and publish the wave
 
