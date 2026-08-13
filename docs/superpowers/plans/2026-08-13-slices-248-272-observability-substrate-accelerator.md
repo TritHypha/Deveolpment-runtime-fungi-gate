@@ -43,3 +43,10 @@ Two reusable lessons were added to both private skills: erased TypeScript shape
 restrictions cannot protect trusted fields from a later untrusted spread, and
 host fields must be captured once from inert own data before validation and use.
 Both skill repositories remain private and unpushed.
+
+The Slice 272 individual owner matrix is green at maintenance commit
+`b9f2edb9`: 1,486/1,486 queue paths, 100 packages / 201 outputs, KB 4/4,
+project 5/5, graph integrity 9,716 nodes / 9,900 edges / zero violations,
+semantic 3/3 with 974 tests, code index 974, canonical counts 7/7 at 9,612,
+212/212 receipts, Golden 11/11 and roadmap 5/5. No crash-linked aggregate was
+run; repository-wide closure remains `UNKNOWN`.

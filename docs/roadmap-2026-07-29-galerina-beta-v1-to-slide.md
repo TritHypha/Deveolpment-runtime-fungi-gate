@@ -3443,6 +3443,9 @@ The TODO owns each repair and its hostile vectors.
 Both private skills now require exact runtime validation where TypeScript
 `Omit`/readonly shapes erase, trusted fields injected last, and hostile fields
 captured once from inert own data before validation and use. Skill custody
-remains private and unpushed. The Slice 272 registered owner refresh is pending;
-crash-linked aggregate lanes remain excluded and repository-wide closure stays
-`UNKNOWN`.
+remains private and unpushed. The Slice 272 individual owner matrix is current
+at maintenance commit `b9f2edb9`: 1,486/1,486 queue paths, 100 packages / 201
+outputs, KB 4/4, project 5/5, 9,716 graph nodes / 9,900 edges with zero
+violations, semantic 3/3 with 974 tests, code index 974, canonical 7/7 at 9,612,
+212/212 governed receipts, Golden 11/11 and roadmap 5/5. Crash-linked aggregate
+lanes remain excluded and repository-wide closure stays `UNKNOWN`.

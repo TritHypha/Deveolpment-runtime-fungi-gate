@@ -51,9 +51,13 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Keep substrate TypeScript until an exact physical replacement and
   bootstrap/fixpoint proof exist. The quarantined staging Fungi candidate is
   non-authorizing and bit-different; checker tolerance is not parity.
-- [ ] Complete the individually registered Slice 272 graph/index/roadmap/subway
-  maintenance matrix. Do not substitute crash-linked aggregate lanes;
-  repository-wide closure remains `UNKNOWN`.
+- [x] Complete the individually registered Slice 272 maintenance matrix at
+  owner commit `b9f2edb9`: 1,486/1,486 queue paths; 100/201 package outputs;
+  KB 4/4; project 5/5; 9,716 graph nodes / 9,900 edges / zero violations;
+  172 tools / 40 proofs; 147 Fungi files; semantic 3/3 with 974 tests; code
+  index 974; canonical 7/7 at 9,612; 212/212 receipts; Golden 11/11; current
+  pinned SLIDE, roadmap 5/5 and zero leak violations. Crash-linked aggregate
+  lanes were not substituted; repository-wide closure remains `UNKNOWN`.
 
 ### Slices 223-247 logger and kernel observability - 2026-08-13
 
