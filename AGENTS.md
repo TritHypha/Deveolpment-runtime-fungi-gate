@@ -190,9 +190,9 @@ Galerina is structured as a **Core-first product constellation**. Core ships fir
 
 | What | Where |
 |---|---|
-| **Canonical Constellation spec** | `../ZTF-Knowledge-Bases/galerina-constellation-architecture.md` |
+| **Canonical Constellation spec** | `../ZTF-Knowledge-Bases/reference/galerina/galerina-constellation-architecture.md` |
 | **In-repo architecture record** | `docs/architecture/constellation-architecture-2026-07-22.md` |
-| **Gap analysis (pre-split checklist)** | `../ZTF-Knowledge-Bases/constellation-architecture-plan-2026-07-22.md` |
+| **Gap analysis (pre-split checklist)** | `../ZTF-Knowledge-Bases/reference/language/constellation-architecture-plan-2026-07-22.md` |
 
 **Development order:** Finish Core → TritMesh:QL → other engines.
 **FUNGI-* / GALERINA-* codes:** Core only — never in optional engines.
@@ -205,17 +205,17 @@ Galerina is structured as a **Core-first product constellation**. Core ships fir
 
 | What | File |
 |---|---|
-| Keyword table (lexer source of truth) | `../ZTF-Knowledge-Bases/v1-reserved-keywords.md` |
-| Diagnostic codes — spec catalog | `../ZTF-Knowledge-Bases/compiler-diagnostics.md` (forward-spec; includes unbuilt codes) |
+| Keyword table (lexer source of truth) | `../ZTF-Knowledge-Bases/reference/language/v1-reserved-keywords.md` |
+| Diagnostic codes — spec catalog | `../ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md` (forward-spec; includes unbuilt codes) |
 | Diagnostic codes — LIVE catalog (generated, every real code) | `build/code-registry/REGISTRY.md` (regen: `node scripts/gen-code-registry.mjs`) |
 | Code INDEX — every code → def/emit/test/doc sites (query instead of grep) | `build/code-index/CODE_INDEX.md` (regen: `node scripts/code-index.mjs`) |
-| Diagnostic-code CONVENTIONS (binding) | `../ZTF-Knowledge-Bases/galerina-diagnostic-code-conventions.md` |
-| Audit Coverage & R&D Standards (20, research-grounded) | `../ZTF-Knowledge-Bases/galerina-audit-coverage-and-rd-standards.md` |
-| Language classification (canonical) | `../ZTF-Knowledge-Bases/galerina-language-classification.md` |
+| Diagnostic-code CONVENTIONS (binding) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-diagnostic-code-conventions.md` |
+| Audit Coverage & R&D Standards (20, research-grounded) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-audit-coverage-and-rd-standards.md` |
+| Language classification (canonical) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-language-classification.md` |
 | AST contract (AstNodeKind, Token, etc.) | `packages-galerina/galerina-core/src/index.ts` |
-| Phase 4 plan | `../ZTF-Knowledge-Bases/phase-4-parser-ast-plan.md` |
-| Concept model | `../ZTF-Knowledge-Bases/galerina-concept-map.md` |
-| Code examples (corrected) | `../ZTF-Knowledge-Bases/galerina-code-examples-full-flow.md` |
+| Phase 4 plan | `../ZTF-Knowledge-Bases/reference/language/phase-4-parser-ast-plan.md` |
+| Concept model | `../ZTF-Knowledge-Bases/reference/galerina/galerina-concept-map.md` |
+| Code examples (corrected) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-code-examples-full-flow.md` |
 | Minimal executable construct lookup | `docs/examples/golden/README.md` (verify: `npm run audit:fungi-golden`) |
 
 ## Package Map
@@ -245,7 +245,7 @@ FUNGI-BINDING-*   binding mutability (001–004 defined)
 FUNGI-MEMORY-*    memory model (001–008 defined)
 ```
 
-See `../ZTF-Knowledge-Bases/compiler-diagnostics.md` for the spec catalog, and `build/code-registry/REGISTRY.md`
+See `../ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md` for the spec catalog, and `build/code-registry/REGISTRY.md`
 for the LIVE generated catalog — <!-- registry:counts.live -->170 live codes of <!-- registry:counts.total -->975 total
 (auto-stamped by `gen-code-registry.mjs`; do NOT hand-edit these numbers — they regenerate from the registry). **Conventions are binding**
 (`galerina-diagnostic-code-conventions.md`): `name` is `UPPER_SNAKE`, `severity` is lowercase `error|warning|info`,

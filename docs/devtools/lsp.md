@@ -2,8 +2,8 @@
 
 **Status:** DESIGN — not yet built  
 **Package:** `galerina-devtools-lsp` (to be created)  
-**KB spec:** `../ZTF-Knowledge-Bases/galerina-lsp-design.md`  
-**Existing IDE tooling spec:** `../../ZTF-Knowledge-Bases/galerina-ide-tooling.md`
+**KB spec:** `../ZTF-Knowledge-Bases/reference/galerina/galerina-lsp-design.md`  
+**Existing IDE tooling spec:** `../../ZTF-Knowledge-Bases/reference/galerina/galerina-ide-tooling.md`
 
 ---
 

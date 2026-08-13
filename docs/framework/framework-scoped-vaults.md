@@ -56,4 +56,4 @@ vault-performance-report.json
 
 ## Knowledge Base
 
-See [Scoped Vaults](../../../ZTF-Knowledge-Bases/scoped-vaults.md).
+See [Scoped Vaults](../../../ZTF-Knowledge-Bases/reference/language/scoped-vaults.md).

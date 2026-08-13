@@ -42,15 +42,15 @@ Example shape:
 concepts:
   actor:
     definition: current execution identity
-    file: ../../../../ZTF-Knowledge-Bases/audit-actor-model.md
+    file: ../../../../ZTF-Knowledge-Bases/reference/language/audit-actor-model.md
 
   view:
     definition: who or what may see data
-    file: ../../../../ZTF-Knowledge-Bases/data-visibility-view-terminology.md
+    file: ../../../../ZTF-Knowledge-Bases/reference/language/data-visibility-view-terminology.md
 
   vault:
     definition: governed shared storage
-    file: ../../../../ZTF-Knowledge-Bases/scoped-vaults.md
+    file: ../../../../ZTF-Knowledge-Bases/reference/language/scoped-vaults.md
 ```
 
 ## Component Metadata

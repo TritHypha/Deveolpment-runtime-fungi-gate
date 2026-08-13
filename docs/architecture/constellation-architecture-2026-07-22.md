@@ -3,8 +3,8 @@
 **Date:** 2026-07-22  
 **Status:** Adopted decision record  
 **Authority:** Owner + Bob (engineering review)  
-**Canonical KB document:** `../ZTF-Knowledge-Bases/galerina-constellation-architecture.md`  
-**Gap analysis:** `../ZTF-Knowledge-Bases/constellation-architecture-plan-2026-07-22.md`
+**Canonical KB document:** `../ZTF-Knowledge-Bases/reference/galerina/galerina-constellation-architecture.md`  
+**Gap analysis:** `../ZTF-Knowledge-Bases/reference/language/constellation-architecture-plan-2026-07-22.md`
 
 ---
 
@@ -163,10 +163,10 @@ Not blockers for Core v1.0. Preconditions for a clean split later.
 
 | Document | Location |
 |---|---|
-| Canonical Constellation KB spec | `../ZTF-Knowledge-Bases/galerina-constellation-architecture.md` |
-| Conformance gap analysis | `../ZTF-Knowledge-Bases/constellation-architecture-plan-2026-07-22.md` |
-| Lego-block design | `../ZTF-Knowledge-Bases/galerina-lego-block-modular-architecture-decouple-and-reslot-2026-07-18.md` |
-| Lego critical assessment | `../ZTF-Knowledge-Bases/galerina-lego-rules-critical-assessment-security-vs-performance-2026-07-18.md` |
+| Canonical Constellation KB spec | `../ZTF-Knowledge-Bases/reference/galerina/galerina-constellation-architecture.md` |
+| Conformance gap analysis | `../ZTF-Knowledge-Bases/reference/language/constellation-architecture-plan-2026-07-22.md` |
+| Lego-block design | `../ZTF-Knowledge-Bases/reference/galerina/galerina-lego-block-modular-architecture-decouple-and-reslot-2026-07-18.md` |
+| Lego critical assessment | `../ZTF-Knowledge-Bases/reference/galerina/galerina-lego-rules-critical-assessment-security-vs-performance-2026-07-18.md` |
 | R&D primary architecture doc | `../new/galerina-constellation-rd-architecture.md` |
 | AI builder handover doc | `../new/galerina-constellation-ai-builder-handover.md` |
 | Runtime seam implementation | `packages-galerina/galerina-core-runtime-wasm/src/seam-adapters.ts` |

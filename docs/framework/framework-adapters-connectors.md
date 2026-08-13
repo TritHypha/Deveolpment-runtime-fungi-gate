@@ -87,4 +87,4 @@ mcp-tool-definitions.json
 
 ## Knowledge Base
 
-See [Boundary Extension Concepts](../../../ZTF-Knowledge-Bases/boundary-extension-concepts.md).
+See [Boundary Extension Concepts](../../../ZTF-Knowledge-Bases/reference/language/boundary-extension-concepts.md).

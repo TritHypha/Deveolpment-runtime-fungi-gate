@@ -34,7 +34,7 @@ validity is necessary but insufficient for Galerina's zero-trust model.
 - `packages-galerina/galerina-core-sentinel-memory/`
 - `packages-galerina/galerina-tower-citizen/`
 - `../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
-- `../ZTF-Knowledge-Bases/RD-0384-faster-mushroom-trusted-environment-threat-model-delta.md`
+- `../ZTF-Knowledge-Bases/research/rd/RD-0384-faster-mushroom-trusted-environment-threat-model-delta.md`
 
 Use Git history to distinguish current behavior from plans. Do not scan
 `node_modules`, Cargo `target`, generated fixtures, or private/off-repository

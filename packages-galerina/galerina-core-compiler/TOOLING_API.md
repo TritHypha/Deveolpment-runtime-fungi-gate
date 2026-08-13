@@ -20,7 +20,7 @@ all four are verified reachable there.
 | `verifyGovernance(ast, flows, effects, profile)` | function | Governance verdicts + per-flow flags/manifests. |
 | `emitGIR(...)` | function | The versioned governance IR (`fungi.gir.v1`): per-flow effects / intent / proofs / capabilities + entry points. The **program-level** governance map — exactly what a flowgraph MVP should draw. Statement-level drawing uses the AST from `parseProgram`. |
 | `ParseResult` | type | `{ ast, flows, diagnostics, versionHeader }`. |
-| `CompilerDiagnostic` | type | `{ code, name, severity, message, location, suggestedFix? }` — `severity` ∈ {error,warning,info}; `code`/`name` are the registry keys (see `ZTF-Knowledge-Bases/compiler-diagnostics.md`); `suggestedFix` is quick-fix material. |
+| `CompilerDiagnostic` | type | `{ code, name, severity, message, location, suggestedFix? }` — `severity` ∈ {error,warning,info}; `code`/`name` are the registry keys (see `ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md`); `suggestedFix` is quick-fix material. |
 | `SourceLocation` | type | Carries **end positions + byte offsets** ("Used for IDE squiggles" per its own doc comment) — range mapping for editors is first-class. |
 
 **Consumability is proven**, not aspirational: `galerina-devtools-benchmarks` and

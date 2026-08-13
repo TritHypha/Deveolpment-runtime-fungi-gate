@@ -195,13 +195,13 @@ repository.
 Resolve every path below relative to the shared GitHub workspace root.
 
 Read these two documents first:
-1. ZTF-Knowledge-Bases/RD-0535-trilowlevel-v2-review-native-first-slide-and-the-label-discipline-gap.md
+1. ZTF-Knowledge-Bases/research/rd/RD-0535-trilowlevel-v2-review-native-first-slide-and-the-label-discipline-gap.md
 2. Galerina/docs/reports/rd0535-response-and-rereview-prompt-2026-07-29.md
 
 Then read these follow-on handovers:
 3. SLIDE/docs/NESTING-AND-XOR-DECISION.md
-4. ZTF-Knowledge-Bases/RD-0580-HANDOVER-what-tll-v2-changes-in-galerina-component-removal.md
-5. ZTF-Knowledge-Bases/RD-0581-galerina-named-component-manifest.md
+4. ZTF-Knowledge-Bases/research/rd/RD-0580-HANDOVER-what-tll-v2-changes-in-galerina-component-removal.md
+5. ZTF-Knowledge-Bases/research/rd/RD-0581-galerina-named-component-manifest.md
 
 Then review all three scopes, without treating one as a substitute for another:
 - planning/architecture: triLowLevel-v2/

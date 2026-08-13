@@ -5807,7 +5807,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   denominator closure and authenticated receipts. Similarity and watermark
   signals may request review only. This is not yet a Galerina runtime package.
 - **Requested research:**
-  `../../ZTF-Knowledge-Bases/MOST-WANTED-RESEARCH-SUBJECTS-2026-08-01.md`.
+  `../../ZTF-Knowledge-Bases/reference/language/MOST-WANTED-RESEARCH-SUBJECTS-2026-08-01.md`.
 
 ### Structured Await deterministic runtime reducer complete - 2026-08-01
 
@@ -5957,7 +5957,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   VPEG. Typed-hole VPEG needs a BA-miss/VPEG-hit value fixture; B2/NSE/
   NSE-Micro/N3 remain research-only under current negative evidence.
 - **Authoritative research:**
-  `../../ZTF-Knowledge-Bases/RD-0650-slide-architecture-synthesis-cut-merge-introduce-and-adoption-table.md`
+  `../../ZTF-Knowledge-Bases/research/rd/RD-0650-slide-architecture-synthesis-cut-merge-introduce-and-adoption-table.md`
   plus RD-0643 through RD-0649 and the baseline-matrix manifest.
 - **Next safe work:** continue existing Galerina beta-v1 correctness and
   cross-platform evidence. Do not implement the newly proposed DFE component
@@ -6085,7 +6085,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   publish an external-runtime comparison.
 - **Authoritative paths:** `../SLIDE/docs/reports/nse-micro-e11-experimental-implementation-report.md`,
   `../SLIDE/research/shape-lab/results/e11-nse-micro-latest.*`,
-  `../ZTF-Knowledge-Bases/RD-0642-slide-nse-micro-e11-implementation-measurement-and-adjudication.md`,
+  `../ZTF-Knowledge-Bases/research/rd/RD-0642-slide-nse-micro-e11-implementation-measurement-and-adjudication.md`,
   `../SLIDE/docs/reports/`,
   `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg` and
   `../SLIDE/research/shape-lab/results/e05-final-shape-latest.*`.
@@ -6329,7 +6329,7 @@ guessing.
 - **Maths and scores:** every record has explicit equations, falsification
   thresholds, a ten-dimension zero-trust score, hard-veto check, and
   scientific-paper review. The requested seven-column table is
-  `../ZTF-Knowledge-Bases/rd-program-2026-07-31-vpeg-slide-and-platform-foundations-MANIFEST.md`.
+  `../ZTF-Knowledge-Bases/research/programmes/rd-program-2026-07-31-vpeg-slide-and-platform-foundations-MANIFEST.md`.
 - **Architecture decisions:** canonical detached GIR becomes the sole semantic
   SLIDE input; a statically linked first production profile precedes a closed
   content-bound SLIDE linker; pathname loading remains development-only.
@@ -8606,13 +8606,13 @@ domain-separated semantic digest and execute only validated V2 instructions.
 Do not start LLVM, `.slide` execution, or driver installation before those
 semantic, memory, capability, and artifact gates.
 
-Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
+Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/reference/galerina/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).
 The dated blocks below are a historical log; the **CURRENT STATE** block is the head.
 
 ## 📍 CURRENT STATE — 2026-07-25 (LEXER FLIPPED = 5th authoritative · gov-verifier Q-A resolved · consolidation before the 6th flip)
 
-**Forward view:** `../ZTF-Knowledge-Bases/galerina-roadmap.md`. HEAD `4b0688cd` (ahead 3; owner pushed the prior batch).
+**Forward view:** `../ZTF-Knowledge-Bases/reference/galerina/galerina-roadmap.md`. HEAD `4b0688cd` (ahead 3; owner pushed the prior batch).
 Ledger **5 of 7 authoritative**. Owner directive 2026-07-25: **get everything else sorted before the 6th flip — don't
 rush** (this block is that consolidation).
 
@@ -8960,7 +8960,7 @@ Full-auto loop (main). 3 commits, none pushed. Verified green this session: runt
     for a tenant-scoped access, the compiler requires the `tenant.scope` caller-scope proof alongside it;
     the unscoped-query class of IDOR bug cannot ship. Exactly the shipped attenuation rule ("delegated
     grants must not be broader than the delegator's authority").
-  - Codes registered in `ZTF-Knowledge-Bases/compiler-diagnostics.md` + `galerina-governance-rules.md`.
+  - Codes registered in `ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md` + `galerina-governance-rules.md`.
   - `FUNGI_TENANT_001` + `FUNGI_TENANT_002` exported from `galerina-core-compiler/src/index.ts`.
   - Tests: `tests/governance/tenant-isolation.test.mjs` 10/10 (includes A27 anti-vacuous guard).
   - Half C (per-tenant KEK, border-2, digital) remains gated on tmf slice 4 (M-of-N threshold custody).
@@ -8976,14 +8976,14 @@ Full-auto loop (main). 3 commits, none pushed. Verified green this session: runt
   real mechanisms (K3 lattice, `contract {}` blocks, `FUNGI-MATCH-001`, hybrid ML-DSA-65, `.lmanifest`,
   ProofGraph). Not aspirational — describes only what is actually shipped or structurally enforced.
 
-- **Language classification doc written** — `../ZTF-Knowledge-Bases/galerina-language-classification.md`.
+- **Language classification doc written** — `../ZTF-Knowledge-Bases/reference/galerina/galerina-language-classification.md`.
   Canonical answer: **"Governed Application Language for High-Assurance Systems"**. Covers: what each word means,
   what Galerina is NOT (systems / scripting / general-purpose / DSL / formal verification), closest analogies
   and where they diverge (Ada/SPARK, Rust, Erlang, Pony), why the classification matters for adopters/auditors.
 
 - **Constellation architecture — confirmed and written up in full:**
-  - Gap analysis: `../ZTF-Knowledge-Bases/constellation-architecture-plan-2026-07-22.md`
-  - KB canonical spec: `../ZTF-Knowledge-Bases/galerina-constellation-architecture.md`
+  - Gap analysis: `../ZTF-Knowledge-Bases/reference/language/constellation-architecture-plan-2026-07-22.md`
+  - KB canonical spec: `../ZTF-Knowledge-Bases/reference/galerina/galerina-constellation-architecture.md`
   - In-repo record: `docs/architecture/constellation-architecture-2026-07-22.md`
 
   **Key confirmed decisions:**
@@ -9019,7 +9019,7 @@ Full-auto loop (main). 3 commits, none pushed. Verified green this session: runt
 - Commands: `:type` · `:effects` · `:explain` · `:k3` · `:gir` · `:profile` · `:quit`
 - Capability mocking in dev mode (no real DB/network in REPL)
 - Gate: Core v1.0 (A18 tenant scope) first; REPL is 4 sprints (R-1..R-4)
-- KB spec: `../ZTF-Knowledge-Bases/galerina-repl-design.md`
+- KB spec: `../ZTF-Knowledge-Bases/reference/galerina/galerina-repl-design.md`
 - In-repo doc: `docs/devtools/repl.md`
 
 **Item 15 — LSP (IDE developer experience) — DESIGN DONE, not yet built:**
@@ -9032,9 +9032,9 @@ Full-auto loop (main). 3 commits, none pushed. Verified green this session: runt
 - Worker thread mandatory — pipeline runs async, main loop never blocked
 - TextMate grammar generated from `V1_ACTIVE_KEYWORDS` — not hand-maintained
 - Gate: Core v1.0. 7 sprints (L-1..L-7)
-- KB spec: `../ZTF-Knowledge-Bases/galerina-lsp-design.md`
+- KB spec: `../ZTF-Knowledge-Bases/reference/galerina/galerina-lsp-design.md`
 - In-repo doc: `docs/devtools/lsp.md`
-- Existing aspirational spec: `../ZTF-Knowledge-Bases/galerina-ide-tooling.md`
+- Existing aspirational spec: `../ZTF-Knowledge-Bases/reference/galerina/galerina-ide-tooling.md`
 
 ## 📍 PREVIOUS STATE — 2026-07-21 (P2 K3 inline + vault docs session)
 
@@ -9053,7 +9053,7 @@ of origin — owner pushes when ready).
 
 **Session 2 — vault documentation + examples:**
 - `5111e9bf` + `4c26f7b7` Vault system was entirely undocumented — zero `.fungi` building standards coverage,
-  zero examples. Remediated: new KB doc `ZTF-Knowledge-Bases/galerina-vault-system.md` (3 vault kinds, layer
+  zero examples. Remediated: new KB doc `ZTF-Knowledge-Bases/reference/galerina/galerina-vault-system.md` (3 vault kinds, layer
   model, effects, 7 FUNGI-VAULT-* codes, rules). BOB/fungi-building-standards-2026-07.md §3d rewritten:
   vault global / GlobalVault + `secure.*` / scoped vaults / secret vault access. `vault.read` / `vault.write`
   added to effects table. 8 new canonical examples: 024–025 (Level 1 vault global + invalid), 227–230
@@ -9090,7 +9090,7 @@ of origin — owner pushes when ready).
   mandatory `await` effect, mandatory timeout in production, no inline `fn`, Border.validate()
   required on external wait results, no fire-and-forget tasks.
   Gates: A18 tenant scope ✅ LANDED. Next gate: W6 codemod (T2.5/T2.6) before Stage B starts.
-  KB spec: `../ZTF-Knowledge-Bases/asyncflow-design.md`
+  KB spec: `../ZTF-Knowledge-Bases/reference/language/asyncflow-design.md`
   Reserved codes: FUNGI-ASYNC-001..006 (defined in `galerina-core-compiler/src/index.ts`, not emitted).
   Implementation plan (4 sprints B-1..B-4): see KB spec.
   Decision record: 2026-07-22 (Bob + owner). Stage A = KB spec + reserved codes only.
@@ -9132,7 +9132,7 @@ native** Rust, memory **~0 B/op**; 4 uncertified lanes correctly carry no cross-
 Handover to R&D: `../ZTF-Knowledge-Bases/coordination/to-rnd/2026-07-18-CLOSING-CYCLE-*.md`.
 
 ## ⚡ ACTIVE — 2026-07-08 syntax/logic update → 100% beta-shippable (owner PROMPT, full-auto session)
-> Work order: `../ZTF-Knowledge-Bases/PROMPT-syntax-update-beta-shippable-2026-07-08.md` (+ RD-0266c, security
+> Work order: `../ZTF-Knowledge-Bases/ai/prompts/PROMPT-syntax-update-beta-shippable-2026-07-08.md` (+ RD-0266c, security
 > review A1–A27). **Plan: `docs/SYNTAX_UPDATE_PLAN.md` · live status: `docs/SYNTAX_UPDATE_TRACKER.md`** — that
 > tracker is the single source for per-item state; this block is the pointer.
 - [x] W1 plan + tracker + todo ledgers updated (this block).
@@ -9164,7 +9164,7 @@ Handover to R&D: `../ZTF-Knowledge-Bases/coordination/to-rnd/2026-07-18-CLOSING-
   21/21 green standalone. Galerina side: workspace.json/version.json/README updated; suite **61/61 · 6,115**
   (exactly −21). Removal is uncommitted (git shows deletions; commit/push held). Name-only refs in
   inference-bridge-contract tests are fixtures — intentionally kept.
-% audit: `../ZTF-Knowledge-Bases/galerina-percent-audit-roadmap-2026-07-02.md` (**~90% shippable / ~64% full-vision**).
+% audit: `../ZTF-Knowledge-Bases/reference/galerina/galerina-percent-audit-roadmap-2026-07-02.md` (**~90% shippable / ~64% full-vision**).
 Consistency rules + gates: `docs/CONSISTENCY_GATES.md`.
 
 **State (2026-07-03 session-2):** 60/60 packages · **6,064 tests** · 0 fail · phase-close ALL green · mutation
@@ -9199,7 +9199,7 @@ language-policy items the owner unlocked. Recursive compiler suite **4256/4256**
   `.gate` privacy no-longer-opt-in (in-tree; `ZT-Galerina-GRAPH-ASCII-v2` isn't a git repo — self-test 136/136).
 - **2 new dev tools, wired `--soft` into run-phase-close (5c-iii/iv) + `.claude/settings.json` (run at Stop):**
   `audit-fungi-runtime.mjs` (runtime `.fungi`: match-exhaustive/no-`?`/test-coverage/parity — **corpus 0 findings**)
-  + `audit-perf-hotpath.mjs`. Full register: `../ZTF-Knowledge-Bases/galerina-fungi-gate-security-findings-register.md` §0.
+  + `audit-perf-hotpath.mjs`. Full register: `../ZTF-Knowledge-Bases/reference/galerina/galerina-fungi-gate-security-findings-register.md` §0.
 - Lesson: `tests/*.test.mjs` misses ~630 **subdir** tests — always run `tests/**` / the package `npm test`; a
   relative `GALERINA_KB_DIR` breaks per-package KB tests under run-all-tests (use the default or an absolute path).
 
@@ -9251,14 +9251,14 @@ fix-the-class) · `5aa1bd9` (README count refresh) · `3578432` (`audit-perf-hot
 **Kernel (TCB): audited CLEAN** — all 3 fuse gates + gate-9.5 secrets seam + S1 auth gate genuinely fail-closed (no fail-open admission/auth/secret path). Residual = DoS (`limits.timeoutMs` advertised-not-enforced, `kernel.ts:435`) + error-message leak (`kernel.ts:317+`) — separate hardening track, NOT a Stage-B blocker.
 
 **The 6 fail-closed blockers (must precede writing runtime `.fungi` / wiring `.gate` to prod):**
-1. **RD-0240** — non-exhaustive `match` → `(i32.const 0)` not trap (`wat-emitter.ts:1780`); `FUNGI-MATCH-001` is a WARNING (`governance-verifier.ts:3778`). `.gate` checker enforces it; `.fungi`→WASM does not. Corpus match-heavy ⇒ FIRST. Spec: `../ZTF-Knowledge-Bases/galerina-rd-0240-match-exhaustiveness-failclosed.md`.
+1. **RD-0240** — non-exhaustive `match` → `(i32.const 0)` not trap (`wat-emitter.ts:1780`); `FUNGI-MATCH-001` is a WARNING (`governance-verifier.ts:3778`). `.gate` checker enforces it; `.fungi`→WASM does not. Corpus match-heavy ⇒ FIRST. Spec: `../ZTF-Knowledge-Bases/research/rd-legacy/galerina-rd-0240-match-exhaustiveness-failclosed.md`.
 2. **BK-2** — `galerinaTypeToWAT` `default→i32` (`type-registry.ts:226`): unknown type silently a 32-bit handle.
 3. **BK-1** — `effectsToFlags` drops ~30 canonical effects → `allowedEffectsMask` bit 0 (`type-registry.ts:214`; comment at :191 admits it).
 4. **BK-3** — `?` operator dropped to `void` at GIR (`gir-emitter.ts` emitExpr) — latent (corpus 0 uses); implement or hard-reject.
 5. **BK-4** — GIR + `.lmanifest` versions written-not-read (`gir-emitter.ts:132`, `manifest-generator.ts:345`) — reject-on-unknown-version.
 6. **BK-5** — WASM-standalone skips `checkTypes` + writes UNSIGNED `.wasm` (`cli.ts:927/949`) + host `readRecordField` unbounded (`wasm-runtime.ts:323`).
 
-Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED→GREEN + committed, then extend WASM parity to `parser.fungi`. Full findings register (CWE + NIST SP 800-207 tenet + [V]/[L] grading): `../ZTF-Knowledge-Bases/galerina-fungi-gate-security-findings-register.md` (KB `39ff5d9`). **Owner-gated language-policy 5 (C2/H1/H3-safelist/M1/M2) remain in the RD-0234c programme — separate approval.**
+Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED→GREEN + committed, then extend WASM parity to `parser.fungi`. Full findings register (CWE + NIST SP 800-207 tenet + [V]/[L] grading): `../ZTF-Knowledge-Bases/reference/galerina/galerina-fungi-gate-security-findings-register.md` (KB `39ff5d9`). **Owner-gated language-policy 5 (C2/H1/H3-safelist/M1/M2) remain in the RD-0234c programme — separate approval.**
 
 ## ✅ Done — 2026-07-03 (main session — now owns Galerina prod; local, push HELD)
 > The R&D worker handed the main session FULL CONTROL of Galerina prod (apply staged fixes / push / ODs /
@@ -9466,7 +9466,7 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
       (taint-source→qualifier + 2nd-order), H3-safelist (net-receiver denylist→host-internal safelist), M2/GNG-03 breadth
       (privacy-deny regex→egress-graph) — are over-block-delicate + touch the language surface; analyzed with phased scopes +
       machine-checkable proof plans in
-      `../ZTF-Knowledge-Bases/galerina-rd-0234c-remaining-failopen-inversions-2026-07-03.md` (owner to approve inversion scope).
+      `../ZTF-Knowledge-Bases/research/rd-legacy/galerina-rd-0234c-remaining-failopen-inversions-2026-07-03.md` (owner to approve inversion scope).
       *In-flight (uncommitted):* `type-registry.ts` now single-sources the type-QUALIFIER vocab as `TYPE_QUALIFIERS`
       (`protected|redacted|unsafe|safe|secret`) and derives the strip-regex from it — first step of the SoT pattern.
 - [ ] **`.gate` front-end compiler** (PROMPT §5a-5d) — build gate GREEN (D5 re-scoped), backstop wired →
@@ -9475,7 +9475,7 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
 <details><summary>Original RD-0234/0234b finding detail (all resolved above unless marked residual)</summary>
 
 ### RD-0234 — `.fungi` prod audit (owner-gated fixes; prod read-only; build-staging; RED-bench-first)
-> `../ZTF-Knowledge-Bases/galerina-rd-0234-fungi-50yr-mistake-audit.md` — 19 confirmed, 0 false; **`.fungi`
+> `../ZTF-Knowledge-Bases/research/rd-legacy/galerina-rd-0234-fungi-50yr-mistake-audit.md` — 19 confirmed, 0 false; **`.fungi`
 > shares `.gate`'s core disease: a passing `build --production` does NOT currently mean the file honours its
 > guarantees.** GNG-01 + VD-1 **re-verified live on prod 2026-07-02** (root-cause below). These are the
 > highest-severity items in this file — a dead security pass mints SIGNED manifests for SQLi. All fixes
@@ -9537,7 +9537,7 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
 - [ ] **CLASS E (adjacent) — fuse ACL self-assertion.** `build --package` signs the capability ACL from
       `package.fungi.json` **verbatim, with zero reconciliation** against the flows' proven effects (MAJOR).
       **Fix:** derive/verify the fuse ACL from the compiled effects, don't trust the declared JSON.
-> Full detail + repros + cross-validation: `../ZTF-Knowledge-Bases/galerina-rd-0234b-fungi-second-pass-hunt.md`.
+> Full detail + repros + cross-validation: `../ZTF-Knowledge-Bases/research/rd-legacy/galerina-rd-0234b-fungi-second-pass-hunt.md`.
 > **The systemic takeaway:** `.fungi`'s `build --production` green is NOT a guarantee across ~29 findings
 > (19 RD-0234 + ~10 here) in ~5 classes — and this is the SOUND backstop `.gate` posture-B defers to. The
 > single highest-leverage prod-security work in the project is wiring + unifying these gates. **[DONE 2026-07-02.]**
@@ -9545,7 +9545,7 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
 </details>
 
 ## 🔒 RUNTIME SECURITY — RD-0236 — ✅ 11/11 FIXED + RED-benched (#1/#3/#6–#11 committed `a927e4b`; #2/#4/#5 done this session, UNCOMMITTED — gates green)
-> `../ZTF-Knowledge-Bases/galerina-rd-0236-runtime-50yr-mistake-audit.md` — 11 reproduced runtime governance
+> `../ZTF-Knowledge-Bases/research/rd-legacy/galerina-rd-0236-runtime-50yr-mistake-audit.md` — 11 reproduced runtime governance
 > fail-opens, SAME disease as RD-0234 on the RUNTIME surface. Owner greenlit "fix all 11, RED-benched" (2026-07-02);
 > **11 fixed**, each RED-benched, full suite green, across 4 packages (tower-citizen · compiler · tri-pipe · app-kernel).
 

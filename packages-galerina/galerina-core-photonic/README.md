@@ -128,10 +128,10 @@ Internal structure: `photonic-runtime.ts`, `photonic-planner.ts`,
 Planned sub-packages: `galerina-target-photonic-runtime`,
 `galerina-target-photonic-routing`, `galerina-target-photonic-audit`.
 
-See `../../../ZTF-Knowledge-Bases/galerina-core-photonic-backend-architecture.md` for the
+See `../../../ZTF-Knowledge-Bases/reference/galerina/galerina-core-photonic-backend-architecture.md` for the
 prior governance specification.
 
-See `../../../ZTF-Knowledge-Bases/galerina-core-photonic-v02.md` for the v0.2 formal spec.
+See `../../../ZTF-Knowledge-Bases/reference/galerina/galerina-core-photonic-v02.md` for the v0.2 formal spec.
 
 ## v0.2 Architecture Depth
 

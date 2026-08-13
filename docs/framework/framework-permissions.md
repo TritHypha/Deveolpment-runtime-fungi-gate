@@ -76,5 +76,5 @@ audit-actor-report.json
 
 ## Knowledge Base
 
-See [Permission, Capability And Actor Model](../../../ZTF-Knowledge-Bases/permission-capability-actor-model.md).
-See [Audit Actor Model](../../../ZTF-Knowledge-Bases/audit-actor-model.md).
+See [Permission, Capability And Actor Model](../../../ZTF-Knowledge-Bases/reference/language/permission-capability-actor-model.md).
+See [Audit Actor Model](../../../ZTF-Knowledge-Bases/reference/language/audit-actor-model.md).

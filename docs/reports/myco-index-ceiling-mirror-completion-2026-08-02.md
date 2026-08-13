@@ -81,5 +81,5 @@ coverage or collapse refusal into absence.
 ## Related evidence
 
 - Package: `packages-galerina/galerina-tools-myco`
-- KB incident analysis: `../ZTF-Knowledge-Bases/RD-0678-myco-index-ceiling-regression-and-fix.md`
+- KB incident analysis: `../ZTF-Knowledge-Bases/research/rd/RD-0678-myco-index-ceiling-regression-and-fix.md`
 - Upstream incident: `../subprojects/myco/docs/INCIDENT-2026-08-02-index-ceiling-crash.md`

@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-03
 **Status:** approved for test-first implementation under the owner's full-auto direction
-**R&D:** `ZTF-Knowledge-Bases/RD-0681-verified-loop-envelope-one-million-index-operations.md`
+**R&D:** `ZTF-Knowledge-Bases/research/rd/RD-0681-verified-loop-envelope-one-million-index-operations.md`
 
 ## Goal
 

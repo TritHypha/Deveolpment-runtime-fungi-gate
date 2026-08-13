@@ -30,5 +30,5 @@ codebase.
 
 ## KB references
 
-- `ZTF-Knowledge-Bases/galerina-vault-system.md` — unified vault reference
-- `ZTF-Knowledge-Bases/galerina-core-config-vault.md` — Config Vault detail
+- `ZTF-Knowledge-Bases/reference/galerina/galerina-vault-system.md` — unified vault reference
+- `ZTF-Knowledge-Bases/reference/galerina/galerina-core-config-vault.md` — Config Vault detail

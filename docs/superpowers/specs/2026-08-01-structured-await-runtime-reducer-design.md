@@ -13,7 +13,7 @@ The reducer emits explicit start/cancel/terminal decisions from admitted events
 and never equates a cancellation request with observed termination.
 
 The research authority is
-`../../../../ZTF-Knowledge-Bases/RD-0651-galerina-structured-await-deterministic-runtime-reducer.md`.
+`../../../../ZTF-Knowledge-Bases/research/rd/RD-0651-galerina-structured-await-deterministic-runtime-reducer.md`.
 
 ## Closed plan
 

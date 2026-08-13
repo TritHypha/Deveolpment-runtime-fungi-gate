@@ -96,4 +96,4 @@ One table per construct family. Every **Example** links a curriculum example tha
 
 ## Diagnostics
 
-The `FUNGI-CATEGORY-NNN` series: [`compiler-diagnostics.md`](../../../../ZTF-Knowledge-Bases/compiler-diagnostics.md) (spec catalog) and `build/code-registry/REGISTRY.md` (live, generated). Key series: `TYPE` · `VALUESTATE` · `MATCH` · `EFFECT` · `PRIVACY` · `GOV` · `TIER` · `SAFETY` · `PARSE` · `NAME`.
+The `FUNGI-CATEGORY-NNN` series: [`compiler-diagnostics.md`](../../../../ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md) (spec catalog) and `build/code-registry/REGISTRY.md` (live, generated). Key series: `TYPE` · `VALUESTATE` · `MATCH` · `EFFECT` · `PRIVACY` · `GOV` · `TIER` · `SAFETY` · `PARSE` · `NAME`.

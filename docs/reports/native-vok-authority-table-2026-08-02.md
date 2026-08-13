@@ -4,8 +4,8 @@
 
 **Status:** bounded authority-to-W^X floor linked; non-authorizing
 
-**R&D:** `ZTF-Knowledge-Bases/RD-0660-native-vok-authority-table.md` and
-`ZTF-Knowledge-Bases/RD-0662-native-vok-wx-execution-floor.md`
+**R&D:** `ZTF-Knowledge-Bases/research/rd/RD-0660-native-vok-authority-table.md` and
+`ZTF-Knowledge-Bases/research/rd/RD-0662-native-vok-wx-execution-floor.md`
 
 ## Outcome
 

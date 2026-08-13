@@ -4,9 +4,9 @@
 
 Galerina is structured as a **Core-first product constellation**. The full specification lives in:
 
-- **KB canonical spec:** `../ZTF-Knowledge-Bases/galerina-constellation-architecture.md`
+- **KB canonical spec:** `../ZTF-Knowledge-Bases/reference/galerina/galerina-constellation-architecture.md`
 - **In-repo record:** `docs/architecture/constellation-architecture-2026-07-22.md`
-- **Gap analysis:** `../ZTF-Knowledge-Bases/constellation-architecture-plan-2026-07-22.md`
+- **Gap analysis:** `../ZTF-Knowledge-Bases/reference/language/constellation-architecture-plan-2026-07-22.md`
 
 **One-line summary:** Galerina:Core ships first as a complete independent product. Fabric, Cortex, Quantum, TritMesh, and the optional fast sister language are separate products that depend on Core — Core depends on none of them.
 
@@ -74,10 +74,10 @@ component responsibility metadata, generated project graph outputs and
 canonical examples where practical.
 
 The charter concept lives in
-`../../ZTF-Knowledge-Bases/architecture-charter.md`.
+`../../ZTF-Knowledge-Bases/reference/language/architecture-charter.md`.
 
 The AI architecture policy lives in
-`../../ZTF-Knowledge-Bases/ai-understandable-architecture-policy.md`.
+`../../ZTF-Knowledge-Bases/reference/language/ai-understandable-architecture-policy.md`.
 
 Galerina security architecture should be invariant-led rather than feature-led.
 The core design question is what architectural rule makes a policy violation
@@ -88,14 +88,14 @@ trust boundaries, effects, audit requirements, package authority and isolation
 requirements.
 
 The concept lives in
-`../../ZTF-Knowledge-Bases/security-invariants-and-policy-proof.md`.
+`../../ZTF-Knowledge-Bases/reference/language/security-invariants-and-policy-proof.md`.
 
 ## Package Dependency and Data Flow Diagrams
 
 Mermaid diagrams for the `galerina-core*` package dependency graph, the runtime
 data flow (HTTP request → response), the compile-time 14-pass pipeline, and the
 diagnostic code namespace table live in
-`../../ZTF-Knowledge-Bases/galerina-core-package-architecture.md`.
+`../../ZTF-Knowledge-Bases/reference/galerina/galerina-core-package-architecture.md`.
 
 ## Canonical flat package topology
 
@@ -304,7 +304,7 @@ The approved unsafe-value conversion operations are `validate`, `guard` and
 input and returns a context-specific safe value such as `safe Html`,
 `safe UrlPart`, `safe JavaScript`, `safe Css`, `safe Xml` or `safe ShellArg`.
 The detailed concept lives in
-`../../ZTF-Knowledge-Bases/trust-conversion-and-data-safety.md`.
+`../../ZTF-Knowledge-Bases/reference/language/trust-conversion-and-data-safety.md`.
 
 
 
@@ -341,7 +341,7 @@ boot/main
 
 Under this model, the runtime does not execute project code until the Runtime Policy Config is verified. Local permissions can only narrow or request authority within these global constraints; they can never exceed what the Runtime Policy Config allows. The policy configuration is kept strictly separated from `boot/main` startup wiring (which handles module registration and route loading).
 
-The concept lives in `../../ZTF-Knowledge-Bases/runtime-policy-config.md`.
+The concept lives in `../../ZTF-Knowledge-Bases/reference/language/runtime-policy-config.md`.
 
 The runtime should separate a small trusted core, a governed runtime zone and an
 untrusted zone for plugins, third-party packages, external services,
@@ -357,7 +357,7 @@ sensitive plugin actions. Plugin risk levels — low (pure computation), medium
 required sandbox strength and human approval requirements.
 
 The full plugin security architecture is documented in
-`../../ZTF-Knowledge-Bases/plugin-security-architecture.md`.
+`../../ZTF-Knowledge-Bases/reference/language/plugin-security-architecture.md`.
 
 Package and module loading belongs to a governed Package Resolver, not an
 autoloading mechanism. Imports are not trust. The resolver finds requested
@@ -372,8 +372,8 @@ package source where packages are published, verified, signed, versioned,
 capability-declared and policy-rated. Registry certification is evidence for
 resolution and governance checks, not unrestricted authority.
 
-The concepts live in `../../ZTF-Knowledge-Bases/certified-package-registry.md` and
-`../../ZTF-Knowledge-Bases/package-resolver.md`.
+The concepts live in `../../ZTF-Knowledge-Bases/reference/language/certified-package-registry.md` and
+`../../ZTF-Knowledge-Bases/reference/language/package-resolver.md`.
 
 Execution should follow:
 
@@ -394,7 +394,7 @@ results; Authority Control decides whether reuse is allowed and can invalidate
 parser, IR, policy, view, vault, compute, schedule, audit and whole-plan caches.
 
 The concept lives in
-`../../ZTF-Knowledge-Bases/context-tagged-verified-execution-cache.md`.
+`../../ZTF-Knowledge-Bases/reference/language/context-tagged-verified-execution-cache.md`.
 
 AI workloads should be described as typed AI compute plans rather than opaque
 model calls. The runtime can then enforce policy, minimise data, reduce copying,
@@ -500,11 +500,11 @@ unless broad future-field access is explicitly approved. A safer broad-read
 mode may use `fields: all current except [...]` to freeze the current field set.
 
 The detailed concept is documented in
-`../../ZTF-Knowledge-Bases/secure-by-default-syntax-principles.md`.
+`../../ZTF-Knowledge-Bases/reference/language/secure-by-default-syntax-principles.md`.
 Field-read modes are documented in
-`../../ZTF-Knowledge-Bases/field-read-rules.md`.
+`../../ZTF-Knowledge-Bases/reference/language/field-read-rules.md`.
 Audit actor attribution is documented in
-`../../ZTF-Knowledge-Bases/audit-actor-model.md`.
+`../../ZTF-Knowledge-Bases/reference/language/audit-actor-model.md`.
 
 ## Audit Actor Attribution
 
@@ -606,7 +606,7 @@ an unrestricted request bag, unfiltered headers/cookies/files or a way to bypass
 permissions. Session and shared mutable state belong in governed vaults.
 
 The concept lives in
-`../../ZTF-Knowledge-Bases/runtime-context-not-superglobals.md`.
+`../../ZTF-Knowledge-Bases/reference/language/runtime-context-not-superglobals.md`.
 
 
 Environment secret handling is a typed security boundary.
@@ -1660,7 +1660,7 @@ sensitive personal data and private AI prompts. Future ML exports must be
 structural and redacted rather than raw runtime payloads or private source.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/generative-runtime-mapper.md`.
+`../../ZTF-Knowledge-Bases/reference/language/generative-runtime-mapper.md`.
 
 ## AI As Untrusted Reasoning Worker
 
@@ -1726,7 +1726,7 @@ human-review-report.json
 ```
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/ai-as-untrusted-reasoning-worker.md`.
+`../../ZTF-Knowledge-Bases/reference/language/ai-as-untrusted-reasoning-worker.md`.
 
 ## Untrusted File, Asset And Base64 Boundaries
 
@@ -1779,8 +1779,8 @@ validation rather than retained inline.
 The concepts are documented in:
 
 ```text
-../../ZTF-Knowledge-Bases/untrusted-file-asset-processing.md
-../../ZTF-Knowledge-Bases/bit-width-and-base64-asset-policy.md
+../../ZTF-Knowledge-Bases/reference/language/untrusted-file-asset-processing.md
+../../ZTF-Knowledge-Bases/reference/language/bit-width-and-base64-asset-policy.md
 ```
 
 ## Numeric Width And Boundary Representation
@@ -1853,7 +1853,7 @@ cleanup-report.json
 ```
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/memory-pressure-security.md`.
+`../../ZTF-Knowledge-Bases/reference/language/memory-pressure-security.md`.
 
 ## Compile-Time Metadata Reflection
 
@@ -1894,7 +1894,7 @@ may consume verified metadata generated before execution, but application code
 must not dynamically discover or grant authority from live objects.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/compile-time-metadata-reflection.md`.
+`../../ZTF-Knowledge-Bases/reference/language/compile-time-metadata-reflection.md`.
 
 ## Security Invariants And Policy Proof
 
@@ -1922,7 +1922,7 @@ raw SQL and nondeterministic execution where policy requires it, while making
 audit mandatory.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/security-invariants-and-policy-proof.md`.
+`../../ZTF-Knowledge-Bases/reference/language/security-invariants-and-policy-proof.md`.
 
 ## Excluded Features
 
@@ -1936,7 +1936,7 @@ mutable concurrency, and implicit network/file/database access.
 
 The full excluded features reference table with reasons and recommended
 Galerina alternatives is documented in
-`../../ZTF-Knowledge-Bases/excluded-features.md`.
+`../../ZTF-Knowledge-Bases/reference/language/excluded-features.md`.
 
 ## Governed Execution Director
 
@@ -2001,7 +2001,7 @@ reason for access, output, target selection, plugin use or AI tool use becomes
 part of the execution plan and audit proof.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/governed-execution-director.md`.
+`../../ZTF-Knowledge-Bases/reference/language/governed-execution-director.md`.
 
 ## Runtime Terminology And Platform Identity
 
@@ -2081,9 +2081,9 @@ Safe fallback always.
 The concepts are documented in:
 
 ```text
-../../ZTF-Knowledge-Bases/runtime-terminology-evolution.md
-../../ZTF-Knowledge-Bases/terminology-naming-philosophy.md
-../../ZTF-Knowledge-Bases/compute-balancer.md
+../../ZTF-Knowledge-Bases/reference/language/runtime-terminology-evolution.md
+../../ZTF-Knowledge-Bases/reference/language/terminology-naming-philosophy.md
+../../ZTF-Knowledge-Bases/reference/language/compute-balancer.md
 ```
 
 ## Data Visibility Views
@@ -2201,11 +2201,11 @@ This is separate from broader security/input/AI/compute classification. Those
 uses may still use `classification` where the meaning is not field exposure.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/data-visibility-view-terminology.md`.
+`../../ZTF-Knowledge-Bases/reference/language/data-visibility-view-terminology.md`.
 Built-in levels are documented in
-`../../ZTF-Knowledge-Bases/builtin-view-levels.md`.
+`../../ZTF-Knowledge-Bases/reference/language/builtin-view-levels.md`.
 Standard behaviour inheritance is documented in
-`../../ZTF-Knowledge-Bases/standard-view-behaviour.md`.
+`../../ZTF-Knowledge-Bases/reference/language/standard-view-behaviour.md`.
 
 ## Postfix Type State Model
 
@@ -2229,7 +2229,7 @@ operations (validators, sanitizers, declassification). The compiler rejects
 state weakening without an explicit operation.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/postfix-type-state-syntax.md`.
+`../../ZTF-Knowledge-Bases/reference/language/postfix-type-state-syntax.md`.
 
 ## Branded Types
 
@@ -2249,7 +2249,7 @@ Brands compose with postfix state qualifiers. A brand alone does not validate
 format — external values must be validated before being branded.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/generic-types.md`.
+`../../ZTF-Knowledge-Bases/reference/language/generic-types.md`.
 
 ## Build System Architecture
 
@@ -2281,8 +2281,8 @@ to runtime authority and feeds: schema precompilation, decoder setup, redaction
 maps, hot reload invalidation, and AI-readable context.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/build-system-and-cli.md`.
-The type manifest is documented in `../../ZTF-Knowledge-Bases/type-manifest.md`.
+`../../ZTF-Knowledge-Bases/reference/language/build-system-and-cli.md`.
+The type manifest is documented in `../../ZTF-Knowledge-Bases/reference/language/type-manifest.md`.
 
 ## Variable Mutation And Vault Model
 
@@ -2371,8 +2371,8 @@ Secret values should use `Secret<T>` so logging, rendering, AI exposure,
 unsafe serialization and reports can apply redaction and flow tracking.
 
 The concept is documented in
-`../../ZTF-Knowledge-Bases/variable-mutation-vault-design.md` and
-`../../ZTF-Knowledge-Bases/explicit-mutation-and-vault-writes.md`.
+`../../ZTF-Knowledge-Bases/reference/language/variable-mutation-vault-design.md` and
+`../../ZTF-Knowledge-Bases/reference/language/explicit-mutation-and-vault-writes.md`.
 
 ## Phase 4 — Parser and AST
 
@@ -2381,7 +2381,7 @@ source-mapped parser that produces a typed AST conforming to a published JSON sc
 
 The Phase 4 plan, deliverable checklist, AstNodeKind additions, diagnostic codes,
 outstanding questions and implementation suggestions live in:
-`../../ZTF-Knowledge-Bases/phase-4-parser-ast-plan.md`
+`../../ZTF-Knowledge-Bases/reference/language/phase-4-parser-ast-plan.md`
 
 ## Compute, Heterogeneous Targets and AI
 
@@ -2407,7 +2407,7 @@ understood before designing the parser AST and compiler passes.
 Finance, Medical, Government and other regulated-industry compliance is implemented at
 the type and effect level, not as a framework concern:
 
-`../../ZTF-Knowledge-Bases/galerina-compliance-governance.md`
+`../../ZTF-Knowledge-Bases/reference/galerina/galerina-compliance-governance.md`
 
 Includes: `PII<T>`, `PHI<T>` (HIPAA), `PCI<T>` (PCI-DSS), `Classified<T>`, regulated
 effects, OWASP coverage, GDPR/SOX policy syntax, break-glass access, compliance packages.
@@ -2415,9 +2415,9 @@ effects, OWASP coverage, GDPR/SOX policy syntax, break-glass access, compliance 
 ## Supply Chain and Package Governance
 
 The Galerina-native module system (long-term npm replacement) is documented in:
-`../../ZTF-Knowledge-Bases/galerina-native-module-system.md`
+`../../ZTF-Knowledge-Bases/reference/galerina/galerina-native-module-system.md`
 
-Cross-package capability inheritance warnings: `../../ZTF-Knowledge-Bases/galerina-developer-tooling-advanced.md`
+Cross-package capability inheritance warnings: `../../ZTF-Knowledge-Bases/reference/galerina/galerina-developer-tooling-advanced.md`
 
 ## Developer Tooling
 

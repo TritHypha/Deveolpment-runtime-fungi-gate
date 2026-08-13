@@ -3166,7 +3166,7 @@ adapters; Tri-Fuse remains a proof-backed compiler pass.
 
 The detailed cut/merge/introduce table, fourteen-criterion review, vertical
 architecture diagram, sequencing and zero-trust score are in
-`../../ZTF-Knowledge-Bases/RD-0650-slide-architecture-synthesis-cut-merge-introduce-and-adoption-table.md`.
+`../../ZTF-Knowledge-Bases/research/rd/RD-0650-slide-architecture-synthesis-cut-merge-introduce-and-adoption-table.md`.
 Repository-aware prompt 19 and repository-blind prompt 20 independently
 challenge the design with primary-source research, ordinary/Tri-1 maths,
 security attacks, alternatives and falsification. The new boundary remains

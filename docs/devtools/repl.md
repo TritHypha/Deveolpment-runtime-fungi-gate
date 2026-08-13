@@ -2,7 +2,7 @@
 
 **Status:** DESIGN — not yet built  
 **Package:** `galerina-devtools-repl` (to be created)  
-**KB spec:** `../ZTF-Knowledge-Bases/galerina-repl-design.md`
+**KB spec:** `../ZTF-Knowledge-Bases/reference/galerina/galerina-repl-design.md`
 
 ---
 

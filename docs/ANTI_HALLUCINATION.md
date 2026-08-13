@@ -166,6 +166,6 @@ instead*, which is what actually closes the loop cheaply. Status:
 
 - `docs/SYNTAX_UPDATE_TRACKER.md` — the W3/W4 fail-closed hardening that removed the
   remaining `.fungi` fail-opens this guarantee depends on.
-- `ZTF-Knowledge-Bases/compiler-diagnostics.md` — the registered codes each phase raises.
+- `ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md` — the registered codes each phase raises.
 - `galerina-gate-ecosystem-three-surfaces` memory — why `.gate`'s three surfaces must stay
   in lockstep or the verify-loop split-brains.

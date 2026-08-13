@@ -321,8 +321,8 @@ git commit -m "feat(vok): add native authority type contract"
 - Modify: `packages-galerina/galerina-core/examples/examples-manifest.md`
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
-- Modify: `../ZTF-Knowledge-Bases/compiler-diagnostics.md`
-- Modify: `../ZTF-Knowledge-Bases/RD-0659-generic-affine-runtime-authority-type.md`
+- Modify: `../ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md`
+- Modify: `../ZTF-Knowledge-Bases/research/rd/RD-0659-generic-affine-runtime-authority-type.md`
 
 **Interfaces:**
 - Consumes: implemented code and fresh test counts.

@@ -283,4 +283,4 @@ integration, native/platform evidence, lifecycle evidence and authority
 release for the exact deployed object and context.
 
 Architecture ruling:
-`../../../ZTF-Knowledge-Bases/RD-0680-galerina-verified-native-operation-hallmark-vok-ruling.md`
+`../../../ZTF-Knowledge-Bases/research/rd/RD-0680-galerina-verified-native-operation-hallmark-vok-ruling.md`

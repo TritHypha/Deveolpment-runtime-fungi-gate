@@ -78,7 +78,7 @@ boolean not truly sensitive) with a trailing comment:
 - **Held (owner-gated):** a compiler-enforced **`@oblivious`** attribute + a lowering pass that rewrites secret-dependent
   branches into "both-arms + `min`-mask select" and proves the emitted WAT has a secret-independent trace. That is a
   grammar + crown-jewel-lowering change, so it ships only on explicit owner approval — until then, write it by hand and
-  let the detector check you. (Design: `ZTF-Knowledge-Bases/galerina-rd-0258-data-oblivious-detector-and-design-2026-07-04.md`.)
+  let the detector check you. (Design: `ZTF-Knowledge-Bases/research/rd-legacy/galerina-rd-0258-data-oblivious-detector-and-design-2026-07-04.md`.)
 
 ## Honest scope
 

@@ -36,7 +36,7 @@ Package directory:
 Cross-check:
 
 - `Galerina/docs/TODO.md`
-- `../ZTF-Knowledge-Bases/galerina-fungi-translation-decision-map.md`
+- `../ZTF-Knowledge-Bases/reference/galerina/galerina-fungi-translation-decision-map.md`
 - `Galerina/docs/examples/VERIFIED-NATIVE-OPERATION-BOUNDARY.md`
 - `Galerina/docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 - `Galerina/docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`

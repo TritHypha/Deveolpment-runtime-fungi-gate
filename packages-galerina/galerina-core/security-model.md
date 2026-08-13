@@ -358,7 +358,7 @@ let apiKey: SecureString = env.secret("API_KEY")     // alias, also valid
 ```
 
 The full postfix type state specification is documented in
-`../../../ZTF-Knowledge-Bases/postfix-type-state-syntax.md`.
+`../../../ZTF-Knowledge-Bases/reference/language/postfix-type-state-syntax.md`.
 
 ---
 
@@ -1043,7 +1043,7 @@ Runtime sandbox layers: compiler validation, runtime sandbox (WASM), capability
 tokens, audit logging.
 
 The full plugin security specification is documented in
-`../../../ZTF-Knowledge-Bases/plugin-security-architecture.md`.
+`../../../ZTF-Knowledge-Bases/reference/language/plugin-security-architecture.md`.
 
 ---
 
