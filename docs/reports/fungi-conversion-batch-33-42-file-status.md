@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-73 File Status
+# Fungi Conversion Batch 33-74 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -72,6 +72,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 71 | `packages-galerina/galerina-core-config/src/governance.ts#isGovernanceMode` | not created | existing Core Config tests retained | The three labels fit the String match ceiling, but the exact type guard accepts every JavaScript `unknown`; a String-only flow or host pre-filter narrows the source contract. | `BLOCKED_BY_UNKNOWN_TYPE_GUARD_ABI` |
 | 72 | `packages-galerina/galerina-framework-app-kernel/src/registry-index.ts#isStrictlyNewerThanFloor` | not created | existing registry-index and hybrid tests retained | Freshness distinguishes an absent floor and otherwise uses JavaScript UTF-16 lexicographic ordering. The physical surface has neither `Option<String>` nor the exact relational String operation. | `BLOCKED_BY_OPTION_STRING_ORDERING_ABI` |
 | 73 | `packages-galerina/galerina-core-logic/src/index.ts#isSafeGalerinaame` | not created | existing complete core-logic package lane retained | The open anchored identifier regex needs exact JavaScript UTF-16 length, code-unit access and traversal, or an admitted regex opcode. Frontend `matchesPattern` is not physical execution and the bounded well-formed text ingress narrows the source domain. Core Logic passes **57/57**. | `BLOCKED_BY_REGEX_TEXT_CHARACTER_ABI` |
+| 74 | `packages-galerina/galerina-data-query/src/index.ts#isSome` | not created | existing complete Data Query package lane retained | The exported generic type guard consumes the custom structural `QueryOption<T>` union. Frontend `Option<T>` is not the same API, and the physical surface has no generic arbitrary-payload tagged-union parameter. Data Query passes **19/19**. | `BLOCKED_BY_GENERIC_TAGGED_UNION_ABI` |
 
 ## Shared implementation and governance files
 
@@ -213,3 +214,8 @@ not one of Slices 33–43 and no Fungi asset was produced.
   physical execution has neither regex nor source-equivalent UTF-16
   length/code-unit traversal, and bounded well-formed text ingress would
   narrow the source domain. Core Logic passes **57/57**.
+- Slice 74 remains blocked without a placeholder asset. The exported generic
+  `QueryOption<T>` type guard cannot be replaced by a concrete Fungi
+  `Option<Int>`, a host-projected tag or a precomputed Boolean. The pinned
+  physical type table has no generic arbitrary-payload tagged-union parameter.
+  Data Query passes **19/19**.

@@ -158,7 +158,11 @@ counts or open items that a newer section explicitly supersedes.
   requires exact UTF-16 length, code-unit access and traversal, or an admitted
   regex operation; frontend acceptance and host projection are not physical
   parity.
-- [ ] Continue Slices 74-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 74 `isSome<T>` as
+  `BLOCKED_BY_GENERIC_TAGGED_UNION_ABI`. The exported custom structural union
+  cannot be specialized to `Option<Int>` or reduced to a host-owned tag; the
+  physical surface has no generic arbitrary-payload tagged-union parameter.
+- [ ] Continue Slices 75-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
