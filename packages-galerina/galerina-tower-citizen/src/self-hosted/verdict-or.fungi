@@ -1,0 +1,14 @@
+@version 1
+pure flow vOrVerdict(left: Verdict, right: Verdict) -> Verdict {
+  check(left) {
+    deny: { return right }
+    ambig: {
+      check(right) {
+        deny: { return Verdict.Unknown }
+        ambig: { return Verdict.Unknown }
+        if: { return Verdict.Allow }
+      }
+    }
+    if: { return Verdict.Allow }
+  }
+}

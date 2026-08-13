@@ -13,6 +13,7 @@
       "src/self-hosted/inference-governance.fungi",
       "src/self-hosted/pq-admission-policy.fungi",
       "src/self-hosted/transport-fsm.fungi",
+      "src/self-hosted/verdict-or.fungi",
       "src/self-hosted/verdict-not.fungi",
       "src/trit-brand.type-guard.ts"
     ]
