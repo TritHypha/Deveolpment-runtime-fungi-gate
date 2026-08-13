@@ -132,5 +132,5 @@
 - [x] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
 - [x] Commit authored evidence separately from registered owner outputs.
 - [x] Run all registered graph/owner publishers and the bounded close matrix.
-- [ ] Commit the final provenance build point, then refresh Myco and codebase-memory with exact-head readback at Slice 547.
-- [ ] Keep repository closure `UNKNOWN` and continue with Slice 548 after the bounded close.
+- [x] Commit the final provenance build point, then refresh Myco and codebase-memory with exact-head readback at Slice 547.
+- [x] Keep repository closure `UNKNOWN` and continue with Slice 548 after the bounded close.
