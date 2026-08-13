@@ -1,11 +1,11 @@
-# Fungi Conversion Batch 33-372 File Status
+# Fungi Conversion Batch 33-397 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-348-372-photonic-target.md`](../superpowers/plans/2026-08-13-slices-348-372-photonic-target.md).
-Slices 348-372 are adjudicated; the Slice 372 individual
+[`../superpowers/plans/2026-08-13-slices-373-397-wasm-test-harness.md`](../superpowers/plans/2026-08-13-slices-373-397-wasm-test-harness.md).
+Slices 373-397 are adjudicated; the Slice 397 individual
 graph/index/roadmap maintenance boundary is pending. Prior plans are retained
 in repository history. Crash-linked aggregate lanes remain excluded.
 
@@ -375,6 +375,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 370 | `packages-galerina/galerina-target-photonic/src/index.ts#photonicDiagnostic` | not created | not created | Optional-field diagnostic record lacks an admitted exact physical ABI. | `BLOCKED` |
 | 371 | `packages-galerina/galerina-target-photonic/src/index.ts#validateOpticalChannelLayout` | not created | not created | Host record, repeated getters, Float and UTF-16 semantics lack physical parity. | `BLOCKED` |
 | 372 | `packages-galerina/galerina-target-photonic/src/index.ts#validatePhotonicLoweringPlan` | not created | not created | Host nested records, sparse arrays, bounded iteration and channels lack physical parity. | `BLOCKED` |
+| 373 | `packages-galerina/galerina-target-wasm/src/index.ts#WasmTarget` | not created | declaration accounted | Erased target interface performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 374 | `packages-galerina/galerina-target-wasm/src/index.ts#WasmArtefact` | not created | declaration accounted | Erased artefact interface supplies no exact record. | `NO_RUNTIME_BEHAVIOR` |
+| 375 | `packages-galerina/galerina-target-wasm/src/index.ts#WasmTargetReport` | not created | declaration accounted | Erased report supplies no immutable evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 376 | `packages-galerina/galerina-target-wasm/src/index.ts#WasmDiagnosticSeverity` | not created | declaration accounted | Erased severity alias performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 377 | `packages-galerina/galerina-target-wasm/src/index.ts#WasmDiagnostic` | not created | declaration accounted | Erased diagnostic supplies no exact record. | `NO_RUNTIME_BEHAVIOR` |
+| 378 | `packages-galerina/galerina-target-wasm/src/index.ts#WASM_RUNTIMES` | not created | not created | Runtime membership/message ABI lacks physical proof. | `BLOCKED` |
+| 379 | `packages-galerina/galerina-target-wasm/src/index.ts#wasmDiagnostic` | not created | not created | Optional diagnostic record lacks physical proof. | `BLOCKED` |
+| 380 | `packages-galerina/galerina-target-wasm/src/index.ts#validateWasmArtefact` | not created | not created | Host records, arrays, text and failures lack exact admission. | `BLOCKED` |
+| 381 | `packages-galerina/galerina-target-wasm/src/index.ts#createWasmTargetReport` | not created | not created | Sparse iteration and aliased report evidence remain blocked. | `BLOCKED` |
+| 382 | `packages-galerina/galerina-test/src/cli.ts#KINDS` | not created | not created | Set membership and String selector ABI lack proof. | `BLOCKED` |
+| 383 | `packages-galerina/galerina-test/src/cli.ts#usage` | not created | not created | Exact stdout stream effect lacks admission. | `BLOCKED` |
+| 384 | `packages-galerina/galerina-test/src/cli.ts#fail` | not created | not created | Ordered stderr/stdout/exit effects lack admission. | `BLOCKED` |
+| 385 | `packages-galerina/galerina-test/src/cli.ts#ParsedArgs` | not created | declaration accounted | Erased parsed-argument interface performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 386 | `packages-galerina/galerina-test/src/cli.ts#parseArgs` | not created | not created | Argv, Number, bounded scanning and termination lack proof. | `BLOCKED` |
+| 387 | `packages-galerina/galerina-test/src/cli.ts#dispatch` | not created | not created | Async test-runner capabilities and CheckResult ABI lack proof. | `BLOCKED` |
+| 388 | `packages-galerina/galerina-test/src/cli.ts#mark` | `packages-galerina/galerina-test/src/self-hosted/test-marker.fungi` | exact focused evidence | Existing exact Bool marker twin; consumer switch and retirement remain pending. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 389 | `packages-galerina/galerina-test/src/cli.ts#printHuman` | not created | not created | Formatting and ordered stdout effects lack proof. | `BLOCKED` |
+| 390 | `packages-galerina/galerina-test/src/cli.ts#main` | not created | not created | Process, JSON, Error, stream and termination effects lack proof. | `BLOCKED` |
+| 391 | `packages-galerina/galerina-test/src/parse.ts#parseCounts` | not created | not created | Regex summary, unsafe counts and Option record lack proof. | `BLOCKED` |
+| 392 | `packages-galerina/galerina-test/src/parse.ts#grab` | not created | not created | Dynamic regex capture and Number/Option semantics lack proof. | `BLOCKED` |
+| 393 | `packages-galerina/galerina-test/src/parse.ts#parseAggregateTotal` | not created | not created | Spoofable first-match summary and numeric range lack admission. | `BLOCKED` |
+| 394 | `packages-galerina/galerina-test/src/paths.ts#WORKSPACE_MARKER` | `packages-galerina/galerina-test/src/self-hosted/workspace-marker.fungi` | exact **2/2** physical reference evidence | Exact immutable marker String is superseded; filesystem attestation remains in consumer slices. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 395 | `packages-galerina/galerina-test/src/paths.ts#findUp` | not created | not created | Filesystem walk, bound and marker attestation lack admission. | `BLOCKED` |
+| 396 | `packages-galerina/galerina-test/src/paths.ts#resolveRoot` | not created | not created | Env/cwd/fs/URL/path precedence and Error identity lack proof. | `BLOCKED` |
+| 397 | `packages-galerina/galerina-test/src/paths.ts#resolveTarget` | not created | not created | Platform path resolution and containment policy remain unproved. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -752,3 +777,12 @@ not one of Slices 33–43 and no Fungi asset was produced.
   work; mapped operations and nested channels are not validated. Same-named
   photonic execution-plan/diagnostic schemas and amplitude rules also conflict
   across packages. Skill review is `NO_SKILL_UPDATE`.
+- Slices 373-397 account nine WASM-target and 16 test-harness scopes: six
+  erased declarations are `NO_RUNTIME_BEHAVIOR`, 17 runtime scopes remain
+  `BLOCKED`, and Slices 388 and 394 are superseded by exact package-owned Fungi.
+  WASM **4/4**, harness **41/41**, foundation **8/8**, Boolean marker **2/2**
+  and workspace marker **2/2** pass.
+  Parsed summary text can be spoofed or overflow to unsafe/Infinite counts yet
+  influences SLIDE success; CLI flag values can swallow later flags; explicit
+  or environment roots bypass marker validation; target resolution provides no
+  containment. These are repair work, not conversion authority.

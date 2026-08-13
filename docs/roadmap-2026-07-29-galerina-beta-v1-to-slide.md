@@ -3563,3 +3563,26 @@ bounded-while, immutable-evidence and physical-profile rules, so the wave is
 with 974 tests; receipts 312/312; roadmap 5/5 and Golden 11/11. Adjacent test
 `.mjs` queue entries and excluded crash-linked aggregate lanes keep
 repository-wide closure `UNKNOWN`.
+
+## Fungi conversion checkpoint through Slice 397 - 2026-08-13
+
+The ledger now accounts nine WASM-target scopes and 16 consolidated test-
+harness scopes. Six erased declarations are `NO_RUNTIME_BEHAVIOR`; 17 runtime
+scopes remain `BLOCKED`; exact package-owned marker assets supersede Slices 388
+and 394 as reference evidence without switching consumers or retiring TS.
+
+Fresh focused evidence passes WASM **4/4**, harness **41/41**, foundation
+**8/8**, Boolean marker **2/2** and workspace marker **2/2**. No other scoped
+source owns an exact Fungi/GIR/physical `.slide`/independent re-admission/VOK
+replacement.
+
+The zero-trust review found authority-relevant repair debt. First-match summary
+parsing accepts spoofed duplicates, unsafe integers and numeric infinity while
+parsed counts influence SLIDE success. CLI parsing can consume a flag as a
+preceding flag's value; process output/JSON/exit paths lack direct tests.
+Explicit and environment roots are accepted without marker validation, the
+advertised resolveRoot failure test does not exercise failure, and target path
+resolution is not containment. WASM reports also accept hostile/sparse records
+and retain caller aliases. Existing private skills already govern these
+patterns, so the wave is `NO_SKILL_UPDATE`. Owner publication remains pending;
+repository-wide closure remains `UNKNOWN`.

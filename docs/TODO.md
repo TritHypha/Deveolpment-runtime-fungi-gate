@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 373-397 WASM target and test harness - 2026-08-13
+
+- [x] Account 25 scopes: six erased declarations, 17 blocked runtime scopes and
+  two exact package-owned Fungi supersessions (`mark` and `WORKSPACE_MARKER`).
+  No placeholder was created.
+- [x] Prove WASM **4/4**, harness **41/41**, foundation **8/8**, Boolean marker
+  **2/2** and workspace marker **2/2** focused evidence; these remain
+  regression/reference lanes only.
+- [ ] Make parsed test summaries canonical and unique; refuse duplicate/spoofed
+  lines, unsafe integers, excessively long digits and non-finite counts before
+  any parsed value can affect SLIDE or other check success.
+- [ ] Repair CLI argument decoding so a flag cannot be consumed as `--root` or
+  `--timeout` data; add exact argv, stream-routing, JSON and exit-code tests.
+- [ ] Exact-decode WASM artefacts and dense arrays, remove caller aliases, bind
+  module bytes/digest/imports/exports/sandbox evidence, and migrate legacy
+  `Galerina_WASM_*` diagnostics to owned `FUNGI-CATEGORY-NNN` codes.
+- [ ] Decide and enforce workspace-root marker attestation and target
+  containment; cover env/explicit-root bypass, file-vs-directory, symlinks,
+  traversal, drives, UNC paths and Error identity.
+- [x] Prove the immutable `WORKSPACE_MARKER` String independently from its
+  filesystem consumers: strict check plus interpretation/signed-Wasm **2/2**;
+  TypeScript remains pending a consumer switch and retirement authority.
+- [ ] Complete the Slice 397 individual owner matrix and dual reindex;
+  repository-wide closure remains `UNKNOWN`.
+
 ### Slices 348-372 photonic target - 2026-08-13
 
 - [x] Account the 25 remaining symbols in

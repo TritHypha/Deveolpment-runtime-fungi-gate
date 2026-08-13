@@ -21,20 +21,20 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = join(HERE, "..");
-const SOURCE = join(PACKAGE_ROOT, "src", "self-hosted", "test-marker.fungi");
-const REFERENCE_SOURCE = join(PACKAGE_ROOT, "src", "cli.ts");
+const SOURCE = join(PACKAGE_ROOT, "src", "self-hosted", "workspace-marker.fungi");
+const REFERENCE_SOURCE = join(PACKAGE_ROOT, "src", "paths.ts");
 const PACKAGE = join(PACKAGE_ROOT, "package.json");
+const EXPECTED = "galerina.workspace.json";
 
 async function compileCandidate() {
-  assert.ok(existsSync(SOURCE), "the package-owned test marker Fungi asset must exist");
+  assert.ok(existsSync(SOURCE), "the package-owned workspace marker Fungi asset must exist");
   const source = readFileSync(SOURCE, "utf8").replace(/^\uFEFF/u, "");
-  const program = parseProgram(source, "test-marker.fungi");
+  const program = parseProgram(source, "workspace-marker.fungi");
   assert.deepEqual(
     (program.diagnostics ?? []).filter((diagnostic) => diagnostic.severity === "error"),
     [],
-    "the exact test marker Fungi asset must parse and type-check without errors",
   );
-  assert.ok(program.flows.some((flow) => flow.name === "mark"), "missing Fungi flow mark");
+  assert.ok(program.flows.some((flow) => flow.name === "workspaceMarker"));
   const effects = checkEffects(program.flows, program.ast);
   assert.deepEqual(
     effects.flatMap((result) => result.diagnostics)
@@ -42,7 +42,7 @@ async function compileCandidate() {
     [],
   );
   const { gir } = emitGIR(program.ast, program.flows, effects);
-  const wat = renderWAT(buildWATModuleFromGIR(gir, undefined, "test-marker", program.ast, true));
+  const wat = renderWAT(buildWATModuleFromGIR(gir, undefined, "workspace-marker", program.ast, true));
   const assembled = await assembleWAT(wat);
   assert.equal(assembled.valid, true, JSON.stringify(assembled.diagnostics));
   assert.deepEqual(assembled.diagnostics, []);
@@ -56,55 +56,37 @@ async function compileCandidate() {
     policy: { requireSigned: true, publicKeyPem: keypair.publicKeyPem },
     host,
   });
-  assert.equal(typeof instance.exports.mark, "function");
   return { host, instance, program, source };
 }
 
-async function interpret(compiled, ok) {
-  const interpreted = await executeFlow(
-    "mark",
-    new Map([["ok", { __tag: "bool", value: ok }]]),
-    compiled.program.ast,
-    compiled.program.flows,
-  );
-  return interpreted.value;
-}
-
-function executeWasm(compiled, ok) {
-  return compiled.host.readString(compiled.instance.exports.mark(ok ? 1 : 0));
-}
-
-describe("galerina-test package-owned Fungi human marker", () => {
-  it("binds the exact private Boolean decision and package-owned asset", async () => {
+describe("galerina-test package-owned Fungi workspace marker", () => {
+  it("binds the exact exported TypeScript constant and package-owned asset", async () => {
     const compiled = await compileCandidate();
     const packageJson = JSON.parse(readFileSync(PACKAGE, "utf8"));
     assert.deepEqual(packageJson.packageGraph?.loadedAssets, [
       "src/self-hosted/test-marker.fungi",
       "src/self-hosted/workspace-marker.fungi",
     ]);
-    const executableFungi = compiled.source.replace(/^\s*\/\/\/.*$/gmu, "");
-    const syntaxOnly = executableFungi.replace(/"(?:\\.|[^"\\])*"/gu, '""');
-    assert.doesNotMatch(
-      syntaxOnly,
-      /\b(?:null|NaN|else|throw|try|catch|for|while|loop)\b/u,
-    );
     const reference = readFileSync(REFERENCE_SOURCE, "utf8").replace(/^\uFEFF/u, "");
-    assert.match(
-      reference,
-      /function mark\(ok: boolean\): string \{\s*return ok \? "✅" : "❌";\s*\}/u,
-    );
+    assert.match(reference, /export const WORKSPACE_MARKER = "galerina\.workspace\.json";/u);
+    const syntaxOnly = compiled.source
+      .replace(/^\s*\/\/\/.*$/gmu, "")
+      .replace(/"(?:\\.|[^"\\])*"/gu, '""');
+    assert.doesNotMatch(syntaxOnly, /\b(?:null|NaN|else|throw|try|catch|for|while|loop)\b/u);
   });
 
-  it("preserves the complete Boolean domain through interpretation and signed Wasm", async () => {
+  it("preserves the exact String through interpretation and signed Wasm", async () => {
     const compiled = await compileCandidate();
-    for (const ok of [false, true]) {
-      const wanted = ok ? "✅" : "❌";
-      assert.deepEqual(
-        await interpret(compiled, ok),
-        { __tag: "string", value: wanted },
-        `Fungi ${ok}`,
-      );
-      assert.equal(executeWasm(compiled, ok), wanted, `Wasm ${ok}`);
-    }
+    const interpreted = await executeFlow(
+      "workspaceMarker",
+      new Map(),
+      compiled.program.ast,
+      compiled.program.flows,
+    );
+    assert.deepEqual(interpreted.value, { __tag: "string", value: EXPECTED });
+    assert.equal(
+      compiled.host.readString(compiled.instance.exports.workspaceMarker()),
+      EXPECTED,
+    );
   });
 });

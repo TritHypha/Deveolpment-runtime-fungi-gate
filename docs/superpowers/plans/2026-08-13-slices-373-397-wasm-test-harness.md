@@ -23,8 +23,11 @@ SLIDE/VOK, Myco and codebase-memory.
   build-point or caller evidence is unavailable.
 - Read both private Fungi skills before adjudication; keep them private/unpushed.
 - Never author null, NaN, `else if`, throw/try/catch, `for` or `loop` in Fungi.
-- Create no candidate without exact GIR, physical `.slide`, independent
-  re-admission and VOK evidence for all types and effects.
+- Create no authorizing or retiring candidate without exact GIR, physical
+  `.slide`, independent re-admission and VOK evidence for all types and
+  effects. A package-owned reference-only semantic twin may be recorded only
+  with exact focused proof and an explicit refusal of consumer switch,
+  physical `.slide` authority and TypeScript retirement.
 - Do not run crash-linked aggregate tooling, phase-close or monolithic memory.
 - Repository-wide and adjacent test-MJS closure remain `UNKNOWN`.
 
@@ -70,27 +73,30 @@ SLIDE/VOK, Myco and codebase-memory.
   `6809F7AF0A8209459F5812DF970C715246A5D0FB82A24DF405CF33C403E03F63`.
 - [x] Pin paths source SHA-256
   `40785B8B394705CF309832755556C2554557967B61E51FD28D587130F04409D9`.
-- [ ] Establish fresh focused package typecheck/test baselines and distinguish
+- [x] Establish fresh focused package typecheck/test baselines and distinguish
   source evidence from existing-dist evidence.
-- [ ] Reconcile consumers and exact Fungi/GIR/SLIDE/VOK evidence.
+- [x] Reconcile consumers and exact Fungi/GIR/SLIDE/VOK evidence.
 
 ### Task 2: Produce three independent dossiers
 
-- [ ] Record exact record/property, collection, text, number, regex, path,
+- [x] Record exact record/property, collection, text, number, regex, path,
   environment, process, stream, exit and asynchronous behavior.
-- [ ] Classify erased declarations as `NO_RUNTIME_BEHAVIOR`; create no enum or
+- [x] Classify erased declarations as `NO_RUNTIME_BEHAVIOR`; create no enum or
   record placeholder.
-- [ ] For runtime scopes, record exact blocker, threadability, hostile vectors
+- [x] For runtime scopes, record exact blocker, threadability, hostile vectors
   and the complete physical/effect admission exit.
-- [ ] Update either private skill only for a reusable missing rule; otherwise
+- [x] Update either private skill only for a reusable missing rule; otherwise
   record evidence-based `NO_SKILL_UPDATE` in every receipt.
 
 ### Task 3: Publish and review governed evidence
 
-- [ ] Create 25 exact slice receipts and update the live register, TODOs and
+- [x] Create 25 exact slice receipts and update the live register, TODOs and
   roadmap without overstating test or physical authority.
-- [ ] Run receipt audit and focused package lanes.
-- [ ] Obtain three independent read-only reviews of pins, arithmetic,
+- [x] Resolve independent review findings: Slice 387 is `ASYNC_HAPPY_PATH`,
+  Slice 397 is `PARALLEL_PURE`, and Slice 394 owns an exact String candidate
+  proved by strict check plus interpretation/signed-Wasm **2/2**.
+- [x] Run receipt audit and focused package lanes.
+- [x] Obtain three independent read-only reviews of pins, arithmetic,
   classifications, blockers, threadability, skills and physical refusals.
 - [ ] Commit authored evidence separately from generated owners.
 
@@ -101,4 +107,3 @@ SLIDE/VOK, Myco and codebase-memory.
 - [ ] Commit final generated build point, refresh Myco and codebase-memory, and
   prove exact indexed HEAD plus a named symbol lookup.
 - [ ] Keep repository closure `UNKNOWN` unless every separate exit is proved.
-

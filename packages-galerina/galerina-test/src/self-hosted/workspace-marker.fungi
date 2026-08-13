@@ -1,0 +1,10 @@
+@version 1
+/// @file: workspace-marker.fungi
+/// @purpose: Reference-only semantic twin of paths.ts WORKSPACE_MARKER.
+/// @status: package-owned conversion proof; TypeScript remains active.
+
+pure flow workspaceMarker() -> String
+contract { intent { "Return the exact Galerina workspace marker filename." } }
+{
+  return "galerina.workspace.json"
+}
