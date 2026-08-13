@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-95 File Status
+# Fungi Conversion Batch 33-98 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -94,6 +94,9 @@ still requires its own strict, physical, VOK and differential proof.
 | 93 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vAnd` | existing `packages-galerina/galerina-tower-citizen/src/self-hosted/effective-verdict.fungi` | `packages-galerina/galerina-tower-citizen/tests/verdict-and-fungi-supersession.test.mjs` | The direct export and existing Fungi flow match all nine literal K3-minimum rows. A duplicate `verdict-and.fungi` is explicitly refused. Tower-Citizen passes **515/515**, the direct proof **2/2**, and the inherited physical SLIDE/VOK proof **1/1** with zero skips. TypeScript remains active. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
 | 94 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#allOf` | not created | existing complete Tower-Citizen lane retained | The arbitrary-length readonly Verdict-array fold includes empty→Unknown, single-element identity, ordered K3 minimum and malformed-element refusal. The selected physical profile admits scalar Bool/Verdict parameters, not `Array<Verdict>` length/index/fold semantics. Host projection is refused. Tower-Citizen passes **515/515**. | `BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI` |
 | 95 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#anyOf` | not created | existing complete Tower-Citizen lane retained | The symmetric arbitrary-length Verdict-array fold includes empty→Unknown, single-element identity, ordered K3 maximum and malformed-element refusal. Scalar Slice 92 proof is not array parity; the current physical profile has no admitted array ABI. Tower-Citizen passes **515/515**. | `BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI` |
+| 96 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#collapse` | existing `packages-galerina/galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi#collapseVerdict` | `packages-galerina/galerina-tower-citizen/tests/collapse-boundary-fungi-conversion.test.mjs` | The existing direct proof passes all three K3 rows; the physical `.slide`/VOK String lane passes 1/1 with zero skips and hostile/mutation refusal. Tower-Citizen passes **515/515**. TypeScript remains active. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
+| 97 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#authorize` | existing `packages-galerina/galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi#authorizeVerdict` | `packages-galerina/galerina-tower-citizen/tests/authorization-boundary-fungi-conversion.test.mjs` | The existing direct proof passes all three K3 rows; the physical `.slide`/VOK Bool lane passes 1/1 with zero skips and hostile/mutation refusal. Tower-Citizen passes **515/515**. TypeScript remains active. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
+| 98 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#decideAtBoundary` | not created | existing complete Tower-Citizen lane retained | Exact parity requires the complete boundary record, an absent/present structured diagnostic and optional exactly-once callback effect. The current physical profile has no corresponding Option/record/callback ABI; host reassembly is refused. Tower-Citizen passes **515/515**. | `BLOCKED_BY_OPTION_RECORD_CALLBACK_ABI` |
 
 ## Shared implementation and governance files
 
@@ -306,3 +309,12 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Slice 95 retains the symmetric K3-maximum array fold as blocked for the same
   exact container boundary. Scalar `vOr` evidence cannot prove arbitrary
   arrays, the empty case or malformed-element behavior.
+- Slice 96 records exact supersession by the existing package-owned
+  `collapseVerdict` flow. Direct proof passes **2/2**, physical SLIDE/VOK passes
+  **1/1** with zero skips, and no duplicate asset is created.
+- Slice 97 records exact supersession by the existing package-owned
+  `authorizeVerdict` flow. Direct proof passes **2/2**, physical SLIDE/VOK
+  passes **1/1** with zero skips, and only exact Allow authorizes.
+- Slice 98 remains blocked without a placeholder asset. The scalar collapse
+  and authorize flows do not conserve the nullable structured diagnostic,
+  complete boundary record or optional exactly-once callback effect.

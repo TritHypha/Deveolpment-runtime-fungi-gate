@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 96-98 verdict-boundary adjudication - 2026-08-13
+
+- [x] Classify Tower-Citizen `collapse` and `authorize` as
+  `SUPERSEDED_BY_EXISTING_FUNGI`; reuse the package-owned
+  `authorization-boundary.fungi` flows and create no duplicates.
+- [x] Verify both direct K3 proofs at 2/2 each and both physical SLIDE/VOK
+  lanes at 1/1 each with zero skips, typed receipts, hostile argument refusal,
+  exhaustion refusal and source/artifact mutation refusal.
+- [x] Verify the complete Tower-Citizen package at 515/515 with zero skips.
+- [x] Classify `decideAtBoundary` as
+  `BLOCKED_BY_OPTION_RECORD_CALLBACK_ABI`; preserve its exact structured
+  record, nullable diagnostic and optional exactly-once callback behavior.
+- [x] Review both private Fungi skills; `NO_SKILL_UPDATE` is correct at
+  `dc2ef82f` and `30eb4dd3` because existing reuse, K3, Option/record, effect
+  and no-host-projection rules already govern this group.
+- [ ] Reopen Slice 98 only after a reviewed physical Option/record/callback
+  ABI can be published and independently verified through VOK.
+- [ ] Keep TypeScript and all callers active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+
 ### Slice 95 anyOf array-fold adjudication - 2026-08-13
 
 - [x] Adjudicate Tower-Citizen `anyOf` as

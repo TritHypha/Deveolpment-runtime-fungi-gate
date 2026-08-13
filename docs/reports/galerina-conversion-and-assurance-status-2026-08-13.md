@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 95**. Slices
+The current conversion campaign is complete through **Slice 98**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -58,6 +58,18 @@ Slice 95 records the symmetric `anyOf` K3-maximum fold at the same missing
 array ABI. The binary `vOr` proof remains valid but cannot prove arbitrary
 array length, empty behavior or malformed-element handling.
 
+Slices 96 and 97 close the adjacent scalar trust-boundary functions by exact
+reuse. Existing package-owned `collapseVerdict` and `authorizeVerdict` flows
+match all three K3 rows, and both physical `.slide`/VOK lanes pass with typed
+String/Bool receipts, hostile-boundary refusal and no authority release. No
+duplicate Fungi asset was created and TypeScript remains active.
+
+Slice 98 keeps `decideAtBoundary` closed. Its complete structured result,
+absent/present diagnostic and optional exactly-once callback effect are not
+equivalent to the two scalar flows, and the pinned physical profile has no
+exact Option/record/callback ABI. Host reassembly or precomputed callback
+routing is refused.
+
 ## Current evidence
 
 - Slice 92 physical-proof build point: `a7258cef` on
@@ -69,7 +81,7 @@ array length, empty behavior or malformed-element handling.
   and 147 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 856
   file-level blockers.
-- Slice receipts: **35/35** governed receipts pass after Slice 95 publication.
+- Slice receipts: **38/38** governed receipts pass after Slices 96-98.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   974 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **515/515**, direct Slice 93
@@ -91,7 +103,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 95 decision boundary is complete. Literal
+The Slice 98 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed

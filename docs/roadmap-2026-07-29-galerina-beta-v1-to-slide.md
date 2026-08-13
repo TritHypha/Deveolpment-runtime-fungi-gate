@@ -3,11 +3,11 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 95**, with the exact status and R&D intake recorded in
+through **Slice 98**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
-blockers; **35/35** governed slice receipts pass. Slices 84-88 conserve five
+blockers; **38/38** governed slice receipts pass. Slices 84-88 conserve five
 additional exact ABI/authority/custody refusals. Slice 88 proves that the Myco
 search-outcome guard cannot move into a read-only mirror or cross the current
 exact-record profile without deleting dynamic property behavior. Slice 89 adds
@@ -28,6 +28,12 @@ the current scalar physical profile cannot preserve its arbitrary-length
 Verdict-array boundary, empty→Unknown rule and malformed-element behavior.
 Slice 95 retains the symmetric `anyOf` K3-maximum array fold at the same exact
 container ABI exit; scalar `vOr` proof is not array parity.
+Slices 96 and 97 prove exact reuse of the existing package-owned
+`collapseVerdict` and `authorizeVerdict` flows across all three K3 rows and
+their independent physical SLIDE/VOK lanes; no duplicate asset is admitted.
+Slice 98 keeps the complete `decideAtBoundary` record, absent/present
+diagnostic and optional exactly-once callback effect blocked until an exact
+physical Option/record/callback ABI exists. Host reassembly is refused.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic
