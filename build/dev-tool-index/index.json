@@ -4,7 +4,7 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 172,
+    "devTools": 173,
     "auditTools": 90,
     "toolsInCadence": 119,
     "proofs": 40
@@ -2585,6 +2585,18 @@
       ]
     },
     {
+      "name": "docs-index.mjs",
+      "category": "index",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "doc-drift",
+        "graph/index"
+      ]
+    },
+    {
       "name": "gen-code-registry.mjs",
       "category": "index",
       "purpose": "the DERIVED code registry (standard #10 \"derived catalog\", #219; closes cluster ①).",
@@ -3728,6 +3740,7 @@
       "project-graph-generator.mjs",
       "ts-retirement-graph.mjs",
       "code-index.mjs",
+      "docs-index.mjs",
       "gen-code-registry.mjs",
       "gen-contract-registry.mjs",
       "kb-index.mjs",
@@ -3964,6 +3977,7 @@
       "fix-logicn-brand.mjs",
       "gen-status-blocks.mjs",
       "code-index.mjs",
+      "docs-index.mjs",
       "gen-code-registry.mjs",
       "gen-contract-registry.mjs",
       "kb-index.mjs",
@@ -5739,6 +5753,15 @@
       ],
       "lifecycle": "active",
       "disposition": "scheduled"
+    },
+    {
+      "tool": "docs-index.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
     },
     {
       "tool": "emit-doc-wat.mjs",

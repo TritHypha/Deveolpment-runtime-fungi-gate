@@ -584,6 +584,9 @@ flowchart LR
   T_code_index_mjs --> C_diagnostics
   T_code_index_mjs --> C_doc_drift
   T_code_index_mjs --> C_graph_index
+  T_docs_index_mjs["docs-index.mjs"]
+  T_docs_index_mjs --> C_doc_drift
+  T_docs_index_mjs --> C_graph_index
   T_gen_code_registry_mjs["gen-code-registry.mjs"]
   T_gen_code_registry_mjs --> C_sinks_taint
   T_gen_code_registry_mjs --> C_signing_fusion

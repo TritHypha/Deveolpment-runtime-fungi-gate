@@ -1,6 +1,6 @@
 # VOK Semantic Assurance Graph
 
-Conserved authoritative-input digest: `33e14510ede8f6a1a4bc81df6fc86b84b406b547077bb22fac3b72869b07e409`
+Conserved authoritative-input digest: `acef4c2d57ef108a48c40185896f3618965fe2ac109fa4abdb4bd4d87dbf229d`
 
 K3 evidence state: **ALLOW (1)**
 
