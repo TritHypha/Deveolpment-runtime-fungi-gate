@@ -1,11 +1,11 @@
-# Fungi Conversion Batch 33-297 File Status
+# Fungi Conversion Batch 33-322 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-273-297-accelerator-cpu.md`](../superpowers/plans/2026-08-13-slices-273-297-accelerator-cpu.md).
-Slices 273-297 are accounted; the Slice 297 individual
+[`../superpowers/plans/2026-08-13-slices-298-322-cpu-gpu-js.md`](../superpowers/plans/2026-08-13-slices-298-322-cpu-gpu-js.md).
+Slices 298-322 are accounted; the Slice 322 individual
 graph/index/roadmap maintenance boundary remains pending. Crash-linked
 aggregate lanes remain excluded.
 
@@ -300,6 +300,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 295 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetPlan` | not created | declaration accounted | Erased plan validates no workload, features, threading, memory or fallback. | `NO_RUNTIME_BEHAVIOR` |
 | 296 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetReport` | not created | declaration accounted | Erased report supplies no nested consistency, snapshot or provenance. | `NO_RUNTIME_BEHAVIOR` |
 | 297 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuFeatureProbe` | not created | declaration accounted | Erased probe supplies no source, timestamp or capability provenance. | `NO_RUNTIME_BEHAVIOR` |
+| 298 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetDiagnosticSeverity` | not created | declaration accounted | Erased severity alias performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 299 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuTargetDiagnostic` | not created | declaration accounted | Erased diagnostic record supplies no grammar, bounds or snapshot. | `NO_RUNTIME_BEHAVIOR` |
+| 300 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuCalibrationSample` | not created | declaration accounted | Erased sample supplies no finite units or provenance. | `NO_RUNTIME_BEHAVIOR` |
+| 301 | `packages-galerina/galerina-target-cpu/src/index.ts#CpuCalibrationReport` | not created | declaration accounted | Erased report proves no calibration work or evidence snapshot. | `NO_RUNTIME_BEHAVIOR` |
+| 302 | `packages-galerina/galerina-target-cpu/src/index.ts#supportsCpuFeatures` | not created | exact blocker retained | Wrong/sparse collections and unbounded membership can produce false positives. | `BLOCKED_BY_UNVALIDATED_RECORD_ARRAY_MEMBERSHIP_AND_BOUNDED_ITERATION_ABI` |
+| 303 | `packages-galerina/galerina-target-cpu/src/index.ts#validateCpuFeatureProbe` | not created | exact blocker retained | Coercive/non-finite numerics and repeated reads fail open. | `BLOCKED_BY_COERCIVE_BINARY64_CAPABILITY_RECORD_DIAGNOSTIC_ARRAY_AND_REPEATED_READ_ABI` |
+| 304 | `packages-galerina/galerina-target-cpu/src/index.ts#selectCpuTargetPlan` | not created | exact blocker retained | Optional memory fails open, traversal is unbounded and report evidence aliases callers. | `BLOCKED_BY_UNVALIDATED_NESTED_RECORD_ARRAY_FAIL_OPEN_OPTIONAL_MEMORY_ALIASED_REPORT_AND_UNBOUNDED_ITERATOR_ABI` |
+| 305 | `packages-galerina/galerina-target-gpu/src/index.ts#GpuTargetCapability` | not created | declaration accounted | Erased capability supplies no runtime or hardware admission. | `NO_RUNTIME_BEHAVIOR` |
+| 306 | `packages-galerina/galerina-target-gpu/src/index.ts#GpuKernelPlan` | not created | declaration accounted | Erased plan supplies no exact text/array admission. | `NO_RUNTIME_BEHAVIOR` |
+| 307 | `packages-galerina/galerina-target-gpu/src/index.ts#GpuTargetReport` | not created | declaration accounted | Erased report supplies no immutable evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 308 | `packages-galerina/galerina-target-gpu/src/index.ts#GpuDiagnosticSeverity` | not created | declaration accounted | Erased severity alias performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 309 | `packages-galerina/galerina-target-gpu/src/index.ts#GpuDiagnostic` | not created | declaration accounted | Erased diagnostic supplies no code/text/path authority. | `NO_RUNTIME_BEHAVIOR` |
+| 310 | `packages-galerina/galerina-target-gpu/src/index.ts#GPU_BACKENDS` | not created | exact blocker retained | Ordered String table and joined message lack physical parity. | `BLOCKED_BY_PRIVATE_STRING_TABLE_MEMBERSHIP_AND_MESSAGE_ABI` |
+| 311 | `packages-galerina/galerina-target-gpu/src/index.ts#gpuDiagnostic` | not created | exact blocker retained | Mutable optional-path diagnostic record lacks an admitted ABI. | `BLOCKED_BY_OPTIONAL_PATH_MUTABLE_DIAGNOSTIC_RECORD_ABI` |
+| 312 | `packages-galerina/galerina-target-gpu/src/index.ts#validateGpuKernelPlan` | not created | exact blocker retained | Hostile records/arrays/text and unbounded capability traversal are unproved. | `BLOCKED_BY_UNVALIDATED_HOST_RECORD_ARRAY_UTF16_AND_DIAGNOSTIC_ABI` |
+| 313 | `packages-galerina/galerina-target-gpu/src/index.ts#createGpuTargetReport` | not created | exact blocker retained | Nested traversal is unbounded and returned evidence aliases callers. | `BLOCKED_BY_UNBOUNDED_NESTED_TRAVERSAL_AND_ALIASED_REPORT_EVIDENCE_ABI` |
+| 314 | `packages-galerina/galerina-target-js/src/index.ts#JsRuntime` | not created | declaration accounted | Erased runtime alias performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 315 | `packages-galerina/galerina-target-js/src/index.ts#JsModuleFormat` | not created | declaration accounted | Erased module-format alias performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 316 | `packages-galerina/galerina-target-js/src/index.ts#SourceMapMode` | not created | declaration accounted | Erased source-map alias performs no admission. | `NO_RUNTIME_BEHAVIOR` |
+| 317 | `packages-galerina/galerina-target-js/src/index.ts#SourceMapRule` | not created | declaration accounted | Erased rule validates no exact Booleans or record. | `NO_RUNTIME_BEHAVIOR` |
+| 318 | `packages-galerina/galerina-target-js/src/index.ts#JsOutputPlan` | not created | declaration accounted | Erased nested plan supplies no runtime policy admission. | `NO_RUNTIME_BEHAVIOR` |
+| 319 | `packages-galerina/galerina-target-js/src/index.ts#EsModuleMetadata` | not created | declaration accounted | Erased module metadata supplies no path/import evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 320 | `packages-galerina/galerina-target-js/src/index.ts#FrameworkAdapterMetadata` | not created | declaration accounted | Erased adapter metadata supplies no identity or optional text admission. | `NO_RUNTIME_BEHAVIOR` |
+| 321 | `packages-galerina/galerina-target-js/src/index.ts#JsBundleCheckOutcome` | not created | declaration accounted | Erased mutable Boolean does not prove a check executed. | `NO_RUNTIME_BEHAVIOR` |
+| 322 | `packages-galerina/galerina-target-js/src/index.ts#JsBundleReport` | not created | declaration accounted | Erased report supplies no deep snapshot or positive check receipts. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -643,3 +668,13 @@ not one of Slices 33–43 and no Fungi asset was produced.
   private and unpushed. The literal queue still contains adjacent test `.mjs`
   files that need a governed harness classification; repository-wide closure
   remains `UNKNOWN`.
+- Slices 298-322 add seven unique CPU scopes, all nine GPU scopes and nine JS
+  declarations. Slice 50 remains the sole receipt for `canUseLowBitCpuPath`;
+  it was not double-counted. CPU **3/3**, GPU **5/5** and JS **13/13** pass, but
+  active CPU/GPU helpers retain exact blockers and no placeholder Fungi exists.
+  The JS declarations are erased; fresh probes show invalid runtime can skip
+  checks yet render three passes, builtin subpaths and module-only imports evade
+  checks, and check Booleans remain writable.
+- Private skill commits `8355bf7` and `82df925` require positive proof that a
+  prerequisite check executed on the same snapshot; absent diagnostics cannot
+  imply PASS. Both remain private and unpushed.

@@ -3476,3 +3476,26 @@ production sources. Those harnesses require an explicit governed classification
 or exclusion before literal repository closure can be claimed. Slice 297 owner
 maintenance is pending; crash-linked aggregate lanes are not substitutes and
 repository-wide closure remains `UNKNOWN`.
+
+## Fungi conversion checkpoint through Slice 322 - 2026-08-13
+
+The ledger now accounts Slices 33-322 without double-counting prior Slice 50
+`canUseLowBitCpuPath`. This wave adds seven unique CPU scopes, the complete GPU
+source and nine JS target declarations. CPU **3/3**, GPU **5/5** and JS
+**13/13** focused tests pass; these are regression baselines, not physical
+conversion authority. No scoped package owns an exact Fungi/GIR/physical
+`.slide`/re-admission/VOK twin and no placeholder was created.
+
+Fresh hostile evidence keeps active CPU/GPU helpers blocked: string/sparse
+collections can return false positives, non-finite numeric probes pass,
+optional memory fails open, traversal is unbounded, getters are re-read, error
+construction can execute hostile coercion, and reports alias caller evidence.
+GPU diagnostic codes also lack canonical registry ownership.
+
+The JS declarations are erased. Consumer probes show an invalid runtime can
+early-return and then render all three checks as passed; builtin subpaths such
+as `fs/promises` and module-only imports evade the current plan scan; derived
+check Booleans remain writable. Private skill commits `8355bf7` and `82df925`
+now require positive typed proof that each prerequisite check executed on one
+immutable snapshot. Slice 322 owner maintenance remains pending and repository
+closure stays `UNKNOWN`.

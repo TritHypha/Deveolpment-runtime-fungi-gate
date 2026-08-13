@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 298-322 CPU, GPU and JS target contracts - 2026-08-13
+
+- [x] Account 25 unique scopes; retain `canUseLowBitCpuPath` solely at prior
+  Slice 50 with zero duplicate queue credit.
+- [x] Prove CPU **3/3**, GPU **5/5** and JS **13/13** focused baselines; no
+  scoped package owns an exact Fungi/GIR/physical `.slide`/VOK twin.
+- [x] Update private skills at translation `8355bf7` and authoring `82df925`:
+  PASS/Allow requires positive evidence that its prerequisite check executed on
+  the same immutable snapshot. Both are verified, private and unpushed.
+- [ ] Close CPU exact record/numeric/array ingress; reject string/sparse SIMD,
+  NaN/infinite cores/memory, unknown memory, rogue workload and aliased reports.
+- [ ] Close GPU hostile record/array/text ingress, bound P×C traversal, validate
+  every operation, return a deep snapshot, and migrate four legacy GPU codes to
+  governed `FUNGI-CATEGORY-NNN` registry ownership.
+- [ ] Fix JS plan/report fail-open behavior: invalid prerequisite domains must
+  never render passed checks; cover builtin subpaths such as `fs/promises`,
+  reconcile module imports with plan imports, and bind immutable typed receipts.
+- [ ] Give adjacent package test `.mjs` files a governed harness classification
+  or exclusion before literal all-TS/MJS closure can be claimed.
+- [ ] Complete the individual Slice 322 graph/index/roadmap owner matrix;
+  repository-wide closure remains `UNKNOWN` and aggregate crash lanes stay out.
+
 ### Slices 273-297 accelerator and CPU declarations - 2026-08-13
 
 - [x] Account the remaining 17 accelerator symbols and first eight CPU
