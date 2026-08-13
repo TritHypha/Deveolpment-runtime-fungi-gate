@@ -178,7 +178,11 @@ counts or open items that a newer section explicitly supersedes.
   table passes checked Fungi, GIR, interpretation and signed WAT/Wasm, but the
   physical package compiler refuses before producing a handle or `.slide`.
   Terminal status is `BLOCKED_BY_TWO_STRING_PHYSICAL_PROFILE`.
-- [ ] Continue Slices 79-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 79 `isArchitecture` as
+  `BLOCKED_BY_UNKNOWN_ARCHITECTURE_GUARD_ABI`. Physical String ingress cannot
+  preserve the source guard's total JavaScript `unknown` domain, and the
+  existing Fungi admission fold consumes a host-computed validation Boolean.
+- [ ] Continue Slices 80-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

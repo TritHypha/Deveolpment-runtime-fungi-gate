@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-78 File Status
+# Fungi Conversion Batch 33-79 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -77,6 +77,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 76 | `packages-galerina/galerina-tower-citizen/src/ai-governance.ts#isTrit` | not created | existing complete Tower-Citizen lane retained | The live type guard accepts JavaScript `unknown`, returns true only for numeric `-1/0/1`, and lets the caller map every malformed value explicitly to DENY. Physical `Verdict` removes the negative domain; signed-i32 `Int` narrows it; boundary refusal is not source false. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_VERDICT_GUARD_ABI` |
 | 77 | `packages-galerina/galerina-tower-citizen/src/quorum.ts#isValidVote` | not created | existing complete Tower-Citizen lane retained | The source accepts open JavaScript objects and its property reads can execute accessors or proxy traps. Physical exact records instead refuse proxies, accessors, inherited and surplus fields before Fungi runs, so they cannot preserve the Boolean malformed path. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_STRUCTURAL_RECORD_ABI` |
 | 78 | `packages-galerina/galerina-devtools-graph-algorithms/src/graphs/boundary-graph.ts#isCrossingAllowed` | `packages-galerina/galerina-devtools-graph-algorithms/src/self-hosted/boundary-crossing.fungi` | `packages-galerina/galerina-devtools-graph-algorithms/tests/boundary-crossing-fungi-conversion.test.mjs` | The complete six-by-four table passes checker, GIR, interpretation and signed WAT/Wasm, with surplus labels denied. Physical package compilation refuses before a handle or bundle exists. Graph Algorithms passes **97/97**. | `BLOCKED_BY_TWO_STRING_PHYSICAL_PROFILE` |
+| 79 | `packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts#isArchitecture` | not created | existing complete App Kernel lane retained | The exact guard consumes JavaScript `unknown`; physical String ingress preserves the two positive labels but deletes every non-String false case. The existing Fungi admission fold accepts a host-computed validation Boolean and cannot supersede this ingress. App Kernel passes **231/231**. | `BLOCKED_BY_UNKNOWN_ARCHITECTURE_GUARD_ABI` |
 
 ## Shared implementation and governance files
 
