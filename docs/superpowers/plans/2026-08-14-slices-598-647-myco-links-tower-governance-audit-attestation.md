@@ -31,6 +31,9 @@
 - `packages-galerina/galerina-tower-citizen/src/ai-governance.ts` SHA-256 `E1CEA2EFD8230787E9C237712082B7B6755ADF9E67820EF97B545FA0EB40C834`
 - `packages-galerina/galerina-tower-citizen/src/audit-logger.ts` SHA-256 `2DE052C255E5806915825339928D95E05CCF35084680D3F0A2FD00EE8C50A86D`
 - `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts` SHA-256 `91C72D7F43E110680885C11EE1C7AE02F4E2C660CFA67ACB066EB5DC6FA01D02`
+- `packages-galerina/galerina-tower-citizen/src/capability-grant.ts` SHA-256 `B8A90324D9D7F92EEC3BF5EF06B4947C8A4F09FAC144993A3410F807B3757883`
+- `packages-galerina/galerina-tower-citizen/src/compiled-policy.ts` SHA-256 `C0807BACCD00CD8784CCA12156108C5EE5EA8F2BDA4463102F0803AC54E7BDE0`
+- `packages-galerina/galerina-tower-citizen/src/data-plane-border.ts` SHA-256 `16D8E0AB4D9F14144B8EDA2611BA012B4837EAA1DC272D4E403ECE02AD14363D`
 
 ---
 
