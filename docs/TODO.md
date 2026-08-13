@@ -4,6 +4,19 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 95 anyOf array-fold adjudication - 2026-08-13
+
+- [x] Adjudicate Tower-Citizen `anyOf` as
+  `BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI`; create no placeholder Fungi asset.
+- [x] Preserve arbitrary-length Verdict-array, empty→Unknown, single-element,
+  K3-maximum fold and malformed-element behavior. Tower-Citizen remains green
+  515/515; scalar Slice 92 evidence is not relabelled as array parity.
+- [x] Review both private Fungi skills; `NO_SKILL_UPDATE` is correct at
+  `dc2ef82f` and `30eb4dd3`.
+- [ ] Reopen with Slice 94 only after a bounded physical `Array<Verdict>` ABI
+  and independent VOK proof exist.
+- [ ] Keep TypeScript and all callers active; host projection is refused.
+
 ### Slice 94 allOf array-fold adjudication - 2026-08-13
 
 - [x] Adjudicate Tower-Citizen `allOf` as

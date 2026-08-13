@@ -3,7 +3,7 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 94**, with the exact status and R&D intake recorded in
+through **Slice 95**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
@@ -26,6 +26,8 @@ Fungi minimum and physical proof; a duplicate Fungi asset is refused. All four
 legacy sources and their consumers remain active. Slice 94 refuses `allOf`:
 the current scalar physical profile cannot preserve its arbitrary-length
 Verdict-array boundary, empty→Unknown rule and malformed-element behavior.
+Slice 95 retains the symmetric `anyOf` K3-maximum array fold at the same exact
+container ABI exit; scalar `vOr` proof is not array parity.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic
