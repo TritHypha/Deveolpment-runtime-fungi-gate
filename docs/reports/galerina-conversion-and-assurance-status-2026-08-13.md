@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 89**. Slices
+The current conversion campaign is complete through **Slice 90**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -23,21 +23,29 @@ fixed documentation-path decision passes the live MJS oracle, checked Fungi,
 GIR, signed Wasm and physical `.slide` publication with independent VOK
 re-admission. Its MJS caller remains active, so it is not retirement.
 
+Slice 90 adds a second successful reference candidate for Tower-Citizen's
+exported K3 `vNot`. It preserves typed `Verdict -> Verdict` across the complete
+three-row table and a dedicated physical SLIDE/VOK lane. The source remains
+active. Canonical Galerina `flip(verdict)` is not yet parsed by the pinned SLIDE
+checked-Fungi frontend, so the physical proof is explicitly for the exact
+exhaustive typed `check` desugaring, not direct `flip` support.
+
 ## Current evidence
 
-- Slice 89 physical-proof build point: `8d0aa574` on
+- Slice 90 physical-proof build point: `84f4524e` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
 - Conversion census: **1,482/1,482** executable-family paths classified;
   519 TypeScript-family, 951 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins
-  and 144 Fungi sources in package `src` trees.
+  and at least 145 Fungi sources in package `src` trees; the registered owner
+  must regenerate the exact current count before closure publication.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 852
   file-level blockers.
-- Slice receipts: **29/29** governed post-baseline receipts valid after Slice
-  89 publication.
-- Latest affected owner lanes: Impact **9/9** and the governed physical
-  SLIDE/VOK lane **10/10**.
+- Slice receipts: Slice 90 adds one governed receipt; the registered owner must
+  regenerate the exact post-baseline total before closure publication.
+- Latest affected owner lanes: Tower-Citizen **509/509** and the dedicated
+  typed-Verdict physical SLIDE/VOK lane **1/1**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
   owner. This housekeeping does not relabel that historic aggregate as a fresh
   whole-repository test run.
@@ -54,7 +62,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 89 decision boundary is complete. Literal
+The Slice 90 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed

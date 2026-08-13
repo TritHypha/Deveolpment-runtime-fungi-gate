@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-87 File Status
+# Fungi Conversion Batch 33-90 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -88,6 +88,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 87 | `packages-galerina/galerina-framework-api-server/src/index.ts#isTlsSocket` | not created | fresh complete API Server lane retained | The duck-type guard observes an active object's function-valued property, including possible accessor/proxy behavior. Exact physical records refuse those shapes before Fungi runs and expose no host method-identity ABI. API Server passes **26/26**. | `BLOCKED_BY_HOST_DUCK_TYPED_METHOD_IDENTITY_ABI` |
 | 88 | `packages-galerina/galerina-tools-myco/src/query/search.ts#isError` | not created | fresh complete Myco and SLIDE record-ABI lanes retained | The source distinguishes a heterogeneous one-field error/twelve-field result union through JavaScript property presence, including inherited, accessor and proxy observations. The package source is also a read-only mirror whose current upstream bytes differ. Myco passes **80/80** and the exact SLIDE record ABI passes **4/4**. | `BLOCKED_BY_VENDOR_CUSTODY_AND_DYNAMIC_PROPERTY_PRESENCE_ABI` |
 | 89 | `packages-galerina/galerina-devtools-impact/src/impact-plan.mjs#isDocumentation` | `packages-galerina/galerina-devtools-impact/src/self-hosted/documentation-path.fungi` | `packages-galerina/galerina-devtools-impact/tests/documentation-path-fungi-conversion.test.mjs` | The exact `docs/` prefix plus three root-file rules pass the live MJS oracle, checked Fungi, GIR, signed Wasm and physical `.slide` publication with independent VOK re-admission and hostile-boundary refusal. Impact passes **9/9** and the governed physical lane passes **10/10**. MJS remains active. | `DONE` (`CANDIDATE`) |
+| 90 | `packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#vNot` | `packages-galerina/galerina-tower-citizen/src/self-hosted/verdict-not.fungi` | `packages-galerina/galerina-tower-citizen/tests/verdict-not-fungi-conversion.test.mjs` | The complete typed K3 NOT table passes the independent TypeScript oracle, checked Fungi and a dedicated physical `.slide`/VOK typed-Verdict lane. Tower-Citizen passes **509/509** and the physical lane passes **1/1**. Canonical `flip` remains a direct SLIDE-profile follow-on; TypeScript remains active. | `DONE` (`CANDIDATE`) |
 
 ## Shared implementation and governance files
 
@@ -108,6 +109,9 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/reports/slice-88-myco-search-outcome-guard-fungi-conversion-2026-08-13.md` | Product-owner negative adjudication for the Myco vendor-custody and dynamic object-union boundary. | `DONE` |
 | `docs/superpowers/specs/2026-08-13-slice-89-documentation-path-fungi-conversion-design.md` | Bound design for the reference-only documentation-path candidate. | `DONE` |
 | `docs/superpowers/plans/2026-08-13-slice-89-documentation-path-fungi-conversion.md` | Test-first implementation and physical-proof plan for Slice 89. | `DONE` |
+| `docs/superpowers/specs/2026-08-13-slice-90-vnot-fungi-conversion-design.md` | Bound typed-K3 design and direct-`flip` physical-profile distinction for Slice 90. | `DONE` |
+| `docs/superpowers/plans/2026-08-13-slice-90-vnot-fungi-conversion.md` | Test-first implementation and physical-proof plan for Slice 90. | `DONE` |
+| `scripts/tests/tower-citizen-vnot-fungi-slide.integration.test.mjs` | Dedicated typed Verdict physical publication, VOK re-admission and hostile-boundary proof for Slice 90. | `DONE` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
 | `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
@@ -121,7 +125,7 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 89 bounded decision is complete. The authored TODO, active roadmap
+The Slice 90 bounded decision is complete. The authored TODO, active roadmap
 and live conversion register are updated. Focused source, physical boundary,
 roadmap, graph and generated-owner checks are current at their relevant input
 build points. The final navigation index is independently refreshed after the
@@ -136,7 +140,7 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 144 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 967 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`938a71b` writing skill; `2902c2a` translation skill; both remain private custody and need no Slice 89 change) |
+| Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody and record the K3 negation profile distinction) |
 | Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
 ## Verified refusal retained outside the batch
@@ -260,3 +264,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   fixed documentation-path decision passes Impact **9/9** and the governed
   physical SLIDE/VOK lane **10/10**; MJS remains active pending retirement
   authority.
+- Slice 90 is a complete reference candidate, not a consumer switch or
+  whole-file proof. The typed K3 NOT table passes Tower-Citizen **509/509** and
+  a dedicated physical SLIDE/VOK lane **1/1**. The pin proves the exhaustive
+  typed `check` desugaring, not direct canonical `flip` support.

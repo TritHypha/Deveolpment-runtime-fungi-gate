@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 90 typed K3 negation conversion - 2026-08-13
+
+- [x] Add the package-owned reference candidate
+  `galerina-tower-citizen/src/self-hosted/verdict-not.fungi` without changing
+  the TypeScript export, callers or authority boundary.
+- [x] Preserve `Verdict -> Verdict` and the complete K3 NOT table through the
+  independent TypeScript oracle, checked Fungi, physical `.slide` publication,
+  VOK re-admission and typed receipt verification. Tower-Citizen passes 509/509
+  and the exact physical lane passes 1/1.
+- [x] Refuse non-K3, missing, surplus and wrong-type inputs, exhausted work,
+  mutated source/artifact and altered typed receipts without fallback or
+  authority release.
+- [x] Update and verify both private Fungi skills at `dc2ef82f` and `30eb4dd3`
+  with the canonical `flip` versus pinned physical-profile distinction. No
+  publication or push authority follows.
+- [ ] Keep TypeScript and its consumers active until an explicit consumer
+  switch, whole-file accounting and retirement proof authorizes removal.
+- [ ] Add direct canonical `flip(verdict)` parsing/lowering to the independent
+  SLIDE checked-Fungi profile before claiming direct physical `flip` support.
+
 ### Slice 89 documentation path conversion - 2026-08-13
 
 - [x] Add the package-owned reference candidate
