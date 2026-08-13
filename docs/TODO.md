@@ -31,8 +31,36 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Prove the immutable `WORKSPACE_MARKER` String independently from its
   filesystem consumers: strict check plus interpretation/signed-Wasm **2/2**;
   TypeScript remains pending a consumer switch and retirement authority.
-- [ ] Complete the Slice 397 individual owner matrix and dual reindex;
-  repository-wide closure remains `UNKNOWN`.
+- [x] Complete the Slice 397 individual owner matrix and dual reindex;
+  repository-wide closure remains `UNKNOWN` because excluded aggregate lanes
+  were not substituted.
+
+### RD-0843 virtual-trit representation follow-up - 2026-08-13
+
+- [x] Record the corrected R&D result from KB commit `2f970fa`: 256-bit
+  `Uint32` batching is the working sweet spot; 512 adds about 8%, while 64/32
+  remain usable fallbacks. BigInt is about 1.01x scalar in the fair lane—it
+  buys no width gain, but the earlier 10x-slower claim was a serial-popcount
+  confound and must not be repeated.
+- [ ] Specify separate physical brands for governance verdict storage and
+  arithmetic trit compute. Governance verdicts require 3-bit parity planes (or
+  one-of-three) with check-on-read; 2-bit dual-rail is compute-only because no
+  injective 2-bit encoding is single-fault-safe for the ordered verdict chain.
+- [ ] Add exhaustive encoding KATs before implementation: every injective
+  encoding for k=2..5, all single-bit neighbours, both raise cells, and a
+  firing wrong-formula control. Preserve the theorem's exact scope as a total
+  order, not a general lattice.
+- [ ] Prototype the hot fold at the selected physical boundary: WASM `v128`
+  first, then AVX2/AVX-512 only behind admitted target profiles. Do not design
+  around `VPTERNLOGD`; it cannot produce two K3 output planes from four inputs
+  in one instruction.
+- [ ] Define integrity by situation: parity/ECC for random faults, periodic
+  keyed verification for adversarial memory, packed base-3 for cold storage,
+  and version/length/encoding-bound AEAD for cross-trust transport. Preserve
+  granularity and TOCTOU as explicit design decisions.
+- [ ] Re-benchmark parity on the admitted implementation. The corrected lab
+  cost is +148% and HMAC-SHA256 is 7.9x the fold; neither is a production
+  Galerina/SLIDE claim until reproduced on the selected physical lane.
 
 ### Slices 348-372 photonic target - 2026-08-13
 

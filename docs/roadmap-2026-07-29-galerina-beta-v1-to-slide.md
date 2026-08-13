@@ -3592,5 +3592,15 @@ Explicit and environment roots are accepted without marker validation, the
 advertised resolveRoot failure test does not exercise failure, and target path
 resolution is not containment. WASM reports also accept hostile/sparse records
 and retain caller aliases. Existing private skills already govern these
-patterns, so the wave is `NO_SKILL_UPDATE`. Owner publication remains pending;
-repository-wide closure remains `UNKNOWN`.
+patterns, so the wave is `NO_SKILL_UPDATE`. Individual owner publication and
+both indexes are current; repository-wide closure remains `UNKNOWN` because
+the excluded aggregate lanes were not substituted.
+
+RD-0843 is accepted as a future representation constraint, not current
+execution authority. The working target is 256-bit `Uint32` batching (512 adds
+about 8%; 64/32 remain fallbacks). Governance verdict storage must use a
+single-fault-detecting 3-bit representation with check-on-read; the faster
+2-bit dual-rail form is restricted to arithmetic compute because exhaustive
+k=2 proof shows it can silently raise an ordered verdict. Cross-trust transport
+requires encoding-bound AEAD. Implementation remains gated on exhaustive KATs,
+admitted target profiles and a fresh physical benchmark.
