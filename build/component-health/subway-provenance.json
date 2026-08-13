@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "tool": "gen-roadmap-subway",
   "authority": "NONE",
-  "gitCommit": "fc23abb71e4cd02eb89fb70a59af989912997878",
-  "builtAt": "2026-08-13T12:57:12.000Z",
+  "gitCommit": "53efd91b9e47c557d161cd30c6886b0504b59224",
+  "builtAt": "2026-08-13T13:06:00.000Z",
   "node": "v24.18.0",
-  "authoritativeInputsDigest": "475ccce736ac4355b02edde771247a60bda035522a634798a00860ec5b988c86"
+  "authoritativeInputsDigest": "3fe91e28c1486cf8fd05fb5847e6e4c687dc5e3fef2dd93e3c5987dfa4f644dc"
 }
