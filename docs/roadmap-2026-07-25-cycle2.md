@@ -202,7 +202,7 @@ are rebaselined.
 
 **Assurance DAG: UNKNOWN** · root `0fc36e81b74087aacc03a2b0072cd662fcf289440672aa1d07fa40c287c985b2` · non-authorizing.
 
-![Galerina roadmap — subway map](build/component-health/roadmap-subway.svg)
+![Galerina roadmap — subway map](../build/component-health/roadmap-subway.svg)
 
 **Self-hosting line (RD-0528).** 7 of 7 compiler stages are AUTHORITATIVE — the `.fungi` stage is the decider of record and the co-located `.ts` is retained as a running differential shadow. All 7 are byte-pinned in the stage-hash baseline.
 
