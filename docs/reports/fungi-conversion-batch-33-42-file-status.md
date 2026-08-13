@@ -136,9 +136,11 @@ still requires its own strict, physical, VOK and differential proof.
 The Slice 92 bounded decision is complete. The authored TODO, active roadmap
 and live conversion register are updated. Focused source, physical boundary,
 roadmap, graph and generated-owner checks are current at their relevant input
-build points. The final navigation index is independently refreshed after the
-last owned-output commit. The excluded aggregate lanes are not substitutes for
-these bounded owners, so repository-wide closure remains `UNKNOWN`.
+build points. The final codebase-memory navigation refresh returned
+`Transport closed` twice, so its exact final-HEAD freshness remains `UNKNOWN`.
+The separate Myco index is readable, but it exposes no equivalent Git build-
+point proof. The excluded aggregate lanes are not substitutes for these
+bounded owners, so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
@@ -149,7 +151,7 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 973 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody; Slice 92 required no skill update) |
-| Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
+| Final codebase graph and Myco navigation refresh | `UNKNOWN`: two moderate code-graph refresh attempts returned `Transport closed`, so no final-HEAD graph receipt exists. Myco remains readable at 5,354 files / 83,226 terms, but its status does not prove Git-HEAD equivalence. Retry the bounded graph refresh after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
 
 ## Verified refusal retained outside the batch
 

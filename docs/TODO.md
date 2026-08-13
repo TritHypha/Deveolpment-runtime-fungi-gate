@@ -29,6 +29,10 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Replace the crash-linked monolithic repository lane with a bounded,
   resumable owner before claiming repository-wide closure; focused Slice 92
   evidence does not substitute for that missing aggregate.
+- [ ] Retry the moderate codebase-memory refresh after the graph service
+  recovers. Both final attempts returned `Transport closed`; keep exact
+  final-HEAD navigation freshness `UNKNOWN`. The readable Myco index (5,354
+  files / 83,226 terms) does not prove Git-HEAD equivalence.
 
 ### Slice 91 typed K3 substrate minimum conversion - 2026-08-13
 
