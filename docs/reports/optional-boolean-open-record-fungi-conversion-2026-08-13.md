@@ -48,3 +48,10 @@ carry `Option<Bool>` or an owner-adopted, exhaustively tested equivalent ABI.
 
 This result grants no conversion, retirement, signing, production, release or
 push authority. Aggregate closure remains deferred to Slice 87.
+
+## Slice-close receipt
+
+Skill disposition: NO_SKILL_UPDATE: existing skills already require exact open-record and Option preservation
+Threadability: SERIAL_HARD_PATH
+Source classification: BLOCKED
+Bounded closure: COMPLETE

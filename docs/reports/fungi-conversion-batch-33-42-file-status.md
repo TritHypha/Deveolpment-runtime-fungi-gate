@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-72 File Status
+# Fungi Conversion Batch 33-73 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -66,6 +66,12 @@ still requires its own strict, physical, VOK and differential proof.
 | 65 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | existing exact asset retained | existing package proof and focused physical refusal retained | The reconciled pin accepts the two-String signature, correcting the stale Slice 45 diagnosis. The unchanged decision and two bounded equivalent shapes all refuse at `SLIDE-REF-LIMIT-002`; no current profile admits the complete transition graph within its physical block ceiling. | `BLOCKED_BY_PHYSICAL_BLOCK_CEILING` |
 | 66 | `packages-galerina/galerina-core-compiler/src/stdlib.ts#moneyDecimals` | not created | not created | The leaf is pure and total, and its file ledger row has no explicit declared floor. The authoritative queue nevertheless derives the `T0-compiler` bootstrap floor and refused the exact symbol override. The attempted decision was removed before implementation. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
 | 67 | `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#samePath` | not created | existing registry-generation package test retained | The live trust-root decision combines ASCII Windows-drive detection with explicit `en-US` Unicode locale case folding. The current physical text surface cannot conserve the complete source domain, and host-precomputed normalization would move path identity authority across the border. | `BLOCKED_BY_LOCALE_PATH_SEMANTICS` |
+| 68 | `packages-galerina/galerina-core-economics/src/index.ts#selectVectorTier` | not created | existing economics package tests retained | The exported helper accepts the complete `HardwareProfile` record, including two JavaScript `number` fields. The pinned profile has signed-i32 `Int` and no binary64 `Float`; a host-projected vector-tier String is not record parity. | `BLOCKED_BY_HARDWARE_PROFILE_RECORD_ABI` |
+| 69 | `packages-galerina/galerina-core-config/src/index.ts#readOptionalBoolean` | not created | existing Core Config tests retained | A runtime key reads an open `Record<string, unknown>` and preserves `true`, `false` and `undefined`. The physical surface has neither dynamic open-record lookup nor `Option<Bool>`. | `BLOCKED_BY_OPEN_RECORD_OPTION_BOOL_ABI` |
+| 70 | `packages-galerina/galerina-ext-tritsocket/src/prefilter.ts#packedLen` | not created | existing Tritsocket tests retained | JavaScript addition, division and `Math.floor` operate over the full binary64 `number` domain. Signed-i32 `Int` cannot conserve fractions, non-finite values, signed zero or wider intermediates. | `BLOCKED_BY_BINARY64_FLOOR_DOMAIN` |
+| 71 | `packages-galerina/galerina-core-config/src/governance.ts#isGovernanceMode` | not created | existing Core Config tests retained | The three labels fit the String match ceiling, but the exact type guard accepts every JavaScript `unknown`; a String-only flow or host pre-filter narrows the source contract. | `BLOCKED_BY_UNKNOWN_TYPE_GUARD_ABI` |
+| 72 | `packages-galerina/galerina-framework-app-kernel/src/registry-index.ts#isStrictlyNewerThanFloor` | not created | existing registry-index and hybrid tests retained | Freshness distinguishes an absent floor and otherwise uses JavaScript UTF-16 lexicographic ordering. The physical surface has neither `Option<String>` nor the exact relational String operation. | `BLOCKED_BY_OPTION_STRING_ORDERING_ABI` |
+| 73 | `packages-galerina/galerina-core-logic/src/index.ts#isSafeGalerinaame` | not created | existing complete core-logic package lane retained | The open anchored identifier regex needs exact JavaScript UTF-16 length, code-unit access and traversal, or an admitted regex opcode. Frontend `matchesPattern` is not physical execution and the bounded well-formed text ingress narrows the source domain. Core Logic passes **57/57**. | `BLOCKED_BY_REGEX_TEXT_CHARACTER_ABI` |
 
 ## Shared implementation and governance files
 
@@ -202,3 +208,8 @@ not one of Slices 33–43 and no Fungi asset was produced.
   distinguishes an absent floor and otherwise uses JavaScript UTF-16 String
   ordering; the pinned surface has neither `Option<String>` nor that exact
   relational text operation.
+- Slice 73 remains blocked without a placeholder asset. Its anchored
+  identifier regex is live for definition and state-name diagnostics. Current
+  physical execution has neither regex nor source-equivalent UTF-16
+  length/code-unit traversal, and bounded well-formed text ingress would
+  narrow the source domain. Core Logic passes **57/57**.

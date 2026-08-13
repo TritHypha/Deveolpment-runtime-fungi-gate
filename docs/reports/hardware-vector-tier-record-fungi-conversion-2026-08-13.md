@@ -50,3 +50,10 @@ fixed-point contract rather than allowing the conversion to invent one.
 
 This result grants no conversion, retirement, signing, production, release or
 push authority. Aggregate closure remains deferred to Slice 87.
+
+## Slice-close receipt
+
+Skill disposition: NO_SKILL_UPDATE: existing skills already block unproved object and binary64 narrowing
+Threadability: SERIAL_HARD_PATH
+Source classification: BLOCKED
+Bounded closure: COMPLETE

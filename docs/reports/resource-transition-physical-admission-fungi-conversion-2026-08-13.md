@@ -51,3 +51,10 @@ private skill worktrees were clean during review.
 This evidence grants no consumer switch, TypeScript retirement, signing,
 production admission, release, profile widening or push authority. Aggregate
 roadmap, graph and index closure remains deferred to the Slice 87 boundary.
+
+## Slice-close receipt
+
+Skill disposition: NO_SKILL_UPDATE: existing skills already require exact source-domain and physical-graph proof
+Threadability: PARALLEL_PURE
+Source classification: BLOCKED
+Bounded closure: COMPLETE

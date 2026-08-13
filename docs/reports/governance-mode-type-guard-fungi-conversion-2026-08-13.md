@@ -48,3 +48,10 @@ String and all callers prove that new contract.
 
 This result grants no conversion, retirement, signing, production, release or
 push authority. Aggregate closure remains deferred to Slice 87.
+
+## Slice-close receipt
+
+Skill disposition: NO_SKILL_UPDATE: existing skills already require complete unknown-value domain preservation
+Threadability: PARALLEL_PURE
+Source classification: BLOCKED
+Bounded closure: COMPLETE

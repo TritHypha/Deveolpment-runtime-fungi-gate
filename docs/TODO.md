@@ -153,7 +153,12 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_OPTION_STRING_ORDERING_ABI`. Trust-root freshness distinguishes
   absent from every present String and then uses JavaScript UTF-16
   lexicographic order; host projection or byte ordering is not parity.
-- [ ] Continue Slices 73-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 73 `isSafeGalerinaame` as
+  `BLOCKED_BY_REGEX_TEXT_CHARACTER_ABI`. The open JavaScript identifier regex
+  requires exact UTF-16 length, code-unit access and traversal, or an admitted
+  regex operation; frontend acceptance and host projection are not physical
+  parity.
+- [ ] Continue Slices 74-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

@@ -45,3 +45,10 @@ helper, not a relabeling of this exported function.
 
 This result grants no conversion, retirement, signing, production, release or
 push authority. Aggregate closure remains deferred to Slice 87.
+
+## Slice-close receipt
+
+Skill disposition: NO_SKILL_UPDATE: existing skills already forbid JavaScript number to Int narrowing
+Threadability: PARALLEL_PURE
+Source classification: BLOCKED
+Bounded closure: COMPLETE

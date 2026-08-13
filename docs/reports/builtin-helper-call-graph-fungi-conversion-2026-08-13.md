@@ -29,3 +29,10 @@ The end-of-slice private-skill review is `NO_SKILL_UPDATE`: both skills already
 require exact complete-helper-graph physical admission and forbid inferring
 composition from frontend or partial profile evidence. Aggregate roadmap,
 graph, index, audit and test closure remains deferred to Slice 87.
+
+## Slice-close receipt
+
+Skill disposition: NO_SKILL_UPDATE: existing skills already require complete physical helper-graph admission
+Threadability: PARALLEL_PURE
+Source classification: BLOCKED
+Bounded closure: COMPLETE
