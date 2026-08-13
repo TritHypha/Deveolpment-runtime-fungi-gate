@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "1f71d705bd6f2a074c663353ab4283a11505297cb16814503f8767a754467d91",
+  "sourceDigest": "770cfcdf174b5a888ae05625d53440d59585d6f16be0b2f4d3d45a0f6b28df57",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1464,
+    "total": 1479,
     "CANDIDATE": 0,
-    "BLOCKED": 835,
+    "BLOCKED": 850,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
@@ -7034,6 +7034,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/benchmarks/call-chain/bench-slide-reference.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/benchmarks/call-chain/bench-wasm.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
@@ -7050,6 +7058,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/benchmarks/collection-pipeline/bench-slide-reference.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/benchmarks/collection-pipeline/bench-wasm.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
@@ -7059,6 +7075,14 @@
     },
     {
       "path": "packages-galerina/galerina-devtools-benchmarks/benchmarks/collection-pipeline/node.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/benchmarks/compute-mix/bench-slide-reference.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
@@ -7578,7 +7602,23 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/src/measurement-provenance.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/src/mem-sampler.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/src/million-iteration-source-pair.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
@@ -7618,7 +7658,31 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/src/run-to-graph.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/src/runner.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/src/slide-reference-runner.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/src/slide-reference-suite.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
@@ -7730,6 +7794,22 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/call-chain-slide-reference.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/call-chain-work-equivalence.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/test/chart.test.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
@@ -7754,6 +7834,22 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/measurement-provenance.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/million-iteration-source-pair.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/test/noise-gate.test.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
@@ -7770,7 +7866,31 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/run-to-graph.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-devtools-benchmarks/test/runner-output.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/slide-reference-runner.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-benchmarks/test/slide-reference-suite.test.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
