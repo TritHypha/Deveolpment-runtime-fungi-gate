@@ -69,7 +69,7 @@ array length, empty behavior or malformed-element handling.
   and 147 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 856
   file-level blockers.
-- Slice receipts: **34/34** governed receipts pass after Slice 94 publication.
+- Slice receipts: **35/35** governed receipts pass after Slice 95 publication.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   974 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **515/515**, direct Slice 93

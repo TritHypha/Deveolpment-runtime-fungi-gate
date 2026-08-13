@@ -13,6 +13,8 @@ counts or open items that a newer section explicitly supersedes.
   515/515; scalar Slice 92 evidence is not relabelled as array parity.
 - [x] Review both private Fungi skills; `NO_SKILL_UPDATE` is correct at
   `dc2ef82f` and `30eb4dd3`.
+- [x] Verify 35/35 governed receipts; the no-code decision leaves the generated
+  census unchanged at 1,486 paths, 147 Fungi sources and 974 semantic tests.
 - [ ] Reopen with Slice 94 only after a bounded physical `Array<Verdict>` ABI
   and independent VOK proof exist.
 - [ ] Keep TypeScript and all callers active; host projection is refused.
