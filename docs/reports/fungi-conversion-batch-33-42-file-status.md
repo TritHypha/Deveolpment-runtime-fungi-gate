@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-142 File Status
+# Fungi Conversion Batch 33-147 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-133-142-introspection-audit.md`](../superpowers/plans/2026-08-13-slices-133-142-introspection-audit.md).
+The current five-slice decision plan is
+[`../superpowers/plans/2026-08-13-slices-143-147-audit-closure.md`](../superpowers/plans/2026-08-13-slices-143-147-audit-closure.md).
 The active roadmap is updated once at the bounded batch exit.
 
 ## Slice 63 entry gate
@@ -143,6 +143,11 @@ still requires its own strict, physical, VOK and differential proof.
 | 140 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.exec` | not created | EXEC/lifecycle proof retained | Exact EXEC record construction, including input hash, delegates to active append. | `BLOCKED_BY_AUDIT_RECORD_APPEND_ABI` |
 | 141 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.trap` | not created | TRAP detail/governance proof retained | Open record spread and collision precedence plus denied active append are not a closed-record ABI. | `BLOCKED_BY_DYNAMIC_RECORD_AUDIT_APPEND_ABI` |
 | 142 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.erase` | not created | ERASE/lifecycle proof retained | Optional property/wire state, conditional severity/authority and active append must remain exact. | `BLOCKED_BY_OPTION_RECORD_AUDIT_APPEND_ABI` |
+| 143 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.query` | not created | query/lifecycle proof retained | Selects live memory or host JSONL, silently drops malformed rows, applies ordered filters and JavaScript slice semantics. | `BLOCKED_BY_HOST_LEDGER_QUERY_ABI` |
+| 144 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.logTransition` | not created | TPL transition/audit proof retained | Binary64 fields, optional/defaulted record members and active append require one admitted graph. | `BLOCKED_BY_BINARY64_OPTION_RECORD_AUDIT_APPEND_ABI` |
+| 145 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#AuditLogger.getLifecycle` | not created | lifecycle fold proof retained | Active query, array allocation, unknown-value string coercion and membership folds cannot be host-prepared. | `BLOCKED_BY_AUDIT_ARRAY_FOLD_ABI` |
+| 146 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#TowerAuditEvent` | not created | event shape/consumer proof retained | Complete heterogeneous record includes open unknown details and optional binary64 tick beyond the admitted descriptor. | `BLOCKED_BY_AUDIT_EVENT_RECORD_ABI` |
+| 147 | `packages-galerina/galerina-tower-citizen/src/audit-logger.ts#EgressSink` | not created | governed egress/chain proof retained | Retained push/flush effect capability requires exact identity, ordering, durability, failure and revocation. | `BLOCKED_BY_ACTIVE_EGRESS_CAPABILITY_ABI` |
 
 ## Shared implementation and governance files
 
@@ -400,3 +405,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   governed egress effects. TypeScript typecheck, focused **63/63** and complete
   Tower-Citizen **515/515** pass with zero skips. Both private skills now state
   the reusable immutable-transport versus active-authority boundary.
+- Slices 143-147 remain blocked without placeholder assets. They conserve host
+  ledger reads/parsing/filtering, exact transition and lifecycle records,
+  unknown-value coercion and active egress capability identity. Focused
+  **64/64**, TypeScript typecheck and complete Tower-Citizen **515/515** pass
+  with zero skips. Skill review is `NO_SKILL_UPDATE`: the current rules already
+  cover every reusable boundary. Silent malformed-ledger row loss is separately
+  tracked as a priority fail-closed security investigation.

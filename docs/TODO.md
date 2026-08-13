@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 143-147 audit closure and 25-slice maintenance boundary - 2026-08-13
+
+- [x] Classify `AuditLogger.query`, `logTransition` and `getLifecycle` at their
+  host-ledger, parse/filter/slice, binary64/Option/record, active append,
+  unknown-value coercion and typed-array fold exits.
+- [x] Classify `TowerAuditEvent` and `EgressSink` at their complete open event
+  record and retained effect-capability exits.
+- [x] Prove TypeScript typecheck, five focused files **64/64**, and complete
+  Tower-Citizen **515/515** with zero skips.
+- [x] Review both private Fungi skills; `NO_SKILL_UPDATE` is correct at
+  `1480843` and `b21ff6e` because their malformed-path, no-`try/catch`, exact
+  record/wire, immutable-transport and active-effect rules cover this group.
+- [ ] Priority security investigation: replace `AuditLogger.query()` silently
+  dropping malformed JSONL rows with a fail-closed or explicit quarantine
+  contract. Add hostile-ledger corruption/tampering tests, bounded diagnostics,
+  recovery semantics and an anti-neutering test before changing runtime code.
+- [ ] Add exact host-ledger query, binary64/Option/open-record, array/coercion
+  and affine egress-capability ABIs before reopening these conversions.
+- [ ] Keep TypeScript and every caller active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+- [ ] Run and record the registered bounded Slice 147 roadmap, subway, graph,
+  code-index, conversion-owner, Myco and codebase-memory maintenance matrix;
+  retain `UNKNOWN` for any unavailable graph service or excluded aggregate.
+
 ### Slices 133-142 TPL introspection and audit adjudication - 2026-08-13
 
 - [x] Classify `TPLSimulator.snapshot` and `packedByteLength` at their exact
