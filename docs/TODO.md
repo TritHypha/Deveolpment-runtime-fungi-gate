@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 113-122 TPL state-boundary adjudication - 2026-08-13
+
+- [x] Classify arithmetic `consensusTrit` as
+  `BLOCKED_BY_ARITH_TRIT_BRAND_ABI`; preserve its three branded inputs/result
+  and the fact that majority can outvote a deny-shaped input.
+- [x] Classify private `tritBitShift` as
+  `BLOCKED_BY_BINARY64_BITWISE_INDEX_ABI`; do not narrow JavaScript remainder,
+  division and bitwise coercion to physical signed i32.
+- [x] Classify the `TPLSimulator` constructor and `setScale` at their exact
+  active-object, typed-memory, binary64 and mutable-instance ABI exits.
+- [x] Classify `verifyIntegrity`, `boundsCheck`, `getTrit`, `eraseOnTrap`,
+  `setTrit` and `gate` at their exact typed-memory, failure-ordering,
+  higher-order, governance and audit boundaries.
+- [x] Prove TypeScript typecheck, the four focused files **49/49**, and complete
+  Tower-Citizen **515/515** with zero skips.
+- [x] Update both private Fungi skills with the reusable cleanup-before-failure
+  rule; private 3/3 tests and release audits pass at `75701e0` and `57c3a4e`,
+  with no push.
+- [ ] Add exact arithmetic-Trit, binary64, mutable typed-memory, active
+  capability and effect transaction ABIs before reopening individual slices.
+- [ ] Prove exactly-once cleanup, cleanup-failure behavior and state erasure
+  before any typed failure crosses the physical VOK boundary.
+- [ ] Keep TypeScript and every caller active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+
 ### Dependency deduplication and root-workspace migration - 2026-08-13
 
 - [x] Verify the current layout rather than assume hoisting: the repository

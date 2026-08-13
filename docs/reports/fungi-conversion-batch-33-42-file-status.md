@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-112 File Status
+# Fungi Conversion Batch 33-122 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-103-112-arithmetic-trit.md`](../superpowers/plans/2026-08-13-slices-103-112-arithmetic-trit.md).
+[`../superpowers/plans/2026-08-13-slices-113-122-tpl-state-boundaries.md`](../superpowers/plans/2026-08-13-slices-113-122-tpl-state-boundaries.md).
 The active roadmap is updated once at the bounded batch exit.
 
 ## Slice 63 entry gate
@@ -113,6 +113,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 110 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#mulTrit` | not created | `packages-galerina/galerina-tower-citizen/tests/ternary-ops.test.mjs` | Balanced-ternary multiplication returns arithmetic Trit; it is not governance conjunction and cannot use physical Verdict identity. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
 | 111 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#minTrit` | not created | existing arithmetic/governance proof retained | The internal raw-number primitive validates two binary64 values before serving separately typed faces. Existing K3 minimum proves only the Verdict face. | `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI` |
 | 112 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#maxTrit` | not created | existing arithmetic/governance proof retained | The symmetric raw-number primitive retains the same binary64 guard and shared-face boundary. Existing K3 maximum is not internal-source parity. | `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI` |
+| 113 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#consensusTrit` | not created | arithmetic/governance and 27-vector proofs retained | The three inputs and result are arithmetic Trits. Majority can outvote a deny-shaped input; physical Verdict would assign authority and physical Int would erase identity. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 114 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#tritBitShift` | not created | packing/fidelity proof retained | The private helper accepts JavaScript binary64 and uses remainder, division and bitwise truncation. Signed-i32 ingress narrows the source domain. | `BLOCKED_BY_BINARY64_BITWISE_INDEX_ABI` |
+| 115 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.constructor` | not created | complete focused simulator lane retained | Construction validates number-domain size, allocates mutable `Int32Array`, stamps canaries and retains active logger/governance identities. | `BLOCKED_BY_ACTIVE_OBJECT_TYPED_MEMORY_ABI` |
+| 116 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.setScale` | not created | focused scale/lifecycle proof retained | Unrestricted binary64 is stored in live instance state; the physical profile has neither Float nor mutable class-state identity. | `BLOCKED_BY_BINARY64_MUTABLE_INSTANCE_ABI` |
+| 117 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.verifyIntegrity` | not created | clean/planted-canary proof retained | Canary corruption must erase secret state and reset the instance before the typed integrity failure crosses the boundary. | `BLOCKED_BY_TYPED_MEMORY_ERASE_FAULT_ABI` |
+| 118 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.boundsCheck` | not created | negative/fractional/out-of-range proof retained | The private method compares binary64 index with retained instance size and throws exact `SecurityTrap`; physical Int or host pre-validation narrows behavior. | `BLOCKED_BY_BINARY64_INSTANCE_FAULT_ABI` |
+| 119 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.getTrit` | not created | round-trip, packing and illegal-code proof retained | Exact instance bounds, indexed typed-memory read, unsigned bit extraction and distinct `0b11` integrity fault are required. | `BLOCKED_BY_TYPED_MEMORY_BITPACK_ABI` |
+| 120 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.eraseOnTrap` | not created | erase-on-failure proof retained | The generic callback executes once and every failure erases complete state before the original failure crosses the boundary. Bare Result propagation is insufficient. | `BLOCKED_BY_HIGHER_ORDER_ERASE_ON_FAILURE_ABI` |
+| 121 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.setTrit` | not created | value/bounds/mutation/cleanup proof retained | Exact two-bit read-modify-write acts on live `Int32Array` state and erases the complete instance on any nested failure. | `BLOCKED_BY_TYPED_MEMORY_MUTATION_ABI` |
+| 122 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.gate` | not created | gate/governance/audit proof retained | The method coordinates packed state, live GovernanceEnforcer, exact AuditLogger records, mutation and erase-on-failure. Host projection retains authority. | `BLOCKED_BY_ACTIVE_GOVERNANCE_AUDIT_ABI` |
 
 ## Shared implementation and governance files
 
@@ -351,3 +361,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   binary64 guard behavior. `addTrit` also needs an exact two-member branded
   record. The focused lane passes **19/19**, the direct branded probe **7/7**,
   TypeScript typecheck passes and Tower-Citizen remains **515/515**.
+- Slices 113-122 remain blocked without placeholder assets. The adjacent TPL
+  boundaries combine nominal arithmetic Trit, binary64 coercion, mutable
+  `Int32Array` instance state, canary integrity, higher-order cleanup, active
+  governance and exact audit effects. Cleanup must complete before failure
+  crosses the boundary; a plain Result or host wrapper is not parity. The
+  focused lane passes **49/49**, TypeScript typecheck passes, and Tower-Citizen
+  remains **515/515** with zero skips.

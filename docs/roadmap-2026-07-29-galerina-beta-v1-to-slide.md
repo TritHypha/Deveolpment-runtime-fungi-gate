@@ -3,11 +3,11 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 112**, with the exact status and R&D intake recorded in
+through **Slice 122**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level
-blockers; **52/52** governed slice receipts pass. Slices 84-88 conserve five
+blockers; **62/62** governed slice receipts pass. Slices 84-88 conserve five
 additional exact ABI/authority/custody refusals. Slice 88 proves that the Myco
 search-outcome guard cannot move into a read-only mirror or cross the current
 exact-record profile without deleting dynamic property behavior. Slice 89 adds
@@ -47,6 +47,14 @@ record. All ten scopes remain blocked without placeholder assets; focused
 arithmetic/governance proof passes **19/19**, a direct branded-entry probe
 passes **7/7**, TypeScript typecheck is clean and Tower-Citizen remains
 **515/515**.
+Slices 113-122 retain the adjacent TPL consensus, packing and stateful
+simulator boundaries. Exact parity needs nominal arithmetic Trit, binary64
+coercion, mutable typed memory, canary integrity, higher-order cleanup, active
+governance capability identity and audit effects. State erasure must complete
+before a failure crosses the boundary; ordinary Result propagation or a host
+cleanup wrapper is not parity. All ten scopes remain blocked without
+placeholder assets. TypeScript typecheck, the focused four-file **49/49** lane
+and Tower-Citizen **515/515** pass with zero skips.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic

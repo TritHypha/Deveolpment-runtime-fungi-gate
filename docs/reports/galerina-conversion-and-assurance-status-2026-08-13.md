@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 112**. Slices
+The current conversion campaign is complete through **Slice 122**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -88,6 +88,15 @@ misbrands it. The internal raw-number helpers also preserve a complete
 binary64 guard, and `addTrit` returns an exact two-member branded record. No
 placeholder Fungi asset was created.
 
+Slices 113-122 retain the adjacent arithmetic consensus, packing helper and
+first eight stateful `TPLSimulator` boundaries. They require combinations of
+nominal arithmetic Trit, complete JavaScript-number coercion, mutable
+`Int32Array` state, canary faults, active logger/governance identities and
+ordered effects. In particular, integrity and mutator failures erase resident
+state before the original failure leaves the instance. Bare Result propagation
+or host cleanup does not conserve that ordering. No placeholder Fungi asset
+was created.
+
 ## Current evidence
 
 - Slice 92 physical-proof build point: `a7258cef` on
@@ -99,12 +108,11 @@ placeholder Fungi asset was created.
   and 147 Fungi sources in package `src` trees.
 - Queue: zero whole-file candidates, seven governed symbol candidates and 856
   file-level blockers.
-- Slice receipts: **52/52** governed receipts pass after Slices 103-112.
+- Slice receipts: **62/62** governed receipts pass after Slices 113-122.
 - Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
   974 test nodes and non-authorizing local K3 evidence `1`.
-- Latest affected owner lanes: Tower-Citizen **515/515**, focused arithmetic
-  and governance separation **19/19**, direct branded-entry probe **7/7**, and
-  TypeScript typecheck clean.
+- Latest affected owner lanes: Tower-Citizen **515/515**, the four focused
+  arithmetic/packing/simulator files **49/49**, and TypeScript typecheck clean.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded
   owner. This housekeeping does not relabel that historic aggregate as a fresh
   whole-repository test run.
@@ -121,7 +129,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 112 decision boundary is complete. Literal
+The Slice 122 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed
