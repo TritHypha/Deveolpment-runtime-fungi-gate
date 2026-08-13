@@ -34,9 +34,9 @@ counts or open items that a newer section explicitly supersedes.
   package 100/201; KB 4/4; project 5/5; graph 9,794 nodes / 9,930 edges /
   zero violations; 172 tools / 40 proofs; 147 Fungi files; semantic 3/3 with
   974 tests; code index 974; canonical 7/7 at 9,612; receipts 287/287;
-  roadmap 5/5 and Golden 11/11. Post-commit Myco refresh remains pending;
-  crash-linked aggregate lanes stay excluded and repository closure remains
-  `UNKNOWN`.
+  roadmap 5/5 and Golden 11/11. The post-commit Myco refresh indexes **5,646
+  files / 83,489 terms**; crash-linked aggregate lanes stay excluded and
+  repository closure remains `UNKNOWN`.
 
 ### Slices 298-322 CPU, GPU and JS target contracts - 2026-08-13
 
