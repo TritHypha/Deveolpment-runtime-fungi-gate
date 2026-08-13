@@ -36,8 +36,10 @@
 - [ ] **Step 1: Write the failing orchestration tests**
 
 Create injected fake process/filesystem adapters and assert the exact ordered
-stage IDs: `measure`, `audit`, `compare`, `report`, `general-chart`,
-`slide-zero`, `wasm-history`, `guard`. Assert direct Node argv, no shell,
+stage IDs: `measure`, `noise`, `audit-vade`, `audit-truth`, `render`,
+`wasm-history`, `history`, `guard`. The `render` stage invokes the existing
+`build-chart.mjs` owner, which already owns comparison, report, primary chart
+and SLIDE-zero publication order. Assert direct Node argv, no shell,
 first-failure stop, signalled/timeout refusal, and missing/empty required-output
 refusal. Assert the final receipt has exact keys, all status values `PASS`,
 `authorityReleased: false`, and no caller path fields.

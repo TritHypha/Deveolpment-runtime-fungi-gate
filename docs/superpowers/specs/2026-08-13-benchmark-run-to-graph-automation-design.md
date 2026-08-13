@@ -22,12 +22,14 @@ second full benchmark while being implemented or tested.
    support.
 2. Require a successful process exit and fresh `latest.json` plus measurement
    provenance.
-3. Run the benchmark truth and SLIDE evidence audits.
-4. Generate the comparison model and Markdown report.
-5. Generate the general historic-control chart and HTML table outputs.
-6. Generate the SLIDE-zero publication outputs.
-7. Generate the historic WASM-zero transition page.
-8. Run the benchmark regression guard.
+3. Measure and publish the current environmental noise floor.
+4. Run the SLIDE evidence audit and benchmark truth audit as distinct stages.
+5. Invoke the existing full chart owner, which generates the comparison
+   Markdown, report model, general historic-control chart, SLIDE-zero chart and
+   SLIDE-zero HTML table in its registered order.
+6. Generate the historic WASM-zero transition page.
+7. Snapshot the new result into benchmark history and generate the fresh diff.
+8. Run the benchmark regression guard against that fresh noise/history pair.
 9. Emit one bounded JSON receipt naming every stage, exit status and required
    output. A receipt is evidence about the orchestration only and releases no
    runtime or production authority.
@@ -58,7 +60,8 @@ second full benchmark while being implemented or tested.
 ## Verification
 
 Focused tests use injected process and filesystem adapters to prove exact
-stage order, direct argv, first-failure stop, timeout/signalled refusal,
+stage order (`measure`, `noise`, `audit-vade`, `audit-truth`, `render`,
+`wasm-history`, `history`, `guard`), direct argv, first-failure stop, timeout/signalled refusal,
 missing/empty output refusal, and receipt schema. Package tests, truth audit,
 path-leak audit and diff checks must pass before the automation is committed.
 The expensive full measurement is deliberately not repeated during this
