@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "a19abf10f85a27278c492d141fde825fc7e31b7871008ffdafcb16e099ed59f6",
+  "authoritativeInputsDigest": "5c1c91dcace200afea95a92e8aa44f8cb292035a7418f70de087d4240ea32e36",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6538,6 +6538,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-325d9ba3cb4bf603cb0ec92a",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-tower-citizen/tests/verdict-and-fungi-supersession.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-c314b5cc124018759b4baa72",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-tower-citizen/tests/verdict-mint.test.mjs",
@@ -11798,6 +11805,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-325d9ba3cb4bf603cb0ec92a",
+      "to": "package:galerina-tower-citizen",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-c314b5cc124018759b4baa72",
       "to": "package:galerina-tower-citizen",
       "type": "CLASSIFIES"
@@ -12698,9 +12710,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 973,
+    "tests": 974,
     "detectors": 6,
-    "executableFamily": 1485,
+    "executableFamily": 1486,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
