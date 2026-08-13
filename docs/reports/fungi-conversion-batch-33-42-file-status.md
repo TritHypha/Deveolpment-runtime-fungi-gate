@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-71 File Status
+# Fungi Conversion Batch 33-72 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -198,3 +198,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   labels fit the String match ceiling, but the exact function is a type guard
   over all JavaScript `unknown` values; a String-only flow or host type
   pre-filter would narrow or retain the decision in TypeScript.
+- Slice 72 remains blocked without a placeholder asset. Registry freshness
+  distinguishes an absent floor and otherwise uses JavaScript UTF-16 String
+  ordering; the pinned surface has neither `Option<String>` nor that exact
+  relational text operation.

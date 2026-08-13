@@ -149,7 +149,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_UNKNOWN_TYPE_GUARD_ABI`. Its three String labels fit, but the
   exact type guard accepts every JavaScript value; String narrowing, a host
   type pre-filter or an invented tag bridge is not parity.
-- [ ] Continue Slices 72-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 72 `isStrictlyNewerThanFloor` as
+  `BLOCKED_BY_OPTION_STRING_ORDERING_ABI`. Trust-root freshness distinguishes
+  absent from every present String and then uses JavaScript UTF-16
+  lexicographic order; host projection or byte ordering is not parity.
+- [ ] Continue Slices 73-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
