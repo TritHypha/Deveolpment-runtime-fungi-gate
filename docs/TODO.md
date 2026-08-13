@@ -137,7 +137,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_HARDWARE_PROFILE_RECORD_ABI`. The exact exported boundary is a
   five-field record with two JavaScript `number` values; signed-i32 `Int`, a
   partial record or a host-projected selector would narrow or move authority.
-- [ ] Continue Slices 69-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 69 `readOptionalBoolean` as
+  `BLOCKED_BY_OPEN_RECORD_OPTION_BOOL_ABI`. The live configuration helper uses
+  a runtime key over `Record<string, unknown>` and preserves true, false and
+  absence; a closed record, false-as-absence or host projection is not parity.
+- [ ] Continue Slices 70-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

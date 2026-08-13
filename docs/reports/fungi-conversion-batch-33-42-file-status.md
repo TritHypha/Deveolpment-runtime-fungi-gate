@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-68 File Status
+# Fungi Conversion Batch 33-69 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -186,3 +186,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   `HardwareProfile` projection crosses a complete record boundary containing
   two JavaScript `number` fields; the pinned physical profile has signed-i32
   `Int` and no binary64 `Float`. A host-projected String is not record parity.
+- Slice 69 remains blocked without a placeholder asset. Its live project and
+  environment configuration callers depend on a runtime-key read from an open
+  unknown-valued record and the distinct `true`/`false`/`undefined` result; the
+  pinned physical surface has neither that lookup nor `Option<Bool>`.
