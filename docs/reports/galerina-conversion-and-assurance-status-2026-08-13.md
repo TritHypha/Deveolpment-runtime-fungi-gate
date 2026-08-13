@@ -8,7 +8,7 @@ real but deliberately narrow execution surface. It is not yet a general
 replacement for every TypeScript/MJS input domain, host API, active JavaScript
 object, affine identity or production platform boundary.
 
-The current conversion campaign is complete through **Slice 92**. Slices
+The current conversion campaign is complete through **Slice 93**. Slices
 84-88 were correctly blocked rather than narrowed: exact case-insensitive regex
 semantics, an affine authenticated-profile seal, a heterogeneous binary64
 finite-number guard and an active TLS-object method boundary cannot be
@@ -42,6 +42,12 @@ independent TypeScript oracle, checked Fungi and the same exact two-Verdict
 physical SLIDE/VOK profile. It releases no authority; TypeScript and every
 caller remain active.
 
+Slice 93 closes the adjacent exported `vAnd` symbol without duplicating the
+minimum implementation. A direct 2/2 proof binds `vAnd` to the existing Slice
+91 Fungi flow across all nine literal rows and refuses a second
+`verdict-and.fungi`; the inherited physical lane remains 1/1 with zero skips.
+This is semantic supersession, not TypeScript retirement.
+
 ## Current evidence
 
 - Slice 92 physical-proof build point: `a7258cef` on
@@ -74,7 +80,7 @@ TypeScript consumers. No placeholder `.fungi` file, frontend-only result,
 signed Wasm result, physical compiler refusal or host-projected Boolean counts
 as a conversion.
 
-The Slice 92 decision boundary is complete. Literal
+The Slice 93 decision boundary is complete. Literal
 TypeScript/MJS retirement remains
 unauthorized until consumer switching, equivalent failure semantics, physical
 publication, independent re-admission, mutation/refusal proof and the governed

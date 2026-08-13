@@ -3,7 +3,7 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 92**, with the exact status and R&D intake recorded in
+through **Slice 93**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,485/1,485** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **855** file-level
@@ -21,7 +21,9 @@ parameters and the result to typed Verdict values. Slice 92 adds the
 complementary `Verdict x Verdict -> Verdict` K3 maximum for exported `vOr`.
 Its independent physical proof binds both inputs and the result to Verdict type
 ID `3`, executes all nine rows without fallback, and releases no authority.
-All four legacy sources and their consumers remain active.
+Slice 93 proves exported `vAnd` is exactly superseded by the existing Slice 91
+Fungi minimum and physical proof; a duplicate Fungi asset is refused. All four
+legacy sources and their consumers remain active.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic

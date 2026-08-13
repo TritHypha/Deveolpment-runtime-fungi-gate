@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 93 vAnd supersession - 2026-08-13
+
+- [x] Classify Tower-Citizen `vAnd` as
+  `SUPERSEDED_BY_EXISTING_FUNGI`; do not add a duplicate
+  `verdict-and.fungi` implementation.
+- [x] Bind the exact exported helper and compare it plus the existing
+  `effective-verdict.fungi` flow against all nine literal K3-minimum rows. The
+  direct proof passes 2/2.
+- [x] Rerun the existing physical SLIDE/VOK minimum proof with the pinned
+  sibling SLIDE path: 1/1 with zero skips.
+- [x] Review both private Fungi skills at `dc2ef82f` and `30eb4dd3`.
+  `NO_SKILL_UPDATE` is correct because duplicate-search, typed-K3,
+  exhaustive-vector and supersession guidance already cover this result.
+- [ ] Keep TypeScript and its callers active; exact semantic reuse is not
+  whole-file retirement or a consumer switch.
+- [ ] Keep final codebase-memory freshness `UNKNOWN` until its service recovers
+  and returns an exact final-HEAD receipt.
+
 ### Slice 92 typed K3 maximum conversion - 2026-08-13
 
 - [x] Add the package-owned reference candidate
