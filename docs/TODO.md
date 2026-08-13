@@ -39,11 +39,13 @@ counts or open items that a newer section explicitly supersedes.
   172 tools / 40 proofs, 147 Fungi files, 3/3 semantic outputs with 974 tests,
   974 codes, three percentage sections, 5/5 subway outputs and 7/7 canonical
   count consumers at 9,612 tests.
-- [ ] Commit the refreshed owner outputs, rerun their exact checks at final
-  `HEAD`, then refresh Myco once and prove Slice 197 is queryable. Codebase-
-  memory remains `UNKNOWN` after `Transport closed`; do not retry-storm or
-  substitute another graph. Crash-linked aggregate lanes remain excluded, so
-  repository-wide closure stays `UNKNOWN`.
+- [x] Commit the refreshed owner outputs and rerun their exact checks at the
+  owner-output build point. All registered bounded owners remain current after
+  commit; no output self-staleness was observed.
+- [ ] Refresh Myco once after the final authored/owner-output commits and prove
+  Slice 197 is queryable. Codebase-memory remains `UNKNOWN` after `Transport
+  closed`; do not retry-storm or substitute another graph. Crash-linked
+  aggregate lanes remain excluded, so repository-wide closure stays `UNKNOWN`.
 
 ### Slices 183-192 observability health ingress - 2026-08-13
 

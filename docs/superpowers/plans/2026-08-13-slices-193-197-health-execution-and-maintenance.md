@@ -105,9 +105,11 @@ private Fungi skills and governed Markdown receipts.
   invoke crash-linked `graph-all`.
 - [x] Run dev-tool/Fungi inventories, code-index, component-health, status,
   roadmap/subway, canonical counts, receipts and path/private-document guards.
-- [ ] Commit owner outputs, rerun exact freshness checks at final `HEAD`, and
-  refresh Myco once.
-- [ ] Record codebase-memory as `UNKNOWN` if its transport remains unavailable;
+- [x] Commit owner outputs and rerun exact freshness checks at the
+  owner-output build point.
+- [ ] Refresh Myco once after the final authored/owner-output commit and prove
+  Slice 197 is queryable.
+- [x] Record codebase-memory as `UNKNOWN` because its transport remains unavailable;
   do not substitute another graph for missing exact-HEAD evidence.
 
 ## Self-review

@@ -248,24 +248,25 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 197 bounded decision is complete and its scheduled 25-slice
-maintenance owners pass at the authored maintenance build point. The refreshed
-generated outputs still require their separate commit and exact final-HEAD
-rerun before this checkpoint can close. The latest codebase-memory lookup
-returned `Transport closed`, so its exact final-HEAD freshness remains
-`UNKNOWN`. The excluded aggregate lanes are not substitutes for these bounded
-owners, so repository-wide closure remains `UNKNOWN`.
+The Slice 197 bounded decision is complete. Its scheduled 25-slice maintenance
+owners were committed at `581ced0e` and the complete bounded owner matrix
+remained current after that output-only commit. This authored close record will
+be followed by one final owner refresh so the published artifacts bind the
+final narrative. The latest codebase-memory lookup returned `Transport closed`,
+so its exact final-HEAD freshness remains `UNKNOWN`. The excluded aggregate
+lanes are not substitutes for these bounded owners, so repository-wide closure
+remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
-| `docs/TODO.md` | `DONE` for authored Slice 197 status; final owner-output commit pending |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for authored Slice 197 status; regenerated subway output pending commit |
+| `docs/TODO.md` | `DONE` for the authored Slice 197 status and bounded owner matrix |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for the authored Slice 197 status and generated subway block |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`96054a97` writing skill; `1bd80388` translation skill; both remain private custody and unpushed; Slices 193-197 required no skill update) |
-| Final codebase graph and Myco navigation refresh | `PENDING/PARTIAL`: codebase-memory returned `Transport closed`, so no final-HEAD structural-navigation receipt exists. Refresh Myco only after the final generated-output commit and verify Slice 197 is queryable; Myco status does not prove Git-HEAD equivalence. Retry the bounded codebase graph only after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
+| Final codebase graph and Myco navigation refresh | `PENDING/PARTIAL`: codebase-memory returned `Transport closed`, so no final-HEAD structural-navigation receipt exists. Myco is the post-final-commit navigation refresh and must prove Slice 197 queryable; its status still does not prove Git-HEAD equivalence. Retry the bounded codebase graph only after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
 
 ## Verified refusal retained outside the batch
 
