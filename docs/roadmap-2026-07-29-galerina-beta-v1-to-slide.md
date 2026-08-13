@@ -3497,5 +3497,6 @@ early-return and then render all three checks as passed; builtin subpaths such
 as `fs/promises` and module-only imports evade the current plan scan; derived
 check Booleans remain writable. Private skill commits `8355bf7` and `82df925`
 now require positive typed proof that each prerequisite check executed on one
-immutable snapshot. Slice 322 owner maintenance remains pending and repository
-closure stays `UNKNOWN`.
+immutable snapshot. The Slice 322 individual owner matrix is current: queue
+1,486/1,486; graph 9,768 nodes / 9,903 edges / zero violations; receipts
+262/262; roadmap 5/5 and Golden 11/11. Repository closure stays `UNKNOWN`.
