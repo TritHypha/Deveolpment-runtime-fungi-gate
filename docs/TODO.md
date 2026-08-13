@@ -170,7 +170,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_UNKNOWN_VERDICT_GUARD_ABI`. Physical `Verdict` removes the
   malformed negative domain, `Int` narrows it, and boundary refusal cannot be
   substituted for the source false that drives explicit DENY.
-- [ ] Continue Slices 77-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 77 `isValidVote` as
+  `BLOCKED_BY_UNKNOWN_STRUCTURAL_RECORD_ABI`. The source accepts an open
+  JavaScript structural object and can execute accessor/proxy property reads;
+  exact physical records refuse those shapes before the Boolean guard runs.
+- [ ] Continue Slices 78-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

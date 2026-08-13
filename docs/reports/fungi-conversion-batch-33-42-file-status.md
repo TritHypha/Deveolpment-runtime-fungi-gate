@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-76 File Status
+# Fungi Conversion Batch 33-77 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -75,6 +75,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 74 | `packages-galerina/galerina-data-query/src/index.ts#isSome` | not created | existing complete Data Query package lane retained | The exported generic type guard consumes the custom structural `QueryOption<T>` union. Frontend `Option<T>` is not the same API, and the physical surface has no generic arbitrary-payload tagged-union parameter. Data Query passes **19/19**. | `BLOCKED_BY_GENERIC_TAGGED_UNION_ABI` |
 | 75 | `packages-galerina/galerina-devtools-package-graph/src/scanner.ts#isSourceFile` | not created | existing complete Package Graph lane retained | Physical two-String suffix execution exists, but the source also consumes configuration-derived dynamic `Array<String>` and the full JavaScript UTF-16 String domain. The physical profile has neither that array parameter nor source-equivalent hostile/oversized behavior. Package Graph passes **28/28**. | `BLOCKED_BY_DYNAMIC_STRING_ARRAY_SUFFIX_ABI` |
 | 76 | `packages-galerina/galerina-tower-citizen/src/ai-governance.ts#isTrit` | not created | existing complete Tower-Citizen lane retained | The live type guard accepts JavaScript `unknown`, returns true only for numeric `-1/0/1`, and lets the caller map every malformed value explicitly to DENY. Physical `Verdict` removes the negative domain; signed-i32 `Int` narrows it; boundary refusal is not source false. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_VERDICT_GUARD_ABI` |
+| 77 | `packages-galerina/galerina-tower-citizen/src/quorum.ts#isValidVote` | not created | existing complete Tower-Citizen lane retained | The source accepts open JavaScript objects and its property reads can execute accessors or proxy traps. Physical exact records instead refuse proxies, accessors, inherited and surplus fields before Fungi runs, so they cannot preserve the Boolean malformed path. Tower-Citizen passes **507/507**. | `BLOCKED_BY_UNKNOWN_STRUCTURAL_RECORD_ABI` |
 
 ## Shared implementation and governance files
 
