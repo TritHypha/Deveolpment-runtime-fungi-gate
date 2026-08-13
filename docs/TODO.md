@@ -24,9 +24,17 @@ counts or open items that a newer section explicitly supersedes.
   and affine egress-capability ABIs before reopening these conversions.
 - [ ] Keep TypeScript and every caller active; no consumer switch, retirement,
   production, release, signing or push authority follows.
-- [ ] Run and record the registered bounded Slice 147 roadmap, subway, graph,
-  code-index, conversion-owner, Myco and codebase-memory maintenance matrix;
-  retain `UNKNOWN` for any unavailable graph service or excluded aggregate.
+- [x] Run the registered bounded Slice 147 conversion, semantic, project,
+  package, KB, code-index, component-health, status, roadmap/subway, canonical
+  count, path-leak and private-document owners. Current checks pass: retirement
+  and queue 1,486/1,486; semantic 3/3; project 5/5; package 100/201; KB 4/4;
+  roadmap 5/5; canonical 7/7 at 9,612; receipts 87/87; path/private leaks zero.
+- [ ] After the generated owner commit, refresh Myco and attempt one moderate
+  codebase-memory refresh. Verify indexed HEAD plus a new Slice 147 symbol when
+  available; retain `UNKNOWN` without retry storms on `Transport closed`.
+- [ ] Dev-tool ergonomics: give registered owners a consistent non-mutating
+  `--help` contract. Several currently reject it, while retirement/code-index
+  interpret a no-mode invocation as generation; add CLI tests before changing.
 
 ### Slices 133-142 TPL introspection and audit adjudication - 2026-08-13
 
