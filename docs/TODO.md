@@ -12,6 +12,11 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Prove WASM **4/4**, harness **41/41**, foundation **8/8**, Boolean marker
   **2/2** and workspace marker **2/2** focused evidence; these remain
   regression/reference lanes only.
+- [x] Close the wave through the 19 individual owner checks: **1,487/1,487**
+  executable-family paths classified, **148** source `.fungi` files,
+  **337/337** governed receipts, graph integrity **9,847 nodes / 9,985 edges /
+  0 violations**, canonical **9,612** tests, Golden **11/11**, roadmap **5/5**
+  and both leak audits green. The excluded aggregate lanes were not substituted.
 - [ ] Make parsed test summaries canonical and unique; refuse duplicate/spoofed
   lines, unsafe integers, excessively long digits and non-finite counts before
   any parsed value can affect SLIDE or other check success.

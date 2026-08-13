@@ -3576,6 +3576,14 @@ Fresh focused evidence passes WASM **4/4**, harness **41/41**, foundation
 source owns an exact Fungi/GIR/physical `.slide`/independent re-admission/VOK
 replacement.
 
+The bounded Slice 397 close passes all 19 individual owners/checks:
+**1,487/1,487** executable-family paths classified, **148** source `.fungi`
+files, **337/337** governed receipts, graph integrity at **9,847 nodes / 9,985
+edges / 0 violations**, canonical **9,612** tests, Golden **11/11**, roadmap
+**5/5**, and both leak audits. This does not substitute the deliberately
+excluded crash-linked aggregate lanes; repository-wide closure remains
+`UNKNOWN` pending their chunked resumable replacement.
+
 The zero-trust review found authority-relevant repair debt. First-match summary
 parsing accepts spoofed duplicates, unsafe integers and numeric infinity while
 parsed counts influence SLIDE success. CLI parsing can consume a flag as a

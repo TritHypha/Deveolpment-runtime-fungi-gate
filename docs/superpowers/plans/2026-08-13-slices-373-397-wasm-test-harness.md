@@ -98,12 +98,12 @@ SLIDE/VOK, Myco and codebase-memory.
 - [x] Run receipt audit and focused package lanes.
 - [x] Obtain three independent read-only reviews of pins, arithmetic,
   classifications, blockers, threadability, skills and physical refusals.
-- [ ] Commit authored evidence separately from generated owners.
+- [x] Commit authored evidence separately from generated owners.
 
 ### Task 4: Individual owner close
 
-- [ ] Regenerate registered owners individually in dependency order.
-- [ ] Run the 19-check bounded owner matrix; do not substitute aggregates.
+- [x] Regenerate registered owners individually in dependency order.
+- [x] Run the 19-check bounded owner matrix; do not substitute aggregates.
 - [ ] Commit final generated build point, refresh Myco and codebase-memory, and
   prove exact indexed HEAD plus a named symbol lookup.
 - [ ] Keep repository closure `UNKNOWN` unless every separate exit is proved.
