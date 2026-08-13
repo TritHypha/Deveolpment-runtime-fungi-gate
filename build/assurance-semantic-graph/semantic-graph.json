@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "da1b529c5be62237b3aaceaf3e8a26246f1c48d11a0daa71ce04770f6f0d0ca3",
+  "authoritativeInputsDigest": "3414221ac626d9dbb649be1661705d2e6e5314cef789af65084068d2491fb087",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6538,6 +6538,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-3239fc72a1d1d13376a5f8e4",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-tower-citizen/tests/verdict-not-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-92f3c41631d7ef55993b50be",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-tri-pipe/tests/execution-router.test.mjs",
@@ -7570,6 +7577,13 @@
       "id": "test:auto-c3d06760803b4d61053b2b10",
       "kind": "test",
       "evidencePath": "scripts/tests/tooling-contract.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-a6a09ddb8e42a1043f2e6e2a",
+      "kind": "test",
+      "evidencePath": "scripts/tests/tower-citizen-vnot-fungi-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -11756,6 +11770,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-3239fc72a1d1d13376a5f8e4",
+      "to": "package:galerina-tower-citizen",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-92f3c41631d7ef55993b50be",
       "to": "package:galerina-tri-pipe",
       "type": "CLASSIFIES"
@@ -12496,6 +12515,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-a6a09ddb8e42a1043f2e6e2a",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-af0730c52540fb9ca3712ac9",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -12626,9 +12650,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 967,
+    "tests": 969,
     "detectors": 6,
-    "executableFamily": 1482,
+    "executableFamily": 1483,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
