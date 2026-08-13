@@ -3533,3 +3533,31 @@ zero violations; semantic 3/3 with 974 tests; receipts 287/287; roadmap 5/5 and
 Golden 11/11. Adjacent test `.mjs` queue entries remain unresolved and
 repository-wide closure remains `UNKNOWN`; excluded crash-linked aggregates
 are not substitutes for the individual evidence matrix.
+
+## Fungi conversion checkpoint through Slice 372 - 2026-08-13
+
+The governed ledger now accounts the remaining 25 symbols in the photonic
+target source. Twenty-one erased aliases/interfaces are
+`NO_RUNTIME_BEHAVIOR`; the ordered status table, diagnostic constructor and two
+validators remain `BLOCKED`. No placeholder Fungi or execution authority was
+manufactured.
+
+Fresh package typecheck and **8/8** focused tests pass. They are regression
+evidence only: the package owns no exact Fungi, GIR, physical `.slide`,
+independent re-admission or VOK twin, and the reference SLIDE profile does not
+admit these open nested records, general arrays or binary64 host semantics.
+
+Hostile evidence gives precise exits. A changing `wavelengthNm` getter can
+bypass an initially invalid value; inherited records are accepted; null or
+missing nested data can escape as foreign `TypeError`; a sparse unsupported-
+operation array can count as work without validating an element; mapped
+operations and nested channels are not checked. Same-named photonic execution
+plan and diagnostic records plus the amplitude-zero rule conflict across
+packages. These are recorded as repair work, not translated into Fungi.
+
+All three read-only reviews agree that the existing private skills already
+cover the reusable exact-record, capture-once, binary64, dense-array,
+bounded-while, immutable-evidence and physical-profile rules, so the wave is
+`NO_SKILL_UPDATE`. The Slice 372 individual owner refresh remains pending;
+adjacent test `.mjs` queue entries and excluded crash-linked aggregate lanes
+keep repository-wide closure `UNKNOWN`.

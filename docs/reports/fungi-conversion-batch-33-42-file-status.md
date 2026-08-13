@@ -1,13 +1,13 @@
-# Fungi Conversion Batch 33-347 File Status
+# Fungi Conversion Batch 33-372 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-323-347-js-native-photonic.md`](../superpowers/plans/2026-08-13-slices-323-347-js-native-photonic.md).
-Slices 323-347 are adjudicated; the Slice 347 individual
-graph/index/roadmap maintenance boundary is pending. The prior 298-322 plan is
-retained in repository history. Crash-linked aggregate lanes remain excluded.
+[`../superpowers/plans/2026-08-13-slices-348-372-photonic-target.md`](../superpowers/plans/2026-08-13-slices-348-372-photonic-target.md).
+Slices 348-372 are adjudicated; the Slice 372 individual
+graph/index/roadmap maintenance boundary is pending. Prior plans are retained
+in repository history. Crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -350,6 +350,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 345 | `packages-galerina/galerina-target-native/src/index.ts#validateNativeArtifact` | not created | not created | Nested artifact/path/target records lack exact physical admission. | `BLOCKED` |
 | 346 | `packages-galerina/galerina-target-native/src/index.ts#createNativeTargetReport` | not created | not created | Unbounded artifacts, partial bridge policy and aliased report evidence remain blocked. | `BLOCKED` |
 | 347 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicActualTarget` | not created | declaration accounted | Erased six-label target alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 348 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicTargetStatus` | not created | declaration accounted | Erased status alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 349 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicOperationKind` | not created | declaration accounted | Erased operation alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 350 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalInterconnectMode` | not created | declaration accounted | Erased interconnect alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 351 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalTransferFormat` | not created | declaration accounted | Erased transfer-format alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 352 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicTargetCapability` | not created | declaration accounted | Erased capability interface supplies no exact immutable record or hardware evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 353 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalIoCapability` | not created | declaration accounted | Erased optical-I/O interface supplies no exact Option, numeric or availability evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 354 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicTargetInput` | not created | declaration accounted | Erased input interface supplies no exact ingress or package provenance. | `NO_RUNTIME_BEHAVIOR` |
+| 355 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicLoweringPlan` | not created | declaration accounted | Erased lowering record supplies no exact nested-array admission. | `NO_RUNTIME_BEHAVIOR` |
+| 356 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicOperationMapping` | not created | declaration accounted | Erased mapping interface supplies no operation or channel admission. | `NO_RUNTIME_BEHAVIOR` |
+| 357 | `packages-galerina/galerina-target-photonic/src/index.ts#UnsupportedPhotonicOperation` | not created | declaration accounted | Erased unsupported-operation record supplies no reason or fallback admission. | `NO_RUNTIME_BEHAVIOR` |
+| 358 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicSimulationTarget` | not created | declaration accounted | Erased simulation record supplies no identity or capability evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 359 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicExecutionPlan` | not created | declaration accounted | Erased plan conflicts with another same-named schema and supplies no receipt. | `NO_RUNTIME_BEHAVIOR` |
+| 360 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalIoPlacementRecommendation` | not created | declaration accounted | Erased recommendation supplies no runtime optimization authority. | `NO_RUNTIME_BEHAVIOR` |
+| 361 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalIoTransferPlan` | not created | declaration accounted | Erased transfer plan supplies no exact policy or numeric admission. | `NO_RUNTIME_BEHAVIOR` |
+| 362 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicHardwareMappingFile` | not created | declaration accounted | Erased file record supplies no admitted hardware identity. | `NO_RUNTIME_BEHAVIOR` |
+| 363 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicFallbackReport` | not created | declaration accounted | Erased fallback report supplies no receipt-bound decision. | `NO_RUNTIME_BEHAVIOR` |
+| 364 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalChannelLayout` | not created | declaration accounted | Erased channel record supplies no Float or Option admission. | `NO_RUNTIME_BEHAVIOR` |
+| 365 | `packages-galerina/galerina-target-photonic/src/index.ts#OpticalChannelLayoutReport` | not created | declaration accounted | Erased report supplies no immutable channel/warning snapshot. | `NO_RUNTIME_BEHAVIOR` |
+| 366 | `packages-galerina/galerina-target-photonic/src/index.ts#MatrixOperationMappingReport` | not created | declaration accounted | Erased mapping report supplies no dense shape or nested-channel admission. | `NO_RUNTIME_BEHAVIOR` |
+| 367 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicTargetReport` | not created | declaration accounted | Erased aggregate report supplies no exact evidence envelope. | `NO_RUNTIME_BEHAVIOR` |
+| 368 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicDiagnostic` | not created | declaration accounted | Erased diagnostic conflicts with another same-named schema and supplies no exact record. | `NO_RUNTIME_BEHAVIOR` |
+| 369 | `packages-galerina/galerina-target-photonic/src/index.ts#PHOTONIC_STATUSES` | not created | not created | Ordered status membership/message table lacks a physical enum/String ABI. | `BLOCKED` |
+| 370 | `packages-galerina/galerina-target-photonic/src/index.ts#photonicDiagnostic` | not created | not created | Optional-field diagnostic record lacks an admitted exact physical ABI. | `BLOCKED` |
+| 371 | `packages-galerina/galerina-target-photonic/src/index.ts#validateOpticalChannelLayout` | not created | not created | Host record, repeated getters, Float and UTF-16 semantics lack physical parity. | `BLOCKED` |
+| 372 | `packages-galerina/galerina-target-photonic/src/index.ts#validatePhotonicLoweringPlan` | not created | not created | Host nested records, sparse arrays, bounded iteration and channels lack physical parity. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -716,3 +741,14 @@ not one of Slices 33–43 and no Fungi asset was produced.
   9,794 nodes / 9,930 edges / zero violations; semantic 3/3 with 974 tests;
   receipts 287/287; roadmap 5/5 and Golden 11/11. Crash-linked aggregates
   remain excluded and repository-wide closure remains `UNKNOWN`.
+- Slices 348-372 finish the target-photonic source surface. Twenty-one erased
+  declarations are `NO_RUNTIME_BEHAVIOR`; four runtime scopes retain exact
+  enum, optional-record, binary64, hostile-object, dense-array, bounded-work and
+  physical-profile blockers. Focused typecheck and **8/8** tests pass, but no
+  exact Fungi/GIR/physical `.slide`/re-admission/VOK twin exists.
+- Hostile probes keep the validators blocked: changing getters bypass channel
+  validation; inherited records pass; missing/null data escape as foreign
+  `TypeError`; sparse unsupported-operation arrays silently satisfy non-empty
+  work; mapped operations and nested channels are not validated. Same-named
+  photonic execution-plan/diagnostic schemas and amplitude rules also conflict
+  across packages. Skill review is `NO_SKILL_UPDATE`.

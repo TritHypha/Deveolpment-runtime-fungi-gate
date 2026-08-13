@@ -22,5 +22,8 @@ be part of the active v1 build surface.
 [x] Define optical I/O transfer report format
 [x] Define data movement and topology report direction
 [x] Add examples
-[ ] Add tests
+[x] Add initial focused tests (8)
+[ ] Add exact hostile-record, changing-getter, sparse-array and nested-channel tests
+[ ] Reconcile shared photonic execution-plan, diagnostic and amplitude contracts
+[ ] Register owned FUNGI diagnostic codes before promotion beyond planning evidence
 ```

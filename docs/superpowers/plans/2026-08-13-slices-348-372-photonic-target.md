@@ -74,9 +74,9 @@ SLIDE/VOK evidence, Myco and the codebase-memory graph.
 
 - [x] Prove the full source commit, SHA-256 and 304-line boundary.
 - [x] Run non-emitting typecheck and the focused test file; require 8/8.
-- [ ] Reconcile every symbol's consumers through the graph, bounded Myco and
+- [x] Reconcile every symbol's consumers through the graph, bounded Myco and
   exact source reads; label stale or unbound index results `UNKNOWN`.
-- [ ] Search for exact package-owned Fungi, GIR, physical `.slide`, independent
+- [x] Search for exact package-owned Fungi, GIR, physical `.slide`, independent
   re-admission and VOK evidence.
 
 ### Task 2: Produce independent slice dossiers
@@ -85,14 +85,14 @@ SLIDE/VOK evidence, Myco and the codebase-memory graph.
 - Read: both private Fungi skill authorities and their routed references.
 - Produce: read-only worker reports for Slices 348-356, 357-364 and 365-372.
 
-- [ ] Record observable semantics, effects, failure identity, aliasing,
+- [x] Record observable semantics, effects, failure identity, aliasing,
   coercion, bounded work and hostile input vectors for every scope.
-- [ ] Classify erased aliases/interfaces as `NO_RUNTIME_BEHAVIOR`; do not create
+- [x] Classify erased aliases/interfaces as `NO_RUNTIME_BEHAVIOR`; do not create
   a standalone enum, record or placeholder execution candidate.
-- [ ] For runtime tables/helpers, require an exact immutable input snapshot,
+- [x] For runtime tables/helpers, require an exact immutable input snapshot,
   closed vocabulary, finite numeric/text/collection bounds, typed diagnostics
   and physical SLIDE/VOK proof before any candidate.
-- [ ] Record `NO_SKILL_UPDATE` or update each private repository only when a
+- [x] Record `NO_SKILL_UPDATE` or update each private repository only when a
   genuinely reusable missing rule is proven.
 
 ### Task 3: Publish governed receipts and live status
@@ -104,10 +104,10 @@ SLIDE/VOK evidence, Myco and the codebase-memory graph.
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Give each receipt exactly one full source identity, classification,
+- [x] Give each receipt exactly one full source identity, classification,
   blocker/prerequisite, truthful threadability, both skill dispositions and
   bounded-closure result.
-- [ ] Preserve confirmed package defects and add their concrete repair exits to
+- [x] Preserve confirmed package defects and add their concrete repair exits to
   the TODO rather than translating unsafe host behavior.
 - [ ] Run the focused receipt audit before commit and repair the audit test-first
   if the receipt contract exposes a new fail-open gap.
@@ -130,4 +130,3 @@ SLIDE/VOK evidence, Myco and the codebase-memory graph.
   indexed HEAD.
 - [ ] Stop with repository-wide closure `UNKNOWN` unless every separately named
   closure requirement is independently satisfied.
-

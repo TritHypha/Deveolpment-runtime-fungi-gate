@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 348-372 photonic target - 2026-08-13
+
+- [x] Account the 25 remaining symbols in
+  `galerina-target-photonic/src/index.ts`: 21 erased declarations and four
+  runtime scopes. No placeholder Fungi or duplicate authority was created.
+- [x] Prove the package typecheck and focused **8/8** baseline. The package owns
+  no exact Fungi, GIR, physical `.slide`, independent re-admission or VOK twin.
+- [ ] Replace the validators' open JavaScript ingress with exact own-data
+  decoders; capture each field once; reject inherited/accessor/proxy/surplus
+  records, wrong classes, sparse/custom arrays and unbounded text/collections.
+- [ ] Repair channel validation so changing getters cannot bypass an invalid
+  wavelength; bind exact finite binary64, `-0`, boundary, Option and UTF-16
+  behavior before any Fungi/SLIDE candidate.
+- [ ] Repair lowering validation so holes cannot silently count as unsupported
+  work, every mapped operation and nested channel is validated, and missing or
+  null records produce typed refusal rather than foreign `TypeError`.
+- [ ] Reconcile same-named `PhotonicExecutionPlan` and `PhotonicDiagnostic`
+  schemas plus the conflicting amplitude-zero rule across photonic packages.
+- [ ] Replace legacy `Galerina_PHOTONIC_*` codes with owned live
+  `FUNGI-CATEGORY-NNN` registry entries before these helpers can be promoted.
+- [ ] Complete the individual Slice 372 owner matrix, update roadmap/subway and
+  refresh both indexes. Crash-linked aggregates remain excluded and
+  repository-wide closure remains `UNKNOWN`.
+
 ### Slices 323-347 JS, native and photonic targets - 2026-08-13
 
 - [x] Account 25 unique scopes: the remaining 11 JS symbols, all 13 native
