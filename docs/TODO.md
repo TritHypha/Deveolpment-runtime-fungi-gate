@@ -125,7 +125,11 @@ counts or open items that a newer section explicitly supersedes.
   pin accepts the exact two-String signature, but the unchanged decision and
   two bounded equivalent shapes all refuse at `SLIDE-REF-LIMIT-002`. The
   original asset and TypeScript consumer remain active; no limit was widened.
-- [ ] Continue Slices 66-87 with non-floor candidates and focused evidence;
+- [x] Stop Slice 66 at the authoritative bootstrap-floor preflight. The
+  `moneyDecimals` leaf is pure and its file ledger row has no explicit floor,
+  but the conversion queue derives the `T0-compiler` floor and refused the
+  exact symbol override. No asset or test was created.
+- [ ] Continue Slices 67-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

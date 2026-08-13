@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-65 File Status
+# Fungi Conversion Batch 33-66 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -64,6 +64,7 @@ still requires its own strict, physical, VOK and differential proof.
 | 63 | `packages-galerina/galerina-core-security/src/index.ts#isHighRiskPermissionAction` | not created | not created | The six-label String decision fits the scalar profile, but its package is a `T1-trust-root` declared `bounded-bootstrap-floor`. The authoritative queue refuses an override; exploratory files were removed. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
 | 64 | `packages-galerina/galerina-devtools-context/src/receipt-generator.ts#isBuiltin` | existing flat asset retained | existing package proof retained | Re-tested under the reconciled pin. Three bounded shapes refuse: flat width, three six-name helpers, and five narrow helpers with shallow composition. No current composite physical profile admits String comparison plus the required function/call graph. | `BLOCKED_BY_COMPOSITE_PHYSICAL_PROFILE` |
 | 65 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | existing exact asset retained | existing package proof and focused physical refusal retained | The reconciled pin accepts the two-String signature, correcting the stale Slice 45 diagnosis. The unchanged decision and two bounded equivalent shapes all refuse at `SLIDE-REF-LIMIT-002`; no current profile admits the complete transition graph within its physical block ceiling. | `BLOCKED_BY_PHYSICAL_BLOCK_CEILING` |
+| 66 | `packages-galerina/galerina-core-compiler/src/stdlib.ts#moneyDecimals` | not created | not created | The leaf is pure and total, and its file ledger row has no explicit declared floor. The authoritative queue nevertheless derives the `T0-compiler` bootstrap floor and refused the exact symbol override. The attempted decision was removed before implementation. | `BLOCKED_BY_BOOTSTRAP_FLOOR` |
 
 ## Shared implementation and governance files
 
@@ -174,3 +175,6 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Slice 65 remains blocked: the unchanged transition graph, a shallow Boolean
   form and an outer nested-match form all refuse with `SLIDE-REF-LIMIT-002`.
   No parameter packing or SLIDE ceiling change is authorized.
+- Slice 66 stopped before implementation. The authoritative queue derives the
+  compiler bootstrap floor even though the file ledger row has no explicit
+  `declaredFloor`; no candidate, asset or test was retained.
