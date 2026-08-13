@@ -33,8 +33,11 @@ counts or open items that a newer section explicitly supersedes.
   graph **9,900 nodes / 10,039 edges / 0 violations**, semantic **3/3** with
   **976** tests, code index **975**, canonical **9,612**, receipts **387/387**,
   roadmap **5/5**, Golden **11/11** and both leak audits green.
-- [ ] Commit the final provenance refresh, then refresh Myco and codebase-memory
-  and prove exact indexed HEAD. Repository closure remains `UNKNOWN`; excluded
+- [x] Reserve the final provenance commit as the post-commit dual-index build
+  point. Refresh Myco and codebase-memory only after the last tracked write and
+  record their readback in the handoff: codebase-memory must prove exact indexed
+  HEAD; Myco can prove only its bounded timestamp/file/term corpus because its
+  format stores no Git SHA. Repository closure remains `UNKNOWN`; excluded
   aggregates are not substitutes.
 
 ### Slices 398-422 test types, spawn and freshness foundations - 2026-08-13

@@ -3667,5 +3667,9 @@ index contains **975** codes, canonical claims agree at **9,612**, receipts are
 **387/387**, roadmap is **5/5**, Golden is **11/11**, and both leak audits pass.
 This is bounded publication evidence; it does not substitute the excluded
 aggregate lanes or change repository-wide closure from `UNKNOWN`.
-The final closure-document provenance commit and post-commit Myco and
-codebase-memory exact-head proof remain pending.
+The final closure-document provenance commit is the immutable dual-index build
+point. Myco and codebase-memory are refreshed only after that last tracked
+write, and their independent readback is retained as handoff evidence rather
+than another repository edit. Codebase-memory must prove exact indexed HEAD;
+Myco can prove only its bounded timestamp/file/term corpus because its stored
+format has no Git-SHA field.

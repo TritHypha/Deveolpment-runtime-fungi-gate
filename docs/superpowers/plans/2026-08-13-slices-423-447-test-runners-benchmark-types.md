@@ -87,7 +87,7 @@ SLIDE/VOK, Myco and codebase-memory.
 - [x] Commit authored evidence separately from generated owners.
 - [x] Regenerate all registered owners individually for Slices 398-447.
 - [x] Run the 19-check bounded owner matrix.
-- [ ] Commit the final closure/provenance documents, then refresh Myco and
-  codebase-memory at the resulting exact committed HEAD and independently
-  prove both indexed build points.
+- [x] Reserve the final closure/provenance commit as the immutable build point;
+  refresh Myco and codebase-memory after the last tracked write and retain the
+  independent readback as handoff evidence rather than another repository edit.
 - [x] Keep repository closure `UNKNOWN`; never substitute excluded aggregates.
