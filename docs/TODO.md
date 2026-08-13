@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slice 91 typed K3 substrate minimum conversion - 2026-08-13
+
+- [x] Add the package-owned reference candidate
+  `galerina-tower-citizen/src/self-hosted/effective-verdict.fungi` without
+  changing the TypeScript export, callers or authority boundary.
+- [x] Preserve `Verdict x Verdict -> Verdict` and all nine Kleene-minimum rows
+  through the independent TypeScript oracle, checked Fungi, physical `.slide`
+  publication, VOK re-admission and typed receipt verification. Tower-Citizen
+  passes 511/511 and the exact physical lane passes 1/1.
+- [x] Refuse non-K3, missing, surplus and wrong-type arguments, exhausted work,
+  changed source/artifact and altered typed receipts without fallback or
+  authority release.
+- [x] Review both private Fungi skills at `dc2ef82f` and `30eb4dd3`.
+  `NO_SKILL_UPDATE` is correct because their existing typed-K3, exhaustive
+  check, physical-proof and hostile-input rules already cover this result.
+- [ ] Keep TypeScript and its consumers active until an explicit consumer
+  switch, whole-file accounting and retirement proof authorizes removal.
+- [ ] Replace the crash-linked monolithic repository lane with a bounded,
+  resumable owner before claiming repository-wide closure; focused Slice 91
+  evidence does not substitute for that missing aggregate.
+
 ### Slice 90 typed K3 negation conversion - 2026-08-13
 
 - [x] Add the package-owned reference candidate

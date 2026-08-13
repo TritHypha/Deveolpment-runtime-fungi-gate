@@ -3,11 +3,11 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is complete
-through **Slice 90**, with the exact status and R&D intake recorded in
+through **Slice 91**, with the exact status and R&D intake recorded in
 [`docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`](reports/galerina-conversion-and-assurance-status-2026-08-13.md).
 The conserved queue accounts for **1,483/1,483** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **853** file-level
-blockers; **30/30** governed slice receipts pass. Slices 84-88 conserve five
+blockers; **31/31** governed slice receipts pass. Slices 84-88 conserve five
 additional exact ABI/authority/custody refusals. Slice 88 proves that the Myco
 search-outcome guard cannot move into a read-only mirror or cross the current
 exact-record profile without deleting dynamic property behavior. Slice 89 adds
@@ -15,7 +15,10 @@ one complete reference-only physical candidate for the impact planner's fixed
 documentation-path decision. Slice 90 adds one typed `Verdict -> Verdict`
 reference candidate for Tower-Citizen's closed K3 NOT table. The pinned
 physical proof uses exhaustive `check`; direct canonical `flip` remains a
-follow-on. Both legacy sources and their consumers remain active.
+follow-on. Slice 91 adds one `Verdict x Verdict -> Verdict` reference candidate
+for Tower-Citizen's exact nine-row K3 minimum. Its physical proof binds both
+parameters and the result to typed Verdict values. All three legacy sources
+and their consumers remain active.
 TypeScript/MJS consumers remain
 active unless their individual physical/VOK and retirement gates say otherwise.
 Repository-wide closure remains **UNKNOWN** until the crash-linked monolithic

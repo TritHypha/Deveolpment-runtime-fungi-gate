@@ -112,6 +112,9 @@ still requires its own strict, physical, VOK and differential proof.
 | `docs/superpowers/specs/2026-08-13-slice-90-vnot-fungi-conversion-design.md` | Bound typed-K3 design and direct-`flip` physical-profile distinction for Slice 90. | `DONE` |
 | `docs/superpowers/plans/2026-08-13-slice-90-vnot-fungi-conversion.md` | Test-first implementation and physical-proof plan for Slice 90. | `DONE` |
 | `scripts/tests/tower-citizen-vnot-fungi-slide.integration.test.mjs` | Dedicated typed Verdict physical publication, VOK re-admission and hostile-boundary proof for Slice 90. | `DONE` |
+| `docs/superpowers/specs/2026-08-13-slice-91-effective-verdict-fungi-conversion-design.md` | Bound two-Verdict Kleene-minimum design for Slice 91. | `DONE` |
+| `docs/superpowers/plans/2026-08-13-slice-91-effective-verdict-fungi-conversion.md` | Test-first implementation and physical-proof plan for Slice 91. | `DONE` |
+| `scripts/tests/tower-citizen-effective-verdict-fungi-slide.integration.test.mjs` | Dedicated two-Verdict physical publication, VOK re-admission and hostile-boundary proof for Slice 91. | `DONE` |
 | `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
 | `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
 | `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
@@ -125,7 +128,7 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 90 bounded decision is complete. The authored TODO, active roadmap
+The Slice 91 bounded decision is complete. The authored TODO, active roadmap
 and live conversion register are updated. Focused source, physical boundary,
 roadmap, graph and generated-owner checks are current at their relevant input
 build points. The final navigation index is independently refreshed after the
@@ -138,9 +141,9 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 | `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section and generated subway block) |
 | Retirement and conversion queue | `DONE` at 1,483/1,483, seven scoped candidates and 853 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
-| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 145 Fungi files |
-| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 969 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody and record the K3 negation profile distinction) |
+| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 146 Fungi files |
+| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 971 test nodes, three sections, current status blocks, 974 codes and 5/5 |
+| Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody; Slice 91 required no duplicate rule) |
 | Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
 ## Verified refusal retained outside the batch
@@ -269,3 +272,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   whole-file proof. The typed K3 NOT table passes Tower-Citizen **509/509** and
   a dedicated physical SLIDE/VOK lane **1/1**. The pin proves the exhaustive
   typed `check` desugaring, not direct canonical `flip` support.
+- Slice 91 is a complete reference candidate, not a consumer switch or
+  whole-file proof. The exact two-Verdict K3 minimum passes Tower-Citizen
+  **511/511** and a dedicated physical SLIDE/VOK lane **1/1**. All nine rows
+  preserve typed Verdict values and release no authority.
