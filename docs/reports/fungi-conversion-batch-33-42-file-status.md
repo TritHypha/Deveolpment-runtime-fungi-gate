@@ -1,11 +1,12 @@
-# Fungi Conversion Batch 33-167 File Status
+# Fungi Conversion Batch 33-172 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-158-167-hybrid-and-neutral-bridge-types.md`](../superpowers/plans/2026-08-13-slices-158-167-hybrid-and-neutral-bridge-types.md).
-Aggregate graph, index and roadmap owners run at the next 25-slice boundary.
+The current five-slice decision and maintenance plan is
+[`../superpowers/plans/2026-08-13-slices-168-172-neutral-bridge-boundary.md`](../superpowers/plans/2026-08-13-slices-168-172-neutral-bridge-boundary.md).
+Individual graph, index and roadmap owners run after the bounded Slice 172
+commit; crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -168,6 +169,11 @@ still requires its own strict, physical, VOK and differential proof.
 | 165 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#FixedScale` | not created | declaration accounted | Erased record accepts binary64 numbers despite integer intent and performs no width/range validation. | `NO_RUNTIME_BEHAVIOR` |
 | 166 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#BridgeOp` | not created | declaration accounted | Erased object combines typed-array/number union, binary64 and optional fields; producers/consumers own the live boundary. | `NO_RUNTIME_BEHAVIOR` |
 | 167 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#BridgeResult` | not created | declaration accounted | Erased object validates neither binary64 results nor native/determinism claims; consumers own verification. | `NO_RUNTIME_BEHAVIOR` |
+| 168 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#InferenceBridge` | not created | declaration accounted | Erased active-object interface combines optional attestation, sync/async lifecycle effects and an execution capability; a record is not an affine bridge lease. | `NO_RUNTIME_BEHAVIOR` |
+| 169 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#BridgeRegistry` | not created | declaration accounted | Erased `ReadonlyMap` alias performs no registration, duplicate, ownership, revocation or lookup behavior. | `NO_RUNTIME_BEHAVIOR` |
+| 170 | `packages-galerina/galerina-inference-bridge-contract/src/bridge.ts#assertDeterminism` | not created | determinism/error proof retained | Exact parity needs the complete binary64/string result object, independently grounded determinism evidence and observable JavaScript Error identity. | `BLOCKED_BY_TYPED_BRIDGE_RESULT_AND_ERROR_IDENTITY_ABI` |
+| 171 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#DeterminismMode` | not created | declaration accounted | Erased four-string vocabulary is part of the signed pre-image but proves no determinism evidence; future mapping must be injective and exhaustive. | `NO_RUNTIME_BEHAVIOR` |
+| 172 | `packages-galerina/galerina-inference-bridge-contract/src/manifest.ts#CertificationProfile` | not created | declaration accounted | Erased two-string vocabulary grants no certified authority; exact signed-pre-image spelling and surplus refusal remain mandatory. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -450,3 +456,12 @@ not one of Slices 33–43 and no Fungi asset was produced.
   consumers **37/37**, and Tower-Citizen **515/515** pass with zero skips. The
   private skills incorporate the approved numeric, benchmark, VOK and
   Lyth/SLIDE evidence rules at `1bd80388` and `96054a97`.
+- Slices 168-169 and 171-172 are erased declarations with
+  `NO_RUNTIME_BEHAVIOR`; they account interface, registry and signed-manifest
+  vocabulary scope without pretending the active boundary has been converted.
+  Slice 170 remains blocked at the complete `BridgeResult`, independent
+  determinism-provenance and JavaScript Error-identity boundary. Both package
+  typechecks, neutral contract **12/12**, focused consumers **27/27**, and
+  Tower-Citizen **515/515** pass with zero skips. Skill review is
+  `NO_SKILL_UPDATE`; existing exact-record, injective-vocabulary,
+  active-capability and Error-identity rules cover the group.

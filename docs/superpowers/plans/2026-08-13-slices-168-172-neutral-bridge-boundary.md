@@ -29,26 +29,26 @@ Galerina owner tools, Markdown slice receipts.
 
 ### Task 1: Bind and classify Slices 168-172
 
-- [ ] Classify `InferenceBridge` and `BridgeRegistry` at their erased active
+- [x] Classify `InferenceBridge` and `BridgeRegistry` at their erased active
   object and map declarations.
-- [ ] Classify `assertDeterminism` at its exact `BridgeResult`, string-union and
+- [x] Classify `assertDeterminism` at its exact `BridgeResult`, string-union and
   JavaScript Error identity boundary.
-- [ ] Classify `DeterminismMode` and `CertificationProfile` as erased string
+- [x] Classify `DeterminismMode` and `CertificationProfile` as erased string
   vocabulary declarations with future injective ABI requirements.
-- [ ] Search existing Fungi assets and all exact consumers before deciding.
+- [x] Search existing Fungi assets and all exact consumers before deciding.
 
 ### Task 2: Bounded verification
 
-- [ ] Run both package typechecks and the complete neutral-contract suite.
-- [ ] Run focused Tower bridge, attestation and precision consumer tests.
-- [ ] Run complete Tower-Citizen; require zero failures and zero skips.
-- [ ] Review both private skills and record a governed disposition for every
+- [x] Run both package typechecks and the complete neutral-contract suite.
+- [x] Run focused Tower bridge, attestation and precision consumer tests.
+- [x] Run complete Tower-Citizen; require zero failures and zero skips.
+- [x] Review both private skills and record a governed disposition for every
   receipt.
 
 ### Task 3: Publish the five slices
 
-- [ ] Create Slice 168-172 receipts, append the live register and update TODO.
-- [ ] Run the slice-close owner plus staged path/private-document guards.
+- [x] Create Slice 168-172 receipts, append the live register and update TODO.
+- [x] Run the slice-close owner plus staged path/private-document guards.
 - [ ] Commit only the bounded slice documents before running generated owners.
 
 ### Task 4: Individual 25-slice maintenance

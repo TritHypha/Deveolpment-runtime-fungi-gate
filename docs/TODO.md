@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 168-172 neutral bridge boundary - 2026-08-13
+
+- [x] Classify `InferenceBridge`, `BridgeRegistry`, `DeterminismMode` and
+  `CertificationProfile` as erased `NO_RUNTIME_BEHAVIOR` declarations. They
+  account TypeScript scope but do not implement active bridge, registry,
+  determinism or certification behavior.
+- [x] Classify `assertDeterminism` as
+  `BLOCKED_BY_TYPED_BRIDGE_RESULT_AND_ERROR_IDENTITY_ABI`; no host-projected
+  ternary/deterministic Booleans or placeholder Fungi asset were accepted.
+- [x] Prove both package typechecks, neutral contract **12/12**, focused
+  consumers **27/27**, and complete Tower-Citizen **515/515** with zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct because
+  their exact-record, external-vocabulary, independent-evidence,
+  active-capability, affine-lease and JavaScript Error-identity rules cover the
+  five slices.
+- [ ] Define the exact neutral bridge registry and execution lease: injective
+  external keys, duplicate/refusal policy, ownership/revocation, complete
+  result records, authenticated determinism evidence and typed failures.
+- [ ] Preserve the exact `assertDeterminism` Error identity and message mapping,
+  or explicitly version a new typed failure contract with differential proof.
+- [ ] Retain TypeScript and every consumer. No declaration accounting, focused
+  test or immutable record grants retirement, production or release authority.
+- [ ] Run the registered graph/index/roadmap owners individually at this
+  25-slice boundary. Do not substitute crash-linked `graph-all`, full tooling,
+  normal phase-close or monolithic memory evaluation for bounded evidence;
+  repository-wide closure remains `UNKNOWN`.
+
 ### Slices 158-167 hybrid and neutral bridge types - 2026-08-13
 
 - [x] Classify `signManifestHybrid`, `verifyAttestationHybrid` and
