@@ -67,14 +67,17 @@ for (const name of files) {
   }
   if (sliceNumber >= 323) {
     const authoring = [...receipt.matchAll(/^Authoring skill disposition: (.+)$/gmu)].map((match) => match[1]);
-    const scopes = [...text.matchAll(/^Scope: `packages-galerina\/[a-z0-9-]+\/src\/[a-z0-9.-]+#[A-Za-z0-9_]+`\.$/gmu)];
+    const scopes = [...text.matchAll(/^Scope: `packages-galerina\/[a-z0-9-]+\/((?:src|scripts)\/[a-z0-9./-]+)#[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*`\.$/gmu)];
     const buildPoints = [...text.matchAll(/^Evidence: source build point `[0-9a-f]{40}`;$/gmu)];
     const sourceDigests = [...text.matchAll(/^source SHA-256 `[0-9A-F]{64}`;/gmu)];
     if (authoring.length !== 1
         || !/^(?:SKILL_UPDATE [0-9a-f]{40}|NO_SKILL_UPDATE: .+)$/u.test(authoring[0] ?? "")) {
       violations.push(`${name}: invalid authoring skill disposition`);
     }
-    if (scopes.length !== 1) violations.push(`${name}: missing exact conversion scope`);
+    if (scopes.length !== 1
+        || scopes[0][1].split("/").some((segment) => segment === "" || segment === "." || segment === "..")) {
+      violations.push(`${name}: missing exact conversion scope`);
+    }
     if (buildPoints.length !== 1) violations.push(`${name}: missing exact source build point`);
     if (sourceDigests.length !== 1) violations.push(`${name}: missing exact source digest`);
   }

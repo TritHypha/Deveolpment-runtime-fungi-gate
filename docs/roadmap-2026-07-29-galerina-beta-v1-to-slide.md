@@ -3673,3 +3673,28 @@ write, and their independent readback is retained as handoff evidence rather
 than another repository edit. Codebase-memory must prove exact indexed HEAD;
 Myco can prove only its bounded timestamp/file/term corpus because its stored
 format has no Git-SHA field.
+
+## Fungi conversion checkpoint through Slice 497 - 2026-08-13
+
+The next fifty scopes cover the Myco source-driven test runner, CLI, stored
+index contract, mutable search graph and store foundations. Nine erased
+declarations are `NO_RUNTIME_BEHAVIOR`; 32 executable scopes remain
+`BLOCKED`; nine exact constants are `CANDIDATE` leaves but mirror
+custody prevents local authoring. No Fungi/GIR/physical `.slide`/independent
+re-admission/VOK replacement or TypeScript retirement is claimed.
+
+Myco typecheck and **80/80** source-driven tests pass. Fresh hostile vectors
+nevertheless prove incomplete JSON coverage, active-property validation races,
+invalid timestamp mismatch, retained Map/Set aliases and partial transactions,
+stale edge counts, malformed-limit widening, and write-side link redirection.
+The installed ignored `dist` is not bound to the pinned source and the
+vendored mirror has mixed upstream provenance. Exact declared, vendored and
+current-upstream identities and their scoped text relationship are pinned in
+the live conversion register.
+
+Private translation `d42238f` and authoring `17fd094` now treat JavaScript
+Map/Set as active identity-bearing state: SameValueZero keys, insertion and
+delete/reinsert order, live iterator mutation, exact aliases and partial
+mutation on failure are binding semantics. The Slice-497 owner publication and
+post-commit dual-index exact-head proof remain pending. Repository-wide closure
+remains `UNKNOWN`.

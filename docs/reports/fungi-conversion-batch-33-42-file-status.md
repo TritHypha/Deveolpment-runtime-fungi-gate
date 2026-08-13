@@ -1,14 +1,12 @@
-# Fungi Conversion Batch 33-447 File Status
+# Fungi Conversion Batch 33-497 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current 50-slice decision and maintenance route is split across
-[`../superpowers/plans/2026-08-13-slices-398-422-test-types-spawn-runners.md`](../superpowers/plans/2026-08-13-slices-398-422-test-types-spawn-runners.md)
-and
-[`../superpowers/plans/2026-08-13-slices-423-447-test-runners-benchmark-types.md`](../superpowers/plans/2026-08-13-slices-423-447-test-runners-benchmark-types.md).
-Slices 398-447 are adjudicated; individual owner publication, graphs and both
-indexes now close at the Slice 447 fifty-slice boundary.
+The current 50-slice decision and maintenance route is
+[`../superpowers/plans/2026-08-13-slices-448-497-myco-foundations.md`](../superpowers/plans/2026-08-13-slices-448-497-myco-foundations.md).
+Slices 448-497 are adjudicated; individual owner publication, graphs and both
+indexes close at the Slice 497 fifty-slice boundary.
 Prior plans remain in repository history. Crash-linked aggregate lanes remain
 excluded.
 
@@ -453,6 +451,56 @@ still requires its own strict, physical, VOK and differential proof.
 | 445 | `packages-galerina/galerina-tools-benchmark/src/index.ts#DEFAULT_BENCHMARK_CONFIG` | not created | not created | Exported mutable config/targets/privacy singleton lacks state parity. | `BLOCKED` |
 | 446 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkDiagnosticSeverity` | not created | declaration accounted | Erased severity union performs no admission. | `NO_RUNTIME_BEHAVIOR` |
 | 447 | `packages-galerina/galerina-tools-benchmark/src/index.ts#BenchmarkDiagnostic` | not created | declaration accounted | Erased optional diagnostic performs no exact-record admission. | `NO_RUNTIME_BEHAVIOR` |
+| 448 | `packages-galerina/galerina-tools-myco/scripts/run-tests.mjs#module` | not created | not created | Node discovery/process/exit boundary. | `BLOCKED` |
+| 449 | `packages-galerina/galerina-tools-myco/src/cli.ts#HELP` | not created | not created | Version-bound text lacks governed physical proof. | `BLOCKED` |
+| 450 | `packages-galerina/galerina-tools-myco/src/cli.ts#toOptions` | not created | not created | Host coercion and binary64 parsing unproved. | `BLOCKED` |
+| 451 | `packages-galerina/galerina-tools-myco/src/cli.ts#useColor` | not created | not created | Environment and TTY observation unproved. | `BLOCKED` |
+| 452 | `packages-galerina/galerina-tools-myco/src/cli.ts#cmdIndex` | not created | not created | Filesystem/index/stream authority unproved. | `BLOCKED` |
+| 453 | `packages-galerina/galerina-tools-myco/src/cli.ts#noteSaveOutcome` | not created | not created | Locale and stdout ordering unproved. | `BLOCKED` |
+| 454 | `packages-galerina/galerina-tools-myco/src/cli.ts#cmdStatus` | not created | not created | Index/date/stream/TOCTOU boundary. | `BLOCKED` |
+| 455 | `packages-galerina/galerina-tools-myco/src/cli.ts#cmdSearch` | not created | not created | Search/worker/coverage/output boundary. | `BLOCKED` |
+| 456 | `packages-galerina/galerina-tools-myco/src/cli.ts#run` | not created | not created | Argv dispatch and exit contract unproved. | `BLOCKED` |
+| 457 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#MAX_INDEX_PATH_LENGTH` | not created | not created | Primitive Int candidate held at mirror custody; no governed physical overlay. | `CANDIDATE` |
+| 458 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#MAX_INDEX_TERM_LENGTH` | not created | not created | Primitive Int candidate held at mirror custody; no governed physical overlay. | `CANDIDATE` |
+| 459 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#MAX_INDEX_FILES` | not created | not created | Primitive Int candidate held at mirror custody; no governed physical overlay. | `CANDIDATE` |
+| 460 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#MAX_INDEX_TERMS_PER_FILE` | not created | not created | Primitive Int candidate held at mirror custody; no governed physical overlay. | `CANDIDATE` |
+| 461 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#MAX_INDEX_TERM_EDGES` | not created | not created | Primitive Int candidate held at mirror custody; no governed physical overlay. | `CANDIDATE` |
+| 462 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#MAX_INDEX_BYTES` | not created | not created | Primitive Int candidate held at mirror custody; no governed physical overlay. | `CANDIDATE` |
+| 463 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#IndexLimits` | not created | declaration accounted | Erased declaration; public type retained. | `NO_RUNTIME_BEHAVIOR` |
+| 464 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#DEFAULT_INDEX_LIMITS` | not created | not created | Frozen JS singleton identity/record ABI. | `BLOCKED` |
+| 465 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#StoredFile` | not created | declaration accounted | Erased declaration; public type retained. | `NO_RUNTIME_BEHAVIOR` |
+| 466 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#StoredIndex` | not created | declaration accounted | Erased declaration; public type retained. | `NO_RUNTIME_BEHAVIOR` |
+| 467 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#isRecord` | not created | not created | Open object/proxy semantics. | `BLOCKED` |
+| 468 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#hasExactKeys` | not created | not created | Own enumeration/proxy/sort semantics. | `BLOCKED` |
+| 469 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#isCanonicalIndexPath` | not created | not created | Node path and UTF-16 profile. | `BLOCKED` |
+| 470 | `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts#validateStoredIndex` | not created | not created | Validation-to-use race and nested ABI. | `BLOCKED` |
+| 471 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#FileId` | not created | declaration accounted | Erased declaration. | `NO_RUNTIME_BEHAVIOR` |
+| 472 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#FileRecord` | not created | declaration accounted | Erased declaration. | `NO_RUNTIME_BEHAVIOR` |
+| 473 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#TermCounts` | not created | declaration accounted | Erased Map alias. | `NO_RUNTIME_BEHAVIOR` |
+| 474 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph` | not created | not created | Active Map/Set state ABI. | `BLOCKED` |
+| 475 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.setFile` | not created | not created | Aliased partial transaction. | `BLOCKED` |
+| 476 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.removeFile` | not created | not created | Multi-index invariant mutation. | `BLOCKED` |
+| 477 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.indexName` | not created | not created | Name-index state and Unicode. | `BLOCKED` |
+| 478 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.file` | not created | not created | Live record alias. | `BLOCKED` |
+| 479 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.fileByPath` | not created | not created | Live record alias. | `BLOCKED` |
+| 480 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.files` | not created | not created | Live Map iterator. | `BLOCKED` |
+| 481 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.fileCount` | not created | not created | Mutable active-state count. | `BLOCKED` |
+| 482 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.termCount` | not created | not created | Mutable active-state count. | `BLOCKED` |
+| 483 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.termEdgeCount` | not created | not created | Stale writable edge counter. | `BLOCKED` |
+| 484 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.forwardOf` | not created | not created | Returned Map alias. | `BLOCKED` |
+| 485 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.filesWithTerm` | not created | not created | Returned bucket Map alias. | `BLOCKED` |
+| 486 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.terms` | not created | not created | Live Map-key iterator. | `BLOCKED` |
+| 487 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#SearchGraph.filesWithNameTerm` | not created | not created | Returned Set alias. | `BLOCKED` |
+| 488 | `packages-galerina/galerina-tools-myco/src/graph/model.ts#nameTermsOf` | not created | not created | ECMAScript Unicode regex/lowercase. | `BLOCKED` |
+| 489 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#FORMAT` | not created | not created | Primitive Int leaf; held by mirror custody. | `CANDIDATE` |
+| 490 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#INDEX_DIR` | not created | not created | Primitive String leaf; held by mirror custody. | `CANDIDATE` |
+| 491 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#INDEX_FILE` | not created | not created | Primitive String leaf; held by mirror custody. | `CANDIDATE` |
+| 492 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#IndexMeta` | not created | declaration accounted | Erased declaration. | `NO_RUNTIME_BEHAVIOR` |
+| 493 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#LoadGraphOptions` | not created | declaration accounted | Erased declaration. | `NO_RUNTIME_BEHAVIOR` |
+| 494 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#SaveGraphOptions` | not created | declaration accounted | Erased declaration. | `NO_RUNTIME_BEHAVIOR` |
+| 495 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#clampTermEdgeCeiling` | not created | not created | JS number/-0/invalid-limit policy. | `BLOCKED` |
+| 496 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#indexPath` | not created | not created | Platform path/containment profile. | `BLOCKED` |
+| 497 | `packages-galerina/galerina-tools-myco/src/graph/store.ts#compareCodeUnits` | not created | not created | UTF-16 code-unit ordering profile. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -859,3 +907,27 @@ not one of Slices 33–43 and no Fungi asset was produced.
   remain open. Translation `3f11c32` and authoring `bd258b6` now require typed
   argv or canonical length-prefixed command provenance; joined display strings
   cannot authorize execution parity.
+- Slices 448-497 account the Myco runner, CLI, stored-index contract, graph
+  model and store foundations: nine erased declarations are
+  `NO_RUNTIME_BEHAVIOR`, 32 runtime scopes remain `BLOCKED`, and nine
+  primitive constants are `CANDIDATE` but cannot be authored beneath
+  the read-only mirror. Source-driven typecheck and **80/80** tests pass.
+- Hostile probes show incomplete JSON coverage, rejected-index mislabelling,
+  validation-to-use races, TimeClip mismatch, mutable Map/Set aliases,
+  stale edge counts that can bypass the save ceiling, malformed limits widening
+  to the maximum, and a write-side link redirection gap. Private translation
+  `d42238f` and authoring `17fd094` now bind active Map/Set identity,
+  SameValueZero, insertion order, live iterators, aliases and partial mutation.
+
+Exact mirror provenance for Slices 448-497: metadata declares upstream
+`a48d2c3b5c508ce35346a4dd7aac0278606d10f6`; the current sibling head is
+`db901e1096fb69ea23f6d3f42199dac784ec3bc1`. Vendored and declared-revision
+`index-contract.ts` share blob
+`feb98a735358a3b292a08d002d874154e58c2f05`; current upstream is
+`b3066a3a8e3d92b01f8c91234ccdfd846c36fe60`, with all six candidate
+declarations byte-identical across the three identities. The vendored
+`store.ts` blob is `44399204622860da4ea4ea6a0d75f5a639080d98`, versus declared-revision
+`35dfa4c25c8c8acfd2ed586006b268381f9f3f56` and current-upstream
+`86a82be205d444ea4bc4fa4ce4ac940a29d9bf6a`. Whole-file bytes differ; the
+nine scoped store declarations/bodies are text-identical at current upstream.
+This reconciles classification only; it grants no local authoring authority.

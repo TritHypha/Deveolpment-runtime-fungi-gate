@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 448-497 Myco foundations - 2026-08-13
+
+- [x] Account 50 unique scopes: nine erased declarations, 32 blocked runtime
+  scopes and nine primitive candidates held at read-only mirror custody. No
+  placeholder Fungi, source edit, consumer switch or retirement was created.
+- [x] Prove source-driven Myco typecheck and **80/80** focused tests; retain
+  graph freshness as `UNKNOWN` after the plan-only commit until the final
+  Slice-497 exact-head refresh.
+- [x] Update both private skills at translation `d42238f` and authoring
+  `17fd094`: JavaScript Map/Set is active identity-bearing state, not
+  immutable transport. SameValueZero, order, live iterators, aliases and
+  partial mutation must be preserved.
+- [ ] Repair machine-readable search coverage: keep JSON clean, report every
+  skipped-large/vendor/binary narrowing, and distinguish rejected from absent
+  indexes without turning narrowed coverage into a no-match result.
+- [ ] Make stored-index validation capture one inert snapshot, reject TimeClip-
+  invalid timestamps and hostile/repeated properties, and bind source-to-dist
+  provenance plus the mixed upstream mirror state before runtime promotion.
+- [ ] Replace retained Map/Set aliases or explicitly govern their active state;
+  make setFile transactional, keep forward/inverted/name/edge views coherent,
+  and add partial-failure/live-iterator/mutation differential vectors.
+- [ ] Refuse malformed explicit ceilings instead of widening them; recompute or
+  bind edge counts to the serialized snapshot, and close write-side
+  symlink/junction redirection before save authority.
+- [ ] Publish all registered owners, pass the bounded close matrix, commit the
+  final build point, then refresh Myco and codebase-memory at that exact HEAD.
+  Repository-wide closure remains `UNKNOWN`.
+
 ### Slices 423-447 runners and benchmark declarations - 2026-08-13
 
 - [x] Account 25 unique scopes: 13 erased benchmark declarations and 12 blocked

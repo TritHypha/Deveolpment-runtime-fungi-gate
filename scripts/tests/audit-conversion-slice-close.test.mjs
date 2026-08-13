@@ -48,6 +48,12 @@ Source classification: BLOCKED
 Bounded closure: COMPLETE
 `;
 
+const qualifiedScript = forward
+  .replace(
+    "packages-galerina/example/src/index.ts#Candidate",
+    "packages-galerina/example/scripts/run-tests.mjs#SearchGraph.setFile",
+  );
+
 test("complete exact slice-close receipt passes", () => {
   const result = run(fixture(base));
   assert.equal(result.status, 0, result.stderr || result.stdout);
@@ -83,6 +89,27 @@ test("forward slice receipts require both skills and exact source identity", () 
     forward.replace(/Evidence: source build point.*\n/u, ""),
     forward.replace(/source SHA-256.*\n/u, ""),
   ]) {
+    assert.equal(run(fixture(body, name)).status, 1);
+  }
+});
+
+test("forward scopes accept scripts and qualified methods", () => {
+  const name = "slice-448-qualified-script-fungi-conversion-2026-08-13.md";
+  const result = run(fixture(qualifiedScript, name));
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
+test("forward scopes refuse traversal and empty path segments", () => {
+  const name = "slice-448-noncanonical-scope-fungi-conversion-2026-08-13.md";
+  for (const scope of [
+    "packages-galerina/example/scripts/../src/index.ts#Candidate",
+    "packages-galerina/example/scripts/./run-tests.mjs#module",
+    "packages-galerina/example/scripts//run-tests.mjs#module",
+  ]) {
+    const body = forward.replace(
+      "packages-galerina/example/src/index.ts#Candidate",
+      scope,
+    );
     assert.equal(run(fixture(body, name)).status, 1);
   }
 });

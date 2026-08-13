@@ -86,10 +86,10 @@
 - Read: `packages-galerina/galerina-tools-myco/src/graph/index-contract.ts`
 - Read: `packages-galerina/galerina-tools-myco/tests/**/*.test.ts`
 
-- [ ] Pin sources, toolchain, callers, tests, package boundary, queue/retirement state, and exact physical evidence.
-- [ ] Record every observable process, argv, stream, filesystem, path, JSON, numeric, array, record, mutation, failure, and exit-code behavior.
-- [ ] Run read-only hostile probes that discriminate nominal TypeScript shapes from the live JavaScript boundary.
-- [ ] Return one exact classification, blocker/exit, threadability class, vectors, and skill disposition for each Slice 448-470.
+- [x] Pin sources, toolchain, callers, tests, package boundary, queue/retirement state, and exact physical evidence.
+- [x] Record every observable process, argv, stream, filesystem, path, JSON, numeric, array, record, mutation, failure, and exit-code behavior.
+- [x] Run read-only hostile probes that discriminate nominal TypeScript shapes from the live JavaScript boundary.
+- [x] Return one exact classification, blocker/exit, threadability class, vectors, and skill disposition for each Slice 448-470.
 
 ### Task 2: Pin and adjudicate Slices 471-488
 
@@ -97,10 +97,10 @@
 - Read: `packages-galerina/galerina-tools-myco/src/graph/model.ts`
 - Read: focused graph-model tests and package boundary evidence.
 
-- [ ] Pin the exact source/test identities and all callers.
-- [ ] Record Map/Set identity, mutation, insertion order, iterator behavior, numeric IDs/counts, path tokenization, regex/Unicode behavior, exceptions, and aliasing.
-- [ ] Exercise duplicate paths, mutable term maps, hostile strings, iterator mutation, unsafe numbers, and post-return aliases.
-- [ ] Return exact classifications, blockers/exits, threadability, vectors, and skill dispositions for Slices 471-488.
+- [x] Pin the exact source/test identities and all callers.
+- [x] Record Map/Set identity, mutation, insertion order, iterator behavior, numeric IDs/counts, path tokenization, regex/Unicode behavior, exceptions, and aliasing.
+- [x] Exercise duplicate paths, mutable term maps, hostile strings, iterator mutation, unsafe numbers, and post-return aliases.
+- [x] Return exact classifications, blockers/exits, threadability, vectors, and skill dispositions for Slices 471-488.
 
 ### Task 3: Pin and adjudicate Slices 489-497
 
@@ -108,10 +108,10 @@
 - Read: `packages-galerina/galerina-tools-myco/src/graph/store.ts`
 - Read: focused store/index contract tests and package boundary evidence.
 
-- [ ] Pin the exact source/test identities and all callers.
-- [ ] Record constant bytes, public declaration contracts, clamp semantics, platform path behavior, UTF-16 comparison, and physical String/Int limits.
-- [ ] Distinguish immutable primitive candidates from consumer filesystem authority; do not over-block constants or under-block active records.
-- [ ] Return exact classifications, blockers/exits, threadability, vectors, and skill dispositions for Slices 489-497.
+- [x] Pin the exact source/test identities and all callers.
+- [x] Record constant bytes, public declaration contracts, clamp semantics, platform path behavior, UTF-16 comparison, and physical String/Int limits.
+- [x] Distinguish immutable primitive candidates from consumer filesystem authority; do not over-block constants or under-block active records.
+- [x] Return exact classifications, blockers/exits, threadability, vectors, and skill dispositions for Slices 489-497.
 
 ### Task 4: Author, review, and publish the wave
 
@@ -121,9 +121,9 @@
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
-- [ ] If any exact candidate is admitted, write it through `writing-fungi`, strict-check it, and prove candidate-specific physical differential evidence; otherwise write no `.fungi`.
-- [ ] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
+- [x] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
+- [x] No exact candidate is admitted under mirror custody; no `.fungi` was authored.
+- [x] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
 - [ ] Commit authored evidence separately from registered owner outputs.
 - [ ] Run all registered graph/owner publishers, the bounded close matrix, Myco refresh, and codebase-memory exact-head re-index at Slice 497.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 498 after the bounded close.
