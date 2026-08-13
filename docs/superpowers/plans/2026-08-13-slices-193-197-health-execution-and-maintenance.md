@@ -86,8 +86,8 @@ private Fungi skills and governed Markdown receipts.
 - [x] Write one exact receipt per method, including source observations,
   decision/effect ledger, blocker, threadability and retained TypeScript exit.
 - [x] Update the live register and TODO without claiming whole-file retirement.
-- [ ] Run receipt, staged-path and private-document checks.
-- [ ] Commit only bounded authored documents.
+- [x] Run receipt, staged-path and private-document checks.
+- [x] Commit only bounded authored documents.
 
 ### Task 4: Close the Slice 197 maintenance boundary
 
@@ -100,10 +100,10 @@ private Fungi skills and governed Markdown receipts.
 - Produces: current bounded owners and an explicit `UNKNOWN` entry for any
   unavailable navigation index.
 
-- [ ] Run retirement and conversion-queue owners individually.
-- [ ] Run package, project, KB and semantic graph owners individually; do not
+- [x] Run retirement and conversion-queue owners individually.
+- [x] Run package, project, KB and semantic graph owners individually; do not
   invoke crash-linked `graph-all`.
-- [ ] Run dev-tool/Fungi inventories, code-index, component-health, status,
+- [x] Run dev-tool/Fungi inventories, code-index, component-health, status,
   roadmap/subway, canonical counts, receipts and path/private-document guards.
 - [ ] Commit owner outputs, rerun exact freshness checks at final `HEAD`, and
   refresh Myco once.

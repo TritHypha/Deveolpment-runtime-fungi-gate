@@ -32,10 +32,18 @@ counts or open items that a newer section explicitly supersedes.
   derived health result.
 - [ ] Retain TypeScript and every route/consumer. Focused evidence grants no
   whole-file retirement, production, release or push authority.
-- [ ] Run retirement/queue, graph, inventory, index, component-health, status,
+- [x] Run retirement/queue, graph, inventory, index, component-health, status,
   roadmap/subway and canonical-count owners individually at this Slice 197
-  boundary. Do not invoke crash-linked aggregate lanes; repository-wide
-  closure remains `UNKNOWN`.
+  boundary. Current checks report 1,486/1,486 paths, 100/201 package outputs,
+  5/5 project outputs, 4/4 KB outputs, 9,630 graph nodes with zero violations,
+  172 tools / 40 proofs, 147 Fungi files, 3/3 semantic outputs with 974 tests,
+  974 codes, three percentage sections, 5/5 subway outputs and 7/7 canonical
+  count consumers at 9,612 tests.
+- [ ] Commit the refreshed owner outputs, rerun their exact checks at final
+  `HEAD`, then refresh Myco once and prove Slice 197 is queryable. Codebase-
+  memory remains `UNKNOWN` after `Transport closed`; do not retry-storm or
+  substitute another graph. Crash-linked aggregate lanes remain excluded, so
+  repository-wide closure stays `UNKNOWN`.
 
 ### Slices 183-192 observability health ingress - 2026-08-13
 
