@@ -3500,3 +3500,34 @@ now require positive typed proof that each prerequisite check executed on one
 immutable snapshot. The Slice 322 individual owner matrix is current: queue
 1,486/1,486; graph 9,768 nodes / 9,903 edges / zero violations; receipts
 262/262; roadmap 5/5 and Golden 11/11. Repository closure stays `UNKNOWN`.
+
+## Fungi conversion checkpoint through Slice 347 - 2026-08-13
+
+The governed ledger now accounts Slices 33-347 without double-counting prior
+Slice 39 `isServerOnlyImport`. The wave closes the remaining 11 unique JS
+target symbols, all 13 native target symbols and the first photonic target
+declaration. Nine erased aliases/interfaces are `NO_RUNTIME_BEHAVIOR`; the 16
+runtime tables/helpers retain precise physical and hostile-boundary blockers.
+No placeholder Fungi or execution authority was manufactured.
+
+Fresh JS **13/13**, native **7/7** and photonic **8/8** focused tests pass with
+their package typechecks. These are regression baselines, not conversion or
+physical admission proof. None of the three packages owns an exact Fungi, GIR,
+physical `.slide`, independent re-admission or VOK twin.
+
+Fresh hostile evidence keeps the runtime scopes blocked. JS invalid or skipped
+prerequisites can still render named checks as passed; sparse arrays skip
+validation; builtin subpaths and module-only imports evade the plan scan; and
+reports alias caller evidence. Native inherited records pass, ABI getters are
+reread, bridge policy accepts wrong classes and rogue ABI/path claims, artifact
+paths have no containment policy, and report evidence aliases caller arrays and
+bridge objects. The photonic target alias is erased and has no runtime decoder.
+
+The slice-close audit now permits the binding fail-closed `UNKNOWN`
+threadability state and `N/A` for declarations that execute nothing; focused
+audit tests pass **5/5** while unrecognised labels still refuse. Both private
+skills already cover the reusable lessons, so the wave records
+`NO_SKILL_UPDATE`; they remain private and unpushed. Individual owner refresh
+is pending. Adjacent test `.mjs` queue entries remain unresolved and
+repository-wide closure remains `UNKNOWN`; excluded crash-linked aggregates
+are not substitutes for the individual evidence matrix.

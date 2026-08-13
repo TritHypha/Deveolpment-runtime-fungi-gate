@@ -4,6 +4,36 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 323-347 JS, native and photonic targets - 2026-08-13
+
+- [x] Account 25 unique scopes: the remaining 11 JS symbols, all 13 native
+  symbols and `PhotonicActualTarget`; retain `isServerOnlyImport` solely at
+  prior Slice 39 with zero duplicate queue credit.
+- [x] Prove JS **13/13**, native **7/7** and photonic **8/8** focused baselines.
+  No scoped package owns an exact Fungi/GIR/physical `.slide`/VOK twin and no
+  placeholder Fungi was created.
+- [x] Repair the slice-close audit so `UNKNOWN` is a valid fail-closed
+  threadability result and erased declarations can truthfully record `N/A`;
+  focused audit tests pass **5/5** and existing receipts remain green.
+- [ ] **Priority JS fail-closed repair:** validate one exact immutable plan,
+  module and adapter snapshot; positively prove every named check executed;
+  cover bare builtin subpaths, module-import evidence, repeated getters,
+  sparse/wrong-class arrays and copied receipt-bound report output.
+- [ ] **Priority native border repair:** exact-decode target, artifact and
+  bridge records; capture once; bound arrays/text; define canonical path and
+  containment policy; bind selected ABI/profile to the exact artifact, target,
+  digest and VOK evidence; return one immutable report snapshot.
+- [ ] Replace the five legacy `Galerina_NATIVE_*` diagnostic codes with owned
+  live `FUNGI-CATEGORY-NNN` registry entries before native validation can be
+  promoted beyond planning evidence.
+- [ ] Add a runtime decoder for `PhotonicActualTarget` before any execution
+  plan treats its six-label TypeScript alias as admitted target evidence.
+- [ ] Give adjacent package test `.mjs` entries a governed harness
+  classification or exclusion before literal all-TS/MJS closure can be claimed.
+- [ ] Complete the individual Slice 347 owner matrix, roadmap/subway refresh
+  and post-commit Myco refresh. Crash-linked aggregate lanes remain excluded;
+  repository-wide closure remains `UNKNOWN`.
+
 ### Slices 298-322 CPU, GPU and JS target contracts - 2026-08-13
 
 - [x] Account 25 unique scopes; retain `canUseLowBitCpuPath` solely at prior

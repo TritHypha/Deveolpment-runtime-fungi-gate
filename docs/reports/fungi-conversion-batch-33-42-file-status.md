@@ -1,12 +1,13 @@
-# Fungi Conversion Batch 33-322 File Status
+# Fungi Conversion Batch 33-347 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-298-322-cpu-gpu-js.md`](../superpowers/plans/2026-08-13-slices-298-322-cpu-gpu-js.md).
-Slices 298-322 and the Slice 322 individual graph/index/roadmap maintenance
-boundary are complete. Crash-linked aggregate lanes remain excluded.
+[`../superpowers/plans/2026-08-13-slices-323-347-js-native-photonic.md`](../superpowers/plans/2026-08-13-slices-323-347-js-native-photonic.md).
+Slices 323-347 are adjudicated; the Slice 347 individual
+graph/index/roadmap maintenance boundary is pending. The prior 298-322 plan is
+retained in repository history. Crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -324,6 +325,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 320 | `packages-galerina/galerina-target-js/src/index.ts#FrameworkAdapterMetadata` | not created | declaration accounted | Erased adapter metadata supplies no identity or optional text admission. | `NO_RUNTIME_BEHAVIOR` |
 | 321 | `packages-galerina/galerina-target-js/src/index.ts#JsBundleCheckOutcome` | not created | declaration accounted | Erased mutable Boolean does not prove a check executed. | `NO_RUNTIME_BEHAVIOR` |
 | 322 | `packages-galerina/galerina-target-js/src/index.ts#JsBundleReport` | not created | declaration accounted | Erased report supplies no deep snapshot or positive check receipts. | `NO_RUNTIME_BEHAVIOR` |
+| 323 | `packages-galerina/galerina-target-js/src/index.ts#JsTargetDiagnosticSeverity` | not created | declaration accounted | Erased severity alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 324 | `packages-galerina/galerina-target-js/src/index.ts#JsTargetDiagnostic` | not created | declaration accounted | Erased diagnostic interface supplies no exact bounded record. | `NO_RUNTIME_BEHAVIOR` |
+| 325 | `packages-galerina/galerina-target-js/src/index.ts#JS_RUNTIMES` | not created | not created | Ordered runtime table lacks an admitted String membership/message ABI. | `BLOCKED` |
+| 326 | `packages-galerina/galerina-target-js/src/index.ts#JS_MODULE_FORMATS` | not created | not created | Ordered module-format table lacks an admitted String membership/message ABI. | `BLOCKED` |
+| 327 | `packages-galerina/galerina-target-js/src/index.ts#SOURCE_MAP_MODES` | not created | not created | Ordered source-map table lacks an admitted String membership/message ABI. | `BLOCKED` |
+| 328 | `packages-galerina/galerina-target-js/src/index.ts#SERVER_ONLY_MODULES` | not created | not created | Mutable 28-name deny Set lacks a complete versioned policy and physical membership ABI. | `BLOCKED` |
+| 329 | `packages-galerina/galerina-target-js/src/index.ts#jsDiagnostic` | not created | not created | Mutable optional-path diagnostic record lacks an admitted exact ABI. | `BLOCKED` |
+| 330 | `packages-galerina/galerina-target-js/src/index.ts#validateJsOutputPlan` | not created | not created | Host records, early exits, repeated reads, sparse arrays and diagnostics lack physical parity. | `BLOCKED` |
+| 331 | `packages-galerina/galerina-target-js/src/index.ts#validateEsModuleMetadata` | not created | not created | Host module records, text and arrays lack bounded exact admission. | `BLOCKED` |
+| 332 | `packages-galerina/galerina-target-js/src/index.ts#validateFrameworkAdapterMetadata` | not created | not created | Optional metadata and hostile text records lack exact admission. | `BLOCKED` |
+| 333 | `packages-galerina/galerina-target-js/src/index.ts#createJsBundleReport` | not created | not created | Missing-error check derivation, unbounded traversal and aliased evidence remain blocked. | `BLOCKED` |
+| 334 | `packages-galerina/galerina-target-native/src/index.ts#NativeAbi` | not created | declaration accounted | Erased ABI alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 335 | `packages-galerina/galerina-target-native/src/index.ts#NativeTarget` | not created | declaration accounted | Erased target interface supplies no exact runtime record. | `NO_RUNTIME_BEHAVIOR` |
+| 336 | `packages-galerina/galerina-target-native/src/index.ts#NativeArtifact` | not created | declaration accounted | Erased artifact interface supplies no exact runtime record. | `NO_RUNTIME_BEHAVIOR` |
+| 337 | `packages-galerina/galerina-target-native/src/index.ts#NativeTargetReport` | not created | declaration accounted | Erased report supplies no immutable receipt-bound evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 338 | `packages-galerina/galerina-target-native/src/index.ts#NativeDiagnosticSeverity` | not created | declaration accounted | Erased severity alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 339 | `packages-galerina/galerina-target-native/src/index.ts#NativeDiagnostic` | not created | declaration accounted | Erased diagnostic interface supplies no exact bounded record. | `NO_RUNTIME_BEHAVIOR` |
+| 340 | `packages-galerina/galerina-target-native/src/index.ts#NATIVE_ABIS` | not created | not created | Ordered ABI table lacks a physical String membership/message ABI. | `BLOCKED` |
+| 341 | `packages-galerina/galerina-target-native/src/index.ts#NATIVE_EXECUTION_MODES` | not created | not created | Ordered execution-mode table lacks a physical String membership/message ABI. | `BLOCKED` |
+| 342 | `packages-galerina/galerina-target-native/src/index.ts#NATIVE_FORMATS` | not created | not created | Ordered format table lacks a physical String membership/message ABI. | `BLOCKED` |
+| 343 | `packages-galerina/galerina-target-native/src/index.ts#nativeDiagnostic` | not created | not created | Mutable optional-path diagnostic record lacks an admitted exact ABI. | `BLOCKED` |
+| 344 | `packages-galerina/galerina-target-native/src/index.ts#validateNativeTarget` | not created | not created | Host record, UTF-16, repeated-read and diagnostic semantics lack physical parity. | `BLOCKED` |
+| 345 | `packages-galerina/galerina-target-native/src/index.ts#validateNativeArtifact` | not created | not created | Nested artifact/path/target records lack exact physical admission. | `BLOCKED` |
+| 346 | `packages-galerina/galerina-target-native/src/index.ts#createNativeTargetReport` | not created | not created | Unbounded artifacts, partial bridge policy and aliased report evidence remain blocked. | `BLOCKED` |
+| 347 | `packages-galerina/galerina-target-photonic/src/index.ts#PhotonicActualTarget` | not created | declaration accounted | Erased six-label target alias performs no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
 
 ## Shared implementation and governance files
 
@@ -677,3 +703,12 @@ not one of Slices 33–43 and no Fungi asset was produced.
 - Private skill commits `8355bf7` and `82df925` require positive proof that a
   prerequisite check executed on the same snapshot; absent diagnostics cannot
   imply PASS. Both remain private and unpushed.
+- Slices 323-347 finish the unique JS target surface, account the complete
+  native target source and begin photonic declarations. Nine erased
+  declarations are `NO_RUNTIME_BEHAVIOR`; 16 runtime tables/helpers retain
+  exact record, String, collection, mutation, bounded-work and physical-profile
+  blockers. JS **13/13**, native **7/7** and photonic **8/8** pass, but no
+  scoped package owns an exact Fungi/GIR/physical `.slide`/VOK twin.
+- The receipt audit now accepts fail-closed `UNKNOWN` and declaration-only
+  `N/A` threadability while refusing unknown labels. Skill review is
+  `NO_SKILL_UPDATE`; current private rules already cover all reusable findings.
