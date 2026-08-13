@@ -5,8 +5,8 @@ design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current 25-slice decision and maintenance plan is
 [`../superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md`](../superpowers/plans/2026-08-13-slices-248-272-observability-substrate-accelerator.md).
-Slices 248-272 are admitted; Slice 272 graph/index/roadmap maintenance is the
-active close boundary. Crash-linked aggregate lanes remain excluded.
+Slices 248-272 and the Slice 272 individual graph/index/roadmap maintenance
+boundary are complete. Crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
