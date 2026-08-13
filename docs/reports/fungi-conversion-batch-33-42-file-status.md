@@ -118,9 +118,10 @@ still requires its own strict, physical, VOK and differential proof.
 
 The Slice 87 bounded owner exit is complete. The authored TODO and active
 roadmap are updated; every listed generated owner is regenerated and
-independently current. Final navigation-index publication follows the last
-owned output commit. The excluded aggregate lanes are not substitutes for
-these bounded owners, so repository-wide closure remains `UNKNOWN`.
+independently current. The final codebase graph and Myco navigation indexes
+are refreshed and are reverified at the last owned output commit. The excluded
+aggregate lanes are not substitutes for these bounded owners, so
+repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
@@ -131,7 +132,7 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 143 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 966 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`d2d955e` writing skill; `9654753` translation skill; both private workflows green, protected `main` requires `verify`, and GitHub reports `PRIVATE`) |
-| Final codebase graph and Myco navigation refresh | `PENDING` final post-output-commit refresh; do not infer freshness from the superseded Slice 62 build point. |
+| Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
 ## Verified refusal retained outside the batch
 
