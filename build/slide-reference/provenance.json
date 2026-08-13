@@ -1,8 +1,8 @@
 {
   "tool": "verify-slide-reference-evidence",
   "authority": "NONE",
-  "gitCommit": "54df1fac15a9639a0adef3ebd5219c90a6a492bd",
-  "builtAt": "2026-08-13T07:48:47.000Z",
+  "gitCommit": "fe560389fe4cf78f4ed46ef3bc4c1eadd866df33",
+  "builtAt": "2026-08-13T16:36:18.000Z",
   "node": "v24.18.0",
   "externalInputDigest": "8def230609f48f1b348fb5eaeb20ec7241c545b46c094b18f63eea190864bc09",
   "externalDocumentCount": 91
