@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-69 File Status
+# Fungi Conversion Batch 33-70 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -190,3 +190,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   environment configuration callers depend on a runtime-key read from an open
   unknown-valued record and the distinct `true`/`false`/`undefined` result; the
   pinned physical surface has neither that lookup nor `Option<Bool>`.
+- Slice 70 remains blocked without a placeholder asset. Tritsocket's exported
+  `packedLen` accepts the full JavaScript binary64 domain and applies addition,
+  division and `Math.floor`; signed-i32 `Int` cannot conserve its fractions,
+  non-finite values, signed zero or wider intermediates.

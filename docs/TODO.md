@@ -141,7 +141,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_OPEN_RECORD_OPTION_BOOL_ABI`. The live configuration helper uses
   a runtime key over `Record<string, unknown>` and preserves true, false and
   absence; a closed record, false-as-absence or host projection is not parity.
-- [ ] Continue Slices 70-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 70 `packedLen` as
+  `BLOCKED_BY_BINARY64_FLOOR_DOMAIN`. The exported Tritsocket helper applies
+  JavaScript addition, division and `Math.floor` to the complete `number`
+  domain; signed-i32 `Int` or caller-only array-length proof is not parity.
+- [ ] Continue Slices 71-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
