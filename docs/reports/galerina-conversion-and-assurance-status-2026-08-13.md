@@ -35,15 +35,15 @@ exhaustive typed `check` desugaring, not direct `flip` support.
 - Slice 90 physical-proof build point: `84f4524e` on
   `codex/rd-0792-synthesize-only`; generated outputs are bound to their
   relevant-input provenance rather than treated as source authority.
-- Conversion census: **1,482/1,482** executable-family paths classified;
-  519 TypeScript-family, 951 MJS and 12 JS.
+- Conversion census: **1,483/1,483** executable-family paths classified;
+  519 TypeScript-family, 952 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins
-  and at least 145 Fungi sources in package `src` trees; the registered owner
-  must regenerate the exact current count before closure publication.
-- Queue: zero whole-file candidates, seven governed symbol candidates and 852
+  and 145 Fungi sources in package `src` trees.
+- Queue: zero whole-file candidates, seven governed symbol candidates and 853
   file-level blockers.
-- Slice receipts: Slice 90 adds one governed receipt; the registered owner must
-  regenerate the exact post-baseline total before closure publication.
+- Slice receipts: **30/30** governed receipts pass after Slice 90 publication.
+- Semantic assurance graph: **3/3** owned outputs are current with 100 packages,
+  969 test nodes and non-authorizing local K3 evidence `1`.
 - Latest affected owner lanes: Tower-Citizen **509/509** and the dedicated
   typed-Verdict physical SLIDE/VOK lane **1/1**.
 - Canonical aggregate remains **100 packages / 9,612 tests** from its recorded

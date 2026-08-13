@@ -136,10 +136,10 @@ these bounded owners, so repository-wide closure remains `UNKNOWN`.
 |---|---|
 | `docs/TODO.md` | `DONE` |
 | `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` (authored section and generated subway block) |
-| Retirement and conversion queue | `DONE` at 1,482/1,482, seven scoped candidates and 852 blockers |
+| Retirement and conversion queue | `DONE` at 1,483/1,483, seven scoped candidates and 853 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
-| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 144 Fungi files |
-| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 967 test nodes, three sections, current status blocks, 974 codes and 5/5 |
+| Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 145 Fungi files |
+| Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 969 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody and record the K3 negation profile distinction) |
 | Final codebase graph and Myco navigation refresh | `DONE`: the moderate code graph conserves expected nodes and reports `stale: false` at the exact final commit; Myco indexes the non-vendored repository corpus and reports a current build. Exact live counts are read from the tools rather than frozen as authority here. |
 
@@ -151,10 +151,11 @@ not one of Slices 33–43 and no Fungi asset was produced.
 
 ## Current focused evidence
 
-- Governed focused physical lane: `8/8` passed, `0` failed, `0` skipped. The
-  eight checks are four complete physical proofs, three exact compile refusals,
-  and one executable profile-boundary check; the refusals are not conversion
-  success.
+- Slice 90's dedicated typed-Verdict physical SLIDE/VOK lane passes `1/1`,
+  with every K3 row and the complete hostile mutation/refusal matrix inside
+  that one bounded test. Earlier shared classifier-lane counts remain their
+  own historical checkpoints; they are not combined into a manufactured
+  current aggregate.
 - Slice 44 proves all eight declared Omni labels plus hostile strings through
   the differential and physical surfaces.
 - Slice 65 re-tests Slice 45's transition decision. All 49 declared pairs plus

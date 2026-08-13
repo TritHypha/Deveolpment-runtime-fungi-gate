@@ -19,6 +19,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Update and verify both private Fungi skills at `dc2ef82f` and `30eb4dd3`
   with the canonical `flip` versus pinned physical-profile distinction. No
   publication or push authority follows.
+- [x] Refresh the bounded owners after Slice 90: 1,483/1,483 executable-family
+  paths, 145 Fungi sources, seven scoped candidates, 853 blockers, 30/30
+  governed receipts and 969 semantic test nodes. These focused facts do not
+  replace the still-UNKNOWN repository-wide closure lane.
 - [ ] Keep TypeScript and its consumers active until an explicit consumer
   switch, whole-file accounting and retirement proof authorizes removal.
 - [ ] Add direct canonical `flip(verdict)` parsing/lowering to the independent
