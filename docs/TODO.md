@@ -34,9 +34,10 @@ counts or open items that a newer section explicitly supersedes.
   5/5 subway outputs. Crash-linked `graph-all`, full tooling, normal
   phase-close and monolithic memory evaluation were not invoked;
   repository-wide closure remains `UNKNOWN`.
-- [ ] Refresh Myco after the generated-owner commit. Codebase-memory returned
-  `Transport closed`; its exact final-HEAD freshness remains `UNKNOWN` and no
-  retry storm is authorized.
+- [x] Refresh Myco after the generated-owner commit: **5,460 files / 83,348
+  terms**, with Slice 172 queryable. Codebase-memory returned `Transport
+  closed`; its exact final-HEAD freshness remains `UNKNOWN` and no retry storm
+  is authorized.
 
 ### Slices 158-167 hybrid and neutral bridge types - 2026-08-13
 

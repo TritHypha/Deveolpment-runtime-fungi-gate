@@ -223,14 +223,15 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 95 bounded decision is complete. The authored TODO, active roadmap
-and live conversion register are updated. Focused source, physical boundary,
-roadmap, graph and generated-owner checks are current at their relevant input
-build points. The final codebase-memory navigation refresh returned
-`Transport closed` twice, so its exact final-HEAD freshness remains `UNKNOWN`.
-The separate Myco index is readable, but it exposes no equivalent Git build-
-point proof. The excluded aggregate lanes are not substitutes for these
-bounded owners, so repository-wide closure remains `UNKNOWN`.
+The Slice 172 bounded decision and scheduled 25-slice maintenance boundary are
+complete. The authored TODO, active roadmap and live conversion register are
+updated. Focused source, roadmap, graph and generated-owner checks are current
+at their relevant input build points. The latest codebase-memory lookup
+returned `Transport closed`, so its exact final-HEAD freshness remains
+`UNKNOWN`. The separate Myco index is refreshed and Slice 172 is queryable,
+but Myco exposes no equivalent Git build-point proof. The excluded aggregate
+lanes are not substitutes for these bounded owners, so repository-wide closure
+remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
@@ -240,8 +241,8 @@ bounded owners, so repository-wide closure remains `UNKNOWN`.
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
-| Private Fungi skill repositories | `DONE` (`dc2ef82f` writing skill; `30eb4dd3` translation skill; both remain private custody; Slice 95 required no skill update) |
-| Final codebase graph and Myco navigation refresh | `UNKNOWN`: two moderate code-graph refresh attempts returned `Transport closed`, so no final-HEAD graph receipt exists. Myco remains readable at 5,354 files / 83,226 terms, but its status does not prove Git-HEAD equivalence. Retry the bounded graph refresh after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
+| Private Fungi skill repositories | `DONE` (`96054a97` writing skill; `1bd80388` translation skill; both remain private custody and unpushed; Slices 168-172 required no skill update) |
+| Final codebase graph and Myco navigation refresh | `PARTIAL`: codebase-memory returned `Transport closed`, so no final-HEAD structural-navigation receipt exists. Myco refreshed at 5,460 files / 83,348 terms before this report commit and resolves Slice 172, but its status does not prove Git-HEAD equivalence. Retry the bounded graph refresh only after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
 
 ## Verified refusal retained outside the batch
 
