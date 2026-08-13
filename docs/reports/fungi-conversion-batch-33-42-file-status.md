@@ -5,6 +5,16 @@ design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The active roadmap is updated once at the bounded batch exit.
 
+## Slice 63 entry gate
+
+The pin-bound SLIDE capability reconciliation is complete at reference commit
+`99a75a6` with a verified 91-file manifest and **1,015/1,015** SLIDE tests. The
+exact capability matrix is recorded in
+`slide-capability-reconciliation-slice-63-2026-08-13.md`. This permits candidate
+selection, not retirement or production authority. Aggregate roadmap, graph
+and index closure is deferred until the next 25-slice boundary; every slice
+still requires its own strict, physical, VOK and differential proof.
+
 ## Status vocabulary
 
 | Status | Meaning |

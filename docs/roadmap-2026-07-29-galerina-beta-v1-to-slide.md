@@ -35,10 +35,13 @@ private `verify` workflow, exposes private vulnerability reporting, and
 protects `main` with the required green check, linear history, resolved
 conversations and no administrative bypass. Both private workflows pass on the
 named commits, and GitHub reports both repositories as `PRIVATE`. This closes
-private repository custody only: Slice 63 has not started, and no TypeScript
-retirement, SLIDE/VOK admission, signing, production or release authority
-follows. The next permitted activity is the pin-bound SLIDE capability
-reconciliation matrix before any further slice.
+private repository custody only; no TypeScript retirement, signing, production
+or release authority follows. The pin-bound capability reconciliation is now
+complete at SLIDE `99a75a6`: the independently checked 91-file reference
+manifest and **1,015/1,015** SLIDE suite establish the exact bounded profile
+recorded in `reports/slide-capability-reconciliation-slice-63-2026-08-13.md`.
+Slice 63 may resume only within that profile and remains subject to physical
+`.slide` publication, independent VOK re-admission and differential proof.
 
 The prior thirty-second conversion slice uses local SLIDE `6de4d91` to
 publish, independently re-admit, and execute the app-kernel's exact private

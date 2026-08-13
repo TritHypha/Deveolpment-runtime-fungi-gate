@@ -104,9 +104,14 @@ counts or open items that a newer section explicitly supersedes.
   administrators cannot bypass the check.
 - [x] Enable private vulnerability reporting and retain the repository
   descriptions and topics as internal discovery metadata.
-- [ ] Keep Slice 63 paused until the pin-bound SLIDE capability reconciliation
-  matrix is complete. Private skill custody does not authorize conversion,
-  retirement, signing, production admission or release.
+- [x] Reconcile the pin-bound SLIDE capability matrix before Slice 63. The
+  reference pin now binds SLIDE `99a75a6`, its verified 91-file manifest and
+  the exact capability ruling in
+  `reports/slide-capability-reconciliation-slice-63-2026-08-13.md`. This does
+  not authorize retirement, signing, production admission or release.
+- [ ] Resume Slice 63 with a source candidate whose complete boundary fits the
+  reconciled profile; retain focused proof per slice and defer aggregate
+  roadmap, graph and index closure to the next 25-slice boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
 
