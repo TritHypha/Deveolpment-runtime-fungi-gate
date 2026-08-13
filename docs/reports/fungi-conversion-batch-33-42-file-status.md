@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33-70 File Status
+# Fungi Conversion Batch 33-71 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -194,3 +194,7 @@ not one of Slices 33–43 and no Fungi asset was produced.
   `packedLen` accepts the full JavaScript binary64 domain and applies addition,
   division and `Math.floor`; signed-i32 `Int` cannot conserve its fractions,
   non-finite values, signed zero or wider intermediates.
+- Slice 71 remains blocked without a placeholder asset. Its three governance
+  labels fit the String match ceiling, but the exact function is a type guard
+  over all JavaScript `unknown` values; a String-only flow or host type
+  pre-filter would narrow or retain the decision in TypeScript.
