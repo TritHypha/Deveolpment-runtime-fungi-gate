@@ -1,0 +1,8 @@
+@version 1
+pure flow vNotVerdict(candidateVerdict: Verdict) -> Verdict {
+  check(candidateVerdict) {
+    deny: { return Verdict.Allow }
+    ambig: { return Verdict.Unknown }
+    if: { return Verdict.Deny }
+  }
+}
