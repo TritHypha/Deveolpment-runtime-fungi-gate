@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 123-132 TPL support and bulk-operation adjudication - 2026-08-13
+
+- [x] Classify `SecurityTrap` and `TPLIntegrityFault` as
+  `BLOCKED_BY_JAVASCRIPT_ERROR_IDENTITY_ABI`; preserve class identity,
+  `instanceof`, name, exact message, stack/cause observations and catch routes.
+- [x] Classify `TritState` and nominal `Trit` at their arithmetic enum-object
+  and brand exits; never substitute governance Verdict or unbranded Int.
+- [x] Classify `encodeTrit`, `decodeTrit` and `assertTrit` at their exact
+  binary64, arithmetic-brand, two-bit encoding and JavaScript-fault exits.
+- [x] Classify `tmacVector`, `loadWeights` and `erase` at their stateful
+  typed-array, numeric-array mutation and transactional reset-capability exits.
+- [x] Prove TypeScript typecheck, the five focused files **56/56**, and complete
+  Tower-Citizen **515/515** with zero skips.
+- [x] Update both private Fungi skills with the reusable exact JavaScript Error
+  identity rule; private 3/3 tests and release audits pass at `8a418cd` and
+  `c065986`, with no push.
+- [ ] Add an explicit, independently admitted Error-identity mapping before
+  translating classes or catch routes whose behavior observes host Error facts.
+- [ ] Add exact arithmetic-Trit, binary64, typed-array/memory and active
+  capability transaction ABIs before reopening the remaining slices.
+- [ ] Keep TypeScript and every caller active; no consumer switch, retirement,
+  production, release, signing or push authority follows.
+- [ ] Defer aggregate roadmap, subway, project-graph, code-index and re-index
+  owners to Slice 147 under the owner-approved 25-slice cadence.
+
 ### Slices 113-122 TPL state-boundary adjudication - 2026-08-13
 
 - [x] Classify arithmetic `consensusTrit` as

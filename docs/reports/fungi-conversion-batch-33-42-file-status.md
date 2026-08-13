@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-122 File Status
+# Fungi Conversion Batch 33-132 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-113-122-tpl-state-boundaries.md`](../superpowers/plans/2026-08-13-slices-113-122-tpl-state-boundaries.md).
+[`../superpowers/plans/2026-08-13-slices-123-132-tpl-support-bulk.md`](../superpowers/plans/2026-08-13-slices-123-132-tpl-support-bulk.md).
 The active roadmap is updated once at the bounded batch exit.
 
 ## Slice 63 entry gate
@@ -123,6 +123,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 120 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.eraseOnTrap` | not created | erase-on-failure proof retained | The generic callback executes once and every failure erases complete state before the original failure crosses the boundary. Bare Result propagation is insufficient. | `BLOCKED_BY_HIGHER_ORDER_ERASE_ON_FAILURE_ABI` |
 | 121 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.setTrit` | not created | value/bounds/mutation/cleanup proof retained | Exact two-bit read-modify-write acts on live `Int32Array` state and erases the complete instance on any nested failure. | `BLOCKED_BY_TYPED_MEMORY_MUTATION_ABI` |
 | 122 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.gate` | not created | gate/governance/audit proof retained | The method coordinates packed state, live GovernanceEnforcer, exact AuditLogger records, mutation and erase-on-failure. Host projection retains authority. | `BLOCKED_BY_ACTIVE_GOVERNANCE_AUDIT_ABI` |
+| 123 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#SecurityTrap` | not created | exact error behavior retained | JavaScript Error-class identity, prefixed message, name, `instanceof` and stack observations have no admitted physical equivalent. | `BLOCKED_BY_JAVASCRIPT_ERROR_IDENTITY_ABI` |
+| 124 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLIntegrityFault` | not created | exact integrity-error behavior retained | JavaScript Error-class identity and its distinct catch route cannot be reconstructed by a host wrapper without changing authority. | `BLOCKED_BY_JAVASCRIPT_ERROR_IDENTITY_ABI` |
+| 125 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TritState` | not created | exhaustive enum behavior retained | Arithmetic Trit enum-object identity and its Reject/Hold/Commit members are not interchangeable with governance Verdict or plain Int. | `BLOCKED_BY_ARITH_TRIT_ENUM_OBJECT_ABI` |
+| 126 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#Trit` | not created | nominal type behavior retained | The nominal arithmetic Trit brand is erased by the current physical scalar profile. | `BLOCKED_BY_ARITH_TRIT_BRAND_ABI` |
+| 127 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#encodeTrit` | not created | encoding/failure vectors retained | Exact arithmetic-brand ingress, two-bit encoding and distinct JavaScript Error behavior lack one admitted boundary. | `BLOCKED_BY_BINARY64_TRIT_ENCODING_FAULT_ABI` |
+| 128 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#decodeTrit` | not created | decoding/failure vectors retained | Exact binary64 code validation and distinct illegal-code fault behavior cannot be narrowed to physical Int. | `BLOCKED_BY_BINARY64_TRIT_DECODING_FAULT_ABI` |
+| 129 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#assertTrit` | not created | validation/failure vectors retained | The guard must preserve binary64 input behavior, nominal arithmetic identity and the exact JavaScript Error exit. | `BLOCKED_BY_BINARY64_TRIT_GUARD_ABI` |
+| 130 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.tmacVector` | not created | vector/state/T-MAC proof retained | Stateful typed-array traversal and mutation, retained scale and exact output identity have no admitted physical transaction. | `BLOCKED_BY_TYPED_ARRAY_STATEFUL_TMAC_ABI` |
+| 131 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.loadWeights` | not created | load/mutation/failure proof retained | JavaScript number-array validation and active packed-memory mutation cannot be projected through the host without changing semantics. | `BLOCKED_BY_NUMBER_ARRAY_MUTATION_ABI` |
+| 132 | `packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#TPLSimulator.erase` | not created | erase/reset proof retained | Packed state, canaries, binary64 scale and live governance reset form one observable cleanup transaction. | `BLOCKED_BY_TYPED_MEMORY_RESET_CAPABILITY_ABI` |
 
 ## Shared implementation and governance files
 
@@ -368,3 +378,9 @@ not one of Slices 33–43 and no Fungi asset was produced.
   crosses the boundary; a plain Result or host wrapper is not parity. The
   focused lane passes **49/49**, TypeScript typecheck passes, and Tower-Citizen
   remains **515/515** with zero skips.
+- Slices 123-132 remain blocked without placeholder assets. They conserve exact
+  JavaScript Error identity, arithmetic Trit enum/brand identity, binary64
+  encoding guards, stateful typed-array T-MAC/load behavior and transactional
+  erase/reset effects. TypeScript typecheck, the five focused files **56/56**
+  and complete Tower-Citizen **515/515** pass with zero skips. The reusable
+  JavaScript Error-identity rule is verified in both private Fungi skills.
