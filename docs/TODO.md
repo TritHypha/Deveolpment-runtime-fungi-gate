@@ -182,7 +182,11 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED_BY_UNKNOWN_ARCHITECTURE_GUARD_ABI`. Physical String ingress cannot
   preserve the source guard's total JavaScript `unknown` domain, and the
   existing Fungi admission fold consumes a host-computed validation Boolean.
-- [ ] Continue Slices 80-87 with non-floor candidates and focused evidence;
+- [x] Adjudicate Slice 80 `stringArrayIsCanonical` as
+  `BLOCKED_BY_UNKNOWN_STRING_ARRAY_CANONICALITY_ABI`. The physical profile has
+  no immutable `Array<String>` ingress/traversal contract for the untrusted
+  nested array, label validation, allow-list membership and strict ordering.
+- [ ] Continue Slices 81-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
