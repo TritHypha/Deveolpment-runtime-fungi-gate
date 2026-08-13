@@ -47,8 +47,13 @@ test("missing, duplicate and vague skill dispositions refuse", () => {
   }
 });
 
-test("unknown threadability and incomplete closure refuse", () => {
-  assert.equal(run(fixture(base.replace("PARALLEL_PURE", "UNKNOWN"))).status, 1);
+test("unknown and non-runtime threadability are valid fail-closed receipts", () => {
+  assert.equal(run(fixture(base.replace("PARALLEL_PURE", "UNKNOWN"))).status, 0);
+  assert.equal(run(fixture(base.replace("PARALLEL_PURE", "N/A"))).status, 0);
+});
+
+test("unrecognised threadability and incomplete closure refuse", () => {
+  assert.equal(run(fixture(base.replace("PARALLEL_PURE", "MAYBE"))).status, 1);
   assert.equal(run(fixture(base.replace("COMPLETE", "INCOMPLETE"))).status, 1);
 });
 

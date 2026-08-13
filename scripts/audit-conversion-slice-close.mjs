@@ -54,7 +54,7 @@ for (const name of files) {
     violations.push(`${name}: invalid skill disposition`);
   }
   if (threadability.length !== 1
-      || !/^(?:PARALLEL_PURE|ASYNC_HAPPY_PATH|ISOLATED_SERVICE|SERIAL_HARD_PATH)$/u.test(threadability[0] ?? "")) {
+      || !/^(?:PARALLEL_PURE|ASYNC_HAPPY_PATH|ISOLATED_SERVICE|SERIAL_HARD_PATH|UNKNOWN|N\/A)$/u.test(threadability[0] ?? "")) {
     violations.push(`${name}: invalid threadability`);
   }
   if (classification.length !== 1
