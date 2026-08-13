@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Account for the next 50 unique conversion scopes across the new Myco broken-link scanner/repair command and tests, Tower AI-governance runtime, Tower audit logger, and the first complete bridge-attestation family.
+**Goal:** Account for the next 50 unique conversion scopes across the new Myco broken-link scanner/repair command and tests, Tower AI-governance and audit class boundaries, capability grants, compiled policy, the uncredited bridge delegation/context scopes, and the data-plane border.
 
 **Architecture:** Three read-only workers produce pinned source dossiers in parallel while the root agent alone writes receipts, runs focused checks, reconciles independent reviews, publishes owners, commits, and refreshes both indexes. Nested scopes are used only where they own separately observable callback, capability, or wrapper behavior.
 
@@ -58,36 +58,41 @@
 | 615 | `AiGovernanceResult` |
 | 616 | `isTrit` |
 | 617 | `governAiProposal` |
-| 618 | `TowerAuditEvent` |
-| 619 | `EgressSink` |
-| 620 | `AuditFilter` |
-| 621 | `AuditLoggerOptions` |
-| 622 | `AuditLogger` |
-| 623 | `AuditLogger.constructor` |
-| 624 | `AuditLogger.append` |
-| 625 | `AuditLogger.flush` |
-| 626 | `AuditLogger.pendingCount` |
-| 627 | `AuditLogger.load` |
-| 628 | `AuditLogger.exec` |
-| 629 | `AuditLogger.trap` |
-| 630 | `AuditLogger.erase` |
-| 631 | `AuditLogger.query` |
-| 632 | `AuditLogger.logTransition` |
-| 633 | `AuditLogger.getLifecycle` |
-| 634 | `AttestationPolicy` |
-| 635 | `AttestationResult` |
-| 636 | `attestationHash` |
-| 637 | `signManifest` |
-| 638 | `verifyAttestation` |
-| 639 | `generateAttestationKeypair` |
-| 640 | `attestBridge` |
-| 641 | nested `attestBridge` delegating wrapper |
-| 642 | `BRIDGE_MLDSA_CONTEXT` |
-| 643 | `generateHybridAttestationKeypair` |
-| 644 | `signManifestHybrid` |
-| 645 | `verifyAttestationHybrid` |
-| 646 | `attestBridgeHybrid` |
-| 647 | nested `attestBridgeHybrid` delegating wrapper |
+| 618 | `AuditLogger` class boundary |
+| 619 | `CapabilityGrant` |
+| 620 | `SignedCapabilityGrant` |
+| 621 | `CAP_MLDSA_CONTEXT` |
+| 622 | `canonicalGrantString` |
+| 623 | `capabilityGrantHash` |
+| 624 | `signCapabilityGrant` |
+| 625 | `signCapabilityGrantHybrid` |
+| 626 | `verifyCapabilityGrant` |
+| 627 | `POL_HAS_ALLOWLIST` |
+| 628 | `POL_DENY_HOST_NATIVE` |
+| 629 | `POL_HAS_CALL_BUDGET` |
+| 630 | `POL_HAS_TOKEN_BUDGET` |
+| 631 | `POL_HAS_COST_CEILING` |
+| 632 | `PolicyTrap` |
+| 633 | `CompiledPolicy` |
+| 634 | `compilePolicy` |
+| 635 | nested `attestBridge` delegating wrapper |
+| 636 | `BRIDGE_MLDSA_CONTEXT` |
+| 637 | nested `attestBridgeHybrid` delegating wrapper |
+| 638 | `VaultManifestEntry` |
+| 639 | `VaultRegistry` |
+| 640 | `DataRow` |
+| 641 | `UserScope` |
+| 642 | `BorderPolicy` |
+| 643 | `vaultIsPublic` |
+| 644 | `admitRowVerdict` |
+| 645 | `admitRow` |
+| 646 | `intersectUserScope` |
+| 647 | `EMPTY_SCOPES` |
+
+Queue reconciliation: graph-first review proved that the initially proposed
+attestation symbols were already governed as Slices 150-160 and most audit
+members as Slices 135-149. They are dependencies only and receive no duplicate
+credit. Slices 635-637 are the three genuinely uncredited attestation scopes.
 
 ### Task 1: Adjudicate Slices 598-613
 
@@ -101,26 +106,29 @@
 - [ ] Record exact Markdown-link grammar, classification/repair order, filesystem/path/Map/RegExp semantics, CLI output/exit and test-runner effects.
 - [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 598-613.
 
-### Task 2: Adjudicate Slices 614-633
+### Task 2: Adjudicate Slices 614-634
 
 **Files:**
 - Read: `packages-galerina/galerina-tower-citizen/src/ai-governance.ts`
 - Read: `packages-galerina/galerina-tower-citizen/src/audit-logger.ts`
+- Read: `packages-galerina/galerina-tower-citizen/src/capability-grant.ts`
+- Read: `packages-galerina/galerina-tower-citizen/src/compiled-policy.ts`
 - Read: owning manifests, exports, callers and focused tests.
 
 - [ ] Pin exact ranges, callers, source/test digests, direct Tower custody, and physical evidence.
-- [ ] Record verdict provenance, structural record validation, mutable logger state, filesystem/egress/clock/JSON effects, lifecycle aggregation and failure ordering.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 614-633.
+- [ ] Record verdict provenance, active logger state, capability grant schemas/canonicalization/signatures, compiled Set/bit-table state and exact trap precedence.
+- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 614-634.
 
-### Task 3: Adjudicate Slices 634-647
+### Task 3: Adjudicate Slices 635-647
 
 **Files:**
 - Read: `packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts`
+- Read: `packages-galerina/galerina-tower-citizen/src/data-plane-border.ts`
 - Read: bridge-contract declarations, package boundary, callers and focused attestation tests.
 
 - [ ] Pin exact ranges, crypto/runtime dependencies, callers, test identities, direct Tower custody, and physical evidence.
-- [ ] Record canonical-manifest hashing, Ed25519 and ML-DSA key/signature semantics, policy/revocation decisions, dynamic imports, wrapper delegation and typed failure gaps.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 634-647.
+- [ ] Record wrapper delegation/context identity plus exact record, registry, Set, K3 admission, callback and ordered filtering semantics.
+- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, defects, and skill dispositions for Slices 635-647.
 
 ### Task 4: Author, verify, review, and publish the wave
 
