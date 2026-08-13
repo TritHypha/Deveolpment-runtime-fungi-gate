@@ -42,6 +42,10 @@ counts or open items that a newer section explicitly supersedes.
   exit/error receipts, every registered test executed once, and one final
   fail-closed conservation check. Repository-wide closure stays `UNKNOWN`
   until that owner passes at the final commit.
+- [ ] Preserve the status distinction: repository-wide closure `UNKNOWN` is
+  incomplete release-wide evidence, not a failed bounded check. Do not relabel
+  it `FAILED`, `PASS` or release-ready until the chunked resumable owner above
+  reaches an exact terminal result and conserves every registered lane.
 - [ ] Treat lower dated count and checkpoint statements as historical unless a
   current section or generated owner independently confirms them.
 
