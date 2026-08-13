@@ -28,9 +28,14 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Refuse malformed explicit ceilings instead of widening them; recompute or
   bind edge counts to the serialized snapshot, and close write-side
   symlink/junction redirection before save authority.
-- [ ] Publish all registered owners, pass the bounded close matrix, commit the
-  final build point, then refresh Myco and codebase-memory at that exact HEAD.
-  Repository-wide closure remains `UNKNOWN`.
+- [x] Publish all registered owners and pass the bounded 19-check matrix:
+  **1,488/1,488** executable-family paths, **149** source Fungi files, graph
+  **9,951 nodes / 10,090 edges / 0 violations**, semantic **3/3** with
+  **976** tests, code index **975**, canonical **9,612**, receipts **437/437**,
+  roadmap **5/5**, Golden **11/11**, and both leak audits green.
+- [ ] Commit the final provenance build point, then refresh Myco and
+  codebase-memory at that exact HEAD. Repository-wide closure remains
+  `UNKNOWN`.
 
 ### Slices 423-447 runners and benchmark declarations - 2026-08-13
 

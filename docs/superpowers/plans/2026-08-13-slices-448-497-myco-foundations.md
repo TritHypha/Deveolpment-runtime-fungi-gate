@@ -124,6 +124,8 @@
 - [x] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
 - [x] No exact candidate is admitted under mirror custody; no `.fungi` was authored.
 - [x] Run focused Myco typecheck/tests, receipt audit, path/private leak checks, and three independent read-only reviews.
-- [ ] Commit authored evidence separately from registered owner outputs.
-- [ ] Run all registered graph/owner publishers, the bounded close matrix, Myco refresh, and codebase-memory exact-head re-index at Slice 497.
+- [x] Commit authored evidence separately from registered owner outputs.
+- [x] Run all registered graph/owner publishers and the bounded close matrix.
+- [ ] Commit the final provenance build point, then refresh Myco and
+  codebase-memory with exact-head readback at Slice 497.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 498 after the bounded close.

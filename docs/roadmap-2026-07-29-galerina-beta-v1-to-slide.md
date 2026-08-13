@@ -3698,3 +3698,10 @@ delete/reinsert order, live iterator mutation, exact aliases and partial
 mutation on failure are binding semantics. The Slice-497 owner publication and
 post-commit dual-index exact-head proof remain pending. Repository-wide closure
 remains `UNKNOWN`.
+
+The Slice-497 owner matrix is green: **1,488/1,488** executable-family paths,
+**149** source Fungi files, graph **9,951 nodes / 10,090 edges / zero
+violations**, semantic **3/3** with **976** tests, code index **975**, canonical
+**9,612**, receipts **437/437**, roadmap **5/5**, Golden **11/11**, and both
+leak audits. The final provenance commit and post-commit Myco/codebase-memory
+exact-head readback remain pending.
