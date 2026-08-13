@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 9 |
+| Files | 10 |
 | Internal edges | 12 |
 | External dependencies | 5 |
 | ├─ Node core | 5 |
@@ -45,6 +45,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/runner-constants.fungi`
 - `src/self-hosted/test-marker.fungi`
 - `src/self-hosted/workspace-marker.fungi`
 
