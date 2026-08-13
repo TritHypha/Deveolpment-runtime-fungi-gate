@@ -91,14 +91,14 @@ private Fungi skills and governed owner scripts.
 - Produces: current bounded owner outputs and explicit `UNKNOWN` for unavailable
   exact codebase-memory freshness.
 
-- [ ] Run retirement and conversion-queue owners individually.
-- [ ] Run package, project, KB and semantic graph owners individually; do not
+- [x] Run retirement and conversion-queue owners individually.
+- [x] Run package, project, KB and semantic graph owners individually; do not
   invoke `graph-all`.
-- [ ] Run dev-tool/Fungi inventories, code-index, component-health, status,
+- [x] Run dev-tool/Fungi inventories, code-index, component-health, status,
   roadmap/subway, canonical counts, receipts, Golden and leak guards.
 - [ ] Commit registered owner outputs and rerun exact freshness checks.
 - [ ] Refresh Myco once after the final commit and prove Slice 222 queryable.
-- [ ] Record codebase-memory as `UNKNOWN` while its transport is unavailable.
+- [x] Record codebase-memory as `UNKNOWN` while its transport is unavailable.
 
 ## Self-review
 

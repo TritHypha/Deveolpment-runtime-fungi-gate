@@ -28,10 +28,15 @@ counts or open items that a newer section explicitly supersedes.
   reopening Slices 218-220.
 - [ ] Retain TypeScript and every renderer/logger consumer. Focused evidence
   grants no whole-file retirement, production, release or push authority.
-- [ ] Run the registered retirement/queue, graph, inventory, index,
+- [x] Run the registered retirement/queue, graph, inventory, index,
   component-health, status, roadmap/subway, count, receipt, Golden and leak
-  owners individually at this Slice 222 boundary. Do not run the crash-linked
-  aggregate lanes; repository-wide closure remains `UNKNOWN`.
+  owners individually at this Slice 222 boundary. Current checks report
+  1,486/1,486 paths, 100/201 package outputs, 5/5 project outputs, 4/4 KB
+  outputs, 9,658 graph nodes / 9,892 edges with zero integrity violations,
+  172 tools / 40 proofs, 147 Fungi files, 3/3 semantic outputs with 974 tests,
+  974 codes, three percentage sections, 5/5 subway outputs, 7/7 canonical
+  consumers at 9,612 tests, 162/162 receipts and Golden 11/11. The crash-linked
+  aggregate lanes were not run; repository-wide closure remains `UNKNOWN`.
 - [ ] Commit the exact owner outputs, rerun freshness checks, refresh Myco once
   and prove Slice 222 queryable. Codebase-memory remains `UNKNOWN` while its
   transport is unavailable.

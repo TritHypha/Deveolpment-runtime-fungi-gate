@@ -273,22 +273,22 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 222 bounded decision is complete and its scheduled maintenance owner
-chain is pending this authored commit. The last owner outputs remain the Slice
-197 checkpoint at `691bd33f`. Codebase-memory still returns `Transport closed`,
-so its exact graph-HEAD freshness remains `UNKNOWN`. The excluded aggregate
-lanes are not substitutes, so repository-wide closure remains `UNKNOWN`.
+The Slice 222 bounded decision and individual maintenance owner chain are
+complete in the current working tree. Owner-output commit and one post-commit
+freshness matrix remain. Codebase-memory still returns `Transport closed`, so
+its exact graph-HEAD freshness remains `UNKNOWN`. The excluded aggregate lanes
+are not substitutes, so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
-| `docs/TODO.md` | `DONE` for the authored Slice 222 status; maintenance owner refresh pending |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `PENDING` Slice 222 registered owner refresh |
+| `docs/TODO.md` | `DONE` for the authored Slice 222 status and individual owner results; owner-output commit pending |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for the authored Slice 222 narrative and generated subway block; owner-output commit pending |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`96054a97` writing skill; `1bd80388` translation skill; both remain private custody and unpushed; Slices 193-197 required no skill update) |
-| Codebase graph and Myco navigation | `PARTIAL`: Myco indexed 5,488 files / 83,364 terms and proves Slice 197 queryable. Codebase-memory returned `Transport closed`, so no exact final-HEAD structural-navigation receipt exists; do not substitute generated package/project/KB graphs for it. |
+| Codebase graph and Myco navigation | `PENDING/PARTIAL`: codebase-memory returned `Transport closed`, so no exact final-HEAD structural-navigation receipt exists. Refresh Myco after the final owner-output commit and prove Slice 222 queryable; do not substitute generated package/project/KB graphs for the unavailable structural receipt. |
 
 ## Verified refusal retained outside the batch
 
