@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "0a5846870a155b0485c5b895717ab91953e06e83c3a162c710b69fea8479032b",
+  "sourceDigest": "351c851cc0f80d6c2cd54e76e09cff8c7b666c14c8f3b4e04dc85451703d4456",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1488,
+    "total": 1490,
     "CANDIDATE": 0,
-    "BLOCKED": 858,
+    "BLOCKED": 860,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 630
@@ -10786,6 +10786,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-tools-myco/src/query/links.ts",
+      "package": "galerina-tools-myco",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-tools-myco/src/query/path-filter.ts",
       "package": "galerina-tools-myco",
       "tranche": "T3-package-graph",
@@ -10859,6 +10867,14 @@
     },
     {
       "path": "packages-galerina/galerina-tools-myco/tests/index-ceiling.test.ts",
+      "package": "galerina-tools-myco",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-tools-myco/tests/links.test.ts",
       "package": "galerina-tools-myco",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
