@@ -14,7 +14,8 @@
   "packageGraph": {
     "roots": ["src", "bin"],
     "extensions": [".mjs"],
-    "entryPoints": ["bin/galerina-impact.mjs"]
+    "entryPoints": ["bin/galerina-impact.mjs"],
+    "loadedAssets": ["src/self-hosted/documentation-path.fungi"]
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs"

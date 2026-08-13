@@ -1,0 +1,12 @@
+@version 1
+pure flow isDocumentationPath(path: String) -> Bool {
+  if path.startsWith("docs/") {
+    return true
+  }
+  match path {
+    "README.md" => return true
+    "AGENTS.md" => return true
+    "SECURITY.md" => return true
+    _ => return false
+  }
+}
