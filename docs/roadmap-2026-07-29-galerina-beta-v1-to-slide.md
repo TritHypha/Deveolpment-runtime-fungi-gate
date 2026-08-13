@@ -3604,3 +3604,34 @@ single-fault-detecting 3-bit representation with check-on-read; the faster
 k=2 proof shows it can silently raise an ordered verdict. Cross-trust transport
 requires encoding-bound AEAD. Implementation remains gated on exhaustive KATs,
 admitted target profiles and a fresh physical benchmark.
+
+## Fungi conversion checkpoint through Slice 422 - 2026-08-13
+
+The next 25 scopes cover the consolidated test harness type surface, its
+process helper, primitive runner constants and compiler-freshness foundation.
+Thirteen erased declarations are `NO_RUNTIME_BEHAVIOR`; their emitted public
+`.d.ts` contracts remain active developer APIs and are not retired by a Fungi
+record or enum. Three executable scopes remain `BLOCKED` at exact host-process,
+canonical-evidence and Git-path boundaries.
+
+Nine closed primitive values now share one package-owned reference asset,
+`runner-constants.fungi`: the exact timeout Int and eight exact path/schema
+Strings pass strict checking plus **2/2** interpretation and signed-Wasm proof;
+the complete focused wave passes **47/47** after the manifest update.
+This is scoped supersession evidence only. No consumer switch, physical
+`.slide`, independent VOK admission or TypeScript retirement is claimed.
+
+Fresh hostile KATs override the reassuring focused baseline. `runNode` maps an
+invalid cwd and output-limit failure to `timedOut: true` because every null
+child status is collapsed. Compiler freshness can approve an ignored compiler
+input, a changed consumed `dist`, duplicate JSON keys and two different file
+sets with identical delimiter framing. The required exit is a typed exhaustive
+process-completion algebra plus duplicate-rejecting, length-prefixed,
+output-bound evidence held to one immutable snapshot through execution.
+
+Both private skills now state those reusable rules at translation `bf22fd0`
+and authoring `6e4b73c`; they remain private and unpushed. The campaign proceeds
+directly through Slices 423-447. In accordance with the owner-approved
+50-slice cadence, registered owner publication, graph regeneration and both
+indexes occur at Slice 447 rather than here. Excluded crash-linked aggregate
+lanes remain unsubstituted, so repository-wide closure remains `UNKNOWN`.

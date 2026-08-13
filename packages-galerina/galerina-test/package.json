@@ -5,6 +5,7 @@
   "license": "Apache-2.0",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/runner-constants.fungi",
       "src/self-hosted/test-marker.fungi",
       "src/self-hosted/workspace-marker.fungi"
     ]

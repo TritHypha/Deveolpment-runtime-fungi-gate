@@ -64,6 +64,7 @@ describe("galerina-test package-owned Fungi workspace marker", () => {
     const compiled = await compileCandidate();
     const packageJson = JSON.parse(readFileSync(PACKAGE, "utf8"));
     assert.deepEqual(packageJson.packageGraph?.loadedAssets, [
+      "src/self-hosted/runner-constants.fungi",
       "src/self-hosted/test-marker.fungi",
       "src/self-hosted/workspace-marker.fungi",
     ]);

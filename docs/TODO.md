@@ -4,6 +4,42 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 398-422 test types, spawn and freshness foundations - 2026-08-13
+
+- [x] Account 25 unique scopes: 13 erased public declarations, nine exact
+  primitive Fungi supersessions and three blocked host/freshness scopes. No
+  placeholder or duplicate slice credit was created.
+- [x] Add package-owned `runner-constants.fungi`; strict check is 0 errors / 0
+  governance warnings and exact interpretation/signed-Wasm proof passes **2/2**
+  across Int `600000` plus all eight String constants. This is reference-only:
+  consumers remain TypeScript and there is no physical `.slide`/VOK retirement.
+- [x] Run the complete focused wave after the asset/manifest update: package
+  typecheck and **47/47** tests pass, the receipt audit accepts **362/362**
+  governed receipts, both leak audits pass and the diff is clean.
+- [x] Update both private skills at translation `bf22fd0` and authoring
+  `6e4b73c`: an erased declaration can still own a public `.d.ts` contract;
+  process completion needs distinct exit/signal/deadline/spawn/output-limit/
+  callback variants; freshness evidence must be duplicate-rejecting,
+  length-prefixed, output-bound and one-snapshot.
+- [ ] Repair `runNode` so null status does not misreport invalid cwd, ENOBUFS or
+  other spawn failures as timeout. Add direct timeout, signal, spawn-error,
+  output-limit, stream ordering, environment and callback tests before any
+  Fungi/SLIDE candidate.
+- [ ] Replace compiler freshness evidence with duplicate-rejecting canonical
+  bytes, domain-separated length-prefix framing, complete compile-affecting
+  input/config/toolchain coverage, governed ignored/untracked policy, exact
+  consumed-output digest, canonical containment and one immutable snapshot
+  through execution. Retain the four firing KATs for ignored input, tampered
+  `dist`, duplicate JSON keys and NUL-framing collision.
+- [ ] Preserve public declaration consumers through retained/versioned `.d.ts`
+  artifacts or a governed binding/schema generator; `NO_RUNTIME_BEHAVIOR` is
+  not source-deletion authority and `TestCounts` null-to-Option is a versioned
+  contract change.
+- [ ] Continue immediately with Slices 423-447. At Slice 447 run the deferred
+  individual 19-owner publication matrix, graph regeneration and both indexes;
+  do not substitute crash-linked aggregate lanes. Repository-wide closure stays
+  `UNKNOWN`.
+
 ### Slices 373-397 WASM target and test harness - 2026-08-13
 
 - [x] Account 25 scopes: six erased declarations, 17 blocked runtime scopes and

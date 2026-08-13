@@ -63,41 +63,41 @@ SLIDE/VOK, Myco and codebase-memory.
 
 ### Task 1: Pin sources and focused evidence
 
-- [ ] Pin `types.ts` SHA-256
+- [x] Pin `types.ts` SHA-256
   `C99F24250846C5523F8D1D4E4B4EE2EE79AF99AE3431D2BE8F2D7BCA02550724`.
-- [ ] Pin `spawn.ts` SHA-256
+- [x] Pin `spawn.ts` SHA-256
   `E64741FAB4D1441F4F81045CA8554908B1A4D35217F61A99FA0E3CB46B735E25`.
-- [ ] Pin `runners.ts` SHA-256
+- [x] Pin `runners.ts` SHA-256
   `A9F7395D08F1DDC97087B8E8BBF163EE10C3C72684B4FB889BB0F456B13FD645`.
-- [ ] Establish fresh focused package typecheck/test evidence and distinguish
+- [x] Establish fresh focused package typecheck/test evidence and distinguish
   source evidence from an existing `dist` build.
-- [ ] Reconcile callers, prior receipts, package assets and exact
+- [x] Reconcile callers, prior receipts, package assets and exact
   Fungi/GIR/SLIDE/VOK evidence.
 
 ### Task 2: Produce three independent dossiers
 
-- [ ] Record exact type erasure, records, aliases, numeric widths, arrays,
+- [x] Record exact type erasure, records, aliases, numeric widths, arrays,
   callbacks, environment, clocks, child processes, streams, timeouts, signals,
   filesystem/Git reads, JSON and cryptographic digest behavior.
-- [ ] Classify erased declarations as `NO_RUNTIME_BEHAVIOR`; create no enum or
+- [x] Classify erased declarations as `NO_RUNTIME_BEHAVIOR`; create no enum or
   record placeholder.
-- [ ] For runtime scopes, record exact blocker, threadability, hostile vectors
+- [x] For runtime scopes, record exact blocker, threadability, hostile vectors
   and complete physical/effect admission exit.
-- [ ] Update either private skill only for a reusable missing rule; otherwise
+- [x] Update either private skill only for a reusable missing rule; otherwise
   record evidence-based `NO_SKILL_UPDATE` in every receipt.
 
 ### Task 3: Publish and review governed evidence
 
-- [ ] Create 25 exact slice receipts and update the live register, TODOs and
+- [x] Create 25 exact slice receipts and update the live register, TODOs and
   roadmap without overstating focused tests or physical authority.
-- [ ] Run receipt audit and focused package lanes.
-- [ ] Obtain three independent read-only reviews of pins, arithmetic,
+- [x] Run receipt audit and focused package lanes.
+- [x] Obtain three independent read-only reviews of pins, arithmetic,
   classifications, blockers, threadability, skills and physical refusals.
-- [ ] Commit authored evidence separately from generated owners.
+- [x] Commit authored evidence separately from generated owners.
 
 ### Task 4: Fifty-slice maintenance boundary
 
-- [ ] Commit the Slice 398-422 receipts after focused checks and review, but
+- [x] Commit the Slice 398-422 receipts after focused checks and review, but
   defer registered owner regeneration to the Slice 447 boundary.
 - [ ] Complete Slices 423-447 as the second 25-slice wave.
 - [ ] After Slice 447, regenerate registered owners individually in dependency

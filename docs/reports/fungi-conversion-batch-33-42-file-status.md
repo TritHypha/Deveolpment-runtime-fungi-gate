@@ -1,13 +1,16 @@
-# Fungi Conversion Batch 33-397 File Status
+# Fungi Conversion Batch 33-422 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current 25-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-373-397-wasm-test-harness.md`](../superpowers/plans/2026-08-13-slices-373-397-wasm-test-harness.md).
-Slices 373-397 are adjudicated; the Slice 397 individual
-graph/index/roadmap maintenance boundary is pending. Prior plans are retained
-in repository history. Crash-linked aggregate lanes remain excluded.
+The current 50-slice decision and maintenance route is split across
+[`../superpowers/plans/2026-08-13-slices-398-422-test-types-spawn-runners.md`](../superpowers/plans/2026-08-13-slices-398-422-test-types-spawn-runners.md)
+and
+[`../superpowers/plans/2026-08-13-slices-423-447-test-runners-benchmark-types.md`](../superpowers/plans/2026-08-13-slices-423-447-test-runners-benchmark-types.md).
+Slices 398-422 are adjudicated; individual owner publication, graphs and both
+indexes are deliberately deferred to the Slice 447 fifty-slice boundary.
+Prior plans remain in repository history. Crash-linked aggregate lanes remain
+excluded.
 
 ## Slice 63 entry gate
 
@@ -400,6 +403,31 @@ still requires its own strict, physical, VOK and differential proof.
 | 395 | `packages-galerina/galerina-test/src/paths.ts#findUp` | not created | not created | Filesystem walk, bound and marker attestation lack admission. | `BLOCKED` |
 | 396 | `packages-galerina/galerina-test/src/paths.ts#resolveRoot` | not created | not created | Env/cwd/fs/URL/path precedence and Error identity lack proof. | `BLOCKED` |
 | 397 | `packages-galerina/galerina-test/src/paths.ts#resolveTarget` | not created | not created | Platform path resolution and containment policy remain unproved. | `BLOCKED` |
+| 398 | `packages-galerina/galerina-test/src/types.ts#CheckKind` | not created | declaration accounted | Erased public union; `.d.ts` compatibility remains active. | `NO_RUNTIME_BEHAVIOR` |
+| 399 | `packages-galerina/galerina-test/src/types.ts#CheckScope` | not created | declaration accounted | Erased public union; runtime selection is separately governed. | `NO_RUNTIME_BEHAVIOR` |
+| 400 | `packages-galerina/galerina-test/src/types.ts#CheckResultKind` | not created | declaration accounted | Erased result identity must retain independent SLIDE evidence distinction. | `NO_RUNTIME_BEHAVIOR` |
+| 401 | `packages-galerina/galerina-test/src/types.ts#TestCounts` | not created | declaration accounted | Erased legacy null-bearing public record requires versioned API retirement. | `NO_RUNTIME_BEHAVIOR` |
+| 402 | `packages-galerina/galerina-test/src/types.ts#CheckResult` | not created | declaration accounted | Erased recursive result and `ok` Boolean supply no runtime authority. | `NO_RUNTIME_BEHAVIOR` |
+| 403 | `packages-galerina/galerina-test/src/types.ts#HarnessOptions` | not created | declaration accounted | Erased options include an active callback capability. | `NO_RUNTIME_BEHAVIOR` |
+| 404 | `packages-galerina/galerina-test/src/types.ts#UnitOptions` | not created | declaration accounted | Erased extension performs no package-array or Boolean admission. | `NO_RUNTIME_BEHAVIOR` |
+| 405 | `packages-galerina/galerina-test/src/types.ts#ConformanceOptions` | not created | declaration accounted | Erased corpus option performs no path admission. | `NO_RUNTIME_BEHAVIOR` |
+| 406 | `packages-galerina/galerina-test/src/types.ts#FidelityOptions` | not created | declaration accounted | Erased optional target performs no provenance or freshness admission. | `NO_RUNTIME_BEHAVIOR` |
+| 407 | `packages-galerina/galerina-test/src/types.ts#SlideOptions` | not created | declaration accounted | Erased options do not bind compiler or independent evidence. | `NO_RUNTIME_BEHAVIOR` |
+| 408 | `packages-galerina/galerina-test/src/types.ts#E2eOptions` | not created | declaration accounted | Erased examples/build options perform no runtime admission. | `NO_RUNTIME_BEHAVIOR` |
+| 409 | `packages-galerina/galerina-test/src/types.ts#AllOptions` | not created | declaration accounted | Erased inheritance and CLI cast are not an exact decoder. | `NO_RUNTIME_BEHAVIOR` |
+| 410 | `packages-galerina/galerina-test/src/spawn.ts#SpawnOutcome` | not created | declaration accounted | Erased Boolean outcome cannot distinguish process termination causes. | `NO_RUNTIME_BEHAVIOR` |
+| 411 | `packages-galerina/galerina-test/src/spawn.ts#DEFAULT_TIMEOUT_MS` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact Int twin; consumer switch and retirement remain pending. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 412 | `packages-galerina/galerina-test/src/spawn.ts#runNode` | not created | not created | Process/env/clock/stream/callback and typed termination ABI remain unproved. | `BLOCKED` |
+| 413 | `packages-galerina/galerina-test/src/runners.ts#UNIT_RUNNER` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin; process consumer remains active. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 414 | `packages-galerina/galerina-test/src/runners.ts#R6_PARITY` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin; target identity remains consumer evidence. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 415 | `packages-galerina/galerina-test/src/runners.ts#FIDELITY_DIFFERENTIAL` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin; freshness/process authority remains blocked. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 416 | `packages-galerina/galerina-test/src/runners.ts#COMPILER_DIST` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin does not bind artifact bytes. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 417 | `packages-galerina/galerina-test/src/runners.ts#COMPILER_BUILD_EVIDENCE` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin does not validate evidence bytes. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 418 | `packages-galerina/galerina-test/src/runners.ts#COMPILER_PACKAGE` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin does not prove package identity. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 419 | `packages-galerina/galerina-test/src/runners.ts#GALERINA_CLI` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin does not prove executable identity. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 420 | `packages-galerina/galerina-test/src/runners.ts#COMPILER_EVIDENCE_SCHEMA` | `packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi` | exact focused evidence | Exact String twin does not prove canonical schema handling. | `SUPERSEDED_BY_EXISTING_FUNGI` |
+| 421 | `packages-galerina/galerina-test/src/runners.ts#compilerFreshnessFailure` | not created | not created | Inputs/output/snapshot/canonical evidence and host effects are unproved. | `BLOCKED` |
+| 422 | `packages-galerina/galerina-test/src/runners.ts#gitPaths` | not created | not created | Git path bytes/status/bounds/config snapshot lack admission. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -786,3 +814,16 @@ not one of Slices 33–43 and no Fungi asset was produced.
   influences SLIDE success; CLI flag values can swallow later flags; explicit
   or environment roots bypass marker validation; target resolution provides no
   containment. These are repair work, not conversion authority.
+- Slices 398-422 account 13 erased public declarations, three blocked host or
+  freshness scopes, and nine exact primitive constants in the package-owned
+  `runner-constants.fungi` reference asset. The constants pass strict checking
+  and **2/2** interpretation/signed-Wasm proof; the complete focused wave passes
+  **47/47**, but no consumer is switched and no TypeScript source is retired.
+- `runNode` mislabels invalid-cwd and output-limit failures as timeout because a
+  null child status is collapsed to one Boolean. Compiler freshness can approve
+  ignored compile inputs, a tampered consumed `dist`, duplicate JSON keys and
+  non-injective NUL framing despite **33/33** focused tests. Private skill heads
+  `bf22fd0` and `6e4b73c` now bind public `.d.ts` retirement, exhaustive process
+  completion, duplicate-rejecting canonical evidence, exact output identity and
+  one immutable snapshot through consumption. The 19-owner matrix, graph and
+  both indexes are intentionally deferred to Slice 447.
