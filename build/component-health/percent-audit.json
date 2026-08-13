@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "ad87c84f",
+    "sha": "60ffeef6",
     "detached": false,
-    "dirty": true
+    "dirty": false
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
