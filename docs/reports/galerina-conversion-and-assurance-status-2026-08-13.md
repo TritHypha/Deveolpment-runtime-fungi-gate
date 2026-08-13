@@ -20,8 +20,9 @@ exact physical record ABI.
 
 ## Current evidence
 
-- Git build point before this housekeeping: `297ccb36` on
-  `codex/rd-0792-synthesize-only`.
+- Slice 88 authored build point: `cc136ff5` on
+  `codex/rd-0792-synthesize-only`; generated outputs are bound to their
+  relevant-input provenance rather than treated as source authority.
 - Conversion census: **1,480/1,480** executable-family paths classified;
   519 TypeScript-family, 949 MJS and 12 JS.
 - Physical inventory: 489 package source TypeScript files, 30 same-stem twins

@@ -119,10 +119,11 @@ still requires its own strict, physical, VOK and differential proof.
 ## Shared closure status
 
 The Slice 88 bounded decision is complete. The authored TODO, active roadmap
-and live conversion register are updated. Focused source and physical boundary
-checks are current; generated owners and navigation indexes must be refreshed
-at the final Slice 88 commit. The excluded aggregate lanes are not substitutes
-for these bounded owners, so repository-wide closure remains `UNKNOWN`.
+and live conversion register are updated. Focused source, physical boundary,
+roadmap, graph and generated-owner checks are current at their relevant input
+build points. The final navigation index is independently refreshed after the
+last owned-output commit. The excluded aggregate lanes are not substitutes for
+these bounded owners, so repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
