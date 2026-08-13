@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 183-192 observability health ingress - 2026-08-13
+
+- [x] Account `HealthStatus`, `HealthKind`, `ComponentHealth`, `HealthCheck`,
+  `HealthReport` and `HealthRegistryOptions` as erased
+  `NO_RUNTIME_BEHAVIOR` declarations; no type alias is mistaken for validation
+  or an active callback/timer capability.
+- [x] Retain private `coerce` at the open host-result, null/malformed-object,
+  optional detail, UTF-16 length/slice and exact diagnostic boundary.
+- [x] Retain `HealthRegistry` construction and liveness/readiness registration
+  at mutable maps, binary64 timeout validation, timer/callback capabilities,
+  replacement semantics and exact `this` identity.
+- [x] Prove observability **36/36** and focused health/kernel consumers
+  **19/19**, both with zero failures and zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct because
+  their open-value, no-null, text-boundary, mutable-object, retained-capability
+  and async-failure rules cover all ten slices.
+- [ ] Define one affine health-registry and timer ABI with exact callback
+  ownership, replacement/revocation, binary64 timeout validation, cancellation,
+  typed terminal receipts and mutable object identity.
+- [ ] Define an exact host-result ingress that distinguishes Boolean, valid
+  record, null and malformed object inputs without passing a precomputed health
+  verdict from the host.
+- [ ] Retain TypeScript and all consumers. Focused fail-closed evidence grants
+  no whole-file retirement, production or release authority.
+- [ ] Defer graph/index/roadmap owners until the next approved 25-slice
+  boundary. Repository-wide closure remains `UNKNOWN`; crash-linked aggregate
+  lanes remain excluded.
+
 ### Slices 173-182 manifest and oracle boundary - 2026-08-13
 
 - [x] Account `BridgeDomain`, `ToleranceWitness`, `BridgeManifest`,

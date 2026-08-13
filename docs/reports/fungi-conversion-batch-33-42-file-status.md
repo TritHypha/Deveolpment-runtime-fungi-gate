@@ -1,10 +1,10 @@
-# Fungi Conversion Batch 33-182 File Status
+# Fungi Conversion Batch 33-192 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
 The current ten-slice decision plan is
-[`../superpowers/plans/2026-08-13-slices-173-182-manifest-and-oracle-boundary.md`](../superpowers/plans/2026-08-13-slices-173-182-manifest-and-oracle-boundary.md).
+[`../superpowers/plans/2026-08-13-slices-183-192-observability-health-ingress.md`](../superpowers/plans/2026-08-13-slices-183-192-observability-health-ingress.md).
 Aggregate graph, index and roadmap owners run at the next approved 25-slice
 boundary; crash-linked aggregate lanes remain excluded.
 
@@ -184,6 +184,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 180 | `packages-galerina/galerina-inference-bridge-contract/src/oracle.ts#TernaryOracle` | not created | declaration accounted | Erased interface implements no oracle, authentication or ground-truth proof; execution is an active capability. | `NO_RUNTIME_BEHAVIOR` |
 | 181 | `packages-galerina/galerina-inference-bridge-contract/src/oracle.ts#oracleAgrees` | not created | numeric/oracle proof retained | JavaScript ToInt32 over two complete binary64 result records is not ordinary Fungi integer equality. | `BLOCKED_BY_BINARY64_TOINT32_BRIDGE_RESULT_ABI` |
 | 182 | `packages-galerina/galerina-inference-bridge-contract/src/index.ts` | not created | public consumer proof retained | Type exports erase, but runtime re-exports and package export-map identity remain a live public ESM boundary. | `BLOCKED_BY_PUBLIC_ESM_EXPORT_AND_MODULE_IDENTITY_ABI` |
+| 183 | `packages-galerina/galerina-observability/src/health.ts#HealthStatus` | not created | declaration accounted | Erased UP/DOWN vocabulary performs no validation; exact spelling and surplus refusal remain required. | `NO_RUNTIME_BEHAVIOR` |
+| 184 | `packages-galerina/galerina-observability/src/health.ts#HealthKind` | not created | declaration accounted | Erased liveness/readiness vocabulary implements neither aggregation nor routing. | `NO_RUNTIME_BEHAVIOR` |
+| 185 | `packages-galerina/galerina-observability/src/health.ts#ComponentHealth` | not created | declaration accounted | Erased status/detail record validates no optional text, length, safety or provenance. | `NO_RUNTIME_BEHAVIOR` |
+| 186 | `packages-galerina/galerina-observability/src/health.ts#HealthCheck` | not created | declaration accounted | Erased sync/async callback alias implements no execution, cancellation, timeout or failure rule. | `NO_RUNTIME_BEHAVIOR` |
+| 187 | `packages-galerina/galerina-observability/src/health.ts#HealthReport` | not created | declaration accounted | Erased aggregate/open-map record validates neither component keys/results nor derived status. | `NO_RUNTIME_BEHAVIOR` |
+| 188 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistryOptions` | not created | declaration accounted | Erased optional timeout/callback record performs no numeric validation or capability control. | `NO_RUNTIME_BEHAVIOR` |
+| 189 | `packages-galerina/galerina-observability/src/health.ts#coerce` | not created | health-ingress proof retained | Open host union, null/malformed refusal, optional detail and UTF-16 slice semantics lack one admitted ingress ABI. | `BLOCKED_BY_OPEN_HOST_RESULT_OPTION_STRING_ABI` |
+| 190 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.constructor` | not created | construction/timeout proof retained | Two mutable maps, binary64 timeout validation and retained injected or ambient timer callbacks form an active object. | `BLOCKED_BY_MUTABLE_MAP_TIMER_CALLBACK_BINARY64_ABI` |
+| 191 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.registerLiveness` | not created | registry mutation proof retained | Arbitrary-key callback retention/replacement, private mutation and exact `this` identity require an affine registry ABI. | `BLOCKED_BY_MUTABLE_CALLBACK_REGISTRY_AND_THIS_IDENTITY_ABI` |
+| 192 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.registerReadiness` | not created | registry mutation proof retained | Same active semantics as liveness registration on a distinct readiness map. | `BLOCKED_BY_MUTABLE_CALLBACK_REGISTRY_AND_THIS_IDENTITY_ABI` |
 
 ## Shared implementation and governance files
 
@@ -484,3 +494,10 @@ not one of Slices 33–43 and no Fungi asset was produced.
   and BitNet bridge **7/7** pass with zero skips. Skill review is
   `NO_SKILL_UPDATE`; current exact-wire, numeric-coercion, crypto evidence,
   active-capability and consumer-switch rules cover the group.
+- Slices 183-188 account erased health vocabulary, result, callback and option
+  declarations as `NO_RUNTIME_BEHAVIOR`. Slices 189-192 remain blocked without
+  placeholders at open host-value/text normalization, mutable maps, timer and
+  retained callback capabilities, replacement and exact object identity.
+  Observability passes **36/36** and focused health/kernel consumers **19/19**,
+  both with zero skips. Skill review is `NO_SKILL_UPDATE`; current open-value,
+  no-null, text, active-capability and mutable-object rules cover the group.

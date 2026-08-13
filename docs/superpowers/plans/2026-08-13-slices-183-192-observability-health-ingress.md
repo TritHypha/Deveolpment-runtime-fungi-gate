@@ -29,30 +29,30 @@ evidence, Myco, private Fungi skills and Markdown slice receipts.
 
 ### Task 1: Bind Slices 183-192
 
-- [ ] Classify `HealthStatus`, `HealthKind`, `ComponentHealth`, `HealthCheck`,
+- [x] Classify `HealthStatus`, `HealthKind`, `ComponentHealth`, `HealthCheck`,
   `HealthReport` and `HealthRegistryOptions` as erased declarations with exact
   future ABI requirements.
-- [ ] Classify private `coerce` at its complete host union, object/property,
+- [x] Classify private `coerce` at its complete host union, object/property,
   optional detail and bounded-string semantics.
-- [ ] Classify `HealthRegistry` construction at its mutable map, binary64
+- [x] Classify `HealthRegistry` construction at its mutable map, binary64
   timeout, injected callback and ambient fallback-timer boundary.
-- [ ] Classify `registerLiveness` and `registerReadiness` at retained callback,
+- [x] Classify `registerLiveness` and `registerReadiness` at retained callback,
   replacement, mutation and `this` identity.
-- [ ] Search exact consumers and existing Fungi assets before deciding.
+- [x] Search exact consumers and existing Fungi assets before deciding.
 
 ### Task 2: Bounded verification
 
-- [ ] Run observability typecheck and complete package suite.
-- [ ] Run the focused health test and directly affected app-kernel integration
+- [x] Run observability typecheck and complete package suite.
+- [x] Run the focused health test and directly affected app-kernel integration
   tests if named consumers exist.
-- [ ] Review both private skills and record a governed disposition for every
+- [x] Review both private skills and record a governed disposition for every
   receipt.
 
 ### Task 3: Publish and verify
 
-- [ ] Create Slice 183-192 receipts, append the live register and update TODO.
-- [ ] Run the slice-close receipt owner and staged path/private-document guards.
-- [ ] Commit only bounded documents and keep the tracked tree clean.
+- [x] Create Slice 183-192 receipts, append the live register and update TODO.
+- [x] Run the slice-close receipt owner and staged path/private-document guards.
+- [x] Commit only bounded documents and keep the tracked tree clean.
 - [ ] Defer graph/index/roadmap owners to the next approved 25-slice boundary.
 
 ## Self-review
