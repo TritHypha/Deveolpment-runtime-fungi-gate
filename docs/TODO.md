@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Dependency deduplication and root-workspace migration - 2026-08-13
+
+- [x] Verify the current layout rather than assume hoisting: the repository
+  root and `packages-galerina/` have no `node_modules`; 95 package-level
+  dependency trees and 97 package-owned lockfiles exist.
+- [x] Confirm the current flat-package topology gate is green only as a
+  pre-SLIDE debt ratchet; it is not evidence that dependencies are deduplicated.
+- [ ] Design one root workspace/lock owner that preserves all 101 canonical
+  package identities, independent package release boundaries and the one
+  explicitly deferred nested native package.
+- [ ] Derive and compare exact package/version/integrity tuples before and
+  after hoisting; refuse peer-resolution changes, undeclared ambient imports,
+  lifecycle-script widening or removal of package isolation.
+- [ ] Prove clean install, build, focused package execution, Windows CI and the
+  flat-package/root-lock security gates before removing any package-level
+  `node_modules` or lockfile.
+- [ ] Make removal recoverable and bounded; never recursively delete dependency
+  trees until the replacement root install and rollback evidence are complete.
+
 ### Slices 103-112 arithmetic-Trit brand adjudication - 2026-08-13
 
 - [x] Classify `asTrit` as
