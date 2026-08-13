@@ -67,7 +67,7 @@ for (const name of files) {
   }
   if (sliceNumber >= 323) {
     const authoring = [...receipt.matchAll(/^Authoring skill disposition: (.+)$/gmu)].map((match) => match[1]);
-    const scopes = [...text.matchAll(/^Scope: `packages-galerina\/[a-z0-9-]+\/((?:src|scripts)\/[a-z0-9./-]+)#[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*`\.$/gmu)];
+    const scopes = [...text.matchAll(/^Scope: `packages-galerina\/[a-z0-9-]+\/((?:src|scripts|tests|bench)\/[a-z0-9./-]+)#[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*`\.$/gmu)];
     const buildPoints = [...text.matchAll(/^Evidence: source build point `[0-9a-f]{40}`;$/gmu)];
     const sourceDigests = [...text.matchAll(/^source SHA-256 `[0-9A-F]{64}`;/gmu)];
     if (authoring.length !== 1

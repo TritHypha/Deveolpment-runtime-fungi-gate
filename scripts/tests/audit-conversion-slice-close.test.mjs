@@ -99,12 +99,29 @@ test("forward scopes accept scripts and qualified methods", () => {
   assert.equal(result.status, 0, result.stderr || result.stdout);
 });
 
+test("forward scopes accept canonical tests and bench module scopes", () => {
+  const name = "slice-583-test-module-fungi-conversion-2026-08-13.md";
+  for (const scope of [
+    "packages-galerina/example/tests/search.test.ts#module",
+    "packages-galerina/example/bench/flight-boot.mjs#module",
+  ]) {
+    const body = forward.replace(
+      "packages-galerina/example/src/index.ts#Candidate",
+      scope,
+    );
+    const result = run(fixture(body, name));
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+  }
+});
+
 test("forward scopes refuse traversal and empty path segments", () => {
   const name = "slice-448-noncanonical-scope-fungi-conversion-2026-08-13.md";
   for (const scope of [
     "packages-galerina/example/scripts/../src/index.ts#Candidate",
     "packages-galerina/example/scripts/./run-tests.mjs#module",
     "packages-galerina/example/scripts//run-tests.mjs#module",
+    "packages-galerina/example/tests/../src/index.ts#Candidate",
+    "packages-galerina/example/bench//flight-boot.mjs#module",
   ]) {
     const body = forward.replace(
       "packages-galerina/example/src/index.ts#Candidate",
