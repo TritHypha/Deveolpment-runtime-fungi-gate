@@ -1,12 +1,12 @@
-# Fungi Conversion Batch 33-197 File Status
+# Fungi Conversion Batch 33-207 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The current five-slice decision and maintenance plan is
-[`../superpowers/plans/2026-08-13-slices-193-197-health-execution-and-maintenance.md`](../superpowers/plans/2026-08-13-slices-193-197-health-execution-and-maintenance.md).
-Slice 197 is the next approved 25-slice graph/index/roadmap boundary;
-crash-linked aggregate lanes remain excluded.
+The current ten-slice decision plan is
+[`../superpowers/plans/2026-08-13-slices-198-207-metrics-types-and-histogram.md`](../superpowers/plans/2026-08-13-slices-198-207-metrics-types-and-histogram.md).
+Slice 197 closed the last approved graph/index/roadmap boundary. Slice 222 is
+the next boundary; crash-linked aggregate lanes remain excluded.
 
 ## Slice 63 entry gate
 
@@ -199,6 +199,16 @@ still requires its own strict, physical, VOK and differential proof.
 | 195 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.readiness` | not created | active readiness route proof retained | The independent readiness map/kind drives traffic-shedding report behavior through the same active evaluator. | `BLOCKED_BY_ACTIVE_ASYNC_HEALTH_REGISTRY_ABI` |
 | 196 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.#evaluate` | not created | async aggregation proof retained | Ordered Map snapshot, all-check scheduling, order-preserving completion, open component-map mutation and fail-closed fold lack one admitted ABI. | `BLOCKED_BY_ASYNC_CALLBACK_MAP_AGGREGATION_ABI` |
 | 197 | `packages-galerina/galerina-observability/src/health.ts#HealthRegistry.#runOne` | not created | timeout/failure/cleanup proof retained | Callback invocation races an injected timer; callback failures map to DOWN, losing work is not cancelled, and a throwing cleanup currently rejects direct evaluation. | `BLOCKED_BY_TIMER_RACE_CALLBACK_CLEANUP_TRANSACTION_ABI` |
+| 198 | `packages-galerina/galerina-observability/src/metrics.ts#StatusClass` | not created | declaration accounted | Erased five-string vocabulary performs no validation or status derivation; exact spelling and surplus refusal remain mandatory. | `NO_RUNTIME_BEHAVIOR` |
+| 199 | `packages-galerina/galerina-observability/src/metrics.ts#RequestObservation` | not created | declaration accounted | Erased record validates no exact shape, external labels, status, optional binary64 duration or optional error flag. | `NO_RUNTIME_BEHAVIOR` |
+| 200 | `packages-galerina/galerina-observability/src/metrics.ts#LatencySnapshot` | not created | declaration accounted | Erased nested record performs no aggregation, percentile estimation, binary64 validation or cumulative-bucket proof. | `NO_RUNTIME_BEHAVIOR` |
+| 201 | `packages-galerina/galerina-observability/src/metrics.ts#RouteMetric` | not created | declaration accounted | Erased rollup validates no labels, closed status map, binary64 rate or nested latency snapshot. | `NO_RUNTIME_BEHAVIOR` |
+| 202 | `packages-galerina/galerina-observability/src/metrics.ts#MetricsSnapshot` | not created | declaration accounted | Erased aggregate validates no counters, rates, route ordering, dropped count or overflow state. | `NO_RUNTIME_BEHAVIOR` |
+| 203 | `packages-galerina/galerina-observability/src/metrics.ts#Histogram.observe` | not created | histogram mutation proof retained | Complete JavaScript-number validation, live count/sum/min/max, ordered first-bucket mutation and overflow lack one admitted state/numeric ABI. | `BLOCKED_BY_MUTABLE_BINARY64_HISTOGRAM_ABI` |
+| 204 | `packages-galerina/galerina-observability/src/metrics.ts#Histogram.#percentile` | not created | interpolation proof retained | Live state, binary64 target/interpolation/clamping, cumulative traversal and overflow estimation lack one physical graph. | `BLOCKED_BY_MUTABLE_BINARY64_INTERPOLATION_ABI` |
+| 205 | `packages-galerina/galerina-observability/src/metrics.ts#Histogram.snapshot` | not created | snapshot proof retained | Ordered cumulative materialization, infinity-sentinel conversion, binary64 rounding and four percentile calls remain bound to mutable state. | `BLOCKED_BY_MUTABLE_BINARY64_HISTOGRAM_SNAPSHOT_ABI` |
+| 206 | `packages-galerina/galerina-observability/src/metrics.ts#clamp` | not created | comparison proof retained | Three JavaScript numbers preserve NaN pass-through and signed-zero identity; signed-i32 comparison is not equivalent. | `BLOCKED_BY_BINARY64_COMPARISON_AND_NAN_ABI` |
+| 207 | `packages-galerina/galerina-observability/src/metrics.ts#round` | not created | rounding proof retained | Multiplication, `Math.round` and division retain binary64 overflow, NaN/infinity, signed-zero and tie-direction behavior. | `BLOCKED_BY_BINARY64_ROUNDING_ABI` |
 
 ## Shared implementation and governance files
 
@@ -248,25 +258,24 @@ still requires its own strict, physical, VOK and differential proof.
 
 ## Shared closure status
 
-The Slice 197 bounded decision is complete. Its scheduled 25-slice maintenance
-owners were committed at `581ced0e` and the complete bounded owner matrix
-remained current after that output-only commit. This authored close record will
-be followed by one final owner refresh so the published artifacts bind the
-final narrative. The latest codebase-memory lookup returned `Transport closed`,
-so its exact final-HEAD freshness remains `UNKNOWN`. The excluded aggregate
-lanes are not substitutes for these bounded owners, so repository-wide closure
-remains `UNKNOWN`.
+The Slice 207 bounded decision is complete. The last scheduled maintenance
+boundary was Slice 197; its owners remained current at `691bd33f`. The
+post-commit Myco refresh indexed 5,488 files / 83,364 terms and finds Slice 197
+in four governed files. Codebase-memory still returns `Transport closed`, so
+its exact graph-HEAD freshness remains `UNKNOWN`. Aggregate owners are deferred
+to Slice 222 and the excluded aggregate lanes are not substitutes, so
+repository-wide closure remains `UNKNOWN`.
 
 | Closure item | Status |
 |---|---|
-| `docs/TODO.md` | `DONE` for the authored Slice 197 status and bounded owner matrix |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for the authored Slice 197 status and generated subway block |
+| `docs/TODO.md` | `DONE` through the authored Slice 207 status and Slice 222 queue |
+| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` at the last scheduled Slice 197 maintenance boundary; next refresh Slice 222 |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |
 | Semantic, percentage, status, code-index and subway owners | `DONE` at 3/3 with 974 test nodes, three sections, current status blocks, 974 codes and 5/5 |
 | Private Fungi skill repositories | `DONE` (`96054a97` writing skill; `1bd80388` translation skill; both remain private custody and unpushed; Slices 193-197 required no skill update) |
-| Final codebase graph and Myco navigation refresh | `PENDING/PARTIAL`: codebase-memory returned `Transport closed`, so no final-HEAD structural-navigation receipt exists. Myco is the post-final-commit navigation refresh and must prove Slice 197 queryable; its status still does not prove Git-HEAD equivalence. Retry the bounded codebase graph only after service recovery; do not substitute the generated package/project/KB graphs for this missing navigation receipt. |
+| Codebase graph and Myco navigation | `PARTIAL`: Myco indexed 5,488 files / 83,364 terms and proves Slice 197 queryable. Codebase-memory returned `Transport closed`, so no exact final-HEAD structural-navigation receipt exists; do not substitute generated package/project/KB graphs for it. |
 
 ## Verified refusal retained outside the batch
 

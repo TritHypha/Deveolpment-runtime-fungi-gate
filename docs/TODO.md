@@ -4,6 +4,40 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 198-207 metrics types and histogram - 2026-08-13
+
+- [x] Account `StatusClass`, `RequestObservation`, `LatencySnapshot`,
+  `RouteMetric` and `MetricsSnapshot` as erased `NO_RUNTIME_BEHAVIOR`
+  declarations. They grant no validation, exact-record, Option, binary64,
+  array, status-map or external-label authority.
+- [x] Retain private `Histogram.observe` at complete JavaScript-number
+  validation, count/sum/min/max mutation, ordered first-bucket selection and
+  overflow mutation.
+- [x] Retain private `#percentile` and `snapshot` at live mutable-state reads,
+  bounded cumulative traversal, binary64 interpolation/clamping/rounding,
+  infinity-sentinel conversion and ordered snapshot materialization.
+- [x] Retain private `clamp` and `round` at their complete JavaScript binary64
+  semantics, including NaN/infinity/signed-zero and `Math.round` tie behavior.
+  No placeholder Fungi asset was created.
+- [x] Prove observability **36/36** and focused metrics/kernel consumers
+  **20/20**, both with zero failures and zero skips.
+- [x] Review both private Fungi skills. `NO_SKILL_UPDATE` is correct because
+  their erased-declaration, exact-record, immutable-transport, binary64,
+  no-NaN, bounded-iteration and mutable-active-state rules cover all ten
+  scopes.
+- [ ] Define an exact finite binary64 value/record/array ABI plus an affine
+  mutable histogram capability. It must preserve ordered bucket traversal,
+  count/sum/min/max updates, overflow, interpolation, rounding and immutable
+  snapshot publication before reopening Slices 203-207.
+- [ ] Add differential vectors for negative, NaN, infinities, signed zero,
+  sub-millisecond values, half ties, large products, every bucket boundary and
+  the overflow bucket before any numeric candidate is admitted.
+- [ ] Retain TypeScript and every metrics route/consumer. Focused evidence
+  grants no whole-file retirement, production, release or push authority.
+- [ ] Defer aggregate graph/index/roadmap/subway owners and Myco refresh until
+  Slice 222 under the approved 25-slice cadence. Repository-wide closure
+  remains `UNKNOWN`; crash-linked aggregate lanes remain excluded.
+
 ### Slices 193-197 health execution and 25-slice maintenance - 2026-08-13
 
 - [x] Retain `HealthRegistry.unregister` at both private mutable-map deletions,
@@ -42,8 +76,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Commit the refreshed owner outputs and rerun their exact checks at the
   owner-output build point. All registered bounded owners remain current after
   commit; no output self-staleness was observed.
-- [ ] Refresh Myco once after the final authored/owner-output commits and prove
-  Slice 197 is queryable. Codebase-memory remains `UNKNOWN` after `Transport
+- [x] Refresh Myco after the final authored/owner-output commits: **5,488 files
+  / 83,364 terms**, with Slice 197 queryable in four governed files.
+  Codebase-memory remains `UNKNOWN` after `Transport
   closed`; do not retry-storm or substitute another graph. Crash-linked
   aggregate lanes remain excluded, so repository-wide closure stays `UNKNOWN`.
 
