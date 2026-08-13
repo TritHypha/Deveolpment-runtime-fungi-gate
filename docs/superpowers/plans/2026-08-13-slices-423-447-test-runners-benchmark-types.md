@@ -85,7 +85,9 @@ SLIDE/VOK, Myco and codebase-memory.
 - [x] Create 25 receipts and update register, TODO and roadmap.
 - [x] Run focused checks and receipt audit; obtain three read-only reviews.
 - [x] Commit authored evidence separately from generated owners.
-- [ ] Regenerate all registered owners individually for Slices 398-447.
-- [ ] Run the 19-check bounded owner matrix, commit the final build point, and
-  refresh Myco plus codebase-memory at exact HEAD.
-- [ ] Keep repository closure `UNKNOWN`; never substitute excluded aggregates.
+- [x] Regenerate all registered owners individually for Slices 398-447.
+- [x] Run the 19-check bounded owner matrix.
+- [ ] Commit the final closure/provenance documents, then refresh Myco and
+  codebase-memory at the resulting exact committed HEAD and independently
+  prove both indexed build points.
+- [x] Keep repository closure `UNKNOWN`; never substitute excluded aggregates.

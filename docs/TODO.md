@@ -28,10 +28,14 @@ counts or open items that a newer section explicitly supersedes.
   records, non-finite numbers and unknown target keys; reconcile `opticalIo:null`,
   validate every literal/privacy field, and rule whether `shareable:false` must
   be binding.
-- [ ] Complete the 50-slice close: publish all registered owners individually,
-  run the 19-check matrix, commit generated outputs, refresh Myco and
-  codebase-memory and prove exact indexed HEAD. Repository closure remains
-  `UNKNOWN`; excluded aggregates are not substitutes.
+- [x] Publish all registered owners individually and pass the complete 19-check
+  matrix: **1,488/1,488** executable-family paths, **149** source Fungi files,
+  graph **9,900 nodes / 10,039 edges / 0 violations**, semantic **3/3** with
+  **976** tests, code index **975**, canonical **9,612**, receipts **387/387**,
+  roadmap **5/5**, Golden **11/11** and both leak audits green.
+- [ ] Commit the final provenance refresh, then refresh Myco and codebase-memory
+  and prove exact indexed HEAD. Repository closure remains `UNKNOWN`; excluded
+  aggregates are not substitutes.
 
 ### Slices 398-422 test types, spawn and freshness foundations - 2026-08-13
 
