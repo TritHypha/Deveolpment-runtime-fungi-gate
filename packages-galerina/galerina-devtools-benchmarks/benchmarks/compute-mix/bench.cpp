@@ -26,11 +26,15 @@ static void run_batch(uint32_t& seed, uint32_t& checksum, int batch_size) {
 
 int main(int argc, char* argv[]) {
     int target_ms = 30000, warmup_ms = 3000, batch_size = 50000;
+    // --operations N: fixed-work mode — the parity instrument. The checksum contract
+    // is only testable at equal work, matching node.mjs / python.py.
+    long long operations = -1;
     uint32_t seed0 = 123456789u;
     for (int i = 1; i < argc-1; ++i) {
         if (!std::strcmp(argv[i],"--target-ms"))  target_ms  = std::atoi(argv[i+1]);
         if (!std::strcmp(argv[i],"--warmup-ms"))  warmup_ms  = std::atoi(argv[i+1]);
         if (!std::strcmp(argv[i],"--batch-size")) batch_size = std::atoi(argv[i+1]);
+        if (!std::strcmp(argv[i],"--operations")) operations = std::atoll(argv[i+1]);
     }
     using clk = std::chrono::steady_clock;
     auto ms = [](auto a, auto b){ return std::chrono::duration<double,std::milli>(b-a).count(); };
@@ -40,7 +44,14 @@ int main(int argc, char* argv[]) {
 
     uint32_t s=seed0, c=0; long long ops=0;
     auto t0 = clk::now();
-    while (ms(t0,clk::now()) < target_ms) { run_batch(s,c,batch_size); ops+=batch_size; }
+    if (operations > 0) {
+        while (ops < operations) {
+            int batch = (operations - ops < (long long)batch_size) ? (int)(operations - ops) : batch_size;
+            run_batch(s,c,batch); ops += batch;
+        }
+    } else {
+        while (ms(t0,clk::now()) < target_ms) { run_batch(s,c,batch_size); ops+=batch_size; }
+    }
     double elapsed = ms(t0,clk::now());
 
     std::cout<<"{"

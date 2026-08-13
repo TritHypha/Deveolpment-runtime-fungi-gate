@@ -26,6 +26,10 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     // 5s default — accurate enough for throughput measurement. Use --target-ms 30000 for publication.
     let mut target_ms = 5000u128; let mut warmup_ms = 1000u128; let mut batch_size = 50000usize;
+    // --operations N: fixed-work mode — the parity instrument. The header contract
+    // ("checksum must match byte-for-byte") is only testable at equal work, matching
+    // node.mjs / python.py which already support it.
+    let mut operations: Option<u64> = None;
     let seed0: u32 = 123456789;
     let mut i = 1;
     while i + 1 < args.len() {
@@ -33,6 +37,7 @@ fn main() {
             "--target-ms"  => target_ms  = args[i+1].parse().unwrap_or(target_ms),
             "--warmup-ms"  => warmup_ms  = args[i+1].parse().unwrap_or(warmup_ms),
             "--batch-size" => batch_size = args[i+1].parse().unwrap_or(batch_size),
+            "--operations" => operations = args[i+1].parse().ok(),
             _ => {}
         }
         i += 2;
@@ -42,7 +47,14 @@ fn main() {
     let _ = (ws,wc);
     let (mut seed,mut checksum)=(seed0,0u32); let mut ops:u64=0;
     let t0 = Instant::now();
-    while t0.elapsed().as_millis()<target_ms { (seed,checksum)=run_batch(seed,checksum,batch_size); ops+=batch_size as u64; }
+    if let Some(target_ops) = operations {
+        while ops < target_ops {
+            let batch = std::cmp::min(batch_size as u64, target_ops - ops) as usize;
+            (seed,checksum)=run_batch(seed,checksum,batch); ops+=batch as u64;
+        }
+    } else {
+        while t0.elapsed().as_millis()<target_ms { (seed,checksum)=run_batch(seed,checksum,batch_size); ops+=batch_size as u64; }
+    }
     let elapsed = t0.elapsed().as_secs_f64()*1000.0;
     println!("{{\"runtime\":\"rust\",\"benchmark\":\"compute-mix-throughput-v2\",\"version\":2,\"algorithm\":\"lcg2x-xorshift2x-sqrt-4branch\",\"targetMs\":{},\"elapsedMs\":{:.3},\"operations\":{},\"operationsPerSecond\":{:.2},\"checksum\":{}}}",
         target_ms, elapsed, ops, ops as f64/(elapsed/1000.0), checksum);
