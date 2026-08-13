@@ -117,7 +117,11 @@ counts or open items that a newer section explicitly supersedes.
   profile. The bounded four-plus-four helper graph passes package proof **2/2**,
   strict check and physical SLIDE/VOK **8/8**. Both private skills now bind the
   reusable helper-call proof rule at `938a71b` and `9d46ddc`.
-- [ ] Continue Slices 64-87 with non-floor candidates and focused evidence;
+- [x] Re-test the earlier Slice 37 `isBuiltin` blocker as Slice 64. Three
+  bounded shapes conserve the exact physical refusal; no current composite
+  profile admits the String-comparison, wide-function and bounded-call-work
+  graph. The flat asset is restored and TypeScript remains active.
+- [ ] Continue Slices 65-87 with non-floor candidates and focused evidence;
   defer aggregate roadmap, graph and index closure to the Slice 87 boundary.
 
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12

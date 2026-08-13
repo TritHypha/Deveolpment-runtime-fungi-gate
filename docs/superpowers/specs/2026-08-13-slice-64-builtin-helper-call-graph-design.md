@@ -25,8 +25,8 @@ new pinned call-chain capability and do not count as current physical proof.
 
 1. **Five bounded pure helpers plus one shallow Boolean composition
    (selected after RED diagnosis).** Four leaves own four exact names and the
-   fifth owns two. The exported flow combines the five pure results with one
-   `or` expression. This keeps every function at or below the narrow
+   fifth owns two. The exported flow combines the five pure results in one
+   Boolean `if ... or ...` condition. This keeps every function at or below the narrow
    eight-block ceiling, uses the bounded wide-function registry and keeps the
    call graph at depth one.
 2. **Three six-name helpers.** Rejected after a valid RED run. Six-name leaf
@@ -43,9 +43,10 @@ The helpers own, in order: `AuditLog`/`Secrets`/`Crypto`/`Database`;
 `Ok`/`Err`/`Some`/`None`; and `true`/`false`.
 
 Every helper uses an exhaustive `match` with terminal `_ => return false`.
-The exported `isBuiltin` returns the Boolean `or` of all five pure helper
-results. The source decision is pure and has no observable evaluation-order or
-short-circuit effect to preserve. It contains no null, NaN, `else if`,
+The exported `isBuiltin` returns `true` from one Boolean `if` over the `or` of
+all five pure helper results, and otherwise returns `false`. The source decision
+is pure and has no observable evaluation-order or short-circuit effect to
+preserve. It contains no null, NaN, `else if`,
 exception syntax, iteration, effect, host API, authority grant, Hallmark,
 border or vault access.
 
@@ -75,3 +76,18 @@ Any frontend, queue, package, physical, re-admission, mutation or exhaustion
 failure returns the slice to `BLOCKED` with the exact boundary named. The
 implementation must not reduce the eighteen-name domain, precompute the
 Boolean in the host or change the SLIDE profile to obtain a pass.
+
+## Adjudicated outcome
+
+`BLOCKED_BY_COMPOSITE_PHYSICAL_PROFILE`.
+
+The planned three-by-six graph strict-checked and passed package parity but
+refused physical package build. Source inspection showed that its six-arm
+leaves select wide-control before wide-function. The corrected five-leaf
+shallow graph also strict-checked and passed package parity, but the independent
+checked-source compiler still refused the combined String-comparison,
+wide-function and bounded-call-work graph. The wide-function reference proof
+uses arithmetic `Int` functions and does not grant this combined String
+profile. After three bounded shapes, no further architecture experiment is
+authorized in this slice. The flat asset and explicit physical refusal are
+retained.

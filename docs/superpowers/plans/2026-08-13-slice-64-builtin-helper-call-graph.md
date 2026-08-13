@@ -40,7 +40,7 @@ Replace `physicalExpectation: "REFUSE_COMPILE"` with
 Run with `GALERINA_SLIDE_REPO` bound to the independent SLIDE repository:
 
 ```powershell
-$env:GALERINA_SLIDE_REPO = "C:\Users\phill\Documents\GitHub\SLIDE"
+$env:GALERINA_SLIDE_REPO = (Resolve-Path '..\SLIDE').Path
 node --test scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs
 Remove-Item Env:GALERINA_SLIDE_REPO
 ```
@@ -125,11 +125,10 @@ contract { intent { "Recognize an exact Boolean builtin name." } }
 pure flow isBuiltin(name: String) -> Bool
 contract { intent { "Recognize only an exact context-receipt builtin name." } }
 {
-  return isBuiltinPlatform(name)
-    or isBuiltinRuntime(name)
-    or isBuiltinOperation(name)
-    or isBuiltinValue(name)
-    or isBuiltinBoolean(name)
+  if isBuiltinPlatform(name) or isBuiltinRuntime(name) or isBuiltinOperation(name) or isBuiltinValue(name) or isBuiltinBoolean(name) {
+    return true
+  }
+  return false
 }
 ```
 
@@ -152,7 +151,7 @@ Expected: 2/2 pass across all eighteen names and hostile surplus text.
 - [ ] **Step 4: Run physical SLIDE/VOK proof**
 
 ```powershell
-$env:GALERINA_SLIDE_REPO = "C:\Users\phill\Documents\GitHub\SLIDE"
+$env:GALERINA_SLIDE_REPO = (Resolve-Path '..\SLIDE').Path
 node --test scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs
 Remove-Item Env:GALERINA_SLIDE_REPO
 ```
@@ -200,3 +199,13 @@ Expected: queue current, zero path leaks and no whitespace errors.
 git add -- packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs docs/reports/fungi-conversion-batch-33-42-file-status.md docs/reports/builtin-helper-call-graph-fungi-conversion-2026-08-13.md docs/TODO.md docs/superpowers/plans/2026-08-13-slice-64-builtin-helper-call-graph.md
 git commit -m "feat: admit builtin Fungi helper graph"
 ```
+
+## Execution outcome
+
+Task 1 produced the intended RED. Task 2 stopped fail-closed after three
+bounded physical shapes refused. Frontend and package parity were green for
+the helper candidates, but no current composite registry admitted the required
+String-comparison, wide-function and bounded-call-work graph. The original flat
+asset and `REFUSE_COMPILE` expectation were restored. Task 3 therefore closes
+the slice as `BLOCKED_BY_COMPOSITE_PHYSICAL_PROFILE`; it must not use the
+success commit command above.
