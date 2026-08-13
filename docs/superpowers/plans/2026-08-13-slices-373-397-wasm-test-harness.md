@@ -104,6 +104,6 @@ SLIDE/VOK, Myco and codebase-memory.
 
 - [x] Regenerate registered owners individually in dependency order.
 - [x] Run the 19-check bounded owner matrix; do not substitute aggregates.
-- [ ] Commit final generated build point, refresh Myco and codebase-memory, and
+- [x] Commit final generated build point, refresh Myco and codebase-memory, and
   prove exact indexed HEAD plus a named symbol lookup.
-- [ ] Keep repository closure `UNKNOWN` unless every separate exit is proved.
+- [x] Keep repository closure `UNKNOWN` unless every separate exit is proved.
