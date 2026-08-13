@@ -8,6 +8,7 @@
   "packageGraph": {
     "loadedAssets": [
       "src/self-hosted/authorization-boundary.fungi",
+      "src/self-hosted/effective-verdict.fungi",
       "src/self-hosted/governance-decisions.fungi",
       "src/self-hosted/inference-governance.fungi",
       "src/self-hosted/pq-admission-policy.fungi",

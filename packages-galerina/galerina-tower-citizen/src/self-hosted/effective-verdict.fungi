@@ -1,0 +1,14 @@
+@version 1
+pure flow effectiveVerdict(ideal: Verdict, reading: Verdict) -> Verdict {
+  check(ideal) {
+    deny: { return Verdict.Deny }
+    ambig: {
+      check(reading) {
+        deny: { return Verdict.Deny }
+        ambig: { return Verdict.Unknown }
+        if: { return Verdict.Unknown }
+      }
+    }
+    if: { return reading }
+  }
+}
