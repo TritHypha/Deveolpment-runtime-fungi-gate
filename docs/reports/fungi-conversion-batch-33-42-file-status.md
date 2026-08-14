@@ -1334,6 +1334,83 @@ time-budget breach or regex timeout. Codebase-memory moderate refresh reports
 interface result with `has_more:false`. A final post-record exact-head refresh
 is handoff evidence; repository-wide closure remains `UNKNOWN`.
 
+## Slices 948-997 - Substrate, snapshot, governance and Tower runtime
+
+These 50 unique source-order scopes finish `substrate-model.ts`, exhaust
+`substrate-snapshot.ts`, credit only the still-uncredited
+`three-valued-governance.ts` scopes, exhaust `tower-runtime.ts`, then stop at
+`tpl-simulator.ts#TRITS_PER_I32`. Exact arithmetic is **12
+NO_RUNTIME_BEHAVIOR + 32 BLOCKED + 6 CANDIDATE**; threadability is **12 N/A +
+26 SERIAL_HARD_PATH + 12 PARALLEL_PURE**. There is no supersession, consumer
+switch or retirement credit. Source build point is
+`17a13157dc1fd87914e17ea543d23a66172bf74b`; plan HEAD is
+`cbec016da8719f7f23ecbcc739c7320e0c1fc176`, so graph freshness after the
+plan-only commit is `UNKNOWN` and exact reads govern.
+
+### Slice 948-997 exact evidence manifest
+
+| Slices | Exact owning ranges |
+|---|---|
+| 948-966 | `substrate-model.ts:164-166`, `:168-186`, `:189-195`, `:204-214`; prior `:224-229#effectiveVerdict` stays Slice91; then `:238-242`, `:244-249`, `:251-258`, `:260`, `:262-265`, `:268-275`, `:279-284`, `:286-291`, `:293-297`, `:299`, `:301-305`, `:307-315`, `:323-358`, `:367-390`, `:393-399` |
+| 967-972 | `substrate-snapshot.ts:20-29`, `:36-51`, `:54-66`, `:68-76`, `:83-103`, `:90#eq` |
+| 973-980 | `three-valued-governance.ts:33-44`, `:58-61`; prior Slices90/92-100 remain skipped; then `:119`, `:122-127`, `:130-136`, `:138-145`; prior Slices99-102 remain skipped around `:191-280`; then `:257-261`, `:274#inRange` |
+| 981-992 | `tower-runtime.ts:19`, `:21-29`, `:34-71`, `:73-262#TowerRuntime`, `:79-105#constructor`, `:109-198#load`, `:202-230#execute`, `:234-238#erase`, `:242-256#evict`, `:259#getLifecycle`, `:260#getAudit`, `:261#getActiveSandboxCount` |
+| 993-997 | `tpl-simulator.ts:61`, `:62`, `:63`, `:64`, `:66`; earlier Error/class/Trit and encode/decode behavior remains prior Slices103/123-129 |
+
+Caller reconciliation is bounded. The remaining model methods feed public
+NoisyLane reads, guarantees, diagnostics and empirical verification. Snapshot
+construction/canonicalization/verification is public through the Tower barrel.
+Three-valued governance declarations and helpers feed every K3 boundary, but
+the already-adjudicated K3 folds retain their prior receipts. TowerRuntime is
+consumed by the hybrid engine, CLI, benchmarks and focused Tower tests. The
+five TPL constants remain internal inputs to packing, encode/decode and memory
+allocation; their primitive candidacy grants no lifecycle or consumer
+authority.
+
+Focused byte pins are `substrate-model.test.mjs`
+`EABD1015628E07A9D7868ECE60BD36F13FC75626BA4C65C7AD6A1DB7C44804CA`;
+`substrate-snapshot.test.mjs`
+`B51D292F3C9BC47A78245B5C1228D1AA14BF7DA02151D6E1890869B56D347DC6`;
+`three-valued-governance.test.mjs`
+`EA1145E0E8170839DB716601881A383DC206733D62231BEEE39CA70D47748117`;
+`tower-citizen.test.mjs`
+`03086BB06BF616798E6BABCCC618BF6B2F03DC9E6731D487A2837A917D897655`;
+and `tpl-simulator.test.mjs`
+`0D58F009D1DDEACFCDC2726BE931A4ECF60D63014D477D84D097B124F5BED3EC`.
+These tests are regression evidence only.
+
+Loaded assets remain the eight Tower governance/logic Fungi sources plus the
+trit brand guard. Exact-name and caller reconciliation found no scoped model,
+snapshot, uncredited-governance, Tower lifecycle or TPL-constant
+Fungi/GIR/physical `.slide`/independent re-admission/VOK twin. Existing K3 and
+Trit assets are adjacent decision-core evidence only; they do not admit the
+JavaScript records, errors, callbacks, clocks, crypto or active lifecycle.
+
+Material defects remain explicit. NoisyLane retains caller parameters and
+combines active neighbors with stateful PRNG closures. Guarantee paths validate
+then reread active records. Snapshot construction returns nested caller aliases;
+canonicalization executes active JSON behavior; verification collapses foreign
+errors and uses a binary64 tolerance. The exported Verdict and diagnostic
+objects remain mutable authority/provenance state. TowerRuntime retains active
+configuration and policy callbacks, combines Map/Set state with async crypto,
+audit and clock effects, and has partial-failure cleanup paths in erase/evict.
+In `load`, `sandboxes.set` precedes `audit.load`; an audit throw rejects the
+call and clears only the loading-ID set, leaving a residual active sandbox.
+The TPL constants are primitive leaves only; they do not prove packing or
+corruption-trap consumers.
+
+Both private skills remain at translation
+`13c070f75cb4899dc46fc35b9d43a770f9116380` and authoring
+`c4b10ae638c4daee09cab9ab1f3dc3d3ce35cd11`, private and unpushed. Every
+finding instantiates existing active-state, exact-record, binary64, callback,
+crypto, error, closure and physical-proof rules, so every receipt records
+`NO_SKILL_UPDATE`. Receipt authoring and fresh verification are complete:
+Tower no-emit typecheck, **515/515** package tests and **937/937** governed
+receipt checks pass. These are regression/schema evidence only. Three
+independent read-only reviews and their bounded correction rechecks pass.
+Registered-owner publication and exact-head index refresh remain pending.
+Repository-wide closure stays `UNKNOWN`.
+
 ## Slices 898-947 - Tower verifier, snapshot and substrate
 
 These 50 unique source-order scopes finish `registry-public-verifier.ts`,

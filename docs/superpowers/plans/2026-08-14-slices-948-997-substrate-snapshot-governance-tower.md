@@ -115,42 +115,42 @@ admission rules, Myco, codebase-memory, node:test and registered owner tools.
 | 997 | `tpl-simulator.ts#TRITS_PER_I32` line 66 |
 
 Exact arithmetic: **12 NO_RUNTIME_BEHAVIOR + 32 BLOCKED + 6 CANDIDATE**;
-threadability **12 N/A + 27 SERIAL_HARD_PATH + 11 PARALLEL_PURE**; zero
+threadability **12 N/A + 26 SERIAL_HARD_PATH + 12 PARALLEL_PURE**; zero
 superseded scopes or retirement credit.
 
 ## Task 1: Adjudicate Slices 948-966
 
-- [ ] Bind the active `NoisyLane` instance, stateful PRNG streams, live records,
+- [x] Bind the active `NoisyLane` instance, stateful PRNG streams, live records,
   loops, binary64 calculations, diagnostics and callback order to exact source.
-- [ ] Retain Slice-91 `effectiveVerdict` as prior credit with zero new ordinal.
-- [ ] Record validation/use split snapshots, erased readonly aliases and
+- [x] Retain Slice-91 `effectiveVerdict` as prior credit with zero new ordinal.
+- [x] Record validation/use split snapshots, erased readonly aliases and
   unbounded-work/failure-order risks with exact exits and hostile vectors.
 
 ## Task 2: Adjudicate Slices 967-980
 
-- [ ] Bind snapshot record aliases, JSON bytes, re-derivation, error collapse,
+- [x] Bind snapshot record aliases, JSON bytes, re-derivation, error collapse,
   binary64 tolerance and local `eq` behavior to exact source.
-- [ ] Reconcile every prior K3 receipt and credit only the eight exact
+- [x] Reconcile every prior K3 receipt and credit only the eight exact
   uncredited governance scopes, including the named local `inRange`.
-- [ ] Preserve public declarations and distinguish mutable Verdict authority
+- [x] Preserve public declarations and distinguish mutable Verdict authority
   from primitive diagnostic and physical-record candidates.
 
 ## Task 3: Adjudicate Slices 981-997
 
-- [ ] Bind RegExp/UUID/Error behavior and the complete active Tower lifecycle,
+- [x] Bind RegExp/UUID/Error behavior and the complete active Tower lifecycle,
   maps, sets, callbacks, crypto, audit, clocks and async cleanup ordering.
-- [ ] Stop after `TRITS_PER_I32`; retain previously absorbed TPL class/error and
+- [x] Stop after `TRITS_PER_I32`; retain previously absorbed TPL class/error and
   encoding-function credits without duplicate ordinal assignment.
-- [ ] Treat the five encoding constants as primitive candidates only, pending
+- [x] Treat the five encoding constants as primitive candidates only, pending
   exact Fungi/GIR/physical `.slide`/re-admission/VOK evidence and consumers.
 
 ## Task 4: Author and verify the 50 receipts
 
-- [ ] Author 50 receipt-local classifications, blocker-specific exits, vectors,
+- [x] Author 50 receipt-local classifications, blocker-specific exits, vectors,
   threadability, source hashes, focused evidence pins and a common manifest.
-- [ ] Run Tower no-emit typecheck, the full Tower test suite and
+- [x] Run Tower no-emit typecheck, the full Tower test suite and
   `node scripts/audit-conversion-slice-close.mjs`; require exact arithmetic.
-- [ ] Reconcile three independent read-only reviews and correct every Critical
+- [x] Reconcile three independent read-only reviews and correct every Critical
   or Important finding before commit.
 - [ ] Commit authored evidence separately from generated owner outputs.
 
@@ -167,9 +167,9 @@ superseded scopes or retirement credit.
 
 ## Self-review
 
-- [ ] Confirm 50 case-sensitive unique scopes in exact source order.
-- [ ] Confirm every prior-credit exclusion and named-local ruling.
-- [ ] Confirm arithmetic is 12 NRB + 32 BLOCKED + 6 CANDIDATE.
-- [ ] Confirm every blocked receipt has an executable blocker-specific exit and
+- [x] Confirm 50 case-sensitive unique scopes in exact source order.
+- [x] Confirm every prior-credit exclusion and named-local ruling.
+- [x] Confirm arithmetic is 12 NRB + 32 BLOCKED + 6 CANDIDATE.
+- [x] Confirm every blocked receipt has an executable blocker-specific exit and
   every candidate has explicit consumer and physical-proof gates.
-- [ ] Confirm no physical authority, switch, supersession or retirement claim.
+- [x] Confirm no physical authority, switch, supersession or retirement claim.

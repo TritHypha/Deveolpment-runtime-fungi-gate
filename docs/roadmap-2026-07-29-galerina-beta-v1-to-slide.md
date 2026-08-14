@@ -3,9 +3,32 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 
-Current checkpoint: the governed TypeScript/MJS-to-Fungi campaign is accounted
-through **Slice 247**. The exact per-symbol results, blockers, threadability and
-skill dispositions are in the live
+## Slices 948-997 - Substrate, snapshot, governance and Tower runtime
+
+These 50 unique source-order scopes finish the substrate model, exhaust its
+snapshot companion, retain all earlier K3 credits while accounting for eight
+uncredited governance scopes, exhaust TowerRuntime and stop after five TPL
+encoding constants. Exact arithmetic is **12 NO_RUNTIME_BEHAVIOR + 32 BLOCKED
++ 6 CANDIDATE**; threadability is **12 N/A + 26 SERIAL_HARD_PATH + 12
+PARALLEL_PURE**. Source build point is `17a13157`; the plan-only commit is
+`cbec016d`, so graph freshness is `UNKNOWN` until the final exact-head refresh.
+
+The candidates are one exact governance diagnostic String and five primitive
+TPL integer constants. They are non-authorizing until candidate-specific Fungi,
+GIR, physical `.slide`, independent re-admission/VOK and complete consumer
+evidence exist. All JavaScript active records, Error behavior, JSON/binary64,
+stateful streams, class/Map/Set state, crypto, audit, clock and async lifecycle
+scopes remain blocked. Prior Slice-91, Slices90/92-102 and Slices103/123-129
+retain sole credit. Receipt authoring and fresh Tower no-emit typecheck,
+**515/515** package tests and **937/937** governed receipt checks are complete;
+these remain regression/schema evidence only. Three independent read-only
+reviews and correction rechecks pass; owner publication and final dual-index
+evidence remain pending.
+
+Historical Slice-247 checkpoint (retained as a chronological baseline): the
+governed TypeScript/MJS-to-Fungi campaign was then accounted through **Slice
+247**. The current checkpoint is Slice 997 above; exact per-symbol results,
+blockers, threadability and skill dispositions are in the live
 [`Fungi conversion register`](reports/fungi-conversion-batch-33-42-file-status.md).
 The conserved queue accounts for **1,486/1,486** executable-family paths, zero
 whole-file candidates, seven symbol-scoped candidates and **856** file-level

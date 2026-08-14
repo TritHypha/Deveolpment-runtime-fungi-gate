@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 948-997 substrate, snapshot, governance and Tower runtime - 2026-08-14
+
+- [x] Freeze 50 unique source-order scopes: 12 erased declarations, 32 blocked
+  runtime scopes and six primitive candidates.
+- [x] Retain prior Slice-91 `effectiveVerdict`, Slices90/92-102 governance and
+  Slices103/123-129 TPL credits with no duplicate ordinal.
+- [x] Author 50 blocker/candidate-specific receipts with exact exits, hostile
+  vectors, source/test pins and one common evidence manifest.
+- [x] Run fresh Tower no-emit typecheck, **515/515** Tower tests and the
+  governed receipt audit at **937/937**; keep all results regression/shape
+  evidence only.
+- [x] Reconcile three independent read-only reviews and correct every Critical
+  or Important discrepancy; all bounded rechecks pass.
+- [ ] Commit authored evidence separately from registered owner outputs.
+- [ ] Publish registered owners, pass the hermetic owner contract and bounded
+  close matrix, then refresh Myco and codebase-memory at the exact final head.
+- [ ] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,
+  production, release, signing, push or retirement authority.
+
 ### Slices 898-947 Tower verifier, snapshot and substrate - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes: 15 erased declarations, 33 blocked
