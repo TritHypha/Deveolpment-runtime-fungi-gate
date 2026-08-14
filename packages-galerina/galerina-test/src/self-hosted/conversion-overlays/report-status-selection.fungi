@@ -1,0 +1,10 @@
+@version 1
+/// Severity-precedence core of core-reports#index.ts#selectReportStatus.
+pure flow selectReportStatusCore(warnings: Int, errors: Int, critical: Int) -> String
+contract { intent { "Choose the highest report severity with critical precedence." } }
+{
+  if critical > 0 { return "critical" }
+  if errors > 0 { return "error" }
+  if warnings > 0 { return "warning" }
+  return "ok"
+}

@@ -1,0 +1,9 @@
+@version 1
+/// Decision core of stage-b-report.ts#parityStatusFromErrors after Int ingress.
+pure flow stageBParityStatus(errors: Int) -> String
+contract { intent { "Classify Stage-B parity by the exact error thresholds." } }
+{
+  if errors == 0 { return "complete" }
+  if errors < 5 { return "partial" }
+  return "pending"
+}

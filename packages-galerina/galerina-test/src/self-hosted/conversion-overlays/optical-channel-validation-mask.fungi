@@ -1,0 +1,7 @@
+@version 1
+/// Diagnostic core of target-photonic#index.ts#validateOpticalChannelLayout after option capture.
+pure flow opticalChannelValidationMask(idFault: Int, wavelengthFault: Int, phaseFault: Int, amplitudeFault: Int) -> Int
+contract { intent { "Encode channel identity and three physical-value faults in source order." } }
+{
+  return idFault + wavelengthFault * 2 + phaseFault * 4 + amplitudeFault * 8
+}

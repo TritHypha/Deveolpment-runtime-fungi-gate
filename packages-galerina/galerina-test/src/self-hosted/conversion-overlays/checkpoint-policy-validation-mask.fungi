@@ -1,0 +1,12 @@
+@version 1
+/// Diagnostic core of data-pipeline#index.ts#validateCheckpointPolicy after border validation.
+pure flow checkpointPolicyValidationMask(intervalValid: Bool, storePresent: Bool) -> Int
+contract { intent { "Report checkpoint interval and store faults independently." } }
+{
+  if intervalValid {
+    if storePresent { return 0 }
+    return 2
+  }
+  if storePresent { return 1 }
+  return 3
+}

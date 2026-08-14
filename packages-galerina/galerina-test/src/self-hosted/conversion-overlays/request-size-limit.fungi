@@ -1,0 +1,9 @@
+@version 1
+/// Decision core of limitPolicy.ts#checkRequestSize after Option and number admission.
+pure flow requestSizeWithinLimit(configured: Bool, actual: Int, maximum: Int) -> Bool
+contract { intent { "Allow an unconfigured request-size limit or an in-bound request." } }
+{
+  if configured == false { return true }
+  if actual > maximum { return false }
+  return true
+}

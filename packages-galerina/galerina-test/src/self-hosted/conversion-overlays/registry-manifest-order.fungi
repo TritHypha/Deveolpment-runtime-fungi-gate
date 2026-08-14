@@ -1,0 +1,11 @@
+@version 1
+/// Ordering core of registry-generation.ts#compareManifest after exact String comparisons.
+pure flow compareRegistryManifestCore(nameOrder: Int, versionOrder: Int) -> Int
+contract { intent { "Order package manifests by name before version." } }
+{
+  if nameOrder < 0 { return -1 }
+  if nameOrder > 0 { return 1 }
+  if versionOrder < 0 { return -1 }
+  if versionOrder > 0 { return 1 }
+  return 0
+}

@@ -1,0 +1,11 @@
+@version 1
+/// Decision core of stage-b-report.ts#overallStatusFromMilestones after tally capture.
+pure flow stageBOverallStatus(total: Int, complete: Int, nonPending: Int) -> String
+contract { intent { "Summarize milestone status without treating partial work as complete." } }
+{
+  if total > 0 {
+    if complete == total { return "complete" }
+  }
+  if nonPending > 0 { return "partial" }
+  return "pending"
+}

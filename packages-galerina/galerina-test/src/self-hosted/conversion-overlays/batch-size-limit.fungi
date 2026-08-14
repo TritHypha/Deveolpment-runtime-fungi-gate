@@ -1,0 +1,10 @@
+@version 1
+/// Decision core of limitPolicy.ts#checkBatchSize after Option and number admission.
+pure flow batchSizeWithinLimit(configured: Bool, count: Int, maximum: Int) -> Bool
+contract { intent { "Refuse only configured batch-size excess." } }
+{
+  if configured {
+    if count > maximum { return false }
+  }
+  return true
+}

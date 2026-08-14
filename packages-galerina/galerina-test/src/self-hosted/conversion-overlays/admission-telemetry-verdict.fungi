@@ -1,0 +1,16 @@
+@version 1
+/// K3 fold of admission-feedback.ts#telemetryToSideSignal after threshold validation.
+pure flow telemetrySideSignalCore(healthUp: Bool, anomalyState: Int, denyEnabled: Bool) -> Verdict
+contract { intent { "Degrade unhealthy telemetry and deny only a validated severe anomaly." } }
+{
+  if healthUp == false { return Verdict.Unknown }
+  match anomalyState {
+    0 => return Verdict.Allow
+    1 => return Verdict.Unknown
+    2 => {
+      if denyEnabled { return Verdict.Deny }
+      return Verdict.Unknown
+    }
+    _ => return Verdict.Unknown
+  }
+}

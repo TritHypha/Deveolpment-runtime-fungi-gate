@@ -1,0 +1,9 @@
+@version 1
+/// Closed selector core of limitPolicy.ts#normaliseRateScope.
+pure flow normaliseRateScope(raw: String) -> String
+contract { intent { "Preserve only explicit IP/global rate scopes and default to actor." } }
+{
+  if raw == "ip" { return "ip" }
+  if raw == "global" { return "global" }
+  return "actor"
+}

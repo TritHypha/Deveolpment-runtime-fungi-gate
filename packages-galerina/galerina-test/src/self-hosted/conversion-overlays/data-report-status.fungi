@@ -1,0 +1,9 @@
+@version 1
+/// Diagnostic-fold core of data-reports#index.ts#deriveDataReportStatus.
+pure flow deriveDataReportStatusCore(hasError: Bool, hasWarning: Bool) -> String
+contract { intent { "Refuse success when error or warning diagnostics remain." } }
+{
+  if hasError { return "failed" }
+  if hasWarning { return "partial" }
+  return "success"
+}

@@ -1,0 +1,17 @@
+@version 1
+/// Suffix-selection core of benchmark-interpretation.mjs#ordinal.
+pure flow ordinalSuffix(place: Int) -> String
+contract { intent { "Select the English ordinal suffix with the 11-13 exception." } }
+{
+  let mod100: Int = place % 100
+  if mod100 >= 11 {
+    if mod100 <= 13 { return "th" }
+  }
+  let mod10: Int = place % 10
+  match mod10 {
+    1 => return "st"
+    2 => return "nd"
+    3 => return "rd"
+    _ => return "th"
+  }
+}

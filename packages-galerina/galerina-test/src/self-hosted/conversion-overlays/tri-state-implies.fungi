@@ -1,0 +1,17 @@
+@version 1
+/// Closed K3 value core of core-logic/tri-ops.ts#triStateImplies.
+pure flow triStateImpliesCore(antecedent: Verdict, consequent: Verdict) -> Verdict
+contract { intent { "Compute K3 implication as not antecedent or consequent." } }
+{
+  check(antecedent) {
+    deny: { return Verdict.Allow }
+    ambig: {
+      check(consequent) {
+        deny: { return Verdict.Unknown }
+        ambig: { return Verdict.Unknown }
+        if: { return Verdict.Allow }
+      }
+    }
+    if: { return consequent }
+  }
+}

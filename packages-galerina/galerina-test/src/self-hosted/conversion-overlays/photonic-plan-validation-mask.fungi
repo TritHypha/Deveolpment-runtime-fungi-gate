@@ -1,0 +1,20 @@
+@version 1
+/// Plan diagnostic core of core-photonic#index.ts#validatePhotonicPlan after child validation.
+pure flow photonicPlanValidationMask(namePresent: Bool, channelsValid: Bool, mappingsValid: Bool) -> Int
+contract { intent { "Aggregate plan-name, channel, and mapping validation without dropping any failure." } }
+{
+  if namePresent {
+    if channelsValid {
+      if mappingsValid { return 0 }
+      return 4
+    }
+    if mappingsValid { return 2 }
+    return 6
+  }
+  if channelsValid {
+    if mappingsValid { return 1 }
+    return 5
+  }
+  if mappingsValid { return 3 }
+  return 7
+}

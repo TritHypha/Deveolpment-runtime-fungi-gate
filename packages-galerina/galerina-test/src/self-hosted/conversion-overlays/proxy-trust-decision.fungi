@@ -1,0 +1,14 @@
+@version 1
+/// Evidence fold of defensive-controls.ts#proxyIsTrusted after exact record capture.
+pure flow proxyTrustDecision(method: String, certificateVerified: Bool, subjectPinned: Bool, tokenVerified: Bool) -> Bool
+contract { intent { "Trust mTLS only with both proofs, or a verified gateway token." } }
+{
+  if method == "mtls" {
+    if certificateVerified {
+      if subjectPinned { return true }
+    }
+    return false
+  }
+  if method == "gateway-token" { return tokenVerified }
+  return false
+}

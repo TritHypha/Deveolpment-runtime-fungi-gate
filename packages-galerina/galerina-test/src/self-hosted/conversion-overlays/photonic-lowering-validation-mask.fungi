@@ -1,0 +1,7 @@
+@version 1
+/// Diagnostic core of target-photonic#index.ts#validatePhotonicLoweringPlan after collection folds.
+pure flow photonicLoweringValidationMask(statusFault: Int, explanationFault: Int, consistencyFault: Int, emptyPlanFault: Int) -> Int
+contract { intent { "Preserve status, explanation, consistency, and empty-plan lowering faults." } }
+{
+  return statusFault + explanationFault * 2 + (consistencyFault + emptyPlanFault * 2) * 4
+}

@@ -1,0 +1,13 @@
+@version 1
+/// Effective-posture core of core-config/posture.ts#resolvePosture after schema admission.
+pure flow resolveSecurityPostureCore(requested: String, relax: Bool) -> String
+contract { intent { "Resolve explicit posture and fail-secure automatic posture." } }
+{
+  if requested == "on" { return "on" }
+  if requested == "off" { return "off" }
+  if requested == "auto" {
+    if relax { return "off" }
+    return "on"
+  }
+  return "on"
+}

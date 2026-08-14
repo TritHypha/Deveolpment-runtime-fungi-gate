@@ -1,0 +1,12 @@
+@version 1
+/// Unit-selection core of limitPolicy.ts#toBytes; JS rounding remains at the host border.
+pure flow byteUnitMultiplier(unit: String) -> Int
+contract { intent { "Select the exact byte multiplier for a normalized limit unit." } }
+{
+  match unit {
+    "kb" => return 1024
+    "mb" => return 1048576
+    "gb" => return 1073741824
+    _ => return 1
+  }
+}

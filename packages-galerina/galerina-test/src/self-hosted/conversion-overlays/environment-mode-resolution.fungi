@@ -1,0 +1,10 @@
+@version 1
+/// Result-selection core of core-config#index.ts#resolveEnvironmentMode.
+pure flow resolveEnvironmentModeCore(present: Bool, valid: Bool, requested: String, fallbackMode: String) -> String
+contract { intent { "Use only a present valid environment mode; otherwise retain the supplied fallback." } }
+{
+  if present {
+    if valid { return requested }
+  }
+  return fallbackMode
+}

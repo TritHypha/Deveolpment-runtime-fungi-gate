@@ -1,0 +1,10 @@
+@version 1
+/// Feature fold of target-cpu#index.ts#canUseLowBitCpuPath after capability capture.
+pure flow canUseLowBitCpuPathCore(supportsLowBit: Bool, architecture: String, hasAvx2: Bool, hasNeon: Bool) -> Bool
+contract { intent { "Admit low-bit CPU execution only with the architecture-specific SIMD feature." } }
+{
+  if supportsLowBit == false { return false }
+  if architecture == "x86_64" { return hasAvx2 }
+  if architecture == "arm64" { return hasNeon }
+  return false
+}

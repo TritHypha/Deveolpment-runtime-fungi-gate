@@ -1,0 +1,11 @@
+@version 1
+/// Tally core of core-tasks/task-report.ts#summarizeTaskRunStatus after array capture.
+pure flow summarizeTaskRunStatusCore(failed: Int, running: Int, pending: Int, total: Int) -> String
+contract { intent { "Summarize task progress without hiding failure or unfinished work." } }
+{
+  if failed > 0 { return "failed" }
+  if running > 0 { return "running" }
+  if pending > 0 { return "pending" }
+  if total == 0 { return "empty" }
+  return "completed"
+}

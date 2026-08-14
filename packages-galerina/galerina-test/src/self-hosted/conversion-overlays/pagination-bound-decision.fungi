@@ -1,0 +1,11 @@
+@version 1
+/// Limit-selection core of defensive-controls.ts#boundPageLimit after numeric admission.
+pure flow boundPageLimitCore(present: Bool, valid: Bool, requested: Int, defaultLimit: Int, maximum: Int) -> Int
+contract { intent { "Default absent or invalid page limits and cap values above policy." } }
+{
+  if present == false { return defaultLimit }
+  if valid == false { return defaultLimit }
+  if requested <= 0 { return defaultLimit }
+  if requested > maximum { return maximum }
+  return requested
+}

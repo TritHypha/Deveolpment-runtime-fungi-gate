@@ -1,0 +1,12 @@
+@version 1
+/// Fail-closed result core of core-runtime-wasm/seam-adapters.ts#moduleDefinesExport after host parsing.
+pure flow moduleDefinesFunctionExportCore(moduleValid: Bool, nameMatched: Bool, functionKind: Bool) -> Bool
+contract { intent { "Admit only a valid module export with the requested name and function kind." } }
+{
+  if moduleValid {
+    if nameMatched {
+      return functionKind
+    }
+  }
+  return false
+}

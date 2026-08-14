@@ -1,0 +1,7 @@
+@version 1
+/// Diagnostic-presence core of core-photonic#index.ts#validateOpticalSignal after Binary64 checks.
+pure flow opticalSignalValidationMask(wavelengthFault: Int, phaseFault: Int, amplitudeFault: Int) -> Int
+contract { intent { "Retain every independent optical-signal validation failure." } }
+{
+  return wavelengthFault + phaseFault * 2 + amplitudeFault * 4
+}

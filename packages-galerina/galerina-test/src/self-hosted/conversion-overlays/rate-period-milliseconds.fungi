@@ -1,0 +1,13 @@
+@version 1
+/// Prefix-selection core of limitPolicy.ts#toPeriodMs after the toxic String border.
+pure flow ratePeriodMilliseconds(unit: String) -> Int
+contract { intent { "Select the conservative rate window for an admitted normalized prefix." } }
+{
+  match unit {
+    "second" => return 1000
+    "minute" => return 60000
+    "hour" => return 3600000
+    "day" => return 86400000
+    _ => return 1000
+  }
+}

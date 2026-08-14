@@ -1,0 +1,17 @@
+@version 1
+/// Closed action core of resilience-inference.ts#coerceFaultAction.
+pure flow coerceFaultAction(signal: String, raw: String) -> String
+contract { intent { "Fail closed on an unrecognized fault action and narrowly retain rotation logging." } }
+{
+  match raw {
+    "halt" => return "halt"
+    "quarantine" => return "quarantine"
+    "retry" => return "retry"
+    "fallback" => return "fallback"
+    "log" => {
+      if signal == "on_rotation_fault" { return "log" }
+      return "halt"
+    }
+    _ => return "halt"
+  }
+}

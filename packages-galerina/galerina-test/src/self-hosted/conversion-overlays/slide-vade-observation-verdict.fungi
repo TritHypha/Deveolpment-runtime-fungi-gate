@@ -1,0 +1,11 @@
+@version 1
+/// Closed evidence fold of audit-slide-vade.mjs#classifySlideVadeObservation after toxic-border checks.
+pure flow classifySlideVadeObservationCore(shapeValid: Bool, identityValid: Bool, digestValid: Bool, authorityReleased: Bool) -> Verdict
+contract { intent { "Admit only a shape-bound, identity-bound, digest-bound non-authorizing observation." } }
+{
+  if shapeValid == false { return Verdict.Deny }
+  if identityValid == false { return Verdict.Deny }
+  if digestValid == false { return Verdict.Deny }
+  if authorityReleased { return Verdict.Deny }
+  return Verdict.Allow
+}

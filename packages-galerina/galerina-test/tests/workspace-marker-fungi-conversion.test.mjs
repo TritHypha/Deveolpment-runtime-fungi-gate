@@ -71,7 +71,7 @@ describe("galerina-test package-owned Fungi workspace marker", () => {
     ]);
     assert.equal(
       loadedAssets.filter((asset) => asset.includes("/conversion-overlays/")).length,
-      40,
+      80,
     );
     const reference = readFileSync(REFERENCE_SOURCE, "utf8").replace(/^\uFEFF/u, "");
     assert.match(reference, /export const WORKSPACE_MARKER = "galerina\.workspace\.json";/u);

@@ -1,0 +1,10 @@
+@version 1
+/// Classification core of devtools-package-graph/scanner.ts#classify after String inspection.
+pure flow classifyPackageSpecifierCore(relative: Bool, nodeCore: Bool, workspace: Bool) -> String
+contract { intent { "Preserve relative, Node-core, workspace, and third-party package classes." } }
+{
+  if relative { return "internal" }
+  if nodeCore { return "node_core" }
+  if workspace { return "workspace" }
+  return "thirdparty"
+}

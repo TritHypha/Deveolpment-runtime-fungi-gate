@@ -1,0 +1,12 @@
+@version 1
+/// Closed selector of devtools-provenance/reporter.ts#kindLabel without presentation padding.
+pure flow provenanceKindLabel(kind: String) -> String
+contract { intent { "Label one admitted provenance node kind." } }
+{
+  match kind {
+    "source" => return "SOURCE"
+    "transform" => return "TRANSFORM"
+    "sink" => return "SINK"
+    _ => return "UNKNOWN"
+  }
+}

@@ -41,6 +41,36 @@ Its exact commit audit reports 41 changed conversion reports and 40 newly added
 final report-only bookkeeping exception for the wave; any next report-bearing
 commit requires another qualifying Fungi batch.
 
+## Forty-file source-bound decision-core overlay - 2026-08-14
+
+The next qualifying code-bearing batch adds **40 new `.fungi` files** under
+`galerina-test/src/self-hosted/conversion-overlays/`, bringing that registered
+overlay set to 80 files. Unlike the preceding literal/primitive batch, these
+flows preserve bounded decision cores taken from 40 distinct live source
+behaviours across compiler, configuration, economics, network, reporting,
+target, Tower, provenance, data, benchmark, core-logic and Wasm surfaces.
+Their host record, coercion, callback, crypto and effect borders remain in the
+executing TypeScript; this is reference-only evidence and authorizes no
+consumer switch, supersession or TypeScript retirement.
+
+Fresh verification is **3/3** source evidence (40 distinct source bindings;
+no exact or normalized/alpha-renamed shadow; parse, effect, GIR and interpreter
+success) plus **1/1** physical SLIDE/VOK integration. The physical check
+compiles all 40 exports, publishes 40 `.slide` artifacts, executes each through
+the selected physical reference profile, independently re-admits and verifies
+the typed receipts, and refuses mutated source, receipt and artifact bytes.
+The package manifest registers every new asset, and the existing 40 primitive
+overlays remain green.
+
+The commit guard now has a pre-commit worktree mode and checks every new Fungi
+file against both the tracked corpus and its proposed batch. It refuses exact
+duplicates and normalized shadows after comments, names, literals and
+alpha-renamed identifiers are removed, requires at least 40 newly added Fungi
+files for every report-bearing commit, and keeps 50 as the expected batch size.
+The sole final-bookkeeping exception remains one commit; a report-only streak
+of two is a hard refusal. This section is committed with the 40 executable
+files and is not a report-only update.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 case-sensitive source-order scopes close the remaining uncredited TPL

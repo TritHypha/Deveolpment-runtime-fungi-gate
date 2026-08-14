@@ -86,7 +86,7 @@ describe("galerina-test package-owned Fungi human marker", () => {
     ]);
     assert.equal(
       loadedAssets.filter((asset) => asset.includes("/conversion-overlays/")).length,
-      40,
+      80,
     );
     const executableFungi = compiled.source.replace(/^\s*\/\/\/.*$/gmu, "");
     const syntaxOnly = executableFungi.replace(/"(?:\\.|[^"\\])*"/gu, '""');

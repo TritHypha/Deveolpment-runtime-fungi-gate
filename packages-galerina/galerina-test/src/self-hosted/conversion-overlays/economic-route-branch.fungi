@@ -1,0 +1,11 @@
+@version 1
+/// Branch-selection core of core-economics#index.ts#selectRoute after candidate ranking.
+pure flow selectEconomicRouteBranch(overBudget: Bool, riskAtThreshold: Bool) -> String
+contract { intent { "Apply the budget brake before risk escalation and standard routing." } }
+{
+  if overBudget == false {
+    if riskAtThreshold { return "proof-escalation" }
+    return "cheapest"
+  }
+  return "emergency-brake"
+}

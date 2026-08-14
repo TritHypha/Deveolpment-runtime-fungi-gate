@@ -38,7 +38,12 @@ function commit(root, message) {
 function addFungi(root, count, suffix = "") {
   for (let index = 0; index < count; index += 1) {
     const name = String(index).padStart(2, "0");
-    write(root, `packages-galerina/example/src/self-hosted/candidate-${name}.fungi`, `@version 1\n${suffix}`);
+    const steps = Array.from({ length: index + 1 }, () => " + 1").join("");
+    write(
+      root,
+      `packages-galerina/example/src/self-hosted/candidate-${name}.fungi`,
+      `@version 1\npure flow candidate${name}(value: Int) -> Int { return value${steps} }\n${suffix}`,
+    );
   }
 }
 
@@ -58,6 +63,14 @@ function runAudit(root, revision = "HEAD", extraArguments = []) {
   return spawnSync(
     process.execPath,
     [AUDIT, "--root", root, "--commit", revision, ...extraArguments],
+    { cwd: root, encoding: "utf8" },
+  );
+}
+
+function runWorktreeAudit(root) {
+  return spawnSync(
+    process.execPath,
+    [AUDIT, "--root", root, "--worktree"],
     { cwd: root, encoding: "utf8" },
   );
 }
@@ -88,7 +101,7 @@ test("a conversion-report commit with the 40-file minimum passes", () => {
   commit(root, "minimum conversion batch");
   const result = runAudit(root);
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.match(result.stdout, /40 added \.fungi files; minimum 40; expected 50/u);
+  assert.match(result.stdout, /40 added \.fungi files; duplication\/shadow 40\/40 unique; minimum 40; expected 50/u);
 });
 
 test("a conversion-report commit with the expected 50 Fungi files passes", () => {
@@ -98,7 +111,98 @@ test("a conversion-report commit with the expected 50 Fungi files passes", () =>
   commit(root, "expected conversion batch");
   const result = runAudit(root);
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.match(result.stdout, /50 added \.fungi files; minimum 40; expected 50/u);
+  assert.match(result.stdout, /50 added \.fungi files; duplication\/shadow 50\/50 unique; minimum 40; expected 50/u);
+});
+
+test("a qualifying batch refuses exact duplicate Fungi files", () => {
+  const root = createRepo();
+  addReport(root);
+  addFungi(root, 40);
+  const duplicate = "@version 1\npure flow duplicate(value: Int) -> Int { return value + 1 }\n";
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", duplicate);
+  write(root, "packages-galerina/example/src/self-hosted/candidate-01.fungi", duplicate);
+  commit(root, "duplicate fungi batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /exact duplicate/u);
+});
+
+test("a qualifying batch refuses template shadows that differ only by names and literals", () => {
+  const root = createRepo();
+  addReport(root);
+  addFungi(root, 40);
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow first() -> String { return \"ALPHA\" }\n");
+  write(root, "packages-galerina/example/src/self-hosted/candidate-01.fungi", "@version 1\npure flow second() -> String { return \"BETA\" }\n");
+  commit(root, "shadow fungi batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /template shadow/u);
+});
+
+test("a qualifying batch refuses alpha-renamed template shadows", () => {
+  const root = createRepo();
+  addReport(root);
+  addFungi(root, 40);
+  write(
+    root,
+    "packages-galerina/example/src/self-hosted/candidate-00.fungi",
+    "@version 1\npure flow first(left: Int) -> Int { let intermediate: Int = left + 7 return intermediate }\n",
+  );
+  write(
+    root,
+    "packages-galerina/example/src/self-hosted/candidate-01.fungi",
+    "@version 1\npure flow second(value: Int) -> Int { let result: Int = value + 99 return result }\n",
+  );
+  commit(root, "alpha-renamed shadow fungi batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /template shadow/u);
+});
+
+test("a qualifying batch refuses a new Fungi file that shadows a tracked file", () => {
+  const root = createRepo();
+  write(root, "packages-galerina/example/src/self-hosted/existing.fungi", "@version 1\npure flow existing() -> String { return \"BASE\" }\n");
+  commit(root, "existing fungi source");
+  addReport(root);
+  addFungi(root, 40);
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow replacement() -> String { return \"OTHER\" }\n");
+  commit(root, "tracked shadow fungi batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /template shadow.*existing\.fungi/u);
+});
+
+test("worktree mode checks an uncommitted 40-file Fungi batch before commit", () => {
+  const root = createRepo();
+  addFungi(root, 40);
+  const result = runWorktreeAudit(root);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /worktree has 40 new \.fungi files; duplication\/shadow 40\/40 unique/u);
+});
+
+test("worktree mode refuses an uncommitted shadow of a tracked Fungi file", () => {
+  const root = createRepo();
+  write(root, "packages-galerina/example/src/self-hosted/existing.fungi", "@version 1\npure flow existing() -> String { return \"BASE\" }\n");
+  commit(root, "tracked fungi baseline");
+  addFungi(root, 40);
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow replacement() -> String { return \"OTHER\" }\n");
+  const result = runWorktreeAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /template shadow.*existing\.fungi/u);
+});
+
+test("worktree mode reads a tracked Fungi corpus larger than the child-process default buffer", () => {
+  const root = createRepo();
+  write(
+    root,
+    "packages-galerina/example/src/self-hosted/large-existing.fungi",
+    `@version 1\n${"/// retained evidence line\n".repeat(60_000)}pure flow largeExisting(value: Int) -> Int { return value }\n`,
+  );
+  commit(root, "large tracked fungi baseline");
+  addFungi(root, 40);
+  const result = runWorktreeAudit(root);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /duplication\/shadow 40\/40 unique/u);
 });
 
 test("modifying existing Fungi files cannot satisfy the added-file minimum", () => {

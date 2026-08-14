@@ -1,0 +1,19 @@
+@version 1
+/// Trust-label core of devtools-provenance/reporter.ts#trustLabel after node capture.
+pure flow provenanceTrustLabel(kind: String, trusted: Bool) -> String
+contract { intent { "Distinguish source, transform, and sink trust without erasing an ungated sink." } }
+{
+  if kind == "source" {
+    if trusted { return "trusted" }
+    return "untrusted"
+  }
+  if kind == "transform" {
+    if trusted { return "transformed-trusted" }
+    return "transformed-untrusted"
+  }
+  if kind == "sink" {
+    if trusted { return "gated" }
+    return "ungated-high-risk"
+  }
+  return "unknown"
+}

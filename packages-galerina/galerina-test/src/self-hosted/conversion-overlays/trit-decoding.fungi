@@ -1,0 +1,10 @@
+@version 1
+/// Closed valid-domain core of tpl-simulator.ts#decodeTrit; encoding 3 remains the illegal sentinel.
+pure flow decodeTritCore(encoded: Int) -> Int
+contract { intent { "Decode the admitted two-bit trit encodings and preserve the illegal sentinel." } }
+{
+  if encoded == 0 { return -1 }
+  if encoded == 1 { return 0 }
+  if encoded == 2 { return 1 }
+  return 2
+}

@@ -1,0 +1,7 @@
+@version 1
+/// Retry diagnostic core of data-pipeline#index.ts#validateRetryPolicy after Number admission.
+pure flow retryPolicyValidationMask(attemptFault: Int, backoffFault: Int, maximumFault: Int) -> Int
+contract { intent { "Keep attempt, backoff, and maximum-backoff failures distinguishable." } }
+{
+  return (maximumFault * 2 + backoffFault) * 2 + attemptFault
+}

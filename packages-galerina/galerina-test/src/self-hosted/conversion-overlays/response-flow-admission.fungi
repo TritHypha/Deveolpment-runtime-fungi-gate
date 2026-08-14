@@ -1,0 +1,10 @@
+@version 1
+/// Fail-closed decision core of data-response#index.ts#validateResponseFlow after record capture.
+pure flow responseFlowAdmissionCore(endpointPresent: Bool, mappingPresent: Bool, mappingValid: Bool) -> Verdict
+contract { intent { "Deny missing endpoints and raw-model responses before accepting a validated mapping." } }
+{
+  if endpointPresent == false { return Verdict.Deny }
+  if mappingPresent == false { return Verdict.Deny }
+  if mappingValid { return Verdict.Allow }
+  return Verdict.Unknown
+}

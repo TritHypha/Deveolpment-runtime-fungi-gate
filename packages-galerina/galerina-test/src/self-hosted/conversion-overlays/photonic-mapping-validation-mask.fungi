@@ -1,0 +1,7 @@
+@version 1
+/// Mapping diagnostic core of core-photonic#index.ts#validatePhotonicMapping after collection capture.
+pure flow photonicMappingValidationMask(nameFault: Int, statesFault: Int, stateNameFault: Int, duplicateFault: Int) -> Int
+contract { intent { "Preserve missing mapping identity, missing states, invalid names, and duplicates separately." } }
+{
+  return ((duplicateFault * 2 + stateNameFault) * 2 + statesFault) * 2 + nameFault
+}

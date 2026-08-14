@@ -1,0 +1,9 @@
+@version 1
+/// False-positive refusal core of devtools-package-graph/scanner.ts#isRealSpecifier.
+pure flow isRealSpecifierCore(hasInterpolation: Bool, isEmitterLiteral: Bool) -> Bool
+contract { intent { "Reject generated-code import text and interpolated specifiers." } }
+{
+  if hasInterpolation { return false }
+  if isEmitterLiteral { return false }
+  return true
+}

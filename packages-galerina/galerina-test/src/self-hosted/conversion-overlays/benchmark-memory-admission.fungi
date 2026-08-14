@@ -1,0 +1,11 @@
+@version 1
+/// Evidence-route core of benchmark-interpretation.mjs#bytesPerOperation after finite-number checks.
+pure flow benchmarkMemoryAdmission(resultUsable: Bool, directFinite: Bool, derivedInputsFinite: Bool, operationsPositive: Bool) -> Int
+contract { intent { "Select direct, derived, or refused benchmark memory evidence." } }
+{
+  if resultUsable == false { return 0 }
+  if directFinite { return 1 }
+  if derivedInputsFinite == false { return 0 }
+  if operationsPositive { return 2 }
+  return 0
+}
