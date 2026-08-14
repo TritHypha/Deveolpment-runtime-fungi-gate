@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/tower-transition-context.fungi
+/// @purpose: Reference-only exact primitive twin of the Tower Citizen source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow towerTransitionContext() -> String
+contract { intent { "Return the exact adjudicated String primitive." } }
+{
+  return "galerina.registry.rotation.transition.v1"
+}

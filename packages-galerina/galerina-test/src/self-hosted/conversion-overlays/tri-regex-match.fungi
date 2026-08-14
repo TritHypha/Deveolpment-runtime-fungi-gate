@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/tri-regex-match.fungi
+/// @purpose: Reference-only exact primitive twin of the TriRegex MATCH candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow triRegexMatch() -> Verdict
+contract { intent { "Return the exact adjudicated Verdict primitive." } }
+{
+  return Verdict.Allow
+}

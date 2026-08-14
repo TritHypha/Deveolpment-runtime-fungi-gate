@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/myco-max-index-bytes.fungi
+/// @purpose: Reference-only exact primitive twin of the Myco mirror source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow mycoMaxIndexBytes() -> Int
+contract { intent { "Return the exact adjudicated Int primitive." } }
+{
+  return 67108864
+}

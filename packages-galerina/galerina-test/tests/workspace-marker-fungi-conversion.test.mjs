@@ -63,11 +63,16 @@ describe("galerina-test package-owned Fungi workspace marker", () => {
   it("binds the exact exported TypeScript constant and package-owned asset", async () => {
     const compiled = await compileCandidate();
     const packageJson = JSON.parse(readFileSync(PACKAGE, "utf8"));
-    assert.deepEqual(packageJson.packageGraph?.loadedAssets, [
+    const loadedAssets = packageJson.packageGraph?.loadedAssets ?? [];
+    assert.deepEqual(loadedAssets.filter((asset) => !asset.includes("/conversion-overlays/")), [
       "src/self-hosted/runner-constants.fungi",
       "src/self-hosted/test-marker.fungi",
       "src/self-hosted/workspace-marker.fungi",
     ]);
+    assert.equal(
+      loadedAssets.filter((asset) => asset.includes("/conversion-overlays/")).length,
+      40,
+    );
     const reference = readFileSync(REFERENCE_SOURCE, "utf8").replace(/^\uFEFF/u, "");
     assert.match(reference, /export const WORKSPACE_MARKER = "galerina\.workspace\.json";/u);
     const syntaxOnly = compiled.source

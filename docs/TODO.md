@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Forty-file primitive Fungi batch - 2026-08-14
+
+- [x] Replace report-only progress with 40 new, one-flow `.fungi` primitive
+  twins in an owner-approved governed overlay; do not edit mirrored Myco source.
+- [x] Bind every candidate to its exact live TypeScript literal and pass parse,
+  effects, GIR and interpreter parity (**2/2**).
+- [x] Compile, publish and independently re-admit 40 physical `.slide` exports;
+  VOK-verify typed results and reject source/artifact/receipt mutation (**1/1**).
+- [x] Guard every added or modified conversion receipt with at least 40 newly
+  added `.fungi` files (expected 50), with at most one explicit final report-only
+  bookkeeping commit and a hard refusal at streak 2.
+- [x] Run the focused package/tooling/receipt matrix and inspect the exact staged
+  commit diff.
+- [ ] Commit this code-bearing batch once. Do not push. Reserve the sole
+  report-only exception for final closure bookkeeping.
+
 ### Slices 998-1047 Tower transport, Tri-Pipe and TriRegex - 2026-08-14
 
 - [x] Freeze 50 case-sensitive source-order scopes: 14 erased declarations, 33

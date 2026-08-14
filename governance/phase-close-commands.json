@@ -1116,6 +1116,72 @@
       }
     },
     {
+      "id": "audit:conversion-report-commit",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-CONVERSION-REPORT-COMMIT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-CONVERSION-REPORT-COMMIT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-conversion-report-commit.mjs",
+          "--commit",
+          "HEAD"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-CONVERSION-REPORT-COMMIT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "commit-shape boundaries are covered by the registered tooling test"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
       "id": "audit:conversion-queue",
       "requirementId": "REQ-PHASE-CLOSE-AUDIT-CONVERSION-QUEUE",
       "satisfies": [

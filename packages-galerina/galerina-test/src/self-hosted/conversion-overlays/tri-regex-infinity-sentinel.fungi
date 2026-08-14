@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/tri-regex-infinity-sentinel.fungi
+/// @purpose: Reference-only exact primitive twin of the TriRegex source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow triRegexInfinitySentinel() -> Int
+contract { intent { "Return the exact adjudicated Int primitive." } }
+{
+  return 2147483647
+}

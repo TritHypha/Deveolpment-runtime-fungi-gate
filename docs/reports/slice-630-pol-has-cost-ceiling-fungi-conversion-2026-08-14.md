@@ -11,6 +11,8 @@ source SHA-256 `C0807BACCD00CD8784CCA12156108C5EE5EA8F2BDA4463102F0803AC54E7BDE0
 
 Private skill commits: translation `a313867e93b3228fcc7b04e775d20a4fd0939f51`; authoring `844376b4acc99b5c807f2c5aa34c0c892b0e1461`. Both remain private and unpushed.
 
+Implementation update (2026-08-14; supersedes the earlier no-twin statement): owner-approved governed overlay `packages-galerina/galerina-test/src/self-hosted/conversion-overlays/tower-policy-has-cost-ceiling.fungi` now supplies the exact zero-argument primitive twin. `conversion-overlay-primitives-fungi.test.mjs` binds the live TypeScript literal and proves parse, effects, GIR and interpreter parity; `conversion-overlay-primitives-fungi-slide.integration.test.mjs` publishes, independently re-admits and VOK-verifies the complete 40-file batch with source, artifact and receipt mutation refusals. This remains reference-only `CANDIDATE` evidence: the original TypeScript consumer is still active, so no consumer switch, supersession or retirement is claimed.
+
 ## Slice-close receipt
 
 Skill disposition: NO_SKILL_UPDATE: current translation rules already cover this boundary

@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/tower-max-plugin-input-depth.fungi
+/// @purpose: Reference-only exact primitive twin of the Tower Citizen source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow towerMaxPluginInputDepth() -> Int
+contract { intent { "Return the exact adjudicated Int primitive." } }
+{
+  return 32
+}

@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/myco-index-file.fungi
+/// @purpose: Reference-only exact primitive twin of the Myco mirror source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow mycoIndexFile() -> String
+contract { intent { "Return the exact adjudicated String primitive." } }
+{
+  return "index.json"
+}

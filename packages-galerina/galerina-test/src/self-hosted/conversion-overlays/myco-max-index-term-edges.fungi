@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/myco-max-index-term-edges.fungi
+/// @purpose: Reference-only exact primitive twin of the Myco mirror source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow mycoMaxIndexTermEdges() -> Int
+contract { intent { "Return the exact adjudicated Int primitive." } }
+{
+  return 2000000
+}

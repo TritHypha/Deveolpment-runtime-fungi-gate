@@ -1,0 +1,10 @@
+@version 1
+/// @file: conversion-overlays/myco-max-repetition.fungi
+/// @purpose: Reference-only exact primitive twin of the Myco mirror source candidate.
+/// @status: owner-approved governed overlay; original TypeScript consumers remain active.
+
+pure flow mycoMaxRepetition() -> Int
+contract { intent { "Return the exact adjudicated Int primitive." } }
+{
+  return 1000
+}

@@ -16,7 +16,10 @@ until final dual-index refresh.
 
 ## Constraints and pins
 
-- Do not create or modify production TypeScript, MJS or Fungi source.
+- Owner directive superseding the original report-only constraint: author exact
+  candidate `.fungi` twins in an owned governed overlay, with at least 40 new
+  `.fungi` files before any conversion-report commit. Original TypeScript and
+  mirrored Myco sources remain unchanged until separate consumer-switch gates.
 - Do not promote a primitive constant beyond `CANDIDATE` without exact Fungi,
   GIR, physical `.slide`, independent re-admission/VOK and consumer evidence.
 - Keep active arrays, parser state, mutable budget/AST aliases, exceptions,

@@ -10,6 +10,29 @@ dual-index proof close at the Slice 597 fifty-slice boundary.
 Prior plans remain in repository history. Crash-linked aggregate lanes remain
 excluded.
 
+## Forty-file primitive conversion overlay - 2026-08-14
+
+The report-only cadence is superseded. An owner-approved governed overlay now
+contains **40 newly added `.fungi` files**, one independently hashable flow per
+previously adjudicated primitive candidate, under
+`galerina-test/src/self-hosted/conversion-overlays/`. The batch covers 14 Myco
+mirror primitives without modifying mirrored TypeScript, 23 Tower primitives,
+and three TriRegex primitives. All original consumers remain active; this is
+reference-only conversion evidence, not a consumer switch or retirement.
+
+Fresh evidence is **2/2** source checks (exact live TypeScript literal binding;
+parse, effects, GIR and interpreter parity) plus **1/1** physical SLIDE/VOK
+integration (40 compiled exports, 40 published `.slide` files, independent
+re-admission, typed result verification, and source/artifact/receipt mutation
+refusal). The package manifest registers all 40 assets.
+
+`audit-conversion-report-commit.mjs` now refuses any commit that adds or modifies
+a conversion receipt or the common conversion-status report without at least
+**40 newly added `.fungi` files** (expected 50). Only an explicit
+final-bookkeeping mode may admit one report-only commit after a qualifying Fungi
+batch; a report-only streak of **2** is always refused. No commit is permitted
+before the current batch and focused verification are complete.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 case-sensitive source-order scopes close the remaining uncredited TPL

@@ -77,11 +77,13 @@ describe("galerina-test package-owned Fungi runner constants", () => {
   it("binds every exact TypeScript constant and the package manifest", async () => {
     const compiled = await compileCandidate();
     const packageJson = JSON.parse(readFileSync(PACKAGE, "utf8"));
-    assert.deepEqual(packageJson.packageGraph?.loadedAssets, [
+    const loadedAssets = packageJson.packageGraph?.loadedAssets ?? [];
+    assert.deepEqual(loadedAssets.filter((asset) => !asset.includes("/conversion-overlays/")), [
       "src/self-hosted/runner-constants.fungi",
       "src/self-hosted/test-marker.fungi",
       "src/self-hosted/workspace-marker.fungi",
     ]);
+    assert.equal(loadedAssets.filter((asset) => asset.includes("/conversion-overlays/")).length, 40);
     const spawn = readFileSync(SPAWN_SOURCE, "utf8").replace(/^\uFEFF/u, "");
     assert.match(spawn, /export const DEFAULT_TIMEOUT_MS = 600_000;/u);
     const runners = readFileSync(REFERENCE_SOURCE, "utf8").replace(/^\uFEFF/u, "");

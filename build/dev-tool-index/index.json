@@ -4,9 +4,9 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 173,
-    "auditTools": 90,
-    "toolsInCadence": 119,
+    "devTools": 174,
+    "auditTools": 91,
+    "toolsInCadence": 120,
     "proofs": 40
   },
   "packages": [
@@ -1294,6 +1294,20 @@
         "doc-drift",
         "graph/index",
         "proofs"
+      ]
+    },
+    {
+      "name": "audit-conversion-report-commit.mjs",
+      "category": "audit",
+      "purpose": "Refuse conversion-report commits that do not add a substantial Fungi batch.",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "source-hygiene",
+        "doc-drift",
+        "graph/index"
       ]
     },
     {
@@ -3686,6 +3700,7 @@
       "audit-code-catalog-coverage.mjs",
       "audit-codes-full.mjs",
       "audit-compiler-stage-twins.mjs",
+      "audit-conversion-report-commit.mjs",
       "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
@@ -3848,6 +3863,7 @@
       "audit-claim-hygiene.mjs",
       "audit-code-catalog-coverage.mjs",
       "audit-compiler-stage-hashes.mjs",
+      "audit-conversion-report-commit.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-dss-wasm-build.mjs",
       "audit-effect-canonicality.mjs",
@@ -3948,6 +3964,7 @@
       "audit-codes-full.mjs",
       "audit-compiler-stage-hashes.mjs",
       "audit-compiler-stage-twins.mjs",
+      "audit-conversion-report-commit.mjs",
       "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
@@ -4076,6 +4093,7 @@
       "audit-cast-hygiene.mjs",
       "audit-claim-hygiene.mjs",
       "audit-codes-full.mjs",
+      "audit-conversion-report-commit.mjs",
       "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-diagnostic-codes.mjs",
@@ -4523,6 +4541,24 @@
       "tool": "audit-compiler-stage-twins.mjs",
       "directEntryIds": [
         "compiler-stage-twins"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-conversion-report-commit.mjs",
+      "directEntryIds": [
+        "audit:conversion-report-commit"
       ],
       "transitiveEntryIds": [],
       "via": [],

@@ -13,6 +13,8 @@ Focused test pins: `registry-key-rotation.test.mjs` SHA-256 `5A9F1F73D214BF9746C
 
 Private skill commits: translation `24b414c6d44ea13218e37fdd0bcaef3556a75a26`; authoring `ff1a093c9ddca265c1ff25988eb6e7abad3b339a`. Both remain private and unpushed.
 
+Implementation update (2026-08-14; supersedes the earlier no-twin statement): owner-approved governed overlay `packages-galerina/galerina-test/src/self-hosted/conversion-overlays/tower-transition-context.fungi` now supplies the exact zero-argument primitive twin. `conversion-overlay-primitives-fungi.test.mjs` binds the live TypeScript literal and proves parse, effects, GIR and interpreter parity; `conversion-overlay-primitives-fungi-slide.integration.test.mjs` publishes, independently re-admits and VOK-verifies the complete 40-file batch with source, artifact and receipt mutation refusals. This remains reference-only `CANDIDATE` evidence: the original TypeScript consumer is still active, so no consumer switch, supersession or retirement is claimed.
+
 ## Slice-close receipt
 
 Skill disposition: NO_SKILL_UPDATE: current rules already cover this scope
