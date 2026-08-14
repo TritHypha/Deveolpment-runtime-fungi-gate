@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 798-847 Tower partial return, photonic, plugins and precision - 2026-08-14
+
+- [x] Freeze 50 unique source-order scopes after retaining prior Slice-797
+  `Masked` credit: 12 erased declarations, 33 blocked runtime scopes and five
+  bounded primitive leaf candidates.
+- [x] Adjudicate partial-return guards/folds, photonic signing/admission, plugin
+  manifest/sandbox borders and the precision-strategy prefix through
+  `RoutingContext` against exact source semantics.
+- [x] Update both private Fungi skills with locale-stable canonical signed-byte
+  rules at translation `24b414c` and authoring `ff1a093`; both remain private
+  and unpushed.
+- [x] Author 50 receipt-local blocker/candidate exits, vectors, threadability,
+  source/test pins and the common evidence manifest.
+- [x] Run fresh Tower typecheck, **515/515** tests and the governed receipt
+  audit at **787/787**.
+- [x] Reconcile three independent reviews; all bounded re-reviews pass after
+  correcting receipt-local skill dispositions.
+- [ ] Commit authored evidence, publish registered owners, run the bounded
+  close matrix and refresh both indexes at Slice 847.
+
 ### Slices 748-797 Tower key rotation and lease - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes after refusing the prior Slice-47

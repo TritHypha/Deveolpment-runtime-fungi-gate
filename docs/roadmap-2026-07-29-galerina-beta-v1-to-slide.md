@@ -3877,3 +3877,23 @@ The committed closure layer is `27dcc5b0`. Myco refresh reports **6,410 files
 **27,031/27,031 nodes / 63,873/63,873 edges**, the exact indexed HEAD and one
 untruncated `Masked` symbol. Final post-record exact-head readback is retained
 in the handoff; repository-wide closure remains `UNKNOWN`.
+
+## Fungi conversion checkpoint planned through Slice 847 - 2026-08-14
+
+The next 50 unique Tower-Citizen scopes continue after Slice 797 through the
+remaining partial-return, complete photonic admission and plugin
+manifest/sandbox surfaces, then enter precision strategy through
+`RoutingContext`. Exact planned arithmetic is **12 erased declarations + 33
+blocked runtime scopes + 5 primitive leaf candidates**. Slice-797 `Masked`
+credit is retained rather than duplicated.
+
+The decisive work is exact host-record and callback ordering, locale-stable
+canonical signed bytes, crypto/key/revocation and consumed-artifact binding,
+live TypedArray/graph admission, sandbox lifecycle/erasure and mutable precision
+routing tables. There is no exact scoped Fungi/GIR/physical `.slide`/independent
+re-admission/VOK twin, consumer switch or retirement authority. Private skills
+advance locally to translation `24b414c` and authoring `ff1a093`; both remain
+private and unpushed. Receipt authoring, Tower typecheck, **515/515** package
+tests, **787/787** governed receipt audit and three independent bounded reviews
+are complete. Owner publication and dual-index closure remain pending.
+Repository-wide closure remains `UNKNOWN`.

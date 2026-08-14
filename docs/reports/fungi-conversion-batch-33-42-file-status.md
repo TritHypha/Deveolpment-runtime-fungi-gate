@@ -1333,3 +1333,80 @@ time-budget breach or regex timeout. Codebase-memory moderate refresh reports
 `27dcc5b02ab6f974a3e2059360d836d952499b7d`, and one exact exported `Masked`
 interface result with `has_more:false`. A final post-record exact-head refresh
 is handoff evidence; repository-wide closure remains `UNKNOWN`.
+
+## Slices 798-847 - Tower partial return, photonic, plugins and precision
+
+These 50 unique source-order scopes retain Slice-797 `Masked` credit and cover
+the remaining `partial-return.ts` surface, all of `photonic-admission.ts`,
+`plugin-manifest.ts` and `plugin-sandbox.ts`, then enter
+`precision-strategy.ts` through `RoutingContext`. Exact arithmetic is **12
+NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 5 CANDIDATE**; there is no supersession,
+consumer switch or retirement credit. Source build point is
+`dfad2785eb018b86fdd305318988225daf445c36`; plan HEAD is `8f594095` and graph
+freshness after that plan-only commit is `UNKNOWN`, so exact reads govern.
+
+### Slice 798-847 exact evidence manifest
+
+| Slices | Exact owning ranges |
+|---|---|
+| 798-803 | `partial-return.ts:42-44`, `:52`, `:54-58`, `:65-77`, `:80-89`, `:100-130` |
+| 804-813 | `photonic-admission.ts:37`, `:40-51`, `:54-57`, `:60-63`, `:66-68`, `:71-74`, `:77-83`, `:85-96`, `:98-106`, `:112-176` |
+| 814-823 | `plugin-manifest.ts:22-26`, `:30`, `:32-42`, `:44-80`, `:84-86`, `:89-91`, `:94-96`, `:99-103`, `:106-119`, `:128-203` |
+| 824-842 | `plugin-sandbox.ts:11-19`, `:21-24`, `:30-92`, `:94-102`, `:104-106`, `:108`, `:109`, `:110`, `:111`, `:112`, `:113`, `:115-120`, `:130-244`, `:246-274`, `:250-252`, `:254`, `:257-263`, `:266-268`, `:271-273` |
+| 843-847 | `precision-strategy.ts:47-52`, `:55-60`, `:71-78`, `:84-90`, `:92-110` |
+
+Caller reconciliation is bounded. `isMasked`, `maskByVerdict` and
+`partialReturn` consume the retained `Masked` declaration; the photonic surface
+is barrel-exported and currently has focused-test consumers but no production
+reprogram consumer. TowerRuntime snapshots plugin metadata, binds artifact
+bytes when supplied, verifies manifests, constructs PluginSandbox and drives
+validate/hash/erase; HybridInferenceEngine consumes `ExecutionResult`.
+`TECHNIQUE_SOURCE`, `TECHNIQUE_BITS` and `OP_SENSITIVITY` feed
+`routePrecision`/`planHybridInference`, whose decisions flow into the hybrid
+engine and Tri-Pipe router.
+
+Focused byte pins are `partial-return.test.mjs`
+`8A1B6A3330963D8CC061B57F5303CD3494E2E70EB67E8375517B66CE1EC0B20D`;
+`photonic-admission.test.mjs`
+`7BC07D0D6D8DDBBB86C65A4E894FAB234B301511D286E8095EBB1C0204F63320`;
+`rd0236-runtime-hardening.test.mjs`
+`977B30D726E5B6265B1084FD2DA559291815E53E98479636AE3835CA0E9A1F03`;
+`tower-citizen.test.mjs`
+`03086BB06BF616798E6BABCCC618BF6B2F03DC9E6731D487A2837A917D897655`;
+`precision-tolerance.test.mjs`
+`CC3FBACC64D2FE81E9BA45D4CA6B71328F10844E6E411EAC0351D526A91403F1`;
+and `hybrid-engine.test.mjs`
+`17B485D225CC09A60997D9D845F1AC20F8786DE008C59A6428D3D9C1D6F0B81C`.
+These are regression evidence only.
+
+Loaded assets remain the eight Tower governance/logic Fungi sources plus the
+trit brand guard. Exact-name and caller reconciliation found no scoped
+partial-return, photonic, plugin, sandbox or precision Fungi/GIR/physical
+`.slide`/independent re-admission/VOK twin. The loaded assets therefore provide
+adjacent dependency evidence only and authorize no switch or retirement.
+
+Material defects remain explicit. `isMasked` accepts forged/inconsistent
+records; partial-return paths read active inputs across callbacks and can
+mutate the shaped prototype through `__proto__`; photonic canonicalization uses
+locale-sensitive `localeCompare`, admission does not bind signerKeyId or a
+mandatory revocation receipt, and returned authority is not tied to an affine
+reprogram consumer. Plugin hybrid signing retains a caller key across `await`;
+verification rereads mutable policy and treats only literal `true` as revoked;
+optional artifact bytes can leave signed identity unbound to consumed bytes.
+PluginSandbox metadata and its erased Boolean are forgeable, erase does not
+zeroize, and its documented SHA-256 result is truncated to 16 hex characters.
+The three precision tables are exported mutable singletons; prototype keys can
+bypass unknown-op routing and importer mutation can forge provenance or numeric
+audit results.
+
+The reusable locale-sensitive canonical-byte gap is closed in the private
+translation skill at `24b414c` and authoring skill at `ff1a093`. Both passed
+their repository checks and red/green pressure tests and remain private and
+unpushed. All other findings instantiate existing skill rules.
+
+Fresh root verification passes Tower no-emit typecheck, **515/515** package
+tests and **787/787** governed conversion receipts with 29 frozen legacy
+reports. These checks are regression and receipt-shape evidence only; they do
+not supply missing physical authority or retirement proof. Three independent
+bounded reviews pass after receipt-local skill dispositions were corrected;
+owner publication and dual-index closure remain pending.

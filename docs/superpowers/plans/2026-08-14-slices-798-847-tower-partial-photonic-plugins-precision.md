@@ -130,10 +130,10 @@ zero superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/photonic-admission.ts`
 - Test evidence: the two focused test files pinned above
 
-- [ ] Reconcile exact ranges, callers, tests, assets and prior Slice-797 credit.
-- [ ] Record per-scope classification, threadability, exact blocker/candidate
+- [x] Reconcile exact ranges, callers, tests, assets and prior Slice-797 credit.
+- [x] Record per-scope classification, threadability, exact blocker/candidate
   exit and discriminating hostile vectors.
-- [ ] Preserve the broad public `Masked.verdict` runtime mismatch as inherited
+- [x] Preserve the broad public `Masked.verdict` runtime mismatch as inherited
   evidence rather than narrowing the source contract silently.
 
 ## Task 2: Adjudicate Slices 814-842
@@ -143,13 +143,13 @@ zero superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts`
 - Test evidence: the plugin/runtime focused files pinned above
 
-- [ ] Bind manifest snapshot/canonicalization, classical and hybrid signature,
+- [x] Bind manifest snapshot/canonicalization, classical and hybrid signature,
   verification, input admission, limits and sandbox lifecycle to exact source
   semantics.
-- [ ] Separate erased declarations and exact primitive limit candidates from
+- [x] Separate erased declarations and exact primitive limit candidates from
   active records, crypto, TypedArray, TextEncoder, callback and class-state
   blockers.
-- [ ] Record receipt-local exact exits and vectors; no generic typed-border
+- [x] Record receipt-local exact exits and vectors; no generic typed-border
   boilerplate is acceptable.
 
 ## Task 3: Adjudicate Slices 843-847
@@ -158,9 +158,9 @@ zero superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/precision-strategy.ts`
 - Test evidence: precision and hybrid-engine focused files pinned above
 
-- [ ] Bind the three mutable lookup singletons and two erased public
+- [x] Bind the three mutable lookup singletons and two erased public
   declarations without entering `LOOSE_TOLERANCE` or later scopes.
-- [ ] Preserve source-order continuity: the next queue begins at
+- [x] Preserve source-order continuity: the next queue begins at
   `precision-strategy.ts#LOOSE_TOLERANCE`.
 
 ## Task 4: Author and verify the 50 receipts
@@ -172,13 +172,13 @@ zero superseded scopes or retirement credit.
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Author 50 receipt-local classifications, exact exits, vectors,
+- [x] Author 50 receipt-local classifications, exact exits, vectors,
   threadability, source hashes, focused evidence pins and the common manifest
   link.
-- [ ] Run Tower no-emit typecheck, the full Tower test suite and
+- [x] Run Tower no-emit typecheck, the full Tower test suite and
   `node scripts/audit-conversion-slice-close.mjs`; require zero failures and
   exact receipt arithmetic.
-- [ ] Reconcile three independent read-only reviews; correct every Critical or
+- [x] Reconcile three independent read-only reviews; correct every Critical or
   Important finding and obtain bounded PASS readback.
 - [ ] Commit authored evidence separately from owner-generated outputs.
 
@@ -199,10 +199,10 @@ zero superseded scopes or retirement credit.
 
 ## Self-review
 
-- [ ] Confirm all 50 ordinals are unique and source ordered.
-- [ ] Confirm `Masked` Slice-797 credit is not duplicated.
-- [ ] Confirm arithmetic is exactly 12 NRB + 33 BLOCKED + 5 CANDIDATE.
-- [ ] Confirm every blocked receipt has a blocker-specific executable exit and
+- [x] Confirm all 50 ordinals are unique and source ordered.
+- [x] Confirm `Masked` Slice-797 credit is not duplicated.
+- [x] Confirm arithmetic is exactly 12 NRB + 33 BLOCKED + 5 CANDIDATE.
+- [x] Confirm every blocked receipt has a blocker-specific executable exit and
   every candidate has exact custody, consumer and physical-proof gates.
-- [ ] Confirm no placeholder, consumer switch, physical authority,
+- [x] Confirm no placeholder, consumer switch, physical authority,
   supersession or retirement is claimed.
