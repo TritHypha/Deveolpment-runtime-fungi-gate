@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/slide-v2b-atomic-state-reference.ts#RECEIPT_SCHEMA_ID
+pure flow receiptSchemaId() -> String {
+  return "slide.atomic-state-receipt.v1"
+}

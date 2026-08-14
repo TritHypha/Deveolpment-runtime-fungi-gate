@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 23 |
+| Files | 40 |
 | Internal edges | 43 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -44,6 +44,23 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/tri/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/fungi-bool-boundary-001-failed-closed.fungi`
+- `src/self-hosted/fungi-bool-boundary-002-unknown-reason.fungi`
+- `src/self-hosted/fungi-decision-001-invalid-decision.fungi`
+- `src/self-hosted/fungi-decision-002-empty-reason.fungi`
+- `src/self-hosted/fungi-decision-003-empty-unknown-reasons.fungi`
+- `src/self-hosted/fungi-decision-004-failed-closed.fungi`
+- `src/self-hosted/fungi-decision-005-empty-combine.fungi`
+- `src/self-hosted/fungi-omni-001-direct-boundary-use.fungi`
+- `src/self-hosted/fungi-omni-002-advisory-only-violated.fungi`
+- `src/self-hosted/fungi-omni-003-confidence-out-of-range.fungi`
+- `src/self-hosted/fungi-omni-004-malformed-evidence.fungi`
+- `src/self-hosted/fungi-omni-005-invalid-state.fungi`
+- `src/self-hosted/fungi-tri-001-invalid-tristate.fungi`
+- `src/self-hosted/fungi-tri-002-empty-unknown-reasons.fungi`
+- `src/self-hosted/fungi-tri-003-invalid-operand.fungi`
+- `src/self-hosted/fungi-tri-004-unknown-leaked.fungi`
+- `src/self-hosted/fungi-tri-005-malformed-unknown-reason.fungi`
 - `src/self-hosted/omni-uncertain.fungi`
 - `src/self-hosted/tri-ops.fungi`
 

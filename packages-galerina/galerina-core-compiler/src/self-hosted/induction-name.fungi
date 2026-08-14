@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/verified-loop-envelope.ts#INDUCTION_NAME
+pure flow inductionName() -> String {
+  return "i"
+}

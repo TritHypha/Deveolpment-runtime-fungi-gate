@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts#FUNGI_DECISION_003_EMPTY_UNKNOWN_REASONS
+pure flow fungiDecision003EmptyUnknownReasons() -> String {
+  return "FUNGI-DECISION-003"
+}

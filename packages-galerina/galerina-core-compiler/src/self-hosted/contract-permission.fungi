@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/verified-loop-envelope.ts#CONTRACT_PERMISSION
+pure flow contractPermission() -> String {
+  return "verified_native_checked_read_loop_v1"
+}

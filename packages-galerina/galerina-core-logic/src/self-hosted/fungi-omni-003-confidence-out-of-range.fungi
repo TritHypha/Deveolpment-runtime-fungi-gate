@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts#FUNGI_OMNI_003_CONFIDENCE_OUT_OF_RANGE
+pure flow fungiOmni003ConfidenceOutOfRange() -> String {
+  return "FUNGI-OMNI-003"
+}

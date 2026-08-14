@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts#FUNGI_OMNI_004_MALFORMED_EVIDENCE
+pure flow fungiOmni004MalformedEvidence() -> String {
+  return "FUNGI-OMNI-004"
+}

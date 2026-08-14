@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/verified-loop-envelope.ts#MAXIMUM_ACCESS_INDEX
+pure flow maximumAccessIndex() -> Int {
+  return 999999
+}

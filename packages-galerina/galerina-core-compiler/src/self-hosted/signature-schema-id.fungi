@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/slide-v2e-crypto-verifier.ts#SIGNATURE_SCHEMA_ID
+pure flow signatureSchemaId() -> String {
+  return "slide.frontend.signature.v1"
+}

@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 39 |
+| Files | 53 |
 | Internal edges | 54 |
 | External dependencies | 3 |
 | ├─ Node core | 1 |
@@ -41,6 +41,19 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/err-registry-delegation-unsigned.fungi`
+- `src/self-hosted/err-registry-duplicate.fungi`
+- `src/self-hosted/err-registry-hash-mismatch.fungi`
+- `src/self-hosted/err-registry-index-bad-signature.fungi`
+- `src/self-hosted/err-registry-index-malformed.fungi`
+- `src/self-hosted/err-registry-index-no-key.fungi`
+- `src/self-hosted/err-registry-index-stale.fungi`
+- `src/self-hosted/err-registry-index-unsigned.fungi`
+- `src/self-hosted/err-registry-keyid-mismatch.fungi`
+- `src/self-hosted/err-registry-package-unknown.fungi`
+- `src/self-hosted/err-registry-policy-denied.fungi`
+- `src/self-hosted/err-registry-runtime-io.fungi`
+- `src/self-hosted/err-registry-version-unknown.fungi`
 - `src/self-hosted/fuse-admission.fungi`
 - `src/self-hosted/kernel.fungi`
 - `src/self-hosted/literal-verification-success.fungi`
@@ -49,6 +62,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/max-public-key-bytes.fungi`
 - `src/self-hosted/package-admission.fungi`
 - `src/self-hosted/registry-activation-terminal.fungi`
+- `src/self-hosted/registry-delegation-v1-context.fungi`
 - `src/self-hosted/registry-durability-admission.fungi`
 - `src/self-hosted/registry-durability-artifact.fungi`
 - `src/self-hosted/registry-durability-evidence.fungi`

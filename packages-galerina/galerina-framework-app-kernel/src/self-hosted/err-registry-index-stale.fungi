@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-index.ts#ERR_REGISTRY_INDEX_STALE
+pure flow errRegistryIndexStale() -> String {
+  return "ERR_REGISTRY_INDEX_STALE"
+}

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts#FUNGI_TRI_003_INVALID_OPERAND
+pure flow fungiTri003InvalidOperand() -> String {
+  return "FUNGI-TRI-003"
+}

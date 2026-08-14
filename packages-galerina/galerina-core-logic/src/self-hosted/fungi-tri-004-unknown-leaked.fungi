@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts#FUNGI_TRI_004_UNKNOWN_LEAKED
+pure flow fungiTri004UnknownLeaked() -> String {
+  return "FUNGI-TRI-004"
+}

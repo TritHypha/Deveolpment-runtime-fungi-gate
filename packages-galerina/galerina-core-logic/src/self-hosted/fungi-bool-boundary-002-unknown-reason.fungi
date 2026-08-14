@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts#FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON
+pure flow fungiBoolBoundary002UnknownReason() -> String {
+  return "FUNGI-BOOL-BOUNDARY-002"
+}

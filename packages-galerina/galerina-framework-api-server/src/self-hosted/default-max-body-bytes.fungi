@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-api-server/src/index.ts#DEFAULT_MAX_BODY_BYTES
+pure flow defaultMaxBodyBytes() -> Int {
+  return 8388608
+}

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/slide-v2b-crypto-verifier.ts#ML_DSA_65_PUBLIC_KEY_BYTES
+pure flow mlDsa65PublicKeyBytes() -> Int {
+  return 1952
+}

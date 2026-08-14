@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts#FUNGI_TRI_002_EMPTY_UNKNOWN_REASONS
+pure flow fungiTri002EmptyUnknownReasons() -> String {
+  return "FUNGI-TRI-002"
+}

@@ -8,6 +8,7 @@
   "packageGraph": {
     "loadedAssets": [
       "src/self-hosted/default-idle-timeout-ms.fungi",
+      "src/self-hosted/default-max-body-bytes.fungi",
       "src/self-hosted/max-principal-scopes.fungi"
     ]
   },
