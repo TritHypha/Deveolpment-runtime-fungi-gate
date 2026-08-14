@@ -2413,6 +2413,44 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 28 - effect checking and escape analysis
+
+Wave 28 adds **40 new source-bound Fungi decision cores** for all 34
+previously uncredited function scopes in `effect-checker.ts` after excluding
+Wave 27's `formatEffects` and `unique`, plus the first six uncredited
+`escape-analysis.ts` function scopes in live source order. The package now
+registers **1,160** conversion overlays. The pinned source build point is
+`a56bcd51d1d8053f3c8acebcd03f1480bf985d19`; the source SHA-256 values are
+`467CEE175F35B5CA7F57E134E02074A2D3E6C31977B7192E69924BE19D9C0F72`
+and
+`B7AEE269B7E40B209E6E3CAF819616239D82239731B8345140E37B80D859B65E`.
+The graph supplied navigation only: its independently observed indexed build
+point remained stale after Wave 27, so freshness is **UNKNOWN** and exact live
+bytes plus the bounded prior-credit literal audit govern.
+
+The RED test failed **0/3** on absent and unregistered assets. The authored
+sources then passed **40/40** whole-corpus exact-byte and normalized
+alpha-renamed shadow checks, parse, effect-check, GIR emission and interpreter
+execution. Focused source evidence passes **3/3**, the complete current source
+wave family **81/81**, focused physical SLIDE/VOK evidence **1/1**, the complete
+current physical wave family **27/27**, and the package no-emit typecheck is
+green. The final focused test pins are
+`A6683CD18C9B80DF4275BCD370FE0008EE1C226D9257279B060621C9703C70A3`
+and
+`1A12BFB756A33FB7E41AC84CA39C6C0DF970EC8EB17EE59D938D1E9B5CCC0AB1`.
+
+This remains bounded post-border decision evidence only. It does not replace
+AST ingress, active Map/Set or array state, UTF-16 and regular-expression
+semantics, recursive traversal and fixpoint behavior, diagnostic construction,
+call-graph identity, JavaScript error or evaluation order, or escape-analysis
+arena safety. It authorizes no compiler consumer switch, memory-reclamation
+change or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, all 40 new
+`.fungi` files must be present, worktree and committed-object duplicate/shadow
+guards must remain 40/40, the report-only streak stays zero, no worker authored
+this wave, and no push or report-only follow-up commit is authorized.
+
 ## Source decision overlay wave 27 - remaining type checking and registry helpers
 
 Wave 27 adds **40 new source-bound Fungi decision cores** for the 32 remaining

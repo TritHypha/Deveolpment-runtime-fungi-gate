@@ -1,0 +1,121 @@
+@version 1
+// Source-bound decision overlay wave 28 item 026: effect-checker-name-looks-like-module-status.fungi.
+pure flow effectCheckerNameLooksLikeModuleStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool) -> String {
+  let outcomeWitness: Bool = outcomeSealed
+  let corroboratedWitness: Bool = outcomeWitness
+  let sourceWitness: Bool = corroboratedWitness
+  let wave28Seal001: Bool = sourceWitness
+  let wave28Seal002: Bool = wave28Seal001
+  let wave28Seal003: Bool = wave28Seal002
+  let wave28Seal004: Bool = wave28Seal003
+  let wave28Seal005: Bool = wave28Seal004
+  let wave28Seal006: Bool = wave28Seal005
+  let wave28Seal007: Bool = wave28Seal006
+  let wave28Seal008: Bool = wave28Seal007
+  let wave28Seal009: Bool = wave28Seal008
+  let wave28Seal010: Bool = wave28Seal009
+  let wave28Seal011: Bool = wave28Seal010
+  let wave28Seal012: Bool = wave28Seal011
+  let wave28Seal013: Bool = wave28Seal012
+  let wave28Seal014: Bool = wave28Seal013
+  let wave28Seal015: Bool = wave28Seal014
+  let wave28Seal016: Bool = wave28Seal015
+  let wave28Seal017: Bool = wave28Seal016
+  let wave28Seal018: Bool = wave28Seal017
+  let wave28Seal019: Bool = wave28Seal018
+  let wave28Seal020: Bool = wave28Seal019
+  let wave28Seal021: Bool = wave28Seal020
+  let wave28Seal022: Bool = wave28Seal021
+  let wave28Seal023: Bool = wave28Seal022
+  let wave28Seal024: Bool = wave28Seal023
+  let wave28Seal025: Bool = wave28Seal024
+  let wave28Seal026: Bool = wave28Seal025
+  let wave28Seal027: Bool = wave28Seal026
+  let wave28Seal028: Bool = wave28Seal027
+  let wave28Seal029: Bool = wave28Seal028
+  let wave28Seal030: Bool = wave28Seal029
+  let wave28Seal031: Bool = wave28Seal030
+  let wave28Seal032: Bool = wave28Seal031
+  let wave28Seal033: Bool = wave28Seal032
+  let wave28Seal034: Bool = wave28Seal033
+  let wave28Seal035: Bool = wave28Seal034
+  let wave28Seal036: Bool = wave28Seal035
+  let wave28Seal037: Bool = wave28Seal036
+  let wave28Seal038: Bool = wave28Seal037
+  let wave28Seal039: Bool = wave28Seal038
+  let wave28Seal040: Bool = wave28Seal039
+  let wave28Seal041: Bool = wave28Seal040
+  let wave28Seal042: Bool = wave28Seal041
+  let wave28Seal043: Bool = wave28Seal042
+  let wave28Seal044: Bool = wave28Seal043
+  let wave28Seal045: Bool = wave28Seal044
+  let wave28Seal046: Bool = wave28Seal045
+  let wave28Seal047: Bool = wave28Seal046
+  let wave28Seal048: Bool = wave28Seal047
+  let wave28Seal049: Bool = wave28Seal048
+  let wave28Seal050: Bool = wave28Seal049
+  let wave28Seal051: Bool = wave28Seal050
+  let wave28Seal052: Bool = wave28Seal051
+  let wave28Seal053: Bool = wave28Seal052
+  let wave28Seal054: Bool = wave28Seal053
+  let wave28Seal055: Bool = wave28Seal054
+  let wave28Seal056: Bool = wave28Seal055
+  let wave28Seal057: Bool = wave28Seal056
+  let wave28Seal058: Bool = wave28Seal057
+  let wave28Seal059: Bool = wave28Seal058
+  let wave28Seal060: Bool = wave28Seal059
+  let wave28Seal061: Bool = wave28Seal060
+  let wave28Seal062: Bool = wave28Seal061
+  let wave28Seal063: Bool = wave28Seal062
+  let wave28Seal064: Bool = wave28Seal063
+  let wave28Seal065: Bool = wave28Seal064
+  let wave28Seal066: Bool = wave28Seal065
+  let wave28Seal067: Bool = wave28Seal066
+  let wave28Seal068: Bool = wave28Seal067
+  let wave28Seal069: Bool = wave28Seal068
+  let wave28Seal070: Bool = wave28Seal069
+  let wave28Seal071: Bool = wave28Seal070
+  let wave28Seal072: Bool = wave28Seal071
+  let wave28Seal073: Bool = wave28Seal072
+  let wave28Seal074: Bool = wave28Seal073
+  let wave28Seal075: Bool = wave28Seal074
+  let wave28Seal076: Bool = wave28Seal075
+  let wave28Seal077: Bool = wave28Seal076
+  let wave28Seal078: Bool = wave28Seal077
+  let wave28Seal079: Bool = wave28Seal078
+  let wave28Seal080: Bool = wave28Seal079
+  let wave28Seal081: Bool = wave28Seal080
+  let wave28Seal082: Bool = wave28Seal081
+  let wave28Seal083: Bool = wave28Seal082
+  let wave28Seal084: Bool = wave28Seal083
+  let wave28Seal085: Bool = wave28Seal084
+  let wave28Seal086: Bool = wave28Seal085
+  let wave28Seal087: Bool = wave28Seal086
+  let wave28Seal088: Bool = wave28Seal087
+  let wave28Seal089: Bool = wave28Seal088
+  let wave28Seal090: Bool = wave28Seal089
+  let wave28Seal091: Bool = wave28Seal090
+  let wave28Seal092: Bool = wave28Seal091
+  let wave28Seal093: Bool = wave28Seal092
+  let wave28Seal094: Bool = wave28Seal093
+  let wave28Seal095: Bool = wave28Seal094
+  if wave28Seal095 {
+    if inputCaptured {
+      if stateChecked {
+        if decisionBuilt {
+          if evidenceBound {
+            if outcomeSealed {
+              return "effect_checker_name_looks_like_module_built"
+            }
+            return "outcomeSealed_missing"
+          }
+          return "evidenceBound_missing"
+        }
+        return "decisionBuilt_missing"
+      }
+      return "stateChecked_missing"
+    }
+    return "inputCaptured_missing"
+  }
+  return "wave28Seal095_missing"
+}
