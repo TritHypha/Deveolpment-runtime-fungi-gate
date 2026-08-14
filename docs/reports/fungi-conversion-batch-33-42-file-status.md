@@ -1334,6 +1334,81 @@ time-budget breach or regex timeout. Codebase-memory moderate refresh reports
 interface result with `has_more:false`. A final post-record exact-head refresh
 is handoff evidence; repository-wide closure remains `UNKNOWN`.
 
+## Slices 898-947 - Tower verifier, snapshot and substrate
+
+These 50 unique source-order scopes finish `registry-public-verifier.ts`,
+exhaust `snapshot-key-provider.ts` and `substrate-erasure.ts`, then enter
+`substrate-model.ts` through the `NoisyLane` class boundary. Exact arithmetic
+is **15 NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 2 CANDIDATE**; threadability is **15
+N/A + 30 SERIAL_HARD_PATH + 5 PARALLEL_PURE**. There is no supersession,
+consumer switch or retirement credit. Source build point is
+`754882b91418790143c656e07b6354f7e54bfdfd`; plan HEAD is
+`0d5b66e3a46b40fbb5b541e26664e94487bf1f0a`, so graph freshness after the
+plan-only commit is `UNKNOWN` and exact reads govern.
+
+### Slice 898-947 exact evidence manifest
+
+| Slices | Exact owning ranges |
+|---|---|
+| 898-903 | `registry-public-verifier.ts:31-34`, `:36-56`, `:58-69`, `:71-149`, `:107-125`, `:126-147` |
+| 904-913 | `snapshot-key-provider.ts:10`, `:12-16`, `:18-21`, `:23-27`, `:29-33`, `:36-46`, `:48-81`, `:89-131`, `:101-107`, `:108-129` |
+| 914-930 | `substrate-erasure.ts:36`, `:39`, `:42-52`, `:55-60`, `:62-70`, `:77-79`, `:92-117`, `:98-101#at`, `:133-143`, `:146-149`, `:151-158`, `:160-166`, `:169-172`, `:175-178`, `:181-187`, `:195-258`, `:201-206#reject` |
+| 931-947 | `substrate-model.ts:41-46`, `:42-45#constructor`, `:51-62`, `:67-69`, `:70-74`, `:75-81`, `:82-86`, `:87-89`, `:96-99`, `:103-110`, `:112-120`, `:123-126`, `:131-139`, `:143-147`, `:149-152`, `:153`, `:163-215#NoisyLane` |
+
+Caller reconciliation is bounded. Registry verifier closures feed hybrid
+rotation-envelope checks. Snapshot resolution binds ring verification, epoch
+selection and secret-key custody and is public through the Tower barrel.
+Substrate erasure/admission is public and presently has focused-test consumers;
+its named local `at` and `reject` functions have independent indexed scopes and
+authority behavior. Substrate model helpers feed `NoisyLane` and later
+probability/guarantee paths. Slice-947 credits only the class identity/prototype
+boundary; `NoisyLane.constructor` starts the next queue. Prior Slice-91
+`effectiveVerdict` remains a future duplicate exclusion.
+
+Focused byte pins are `registry-public-verifier.test.mjs`
+`970B961C3B9631B578A7E2EE5D9152F67036E5452A2A55E105BE79FFC1F37BC7`;
+`snapshot-key-provider.test.mjs`
+`1DE4174C839C8E60B3F2D64DF227D0B10FCFC0957FBF8DC2427680C81F51E465`;
+`substrate-erasure.test.mjs`
+`5168F198D8435067A1C74803084BD1D2C78C56A2D1F65DCE527E06909316A238`;
+and `substrate-model.test.mjs`
+`EABD1015628E07A9D7868ECE60BD36F13FC75626BA4C65C7AD6A1DB7C44804CA`.
+These tests import built JavaScript and are regression evidence only until root
+rebuilds and binds the focused run.
+
+Loaded assets remain the eight Tower governance/logic Fungi sources plus the
+trit brand guard. Exact-name and caller reconciliation found no scoped
+registry-verifier, snapshot-key, substrate-erasure or substrate-model
+Fungi/GIR/physical `.slide`/independent re-admission/VOK twin. The loaded PQ
+policy consumes host-computed crypto Booleans and supplies no verifier receipt.
+No switch, supersession or retirement is authorized.
+
+Material defects remain explicit. Verifier construction validates then rereads
+hostile key and role fields. Snapshot resolution can throw outside its narrow
+catch paths, retains mutable option callbacks and returns secret bytes by alias
+after commitment. Caller-mintable `attested:true` selects the permissive erase
+model. Signed substrate canonicalization uses ambient `localeCompare` and can
+execute surplus `toJSON`; storage admission rereads signed fields, can skip
+revocation and trusts a caller capability array. Model validation rereads
+active records; `assertTritValue` admits `-0`; the nonescaping default Neighbors
+value still lacks a proved physical record/Trit ABI. `mulberry32` and `makeStream` return
+identity-bearing mutable-state closures whose aliases/interleaving are part of
+the source contract.
+
+The private translation skill is updated at
+`13c070f75cb4899dc46fc35b9d43a770f9116380` and authoring skill at
+`c4b10ae638c4daee09cab9ab1f3dc3d3ce35cd11`. Their stateful-closure rules pass
+repository checks and red/green pressure tests, remain private and unpushed,
+and apply specifically to Slices 941-942. All other findings instantiate
+existing rules. Receipt authoring is complete. Fresh Tower no-emit typecheck,
+**515/515** package tests and **887/887** governed receipt-shape checks pass;
+these are regression and schema evidence only. Three independent read-only
+reviews and all bounded re-reviews pass after correcting skill provenance,
+class/constructor credit boundaries and the `fnv1a` / `NO_NEIGHBORS`
+threadability split. The authored-evidence commit, registered owner publication,
+bounded close matrix and dual-index refresh remain pending. Repository-wide
+closure stays `UNKNOWN`.
+
 ## Slices 848-897 - Tower precision, quorum and registry
 
 These 50 unique source-order scopes finish `precision-strategy.ts`, exhaust

@@ -115,8 +115,8 @@ admission rules, Myco, codebase-memory, node:test and registered owner tools.
 | 946 | `substrate-model.ts#NO_NEIGHBORS` |
 | 947 | `substrate-model.ts#NoisyLane` |
 
-Planned arithmetic: **15 NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 2 CANDIDATE**;
-threadability **15 N/A + 27 SERIAL_HARD_PATH + 8 PARALLEL_PURE**; zero
+Exact arithmetic: **15 NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 2 CANDIDATE**;
+threadability **15 N/A + 30 SERIAL_HARD_PATH + 5 PARALLEL_PURE**; zero
 superseded scopes or retirement credit.
 
 ## Task 1: Adjudicate Slices 898-913
@@ -126,10 +126,10 @@ superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts`
 - Test evidence: the two focused test files pinned above
 
-- [ ] Reconcile exact ranges, callers, tests, assets and prior Slices 894-897.
-- [ ] Bind Base64/PEM/crypto, callback and TypedArray semantics to one exact
+- [x] Reconcile exact ranges, callers, tests, assets and prior Slices 894-897.
+- [x] Bind Base64/PEM/crypto, callback and TypedArray semantics to one exact
   captured verifier/provider snapshot.
-- [ ] Record split validation/use, unbounded decoding, mutable option retention
+- [x] Record split validation/use, unbounded decoding, mutable option retention
   and returned key-alias defects with blocker-specific exits and vectors.
 
 ## Task 2: Adjudicate Slices 914-930
@@ -138,11 +138,11 @@ superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/substrate-erasure.ts`
 - Test evidence: `substrate-erasure.test.mjs`
 
-- [ ] Bind caller-mintable attestation flags, diagnostic callbacks, signed
+- [x] Bind caller-mintable attestation flags, diagnostic callbacks, signed
   canonical bytes, Ed25519 custody and revocation to exact source behavior.
-- [ ] Treat ambient `localeCompare` as non-authorizing for signed bytes unless
+- [x] Treat ambient `localeCompare` as non-authorizing for signed bytes unless
   the complete locale/ICU/runtime oracle is pinned or the wire is versioned.
-- [ ] Keep the named `at` and `reject` closures distinct from their parent
+- [x] Keep the named `at` and `reject` closures distinct from their parent
   orchestration receipts without double-crediting anonymous expressions.
 
 ## Task 3: Adjudicate Slices 931-947
@@ -151,11 +151,11 @@ superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/substrate-model.ts`
 - Test evidence: `substrate-model.test.mjs`
 
-- [ ] Bind JavaScript Error, binary64/NaN/-0/Infinity, typed Trit, UTF-16 hash,
+- [x] Bind JavaScript Error, binary64/NaN/-0/Infinity, typed Trit, UTF-16 hash,
   PRNG closure, live arrays and active class state to exact source semantics.
-- [ ] Credit `SubstrateParamError` and its constructor separately; stop at the
+- [x] Credit `SubstrateParamError` and its constructor separately; stop at the
   `NoisyLane` class boundary so its constructor begins the next queue.
-- [ ] Record prior Slice-91 `effectiveVerdict` as a future duplicate exclusion.
+- [x] Record prior Slice-91 `effectiveVerdict` as a future duplicate exclusion.
 
 ## Task 4: Author and verify the 50 receipts
 
@@ -166,12 +166,12 @@ superseded scopes or retirement credit.
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Author 50 receipt-local classifications, exact exits, vectors,
+- [x] Author 50 receipt-local classifications, exact exits, vectors,
   threadability, source hashes, focused evidence pins and a common manifest.
-- [ ] Run Tower no-emit typecheck, the full Tower test suite and
+- [x] Run Tower no-emit typecheck, the full Tower test suite and
   `node scripts/audit-conversion-slice-close.mjs`; require zero failures and
   exact receipt arithmetic.
-- [ ] Reconcile three independent read-only reviews and correct every Critical
+- [x] Reconcile three independent read-only reviews and correct every Critical
   or Important finding before commit.
 - [ ] Commit authored evidence separately from generated owner outputs.
 

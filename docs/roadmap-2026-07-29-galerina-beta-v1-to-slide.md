@@ -3878,6 +3878,29 @@ The committed closure layer is `27dcc5b0`. Myco refresh reports **6,410 files
 untruncated `Masked` symbol. Final post-record exact-head readback is retained
 in the handoff; repository-wide closure remains `UNKNOWN`.
 
+## Fungi conversion checkpoint planned through Slice 947 - 2026-08-14
+
+The next 50 unique Tower-Citizen scopes finish registry public verification,
+exhaust snapshot-key and substrate-erasure surfaces, then enter substrate model
+through the `NoisyLane` class boundary. Exact planned arithmetic is **15 erased
+declarations + 33 blocked runtime scopes + 2 primitive String candidates**.
+
+The decisive work is exact crypto/signature parsing and receipts, one-snapshot
+key custody, returned secret aliasing, provenance-bound erase attestations,
+locale-stable signed bytes, mandatory revocation/capability evidence,
+JavaScript Error/Binary64/Trit behavior, live arrays and identity-bearing
+mutable-state PRNG closures. The private skills are updated at translation
+`13c070f` and authoring `c4b10ae`, remain private/unpushed and pass focused
+pressure tests. Fifty receipt-local exits and the common manifest are authored;
+fresh Tower no-emit typecheck, **515/515** package tests and **887/887** receipt
+checks pass as regression/schema evidence. Three independent read-only reviews
+and all bounded re-reviews pass after receipt-local provenance, credit-boundary
+and threadability corrections. Separate authored and owner commits, the bounded
+close matrix and dual-index refresh remain pending.
+No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK twin,
+consumer switch, supersession or retirement is claimed. Repository-wide
+closure remains `UNKNOWN`.
+
 ## Fungi conversion checkpoint planned through Slice 897 - 2026-08-14
 
 The next 50 unique Tower-Citizen scopes finish precision strategy, exhaust

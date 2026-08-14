@@ -4,6 +4,29 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 898-947 Tower verifier, snapshot and substrate - 2026-08-14
+
+- [x] Freeze 50 unique source-order scopes: 15 erased declarations, 33 blocked
+  runtime scopes and two primitive String leaf candidates.
+- [x] Retain Slices 894-897 and future Slice-91 `effectiveVerdict` credit with
+  no duplicate receipt or ordinal.
+- [x] Adjudicate registry public verification, snapshot key custody, substrate
+  erasure/admission and the substrate-model prefix through `NoisyLane`.
+- [x] Update both private Fungi skills for returned mutable-state closure
+  identity at translation `13c070f` and authoring `c4b10ae`; both remain
+  private and unpushed and pass red/green pressure tests.
+- [x] Author 50 blocker/candidate-specific receipts with exact exits, hostile
+  vectors, source/test pins and one common evidence manifest.
+- [x] Run fresh Tower no-emit typecheck, **515/515** Tower tests and the
+  governed receipt audit at **887/887**; these remain regression/shape evidence.
+- [x] Reconcile three independent read-only reviews; all bounded re-reviews pass
+  after correcting skill provenance, class/constructor credit boundaries and
+  the `fnv1a` / `NO_NEIGHBORS` threadability split.
+- [ ] Publish all registered owners to fixed point, pass the hermetic owner
+  contract and bounded close matrix, then commit generated layers separately.
+- [ ] Refresh Myco and force an exact full code-graph rebuild at the final
+  committed head with bounded `NoisyLane` readback.
+
 ### Slices 848-897 Tower precision, quorum and registry - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes: 15 erased declarations, 32 blocked
