@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 848-897 Tower precision, quorum and registry - 2026-08-14
+
+- [x] Freeze 50 unique source-order scopes: 15 erased declarations, 32 blocked
+  runtime scopes and three primitive leaf candidates.
+- [x] Retain prior Slice-77 `quorum.ts#isValidVote` credit with no duplicate
+  receipt or ordinal.
+- [x] Adjudicate precision routing, vote-array quorum, registry checkpoint/key
+  rotation and the registry public-verifier prefix against exact source bytes.
+- [x] Author 50 blocker/candidate-specific receipts with exact exits, hostile
+  vectors, source/test pins and one common evidence manifest.
+- [x] Run fresh Tower no-emit typecheck, **515/515** tests and the governed
+  receipt audit at **837/837**.
+- [x] Reconcile three independent reviews; all bounded re-reviews pass after
+  tightening live-table freeze/copy authority, JavaScript `null` to Fungi
+  `Option` mapping, and arbitrary signature-String parity.
+- [ ] Commit authored evidence, publish registered owners, run the bounded close
+  matrix and refresh both indexes.
+
 ### Slices 798-847 Tower partial return, photonic, plugins and precision - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes after retaining prior Slice-797

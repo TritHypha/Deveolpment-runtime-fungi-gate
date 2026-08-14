@@ -121,11 +121,11 @@ zero superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/quorum.ts`
 - Test evidence: the two focused test files pinned above
 
-- [ ] Reconcile exact ranges, callers, tests, assets and the prior Slice-77
+- [x] Reconcile exact ranges, callers, tests, assets and the prior Slice-77
   exclusion.
-- [ ] Record exact selector/Float/record/array/Map/K3/callback semantics,
+- [x] Record exact selector/Float/record/array/Map/K3/callback semantics,
   blocker-specific exits and discriminating vectors.
-- [ ] Keep `governance-decisions.fungi#quorumVerdict` adjacent-only unless the
+- [x] Keep `governance-decisions.fungi#quorumVerdict` adjacent-only unless the
   host vote-array and tally boundary is independently proved.
 
 ## Task 2: Adjudicate Slices 859-893
@@ -134,12 +134,12 @@ zero superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts`
 - Test evidence: `registry-key-rotation.test.mjs`
 
-- [ ] Bind regex/context constants, WeakSet provenance, erased declarations,
+- [x] Bind regex/context constants, WeakSet provenance, erased declarations,
   number/time/JSON, recursive freeze, checkpoint crypto, signatures, key
   custody, callbacks and trigger authority to exact source behavior.
-- [ ] Preserve exception type/message/order, TypedArray view semantics,
+- [x] Preserve exception type/message/order, TypedArray view semantics,
   same-snapshot cryptographic preimages and every retained alias.
-- [ ] Record one exact executable exit and minimum hostile vector set per
+- [x] Record one exact executable exit and minimum hostile vector set per
   blocked scope; candidates remain non-authorizing until physical proof.
 
 ## Task 3: Adjudicate Slices 894-897
@@ -148,9 +148,9 @@ zero superseded scopes or retirement credit.
 - Read: `packages-galerina/galerina-tower-citizen/src/registry-public-verifier.ts`
 - Test evidence: `registry-public-verifier.test.mjs`
 
-- [ ] Bind the mutable RegExp/context objects and retain the two erased public
+- [x] Bind the mutable RegExp/context objects and retain the two erased public
   declarations without entering `RegistryPublicVerifiers` or later scopes.
-- [ ] Preserve source-order continuity: the next queue begins at
+- [x] Preserve source-order continuity: the next queue begins at
   `registry-public-verifier.ts#RegistryPublicVerifiers`.
 
 ## Task 4: Author and verify the 50 receipts
@@ -162,13 +162,13 @@ zero superseded scopes or retirement credit.
 - Modify: `docs/TODO.md`
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 
-- [ ] Author 50 receipt-local classifications, exact exits, vectors,
+- [x] Author 50 receipt-local classifications, exact exits, vectors,
   threadability, source hashes, focused evidence pins and a common manifest.
-- [ ] Run Tower no-emit typecheck, the full Tower test suite and
+- [x] Run Tower no-emit typecheck, the full Tower test suite and
   `node scripts/audit-conversion-slice-close.mjs`; require zero failures and
   exact receipt arithmetic.
-- [ ] Reconcile three independent read-only reviews and correct every Critical
-  or Important finding before commit.
+- [x] Reconcile three independent read-only reviews and correct every Critical
+  or Important finding before commit; all bounded re-reviews pass.
 - [ ] Commit authored evidence separately from generated owner outputs.
 
 ## Task 5: Publish owners and close the checkpoint
@@ -187,9 +187,9 @@ zero superseded scopes or retirement credit.
 
 ## Self-review
 
-- [ ] Confirm 50 case-sensitive unique scopes in exact source order.
-- [ ] Confirm prior Slice-77 `isValidVote` is excluded from new credit.
-- [ ] Confirm arithmetic is 15 NRB + 32 BLOCKED + 3 CANDIDATE.
-- [ ] Confirm every blocked receipt has an executable blocker-specific exit and
+- [x] Confirm 50 case-sensitive unique scopes in exact source order.
+- [x] Confirm prior Slice-77 `isValidVote` is excluded from new credit.
+- [x] Confirm arithmetic is 15 NRB + 32 BLOCKED + 3 CANDIDATE.
+- [x] Confirm every blocked receipt has an executable blocker-specific exit and
   every candidate has explicit consumer and physical-proof gates.
-- [ ] Confirm no physical authority, switch, supersession or retirement claim.
+- [x] Confirm no physical authority, switch, supersession or retirement claim.

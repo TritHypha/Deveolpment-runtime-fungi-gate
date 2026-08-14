@@ -1334,6 +1334,77 @@ time-budget breach or regex timeout. Codebase-memory moderate refresh reports
 interface result with `has_more:false`. A final post-record exact-head refresh
 is handoff evidence; repository-wide closure remains `UNKNOWN`.
 
+## Slices 848-897 - Tower precision, quorum and registry
+
+These 50 unique source-order scopes finish `precision-strategy.ts`, exhaust
+`quorum.ts` after retaining prior Slice-77 `isValidVote`, exhaust
+`registry-key-rotation.ts`, then enter `registry-public-verifier.ts` through
+`RegistryPublicVerifier`. Exact arithmetic is **15 NO_RUNTIME_BEHAVIOR + 32
+BLOCKED + 3 CANDIDATE**; threadability is **15 N/A + 24 SERIAL_HARD_PATH + 10
+PARALLEL_PURE + 1 UNKNOWN**. There is no supersession, consumer switch or
+retirement credit. Source build point is `d5cde96e286e26911ee12349a18af0185e0d1b95`;
+plan HEAD is `20e658298c3839ff7bc6417a00527de3a5fffa38`, so graph freshness after the
+plan-only commit is `UNKNOWN` and exact reads govern.
+
+### Slice 848-897 exact evidence manifest
+
+| Slices | Exact owning ranges |
+|---|---|
+| 848-851 | `precision-strategy.ts:117`, `:126-217`, `:224-230`, `:232-251` |
+| 852-858 | `quorum.ts:44-49`, `:52-59`, `:62`, `:77-90`, `:99-103`, `:113-133`, `:139-141`; `:65-70#isValidVote` remains prior Slice77 |
+| 859-872 | `registry-key-rotation.ts:19`, `:20`, `:21`, `:22`, `:23`, `:25-29`, `:31-34`, `:36-43`, `:45-53`, `:55-61`, `:63-66`, `:68-75`, `:77-81`, `:83-90` |
+| 873-893 | `registry-key-rotation.ts:92-94`, `:96-100`, `:102-107`, `:109-120`, `:122-204`, `:206-214`, `:216-226`, `:228-244`, `:246-310`, `:312-318`, `:320-335`, `:337-352`, `:354-367`, `:369-377`, `:379-389`, `:391-403`, `:406-425`, `:427-441`, `:447-481`, `:488-538`, `:544-574` |
+| 894-897 | `registry-public-verifier.ts:8`, `:9-16`, `:18-23`, `:25-29` |
+
+Caller reconciliation is bounded. Precision decisions feed HybridInferenceEngine
+and the Tri-Pipe router. Quorum functions feed key-rotation lock/drain paths and
+app-kernel registry rotation; the loaded scalar quorum Fungi fold is
+adjacent-only because host vote capture, anti-equivocation Map state and typed
+Verdict ingress remain outside it. Registry rotation is consumed by the
+app-kernel controller, authority, runtime and generation surfaces. The public
+verifier declarations and constants feed registry key rotation and the package
+barrel.
+
+Focused byte pins are `precision-tolerance.test.mjs`
+`CC3FBACC64D2FE81E9BA45D4CA6B71328F10844E6E411EAC0351D526A91403F1`;
+`quorum.test.mjs`
+`809854D30ED956F001756C10EF3B57F9A3AB68570F515F92654402FD7CE57802`;
+`registry-key-rotation.test.mjs`
+`5A9F1F73D214BF9746CCEE1765B6E9B8DE0071C5B7F6CD9B830F6816BB8CE276`;
+and `registry-public-verifier.test.mjs`
+`970B961C3B9631B578A7E2EE5D9152F67036E5452A2A55E105BE79FFC1F37BC7`.
+These tests are regression evidence only.
+
+Loaded assets remain the eight Tower governance/logic Fungi sources plus the
+trit brand guard. Exact-name and caller reconciliation found no scoped
+precision, vote-array quorum, registry rotation or public-verifier
+Fungi/GIR/physical `.slide`/independent re-admission/VOK twin. No switch,
+supersession or retirement is authorized.
+
+Material defects remain explicit. Prototype keys can bypass unknown-op
+precision routing, and exported mutable tables can forge provenance or numeric
+results. Quorum tally reads caller-live vote records and Map state across
+validation. Registry checkpoint seal can authenticate a `toJSON`/getter-swapped
+state; restore can authenticate payload A and parse payload B through repeated
+getters, minting restored provenance for unauthenticated bytes. Key commitments
+and fingerprints reread live bundle/key views; dual signing exposes an old-half
+side effect before a failing new half. Returned frozen contexts retain mutable
+authority callbacks and bundles. Public verifier role contexts are shallow
+frozen while nested cryptographic Uint8Arrays remain mutable.
+
+Both private skills remain at translation `24b414c` and authoring `ff1a093`,
+private and unpushed. Every finding instantiates existing capture-once,
+TypedArray, callback/effect, canonical-crypto, active-state, public-declaration
+and physical-proof rules; both dispositions are `NO_SKILL_UPDATE`.
+
+Receipt authoring is complete. Fresh root verification passes Tower no-emit
+typecheck, **515/515** package tests and **837/837** governed receipt-shape
+checks with 29 frozen legacy reports. Three independent bounded reviews pass
+after tightening live-table freeze/copy authority, JavaScript `null` to Fungi
+`Option` mapping, and arbitrary signature-String parity. These checks remain
+regression and receipt-shape evidence only; owner publication and dual-index
+closure remain pending. Repository-wide closure remains `UNKNOWN`.
+
 ## Slices 798-847 - Tower partial return, photonic, plugins and precision
 
 These 50 unique source-order scopes retain Slice-797 `Masked` credit and cover
