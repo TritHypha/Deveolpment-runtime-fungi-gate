@@ -10,7 +10,9 @@ import test from "node:test";
 import {
   classifyBroken,
   isExternalHref,
+  isPrivatePath,
   scanText,
+  scanPrivateRefs,
   repairText,
   MD_LINK,
 } from "../src/query/links.ts";
@@ -254,6 +256,48 @@ test("repair is idempotent: a second pass finds nothing to change", () => {
   const second = repairText("papers/p.md", first.text, findings);
   assert.equal(second.repaired, 0);
   assert.equal(second.text, first.text);
+});
+
+test("a resolved public -> never-public link is reported", () => {
+  // Not broken, which is exactly why the broken-link report can never see it. It works
+  // today and leaks scope the moment the public document is mirrored.
+  const exists = (p: string) => p === "private/reference/x-PRIVATE.md";
+  const out = scanPrivateRefs(
+    "reference/galerina/doc.md",
+    "[x](../../private/reference/x-PRIVATE.md)",
+    exists,
+  );
+  assert.equal(out.length, 1);
+  assert.equal(out[0]?.target, "private/reference/x-PRIVATE.md");
+});
+
+test("private -> private is in scope and not reported", () => {
+  const exists = (p: string) => p === "private/reference/x-PRIVATE.md";
+  const out = scanPrivateRefs(
+    "private/reference/other-PRIVATE.md",
+    "[x](x-PRIVATE.md)",
+    exists,
+  );
+  assert.equal(out.length, 0);
+});
+
+test("CONTROL: a public -> public link is not reported as a scope leak", () => {
+  const exists = (p: string) => p === "reference/galerina/other.md";
+  const out = scanPrivateRefs("reference/galerina/doc.md", "[x](other.md)", exists);
+  assert.equal(out.length, 0, "the check must not flag every resolved link");
+});
+
+test("a BROKEN link into private/ is left to the broken-link report", () => {
+  const out = scanPrivateRefs("doc.md", "[x](private/gone-PRIVATE.md)", () => false);
+  assert.equal(out.length, 0);
+});
+
+test("isPrivatePath recognises both the tag and the tree", () => {
+  assert.equal(isPrivatePath("a/b-PRIVATE.md"), true);
+  assert.equal(isPrivatePath("private/a/b.md"), true);
+  assert.equal(isPrivatePath("a/private/b.md"), true);
+  assert.equal(isPrivatePath("a/b.md"), false);
+  assert.equal(isPrivatePath("a/privateer/b.md"), false, "the boundary is the slash");
 });
 
 test("MD_LINK does not match a bare code span or a reference definition", () => {

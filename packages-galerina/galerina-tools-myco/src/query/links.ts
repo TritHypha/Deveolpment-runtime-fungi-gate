@@ -125,6 +125,45 @@ export function stripTrailingSlash(p: string): string {
   return p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p;
 }
 
+/** A never-public document: tagged in the filename, or living under a `private/` tree. */
+export function isPrivatePath(p: string): boolean {
+  return /-PRIVATE\.[A-Za-z0-9]+$/.test(p) || /(^|\/)private\//.test(p);
+}
+
+/**
+ * A RESOLVED link from a public document into a never-public one. Not broken — which is
+ * exactly why it needs its own report: it works today, and it is a publication-scope leak
+ * the moment the public document is mirrored anywhere. Broken-link checking would never
+ * surface it, because nothing is broken.
+ */
+export interface PrivateRef {
+  file: string;
+  href: string;
+  target: string;
+}
+
+export function scanPrivateRefs(
+  relFile: string,
+  text: string,
+  exists: (p: string) => boolean,
+): PrivateRef[] {
+  if (isPrivatePath(relFile)) return []; // private-to-private is in scope by definition
+  const dir = posix.dirname(relFile) === "." ? "" : posix.dirname(relFile);
+  const out: PrivateRef[] = [];
+  for (const m of text.matchAll(MD_LINK)) {
+    const href = m[2] ?? "";
+    if (isExternalHref(href)) continue;
+    const rawPath = href.split("#")[0] ?? "";
+    if (rawPath === "") continue;
+    const target = stripTrailingSlash(
+      posix.normalize(posix.join(dir, decodeURIComponent(rawPath))),
+    );
+    if (!exists(target)) continue; // a broken link is the other report's business
+    if (isPrivatePath(target)) out.push({ file: relFile, href, target });
+  }
+  return out;
+}
+
 /**
  * Scan one file's text for broken links.
  *   exists(relPath) must answer whether a repo-relative path is present.

@@ -26,8 +26,8 @@ import { search, searchFile, isError, detectRegexIntent } from "./query/search.t
 import type { MatchMode, SearchOptions, SearchOutcome } from "./query/search.ts";
 import { render, summaryLine } from "./output.ts";
 import { walk } from "./ingest/walk.ts";
-import { scanText, repairText } from "./query/links.ts";
-import type { BrokenLink, LinkClass } from "./query/links.ts";
+import { scanText, repairText, scanPrivateRefs } from "./query/links.ts";
+import type { BrokenLink, LinkClass, PrivateRef } from "./query/links.ts";
 import { VERSION } from "./index.ts";
 
 const HELP = `myco ${VERSION} — grep, but it grows a graph.
@@ -318,11 +318,23 @@ async function cmdLinks(
     );
   }
 
+  // A RESOLVED public -> never-public link is not broken, so the report above can never see
+  // it. It works today and becomes a publication-scope leak the moment the public document
+  // is mirrored. Reported alongside, never counted as breakage.
+  const privateRefs: PrivateRef[] = [];
+  for (const f of markdown) {
+    const text = await fs.readFile(f.absPath, "utf8").catch(() => undefined);
+    if (text === undefined) continue;
+    privateRefs.push(...scanPrivateRefs(f.relPath, text, exists));
+  }
+
   const counts = new Map<LinkClass, number>();
   for (const f of findings) counts.set(f.cls, (counts.get(f.cls) ?? 0) + 1);
 
   if (values["json"]) {
-    process.stdout.write(JSON.stringify({ scanned: markdown.length, findings }, null, 2) + "\n");
+    process.stdout.write(
+      JSON.stringify({ scanned: markdown.length, findings, privateRefs }, null, 2) + "\n",
+    );
     return findings.length > 0 ? 1 : 0;
   }
 
@@ -353,6 +365,13 @@ async function cmdLinks(
       process.stdout.write(`  ${f.file}\n      -> ${f.href}`);
       process.stdout.write(f.candidates ? `   [${f.candidates.length} candidates]\n` : "\n");
     }
+  }
+  if (privateRefs.length > 0) {
+    process.stdout.write(
+      `\nPUBLIC -> PRIVATE (${privateRefs.length}) — resolves today; a scope leak if the `
+        + `source is ever mirrored:\n`,
+    );
+    for (const r of privateRefs) process.stdout.write(`  ${r.file}\n      -> ${r.target}\n`);
   }
   return findings.length > 0 ? 1 : 0;
 }
