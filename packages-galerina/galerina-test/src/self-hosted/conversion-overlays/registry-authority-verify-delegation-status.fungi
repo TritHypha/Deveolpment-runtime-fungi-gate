@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 3: registry-authority-verify-delegation-status.fungi.
+pure flow registryAuthorityVerifyDelegationStatusCore(delegationCaptured: Bool, optionsCaptured: Bool, signaturesVerified: Bool, windowActive: Bool, rolesAuthorized: Bool) -> String {
+  let sourceProofA: Bool = windowActive
+  let sourceProofB: Bool = optionsCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if delegationCaptured {
+          if windowActive {
+            if rolesAuthorized {
+              if signaturesVerified {
+                return "registry_authority_delegation_verified"
+              }
+              return "signaturesVerified_missing"
+            }
+            return "rolesAuthorized_missing"
+          }
+          return "windowActive_missing"
+        }
+        return "delegationCaptured_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

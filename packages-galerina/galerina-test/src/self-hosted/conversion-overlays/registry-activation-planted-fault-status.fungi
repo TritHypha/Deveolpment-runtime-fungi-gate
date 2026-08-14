@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 20: registry-activation-planted-fault-status.fungi.
+pure flow registryActivationPlantedFaultStatusCore(boundaryCaptured: Bool, kindSelected: Bool, mappingClosed: Bool, faultReady: Bool) -> String {
+  let sourceProofA: Bool = mappingClosed
+  let sourceProofB: Bool = mappingClosed
+  let sourceProofC: Bool = mappingClosed
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if boundaryCaptured {
+          if faultReady {
+            if kindSelected {
+              if mappingClosed {
+                return "registry_activation_fault_planted"
+              }
+              return "mappingClosed_missing"
+            }
+            return "kindSelected_missing"
+          }
+          return "faultReady_missing"
+        }
+        return "boundaryCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

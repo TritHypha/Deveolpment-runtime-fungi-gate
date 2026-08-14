@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 30: registry-artifact-macho-status.fungi.
+pure flow registryArtifactMachoStatusCore(bytesCaptured: Bool, magicMatched: Bool, cpuMatched: Bool, formatAccepted: Bool) -> String {
+  let sourceProofA: Bool = formatAccepted
+  let sourceProofB: Bool = magicMatched
+  let sourceProofC: Bool = formatAccepted
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if magicMatched {
+          if cpuMatched {
+            if formatAccepted {
+              if bytesCaptured {
+                return "registry_artifact_macho_matched"
+              }
+              return "bytesCaptured_missing"
+            }
+            return "formatAccepted_missing"
+          }
+          return "cpuMatched_missing"
+        }
+        return "magicMatched_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

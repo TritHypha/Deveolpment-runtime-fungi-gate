@@ -1,0 +1,24 @@
+@version 1
+// Source-bound decision overlay wave 18 item 1: registry-authority-sign-delegation-status.fungi.
+pure flow registryAuthoritySignDelegationStatusCore(delegationCaptured: Bool, preimageReady: Bool, edSigned: Bool, mlSigned: Bool, envelopeBuilt: Bool) -> String {
+  let sourceProofA: Bool = envelopeBuilt
+  if sourceProofA {
+    if delegationCaptured {
+      if preimageReady {
+        if edSigned {
+          if mlSigned {
+            if envelopeBuilt {
+              return "registry_authority_delegation_signed"
+            }
+            return "envelopeBuilt_missing"
+          }
+          return "mlSigned_missing"
+        }
+        return "edSigned_missing"
+      }
+      return "preimageReady_missing"
+    }
+    return "delegationCaptured_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 5: registry-authority-manifest-delegation-status.fungi.
+pure flow registryAuthorityManifestDelegationStatusCore(manifestCaptured: Bool, delegationVerified: Bool, fingerprintsMatched: Bool, identitiesBound: Bool, manifestVerified: Bool) -> String {
+  let sourceProofA: Bool = fingerprintsMatched
+  let sourceProofB: Bool = fingerprintsMatched
+  if sourceProofA {
+    if sourceProofB {
+      if fingerprintsMatched {
+        if delegationVerified {
+          if manifestVerified {
+            if identitiesBound {
+              if manifestCaptured {
+                return "registry_authority_manifest_verified"
+              }
+              return "manifestCaptured_missing"
+            }
+            return "identitiesBound_missing"
+          }
+          return "manifestVerified_missing"
+        }
+        return "delegationVerified_missing"
+      }
+      return "fingerprintsMatched_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

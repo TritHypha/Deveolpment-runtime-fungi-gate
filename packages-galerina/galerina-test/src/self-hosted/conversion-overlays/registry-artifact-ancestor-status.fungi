@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 32: registry-artifact-ancestor-status.fungi.
+pure flow registryArtifactAncestorStatusCore(pathCaptured: Bool, ancestorRead: Bool, linkAbsent: Bool, rootReached: Bool) -> String {
+  let sourceProofA: Bool = linkAbsent
+  let sourceProofB: Bool = linkAbsent
+  let sourceProofC: Bool = linkAbsent
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if linkAbsent {
+          if pathCaptured {
+            if ancestorRead {
+              if rootReached {
+                return "registry_artifact_ancestors_direct"
+              }
+              return "rootReached_missing"
+            }
+            return "ancestorRead_missing"
+          }
+          return "pathCaptured_missing"
+        }
+        return "linkAbsent_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

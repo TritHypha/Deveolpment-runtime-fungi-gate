@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 38: host-floor-data-field-status.fungi.
+pure flow hostFloorDataFieldStatusCore(valueCaptured: Bool, nameCaptured: Bool, descriptorData: Bool, fieldReturned: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = descriptorData
+  let sourceProofC: Bool = fieldReturned
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if nameCaptured {
+          if fieldReturned {
+            if descriptorData {
+              if valueCaptured {
+                return "host_floor_data_ready"
+              }
+              return "valueCaptured_missing"
+            }
+            return "descriptorData_missing"
+          }
+          return "fieldReturned_missing"
+        }
+        return "nameCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

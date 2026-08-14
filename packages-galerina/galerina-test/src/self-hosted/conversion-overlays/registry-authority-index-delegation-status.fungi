@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 6: registry-authority-index-delegation-status.fungi.
+pure flow registryAuthorityIndexDelegationStatusCore(indexCaptured: Bool, delegationVerified: Bool, fingerprintsMatched: Bool, identityBound: Bool, indexVerified: Bool) -> String {
+  let sourceProofA: Bool = indexVerified
+  let sourceProofB: Bool = indexCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if identityBound {
+        if indexCaptured {
+          if fingerprintsMatched {
+            if indexVerified {
+              if delegationVerified {
+                return "registry_authority_index_verified"
+              }
+              return "delegationVerified_missing"
+            }
+            return "indexVerified_missing"
+          }
+          return "fingerprintsMatched_missing"
+        }
+        return "indexCaptured_missing"
+      }
+      return "identityBound_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

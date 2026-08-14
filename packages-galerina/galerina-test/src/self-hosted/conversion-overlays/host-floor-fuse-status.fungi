@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 39: host-floor-fuse-status.fungi.
+pure flow hostFloorFuseStatusCore(importsStarted: Bool, modulesLoaded: Bool, capabilitiesNarrowed: Bool, recordFrozen: Bool, floorReturned: Bool) -> String {
+  let sourceProofA: Bool = capabilitiesNarrowed
+  let sourceProofB: Bool = modulesLoaded
+  if sourceProofA {
+    if sourceProofB {
+      if modulesLoaded {
+        if capabilitiesNarrowed {
+          if recordFrozen {
+            if floorReturned {
+              if importsStarted {
+                return "host_floor_fuse_loaded"
+              }
+              return "importsStarted_missing"
+            }
+            return "floorReturned_missing"
+          }
+          return "recordFrozen_missing"
+        }
+        return "capabilitiesNarrowed_missing"
+      }
+      return "modulesLoaded_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

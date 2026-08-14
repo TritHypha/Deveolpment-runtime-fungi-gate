@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 22: registry-activation-explore-status.fungi.
+pure flow registryActivationExploreStatusCore(optionsCaptured: Bool, controlSimulated: Bool, scenariosExplored: Bool, coverageComplete: Bool, matrixBound: Bool) -> String {
+  let sourceProofA: Bool = scenariosExplored
+  let sourceProofB: Bool = matrixBound
+  if sourceProofA {
+    if sourceProofB {
+      if controlSimulated {
+        if matrixBound {
+          if coverageComplete {
+            if optionsCaptured {
+              if scenariosExplored {
+                return "registry_activation_matrix_explored"
+              }
+              return "scenariosExplored_missing"
+            }
+            return "optionsCaptured_missing"
+          }
+          return "coverageComplete_missing"
+        }
+        return "matrixBound_missing"
+      }
+      return "controlSimulated_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

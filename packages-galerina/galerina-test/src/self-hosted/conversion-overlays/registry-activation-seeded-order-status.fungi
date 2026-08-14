@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 21: registry-activation-seeded-order-status.fungi.
+pure flow registryActivationSeededOrderStatusCore(seedCaptured: Bool, boundariesScored: Bool, scoresOrdered: Bool, tiesResolved: Bool, orderFrozen: Bool) -> String {
+  let sourceProofA: Bool = seedCaptured
+  let sourceProofB: Bool = boundariesScored
+  if sourceProofA {
+    if sourceProofB {
+      if boundariesScored {
+        if scoresOrdered {
+          if seedCaptured {
+            if tiesResolved {
+              if orderFrozen {
+                return "registry_activation_order_seeded"
+              }
+              return "orderFrozen_missing"
+            }
+            return "tiesResolved_missing"
+          }
+          return "seedCaptured_missing"
+        }
+        return "scoresOrdered_missing"
+      }
+      return "boundariesScored_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

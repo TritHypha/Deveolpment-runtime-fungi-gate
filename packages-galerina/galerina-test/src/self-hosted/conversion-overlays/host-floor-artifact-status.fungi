@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 40: host-floor-artifact-status.fungi.
+pure flow hostFloorArtifactStatusCore(importsStarted: Bool, modulesLoaded: Bool, constantsNarrowed: Bool, capabilitiesNarrowed: Bool, floorFrozen: Bool) -> String {
+  let sourceProofA: Bool = floorFrozen
+  let sourceProofB: Bool = floorFrozen
+  if sourceProofA {
+    if sourceProofB {
+      if constantsNarrowed {
+        if importsStarted {
+          if modulesLoaded {
+            if floorFrozen {
+              if capabilitiesNarrowed {
+                return "host_floor_artifact_loaded"
+              }
+              return "capabilitiesNarrowed_missing"
+            }
+            return "floorFrozen_missing"
+          }
+          return "modulesLoaded_missing"
+        }
+        return "importsStarted_missing"
+      }
+      return "constantsNarrowed_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

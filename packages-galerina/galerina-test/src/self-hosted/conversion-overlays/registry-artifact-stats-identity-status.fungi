@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 25: registry-artifact-stats-identity-status.fungi.
+pure flow registryArtifactStatsIdentityStatusCore(leftCaptured: Bool, rightCaptured: Bool, deviceMatched: Bool, metadataMatched: Bool, timestampsMatched: Bool) -> String {
+  let sourceProofA: Bool = rightCaptured
+  let sourceProofB: Bool = rightCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if metadataMatched {
+        if deviceMatched {
+          if leftCaptured {
+            if rightCaptured {
+              if timestampsMatched {
+                return "registry_artifact_identity_matched"
+              }
+              return "timestampsMatched_missing"
+            }
+            return "rightCaptured_missing"
+          }
+          return "leftCaptured_missing"
+        }
+        return "deviceMatched_missing"
+      }
+      return "metadataMatched_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

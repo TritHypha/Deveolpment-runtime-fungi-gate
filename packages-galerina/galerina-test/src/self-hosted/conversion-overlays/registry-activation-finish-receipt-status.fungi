@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 18: registry-activation-finish-receipt-status.fungi.
+pure flow registryActivationFinishReceiptStatusCore(receiptCaptured: Bool, fieldsBound: Bool, canonicalReady: Bool, digestComputed: Bool, receiptFrozen: Bool) -> String {
+  let sourceProofA: Bool = receiptCaptured
+  let sourceProofB: Bool = digestComputed
+  if sourceProofA {
+    if sourceProofB {
+      if receiptFrozen {
+        if fieldsBound {
+          if digestComputed {
+            if canonicalReady {
+              if receiptCaptured {
+                return "registry_activation_receipt_finished"
+              }
+              return "receiptCaptured_missing"
+            }
+            return "canonicalReady_missing"
+          }
+          return "digestComputed_missing"
+        }
+        return "fieldsBound_missing"
+      }
+      return "receiptFrozen_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

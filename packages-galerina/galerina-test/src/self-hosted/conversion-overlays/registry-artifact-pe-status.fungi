@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 28: registry-artifact-pe-status.fungi.
+pure flow registryArtifactPeStatusCore(bytesCaptured: Bool, headerValid: Bool, offsetBound: Bool, machineMatched: Bool, formatAccepted: Bool) -> String {
+  let sourceProofA: Bool = bytesCaptured
+  let sourceProofB: Bool = machineMatched
+  if sourceProofA {
+    if sourceProofB {
+      if bytesCaptured {
+        if headerValid {
+          if machineMatched {
+            if offsetBound {
+              if formatAccepted {
+                return "registry_artifact_pe_matched"
+              }
+              return "formatAccepted_missing"
+            }
+            return "offsetBound_missing"
+          }
+          return "machineMatched_missing"
+        }
+        return "headerValid_missing"
+      }
+      return "bytesCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

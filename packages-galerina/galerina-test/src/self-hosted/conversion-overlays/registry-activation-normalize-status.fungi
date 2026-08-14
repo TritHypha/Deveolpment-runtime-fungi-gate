@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 13: registry-activation-normalize-status.fungi.
+pure flow registryActivationNormalizeStatusCore(optionsCaptured: Bool, digestsValid: Bool, budgetValid: Bool, canaryValid: Bool, faultsValid: Bool) -> String {
+  let sourceProofA: Bool = budgetValid
+  let sourceProofB: Bool = optionsCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if digestsValid {
+        if canaryValid {
+          if optionsCaptured {
+            if faultsValid {
+              if budgetValid {
+                return "registry_activation_options_normalized"
+              }
+              return "budgetValid_missing"
+            }
+            return "faultsValid_missing"
+          }
+          return "optionsCaptured_missing"
+        }
+        return "canaryValid_missing"
+      }
+      return "digestsValid_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

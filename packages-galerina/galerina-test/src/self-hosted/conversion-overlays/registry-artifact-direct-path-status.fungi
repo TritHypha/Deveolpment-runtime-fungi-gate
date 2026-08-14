@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 33: registry-artifact-direct-path-status.fungi.
+pure flow registryArtifactDirectPathStatusCore(rootCaptured: Bool, descriptorCaptured: Bool, segmentsBound: Bool, metadataValid: Bool, pathReturned: Bool) -> String {
+  let sourceProofA: Bool = metadataValid
+  let sourceProofB: Bool = descriptorCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if metadataValid {
+        if rootCaptured {
+          if descriptorCaptured {
+            if segmentsBound {
+              if pathReturned {
+                return "registry_artifact_path_direct"
+              }
+              return "pathReturned_missing"
+            }
+            return "segmentsBound_missing"
+          }
+          return "descriptorCaptured_missing"
+        }
+        return "rootCaptured_missing"
+      }
+      return "metadataValid_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

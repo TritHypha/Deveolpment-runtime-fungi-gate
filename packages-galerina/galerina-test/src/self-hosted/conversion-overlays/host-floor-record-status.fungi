@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 18 item 36: host-floor-record-status.fungi.
+pure flow hostFloorRecordStatusCore(valueCaptured: Bool, recordClassified: Bool, recordReturned: Bool) -> String {
+  let sourceProofA: Bool = recordClassified
+  let sourceProofB: Bool = recordClassified
+  let sourceProofC: Bool = recordClassified
+  let sourceProofD: Bool = recordClassified
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if recordClassified {
+            if valueCaptured {
+              if recordReturned {
+                return "host_floor_record_required"
+              }
+              return "recordReturned_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "recordClassified_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

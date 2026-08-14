@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 9: registry-activation-canonical-json-status.fungi.
+pure flow registryActivationCanonicalJsonStatusCore(valueCaptured: Bool, shapeAdmitted: Bool, keysOrdered: Bool, serialized: Bool) -> String {
+  let sourceProofA: Bool = serialized
+  let sourceProofB: Bool = valueCaptured
+  let sourceProofC: Bool = shapeAdmitted
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if shapeAdmitted {
+          if valueCaptured {
+            if serialized {
+              if keysOrdered {
+                return "registry_activation_json_canonical"
+              }
+              return "keysOrdered_missing"
+            }
+            return "serialized_missing"
+          }
+          return "valueCaptured_missing"
+        }
+        return "shapeAdmitted_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

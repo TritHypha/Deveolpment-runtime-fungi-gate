@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 17: registry-activation-set-terminal-status.fungi.
+pure flow registryActivationSetTerminalStatusCore(stateCaptured: Bool, boundaryCaptured: Bool, authorityMatched: Bool, terminalSelected: Bool, stateUpdated: Bool) -> String {
+  let sourceProofA: Bool = terminalSelected
+  let sourceProofB: Bool = stateCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if terminalSelected {
+        if stateUpdated {
+          if stateCaptured {
+            if authorityMatched {
+              if boundaryCaptured {
+                return "registry_activation_terminal_set"
+              }
+              return "boundaryCaptured_missing"
+            }
+            return "authorityMatched_missing"
+          }
+          return "stateCaptured_missing"
+        }
+        return "stateUpdated_missing"
+      }
+      return "terminalSelected_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

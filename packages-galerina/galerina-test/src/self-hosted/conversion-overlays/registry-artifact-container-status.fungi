@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 31: registry-artifact-container-status.fungi.
+pure flow registryArtifactContainerStatusCore(bytesCaptured: Bool, descriptorCaptured: Bool, formatSelected: Bool, parserAccepted: Bool, containerMatched: Bool) -> String {
+  let sourceProofA: Bool = bytesCaptured
+  let sourceProofB: Bool = descriptorCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if descriptorCaptured {
+        if containerMatched {
+          if formatSelected {
+            if parserAccepted {
+              if bytesCaptured {
+                return "registry_artifact_container_matched"
+              }
+              return "bytesCaptured_missing"
+            }
+            return "parserAccepted_missing"
+          }
+          return "formatSelected_missing"
+        }
+        return "containerMatched_missing"
+      }
+      return "descriptorCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

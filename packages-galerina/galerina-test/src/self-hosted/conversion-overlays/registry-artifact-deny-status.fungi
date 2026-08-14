@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 24: registry-artifact-deny-status.fungi.
+pure flow registryArtifactDenyStatusCore(reasonCaptured: Bool, verdictDenied: Bool, fieldsCleared: Bool, decisionFrozen: Bool) -> String {
+  let sourceProofA: Bool = decisionFrozen
+  let sourceProofB: Bool = decisionFrozen
+  let sourceProofC: Bool = decisionFrozen
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if reasonCaptured {
+          if decisionFrozen {
+            if fieldsCleared {
+              if verdictDenied {
+                return "registry_artifact_denied"
+              }
+              return "verdictDenied_missing"
+            }
+            return "fieldsCleared_missing"
+          }
+          return "decisionFrozen_missing"
+        }
+        return "reasonCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

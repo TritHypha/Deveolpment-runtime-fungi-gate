@@ -2412,3 +2412,52 @@ must contain all 40 new `.fungi` files, and both worktree and committed-object
 guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
+
+## Source decision overlay wave 18 - registry activation and host boundaries
+
+Wave 18 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. Six bind the remaining executable scopes in
+`galerina-framework-app-kernel/src/registry-authority.ts`, sixteen bind the
+complete executable scope set in `registry-activation-simulator.ts`, twelve
+bind `registry-durability-artifact.ts`, and six begin the fixed host import
+seams in `host-floor.ts`. The package now registers **760** conversion
+overlays. The pinned source build point is
+`6b86970d08af7c2b25c6b284d7c2601699dffbf2`; the four source SHA-256
+values are
+`B5030C649ADA2DB6C02E1379E168E5E2C41701006658FF00B4EA00C5832EE7C0`,
+`F234E1DD55627A6CD98A312ED142F48FDE70D4A3A83BB0FC4D5B9A2A38CB31CE`,
+`FCF07A44FC83E614C0F542B454B1F1A9ADED73F8D7CCB2A16E69F22A0C4C0D6E`
+and
+`1317EF615490CD38D083268B0C5E99CCDBEFABFF3E94A79259E1AF964B364061`.
+The graph supplied navigation only and remains behind the live source build
+point, so freshness is **UNKNOWN** and exact bytes plus the zero-hit
+prior-wave audit are final scope authority.
+
+The source test first failed on the absent and unregistered assets. The first
+authored pass exposed three normalized shadows; after separation, one further
+cross-wave shadow was found and removed by simplifying that proof shape. The
+accepted whole-corpus gate reports **40/40 unique** with zero exact-byte or
+alpha-renamed template collisions. Focused source evidence passes **3/3** and
+the complete overlay source family passes **53/53**. Focused physical evidence
+passes **1/1** and the complete physical wave family passes **17/17**: all 40
+new sources compile into physical `.slide` artifacts, publish, independently
+re-admit and VOK-verify their typed values, refuse source and physical artifact
+mutation, reject receipt tampering, and release no production authority. The
+test package no-emit typecheck is green. The focused test pins are
+`1D1D996ADBAF5BEA53B9629F3793DF9B6BE53601C83E0F11D49B135B2E86BB1C`
+and
+`5CCBCE5D5D2B614E16712EE7054E32339BF793AF29BE79A1024C1D5128DCFBD9`.
+
+This remains bounded post-border decision evidence. It does not replace
+dynamic imports, filesystem and path inspection, binary parsing, Node crypto,
+canonical JSON or UTF-8, signature and revocation verification, callbacks,
+clocks, mutable objects, model scheduling, host capability identity, native
+artifact execution, error identity or cleanup ordering. It authorizes no
+registry delegation, activation, durability capability, host-floor expansion,
+consumer switch or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, no worker authored this wave, no push is authorized, and no report-only
+follow-up commit is permitted.

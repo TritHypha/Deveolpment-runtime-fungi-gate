@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 34: registry-artifact-inspect-status.fungi.
+pure flow registryArtifactInspectStatusCore(inputsCaptured: Bool, pathAdmitted: Bool, bytesStable: Bool, formatVerified: Bool, digestMatched: Bool) -> String {
+  let sourceProofA: Bool = inputsCaptured
+  let sourceProofB: Bool = digestMatched
+  if sourceProofA {
+    if sourceProofB {
+      if formatVerified {
+        if bytesStable {
+          if digestMatched {
+            if inputsCaptured {
+              if pathAdmitted {
+                return "registry_artifact_candidate_verified"
+              }
+              return "pathAdmitted_missing"
+            }
+            return "inputsCaptured_missing"
+          }
+          return "digestMatched_missing"
+        }
+        return "bytesStable_missing"
+      }
+      return "formatVerified_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

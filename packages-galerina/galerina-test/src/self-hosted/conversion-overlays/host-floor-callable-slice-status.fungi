@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 37: host-floor-callable-slice-status.fungi.
+pure flow hostFloorCallableSliceStatusCore(valueCaptured: Bool, namesCaptured: Bool, callablesChecked: Bool, wrappersBound: Bool, sliceFrozen: Bool) -> String {
+  let sourceProofA: Bool = sliceFrozen
+  let sourceProofB: Bool = namesCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if callablesChecked {
+          if namesCaptured {
+            if wrappersBound {
+              if sliceFrozen {
+                return "host_floor_callable_slice_ready"
+              }
+              return "sliceFrozen_missing"
+            }
+            return "wrappersBound_missing"
+          }
+          return "namesCaptured_missing"
+        }
+        return "callablesChecked_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

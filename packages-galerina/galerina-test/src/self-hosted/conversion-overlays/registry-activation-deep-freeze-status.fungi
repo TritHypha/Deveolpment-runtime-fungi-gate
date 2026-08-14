@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 8: registry-activation-deep-freeze-status.fungi.
+pure flow registryActivationDeepFreezeStatusCore(valueCaptured: Bool, childrenVisited: Bool, objectFrozen: Bool, graphSealed: Bool) -> String {
+  let sourceProofA: Bool = childrenVisited
+  let sourceProofB: Bool = childrenVisited
+  let sourceProofC: Bool = childrenVisited
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if objectFrozen {
+          if childrenVisited {
+            if graphSealed {
+              if valueCaptured {
+                return "registry_activation_graph_frozen"
+              }
+              return "valueCaptured_missing"
+            }
+            return "graphSealed_missing"
+          }
+          return "childrenVisited_missing"
+        }
+        return "objectFrozen_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

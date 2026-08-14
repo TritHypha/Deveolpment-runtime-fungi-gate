@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 18 item 35: host-floor-import-status.fungi.
+pure flow hostFloorImportStatusCore(specifierCaptured: Bool, importBound: Bool, moduleLoaded: Bool) -> String {
+  let sourceProofA: Bool = moduleLoaded
+  let sourceProofB: Bool = importBound
+  let sourceProofC: Bool = specifierCaptured
+  let sourceProofD: Bool = moduleLoaded
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if moduleLoaded {
+            if specifierCaptured {
+              if importBound {
+                return "host_floor_module_loaded"
+              }
+              return "importBound_missing"
+            }
+            return "specifierCaptured_missing"
+          }
+          return "moduleLoaded_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

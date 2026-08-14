@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 4: registry-authority-root-component-status.fungi.
+pure flow registryAuthorityRootComponentStatusCore(messageCaptured: Bool, signatureCaptured: Bool, keyMatched: Bool, verifierAccepted: Bool, resultBound: Bool) -> String {
+  let sourceProofA: Bool = messageCaptured
+  let sourceProofB: Bool = resultBound
+  if sourceProofA {
+    if sourceProofB {
+      if signatureCaptured {
+        if resultBound {
+          if messageCaptured {
+            if verifierAccepted {
+              if keyMatched {
+                return "registry_authority_root_component_verified"
+              }
+              return "keyMatched_missing"
+            }
+            return "verifierAccepted_missing"
+          }
+          return "messageCaptured_missing"
+        }
+        return "resultBound_missing"
+      }
+      return "signatureCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

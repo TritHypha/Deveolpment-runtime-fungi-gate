@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 18 item 12: registry-activation-canary-status.fungi.
+pure flow registryActivationCanaryStatusCore(valueCaptured: Bool, stringTyped: Bool, verdictKnown: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = valueCaptured
+  let sourceProofC: Bool = valueCaptured
+  let sourceProofD: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if valueCaptured {
+            if stringTyped {
+              if verdictKnown {
+                return "registry_activation_canary_known"
+              }
+              return "verdictKnown_missing"
+            }
+            return "stringTyped_missing"
+          }
+          return "valueCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 7: registry-activation-plain-shape-status.fungi.
+pure flow registryActivationPlainShapeStatusCore(valueCaptured: Bool, objectPresent: Bool, prototypePlain: Bool, keysData: Bool) -> String {
+  let sourceProofA: Bool = keysData
+  let sourceProofB: Bool = prototypePlain
+  let sourceProofC: Bool = objectPresent
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if keysData {
+          if prototypePlain {
+            if objectPresent {
+              if valueCaptured {
+                return "registry_activation_shape_plain"
+              }
+              return "valueCaptured_missing"
+            }
+            return "objectPresent_missing"
+          }
+          return "prototypePlain_missing"
+        }
+        return "keysData_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

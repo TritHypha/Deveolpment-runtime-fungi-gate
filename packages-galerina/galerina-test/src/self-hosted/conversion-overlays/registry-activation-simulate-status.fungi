@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 19: registry-activation-simulate-status.fungi.
+pure flow registryActivationSimulateStatusCore(optionsCaptured: Bool, scheduleReady: Bool, faultsApplied: Bool, terminalReached: Bool, receiptBuilt: Bool) -> String {
+  let sourceProofA: Bool = faultsApplied
+  let sourceProofB: Bool = scheduleReady
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if scheduleReady {
+          if terminalReached {
+            if receiptBuilt {
+              if faultsApplied {
+                return "registry_activation_simulated"
+              }
+              return "faultsApplied_missing"
+            }
+            return "receiptBuilt_missing"
+          }
+          return "terminalReached_missing"
+        }
+        return "scheduleReady_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

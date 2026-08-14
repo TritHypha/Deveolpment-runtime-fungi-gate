@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 16: registry-activation-terminal-status.fungi.
+pure flow registryActivationTerminalStatusCore(boundaryCaptured: Bool, candidateAccepted: Bool, canaryClassified: Bool, terminalSelected: Bool) -> String {
+  let sourceProofA: Bool = candidateAccepted
+  let sourceProofB: Bool = candidateAccepted
+  let sourceProofC: Bool = candidateAccepted
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if boundaryCaptured {
+          if canaryClassified {
+            if terminalSelected {
+              if candidateAccepted {
+                return "registry_activation_terminal_selected"
+              }
+              return "candidateAccepted_missing"
+            }
+            return "terminalSelected_missing"
+          }
+          return "canaryClassified_missing"
+        }
+        return "boundaryCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

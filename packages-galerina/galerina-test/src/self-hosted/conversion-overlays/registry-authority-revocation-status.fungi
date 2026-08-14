@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 2: registry-authority-revocation-status.fungi.
+pure flow registryAuthorityRevocationStatusCore(keyIdCaptured: Bool, checkBound: Bool, callbackCompleted: Bool, literalTrue: Bool) -> String {
+  let sourceProofA: Bool = checkBound
+  let sourceProofB: Bool = literalTrue
+  let sourceProofC: Bool = checkBound
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if checkBound {
+          if literalTrue {
+            if callbackCompleted {
+              if keyIdCaptured {
+                return "registry_authority_not_revoked"
+              }
+              return "keyIdCaptured_missing"
+            }
+            return "callbackCompleted_missing"
+          }
+          return "literalTrue_missing"
+        }
+        return "checkBound_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

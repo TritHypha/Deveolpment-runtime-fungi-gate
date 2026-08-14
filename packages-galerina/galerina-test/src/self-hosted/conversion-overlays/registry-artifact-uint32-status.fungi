@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 27: registry-artifact-uint32-status.fungi.
+pure flow registryArtifactUint32StatusCore(bytesCaptured: Bool, offsetValid: Bool, wordDecoded: Bool, unsignedBound: Bool) -> String {
+  let sourceProofA: Bool = unsignedBound
+  let sourceProofB: Bool = wordDecoded
+  let sourceProofC: Bool = offsetValid
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if unsignedBound {
+          if bytesCaptured {
+            if wordDecoded {
+              if offsetValid {
+                return "registry_artifact_uint32_decoded"
+              }
+              return "offsetValid_missing"
+            }
+            return "wordDecoded_missing"
+          }
+          return "bytesCaptured_missing"
+        }
+        return "unsignedBound_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

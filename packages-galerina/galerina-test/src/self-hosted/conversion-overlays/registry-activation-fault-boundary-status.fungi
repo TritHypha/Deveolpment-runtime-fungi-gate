@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 15: registry-activation-fault-boundary-status.fungi.
+pure flow registryActivationFaultBoundaryStatusCore(faultCaptured: Bool, boundaryMatched: Bool, kindAllowed: Bool, timingValid: Bool) -> String {
+  let sourceProofA: Bool = timingValid
+  let sourceProofB: Bool = kindAllowed
+  let sourceProofC: Bool = boundaryMatched
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if boundaryMatched {
+          if timingValid {
+            if kindAllowed {
+              if faultCaptured {
+                return "registry_activation_fault_valid"
+              }
+              return "faultCaptured_missing"
+            }
+            return "kindAllowed_missing"
+          }
+          return "timingValid_missing"
+        }
+        return "boundaryMatched_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

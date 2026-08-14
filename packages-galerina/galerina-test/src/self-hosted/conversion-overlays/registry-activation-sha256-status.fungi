@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 18 item 10: registry-activation-sha256-status.fungi.
+pure flow registryActivationSha256StatusCore(valueCaptured: Bool, canonicalReady: Bool, bytesEncoded: Bool, digestReady: Bool) -> String {
+  let sourceProofA: Bool = canonicalReady
+  let sourceProofB: Bool = digestReady
+  let sourceProofC: Bool = canonicalReady
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if digestReady {
+          if bytesEncoded {
+            if canonicalReady {
+              if valueCaptured {
+                return "registry_activation_digest_ready"
+              }
+              return "valueCaptured_missing"
+            }
+            return "canonicalReady_missing"
+          }
+          return "bytesEncoded_missing"
+        }
+        return "digestReady_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

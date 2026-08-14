@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 29: registry-artifact-elf-status.fungi.
+pure flow registryArtifactElfStatusCore(bytesCaptured: Bool, headerValid: Bool, classMatched: Bool, machineMatched: Bool, formatAccepted: Bool) -> String {
+  let sourceProofA: Bool = classMatched
+  let sourceProofB: Bool = headerValid
+  if sourceProofA {
+    if sourceProofB {
+      if bytesCaptured {
+        if formatAccepted {
+          if headerValid {
+            if classMatched {
+              if machineMatched {
+                return "registry_artifact_elf_matched"
+              }
+              return "machineMatched_missing"
+            }
+            return "classMatched_missing"
+          }
+          return "headerValid_missing"
+        }
+        return "formatAccepted_missing"
+      }
+      return "bytesCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

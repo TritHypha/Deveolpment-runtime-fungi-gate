@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 18 item 11: registry-activation-boundary-status.fungi.
+pure flow registryActivationBoundaryStatusCore(valueCaptured: Bool, stringTyped: Bool, boundaryKnown: Bool) -> String {
+  let sourceProofA: Bool = stringTyped
+  let sourceProofB: Bool = valueCaptured
+  let sourceProofC: Bool = boundaryKnown
+  let sourceProofD: Bool = stringTyped
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if stringTyped {
+            if valueCaptured {
+              if boundaryKnown {
+                return "registry_activation_boundary_known"
+              }
+              return "boundaryKnown_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "stringTyped_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

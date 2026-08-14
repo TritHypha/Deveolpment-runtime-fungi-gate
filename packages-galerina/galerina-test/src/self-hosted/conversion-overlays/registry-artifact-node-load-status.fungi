@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 18 item 23: registry-artifact-node-load-status.fungi.
+pure flow registryArtifactNodeLoadStatusCore(hostCaptured: Bool, modulesNarrowed: Bool, nodeReady: Bool) -> String {
+  let sourceProofA: Bool = hostCaptured
+  let sourceProofB: Bool = nodeReady
+  let sourceProofC: Bool = modulesNarrowed
+  let sourceProofD: Bool = hostCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if hostCaptured {
+            if modulesNarrowed {
+              if nodeReady {
+                return "registry_artifact_node_loaded"
+              }
+              return "nodeReady_missing"
+            }
+            return "modulesNarrowed_missing"
+          }
+          return "hostCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

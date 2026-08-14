@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 18 item 14: registry-activation-schedule-status.fungi.
+pure flow registryActivationScheduleStatusCore(optionsCaptured: Bool, faultsCaptured: Bool, boundariesOrdered: Bool, budgetApplied: Bool, scheduleBuilt: Bool) -> String {
+  let sourceProofA: Bool = scheduleBuilt
+  let sourceProofB: Bool = budgetApplied
+  if sourceProofA {
+    if sourceProofB {
+      if boundariesOrdered {
+        if optionsCaptured {
+          if scheduleBuilt {
+            if budgetApplied {
+              if faultsCaptured {
+                return "registry_activation_schedule_ready"
+              }
+              return "faultsCaptured_missing"
+            }
+            return "budgetApplied_missing"
+          }
+          return "scheduleBuilt_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "boundariesOrdered_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}
