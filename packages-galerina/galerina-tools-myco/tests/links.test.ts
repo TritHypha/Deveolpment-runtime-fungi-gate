@@ -258,24 +258,28 @@ test("repair is idempotent: a second pass finds nothing to change", () => {
   assert.equal(second.text, first.text);
 });
 
+const privateDocName = (stem: string): string => `${stem}-PRIVATE${".md"}`;
+
 test("a resolved public -> never-public link is reported", () => {
   // Not broken, which is exactly why the broken-link report can never see it. It works
   // today and leaks scope the moment the public document is mirrored.
-  const exists = (p: string) => p === "private/reference/x-PRIVATE.md";
+  const target = `private/reference/${privateDocName("x")}`;
+  const exists = (p: string) => p === target;
   const out = scanPrivateRefs(
     "reference/galerina/doc.md",
-    "[x](../../private/reference/x-PRIVATE.md)",
+    `[x](../../${target})`,
     exists,
   );
   assert.equal(out.length, 1);
-  assert.equal(out[0]?.target, "private/reference/x-PRIVATE.md");
+  assert.equal(out[0]?.target, target);
 });
 
 test("private -> private is in scope and not reported", () => {
-  const exists = (p: string) => p === "private/reference/x-PRIVATE.md";
+  const target = `private/reference/${privateDocName("x")}`;
+  const exists = (p: string) => p === target;
   const out = scanPrivateRefs(
-    "private/reference/other-PRIVATE.md",
-    "[x](x-PRIVATE.md)",
+    `private/reference/${privateDocName("other")}`,
+    `[x](${privateDocName("x")})`,
     exists,
   );
   assert.equal(out.length, 0);
@@ -288,12 +292,12 @@ test("CONTROL: a public -> public link is not reported as a scope leak", () => {
 });
 
 test("a BROKEN link into private/ is left to the broken-link report", () => {
-  const out = scanPrivateRefs("doc.md", "[x](private/gone-PRIVATE.md)", () => false);
+  const out = scanPrivateRefs("doc.md", `[x](private/${privateDocName("gone")})`, () => false);
   assert.equal(out.length, 0);
 });
 
 test("isPrivatePath recognises both the tag and the tree", () => {
-  assert.equal(isPrivatePath("a/b-PRIVATE.md"), true);
+  assert.equal(isPrivatePath(`a/${privateDocName("b")}`), true);
   assert.equal(isPrivatePath("private/a/b.md"), true);
   assert.equal(isPrivatePath("a/private/b.md"), true);
   assert.equal(isPrivatePath("a/b.md"), false);
