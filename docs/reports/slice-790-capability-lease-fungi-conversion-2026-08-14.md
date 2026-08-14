@@ -20,4 +20,3 @@ Authoring skill disposition: NO_SKILL_UPDATE: current rules cover this exact bou
 Threadability: N/A
 Source classification: NO_RUNTIME_BEHAVIOR
 Bounded closure: COMPLETE
-

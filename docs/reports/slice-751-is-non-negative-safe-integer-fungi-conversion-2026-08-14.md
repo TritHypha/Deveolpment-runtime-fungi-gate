@@ -20,4 +20,3 @@ Authoring skill disposition: NO_SKILL_UPDATE: current rules cover this exact bou
 Threadability: PARALLEL_PURE
 Source classification: BLOCKED
 Bounded closure: COMPLETE
-
