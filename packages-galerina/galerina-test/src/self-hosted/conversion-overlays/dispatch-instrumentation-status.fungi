@@ -1,0 +1,13 @@
+@version 1
+/// Wrapped-handler fold from galerina-observability#instrumentDispatch.
+pure flow dispatchInstrumentationStatusCore(handlerPresent: Bool, handlerSucceeded: Bool, recordingSucceeded: Bool) -> String
+contract { intent { "Preserve handler outcome while isolating metrics recording." } }
+{
+  let admittedHandler: Bool = handlerPresent
+  if admittedHandler == false { return "handler_absent" }
+  if handlerSucceeded {
+    if recordingSucceeded { return "returned_recorded" }
+    return "returned_recording_isolated"
+  }
+  return "rethrow_recorded_error"
+}

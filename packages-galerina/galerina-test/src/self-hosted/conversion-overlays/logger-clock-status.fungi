@@ -1,0 +1,10 @@
+@version 1
+/// Logger clock fold from Logger#safeNow.
+pure flow loggerClockStatusCore(clockReturned: Bool, finiteNumber: Bool) -> String
+contract { intent { "Keep a finite logger clock reading and collapse every other outcome to zero." } }
+{
+  if finiteNumber {
+    if clockReturned { return "finite" }
+  }
+  return "zero"
+}

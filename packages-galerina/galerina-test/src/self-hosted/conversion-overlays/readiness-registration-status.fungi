@@ -1,0 +1,9 @@
+@version 1
+/// Replacement fold from HealthRegistry#registerReadiness.
+pure flow readinessRegistrationStatusCore(existing: Bool, checkCallable: Bool) -> Int
+contract { intent { "Distinguish readiness insertion from replacement after callable admission." } }
+{
+  if checkCallable == false { return -1 }
+  if existing { return 2 }
+  return 1
+}

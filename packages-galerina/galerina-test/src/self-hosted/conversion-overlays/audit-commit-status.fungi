@@ -1,0 +1,13 @@
+@version 1
+/// Commit fold from metricsAuditSink#commit.
+pure flow auditCommitStatusCore(reservationLive: Bool, eventPresent: Bool) -> String
+contract { intent { "Commit a metrics audit event only with a live reservation and captured event." } }
+{
+  let capturedEvent: Bool = eventPresent
+  let capturedReservation: Bool = reservationLive
+  if capturedEvent {
+    if capturedReservation { return "committed" }
+    return "reservation_refused"
+  }
+  return "event_refused"
+}

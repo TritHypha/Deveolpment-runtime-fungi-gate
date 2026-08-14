@@ -1,0 +1,10 @@
+@version 1
+/// Handler containment fold from galerina-observability#failSafe.
+pure flow healthFailsafeStatusCore(handlerSucceeded: Bool, resultPresent: Bool) -> String
+contract { intent { "Convert every health handler fault or missing result into a down response." } }
+{
+  let completed: Bool = handlerSucceeded
+  if completed == false { return "down_503" }
+  if resultPresent == false { return "down_missing" }
+  return "handler_result"
+}

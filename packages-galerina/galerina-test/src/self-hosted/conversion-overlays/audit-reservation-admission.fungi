@@ -1,0 +1,11 @@
+@version 1
+/// Reservation lifecycle fold from galerina-observability#metricsAuditSink.
+pure flow auditReservationAdmissionCore(reservationPresent: Bool, alreadyConsumed: Bool) -> String
+contract { intent { "Accept only a live metrics audit reservation." } }
+{
+  let capturedReservation: Bool = reservationPresent
+  let capturedConsumption: Bool = alreadyConsumed
+  if capturedReservation == false { return "foreign_refused" }
+  if capturedConsumption { return "consumed_refused" }
+  return "live"
+}

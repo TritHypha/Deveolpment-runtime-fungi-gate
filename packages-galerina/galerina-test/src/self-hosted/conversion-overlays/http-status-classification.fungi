@@ -1,0 +1,12 @@
+@version 1
+/// Closed HTTP class fold from galerina-observability#statusClassOf.
+pure flow httpStatusClassificationCore(hundreds: Int) -> String
+contract { intent { "Accept only the five HTTP status classes." } }
+{
+  if hundreds == 1 { return "1xx" }
+  if hundreds == 2 { return "2xx" }
+  if hundreds == 3 { return "3xx" }
+  if hundreds == 4 { return "4xx" }
+  if hundreds == 5 { return "5xx" }
+  return "invalid"
+}

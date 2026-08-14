@@ -1,0 +1,12 @@
+@version 1
+/// Registration fold from HealthRegistry#registerLiveness.
+pure flow livenessRegistrationStatusCore(namePresent: Bool, checkCallable: Bool) -> String
+contract { intent { "Register liveness only after name and callable checks." } }
+{
+  let admittedName: Bool = namePresent
+  if admittedName {
+    if checkCallable { return "registered_liveness" }
+    return "check_refused"
+  }
+  return "name_refused"
+}

@@ -1,0 +1,9 @@
+@version 1
+/// Cancellation fold from metricsAuditSink#cancel.
+pure flow auditCancelStatusCore(reservationLive: Bool, previouslyCancelled: Bool) -> String
+contract { intent { "Cancel exactly one live metrics reservation." } }
+{
+  if previouslyCancelled { return "repeat_refused" }
+  if reservationLive == false { return "foreign_refused" }
+  return "cancelled"
+}

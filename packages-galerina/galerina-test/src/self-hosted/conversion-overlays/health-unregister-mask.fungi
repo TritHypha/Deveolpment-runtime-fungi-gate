@@ -1,0 +1,12 @@
+@version 1
+/// Dual-map deletion fold from HealthRegistry#unregister.
+pure flow healthUnregisterMaskCore(livenessPresent: Bool, readinessPresent: Bool) -> Int
+contract { intent { "Encode which registered health checks are removed by one name." } }
+{
+  if readinessPresent {
+    if livenessPresent { return 3 }
+    return 2
+  }
+  if livenessPresent { return 1 }
+  return 0
+}

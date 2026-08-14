@@ -1,0 +1,13 @@
+@version 1
+/// Construction option fold from galerina-observability#createLogger.
+pure flow loggerConstructionStatusCore(optionsProvided: Bool, sinkProvided: Bool, clockProvided: Bool) -> String
+contract { intent { "Summarize logger construction authority supplied by the host." } }
+{
+  if optionsProvided == false { return "defaults" }
+  if sinkProvided {
+    if clockProvided { return "custom_sink_clock" }
+    return "custom_sink"
+  }
+  if clockProvided { return "custom_clock" }
+  return "custom_options"
+}

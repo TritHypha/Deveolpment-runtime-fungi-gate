@@ -1,0 +1,9 @@
+@version 1
+/// Aggregate fold from HealthRegistry#readiness.
+pure flow readinessSummaryCore(checkCount: Int, everyUp: Bool) -> Bool
+contract { intent { "Admit readiness when every captured check is up, including the empty fold." } }
+{
+  if everyUp { return true }
+  if checkCount == 0 { return true }
+  return false
+}

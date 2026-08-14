@@ -1,0 +1,15 @@
+@version 1
+/// Sink isolation fold from Logger#emit.
+pure flow loggerEmissionStatusCore(levelEnabled: Bool, recordConstructed: Bool, sinkSucceeded: Bool) -> String
+contract { intent { "Emit only enabled records and isolate construction or sink faults." } }
+{
+  let enabled: Bool = levelEnabled
+  if enabled {
+    if recordConstructed {
+      if sinkSucceeded { return "written" }
+      return "sink_isolated"
+    }
+    return "construction_isolated"
+  }
+  return "below_level"
+}

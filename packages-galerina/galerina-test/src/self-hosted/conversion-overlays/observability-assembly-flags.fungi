@@ -1,0 +1,11 @@
+@version 1
+/// Option-presence fold from galerina-observability#createObservability.
+pure flow observabilityAssemblyFlagsCore(healthConfigured: Bool, metricsConfigured: Bool, loggerConfigured: Bool, routesConfigured: Bool) -> String
+contract { intent { "Summarize explicit observability configuration without carrying active option records." } }
+{
+  if routesConfigured { return "routes_configured" }
+  if loggerConfigured { return "logger_configured" }
+  if metricsConfigured { return "metrics_configured" }
+  if healthConfigured { return "health_configured" }
+  return "defaults"
+}

@@ -1,0 +1,9 @@
+@version 1
+/// Failure counter fold from Logger#sinkFailures.
+pure flow loggerSinkFailureStatusCore(failureCount: Int) -> String
+contract { intent { "Classify the logger sink failure count without hiding invalid state." } }
+{
+  if failureCount < 0 { return "invalid" }
+  if failureCount == 0 { return "healthy" }
+  return "degraded"
+}

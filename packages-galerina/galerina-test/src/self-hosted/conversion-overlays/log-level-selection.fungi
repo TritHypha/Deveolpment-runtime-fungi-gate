@@ -1,0 +1,11 @@
+@version 1
+/// Closed level fold from galerina-observability#levelName.
+pure flow logLevelSelectionCore(order: Int) -> String
+contract { intent { "Map known numeric log ordering to a closed level and default unknown values to info." } }
+{
+  if order == 10 { return "debug" }
+  if order == 20 { return "info" }
+  if order == 30 { return "warn" }
+  if order == 40 { return "error" }
+  return "info_default"
+}

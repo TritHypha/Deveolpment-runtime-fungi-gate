@@ -1,0 +1,13 @@
+@version 1
+/// Accumulator selection fold from MetricsCollector#routeAccumulator.
+pure flow routeCardinalityStatusCore(existing: Bool, capReached: Bool, overflowExisting: Bool) -> String
+contract { intent { "Reuse existing routes and bound new cardinality through a per-method overflow series." } }
+{
+  if capReached {
+    if existing { return "existing" }
+    if overflowExisting { return "overflow_reused" }
+    return "overflow_created"
+  }
+  if existing { return "existing" }
+  return "route_created"
+}

@@ -1,0 +1,16 @@
+@version 1
+/// Sample admission fold from Histogram#observe.
+pure flow histogramObservationStatusCore(numberValid: Bool, nonnegative: Bool, bucketMatched: Bool) -> String
+contract { intent { "Admit only finite non-negative latency samples and distinguish overflow." } }
+{
+  let admittedNumber: Bool = numberValid
+  let admittedSign: Bool = nonnegative
+  if admittedNumber {
+    if admittedSign {
+      if bucketMatched { return "bucketed" }
+      return "overflow"
+    }
+    return "dropped_negative"
+  }
+  return "dropped_nonfinite"
+}

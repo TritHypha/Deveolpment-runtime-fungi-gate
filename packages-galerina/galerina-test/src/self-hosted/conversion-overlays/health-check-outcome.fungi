@@ -1,0 +1,11 @@
+@version 1
+/// One-check failure fold from HealthRegistry#runOne.
+pure flow healthCheckOutcomeCore(timedOut: Bool, checkThrew: Bool, resultValid: Bool, resultUp: Bool) -> String
+contract { intent { "Conserve timeout and throw identity before interpreting a captured health result." } }
+{
+  if timedOut { return "timeout_down" }
+  if checkThrew { return "throw_down" }
+  if resultValid == false { return "malformed_down" }
+  if resultUp { return "up" }
+  return "down"
+}

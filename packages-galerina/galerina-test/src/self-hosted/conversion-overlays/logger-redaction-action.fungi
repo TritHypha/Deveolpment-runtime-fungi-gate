@@ -1,0 +1,10 @@
+@version 1
+/// Field action fold from Logger#redactFields.
+pure flow loggerRedactionActionCore(keySensitive: Bool, valuePresent: Bool) -> String
+contract { intent { "Replace sensitive fields before copying ordinary present values." } }
+{
+  if keySensitive { return "redacted" }
+  let capturedValue: Bool = valuePresent
+  if capturedValue { return "copied" }
+  return "undefined_copied"
+}

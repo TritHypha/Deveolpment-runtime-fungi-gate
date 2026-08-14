@@ -1,0 +1,12 @@
+@version 1
+/// Ordering fold from galerina-observability#clamp.
+pure flow metricClampPositionCore(below: Bool, above: Bool) -> Int
+contract { intent { "Classify which clamp bound supplies the result." } }
+{
+  if below {
+    let position: Int = -1
+    return position
+  }
+  if above { return 1 }
+  return 0
+}

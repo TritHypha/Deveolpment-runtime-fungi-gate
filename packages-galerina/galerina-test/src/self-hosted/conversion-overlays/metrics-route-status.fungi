@@ -1,0 +1,13 @@
+@version 1
+/// Snapshot handler fold from observabilityRoutes#[metricsName].
+pure flow metricsRouteStatusCore(snapshotReady: Bool, metricsPublic: Bool) -> String
+contract { intent { "Serve the metrics snapshot while retaining its authentication posture." } }
+{
+  let capturedSnapshot: Bool = snapshotReady
+  let publicRoute: Bool = metricsPublic
+  if capturedSnapshot {
+    if publicRoute { return "public_200" }
+    return "required_auth_200"
+  }
+  return "snapshot_refused"
+}

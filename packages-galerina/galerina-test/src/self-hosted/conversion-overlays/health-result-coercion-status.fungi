@@ -1,0 +1,18 @@
+@version 1
+/// Post-border result fold from galerina-observability#coerce.
+pure flow healthResultCoercionStatusCore(booleanResult: Bool, booleanUp: Bool, structuredValid: Bool, detailPresent: Bool, detailTruncated: Bool) -> String
+contract { intent { "Classify a captured component result without carrying the active host object." } }
+{
+  if booleanResult {
+    if booleanUp { return "boolean_up" }
+    return "boolean_down"
+  }
+  if structuredValid {
+    if detailPresent {
+      if detailTruncated { return "structured_truncated" }
+      return "structured_detail"
+    }
+    return "structured"
+  }
+  return "malformed_down"
+}

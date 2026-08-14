@@ -1,0 +1,12 @@
+@version 1
+/// Timeout option fold from HealthRegistry#constructor.
+pure flow healthTimeoutSelectionCore(timeoutProvided: Bool, finite: Bool, positive: Bool) -> Int
+contract { intent { "Select a custom health timeout only after finite positive admission." } }
+{
+  if timeoutProvided {
+    if finite {
+      if positive { return 1 }
+    }
+  }
+  return 1000
+}

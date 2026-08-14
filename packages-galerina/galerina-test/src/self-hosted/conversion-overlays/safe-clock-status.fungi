@@ -1,0 +1,10 @@
+@version 1
+/// Clock containment fold from galerina-observability#safeNow.
+pure flow safeClockStatusCore(callbackSucceeded: Bool, finiteNumber: Bool) -> Int
+contract { intent { "Use a clock value only when the callback succeeds with a finite number." } }
+{
+  if callbackSucceeded {
+    if finiteNumber { return 1 }
+  }
+  return 0
+}

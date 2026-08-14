@@ -1,0 +1,9 @@
+@version 1
+/// Aggregate fold from HealthRegistry#liveness.
+pure flow livenessSummaryCore(checkCount: Int, anyDown: Bool) -> String
+contract { intent { "Keep the empty liveness registry up and fail closed on any down result." } }
+{
+  if checkCount == 0 { return "up_default" }
+  if anyDown { return "down" }
+  return "up_checked"
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Percentile location fold from Histogram#percentile.
+pure flow percentileSelectionStatusCore(empty: Bool, targetInBucket: Bool, overflow: Bool) -> String
+contract { intent { "Choose zero, an interpolated bucket, or exact max for an admitted percentile." } }
+{
+  if empty { return "zero" }
+  if overflow { return "exact_max" }
+  if targetInBucket { return "interpolated" }
+  return "scan_continue"
+}

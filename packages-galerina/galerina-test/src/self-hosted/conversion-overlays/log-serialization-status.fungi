@@ -1,0 +1,12 @@
+@version 1
+/// Serialization fallback fold from galerina-observability#safeStringify.
+pure flow logSerializationStatusCore(primarySerializable: Bool, fallbackSerializable: Bool, loggerPresent: Bool) -> String
+contract { intent { "Prefer the original record, then a redacted fallback, then a fixed terminal record." } }
+{
+  if primarySerializable { return "primary" }
+  if fallbackSerializable {
+    if loggerPresent { return "fallback_with_logger" }
+    return "fallback"
+  }
+  return "terminal_fixed"
+}

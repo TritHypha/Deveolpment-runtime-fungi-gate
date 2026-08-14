@@ -1,0 +1,13 @@
+@version 1
+/// Route option fold from galerina-observability#observabilityRoutes.
+pure flow observabilityRouteFlagsCore(metricsPublic: Bool, includePrometheus: Bool) -> Int
+contract { intent { "Encode public metrics and Prometheus opt-in route choices." } }
+{
+  let publicOnly: Int = 1
+  if metricsPublic {
+    if includePrometheus { return 3 }
+    return publicOnly
+  }
+  if includePrometheus { return 2 }
+  return 0
+}

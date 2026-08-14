@@ -1,0 +1,12 @@
+@version 1
+/// View fold from MemoryLogSink#records.
+pure flow memoryLogViewStatusCore(recordCount: Int, aliasRetained: Bool) -> String
+contract { intent { "Describe the retained live record view without claiming immutable transport." } }
+{
+  if recordCount < 0 { return "invalid_count" }
+  if aliasRetained {
+    if recordCount == 0 { return "empty_live_alias" }
+    return "populated_live_alias"
+  }
+  return "copy"
+}

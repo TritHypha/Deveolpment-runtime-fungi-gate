@@ -1,0 +1,11 @@
+@version 1
+/// Metrics containment fold from galerina-observability#recordRequest.
+pure flow requestRecordingStatusCore(clockFinite: Bool, durationNonnegative: Bool, metricsSucceeded: Bool, handlerErrored: Bool) -> String
+contract { intent { "Classify best-effort request recording without masking handler state." } }
+{
+  if metricsSucceeded == false { return "recording_isolated" }
+  if clockFinite == false { return "zero_clock_recorded" }
+  if durationNonnegative == false { return "duration_clamped" }
+  if handlerErrored { return "error_recorded" }
+  return "success_recorded"
+}

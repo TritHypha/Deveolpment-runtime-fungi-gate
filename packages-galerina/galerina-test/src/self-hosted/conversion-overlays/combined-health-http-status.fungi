@@ -1,0 +1,11 @@
+@version 1
+/// Combined probe fold from observabilityRoutes#[healthName].
+pure flow combinedHealthHttpStatusCore(reportsPresent: Bool, livenessUp: Bool, readinessUp: Bool) -> Int
+contract { intent { "Return 200 only when both captured health reports are present and up." } }
+{
+  if reportsPresent == false { return 503 }
+  if livenessUp {
+    if readinessUp { return 200 }
+  }
+  return 503
+}

@@ -1,0 +1,13 @@
+@version 1
+/// Route-label fold from galerina-observability#normaliseRoute.
+pure flow routeNormalisationStatusCore(routeString: Bool, nonempty: Bool, queryRemoved: Bool, withinBound: Bool) -> String
+contract { intent { "Refuse malformed route labels and report query removal or length bounding." } }
+{
+  if routeString == false { return "unknown_type" }
+  if nonempty {
+    if withinBound == false { return "truncated" }
+    if queryRemoved { return "query_removed" }
+    return "unchanged"
+  }
+  return "unknown_empty"
+}

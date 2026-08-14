@@ -1,0 +1,14 @@
+@version 1
+/// Direct-emission fold from metricsAuditSink#emit.
+pure flow auditEmitStatusCore(eventPresent: Bool, recordSucceeded: Bool) -> String
+contract { intent { "Report direct audit emission without allowing recording failure to escape." } }
+{
+  let capturedEvent: Bool = eventPresent
+  let capturedRecord: Bool = recordSucceeded
+  let attempted: Bool = capturedEvent
+  if attempted {
+    if capturedRecord { return "emitted" }
+    return "recording_isolated"
+  }
+  return "event_refused"
+}

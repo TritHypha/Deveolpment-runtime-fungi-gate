@@ -1,0 +1,18 @@
+@version 1
+/// Series emission fold from galerina-observability#renderMetricsPrometheus.
+pure flow prometheusSeriesAdmissionCore(routeSafe: Bool, methodSafe: Bool, countPositive: Bool, errorsPresent: Bool) -> String
+contract { intent { "Emit request series only for safe labels and positive captured observations." } }
+{
+  let admittedRoute: Bool = routeSafe
+  if admittedRoute {
+    if methodSafe {
+      if countPositive {
+        if errorsPresent { return "request_and_error_series" }
+        return "request_series"
+      }
+      return "help_only"
+    }
+    return "method_dropped"
+  }
+  return "route_dropped"
+}

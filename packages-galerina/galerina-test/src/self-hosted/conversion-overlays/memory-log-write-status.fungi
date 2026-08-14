@@ -1,0 +1,14 @@
+@version 1
+/// Append fold from MemoryLogSink#write.
+pure flow memoryLogWriteStatusCore(recordPresent: Bool, capacityAvailable: Bool) -> String
+contract { intent { "Describe the in-memory append only after the host record is captured." } }
+{
+  let admittedCapacity: Bool = capacityAvailable
+  let capturedRecord: Bool = recordPresent
+  let appendable: Bool = capturedRecord
+  if admittedCapacity {
+    if appendable { return "appended" }
+    return "undefined_appended"
+  }
+  return "capacity_refused"
+}

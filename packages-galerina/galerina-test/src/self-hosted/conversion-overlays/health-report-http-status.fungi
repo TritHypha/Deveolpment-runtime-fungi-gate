@@ -1,0 +1,8 @@
+@version 1
+/// HTTP projection from galerina-observability#reportToResult.
+pure flow healthReportHttpStatusCore(reportUp: Bool) -> Int
+contract { intent { "Map only an UP report to HTTP 200 and every down report to 503." } }
+{
+  if reportUp == false { return 503 }
+  return 200
+}

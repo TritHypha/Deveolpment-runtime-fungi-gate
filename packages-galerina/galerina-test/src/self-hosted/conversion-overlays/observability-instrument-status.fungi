@@ -1,0 +1,13 @@
+@version 1
+/// Instrument seam fold from Observability#instrument.
+pure flow observabilityInstrumentStatusCore(dispatchPresent: Bool, optionsProvided: Bool) -> String
+contract { intent { "Bind dispatch instrumentation to a present handler table and explicit option posture." } }
+{
+  let capturedOptions: Bool = optionsProvided
+  if capturedOptions {
+    if dispatchPresent { return "instrumented_custom" }
+    return "dispatch_refused"
+  }
+  if dispatchPresent { return "instrumented_default" }
+  return "dispatch_refused"
+}

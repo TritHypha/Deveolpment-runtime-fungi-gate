@@ -1,0 +1,13 @@
+@version 1
+/// Base-path shape fold from galerina-observability#normaliseBase.
+pure flow basePathNormalisationStatusCore(emptyOrRoot: Bool, leadingSlash: Bool, trailingSlash: Bool) -> String
+contract { intent { "Classify the source base-path normalization action." } }
+{
+  if emptyOrRoot { return "empty" }
+  if leadingSlash == false {
+    if trailingSlash { return "prefix_and_trim" }
+    return "prefix"
+  }
+  if trailingSlash { return "trim" }
+  return "unchanged"
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Component aggregate from HealthRegistry#evaluate.
+pure flow healthAggregateStatusCore(componentCount: Int, anyDown: Bool, readinessKind: Bool) -> String
+contract { intent { "Return a kind-specific up state only after all components avoid down." } }
+{
+  if componentCount < 0 { return "invalid_count" }
+  if anyDown { return "down" }
+  if readinessKind { return "readiness_up" }
+  return "liveness_up"
+}

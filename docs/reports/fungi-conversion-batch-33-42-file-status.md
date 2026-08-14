@@ -350,6 +350,39 @@ code and no push is performed. The commit guard continues to refuse fewer than
 40 new Fungi files, exact or normalized shadows, and a report-only streak of
 two.
 
+## Forty-file source-bound decision-core overlay wave 10 - 2026-08-14
+
+A tenth root-authored source-bound wave adds **40 new `.fungi` files** under
+`galerina-test/src/self-hosted/conversion-overlays/`, bringing the registered
+overlay set to 440 files. The distinct source decisions cover health-result and
+timeout handling, liveness/readiness registration and aggregation, audit
+reservation lifecycle, dispatch instrumentation, safe clocks, request metrics,
+actuator routes, structured-log serialization and redaction, histogram and
+route-cardinality decisions, and Prometheus series admission. Active maps,
+callbacks, clocks, records and sinks remain at their typed borders. The scalar
+cores authorize no consumer switch or TypeScript retirement.
+
+Fresh source evidence passes **3/3**: all 40 package assets bind to distinct
+live observability source scopes; every file is distinct under exact bytes and
+normalized alpha-renamed whole-corpus shadow comparison; and all 40 parse,
+effect-check, emit GIR and execute with the expected typed result. The complete-
+corpus worktree guard reports **40/40 unique**, meeting the hard 40-file minimum
+while retaining 50 as the expected batch size. Seventeen initially detected
+whole-corpus template shadows were structurally replaced and rechecked rather
+than renamed.
+
+Physical evidence passes **1/1** through independent SLIDE/VOK without a
+remaining profile refusal. The check compiles the 40-flow package set, publishes
+exactly 40 physical `.slide` artifacts, executes every export, independently
+re-admits and verifies every typed receipt, and refuses mutated source, artifact
+and receipt bytes. The receipts remain reference-only and release no authority.
+
+This is the only report modified by the wave. It is committed with the 40 new
+Fungi files, package registration, source test, physical test and aggregate
+asset-count update; it is not a report-only update. No workers authored the code
+and no push is performed. The commit guard continues to refuse fewer than 40
+new Fungi files, exact or normalized shadows, and a report-only streak of two.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 case-sensitive source-order scopes close the remaining uncredited TPL
