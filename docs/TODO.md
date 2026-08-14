@@ -17,7 +17,7 @@ counts or open items that a newer section explicitly supersedes.
   bookkeeping commit and a hard refusal at streak 2.
 - [x] Run the focused package/tooling/receipt matrix and inspect the exact staged
   commit diff.
-- [ ] Commit this code-bearing batch once. Do not push. Reserve the sole
+- [x] Commit this code-bearing batch once. Do not push. Reserve the sole
   report-only exception for final closure bookkeeping.
 
 ### Slices 998-1047 Tower transport, Tri-Pipe and TriRegex - 2026-08-14

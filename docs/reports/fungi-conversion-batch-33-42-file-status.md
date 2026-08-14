@@ -33,6 +33,14 @@ final-bookkeeping mode may admit one report-only commit after a qualifying Fungi
 batch; a report-only streak of **2** is always refused. No commit is permitted
 before the current batch and focused verification are complete.
 
+The code-bearing batch landed as `5a76292a2ab21eed99b2e6cc5a0425a0c2d7a049`.
+Its exact commit audit reports 41 changed conversion reports and 40 newly added
+`.fungi` files. The post-commit moderate graph refresh reports `status:indexed`,
+61,862 nodes, 153,062 edges and
+`indexed_head_sha:5a76292a2ab21eed99b2e6cc5a0425a0c2d7a049`. This paragraph is the sole
+final report-only bookkeeping exception for the wave; any next report-bearing
+commit requires another qualifying Fungi batch.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 case-sensitive source-order scopes close the remaining uncredited TPL
