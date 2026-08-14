@@ -192,10 +192,10 @@ zero superseded scopes or retirement credit.
   point; run `node scripts/audit-generator-contract.mjs --tier phase-close`.
 - [x] Run the historical bounded 19-check close matrix; every member must exit
   zero with affirmative output and no SKIPPED state.
-- [x] Commit owner outputs and dependent graph layers separately at
-  `c646e0e3`, `8a1ea540` and `b011a2fb`.
-- [ ] Refresh Myco and run a bounded exact frontier-symbol query.
-- [ ] Refresh codebase-memory, require `status=indexed`, exact expected node and
+- [x] Commit owner outputs and dependent graph layers separately, with the
+  final settled owner state at `e8afd72c`.
+- [x] Refresh Myco and run a bounded exact frontier-symbol query.
+- [x] Refresh codebase-memory, require `status=indexed`, exact expected node and
   edge counts, and `indexed_head_sha` equal to the committed closure HEAD;
   independently search one new Slice-847 symbol.
 

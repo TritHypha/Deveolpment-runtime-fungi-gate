@@ -1414,5 +1414,9 @@ committed in separate provenance layers at `c646e0e3`, `8a1ea540` and
 `b011a2fb`. The hermetic generator contract and historical bounded close
 matrix both pass **19/19**: graph integrity is **10,612 nodes / 10,462 edges /
 zero violations**, canonical tests remain **9,612**, governed receipts remain
-**787/787**, and both leak audits are clean. Final closure recording and
-dual-index proof remain pending.
+**787/787**, and both leak audits are clean. The settled owner checkpoint is
+`e8afd72c`. Myco refresh reports **6,461 files / 84,105 terms** with a complete
+bounded 17-hit `RoutingContext` query. Codebase-memory reports
+**60,722/60,722 nodes / 152,367/152,367 edges**, exact indexed HEAD and one
+untruncated `RoutingContext` interface. A final post-record exact-head refresh
+is retained in handoff; repository-wide closure remains `UNKNOWN`.

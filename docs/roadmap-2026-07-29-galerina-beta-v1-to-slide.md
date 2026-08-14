@@ -3899,5 +3899,9 @@ are complete. Authored evidence is committed at `f2626610`; registered owner
 outputs close through `b011a2fb`; both the hermetic generator contract and the
 bounded close matrix pass **19/19**. Graph integrity is **10,612 nodes / 10,462
 edges / zero violations**, canonical tests remain **9,612**, and both leak
-audits are clean. Final closure recording and dual-index proof remain pending.
-Repository-wide closure remains `UNKNOWN`.
+audits are clean. The settled owner checkpoint is `e8afd72c`; Myco reports
+**6,461 files / 84,105 terms** with a complete bounded `RoutingContext` query,
+and codebase-memory reports **60,722/60,722 nodes / 152,367/152,367 edges** at
+the exact indexed HEAD with one untruncated `RoutingContext` interface. A final
+post-record exact-head refresh is retained in handoff. Repository-wide closure
+remains `UNKNOWN`.

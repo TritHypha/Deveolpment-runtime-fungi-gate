@@ -26,7 +26,12 @@ counts or open items that a newer section explicitly supersedes.
   generator contract and bounded close matrix **19/19**. Graph integrity is
   **10,612 nodes / 10,462 edges / zero violations**; canonical tests remain
   **9,612**; both leak audits are clean.
-- [ ] Commit the final closure record and refresh both indexes at Slice 847.
+- [x] Record the settled owner checkpoint at `e8afd72c` and refresh both
+  indexes: Myco reports **6,461 files / 84,105 terms** with a complete bounded
+  17-hit `RoutingContext` query; codebase-memory reports **60,722/60,722 nodes /
+  152,367/152,367 edges**, exact indexed HEAD and one untruncated
+  `RoutingContext` interface. A final post-record exact-head refresh is retained
+  in handoff.
 
 ### Slices 748-797 Tower key rotation and lease - 2026-08-14
 
