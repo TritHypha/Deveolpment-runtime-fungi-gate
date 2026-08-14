@@ -1,0 +1,11 @@
+@version 1
+/// Certificate gate projection from galerina-framework-api-server#makeCertGateResolver.
+pure flow certificateGateResolutionCore(tlsSocket: Bool, certificateInputAdmitted: Bool, certificateVerdict: Int) -> Int
+contract { intent { "Deny non-TLS or malformed certificate inputs before projecting the captured gate verdict." } }
+{
+  if tlsSocket == false { return -1 }
+  if certificateInputAdmitted == false { return -1 }
+  if certificateVerdict < -1 { return -1 }
+  if certificateVerdict > 1 { return -1 }
+  return certificateVerdict
+}

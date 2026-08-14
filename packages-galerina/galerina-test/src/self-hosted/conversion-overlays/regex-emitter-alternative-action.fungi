@@ -1,0 +1,12 @@
+@version 1
+/// Alternative lowering from galerina-tri-regex#Emitter.emitAlt.
+pure flow regexEmitterAlternativeActionCore(itemsPresent: Bool, itemCount: Int, budgetAccepted: Bool) -> String
+contract { intent { "Choose empty, direct or recursive split lowering for a captured alternative list." } }
+{
+  if itemsPresent == false { return "items_refused" }
+  if itemCount < 0 { return "items_refused" }
+  if itemCount == 0 { return "empty" }
+  if itemCount == 1 { return "direct" }
+  if budgetAccepted == false { return "budget_refused" }
+  return "split_chain"
+}

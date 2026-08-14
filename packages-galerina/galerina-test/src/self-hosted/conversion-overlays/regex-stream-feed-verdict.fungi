@@ -1,0 +1,11 @@
+@version 1
+/// Streaming K3 projection from galerina-tri-regex#TriMatcher.stream.
+pure flow regexStreamFeedVerdictCore(ended: Bool, matched: Bool, impossible: Bool, uniformScan: Bool) -> Int
+contract { intent { "Project one captured stream state to matched, impossible or indeterminate." } }
+{
+  if ended { return -1 }
+  if matched { return 1 }
+  if impossible { return -1 }
+  if uniformScan { return 0 }
+  return 0
+}

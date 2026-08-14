@@ -1,0 +1,9 @@
+@version 1
+/// Completion rule from galerina-tri-regex#P.parse.
+pure flow regexParseCompletionCore(alternativeAccepted: Bool, atEnd: Bool) -> String
+contract { intent { "Accept an alternative only when it consumes the complete captured pattern." } }
+{
+  if alternativeAccepted == false { return "alternative_refused" }
+  if atEnd { return "accepted" }
+  return "unexpected_character"
+}

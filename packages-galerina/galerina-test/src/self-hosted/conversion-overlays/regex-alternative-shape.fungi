@@ -1,0 +1,14 @@
+@version 1
+/// Alternative assembly decision from galerina-tri-regex#P.alt.
+pure flow regexAlternativeShapeCore(concatAccepted: Bool, separatorPresent: Bool, itemCount: Int) -> String
+contract { intent { "Classify the source alternative shape after every concatenation is admitted." } }
+{
+  if concatAccepted == false { return "refused" }
+  if itemCount < 1 { return "refused" }
+  if separatorPresent == false {
+    if itemCount == 1 { return "single" }
+    return "refused"
+  }
+  if itemCount == 1 { return "single" }
+  return "alternative"
+}

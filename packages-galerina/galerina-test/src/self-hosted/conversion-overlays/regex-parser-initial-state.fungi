@@ -1,0 +1,14 @@
+@version 1
+/// Capture-state core from galerina-tri-regex#P.constructor.
+pure flow regexParserInitialStateCore(patternCaptured: Bool, budgetCaptured: Bool, initialIndex: Int) -> String
+contract { intent { "Establish a parser only from captured pattern and budget state at index zero." } }
+{
+  if patternCaptured {
+    if budgetCaptured {
+      if initialIndex == 0 { return "ready" }
+      return "index_refused"
+    }
+    return "budget_missing"
+  }
+  return "pattern_missing"
+}

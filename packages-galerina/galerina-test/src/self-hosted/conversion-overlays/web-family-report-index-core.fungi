@@ -1,0 +1,12 @@
+@version 1
+/// Index status fold from galerina-web#createWebFamilyReportIndex.
+pure flow webFamilyReportIndexCore(timestampValid: Bool, duplicateCount: Int, missingProducerCount: Int, anyFailed: Bool, anyPartial: Bool) -> String
+contract { intent { "Fail malformed or duplicate indexes and retain partial status for missing family coverage." } }
+{
+  if timestampValid == false { return "failed" }
+  if duplicateCount > 0 { return "failed" }
+  if anyFailed { return "failed" }
+  if anyPartial { return "partial" }
+  if missingProducerCount > 0 { return "partial" }
+  return "success"
+}

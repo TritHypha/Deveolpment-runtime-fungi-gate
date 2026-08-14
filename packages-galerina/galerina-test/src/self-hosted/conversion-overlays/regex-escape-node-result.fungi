@@ -1,0 +1,9 @@
+@version 1
+/// AST wrapper decision from galerina-tri-regex#P.escape.
+pure flow regexEscapeNodeResultCore(escapeAccepted: Bool, rangesPresent: Bool) -> String
+contract { intent { "Create a class node only from an admitted nonempty escape range result." } }
+{
+  if escapeAccepted == false { return "veto" }
+  if rangesPresent == false { return "range_refused" }
+  return "class_node"
+}

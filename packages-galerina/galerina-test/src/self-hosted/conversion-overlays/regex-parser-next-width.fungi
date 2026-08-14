@@ -1,0 +1,9 @@
+@version 1
+/// UTF-16 cursor-width decision from galerina-tri-regex#P.next.
+pure flow regexParserNextWidthCore(atEnd: Bool, codePoint: Int, index: Int) -> Int
+contract { intent { "Advance a captured parser cursor by the source UTF-16 width." } }
+{
+  if atEnd { return index }
+  if codePoint > 65535 { return index + 2 }
+  return index + 1
+}

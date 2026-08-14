@@ -1,0 +1,12 @@
+@version 1
+/// DOM update report gate from galerina-web-render#createDomUpdateReport.
+pure flow domUpdateReportCore(targetPresent: Bool, planAdmitted: Bool, contentAdmitted: Bool, streamingAdmitted: Bool, countsAdmitted: Bool) -> String
+contract { intent { "Classify a captured DOM update only after target, plan, content, streaming and count checks." } }
+{
+  if targetPresent == false { return "target_refused" }
+  if planAdmitted == false { return "plan_refused" }
+  if contentAdmitted == false { return "content_refused" }
+  if streamingAdmitted == false { return "streaming_refused" }
+  if countsAdmitted == false { return "counts_refused" }
+  return "success"
+}

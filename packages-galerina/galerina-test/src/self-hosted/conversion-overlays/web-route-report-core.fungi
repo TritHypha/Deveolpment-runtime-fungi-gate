@@ -1,0 +1,12 @@
+@version 1
+/// Route report fold from galerina-web-router#createWebRouteReport.
+pure flow webRouteReportCore(routesAdmitted: Bool, linksAdmitted: Bool, preloadAdmitted: Bool, routeCount: Int) -> String
+contract { intent { "Release route-report success only after route, link, preload and count evidence agree." } }
+{
+  if routeCount < 0 { return "failed" }
+  if routesAdmitted == false { return "routes_failed" }
+  if linksAdmitted == false { return "links_failed" }
+  if preloadAdmitted == false { return "preload_failed" }
+  if routeCount == 0 { return "success_empty" }
+  return "success"
+}

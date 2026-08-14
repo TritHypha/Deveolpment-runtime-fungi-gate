@@ -1,0 +1,9 @@
+@version 1
+/// Budget-first decision from galerina-tri-regex#parsePattern.
+pure flow regexPatternBudgetCore(patternLength: Int, maxPatternLength: Int, parserAccepted: Bool) -> String
+contract { intent { "Refuse oversized patterns before accepting the captured parser result." } }
+{
+  if patternLength > maxPatternLength { return "budget_refused" }
+  if parserAccepted == false { return "parse_refused" }
+  return "parsed"
+}

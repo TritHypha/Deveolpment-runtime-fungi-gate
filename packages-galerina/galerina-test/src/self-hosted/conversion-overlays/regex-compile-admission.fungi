@@ -1,0 +1,11 @@
+@version 1
+/// Post-border compilation decision from galerina-tri-regex#compileAst.
+pure flow regexCompileAdmissionCore(parseAccepted: Bool, instructionBudgetAccepted: Bool, closureBudgetAccepted: Bool, workBound: Int) -> String
+contract { intent { "Admit compiled regex evidence only after parser, instruction, closure and work bounds agree." } }
+{
+  if parseAccepted == false { return "parse_refused" }
+  if instructionBudgetAccepted == false { return "instruction_budget_refused" }
+  if closureBudgetAccepted == false { return "closure_budget_refused" }
+  if workBound < 1 { return "work_bound_refused" }
+  return "compiled"
+}

@@ -204,6 +204,42 @@ no push is performed. The guard continues to refuse report-bearing commits
 below 40 new `.fungi` files, exact or normalized shadows, and a report-only
 streak of two.
 
+## Forty-file source-bound decision-core overlay wave 6 - 2026-08-14
+
+A sixth root-authored source-bound wave adds **40 new `.fungi` files** under
+`galerina-test/src/self-hosted/conversion-overlays/`, bringing the registered
+overlay set to 280 files. The distinct decisions cover TriRegex parser,
+quantifier, escape, matcher and Thompson-emitter control; web report assembly;
+route-template parameters; API response, TLS and principal-evidence handling;
+and data-query diagnostic shape. Repeated diagnostic constructors and status
+helpers were deliberately excluded rather than renamed into twins. Active
+JavaScript strings, arrays, closures, sockets, descriptors, records and error
+identity remain at their typed host borders. These post-border cores authorize
+no consumer switch or TypeScript retirement.
+
+Fresh source evidence passes **3/3**: all 40 package assets bind to distinct
+live source scopes; every file is distinct under exact bytes and normalized
+alpha-renamed whole-corpus shadow comparison; and all 40 parse, effect-check,
+emit GIR and execute with the expected typed result. The complete-corpus
+worktree guard reports **40/40 unique**, meeting the hard 40-file minimum while
+retaining 50 as the expected batch size. Three candidate shadows were detected
+and structurally replaced during the red/green cycle. Package no-emit typecheck
+also passes through its package-owned toolchain.
+
+Physical evidence passes **1/1** through independent SLIDE/VOK. Five initially
+too-deep source-derived decision trees were reduced to explicit captured scalar
+flags while preserving their post-border decisions. The final check compiles
+the 40-flow package set, publishes exactly 40 physical `.slide` artifacts,
+executes every export, independently re-admits and verifies every typed receipt,
+and refuses mutated source, artifact and receipt bytes. The receipts remain
+reference-only and release no authority.
+
+This is the only report modified by the wave. It is committed with the 40 new
+Fungi files, package registration, source test and physical test; it is not a
+report-only update. No workers authored the code and no push is performed. The
+commit guard continues to refuse fewer than 40 new Fungi files, exact or
+normalized shadows, and a report-only streak of two.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 case-sensitive source-order scopes close the remaining uncredited TPL

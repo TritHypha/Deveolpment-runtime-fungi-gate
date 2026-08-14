@@ -1,0 +1,14 @@
+@version 1
+/// Atom dispatch from galerina-tri-regex#P.atom.
+pure flow regexAtomDispatchCore(groupAtom: Bool, groupClosed: Bool, unsupportedPrefix: Bool, nakedQuantifier: Bool, classAtom: Bool) -> String
+contract { intent { "Select the source atom class while refusing unsupported groups and naked quantifiers." } }
+{
+  if nakedQuantifier { return "naked_quantifier_refused" }
+  if groupAtom {
+    if unsupportedPrefix { return "group_prefix_refused" }
+    if groupClosed == false { return "group_unclosed" }
+    return "group"
+  }
+  if classAtom { return "class" }
+  return "literal"
+}

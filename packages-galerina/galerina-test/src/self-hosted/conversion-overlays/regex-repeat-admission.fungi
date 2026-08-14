@@ -1,0 +1,11 @@
+@version 1
+/// Repetition admission from galerina-tri-regex#P.repeated.
+pure flow regexRepeatAdmissionCore(atomAccepted: Bool, quantifierPresent: Bool, anchorAtom: Bool, stackedModifier: Bool) -> String
+contract { intent { "Refuse quantified anchors and stacked modifiers before emitting a repetition." } }
+{
+  if atomAccepted == false { return "atom_refused" }
+  if quantifierPresent == false { return "atom" }
+  if anchorAtom { return "anchor_refused" }
+  if stackedModifier { return "modifier_refused" }
+  return "repeat"
+}

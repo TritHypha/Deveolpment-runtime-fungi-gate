@@ -1,0 +1,10 @@
+@version 1
+/// Path-template segment decision from galerina-web-router#parseTemplateParams.
+pure flow templateParamSegmentCore(startsWithColon: Bool, namePresent: Bool, segmentIndex: Int) -> String
+contract { intent { "Separate ordinary, malformed and named parameter segments in source order." } }
+{
+  if segmentIndex < 0 { return "index_refused" }
+  if startsWithColon == false { return "ordinary" }
+  if namePresent == false { return "malformed" }
+  return "parameter"
+}

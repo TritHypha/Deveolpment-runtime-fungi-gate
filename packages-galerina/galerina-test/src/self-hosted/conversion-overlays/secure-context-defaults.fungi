@@ -1,0 +1,15 @@
+@version 1
+/// TLS option defaulting from galerina-framework-api-server#buildSecureContext.
+pure flow secureContextDefaultsCore(keyPresent: Bool, certificatePresent: Bool, caPresent: Bool, requestCertProvided: Bool, rejectUnauthorizedProvided: Bool) -> String
+contract { intent { "Classify the source TLS default shape after required key and certificate capture." } }
+{
+  if keyPresent == false { return "key_refused" }
+  if certificatePresent == false { return "certificate_refused" }
+  if requestCertProvided {
+    if rejectUnauthorizedProvided { return "explicit_pair" }
+    return "explicit_request"
+  }
+  if rejectUnauthorizedProvided { return "explicit_reject" }
+  if caPresent { return "default_verify_peer" }
+  return "default_verify_peer"
+}

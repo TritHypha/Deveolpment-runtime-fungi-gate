@@ -1,0 +1,10 @@
+@version 1
+/// Matcher construction state from galerina-tri-regex#TriMatcher.constructor.
+pure flow regexMatcherConstructionCore(compiledCaptured: Bool, uniformScan: Bool, wordCount: Int) -> String
+contract { intent { "Construct a matcher only from captured compiled state with a positive word count." } }
+{
+  if compiledCaptured == false { return "compiled_missing" }
+  if wordCount < 1 { return "words_refused" }
+  if uniformScan { return "uniform" }
+  return "early_exit"
+}

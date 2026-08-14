@@ -1,0 +1,12 @@
+@version 1
+/// Event report fold from galerina-web-events#createWebEventReport.
+pure flow webEventReportCore(eventCount: Int, eventsAdmitted: Bool, errorOrFailedCheck: Bool, warningPresent: Bool) -> String
+contract { intent { "Classify the captured event report without treating an invalid event list as empty success." } }
+{
+  if eventCount < 0 { return "failed" }
+  if eventsAdmitted == false { return "failed" }
+  if errorOrFailedCheck { return "failed" }
+  if warningPresent { return "partial" }
+  if eventCount == 0 { return "success_empty" }
+  return "success"
+}

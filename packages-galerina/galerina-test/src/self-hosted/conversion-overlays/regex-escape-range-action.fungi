@@ -1,0 +1,12 @@
+@version 1
+/// Escape classification from galerina-tri-regex#P.escapeRanges.
+pure flow regexEscapeRangeActionCore(payloadValid: Bool, withinCodePoint: Bool, unsupportedEscape: Bool, classEscape: Bool, codePoint: Int) -> String
+contract { intent { "Classify a captured escape only after payload and Unicode range checks." } }
+{
+  if payloadValid == false { return "payload_refused" }
+  if withinCodePoint == false { return "code_point_refused" }
+  if unsupportedEscape { return "unsupported" }
+  if classEscape { return "class" }
+  if codePoint < 0 { return "payload_refused" }
+  return "literal"
+}

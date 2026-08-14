@@ -1,0 +1,12 @@
+@version 1
+/// Repetition lowering from galerina-tri-regex#Emitter.emitRep.
+pure flow regexEmitterRepeatActionCore(itemPresent: Bool, minimum: Int, unbounded: Bool, maximum: Int) -> String
+contract { intent { "Select required-prefix, unbounded loop or finite optional-tail emission." } }
+{
+  if itemPresent == false { return "item_refused" }
+  if minimum < 0 { return "minimum_refused" }
+  if unbounded { return "split_loop" }
+  if maximum < minimum { return "order_refused" }
+  if maximum == minimum { return "required_only" }
+  return "finite_tail"
+}

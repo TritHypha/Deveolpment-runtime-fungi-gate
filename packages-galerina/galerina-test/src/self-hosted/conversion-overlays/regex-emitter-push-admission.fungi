@@ -1,0 +1,10 @@
+@version 1
+/// Instruction append bound from galerina-tri-regex#Emitter.push.
+pure flow regexEmitterPushAdmissionCore(currentLength: Int, maxInstructions: Int, instructionPresent: Bool) -> Int
+contract { intent { "Return the appended program length or a refusal sentinel when the source bound would be exceeded." } }
+{
+  if instructionPresent == false { return -2 }
+  if currentLength < 0 { return -2 }
+  if currentLength + 1 > maxInstructions { return -1 }
+  return currentLength + 1
+}

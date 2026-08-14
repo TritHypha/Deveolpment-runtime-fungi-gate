@@ -1,0 +1,15 @@
+@version 1
+/// Client-state report fold from galerina-web-state#createClientStateReport.
+pure flow clientStateReportCore(contractAdmitted: Bool, conversionAdmitted: Bool, hydrationPresent: Bool, hydrationAdmitted: Bool, diffPresent: Bool, diffAdmitted: Bool) -> String
+contract { intent { "Classify captured client-state evidence with optional hydration and diff checks." } }
+{
+  if contractAdmitted == false { return "contract_failed" }
+  if conversionAdmitted == false { return "conversion_failed" }
+  if hydrationPresent {
+    if hydrationAdmitted == false { return "hydration_failed" }
+  }
+  if diffPresent {
+    if diffAdmitted == false { return "diff_failed" }
+  }
+  return "success"
+}

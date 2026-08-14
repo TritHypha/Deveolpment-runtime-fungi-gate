@@ -1,0 +1,16 @@
+@version 1
+/// AST emission routing from galerina-tri-regex#Emitter.emit.
+pure flow regexEmitterNodeActionCore(emptyNode: Bool, characterNode: Bool, rangesPresent: Bool, compositeNode: Bool, itemCount: Int) -> String
+contract { intent { "Route one admitted AST node to its Thompson-emission action." } }
+{
+  if emptyNode { return "no_op" }
+  if characterNode {
+    if rangesPresent == false { return "class_refused" }
+    return "emit_char"
+  }
+  if compositeNode {
+    if itemCount < 0 { return "concat_refused" }
+    return "emit_each"
+  }
+  return "emit_control"
+}

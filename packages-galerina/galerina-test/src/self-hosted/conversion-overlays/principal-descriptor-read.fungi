@@ -1,0 +1,15 @@
+@version 1
+/// Own-data descriptor decision from galerina-framework-api-server#read.
+pure flow principalDescriptorReadCore(descriptorPresent: Bool, dataDescriptor: Bool, enumerable: Bool, valuePresent: Bool) -> String
+contract { intent { "Read principal evidence only from a present enumerable data descriptor." } }
+{
+  if descriptorPresent == false { return "absent" }
+  if dataDescriptor {
+    if enumerable {
+      if valuePresent { return "value" }
+      return "undefined_value"
+    }
+    return "enumerability_refused"
+  }
+  return "descriptor_refused"
+}

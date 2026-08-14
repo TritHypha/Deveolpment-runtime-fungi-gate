@@ -1,0 +1,15 @@
+@version 1
+/// Concatenation assembly decision from galerina-tri-regex#P.concat.
+pure flow regexConcatShapeCore(repeatAccepted: Bool, terminatorSeen: Bool, itemCount: Int) -> String
+contract { intent { "Classify empty, singleton and multi-item concatenations at a captured terminator." } }
+{
+  if repeatAccepted == false { return "refused" }
+  if itemCount < 0 { return "refused" }
+  if itemCount == 0 { return "empty" }
+  if itemCount == 1 {
+    if terminatorSeen { return "single" }
+    return "single"
+  }
+  if terminatorSeen { return "concat" }
+  return "concat"
+}

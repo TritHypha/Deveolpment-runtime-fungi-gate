@@ -1,0 +1,9 @@
+@version 1
+/// Emitter state capture from galerina-tri-regex#Emitter.constructor.
+pure flow regexEmitterConstructionCore(budgetCaptured: Bool, maxInstructions: Int) -> String
+contract { intent { "Create an empty emitter only with a captured positive instruction budget." } }
+{
+  if budgetCaptured == false { return "budget_missing" }
+  if maxInstructions < 1 { return "budget_refused" }
+  return "ready"
+}

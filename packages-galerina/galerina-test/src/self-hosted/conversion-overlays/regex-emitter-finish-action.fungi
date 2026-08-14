@@ -1,0 +1,10 @@
+@version 1
+/// Terminal instruction action from galerina-tri-regex#Emitter.finish.
+pure flow regexEmitterFinishActionCore(emitterReady: Bool, currentLength: Int, maxInstructions: Int) -> String
+contract { intent { "Append the terminal match instruction only when the emitter has remaining budget." } }
+{
+  if emitterReady == false { return "emitter_refused" }
+  if currentLength < 0 { return "length_refused" }
+  if currentLength + 1 > maxInstructions { return "budget_refused" }
+  return "match_appended"
+}

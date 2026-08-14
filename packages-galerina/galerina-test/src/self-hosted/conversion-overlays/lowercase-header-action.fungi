@@ -1,0 +1,13 @@
+@version 1
+/// Header normalization action from galerina-framework-api-server#lowercaseHeaders.
+pure flow lowercaseHeaderActionCore(valuePresent: Bool, arrayValue: Bool, memberCount: Int) -> String
+contract { intent { "Skip absent headers and select scalar or joined normalization for captured values." } }
+{
+  if valuePresent == false { return "skip" }
+  if arrayValue {
+    if memberCount < 0 { return "array_refused" }
+    if memberCount == 0 { return "join_empty" }
+    return "join"
+  }
+  return "scalar"
+}

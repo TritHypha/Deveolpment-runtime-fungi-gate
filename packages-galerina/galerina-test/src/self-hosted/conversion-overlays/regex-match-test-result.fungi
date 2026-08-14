@@ -1,0 +1,10 @@
+@version 1
+/// Whole-input composition decision from galerina-tri-regex#TriMatcher.test.
+pure flow regexMatchTestResultCore(streamCreated: Bool, feedFailed: Bool, matched: Bool) -> String
+contract { intent { "Release a whole-input outcome only after stream creation, feed and end composition." } }
+{
+  if streamCreated == false { return "stream_refused" }
+  if feedFailed { return "feed_refused" }
+  if matched { return "matched" }
+  return "refused"
+}

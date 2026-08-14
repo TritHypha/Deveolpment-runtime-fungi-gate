@@ -1,0 +1,18 @@
+@version 1
+/// Diagnostic record shape from galerina-data-query#queryDiagnostic.
+pure flow queryDiagnosticRecordCore(codePresent: Bool, severityClass: String, messagePresent: Bool, pathPresent: Bool) -> String
+contract { intent { "Construct a query diagnostic only from admitted mandatory fields and preserve optional-path shape." } }
+{
+  if codePresent == false { return "code_refused" }
+  if messagePresent == false { return "message_refused" }
+  if severityClass == "error" {
+    if pathPresent { return "error_with_path" }
+    return "error_without_path"
+  }
+  if severityClass == "warning" {
+    if pathPresent { return "with_path" }
+    return "without_path"
+  }
+  if severityClass == "info" { return "info" }
+  return "severity_refused"
+}

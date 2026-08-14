@@ -1,0 +1,13 @@
+@version 1
+/// Brace-quantifier result from galerina-tri-regex#P.quant.
+pure flow regexQuantifierShapeCore(digitsPresent: Bool, closingBracePresent: Bool, openMaximum: Bool, rangePresent: Bool, minimum: Int, maximum: Int) -> String
+contract { intent { "Classify one captured brace quantifier after syntax and ordering checks." } }
+{
+  if digitsPresent == false { return "bare_brace_refused" }
+  if closingBracePresent == false { return "unterminated_refused" }
+  if minimum < 0 { return "minimum_refused" }
+  if rangePresent == false { return "exact" }
+  if openMaximum { return "unbounded" }
+  if maximum < minimum { return "order_refused" }
+  return "bounded"
+}

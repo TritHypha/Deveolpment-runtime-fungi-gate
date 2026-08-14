@@ -1,0 +1,16 @@
+@version 1
+/// Instruction routing core from galerina-tri-regex#compileAst.walk.
+pure flow regexClosureInstructionActionCore(splitInstruction: Bool, endAssertion: Bool, startAssertion: Bool, assertionSatisfied: Bool) -> String
+contract { intent { "Select the closure action for one captured regex instruction." } }
+{
+  if splitInstruction { return "fork" }
+  if endAssertion {
+    if assertionSatisfied { return "advance_eol" }
+    return "stop_eol"
+  }
+  if startAssertion {
+    if assertionSatisfied { return "advance_bol" }
+    return "stop_bol"
+  }
+  return "park_or_advance"
+}

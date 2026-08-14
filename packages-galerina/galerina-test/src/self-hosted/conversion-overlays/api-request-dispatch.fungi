@@ -1,0 +1,12 @@
+@version 1
+/// Request dispatch admission from galerina-framework-api-server#onRequest.
+pure flow apiRequestDispatchCore(kernelReady: Bool, bodyBoundValid: Bool, channelResolverPresent: Bool, principalResolverPresent: Bool, tlsEnabled: Bool) -> String
+contract { intent { "Dispatch one captured request only after kernel, body and resolver capabilities are admitted." } }
+{
+  if kernelReady == false { return "kernel_refused" }
+  if bodyBoundValid == false { return "body_bound_refused" }
+  if channelResolverPresent == false { return "channel_resolver_refused" }
+  if principalResolverPresent == false { return "principal_resolver_refused" }
+  if tlsEnabled { return "dispatch_tls" }
+  return "dispatch_plain"
+}

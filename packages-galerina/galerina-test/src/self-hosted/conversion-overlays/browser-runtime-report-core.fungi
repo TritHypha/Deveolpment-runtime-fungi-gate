@@ -1,0 +1,10 @@
+@version 1
+/// Aggregate status from galerina-web#createBrowserRuntimeReport.
+pure flow browserRuntimeReportCore(errorCount: Int, warningCount: Int, failedCheckCount: Int) -> String
+contract { intent { "Classify a browser-runtime report from captured diagnostic and check counts." } }
+{
+  if errorCount > 0 { return "failed" }
+  if failedCheckCount > 0 { return "failed" }
+  if warningCount > 0 { return "partial" }
+  return "success"
+}

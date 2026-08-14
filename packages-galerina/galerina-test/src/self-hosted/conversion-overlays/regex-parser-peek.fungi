@@ -1,0 +1,8 @@
+@version 1
+/// Captured code-point observation from galerina-tri-regex#P.peek.
+pure flow regexParserPeekCore(atEnd: Bool, codePoint: Int) -> Int
+contract { intent { "Return the captured code point or the source end sentinel." } }
+{
+  if atEnd { return -1 }
+  return codePoint
+}

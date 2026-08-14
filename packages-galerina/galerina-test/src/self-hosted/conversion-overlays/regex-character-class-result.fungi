@@ -1,0 +1,15 @@
+@version 1
+/// Character-class finalization from galerina-tri-regex#P.charClass.
+pure flow regexCharacterClassResultCore(unterminated: Bool, rangeOutOfOrder: Bool, normalizedNonEmpty: Bool, negated: Bool, rangeCount: Int) -> String
+contract { intent { "Finalize a captured character class after termination, ordering and normalization checks." } }
+{
+  if unterminated { return "unterminated" }
+  if rangeOutOfOrder { return "range_refused" }
+  if normalizedNonEmpty == false {
+    if negated { return "negated_empty" }
+    return "empty_refused"
+  }
+  if rangeCount < 1 { return "range_refused" }
+  if negated { return "class" }
+  return "class"
+}

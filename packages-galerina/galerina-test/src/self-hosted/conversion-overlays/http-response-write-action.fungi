@@ -1,0 +1,11 @@
+@version 1
+/// Response lifecycle action from galerina-framework-api-server#writeResponse.
+pure flow httpResponseWriteActionCore(headersSent: Bool, writableEnded: Bool, bodyPresent: Bool, bodyLength: Int) -> String
+contract { intent { "Avoid duplicate writes and distinguish empty from byte-backed response completion." } }
+{
+  if headersSent { return "already_committed" }
+  if writableEnded { return "already_ended" }
+  if bodyPresent == false { return "end_empty" }
+  if bodyLength < 1 { return "end_empty" }
+  return "write_body"
+}

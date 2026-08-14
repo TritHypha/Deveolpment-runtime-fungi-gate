@@ -1,0 +1,11 @@
+@version 1
+/// Component report fold from galerina-web-components#createComponentReport.
+pure flow componentReportCore(componentAdmitted: Bool, errorCount: Int, warningCount: Int, failedCheckCount: Int) -> String
+contract { intent { "Release a component report status only for an admitted captured component." } }
+{
+  if componentAdmitted == false { return "failed" }
+  if errorCount > 0 { return "failed" }
+  if failedCheckCount > 0 { return "failed" }
+  if warningCount > 0 { return "partial" }
+  return "success"
+}

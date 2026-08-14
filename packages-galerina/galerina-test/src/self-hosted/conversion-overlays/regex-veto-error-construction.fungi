@@ -1,0 +1,10 @@
+@version 1
+/// Failure construction decision from galerina-tri-regex#VetoError.constructor.
+pure flow regexVetoErrorConstructionCore(reasonPresent: Bool, vetoCaptured: Bool, foreignFailure: Bool) -> String
+contract { intent { "Construct the typed veto error only after reason and veto evidence are captured." } }
+{
+  if foreignFailure { return "foreign_failure" }
+  if reasonPresent == false { return "reason_refused" }
+  if vetoCaptured == false { return "veto_refused" }
+  return "veto_error"
+}
