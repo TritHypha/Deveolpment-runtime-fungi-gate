@@ -1,0 +1,9 @@
+@version 1
+/// Erasure-observation core of transport-fsm#toClosed.
+pure flow transportCloseErasureCore(keysPresent: Bool, callbackPresent: Bool) -> Bool
+contract { intent { "Report erasure only when channel keys existed, independent of callback presence." } }
+{
+  if keysPresent == false { return false }
+  if callbackPresent { return true }
+  return true
+}

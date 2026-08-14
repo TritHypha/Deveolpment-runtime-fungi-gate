@@ -1,0 +1,10 @@
+@version 1
+/// Closed interval core of three-valued-governance#inRange.
+pure flow confidenceRangeAdmissionCore(confidence: Int, lower: Int, upper: Int) -> Bool
+contract { intent { "Admit confidence only inside an ordered inclusive range." } }
+{
+  if lower > upper { return false }
+  if confidence < lower { return false }
+  if confidence > upper { return false }
+  return true
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Three-lane consensus core of substrate-model#votedTrit3.
+pure flow votedTritThreeCore(a: Int, b: Int, c: Int) -> Int
+contract { intent { "Return the sign of the admitted three-trit sum." } }
+{
+  let total: Int = a + b + c
+  if total > 0 { return 1 }
+  if total < 0 { return -1 }
+  return 0
+}

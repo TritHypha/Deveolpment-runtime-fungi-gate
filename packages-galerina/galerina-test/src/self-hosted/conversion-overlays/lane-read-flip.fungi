@@ -1,0 +1,8 @@
+@version 1
+/// Post-random-draw ternary decision of NoisyLane.read.
+pure flow laneReadFlipCore(shouldFlip: Bool, ideal: Int, flipped: Int) -> Int
+contract { intent { "Return the modeled flipped trit only when the admitted draw crosses the failure threshold." } }
+{
+  if shouldFlip { return flipped }
+  return ideal
+}

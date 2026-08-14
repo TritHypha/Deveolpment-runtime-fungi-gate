@@ -1,0 +1,15 @@
+@version 1
+/// Closed K3 core of api-server#composeTlsAndCustomVerdicts.
+pure flow tlsCustomVerdictCore(cert: Verdict, customPresent: Bool, custom: Verdict, inputsValid: Bool) -> Verdict
+contract { intent { "Deny invalid factors, then conservatively compose certificate and custom verdicts." } }
+{
+  if inputsValid == false { return Verdict.Deny }
+  check(cert) {
+    deny: { return Verdict.Deny }
+    ambig: { return Verdict.Unknown }
+    if: {
+      if customPresent == false { return Verdict.Allow }
+      return custom
+    }
+  }
+}

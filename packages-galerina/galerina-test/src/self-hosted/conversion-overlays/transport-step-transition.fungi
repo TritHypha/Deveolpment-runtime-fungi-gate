@@ -1,0 +1,13 @@
+@version 1
+/// Closed transition selector of transport-fsm#step after effectful borders.
+pure flow transportStepTransitionCore(state: String, transportEvent: String, authorized: Bool) -> String
+contract { intent { "Keep closed terminal and require authorization before entering open." } }
+{
+  if state == "closed" { return "closed" }
+  if transportEvent == "close" { return "closed" }
+  if transportEvent == "open" {
+    if authorized { return "open" }
+    return state
+  }
+  return state
+}

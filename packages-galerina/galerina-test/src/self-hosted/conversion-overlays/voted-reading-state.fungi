@@ -1,0 +1,10 @@
+@version 1
+/// Post-majority classification of NoisyLane.readVoted.
+pure flow votedReadingStateCore(majority: Int, noiseMargin: Int) -> String
+contract { intent { "Classify an exact-zero vote as indeterminate and retain the margin class otherwise." } }
+{
+  if majority == 0 { return "indeterminate" }
+  if noiseMargin <= 0 { return "determinate_no_margin" }
+  if majority < 0 { return "negative" }
+  return "positive"
+}

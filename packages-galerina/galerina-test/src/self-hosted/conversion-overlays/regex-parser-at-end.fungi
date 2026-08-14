@@ -1,0 +1,9 @@
+@version 1
+/// Bounded cursor core of TriRegex parser P.atEnd.
+pure flow regexParserAtEndCore(index: Int, length: Int) -> Bool
+contract { intent { "Report parser exhaustion once the cursor reaches or exceeds the admitted length." } }
+{
+  if length < 0 { return true }
+  if index < length { return false }
+  return true
+}

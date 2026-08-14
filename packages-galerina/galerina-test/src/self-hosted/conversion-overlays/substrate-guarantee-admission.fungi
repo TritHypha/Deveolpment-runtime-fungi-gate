@@ -1,0 +1,9 @@
+@version 1
+/// Validated guarantee core of substrate-model#validateGuarantee.
+pure flow substrateGuaranteeAdmissionCore(epsilonValid: Bool, redundancyOdd: Bool, redundancyPositive: Bool) -> Bool
+contract { intent { "Admit a guarantee only when epsilon and odd positive redundancy are valid." } }
+{
+  if epsilonValid == false { return false }
+  if redundancyPositive == false { return false }
+  return redundancyOdd
+}

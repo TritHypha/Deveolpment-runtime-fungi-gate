@@ -1,0 +1,14 @@
+@version 1
+/// Diagnostic action core of three-valued-governance#indeterminateDiagnostic.
+pure flow indeterminateDiagnosticActionCore(value: Verdict, codePresent: Bool) -> String
+contract { intent { "Emit a diagnostic only for semantic ambiguity with an admitted diagnostic code." } }
+{
+  check(value) {
+    deny: { return "none" }
+    ambig: {
+      if codePresent { return "emit" }
+      return "refuse"
+    }
+    if: { return "none" }
+  }
+}

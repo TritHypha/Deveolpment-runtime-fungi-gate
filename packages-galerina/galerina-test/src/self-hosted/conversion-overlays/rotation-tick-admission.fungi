@@ -1,0 +1,10 @@
+@version 1
+/// Captured Number classifier of registry-key-rotation#validTick.
+pure flow rotationTickAdmissionCore(safeInteger: Bool, nonnegative: Bool, negativeZero: Bool) -> Bool
+contract { intent { "Admit only a nonnegative safe integer tick and explicitly refuse negative zero." } }
+{
+  if safeInteger == false { return false }
+  if nonnegative == false { return false }
+  if negativeZero { return false }
+  return true
+}

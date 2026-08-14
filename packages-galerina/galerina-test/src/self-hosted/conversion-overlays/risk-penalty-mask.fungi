@@ -1,0 +1,12 @@
+@version 1
+/// Bounded additive decision core of economics#calculateRiskCost.
+pure flow riskPenaltyMaskCore(multiCloud: Bool, ungovernedNpu: Bool, baseLoss: Int) -> Int
+contract { intent { "Accumulate distinct admitted environment and accelerator penalties." } }
+{
+  if multiCloud {
+    if ungovernedNpu { return baseLoss + 3 }
+    return baseLoss + 1
+  }
+  if ungovernedNpu { return baseLoss + 2 }
+  return baseLoss
+}

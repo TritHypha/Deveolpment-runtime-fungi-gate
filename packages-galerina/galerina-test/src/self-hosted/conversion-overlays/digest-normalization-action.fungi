@@ -1,0 +1,12 @@
+@version 1
+/// Action selection for api-server#normaliseDigest before host string rewriting.
+pure flow digestNormalizationActionCore(hadSeparators: Bool, hadUppercase: Bool) -> String
+contract { intent { "Select the exact normalization work required by an admitted digest observation." } }
+{
+  if hadSeparators {
+    if hadUppercase { return "strip_and_lower" }
+    return "strip"
+  }
+  if hadUppercase { return "lower" }
+  return "unchanged"
+}

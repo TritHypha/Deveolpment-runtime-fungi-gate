@@ -1,0 +1,11 @@
+@version 1
+/// Post-regex selection core of tower-runtime#admittedCorrelationId.
+pure flow correlationIdAdmissionCore(provided: Bool, patternMatched: Bool, length: Int) -> String
+contract { intent { "Use a supplied correlation identifier only when its admitted pattern matches." } }
+{
+  if provided == false { return "generated" }
+  if patternMatched == false { return "refuse" }
+  if length < 1 { return "refuse" }
+  if length > 128 { return "refuse" }
+  return "provided"
+}

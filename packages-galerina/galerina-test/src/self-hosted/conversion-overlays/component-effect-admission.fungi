@@ -1,0 +1,10 @@
+@version 1
+/// Closed effect core of web-components#KNOWN_COMPONENT_EFFECTS.
+pure flow componentEffectAdmissionCore(known: Bool, eventEffect: Bool, mutationEffect: Bool) -> Bool
+contract { intent { "Admit only a known component event or mutation effect, never an unclassified effect." } }
+{
+  if known == false { return false }
+  if eventEffect { return true }
+  if mutationEffect { return true }
+  return false
+}

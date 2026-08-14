@@ -1,0 +1,13 @@
+@version 1
+/// First-failure core of substrate-model#verifyToleranceUnderNoise.
+pure flow toleranceDiagnosticPrecedenceCore(cryptoEffect: Bool, laneNoisy: Bool, deterministicSink: Bool, redundancy: Int) -> String
+contract { intent { "Select the first modeled tolerance refusal in source order." } }
+{
+  if cryptoEffect {
+    if laneNoisy { return "crypto_on_noisy_lane" }
+  }
+  if deterministicSink {
+    if redundancy < 3 { return "unvoted_analog_into_deterministic" }
+  }
+  return "continue"
+}

@@ -1,0 +1,9 @@
+@version 1
+/// Post-environment decision core of posture.ts#resolveEgressTls.
+pure flow egressLoopbackDecisionCore(isProd: Bool, isDev: Bool, explicitLocalhost: Bool) -> Bool
+contract { intent { "Permit loopback outside production only for development or explicit localhost opt-in." } }
+{
+  if isProd { return false }
+  if isDev { return true }
+  return explicitLocalhost
+}

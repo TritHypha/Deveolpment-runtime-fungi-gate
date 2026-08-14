@@ -1,0 +1,12 @@
+@version 1
+/// Closed child-kind core of web-components#KNOWN_COMPONENT_CHILD_KINDS.
+pure flow componentChildKindAdmissionCore(known: Bool, safeHtml: Bool, kind: String) -> String
+contract { intent { "Separate safe-HTML child content from ordinary text after kind admission." } }
+{
+  if known == false { return "refuse" }
+  if safeHtml {
+    if kind == "safe_html" { return "safe_html" }
+    return "refuse"
+  }
+  return "text"
+}

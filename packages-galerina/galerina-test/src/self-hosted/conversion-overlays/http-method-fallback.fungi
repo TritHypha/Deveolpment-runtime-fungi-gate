@@ -1,0 +1,9 @@
+@version 1
+/// Presence branch of api-server#normaliseMethod after host case mapping.
+pure flow httpMethodFallbackCore(rawPresent: Bool, alreadyUppercase: Bool, rawMethod: String) -> String
+contract { intent { "Use GET only when the host supplied no request method." } }
+{
+  if rawPresent == false { return "GET" }
+  if alreadyUppercase { return rawMethod }
+  return "uppercase"
+}

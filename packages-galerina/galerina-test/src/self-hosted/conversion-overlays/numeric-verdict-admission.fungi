@@ -1,0 +1,9 @@
+@version 1
+/// Closed numeric brand core of three-valued-governance#asVerdict.
+pure flow numericVerdictAdmissionCore(value: Int) -> Verdict
+contract { intent { "Map only the three arithmetic trits into semantic Verdict values." } }
+{
+  if value == 1 { return Verdict.Allow }
+  if value == 0 { return Verdict.Unknown }
+  return Verdict.Deny
+}

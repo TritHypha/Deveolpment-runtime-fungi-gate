@@ -1,0 +1,13 @@
+@version 1
+/// Scalar invariant core of TriRegex parser#one.
+pure flow regexSingletonRangeCore(codePoint: Int, lower: Int, upper: Int) -> Bool
+contract { intent { "Confirm that a lowered range contains exactly one admitted code point." } }
+{
+  if lower == upper {
+    if codePoint == lower {
+      if codePoint < 0 { return false }
+      return true
+    }
+  }
+  return false
+}

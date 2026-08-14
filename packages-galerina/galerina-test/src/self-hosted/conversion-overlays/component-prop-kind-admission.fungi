@@ -1,0 +1,9 @@
+@version 1
+/// Closed-kind core of web-components#KNOWN_COMPONENT_PROP_KINDS.
+pure flow componentPropKindAdmissionCore(known: Bool, kind: String) -> Bool
+contract { intent { "Admit a component property kind only after closed-set membership." } }
+{
+  if known == false { return false }
+  if kind == "event_handler" { return false }
+  return true
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Integer-scaled comparison core of substrate-snapshot#eq after Float admission.
+pure flow snapshotFloatEqualityCore(absoluteDelta: Int, tolerance: Int) -> Bool
+contract { intent { "Accept an admitted scaled difference only within the admitted tolerance." } }
+{
+  if absoluteDelta < 0 { return false }
+  if tolerance < 0 { return false }
+  if absoluteDelta > tolerance { return false }
+  return true
+}

@@ -1,0 +1,12 @@
+@version 1
+/// Initial-state selector of transport-fsm#initialContext.
+pure flow transportInitialStateCore(keysPresent: Bool, opened: Bool) -> String
+contract { intent { "Select an initial transport state without manufacturing key authority." } }
+{
+  if opened {
+    if keysPresent { return "open" }
+    return "handshake"
+  }
+  if keysPresent { return "recovering" }
+  return "closed"
+}

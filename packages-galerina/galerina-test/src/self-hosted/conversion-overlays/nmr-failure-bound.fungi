@@ -1,0 +1,11 @@
+@version 1
+/// Post-bootstrap bound check for substrate-model#nmrFailureProbability.
+pure flow nmrFailureBoundCore(failureScaled: Int, redundancy: Int, limitScaled: Int) -> Bool
+contract { intent { "Accept a modeled NMR failure rate only for valid redundancy within the declared bound." } }
+{
+  if redundancy < 1 { return false }
+  if redundancy == 2 { return false }
+  if failureScaled < 0 { return false }
+  if failureScaled > limitScaled { return false }
+  return true
+}

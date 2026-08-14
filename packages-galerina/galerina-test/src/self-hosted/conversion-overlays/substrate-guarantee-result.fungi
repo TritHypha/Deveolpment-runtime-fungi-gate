@@ -1,0 +1,10 @@
+@version 1
+/// Post-model result core of substrate-model#checkGuarantee.
+pure flow substrateGuaranteeResultCore(modeled: Int, declared: Int, redundancy: Int) -> Bool
+contract { intent { "Require modeled error within the declaration and a usable redundancy count." } }
+{
+  if modeled > declared { return false }
+  if redundancy < 1 { return false }
+  if redundancy == 2 { return false }
+  return true
+}

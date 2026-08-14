@@ -1,0 +1,11 @@
+@version 1
+/// Typed refusal selector of TriRegex compile#budgetVeto.
+pure flow regexBudgetVetoKindCore(reasonPresent: Bool, budgetExceeded: Bool) -> String
+contract { intent { "Mint a budget veto only for an exceeded budget with an admitted reason." } }
+{
+  if budgetExceeded {
+    if reasonPresent { return "veto" }
+    return "invalid_reason"
+  }
+  return "continue"
+}

@@ -1,0 +1,11 @@
+@version 1
+/// Post-tokenization decision core of posture.ts#parseAllowedHosts.
+pure flow allowedHostInputDecisionCore(rawPresent: Bool, tokenCount: Int, uniqueCount: Int) -> Bool
+contract { intent { "Accept a host input only when tokenization produced at least one unique host." } }
+{
+  if rawPresent == false { return false }
+  if tokenCount < 1 { return false }
+  if uniqueCount < 1 { return false }
+  if uniqueCount > tokenCount { return false }
+  return true
+}

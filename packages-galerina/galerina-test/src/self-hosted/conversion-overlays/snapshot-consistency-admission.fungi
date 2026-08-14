@@ -1,0 +1,9 @@
+@version 1
+/// Verification fold of substrate-snapshot#verifySubstrateSnapshot.
+pure flow snapshotConsistencyAdmissionCore(freshConsistent: Bool, modeledClose: Bool, guaranteeMet: Bool) -> Bool
+contract { intent { "Admit a snapshot only when recomputation, modeled value and guarantee result agree." } }
+{
+  if freshConsistent == false { return false }
+  if modeledClose == false { return false }
+  return guaranteeMet
+}

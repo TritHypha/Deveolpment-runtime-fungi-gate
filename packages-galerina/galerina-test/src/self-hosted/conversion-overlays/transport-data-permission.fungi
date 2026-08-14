@@ -1,0 +1,10 @@
+@version 1
+/// Data-event gate of transport-fsm#permitData.
+pure flow transportDataPermissionCore(stateOpen: Bool, eventData: Bool, gateAllow: Bool) -> Bool
+contract { intent { "Permit data only in the open state for a data event with an allowing gate." } }
+{
+  if stateOpen == false { return false }
+  if eventData == false { return false }
+  if gateAllow { return true }
+  return false
+}

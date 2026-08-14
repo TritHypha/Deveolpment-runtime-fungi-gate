@@ -1,0 +1,9 @@
+@version 1
+/// Diagnostic severity selector of substrate-model#deny.
+pure flow substrateDenialSeverityCore(requested: String, compliance: Bool) -> String
+contract { intent { "Preserve errors and promote warnings when the compliance profile requires it." } }
+{
+  if requested == "error" { return "error" }
+  if compliance { return "error" }
+  return "warning"
+}

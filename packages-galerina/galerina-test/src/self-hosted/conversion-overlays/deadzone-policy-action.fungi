@@ -1,0 +1,13 @@
+@version 1
+/// Closed policy selector of NoisyLane.readVotedGoverned.
+pure flow deadzonePolicyActionCore(indeterminate: Bool, actionPolicy: String, revoteCount: Int) -> String
+contract { intent { "Invoke dead-zone policy only for an indeterminate reading and validate revote work." } }
+{
+  if indeterminate == false { return "return_reading" }
+  if actionPolicy == "fallback_digital" { return "fallback_digital" }
+  if actionPolicy == "revote" {
+    if revoteCount > 0 { return "revote" }
+    return "trap"
+  }
+  return "trap"
+}

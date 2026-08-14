@@ -1,0 +1,9 @@
+@version 1
+/// Token-consumption decision of TriRegex parser P.eat.
+pure flow regexParserEatCore(atEnd: Bool, expected: Int, actual: Int) -> Bool
+contract { intent { "Consume only a present code point equal to the expected code point." } }
+{
+  if atEnd { return false }
+  if expected == actual { return true }
+  return false
+}

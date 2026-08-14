@@ -1,0 +1,11 @@
+@version 1
+/// Post-border discriminant decision of data-query#index.isSome.
+pure flow queryOptionKindCore(recordAdmitted: Bool, kind: String) -> Bool
+contract { intent { "Recognize the admitted some discriminant without inspecting its payload." } }
+{
+  if recordAdmitted == false { return false }
+  match kind {
+    "some" => return true
+    _ => return false
+  }
+}

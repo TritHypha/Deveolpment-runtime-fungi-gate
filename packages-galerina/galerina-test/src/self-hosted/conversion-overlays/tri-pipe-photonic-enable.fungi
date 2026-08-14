@@ -1,0 +1,11 @@
+@version 1
+/// Photonic construction gate of tri-pipe#createTriPipeEngine.
+pure flow triPipePhotonicEnableCore(targetPhotonic: Bool, componentEligible: Bool, configMode: Int) -> Bool
+contract { intent { "Enable photonic construction only for the selected eligible configured target." } }
+{
+  if configMode != 1 { return false }
+  if targetPhotonic {
+    if componentEligible { return true }
+  }
+  return false
+}

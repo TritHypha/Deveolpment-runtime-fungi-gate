@@ -1,0 +1,10 @@
+@version 1
+/// Captured capability fold of ExecutionRouter.laneIsGranted.
+pure flow laneGrantMaskCore(capabilityGranted: Bool, attestationVerified: Bool, componentEligible: Bool, laneCount: Int) -> Bool
+contract { intent { "Grant a hardware lane only when capability, attestation and component evidence all hold." } }
+{
+  if laneCount < 1 { return false }
+  if capabilityGranted == false { return false }
+  if attestationVerified == false { return false }
+  return componentEligible
+}

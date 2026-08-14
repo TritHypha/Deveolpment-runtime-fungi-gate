@@ -1,0 +1,10 @@
+@version 1
+/// Captured shape fold of api-server#isTlsSocket.
+pure flow tlsSocketShapeCore(objectLike: Bool, nonNull: Bool, propertyReadSucceeded: Bool, peerCertificateFunction: Bool) -> Bool
+contract { intent { "Recognize a TLS socket only after all host shape checks succeed." } }
+{
+  if objectLike == false { return false }
+  if nonNull == false { return false }
+  if propertyReadSucceeded == false { return false }
+  return peerCertificateFunction
+}

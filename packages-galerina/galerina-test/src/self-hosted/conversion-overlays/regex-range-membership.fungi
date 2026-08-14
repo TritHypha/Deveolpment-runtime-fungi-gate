@@ -1,0 +1,9 @@
+@version 1
+/// Scalar range core of TriRegex compile#inRanges.
+pure flow regexRangeMembershipCore(codePoint: Int, lower: Int, upper: Int) -> Bool
+contract { intent { "Match a code point only inside an admitted ordered range." } }
+{
+  if codePoint < lower { return false }
+  if codePoint > upper { return false }
+  return true
+}

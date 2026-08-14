@@ -1,0 +1,10 @@
+@version 1
+/// Optional-token branch of economics#estimateCost after numeric calculation.
+pure flow aiTokenCostBranchCore(tokensPresent: Bool, baseCost: Int, tokenCost: Int) -> Int
+contract { intent { "Include token cost only when an admitted token record is present." } }
+{
+  if tokensPresent {
+    return baseCost + tokenCost
+  }
+  return baseCost
+}

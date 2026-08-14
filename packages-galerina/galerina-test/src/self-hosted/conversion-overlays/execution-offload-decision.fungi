@@ -1,0 +1,13 @@
+@version 1
+/// Post-routing selector of ExecutionRouter.route.
+pure flow executionOffloadDecisionCore(laneGranted: Bool, photonicEligible: Bool, precision: String) -> String
+contract { intent { "Choose photonic offload only for an admitted lane and eligible precision." } }
+{
+  if laneGranted {
+    if photonicEligible {
+      if precision == "fp8" { return "photonic" }
+      if precision == "fp4" { return "photonic" }
+    }
+  }
+  return "digital"
+}
