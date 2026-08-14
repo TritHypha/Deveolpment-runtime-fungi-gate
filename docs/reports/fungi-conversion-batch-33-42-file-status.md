@@ -1225,3 +1225,19 @@ The package boundary loads `authorization-boundary.fungi`,
 finds no Slice 698-747 Fungi/GIR/physical `.slide`/re-admission/VOK twin:
 these assets are adjacent dependency evidence only and authorize no consumer
 switch or retirement.
+
+## Slices 748-797 - Tower key rotation and lease
+
+The next 50 unique source-order scopes finish `key-rotation.ts` after
+`isWeakRingKey`, cover the complete lease border and enter
+`partial-return.ts`. Exact planned arithmetic is 14 erased declarations and
+36 blocked runtime scopes, with no candidate or superseded scope.
+`key-rotation.ts#isWellFormedCommit` retains prior Slice-47 credit and is not
+renumbered.
+
+The decisive borders are canonical JSON/HMAC/Buffer behavior; live
+Uint8Array, epoch-array and ring aliases; callback/error/K3 ordering; rotation
+phase authority; active lease record admission; and declaration retention.
+The loaded Fungi lease fold consumes already-computed host Booleans and is not
+an exact ingress, physical or retirement twin. Repository-wide closure stays
+`UNKNOWN`.

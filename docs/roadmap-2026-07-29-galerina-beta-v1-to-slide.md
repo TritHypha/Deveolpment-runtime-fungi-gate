@@ -3849,3 +3849,17 @@ codebase-memory refreshed to **60,461 nodes / 147,260 edges** with exact
 indexed HEAD and one untruncated symbol result. A final post-record exact-head
 readback is retained in the handoff; repository-wide closure remains
 `UNKNOWN`.
+
+## Fungi conversion checkpoint planned through Slice 797 - 2026-08-14
+
+The next 50 unique scopes finish Tower key rotation, cover its lease border and
+enter partial-return declarations. Planned arithmetic is 14 erased declarations
+and 36 blocked runtime scopes. Prior Slice-47 `isWellFormedCommit` credit is
+retained rather than duplicated; no candidate, physical authority, consumer
+switch or retirement is claimed.
+
+The decisive work is exact canonical crypto/wire behavior, live typed-array and
+ring state, callback/K3 and phase ordering, closed lease admission and retained
+declaration contracts. The loaded lease Fungi fold is adjacent evidence only
+because it does not preserve the TypeScript host ingress. Repository-wide
+closure remains `UNKNOWN`.
