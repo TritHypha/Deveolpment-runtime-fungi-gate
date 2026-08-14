@@ -1,0 +1,57 @@
+@version 1
+// Source-bound decision overlay wave 44 item 09: parser-parse-governed-flow-status.fungi.
+pure flow parserParseGovernedFlowStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism09A: Bool = sourceReady
+  let prism09B: Bool = shapeReady
+  let prism09C: Bool = stateReady
+  let prism09D: Bool = policyReady
+  let prism09E: Bool = routeReady
+  let prism09F: Bool = proofReady
+  let prism09G: Bool = sealReady
+  let trail09001: Bool = prism09B
+  let trail09002: Bool = trail09001
+  let trail09003: Bool = trail09002
+  let trail09004: Bool = trail09003
+  let trail09005: Bool = trail09004
+  let trail09006: Bool = prism09A
+  let trail09007: Bool = trail09006
+  let trail09008: Bool = trail09007
+  let trail09009: Bool = trail09008
+  let trail09010: Bool = trail09009
+  let trail09011: Bool = trail09010
+  let trail09012: Bool = prism09G
+  let trail09013: Bool = trail09012
+  let trail09014: Bool = trail09013
+  let trail09015: Bool = trail09014
+  let trail09016: Bool = trail09015
+  let trail09017: Bool = trail09016
+  let trail09018: Bool = prism09F
+  let trail09019: Bool = trail09018
+  let trail09020: Bool = trail09019
+  let trail09021: Bool = trail09020
+  let span09A: Bool = trail09021
+  let span09B: Bool = prism09E
+  let span09C: Bool = prism09G
+  if span09A {
+    if span09B {
+      if span09C {
+        if prism09C {
+          if prism09D {
+            if prism09E {
+              if prism09F {
+                return "parser_parse_governed_flow_built"
+              }
+              return "wave44_prism_source_missing"
+            }
+            return "wave44_prism_seal_missing"
+          }
+          return "wave44_prism_proof_missing"
+        }
+        return "wave44_prism_route_missing"
+      }
+      return "wave44_prism_policy_missing"
+    }
+    return "wave44_prism_state_missing"
+  }
+  return "wave44_prism_shape_missing"
+}

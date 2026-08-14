@@ -1,0 +1,77 @@
+@version 1
+// Source-bound decision overlay wave 44 item 29: parser-parse-prefilter-stmt-status.fungi.
+pure flow parserParsePrefilterStmtStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism29A: Bool = sourceReady
+  let prism29B: Bool = shapeReady
+  let prism29C: Bool = stateReady
+  let prism29D: Bool = policyReady
+  let prism29E: Bool = routeReady
+  let prism29F: Bool = proofReady
+  let prism29G: Bool = sealReady
+  let trail29001: Bool = prism29A
+  let trail29002: Bool = trail29001
+  let trail29003: Bool = trail29002
+  let trail29004: Bool = trail29003
+  let trail29005: Bool = trail29004
+  let trail29006: Bool = prism29G
+  let trail29007: Bool = trail29006
+  let trail29008: Bool = trail29007
+  let trail29009: Bool = trail29008
+  let trail29010: Bool = trail29009
+  let trail29011: Bool = trail29010
+  let trail29012: Bool = prism29F
+  let trail29013: Bool = trail29012
+  let trail29014: Bool = trail29013
+  let trail29015: Bool = trail29014
+  let trail29016: Bool = trail29015
+  let trail29017: Bool = trail29016
+  let trail29018: Bool = prism29E
+  let trail29019: Bool = trail29018
+  let trail29020: Bool = trail29019
+  let trail29021: Bool = trail29020
+  let trail29022: Bool = trail29021
+  let trail29023: Bool = trail29022
+  let trail29024: Bool = prism29D
+  let trail29025: Bool = trail29024
+  let trail29026: Bool = trail29025
+  let trail29027: Bool = trail29026
+  let trail29028: Bool = trail29027
+  let trail29029: Bool = trail29028
+  let trail29030: Bool = prism29C
+  let trail29031: Bool = trail29030
+  let trail29032: Bool = trail29031
+  let trail29033: Bool = trail29032
+  let trail29034: Bool = trail29033
+  let trail29035: Bool = trail29034
+  let trail29036: Bool = prism29B
+  let trail29037: Bool = trail29036
+  let trail29038: Bool = trail29037
+  let trail29039: Bool = trail29038
+  let trail29040: Bool = trail29039
+  let trail29041: Bool = trail29040
+  let span29A: Bool = trail29041
+  let span29B: Bool = prism29D
+  let span29C: Bool = prism29F
+  if span29A {
+    if span29B {
+      if span29C {
+        if prism29B {
+          if prism29C {
+            if prism29D {
+              if prism29E {
+                return "parser_parse_prefilter_stmt_built"
+              }
+              return "wave44_prism_seal_missing"
+            }
+            return "wave44_prism_proof_missing"
+          }
+          return "wave44_prism_route_missing"
+        }
+        return "wave44_prism_policy_missing"
+      }
+      return "wave44_prism_state_missing"
+    }
+    return "wave44_prism_shape_missing"
+  }
+  return "wave44_prism_source_missing"
+}

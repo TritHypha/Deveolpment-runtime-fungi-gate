@@ -1,0 +1,88 @@
+@version 1
+// Source-bound decision overlay wave 44 item 40: parser-consume-spread-if-present-status.fungi.
+pure flow parserConsumeSpreadIfPresentStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism40A: Bool = sourceReady
+  let prism40B: Bool = shapeReady
+  let prism40C: Bool = stateReady
+  let prism40D: Bool = policyReady
+  let prism40E: Bool = routeReady
+  let prism40F: Bool = proofReady
+  let prism40G: Bool = sealReady
+  let trail40001: Bool = prism40E
+  let trail40002: Bool = trail40001
+  let trail40003: Bool = trail40002
+  let trail40004: Bool = trail40003
+  let trail40005: Bool = trail40004
+  let trail40006: Bool = prism40D
+  let trail40007: Bool = trail40006
+  let trail40008: Bool = trail40007
+  let trail40009: Bool = trail40008
+  let trail40010: Bool = trail40009
+  let trail40011: Bool = trail40010
+  let trail40012: Bool = prism40C
+  let trail40013: Bool = trail40012
+  let trail40014: Bool = trail40013
+  let trail40015: Bool = trail40014
+  let trail40016: Bool = trail40015
+  let trail40017: Bool = trail40016
+  let trail40018: Bool = prism40B
+  let trail40019: Bool = trail40018
+  let trail40020: Bool = trail40019
+  let trail40021: Bool = trail40020
+  let trail40022: Bool = trail40021
+  let trail40023: Bool = trail40022
+  let trail40024: Bool = prism40A
+  let trail40025: Bool = trail40024
+  let trail40026: Bool = trail40025
+  let trail40027: Bool = trail40026
+  let trail40028: Bool = trail40027
+  let trail40029: Bool = trail40028
+  let trail40030: Bool = prism40G
+  let trail40031: Bool = trail40030
+  let trail40032: Bool = trail40031
+  let trail40033: Bool = trail40032
+  let trail40034: Bool = trail40033
+  let trail40035: Bool = trail40034
+  let trail40036: Bool = prism40F
+  let trail40037: Bool = trail40036
+  let trail40038: Bool = trail40037
+  let trail40039: Bool = trail40038
+  let trail40040: Bool = trail40039
+  let trail40041: Bool = trail40040
+  let trail40042: Bool = prism40E
+  let trail40043: Bool = trail40042
+  let trail40044: Bool = trail40043
+  let trail40045: Bool = trail40044
+  let trail40046: Bool = trail40045
+  let trail40047: Bool = trail40046
+  let trail40048: Bool = prism40D
+  let trail40049: Bool = trail40048
+  let trail40050: Bool = trail40049
+  let trail40051: Bool = trail40050
+  let trail40052: Bool = trail40051
+  let span40A: Bool = trail40052
+  let span40B: Bool = prism40A
+  let span40C: Bool = prism40C
+  if span40A {
+    if span40B {
+      if span40C {
+        if prism40F {
+          if prism40G {
+            if prism40A {
+              if prism40B {
+                return "parser_consume_spread_if_present_built"
+              }
+              return "wave44_prism_policy_missing"
+            }
+            return "wave44_prism_state_missing"
+          }
+          return "wave44_prism_shape_missing"
+        }
+        return "wave44_prism_source_missing"
+      }
+      return "wave44_prism_seal_missing"
+    }
+    return "wave44_prism_proof_missing"
+  }
+  return "wave44_prism_route_missing"
+}

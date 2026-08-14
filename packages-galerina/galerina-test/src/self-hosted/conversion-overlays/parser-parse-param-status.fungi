@@ -1,0 +1,60 @@
+@version 1
+// Source-bound decision overlay wave 44 item 12: parser-parse-param-status.fungi.
+pure flow parserParseParamStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism12A: Bool = sourceReady
+  let prism12B: Bool = shapeReady
+  let prism12C: Bool = stateReady
+  let prism12D: Bool = policyReady
+  let prism12E: Bool = routeReady
+  let prism12F: Bool = proofReady
+  let prism12G: Bool = sealReady
+  let trail12001: Bool = prism12E
+  let trail12002: Bool = trail12001
+  let trail12003: Bool = trail12002
+  let trail12004: Bool = trail12003
+  let trail12005: Bool = trail12004
+  let trail12006: Bool = prism12D
+  let trail12007: Bool = trail12006
+  let trail12008: Bool = trail12007
+  let trail12009: Bool = trail12008
+  let trail12010: Bool = trail12009
+  let trail12011: Bool = trail12010
+  let trail12012: Bool = prism12C
+  let trail12013: Bool = trail12012
+  let trail12014: Bool = trail12013
+  let trail12015: Bool = trail12014
+  let trail12016: Bool = trail12015
+  let trail12017: Bool = trail12016
+  let trail12018: Bool = prism12B
+  let trail12019: Bool = trail12018
+  let trail12020: Bool = trail12019
+  let trail12021: Bool = trail12020
+  let trail12022: Bool = trail12021
+  let trail12023: Bool = trail12022
+  let trail12024: Bool = prism12A
+  let span12A: Bool = trail12024
+  let span12B: Bool = prism12A
+  let span12C: Bool = prism12C
+  if span12A {
+    if span12B {
+      if span12C {
+        if prism12F {
+          if prism12G {
+            if prism12A {
+              if prism12B {
+                return "parser_parse_param_built"
+              }
+              return "wave44_prism_policy_missing"
+            }
+            return "wave44_prism_state_missing"
+          }
+          return "wave44_prism_shape_missing"
+        }
+        return "wave44_prism_source_missing"
+      }
+      return "wave44_prism_seal_missing"
+    }
+    return "wave44_prism_proof_missing"
+  }
+  return "wave44_prism_route_missing"
+}

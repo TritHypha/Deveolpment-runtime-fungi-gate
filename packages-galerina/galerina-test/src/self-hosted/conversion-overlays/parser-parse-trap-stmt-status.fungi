@@ -1,0 +1,71 @@
+@version 1
+// Source-bound decision overlay wave 44 item 23: parser-parse-trap-stmt-status.fungi.
+pure flow parserParseTrapStmtStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism23A: Bool = sourceReady
+  let prism23B: Bool = shapeReady
+  let prism23C: Bool = stateReady
+  let prism23D: Bool = policyReady
+  let prism23E: Bool = routeReady
+  let prism23F: Bool = proofReady
+  let prism23G: Bool = sealReady
+  let trail23001: Bool = prism23B
+  let trail23002: Bool = trail23001
+  let trail23003: Bool = trail23002
+  let trail23004: Bool = trail23003
+  let trail23005: Bool = trail23004
+  let trail23006: Bool = prism23A
+  let trail23007: Bool = trail23006
+  let trail23008: Bool = trail23007
+  let trail23009: Bool = trail23008
+  let trail23010: Bool = trail23009
+  let trail23011: Bool = trail23010
+  let trail23012: Bool = prism23G
+  let trail23013: Bool = trail23012
+  let trail23014: Bool = trail23013
+  let trail23015: Bool = trail23014
+  let trail23016: Bool = trail23015
+  let trail23017: Bool = trail23016
+  let trail23018: Bool = prism23F
+  let trail23019: Bool = trail23018
+  let trail23020: Bool = trail23019
+  let trail23021: Bool = trail23020
+  let trail23022: Bool = trail23021
+  let trail23023: Bool = trail23022
+  let trail23024: Bool = prism23E
+  let trail23025: Bool = trail23024
+  let trail23026: Bool = trail23025
+  let trail23027: Bool = trail23026
+  let trail23028: Bool = trail23027
+  let trail23029: Bool = trail23028
+  let trail23030: Bool = prism23D
+  let trail23031: Bool = trail23030
+  let trail23032: Bool = trail23031
+  let trail23033: Bool = trail23032
+  let trail23034: Bool = trail23033
+  let trail23035: Bool = trail23034
+  let span23A: Bool = trail23035
+  let span23B: Bool = prism23E
+  let span23C: Bool = prism23G
+  if span23A {
+    if span23B {
+      if span23C {
+        if prism23C {
+          if prism23D {
+            if prism23E {
+              if prism23F {
+                return "parser_parse_trap_stmt_built"
+              }
+              return "wave44_prism_source_missing"
+            }
+            return "wave44_prism_seal_missing"
+          }
+          return "wave44_prism_proof_missing"
+        }
+        return "wave44_prism_route_missing"
+      }
+      return "wave44_prism_policy_missing"
+    }
+    return "wave44_prism_state_missing"
+  }
+  return "wave44_prism_shape_missing"
+}

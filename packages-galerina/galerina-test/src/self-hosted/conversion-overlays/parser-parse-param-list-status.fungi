@@ -1,0 +1,58 @@
+@version 1
+// Source-bound decision overlay wave 44 item 10: parser-parse-param-list-status.fungi.
+pure flow parserParseParamListStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism10A: Bool = sourceReady
+  let prism10B: Bool = shapeReady
+  let prism10C: Bool = stateReady
+  let prism10D: Bool = policyReady
+  let prism10E: Bool = routeReady
+  let prism10F: Bool = proofReady
+  let prism10G: Bool = sealReady
+  let trail10001: Bool = prism10C
+  let trail10002: Bool = trail10001
+  let trail10003: Bool = trail10002
+  let trail10004: Bool = trail10003
+  let trail10005: Bool = trail10004
+  let trail10006: Bool = prism10B
+  let trail10007: Bool = trail10006
+  let trail10008: Bool = trail10007
+  let trail10009: Bool = trail10008
+  let trail10010: Bool = trail10009
+  let trail10011: Bool = trail10010
+  let trail10012: Bool = prism10A
+  let trail10013: Bool = trail10012
+  let trail10014: Bool = trail10013
+  let trail10015: Bool = trail10014
+  let trail10016: Bool = trail10015
+  let trail10017: Bool = trail10016
+  let trail10018: Bool = prism10G
+  let trail10019: Bool = trail10018
+  let trail10020: Bool = trail10019
+  let trail10021: Bool = trail10020
+  let trail10022: Bool = trail10021
+  let span10A: Bool = trail10022
+  let span10B: Bool = prism10F
+  let span10C: Bool = prism10A
+  if span10A {
+    if span10B {
+      if span10C {
+        if prism10D {
+          if prism10E {
+            if prism10F {
+              if prism10G {
+                return "parser_parse_param_list_built"
+              }
+              return "wave44_prism_shape_missing"
+            }
+            return "wave44_prism_source_missing"
+          }
+          return "wave44_prism_seal_missing"
+        }
+        return "wave44_prism_proof_missing"
+      }
+      return "wave44_prism_route_missing"
+    }
+    return "wave44_prism_policy_missing"
+  }
+  return "wave44_prism_state_missing"
+}

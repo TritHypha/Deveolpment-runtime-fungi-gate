@@ -1,0 +1,53 @@
+@version 1
+// Source-bound decision overlay wave 44 item 05: parser-parse-flow-decl-status.fungi.
+pure flow parserParseFlowDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism05A: Bool = sourceReady
+  let prism05B: Bool = shapeReady
+  let prism05C: Bool = stateReady
+  let prism05D: Bool = policyReady
+  let prism05E: Bool = routeReady
+  let prism05F: Bool = proofReady
+  let prism05G: Bool = sealReady
+  let trail05001: Bool = prism05E
+  let trail05002: Bool = trail05001
+  let trail05003: Bool = trail05002
+  let trail05004: Bool = trail05003
+  let trail05005: Bool = trail05004
+  let trail05006: Bool = prism05D
+  let trail05007: Bool = trail05006
+  let trail05008: Bool = trail05007
+  let trail05009: Bool = trail05008
+  let trail05010: Bool = trail05009
+  let trail05011: Bool = trail05010
+  let trail05012: Bool = prism05C
+  let trail05013: Bool = trail05012
+  let trail05014: Bool = trail05013
+  let trail05015: Bool = trail05014
+  let trail05016: Bool = trail05015
+  let trail05017: Bool = trail05016
+  let span05A: Bool = trail05017
+  let span05B: Bool = prism05A
+  let span05C: Bool = prism05C
+  if span05A {
+    if span05B {
+      if span05C {
+        if prism05F {
+          if prism05G {
+            if prism05A {
+              if prism05B {
+                return "parser_parse_flow_decl_built"
+              }
+              return "wave44_prism_policy_missing"
+            }
+            return "wave44_prism_state_missing"
+          }
+          return "wave44_prism_shape_missing"
+        }
+        return "wave44_prism_source_missing"
+      }
+      return "wave44_prism_seal_missing"
+    }
+    return "wave44_prism_proof_missing"
+  }
+  return "wave44_prism_route_missing"
+}

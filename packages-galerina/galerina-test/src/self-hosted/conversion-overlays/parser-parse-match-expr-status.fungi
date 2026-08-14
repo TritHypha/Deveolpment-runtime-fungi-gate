@@ -1,0 +1,73 @@
+@version 1
+// Source-bound decision overlay wave 44 item 25: parser-parse-match-expr-status.fungi.
+pure flow parserParseMatchExprStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism25A: Bool = sourceReady
+  let prism25B: Bool = shapeReady
+  let prism25C: Bool = stateReady
+  let prism25D: Bool = policyReady
+  let prism25E: Bool = routeReady
+  let prism25F: Bool = proofReady
+  let prism25G: Bool = sealReady
+  let trail25001: Bool = prism25D
+  let trail25002: Bool = trail25001
+  let trail25003: Bool = trail25002
+  let trail25004: Bool = trail25003
+  let trail25005: Bool = trail25004
+  let trail25006: Bool = prism25C
+  let trail25007: Bool = trail25006
+  let trail25008: Bool = trail25007
+  let trail25009: Bool = trail25008
+  let trail25010: Bool = trail25009
+  let trail25011: Bool = trail25010
+  let trail25012: Bool = prism25B
+  let trail25013: Bool = trail25012
+  let trail25014: Bool = trail25013
+  let trail25015: Bool = trail25014
+  let trail25016: Bool = trail25015
+  let trail25017: Bool = trail25016
+  let trail25018: Bool = prism25A
+  let trail25019: Bool = trail25018
+  let trail25020: Bool = trail25019
+  let trail25021: Bool = trail25020
+  let trail25022: Bool = trail25021
+  let trail25023: Bool = trail25022
+  let trail25024: Bool = prism25G
+  let trail25025: Bool = trail25024
+  let trail25026: Bool = trail25025
+  let trail25027: Bool = trail25026
+  let trail25028: Bool = trail25027
+  let trail25029: Bool = trail25028
+  let trail25030: Bool = prism25F
+  let trail25031: Bool = trail25030
+  let trail25032: Bool = trail25031
+  let trail25033: Bool = trail25032
+  let trail25034: Bool = trail25033
+  let trail25035: Bool = trail25034
+  let trail25036: Bool = prism25E
+  let trail25037: Bool = trail25036
+  let span25A: Bool = trail25037
+  let span25B: Bool = prism25G
+  let span25C: Bool = prism25B
+  if span25A {
+    if span25B {
+      if span25C {
+        if prism25E {
+          if prism25F {
+            if prism25G {
+              if prism25A {
+                return "parser_parse_match_expr_built"
+              }
+              return "wave44_prism_state_missing"
+            }
+            return "wave44_prism_shape_missing"
+          }
+          return "wave44_prism_source_missing"
+        }
+        return "wave44_prism_seal_missing"
+      }
+      return "wave44_prism_proof_missing"
+    }
+    return "wave44_prism_route_missing"
+  }
+  return "wave44_prism_policy_missing"
+}

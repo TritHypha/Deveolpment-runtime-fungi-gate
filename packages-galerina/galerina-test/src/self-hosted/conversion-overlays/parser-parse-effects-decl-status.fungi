@@ -1,0 +1,62 @@
+@version 1
+// Source-bound decision overlay wave 44 item 14: parser-parse-effects-decl-status.fungi.
+pure flow parserParseEffectsDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism14A: Bool = sourceReady
+  let prism14B: Bool = shapeReady
+  let prism14C: Bool = stateReady
+  let prism14D: Bool = policyReady
+  let prism14E: Bool = routeReady
+  let prism14F: Bool = proofReady
+  let prism14G: Bool = sealReady
+  let trail14001: Bool = prism14G
+  let trail14002: Bool = trail14001
+  let trail14003: Bool = trail14002
+  let trail14004: Bool = trail14003
+  let trail14005: Bool = trail14004
+  let trail14006: Bool = prism14F
+  let trail14007: Bool = trail14006
+  let trail14008: Bool = trail14007
+  let trail14009: Bool = trail14008
+  let trail14010: Bool = trail14009
+  let trail14011: Bool = trail14010
+  let trail14012: Bool = prism14E
+  let trail14013: Bool = trail14012
+  let trail14014: Bool = trail14013
+  let trail14015: Bool = trail14014
+  let trail14016: Bool = trail14015
+  let trail14017: Bool = trail14016
+  let trail14018: Bool = prism14D
+  let trail14019: Bool = trail14018
+  let trail14020: Bool = trail14019
+  let trail14021: Bool = trail14020
+  let trail14022: Bool = trail14021
+  let trail14023: Bool = trail14022
+  let trail14024: Bool = prism14C
+  let trail14025: Bool = trail14024
+  let trail14026: Bool = trail14025
+  let span14A: Bool = trail14026
+  let span14B: Bool = prism14C
+  let span14C: Bool = prism14E
+  if span14A {
+    if span14B {
+      if span14C {
+        if prism14A {
+          if prism14B {
+            if prism14C {
+              if prism14D {
+                return "parser_parse_effects_decl_built"
+              }
+              return "wave44_prism_proof_missing"
+            }
+            return "wave44_prism_route_missing"
+          }
+          return "wave44_prism_policy_missing"
+        }
+        return "wave44_prism_state_missing"
+      }
+      return "wave44_prism_shape_missing"
+    }
+    return "wave44_prism_source_missing"
+  }
+  return "wave44_prism_seal_missing"
+}

@@ -1,0 +1,67 @@
+@version 1
+// Source-bound decision overlay wave 44 item 19: parser-parse-mut-decl-status.fungi.
+pure flow parserParseMutDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism19A: Bool = sourceReady
+  let prism19B: Bool = shapeReady
+  let prism19C: Bool = stateReady
+  let prism19D: Bool = policyReady
+  let prism19E: Bool = routeReady
+  let prism19F: Bool = proofReady
+  let prism19G: Bool = sealReady
+  let trail19001: Bool = prism19E
+  let trail19002: Bool = trail19001
+  let trail19003: Bool = trail19002
+  let trail19004: Bool = trail19003
+  let trail19005: Bool = trail19004
+  let trail19006: Bool = prism19D
+  let trail19007: Bool = trail19006
+  let trail19008: Bool = trail19007
+  let trail19009: Bool = trail19008
+  let trail19010: Bool = trail19009
+  let trail19011: Bool = trail19010
+  let trail19012: Bool = prism19C
+  let trail19013: Bool = trail19012
+  let trail19014: Bool = trail19013
+  let trail19015: Bool = trail19014
+  let trail19016: Bool = trail19015
+  let trail19017: Bool = trail19016
+  let trail19018: Bool = prism19B
+  let trail19019: Bool = trail19018
+  let trail19020: Bool = trail19019
+  let trail19021: Bool = trail19020
+  let trail19022: Bool = trail19021
+  let trail19023: Bool = trail19022
+  let trail19024: Bool = prism19A
+  let trail19025: Bool = trail19024
+  let trail19026: Bool = trail19025
+  let trail19027: Bool = trail19026
+  let trail19028: Bool = trail19027
+  let trail19029: Bool = trail19028
+  let trail19030: Bool = prism19G
+  let trail19031: Bool = trail19030
+  let span19A: Bool = trail19031
+  let span19B: Bool = prism19A
+  let span19C: Bool = prism19C
+  if span19A {
+    if span19B {
+      if span19C {
+        if prism19F {
+          if prism19G {
+            if prism19A {
+              if prism19B {
+                return "parser_parse_mut_decl_built"
+              }
+              return "wave44_prism_policy_missing"
+            }
+            return "wave44_prism_state_missing"
+          }
+          return "wave44_prism_shape_missing"
+        }
+        return "wave44_prism_source_missing"
+      }
+      return "wave44_prism_seal_missing"
+    }
+    return "wave44_prism_proof_missing"
+  }
+  return "wave44_prism_route_missing"
+}

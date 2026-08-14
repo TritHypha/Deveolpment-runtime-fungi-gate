@@ -1,0 +1,59 @@
+@version 1
+// Source-bound decision overlay wave 44 item 11: parser-skip-malformed-param-status.fungi.
+pure flow parserSkipMalformedParamStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism11A: Bool = sourceReady
+  let prism11B: Bool = shapeReady
+  let prism11C: Bool = stateReady
+  let prism11D: Bool = policyReady
+  let prism11E: Bool = routeReady
+  let prism11F: Bool = proofReady
+  let prism11G: Bool = sealReady
+  let trail11001: Bool = prism11D
+  let trail11002: Bool = trail11001
+  let trail11003: Bool = trail11002
+  let trail11004: Bool = trail11003
+  let trail11005: Bool = trail11004
+  let trail11006: Bool = prism11C
+  let trail11007: Bool = trail11006
+  let trail11008: Bool = trail11007
+  let trail11009: Bool = trail11008
+  let trail11010: Bool = trail11009
+  let trail11011: Bool = trail11010
+  let trail11012: Bool = prism11B
+  let trail11013: Bool = trail11012
+  let trail11014: Bool = trail11013
+  let trail11015: Bool = trail11014
+  let trail11016: Bool = trail11015
+  let trail11017: Bool = trail11016
+  let trail11018: Bool = prism11A
+  let trail11019: Bool = trail11018
+  let trail11020: Bool = trail11019
+  let trail11021: Bool = trail11020
+  let trail11022: Bool = trail11021
+  let trail11023: Bool = trail11022
+  let span11A: Bool = trail11023
+  let span11B: Bool = prism11G
+  let span11C: Bool = prism11B
+  if span11A {
+    if span11B {
+      if span11C {
+        if prism11E {
+          if prism11F {
+            if prism11G {
+              if prism11A {
+                return "parser_skip_malformed_param_built"
+              }
+              return "wave44_prism_state_missing"
+            }
+            return "wave44_prism_shape_missing"
+          }
+          return "wave44_prism_source_missing"
+        }
+        return "wave44_prism_seal_missing"
+      }
+      return "wave44_prism_proof_missing"
+    }
+    return "wave44_prism_route_missing"
+  }
+  return "wave44_prism_policy_missing"
+}

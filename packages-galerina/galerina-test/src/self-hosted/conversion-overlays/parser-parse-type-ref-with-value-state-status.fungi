@@ -1,0 +1,68 @@
+@version 1
+// Source-bound decision overlay wave 44 item 20: parser-parse-type-ref-with-value-state-status.fungi.
+pure flow parserParseTypeRefWithValueStateStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism20A: Bool = sourceReady
+  let prism20B: Bool = shapeReady
+  let prism20C: Bool = stateReady
+  let prism20D: Bool = policyReady
+  let prism20E: Bool = routeReady
+  let prism20F: Bool = proofReady
+  let prism20G: Bool = sealReady
+  let trail20001: Bool = prism20F
+  let trail20002: Bool = trail20001
+  let trail20003: Bool = trail20002
+  let trail20004: Bool = trail20003
+  let trail20005: Bool = trail20004
+  let trail20006: Bool = prism20E
+  let trail20007: Bool = trail20006
+  let trail20008: Bool = trail20007
+  let trail20009: Bool = trail20008
+  let trail20010: Bool = trail20009
+  let trail20011: Bool = trail20010
+  let trail20012: Bool = prism20D
+  let trail20013: Bool = trail20012
+  let trail20014: Bool = trail20013
+  let trail20015: Bool = trail20014
+  let trail20016: Bool = trail20015
+  let trail20017: Bool = trail20016
+  let trail20018: Bool = prism20C
+  let trail20019: Bool = trail20018
+  let trail20020: Bool = trail20019
+  let trail20021: Bool = trail20020
+  let trail20022: Bool = trail20021
+  let trail20023: Bool = trail20022
+  let trail20024: Bool = prism20B
+  let trail20025: Bool = trail20024
+  let trail20026: Bool = trail20025
+  let trail20027: Bool = trail20026
+  let trail20028: Bool = trail20027
+  let trail20029: Bool = trail20028
+  let trail20030: Bool = prism20A
+  let trail20031: Bool = trail20030
+  let trail20032: Bool = trail20031
+  let span20A: Bool = trail20032
+  let span20B: Bool = prism20B
+  let span20C: Bool = prism20D
+  if span20A {
+    if span20B {
+      if span20C {
+        if prism20G {
+          if prism20A {
+            if prism20B {
+              if prism20C {
+                return "parser_parse_type_ref_with_value_state_built"
+              }
+              return "wave44_prism_route_missing"
+            }
+            return "wave44_prism_policy_missing"
+          }
+          return "wave44_prism_state_missing"
+        }
+        return "wave44_prism_shape_missing"
+      }
+      return "wave44_prism_source_missing"
+    }
+    return "wave44_prism_seal_missing"
+  }
+  return "wave44_prism_proof_missing"
+}

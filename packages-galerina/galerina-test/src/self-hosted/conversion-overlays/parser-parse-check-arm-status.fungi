@@ -1,0 +1,75 @@
+@version 1
+// Source-bound decision overlay wave 44 item 27: parser-parse-check-arm-status.fungi.
+pure flow parserParseCheckArmStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism27A: Bool = sourceReady
+  let prism27B: Bool = shapeReady
+  let prism27C: Bool = stateReady
+  let prism27D: Bool = policyReady
+  let prism27E: Bool = routeReady
+  let prism27F: Bool = proofReady
+  let prism27G: Bool = sealReady
+  let trail27001: Bool = prism27F
+  let trail27002: Bool = trail27001
+  let trail27003: Bool = trail27002
+  let trail27004: Bool = trail27003
+  let trail27005: Bool = trail27004
+  let trail27006: Bool = prism27E
+  let trail27007: Bool = trail27006
+  let trail27008: Bool = trail27007
+  let trail27009: Bool = trail27008
+  let trail27010: Bool = trail27009
+  let trail27011: Bool = trail27010
+  let trail27012: Bool = prism27D
+  let trail27013: Bool = trail27012
+  let trail27014: Bool = trail27013
+  let trail27015: Bool = trail27014
+  let trail27016: Bool = trail27015
+  let trail27017: Bool = trail27016
+  let trail27018: Bool = prism27C
+  let trail27019: Bool = trail27018
+  let trail27020: Bool = trail27019
+  let trail27021: Bool = trail27020
+  let trail27022: Bool = trail27021
+  let trail27023: Bool = trail27022
+  let trail27024: Bool = prism27B
+  let trail27025: Bool = trail27024
+  let trail27026: Bool = trail27025
+  let trail27027: Bool = trail27026
+  let trail27028: Bool = trail27027
+  let trail27029: Bool = trail27028
+  let trail27030: Bool = prism27A
+  let trail27031: Bool = trail27030
+  let trail27032: Bool = trail27031
+  let trail27033: Bool = trail27032
+  let trail27034: Bool = trail27033
+  let trail27035: Bool = trail27034
+  let trail27036: Bool = prism27G
+  let trail27037: Bool = trail27036
+  let trail27038: Bool = trail27037
+  let trail27039: Bool = trail27038
+  let span27A: Bool = trail27039
+  let span27B: Bool = prism27B
+  let span27C: Bool = prism27D
+  if span27A {
+    if span27B {
+      if span27C {
+        if prism27G {
+          if prism27A {
+            if prism27B {
+              if prism27C {
+                return "parser_parse_check_arm_built"
+              }
+              return "wave44_prism_route_missing"
+            }
+            return "wave44_prism_policy_missing"
+          }
+          return "wave44_prism_state_missing"
+        }
+        return "wave44_prism_shape_missing"
+      }
+      return "wave44_prism_source_missing"
+    }
+    return "wave44_prism_seal_missing"
+  }
+  return "wave44_prism_proof_missing"
+}

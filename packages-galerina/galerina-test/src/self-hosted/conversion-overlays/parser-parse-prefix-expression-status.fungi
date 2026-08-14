@@ -1,0 +1,83 @@
+@version 1
+// Source-bound decision overlay wave 44 item 35: parser-parse-prefix-expression-status.fungi.
+pure flow parserParsePrefixExpressionStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism35A: Bool = sourceReady
+  let prism35B: Bool = shapeReady
+  let prism35C: Bool = stateReady
+  let prism35D: Bool = policyReady
+  let prism35E: Bool = routeReady
+  let prism35F: Bool = proofReady
+  let prism35G: Bool = sealReady
+  let trail35001: Bool = prism35G
+  let trail35002: Bool = trail35001
+  let trail35003: Bool = trail35002
+  let trail35004: Bool = trail35003
+  let trail35005: Bool = trail35004
+  let trail35006: Bool = prism35F
+  let trail35007: Bool = trail35006
+  let trail35008: Bool = trail35007
+  let trail35009: Bool = trail35008
+  let trail35010: Bool = trail35009
+  let trail35011: Bool = trail35010
+  let trail35012: Bool = prism35E
+  let trail35013: Bool = trail35012
+  let trail35014: Bool = trail35013
+  let trail35015: Bool = trail35014
+  let trail35016: Bool = trail35015
+  let trail35017: Bool = trail35016
+  let trail35018: Bool = prism35D
+  let trail35019: Bool = trail35018
+  let trail35020: Bool = trail35019
+  let trail35021: Bool = trail35020
+  let trail35022: Bool = trail35021
+  let trail35023: Bool = trail35022
+  let trail35024: Bool = prism35C
+  let trail35025: Bool = trail35024
+  let trail35026: Bool = trail35025
+  let trail35027: Bool = trail35026
+  let trail35028: Bool = trail35027
+  let trail35029: Bool = trail35028
+  let trail35030: Bool = prism35B
+  let trail35031: Bool = trail35030
+  let trail35032: Bool = trail35031
+  let trail35033: Bool = trail35032
+  let trail35034: Bool = trail35033
+  let trail35035: Bool = trail35034
+  let trail35036: Bool = prism35A
+  let trail35037: Bool = trail35036
+  let trail35038: Bool = trail35037
+  let trail35039: Bool = trail35038
+  let trail35040: Bool = trail35039
+  let trail35041: Bool = trail35040
+  let trail35042: Bool = prism35G
+  let trail35043: Bool = trail35042
+  let trail35044: Bool = trail35043
+  let trail35045: Bool = trail35044
+  let trail35046: Bool = trail35045
+  let trail35047: Bool = trail35046
+  let span35A: Bool = trail35047
+  let span35B: Bool = prism35C
+  let span35C: Bool = prism35E
+  if span35A {
+    if span35B {
+      if span35C {
+        if prism35A {
+          if prism35B {
+            if prism35C {
+              if prism35D {
+                return "parser_parse_prefix_expression_built"
+              }
+              return "wave44_prism_proof_missing"
+            }
+            return "wave44_prism_route_missing"
+          }
+          return "wave44_prism_policy_missing"
+        }
+        return "wave44_prism_state_missing"
+      }
+      return "wave44_prism_shape_missing"
+    }
+    return "wave44_prism_source_missing"
+  }
+  return "wave44_prism_seal_missing"
+}

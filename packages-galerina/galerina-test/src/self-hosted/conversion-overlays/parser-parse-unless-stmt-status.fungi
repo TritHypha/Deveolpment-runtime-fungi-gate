@@ -1,0 +1,72 @@
+@version 1
+// Source-bound decision overlay wave 44 item 24: parser-parse-unless-stmt-status.fungi.
+pure flow parserParseUnlessStmtStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism24A: Bool = sourceReady
+  let prism24B: Bool = shapeReady
+  let prism24C: Bool = stateReady
+  let prism24D: Bool = policyReady
+  let prism24E: Bool = routeReady
+  let prism24F: Bool = proofReady
+  let prism24G: Bool = sealReady
+  let trail24001: Bool = prism24C
+  let trail24002: Bool = trail24001
+  let trail24003: Bool = trail24002
+  let trail24004: Bool = trail24003
+  let trail24005: Bool = trail24004
+  let trail24006: Bool = prism24B
+  let trail24007: Bool = trail24006
+  let trail24008: Bool = trail24007
+  let trail24009: Bool = trail24008
+  let trail24010: Bool = trail24009
+  let trail24011: Bool = trail24010
+  let trail24012: Bool = prism24A
+  let trail24013: Bool = trail24012
+  let trail24014: Bool = trail24013
+  let trail24015: Bool = trail24014
+  let trail24016: Bool = trail24015
+  let trail24017: Bool = trail24016
+  let trail24018: Bool = prism24G
+  let trail24019: Bool = trail24018
+  let trail24020: Bool = trail24019
+  let trail24021: Bool = trail24020
+  let trail24022: Bool = trail24021
+  let trail24023: Bool = trail24022
+  let trail24024: Bool = prism24F
+  let trail24025: Bool = trail24024
+  let trail24026: Bool = trail24025
+  let trail24027: Bool = trail24026
+  let trail24028: Bool = trail24027
+  let trail24029: Bool = trail24028
+  let trail24030: Bool = prism24E
+  let trail24031: Bool = trail24030
+  let trail24032: Bool = trail24031
+  let trail24033: Bool = trail24032
+  let trail24034: Bool = trail24033
+  let trail24035: Bool = trail24034
+  let trail24036: Bool = prism24D
+  let span24A: Bool = trail24036
+  let span24B: Bool = prism24F
+  let span24C: Bool = prism24A
+  if span24A {
+    if span24B {
+      if span24C {
+        if prism24D {
+          if prism24E {
+            if prism24F {
+              if prism24G {
+                return "parser_parse_unless_stmt_built"
+              }
+              return "wave44_prism_shape_missing"
+            }
+            return "wave44_prism_source_missing"
+          }
+          return "wave44_prism_seal_missing"
+        }
+        return "wave44_prism_proof_missing"
+      }
+      return "wave44_prism_route_missing"
+    }
+    return "wave44_prism_policy_missing"
+  }
+  return "wave44_prism_state_missing"
+}

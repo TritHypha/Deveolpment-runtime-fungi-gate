@@ -1,0 +1,76 @@
+@version 1
+// Source-bound decision overlay wave 44 item 28: parser-parse-fault-stmt-status.fungi.
+pure flow parserParseFaultStmtStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism28A: Bool = sourceReady
+  let prism28B: Bool = shapeReady
+  let prism28C: Bool = stateReady
+  let prism28D: Bool = policyReady
+  let prism28E: Bool = routeReady
+  let prism28F: Bool = proofReady
+  let prism28G: Bool = sealReady
+  let trail28001: Bool = prism28G
+  let trail28002: Bool = trail28001
+  let trail28003: Bool = trail28002
+  let trail28004: Bool = trail28003
+  let trail28005: Bool = trail28004
+  let trail28006: Bool = prism28F
+  let trail28007: Bool = trail28006
+  let trail28008: Bool = trail28007
+  let trail28009: Bool = trail28008
+  let trail28010: Bool = trail28009
+  let trail28011: Bool = trail28010
+  let trail28012: Bool = prism28E
+  let trail28013: Bool = trail28012
+  let trail28014: Bool = trail28013
+  let trail28015: Bool = trail28014
+  let trail28016: Bool = trail28015
+  let trail28017: Bool = trail28016
+  let trail28018: Bool = prism28D
+  let trail28019: Bool = trail28018
+  let trail28020: Bool = trail28019
+  let trail28021: Bool = trail28020
+  let trail28022: Bool = trail28021
+  let trail28023: Bool = trail28022
+  let trail28024: Bool = prism28C
+  let trail28025: Bool = trail28024
+  let trail28026: Bool = trail28025
+  let trail28027: Bool = trail28026
+  let trail28028: Bool = trail28027
+  let trail28029: Bool = trail28028
+  let trail28030: Bool = prism28B
+  let trail28031: Bool = trail28030
+  let trail28032: Bool = trail28031
+  let trail28033: Bool = trail28032
+  let trail28034: Bool = trail28033
+  let trail28035: Bool = trail28034
+  let trail28036: Bool = prism28A
+  let trail28037: Bool = trail28036
+  let trail28038: Bool = trail28037
+  let trail28039: Bool = trail28038
+  let trail28040: Bool = trail28039
+  let span28A: Bool = trail28040
+  let span28B: Bool = prism28C
+  let span28C: Bool = prism28E
+  if span28A {
+    if span28B {
+      if span28C {
+        if prism28A {
+          if prism28B {
+            if prism28C {
+              if prism28D {
+                return "parser_parse_fault_stmt_built"
+              }
+              return "wave44_prism_proof_missing"
+            }
+            return "wave44_prism_route_missing"
+          }
+          return "wave44_prism_policy_missing"
+        }
+        return "wave44_prism_state_missing"
+      }
+      return "wave44_prism_shape_missing"
+    }
+    return "wave44_prism_source_missing"
+  }
+  return "wave44_prism_seal_missing"
+}

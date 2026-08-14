@@ -1,0 +1,49 @@
+@version 1
+// Source-bound decision overlay wave 44 item 01: parser-append-record-field-status.fungi.
+pure flow parserAppendRecordFieldStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let prism01A: Bool = sourceReady
+  let prism01B: Bool = shapeReady
+  let prism01C: Bool = stateReady
+  let prism01D: Bool = policyReady
+  let prism01E: Bool = routeReady
+  let prism01F: Bool = proofReady
+  let prism01G: Bool = sealReady
+  let trail01001: Bool = prism01A
+  let trail01002: Bool = trail01001
+  let trail01003: Bool = trail01002
+  let trail01004: Bool = trail01003
+  let trail01005: Bool = trail01004
+  let trail01006: Bool = prism01G
+  let trail01007: Bool = trail01006
+  let trail01008: Bool = trail01007
+  let trail01009: Bool = trail01008
+  let trail01010: Bool = trail01009
+  let trail01011: Bool = trail01010
+  let trail01012: Bool = prism01F
+  let trail01013: Bool = trail01012
+  let span01A: Bool = trail01013
+  let span01B: Bool = prism01D
+  let span01C: Bool = prism01F
+  if span01A {
+    if span01B {
+      if span01C {
+        if prism01B {
+          if prism01C {
+            if prism01D {
+              if prism01E {
+                return "parser_append_record_field_built"
+              }
+              return "wave44_prism_seal_missing"
+            }
+            return "wave44_prism_proof_missing"
+          }
+          return "wave44_prism_route_missing"
+        }
+        return "wave44_prism_policy_missing"
+      }
+      return "wave44_prism_state_missing"
+    }
+    return "wave44_prism_shape_missing"
+  }
+  return "wave44_prism_source_missing"
+}
