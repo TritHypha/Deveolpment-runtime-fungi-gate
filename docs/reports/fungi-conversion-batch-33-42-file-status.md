@@ -1411,8 +1411,12 @@ the bounded close matrix also passes **19/19**, with queue **1,490/1,490**,
 package **100/201**, project **5/5**, graph **10,714 nodes / 10,564 edges / zero
 violations**, semantic **3/3** with **977** tests, source inventory **149**, code
 index **975**, receipts **887/887**, Golden **11/11**, canonical **7/7**, and
-both leak audits at zero. The dual-index exact-head refresh remains pending;
-repository-wide closure stays `UNKNOWN`.
+both leak audits at zero. Initial dual-index exact-head proof completes at clean
+head `66b42b544977dfbd23b29aa261584239e4c7a9e2`: Myco reports **6,563 files /
+84,218 terms** with bounded `NoisyLane` evidence; codebase-memory reports
+**61,370/61,370 nodes / 152,391/152,391 edges**, the exact indexed HEAD and one
+untruncated `NoisyLane` class. The final post-record repeat is retained in the
+handoff; repository-wide closure stays `UNKNOWN`.
 
 ## Slices 848-897 - Tower precision, quorum and registry
 

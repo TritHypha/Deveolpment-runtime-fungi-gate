@@ -29,8 +29,11 @@ counts or open items that a newer section explicitly supersedes.
   semantic **3/3** with **977** tests, source inventory **149**, code index
   **975**, receipts **887/887**, Golden **11/11**, canonical **7/7**, and both
   leak audits at zero.
-- [ ] Refresh Myco and force an exact full code-graph rebuild at the final
-  committed head with bounded `NoisyLane` readback.
+- [x] Refresh Myco to **6,563 files / 84,218 terms** with bounded `NoisyLane`
+  readback and force a full code-graph rebuild at clean head `66b42b54`:
+  **61,370/61,370 nodes / 152,391/152,391 edges**, exact indexed HEAD and one
+  untruncated `NoisyLane` class. Retain the exact-head repeat after the final
+  record/owner commit; repository-wide closure remains `UNKNOWN`.
 
 ### Slices 848-897 Tower precision, quorum and registry - 2026-08-14
 

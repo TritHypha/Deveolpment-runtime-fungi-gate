@@ -185,8 +185,8 @@ superseded scopes or retirement credit.
 - [x] Run the historical bounded 19-check close matrix with no failure or
   SKIPPED member.
 - [x] Commit owner and dependent graph layers separately.
-- [ ] Refresh Myco and require a bounded exact `NoisyLane` query.
-- [ ] Refresh codebase-memory with a forced full rebuild and require exact
+- [x] Refresh Myco and require a bounded exact `NoisyLane` query.
+- [x] Refresh codebase-memory with a forced full rebuild and require exact
   expected node/edge counts, exact `indexed_head_sha` and one untruncated
   Slice-947 symbol. Repeat at the final record commit.
 

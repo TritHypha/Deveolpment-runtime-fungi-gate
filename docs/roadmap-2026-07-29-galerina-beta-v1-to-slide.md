@@ -3901,7 +3901,11 @@ pass **19/19**. Current bounded outputs are queue **1,490/1,490**, package
 **100/201**, project **5/5**, graph **10,714 nodes / 10,564 edges / zero
 violations**, semantic **3/3**, source inventory **149**, code index **975**,
 receipts **887/887**, Golden **11/11**, canonical **7/7**, and both leak audits
-at zero. The dual-index exact-head refresh remains pending.
+at zero. Initial dual-index proof completes at clean head `66b42b54`: Myco is
+**6,563 files / 84,218 terms** with bounded `NoisyLane` evidence, while
+codebase-memory is **61,370/61,370 nodes / 152,391/152,391 edges** at the exact
+indexed HEAD with an untruncated class readback. The final post-record repeat is
+retained in the handoff; repository-wide closure remains `UNKNOWN`.
 No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK twin,
 consumer switch, supersession or retirement is claimed. Repository-wide
 closure remains `UNKNOWN`.
