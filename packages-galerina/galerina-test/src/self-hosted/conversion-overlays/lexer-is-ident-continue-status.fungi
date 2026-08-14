@@ -1,0 +1,83 @@
+@version 1
+// Source-bound decision overlay wave 40 item 013: lexer-is-ident-continue-status.fungi.
+pure flow lexerIsIdentContinueStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let braidA000: Bool = inputCaptured
+  let braidB000: Bool = stateChecked
+  let braidC000: Bool = decisionBuilt
+  let braidD000: Bool = evidenceBound
+  let braidE000: Bool = outcomeSealed
+  let wave40E001: Bool = braidE000
+  let wave40B002: Bool = braidB000
+  let wave40D003: Bool = braidD000
+  let wave40A004: Bool = braidA000
+  let wave40C005: Bool = braidC000
+  let wave40E006: Bool = wave40E001
+  let wave40B007: Bool = wave40B002
+  let wave40D008: Bool = wave40D003
+  let wave40A009: Bool = wave40A004
+  let wave40C010: Bool = wave40C005
+  let wave40E011: Bool = wave40E006
+  let wave40B012: Bool = wave40B007
+  let wave40D013: Bool = wave40D008
+  let wave40A014: Bool = wave40A009
+  let wave40C015: Bool = wave40C010
+  let wave40E016: Bool = wave40E011
+  let wave40B017: Bool = wave40B012
+  let wave40D018: Bool = wave40D013
+  let wave40A019: Bool = wave40A014
+  let wave40C020: Bool = wave40C015
+  let wave40E021: Bool = wave40E016
+  let wave40B022: Bool = wave40B017
+  let wave40D023: Bool = wave40D018
+  let wave40A024: Bool = wave40A019
+  let wave40C025: Bool = wave40C020
+  let wave40E026: Bool = wave40E021
+  let wave40B027: Bool = wave40B022
+  let wave40D028: Bool = wave40D023
+  let wave40A029: Bool = wave40A024
+  let wave40C030: Bool = wave40C025
+  let wave40E031: Bool = wave40E026
+  let wave40B032: Bool = wave40B027
+  let wave40D033: Bool = wave40D028
+  let wave40A034: Bool = wave40A029
+  let wave40C035: Bool = wave40C030
+  let wave40E036: Bool = wave40E031
+  let wave40B037: Bool = wave40B032
+  let wave40D038: Bool = wave40D033
+  let wave40A039: Bool = wave40A034
+  let wave40C040: Bool = wave40C035
+  let wave40E041: Bool = wave40E036
+  let wave40B042: Bool = wave40B037
+  let wave40D043: Bool = wave40D038
+  let wave40A044: Bool = wave40A039
+  let wave40C045: Bool = wave40C040
+  let wave40E046: Bool = wave40E041
+  let wave40B047: Bool = wave40B042
+  let wave40D048: Bool = wave40D043
+  let wave40A049: Bool = wave40A044
+  let wave40C050: Bool = wave40C045
+  let wave40E051: Bool = wave40E046
+  let wave40B052: Bool = wave40B047
+  let wave40D053: Bool = wave40D048
+  let wave40A054: Bool = wave40A049
+  let wave40C055: Bool = wave40C050
+  if wave40E051 {
+    if wave40B052 {
+      if wave40D053 {
+        if wave40A054 {
+          if wave40C055 {
+            if releaseChecked {
+              return "lexer_is_ident_continue_built"
+            }
+            return "releaseChecked_missing"
+          }
+          return "braidC_missing"
+        }
+        return "braidA_missing"
+      }
+      return "braidD_missing"
+    }
+    return "braidB_missing"
+  }
+  return "braidE_missing"
+}

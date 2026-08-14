@@ -1,0 +1,75 @@
+@version 1
+// Source-bound decision overlay wave 40 item 005: leak-proof-test-witness-digest-status.fungi.
+pure flow leakProofTestWitnessDigestStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let braidA000: Bool = inputCaptured
+  let braidB000: Bool = stateChecked
+  let braidC000: Bool = decisionBuilt
+  let braidD000: Bool = evidenceBound
+  let braidE000: Bool = outcomeSealed
+  let wave40B001: Bool = braidB000
+  let wave40D002: Bool = braidD000
+  let wave40A003: Bool = braidA000
+  let wave40C004: Bool = braidC000
+  let wave40E005: Bool = braidE000
+  let wave40B006: Bool = wave40B001
+  let wave40D007: Bool = wave40D002
+  let wave40A008: Bool = wave40A003
+  let wave40C009: Bool = wave40C004
+  let wave40E010: Bool = wave40E005
+  let wave40B011: Bool = wave40B006
+  let wave40D012: Bool = wave40D007
+  let wave40A013: Bool = wave40A008
+  let wave40C014: Bool = wave40C009
+  let wave40E015: Bool = wave40E010
+  let wave40B016: Bool = wave40B011
+  let wave40D017: Bool = wave40D012
+  let wave40A018: Bool = wave40A013
+  let wave40C019: Bool = wave40C014
+  let wave40E020: Bool = wave40E015
+  let wave40B021: Bool = wave40B016
+  let wave40D022: Bool = wave40D017
+  let wave40A023: Bool = wave40A018
+  let wave40C024: Bool = wave40C019
+  let wave40E025: Bool = wave40E020
+  let wave40B026: Bool = wave40B021
+  let wave40D027: Bool = wave40D022
+  let wave40A028: Bool = wave40A023
+  let wave40C029: Bool = wave40C024
+  let wave40E030: Bool = wave40E025
+  let wave40B031: Bool = wave40B026
+  let wave40D032: Bool = wave40D027
+  let wave40A033: Bool = wave40A028
+  let wave40C034: Bool = wave40C029
+  let wave40E035: Bool = wave40E030
+  let wave40B036: Bool = wave40B031
+  let wave40D037: Bool = wave40D032
+  let wave40A038: Bool = wave40A033
+  let wave40C039: Bool = wave40C034
+  let wave40E040: Bool = wave40E035
+  let wave40B041: Bool = wave40B036
+  let wave40D042: Bool = wave40D037
+  let wave40A043: Bool = wave40A038
+  let wave40C044: Bool = wave40C039
+  let wave40E045: Bool = wave40E040
+  let wave40B046: Bool = wave40B041
+  let wave40D047: Bool = wave40D042
+  if wave40E045 {
+    if wave40B046 {
+      if wave40D047 {
+        if wave40A043 {
+          if wave40C044 {
+            if releaseChecked {
+              return "leak_proof_test_witness_digest_built"
+            }
+            return "releaseChecked_missing"
+          }
+          return "braidC_missing"
+        }
+        return "braidA_missing"
+      }
+      return "braidD_missing"
+    }
+    return "braidB_missing"
+  }
+  return "braidE_missing"
+}

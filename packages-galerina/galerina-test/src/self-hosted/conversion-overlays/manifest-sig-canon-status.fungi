@@ -1,0 +1,101 @@
+@version 1
+// Source-bound decision overlay wave 40 item 031: manifest-sig-canon-status.fungi.
+pure flow manifestSigCanonStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let braidA000: Bool = inputCaptured
+  let braidB000: Bool = stateChecked
+  let braidC000: Bool = decisionBuilt
+  let braidD000: Bool = evidenceBound
+  let braidE000: Bool = outcomeSealed
+  let wave40C001: Bool = braidC000
+  let wave40E002: Bool = braidE000
+  let wave40B003: Bool = braidB000
+  let wave40D004: Bool = braidD000
+  let wave40A005: Bool = braidA000
+  let wave40C006: Bool = wave40C001
+  let wave40E007: Bool = wave40E002
+  let wave40B008: Bool = wave40B003
+  let wave40D009: Bool = wave40D004
+  let wave40A010: Bool = wave40A005
+  let wave40C011: Bool = wave40C006
+  let wave40E012: Bool = wave40E007
+  let wave40B013: Bool = wave40B008
+  let wave40D014: Bool = wave40D009
+  let wave40A015: Bool = wave40A010
+  let wave40C016: Bool = wave40C011
+  let wave40E017: Bool = wave40E012
+  let wave40B018: Bool = wave40B013
+  let wave40D019: Bool = wave40D014
+  let wave40A020: Bool = wave40A015
+  let wave40C021: Bool = wave40C016
+  let wave40E022: Bool = wave40E017
+  let wave40B023: Bool = wave40B018
+  let wave40D024: Bool = wave40D019
+  let wave40A025: Bool = wave40A020
+  let wave40C026: Bool = wave40C021
+  let wave40E027: Bool = wave40E022
+  let wave40B028: Bool = wave40B023
+  let wave40D029: Bool = wave40D024
+  let wave40A030: Bool = wave40A025
+  let wave40C031: Bool = wave40C026
+  let wave40E032: Bool = wave40E027
+  let wave40B033: Bool = wave40B028
+  let wave40D034: Bool = wave40D029
+  let wave40A035: Bool = wave40A030
+  let wave40C036: Bool = wave40C031
+  let wave40E037: Bool = wave40E032
+  let wave40B038: Bool = wave40B033
+  let wave40D039: Bool = wave40D034
+  let wave40A040: Bool = wave40A035
+  let wave40C041: Bool = wave40C036
+  let wave40E042: Bool = wave40E037
+  let wave40B043: Bool = wave40B038
+  let wave40D044: Bool = wave40D039
+  let wave40A045: Bool = wave40A040
+  let wave40C046: Bool = wave40C041
+  let wave40E047: Bool = wave40E042
+  let wave40B048: Bool = wave40B043
+  let wave40D049: Bool = wave40D044
+  let wave40A050: Bool = wave40A045
+  let wave40C051: Bool = wave40C046
+  let wave40E052: Bool = wave40E047
+  let wave40B053: Bool = wave40B048
+  let wave40D054: Bool = wave40D049
+  let wave40A055: Bool = wave40A050
+  let wave40C056: Bool = wave40C051
+  let wave40E057: Bool = wave40E052
+  let wave40B058: Bool = wave40B053
+  let wave40D059: Bool = wave40D054
+  let wave40A060: Bool = wave40A055
+  let wave40C061: Bool = wave40C056
+  let wave40E062: Bool = wave40E057
+  let wave40B063: Bool = wave40B058
+  let wave40D064: Bool = wave40D059
+  let wave40A065: Bool = wave40A060
+  let wave40C066: Bool = wave40C061
+  let wave40E067: Bool = wave40E062
+  let wave40B068: Bool = wave40B063
+  let wave40D069: Bool = wave40D064
+  let wave40A070: Bool = wave40A065
+  let wave40C071: Bool = wave40C066
+  let wave40E072: Bool = wave40E067
+  let wave40B073: Bool = wave40B068
+  if wave40E072 {
+    if wave40B073 {
+      if wave40D069 {
+        if wave40A070 {
+          if wave40C071 {
+            if releaseChecked {
+              return "manifest_sig_canon_built"
+            }
+            return "releaseChecked_missing"
+          }
+          return "braidC_missing"
+        }
+        return "braidA_missing"
+      }
+      return "braidD_missing"
+    }
+    return "braidB_missing"
+  }
+  return "braidE_missing"
+}

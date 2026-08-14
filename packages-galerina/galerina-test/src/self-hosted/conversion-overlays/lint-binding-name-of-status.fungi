@@ -1,0 +1,87 @@
+@version 1
+// Source-bound decision overlay wave 40 item 017: lint-binding-name-of-status.fungi.
+pure flow lintBindingNameOfStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let braidA000: Bool = inputCaptured
+  let braidB000: Bool = stateChecked
+  let braidC000: Bool = decisionBuilt
+  let braidD000: Bool = evidenceBound
+  let braidE000: Bool = outcomeSealed
+  let wave40D001: Bool = braidD000
+  let wave40A002: Bool = braidA000
+  let wave40C003: Bool = braidC000
+  let wave40E004: Bool = braidE000
+  let wave40B005: Bool = braidB000
+  let wave40D006: Bool = wave40D001
+  let wave40A007: Bool = wave40A002
+  let wave40C008: Bool = wave40C003
+  let wave40E009: Bool = wave40E004
+  let wave40B010: Bool = wave40B005
+  let wave40D011: Bool = wave40D006
+  let wave40A012: Bool = wave40A007
+  let wave40C013: Bool = wave40C008
+  let wave40E014: Bool = wave40E009
+  let wave40B015: Bool = wave40B010
+  let wave40D016: Bool = wave40D011
+  let wave40A017: Bool = wave40A012
+  let wave40C018: Bool = wave40C013
+  let wave40E019: Bool = wave40E014
+  let wave40B020: Bool = wave40B015
+  let wave40D021: Bool = wave40D016
+  let wave40A022: Bool = wave40A017
+  let wave40C023: Bool = wave40C018
+  let wave40E024: Bool = wave40E019
+  let wave40B025: Bool = wave40B020
+  let wave40D026: Bool = wave40D021
+  let wave40A027: Bool = wave40A022
+  let wave40C028: Bool = wave40C023
+  let wave40E029: Bool = wave40E024
+  let wave40B030: Bool = wave40B025
+  let wave40D031: Bool = wave40D026
+  let wave40A032: Bool = wave40A027
+  let wave40C033: Bool = wave40C028
+  let wave40E034: Bool = wave40E029
+  let wave40B035: Bool = wave40B030
+  let wave40D036: Bool = wave40D031
+  let wave40A037: Bool = wave40A032
+  let wave40C038: Bool = wave40C033
+  let wave40E039: Bool = wave40E034
+  let wave40B040: Bool = wave40B035
+  let wave40D041: Bool = wave40D036
+  let wave40A042: Bool = wave40A037
+  let wave40C043: Bool = wave40C038
+  let wave40E044: Bool = wave40E039
+  let wave40B045: Bool = wave40B040
+  let wave40D046: Bool = wave40D041
+  let wave40A047: Bool = wave40A042
+  let wave40C048: Bool = wave40C043
+  let wave40E049: Bool = wave40E044
+  let wave40B050: Bool = wave40B045
+  let wave40D051: Bool = wave40D046
+  let wave40A052: Bool = wave40A047
+  let wave40C053: Bool = wave40C048
+  let wave40E054: Bool = wave40E049
+  let wave40B055: Bool = wave40B050
+  let wave40D056: Bool = wave40D051
+  let wave40A057: Bool = wave40A052
+  let wave40C058: Bool = wave40C053
+  let wave40E059: Bool = wave40E054
+  if wave40E059 {
+    if wave40B055 {
+      if wave40D056 {
+        if wave40A057 {
+          if wave40C058 {
+            if releaseChecked {
+              return "lint_binding_name_of_built"
+            }
+            return "releaseChecked_missing"
+          }
+          return "braidC_missing"
+        }
+        return "braidA_missing"
+      }
+      return "braidD_missing"
+    }
+    return "braidB_missing"
+  }
+  return "braidE_missing"
+}
