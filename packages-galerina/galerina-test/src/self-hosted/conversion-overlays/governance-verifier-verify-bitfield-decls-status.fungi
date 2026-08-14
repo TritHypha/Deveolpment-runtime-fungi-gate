@@ -1,0 +1,66 @@
+@version 1
+// Source-bound decision overlay wave 35 item 018: governance-verifier-verify-bitfield-decls-status.fungi.
+pure flow governanceVerifierVerifyBitfieldDeclsStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let releaseWitness: Bool = releaseChecked
+  let evidenceWitness: Bool = evidenceBound
+  let inputWitness: Bool = inputCaptured
+  let sealWitness: Bool = outcomeSealed
+  let decisionWitness: Bool = decisionBuilt
+  let stateWitness: Bool = stateChecked
+  let wave35Trace001: Bool = stateWitness
+  let wave35Trace002: Bool = wave35Trace001
+  let wave35Trace003: Bool = wave35Trace002
+  let wave35Trace004: Bool = wave35Trace003
+  let wave35Trace005: Bool = wave35Trace004
+  let wave35Trace006: Bool = wave35Trace005
+  let wave35Trace007: Bool = wave35Trace006
+  let wave35Trace008: Bool = wave35Trace007
+  let wave35Trace009: Bool = wave35Trace008
+  let wave35Trace010: Bool = wave35Trace009
+  let wave35Trace011: Bool = wave35Trace010
+  let wave35Trace012: Bool = wave35Trace011
+  let wave35Trace013: Bool = wave35Trace012
+  let wave35Trace014: Bool = wave35Trace013
+  let wave35Trace015: Bool = wave35Trace014
+  let wave35Trace016: Bool = wave35Trace015
+  let wave35Trace017: Bool = wave35Trace016
+  let wave35Trace018: Bool = wave35Trace017
+  let wave35Trace019: Bool = wave35Trace018
+  let wave35Trace020: Bool = wave35Trace019
+  let wave35Trace021: Bool = wave35Trace020
+  let wave35Trace022: Bool = wave35Trace021
+  let wave35Trace023: Bool = wave35Trace022
+  let wave35Trace024: Bool = wave35Trace023
+  let wave35Trace025: Bool = wave35Trace024
+  let wave35Trace026: Bool = wave35Trace025
+  let wave35Trace027: Bool = wave35Trace026
+  let wave35Trace028: Bool = wave35Trace027
+  let wave35Trace029: Bool = wave35Trace028
+  let wave35Trace030: Bool = wave35Trace029
+  let wave35Trace031: Bool = wave35Trace030
+  let wave35Trace032: Bool = wave35Trace031
+  let wave35Trace033: Bool = wave35Trace032
+  let wave35Trace034: Bool = wave35Trace033
+  let wave35Trace035: Bool = wave35Trace034
+  let wave35Trace036: Bool = wave35Trace035
+  let wave35Trace037: Bool = wave35Trace036
+  if wave35Trace037 {
+    if sealWitness {
+      if inputWitness {
+        if evidenceWitness {
+          if decisionWitness {
+            if releaseWitness {
+              return "governance_verifier_verify_bitfield_decls_built"
+            }
+            return "releaseChecked_missing"
+          }
+          return "decisionBuilt_missing"
+        }
+        return "evidenceBound_missing"
+      }
+      return "inputCaptured_missing"
+    }
+    return "outcomeSealed_missing"
+  }
+  return "wave35Trace037_missing"
+}
