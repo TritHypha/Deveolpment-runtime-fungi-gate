@@ -177,11 +177,13 @@ zero superseded scopes or retirement credit.
 **Files:**
 - Modify only outputs named by `governance/tooling-policy.json` publishers.
 
-- [ ] Run every registered publisher and its exact check to a fixed point,
-  followed by `node scripts/audit-generator-contract.mjs --tier phase-close`.
-- [ ] Run the historical bounded 19-check close matrix with no failure or
-  SKIPPED member.
-- [ ] Commit owner and dependent graph layers separately.
+- [x] Run every registered publisher and its exact check to a fixed point,
+  followed by `node scripts/audit-generator-contract.mjs --tier phase-close`;
+  **19/19** pass.
+- [x] Run the historical bounded 19-check close matrix with no failure or
+  SKIPPED member; **19/19** pass.
+- [x] Commit owner and dependent graph layers separately at `c3108109`,
+  `cd0e4c6` and converged roadmap layer `69de8822`.
 - [ ] Refresh Myco and require a bounded exact `RegistryPublicVerifier` query.
 - [ ] Refresh codebase-memory and require exact expected node/edge counts,
   exact `indexed_head_sha` and one untruncated Slice-897 symbol.

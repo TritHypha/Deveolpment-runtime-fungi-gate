@@ -3895,8 +3895,12 @@ or retirement exists. The 50 receipts and common evidence manifest are
 authored; fresh Tower typecheck, **515/515** package tests and **837/837**
 governed receipt audit pass. Three independent bounded reviews pass after
 receipt-local parity corrections, and authored evidence is committed separately
-at `1993f4f9`. Owner publication and dual-index closure remain pending.
-Repository-wide closure remains `UNKNOWN`.
+at `1993f4f9`. All 19 registered owners and their hermetic contract pass; the
+bounded close matrix passes **19/19**, including graph integrity at **10,663
+nodes / 10,513 edges / zero violations**, **9,612** canonical tests,
+**837/837** receipt audit and clean leak audits. Final closure provenance and
+exact-head dual-index proof remain pending. Repository-wide closure remains
+`UNKNOWN`.
 
 ## Fungi conversion checkpoint planned through Slice 847 - 2026-08-14
 

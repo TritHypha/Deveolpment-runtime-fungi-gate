@@ -20,8 +20,14 @@ counts or open items that a newer section explicitly supersedes.
   tightening live-table freeze/copy authority, JavaScript `null` to Fungi
   `Option` mapping, and arbitrary signature-String parity.
 - [x] Commit authored evidence separately at `1993f4f9`.
-- [ ] Publish registered owners, run the bounded close matrix and refresh both
-  indexes.
+- [x] Publish all 19 registered owners to fixed point in separate layers
+  (`c3108109`, `cd0e4c6`, `69de8822`) and pass the hermetic owner contract
+  **19/19**.
+- [x] Pass the bounded close matrix **19/19**: graph integrity is **10,663
+  nodes / 10,513 edges / zero violations**, canonical test counts are **9,612**,
+  receipt audit is **837/837**, and both leak audits are clean.
+- [ ] Commit the final closure-provenance record and refresh both indexes at its
+  exact committed build point.
 
 ### Slices 798-847 Tower partial return, photonic, plugins and precision - 2026-08-14
 

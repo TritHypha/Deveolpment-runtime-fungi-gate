@@ -1402,9 +1402,15 @@ typecheck, **515/515** package tests and **837/837** governed receipt-shape
 checks with 29 frozen legacy reports. Three independent bounded reviews pass
 after tightening live-table freeze/copy authority, JavaScript `null` to Fungi
 `Option` mapping, and arbitrary signature-String parity. Authored evidence is
-committed separately at `1993f4f9`. These checks remain regression and
-receipt-shape evidence only; owner publication and dual-index closure remain
-pending. Repository-wide closure remains `UNKNOWN`.
+committed separately at `1993f4f9`. All 19 registered owners pass their exact
+checks and the hermetic generator contract **19/19**, with tracked owner layers
+at `c3108109`, `cd0e4c6` and converged roadmap layer `69de8822`. The bounded
+close matrix passes **19/19**: graph integrity is **10,663 nodes / 10,513 edges /
+zero violations**, canonical test counts are **9,612**, receipt audit is
+**837/837**, and both leak audits are clean. These checks remain regression,
+receipt-shape and repository-hygiene evidence only; the final closure-provenance
+record and exact-head dual-index proof remain pending. Repository-wide closure
+remains `UNKNOWN`.
 
 ## Slices 798-847 - Tower partial return, photonic, plugins and precision
 
