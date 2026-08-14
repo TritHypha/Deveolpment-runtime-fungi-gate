@@ -8,11 +8,22 @@
   "packageGraph": {
     "loadedAssets": [
       "src/self-hosted/authorization-boundary.fungi",
+      "src/self-hosted/challenge-context.fungi",
+      "src/self-hosted/demo-count.fungi",
       "src/self-hosted/effective-verdict.fungi",
       "src/self-hosted/governance-decisions.fungi",
+      "src/self-hosted/gov-3vl-diagnostic.fungi",
       "src/self-hosted/inference-governance.fungi",
+      "src/self-hosted/max-container-fields.fungi",
+      "src/self-hosted/max-input-bytes.fungi",
+      "src/self-hosted/max-input-depth.fungi",
+      "src/self-hosted/max-input-nodes.fungi",
+      "src/self-hosted/photonic-reprogram-cap.fungi",
       "src/self-hosted/pq-admission-policy.fungi",
+      "src/self-hosted/snapshot-key-context.fungi",
+      "src/self-hosted/storage-admit-cap.fungi",
       "src/self-hosted/transport-fsm.fungi",
+      "src/self-hosted/transition-context.fungi",
       "src/self-hosted/verdict-or.fungi",
       "src/self-hosted/verdict-not.fungi",
       "src/trit-brand.type-guard.ts"

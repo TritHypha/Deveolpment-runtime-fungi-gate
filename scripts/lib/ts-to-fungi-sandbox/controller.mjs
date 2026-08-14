@@ -20,7 +20,7 @@ import {
   buildCompilerEvidence,
   buildPhysicalEvidence,
   findCorpusCollision,
-  loadTrackedFungiCorpus,
+  loadWorkingFungiCorpus,
 } from "./evidence.mjs";
 import { rehashSource, resolveSourceIdentity } from "./identity.mjs";
 import { appendOutcomeRecord, canonicalJson } from "./journal.mjs";
@@ -228,7 +228,7 @@ export async function runBatch({ root, project, manifest, out, auditOnly = false
   await mkdir(stagingPath);
   let published = false;
   try {
-    const corpus = [...await loadTrackedFungiCorpus(root)];
+    const corpus = [...await loadWorkingFungiCorpus(root)];
     const records = [];
     for (const request of admitted.requests) records.push(await processRequest({ root: resolve(root), project, request, out: stagingPath, corpus }));
     const outcomes = Object.fromEntries(OUTCOMES.map((outcome) => [outcome, records.filter((record) => record.outcome === outcome).length]));
@@ -274,7 +274,7 @@ export async function verifyReceipt({ root, receipt }) {
       if (!contained(outputRoot, candidatePath)) return { valid: false, reason: "candidate path escapes output" };
       const source = await readFile(candidatePath, "utf8");
       if (sha256(Buffer.from(source, "utf8")) !== parsed.candidate.sha256) return { valid: false, reason: "candidate digest mismatch" };
-      const collision = findCorpusCollision(source, await loadTrackedFungiCorpus(root));
+      const collision = findCorpusCollision(source, await loadWorkingFungiCorpus(root));
       if (collision !== undefined) return { valid: false, reason: `${collision.kind} with ${collision.path}` };
       const expected = parsed.classifier?.value?.value;
       const compiler = await buildCompilerEvidence({ source, file: `sandbox/${parsed.candidate.flow}.fungi`, flow: parsed.candidate.flow, expected, parameterNames: parsed.candidate.parameterNames, vectors: parsed.candidate.vectors });

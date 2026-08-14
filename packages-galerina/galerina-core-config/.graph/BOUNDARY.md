@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 4 |
+| Files | 7 |
 | Internal edges | 3 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -40,6 +40,9 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/allow-localhost-env.fungi`
+- `src/self-hosted/allow-plaintext-egress-env.fungi`
+- `src/self-hosted/egress-allowed-hosts-env.fungi`
 - `src/self-hosted/environment-mode.fungi`
 
 ## Allowed Orphans

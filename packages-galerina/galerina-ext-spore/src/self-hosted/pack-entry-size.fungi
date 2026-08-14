@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-spore/src/history.ts#PACK_ENTRY_SIZE
+pure flow packEntrySize() -> Int {
+  return 56
+}

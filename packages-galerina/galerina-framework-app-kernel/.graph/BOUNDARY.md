@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 35 |
+| Files | 39 |
 | Internal edges | 54 |
 | External dependencies | 3 |
 | ├─ Node core | 1 |
@@ -44,6 +44,9 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/fuse-admission.fungi`
 - `src/self-hosted/kernel.fungi`
 - `src/self-hosted/literal-verification-success.fungi`
+- `src/self-hosted/max-exploration-budget.fungi`
+- `src/self-hosted/max-index-bytes.fungi`
+- `src/self-hosted/max-public-key-bytes.fungi`
 - `src/self-hosted/package-admission.fungi`
 - `src/self-hosted/registry-activation-terminal.fungi`
 - `src/self-hosted/registry-durability-admission.fungi`
@@ -51,6 +54,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/registry-durability-evidence.fungi`
 - `src/self-hosted/registry-durability-production-admission.fungi`
 - `src/self-hosted/registry-generation-forward-probe.fungi`
+- `src/self-hosted/registry-index-v2-context.fungi`
 - `src/self-hosted/registry-index.fungi`
 - `src/self-hosted/route-defaults.fungi`
 - `src/self-hosted/secret-gate.fungi`

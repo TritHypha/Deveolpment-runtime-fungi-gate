@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -17,6 +18,7 @@ import {
   buildCompilerEvidence,
   buildPhysicalEvidence,
   findCorpusCollision,
+  loadWorkingFungiCorpus,
 } from "../lib/ts-to-fungi-sandbox/evidence.mjs";
 import { discoverGraphProject, resolveSourceIdentity } from "../lib/ts-to-fungi-sandbox/identity.mjs";
 import { appendOutcomeRecord, canonicalJson } from "../lib/ts-to-fungi-sandbox/journal.mjs";
@@ -106,6 +108,7 @@ test("6 lowerer emits documented deterministic Fungi and cannot consume a forged
   const constant = classifyTypeScriptSource({ source: 'export const CONTEXT = "sandbox.v1";\n', file: "packages-galerina/test/src/value.ts", symbol: "CONTEXT" });
   const lowered = lowerClassifiedSymbol(constant);
   assert.match(lowered.source, /^@version 1\n/u);
+  assert.match(lowered.source, /TypeScript oracle: packages-galerina\/test\/src\/value\.ts#CONTEXT/u);
   assert.match(lowered.source, /pure flow context\(\) -> String/u);
   assert.match(lowered.source, /return "sandbox\.v1"/u);
   assert.deepEqual(lowered.parameterNames, []);
@@ -124,14 +127,21 @@ test("6 lowerer emits documented deterministic Fungi and cannot consume a forged
   assert.throws(() => lowerClassifiedSymbol({ ...constant }));
 });
 
-test("7 exact and identifier-alpha shadow checks reject twins while preserving literals", () => {
+test("7 exact and identifier-alpha shadow checks include tracked and untracked worktree Fungi", async () => withTemp("ts-fungi-corpus-", async (dir) => {
   const a = '@version 1\npure flow first(value: Bool) -> String { if value { return "one" } return "zero" }\n';
   const b = '@version 1\npure flow second(flag: Bool) -> String { if flag { return "one" } return "zero" }\n';
   const c = '@version 1\npure flow third(flag: Bool) -> String { if flag { return "two" } return "zero" }\n';
   assert.equal(alphaShadowFingerprint(a), alphaShadowFingerprint(b));
   assert.notEqual(alphaShadowFingerprint(a), alphaShadowFingerprint(c));
   assert.equal(findCorpusCollision(b, [{ path: "a.fungi", source: a }]).kind, "ALPHA_SHADOW");
-});
+  execFileSync("git", ["init", "--quiet"], { cwd: dir, windowsHide: true });
+  await mkdir(join(dir, "src"));
+  await writeFile(join(dir, "src", "tracked.fungi"), a);
+  execFileSync("git", ["add", "src/tracked.fungi"], { cwd: dir, windowsHide: true });
+  await writeFile(join(dir, "src", "untracked.fungi"), c);
+  const corpus = await loadWorkingFungiCorpus(dir);
+  assert.deepEqual(corpus.map((item) => item.path), ["src/tracked.fungi", "src/untracked.fungi"]);
+}));
 
 test("8 compiler evidence covers parser, types, effects, governance and deterministic GIR", async () => {
   const classified = classifyTypeScriptSource({

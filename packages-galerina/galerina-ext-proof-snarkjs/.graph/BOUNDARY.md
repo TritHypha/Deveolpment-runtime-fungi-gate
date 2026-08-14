@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 3 |
+| Files | 4 |
 | Internal edges | 3 |
 | External dependencies | 1 |
 | ├─ Node core | 1 |
@@ -40,7 +40,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/circuit-id.fungi`
 
 ## Allowed Orphans
 _none declared_

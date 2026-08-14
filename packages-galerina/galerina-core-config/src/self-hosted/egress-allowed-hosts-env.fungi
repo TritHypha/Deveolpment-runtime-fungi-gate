@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-config/src/posture.ts#EGRESS_ALLOWED_HOSTS_ENV
+pure flow egressAllowedHostsEnv() -> String {
+  return "GALERINA_EGRESS_ALLOWED_HOSTS"
+}

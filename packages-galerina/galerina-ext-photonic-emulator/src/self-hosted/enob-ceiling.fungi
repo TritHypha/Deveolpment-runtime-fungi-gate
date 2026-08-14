@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-photonic-emulator/src/emulator.ts#ENOB_CEILING
+pure flow enobCeiling() -> Int {
+  return 8
+}

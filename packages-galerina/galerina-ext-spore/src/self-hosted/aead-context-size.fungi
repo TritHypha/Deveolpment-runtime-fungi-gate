@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-spore/src/kemdem.ts#AEAD_CONTEXT_SIZE
+pure flow aeadContextSize() -> Int {
+  return 36
+}

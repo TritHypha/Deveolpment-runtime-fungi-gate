@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-index.ts#REGISTRY_INDEX_V2_CONTEXT
+pure flow registryIndexV2Context() -> String {
+  return "galerina.registry.index.sig.v2"
+}

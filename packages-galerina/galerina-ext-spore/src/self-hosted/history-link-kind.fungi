@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-spore/src/history.ts#HISTORY_LINK_KIND
+pure flow historyLinkKind() -> Int {
+  return 7
+}

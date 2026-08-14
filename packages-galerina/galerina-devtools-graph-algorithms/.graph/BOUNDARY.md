@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 16 |
+| Files | 17 |
 | Internal edges | 33 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -40,6 +40,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/binary-dispatch-size.fungi`
 - `src/self-hosted/boundary-crossing.fungi`
 
 ## Allowed Orphans

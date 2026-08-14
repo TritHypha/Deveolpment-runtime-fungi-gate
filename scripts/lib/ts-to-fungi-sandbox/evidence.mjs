@@ -104,9 +104,9 @@ export function findCorpusCollision(candidateSource, corpus) {
   return undefined;
 }
 
-export async function loadTrackedFungiCorpus(root) {
-  const { stdout } = await execFile("git", ["ls-files", "-z", "--", "*.fungi"], { cwd: root, encoding: "buffer", maxBuffer: 64 * 1024 * 1024, windowsHide: true });
-  const paths = stdout.toString("utf8").split("\0").filter(Boolean);
+export async function loadWorkingFungiCorpus(root) {
+  const { stdout } = await execFile("git", ["ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "*.fungi"], { cwd: root, encoding: "buffer", maxBuffer: 64 * 1024 * 1024, windowsHide: true });
+  const paths = stdout.toString("utf8").split("\0").filter(Boolean).sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
   const corpus = [];
   for (const path of paths) corpus.push(Object.freeze({ path, source: await readFile(resolve(root, ...path.split("/")), "utf8") }));
   return Object.freeze(corpus);

@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 6 |
+| Files | 8 |
 | Internal edges | 10 |
 | External dependencies | 3 |
 | ├─ Node core | 3 |
@@ -43,6 +43,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/cold-boot.fungi`
+- `src/self-hosted/restore-verdict-export-name.fungi`
+- `src/self-hosted/restore-verdict-package-identity.fungi`
 
 ## Allowed Orphans
 _none declared_

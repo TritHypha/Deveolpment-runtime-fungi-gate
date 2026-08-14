@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/manifest-generator.ts#MANIFEST_SCHEMA_VERSION
+pure flow manifestSchemaVersion() -> String {
+  return "fungi.manifest.v1"
+}

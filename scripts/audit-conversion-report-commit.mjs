@@ -115,6 +115,36 @@ function exactFingerprint(source) {
   return createHash("sha256").update(source, "utf8").digest("hex");
 }
 
+function protectQuotedLiterals(source) {
+  const literals = [];
+  let protectedSource = "";
+  for (let index = 0; index < source.length;) {
+    const quote = source[index];
+    if (quote !== '"' && quote !== "'") {
+      protectedSource += quote;
+      index += 1;
+      continue;
+    }
+    const start = index;
+    index += 1;
+    let escaped = false;
+    while (index < source.length) {
+      const character = source[index++];
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === quote) break;
+    }
+    const literalIndex = literals.push(source.slice(start, index)) - 1;
+    protectedSource += `\uE000${literalIndex}\uE001`;
+  }
+  return {
+    protectedSource,
+    restore(value) {
+      return value.replace(/\uE000(\d+)\uE001/gu, (_match, literalIndex) => literals[Number(literalIndex)]);
+    },
+  };
+}
+
 function canonicalizeShadowIdentifiers(source) {
   const identifiers = new Map();
   return source.replace(/\b[A-Za-z_][A-Za-z0-9_]*\b/gu, (identifier) => {
@@ -129,16 +159,15 @@ function canonicalizeShadowIdentifiers(source) {
 }
 
 function shadowFingerprint(source) {
-  const executable = canonicalizeShadowIdentifiers(source
+  const protectedLiterals = protectQuotedLiterals(source);
+  const executable = protectedLiterals.restore(canonicalizeShadowIdentifiers(protectedLiterals.protectedSource
     .replace(/^\uFEFF/u, "")
     .replace(/\/\*[\s\S]*?\*\//gu, " ")
     .replace(/^\s*\/\/.*$/gmu, " ")
     .replace(/\b((?:pure|secure)\s+)?flow\s+[A-Za-z_][A-Za-z0-9_]*/gu, (match) =>
       match.replace(/([A-Za-z_][A-Za-z0-9_]*)$/u, "FLOW"))
-    .replace(/"(?:\\.|[^"\\])*"/gu, '"STRING"')
-    .replace(/\b-?(?:0x[0-9a-fA-F_]+|\d[\d_]*)\b/gu, "NUMBER")
     .replace(/\s+/gu, " ")
-    .trim());
+    .trim()));
   if (executable.length === 0) throw new Error("Fungi duplication check found an empty executable source");
   return createHash("sha256").update(executable, "utf8").digest("hex");
 }
@@ -186,6 +215,18 @@ function worktreeAddedFungi(root) {
     .split("\0")
     .filter((path) => path.length > 0);
   return [...new Set([...changed, ...untracked].filter((path) => FUNGI.test(path)))].sort();
+}
+
+function worktreeChangedPaths(root) {
+  const changed = git(root, ["diff", "--name-only", "-z", "HEAD"], null)
+    .toString("utf8")
+    .split("\0")
+    .filter((path) => path.length > 0);
+  const untracked = git(root, ["ls-files", "--others", "--exclude-standard", "-z"], null)
+    .toString("utf8")
+    .split("\0")
+    .filter((path) => path.length > 0);
+  return [...new Set([...changed, ...untracked])].sort();
 }
 
 function auditWorktreeFungiUniqueness(root, addedFungi) {
@@ -257,6 +298,10 @@ function reportOnlyState(root, commit) {
 try {
   const { root, revision, allowFinalReportOnly, worktree } = parseArgs(process.argv.slice(2));
   if (worktree) {
+    const reports = worktreeChangedPaths(root).filter((path) => REPORT.test(path));
+    if (reports.length > 1) {
+      throw new Error(`worktree changes ${reports.length} conversion reports; maximum 1`);
+    }
     const fungi = worktreeAddedFungi(root);
     if (fungi.length < MINIMUM_FUNGI_FILES) {
       throw new Error(
@@ -276,6 +321,9 @@ try {
   const reports = changed.filter((path) => REPORT.test(path));
   const fungi = added.filter((path) => FUNGI.test(path));
   const short = commit.slice(0, 8);
+  if (reports.length > 1) {
+    throw new Error(`conversion commit ${short} added ${reports.length} conversion reports; maximum 1`);
+  }
   auditFungiUniqueness(root, commit, fungi);
 
   if (reports.length === 0) {

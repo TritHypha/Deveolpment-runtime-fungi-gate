@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/parser.ts#MAX_RECORD_FIELDS
+pure flow maxRecordFields() -> Int {
+  return 64
+}

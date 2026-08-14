@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-sentinel-memory/src/photonic-bridge-interface.ts#CHANNEL_STRIDE
+pure flow channelStride() -> Int {
+  return 2048
+}

@@ -8,6 +8,11 @@
   "bin": {
     "Galerina": "./dist/index.js"
   },
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/fungi-cli-redact-001.fungi"
+    ]
+  },
   "scripts": {
     "typecheck": "npm --prefix ../galerina-devtools-project-graph run build && npm --prefix ../galerina-devtools-graph-project run build && npm --prefix ../galerina-core-tasks run build && tsc --noEmit",
     "build": "npm --prefix ../galerina-devtools-project-graph run build && npm --prefix ../galerina-devtools-graph-project run build && npm --prefix ../galerina-core-tasks run build && tsc -p tsconfig.json",

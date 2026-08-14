@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-config/src/posture.ts#ALLOW_PLAINTEXT_EGRESS_ENV
+pure flow allowPlaintextEgressEnv() -> String {
+  return "GALERINA_ALLOW_PLAINTEXT_EGRESS"
+}

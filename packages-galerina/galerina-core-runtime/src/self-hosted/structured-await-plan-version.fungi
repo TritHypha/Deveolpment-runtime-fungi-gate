@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-runtime/src/structured-await.ts#STRUCTURED_AWAIT_PLAN_VERSION
+pure flow structuredAwaitPlanVersion() -> String {
+  return "galerina.runtime.await.v1"
+}

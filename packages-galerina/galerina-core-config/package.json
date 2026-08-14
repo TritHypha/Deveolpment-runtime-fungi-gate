@@ -7,6 +7,9 @@
   "type": "module",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/allow-localhost-env.fungi",
+      "src/self-hosted/allow-plaintext-egress-env.fungi",
+      "src/self-hosted/egress-allowed-hosts-env.fungi",
       "src/self-hosted/environment-mode.fungi"
     ]
   },

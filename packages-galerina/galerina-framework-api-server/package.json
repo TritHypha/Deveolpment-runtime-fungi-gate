@@ -5,6 +5,12 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/default-idle-timeout-ms.fungi",
+      "src/self-hosted/max-principal-scopes.fungi"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-tritsocket/src/prefilter.ts#ABI_VERSION
+pure flow abiVersion() -> Int {
+  return 1
+}

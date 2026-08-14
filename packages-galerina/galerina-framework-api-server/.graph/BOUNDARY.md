@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 1 |
+| Files | 3 |
 | Internal edges | 0 |
 | External dependencies | 8 |
 | ├─ Node core | 5 |
@@ -46,7 +46,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/default-idle-timeout-ms.fungi`
+- `src/self-hosted/max-principal-scopes.fungi`
 
 ## Allowed Orphans
 _none declared_

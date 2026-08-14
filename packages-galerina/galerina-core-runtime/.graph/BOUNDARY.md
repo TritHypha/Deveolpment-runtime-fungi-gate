@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 5 |
+| Files | 7 |
 | Internal edges | 1 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -40,7 +40,9 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/governed-runtime-seam-version.fungi`
 - `src/self-hosted/passive-plan-replay-admission.fungi`
+- `src/self-hosted/structured-await-plan-version.fungi`
 - `src/self-hosted/terminal-scope.fungi`
 - `src/self-hosted/vok-authority-admission.fungi`
 

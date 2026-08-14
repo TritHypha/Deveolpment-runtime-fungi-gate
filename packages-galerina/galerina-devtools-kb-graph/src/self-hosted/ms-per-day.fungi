@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-devtools-kb-graph/src/cli.ts#MS_PER_DAY
+pure flow msPerDay() -> Int {
+  return 86400000
+}

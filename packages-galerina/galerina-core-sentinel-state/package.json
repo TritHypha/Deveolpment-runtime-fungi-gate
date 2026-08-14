@@ -7,7 +7,9 @@
   "type": "module",
   "packageGraph": {
     "loadedAssets": [
-      "src/self-hosted/cold-boot.fungi"
+      "src/self-hosted/cold-boot.fungi",
+      "src/self-hosted/restore-verdict-export-name.fungi",
+      "src/self-hosted/restore-verdict-package-identity.fungi"
     ]
   },
   "main": "./dist/index.js",

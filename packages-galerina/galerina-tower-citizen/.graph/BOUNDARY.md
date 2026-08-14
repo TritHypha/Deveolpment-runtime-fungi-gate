@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 41 |
+| Files | 52 |
 | Internal edges | 79 |
 | External dependencies | 7 |
 | ├─ Node core | 4 |
@@ -45,10 +45,21 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/authorization-boundary.fungi`
+- `src/self-hosted/challenge-context.fungi`
+- `src/self-hosted/demo-count.fungi`
 - `src/self-hosted/effective-verdict.fungi`
+- `src/self-hosted/gov-3vl-diagnostic.fungi`
 - `src/self-hosted/governance-decisions.fungi`
 - `src/self-hosted/inference-governance.fungi`
+- `src/self-hosted/max-container-fields.fungi`
+- `src/self-hosted/max-input-bytes.fungi`
+- `src/self-hosted/max-input-depth.fungi`
+- `src/self-hosted/max-input-nodes.fungi`
+- `src/self-hosted/photonic-reprogram-cap.fungi`
 - `src/self-hosted/pq-admission-policy.fungi`
+- `src/self-hosted/snapshot-key-context.fungi`
+- `src/self-hosted/storage-admit-cap.fungi`
+- `src/self-hosted/transition-context.fungi`
 - `src/self-hosted/transport-fsm.fungi`
 - `src/self-hosted/verdict-not.fungi`
 - `src/self-hosted/verdict-or.fungi`

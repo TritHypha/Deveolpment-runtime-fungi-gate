@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts#SNAPSHOT_KEY_CONTEXT
+pure flow snapshotKeyContext() -> String {
+  return "galerina.snapshot.epoch.key.v1"
+}

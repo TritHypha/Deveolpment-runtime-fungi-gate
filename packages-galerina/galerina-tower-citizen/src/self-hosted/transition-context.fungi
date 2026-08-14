@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts#TRANSITION_CONTEXT
+pure flow transitionContext() -> String {
+  return "galerina.registry.rotation.transition.v1"
+}

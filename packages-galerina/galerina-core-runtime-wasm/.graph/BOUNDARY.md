@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 4 |
+| Files | 6 |
 | Internal edges | 5 |
 | External dependencies | 2 |
 | ├─ Node core | 1 |
@@ -40,7 +40,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/wat-heap-base.fungi`
+- `src/self-hosted/wat-rec-field-size.fungi`
 
 ## Allowed Orphans
 _none declared_

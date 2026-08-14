@@ -114,6 +114,17 @@ test("a conversion-report commit with the expected 50 Fungi files passes", () =>
   assert.match(result.stdout, /50 added \.fungi files; duplication\/shadow 50\/50 unique; minimum 40; expected 50/u);
 });
 
+test("a qualifying batch refuses more than one changed conversion report", () => {
+  const root = createRepo();
+  addReport(root, 2000);
+  addReport(root, 2001);
+  addFungi(root, 40);
+  commit(root, "ambiguous two-report conversion batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /added 2 conversion reports; maximum 1/u);
+});
+
 test("a qualifying batch refuses exact duplicate Fungi files", () => {
   const root = createRepo();
   addReport(root);
@@ -127,12 +138,12 @@ test("a qualifying batch refuses exact duplicate Fungi files", () => {
   assert.match(result.stderr, /exact duplicate/u);
 });
 
-test("a qualifying batch refuses template shadows that differ only by names and literals", () => {
+test("a qualifying batch refuses template shadows that differ only by names", () => {
   const root = createRepo();
   addReport(root);
   addFungi(root, 40);
   write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow first() -> String { return \"ALPHA\" }\n");
-  write(root, "packages-galerina/example/src/self-hosted/candidate-01.fungi", "@version 1\npure flow second() -> String { return \"BETA\" }\n");
+  write(root, "packages-galerina/example/src/self-hosted/candidate-01.fungi", "@version 1\npure flow second() -> String { return \"ALPHA\" }\n");
   commit(root, "shadow fungi batch");
   const result = runAudit(root);
   assert.equal(result.status, 1);
@@ -151,12 +162,24 @@ test("a qualifying batch refuses alpha-renamed template shadows", () => {
   write(
     root,
     "packages-galerina/example/src/self-hosted/candidate-01.fungi",
-    "@version 1\npure flow second(value: Int) -> Int { let result: Int = value + 99 return result }\n",
+    "@version 1\npure flow second(value: Int) -> Int { let result: Int = value + 7 return result }\n",
   );
   commit(root, "alpha-renamed shadow fungi batch");
   const result = runAudit(root);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /template shadow/u);
+});
+
+test("a qualifying batch preserves distinct literal semantics", () => {
+  const root = createRepo();
+  addReport(root);
+  addFungi(root, 40);
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow first() -> String { return \"ALPHA\" }\n");
+  write(root, "packages-galerina/example/src/self-hosted/candidate-01.fungi", "@version 1\npure flow second() -> String { return \"BETA\" }\n");
+  commit(root, "literal-distinct fungi batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /duplication\/shadow 40\/40 unique/u);
 });
 
 test("a qualifying batch refuses a new Fungi file that shadows a tracked file", () => {
@@ -165,7 +188,7 @@ test("a qualifying batch refuses a new Fungi file that shadows a tracked file", 
   commit(root, "existing fungi source");
   addReport(root);
   addFungi(root, 40);
-  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow replacement() -> String { return \"OTHER\" }\n");
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow replacement() -> String { return \"BASE\" }\n");
   commit(root, "tracked shadow fungi batch");
   const result = runAudit(root);
   assert.equal(result.status, 1);
@@ -180,12 +203,22 @@ test("worktree mode checks an uncommitted 40-file Fungi batch before commit", ()
   assert.match(result.stdout, /worktree has 40 new \.fungi files; duplication\/shadow 40\/40 unique/u);
 });
 
+test("worktree mode refuses more than one changed conversion report", () => {
+  const root = createRepo();
+  addReport(root, 2000);
+  addReport(root, 2001);
+  addFungi(root, 40);
+  const result = runWorktreeAudit(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /worktree changes 2 conversion reports; maximum 1/u);
+});
+
 test("worktree mode refuses an uncommitted shadow of a tracked Fungi file", () => {
   const root = createRepo();
   write(root, "packages-galerina/example/src/self-hosted/existing.fungi", "@version 1\npure flow existing() -> String { return \"BASE\" }\n");
   commit(root, "tracked fungi baseline");
   addFungi(root, 40);
-  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow replacement() -> String { return \"OTHER\" }\n");
+  write(root, "packages-galerina/example/src/self-hosted/candidate-00.fungi", "@version 1\npure flow replacement() -> String { return \"BASE\" }\n");
   const result = runWorktreeAudit(root);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /template shadow.*existing\.fungi/u);

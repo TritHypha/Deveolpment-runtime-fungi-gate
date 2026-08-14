@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts#MAX_INPUT_BYTES
+pure flow maxInputBytes() -> Int {
+  return 4194304
+}

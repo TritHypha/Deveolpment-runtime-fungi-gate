@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 10 |
+| Files | 11 |
 | Internal edges | 21 |
 | External dependencies | 6 |
 | ├─ Node core | 4 |
@@ -44,7 +44,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/modality-structured.fungi`
 
 ## Allowed Orphans
 _none declared_

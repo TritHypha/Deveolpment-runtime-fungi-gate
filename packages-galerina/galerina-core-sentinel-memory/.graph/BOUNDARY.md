@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 12 |
+| Files | 13 |
 | Internal edges | 17 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -40,6 +40,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/channel-stride.fungi`
 - `src/self-hosted/memory-validator.fungi`
 - `src/self-hosted/pool-allocation-guard.fungi`
 - `src/self-hosted/pool-policy.fungi`

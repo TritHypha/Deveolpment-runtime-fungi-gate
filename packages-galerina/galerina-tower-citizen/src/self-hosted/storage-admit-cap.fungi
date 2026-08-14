@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-tower-citizen/src/substrate-erasure.ts#STORAGE_ADMIT_CAP
+pure flow storageAdmitCap() -> String {
+  return "storage.admit"
+}

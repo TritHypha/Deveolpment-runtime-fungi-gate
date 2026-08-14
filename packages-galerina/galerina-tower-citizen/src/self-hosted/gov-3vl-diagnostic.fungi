@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts#GOV_3VL_DIAGNOSTIC
+pure flow gov3vlDiagnostic() -> String {
+  return "FUNGI-GOV-3VL-001"
+}

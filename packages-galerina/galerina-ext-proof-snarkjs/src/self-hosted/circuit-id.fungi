@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-proof-snarkjs/src/circuit.ts#CIRCUIT_ID
+pure flow circuitId() -> String {
+  return "galerina-sha256-v0.1"
+}

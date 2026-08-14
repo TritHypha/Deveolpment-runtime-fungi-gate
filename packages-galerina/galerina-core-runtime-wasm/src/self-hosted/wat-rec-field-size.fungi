@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-runtime-wasm/src/record-abi.ts#WAT_REC_FIELD_SIZE
+pure flow watRecFieldSize() -> Int {
+  return 4
+}

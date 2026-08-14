@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-photonic-emulator/src/partition-decider.ts#W_REP
+pure flow wRep() -> Int {
+  return 40
+}

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/stdlib.ts#MAX_REGEX_SUBJECT_CHARS
+pure flow maxRegexSubjectChars() -> Int {
+  return 4096
+}

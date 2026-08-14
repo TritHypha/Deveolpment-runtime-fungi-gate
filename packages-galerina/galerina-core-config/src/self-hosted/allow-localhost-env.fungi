@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-config/src/posture.ts#ALLOW_LOCALHOST_ENV
+pure flow allowLocalhostEnv() -> String {
+  return "GALERINA_ALLOW_LOCALHOST"
+}

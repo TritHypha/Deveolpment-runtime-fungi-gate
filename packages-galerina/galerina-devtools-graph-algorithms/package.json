@@ -6,6 +6,7 @@
   "type": "commonjs",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/binary-dispatch-size.fungi",
       "src/self-hosted/boundary-crossing.fungi"
     ]
   },
