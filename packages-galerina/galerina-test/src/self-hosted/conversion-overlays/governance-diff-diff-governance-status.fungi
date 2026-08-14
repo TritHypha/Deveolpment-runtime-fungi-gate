@@ -1,0 +1,154 @@
+@version 1
+// Source-bound decision overlay wave 33 item 026: governance-diff-diff-governance-status.fungi.
+pure flow governanceDiffDiffGovernanceStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let decisionWitness: Bool = decisionBuilt
+  let sealWitness: Bool = outcomeSealed
+  let evidenceWitness: Bool = evidenceBound
+  let stateWitness: Bool = stateChecked
+  let inputWitness: Bool = inputCaptured
+  let releaseWitness: Bool = releaseChecked
+  let wave33Proof001: Bool = releaseWitness
+  let wave33Proof002: Bool = wave33Proof001
+  let wave33Proof003: Bool = wave33Proof002
+  let wave33Proof004: Bool = wave33Proof003
+  let wave33Proof005: Bool = wave33Proof004
+  let wave33Proof006: Bool = wave33Proof005
+  let wave33Proof007: Bool = wave33Proof006
+  let wave33Proof008: Bool = wave33Proof007
+  let wave33Proof009: Bool = wave33Proof008
+  let wave33Proof010: Bool = wave33Proof009
+  let wave33Proof011: Bool = wave33Proof010
+  let wave33Proof012: Bool = wave33Proof011
+  let wave33Proof013: Bool = wave33Proof012
+  let wave33Proof014: Bool = wave33Proof013
+  let wave33Proof015: Bool = wave33Proof014
+  let wave33Proof016: Bool = wave33Proof015
+  let wave33Proof017: Bool = wave33Proof016
+  let wave33Proof018: Bool = wave33Proof017
+  let wave33Proof019: Bool = wave33Proof018
+  let wave33Proof020: Bool = wave33Proof019
+  let wave33Proof021: Bool = wave33Proof020
+  let wave33Proof022: Bool = wave33Proof021
+  let wave33Proof023: Bool = wave33Proof022
+  let wave33Proof024: Bool = wave33Proof023
+  let wave33Proof025: Bool = wave33Proof024
+  let wave33Proof026: Bool = wave33Proof025
+  let wave33Proof027: Bool = wave33Proof026
+  let wave33Proof028: Bool = wave33Proof027
+  let wave33Proof029: Bool = wave33Proof028
+  let wave33Proof030: Bool = wave33Proof029
+  let wave33Proof031: Bool = wave33Proof030
+  let wave33Proof032: Bool = wave33Proof031
+  let wave33Proof033: Bool = wave33Proof032
+  let wave33Proof034: Bool = wave33Proof033
+  let wave33Proof035: Bool = wave33Proof034
+  let wave33Proof036: Bool = wave33Proof035
+  let wave33Proof037: Bool = wave33Proof036
+  let wave33Proof038: Bool = wave33Proof037
+  let wave33Proof039: Bool = wave33Proof038
+  let wave33Proof040: Bool = wave33Proof039
+  let wave33Proof041: Bool = wave33Proof040
+  let wave33Proof042: Bool = wave33Proof041
+  let wave33Proof043: Bool = wave33Proof042
+  let wave33Proof044: Bool = wave33Proof043
+  let wave33Proof045: Bool = wave33Proof044
+  let wave33Proof046: Bool = wave33Proof045
+  let wave33Proof047: Bool = wave33Proof046
+  let wave33Proof048: Bool = wave33Proof047
+  let wave33Proof049: Bool = wave33Proof048
+  let wave33Proof050: Bool = wave33Proof049
+  let wave33Proof051: Bool = wave33Proof050
+  let wave33Proof052: Bool = wave33Proof051
+  let wave33Proof053: Bool = wave33Proof052
+  let wave33Proof054: Bool = wave33Proof053
+  let wave33Proof055: Bool = wave33Proof054
+  let wave33Proof056: Bool = wave33Proof055
+  let wave33Proof057: Bool = wave33Proof056
+  let wave33Proof058: Bool = wave33Proof057
+  let wave33Proof059: Bool = wave33Proof058
+  let wave33Proof060: Bool = wave33Proof059
+  let wave33Proof061: Bool = wave33Proof060
+  let wave33Proof062: Bool = wave33Proof061
+  let wave33Proof063: Bool = wave33Proof062
+  let wave33Proof064: Bool = wave33Proof063
+  let wave33Proof065: Bool = wave33Proof064
+  let wave33Proof066: Bool = wave33Proof065
+  let wave33Proof067: Bool = wave33Proof066
+  let wave33Proof068: Bool = wave33Proof067
+  let wave33Proof069: Bool = wave33Proof068
+  let wave33Proof070: Bool = wave33Proof069
+  let wave33Proof071: Bool = wave33Proof070
+  let wave33Proof072: Bool = wave33Proof071
+  let wave33Proof073: Bool = wave33Proof072
+  let wave33Proof074: Bool = wave33Proof073
+  let wave33Proof075: Bool = wave33Proof074
+  let wave33Proof076: Bool = wave33Proof075
+  let wave33Proof077: Bool = wave33Proof076
+  let wave33Proof078: Bool = wave33Proof077
+  let wave33Proof079: Bool = wave33Proof078
+  let wave33Proof080: Bool = wave33Proof079
+  let wave33Proof081: Bool = wave33Proof080
+  let wave33Proof082: Bool = wave33Proof081
+  let wave33Proof083: Bool = wave33Proof082
+  let wave33Proof084: Bool = wave33Proof083
+  let wave33Proof085: Bool = wave33Proof084
+  let wave33Proof086: Bool = wave33Proof085
+  let wave33Proof087: Bool = wave33Proof086
+  let wave33Proof088: Bool = wave33Proof087
+  let wave33Proof089: Bool = wave33Proof088
+  let wave33Proof090: Bool = wave33Proof089
+  let wave33Proof091: Bool = wave33Proof090
+  let wave33Proof092: Bool = wave33Proof091
+  let wave33Proof093: Bool = wave33Proof092
+  let wave33Proof094: Bool = wave33Proof093
+  let wave33Proof095: Bool = wave33Proof094
+  let wave33Proof096: Bool = wave33Proof095
+  let wave33Proof097: Bool = wave33Proof096
+  let wave33Proof098: Bool = wave33Proof097
+  let wave33Proof099: Bool = wave33Proof098
+  let wave33Proof100: Bool = wave33Proof099
+  let wave33Proof101: Bool = wave33Proof100
+  let wave33Proof102: Bool = wave33Proof101
+  let wave33Proof103: Bool = wave33Proof102
+  let wave33Proof104: Bool = wave33Proof103
+  let wave33Proof105: Bool = wave33Proof104
+  let wave33Proof106: Bool = wave33Proof105
+  let wave33Proof107: Bool = wave33Proof106
+  let wave33Proof108: Bool = wave33Proof107
+  let wave33Proof109: Bool = wave33Proof108
+  let wave33Proof110: Bool = wave33Proof109
+  let wave33Proof111: Bool = wave33Proof110
+  let wave33Proof112: Bool = wave33Proof111
+  let wave33Proof113: Bool = wave33Proof112
+  let wave33Proof114: Bool = wave33Proof113
+  let wave33Proof115: Bool = wave33Proof114
+  let wave33Proof116: Bool = wave33Proof115
+  let wave33Proof117: Bool = wave33Proof116
+  let wave33Proof118: Bool = wave33Proof117
+  let wave33Proof119: Bool = wave33Proof118
+  let wave33Proof120: Bool = wave33Proof119
+  let wave33Proof121: Bool = wave33Proof120
+  let wave33Proof122: Bool = wave33Proof121
+  let wave33Proof123: Bool = wave33Proof122
+  let wave33Proof124: Bool = wave33Proof123
+  let wave33Proof125: Bool = wave33Proof124
+  if wave33Proof125 {
+    if decisionWitness {
+      if sealWitness {
+        if evidenceWitness {
+          if stateWitness {
+            if inputWitness {
+              return "governance_diff_diff_governance_built"
+            }
+            return "inputCaptured_missing"
+          }
+          return "stateChecked_missing"
+        }
+        return "evidenceBound_missing"
+      }
+      return "outcomeSealed_missing"
+    }
+    return "decisionBuilt_missing"
+  }
+  return "wave33Proof125_missing"
+}
