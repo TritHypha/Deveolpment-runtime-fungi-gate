@@ -2413,6 +2413,56 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 39 - Interpreter completion, invariant discharge and leak proof
+
+Wave 39 adds **40 new source-bound Fungi decision cores** in exact executable
+source order. Thirty complete the remaining interpreter segment: character and
+title helpers, string-literal discovery and its named walker, response/error
+values, capability effects, ensure/admission extraction, governed-path
+detection and its named walker, execution helpers, graph dispatch, slot
+assignment, the `SlottedScope` class/constructor/methods, and the bounded while
+fast path. Three bind invariant-discharge helpers. Seven begin leak-proof
+construction, including the named `canonicalLeakProof.fld` field normalizer.
+A graph-first and bounded prior-credit check found no exact source-and-symbol
+reuse. The package now registers **1,600** conversion overlays. Host AST,
+records, exceptions, callbacks, maps, classes, coercion and audit/effect
+boundaries remain in executing TypeScript. No consumer switch, supersession or
+retirement is claimed.
+
+The pinned source build point is
+`952ed554114df8cca098704fcf77781a7da4b013`. Exact source SHA-256 pins are
+`A43A9F93DF7C94D9C6199E92CA09C33A429904FDCCB03F8B27576069AD74F61F`
+for `interpreter.ts`,
+`92CA5E26F8D4DF29BD925B4A27B79557EFFFCDA9947C70DFAFCAAEF73624307C`
+for `invariant-discharge.ts`, and
+`35DE518977E459D79EDC2A561C870C6A65193E3CFD58AB3E9DF2FD103DDD6881`
+for `leak-proof.ts`. The latest moderate graph refresh still reports the older
+`9541ac8c2a9f5adff4d71d511d89bd27ebc7c757` build point, so graph freshness
+remains **UNKNOWN** and exact bytes govern.
+
+The RED source test failed **0/3** while the assets were absent. The accepted
+topology uses four independently rooted bounded Boolean lanes with distinct
+per-file lengths and round-robin updates, followed by one ordered six-gate
+release decision. Fresh source verification passes **3/3**, including exact
+live source binding, whole-corpus byte duplicate and normalized alpha-renamed
+shadow refusal, parse/effect/GIR generation and execution. The accumulated
+source suite passes **114/114** across 38 suites and the package no-emit
+typecheck is green. The exact source-test SHA-256 is
+`4949AB35E7527F32CC16A493D92FE1A24589DEFF0AB65699E8A0897FA3624D4E`.
+
+Physical verification passes **1/1** for this wave and **38/38** across the
+accumulated physical suites. It compiles all 40 exports, publishes exactly 40
+physical `.slide` artifacts, executes each export, independently re-admits and
+verifies every typed receipt, and refuses changed source, artifact and receipt
+bytes. The exact physical-test SHA-256 is
+`9F8B02201D6C3D361D58E0D0902E543B73990ECBEB71A9076B0FD8A320F7D186`.
+
+This is the only report modified by the wave. It is committed alongside 40
+new `.fungi` files, not as a report-only update. Root authored the source and
+evidence directly; no worker authored the batch and no push is performed. Both
+worktree and committed guards must report **40/40 unique**, one report, the
+40-file minimum, and no report-only streak.
+
 ## Source decision overlay wave 38 - Interpreter execution, matching and value borders
 
 Wave 38 adds **40 new source-bound Fungi decision cores** from the next live

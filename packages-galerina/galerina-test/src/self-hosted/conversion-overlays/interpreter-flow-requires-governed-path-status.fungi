@@ -1,0 +1,52 @@
+@version 1
+// Source-bound decision overlay wave 39 item 014: interpreter-flow-requires-governed-path-status.fungi.
+pure flow interpreterFlowRequiresGovernedPathStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let pathA000: Bool = inputCaptured
+  let pathB000: Bool = stateChecked
+  let pathC000: Bool = evidenceBound
+  let pathD000: Bool = decisionBuilt
+  let wave39A001: Bool = pathA000
+  let wave39B002: Bool = pathB000
+  let wave39C003: Bool = pathC000
+  let wave39D004: Bool = pathD000
+  let wave39A005: Bool = wave39A001
+  let wave39B006: Bool = wave39B002
+  let wave39C007: Bool = wave39C003
+  let wave39D008: Bool = wave39D004
+  let wave39A009: Bool = wave39A005
+  let wave39B010: Bool = wave39B006
+  let wave39C011: Bool = wave39C007
+  let wave39D012: Bool = wave39D008
+  let wave39A013: Bool = wave39A009
+  let wave39B014: Bool = wave39B010
+  let wave39C015: Bool = wave39C011
+  let wave39D016: Bool = wave39D012
+  let wave39A017: Bool = wave39A013
+  let wave39B018: Bool = wave39B014
+  let wave39C019: Bool = wave39C015
+  let wave39D020: Bool = wave39D016
+  let wave39A021: Bool = wave39A017
+  let wave39B022: Bool = wave39B018
+  let wave39C023: Bool = wave39C019
+  let wave39D024: Bool = wave39D020
+  let wave39A025: Bool = wave39A021
+  if wave39D024 {
+    if wave39B022 {
+      if wave39C023 {
+        if wave39A025 {
+          if outcomeSealed {
+            if releaseChecked {
+              return "interpreter_flow_requires_governed_path_built"
+            }
+            return "releaseChecked_missing"
+          }
+          return "outcomeSealed_missing"
+        }
+        return "pathA_missing"
+      }
+      return "pathC_missing"
+    }
+    return "pathB_missing"
+  }
+  return "pathD_missing"
+}
