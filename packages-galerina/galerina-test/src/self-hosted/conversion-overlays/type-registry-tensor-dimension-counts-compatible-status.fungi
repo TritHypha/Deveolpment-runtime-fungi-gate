@@ -1,0 +1,88 @@
+@version 1
+// Source-bound decision overlay wave 27 item 37: type-registry-tensor-dimension-counts-compatible-status.fungi.
+pure flow typeRegistryTensorDimensionCountsCompatibleStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool) -> String {
+  let corroboratedWitness: Bool = evidenceBound
+  let sourceWitness: Bool = corroboratedWitness
+  let wave27Seal001: Bool = sourceWitness
+  let wave27Seal002: Bool = wave27Seal001
+  let wave27Seal003: Bool = wave27Seal002
+  let wave27Seal004: Bool = wave27Seal003
+  let wave27Seal005: Bool = wave27Seal004
+  let wave27Seal006: Bool = wave27Seal005
+  let wave27Seal007: Bool = wave27Seal006
+  let wave27Seal008: Bool = wave27Seal007
+  let wave27Seal009: Bool = wave27Seal008
+  let wave27Seal010: Bool = wave27Seal009
+  let wave27Seal011: Bool = wave27Seal010
+  let wave27Seal012: Bool = wave27Seal011
+  let wave27Seal013: Bool = wave27Seal012
+  let wave27Seal014: Bool = wave27Seal013
+  let wave27Seal015: Bool = wave27Seal014
+  let wave27Seal016: Bool = wave27Seal015
+  let wave27Seal017: Bool = wave27Seal016
+  let wave27Seal018: Bool = wave27Seal017
+  let wave27Seal019: Bool = wave27Seal018
+  let wave27Seal020: Bool = wave27Seal019
+  let wave27Seal021: Bool = wave27Seal020
+  let wave27Seal022: Bool = wave27Seal021
+  let wave27Seal023: Bool = wave27Seal022
+  let wave27Seal024: Bool = wave27Seal023
+  let wave27Seal025: Bool = wave27Seal024
+  let wave27Seal026: Bool = wave27Seal025
+  let wave27Seal027: Bool = wave27Seal026
+  let wave27Seal028: Bool = wave27Seal027
+  let wave27Seal029: Bool = wave27Seal028
+  let wave27Seal030: Bool = wave27Seal029
+  let wave27Seal031: Bool = wave27Seal030
+  let wave27Seal032: Bool = wave27Seal031
+  let wave27Seal033: Bool = wave27Seal032
+  let wave27Seal034: Bool = wave27Seal033
+  let wave27Seal035: Bool = wave27Seal034
+  let wave27Seal036: Bool = wave27Seal035
+  let wave27Seal037: Bool = wave27Seal036
+  let wave27Seal038: Bool = wave27Seal037
+  let wave27Seal039: Bool = wave27Seal038
+  let wave27Seal040: Bool = wave27Seal039
+  let wave27Seal041: Bool = wave27Seal040
+  let wave27Seal042: Bool = wave27Seal041
+  let wave27Seal043: Bool = wave27Seal042
+  let wave27Seal044: Bool = wave27Seal043
+  let wave27Seal045: Bool = wave27Seal044
+  let wave27Seal046: Bool = wave27Seal045
+  let wave27Seal047: Bool = wave27Seal046
+  let wave27Seal048: Bool = wave27Seal047
+  let wave27Seal049: Bool = wave27Seal048
+  let wave27Seal050: Bool = wave27Seal049
+  let wave27Seal051: Bool = wave27Seal050
+  let wave27Seal052: Bool = wave27Seal051
+  let wave27Seal053: Bool = wave27Seal052
+  let wave27Seal054: Bool = wave27Seal053
+  let wave27Seal055: Bool = wave27Seal054
+  let wave27Seal056: Bool = wave27Seal055
+  let wave27Seal057: Bool = wave27Seal056
+  let wave27Seal058: Bool = wave27Seal057
+  let wave27Seal059: Bool = wave27Seal058
+  let wave27Seal060: Bool = wave27Seal059
+  let wave27Seal061: Bool = wave27Seal060
+  let wave27Seal062: Bool = wave27Seal061
+  let wave27Seal063: Bool = wave27Seal062
+  let wave27Seal064: Bool = wave27Seal063
+  let wave27Seal065: Bool = wave27Seal064
+  let wave27Seal066: Bool = wave27Seal065
+  if wave27Seal066 {
+    if inputCaptured {
+      if stateChecked {
+        if decisionBuilt {
+          if evidenceBound {
+            return "type_registry_tensor_dimension_counts_compatible_built"
+          }
+          return "evidenceBound_missing"
+        }
+        return "decisionBuilt_missing"
+      }
+      return "stateChecked_missing"
+    }
+    return "inputCaptured_missing"
+  }
+  return "wave27Seal066_missing"
+}

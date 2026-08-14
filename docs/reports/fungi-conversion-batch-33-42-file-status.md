@@ -2413,6 +2413,43 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 27 - remaining type checking and registry helpers
+
+Wave 27 adds **40 new source-bound Fungi decision cores** for the 32 remaining
+previously uncredited `type-checker.ts` class, helper and method scopes, six
+`type-registry.ts` functions and two `effect-checker.ts` helpers. Wave 26's
+17 type-checker scopes remain excluded. The package now registers **1,120**
+conversion overlays. The pinned source build point is
+`d84f9388c3087424db76e1c1dbd7bcc92a56fa68`; the source SHA-256 values are
+`873E108F03091F4C16B11015CDB17698369D4BE6FB427F50D3D53AAB34E3A3FA`,
+`922ACA599C553C5764546055E7D64C3DEAB2CD44CB9F7E8C5817978B2E9EBFC7`
+and
+`467CEE175F35B5CA7F57E134E02074A2D3E6C31977B7192E69924BE19D9C0F72`.
+The graph supplied navigation only: its latest independently checked build
+point did not match the Wave-26 commit, so freshness remains **UNKNOWN** and
+the exact live bytes govern.
+
+The RED test failed **0/3** on absent and unregistered assets. The authored
+sources then passed **40/40** whole-corpus exact-byte and normalized
+alpha-renamed shadow checks, parse, effect-check, GIR emission and interpreter
+execution. Focused source evidence passes **3/3**, complete source evidence
+**83/83**, focused physical SLIDE/VOK evidence **1/1**, complete physical
+evidence **28/28**, and package typecheck is green. The final test pins are
+`11EB213F1AF29BF10C56B697A0387E2C6524BD1E7B5FD31CC2631ED8152611C8`
+and
+`E6B302F9997AFBB3EA8EE00F39730CCE302B6FC1E4B61B5EFEBDCDADFE59E2A5`.
+
+This is bounded post-border decision evidence only. It does not replace AST,
+active class, binding-scope, Map/Set, array, UTF-16, regular-expression,
+numeric-coercion, recursive traversal, diagnostic, TypeId, tensor-record,
+effect-order or error semantics; it authorizes no compiler consumer switch or
+TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, all 40 new
+`.fungi` files must be present, worktree and committed-object duplicate/shadow
+guards must remain 40/40, the report-only streak stays zero, no worker authored
+this wave, and no push or report-only follow-up commit is authorized.
+
 ## Source decision overlay wave 26 - remaining value-state and type checking
 
 Wave 26 adds **40 new source-bound Fungi decision cores** for 23 previously
