@@ -1,0 +1,14 @@
+@version 1
+/// Empty manifest construction after recipient-key capture.
+pure flow sporeEmptyManifestStatusCore(recipientCaptured: Bool, hexEncoded: Bool, entriesEmpty: Bool) -> String {
+  let capturedRecipient: Bool = recipientCaptured
+  let capturedEntries: Bool = entriesEmpty
+  if capturedRecipient {
+    if capturedEntries {
+      if hexEncoded { return "empty_manifest" }
+      return "hex_refused"
+    }
+    return "entries_not_empty"
+  }
+  return "recipient_refused"
+}

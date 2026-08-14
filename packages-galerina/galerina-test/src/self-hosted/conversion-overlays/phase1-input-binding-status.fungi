@@ -1,0 +1,17 @@
+@version 1
+/// Post-border commitment-field selection for computePhase1Proof.
+pure flow phase1InputBindingStatusCore(sourceCaptured: Bool, contractCaptured: Bool, resultPresent: Bool) -> String {
+  if resultPresent {
+    if sourceCaptured {
+      if contractCaptured { return "input_and_result_hashes" }
+      return "contract_missing"
+    }
+    return "source_missing"
+  }
+  if contractCaptured {
+    if sourceCaptured { return "input_hash_only" }
+    return "contract_missing"
+  }
+  if sourceCaptured { return "contract_missing" }
+  return "source_missing"
+}

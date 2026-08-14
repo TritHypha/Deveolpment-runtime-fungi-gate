@@ -1,0 +1,18 @@
+@version 1
+/// Arena insert or replacement status after exact buffer capture.
+pure flow sealArenaPutStatusCore(arenaLive: Bool, replacing: Bool, stagingPresent: Bool, copied: Bool, locked: Bool) -> String {
+  if arenaLive {
+    if copied {
+      if locked {
+        if replacing {
+          if stagingPresent { return "replaced_and_wiped" }
+          return "replaced"
+        }
+        return "inserted"
+      }
+      return "lock_unavailable"
+    }
+    return "copy_failed"
+  }
+  return "disposed_refusal"
+}

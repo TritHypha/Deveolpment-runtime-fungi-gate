@@ -1,0 +1,8 @@
+@version 1
+/// Factory availability for the phase-one proof backend.
+pure flow snarkjsProverFactoryStatusCore(constructorAvailable: Bool) -> String {
+  let admittedConstructor: Bool = constructorAvailable
+  let readyConstructor: Bool = admittedConstructor
+  if readyConstructor { return "new_backend" }
+  return "factory_refused"
+}

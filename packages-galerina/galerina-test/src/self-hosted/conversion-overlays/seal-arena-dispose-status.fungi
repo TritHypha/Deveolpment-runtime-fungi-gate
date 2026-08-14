@@ -1,0 +1,14 @@
+@version 1
+/// Idempotent arena-wide wipe and disposal fold.
+pure flow sealArenaDisposeStatusCore(entriesPresent: Bool, allWiped: Bool, cleared: Bool) -> String {
+  let capturedEntries: Bool = entriesPresent
+  let clearedState: Bool = cleared
+  if clearedState {
+    if capturedEntries {
+      if allWiped { return "disposed" }
+      return "wipe_incomplete"
+    }
+    return "disposed_empty"
+  }
+  return "clear_failed"
+}

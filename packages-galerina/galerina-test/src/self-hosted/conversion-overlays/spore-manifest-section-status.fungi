@@ -1,0 +1,12 @@
+@version 1
+/// Reserved manifest-section record assembly readiness.
+pure flow sporeManifestSectionStatusCore(sentinelReady: Bool, payloadReady: Bool) -> String {
+  let capturedPayload: Bool = payloadReady
+  let capturedSentinel: Bool = sentinelReady
+  let admittedSentinel: Bool = capturedSentinel
+  if capturedPayload {
+    if admittedSentinel { return "manifest_section" }
+    return "sentinel_refused"
+  }
+  return "payload_refused"
+}

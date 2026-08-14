@@ -1,0 +1,10 @@
+@version 1
+/// Constructor state binding for the snarkjs facade.
+pure flow snarkjsProverConstructorStatusCore(backendConstructed: Bool, circuitCopied: Bool) -> String {
+  let copied: Bool = circuitCopied
+  if copied {
+    if backendConstructed { return "constructed" }
+    return "backend_refused"
+  }
+  return "circuit_refused"
+}

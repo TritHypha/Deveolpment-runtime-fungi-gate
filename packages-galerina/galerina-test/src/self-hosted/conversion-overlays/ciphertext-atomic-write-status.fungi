@@ -1,0 +1,16 @@
+@version 1
+/// Same-directory ciphertext write, fsync and rename fold.
+pure flow ciphertextAtomicWriteStatusCore(sameDirectory: Bool, wrote: Bool, fsynced: Bool, renamed: Bool) -> String {
+  let capturedDirectory: Bool = sameDirectory
+  if capturedDirectory {
+    if wrote {
+      if fsynced {
+        if renamed { return "durable_replace" }
+        return "rename_failed"
+      }
+      return "fsync_failed"
+    }
+    return "write_failed"
+  }
+  return "directory_refused"
+}

@@ -1,0 +1,20 @@
+@version 1
+/// Seal payload framing and length-field binding status.
+pure flow sporePackSealStatusCore(magicReady: Bool, profileBound: Bool, nonceBound: Bool, bodyBound: Bool, lengthsBound: Bool) -> String {
+  let capturedLengths: Bool = lengthsBound
+  let capturedMagic: Bool = magicReady
+  if capturedLengths {
+    if capturedMagic {
+      if profileBound {
+        if nonceBound {
+          if bodyBound { return "packed_seal" }
+          return "body_refused"
+        }
+        return "nonce_refused"
+      }
+      return "profile_refused"
+    }
+    return "magic_refused"
+  }
+  return "length_refused"
+}

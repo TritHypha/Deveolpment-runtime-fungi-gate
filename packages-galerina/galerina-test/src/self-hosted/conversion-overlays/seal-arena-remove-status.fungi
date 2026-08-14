@@ -1,0 +1,12 @@
+@version 1
+/// Entry removal after value and staging cleanup.
+pure flow sealArenaRemoveStatusCore(entryExists: Bool, stagingPresent: Bool, deleted: Bool) -> String {
+  if entryExists {
+    if deleted {
+      if stagingPresent { return "removed_wiped" }
+      return "removed_value_wiped"
+    }
+    return "delete_failed"
+  }
+  return "absent_noop"
+}

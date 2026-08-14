@@ -1,0 +1,13 @@
+@version 1
+/// Verify delegation status through the retained backend.
+pure flow snarkjsProverVerifyStatusCore(backendReady: Bool, proofCaptured: Bool, inputCaptured: Bool) -> String {
+  let admittedBackend: Bool = backendReady
+  if inputCaptured {
+    if proofCaptured {
+      if admittedBackend { return "delegated_verify" }
+      return "backend_refused"
+    }
+    return "proof_refused"
+  }
+  return "input_refused"
+}

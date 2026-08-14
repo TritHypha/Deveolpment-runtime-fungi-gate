@@ -1,0 +1,13 @@
+@version 1
+/// Domain-separated opaque 16-byte coordinate readiness.
+pure flow sporeCoordinateStatusCore(nameCaptured: Bool, domainApplied: Bool, output16: Bool) -> String {
+  let capturedWidth: Bool = output16
+  if capturedWidth {
+    if domainApplied {
+      if nameCaptured { return "opaque_coord_16" }
+      return "name_refused"
+    }
+    return "domain_refused"
+  }
+  return "width_refused"
+}

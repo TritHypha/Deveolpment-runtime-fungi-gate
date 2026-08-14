@@ -1,0 +1,9 @@
+@version 1
+/// Page-lock hook installation state.
+pure flow mlockHookStatusCore(hookProvided: Bool) -> String {
+  let capturedHook: Bool = hookProvided
+  let installedHook: Bool = capturedHook
+  let activeHook: Bool = installedHook
+  if activeHook { return "hook_installed" }
+  return "hook_cleared"
+}

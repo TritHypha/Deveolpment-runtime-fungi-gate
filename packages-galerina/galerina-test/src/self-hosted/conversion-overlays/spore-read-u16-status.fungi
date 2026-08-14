@@ -1,0 +1,14 @@
+@version 1
+/// Bounded DataView 16-bit little-endian read profile.
+pure flow sporeReadU16StatusCore(viewValid: Bool, offsetValid: Bool, littleEndian: Bool) -> String {
+  let capturedView: Bool = viewValid
+  let capturedOffset: Bool = offsetValid
+  if capturedOffset {
+    if capturedView {
+      if littleEndian { return "read_u16le" }
+      return "endian_refused"
+    }
+    return "view_refused"
+  }
+  return "offset_refused"
+}

@@ -1,0 +1,13 @@
+@version 1
+/// Unsigned 32-bit little-endian write profile.
+pure flow sporeU32leStatusCore(numberCaptured: Bool, wrapped32: Bool, littleEndian: Bool) -> String {
+  if wrapped32 {
+    let endianReady: Bool = littleEndian
+    if endianReady {
+      if numberCaptured { return "u32le" }
+      return "number_refused"
+    }
+    return "endian_refused"
+  }
+  return "wrap_refused"
+}

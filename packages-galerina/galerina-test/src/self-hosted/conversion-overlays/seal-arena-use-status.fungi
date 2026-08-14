@@ -1,0 +1,18 @@
+@version 1
+/// Transient callback service and mandatory wipe status.
+pure flow sealArenaUseStatusCore(arenaLive: Bool, entryPresent: Bool, notFaulted: Bool, callbackContained: Bool, transientWiped: Bool) -> String {
+  if entryPresent {
+    if arenaLive {
+      if notFaulted {
+        if callbackContained {
+          if transientWiped { return "served_wiped" }
+          return "transient_not_wiped"
+        }
+        return "callback_escape"
+      }
+      return "faulted_refusal"
+    }
+    return "disposed_refusal"
+  }
+  return "entry_absent"
+}

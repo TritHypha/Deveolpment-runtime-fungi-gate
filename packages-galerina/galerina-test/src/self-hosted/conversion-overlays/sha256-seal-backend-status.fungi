@@ -1,0 +1,12 @@
+@version 1
+/// Phase-one backend surface readiness after class construction.
+pure flow sha256SealBackendStatusCore(circuitBound: Bool, provePresent: Bool, verifyPresent: Bool) -> String {
+  if provePresent {
+    if circuitBound {
+      if verifyPresent { return "backend_ready" }
+      return "verify_missing"
+    }
+    return "circuit_missing"
+  }
+  return "prove_missing"
+}

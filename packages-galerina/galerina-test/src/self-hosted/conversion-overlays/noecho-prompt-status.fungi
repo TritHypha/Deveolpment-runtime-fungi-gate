@@ -1,0 +1,20 @@
+@version 1
+/// TTY no-echo capture, restoration and byte-array wipe status.
+pure flow noechoPromptStatusCore(tty: Bool, rawEnabled: Bool, lineEnded: Bool, restored: Bool, arrayWiped: Bool) -> String {
+  let admittedTty: Bool = tty
+  let restoredTerminal: Bool = restored
+  if admittedTty {
+    if rawEnabled {
+      if lineEnded {
+        if restoredTerminal {
+          if arrayWiped { return "captured_noecho_wiped" }
+          return "array_not_wiped"
+        }
+        return "terminal_not_restored"
+      }
+      return "line_incomplete"
+    }
+    return "raw_mode_failed"
+  }
+  return "tty_refused"
+}

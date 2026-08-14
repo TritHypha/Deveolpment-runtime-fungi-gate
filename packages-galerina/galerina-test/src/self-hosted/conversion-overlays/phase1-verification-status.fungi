@@ -1,0 +1,15 @@
+@version 1
+/// Fail-closed field equality fold for verifyPhase1Proof.
+pure flow phase1VerificationStatusCore(protocolValid: Bool, curveValid: Bool, decoded: Bool, fieldsMatch: Bool, keyHashesMatch: Bool) -> Bool {
+  if protocolValid {
+    if curveValid {
+      if decoded {
+        if fieldsMatch { return keyHashesMatch }
+        return false
+      }
+      return false
+    }
+    return false
+  }
+  return false
+}

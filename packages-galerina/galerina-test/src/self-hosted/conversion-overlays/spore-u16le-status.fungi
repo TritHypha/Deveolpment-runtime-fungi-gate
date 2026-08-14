@@ -1,0 +1,13 @@
+@version 1
+/// Unsigned 16-bit little-endian write profile.
+pure flow sporeU16leStatusCore(numberCaptured: Bool, masked16: Bool, littleEndian: Bool) -> String {
+  let admittedNumber: Bool = numberCaptured
+  if admittedNumber {
+    if littleEndian {
+      if masked16 { return "u16le" }
+      return "mask_refused"
+    }
+    return "endian_refused"
+  }
+  return "number_refused"
+}

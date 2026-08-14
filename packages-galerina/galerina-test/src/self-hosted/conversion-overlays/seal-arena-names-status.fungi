@@ -1,0 +1,11 @@
+@version 1
+/// Name snapshot availability without exposing values.
+pure flow sealArenaNamesStatusCore(entriesPresent: Bool, keysCaptured: Bool) -> String {
+  let capturedKeys: Bool = keysCaptured
+  if entriesPresent {
+    if capturedKeys { return "names_snapshot" }
+    return "snapshot_refused"
+  }
+  if capturedKeys { return "empty_snapshot" }
+  return "snapshot_refused"
+}

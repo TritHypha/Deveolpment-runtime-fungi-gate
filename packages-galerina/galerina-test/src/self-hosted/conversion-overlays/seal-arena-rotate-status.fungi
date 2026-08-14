@@ -1,0 +1,21 @@
+@version 1
+/// Atomic stage-swap-wipe rotation decision.
+pure flow sealArenaRotateStatusCore(arenaLive: Bool, entryExists: Bool, staged: Bool, swapped: Bool, oldWiped: Bool) -> String {
+  let admittedArena: Bool = arenaLive
+  let capturedEntry: Bool = entryExists
+  let capturedStage: Bool = staged
+  if admittedArena {
+    if capturedEntry {
+      if capturedStage {
+        if swapped {
+          if oldWiped { return "rotated_wiped" }
+          return "old_not_wiped"
+        }
+        return "swap_failed"
+      }
+      return "stage_failed"
+    }
+    return "insert_instead"
+  }
+  return "disposed_refusal"
+}

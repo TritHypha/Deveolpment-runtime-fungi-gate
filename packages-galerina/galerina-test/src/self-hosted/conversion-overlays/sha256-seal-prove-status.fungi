@@ -1,0 +1,10 @@
+@version 1
+/// Async prove delegation outcome after input capture.
+pure flow sha256SealProveStatusCore(inputCaptured: Bool, computationSucceeded: Bool) -> String {
+  let admittedInput: Bool = inputCaptured
+  if computationSucceeded {
+    if admittedInput { return "proof_ready" }
+    return "input_missing"
+  }
+  return "proof_failed"
+}

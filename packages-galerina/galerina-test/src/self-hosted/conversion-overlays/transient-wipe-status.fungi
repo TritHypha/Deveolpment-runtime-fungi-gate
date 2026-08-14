@@ -1,0 +1,15 @@
+@version 1
+/// Callback completion followed by unconditional transient wipe.
+pure flow transientWipeStatusCore(copied: Bool, callbackCompleted: Bool, wiped: Bool) -> String {
+  let capturedCopy: Bool = copied
+  let capturedCallback: Bool = callbackCompleted
+  let capturedWipe: Bool = wiped
+  if capturedCopy {
+    if capturedWipe {
+      if capturedCallback { return "callback_then_wipe" }
+      return "throw_then_wipe"
+    }
+    return "wipe_missing"
+  }
+  return "copy_refused"
+}

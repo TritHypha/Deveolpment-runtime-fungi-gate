@@ -1,0 +1,15 @@
+@version 1
+/// Seal payload parse and exact trailing-byte refusal.
+pure flow sporeUnpackSealStatusCore(magicValid: Bool, minimumLength: Bool, sectionsBound: Bool, noTrailingBytes: Bool) -> String {
+  if minimumLength {
+    if magicValid {
+      if sectionsBound {
+        if noTrailingBytes { return "unpacked_exact" }
+        return "trailing_bytes"
+      }
+      return "section_bounds_refused"
+    }
+    return "magic_refused"
+  }
+  return "length_refused"
+}

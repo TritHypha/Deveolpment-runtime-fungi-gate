@@ -1,0 +1,10 @@
+@version 1
+/// Async verification projection after proof and input capture.
+pure flow sha256SealVerifyStatusCore(proofCaptured: Bool, inputCaptured: Bool, verified: Bool) -> Bool {
+  if proofCaptured {
+    let admittedInput: Bool = inputCaptured
+    if admittedInput { return verified }
+    return false
+  }
+  return false
+}

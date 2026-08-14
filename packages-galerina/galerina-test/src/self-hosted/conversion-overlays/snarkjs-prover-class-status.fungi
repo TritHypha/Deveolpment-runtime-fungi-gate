@@ -1,0 +1,12 @@
+@version 1
+/// Wrapper class readiness without claiming Groth16 authority.
+pure flow snarkjsProverClassStatusCore(constructible: Bool, backendBound: Bool, circuitCopied: Bool) -> String {
+  if circuitCopied {
+    if constructible {
+      if backendBound { return "wrapper_ready" }
+      return "backend_missing"
+    }
+    return "constructor_missing"
+  }
+  return "circuit_missing"
+}

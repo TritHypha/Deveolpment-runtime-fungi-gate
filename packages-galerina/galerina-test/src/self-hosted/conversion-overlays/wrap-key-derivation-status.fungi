@@ -1,0 +1,12 @@
+@version 1
+/// Argon2id wrap-key derivation readiness after byte capture.
+pure flow wrapKeyDerivationStatusCore(passphrasePresent: Bool, saltPresent: Bool, parametersPinned: Bool) -> String {
+  if parametersPinned {
+    if saltPresent {
+      if passphrasePresent { return "derived_32" }
+      return "passphrase_refused"
+    }
+    return "salt_refused"
+  }
+  return "parameters_refused"
+}

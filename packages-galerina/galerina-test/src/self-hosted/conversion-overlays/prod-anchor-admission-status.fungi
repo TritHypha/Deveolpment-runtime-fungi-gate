@@ -1,0 +1,17 @@
+@version 1
+/// KMS-or-Vault post-border admission and cleanup status.
+pure flow prodAnchorAdmissionStatusCore(sourceAdmitted: Bool, fetchSucceeded: Bool, callbackSucceeded: Bool, bufferWiped: Bool) -> String {
+  let admittedSource: Bool = sourceAdmitted
+  let trustedSource: Bool = admittedSource
+  if trustedSource {
+    if fetchSucceeded {
+      if callbackSucceeded {
+        if bufferWiped { return "anchor_wiped" }
+        return "wipe_missing"
+      }
+      return "callback_failed"
+    }
+    return "fetch_failed"
+  }
+  return "source_refused"
+}

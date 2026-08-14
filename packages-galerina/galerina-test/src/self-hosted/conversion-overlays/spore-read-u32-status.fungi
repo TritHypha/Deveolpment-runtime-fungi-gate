@@ -1,0 +1,13 @@
+@version 1
+/// Bounded DataView 32-bit little-endian read profile.
+pure flow sporeReadU32StatusCore(viewValid: Bool, offsetValid: Bool, littleEndian: Bool) -> String {
+  if viewValid {
+    if littleEndian {
+      let offsetReady: Bool = offsetValid
+      if offsetReady { return "read_u32le" }
+      return "offset_refused"
+    }
+    return "endian_refused"
+  }
+  return "view_refused"
+}

@@ -1,0 +1,14 @@
+@version 1
+/// Fault transition and buffer cleanup status.
+pure flow sealArenaFaultStatusCore(entryExists: Bool, stagingPresent: Bool, valueWiped: Bool) -> String {
+  let capturedEntry: Bool = entryExists
+  let capturedStaging: Bool = stagingPresent
+  if valueWiped {
+    if capturedEntry {
+      if capturedStaging { return "faulted_wiped" }
+      return "faulted_value_wiped"
+    }
+    return "absent_noop"
+  }
+  return "wipe_refused"
+}

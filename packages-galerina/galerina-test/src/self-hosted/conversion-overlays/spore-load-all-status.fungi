@@ -1,0 +1,18 @@
+@version 1
+/// Fail-closed all-section decrypt and arena population status.
+pure flow sporeLoadAllStatusCore(composeAllowed: Bool, sectionsComplete: Bool, profilesValid: Bool, decrypted: Bool, allStored: Bool) -> String {
+  if allStored {
+    if composeAllowed {
+      if sectionsComplete {
+        if profilesValid {
+          if decrypted { return "arena_ready" }
+          return "decrypt_refused"
+        }
+        return "profile_refused"
+      }
+      return "section_missing"
+    }
+    return "compose_refused"
+  }
+  return "partial_arena_wiped"
+}

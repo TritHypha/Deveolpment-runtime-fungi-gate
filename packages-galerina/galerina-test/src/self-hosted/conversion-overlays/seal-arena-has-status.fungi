@@ -1,0 +1,6 @@
+@version 1
+/// Present and non-faulted arena membership decision.
+pure flow sealArenaHasStatusCore(entryPresent: Bool, faulted: Bool) -> Bool {
+  if faulted { return false }
+  return entryPresent
+}

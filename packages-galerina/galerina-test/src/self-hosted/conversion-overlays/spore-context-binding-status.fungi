@@ -1,0 +1,15 @@
+@version 1
+/// Section context binds identity, coordinate, profile and epoch.
+pure flow sporeContextBindingStatusCore(idBound: Bool, coordBound: Bool, profileBound: Bool, epochBound: Bool) -> String {
+  if epochBound {
+    if profileBound {
+      if coordBound {
+        if idBound { return "context_bound" }
+        return "id_refused"
+      }
+      return "coord_refused"
+    }
+    return "profile_refused"
+  }
+  return "epoch_refused"
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Best-effort page-lock attempt with fail-closed exception projection.
+pure flow mlockAttemptStatusCore(hookPresent: Bool, returnedTrue: Bool, threw: Bool) -> String {
+  if threw { return "lock_failed" }
+  if hookPresent {
+    if returnedTrue { return "locked" }
+    return "not_locked"
+  }
+  return "hook_absent"
+}
