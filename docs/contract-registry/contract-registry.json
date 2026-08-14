@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-12T18:03:17.000Z",
-  "sha": "c4a1cb57",
-  "contracts": 1519,
-  "parsed": 565,
+  "generatedAt": "2026-08-14T00:38:03.000Z",
+  "sha": "e960da59",
+  "contracts": 1536,
+  "parsed": 572,
   "rows": [
     {
       "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
@@ -10568,6 +10568,22 @@
     },
     {
       "file": "packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "name": "isTaskEffectCore",
+      "qualifier": "pure",
+      "signature": "pure flow isTaskEffectCore(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize a canonical core task effect name."
+    },
+    {
+      "file": "packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "name": "isTaskEffectExtended",
+      "qualifier": "pure",
+      "signature": "pure flow isTaskEffectExtended(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize a canonical extended task effect name."
+    },
+    {
+      "file": "packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi",
       "name": "isTaskEffect",
       "qualifier": "pure",
       "signature": "pure flow isTaskEffect(value: String) -> Bool",
@@ -11525,6 +11541,22 @@
       "intent": "Recognize only an exact context-receipt builtin name."
     },
     {
+      "file": "packages-galerina/galerina-devtools-graph-algorithms/src/self-hosted/boundary-crossing.fungi",
+      "name": "isCrossingAllowed",
+      "qualifier": "pure",
+      "signature": "pure flow isCrossingAllowed(callerKind: String, calleeTrustLevel: String) -> Bool",
+      "effects": [],
+      "intent": "Admit only a declared boundary crossing permitted by the trust policy."
+    },
+    {
+      "file": "packages-galerina/galerina-devtools-impact/src/self-hosted/documentation-path.fungi",
+      "name": "isDocumentationPath",
+      "qualifier": "pure",
+      "signature": "pure flow isDocumentationPath(path: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "packages-galerina/galerina-devtools-naming/src/self-hosted/generic-type-name.fungi",
       "name": "isGenericTypeName",
       "qualifier": "pure",
@@ -12005,12 +12037,92 @@
       "intent": "Return the HTTP 200 status for the hello-world greeting served at GET /hello."
     },
     {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "defaultTimeoutMs",
+      "qualifier": "pure",
+      "signature": "pure flow defaultTimeoutMs() -> Int",
+      "effects": [],
+      "intent": "Return the exact default harness timeout in milliseconds."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "unitRunner",
+      "qualifier": "pure",
+      "signature": "pure flow unitRunner() -> String",
+      "effects": [],
+      "intent": "Return the exact unit-runner path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "r6Parity",
+      "qualifier": "pure",
+      "signature": "pure flow r6Parity() -> String",
+      "effects": [],
+      "intent": "Return the exact R6 parity-test path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "fidelityDifferential",
+      "qualifier": "pure",
+      "signature": "pure flow fidelityDifferential() -> String",
+      "effects": [],
+      "intent": "Return the exact fidelity-differential test path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "compilerDist",
+      "qualifier": "pure",
+      "signature": "pure flow compilerDist() -> String",
+      "effects": [],
+      "intent": "Return the exact compiler distribution path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "compilerBuildEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow compilerBuildEvidence() -> String",
+      "effects": [],
+      "intent": "Return the exact compiler build-evidence path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "compilerPackage",
+      "qualifier": "pure",
+      "signature": "pure flow compilerPackage() -> String",
+      "effects": [],
+      "intent": "Return the exact compiler package path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "galerinaCli",
+      "qualifier": "pure",
+      "signature": "pure flow galerinaCli() -> String",
+      "effects": [],
+      "intent": "Return the exact Galerina CLI path."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/runner-constants.fungi",
+      "name": "compilerEvidenceSchema",
+      "qualifier": "pure",
+      "signature": "pure flow compilerEvidenceSchema() -> String",
+      "effects": [],
+      "intent": "Return the exact compiler evidence schema identifier."
+    },
+    {
       "file": "packages-galerina/galerina-test/src/self-hosted/test-marker.fungi",
       "name": "mark",
       "qualifier": "pure",
       "signature": "pure flow mark(ok: Bool) -> String",
       "effects": [],
       "intent": "Render the exact human test marker for a Boolean result."
+    },
+    {
+      "file": "packages-galerina/galerina-test/src/self-hosted/workspace-marker.fungi",
+      "name": "workspaceMarker",
+      "qualifier": "pure",
+      "signature": "pure flow workspaceMarker() -> String",
+      "effects": [],
+      "intent": "Return the exact Galerina workspace marker filename."
     },
     {
       "file": "packages-galerina/galerina-tools-benchmark/examples/benchmark.config.fungi",
@@ -12043,6 +12155,14 @@
       "signature": "pure flow collapseVerdict(candidateVerdict: Verdict) -> String",
       "effects": [],
       "intent": "Name the fail-closed binary boundary decision."
+    },
+    {
+      "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/effective-verdict.fungi",
+      "name": "effectiveVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow effectiveVerdict(ideal: Verdict, reading: Verdict) -> Verdict",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/governance-decisions.fungi",
@@ -12187,6 +12307,22 @@
       "signature": "pure flow s4PermitData(state: Int) -> Bool",
       "effects": [],
       "intent": "Permit transport data only in the Established state."
+    },
+    {
+      "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/verdict-not.fungi",
+      "name": "vNotVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow vNotVerdict(candidateVerdict: Verdict) -> Verdict",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/verdict-or.fungi",
+      "name": "vOrVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow vOrVerdict(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "tests/owasp/owasp-a01-broken-access-control.fungi",
