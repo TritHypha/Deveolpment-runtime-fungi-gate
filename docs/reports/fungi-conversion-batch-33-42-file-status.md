@@ -2413,6 +2413,54 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 37 - Interpreter values, sync execution and admission
+
+Wave 37 adds **40 new source-bound Fungi decision cores** from the live
+interpreter in exact executable-source order. It first closes the two named
+arrow helpers omitted by the preceding map (`boolVal` and `verdictVal`), then
+continues through float comparison, dispatch and tagged-int helpers, the sync
+sentinel/class/method sequence, fault/trap signalling, and the opening
+`Interpreter` class methods through `checkParameterAdmission`. A bounded
+prior-credit search found no exact source-and-symbol reuse. The package now
+registers **1,520** conversion overlays. These are post-border decision cores:
+JavaScript binary64/coercion, mutable AST/Map/class state, exceptions, async
+effects, clocks, callbacks, diagnostics and runtime admission remain at the
+executing TypeScript border. No consumer switch, supersession or TypeScript
+retirement is claimed.
+
+The pinned source build point is
+`fe0f4ee761e078c887432e350a392c1fd51e40f3`. The exact interpreter source
+SHA-256 is
+`A43A9F93DF7C94D9C6199E92CA09C33A429904FDCCB03F8B27576069AD74F61F`.
+The post-Wave-36 moderate graph refresh still reported the older
+`9541ac8c2a9f5adff4d71d511d89bd27ebc7c757` build point, so graph freshness
+remains **UNKNOWN**. Graph results were navigation only; exact live bytes and
+the bounded source-order/prior-credit audit govern this wave.
+
+The RED source test failed **0/3** because all 40 assets were absent and
+unregistered. The accepted topology uses two independently rooted bounded
+Boolean traces of different lengths, followed by one ordered six-gate release
+decision. This makes the wave structurally distinct rather than a set of
+renamed twins. Fresh source verification passes **3/3**, including exact live
+source binding, complete-corpus exact and normalized alpha-renamed shadow
+refusal, parse/effect/GIR generation and execution. The complete accumulated
+source suite passes **108/108** across 36 suites; package no-emit typecheck is
+green. The exact source-test SHA-256 is
+`101FA766774D3770BEF93F947E540641F510983099F49F490BE5CD64181BF69D`.
+
+Physical verification passes **1/1** for this wave and **36/36** across the
+accumulated source-decision physical suites. It compiles all 40 exports,
+publishes exactly 40 `.slide` artifacts, executes each export, independently
+re-admits and verifies every typed receipt, and refuses changed source,
+artifact and receipt bytes. The exact physical-test SHA-256 is
+`9F7EB4D06704A4622D3212935F8563E63AFD5C6206D1F51BFB76944C9FBF39A9`.
+
+This is the only report modified by the wave. It is committed with 40 new
+`.fungi` files, not as a report-only update. No worker authored these files and
+no push is performed. The worktree and committed guards must both report
+**40/40 unique**, at least 40 newly added `.fungi` files, one report, and a
+report-only streak below two before the commit is accepted.
+
 ## Source decision overlay wave 36 - Hardening, checked arithmetic, imports and interpreter
 
 Wave 36 adds **40 new source-bound Fungi decision cores**: the final six

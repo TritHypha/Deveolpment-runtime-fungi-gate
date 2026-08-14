@@ -1,0 +1,88 @@
+@version 1
+// Source-bound decision overlay wave 37 item 023: interpreter-early-return-class-status.fungi.
+pure flow interpreterEarlyReturnClassStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let leftRoot: Bool = inputCaptured
+  let rightRoot: Bool = evidenceBound
+  let wave37Left001: Bool = leftRoot
+  let wave37Left002: Bool = wave37Left001
+  let wave37Right002: Bool = rightRoot
+  let wave37Left003: Bool = wave37Left002
+  let wave37Left004: Bool = wave37Left003
+  let wave37Right004: Bool = wave37Right002
+  let wave37Left005: Bool = wave37Left004
+  let wave37Left006: Bool = wave37Left005
+  let wave37Right006: Bool = wave37Right004
+  let wave37Left007: Bool = wave37Left006
+  let wave37Left008: Bool = wave37Left007
+  let wave37Right008: Bool = wave37Right006
+  let wave37Left009: Bool = wave37Left008
+  let wave37Left010: Bool = wave37Left009
+  let wave37Right010: Bool = wave37Right008
+  let wave37Left011: Bool = wave37Left010
+  let wave37Left012: Bool = wave37Left011
+  let wave37Right012: Bool = wave37Right010
+  let wave37Left013: Bool = wave37Left012
+  let wave37Left014: Bool = wave37Left013
+  let wave37Right014: Bool = wave37Right012
+  let wave37Left015: Bool = wave37Left014
+  let wave37Left016: Bool = wave37Left015
+  let wave37Right016: Bool = wave37Right014
+  let wave37Left017: Bool = wave37Left016
+  let wave37Left018: Bool = wave37Left017
+  let wave37Right018: Bool = wave37Right016
+  let wave37Left019: Bool = wave37Left018
+  let wave37Left020: Bool = wave37Left019
+  let wave37Right020: Bool = wave37Right018
+  let wave37Left021: Bool = wave37Left020
+  let wave37Left022: Bool = wave37Left021
+  let wave37Right022: Bool = wave37Right020
+  let wave37Left023: Bool = wave37Left022
+  let wave37Left024: Bool = wave37Left023
+  let wave37Right024: Bool = wave37Right022
+  let wave37Left025: Bool = wave37Left024
+  let wave37Left026: Bool = wave37Left025
+  let wave37Right026: Bool = wave37Right024
+  let wave37Left027: Bool = wave37Left026
+  let wave37Left028: Bool = wave37Left027
+  let wave37Right028: Bool = wave37Right026
+  let wave37Left029: Bool = wave37Left028
+  let wave37Left030: Bool = wave37Left029
+  let wave37Right030: Bool = wave37Right028
+  let wave37Left031: Bool = wave37Left030
+  let wave37Left032: Bool = wave37Left031
+  let wave37Right032: Bool = wave37Right030
+  let wave37Left033: Bool = wave37Left032
+  let wave37Left034: Bool = wave37Left033
+  let wave37Right034: Bool = wave37Right032
+  let wave37Left035: Bool = wave37Left034
+  let wave37Left036: Bool = wave37Left035
+  let wave37Right036: Bool = wave37Right034
+  let wave37Left037: Bool = wave37Left036
+  let wave37Left038: Bool = wave37Left037
+  let wave37Right038: Bool = wave37Right036
+  let wave37Left039: Bool = wave37Left038
+  let wave37Left040: Bool = wave37Left039
+  let wave37Right040: Bool = wave37Right038
+  let wave37Left041: Bool = wave37Left040
+  let wave37Left042: Bool = wave37Left041
+  let wave37Right042: Bool = wave37Right040
+  if wave37Right042 {
+    if wave37Left042 {
+      if stateChecked {
+        if outcomeSealed {
+          if releaseChecked {
+            if decisionBuilt {
+              return "interpreter_early_return_class_built"
+            }
+            return "decisionBuilt_missing"
+          }
+          return "releaseChecked_missing"
+        }
+        return "outcomeSealed_missing"
+      }
+      return "stateChecked_missing"
+    }
+    return "leftTrace_missing"
+  }
+  return "rightTrace_missing"
+}
