@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "b268cb07",
+    "sha": "4e199a40",
     "detached": false,
     "dirty": true
   },
@@ -281,7 +281,7 @@
         {
           "item": "Contract Registry (RD-0359)",
           "state": "shipped",
-          "detail": "generated authority is current at 1,519 contracts across 565 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
+          "detail": "generated authority is current at 1,536 contracts across 572 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
         },
         {
           "item": "DSS decision core + optional Wasm oracle",
