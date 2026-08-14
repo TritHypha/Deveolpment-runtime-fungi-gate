@@ -1,0 +1,17 @@
+@version 1
+/// Binds context, provider result, selected profile and packed representation.
+pure flow sporeSectionSealStatusCore(contextBound: Bool, sealSucceeded: Bool, profileMatched: Bool, packed: Bool) -> String {
+  let contextReady: Bool = contextBound
+  if contextReady {
+    if sealSucceeded {
+      if profileMatched {
+        let outputReady: Bool = packed
+        if outputReady { return "section_sealed" }
+        return "pack_failed"
+      }
+      return "profile_mismatch"
+    }
+    return "seal_failed"
+  }
+  return "context_missing"
+}

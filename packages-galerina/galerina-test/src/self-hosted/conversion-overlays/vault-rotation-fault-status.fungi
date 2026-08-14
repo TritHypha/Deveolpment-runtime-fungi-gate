@@ -1,0 +1,12 @@
+@version 1
+/// Conserves the explicit rotation-fault policy path.
+pure flow vaultRotationFaultStatusCore(rotationSucceeded: Bool, policyHandled: Bool, secretSafe: Bool) -> String {
+  if rotationSucceeded { return "rotation_succeeded" }
+  let handled: Bool = policyHandled
+  if handled {
+    let safe: Bool = secretSafe
+    if safe { return "fault_handled" }
+    return "fault_left_secret_live"
+  }
+  return "fault_unhandled"
+}

@@ -1,0 +1,11 @@
+@version 1
+/// Projects only an admitted ALLOW verdict into the store operation.
+pure flow sporeVerdictAllowStatusCore(allow: Bool) -> String {
+  let admitted: Bool = allow
+  let release: Bool = admitted
+  if admitted {
+    if release { return "allowed" }
+    return "release_refused"
+  }
+  return "refused"
+}

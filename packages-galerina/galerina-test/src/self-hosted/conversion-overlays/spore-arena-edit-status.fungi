@@ -1,0 +1,22 @@
+@version 1
+/// Couples arena mutation and reseal with mandatory transient cleanup.
+pure flow sporeArenaEditStatusCore(compositionReady: Bool, valuesOpened: Bool, arenaLoaded: Bool, mutationApplied: Bool, resealed: Bool, wiped: Bool) -> String {
+  if compositionReady {
+    if valuesOpened {
+      let loaded: Bool = arenaLoaded
+      if loaded {
+        if mutationApplied {
+          if resealed {
+            if wiped { return "edited_wiped" }
+            return "arena_wipe_missing"
+          }
+          return "reseal_failed"
+        }
+        return "mutation_failed"
+      }
+      return "arena_load_failed"
+    }
+    return "values_open_failed"
+  }
+  return "compose_failed"
+}

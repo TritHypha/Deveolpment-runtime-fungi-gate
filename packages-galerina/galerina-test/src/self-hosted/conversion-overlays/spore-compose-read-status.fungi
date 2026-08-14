@@ -1,0 +1,19 @@
+@version 1
+/// Models the admitted read composition and mandatory manifest wipe.
+pure flow sporeComposeReadStatusCore(readAllowed: Bool, cryptoReady: Bool, manifestFound: Bool, manifestOpened: Bool, manifestWiped: Bool) -> String {
+  if readAllowed {
+    if cryptoReady {
+      if manifestFound {
+        let opened: Bool = manifestOpened
+        if opened {
+          if manifestWiped { return "compose_ready" }
+          return "manifest_wipe_missing"
+        }
+        return "manifest_open_failed"
+      }
+      return "manifest_section_missing"
+    }
+    return "crypto_missing"
+  }
+  return "read_denied"
+}

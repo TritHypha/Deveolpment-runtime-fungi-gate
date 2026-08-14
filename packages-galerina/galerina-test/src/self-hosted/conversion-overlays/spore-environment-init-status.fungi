@@ -1,0 +1,17 @@
+@version 1
+/// Tracks initial environment creation through cryptography, seal and write.
+pure flow sporeEnvironmentInitStatusCore(cryptoReady: Bool, manifestEmpty: Bool, manifestSealed: Bool, written: Bool) -> String {
+  if cryptoReady {
+    if manifestEmpty {
+      let sealed: Bool = manifestSealed
+      let persisted: Bool = written
+      if sealed {
+        if persisted { return "environment_initialized" }
+        return "write_failed"
+      }
+      return "initial_seal_failed"
+    }
+    return "manifest_not_empty"
+  }
+  return "crypto_unavailable"
+}

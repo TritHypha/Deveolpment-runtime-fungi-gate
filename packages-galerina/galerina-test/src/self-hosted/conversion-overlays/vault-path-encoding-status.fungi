@@ -1,0 +1,17 @@
+@version 1
+/// Normalizes prefixes then validates and rejoins every path segment.
+pure flow vaultPathEncodingStatusCore(prefixStripped: Bool, pathNonempty: Bool, segmentsValid: Bool, joined: Bool) -> String {
+  if prefixStripped {
+    let nonempty: Bool = pathNonempty
+    if nonempty {
+      if segmentsValid {
+        let outputJoined: Bool = joined
+        if outputJoined { return "path_encoded" }
+        return "path_join_failed"
+      }
+      return "path_segment_invalid"
+    }
+    return "path_empty"
+  }
+  return "prefix_normalization_failed"
+}

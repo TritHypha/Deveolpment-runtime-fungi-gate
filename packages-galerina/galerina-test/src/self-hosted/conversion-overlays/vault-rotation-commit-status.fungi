@@ -1,0 +1,27 @@
+@version 1
+/// Commits a staged Vault value after quiescence and identity stability.
+pure flow vaultRotationCommitStatusCore(handleFound: Bool, candidateFetched: Bool, quiesced: Bool, identityStable: Bool, swapped: Bool, oldWiped: Bool) -> String {
+  if handleFound {
+    if candidateFetched {
+      let drainComplete: Bool = quiesced
+      if drainComplete {
+        let sameHandle: Bool = identityStable
+        let commitAllowed: Bool = sameHandle
+        if sameHandle {
+          if commitAllowed {
+          if swapped {
+            if oldWiped { return "rotation_committed" }
+            return "old_secret_live"
+          }
+          return "swap_failed"
+          }
+          return "commit_refused"
+        }
+        return "handle_changed"
+      }
+      return "quiesce_failed"
+    }
+    return "candidate_fetch_failed"
+  }
+  return "unknown_credential"
+}

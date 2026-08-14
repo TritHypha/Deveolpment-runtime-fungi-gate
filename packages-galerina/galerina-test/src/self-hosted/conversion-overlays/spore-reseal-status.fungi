@@ -1,0 +1,18 @@
+@version 1
+/// Requires the manifest and every value to be sealed before section release.
+pure flow sporeResealStatusCore(manifestSealed: Bool, valuesPresent: Bool, allValuesSealed: Bool, sectionsReturned: Bool) -> String {
+  if manifestSealed {
+    let hasValues: Bool = valuesPresent
+    if hasValues {
+      if allValuesSealed {
+        let releaseReady: Bool = sectionsReturned
+        if releaseReady { return "resealed" }
+        return "sections_missing"
+      }
+      return "value_seal_failed"
+    }
+    if sectionsReturned { return "resealed" }
+    return "empty_sections_missing"
+  }
+  return "manifest_seal_failed"
+}

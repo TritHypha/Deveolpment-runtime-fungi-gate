@@ -1,0 +1,15 @@
+@version 1
+/// Requires both cryptographic provider operations before store authority.
+pure flow sporeCryptoLibAdmissionStatusCore(sealReady: Bool, openReady: Bool) -> String {
+  let providerPresent: Bool = sealReady
+  let inverseReady: Bool = openReady
+  let roundTripReady: Bool = inverseReady
+  if providerPresent {
+    if inverseReady {
+      if roundTripReady { return "crypto_ready" }
+      return "roundtrip_missing"
+    }
+    return "open_missing"
+  }
+  return "seal_missing"
+}

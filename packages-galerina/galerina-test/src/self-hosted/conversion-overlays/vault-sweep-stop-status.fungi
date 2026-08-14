@@ -1,0 +1,14 @@
+@version 1
+/// Stops a retained sweep timer without creating further work.
+pure flow vaultSweepStopStatusCore(timerPresent: Bool, timerCleared: Bool) -> String {
+  let supplied: Bool = timerPresent
+  let cleared: Bool = timerCleared
+  let stopRequested: Bool = supplied
+  let stopObserved: Bool = cleared
+  let releaseReady: Bool = stopObserved
+  if stopRequested {
+    if releaseReady { return "sweep_stopped" }
+    return "timer_live"
+  }
+  return "timer_missing"
+}

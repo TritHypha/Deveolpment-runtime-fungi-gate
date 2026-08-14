@@ -1,0 +1,18 @@
+@version 1
+/// Binds URL parsing, transport, limits and complete HTTP response.
+pure flow vaultHttpRequestStatusCore(urlParsed: Bool, transportSelected: Bool, limitsBound: Bool, responseComplete: Bool) -> String {
+  let urlReady: Bool = urlParsed
+  if urlReady {
+    if transportSelected {
+      let budgetReady: Bool = limitsBound
+      if budgetReady {
+        let complete: Bool = responseComplete
+        if complete { return "request_complete" }
+        return "response_incomplete"
+      }
+      return "limits_refused"
+    }
+    return "transport_refused"
+  }
+  return "url_refused"
+}

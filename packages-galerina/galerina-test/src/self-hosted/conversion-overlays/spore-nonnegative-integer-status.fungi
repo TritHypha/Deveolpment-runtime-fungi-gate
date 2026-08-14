@@ -1,0 +1,19 @@
+@version 1
+/// Mirrors the three ordered predicates in the non-negative integer screen.
+pure flow sporeNonnegativeIntegerStatusCore(numberValue: Bool, integerValue: Bool, nonnegative: Bool) -> String {
+  let numeric: Bool = numberValue
+  if numeric {
+    let integral: Bool = integerValue
+    if integral {
+      let rangeReady: Bool = nonnegative
+      let releaseReady: Bool = rangeReady
+      if rangeReady {
+        if releaseReady { return "nonnegative_integer" }
+        return "integer_not_released"
+      }
+      return "negative"
+    }
+    return "fractional"
+  }
+  return "not_number"
+}

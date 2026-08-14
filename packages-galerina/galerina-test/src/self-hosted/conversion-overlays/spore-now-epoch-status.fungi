@@ -1,0 +1,19 @@
+@version 1
+/// Records finite clock admission followed by whole-second projection.
+pure flow sporeNowEpochStatusCore(finiteClock: Bool, floored: Bool) -> String {
+  let observed: Bool = finiteClock
+  let integral: Bool = floored
+  let release: Bool = integral
+  let stableClock: Bool = observed
+  if observed {
+    if integral {
+      if stableClock {
+        if release { return "epoch_ready" }
+        return "epoch_not_released"
+      }
+      return "clock_changed"
+    }
+    return "epoch_fractional"
+  }
+  return "clock_refused"
+}

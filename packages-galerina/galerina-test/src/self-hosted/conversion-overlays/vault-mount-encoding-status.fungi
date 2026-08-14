@@ -1,0 +1,13 @@
+@version 1
+/// Requires a single namespace segment before mount encoding.
+pure flow vaultMountEncodingStatusCore(singleSegment: Bool, segmentValid: Bool) -> String {
+  let namespaceSingle: Bool = singleSegment
+  let grammarValid: Bool = segmentValid
+  let mountReady: Bool = namespaceSingle
+  if mountReady {
+    let segmentReady: Bool = grammarValid
+    if segmentReady { return "mount_encoded" }
+    return "mount_segment_invalid"
+  }
+  return "mount_namespace_invalid"
+}

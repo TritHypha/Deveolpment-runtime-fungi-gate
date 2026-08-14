@@ -1,0 +1,13 @@
+@version 1
+/// Tracks capture, JSON serialization and UTF-8 production as separate gates.
+pure flow sporeManifestBytesStatusCore(manifestCaptured: Bool, jsonReady: Bool, utf8Ready: Bool) -> String {
+  if manifestCaptured {
+    let encoded: Bool = utf8Ready
+    if jsonReady {
+      if encoded { return "manifest_bytes" }
+      return "utf8_refused"
+    }
+    return "json_refused"
+  }
+  return "manifest_missing"
+}

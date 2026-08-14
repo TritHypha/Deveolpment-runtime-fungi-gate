@@ -1,0 +1,16 @@
+@version 1
+/// Records the synchronous ciphertext path-to-bytes operation.
+pure flow sporeFileReadStatusCore(pathCaptured: Bool, bytesRead: Bool) -> String {
+  let pathReady: Bool = pathCaptured
+  let readReady: Bool = bytesRead
+  let operationReady: Bool = pathReady
+  let outputReady: Bool = readReady
+  if operationReady {
+    if outputReady {
+      if pathReady { return "file_bytes" }
+      return "path_changed"
+    }
+    return "read_failed"
+  }
+  return "path_missing"
+}

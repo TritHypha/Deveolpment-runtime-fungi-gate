@@ -2207,3 +2207,37 @@ bounded 17-hit `RoutingContext` query. Codebase-memory reports
 **60,722/60,722 nodes / 152,367/152,367 edges**, exact indexed HEAD and one
 untruncated `RoutingContext` interface. A final post-record exact-head refresh
 is retained in handoff; repository-wide closure remains `UNKNOWN`.
+
+## Source decision overlay wave 13 - Spore store and Vault operations
+
+Wave 13 adds **40 new source-bound Fungi decision cores** and no TypeScript
+retirement: 22 bind the Spore store boundary, 11 bind the Vault rotation
+manager, and 7 bind the Vault HTTP client. Each core has one distinct exact
+source scope, one registered package asset, and a whole-corpus exact plus
+normalized alpha-renamed shadow check. The final check reports **40/40
+unique**; no twin or template shadow is accepted.
+
+The source gate passes **3/3**: all 40 live symbols and assets are present, all
+40 are unique across the complete conversion-overlay corpus, and all 40 parse,
+effect-check, emit GIR and execute their admitted decision vector. The
+independent physical gate passes **1/1** and publishes 40 physical `.slide`
+files, independently re-admits and VOK-verifies every typed result, refuses a
+mutated source package, refuses a mutated physical artifact, and releases no
+production authority.
+
+This is deliberately bounded evidence. The Fungi cores model post-border
+decisions; they do not implement Vault HTTP, timers, callbacks, Buffer
+zeroization, filesystem reads, JSON/UTF-8 parsing, Node cryptography, KEM
+operations, mutable Maps, or secret custody. Those active host effects remain
+in TypeScript and require independently admitted adapters and receipts before
+any consumer switch or retirement. In particular, the current rotation and
+store sources retain callback identity, alias, timing, error-order and
+zero-wipe obligations that these reference-only decision artifacts do not
+authorize.
+
+Commit custody remains guarded: any report-bearing commit must contain at
+least 40 newly added `.fungi` files (50 expected), the report-only streak
+must stay below two, and every added Fungi file must pass exact and normalized
+whole-corpus duplicate/shadow checks before staging. Wave 13 contains one
+report update and 40 new Fungi files. No worker authored this wave and no push
+is authorized.

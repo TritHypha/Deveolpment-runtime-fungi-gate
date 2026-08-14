@@ -1,0 +1,17 @@
+@version 1
+/// Refuses before opening unless packed bytes, context and profile agree.
+pure flow sporeSectionOpenStatusCore(packedCaptured: Bool, contextBound: Bool, profileMatched: Bool, opened: Bool) -> String {
+  if packedCaptured {
+    let bound: Bool = contextBound
+    if bound {
+      let profile: Bool = profileMatched
+      if profile {
+        if opened { return "section_opened" }
+        return "open_failed"
+      }
+      return "profile_refused"
+    }
+    return "context_refused"
+  }
+  return "packed_missing"
+}

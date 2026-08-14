@@ -1,0 +1,17 @@
+@version 1
+/// Validates schema, recipient, entry collection and forbidden-key absence.
+pure flow sporeManifestValidationStatusCore(schemaValid: Bool, recipientValid: Bool, entriesValid: Bool, forbiddenKeysAbsent: Bool) -> String {
+  let schemaGate: Bool = schemaValid
+  if schemaGate {
+    if recipientValid {
+      let entryGate: Bool = entriesValid
+      if entryGate {
+        if forbiddenKeysAbsent { return "manifest_valid" }
+        return "forbidden_key"
+      }
+      return "entries_invalid"
+    }
+    return "recipient_invalid"
+  }
+  return "schema_invalid"
+}

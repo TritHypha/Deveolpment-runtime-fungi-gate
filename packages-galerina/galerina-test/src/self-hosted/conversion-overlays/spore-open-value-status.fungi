@@ -1,0 +1,22 @@
+@version 1
+/// Allows transient value use only when lookup, open, callback and wipe complete.
+pure flow sporeOpenValueStatusCore(compositionReady: Bool, entryFound: Bool, sectionFound: Bool, opened: Bool, callbackCompleted: Bool, wiped: Bool) -> String {
+  if compositionReady {
+    if entryFound {
+      if sectionFound {
+        if opened {
+          let callbackReady: Bool = callbackCompleted
+          if callbackReady {
+            if wiped { return "value_used_wiped" }
+            return "value_wipe_missing"
+          }
+          return "callback_failed"
+        }
+        return "value_open_failed"
+      }
+      return "value_section_missing"
+    }
+    return "entry_missing"
+  }
+  return "composition_refused"
+}

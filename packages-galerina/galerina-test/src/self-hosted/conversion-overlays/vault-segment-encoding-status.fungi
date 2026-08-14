@@ -1,0 +1,19 @@
+@version 1
+/// Refuses traversal before applying the Vault segment grammar and encoding.
+pure flow vaultSegmentEncodingStatusCore(segmentNontraversal: Bool, grammarValid: Bool, encoded: Bool) -> String {
+  let traversalSafe: Bool = segmentNontraversal
+  let segmentCaptured: Bool = traversalSafe
+  if traversalSafe {
+    let grammarReady: Bool = grammarValid
+    if segmentCaptured {
+      if grammarReady {
+      let encodingReady: Bool = encoded
+      if encodingReady { return "segment_encoded" }
+      return "encoding_failed"
+      }
+      return "segment_invalid"
+    }
+    return "segment_missing"
+  }
+  return "traversal_refused"
+}

@@ -1,0 +1,20 @@
+@version 1
+/// Requires all values to be opened and wiped around recipient resealing.
+pure flow sporeRecipientRotationStatusCore(compositionReady: Bool, allValuesOpened: Bool, recipientChanged: Bool, resealed: Bool, wiped: Bool) -> String {
+  if compositionReady {
+    let valuesReady: Bool = allValuesOpened
+    if valuesReady {
+      if recipientChanged {
+        let sealReady: Bool = resealed
+        if sealReady {
+          if wiped { return "recipient_rotated" }
+          return "rotation_wipe_missing"
+        }
+        return "rotation_reseal_failed"
+      }
+      return "recipient_unchanged"
+    }
+    return "values_incomplete"
+  }
+  return "rotation_compose_failed"
+}

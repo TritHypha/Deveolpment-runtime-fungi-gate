@@ -1,0 +1,17 @@
+@version 1
+/// Wipes both possible buffers before removing the handle.
+pure flow vaultEvictionStatusCore(handlePresent: Bool, activeWiped: Bool, stagingWiped: Bool, deleted: Bool) -> String {
+  if handlePresent {
+    if activeWiped {
+      let stageClean: Bool = stagingWiped
+      if stageClean {
+        if deleted { return "credential_evicted" }
+        return "handle_retained"
+      }
+      return "staging_live"
+    }
+    return "active_live"
+  }
+  if deleted { return "credential_evicted" }
+  return "already_absent"
+}

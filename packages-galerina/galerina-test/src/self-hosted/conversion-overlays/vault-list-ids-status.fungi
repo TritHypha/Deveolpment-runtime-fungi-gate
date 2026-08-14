@@ -1,0 +1,13 @@
+@version 1
+/// Copies the current handle-key iteration into a returned identifier list.
+pure flow vaultListIdsStatusCore(handlesCaptured: Bool, keysCopied: Bool) -> String {
+  let captured: Bool = handlesCaptured
+  let copied: Bool = keysCopied
+  let iterationReady: Bool = captured
+  let outputReady: Bool = copied
+  if iterationReady {
+    if outputReady { return "ids_listed" }
+    return "keys_alias_refused"
+  }
+  return "handles_unavailable"
+}

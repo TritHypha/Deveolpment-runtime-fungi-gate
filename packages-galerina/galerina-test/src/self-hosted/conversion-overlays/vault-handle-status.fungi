@@ -1,0 +1,14 @@
+@version 1
+/// Produces a frozen redacted view without secret buffers.
+pure flow vaultHandleStatusCore(handlePresent: Bool, statusRedacted: Bool, frozen: Bool) -> String {
+  if handlePresent {
+    let redactionReady: Bool = statusRedacted
+    let statusFrozen: Bool = frozen
+    if redactionReady {
+      if statusFrozen { return "handle_status" }
+      return "status_mutable"
+    }
+    return "secret_exposed"
+  }
+  return "handle_absent"
+}

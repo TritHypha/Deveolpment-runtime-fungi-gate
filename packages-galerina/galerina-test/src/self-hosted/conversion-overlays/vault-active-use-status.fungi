@@ -1,0 +1,20 @@
+@version 1
+/// Releases only presence after synchronous callback use and copy wipe.
+pure flow vaultActiveUseStatusCore(handlePresent: Bool, notFaulted: Bool, copied: Bool, callbackSync: Bool, copyWiped: Bool) -> String {
+  let handleReady: Bool = handlePresent
+  if handleReady {
+    let healthy: Bool = notFaulted
+    if healthy {
+      if copied {
+        if callbackSync {
+          if copyWiped { return "active_used_wiped" }
+          return "copy_wipe_missing"
+        }
+        return "async_callback_refused"
+      }
+      return "copy_failed"
+    }
+    return "credential_faulted"
+  }
+  return "credential_missing"
+}

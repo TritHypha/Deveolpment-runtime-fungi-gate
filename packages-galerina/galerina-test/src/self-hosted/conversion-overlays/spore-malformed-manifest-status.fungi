@@ -1,0 +1,11 @@
+@version 1
+/// Captures construction of the typed malformed-manifest refusal.
+pure flow sporeMalformedManifestStatusCore(reasonCaptured: Bool, typedError: Bool) -> String {
+  let hasReason: Bool = reasonCaptured
+  let hasType: Bool = typedError
+  if hasType {
+    if hasReason { return "manifest_refused" }
+    return "reason_missing"
+  }
+  return "untyped_failure"
+}

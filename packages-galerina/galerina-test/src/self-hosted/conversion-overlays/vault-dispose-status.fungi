@@ -1,0 +1,18 @@
+@version 1
+/// Requires complete buffer erasure before clearing manager state.
+pure flow vaultDisposeStatusCore(handlesPresent: Bool, activeWiped: Bool, stagingWiped: Bool, mapCleared: Bool) -> String {
+  if handlesPresent {
+    let activeClean: Bool = activeWiped
+    let stagingClean: Bool = stagingWiped
+    if activeClean {
+      if stagingClean {
+        if mapCleared { return "vault_disposed" }
+        return "map_not_cleared"
+      }
+      return "staging_not_wiped"
+    }
+    return "active_not_wiped"
+  }
+  if mapCleared { return "vault_disposed" }
+  return "empty_map_not_cleared"
+}

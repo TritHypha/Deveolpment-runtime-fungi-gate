@@ -1,0 +1,18 @@
+@version 1
+/// Models the single-operation rotation lease and finally cleanup.
+pure flow vaultRotationLeaseStatusCore(leaseFree: Bool, operationStarted: Bool, operationCompleted: Bool, leaseCleared: Bool) -> String {
+  let available: Bool = leaseFree
+  if available {
+    if operationStarted {
+      if operationCompleted {
+        let cleaned: Bool = leaseCleared
+        if cleaned { return "rotation_completed" }
+        return "lease_stuck"
+      }
+      if leaseCleared { return "operation_failed_cleaned" }
+      return "operation_failed_lease_stuck"
+    }
+    return "operation_not_started"
+  }
+  return "lease_busy"
+}

@@ -1,0 +1,12 @@
+@version 1
+/// Confirms the provider profile and the context profile discriminator.
+pure flow sporeKemProfileStatusCore(profileMatched: Bool, contextMatched: Bool) -> String {
+  let providerProfile: Bool = profileMatched
+  let contextProfile: Bool = contextMatched
+  let profilesAgree: Bool = providerProfile
+  if profilesAgree {
+    if contextProfile { return "kem_profile_bound" }
+    return "context_profile_mismatch"
+  }
+  return "provider_profile_mismatch"
+}

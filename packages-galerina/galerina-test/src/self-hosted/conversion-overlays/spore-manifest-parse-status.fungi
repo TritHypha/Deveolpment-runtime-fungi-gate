@@ -1,0 +1,17 @@
+@version 1
+/// Conserves the decode, parse and structural-validation pipeline.
+pure flow sporeManifestParseStatusCore(bytesCaptured: Bool, utf8Decoded: Bool, jsonParsed: Bool, validationReady: Bool) -> String {
+  if bytesCaptured {
+    let textReady: Bool = utf8Decoded
+    let syntaxReady: Bool = jsonParsed
+    if textReady {
+      if syntaxReady {
+        if validationReady { return "manifest_parsed" }
+        return "validation_failed"
+      }
+      return "parse_failed"
+    }
+    return "decode_failed"
+  }
+  return "bytes_missing"
+}

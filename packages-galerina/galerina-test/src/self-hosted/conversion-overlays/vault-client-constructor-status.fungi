@@ -1,0 +1,18 @@
+@version 1
+/// Admits client construction only after URL, transport, token and budgets.
+pure flow vaultClientConstructorStatusCore(urlValid: Bool, transportAllowed: Bool, tokenPresent: Bool, limitsValid: Bool) -> String {
+  let parsed: Bool = urlValid
+  let transport: Bool = transportAllowed
+  if parsed {
+    if transport {
+      let tokenReady: Bool = tokenPresent
+      if tokenReady {
+        if limitsValid { return "client_constructed" }
+        return "limits_invalid"
+      }
+      return "token_missing"
+    }
+    return "transport_not_authorized"
+  }
+  return "address_invalid"
+}

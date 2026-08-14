@@ -1,0 +1,23 @@
+@version 1
+/// Starts the periodic sweep only with captured credentials and interval.
+pure flow vaultSweepStartStatusCore(credentialsCaptured: Bool, intervalValid: Bool, timerStarted: Bool) -> String {
+  let credentialsReady: Bool = credentialsCaptured
+  let sweepInputReady: Bool = credentialsReady
+  if credentialsReady {
+    let scheduleReady: Bool = intervalValid
+    if sweepInputReady {
+      if scheduleReady {
+      let started: Bool = timerStarted
+      let retained: Bool = started
+      if started {
+        if retained { return "sweep_started" }
+        return "timer_not_retained"
+      }
+      return "timer_failed"
+      }
+      return "interval_refused"
+    }
+    return "credentials_changed"
+  }
+  return "credentials_missing"
+}
