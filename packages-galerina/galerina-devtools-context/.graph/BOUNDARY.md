@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 6 |
+| Files | 7 |
 | Internal edges | 8 |
 | External dependencies | 2 |
 | ├─ Node core | 1 |
@@ -42,6 +42,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/builtin-name.fungi`
+- `src/self-hosted/devtools-context-version.fungi`
 
 ## Allowed Orphans
 _none declared_

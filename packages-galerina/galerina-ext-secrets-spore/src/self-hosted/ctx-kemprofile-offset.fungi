@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-secrets-spore/src/store.ts#CTX_KEMPROFILE_OFFSET
+pure flow ctxKemprofileOffset() -> Int {
+  return 26
+}

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-devtools-kb-graph/src/reporter.ts#DEFAULT_FILL
+pure flow defaultFill() -> String {
+  return "#f5f5f5"
+}

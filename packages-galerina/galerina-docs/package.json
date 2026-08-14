@@ -5,6 +5,13 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/bearer-scheme.fungi",
+      "src/self-hosted/default-version.fungi",
+      "src/self-hosted/error-schema.fungi"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

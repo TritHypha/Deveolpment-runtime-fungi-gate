@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-sentinel-egress/src/audit-egress.ts#LEDGER_FILE
+pure flow ledgerFile() -> String {
+  return "audit-egress.jsonl"
+}

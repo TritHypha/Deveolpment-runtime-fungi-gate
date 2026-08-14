@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-cli/src/security.ts#REDACTION
+pure flow redaction() -> String {
+  return "SecureString(redacted)"
+}

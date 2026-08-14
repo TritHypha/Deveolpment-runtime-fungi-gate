@@ -13,6 +13,9 @@
       "src/tri/index.ts"
     ],
     "loadedAssets": [
+      "src/self-hosted/fungi-bool-boundary-003-invalid-input.fungi",
+      "src/self-hosted/fungi-bool-boundary-004-missing-boundary-name.fungi",
+      "src/self-hosted/fungi-bool-boundary-005-result-misused.fungi",
       "src/self-hosted/fungi-bool-boundary-001-failed-closed.fungi",
       "src/self-hosted/fungi-bool-boundary-002-unknown-reason.fungi",
       "src/self-hosted/fungi-decision-001-invalid-decision.fungi",

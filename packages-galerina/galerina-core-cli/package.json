@@ -10,6 +10,7 @@
   },
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/redaction.fungi",
       "src/self-hosted/fungi-cli-redact-001.fungi"
     ]
   },

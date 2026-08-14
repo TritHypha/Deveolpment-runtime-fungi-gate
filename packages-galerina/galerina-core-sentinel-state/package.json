@@ -7,6 +7,8 @@
   "type": "module",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/local-key-id.fungi",
+      "src/self-hosted/snapshot-version.fungi",
       "src/self-hosted/cold-boot.fungi",
       "src/self-hosted/restore-verdict-export-name.fungi",
       "src/self-hosted/restore-verdict-package-identity.fungi"

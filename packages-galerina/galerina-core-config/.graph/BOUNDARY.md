@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 7 |
+| Files | 9 |
 | Internal edges | 3 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -42,6 +42,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 ## Loaded Assets
 - `src/self-hosted/allow-localhost-env.fungi`
 - `src/self-hosted/allow-plaintext-egress-env.fungi`
+- `src/self-hosted/default-governance-mode.fungi`
+- `src/self-hosted/default-security-posture.fungi`
 - `src/self-hosted/egress-allowed-hosts-env.fungi`
 - `src/self-hosted/environment-mode.fungi`
 

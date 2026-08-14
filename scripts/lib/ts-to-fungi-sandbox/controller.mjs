@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, realpathSync } from "node:fs";
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
@@ -15,7 +16,7 @@ import {
   canonicalRelativeTsPath,
   codeUnitCompare,
 } from "./contracts.mjs";
-import { classifyTypeScriptSource } from "./classifier.mjs";
+import { classifyTypeScriptSource, discoverTypeScriptScopes } from "./classifier.mjs";
 import {
   buildCompilerEvidence,
   buildPhysicalEvidence,
@@ -251,6 +252,109 @@ export async function runBatch({ root, project, manifest, out, auditOnly = false
 
 export async function runInspect({ root, project, file, symbol, out, auditOnly = false }) {
   return runBatch({ root, project, manifest: { schema: "galerina.ts-to-fungi-sandbox.batch.v1", requests: [{ file, symbol }] }, out, auditOnly });
+}
+
+function trackedTypeScriptSources(root) {
+  let bytes;
+  try {
+    bytes = execFileSync("git", ["ls-files", "-z", "--", "packages-galerina"], {
+      cwd: root,
+      encoding: "utf8",
+      windowsHide: true,
+      maxBuffer: 16 * 1024 * 1024,
+    });
+  } catch {
+    throw new SandboxRefusal("DISCOVERY_GIT_INDEX_UNAVAILABLE", "tracked source index is unavailable");
+  }
+  return bytes
+    .split("\0")
+    .filter((file) => /^packages-galerina\/[^/]+\/src\/.+\.ts$/u.test(file))
+    .sort(codeUnitCompare);
+}
+
+function discoveryCursor(value) {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string") throw new SandboxRefusal("DISCOVERY_CURSOR_INVALID", "discovery cursor must be file#symbol");
+  const separator = value.lastIndexOf("#");
+  if (separator <= 0) throw new SandboxRefusal("DISCOVERY_CURSOR_INVALID", "discovery cursor must be file#symbol");
+  const file = value.slice(0, separator);
+  const symbol = value.slice(separator + 1);
+  canonicalRelativeTsPath(file);
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/u.test(symbol)) throw new SandboxRefusal("DISCOVERY_CURSOR_INVALID", "discovery cursor symbol is invalid");
+  return `${file}#${symbol}`;
+}
+
+function oracleScopes(corpus) {
+  const scopes = new Set();
+  const pattern = /^\/\/\/ TypeScript oracle: (packages-galerina\/[^\s#]+\.ts)#([A-Za-z_$][A-Za-z0-9_$]*)\r?$/gmu;
+  for (const item of corpus) {
+    for (const match of item.source.matchAll(pattern)) scopes.add(`${match[1]}#${match[2]}`);
+  }
+  return scopes;
+}
+
+async function isVendoredPackage(root, file, cache) {
+  const packageRoot = file.split("/").slice(0, 2).join("/");
+  if (cache.has(packageRoot)) return cache.get(packageRoot);
+  const packagePath = resolve(root, ...packageRoot.split("/"), "package.json");
+  let vendored = false;
+  if (existsSync(packagePath)) {
+    const metadata = parseStrictJsonBytes(await readFile(packagePath), { label: `${packageRoot} package manifest`, maxBytes: 1024 * 1024 });
+    assertPlainRecord(metadata, `${packageRoot} package manifest`);
+    vendored = Object.hasOwn(metadata, "galerinaVendor");
+  }
+  cache.set(packageRoot, vendored);
+  return vendored;
+}
+
+export async function runDiscover({ root, project, out, limit = MAX_BATCH_REQUESTS, after }) {
+  if (!Number.isSafeInteger(limit) || limit < 1 || limit > MAX_BATCH_REQUESTS) {
+    throw new SandboxRefusal("DISCOVERY_LIMIT_INVALID", `discovery limit must be 1..${MAX_BATCH_REQUESTS}`);
+  }
+  const cursor = discoveryCursor(after);
+  const corpus = [...await loadWorkingFungiCorpus(root)];
+  const existingScopes = oracleScopes(corpus);
+  const packageCache = new Map();
+  const requests = [];
+  const skipped = [];
+  let scanned = 0;
+  for (const file of trackedTypeScriptSources(root)) {
+    if (await isVendoredPackage(root, file, packageCache)) continue;
+    const sourceBytes = await readFile(resolve(root, ...file.split("/")));
+    if (sourceBytes.byteLength > 4 * 1024 * 1024) continue;
+    const source = sourceBytes.toString("utf8");
+    for (const classification of discoverTypeScriptScopes({ source, file })) {
+      const key = `${file}#${classification.symbol}`;
+      if (cursor !== undefined && codeUnitCompare(key, cursor) <= 0) continue;
+      scanned += 1;
+      if (existingScopes.has(key)) continue;
+      const lowered = lowerClassifiedSymbol(classification);
+      if (findCorpusCollision(lowered.source, corpus) !== undefined) continue;
+      try {
+        await resolveSourceIdentity({ root, project, file, symbol: classification.symbol });
+      } catch (error) {
+        const refusal = refusalReason(error);
+        if (skipped.length < MAX_BATCH_REQUESTS * 10) skipped.push(Object.freeze({ scope: key, reasonCode: refusal.code, reason: refusal.detail }));
+        continue;
+      }
+      requests.push(Object.freeze({ file, symbol: classification.symbol }));
+      existingScopes.add(key);
+      corpus.push(Object.freeze({ path: `discovery/${key}.fungi`, source: lowered.source }));
+      if (requests.length === limit) break;
+    }
+    if (requests.length === limit) break;
+  }
+  const manifest = validateManifest({ schema: "galerina.ts-to-fungi-sandbox.batch.v1", requests });
+  await atomicWrite(resolve(out), `${canonicalJson(manifest)}\n`);
+  return Object.freeze({
+    schema: "galerina.ts-to-fungi-sandbox.discovery.v1",
+    limit,
+    scanned,
+    selected: requests.length,
+    skipped: Object.freeze(skipped),
+    nextAfter: requests.length === 0 ? cursor : `${requests.at(-1).file}#${requests.at(-1).symbol}`,
+    manifest,
+  });
 }
 
 export async function verifyReceipt({ root, receipt }) {

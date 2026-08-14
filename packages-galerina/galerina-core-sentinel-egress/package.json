@@ -7,6 +7,7 @@
   "type": "module",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/ledger-file.fungi",
       "src/self-hosted/audit-egress.fungi"
     ]
   },

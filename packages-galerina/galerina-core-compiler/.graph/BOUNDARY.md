@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 214 |
+| Files | 231 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -67,8 +67,13 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/default-max-steps.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/effect-mask-subset.fungi`
+- `src/self-hosted/float-nonfinite-trap.fungi`
 - `src/self-hosted/floor-normalisation.fungi`
+- `src/self-hosted/fnv-prime.fungi`
 - `src/self-hosted/frontend-evidence-role-id.fungi`
+- `src/self-hosted/fungi-build-001-code.fungi`
+- `src/self-hosted/fungi-proof-cert-001.fungi`
+- `src/self-hosted/fungi-proof-cert-002.fungi`
 - `src/self-hosted/gate-v3-version.fungi`
 - `src/self-hosted/gir-emitter.fungi`
 - `src/self-hosted/governance-qualifier-escalation.fungi`
@@ -76,15 +81,20 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/governance-verifier.fungi`
 - `src/self-hosted/hardening-host-capability.fungi`
 - `src/self-hosted/hardening-trust-boundary.fungi`
+- `src/self-hosted/i32-max.fungi`
+- `src/self-hosted/i32-min.fungi`
+- `src/self-hosted/ident.fungi`
 - `src/self-hosted/induction-name.fungi`
 - `src/self-hosted/lease-schema-id.fungi`
 - `src/self-hosted/lexer.fungi`
 - `src/self-hosted/manifest-schema-version.fungi`
+- `src/self-hosted/max-import-bytes.fungi`
 - `src/self-hosted/max-record-fields.fungi`
 - `src/self-hosted/max-regex-subject-chars.fungi`
 - `src/self-hosted/max-tagged.fungi`
 - `src/self-hosted/maximum-access-index.fungi`
 - `src/self-hosted/min-secret-length.fungi`
+- `src/self-hosted/min-tagged.fungi`
 - `src/self-hosted/ml-dsa-65-public-key-bytes.fungi`
 - `src/self-hosted/ml-dsa-65-signature-bytes.fungi`
 - `src/self-hosted/money-ratio-decimals.fungi`
@@ -99,6 +109,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/retry-strategy.fungi`
 - `src/self-hosted/runtime.fungi`
 - `src/self-hosted/schema-id.fungi`
+- `src/self-hosted/secure-default-fault-action.fungi`
 - `src/self-hosted/signature-schema-id.fungi`
 - `src/self-hosted/signing-domain.fungi`
 - `src/self-hosted/slide-checked-decision-frontend.fungi`
@@ -126,6 +137,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-v2b-lease-canonical.fungi`
 - `src/self-hosted/slide-v2b-lease-shape.fungi`
 - `src/self-hosted/slide-v2b-lease-use-state.fungi`
+- `src/self-hosted/slide-v2b-receipt-schema-id.fungi`
 - `src/self-hosted/slide-v2c-aggregate-model.fungi`
 - `src/self-hosted/slide-v2c-aggregate-validator.fungi`
 - `src/self-hosted/slide-v2c-cbor-encoder.fungi`
@@ -149,8 +161,13 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-v2e-frontend-model.fungi`
 - `src/self-hosted/slide-v2e-frontend-schema.fungi`
 - `src/self-hosted/slide-v2e-frontend-validator.fungi`
+- `src/self-hosted/slide-v2e-receipt-schema-id.fungi`
 - `src/self-hosted/slide-v2e-signature-evidence.fungi`
+- `src/self-hosted/slide-v2e-signing-domain.fungi`
+- `src/self-hosted/slide-v2e-verifier-id.fungi`
 - `src/self-hosted/slide-vok-authority-types.fungi`
+- `src/self-hosted/tenant-scope-binding.fungi`
+- `src/self-hosted/tenant-scoped-suffix.fungi`
 - `src/self-hosted/tensor-dimension-count-compatibility.fungi`
 - `src/self-hosted/tensor-element-type-compatibility.fungi`
 - `src/self-hosted/type-checker.fungi`

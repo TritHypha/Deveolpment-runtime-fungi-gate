@@ -7,6 +7,9 @@
   "type": "module",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/codec-json.fungi",
+      "src/self-hosted/ctx-kemprofile-offset.fungi",
+      "src/self-hosted/seal-magic.fungi",
       "src/self-hosted/modality-structured.fungi"
     ]
   },

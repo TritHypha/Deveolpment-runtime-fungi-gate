@@ -6,6 +6,7 @@
   "type": "module",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/devtools-context-version.fungi",
       "src/self-hosted/builtin-name.fungi"
     ]
   },

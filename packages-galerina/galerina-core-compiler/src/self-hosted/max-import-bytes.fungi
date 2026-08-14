@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/module-registry.ts#MAX_IMPORT_BYTES
+pure flow maxImportBytes() -> Int {
+  return 10485760
+}

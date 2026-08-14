@@ -12,7 +12,7 @@ import {
   OUTCOMES,
   canonicalRelativeTsPath,
 } from "../lib/ts-to-fungi-sandbox/contracts.mjs";
-import { classifyTypeScriptSource } from "../lib/ts-to-fungi-sandbox/classifier.mjs";
+import { classifyTypeScriptSource, discoverTypeScriptScopes } from "../lib/ts-to-fungi-sandbox/classifier.mjs";
 import {
   alphaShadowFingerprint,
   buildCompilerEvidence,
@@ -23,7 +23,7 @@ import {
 import { discoverGraphProject, resolveSourceIdentity } from "../lib/ts-to-fungi-sandbox/identity.mjs";
 import { appendOutcomeRecord, canonicalJson } from "../lib/ts-to-fungi-sandbox/journal.mjs";
 import { lowerClassifiedSymbol } from "../lib/ts-to-fungi-sandbox/lowerer.mjs";
-import { assertCliInput, assertCliOutput, runBatch, verifyReceipt } from "../lib/ts-to-fungi-sandbox/controller.mjs";
+import { assertCliInput, assertCliOutput, runBatch, runDiscover, verifyReceipt } from "../lib/ts-to-fungi-sandbox/controller.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const SNAPSHOT_FILE = "packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts";
@@ -102,6 +102,18 @@ test("5 classifier admits a closed scalar function and blocks known active or nu
   const active = classifyTypeScriptSource({ source: 'export const ITEMS = new Set(["x"]);\n', file: "packages-galerina/test/src/value.ts", symbol: "ITEMS" });
   assert.equal(active.outcome, "BLOCKED");
   assert.ok(active.blockers.includes(BLOCKERS.ACTIVE_OBJECT));
+});
+
+test("5a discovery returns only supported top-level scopes in source order", () => {
+  const source = [
+    'export const CONTEXT = "sandbox.discovery.v1";',
+    'export const ITEMS = new Set(["x"]);',
+    'export interface Shape { readonly value: string }',
+    'export function choose(flag: boolean): string { if (flag) { return "yes"; } return "no"; }',
+  ].join("\n");
+  const discovered = discoverTypeScriptScopes({ source, file: "packages-galerina/test/src/value.ts" });
+  assert.deepEqual(discovered.map((item) => item.symbol), ["CONTEXT", "choose"]);
+  assert.ok(discovered.every((item) => item.outcome === "SUPPORTED"));
 });
 
 test("6 lowerer emits documented deterministic Fungi and cannot consume a forged record", () => {
@@ -194,4 +206,17 @@ test("10 a mixed ten-request audit batch continues, retains TypeScript, and dete
   const tamperedPath = join(out, "tampered.json");
   await writeFile(tamperedPath, `${canonicalJson(receipt)}\n`, { flag: "wx" });
   assert.equal((await verifyReceipt({ root: ROOT, receipt: tamperedPath })).valid, false);
+}));
+
+test("11 bounded discovery writes a ten-or-fewer unique real-package manifest", async () => withTemp("ts-fungi-discover-", async (dir) => {
+  const project = await discoverGraphProject(ROOT);
+  const out = join(dir, "manifest.json");
+  const result = await runDiscover({ root: ROOT, project, out, limit: 3 });
+  assert.equal(result.limit, 3);
+  assert.equal(result.selected, 3);
+  assert.equal(result.manifest.requests.length, 3);
+  assert.ok(Array.isArray(result.skipped));
+  assert.ok(result.manifest.requests.every((request) => request.file.startsWith("packages-galerina/") && request.file.includes("/src/") && request.file.endsWith(".ts")));
+  assert.equal(new Set(result.manifest.requests.map((request) => `${request.file}#${request.symbol}`)).size, 3);
+  assert.deepEqual(JSON.parse(await readFile(out, "utf8")), result.manifest);
 }));

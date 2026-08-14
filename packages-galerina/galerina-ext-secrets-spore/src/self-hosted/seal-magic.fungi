@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-secrets-spore/src/schema.ts#SEAL_MAGIC
+pure flow sealMagic() -> Int {
+  return 231
+}

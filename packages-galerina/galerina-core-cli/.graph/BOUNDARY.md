@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 10 |
+| Files | 11 |
 | Internal edges | 16 |
 | External dependencies | 6 |
 | ├─ Node core | 4 |
@@ -46,6 +46,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/fungi-cli-redact-001.fungi`
+- `src/self-hosted/redaction.fungi`
 
 ## Allowed Orphans
 _none declared_

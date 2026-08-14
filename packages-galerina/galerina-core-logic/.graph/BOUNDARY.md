@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 40 |
+| Files | 43 |
 | Internal edges | 43 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -46,6 +46,9 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 ## Loaded Assets
 - `src/self-hosted/fungi-bool-boundary-001-failed-closed.fungi`
 - `src/self-hosted/fungi-bool-boundary-002-unknown-reason.fungi`
+- `src/self-hosted/fungi-bool-boundary-003-invalid-input.fungi`
+- `src/self-hosted/fungi-bool-boundary-004-missing-boundary-name.fungi`
+- `src/self-hosted/fungi-bool-boundary-005-result-misused.fungi`
 - `src/self-hosted/fungi-decision-001-invalid-decision.fungi`
 - `src/self-hosted/fungi-decision-002-empty-reason.fungi`
 - `src/self-hosted/fungi-decision-003-empty-unknown-reasons.fungi`

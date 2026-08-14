@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 4 |
+| Files | 7 |
 | Internal edges | 6 |
 | External dependencies | 1 |
 | ├─ Node core | 0 |
@@ -40,7 +40,9 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/bearer-scheme.fungi`
+- `src/self-hosted/default-version.fungi`
+- `src/self-hosted/error-schema.fungi`
 
 ## Allowed Orphans
 _none declared_

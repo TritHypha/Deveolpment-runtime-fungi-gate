@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-secrets-spore/src/schema.ts#CODEC_JSON
+pure flow codecJson() -> Int {
+  return 1537
+}

@@ -8,6 +8,7 @@
   "types": "./dist/index.d.ts",
   "packageGraph": {
     "loadedAssets": [
+      "src/self-hosted/vkey-material.fungi",
       "src/self-hosted/circuit-id.fungi"
     ]
   },

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-ext-proof-snarkjs/src/circuit.ts#VKEY_MATERIAL
+pure flow vkeyMaterial() -> String {
+  return "galerina-vkey-sha256-v0.1"
+}

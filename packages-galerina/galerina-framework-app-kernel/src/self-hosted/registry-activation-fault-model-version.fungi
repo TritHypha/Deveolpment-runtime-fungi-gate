@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-activation-simulator.ts#REGISTRY_ACTIVATION_FAULT_MODEL_VERSION
+pure flow registryActivationFaultModelVersion() -> String {
+  return "galerina.registry.activation.fault-model.v1"
+}

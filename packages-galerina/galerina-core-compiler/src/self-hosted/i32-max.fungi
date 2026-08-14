@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/i32-arith.ts#I32_MAX
+pure flow i32Max() -> Int {
+  return 2147483647
+}

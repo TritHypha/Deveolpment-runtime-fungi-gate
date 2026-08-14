@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-sentinel-state/src/state-serializer.ts#LOCAL_KEY_ID
+pure flow localKeyId() -> String {
+  return "local-development-epoch-1"
+}

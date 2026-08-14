@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 5 |
+| Files | 6 |
 | Internal edges | 7 |
 | External dependencies | 4 |
 | ├─ Node core | 3 |
@@ -43,7 +43,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
-_none declared_
+- `src/self-hosted/compliance-ledger-file.fungi`
 
 ## Allowed Orphans
 _none declared_

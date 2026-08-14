@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-config/src/governance.ts#DEFAULT_GOVERNANCE_MODE
+pure flow defaultGovernanceMode() -> String {
+  return "full"
+}

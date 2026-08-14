@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 11 |
+| Files | 14 |
 | Internal edges | 21 |
 | External dependencies | 6 |
 | ├─ Node core | 4 |
@@ -44,7 +44,10 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/codec-json.fungi`
+- `src/self-hosted/ctx-kemprofile-offset.fungi`
 - `src/self-hosted/modality-structured.fungi`
+- `src/self-hosted/seal-magic.fungi`
 
 ## Allowed Orphans
 _none declared_

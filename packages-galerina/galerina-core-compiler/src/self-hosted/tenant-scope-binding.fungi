@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/governance-verifier.ts#TENANT_SCOPE_BINDING
+pure flow tenantScopeBinding() -> String {
+  return "tenant.scope"
+}

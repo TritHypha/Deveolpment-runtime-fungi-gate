@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/pure-flow-cache.ts#FNV_PRIME
+pure flow fnvPrime() -> Int {
+  return 16777619
+}

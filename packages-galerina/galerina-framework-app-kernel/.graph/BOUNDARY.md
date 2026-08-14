@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 53 |
+| Files | 61 |
 | Internal edges | 54 |
 | External dependencies | 3 |
 | ├─ Node core | 1 |
@@ -41,6 +41,12 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/err-registry-delegation-bad-signature.fungi`
+- `src/self-hosted/err-registry-delegation-key-mismatch.fungi`
+- `src/self-hosted/err-registry-delegation-malformed.fungi`
+- `src/self-hosted/err-registry-delegation-not-active.fungi`
+- `src/self-hosted/err-registry-delegation-revoked.fungi`
+- `src/self-hosted/err-registry-delegation-role.fungi`
 - `src/self-hosted/err-registry-delegation-unsigned.fungi`
 - `src/self-hosted/err-registry-duplicate.fungi`
 - `src/self-hosted/err-registry-hash-mismatch.fungi`
@@ -61,6 +67,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/max-index-bytes.fungi`
 - `src/self-hosted/max-public-key-bytes.fungi`
 - `src/self-hosted/package-admission.fungi`
+- `src/self-hosted/registry-activation-fault-model-version.fungi`
+- `src/self-hosted/registry-activation-invariant.fungi`
 - `src/self-hosted/registry-activation-terminal.fungi`
 - `src/self-hosted/registry-delegation-v1-context.fungi`
 - `src/self-hosted/registry-durability-admission.fungi`

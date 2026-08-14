@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-sentinel-state/src/state-serializer.ts#SNAPSHOT_VERSION
+pure flow snapshotVersion() -> String {
+  return "2.0"
+}

@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { SandboxRefusal } from "./lib/ts-to-fungi-sandbox/contracts.mjs";
-import { assertCliInput, assertCliOutput, readManifest, runBatch, runInspect, verifyReceipt } from "./lib/ts-to-fungi-sandbox/controller.mjs";
+import { assertCliInput, assertCliOutput, readManifest, runBatch, runDiscover, runInspect, verifyReceipt } from "./lib/ts-to-fungi-sandbox/controller.mjs";
 import { discoverGraphProject } from "./lib/ts-to-fungi-sandbox/identity.mjs";
 import { canonicalJson } from "./lib/ts-to-fungi-sandbox/journal.mjs";
 
@@ -13,7 +13,7 @@ const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 
 function parseArgs(argv) {
   const command = argv[0];
-  if (!["inspect", "batch", "verify"].includes(command)) throw new SandboxRefusal("CLI_COMMAND_INVALID", "expected inspect, batch or verify");
+  if (!["inspect", "batch", "discover", "verify"].includes(command)) throw new SandboxRefusal("CLI_COMMAND_INVALID", "expected inspect, batch, discover or verify");
   const values = new Map();
   let auditOnly = false;
   for (let index = 1; index < argv.length; index += 1) {
@@ -41,7 +41,12 @@ async function main() {
   const out = assertCliOutput(ROOT, values.get("--out"));
   const project = values.get("--project") ?? await discoverGraphProject(ROOT);
   let summary;
-  if (command === "inspect") {
+  if (command === "discover") {
+    if (!["--limit", "--out"].every((key) => values.has(key)) || ![2, 3, 4].includes(values.size) || [...values.keys()].some((key) => !["--after", "--limit", "--out", "--project"].includes(key)) || auditOnly) {
+      throw new SandboxRefusal("CLI_ARGUMENT_INVALID", "discover requires --limit --out and accepts optional --after and --project");
+    }
+    summary = await runDiscover({ root: ROOT, project, out, limit: Number(values.get("--limit")), after: values.get("--after") });
+  } else if (command === "inspect") {
     if (!["--file", "--symbol", "--out"].every((key) => values.has(key)) || ![3, 4].includes(values.size) || [...values.keys()].some((key) => !["--file", "--symbol", "--project", "--out"].includes(key))) throw new SandboxRefusal("CLI_ARGUMENT_INVALID", "inspect requires --file --symbol --out and accepts optional --project");
     summary = await runInspect({ root: ROOT, project, file: values.get("--file"), symbol: values.get("--symbol"), out, auditOnly });
   } else {
@@ -50,7 +55,7 @@ async function main() {
     summary = await runBatch({ root: ROOT, project, manifest, out, auditOnly });
   }
   process.stdout.write(`${canonicalJson(summary)}\n`);
-  if (!auditOnly && summary.outcomes.CONVERTED !== summary.total) process.exitCode = 1;
+  if (command !== "discover" && !auditOnly && summary.outcomes.CONVERTED !== summary.total) process.exitCode = 1;
 }
 
 try {

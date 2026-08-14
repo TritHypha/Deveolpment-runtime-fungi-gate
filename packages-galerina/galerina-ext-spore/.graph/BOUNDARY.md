@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 10 |
+| Files | 11 |
 | Internal edges | 8 |
 | External dependencies | 4 |
 | ├─ Node core | 1 |
@@ -46,6 +46,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/header-core-len.fungi`
 - `src/self-hosted/history-link-kind.fungi`
 - `src/self-hosted/pack-entry-size.fungi`
+- `src/self-hosted/tmx-profile-shake.fungi`
 
 ## Allowed Orphans
 _none declared_

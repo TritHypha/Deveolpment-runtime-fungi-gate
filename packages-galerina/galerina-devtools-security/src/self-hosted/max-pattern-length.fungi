@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-devtools-security/src/regex-guard.ts#MAX_PATTERN_LENGTH
+pure flow maxPatternLength() -> Int {
+  return 500
+}

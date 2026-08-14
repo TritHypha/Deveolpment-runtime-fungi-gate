@@ -247,6 +247,29 @@ export function classifyTypeScriptSource({ source, file, symbol }) {
   return freezeResult({ ...base, outcome: "MANUAL_REVIEW", complete: false, blockers: [], reason: `unclassified initializer ${ts.SyntaxKind[expression.kind]}` });
 }
 
+export function discoverTypeScriptScopes({ source, file }) {
+  canonicalRelativeTsPath(file);
+  if (typeof source !== "string" || source.length === 0) {
+    throw new SandboxRefusal("DISCOVERY_INPUT_INVALID", "discovery requires non-empty TypeScript source text");
+  }
+  const sourceFile = ts.createSourceFile(file, source, ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
+  if ((sourceFile.parseDiagnostics ?? []).length > 0) return Object.freeze([]);
+  const symbols = [];
+  for (const statement of sourceFile.statements) {
+    if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (ts.isIdentifier(declaration.name)) symbols.push(declaration.name.text);
+      }
+      continue;
+    }
+    const name = declarationName(statement);
+    if (name !== undefined) symbols.push(name);
+  }
+  return Object.freeze(symbols
+    .map((symbol) => classifyTypeScriptSource({ source, file, symbol }))
+    .filter((classification) => classification.outcome === "SUPPORTED"));
+}
+
 export function isAdmittedClassification(value) {
   return admitted.has(value);
 }

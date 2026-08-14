@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 4 |
+| Files | 5 |
 | Internal edges | 3 |
 | External dependencies | 1 |
 | ├─ Node core | 1 |
@@ -41,6 +41,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/circuit-id.fungi`
+- `src/self-hosted/vkey-material.fungi`
 
 ## Allowed Orphans
 _none declared_

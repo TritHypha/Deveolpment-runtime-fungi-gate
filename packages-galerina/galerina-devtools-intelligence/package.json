@@ -4,6 +4,12 @@
   "license": "Apache-2.0",
   "description": "Hybrid BM25 + structural code search for Galerina workspaces. Indexes flows by semantic tokens, effects, economics, and governance metadata. Zero external dependencies — runs fully local.",
   "type": "module",
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/index-filename.fungi",
+      "src/self-hosted/top-k.fungi"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": { "galerina-intelligence": "./dist/cli.js" },

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-docs/src/openapi.ts#DEFAULT_VERSION
+pure flow defaultVersion() -> String {
+  return "3.1.0"
+}

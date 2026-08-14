@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 5 |
+| Files | 6 |
 | Internal edges | 6 |
 | External dependencies | 3 |
 | ├─ Node core | 3 |
@@ -42,6 +42,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/cli.ts`
 
 ## Loaded Assets
+- `src/self-hosted/default-fill.fungi`
 - `src/self-hosted/ms-per-day.fungi`
 
 ## Allowed Orphans

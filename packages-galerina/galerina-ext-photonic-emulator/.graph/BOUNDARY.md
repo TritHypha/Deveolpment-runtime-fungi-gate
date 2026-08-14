@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 11 |
+| Files | 12 |
 | Internal edges | 19 |
 | External dependencies | 1 |
 | ├─ Node core | 0 |
@@ -40,6 +40,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/index.ts`
 
 ## Loaded Assets
+- `src/self-hosted/act-max.fungi`
 - `src/self-hosted/enob-ceiling.fungi`
 - `src/self-hosted/w-rep.fungi`
 

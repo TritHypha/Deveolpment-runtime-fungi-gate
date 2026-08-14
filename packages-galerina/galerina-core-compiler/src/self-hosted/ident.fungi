@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/gate-v3-parser.ts#IDENT
+pure flow ident() -> String {
+  return "[A-Za-z_][A-Za-z0-9_]*"
+}
