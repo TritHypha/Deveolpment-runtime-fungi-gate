@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 998-1047 Tower transport, Tri-Pipe and TriRegex - 2026-08-14
+
+- [x] Freeze 50 case-sensitive source-order scopes: 14 erased declarations, 33
+  blocked runtime scopes and three primitive integer candidates.
+- [x] Retain all prior TPL Slices103-134 and 993-997 with no duplicate credit;
+  class receipts are identity/prototype only and named locals remain distinct.
+- [x] Author 50 blocker/candidate-specific receipts with exact exits, hostile
+  vectors, source/test pins and one common evidence manifest.
+- [x] Run fresh no-emit typechecks and focused suites: Tower **515/515**,
+  Tri-Pipe **24/24**, TriRegex **34/34**, and governed receipt audit **987/987**;
+  keep results regression/shape evidence only.
+- [x] Complete a separate evidence-first verification review; no unresolved
+  Critical or Important discrepancy remains.
+- [ ] Commit authored evidence separately, publish registered owners by
+  provenance layer, run the hermetic owner contract and bounded close matrix.
+- [ ] Refresh Myco and codebase-memory at the final clean head with an exact,
+  untruncated Slice-1047 query/snippet.
+- [x] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,
+  production, release, signing, push or retirement authority.
+
 ### Slices 948-997 substrate, snapshot, governance and Tower runtime - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes: 12 erased declarations, 32 blocked

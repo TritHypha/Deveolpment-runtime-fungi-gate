@@ -3,6 +3,29 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 
+## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
+
+These 50 unique source-order scopes close the final TPL simulator boundary,
+exhaust Tower transport and the trit type gate, exhaust Tri-Pipe, then enter
+TriRegex through the ASCII digit range singleton. Exact arithmetic is **14
+NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 3 CANDIDATE**; threadability is **14 N/A +
+33 SERIAL_HARD_PATH + 3 PARALLEL_PURE**. Source build point is `6e58f482` and
+the plan-only commit is `72e8bf06`, so graph freshness is `UNKNOWN` until the
+final exact-head refresh.
+
+The candidates are the exact TPL canary, regex i32 infinity sentinel and
+Unicode maximum code point constants. They remain non-authorizing until
+candidate-specific Fungi, GIR, physical `.slide`, independent re-admission/VOK
+and complete consumer evidence exist. All active FSM, callback, erasure,
+Tri-Pipe authority, recursive compiler, typed-array graph, Error/class and
+stateful stream scopes remain blocked. Prior TPL receipts retain sole child
+behavior credit. Receipt authoring and fresh no-emit typechecks are complete;
+focused suites pass Tower **515/515**, Tri-Pipe **24/24** and TriRegex **34/34**,
+and the governed receipt audit passes **987/987**. These remain regression and
+shape evidence only. A separate evidence-first verification review finds no
+unresolved Critical or Important discrepancy. Owner publication and dual-index
+closure remain pending. Repository-wide closure stays `UNKNOWN`.
+
 ## Slices 948-997 - Substrate, snapshot, governance and Tower runtime
 
 These 50 unique source-order scopes finish the substrate model, exhaust its

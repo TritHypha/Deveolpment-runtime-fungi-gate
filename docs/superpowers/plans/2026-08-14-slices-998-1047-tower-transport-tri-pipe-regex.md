@@ -134,36 +134,36 @@ superseded scopes or retirement credit.
 
 ## Task 1: Adjudicate Slices 998-1012
 
-- [ ] Bind the exact signed i32 canary constant and TPL class identity without
+- [x] Bind the exact signed i32 canary constant and TPL class identity without
   duplicating constructor/method behavior.
-- [ ] Preserve the erased transport declarations and exact active FSM record,
+- [x] Preserve the erased transport declarations and exact active FSM record,
   K3, callback, erasure, alias, time-number and local-closure semantics.
-- [ ] Treat the emitted type-gate function as callable runtime JS while keeping
+- [x] Treat the emitted type-gate function as callable runtime JS while keeping
   its compile-time negative-evidence purpose distinct.
 
 ## Task 2: Adjudicate Slices 1013-1023
 
-- [ ] Retain all public Tri-Pipe declarations and bind class/factory identity.
-- [ ] Capture capability, routing, active arrays, callbacks, bridge registries,
+- [x] Retain all public Tri-Pipe declarations and bind class/factory identity.
+- [x] Capture capability, routing, active arrays, callbacks, bridge registries,
   attestation Booleans and reason/error order exactly once or block conversion.
-- [ ] Record all validation/use and authority/action split risks with hostile
+- [x] Record all validation/use and authority/action split risks with hostile
   vectors and physical consumer exits.
 
 ## Task 3: Adjudicate Slices 1024-1047
 
-- [ ] Bind Error/class identity, recursive Thompson emission, mutable program
+- [x] Bind Error/class identity, recursive Thompson emission, mutable program
   state, typed arrays, recursion/loop bounds and exact veto ordering.
-- [ ] Preserve compiled aliases, streaming mutable closure state, UTF-16/code
+- [x] Preserve compiled aliases, streaming mutable closure state, UTF-16/code
   point semantics, leftmost-longest behavior and K3 boundary collapse.
-- [ ] Stop at parser `D`; keep `W` as the exact next queue scope.
+- [x] Stop at parser `D`; keep `W` as the exact next queue scope.
 
 ## Task 4: Author and verify the 50 receipts
 
-- [ ] Author 50 receipt-local classifications, blocker-specific exits, vectors,
+- [x] Author 50 receipt-local classifications, blocker-specific exits, vectors,
   threadability, source hashes, focused evidence pins and a common manifest.
-- [ ] Run focused no-emit typechecks/tests and
+- [x] Run focused no-emit typechecks/tests and
   `node scripts/audit-conversion-slice-close.mjs`; require exact arithmetic.
-- [ ] Reconcile independent read-only review and correct every Critical or
+- [x] Reconcile independent read-only review and correct every Critical or
   Important finding before the evidence commit.
 
 ## Task 5: Publish owners and close the checkpoint
@@ -176,9 +176,9 @@ superseded scopes or retirement credit.
 
 ## Self-review
 
-- [ ] Confirm 50 case-sensitive unique scopes in exact source order.
-- [ ] Confirm every prior-credit exclusion and named-local/class-boundary ruling.
-- [ ] Confirm arithmetic is 14 NRB + 33 BLOCKED + 3 CANDIDATE.
-- [ ] Confirm every blocked receipt has an executable blocker-specific exit and
+- [x] Confirm 50 case-sensitive unique scopes in exact source order.
+- [x] Confirm every prior-credit exclusion and named-local/class-boundary ruling.
+- [x] Confirm arithmetic is 14 NRB + 33 BLOCKED + 3 CANDIDATE.
+- [x] Confirm every blocked receipt has an executable blocker-specific exit and
   every candidate has explicit consumer and physical-proof gates.
-- [ ] Confirm no physical authority, switch, supersession or retirement claim.
+- [x] Confirm no physical authority, switch, supersession or retirement claim.

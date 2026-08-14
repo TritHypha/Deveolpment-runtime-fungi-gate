@@ -10,6 +10,82 @@ dual-index proof close at the Slice 597 fifty-slice boundary.
 Prior plans remain in repository history. Crash-linked aggregate lanes remain
 excluded.
 
+## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
+
+These 50 case-sensitive source-order scopes close the remaining uncredited TPL
+simulator boundary, exhaust Tower transport and the trit type gate, exhaust
+Tri-Pipe, then enter TriRegex through `parser.ts#D`. Exact arithmetic is **14
+NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 3 CANDIDATE**; threadability is **14 N/A +
+33 SERIAL_HARD_PATH + 3 PARALLEL_PURE**. Source build point is
+`6e58f482bc1a3ac15c79e0e5a5694c1b0c5865ef`; plan HEAD is `72e8bf06`, so graph
+freshness after the plan-only commit is `UNKNOWN` and exact source bytes govern.
+
+### Slice 998-1047 exact evidence manifest
+
+| Slices | Exact owning ranges |
+|---|---|
+| 998-999 | `tpl-simulator.ts:67`, `:206-428#TPLSimulator` class identity only; Slices103-134 and 993-997 retain child behavior/constant credit |
+| 1000-1011 | `transport-fsm.ts:22`, `:25`, `:28`, `:30-36`, `:39-43`, `:45-51`, `:54-56`, `:58-60`, `:64-68`, `:74-119`, nested `:81#stay`, nested `:82#closed` |
+| 1012 | `trit-brand.type-guard.ts:12-27` |
+| 1013-1020 | `execution-router.ts:24-31`, `:33-61`, `:63-83`, `:86-161` class identity only, `:88`, `:102-107`, `:109-160`, `:164-166` |
+| 1021-1023 | `tri-pipe.ts:23-42`, `:44-51`, `:58-81` |
+| 1024-1039 | `compile.ts:15-18` class identity only, `:17`, `:19-20`, `:23-85` class identity only, `:26`, `:28-33`, `:35-37`, `:39-50`, `:52-63`, `:65-84`, `:88-92`, `:94-115`, `:117-228`, nested `:141-164#walk`, `:230-246`, `:248-250` |
+| 1040-1045 | `engine.ts:17`, `:19-25`, `:27-160` class identity only, `:30-33`, `:36-41`, `:43-159` |
+| 1046-1047 | `parser.ts:16`, `:19`; exact next queue begins `parser.ts#W` line20 |
+
+Caller reconciliation is bounded. TPL canary state remains consumed only by
+the already-accounted simulator constructor/integrity/erase paths. Transport
+entrypoints are package-barrel APIs and their tests; `step` composes the K3
+boundary and injected diagnostic/erasure capabilities. The Tri-Pipe router and
+factory compose hardware, precision, partition, bridge, photonic and hybrid
+engine surfaces. TriRegex `compileAst` feeds `TriMatcher`; the returned stream
+object owns mutable closure state across `feed`, `end` and `stats`.
+
+Focused byte pins are `tpl-simulator.test.mjs`
+`0D58F009D1DDEACFCDC2726BE931A4ECF60D63014D477D84D097B124F5BED3EC`;
+`transport-fsm.test.mjs`
+`809C86898BB3A6B91DC62FE8DB76B52CED587A1F1ACE303F9B4F1F4D2FDCDDD3`;
+`execution-router.test.mjs`
+`2D26323C124821B1E780BDF61EAF742FFC5B71FA05001569FDC39C2D77F8266C`;
+`tri-pipe.test.mjs`
+`E5E7F12F928CA68F365F38FF842A99BD40735DF598D04B18D3681FC9A23AC57D`;
+and TriRegex `semantics`, `streaming`, `refusals` and `redos` tests at
+`F9EBC88F...BEB82`, `ACA74C99...8736B`, `6A2A3BE0...9DF3E` and
+`B0DF0889...E7663`. They are regression evidence only.
+
+Loaded assets remain the eight Tower governance/logic Fungi sources plus the
+trit brand guard. Exact-name and caller reconciliation found no scoped
+transport, Tri-Pipe, TriRegex compiler/engine or parser physical twin. No exact
+Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement, complete
+consumer switch, supersession or TypeScript retirement is authorized.
+
+Material risks remain explicit. Transport authority reads caller-live records,
+uses binary64 time, and invokes diagnostic/erasure callbacks whose failure can
+interrupt state release. Tri-Pipe reads active nested capability records,
+mutable lane arrays and callbacks while composing decisions, so verified
+authority can diverge from the dispatched action without a single snapshot.
+The regex compiler retains mutable AST/budget/range aliases, recursively
+mutates partial programs before veto, and returns mutable typed-array graphs.
+The matcher retains that graph and returns identity-bearing closures with
+shared captured state; stream interleaving, repeated end, UTF-16 iteration and
+failure order cannot be reduced to a stateless helper. Parser `D` is a mutable
+nested singleton, not an immutable declaration.
+
+Private skills remain at translation `13c070f75cb4899dc46fc35b9d43a770f9116380`
+and authoring `c4b10ae638c4daee09cab9ab1f3dc3d3ce35cd11`, private and unpushed.
+All findings instantiate existing active-state, returned-closure, callback,
+typed-array, Error, public-declaration and physical-proof rules; both receipt
+dispositions are `NO_SKILL_UPDATE`.
+
+Receipt authoring is complete. Fresh no-emit typechecks pass for Tower,
+Tri-Pipe and TriRegex; focused suites pass Tower **515/515**, Tri-Pipe **24/24**
+and TriRegex **34/34**; the governed receipt audit passes **987/987** with 29
+frozen legacy reports. These remain regression and receipt-shape evidence only.
+A separate verification pass against exact source ranges, prior receipts,
+classification arithmetic, tests and skill rules found no unresolved Critical
+or Important discrepancy. Registered publishers and exact dual-index closure
+remain pending. Repository-wide conversion closure stays `UNKNOWN`.
+
 ## Slice 63 entry gate
 
 The pin-bound SLIDE capability reconciliation is complete at reference commit
