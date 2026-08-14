@@ -1,0 +1,12 @@
+@version 1
+/// Closed strategy membership of retryPolicy.ts#isValidStrategy.
+pure flow validRetryStrategyCore(strategy: String) -> Bool
+contract { intent { "Recognize only none, linear, or exponential backoff retry strategies." } }
+{
+  match strategy {
+    "none" => return true
+    "linear" => return true
+    "exponential_backoff" => return true
+    _ => return false
+  }
+}

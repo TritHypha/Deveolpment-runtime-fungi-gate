@@ -1,0 +1,18 @@
+@version 1
+/// Post-tokenization fold of governance-verifier.ts#canonicalLimitName.
+pure flow canonicalLimitTokenCore(base: String, unit: String, hasUnit: Bool) -> String
+contract { intent { "Construct one admitted canonical limit token without ambient text normalization." } }
+{
+  if hasUnit {
+    if base == "request" {
+      if unit == "size" { return "request_size" }
+    }
+    if base == "batch" {
+      if unit == "size" { return "batch_size" }
+    }
+    if base == "token" {
+      if unit == "budget" { return "token_budget" }
+    }
+  }
+  return base
+}

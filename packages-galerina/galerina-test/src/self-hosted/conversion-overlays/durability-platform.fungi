@@ -1,0 +1,12 @@
+@version 1
+/// Closed platform selector of registry-durability-admission.ts#isPlatform.
+pure flow durabilityPlatformCore(platform: String) -> Bool
+contract { intent { "Recognize only the three registry durability platform tags." } }
+{
+  if platform == "windows" { return true }
+  if platform == "linux" {
+    if platform == "linux" { return true }
+  }
+  if platform == "macos" { return true }
+  return false
+}

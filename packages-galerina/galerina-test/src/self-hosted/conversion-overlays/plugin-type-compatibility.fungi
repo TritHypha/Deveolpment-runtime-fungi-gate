@@ -1,0 +1,11 @@
+@version 1
+/// Compatibility decision of plugin-schema.ts#isCompatibleType after type-name capture.
+pure flow pluginTypeCompatibleCore(actual: String, expected: String) -> Bool
+contract { intent { "Accept exact type equality and the single widening conversion from Int to Float." } }
+{
+  if actual == expected { return true }
+  if actual == "Int" {
+    if expected == "Float" { return true }
+  }
+  return false
+}

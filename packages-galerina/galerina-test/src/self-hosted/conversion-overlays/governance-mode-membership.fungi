@@ -1,0 +1,15 @@
+@version 1
+/// Closed governance selector of core-config/governance.ts#isGovernanceMode.
+pure flow governanceModeMemberCore(modeAdmitted: Bool, mode: String) -> Bool
+contract { intent { "Recognize the three governance operating modes without coercion." } }
+{
+  if modeAdmitted {
+    match mode {
+      "full" => return true
+      "auto" => return true
+      "lean" => return true
+      _ => return false
+    }
+  }
+  return false
+}

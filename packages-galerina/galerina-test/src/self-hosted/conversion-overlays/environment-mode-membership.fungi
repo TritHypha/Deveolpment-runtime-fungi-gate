@@ -1,0 +1,12 @@
+@version 1
+/// Closed environment selector of core-config#index.ts#isEnvironmentMode.
+pure flow environmentModeMemberCore(mode: String) -> Bool
+contract { intent { "Recognize exactly the supported runtime environment modes." } }
+{
+  if mode == "development" { return true }
+  match mode {
+    "test" => return true
+    "production" => return true
+    _ => return false
+  }
+}

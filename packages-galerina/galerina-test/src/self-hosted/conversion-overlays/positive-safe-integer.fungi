@@ -1,0 +1,10 @@
+@version 1
+/// Post-Number-classifier decision of core-vector#index.ts#isPositiveSafeInteger.
+pure flow positiveSafeIntegerCore(safeInteger: Bool, value: Int) -> Bool
+contract { intent { "Accept a captured integer only when the host proved safe-integer status and it is positive." } }
+{
+  if value > 0 {
+    if safeInteger { return true }
+  }
+  return false
+}

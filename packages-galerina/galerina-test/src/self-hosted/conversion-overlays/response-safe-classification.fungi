@@ -1,0 +1,8 @@
+@version 1
+/// Exact classification decision of data-model#index.ts#isResponseSafeClassification.
+pure flow responseSafeClassificationCore(classification: String) -> Bool
+contract { intent { "Release response data only when its admitted classification is public." } }
+{
+  if classification == "public" { return true }
+  return false
+}

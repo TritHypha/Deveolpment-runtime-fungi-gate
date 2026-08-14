@@ -1,0 +1,13 @@
+@version 1
+/// Post-trim selector of naming-checker.ts#isImplicitReturnType.
+pure flow implicitReturnTypeCore(typeName: String) -> Bool
+contract { intent { "Flag only missing or void return-type spellings as implicit." } }
+{
+  if typeName == "" { return true }
+  if typeName == "void" {
+    if typeName == "void" { return true }
+    return false
+  }
+  if typeName == "Void" { return true }
+  return false
+}

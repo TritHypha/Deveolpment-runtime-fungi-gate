@@ -1,0 +1,10 @@
+@version 1
+/// Post-own-property decision of registry-durability-evidence.ts#isEvidenceClass.
+pure flow durabilityEvidenceClassCore(valueIsString: Bool, recognized: Bool) -> Bool
+contract { intent { "Admit an evidence class only after primitive String and closed-table recognition." } }
+{
+  if valueIsString {
+    if recognized { return true }
+  }
+  return false
+}

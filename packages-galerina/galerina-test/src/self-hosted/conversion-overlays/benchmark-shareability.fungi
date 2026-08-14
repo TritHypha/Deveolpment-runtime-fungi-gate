@@ -1,0 +1,17 @@
+@version 1
+/// Privacy conjunction of tools-benchmark#index.ts#isBenchmarkReportShareable after record capture.
+pure flow benchmarkShareableCore(allowSubmit: Bool, containsPersonalData: Bool, machineExcluded: Bool, hostExcluded: Bool, userExcluded: Bool, pathExcluded: Bool) -> Bool
+contract { intent { "Share a benchmark only after explicit opt-in and removal of every named personal field." } }
+{
+  if allowSubmit {
+    if containsPersonalData { return false }
+    if machineExcluded {
+      if hostExcluded {
+        if userExcluded {
+          return pathExcluded
+        }
+      }
+    }
+  }
+  return false
+}

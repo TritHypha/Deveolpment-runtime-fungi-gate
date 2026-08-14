@@ -1,0 +1,14 @@
+@version 1
+/// Post-capture decision core of governance-diff.ts#classifyDelta.
+pure flow classifyGovernanceDeltaCore(isAdded: Bool, afterGuarded: Bool, authorityGrowth: Bool, authorityReduction: Bool) -> String
+contract { intent { "Classify additions and authority growth before tightening, with neutral as the terminal default." } }
+{
+  if isAdded {
+    if authorityGrowth { return "expansion" }
+    if afterGuarded { return "expansion" }
+    return "neutral"
+  }
+  if authorityGrowth { return "expansion" }
+  if authorityReduction { return "tightening" }
+  return "neutral"
+}

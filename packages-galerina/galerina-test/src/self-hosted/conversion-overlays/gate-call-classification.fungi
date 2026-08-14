@@ -1,0 +1,9 @@
+@version 1
+/// Post-name-classification decision of provenance/analyzer.ts#isGateCall.
+pure flow gateCallCore(exactGate: Bool, gatePrefix: Bool) -> Bool
+contract { intent { "Treat only an exact governance gate or admitted gate prefix as a gate call." } }
+{
+  if gatePrefix { return true }
+  if exactGate { return true }
+  return false
+}

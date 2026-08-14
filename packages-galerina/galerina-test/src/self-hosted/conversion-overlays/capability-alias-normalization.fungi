@@ -1,0 +1,14 @@
+@version 1
+/// Closed alias table of capability-types.ts#normalizeCapability after exact String capture.
+pure flow normalizeCapabilityCore(name: String) -> String
+contract { intent { "Normalize only the five admitted capability aliases." } }
+{
+  match name {
+    "db.read" => return "database.read"
+    "db.write" => return "database.write"
+    "filesystem.read" => return "storage.read"
+    "filesystem.write" => return "storage.write"
+    "time.read" => return "clock.read"
+    _ => return name
+  }
+}

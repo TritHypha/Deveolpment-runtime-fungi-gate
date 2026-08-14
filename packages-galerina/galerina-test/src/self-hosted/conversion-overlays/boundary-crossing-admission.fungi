@@ -1,0 +1,15 @@
+@version 1
+/// Trust-level decision of boundary-graph.ts#isCrossingAllowed after closed-tag admission.
+pure flow boundaryCrossingAllowedCore(secureCaller: Bool, externalCaller: Bool, calleeRank: Int) -> Bool
+contract { intent { "Apply secure and external-caller crossing restrictions before the permissive internal default." } }
+{
+  if secureCaller {
+    if calleeRank >= 2 { return true }
+    return false
+  }
+  if externalCaller {
+    if calleeRank >= 1 { return true }
+    return false
+  }
+  return true
+}

@@ -1,0 +1,9 @@
+@version 1
+/// Post-trim/name-set fold of target-js#index.ts#isServerOnlyImport.
+pure flow serverOnlyImportCore(nodePrefix: Bool, knownServerOnly: Bool) -> Bool
+contract { intent { "Mark an import server-only when it uses the Node prefix or the admitted server-only set." } }
+{
+  if nodePrefix { return true }
+  if knownServerOnly { return true }
+  return false
+}

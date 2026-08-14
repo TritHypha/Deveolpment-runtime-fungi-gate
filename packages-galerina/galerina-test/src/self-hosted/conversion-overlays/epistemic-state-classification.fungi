@@ -1,0 +1,12 @@
+@version 1
+/// Combined trust classifier around epistemic-type-state.ts#isTrusted.
+pure flow classifyEpistemicStateCore(state: String) -> Int
+contract { intent { "Classify proven as trusted, refuted as negative, unknown as unresolved, and malformed separately." } }
+{
+  match state {
+    "PROVEN" => return 1
+    "UNKNOWN" => return 0
+    "REFUTED" => return -1
+    _ => return -2
+  }
+}

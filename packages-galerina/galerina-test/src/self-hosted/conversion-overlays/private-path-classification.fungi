@@ -1,0 +1,8 @@
+@version 1
+/// Post-pattern fold of tools-myco/query/links.ts#isPrivatePath.
+pure flow privatePathCore(privateFilename: Bool, privateDirectory: Bool) -> Bool
+contract { intent { "Classify a path as private when its filename marker or directory boundary matches." } }
+{
+  if privateDirectory { return true }
+  return privateFilename
+}

@@ -1,0 +1,16 @@
+@version 1
+/// Closed bit-selection core of capability-types.ts#capabilityToBitmask after String admission.
+pure flow capabilityBitmaskCore(runtimeFamily: Bool, effect: String) -> Int
+contract { intent { "Return the V_DPM bit for this bounded runtime family and zero otherwise." } }
+{
+  if runtimeFamily {
+    match effect {
+      "ai.inference" => return 32
+      "shell.execute" => return 64
+      "native.call" => return 128
+      "payment.charge" => return 1048576
+      _ => return 0
+    }
+  }
+  return 0
+}

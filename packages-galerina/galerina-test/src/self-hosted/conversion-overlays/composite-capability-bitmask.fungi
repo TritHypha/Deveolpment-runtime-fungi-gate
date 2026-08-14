@@ -1,0 +1,8 @@
+@version 1
+/// Composite branch of capability-types.ts#resolveCompositeBitmask after atomic lookup.
+pure flow compositeCapabilityBitmaskCore(effect: String, atomicMask: Int) -> Int
+contract { intent { "Expand ledger mutation to storage plus audit bits; retain other atomic masks." } }
+{
+  if effect == "ledger.mutate" { return 10 }
+  return atomicMask
+}

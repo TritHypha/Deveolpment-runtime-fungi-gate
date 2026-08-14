@@ -71,6 +71,38 @@ The sole final-bookkeeping exception remains one commit; a report-only streak
 of two is a hard refusal. This section is committed with the 40 executable
 files and is not a report-only update.
 
+## Forty-file source-bound decision-core overlay wave 2 - 2026-08-14
+
+A second root-authored source-bound wave adds **40 new `.fungi` files** under
+`galerina-test/src/self-hosted/conversion-overlays/`, bringing the registered
+overlay set to 120 files. Each flow is tied to a different live TypeScript
+decision surface across compiler capability, configuration, governance diff,
+WAT lowering, naming, PCI/provenance, registry durability, Myco, Tower, target
+and benchmark packages. Host-only record capture, regular expressions,
+case-folding, collection lookup, JavaScript coercion and safe-integer checks
+remain explicit TypeScript borders. The Fungi assets are bounded post-border
+decision cores and authorize no consumer switch or TypeScript retirement.
+
+Fresh source evidence passes **3/3**: all 40 package assets bind to their exact
+live source symbol; every file is distinct under exact bytes and normalized
+alpha-renamed shadow comparison; and all 40 parse, effect-check, emit GIR and
+execute with the expected typed result. The stricter worktree commit guard also
+compares the 40 files with the complete tracked Fungi corpus and reports
+**40/40 unique**, meeting the 40-file minimum while retaining 50 as the expected
+batch size.
+
+Physical evidence passes **1/1** through independent SLIDE/VOK. The check
+compiles the 40-flow package set, publishes exactly 40 physical `.slide`
+artifacts, executes every export, independently re-admits and verifies every
+typed receipt, and refuses mutated source, physical artifact and receipt bytes.
+The preceding 40 source-bound decision cores remain green in the same focused
+run. Package no-emit typecheck also passes.
+
+This is the only report modified by the wave. It is committed with the 40 new
+Fungi files; it is not a report-only update. The guard continues to refuse any
+report-bearing commit below 40 new `.fungi` files, any exact or normalized
+shadow, and any report-only streak of two.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 case-sensitive source-order scopes close the remaining uncredited TPL

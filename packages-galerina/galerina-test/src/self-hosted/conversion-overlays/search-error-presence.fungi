@@ -1,0 +1,7 @@
+@version 1
+/// Property-presence projection of tools-myco/query/search.ts#isError after exact record admission.
+pure flow searchErrorPresenceCore(errorPresent: Bool) -> Bool
+contract { intent { "Retain the admitted own-property presence result for a search error outcome." } }
+{
+  return errorPresent
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Closed posture selector of core-config/posture.ts#isSecurityPosture.
+pure flow securityPostureMemberCore(posture: String) -> Bool
+contract { intent { "Accept only off, auto, or on as a security posture." } }
+{
+  if posture == "off" { return true }
+  if posture == "on" { return true }
+  if posture == "auto" { return true }
+  return false
+}

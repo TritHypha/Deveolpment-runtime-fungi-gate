@@ -1,0 +1,18 @@
+@version 1
+/// Closed numeric selector of wat-emitter.ts#is64BitWatType.
+pure flow wat64BitTypeCore(baseAdmitted: Bool, base: String) -> Bool
+contract { intent { "Recognize only admitted signed and unsigned 64-bit WAT source types." } }
+{
+  if baseAdmitted {
+    match base {
+      "Int64" => return true
+      "UInt64" => return true
+      "I64" => return true
+      "U64" => return true
+      "Long" => return true
+      "ULong" => return true
+      _ => return false
+    }
+  }
+  return false
+}

@@ -1,0 +1,11 @@
+@version 1
+/// Qualifier/effect decision of wat-emitter.ts#isWasmExportable.
+pure flow wasmFlowExportableCore(qualifier: String, effectCount: Int) -> Bool
+contract { intent { "Export pure flows and effect-free guarded flows only." } }
+{
+  if qualifier == "pure" { return true }
+  if qualifier == "guarded" {
+    if effectCount == 0 { return true }
+  }
+  return false
+}

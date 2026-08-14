@@ -1,0 +1,12 @@
+@version 1
+/// Combined closed classifier for decision-state.ts#isAllow/isDeny/isReview.
+pure flow classifyDecisionStateCore(kind: String) -> Int
+contract { intent { "Classify allow as positive, deny as negative, review as zero, and malformed states separately." } }
+{
+  match kind {
+    "allow" => return 1
+    "deny" => return -1
+    "review" => return 0
+    _ => return -2
+  }
+}

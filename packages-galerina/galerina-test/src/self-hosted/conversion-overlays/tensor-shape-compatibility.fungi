@@ -1,0 +1,12 @@
+@version 1
+/// Equality fold of ai-neural#index.ts#isSameTensorShape after bounded shape comparison.
+pure flow tensorShapeCompatibleCore(elementTypeEqual: Bool, rankEqual: Bool, dimensionsEqual: Bool) -> Bool
+contract { intent { "Accept tensor shapes only when element type, rank, and every dimension agree." } }
+{
+  if elementTypeEqual {
+    if rankEqual {
+      if dimensionsEqual { return true }
+    }
+  }
+  return false
+}

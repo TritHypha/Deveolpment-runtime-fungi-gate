@@ -1,0 +1,8 @@
+@version 1
+/// Post-scan decision of pci-checker.ts#isPaymentFlow.
+pure flow paymentFlowCore(nameMatched: Bool, paymentTypePresent: Bool) -> Bool
+contract { intent { "Classify a flow as payment-related when its name or admitted type scan supplies evidence." } }
+{
+  if nameMatched { return true }
+  return paymentTypePresent
+}

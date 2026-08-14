@@ -1,0 +1,8 @@
+@version 1
+/// Literal Boolean projection of registry-index.ts#isLiteralVerificationSuccess.
+pure flow literalVerificationSuccessCore(result: Bool) -> Bool
+contract { intent { "Release success only for the admitted literal true verifier result." } }
+{
+  if result { return true }
+  return false
+}

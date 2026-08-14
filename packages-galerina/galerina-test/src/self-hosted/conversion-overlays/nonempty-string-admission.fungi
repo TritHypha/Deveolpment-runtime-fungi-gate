@@ -1,0 +1,10 @@
+@version 1
+/// Primitive border decision of production-boot-composition-candidate.ts#isNonEmptyString.
+pure flow nonEmptyStringCore(isString: Bool, length: Int) -> Bool
+contract { intent { "Admit a value only after String classification and a positive captured length." } }
+{
+  if isString {
+    if length > 0 { return true }
+  }
+  return false
+}

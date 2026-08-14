@@ -1,0 +1,13 @@
+@version 1
+/// Post-trim/casefold host selector of db-mysql#index.ts#isLocalhostHost.
+pure flow localhostHostCore(host: String) -> Bool
+contract { intent { "Recognize only normalized loopback host spellings." } }
+{
+  if host == "localhost" { return true }
+  if host == "127.0.0.1" { return true }
+  match host {
+    "::1" => return true
+    "0:0:0:0:0:0:0:1" => return true
+    _ => return false
+  }
+}

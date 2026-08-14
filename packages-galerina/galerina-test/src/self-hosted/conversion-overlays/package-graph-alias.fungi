@@ -1,0 +1,16 @@
+@version 1
+/// Post-casefold alias selector of core-config#index.ts#isLoPackageGraphAlias.
+pure flow packageGraphAliasCore(normalizedString: Bool, alias: String) -> Bool
+contract { intent { "Recognize one admitted legacy package-graph alias after host case normalization." } }
+{
+  if normalizedString {
+    match alias {
+      "package-Galerina" => return true
+      "Galerina.lock" => return true
+      "Galerina-profile" => return true
+      "Galerina-package-graph" => return true
+      _ => return false
+    }
+  }
+  return false
+}

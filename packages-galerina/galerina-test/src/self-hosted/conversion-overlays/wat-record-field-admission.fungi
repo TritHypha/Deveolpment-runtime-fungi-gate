@@ -1,0 +1,15 @@
+@version 1
+/// Physical field-type decision of wat-emitter.ts#isWATRecordFieldTypeSupported after lowering.
+pure flow watRecordFieldSupportedCore(base: String, lowered: String) -> Bool
+contract { intent { "Refuse unsupported decimal and narrow-float record fields before accepting WAT scalar types." } }
+{
+  if base == "Decimal" { return false }
+  if base == "Float16" { return false }
+  if base == "Float32" { return false }
+  match lowered {
+    "i32" => return true
+    "i64" => return true
+    "f64" => return true
+    _ => return false
+  }
+}

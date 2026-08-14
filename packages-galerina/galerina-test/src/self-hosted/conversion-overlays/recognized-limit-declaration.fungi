@@ -1,0 +1,18 @@
+@version 1
+/// Post-regex family selector for limitPolicy.ts#isRecognizedLimitDecl.
+pure flow recognizedLimitDeclarationCore(normalized: Bool, regexClassified: Bool, family: String) -> Bool
+contract { intent { "Admit only one host-classified limit declaration family." } }
+{
+  if normalized {
+    if regexClassified {
+      match family {
+        "request_size" => return true
+        "batch_size" => return true
+        "rate" => return true
+        "timeout" => return true
+        _ => return false
+      }
+    }
+  }
+  return false
+}

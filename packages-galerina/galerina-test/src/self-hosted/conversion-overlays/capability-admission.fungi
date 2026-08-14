@@ -1,0 +1,10 @@
+@version 1
+/// Post-membership fold of capability-types.ts#isAdmissibleCapability after exact table lookup.
+pure flow admissibleCapabilityCore(canonicalKnown: Bool, extraKnown: Bool, wildcard: Bool) -> Bool
+contract { intent { "Admit canonical or extra capabilities while refusing wildcard roots." } }
+{
+  if wildcard { return false }
+  if canonicalKnown { return true }
+  if extraKnown { return true }
+  return false
+}

@@ -1,0 +1,12 @@
+@version 1
+/// Short-name normalization core of capability-types.ts#normaliseFloor.
+pure flow normaliseFloorCore(name: String) -> String
+contract { intent { "Map admitted floor aliases to canonical Tower floor names." } }
+{
+  if name == "execution" { return "floor_1" }
+  if name == "containment" { return "floor_2" }
+  if name == "proof" { return "floor_3" }
+  if name == "proof_zone" { return "floor_3" }
+  if name == "attestation" { return "floor_4" }
+  return name
+}

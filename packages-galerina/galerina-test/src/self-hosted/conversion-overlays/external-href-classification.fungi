@@ -1,0 +1,10 @@
+@version 1
+/// Post-pattern fold of tools-myco/query/links.ts#isExternalHref.
+pure flow externalHrefCore(scheme: Bool, fileScheme: Bool, drivePath: Bool, rootPath: Bool) -> Bool
+contract { intent { "Classify an href as external when any admitted external path shape matches." } }
+{
+  if scheme { return true }
+  if fileScheme { return true }
+  if drivePath { return true }
+  return rootPath
+}

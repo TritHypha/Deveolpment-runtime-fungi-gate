@@ -1,0 +1,16 @@
+@version 1
+/// Closed selector of decimal-arith.ts#isRoundMode after primitive String admission.
+pure flow isDecimalRoundModeCore(mode: String) -> Bool
+contract { intent { "Recognize exactly the seven explicit decimal rounding policies." } }
+{
+  match mode {
+    "halfEven" => return true
+    "halfUp" => return true
+    "halfDown" => return true
+    "up" => return true
+    "down" => return true
+    "ceiling" => return true
+    "floor" => return true
+    _ => return false
+  }
+}

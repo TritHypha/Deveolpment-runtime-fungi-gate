@@ -1,0 +1,12 @@
+@version 1
+/// Post-trim selector of naming-checker.ts#isGenericTypeName.
+pure flow genericTypeNameCore(typeName: String) -> Bool
+contract { intent { "Flag only the three standalone generic or opaque type names." } }
+{
+  if typeName == "Any" { return true }
+  if typeName == "Object" { return true }
+  if typeName == "unknown" {
+    if typeName == "unknown" { return true }
+  }
+  return false
+}

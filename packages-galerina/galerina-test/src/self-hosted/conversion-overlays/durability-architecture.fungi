@@ -1,0 +1,9 @@
+@version 1
+/// Closed architecture selector of registry-durability-admission.ts#isArchitecture.
+pure flow durabilityArchitectureCore(architecture: String) -> Bool
+contract { intent { "Recognize only x86-64 and AArch64 durability evidence architectures." } }
+{
+  if architecture == "x86_64" { return true }
+  if architecture == "aarch64" { return true }
+  return false
+}
