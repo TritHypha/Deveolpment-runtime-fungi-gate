@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 30: registry-generation-entries-equal-status.fungi.
+pure flow registryGenerationEntriesEqualStatusCore(leftCaptured: Bool, rightCaptured: Bool, lengthsEqual: Bool, fieldsEqual: Bool, listsEqual: Bool) -> String {
+  let sourceProofA: Bool = rightCaptured
+  let sourceProofB: Bool = lengthsEqual
+  if sourceProofA {
+    if sourceProofB {
+      if leftCaptured {
+        if rightCaptured {
+          if lengthsEqual {
+            if fieldsEqual {
+              if listsEqual {
+                return "registry_generation_entries_equal"
+              }
+              return "listsEqual_missing"
+            }
+            return "fieldsEqual_missing"
+          }
+          return "lengthsEqual_missing"
+        }
+        return "rightCaptured_missing"
+      }
+      return "leftCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 20: registry-store-persist-generation-status.fungi.
+pure flow registryStorePersistGenerationStatusCore(optionsCaptured: Bool, adapterIssued: Bool, generationVerified: Bool, publicationDurable: Bool, receiptMinted: Bool) -> String {
+  let sourceProofA: Bool = receiptMinted
+  let sourceProofB: Bool = adapterIssued
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if adapterIssued {
+          if generationVerified {
+            if publicationDurable {
+              if receiptMinted {
+                return "registry_store_generation_persisted"
+              }
+              return "receiptMinted_missing"
+            }
+            return "publicationDurable_missing"
+          }
+          return "generationVerified_missing"
+        }
+        return "adapterIssued_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

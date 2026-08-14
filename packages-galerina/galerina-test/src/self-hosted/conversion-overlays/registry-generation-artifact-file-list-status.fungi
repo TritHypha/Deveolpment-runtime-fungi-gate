@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 26: registry-generation-artifact-file-list-status.fungi.
+pure flow registryGenerationArtifactFileListStatusCore(valueCaptured: Bool, listValid: Bool, bounded: Bool, relativePaths: Bool) -> String {
+  let sourceProofA: Bool = relativePaths
+  let sourceProofB: Bool = bounded
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if listValid {
+          if bounded {
+            if relativePaths {
+              return "registry_generation_artifacts_valid"
+            }
+            return "relativePaths_missing"
+          }
+          return "bounded_missing"
+        }
+        return "listValid_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

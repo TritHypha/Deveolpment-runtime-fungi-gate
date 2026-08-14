@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 9: registry-store-host-evidence-flush-status.fungi.
+pure flow registryStoreHostEvidenceFlushStatusCore(directoryCaptured: Bool, callbackBound: Bool, callbackCompleted: Bool, literalTrue: Bool) -> String {
+  let sourceProofA: Bool = literalTrue
+  let sourceProofB: Bool = directoryCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if directoryCaptured {
+        if callbackBound {
+          if callbackCompleted {
+            if literalTrue {
+              return "registry_store_directory_flushed"
+            }
+            return "literalTrue_missing"
+          }
+          return "callbackCompleted_missing"
+        }
+        return "callbackBound_missing"
+      }
+      return "directoryCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

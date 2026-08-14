@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 16 item 23: registry-generation-required-string-status.fungi.
+pure flow registryGenerationRequiredStringStatusCore(valueCaptured: Bool, stringTyped: Bool, nonEmpty: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = stringTyped
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if stringTyped {
+          if nonEmpty {
+            return "registry_generation_string_valid"
+          }
+          return "nonEmpty_missing"
+        }
+        return "stringTyped_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 1: registry-store-size-bound-status.fungi.
+pure flow registryStoreSizeBoundStatusCore(valueCaptured: Bool, defaultApplied: Bool, safeInteger: Bool, withinRange: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if defaultApplied {
+          if safeInteger {
+            if withinRange {
+              return "registry_store_bound_ready"
+            }
+            return "withinRange_missing"
+          }
+          return "safeInteger_missing"
+        }
+        return "defaultApplied_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

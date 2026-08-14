@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 21: registry-generation-deep-freeze-status.fungi.
+pure flow registryGenerationDeepFreezeStatusCore(valueCaptured: Bool, objectClassified: Bool, childrenFrozen: Bool, objectFrozen: Bool) -> String {
+  let sourceProofA: Bool = objectFrozen
+  let sourceProofB: Bool = objectClassified
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if objectClassified {
+          if childrenFrozen {
+            if objectFrozen {
+              return "registry_generation_deep_frozen"
+            }
+            return "objectFrozen_missing"
+          }
+          return "childrenFrozen_missing"
+        }
+        return "objectClassified_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 32: registry-generation-verify-status.fungi.
+pure flow registryGenerationVerifyStatusCore(generationCaptured: Bool, optionsCaptured: Bool, envelopeValid: Bool, contentsVerified: Bool, entriesMatched: Bool) -> String {
+  let sourceProofA: Bool = contentsVerified
+  let sourceProofB: Bool = envelopeValid
+  if sourceProofA {
+    if sourceProofB {
+      if generationCaptured {
+        if optionsCaptured {
+          if envelopeValid {
+            if contentsVerified {
+              if entriesMatched {
+                return "registry_generation_verified"
+              }
+              return "entriesMatched_missing"
+            }
+            return "contentsVerified_missing"
+          }
+          return "envelopeValid_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "generationCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

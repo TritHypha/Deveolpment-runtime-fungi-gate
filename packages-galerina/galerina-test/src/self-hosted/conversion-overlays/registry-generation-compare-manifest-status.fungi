@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 28: registry-generation-compare-manifest-status.fungi.
+pure flow registryGenerationCompareManifestStatusCore(leftCaptured: Bool, rightCaptured: Bool, namesCompared: Bool, versionsCompared: Bool) -> String {
+  let sourceProofA: Bool = leftCaptured
+  let sourceProofB: Bool = versionsCompared
+  if sourceProofA {
+    if sourceProofB {
+      if leftCaptured {
+        if rightCaptured {
+          if namesCompared {
+            if versionsCompared {
+              return "registry_generation_manifest_compared"
+            }
+            return "versionsCompared_missing"
+          }
+          return "namesCompared_missing"
+        }
+        return "rightCaptured_missing"
+      }
+      return "leftCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

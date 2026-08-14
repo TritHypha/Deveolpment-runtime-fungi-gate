@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 31: registry-generation-sign-pair-status.fungi.
+pure flow registryGenerationSignPairStatusCore(custodyCaptured: Bool, inputsBound: Bool, callbackCompleted: Bool, proofsComplete: Bool, pairReturned: Bool) -> String {
+  let sourceProofA: Bool = callbackCompleted
+  let sourceProofB: Bool = callbackCompleted
+  if sourceProofA {
+    if sourceProofB {
+      if custodyCaptured {
+        if inputsBound {
+          if callbackCompleted {
+            if proofsComplete {
+              if pairReturned {
+                return "registry_generation_pair_signed"
+              }
+              return "pairReturned_missing"
+            }
+            return "proofsComplete_missing"
+          }
+          return "callbackCompleted_missing"
+        }
+        return "inputsBound_missing"
+      }
+      return "custodyCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

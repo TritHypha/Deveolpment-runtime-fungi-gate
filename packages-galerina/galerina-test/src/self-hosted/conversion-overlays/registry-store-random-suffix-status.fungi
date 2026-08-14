@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 16 item 19: registry-store-random-suffix-status.fungi.
+pure flow registryStoreRandomSuffixStatusCore(entropyReady: Bool, bytesFilled: Bool, hexEncoded: Bool) -> String {
+  let sourceProofA: Bool = hexEncoded
+  let sourceProofB: Bool = entropyReady
+  if sourceProofA {
+    if sourceProofB {
+      if entropyReady {
+        if bytesFilled {
+          if hexEncoded {
+            return "registry_store_suffix_ready"
+          }
+          return "hexEncoded_missing"
+        }
+        return "bytesFilled_missing"
+      }
+      return "entropyReady_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

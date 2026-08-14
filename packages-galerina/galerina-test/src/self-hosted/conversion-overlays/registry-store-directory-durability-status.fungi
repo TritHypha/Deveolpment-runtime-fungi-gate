@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 10: registry-store-directory-durability-status.fungi.
+pure flow registryStoreDirectoryDurabilityStatusCore(adapterCaptured: Bool, capabilityIssued: Bool, identityValid: Bool, callbackCompleted: Bool, literalTrue: Bool) -> String {
+  let sourceProofA: Bool = adapterCaptured
+  let sourceProofB: Bool = capabilityIssued
+  if sourceProofA {
+    if sourceProofB {
+      if adapterCaptured {
+        if capabilityIssued {
+          if identityValid {
+            if callbackCompleted {
+              if literalTrue {
+                return "registry_store_durability_proven"
+              }
+              return "literalTrue_missing"
+            }
+            return "callbackCompleted_missing"
+          }
+          return "identityValid_missing"
+        }
+        return "capabilityIssued_missing"
+      }
+      return "adapterCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

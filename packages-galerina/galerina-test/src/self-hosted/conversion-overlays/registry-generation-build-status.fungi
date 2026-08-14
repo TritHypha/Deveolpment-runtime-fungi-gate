@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 33: registry-generation-build-status.fungi.
+pure flow registryGenerationBuildStatusCore(optionsCaptured: Bool, inputValid: Bool, manifestsSigned: Bool, indexSigned: Bool, generationVerified: Bool) -> String {
+  let sourceProofA: Bool = generationVerified
+  let sourceProofB: Bool = manifestsSigned
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if inputValid {
+          if manifestsSigned {
+            if indexSigned {
+              if generationVerified {
+                return "registry_generation_built"
+              }
+              return "generationVerified_missing"
+            }
+            return "indexSigned_missing"
+          }
+          return "manifestsSigned_missing"
+        }
+        return "inputValid_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

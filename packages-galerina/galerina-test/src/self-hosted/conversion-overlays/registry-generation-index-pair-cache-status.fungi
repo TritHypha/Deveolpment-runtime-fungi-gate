@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 35: registry-generation-index-pair-cache-status.fungi.
+pure flow registryGenerationIndexPairCacheStatusCore(indexMessageCaptured: Bool, cacheChecked: Bool, pairSigned: Bool, cacheStored: Bool, pairReturned: Bool) -> String {
+  let sourceProofA: Bool = indexMessageCaptured
+  let sourceProofB: Bool = cacheStored
+  if sourceProofA {
+    if sourceProofB {
+      if indexMessageCaptured {
+        if cacheChecked {
+          if pairSigned {
+            if cacheStored {
+              if pairReturned {
+                return "registry_generation_index_pair_ready"
+              }
+              return "pairReturned_missing"
+            }
+            return "cacheStored_missing"
+          }
+          return "pairSigned_missing"
+        }
+        return "cacheChecked_missing"
+      }
+      return "indexMessageCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

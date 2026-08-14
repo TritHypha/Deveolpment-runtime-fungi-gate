@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 12: registry-store-persisted-guard-status.fungi.
+pure flow registryStorePersistedGuardStatusCore(valueCaptured: Bool, objectPresent: Bool, verifiedKnown: Bool, durableKnown: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = objectPresent
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if objectPresent {
+          if verifiedKnown {
+            if durableKnown {
+              return "registry_store_persisted"
+            }
+            return "durableKnown_missing"
+          }
+          return "verifiedKnown_missing"
+        }
+        return "objectPresent_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

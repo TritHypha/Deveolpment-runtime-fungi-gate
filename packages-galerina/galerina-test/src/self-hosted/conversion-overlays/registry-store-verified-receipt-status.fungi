@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 6: registry-store-verified-receipt-status.fungi.
+pure flow registryStoreVerifiedReceiptStatusCore(generationCaptured: Bool, generationFrozen: Bool, receiptBuilt: Bool, verifiedMinted: Bool) -> String {
+  let sourceProofA: Bool = receiptBuilt
+  let sourceProofB: Bool = generationCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if generationCaptured {
+        if generationFrozen {
+          if receiptBuilt {
+            if verifiedMinted {
+              return "registry_store_verified_minted"
+            }
+            return "verifiedMinted_missing"
+          }
+          return "receiptBuilt_missing"
+        }
+        return "generationFrozen_missing"
+      }
+      return "generationCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

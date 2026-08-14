@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 16 item 40: registry-rotation-candidate-guard-status.fungi.
+pure flow registryRotationCandidateGuardStatusCore(valueCaptured: Bool, objectPresent: Bool, provenanceKnown: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = provenanceKnown
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if objectPresent {
+          if provenanceKnown {
+            return "registry_rotation_candidate_known"
+          }
+          return "provenanceKnown_missing"
+        }
+        return "objectPresent_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 17: registry-store-forward-probe-verify-status.fungi.
+pure flow registryStoreForwardProbeVerifyStatusCore(optionsCaptured: Bool, generationLoaded: Bool, receiptBuilt: Bool, authorityRetained: Bool, provenanceMinted: Bool) -> String {
+  let sourceProofA: Bool = receiptBuilt
+  let sourceProofB: Bool = generationLoaded
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if generationLoaded {
+          if receiptBuilt {
+            if authorityRetained {
+              if provenanceMinted {
+                return "registry_store_probe_issued"
+              }
+              return "provenanceMinted_missing"
+            }
+            return "authorityRetained_missing"
+          }
+          return "receiptBuilt_missing"
+        }
+        return "generationLoaded_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

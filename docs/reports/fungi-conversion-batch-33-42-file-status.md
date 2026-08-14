@@ -2311,3 +2311,53 @@ contains all 40 new `.fungi` files, and both the worktree and committed diff
 must satisfy the minimum-40/expected-50 guard and the 40/40 duplicate-shadow
 check. No worker authored the wave, no push is authorized, and no report-only
 follow-up commit is permitted.
+
+## Source decision overlay wave 16 - registry generation and rotation custody
+
+Wave 16 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. Twenty bind the remaining executable scopes in
+`galerina-framework-app-kernel/src/registry-generation-store.ts`, eighteen
+bind the executable scopes in
+`galerina-framework-app-kernel/src/registry-generation.ts`, and two begin the
+admission boundary in
+`galerina-framework-app-kernel/src/registry-rotation-authority.ts`. The
+package now registers **680** conversion overlays. The pinned source build
+point is `d18ef1af13b0c221e87cb483555e9b09262a09ec`; the three source
+SHA-256 values are
+`74F6A976E7EEC9649ABA2E850A08FB7B36E2311D2E14543BFF8F6CF95B947A80`,
+`09276184516293559D435A6460B6C0218613568744DEB89804E947D79400993C`
+and
+`5CC0D8BFB7C5171D81CD7DB524CF876C95C387BE78F2F168E501E8CAF769C3BA`.
+The code graph supplied navigation only: two post-Wave-15 refresh attempts
+remained pinned to `c01302c1`, so graph freshness is **UNKNOWN** and exact
+current source bytes plus the zero-hit prior-wave audit are final authority.
+
+The source test first failed on all absent and unregistered assets. The first
+implementation then passed source parsing, effects, GIR, execution and the
+40/40 duplicate-shadow gate, but physical SLIDE correctly refused the
+over-deep uniqueness tails. The accepted revision groups composite host facts
+and gives every flow a distinct shallow proof shape capped at seven branches.
+The final whole-corpus gate reports **40/40 unique** with zero exact-byte or
+alpha-renamed template collisions. Focused source evidence passes **3/3** and
+the complete overlay source family passes **47/47**. Focused physical evidence
+passes **1/1** and the complete physical wave family passes **15/15**: all 40
+new sources compile into physical `.slide` artifacts, publish, independently
+re-admit and VOK-verify their typed values, refuse mutated source and physical
+artifacts, reject receipt tampering, and release no production authority. The
+test package no-emit typecheck is green. The focused test pins are
+`5ABD459276A23DB7B70E3823F5C88152FFFB84611462F246FA8D66464CD78BB1`
+and
+`053794545B9FB7AA501AA4DAE9B8B686B54EA0611940DCDDD0D4457A2318DB03`.
+
+This remains bounded post-border decision evidence. It does not replace Node
+filesystem, path, process, crypto, TextDecoder, JSON, Date, randomness,
+durability, publication, callback, WeakSet provenance, registry signature,
+key-custody, error-identity or cleanup semantics. It does not authorize a
+registry generation, rotation candidate, production receipt, consumer switch
+or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak is
+zero, no worker authored the wave, no push is authorized, and no report-only
+follow-up commit is permitted.

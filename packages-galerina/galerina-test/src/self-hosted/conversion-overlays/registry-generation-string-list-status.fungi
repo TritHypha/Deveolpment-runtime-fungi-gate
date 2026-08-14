@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 24: registry-generation-string-list-status.fungi.
+pure flow registryGenerationStringListStatusCore(valueCaptured: Bool, arrayTyped: Bool, itemsValid: Bool, duplicatesAbsent: Bool) -> String {
+  let sourceProofA: Bool = arrayTyped
+  let sourceProofB: Bool = itemsValid
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if arrayTyped {
+          if itemsValid {
+            if duplicatesAbsent {
+              return "registry_generation_list_valid"
+            }
+            return "duplicatesAbsent_missing"
+          }
+          return "itemsValid_missing"
+        }
+        return "arrayTyped_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

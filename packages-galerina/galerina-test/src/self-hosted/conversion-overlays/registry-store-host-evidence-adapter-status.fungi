@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 8: registry-store-host-evidence-adapter-status.fungi.
+pure flow registryStoreHostEvidenceAdapterStatusCore(optionsCaptured: Bool, identityValid: Bool, digestValid: Bool, callbackCaptured: Bool, capabilityMinted: Bool) -> String {
+  let sourceProofA: Bool = capabilityMinted
+  let sourceProofB: Bool = optionsCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if identityValid {
+          if digestValid {
+            if callbackCaptured {
+              if capabilityMinted {
+                return "registry_store_adapter_issued"
+              }
+              return "capabilityMinted_missing"
+            }
+            return "callbackCaptured_missing"
+          }
+          return "digestValid_missing"
+        }
+        return "identityValid_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

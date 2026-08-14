@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 16 item 38: registry-generation-file-name-status.fungi.
+pure flow registryGenerationFileNameStatusCore(identityCaptured: Bool, grammarValid: Bool, nameBuilt: Bool) -> String {
+  let sourceProofA: Bool = nameBuilt
+  let sourceProofB: Bool = grammarValid
+  if sourceProofA {
+    if sourceProofB {
+      if identityCaptured {
+        if grammarValid {
+          if nameBuilt {
+            return "registry_generation_filename_ready"
+          }
+          return "nameBuilt_missing"
+        }
+        return "grammarValid_missing"
+      }
+      return "identityCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

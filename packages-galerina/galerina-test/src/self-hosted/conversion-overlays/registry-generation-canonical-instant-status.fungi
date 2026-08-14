@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 25: registry-generation-canonical-instant-status.fungi.
+pure flow registryGenerationCanonicalInstantStatusCore(valueCaptured: Bool, stringTyped: Bool, patternValid: Bool, dateRoundTrip: Bool) -> String {
+  let sourceProofA: Bool = patternValid
+  let sourceProofB: Bool = patternValid
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if stringTyped {
+          if patternValid {
+            if dateRoundTrip {
+              return "registry_generation_instant_canonical"
+            }
+            return "dateRoundTrip_missing"
+          }
+          return "patternValid_missing"
+        }
+        return "stringTyped_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

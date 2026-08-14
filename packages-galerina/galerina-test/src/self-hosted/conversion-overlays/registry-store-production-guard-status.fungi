@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 13: registry-store-production-guard-status.fungi.
+pure flow registryStoreProductionGuardStatusCore(valueCaptured: Bool, persistedKnown: Bool, productionKnown: Bool, bindingKnown: Bool) -> String {
+  let sourceProofA: Bool = persistedKnown
+  let sourceProofB: Bool = persistedKnown
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if persistedKnown {
+          if productionKnown {
+            if bindingKnown {
+              return "registry_store_production_admitted"
+            }
+            return "bindingKnown_missing"
+          }
+          return "productionKnown_missing"
+        }
+        return "persistedKnown_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

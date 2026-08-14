@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 16 item 15: registry-store-forward-probe-consume-status.fungi.
+pure flow registryStoreForwardProbeConsumeStatusCore(probeCaptured: Bool, identityMatched: Bool, receiptConsumed: Bool) -> String {
+  let sourceProofA: Bool = identityMatched
+  let sourceProofB: Bool = probeCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if probeCaptured {
+        if identityMatched {
+          if receiptConsumed {
+            return "registry_store_probe_consumed"
+          }
+          return "receiptConsumed_missing"
+        }
+        return "identityMatched_missing"
+      }
+      return "probeCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

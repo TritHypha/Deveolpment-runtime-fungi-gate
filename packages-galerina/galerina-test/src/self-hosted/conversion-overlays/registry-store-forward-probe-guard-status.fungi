@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 14: registry-store-forward-probe-guard-status.fungi.
+pure flow registryStoreForwardProbeGuardStatusCore(valueCaptured: Bool, probeKnown: Bool, generationVerified: Bool, identityMatched: Bool) -> String {
+  let sourceProofA: Bool = generationVerified
+  let sourceProofB: Bool = probeKnown
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if probeKnown {
+          if generationVerified {
+            if identityMatched {
+              return "registry_store_probe_valid"
+            }
+            return "identityMatched_missing"
+          }
+          return "generationVerified_missing"
+        }
+        return "probeKnown_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

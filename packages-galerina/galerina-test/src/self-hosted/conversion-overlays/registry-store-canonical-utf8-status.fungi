@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 2: registry-store-canonical-utf8-status.fungi.
+pure flow registryStoreCanonicalUtf8StatusCore(bytesCaptured: Bool, nonEmpty: Bool, bomAbsent: Bool, utf8Decoded: Bool, nulAbsent: Bool) -> String {
+  let sourceProofA: Bool = bytesCaptured
+  let sourceProofB: Bool = bytesCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if bytesCaptured {
+        if nonEmpty {
+          if bomAbsent {
+            if utf8Decoded {
+              if nulAbsent {
+                return "registry_store_utf8_canonical"
+              }
+              return "nulAbsent_missing"
+            }
+            return "utf8Decoded_missing"
+          }
+          return "bomAbsent_missing"
+        }
+        return "nonEmpty_missing"
+      }
+      return "bytesCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

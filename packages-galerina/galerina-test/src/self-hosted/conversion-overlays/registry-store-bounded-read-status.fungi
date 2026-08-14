@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 5: registry-store-bounded-read-status.fungi.
+pure flow registryStoreBoundedReadStatusCore(pathCaptured: Bool, regularFile: Bool, bytesRead: Bool, identityStable: Bool, handleClosed: Bool) -> String {
+  let sourceProofA: Bool = bytesRead
+  let sourceProofB: Bool = pathCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if pathCaptured {
+        if regularFile {
+          if bytesRead {
+            if identityStable {
+              if handleClosed {
+                return "registry_store_file_bounded"
+              }
+              return "handleClosed_missing"
+            }
+            return "identityStable_missing"
+          }
+          return "bytesRead_missing"
+        }
+        return "regularFile_missing"
+      }
+      return "pathCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

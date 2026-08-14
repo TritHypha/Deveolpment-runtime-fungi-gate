@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 16 item 22: registry-generation-materialize-status.fungi.
+pure flow registryGenerationMaterializeStatusCore(valueCaptured: Bool, canonicalSerialized: Bool, jsonParsed: Bool, detachedReady: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = jsonParsed
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if canonicalSerialized {
+          if jsonParsed {
+            if detachedReady {
+              return "registry_generation_materialized"
+            }
+            return "detachedReady_missing"
+          }
+          return "jsonParsed_missing"
+        }
+        return "canonicalSerialized_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

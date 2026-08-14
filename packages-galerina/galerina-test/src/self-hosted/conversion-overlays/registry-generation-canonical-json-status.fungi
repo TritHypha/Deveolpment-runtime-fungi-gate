@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 16 item 36: registry-generation-canonical-json-status.fungi.
+pure flow registryGenerationCanonicalJsonStatusCore(generationCaptured: Bool, schemaValid: Bool, canonicalSerialized: Bool) -> String {
+  let sourceProofA: Bool = schemaValid
+  let sourceProofB: Bool = schemaValid
+  if sourceProofA {
+    if sourceProofB {
+      if generationCaptured {
+        if schemaValid {
+          if canonicalSerialized {
+            return "registry_generation_json_canonical"
+          }
+          return "canonicalSerialized_missing"
+        }
+        return "schemaValid_missing"
+      }
+      return "generationCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

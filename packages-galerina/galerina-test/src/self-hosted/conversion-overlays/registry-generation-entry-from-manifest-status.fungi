@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 27: registry-generation-entry-from-manifest-status.fungi.
+pure flow registryGenerationEntryFromManifestStatusCore(manifestCaptured: Bool, identityValid: Bool, governanceReviewed: Bool, collectionsValid: Bool, entryBuilt: Bool) -> String {
+  let sourceProofA: Bool = manifestCaptured
+  let sourceProofB: Bool = governanceReviewed
+  if sourceProofA {
+    if sourceProofB {
+      if manifestCaptured {
+        if identityValid {
+          if governanceReviewed {
+            if collectionsValid {
+              if entryBuilt {
+                return "registry_generation_entry_built"
+              }
+              return "entryBuilt_missing"
+            }
+            return "collectionsValid_missing"
+          }
+          return "governanceReviewed_missing"
+        }
+        return "identityValid_missing"
+      }
+      return "manifestCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

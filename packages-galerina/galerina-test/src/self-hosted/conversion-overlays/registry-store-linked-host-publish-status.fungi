@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 18: registry-store-linked-host-publish-status.fungi.
+pure flow registryStoreLinkedHostPublishStatusCore(optionsCaptured: Bool, profileAdmitted: Bool, hostVerified: Bool, publicationVerified: Bool, receiptMinted: Bool) -> String {
+  let sourceProofA: Bool = publicationVerified
+  let sourceProofB: Bool = profileAdmitted
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if profileAdmitted {
+          if hostVerified {
+            if publicationVerified {
+              if receiptMinted {
+                return "registry_store_linked_published"
+              }
+              return "receiptMinted_missing"
+            }
+            return "publicationVerified_missing"
+          }
+          return "hostVerified_missing"
+        }
+        return "profileAdmitted_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

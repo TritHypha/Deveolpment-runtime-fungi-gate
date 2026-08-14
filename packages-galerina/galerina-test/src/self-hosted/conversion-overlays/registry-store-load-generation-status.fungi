@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 16: registry-store-load-generation-status.fungi.
+pure flow registryStoreLoadGenerationStatusCore(optionsCaptured: Bool, borderAdmitted: Bool, bytesVerified: Bool, generationVerified: Bool, receiptMinted: Bool) -> String {
+  let sourceProofA: Bool = borderAdmitted
+  let sourceProofB: Bool = borderAdmitted
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if borderAdmitted {
+          if bytesVerified {
+            if generationVerified {
+              if receiptMinted {
+                return "registry_store_generation_loaded"
+              }
+              return "receiptMinted_missing"
+            }
+            return "generationVerified_missing"
+          }
+          return "bytesVerified_missing"
+        }
+        return "borderAdmitted_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

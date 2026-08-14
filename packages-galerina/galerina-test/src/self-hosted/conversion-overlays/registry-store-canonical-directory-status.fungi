@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 4: registry-store-canonical-directory-status.fungi.
+pure flow registryStoreCanonicalDirectoryStatusCore(directoryCaptured: Bool, absolutePath: Bool, resolved: Bool, statsLoaded: Bool, directDirectory: Bool) -> String {
+  let sourceProofA: Bool = absolutePath
+  let sourceProofB: Bool = directoryCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if directoryCaptured {
+        if absolutePath {
+          if resolved {
+            if statsLoaded {
+              if directDirectory {
+                return "registry_store_directory_canonical"
+              }
+              return "directDirectory_missing"
+            }
+            return "statsLoaded_missing"
+          }
+          return "resolved_missing"
+        }
+        return "absolutePath_missing"
+      }
+      return "directoryCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

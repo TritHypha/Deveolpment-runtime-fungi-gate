@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 7: registry-store-durable-receipt-status.fungi.
+pure flow registryStoreDurableReceiptStatusCore(verifiedCaptured: Bool, adapterCaptured: Bool, receiptBuilt: Bool, durableMinted: Bool, productionClassified: Bool) -> String {
+  let sourceProofA: Bool = durableMinted
+  let sourceProofB: Bool = verifiedCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if verifiedCaptured {
+        if adapterCaptured {
+          if receiptBuilt {
+            if durableMinted {
+              if productionClassified {
+                return "registry_store_durable_minted"
+              }
+              return "productionClassified_missing"
+            }
+            return "durableMinted_missing"
+          }
+          return "receiptBuilt_missing"
+        }
+        return "adapterCaptured_missing"
+      }
+      return "verifiedCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

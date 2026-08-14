@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 16 item 39: registry-rotation-candidate-admit-status.fungi.
+pure flow registryRotationCandidateAdmitStatusCore(optionsCaptured: Bool, identitiesMatched: Bool, delegationVerified: Bool, fingerprintsMatched: Bool, provenanceMinted: Bool) -> String {
+  let sourceProofA: Bool = delegationVerified
+  let sourceProofB: Bool = fingerprintsMatched
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if identitiesMatched {
+          if delegationVerified {
+            if fingerprintsMatched {
+              if provenanceMinted {
+                return "registry_rotation_candidate_admitted"
+              }
+              return "provenanceMinted_missing"
+            }
+            return "fingerprintsMatched_missing"
+          }
+          return "delegationVerified_missing"
+        }
+        return "identitiesMatched_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}
