@@ -2413,6 +2413,57 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 23 - substrate, governance and Tower runtime
+
+Wave 23 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. Twelve bind previously uncredited substrate-model helpers, two
+bind substrate snapshot construction and canonicalization, twelve bind
+three-valued governance folds and boundary decisions, nine bind the TowerRuntime
+class, construction and lifecycle surface, and five bind ternary simulator
+arithmetic/admission helpers. The earlier substrate read, vote, guarantee,
+denial, tolerance and snapshot-verification overlays remain excluded. The
+package now registers **960** conversion overlays. The pinned source build point
+is `32122b5c5f94aff98d4b0cc3fd96fdbf14e2daa7`; the five source SHA-256
+values are
+`BF66D6AAA4CEB713155AAEE593430D41A105A83B13444EBCF70CC6CCC4D8C91A`,
+`001BCF9BF500AAE3A36E095E959A7D72A9081705796E4C151ADFD605D0B08350`,
+`801F3AA1366BEE32AA2015B76A5F457677193D621FE0D425780C90DD6B5C37A1`,
+`4B7F5C903A50718B83D3A4AE000A3C4D65EBCAF3DB69FA88D8E9A1E62BC30BFC`
+and
+`110D0166B3066EB145BC4DE5187367477D37614D3D49AAEA975DC9AD0B4E8739`.
+The graph supplied navigation only. The attempted post-Wave-22 refresh returned
+`status: indexed` while retaining the Wave-21 build point and could not find a
+Wave-22 flow. Freshness is therefore **UNKNOWN**, and exact live bytes plus the
+zero-hit prior-overlay scope audit are the final authority.
+
+The source test first failed on the absent and unregistered assets. The first
+authored pass then passed the whole-corpus duplicate guard without a repair
+round: **40/40 unique**, with zero exact-byte or normalized alpha-renamed
+template collisions. Focused source evidence passes **3/3** and the complete
+overlay source family passes **71/71**. Focused physical evidence passes
+**1/1** and the complete physical wave family passes **24/24**: all 40 new
+sources compile into physical `.slide` artifacts, publish, independently
+re-admit and VOK-verify their typed values, refuse mutated source and physical
+artifacts, reject receipt tampering, and release no production authority. The
+test package no-emit typecheck is green. The focused test pins are
+`B76B9F98DBC2BE43AA0C0DC438CBCDE310C74744B77FBB99CEC6096092A860F4`
+and
+`E21BF23752CC54FAA69D3CB5A2F3B80B14104D233C8774E3F6BA04F4BF6C6281`.
+
+This remains bounded post-border decision evidence. It does not replace active
+JavaScript number/coercion semantics, stateful PRNG closures, mutable records,
+typed arrays, JSON canonicalization, callbacks, audit and filesystem effects,
+crypto and manifest verification, plugin execution, lifecycle state, error
+identity, concurrency or cleanup ordering. It authorizes no substrate result,
+governance boundary, Tower plugin, runtime capability, consumer switch or
+TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, no worker authored this wave, no push is authorized, and no report-only
+follow-up commit is permitted.
+
 ## Source decision overlay wave 22 - target validators, benchmark and Myco
 
 Wave 22 adds **40 new source-bound Fungi decision cores** and reuses no prior
