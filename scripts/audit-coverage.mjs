@@ -11,7 +11,7 @@
 // Dimension implemented: `codes` (FUNGI-*/ERR-*). Inputs: build/code-index/code-index.json (the graph)
 // + docs/Knowledge-Bases/galerina-governance-rules.md (the audit registry). Other dimensions register here
 // as their index + audit land (#217 capabilities, project graph, etc.).
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { extractCodes } from "./lib/codes.mjs";
@@ -46,7 +46,9 @@ try {
 // empty registry silently reports "0 phantoms / clean" — a fail-OPEN. Fail CLOSED so the blind spot is loud
 // (mirrors the exit(2) on a missing code-index above; --soft governs VIOLATIONS, not a missing corpus).
 const KB_DIR = process.env.GALERINA_KB_DIR || join(ROOT, "..", "ZTF-Knowledge-Bases");
-const REGISTRY = join(KB_DIR, "galerina-governance-rules.md");
+const LEGACY_REGISTRY = join(KB_DIR, "galerina-governance-rules.md");
+const MIGRATED_REGISTRY = join(KB_DIR, "reference", "galerina", "galerina-governance-rules.md");
+const REGISTRY = existsSync(LEGACY_REGISTRY) ? LEGACY_REGISTRY : MIGRATED_REGISTRY;
 let registryText = "";
 try {
   registryText = readFileSync(REGISTRY, "utf8");

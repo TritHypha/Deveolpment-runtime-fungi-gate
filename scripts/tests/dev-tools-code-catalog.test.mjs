@@ -160,6 +160,18 @@ test("audit-coverage fails closed when the governance registry is absent", () =>
   assert.match(result.stderr, /registry unreadable|Failing closed/i);
 });
 
+test("audit-coverage resolves the governance registry after the KB reference migration", () => {
+  const migratedKb = join(tmp, "migrated-kb");
+  mkdirSync(join(migratedKb, "reference", "galerina"), { recursive: true });
+  writeFileSync(
+    join(migratedKb, "reference", "galerina", "galerina-governance-rules.md"),
+    "# Governance rules\n(no curated FUNGI codes yet)\n",
+  );
+  const result = runCoverage(migratedKb);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.equal(JSON.parse(result.stdout).holes, 0);
+});
+
 test("audit-coverage check refuses drift without rewriting governed output", () => {
   const output = join(tmp, "build", "coverage", "coverage-codes.md");
   const provenance = join(tmp, "build", "coverage", "provenance.json");
