@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 15: kernel-route-key-status.fungi.
+pure flow kernelRouteKeyStatusCore(methodCaptured: Bool, pathCaptured: Bool, keyBuilt: Bool) -> String {
+  let sourceProofA: Bool = methodCaptured
+  let sourceProofB: Bool = pathCaptured
+  let sourceProofC: Bool = methodCaptured
+  let sourceProofD: Bool = keyBuilt
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if methodCaptured {
+            if keyBuilt {
+              if pathCaptured {
+                return "kernel_route_key_built"
+              }
+              return "pathCaptured_missing"
+            }
+            return "keyBuilt_missing"
+          }
+          return "methodCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 5: kernel-base-content-type-status.fungi.
+pure flow kernelBaseContentTypeStatusCore(valueCaptured: Bool, separatorFound: Bool, contentTypeNormalized: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = contentTypeNormalized
+  let sourceProofC: Bool = separatorFound
+  let sourceProofD: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if contentTypeNormalized {
+            if separatorFound {
+              if valueCaptured {
+                return "kernel_content_type_normalized"
+              }
+              return "valueCaptured_missing"
+            }
+            return "separatorFound_missing"
+          }
+          return "contentTypeNormalized_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 38: registry-durability-authority-shape-status.fungi.
+pure flow registryDurabilityAuthorityShapeStatusCore(valueCaptured: Bool, shapeExact: Bool, callbacksBound: Bool, keyIdsBound: Bool) -> String {
+  let sourceProofA: Bool = shapeExact
+  let sourceProofB: Bool = keyIdsBound
+  let sourceProofC: Bool = shapeExact
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if shapeExact {
+          if callbacksBound {
+            if keyIdsBound {
+              if valueCaptured {
+                return "registry_durability_authority_valid"
+              }
+              return "valueCaptured_missing"
+            }
+            return "keyIdsBound_missing"
+          }
+          return "callbacksBound_missing"
+        }
+        return "shapeExact_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

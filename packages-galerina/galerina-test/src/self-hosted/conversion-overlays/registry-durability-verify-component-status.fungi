@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 40: registry-durability-verify-component-status.fungi.
+pure flow registryDurabilityVerifyComponentStatusCore(verifierCaptured: Bool, preimageCaptured: Bool, signatureCaptured: Bool, keyBound: Bool, literalTrue: Bool) -> String {
+  let sourceProofA: Bool = literalTrue
+  let sourceProofB: Bool = preimageCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if verifierCaptured {
+        if keyBound {
+          if preimageCaptured {
+            if literalTrue {
+              if signatureCaptured {
+                return "registry_durability_component_verified"
+              }
+              return "signatureCaptured_missing"
+            }
+            return "literalTrue_missing"
+          }
+          return "preimageCaptured_missing"
+        }
+        return "keyBound_missing"
+      }
+      return "verifierCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

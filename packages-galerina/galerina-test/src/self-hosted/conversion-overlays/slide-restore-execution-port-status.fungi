@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 20: slide-restore-execution-port-status.fungi.
+pure flow slideRestoreExecutionPortStatusCore(valueCaptured: Bool, shapeExact: Bool, schemaMatched: Bool, callbackBound: Bool) -> String {
+  let sourceProofA: Bool = callbackBound
+  let sourceProofB: Bool = shapeExact
+  let sourceProofC: Bool = callbackBound
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if valueCaptured {
+          if callbackBound {
+            if schemaMatched {
+              if shapeExact {
+                return "slide_restore_execution_port_valid"
+              }
+              return "shapeExact_missing"
+            }
+            return "schemaMatched_missing"
+          }
+          return "callbackBound_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

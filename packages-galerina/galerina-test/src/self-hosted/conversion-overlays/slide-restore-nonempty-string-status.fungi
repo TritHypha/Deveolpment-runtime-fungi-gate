@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 23: slide-restore-nonempty-string-status.fungi.
+pure flow slideRestoreNonemptyStringStatusCore(valueCaptured: Bool, stringTyped: Bool, nonempty: Bool) -> String {
+  let sourceProofA: Bool = nonempty
+  let sourceProofB: Bool = valueCaptured
+  let sourceProofC: Bool = nonempty
+  let sourceProofD: Bool = stringTyped
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if nonempty {
+            if valueCaptured {
+              if stringTyped {
+                return "slide_restore_string_nonempty"
+              }
+              return "stringTyped_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "nonempty_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 21: slide-restore-data-shape-status.fungi.
+pure flow slideRestoreDataShapeStatusCore(valueCaptured: Bool, prototypePlain: Bool, keysExact: Bool, descriptorsData: Bool, cloneSucceeded: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = keysExact
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if prototypePlain {
+          if cloneSucceeded {
+            if descriptorsData {
+              if keysExact {
+                return "slide_restore_data_shape_exact"
+              }
+              return "keysExact_missing"
+            }
+            return "descriptorsData_missing"
+          }
+          return "cloneSucceeded_missing"
+        }
+        return "prototypePlain_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

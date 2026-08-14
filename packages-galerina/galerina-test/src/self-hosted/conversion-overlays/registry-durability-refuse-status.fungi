@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 35: registry-durability-refuse-status.fungi.
+pure flow registryDurabilityRefuseStatusCore(codeCaptured: Bool, errorTyped: Bool, refusalRaised: Bool) -> String {
+  let sourceProofA: Bool = codeCaptured
+  let sourceProofB: Bool = codeCaptured
+  let sourceProofC: Bool = refusalRaised
+  let sourceProofD: Bool = errorTyped
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if codeCaptured {
+            if refusalRaised {
+              if errorTyped {
+                return "registry_durability_refusal_bound"
+              }
+              return "errorTyped_missing"
+            }
+            return "refusalRaised_missing"
+          }
+          return "codeCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

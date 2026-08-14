@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 24: slide-restore-manifest-shape-status.fungi.
+pure flow slideRestoreManifestShapeStatusCore(valueCaptured: Bool, shapeExact: Bool, digestsValid: Bool, epochsValid: Bool, signaturesPresent: Bool) -> String {
+  let sourceProofA: Bool = epochsValid
+  let sourceProofB: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if digestsValid {
+          if shapeExact {
+            if epochsValid {
+              if signaturesPresent {
+                return "slide_restore_manifest_valid"
+              }
+              return "signaturesPresent_missing"
+            }
+            return "epochsValid_missing"
+          }
+          return "shapeExact_missing"
+        }
+        return "digestsValid_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

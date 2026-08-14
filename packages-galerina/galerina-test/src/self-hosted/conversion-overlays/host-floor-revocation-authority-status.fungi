@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 4: host-floor-revocation-authority-status.fungi.
+pure flow hostFloorRevocationAuthorityStatusCore(rootCaptured: Bool, urlBound: Bool, moduleImported: Bool) -> String {
+  let sourceProofA: Bool = rootCaptured
+  let sourceProofB: Bool = moduleImported
+  let sourceProofC: Bool = urlBound
+  let sourceProofD: Bool = rootCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if rootCaptured {
+            if moduleImported {
+              if urlBound {
+                return "host_floor_revocation_authority_loaded"
+              }
+              return "urlBound_missing"
+            }
+            return "moduleImported_missing"
+          }
+          return "rootCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

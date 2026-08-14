@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 29: slide-restore-verify-component-status.fungi.
+pure flow slideRestoreVerifyComponentStatusCore(verifierCaptured: Bool, preimageCaptured: Bool, signatureCaptured: Bool, keyBound: Bool, literalTrue: Bool) -> String {
+  let sourceProofA: Bool = keyBound
+  let sourceProofB: Bool = verifierCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if verifierCaptured {
+        if signatureCaptured {
+          if keyBound {
+            if literalTrue {
+              if preimageCaptured {
+                return "slide_restore_component_verified"
+              }
+              return "preimageCaptured_missing"
+            }
+            return "literalTrue_missing"
+          }
+          return "keyBound_missing"
+        }
+        return "signatureCaptured_missing"
+      }
+      return "verifierCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

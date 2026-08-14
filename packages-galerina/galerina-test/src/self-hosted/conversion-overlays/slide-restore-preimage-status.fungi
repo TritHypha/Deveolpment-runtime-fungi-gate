@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 28: slide-restore-preimage-status.fungi.
+pure flow slideRestorePreimageStatusCore(manifestCaptured: Bool, fieldsOrdered: Bool, jsonEncoded: Bool, domainBound: Bool) -> String {
+  let sourceProofA: Bool = domainBound
+  let sourceProofB: Bool = fieldsOrdered
+  let sourceProofC: Bool = domainBound
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if fieldsOrdered {
+          if manifestCaptured {
+            if jsonEncoded {
+              if domainBound {
+                return "slide_restore_preimage_ready"
+              }
+              return "domainBound_missing"
+            }
+            return "jsonEncoded_missing"
+          }
+          return "manifestCaptured_missing"
+        }
+        return "fieldsOrdered_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

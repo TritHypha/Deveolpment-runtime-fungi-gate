@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 25: slide-restore-observation-status.fungi.
+pure flow slideRestoreObservationStatusCore(valueCaptured: Bool, shapeExact: Bool, identityMatched: Bool, provenanceMatched: Bool, verdictMatched: Bool) -> String {
+  let sourceProofA: Bool = verdictMatched
+  let sourceProofB: Bool = shapeExact
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if identityMatched {
+          if shapeExact {
+            if verdictMatched {
+              if provenanceMatched {
+                return "slide_restore_observation_valid"
+              }
+              return "provenanceMatched_missing"
+            }
+            return "verdictMatched_missing"
+          }
+          return "shapeExact_missing"
+        }
+        return "identityMatched_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

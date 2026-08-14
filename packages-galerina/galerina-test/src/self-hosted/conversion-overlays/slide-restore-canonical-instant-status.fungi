@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 19: slide-restore-canonical-instant-status.fungi.
+pure flow slideRestoreCanonicalInstantStatusCore(valueCaptured: Bool, instantParsed: Bool, roundTripMatched: Bool) -> String {
+  let sourceProofA: Bool = instantParsed
+  let sourceProofB: Bool = roundTripMatched
+  let sourceProofC: Bool = instantParsed
+  let sourceProofD: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if instantParsed {
+            if valueCaptured {
+              if roundTripMatched {
+                return "slide_restore_instant_canonical"
+              }
+              return "roundTripMatched_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "instantParsed_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

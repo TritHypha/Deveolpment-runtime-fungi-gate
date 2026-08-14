@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 10: kernel-handle-status.fungi.
+pure flow kernelHandleStatusCore(requestCaptured: Bool, auditReserved: Bool, pipelineCompleted: Bool, evidenceCommitted: Bool, responseReturned: Bool) -> String {
+  let sourceProofA: Bool = responseReturned
+  let sourceProofB: Bool = auditReserved
+  if sourceProofA {
+    if sourceProofB {
+      if requestCaptured {
+        if auditReserved {
+          if evidenceCommitted {
+            if pipelineCompleted {
+              if responseReturned {
+                return "kernel_request_handled"
+              }
+              return "responseReturned_missing"
+            }
+            return "pipelineCompleted_missing"
+          }
+          return "evidenceCommitted_missing"
+        }
+        return "auditReserved_missing"
+      }
+      return "requestCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 11: kernel-duplicate-json-key-status.fungi.
+pure flow kernelDuplicateJsonKeyStatusCore(textCaptured: Bool, tokensScanned: Bool, objectKeysTracked: Bool, duplicatesClassified: Bool) -> String {
+  let sourceProofA: Bool = objectKeysTracked
+  let sourceProofB: Bool = textCaptured
+  let sourceProofC: Bool = objectKeysTracked
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if textCaptured {
+          if objectKeysTracked {
+            if duplicatesClassified {
+              if tokensScanned {
+                return "kernel_json_keys_classified"
+              }
+              return "tokensScanned_missing"
+            }
+            return "duplicatesClassified_missing"
+          }
+          return "objectKeysTracked_missing"
+        }
+        return "textCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

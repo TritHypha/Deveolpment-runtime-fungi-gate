@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 27: slide-restore-refuse-status.fungi.
+pure flow slideRestoreRefuseStatusCore(codeCaptured: Bool, errorTyped: Bool, refusalRaised: Bool) -> String {
+  let sourceProofA: Bool = codeCaptured
+  let sourceProofB: Bool = errorTyped
+  let sourceProofC: Bool = codeCaptured
+  let sourceProofD: Bool = refusalRaised
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if refusalRaised {
+            if errorTyped {
+              if codeCaptured {
+                return "slide_restore_refusal_bound"
+              }
+              return "codeCaptured_missing"
+            }
+            return "errorTyped_missing"
+          }
+          return "refusalRaised_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

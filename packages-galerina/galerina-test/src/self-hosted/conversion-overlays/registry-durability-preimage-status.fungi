@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 39: registry-durability-preimage-status.fungi.
+pure flow registryDurabilityPreimageStatusCore(manifestCaptured: Bool, fieldsSelected: Bool, jsonEncoded: Bool, domainBound: Bool) -> String {
+  let sourceProofA: Bool = jsonEncoded
+  let sourceProofB: Bool = manifestCaptured
+  let sourceProofC: Bool = jsonEncoded
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if fieldsSelected {
+          if domainBound {
+            if manifestCaptured {
+              if jsonEncoded {
+                return "registry_durability_preimage_ready"
+              }
+              return "jsonEncoded_missing"
+            }
+            return "manifestCaptured_missing"
+          }
+          return "domainBound_missing"
+        }
+        return "fieldsSelected_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

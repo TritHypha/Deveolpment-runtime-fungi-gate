@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 16: kernel-run-pipeline-status.fungi.
+pure flow kernelRunPipelineStatusCore(requestCaptured: Bool, routeMatched: Bool, policyApplied: Bool, gatesPassed: Bool, handlerCompleted: Bool) -> String {
+  let sourceProofA: Bool = requestCaptured
+  let sourceProofB: Bool = policyApplied
+  if sourceProofA {
+    if sourceProofB {
+      if requestCaptured {
+        if routeMatched {
+          if gatesPassed {
+            if handlerCompleted {
+              if policyApplied {
+                return "kernel_pipeline_completed"
+              }
+              return "policyApplied_missing"
+            }
+            return "handlerCompleted_missing"
+          }
+          return "gatesPassed_missing"
+        }
+        return "routeMatched_missing"
+      }
+      return "requestCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

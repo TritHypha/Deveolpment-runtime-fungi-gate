@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 6: kernel-create-status.fungi.
+pure flow kernelCreateStatusCore(optionsCaptured: Bool, routesIndexed: Bool, policiesResolved: Bool, gatesBound: Bool, kernelFrozen: Bool) -> String {
+  let sourceProofA: Bool = optionsCaptured
+  let sourceProofB: Bool = policiesResolved
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if routesIndexed {
+          if policiesResolved {
+            if kernelFrozen {
+              if gatesBound {
+                return "kernel_created"
+              }
+              return "gatesBound_missing"
+            }
+            return "kernelFrozen_missing"
+          }
+          return "policiesResolved_missing"
+        }
+        return "routesIndexed_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

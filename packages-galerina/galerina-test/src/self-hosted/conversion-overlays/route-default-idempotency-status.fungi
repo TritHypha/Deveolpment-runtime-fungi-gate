@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 30: route-default-idempotency-status.fungi.
+pure flow routeDefaultIdempotencyStatusCore(methodCaptured: Bool, mutationClassified: Bool, policyBuilt: Bool) -> String {
+  let sourceProofA: Bool = mutationClassified
+  let sourceProofB: Bool = mutationClassified
+  let sourceProofC: Bool = methodCaptured
+  let sourceProofD: Bool = policyBuilt
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if methodCaptured {
+            if mutationClassified {
+              if policyBuilt {
+                return "route_idempotency_defaulted"
+              }
+              return "policyBuilt_missing"
+            }
+            return "mutationClassified_missing"
+          }
+          return "methodCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 1: host-floor-registry-generation-status.fungi.
+pure flow hostFloorRegistryGenerationStatusCore(importsStarted: Bool, modulesLoaded: Bool, processNarrowed: Bool, capabilitiesBound: Bool, floorFrozen: Bool) -> String {
+  let sourceProofA: Bool = floorFrozen
+  let sourceProofB: Bool = modulesLoaded
+  let sourceProofMirror: Bool = sourceProofA
+  if sourceProofMirror {
+    if sourceProofB {
+      if importsStarted {
+        if modulesLoaded {
+          if processNarrowed {
+            if capabilitiesBound {
+              if floorFrozen {
+                return "host_floor_registry_generation_loaded"
+              }
+              return "floorFrozen_missing"
+            }
+            return "capabilitiesBound_missing"
+          }
+          return "processNarrowed_missing"
+        }
+        return "modulesLoaded_missing"
+      }
+      return "importsStarted_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofMirror_missing"
+}

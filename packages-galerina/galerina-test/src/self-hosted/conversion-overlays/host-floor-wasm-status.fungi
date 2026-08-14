@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 3: host-floor-wasm-status.fungi.
+pure flow hostFloorWasmStatusCore(bytesCaptured: Bool, importsCaptured: Bool, runtimeInvoked: Bool) -> String {
+  let sourceProofA: Bool = runtimeInvoked
+  let sourceProofB: Bool = importsCaptured
+  let sourceProofC: Bool = bytesCaptured
+  let sourceProofD: Bool = runtimeInvoked
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if bytesCaptured {
+            if importsCaptured {
+              if runtimeInvoked {
+                return "host_floor_wasm_instantiated"
+              }
+              return "runtimeInvoked_missing"
+            }
+            return "importsCaptured_missing"
+          }
+          return "bytesCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

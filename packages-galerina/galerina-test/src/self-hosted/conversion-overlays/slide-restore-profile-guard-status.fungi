@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 22: slide-restore-profile-guard-status.fungi.
+pure flow slideRestoreProfileGuardStatusCore(valueCaptured: Bool, objectPresent: Bool, provenanceMatched: Bool) -> String {
+  let sourceProofA: Bool = objectPresent
+  let sourceProofB: Bool = provenanceMatched
+  let sourceProofC: Bool = objectPresent
+  let sourceProofD: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if objectPresent {
+            if provenanceMatched {
+              if valueCaptured {
+                return "slide_restore_profile_authenticated"
+              }
+              return "valueCaptured_missing"
+            }
+            return "provenanceMatched_missing"
+          }
+          return "objectPresent_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

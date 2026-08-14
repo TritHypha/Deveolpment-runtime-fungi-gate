@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 17: slide-restore-admit-status.fungi.
+pure flow slideRestoreAdmitStatusCore(manifestCaptured: Bool, objectBound: Bool, authorityVerified: Bool, observationsMatched: Bool, profileSealed: Bool) -> String {
+  let sourceProofA: Bool = objectBound
+  let sourceProofB: Bool = observationsMatched
+  if sourceProofA {
+    if sourceProofB {
+      if manifestCaptured {
+        if objectBound {
+          if profileSealed {
+            if authorityVerified {
+              if observationsMatched {
+                return "slide_restore_profile_admitted"
+              }
+              return "observationsMatched_missing"
+            }
+            return "authorityVerified_missing"
+          }
+          return "profileSealed_missing"
+        }
+        return "objectBound_missing"
+      }
+      return "manifestCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

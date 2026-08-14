@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 18: slide-restore-authority-shape-status.fungi.
+pure flow slideRestoreAuthorityShapeStatusCore(valueCaptured: Bool, shapeExact: Bool, callbacksBound: Bool, authorityValid: Bool) -> String {
+  let sourceProofA: Bool = shapeExact
+  let sourceProofB: Bool = authorityValid
+  let sourceProofC: Bool = shapeExact
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if valueCaptured {
+          if authorityValid {
+            if shapeExact {
+              if callbacksBound {
+                return "slide_restore_authority_valid"
+              }
+              return "callbacksBound_missing"
+            }
+            return "shapeExact_missing"
+          }
+          return "authorityValid_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

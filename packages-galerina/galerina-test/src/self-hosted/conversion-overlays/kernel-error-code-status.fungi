@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 19 item 7: kernel-error-code-status.fungi.
+pure flow kernelErrorCodeStatusCore(responseCaptured: Bool, bodyDecoded: Bool, codeValidated: Bool, resultBound: Bool) -> String {
+  let sourceProofA: Bool = codeValidated
+  let sourceProofB: Bool = responseCaptured
+  let sourceProofC: Bool = codeValidated
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if responseCaptured {
+          if bodyDecoded {
+            if resultBound {
+              if codeValidated {
+                return "kernel_error_code_resolved"
+              }
+              return "codeValidated_missing"
+            }
+            return "resultBound_missing"
+          }
+          return "bodyDecoded_missing"
+        }
+        return "responseCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

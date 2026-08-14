@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 37: registry-durability-manifest-shape-status.fungi.
+pure flow registryDurabilityManifestShapeStatusCore(valueCaptured: Bool, shapeExact: Bool, digestsValid: Bool, adapterMatched: Bool, signaturesPresent: Bool) -> String {
+  let sourceProofA: Bool = shapeExact
+  let sourceProofB: Bool = adapterMatched
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if adapterMatched {
+          if shapeExact {
+            if digestsValid {
+              if signaturesPresent {
+                return "registry_durability_manifest_valid"
+              }
+              return "signaturesPresent_missing"
+            }
+            return "digestsValid_missing"
+          }
+          return "shapeExact_missing"
+        }
+        return "adapterMatched_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 19 item 14: kernel-release-slot-status.fungi.
+pure flow kernelReleaseSlotStatusCore(slotHeld: Bool, counterUpdated: Bool, releaseRecorded: Bool) -> String {
+  let sourceProofA: Bool = releaseRecorded
+  let sourceProofB: Bool = slotHeld
+  let sourceProofC: Bool = releaseRecorded
+  let sourceProofD: Bool = counterUpdated
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if slotHeld {
+            if counterUpdated {
+              if releaseRecorded {
+                return "kernel_slot_released"
+              }
+              return "releaseRecorded_missing"
+            }
+            return "counterUpdated_missing"
+          }
+          return "slotHeld_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

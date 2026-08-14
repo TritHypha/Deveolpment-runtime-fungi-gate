@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 26: slide-restore-provenance-status.fungi.
+pure flow slideRestoreProvenanceStatusCore(valueCaptured: Bool, arrayPlain: Bool, lengthExact: Bool, digestsUnique: Bool, cloneSucceeded: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = lengthExact
+  if sourceProofA {
+    if sourceProofB {
+      if valueCaptured {
+        if lengthExact {
+          if digestsUnique {
+            if arrayPlain {
+              if cloneSucceeded {
+                return "slide_restore_provenance_valid"
+              }
+              return "cloneSucceeded_missing"
+            }
+            return "arrayPlain_missing"
+          }
+          return "digestsUnique_missing"
+        }
+        return "lengthExact_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

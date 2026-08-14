@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 19 item 31: route-effective-policy-status.fungi.
+pure flow routeEffectivePolicyStatusCore(routeCaptured: Bool, postureApplied: Bool, defaultsMerged: Bool, relaxationsBound: Bool, policyFrozen: Bool) -> String {
+  let sourceProofA: Bool = routeCaptured
+  let sourceProofB: Bool = defaultsMerged
+  if sourceProofA {
+    if sourceProofB {
+      if routeCaptured {
+        if defaultsMerged {
+          if policyFrozen {
+            if postureApplied {
+              if relaxationsBound {
+                return "route_policy_resolved"
+              }
+              return "relaxationsBound_missing"
+            }
+            return "postureApplied_missing"
+          }
+          return "policyFrozen_missing"
+        }
+        return "defaultsMerged_missing"
+      }
+      return "routeCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}
