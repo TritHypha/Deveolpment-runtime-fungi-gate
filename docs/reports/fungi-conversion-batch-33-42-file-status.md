@@ -2413,6 +2413,66 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 49 - Proof diff, pure-flow cache, register VM and resilience
+
+Wave 49 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay filename or source-and-symbol credit. It closes
+`proof-graph.ts#diffFingerprints`, exhausts the source-order code scopes in
+`pure-flow-cache.ts` and `register-vm.ts`, then opens
+`resilience-inference.ts` through `NETWORK_EFFECTS`.
+`hasExplicitResilience` remains the next uncredited source-order scope. The
+package now registers **2,000** conversion overlays. The committed batch also
+includes the reviewed design specification for a fail-closed
+TypeScript-to-Fungi sandbox; the tool itself is not implemented by this wave,
+and every original TypeScript source remains the comparison oracle.
+
+The pinned source build point is
+`a6a665613d3e210ad046ae7f81d23169ca457bfe`. Exact SHA-256 pins are
+`BDB011168701772414BDAB7F34F1F085D8AF859CAB470287777D27A8D867FBD3`
+for `proof-graph.ts`,
+`60A071DF63787E7B7E4B3453CED2D41887B87161BD1A526FDC9DE875AE80B69F`
+for `pure-flow-cache.ts`,
+`AA47B99509AFFFAD2FF78925D8872CDA41EC2CF4D2AD5E6030E7BB376C03BBF2`
+for `register-vm.ts`, and
+`34D6921D7876E5B56CF1936BD208421518B88E26D4A6B440D46B0C0C8C3AB93E`
+for `resilience-inference.ts`. Graph-first discovery used the independently
+exact Wave-48 build point, followed by exact source reads. The report-bearing
+commit follows that point, so graph freshness returns to **UNKNOWN** until the
+required post-commit exact-head refresh.
+
+The RED source test failed **0/3** while the 40 assets and registrations were
+absent. Focused source evidence now passes **3/3**: all 40 files are pinned to
+live source and package registration; all 40 pass exact-byte and normalized
+alpha-renamed whole-corpus shadow checks; and a deterministic ten-file sample
+parses, effect-checks, emits GIR and executes. The focused source-test SHA-256
+is
+`58ADE6521FA72D9B5CF87501EBF77D8E8772249601AD64F0B79C74B67DCDC142`.
+
+Focused physical evidence passes **1/1** over the same deterministic ten-file
+sample. It compiles and publishes ten physical `.slide` artifacts, executes
+them, independently re-admits and VOK-verifies their typed receipts, and
+refuses changed source, artifact and receipt bytes. The focused physical-test
+SHA-256 is
+`D3355F14C8071DCB85C282CDC35418CC2E5243A0D3855FCD7316A8C15EA484F1`.
+The ten-file execution limit is intentional owner direction for this wave;
+the commit guard and duplication/shadow custody still cover all 40 new Fungi
+files.
+
+This remains bounded post-border decision evidence. It does not replace
+proof-graph record ingress, LRU identity and mutation, JavaScript hashing and
+coercion, bytecode record lowering, resilience callbacks/effects or any other
+executing TypeScript border. It authorizes no production consumer switch,
+supersession or TypeScript retirement. The sandbox design likewise grants no
+automatic conversion authority: unsupported or incomplete symbols must end
+as `BLOCKED` or `MANUAL_REVIEW`, while convertible symbols retain the exact
+TypeScript source and evidence binding.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, root authored the wave without workers, no push is authorized, and no
+report-only follow-up commit is permitted.
+
 ## Source decision overlay wave 48 - Proof graph hardware, signatures and cache
 
 Wave 48 adds **40 new source-bound Fungi decision cores** and reuses no prior
