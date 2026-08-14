@@ -2413,6 +2413,66 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 54 - Runtime authority, context, reporting and SBOM boundaries
+
+Wave 54 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay filename or source-and-symbol credit. Fourteen exhaust
+`runtime/rootCapabilityProvider.ts`; five exhaust `runtime/runtimeContext.ts`;
+eight exhaust `runtime/runtimeReport.ts`; seven exhaust
+`runtime/timeoutPolicy.ts`; and six exhaust `sbom.ts`. The next uncredited
+source-order scope is `security-gate.ts#GateDiagnostic`. The package now
+registers **2,200** conversion overlays. The original TypeScript remains
+executing and unchanged for comparison; these reference-only decision cores
+authorize no consumer switch, supersession or TypeScript retirement.
+
+The pinned source build point is
+`59550e7bdedbb8c0eedebd56a168996ce9d3b4bf`. Exact SHA-256 pins are
+`05788D7094F42A9F3C6376543A205624BEDB616D1866C8BC69680762C860C27E`
+for `runtime/rootCapabilityProvider.ts`,
+`90083467AC211AFEDD6C726C71EFEFEB4B4E1FA22581A3BF98ACC7E474EEB90D`
+for `runtime/runtimeContext.ts`,
+`6CD7D53FF8E36CFB5DAA35E4B06DEA4C0439B0807A7ACB47F0A65FE993BD7C75`
+for `runtime/runtimeReport.ts`,
+`69EF77FC8027B48D9DE98B69E842C96D9C5F5A77AB1333676FAAE781C123A392`
+for `runtime/timeoutPolicy.ts`, and
+`C30873F5CD3D67DE7E9DAA38B062F9561252ED9D433D90ABD67A02488C957BDE`
+for `sbom.ts`. Graph-first discovery used the independently exact Wave-53
+build point and exact source reads. The report-bearing commit will follow that
+point, so graph freshness returns to **UNKNOWN** until the required
+post-commit exact-head refresh succeeds.
+
+The RED source test failed **0/3** only because the 40 assets and registrations
+were absent. Focused source evidence now passes **3/3**: all 40 files are pinned
+to live source and package registration; every candidate passes byte-exact and
+normalized identifier-alpha whole-corpus shadow checks; and the owner-bounded
+ten-file sample parses, effect-checks, emits GIR and executes. Its SHA-256 is
+`EFE072D6B26713D18EC169BDE60241C7C24304B38BB3FE20D39ABED8AEBBCAEB`.
+
+Focused physical evidence passes **1/1** over exactly the first ten candidates.
+It compiles and publishes ten physical `.slide` artifacts, executes them,
+independently re-admits and VOK-verifies their typed receipts, and refuses
+changed source, receipt and artifact bytes. Its SHA-256 is
+`C0B6B49CE9507C732E52DE38190B8D4FFC4B879519BF14B64AF2C12E86690484`.
+During GREEN, the physical profile refused an experimental thirteen-level
+control-flow form and individually refused sampled descriptive export names of
+65 characters or longer. The final assets retain the proven seven-gate form,
+carry uniqueness in a compact relay-dependency signature, and use stable
+`wave54ItemNNStatusCore` export names; the descriptive filenames and source
+comments retain exact source custody. The ten-file execution limit remains
+explicit owner direction, while source binding and duplicate/shadow custody
+cover all 40 files.
+
+This is the wave's only modified report. The commit remains ineligible unless
+it contains all 40 newly added `.fungi` files, exactly one report, no
+TypeScript change, no exact duplicate or normalized shadow, and a report-only
+streak below two. The sandbox converter remains bounded to exactly ten inputs
+with terminal `CONVERTED | BLOCKED | MANUAL_REVIEW` outcomes and passes its
+fresh **10/10** suite; package no-emit typecheck and both new test syntax checks
+also pass. Both private Fungi skills require no update for this wave: these
+scope bindings and physical-profile corrections instantiate their existing
+exact-profile and fail-closed rules. No worker authored these changes, no
+TypeScript source was modified, and no push is performed.
+
 ## Source decision overlay wave 53 - Governed-memory and runtime policy boundaries
 
 Wave 53 adds **40 new source-bound Fungi decision cores** and reuses no prior

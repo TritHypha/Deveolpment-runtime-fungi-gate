@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 11: galerina-core-compiler/src/runtime/rootCapabilityProvider.ts#createRootCapabilityProvider.use.
+pure flow wave54Item11StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay1101: Bool = routeReady
+  let wave54Relay1102: Bool = wave54Relay1101
+  let wave54Relay1103: Bool = wave54Relay1102
+  let wave54Relay1104: Bool = sourceReady
+  let wave54Relay1105: Bool = wave54Relay1104
+  let wave54Relay1106: Bool = stateReady
+  let wave54Relay1107: Bool = policyReady
+  if wave54Relay1107 {
+    if proofReady {
+      if sealReady {
+        if sourceReady {
+          if shapeReady {
+            if stateReady {
+              if policyReady {
+                return "root_capability_provider_create_root_capability_provider_use_built"
+              }
+              return "wave54_policy_missing"
+            }
+            return "wave54_state_missing"
+          }
+          return "wave54_shape_missing"
+        }
+        return "wave54_source_missing"
+      }
+      return "wave54_seal_missing"
+    }
+    return "wave54_proof_missing"
+  }
+  return "wave54_route_missing"
+}

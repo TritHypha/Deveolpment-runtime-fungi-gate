@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 29: galerina-core-compiler/src/runtime/timeoutPolicy.ts#DEFAULT_TIMEOUT_CONFIG.
+pure flow wave54Item29StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay2901: Bool = shapeReady
+  let wave54Relay2902: Bool = wave54Relay2901
+  let wave54Relay2903: Bool = policyReady
+  let wave54Relay2904: Bool = wave54Relay2903
+  let wave54Relay2905: Bool = wave54Relay2904
+  let wave54Relay2906: Bool = wave54Relay2905
+  let wave54Relay2907: Bool = sourceReady
+  if wave54Relay2907 {
+    if stateReady {
+      if policyReady {
+        if routeReady {
+          if proofReady {
+            if sealReady {
+              if sourceReady {
+                return "timeout_policy_default_timeout_config_built"
+              }
+              return "wave54_source_missing"
+            }
+            return "wave54_seal_missing"
+          }
+          return "wave54_proof_missing"
+        }
+        return "wave54_route_missing"
+      }
+      return "wave54_policy_missing"
+    }
+    return "wave54_state_missing"
+  }
+  return "wave54_shape_missing"
+}

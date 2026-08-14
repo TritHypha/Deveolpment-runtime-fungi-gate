@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 20: galerina-core-compiler/src/runtime/runtimeReport.ts#ContractEnforcementRecord.
+pure flow wave54Item20StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay2001: Bool = sealReady
+  let wave54Relay2002: Bool = sourceReady
+  let wave54Relay2003: Bool = shapeReady
+  let wave54Relay2004: Bool = wave54Relay2003
+  let wave54Relay2005: Bool = policyReady
+  let wave54Relay2006: Bool = wave54Relay2005
+  let wave54Relay2007: Bool = proofReady
+  if wave54Relay2007 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if policyReady {
+            if routeReady {
+              if proofReady {
+                return "runtime_report_contract_enforcement_record_built"
+              }
+              return "wave54_proof_missing"
+            }
+            return "wave54_route_missing"
+          }
+          return "wave54_policy_missing"
+        }
+        return "wave54_state_missing"
+      }
+      return "wave54_shape_missing"
+    }
+    return "wave54_source_missing"
+  }
+  return "wave54_seal_missing"
+}

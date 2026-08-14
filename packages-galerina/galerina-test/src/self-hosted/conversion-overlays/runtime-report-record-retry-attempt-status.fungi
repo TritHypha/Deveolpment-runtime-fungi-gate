@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 22: galerina-core-compiler/src/runtime/runtimeReport.ts#recordRetryAttempt.
+pure flow wave54Item22StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay2201: Bool = shapeReady
+  let wave54Relay2202: Bool = stateReady
+  let wave54Relay2203: Bool = wave54Relay2202
+  let wave54Relay2204: Bool = wave54Relay2203
+  let wave54Relay2205: Bool = proofReady
+  let wave54Relay2206: Bool = wave54Relay2205
+  let wave54Relay2207: Bool = sourceReady
+  if wave54Relay2207 {
+    if stateReady {
+      if policyReady {
+        if routeReady {
+          if proofReady {
+            if sealReady {
+              if sourceReady {
+                return "runtime_report_record_retry_attempt_built"
+              }
+              return "wave54_source_missing"
+            }
+            return "wave54_seal_missing"
+          }
+          return "wave54_proof_missing"
+        }
+        return "wave54_route_missing"
+      }
+      return "wave54_policy_missing"
+    }
+    return "wave54_state_missing"
+  }
+  return "wave54_shape_missing"
+}

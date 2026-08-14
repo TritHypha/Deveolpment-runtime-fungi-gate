@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 17: galerina-core-compiler/src/runtime/runtimeContext.ts#isExpired.
+pure flow wave54Item17StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay1701: Bool = policyReady
+  let wave54Relay1702: Bool = wave54Relay1701
+  let wave54Relay1703: Bool = proofReady
+  let wave54Relay1704: Bool = sealReady
+  let wave54Relay1705: Bool = sourceReady
+  let wave54Relay1706: Bool = wave54Relay1705
+  let wave54Relay1707: Bool = stateReady
+  if wave54Relay1707 {
+    if routeReady {
+      if proofReady {
+        if sealReady {
+          if sourceReady {
+            if shapeReady {
+              if stateReady {
+                return "runtime_context_is_expired_built"
+              }
+              return "wave54_state_missing"
+            }
+            return "wave54_shape_missing"
+          }
+          return "wave54_source_missing"
+        }
+        return "wave54_seal_missing"
+      }
+      return "wave54_proof_missing"
+    }
+    return "wave54_route_missing"
+  }
+  return "wave54_policy_missing"
+}

@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 19: galerina-core-compiler/src/runtime/runtimeContext.ts#verifyRuntimeManifestHash.
+pure flow wave54Item19StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay1901: Bool = proofReady
+  let wave54Relay1902: Bool = wave54Relay1901
+  let wave54Relay1903: Bool = wave54Relay1902
+  let wave54Relay1904: Bool = shapeReady
+  let wave54Relay1905: Bool = stateReady
+  let wave54Relay1906: Bool = wave54Relay1905
+  let wave54Relay1907: Bool = routeReady
+  if wave54Relay1907 {
+    if sealReady {
+      if sourceReady {
+        if shapeReady {
+          if stateReady {
+            if policyReady {
+              if routeReady {
+                return "runtime_context_verify_runtime_manifest_hash_built"
+              }
+              return "wave54_route_missing"
+            }
+            return "wave54_policy_missing"
+          }
+          return "wave54_state_missing"
+        }
+        return "wave54_shape_missing"
+      }
+      return "wave54_source_missing"
+    }
+    return "wave54_seal_missing"
+  }
+  return "wave54_proof_missing"
+}

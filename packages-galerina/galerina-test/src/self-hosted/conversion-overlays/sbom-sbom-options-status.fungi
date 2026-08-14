@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 38: galerina-core-compiler/src/sbom.ts#SbomOptions.
+pure flow wave54Item38StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay3801: Bool = policyReady
+  let wave54Relay3802: Bool = routeReady
+  let wave54Relay3803: Bool = wave54Relay3802
+  let wave54Relay3804: Bool = wave54Relay3803
+  let wave54Relay3805: Bool = sourceReady
+  let wave54Relay3806: Bool = shapeReady
+  let wave54Relay3807: Bool = wave54Relay3806
+  if wave54Relay3807 {
+    if routeReady {
+      if proofReady {
+        if sealReady {
+          if sourceReady {
+            if shapeReady {
+              if stateReady {
+                return "sbom_sbom_options_built"
+              }
+              return "wave54_state_missing"
+            }
+            return "wave54_shape_missing"
+          }
+          return "wave54_source_missing"
+        }
+        return "wave54_seal_missing"
+      }
+      return "wave54_proof_missing"
+    }
+    return "wave54_route_missing"
+  }
+  return "wave54_policy_missing"
+}

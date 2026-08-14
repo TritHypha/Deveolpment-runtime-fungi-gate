@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 54 item 23: galerina-core-compiler/src/runtime/runtimeReport.ts#recordLimitViolation.
+pure flow wave54Item23StatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave54Relay2301: Bool = stateReady
+  let wave54Relay2302: Bool = wave54Relay2301
+  let wave54Relay2303: Bool = wave54Relay2302
+  let wave54Relay2304: Bool = wave54Relay2303
+  let wave54Relay2305: Bool = sealReady
+  let wave54Relay2306: Bool = wave54Relay2305
+  let wave54Relay2307: Bool = shapeReady
+  if wave54Relay2307 {
+    if policyReady {
+      if routeReady {
+        if proofReady {
+          if sealReady {
+            if sourceReady {
+              if shapeReady {
+                return "runtime_report_record_limit_violation_built"
+              }
+              return "wave54_shape_missing"
+            }
+            return "wave54_source_missing"
+          }
+          return "wave54_seal_missing"
+        }
+        return "wave54_proof_missing"
+      }
+      return "wave54_route_missing"
+    }
+    return "wave54_policy_missing"
+  }
+  return "wave54_state_missing"
+}
