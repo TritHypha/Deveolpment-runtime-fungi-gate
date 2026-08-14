@@ -2413,6 +2413,55 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 32 - Gate v3 verification and GIR emission
+
+Wave 32 adds **40 new source-bound Fungi decision cores**: the final privacy
+sink check, five registry helpers, six resolver functions, two Verdict folds,
+seven structural-verifier functions, six zone-domination functions, and the
+first thirteen functions in source order from `gir-emitter.ts`. A bounded
+prior-credit audit found no exact source-and-symbol reuse. The package now
+registers **1,320** conversion overlays. These are post-border scalar decision
+cores only: active JavaScript objects, Maps, Sets, iterators, JSON, AST
+recursion, diagnostics, clocks and host error identity remain at the executing
+TypeScript border. No consumer switch, supersession or TypeScript retirement
+is claimed.
+
+The pinned source build point is
+`85093142784d2abaa1aa6d4d4ff1a33f27e282d1`. Exact source SHA-256 values,
+in source order, are
+`85C157D61F604DD9D283B6A905B8A0631F03A5DE11D09EA257671C61EBFCF6A9`,
+`BD2798F63738CD46964F2443ECF57A7325697758DA605C15E81556982B04E2E6`,
+`AB80B1EAE6FD0AA74B686189E6B14E582765EAC4E9A9A85EB0E9A336C3DF8EA3`,
+`339008275FD7F170F70A62109A8F1EC865B96F6C5A43B226BAE5AACEE678A239`,
+`94A0B8B34596AF4252605B2DA4C751C7CAED5808E79439288CFB0415C02DE987`,
+`7625107B2298639D91F7511C7EE11933A96CC4B39DA3F5A274A83DD2164EED5B`
+and
+`66F90977F6F32A091DB5DC1216C7DCDB88F5076B0C888B8D603DBCB7C1230B3D`.
+The moderate graph refresh after Wave 31 reported an older indexed build point
+rather than the live commit, so graph freshness is **UNKNOWN**. Graph results
+were navigation only; exact live bytes and the bounded prior-credit audit
+govern this wave.
+
+The RED test failed **0/3** because all 40 assets were absent and unregistered.
+The accepted six-Boolean shape uses a distinct state-check witness and bounded
+chain lengths 140-179. Focused source evidence passes **3/3**, including
+**40/40** exact-byte and normalized alpha-renamed whole-corpus uniqueness.
+The complete source-wave family passes **93/93**. Focused physical SLIDE/VOK
+evidence passes **1/1** and the complete physical-wave family passes **31/31**:
+each source compiles to a physical `.slide`, publishes, independently
+re-admits, executes with the expected typed value, and refuses mutated source,
+artifact and receipt bytes. Package no-emit typecheck is green. The focused
+test pins are
+`07BBABB67B6D77993660FD1337B93821AA4E0AD81C06036E47855B4B94D15C74`
+and
+`A294EFF2510527C5139667254ABAAB3DD81D09F31D065C38A484D414EAF84F64`.
+
+This is the only report modified by the wave and it is committed with all 40
+new Fungi files, so it is not report-only. Root authored the code directly; no
+worker authored these files and no push is performed. The commit guard must
+still report at least 40 new `.fungi`, **40/40 unique**, no second report-only
+commit and exactly one conversion report before commit.
+
 ## Source decision overlay wave 31 - Gate v3 graph, parser and privacy
 
 Wave 31 adds **40 new source-bound Fungi decision cores** for the two remaining

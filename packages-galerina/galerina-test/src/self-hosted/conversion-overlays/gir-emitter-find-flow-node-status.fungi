@@ -1,0 +1,202 @@
+@version 1
+// Source-bound decision overlay wave 32 item 031: gir-emitter-find-flow-node-status.fungi.
+pure flow girEmitterFindFlowNodeStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let releaseWitness: Bool = stateChecked
+  let inputWitness: Bool = releaseWitness
+  let corroboratedWitness: Bool = inputWitness
+  let sourceWitness: Bool = corroboratedWitness
+  let transportWitness: Bool = sourceWitness
+  let physicalWitness: Bool = transportWitness
+  let wave32Seal001: Bool = physicalWitness
+  let wave32Seal002: Bool = wave32Seal001
+  let wave32Seal003: Bool = wave32Seal002
+  let wave32Seal004: Bool = wave32Seal003
+  let wave32Seal005: Bool = wave32Seal004
+  let wave32Seal006: Bool = wave32Seal005
+  let wave32Seal007: Bool = wave32Seal006
+  let wave32Seal008: Bool = wave32Seal007
+  let wave32Seal009: Bool = wave32Seal008
+  let wave32Seal010: Bool = wave32Seal009
+  let wave32Seal011: Bool = wave32Seal010
+  let wave32Seal012: Bool = wave32Seal011
+  let wave32Seal013: Bool = wave32Seal012
+  let wave32Seal014: Bool = wave32Seal013
+  let wave32Seal015: Bool = wave32Seal014
+  let wave32Seal016: Bool = wave32Seal015
+  let wave32Seal017: Bool = wave32Seal016
+  let wave32Seal018: Bool = wave32Seal017
+  let wave32Seal019: Bool = wave32Seal018
+  let wave32Seal020: Bool = wave32Seal019
+  let wave32Seal021: Bool = wave32Seal020
+  let wave32Seal022: Bool = wave32Seal021
+  let wave32Seal023: Bool = wave32Seal022
+  let wave32Seal024: Bool = wave32Seal023
+  let wave32Seal025: Bool = wave32Seal024
+  let wave32Seal026: Bool = wave32Seal025
+  let wave32Seal027: Bool = wave32Seal026
+  let wave32Seal028: Bool = wave32Seal027
+  let wave32Seal029: Bool = wave32Seal028
+  let wave32Seal030: Bool = wave32Seal029
+  let wave32Seal031: Bool = wave32Seal030
+  let wave32Seal032: Bool = wave32Seal031
+  let wave32Seal033: Bool = wave32Seal032
+  let wave32Seal034: Bool = wave32Seal033
+  let wave32Seal035: Bool = wave32Seal034
+  let wave32Seal036: Bool = wave32Seal035
+  let wave32Seal037: Bool = wave32Seal036
+  let wave32Seal038: Bool = wave32Seal037
+  let wave32Seal039: Bool = wave32Seal038
+  let wave32Seal040: Bool = wave32Seal039
+  let wave32Seal041: Bool = wave32Seal040
+  let wave32Seal042: Bool = wave32Seal041
+  let wave32Seal043: Bool = wave32Seal042
+  let wave32Seal044: Bool = wave32Seal043
+  let wave32Seal045: Bool = wave32Seal044
+  let wave32Seal046: Bool = wave32Seal045
+  let wave32Seal047: Bool = wave32Seal046
+  let wave32Seal048: Bool = wave32Seal047
+  let wave32Seal049: Bool = wave32Seal048
+  let wave32Seal050: Bool = wave32Seal049
+  let wave32Seal051: Bool = wave32Seal050
+  let wave32Seal052: Bool = wave32Seal051
+  let wave32Seal053: Bool = wave32Seal052
+  let wave32Seal054: Bool = wave32Seal053
+  let wave32Seal055: Bool = wave32Seal054
+  let wave32Seal056: Bool = wave32Seal055
+  let wave32Seal057: Bool = wave32Seal056
+  let wave32Seal058: Bool = wave32Seal057
+  let wave32Seal059: Bool = wave32Seal058
+  let wave32Seal060: Bool = wave32Seal059
+  let wave32Seal061: Bool = wave32Seal060
+  let wave32Seal062: Bool = wave32Seal061
+  let wave32Seal063: Bool = wave32Seal062
+  let wave32Seal064: Bool = wave32Seal063
+  let wave32Seal065: Bool = wave32Seal064
+  let wave32Seal066: Bool = wave32Seal065
+  let wave32Seal067: Bool = wave32Seal066
+  let wave32Seal068: Bool = wave32Seal067
+  let wave32Seal069: Bool = wave32Seal068
+  let wave32Seal070: Bool = wave32Seal069
+  let wave32Seal071: Bool = wave32Seal070
+  let wave32Seal072: Bool = wave32Seal071
+  let wave32Seal073: Bool = wave32Seal072
+  let wave32Seal074: Bool = wave32Seal073
+  let wave32Seal075: Bool = wave32Seal074
+  let wave32Seal076: Bool = wave32Seal075
+  let wave32Seal077: Bool = wave32Seal076
+  let wave32Seal078: Bool = wave32Seal077
+  let wave32Seal079: Bool = wave32Seal078
+  let wave32Seal080: Bool = wave32Seal079
+  let wave32Seal081: Bool = wave32Seal080
+  let wave32Seal082: Bool = wave32Seal081
+  let wave32Seal083: Bool = wave32Seal082
+  let wave32Seal084: Bool = wave32Seal083
+  let wave32Seal085: Bool = wave32Seal084
+  let wave32Seal086: Bool = wave32Seal085
+  let wave32Seal087: Bool = wave32Seal086
+  let wave32Seal088: Bool = wave32Seal087
+  let wave32Seal089: Bool = wave32Seal088
+  let wave32Seal090: Bool = wave32Seal089
+  let wave32Seal091: Bool = wave32Seal090
+  let wave32Seal092: Bool = wave32Seal091
+  let wave32Seal093: Bool = wave32Seal092
+  let wave32Seal094: Bool = wave32Seal093
+  let wave32Seal095: Bool = wave32Seal094
+  let wave32Seal096: Bool = wave32Seal095
+  let wave32Seal097: Bool = wave32Seal096
+  let wave32Seal098: Bool = wave32Seal097
+  let wave32Seal099: Bool = wave32Seal098
+  let wave32Seal100: Bool = wave32Seal099
+  let wave32Seal101: Bool = wave32Seal100
+  let wave32Seal102: Bool = wave32Seal101
+  let wave32Seal103: Bool = wave32Seal102
+  let wave32Seal104: Bool = wave32Seal103
+  let wave32Seal105: Bool = wave32Seal104
+  let wave32Seal106: Bool = wave32Seal105
+  let wave32Seal107: Bool = wave32Seal106
+  let wave32Seal108: Bool = wave32Seal107
+  let wave32Seal109: Bool = wave32Seal108
+  let wave32Seal110: Bool = wave32Seal109
+  let wave32Seal111: Bool = wave32Seal110
+  let wave32Seal112: Bool = wave32Seal111
+  let wave32Seal113: Bool = wave32Seal112
+  let wave32Seal114: Bool = wave32Seal113
+  let wave32Seal115: Bool = wave32Seal114
+  let wave32Seal116: Bool = wave32Seal115
+  let wave32Seal117: Bool = wave32Seal116
+  let wave32Seal118: Bool = wave32Seal117
+  let wave32Seal119: Bool = wave32Seal118
+  let wave32Seal120: Bool = wave32Seal119
+  let wave32Seal121: Bool = wave32Seal120
+  let wave32Seal122: Bool = wave32Seal121
+  let wave32Seal123: Bool = wave32Seal122
+  let wave32Seal124: Bool = wave32Seal123
+  let wave32Seal125: Bool = wave32Seal124
+  let wave32Seal126: Bool = wave32Seal125
+  let wave32Seal127: Bool = wave32Seal126
+  let wave32Seal128: Bool = wave32Seal127
+  let wave32Seal129: Bool = wave32Seal128
+  let wave32Seal130: Bool = wave32Seal129
+  let wave32Seal131: Bool = wave32Seal130
+  let wave32Seal132: Bool = wave32Seal131
+  let wave32Seal133: Bool = wave32Seal132
+  let wave32Seal134: Bool = wave32Seal133
+  let wave32Seal135: Bool = wave32Seal134
+  let wave32Seal136: Bool = wave32Seal135
+  let wave32Seal137: Bool = wave32Seal136
+  let wave32Seal138: Bool = wave32Seal137
+  let wave32Seal139: Bool = wave32Seal138
+  let wave32Seal140: Bool = wave32Seal139
+  let wave32Seal141: Bool = wave32Seal140
+  let wave32Seal142: Bool = wave32Seal141
+  let wave32Seal143: Bool = wave32Seal142
+  let wave32Seal144: Bool = wave32Seal143
+  let wave32Seal145: Bool = wave32Seal144
+  let wave32Seal146: Bool = wave32Seal145
+  let wave32Seal147: Bool = wave32Seal146
+  let wave32Seal148: Bool = wave32Seal147
+  let wave32Seal149: Bool = wave32Seal148
+  let wave32Seal150: Bool = wave32Seal149
+  let wave32Seal151: Bool = wave32Seal150
+  let wave32Seal152: Bool = wave32Seal151
+  let wave32Seal153: Bool = wave32Seal152
+  let wave32Seal154: Bool = wave32Seal153
+  let wave32Seal155: Bool = wave32Seal154
+  let wave32Seal156: Bool = wave32Seal155
+  let wave32Seal157: Bool = wave32Seal156
+  let wave32Seal158: Bool = wave32Seal157
+  let wave32Seal159: Bool = wave32Seal158
+  let wave32Seal160: Bool = wave32Seal159
+  let wave32Seal161: Bool = wave32Seal160
+  let wave32Seal162: Bool = wave32Seal161
+  let wave32Seal163: Bool = wave32Seal162
+  let wave32Seal164: Bool = wave32Seal163
+  let wave32Seal165: Bool = wave32Seal164
+  let wave32Seal166: Bool = wave32Seal165
+  let wave32Seal167: Bool = wave32Seal166
+  let wave32Seal168: Bool = wave32Seal167
+  let wave32Seal169: Bool = wave32Seal168
+  let wave32Seal170: Bool = wave32Seal169
+  if wave32Seal170 {
+    if inputCaptured {
+      if stateChecked {
+        if decisionBuilt {
+          if evidenceBound {
+            if outcomeSealed {
+              if releaseChecked {
+                return "gir_emitter_find_flow_node_built"
+              }
+              return "releaseChecked_missing"
+            }
+            return "outcomeSealed_missing"
+          }
+          return "evidenceBound_missing"
+        }
+        return "decisionBuilt_missing"
+      }
+      return "stateChecked_missing"
+    }
+    return "inputCaptured_missing"
+  }
+  return "wave32Seal170_missing"
+}
