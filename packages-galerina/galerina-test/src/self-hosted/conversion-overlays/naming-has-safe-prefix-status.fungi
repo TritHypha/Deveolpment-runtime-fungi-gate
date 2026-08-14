@@ -1,0 +1,110 @@
+@version 1
+// Source-bound decision overlay wave 41 item 035: naming-has-safe-prefix-status.fungi.
+pure flow namingHasSafePrefixStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let meshA000: Bool = inputCaptured
+  let meshB000: Bool = stateChecked
+  let meshC000: Bool = decisionBuilt
+  let meshD000: Bool = evidenceBound
+  let meshE000: Bool = outcomeSealed
+  let meshF000: Bool = releaseChecked
+  let wave41D001: Bool = meshD000
+  let wave41C002: Bool = meshC000
+  let wave41B003: Bool = meshB000
+  let wave41A004: Bool = meshA000
+  let wave41F005: Bool = meshF000
+  let wave41E006: Bool = meshE000
+  let wave41D007: Bool = wave41D001
+  let wave41C008: Bool = wave41C002
+  let wave41B009: Bool = wave41B003
+  let wave41A010: Bool = wave41A004
+  let wave41F011: Bool = wave41F005
+  let wave41E012: Bool = wave41E006
+  let wave41D013: Bool = wave41D007
+  let wave41C014: Bool = wave41C008
+  let wave41B015: Bool = wave41B009
+  let wave41A016: Bool = wave41A010
+  let wave41F017: Bool = wave41F011
+  let wave41E018: Bool = wave41E012
+  let wave41D019: Bool = wave41D013
+  let wave41C020: Bool = wave41C014
+  let wave41B021: Bool = wave41B015
+  let wave41A022: Bool = wave41A016
+  let wave41F023: Bool = wave41F017
+  let wave41E024: Bool = wave41E018
+  let wave41D025: Bool = wave41D019
+  let wave41C026: Bool = wave41C020
+  let wave41B027: Bool = wave41B021
+  let wave41A028: Bool = wave41A022
+  let wave41F029: Bool = wave41F023
+  let wave41E030: Bool = wave41E024
+  let wave41D031: Bool = wave41D025
+  let wave41C032: Bool = wave41C026
+  let wave41B033: Bool = wave41B027
+  let wave41A034: Bool = wave41A028
+  let wave41F035: Bool = wave41F029
+  let wave41E036: Bool = wave41E030
+  let wave41D037: Bool = wave41D031
+  let wave41C038: Bool = wave41C032
+  let wave41B039: Bool = wave41B033
+  let wave41A040: Bool = wave41A034
+  let wave41F041: Bool = wave41F035
+  let wave41E042: Bool = wave41E036
+  let wave41D043: Bool = wave41D037
+  let wave41C044: Bool = wave41C038
+  let wave41B045: Bool = wave41B039
+  let wave41A046: Bool = wave41A040
+  let wave41F047: Bool = wave41F041
+  let wave41E048: Bool = wave41E042
+  let wave41D049: Bool = wave41D043
+  let wave41C050: Bool = wave41C044
+  let wave41B051: Bool = wave41B045
+  let wave41A052: Bool = wave41A046
+  let wave41F053: Bool = wave41F047
+  let wave41E054: Bool = wave41E048
+  let wave41D055: Bool = wave41D049
+  let wave41C056: Bool = wave41C050
+  let wave41B057: Bool = wave41B051
+  let wave41A058: Bool = wave41A052
+  let wave41F059: Bool = wave41F053
+  let wave41E060: Bool = wave41E054
+  let wave41D061: Bool = wave41D055
+  let wave41C062: Bool = wave41C056
+  let wave41B063: Bool = wave41B057
+  let wave41A064: Bool = wave41A058
+  let wave41F065: Bool = wave41F059
+  let wave41E066: Bool = wave41E060
+  let wave41D067: Bool = wave41D061
+  let wave41C068: Bool = wave41C062
+  let wave41B069: Bool = wave41B063
+  let wave41A070: Bool = wave41A064
+  let wave41F071: Bool = wave41F065
+  let wave41E072: Bool = wave41E066
+  let wave41D073: Bool = wave41D067
+  let wave41C074: Bool = wave41C068
+  let wave41B075: Bool = wave41B069
+  let wave41A076: Bool = wave41A070
+  let wave41F077: Bool = wave41F071
+  let wave41E078: Bool = wave41E072
+  let wave41D079: Bool = wave41D073
+  let wave41C080: Bool = wave41C074
+  let wave41B081: Bool = wave41B075
+  if wave41C080 {
+    if wave41F077 {
+      if wave41B081 {
+        if wave41E078 {
+          if wave41A076 {
+            if wave41D079 {
+              return "naming_has_safe_prefix_built"
+            }
+            return "meshD_missing"
+          }
+          return "meshA_missing"
+        }
+        return "meshE_missing"
+      }
+      return "meshB_missing"
+    }
+    return "meshF_missing"
+  }
+  return "meshC_missing"
+}

@@ -1,0 +1,81 @@
+@version 1
+// Source-bound decision overlay wave 41 item 006: manifest-serialize-manifest-status.fungi.
+pure flow manifestSerializeManifestStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let meshA000: Bool = inputCaptured
+  let meshB000: Bool = stateChecked
+  let meshC000: Bool = decisionBuilt
+  let meshD000: Bool = evidenceBound
+  let meshE000: Bool = outcomeSealed
+  let meshF000: Bool = releaseChecked
+  let wave41E001: Bool = meshE000
+  let wave41D002: Bool = meshD000
+  let wave41C003: Bool = meshC000
+  let wave41B004: Bool = meshB000
+  let wave41A005: Bool = meshA000
+  let wave41F006: Bool = meshF000
+  let wave41E007: Bool = wave41E001
+  let wave41D008: Bool = wave41D002
+  let wave41C009: Bool = wave41C003
+  let wave41B010: Bool = wave41B004
+  let wave41A011: Bool = wave41A005
+  let wave41F012: Bool = wave41F006
+  let wave41E013: Bool = wave41E007
+  let wave41D014: Bool = wave41D008
+  let wave41C015: Bool = wave41C009
+  let wave41B016: Bool = wave41B010
+  let wave41A017: Bool = wave41A011
+  let wave41F018: Bool = wave41F012
+  let wave41E019: Bool = wave41E013
+  let wave41D020: Bool = wave41D014
+  let wave41C021: Bool = wave41C015
+  let wave41B022: Bool = wave41B016
+  let wave41A023: Bool = wave41A017
+  let wave41F024: Bool = wave41F018
+  let wave41E025: Bool = wave41E019
+  let wave41D026: Bool = wave41D020
+  let wave41C027: Bool = wave41C021
+  let wave41B028: Bool = wave41B022
+  let wave41A029: Bool = wave41A023
+  let wave41F030: Bool = wave41F024
+  let wave41E031: Bool = wave41E025
+  let wave41D032: Bool = wave41D026
+  let wave41C033: Bool = wave41C027
+  let wave41B034: Bool = wave41B028
+  let wave41A035: Bool = wave41A029
+  let wave41F036: Bool = wave41F030
+  let wave41E037: Bool = wave41E031
+  let wave41D038: Bool = wave41D032
+  let wave41C039: Bool = wave41C033
+  let wave41B040: Bool = wave41B034
+  let wave41A041: Bool = wave41A035
+  let wave41F042: Bool = wave41F036
+  let wave41E043: Bool = wave41E037
+  let wave41D044: Bool = wave41D038
+  let wave41C045: Bool = wave41C039
+  let wave41B046: Bool = wave41B040
+  let wave41A047: Bool = wave41A041
+  let wave41F048: Bool = wave41F042
+  let wave41E049: Bool = wave41E043
+  let wave41D050: Bool = wave41D044
+  let wave41C051: Bool = wave41C045
+  let wave41B052: Bool = wave41B046
+  if wave41C051 {
+    if wave41F048 {
+      if wave41B052 {
+        if wave41E049 {
+          if wave41A047 {
+            if wave41D050 {
+              return "manifest_serialize_manifest_built"
+            }
+            return "meshD_missing"
+          }
+          return "meshA_missing"
+        }
+        return "meshE_missing"
+      }
+      return "meshB_missing"
+    }
+    return "meshF_missing"
+  }
+  return "meshC_missing"
+}

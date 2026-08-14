@@ -1,0 +1,101 @@
+@version 1
+// Source-bound decision overlay wave 41 item 026: monkey-scan-text-prototype-mutation-status.fungi.
+pure flow monkeyScanTextPrototypeMutationStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let meshA000: Bool = inputCaptured
+  let meshB000: Bool = stateChecked
+  let meshC000: Bool = decisionBuilt
+  let meshD000: Bool = evidenceBound
+  let meshE000: Bool = outcomeSealed
+  let meshF000: Bool = releaseChecked
+  let wave41A001: Bool = meshA000
+  let wave41F002: Bool = meshF000
+  let wave41E003: Bool = meshE000
+  let wave41D004: Bool = meshD000
+  let wave41C005: Bool = meshC000
+  let wave41B006: Bool = meshB000
+  let wave41A007: Bool = wave41A001
+  let wave41F008: Bool = wave41F002
+  let wave41E009: Bool = wave41E003
+  let wave41D010: Bool = wave41D004
+  let wave41C011: Bool = wave41C005
+  let wave41B012: Bool = wave41B006
+  let wave41A013: Bool = wave41A007
+  let wave41F014: Bool = wave41F008
+  let wave41E015: Bool = wave41E009
+  let wave41D016: Bool = wave41D010
+  let wave41C017: Bool = wave41C011
+  let wave41B018: Bool = wave41B012
+  let wave41A019: Bool = wave41A013
+  let wave41F020: Bool = wave41F014
+  let wave41E021: Bool = wave41E015
+  let wave41D022: Bool = wave41D016
+  let wave41C023: Bool = wave41C017
+  let wave41B024: Bool = wave41B018
+  let wave41A025: Bool = wave41A019
+  let wave41F026: Bool = wave41F020
+  let wave41E027: Bool = wave41E021
+  let wave41D028: Bool = wave41D022
+  let wave41C029: Bool = wave41C023
+  let wave41B030: Bool = wave41B024
+  let wave41A031: Bool = wave41A025
+  let wave41F032: Bool = wave41F026
+  let wave41E033: Bool = wave41E027
+  let wave41D034: Bool = wave41D028
+  let wave41C035: Bool = wave41C029
+  let wave41B036: Bool = wave41B030
+  let wave41A037: Bool = wave41A031
+  let wave41F038: Bool = wave41F032
+  let wave41E039: Bool = wave41E033
+  let wave41D040: Bool = wave41D034
+  let wave41C041: Bool = wave41C035
+  let wave41B042: Bool = wave41B036
+  let wave41A043: Bool = wave41A037
+  let wave41F044: Bool = wave41F038
+  let wave41E045: Bool = wave41E039
+  let wave41D046: Bool = wave41D040
+  let wave41C047: Bool = wave41C041
+  let wave41B048: Bool = wave41B042
+  let wave41A049: Bool = wave41A043
+  let wave41F050: Bool = wave41F044
+  let wave41E051: Bool = wave41E045
+  let wave41D052: Bool = wave41D046
+  let wave41C053: Bool = wave41C047
+  let wave41B054: Bool = wave41B048
+  let wave41A055: Bool = wave41A049
+  let wave41F056: Bool = wave41F050
+  let wave41E057: Bool = wave41E051
+  let wave41D058: Bool = wave41D052
+  let wave41C059: Bool = wave41C053
+  let wave41B060: Bool = wave41B054
+  let wave41A061: Bool = wave41A055
+  let wave41F062: Bool = wave41F056
+  let wave41E063: Bool = wave41E057
+  let wave41D064: Bool = wave41D058
+  let wave41C065: Bool = wave41C059
+  let wave41B066: Bool = wave41B060
+  let wave41A067: Bool = wave41A061
+  let wave41F068: Bool = wave41F062
+  let wave41E069: Bool = wave41E063
+  let wave41D070: Bool = wave41D064
+  let wave41C071: Bool = wave41C065
+  let wave41B072: Bool = wave41B066
+  if wave41C071 {
+    if wave41F068 {
+      if wave41B072 {
+        if wave41E069 {
+          if wave41A067 {
+            if wave41D070 {
+              return "monkey_scan_text_prototype_mutation_built"
+            }
+            return "meshD_missing"
+          }
+          return "meshA_missing"
+        }
+        return "meshE_missing"
+      }
+      return "meshB_missing"
+    }
+    return "meshF_missing"
+  }
+  return "meshC_missing"
+}

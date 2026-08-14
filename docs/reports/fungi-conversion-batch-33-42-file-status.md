@@ -2413,6 +2413,60 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 41 - Manifest completion, modules and source policy
+
+Wave 41 adds **40 new source-bound Fungi decision cores** in exact executable
+source order. Nine complete manifest generation and CBOR/JSON serialization;
+seven cover file-module extraction, containment, resolution and collision
+checks; thirteen cover AST and textual monkey-patch detection; nine cover
+naming-policy classification, conversion and traversal; and two begin numeric
+lowering. The nested `generateManifest.extractGrants` walker is separately
+bound because it owns recursive callable behaviour. Graph-first discovery and
+a bounded prior-credit sweep found no reused source-and-symbol scope. The
+package now registers **1,680** conversion overlays. Host filesystem, AST,
+regex, string, recursive collection, diagnostic, crypto and numeric borders
+remain in executing TypeScript. No consumer switch, supersession or retirement
+is claimed.
+
+The pinned source build point is
+`3f7ef63de11f3d77a98004de8785d6a2c7644dab`. Exact source SHA-256 pins are
+`6ECF5F150421D931E1B3735EC09E88BF34602199D9C4A62BAF0A9367707669CD`
+for `manifest-generator.ts`,
+`093ABE3BE09010E0639078D4E15E4B8792091D7EADA55E75183E0D0243375BDC`
+for `module-registry.ts`,
+`B6C4A6EC1C74A98C8C34BA00BF68D1850D199DCC041790DA4D3C7EA652D69CFC`
+for `monkey-patch-checker.ts`,
+`359494435A083B1412C5C3D125EA0129EB8B2DE7302E63BC6DC3A2720F95EE58`
+for `naming-policy-checker.ts`, and
+`3CD648112AD83128F92F2B21536D7EA921485121C62052B240583D85E5AA27EE`
+for `numeric-lowering.ts`. The post-Wave-40 moderate refresh reported
+`status:indexed` but retained
+`indexed_head_sha:3eb9039e22da19ac491876683ea4ea37a6dd8d5e`; graph freshness is therefore
+**UNKNOWN** and exact bytes govern.
+
+The RED source test failed **0/3** while the assets were absent. The accepted
+topology uses six independently rooted Boolean lanes with varying mesh length
+and update order, followed by an ordered six-gate release. Fresh source
+verification passes **3/3**, including exact live source binding,
+whole-corpus byte duplicate and normalized alpha-renamed shadow refusal,
+parse/effect/GIR generation and execution. The accumulated source suite passes
+**120/120** across 40 suites and the package no-emit typecheck is green. The
+exact source-test SHA-256 is
+`E767841D6CDD30C9F0441C125EEF56D6A3922D413578E19AD8A14E86A99F5CB5`.
+
+Physical verification passes **1/1** for this wave and **40/40** across the
+accumulated physical suites. It compiles all 40 exports, publishes exactly 40
+physical `.slide` artifacts, executes each export, independently re-admits and
+verifies every typed receipt, and refuses changed source, artifact and receipt
+bytes. The exact physical-test SHA-256 is
+`79DBC5F1C7F6C4E3680CA9E72EA9D63B6AA53BB9A1FE19F39845C55A131DE480`.
+
+This is the only report modified by the wave. It is committed alongside 40
+new `.fungi` files, not as a report-only update. Root authored the source and
+evidence directly; no worker authored the batch and no push is performed. Both
+worktree and committed guards must report **40/40 unique**, one report, the
+40-file minimum, and no report-only streak.
+
 ## Source decision overlay wave 40 - Leak witness, lexer, lint and manifest encoding
 
 Wave 40 adds **40 new source-bound Fungi decision cores** in exact executable

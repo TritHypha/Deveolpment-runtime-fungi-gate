@@ -1,0 +1,112 @@
+@version 1
+// Source-bound decision overlay wave 41 item 037: naming-walk-node-status.fungi.
+pure flow namingWalkNodeStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let meshA000: Bool = inputCaptured
+  let meshB000: Bool = stateChecked
+  let meshC000: Bool = decisionBuilt
+  let meshD000: Bool = evidenceBound
+  let meshE000: Bool = outcomeSealed
+  let meshF000: Bool = releaseChecked
+  let wave41F001: Bool = meshF000
+  let wave41E002: Bool = meshE000
+  let wave41D003: Bool = meshD000
+  let wave41C004: Bool = meshC000
+  let wave41B005: Bool = meshB000
+  let wave41A006: Bool = meshA000
+  let wave41F007: Bool = wave41F001
+  let wave41E008: Bool = wave41E002
+  let wave41D009: Bool = wave41D003
+  let wave41C010: Bool = wave41C004
+  let wave41B011: Bool = wave41B005
+  let wave41A012: Bool = wave41A006
+  let wave41F013: Bool = wave41F007
+  let wave41E014: Bool = wave41E008
+  let wave41D015: Bool = wave41D009
+  let wave41C016: Bool = wave41C010
+  let wave41B017: Bool = wave41B011
+  let wave41A018: Bool = wave41A012
+  let wave41F019: Bool = wave41F013
+  let wave41E020: Bool = wave41E014
+  let wave41D021: Bool = wave41D015
+  let wave41C022: Bool = wave41C016
+  let wave41B023: Bool = wave41B017
+  let wave41A024: Bool = wave41A018
+  let wave41F025: Bool = wave41F019
+  let wave41E026: Bool = wave41E020
+  let wave41D027: Bool = wave41D021
+  let wave41C028: Bool = wave41C022
+  let wave41B029: Bool = wave41B023
+  let wave41A030: Bool = wave41A024
+  let wave41F031: Bool = wave41F025
+  let wave41E032: Bool = wave41E026
+  let wave41D033: Bool = wave41D027
+  let wave41C034: Bool = wave41C028
+  let wave41B035: Bool = wave41B029
+  let wave41A036: Bool = wave41A030
+  let wave41F037: Bool = wave41F031
+  let wave41E038: Bool = wave41E032
+  let wave41D039: Bool = wave41D033
+  let wave41C040: Bool = wave41C034
+  let wave41B041: Bool = wave41B035
+  let wave41A042: Bool = wave41A036
+  let wave41F043: Bool = wave41F037
+  let wave41E044: Bool = wave41E038
+  let wave41D045: Bool = wave41D039
+  let wave41C046: Bool = wave41C040
+  let wave41B047: Bool = wave41B041
+  let wave41A048: Bool = wave41A042
+  let wave41F049: Bool = wave41F043
+  let wave41E050: Bool = wave41E044
+  let wave41D051: Bool = wave41D045
+  let wave41C052: Bool = wave41C046
+  let wave41B053: Bool = wave41B047
+  let wave41A054: Bool = wave41A048
+  let wave41F055: Bool = wave41F049
+  let wave41E056: Bool = wave41E050
+  let wave41D057: Bool = wave41D051
+  let wave41C058: Bool = wave41C052
+  let wave41B059: Bool = wave41B053
+  let wave41A060: Bool = wave41A054
+  let wave41F061: Bool = wave41F055
+  let wave41E062: Bool = wave41E056
+  let wave41D063: Bool = wave41D057
+  let wave41C064: Bool = wave41C058
+  let wave41B065: Bool = wave41B059
+  let wave41A066: Bool = wave41A060
+  let wave41F067: Bool = wave41F061
+  let wave41E068: Bool = wave41E062
+  let wave41D069: Bool = wave41D063
+  let wave41C070: Bool = wave41C064
+  let wave41B071: Bool = wave41B065
+  let wave41A072: Bool = wave41A066
+  let wave41F073: Bool = wave41F067
+  let wave41E074: Bool = wave41E068
+  let wave41D075: Bool = wave41D069
+  let wave41C076: Bool = wave41C070
+  let wave41B077: Bool = wave41B071
+  let wave41A078: Bool = wave41A072
+  let wave41F079: Bool = wave41F073
+  let wave41E080: Bool = wave41E074
+  let wave41D081: Bool = wave41D075
+  let wave41C082: Bool = wave41C076
+  let wave41B083: Bool = wave41B077
+  if wave41C082 {
+    if wave41F079 {
+      if wave41B083 {
+        if wave41E080 {
+          if wave41A078 {
+            if wave41D081 {
+              return "naming_walk_node_built"
+            }
+            return "meshD_missing"
+          }
+          return "meshA_missing"
+        }
+        return "meshE_missing"
+      }
+      return "meshB_missing"
+    }
+    return "meshF_missing"
+  }
+  return "meshC_missing"
+}
