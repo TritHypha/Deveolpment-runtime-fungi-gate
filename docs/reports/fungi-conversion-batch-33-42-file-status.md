@@ -1068,3 +1068,13 @@ immediate revalidation, atomic no-follow publication, and typed rollback or
 loud partial-commit evidence. Both remain private and unpushed. No exact scoped
 Fungi/GIR/physical `.slide`/independent re-admission/VOK replacement, consumer
 switch or source retirement is claimed; repository-wide closure is `UNKNOWN`.
+
+The bounded owner matrix passes **19/19** after replacing the literal private
+fixture name without weakening the leak guard: focused link tests pass **25/25**,
+complete Myco passes **105/105**, and private-document leaks are zero. Current
+owners report queue **1,490/1,490**, package **100/201**, project **5/5**, KB
+**4/4**, graph **10,408 nodes / 10,258 edges / zero violations**, semantic
+**3/3**, source inventory **149**, code index **975**, receipts **587/587**,
+Golden **11/11**, canonical **7/7**, and path/private leak audits at zero. Final
+owner publication and dual-index exact-head proof remain pending; repository
+closure stays `UNKNOWN`.

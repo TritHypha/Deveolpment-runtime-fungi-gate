@@ -27,8 +27,15 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Close inherited registry/fake-scope authority, freeze or replace the
   dead-zone default singleton, and validate bounded callback/readings plus exact
   typed trap identity.
-- [ ] Complete three independent reviews, commit evidence, publish owners and
-  graphs, then prove both indexes exact at the final Slice-647 commit.
+- [x] Complete three independent reviews, commit authored evidence separately,
+  publish all registered owners/graphs, and pass the bounded matrix **19/19**:
+  queue **1,490/1,490**, package **100/201**, project **5/5**, KB **4/4**,
+  graph **10,408 nodes / 10,258 edges / zero violations**, semantic **3/3**,
+  source inventory **149**, code index **975**, receipts **587/587**, Golden
+  **11/11**, canonical **7/7**, and both leak audits at zero.
+- [ ] Commit the final owner/provenance build point and prove Myco plus
+  codebase-memory exact at that clean Slice-647 HEAD; keep repository closure
+  `UNKNOWN` and continue with Slice 648.
 
 ### Slices 548-597 Myco search, tests and Tower evidence - 2026-08-13
 

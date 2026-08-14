@@ -149,7 +149,7 @@ policy type, mutable default and Error subclass, with Slice 647 its runtime.
 - [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
 - [x] Run focused Myco and Tower checks and the receipt audit: Myco typecheck plus 105/105, Tower typecheck plus 515/515, audit tests 9/9 and 587/587 governed receipts.
 - [x] Resolve three independent read-only reviews and record the final PASS.
-- [ ] Commit authored evidence separately from registered owner outputs.
-- [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.
+- [x] Commit authored evidence separately from registered owner outputs.
+- [x] Run all graph/owner publishers and the bounded 50-slice close matrix.
 - [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 648.
