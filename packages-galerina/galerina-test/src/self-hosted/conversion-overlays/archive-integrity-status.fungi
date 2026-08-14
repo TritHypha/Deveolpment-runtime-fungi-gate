@@ -1,0 +1,14 @@
+@version 1
+/// Integrity status from galerina-data-archive#createArchiveIntegrityReport.
+pure flow archiveIntegrityStatusCore(countsValid: Bool, itemCount: Int, verifiedCount: Int, failedCount: Int) -> String
+contract { intent { "Classify archive integrity without allowing verified and failed counts to exceed the item total." } }
+{
+  if countsValid == false { return "not_verified" }
+  if verifiedCount + failedCount > itemCount { return "count_refused" }
+  if failedCount > 0 { return "failed" }
+  if itemCount > 0 {
+    if verifiedCount == itemCount { return "verified" }
+    return "not_verified"
+  }
+  return "not_verified"
+}

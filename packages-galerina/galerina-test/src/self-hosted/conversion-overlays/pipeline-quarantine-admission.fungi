@@ -1,0 +1,10 @@
+@version 1
+/// Quarantine decision from galerina-data-pipeline#validateQuarantinePolicy.
+pure flow pipelineQuarantineAdmissionCore(destinationPresent: Bool, maxItems: Int, maxItemsValid: Bool) -> String
+contract { intent { "Require a named destination and positive bounded capacity for quarantine." } }
+{
+  if destinationPresent == false { return "destination_refused" }
+  if maxItemsValid == false { return "bound_refused" }
+  if maxItems < 1 { return "bound_refused" }
+  return "accepted"
+}

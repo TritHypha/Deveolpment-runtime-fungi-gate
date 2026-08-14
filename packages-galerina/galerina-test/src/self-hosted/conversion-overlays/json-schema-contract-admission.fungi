@@ -1,0 +1,11 @@
+@version 1
+/// Schema fold from galerina-data-json#validateJsonSchemaContract.
+pure flow jsonSchemaContractAdmissionCore(headerAccepted: Bool, fieldCount: Int, fieldsAccepted: Bool) -> String
+contract { intent { "Admit a JSON schema with a known root and unique named fields of known kinds." } }
+{
+  if headerAccepted == false { return "header_refused" }
+  if fieldCount < 0 { return "count_refused" }
+  if fieldCount == 0 { return "accepted_empty" }
+  if fieldsAccepted == false { return "field_refused" }
+  return "accepted"
+}

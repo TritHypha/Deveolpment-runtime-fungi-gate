@@ -1,0 +1,13 @@
+@version 1
+/// Sanitizer policy fold from galerina-data-html#validateHtmlSanitizePolicy.
+pure flow htmlSanitizePolicyAdmissionCore(namePresent: Bool, allowlistEmpty: Bool, tagNamesValid: Bool, forbiddenTag: Bool, attributeNamesValid: Bool, eventHandlerAttribute: Bool) -> String
+contract { intent { "Refuse executable tags and event attributes while surfacing an empty sanitizer allowlist." } }
+{
+  if namePresent == false { return "name_refused" }
+  if tagNamesValid == false { return "tag_name_refused" }
+  if forbiddenTag { return "tag_refused" }
+  if attributeNamesValid == false { return "attribute_name_refused" }
+  if eventHandlerAttribute { return "event_attribute_refused" }
+  if allowlistEmpty { return "accepted_empty" }
+  return "accepted"
+}

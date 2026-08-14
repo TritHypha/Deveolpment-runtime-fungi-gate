@@ -1,0 +1,12 @@
+@version 1
+/// Policy fold from galerina-data-search#validateSearchIndexPolicy.
+pure flow searchIndexPolicyAdmissionCore(namePresent: Bool, allowlistCount: Int, fieldNamesValid: Bool, piiIndexed: Bool) -> String
+contract { intent { "Refuse PII indexing and surface an empty deny-by-default allowlist." } }
+{
+  if namePresent == false { return "name_refused" }
+  if allowlistCount < 0 { return "count_refused" }
+  if allowlistCount == 0 { return "accepted_empty" }
+  if fieldNamesValid == false { return "field_refused" }
+  if piiIndexed { return "pii_refused" }
+  return "accepted"
+}

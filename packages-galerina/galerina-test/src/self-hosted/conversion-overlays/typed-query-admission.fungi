@@ -1,0 +1,14 @@
+@version 1
+/// Declaration fold from galerina-data-query#validateTypedQuery.
+pure flow typedQueryAdmissionCore(identityFieldsPresent: Bool, cardinalityKnown: Bool, parametersAccepted: Bool, templateAccepted: Bool) -> Bool
+contract { intent { "Admit a typed query only after identity, cardinality, parameter and template checks." } }
+{
+  if identityFieldsPresent {
+    if cardinalityKnown {
+      if parametersAccepted {
+        return templateAccepted
+      }
+    }
+  }
+  return false
+}

@@ -1,0 +1,14 @@
+@version 1
+/// Decode-plan fold from galerina-data-json#validateJsonDecodePlan.
+pure flow jsonDecodePlanAdmissionCore(namePresent: Bool, modeKnown: Bool, memoryPolicyAccepted: Bool) -> String
+contract { intent { "Refuse unknown decode modes instead of silently falling back to whole-document loading." } }
+{
+  if namePresent {
+    if modeKnown {
+      if memoryPolicyAccepted { return "accepted" }
+      return "memory_refused"
+    }
+    return "mode_refused"
+  }
+  return "name_refused"
+}

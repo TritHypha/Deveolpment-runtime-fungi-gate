@@ -1,0 +1,11 @@
+@version 1
+/// Restore status from galerina-data-archive#createArchiveRestoreReport.
+pure flow archiveRestoreStatusCore(countsConsistent: Bool, requestedCount: Int, failedCount: Int, allRestoredVerified: Bool) -> String
+contract { intent { "Classify restore verification only when restored, failed and verified counts are mutually consistent." } }
+{
+  if countsConsistent == false { return "count_refused" }
+  if failedCount > 0 { return "failed" }
+  if requestedCount < 1 { return "not_verified" }
+  if allRestoredVerified { return "verified" }
+  return "not_verified"
+}

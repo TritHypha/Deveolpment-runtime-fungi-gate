@@ -1,0 +1,13 @@
+@version 1
+/// Search-document fold from galerina-data-html#validateHtmlSearchDocumentPlan.
+pure flow htmlSearchDocumentAdmissionCore(documentIdPresent: Bool, fieldCount: Int, fieldNamesPresent: Bool, sourcesKnown: Bool) -> String
+contract { intent { "Admit an HTML search document only with named fields from known extraction targets." } }
+{
+  if documentIdPresent == false { return "document_refused" }
+  if fieldCount < 1 { return "fields_required" }
+  if fieldNamesPresent {
+    if sourcesKnown { return "accepted" }
+    return "source_refused"
+  }
+  return "field_refused"
+}

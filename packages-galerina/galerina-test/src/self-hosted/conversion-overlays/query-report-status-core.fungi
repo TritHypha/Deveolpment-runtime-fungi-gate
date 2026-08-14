@@ -1,0 +1,13 @@
+@version 1
+/// Report status from galerina-data-query#createQueryReport.
+pure flow queryReportStatusCore(flowPresent: Bool, queriesAccepted: Bool, commandsAccepted: Bool, policyAccepted: Bool, exceptionCount: Int) -> String
+contract { intent { "Surface active raw-SQL exceptions after all report inputs are admitted." } }
+{
+  if flowPresent == false { return "failed" }
+  if queriesAccepted == false { return "failed" }
+  if commandsAccepted == false { return "failed" }
+  if policyAccepted == false { return "failed" }
+  if exceptionCount < 0 { return "failed" }
+  if exceptionCount > 0 { return "warning" }
+  return "success"
+}

@@ -1,0 +1,15 @@
+@version 1
+/// Archive report fold from galerina-data-json#createJsonArchiveReport.
+pure flow jsonArchiveReportStatusCore(archivePresent: Bool, decodePlanAccepted: Bool, redactionPresent: Bool, redactionAccepted: Bool, countsValid: Bool, documentCount: Int) -> String
+contract { intent { "Surface an undeclared redaction policy while retaining bounded archive counts." } }
+{
+  if archivePresent == false { return "archive_refused" }
+  if decodePlanAccepted == false { return "decode_refused" }
+  if countsValid == false { return "count_refused" }
+  if documentCount < 0 { return "count_refused" }
+  if redactionPresent {
+    if redactionAccepted == false { return "redaction_refused" }
+    return "accepted"
+  }
+  return "accepted_with_warning"
+}

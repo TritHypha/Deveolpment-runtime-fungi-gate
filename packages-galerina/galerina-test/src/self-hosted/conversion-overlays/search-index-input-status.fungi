@@ -1,0 +1,13 @@
+@version 1
+/// Index-input fold from galerina-data-search#validateSearchIndexInput.
+pure flow searchIndexInputStatusCore(indexPresent: Bool, documentAccepted: Bool, policyAccepted: Bool, fieldsPresent: Bool, indexablePresent: Bool) -> String
+contract { intent { "Surface a valid index request that would index no searchable field." } }
+{
+  if indexPresent == false { return "index_refused" }
+  if documentAccepted == false { return "document_refused" }
+  if policyAccepted == false { return "policy_refused" }
+  if fieldsPresent {
+    if indexablePresent == false { return "accepted_with_warning" }
+  }
+  return "accepted"
+}

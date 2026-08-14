@@ -1,0 +1,13 @@
+@version 1
+/// Report fold from galerina-data-response#createResponseReport.
+pure flow responseReportStatusCore(kindKnown: Bool, mappingAccepted: Bool, countsValid: Bool, mappedCount: Int, droppedCount: Int) -> String
+contract { intent { "Release a response report only after kind, mapping and count evidence agree." } }
+{
+  if kindKnown == false { return "kind_refused" }
+  if mappingAccepted == false { return "mapping_refused" }
+  if countsValid == false { return "count_refused" }
+  if mappedCount < 0 { return "count_refused" }
+  if droppedCount < 0 { return "count_refused" }
+  if droppedCount > mappedCount { return "accepted_with_drops" }
+  return "accepted"
+}

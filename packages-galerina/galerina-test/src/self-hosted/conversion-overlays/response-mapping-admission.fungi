@@ -1,0 +1,12 @@
+@version 1
+/// Allowlist fold from galerina-data-response#validateResponseMapping.
+pure flow responseMappingAdmissionCore(mappingAccepted: Bool, allowlistCount: Int, forbiddenExposure: Bool, piiExposure: Bool) -> String
+contract { intent { "Admit only classified non-secret response projections and surface PII exposure." } }
+{
+  if mappingAccepted == false { return "mapping_refused" }
+  if allowlistCount < 0 { return "allowlist_refused" }
+  if allowlistCount == 0 { return "accepted_empty" }
+  if forbiddenExposure { return "sensitive_refused" }
+  if piiExposure { return "accepted_with_warning" }
+  return "accepted"
+}

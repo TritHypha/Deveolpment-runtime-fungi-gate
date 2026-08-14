@@ -1,0 +1,10 @@
+@version 1
+/// Saturation decision from galerina-data-pipeline#validateBackpressurePolicy.
+pure flow pipelineBackpressureAdmissionCore(maxInFlightValid: Bool, saturationModeKnown: Bool, timeoutSemanticsValid: Bool) -> Bool
+contract { intent { "Bind block timeouts and refuse timeout fields on nonblocking saturation modes." } }
+{
+  if maxInFlightValid == false { return false }
+  if saturationModeKnown == false { return false }
+  if timeoutSemanticsValid == false { return false }
+  return true
+}

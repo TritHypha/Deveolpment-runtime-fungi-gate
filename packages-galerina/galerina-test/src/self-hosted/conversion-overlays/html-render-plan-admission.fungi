@@ -1,0 +1,9 @@
+@version 1
+/// Render-plan fold from galerina-data-html#validateHtmlRenderPlan.
+pure flow htmlRenderPlanAdmissionCore(namePresent: Bool, sanitizeErrorCount: Int) -> Int
+contract { intent { "Count render-plan diagnostics after adding the plan-name error to captured sanitizer errors." } }
+{
+  if sanitizeErrorCount < 0 { return -1 }
+  if namePresent == false { return sanitizeErrorCount + 1 }
+  return sanitizeErrorCount
+}

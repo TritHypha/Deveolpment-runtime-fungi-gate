@@ -1,0 +1,13 @@
+@version 1
+/// Extraction fold from galerina-data-json#validateJsonExtractionPlan.
+pure flow jsonExtractionPlanAdmissionCore(sourcePresent: Bool, pointerCount: Int, allPointersAbsolute: Bool) -> String
+contract { intent { "Require a named source and at least one non-root absolute JSON Pointer." } }
+{
+  if sourcePresent == false { return "source_refused" }
+  if pointerCount < 1 { return "pointers_required" }
+  if allPointersAbsolute {
+    if pointerCount == 1 { return "accepted_single" }
+    return "accepted"
+  }
+  return "pointer_refused"
+}

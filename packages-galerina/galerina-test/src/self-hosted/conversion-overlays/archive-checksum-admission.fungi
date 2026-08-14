@@ -1,0 +1,12 @@
+@version 1
+/// Checksum fold from galerina-data-archive#validateChecksumRef.
+pure flow archiveChecksumAdmissionCore(algorithmKnown: Bool, digestLengthValid: Bool, hexValid: Bool) -> String
+contract { intent { "Admit an archive checksum only for a known algorithm and exact hexadecimal digest." } }
+{
+  if algorithmKnown == false { return "algorithm_refused" }
+  if digestLengthValid {
+    if hexValid { return "accepted" }
+    return "hex_refused"
+  }
+  return "length_refused"
+}

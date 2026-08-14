@@ -1,0 +1,21 @@
+@version 1
+/// Report fold from galerina-data-search#createSearchIndexReport.
+pure flow searchIndexReportStatusCore(indexPresent: Bool, policyAccepted: Bool, documentCountValid: Bool, skippedCountValid: Bool, skippedCount: Int) -> String
+contract { intent { "Release search-report status after policy and nonnegative count checks." } }
+{
+  if indexPresent {
+    if policyAccepted {
+      if documentCountValid {
+        if skippedCountValid {
+          if skippedCount < 0 { return "skipped_count_refused" }
+          if skippedCount > 0 { return "accepted_with_skips" }
+          return "accepted"
+        }
+        return "skipped_count_refused"
+      }
+      return "document_count_refused"
+    }
+    return "policy_refused"
+  }
+  return "index_refused"
+}

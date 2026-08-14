@@ -1,0 +1,13 @@
+@version 1
+/// Raw-SQL policy decision from galerina-data-query#validateDatabaseAccessPolicy.
+pure flow databaseAccessPolicyCore(namePresent: Bool, rawSqlDenied: Bool, exceptionsReviewed: Bool, expiriesValid: Bool, exceptionCount: Int) -> String
+contract { intent { "Require deny-by-default SQL and reviewed expiring exceptions." } }
+{
+  if namePresent == false { return "name_refused" }
+  if rawSqlDenied == false { return "raw_sql_refused" }
+  if exceptionCount < 0 { return "count_refused" }
+  if exceptionCount == 0 { return "accepted" }
+  if exceptionsReviewed == false { return "review_refused" }
+  if expiriesValid == false { return "expiry_refused" }
+  return "accepted_with_exceptions"
+}

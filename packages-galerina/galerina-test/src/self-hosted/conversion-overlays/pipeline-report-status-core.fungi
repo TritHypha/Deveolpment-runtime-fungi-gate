@@ -1,0 +1,12 @@
+@version 1
+/// Count status from galerina-data-pipeline#createPipelineReport.
+pure flow pipelineReportStatusCore(identityPresent: Bool, countsValid: Bool, failedCount: Int, quarantinedCount: Int) -> String
+contract { intent { "Surface failed items that were not accounted for by quarantine." } }
+{
+  if identityPresent == false { return "failed" }
+  if countsValid == false { return "failed" }
+  if failedCount < 0 { return "failed" }
+  if quarantinedCount < 0 { return "failed" }
+  if failedCount > quarantinedCount { return "warning_unquarantined" }
+  return "success"
+}

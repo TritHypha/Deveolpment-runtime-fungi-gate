@@ -1,0 +1,13 @@
+@version 1
+/// Memory fold from galerina-data-json#validateJsonMemoryPolicy.
+pure flow jsonMemoryPolicyAdmissionCore(depthValid: Bool, documentLimitValid: Bool, stringLimitPresent: Bool, stringLimitValid: Bool) -> String
+contract { intent { "Require depth and document bounds plus a valid optional string-byte bound." } }
+{
+  if depthValid == false { return "depth_refused" }
+  if documentLimitValid == false { return "document_limit_refused" }
+  if stringLimitPresent {
+    if stringLimitValid == false { return "string_limit_refused" }
+    return "accepted_bounded_string"
+  }
+  return "accepted"
+}

@@ -1,0 +1,14 @@
+@version 1
+/// Ranking fold from galerina-data-search#validateSearchRanking.
+pure flow searchRankingAdmissionCore(strategyKnown: Bool, fieldBoost: Bool, boostCount: Int, boostsValid: Bool) -> String
+contract { intent { "Require a nonempty valid boost list only for field-boost ranking." } }
+{
+  if strategyKnown == false { return "strategy_refused" }
+  if fieldBoost {
+    if boostCount < 1 { return "boosts_required" }
+    if boostsValid == false { return "boost_refused" }
+    return "accepted_boost"
+  }
+  if boostCount > 0 { return "accepted_ignored_boosts" }
+  return "accepted"
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Extraction fold from galerina-data-html#validateHtmlExtractionPlan.
+pure flow htmlExtractionPlanAdmissionCore(sourcePresent: Bool, targetCount: Int, targetsKnown: Bool) -> String
+contract { intent { "Require one source and at least one known extraction target." } }
+{
+  if sourcePresent == false { return "source_refused" }
+  if targetCount < 1 { return "targets_required" }
+  if targetsKnown == false { return "target_refused" }
+  return "accepted"
+}

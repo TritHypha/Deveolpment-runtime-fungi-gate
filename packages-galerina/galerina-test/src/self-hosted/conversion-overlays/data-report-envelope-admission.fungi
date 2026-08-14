@@ -1,0 +1,11 @@
+@version 1
+/// Envelope validation fold from galerina-data-reports#validateDataReportEnvelope.
+pure flow dataReportEnvelopeAdmissionCore(identityAccepted: Bool, evidenceAccepted: Bool, statusConsistent: Bool, countsValid: Bool) -> Int
+contract { intent { "Admit a report envelope only when identity, evidence, status and counts are consistent." } }
+{
+  if identityAccepted == false { return 1 }
+  if evidenceAccepted == false { return 2 }
+  if statusConsistent == false { return 3 }
+  if countsValid == false { return 4 }
+  return 0
+}

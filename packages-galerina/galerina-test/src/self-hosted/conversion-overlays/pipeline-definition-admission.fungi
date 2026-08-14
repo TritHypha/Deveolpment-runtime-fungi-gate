@@ -1,0 +1,11 @@
+@version 1
+/// Pipeline fold from galerina-data-pipeline#validatePipelineDefinition.
+pure flow pipelineDefinitionAdmissionCore(identityAccepted: Bool, stagesAccepted: Bool, runtimeAccepted: Bool, quarantineConsistent: Bool) -> Bool
+contract { intent { "Admit a typed bounded pipeline and surface the optional quarantine gap." } }
+{
+  if identityAccepted == false { return false }
+  if stagesAccepted == false { return false }
+  if runtimeAccepted == false { return false }
+  if quarantineConsistent == false { return false }
+  return true
+}

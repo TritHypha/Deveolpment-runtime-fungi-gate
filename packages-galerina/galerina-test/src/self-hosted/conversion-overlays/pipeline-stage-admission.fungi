@@ -1,0 +1,16 @@
+@version 1
+/// Stage fold from galerina-data-pipeline#validatePipelineStage.
+pure flow pipelineStageAdmissionCore(identityPresent: Bool, transformTypesPresent: Bool, backpressureAccepted: Bool, batchPresent: Bool, batchAccepted: Bool, retryPresent: Bool, retryAccepted: Bool) -> String
+contract { intent { "Admit a stage after identity, transform, backpressure and optional policy checks." } }
+{
+  if identityPresent == false { return "identity_refused" }
+  if transformTypesPresent == false { return "transform_refused" }
+  if backpressureAccepted == false { return "backpressure_refused" }
+  if batchPresent {
+    if batchAccepted == false { return "batch_refused" }
+  }
+  if retryPresent {
+    if retryAccepted == false { return "retry_refused" }
+  }
+  return "accepted"
+}

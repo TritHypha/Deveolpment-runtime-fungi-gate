@@ -1,0 +1,17 @@
+@version 1
+/// Field projection action from galerina-data-response#applyResponseMapping.
+pure flow responseFieldProjectionCore(allowlisted: Bool, ownField: Bool, targetPresent: Bool, alreadyMapped: Bool) -> String
+contract { intent { "Project only allowlisted own fields to one unambiguous target." } }
+{
+  if allowlisted {
+    if ownField {
+      if targetPresent {
+        if alreadyMapped { return "target_refused" }
+        return "project"
+      }
+      return "target_refused"
+    }
+    return "source_absent"
+  }
+  return "drop"
+}

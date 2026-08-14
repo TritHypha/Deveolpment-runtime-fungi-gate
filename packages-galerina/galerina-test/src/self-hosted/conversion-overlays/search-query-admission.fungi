@@ -1,0 +1,13 @@
+@version 1
+/// Query fold from galerina-data-search#validateSearchQuery.
+pure flow searchQueryAdmissionCore(indexPresent: Bool, limitValid: Bool, offsetPresent: Bool, offsetValid: Bool, filtersValid: Bool) -> String
+contract { intent { "Require bounded search results, valid optional offset and known filters." } }
+{
+  if indexPresent == false { return "index_refused" }
+  if limitValid == false { return "limit_refused" }
+  if offsetPresent {
+    if offsetValid == false { return "offset_refused" }
+  }
+  if filtersValid == false { return "filter_refused" }
+  return "accepted"
+}

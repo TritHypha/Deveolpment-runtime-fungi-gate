@@ -1,0 +1,13 @@
+@version 1
+/// Snapshot fold from galerina-data-database#validateDatabaseSnapshot.
+pure flow databaseSnapshotAdmissionCore(snapshotIdPresent: Bool, timestampValid: Bool, schemaVersionPresent: Bool, checksumAccepted: Bool) -> String
+contract { intent { "Admit a database snapshot only with identity, time, schema version and checksum evidence." } }
+{
+  if snapshotIdPresent == false { return "snapshot_refused" }
+  if timestampValid == false { return "timestamp_refused" }
+  if schemaVersionPresent {
+    if checksumAccepted { return "accepted" }
+    return "checksum_refused"
+  }
+  return "schema_refused"
+}

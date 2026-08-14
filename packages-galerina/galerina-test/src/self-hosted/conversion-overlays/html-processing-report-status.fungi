@@ -1,0 +1,13 @@
+@version 1
+/// Processing report fold from galerina-data-html#createHtmlProcessingReport.
+pure flow htmlProcessingReportStatusCore(reportAccepted: Bool, countsValid: Bool, unsafeTotal: Int) -> String
+contract { intent { "Release processing status only when unsafe findings have known safe dispositions and valid counts." } }
+{
+  if reportAccepted == false { return "report_refused" }
+  if countsValid {
+    if unsafeTotal < 0 { return "count_refused" }
+    if unsafeTotal > 0 { return "unsafe_found" }
+    return "clean"
+  }
+  return "count_refused"
+}

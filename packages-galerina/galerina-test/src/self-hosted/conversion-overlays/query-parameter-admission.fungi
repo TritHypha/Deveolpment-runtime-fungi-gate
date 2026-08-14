@@ -1,0 +1,13 @@
+@version 1
+/// Parameter decision from galerina-data-query#validateParameters.
+pure flow queryParameterAdmissionCore(nameValid: Bool, duplicate: Bool, typeKnown: Bool, parameterIndex: Int) -> String
+contract { intent { "Admit one captured query parameter only with a unique identifier and known type." } }
+{
+  if parameterIndex < 0 { return "index_refused" }
+  if nameValid {
+    if duplicate { return "duplicate_refused" }
+    if typeKnown { return "accepted" }
+    return "type_refused"
+  }
+  return "name_refused"
+}

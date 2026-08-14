@@ -1,0 +1,12 @@
+@version 1
+/// Template decision from galerina-data-query#validateTemplate.
+pure flow queryTemplateAdmissionCore(templatePresent: Bool, rawInterpolation: Bool, stackedStatements: Bool, placeholdersDeclared: Bool, unusedCount: Int) -> String
+contract { intent { "Refuse raw interpolation, stacked statements and undeclared placeholders." } }
+{
+  if templatePresent == false { return "template_refused" }
+  if rawInterpolation { return "interpolation_refused" }
+  if stackedStatements { return "stacked_refused" }
+  if placeholdersDeclared == false { return "placeholder_refused" }
+  if unusedCount > 0 { return "accepted_with_warning" }
+  return "accepted"
+}

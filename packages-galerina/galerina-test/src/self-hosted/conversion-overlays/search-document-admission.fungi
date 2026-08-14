@@ -1,0 +1,13 @@
+@version 1
+/// Document fold from galerina-data-search#validateSearchDocument.
+pure flow searchDocumentAdmissionCore(idPresent: Bool, fieldCount: Int, searchablePresent: Bool, fieldsNamed: Bool, duplicatesPresent: Bool, kindsKnown: Bool) -> String
+contract { intent { "Admit a search document with named unique known fields and at least one searchable field." } }
+{
+  if idPresent == false { return "id_refused" }
+  if fieldCount < 1 { return "fields_required" }
+  if searchablePresent == false { return "searchable_required" }
+  if fieldsNamed == false { return "field_name_refused" }
+  if duplicatesPresent { return "duplicate_refused" }
+  if kindsKnown == false { return "kind_refused" }
+  return "accepted"
+}

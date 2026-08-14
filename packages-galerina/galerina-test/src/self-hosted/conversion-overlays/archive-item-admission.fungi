@@ -1,0 +1,18 @@
+@version 1
+/// Item fold from galerina-data-archive#validateArchiveItem.
+pure flow archiveItemAdmissionCore(pathPresent: Bool, relativePath: Bool, noTraversal: Bool, sizeValid: Bool, checksumAccepted: Bool) -> String
+contract { intent { "Admit only bounded relative archive items without upward traversal." } }
+{
+  if pathPresent == false { return "path_refused" }
+  if relativePath {
+    if noTraversal {
+      if sizeValid {
+        if checksumAccepted { return "accepted" }
+        return "checksum_refused"
+      }
+      return "size_refused"
+    }
+    return "traversal_refused"
+  }
+  return "absolute_refused"
+}

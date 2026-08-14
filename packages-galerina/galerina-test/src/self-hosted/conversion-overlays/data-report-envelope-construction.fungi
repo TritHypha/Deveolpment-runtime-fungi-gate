@@ -1,0 +1,16 @@
+@version 1
+/// Envelope status construction from galerina-data-reports#createDataReportEnvelope.
+pure flow dataReportEnvelopeConstructionCore(hasError: Bool, hasWarning: Bool, generatedAtPresent: Bool, countsPresent: Bool) -> String
+contract { intent { "Select report status after optional timestamp and count defaults are resolved." } }
+{
+  if generatedAtPresent == false {
+    if countsPresent == false {
+      if hasError { return "failed" }
+      if hasWarning { return "partial" }
+      return "success"
+    }
+  }
+  if hasError { return "failed" }
+  if hasWarning { return "partial" }
+  return "success"
+}

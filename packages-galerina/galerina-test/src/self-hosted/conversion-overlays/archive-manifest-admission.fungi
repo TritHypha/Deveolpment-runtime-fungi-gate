@@ -1,0 +1,11 @@
+@version 1
+/// Manifest fold from galerina-data-archive#validateArchiveManifest.
+pure flow archiveManifestAdmissionCore(identityAccepted: Bool, itemsAccepted: Bool, contentAccepted: Bool, optionalEvidenceConsistent: Bool) -> Bool
+contract { intent { "Admit a unique checksummed manifest with valid optional signature and retention evidence." } }
+{
+  if identityAccepted == false { return false }
+  if itemsAccepted {
+    if contentAccepted { return optionalEvidenceConsistent }
+  }
+  return false
+}

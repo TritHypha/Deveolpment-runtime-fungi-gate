@@ -1,0 +1,15 @@
+@version 1
+/// Redaction fold from galerina-data-json#validateJsonRedactionPolicy.
+pure flow jsonRedactionPolicyAdmissionCore(namePresent: Bool, containsPersonalData: Bool, fieldCount: Int, fieldNamesPresent: Bool) -> String
+contract { intent { "Surface a personal-data policy that declares no fields and refuse empty field names." } }
+{
+  if namePresent == false { return "name_refused" }
+  if fieldCount < 0 { return "count_refused" }
+  if fieldNamesPresent == false { return "field_refused" }
+  if containsPersonalData {
+    if fieldCount == 0 { return "accepted_with_warning" }
+    return "accepted"
+  }
+  if fieldCount > 0 { return "accepted_precautionary" }
+  return "accepted"
+}

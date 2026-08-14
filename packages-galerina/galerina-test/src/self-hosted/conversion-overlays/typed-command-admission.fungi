@@ -1,0 +1,16 @@
+@version 1
+/// Declaration fold from galerina-data-query#validateTypedCommand.
+pure flow typedCommandAdmissionCore(namePresent: Bool, modelPresent: Bool, effectKnown: Bool, parametersAccepted: Bool, templateAccepted: Bool) -> String
+contract { intent { "Admit a typed command only with named model, known effect and safe binding template." } }
+{
+  if namePresent {
+    if modelPresent {
+      if effectKnown == false { return "effect_refused" }
+      if parametersAccepted == false { return "parameters_refused" }
+      if templateAccepted { return "accepted" }
+      return "template_refused"
+    }
+    return "model_refused"
+  }
+  return "name_refused"
+}

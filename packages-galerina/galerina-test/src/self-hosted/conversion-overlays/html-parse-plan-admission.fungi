@@ -1,0 +1,14 @@
+@version 1
+/// Parse-plan fold from galerina-data-html#validateHtmlParsePlan.
+pure flow htmlParsePlanAdmissionCore(namePresent: Bool, modeKnown: Bool, inputLimitValid: Bool, nodeLimitPresent: Bool, nodeLimitValid: Bool) -> String
+contract { intent { "Require named, known and bounded HTML parsing with a valid optional node cap." } }
+{
+  if namePresent == false { return "name_refused" }
+  if modeKnown == false { return "mode_refused" }
+  if inputLimitValid == false { return "input_limit_refused" }
+  if nodeLimitPresent {
+    if nodeLimitValid { return "accepted" }
+    return "node_limit_refused"
+  }
+  return "accepted"
+}
