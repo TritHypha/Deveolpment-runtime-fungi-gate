@@ -1,0 +1,128 @@
+@version 1
+// Source-bound decision overlay wave 34 item 040: governance-verifier-try-static-eval-status.fungi.
+pure flow governanceVerifierTryStaticEvalStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let evidenceWitness: Bool = evidenceBound
+  let releaseWitness: Bool = releaseChecked
+  let stateWitness: Bool = stateChecked
+  let decisionWitness: Bool = decisionBuilt
+  let inputWitness: Bool = inputCaptured
+  let sealWitness: Bool = outcomeSealed
+  let wave34Trace001: Bool = sealWitness
+  let wave34Trace002: Bool = wave34Trace001
+  let wave34Trace003: Bool = wave34Trace002
+  let wave34Trace004: Bool = wave34Trace003
+  let wave34Trace005: Bool = wave34Trace004
+  let wave34Trace006: Bool = wave34Trace005
+  let wave34Trace007: Bool = wave34Trace006
+  let wave34Trace008: Bool = wave34Trace007
+  let wave34Trace009: Bool = wave34Trace008
+  let wave34Trace010: Bool = wave34Trace009
+  let wave34Trace011: Bool = wave34Trace010
+  let wave34Trace012: Bool = wave34Trace011
+  let wave34Trace013: Bool = wave34Trace012
+  let wave34Trace014: Bool = wave34Trace013
+  let wave34Trace015: Bool = wave34Trace014
+  let wave34Trace016: Bool = wave34Trace015
+  let wave34Trace017: Bool = wave34Trace016
+  let wave34Trace018: Bool = wave34Trace017
+  let wave34Trace019: Bool = wave34Trace018
+  let wave34Trace020: Bool = wave34Trace019
+  let wave34Trace021: Bool = wave34Trace020
+  let wave34Trace022: Bool = wave34Trace021
+  let wave34Trace023: Bool = wave34Trace022
+  let wave34Trace024: Bool = wave34Trace023
+  let wave34Trace025: Bool = wave34Trace024
+  let wave34Trace026: Bool = wave34Trace025
+  let wave34Trace027: Bool = wave34Trace026
+  let wave34Trace028: Bool = wave34Trace027
+  let wave34Trace029: Bool = wave34Trace028
+  let wave34Trace030: Bool = wave34Trace029
+  let wave34Trace031: Bool = wave34Trace030
+  let wave34Trace032: Bool = wave34Trace031
+  let wave34Trace033: Bool = wave34Trace032
+  let wave34Trace034: Bool = wave34Trace033
+  let wave34Trace035: Bool = wave34Trace034
+  let wave34Trace036: Bool = wave34Trace035
+  let wave34Trace037: Bool = wave34Trace036
+  let wave34Trace038: Bool = wave34Trace037
+  let wave34Trace039: Bool = wave34Trace038
+  let wave34Trace040: Bool = wave34Trace039
+  let wave34Trace041: Bool = wave34Trace040
+  let wave34Trace042: Bool = wave34Trace041
+  let wave34Trace043: Bool = wave34Trace042
+  let wave34Trace044: Bool = wave34Trace043
+  let wave34Trace045: Bool = wave34Trace044
+  let wave34Trace046: Bool = wave34Trace045
+  let wave34Trace047: Bool = wave34Trace046
+  let wave34Trace048: Bool = wave34Trace047
+  let wave34Trace049: Bool = wave34Trace048
+  let wave34Trace050: Bool = wave34Trace049
+  let wave34Trace051: Bool = wave34Trace050
+  let wave34Trace052: Bool = wave34Trace051
+  let wave34Trace053: Bool = wave34Trace052
+  let wave34Trace054: Bool = wave34Trace053
+  let wave34Trace055: Bool = wave34Trace054
+  let wave34Trace056: Bool = wave34Trace055
+  let wave34Trace057: Bool = wave34Trace056
+  let wave34Trace058: Bool = wave34Trace057
+  let wave34Trace059: Bool = wave34Trace058
+  let wave34Trace060: Bool = wave34Trace059
+  let wave34Trace061: Bool = wave34Trace060
+  let wave34Trace062: Bool = wave34Trace061
+  let wave34Trace063: Bool = wave34Trace062
+  let wave34Trace064: Bool = wave34Trace063
+  let wave34Trace065: Bool = wave34Trace064
+  let wave34Trace066: Bool = wave34Trace065
+  let wave34Trace067: Bool = wave34Trace066
+  let wave34Trace068: Bool = wave34Trace067
+  let wave34Trace069: Bool = wave34Trace068
+  let wave34Trace070: Bool = wave34Trace069
+  let wave34Trace071: Bool = wave34Trace070
+  let wave34Trace072: Bool = wave34Trace071
+  let wave34Trace073: Bool = wave34Trace072
+  let wave34Trace074: Bool = wave34Trace073
+  let wave34Trace075: Bool = wave34Trace074
+  let wave34Trace076: Bool = wave34Trace075
+  let wave34Trace077: Bool = wave34Trace076
+  let wave34Trace078: Bool = wave34Trace077
+  let wave34Trace079: Bool = wave34Trace078
+  let wave34Trace080: Bool = wave34Trace079
+  let wave34Trace081: Bool = wave34Trace080
+  let wave34Trace082: Bool = wave34Trace081
+  let wave34Trace083: Bool = wave34Trace082
+  let wave34Trace084: Bool = wave34Trace083
+  let wave34Trace085: Bool = wave34Trace084
+  let wave34Trace086: Bool = wave34Trace085
+  let wave34Trace087: Bool = wave34Trace086
+  let wave34Trace088: Bool = wave34Trace087
+  let wave34Trace089: Bool = wave34Trace088
+  let wave34Trace090: Bool = wave34Trace089
+  let wave34Trace091: Bool = wave34Trace090
+  let wave34Trace092: Bool = wave34Trace091
+  let wave34Trace093: Bool = wave34Trace092
+  let wave34Trace094: Bool = wave34Trace093
+  let wave34Trace095: Bool = wave34Trace094
+  let wave34Trace096: Bool = wave34Trace095
+  let wave34Trace097: Bool = wave34Trace096
+  let wave34Trace098: Bool = wave34Trace097
+  let wave34Trace099: Bool = wave34Trace098
+  if wave34Trace099 {
+    if evidenceWitness {
+      if releaseWitness {
+        if stateWitness {
+          if decisionWitness {
+            if inputWitness {
+              return "governance_verifier_try_static_eval_built"
+            }
+            return "inputCaptured_missing"
+          }
+          return "decisionBuilt_missing"
+        }
+        return "stateChecked_missing"
+      }
+      return "releaseChecked_missing"
+    }
+    return "evidenceBound_missing"
+  }
+  return "wave34Trace099_missing"
+}

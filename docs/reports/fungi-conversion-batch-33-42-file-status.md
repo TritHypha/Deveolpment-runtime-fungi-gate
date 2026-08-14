@@ -2413,6 +2413,47 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 34 - Governance verifier state and helpers
+
+Wave 34 adds **40 new source-bound Fungi decision cores** from the next exact
+source-order segment of `governance-verifier.ts`: record and policy helpers,
+four named local traversal helpers, the verifier class boundary, its public
+verification/result methods, and the first seven private verification methods.
+A bounded prior-credit audit found no exact source-and-symbol reuse. The
+package now registers **1,400** conversion overlays. These are post-border
+scalar decision cores: AST identity and recursion, active Maps/Sets/arrays,
+regular expressions, binary64 parsing, diagnostics, class lifecycle and host
+failure identity remain at the executing TypeScript border. No consumer
+switch, supersession or TypeScript retirement is claimed.
+
+The pinned source build point is
+`5ced8cf22e0ad0c8846536835d809d7ec54e918d`; the exact source SHA-256 is
+`A581B16510FCC0927D08318EAFDA67A0A6EC0E1C6623769C1EE4A724AC068F2B`.
+The post-Wave-33 moderate graph refresh returned the preceding Wave-32 build
+point instead of the live commit, so graph freshness remains **UNKNOWN**.
+Graph results were used only to discover exact symbols and ranges; exact live
+bytes and the bounded prior-credit audit govern this wave.
+
+The RED test failed **0/3** because all 40 assets were absent and unregistered.
+The accepted six-Boolean shape uses a new evidence-first witness topology and
+bounded trace lengths 60-99. Focused source evidence passes **3/3**, including
+**40/40** exact-byte and normalized alpha-renamed whole-corpus uniqueness. The
+complete source-wave family passes **99/99**. Focused physical SLIDE/VOK
+evidence passes **1/1** and the complete physical-wave family passes **33/33**:
+each source compiles to a physical `.slide`, publishes, independently
+re-admits, executes with the expected typed value, and refuses mutated source,
+artifact and receipt bytes. Package no-emit typecheck is green. The focused
+test pins are
+`54930EA11C9BDAE554F44C07084DA91A4732B1F4A161E43119A6E72D81CD8E65`
+and
+`A58AE12964B7A2B0841C40D475E650E384C773D1BF5E91CEE3F7CDBB8A1A0397`.
+
+This is the only report modified by the wave and it is committed with all 40
+new Fungi files, so it is not report-only. Root authored the code directly; no
+worker authored these files and no push is performed. Both worktree and
+committed-object guards must report 40/40 uniqueness, the report-only streak
+must remain zero, and no report-only follow-up commit is permitted.
+
 ## Source decision overlay wave 33 - GIR, ignore and governance decisions
 
 Wave 33 adds **40 new source-bound Fungi decision cores**: the remaining
