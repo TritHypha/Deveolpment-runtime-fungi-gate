@@ -1405,9 +1405,14 @@ existing rules. Receipt authoring is complete. Fresh Tower no-emit typecheck,
 these are regression and schema evidence only. Three independent read-only
 reviews and all bounded re-reviews pass after correcting skill provenance,
 class/constructor credit boundaries and the `fnv1a` / `NO_NEIGHBORS`
-threadability split. The authored-evidence commit, registered owner publication,
-bounded close matrix and dual-index refresh remain pending. Repository-wide
-closure stays `UNKNOWN`.
+threadability split. Authored evidence is committed separately at `32e55d5d`.
+All 19 registered owners and the hermetic generator contract pass **19/19**;
+the bounded close matrix also passes **19/19**, with queue **1,490/1,490**,
+package **100/201**, project **5/5**, graph **10,714 nodes / 10,564 edges / zero
+violations**, semantic **3/3** with **977** tests, source inventory **149**, code
+index **975**, receipts **887/887**, Golden **11/11**, canonical **7/7**, and
+both leak audits at zero. The dual-index exact-head refresh remains pending;
+repository-wide closure stays `UNKNOWN`.
 
 ## Slices 848-897 - Tower precision, quorum and registry
 

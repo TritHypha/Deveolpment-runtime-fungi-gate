@@ -22,8 +22,13 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Reconcile three independent read-only reviews; all bounded re-reviews pass
   after correcting skill provenance, class/constructor credit boundaries and
   the `fnv1a` / `NO_NEIGHBORS` threadability split.
-- [ ] Publish all registered owners to fixed point, pass the hermetic owner
-  contract and bounded close matrix, then commit generated layers separately.
+- [x] Commit authored evidence separately at `32e55d5d`, publish all registered
+  owners in separate provenance layers and pass both the hermetic owner contract
+  and bounded close matrix **19/19**: queue **1,490/1,490**, package **100/201**,
+  project **5/5**, graph **10,714 nodes / 10,564 edges / zero violations**,
+  semantic **3/3** with **977** tests, source inventory **149**, code index
+  **975**, receipts **887/887**, Golden **11/11**, canonical **7/7**, and both
+  leak audits at zero.
 - [ ] Refresh Myco and force an exact full code-graph rebuild at the final
   committed head with bounded `NoisyLane` readback.
 

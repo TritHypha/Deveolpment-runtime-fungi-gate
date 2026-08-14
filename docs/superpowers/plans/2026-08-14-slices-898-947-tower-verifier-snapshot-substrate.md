@@ -180,11 +180,11 @@ superseded scopes or retirement credit.
 **Files:**
 - Modify only outputs named by `governance/tooling-policy.json` publishers.
 
-- [ ] Run every registered publisher and its exact check to a fixed point,
+- [x] Run every registered publisher and its exact check to a fixed point,
   followed by `node scripts/audit-generator-contract.mjs --tier phase-close`.
-- [ ] Run the historical bounded 19-check close matrix with no failure or
+- [x] Run the historical bounded 19-check close matrix with no failure or
   SKIPPED member.
-- [ ] Commit owner and dependent graph layers separately.
+- [x] Commit owner and dependent graph layers separately.
 - [ ] Refresh Myco and require a bounded exact `NoisyLane` query.
 - [ ] Refresh codebase-memory with a forced full rebuild and require exact
   expected node/edge counts, exact `indexed_head_sha` and one untruncated

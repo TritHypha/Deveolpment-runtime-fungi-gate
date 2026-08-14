@@ -3895,8 +3895,13 @@ pressure tests. Fifty receipt-local exits and the common manifest are authored;
 fresh Tower no-emit typecheck, **515/515** package tests and **887/887** receipt
 checks pass as regression/schema evidence. Three independent read-only reviews
 and all bounded re-reviews pass after receipt-local provenance, credit-boundary
-and threadability corrections. Separate authored and owner commits, the bounded
-close matrix and dual-index refresh remain pending.
+and threadability corrections. Authored evidence is committed at `32e55d5d`;
+all 19 registered owners, the hermetic owner contract and bounded close matrix
+pass **19/19**. Current bounded outputs are queue **1,490/1,490**, package
+**100/201**, project **5/5**, graph **10,714 nodes / 10,564 edges / zero
+violations**, semantic **3/3**, source inventory **149**, code index **975**,
+receipts **887/887**, Golden **11/11**, canonical **7/7**, and both leak audits
+at zero. The dual-index exact-head refresh remains pending.
 No exact scoped Fungi/GIR/physical `.slide`/independent re-admission/VOK twin,
 consumer switch, supersession or retirement is claimed. Repository-wide
 closure remains `UNKNOWN`.
