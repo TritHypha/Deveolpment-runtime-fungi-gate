@@ -1,0 +1,4 @@
+@version 1
+pure flow sporeCliMainStatusCore(argsParsed: Bool, commandKnown: Bool, secretDisciplineHeld: Bool, operationCompleted: Bool, cleanupCompleted: Bool) -> String {
+  if argsParsed { if commandKnown { let secretSafe: Bool = secretDisciplineHeld if secretSafe { if operationCompleted { if cleanupCompleted { return "spore_cli_complete" } return "cleanup_failed" } return "operation_failed" } return "secret_discipline_failed" } return "command_unknown" } return "args_failed"
+}

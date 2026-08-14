@@ -1,0 +1,19 @@
+﻿@version 1
+pure flow sealArenaClassStatusCore(classReady: Bool, entriesOwned: Bool, disposedOwned: Bool) -> String {
+  let evidence01: Bool = classReady
+  let evidence02: Bool = evidence01
+  let evidence03: Bool = evidence02
+  let evidence04: Bool = evidence03
+  let evidence05: Bool = evidence04
+  let evidence06: Bool = evidence05
+  let evidence07: Bool = evidence06
+  let evidence08: Bool = evidence07
+  let evidence09: Bool = evidence08
+  let evidence10: Bool = evidence09
+  let evidence11: Bool = evidence10
+  let evidence12: Bool = evidence11
+  let evidence13: Bool = evidence12
+  let evidence14: Bool = evidence13
+  let evidence15: Bool = evidence14
+  if evidence15 { let entriesReady: Bool = entriesOwned let lifecycleReady: Bool = disposedOwned if entriesReady { if lifecycleReady { return "seal_arena_class" } return "lifecycle_unowned" } return "entries_unowned" } return "class_missing"
+}

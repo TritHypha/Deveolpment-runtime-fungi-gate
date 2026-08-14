@@ -2241,3 +2241,27 @@ must stay below two, and every added Fungi file must pass exact and normalized
 whole-corpus duplicate/shadow checks before staging. Wave 13 contains one
 report update and 40 new Fungi files. No worker authored this wave and no push
 is authorized.
+
+## Source decision overlay wave 14 - remaining Vault and Spore boundaries
+
+Wave 14 adds another **40 new source-bound Fungi decision cores**: the remaining
+Vault facade, client, rotation and CLI boundaries; the Spore CLI and arena
+class boundaries; and exact Spore schema, domain and parameter constants. No
+Wave 13 source scope is reused. The package now registers **600** conversion
+overlays.
+
+The unchanged whole-corpus guard reports **40/40 unique** after exact-byte and
+normalized alpha-renamed comparison. The source gate passes **3/3** for live
+scope and asset binding, uniqueness, parse/effect/GIR generation and execution.
+The physical gate passes **1/1**, producing and independently re-admitting 40
+typed reference-only `.slide` artifacts while refusing source and physical
+artifact mutation. These files remain post-border decision evidence: they do
+not replace environment access, Vault transport, process exits, terminal I/O,
+callback execution, Buffer custody, timers, hashing, Argon2id, JSON parsing or
+zeroization effects.
+
+Commit custody is unchanged: this report-bearing commit is eligible only with
+all 40 new Fungi files, one report update, the 40/40 shadow result, the full
+source and physical overlay suites, and typecheck green. No worker authored
+the wave, no production authority is released, no TypeScript is retired, and
+no push is authorized.

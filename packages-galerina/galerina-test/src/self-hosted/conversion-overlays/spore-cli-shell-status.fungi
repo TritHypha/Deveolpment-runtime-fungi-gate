@@ -1,0 +1,5 @@
+@version 1
+pure flow sporeCliShellStatusCore(interfaceReady: Bool, commandParsed: Bool, mutationContained: Bool, ciphertextSaved: Bool, closed: Bool) -> String {
+  let interfaceLive: Bool = interfaceReady
+  if interfaceLive { if commandParsed { if mutationContained { let saved: Bool = ciphertextSaved if saved { if closed { return "shell_closed" } return "shell_live" } return "save_failed" } return "mutation_escaped" } return "command_invalid" } return "interface_failed"
+}

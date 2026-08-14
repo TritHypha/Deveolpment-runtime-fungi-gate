@@ -1,0 +1,4 @@
+@version 1
+pure flow vaultContractLoadStatusCore(blockCaptured: Bool, credentialsPresent: Bool, allLoaded: Bool) -> String {
+  if blockCaptured { if credentialsPresent { let complete: Bool = allLoaded if complete { return "contract_loaded" } return "load_incomplete" } if allLoaded { return "contract_loaded" } return "empty_unhandled" } return "block_missing"
+}

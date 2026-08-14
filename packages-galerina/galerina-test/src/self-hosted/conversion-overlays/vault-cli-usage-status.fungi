@@ -1,0 +1,8 @@
+@version 1
+pure flow vaultCliUsageStatusCore(messageReady: Bool, stderrWritten: Bool) -> String {
+  let usageReady: Bool = messageReady
+  let outputReady: Bool = stderrWritten
+  let sinkReady: Bool = outputReady
+  let releaseReady: Bool = sinkReady
+  if usageReady { if releaseReady { return "usage_written" } return "stderr_failed" } return "usage_missing"
+}

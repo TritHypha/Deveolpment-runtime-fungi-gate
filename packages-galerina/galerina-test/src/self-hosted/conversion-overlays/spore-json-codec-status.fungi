@@ -1,0 +1,14 @@
+@version 1
+pure flow sporeJsonCodecStatusCore(valueExact: Bool, structuredBound: Bool) -> String {
+  let exact: Bool = valueExact
+  let structured: Bool = structuredBound
+  let codecReady: Bool = exact
+  let modalityReady: Bool = structured
+  let wireReady: Bool = codecReady
+  let bindingReady: Bool = modalityReady
+  let releaseReady: Bool = wireReady
+  let outputReady: Bool = bindingReady
+  let finalWire: Bool = releaseReady
+  let finalBinding: Bool = outputReady
+  if finalWire { if finalBinding { return "json_codec" } return "structure_refused" } return "codec_refused"
+}

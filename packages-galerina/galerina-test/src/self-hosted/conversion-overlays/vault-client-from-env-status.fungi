@@ -1,0 +1,5 @@
+@version 1
+pure flow vaultClientFromEnvStatusCore(environmentCaptured: Bool, modeResolved: Bool, credentialsPresent: Bool, clientCreated: Bool) -> String {
+  let environmentReady: Bool = environmentCaptured
+  if environmentReady { let modeReady: Bool = modeResolved if modeReady { if credentialsPresent { if clientCreated { return "vault_client_from_env" } return "client_failed" } return "credentials_missing" } return "mode_unknown" } return "environment_missing"
+}

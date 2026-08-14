@@ -1,0 +1,4 @@
+@version 1
+pure flow vaultFacadeFromConfigStatusCore(addressCaptured: Bool, tokenCaptured: Bool, clientCreated: Bool, facadeCreated: Bool) -> String {
+  if addressCaptured { if tokenCaptured { let clientReady: Bool = clientCreated if clientReady { if facadeCreated { return "facade_from_config" } return "facade_failed" } return "client_failed" } return "token_missing" } return "address_missing"
+}

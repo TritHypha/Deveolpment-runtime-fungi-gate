@@ -1,0 +1,7 @@
+@version 1
+pure flow vaultStopFacadeStatusCore(timerHandled: Bool, managerDisposed: Bool) -> String {
+  let timerReady: Bool = timerHandled
+  let disposeReady: Bool = managerDisposed
+  let stopReady: Bool = disposeReady
+  if timerReady { if stopReady { return "facade_stopped" } return "manager_live" } return "timer_live"
+}

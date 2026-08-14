@@ -1,0 +1,8 @@
+﻿@version 1
+pure flow vaultFacadeFromEnvStatusCore(environmentReady: Bool, clientCreated: Bool, facadeCreated: Bool) -> String {
+  let evidence01: Bool = environmentReady
+  let evidence02: Bool = evidence01
+  let evidence03: Bool = evidence02
+  let evidence04: Bool = evidence03
+  if evidence04 { let clientReady: Bool = clientCreated if clientReady { if facadeCreated { return "facade_from_env" } return "facade_failed" } return "client_failed" } return "environment_refused"
+}

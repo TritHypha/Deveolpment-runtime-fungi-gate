@@ -1,0 +1,10 @@
+@version 1
+pure flow sporeCliPromptStatusCore(stderrReady: Bool, promptWritten: Bool) -> String {
+  let sinkReady: Bool = stderrReady
+  let promptReady: Bool = promptWritten
+  let writeReady: Bool = promptReady
+  let visibilityReady: Bool = writeReady
+  let terminalReady: Bool = sinkReady
+  let outputReady: Bool = visibilityReady
+  if terminalReady { if outputReady { return "prompt_written" } return "prompt_failed" } return "stderr_missing"
+}

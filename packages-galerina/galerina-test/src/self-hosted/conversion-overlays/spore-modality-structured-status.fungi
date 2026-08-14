@@ -1,0 +1,12 @@
+@version 1
+pure flow sporeModalityStructuredStatusCore(valueExact: Bool) -> String {
+  let captured: Bool = valueExact
+  let structured: Bool = captured
+  let modalityReady: Bool = structured
+  let numericReady: Bool = modalityReady
+  let domainReady: Bool = numericReady
+  let releaseReady: Bool = domainReady
+  let valueReady: Bool = releaseReady
+  let outputReady: Bool = valueReady
+  if outputReady { return "modality_structured" } return "modality_refused"
+}

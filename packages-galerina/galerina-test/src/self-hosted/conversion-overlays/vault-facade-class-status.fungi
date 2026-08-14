@@ -1,0 +1,6 @@
+﻿@version 1
+pure flow vaultFacadeClassStatusCore(classReady: Bool, clientSlot: Bool, managerSlot: Bool) -> String {
+  let evidence01: Bool = classReady
+  let evidence02: Bool = evidence01
+  if evidence02 { if clientSlot { if managerSlot { return "facade_class" } return "manager_slot_missing" } return "client_slot_missing" } return "class_missing"
+}

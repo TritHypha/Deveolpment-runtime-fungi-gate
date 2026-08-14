@@ -1,0 +1,22 @@
+﻿@version 1
+pure flow sporeToHexStatusCore(bytesCaptured: Bool, bufferBound: Bool, hexEncoded: Bool) -> String {
+  let evidence01: Bool = bytesCaptured
+  let evidence02: Bool = evidence01
+  let evidence03: Bool = evidence02
+  let evidence04: Bool = evidence03
+  let evidence05: Bool = evidence04
+  let evidence06: Bool = evidence05
+  let evidence07: Bool = evidence06
+  let evidence08: Bool = evidence07
+  let evidence09: Bool = evidence08
+  let evidence10: Bool = evidence09
+  let evidence11: Bool = evidence10
+  let evidence12: Bool = evidence11
+  let evidence13: Bool = evidence12
+  let evidence14: Bool = evidence13
+  let evidence15: Bool = evidence14
+  let evidence16: Bool = evidence15
+  let evidence17: Bool = evidence16
+  let bytesReady: Bool = bytesCaptured
+  if evidence17 { let bufferReady: Bool = bufferBound if bufferReady { let hexReady: Bool = hexEncoded if hexReady { return "hex_encoded" } return "encode_failed" } return "buffer_failed" } return "bytes_missing"
+}

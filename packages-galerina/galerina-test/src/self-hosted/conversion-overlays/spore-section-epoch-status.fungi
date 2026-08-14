@@ -1,0 +1,16 @@
+@version 1
+pure flow sporeSectionEpochStatusCore(valueExact: Bool, contextBound: Bool) -> String {
+  let epochReady: Bool = valueExact
+  let contextReady: Bool = contextBound
+  let valueReady: Bool = epochReady
+  let bindingReady: Bool = contextReady
+  let sectionReady: Bool = valueReady
+  let contextFinal: Bool = bindingReady
+  let epochFinal: Bool = sectionReady
+  let releaseReady: Bool = contextFinal
+  let outputReady: Bool = epochFinal
+  let finalContext: Bool = releaseReady
+  let finalEpoch: Bool = outputReady
+  let decisionReady: Bool = finalEpoch
+  if decisionReady { if finalContext { return "section_epoch" } return "context_unbound" } return "epoch_refused"
+}

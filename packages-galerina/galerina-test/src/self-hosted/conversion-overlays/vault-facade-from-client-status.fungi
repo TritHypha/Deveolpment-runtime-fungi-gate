@@ -1,0 +1,11 @@
+﻿@version 1
+pure flow vaultFacadeFromClientStatusCore(clientOwned: Bool, facadeCreated: Bool) -> String {
+  let evidence01: Bool = clientOwned
+  let evidence02: Bool = evidence01
+  let evidence03: Bool = evidence02
+  let evidence04: Bool = evidence03
+  let evidence05: Bool = evidence04
+  let clientReady: Bool = clientOwned
+  let constructReady: Bool = facadeCreated
+  if evidence05 { if constructReady { return "facade_from_client" } return "construction_failed" } return "client_refused"
+}

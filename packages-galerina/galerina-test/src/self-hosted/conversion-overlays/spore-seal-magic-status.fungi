@@ -1,0 +1,15 @@
+@version 1
+pure flow sporeSealMagicStatusCore(valueExact: Bool, payloadBound: Bool) -> String {
+  let valueReady: Bool = valueExact
+  let payloadReady: Bool = payloadBound
+  let markerReady: Bool = valueReady
+  let framingReady: Bool = payloadReady
+  let sealReady: Bool = markerReady
+  let formatReady: Bool = framingReady
+  let releaseReady: Bool = sealReady
+  let outputReady: Bool = formatReady
+  let markerFinal: Bool = releaseReady
+  let payloadFinal: Bool = outputReady
+  let decisionReady: Bool = markerFinal
+  if decisionReady { if payloadFinal { return "seal_magic" } return "payload_unbound" } return "magic_refused"
+}

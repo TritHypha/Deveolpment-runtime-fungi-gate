@@ -1,0 +1,11 @@
+﻿@version 1
+pure flow vaultRotationStartFacadeCore(blockCaptured: Bool, policyResolved: Bool, sweepStarted: Bool) -> String {
+  let evidence01: Bool = blockCaptured
+  let evidence02: Bool = evidence01
+  let evidence03: Bool = evidence02
+  let evidence04: Bool = evidence03
+  let evidence05: Bool = evidence04
+  let evidence06: Bool = evidence05
+  let evidence07: Bool = evidence06
+  if evidence07 { let policyReady: Bool = policyResolved let timerReady: Bool = sweepStarted if policyReady { if timerReady { return "rotation_started" } return "timer_failed" } return "policy_failed" } return "block_missing"
+}

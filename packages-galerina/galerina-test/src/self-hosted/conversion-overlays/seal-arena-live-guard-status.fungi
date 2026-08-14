@@ -1,0 +1,11 @@
+@version 1
+pure flow sealArenaLiveGuardStatusCore(notDisposed: Bool, operationAllowed: Bool) -> String {
+  let live: Bool = notDisposed
+  let allowed: Bool = operationAllowed
+  let stateReady: Bool = live
+  let gateReady: Bool = allowed
+  let operationReady: Bool = gateReady
+  let releaseReady: Bool = operationReady
+  let lifecycleReady: Bool = stateReady
+  if lifecycleReady { if releaseReady { return "arena_live" } return "operation_refused" } return "arena_disposed"
+}

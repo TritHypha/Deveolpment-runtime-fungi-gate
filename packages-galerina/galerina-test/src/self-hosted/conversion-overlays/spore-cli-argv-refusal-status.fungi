@@ -1,0 +1,9 @@
+@version 1
+pure flow sporeCliArgvRefusalStatusCore(argsCaptured: Bool, secretAbsentFromArgv: Bool) -> String {
+  let argsReady: Bool = argsCaptured
+  let noSecret: Bool = secretAbsentFromArgv
+  let disciplineReady: Bool = noSecret
+  let boundaryReady: Bool = argsReady
+  let releaseReady: Bool = disciplineReady
+  if boundaryReady { if releaseReady { return "argv_safe" } return "secret_in_argv" } return "args_missing"
+}

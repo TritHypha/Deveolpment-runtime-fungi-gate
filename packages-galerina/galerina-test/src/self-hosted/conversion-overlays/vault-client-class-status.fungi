@@ -1,0 +1,4 @@
+@version 1
+pure flow vaultClientClassStatusCore(classReady: Bool, addressSlot: Bool, tokenSlot: Bool, limitsSlots: Bool) -> String {
+  if classReady { if addressSlot { if tokenSlot { let limitsReady: Bool = limitsSlots if limitsReady { return "vault_client_class" } return "limits_missing" } return "token_missing" } return "address_missing" } return "class_missing"
+}

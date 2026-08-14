@@ -1,0 +1,18 @@
+﻿@version 1
+pure flow sporeCliRecipientCallbackStatusCore(wrappedReady: Bool, passphraseRead: Bool, callbackCompleted: Bool, passphraseWiped: Bool) -> String {
+  let evidence01: Bool = wrappedReady
+  let evidence02: Bool = evidence01
+  let evidence03: Bool = evidence02
+  let evidence04: Bool = evidence03
+  let evidence05: Bool = evidence04
+  let evidence06: Bool = evidence05
+  let evidence07: Bool = evidence06
+  let evidence08: Bool = evidence07
+  let evidence09: Bool = evidence08
+  let evidence10: Bool = evidence09
+  let evidence11: Bool = evidence10
+  let evidence12: Bool = evidence11
+  let evidence13: Bool = evidence12
+  let evidence14: Bool = evidence13
+  if evidence14 { let passReady: Bool = passphraseRead if passReady { if callbackCompleted { let wipeReady: Bool = passphraseWiped if wipeReady { return "recipient_callback_wiped" } return "passphrase_live" } return "callback_failed" } return "passphrase_missing" } return "wrap_missing"
+}
