@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 14: registry-runtime-parse-object-status.fungi.
+pure flow registryRuntimeParseObjectStatusCore(bytesCaptured: Bool, utf8Valid: Bool, jsonParsed: Bool, recordPresent: Bool) -> String {
+  let sourceProofA: Bool = recordPresent
+  let sourceProofB: Bool = bytesCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if utf8Valid {
+        if recordPresent {
+          if bytesCaptured {
+            if jsonParsed {
+              return "registry_runtime_object_parsed"
+            }
+            return "jsonParsed_missing"
+          }
+          return "bytesCaptured_missing"
+        }
+        return "recordPresent_missing"
+      }
+      return "utf8Valid_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

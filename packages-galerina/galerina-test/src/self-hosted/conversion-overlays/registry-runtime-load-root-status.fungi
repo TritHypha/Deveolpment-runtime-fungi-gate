@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 20: registry-runtime-load-root-status.fungi.
+pure flow registryRuntimeLoadRootStatusCore(rootCaptured: Bool, optionsCaptured: Bool, registryVerified: Bool, authorityAdmitted: Bool, runtimeBuilt: Bool) -> String {
+  let sourceProofA: Bool = authorityAdmitted
+  let sourceProofB: Bool = optionsCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if optionsCaptured {
+        if registryVerified {
+          if runtimeBuilt {
+            if rootCaptured {
+              if authorityAdmitted {
+                return "registry_runtime_root_loaded"
+              }
+              return "authorityAdmitted_missing"
+            }
+            return "rootCaptured_missing"
+          }
+          return "runtimeBuilt_missing"
+        }
+        return "registryVerified_missing"
+      }
+      return "optionsCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

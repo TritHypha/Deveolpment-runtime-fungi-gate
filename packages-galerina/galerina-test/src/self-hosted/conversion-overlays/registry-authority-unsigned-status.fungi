@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 37: registry-authority-unsigned-status.fungi.
+pure flow registryAuthorityUnsignedStatusCore(delegationCaptured: Bool, serialValid: Bool, windowCanonical: Bool, rolesValid: Bool, fieldsBound: Bool) -> String {
+  let sourceProofA: Bool = fieldsBound
+  let sourceProofB: Bool = windowCanonical
+  if sourceProofA {
+    if sourceProofB {
+      if windowCanonical {
+        if serialValid {
+          if delegationCaptured {
+            if rolesValid {
+              if fieldsBound {
+                return "registry_authority_unsigned_valid"
+              }
+              return "fieldsBound_missing"
+            }
+            return "rolesValid_missing"
+          }
+          return "delegationCaptured_missing"
+        }
+        return "serialValid_missing"
+      }
+      return "windowCanonical_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

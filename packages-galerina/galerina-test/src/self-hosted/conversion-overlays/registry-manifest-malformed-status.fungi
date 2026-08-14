@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 17 item 23: registry-manifest-malformed-status.fungi.
+pure flow registryManifestMalformedStatusCore(messageCaptured: Bool, errorBuilt: Bool, failureTyped: Bool) -> String {
+  let sourceProofA: Bool = errorBuilt
+  let sourceProofB: Bool = messageCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if messageCaptured {
+        if failureTyped {
+          if errorBuilt {
+            return "registry_manifest_malformed"
+          }
+          return "errorBuilt_missing"
+        }
+        return "failureTyped_missing"
+      }
+      return "messageCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

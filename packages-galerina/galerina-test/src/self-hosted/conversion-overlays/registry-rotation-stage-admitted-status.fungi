@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 4: registry-rotation-stage-admitted-status.fungi.
+pure flow registryRotationStageAdmittedStatusCore(optionsCaptured: Bool, receiptKnown: Bool, identityValid: Bool, delegationActive: Bool, candidateStaged: Bool) -> String {
+  let sourceProofA: Bool = optionsCaptured
+  let sourceProofB: Bool = delegationActive
+  if sourceProofA {
+    if sourceProofB {
+      if receiptKnown {
+        if optionsCaptured {
+          if identityValid {
+            if delegationActive {
+              if candidateStaged {
+                return "registry_rotation_candidate_staged"
+              }
+              return "candidateStaged_missing"
+            }
+            return "delegationActive_missing"
+          }
+          return "identityValid_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "receiptKnown_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

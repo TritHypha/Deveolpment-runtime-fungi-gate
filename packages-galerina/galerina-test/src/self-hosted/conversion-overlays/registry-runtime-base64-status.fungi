@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 15: registry-runtime-base64-status.fungi.
+pure flow registryRuntimeBase64StatusCore(valueCaptured: Bool, grammarValid: Bool, decoded: Bool, canonical: Bool) -> String {
+  let sourceProofA: Bool = decoded
+  let sourceProofB: Bool = canonical
+  if sourceProofA {
+    if sourceProofB {
+      if canonical {
+        if grammarValid {
+          if valueCaptured {
+            if decoded {
+              return "registry_runtime_base64_canonical"
+            }
+            return "decoded_missing"
+          }
+          return "valueCaptured_missing"
+        }
+        return "grammarValid_missing"
+      }
+      return "canonical_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

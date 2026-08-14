@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 22: registry-runtime-production-status.fungi.
+pure flow registryRuntimeProductionStatusCore(optionsCaptured: Bool, stateRestored: Bool, epochMatched: Bool, registryLoaded: Bool, runtimeBound: Bool) -> String {
+  let sourceProofA: Bool = epochMatched
+  let sourceProofB: Bool = stateRestored
+  if sourceProofA {
+    if sourceProofB {
+      if epochMatched {
+        if optionsCaptured {
+          if registryLoaded {
+            if runtimeBound {
+              if stateRestored {
+                return "registry_runtime_production_loaded"
+              }
+              return "stateRestored_missing"
+            }
+            return "runtimeBound_missing"
+          }
+          return "registryLoaded_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "epochMatched_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 17 item 16: registry-runtime-sha256-status.fungi.
+pure flow registryRuntimeSha256StatusCore(cryptoCaptured: Bool, bytesCaptured: Bool, digestReady: Bool) -> String {
+  let sourceProofA: Bool = bytesCaptured
+  let sourceProofB: Bool = cryptoCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if bytesCaptured {
+        if digestReady {
+          if cryptoCaptured {
+            return "registry_runtime_digest_ready"
+          }
+          return "cryptoCaptured_missing"
+        }
+        return "digestReady_missing"
+      }
+      return "bytesCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 21: registry-runtime-bootstrap-status.fungi.
+pure flow registryRuntimeBootstrapStatusCore(optionsCaptured: Bool, rootBound: Bool, authorityLoaded: Bool, runtimeBuilt: Bool) -> String {
+  let sourceProofA: Bool = authorityLoaded
+  let sourceProofB: Bool = authorityLoaded
+  if sourceProofA {
+    if sourceProofB {
+      if runtimeBuilt {
+        if authorityLoaded {
+          if rootBound {
+            if optionsCaptured {
+              return "registry_runtime_bootstrap_loaded"
+            }
+            return "optionsCaptured_missing"
+          }
+          return "rootBound_missing"
+        }
+        return "authorityLoaded_missing"
+      }
+      return "runtimeBuilt_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

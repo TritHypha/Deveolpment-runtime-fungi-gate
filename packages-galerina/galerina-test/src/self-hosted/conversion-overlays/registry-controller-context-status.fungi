@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 17 item 7: registry-controller-context-status.fungi.
+pure flow registryControllerContextStatusCore(optionsCaptured: Bool, transitionPresent: Bool, bundlesMatched: Bool, contextCreated: Bool) -> String {
+  let sourceProofA: Bool = bundlesMatched
+  let sourceProofB: Bool = contextCreated
+  let sourceProofC: Bool = transitionPresent
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if optionsCaptured {
+          if transitionPresent {
+            if bundlesMatched {
+              if contextCreated {
+                return "registry_controller_context_ready"
+              }
+              return "contextCreated_missing"
+            }
+            return "bundlesMatched_missing"
+          }
+          return "transitionPresent_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 17 item 33: registry-authority-nonempty-status.fungi.
+pure flow registryAuthorityNonemptyStatusCore(valueCaptured: Bool, stringTyped: Bool, nonEmpty: Bool) -> String {
+  let sourceProofA: Bool = stringTyped
+  let sourceProofB: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if stringTyped {
+        if valueCaptured {
+          if nonEmpty {
+            return "registry_authority_string_valid"
+          }
+          return "nonEmpty_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "stringTyped_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

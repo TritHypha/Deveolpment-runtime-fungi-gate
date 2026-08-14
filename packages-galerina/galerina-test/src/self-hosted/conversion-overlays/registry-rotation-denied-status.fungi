@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 3: registry-rotation-denied-status.fungi.
+pure flow registryRotationDeniedStatusCore(processCaptured: Bool, reasonCaptured: Bool, boundaryDenied: Bool, outcomeBuilt: Bool) -> String {
+  let sourceProofA: Bool = boundaryDenied
+  let sourceProofB: Bool = reasonCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if boundaryDenied {
+        if reasonCaptured {
+          if processCaptured {
+            if outcomeBuilt {
+              return "registry_rotation_denied"
+            }
+            return "outcomeBuilt_missing"
+          }
+          return "processCaptured_missing"
+        }
+        return "reasonCaptured_missing"
+      }
+      return "boundaryDenied_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

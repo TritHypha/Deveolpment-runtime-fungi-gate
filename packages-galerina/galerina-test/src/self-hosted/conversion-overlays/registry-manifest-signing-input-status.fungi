@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 26: registry-manifest-signing-input-status.fungi.
+pure flow registryManifestSigningInputStatusCore(manifestCaptured: Bool, fieldsBound: Bool, canonicalReady: Bool, bytesReady: Bool) -> String {
+  let sourceProofA: Bool = fieldsBound
+  let sourceProofB: Bool = bytesReady
+  if sourceProofA {
+    if sourceProofB {
+      if bytesReady {
+        if manifestCaptured {
+          if canonicalReady {
+            if fieldsBound {
+              return "registry_manifest_signing_ready"
+            }
+            return "fieldsBound_missing"
+          }
+          return "canonicalReady_missing"
+        }
+        return "manifestCaptured_missing"
+      }
+      return "bytesReady_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

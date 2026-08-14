@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 35: registry-authority-roles-status.fungi.
+pure flow registryAuthorityRolesStatusCore(rolesCaptured: Bool, closedSet: Bool, requiredPresent: Bool, unique: Bool) -> String {
+  let sourceProofA: Bool = requiredPresent
+  let sourceProofB: Bool = closedSet
+  if sourceProofA {
+    if sourceProofB {
+      if unique {
+        if requiredPresent {
+          if rolesCaptured {
+            if closedSet {
+              return "registry_authority_roles_valid"
+            }
+            return "closedSet_missing"
+          }
+          return "rolesCaptured_missing"
+        }
+        return "requiredPresent_missing"
+      }
+      return "unique_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

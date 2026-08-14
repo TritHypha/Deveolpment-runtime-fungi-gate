@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 10: registry-controller-state-advance-status.fungi.
+pure flow registryControllerStateAdvanceStatusCore(optionsCaptured: Bool, stateRestored: Bool, probeVerified: Bool, candidateAccepted: Bool, stateAdvanced: Bool) -> String {
+  let sourceProofA: Bool = probeVerified
+  let sourceProofB: Bool = candidateAccepted
+  if sourceProofA {
+    if sourceProofB {
+      if candidateAccepted {
+        if optionsCaptured {
+          if probeVerified {
+            if stateAdvanced {
+              if stateRestored {
+                return "registry_controller_state_advanced"
+              }
+              return "stateRestored_missing"
+            }
+            return "stateAdvanced_missing"
+          }
+          return "probeVerified_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "candidateAccepted_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

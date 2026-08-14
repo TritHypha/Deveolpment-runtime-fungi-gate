@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 2: registry-rotation-index-admit-status.fungi.
+pure flow registryRotationIndexAdmitStatusCore(receiptCaptured: Bool, identitiesMatched: Bool, entriesBound: Bool, signatureVerified: Bool, provenanceMinted: Bool) -> String {
+  let sourceProofA: Bool = identitiesMatched
+  let sourceProofB: Bool = signatureVerified
+  if sourceProofA {
+    if sourceProofB {
+      if receiptCaptured {
+        if entriesBound {
+          if identitiesMatched {
+            if provenanceMinted {
+              if signatureVerified {
+                return "registry_rotation_index_admitted"
+              }
+              return "signatureVerified_missing"
+            }
+            return "provenanceMinted_missing"
+          }
+          return "identitiesMatched_missing"
+        }
+        return "entriesBound_missing"
+      }
+      return "receiptCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

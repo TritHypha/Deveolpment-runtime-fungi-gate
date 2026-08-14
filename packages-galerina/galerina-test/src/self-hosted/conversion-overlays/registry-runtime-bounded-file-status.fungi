@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 12: registry-runtime-bounded-file-status.fungi.
+pure flow registryRuntimeBoundedFileStatusCore(pathCaptured: Bool, statsValid: Bool, sizeBound: Bool, bytesRead: Bool, identityStable: Bool) -> String {
+  let sourceProofA: Bool = statsValid
+  let sourceProofB: Bool = bytesRead
+  if sourceProofA {
+    if sourceProofB {
+      if bytesRead {
+        if identityStable {
+          if statsValid {
+            if pathCaptured {
+              if sizeBound {
+                return "registry_runtime_file_bounded"
+              }
+              return "sizeBound_missing"
+            }
+            return "pathCaptured_missing"
+          }
+          return "statsValid_missing"
+        }
+        return "identityStable_missing"
+      }
+      return "bytesRead_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

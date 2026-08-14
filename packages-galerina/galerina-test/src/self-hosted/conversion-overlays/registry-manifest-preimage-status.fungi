@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 27: registry-manifest-preimage-status.fungi.
+pure flow registryManifestPreimageStatusCore(manifestCaptured: Bool, signingReady: Bool, contextBound: Bool, framed: Bool, bytesReady: Bool) -> String {
+  let sourceProofA: Bool = bytesReady
+  let sourceProofB: Bool = contextBound
+  if sourceProofA {
+    if sourceProofB {
+      if framed {
+        if contextBound {
+          if bytesReady {
+            if signingReady {
+              if manifestCaptured {
+                return "registry_manifest_preimage_ready"
+              }
+              return "manifestCaptured_missing"
+            }
+            return "signingReady_missing"
+          }
+          return "bytesReady_missing"
+        }
+        return "contextBound_missing"
+      }
+      return "framed_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

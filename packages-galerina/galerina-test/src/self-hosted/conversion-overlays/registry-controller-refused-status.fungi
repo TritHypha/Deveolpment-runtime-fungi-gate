@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 5: registry-controller-refused-status.fungi.
+pure flow registryControllerRefusedStatusCore(optionsCaptured: Bool, verdictCaptured: Bool, boundaryDecided: Bool, outcomeBuilt: Bool) -> String {
+  let sourceProofA: Bool = boundaryDecided
+  let sourceProofB: Bool = boundaryDecided
+  if sourceProofA {
+    if sourceProofB {
+      if verdictCaptured {
+        if optionsCaptured {
+          if outcomeBuilt {
+            if boundaryDecided {
+              return "registry_controller_refused"
+            }
+            return "boundaryDecided_missing"
+          }
+          return "outcomeBuilt_missing"
+        }
+        return "optionsCaptured_missing"
+      }
+      return "verdictCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

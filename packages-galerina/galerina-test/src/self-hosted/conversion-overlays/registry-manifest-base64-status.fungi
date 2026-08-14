@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 25: registry-manifest-base64-status.fungi.
+pure flow registryManifestBase64StatusCore(valueCaptured: Bool, grammarValid: Bool, decoded: Bool, reencoded: Bool) -> String {
+  let sourceProofA: Bool = decoded
+  let sourceProofB: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if grammarValid {
+        if decoded {
+          if reencoded {
+            if valueCaptured {
+              return "registry_manifest_base64_canonical"
+            }
+            return "valueCaptured_missing"
+          }
+          return "reencoded_missing"
+        }
+        return "decoded_missing"
+      }
+      return "grammarValid_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

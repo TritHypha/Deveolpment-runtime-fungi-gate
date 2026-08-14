@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 6: registry-controller-bundles-match-status.fungi.
+pure flow registryControllerBundlesMatchStatusCore(optionsCaptured: Bool, oldCommitReady: Bool, newCommitReady: Bool, oldEpochMatched: Bool, newEpochMatched: Bool) -> String {
+  let sourceProofA: Bool = newEpochMatched
+  let sourceProofB: Bool = oldEpochMatched
+  if sourceProofA {
+    if sourceProofB {
+      if oldCommitReady {
+        if oldEpochMatched {
+          if newEpochMatched {
+            if newCommitReady {
+              if optionsCaptured {
+                return "registry_controller_bundles_matched"
+              }
+              return "optionsCaptured_missing"
+            }
+            return "newCommitReady_missing"
+          }
+          return "newEpochMatched_missing"
+        }
+        return "oldEpochMatched_missing"
+      }
+      return "oldCommitReady_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

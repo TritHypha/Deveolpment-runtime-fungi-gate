@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 28: registry-manifest-envelope-status.fungi.
+pure flow registryManifestEnvelopeStatusCore(valueCaptured: Bool, shapeValid: Bool, signaturesPresent: Bool, envelopeBuilt: Bool) -> String {
+  let sourceProofA: Bool = shapeValid
+  let sourceProofB: Bool = valueCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if signaturesPresent {
+        if valueCaptured {
+          if shapeValid {
+            if envelopeBuilt {
+              return "registry_manifest_envelope_parsed"
+            }
+            return "envelopeBuilt_missing"
+          }
+          return "shapeValid_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "signaturesPresent_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 38: registry-authority-signing-input-status.fungi.
+pure flow registryAuthoritySigningInputStatusCore(delegationCaptured: Bool, fieldsSelected: Bool, canonicalReady: Bool, bytesReady: Bool) -> String {
+  let sourceProofA: Bool = bytesReady
+  let sourceProofB: Bool = delegationCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if bytesReady {
+        if canonicalReady {
+          if delegationCaptured {
+            if fieldsSelected {
+              return "registry_authority_signing_ready"
+            }
+            return "fieldsSelected_missing"
+          }
+          return "delegationCaptured_missing"
+        }
+        return "canonicalReady_missing"
+      }
+      return "bytesReady_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

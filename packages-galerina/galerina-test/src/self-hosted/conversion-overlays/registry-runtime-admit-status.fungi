@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 19: registry-runtime-admit-status.fungi.
+pure flow registryRuntimeAdmitStatusCore(lookupCaptured: Bool, policyCaptured: Bool, packageFound: Bool, decisionBuilt: Bool) -> String {
+  let sourceProofA: Bool = packageFound
+  let sourceProofB: Bool = policyCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if policyCaptured {
+        if lookupCaptured {
+          if packageFound {
+            if decisionBuilt {
+              return "registry_runtime_package_admitted"
+            }
+            return "decisionBuilt_missing"
+          }
+          return "packageFound_missing"
+        }
+        return "lookupCaptured_missing"
+      }
+      return "policyCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

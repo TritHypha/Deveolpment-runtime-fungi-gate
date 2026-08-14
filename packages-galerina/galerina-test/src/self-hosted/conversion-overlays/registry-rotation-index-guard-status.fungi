@@ -1,0 +1,26 @@
+@version 1
+// Source-bound decision overlay wave 17 item 1: registry-rotation-index-guard-status.fungi.
+pure flow registryRotationIndexGuardStatusCore(valueCaptured: Bool, objectPresent: Bool, provenanceKnown: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = objectPresent
+  let sourceProofC: Bool = provenanceKnown
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if valueCaptured {
+          if objectPresent {
+            if provenanceKnown {
+              return "registry_rotation_index_known"
+            }
+            return "provenanceKnown_missing"
+          }
+          return "objectPresent_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

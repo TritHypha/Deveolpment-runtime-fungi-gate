@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 36: registry-authority-operational-status.fungi.
+pure flow registryAuthorityOperationalStatusCore(operationalCaptured: Bool, identityValid: Bool, fingerprintsValid: Bool, rolesValid: Bool, authorityBound: Bool) -> String {
+  let sourceProofA: Bool = identityValid
+  let sourceProofB: Bool = authorityBound
+  if sourceProofA {
+    if sourceProofB {
+      if identityValid {
+        if authorityBound {
+          if fingerprintsValid {
+            if operationalCaptured {
+              if rolesValid {
+                return "registry_authority_operational_valid"
+              }
+              return "rolesValid_missing"
+            }
+            return "operationalCaptured_missing"
+          }
+          return "fingerprintsValid_missing"
+        }
+        return "authorityBound_missing"
+      }
+      return "identityValid_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

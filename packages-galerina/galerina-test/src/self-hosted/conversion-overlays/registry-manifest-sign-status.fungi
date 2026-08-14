@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 30: registry-manifest-sign-status.fungi.
+pure flow registryManifestSignStatusCore(manifestCaptured: Bool, preimageReady: Bool, edSigned: Bool, mlSigned: Bool, envelopeBuilt: Bool) -> String {
+  let sourceProofA: Bool = preimageReady
+  let sourceProofB: Bool = manifestCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if envelopeBuilt {
+        if mlSigned {
+          if preimageReady {
+            if manifestCaptured {
+              if edSigned {
+                return "registry_manifest_signed"
+              }
+              return "edSigned_missing"
+            }
+            return "manifestCaptured_missing"
+          }
+          return "preimageReady_missing"
+        }
+        return "mlSigned_missing"
+      }
+      return "envelopeBuilt_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

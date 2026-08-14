@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 40: registry-authority-build-status.fungi.
+pure flow registryAuthorityBuildStatusCore(inputCaptured: Bool, fieldsValidated: Bool, operationalValid: Bool, objectBuilt: Bool, frozen: Bool) -> String {
+  let sourceProofA: Bool = fieldsValidated
+  let sourceProofB: Bool = inputCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if objectBuilt {
+        if fieldsValidated {
+          if operationalValid {
+            if frozen {
+              if inputCaptured {
+                return "registry_authority_delegation_built"
+              }
+              return "inputCaptured_missing"
+            }
+            return "frozen_missing"
+          }
+          return "operationalValid_missing"
+        }
+        return "fieldsValidated_missing"
+      }
+      return "objectBuilt_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

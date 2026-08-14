@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 31: registry-manifest-verify-status.fungi.
+pure flow registryManifestVerifyStatusCore(manifestCaptured: Bool, envelopeParsed: Bool, componentsValid: Bool, revocationChecked: Bool, verified: Bool) -> String {
+  let sourceProofA: Bool = verified
+  let sourceProofB: Bool = revocationChecked
+  if sourceProofA {
+    if sourceProofB {
+      if manifestCaptured {
+        if componentsValid {
+          if envelopeParsed {
+            if revocationChecked {
+              if verified {
+                return "registry_manifest_verified"
+              }
+              return "verified_missing"
+            }
+            return "revocationChecked_missing"
+          }
+          return "envelopeParsed_missing"
+        }
+        return "componentsValid_missing"
+      }
+      return "manifestCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

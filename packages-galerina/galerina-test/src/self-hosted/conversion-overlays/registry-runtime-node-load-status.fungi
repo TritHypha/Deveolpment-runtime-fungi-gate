@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay wave 17 item 11: registry-runtime-node-load-status.fungi.
+pure flow registryRuntimeNodeLoadStatusCore(environmentCaptured: Bool, fsLoaded: Bool, cryptoLoaded: Bool) -> String {
+  let sourceProofA: Bool = environmentCaptured
+  let sourceProofB: Bool = fsLoaded
+  if sourceProofA {
+    if sourceProofB {
+      if environmentCaptured {
+        if cryptoLoaded {
+          if fsLoaded {
+            return "registry_runtime_node_loaded"
+          }
+          return "fsLoaded_missing"
+        }
+        return "cryptoLoaded_missing"
+      }
+      return "environmentCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

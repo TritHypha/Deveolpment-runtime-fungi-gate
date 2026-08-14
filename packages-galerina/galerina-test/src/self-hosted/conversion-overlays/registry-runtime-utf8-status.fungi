@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 17 item 13: registry-runtime-utf8-status.fungi.
+pure flow registryRuntimeUtf8StatusCore(bytesCaptured: Bool, nonEmpty: Bool, decoded: Bool, noReplacement: Bool) -> String {
+  let sourceProofA: Bool = bytesCaptured
+  let sourceProofB: Bool = nonEmpty
+  let sourceProofC: Bool = noReplacement
+  if sourceProofA {
+    if sourceProofB {
+      if sourceProofC {
+        if bytesCaptured {
+          if nonEmpty {
+            if decoded {
+              if noReplacement {
+                return "registry_runtime_utf8_decoded"
+              }
+              return "noReplacement_missing"
+            }
+            return "decoded_missing"
+          }
+          return "nonEmpty_missing"
+        }
+        return "bytesCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

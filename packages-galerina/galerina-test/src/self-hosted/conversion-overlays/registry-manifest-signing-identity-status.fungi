@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 24: registry-manifest-signing-identity-status.fungi.
+pure flow registryManifestSigningIdentityStatusCore(valueCaptured: Bool, objectPresent: Bool, keyIdValid: Bool, returned: Bool) -> String {
+  let sourceProofA: Bool = returned
+  let sourceProofB: Bool = objectPresent
+  if sourceProofA {
+    if sourceProofB {
+      if returned {
+        if keyIdValid {
+          if objectPresent {
+            if valueCaptured {
+              return "registry_manifest_identity_valid"
+            }
+            return "valueCaptured_missing"
+          }
+          return "objectPresent_missing"
+        }
+        return "keyIdValid_missing"
+      }
+      return "returned_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

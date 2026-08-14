@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 34: registry-authority-instant-status.fungi.
+pure flow registryAuthorityInstantStatusCore(valueCaptured: Bool, stringTyped: Bool, parsed: Bool, roundTripped: Bool) -> String {
+  let sourceProofA: Bool = roundTripped
+  let sourceProofB: Bool = parsed
+  if sourceProofA {
+    if sourceProofB {
+      if parsed {
+        if valueCaptured {
+          if stringTyped {
+            if roundTripped {
+              return "registry_authority_instant_canonical"
+            }
+            return "roundTripped_missing"
+          }
+          return "stringTyped_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "parsed_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

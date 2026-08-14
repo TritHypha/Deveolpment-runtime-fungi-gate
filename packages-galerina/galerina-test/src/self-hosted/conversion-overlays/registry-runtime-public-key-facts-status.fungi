@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 17: registry-runtime-public-key-facts-status.fungi.
+pure flow registryRuntimePublicKeyFactsStatusCore(keyIdCaptured: Bool, filesBound: Bool, algorithmsValid: Bool, fingerprintsComputed: Bool, factsBuilt: Bool) -> String {
+  let sourceProofA: Bool = fingerprintsComputed
+  let sourceProofB: Bool = factsBuilt
+  if sourceProofA {
+    if sourceProofB {
+      if keyIdCaptured {
+        if algorithmsValid {
+          if factsBuilt {
+            if filesBound {
+              if fingerprintsComputed {
+                return "registry_runtime_key_facts_ready"
+              }
+              return "fingerprintsComputed_missing"
+            }
+            return "filesBound_missing"
+          }
+          return "factsBuilt_missing"
+        }
+        return "algorithmsValid_missing"
+      }
+      return "keyIdCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

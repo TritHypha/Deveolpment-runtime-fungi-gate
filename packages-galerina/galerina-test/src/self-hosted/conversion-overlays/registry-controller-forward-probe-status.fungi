@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 9: registry-controller-forward-probe-status.fungi.
+pure flow registryControllerForwardProbeStatusCore(probeCaptured: Bool, candidateCaptured: Bool, receiptConsumed: Bool, generationMatched: Bool) -> String {
+  let sourceProofA: Bool = receiptConsumed
+  let sourceProofB: Bool = probeCaptured
+  if sourceProofA {
+    if sourceProofB {
+      if receiptConsumed {
+        if generationMatched {
+          if candidateCaptured {
+            if probeCaptured {
+              return "registry_controller_probe_verified"
+            }
+            return "probeCaptured_missing"
+          }
+          return "candidateCaptured_missing"
+        }
+        return "generationMatched_missing"
+      }
+      return "receiptConsumed_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

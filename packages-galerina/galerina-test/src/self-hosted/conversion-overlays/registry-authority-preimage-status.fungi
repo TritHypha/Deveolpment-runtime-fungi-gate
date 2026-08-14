@@ -1,0 +1,28 @@
+@version 1
+// Source-bound decision overlay wave 17 item 39: registry-authority-preimage-status.fungi.
+pure flow registryAuthorityPreimageStatusCore(delegationCaptured: Bool, signingReady: Bool, contextBound: Bool, framed: Bool, bytesReady: Bool) -> String {
+  let sourceProofA: Bool = framed
+  let sourceProofB: Bool = contextBound
+  if sourceProofA {
+    if sourceProofB {
+      if contextBound {
+        if bytesReady {
+          if framed {
+            if signingReady {
+              if delegationCaptured {
+                return "registry_authority_preimage_ready"
+              }
+              return "delegationCaptured_missing"
+            }
+            return "signingReady_missing"
+          }
+          return "framed_missing"
+        }
+        return "bytesReady_missing"
+      }
+      return "contextBound_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}

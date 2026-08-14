@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay wave 17 item 32: registry-authority-malformed-status.fungi.
+pure flow registryAuthorityMalformedStatusCore(messageCaptured: Bool, authorityScoped: Bool, errorBuilt: Bool, failureTyped: Bool) -> String {
+  let sourceProofA: Bool = failureTyped
+  let sourceProofB: Bool = authorityScoped
+  if sourceProofA {
+    if sourceProofB {
+      if failureTyped {
+        if messageCaptured {
+          if errorBuilt {
+            if authorityScoped {
+              return "registry_authority_malformed"
+            }
+            return "authorityScoped_missing"
+          }
+          return "errorBuilt_missing"
+        }
+        return "messageCaptured_missing"
+      }
+      return "failureTyped_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "sourceProofA_missing"
+}
