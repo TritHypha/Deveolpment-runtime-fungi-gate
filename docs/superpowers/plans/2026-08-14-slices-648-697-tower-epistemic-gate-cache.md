@@ -128,8 +128,8 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 
 - [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
 - [x] Run focused Tower checks and the receipt audit: Tower typecheck plus 515/515 and 637/637 governed receipts.
-- [ ] Resolve three independent read-only reviews and record the final PASS.
-- [ ] Commit authored evidence separately from registered owner outputs.
+- [x] Resolve three independent read-only reviews and record the final PASS.
+- [x] Commit authored evidence separately from registered owner outputs.
 - [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.
 - [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 698.

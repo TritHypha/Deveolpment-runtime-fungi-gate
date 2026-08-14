@@ -1105,11 +1105,12 @@ one observation and compiles a later reread, and returns mutable
 must instead derive from one admitted immutable snapshot with injective typed
 bytes and non-aliasing bounded state.
 
-Private translation `11474f7006cefc6841237a915ba9e4bafc3ef358` and
-authoring `85679ff04f211ebb50844e16a0f7b3a5c1450187` bind exact
-mode/callback Verdict validation and one-snapshot immutable memoization
-authority. Both remain private and unpushed. Fresh Tower no-emit typecheck plus
+Private translation `e7b3af182261eb17b8362143781628290a5d1792` and
+authoring `9c74a4774435e3428b5d3bff34725f65de41f844` bind exact
+mode/callback Verdict validation, source-order selector/callback precedence and
+one-snapshot immutable memoization authority. Both remain private and unpushed. Fresh Tower no-emit typecheck plus
 **515/515** tests and **637/637** governed receipts pass; these are regression
-and receipt-shape evidence only. Independent reviews, owner publication and
-dual-index refresh are the remaining wave-close operations; repository-wide
-closure remains `UNKNOWN`.
+and receipt-shape evidence only. Three independent reviews pass after pinning
+source-exact contract/callback/mode order and conservative classJoin
+threadability. Owner publication and dual-index refresh are the remaining
+wave-close operations; repository-wide closure remains `UNKNOWN`.

@@ -3778,8 +3778,9 @@ stale-scan repair authority without atomic publication and typed partial-state
 evidence. Three independent reviews pass, all registered owners/graphs are
 current, and the bounded matrix passes **19/19** with graph **10,408 nodes /
 10,258 edges / zero violations**, receipts **587/587**, and both leak audits at
-zero. Repository-wide closure remains `UNKNOWN`; final owner publication and
-dual-index exact-head proof remain pending at this 50-slice boundary.
+zero. Slice-647 owner publication and dual-index proof completed at exact clean
+head `e0ba95f789837672e3225e044d5a95e39e18ddc0`; repository-wide closure
+remains `UNKNOWN`.
 
 ## Fungi conversion checkpoint through Slice 697 - 2026-08-14
 
@@ -3796,9 +3797,9 @@ mode and Verdict decoding; prototype-neutral tri-schema output; and an
 injective, immutable, bounded policy cache whose key and value derive from the
 same admitted snapshot and whose returned state cannot poison later hits.
 
-Private skills `11474f7` and `85679ff` now state the reusable callback/mode
-and memoization rules directly. The 50 receipts pin exact source and focused
+Private skills `e7b3af1` and `9c74a47` now state the reusable callback/mode,
+source-order and memoization rules directly. The 50 receipts pin exact source and focused
 test identities. Fresh Tower typecheck plus **515/515** tests and **637/637**
-governed receipts pass. Three independent reviews, owner publication and
+governed receipts pass. Three independent reviews pass; owner publication and
 exact-head dual-index proof remain pending. Repository-wide closure stays
 `UNKNOWN`.

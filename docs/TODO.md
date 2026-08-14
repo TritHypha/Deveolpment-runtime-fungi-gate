@@ -10,10 +10,11 @@ counts or open items that a newer section explicitly supersedes.
   declarations/runtime values and the first eight GateCache scopes. Exact
   arithmetic is 18 erased declarations plus 32 blocked runtime scopes; no
   candidate, supersession, consumer switch or retirement authority exists.
-- [x] Update both private skills at translation `11474f7` and authoring
-  `85679ff`: closed runtime modes and callback Verdict minting are mandatory,
+- [x] Update both private skills at translation `e7b3af1` and authoring
+  `9c74a47`: closed runtime modes and callback Verdict minting are mandatory,
   and memoized keys/authority values must derive from one immutable snapshot
-  without alias-mutable cache poisoning.
+  without alias-mutable cache poisoning; selector/callback evaluation order is
+  preserved unless an owner approves a versioned change.
 - [ ] Replace caller-mintable Trust/PROVEN and declassification entrypoints with
   provenance-bound Hallmarks, verifier/declassifier capabilities and
   same-snapshot immutable receipts.
@@ -25,8 +26,9 @@ counts or open items that a newer section explicitly supersedes.
   and prevent returned Set/object aliases from poisoning later hits.
 - [x] Run fresh Tower typecheck plus **515/515** tests and the receipt gate at
   **637/637** governed receipts.
-- [ ] Reconcile three independent reviews; commit authored evidence and all
-  registered owner outputs.
+- [x] Commit the authored 50-receipt evidence separately.
+- [x] Reconcile three independent read-only reviews with final PASS.
+- [ ] Commit all registered owner outputs.
 - [ ] Refresh Myco and codebase-memory at the final committed Slice 697 head and
   independently prove both indexed build points. Repository closure stays
   `UNKNOWN`.
