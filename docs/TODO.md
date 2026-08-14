@@ -26,8 +26,11 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Pass the bounded close matrix **19/19**: graph integrity is **10,663
   nodes / 10,513 edges / zero violations**, canonical test counts are **9,612**,
   receipt audit is **837/837**, and both leak audits are clean.
-- [ ] Commit the final closure-provenance record and refresh both indexes at its
-  exact committed build point.
+- [x] Refresh Myco to **6,512 files / 84,165 terms** with one-file bounded,
+  untruncated `RegistryPublicVerifier` evidence, and force a full code-graph
+  rebuild with exact **61,109/61,109 nodes** and **147,763/147,763 edges** plus
+  the exact five-line Slice-897 type source. Repeat both readbacks at the final
+  closure-record commit before handoff.
 
 ### Slices 798-847 Tower partial return, photonic, plugins and precision - 2026-08-14
 

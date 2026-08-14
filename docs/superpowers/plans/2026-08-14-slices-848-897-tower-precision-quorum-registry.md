@@ -184,9 +184,12 @@ zero superseded scopes or retirement credit.
   SKIPPED member; **19/19** pass.
 - [x] Commit owner and dependent graph layers separately at `c3108109`,
   `cd0e4c6` and converged roadmap layer `69de8822`.
-- [ ] Refresh Myco and require a bounded exact `RegistryPublicVerifier` query.
-- [ ] Refresh codebase-memory and require exact expected node/edge counts,
-  exact `indexed_head_sha` and one untruncated Slice-897 symbol.
+- [x] Refresh Myco to **6,512 files / 84,165 terms** and require a bounded exact
+  `RegistryPublicVerifier` query; three one-file hits, untruncated.
+- [x] Refresh codebase-memory with a forced full rebuild and require exact
+  expected node/edge counts, exact `indexed_head_sha` and one untruncated
+  Slice-897 symbol; **61,109/61,109 nodes**, **147,763/147,763 edges**, and the
+  complete five-line type source pass. Repeat at the final record commit.
 
 ## Self-review
 

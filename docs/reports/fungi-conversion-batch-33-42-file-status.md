@@ -1408,9 +1408,14 @@ at `c3108109`, `cd0e4c6` and converged roadmap layer `69de8822`. The bounded
 close matrix passes **19/19**: graph integrity is **10,663 nodes / 10,513 edges /
 zero violations**, canonical test counts are **9,612**, receipt audit is
 **837/837**, and both leak audits are clean. These checks remain regression,
-receipt-shape and repository-hygiene evidence only; the final closure-provenance
-record and exact-head dual-index proof remain pending. Repository-wide closure
-remains `UNKNOWN`.
+receipt-shape and repository-hygiene evidence only. Myco refreshes to **6,512
+files / 84,165 terms** and returns three exact, untruncated
+`RegistryPublicVerifier` hits in the one-file scope. A forced full code-graph
+rebuild reports exact **61,109/61,109 nodes** and **147,763/147,763 edges**, an
+exact indexed build point and the complete five-line Slice-897 type source.
+Both readbacks must be repeated against this final closure-record commit before
+handoff. Repository-wide closure remains `UNKNOWN`; no conversion, physical or
+retirement authority is inferred from indexing.
 
 ## Slices 798-847 - Tower partial return, photonic, plugins and precision
 
