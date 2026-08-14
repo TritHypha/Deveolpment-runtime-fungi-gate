@@ -1,0 +1,11 @@
+@version 1
+/// Host-manifest fold from galerina-core-config#validateHostPackageManifestBoundary.
+pure flow hostManifestBoundaryStatusCore(recordAccepted: Bool, forbiddenKeyPresent: Bool, dependencyObjectsValid: Bool, galerinaAliasPresent: Bool) -> String
+contract { intent { "Keep Galerina package-graph keys and aliases out of host package manifests." } }
+{
+  if recordAccepted == false { return "record_refused" }
+  if forbiddenKeyPresent { return "key_refused" }
+  if dependencyObjectsValid == false { return "dependencies_refused" }
+  if galerinaAliasPresent { return "alias_refused" }
+  return "accepted"
+}

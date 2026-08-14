@@ -1,0 +1,10 @@
+@version 1
+/// Severity precedence from galerina-core-security#selectSecurityStatus.
+pure flow securityStatusSelectionCore(criticalCount: Int, errorCount: Int, warningCount: Int) -> String
+contract { intent { "Select critical, error, warning or ok in exact severity order." } }
+{
+  if criticalCount > 0 { return "critical" }
+  if errorCount > 0 { return "error" }
+  if warningCount > 0 { return "warning" }
+  return "ok"
+}

@@ -1,0 +1,8 @@
+@version 1
+/// None-constructor tag from galerina-data-query#optionNone.
+pure flow queryOptionNoneTagCore() -> String
+contract { intent { "Represent the query option absence branch without host null." } }
+{
+  let noneTag: String = "none"
+  return noneTag
+}

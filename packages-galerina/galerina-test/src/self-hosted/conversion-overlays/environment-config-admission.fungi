@@ -1,0 +1,15 @@
+@version 1
+/// Environment fold from galerina-core-config#parseEnvironmentConfig.
+pure flow environmentConfigAdmissionCore(recordAccepted: Bool, modeAccepted: Bool, variablesAccepted: Bool, secretsAccepted: Bool) -> Bool
+contract { intent { "Admit an environment record only after mode, variables and secret references are decoded." } }
+{
+  if recordAccepted == false { return false }
+  if modeAccepted {
+    if variablesAccepted {
+      if secretsAccepted { return true }
+      return false
+    }
+    return false
+  }
+  return false
+}

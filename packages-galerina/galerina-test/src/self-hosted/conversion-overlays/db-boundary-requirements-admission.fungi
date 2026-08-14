@@ -1,0 +1,12 @@
+@version 1
+/// Requirement fold from galerina-data-db#validateDbBoundaryRequirements.
+pure flow dbBoundaryRequirementsAdmissionCore(parameterisedOnly: Bool, rawSqlDenied: Bool, responseMappingRequired: Bool) -> Int
+contract { intent { "Require all three non-configurable database boundary protections." } }
+{
+  if parameterisedOnly == false { return 1 }
+  if rawSqlDenied {
+    if responseMappingRequired { return 0 }
+    return 3
+  }
+  return 2
+}

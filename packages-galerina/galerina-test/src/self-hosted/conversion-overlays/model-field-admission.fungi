@@ -1,0 +1,17 @@
+@version 1
+/// Field fold from galerina-data-model#validateModelField.
+pure flow modelFieldAdmissionCore(identityAccepted: Bool, typeKnown: Bool, classificationKnown: Bool, secretStorageConsistent: Bool) -> Int
+contract { intent { "Return zero only for an admitted field and a distinct negative code for each refusal." } }
+{
+  if identityAccepted {
+    if typeKnown {
+      if classificationKnown {
+        if secretStorageConsistent { return 0 }
+        return -1
+      }
+      return -2
+    }
+    return -3
+  }
+  return -4
+}

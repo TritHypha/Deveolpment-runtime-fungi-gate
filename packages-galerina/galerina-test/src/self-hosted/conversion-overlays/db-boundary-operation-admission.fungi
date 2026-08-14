@@ -1,0 +1,11 @@
+@version 1
+/// Operation fold from galerina-data-db#validateDbBoundaryOperation.
+pure flow dbBoundaryOperationAdmissionCore(namePresent: Bool, kindKnown: Bool, contractPresent: Bool, permissionReferenceValid: Bool) -> Int
+contract { intent { "Return the first database boundary operation refusal code, or zero when admitted." } }
+{
+  if namePresent == false { return 11 }
+  if kindKnown == false { return 12 }
+  if contractPresent == false { return 13 }
+  if permissionReferenceValid { return 0 }
+  return 14
+}

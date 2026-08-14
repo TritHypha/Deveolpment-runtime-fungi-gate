@@ -1,0 +1,12 @@
+@version 1
+/// Flow fold from galerina-data-db#validateDbModelFlow.
+pure flow dbModelFlowAdmissionCore(modelPresent: Bool, operationCount: Int, operationsAccepted: Bool, requirementsAccepted: Bool, responseBoundaryConsistent: Bool) -> String
+contract { intent { "Admit a model flow only with operations, boundary requirements and safe response mapping." } }
+{
+  if modelPresent == false { return "model_refused" }
+  if operationCount < 1 { return "operations_required" }
+  if operationsAccepted == false { return "operation_refused" }
+  if requirementsAccepted == false { return "requirements_refused" }
+  if responseBoundaryConsistent == false { return "accepted_with_warning" }
+  return "accepted"
+}

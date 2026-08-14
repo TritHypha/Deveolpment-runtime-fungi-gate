@@ -1,0 +1,12 @@
+@version 1
+/// Model construction fold from galerina-core-security#definePermissionModel.
+pure flow permissionModelDefaultCore(grantCount: Int, defaultAllow: Bool) -> String
+contract { intent { "Expose permission-model default posture and whether explicit grants are present." } }
+{
+  if defaultAllow {
+    if grantCount > 0 { return "permissive_with_grants" }
+    return "permissive_empty"
+  }
+  if grantCount > 0 { return "deny_with_grants" }
+  return "deny_empty"
+}

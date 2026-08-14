@@ -1,0 +1,9 @@
+@version 1
+/// Count admission from galerina-data-database#validateCount.
+pure flow databaseReportCountAdmissionCore(safeInteger: Bool, value: Int) -> Int
+contract { intent { "Return an admitted database report count or a typed negative refusal code." } }
+{
+  if safeInteger == false { return -1 }
+  if value < 0 { return -2 }
+  return value
+}

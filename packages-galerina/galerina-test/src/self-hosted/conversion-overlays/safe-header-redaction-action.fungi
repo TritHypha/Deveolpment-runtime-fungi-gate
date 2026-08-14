@@ -1,0 +1,9 @@
+@version 1
+/// Header fold from galerina-core-security#createSafeHeaderReference.
+pure flow safeHeaderRedactionActionCore(sensitive: Bool, valueIsString: Bool) -> Int
+contract { intent { "Return zero for retained values, one for retained references and two for redaction." } }
+{
+  if sensitive == false { return 0 }
+  if valueIsString { return 2 }
+  return 1
+}

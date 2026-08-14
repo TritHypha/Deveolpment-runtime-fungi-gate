@@ -1,0 +1,15 @@
+@version 1
+/// Project fold from galerina-core-config#parseProjectConfig.
+pure flow projectConfigAdmissionCore(recordAccepted: Bool, requiredFieldsPresent: Bool, governanceAccepted: Bool, collectionsAccepted: Bool) -> Int
+contract { intent { "Return a stable project-config refusal code before constructing the runtime record." } }
+{
+  if recordAccepted == false { return 51 }
+  if requiredFieldsPresent {
+    if governanceAccepted {
+      if collectionsAccepted { return 0 }
+      return 54
+    }
+    return 53
+  }
+  return 52
+}

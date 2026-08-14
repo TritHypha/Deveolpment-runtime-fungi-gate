@@ -1,0 +1,11 @@
+@version 1
+/// Verification fold from galerina-data-database#createDatabaseExportReport.
+pure flow databaseExportVerificationStatusCore(countsConsistent: Bool, tableCount: Int, failedCount: Int, verifiedCount: Int) -> String
+contract { intent { "Classify checksum verification without releasing inconsistent report counts." } }
+{
+  if countsConsistent == false { return "not_verified" }
+  if failedCount > 0 { return "failed" }
+  if tableCount < 1 { return "not_verified" }
+  if verifiedCount == tableCount { return "verified" }
+  return "not_verified"
+}

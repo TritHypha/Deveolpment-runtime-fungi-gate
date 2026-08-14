@@ -1,0 +1,11 @@
+@version 1
+/// Report assembly fold from galerina-core-security#createSecurityReport.
+pure flow securityReportSummaryCore(diagnosticsPresent: Bool, redactedSecrets: Int, blockedOperationCount: Int, statusKnown: Bool) -> String
+contract { intent { "Release security report status only with valid counts and a classified diagnostic state." } }
+{
+  if statusKnown == false { return "status_refused" }
+  if redactedSecrets < 0 { return "count_refused" }
+  if blockedOperationCount < 0 { return "count_refused" }
+  if diagnosticsPresent { return "reported" }
+  return "clean"
+}

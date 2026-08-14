@@ -1,0 +1,10 @@
+@version 1
+/// Token-reference fold from galerina-core-security#createSafeTokenReference.
+pure flow safeTokenReferenceStatusCore(namePresent: Bool, scopeCount: Int) -> String
+contract { intent { "Classify a redacted token reference and its declared scope set." } }
+{
+  if namePresent == false { return "name_refused" }
+  if scopeCount < 0 { return "scope_refused" }
+  if scopeCount == 0 { return "unscoped" }
+  return "scoped"
+}

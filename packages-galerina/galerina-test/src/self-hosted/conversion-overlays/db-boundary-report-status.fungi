@@ -1,0 +1,10 @@
+@version 1
+/// Boundary report fold from galerina-data-db#createDbBoundaryReport.
+pure flow dbBoundaryReportStatusCore(flowAccepted: Bool, operationCount: Int, warningCount: Int) -> String
+contract { intent { "Classify the database boundary report after flow validation and operation counting." } }
+{
+  if flowAccepted == false { return "failed" }
+  if operationCount < 1 { return "empty" }
+  if warningCount > 0 { return "warning" }
+  return "accepted"
+}

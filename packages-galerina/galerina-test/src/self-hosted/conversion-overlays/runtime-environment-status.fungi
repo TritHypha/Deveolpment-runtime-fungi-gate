@@ -1,0 +1,13 @@
+@version 1
+/// Presence fold from galerina-core-config#validateRuntimeEnvironment.
+pure flow runtimeEnvironmentStatusCore(requiredMissing: Bool, productionMode: Bool, allowMissingRequired: Bool) -> String
+contract { intent { "Escalate a missing required environment value to error under strict production policy." } }
+{
+  if requiredMissing {
+    if productionMode {
+      if allowMissingRequired == false { return "error" }
+    }
+    return "warning"
+  }
+  return "accepted"
+}

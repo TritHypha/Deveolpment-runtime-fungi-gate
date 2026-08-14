@@ -1,0 +1,13 @@
+@version 1
+/// Redaction fold from galerina-core-security#redactText.
+pure flow redactionResultStatusCore(inputWithinLimit: Bool, rulesValid: Bool, failClosed: Bool, matchCount: Int) -> String
+contract { intent { "Classify redaction without releasing text when bounds or rules fail." } }
+{
+  if inputWithinLimit == false { return "fully_redacted" }
+  if rulesValid == false {
+    if failClosed { return "fully_redacted" }
+    return "rule_skipped"
+  }
+  if matchCount > 0 { return "redacted" }
+  return "unchanged"
+}

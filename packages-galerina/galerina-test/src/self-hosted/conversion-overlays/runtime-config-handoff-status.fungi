@@ -1,0 +1,12 @@
+@version 1
+/// Handoff fold from galerina-core-config#createRuntimeConfigHandoff.
+pure flow runtimeConfigHandoffStatusCore(environmentValidated: Bool, hasError: Bool, warningCount: Int, maximumWarnings: Int, productionMode: Bool) -> String
+contract { intent { "Release runtime handoff only after mandatory environment and warning-budget checks." } }
+{
+  if environmentValidated == false { return "validation_required" }
+  if hasError { return "refused" }
+  if productionMode {
+    if warningCount > maximumWarnings { return "warning_budget_refused" }
+  }
+  return "accepted"
+}

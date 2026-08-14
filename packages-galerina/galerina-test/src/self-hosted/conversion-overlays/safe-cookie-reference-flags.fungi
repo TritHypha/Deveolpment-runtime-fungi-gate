@@ -1,0 +1,13 @@
+@version 1
+/// Cookie-reference defaults from galerina-core-security#createSafeCookieReference.
+pure flow safeCookieReferenceFlagsCore(httpOnly: Bool, secureFlag: Bool, sameSiteKnown: Bool) -> Int
+contract { intent { "Encode cookie transport protections without exposing cookie value bytes." } }
+{
+  if sameSiteKnown == false { return -1 }
+  if httpOnly {
+    if secureFlag { return 3 }
+    return 1
+  }
+  if secureFlag { return 2 }
+  return 0
+}

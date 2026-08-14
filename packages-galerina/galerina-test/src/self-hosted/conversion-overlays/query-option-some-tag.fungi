@@ -1,0 +1,8 @@
+@version 1
+/// Some-constructor tag from galerina-data-query#optionSome.
+pure flow queryOptionSomeTagCore(valueAdmitted: Bool) -> Bool
+contract { intent { "Mint a Some tag only after the carried value crosses its typed border." } }
+{
+  let someTag: Bool = valueAdmitted
+  return someTag
+}

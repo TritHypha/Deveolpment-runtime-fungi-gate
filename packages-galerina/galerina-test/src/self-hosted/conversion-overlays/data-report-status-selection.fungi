@@ -1,0 +1,9 @@
+@version 1
+/// Status precedence from galerina-data-reports#deriveDataReportStatus.
+pure flow dataReportStatusSelectionCore(errorCount: Int, warningCount: Int) -> String
+contract { intent { "Derive failed, partial or success from diagnostic severity counts." } }
+{
+  if errorCount > 0 { return "failed" }
+  if warningCount > 0 { return "partial" }
+  return "success"
+}

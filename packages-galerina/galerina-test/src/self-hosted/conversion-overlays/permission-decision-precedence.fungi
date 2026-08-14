@@ -1,0 +1,12 @@
+@version 1
+/// Grant precedence from galerina-core-security#decidePermission.
+pure flow permissionDecisionPrecedenceCore(explicitDeny: Bool, wildcardDeny: Bool, explicitAllow: Bool, wildcardAllow: Bool, defaultAllow: Bool) -> String
+contract { intent { "Preserve explicit-deny, wildcard-deny, explicit-allow, wildcard-allow and default order." } }
+{
+  if explicitDeny { return "deny_explicit" }
+  if wildcardDeny { return "deny_wildcard" }
+  if explicitAllow { return "allow_explicit" }
+  if wildcardAllow { return "allow_wildcard" }
+  if defaultAllow == false { return "deny_default" }
+  return "allow_default"
+}

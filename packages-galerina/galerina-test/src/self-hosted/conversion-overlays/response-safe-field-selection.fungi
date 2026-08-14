@@ -1,0 +1,9 @@
+@version 1
+/// Projection fold from galerina-data-model#listResponseSafeFields.
+pure flow responseSafeFieldSelectionCore(classificationSafe: Bool, namePresent: Bool) -> String
+contract { intent { "Project only named fields whose classification is response-safe." } }
+{
+  if namePresent == false { return "refuse" }
+  if classificationSafe { return "project" }
+  return "skip"
+}

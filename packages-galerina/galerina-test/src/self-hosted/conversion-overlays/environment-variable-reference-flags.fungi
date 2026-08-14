@@ -1,0 +1,13 @@
+@version 1
+/// Default fold from galerina-core-config#defineEnvironmentVariableReference.
+pure flow environmentVariableReferenceFlagsCore(required: Bool, secretFlag: Bool, runtimeScope: Bool) -> String
+contract { intent { "Encode required, secret and runtime-scope flags for an admitted environment reference." } }
+{
+  if runtimeScope == false { return "scope_refused" }
+  if required {
+    if secretFlag { return "required_secret" }
+    return "required_value"
+  }
+  if secretFlag { return "optional_secret" }
+  return "optional_value"
+}

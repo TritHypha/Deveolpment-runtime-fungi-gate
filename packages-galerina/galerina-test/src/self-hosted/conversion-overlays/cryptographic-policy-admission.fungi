@@ -1,0 +1,10 @@
+@version 1
+/// Policy fold from galerina-core-security#validateCryptographicPolicy.
+pure flow cryptographicPolicyAdmissionCore(minimumKeyBits: Int, weakAlgorithmAllowed: Bool, authenticatedEncryption: Bool) -> String
+contract { intent { "Refuse undersized keys and allowed weak algorithms, and surface missing authentication." } }
+{
+  if minimumKeyBits < 128 { return "key_refused" }
+  if weakAlgorithmAllowed { return "weak_algorithm_refused" }
+  if authenticatedEncryption == false { return "accepted_with_warning" }
+  return "accepted"
+}

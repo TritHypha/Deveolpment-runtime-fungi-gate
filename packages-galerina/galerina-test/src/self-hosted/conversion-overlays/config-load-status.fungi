@@ -1,0 +1,14 @@
+@version 1
+/// Load fold from galerina-core-config#loadConfigFromObjects.
+pure flow configLoadStatusCore(projectPresent: Bool, environmentPresent: Bool, runtimeCanRun: Bool) -> Int
+contract { intent { "Distinguish partial decoding from a complete runnable configuration handoff." } }
+{
+  if projectPresent {
+    if environmentPresent {
+      if runtimeCanRun { return 0 }
+      return 3
+    }
+    return 2
+  }
+  return 1
+}

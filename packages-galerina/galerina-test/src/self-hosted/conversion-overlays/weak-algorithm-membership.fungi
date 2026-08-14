@@ -1,0 +1,11 @@
+@version 1
+/// Membership fold from galerina-core-security#isAllowedWeakAlgorithm.
+pure flow weakAlgorithmMembershipCore(listPresent: Bool, algorithmAllowed: Bool) -> Bool
+contract { intent { "Report weak-algorithm membership only for an admitted policy list." } }
+{
+  if listPresent {
+    let admittedWeakAlgorithm: Bool = algorithmAllowed
+    return admittedWeakAlgorithm
+  }
+  return false
+}

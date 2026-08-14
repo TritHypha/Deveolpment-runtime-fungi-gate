@@ -1,0 +1,11 @@
+@version 1
+/// Report-index fold from galerina-data-db#validateDbReportIndex.
+pure flow dbReportIndexAdmissionCore(flowPresent: Bool, entryCount: Int, entriesSafe: Bool, duplicatesPresent: Bool) -> Bool
+contract { intent { "Admit a database report index with a named flow and unique safe relative entries." } }
+{
+  if flowPresent == false { return false }
+  if entryCount < 0 { return false }
+  if entriesSafe == false { return false }
+  if duplicatesPresent { return false }
+  return true
+}

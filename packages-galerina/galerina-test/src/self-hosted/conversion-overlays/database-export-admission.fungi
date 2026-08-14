@@ -1,0 +1,13 @@
+@version 1
+/// Export contract fold from galerina-data-database#validateDatabaseExport.
+pure flow databaseExportAdmissionCore(identityAccepted: Bool, snapshotAccepted: Bool, tableCount: Int, tablesAccepted: Bool, restoreReferenceValid: Bool) -> String
+contract { intent { "Admit a named snapshot export with unique valid tables and a valid optional restore reference." } }
+{
+  if identityAccepted == false { return "identity_refused" }
+  if snapshotAccepted == false { return "snapshot_refused" }
+  if tableCount < 0 { return "table_count_refused" }
+  if tablesAccepted == false { return "table_refused" }
+  if restoreReferenceValid == false { return "restore_refused" }
+  if tableCount == 0 { return "accepted_empty" }
+  return "accepted"
+}

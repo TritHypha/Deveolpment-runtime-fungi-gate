@@ -1,0 +1,10 @@
+@version 1
+/// Failure action from galerina-core-security#compileRedactionRule.
+pure flow redactionCompileActionCore(regexValid: Bool, failureMode: Int) -> String
+contract { intent { "Select compiled, thrown, fail-closed or skipped redaction behavior." } }
+{
+  if regexValid { return "compiled" }
+  if failureMode < 0 { return "throw" }
+  if failureMode == 0 { return "fail_closed" }
+  return "skip"
+}

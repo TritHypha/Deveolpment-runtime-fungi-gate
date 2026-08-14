@@ -1,0 +1,10 @@
+@version 1
+/// Rule fold from galerina-core-security#validateRedactionRule.
+pure flow redactionRuleAdmissionCore(namePresent: Bool, replacementSafe: Bool, regexValid: Bool) -> Int
+contract { intent { "Return a stable refusal code for invalid redaction names, replacements or regexes." } }
+{
+  if namePresent == false { return 41 }
+  if replacementSafe == false { return 42 }
+  if regexValid == false { return 43 }
+  return 0
+}

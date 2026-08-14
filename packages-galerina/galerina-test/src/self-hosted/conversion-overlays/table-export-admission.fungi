@@ -1,0 +1,15 @@
+@version 1
+/// Table export fold from galerina-data-database#validateTableExport.
+pure flow tableExportAdmissionCore(headerAccepted: Bool, checksumAccepted: Bool, redactionConsistent: Bool, classificationState: Int) -> String
+contract { intent { "Admit checksummed table exports and preserve missing-classification warning state." } }
+{
+  if headerAccepted == false { return "table_refused" }
+  if checksumAccepted {
+    if redactionConsistent {
+      if classificationState < 1 { return "accepted_unclassified" }
+      return "accepted"
+    }
+    return "redaction_refused"
+  }
+  return "checksum_refused"
+}

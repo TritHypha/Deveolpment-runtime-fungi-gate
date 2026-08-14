@@ -1,0 +1,12 @@
+@version 1
+/// Projection fold from galerina-data-query#unwrapOr.
+pure flow queryOptionFallbackSelectionCore(tagIsSome: Bool, valueAvailable: Bool, fallbackAvailable: Bool) -> String
+contract { intent { "Select the carried value for Some and the fallback for None." } }
+{
+  if tagIsSome {
+    if valueAvailable { return "value" }
+    return "refuse"
+  }
+  if fallbackAvailable { return "fallback" }
+  return "refuse"
+}

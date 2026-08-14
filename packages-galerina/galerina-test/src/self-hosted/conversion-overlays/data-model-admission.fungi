@@ -1,0 +1,12 @@
+@version 1
+/// Model fold from galerina-data-model#validateDataModel.
+pure flow dataModelAdmissionCore(structureAccepted: Bool, primaryKeyCount: Int, relationsAccepted: Bool, referencesValid: Bool) -> String
+contract { intent { "Admit a structured model with exactly one primary key and valid related declarations." } }
+{
+  if structureAccepted == false { return "structure_refused" }
+  if primaryKeyCount < 1 { return "primary_key_required" }
+  if primaryKeyCount > 1 { return "primary_key_duplicate" }
+  if relationsAccepted == false { return "relation_refused" }
+  if referencesValid == false { return "reference_refused" }
+  return "accepted"
+}

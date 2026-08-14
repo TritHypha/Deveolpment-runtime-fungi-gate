@@ -1,0 +1,8 @@
+@version 1
+/// Tag guard from galerina-data-query#isSome.
+pure flow queryOptionMembershipCore(tagKnown: Bool, tagIsSome: Bool) -> Bool
+contract { intent { "Recognize Some only after admitting the option tag." } }
+{
+  if tagKnown == false { return false }
+  return tagIsSome
+}

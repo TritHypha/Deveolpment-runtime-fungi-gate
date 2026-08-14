@@ -1,0 +1,12 @@
+@version 1
+/// Restore fold from galerina-data-database#createDatabaseRestoreReport.
+pure flow databaseRestoreVerificationStatusCore(countsConsistent: Bool, schemaMatched: Bool, rowCountsMatched: Bool, failedCount: Int, allTablesVerified: Bool) -> String
+contract { intent { "Verify database restore only when schema, rows and table counts all agree." } }
+{
+  if countsConsistent == false { return "count_refused" }
+  if schemaMatched == false { return "failed" }
+  if rowCountsMatched == false { return "failed" }
+  if failedCount > 0 { return "failed" }
+  if allTablesVerified { return "verified" }
+  return "not_verified"
+}

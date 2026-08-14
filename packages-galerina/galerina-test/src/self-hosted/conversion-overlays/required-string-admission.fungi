@@ -1,0 +1,11 @@
+@version 1
+/// Required-value fold from galerina-core-config#readRequiredString.
+pure flow requiredStringAdmissionCore(valueIsString: Bool, valueNonempty: Bool, pathPrefixPresent: Bool) -> String
+contract { intent { "Return the admitted value branch or the exact prefixed/unprefixed refusal path class." } }
+{
+  if valueIsString {
+    if valueNonempty { return "value" }
+  }
+  if pathPrefixPresent { return "refuse_prefixed" }
+  return "refuse_key"
+}

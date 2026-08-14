@@ -1,0 +1,13 @@
+@version 1
+/// Validation fold from galerina-core-security#validatePermissionModel.
+pure flow permissionModelAdmissionCore(defaultDeny: Bool, grantsUnique: Bool, resourcesValid: Bool, wildcardRiskPresent: Bool) -> Int
+contract { intent { "Reject permissive defaults and invalid grants while exposing wildcard risk." } }
+{
+  if defaultDeny == false { return 31 }
+  if grantsUnique == false { return 32 }
+  if resourcesValid {
+    if wildcardRiskPresent { return 34 }
+    return 0
+  }
+  return 33
+}
