@@ -1417,8 +1417,12 @@ reports queue **1,490/1,490**, package **100/201**, project **5/5**, graph
 **10,768 nodes / 10,617 edges / zero violations**, semantic **3/3** with
 **977** tests, source inventory **149**, code index **975**, receipts
 **937/937**, Golden **11/11**, canonical **7/7**, and both path/private leak
-audits at zero. Exact-head Myco and codebase-memory refresh remains pending.
-Repository-wide closure stays `UNKNOWN`.
+audits at zero. Initial exact-head index proof completes at clean closure head
+`94487cb9`: Myco reports **6,614 files / 84,287 terms** with a complete bounded
+five-hit `TRITS_PER_I32` query, while a forced full codebase-memory rebuild
+reports **61,545/61,545 nodes / 148,122/148,122 edges**, the exact indexed HEAD
+and an untruncated Slice-997 source snippet. The post-record exact-head repeat
+is retained in handoff. Repository-wide closure stays `UNKNOWN`.
 
 ## Slices 898-947 - Tower verifier, snapshot and substrate
 

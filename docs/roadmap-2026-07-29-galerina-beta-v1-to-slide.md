@@ -28,7 +28,11 @@ typecheck and **110/110** tests. Registered owners are committed by provenance
 layer through `635253dc`; the hermetic owner contract and bounded close matrix
 pass, including **937/937** receipts, **10,768 nodes / 10,617 edges / zero
 graph violations**, canonical **7/7 = 9,612**, and clean path/private leak
-audits. Final exact-head dual-index evidence remains pending.
+audits. Initial exact-head proof at `94487cb9` records Myco **6,614 files /
+84,287 terms** with five bounded `TRITS_PER_I32` hits and codebase-memory
+**61,545/61,545 nodes / 148,122/148,122 edges**, the exact indexed HEAD and an
+untruncated Slice-997 source snippet. The post-record exact-head repeat remains
+in handoff.
 
 Historical Slice-247 checkpoint (retained as a chronological baseline): the
 governed TypeScript/MJS-to-Fungi campaign was then accounted through **Slice

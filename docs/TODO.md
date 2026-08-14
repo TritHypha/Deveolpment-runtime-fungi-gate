@@ -26,7 +26,11 @@ counts or open items that a newer section explicitly supersedes.
   graph **10,768 nodes / 10,617 edges / zero violations**, semantic **3/3**
   with **977** tests, source inventory **149**, code index **975**, receipts
   **937/937**, Golden **11/11**, canonical **7/7**, and both leak audits clean.
-- [ ] Refresh Myco and codebase-memory at the exact final record head.
+- [x] Refresh Myco to **6,614 files / 84,287 terms** with a complete bounded
+  five-hit `TRITS_PER_I32` query, and force a full codebase-memory rebuild at
+  clean closure head `94487cb9`: **61,545/61,545 nodes / 148,122/148,122
+  edges**, exact indexed HEAD and an untruncated Slice-997 source snippet.
+  Retain the exact-head repeat after this final record commit.
 - [x] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,
   production, release, signing, push or retirement authority.
 

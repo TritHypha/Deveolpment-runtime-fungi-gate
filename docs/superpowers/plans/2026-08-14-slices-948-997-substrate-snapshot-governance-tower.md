@@ -164,9 +164,11 @@ superseded scopes or retirement credit.
   member; all governed owner, graph, receipt, canonical and leak surfaces pass.
 - [x] Commit owner and dependent graph layers separately through `635253dc`;
   retain the focused private-link fixture repair at `b19ae0c3`.
-- [ ] Refresh Myco and require a bounded exact Slice-997 query.
-- [ ] Refresh codebase-memory with a forced full rebuild and require exact
-  expected counts, exact `indexed_head_sha` and an untruncated Slice-997 symbol.
+- [x] Refresh Myco to **6,614 files / 84,287 terms** and require the complete
+  bounded five-hit Slice-997 query.
+- [x] Refresh codebase-memory with a forced full rebuild: **61,545/61,545
+  nodes / 148,122/148,122 edges**, exact `indexed_head_sha` at `94487cb9` and
+  an untruncated Slice-997 source snippet. Repeat after the final record commit.
 
 ## Self-review
 
