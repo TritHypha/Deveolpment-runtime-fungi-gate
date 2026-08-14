@@ -1,0 +1,16 @@
+@version 1
+/// Parser fold from galerina-core-network#parseRateLimit.
+pure flow rateLimitParseStatusCore(syntaxMatched: Bool, countValid: Bool, unitKnown: Bool, unitCountValid: Bool, withinOperationalBound: Bool) -> String
+contract { intent { "Reject malformed, non-positive and operationally absurd rate-limit declarations." } }
+{
+  if syntaxMatched {
+    if countValid {
+      if unitKnown == false { return "unit_refused" }
+      if unitCountValid == false { return "unit_count_refused" }
+      if withinOperationalBound == false { return "bound_refused" }
+      return "accepted"
+    }
+    return "count_refused"
+  }
+  return "syntax_refused"
+}

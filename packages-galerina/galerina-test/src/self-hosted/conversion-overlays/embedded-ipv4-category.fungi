@@ -1,0 +1,11 @@
+@version 1
+/// Embedded-address fold from galerina-core-network#embedded.
+pure flow embeddedIpv4CategoryCore(ipv4Valid: Bool, ipv4Public: Bool) -> String
+contract { intent { "Carry an embedded IPv4 classification into IPv6 without promoting a non-public address." } }
+{
+  if ipv4Public {
+    if ipv4Valid { return "public_ipv4_in_ipv6" }
+  }
+  if ipv4Valid { return "nonpublic_ipv4_in_ipv6" }
+  return "invalid_ipv4_in_ipv6"
+}

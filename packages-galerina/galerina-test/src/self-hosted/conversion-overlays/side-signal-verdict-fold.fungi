@@ -1,0 +1,8 @@
+@version 1
+/// Degrade-only K3 fold from galerina-core-network#withSideSignal.
+pure flow sideSignalVerdictFoldCore(baseVerdict: Int, sideSignal: Int) -> Int
+contract { intent { "Return the lower verdict so a side signal can only degrade existing authority." } }
+{
+  if sideSignal < baseVerdict { return sideSignal }
+  return baseVerdict
+}

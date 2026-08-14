@@ -1,0 +1,12 @@
+@version 1
+/// Policy validator summary from galerina-core-network#validateNetworkPolicy.
+pure flow networkPolicyAdmissionCore(securityChecksValid: Bool, timeoutsRequired: Bool, backpressureRequired: Bool) -> String
+contract { intent { "Refuse failed security checks while retaining timeout and backpressure warnings." } }
+{
+  if securityChecksValid {
+    if timeoutsRequired == false { return "warning_timeouts" }
+    if backpressureRequired == false { return "warning_backpressure" }
+    return "accepted"
+  }
+  return "security_refused"
+}

@@ -1,0 +1,16 @@
+@version 1
+/// Boundary fold from galerina-core-network#certGate.
+pure flow certGateBoundaryStatusCore(pinAllowed: Bool, chainAllowed: Bool, expiryAllowed: Bool, revocationAllowed: Bool, sideSignalsAllowed: Bool) -> String
+contract { intent { "Open the certificate boundary only when every admitted factor and side signal allows." } }
+{
+  if pinAllowed == false { return "pin_refused" }
+  if chainAllowed == false { return "chain_refused" }
+  if expiryAllowed {
+    if revocationAllowed {
+      if sideSignalsAllowed { return "authorized" }
+      return "side_signal_refused"
+    }
+    return "revocation_refused"
+  }
+  return "expiry_refused"
+}

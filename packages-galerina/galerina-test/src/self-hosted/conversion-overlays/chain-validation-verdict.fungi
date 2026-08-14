@@ -1,0 +1,9 @@
+@version 1
+/// Library-outcome mapping from galerina-core-network#chainValidVerdict.
+pure flow chainValidationVerdictCore(outcomeState: Int) -> Int
+contract { intent { "Map valid to allow, invalid to deny and absent or incomplete to indeterminate." } }
+{
+  if outcomeState > 0 { return 1 }
+  if outcomeState < 0 { return -1 }
+  return 0
+}

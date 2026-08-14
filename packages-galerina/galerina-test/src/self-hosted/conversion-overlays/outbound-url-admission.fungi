@@ -1,0 +1,11 @@
+@version 1
+/// URL-policy fold from galerina-core-network#guardOutboundUrl after exact URL and host parsing.
+pure flow outboundUrlAdmissionCore(prefixAdmitted: Bool, trustedEndpoint: Bool, tlsSatisfied: Bool, portAllowed: Bool) -> String
+contract { intent { "Apply parse, scheme, credential, host, TLS and port gates in source order." } }
+{
+  if prefixAdmitted == false { return "url_boundary_denied" }
+  if trustedEndpoint { return "trusted_endpoint" }
+  if tlsSatisfied == false { return "tls_required" }
+  if portAllowed == false { return "port_denied" }
+  return "allowed"
+}

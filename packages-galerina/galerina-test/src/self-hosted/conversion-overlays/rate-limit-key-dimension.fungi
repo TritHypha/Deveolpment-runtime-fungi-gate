@@ -1,0 +1,12 @@
+@version 1
+/// Scope selection from galerina-core-network#rateLimitKey.
+pure flow rateLimitKeyDimensionCore(scopeState: Int, valuePresent: Bool) -> String
+contract { intent { "Select the admitted rate-limit dimension or its explicit missing placeholder." } }
+{
+  if scopeState < 1 { return "global" }
+  if valuePresent == false { return "missing_dimension" }
+  if scopeState == 1 { return "ip" }
+  if scopeState == 2 { return "service" }
+  if scopeState == 3 { return "route" }
+  return "tenant"
+}

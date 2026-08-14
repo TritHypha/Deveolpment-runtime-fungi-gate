@@ -1,0 +1,14 @@
+@version 1
+/// Host-kind route from galerina-core-network#classifyHost.
+pure flow hostKindRoutingCore(nonempty: Bool, ipv6Candidate: Bool, ipv4Candidate: Bool, hostnameAccepted: Bool) -> String
+contract { intent { "Route an admitted normalized host to its classifier and fail closed on invalid text." } }
+{
+  if nonempty == false { return "invalid" }
+  if ipv6Candidate { return "ipv6" }
+  if ipv4Candidate {
+    if hostnameAccepted { return "ipv4_or_hostname" }
+    return "ipv4"
+  }
+  if hostnameAccepted { return "hostname" }
+  return "invalid_characters"
+}

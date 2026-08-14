@@ -1,0 +1,13 @@
+@version 1
+/// IPv4 range fold from galerina-core-network#classifyIpv4 after exact host parsing.
+pure flow ipv4CategoryClassificationCore(metadata: Bool, linkLocal: Bool, loopback: Bool, privateRange: Bool, unspecified: Bool, reserved: Bool) -> String
+contract { intent { "Classify high-risk IPv4 ranges before the public default." } }
+{
+  if metadata { return "metadata" }
+  if linkLocal { return "link_local" }
+  if loopback { return "loopback" }
+  if privateRange { return "private" }
+  if unspecified { return "unspecified" }
+  if reserved { return "reserved" }
+  return "public"
+}

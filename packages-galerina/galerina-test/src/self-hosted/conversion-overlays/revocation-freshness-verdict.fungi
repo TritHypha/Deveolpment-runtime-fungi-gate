@@ -1,0 +1,13 @@
+@version 1
+/// Revocation mapping from galerina-core-network#revocationVerdict.
+pure flow revocationFreshnessVerdictCore(checkFailed: Bool, revoked: Bool, good: Bool, freshnessPresent: Bool, valuesFinite: Bool, ageWithinWindow: Bool) -> Int
+contract { intent { "Deny revoked evidence and allow good evidence only when its freshness is provable." } }
+{
+  if checkFailed { return 0 }
+  if revoked { return -1 }
+  if good == false { return 0 }
+  if freshnessPresent == false { return 0 }
+  if valuesFinite == false { return 0 }
+  if ageWithinWindow { return 1 }
+  return 0
+}

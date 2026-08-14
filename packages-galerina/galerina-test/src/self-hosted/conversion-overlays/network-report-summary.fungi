@@ -1,0 +1,11 @@
+@version 1
+/// Report fold from galerina-core-network#createNetworkReport.
+pure flow networkReportSummaryCore(errorCount: Int, warningCount: Int, plaintextAllowed: Bool, rawSocketsAllowed: Bool) -> String
+contract { intent { "Summarize unsafe transport exposure before warnings and the clean state." } }
+{
+  if rawSocketsAllowed { return "raw_socket_exposed" }
+  if plaintextAllowed { return "plaintext_exposed" }
+  if errorCount > 0 { return "error" }
+  if warningCount > 0 { return "warning" }
+  return "accepted"
+}

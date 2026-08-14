@@ -1,0 +1,12 @@
+@version 1
+/// DNS-rebinding fold from galerina-core-network#guardResolvedAddresses.
+pure flow resolvedAddressAdmissionCore(resolutionPresent: Bool, hostAllowlisted: Bool, everyAddressAllowed: Bool) -> String
+contract { intent { "Refuse empty or mixed public and non-public DNS results unless the host is explicitly trusted." } }
+{
+  if resolutionPresent {
+    if hostAllowlisted { return "allowlisted" }
+    if everyAddressAllowed { return "all_public" }
+    return "rebind_denied"
+  }
+  return "no_resolution"
+}

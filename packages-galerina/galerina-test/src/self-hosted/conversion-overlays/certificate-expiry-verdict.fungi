@@ -1,0 +1,10 @@
+@version 1
+/// Validity-window mapping from galerina-core-network#notExpiredVerdict.
+pure flow certificateExpiryVerdictCore(boundsPresent: Bool, valuesFinite: Bool, insideWindow: Bool) -> Int
+contract { intent { "Return indeterminate without a finite window, deny outside it and allow inside it." } }
+{
+  if boundsPresent == false { return 0 }
+  if valuesFinite == false { return 0 }
+  if insideWindow { return 1 }
+  return -1
+}

@@ -1,0 +1,8 @@
+@version 1
+/// Enumeration-resistant fold from galerina-core-network#uniformAuthResponse.
+pure flow uniformAuthResponseStatusCore(authenticated: Bool) -> Int
+contract { intent { "Return one public status for success and one indistinguishable denial for every auth failure." } }
+{
+  if authenticated { return 200 }
+  return 401
+}

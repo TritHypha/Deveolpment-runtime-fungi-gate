@@ -1,0 +1,8 @@
+@version 1
+/// Protocol-selector fold from galerina-core-network#protoMatches.
+pure flow inboundProtocolMatchCore(protocolRequested: Bool, protocolEqual: Bool) -> Bool
+contract { intent { "Treat an absent requested protocol as unrestricted and otherwise require equality." } }
+{
+  if protocolRequested == false { return true }
+  return protocolEqual
+}

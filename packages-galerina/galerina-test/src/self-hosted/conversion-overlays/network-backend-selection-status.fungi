@@ -1,0 +1,14 @@
+@version 1
+/// Backend fold from galerina-core-network#selectNetworkBackend.
+pure flow networkBackendSelectionStatusCore(preferredAvailable: Bool, preferredSafe: Bool, fallbackAvailable: Bool, fallbackSafe: Bool, requireSafeFallback: Bool) -> String
+contract { intent { "Select a safe preferred backend or report the exact fallback posture." } }
+{
+  if preferredAvailable {
+    if preferredSafe { return "preferred" }
+  }
+  if fallbackAvailable {
+    if fallbackSafe { return "safe_fallback" }
+  }
+  if requireSafeFallback { return "unsatisfied" }
+  return "unsafe_fallback_permitted"
+}

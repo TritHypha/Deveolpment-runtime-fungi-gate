@@ -1,0 +1,12 @@
+@version 1
+/// Classification record flags from galerina-core-network#cls.
+pure flow hostClassificationFlagsCore(categoryPublic: Bool, dnsRecheckRequired: Bool) -> Int
+contract { intent { "Encode public and DNS-recheck state without carrying the active host record." } }
+{
+  if categoryPublic {
+    if dnsRecheckRequired { return 3 }
+  }
+  if categoryPublic { return 2 }
+  if dnsRecheckRequired { return 1 }
+  return 0
+}

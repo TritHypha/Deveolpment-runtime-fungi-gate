@@ -1,0 +1,12 @@
+@version 1
+/// Diagnostic-record fold from galerina-core-network#createNetworkDiagnostic.
+pure flow networkDiagnosticStatusCore(errorSeverity: Bool, pathPresent: Bool) -> Int
+contract { intent { "Encode severity and optional-path presence for a captured network diagnostic." } }
+{
+  if errorSeverity == false {
+    if pathPresent { return 1 }
+    return 0
+  }
+  if pathPresent { return 3 }
+  return 2
+}

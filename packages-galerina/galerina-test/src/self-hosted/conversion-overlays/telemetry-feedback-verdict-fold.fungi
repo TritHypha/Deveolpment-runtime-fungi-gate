@@ -1,0 +1,9 @@
+@version 1
+/// Closed-loop fold from galerina-core-network#withTelemetryFeedback.
+pure flow telemetryFeedbackVerdictFoldCore(baseVerdict: Int, telemetryVerdict: Int, telemetryPresent: Bool) -> Int
+contract { intent { "Leave an unwired gate unchanged and otherwise apply telemetry as a degrade-only operand." } }
+{
+  if telemetryPresent == false { return baseVerdict }
+  if telemetryVerdict < baseVerdict { return telemetryVerdict }
+  return baseVerdict
+}

@@ -1,0 +1,13 @@
+@version 1
+/// Endpoint validator fold from galerina-core-network#validateEndpointRule.
+pure flow endpointRuleAdmissionCore(plaintextHttpAllowed: Bool, rawSocketAllowed: Bool, rawSocketsDenied: Bool, portsValid: Bool, hostsValid: Bool) -> String
+contract { intent { "Reject plaintext, forbidden raw sockets, invalid ports and URL-shaped hosts in source order." } }
+{
+  if plaintextHttpAllowed { return "plaintext_refused" }
+  if rawSocketAllowed {
+    if rawSocketsDenied { return "raw_socket_refused" }
+  }
+  if portsValid == false { return "port_refused" }
+  if hostsValid == false { return "host_refused" }
+  return "accepted"
+}

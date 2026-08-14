@@ -1,0 +1,9 @@
+@version 1
+/// Poll-interval fold from galerina-core-network#isValidPollIntervalMs.
+pure flow pollIntervalAdmissionCore(finite: Bool, positive: Bool) -> Bool
+contract { intent { "Admit a revocation poll interval only when it is finite and positive." } }
+{
+  if finite == false { return false }
+  if positive { return true }
+  return false
+}

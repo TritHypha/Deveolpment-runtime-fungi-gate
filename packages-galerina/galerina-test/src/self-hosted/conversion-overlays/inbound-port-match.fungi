@@ -1,0 +1,11 @@
+@version 1
+/// Port-selector fold from galerina-core-network#portMatches.
+pure flow inboundPortMatchCore(portsRestricted: Bool, requestedPortIncluded: Bool) -> Bool
+contract { intent { "Treat an absent port list as unrestricted and otherwise require exact membership." } }
+{
+  if portsRestricted {
+    if requestedPortIncluded { return true }
+    return false
+  }
+  return true
+}

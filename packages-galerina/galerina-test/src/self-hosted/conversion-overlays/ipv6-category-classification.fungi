@@ -1,0 +1,13 @@
+@version 1
+/// IPv6 range fold from galerina-core-network#classifyIpv6.
+pure flow ipv6CategoryClassificationCore(valid: Bool, unspecified: Bool, loopback: Bool, metadata: Bool, embeddedNonpublic: Bool, specialPrefix: Bool) -> String
+contract { intent { "Refuse malformed and special IPv6 ranges before the global-unicast default." } }
+{
+  if valid == false { return "invalid" }
+  if unspecified { return "unspecified" }
+  if loopback { return "loopback" }
+  if metadata { return "metadata" }
+  if embeddedNonpublic { return "embedded_nonpublic" }
+  if specialPrefix { return "special_nonpublic" }
+  return "public"
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Deduplication summary from galerina-core-network#uniqueStrings.
+pure flow uniqueStringSummaryCore(valueCount: Int, uniqueCount: Int, orderCanonical: Bool) -> String
+contract { intent { "Summarize empty, duplicate and canonical unique-string output after the active Set border." } }
+{
+  if valueCount < 1 { return "empty" }
+  if uniqueCount < valueCount { return "deduplicated" }
+  if orderCanonical { return "unique_sorted" }
+  return "unique_unsorted"
+}

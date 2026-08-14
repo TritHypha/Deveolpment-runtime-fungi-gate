@@ -1,0 +1,14 @@
+@version 1
+/// Egress validation fold from galerina-core-network#validateEgressPolicy.
+pure flow egressPolicyDiagnosticStatusCore(metadataAllowed: Bool, urlCredentialsAllowed: Bool, nonpublicAllowed: Bool, production: Bool, plaintextScheme: Bool) -> String
+contract { intent { "Escalate dangerous metadata and production non-public egress before warnings." } }
+{
+  if metadataAllowed { return "error_metadata" }
+  if nonpublicAllowed {
+    if production { return "error_nonpublic" }
+    return "warning_nonpublic"
+  }
+  if urlCredentialsAllowed { return "warning_credentials" }
+  if plaintextScheme { return "warning_plaintext" }
+  return "accepted"
+}

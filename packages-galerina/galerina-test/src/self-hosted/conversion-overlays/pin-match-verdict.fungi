@@ -1,0 +1,14 @@
+@version 1
+/// Pin comparison fold from galerina-core-network#pinMatchVerdict.
+pure flow pinMatchVerdictCore(pinsConfigured: Bool, digestPresented: Bool, digestMatched: Bool) -> Int
+contract { intent { "Distinguish absent pin evidence from a hard pin mismatch." } }
+{
+  if pinsConfigured {
+    if digestPresented {
+      if digestMatched { return 1 }
+      return -1
+    }
+    return 0
+  }
+  return 0
+}

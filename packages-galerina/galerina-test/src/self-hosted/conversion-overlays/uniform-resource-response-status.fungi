@@ -1,0 +1,9 @@
+@version 1
+/// Enumeration-resistant fold from galerina-core-network#uniformResourceResponse.
+pure flow uniformResourceResponseStatusCore(authorized: Bool, denialStatus: Int) -> Int
+contract { intent { "Collapse missing and forbidden resources into the same caller-selected denial status." } }
+{
+  if authorized { return 200 }
+  if denialStatus > 0 { return denialStatus }
+  return 404
+}

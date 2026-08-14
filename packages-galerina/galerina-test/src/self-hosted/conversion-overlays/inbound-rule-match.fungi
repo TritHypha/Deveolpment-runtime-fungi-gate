@@ -1,0 +1,9 @@
+@version 1
+/// Local rule conjunction from galerina-core-network#matches.
+pure flow inboundRuleMatchCore(portMatched: Bool, protocolMatched: Bool) -> Bool
+contract { intent { "Match an inbound rule only when both its port and protocol selectors agree." } }
+{
+  let portAdmitted: Bool = portMatched
+  if portAdmitted == false { return false }
+  return protocolMatched
+}

@@ -1,0 +1,20 @@
+@version 1
+/// Host-policy fold from galerina-core-network#guardOutboundHost.
+pure flow outboundHostAdmissionCore(allowlisted: Bool, metadata: Bool, metadataAllowed: Bool, loopback: Bool, loopbackAllowed: Bool, nonpublic: Bool, nonpublicAllowed: Bool) -> String
+contract { intent { "Admit exact allow-list entries before narrow metadata, loopback and non-public exceptions." } }
+{
+  if allowlisted { return "allowlisted" }
+  if metadata {
+    if metadataAllowed { return "metadata_allowed" }
+    return "metadata_denied"
+  }
+  if loopback {
+    if loopbackAllowed { return "loopback_allowed" }
+    return "loopback_denied"
+  }
+  if nonpublic {
+    if nonpublicAllowed { return "nonpublic_allowed" }
+    return "nonpublic_denied"
+  }
+  return "public_allowed"
+}

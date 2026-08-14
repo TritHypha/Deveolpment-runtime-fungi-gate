@@ -1,0 +1,14 @@
+@version 1
+/// Default-construction fold from galerina-core-network#defineNetworkPolicy.
+pure flow networkPolicyDefaultFlagsCore(effectProvided: Bool, tlsProvided: Bool, endpointsProvided: Bool, privacyProvided: Bool, egressProvided: Bool) -> Int
+contract { intent { "Encode which admitted network-policy sections override deny-by-default construction." } }
+{
+  if effectProvided {
+    if tlsProvided { return 24 }
+    return 16
+  }
+  if endpointsProvided { return 8 }
+  if privacyProvided { return 4 }
+  if egressProvided { return 2 }
+  return 1
+}

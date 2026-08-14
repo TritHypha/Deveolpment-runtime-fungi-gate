@@ -1,0 +1,12 @@
+@version 1
+/// Cadence fold from galerina-core-network#revocationRecheckDue.
+pure flow revocationRecheckDueCore(atBoundary: Bool, pollMode: Bool, intervalValid: Bool, elapsedFinite: Bool, intervalElapsed: Bool) -> Bool
+contract { intent { "Never skip a boundary recheck and treat invalid or broken poll clocks fail closed." } }
+{
+  if atBoundary { return true }
+  if pollMode == false { return false }
+  if intervalValid == false { return false }
+  if elapsedFinite == false { return true }
+  if intervalElapsed { return true }
+  return false
+}

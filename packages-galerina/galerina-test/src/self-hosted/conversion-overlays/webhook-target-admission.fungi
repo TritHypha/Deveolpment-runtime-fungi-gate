@@ -1,0 +1,11 @@
+@version 1
+/// Strict webhook fold from galerina-core-network#validateWebhookTarget.
+pure flow webhookTargetAdmissionCore(urlAllowed: Bool, exactHostAllowlisted: Bool) -> Bool
+contract { intent { "Admit a webhook only under the strict URL posture or an exact trusted-host exception." } }
+{
+  if urlAllowed {
+    let admitted: Bool = true
+    return admitted
+  }
+  return exactHostAllowlisted
+}

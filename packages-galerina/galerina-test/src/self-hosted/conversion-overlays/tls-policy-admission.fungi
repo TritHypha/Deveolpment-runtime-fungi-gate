@@ -1,0 +1,14 @@
+@version 1
+/// TLS validator fold from galerina-core-network#validateTlsPolicy.
+pure flow tlsPolicyAdmissionCore(requireTls: Bool, plaintextFallback: Bool, downgradeAllowed: Bool, production: Bool, certificatesVerified: Bool, hostnamesVerified: Bool) -> String
+contract { intent { "Require TLS, deny downgrade and enforce certificate and hostname verification in production." } }
+{
+  if requireTls == false { return "tls_required" }
+  if plaintextFallback { return "plaintext_fallback_refused" }
+  if downgradeAllowed { return "downgrade_refused" }
+  if production {
+    if certificatesVerified == false { return "certificate_refused" }
+    if hostnamesVerified == false { return "hostname_refused" }
+  }
+  return "accepted"
+}

@@ -1,0 +1,16 @@
+@version 1
+/// CORS decision fold from galerina-core-network#guardCorsRequest after exact-origin parsing.
+pure flow corsRequestAdmissionCore(sameOrigin: Bool, nullOrigin: Bool, wildcardCredentialsDenied: Bool, originAllowed: Bool, preflight: Bool, methodAllowed: Bool, headersAllowed: Bool) -> String
+contract { intent { "Deny null, reflected and malformed preflight origins while preserving same-origin traffic." } }
+{
+  if sameOrigin { return "same_origin" }
+  if nullOrigin { return "null_origin_denied" }
+  if wildcardCredentialsDenied { return "wildcard_credentials_denied" }
+  if originAllowed == false { return "origin_denied" }
+  if preflight {
+    if methodAllowed == false { return "method_denied" }
+    if headersAllowed == false { return "headers_denied" }
+    return "preflight_allowed"
+  }
+  return "allowed"
+}

@@ -1,0 +1,9 @@
+@version 1
+/// Aggregated four-factor K3 fold from galerina-core-network#certVerdict.
+pure flow certVerdictFoldCore(anyDenied: Bool, anyIndeterminate: Bool) -> Int
+contract { intent { "Return deny for any negative factor, indeterminate for any zero factor, otherwise allow." } }
+{
+  if anyDenied { return -1 }
+  if anyIndeterminate == false { return 1 }
+  return 0
+}

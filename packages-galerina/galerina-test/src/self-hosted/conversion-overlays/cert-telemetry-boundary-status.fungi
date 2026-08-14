@@ -1,0 +1,13 @@
+@version 1
+/// Telemetry gate fold from galerina-core-network#certGateWithTelemetry.
+pure flow certTelemetryBoundaryStatusCore(certAllowed: Bool, healthUp: Bool, anomalyState: Int, diagnosticReady: Bool) -> String
+contract { intent { "Permit telemetry to degrade certificate admission but never manufacture authority." } }
+{
+  if certAllowed == false { return "certificate_refused" }
+  if healthUp {
+    if anomalyState < 1 { return "authorized" }
+    if anomalyState > 1 { return "denied" }
+  }
+  if diagnosticReady { return "throttled" }
+  return "throttled_unreported"
+}

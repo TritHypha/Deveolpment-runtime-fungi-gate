@@ -1,0 +1,11 @@
+@version 1
+/// Inbound rule fold from galerina-core-network#guardInboundRequest.
+pure flow inboundRequestAdmissionCore(portValid: Bool, explicitDeny: Bool, explicitAllow: Bool, defaultAllow: Bool) -> String
+contract { intent { "Preserve invalid-port and explicit-deny precedence before allow and default policy." } }
+{
+  if portValid == false { return "invalid_port" }
+  if explicitDeny { return "explicit_deny" }
+  if explicitAllow { return "explicit_allow" }
+  if defaultAllow == false { return "default_deny" }
+  return "default_allow"
+}

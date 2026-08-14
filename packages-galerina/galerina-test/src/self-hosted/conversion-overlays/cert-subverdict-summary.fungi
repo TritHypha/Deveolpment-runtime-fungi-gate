@@ -1,0 +1,11 @@
+@version 1
+/// Mapper summary from galerina-core-network#toSubVerdicts.
+pure flow certSubverdictSummaryCore(pinVerdict: Int, chainVerdict: Int, expiryVerdict: Int, revocationVerdict: Int) -> String
+contract { intent { "Expose the first fail-closed certificate factor before the all-allow summary." } }
+{
+  if pinVerdict < 1 { return "pin_not_allow" }
+  if chainVerdict < 1 { return "chain_not_allow" }
+  if expiryVerdict < 1 { return "expiry_not_allow" }
+  if revocationVerdict < 1 { return "revocation_not_allow" }
+  return "all_allow"
+}

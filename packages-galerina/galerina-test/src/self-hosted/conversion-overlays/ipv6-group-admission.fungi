@@ -1,0 +1,11 @@
+@version 1
+/// Hextet-group fold from galerina-core-network#groups.
+pure flow ipv6GroupAdmissionCore(partEmpty: Bool, everyHex: Bool, groupCount: Int) -> String
+contract { intent { "Accept an empty compressed side or a bounded sequence of hexadecimal hextets." } }
+{
+  if partEmpty { return "empty_side" }
+  if everyHex == false { return "invalid_hex" }
+  if groupCount < 1 { return "missing_group" }
+  if groupCount > 8 { return "too_many_groups" }
+  return "accepted"
+}
