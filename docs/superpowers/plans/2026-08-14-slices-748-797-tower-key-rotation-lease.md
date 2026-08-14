@@ -119,4 +119,5 @@ candidates/superseded scopes.
 - [x] Reconcile three independent read-only reviews.
 - [x] Commit authored evidence separately, publish owners and run the bounded
   19-check matrix.
-- [ ] Refresh both indexes at the final Slice-797 closure commit.
+- [x] Refresh both indexes at the Slice-797 closure layer and retain the final
+  post-record exact-head readback in the handoff.

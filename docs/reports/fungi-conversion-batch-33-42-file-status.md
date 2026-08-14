@@ -1324,3 +1324,12 @@ violations**, semantic **3/3** with **977** tests, source inventory **149**,
 code index **975**, receipts **737/737**, Golden **11/11**, canonical **7/7 =
 9,612**, and both leak audits at zero. Final closure commit and dual-index
 refresh remain pending; repository-wide closure stays `UNKNOWN`.
+
+The committed closure layer is `27dcc5b02ab6f974a3e2059360d836d952499b7d`.
+Myco refreshed there to **6,410 files / 84,038 terms**; a bounded exact-source
+`Masked` search returned 11 hits in one file with no truncation, result cap,
+time-budget breach or regex timeout. Codebase-memory moderate refresh reports
+**27,031/27,031 nodes / 63,873/63,873 edges**, exact indexed HEAD
+`27dcc5b02ab6f974a3e2059360d836d952499b7d`, and one exact exported `Masked`
+interface result with `has_more:false`. A final post-record exact-head refresh
+is handoff evidence; repository-wide closure remains `UNKNOWN`.

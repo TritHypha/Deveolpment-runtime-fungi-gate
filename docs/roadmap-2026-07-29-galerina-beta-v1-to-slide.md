@@ -3871,3 +3871,9 @@ layers are committed; the registered owner contract and bounded close matrix
 both pass **19/19**, with graph integrity at **10,561 nodes / 10,411 edges /
 zero violations** and both leak audits clean. Final closure recording and the
 dual-index refresh remain pending.
+
+The committed closure layer is `27dcc5b0`. Myco refresh reports **6,410 files
+/ 84,038 terms** and a complete bounded `Masked` query. Codebase-memory reports
+**27,031/27,031 nodes / 63,873/63,873 edges**, the exact indexed HEAD and one
+untruncated `Masked` symbol. Final post-record exact-head readback is retained
+in the handoff; repository-wide closure remains `UNKNOWN`.

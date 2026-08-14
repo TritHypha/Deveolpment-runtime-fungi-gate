@@ -20,8 +20,11 @@ counts or open items that a newer section explicitly supersedes.
   `238260c6`; fix the migrated KB registry lookup at `d4ac4ec8`; publish the
   owner layers at `a050db6a`, `24813403` and `a3729533`; pass both registered
   owner checks and the bounded close matrix **19/19**.
-- [ ] Record the final closure commit and refresh both indexes at Slice 797.
-  Repository-wide closure remains `UNKNOWN`.
+- [x] Record the closure layer at `27dcc5b0` and refresh both indexes: Myco
+  **6,410 files / 84,038 terms** with a complete 11-hit `Masked` query;
+  codebase-memory **27,031/27,031 nodes / 63,873/63,873 edges** at the exact
+  indexed HEAD with one untruncated `Masked` symbol. Final post-record refresh
+  is retained in the handoff. Repository-wide closure remains `UNKNOWN`.
 
 ### Slices 698-747 Tower cached policy, TPL enforcement and hybrid engine - 2026-08-14
 
