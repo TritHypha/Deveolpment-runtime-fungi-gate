@@ -1,0 +1,11 @@
+@version 1
+/// Post-capture decision core of limitPolicy.ts#checkConcurrentTasks.
+pure flow concurrentTaskLimitCore(configured: Bool, current: Int, limit: Int) -> String
+contract { intent { "Emit the concurrent-task violation kind only above its bound." } }
+{
+  if configured {
+    if current > limit { return "concurrent_tasks" }
+    return ""
+  }
+  return ""
+}

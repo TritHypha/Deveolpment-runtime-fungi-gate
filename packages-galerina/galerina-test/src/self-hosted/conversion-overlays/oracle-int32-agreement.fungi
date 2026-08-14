@@ -1,0 +1,8 @@
+@version 1
+/// Scaled-accumulator decision core of oracle.ts#oracleAgrees after Int32 capture.
+pure flow oracleInt32AgreementCore(candidate: Int, reference: Int) -> Bool
+contract { intent { "Require bit-exact equality of admitted scaled integer accumulators." } }
+{
+  if candidate == reference { return true }
+  return false
+}

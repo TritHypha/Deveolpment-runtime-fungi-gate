@@ -1,0 +1,11 @@
+@version 1
+/// Post-capture action core of core-security#index.ts#normalizeRegexFlags.
+pure flow regexGlobalFlagActionCore(flagsProvided: Bool, globalPresent: Bool) -> String
+contract { intent { "Preserve a global flag or request its append after admitted flag capture." } }
+{
+  if flagsProvided {
+    if globalPresent { return "unchanged" }
+    return "append_g"
+  }
+  return "default_g"
+}

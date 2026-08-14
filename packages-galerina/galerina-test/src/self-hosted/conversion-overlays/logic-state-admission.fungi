@@ -1,0 +1,14 @@
+@version 1
+/// Post-capture decision core of core-logic#index.ts#isValidLogicState.
+pure flow logicStateAdmissionCore(widthEqual: Bool, safeInteger: Bool, state: Int, definitionWidth: Int) -> Bool
+contract { intent { "Admit a logic state only within the matching closed definition width." } }
+{
+  if widthEqual {
+    if safeInteger {
+      if state >= 0 {
+        if state < definitionWidth { return true }
+      }
+    }
+  }
+  return false
+}

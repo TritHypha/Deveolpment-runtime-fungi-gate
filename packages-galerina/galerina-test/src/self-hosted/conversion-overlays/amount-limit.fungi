@@ -1,0 +1,11 @@
+@version 1
+/// Post-capture decision core of limitPolicy.ts#checkAmount.
+pure flow amountLimitCore(configured: Bool, amount: Int, limit: Int) -> Int
+contract { intent { "Return an over-limit amount or the physical no-violation sentinel." } }
+{
+  if configured {
+    if amount > limit { return amount }
+    return -1
+  }
+  return -1
+}

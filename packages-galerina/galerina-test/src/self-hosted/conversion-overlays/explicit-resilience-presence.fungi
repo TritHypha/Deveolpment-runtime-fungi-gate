@@ -1,0 +1,8 @@
+@version 1
+/// Post-capture decision core of resilience-inference.ts#hasExplicitResilience.
+pure flow explicitResiliencePresenceCore(contractFound: Bool, markerFound: Bool) -> Bool
+contract { intent { "Require the resilience marker to occur inside an admitted contract." } }
+{
+  if contractFound { return markerFound }
+  return false
+}

@@ -1,0 +1,8 @@
+@version 1
+/// Post-suffix decision core of package-graph scanner.ts#isSourceFile.
+pure flow sourceFileDecisionCore(declarationFile: Bool, extensionMatched: Bool) -> Bool
+contract { intent { "Exclude declaration files before accepting a configured source extension." } }
+{
+  if declarationFile { return false }
+  return extensionMatched
+}

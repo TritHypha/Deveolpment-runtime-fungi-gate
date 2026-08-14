@@ -1,0 +1,10 @@
+@version 1
+/// Post-capture decision core of resilience-inference.ts#extractFallback.
+pure flow resilienceFallbackSelectionCore(rawPresent: Bool, recognized: Bool, value: String) -> String
+contract { intent { "Return only a recognized fallback captured from an existing field." } }
+{
+  if rawPresent {
+    if recognized { return value }
+  }
+  return ""
+}

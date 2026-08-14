@@ -1,0 +1,13 @@
+@version 1
+/// Post-capture decision core of provenance analyzer.ts#isBoundaryAccessExpr.
+pure flow boundaryAccessExpressionCore(memberExpression: Bool, requestRoot: Bool, reqRoot: Bool, inputRoot: Bool, paramsRoot: Bool) -> Bool
+contract { intent { "Recognize boundary access only for member expressions rooted in admitted request inputs." } }
+{
+  if memberExpression {
+    if requestRoot { return true }
+    if reqRoot { return true }
+    if inputRoot { return true }
+    return paramsRoot
+  }
+  return false
+}

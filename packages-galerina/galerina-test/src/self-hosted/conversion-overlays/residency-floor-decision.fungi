@@ -1,0 +1,8 @@
+@version 1
+/// Rank decision core of hardening-residency.ts#atLeastAsStrict.
+pure flow residencyFloorDecisionCore(tierRank: Int, floorRank: Int) -> Bool
+contract { intent { "Admit a residency tier only when its rank is at least as strict as the floor." } }
+{
+  if tierRank <= floorRank { return true }
+  return false
+}

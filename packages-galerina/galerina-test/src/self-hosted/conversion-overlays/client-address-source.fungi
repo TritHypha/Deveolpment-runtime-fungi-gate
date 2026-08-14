@@ -1,0 +1,10 @@
+@version 1
+/// Post-capture source decision of defensive-controls.ts#resolveClientAddress.
+pure flow clientAddressSourceCore(proxyTrusted: Bool, forwardedPresent: Bool) -> String
+contract { intent { "Use a forwarded address only when the proxy is trusted and the value is nonempty." } }
+{
+  if proxyTrusted {
+    if forwardedPresent { return "forwarded" }
+  }
+  return "socket-peer"
+}

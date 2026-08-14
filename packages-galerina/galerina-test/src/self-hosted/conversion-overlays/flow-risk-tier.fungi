@@ -1,0 +1,14 @@
+@version 1
+/// Post-tally decision core of intelligence search.ts#deriveRiskTier.
+pure flow flowRiskTierCore(isTainted: Bool, hasSecrets: Bool, sensitiveEffects: Int) -> String
+contract { intent { "Classify high risk before medium risk using admitted sensitivity facts." } }
+{
+  if isTainted {
+    if hasSecrets { return "high" }
+  }
+  if sensitiveEffects >= 3 { return "high" }
+  if isTainted { return "medium" }
+  if hasSecrets { return "medium" }
+  if sensitiveEffects >= 1 { return "medium" }
+  return "low"
+}

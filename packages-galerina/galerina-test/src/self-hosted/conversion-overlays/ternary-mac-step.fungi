@@ -1,0 +1,9 @@
+@version 1
+/// Bounded accumulator decision step of photonic emulator.ts#tmacExact.
+pure flow ternaryMacStepCore(weight: Int, activation: Int, sum: Int) -> Int
+contract { intent { "Add, subtract or ignore one activation according to its admitted ternary weight." } }
+{
+  if weight == 1 { return sum + activation }
+  if weight == -1 { return sum - activation }
+  return sum
+}

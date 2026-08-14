@@ -1,0 +1,11 @@
+@version 1
+/// Post-capture decision core of value-state-checker.ts#isSerializationCall.
+pure flow serializationCallClassificationCore(directMethod: Bool, jsonEncode: Bool, jsonStringify: Bool, tomlEncode: Bool, xmlEncode: Bool) -> Bool
+contract { intent { "Recognize direct serialization before the closed qualified encoder families." } }
+{
+  if directMethod { return true }
+  if jsonEncode { return true }
+  if jsonStringify { return true }
+  if tomlEncode { return true }
+  return xmlEncode
+}

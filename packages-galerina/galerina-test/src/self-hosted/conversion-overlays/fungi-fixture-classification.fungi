@@ -1,0 +1,10 @@
+@version 1
+/// Post-regex decision core of inline-fixtures.ts#looksLikeFungi.
+pure flow fungiFixtureClassificationCore(versionHeader: Bool, flowDeclaration: Bool, contractBlock: Bool) -> Bool
+contract { intent { "Classify an inline fixture when any admitted Fungi marker is present." } }
+{
+  if versionHeader { return true }
+  if flowDeclaration { return true }
+  if contractBlock { return true }
+  return false
+}

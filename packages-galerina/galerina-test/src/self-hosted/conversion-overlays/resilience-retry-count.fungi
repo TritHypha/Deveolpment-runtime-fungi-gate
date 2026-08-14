@@ -1,0 +1,11 @@
+@version 1
+/// Post-capture decision core of resilience-inference.ts#extractRetryCount.
+pure flow resilienceRetryCountCore(rawPresent: Bool, matchPresent: Bool, parsed: Int) -> Int
+contract { intent { "Return the captured retry count or the physical absence sentinel." } }
+{
+  if rawPresent {
+    if matchPresent { return parsed }
+    return -1
+  }
+  return -1
+}

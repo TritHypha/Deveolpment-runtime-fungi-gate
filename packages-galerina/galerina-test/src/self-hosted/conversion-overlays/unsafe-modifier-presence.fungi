@@ -1,0 +1,9 @@
+@version 1
+/// Post-capture decision core of provenance analyzer.ts#hasUnsafeModifier.
+pure flow unsafeModifierPresenceCore(valueContainsUnsafe: Bool, childIdentifier: Bool, childUnsafe: Bool) -> Bool
+contract { intent { "Recognize an inline unsafe marker before the admitted first-child encoding." } }
+{
+  if valueContainsUnsafe { return true }
+  if childIdentifier { return childUnsafe }
+  return false
+}

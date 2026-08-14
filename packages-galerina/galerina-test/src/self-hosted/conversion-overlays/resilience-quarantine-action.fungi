@@ -1,0 +1,12 @@
+@version 1
+/// Post-capture decision core of resilience-inference.ts#extractOnQuarantine.
+pure flow resilienceQuarantineActionCore(rawPresent: Bool, setPostureBit: Bool, actionCaptured: Bool, action: String) -> String
+contract { intent { "Release a quarantine action only after the complete admitted command shape." } }
+{
+  if rawPresent {
+    if setPostureBit {
+      if actionCaptured { return action }
+    }
+  }
+  return ""
+}

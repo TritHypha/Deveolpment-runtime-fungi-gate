@@ -1,0 +1,9 @@
+@version 1
+/// Post-traversal decision core of target-cpu#index.ts#supportsCpuFeatures.
+pure flow cpuFeatureCoverageCore(firstMissingIndex: Int, requiredCount: Int) -> Bool
+contract { intent { "Admit CPU feature coverage only when traversal found no missing requirement." } }
+{
+  if requiredCount == 0 { return true }
+  if firstMissingIndex < 0 { return true }
+  return false
+}

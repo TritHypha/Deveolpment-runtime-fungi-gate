@@ -1,0 +1,12 @@
+@version 1
+/// Post-admission selection core of admission-feedback.ts#resolveThrottleThreshold.
+pure flow throttleThresholdSelectionCore(numberPresent: Bool, finite: Bool, inRange: Bool, candidate: Int, fallbackValue: Int) -> Int
+contract { intent { "Select the candidate threshold only after the complete numeric admission." } }
+{
+  if numberPresent {
+    if finite {
+      if inRange { return candidate }
+    }
+  }
+  return fallbackValue
+}

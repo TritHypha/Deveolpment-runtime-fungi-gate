@@ -1,0 +1,11 @@
+@version 1
+/// Post-prefix decision core of provenance analyzer.ts#classifyTransform.
+pure flow provenanceTransformClassificationCore(validateOrSanitize: Bool, hashFamily: Bool, encryptFamily: Bool, redact: Bool) -> String
+contract { intent { "Preserve source branch precedence, including sanitize collapsing into gate." } }
+{
+  if validateOrSanitize { return "gate" }
+  if hashFamily { return "hash" }
+  if encryptFamily { return "encrypt" }
+  if redact { return "redact" }
+  return "gate"
+}

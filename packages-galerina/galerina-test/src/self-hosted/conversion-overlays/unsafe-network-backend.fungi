@@ -1,0 +1,9 @@
+@version 1
+/// Post-capture decision core of core-network#index.ts#isUnsafeNetworkBackend.
+pure flow unsafeNetworkBackendCore(elevated: Bool, dpdk: Bool, xdp: Bool) -> Bool
+contract { intent { "Classify elevated, DPDK or XDP backends as unsafe." } }
+{
+  if elevated { return true }
+  if dpdk { return true }
+  return xdp
+}

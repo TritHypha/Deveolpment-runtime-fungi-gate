@@ -1,0 +1,8 @@
+@version 1
+/// Post-check decision core of path-sandbox.ts#isPathEscape.
+pure flow sandboxPathEscapeCore(sandboxAllowed: Bool) -> Bool
+contract { intent { "Invert the admitted path-sandbox result to classify escape." } }
+{
+  if sandboxAllowed { return false }
+  return true
+}

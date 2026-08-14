@@ -1,0 +1,11 @@
+@version 1
+/// Post-capture decision core of value-state-checker.ts#isLogCall.
+pure flow logCallClassificationCore(directPrint: Bool, receiverSegment: String) -> Bool
+contract { intent { "Recognize standalone print before the three admitted logging receiver segments." } }
+{
+  if directPrint { return true }
+  if receiverSegment == "log" { return true }
+  if receiverSegment == "logger" { return true }
+  if receiverSegment == "console" { return true }
+  return false
+}

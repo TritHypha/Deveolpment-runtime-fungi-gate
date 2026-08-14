@@ -1,0 +1,10 @@
+@version 1
+/// Post-capture decision core of limitPolicy.ts#checkQueryLength.
+pure flow queryLengthLimitCore(configured: Bool, chars: Int, limit: Int) -> Bool
+contract { intent { "Report whether an admitted query length exceeds its configured bound." } }
+{
+  if configured {
+    if chars > limit { return true }
+  }
+  return false
+}

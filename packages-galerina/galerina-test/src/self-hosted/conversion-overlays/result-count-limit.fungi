@@ -1,0 +1,10 @@
+@version 1
+/// Post-capture decision core of limitPolicy.ts#checkResultCount.
+pure flow resultCountLimitCore(configured: Bool, count: Int, limit: Int) -> String
+contract { intent { "Emit the results violation kind only above a configured bound." } }
+{
+  if configured {
+    if count > limit { return "results" }
+  }
+  return "ok"
+}

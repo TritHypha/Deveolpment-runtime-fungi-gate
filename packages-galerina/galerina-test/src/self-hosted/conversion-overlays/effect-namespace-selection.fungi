@@ -1,0 +1,8 @@
+@version 1
+/// Post-capture decision core of leak-proof.ts#nsOf.
+pure flow effectNamespaceSelectionCore(dotIndex: Int, prefix: String, effect: String) -> String
+contract { intent { "Select the prefix before the first dot or preserve the whole effect." } }
+{
+  if dotIndex < 0 { return effect }
+  return prefix
+}

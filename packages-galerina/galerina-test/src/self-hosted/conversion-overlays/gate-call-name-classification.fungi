@@ -1,0 +1,10 @@
+@version 1
+/// Post-capture decision core of value-state-checker.ts#isGateCallName.
+pure flow gateCallNameClassificationCore(builtinPrefix: Bool, userPrefix: Bool, registryPresent: Bool, registryMatched: Bool) -> Bool
+contract { intent { "Recognize built-in and user prefixes before consulting an optional gate registry." } }
+{
+  if builtinPrefix { return true }
+  if userPrefix { return true }
+  if registryPresent { return registryMatched }
+  return false
+}

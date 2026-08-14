@@ -1,0 +1,8 @@
+@version 1
+/// Post-capture decision core of leak-proof.ts#extractCapability.
+pure flow diagnosticCapabilitySelectionCore(matched: Bool, captured: String) -> String
+contract { intent { "Use the captured capability only when the admission regex matched." } }
+{
+  if matched { return captured }
+  return "unknown"
+}

@@ -1,0 +1,12 @@
+@version 1
+/// Post-normalization decision core of egress-guard.ts#classifyHostname.
+pure flow hostnameClassificationCore(loopback: Bool, metadata: Bool, linkLocal: Bool, internalName: Bool, bareName: Bool) -> String
+contract { intent { "Classify hostname risk in source order before the tentative public default." } }
+{
+  if loopback { return "loopback" }
+  if metadata { return "metadata" }
+  if linkLocal { return "linkLocal" }
+  if internalName { return "private" }
+  if bareName { return "private" }
+  return "public"
+}

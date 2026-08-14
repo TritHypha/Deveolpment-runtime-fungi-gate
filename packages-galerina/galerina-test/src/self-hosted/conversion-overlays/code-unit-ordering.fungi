@@ -1,0 +1,9 @@
+@version 1
+/// Post-comparison decision core of gate-v3-parser.ts#byCodeUnit.
+pure flow codeUnitOrderingCore(leftLess: Bool, leftGreater: Bool) -> Int
+contract { intent { "Return negative, positive or zero ordering after exact code-unit comparison." } }
+{
+  if leftLess { return -1 }
+  if leftGreater { return 1 }
+  return 0
+}

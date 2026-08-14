@@ -1,0 +1,8 @@
+@version 1
+/// Closed-tag decision core of data-query#index.ts#unwrapOr.
+pure flow queryOptionUnwrapCore(some: Bool, value: String, fallbackValue: String) -> String
+contract { intent { "Select the captured option value or the caller fallback." } }
+{
+  if some { return value }
+  return fallbackValue
+}

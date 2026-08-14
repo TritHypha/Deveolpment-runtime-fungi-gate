@@ -1,0 +1,13 @@
+@version 1
+/// Closed-union decision core of core-security#index.ts#isHighRiskPermissionAction.
+pure flow highRiskPermissionDecisionCore(action: String) -> Bool
+contract { intent { "Recognize the six permission actions requiring elevated scrutiny." } }
+{
+  if action == "execute" { return true }
+  if action == "network" { return true }
+  if action == "environment" { return true }
+  if action == "native" { return true }
+  if action == "unsafe" { return true }
+  if action == "crypto" { return true }
+  return false
+}

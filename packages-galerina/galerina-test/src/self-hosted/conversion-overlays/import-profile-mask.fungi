@@ -1,0 +1,8 @@
+@version 1
+/// Two-bit decision projection of posture.ts#deriveImportProfile.
+pure flow importProfileMaskCore(effective: String) -> Int
+contract { intent { "Encode require-signature as bit one and allow-file-path as bit two." } }
+{
+  if effective == "on" { return 1 }
+  return 2
+}

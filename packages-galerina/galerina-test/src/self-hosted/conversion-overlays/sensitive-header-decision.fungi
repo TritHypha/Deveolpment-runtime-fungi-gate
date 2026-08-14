@@ -1,0 +1,11 @@
+@version 1
+/// Post-lowercasing decision core of core-security#index.ts#isSensitiveHeaderName.
+pure flow sensitiveHeaderDecisionCore(normalizedName: String) -> Bool
+contract { intent { "Recognize the four exact sensitive-header names after host lowercasing." } }
+{
+  if normalizedName == "authorization" { return true }
+  if normalizedName == "cookie" { return true }
+  if normalizedName == "set-cookie" { return true }
+  if normalizedName == "x-api-key" { return true }
+  return false
+}

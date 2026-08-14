@@ -1,0 +1,16 @@
+@version 1
+/// Post-descriptor decision core of registry-durability-production-admission.ts#hasExactDataShape.
+pure flow exactDataShapeAdmissionCore(ordinaryPrototype: Bool, keysExact: Bool, dataDescriptors: Bool, functionsAllowed: Bool, functionValuePresent: Bool) -> Bool
+contract { intent { "Admit only exact ordinary data records, with function values explicitly governed." } }
+{
+  if ordinaryPrototype {
+    if keysExact {
+      if dataDescriptors {
+        if functionsAllowed { return true }
+        if functionValuePresent { return false }
+        return true
+      }
+    }
+  }
+  return false
+}

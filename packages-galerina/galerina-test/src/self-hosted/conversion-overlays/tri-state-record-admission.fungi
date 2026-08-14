@@ -1,0 +1,15 @@
+@version 1
+/// Post-capture decision core of bool-enforce.ts#isTriState.
+pure flow triStateRecordAdmissionCore(objectLike: Bool, kindPresent: Bool, validKind: Bool, reasonPresent: Bool) -> Bool
+contract { intent { "Admit a tri-state record only with a valid kind and without a reason field." } }
+{
+  if objectLike {
+    if kindPresent {
+      if validKind {
+        if reasonPresent { return false }
+        return true
+      }
+    }
+  }
+  return false
+}

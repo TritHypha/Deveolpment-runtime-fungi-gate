@@ -1,0 +1,13 @@
+@version 1
+/// Post-admission decision core of defensive-controls.ts#isOpaqueId.
+pure flow opaqueIdDecisionCore(stringValue: Bool, longEnough: Bool, numericOnly: Bool, charsetMatched: Bool) -> Bool
+contract { intent { "Accept only admitted, sufficiently long, nonnumeric opaque identifiers." } }
+{
+  if stringValue {
+    if longEnough {
+      if numericOnly { return false }
+      return charsetMatched
+    }
+  }
+  return false
+}

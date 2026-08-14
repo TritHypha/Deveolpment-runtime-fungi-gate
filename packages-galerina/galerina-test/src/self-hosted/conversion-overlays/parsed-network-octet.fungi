@@ -1,0 +1,18 @@
+@version 1
+/// Post-regex and parse decision core of egress-guard.ts#parseOctet.
+pure flow parsedNetworkOctetCore(hexMatched: Bool, octalMatched: Bool, decimalMatched: Bool, parsedInteger: Bool, value: Int) -> Int
+contract { intent { "Release a parsed octet only for an admitted grammar and integer result." } }
+{
+  if hexMatched {
+    if parsedInteger { return value }
+    return -1
+  }
+  if octalMatched {
+    if parsedInteger { return value }
+    return -1
+  }
+  if decimalMatched {
+    if parsedInteger { return value }
+  }
+  return -1
+}
