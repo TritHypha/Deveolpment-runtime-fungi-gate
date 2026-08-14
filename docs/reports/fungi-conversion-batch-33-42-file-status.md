@@ -1076,5 +1076,40 @@ owners report queue **1,490/1,490**, package **100/201**, project **5/5**, KB
 **4/4**, graph **10,408 nodes / 10,258 edges / zero violations**, semantic
 **3/3**, source inventory **149**, code index **975**, receipts **587/587**,
 Golden **11/11**, canonical **7/7**, and path/private leak audits at zero. Final
-owner publication and dual-index exact-head proof remain pending; repository
-closure stays `UNKNOWN`.
+owner publication and dual-index exact-head proof completed at
+`e0ba95f789837672e3225e044d5a95e39e18ddc0`: Myco reports 6,257 files /
+83,865 terms and codebase-memory independently reports 27,031 nodes / 63,873
+edges with `stale:false`. Repository closure stays `UNKNOWN`.
+
+## Slices 648-697 - Tower epistemic state and GateCache
+
+At source build point `e0ba95f789837672e3225e044d5a95e39e18ddc0`,
+the complete 42-scope epistemic type-state module plus the first eight
+GateCache scopes account for 18 erased declarations and 32 blocked runtime
+scopes. No candidate, exact scoped Fungi/GIR/physical `.slide`, independent
+re-admission, VOK, consumer switch or TypeScript retirement exists.
+
+Material authority defects override the nominal TypeScript contracts:
+`Trust` is an exported mutable runtime object; trusted roots, guards,
+reconciliation, `triTyped`, declassification and release accept caller-mintable
+trust or authority; callbacks and active inputs are reread across effects;
+singleton K3 folds can return an invalid callback value without passing the
+combiner; and any malformed enforcement mode other than exact `enforce`
+proceeds.
+
+`validateTriSchema` repeatedly observes active records/specs, accepts truthy
+non-Boolean verifiers and writes dynamic keys into ordinary prototype-bearing
+objects. GateCache canonicalization collapses distinct hostile states, hashes
+one observation and compiles a later reread, and returns mutable
+`CompiledPolicy`/Set aliases that can poison later hits. Key and cached value
+must instead derive from one admitted immutable snapshot with injective typed
+bytes and non-aliasing bounded state.
+
+Private translation `11474f7006cefc6841237a915ba9e4bafc3ef358` and
+authoring `85679ff04f211ebb50844e16a0f7b3a5c1450187` bind exact
+mode/callback Verdict validation and one-snapshot immutable memoization
+authority. Both remain private and unpushed. Fresh Tower no-emit typecheck plus
+**515/515** tests and **637/637** governed receipts pass; these are regression
+and receipt-shape evidence only. Independent reviews, owner publication and
+dual-index refresh are the remaining wave-close operations; repository-wide
+closure remains `UNKNOWN`.

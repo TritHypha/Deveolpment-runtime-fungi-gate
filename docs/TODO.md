@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 648-697 Tower epistemic state and GateCache - 2026-08-14
+
+- [x] Freeze 50 unique source-order scopes: all 42 epistemic type-state
+  declarations/runtime values and the first eight GateCache scopes. Exact
+  arithmetic is 18 erased declarations plus 32 blocked runtime scopes; no
+  candidate, supersession, consumer switch or retirement authority exists.
+- [x] Update both private skills at translation `11474f7` and authoring
+  `85679ff`: closed runtime modes and callback Verdict minting are mandatory,
+  and memoized keys/authority values must derive from one immutable snapshot
+  without alias-mutable cache poisoning.
+- [ ] Replace caller-mintable Trust/PROVEN and declassification entrypoints with
+  provenance-bound Hallmarks, verifier/declassifier capabilities and
+  same-snapshot immutable receipts.
+- [ ] Decode enforcement modes and callback outputs through exact closed unions;
+  preserve callback order, failure and partial effects, and prove that each
+  OR-clause independently suffices to authorize.
+- [ ] Replace active JSON cache canonicalization with injective typed bytes,
+  derive key plus CompiledPolicy from one admitted snapshot, bound cache growth,
+  and prevent returned Set/object aliases from poisoning later hits.
+- [x] Run fresh Tower typecheck plus **515/515** tests and the receipt gate at
+  **637/637** governed receipts.
+- [ ] Reconcile three independent reviews; commit authored evidence and all
+  registered owner outputs.
+- [ ] Refresh Myco and codebase-memory at the final committed Slice 697 head and
+  independently prove both indexed build points. Repository closure stays
+  `UNKNOWN`.
+
 ### Slices 598-647 Myco links and Tower authority borders - 2026-08-14
 
 - [x] Account 50 unique scopes after refusing prior Slice 76, 135-160
@@ -33,9 +60,10 @@ counts or open items that a newer section explicitly supersedes.
   graph **10,408 nodes / 10,258 edges / zero violations**, semantic **3/3**,
   source inventory **149**, code index **975**, receipts **587/587**, Golden
   **11/11**, canonical **7/7**, and both leak audits at zero.
-- [ ] Commit the final owner/provenance build point and prove Myco plus
-  codebase-memory exact at that clean Slice-647 HEAD; keep repository closure
-  `UNKNOWN` and continue with Slice 648.
+- [x] Commit the final owner/provenance build point and prove Myco plus
+  codebase-memory exact at clean Slice-647 HEAD
+  `e0ba95f789837672e3225e044d5a95e39e18ddc0`; repository closure remains
+  `UNKNOWN` and Slice 648 is active.
 
 ### Slices 548-597 Myco search, tests and Tower evidence - 2026-08-13
 

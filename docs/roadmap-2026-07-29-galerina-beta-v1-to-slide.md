@@ -3780,3 +3780,25 @@ current, and the bounded matrix passes **19/19** with graph **10,408 nodes /
 10,258 edges / zero violations**, receipts **587/587**, and both leak audits at
 zero. Repository-wide closure remains `UNKNOWN`; final owner publication and
 dual-index exact-head proof remain pending at this 50-slice boundary.
+
+## Fungi conversion checkpoint through Slice 697 - 2026-08-14
+
+The next 50 unique source-order scopes cover Tower's complete epistemic
+type-state module and the first eight GateCache declarations/operations.
+Eighteen declarations are `NO_RUNTIME_BEHAVIOR`; 32 runtime scopes remain
+`BLOCKED`; there are no candidates or superseded scopes. Loaded governance
+Fungi assets are dependency evidence only and supply no exact record,
+callback, cache, physical SLIDE/VOK or retirement authority.
+
+The decisive open work is provenance-bound Trust and declassification
+authority; one-snapshot callback/record evaluation; exact wildcard-denying
+mode and Verdict decoding; prototype-neutral tri-schema output; and an
+injective, immutable, bounded policy cache whose key and value derive from the
+same admitted snapshot and whose returned state cannot poison later hits.
+
+Private skills `11474f7` and `85679ff` now state the reusable callback/mode
+and memoization rules directly. The 50 receipts pin exact source and focused
+test identities. Fresh Tower typecheck plus **515/515** tests and **637/637**
+governed receipts pass. Three independent reviews, owner publication and
+exact-head dual-index proof remain pending. Repository-wide closure stays
+`UNKNOWN`.

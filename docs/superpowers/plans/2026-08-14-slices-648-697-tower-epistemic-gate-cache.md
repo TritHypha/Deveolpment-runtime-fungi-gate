@@ -93,9 +93,9 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - Read: `packages-galerina/galerina-tower-citizen/src/epistemic-type-state.ts` lines 92-214.
 - Read: exact exports, callers, focused tests, package boundary and physical evidence.
 
-- [ ] Pin exact ranges, caller families, test identities, physical assets and both private skill commits.
-- [ ] Record exact trust-trit encoding, record/array aliasing, verifier/callback effects, provenance order, K3 folds and type-guard behavior.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, material defects and skill dispositions for Slices 648-663.
+- [x] Pin exact ranges, caller families, test identities, physical assets and both private skill commits.
+- [x] Record exact trust-trit encoding, record/array aliasing, verifier/callback effects, provenance order, K3 folds and type-guard behavior.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, material defects and skill dispositions for Slices 648-663.
 
 ### Task 2: Adjudicate Slices 664-679
 
@@ -103,9 +103,9 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - Read: `packages-galerina/galerina-tower-citizen/src/epistemic-type-state.ts` lines 216-388.
 - Read: exact exports, callers, focused tests, package boundary and physical evidence.
 
-- [ ] Pin exact ranges, caller families, test identities, physical assets and both private skill commits.
-- [ ] Record trust-boundary release, optional callback/audit order, optimistic/reconcile semantics, higher-order contract callbacks, mode routing and tri-schema declaration contracts.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, material defects and skill dispositions for Slices 664-679.
+- [x] Pin exact ranges, caller families, test identities, physical assets and both private skill commits.
+- [x] Record trust-boundary release, optional callback/audit order, optimistic/reconcile semantics, higher-order contract callbacks, mode routing and tri-schema declaration contracts.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, material defects and skill dispositions for Slices 664-679.
 
 ### Task 3: Adjudicate Slices 680-697
 
@@ -114,9 +114,9 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - Read: `packages-galerina/galerina-tower-citizen/src/gate-cache.ts` lines 1-125.
 - Read: exact exports, callers, focused tests, package boundary and physical evidence.
 
-- [ ] Pin exact ranges, caller families, test identities, physical assets and both private skill commits.
-- [ ] Record tri-schema active-record/callback behavior, classification lattice, declassification/release authority, canonical policy serialization, SHA-256 keying and mutable cache identity/state.
-- [ ] Return per-scope classification, blocker/exit, threadability, minimum vectors, material defects and skill dispositions for Slices 680-697.
+- [x] Pin exact ranges, caller families, test identities, physical assets and both private skill commits.
+- [x] Record tri-schema active-record/callback behavior, classification lattice, declassification/release authority, canonical policy serialization, SHA-256 keying and mutable cache identity/state.
+- [x] Return per-scope classification, blocker/exit, threadability, minimum vectors, material defects and skill dispositions for Slices 680-697.
 
 ### Task 4: Author, verify, review and publish the wave
 
@@ -126,8 +126,8 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - Modify: `docs/TODO.md`.
 - Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
 
-- [ ] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
-- [ ] Run focused Tower checks and the receipt audit, recording exact fresh totals.
+- [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
+- [x] Run focused Tower checks and the receipt audit: Tower typecheck plus 515/515 and 637/637 governed receipts.
 - [ ] Resolve three independent read-only reviews and record the final PASS.
 - [ ] Commit authored evidence separately from registered owner outputs.
 - [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.
