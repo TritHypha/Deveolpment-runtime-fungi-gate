@@ -1168,7 +1168,12 @@ the hermetic generator contract pass **19/19**. The bounded close reports queue
 10,361 edges / zero violations**, semantic **3/3** with **977** tests, source
 inventory **149**, code index **975**, receipts **687/687**, Golden **11/11**,
 canonical **7/7**, and both leak audits at zero. Final closure-provenance commit
-and dual-index exact-head refresh remain pending.
+and initial dual-index exact-head refresh complete at
+`ee8bcdea0b4619ff7d99de9cff51595251626204`: Myco reports 6,359 files /
+83,973 terms with a complete bounded `isWeakRingKey` query, while
+codebase-memory reports 60,461 nodes / 147,260 edges, the exact indexed head,
+and one untruncated `isWeakRingKey` symbol. Final post-record exact-head
+readback is handoff evidence; repository-wide closure stays `UNKNOWN`.
 
 ### Slice 698-747 exact evidence manifest
 

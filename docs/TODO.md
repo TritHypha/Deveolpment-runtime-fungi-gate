@@ -27,8 +27,11 @@ counts or open items that a newer section explicitly supersedes.
   **3/3** with **977** tests, source inventory **149**, code index **975**,
   receipts **687/687**, Golden **11/11**, canonical **7/7**, and both leak
   audits at zero.
-- [ ] Commit the final closure provenance, then refresh Myco and
-  codebase-memory and prove exact Slice-747 indexed-head readback.
+- [x] Commit the closure roadmap at `ee8bcdea0b4619ff7d99de9cff51595251626204`
+  and refresh both indexes: Myco reports **6,359 files / 83,973 terms** with a
+  complete bounded `isWeakRingKey` readback; codebase-memory reports **60,461
+  nodes / 147,260 edges**, exact indexed HEAD, and one untruncated
+  `isWeakRingKey` symbol. A final post-record re-index is retained in handoff.
   Repository-wide closure remains `UNKNOWN`.
 
 ### Slices 648-697 Tower epistemic state and GateCache - 2026-08-14

@@ -3841,3 +3841,11 @@ plus the hermetic generator contract pass **19/19**; bounded outputs are queue
 semantic **3/3** with **977** tests, source inventory **149**, code index
 **975**, Golden **11/11**, canonical **7/7**, and both leak audits at zero.
 Final closure-provenance commit and dual-index refresh remain pending.
+
+Slice-747 owner/roadmap closure is committed at
+`ee8bcdea0b4619ff7d99de9cff51595251626204`. Myco then refreshed to **6,359
+files / 83,973 terms** with a complete bounded `isWeakRingKey` query, and
+codebase-memory refreshed to **60,461 nodes / 147,260 edges** with exact
+indexed HEAD and one untruncated symbol result. A final post-record exact-head
+readback is retained in the handoff; repository-wide closure remains
+`UNKNOWN`.

@@ -121,4 +121,4 @@ would narrow that observable host contract until an exact border is approved.
 - [x] Reconcile three independent read-only reviews.
 - [x] Commit authored evidence separately.
 - [x] Publish registered owners and pass the bounded 19-check matrix.
-- [ ] Commit closure provenance and refresh both indexes at Slice 747.
+- [x] Commit closure provenance and refresh both indexes at Slice 747.
