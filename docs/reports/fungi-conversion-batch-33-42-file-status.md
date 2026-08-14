@@ -2413,6 +2413,53 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 36 - Hardening, checked arithmetic, imports and interpreter
+
+Wave 36 adds **40 new source-bound Fungi decision cores**: the final six
+hardening-residency functions, every executable function in the checked i32
+and i64 arithmetic modules, six import-resolver functions, and the first
+thirteen interpreter helpers in source order. A bounded prior-credit audit
+found no exact source-and-symbol reuse. The package now registers **1,480**
+conversion overlays. These are post-border scalar decision cores: BigInt and
+binary64 semantics, checked-trap identity, AST/manifest records, filesystem
+and cache state, callbacks, diagnostics and host failure identity remain at
+the executing TypeScript border. No consumer switch, supersession or
+TypeScript retirement is claimed.
+
+The pinned source build point is
+`4b4ecdb90feb124daba517e7ee467689085a8932`. Exact source SHA-256 values,
+in source order, are
+`A8E86434A8BC2F65769E49C1650A350A4EAF0C43DF436D4102D94F39392E496B`,
+`7705C44F536AC2BF1475CB809C95E6CAD82C48E0CDD91FCC3BC39493F3950813`,
+`895AFEE63D6EB2AB1F13414AD608A6B795EA787980BDF0D78F280B5BB2D1D0EF`,
+`24121F69D0B1D3BF416C0DF03F0516BEB0AD897C46DE8A487D7F4F37518DA7A9`
+and
+`A43A9F93DF7C94D9C6199E92CA09C33A429904FDCCB03F8B27576069AD74F61F`.
+The post-Wave-35 moderate graph refresh returned the older
+`9541ac8c2a9f5adff4d71d511d89bd27ebc7c757` build point instead of the live
+commit, so graph freshness remains **UNKNOWN**. Graph results were navigation
+only; exact live bytes and the bounded prior-credit audit govern this wave.
+
+The RED test failed **0/3** because all 40 assets were absent and unregistered.
+The accepted six-Boolean shape uses a new evidence-rooted trace with distinct
+witness/branch order and bounded trace lengths 100-139. Focused source
+evidence passes **3/3**, including **40/40** exact-byte and normalized
+alpha-renamed whole-corpus uniqueness. The complete source-wave family passes
+**105/105**. Focused physical SLIDE/VOK evidence passes **1/1** and the
+complete physical-wave family passes **35/35**: each source compiles to a
+physical `.slide`, publishes, independently re-admits, executes with the
+expected typed value, and refuses mutated source, artifact and receipt bytes.
+Package no-emit typecheck is green. The focused test pins are
+`7CE9165A768521136E3DF3C4FB97BAEDA71D3AC5C140ADE26CBD8FCC5DF2D2B8`
+and
+`9061E4CFBA1D935831F7DDE78A1A4C43DDAB98F7168963FCA8B06FCA093EE250`.
+
+This is the only report modified by the wave and it is committed with all 40
+new Fungi files, so it is not report-only. Root authored the code directly; no
+worker authored these files and no push is performed. Both worktree and
+committed-object guards must report 40/40 uniqueness, the report-only streak
+must remain zero, and no report-only follow-up commit is permitted.
+
 ## Source decision overlay wave 35 - Governance, GPU plans and hardening residency
 
 Wave 35 adds **40 new source-bound Fungi decision cores**: the final twenty-six

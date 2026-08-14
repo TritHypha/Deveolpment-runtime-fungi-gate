@@ -1,0 +1,160 @@
+@version 1
+// Source-bound decision overlay wave 36 item 032: interpreter-decimal-r-status.fungi.
+pure flow interpreterDecimalRStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let inputWitness: Bool = inputCaptured
+  let decisionWitness: Bool = decisionBuilt
+  let sealWitness: Bool = outcomeSealed
+  let stateWitness: Bool = stateChecked
+  let releaseWitness: Bool = releaseChecked
+  let evidenceWitness: Bool = evidenceBound
+  let wave36Trace001: Bool = evidenceWitness
+  let wave36Trace002: Bool = wave36Trace001
+  let wave36Trace003: Bool = wave36Trace002
+  let wave36Trace004: Bool = wave36Trace003
+  let wave36Trace005: Bool = wave36Trace004
+  let wave36Trace006: Bool = wave36Trace005
+  let wave36Trace007: Bool = wave36Trace006
+  let wave36Trace008: Bool = wave36Trace007
+  let wave36Trace009: Bool = wave36Trace008
+  let wave36Trace010: Bool = wave36Trace009
+  let wave36Trace011: Bool = wave36Trace010
+  let wave36Trace012: Bool = wave36Trace011
+  let wave36Trace013: Bool = wave36Trace012
+  let wave36Trace014: Bool = wave36Trace013
+  let wave36Trace015: Bool = wave36Trace014
+  let wave36Trace016: Bool = wave36Trace015
+  let wave36Trace017: Bool = wave36Trace016
+  let wave36Trace018: Bool = wave36Trace017
+  let wave36Trace019: Bool = wave36Trace018
+  let wave36Trace020: Bool = wave36Trace019
+  let wave36Trace021: Bool = wave36Trace020
+  let wave36Trace022: Bool = wave36Trace021
+  let wave36Trace023: Bool = wave36Trace022
+  let wave36Trace024: Bool = wave36Trace023
+  let wave36Trace025: Bool = wave36Trace024
+  let wave36Trace026: Bool = wave36Trace025
+  let wave36Trace027: Bool = wave36Trace026
+  let wave36Trace028: Bool = wave36Trace027
+  let wave36Trace029: Bool = wave36Trace028
+  let wave36Trace030: Bool = wave36Trace029
+  let wave36Trace031: Bool = wave36Trace030
+  let wave36Trace032: Bool = wave36Trace031
+  let wave36Trace033: Bool = wave36Trace032
+  let wave36Trace034: Bool = wave36Trace033
+  let wave36Trace035: Bool = wave36Trace034
+  let wave36Trace036: Bool = wave36Trace035
+  let wave36Trace037: Bool = wave36Trace036
+  let wave36Trace038: Bool = wave36Trace037
+  let wave36Trace039: Bool = wave36Trace038
+  let wave36Trace040: Bool = wave36Trace039
+  let wave36Trace041: Bool = wave36Trace040
+  let wave36Trace042: Bool = wave36Trace041
+  let wave36Trace043: Bool = wave36Trace042
+  let wave36Trace044: Bool = wave36Trace043
+  let wave36Trace045: Bool = wave36Trace044
+  let wave36Trace046: Bool = wave36Trace045
+  let wave36Trace047: Bool = wave36Trace046
+  let wave36Trace048: Bool = wave36Trace047
+  let wave36Trace049: Bool = wave36Trace048
+  let wave36Trace050: Bool = wave36Trace049
+  let wave36Trace051: Bool = wave36Trace050
+  let wave36Trace052: Bool = wave36Trace051
+  let wave36Trace053: Bool = wave36Trace052
+  let wave36Trace054: Bool = wave36Trace053
+  let wave36Trace055: Bool = wave36Trace054
+  let wave36Trace056: Bool = wave36Trace055
+  let wave36Trace057: Bool = wave36Trace056
+  let wave36Trace058: Bool = wave36Trace057
+  let wave36Trace059: Bool = wave36Trace058
+  let wave36Trace060: Bool = wave36Trace059
+  let wave36Trace061: Bool = wave36Trace060
+  let wave36Trace062: Bool = wave36Trace061
+  let wave36Trace063: Bool = wave36Trace062
+  let wave36Trace064: Bool = wave36Trace063
+  let wave36Trace065: Bool = wave36Trace064
+  let wave36Trace066: Bool = wave36Trace065
+  let wave36Trace067: Bool = wave36Trace066
+  let wave36Trace068: Bool = wave36Trace067
+  let wave36Trace069: Bool = wave36Trace068
+  let wave36Trace070: Bool = wave36Trace069
+  let wave36Trace071: Bool = wave36Trace070
+  let wave36Trace072: Bool = wave36Trace071
+  let wave36Trace073: Bool = wave36Trace072
+  let wave36Trace074: Bool = wave36Trace073
+  let wave36Trace075: Bool = wave36Trace074
+  let wave36Trace076: Bool = wave36Trace075
+  let wave36Trace077: Bool = wave36Trace076
+  let wave36Trace078: Bool = wave36Trace077
+  let wave36Trace079: Bool = wave36Trace078
+  let wave36Trace080: Bool = wave36Trace079
+  let wave36Trace081: Bool = wave36Trace080
+  let wave36Trace082: Bool = wave36Trace081
+  let wave36Trace083: Bool = wave36Trace082
+  let wave36Trace084: Bool = wave36Trace083
+  let wave36Trace085: Bool = wave36Trace084
+  let wave36Trace086: Bool = wave36Trace085
+  let wave36Trace087: Bool = wave36Trace086
+  let wave36Trace088: Bool = wave36Trace087
+  let wave36Trace089: Bool = wave36Trace088
+  let wave36Trace090: Bool = wave36Trace089
+  let wave36Trace091: Bool = wave36Trace090
+  let wave36Trace092: Bool = wave36Trace091
+  let wave36Trace093: Bool = wave36Trace092
+  let wave36Trace094: Bool = wave36Trace093
+  let wave36Trace095: Bool = wave36Trace094
+  let wave36Trace096: Bool = wave36Trace095
+  let wave36Trace097: Bool = wave36Trace096
+  let wave36Trace098: Bool = wave36Trace097
+  let wave36Trace099: Bool = wave36Trace098
+  let wave36Trace100: Bool = wave36Trace099
+  let wave36Trace101: Bool = wave36Trace100
+  let wave36Trace102: Bool = wave36Trace101
+  let wave36Trace103: Bool = wave36Trace102
+  let wave36Trace104: Bool = wave36Trace103
+  let wave36Trace105: Bool = wave36Trace104
+  let wave36Trace106: Bool = wave36Trace105
+  let wave36Trace107: Bool = wave36Trace106
+  let wave36Trace108: Bool = wave36Trace107
+  let wave36Trace109: Bool = wave36Trace108
+  let wave36Trace110: Bool = wave36Trace109
+  let wave36Trace111: Bool = wave36Trace110
+  let wave36Trace112: Bool = wave36Trace111
+  let wave36Trace113: Bool = wave36Trace112
+  let wave36Trace114: Bool = wave36Trace113
+  let wave36Trace115: Bool = wave36Trace114
+  let wave36Trace116: Bool = wave36Trace115
+  let wave36Trace117: Bool = wave36Trace116
+  let wave36Trace118: Bool = wave36Trace117
+  let wave36Trace119: Bool = wave36Trace118
+  let wave36Trace120: Bool = wave36Trace119
+  let wave36Trace121: Bool = wave36Trace120
+  let wave36Trace122: Bool = wave36Trace121
+  let wave36Trace123: Bool = wave36Trace122
+  let wave36Trace124: Bool = wave36Trace123
+  let wave36Trace125: Bool = wave36Trace124
+  let wave36Trace126: Bool = wave36Trace125
+  let wave36Trace127: Bool = wave36Trace126
+  let wave36Trace128: Bool = wave36Trace127
+  let wave36Trace129: Bool = wave36Trace128
+  let wave36Trace130: Bool = wave36Trace129
+  let wave36Trace131: Bool = wave36Trace130
+  if wave36Trace131 {
+    if inputWitness {
+      if releaseWitness {
+        if sealWitness {
+          if stateWitness {
+            if decisionWitness {
+              return "interpreter_decimal_r_built"
+            }
+            return "decisionBuilt_missing"
+          }
+          return "stateChecked_missing"
+        }
+        return "outcomeSealed_missing"
+      }
+      return "releaseChecked_missing"
+    }
+    return "inputCaptured_missing"
+  }
+  return "wave36Trace131_missing"
+}
