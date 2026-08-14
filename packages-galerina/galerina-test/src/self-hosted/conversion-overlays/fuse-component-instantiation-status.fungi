@@ -1,0 +1,20 @@
+@version 1
+// Source-bound decision overlay 25: fuse-component-instantiation-status.fungi.
+pure flow fuseComponentInstantiationStatusCore(packageAdmitted: Bool, importsClosed: Bool, wasmInstantiated: Bool, exportsWrapped: Bool) -> String {
+  if packageAdmitted {
+    if importsClosed {
+      if wasmInstantiated {
+        let exportsWrappedGate: Bool = exportsWrapped
+        if exportsWrappedGate {
+          let handoff01: Bool = exportsWrappedGate
+          if handoff01 { return "fuse_component_instantiated" }
+          return "fuse_component_instantiated_handoff_missing"
+        }
+        return "exportsWrapped_missing"
+      }
+      return "wasmInstantiated_missing"
+    }
+    return "importsClosed_missing"
+  }
+  return "packageAdmitted_missing"
+}

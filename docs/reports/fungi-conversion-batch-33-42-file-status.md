@@ -2265,3 +2265,49 @@ all 40 new Fungi files, one report update, the 40/40 shadow result, the full
 source and physical overlay suites, and typecheck green. No worker authored
 the wave, no production authority is released, no TypeScript is retired, and
 no push is authorized.
+
+## Source decision overlay wave 15 - app-kernel fuse and registry-store boundaries
+
+Wave 15 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. Thirty-two bind the complete executable scope set discovered in
+`galerina-framework-app-kernel/src/fuse-loader.ts`; eight bind the first
+durable-host and identity checks in
+`galerina-framework-app-kernel/src/registry-generation-store.ts`. The
+package now registers **640** conversion overlays. The pinned source build
+point is `c01302c16b2a4b25fe185a4fbf97dc75435389f3`;
+`fuse-loader.ts` is
+`FA9308792A8B1CD796965ECFB95DEA5F09FE228DFE959818CD3C3B28A2184D9B`
+and `registry-generation-store.ts` is
+`74F6A976E7EEC9649ABA2E850A08FB7B36E2311D2E14543BFF8F6CF95B947A80`.
+The code graph supplied source-order discovery; exact live bytes and a bounded
+prior-wave literal audit supplied final scope authority.
+
+The source test first failed on absent assets. Its first implementation pass
+then refused seven normalized shadows, which were structurally separated
+before acceptance. The final whole-corpus gate reports **40/40 unique** with
+zero exact-byte or alpha-renamed template collisions. Focused source evidence
+passes **3/3** and the complete overlay source family passes **47/47**. The
+focused physical gate passes **1/1** and the complete physical family passes
+**16/16**: all 40 files compile into physical `.slide` artifacts, publish,
+independently re-admit and VOK-verify their typed results, refuse mutated
+source and physical artifacts, reject receipt tampering, and release no
+production authority. The test package no-emit typecheck is green. The focused
+test pins are
+`D98F8C12CAEC8A950D061754076B7351768D3374F018026899BBDF60A2326BAE`
+and
+`8B3820F3898D4D401AC82FC8BF155E997B1FFA3AE865CF3199E7C9CD61FBBEBB`.
+
+This remains bounded post-border decision evidence. It does not replace
+filesystem or dynamic-module loading, WebAssembly instantiation, JSON/JCS and
+UTF-8 processing, Node or Web crypto, signature and revocation verification,
+callback identities, mutable Map/Set state, retained object identity,
+durability, publication, clock/network/log effects, error classes, or cleanup
+ordering. Those source behaviours remain in TypeScript until their complete
+typed borders, effects, physical profiles, consumers and retirement gates are
+independently proved.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+contains all 40 new `.fungi` files, and both the worktree and committed diff
+must satisfy the minimum-40/expected-50 guard and the 40/40 duplicate-shadow
+check. No worker authored the wave, no push is authorized, and no report-only
+follow-up commit is permitted.

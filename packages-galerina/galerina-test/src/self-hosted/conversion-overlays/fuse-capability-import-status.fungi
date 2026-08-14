@@ -1,0 +1,21 @@
+@version 1
+// Source-bound decision overlay 23: fuse-capability-import-status.fungi.
+pure flow fuseCapabilityImportStatusCore(capabilitiesCaptured: Bool, registryBound: Bool, allKnown: Bool, namespacesGranted: Bool) -> String {
+  if capabilitiesCaptured {
+    let registryBoundGate: Bool = registryBound
+    if registryBoundGate {
+      let allKnownGate: Bool = allKnown
+      if allKnownGate {
+        if namespacesGranted {
+          let handoff01: Bool = namespacesGranted
+          if handoff01 { return "fuse_capability_imports_built" }
+          return "fuse_capability_imports_built_handoff_missing"
+        }
+        return "namespacesGranted_missing"
+      }
+      return "allKnown_missing"
+    }
+    return "registryBound_missing"
+  }
+  return "capabilitiesCaptured_missing"
+}

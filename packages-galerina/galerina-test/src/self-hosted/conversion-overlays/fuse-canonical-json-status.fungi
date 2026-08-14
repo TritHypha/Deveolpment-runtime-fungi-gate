@@ -1,0 +1,25 @@
+@version 1
+// Source-bound decision overlay 5: fuse-canonical-json-status.fungi.
+pure flow fuseCanonicalJsonStatusCore(valueCaptured: Bool, kindSupported: Bool, childrenCanonical: Bool, bytesStable: Bool) -> String {
+  let sourceProof01: Bool = valueCaptured
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  let sourceProof04: Bool = sourceProof03
+  let sourceProof05: Bool = sourceProof04
+  let sourceProof06: Bool = sourceProof05
+  let sourceProof07: Bool = sourceProof06
+  if sourceProof07 {
+    if kindSupported {
+      let childrenCanonicalGate: Bool = childrenCanonical
+      if childrenCanonicalGate {
+        if bytesStable {
+          return "fuse_json_canonical"
+        }
+        return "bytesStable_missing"
+      }
+      return "childrenCanonical_missing"
+    }
+    return "kindSupported_missing"
+  }
+  return "valueCaptured_missing"
+}

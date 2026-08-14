@@ -1,0 +1,24 @@
+@version 1
+// Source-bound decision overlay 28: fuse-composition-plan-status.fungi.
+pure flow fuseCompositionPlanStatusCore(membersCaptured: Bool, signatureSetValid: Bool, providersUnique: Bool, capabilitiesResolved: Bool, graphAcyclic: Bool) -> String {
+  let membersCapturedGate: Bool = membersCaptured
+  if membersCapturedGate {
+    let signatureSetValidGate: Bool = signatureSetValid
+    if signatureSetValidGate {
+      if providersUnique {
+        let capabilitiesResolvedGate: Bool = capabilitiesResolved
+        if capabilitiesResolvedGate {
+          let graphAcyclicGate: Bool = graphAcyclic
+          if graphAcyclicGate {
+            return "fuse_composition_planned"
+          }
+          return "graphAcyclic_missing"
+        }
+        return "capabilitiesResolved_missing"
+      }
+      return "providersUnique_missing"
+    }
+    return "signatureSetValid_missing"
+  }
+  return "membersCaptured_missing"
+}

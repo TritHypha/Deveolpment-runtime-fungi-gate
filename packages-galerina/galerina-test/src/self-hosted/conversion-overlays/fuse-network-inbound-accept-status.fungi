@@ -1,0 +1,15 @@
+@version 1
+// Source-bound decision overlay 8: fuse-network-inbound-accept-status.fungi.
+pure flow fuseNetworkInboundAcceptStatusCore(namespaceBound: Bool, handleUnavailable: Bool) -> String {
+  let namespaceBoundGate: Bool = namespaceBound
+  if namespaceBoundGate {
+    let handleUnavailableGate: Bool = handleUnavailable
+    if handleUnavailableGate {
+      let handoff01: Bool = handleUnavailableGate
+      if handoff01 { return "fuse_network_inbound_accept" }
+      return "fuse_network_inbound_accept_handoff_missing"
+    }
+    return "handleUnavailable_missing"
+  }
+  return "namespaceBound_missing"
+}

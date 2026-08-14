@@ -1,0 +1,23 @@
+@version 1
+// Source-bound decision overlay 32: fuse-import-closure-status.fungi.
+pure flow fuseImportClosureStatusCore(directoriesCaptured: Bool, packagesVerified: Bool, modulesRecorded: Bool, reportUntrusted: Bool) -> String {
+  let directoriesCapturedGate: Bool = directoriesCaptured
+  if directoriesCapturedGate {
+    let packagesVerifiedGate: Bool = packagesVerified
+    if packagesVerifiedGate {
+      let modulesRecordedGate: Bool = modulesRecorded
+      if modulesRecordedGate {
+        let reportUntrustedGate: Bool = reportUntrusted
+        if reportUntrustedGate {
+          let handoff01: Bool = reportUntrustedGate
+          if handoff01 { return "fuse_import_closure_built" }
+          return "fuse_import_closure_built_handoff_missing"
+        }
+        return "reportUntrusted_missing"
+      }
+      return "modulesRecorded_missing"
+    }
+    return "packagesVerified_missing"
+  }
+  return "directoriesCaptured_missing"
+}

@@ -1,0 +1,20 @@
+@version 1
+// Source-bound decision overlay 21: fuse-public-key-resolution-status.fungi.
+pure flow fusePublicKeyResolutionStatusCore(keyIdCaptured: Bool, directoryAdmitted: Bool, candidateBuilt: Bool, filePresent: Bool) -> String {
+  if keyIdCaptured {
+    if directoryAdmitted {
+      let candidateBuiltGate: Bool = candidateBuilt
+      if candidateBuiltGate {
+        if filePresent {
+          let handoff01: Bool = filePresent
+          if handoff01 { return "fuse_public_key_resolved" }
+          return "fuse_public_key_resolved_handoff_missing"
+        }
+        return "filePresent_missing"
+      }
+      return "candidateBuilt_missing"
+    }
+    return "directoryAdmitted_missing"
+  }
+  return "keyIdCaptured_missing"
+}

@@ -1,0 +1,18 @@
+@version 1
+// Source-bound decision overlay 12: fuse-network-outbound-send-status.fungi.
+pure flow fuseNetworkOutboundSendStatusCore(namespaceBound: Bool, sendUnavailable: Bool, payloadUnreleased: Bool) -> String {
+  let namespaceBoundGate: Bool = namespaceBound
+  if namespaceBoundGate {
+    let sendUnavailableGate: Bool = sendUnavailable
+    if sendUnavailableGate {
+      if payloadUnreleased {
+        let handoff01: Bool = payloadUnreleased
+        if handoff01 { return "fuse_network_outbound_send" }
+        return "fuse_network_outbound_send_handoff_missing"
+      }
+      return "payloadUnreleased_missing"
+    }
+    return "sendUnavailable_missing"
+  }
+  return "namespaceBound_missing"
+}

@@ -1,0 +1,16 @@
+@version 1
+// Source-bound decision overlay 9: fuse-network-inbound-peer-status.fungi.
+pure flow fuseNetworkInboundPeerStatusCore(namespaceBound: Bool, peerUnavailable: Bool, outboundAbsent: Bool) -> String {
+  if namespaceBound {
+    if peerUnavailable {
+      if outboundAbsent {
+        let handoff01: Bool = outboundAbsent
+        if handoff01 { return "fuse_network_inbound_peer" }
+        return "fuse_network_inbound_peer_handoff_missing"
+      }
+      return "outboundAbsent_missing"
+    }
+    return "peerUnavailable_missing"
+  }
+  return "namespaceBound_missing"
+}

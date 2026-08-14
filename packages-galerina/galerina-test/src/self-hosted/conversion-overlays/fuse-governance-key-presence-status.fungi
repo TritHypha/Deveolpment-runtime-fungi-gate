@@ -1,0 +1,19 @@
+@version 1
+// Source-bound decision overlay 22: fuse-governance-key-presence-status.fungi.
+pure flow fuseGovernanceKeyPresenceStatusCore(directoryAdmitted: Bool, directoryReadable: Bool, keyPatternFound: Bool) -> String {
+  let directoryAdmittedGate: Bool = directoryAdmitted
+  if directoryAdmittedGate {
+    if directoryReadable {
+      let keyPatternFoundGate: Bool = keyPatternFound
+      if keyPatternFoundGate {
+        let handoff01: Bool = keyPatternFoundGate
+        let handoff02: Bool = handoff01
+        if handoff02 { return "fuse_governance_key_present" }
+        return "fuse_governance_key_present_handoff_missing"
+      }
+      return "keyPatternFound_missing"
+    }
+    return "directoryReadable_missing"
+  }
+  return "directoryAdmitted_missing"
+}

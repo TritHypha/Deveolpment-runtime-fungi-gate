@@ -1,0 +1,27 @@
+@version 1
+// Source-bound decision overlay 24: fuse-package-load-verification-status.fungi.
+pure flow fusePackageLoadVerificationStatusCore(directoryCaptured: Bool, manifestRead: Bool, descriptorChecked: Bool, hashMatched: Bool, signatureChecked: Bool, revocationChecked: Bool) -> String {
+  let directoryCapturedGate: Bool = directoryCaptured
+  if directoryCapturedGate {
+    let manifestReadGate: Bool = manifestRead
+    if manifestReadGate {
+      let descriptorCheckedGate: Bool = descriptorChecked
+      if descriptorCheckedGate {
+        if hashMatched {
+          let signatureCheckedGate: Bool = signatureChecked
+          if signatureCheckedGate {
+            if revocationChecked {
+              return "fuse_package_admitted"
+            }
+            return "revocationChecked_missing"
+          }
+          return "signatureChecked_missing"
+        }
+        return "hashMatched_missing"
+      }
+      return "descriptorChecked_missing"
+    }
+    return "manifestRead_missing"
+  }
+  return "directoryCaptured_missing"
+}

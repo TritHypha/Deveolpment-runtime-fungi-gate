@@ -1,0 +1,20 @@
+@version 1
+// Source-bound decision overlay 15: fuse-log-factory-status.fungi.
+pure flow fuseLogFactoryStatusCore(capabilitySelected: Bool, namespaceBound: Bool, loggerClosed: Bool, egressBound: Bool) -> String {
+  if capabilitySelected {
+    let namespaceBoundGate: Bool = namespaceBound
+    if namespaceBoundGate {
+      let loggerClosedGate: Bool = loggerClosed
+      if loggerClosedGate {
+        let egressBoundGate: Bool = egressBound
+        if egressBoundGate {
+          return "fuse_log_factory"
+        }
+        return "egressBound_missing"
+      }
+      return "loggerClosed_missing"
+    }
+    return "namespaceBound_missing"
+  }
+  return "capabilitySelected_missing"
+}

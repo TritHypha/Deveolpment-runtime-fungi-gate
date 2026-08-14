@@ -1,0 +1,16 @@
+@version 1
+// Source-bound decision overlay 14: fuse-clock-now-status.fungi.
+pure flow fuseClockNowStatusCore(namespaceBound: Bool, zeroReturned: Bool) -> String {
+  let namespaceBoundGate: Bool = namespaceBound
+  if namespaceBoundGate {
+    if zeroReturned {
+      let handoff01: Bool = zeroReturned
+      let handoff02: Bool = handoff01
+      let handoff03: Bool = handoff02
+      if handoff03 { return "fuse_clock_now" }
+      return "fuse_clock_now_handoff_missing"
+    }
+    return "zeroReturned_missing"
+  }
+  return "namespaceBound_missing"
+}

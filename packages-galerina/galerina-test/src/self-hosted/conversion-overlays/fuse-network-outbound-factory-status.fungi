@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay 10: fuse-network-outbound-factory-status.fungi.
+pure flow fuseNetworkOutboundFactoryStatusCore(capabilitySelected: Bool, namespaceBound: Bool, functionsClosed: Bool, inboundAbsent: Bool) -> String {
+  let sourceProof01: Bool = capabilitySelected
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  let sourceProof04: Bool = sourceProof03
+  let sourceProof05: Bool = sourceProof04
+  let sourceProof06: Bool = sourceProof05
+  let sourceProof07: Bool = sourceProof06
+  let sourceProof08: Bool = sourceProof07
+  let sourceProof09: Bool = sourceProof08
+  let sourceProof10: Bool = sourceProof09
+  let sourceProof11: Bool = sourceProof10
+  let sourceProof12: Bool = sourceProof11
+  let sourceProof13: Bool = sourceProof12
+  if sourceProof13 {
+    if namespaceBound {
+      if functionsClosed {
+        let inboundAbsentGate: Bool = inboundAbsent
+        if inboundAbsentGate {
+          return "fuse_network_outbound_factory"
+        }
+        return "inboundAbsent_missing"
+      }
+      return "functionsClosed_missing"
+    }
+    return "namespaceBound_missing"
+  }
+  return "capabilitySelected_missing"
+}

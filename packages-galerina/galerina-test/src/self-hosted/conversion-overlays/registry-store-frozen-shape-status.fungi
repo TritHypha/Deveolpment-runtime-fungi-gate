@@ -1,0 +1,23 @@
+@version 1
+// Source-bound decision overlay 34: registry-store-frozen-shape-status.fungi.
+pure flow registryStoreFrozenShapeStatusCore(objectCaptured: Bool, prototypeExact: Bool, frozen: Bool, keysExact: Bool, descriptorsExact: Bool) -> String {
+  let objectCapturedGate: Bool = objectCaptured
+  if objectCapturedGate {
+    if prototypeExact {
+      if frozen {
+        if keysExact {
+          if descriptorsExact {
+            let handoff01: Bool = descriptorsExact
+            if handoff01 { return "registry_store_shape_exact" }
+            return "registry_store_shape_exact_handoff_missing"
+          }
+          return "descriptorsExact_missing"
+        }
+        return "keysExact_missing"
+      }
+      return "frozen_missing"
+    }
+    return "prototypeExact_missing"
+  }
+  return "objectCaptured_missing"
+}

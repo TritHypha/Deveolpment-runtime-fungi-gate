@@ -1,0 +1,20 @@
+@version 1
+// Source-bound decision overlay 18: fuse-read-json-status.fungi.
+pure flow fuseReadJsonStatusCore(pathCaptured: Bool, fileRead: Bool, jsonParsed: Bool, failureMapped: Bool) -> String {
+  let pathCapturedGate: Bool = pathCaptured
+  if pathCapturedGate {
+    if fileRead {
+      if jsonParsed {
+        if failureMapped {
+          let handoff01: Bool = failureMapped
+          if handoff01 { return "fuse_json_read" }
+          return "fuse_json_read_handoff_missing"
+        }
+        return "failureMapped_missing"
+      }
+      return "jsonParsed_missing"
+    }
+    return "fileRead_missing"
+  }
+  return "pathCaptured_missing"
+}

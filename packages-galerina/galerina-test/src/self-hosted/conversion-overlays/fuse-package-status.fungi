@@ -1,0 +1,23 @@
+@version 1
+// Source-bound decision overlay 27: fuse-package-status.fungi.
+pure flow fusePackageStatusCore(packageLoaded: Bool, signaturePolicyPassed: Bool, registryPassed: Bool, importsClosed: Bool, componentInstantiated: Bool) -> String {
+  if packageLoaded {
+    let signaturePolicyPassedGate: Bool = signaturePolicyPassed
+    if signaturePolicyPassedGate {
+      if registryPassed {
+        let importsClosedGate: Bool = importsClosed
+        if importsClosedGate {
+          let componentInstantiatedGate: Bool = componentInstantiated
+          if componentInstantiatedGate {
+            return "fuse_package_complete"
+          }
+          return "componentInstantiated_missing"
+        }
+        return "importsClosed_missing"
+      }
+      return "registryPassed_missing"
+    }
+    return "signaturePolicyPassed_missing"
+  }
+  return "packageLoaded_missing"
+}

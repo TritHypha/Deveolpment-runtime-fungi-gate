@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay 36: registry-store-sha256-status.fungi.
+pure flow registryStoreSha256StatusCore(bytesCaptured: Bool, ownedCopy: Bool, digestComputed: Bool, hexEncoded: Bool) -> String {
+  let bytesCapturedGate: Bool = bytesCaptured
+  if bytesCapturedGate {
+    let ownedCopyGate: Bool = ownedCopy
+    if ownedCopyGate {
+      if digestComputed {
+        if hexEncoded {
+          let handoff01: Bool = hexEncoded
+          let handoff02: Bool = handoff01
+          if handoff02 { return "registry_store_sha256_ready" }
+          return "registry_store_sha256_ready_handoff_missing"
+        }
+        return "hexEncoded_missing"
+      }
+      return "digestComputed_missing"
+    }
+    return "ownedCopy_missing"
+  }
+  return "bytesCaptured_missing"
+}

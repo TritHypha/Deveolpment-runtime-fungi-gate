@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay 38: registry-store-error-code-status.fungi.
+pure flow registryStoreErrorCodeStatusCore(errorCaptured: Bool, objectPresent: Bool, codePresent: Bool, codeString: Bool) -> String {
+  let errorCapturedGate: Bool = errorCaptured
+  if errorCapturedGate {
+    if objectPresent {
+      let codePresentGate: Bool = codePresent
+      if codePresentGate {
+        if codeString {
+          let handoff01: Bool = codeString
+          let handoff02: Bool = handoff01
+          if handoff02 { return "registry_store_error_code" }
+          return "registry_store_error_code_handoff_missing"
+        }
+        return "codeString_missing"
+      }
+      return "codePresent_missing"
+    }
+    return "objectPresent_missing"
+  }
+  return "errorCaptured_missing"
+}

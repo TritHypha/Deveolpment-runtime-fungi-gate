@@ -1,0 +1,21 @@
+@version 1
+// Source-bound decision overlay 35: registry-store-linked-binding-status.fungi.
+pure flow registryStoreLinkedBindingStatusCore(processCaptured: Bool, descriptorExact: Bool, factoryCalled: Bool, candidateExact: Bool) -> String {
+  if processCaptured {
+    let descriptorExactGate: Bool = descriptorExact
+    if descriptorExactGate {
+      if factoryCalled {
+        if candidateExact {
+          let handoff01: Bool = candidateExact
+          let handoff02: Bool = handoff01
+          if handoff02 { return "registry_store_binding_linked" }
+          return "registry_store_binding_linked_handoff_missing"
+        }
+        return "candidateExact_missing"
+      }
+      return "factoryCalled_missing"
+    }
+    return "descriptorExact_missing"
+  }
+  return "processCaptured_missing"
+}

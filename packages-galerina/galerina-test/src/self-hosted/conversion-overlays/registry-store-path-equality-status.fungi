@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay 39: registry-store-path-equality-status.fungi.
+pure flow registryStorePathEqualityStatusCore(leftCaptured: Bool, rightCaptured: Bool, platformClassified: Bool, comparisonComplete: Bool) -> String {
+  if leftCaptured {
+    let rightCapturedGate: Bool = rightCaptured
+    if rightCapturedGate {
+      let platformClassifiedGate: Bool = platformClassified
+      if platformClassifiedGate {
+        if comparisonComplete {
+          let handoff01: Bool = comparisonComplete
+          let handoff02: Bool = handoff01
+          if handoff02 { return "registry_store_path_compared" }
+          return "registry_store_path_compared_handoff_missing"
+        }
+        return "comparisonComplete_missing"
+      }
+      return "platformClassified_missing"
+    }
+    return "rightCaptured_missing"
+  }
+  return "leftCaptured_missing"
+}

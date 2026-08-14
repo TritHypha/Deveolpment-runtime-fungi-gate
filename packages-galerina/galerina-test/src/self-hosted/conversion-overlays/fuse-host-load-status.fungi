@@ -1,0 +1,17 @@
+@version 1
+// Source-bound decision overlay 1: fuse-host-load-status.fungi.
+pure flow fuseHostLoadStatusCore(floorLoaded: Bool, hostTyped: Bool, hostReturned: Bool) -> String {
+  let sourceProof01: Bool = floorLoaded
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  if sourceProof03 {
+    if hostTyped {
+      if hostReturned {
+        return "fuse_host_loaded"
+      }
+      return "hostReturned_missing"
+    }
+    return "hostTyped_missing"
+  }
+  return "floorLoaded_missing"
+}

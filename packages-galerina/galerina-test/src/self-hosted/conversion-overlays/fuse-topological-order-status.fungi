@@ -1,0 +1,21 @@
+@version 1
+// Source-bound decision overlay 29: fuse-topological-order-status.fungi.
+pure flow fuseTopologicalOrderStatusCore(namesCaptured: Bool, dependenciesCaptured: Bool, indegreesBuilt: Bool, allEmitted: Bool) -> String {
+  if namesCaptured {
+    if dependenciesCaptured {
+      let indegreesBuiltGate: Bool = indegreesBuilt
+      if indegreesBuiltGate {
+        let allEmittedGate: Bool = allEmitted
+        if allEmittedGate {
+          let handoff01: Bool = allEmittedGate
+          if handoff01 { return "fuse_topological_ordered" }
+          return "fuse_topological_ordered_handoff_missing"
+        }
+        return "allEmitted_missing"
+      }
+      return "indegreesBuilt_missing"
+    }
+    return "dependenciesCaptured_missing"
+  }
+  return "namesCaptured_missing"
+}

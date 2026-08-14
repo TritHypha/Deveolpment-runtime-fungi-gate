@@ -1,0 +1,23 @@
+@version 1
+// Source-bound decision overlay 4: fuse-canonical-string-status.fungi.
+pure flow fuseCanonicalStringStatusCore(textCaptured: Bool, quotesEscaped: Bool, controlsEscaped: Bool, allUnitsCopied: Bool) -> String {
+  let sourceProof01: Bool = textCaptured
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  let sourceProof04: Bool = sourceProof03
+  let sourceProof05: Bool = sourceProof04
+  if sourceProof05 {
+    let quotesEscapedGate: Bool = quotesEscaped
+    if quotesEscapedGate {
+      if controlsEscaped {
+        if allUnitsCopied {
+          return "fuse_string_canonical"
+        }
+        return "allUnitsCopied_missing"
+      }
+      return "controlsEscaped_missing"
+    }
+    return "quotesEscaped_missing"
+  }
+  return "textCaptured_missing"
+}

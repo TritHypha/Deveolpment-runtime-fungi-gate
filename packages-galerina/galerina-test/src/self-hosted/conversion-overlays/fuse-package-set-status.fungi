@@ -1,0 +1,27 @@
+@version 1
+// Source-bound decision overlay 31: fuse-package-set-status.fungi.
+pure flow fusePackageSetStatusCore(packagesLoaded: Bool, namesUnique: Bool, registryPassed: Bool, planBuilt: Bool, providersInstantiated: Bool, consumersInstantiated: Bool) -> String {
+  if packagesLoaded {
+    let namesUniqueGate: Bool = namesUnique
+    if namesUniqueGate {
+      let registryPassedGate: Bool = registryPassed
+      if registryPassedGate {
+        let planBuiltGate: Bool = planBuilt
+        if planBuiltGate {
+          let providersInstantiatedGate: Bool = providersInstantiated
+          if providersInstantiatedGate {
+            if consumersInstantiated {
+              return "fuse_package_set_complete"
+            }
+            return "consumersInstantiated_missing"
+          }
+          return "providersInstantiated_missing"
+        }
+        return "planBuilt_missing"
+      }
+      return "registryPassed_missing"
+    }
+    return "namesUnique_missing"
+  }
+  return "packagesLoaded_missing"
+}

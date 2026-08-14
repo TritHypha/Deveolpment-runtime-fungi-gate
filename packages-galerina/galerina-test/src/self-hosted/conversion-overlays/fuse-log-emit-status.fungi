@@ -1,0 +1,19 @@
+@version 1
+// Source-bound decision overlay 16: fuse-log-emit-status.fungi.
+pure flow fuseLogEmitStatusCore(namespaceBound: Bool, emitAcknowledged: Bool, authorityUnreleased: Bool) -> String {
+  let namespaceBoundGate: Bool = namespaceBound
+  if namespaceBoundGate {
+    let emitAcknowledgedGate: Bool = emitAcknowledged
+    if emitAcknowledgedGate {
+      let authorityUnreleasedGate: Bool = authorityUnreleased
+      if authorityUnreleasedGate {
+        let handoff01: Bool = authorityUnreleasedGate
+        if handoff01 { return "fuse_log_emit" }
+        return "fuse_log_emit_handoff_missing"
+      }
+      return "authorityUnreleased_missing"
+    }
+    return "emitAcknowledged_missing"
+  }
+  return "namespaceBound_missing"
+}

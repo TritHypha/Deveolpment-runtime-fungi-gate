@@ -1,0 +1,37 @@
+@version 1
+// Source-bound decision overlay 19: fuse-descriptor-extraction-status.fungi.
+pure flow fuseDescriptorExtractionStatusCore(manifestCaptured: Bool, descriptorPresent: Bool, hashValid: Bool, versionClosed: Bool, recordBuilt: Bool) -> String {
+  let sourceProof01: Bool = manifestCaptured
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  let sourceProof04: Bool = sourceProof03
+  let sourceProof05: Bool = sourceProof04
+  let sourceProof06: Bool = sourceProof05
+  let sourceProof07: Bool = sourceProof06
+  let sourceProof08: Bool = sourceProof07
+  let sourceProof09: Bool = sourceProof08
+  let sourceProof10: Bool = sourceProof09
+  let sourceProof11: Bool = sourceProof10
+  let sourceProof12: Bool = sourceProof11
+  let sourceProof13: Bool = sourceProof12
+  let sourceProof14: Bool = sourceProof13
+  let sourceProof15: Bool = sourceProof14
+  if sourceProof15 {
+    let descriptorPresentGate: Bool = descriptorPresent
+    if descriptorPresentGate {
+      if hashValid {
+        if versionClosed {
+          let recordBuiltGate: Bool = recordBuilt
+          if recordBuiltGate {
+            return "fuse_descriptor_extracted"
+          }
+          return "recordBuilt_missing"
+        }
+        return "versionClosed_missing"
+      }
+      return "hashValid_missing"
+    }
+    return "descriptorPresent_missing"
+  }
+  return "manifestCaptured_missing"
+}

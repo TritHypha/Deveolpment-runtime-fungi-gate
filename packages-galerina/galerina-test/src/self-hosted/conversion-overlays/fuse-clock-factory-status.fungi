@@ -1,0 +1,17 @@
+@version 1
+// Source-bound decision overlay 13: fuse-clock-factory-status.fungi.
+pure flow fuseClockFactoryStatusCore(capabilitySelected: Bool, namespaceBound: Bool, clockClosed: Bool) -> String {
+  if capabilitySelected {
+    if namespaceBound {
+      let clockClosedGate: Bool = clockClosed
+      if clockClosedGate {
+        let handoff01: Bool = clockClosedGate
+        if handoff01 { return "fuse_clock_factory" }
+        return "fuse_clock_factory_handoff_missing"
+      }
+      return "clockClosed_missing"
+    }
+    return "namespaceBound_missing"
+  }
+  return "capabilitySelected_missing"
+}

@@ -1,0 +1,22 @@
+@version 1
+// Source-bound decision overlay 30: fuse-provider-factory-status.fungi.
+pure flow fuseProviderFactoryStatusCore(capabilityCaptured: Bool, shapeKnown: Bool, providerBound: Bool, routesBuilt: Bool) -> String {
+  let capabilityCapturedGate: Bool = capabilityCaptured
+  if capabilityCapturedGate {
+    if shapeKnown {
+      let providerBoundGate: Bool = providerBound
+      if providerBoundGate {
+        let routesBuiltGate: Bool = routesBuilt
+        if routesBuiltGate {
+          let handoff01: Bool = routesBuiltGate
+          if handoff01 { return "fuse_provider_factory_built" }
+          return "fuse_provider_factory_built_handoff_missing"
+        }
+        return "routesBuilt_missing"
+      }
+      return "providerBound_missing"
+    }
+    return "shapeKnown_missing"
+  }
+  return "capabilityCaptured_missing"
+}

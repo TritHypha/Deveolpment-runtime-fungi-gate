@@ -1,0 +1,27 @@
+@version 1
+// Source-bound decision overlay 7: fuse-network-inbound-factory-status.fungi.
+pure flow fuseNetworkInboundFactoryStatusCore(capabilitySelected: Bool, namespaceBound: Bool, functionsClosed: Bool) -> String {
+  let sourceProof01: Bool = capabilitySelected
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  let sourceProof04: Bool = sourceProof03
+  let sourceProof05: Bool = sourceProof04
+  let sourceProof06: Bool = sourceProof05
+  let sourceProof07: Bool = sourceProof06
+  let sourceProof08: Bool = sourceProof07
+  let sourceProof09: Bool = sourceProof08
+  let sourceProof10: Bool = sourceProof09
+  let sourceProof11: Bool = sourceProof10
+  if sourceProof11 {
+    let namespaceBoundGate: Bool = namespaceBound
+    if namespaceBoundGate {
+      let functionsClosedGate: Bool = functionsClosed
+      if functionsClosedGate {
+        return "fuse_network_inbound_factory"
+      }
+      return "functionsClosed_missing"
+    }
+    return "namespaceBound_missing"
+  }
+  return "capabilitySelected_missing"
+}

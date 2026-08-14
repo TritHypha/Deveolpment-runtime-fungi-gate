@@ -1,0 +1,15 @@
+@version 1
+// Source-bound decision overlay 11: fuse-network-outbound-connect-status.fungi.
+pure flow fuseNetworkOutboundConnectStatusCore(namespaceBound: Bool, connectionUnavailable: Bool) -> String {
+  if namespaceBound {
+    let connectionUnavailableGate: Bool = connectionUnavailable
+    if connectionUnavailableGate {
+      let handoff01: Bool = connectionUnavailableGate
+      let handoff02: Bool = handoff01
+      if handoff02 { return "fuse_network_outbound_connect" }
+      return "fuse_network_outbound_connect_handoff_missing"
+    }
+    return "connectionUnavailable_missing"
+  }
+  return "namespaceBound_missing"
+}

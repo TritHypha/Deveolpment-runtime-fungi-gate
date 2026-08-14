@@ -1,0 +1,15 @@
+@version 1
+// Source-bound decision overlay 2: fuse-utf8-encoding-status.fungi.
+pure flow fuseUtf8EncodingStatusCore(textCaptured: Bool, encoderReady: Bool, bytesProduced: Bool) -> String {
+  let textCapturedGate: Bool = textCaptured
+  if textCapturedGate {
+    if encoderReady {
+      if bytesProduced {
+        return "fuse_utf8_encoded"
+      }
+      return "bytesProduced_missing"
+    }
+    return "encoderReady_missing"
+  }
+  return "textCaptured_missing"
+}

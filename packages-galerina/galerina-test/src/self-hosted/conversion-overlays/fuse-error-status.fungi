@@ -1,0 +1,17 @@
+@version 1
+// Source-bound decision overlay 17: fuse-error-status.fungi.
+pure flow fuseErrorStatusCore(codeCaptured: Bool, messageCaptured: Bool, failureRaised: Bool) -> String {
+  if codeCaptured {
+    if messageCaptured {
+      if failureRaised {
+        let handoff01: Bool = failureRaised
+        let handoff02: Bool = handoff01
+        if handoff02 { return "fuse_error_raised" }
+        return "fuse_error_raised_handoff_missing"
+      }
+      return "failureRaised_missing"
+    }
+    return "messageCaptured_missing"
+  }
+  return "codeCaptured_missing"
+}

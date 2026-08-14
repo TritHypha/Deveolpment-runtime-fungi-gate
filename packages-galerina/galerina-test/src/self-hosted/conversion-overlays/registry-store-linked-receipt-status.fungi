@@ -1,0 +1,23 @@
+@version 1
+// Source-bound decision overlay 37: registry-store-linked-receipt-status.fungi.
+pure flow registryStoreLinkedReceiptStatusCore(valueCaptured: Bool, shapeExact: Bool, schemaExact: Bool, identityMatched: Bool, nonAuthorizing: Bool) -> String {
+  if valueCaptured {
+    if shapeExact {
+      let schemaExactGate: Bool = schemaExact
+      if schemaExactGate {
+        if identityMatched {
+          if nonAuthorizing {
+            let handoff01: Bool = nonAuthorizing
+            if handoff01 { return "registry_store_receipt_linked" }
+            return "registry_store_receipt_linked_handoff_missing"
+          }
+          return "nonAuthorizing_missing"
+        }
+        return "identityMatched_missing"
+      }
+      return "schemaExact_missing"
+    }
+    return "shapeExact_missing"
+  }
+  return "valueCaptured_missing"
+}

@@ -1,0 +1,23 @@
+@version 1
+// Source-bound decision overlay 20: fuse-manifest-verification-status.fungi.
+pure flow fuseManifestVerificationStatusCore(signatureCaptured: Bool, algorithmClosed: Bool, keyResolved: Bool, bytesCanonical: Bool, signatureVerified: Bool) -> String {
+  let signatureCapturedGate: Bool = signatureCaptured
+  if signatureCapturedGate {
+    let algorithmClosedGate: Bool = algorithmClosed
+    if algorithmClosedGate {
+      if keyResolved {
+        if bytesCanonical {
+          let signatureVerifiedGate: Bool = signatureVerified
+          if signatureVerifiedGate {
+            return "fuse_manifest_verified"
+          }
+          return "signatureVerified_missing"
+        }
+        return "bytesCanonical_missing"
+      }
+      return "keyResolved_missing"
+    }
+    return "algorithmClosed_missing"
+  }
+  return "signatureCaptured_missing"
+}

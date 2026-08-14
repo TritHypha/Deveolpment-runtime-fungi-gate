@@ -1,0 +1,24 @@
+@version 1
+// Source-bound decision overlay 6: fuse-manifest-signing-input-status.fungi.
+pure flow fuseManifestSigningInputStatusCore(manifestCaptured: Bool, canonSelected: Bool, bodySerialized: Bool) -> String {
+  let sourceProof01: Bool = manifestCaptured
+  let sourceProof02: Bool = sourceProof01
+  let sourceProof03: Bool = sourceProof02
+  let sourceProof04: Bool = sourceProof03
+  let sourceProof05: Bool = sourceProof04
+  let sourceProof06: Bool = sourceProof05
+  let sourceProof07: Bool = sourceProof06
+  let sourceProof08: Bool = sourceProof07
+  let sourceProof09: Bool = sourceProof08
+  if sourceProof09 {
+    if canonSelected {
+      let bodySerializedGate: Bool = bodySerialized
+      if bodySerializedGate {
+        return "fuse_signing_input_ready"
+      }
+      return "bodySerialized_missing"
+    }
+    return "canonSelected_missing"
+  }
+  return "manifestCaptured_missing"
+}

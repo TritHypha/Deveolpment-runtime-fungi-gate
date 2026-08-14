@@ -1,0 +1,20 @@
+@version 1
+// Source-bound decision overlay 33: registry-store-host-load-status.fungi.
+pure flow registryStoreHostLoadStatusCore(floorLoaded: Bool, fsBound: Bool, pathBound: Bool, processBound: Bool) -> String {
+  if floorLoaded {
+    if fsBound {
+      if pathBound {
+        if processBound {
+          let handoff01: Bool = processBound
+          let handoff02: Bool = handoff01
+          if handoff02 { return "registry_store_host_loaded" }
+          return "registry_store_host_loaded_handoff_missing"
+        }
+        return "processBound_missing"
+      }
+      return "pathBound_missing"
+    }
+    return "fsBound_missing"
+  }
+  return "floorLoaded_missing"
+}

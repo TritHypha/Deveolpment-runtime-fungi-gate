@@ -1,0 +1,21 @@
+@version 1
+// Source-bound decision overlay 26: fuse-component-invoke-status.fungi.
+pure flow fuseComponentInvokeStatusCore(exportCaptured: Bool, functionPresent: Bool, argumentsBound: Bool, resultNormalized: Bool) -> String {
+  let exportCapturedGate: Bool = exportCaptured
+  if exportCapturedGate {
+    if functionPresent {
+      if argumentsBound {
+        let resultNormalizedGate: Bool = resultNormalized
+        if resultNormalizedGate {
+          let handoff01: Bool = resultNormalizedGate
+          if handoff01 { return "fuse_component_invoked" }
+          return "fuse_component_invoked_handoff_missing"
+        }
+        return "resultNormalized_missing"
+      }
+      return "argumentsBound_missing"
+    }
+    return "functionPresent_missing"
+  }
+  return "exportCaptured_missing"
+}

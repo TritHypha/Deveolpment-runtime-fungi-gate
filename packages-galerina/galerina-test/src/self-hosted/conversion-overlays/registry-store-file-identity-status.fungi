@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay 40: registry-store-file-identity-status.fungi.
+pure flow registryStoreFileIdentityStatusCore(beforeCaptured: Bool, handleCaptured: Bool, afterCaptured: Bool, fileKindsValid: Bool, sizesStable: Bool, timesStable: Bool, identityStable: Bool) -> String {
+  let beforeCapturedGate: Bool = beforeCaptured
+  if beforeCapturedGate {
+    let handleCapturedGate: Bool = handleCaptured
+    if handleCapturedGate {
+      let afterCapturedGate: Bool = afterCaptured
+      if afterCapturedGate {
+        if fileKindsValid {
+          if sizesStable {
+            let timesStableGate: Bool = timesStable
+            if timesStableGate {
+              if identityStable {
+                return "registry_store_file_same"
+              }
+              return "identityStable_missing"
+            }
+            return "timesStable_missing"
+          }
+          return "sizesStable_missing"
+        }
+        return "fileKindsValid_missing"
+      }
+      return "afterCaptured_missing"
+    }
+    return "handleCaptured_missing"
+  }
+  return "beforeCaptured_missing"
+}

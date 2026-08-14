@@ -1,0 +1,18 @@
+@version 1
+// Source-bound decision overlay 3: fuse-base64-decoding-status.fungi.
+pure flow fuseBase64DecodingStatusCore(textCaptured: Bool, alphabetAccepted: Bool, bytesAllocated: Bool, allDecoded: Bool) -> String {
+  if textCaptured {
+    let alphabetAcceptedGate: Bool = alphabetAccepted
+    if alphabetAcceptedGate {
+      if bytesAllocated {
+        if allDecoded {
+          return "fuse_base64_decoded"
+        }
+        return "allDecoded_missing"
+      }
+      return "bytesAllocated_missing"
+    }
+    return "alphabetAccepted_missing"
+  }
+  return "textCaptured_missing"
+}
