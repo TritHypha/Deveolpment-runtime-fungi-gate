@@ -1,0 +1,70 @@
+@version 1
+// Source-bound decision overlay wave 42 item 021: observability-warning-status.fungi.
+pure flow observabilityWarningStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay21001: Bool = gateG000
+  let relay21002: Bool = gateB000
+  let relay21003: Bool = gateD000
+  let relay21004: Bool = gateF000
+  let relay21005: Bool = gateA000
+  let relay21006: Bool = gateC000
+  let relay21007: Bool = gateE000
+  let relay21008: Bool = relay21001
+  let relay21009: Bool = relay21002
+  let relay21010: Bool = relay21003
+  let relay21011: Bool = relay21004
+  let relay21012: Bool = relay21005
+  let relay21013: Bool = relay21006
+  let relay21014: Bool = relay21007
+  let relay21015: Bool = relay21008
+  let relay21016: Bool = relay21009
+  let relay21017: Bool = relay21010
+  let relay21018: Bool = relay21011
+  let relay21019: Bool = relay21012
+  let relay21020: Bool = relay21013
+  let relay21021: Bool = relay21014
+  let relay21022: Bool = relay21015
+  let relay21023: Bool = relay21016
+  let relay21024: Bool = relay21017
+  let relay21025: Bool = relay21018
+  let relay21026: Bool = relay21019
+  let relay21027: Bool = relay21020
+  let relay21028: Bool = relay21021
+  let relay21029: Bool = relay21022
+  let relay21030: Bool = relay21023
+  let relay21031: Bool = relay21024
+  let relay21032: Bool = relay21025
+  let relay21033: Bool = relay21026
+  let relay21034: Bool = relay21027
+  let relay21035: Bool = relay21028
+  let relay21036: Bool = relay21029
+  let relay21037: Bool = relay21030
+  if relay21036 {
+    if relay21034 {
+      if relay21032 {
+        if relay21037 {
+          if relay21035 {
+            if relay21033 {
+              if relay21031 {
+                return "observability_warning_built"
+              }
+              return "wave42_gate_3_missing"
+            }
+            return "wave42_gate_0_missing"
+          }
+          return "wave42_gate_4_missing"
+        }
+        return "wave42_gate_1_missing"
+      }
+      return "wave42_gate_5_missing"
+    }
+    return "wave42_gate_2_missing"
+  }
+  return "wave42_gate_6_missing"
+}

@@ -1,0 +1,68 @@
+@version 1
+// Source-bound decision overlay wave 42 item 019: observability-extract-audit-level-status.fungi.
+pure flow observabilityExtractAuditLevelStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay19001: Bool = gateA000
+  let relay19002: Bool = gateC000
+  let relay19003: Bool = gateE000
+  let relay19004: Bool = gateG000
+  let relay19005: Bool = gateB000
+  let relay19006: Bool = gateD000
+  let relay19007: Bool = gateF000
+  let relay19008: Bool = relay19001
+  let relay19009: Bool = relay19002
+  let relay19010: Bool = relay19003
+  let relay19011: Bool = relay19004
+  let relay19012: Bool = relay19005
+  let relay19013: Bool = relay19006
+  let relay19014: Bool = relay19007
+  let relay19015: Bool = relay19008
+  let relay19016: Bool = relay19009
+  let relay19017: Bool = relay19010
+  let relay19018: Bool = relay19011
+  let relay19019: Bool = relay19012
+  let relay19020: Bool = relay19013
+  let relay19021: Bool = relay19014
+  let relay19022: Bool = relay19015
+  let relay19023: Bool = relay19016
+  let relay19024: Bool = relay19017
+  let relay19025: Bool = relay19018
+  let relay19026: Bool = relay19019
+  let relay19027: Bool = relay19020
+  let relay19028: Bool = relay19021
+  let relay19029: Bool = relay19022
+  let relay19030: Bool = relay19023
+  let relay19031: Bool = relay19024
+  let relay19032: Bool = relay19025
+  let relay19033: Bool = relay19026
+  let relay19034: Bool = relay19027
+  let relay19035: Bool = relay19028
+  if relay19031 {
+    if relay19035 {
+      if relay19032 {
+        if relay19029 {
+          if relay19033 {
+            if relay19030 {
+              if relay19034 {
+                return "observability_extract_audit_level_built"
+              }
+              return "wave42_gate_3_missing"
+            }
+            return "wave42_gate_2_missing"
+          }
+          return "wave42_gate_1_missing"
+        }
+        return "wave42_gate_0_missing"
+      }
+      return "wave42_gate_6_missing"
+    }
+    return "wave42_gate_5_missing"
+  }
+  return "wave42_gate_4_missing"
+}

@@ -1,0 +1,72 @@
+@version 1
+// Source-bound decision overlay wave 42 item 023: package-max-manifest-bytes-status.fungi.
+pure flow packageMaxManifestBytesStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay23001: Bool = gateF000
+  let relay23002: Bool = gateA000
+  let relay23003: Bool = gateC000
+  let relay23004: Bool = gateE000
+  let relay23005: Bool = gateG000
+  let relay23006: Bool = gateB000
+  let relay23007: Bool = gateD000
+  let relay23008: Bool = relay23001
+  let relay23009: Bool = relay23002
+  let relay23010: Bool = relay23003
+  let relay23011: Bool = relay23004
+  let relay23012: Bool = relay23005
+  let relay23013: Bool = relay23006
+  let relay23014: Bool = relay23007
+  let relay23015: Bool = relay23008
+  let relay23016: Bool = relay23009
+  let relay23017: Bool = relay23010
+  let relay23018: Bool = relay23011
+  let relay23019: Bool = relay23012
+  let relay23020: Bool = relay23013
+  let relay23021: Bool = relay23014
+  let relay23022: Bool = relay23015
+  let relay23023: Bool = relay23016
+  let relay23024: Bool = relay23017
+  let relay23025: Bool = relay23018
+  let relay23026: Bool = relay23019
+  let relay23027: Bool = relay23020
+  let relay23028: Bool = relay23021
+  let relay23029: Bool = relay23022
+  let relay23030: Bool = relay23023
+  let relay23031: Bool = relay23024
+  let relay23032: Bool = relay23025
+  let relay23033: Bool = relay23026
+  let relay23034: Bool = relay23027
+  let relay23035: Bool = relay23028
+  let relay23036: Bool = relay23029
+  let relay23037: Bool = relay23030
+  let relay23038: Bool = relay23031
+  let relay23039: Bool = relay23032
+  if relay23034 {
+    if relay23033 {
+      if relay23039 {
+        if relay23038 {
+          if relay23037 {
+            if relay23036 {
+              if relay23035 {
+                return "package_max_manifest_bytes_built"
+              }
+              return "wave42_gate_3_missing"
+            }
+            return "wave42_gate_5_missing"
+          }
+          return "wave42_gate_0_missing"
+        }
+        return "wave42_gate_2_missing"
+      }
+      return "wave42_gate_4_missing"
+    }
+    return "wave42_gate_6_missing"
+  }
+  return "wave42_gate_1_missing"
+}

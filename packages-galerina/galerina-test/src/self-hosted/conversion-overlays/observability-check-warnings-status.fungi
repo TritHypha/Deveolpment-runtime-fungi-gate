@@ -1,0 +1,71 @@
+@version 1
+// Source-bound decision overlay wave 42 item 022: observability-check-warnings-status.fungi.
+pure flow observabilityCheckWarningsStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay22001: Bool = gateC000
+  let relay22002: Bool = gateE000
+  let relay22003: Bool = gateG000
+  let relay22004: Bool = gateB000
+  let relay22005: Bool = gateD000
+  let relay22006: Bool = gateF000
+  let relay22007: Bool = gateA000
+  let relay22008: Bool = relay22001
+  let relay22009: Bool = relay22002
+  let relay22010: Bool = relay22003
+  let relay22011: Bool = relay22004
+  let relay22012: Bool = relay22005
+  let relay22013: Bool = relay22006
+  let relay22014: Bool = relay22007
+  let relay22015: Bool = relay22008
+  let relay22016: Bool = relay22009
+  let relay22017: Bool = relay22010
+  let relay22018: Bool = relay22011
+  let relay22019: Bool = relay22012
+  let relay22020: Bool = relay22013
+  let relay22021: Bool = relay22014
+  let relay22022: Bool = relay22015
+  let relay22023: Bool = relay22016
+  let relay22024: Bool = relay22017
+  let relay22025: Bool = relay22018
+  let relay22026: Bool = relay22019
+  let relay22027: Bool = relay22020
+  let relay22028: Bool = relay22021
+  let relay22029: Bool = relay22022
+  let relay22030: Bool = relay22023
+  let relay22031: Bool = relay22024
+  let relay22032: Bool = relay22025
+  let relay22033: Bool = relay22026
+  let relay22034: Bool = relay22027
+  let relay22035: Bool = relay22028
+  let relay22036: Bool = relay22029
+  let relay22037: Bool = relay22030
+  let relay22038: Bool = relay22031
+  if relay22035 {
+    if relay22037 {
+      if relay22032 {
+        if relay22034 {
+          if relay22036 {
+            if relay22038 {
+              if relay22033 {
+                return "observability_check_warnings_built"
+              }
+              return "wave42_gate_3_missing"
+            }
+            return "wave42_gate_6_missing"
+          }
+          return "wave42_gate_2_missing"
+        }
+        return "wave42_gate_5_missing"
+      }
+      return "wave42_gate_1_missing"
+    }
+    return "wave42_gate_4_missing"
+  }
+  return "wave42_gate_0_missing"
+}

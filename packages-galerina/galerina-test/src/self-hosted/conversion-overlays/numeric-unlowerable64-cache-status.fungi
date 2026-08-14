@@ -1,0 +1,54 @@
+@version 1
+// Source-bound decision overlay wave 42 item 005: numeric-unlowerable64-cache-status.fungi.
+pure flow numericUnlowerable64CacheStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay05001: Bool = gateA000
+  let relay05002: Bool = gateC000
+  let relay05003: Bool = gateE000
+  let relay05004: Bool = gateG000
+  let relay05005: Bool = gateB000
+  let relay05006: Bool = gateD000
+  let relay05007: Bool = gateF000
+  let relay05008: Bool = relay05001
+  let relay05009: Bool = relay05002
+  let relay05010: Bool = relay05003
+  let relay05011: Bool = relay05004
+  let relay05012: Bool = relay05005
+  let relay05013: Bool = relay05006
+  let relay05014: Bool = relay05007
+  let relay05015: Bool = relay05008
+  let relay05016: Bool = relay05009
+  let relay05017: Bool = relay05010
+  let relay05018: Bool = relay05011
+  let relay05019: Bool = relay05012
+  let relay05020: Bool = relay05013
+  let relay05021: Bool = relay05014
+  if relay05017 {
+    if relay05016 {
+      if relay05015 {
+        if relay05021 {
+          if relay05020 {
+            if relay05019 {
+              if relay05018 {
+                return "numeric_unlowerable64_cache_built"
+              }
+              return "wave42_gate_6_missing"
+            }
+            return "wave42_gate_1_missing"
+          }
+          return "wave42_gate_3_missing"
+        }
+        return "wave42_gate_5_missing"
+      }
+      return "wave42_gate_0_missing"
+    }
+    return "wave42_gate_2_missing"
+  }
+  return "wave42_gate_4_missing"
+}

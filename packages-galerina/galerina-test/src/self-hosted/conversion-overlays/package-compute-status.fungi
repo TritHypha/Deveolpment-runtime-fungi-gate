@@ -1,0 +1,74 @@
+@version 1
+// Source-bound decision overlay wave 42 item 025: package-compute-status.fungi.
+pure flow packageComputeStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay25001: Bool = gateE000
+  let relay25002: Bool = gateG000
+  let relay25003: Bool = gateB000
+  let relay25004: Bool = gateD000
+  let relay25005: Bool = gateF000
+  let relay25006: Bool = gateA000
+  let relay25007: Bool = gateC000
+  let relay25008: Bool = relay25001
+  let relay25009: Bool = relay25002
+  let relay25010: Bool = relay25003
+  let relay25011: Bool = relay25004
+  let relay25012: Bool = relay25005
+  let relay25013: Bool = relay25006
+  let relay25014: Bool = relay25007
+  let relay25015: Bool = relay25008
+  let relay25016: Bool = relay25009
+  let relay25017: Bool = relay25010
+  let relay25018: Bool = relay25011
+  let relay25019: Bool = relay25012
+  let relay25020: Bool = relay25013
+  let relay25021: Bool = relay25014
+  let relay25022: Bool = relay25015
+  let relay25023: Bool = relay25016
+  let relay25024: Bool = relay25017
+  let relay25025: Bool = relay25018
+  let relay25026: Bool = relay25019
+  let relay25027: Bool = relay25020
+  let relay25028: Bool = relay25021
+  let relay25029: Bool = relay25022
+  let relay25030: Bool = relay25023
+  let relay25031: Bool = relay25024
+  let relay25032: Bool = relay25025
+  let relay25033: Bool = relay25026
+  let relay25034: Bool = relay25027
+  let relay25035: Bool = relay25028
+  let relay25036: Bool = relay25029
+  let relay25037: Bool = relay25030
+  let relay25038: Bool = relay25031
+  let relay25039: Bool = relay25032
+  let relay25040: Bool = relay25033
+  let relay25041: Bool = relay25034
+  if relay25039 {
+    if relay25036 {
+      if relay25040 {
+        if relay25037 {
+          if relay25041 {
+            if relay25038 {
+              if relay25035 {
+                return "package_compute_built"
+              }
+              return "wave42_gate_2_missing"
+            }
+            return "wave42_gate_1_missing"
+          }
+          return "wave42_gate_0_missing"
+        }
+        return "wave42_gate_6_missing"
+      }
+      return "wave42_gate_5_missing"
+    }
+    return "wave42_gate_4_missing"
+  }
+  return "wave42_gate_3_missing"
+}

@@ -1,0 +1,59 @@
+@version 1
+// Source-bound decision overlay wave 42 item 010: observability-metric-status.fungi.
+pure flow observabilityMetricStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay10001: Bool = gateB000
+  let relay10002: Bool = gateD000
+  let relay10003: Bool = gateF000
+  let relay10004: Bool = gateA000
+  let relay10005: Bool = gateC000
+  let relay10006: Bool = gateE000
+  let relay10007: Bool = gateG000
+  let relay10008: Bool = relay10001
+  let relay10009: Bool = relay10002
+  let relay10010: Bool = relay10003
+  let relay10011: Bool = relay10004
+  let relay10012: Bool = relay10005
+  let relay10013: Bool = relay10006
+  let relay10014: Bool = relay10007
+  let relay10015: Bool = relay10008
+  let relay10016: Bool = relay10009
+  let relay10017: Bool = relay10010
+  let relay10018: Bool = relay10011
+  let relay10019: Bool = relay10012
+  let relay10020: Bool = relay10013
+  let relay10021: Bool = relay10014
+  let relay10022: Bool = relay10015
+  let relay10023: Bool = relay10016
+  let relay10024: Bool = relay10017
+  let relay10025: Bool = relay10018
+  let relay10026: Bool = relay10019
+  if relay10026 {
+    if relay10021 {
+      if relay10023 {
+        if relay10025 {
+          if relay10020 {
+            if relay10022 {
+              if relay10024 {
+                return "observability_metric_built"
+              }
+              return "wave42_gate_5_missing"
+            }
+            return "wave42_gate_1_missing"
+          }
+          return "wave42_gate_4_missing"
+        }
+        return "wave42_gate_0_missing"
+      }
+      return "wave42_gate_3_missing"
+    }
+    return "wave42_gate_6_missing"
+  }
+  return "wave42_gate_2_missing"
+}

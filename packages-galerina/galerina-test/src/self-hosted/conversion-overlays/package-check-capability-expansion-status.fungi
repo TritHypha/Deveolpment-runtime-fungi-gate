@@ -1,0 +1,78 @@
+@version 1
+// Source-bound decision overlay wave 42 item 029: package-check-capability-expansion-status.fungi.
+pure flow packageCheckCapabilityExpansionStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay29001: Bool = gateC000
+  let relay29002: Bool = gateE000
+  let relay29003: Bool = gateG000
+  let relay29004: Bool = gateB000
+  let relay29005: Bool = gateD000
+  let relay29006: Bool = gateF000
+  let relay29007: Bool = gateA000
+  let relay29008: Bool = relay29001
+  let relay29009: Bool = relay29002
+  let relay29010: Bool = relay29003
+  let relay29011: Bool = relay29004
+  let relay29012: Bool = relay29005
+  let relay29013: Bool = relay29006
+  let relay29014: Bool = relay29007
+  let relay29015: Bool = relay29008
+  let relay29016: Bool = relay29009
+  let relay29017: Bool = relay29010
+  let relay29018: Bool = relay29011
+  let relay29019: Bool = relay29012
+  let relay29020: Bool = relay29013
+  let relay29021: Bool = relay29014
+  let relay29022: Bool = relay29015
+  let relay29023: Bool = relay29016
+  let relay29024: Bool = relay29017
+  let relay29025: Bool = relay29018
+  let relay29026: Bool = relay29019
+  let relay29027: Bool = relay29020
+  let relay29028: Bool = relay29021
+  let relay29029: Bool = relay29022
+  let relay29030: Bool = relay29023
+  let relay29031: Bool = relay29024
+  let relay29032: Bool = relay29025
+  let relay29033: Bool = relay29026
+  let relay29034: Bool = relay29027
+  let relay29035: Bool = relay29028
+  let relay29036: Bool = relay29029
+  let relay29037: Bool = relay29030
+  let relay29038: Bool = relay29031
+  let relay29039: Bool = relay29032
+  let relay29040: Bool = relay29033
+  let relay29041: Bool = relay29034
+  let relay29042: Bool = relay29035
+  let relay29043: Bool = relay29036
+  let relay29044: Bool = relay29037
+  let relay29045: Bool = relay29038
+  if relay29042 {
+    if relay29041 {
+      if relay29040 {
+        if relay29039 {
+          if relay29045 {
+            if relay29044 {
+              if relay29043 {
+                return "package_check_capability_expansion_built"
+              }
+              return "wave42_gate_2_missing"
+            }
+            return "wave42_gate_4_missing"
+          }
+          return "wave42_gate_6_missing"
+        }
+        return "wave42_gate_1_missing"
+      }
+      return "wave42_gate_3_missing"
+    }
+    return "wave42_gate_5_missing"
+  }
+  return "wave42_gate_0_missing"
+}

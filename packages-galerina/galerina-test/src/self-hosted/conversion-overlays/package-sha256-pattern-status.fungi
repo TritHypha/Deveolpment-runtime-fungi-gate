@@ -1,0 +1,80 @@
+@version 1
+// Source-bound decision overlay wave 42 item 031: package-sha256-pattern-status.fungi.
+pure flow packageSha256PatternStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay31001: Bool = gateB000
+  let relay31002: Bool = gateD000
+  let relay31003: Bool = gateF000
+  let relay31004: Bool = gateA000
+  let relay31005: Bool = gateC000
+  let relay31006: Bool = gateE000
+  let relay31007: Bool = gateG000
+  let relay31008: Bool = relay31001
+  let relay31009: Bool = relay31002
+  let relay31010: Bool = relay31003
+  let relay31011: Bool = relay31004
+  let relay31012: Bool = relay31005
+  let relay31013: Bool = relay31006
+  let relay31014: Bool = relay31007
+  let relay31015: Bool = relay31008
+  let relay31016: Bool = relay31009
+  let relay31017: Bool = relay31010
+  let relay31018: Bool = relay31011
+  let relay31019: Bool = relay31012
+  let relay31020: Bool = relay31013
+  let relay31021: Bool = relay31014
+  let relay31022: Bool = relay31015
+  let relay31023: Bool = relay31016
+  let relay31024: Bool = relay31017
+  let relay31025: Bool = relay31018
+  let relay31026: Bool = relay31019
+  let relay31027: Bool = relay31020
+  let relay31028: Bool = relay31021
+  let relay31029: Bool = relay31022
+  let relay31030: Bool = relay31023
+  let relay31031: Bool = relay31024
+  let relay31032: Bool = relay31025
+  let relay31033: Bool = relay31026
+  let relay31034: Bool = relay31027
+  let relay31035: Bool = relay31028
+  let relay31036: Bool = relay31029
+  let relay31037: Bool = relay31030
+  let relay31038: Bool = relay31031
+  let relay31039: Bool = relay31032
+  let relay31040: Bool = relay31033
+  let relay31041: Bool = relay31034
+  let relay31042: Bool = relay31035
+  let relay31043: Bool = relay31036
+  let relay31044: Bool = relay31037
+  let relay31045: Bool = relay31038
+  let relay31046: Bool = relay31039
+  let relay31047: Bool = relay31040
+  if relay31047 {
+    if relay31044 {
+      if relay31041 {
+        if relay31045 {
+          if relay31042 {
+            if relay31046 {
+              if relay31043 {
+                return "package_sha256_pattern_built"
+              }
+              return "wave42_gate_1_missing"
+            }
+            return "wave42_gate_0_missing"
+          }
+          return "wave42_gate_6_missing"
+        }
+        return "wave42_gate_5_missing"
+      }
+      return "wave42_gate_4_missing"
+    }
+    return "wave42_gate_3_missing"
+  }
+  return "wave42_gate_2_missing"
+}

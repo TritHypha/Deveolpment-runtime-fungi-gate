@@ -1,0 +1,89 @@
+@version 1
+// Source-bound decision overlay wave 42 item 040: package-strip-quotes-status.fungi.
+pure flow packageStripQuotesStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay40001: Bool = gateA000
+  let relay40002: Bool = gateC000
+  let relay40003: Bool = gateE000
+  let relay40004: Bool = gateG000
+  let relay40005: Bool = gateB000
+  let relay40006: Bool = gateD000
+  let relay40007: Bool = gateF000
+  let relay40008: Bool = relay40001
+  let relay40009: Bool = relay40002
+  let relay40010: Bool = relay40003
+  let relay40011: Bool = relay40004
+  let relay40012: Bool = relay40005
+  let relay40013: Bool = relay40006
+  let relay40014: Bool = relay40007
+  let relay40015: Bool = relay40008
+  let relay40016: Bool = relay40009
+  let relay40017: Bool = relay40010
+  let relay40018: Bool = relay40011
+  let relay40019: Bool = relay40012
+  let relay40020: Bool = relay40013
+  let relay40021: Bool = relay40014
+  let relay40022: Bool = relay40015
+  let relay40023: Bool = relay40016
+  let relay40024: Bool = relay40017
+  let relay40025: Bool = relay40018
+  let relay40026: Bool = relay40019
+  let relay40027: Bool = relay40020
+  let relay40028: Bool = relay40021
+  let relay40029: Bool = relay40022
+  let relay40030: Bool = relay40023
+  let relay40031: Bool = relay40024
+  let relay40032: Bool = relay40025
+  let relay40033: Bool = relay40026
+  let relay40034: Bool = relay40027
+  let relay40035: Bool = relay40028
+  let relay40036: Bool = relay40029
+  let relay40037: Bool = relay40030
+  let relay40038: Bool = relay40031
+  let relay40039: Bool = relay40032
+  let relay40040: Bool = relay40033
+  let relay40041: Bool = relay40034
+  let relay40042: Bool = relay40035
+  let relay40043: Bool = relay40036
+  let relay40044: Bool = relay40037
+  let relay40045: Bool = relay40038
+  let relay40046: Bool = relay40039
+  let relay40047: Bool = relay40040
+  let relay40048: Bool = relay40041
+  let relay40049: Bool = relay40042
+  let relay40050: Bool = relay40043
+  let relay40051: Bool = relay40044
+  let relay40052: Bool = relay40045
+  let relay40053: Bool = relay40046
+  let relay40054: Bool = relay40047
+  let relay40055: Bool = relay40048
+  let relay40056: Bool = relay40049
+  if relay40052 {
+    if relay40054 {
+      if relay40056 {
+        if relay40051 {
+          if relay40053 {
+            if relay40055 {
+              if relay40050 {
+                return "package_strip_quotes_built"
+              }
+              return "wave42_gate_0_missing"
+            }
+            return "wave42_gate_3_missing"
+          }
+          return "wave42_gate_6_missing"
+        }
+        return "wave42_gate_2_missing"
+      }
+      return "wave42_gate_5_missing"
+    }
+    return "wave42_gate_1_missing"
+  }
+  return "wave42_gate_4_missing"
+}

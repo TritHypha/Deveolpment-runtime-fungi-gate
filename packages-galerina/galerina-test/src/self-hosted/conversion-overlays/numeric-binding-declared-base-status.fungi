@@ -1,0 +1,53 @@
+@version 1
+// Source-bound decision overlay wave 42 item 004: numeric-binding-declared-base-status.fungi.
+pure flow numericBindingDeclaredBaseStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay04001: Bool = gateE000
+  let relay04002: Bool = gateG000
+  let relay04003: Bool = gateB000
+  let relay04004: Bool = gateD000
+  let relay04005: Bool = gateF000
+  let relay04006: Bool = gateA000
+  let relay04007: Bool = gateC000
+  let relay04008: Bool = relay04001
+  let relay04009: Bool = relay04002
+  let relay04010: Bool = relay04003
+  let relay04011: Bool = relay04004
+  let relay04012: Bool = relay04005
+  let relay04013: Bool = relay04006
+  let relay04014: Bool = relay04007
+  let relay04015: Bool = relay04008
+  let relay04016: Bool = relay04009
+  let relay04017: Bool = relay04010
+  let relay04018: Bool = relay04011
+  let relay04019: Bool = relay04012
+  let relay04020: Bool = relay04013
+  if relay04018 {
+    if relay04020 {
+      if relay04015 {
+        if relay04017 {
+          if relay04019 {
+            if relay04014 {
+              if relay04016 {
+                return "numeric_binding_declared_base_built"
+              }
+              return "wave42_gate_6_missing"
+            }
+            return "wave42_gate_2_missing"
+          }
+          return "wave42_gate_5_missing"
+        }
+        return "wave42_gate_1_missing"
+      }
+      return "wave42_gate_4_missing"
+    }
+    return "wave42_gate_0_missing"
+  }
+  return "wave42_gate_3_missing"
+}

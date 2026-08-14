@@ -1,0 +1,52 @@
+@version 1
+// Source-bound decision overlay wave 42 item 003: numeric-bind-kinds-status.fungi.
+pure flow numericBindKindsStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay03001: Bool = gateB000
+  let relay03002: Bool = gateD000
+  let relay03003: Bool = gateF000
+  let relay03004: Bool = gateA000
+  let relay03005: Bool = gateC000
+  let relay03006: Bool = gateE000
+  let relay03007: Bool = gateG000
+  let relay03008: Bool = relay03001
+  let relay03009: Bool = relay03002
+  let relay03010: Bool = relay03003
+  let relay03011: Bool = relay03004
+  let relay03012: Bool = relay03005
+  let relay03013: Bool = relay03006
+  let relay03014: Bool = relay03007
+  let relay03015: Bool = relay03008
+  let relay03016: Bool = relay03009
+  let relay03017: Bool = relay03010
+  let relay03018: Bool = relay03011
+  let relay03019: Bool = relay03012
+  if relay03019 {
+    if relay03017 {
+      if relay03015 {
+        if relay03013 {
+          if relay03018 {
+            if relay03016 {
+              if relay03014 {
+                return "numeric_bind_kinds_built"
+              }
+              return "wave42_gate_6_missing"
+            }
+            return "wave42_gate_3_missing"
+          }
+          return "wave42_gate_0_missing"
+        }
+        return "wave42_gate_4_missing"
+      }
+      return "wave42_gate_1_missing"
+    }
+    return "wave42_gate_5_missing"
+  }
+  return "wave42_gate_2_missing"
+}

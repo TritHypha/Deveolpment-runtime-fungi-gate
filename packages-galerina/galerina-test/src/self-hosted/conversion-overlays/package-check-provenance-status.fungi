@@ -1,0 +1,84 @@
+@version 1
+// Source-bound decision overlay wave 42 item 035: package-check-provenance-status.fungi.
+pure flow packageCheckProvenanceStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay35001: Bool = gateG000
+  let relay35002: Bool = gateB000
+  let relay35003: Bool = gateD000
+  let relay35004: Bool = gateF000
+  let relay35005: Bool = gateA000
+  let relay35006: Bool = gateC000
+  let relay35007: Bool = gateE000
+  let relay35008: Bool = relay35001
+  let relay35009: Bool = relay35002
+  let relay35010: Bool = relay35003
+  let relay35011: Bool = relay35004
+  let relay35012: Bool = relay35005
+  let relay35013: Bool = relay35006
+  let relay35014: Bool = relay35007
+  let relay35015: Bool = relay35008
+  let relay35016: Bool = relay35009
+  let relay35017: Bool = relay35010
+  let relay35018: Bool = relay35011
+  let relay35019: Bool = relay35012
+  let relay35020: Bool = relay35013
+  let relay35021: Bool = relay35014
+  let relay35022: Bool = relay35015
+  let relay35023: Bool = relay35016
+  let relay35024: Bool = relay35017
+  let relay35025: Bool = relay35018
+  let relay35026: Bool = relay35019
+  let relay35027: Bool = relay35020
+  let relay35028: Bool = relay35021
+  let relay35029: Bool = relay35022
+  let relay35030: Bool = relay35023
+  let relay35031: Bool = relay35024
+  let relay35032: Bool = relay35025
+  let relay35033: Bool = relay35026
+  let relay35034: Bool = relay35027
+  let relay35035: Bool = relay35028
+  let relay35036: Bool = relay35029
+  let relay35037: Bool = relay35030
+  let relay35038: Bool = relay35031
+  let relay35039: Bool = relay35032
+  let relay35040: Bool = relay35033
+  let relay35041: Bool = relay35034
+  let relay35042: Bool = relay35035
+  let relay35043: Bool = relay35036
+  let relay35044: Bool = relay35037
+  let relay35045: Bool = relay35038
+  let relay35046: Bool = relay35039
+  let relay35047: Bool = relay35040
+  let relay35048: Bool = relay35041
+  let relay35049: Bool = relay35042
+  let relay35050: Bool = relay35043
+  let relay35051: Bool = relay35044
+  if relay35050 {
+    if relay35049 {
+      if relay35048 {
+        if relay35047 {
+          if relay35046 {
+            if relay35045 {
+              if relay35051 {
+                return "package_check_provenance_built"
+              }
+              return "wave42_gate_1_missing"
+            }
+            return "wave42_gate_3_missing"
+          }
+          return "wave42_gate_5_missing"
+        }
+        return "wave42_gate_0_missing"
+      }
+      return "wave42_gate_2_missing"
+    }
+    return "wave42_gate_4_missing"
+  }
+  return "wave42_gate_6_missing"
+}

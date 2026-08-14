@@ -1,0 +1,50 @@
+@version 1
+// Source-bound decision overlay wave 42 item 001: numeric-parse-i64-literal-status.fungi.
+pure flow numericParseI64LiteralStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay01001: Bool = gateC000
+  let relay01002: Bool = gateE000
+  let relay01003: Bool = gateG000
+  let relay01004: Bool = gateB000
+  let relay01005: Bool = gateD000
+  let relay01006: Bool = gateF000
+  let relay01007: Bool = gateA000
+  let relay01008: Bool = relay01001
+  let relay01009: Bool = relay01002
+  let relay01010: Bool = relay01003
+  let relay01011: Bool = relay01004
+  let relay01012: Bool = relay01005
+  let relay01013: Bool = relay01006
+  let relay01014: Bool = relay01007
+  let relay01015: Bool = relay01008
+  let relay01016: Bool = relay01009
+  let relay01017: Bool = relay01010
+  if relay01014 {
+    if relay01011 {
+      if relay01015 {
+        if relay01012 {
+          if relay01016 {
+            if relay01013 {
+              if relay01017 {
+                return "numeric_parse_i64_literal_built"
+              }
+              return "wave42_gate_6_missing"
+            }
+            return "wave42_gate_5_missing"
+          }
+          return "wave42_gate_4_missing"
+        }
+        return "wave42_gate_3_missing"
+      }
+      return "wave42_gate_2_missing"
+    }
+    return "wave42_gate_1_missing"
+  }
+  return "wave42_gate_0_missing"
+}

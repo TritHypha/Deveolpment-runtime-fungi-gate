@@ -1,0 +1,69 @@
+@version 1
+// Source-bound decision overlay wave 42 item 020: observability-infer-flow-status.fungi.
+pure flow observabilityInferFlowStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay20001: Bool = gateD000
+  let relay20002: Bool = gateF000
+  let relay20003: Bool = gateA000
+  let relay20004: Bool = gateC000
+  let relay20005: Bool = gateE000
+  let relay20006: Bool = gateG000
+  let relay20007: Bool = gateB000
+  let relay20008: Bool = relay20001
+  let relay20009: Bool = relay20002
+  let relay20010: Bool = relay20003
+  let relay20011: Bool = relay20004
+  let relay20012: Bool = relay20005
+  let relay20013: Bool = relay20006
+  let relay20014: Bool = relay20007
+  let relay20015: Bool = relay20008
+  let relay20016: Bool = relay20009
+  let relay20017: Bool = relay20010
+  let relay20018: Bool = relay20011
+  let relay20019: Bool = relay20012
+  let relay20020: Bool = relay20013
+  let relay20021: Bool = relay20014
+  let relay20022: Bool = relay20015
+  let relay20023: Bool = relay20016
+  let relay20024: Bool = relay20017
+  let relay20025: Bool = relay20018
+  let relay20026: Bool = relay20019
+  let relay20027: Bool = relay20020
+  let relay20028: Bool = relay20021
+  let relay20029: Bool = relay20022
+  let relay20030: Bool = relay20023
+  let relay20031: Bool = relay20024
+  let relay20032: Bool = relay20025
+  let relay20033: Bool = relay20026
+  let relay20034: Bool = relay20027
+  let relay20035: Bool = relay20028
+  let relay20036: Bool = relay20029
+  if relay20030 {
+    if relay20031 {
+      if relay20032 {
+        if relay20033 {
+          if relay20034 {
+            if relay20035 {
+              if relay20036 {
+                return "observability_infer_flow_built"
+              }
+              return "wave42_gate_3_missing"
+            }
+            return "wave42_gate_1_missing"
+          }
+          return "wave42_gate_6_missing"
+        }
+        return "wave42_gate_4_missing"
+      }
+      return "wave42_gate_2_missing"
+    }
+    return "wave42_gate_0_missing"
+  }
+  return "wave42_gate_5_missing"
+}

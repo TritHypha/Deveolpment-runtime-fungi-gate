@@ -1,0 +1,57 @@
+@version 1
+// Source-bound decision overlay wave 42 item 008: numeric-scan-flow-visit-status.fungi.
+pure flow numericScanFlowVisitStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay08001: Bool = gateC000
+  let relay08002: Bool = gateE000
+  let relay08003: Bool = gateG000
+  let relay08004: Bool = gateB000
+  let relay08005: Bool = gateD000
+  let relay08006: Bool = gateF000
+  let relay08007: Bool = gateA000
+  let relay08008: Bool = relay08001
+  let relay08009: Bool = relay08002
+  let relay08010: Bool = relay08003
+  let relay08011: Bool = relay08004
+  let relay08012: Bool = relay08005
+  let relay08013: Bool = relay08006
+  let relay08014: Bool = relay08007
+  let relay08015: Bool = relay08008
+  let relay08016: Bool = relay08009
+  let relay08017: Bool = relay08010
+  let relay08018: Bool = relay08011
+  let relay08019: Bool = relay08012
+  let relay08020: Bool = relay08013
+  let relay08021: Bool = relay08014
+  let relay08022: Bool = relay08015
+  let relay08023: Bool = relay08016
+  let relay08024: Bool = relay08017
+  if relay08021 {
+    if relay08022 {
+      if relay08023 {
+        if relay08024 {
+          if relay08018 {
+            if relay08019 {
+              if relay08020 {
+                return "numeric_scan_flow_visit_built"
+              }
+              return "wave42_gate_5_missing"
+            }
+            return "wave42_gate_3_missing"
+          }
+          return "wave42_gate_1_missing"
+        }
+        return "wave42_gate_6_missing"
+      }
+      return "wave42_gate_4_missing"
+    }
+    return "wave42_gate_2_missing"
+  }
+  return "wave42_gate_0_missing"
+}

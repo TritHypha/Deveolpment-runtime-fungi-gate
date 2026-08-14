@@ -1,0 +1,55 @@
+@version 1
+// Source-bound decision overlay wave 42 item 006: numeric-flow-declares-unlowerable64-status.fungi.
+pure flow numericFlowDeclaresUnlowerable64StatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay06001: Bool = gateD000
+  let relay06002: Bool = gateF000
+  let relay06003: Bool = gateA000
+  let relay06004: Bool = gateC000
+  let relay06005: Bool = gateE000
+  let relay06006: Bool = gateG000
+  let relay06007: Bool = gateB000
+  let relay06008: Bool = relay06001
+  let relay06009: Bool = relay06002
+  let relay06010: Bool = relay06003
+  let relay06011: Bool = relay06004
+  let relay06012: Bool = relay06005
+  let relay06013: Bool = relay06006
+  let relay06014: Bool = relay06007
+  let relay06015: Bool = relay06008
+  let relay06016: Bool = relay06009
+  let relay06017: Bool = relay06010
+  let relay06018: Bool = relay06011
+  let relay06019: Bool = relay06012
+  let relay06020: Bool = relay06013
+  let relay06021: Bool = relay06014
+  let relay06022: Bool = relay06015
+  if relay06016 {
+    if relay06019 {
+      if relay06022 {
+        if relay06018 {
+          if relay06021 {
+            if relay06017 {
+              if relay06020 {
+                return "numeric_flow_declares_unlowerable64_built"
+              }
+              return "wave42_gate_6_missing"
+            }
+            return "wave42_gate_0_missing"
+          }
+          return "wave42_gate_1_missing"
+        }
+        return "wave42_gate_2_missing"
+      }
+      return "wave42_gate_3_missing"
+    }
+    return "wave42_gate_4_missing"
+  }
+  return "wave42_gate_5_missing"
+}

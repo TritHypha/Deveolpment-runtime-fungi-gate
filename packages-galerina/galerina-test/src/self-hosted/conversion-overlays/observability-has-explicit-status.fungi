@@ -1,0 +1,67 @@
+@version 1
+// Source-bound decision overlay wave 42 item 018: observability-has-explicit-status.fungi.
+pure flow observabilityHasExplicitStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay18001: Bool = gateE000
+  let relay18002: Bool = gateG000
+  let relay18003: Bool = gateB000
+  let relay18004: Bool = gateD000
+  let relay18005: Bool = gateF000
+  let relay18006: Bool = gateA000
+  let relay18007: Bool = gateC000
+  let relay18008: Bool = relay18001
+  let relay18009: Bool = relay18002
+  let relay18010: Bool = relay18003
+  let relay18011: Bool = relay18004
+  let relay18012: Bool = relay18005
+  let relay18013: Bool = relay18006
+  let relay18014: Bool = relay18007
+  let relay18015: Bool = relay18008
+  let relay18016: Bool = relay18009
+  let relay18017: Bool = relay18010
+  let relay18018: Bool = relay18011
+  let relay18019: Bool = relay18012
+  let relay18020: Bool = relay18013
+  let relay18021: Bool = relay18014
+  let relay18022: Bool = relay18015
+  let relay18023: Bool = relay18016
+  let relay18024: Bool = relay18017
+  let relay18025: Bool = relay18018
+  let relay18026: Bool = relay18019
+  let relay18027: Bool = relay18020
+  let relay18028: Bool = relay18021
+  let relay18029: Bool = relay18022
+  let relay18030: Bool = relay18023
+  let relay18031: Bool = relay18024
+  let relay18032: Bool = relay18025
+  let relay18033: Bool = relay18026
+  let relay18034: Bool = relay18027
+  if relay18032 {
+    if relay18028 {
+      if relay18031 {
+        if relay18034 {
+          if relay18030 {
+            if relay18033 {
+              if relay18029 {
+                return "observability_has_explicit_built"
+              }
+              return "wave42_gate_4_missing"
+            }
+            return "wave42_gate_5_missing"
+          }
+          return "wave42_gate_6_missing"
+        }
+        return "wave42_gate_0_missing"
+      }
+      return "wave42_gate_1_missing"
+    }
+    return "wave42_gate_2_missing"
+  }
+  return "wave42_gate_3_missing"
+}

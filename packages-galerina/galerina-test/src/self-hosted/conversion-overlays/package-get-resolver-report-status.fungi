@@ -1,0 +1,87 @@
+@version 1
+// Source-bound decision overlay wave 42 item 038: package-get-resolver-report-status.fungi.
+pure flow packageGetResolverReportStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay38001: Bool = gateB000
+  let relay38002: Bool = gateD000
+  let relay38003: Bool = gateF000
+  let relay38004: Bool = gateA000
+  let relay38005: Bool = gateC000
+  let relay38006: Bool = gateE000
+  let relay38007: Bool = gateG000
+  let relay38008: Bool = relay38001
+  let relay38009: Bool = relay38002
+  let relay38010: Bool = relay38003
+  let relay38011: Bool = relay38004
+  let relay38012: Bool = relay38005
+  let relay38013: Bool = relay38006
+  let relay38014: Bool = relay38007
+  let relay38015: Bool = relay38008
+  let relay38016: Bool = relay38009
+  let relay38017: Bool = relay38010
+  let relay38018: Bool = relay38011
+  let relay38019: Bool = relay38012
+  let relay38020: Bool = relay38013
+  let relay38021: Bool = relay38014
+  let relay38022: Bool = relay38015
+  let relay38023: Bool = relay38016
+  let relay38024: Bool = relay38017
+  let relay38025: Bool = relay38018
+  let relay38026: Bool = relay38019
+  let relay38027: Bool = relay38020
+  let relay38028: Bool = relay38021
+  let relay38029: Bool = relay38022
+  let relay38030: Bool = relay38023
+  let relay38031: Bool = relay38024
+  let relay38032: Bool = relay38025
+  let relay38033: Bool = relay38026
+  let relay38034: Bool = relay38027
+  let relay38035: Bool = relay38028
+  let relay38036: Bool = relay38029
+  let relay38037: Bool = relay38030
+  let relay38038: Bool = relay38031
+  let relay38039: Bool = relay38032
+  let relay38040: Bool = relay38033
+  let relay38041: Bool = relay38034
+  let relay38042: Bool = relay38035
+  let relay38043: Bool = relay38036
+  let relay38044: Bool = relay38037
+  let relay38045: Bool = relay38038
+  let relay38046: Bool = relay38039
+  let relay38047: Bool = relay38040
+  let relay38048: Bool = relay38041
+  let relay38049: Bool = relay38042
+  let relay38050: Bool = relay38043
+  let relay38051: Bool = relay38044
+  let relay38052: Bool = relay38045
+  let relay38053: Bool = relay38046
+  let relay38054: Bool = relay38047
+  if relay38054 {
+    if relay38048 {
+      if relay38049 {
+        if relay38050 {
+          if relay38051 {
+            if relay38052 {
+              if relay38053 {
+                return "package_get_resolver_report_built"
+              }
+              return "wave42_gate_0_missing"
+            }
+            return "wave42_gate_5_missing"
+          }
+          return "wave42_gate_3_missing"
+        }
+        return "wave42_gate_1_missing"
+      }
+      return "wave42_gate_6_missing"
+    }
+    return "wave42_gate_4_missing"
+  }
+  return "wave42_gate_2_missing"
+}

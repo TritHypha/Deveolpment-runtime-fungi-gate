@@ -1,0 +1,79 @@
+@version 1
+// Source-bound decision overlay wave 42 item 030: package-check-install-script-status.fungi.
+pure flow packageCheckInstallScriptStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay30001: Bool = gateF000
+  let relay30002: Bool = gateA000
+  let relay30003: Bool = gateC000
+  let relay30004: Bool = gateE000
+  let relay30005: Bool = gateG000
+  let relay30006: Bool = gateB000
+  let relay30007: Bool = gateD000
+  let relay30008: Bool = relay30001
+  let relay30009: Bool = relay30002
+  let relay30010: Bool = relay30003
+  let relay30011: Bool = relay30004
+  let relay30012: Bool = relay30005
+  let relay30013: Bool = relay30006
+  let relay30014: Bool = relay30007
+  let relay30015: Bool = relay30008
+  let relay30016: Bool = relay30009
+  let relay30017: Bool = relay30010
+  let relay30018: Bool = relay30011
+  let relay30019: Bool = relay30012
+  let relay30020: Bool = relay30013
+  let relay30021: Bool = relay30014
+  let relay30022: Bool = relay30015
+  let relay30023: Bool = relay30016
+  let relay30024: Bool = relay30017
+  let relay30025: Bool = relay30018
+  let relay30026: Bool = relay30019
+  let relay30027: Bool = relay30020
+  let relay30028: Bool = relay30021
+  let relay30029: Bool = relay30022
+  let relay30030: Bool = relay30023
+  let relay30031: Bool = relay30024
+  let relay30032: Bool = relay30025
+  let relay30033: Bool = relay30026
+  let relay30034: Bool = relay30027
+  let relay30035: Bool = relay30028
+  let relay30036: Bool = relay30029
+  let relay30037: Bool = relay30030
+  let relay30038: Bool = relay30031
+  let relay30039: Bool = relay30032
+  let relay30040: Bool = relay30033
+  let relay30041: Bool = relay30034
+  let relay30042: Bool = relay30035
+  let relay30043: Bool = relay30036
+  let relay30044: Bool = relay30037
+  let relay30045: Bool = relay30038
+  let relay30046: Bool = relay30039
+  if relay30041 {
+    if relay30044 {
+      if relay30040 {
+        if relay30043 {
+          if relay30046 {
+            if relay30042 {
+              if relay30045 {
+                return "package_check_install_script_built"
+              }
+              return "wave42_gate_2_missing"
+            }
+            return "wave42_gate_3_missing"
+          }
+          return "wave42_gate_4_missing"
+        }
+        return "wave42_gate_5_missing"
+      }
+      return "wave42_gate_6_missing"
+    }
+    return "wave42_gate_0_missing"
+  }
+  return "wave42_gate_1_missing"
+}

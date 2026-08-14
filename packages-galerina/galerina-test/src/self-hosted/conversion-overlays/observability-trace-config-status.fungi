@@ -1,0 +1,58 @@
+@version 1
+// Source-bound decision overlay wave 42 item 009: observability-trace-config-status.fungi.
+pure flow observabilityTraceConfigStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay09001: Bool = gateF000
+  let relay09002: Bool = gateA000
+  let relay09003: Bool = gateC000
+  let relay09004: Bool = gateE000
+  let relay09005: Bool = gateG000
+  let relay09006: Bool = gateB000
+  let relay09007: Bool = gateD000
+  let relay09008: Bool = relay09001
+  let relay09009: Bool = relay09002
+  let relay09010: Bool = relay09003
+  let relay09011: Bool = relay09004
+  let relay09012: Bool = relay09005
+  let relay09013: Bool = relay09006
+  let relay09014: Bool = relay09007
+  let relay09015: Bool = relay09008
+  let relay09016: Bool = relay09009
+  let relay09017: Bool = relay09010
+  let relay09018: Bool = relay09011
+  let relay09019: Bool = relay09012
+  let relay09020: Bool = relay09013
+  let relay09021: Bool = relay09014
+  let relay09022: Bool = relay09015
+  let relay09023: Bool = relay09016
+  let relay09024: Bool = relay09017
+  let relay09025: Bool = relay09018
+  if relay09020 {
+    if relay09025 {
+      if relay09023 {
+        if relay09021 {
+          if relay09019 {
+            if relay09024 {
+              if relay09022 {
+                return "observability_trace_config_built"
+              }
+              return "wave42_gate_5_missing"
+            }
+            return "wave42_gate_2_missing"
+          }
+          return "wave42_gate_6_missing"
+        }
+        return "wave42_gate_3_missing"
+      }
+      return "wave42_gate_0_missing"
+    }
+    return "wave42_gate_4_missing"
+  }
+  return "wave42_gate_1_missing"
+}

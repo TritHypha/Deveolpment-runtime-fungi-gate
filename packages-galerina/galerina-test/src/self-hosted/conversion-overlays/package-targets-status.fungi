@@ -1,0 +1,73 @@
+@version 1
+// Source-bound decision overlay wave 42 item 024: package-targets-status.fungi.
+pure flow packageTargetsStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay24001: Bool = gateB000
+  let relay24002: Bool = gateD000
+  let relay24003: Bool = gateF000
+  let relay24004: Bool = gateA000
+  let relay24005: Bool = gateC000
+  let relay24006: Bool = gateE000
+  let relay24007: Bool = gateG000
+  let relay24008: Bool = relay24001
+  let relay24009: Bool = relay24002
+  let relay24010: Bool = relay24003
+  let relay24011: Bool = relay24004
+  let relay24012: Bool = relay24005
+  let relay24013: Bool = relay24006
+  let relay24014: Bool = relay24007
+  let relay24015: Bool = relay24008
+  let relay24016: Bool = relay24009
+  let relay24017: Bool = relay24010
+  let relay24018: Bool = relay24011
+  let relay24019: Bool = relay24012
+  let relay24020: Bool = relay24013
+  let relay24021: Bool = relay24014
+  let relay24022: Bool = relay24015
+  let relay24023: Bool = relay24016
+  let relay24024: Bool = relay24017
+  let relay24025: Bool = relay24018
+  let relay24026: Bool = relay24019
+  let relay24027: Bool = relay24020
+  let relay24028: Bool = relay24021
+  let relay24029: Bool = relay24022
+  let relay24030: Bool = relay24023
+  let relay24031: Bool = relay24024
+  let relay24032: Bool = relay24025
+  let relay24033: Bool = relay24026
+  let relay24034: Bool = relay24027
+  let relay24035: Bool = relay24028
+  let relay24036: Bool = relay24029
+  let relay24037: Bool = relay24030
+  let relay24038: Bool = relay24031
+  let relay24039: Bool = relay24032
+  let relay24040: Bool = relay24033
+  if relay24040 {
+    if relay24036 {
+      if relay24039 {
+        if relay24035 {
+          if relay24038 {
+            if relay24034 {
+              if relay24037 {
+                return "package_targets_built"
+              }
+              return "wave42_gate_3_missing"
+            }
+            return "wave42_gate_4_missing"
+          }
+          return "wave42_gate_5_missing"
+        }
+        return "wave42_gate_6_missing"
+      }
+      return "wave42_gate_0_missing"
+    }
+    return "wave42_gate_1_missing"
+  }
+  return "wave42_gate_2_missing"
+}

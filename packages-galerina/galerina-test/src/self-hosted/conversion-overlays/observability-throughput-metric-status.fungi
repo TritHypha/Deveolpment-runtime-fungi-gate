@@ -1,0 +1,65 @@
+@version 1
+// Source-bound decision overlay wave 42 item 016: observability-throughput-metric-status.fungi.
+pure flow observabilityThroughputMetricStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay16001: Bool = gateF000
+  let relay16002: Bool = gateA000
+  let relay16003: Bool = gateC000
+  let relay16004: Bool = gateE000
+  let relay16005: Bool = gateG000
+  let relay16006: Bool = gateB000
+  let relay16007: Bool = gateD000
+  let relay16008: Bool = relay16001
+  let relay16009: Bool = relay16002
+  let relay16010: Bool = relay16003
+  let relay16011: Bool = relay16004
+  let relay16012: Bool = relay16005
+  let relay16013: Bool = relay16006
+  let relay16014: Bool = relay16007
+  let relay16015: Bool = relay16008
+  let relay16016: Bool = relay16009
+  let relay16017: Bool = relay16010
+  let relay16018: Bool = relay16011
+  let relay16019: Bool = relay16012
+  let relay16020: Bool = relay16013
+  let relay16021: Bool = relay16014
+  let relay16022: Bool = relay16015
+  let relay16023: Bool = relay16016
+  let relay16024: Bool = relay16017
+  let relay16025: Bool = relay16018
+  let relay16026: Bool = relay16019
+  let relay16027: Bool = relay16020
+  let relay16028: Bool = relay16021
+  let relay16029: Bool = relay16022
+  let relay16030: Bool = relay16023
+  let relay16031: Bool = relay16024
+  let relay16032: Bool = relay16025
+  if relay16027 {
+    if relay16029 {
+      if relay16031 {
+        if relay16026 {
+          if relay16028 {
+            if relay16030 {
+              if relay16032 {
+                return "observability_throughput_metric_built"
+              }
+              return "wave42_gate_4_missing"
+            }
+            return "wave42_gate_0_missing"
+          }
+          return "wave42_gate_3_missing"
+        }
+        return "wave42_gate_6_missing"
+      }
+      return "wave42_gate_2_missing"
+    }
+    return "wave42_gate_5_missing"
+  }
+  return "wave42_gate_1_missing"
+}

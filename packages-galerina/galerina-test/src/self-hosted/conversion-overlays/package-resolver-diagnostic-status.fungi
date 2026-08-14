@@ -1,0 +1,76 @@
+@version 1
+// Source-bound decision overlay wave 42 item 027: package-resolver-diagnostic-status.fungi.
+pure flow packageResolverDiagnosticStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay27001: Bool = gateD000
+  let relay27002: Bool = gateF000
+  let relay27003: Bool = gateA000
+  let relay27004: Bool = gateC000
+  let relay27005: Bool = gateE000
+  let relay27006: Bool = gateG000
+  let relay27007: Bool = gateB000
+  let relay27008: Bool = relay27001
+  let relay27009: Bool = relay27002
+  let relay27010: Bool = relay27003
+  let relay27011: Bool = relay27004
+  let relay27012: Bool = relay27005
+  let relay27013: Bool = relay27006
+  let relay27014: Bool = relay27007
+  let relay27015: Bool = relay27008
+  let relay27016: Bool = relay27009
+  let relay27017: Bool = relay27010
+  let relay27018: Bool = relay27011
+  let relay27019: Bool = relay27012
+  let relay27020: Bool = relay27013
+  let relay27021: Bool = relay27014
+  let relay27022: Bool = relay27015
+  let relay27023: Bool = relay27016
+  let relay27024: Bool = relay27017
+  let relay27025: Bool = relay27018
+  let relay27026: Bool = relay27019
+  let relay27027: Bool = relay27020
+  let relay27028: Bool = relay27021
+  let relay27029: Bool = relay27022
+  let relay27030: Bool = relay27023
+  let relay27031: Bool = relay27024
+  let relay27032: Bool = relay27025
+  let relay27033: Bool = relay27026
+  let relay27034: Bool = relay27027
+  let relay27035: Bool = relay27028
+  let relay27036: Bool = relay27029
+  let relay27037: Bool = relay27030
+  let relay27038: Bool = relay27031
+  let relay27039: Bool = relay27032
+  let relay27040: Bool = relay27033
+  let relay27041: Bool = relay27034
+  let relay27042: Bool = relay27035
+  let relay27043: Bool = relay27036
+  if relay27037 {
+    if relay27042 {
+      if relay27040 {
+        if relay27038 {
+          if relay27043 {
+            if relay27041 {
+              if relay27039 {
+                return "package_resolver_diagnostic_built"
+              }
+              return "wave42_gate_2_missing"
+            }
+            return "wave42_gate_6_missing"
+          }
+          return "wave42_gate_3_missing"
+        }
+        return "wave42_gate_0_missing"
+      }
+      return "wave42_gate_4_missing"
+    }
+    return "wave42_gate_1_missing"
+  }
+  return "wave42_gate_5_missing"
+}

@@ -1,0 +1,82 @@
+@version 1
+// Source-bound decision overlay wave 42 item 033: package-provenance-options-status.fungi.
+pure flow packageProvenanceOptionsStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay33001: Bool = gateA000
+  let relay33002: Bool = gateC000
+  let relay33003: Bool = gateE000
+  let relay33004: Bool = gateG000
+  let relay33005: Bool = gateB000
+  let relay33006: Bool = gateD000
+  let relay33007: Bool = gateF000
+  let relay33008: Bool = relay33001
+  let relay33009: Bool = relay33002
+  let relay33010: Bool = relay33003
+  let relay33011: Bool = relay33004
+  let relay33012: Bool = relay33005
+  let relay33013: Bool = relay33006
+  let relay33014: Bool = relay33007
+  let relay33015: Bool = relay33008
+  let relay33016: Bool = relay33009
+  let relay33017: Bool = relay33010
+  let relay33018: Bool = relay33011
+  let relay33019: Bool = relay33012
+  let relay33020: Bool = relay33013
+  let relay33021: Bool = relay33014
+  let relay33022: Bool = relay33015
+  let relay33023: Bool = relay33016
+  let relay33024: Bool = relay33017
+  let relay33025: Bool = relay33018
+  let relay33026: Bool = relay33019
+  let relay33027: Bool = relay33020
+  let relay33028: Bool = relay33021
+  let relay33029: Bool = relay33022
+  let relay33030: Bool = relay33023
+  let relay33031: Bool = relay33024
+  let relay33032: Bool = relay33025
+  let relay33033: Bool = relay33026
+  let relay33034: Bool = relay33027
+  let relay33035: Bool = relay33028
+  let relay33036: Bool = relay33029
+  let relay33037: Bool = relay33030
+  let relay33038: Bool = relay33031
+  let relay33039: Bool = relay33032
+  let relay33040: Bool = relay33033
+  let relay33041: Bool = relay33034
+  let relay33042: Bool = relay33035
+  let relay33043: Bool = relay33036
+  let relay33044: Bool = relay33037
+  let relay33045: Bool = relay33038
+  let relay33046: Bool = relay33039
+  let relay33047: Bool = relay33040
+  let relay33048: Bool = relay33041
+  let relay33049: Bool = relay33042
+  if relay33045 {
+    if relay33043 {
+      if relay33048 {
+        if relay33046 {
+          if relay33044 {
+            if relay33049 {
+              if relay33047 {
+                return "package_provenance_options_built"
+              }
+              return "wave42_gate_1_missing"
+            }
+            return "wave42_gate_5_missing"
+          }
+          return "wave42_gate_2_missing"
+        }
+        return "wave42_gate_6_missing"
+      }
+      return "wave42_gate_3_missing"
+    }
+    return "wave42_gate_0_missing"
+  }
+  return "wave42_gate_4_missing"
+}

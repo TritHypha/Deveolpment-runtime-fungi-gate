@@ -1,0 +1,75 @@
+@version 1
+// Source-bound decision overlay wave 42 item 026: package-manifest-status.fungi.
+pure flow packageManifestStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay26001: Bool = gateA000
+  let relay26002: Bool = gateC000
+  let relay26003: Bool = gateE000
+  let relay26004: Bool = gateG000
+  let relay26005: Bool = gateB000
+  let relay26006: Bool = gateD000
+  let relay26007: Bool = gateF000
+  let relay26008: Bool = relay26001
+  let relay26009: Bool = relay26002
+  let relay26010: Bool = relay26003
+  let relay26011: Bool = relay26004
+  let relay26012: Bool = relay26005
+  let relay26013: Bool = relay26006
+  let relay26014: Bool = relay26007
+  let relay26015: Bool = relay26008
+  let relay26016: Bool = relay26009
+  let relay26017: Bool = relay26010
+  let relay26018: Bool = relay26011
+  let relay26019: Bool = relay26012
+  let relay26020: Bool = relay26013
+  let relay26021: Bool = relay26014
+  let relay26022: Bool = relay26015
+  let relay26023: Bool = relay26016
+  let relay26024: Bool = relay26017
+  let relay26025: Bool = relay26018
+  let relay26026: Bool = relay26019
+  let relay26027: Bool = relay26020
+  let relay26028: Bool = relay26021
+  let relay26029: Bool = relay26022
+  let relay26030: Bool = relay26023
+  let relay26031: Bool = relay26024
+  let relay26032: Bool = relay26025
+  let relay26033: Bool = relay26026
+  let relay26034: Bool = relay26027
+  let relay26035: Bool = relay26028
+  let relay26036: Bool = relay26029
+  let relay26037: Bool = relay26030
+  let relay26038: Bool = relay26031
+  let relay26039: Bool = relay26032
+  let relay26040: Bool = relay26033
+  let relay26041: Bool = relay26034
+  let relay26042: Bool = relay26035
+  if relay26038 {
+    if relay26039 {
+      if relay26040 {
+        if relay26041 {
+          if relay26042 {
+            if relay26036 {
+              if relay26037 {
+                return "package_manifest_built"
+              }
+              return "wave42_gate_2_missing"
+            }
+            return "wave42_gate_0_missing"
+          }
+          return "wave42_gate_5_missing"
+        }
+        return "wave42_gate_3_missing"
+      }
+      return "wave42_gate_1_missing"
+    }
+    return "wave42_gate_6_missing"
+  }
+  return "wave42_gate_4_missing"
+}

@@ -1,0 +1,83 @@
+@version 1
+// Source-bound decision overlay wave 42 item 034: package-check-registry-trust-status.fungi.
+pure flow packageCheckRegistryTrustStatusCore(captureReady: Bool, shapeReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool, releaseReady: Bool) -> String {
+  let gateA000: Bool = captureReady
+  let gateB000: Bool = shapeReady
+  let gateC000: Bool = policyReady
+  let gateD000: Bool = routeReady
+  let gateE000: Bool = proofReady
+  let gateF000: Bool = sealReady
+  let gateG000: Bool = releaseReady
+  let relay34001: Bool = gateD000
+  let relay34002: Bool = gateF000
+  let relay34003: Bool = gateA000
+  let relay34004: Bool = gateC000
+  let relay34005: Bool = gateE000
+  let relay34006: Bool = gateG000
+  let relay34007: Bool = gateB000
+  let relay34008: Bool = relay34001
+  let relay34009: Bool = relay34002
+  let relay34010: Bool = relay34003
+  let relay34011: Bool = relay34004
+  let relay34012: Bool = relay34005
+  let relay34013: Bool = relay34006
+  let relay34014: Bool = relay34007
+  let relay34015: Bool = relay34008
+  let relay34016: Bool = relay34009
+  let relay34017: Bool = relay34010
+  let relay34018: Bool = relay34011
+  let relay34019: Bool = relay34012
+  let relay34020: Bool = relay34013
+  let relay34021: Bool = relay34014
+  let relay34022: Bool = relay34015
+  let relay34023: Bool = relay34016
+  let relay34024: Bool = relay34017
+  let relay34025: Bool = relay34018
+  let relay34026: Bool = relay34019
+  let relay34027: Bool = relay34020
+  let relay34028: Bool = relay34021
+  let relay34029: Bool = relay34022
+  let relay34030: Bool = relay34023
+  let relay34031: Bool = relay34024
+  let relay34032: Bool = relay34025
+  let relay34033: Bool = relay34026
+  let relay34034: Bool = relay34027
+  let relay34035: Bool = relay34028
+  let relay34036: Bool = relay34029
+  let relay34037: Bool = relay34030
+  let relay34038: Bool = relay34031
+  let relay34039: Bool = relay34032
+  let relay34040: Bool = relay34033
+  let relay34041: Bool = relay34034
+  let relay34042: Bool = relay34035
+  let relay34043: Bool = relay34036
+  let relay34044: Bool = relay34037
+  let relay34045: Bool = relay34038
+  let relay34046: Bool = relay34039
+  let relay34047: Bool = relay34040
+  let relay34048: Bool = relay34041
+  let relay34049: Bool = relay34042
+  let relay34050: Bool = relay34043
+  if relay34044 {
+    if relay34046 {
+      if relay34048 {
+        if relay34050 {
+          if relay34045 {
+            if relay34047 {
+              if relay34049 {
+                return "package_check_registry_trust_built"
+              }
+              return "wave42_gate_1_missing"
+            }
+            return "wave42_gate_4_missing"
+          }
+          return "wave42_gate_0_missing"
+        }
+        return "wave42_gate_3_missing"
+      }
+      return "wave42_gate_6_missing"
+    }
+    return "wave42_gate_2_missing"
+  }
+  return "wave42_gate_5_missing"
+}
