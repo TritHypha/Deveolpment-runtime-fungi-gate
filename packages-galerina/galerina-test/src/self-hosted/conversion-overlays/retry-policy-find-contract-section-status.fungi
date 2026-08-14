@@ -1,0 +1,145 @@
+@version 1
+// Source-bound decision overlay wave 53 item 39: galerina-core-compiler/src/runtime/retryPolicy.ts#findContractSection.
+pure flow retryPolicyFindContractSectionStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave53Relay39001: Bool = routeReady
+  let wave53Relay39002: Bool = wave53Relay39001
+  let wave53Relay39003: Bool = wave53Relay39002
+  let wave53Relay39004: Bool = wave53Relay39003
+  let wave53Relay39005: Bool = wave53Relay39004
+  let wave53Relay39006: Bool = wave53Relay39005
+  let wave53Relay39007: Bool = wave53Relay39006
+  let wave53Relay39008: Bool = wave53Relay39007
+  let wave53Relay39009: Bool = wave53Relay39008
+  let wave53Relay39010: Bool = wave53Relay39009
+  let wave53Relay39011: Bool = wave53Relay39010
+  let wave53Relay39012: Bool = wave53Relay39011
+  let wave53Relay39013: Bool = wave53Relay39012
+  let wave53Relay39014: Bool = wave53Relay39013
+  let wave53Relay39015: Bool = wave53Relay39014
+  let wave53Relay39016: Bool = wave53Relay39015
+  let wave53Relay39017: Bool = wave53Relay39016
+  let wave53Relay39018: Bool = wave53Relay39017
+  let wave53Relay39019: Bool = wave53Relay39018
+  let wave53Relay39020: Bool = wave53Relay39019
+  let wave53Relay39021: Bool = wave53Relay39020
+  let wave53Relay39022: Bool = wave53Relay39021
+  let wave53Relay39023: Bool = wave53Relay39022
+  let wave53Relay39024: Bool = wave53Relay39023
+  let wave53Relay39025: Bool = wave53Relay39024
+  let wave53Relay39026: Bool = wave53Relay39025
+  let wave53Relay39027: Bool = wave53Relay39026
+  let wave53Relay39028: Bool = wave53Relay39027
+  let wave53Relay39029: Bool = wave53Relay39028
+  let wave53Relay39030: Bool = wave53Relay39029
+  let wave53Relay39031: Bool = wave53Relay39030
+  let wave53Relay39032: Bool = wave53Relay39031
+  let wave53Relay39033: Bool = wave53Relay39032
+  let wave53Relay39034: Bool = wave53Relay39033
+  let wave53Relay39035: Bool = wave53Relay39034
+  let wave53Relay39036: Bool = wave53Relay39035
+  let wave53Relay39037: Bool = wave53Relay39036
+  let wave53Relay39038: Bool = wave53Relay39037
+  let wave53Relay39039: Bool = wave53Relay39038
+  let wave53Relay39040: Bool = wave53Relay39039
+  let wave53Relay39041: Bool = wave53Relay39040
+  let wave53Relay39042: Bool = wave53Relay39041
+  let wave53Relay39043: Bool = wave53Relay39042
+  let wave53Relay39044: Bool = wave53Relay39043
+  let wave53Relay39045: Bool = wave53Relay39044
+  let wave53Relay39046: Bool = wave53Relay39045
+  let wave53Relay39047: Bool = wave53Relay39046
+  let wave53Relay39048: Bool = wave53Relay39047
+  let wave53Relay39049: Bool = wave53Relay39048
+  let wave53Relay39050: Bool = wave53Relay39049
+  let wave53Relay39051: Bool = wave53Relay39050
+  let wave53Relay39052: Bool = wave53Relay39051
+  let wave53Relay39053: Bool = wave53Relay39052
+  let wave53Relay39054: Bool = wave53Relay39053
+  let wave53Relay39055: Bool = wave53Relay39054
+  let wave53Relay39056: Bool = wave53Relay39055
+  let wave53Relay39057: Bool = wave53Relay39056
+  let wave53Relay39058: Bool = wave53Relay39057
+  let wave53Relay39059: Bool = wave53Relay39058
+  let wave53Relay39060: Bool = wave53Relay39059
+  let wave53Relay39061: Bool = wave53Relay39060
+  let wave53Relay39062: Bool = wave53Relay39061
+  let wave53Relay39063: Bool = wave53Relay39062
+  let wave53Relay39064: Bool = wave53Relay39063
+  let wave53Relay39065: Bool = wave53Relay39064
+  let wave53Relay39066: Bool = wave53Relay39065
+  let wave53Relay39067: Bool = wave53Relay39066
+  let wave53Relay39068: Bool = wave53Relay39067
+  let wave53Relay39069: Bool = wave53Relay39068
+  let wave53Relay39070: Bool = wave53Relay39069
+  let wave53Relay39071: Bool = wave53Relay39070
+  let wave53Relay39072: Bool = wave53Relay39071
+  let wave53Relay39073: Bool = wave53Relay39072
+  let wave53Relay39074: Bool = wave53Relay39073
+  let wave53Relay39075: Bool = wave53Relay39074
+  let wave53Relay39076: Bool = wave53Relay39075
+  let wave53Relay39077: Bool = wave53Relay39076
+  let wave53Relay39078: Bool = wave53Relay39077
+  let wave53Relay39079: Bool = wave53Relay39078
+  let wave53Relay39080: Bool = wave53Relay39079
+  let wave53Relay39081: Bool = wave53Relay39080
+  let wave53Relay39082: Bool = wave53Relay39081
+  let wave53Relay39083: Bool = wave53Relay39082
+  let wave53Relay39084: Bool = wave53Relay39083
+  let wave53Relay39085: Bool = wave53Relay39084
+  let wave53Relay39086: Bool = wave53Relay39085
+  let wave53Relay39087: Bool = wave53Relay39086
+  let wave53Relay39088: Bool = wave53Relay39087
+  let wave53Relay39089: Bool = wave53Relay39088
+  let wave53Relay39090: Bool = wave53Relay39089
+  let wave53Relay39091: Bool = wave53Relay39090
+  let wave53Relay39092: Bool = wave53Relay39091
+  let wave53Relay39093: Bool = wave53Relay39092
+  let wave53Relay39094: Bool = wave53Relay39093
+  let wave53Relay39095: Bool = wave53Relay39094
+  let wave53Relay39096: Bool = wave53Relay39095
+  let wave53Relay39097: Bool = wave53Relay39096
+  let wave53Relay39098: Bool = wave53Relay39097
+  let wave53Relay39099: Bool = wave53Relay39098
+  let wave53Relay39100: Bool = wave53Relay39099
+  let wave53Relay39101: Bool = wave53Relay39100
+  let wave53Relay39102: Bool = wave53Relay39101
+  let wave53Relay39103: Bool = wave53Relay39102
+  let wave53Relay39104: Bool = wave53Relay39103
+  let wave53Relay39105: Bool = wave53Relay39104
+  let wave53Relay39106: Bool = wave53Relay39105
+  let wave53Relay39107: Bool = wave53Relay39106
+  let wave53Relay39108: Bool = wave53Relay39107
+  let wave53Relay39109: Bool = wave53Relay39108
+  let wave53Relay39110: Bool = wave53Relay39109
+  let wave53Relay39111: Bool = wave53Relay39110
+  let wave53Relay39112: Bool = wave53Relay39111
+  let wave53Relay39113: Bool = wave53Relay39112
+  let wave53Relay39114: Bool = wave53Relay39113
+  let wave53Relay39115: Bool = wave53Relay39114
+  let wave53Relay39116: Bool = wave53Relay39115
+  let wave53Relay39117: Bool = wave53Relay39116
+  let wave53Relay39118: Bool = wave53Relay39117
+  let wave53Relay39119: Bool = wave53Relay39118
+  if wave53Relay39119 {
+    if proofReady {
+      if sealReady {
+        if sourceReady {
+          if shapeReady {
+            if stateReady {
+              if policyReady {
+                return "retry_policy_find_contract_section_built"
+              }
+              return "wave53_policy_missing"
+            }
+            return "wave53_state_missing"
+          }
+          return "wave53_shape_missing"
+        }
+        return "wave53_source_missing"
+      }
+      return "wave53_seal_missing"
+    }
+    return "wave53_proof_missing"
+  }
+  return "wave53_route_missing"
+}

@@ -2413,6 +2413,59 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 53 - Governed-memory and runtime policy boundaries
+
+Wave 53 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay filename or source-and-symbol credit. Three exhaust the remaining
+nested accessors in `runtime/governedMemory.ts`; twenty-seven cover the complete
+declaration, regular-expression, parser, checker and helper surface in
+`runtime/limitPolicy.ts`; and ten exhaust `runtime/retryPolicy.ts`. The next
+uncredited source-order scope is
+`runtime/rootCapabilityProvider.ts#CapabilityDomain`. The package now
+registers **2,160** conversion overlays. The original TypeScript remains
+executing and unchanged for comparison; these reference-only decision cores
+authorize no consumer switch, supersession or TypeScript retirement.
+
+The pinned source build point is
+`fb550976592c76fff9faafa8cd06e4d47a88f9ad`. Exact SHA-256 pins are
+`59656864BDC3BDB720353AF0FFDA45AFB09C45FB9A9ACD478AB6818E7B86C560`
+for `runtime/governedMemory.ts`,
+`62226C1BBFD53821D399FFC8369AB240C986849A1562A546C1F321CC15A26AE1`
+for `runtime/limitPolicy.ts`, and
+`2D780121A92CFE02F84778447A14951820232FE5C569C1CA9B8EBAE6B806A3B7`
+for `runtime/retryPolicy.ts`. Graph-first discovery used the independently
+exact Wave-52 build point and exact source reads. The report-bearing commit
+will follow that point, so graph freshness returns to **UNKNOWN** until the
+required post-commit exact-head refresh succeeds.
+
+The RED source test failed **0/3** only because the 40 assets and registrations
+were absent. Focused source evidence now passes **3/3**: all 40 files are pinned
+to live source and package registration; every candidate passes byte-exact and
+normalized identifier-alpha whole-corpus shadow checks; and the owner-bounded
+ten-file sample parses, effect-checks, emits GIR and executes. Five genuine
+normalized shadows found during GREEN were corrected structurally without
+weakening the detector. The source test SHA-256 is
+`6F182242E345584E2F6BC43B8AAED1A13873ACAF0CC996105B3658D77FC3C374`.
+
+Focused physical evidence passes **1/1** over exactly the first ten candidates.
+It compiles and publishes ten physical `.slide` artifacts, executes them,
+independently re-admits and VOK-verifies their typed receipts, and refuses
+changed source, receipt and artifact bytes. Its SHA-256 is
+`B1A616681D844BA6B8CF045A64027B31BC01C99F5C8BA753C5587B4029A53416`.
+The ten-file execution limit is explicit owner direction; source binding,
+registration and duplicate/shadow custody still cover all 40 new Fungi files.
+
+This is the wave's only modified report. The commit remains ineligible unless
+it contains all 40 newly added `.fungi` files, exactly one report, no
+TypeScript change, no exact duplicate or normalized shadow, and a report-only
+streak below two. The sandbox converter remains bounded to exactly ten inputs
+with terminal `CONVERTED | BLOCKED | MANUAL_REVIEW` outcomes and passes its
+fresh **10/10** suite; package no-emit typecheck and both new test syntax checks
+also pass. Both private Fungi skills require no update for this wave: these
+scope bindings instantiate their existing exact-profile, state/effect and
+fail-closed rules. No worker authored these changes, no TypeScript source was
+modified, and no push is performed.
+
 ## Source decision overlay wave 52 - Contract, plan and governed-memory boundaries
 
 Wave 52 adds **40 new source-bound Fungi decision cores** and reuses no prior
