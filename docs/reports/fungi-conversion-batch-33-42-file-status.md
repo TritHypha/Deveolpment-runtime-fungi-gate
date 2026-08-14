@@ -2413,7 +2413,61 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
-+## Source decision overlay wave 30 - fused compiler and gate pipeline
+## Source decision overlay wave 31 - Gate v3 graph, parser and privacy
+
+Wave 31 adds **40 new source-bound Fungi decision cores** for the two remaining
+`gate-v3-condense.ts` functions, one construction function, three envelope
+functions, seven GIR functions, six graph functions, fourteen parser
+functions and seven privacy functions. The already credited parser
+`byCodeUnit` helper is excluded, and the generic parser refusal constructor is
+not manufactured into a second source credit. The package now registers
+**1,280** conversion overlays. These remain bounded post-border decision cores:
+active JavaScript records, arrays, maps, regular expressions, JSON, Unicode,
+diagnostics, graph traversal and error semantics stay at the TypeScript border.
+No consumer switch, supersession or TypeScript retirement is claimed.
+
+The pinned source build point is
+`65faffef013016970b6b2f92ca46037936a1d97b`. The exact source SHA-256 values,
+in source order, are
+`78604501A33CE6BE5B1879A827BEDA54AA49372404209A676FF00624A2777C8A`,
+`3038455E69570DEF3359EB8C8FAB9D6B737FB62E4AF94AC85291855B31B5F1D3`,
+`EEBD0BB253CC0DDC777496151332F1A7A8B8BE1CFF0C43F3ED4B005BBC6FA878`,
+`7B175F985BB223F82BF7BA39EAADE9FB57C01BC0D40FEEDA3FA53779DF00F137`,
+`C7D52935DD7827F4892A8433917C217B82559C781CF90926AF92B3E8EEF4F4A2`,
+`841DD00500C4DEAD9712F75171A8E5F51944A6E71FB622298C2F003AED08F598`
+and
+`85C157D61F604DD9D283B6A905B8A0631F03A5DE11D09EA257671C61EBFCF6A9`.
+The post-Wave-30 moderate graph build matched that source build point exactly.
+The present worktree is newer, so graph freshness for Wave 31 is **UNKNOWN**;
+the head-matched navigation, exact live bytes and bounded prior-credit audit
+govern this wave.
+
+The RED test failed **0/3** on absent and unregistered assets. The first
+authored physical package crossed the selected checked-profile node ceiling;
+an attempted smaller scaffold then exposed 40 normalized shadows against the
+preceding corpus. Neither failure was waived. The accepted six-Boolean shape
+uses a distinct captured-input witness and bounded chain lengths 180-219. It
+passes **40/40** whole-corpus exact-byte and normalized alpha-renamed shadow
+checks with no duplicate or twin.
+
+Focused source evidence passes **3/3** and the complete source-wave family
+passes **90/90**. Focused physical SLIDE/VOK evidence passes **1/1** and the
+complete physical-wave family passes **30/30**: every new source compiles into
+a physical `.slide` artifact, publishes, independently re-admits and
+VOK-verifies its typed value, refuses mutated source and artifact bytes,
+rejects receipt tampering, and releases no production authority. Package
+no-emit typecheck is green. The focused test pins are
+`5F68E5587B612565458D1AD5E02851056E83283921318B07D75707907BC88C09`
+and
+`969C09AD795555A8E239E92506E500DFBF3258D477BBB186D3E4C66866F6663D`.
+
+This is the only report modified by the wave and it is committed with all 40
+new Fungi files, so it is not report-only. Root authored the code directly; no
+worker authored these files and no push is performed. The commit guard must
+still report at least 40 new `.fungi`, **40/40 unique**, no second report-only
+commit and exactly one conversion report before commit.
+
+## Source decision overlay wave 30 - fused compiler and gate pipeline
 
 Wave 30 adds **40 new source-bound Fungi decision cores** for 11
 `fused-pass.ts` functions, two `gate-dispatch.ts` functions, eight
