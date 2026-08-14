@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 16: durability-evidence-freeze-keys-status.fungi.
+pure flow durabilityEvidenceFreezeKeysStatusCore(keysCaptured: Bool, keysCopied: Bool, arrayFrozen: Bool) -> String {
+  let sourceProofA: Bool = keysCaptured
+  let sourceProofB: Bool = arrayFrozen
+  let sourceProofC: Bool = arrayFrozen
+  let sourceProofD: Bool = keysCaptured
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if arrayFrozen {
+            if keysCopied {
+              if keysCaptured {
+                return "durability_evidence_keys_frozen"
+              }
+              return "keysCaptured_missing"
+            }
+            return "keysCopied_missing"
+          }
+          return "arrayFrozen_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

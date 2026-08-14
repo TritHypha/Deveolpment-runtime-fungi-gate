@@ -1,0 +1,32 @@
+@version 1
+// Source-bound decision overlay wave 20 item 33: registry-index-sign-status.fungi.
+pure flow registryIndexSignStatusCore(indexCaptured: Bool, schemaAccepted: Bool, preimageReady: Bool, signatureBound: Bool) -> String {
+  let sourceProofA: Bool = schemaAccepted
+  let sourceProofB: Bool = schemaAccepted
+  let sourceProofC: Bool = preimageReady
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if sourceProofC {
+        if schemaAccepted {
+          if indexCaptured {
+            if preimageReady {
+              if signatureBound {
+                return "registry_index_signed"
+              }
+              return "signatureBound_missing"
+            }
+            return "preimageReady_missing"
+          }
+          return "indexCaptured_missing"
+        }
+        return "schemaAccepted_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

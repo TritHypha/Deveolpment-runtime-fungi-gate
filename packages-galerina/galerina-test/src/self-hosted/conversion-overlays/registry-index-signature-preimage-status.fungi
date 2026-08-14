@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 31: registry-index-signature-preimage-status.fungi.
+pure flow registryIndexSignaturePreimageStatusCore(indexCaptured: Bool, schemaSelected: Bool, keyBound: Bool, domainSeparated: Bool) -> String {
+  let sourceProofA: Bool = domainSeparated
+  let sourceProofB: Bool = domainSeparated
+  let sourceProofC: Bool = indexCaptured
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if indexCaptured {
+          if domainSeparated {
+            if schemaSelected {
+              if keyBound {
+                return "registry_index_preimage_ready"
+              }
+              return "keyBound_missing"
+            }
+            return "schemaSelected_missing"
+          }
+          return "domainSeparated_missing"
+        }
+        return "indexCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

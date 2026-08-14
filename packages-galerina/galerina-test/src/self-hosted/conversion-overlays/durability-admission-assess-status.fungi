@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 15: durability-admission-assess-status.fungi.
+pure flow durabilityAdmissionAssessStatusCore(descriptorCaptured: Bool, hostCaptured: Bool, shapesValid: Bool, factsMatched: Bool, candidateBound: Bool) -> String {
+  let sourceProofA: Bool = candidateBound
+  let sourceProofB: Bool = descriptorCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if hostCaptured {
+        if descriptorCaptured {
+          if factsMatched {
+            if candidateBound {
+              if shapesValid {
+                return "durability_candidate_assessed"
+              }
+              return "shapesValid_missing"
+            }
+            return "candidateBound_missing"
+          }
+          return "factsMatched_missing"
+        }
+        return "descriptorCaptured_missing"
+      }
+      return "hostCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

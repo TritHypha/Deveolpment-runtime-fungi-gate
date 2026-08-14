@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 20: durability-evidence-shape-status.fungi.
+pure flow durabilityEvidenceShapeStatusCore(valueCaptured: Bool, shapeExact: Bool, checksValid: Bool, digestsValid: Bool, evidenceValid: Bool) -> String {
+  let sourceProofA: Bool = evidenceValid
+  let sourceProofB: Bool = valueCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if shapeExact {
+        if valueCaptured {
+          if evidenceValid {
+            if checksValid {
+              if digestsValid {
+                return "durability_evidence_shape_valid"
+              }
+              return "digestsValid_missing"
+            }
+            return "checksValid_missing"
+          }
+          return "evidenceValid_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "shapeExact_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 1: boot-composition-refuse-status.fungi.
+pure flow bootCompositionRefuseStatusCore(errorTyped: Bool, verdictDenied: Bool, refusalRaised: Bool) -> String {
+  let sourceProofA: Bool = errorTyped
+  let sourceProofB: Bool = refusalRaised
+  let sourceProofC: Bool = refusalRaised
+  let sourceProofD: Bool = errorTyped
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if verdictDenied {
+            if errorTyped {
+              if refusalRaised {
+                return "boot_composition_refusal_bound"
+              }
+              return "refusalRaised_missing"
+            }
+            return "errorTyped_missing"
+          }
+          return "verdictDenied_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

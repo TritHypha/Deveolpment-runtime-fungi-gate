@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 21: durability-evidence-policy-status.fungi.
+pure flow durabilityEvidencePolicyStatusCore(valueCaptured: Bool, shapeExact: Bool, classesKnown: Bool, boundariesKnown: Bool, policyValid: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = shapeExact
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if shapeExact {
+        if valueCaptured {
+          if policyValid {
+            if boundariesKnown {
+              if classesKnown {
+                return "durability_evidence_policy_valid"
+              }
+              return "classesKnown_missing"
+            }
+            return "boundariesKnown_missing"
+          }
+          return "policyValid_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "shapeExact_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

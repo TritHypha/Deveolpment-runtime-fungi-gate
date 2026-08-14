@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 19: durability-evidence-boundaries-status.fungi.
+pure flow durabilityEvidenceBoundariesStatusCore(valueCaptured: Bool, arrayPlain: Bool, entriesKnown: Bool, orderCanonical: Bool) -> String {
+  let sourceProofA: Bool = orderCanonical
+  let sourceProofB: Bool = orderCanonical
+  let sourceProofC: Bool = valueCaptured
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if valueCaptured {
+          if arrayPlain {
+            if orderCanonical {
+              if entriesKnown {
+                return "durability_evidence_boundaries_canonical"
+              }
+              return "entriesKnown_missing"
+            }
+            return "orderCanonical_missing"
+          }
+          return "arrayPlain_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

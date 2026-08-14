@@ -1,0 +1,32 @@
+@version 1
+// Source-bound decision overlay wave 20 item 35: registry-index-freshness-status.fungi.
+pure flow registryIndexFreshnessStatusCore(issuedAtCaptured: Bool, floorCaptured: Bool, freshnessClassified: Bool) -> String {
+  let sourceProofA: Bool = freshnessClassified
+  let sourceProofB: Bool = issuedAtCaptured
+  let sourceProofC: Bool = issuedAtCaptured
+  let sourceProofD: Bool = floorCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if freshnessClassified {
+            if floorCaptured {
+              if issuedAtCaptured {
+                return "registry_index_freshness_classified"
+              }
+              return "issuedAtCaptured_missing"
+            }
+            return "floorCaptured_missing"
+          }
+          return "freshnessClassified_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

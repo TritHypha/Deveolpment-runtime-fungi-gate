@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 20 item 4: boot-composition-provenance-status.fungi.
+pure flow bootCompositionProvenanceStatusCore(valueCaptured: Bool, arrayPlain: Bool, lengthExact: Bool, digestsUnique: Bool, cloneSucceeded: Bool) -> String {
+  let sourceProofA: Bool = digestsUnique
+  let sourceProofB: Bool = cloneSucceeded
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if valueCaptured {
+        if cloneSucceeded {
+          if lengthExact {
+            if digestsUnique {
+              if arrayPlain {
+                return "boot_composition_provenance_valid"
+              }
+              return "arrayPlain_missing"
+            }
+            return "digestsUnique_missing"
+          }
+          return "lengthExact_missing"
+        }
+        return "cloneSucceeded_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

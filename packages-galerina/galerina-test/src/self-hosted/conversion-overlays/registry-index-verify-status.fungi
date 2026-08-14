@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 36: registry-index-verify-status.fungi.
+pure flow registryIndexVerifyStatusCore(indexCaptured: Bool, signatureVerified: Bool, schemaChecked: Bool, freshnessHeld: Bool, resultBound: Bool) -> String {
+  let sourceProofA: Bool = indexCaptured
+  let sourceProofB: Bool = signatureVerified
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if signatureVerified {
+        if schemaChecked {
+          if resultBound {
+            if indexCaptured {
+              if freshnessHeld {
+                return "registry_index_verified"
+              }
+              return "freshnessHeld_missing"
+            }
+            return "indexCaptured_missing"
+          }
+          return "resultBound_missing"
+        }
+        return "schemaChecked_missing"
+      }
+      return "signatureVerified_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 20 item 9: boot-composition-guard-status.fungi.
+pure flow bootCompositionGuardStatusCore(valueCaptured: Bool, objectPresent: Bool, provenanceMatched: Bool) -> String {
+  let sourceProofA: Bool = provenanceMatched
+  let sourceProofB: Bool = objectPresent
+  let sourceProofC: Bool = objectPresent
+  let sourceProofD: Bool = provenanceMatched
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if provenanceMatched {
+            if valueCaptured {
+              if objectPresent {
+                return "boot_composition_candidate_authenticated"
+              }
+              return "objectPresent_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "provenanceMatched_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

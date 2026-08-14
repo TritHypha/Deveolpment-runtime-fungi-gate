@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 23: durability-evidence-boundary-equality-status.fungi.
+pure flow durabilityEvidenceBoundaryEqualityStatusCore(leftCaptured: Bool, rightCaptured: Bool, lengthMatched: Bool, entriesMatched: Bool) -> String {
+  let sourceProofA: Bool = entriesMatched
+  let sourceProofB: Bool = entriesMatched
+  let sourceProofC: Bool = leftCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if leftCaptured {
+          if lengthMatched {
+            if entriesMatched {
+              if rightCaptured {
+                return "durability_evidence_boundaries_equal"
+              }
+              return "rightCaptured_missing"
+            }
+            return "entriesMatched_missing"
+          }
+          return "lengthMatched_missing"
+        }
+        return "leftCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

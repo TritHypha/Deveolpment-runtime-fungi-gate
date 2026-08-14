@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 14: durability-admission-deny-status.fungi.
+pure flow durabilityAdmissionDenyStatusCore(reasonCaptured: Bool, verdictDenied: Bool, fieldsCleared: Bool, decisionFrozen: Bool) -> String {
+  let sourceProofA: Bool = verdictDenied
+  let sourceProofB: Bool = fieldsCleared
+  let sourceProofC: Bool = decisionFrozen
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if decisionFrozen {
+          if fieldsCleared {
+            if verdictDenied {
+              if reasonCaptured {
+                return "durability_admission_denied"
+              }
+              return "reasonCaptured_missing"
+            }
+            return "verdictDenied_missing"
+          }
+          return "fieldsCleared_missing"
+        }
+        return "decisionFrozen_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

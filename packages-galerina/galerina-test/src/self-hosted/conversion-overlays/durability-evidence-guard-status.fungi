@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 25: durability-evidence-guard-status.fungi.
+pure flow durabilityEvidenceGuardStatusCore(valueCaptured: Bool, objectPresent: Bool, provenanceMatched: Bool) -> String {
+  let sourceProofA: Bool = objectPresent
+  let sourceProofB: Bool = provenanceMatched
+  let sourceProofC: Bool = provenanceMatched
+  let sourceProofD: Bool = valueCaptured
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if valueCaptured {
+            if provenanceMatched {
+              if objectPresent {
+                return "durability_evidence_authenticated"
+              }
+              return "objectPresent_missing"
+            }
+            return "provenanceMatched_missing"
+          }
+          return "valueCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

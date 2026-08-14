@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 8: boot-composition-admit-status.fungi.
+pure flow bootCompositionAdmitStatusCore(policyCaptured: Bool, slideAuthenticated: Bool, durabilityAuthenticated: Bool, profilesMatched: Bool, candidateSealed: Bool) -> String {
+  let sourceProofA: Bool = durabilityAuthenticated
+  let sourceProofB: Bool = profilesMatched
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if slideAuthenticated {
+        if policyCaptured {
+          if durabilityAuthenticated {
+            if candidateSealed {
+              if profilesMatched {
+                return "boot_composition_candidate_admitted"
+              }
+              return "profilesMatched_missing"
+            }
+            return "candidateSealed_missing"
+          }
+          return "durabilityAuthenticated_missing"
+        }
+        return "policyCaptured_missing"
+      }
+      return "slideAuthenticated_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

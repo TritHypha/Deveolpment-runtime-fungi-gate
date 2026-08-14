@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 40: registry-index-policy-status.fungi.
+pure flow registryIndexPolicyStatusCore(entryCaptured: Bool, policyCaptured: Bool, levelAllowed: Bool, riskAllowed: Bool) -> String {
+  let sourceProofA: Bool = entryCaptured
+  let sourceProofB: Bool = entryCaptured
+  let sourceProofC: Bool = policyCaptured
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if policyCaptured {
+          if entryCaptured {
+            if riskAllowed {
+              if levelAllowed {
+                return "registry_index_policy_checked"
+              }
+              return "levelAllowed_missing"
+            }
+            return "riskAllowed_missing"
+          }
+          return "entryCaptured_missing"
+        }
+        return "policyCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 20 item 3: boot-composition-canonical-instant-status.fungi.
+pure flow bootCompositionCanonicalInstantStatusCore(valueCaptured: Bool, instantParsed: Bool, roundTripMatched: Bool) -> String {
+  let sourceProofA: Bool = roundTripMatched
+  let sourceProofB: Bool = instantParsed
+  let sourceProofC: Bool = instantParsed
+  let sourceProofD: Bool = roundTripMatched
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if instantParsed {
+            if roundTripMatched {
+              if valueCaptured {
+                return "boot_composition_instant_canonical"
+              }
+              return "valueCaptured_missing"
+            }
+            return "roundTripMatched_missing"
+          }
+          return "instantParsed_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

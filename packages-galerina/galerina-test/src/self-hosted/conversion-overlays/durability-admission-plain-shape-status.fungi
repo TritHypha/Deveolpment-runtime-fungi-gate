@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 10: durability-admission-plain-shape-status.fungi.
+pure flow durabilityAdmissionPlainShapeStatusCore(valueCaptured: Bool, prototypePlain: Bool, keysExact: Bool, descriptorsData: Bool) -> String {
+  let sourceProofA: Bool = prototypePlain
+  let sourceProofB: Bool = keysExact
+  let sourceProofC: Bool = descriptorsData
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if descriptorsData {
+          if prototypePlain {
+            if valueCaptured {
+              if keysExact {
+                return "durability_admission_shape_plain"
+              }
+              return "keysExact_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "prototypePlain_missing"
+        }
+        return "descriptorsData_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

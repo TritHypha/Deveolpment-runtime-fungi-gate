@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 24: durability-evidence-verify-status.fungi.
+pure flow durabilityEvidenceVerifyStatusCore(evidenceCaptured: Bool, policyCaptured: Bool, shapeVerified: Bool, claimsBound: Bool, receiptMinted: Bool) -> String {
+  let sourceProofA: Bool = claimsBound
+  let sourceProofB: Bool = receiptMinted
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if policyCaptured {
+        if shapeVerified {
+          if evidenceCaptured {
+            if claimsBound {
+              if receiptMinted {
+                return "durability_evidence_verified"
+              }
+              return "receiptMinted_missing"
+            }
+            return "claimsBound_missing"
+          }
+          return "evidenceCaptured_missing"
+        }
+        return "shapeVerified_missing"
+      }
+      return "policyCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

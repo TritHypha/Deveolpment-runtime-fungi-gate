@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 20 item 34: registry-index-hybrid-sign-status.fungi.
+pure flow registryIndexHybridSignStatusCore(indexCaptured: Bool, keyBound: Bool, preimageReady: Bool, bothSigned: Bool, envelopeBuilt: Bool) -> String {
+  let sourceProofA: Bool = bothSigned
+  let sourceProofB: Bool = envelopeBuilt
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if keyBound {
+        if preimageReady {
+          if bothSigned {
+            if envelopeBuilt {
+              if indexCaptured {
+                return "registry_index_hybrid_signed"
+              }
+              return "indexCaptured_missing"
+            }
+            return "envelopeBuilt_missing"
+          }
+          return "bothSigned_missing"
+        }
+        return "preimageReady_missing"
+      }
+      return "keyBound_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

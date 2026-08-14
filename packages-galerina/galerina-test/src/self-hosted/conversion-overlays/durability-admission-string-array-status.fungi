@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 11: durability-admission-string-array-status.fungi.
+pure flow durabilityAdmissionStringArrayStatusCore(valueCaptured: Bool, arrayPlain: Bool, valuesAllowed: Bool, duplicatesAbsent: Bool) -> String {
+  let sourceProofA: Bool = valuesAllowed
+  let sourceProofB: Bool = duplicatesAbsent
+  let sourceProofC: Bool = valueCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if duplicatesAbsent {
+          if arrayPlain {
+            if valuesAllowed {
+              if valueCaptured {
+                return "durability_admission_array_canonical"
+              }
+              return "valueCaptured_missing"
+            }
+            return "valuesAllowed_missing"
+          }
+          return "arrayPlain_missing"
+        }
+        return "duplicatesAbsent_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

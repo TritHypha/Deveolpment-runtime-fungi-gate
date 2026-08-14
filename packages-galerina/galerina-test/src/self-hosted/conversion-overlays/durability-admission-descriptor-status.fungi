@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 12: durability-admission-descriptor-status.fungi.
+pure flow durabilityAdmissionDescriptorStatusCore(valueCaptured: Bool, shapeExact: Bool, platformKnown: Bool, architectureKnown: Bool, descriptorValid: Bool) -> String {
+  let sourceProofA: Bool = shapeExact
+  let sourceProofB: Bool = platformKnown
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if shapeExact {
+        if valueCaptured {
+          if architectureKnown {
+            if platformKnown {
+              if descriptorValid {
+                return "durability_adapter_descriptor_valid"
+              }
+              return "descriptorValid_missing"
+            }
+            return "platformKnown_missing"
+          }
+          return "architectureKnown_missing"
+        }
+        return "valueCaptured_missing"
+      }
+      return "shapeExact_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

@@ -1,0 +1,32 @@
+@version 1
+// Source-bound decision overlay wave 20 item 17: durability-evidence-refuse-status.fungi.
+pure flow durabilityEvidenceRefuseStatusCore(codeCaptured: Bool, errorTyped: Bool, refusalRaised: Bool) -> String {
+  let sourceProofA: Bool = refusalRaised
+  let sourceProofB: Bool = codeCaptured
+  let sourceProofC: Bool = codeCaptured
+  let sourceProofD: Bool = errorTyped
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if codeCaptured {
+            if errorTyped {
+              if refusalRaised {
+                return "durability_evidence_refusal_bound"
+              }
+              return "refusalRaised_missing"
+            }
+            return "errorTyped_missing"
+          }
+          return "codeCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 20 item 28: registry-durability-rotation-match-status.fungi.
+pure flow registryDurabilityRotationMatchStatusCore(identityCaptured: Bool, profileAuthenticated: Bool, generationMatched: Bool, keysMatched: Bool, rotationBound: Bool) -> String {
+  let sourceProofA: Bool = generationMatched
+  let sourceProofB: Bool = keysMatched
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if profileAuthenticated {
+        if generationMatched {
+          if keysMatched {
+            if identityCaptured {
+              if rotationBound {
+                return "registry_durability_rotation_matched"
+              }
+              return "rotationBound_missing"
+            }
+            return "identityCaptured_missing"
+          }
+          return "keysMatched_missing"
+        }
+        return "generationMatched_missing"
+      }
+      return "profileAuthenticated_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

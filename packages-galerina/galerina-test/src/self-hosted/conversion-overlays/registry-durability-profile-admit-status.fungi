@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 26: registry-durability-profile-admit-status.fungi.
+pure flow registryDurabilityProfileAdmitStatusCore(manifestCaptured: Bool, evidenceVerified: Bool, authorityBound: Bool, signaturesVerified: Bool, profileSealed: Bool) -> String {
+  let sourceProofA: Bool = manifestCaptured
+  let sourceProofB: Bool = evidenceVerified
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if evidenceVerified {
+        if authorityBound {
+          if manifestCaptured {
+            if profileSealed {
+              if signaturesVerified {
+                return "registry_durability_profile_admitted"
+              }
+              return "signaturesVerified_missing"
+            }
+            return "profileSealed_missing"
+          }
+          return "manifestCaptured_missing"
+        }
+        return "authorityBound_missing"
+      }
+      return "evidenceVerified_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 13: durability-admission-host-status.fungi.
+pure flow durabilityAdmissionHostStatusCore(valueCaptured: Bool, shapeExact: Bool, callbacksBound: Bool, hostValid: Bool) -> String {
+  let sourceProofA: Bool = valueCaptured
+  let sourceProofB: Bool = shapeExact
+  let sourceProofC: Bool = callbacksBound
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if sourceProofC {
+        if hostValid {
+          if callbacksBound {
+            if valueCaptured {
+              if shapeExact {
+                return "durability_host_valid"
+              }
+              return "shapeExact_missing"
+            }
+            return "valueCaptured_missing"
+          }
+          return "callbacksBound_missing"
+        }
+        return "hostValid_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

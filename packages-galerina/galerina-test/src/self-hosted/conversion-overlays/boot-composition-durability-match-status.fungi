@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 20 item 7: boot-composition-durability-match-status.fungi.
+pure flow bootCompositionDurabilityMatchStatusCore(policyCaptured: Bool, profileCaptured: Bool, platformMatched: Bool, timeBound: Bool, factsMatched: Bool) -> String {
+  let sourceProofA: Bool = profileCaptured
+  let sourceProofB: Bool = platformMatched
+  let waveSealA: Bool = sourceProofA
+  if waveSealA {
+    if sourceProofB {
+      if profileCaptured {
+        if policyCaptured {
+          if platformMatched {
+            if timeBound {
+              if factsMatched {
+                return "boot_composition_durability_matched"
+              }
+              return "factsMatched_missing"
+            }
+            return "timeBound_missing"
+          }
+          return "platformMatched_missing"
+        }
+        return "policyCaptured_missing"
+      }
+      return "profileCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealA_missing"
+}

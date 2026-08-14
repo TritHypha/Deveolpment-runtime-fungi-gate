@@ -2515,3 +2515,53 @@ must contain all 40 new `.fungi` files, and both worktree and committed-object
 guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
+
+## Source decision overlay wave 20 - boot composition, durability and registry index
+
+Wave 20 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. Nine bind the remaining executable decision seams in
+`galerina-framework-app-kernel/src/production-boot-composition-candidate.ts`,
+six bind `registry-durability-admission.ts`, ten bind
+`registry-durability-evidence.ts`, three bind the remaining uncredited
+functions in `registry-durability-production-admission.ts`, and twelve bind
+previously uncredited functions in `registry-index.ts`. The package now
+registers **840** conversion overlays. The pinned source build point is
+`4795e7abd15296b259ff7c9ef99c251a07e2f56b`; the five source SHA-256 values
+are
+`53CCC0BFEF87012AB807444445BB5FB46882CED9CA3D890FB4852FA86758995D`,
+`8AF5DC485A086D8BE6F90E6C64208606B9E93A1BA3CB09C5D456E09F299CB4E7`,
+`4297D47F36656C6D45A2E8596A27BF143A82B3FF23869B72EAA3CA97FDC8B15C`,
+`A6E70B81FFE8A8800168F3B96EF08143353868363A835BB31F9EB133B7257D31`
+and
+`B21EA6A79B53DBA243E5B8D550A4476FAF736751B53E98FE0EE47348E1F46ADB`.
+The graph supplied navigation only and its independently observed build point
+preceded this source build, so freshness is **UNKNOWN**; exact live bytes and
+the bounded prior-wave scope audit are final authority.
+
+The source test first failed on the absent and unregistered assets. The first
+authored pass then passed the whole-corpus duplicate guard without a repair
+round: **40/40 unique**, with zero exact-byte or normalized alpha-renamed
+template collisions. Focused source evidence passes **3/3** and the complete
+overlay source family passes **59/59**. Focused physical evidence passes
+**1/1** and the complete physical wave family passes **19/19**: all 40 new
+sources compile into physical `.slide` artifacts, publish, independently
+re-admit and VOK-verify their typed values, refuse mutated source and physical
+artifacts, reject receipt tampering, and release no production authority. The
+test package no-emit typecheck is green. The focused test pins are
+`ACE446429E5E63AD39BF694838B05B77A7AF1A968C5627FD048FA85AD53BAF4D`
+and
+`8369DB3B237C23A1EE384BFBF296D9CB4B8A0550347720A306F8ABC257B88B29`.
+
+This remains bounded post-border decision evidence. It does not replace
+request or manifest decoding, canonical JSON or UTF-8, filesystem and path
+effects, binary inspection, clocks, signature and revocation verification,
+crypto key custody, mutable records and arrays, callbacks, audit effects,
+error identity, concurrency or cleanup ordering. It authorizes no boot
+composition, durability adapter or evidence profile, registry index, package
+lookup, consumer switch or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, no worker authored this wave, no push is authorized, and no report-only
+follow-up commit is permitted.

@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 38: registry-index-component-status.fungi.
+pure flow registryIndexComponentStatusCore(messageCaptured: Bool, signatureCaptured: Bool, keyBound: Bool, verifierCompleted: Bool, literalTrue: Bool) -> String {
+  let sourceProofA: Bool = keyBound
+  let sourceProofB: Bool = verifierCompleted
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if signatureCaptured {
+        if verifierCompleted {
+          if messageCaptured {
+            if keyBound {
+              if literalTrue {
+                return "registry_index_component_verified"
+              }
+              return "literalTrue_missing"
+            }
+            return "keyBound_missing"
+          }
+          return "messageCaptured_missing"
+        }
+        return "verifierCompleted_missing"
+      }
+      return "signatureCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

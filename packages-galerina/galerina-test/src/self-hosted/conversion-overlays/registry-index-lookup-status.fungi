@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 39: registry-index-lookup-status.fungi.
+pure flow registryIndexLookupStatusCore(indexCaptured: Bool, queryCaptured: Bool, entryUnique: Bool, identityMatched: Bool, resultBound: Bool) -> String {
+  let sourceProofA: Bool = identityMatched
+  let sourceProofB: Bool = resultBound
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if queryCaptured {
+        if identityMatched {
+          if indexCaptured {
+            if resultBound {
+              if entryUnique {
+                return "registry_index_lookup_resolved"
+              }
+              return "entryUnique_missing"
+            }
+            return "resultBound_missing"
+          }
+          return "indexCaptured_missing"
+        }
+        return "identityMatched_missing"
+      }
+      return "queryCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

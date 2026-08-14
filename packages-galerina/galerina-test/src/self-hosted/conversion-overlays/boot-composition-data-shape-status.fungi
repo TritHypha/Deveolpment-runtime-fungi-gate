@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 2: boot-composition-data-shape-status.fungi.
+pure flow bootCompositionDataShapeStatusCore(valueCaptured: Bool, prototypePlain: Bool, keysExact: Bool, descriptorsData: Bool, cloneSucceeded: Bool) -> String {
+  let sourceProofA: Bool = prototypePlain
+  let sourceProofB: Bool = keysExact
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if valueCaptured {
+        if cloneSucceeded {
+          if keysExact {
+            if prototypePlain {
+              if descriptorsData {
+                return "boot_composition_data_shape_exact"
+              }
+              return "descriptorsData_missing"
+            }
+            return "prototypePlain_missing"
+          }
+          return "keysExact_missing"
+        }
+        return "cloneSucceeded_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

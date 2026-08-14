@@ -1,0 +1,30 @@
+@version 1
+// Source-bound decision overlay wave 20 item 5: boot-composition-policy-shape-status.fungi.
+pure flow bootCompositionPolicyShapeStatusCore(valueCaptured: Bool, shapeExact: Bool, identitiesValid: Bool, timeWindowValid: Bool, policyClosed: Bool) -> String {
+  let sourceProofA: Bool = policyClosed
+  let sourceProofB: Bool = valueCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if valueCaptured {
+        if policyClosed {
+          if timeWindowValid {
+            if shapeExact {
+              if identitiesValid {
+                return "boot_composition_policy_valid"
+              }
+              return "identitiesValid_missing"
+            }
+            return "shapeExact_missing"
+          }
+          return "timeWindowValid_missing"
+        }
+        return "policyClosed_missing"
+      }
+      return "valueCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

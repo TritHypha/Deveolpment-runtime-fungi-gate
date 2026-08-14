@@ -1,0 +1,32 @@
+@version 1
+// Source-bound decision overlay wave 20 item 29: registry-index-compare-status.fungi.
+pure flow registryIndexCompareStatusCore(leftCaptured: Bool, rightCaptured: Bool, orderClassified: Bool) -> String {
+  let sourceProofA: Bool = orderClassified
+  let sourceProofB: Bool = leftCaptured
+  let sourceProofC: Bool = leftCaptured
+  let sourceProofD: Bool = rightCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if sourceProofD {
+          if rightCaptured {
+            if orderClassified {
+              if leftCaptured {
+                return "registry_index_order_classified"
+              }
+              return "leftCaptured_missing"
+            }
+            return "orderClassified_missing"
+          }
+          return "rightCaptured_missing"
+        }
+        return "sourceProofD_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}

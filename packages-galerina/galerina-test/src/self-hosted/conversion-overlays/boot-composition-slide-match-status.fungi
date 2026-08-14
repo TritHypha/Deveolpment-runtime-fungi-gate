@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 6: boot-composition-slide-match-status.fungi.
+pure flow bootCompositionSlideMatchStatusCore(policyCaptured: Bool, profileCaptured: Bool, identityMatched: Bool, authorityContained: Bool, factsMatched: Bool) -> String {
+  let sourceProofA: Bool = policyCaptured
+  let sourceProofB: Bool = profileCaptured
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  let waveSealC: Bool = waveSealB
+  if waveSealC {
+    if sourceProofB {
+      if policyCaptured {
+        if factsMatched {
+          if authorityContained {
+            if identityMatched {
+              if profileCaptured {
+                return "boot_composition_slide_matched"
+              }
+              return "profileCaptured_missing"
+            }
+            return "identityMatched_missing"
+          }
+          return "authorityContained_missing"
+        }
+        return "factsMatched_missing"
+      }
+      return "policyCaptured_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealC_missing"
+}

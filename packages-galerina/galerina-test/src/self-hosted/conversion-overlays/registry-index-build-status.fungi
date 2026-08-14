@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 20 item 32: registry-index-build-status.fungi.
+pure flow registryIndexBuildStatusCore(inputCaptured: Bool, entriesCopied: Bool, entriesSorted: Bool, indexBuilt: Bool) -> String {
+  let sourceProofA: Bool = inputCaptured
+  let sourceProofB: Bool = inputCaptured
+  let sourceProofC: Bool = entriesCopied
+  let waveSealA: Bool = sourceProofA
+  let waveSealB: Bool = waveSealA
+  if waveSealB {
+    if sourceProofB {
+      if sourceProofC {
+        if inputCaptured {
+          if indexBuilt {
+            if entriesSorted {
+              if entriesCopied {
+                return "registry_index_built"
+              }
+              return "entriesCopied_missing"
+            }
+            return "entriesSorted_missing"
+          }
+          return "indexBuilt_missing"
+        }
+        return "inputCaptured_missing"
+      }
+      return "sourceProofC_missing"
+    }
+    return "sourceProofB_missing"
+  }
+  return "waveSealB_missing"
+}
