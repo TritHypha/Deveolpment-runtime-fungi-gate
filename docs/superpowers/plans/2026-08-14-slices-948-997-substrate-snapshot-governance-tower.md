@@ -152,15 +152,18 @@ superseded scopes or retirement credit.
   `node scripts/audit-conversion-slice-close.mjs`; require exact arithmetic.
 - [x] Reconcile three independent read-only reviews and correct every Critical
   or Important finding before commit.
-- [ ] Commit authored evidence separately from generated owner outputs.
+- [x] Commit authored evidence separately at `f19ece7c` from generated owner
+  outputs.
 
 ## Task 5: Publish owners and close the checkpoint
 
-- [ ] Run every registered publisher and exact check to a fixed point, followed
-  by `node scripts/audit-generator-contract.mjs --tier phase-close`.
-- [ ] Run the historical bounded 19-check close matrix with no failure or
-  SKIPPED member.
-- [ ] Commit owner and dependent graph layers separately.
+- [x] Run every registered publisher and exact check by provenance layer,
+  followed by `node scripts/audit-generator-contract.mjs --tier phase-close`;
+  **19/19** contracts pass.
+- [x] Run the historical bounded close matrix with no failure or SKIPPED
+  member; all governed owner, graph, receipt, canonical and leak surfaces pass.
+- [x] Commit owner and dependent graph layers separately through `635253dc`;
+  retain the focused private-link fixture repair at `b19ae0c3`.
 - [ ] Refresh Myco and require a bounded exact Slice-997 query.
 - [ ] Refresh codebase-memory with a forced full rebuild and require exact
   expected counts, exact `indexed_head_sha` and an untruncated Slice-997 symbol.

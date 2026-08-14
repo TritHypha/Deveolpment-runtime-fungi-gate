@@ -1408,7 +1408,16 @@ crypto, error, closure and physical-proof rules, so every receipt records
 Tower no-emit typecheck, **515/515** package tests and **937/937** governed
 receipt checks pass. These are regression/schema evidence only. Three
 independent read-only reviews and their bounded correction rechecks pass.
-Registered-owner publication and exact-head index refresh remain pending.
+Authored evidence is committed separately at `f19ece7c`. A focused Myco test
+fixture repair at `b19ae0c3` removes tracked literal never-public filenames
+without weakening the detector; Myco no-emit typecheck and **110/110** tests
+pass. Registered owners are committed in separate provenance layers through
+`635253dc`. The hermetic generator contract passes **19/19**. The bounded close
+reports queue **1,490/1,490**, package **100/201**, project **5/5**, graph
+**10,768 nodes / 10,617 edges / zero violations**, semantic **3/3** with
+**977** tests, source inventory **149**, code index **975**, receipts
+**937/937**, Golden **11/11**, canonical **7/7**, and both path/private leak
+audits at zero. Exact-head Myco and codebase-memory refresh remains pending.
 Repository-wide closure stays `UNKNOWN`.
 
 ## Slices 898-947 - Tower verifier, snapshot and substrate

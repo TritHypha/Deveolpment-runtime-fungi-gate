@@ -22,8 +22,13 @@ scopes remain blocked. Prior Slice-91, Slices90/92-102 and Slices103/123-129
 retain sole credit. Receipt authoring and fresh Tower no-emit typecheck,
 **515/515** package tests and **937/937** governed receipt checks are complete;
 these remain regression/schema evidence only. Three independent read-only
-reviews and correction rechecks pass; owner publication and final dual-index
-evidence remain pending.
+reviews and correction rechecks pass. Authored evidence is committed at
+`f19ece7c`; a focused Myco fixture repair at `b19ae0c3` passes no-emit
+typecheck and **110/110** tests. Registered owners are committed by provenance
+layer through `635253dc`; the hermetic owner contract and bounded close matrix
+pass, including **937/937** receipts, **10,768 nodes / 10,617 edges / zero
+graph violations**, canonical **7/7 = 9,612**, and clean path/private leak
+audits. Final exact-head dual-index evidence remains pending.
 
 Historical Slice-247 checkpoint (retained as a chronological baseline): the
 governed TypeScript/MJS-to-Fungi campaign was then accounted through **Slice

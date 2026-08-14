@@ -17,10 +17,17 @@ counts or open items that a newer section explicitly supersedes.
   evidence only.
 - [x] Reconcile three independent read-only reviews and correct every Critical
   or Important discrepancy; all bounded rechecks pass.
-- [ ] Commit authored evidence separately from registered owner outputs.
-- [ ] Publish registered owners, pass the hermetic owner contract and bounded
-  close matrix, then refresh Myco and codebase-memory at the exact final head.
-- [ ] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,
+- [x] Commit authored evidence separately at `f19ece7c`; retain the focused
+  private-link fixture repair at `b19ae0c3` with Myco typecheck and **110/110**
+  tests.
+- [x] Publish registered owners in separate provenance layers through
+  `635253dc`; pass the hermetic owner contract **19/19** and bounded close
+  matrix with queue **1,490/1,490**, package **100/201**, project **5/5**,
+  graph **10,768 nodes / 10,617 edges / zero violations**, semantic **3/3**
+  with **977** tests, source inventory **149**, code index **975**, receipts
+  **937/937**, Golden **11/11**, canonical **7/7**, and both leak audits clean.
+- [ ] Refresh Myco and codebase-memory at the exact final record head.
+- [x] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,
   production, release, signing, push or retirement authority.
 
 ### Slices 898-947 Tower verifier, snapshot and substrate - 2026-08-14
