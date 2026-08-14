@@ -2081,7 +2081,7 @@
       "identity": "@galerina/tools-myco",
       "version": "0.2.1",
       "directory": "galerina-tools-myco",
-      "contentDigest": "b0393c55eba9b87eb76280ee639ff86f16362b4abb75c9404a8f8717a76e96fa",
+      "contentDigest": "2f20c55fa8c7dd14bafa90a0f17b8d7a0da26c40f838626146a78e85ad8b524c",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3273,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "7bc7f18115a98abec688eb0685cb47b83a3652c349f1e0452e52e9093dd3f317"
+  "rootDigest": "83d432c037400bbb38ba315da3352bccb45f9847c8f1095e6a6877980e48543c"
 }
