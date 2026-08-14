@@ -119,5 +119,6 @@ would narrow that observable host contract until an exact border is approved.
 - [x] Author 50 unique receipt-local classifications/blockers/exits/vectors.
 - [x] Run focused Tower checks and the governed receipt audit.
 - [x] Reconcile three independent read-only reviews.
-- [ ] Commit authored evidence separately, publish registered owners, run the
-  bounded 19-check matrix, then refresh both indexes at Slice 747.
+- [x] Commit authored evidence separately.
+- [x] Publish registered owners and pass the bounded 19-check matrix.
+- [ ] Commit closure provenance and refresh both indexes at Slice 747.

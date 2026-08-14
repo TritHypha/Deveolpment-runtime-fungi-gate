@@ -3835,5 +3835,9 @@ one immutable evidence snapshot and a closed pending/verified/denied state, and
 make live TypedArray/DataView buffer, view, offset, detachment, resizing and
 shared-memory behavior explicit conversion borders. Fresh Tower typecheck plus
 **515/515** tests and **687/687** governed receipts pass. Three independent
-reviews, authored-evidence commit, owner publication, the bounded 19-check
-matrix and final dual-index refresh remain pending.
+reviews pass and authored evidence is committed at `fb524a5a`. All 19 owners
+plus the hermetic generator contract pass **19/19**; bounded outputs are queue
+**1,490/1,490**, graph **10,510 nodes / 10,361 edges / zero violations**,
+semantic **3/3** with **977** tests, source inventory **149**, code index
+**975**, Golden **11/11**, canonical **7/7**, and both leak audits at zero.
+Final closure-provenance commit and dual-index refresh remain pending.

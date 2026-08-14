@@ -20,8 +20,15 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Reconcile three independent read-only reviews with final PASS after
   correcting async/live-view threadability and making every exit plus the
   range/caller/test/asset manifest receipt-exact.
-- [ ] Commit authored evidence separately, publish all registered owners, run
-  the bounded 19-check matrix, then refresh both indexes only at Slice 747.
+- [x] Commit authored evidence separately at `fb524a5a`, publish all 19
+  registered owners, pass the hermetic generator contract **19/19**, and close
+  the bounded matrix at queue **1,490/1,490**, package **100/201**, project
+  **5/5**, graph **10,510 nodes / 10,361 edges / zero violations**, semantic
+  **3/3** with **977** tests, source inventory **149**, code index **975**,
+  receipts **687/687**, Golden **11/11**, canonical **7/7**, and both leak
+  audits at zero.
+- [ ] Commit the final closure provenance, then refresh Myco and
+  codebase-memory and prove exact Slice-747 indexed-head readback.
   Repository-wide closure remains `UNKNOWN`.
 
 ### Slices 648-697 Tower epistemic state and GateCache - 2026-08-14

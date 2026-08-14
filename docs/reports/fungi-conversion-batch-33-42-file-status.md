@@ -1158,9 +1158,17 @@ claimed. Both remain private and unpushed.
 
 Fresh Tower no-emit typecheck plus **515/515** tests pass, and all **687/687**
 governed receipts are valid with 29 frozen legacy reports. These are bounded
-regression and receipt-shape evidence only. Independent reviews, owner
-publication, the bounded 19-check matrix and final dual-index refresh remain
-pending.
+regression and receipt-shape evidence only. Three independent reviews pass
+after correcting live-view/async threadability and making all exits plus the
+range/caller/test/asset manifest exact.
+
+Authored evidence is committed at `fb524a5a`. All 19 registered owners and
+the hermetic generator contract pass **19/19**. The bounded close reports queue
+**1,490/1,490**, package **100/201**, project **5/5**, graph **10,510 nodes /
+10,361 edges / zero violations**, semantic **3/3** with **977** tests, source
+inventory **149**, code index **975**, receipts **687/687**, Golden **11/11**,
+canonical **7/7**, and both leak audits at zero. Final closure-provenance commit
+and dual-index exact-head refresh remain pending.
 
 ### Slice 698-747 exact evidence manifest
 
