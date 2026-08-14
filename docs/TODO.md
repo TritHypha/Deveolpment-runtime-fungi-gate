@@ -17,8 +17,13 @@ counts or open items that a newer section explicitly supersedes.
   keep results regression/shape evidence only.
 - [x] Complete a separate evidence-first verification review; no unresolved
   Critical or Important discrepancy remains.
-- [ ] Commit authored evidence separately, publish registered owners by
-  provenance layer, run the hermetic owner contract and bounded close matrix.
+- [x] Commit authored evidence separately at `7f938b61`; publish registered
+  owners by provenance layer through `431e297b`, pass the hermetic owner
+  contract **19/19**, and pass the bounded close matrix: queue **1,490/1,490**,
+  package **100/201**, project **5/5**, graph **10,819 nodes / 10,667 edges /
+  zero violations**, semantic **3/3** with **977** tests, source inventory
+  **149**, code index **975**, receipts **987/987**, Golden **11/11**,
+  canonical **7/7 = 9,612**, and both leak audits clean.
 - [ ] Refresh Myco and codebase-memory at the final clean head with an exact,
   untruncated Slice-1047 query/snippet.
 - [x] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,

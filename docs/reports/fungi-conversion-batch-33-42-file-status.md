@@ -83,8 +83,14 @@ and TriRegex **34/34**; the governed receipt audit passes **987/987** with 29
 frozen legacy reports. These remain regression and receipt-shape evidence only.
 A separate verification pass against exact source ranges, prior receipts,
 classification arithmetic, tests and skill rules found no unresolved Critical
-or Important discrepancy. Registered publishers and exact dual-index closure
-remain pending. Repository-wide conversion closure stays `UNKNOWN`.
+or Important discrepancy. Authored evidence is committed at `7f938b61`;
+registered owner layers close through `431e297b` and the hermetic publisher
+contract passes **19/19**. The bounded close matrix passes queue **1,490/1,490**,
+package **100/201**, project **5/5**, graph **10,819 nodes / 10,667 edges / zero
+violations**, semantic **3/3** with **977** tests, source inventory **149**, code
+index **975**, receipts **987/987**, Golden **11/11**, canonical **7/7 = 9,612**,
+and both leak audits clean. Final exact dual-index closure remains pending.
+Repository-wide conversion closure stays `UNKNOWN`.
 
 ## Slice 63 entry gate
 
