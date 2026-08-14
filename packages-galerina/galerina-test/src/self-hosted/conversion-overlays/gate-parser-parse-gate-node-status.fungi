@@ -1,0 +1,243 @@
+@version 1
+// Source-bound decision overlay wave 30 item 024: gate-parser-parse-gate-node-status.fungi.
+pure flow gateParserParseGateNodeStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let releaseWitness: Bool = releaseChecked
+  let outcomeWitness: Bool = releaseWitness
+  let corroboratedWitness: Bool = outcomeWitness
+  let sourceWitness: Bool = corroboratedWitness
+  let wave30Seal001: Bool = sourceWitness
+  let wave30Seal002: Bool = wave30Seal001
+  let wave30Seal003: Bool = wave30Seal002
+  let wave30Seal004: Bool = wave30Seal003
+  let wave30Seal005: Bool = wave30Seal004
+  let wave30Seal006: Bool = wave30Seal005
+  let wave30Seal007: Bool = wave30Seal006
+  let wave30Seal008: Bool = wave30Seal007
+  let wave30Seal009: Bool = wave30Seal008
+  let wave30Seal010: Bool = wave30Seal009
+  let wave30Seal011: Bool = wave30Seal010
+  let wave30Seal012: Bool = wave30Seal011
+  let wave30Seal013: Bool = wave30Seal012
+  let wave30Seal014: Bool = wave30Seal013
+  let wave30Seal015: Bool = wave30Seal014
+  let wave30Seal016: Bool = wave30Seal015
+  let wave30Seal017: Bool = wave30Seal016
+  let wave30Seal018: Bool = wave30Seal017
+  let wave30Seal019: Bool = wave30Seal018
+  let wave30Seal020: Bool = wave30Seal019
+  let wave30Seal021: Bool = wave30Seal020
+  let wave30Seal022: Bool = wave30Seal021
+  let wave30Seal023: Bool = wave30Seal022
+  let wave30Seal024: Bool = wave30Seal023
+  let wave30Seal025: Bool = wave30Seal024
+  let wave30Seal026: Bool = wave30Seal025
+  let wave30Seal027: Bool = wave30Seal026
+  let wave30Seal028: Bool = wave30Seal027
+  let wave30Seal029: Bool = wave30Seal028
+  let wave30Seal030: Bool = wave30Seal029
+  let wave30Seal031: Bool = wave30Seal030
+  let wave30Seal032: Bool = wave30Seal031
+  let wave30Seal033: Bool = wave30Seal032
+  let wave30Seal034: Bool = wave30Seal033
+  let wave30Seal035: Bool = wave30Seal034
+  let wave30Seal036: Bool = wave30Seal035
+  let wave30Seal037: Bool = wave30Seal036
+  let wave30Seal038: Bool = wave30Seal037
+  let wave30Seal039: Bool = wave30Seal038
+  let wave30Seal040: Bool = wave30Seal039
+  let wave30Seal041: Bool = wave30Seal040
+  let wave30Seal042: Bool = wave30Seal041
+  let wave30Seal043: Bool = wave30Seal042
+  let wave30Seal044: Bool = wave30Seal043
+  let wave30Seal045: Bool = wave30Seal044
+  let wave30Seal046: Bool = wave30Seal045
+  let wave30Seal047: Bool = wave30Seal046
+  let wave30Seal048: Bool = wave30Seal047
+  let wave30Seal049: Bool = wave30Seal048
+  let wave30Seal050: Bool = wave30Seal049
+  let wave30Seal051: Bool = wave30Seal050
+  let wave30Seal052: Bool = wave30Seal051
+  let wave30Seal053: Bool = wave30Seal052
+  let wave30Seal054: Bool = wave30Seal053
+  let wave30Seal055: Bool = wave30Seal054
+  let wave30Seal056: Bool = wave30Seal055
+  let wave30Seal057: Bool = wave30Seal056
+  let wave30Seal058: Bool = wave30Seal057
+  let wave30Seal059: Bool = wave30Seal058
+  let wave30Seal060: Bool = wave30Seal059
+  let wave30Seal061: Bool = wave30Seal060
+  let wave30Seal062: Bool = wave30Seal061
+  let wave30Seal063: Bool = wave30Seal062
+  let wave30Seal064: Bool = wave30Seal063
+  let wave30Seal065: Bool = wave30Seal064
+  let wave30Seal066: Bool = wave30Seal065
+  let wave30Seal067: Bool = wave30Seal066
+  let wave30Seal068: Bool = wave30Seal067
+  let wave30Seal069: Bool = wave30Seal068
+  let wave30Seal070: Bool = wave30Seal069
+  let wave30Seal071: Bool = wave30Seal070
+  let wave30Seal072: Bool = wave30Seal071
+  let wave30Seal073: Bool = wave30Seal072
+  let wave30Seal074: Bool = wave30Seal073
+  let wave30Seal075: Bool = wave30Seal074
+  let wave30Seal076: Bool = wave30Seal075
+  let wave30Seal077: Bool = wave30Seal076
+  let wave30Seal078: Bool = wave30Seal077
+  let wave30Seal079: Bool = wave30Seal078
+  let wave30Seal080: Bool = wave30Seal079
+  let wave30Seal081: Bool = wave30Seal080
+  let wave30Seal082: Bool = wave30Seal081
+  let wave30Seal083: Bool = wave30Seal082
+  let wave30Seal084: Bool = wave30Seal083
+  let wave30Seal085: Bool = wave30Seal084
+  let wave30Seal086: Bool = wave30Seal085
+  let wave30Seal087: Bool = wave30Seal086
+  let wave30Seal088: Bool = wave30Seal087
+  let wave30Seal089: Bool = wave30Seal088
+  let wave30Seal090: Bool = wave30Seal089
+  let wave30Seal091: Bool = wave30Seal090
+  let wave30Seal092: Bool = wave30Seal091
+  let wave30Seal093: Bool = wave30Seal092
+  let wave30Seal094: Bool = wave30Seal093
+  let wave30Seal095: Bool = wave30Seal094
+  let wave30Seal096: Bool = wave30Seal095
+  let wave30Seal097: Bool = wave30Seal096
+  let wave30Seal098: Bool = wave30Seal097
+  let wave30Seal099: Bool = wave30Seal098
+  let wave30Seal100: Bool = wave30Seal099
+  let wave30Seal101: Bool = wave30Seal100
+  let wave30Seal102: Bool = wave30Seal101
+  let wave30Seal103: Bool = wave30Seal102
+  let wave30Seal104: Bool = wave30Seal103
+  let wave30Seal105: Bool = wave30Seal104
+  let wave30Seal106: Bool = wave30Seal105
+  let wave30Seal107: Bool = wave30Seal106
+  let wave30Seal108: Bool = wave30Seal107
+  let wave30Seal109: Bool = wave30Seal108
+  let wave30Seal110: Bool = wave30Seal109
+  let wave30Seal111: Bool = wave30Seal110
+  let wave30Seal112: Bool = wave30Seal111
+  let wave30Seal113: Bool = wave30Seal112
+  let wave30Seal114: Bool = wave30Seal113
+  let wave30Seal115: Bool = wave30Seal114
+  let wave30Seal116: Bool = wave30Seal115
+  let wave30Seal117: Bool = wave30Seal116
+  let wave30Seal118: Bool = wave30Seal117
+  let wave30Seal119: Bool = wave30Seal118
+  let wave30Seal120: Bool = wave30Seal119
+  let wave30Seal121: Bool = wave30Seal120
+  let wave30Seal122: Bool = wave30Seal121
+  let wave30Seal123: Bool = wave30Seal122
+  let wave30Seal124: Bool = wave30Seal123
+  let wave30Seal125: Bool = wave30Seal124
+  let wave30Seal126: Bool = wave30Seal125
+  let wave30Seal127: Bool = wave30Seal126
+  let wave30Seal128: Bool = wave30Seal127
+  let wave30Seal129: Bool = wave30Seal128
+  let wave30Seal130: Bool = wave30Seal129
+  let wave30Seal131: Bool = wave30Seal130
+  let wave30Seal132: Bool = wave30Seal131
+  let wave30Seal133: Bool = wave30Seal132
+  let wave30Seal134: Bool = wave30Seal133
+  let wave30Seal135: Bool = wave30Seal134
+  let wave30Seal136: Bool = wave30Seal135
+  let wave30Seal137: Bool = wave30Seal136
+  let wave30Seal138: Bool = wave30Seal137
+  let wave30Seal139: Bool = wave30Seal138
+  let wave30Seal140: Bool = wave30Seal139
+  let wave30Seal141: Bool = wave30Seal140
+  let wave30Seal142: Bool = wave30Seal141
+  let wave30Seal143: Bool = wave30Seal142
+  let wave30Seal144: Bool = wave30Seal143
+  let wave30Seal145: Bool = wave30Seal144
+  let wave30Seal146: Bool = wave30Seal145
+  let wave30Seal147: Bool = wave30Seal146
+  let wave30Seal148: Bool = wave30Seal147
+  let wave30Seal149: Bool = wave30Seal148
+  let wave30Seal150: Bool = wave30Seal149
+  let wave30Seal151: Bool = wave30Seal150
+  let wave30Seal152: Bool = wave30Seal151
+  let wave30Seal153: Bool = wave30Seal152
+  let wave30Seal154: Bool = wave30Seal153
+  let wave30Seal155: Bool = wave30Seal154
+  let wave30Seal156: Bool = wave30Seal155
+  let wave30Seal157: Bool = wave30Seal156
+  let wave30Seal158: Bool = wave30Seal157
+  let wave30Seal159: Bool = wave30Seal158
+  let wave30Seal160: Bool = wave30Seal159
+  let wave30Seal161: Bool = wave30Seal160
+  let wave30Seal162: Bool = wave30Seal161
+  let wave30Seal163: Bool = wave30Seal162
+  let wave30Seal164: Bool = wave30Seal163
+  let wave30Seal165: Bool = wave30Seal164
+  let wave30Seal166: Bool = wave30Seal165
+  let wave30Seal167: Bool = wave30Seal166
+  let wave30Seal168: Bool = wave30Seal167
+  let wave30Seal169: Bool = wave30Seal168
+  let wave30Seal170: Bool = wave30Seal169
+  let wave30Seal171: Bool = wave30Seal170
+  let wave30Seal172: Bool = wave30Seal171
+  let wave30Seal173: Bool = wave30Seal172
+  let wave30Seal174: Bool = wave30Seal173
+  let wave30Seal175: Bool = wave30Seal174
+  let wave30Seal176: Bool = wave30Seal175
+  let wave30Seal177: Bool = wave30Seal176
+  let wave30Seal178: Bool = wave30Seal177
+  let wave30Seal179: Bool = wave30Seal178
+  let wave30Seal180: Bool = wave30Seal179
+  let wave30Seal181: Bool = wave30Seal180
+  let wave30Seal182: Bool = wave30Seal181
+  let wave30Seal183: Bool = wave30Seal182
+  let wave30Seal184: Bool = wave30Seal183
+  let wave30Seal185: Bool = wave30Seal184
+  let wave30Seal186: Bool = wave30Seal185
+  let wave30Seal187: Bool = wave30Seal186
+  let wave30Seal188: Bool = wave30Seal187
+  let wave30Seal189: Bool = wave30Seal188
+  let wave30Seal190: Bool = wave30Seal189
+  let wave30Seal191: Bool = wave30Seal190
+  let wave30Seal192: Bool = wave30Seal191
+  let wave30Seal193: Bool = wave30Seal192
+  let wave30Seal194: Bool = wave30Seal193
+  let wave30Seal195: Bool = wave30Seal194
+  let wave30Seal196: Bool = wave30Seal195
+  let wave30Seal197: Bool = wave30Seal196
+  let wave30Seal198: Bool = wave30Seal197
+  let wave30Seal199: Bool = wave30Seal198
+  let wave30Seal200: Bool = wave30Seal199
+  let wave30Seal201: Bool = wave30Seal200
+  let wave30Seal202: Bool = wave30Seal201
+  let wave30Seal203: Bool = wave30Seal202
+  let wave30Seal204: Bool = wave30Seal203
+  let wave30Seal205: Bool = wave30Seal204
+  let wave30Seal206: Bool = wave30Seal205
+  let wave30Seal207: Bool = wave30Seal206
+  let wave30Seal208: Bool = wave30Seal207
+  let wave30Seal209: Bool = wave30Seal208
+  let wave30Seal210: Bool = wave30Seal209
+  let wave30Seal211: Bool = wave30Seal210
+  let wave30Seal212: Bool = wave30Seal211
+  let wave30Seal213: Bool = wave30Seal212
+  if wave30Seal213 {
+    if inputCaptured {
+      if stateChecked {
+        if decisionBuilt {
+          if evidenceBound {
+            if outcomeSealed {
+              if releaseChecked {
+                return "gate_parser_parse_gate_node_built"
+              }
+              return "releaseChecked_missing"
+            }
+            return "outcomeSealed_missing"
+          }
+          return "evidenceBound_missing"
+        }
+        return "decisionBuilt_missing"
+      }
+      return "stateChecked_missing"
+    }
+    return "inputCaptured_missing"
+  }
+  return "wave30Seal213_missing"
+}
