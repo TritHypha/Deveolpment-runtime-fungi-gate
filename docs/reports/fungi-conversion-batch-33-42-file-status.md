@@ -2413,6 +2413,59 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 47 - Profile enforcement and proof receipts
+
+Wave 47 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay filename or source-and-symbol credit. Sixteen exhaust the remaining
+runtime-profile constants, records, AST analysis and public checker surface;
+eleven exhaust `proof-chain.ts`; and thirteen bind the opening proof-graph
+execution-signature, immutable-seal and epilogue-receipt surface through
+`generateEpilogueReceipt`. The package now registers **1,920** conversion
+overlays.
+
+The pinned source build point is
+`be262520cb30a4efcaaedd97da0e97bcf6657696`. The exact source SHA-256 values
+are `F952EC7BD574E267AB1F572B46670BD9708185136CA412EB7FCD75D5BBCCDEAD`
+for `profile-checker.ts`,
+`20A5B04CD134EDC0965E6409F07761AA53B162B960F08397A9CBE667AA27B621`
+for `proof-chain.ts`, and
+`BDB011168701772414BDAB7F34F1F085D8AF859CAB470287777D27A8D867FBD3`
+for `proof-graph.ts`. The isolated moderate graph was independently exact at
+that build point with **27,035/27,035 expected nodes** and **63,736/63,736
+expected edges**; exact source snippets then fixed the 40-scope order. The
+report-bearing commit follows that build point, so its graph freshness is
+**UNKNOWN** until the required post-commit refresh.
+
+The RED source test failed **0/3** while the 40 assets and registrations were
+absent. Focused source evidence now passes **3/3**, and the accumulated source
+family passes **138/138** across 46 suites. All 40 sources pass strict parse,
+type/effect, governance and GIR checks. Whole-corpus byte-duplicate and
+normalized alpha-renamed shadow checks report **40/40 unique**. The focused
+source-test SHA-256 is
+`E6D6849FC57EE822C7E555C0ADFE735D982FB395A9410AAAC79B57A98D9D35F1`.
+
+Focused physical evidence passes **1/1**, and the accumulated physical family
+passes **46/46** with zero skips. Every source compiles and publishes one
+physical `.slide`, executes, independently re-admits and VOK-verifies its
+typed receipt, and refuses changed source, artifact and receipt bytes. The
+focused physical-test SHA-256 is
+`C5592AB672445476F66EECB99AEA98590BEDC467B975F364456BA682D4E45A3F`.
+The Golden Pack remains current at **11/11 checked assets** plus **11/11
+execution vectors**, and package no-emit typecheck is green.
+
+This remains bounded post-border decision evidence. Active AST traversal and
+recursion state, JavaScript `Set` and object identity, JSON canonicalization,
+UTF-8, SHA-256, `Date`, base64, callbacks, promises, prover backends, key and
+receipt custody, errors and coercion remain in executing TypeScript. No proof
+authority, production consumer switch, supersession or TypeScript retirement
+is claimed.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, root authored the wave without workers, no push is authorized, and no
+report-only follow-up commit is permitted.
+
 ## Source decision overlay wave 46 - Parser completion, plugin schema and profile gates
 
 Wave 46 adds **40 new source-bound Fungi decision cores** and reuses no prior

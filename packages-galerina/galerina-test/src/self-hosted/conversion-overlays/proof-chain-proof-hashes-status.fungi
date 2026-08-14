@@ -1,0 +1,184 @@
+@version 1
+// Source-bound decision overlay wave 47 item 18: proof-chain-proof-hashes-status.fungi.
+pure flow proofChainProofHashesStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay58001: Bool = policyReady
+  let relay58002: Bool = relay58001
+  let relay58003: Bool = relay58002
+  let relay58004: Bool = relay58003
+  let relay58005: Bool = relay58004
+  let relay58006: Bool = relay58005
+  let relay58007: Bool = relay58006
+  let relay58008: Bool = relay58007
+  let relay58009: Bool = relay58008
+  let relay58010: Bool = relay58009
+  let relay58011: Bool = relay58010
+  let relay58012: Bool = relay58011
+  let relay58013: Bool = relay58012
+  let relay58014: Bool = relay58013
+  let relay58015: Bool = relay58014
+  let relay58016: Bool = relay58015
+  let relay58017: Bool = relay58016
+  let relay58018: Bool = relay58017
+  let relay58019: Bool = relay58018
+  let relay58020: Bool = relay58019
+  let relay58021: Bool = relay58020
+  let relay58022: Bool = relay58021
+  let relay58023: Bool = relay58022
+  let relay58024: Bool = relay58023
+  let relay58025: Bool = relay58024
+  let relay58026: Bool = relay58025
+  let relay58027: Bool = relay58026
+  let relay58028: Bool = relay58027
+  let relay58029: Bool = relay58028
+  let relay58030: Bool = relay58029
+  let relay58031: Bool = relay58030
+  let relay58032: Bool = relay58031
+  let relay58033: Bool = relay58032
+  let relay58034: Bool = relay58033
+  let relay58035: Bool = relay58034
+  let relay58036: Bool = relay58035
+  let relay58037: Bool = relay58036
+  let relay58038: Bool = relay58037
+  let relay58039: Bool = relay58038
+  let relay58040: Bool = relay58039
+  let relay58041: Bool = relay58040
+  let relay58042: Bool = relay58041
+  let relay58043: Bool = relay58042
+  let relay58044: Bool = relay58043
+  let relay58045: Bool = relay58044
+  let relay58046: Bool = relay58045
+  let relay58047: Bool = relay58046
+  let relay58048: Bool = relay58047
+  let relay58049: Bool = relay58048
+  let relay58050: Bool = relay58049
+  let relay58051: Bool = relay58050
+  let relay58052: Bool = relay58051
+  let relay58053: Bool = relay58052
+  let relay58054: Bool = relay58053
+  let relay58055: Bool = relay58054
+  let relay58056: Bool = relay58055
+  let relay58057: Bool = relay58056
+  let relay58058: Bool = relay58057
+  let relay58059: Bool = relay58058
+  let relay58060: Bool = relay58059
+  let relay58061: Bool = relay58060
+  let relay58062: Bool = relay58061
+  let relay58063: Bool = relay58062
+  let relay58064: Bool = relay58063
+  let relay58065: Bool = relay58064
+  let relay58066: Bool = relay58065
+  let relay58067: Bool = relay58066
+  let relay58068: Bool = relay58067
+  let relay58069: Bool = relay58068
+  let relay58070: Bool = relay58069
+  let relay58071: Bool = relay58070
+  let relay58072: Bool = relay58071
+  let relay58073: Bool = relay58072
+  let relay58074: Bool = relay58073
+  let relay58075: Bool = relay58074
+  let relay58076: Bool = relay58075
+  let relay58077: Bool = relay58076
+  let relay58078: Bool = relay58077
+  let relay58079: Bool = relay58078
+  let relay58080: Bool = relay58079
+  let relay58081: Bool = relay58080
+  let relay58082: Bool = relay58081
+  let relay58083: Bool = relay58082
+  let relay58084: Bool = relay58083
+  let relay58085: Bool = relay58084
+  let relay58086: Bool = relay58085
+  let relay58087: Bool = relay58086
+  let relay58088: Bool = relay58087
+  let relay58089: Bool = relay58088
+  let relay58090: Bool = relay58089
+  let relay58091: Bool = relay58090
+  let relay58092: Bool = relay58091
+  let relay58093: Bool = relay58092
+  let relay58094: Bool = relay58093
+  let relay58095: Bool = relay58094
+  let relay58096: Bool = relay58095
+  let relay58097: Bool = relay58096
+  let relay58098: Bool = relay58097
+  let relay58099: Bool = relay58098
+  let relay58100: Bool = relay58099
+  let relay58101: Bool = relay58100
+  let relay58102: Bool = relay58101
+  let relay58103: Bool = relay58102
+  let relay58104: Bool = relay58103
+  let relay58105: Bool = relay58104
+  let relay58106: Bool = relay58105
+  let relay58107: Bool = relay58106
+  let relay58108: Bool = relay58107
+  let relay58109: Bool = relay58108
+  let relay58110: Bool = relay58109
+  let relay58111: Bool = relay58110
+  let relay58112: Bool = relay58111
+  let relay58113: Bool = relay58112
+  let relay58114: Bool = relay58113
+  let relay58115: Bool = relay58114
+  let relay58116: Bool = relay58115
+  let relay58117: Bool = relay58116
+  let relay58118: Bool = relay58117
+  let relay58119: Bool = relay58118
+  let relay58120: Bool = relay58119
+  let relay58121: Bool = relay58120
+  let relay58122: Bool = relay58121
+  let relay58123: Bool = relay58122
+  let relay58124: Bool = relay58123
+  let relay58125: Bool = relay58124
+  let relay58126: Bool = relay58125
+  let relay58127: Bool = relay58126
+  let relay58128: Bool = relay58127
+  let relay58129: Bool = relay58128
+  let relay58130: Bool = relay58129
+  let relay58131: Bool = relay58130
+  let relay58132: Bool = relay58131
+  let relay58133: Bool = relay58132
+  let relay58134: Bool = relay58133
+  let relay58135: Bool = relay58134
+  let relay58136: Bool = relay58135
+  let relay58137: Bool = relay58136
+  let relay58138: Bool = relay58137
+  let relay58139: Bool = relay58138
+  let relay58140: Bool = relay58139
+  let relay58141: Bool = relay58140
+  let relay58142: Bool = relay58141
+  let relay58143: Bool = relay58142
+  let relay58144: Bool = relay58143
+  let relay58145: Bool = relay58144
+  let relay58146: Bool = relay58145
+  let relay58147: Bool = relay58146
+  let relay58148: Bool = relay58147
+  let relay58149: Bool = relay58148
+  let relay58150: Bool = relay58149
+  let relay58151: Bool = relay58150
+  let relay58152: Bool = relay58151
+  let relay58153: Bool = relay58152
+  let relay58154: Bool = relay58153
+  let relay58155: Bool = relay58154
+  let relay58156: Bool = relay58155
+  let relay58157: Bool = relay58156
+  let relay58158: Bool = relay58157
+  if relay58158 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if routeReady {
+            if proofReady {
+              if sealReady {
+                return "proof_chain_proof_hashes_built"
+              }
+              return "wave47_seal_missing"
+            }
+            return "wave47_proof_missing"
+          }
+          return "wave47_route_missing"
+        }
+        return "wave47_state_missing"
+      }
+      return "wave47_shape_missing"
+    }
+    return "wave47_source_missing"
+  }
+  return "wave47_policy_missing"
+}

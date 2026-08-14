@@ -1,0 +1,202 @@
+@version 1
+// Source-bound decision overlay wave 47 item 36: proof-graph-placeholder-circuit-ids-status.fungi.
+pure flow proofGraphPlaceholderCircuitIdsStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay76001: Bool = sourceReady
+  let relay76002: Bool = relay76001
+  let relay76003: Bool = relay76002
+  let relay76004: Bool = relay76003
+  let relay76005: Bool = relay76004
+  let relay76006: Bool = relay76005
+  let relay76007: Bool = relay76006
+  let relay76008: Bool = relay76007
+  let relay76009: Bool = relay76008
+  let relay76010: Bool = relay76009
+  let relay76011: Bool = relay76010
+  let relay76012: Bool = relay76011
+  let relay76013: Bool = relay76012
+  let relay76014: Bool = relay76013
+  let relay76015: Bool = relay76014
+  let relay76016: Bool = relay76015
+  let relay76017: Bool = relay76016
+  let relay76018: Bool = relay76017
+  let relay76019: Bool = relay76018
+  let relay76020: Bool = relay76019
+  let relay76021: Bool = relay76020
+  let relay76022: Bool = relay76021
+  let relay76023: Bool = relay76022
+  let relay76024: Bool = relay76023
+  let relay76025: Bool = relay76024
+  let relay76026: Bool = relay76025
+  let relay76027: Bool = relay76026
+  let relay76028: Bool = relay76027
+  let relay76029: Bool = relay76028
+  let relay76030: Bool = relay76029
+  let relay76031: Bool = relay76030
+  let relay76032: Bool = relay76031
+  let relay76033: Bool = relay76032
+  let relay76034: Bool = relay76033
+  let relay76035: Bool = relay76034
+  let relay76036: Bool = relay76035
+  let relay76037: Bool = relay76036
+  let relay76038: Bool = relay76037
+  let relay76039: Bool = relay76038
+  let relay76040: Bool = relay76039
+  let relay76041: Bool = relay76040
+  let relay76042: Bool = relay76041
+  let relay76043: Bool = relay76042
+  let relay76044: Bool = relay76043
+  let relay76045: Bool = relay76044
+  let relay76046: Bool = relay76045
+  let relay76047: Bool = relay76046
+  let relay76048: Bool = relay76047
+  let relay76049: Bool = relay76048
+  let relay76050: Bool = relay76049
+  let relay76051: Bool = relay76050
+  let relay76052: Bool = relay76051
+  let relay76053: Bool = relay76052
+  let relay76054: Bool = relay76053
+  let relay76055: Bool = relay76054
+  let relay76056: Bool = relay76055
+  let relay76057: Bool = relay76056
+  let relay76058: Bool = relay76057
+  let relay76059: Bool = relay76058
+  let relay76060: Bool = relay76059
+  let relay76061: Bool = relay76060
+  let relay76062: Bool = relay76061
+  let relay76063: Bool = relay76062
+  let relay76064: Bool = relay76063
+  let relay76065: Bool = relay76064
+  let relay76066: Bool = relay76065
+  let relay76067: Bool = relay76066
+  let relay76068: Bool = relay76067
+  let relay76069: Bool = relay76068
+  let relay76070: Bool = relay76069
+  let relay76071: Bool = relay76070
+  let relay76072: Bool = relay76071
+  let relay76073: Bool = relay76072
+  let relay76074: Bool = relay76073
+  let relay76075: Bool = relay76074
+  let relay76076: Bool = relay76075
+  let relay76077: Bool = relay76076
+  let relay76078: Bool = relay76077
+  let relay76079: Bool = relay76078
+  let relay76080: Bool = relay76079
+  let relay76081: Bool = relay76080
+  let relay76082: Bool = relay76081
+  let relay76083: Bool = relay76082
+  let relay76084: Bool = relay76083
+  let relay76085: Bool = relay76084
+  let relay76086: Bool = relay76085
+  let relay76087: Bool = relay76086
+  let relay76088: Bool = relay76087
+  let relay76089: Bool = relay76088
+  let relay76090: Bool = relay76089
+  let relay76091: Bool = relay76090
+  let relay76092: Bool = relay76091
+  let relay76093: Bool = relay76092
+  let relay76094: Bool = relay76093
+  let relay76095: Bool = relay76094
+  let relay76096: Bool = relay76095
+  let relay76097: Bool = relay76096
+  let relay76098: Bool = relay76097
+  let relay76099: Bool = relay76098
+  let relay76100: Bool = relay76099
+  let relay76101: Bool = relay76100
+  let relay76102: Bool = relay76101
+  let relay76103: Bool = relay76102
+  let relay76104: Bool = relay76103
+  let relay76105: Bool = relay76104
+  let relay76106: Bool = relay76105
+  let relay76107: Bool = relay76106
+  let relay76108: Bool = relay76107
+  let relay76109: Bool = relay76108
+  let relay76110: Bool = relay76109
+  let relay76111: Bool = relay76110
+  let relay76112: Bool = relay76111
+  let relay76113: Bool = relay76112
+  let relay76114: Bool = relay76113
+  let relay76115: Bool = relay76114
+  let relay76116: Bool = relay76115
+  let relay76117: Bool = relay76116
+  let relay76118: Bool = relay76117
+  let relay76119: Bool = relay76118
+  let relay76120: Bool = relay76119
+  let relay76121: Bool = relay76120
+  let relay76122: Bool = relay76121
+  let relay76123: Bool = relay76122
+  let relay76124: Bool = relay76123
+  let relay76125: Bool = relay76124
+  let relay76126: Bool = relay76125
+  let relay76127: Bool = relay76126
+  let relay76128: Bool = relay76127
+  let relay76129: Bool = relay76128
+  let relay76130: Bool = relay76129
+  let relay76131: Bool = relay76130
+  let relay76132: Bool = relay76131
+  let relay76133: Bool = relay76132
+  let relay76134: Bool = relay76133
+  let relay76135: Bool = relay76134
+  let relay76136: Bool = relay76135
+  let relay76137: Bool = relay76136
+  let relay76138: Bool = relay76137
+  let relay76139: Bool = relay76138
+  let relay76140: Bool = relay76139
+  let relay76141: Bool = relay76140
+  let relay76142: Bool = relay76141
+  let relay76143: Bool = relay76142
+  let relay76144: Bool = relay76143
+  let relay76145: Bool = relay76144
+  let relay76146: Bool = relay76145
+  let relay76147: Bool = relay76146
+  let relay76148: Bool = relay76147
+  let relay76149: Bool = relay76148
+  let relay76150: Bool = relay76149
+  let relay76151: Bool = relay76150
+  let relay76152: Bool = relay76151
+  let relay76153: Bool = relay76152
+  let relay76154: Bool = relay76153
+  let relay76155: Bool = relay76154
+  let relay76156: Bool = relay76155
+  let relay76157: Bool = relay76156
+  let relay76158: Bool = relay76157
+  let relay76159: Bool = relay76158
+  let relay76160: Bool = relay76159
+  let relay76161: Bool = relay76160
+  let relay76162: Bool = relay76161
+  let relay76163: Bool = relay76162
+  let relay76164: Bool = relay76163
+  let relay76165: Bool = relay76164
+  let relay76166: Bool = relay76165
+  let relay76167: Bool = relay76166
+  let relay76168: Bool = relay76167
+  let relay76169: Bool = relay76168
+  let relay76170: Bool = relay76169
+  let relay76171: Bool = relay76170
+  let relay76172: Bool = relay76171
+  let relay76173: Bool = relay76172
+  let relay76174: Bool = relay76173
+  let relay76175: Bool = relay76174
+  let relay76176: Bool = relay76175
+  if relay76176 {
+    if shapeReady {
+      if stateReady {
+        if policyReady {
+          if routeReady {
+            if proofReady {
+              if sealReady {
+                return "proof_graph_placeholder_circuit_ids_built"
+              }
+              return "wave47_seal_missing"
+            }
+            return "wave47_proof_missing"
+          }
+          return "wave47_route_missing"
+        }
+        return "wave47_policy_missing"
+      }
+      return "wave47_state_missing"
+    }
+    return "wave47_shape_missing"
+  }
+  return "wave47_source_missing"
+}
