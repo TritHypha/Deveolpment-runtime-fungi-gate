@@ -4,7 +4,7 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 174,
+    "devTools": 175,
     "auditTools": 91,
     "toolsInCadence": 120,
     "proofs": 40
@@ -3482,6 +3482,19 @@
       ]
     },
     {
+      "name": "ts-to-fungi-sandbox.mjs",
+      "category": "util",
+      "purpose": "Convert only a proved TypeScript subset to non-authorizing Fungi sandbox candidates.",
+      "selfTest": false,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "graph/index"
+      ]
+    },
+    {
       "name": "validate-workspace-pointers.mjs",
       "category": "util",
       "purpose": "CI guard for galerina.workspace.json",
@@ -3676,6 +3689,7 @@
       "platform-smoke.mjs",
       "rebrand-tmf-to-spore.mjs",
       "repoint-kb-refs.mjs",
+      "ts-to-fungi-sandbox.mjs",
       "verify-artifacts.mjs",
       "verify-platform-durability-evidence.mjs",
       "verify-slide-reference-evidence.mjs"
@@ -3798,6 +3812,7 @@
       "relink-workspace.mjs",
       "repoint-kb-refs.mjs",
       "subject-galerina-compile.mjs",
+      "ts-to-fungi-sandbox.mjs",
       "verify-artifacts.mjs",
       "verify-slide-reference-evidence.mjs",
       "wat-invalid-triage.mjs"
@@ -3949,6 +3964,7 @@
       "phase-close-hook.mjs",
       "rebuild-fusable-packages.mjs",
       "release-evidence-authority-cli.mjs",
+      "ts-to-fungi-sandbox.mjs",
       "verify-artifacts.mjs",
       "verify-platform-durability-evidence.mjs",
       "verify-slide-reference-evidence.mjs"
@@ -6709,6 +6725,15 @@
     },
     {
       "tool": "ts-retirement-graph.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "ts-to-fungi-sandbox.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
       "via": [],

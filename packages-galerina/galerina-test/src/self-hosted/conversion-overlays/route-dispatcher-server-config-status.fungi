@@ -1,0 +1,24 @@
+@version 1
+// Source-bound decision overlay wave 50 item 17: route-dispatcher.ts#ServerConfig.
+pure flow routeDispatcherServerConfigStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  if sourceReady {
+    if shapeReady {
+      if stateReady {
+        if proofReady {
+          if sealReady {
+            if policyReady {
+              if routeReady { return "route_dispatcher_server_config_built" }
+              return "wave50_route_missing"
+            }
+            return "wave50_policy_missing"
+          }
+          return "wave50_seal_missing"
+        }
+        return "wave50_proof_missing"
+      }
+      return "wave50_state_missing"
+    }
+    return "wave50_shape_missing"
+  }
+  return "wave50_source_missing"
+}

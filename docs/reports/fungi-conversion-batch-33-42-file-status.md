@@ -2413,6 +2413,81 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 50 - Resilience and route boundaries plus sandbox converter
+
+Wave 50 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay filename or source-and-symbol credit. Sixteen exhaust the remaining
+source-order scopes in `resilience-inference.ts`, seventeen cover the complete
+code-scope surface in `route-dispatcher.ts`, and seven cover the complete
+code-scope surface in `route-registry.ts`. The wave ends at
+`route-registry.ts#parseRouteEntry`; `runtime.ts#RuntimeMode` is the next
+uncredited source-order scope. The package now registers **2,040** conversion
+overlays.
+
+The pinned source build point is
+`1795e134fdae35ea8cd73892d14b2261e33cc195`. Exact SHA-256 pins are
+`34D6921D7876E5B56CF1936BD208421518B88E26D4A6B440D46B0C0C8C3AB93E`
+for `resilience-inference.ts`,
+`B293B7CA5A9C8A6E39D6464750CDC60A8E7C18154A175A3A096FD5BDED9CAA44`
+for `route-dispatcher.ts`, and
+`9EABD8F6594468F13C0D7E60D8A3FBEC098098277652EFEEC73832C37DB52F18`
+for `route-registry.ts`. Graph-first discovery used the independently exact
+Wave-49 build point and exact source reads. The report-bearing commit follows
+that point, so graph freshness returns to **UNKNOWN** until the required
+post-commit exact-head refresh.
+
+The RED source test failed **0/3** only because the 40 assets and registrations
+were absent. Focused source evidence now passes **3/3**: all 40 files are pinned
+to live source and package registration; all 40 pass byte-exact and normalized
+alpha-renamed whole-corpus shadow checks; and an owner-bounded ten-file sample
+parses, effect-checks, emits GIR and executes. The focused source-test SHA-256
+is
+`0F648DBB690C30D6A0E332A438FC6C50E6B4FF4F2CB4B4F1EAEDAACDF66F1228`.
+
+Focused physical evidence passes **1/1** over exactly the same ten candidates.
+It compiles and publishes ten physical `.slide` artifacts, executes them,
+independently re-admits and VOK-verifies their typed receipts, and refuses
+changed source, artifact and receipt bytes. The focused physical-test SHA-256
+is
+`8C4A3EB159BBB1C007C70F5E4BB0663DAA0ECDFB125F0EADB894F2D4F2B7F4A1`.
+The ten-file execution limit is explicit owner direction; source binding,
+asset registration and duplicate/shadow custody still cover every one of the
+40 new Fungi files.
+
+This commit also implements the approved non-authorizing TypeScript-to-Fungi
+sandbox while retaining every `.ts` source as the comparison oracle. Each
+request ends independently as `CONVERTED`, `BLOCKED` or `MANUAL_REVIEW`, and
+the batch continues after refusals. The tool accepts at most ten requests,
+writes only ignored evidence below `build/ts-to-fungi-sandbox`, re-establishes
+tracked clean source and exact graph identity, uses the pinned TypeScript
+compiler API, proves bounded differential behavior for the admitted subset,
+runs whole-corpus byte/shadow checks and binds fresh SLIDE/VOK evidence. It has
+no commit or push path and never edits or retires the TypeScript input.
+
+The focused sandbox suite passes **10/10**. Two actual ten-item pilot runs are
+byte-identical and each report **7 CONVERTED + 2 BLOCKED + 1 MANUAL_REVIEW**;
+all ten receipts reverify independently, changed TypeScript remains zero and
+local-path/private-skill leakage remains zero. The focused sandbox-test
+SHA-256 is
+`6FEACB156EE1A6C497C317D495A8AD89F00684294F54C24FE6DAE9E0A5615743`;
+the CLI entry-point SHA-256 is
+`84CF2D9F727E8B0CD2C033F5A32D328BC9D9D7BB6839FDA55D875C94F7A1B9E3`.
+Sandbox output remains non-authorizing evidence and cannot itself create a
+production consumer switch or TypeScript retirement claim.
+
+This remains bounded post-border decision evidence. It does not replace AST
+record ingress, JavaScript `Map`/`Set`, regex and string coercion, clocks,
+rate-limiter state, Node HTTP callbacks, dynamic imports, byte-view identity,
+JSON/UTF-8 parsing, response side effects, promise cleanup or error identity.
+It authorizes no production server, route registry, resilience policy,
+consumer switch, supersession or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, root authored the wave without workers, no push is authorized, and no
+report-only follow-up commit is permitted.
+
 ## Source decision overlay wave 49 - Proof diff, pure-flow cache, register VM and resilience
 
 Wave 49 adds **40 new source-bound Fungi decision cores** and reuses no prior

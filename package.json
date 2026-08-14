@@ -39,6 +39,8 @@
     "audit:governance-algebra:selftest": "node tools/verify-governance-algebra.mjs --self-test",
     "audit:fungi-golden": "node scripts/fungi-golden-probe.mjs --check",
     "audit:fungi-golden:update": "node scripts/fungi-golden-probe.mjs --write",
+    "sandbox:ts-to-fungi": "node scripts/ts-to-fungi-sandbox.mjs",
+    "test:ts-to-fungi-sandbox": "node --test scripts/tests/ts-to-fungi-sandbox.test.mjs",
     "audit:conversion-report-commit": "node scripts/audit-conversion-report-commit.mjs --commit HEAD",
     "audit:conversion-report-commit:selftest": "node --test scripts/tests/audit-conversion-report-commit.test.mjs",
     "audit:registry-static-host-toolchain": "node scripts/verify-registry-static-host-toolchain.mjs",

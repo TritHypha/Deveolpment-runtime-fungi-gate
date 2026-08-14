@@ -896,6 +896,10 @@ flowchart LR
   T_test_compiler_subdirs_mjs --> C_effects
   T_test_compiler_subdirs_mjs --> C_governance
   T_test_compiler_subdirs_mjs --> C_gate_wiring
+  T_ts_to_fungi_sandbox_mjs["ts-to-fungi-sandbox.mjs"]
+  T_ts_to_fungi_sandbox_mjs --> C_signing_fusion
+  T_ts_to_fungi_sandbox_mjs --> C_diagnostics
+  T_ts_to_fungi_sandbox_mjs --> C_graph_index
   T_validate_workspace_pointers_mjs["validate-workspace-pointers.mjs"]
   T_validate_workspace_pointers_mjs --> C_source_hygiene
   T_validate_workspace_pointers_mjs --> C_doc_drift

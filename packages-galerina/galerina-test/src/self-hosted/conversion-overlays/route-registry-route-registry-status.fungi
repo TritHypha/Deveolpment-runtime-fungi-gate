@@ -1,0 +1,24 @@
+@version 1
+// Source-bound decision overlay wave 50 item 36: route-registry.ts#RouteRegistry.
+pure flow routeRegistryRouteRegistryStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  if sourceReady {
+    if shapeReady {
+      if policyReady {
+        if routeReady {
+          if sealReady {
+            if stateReady {
+              if proofReady { return "route_registry_route_registry_built" }
+              return "wave50_proof_missing"
+            }
+            return "wave50_state_missing"
+          }
+          return "wave50_seal_missing"
+        }
+        return "wave50_route_missing"
+      }
+      return "wave50_policy_missing"
+    }
+    return "wave50_shape_missing"
+  }
+  return "wave50_source_missing"
+}

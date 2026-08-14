@@ -1,0 +1,24 @@
+@version 1
+// Source-bound decision overlay wave 50 item 8: resilience-inference.ts#SECURE_DEFAULT_FAULT_ACTION.
+pure flow resilienceInferenceSecureDefaultFaultActionStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  if sourceReady {
+    if shapeReady {
+      if stateReady {
+        if routeReady {
+          if policyReady {
+            if sealReady {
+              if proofReady { return "resilience_inference_secure_default_fault_action_built" }
+              return "wave50_proof_missing"
+            }
+            return "wave50_seal_missing"
+          }
+          return "wave50_policy_missing"
+        }
+        return "wave50_route_missing"
+      }
+      return "wave50_state_missing"
+    }
+    return "wave50_shape_missing"
+  }
+  return "wave50_source_missing"
+}

@@ -148,6 +148,7 @@ build/lss-test-*/
 # the 25-gate matrix runs green with them untracked) ──
 build/fungi-scan/
 build/package-usage/
+build/ts-to-fungi-sandbox/
 
 # ── Local retrieval / index MCP artifacts (per-machine; rebuildable; NEVER commit) ──
 # Machine-local caches built by local MCP servers (codebase-memory-mcp's code index). Large binary
