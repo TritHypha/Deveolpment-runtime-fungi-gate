@@ -1,0 +1,102 @@
+@version 1
+// Source-bound decision overlay wave 52 item 36: galerina-core-compiler/src/runtime/governedMemory.ts#GovernedValueTag.
+pure flow governedMemoryGovernedValueTagStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave52Relay36001: Bool = shapeReady
+  let wave52Relay36002: Bool = wave52Relay36001
+  let wave52Relay36003: Bool = wave52Relay36002
+  let wave52Relay36004: Bool = wave52Relay36003
+  let wave52Relay36005: Bool = wave52Relay36004
+  let wave52Relay36006: Bool = wave52Relay36005
+  let wave52Relay36007: Bool = wave52Relay36006
+  let wave52Relay36008: Bool = wave52Relay36007
+  let wave52Relay36009: Bool = wave52Relay36008
+  let wave52Relay36010: Bool = wave52Relay36009
+  let wave52Relay36011: Bool = wave52Relay36010
+  let wave52Relay36012: Bool = wave52Relay36011
+  let wave52Relay36013: Bool = wave52Relay36012
+  let wave52Relay36014: Bool = wave52Relay36013
+  let wave52Relay36015: Bool = wave52Relay36014
+  let wave52Relay36016: Bool = wave52Relay36015
+  let wave52Relay36017: Bool = wave52Relay36016
+  let wave52Relay36018: Bool = wave52Relay36017
+  let wave52Relay36019: Bool = wave52Relay36018
+  let wave52Relay36020: Bool = wave52Relay36019
+  let wave52Relay36021: Bool = wave52Relay36020
+  let wave52Relay36022: Bool = wave52Relay36021
+  let wave52Relay36023: Bool = wave52Relay36022
+  let wave52Relay36024: Bool = wave52Relay36023
+  let wave52Relay36025: Bool = wave52Relay36024
+  let wave52Relay36026: Bool = wave52Relay36025
+  let wave52Relay36027: Bool = wave52Relay36026
+  let wave52Relay36028: Bool = wave52Relay36027
+  let wave52Relay36029: Bool = wave52Relay36028
+  let wave52Relay36030: Bool = wave52Relay36029
+  let wave52Relay36031: Bool = wave52Relay36030
+  let wave52Relay36032: Bool = wave52Relay36031
+  let wave52Relay36033: Bool = wave52Relay36032
+  let wave52Relay36034: Bool = wave52Relay36033
+  let wave52Relay36035: Bool = wave52Relay36034
+  let wave52Relay36036: Bool = wave52Relay36035
+  let wave52Relay36037: Bool = wave52Relay36036
+  let wave52Relay36038: Bool = wave52Relay36037
+  let wave52Relay36039: Bool = wave52Relay36038
+  let wave52Relay36040: Bool = wave52Relay36039
+  let wave52Relay36041: Bool = wave52Relay36040
+  let wave52Relay36042: Bool = wave52Relay36041
+  let wave52Relay36043: Bool = wave52Relay36042
+  let wave52Relay36044: Bool = wave52Relay36043
+  let wave52Relay36045: Bool = wave52Relay36044
+  let wave52Relay36046: Bool = wave52Relay36045
+  let wave52Relay36047: Bool = wave52Relay36046
+  let wave52Relay36048: Bool = wave52Relay36047
+  let wave52Relay36049: Bool = wave52Relay36048
+  let wave52Relay36050: Bool = wave52Relay36049
+  let wave52Relay36051: Bool = wave52Relay36050
+  let wave52Relay36052: Bool = wave52Relay36051
+  let wave52Relay36053: Bool = wave52Relay36052
+  let wave52Relay36054: Bool = wave52Relay36053
+  let wave52Relay36055: Bool = wave52Relay36054
+  let wave52Relay36056: Bool = wave52Relay36055
+  let wave52Relay36057: Bool = wave52Relay36056
+  let wave52Relay36058: Bool = wave52Relay36057
+  let wave52Relay36059: Bool = wave52Relay36058
+  let wave52Relay36060: Bool = wave52Relay36059
+  let wave52Relay36061: Bool = wave52Relay36060
+  let wave52Relay36062: Bool = wave52Relay36061
+  let wave52Relay36063: Bool = wave52Relay36062
+  let wave52Relay36064: Bool = wave52Relay36063
+  let wave52Relay36065: Bool = wave52Relay36064
+  let wave52Relay36066: Bool = wave52Relay36065
+  let wave52Relay36067: Bool = wave52Relay36066
+  let wave52Relay36068: Bool = wave52Relay36067
+  let wave52Relay36069: Bool = wave52Relay36068
+  let wave52Relay36070: Bool = wave52Relay36069
+  let wave52Relay36071: Bool = wave52Relay36070
+  let wave52Relay36072: Bool = wave52Relay36071
+  let wave52Relay36073: Bool = wave52Relay36072
+  let wave52Relay36074: Bool = wave52Relay36073
+  let wave52Relay36075: Bool = wave52Relay36074
+  let wave52Relay36076: Bool = wave52Relay36075
+  if wave52Relay36076 {
+    if stateReady {
+      if policyReady {
+        if routeReady {
+          if proofReady {
+            if sealReady {
+              if sourceReady {
+                return "governed_memory_governed_value_tag_built"
+              }
+              return "wave52_source_missing"
+            }
+            return "wave52_seal_missing"
+          }
+          return "wave52_proof_missing"
+        }
+        return "wave52_route_missing"
+      }
+      return "wave52_policy_missing"
+    }
+    return "wave52_state_missing"
+  }
+  return "wave52_shape_missing"
+}

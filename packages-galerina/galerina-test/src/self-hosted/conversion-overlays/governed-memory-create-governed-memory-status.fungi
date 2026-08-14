@@ -1,0 +1,104 @@
+@version 1
+// Source-bound decision overlay wave 52 item 38: galerina-core-compiler/src/runtime/governedMemory.ts#createGovernedMemory.
+pure flow governedMemoryCreateGovernedMemoryStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave52Relay38001: Bool = policyReady
+  let wave52Relay38002: Bool = wave52Relay38001
+  let wave52Relay38003: Bool = wave52Relay38002
+  let wave52Relay38004: Bool = wave52Relay38003
+  let wave52Relay38005: Bool = wave52Relay38004
+  let wave52Relay38006: Bool = wave52Relay38005
+  let wave52Relay38007: Bool = wave52Relay38006
+  let wave52Relay38008: Bool = wave52Relay38007
+  let wave52Relay38009: Bool = wave52Relay38008
+  let wave52Relay38010: Bool = wave52Relay38009
+  let wave52Relay38011: Bool = wave52Relay38010
+  let wave52Relay38012: Bool = wave52Relay38011
+  let wave52Relay38013: Bool = wave52Relay38012
+  let wave52Relay38014: Bool = wave52Relay38013
+  let wave52Relay38015: Bool = wave52Relay38014
+  let wave52Relay38016: Bool = wave52Relay38015
+  let wave52Relay38017: Bool = wave52Relay38016
+  let wave52Relay38018: Bool = wave52Relay38017
+  let wave52Relay38019: Bool = wave52Relay38018
+  let wave52Relay38020: Bool = wave52Relay38019
+  let wave52Relay38021: Bool = wave52Relay38020
+  let wave52Relay38022: Bool = wave52Relay38021
+  let wave52Relay38023: Bool = wave52Relay38022
+  let wave52Relay38024: Bool = wave52Relay38023
+  let wave52Relay38025: Bool = wave52Relay38024
+  let wave52Relay38026: Bool = wave52Relay38025
+  let wave52Relay38027: Bool = wave52Relay38026
+  let wave52Relay38028: Bool = wave52Relay38027
+  let wave52Relay38029: Bool = wave52Relay38028
+  let wave52Relay38030: Bool = wave52Relay38029
+  let wave52Relay38031: Bool = wave52Relay38030
+  let wave52Relay38032: Bool = wave52Relay38031
+  let wave52Relay38033: Bool = wave52Relay38032
+  let wave52Relay38034: Bool = wave52Relay38033
+  let wave52Relay38035: Bool = wave52Relay38034
+  let wave52Relay38036: Bool = wave52Relay38035
+  let wave52Relay38037: Bool = wave52Relay38036
+  let wave52Relay38038: Bool = wave52Relay38037
+  let wave52Relay38039: Bool = wave52Relay38038
+  let wave52Relay38040: Bool = wave52Relay38039
+  let wave52Relay38041: Bool = wave52Relay38040
+  let wave52Relay38042: Bool = wave52Relay38041
+  let wave52Relay38043: Bool = wave52Relay38042
+  let wave52Relay38044: Bool = wave52Relay38043
+  let wave52Relay38045: Bool = wave52Relay38044
+  let wave52Relay38046: Bool = wave52Relay38045
+  let wave52Relay38047: Bool = wave52Relay38046
+  let wave52Relay38048: Bool = wave52Relay38047
+  let wave52Relay38049: Bool = wave52Relay38048
+  let wave52Relay38050: Bool = wave52Relay38049
+  let wave52Relay38051: Bool = wave52Relay38050
+  let wave52Relay38052: Bool = wave52Relay38051
+  let wave52Relay38053: Bool = wave52Relay38052
+  let wave52Relay38054: Bool = wave52Relay38053
+  let wave52Relay38055: Bool = wave52Relay38054
+  let wave52Relay38056: Bool = wave52Relay38055
+  let wave52Relay38057: Bool = wave52Relay38056
+  let wave52Relay38058: Bool = wave52Relay38057
+  let wave52Relay38059: Bool = wave52Relay38058
+  let wave52Relay38060: Bool = wave52Relay38059
+  let wave52Relay38061: Bool = wave52Relay38060
+  let wave52Relay38062: Bool = wave52Relay38061
+  let wave52Relay38063: Bool = wave52Relay38062
+  let wave52Relay38064: Bool = wave52Relay38063
+  let wave52Relay38065: Bool = wave52Relay38064
+  let wave52Relay38066: Bool = wave52Relay38065
+  let wave52Relay38067: Bool = wave52Relay38066
+  let wave52Relay38068: Bool = wave52Relay38067
+  let wave52Relay38069: Bool = wave52Relay38068
+  let wave52Relay38070: Bool = wave52Relay38069
+  let wave52Relay38071: Bool = wave52Relay38070
+  let wave52Relay38072: Bool = wave52Relay38071
+  let wave52Relay38073: Bool = wave52Relay38072
+  let wave52Relay38074: Bool = wave52Relay38073
+  let wave52Relay38075: Bool = wave52Relay38074
+  let wave52Relay38076: Bool = wave52Relay38075
+  let wave52Relay38077: Bool = wave52Relay38076
+  let wave52Relay38078: Bool = wave52Relay38077
+  if wave52Relay38078 {
+    if routeReady {
+      if proofReady {
+        if sealReady {
+          if sourceReady {
+            if shapeReady {
+              if stateReady {
+                return "governed_memory_create_governed_memory_built"
+              }
+              return "wave52_state_missing"
+            }
+            return "wave52_shape_missing"
+          }
+          return "wave52_source_missing"
+        }
+        return "wave52_seal_missing"
+      }
+      return "wave52_proof_missing"
+    }
+    return "wave52_route_missing"
+  }
+  return "wave52_policy_missing"
+}

@@ -1,0 +1,78 @@
+@version 1
+// Source-bound decision overlay wave 52 item 12: galerina-core-compiler/src/runtime/contractEnforcer.ts#createContractEnforcer.recordRetry.
+pure flow contractEnforcerRecordRetryStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave52Relay12001: Bool = proofReady
+  let wave52Relay12002: Bool = wave52Relay12001
+  let wave52Relay12003: Bool = wave52Relay12002
+  let wave52Relay12004: Bool = wave52Relay12003
+  let wave52Relay12005: Bool = wave52Relay12004
+  let wave52Relay12006: Bool = wave52Relay12005
+  let wave52Relay12007: Bool = wave52Relay12006
+  let wave52Relay12008: Bool = wave52Relay12007
+  let wave52Relay12009: Bool = wave52Relay12008
+  let wave52Relay12010: Bool = wave52Relay12009
+  let wave52Relay12011: Bool = wave52Relay12010
+  let wave52Relay12012: Bool = wave52Relay12011
+  let wave52Relay12013: Bool = wave52Relay12012
+  let wave52Relay12014: Bool = wave52Relay12013
+  let wave52Relay12015: Bool = wave52Relay12014
+  let wave52Relay12016: Bool = wave52Relay12015
+  let wave52Relay12017: Bool = wave52Relay12016
+  let wave52Relay12018: Bool = wave52Relay12017
+  let wave52Relay12019: Bool = wave52Relay12018
+  let wave52Relay12020: Bool = wave52Relay12019
+  let wave52Relay12021: Bool = wave52Relay12020
+  let wave52Relay12022: Bool = wave52Relay12021
+  let wave52Relay12023: Bool = wave52Relay12022
+  let wave52Relay12024: Bool = wave52Relay12023
+  let wave52Relay12025: Bool = wave52Relay12024
+  let wave52Relay12026: Bool = wave52Relay12025
+  let wave52Relay12027: Bool = wave52Relay12026
+  let wave52Relay12028: Bool = wave52Relay12027
+  let wave52Relay12029: Bool = wave52Relay12028
+  let wave52Relay12030: Bool = wave52Relay12029
+  let wave52Relay12031: Bool = wave52Relay12030
+  let wave52Relay12032: Bool = wave52Relay12031
+  let wave52Relay12033: Bool = wave52Relay12032
+  let wave52Relay12034: Bool = wave52Relay12033
+  let wave52Relay12035: Bool = wave52Relay12034
+  let wave52Relay12036: Bool = wave52Relay12035
+  let wave52Relay12037: Bool = wave52Relay12036
+  let wave52Relay12038: Bool = wave52Relay12037
+  let wave52Relay12039: Bool = wave52Relay12038
+  let wave52Relay12040: Bool = wave52Relay12039
+  let wave52Relay12041: Bool = wave52Relay12040
+  let wave52Relay12042: Bool = wave52Relay12041
+  let wave52Relay12043: Bool = wave52Relay12042
+  let wave52Relay12044: Bool = wave52Relay12043
+  let wave52Relay12045: Bool = wave52Relay12044
+  let wave52Relay12046: Bool = wave52Relay12045
+  let wave52Relay12047: Bool = wave52Relay12046
+  let wave52Relay12048: Bool = wave52Relay12047
+  let wave52Relay12049: Bool = wave52Relay12048
+  let wave52Relay12050: Bool = wave52Relay12049
+  let wave52Relay12051: Bool = wave52Relay12050
+  let wave52Relay12052: Bool = wave52Relay12051
+  if wave52Relay12052 {
+    if sealReady {
+      if sourceReady {
+        if shapeReady {
+          if stateReady {
+            if policyReady {
+              if routeReady {
+                return "contract_enforcer_record_retry_built"
+              }
+              return "wave52_route_missing"
+            }
+            return "wave52_policy_missing"
+          }
+          return "wave52_state_missing"
+        }
+        return "wave52_shape_missing"
+      }
+      return "wave52_source_missing"
+    }
+    return "wave52_seal_missing"
+  }
+  return "wave52_proof_missing"
+}

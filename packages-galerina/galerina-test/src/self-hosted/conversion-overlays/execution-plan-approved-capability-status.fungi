@@ -1,0 +1,86 @@
+@version 1
+// Source-bound decision overlay wave 52 item 20: galerina-core-compiler/src/runtime/executionPlan.ts#ApprovedCapability.
+pure flow executionPlanApprovedCapabilityStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave52Relay20001: Bool = sealReady
+  let wave52Relay20002: Bool = wave52Relay20001
+  let wave52Relay20003: Bool = wave52Relay20002
+  let wave52Relay20004: Bool = wave52Relay20003
+  let wave52Relay20005: Bool = wave52Relay20004
+  let wave52Relay20006: Bool = wave52Relay20005
+  let wave52Relay20007: Bool = wave52Relay20006
+  let wave52Relay20008: Bool = wave52Relay20007
+  let wave52Relay20009: Bool = wave52Relay20008
+  let wave52Relay20010: Bool = wave52Relay20009
+  let wave52Relay20011: Bool = wave52Relay20010
+  let wave52Relay20012: Bool = wave52Relay20011
+  let wave52Relay20013: Bool = wave52Relay20012
+  let wave52Relay20014: Bool = wave52Relay20013
+  let wave52Relay20015: Bool = wave52Relay20014
+  let wave52Relay20016: Bool = wave52Relay20015
+  let wave52Relay20017: Bool = wave52Relay20016
+  let wave52Relay20018: Bool = wave52Relay20017
+  let wave52Relay20019: Bool = wave52Relay20018
+  let wave52Relay20020: Bool = wave52Relay20019
+  let wave52Relay20021: Bool = wave52Relay20020
+  let wave52Relay20022: Bool = wave52Relay20021
+  let wave52Relay20023: Bool = wave52Relay20022
+  let wave52Relay20024: Bool = wave52Relay20023
+  let wave52Relay20025: Bool = wave52Relay20024
+  let wave52Relay20026: Bool = wave52Relay20025
+  let wave52Relay20027: Bool = wave52Relay20026
+  let wave52Relay20028: Bool = wave52Relay20027
+  let wave52Relay20029: Bool = wave52Relay20028
+  let wave52Relay20030: Bool = wave52Relay20029
+  let wave52Relay20031: Bool = wave52Relay20030
+  let wave52Relay20032: Bool = wave52Relay20031
+  let wave52Relay20033: Bool = wave52Relay20032
+  let wave52Relay20034: Bool = wave52Relay20033
+  let wave52Relay20035: Bool = wave52Relay20034
+  let wave52Relay20036: Bool = wave52Relay20035
+  let wave52Relay20037: Bool = wave52Relay20036
+  let wave52Relay20038: Bool = wave52Relay20037
+  let wave52Relay20039: Bool = wave52Relay20038
+  let wave52Relay20040: Bool = wave52Relay20039
+  let wave52Relay20041: Bool = wave52Relay20040
+  let wave52Relay20042: Bool = wave52Relay20041
+  let wave52Relay20043: Bool = wave52Relay20042
+  let wave52Relay20044: Bool = wave52Relay20043
+  let wave52Relay20045: Bool = wave52Relay20044
+  let wave52Relay20046: Bool = wave52Relay20045
+  let wave52Relay20047: Bool = wave52Relay20046
+  let wave52Relay20048: Bool = wave52Relay20047
+  let wave52Relay20049: Bool = wave52Relay20048
+  let wave52Relay20050: Bool = wave52Relay20049
+  let wave52Relay20051: Bool = wave52Relay20050
+  let wave52Relay20052: Bool = wave52Relay20051
+  let wave52Relay20053: Bool = wave52Relay20052
+  let wave52Relay20054: Bool = wave52Relay20053
+  let wave52Relay20055: Bool = wave52Relay20054
+  let wave52Relay20056: Bool = wave52Relay20055
+  let wave52Relay20057: Bool = wave52Relay20056
+  let wave52Relay20058: Bool = wave52Relay20057
+  let wave52Relay20059: Bool = wave52Relay20058
+  let wave52Relay20060: Bool = wave52Relay20059
+  if wave52Relay20060 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if policyReady {
+            if routeReady {
+              if proofReady {
+                return "execution_plan_approved_capability_built"
+              }
+              return "wave52_proof_missing"
+            }
+            return "wave52_route_missing"
+          }
+          return "wave52_policy_missing"
+        }
+        return "wave52_state_missing"
+      }
+      return "wave52_shape_missing"
+    }
+    return "wave52_source_missing"
+  }
+  return "wave52_seal_missing"
+}
