@@ -1,0 +1,116 @@
+@version 1
+// Source-bound decision overlay wave 45 item 24: parser-parse-contract-decl-status.fungi.
+pure flow parserParseContractDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice24A: Bool = sourceReady
+  let lattice24B: Bool = shapeReady
+  let lattice24C: Bool = stateReady
+  let lattice24D: Bool = policyReady
+  let lattice24E: Bool = routeReady
+  let lattice24F: Bool = proofReady
+  let lattice24G: Bool = sealReady
+  let beam24001: Bool = lattice24E
+  let beam24002: Bool = beam24001
+  let beam24003: Bool = beam24002
+  let beam24004: Bool = beam24003
+  let beam24005: Bool = beam24004
+  let beam24006: Bool = beam24005
+  let beam24007: Bool = beam24006
+  let beam24008: Bool = lattice24E
+  let beam24009: Bool = beam24008
+  let beam24010: Bool = beam24009
+  let beam24011: Bool = beam24010
+  let beam24012: Bool = beam24011
+  let beam24013: Bool = beam24012
+  let beam24014: Bool = beam24013
+  let beam24015: Bool = beam24014
+  let beam24016: Bool = lattice24F
+  let beam24017: Bool = beam24016
+  let beam24018: Bool = beam24017
+  let beam24019: Bool = beam24018
+  let beam24020: Bool = beam24019
+  let beam24021: Bool = beam24020
+  let beam24022: Bool = beam24021
+  let beam24023: Bool = beam24022
+  let beam24024: Bool = lattice24G
+  let beam24025: Bool = beam24024
+  let beam24026: Bool = beam24025
+  let beam24027: Bool = beam24026
+  let beam24028: Bool = beam24027
+  let beam24029: Bool = beam24028
+  let beam24030: Bool = beam24029
+  let beam24031: Bool = beam24030
+  let beam24032: Bool = lattice24A
+  let beam24033: Bool = beam24032
+  let beam24034: Bool = beam24033
+  let beam24035: Bool = beam24034
+  let beam24036: Bool = beam24035
+  let beam24037: Bool = beam24036
+  let beam24038: Bool = beam24037
+  let beam24039: Bool = beam24038
+  let beam24040: Bool = lattice24B
+  let beam24041: Bool = beam24040
+  let beam24042: Bool = beam24041
+  let beam24043: Bool = beam24042
+  let beam24044: Bool = beam24043
+  let beam24045: Bool = beam24044
+  let beam24046: Bool = beam24045
+  let beam24047: Bool = beam24046
+  let beam24048: Bool = lattice24C
+  let beam24049: Bool = beam24048
+  let beam24050: Bool = beam24049
+  let beam24051: Bool = beam24050
+  let beam24052: Bool = beam24051
+  let beam24053: Bool = beam24052
+  let beam24054: Bool = beam24053
+  let beam24055: Bool = beam24054
+  let beam24056: Bool = lattice24D
+  let beam24057: Bool = beam24056
+  let beam24058: Bool = beam24057
+  let beam24059: Bool = beam24058
+  let beam24060: Bool = beam24059
+  let beam24061: Bool = beam24060
+  let beam24062: Bool = beam24061
+  let beam24063: Bool = beam24062
+  let beam24064: Bool = lattice24E
+  let beam24065: Bool = beam24064
+  let beam24066: Bool = beam24065
+  let beam24067: Bool = beam24066
+  let beam24068: Bool = beam24067
+  let beam24069: Bool = beam24068
+  let beam24070: Bool = beam24069
+  let beam24071: Bool = beam24070
+  let beam24072: Bool = lattice24F
+  let beam24073: Bool = beam24072
+  let beam24074: Bool = beam24073
+  let beam24075: Bool = beam24074
+  let beam24076: Bool = beam24075
+  let beam24077: Bool = beam24076
+  let beam24078: Bool = beam24077
+  let beam24079: Bool = beam24078
+  let beam24080: Bool = lattice24G
+  let brace24A: Bool = beam24080
+  let brace24B: Bool = lattice24G
+  let brace24C: Bool = lattice24B
+  if brace24C {
+    if brace24A {
+      if brace24B {
+        if lattice24E {
+          if lattice24F {
+            if lattice24G {
+              if lattice24A {
+                return "parser_parse_contract_decl_built"
+              }
+              return "wave45_lattice_shape_missing"
+            }
+            return "wave45_lattice_source_missing"
+          }
+          return "wave45_lattice_seal_missing"
+        }
+        return "wave45_lattice_proof_missing"
+      }
+      return "wave45_lattice_route_missing"
+    }
+    return "wave45_lattice_policy_missing"
+  }
+  return "wave45_lattice_state_missing"
+}

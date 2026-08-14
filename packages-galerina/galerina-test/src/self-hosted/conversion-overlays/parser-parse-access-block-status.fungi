@@ -1,0 +1,101 @@
+@version 1
+// Source-bound decision overlay wave 45 item 09: parser-parse-access-block-status.fungi.
+pure flow parserParseAccessBlockStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice09A: Bool = sourceReady
+  let lattice09B: Bool = shapeReady
+  let lattice09C: Bool = stateReady
+  let lattice09D: Bool = policyReady
+  let lattice09E: Bool = routeReady
+  let lattice09F: Bool = proofReady
+  let lattice09G: Bool = sealReady
+  let beam09001: Bool = lattice09D
+  let beam09002: Bool = beam09001
+  let beam09003: Bool = beam09002
+  let beam09004: Bool = beam09003
+  let beam09005: Bool = beam09004
+  let beam09006: Bool = beam09005
+  let beam09007: Bool = beam09006
+  let beam09008: Bool = lattice09D
+  let beam09009: Bool = beam09008
+  let beam09010: Bool = beam09009
+  let beam09011: Bool = beam09010
+  let beam09012: Bool = beam09011
+  let beam09013: Bool = beam09012
+  let beam09014: Bool = beam09013
+  let beam09015: Bool = beam09014
+  let beam09016: Bool = lattice09E
+  let beam09017: Bool = beam09016
+  let beam09018: Bool = beam09017
+  let beam09019: Bool = beam09018
+  let beam09020: Bool = beam09019
+  let beam09021: Bool = beam09020
+  let beam09022: Bool = beam09021
+  let beam09023: Bool = beam09022
+  let beam09024: Bool = lattice09F
+  let beam09025: Bool = beam09024
+  let beam09026: Bool = beam09025
+  let beam09027: Bool = beam09026
+  let beam09028: Bool = beam09027
+  let beam09029: Bool = beam09028
+  let beam09030: Bool = beam09029
+  let beam09031: Bool = beam09030
+  let beam09032: Bool = lattice09G
+  let beam09033: Bool = beam09032
+  let beam09034: Bool = beam09033
+  let beam09035: Bool = beam09034
+  let beam09036: Bool = beam09035
+  let beam09037: Bool = beam09036
+  let beam09038: Bool = beam09037
+  let beam09039: Bool = beam09038
+  let beam09040: Bool = lattice09A
+  let beam09041: Bool = beam09040
+  let beam09042: Bool = beam09041
+  let beam09043: Bool = beam09042
+  let beam09044: Bool = beam09043
+  let beam09045: Bool = beam09044
+  let beam09046: Bool = beam09045
+  let beam09047: Bool = beam09046
+  let beam09048: Bool = lattice09B
+  let beam09049: Bool = beam09048
+  let beam09050: Bool = beam09049
+  let beam09051: Bool = beam09050
+  let beam09052: Bool = beam09051
+  let beam09053: Bool = beam09052
+  let beam09054: Bool = beam09053
+  let beam09055: Bool = beam09054
+  let beam09056: Bool = lattice09C
+  let beam09057: Bool = beam09056
+  let beam09058: Bool = beam09057
+  let beam09059: Bool = beam09058
+  let beam09060: Bool = beam09059
+  let beam09061: Bool = beam09060
+  let beam09062: Bool = beam09061
+  let beam09063: Bool = beam09062
+  let beam09064: Bool = lattice09D
+  let beam09065: Bool = beam09064
+  let brace09A: Bool = beam09065
+  let brace09B: Bool = lattice09F
+  let brace09C: Bool = lattice09A
+  if brace09C {
+    if brace09A {
+      if brace09B {
+        if lattice09D {
+          if lattice09E {
+            if lattice09F {
+              if lattice09G {
+                return "parser_parse_access_block_built"
+              }
+              return "wave45_lattice_source_missing"
+            }
+            return "wave45_lattice_seal_missing"
+          }
+          return "wave45_lattice_proof_missing"
+        }
+        return "wave45_lattice_route_missing"
+      }
+      return "wave45_lattice_policy_missing"
+    }
+    return "wave45_lattice_state_missing"
+  }
+  return "wave45_lattice_shape_missing"
+}

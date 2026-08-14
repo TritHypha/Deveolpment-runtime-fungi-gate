@@ -1,0 +1,130 @@
+@version 1
+// Source-bound decision overlay wave 45 item 38: parser-parse-import-decl-status.fungi.
+pure flow parserParseImportDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice38A: Bool = sourceReady
+  let lattice38B: Bool = shapeReady
+  let lattice38C: Bool = stateReady
+  let lattice38D: Bool = policyReady
+  let lattice38E: Bool = routeReady
+  let lattice38F: Bool = proofReady
+  let lattice38G: Bool = sealReady
+  let beam38001: Bool = lattice38E
+  let beam38002: Bool = beam38001
+  let beam38003: Bool = beam38002
+  let beam38004: Bool = beam38003
+  let beam38005: Bool = beam38004
+  let beam38006: Bool = beam38005
+  let beam38007: Bool = beam38006
+  let beam38008: Bool = lattice38E
+  let beam38009: Bool = beam38008
+  let beam38010: Bool = beam38009
+  let beam38011: Bool = beam38010
+  let beam38012: Bool = beam38011
+  let beam38013: Bool = beam38012
+  let beam38014: Bool = beam38013
+  let beam38015: Bool = beam38014
+  let beam38016: Bool = lattice38F
+  let beam38017: Bool = beam38016
+  let beam38018: Bool = beam38017
+  let beam38019: Bool = beam38018
+  let beam38020: Bool = beam38019
+  let beam38021: Bool = beam38020
+  let beam38022: Bool = beam38021
+  let beam38023: Bool = beam38022
+  let beam38024: Bool = lattice38G
+  let beam38025: Bool = beam38024
+  let beam38026: Bool = beam38025
+  let beam38027: Bool = beam38026
+  let beam38028: Bool = beam38027
+  let beam38029: Bool = beam38028
+  let beam38030: Bool = beam38029
+  let beam38031: Bool = beam38030
+  let beam38032: Bool = lattice38A
+  let beam38033: Bool = beam38032
+  let beam38034: Bool = beam38033
+  let beam38035: Bool = beam38034
+  let beam38036: Bool = beam38035
+  let beam38037: Bool = beam38036
+  let beam38038: Bool = beam38037
+  let beam38039: Bool = beam38038
+  let beam38040: Bool = lattice38B
+  let beam38041: Bool = beam38040
+  let beam38042: Bool = beam38041
+  let beam38043: Bool = beam38042
+  let beam38044: Bool = beam38043
+  let beam38045: Bool = beam38044
+  let beam38046: Bool = beam38045
+  let beam38047: Bool = beam38046
+  let beam38048: Bool = lattice38C
+  let beam38049: Bool = beam38048
+  let beam38050: Bool = beam38049
+  let beam38051: Bool = beam38050
+  let beam38052: Bool = beam38051
+  let beam38053: Bool = beam38052
+  let beam38054: Bool = beam38053
+  let beam38055: Bool = beam38054
+  let beam38056: Bool = lattice38D
+  let beam38057: Bool = beam38056
+  let beam38058: Bool = beam38057
+  let beam38059: Bool = beam38058
+  let beam38060: Bool = beam38059
+  let beam38061: Bool = beam38060
+  let beam38062: Bool = beam38061
+  let beam38063: Bool = beam38062
+  let beam38064: Bool = lattice38E
+  let beam38065: Bool = beam38064
+  let beam38066: Bool = beam38065
+  let beam38067: Bool = beam38066
+  let beam38068: Bool = beam38067
+  let beam38069: Bool = beam38068
+  let beam38070: Bool = beam38069
+  let beam38071: Bool = beam38070
+  let beam38072: Bool = lattice38F
+  let beam38073: Bool = beam38072
+  let beam38074: Bool = beam38073
+  let beam38075: Bool = beam38074
+  let beam38076: Bool = beam38075
+  let beam38077: Bool = beam38076
+  let beam38078: Bool = beam38077
+  let beam38079: Bool = beam38078
+  let beam38080: Bool = lattice38G
+  let beam38081: Bool = beam38080
+  let beam38082: Bool = beam38081
+  let beam38083: Bool = beam38082
+  let beam38084: Bool = beam38083
+  let beam38085: Bool = beam38084
+  let beam38086: Bool = beam38085
+  let beam38087: Bool = beam38086
+  let beam38088: Bool = lattice38A
+  let beam38089: Bool = beam38088
+  let beam38090: Bool = beam38089
+  let beam38091: Bool = beam38090
+  let beam38092: Bool = beam38091
+  let beam38093: Bool = beam38092
+  let beam38094: Bool = beam38093
+  let brace38A: Bool = beam38094
+  let brace38B: Bool = lattice38G
+  let brace38C: Bool = lattice38B
+  if brace38C {
+    if brace38A {
+      if brace38B {
+        if lattice38E {
+          if lattice38F {
+            if lattice38G {
+              if lattice38A {
+                return "parser_parse_import_decl_built"
+              }
+              return "wave45_lattice_shape_missing"
+            }
+            return "wave45_lattice_source_missing"
+          }
+          return "wave45_lattice_seal_missing"
+        }
+        return "wave45_lattice_proof_missing"
+      }
+      return "wave45_lattice_route_missing"
+    }
+    return "wave45_lattice_policy_missing"
+  }
+  return "wave45_lattice_state_missing"
+}

@@ -1,0 +1,97 @@
+@version 1
+// Source-bound decision overlay wave 45 item 05: parser-parse-intent-decl-status.fungi.
+pure flow parserParseIntentDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice05A: Bool = sourceReady
+  let lattice05B: Bool = shapeReady
+  let lattice05C: Bool = stateReady
+  let lattice05D: Bool = policyReady
+  let lattice05E: Bool = routeReady
+  let lattice05F: Bool = proofReady
+  let lattice05G: Bool = sealReady
+  let beam05001: Bool = lattice05G
+  let beam05002: Bool = beam05001
+  let beam05003: Bool = beam05002
+  let beam05004: Bool = beam05003
+  let beam05005: Bool = beam05004
+  let beam05006: Bool = beam05005
+  let beam05007: Bool = beam05006
+  let beam05008: Bool = lattice05G
+  let beam05009: Bool = beam05008
+  let beam05010: Bool = beam05009
+  let beam05011: Bool = beam05010
+  let beam05012: Bool = beam05011
+  let beam05013: Bool = beam05012
+  let beam05014: Bool = beam05013
+  let beam05015: Bool = beam05014
+  let beam05016: Bool = lattice05A
+  let beam05017: Bool = beam05016
+  let beam05018: Bool = beam05017
+  let beam05019: Bool = beam05018
+  let beam05020: Bool = beam05019
+  let beam05021: Bool = beam05020
+  let beam05022: Bool = beam05021
+  let beam05023: Bool = beam05022
+  let beam05024: Bool = lattice05B
+  let beam05025: Bool = beam05024
+  let beam05026: Bool = beam05025
+  let beam05027: Bool = beam05026
+  let beam05028: Bool = beam05027
+  let beam05029: Bool = beam05028
+  let beam05030: Bool = beam05029
+  let beam05031: Bool = beam05030
+  let beam05032: Bool = lattice05C
+  let beam05033: Bool = beam05032
+  let beam05034: Bool = beam05033
+  let beam05035: Bool = beam05034
+  let beam05036: Bool = beam05035
+  let beam05037: Bool = beam05036
+  let beam05038: Bool = beam05037
+  let beam05039: Bool = beam05038
+  let beam05040: Bool = lattice05D
+  let beam05041: Bool = beam05040
+  let beam05042: Bool = beam05041
+  let beam05043: Bool = beam05042
+  let beam05044: Bool = beam05043
+  let beam05045: Bool = beam05044
+  let beam05046: Bool = beam05045
+  let beam05047: Bool = beam05046
+  let beam05048: Bool = lattice05E
+  let beam05049: Bool = beam05048
+  let beam05050: Bool = beam05049
+  let beam05051: Bool = beam05050
+  let beam05052: Bool = beam05051
+  let beam05053: Bool = beam05052
+  let beam05054: Bool = beam05053
+  let beam05055: Bool = beam05054
+  let beam05056: Bool = lattice05F
+  let beam05057: Bool = beam05056
+  let beam05058: Bool = beam05057
+  let beam05059: Bool = beam05058
+  let beam05060: Bool = beam05059
+  let beam05061: Bool = beam05060
+  let brace05A: Bool = beam05061
+  let brace05B: Bool = lattice05B
+  let brace05C: Bool = lattice05D
+  if brace05C {
+    if brace05A {
+      if brace05B {
+        if lattice05G {
+          if lattice05A {
+            if lattice05B {
+              if lattice05C {
+                return "parser_parse_intent_decl_built"
+              }
+              return "wave45_lattice_policy_missing"
+            }
+            return "wave45_lattice_state_missing"
+          }
+          return "wave45_lattice_shape_missing"
+        }
+        return "wave45_lattice_source_missing"
+      }
+      return "wave45_lattice_seal_missing"
+    }
+    return "wave45_lattice_proof_missing"
+  }
+  return "wave45_lattice_route_missing"
+}

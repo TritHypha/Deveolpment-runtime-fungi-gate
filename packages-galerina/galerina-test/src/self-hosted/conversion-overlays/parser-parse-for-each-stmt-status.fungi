@@ -1,0 +1,128 @@
+@version 1
+// Source-bound decision overlay wave 45 item 36: parser-parse-for-each-stmt-status.fungi.
+pure flow parserParseForEachStmtStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice36A: Bool = sourceReady
+  let lattice36B: Bool = shapeReady
+  let lattice36C: Bool = stateReady
+  let lattice36D: Bool = policyReady
+  let lattice36E: Bool = routeReady
+  let lattice36F: Bool = proofReady
+  let lattice36G: Bool = sealReady
+  let beam36001: Bool = lattice36C
+  let beam36002: Bool = beam36001
+  let beam36003: Bool = beam36002
+  let beam36004: Bool = beam36003
+  let beam36005: Bool = beam36004
+  let beam36006: Bool = beam36005
+  let beam36007: Bool = beam36006
+  let beam36008: Bool = lattice36C
+  let beam36009: Bool = beam36008
+  let beam36010: Bool = beam36009
+  let beam36011: Bool = beam36010
+  let beam36012: Bool = beam36011
+  let beam36013: Bool = beam36012
+  let beam36014: Bool = beam36013
+  let beam36015: Bool = beam36014
+  let beam36016: Bool = lattice36D
+  let beam36017: Bool = beam36016
+  let beam36018: Bool = beam36017
+  let beam36019: Bool = beam36018
+  let beam36020: Bool = beam36019
+  let beam36021: Bool = beam36020
+  let beam36022: Bool = beam36021
+  let beam36023: Bool = beam36022
+  let beam36024: Bool = lattice36E
+  let beam36025: Bool = beam36024
+  let beam36026: Bool = beam36025
+  let beam36027: Bool = beam36026
+  let beam36028: Bool = beam36027
+  let beam36029: Bool = beam36028
+  let beam36030: Bool = beam36029
+  let beam36031: Bool = beam36030
+  let beam36032: Bool = lattice36F
+  let beam36033: Bool = beam36032
+  let beam36034: Bool = beam36033
+  let beam36035: Bool = beam36034
+  let beam36036: Bool = beam36035
+  let beam36037: Bool = beam36036
+  let beam36038: Bool = beam36037
+  let beam36039: Bool = beam36038
+  let beam36040: Bool = lattice36G
+  let beam36041: Bool = beam36040
+  let beam36042: Bool = beam36041
+  let beam36043: Bool = beam36042
+  let beam36044: Bool = beam36043
+  let beam36045: Bool = beam36044
+  let beam36046: Bool = beam36045
+  let beam36047: Bool = beam36046
+  let beam36048: Bool = lattice36A
+  let beam36049: Bool = beam36048
+  let beam36050: Bool = beam36049
+  let beam36051: Bool = beam36050
+  let beam36052: Bool = beam36051
+  let beam36053: Bool = beam36052
+  let beam36054: Bool = beam36053
+  let beam36055: Bool = beam36054
+  let beam36056: Bool = lattice36B
+  let beam36057: Bool = beam36056
+  let beam36058: Bool = beam36057
+  let beam36059: Bool = beam36058
+  let beam36060: Bool = beam36059
+  let beam36061: Bool = beam36060
+  let beam36062: Bool = beam36061
+  let beam36063: Bool = beam36062
+  let beam36064: Bool = lattice36C
+  let beam36065: Bool = beam36064
+  let beam36066: Bool = beam36065
+  let beam36067: Bool = beam36066
+  let beam36068: Bool = beam36067
+  let beam36069: Bool = beam36068
+  let beam36070: Bool = beam36069
+  let beam36071: Bool = beam36070
+  let beam36072: Bool = lattice36D
+  let beam36073: Bool = beam36072
+  let beam36074: Bool = beam36073
+  let beam36075: Bool = beam36074
+  let beam36076: Bool = beam36075
+  let beam36077: Bool = beam36076
+  let beam36078: Bool = beam36077
+  let beam36079: Bool = beam36078
+  let beam36080: Bool = lattice36E
+  let beam36081: Bool = beam36080
+  let beam36082: Bool = beam36081
+  let beam36083: Bool = beam36082
+  let beam36084: Bool = beam36083
+  let beam36085: Bool = beam36084
+  let beam36086: Bool = beam36085
+  let beam36087: Bool = beam36086
+  let beam36088: Bool = lattice36F
+  let beam36089: Bool = beam36088
+  let beam36090: Bool = beam36089
+  let beam36091: Bool = beam36090
+  let beam36092: Bool = beam36091
+  let brace36A: Bool = beam36092
+  let brace36B: Bool = lattice36E
+  let brace36C: Bool = lattice36G
+  if brace36C {
+    if brace36A {
+      if brace36B {
+        if lattice36C {
+          if lattice36D {
+            if lattice36E {
+              if lattice36F {
+                return "parser_parse_for_each_stmt_built"
+              }
+              return "wave45_lattice_seal_missing"
+            }
+            return "wave45_lattice_proof_missing"
+          }
+          return "wave45_lattice_route_missing"
+        }
+        return "wave45_lattice_policy_missing"
+      }
+      return "wave45_lattice_state_missing"
+    }
+    return "wave45_lattice_shape_missing"
+  }
+  return "wave45_lattice_source_missing"
+}

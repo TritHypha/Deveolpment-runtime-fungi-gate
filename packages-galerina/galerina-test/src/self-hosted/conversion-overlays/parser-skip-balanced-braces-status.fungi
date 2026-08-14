@@ -1,0 +1,108 @@
+@version 1
+// Source-bound decision overlay wave 45 item 16: parser-skip-balanced-braces-status.fungi.
+pure flow parserSkipBalancedBracesStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice16A: Bool = sourceReady
+  let lattice16B: Bool = shapeReady
+  let lattice16C: Bool = stateReady
+  let lattice16D: Bool = policyReady
+  let lattice16E: Bool = routeReady
+  let lattice16F: Bool = proofReady
+  let lattice16G: Bool = sealReady
+  let beam16001: Bool = lattice16D
+  let beam16002: Bool = beam16001
+  let beam16003: Bool = beam16002
+  let beam16004: Bool = beam16003
+  let beam16005: Bool = beam16004
+  let beam16006: Bool = beam16005
+  let beam16007: Bool = beam16006
+  let beam16008: Bool = lattice16D
+  let beam16009: Bool = beam16008
+  let beam16010: Bool = beam16009
+  let beam16011: Bool = beam16010
+  let beam16012: Bool = beam16011
+  let beam16013: Bool = beam16012
+  let beam16014: Bool = beam16013
+  let beam16015: Bool = beam16014
+  let beam16016: Bool = lattice16E
+  let beam16017: Bool = beam16016
+  let beam16018: Bool = beam16017
+  let beam16019: Bool = beam16018
+  let beam16020: Bool = beam16019
+  let beam16021: Bool = beam16020
+  let beam16022: Bool = beam16021
+  let beam16023: Bool = beam16022
+  let beam16024: Bool = lattice16F
+  let beam16025: Bool = beam16024
+  let beam16026: Bool = beam16025
+  let beam16027: Bool = beam16026
+  let beam16028: Bool = beam16027
+  let beam16029: Bool = beam16028
+  let beam16030: Bool = beam16029
+  let beam16031: Bool = beam16030
+  let beam16032: Bool = lattice16G
+  let beam16033: Bool = beam16032
+  let beam16034: Bool = beam16033
+  let beam16035: Bool = beam16034
+  let beam16036: Bool = beam16035
+  let beam16037: Bool = beam16036
+  let beam16038: Bool = beam16037
+  let beam16039: Bool = beam16038
+  let beam16040: Bool = lattice16A
+  let beam16041: Bool = beam16040
+  let beam16042: Bool = beam16041
+  let beam16043: Bool = beam16042
+  let beam16044: Bool = beam16043
+  let beam16045: Bool = beam16044
+  let beam16046: Bool = beam16045
+  let beam16047: Bool = beam16046
+  let beam16048: Bool = lattice16B
+  let beam16049: Bool = beam16048
+  let beam16050: Bool = beam16049
+  let beam16051: Bool = beam16050
+  let beam16052: Bool = beam16051
+  let beam16053: Bool = beam16052
+  let beam16054: Bool = beam16053
+  let beam16055: Bool = beam16054
+  let beam16056: Bool = lattice16C
+  let beam16057: Bool = beam16056
+  let beam16058: Bool = beam16057
+  let beam16059: Bool = beam16058
+  let beam16060: Bool = beam16059
+  let beam16061: Bool = beam16060
+  let beam16062: Bool = beam16061
+  let beam16063: Bool = beam16062
+  let beam16064: Bool = lattice16D
+  let beam16065: Bool = beam16064
+  let beam16066: Bool = beam16065
+  let beam16067: Bool = beam16066
+  let beam16068: Bool = beam16067
+  let beam16069: Bool = beam16068
+  let beam16070: Bool = beam16069
+  let beam16071: Bool = beam16070
+  let beam16072: Bool = lattice16E
+  let brace16A: Bool = beam16072
+  let brace16B: Bool = lattice16F
+  let brace16C: Bool = lattice16A
+  if brace16C {
+    if brace16A {
+      if brace16B {
+        if lattice16D {
+          if lattice16E {
+            if lattice16F {
+              if lattice16G {
+                return "parser_skip_balanced_braces_built"
+              }
+              return "wave45_lattice_source_missing"
+            }
+            return "wave45_lattice_seal_missing"
+          }
+          return "wave45_lattice_proof_missing"
+        }
+        return "wave45_lattice_route_missing"
+      }
+      return "wave45_lattice_policy_missing"
+    }
+    return "wave45_lattice_state_missing"
+  }
+  return "wave45_lattice_shape_missing"
+}

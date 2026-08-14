@@ -1,0 +1,103 @@
+@version 1
+// Source-bound decision overlay wave 45 item 11: parser-parse-bitfield-decl-status.fungi.
+pure flow parserParseBitfieldDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice11A: Bool = sourceReady
+  let lattice11B: Bool = shapeReady
+  let lattice11C: Bool = stateReady
+  let lattice11D: Bool = policyReady
+  let lattice11E: Bool = routeReady
+  let lattice11F: Bool = proofReady
+  let lattice11G: Bool = sealReady
+  let beam11001: Bool = lattice11F
+  let beam11002: Bool = beam11001
+  let beam11003: Bool = beam11002
+  let beam11004: Bool = beam11003
+  let beam11005: Bool = beam11004
+  let beam11006: Bool = beam11005
+  let beam11007: Bool = beam11006
+  let beam11008: Bool = lattice11F
+  let beam11009: Bool = beam11008
+  let beam11010: Bool = beam11009
+  let beam11011: Bool = beam11010
+  let beam11012: Bool = beam11011
+  let beam11013: Bool = beam11012
+  let beam11014: Bool = beam11013
+  let beam11015: Bool = beam11014
+  let beam11016: Bool = lattice11G
+  let beam11017: Bool = beam11016
+  let beam11018: Bool = beam11017
+  let beam11019: Bool = beam11018
+  let beam11020: Bool = beam11019
+  let beam11021: Bool = beam11020
+  let beam11022: Bool = beam11021
+  let beam11023: Bool = beam11022
+  let beam11024: Bool = lattice11A
+  let beam11025: Bool = beam11024
+  let beam11026: Bool = beam11025
+  let beam11027: Bool = beam11026
+  let beam11028: Bool = beam11027
+  let beam11029: Bool = beam11028
+  let beam11030: Bool = beam11029
+  let beam11031: Bool = beam11030
+  let beam11032: Bool = lattice11B
+  let beam11033: Bool = beam11032
+  let beam11034: Bool = beam11033
+  let beam11035: Bool = beam11034
+  let beam11036: Bool = beam11035
+  let beam11037: Bool = beam11036
+  let beam11038: Bool = beam11037
+  let beam11039: Bool = beam11038
+  let beam11040: Bool = lattice11C
+  let beam11041: Bool = beam11040
+  let beam11042: Bool = beam11041
+  let beam11043: Bool = beam11042
+  let beam11044: Bool = beam11043
+  let beam11045: Bool = beam11044
+  let beam11046: Bool = beam11045
+  let beam11047: Bool = beam11046
+  let beam11048: Bool = lattice11D
+  let beam11049: Bool = beam11048
+  let beam11050: Bool = beam11049
+  let beam11051: Bool = beam11050
+  let beam11052: Bool = beam11051
+  let beam11053: Bool = beam11052
+  let beam11054: Bool = beam11053
+  let beam11055: Bool = beam11054
+  let beam11056: Bool = lattice11E
+  let beam11057: Bool = beam11056
+  let beam11058: Bool = beam11057
+  let beam11059: Bool = beam11058
+  let beam11060: Bool = beam11059
+  let beam11061: Bool = beam11060
+  let beam11062: Bool = beam11061
+  let beam11063: Bool = beam11062
+  let beam11064: Bool = lattice11F
+  let beam11065: Bool = beam11064
+  let beam11066: Bool = beam11065
+  let beam11067: Bool = beam11066
+  let brace11A: Bool = beam11067
+  let brace11B: Bool = lattice11A
+  let brace11C: Bool = lattice11C
+  if brace11C {
+    if brace11A {
+      if brace11B {
+        if lattice11F {
+          if lattice11G {
+            if lattice11A {
+              if lattice11B {
+                return "parser_parse_bitfield_decl_built"
+              }
+              return "wave45_lattice_state_missing"
+            }
+            return "wave45_lattice_shape_missing"
+          }
+          return "wave45_lattice_source_missing"
+        }
+        return "wave45_lattice_seal_missing"
+      }
+      return "wave45_lattice_proof_missing"
+    }
+    return "wave45_lattice_route_missing"
+  }
+  return "wave45_lattice_policy_missing"
+}

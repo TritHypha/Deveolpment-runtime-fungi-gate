@@ -1,0 +1,117 @@
+@version 1
+// Source-bound decision overlay wave 45 item 25: parser-parse-assuming-decl-status.fungi.
+pure flow parserParseAssumingDeclStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let lattice25A: Bool = sourceReady
+  let lattice25B: Bool = shapeReady
+  let lattice25C: Bool = stateReady
+  let lattice25D: Bool = policyReady
+  let lattice25E: Bool = routeReady
+  let lattice25F: Bool = proofReady
+  let lattice25G: Bool = sealReady
+  let beam25001: Bool = lattice25F
+  let beam25002: Bool = beam25001
+  let beam25003: Bool = beam25002
+  let beam25004: Bool = beam25003
+  let beam25005: Bool = beam25004
+  let beam25006: Bool = beam25005
+  let beam25007: Bool = beam25006
+  let beam25008: Bool = lattice25F
+  let beam25009: Bool = beam25008
+  let beam25010: Bool = beam25009
+  let beam25011: Bool = beam25010
+  let beam25012: Bool = beam25011
+  let beam25013: Bool = beam25012
+  let beam25014: Bool = beam25013
+  let beam25015: Bool = beam25014
+  let beam25016: Bool = lattice25G
+  let beam25017: Bool = beam25016
+  let beam25018: Bool = beam25017
+  let beam25019: Bool = beam25018
+  let beam25020: Bool = beam25019
+  let beam25021: Bool = beam25020
+  let beam25022: Bool = beam25021
+  let beam25023: Bool = beam25022
+  let beam25024: Bool = lattice25A
+  let beam25025: Bool = beam25024
+  let beam25026: Bool = beam25025
+  let beam25027: Bool = beam25026
+  let beam25028: Bool = beam25027
+  let beam25029: Bool = beam25028
+  let beam25030: Bool = beam25029
+  let beam25031: Bool = beam25030
+  let beam25032: Bool = lattice25B
+  let beam25033: Bool = beam25032
+  let beam25034: Bool = beam25033
+  let beam25035: Bool = beam25034
+  let beam25036: Bool = beam25035
+  let beam25037: Bool = beam25036
+  let beam25038: Bool = beam25037
+  let beam25039: Bool = beam25038
+  let beam25040: Bool = lattice25C
+  let beam25041: Bool = beam25040
+  let beam25042: Bool = beam25041
+  let beam25043: Bool = beam25042
+  let beam25044: Bool = beam25043
+  let beam25045: Bool = beam25044
+  let beam25046: Bool = beam25045
+  let beam25047: Bool = beam25046
+  let beam25048: Bool = lattice25D
+  let beam25049: Bool = beam25048
+  let beam25050: Bool = beam25049
+  let beam25051: Bool = beam25050
+  let beam25052: Bool = beam25051
+  let beam25053: Bool = beam25052
+  let beam25054: Bool = beam25053
+  let beam25055: Bool = beam25054
+  let beam25056: Bool = lattice25E
+  let beam25057: Bool = beam25056
+  let beam25058: Bool = beam25057
+  let beam25059: Bool = beam25058
+  let beam25060: Bool = beam25059
+  let beam25061: Bool = beam25060
+  let beam25062: Bool = beam25061
+  let beam25063: Bool = beam25062
+  let beam25064: Bool = lattice25F
+  let beam25065: Bool = beam25064
+  let beam25066: Bool = beam25065
+  let beam25067: Bool = beam25066
+  let beam25068: Bool = beam25067
+  let beam25069: Bool = beam25068
+  let beam25070: Bool = beam25069
+  let beam25071: Bool = beam25070
+  let beam25072: Bool = lattice25G
+  let beam25073: Bool = beam25072
+  let beam25074: Bool = beam25073
+  let beam25075: Bool = beam25074
+  let beam25076: Bool = beam25075
+  let beam25077: Bool = beam25076
+  let beam25078: Bool = beam25077
+  let beam25079: Bool = beam25078
+  let beam25080: Bool = lattice25A
+  let beam25081: Bool = beam25080
+  let brace25A: Bool = beam25081
+  let brace25B: Bool = lattice25A
+  let brace25C: Bool = lattice25C
+  if brace25C {
+    if brace25A {
+      if brace25B {
+        if lattice25F {
+          if lattice25G {
+            if lattice25A {
+              if lattice25B {
+                return "parser_parse_assuming_decl_built"
+              }
+              return "wave45_lattice_state_missing"
+            }
+            return "wave45_lattice_shape_missing"
+          }
+          return "wave45_lattice_source_missing"
+        }
+        return "wave45_lattice_seal_missing"
+      }
+      return "wave45_lattice_proof_missing"
+    }
+    return "wave45_lattice_route_missing"
+  }
+  return "wave45_lattice_policy_missing"
+}
