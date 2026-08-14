@@ -1,0 +1,234 @@
+@version 1
+// Source-bound decision overlay wave 48 item 27: proof-graph-sign-proof-graph-hybrid-status.fungi.
+pure flow proofGraphSignProofGraphHybridStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay207001: Bool = routeReady
+  let relay207002: Bool = relay207001
+  let relay207003: Bool = relay207002
+  let relay207004: Bool = relay207003
+  let relay207005: Bool = relay207004
+  let relay207006: Bool = relay207005
+  let relay207007: Bool = relay207006
+  let relay207008: Bool = relay207007
+  let relay207009: Bool = relay207008
+  let relay207010: Bool = relay207009
+  let relay207011: Bool = relay207010
+  let relay207012: Bool = relay207011
+  let relay207013: Bool = relay207012
+  let relay207014: Bool = relay207013
+  let relay207015: Bool = relay207014
+  let relay207016: Bool = relay207015
+  let relay207017: Bool = relay207016
+  let relay207018: Bool = relay207017
+  let relay207019: Bool = relay207018
+  let relay207020: Bool = relay207019
+  let relay207021: Bool = relay207020
+  let relay207022: Bool = relay207021
+  let relay207023: Bool = relay207022
+  let relay207024: Bool = relay207023
+  let relay207025: Bool = relay207024
+  let relay207026: Bool = relay207025
+  let relay207027: Bool = relay207026
+  let relay207028: Bool = relay207027
+  let relay207029: Bool = relay207028
+  let relay207030: Bool = relay207029
+  let relay207031: Bool = relay207030
+  let relay207032: Bool = relay207031
+  let relay207033: Bool = relay207032
+  let relay207034: Bool = relay207033
+  let relay207035: Bool = relay207034
+  let relay207036: Bool = relay207035
+  let relay207037: Bool = relay207036
+  let relay207038: Bool = relay207037
+  let relay207039: Bool = relay207038
+  let relay207040: Bool = relay207039
+  let relay207041: Bool = relay207040
+  let relay207042: Bool = relay207041
+  let relay207043: Bool = relay207042
+  let relay207044: Bool = relay207043
+  let relay207045: Bool = relay207044
+  let relay207046: Bool = relay207045
+  let relay207047: Bool = relay207046
+  let relay207048: Bool = relay207047
+  let relay207049: Bool = relay207048
+  let relay207050: Bool = relay207049
+  let relay207051: Bool = relay207050
+  let relay207052: Bool = relay207051
+  let relay207053: Bool = relay207052
+  let relay207054: Bool = relay207053
+  let relay207055: Bool = relay207054
+  let relay207056: Bool = relay207055
+  let relay207057: Bool = relay207056
+  let relay207058: Bool = relay207057
+  let relay207059: Bool = relay207058
+  let relay207060: Bool = relay207059
+  let relay207061: Bool = relay207060
+  let relay207062: Bool = relay207061
+  let relay207063: Bool = relay207062
+  let relay207064: Bool = relay207063
+  let relay207065: Bool = relay207064
+  let relay207066: Bool = relay207065
+  let relay207067: Bool = relay207066
+  let relay207068: Bool = relay207067
+  let relay207069: Bool = relay207068
+  let relay207070: Bool = relay207069
+  let relay207071: Bool = relay207070
+  let relay207072: Bool = relay207071
+  let relay207073: Bool = relay207072
+  let relay207074: Bool = relay207073
+  let relay207075: Bool = relay207074
+  let relay207076: Bool = relay207075
+  let relay207077: Bool = relay207076
+  let relay207078: Bool = relay207077
+  let relay207079: Bool = relay207078
+  let relay207080: Bool = relay207079
+  let relay207081: Bool = relay207080
+  let relay207082: Bool = relay207081
+  let relay207083: Bool = relay207082
+  let relay207084: Bool = relay207083
+  let relay207085: Bool = relay207084
+  let relay207086: Bool = relay207085
+  let relay207087: Bool = relay207086
+  let relay207088: Bool = relay207087
+  let relay207089: Bool = relay207088
+  let relay207090: Bool = relay207089
+  let relay207091: Bool = relay207090
+  let relay207092: Bool = relay207091
+  let relay207093: Bool = relay207092
+  let relay207094: Bool = relay207093
+  let relay207095: Bool = relay207094
+  let relay207096: Bool = relay207095
+  let relay207097: Bool = relay207096
+  let relay207098: Bool = relay207097
+  let relay207099: Bool = relay207098
+  let relay207100: Bool = relay207099
+  let relay207101: Bool = relay207100
+  let relay207102: Bool = relay207101
+  let relay207103: Bool = relay207102
+  let relay207104: Bool = relay207103
+  let relay207105: Bool = relay207104
+  let relay207106: Bool = relay207105
+  let relay207107: Bool = relay207106
+  let relay207108: Bool = relay207107
+  let relay207109: Bool = relay207108
+  let relay207110: Bool = relay207109
+  let relay207111: Bool = relay207110
+  let relay207112: Bool = relay207111
+  let relay207113: Bool = relay207112
+  let relay207114: Bool = relay207113
+  let relay207115: Bool = relay207114
+  let relay207116: Bool = relay207115
+  let relay207117: Bool = relay207116
+  let relay207118: Bool = relay207117
+  let relay207119: Bool = relay207118
+  let relay207120: Bool = relay207119
+  let relay207121: Bool = relay207120
+  let relay207122: Bool = relay207121
+  let relay207123: Bool = relay207122
+  let relay207124: Bool = relay207123
+  let relay207125: Bool = relay207124
+  let relay207126: Bool = relay207125
+  let relay207127: Bool = relay207126
+  let relay207128: Bool = relay207127
+  let relay207129: Bool = relay207128
+  let relay207130: Bool = relay207129
+  let relay207131: Bool = relay207130
+  let relay207132: Bool = relay207131
+  let relay207133: Bool = relay207132
+  let relay207134: Bool = relay207133
+  let relay207135: Bool = relay207134
+  let relay207136: Bool = relay207135
+  let relay207137: Bool = relay207136
+  let relay207138: Bool = relay207137
+  let relay207139: Bool = relay207138
+  let relay207140: Bool = relay207139
+  let relay207141: Bool = relay207140
+  let relay207142: Bool = relay207141
+  let relay207143: Bool = relay207142
+  let relay207144: Bool = relay207143
+  let relay207145: Bool = relay207144
+  let relay207146: Bool = relay207145
+  let relay207147: Bool = relay207146
+  let relay207148: Bool = relay207147
+  let relay207149: Bool = relay207148
+  let relay207150: Bool = relay207149
+  let relay207151: Bool = relay207150
+  let relay207152: Bool = relay207151
+  let relay207153: Bool = relay207152
+  let relay207154: Bool = relay207153
+  let relay207155: Bool = relay207154
+  let relay207156: Bool = relay207155
+  let relay207157: Bool = relay207156
+  let relay207158: Bool = relay207157
+  let relay207159: Bool = relay207158
+  let relay207160: Bool = relay207159
+  let relay207161: Bool = relay207160
+  let relay207162: Bool = relay207161
+  let relay207163: Bool = relay207162
+  let relay207164: Bool = relay207163
+  let relay207165: Bool = relay207164
+  let relay207166: Bool = relay207165
+  let relay207167: Bool = relay207166
+  let relay207168: Bool = relay207167
+  let relay207169: Bool = relay207168
+  let relay207170: Bool = relay207169
+  let relay207171: Bool = relay207170
+  let relay207172: Bool = relay207171
+  let relay207173: Bool = relay207172
+  let relay207174: Bool = relay207173
+  let relay207175: Bool = relay207174
+  let relay207176: Bool = relay207175
+  let relay207177: Bool = relay207176
+  let relay207178: Bool = relay207177
+  let relay207179: Bool = relay207178
+  let relay207180: Bool = relay207179
+  let relay207181: Bool = relay207180
+  let relay207182: Bool = relay207181
+  let relay207183: Bool = relay207182
+  let relay207184: Bool = relay207183
+  let relay207185: Bool = relay207184
+  let relay207186: Bool = relay207185
+  let relay207187: Bool = relay207186
+  let relay207188: Bool = relay207187
+  let relay207189: Bool = relay207188
+  let relay207190: Bool = relay207189
+  let relay207191: Bool = relay207190
+  let relay207192: Bool = relay207191
+  let relay207193: Bool = relay207192
+  let relay207194: Bool = relay207193
+  let relay207195: Bool = relay207194
+  let relay207196: Bool = relay207195
+  let relay207197: Bool = relay207196
+  let relay207198: Bool = relay207197
+  let relay207199: Bool = relay207198
+  let relay207200: Bool = relay207199
+  let relay207201: Bool = relay207200
+  let relay207202: Bool = relay207201
+  let relay207203: Bool = relay207202
+  let relay207204: Bool = relay207203
+  let relay207205: Bool = relay207204
+  let relay207206: Bool = relay207205
+  let relay207207: Bool = relay207206
+  if relay207207 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if policyReady {
+            if proofReady {
+              if sealReady {
+                return "proof_graph_sign_proof_graph_hybrid_built"
+              }
+              return "wave48_seal_missing"
+            }
+            return "wave48_proof_missing"
+          }
+          return "wave48_policy_missing"
+        }
+        return "wave48_state_missing"
+      }
+      return "wave48_shape_missing"
+    }
+    return "wave48_source_missing"
+  }
+  return "wave48_route_missing"
+}
+

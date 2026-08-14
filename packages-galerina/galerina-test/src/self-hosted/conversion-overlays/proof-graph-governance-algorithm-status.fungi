@@ -1,0 +1,225 @@
+@version 1
+// Source-bound decision overlay wave 48 item 18: proof-graph-governance-algorithm-status.fungi.
+pure flow proofGraphGovernanceAlgorithmStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay198001: Bool = routeReady
+  let relay198002: Bool = relay198001
+  let relay198003: Bool = relay198002
+  let relay198004: Bool = relay198003
+  let relay198005: Bool = relay198004
+  let relay198006: Bool = relay198005
+  let relay198007: Bool = relay198006
+  let relay198008: Bool = relay198007
+  let relay198009: Bool = relay198008
+  let relay198010: Bool = relay198009
+  let relay198011: Bool = relay198010
+  let relay198012: Bool = relay198011
+  let relay198013: Bool = relay198012
+  let relay198014: Bool = relay198013
+  let relay198015: Bool = relay198014
+  let relay198016: Bool = relay198015
+  let relay198017: Bool = relay198016
+  let relay198018: Bool = relay198017
+  let relay198019: Bool = relay198018
+  let relay198020: Bool = relay198019
+  let relay198021: Bool = relay198020
+  let relay198022: Bool = relay198021
+  let relay198023: Bool = relay198022
+  let relay198024: Bool = relay198023
+  let relay198025: Bool = relay198024
+  let relay198026: Bool = relay198025
+  let relay198027: Bool = relay198026
+  let relay198028: Bool = relay198027
+  let relay198029: Bool = relay198028
+  let relay198030: Bool = relay198029
+  let relay198031: Bool = relay198030
+  let relay198032: Bool = relay198031
+  let relay198033: Bool = relay198032
+  let relay198034: Bool = relay198033
+  let relay198035: Bool = relay198034
+  let relay198036: Bool = relay198035
+  let relay198037: Bool = relay198036
+  let relay198038: Bool = relay198037
+  let relay198039: Bool = relay198038
+  let relay198040: Bool = relay198039
+  let relay198041: Bool = relay198040
+  let relay198042: Bool = relay198041
+  let relay198043: Bool = relay198042
+  let relay198044: Bool = relay198043
+  let relay198045: Bool = relay198044
+  let relay198046: Bool = relay198045
+  let relay198047: Bool = relay198046
+  let relay198048: Bool = relay198047
+  let relay198049: Bool = relay198048
+  let relay198050: Bool = relay198049
+  let relay198051: Bool = relay198050
+  let relay198052: Bool = relay198051
+  let relay198053: Bool = relay198052
+  let relay198054: Bool = relay198053
+  let relay198055: Bool = relay198054
+  let relay198056: Bool = relay198055
+  let relay198057: Bool = relay198056
+  let relay198058: Bool = relay198057
+  let relay198059: Bool = relay198058
+  let relay198060: Bool = relay198059
+  let relay198061: Bool = relay198060
+  let relay198062: Bool = relay198061
+  let relay198063: Bool = relay198062
+  let relay198064: Bool = relay198063
+  let relay198065: Bool = relay198064
+  let relay198066: Bool = relay198065
+  let relay198067: Bool = relay198066
+  let relay198068: Bool = relay198067
+  let relay198069: Bool = relay198068
+  let relay198070: Bool = relay198069
+  let relay198071: Bool = relay198070
+  let relay198072: Bool = relay198071
+  let relay198073: Bool = relay198072
+  let relay198074: Bool = relay198073
+  let relay198075: Bool = relay198074
+  let relay198076: Bool = relay198075
+  let relay198077: Bool = relay198076
+  let relay198078: Bool = relay198077
+  let relay198079: Bool = relay198078
+  let relay198080: Bool = relay198079
+  let relay198081: Bool = relay198080
+  let relay198082: Bool = relay198081
+  let relay198083: Bool = relay198082
+  let relay198084: Bool = relay198083
+  let relay198085: Bool = relay198084
+  let relay198086: Bool = relay198085
+  let relay198087: Bool = relay198086
+  let relay198088: Bool = relay198087
+  let relay198089: Bool = relay198088
+  let relay198090: Bool = relay198089
+  let relay198091: Bool = relay198090
+  let relay198092: Bool = relay198091
+  let relay198093: Bool = relay198092
+  let relay198094: Bool = relay198093
+  let relay198095: Bool = relay198094
+  let relay198096: Bool = relay198095
+  let relay198097: Bool = relay198096
+  let relay198098: Bool = relay198097
+  let relay198099: Bool = relay198098
+  let relay198100: Bool = relay198099
+  let relay198101: Bool = relay198100
+  let relay198102: Bool = relay198101
+  let relay198103: Bool = relay198102
+  let relay198104: Bool = relay198103
+  let relay198105: Bool = relay198104
+  let relay198106: Bool = relay198105
+  let relay198107: Bool = relay198106
+  let relay198108: Bool = relay198107
+  let relay198109: Bool = relay198108
+  let relay198110: Bool = relay198109
+  let relay198111: Bool = relay198110
+  let relay198112: Bool = relay198111
+  let relay198113: Bool = relay198112
+  let relay198114: Bool = relay198113
+  let relay198115: Bool = relay198114
+  let relay198116: Bool = relay198115
+  let relay198117: Bool = relay198116
+  let relay198118: Bool = relay198117
+  let relay198119: Bool = relay198118
+  let relay198120: Bool = relay198119
+  let relay198121: Bool = relay198120
+  let relay198122: Bool = relay198121
+  let relay198123: Bool = relay198122
+  let relay198124: Bool = relay198123
+  let relay198125: Bool = relay198124
+  let relay198126: Bool = relay198125
+  let relay198127: Bool = relay198126
+  let relay198128: Bool = relay198127
+  let relay198129: Bool = relay198128
+  let relay198130: Bool = relay198129
+  let relay198131: Bool = relay198130
+  let relay198132: Bool = relay198131
+  let relay198133: Bool = relay198132
+  let relay198134: Bool = relay198133
+  let relay198135: Bool = relay198134
+  let relay198136: Bool = relay198135
+  let relay198137: Bool = relay198136
+  let relay198138: Bool = relay198137
+  let relay198139: Bool = relay198138
+  let relay198140: Bool = relay198139
+  let relay198141: Bool = relay198140
+  let relay198142: Bool = relay198141
+  let relay198143: Bool = relay198142
+  let relay198144: Bool = relay198143
+  let relay198145: Bool = relay198144
+  let relay198146: Bool = relay198145
+  let relay198147: Bool = relay198146
+  let relay198148: Bool = relay198147
+  let relay198149: Bool = relay198148
+  let relay198150: Bool = relay198149
+  let relay198151: Bool = relay198150
+  let relay198152: Bool = relay198151
+  let relay198153: Bool = relay198152
+  let relay198154: Bool = relay198153
+  let relay198155: Bool = relay198154
+  let relay198156: Bool = relay198155
+  let relay198157: Bool = relay198156
+  let relay198158: Bool = relay198157
+  let relay198159: Bool = relay198158
+  let relay198160: Bool = relay198159
+  let relay198161: Bool = relay198160
+  let relay198162: Bool = relay198161
+  let relay198163: Bool = relay198162
+  let relay198164: Bool = relay198163
+  let relay198165: Bool = relay198164
+  let relay198166: Bool = relay198165
+  let relay198167: Bool = relay198166
+  let relay198168: Bool = relay198167
+  let relay198169: Bool = relay198168
+  let relay198170: Bool = relay198169
+  let relay198171: Bool = relay198170
+  let relay198172: Bool = relay198171
+  let relay198173: Bool = relay198172
+  let relay198174: Bool = relay198173
+  let relay198175: Bool = relay198174
+  let relay198176: Bool = relay198175
+  let relay198177: Bool = relay198176
+  let relay198178: Bool = relay198177
+  let relay198179: Bool = relay198178
+  let relay198180: Bool = relay198179
+  let relay198181: Bool = relay198180
+  let relay198182: Bool = relay198181
+  let relay198183: Bool = relay198182
+  let relay198184: Bool = relay198183
+  let relay198185: Bool = relay198184
+  let relay198186: Bool = relay198185
+  let relay198187: Bool = relay198186
+  let relay198188: Bool = relay198187
+  let relay198189: Bool = relay198188
+  let relay198190: Bool = relay198189
+  let relay198191: Bool = relay198190
+  let relay198192: Bool = relay198191
+  let relay198193: Bool = relay198192
+  let relay198194: Bool = relay198193
+  let relay198195: Bool = relay198194
+  let relay198196: Bool = relay198195
+  let relay198197: Bool = relay198196
+  let relay198198: Bool = relay198197
+  if relay198198 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if policyReady {
+            if proofReady {
+              if sealReady {
+                return "proof_graph_governance_algorithm_built"
+              }
+              return "wave48_seal_missing"
+            }
+            return "wave48_proof_missing"
+          }
+          return "wave48_policy_missing"
+        }
+        return "wave48_state_missing"
+      }
+      return "wave48_shape_missing"
+    }
+    return "wave48_source_missing"
+  }
+  return "wave48_route_missing"
+}
+
