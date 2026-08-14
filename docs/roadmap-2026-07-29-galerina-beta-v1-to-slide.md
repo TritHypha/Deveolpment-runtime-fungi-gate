@@ -29,8 +29,12 @@ hermetic publisher contract **19/19**. The bounded close matrix passes queue
 **1,490/1,490**, package **100/201**, project **5/5**, graph **10,819 nodes /
 10,667 edges / zero violations**, semantic **3/3** with **977** tests, source
 inventory **149**, code index **975**, receipts **987/987**, Golden **11/11**,
-canonical **7/7 = 9,612**, and both leak audits clean. Final dual-index exact-head
-proof remains pending. Repository-wide closure stays `UNKNOWN`.
+canonical **7/7 = 9,612**, and both leak audits clean. Initial dual-index proof
+at clean closure head `baab4221` records Myco **6,665 files / 84,362 terms** and
+codebase-memory **61,761 nodes / 148,287 edges** against **61,545 / 148,122**
+expected, with one exact untruncated Slice-1047 `D` source hit in each index.
+Retain the exact-head repeat after this final record commit. Repository-wide
+closure stays `UNKNOWN`.
 
 ## Slices 948-997 - Substrate, snapshot, governance and Tower runtime
 

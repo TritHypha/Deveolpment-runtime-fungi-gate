@@ -171,7 +171,7 @@ superseded scopes or retirement credit.
 - [x] Run registered publishers by provenance layer followed by the governed
   generator-contract audit and historical bounded close matrix.
 - [x] Commit owner and dependent graph layers separately; do not push.
-- [ ] Refresh Myco and codebase-memory and independently verify exact final
+- [x] Refresh Myco and codebase-memory and independently verify exact final
   indexed build points plus one untruncated Slice-1047 query/snippet.
 
 ## Self-review

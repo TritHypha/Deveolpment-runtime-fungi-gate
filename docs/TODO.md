@@ -24,8 +24,11 @@ counts or open items that a newer section explicitly supersedes.
   zero violations**, semantic **3/3** with **977** tests, source inventory
   **149**, code index **975**, receipts **987/987**, Golden **11/11**,
   canonical **7/7 = 9,612**, and both leak audits clean.
-- [ ] Refresh Myco and codebase-memory at the final clean head with an exact,
-  untruncated Slice-1047 query/snippet.
+- [x] Refresh Myco at clean closure head `baab4221` to **6,665 files / 84,362
+  terms** with one exact, untruncated Slice-1047 `D` hit; rebuild
+  codebase-memory at the same exact head to **61,761 nodes / 148,287 edges**
+  against **61,545 / 148,122** expected, with the same exact source hit. Retain
+  the exact-head repeat after this final record commit.
 - [x] Preserve repository-wide closure as `UNKNOWN`; do not infer physical,
   production, release, signing, push or retirement authority.
 
