@@ -3895,5 +3895,9 @@ re-admission/VOK twin, consumer switch or retirement authority. Private skills
 advance locally to translation `24b414c` and authoring `ff1a093`; both remain
 private and unpushed. Receipt authoring, Tower typecheck, **515/515** package
 tests, **787/787** governed receipt audit and three independent bounded reviews
-are complete. Owner publication and dual-index closure remain pending.
+are complete. Authored evidence is committed at `f2626610`; registered owner
+outputs close through `b011a2fb`; both the hermetic generator contract and the
+bounded close matrix pass **19/19**. Graph integrity is **10,612 nodes / 10,462
+edges / zero violations**, canonical tests remain **9,612**, and both leak
+audits are clean. Final closure recording and dual-index proof remain pending.
 Repository-wide closure remains `UNKNOWN`.

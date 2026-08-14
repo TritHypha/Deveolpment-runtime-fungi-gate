@@ -21,8 +21,12 @@ counts or open items that a newer section explicitly supersedes.
   audit at **787/787**.
 - [x] Reconcile three independent reviews; all bounded re-reviews pass after
   correcting receipt-local skill dispositions.
-- [ ] Commit authored evidence, publish registered owners, run the bounded
-  close matrix and refresh both indexes at Slice 847.
+- [x] Commit authored evidence at `f2626610`, publish the registered owners in
+  three provenance layers through `b011a2fb`, and pass both the hermetic
+  generator contract and bounded close matrix **19/19**. Graph integrity is
+  **10,612 nodes / 10,462 edges / zero violations**; canonical tests remain
+  **9,612**; both leak audits are clean.
+- [ ] Commit the final closure record and refresh both indexes at Slice 847.
 
 ### Slices 748-797 Tower key rotation and lease - 2026-08-14
 

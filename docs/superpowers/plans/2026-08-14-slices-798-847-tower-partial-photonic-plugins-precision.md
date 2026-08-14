@@ -180,18 +180,20 @@ zero superseded scopes or retirement credit.
   exact receipt arithmetic.
 - [x] Reconcile three independent read-only reviews; correct every Critical or
   Important finding and obtain bounded PASS readback.
-- [ ] Commit authored evidence separately from owner-generated outputs.
+- [x] Commit authored evidence separately from owner-generated outputs at
+  `f2626610`.
 
 ## Task 5: Publish owner outputs and close the checkpoint
 
 **Files:**
 - Modify only outputs named by `governance/tooling-policy.json` publishers.
 
-- [ ] Run every registered publisher followed by its exact check to a fixed
+- [x] Run every registered publisher followed by its exact check to a fixed
   point; run `node scripts/audit-generator-contract.mjs --tier phase-close`.
-- [ ] Run the historical bounded 19-check close matrix; every member must exit
+- [x] Run the historical bounded 19-check close matrix; every member must exit
   zero with affirmative output and no SKIPPED state.
-- [ ] Commit owner outputs and any dependent graph-closure layer separately.
+- [x] Commit owner outputs and dependent graph layers separately at
+  `c646e0e3`, `8a1ea540` and `b011a2fb`.
 - [ ] Refresh Myco and run a bounded exact frontier-symbol query.
 - [ ] Refresh codebase-memory, require `status=indexed`, exact expected node and
   edge counts, and `indexed_head_sha` equal to the committed closure HEAD;

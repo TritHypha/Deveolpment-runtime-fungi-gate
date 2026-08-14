@@ -1409,4 +1409,10 @@ tests and **787/787** governed conversion receipts with 29 frozen legacy
 reports. These checks are regression and receipt-shape evidence only; they do
 not supply missing physical authority or retirement proof. Three independent
 bounded reviews pass after receipt-local skill dispositions were corrected;
-owner publication and dual-index closure remain pending.
+authored evidence is committed at `f2626610`. Registered owner outputs are
+committed in separate provenance layers at `c646e0e3`, `8a1ea540` and
+`b011a2fb`. The hermetic generator contract and historical bounded close
+matrix both pass **19/19**: graph integrity is **10,612 nodes / 10,462 edges /
+zero violations**, canonical tests remain **9,612**, governed receipts remain
+**787/787**, and both leak audits are clean. Final closure recording and
+dual-index proof remain pending.
