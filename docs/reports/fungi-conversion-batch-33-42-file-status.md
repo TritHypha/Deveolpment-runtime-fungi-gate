@@ -1401,9 +1401,10 @@ Receipt authoring is complete. Fresh root verification passes Tower no-emit
 typecheck, **515/515** package tests and **837/837** governed receipt-shape
 checks with 29 frozen legacy reports. Three independent bounded reviews pass
 after tightening live-table freeze/copy authority, JavaScript `null` to Fungi
-`Option` mapping, and arbitrary signature-String parity. These checks remain
-regression and receipt-shape evidence only; owner publication and dual-index
-closure remain pending. Repository-wide closure remains `UNKNOWN`.
+`Option` mapping, and arbitrary signature-String parity. Authored evidence is
+committed separately at `1993f4f9`. These checks remain regression and
+receipt-shape evidence only; owner publication and dual-index closure remain
+pending. Repository-wide closure remains `UNKNOWN`.
 
 ## Slices 798-847 - Tower partial return, photonic, plugins and precision
 

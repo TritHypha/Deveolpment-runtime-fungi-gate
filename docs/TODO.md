@@ -19,8 +19,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Reconcile three independent reviews; all bounded re-reviews pass after
   tightening live-table freeze/copy authority, JavaScript `null` to Fungi
   `Option` mapping, and arbitrary signature-String parity.
-- [ ] Commit authored evidence, publish registered owners, run the bounded close
-  matrix and refresh both indexes.
+- [x] Commit authored evidence separately at `1993f4f9`.
+- [ ] Publish registered owners, run the bounded close matrix and refresh both
+  indexes.
 
 ### Slices 798-847 Tower partial return, photonic, plugins and precision - 2026-08-14
 

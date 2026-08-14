@@ -3894,8 +3894,9 @@ Fungi/GIR/physical `.slide`/independent re-admission/VOK twin, consumer switch
 or retirement exists. The 50 receipts and common evidence manifest are
 authored; fresh Tower typecheck, **515/515** package tests and **837/837**
 governed receipt audit pass. Three independent bounded reviews pass after
-receipt-local parity corrections. Owner publication and dual-index closure
-remain pending. Repository-wide closure remains `UNKNOWN`.
+receipt-local parity corrections, and authored evidence is committed separately
+at `1993f4f9`. Owner publication and dual-index closure remain pending.
+Repository-wide closure remains `UNKNOWN`.
 
 ## Fungi conversion checkpoint planned through Slice 847 - 2026-08-14
 

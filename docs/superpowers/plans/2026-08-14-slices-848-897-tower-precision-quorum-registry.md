@@ -169,7 +169,8 @@ zero superseded scopes or retirement credit.
   exact receipt arithmetic.
 - [x] Reconcile three independent read-only reviews and correct every Critical
   or Important finding before commit; all bounded re-reviews pass.
-- [ ] Commit authored evidence separately from generated owner outputs.
+- [x] Commit authored evidence separately from generated owner outputs at
+  `1993f4f9`.
 
 ## Task 5: Publish owners and close the checkpoint
 
