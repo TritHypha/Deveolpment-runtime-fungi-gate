@@ -87,7 +87,12 @@ freshness `UNKNOWN` until the Slice-747 refresh.
 | 746 | `key-rotation.ts#Transition` |
 | 747 | `key-rotation.ts#isWeakRingKey` |
 
-Planned arithmetic: **14 NO_RUNTIME_BEHAVIOR + 33 BLOCKED + 3 CANDIDATE**.
+Planned arithmetic: **14 NO_RUNTIME_BEHAVIOR + 34 BLOCKED + 2 CANDIDATE**.
+
+`isWeakRingKey` is `BLOCKED`, not a leaf candidate: its complete source domain
+is a live `Uint8Array | undefined` view with offset/length, mutation,
+detachment/resize and possible shared-buffer behavior. An inert byte-array copy
+would narrow that observable host contract until an exact border is approved.
 
 ## Tasks
 

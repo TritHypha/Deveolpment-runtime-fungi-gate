@@ -3819,13 +3819,13 @@ remains `UNKNOWN`.
 
 The next 50 unique scopes finish GateCache, cover Tower's complete TPL
 GovernanceEnforcer and HybridInferenceEngine surfaces, and enter key rotation
-through `isWeakRingKey`. Planned arithmetic is 14 erased declarations, 33
-blocked runtime scopes and three leaf candidates. Prior bridge re-export and
+through `isWeakRingKey`. Planned arithmetic is 14 erased declarations, 34
+blocked runtime scopes and two integer leaf candidates. Prior bridge re-export and
 key-rotation credits are retained rather than duplicated.
 
 The decisive borders are process-wide mutable cache and policy state,
 caller-mintable audit/schema authority, exact host crypto, active typed arrays,
 bridge and photonic admission, clock/audit effects, and asynchronous lifecycle
-ordering. The three leaf candidates remain non-authorizing until their exact
+ordering. The two leaf candidates remain non-authorizing until their exact
 consumer and Fungi-to-physical evidence chains exist. Repository-wide closure
 remains `UNKNOWN`.

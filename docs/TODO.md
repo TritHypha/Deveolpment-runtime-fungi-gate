@@ -7,8 +7,8 @@ counts or open items that a newer section explicitly supersedes.
 ### Slices 698-747 Tower cached policy, TPL enforcement and hybrid engine - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes after refusing bridge re-export and
-  earlier key-rotation duplicate credit: 14 erased declarations, 33 blocked
-  runtime scopes and three bounded leaf candidates.
+  earlier key-rotation duplicate credit: 14 erased declarations, 34 blocked
+  runtime scopes and two bounded integer leaf candidates.
 - [ ] Adjudicate the process-wide GateCache singleton, TPL policy/enforcer,
   complete HybridInferenceEngine surface and key-rotation prefix through
   `isWeakRingKey` against exact callers, hostile vectors and physical evidence.

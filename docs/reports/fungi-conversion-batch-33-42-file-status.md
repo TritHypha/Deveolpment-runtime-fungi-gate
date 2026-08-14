@@ -1128,14 +1128,15 @@ edges with `stale:false`. Repository-wide closure stays `UNKNOWN`.
 The next 50 unique source-order scopes finish GateCache, cover the complete
 GovernanceEnforcer and HybridInferenceEngine surfaces, and enter key rotation
 through `isWeakRingKey`. Exact planned arithmetic is 14 erased declarations,
-33 blocked runtime scopes and three bounded leaf candidates. Bridge re-export
+34 blocked runtime scopes and two bounded integer leaf candidates. Bridge re-export
 shims retain Slices 165-181 credit and are not renumbered; the prior
 `isWellFormedCommit` Slice 47 remains a future duplicate exclusion.
 
 No candidate authoring or retirement is authorized by this plan. The two exact
-integer leaves and bounded byte predicate still require candidate-specific
+integer leaves still require candidate-specific
 Fungi, GIR, physical `.slide`, independent re-admission, VOK and consumer
-switch evidence. Process-wide mutable cache/policy singletons, erased private
+switch evidence. The live `Uint8Array` view predicate remains blocked pending
+an exact snapshot or full live-view ABI. Process-wide mutable cache/policy singletons, erased private
 Set state, caller-mintable audit/schema authority, host crypto, active typed
 arrays, bridge/clock/audit effects and asynchronous lifecycle ordering remain
 fail-closed blockers. Repository-wide closure stays `UNKNOWN`.
