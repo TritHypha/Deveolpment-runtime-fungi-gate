@@ -130,6 +130,7 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - [x] Run focused Tower checks and the receipt audit: Tower typecheck plus 515/515 and 637/637 governed receipts.
 - [x] Resolve three independent read-only reviews and record the final PASS.
 - [x] Commit authored evidence separately from registered owner outputs.
-- [ ] Run all graph/owner publishers and the bounded 50-slice close matrix.
+- [x] Run all 19 graph/owner publishers and the hermetic generator-contract
+  matrix; retain the final clean-head 19-check readback for the provenance step.
 - [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
 - [ ] Keep repository closure `UNKNOWN` and continue with Slice 698.

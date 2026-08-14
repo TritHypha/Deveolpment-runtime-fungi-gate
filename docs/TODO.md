@@ -28,7 +28,13 @@ counts or open items that a newer section explicitly supersedes.
   **637/637** governed receipts.
 - [x] Commit the authored 50-receipt evidence separately.
 - [x] Reconcile three independent read-only reviews with final PASS.
-- [ ] Commit all registered owner outputs.
+- [x] Publish all 19 registered owners, pass the hermetic generator-contract
+  matrix **19/19**, and refresh the bounded graph/owner outputs: queue
+  **1,490/1,490**, package **100/201**, project **5/5**, KB **4/4**, graph
+  **10,459 nodes / 10,311 edges / zero violations**, semantic **3/3**, source
+  inventory **149**, code index **975**, receipts **637/637**, Golden **11/11**
+  and canonical **7/7**. Final leak readback remains part of the clean-head
+  matrix; repository-wide closure is not inferred.
 - [ ] Refresh Myco and codebase-memory at the final committed Slice 697 head and
   independently prove both indexed build points. Repository closure stays
   `UNKNOWN`.

@@ -1108,9 +1108,14 @@ bytes and non-aliasing bounded state.
 Private translation `e7b3af182261eb17b8362143781628290a5d1792` and
 authoring `9c74a4774435e3428b5d3bff34725f65de41f844` bind exact
 mode/callback Verdict validation, source-order selector/callback precedence and
-one-snapshot immutable memoization authority. Both remain private and unpushed. Fresh Tower no-emit typecheck plus
-**515/515** tests and **637/637** governed receipts pass; these are regression
-and receipt-shape evidence only. Three independent reviews pass after pinning
-source-exact contract/callback/mode order and conservative classJoin
-threadability. Owner publication and dual-index refresh are the remaining
-wave-close operations; repository-wide closure remains `UNKNOWN`.
+one-snapshot immutable memoization authority. Both remain private and unpushed.
+Fresh Tower no-emit typecheck plus **515/515** tests and **637/637** governed
+receipts pass; these are regression and receipt-shape evidence only. Three
+independent reviews pass after pinning source-exact contract/callback/mode order
+and conservative classJoin threadability. All 19 registered publishers and the
+hermetic generator-contract matrix pass **19/19**. Current bounded owners report
+queue **1,490/1,490**, package **100/201**, project **5/5**, KB **4/4**, graph
+**10,459 nodes / 10,311 edges / zero violations**, semantic **3/3**, source
+inventory **149**, code index **975**, receipts **637/637**, Golden **11/11**
+and canonical **7/7**. Final clean-head leak readback and dual-index refresh
+remain; repository-wide closure stays `UNKNOWN`.
