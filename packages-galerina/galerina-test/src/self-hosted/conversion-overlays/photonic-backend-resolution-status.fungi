@@ -1,0 +1,10 @@
+@version 1
+/// Backend-only projection from photonic-switch#resolvePhotonicBackend.
+pure flow photonicBackendResolutionStatusCore(decisionHardware: Bool, backendUsable: Bool) -> String {
+  if backendUsable {
+    let hardware: Bool = decisionHardware
+    if hardware { return "hardware_backend" }
+    return "emulator_backend"
+  }
+  return "backend_refused"
+}

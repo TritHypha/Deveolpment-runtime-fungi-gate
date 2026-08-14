@@ -1,0 +1,10 @@
+@version 1
+/// ADC quantization-step readiness after finite-number admission.
+pure flow photonicQuantStepStatusCore(rangeFinite: Bool, quantBitsPositive: Bool) -> String {
+  if rangeFinite {
+    let supportedBits: Bool = quantBitsPositive
+    if supportedBits { return "finite_step" }
+    return "unity_divisor"
+  }
+  return "range_refused"
+}

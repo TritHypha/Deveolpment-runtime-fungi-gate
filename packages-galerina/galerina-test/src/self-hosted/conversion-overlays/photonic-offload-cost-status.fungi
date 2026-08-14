@@ -1,0 +1,22 @@
+@version 1
+/// Photonic cost-component summary for partition-decider#Tphotonic.
+pure flow photonicOffloadCostStatusCore(dimensionPositive: Bool, votesPositive: Bool, conversionIncluded: Bool, fixedIncluded: Bool) -> String {
+  if fixedIncluded {
+    if dimensionPositive {
+      if votesPositive {
+        if conversionIncluded { return "voted_verified_cost" }
+        return "conversion_missing"
+      }
+      return "votes_refused"
+    }
+    return "dimension_refused"
+  }
+  if dimensionPositive {
+    if votesPositive {
+      if conversionIncluded { return "fixed_missing" }
+      return "conversion_missing"
+    }
+    return "votes_refused"
+  }
+  return "dimension_refused"
+}

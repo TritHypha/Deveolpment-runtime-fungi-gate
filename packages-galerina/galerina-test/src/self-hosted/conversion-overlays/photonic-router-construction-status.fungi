@@ -1,0 +1,10 @@
+@version 1
+/// Router closure construction status for runner#createPhotonicRouterPort.
+pure flow photonicRouterConstructionStatusCore(bridgeConstructed: Bool, deciderPresent: Bool) -> String {
+  if bridgeConstructed {
+    if deciderPresent { return "router_ready" }
+    return "decider_refused"
+  }
+  if deciderPresent { return "bridge_refused" }
+  return "bridge_refused"
+}

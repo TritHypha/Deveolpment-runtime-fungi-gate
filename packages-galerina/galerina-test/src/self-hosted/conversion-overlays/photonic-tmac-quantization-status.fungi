@@ -1,0 +1,13 @@
+@version 1
+/// Analog T-MAC stage summary after active host computations.
+pure flow photonicTmacQuantizationStatusCore(zeroWeight: Bool, gainReady: Bool, readoutAdded: Bool, quantBitsPositive: Bool) -> String {
+  if zeroWeight { return "zero_skipped" }
+  if gainReady {
+    if readoutAdded {
+      if quantBitsPositive { return "quantized_scaled" }
+      return "unquantized_scaled"
+    }
+    return "readout_missing"
+  }
+  return "gain_refused"
+}

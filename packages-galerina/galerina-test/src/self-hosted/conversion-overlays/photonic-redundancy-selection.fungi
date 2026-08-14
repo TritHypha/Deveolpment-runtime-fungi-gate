@@ -1,0 +1,11 @@
+@version 1
+/// Voting redundancy branch after closed-form host computation.
+pure flow photonicRedundancySelectionCore(quantFloorExceeds: Bool, varianceWithin: Bool, targetPositive: Bool) -> String {
+  if targetPositive {
+    if quantFloorExceeds { return "infeasible_floor" }
+    let randomVarianceWithin: Bool = varianceWithin
+    if randomVarianceWithin { return "single_read" }
+    return "ceil_votes"
+  }
+  return "target_refused"
+}

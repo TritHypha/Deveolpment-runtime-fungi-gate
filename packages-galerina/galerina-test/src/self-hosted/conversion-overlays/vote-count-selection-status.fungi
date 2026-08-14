@@ -1,0 +1,15 @@
+@version 1
+/// Caller-independent vote-bound selection for emulator#clampVotes.
+pure flow voteCountSelectionStatusCore(provided: Bool, finite: Bool, belowOne: Bool, aboveMaximum: Bool, fallbackValid: Bool) -> String {
+  if provided {
+    if finite {
+      if belowOne { return "minimum_clamped" }
+      if aboveMaximum { return "max_clamped" }
+      return "requested_in_range"
+    }
+    if fallbackValid { return "nonfinite_fallback" }
+    return "unit_fallback"
+  }
+  if fallbackValid { return "missing_fallback" }
+  return "missing_unit"
+}

@@ -1,0 +1,7 @@
+@version 1
+/// Unit-interval clamp position for emulator#clamp01.
+pure flow photonicClampPositionCore(belowZero: Bool, aboveOne: Bool) -> Int {
+  if belowZero { return -1 }
+  if aboveOne { return 1 }
+  return 0
+}

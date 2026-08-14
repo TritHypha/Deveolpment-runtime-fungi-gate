@@ -1,0 +1,7 @@
+@version 1
+/// Digital cubic-cost domain status for partition-decider#Tdigital.
+pure flow photonicDigitalCostStatusCore(dimensionPositive: Bool) -> String {
+  let domainReady: Bool = dimensionPositive
+  if domainReady { return "cubic_cost" }
+  return "dimension_refused"
+}

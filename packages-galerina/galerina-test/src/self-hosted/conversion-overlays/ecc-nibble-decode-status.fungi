@@ -1,0 +1,13 @@
+@version 1
+/// Fail-closed SEC-DED decision after the numeric border.
+pure flow eccNibbleDecodeStatusCore(inputValid: Bool, oddParity: Bool, syndromePresent: Bool) -> String {
+  if inputValid {
+    if oddParity {
+      if syndromePresent { return "corrected_data_bit" }
+      return "corrected_parity_bit"
+    }
+    if syndromePresent { return "uncorrectable" }
+    return "ok"
+  }
+  return "uncorrectable_input"
+}

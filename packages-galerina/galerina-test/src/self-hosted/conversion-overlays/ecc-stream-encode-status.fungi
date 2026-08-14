@@ -1,0 +1,9 @@
+@version 1
+/// Byte-to-codeword expansion status for digital-ecc#eccEncode.
+pure flow eccStreamEncodeStatusCore(dataPresent: Bool, capacityReady: Bool) -> String {
+  if capacityReady {
+    if dataPresent { return "expanded" }
+    return "empty_expansion"
+  }
+  return "capacity_refused"
+}

@@ -1,0 +1,13 @@
+@version 1
+/// Trusted-band selection for runner#effectiveTolerance.
+pure flow photonicEffectiveToleranceStatusCore(callerValid: Bool, callerBelowMaximum: Bool, maximumBandValid: Bool) -> String {
+  if maximumBandValid {
+    if callerValid {
+      let narrower: Bool = callerBelowMaximum
+      if narrower { return "caller_band" }
+      return "maximum_clamp"
+    }
+    return "maximum_default"
+  }
+  return "maximum_refused"
+}

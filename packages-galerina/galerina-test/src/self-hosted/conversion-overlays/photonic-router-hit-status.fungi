@@ -1,0 +1,14 @@
+@version 1
+/// Route hit/decline fold after photonic re-verification.
+pure flow photonicRouterHitStatusCore(decisionPhotonic: Bool, valueFinite: Bool, withinTolerance: Bool) -> String {
+  if decisionPhotonic {
+    let executedValue: Bool = valueFinite
+    if executedValue {
+      let verifiedValue: Bool = withinTolerance
+      if verifiedValue { return "hit" }
+      return "decline_tolerance"
+    }
+    return "decline_value"
+  }
+  return "decline_decision"
+}

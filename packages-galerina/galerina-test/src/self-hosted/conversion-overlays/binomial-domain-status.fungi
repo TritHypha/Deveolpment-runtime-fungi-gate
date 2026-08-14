@@ -1,0 +1,8 @@
+@version 1
+/// Binomial-domain and symmetry classification for emulator#binom.
+pure flow binomialDomainStatusCore(kNegative: Bool, kAboveN: Bool, symmetricReduction: Bool) -> String {
+  if kNegative { return "zero_negative" }
+  if kAboveN { return "zero_above_n" }
+  if symmetricReduction { return "computed" }
+  return "computed_direct"
+}

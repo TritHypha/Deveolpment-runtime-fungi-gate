@@ -1,0 +1,10 @@
+@version 1
+/// Ternary action selection after arithmetic-trit admission.
+pure flow photonicTmacExactActionCore(weightPositive: Bool, weightNegative: Bool, activationPresent: Bool) -> String {
+  if activationPresent {
+    if weightPositive { return "add" }
+    if weightNegative { return "subtract" }
+    return "skip_zero"
+  }
+  return "activation_refused"
+}

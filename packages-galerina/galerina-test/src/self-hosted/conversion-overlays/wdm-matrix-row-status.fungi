@@ -1,0 +1,14 @@
+@version 1
+/// Passive-coupler row construction for emulator#wdmCrosstalkMatrix.
+pure flow wdmMatrixRowStatusCore(singleChannel: Bool, leftNeighbor: Bool, rightNeighbor: Bool, leakPositive: Bool) -> String {
+  if singleChannel { return "identity_row" }
+  if leakPositive {
+    if leftNeighbor {
+      if rightNeighbor { return "two_neighbor_split" }
+      return "left_split"
+    }
+    if rightNeighbor { return "right_split" }
+    return "no_path_identity"
+  }
+  return "zero_leak"
+}

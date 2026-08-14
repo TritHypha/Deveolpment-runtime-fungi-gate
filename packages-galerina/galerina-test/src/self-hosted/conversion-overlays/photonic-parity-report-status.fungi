@@ -1,0 +1,15 @@
+@version 1
+/// Corpus conformance summary for parity-conformance#proveBifurcatedParity.
+pure flow photonicParityReportStatusCore(everyConformant: Bool, divergencesZero: Bool, outOfToleranceZero: Bool, residualsPresent: Bool) -> String {
+  if divergencesZero {
+    if outOfToleranceZero {
+      if everyConformant {
+        if residualsPresent { return "all_conformant_measured" }
+        return "all_conformant_empty"
+      }
+      return "count_mismatch"
+    }
+    return "out_of_tolerance"
+  }
+  return "decision_divergence"
+}

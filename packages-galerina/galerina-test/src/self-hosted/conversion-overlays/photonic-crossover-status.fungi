@@ -1,0 +1,11 @@
+@version 1
+/// Closed-form crossover readiness after finite-float admission.
+pure flow photonicCrossoverStatusCore(votesPositive: Bool, digitalRatePositive: Bool) -> String {
+  if digitalRatePositive {
+    let numeratorReady: Bool = votesPositive
+    if numeratorReady { return "finite_threshold" }
+    return "votes_refused"
+  }
+  if votesPositive { return "rate_refused" }
+  return "votes_refused"
+}

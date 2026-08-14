@@ -1,0 +1,11 @@
+@version 1
+/// Bounded-vote aggregation status for emulator#tmacVoted.
+pure flow photonicTmacVoteStatusCore(votesBounded: Bool, sampleCountPositive: Bool) -> String {
+  let canIterate: Bool = votesBounded
+  if canIterate {
+    let canDivide: Bool = sampleCountPositive
+    if canDivide { return "mean" }
+    return "empty_refused"
+  }
+  return "vote_bound_refused"
+}

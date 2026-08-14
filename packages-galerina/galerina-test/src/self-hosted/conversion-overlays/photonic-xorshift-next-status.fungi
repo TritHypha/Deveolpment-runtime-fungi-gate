@@ -1,0 +1,18 @@
+@version 1
+/// Stateful xorshift step profile after the active-object boundary.
+pure flow photonicXorshiftNextStatusCore(seedNonzero: Bool, xorshiftsApplied: Bool, stateWrapped: Bool) -> String {
+  if stateWrapped {
+    let admittedSeed: Bool = seedNonzero
+    if admittedSeed {
+      let transitionsComplete: Bool = xorshiftsApplied
+      if transitionsComplete { return "uniform" }
+      return "transition_refused"
+    }
+    return "seed_fallback_required"
+  }
+  if seedNonzero {
+    if xorshiftsApplied { return "wrap_refused" }
+    return "transition_refused"
+  }
+  return "seed_fallback_required"
+}

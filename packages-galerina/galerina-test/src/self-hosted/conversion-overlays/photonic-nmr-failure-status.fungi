@@ -1,0 +1,13 @@
+@version 1
+/// Majority-tail accumulation status for emulator#nmrFailureProbability.
+pure flow photonicNmrFailureStatusCore(majorityThreshold: Bool, termsAccumulated: Bool, withinUnit: Bool) -> String {
+  if majorityThreshold {
+    let accumulated: Bool = termsAccumulated
+    if accumulated {
+      if withinUnit { return "bounded_probability" }
+      return "clamped_probability"
+    }
+    return "no_terms"
+  }
+  return "threshold_refused"
+}

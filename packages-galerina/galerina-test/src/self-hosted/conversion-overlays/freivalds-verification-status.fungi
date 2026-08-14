@@ -1,0 +1,13 @@
+@version 1
+/// Probe-result fold for freivalds#freivaldsVerify.
+pure flow freivaldsVerificationStatusCore(probesPositive: Bool, allWithinTolerance: Bool, rngBounded: Bool) -> Bool {
+  if probesPositive {
+    if rngBounded {
+      let comparisonsPass: Bool = allWithinTolerance
+      if comparisonsPass { return true }
+      return false
+    }
+    return false
+  }
+  return true
+}

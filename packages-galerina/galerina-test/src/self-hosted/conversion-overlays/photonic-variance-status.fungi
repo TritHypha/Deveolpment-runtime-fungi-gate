@@ -1,0 +1,14 @@
+@version 1
+/// Closed-form variance component summary after host-float capture.
+pure flow photonicVarianceStatusCore(activeTerms: Bool, phaseNoise: Bool, readoutNoise: Bool) -> String {
+  if activeTerms {
+    if phaseNoise {
+      if readoutNoise { return "phase_and_readout" }
+      return "phase_only"
+    }
+    if readoutNoise { return "readout_only_active" }
+    return "zero_active_variance"
+  }
+  if readoutNoise { return "readout_only" }
+  return "zero_variance"
+}

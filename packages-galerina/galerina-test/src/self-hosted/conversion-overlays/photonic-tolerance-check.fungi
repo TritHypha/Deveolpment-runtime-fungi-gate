@@ -1,0 +1,13 @@
+@version 1
+/// Fail-closed scalar tolerance fold after host-float checks.
+pure flow photonicToleranceCheckCore(valuesFinite: Bool, residualWithin: Bool, spanFloorApplied: Bool) -> Bool {
+  let finite: Bool = valuesFinite
+  if finite {
+    if spanFloorApplied {
+      let accepted: Bool = residualWithin
+      return accepted
+    }
+    return false
+  }
+  return false
+}

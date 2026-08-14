@@ -1,0 +1,15 @@
+@version 1
+/// First-failure block result for digital-ecc#eccDecode.
+pure flow eccStreamDecodeStatusCore(evenLength: Bool, lowOk: Bool, highOk: Bool, correctionsPresent: Bool) -> String {
+  if evenLength {
+    if lowOk {
+      if highOk {
+        if correctionsPresent { return "ok_corrected" }
+        return "ok_clean"
+      }
+      return "uncorrectable_high"
+    }
+    return "uncorrectable_low"
+  }
+  return "odd_length"
+}

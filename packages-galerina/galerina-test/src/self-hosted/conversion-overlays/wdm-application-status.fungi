@@ -1,0 +1,14 @@
+@version 1
+/// Matrix-vector application readiness for emulator#applyWdm.
+pure flow wdmApplicationStatusCore(matrixReady: Bool, vectorReady: Bool, dimensionsMatch: Bool) -> String {
+  let admittedMatrix: Bool = matrixReady
+  let admittedVector: Bool = vectorReady
+  if admittedMatrix {
+    if admittedVector {
+      if dimensionsMatch { return "applied" }
+      return "dimension_mismatch"
+    }
+    return "vector_refused"
+  }
+  return "matrix_refused"
+}

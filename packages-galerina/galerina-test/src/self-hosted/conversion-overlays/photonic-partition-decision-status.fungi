@@ -1,0 +1,18 @@
+@version 1
+/// Ordered fail-closed partition decision after hostile-record capture.
+pure flow photonicPartitionDecisionStatusCore(eligible: Bool, inputValid: Bool, laneFeasible: Bool, votesValid: Bool, photonicWins: Bool) -> String {
+  if eligible {
+    if inputValid {
+      if laneFeasible {
+        if votesValid {
+          if photonicWins { return "photonic_net_win" }
+          return "digital_no_win"
+        }
+        return "digital_vote_refusal"
+      }
+      return "digital_lane_infeasible"
+    }
+    return "digital_input_refusal"
+  }
+  return "digital_ineligible"
+}

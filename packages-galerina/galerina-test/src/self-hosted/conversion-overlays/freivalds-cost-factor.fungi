@@ -1,0 +1,9 @@
+@version 1
+/// Cost-factor selector for freivalds#freivaldsVerifyCost.
+pure flow freivaldsCostFactorCore(dimensionPositive: Bool, probeCountPositive: Bool) -> Int {
+  if dimensionPositive {
+    if probeCountPositive { return 3 }
+    return 0
+  }
+  return -1
+}

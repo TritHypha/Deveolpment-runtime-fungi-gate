@@ -1,0 +1,10 @@
+@version 1
+/// Data-position assembly status for digital-ecc#extractData.
+pure flow eccDataExtractionStatusCore(positionsCaptured: Bool, nibbleReady: Bool) -> String {
+  let selectedPositions: Bool = positionsCaptured
+  if selectedPositions {
+    if nibbleReady { return "nibble" }
+    return "assembly_incomplete"
+  }
+  return "positions_missing"
+}

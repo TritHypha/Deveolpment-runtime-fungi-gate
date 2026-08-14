@@ -1,0 +1,11 @@
+@version 1
+/// Placeholder digest-shape status for photonic-bridge#HEX64.
+pure flow photonicHexRepeatStatusCore(characterPresent: Bool, repeatCountCorrect: Bool) -> String {
+  let capturedCharacter: Bool = characterPresent
+  let expectedWidth: Bool = repeatCountCorrect
+  if capturedCharacter {
+    if expectedWidth { return "placeholder_64" }
+    return "wrong_width"
+  }
+  return "character_missing"
+}

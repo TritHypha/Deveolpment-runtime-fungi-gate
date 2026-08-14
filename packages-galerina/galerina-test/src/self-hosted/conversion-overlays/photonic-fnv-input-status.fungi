@@ -1,0 +1,15 @@
+@version 1
+/// UTF-16/u32 execution profile for photonic-bridge#fnv1a.
+pure flow photonicFnvInputStatusCore(utf16Captured: Bool, loopBounded: Bool, wrappedU32: Bool) -> String {
+  let textReady: Bool = utf16Captured
+  if textReady {
+    let progressReady: Bool = loopBounded
+    if progressReady {
+      let arithmeticReady: Bool = wrappedU32
+      if arithmeticReady { return "u32_hash" }
+      return "wrap_profile_missing"
+    }
+    return "loop_unbounded"
+  }
+  return "text_refused"
+}

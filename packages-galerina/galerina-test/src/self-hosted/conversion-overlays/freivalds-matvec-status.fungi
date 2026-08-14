@@ -1,0 +1,18 @@
+@version 1
+/// Captured matrix-vector readiness for freivalds#matvec.
+pure flow freivaldsMatvecStatusCore(matrixSquare: Bool, vectorLengthMatch: Bool, rowsComplete: Bool) -> String {
+  if rowsComplete {
+    if matrixSquare {
+      let vectorReady: Bool = vectorLengthMatch
+      if vectorReady { return "vector_ready" }
+      return "vector_mismatch"
+    }
+    return "matrix_refused"
+  }
+  if matrixSquare {
+    let vectorReady: Bool = vectorLengthMatch
+    if vectorReady { return "row_refused" }
+    return "vector_mismatch"
+  }
+  return "matrix_refused"
+}

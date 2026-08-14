@@ -1,0 +1,9 @@
+@version 1
+/// Post-border bit selection for digital-ecc#bit.
+pure flow eccBitExtractionCore(addressValid: Bool, selectedOne: Bool) -> Int {
+  if addressValid {
+    if selectedOne { return 1 }
+    return 0
+  }
+  return 0
+}

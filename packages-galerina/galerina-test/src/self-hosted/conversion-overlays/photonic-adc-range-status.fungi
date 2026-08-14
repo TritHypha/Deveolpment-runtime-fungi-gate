@@ -1,0 +1,6 @@
+@version 1
+/// Dynamic-range branch after numeric admission for emulator#adcRange.
+pure flow photonicAdcRangeStatusCore(dimensionPositive: Bool) -> String {
+  if dimensionPositive { return "scaled_range" }
+  return "unit_floor_range"
+}

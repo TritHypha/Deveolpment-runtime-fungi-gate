@@ -1,0 +1,11 @@
+@version 1
+/// Bifurcated admit/reject and numeric-parity summary.
+pure flow photonicParityConformanceStatusCore(binaryRejected: Bool, photonicRejected: Bool, withinTolerance: Bool) -> String {
+  if binaryRejected {
+    if photonicRejected { return "both_rejected" }
+    return "binary_only_rejected"
+  }
+  if photonicRejected { return "photonic_only_rejected" }
+  if withinTolerance { return "both_admitted_within_tolerance" }
+  return "both_admitted_out_of_tolerance"
+}

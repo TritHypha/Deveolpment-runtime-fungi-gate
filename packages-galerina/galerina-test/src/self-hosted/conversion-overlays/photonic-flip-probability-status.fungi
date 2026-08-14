@@ -1,0 +1,8 @@
+@version 1
+/// Clamp result for the captured flip-probability sum.
+pure flow photonicFlipProbabilityStatusCore(rawBelowZero: Bool, rawAboveOne: Bool) -> String {
+  if rawBelowZero { return "clamped_zero" }
+  let high: Bool = rawAboveOne
+  if high { return "clamped_one" }
+  return "within_unit"
+}

@@ -1,0 +1,16 @@
+@version 1
+/// Fail-closed backend selection after exact option capture.
+pure flow photonicBackendSelectionStatusCore(modeHardware: Bool, hardwarePresent: Bool, nativeAvailable: Bool, attested: Bool) -> String {
+  if hardwarePresent {
+    if modeHardware {
+      if nativeAvailable {
+        if attested { return "hardware" }
+        return "emulator_unattested"
+      }
+      return "emulator_unavailable"
+    }
+    return "emulator_mode"
+  }
+  if modeHardware { return "emulator_missing" }
+  return "emulator_mode"
+}

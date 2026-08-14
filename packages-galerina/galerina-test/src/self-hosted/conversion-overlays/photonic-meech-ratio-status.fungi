@@ -1,0 +1,15 @@
+@version 1
+/// Ideal/realized ratio evidence summary for partition-decider#meechRealizedRatio.
+pure flow photonicMeechRatioStatusCore(idealPositive: Bool, conversionTaxIncluded: Bool, realizedPositive: Bool) -> String {
+  let idealReady: Bool = idealPositive
+  let taxReady: Bool = conversionTaxIncluded
+  let realizedReady: Bool = realizedPositive
+  if idealReady {
+    if taxReady {
+      if realizedReady { return "realized_after_tax" }
+      return "realized_refused"
+    }
+    return "tax_missing"
+  }
+  return "ideal_refused"
+}

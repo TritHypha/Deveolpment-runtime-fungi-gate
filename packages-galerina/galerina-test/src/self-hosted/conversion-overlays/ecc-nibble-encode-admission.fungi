@@ -1,0 +1,12 @@
+@version 1
+/// Captured input-domain gate for digital-ecc#eccEncodeNibble.
+pure flow eccNibbleEncodeAdmissionCore(integerInput: Bool, lowerBounded: Bool, upperBounded: Bool) -> String {
+  if integerInput {
+    if lowerBounded {
+      if upperBounded { return "encode" }
+      return "above_nibble"
+    }
+    return "below_nibble"
+  }
+  return "non_integer"
+}

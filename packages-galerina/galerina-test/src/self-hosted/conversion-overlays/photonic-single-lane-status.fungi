@@ -1,0 +1,8 @@
+@version 1
+/// Lane-failure and ordinary-flip composition status.
+pure flow photonicSingleLaneStatusCore(laneFailed: Bool, flipPresent: Bool) -> String {
+  let terminalLaneFailure: Bool = laneFailed
+  if terminalLaneFailure { return "lane_failure" }
+  if flipPresent { return "combined_probability" }
+  return "clean_lane"
+}
