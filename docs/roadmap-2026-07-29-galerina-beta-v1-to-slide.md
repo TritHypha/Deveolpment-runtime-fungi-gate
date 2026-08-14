@@ -3807,3 +3807,25 @@ zero violations**, semantic **3/3**, source inventory **149**, code index
 **975**, Golden **11/11** and canonical **7/7**. Final clean-head leak readback
 and exact-head dual-index proof remain pending. Repository-wide closure stays
 `UNKNOWN`.
+
+Slice-697 final publication and dual-index proof completed at exact clean head
+`17996b1145cc42067ec76332685b986ca741754f`: the bounded 19-check matrix is
+green, Myco reports **6,308 files / 83,905 terms**, and codebase-memory reports
+**27,031 nodes / 63,873 edges** with exact indexed HEAD and `stale:false`.
+This is bounded navigation/provenance evidence only; repository-wide closure
+remains `UNKNOWN`.
+
+## Fungi conversion checkpoint planned through Slice 747 - 2026-08-14
+
+The next 50 unique scopes finish GateCache, cover Tower's complete TPL
+GovernanceEnforcer and HybridInferenceEngine surfaces, and enter key rotation
+through `isWeakRingKey`. Planned arithmetic is 14 erased declarations, 33
+blocked runtime scopes and three leaf candidates. Prior bridge re-export and
+key-rotation credits are retained rather than duplicated.
+
+The decisive borders are process-wide mutable cache and policy state,
+caller-mintable audit/schema authority, exact host crypto, active typed arrays,
+bridge and photonic admission, clock/audit effects, and asynchronous lifecycle
+ordering. The three leaf candidates remain non-authorizing until their exact
+consumer and Fungi-to-physical evidence chains exist. Repository-wide closure
+remains `UNKNOWN`.

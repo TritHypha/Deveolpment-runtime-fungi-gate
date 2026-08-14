@@ -132,5 +132,5 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - [x] Commit authored evidence separately from registered owner outputs.
 - [x] Run all 19 graph/owner publishers and the hermetic generator-contract
   matrix; retain the final clean-head 19-check readback for the provenance step.
-- [ ] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
-- [ ] Keep repository closure `UNKNOWN` and continue with Slice 698.
+- [x] Commit the final provenance build point, refresh Myco and codebase-memory, and independently prove both exact indexed build points.
+- [x] Keep repository closure `UNKNOWN` and continue with Slice 698.

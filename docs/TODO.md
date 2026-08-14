@@ -4,6 +4,20 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Slices 698-747 Tower cached policy, TPL enforcement and hybrid engine - 2026-08-14
+
+- [x] Freeze 50 unique source-order scopes after refusing bridge re-export and
+  earlier key-rotation duplicate credit: 14 erased declarations, 33 blocked
+  runtime scopes and three bounded leaf candidates.
+- [ ] Adjudicate the process-wide GateCache singleton, TPL policy/enforcer,
+  complete HybridInferenceEngine surface and key-rotation prefix through
+  `isWeakRingKey` against exact callers, hostile vectors and physical evidence.
+- [ ] Author 50 receipt-local blocker/exit/vector records, run focused Tower
+  checks plus the receipt audit, and reconcile three independent reviews.
+- [ ] Commit authored evidence separately, publish all registered owners, run
+  the bounded 19-check matrix, then refresh both indexes only at Slice 747.
+  Repository-wide closure remains `UNKNOWN`.
+
 ### Slices 648-697 Tower epistemic state and GateCache - 2026-08-14
 
 - [x] Freeze 50 unique source-order scopes: all 42 epistemic type-state
@@ -35,9 +49,11 @@ counts or open items that a newer section explicitly supersedes.
   inventory **149**, code index **975**, receipts **637/637**, Golden **11/11**
   and canonical **7/7**. Final leak readback remains part of the clean-head
   matrix; repository-wide closure is not inferred.
-- [ ] Refresh Myco and codebase-memory at the final committed Slice 697 head and
-  independently prove both indexed build points. Repository closure stays
-  `UNKNOWN`.
+- [x] Refresh Myco and codebase-memory at exact clean head
+  `17996b1145cc42067ec76332685b986ca741754f`: Myco reports **6,308 files /
+  83,905 terms** and a complete bounded `policyCacheKey` readback;
+  codebase-memory reports **27,031 nodes / 63,873 edges**, exact indexed HEAD
+  and `stale:false`. Repository closure stays `UNKNOWN`.
 
 ### Slices 598-647 Myco links and Tower authority borders - 2026-08-14
 

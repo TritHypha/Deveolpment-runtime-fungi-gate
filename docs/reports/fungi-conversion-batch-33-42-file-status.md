@@ -1118,4 +1118,24 @@ queue **1,490/1,490**, package **100/201**, project **5/5**, KB **4/4**, graph
 **10,459 nodes / 10,311 edges / zero violations**, semantic **3/3**, source
 inventory **149**, code index **975**, receipts **637/637**, Golden **11/11**
 and canonical **7/7**. Final clean-head leak readback and dual-index refresh
-remain; repository-wide closure stays `UNKNOWN`.
+completed at exact clean head
+`17996b1145cc42067ec76332685b986ca741754f`: Myco reports 6,308 files /
+83,905 terms and codebase-memory independently reports 27,031 nodes / 63,873
+edges with `stale:false`. Repository-wide closure stays `UNKNOWN`.
+
+## Slices 698-747 - Tower cached policy, TPL enforcement and hybrid engine
+
+The next 50 unique source-order scopes finish GateCache, cover the complete
+GovernanceEnforcer and HybridInferenceEngine surfaces, and enter key rotation
+through `isWeakRingKey`. Exact planned arithmetic is 14 erased declarations,
+33 blocked runtime scopes and three bounded leaf candidates. Bridge re-export
+shims retain Slices 165-181 credit and are not renumbered; the prior
+`isWellFormedCommit` Slice 47 remains a future duplicate exclusion.
+
+No candidate authoring or retirement is authorized by this plan. The two exact
+integer leaves and bounded byte predicate still require candidate-specific
+Fungi, GIR, physical `.slide`, independent re-admission, VOK and consumer
+switch evidence. Process-wide mutable cache/policy singletons, erased private
+Set state, caller-mintable audit/schema authority, host crypto, active typed
+arrays, bridge/clock/audit effects and asynchronous lifecycle ordering remain
+fail-closed blockers. Repository-wide closure stays `UNKNOWN`.
