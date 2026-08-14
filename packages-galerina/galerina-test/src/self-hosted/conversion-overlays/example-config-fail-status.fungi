@@ -1,0 +1,26 @@
+@version 1
+// Source-bound decision overlay wave 21 item 2: example-config-fail-status.fungi.
+pure flow exampleConfigFailStatusCore(reasonCaptured: Bool, errorTyped: Bool, failureRaised: Bool) -> String {
+  let sourceWitness: Bool = failureRaised
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  let wave21Seal08: Bool = sourceWitness
+  if wave21Seal08 {
+    if errorTyped {
+      if failureRaised {
+        if reasonCaptured {
+          return "example_config_failure_bound"
+        }
+        return "reasonCaptured_missing"
+      }
+      return "failureRaised_missing"
+    }
+    return "errorTyped_missing"
+  }
+  return "wave21Seal08_missing"
+}

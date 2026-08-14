@@ -2565,3 +2565,62 @@ must contain all 40 new `.fungi` files, and both worktree and committed-object
 guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
+
+## Source decision overlay wave 21 - example host, telemetry, hardware and AI targets
+
+Wave 21 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. One binds the final uncredited admission function in
+`galerina-framework-app-kernel/src/registry-index.ts`; nine bind the executable
+host seams in `galerina-framework-example-app`; twelve bind the complete
+executable function family in `galerina-governance-telemetry`; ten bind the
+executable function and method family in `galerina-hardware-tier`; four bind
+previously uncredited decision seams in `galerina-inference-bridge-contract`;
+and four bind the executable functions in `galerina-target-ai-accelerator`.
+The package now registers **880** conversion overlays. The pinned source build
+point is `4da6e7442d22ec448771d95db7ec23bd3572c971`; the eleven source SHA-256
+values are
+`B21EA6A79B53DBA243E5B8D550A4476FAF736751B53E98FE0EE47348E1F46ADB`,
+`57CC7A06ABEABC34ECBB68B0860F42B5A9349E70A8106D2FCC15D966A7338AEF`,
+`F122E4760F94B20925D42DF2644E9CD3E2048110D3BD8EE00B7E6B89AAC405AC`,
+`F928E42BEA46E913FBEFAC340AB42C18F8BC2C69C706DE904C68B04E81B5A06D`,
+`5A06D29709973F9C1EEFE7195122FC175211CD5C08EDD5B5DA0EB64987B283A6`,
+`1C780AEFBC50B47BDE2384CED4B8D254FC0EC9AB9A6EC0F4FA74A82AC47F1F12`,
+`C234A80B3D354C257B0AB27DB4226CEB5B517B957F0B198335B73D134E11971C`,
+`CD7DE621E7FE877179ED306D29CEB22E36D359872D18AB22BF9D8BC249F23E68`,
+`1462AFE9D754757D832DD096EA4A8F4026955A9A0244DD71A696541FAF12B956`,
+`6D06648B6A2BF70318A5AFF6FA69883F69E49451073E1A4EE359BDB4EED2231A`
+and
+`31045854A8E81F3A58622B3B9D67A39F82667DFC96C458F7BF78953200E5C308`.
+The graph supplied navigation only: its attempted post-Wave-20 refresh reported
+the Wave-19 build point and omitted a Wave-20 symbol. Freshness is therefore
+**UNKNOWN**, and exact live bytes plus the zero-hit prior-wave scope audit are
+the final authority.
+
+The source test first failed on the absent and unregistered assets. The first
+authored pass then passed the whole-corpus duplicate guard without a repair
+round: **40/40 unique**, with zero exact-byte or normalized alpha-renamed
+template collisions. Focused source evidence passes **3/3** and the complete
+overlay source family passes **62/62**. Focused physical evidence passes
+**1/1** and the complete physical wave family passes **20/20**: all 40 new
+sources compile into physical `.slide` artifacts, publish, independently
+re-admit and VOK-verify their typed values, refuse mutated source and physical
+artifacts, reject receipt tampering, and release no production authority. The
+test package no-emit typecheck is green. The focused test pins are
+`85CB3988558B9294B75C7C40E3A159C7A100B228EE90D09DCD3F3F87774B92B4`
+and
+`A79FBE42B68A029AA1D6CB3B99BE43F837DFD6BF0BBC4A7667BE72E5BEC17BCC`.
+
+This remains bounded post-border decision evidence. It does not replace
+registry verification, filesystem and dynamic-import effects, HTTP lifecycle,
+configuration decoding, revocation authority, Prometheus text encoding,
+mutable exporter state, hardware identity and capability custody, bridge
+manifest canonicalization, accelerator discovery, callbacks, clocks, error
+identity, concurrency or cleanup ordering. It authorizes no registry package,
+HTTP service, telemetry endpoint, hardware tier, inference bridge, AI target,
+consumer switch or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, no worker authored this wave, no push is authorized, and no report-only
+follow-up commit is permitted.

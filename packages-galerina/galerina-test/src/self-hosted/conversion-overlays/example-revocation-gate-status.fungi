@@ -1,0 +1,32 @@
+@version 1
+// Source-bound decision overlay wave 21 item 5: example-revocation-gate-status.fungi.
+pure flow exampleRevocationGateStatusCore(directoryCaptured: Bool, registryImported: Bool, anchorVerified: Bool, predicateBound: Bool) -> String {
+  let sourceWitness: Bool = directoryCaptured
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  let wave21Seal08: Bool = sourceWitness
+  let wave21Seal09: Bool = wave21Seal08
+  let wave21Seal10: Bool = wave21Seal09
+  let wave21Seal11: Bool = wave21Seal10
+  if wave21Seal11 {
+    if directoryCaptured {
+      if registryImported {
+        if anchorVerified {
+          if predicateBound {
+            return "example_revocation_gate_ready"
+          }
+          return "predicateBound_missing"
+        }
+        return "anchorVerified_missing"
+      }
+      return "registryImported_missing"
+    }
+    return "directoryCaptured_missing"
+  }
+  return "wave21Seal11_missing"
+}

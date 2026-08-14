@@ -1,0 +1,35 @@
+@version 1
+// Source-bound decision overlay wave 21 item 8: example-greeting-dispatch-status.fungi.
+pure flow exampleGreetingDispatchStatusCore(componentBound: Bool, invoked: Bool, statusCaptured: Bool, responseBuilt: Bool) -> String {
+  let sourceWitness: Bool = statusCaptured
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  let wave21Seal08: Bool = sourceWitness
+  let wave21Seal09: Bool = wave21Seal08
+  let wave21Seal10: Bool = wave21Seal09
+  let wave21Seal11: Bool = wave21Seal10
+  let wave21Seal12: Bool = sourceWitness
+  let wave21Seal13: Bool = wave21Seal12
+  let wave21Seal14: Bool = wave21Seal13
+  if wave21Seal14 {
+    if responseBuilt {
+      if componentBound {
+        if invoked {
+          if statusCaptured {
+            return "example_greeting_dispatched"
+          }
+          return "statusCaptured_missing"
+        }
+        return "invoked_missing"
+      }
+      return "componentBound_missing"
+    }
+    return "responseBuilt_missing"
+  }
+  return "wave21Seal14_missing"
+}

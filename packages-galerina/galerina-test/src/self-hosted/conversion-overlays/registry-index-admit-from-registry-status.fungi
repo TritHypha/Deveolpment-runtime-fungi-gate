@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 21 item 1: registry-index-admit-from-registry-status.fungi.
+pure flow registryIndexAdmitFromRegistryStatusCore(indexCaptured: Bool, verifierBound: Bool, signatureValid: Bool, lookupResolved: Bool, policyAllowed: Bool) -> String {
+  let sourceWitness: Bool = indexCaptured
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  if wave21Seal07 {
+    if indexCaptured {
+      if verifierBound {
+        if signatureValid {
+          if lookupResolved {
+            if policyAllowed {
+              return "registry_index_admission_granted"
+            }
+            return "policyAllowed_missing"
+          }
+          return "lookupResolved_missing"
+        }
+        return "signatureValid_missing"
+      }
+      return "verifierBound_missing"
+    }
+    return "indexCaptured_missing"
+  }
+  return "wave21Seal07_missing"
+}

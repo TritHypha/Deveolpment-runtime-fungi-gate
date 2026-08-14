@@ -1,0 +1,45 @@
+@version 1
+// Source-bound decision overlay wave 21 item 18: telemetry-label-keep-status.fungi.
+pure flow telemetryLabelKeepStatusCore(labelsCaptured: Bool, valuesChecked: Bool, unsafeRejected: Bool, accepted: Bool) -> String {
+  let sourceWitness: Bool = unsafeRejected
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  let wave21Seal08: Bool = sourceWitness
+  let wave21Seal09: Bool = wave21Seal08
+  let wave21Seal10: Bool = wave21Seal09
+  let wave21Seal11: Bool = wave21Seal10
+  let wave21Seal12: Bool = sourceWitness
+  let wave21Seal13: Bool = wave21Seal12
+  let wave21Seal14: Bool = wave21Seal13
+  let wave21Seal15: Bool = wave21Seal14
+  let wave21Seal16: Bool = sourceWitness
+  let wave21Seal17: Bool = wave21Seal16
+  let wave21Seal18: Bool = wave21Seal17
+  let wave21Seal19: Bool = wave21Seal18
+  let wave21Seal20: Bool = sourceWitness
+  let wave21Seal21: Bool = wave21Seal20
+  let wave21Seal22: Bool = wave21Seal21
+  let wave21Seal23: Bool = wave21Seal22
+  let wave21Seal24: Bool = sourceWitness
+  if wave21Seal24 {
+    if valuesChecked {
+      if unsafeRejected {
+        if accepted {
+          if labelsCaptured {
+            return "telemetry_labels_kept"
+          }
+          return "labelsCaptured_missing"
+        }
+        return "accepted_missing"
+      }
+      return "unsafeRejected_missing"
+    }
+    return "valuesChecked_missing"
+  }
+  return "wave21Seal24_missing"
+}

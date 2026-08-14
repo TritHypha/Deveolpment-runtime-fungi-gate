@@ -1,0 +1,31 @@
+@version 1
+// Source-bound decision overlay wave 21 item 4: example-config-load-status.fungi.
+pure flow exampleConfigLoadStatusCore(pathCaptured: Bool, fileRead: Bool, jsonParsed: Bool, configValidated: Bool) -> String {
+  let sourceWitness: Bool = jsonParsed
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  let wave21Seal08: Bool = sourceWitness
+  let wave21Seal09: Bool = wave21Seal08
+  let wave21Seal10: Bool = wave21Seal09
+  if wave21Seal10 {
+    if configValidated {
+      if pathCaptured {
+        if fileRead {
+          if jsonParsed {
+            return "example_config_loaded"
+          }
+          return "jsonParsed_missing"
+        }
+        return "fileRead_missing"
+      }
+      return "pathCaptured_missing"
+    }
+    return "configValidated_missing"
+  }
+  return "wave21Seal10_missing"
+}

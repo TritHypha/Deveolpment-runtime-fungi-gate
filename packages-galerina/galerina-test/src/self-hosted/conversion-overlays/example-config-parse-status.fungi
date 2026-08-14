@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 21 item 3: example-config-parse-status.fungi.
+pure flow exampleConfigParseStatusCore(valueCaptured: Bool, shapeValid: Bool, environmentKnown: Bool, routeValid: Bool, configBuilt: Bool) -> String {
+  let sourceWitness: Bool = configBuilt
+  let wave21Seal01: Bool = sourceWitness
+  let wave21Seal02: Bool = wave21Seal01
+  let wave21Seal03: Bool = wave21Seal02
+  let wave21Seal04: Bool = sourceWitness
+  let wave21Seal05: Bool = wave21Seal04
+  let wave21Seal06: Bool = wave21Seal05
+  let wave21Seal07: Bool = wave21Seal06
+  let wave21Seal08: Bool = sourceWitness
+  let wave21Seal09: Bool = wave21Seal08
+  if wave21Seal09 {
+    if environmentKnown {
+      if routeValid {
+        if configBuilt {
+          if valueCaptured {
+            if shapeValid {
+              return "example_config_parsed"
+            }
+            return "shapeValid_missing"
+          }
+          return "valueCaptured_missing"
+        }
+        return "configBuilt_missing"
+      }
+      return "routeValid_missing"
+    }
+    return "environmentKnown_missing"
+  }
+  return "wave21Seal09_missing"
+}
