@@ -1,0 +1,134 @@
+@version 1
+// Source-bound decision overlay wave 46 item 8: parser-is-eof-status.fungi.
+pure flow parserIsEofStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay8001: Bool = sourceReady
+  let relay8002: Bool = relay8001
+  let relay8003: Bool = relay8002
+  let relay8004: Bool = relay8003
+  let relay8005: Bool = relay8004
+  let relay8006: Bool = relay8005
+  let relay8007: Bool = relay8006
+  let relay8008: Bool = relay8007
+  let relay8009: Bool = relay8008
+  let relay8010: Bool = relay8009
+  let relay8011: Bool = relay8010
+  let relay8012: Bool = relay8011
+  let relay8013: Bool = relay8012
+  let relay8014: Bool = relay8013
+  let relay8015: Bool = relay8014
+  let relay8016: Bool = relay8015
+  let relay8017: Bool = relay8016
+  let relay8018: Bool = relay8017
+  let relay8019: Bool = relay8018
+  let relay8020: Bool = relay8019
+  let relay8021: Bool = relay8020
+  let relay8022: Bool = relay8021
+  let relay8023: Bool = relay8022
+  let relay8024: Bool = relay8023
+  let relay8025: Bool = relay8024
+  let relay8026: Bool = relay8025
+  let relay8027: Bool = relay8026
+  let relay8028: Bool = relay8027
+  let relay8029: Bool = relay8028
+  let relay8030: Bool = relay8029
+  let relay8031: Bool = relay8030
+  let relay8032: Bool = relay8031
+  let relay8033: Bool = relay8032
+  let relay8034: Bool = relay8033
+  let relay8035: Bool = relay8034
+  let relay8036: Bool = relay8035
+  let relay8037: Bool = relay8036
+  let relay8038: Bool = relay8037
+  let relay8039: Bool = relay8038
+  let relay8040: Bool = relay8039
+  let relay8041: Bool = relay8040
+  let relay8042: Bool = relay8041
+  let relay8043: Bool = relay8042
+  let relay8044: Bool = relay8043
+  let relay8045: Bool = relay8044
+  let relay8046: Bool = relay8045
+  let relay8047: Bool = relay8046
+  let relay8048: Bool = relay8047
+  let relay8049: Bool = relay8048
+  let relay8050: Bool = relay8049
+  let relay8051: Bool = relay8050
+  let relay8052: Bool = relay8051
+  let relay8053: Bool = relay8052
+  let relay8054: Bool = relay8053
+  let relay8055: Bool = relay8054
+  let relay8056: Bool = relay8055
+  let relay8057: Bool = relay8056
+  let relay8058: Bool = relay8057
+  let relay8059: Bool = relay8058
+  let relay8060: Bool = relay8059
+  let relay8061: Bool = relay8060
+  let relay8062: Bool = relay8061
+  let relay8063: Bool = relay8062
+  let relay8064: Bool = relay8063
+  let relay8065: Bool = relay8064
+  let relay8066: Bool = relay8065
+  let relay8067: Bool = relay8066
+  let relay8068: Bool = relay8067
+  let relay8069: Bool = relay8068
+  let relay8070: Bool = relay8069
+  let relay8071: Bool = relay8070
+  let relay8072: Bool = relay8071
+  let relay8073: Bool = relay8072
+  let relay8074: Bool = relay8073
+  let relay8075: Bool = relay8074
+  let relay8076: Bool = relay8075
+  let relay8077: Bool = relay8076
+  let relay8078: Bool = relay8077
+  let relay8079: Bool = relay8078
+  let relay8080: Bool = relay8079
+  let relay8081: Bool = relay8080
+  let relay8082: Bool = relay8081
+  let relay8083: Bool = relay8082
+  let relay8084: Bool = relay8083
+  let relay8085: Bool = relay8084
+  let relay8086: Bool = relay8085
+  let relay8087: Bool = relay8086
+  let relay8088: Bool = relay8087
+  let relay8089: Bool = relay8088
+  let relay8090: Bool = relay8089
+  let relay8091: Bool = relay8090
+  let relay8092: Bool = relay8091
+  let relay8093: Bool = relay8092
+  let relay8094: Bool = relay8093
+  let relay8095: Bool = relay8094
+  let relay8096: Bool = relay8095
+  let relay8097: Bool = relay8096
+  let relay8098: Bool = relay8097
+  let relay8099: Bool = relay8098
+  let relay8100: Bool = relay8099
+  let relay8101: Bool = relay8100
+  let relay8102: Bool = relay8101
+  let relay8103: Bool = relay8102
+  let relay8104: Bool = relay8103
+  let relay8105: Bool = relay8104
+  let relay8106: Bool = relay8105
+  let relay8107: Bool = relay8106
+  let relay8108: Bool = relay8107
+  if relay8108 {
+    if shapeReady {
+      if stateReady {
+        if policyReady {
+          if routeReady {
+            if proofReady {
+              if sealReady {
+                return "parser_is_eof_built"
+              }
+              return "wave46_seal_missing"
+            }
+            return "wave46_proof_missing"
+          }
+          return "wave46_route_missing"
+        }
+        return "wave46_policy_missing"
+      }
+      return "wave46_state_missing"
+    }
+    return "wave46_shape_missing"
+  }
+  return "wave46_source_missing"
+}

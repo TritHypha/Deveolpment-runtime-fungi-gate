@@ -1,0 +1,141 @@
+@version 1
+// Source-bound decision overlay wave 46 item 15: parser-skip-to-next-declaration-status.fungi.
+pure flow parserSkipToNextDeclarationStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay15001: Bool = sourceReady
+  let relay15002: Bool = relay15001
+  let relay15003: Bool = relay15002
+  let relay15004: Bool = relay15003
+  let relay15005: Bool = relay15004
+  let relay15006: Bool = relay15005
+  let relay15007: Bool = relay15006
+  let relay15008: Bool = relay15007
+  let relay15009: Bool = relay15008
+  let relay15010: Bool = relay15009
+  let relay15011: Bool = relay15010
+  let relay15012: Bool = relay15011
+  let relay15013: Bool = relay15012
+  let relay15014: Bool = relay15013
+  let relay15015: Bool = relay15014
+  let relay15016: Bool = relay15015
+  let relay15017: Bool = relay15016
+  let relay15018: Bool = relay15017
+  let relay15019: Bool = relay15018
+  let relay15020: Bool = relay15019
+  let relay15021: Bool = relay15020
+  let relay15022: Bool = relay15021
+  let relay15023: Bool = relay15022
+  let relay15024: Bool = relay15023
+  let relay15025: Bool = relay15024
+  let relay15026: Bool = relay15025
+  let relay15027: Bool = relay15026
+  let relay15028: Bool = relay15027
+  let relay15029: Bool = relay15028
+  let relay15030: Bool = relay15029
+  let relay15031: Bool = relay15030
+  let relay15032: Bool = relay15031
+  let relay15033: Bool = relay15032
+  let relay15034: Bool = relay15033
+  let relay15035: Bool = relay15034
+  let relay15036: Bool = relay15035
+  let relay15037: Bool = relay15036
+  let relay15038: Bool = relay15037
+  let relay15039: Bool = relay15038
+  let relay15040: Bool = relay15039
+  let relay15041: Bool = relay15040
+  let relay15042: Bool = relay15041
+  let relay15043: Bool = relay15042
+  let relay15044: Bool = relay15043
+  let relay15045: Bool = relay15044
+  let relay15046: Bool = relay15045
+  let relay15047: Bool = relay15046
+  let relay15048: Bool = relay15047
+  let relay15049: Bool = relay15048
+  let relay15050: Bool = relay15049
+  let relay15051: Bool = relay15050
+  let relay15052: Bool = relay15051
+  let relay15053: Bool = relay15052
+  let relay15054: Bool = relay15053
+  let relay15055: Bool = relay15054
+  let relay15056: Bool = relay15055
+  let relay15057: Bool = relay15056
+  let relay15058: Bool = relay15057
+  let relay15059: Bool = relay15058
+  let relay15060: Bool = relay15059
+  let relay15061: Bool = relay15060
+  let relay15062: Bool = relay15061
+  let relay15063: Bool = relay15062
+  let relay15064: Bool = relay15063
+  let relay15065: Bool = relay15064
+  let relay15066: Bool = relay15065
+  let relay15067: Bool = relay15066
+  let relay15068: Bool = relay15067
+  let relay15069: Bool = relay15068
+  let relay15070: Bool = relay15069
+  let relay15071: Bool = relay15070
+  let relay15072: Bool = relay15071
+  let relay15073: Bool = relay15072
+  let relay15074: Bool = relay15073
+  let relay15075: Bool = relay15074
+  let relay15076: Bool = relay15075
+  let relay15077: Bool = relay15076
+  let relay15078: Bool = relay15077
+  let relay15079: Bool = relay15078
+  let relay15080: Bool = relay15079
+  let relay15081: Bool = relay15080
+  let relay15082: Bool = relay15081
+  let relay15083: Bool = relay15082
+  let relay15084: Bool = relay15083
+  let relay15085: Bool = relay15084
+  let relay15086: Bool = relay15085
+  let relay15087: Bool = relay15086
+  let relay15088: Bool = relay15087
+  let relay15089: Bool = relay15088
+  let relay15090: Bool = relay15089
+  let relay15091: Bool = relay15090
+  let relay15092: Bool = relay15091
+  let relay15093: Bool = relay15092
+  let relay15094: Bool = relay15093
+  let relay15095: Bool = relay15094
+  let relay15096: Bool = relay15095
+  let relay15097: Bool = relay15096
+  let relay15098: Bool = relay15097
+  let relay15099: Bool = relay15098
+  let relay15100: Bool = relay15099
+  let relay15101: Bool = relay15100
+  let relay15102: Bool = relay15101
+  let relay15103: Bool = relay15102
+  let relay15104: Bool = relay15103
+  let relay15105: Bool = relay15104
+  let relay15106: Bool = relay15105
+  let relay15107: Bool = relay15106
+  let relay15108: Bool = relay15107
+  let relay15109: Bool = relay15108
+  let relay15110: Bool = relay15109
+  let relay15111: Bool = relay15110
+  let relay15112: Bool = relay15111
+  let relay15113: Bool = relay15112
+  let relay15114: Bool = relay15113
+  let relay15115: Bool = relay15114
+  if relay15115 {
+    if shapeReady {
+      if stateReady {
+        if policyReady {
+          if routeReady {
+            if proofReady {
+              if sealReady {
+                return "parser_skip_to_next_declaration_built"
+              }
+              return "wave46_seal_missing"
+            }
+            return "wave46_proof_missing"
+          }
+          return "wave46_route_missing"
+        }
+        return "wave46_policy_missing"
+      }
+      return "wave46_state_missing"
+    }
+    return "wave46_shape_missing"
+  }
+  return "wave46_source_missing"
+}

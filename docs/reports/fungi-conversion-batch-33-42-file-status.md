@@ -2413,6 +2413,59 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 46 - Parser completion, plugin schema and profile gates
+
+Wave 46 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay filename or source-and-symbol credit. Nineteen finish the remaining
+parser declaration, diagnostic, token, recovery and public `parseProgram`
+surface; ten bind plugin-schema records, validation, hashing and erasure
+decisions; three bind production-readiness diagnostics; and eight bind the
+initial profile-diagnostic constants. The package now registers **1,880**
+conversion overlays.
+
+The pinned source build point is
+`5e1e880b8f61da4a1574cf0d9410704a4fc40e2d`. The exact source SHA-256 values
+are `3169424008FB816058D614B1229FD6056B83BB5C2CAA6B29EC8AE12F9129C923`
+for `parser.ts`,
+`8DFBDCF8292CE1647012CA570CDE6635DBEF68FC8C76CE1CAAF178BDCEF1902E`
+for `plugin-schema.ts`,
+`6ECEE6CF61CB1EE556377C57447CE3EF30F4EB467F2B35D13BA004B62C89E6E6`
+for `production-check.ts`, and
+`F952EC7BD574E267AB1F572B46670BD9708185136CA412EB7FCD75D5BBCCDEAD`
+for `profile-checker.ts`. Graph-first discovery and exact source reads governed
+the scope map; post-authoring graph freshness remains **UNKNOWN** until the
+required committed-object refresh.
+
+The RED source test first failed **0/3** because all 40 assets and their
+registrations were absent. Focused source evidence now passes **3/3**, and the
+accumulated source family passes **135/135** across 45 suites. All 40 sources
+also pass strict parse, type/effect, governance and GIR checks. Whole-corpus
+byte-duplicate and normalized alpha-renamed shadow checks report **40/40
+unique**. The exact focused source-test SHA-256 is
+`59B36B312A2F85F6E15A6B712402B81439EB6602E5B782F79FC4694AEC4CB9DB`.
+
+Focused physical evidence passes **1/1**, and the accumulated physical family
+passes **45/45** with zero skips: each source compiles and publishes one
+physical `.slide`, executes, independently re-admits and VOK-verifies its
+typed receipt, and refuses changed source, artifact and receipt bytes. The
+exact focused physical-test SHA-256 is
+`610008E3A3ACA3BA9D0132265ECAD24B54FE54228CF0EA01A0F962EF37F7C7D0`.
+The Golden Pack owner refresh reconciles pre-existing governance
+runtime-closure drift and is green at **11/11 checked assets** plus **11/11
+execution vectors**. Package no-emit typecheck is green.
+
+This remains bounded post-border decision evidence. Parser state, token and
+diagnostic identities, recovery effects, AST construction, active JavaScript
+records and collections, JSON, crypto, Date, `Set`, `Uint8Array`, errors and
+coercion remain in executing TypeScript. No production consumer switch,
+supersession or TypeScript retirement is claimed.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, root authored the wave without workers, no push is authorized, and no
+report-only follow-up commit is permitted.
+
 ## Source decision overlay wave 45 - Parser governance, contracts and declarations
 
 Wave 45 adds **40 new source-bound Fungi decision cores** in exact parser

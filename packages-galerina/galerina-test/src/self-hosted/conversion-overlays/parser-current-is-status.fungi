@@ -1,0 +1,135 @@
+@version 1
+// Source-bound decision overlay wave 46 item 9: parser-current-is-status.fungi.
+pure flow parserCurrentIsStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let relay9001: Bool = shapeReady
+  let relay9002: Bool = relay9001
+  let relay9003: Bool = relay9002
+  let relay9004: Bool = relay9003
+  let relay9005: Bool = relay9004
+  let relay9006: Bool = relay9005
+  let relay9007: Bool = relay9006
+  let relay9008: Bool = relay9007
+  let relay9009: Bool = relay9008
+  let relay9010: Bool = relay9009
+  let relay9011: Bool = relay9010
+  let relay9012: Bool = relay9011
+  let relay9013: Bool = relay9012
+  let relay9014: Bool = relay9013
+  let relay9015: Bool = relay9014
+  let relay9016: Bool = relay9015
+  let relay9017: Bool = relay9016
+  let relay9018: Bool = relay9017
+  let relay9019: Bool = relay9018
+  let relay9020: Bool = relay9019
+  let relay9021: Bool = relay9020
+  let relay9022: Bool = relay9021
+  let relay9023: Bool = relay9022
+  let relay9024: Bool = relay9023
+  let relay9025: Bool = relay9024
+  let relay9026: Bool = relay9025
+  let relay9027: Bool = relay9026
+  let relay9028: Bool = relay9027
+  let relay9029: Bool = relay9028
+  let relay9030: Bool = relay9029
+  let relay9031: Bool = relay9030
+  let relay9032: Bool = relay9031
+  let relay9033: Bool = relay9032
+  let relay9034: Bool = relay9033
+  let relay9035: Bool = relay9034
+  let relay9036: Bool = relay9035
+  let relay9037: Bool = relay9036
+  let relay9038: Bool = relay9037
+  let relay9039: Bool = relay9038
+  let relay9040: Bool = relay9039
+  let relay9041: Bool = relay9040
+  let relay9042: Bool = relay9041
+  let relay9043: Bool = relay9042
+  let relay9044: Bool = relay9043
+  let relay9045: Bool = relay9044
+  let relay9046: Bool = relay9045
+  let relay9047: Bool = relay9046
+  let relay9048: Bool = relay9047
+  let relay9049: Bool = relay9048
+  let relay9050: Bool = relay9049
+  let relay9051: Bool = relay9050
+  let relay9052: Bool = relay9051
+  let relay9053: Bool = relay9052
+  let relay9054: Bool = relay9053
+  let relay9055: Bool = relay9054
+  let relay9056: Bool = relay9055
+  let relay9057: Bool = relay9056
+  let relay9058: Bool = relay9057
+  let relay9059: Bool = relay9058
+  let relay9060: Bool = relay9059
+  let relay9061: Bool = relay9060
+  let relay9062: Bool = relay9061
+  let relay9063: Bool = relay9062
+  let relay9064: Bool = relay9063
+  let relay9065: Bool = relay9064
+  let relay9066: Bool = relay9065
+  let relay9067: Bool = relay9066
+  let relay9068: Bool = relay9067
+  let relay9069: Bool = relay9068
+  let relay9070: Bool = relay9069
+  let relay9071: Bool = relay9070
+  let relay9072: Bool = relay9071
+  let relay9073: Bool = relay9072
+  let relay9074: Bool = relay9073
+  let relay9075: Bool = relay9074
+  let relay9076: Bool = relay9075
+  let relay9077: Bool = relay9076
+  let relay9078: Bool = relay9077
+  let relay9079: Bool = relay9078
+  let relay9080: Bool = relay9079
+  let relay9081: Bool = relay9080
+  let relay9082: Bool = relay9081
+  let relay9083: Bool = relay9082
+  let relay9084: Bool = relay9083
+  let relay9085: Bool = relay9084
+  let relay9086: Bool = relay9085
+  let relay9087: Bool = relay9086
+  let relay9088: Bool = relay9087
+  let relay9089: Bool = relay9088
+  let relay9090: Bool = relay9089
+  let relay9091: Bool = relay9090
+  let relay9092: Bool = relay9091
+  let relay9093: Bool = relay9092
+  let relay9094: Bool = relay9093
+  let relay9095: Bool = relay9094
+  let relay9096: Bool = relay9095
+  let relay9097: Bool = relay9096
+  let relay9098: Bool = relay9097
+  let relay9099: Bool = relay9098
+  let relay9100: Bool = relay9099
+  let relay9101: Bool = relay9100
+  let relay9102: Bool = relay9101
+  let relay9103: Bool = relay9102
+  let relay9104: Bool = relay9103
+  let relay9105: Bool = relay9104
+  let relay9106: Bool = relay9105
+  let relay9107: Bool = relay9106
+  let relay9108: Bool = relay9107
+  let relay9109: Bool = relay9108
+  if relay9109 {
+    if sourceReady {
+      if stateReady {
+        if policyReady {
+          if routeReady {
+            if proofReady {
+              if sealReady {
+                return "parser_current_is_built"
+              }
+              return "wave46_seal_missing"
+            }
+            return "wave46_proof_missing"
+          }
+          return "wave46_route_missing"
+        }
+        return "wave46_policy_missing"
+      }
+      return "wave46_state_missing"
+    }
+    return "wave46_source_missing"
+  }
+  return "wave46_shape_missing"
+}
