@@ -2413,6 +2413,53 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 29 - compiler graph and source utilities
+
+Wave 29 adds **40 new source-bound Fungi decision cores** for the four
+remaining `escape-analysis.ts` functions, five `event-checker.ts` functions,
+14 `execution-graph.ts` functions, three `fix-edit.ts` functions, five
+`flat-token-stream.ts` functions, three `flow-complexity.ts` functions, four
+`flow-dependency-analysis.ts` functions and two `flow-name.ts` functions.
+The package now registers **1,200** conversion overlays. The pinned source
+build point is `2dda96bdb7330d93d4e1228953320dd3d95c06ed`; the source
+SHA-256 values are
+`B7AEE269B7E40B209E6E3CAF819616239D82239731B8345140E37B80D859B65E`,
+`DD9A0D5F1173288CB23FC94BE9E2A634E1E7B7BFFFF73617408155355BF917FF`,
+`46FCF197BD5CB7F4BFED170BF3EF92557F5FBBB1B034B612BC0A1C37C3DA140A`,
+`50994D7A21109C1EACF8A415039476FAC719ACFAD803C9A729F127DC69F1500A`,
+`F91A764DB53F759E3E9DC8C95E87EA8037AC5336BA285936E0420843EDF87289`,
+`3F76C7668E50F6AEBD7E5967ED6A22A57FB214AEB1FF2568F6A8EFB57290DD50`,
+`240BC0174C497CEC77073E570814F68D0C6FDAAA947AAF6D91C439ECD2A6DD4D`
+and
+`DC5485092018B5FE7A758D3A3C6DDECAC86567D7055926F8794041A64906E204`.
+The graph supplied navigation only: its refresh retained stale build point
+`9541ac8c2a9f5adff4d71d511d89bd27ebc7c757` and could not find Wave 28's
+new flow, so freshness is **UNKNOWN** and exact live bytes plus the bounded
+prior-credit audit govern.
+
+The RED test failed **0/3** on absent and unregistered assets. The authored
+sources then passed **40/40** whole-corpus exact-byte and normalized
+alpha-renamed shadow checks, parse, effect-check, GIR emission and interpreter
+execution. Focused source evidence passes **3/3**, the complete current source
+wave family **84/84**, focused physical SLIDE/VOK evidence **1/1**, the complete
+current physical wave family **28/28**, and package typecheck is green. The
+focused test pins are
+`DB1A6ADBFD3A154A77735EFFCCD68FD71F21B4123686F57C52F0812F48044C03`
+and
+`46BC5A445AB889EE53D08E4E92C87D27739F2F8ECC06C2AD3F7138172757AF3F`.
+
+This remains bounded post-border decision evidence only. It does not replace
+AST or token ingress, recursive traversal, Map/Set/cache identity, graph
+construction, edit callback/error ordering, UTF-16 slicing, typed-array
+storage, source rewriting, numeric coercion or arena-safety semantics. It
+authorizes no compiler consumer switch, cache authority, auto-fix authority,
+memory-reclamation change or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, all 40 new
+`.fungi` files must be present, worktree and committed-object duplicate/shadow
+guards must remain 40/40, the report-only streak stays zero, no worker authored
+this wave, and no push or report-only follow-up commit is authorized.
+
 ## Source decision overlay wave 28 - effect checking and escape analysis
 
 Wave 28 adds **40 new source-bound Fungi decision cores** for all 34
