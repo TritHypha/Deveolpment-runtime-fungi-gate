@@ -1,0 +1,59 @@
+@version 1
+// Source-bound decision overlay wave 38 item 019: interpreter-seed-prelude-status.fungi.
+pure flow interpreterSeedPreludeStatusCore(inputCaptured: Bool, stateChecked: Bool, decisionBuilt: Bool, evidenceBound: Bool, outcomeSealed: Bool, releaseChecked: Bool) -> String {
+  let traceA000: Bool = inputCaptured
+  let traceB000: Bool = stateChecked
+  let traceC000: Bool = evidenceBound
+  let wave38A001: Bool = traceA000
+  let wave38B002: Bool = traceB000
+  let wave38C003: Bool = traceC000
+  let wave38A004: Bool = wave38A001
+  let wave38B005: Bool = wave38B002
+  let wave38C006: Bool = wave38C003
+  let wave38A007: Bool = wave38A004
+  let wave38B008: Bool = wave38B005
+  let wave38C009: Bool = wave38C006
+  let wave38A010: Bool = wave38A007
+  let wave38B011: Bool = wave38B008
+  let wave38C012: Bool = wave38C009
+  let wave38A013: Bool = wave38A010
+  let wave38B014: Bool = wave38B011
+  let wave38C015: Bool = wave38C012
+  let wave38A016: Bool = wave38A013
+  let wave38B017: Bool = wave38B014
+  let wave38C018: Bool = wave38C015
+  let wave38A019: Bool = wave38A016
+  let wave38B020: Bool = wave38B017
+  let wave38C021: Bool = wave38C018
+  let wave38A022: Bool = wave38A019
+  let wave38B023: Bool = wave38B020
+  let wave38C024: Bool = wave38C021
+  let wave38A025: Bool = wave38A022
+  let wave38B026: Bool = wave38B023
+  let wave38C027: Bool = wave38C024
+  let wave38A028: Bool = wave38A025
+  let wave38B029: Bool = wave38B026
+  let wave38C030: Bool = wave38C027
+  let wave38A031: Bool = wave38A028
+  let wave38B032: Bool = wave38B029
+  let wave38C033: Bool = wave38C030
+  if wave38C033 {
+    if wave38A031 {
+      if wave38B032 {
+        if decisionBuilt {
+          if releaseChecked {
+            if outcomeSealed {
+              return "interpreter_seed_prelude_built"
+            }
+            return "outcomeSealed_missing"
+          }
+          return "releaseChecked_missing"
+        }
+        return "decisionBuilt_missing"
+      }
+      return "traceB_missing"
+    }
+    return "traceA_missing"
+  }
+  return "traceC_missing"
+}

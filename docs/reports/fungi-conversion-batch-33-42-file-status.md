@@ -2413,6 +2413,52 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 38 - Interpreter execution, matching and value borders
+
+Wave 38 adds **40 new source-bound Fungi decision cores** from the next live
+interpreter segment in exact executable-source order. It covers output
+postconditions; scope and binding state; block, statement, expression, binary,
+call, method, match and member evaluation; nested-flow/audit paths; the flow
+index and its named local walker; pattern matching; safe display/string
+helpers; binding parsing; governed-value wrapping; receiver and qualifier
+selection; runtime/trap classification; and quote stripping. The named local
+`buildFlowIndex.walk` is separately bound because it has its own callable body
+and recursive traversal contract. A bounded prior-credit search found no exact
+source-and-symbol reuse. The package now registers **1,560** conversion
+overlays. Mutable maps/ASTs/classes, exceptions, callbacks, async effects,
+binary64/coercion, audit egress and host error identity remain at the executing
+TypeScript border. No consumer switch, supersession or retirement is claimed.
+
+The pinned source build point is
+`5b9dd756623778c04c2a9fb9f16bce20c62db136`. The exact interpreter source
+SHA-256 remains
+`A43A9F93DF7C94D9C6199E92CA09C33A429904FDCCB03F8B27576069AD74F61F`.
+The post-Wave-37 moderate graph refresh again returned the older
+`9541ac8c2a9f5adff4d71d511d89bd27ebc7c757` build point, so graph freshness
+remains **UNKNOWN** and exact bytes govern.
+
+The RED source test failed **0/3** because the 40 assets were absent and
+unregistered. The accepted topology uses three independently rooted bounded
+Boolean lanes updated round-robin, followed by one ordered six-gate release
+decision; lengths differ per file. Fresh source verification passes **3/3**,
+including live source binding, complete-corpus exact and normalized
+alpha-renamed shadow refusal, parse/effect/GIR generation and execution. The
+complete accumulated source suite passes **111/111** across 37 suites and the
+package no-emit typecheck is green. The exact source-test SHA-256 is
+`7B470F895A5055247913994C8EF5B7BB2540619311F14ED9B549DCB69C46493F`.
+
+Physical verification passes **1/1** for this wave and **37/37** across the
+accumulated physical suites. It compiles all 40 exports, publishes exactly 40
+physical `.slide` artifacts, executes each export, independently re-admits and
+verifies every typed receipt, and refuses changed source, artifact and receipt
+bytes. The exact physical-test SHA-256 is
+`060F2F8F44738207C279708EF44848626433A528574D893473D4A594380DDED5`.
+
+This is the only report modified by the wave. It is committed alongside 40
+new `.fungi` files, not as a report-only update. No worker authored these files
+and no push is performed. Both worktree and committed guards must report
+**40/40 unique**, one report, the 40-file minimum, and no report-only streak.
+
 ## Source decision overlay wave 37 - Interpreter values, sync execution and admission
 
 Wave 37 adds **40 new source-bound Fungi decision cores** from the live

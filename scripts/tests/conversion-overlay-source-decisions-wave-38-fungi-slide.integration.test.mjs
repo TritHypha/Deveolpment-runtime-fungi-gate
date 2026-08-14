@@ -1,0 +1,33 @@
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+import { it } from "node:test";
+
+const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
+const STEMS=Object.freeze([
+  "interpreter-check-output-postconditions","interpreter-push-scope","interpreter-pop-scope","interpreter-lookup",
+  "interpreter-declare","interpreter-assign","interpreter-execute-block","interpreter-eval-binding-init",
+  "interpreter-eval-expr-as-int64","interpreter-eval-expr-as-uint64","interpreter-execute-statement","interpreter-eval-expr",
+  "interpreter-eval-binary","interpreter-eval-call","interpreter-eval-method-call","interpreter-eval-match",
+  "interpreter-eval-member","interpreter-get-receiver-name","interpreter-seed-prelude","interpreter-run-local-fn",
+  "interpreter-run-nested-flow","interpreter-enrich-audit-entry-with-manifest","interpreter-build-audit-entry","interpreter-build-flow-index",
+  "interpreter-build-flow-index-walk","interpreter-match-pattern","interpreter-safe-display","interpreter-safe-stringify",
+  "interpreter-extract-param-name","interpreter-parse-binding-value","interpreter-binding-type-name","interpreter-binding-base-type",
+  "interpreter-tag-governed-value","interpreter-wrap-governed-value","interpreter-get-receiver","interpreter-secure-comparable",
+  "interpreter-qualifier-from-flow-kind","interpreter-is-runtime-error","interpreter-is-checked-trap","interpreter-strip-string-quotes",
+]);
+const camel=stem=>stem.split("-").map((part,index)=>index===0?part:part[0].toUpperCase()+part.slice(1)).join("");
+const CANDIDATES=Object.freeze(STEMS.map(stem=>Object.freeze({file:`${stem}-status.fungi`,flow:`${camel(stem)}StatusCore`,args:Array(6).fill(true),expected:`${stem.replaceAll("-","_")}_built`})));
+
+async function api(){const load=async p=>import(pathToFileURL(join(SLIDE_ROOT,"src",p)).href);return {...await load("checked-fungi-package-compiler.mjs"),...await load("checked-fungi-package-file.mjs"),...await load("checked-fungi-package-publication-loader.mjs"),...await load("safe-value-envelope.mjs"),...await load("portable-veo.mjs")};}
+function expectation(r){return {packageSetDigest:r.packageSetDigest,packageIdentity:r.packageIdentity,exportName:r.exportName,receiptDigest:r.receiptDigest,safeValueTypeId:r.safeValueTypeId,safeValueStateId:r.safeValueStateId,safeValueProvenanceDigest:r.safeValueProvenanceDigest};}
+
+it("publishes and independently re-admits all 40 wave-38 source decisions through physical SLIDE/VOK",{skip:!AVAILABLE},async()=>{
+  const slide=await api(),context=slide.portableVeoReferenceContext(),sources=CANDIDATES.map(c=>Uint8Array.from(readFileSync(join(ROOT,c.file)))),request=bytes=>({packages:[{identity:"@galerina/test",version:"1.0.0-beta.38",exports:CANDIDATES.map((c,i)=>({name:c.flow,sourceFlowName:c.flow,sourceBytes:bytes[i]})),dependencies:[],resources:[]}],context,gates:GATES}),compiled=slide.compileCheckedFungiPackageSet(request(sources));
+  assert.equal(compiled.verdict,1,JSON.stringify(compiled));const changed=sources.map(source=>Uint8Array.from(source));changed[0][0]^=1;assert.equal(slide.compileCheckedFungiPackageSet(request(changed)).verdict,-1);
+  const parent=await mkdtemp(join(tmpdir(),"galerina-wave-38-")),out=join(parent,"published");
+  try{const published=await slide.publishCheckedFungiPackageBuild({packageBuildHandle:compiled.packageBuildHandle,outputDirectory:out});assert.equal(published.verdict,1,JSON.stringify(published));assert.equal(published.outputFiles.filter(n=>n.endsWith(".slide")).length,40);let last;for(const c of CANDIDATES){const prepared=await slide.prepareCheckedFungiPackagePublication({publicationDirectory:out,packageIdentity:"@galerina/test",exportName:c.flow,context,gates:GATES});assert.equal(prepared.verdict,1,c.flow);const receipt=slide.executeTypedCheckedFungiPackagePublication(prepared.packageExecutionHandle,c.args,undefined),verified=slide.verifyTypedCheckedFungiPackageReceipt(receipt,expectation(receipt));assert.equal(verified.verdict,1,c.flow);assert.equal(verified.value,c.expected,c.flow);assert.equal(verified.authorityReleased,false,c.flow);last=receipt;}assert.equal(slide.verifyTypedCheckedFungiPackageReceipt({...last,receiptDigest:"sha256:"+"0".repeat(64)},expectation(last)).verdict,-1);const path=join(out,published.outputFiles.find(n=>n.endsWith(".slide"))),bytes=await readFile(path);bytes[0]^=1;await writeFile(path,bytes);assert.equal((await slide.prepareCheckedFungiPackagePublication({publicationDirectory:out,packageIdentity:"@galerina/test",exportName:CANDIDATES[0].flow,context,gates:GATES})).verdict,-1);}finally{await rm(parent,{recursive:true,force:true});}
+});
