@@ -1311,3 +1311,16 @@ stage/switch/retire precedence before phase refusal, preserving the broad
 public `Masked.verdict` contract and repairing one durable blocker spelling.
 No Critical or Important discrepancy remains in the reviewed Slice 748-797
 evidence.
+
+Authored evidence is committed at `7e5e88be` with normalized receipts at
+`238260c6`. The owner close exposed and fixed one fail-closed tooling drift:
+`audit-coverage.mjs` now resolves both the legacy KB-root registry and its
+migrated `reference/galerina` location, with a red-then-green **10/10** focused
+test at `d4ac4ec8`. Owner layers are committed at `a050db6a`, `24813403` and
+`a3729533`. All registered checks plus the hermetic generator contract pass
+**19/19**. The bounded close reports queue **1,490/1,490**, package
+**100/201**, project **5/5**, graph **10,561 nodes / 10,411 edges / zero
+violations**, semantic **3/3** with **977** tests, source inventory **149**,
+code index **975**, receipts **737/737**, Golden **11/11**, canonical **7/7 =
+9,612**, and both leak audits at zero. Final closure commit and dual-index
+refresh remain pending; repository-wide closure stays `UNKNOWN`.

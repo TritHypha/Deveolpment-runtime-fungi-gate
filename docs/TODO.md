@@ -16,9 +16,12 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Reconcile three independent read-only reviews with final PASS after
   correcting exact phase precedence, the `Masked` public contract and one
   durable blocker spelling.
-- [ ] Commit authored evidence, publish owners/graphs, pass the bounded matrix,
-  then refresh both indexes at Slice 797. Repository-wide closure remains
-  `UNKNOWN`.
+- [x] Commit authored evidence at `7e5e88be` plus normalized receipts at
+  `238260c6`; fix the migrated KB registry lookup at `d4ac4ec8`; publish the
+  owner layers at `a050db6a`, `24813403` and `a3729533`; pass both registered
+  owner checks and the bounded close matrix **19/19**.
+- [ ] Record the final closure commit and refresh both indexes at Slice 797.
+  Repository-wide closure remains `UNKNOWN`.
 
 ### Slices 698-747 Tower cached policy, TPL enforcement and hybrid engine - 2026-08-14
 

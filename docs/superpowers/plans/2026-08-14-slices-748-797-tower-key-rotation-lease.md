@@ -117,5 +117,6 @@ candidates/superseded scopes.
 - [x] Author 50 unique receipt-local classifications, exact exits and vectors.
 - [x] Run focused Tower checks and the governed receipt audit.
 - [x] Reconcile three independent read-only reviews.
-- [ ] Commit authored evidence separately, publish owners, run the bounded
-  19-check matrix, and refresh both indexes at Slice 797.
+- [x] Commit authored evidence separately, publish owners and run the bounded
+  19-check matrix.
+- [ ] Refresh both indexes at the final Slice-797 closure commit.

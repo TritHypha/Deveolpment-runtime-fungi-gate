@@ -3866,5 +3866,8 @@ closure remains `UNKNOWN`.
 
 All 50 scopes are now adjudicated as **14 NO_RUNTIME_BEHAVIOR + 36 BLOCKED**.
 Fresh Tower typecheck, **515/515** package tests and **737/737** governed
-receipts pass. Three independent reviews pass. The authored-evidence commit,
-owner publication, bounded close matrix and dual-index refresh remain pending.
+receipts pass. Three independent reviews pass. Authored evidence and the owner
+layers are committed; the registered owner contract and bounded close matrix
+both pass **19/19**, with graph integrity at **10,561 nodes / 10,411 edges /
+zero violations** and both leak audits clean. Final closure recording and the
+dual-index refresh remain pending.
