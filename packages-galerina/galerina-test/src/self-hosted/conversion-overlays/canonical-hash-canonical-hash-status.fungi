@@ -1,0 +1,41 @@
+@version 1
+// Source-bound decision overlay wave 51 item 15: galerina-core-compiler/src/runtime/canonicalHash.ts#canonicalHash.
+pure flow canonicalHashCanonicalHashStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay15001: Bool = sealReady
+  let wave51Relay15002: Bool = wave51Relay15001
+  let wave51Relay15003: Bool = wave51Relay15002
+  let wave51Relay15004: Bool = wave51Relay15003
+  let wave51Relay15005: Bool = wave51Relay15004
+  let wave51Relay15006: Bool = wave51Relay15005
+  let wave51Relay15007: Bool = wave51Relay15006
+  let wave51Relay15008: Bool = wave51Relay15007
+  let wave51Relay15009: Bool = wave51Relay15008
+  let wave51Relay15010: Bool = wave51Relay15009
+  let wave51Relay15011: Bool = wave51Relay15010
+  let wave51Relay15012: Bool = wave51Relay15011
+  let wave51Relay15013: Bool = wave51Relay15012
+  let wave51Relay15014: Bool = wave51Relay15013
+  let wave51Relay15015: Bool = wave51Relay15014
+  if wave51Relay15015 {
+    if proofReady {
+      if routeReady {
+        if policyReady {
+          if stateReady {
+            if shapeReady {
+              if sourceReady {
+                return "canonical_hash_canonical_hash_built"
+              }
+              return "wave51_source_missing"
+            }
+            return "wave51_shape_missing"
+          }
+          return "wave51_state_missing"
+        }
+        return "wave51_policy_missing"
+      }
+      return "wave51_route_missing"
+    }
+    return "wave51_proof_missing"
+  }
+  return "wave51_seal_missing"
+}

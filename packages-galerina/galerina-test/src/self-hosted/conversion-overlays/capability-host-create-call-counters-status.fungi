@@ -1,0 +1,62 @@
+@version 1
+// Source-bound decision overlay wave 51 item 36: galerina-core-compiler/src/runtime/capabilityHost.ts#createCapabilityHost.callCounters.
+pure flow capabilityHostCreateCallCountersStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay36001: Bool = policyReady
+  let wave51Relay36002: Bool = wave51Relay36001
+  let wave51Relay36003: Bool = wave51Relay36002
+  let wave51Relay36004: Bool = wave51Relay36003
+  let wave51Relay36005: Bool = wave51Relay36004
+  let wave51Relay36006: Bool = wave51Relay36005
+  let wave51Relay36007: Bool = wave51Relay36006
+  let wave51Relay36008: Bool = wave51Relay36007
+  let wave51Relay36009: Bool = wave51Relay36008
+  let wave51Relay36010: Bool = wave51Relay36009
+  let wave51Relay36011: Bool = wave51Relay36010
+  let wave51Relay36012: Bool = wave51Relay36011
+  let wave51Relay36013: Bool = wave51Relay36012
+  let wave51Relay36014: Bool = wave51Relay36013
+  let wave51Relay36015: Bool = wave51Relay36014
+  let wave51Relay36016: Bool = wave51Relay36015
+  let wave51Relay36017: Bool = wave51Relay36016
+  let wave51Relay36018: Bool = wave51Relay36017
+  let wave51Relay36019: Bool = wave51Relay36018
+  let wave51Relay36020: Bool = wave51Relay36019
+  let wave51Relay36021: Bool = wave51Relay36020
+  let wave51Relay36022: Bool = wave51Relay36021
+  let wave51Relay36023: Bool = wave51Relay36022
+  let wave51Relay36024: Bool = wave51Relay36023
+  let wave51Relay36025: Bool = wave51Relay36024
+  let wave51Relay36026: Bool = wave51Relay36025
+  let wave51Relay36027: Bool = wave51Relay36026
+  let wave51Relay36028: Bool = wave51Relay36027
+  let wave51Relay36029: Bool = wave51Relay36028
+  let wave51Relay36030: Bool = wave51Relay36029
+  let wave51Relay36031: Bool = wave51Relay36030
+  let wave51Relay36032: Bool = wave51Relay36031
+  let wave51Relay36033: Bool = wave51Relay36032
+  let wave51Relay36034: Bool = wave51Relay36033
+  let wave51Relay36035: Bool = wave51Relay36034
+  let wave51Relay36036: Bool = wave51Relay36035
+  if wave51Relay36036 {
+    if routeReady {
+      if proofReady {
+        if sealReady {
+          if sourceReady {
+            if shapeReady {
+              if stateReady {
+                return "capability_host_create_call_counters_built"
+              }
+              return "wave51_state_missing"
+            }
+            return "wave51_shape_missing"
+          }
+          return "wave51_source_missing"
+        }
+        return "wave51_seal_missing"
+      }
+      return "wave51_proof_missing"
+    }
+    return "wave51_route_missing"
+  }
+  return "wave51_policy_missing"
+}

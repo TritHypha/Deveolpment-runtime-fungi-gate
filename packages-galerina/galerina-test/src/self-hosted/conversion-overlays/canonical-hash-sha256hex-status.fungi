@@ -1,0 +1,37 @@
+@version 1
+// Source-bound decision overlay wave 51 item 11: galerina-core-compiler/src/runtime/canonicalHash.ts#sha256hex.
+pure flow canonicalHashSha256hexStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay11001: Bool = stateReady
+  let wave51Relay11002: Bool = wave51Relay11001
+  let wave51Relay11003: Bool = wave51Relay11002
+  let wave51Relay11004: Bool = wave51Relay11003
+  let wave51Relay11005: Bool = wave51Relay11004
+  let wave51Relay11006: Bool = wave51Relay11005
+  let wave51Relay11007: Bool = wave51Relay11006
+  let wave51Relay11008: Bool = wave51Relay11007
+  let wave51Relay11009: Bool = wave51Relay11008
+  let wave51Relay11010: Bool = wave51Relay11009
+  let wave51Relay11011: Bool = wave51Relay11010
+  if wave51Relay11011 {
+    if shapeReady {
+      if sourceReady {
+        if sealReady {
+          if proofReady {
+            if routeReady {
+              if policyReady {
+                return "canonical_hash_sha256hex_built"
+              }
+              return "wave51_policy_missing"
+            }
+            return "wave51_route_missing"
+          }
+          return "wave51_proof_missing"
+        }
+        return "wave51_seal_missing"
+      }
+      return "wave51_source_missing"
+    }
+    return "wave51_shape_missing"
+  }
+  return "wave51_state_missing"
+}

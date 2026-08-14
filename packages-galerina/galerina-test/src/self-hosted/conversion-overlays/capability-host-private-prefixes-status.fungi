@@ -1,0 +1,50 @@
+@version 1
+// Source-bound decision overlay wave 51 item 24: galerina-core-compiler/src/runtime/capabilityHost.ts#PRIVATE_PREFIXES.
+pure flow capabilityHostPrivatePrefixesStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay24001: Bool = sourceReady
+  let wave51Relay24002: Bool = wave51Relay24001
+  let wave51Relay24003: Bool = wave51Relay24002
+  let wave51Relay24004: Bool = wave51Relay24003
+  let wave51Relay24005: Bool = wave51Relay24004
+  let wave51Relay24006: Bool = wave51Relay24005
+  let wave51Relay24007: Bool = wave51Relay24006
+  let wave51Relay24008: Bool = wave51Relay24007
+  let wave51Relay24009: Bool = wave51Relay24008
+  let wave51Relay24010: Bool = wave51Relay24009
+  let wave51Relay24011: Bool = wave51Relay24010
+  let wave51Relay24012: Bool = wave51Relay24011
+  let wave51Relay24013: Bool = wave51Relay24012
+  let wave51Relay24014: Bool = wave51Relay24013
+  let wave51Relay24015: Bool = wave51Relay24014
+  let wave51Relay24016: Bool = wave51Relay24015
+  let wave51Relay24017: Bool = wave51Relay24016
+  let wave51Relay24018: Bool = wave51Relay24017
+  let wave51Relay24019: Bool = wave51Relay24018
+  let wave51Relay24020: Bool = wave51Relay24019
+  let wave51Relay24021: Bool = wave51Relay24020
+  let wave51Relay24022: Bool = wave51Relay24021
+  let wave51Relay24023: Bool = wave51Relay24022
+  let wave51Relay24024: Bool = wave51Relay24023
+  if sourceReady {
+    if shapeReady {
+      if stateReady {
+        if policyReady {
+          if routeReady {
+            if proofReady {
+              if sealReady {
+                return "capability_host_private_prefixes_built"
+              }
+              return "wave51_seal_missing"
+            }
+            return "wave51_proof_missing"
+          }
+          return "wave51_route_missing"
+        }
+        return "wave51_policy_missing"
+      }
+      return "wave51_state_missing"
+    }
+    return "wave51_shape_missing"
+  }
+  return "wave51_source_missing"
+}

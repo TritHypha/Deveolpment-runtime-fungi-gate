@@ -1,0 +1,45 @@
+@version 1
+// Source-bound decision overlay wave 51 item 19: galerina-core-compiler/src/runtime/canonicalHash.ts#hashGIR.
+pure flow canonicalHashHashGirStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay19001: Bool = stateReady
+  let wave51Relay19002: Bool = wave51Relay19001
+  let wave51Relay19003: Bool = wave51Relay19002
+  let wave51Relay19004: Bool = wave51Relay19003
+  let wave51Relay19005: Bool = wave51Relay19004
+  let wave51Relay19006: Bool = wave51Relay19005
+  let wave51Relay19007: Bool = wave51Relay19006
+  let wave51Relay19008: Bool = wave51Relay19007
+  let wave51Relay19009: Bool = wave51Relay19008
+  let wave51Relay19010: Bool = wave51Relay19009
+  let wave51Relay19011: Bool = wave51Relay19010
+  let wave51Relay19012: Bool = wave51Relay19011
+  let wave51Relay19013: Bool = wave51Relay19012
+  let wave51Relay19014: Bool = wave51Relay19013
+  let wave51Relay19015: Bool = wave51Relay19014
+  let wave51Relay19016: Bool = wave51Relay19015
+  let wave51Relay19017: Bool = wave51Relay19016
+  let wave51Relay19018: Bool = wave51Relay19017
+  let wave51Relay19019: Bool = wave51Relay19018
+  if wave51Relay19019 {
+    if policyReady {
+      if routeReady {
+        if proofReady {
+          if sealReady {
+            if sourceReady {
+              if shapeReady {
+                return "canonical_hash_hash_gir_built"
+              }
+              return "wave51_shape_missing"
+            }
+            return "wave51_source_missing"
+          }
+          return "wave51_seal_missing"
+        }
+        return "wave51_proof_missing"
+      }
+      return "wave51_route_missing"
+    }
+    return "wave51_policy_missing"
+  }
+  return "wave51_state_missing"
+}

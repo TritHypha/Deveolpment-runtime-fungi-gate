@@ -1,0 +1,33 @@
+@version 1
+// Source-bound decision overlay wave 51 item 7: galerina-core-compiler/src/runtime.ts#admitRuntime.appendDiagnostics.
+pure flow runtimeAdmitRuntimeAppendDiagnosticsStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay07001: Bool = sealReady
+  let wave51Relay07002: Bool = wave51Relay07001
+  let wave51Relay07003: Bool = wave51Relay07002
+  let wave51Relay07004: Bool = wave51Relay07003
+  let wave51Relay07005: Bool = wave51Relay07004
+  let wave51Relay07006: Bool = wave51Relay07005
+  let wave51Relay07007: Bool = wave51Relay07006
+  if wave51Relay07007 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if policyReady {
+            if routeReady {
+              if proofReady {
+                return "runtime_admit_runtime_append_diagnostics_built"
+              }
+              return "wave51_proof_missing"
+            }
+            return "wave51_route_missing"
+          }
+          return "wave51_policy_missing"
+        }
+        return "wave51_state_missing"
+      }
+      return "wave51_shape_missing"
+    }
+    return "wave51_source_missing"
+  }
+  return "wave51_seal_missing"
+}

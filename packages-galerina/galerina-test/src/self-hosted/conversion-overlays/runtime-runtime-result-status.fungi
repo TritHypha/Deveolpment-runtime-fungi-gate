@@ -1,0 +1,29 @@
+@version 1
+// Source-bound decision overlay wave 51 item 3: galerina-core-compiler/src/runtime.ts#RuntimeResult.
+pure flow runtimeRuntimeResultStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay03001: Bool = stateReady
+  let wave51Relay03002: Bool = wave51Relay03001
+  let wave51Relay03003: Bool = wave51Relay03002
+  if wave51Relay03003 {
+    if policyReady {
+      if routeReady {
+        if proofReady {
+          if sealReady {
+            if sourceReady {
+              if shapeReady {
+                return "runtime_runtime_result_built"
+              }
+              return "wave51_shape_missing"
+            }
+            return "wave51_source_missing"
+          }
+          return "wave51_seal_missing"
+        }
+        return "wave51_proof_missing"
+      }
+      return "wave51_route_missing"
+    }
+    return "wave51_policy_missing"
+  }
+  return "wave51_state_missing"
+}

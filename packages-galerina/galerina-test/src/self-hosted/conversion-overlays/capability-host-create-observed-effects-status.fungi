@@ -1,0 +1,61 @@
+@version 1
+// Source-bound decision overlay wave 51 item 35: galerina-core-compiler/src/runtime/capabilityHost.ts#createCapabilityHost.observedEffects.
+pure flow capabilityHostCreateObservedEffectsStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay35001: Bool = stateReady
+  let wave51Relay35002: Bool = wave51Relay35001
+  let wave51Relay35003: Bool = wave51Relay35002
+  let wave51Relay35004: Bool = wave51Relay35003
+  let wave51Relay35005: Bool = wave51Relay35004
+  let wave51Relay35006: Bool = wave51Relay35005
+  let wave51Relay35007: Bool = wave51Relay35006
+  let wave51Relay35008: Bool = wave51Relay35007
+  let wave51Relay35009: Bool = wave51Relay35008
+  let wave51Relay35010: Bool = wave51Relay35009
+  let wave51Relay35011: Bool = wave51Relay35010
+  let wave51Relay35012: Bool = wave51Relay35011
+  let wave51Relay35013: Bool = wave51Relay35012
+  let wave51Relay35014: Bool = wave51Relay35013
+  let wave51Relay35015: Bool = wave51Relay35014
+  let wave51Relay35016: Bool = wave51Relay35015
+  let wave51Relay35017: Bool = wave51Relay35016
+  let wave51Relay35018: Bool = wave51Relay35017
+  let wave51Relay35019: Bool = wave51Relay35018
+  let wave51Relay35020: Bool = wave51Relay35019
+  let wave51Relay35021: Bool = wave51Relay35020
+  let wave51Relay35022: Bool = wave51Relay35021
+  let wave51Relay35023: Bool = wave51Relay35022
+  let wave51Relay35024: Bool = wave51Relay35023
+  let wave51Relay35025: Bool = wave51Relay35024
+  let wave51Relay35026: Bool = wave51Relay35025
+  let wave51Relay35027: Bool = wave51Relay35026
+  let wave51Relay35028: Bool = wave51Relay35027
+  let wave51Relay35029: Bool = wave51Relay35028
+  let wave51Relay35030: Bool = wave51Relay35029
+  let wave51Relay35031: Bool = wave51Relay35030
+  let wave51Relay35032: Bool = wave51Relay35031
+  let wave51Relay35033: Bool = wave51Relay35032
+  let wave51Relay35034: Bool = wave51Relay35033
+  let wave51Relay35035: Bool = wave51Relay35034
+  if wave51Relay35035 {
+    if policyReady {
+      if routeReady {
+        if proofReady {
+          if sealReady {
+            if sourceReady {
+              if shapeReady {
+                return "capability_host_create_observed_effects_built"
+              }
+              return "wave51_shape_missing"
+            }
+            return "wave51_source_missing"
+          }
+          return "wave51_seal_missing"
+        }
+        return "wave51_proof_missing"
+      }
+      return "wave51_route_missing"
+    }
+    return "wave51_policy_missing"
+  }
+  return "wave51_state_missing"
+}

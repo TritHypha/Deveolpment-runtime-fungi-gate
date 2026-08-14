@@ -1,0 +1,58 @@
+@version 1
+// Source-bound decision overlay wave 51 item 32: galerina-core-compiler/src/runtime/capabilityHost.ts#createCapabilityHost.trackCallCount.
+pure flow capabilityHostCreateTrackCallCountStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay32001: Bool = sourceReady
+  let wave51Relay32002: Bool = wave51Relay32001
+  let wave51Relay32003: Bool = wave51Relay32002
+  let wave51Relay32004: Bool = wave51Relay32003
+  let wave51Relay32005: Bool = wave51Relay32004
+  let wave51Relay32006: Bool = wave51Relay32005
+  let wave51Relay32007: Bool = wave51Relay32006
+  let wave51Relay32008: Bool = wave51Relay32007
+  let wave51Relay32009: Bool = wave51Relay32008
+  let wave51Relay32010: Bool = wave51Relay32009
+  let wave51Relay32011: Bool = wave51Relay32010
+  let wave51Relay32012: Bool = wave51Relay32011
+  let wave51Relay32013: Bool = wave51Relay32012
+  let wave51Relay32014: Bool = wave51Relay32013
+  let wave51Relay32015: Bool = wave51Relay32014
+  let wave51Relay32016: Bool = wave51Relay32015
+  let wave51Relay32017: Bool = wave51Relay32016
+  let wave51Relay32018: Bool = wave51Relay32017
+  let wave51Relay32019: Bool = wave51Relay32018
+  let wave51Relay32020: Bool = wave51Relay32019
+  let wave51Relay32021: Bool = wave51Relay32020
+  let wave51Relay32022: Bool = wave51Relay32021
+  let wave51Relay32023: Bool = wave51Relay32022
+  let wave51Relay32024: Bool = wave51Relay32023
+  let wave51Relay32025: Bool = wave51Relay32024
+  let wave51Relay32026: Bool = wave51Relay32025
+  let wave51Relay32027: Bool = wave51Relay32026
+  let wave51Relay32028: Bool = wave51Relay32027
+  let wave51Relay32029: Bool = wave51Relay32028
+  let wave51Relay32030: Bool = wave51Relay32029
+  let wave51Relay32031: Bool = wave51Relay32030
+  let wave51Relay32032: Bool = wave51Relay32031
+  if sealReady {
+    if proofReady {
+      if routeReady {
+        if policyReady {
+          if stateReady {
+            if shapeReady {
+              if sourceReady {
+                return "capability_host_create_track_call_count_built"
+              }
+              return "wave51_source_missing"
+            }
+            return "wave51_shape_missing"
+          }
+          return "wave51_state_missing"
+        }
+        return "wave51_policy_missing"
+      }
+      return "wave51_route_missing"
+    }
+    return "wave51_proof_missing"
+  }
+  return "wave51_seal_missing"
+}

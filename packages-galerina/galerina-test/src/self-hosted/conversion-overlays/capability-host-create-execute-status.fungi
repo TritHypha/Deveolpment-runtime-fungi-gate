@@ -1,0 +1,60 @@
+@version 1
+// Source-bound decision overlay wave 51 item 34: galerina-core-compiler/src/runtime/capabilityHost.ts#createCapabilityHost.execute.
+pure flow capabilityHostCreateExecuteStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay34001: Bool = shapeReady
+  let wave51Relay34002: Bool = wave51Relay34001
+  let wave51Relay34003: Bool = wave51Relay34002
+  let wave51Relay34004: Bool = wave51Relay34003
+  let wave51Relay34005: Bool = wave51Relay34004
+  let wave51Relay34006: Bool = wave51Relay34005
+  let wave51Relay34007: Bool = wave51Relay34006
+  let wave51Relay34008: Bool = wave51Relay34007
+  let wave51Relay34009: Bool = wave51Relay34008
+  let wave51Relay34010: Bool = wave51Relay34009
+  let wave51Relay34011: Bool = wave51Relay34010
+  let wave51Relay34012: Bool = wave51Relay34011
+  let wave51Relay34013: Bool = wave51Relay34012
+  let wave51Relay34014: Bool = wave51Relay34013
+  let wave51Relay34015: Bool = wave51Relay34014
+  let wave51Relay34016: Bool = wave51Relay34015
+  let wave51Relay34017: Bool = wave51Relay34016
+  let wave51Relay34018: Bool = wave51Relay34017
+  let wave51Relay34019: Bool = wave51Relay34018
+  let wave51Relay34020: Bool = wave51Relay34019
+  let wave51Relay34021: Bool = wave51Relay34020
+  let wave51Relay34022: Bool = wave51Relay34021
+  let wave51Relay34023: Bool = wave51Relay34022
+  let wave51Relay34024: Bool = wave51Relay34023
+  let wave51Relay34025: Bool = wave51Relay34024
+  let wave51Relay34026: Bool = wave51Relay34025
+  let wave51Relay34027: Bool = wave51Relay34026
+  let wave51Relay34028: Bool = wave51Relay34027
+  let wave51Relay34029: Bool = wave51Relay34028
+  let wave51Relay34030: Bool = wave51Relay34029
+  let wave51Relay34031: Bool = wave51Relay34030
+  let wave51Relay34032: Bool = wave51Relay34031
+  let wave51Relay34033: Bool = wave51Relay34032
+  let wave51Relay34034: Bool = wave51Relay34033
+  if wave51Relay34034 {
+    if stateReady {
+      if policyReady {
+        if routeReady {
+          if proofReady {
+            if sealReady {
+              if sourceReady {
+                return "capability_host_create_execute_built"
+              }
+              return "wave51_source_missing"
+            }
+            return "wave51_seal_missing"
+          }
+          return "wave51_proof_missing"
+        }
+        return "wave51_route_missing"
+      }
+      return "wave51_policy_missing"
+    }
+    return "wave51_state_missing"
+  }
+  return "wave51_shape_missing"
+}

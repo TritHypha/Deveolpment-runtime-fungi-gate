@@ -1,0 +1,49 @@
+@version 1
+// Source-bound decision overlay wave 51 item 23: galerina-core-compiler/src/runtime/capabilityHost.ts#CapabilityResult.
+pure flow capabilityHostCapabilityResultStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay23001: Bool = sealReady
+  let wave51Relay23002: Bool = wave51Relay23001
+  let wave51Relay23003: Bool = wave51Relay23002
+  let wave51Relay23004: Bool = wave51Relay23003
+  let wave51Relay23005: Bool = wave51Relay23004
+  let wave51Relay23006: Bool = wave51Relay23005
+  let wave51Relay23007: Bool = wave51Relay23006
+  let wave51Relay23008: Bool = wave51Relay23007
+  let wave51Relay23009: Bool = wave51Relay23008
+  let wave51Relay23010: Bool = wave51Relay23009
+  let wave51Relay23011: Bool = wave51Relay23010
+  let wave51Relay23012: Bool = wave51Relay23011
+  let wave51Relay23013: Bool = wave51Relay23012
+  let wave51Relay23014: Bool = wave51Relay23013
+  let wave51Relay23015: Bool = wave51Relay23014
+  let wave51Relay23016: Bool = wave51Relay23015
+  let wave51Relay23017: Bool = wave51Relay23016
+  let wave51Relay23018: Bool = wave51Relay23017
+  let wave51Relay23019: Bool = wave51Relay23018
+  let wave51Relay23020: Bool = wave51Relay23019
+  let wave51Relay23021: Bool = wave51Relay23020
+  let wave51Relay23022: Bool = wave51Relay23021
+  let wave51Relay23023: Bool = wave51Relay23022
+  if wave51Relay23023 {
+    if sourceReady {
+      if shapeReady {
+        if stateReady {
+          if policyReady {
+            if routeReady {
+              if proofReady {
+                return "capability_host_capability_result_built"
+              }
+              return "wave51_proof_missing"
+            }
+            return "wave51_route_missing"
+          }
+          return "wave51_policy_missing"
+        }
+        return "wave51_state_missing"
+      }
+      return "wave51_shape_missing"
+    }
+    return "wave51_source_missing"
+  }
+  return "wave51_seal_missing"
+}

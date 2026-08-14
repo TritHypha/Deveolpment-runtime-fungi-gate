@@ -1,0 +1,48 @@
+@version 1
+// Source-bound decision overlay wave 51 item 22: galerina-core-compiler/src/runtime/capabilityHost.ts#CapabilityCall.
+pure flow capabilityHostCapabilityCallStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay22001: Bool = proofReady
+  let wave51Relay22002: Bool = wave51Relay22001
+  let wave51Relay22003: Bool = wave51Relay22002
+  let wave51Relay22004: Bool = wave51Relay22003
+  let wave51Relay22005: Bool = wave51Relay22004
+  let wave51Relay22006: Bool = wave51Relay22005
+  let wave51Relay22007: Bool = wave51Relay22006
+  let wave51Relay22008: Bool = wave51Relay22007
+  let wave51Relay22009: Bool = wave51Relay22008
+  let wave51Relay22010: Bool = wave51Relay22009
+  let wave51Relay22011: Bool = wave51Relay22010
+  let wave51Relay22012: Bool = wave51Relay22011
+  let wave51Relay22013: Bool = wave51Relay22012
+  let wave51Relay22014: Bool = wave51Relay22013
+  let wave51Relay22015: Bool = wave51Relay22014
+  let wave51Relay22016: Bool = wave51Relay22015
+  let wave51Relay22017: Bool = wave51Relay22016
+  let wave51Relay22018: Bool = wave51Relay22017
+  let wave51Relay22019: Bool = wave51Relay22018
+  let wave51Relay22020: Bool = wave51Relay22019
+  let wave51Relay22021: Bool = wave51Relay22020
+  let wave51Relay22022: Bool = wave51Relay22021
+  if wave51Relay22022 {
+    if sealReady {
+      if sourceReady {
+        if shapeReady {
+          if stateReady {
+            if policyReady {
+              if routeReady {
+                return "capability_host_capability_call_built"
+              }
+              return "wave51_route_missing"
+            }
+            return "wave51_policy_missing"
+          }
+          return "wave51_state_missing"
+        }
+        return "wave51_shape_missing"
+      }
+      return "wave51_source_missing"
+    }
+    return "wave51_seal_missing"
+  }
+  return "wave51_proof_missing"
+}

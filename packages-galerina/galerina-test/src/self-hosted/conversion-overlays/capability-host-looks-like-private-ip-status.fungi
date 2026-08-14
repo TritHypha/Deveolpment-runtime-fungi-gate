@@ -1,0 +1,51 @@
+@version 1
+// Source-bound decision overlay wave 51 item 25: galerina-core-compiler/src/runtime/capabilityHost.ts#looksLikePrivateIp.
+pure flow capabilityHostLooksLikePrivateIpStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay25001: Bool = sourceReady
+  let wave51Relay25002: Bool = wave51Relay25001
+  let wave51Relay25003: Bool = wave51Relay25002
+  let wave51Relay25004: Bool = wave51Relay25003
+  let wave51Relay25005: Bool = wave51Relay25004
+  let wave51Relay25006: Bool = wave51Relay25005
+  let wave51Relay25007: Bool = wave51Relay25006
+  let wave51Relay25008: Bool = wave51Relay25007
+  let wave51Relay25009: Bool = wave51Relay25008
+  let wave51Relay25010: Bool = wave51Relay25009
+  let wave51Relay25011: Bool = wave51Relay25010
+  let wave51Relay25012: Bool = wave51Relay25011
+  let wave51Relay25013: Bool = wave51Relay25012
+  let wave51Relay25014: Bool = wave51Relay25013
+  let wave51Relay25015: Bool = wave51Relay25014
+  let wave51Relay25016: Bool = wave51Relay25015
+  let wave51Relay25017: Bool = wave51Relay25016
+  let wave51Relay25018: Bool = wave51Relay25017
+  let wave51Relay25019: Bool = wave51Relay25018
+  let wave51Relay25020: Bool = wave51Relay25019
+  let wave51Relay25021: Bool = wave51Relay25020
+  let wave51Relay25022: Bool = wave51Relay25021
+  let wave51Relay25023: Bool = wave51Relay25022
+  let wave51Relay25024: Bool = wave51Relay25023
+  let wave51Relay25025: Bool = wave51Relay25024
+  if wave51Relay25025 {
+    if sealReady {
+      if proofReady {
+        if routeReady {
+          if policyReady {
+            if stateReady {
+              if shapeReady {
+                return "capability_host_looks_like_private_ip_built"
+              }
+              return "wave51_shape_missing"
+            }
+            return "wave51_state_missing"
+          }
+          return "wave51_policy_missing"
+        }
+        return "wave51_route_missing"
+      }
+      return "wave51_proof_missing"
+    }
+    return "wave51_seal_missing"
+  }
+  return "wave51_source_missing"
+}

@@ -1,0 +1,39 @@
+@version 1
+// Source-bound decision overlay wave 51 item 13: galerina-core-compiler/src/runtime/canonicalHash.ts#isTimestampString.
+pure flow canonicalHashIsTimestampStringStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay13001: Bool = routeReady
+  let wave51Relay13002: Bool = wave51Relay13001
+  let wave51Relay13003: Bool = wave51Relay13002
+  let wave51Relay13004: Bool = wave51Relay13003
+  let wave51Relay13005: Bool = wave51Relay13004
+  let wave51Relay13006: Bool = wave51Relay13005
+  let wave51Relay13007: Bool = wave51Relay13006
+  let wave51Relay13008: Bool = wave51Relay13007
+  let wave51Relay13009: Bool = wave51Relay13008
+  let wave51Relay13010: Bool = wave51Relay13009
+  let wave51Relay13011: Bool = wave51Relay13010
+  let wave51Relay13012: Bool = wave51Relay13011
+  let wave51Relay13013: Bool = wave51Relay13012
+  if wave51Relay13013 {
+    if policyReady {
+      if stateReady {
+        if shapeReady {
+          if sourceReady {
+            if sealReady {
+              if proofReady {
+                return "canonical_hash_is_timestamp_string_built"
+              }
+              return "wave51_proof_missing"
+            }
+            return "wave51_seal_missing"
+          }
+          return "wave51_source_missing"
+        }
+        return "wave51_shape_missing"
+      }
+      return "wave51_state_missing"
+    }
+    return "wave51_policy_missing"
+  }
+  return "wave51_route_missing"
+}

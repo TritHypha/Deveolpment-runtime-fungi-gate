@@ -1,0 +1,47 @@
+@version 1
+// Source-bound decision overlay wave 51 item 21: galerina-core-compiler/src/runtime/capabilityHost.ts#CapabilityCheckResult.
+pure flow capabilityHostCapabilityCheckResultStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay21001: Bool = routeReady
+  let wave51Relay21002: Bool = wave51Relay21001
+  let wave51Relay21003: Bool = wave51Relay21002
+  let wave51Relay21004: Bool = wave51Relay21003
+  let wave51Relay21005: Bool = wave51Relay21004
+  let wave51Relay21006: Bool = wave51Relay21005
+  let wave51Relay21007: Bool = wave51Relay21006
+  let wave51Relay21008: Bool = wave51Relay21007
+  let wave51Relay21009: Bool = wave51Relay21008
+  let wave51Relay21010: Bool = wave51Relay21009
+  let wave51Relay21011: Bool = wave51Relay21010
+  let wave51Relay21012: Bool = wave51Relay21011
+  let wave51Relay21013: Bool = wave51Relay21012
+  let wave51Relay21014: Bool = wave51Relay21013
+  let wave51Relay21015: Bool = wave51Relay21014
+  let wave51Relay21016: Bool = wave51Relay21015
+  let wave51Relay21017: Bool = wave51Relay21016
+  let wave51Relay21018: Bool = wave51Relay21017
+  let wave51Relay21019: Bool = wave51Relay21018
+  let wave51Relay21020: Bool = wave51Relay21019
+  let wave51Relay21021: Bool = wave51Relay21020
+  if wave51Relay21021 {
+    if proofReady {
+      if sealReady {
+        if sourceReady {
+          if shapeReady {
+            if stateReady {
+              if policyReady {
+                return "capability_host_capability_check_result_built"
+              }
+              return "wave51_policy_missing"
+            }
+            return "wave51_state_missing"
+          }
+          return "wave51_shape_missing"
+        }
+        return "wave51_source_missing"
+      }
+      return "wave51_seal_missing"
+    }
+    return "wave51_proof_missing"
+  }
+  return "wave51_route_missing"
+}

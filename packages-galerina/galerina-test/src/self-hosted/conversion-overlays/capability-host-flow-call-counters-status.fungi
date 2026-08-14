@@ -1,0 +1,53 @@
+@version 1
+// Source-bound decision overlay wave 51 item 27: galerina-core-compiler/src/runtime/capabilityHost.ts#FlowCallCounters.
+pure flow capabilityHostFlowCallCountersStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let wave51Relay27001: Bool = stateReady
+  let wave51Relay27002: Bool = wave51Relay27001
+  let wave51Relay27003: Bool = wave51Relay27002
+  let wave51Relay27004: Bool = wave51Relay27003
+  let wave51Relay27005: Bool = wave51Relay27004
+  let wave51Relay27006: Bool = wave51Relay27005
+  let wave51Relay27007: Bool = wave51Relay27006
+  let wave51Relay27008: Bool = wave51Relay27007
+  let wave51Relay27009: Bool = wave51Relay27008
+  let wave51Relay27010: Bool = wave51Relay27009
+  let wave51Relay27011: Bool = wave51Relay27010
+  let wave51Relay27012: Bool = wave51Relay27011
+  let wave51Relay27013: Bool = wave51Relay27012
+  let wave51Relay27014: Bool = wave51Relay27013
+  let wave51Relay27015: Bool = wave51Relay27014
+  let wave51Relay27016: Bool = wave51Relay27015
+  let wave51Relay27017: Bool = wave51Relay27016
+  let wave51Relay27018: Bool = wave51Relay27017
+  let wave51Relay27019: Bool = wave51Relay27018
+  let wave51Relay27020: Bool = wave51Relay27019
+  let wave51Relay27021: Bool = wave51Relay27020
+  let wave51Relay27022: Bool = wave51Relay27021
+  let wave51Relay27023: Bool = wave51Relay27022
+  let wave51Relay27024: Bool = wave51Relay27023
+  let wave51Relay27025: Bool = wave51Relay27024
+  let wave51Relay27026: Bool = wave51Relay27025
+  let wave51Relay27027: Bool = wave51Relay27026
+  if wave51Relay27027 {
+    if shapeReady {
+      if sourceReady {
+        if sealReady {
+          if proofReady {
+            if routeReady {
+              if policyReady {
+                return "capability_host_flow_call_counters_built"
+              }
+              return "wave51_policy_missing"
+            }
+            return "wave51_route_missing"
+          }
+          return "wave51_proof_missing"
+        }
+        return "wave51_seal_missing"
+      }
+      return "wave51_source_missing"
+    }
+    return "wave51_shape_missing"
+  }
+  return "wave51_state_missing"
+}
