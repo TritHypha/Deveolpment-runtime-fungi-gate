@@ -9,11 +9,16 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Freeze 50 unique source-order scopes after refusing the prior Slice-47
   `isWellFormedCommit` credit: 14 erased declarations and 36 blocked runtime
   scopes; no candidate, supersession or retirement authority.
-- [ ] Adjudicate exact crypto/TypedArray/JSON, live ring state, callback/K3
+- [x] Adjudicate exact crypto/TypedArray/JSON, live ring state, callback/K3
   folds, phase lifecycle, lease borders and partial-return declaration.
-- [ ] Author and independently review 50 receipts, run fresh Tower checks plus
-  the receipt gate, publish owners/graphs, pass the bounded matrix, then refresh
-  both indexes at Slice 797. Repository-wide closure remains `UNKNOWN`.
+- [x] Author 50 receipt-local blocker/exit/vector records and run fresh Tower
+  typecheck plus **515/515** tests and the receipt audit at **737/737**.
+- [x] Reconcile three independent read-only reviews with final PASS after
+  correcting exact phase precedence, the `Masked` public contract and one
+  durable blocker spelling.
+- [ ] Commit authored evidence, publish owners/graphs, pass the bounded matrix,
+  then refresh both indexes at Slice 797. Repository-wide closure remains
+  `UNKNOWN`.
 
 ### Slices 698-747 Tower cached policy, TPL enforcement and hybrid engine - 2026-08-14
 

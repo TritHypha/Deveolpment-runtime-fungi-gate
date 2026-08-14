@@ -3863,3 +3863,8 @@ ring state, callback/K3 and phase ordering, closed lease admission and retained
 declaration contracts. The loaded lease Fungi fold is adjacent evidence only
 because it does not preserve the TypeScript host ingress. Repository-wide
 closure remains `UNKNOWN`.
+
+All 50 scopes are now adjudicated as **14 NO_RUNTIME_BEHAVIOR + 36 BLOCKED**.
+Fresh Tower typecheck, **515/515** package tests and **737/737** governed
+receipts pass. Three independent reviews pass. The authored-evidence commit,
+owner publication, bounded close matrix and dual-index refresh remain pending.

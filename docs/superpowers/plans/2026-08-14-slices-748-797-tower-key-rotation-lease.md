@@ -98,24 +98,24 @@ candidates/superseded scopes.
 
 ### Task 1: Slices 748-764
 
-- [ ] Pin crypto, canonical wire, ring construction/mutation, callbacks,
+- [x] Pin crypto, canonical wire, ring construction/mutation, callbacks,
   declarations, callers, tests, assets and prior-credit proof.
-- [ ] Record exact blocker exits, hostile vectors and threadability.
+- [x] Record exact blocker exits, hostile vectors and threadability.
 
 ### Task 2: Slices 765-781
 
-- [ ] Pin readiness/lock/verify/drain/retire folds and rotation process state.
-- [ ] Preserve callback, K3, array/record alias and failure ordering exactly.
+- [x] Pin readiness/lock/verify/drain/retire folds and rotation process state.
+- [x] Preserve callback, K3, array/record alias and failure ordering exactly.
 
 ### Task 3: Slices 782-797
 
-- [ ] Pin phase wrappers, lease borders and the partial-return declaration.
-- [ ] Reconcile loaded Fungi dependency evidence without promoting a false twin.
+- [x] Pin phase wrappers, lease borders and the partial-return declaration.
+- [x] Reconcile loaded Fungi dependency evidence without promoting a false twin.
 
 ### Task 4: Author, verify, review and publish
 
-- [ ] Author 50 unique receipt-local classifications, exact exits and vectors.
-- [ ] Run focused Tower checks and the governed receipt audit.
-- [ ] Reconcile three independent read-only reviews.
+- [x] Author 50 unique receipt-local classifications, exact exits and vectors.
+- [x] Run focused Tower checks and the governed receipt audit.
+- [x] Reconcile three independent read-only reviews.
 - [ ] Commit authored evidence separately, publish owners, run the bounded
   19-check matrix, and refresh both indexes at Slice 797.

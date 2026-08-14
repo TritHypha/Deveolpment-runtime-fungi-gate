@@ -1241,3 +1241,73 @@ phase authority; active lease record admission; and declaration retention.
 The loaded Fungi lease fold consumes already-computed host Booleans and is not
 an exact ingress, physical or retirement twin. Repository-wide closure stays
 `UNKNOWN`.
+
+### Slice 748-797 exact evidence manifest
+
+The receipts bind to source build point
+`2a5c5454fbdc163709f9d04e74842ae77924fb1b`; their source bytes remain exact
+at plan HEAD `5439944b53d1c7f428d19561cef183c7689c98c9`. The plan-only
+commit follows the independently indexed predecessor, so graph freshness for
+the receipt HEAD is `UNKNOWN` and exact reads govern.
+
+| Slices | Exact owning ranges |
+|---|---|
+| 748-759 | `key-rotation.ts:101-105`, `:107-112`, `:114-119`, `:128-130`, `:136-160`, `:167-212`, `:215-218`, `:226-231`, `:238-270`, `:277-293`, `:301-318`, `:321-335` |
+| 760-769 | `key-rotation.ts:344-357`, `:360-367`, `:370-373`, `:375-378`, `:381-388`, `:396-408`, `:415-433`, `:440-454`, `:462-468`, `:471-473` |
+| 770-781 | `key-rotation.ts:476-485`, `:493-505`, `:508-513`, `:522-534`, `:537`, `:539-543`, `:554-574`, `:578`, `:580-586`, `:588-593`, `:596-598`, `:601-621` |
+| 782-789 | `key-rotation.ts:624-626`, `:629-642`, `:645-657`, `:660-669`, `:672-674`, `:681-699`, `:702-704`, `:713-730` |
+| 790-796 | `lease.ts:40-50`, `:53-58`, `:61`, `:64-71`, `:80-84`, `:95-110`, `:116-118` |
+| 797 | `partial-return.ts:32-39` |
+
+Caller reconciliation is bounded. `ringMac` consumes `canonicalEpochs`; ring
+creation, verification and transition functions consume the crypto helpers;
+the snapshot provider and registry-rotation families consume active and
+verification epochs. The readiness, lock, verify, drain and retirement folds
+feed the phase wrappers, which are consumed by app-kernel
+`advanceRegistryRotation`. Lease functions form
+`isWellFormed -> leaseVerdict -> checkLease -> isLeaseValid` and remain public
+barrel exports. `Masked` is consumed by `isMasked`, `maskByVerdict` and
+`partialReturn` and remains a declaration-only public surface.
+
+Focused byte pins are `key-rotation.test.mjs`
+`950673FF76FC12DDB0C21EC41B42A1611A937A6CB6C39D1859F070454C7ADB25`;
+`registry-key-rotation.test.mjs`
+`5A9F1F73D214BF9746CCEE1765B6E9B8DE0071C5B7F6CD9B830F6816BB8CE276`;
+`snapshot-key-provider.test.mjs`
+`1DE4174C839C8E60B3F2D64DF227D0B10FCFC0957FBF8DC2427680C81F51E465`;
+`registry-rotation-authority.test.mjs`
+`F364BF28CE908FC45461894D72F54C38FCACA3BEAE87E82A3861DC8CAB3A0366`;
+`registry-runtime.test.mjs`
+`4913FC2776F1776D4C738CDB62DA68AF53002A0CF5F1723C94788E89902C4563`;
+`lease.test.mjs`
+`C9D5C2BE5BD53A98A7A68666F3A76E453A5CAC0722C1028E92D0A82D43E8B2D1`;
+and `partial-return.test.mjs`
+`8A1B6A3330963D8CC061B57F5303CD3494E2E70EB67E8375517B66CE1EC0B20D`.
+These are regression evidence only.
+
+Material defects remain explicit: `verifyRing` can throw through hostile
+getters before its catch begins; several crypto paths validate then reread
+mutable inputs and preserve epoch aliases; caller-mintable
+`revocationRecorded` can authorize retirement; some wrong-phase wrappers run
+authority probes before refusal; lease validation uses split snapshots and
+returns a mutable admitted alias; and registry rotation can destroy the old
+private key before the final retirement transition is guaranteed. The public
+`Masked.verdict` declaration admits every Verdict and `isMasked` checks only
+`masked === true`, so the documented non-ALLOW invariant is not enforced at
+runtime and any narrowing requires an explicit owner-approved contract change.
+Exact-name
+reconciliation found no scoped Fungi/GIR/physical `.slide`/independent
+re-admission/VOK twin. `governance-decisions.fungi#leaseVerdict` accepts only
+host-precomputed scalar facts, so it is adjacent evidence and authorizes no
+consumer switch or retirement.
+
+Fresh root verification at the plan HEAD passes Tower no-emit typecheck,
+**515/515** package tests and **737/737** governed conversion receipts with 29
+frozen legacy reports. These checks are regression and receipt-shape evidence;
+they do not supply missing physical authority or retirement proof.
+
+Three independent read-only reviews pass after correcting the exact
+stage/switch/retire precedence before phase refusal, preserving the broad
+public `Masked.verdict` contract and repairing one durable blocker spelling.
+No Critical or Important discrepancy remains in the reviewed Slice 748-797
+evidence.
