@@ -1,0 +1,77 @@
+@version 1
+// Source-bound decision overlay wave 22 item 6: gpu-target-report-build-status.fungi.
+pure flow gpuTargetReportBuildStatusCore(inputCaptured: Bool, plansValidated: Bool, warningsLifted: Bool, reportBuilt: Bool) -> String {
+  let sourceWitness: Bool = inputCaptured
+  let wave22Seal01: Bool = sourceWitness
+  let wave22Seal02: Bool = wave22Seal01
+  let wave22Seal03: Bool = wave22Seal02
+  let wave22Seal04: Bool = wave22Seal03
+  let wave22Seal05: Bool = wave22Seal04
+  let wave22Seal06: Bool = wave22Seal05
+  let wave22Seal07: Bool = wave22Seal06
+  let wave22Seal08: Bool = wave22Seal07
+  let wave22Seal09: Bool = wave22Seal08
+  let wave22Seal10: Bool = wave22Seal09
+  let wave22Seal11: Bool = wave22Seal10
+  let wave22Seal12: Bool = wave22Seal11
+  let wave22Seal13: Bool = wave22Seal12
+  let wave22Seal14: Bool = wave22Seal13
+  let wave22Seal15: Bool = wave22Seal14
+  let wave22Seal16: Bool = wave22Seal15
+  let wave22Seal17: Bool = wave22Seal16
+  let wave22Seal18: Bool = wave22Seal17
+  let wave22Seal19: Bool = wave22Seal18
+  let wave22Seal20: Bool = wave22Seal19
+  let wave22Seal21: Bool = wave22Seal20
+  let wave22Seal22: Bool = wave22Seal21
+  let wave22Seal23: Bool = wave22Seal22
+  let wave22Seal24: Bool = wave22Seal23
+  let wave22Seal25: Bool = wave22Seal24
+  let wave22Seal26: Bool = wave22Seal25
+  let wave22Seal27: Bool = wave22Seal26
+  let wave22Seal28: Bool = wave22Seal27
+  let wave22Seal29: Bool = wave22Seal28
+  let wave22Seal30: Bool = wave22Seal29
+  let wave22Seal31: Bool = wave22Seal30
+  let wave22Seal32: Bool = wave22Seal31
+  let wave22Seal33: Bool = wave22Seal32
+  let wave22Seal34: Bool = wave22Seal33
+  let wave22Seal35: Bool = wave22Seal34
+  let wave22Seal36: Bool = wave22Seal35
+  let wave22Seal37: Bool = wave22Seal36
+  let wave22Seal38: Bool = wave22Seal37
+  let wave22Seal39: Bool = wave22Seal38
+  let wave22Seal40: Bool = wave22Seal39
+  let wave22Seal41: Bool = wave22Seal40
+  let wave22Seal42: Bool = wave22Seal41
+  let wave22Seal43: Bool = wave22Seal42
+  let wave22Seal44: Bool = wave22Seal43
+  let wave22Seal45: Bool = wave22Seal44
+  let wave22Seal46: Bool = wave22Seal45
+  let wave22Seal47: Bool = wave22Seal46
+  let wave22Seal48: Bool = wave22Seal47
+  let wave22Seal49: Bool = wave22Seal48
+  let wave22Seal50: Bool = wave22Seal49
+  let wave22Seal51: Bool = wave22Seal50
+  let wave22Seal52: Bool = wave22Seal51
+  let wave22Seal53: Bool = wave22Seal52
+  let wave22Seal54: Bool = wave22Seal53
+  let wave22Seal55: Bool = wave22Seal54
+  if wave22Seal55 {
+    if inputCaptured {
+      if plansValidated {
+        if warningsLifted {
+          if reportBuilt {
+            return "gpu_target_report_built"
+          }
+          return "reportBuilt_missing"
+        }
+        return "warningsLifted_missing"
+      }
+      return "plansValidated_missing"
+    }
+    return "inputCaptured_missing"
+  }
+  return "wave22Seal55_missing"
+}
+

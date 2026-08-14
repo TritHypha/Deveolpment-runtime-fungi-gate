@@ -2413,6 +2413,68 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 22 - target validators, benchmark and Myco
+
+Wave 22 adds **40 new source-bound Fungi decision cores** and reuses no prior
+overlay scope. Twenty-two bind every previously uncredited executable function
+in the CPU, GPU, JavaScript, native, photonic and Wasm target packages; two bind
+the remaining uncredited benchmark diagnostic and configuration validators; and
+sixteen bind previously uncredited Myco index-contract, storage, ingest, output
+and link-analysis functions. The earlier CPU feature, JavaScript server-only
+import, benchmark shareability and three Myco link/search credits remain
+excluded. The package now registers **920** conversion overlays. The pinned
+source build point is
+`bb8b6b51ce0663b9ea8c49b259f6f26083d69e44`; the fifteen source SHA-256
+values are
+`4EF20E25E0BC8DBCEA71344965561FDDE5C77D49847BC032928B568EAB1148D4`,
+`ABB1021DBB52D72594EC4215732AF810C394586FA89DF52AEB42E18C62A81046`,
+`B9B2E775F4583D617C89FA63ED09B6026A2A096D874C95B8FF91C7706D863A6C`,
+`831215D52F5012EEB225654097C581F8ECF7E518A340977374627E6DF3A5B2F1`,
+`0C815A536E0B0F426382373DE537827A622ADEE815834FF7AEFEEBED990A3719`,
+`D6E1E90649E2378003565C2F710B483C9168B6B1324176462FF0A5424CC8095A`,
+`5C472FBC5723A5D50D824542C7258092A9048109D1800EBD9895333BBA1F932A`,
+`CD2DC76EEB6C8896810F1DB4764081ADC5E7BFE8FD6F5CC1CE9D045D1AA447E2`,
+`B41CAF1D7677C41C0F50CD505B7DFFC1BC835705FA9E28A0C8F15CA353B3C78C`,
+`9C7F7FE75F98FDD7E4CFEC0EDC376891BC4910D9F37B30D7C833F8DCE7C14992`,
+`8CCDFA3C435527F01CA2FEE63832A3AD9FBD3B4C617C45B68EA6B5C9519A7843`,
+`BFC4AD75E9A0D6EA82DE852F0C3493F4BC7CF0D284C23D1F1BBD3AA9D3FAAA88`,
+`C8F2C95A235AD7EF661F3C7F04F663385CB6AF99730D1E9A8A1A3F2D9E8B7E9B`,
+`C182D1FCE932BA31D1872B4FAC37B097A7DE3430AF1DF5A2388D35ED9E8AAC4E`
+and
+`E800974A1A52EC6855FC2648CB70787508B1253C3A082D723AC4C8D47A36877B`.
+The graph supplied navigation only: its last independently observed build point
+preceded the source build and omitted the prior wave's new symbol. Freshness is
+therefore **UNKNOWN**, and exact live bytes plus the zero-hit prior-wave scope
+audit are the final authority.
+
+The source test first failed on the absent and unregistered assets. The first
+authored pass then passed the whole-corpus duplicate guard without a repair
+round: **40/40 unique**, with zero exact-byte or normalized alpha-renamed
+template collisions. Focused source evidence passes **3/3** and the complete
+overlay source family passes **68/68**. Focused physical evidence passes
+**1/1** and the complete physical wave family passes **23/23**: all 40 new
+sources compile into physical `.slide` artifacts, publish, independently
+re-admit and VOK-verify their typed values, refuse mutated source and physical
+artifacts, reject receipt tampering, and release no production authority. The
+test package no-emit typecheck is green. The focused test pins are
+`2EC1D3880AA5640D62B0926FB3A41F03FEED00E66F85016D33E5B344A9400B8A`
+and
+`9CF78319E0D3A1E444AB7887F9A477485A61BE7794E67E6F342F5A4BE728E008`.
+
+This remains bounded post-border decision evidence. It does not replace target
+record decoding, mutable capability arrays, diagnostic construction, source-map
+and browser import enforcement, native or accelerator execution, benchmark
+privacy state, Myco filesystem traversal, JSON index parsing, Unicode and regex
+semantics, path containment, clocks, callbacks, error identity, concurrency or
+cleanup ordering. It authorizes no target artifact, benchmark submission, Myco
+index, consumer switch or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, the commit
+must contain all 40 new `.fungi` files, and both worktree and committed-object
+guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
+zero, no worker authored this wave, no push is authorized, and no report-only
+follow-up commit is permitted.
+
 ## Source decision overlay wave 18 - registry activation and host boundaries
 
 Wave 18 adds **40 new source-bound Fungi decision cores** and reuses no prior
