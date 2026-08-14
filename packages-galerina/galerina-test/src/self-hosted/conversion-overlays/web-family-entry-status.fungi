@@ -1,0 +1,11 @@
+@version 1
+/// Diagnostic-category core of galerina-web#validateWebFamilyReportEntry.
+pure flow webFamilyEntryStatusCore(entryWellFormed: Bool, statusConsistent: Bool, producerKnown: Bool, failedWithoutErrors: Bool, admittedStatus: String) -> String
+contract { intent { "Classify a captured web-family report entry without laundering contradictory status evidence." } }
+{
+  if entryWellFormed == false { return "error" }
+  if statusConsistent == false { return "error" }
+  if producerKnown == false { return "warning" }
+  if failedWithoutErrors { return "warning" }
+  return admittedStatus
+}

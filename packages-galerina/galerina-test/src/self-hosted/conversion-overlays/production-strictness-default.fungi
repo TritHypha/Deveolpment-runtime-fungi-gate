@@ -1,0 +1,8 @@
+@version 1
+/// Optional-field default from galerina-core-config#defineProductionStrictnessPolicy.
+pure flow productionStrictnessDefaultCore(fieldPresent: Bool, providedValue: Bool, defaultValue: Bool) -> Bool
+contract { intent { "Preserve an explicit production strictness value and otherwise use the governed default." } }
+{
+  if fieldPresent { return providedValue }
+  return defaultValue
+}

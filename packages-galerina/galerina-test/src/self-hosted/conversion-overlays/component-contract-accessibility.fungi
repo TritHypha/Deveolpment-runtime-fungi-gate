@@ -1,0 +1,13 @@
+@version 1
+/// Accessibility gate core of web-components#validateComponentContract.
+pure flow componentContractAccessibilityCore(namePresent: Bool, propsAdmitted: Bool, slotsAdmitted: Bool, eventEmit: Bool, accessibilityPresent: Bool) -> Bool
+contract { intent { "Require admitted structure and an accessibility contract for interactive components." } }
+{
+  if namePresent == false { return false }
+  if propsAdmitted == false { return false }
+  if slotsAdmitted == false { return false }
+  if eventEmit {
+    if accessibilityPresent == false { return false }
+  }
+  return true
+}

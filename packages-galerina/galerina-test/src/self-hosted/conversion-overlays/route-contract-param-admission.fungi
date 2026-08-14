@@ -1,0 +1,13 @@
+@version 1
+/// Parameter gate core of web-router#validateRouteContract.
+pure flow routeContractParamAdmissionCore(namePresent: Bool, templatePresent: Bool, templateMalformed: Bool, declaredParamCount: Int, undeclaredCount: Int, validatorsKnown: Bool) -> String
+contract { intent { "Refuse route templates whose parameters are malformed, undeclared, or unvalidated." } }
+{
+  if namePresent == false { return "missing_name" }
+  if templatePresent == false { return "missing_template" }
+  if templateMalformed { return "malformed_template" }
+  if declaredParamCount < 0 { return "invalid_count" }
+  if undeclaredCount > 0 { return "undeclared_param" }
+  if validatorsKnown == false { return "unknown_validator" }
+  return "accepted"
+}

@@ -1,0 +1,16 @@
+@version 1
+/// Post-parser scheme decision of web-router#validateLinkTarget.
+pure flow linkSchemeDecisionCore(targetPresent: Bool, protocolRelative: Bool, schemePresent: Bool, scheme: String, localhost: Bool) -> String
+contract { intent { "Classify a normalized link target using the deny-by-default browser scheme allowlist." } }
+{
+  if targetPresent == false { return "missing" }
+  if protocolRelative { return "forbidden_relative" }
+  if schemePresent == false { return "relative" }
+  if scheme == "https" { return "allowed_secure" }
+  if scheme == "mailto" { return "allowed_mail" }
+  if scheme == "http" {
+    if localhost { return "allowed_local" }
+    return "forbidden_cleartext"
+  }
+  return "forbidden_scheme"
+}

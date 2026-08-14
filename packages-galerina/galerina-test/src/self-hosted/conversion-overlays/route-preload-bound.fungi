@@ -1,0 +1,10 @@
+@version 1
+/// Bounded-work core of web-router#validateRoutePreloadPolicy.
+pure flow routePreloadBoundCore(policyPresent: Bool, safeInteger: Bool, maxPreloadRoutes: Int) -> Bool
+contract { intent { "Admit route preloading only with a present positive safe bound." } }
+{
+  if policyPresent == false { return false }
+  if safeInteger == false { return false }
+  if maxPreloadRoutes < 1 { return false }
+  return true
+}

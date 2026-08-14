@@ -1,0 +1,11 @@
+@version 1
+/// Decision core of galerina-web#validateBrowserRuntimeProfile.
+pure flow browserRuntimeProfileAdmissionCore(namePresent: Bool, failClosed: Bool, secretFree: Bool, importsAdmitted: Bool, importCount: Int) -> Bool
+contract { intent { "Admit a browser runtime profile only with bounded, secret-free, fail-closed imports." } }
+{
+  if namePresent == false { return false }
+  if failClosed == false { return false }
+  if secretFree == false { return false }
+  if importCount < 0 { return false }
+  return importsAdmitted
+}

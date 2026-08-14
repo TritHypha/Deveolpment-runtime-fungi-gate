@@ -1,0 +1,9 @@
+@version 1
+/// Field decision core of web-events#validateEventPayloadField.
+pure flow eventPayloadFieldAdmissionCore(index: Int, namePresent: Bool, kindKnown: Bool) -> Bool
+contract { intent { "Admit a bounded event payload field only with a name and known type." } }
+{
+  if index < 0 { return false }
+  if namePresent == false { return false }
+  return kindKnown
+}

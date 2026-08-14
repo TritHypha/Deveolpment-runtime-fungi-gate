@@ -1,0 +1,11 @@
+@version 1
+/// Exact-record decision from galerina-framework-api-server#snapshotPrincipalResolution.
+pure flow principalResolutionAdmissionCore(objectShapeAdmitted: Bool, fieldSetCanonical: Bool, principalIdCanonical: Bool, scopeCount: Int, scopesCanonical: Bool) -> Bool
+contract { intent { "Admit a principal resolution only from a captured plain record with canonical identity and scopes." } }
+{
+  if objectShapeAdmitted == false { return false }
+  if fieldSetCanonical == false { return false }
+  if principalIdCanonical == false { return false }
+  if scopeCount < 0 { return false }
+  return scopesCanonical
+}

@@ -1,0 +1,11 @@
+@version 1
+/// TLS principal classification from galerina-framework-api-server#principalFromAdmittedTls.
+pure flow tlsPrincipalAdmissionCore(tlsSocket: Bool, certificatePresent: Bool, certificateBytes: Int, digestBound: Bool) -> String
+contract { intent { "Resolve a TLS principal only from a certificate-bearing socket with a nonempty digest-bound certificate." } }
+{
+  if tlsSocket == false { return "not_tls" }
+  if certificatePresent == false { return "missing_certificate" }
+  if certificateBytes < 1 { return "empty_certificate" }
+  if digestBound == false { return "unbound_certificate" }
+  return "admitted"
+}

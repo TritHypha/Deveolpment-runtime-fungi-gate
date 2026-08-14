@@ -1,0 +1,10 @@
+@version 1
+/// Aggregate gate core of web-events#validateWebEventContract.
+pure flow webEventContractAdmissionCore(baseContractAdmitted: Bool, ratePolicyAdmitted: Bool, sensitiveCapabilityAdmitted: Bool) -> String
+contract { intent { "Admit a web event only after every declared boundary policy is closed." } }
+{
+  if baseContractAdmitted == false { return "invalid_contract" }
+  if ratePolicyAdmitted == false { return "invalid_rate_policy" }
+  if sensitiveCapabilityAdmitted == false { return "invalid_sensitive_capability" }
+  return "accepted"
+}

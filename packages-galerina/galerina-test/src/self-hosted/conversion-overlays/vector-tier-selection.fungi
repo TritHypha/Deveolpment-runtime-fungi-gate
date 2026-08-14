@@ -1,0 +1,10 @@
+@version 1
+/// Closed tier choice from galerina-core-economics#selectVectorTier.
+pure flow vectorTierSelectionCore(profileAdmitted: Bool, requestedTier: String) -> String
+contract { intent { "Select an accelerated tier only after profile admission, otherwise retain scalar execution." } }
+{
+  if profileAdmitted == false { return "scalar" }
+  if requestedTier == "avx512" { return "avx512" }
+  if requestedTier == "avx2" { return "avx2" }
+  return "scalar"
+}

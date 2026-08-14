@@ -1,0 +1,12 @@
+@version 1
+/// Bounded contract decision from galerina-web-state#validatePageStateContract.
+pure flow pageStateFieldAdmissionCore(contractAndPhaseAdmitted: Bool, countsValid: Bool, duplicatesPresent: Bool, fieldKindsKnown: Bool, emptyContract: Bool) -> String
+contract { intent { "Admit a page-state contract only with a named phase and unique, classified fields." } }
+{
+  if contractAndPhaseAdmitted == false { return "invalid_contract_or_phase" }
+  if countsValid == false { return "invalid_field_counts" }
+  if duplicatesPresent { return "duplicate_field" }
+  if fieldKindsKnown == false { return "unknown_field_kind" }
+  if emptyContract { return "empty_contract" }
+  return "accepted"
+}

@@ -1,0 +1,11 @@
+@version 1
+/// Capability gate core of web-events#validateSensitiveCapabilityDeclaration.
+pure flow sensitiveCapabilityGestureCore(capabilityCount: Int, allKnown: Bool, requiresGesture: Bool) -> String
+contract { intent { "Require known sensitive capabilities and an explicit user-gesture gate." } }
+{
+  if capabilityCount < 0 { return "invalid" }
+  if allKnown == false { return "unknown_capability" }
+  if requiresGesture == false { return "gesture_required" }
+  if capabilityCount == 0 { return "empty_warning" }
+  return "accepted"
+}

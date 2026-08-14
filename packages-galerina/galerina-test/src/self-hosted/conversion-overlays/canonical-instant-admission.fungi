@@ -1,0 +1,11 @@
+@version 1
+/// Canonical timestamp decision from registry-key-rotation#canonicalInstant.
+pure flow canonicalInstantAdmissionCore(stringValue: Bool, nonEmpty: Bool, parsedFinite: Bool, roundTripEqual: Bool) -> String
+contract { intent { "Admit only a nonempty timestamp string that parses finitely and round-trips to its canonical instant." } }
+{
+  if stringValue == false { return "not_string" }
+  if nonEmpty == false { return "empty" }
+  if parsedFinite == false { return "invalid_instant" }
+  if roundTripEqual == false { return "noncanonical" }
+  return "canonical"
+}

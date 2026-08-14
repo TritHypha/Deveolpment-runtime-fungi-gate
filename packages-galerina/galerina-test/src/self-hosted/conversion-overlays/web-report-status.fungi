@@ -1,0 +1,10 @@
+@version 1
+/// Post-scan status core of galerina-web#deriveWebReportStatus.
+pure flow webReportStatusCore(hasError: Bool, hasWarning: Bool, diagnosticCount: Int) -> String
+contract { intent { "Select the fail-closed web report status after bounded diagnostic classification." } }
+{
+  if diagnosticCount < 0 { return "failed" }
+  if hasError { return "failed" }
+  if hasWarning { return "partial" }
+  return "success"
+}

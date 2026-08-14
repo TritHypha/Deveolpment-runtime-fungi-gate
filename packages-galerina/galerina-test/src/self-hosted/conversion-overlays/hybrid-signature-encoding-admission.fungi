@@ -1,0 +1,11 @@
+@version 1
+/// Envelope validation core of registry-key-rotation#encodeSignature.
+pure flow hybridSignatureEncodingAdmissionCore(envelopePresent: Bool, edSignaturePresent: Bool, mlSignaturePresent: Bool, edColonFree: Bool, mlColonFree: Bool) -> Bool
+contract { intent { "Encode a hybrid signature only when both nonempty components are free of the framing delimiter." } }
+{
+  if envelopePresent == false { return false }
+  if edSignaturePresent == false { return false }
+  if mlSignaturePresent == false { return false }
+  if edColonFree == false { return false }
+  return mlColonFree
+}

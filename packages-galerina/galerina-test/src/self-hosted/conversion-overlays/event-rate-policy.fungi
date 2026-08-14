@@ -1,0 +1,10 @@
+@version 1
+/// Rate-policy decision core of web-events#validateEventRatePolicy.
+pure flow eventRatePolicyCore(debounceInvalid: Bool, throttleInvalid: Bool, contradictory: Bool, selectedPolicy: String) -> String
+contract { intent { "Refuse invalid or contradictory event debounce and throttle declarations." } }
+{
+  if debounceInvalid { return "invalid_debounce" }
+  if throttleInvalid { return "invalid_throttle" }
+  if contradictory { return "contradiction" }
+  return selectedPolicy
+}

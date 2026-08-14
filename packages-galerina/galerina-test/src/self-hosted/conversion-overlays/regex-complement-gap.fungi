@@ -1,0 +1,11 @@
+@version 1
+/// Ordered range-gap decision from galerina-tri-regex#complementRanges.
+pure flow regexComplementGapCore(boundsValid: Bool, nextBeyondMaximum: Bool, gapPresent: Bool, tailPresent: Bool) -> String
+contract { intent { "Classify a bounded complement step without crossing the configured maximum code point." } }
+{
+  if boundsValid == false { return "invalid_bounds" }
+  if nextBeyondMaximum { return "complete" }
+  if gapPresent { return "gap" }
+  if tailPresent { return "tail" }
+  return "complete"
+}

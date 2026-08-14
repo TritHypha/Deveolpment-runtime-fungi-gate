@@ -1,0 +1,9 @@
+@version 1
+/// Post-trim import classification of galerina-web#isServerOnlyImport.
+pure flow webServerOnlyImportCore(specifierAdmitted: Bool, nodePrefix: Bool, knownServerModule: Bool) -> Bool
+contract { intent { "Classify only admitted browser import specifiers against the server-only sets." } }
+{
+  if specifierAdmitted == false { return true }
+  if nodePrefix { return true }
+  return knownServerModule
+}

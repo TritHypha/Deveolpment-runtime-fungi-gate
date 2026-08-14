@@ -1,0 +1,11 @@
+@version 1
+/// Child-kind decision core of web-components#validateComponentChildContent.
+pure flow componentChildAdmissionCore(kindKnown: Bool, safeHtml: Bool, sanitizePolicyPresent: Bool) -> String
+contract { intent { "Refuse unknown component children and safe HTML without its sanitize provenance." } }
+{
+  if kindKnown == false { return "unknown_kind" }
+  if safeHtml {
+    if sanitizePolicyPresent == false { return "missing_policy" }
+  }
+  return "accepted"
+}

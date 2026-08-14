@@ -1,0 +1,12 @@
+@version 1
+/// Content-kind core of web-render#validateRenderableContent.
+pure flow renderableContentAdmissionCore(kindKnown: Bool, safeHtml: Bool, sanitizePolicyPresent: Bool, contentLength: Int) -> String
+contract { intent { "Refuse unknown render content and safe HTML lacking sanitize-policy provenance." } }
+{
+  if contentLength < 0 { return "invalid_length" }
+  if kindKnown == false { return "unknown_kind" }
+  if safeHtml {
+    if sanitizePolicyPresent == false { return "missing_sanitize_policy" }
+  }
+  return "accepted"
+}

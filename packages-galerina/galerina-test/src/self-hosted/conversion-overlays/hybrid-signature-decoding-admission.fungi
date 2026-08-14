@@ -1,0 +1,12 @@
+@version 1
+/// Envelope split decision from registry-key-rotation#decodeSignature.
+pure flow hybridSignatureDecodingAdmissionCore(stringValue: Bool, partCount: Int, edSignaturePresent: Bool, mlSignaturePresent: Bool) -> String
+contract { intent { "Decode only a two-part hybrid signature with both nonempty source components." } }
+{
+  if stringValue == false { return "not_string" }
+  if partCount < 2 { return "wrong_part_count" }
+  if 2 < partCount { return "wrong_part_count" }
+  if edSignaturePresent == false { return "missing_ed25519" }
+  if mlSignaturePresent == false { return "missing_ml_dsa65" }
+  return "decoded"
+}

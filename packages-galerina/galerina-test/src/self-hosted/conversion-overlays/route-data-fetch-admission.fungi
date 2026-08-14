@@ -1,0 +1,12 @@
+@version 1
+/// Reference-presence core of web-router#validateRouteDataFetchContract.
+pure flow routeDataFetchAdmissionCore(queryReferencePresent: Bool, responseReferencePresent: Bool) -> String
+contract { intent { "Require both governed query and response contracts before route data fetching." } }
+{
+  if queryReferencePresent == false {
+    if responseReferencePresent == false { return "missing_both" }
+    return "missing_query"
+  }
+  if responseReferencePresent == false { return "missing_response" }
+  return "accepted"
+}

@@ -1,0 +1,10 @@
+@version 1
+/// Veto record shape from galerina-tri-regex#veto.
+pure flow regexVetoRecordCore(codePresent: Bool, reasonPresent: Bool, offsetPresent: Bool) -> String
+contract { intent { "Mint a regex veto only with a diagnostic code and reason, preserving optional offset presence." } }
+{
+  if codePresent == false { return "invalid_code" }
+  if reasonPresent == false { return "invalid_reason" }
+  if offsetPresent { return "veto_with_offset" }
+  return "veto"
+}

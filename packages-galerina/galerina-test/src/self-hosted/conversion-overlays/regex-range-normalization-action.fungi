@@ -1,0 +1,10 @@
+@version 1
+/// Range action from galerina-tri-regex#normalizeRanges.
+pure flow regexRangeNormalizationActionCore(lower: Int, upper: Int, hasPrevious: Bool, previousUpper: Int) -> String
+contract { intent { "Drop inverted ranges, merge touching ranges, and append disjoint ranges in source order." } }
+{
+  if upper < lower { return "drop" }
+  if hasPrevious == false { return "append" }
+  if lower < previousUpper + 2 { return "merge" }
+  return "append"
+}

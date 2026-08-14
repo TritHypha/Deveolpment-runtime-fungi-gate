@@ -1,0 +1,12 @@
+@version 1
+/// Bounded field decision from galerina-web-state#validateHydrationContract.
+pure flow hydrationFieldAdmissionCore(contractNamePresent: Bool, fieldNamePresent: Bool, classificationKnown: Bool, secretClassification: Bool, fieldIndex: Int) -> String
+contract { intent { "Classify hydration fields without allowing unnamed, unknown, secret, or negative-index state." } }
+{
+  if contractNamePresent == false { return "missing_contract" }
+  if fieldNamePresent == false { return "missing_field" }
+  if fieldIndex < 0 { return "invalid_index" }
+  if classificationKnown == false { return "unknown_classification" }
+  if secretClassification { return "secret_refused" }
+  return "accepted"
+}

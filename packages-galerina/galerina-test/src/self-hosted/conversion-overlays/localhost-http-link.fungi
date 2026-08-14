@@ -1,0 +1,11 @@
+@version 1
+/// Post-parser host decision of galerina-web-router#httpHostIsLocalhost.
+pure flow localhostHttpLinkCore(authorityWellFormed: Bool, userInfoResolved: Bool, bracketHostClosed: Bool, localhostMember: Bool) -> String
+contract { intent { "Accept cleartext HTTP only after authority normalization identifies a localhost host." } }
+{
+  if authorityWellFormed == false { return "malformed_authority" }
+  if userInfoResolved == false { return "unresolved_userinfo" }
+  if bracketHostClosed == false { return "unclosed_bracket_host" }
+  if localhostMember { return "localhost" }
+  return "nonlocal"
+}

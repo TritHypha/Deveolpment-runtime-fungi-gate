@@ -1,0 +1,10 @@
+@version 1
+/// Decision core of galerina-web-state#validateStateDiffPlan.
+pure flow stateDiffPlanAdmissionCore(namePresent: Bool, operationBoundValid: Bool, maxOperations: Int) -> String
+contract { intent { "Admit a named state-diff plan only when its operation budget is positive and validated." } }
+{
+  if namePresent == false { return "missing_name" }
+  if maxOperations < 1 { return "invalid_operation_bound" }
+  if operationBoundValid == false { return "unproved_operation_bound" }
+  return "accepted"
+}

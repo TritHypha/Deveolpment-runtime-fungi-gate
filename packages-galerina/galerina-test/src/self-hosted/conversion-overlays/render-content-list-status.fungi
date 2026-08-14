@@ -1,0 +1,12 @@
+@version 1
+/// Aggregate content status of web-render#validateRenderableContentList.
+pure flow renderContentListStatusCore(itemCount: Int, invalidCount: Int) -> String
+contract { intent { "Classify an admitted render list as empty, invalid, or ready." } }
+{
+  if itemCount < 0 { return "invalid" }
+  if invalidCount < 0 { return "invalid" }
+  if invalidCount > itemCount { return "invalid" }
+  if invalidCount > 0 { return "content_error" }
+  if itemCount == 0 { return "empty_warning" }
+  return "ready"
+}

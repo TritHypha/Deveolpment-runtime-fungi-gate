@@ -1,0 +1,10 @@
+@version 1
+/// Bounded plan core of web-render#validateStreamingBatchRenderPlan.
+pure flow streamingRenderPlanAdmissionCore(namePresent: Bool, itemsBoundValid: Bool, delayBoundValid: Bool, maxBatchItems: Int) -> Bool
+contract { intent { "Admit streaming rendering only with named positive item and delay bounds." } }
+{
+  if namePresent == false { return false }
+  if itemsBoundValid == false { return false }
+  if maxBatchItems < 1 { return false }
+  return delayBoundValid
+}

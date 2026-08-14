@@ -1,0 +1,10 @@
+@version 1
+/// Bounded patch core of web-render#validateStateDiffRenderPlan.
+pure flow stateDiffRenderPlanAdmissionCore(namePresent: Bool, stateReferencePresent: Bool, patchBoundValid: Bool, maxPatchOps: Int) -> Bool
+contract { intent { "Admit state-driven rendering only with a named state contract and bounded patch work." } }
+{
+  if maxPatchOps < 1 { return false }
+  if patchBoundValid == false { return false }
+  if stateReferencePresent == false { return false }
+  return namePresent
+}

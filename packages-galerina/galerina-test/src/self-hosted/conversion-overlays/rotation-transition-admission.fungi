@@ -1,0 +1,10 @@
+@version 1
+/// Structural transition decision from registry-key-rotation#transitionWellFormed.
+pure flow rotationTransitionAdmissionCore(nullTransition: Bool, epochStepAdmitted: Bool, tickAndHeadAdmitted: Bool, macEvidenceComplete: Bool) -> Bool
+contract { intent { "Admit a rotation transition only when its epoch, tick, head commitment, and dual MAC evidence are structurally complete." } }
+{
+  if nullTransition { return true }
+  if epochStepAdmitted == false { return false }
+  if tickAndHeadAdmitted == false { return false }
+  return macEvidenceComplete
+}

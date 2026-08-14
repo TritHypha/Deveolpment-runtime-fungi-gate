@@ -1,0 +1,11 @@
+@version 1
+/// Per-property decision core of web-components#validateComponentProps.
+pure flow componentPropAdmissionCore(namePresent: Bool, duplicate: Bool, kindKnown: Bool, ordinal: Int) -> String
+contract { intent { "Classify a bounded component property after exact record admission." } }
+{
+  if ordinal < 0 { return "invalid_ordinal" }
+  if namePresent == false { return "missing_name" }
+  if duplicate { return "duplicate" }
+  if kindKnown == false { return "unknown_kind" }
+  return "accepted"
+}

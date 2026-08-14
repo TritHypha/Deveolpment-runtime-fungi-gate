@@ -1,0 +1,13 @@
+@version 1
+/// Decision core of galerina-web-state#validateApiToStateConversion.
+pure flow apiStateConversionAdmissionCore(conversionCaptured: Bool, stateReferencePresent: Bool, mappingReferencePresent: Bool) -> String
+contract { intent { "Admit an API-to-state conversion only when its conversion, state, and mapping references are captured." } }
+{
+  if conversionCaptured == false { return "missing_conversion" }
+  if stateReferencePresent == false {
+    if mappingReferencePresent == false { return "missing_state_and_mapping" }
+    return "missing_state"
+  }
+  if mappingReferencePresent == false { return "missing_mapping" }
+  return "accepted"
+}

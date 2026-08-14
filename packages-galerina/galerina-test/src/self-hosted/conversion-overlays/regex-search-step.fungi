@@ -1,0 +1,9 @@
+@version 1
+/// Binary-search branch from galerina-tri-regex#inRangesWithCost.
+pure flow regexSearchStepCore(codePoint: Int, lower: Int, upper: Int) -> String
+contract { intent { "Select the next ordered range-search branch or report a bounded match." } }
+{
+  if codePoint < lower { return "lower_half" }
+  if upper < codePoint { return "upper_half" }
+  return "matched"
+}

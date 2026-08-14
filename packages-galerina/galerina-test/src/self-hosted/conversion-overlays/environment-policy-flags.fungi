@@ -1,0 +1,11 @@
+@version 1
+/// Closed mode projection from galerina-core-config#defaultEnvironmentPolicy.
+pure flow environmentPolicyFlagsCore(mode: String) -> Int
+contract { intent { "Project a closed environment mode to the source policy flag mask." } }
+{
+  if mode == "development" { return 3 }
+  if mode == "test" { return 1 }
+  if mode == "staging" { return 0 }
+  if mode == "production" { return 0 }
+  return 0
+}

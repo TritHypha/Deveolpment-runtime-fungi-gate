@@ -1,0 +1,11 @@
+@version 1
+/// Resolution core of galerina-core-config#resolveProjectGovernance.
+pure flow governanceResolutionStatusCore(requestPresent: Bool, requestedModeKnown: Bool, requestedMode: String) -> String
+contract { intent { "Resolve absent governance to the full default and refuse an unrecognised requested mode." } }
+{
+  if requestPresent {
+    if requestedModeKnown { return requestedMode }
+    return "invalid_full"
+  }
+  return "default_full"
+}

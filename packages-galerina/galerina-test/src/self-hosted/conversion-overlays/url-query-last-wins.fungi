@@ -1,0 +1,11 @@
+@version 1
+/// Query accumulation decision from galerina-framework-api-server#parseUrl.
+pure flow urlQueryLastWinsCore(rawPresent: Bool, pathPresent: Bool, repeatedKey: Bool, valuePresent: Bool) -> String
+contract { intent { "Preserve the source last-value query rule while distinguishing missing input and path-only URLs." } }
+{
+  if rawPresent == false { return "default_root" }
+  if pathPresent == false { return "invalid_path" }
+  if valuePresent == false { return "path_only" }
+  if repeatedKey { return "replace_last" }
+  return "set_value"
+}

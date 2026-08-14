@@ -1,0 +1,10 @@
+@version 1
+/// Date parse classification from galerina-framework-api-server#parseCertDate.
+pure flow certificateDateAdmissionCore(valuePresent: Bool, parsedFinite: Bool, parsedMilliseconds: Int) -> String
+contract { intent { "Classify absent, invalid, pre-epoch, and ordinary certificate dates without granting trust." } }
+{
+  if valuePresent == false { return "absent" }
+  if parsedFinite == false { return "invalid" }
+  if parsedMilliseconds < 0 { return "parsed_pre_epoch" }
+  return "parsed"
+}
