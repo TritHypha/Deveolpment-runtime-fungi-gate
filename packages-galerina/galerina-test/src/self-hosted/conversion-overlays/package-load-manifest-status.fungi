@@ -1,0 +1,75 @@
+@version 1
+// Source-bound decision overlay wave 43 item 010: package-load-manifest-status.fungi.
+pure flow packageLoadManifestStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc10001: Bool = heptA000
+  let arc10002: Bool = heptF000
+  let arc10003: Bool = arc10001
+  let arc10004: Bool = arc10002
+  let arc10005: Bool = heptD000
+  let arc10006: Bool = arc10004
+  let arc10007: Bool = arc10005
+  let arc10008: Bool = heptB000
+  let arc10009: Bool = arc10007
+  let arc10010: Bool = arc10008
+  let arc10011: Bool = heptG000
+  let arc10012: Bool = arc10010
+  let arc10013: Bool = arc10011
+  let arc10014: Bool = heptE000
+  let arc10015: Bool = arc10013
+  let arc10016: Bool = arc10014
+  let arc10017: Bool = heptC000
+  let arc10018: Bool = arc10016
+  let arc10019: Bool = arc10017
+  let arc10020: Bool = arc10003
+  let arc10021: Bool = arc10019
+  let arc10022: Bool = arc10020
+  let arc10023: Bool = arc10006
+  let arc10024: Bool = arc10022
+  let arc10025: Bool = arc10023
+  let arc10026: Bool = arc10009
+  let arc10027: Bool = arc10025
+  let arc10028: Bool = arc10026
+  let arc10029: Bool = arc10012
+  let arc10030: Bool = arc10028
+  let arc10031: Bool = arc10029
+  let arc10032: Bool = arc10015
+  let arc10033: Bool = arc10031
+  let arc10034: Bool = arc10032
+  let arc10035: Bool = arc10018
+  let arc10036: Bool = arc10034
+  let arc10037: Bool = arc10035
+  let arc10038: Bool = arc10021
+  let arc10039: Bool = arc10037
+  let arc10040: Bool = arc10038
+  let cross100: Bool = arc10039
+  let cross101: Bool = arc10024
+  if arc10040 {
+    if arc10033 {
+      if cross101 {
+        if arc10036 {
+          if arc10027 {
+            if cross100 {
+              if arc10030 {
+                return "package_load_manifest_built"
+              }
+              return "wave43_heptant_3_missing"
+            }
+            return "wave43_heptant_4_missing"
+          }
+          return "wave43_heptant_5_missing"
+        }
+        return "wave43_heptant_6_missing"
+      }
+      return "wave43_heptant_0_missing"
+    }
+    return "wave43_heptant_1_missing"
+  }
+  return "wave43_heptant_2_missing"
+}

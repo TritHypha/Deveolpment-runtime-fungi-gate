@@ -1,0 +1,82 @@
+@version 1
+// Source-bound decision overlay wave 43 item 017: parser-source-location-status.fungi.
+pure flow parserSourceLocationStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc17001: Bool = heptA000
+  let arc17002: Bool = heptF000
+  let arc17003: Bool = arc17001
+  let arc17004: Bool = arc17002
+  let arc17005: Bool = heptD000
+  let arc17006: Bool = arc17004
+  let arc17007: Bool = arc17005
+  let arc17008: Bool = heptB000
+  let arc17009: Bool = arc17007
+  let arc17010: Bool = arc17008
+  let arc17011: Bool = heptG000
+  let arc17012: Bool = arc17010
+  let arc17013: Bool = arc17011
+  let arc17014: Bool = heptE000
+  let arc17015: Bool = arc17013
+  let arc17016: Bool = arc17014
+  let arc17017: Bool = heptC000
+  let arc17018: Bool = arc17016
+  let arc17019: Bool = arc17017
+  let arc17020: Bool = arc17003
+  let arc17021: Bool = arc17019
+  let arc17022: Bool = arc17020
+  let arc17023: Bool = arc17006
+  let arc17024: Bool = arc17022
+  let arc17025: Bool = arc17023
+  let arc17026: Bool = arc17009
+  let arc17027: Bool = arc17025
+  let arc17028: Bool = arc17026
+  let arc17029: Bool = arc17012
+  let arc17030: Bool = arc17028
+  let arc17031: Bool = arc17029
+  let arc17032: Bool = arc17015
+  let arc17033: Bool = arc17031
+  let arc17034: Bool = arc17032
+  let arc17035: Bool = arc17018
+  let arc17036: Bool = arc17034
+  let arc17037: Bool = arc17035
+  let arc17038: Bool = arc17021
+  let arc17039: Bool = arc17037
+  let arc17040: Bool = arc17038
+  let arc17041: Bool = arc17024
+  let arc17042: Bool = arc17040
+  let arc17043: Bool = arc17041
+  let arc17044: Bool = arc17027
+  let arc17045: Bool = arc17043
+  let arc17046: Bool = arc17044
+  let arc17047: Bool = arc17030
+  let cross170: Bool = arc17039
+  let cross171: Bool = arc17045
+  if arc17042 {
+    if arc17047 {
+      if cross170 {
+        if arc17046 {
+          if arc17036 {
+            if cross171 {
+              if arc17033 {
+                return "parser_source_location_built"
+              }
+              return "wave43_heptant_1_missing"
+            }
+            return "wave43_heptant_0_missing"
+          }
+          return "wave43_heptant_6_missing"
+        }
+        return "wave43_heptant_5_missing"
+      }
+      return "wave43_heptant_4_missing"
+    }
+    return "wave43_heptant_3_missing"
+  }
+  return "wave43_heptant_2_missing"
+}

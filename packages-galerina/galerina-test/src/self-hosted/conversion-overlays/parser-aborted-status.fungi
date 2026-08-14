@@ -1,0 +1,97 @@
+@version 1
+// Source-bound decision overlay wave 43 item 032: parser-aborted-status.fungi.
+pure flow parserAbortedStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc32001: Bool = heptB000
+  let arc32002: Bool = heptG000
+  let arc32003: Bool = arc32001
+  let arc32004: Bool = arc32002
+  let arc32005: Bool = heptE000
+  let arc32006: Bool = arc32004
+  let arc32007: Bool = arc32005
+  let arc32008: Bool = heptC000
+  let arc32009: Bool = arc32007
+  let arc32010: Bool = arc32008
+  let arc32011: Bool = heptA000
+  let arc32012: Bool = arc32010
+  let arc32013: Bool = arc32011
+  let arc32014: Bool = heptF000
+  let arc32015: Bool = arc32013
+  let arc32016: Bool = arc32014
+  let arc32017: Bool = heptD000
+  let arc32018: Bool = arc32016
+  let arc32019: Bool = arc32017
+  let arc32020: Bool = arc32003
+  let arc32021: Bool = arc32019
+  let arc32022: Bool = arc32020
+  let arc32023: Bool = arc32006
+  let arc32024: Bool = arc32022
+  let arc32025: Bool = arc32023
+  let arc32026: Bool = arc32009
+  let arc32027: Bool = arc32025
+  let arc32028: Bool = arc32026
+  let arc32029: Bool = arc32012
+  let arc32030: Bool = arc32028
+  let arc32031: Bool = arc32029
+  let arc32032: Bool = arc32015
+  let arc32033: Bool = arc32031
+  let arc32034: Bool = arc32032
+  let arc32035: Bool = arc32018
+  let arc32036: Bool = arc32034
+  let arc32037: Bool = arc32035
+  let arc32038: Bool = arc32021
+  let arc32039: Bool = arc32037
+  let arc32040: Bool = arc32038
+  let arc32041: Bool = arc32024
+  let arc32042: Bool = arc32040
+  let arc32043: Bool = arc32041
+  let arc32044: Bool = arc32027
+  let arc32045: Bool = arc32043
+  let arc32046: Bool = arc32044
+  let arc32047: Bool = arc32030
+  let arc32048: Bool = arc32046
+  let arc32049: Bool = arc32047
+  let arc32050: Bool = arc32033
+  let arc32051: Bool = arc32049
+  let arc32052: Bool = arc32050
+  let arc32053: Bool = arc32036
+  let arc32054: Bool = arc32052
+  let arc32055: Bool = arc32053
+  let arc32056: Bool = arc32039
+  let arc32057: Bool = arc32055
+  let arc32058: Bool = arc32056
+  let arc32059: Bool = arc32042
+  let arc32060: Bool = arc32058
+  let arc32061: Bool = arc32059
+  let arc32062: Bool = arc32045
+  let cross320: Bool = arc32060
+  let cross321: Bool = arc32062
+  if arc32061 {
+    if arc32057 {
+      if arc32051 {
+        if cross321 {
+          if cross320 {
+            if arc32054 {
+              if arc32048 {
+                return "parser_aborted_built"
+              }
+              return "wave43_heptant_6_missing"
+            }
+            return "wave43_heptant_2_missing"
+          }
+          return "wave43_heptant_5_missing"
+        }
+        return "wave43_heptant_1_missing"
+      }
+      return "wave43_heptant_4_missing"
+    }
+    return "wave43_heptant_0_missing"
+  }
+  return "wave43_heptant_3_missing"
+}

@@ -1,0 +1,77 @@
+@version 1
+// Source-bound decision overlay wave 43 item 012: package-types-known-package-types-status.fungi.
+pure flow packageTypesKnownPackageTypesStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc12001: Bool = heptC000
+  let arc12002: Bool = heptA000
+  let arc12003: Bool = arc12001
+  let arc12004: Bool = arc12002
+  let arc12005: Bool = heptF000
+  let arc12006: Bool = arc12004
+  let arc12007: Bool = arc12005
+  let arc12008: Bool = heptD000
+  let arc12009: Bool = arc12007
+  let arc12010: Bool = arc12008
+  let arc12011: Bool = heptB000
+  let arc12012: Bool = arc12010
+  let arc12013: Bool = arc12011
+  let arc12014: Bool = heptG000
+  let arc12015: Bool = arc12013
+  let arc12016: Bool = arc12014
+  let arc12017: Bool = heptE000
+  let arc12018: Bool = arc12016
+  let arc12019: Bool = arc12017
+  let arc12020: Bool = arc12003
+  let arc12021: Bool = arc12019
+  let arc12022: Bool = arc12020
+  let arc12023: Bool = arc12006
+  let arc12024: Bool = arc12022
+  let arc12025: Bool = arc12023
+  let arc12026: Bool = arc12009
+  let arc12027: Bool = arc12025
+  let arc12028: Bool = arc12026
+  let arc12029: Bool = arc12012
+  let arc12030: Bool = arc12028
+  let arc12031: Bool = arc12029
+  let arc12032: Bool = arc12015
+  let arc12033: Bool = arc12031
+  let arc12034: Bool = arc12032
+  let arc12035: Bool = arc12018
+  let arc12036: Bool = arc12034
+  let arc12037: Bool = arc12035
+  let arc12038: Bool = arc12021
+  let arc12039: Bool = arc12037
+  let arc12040: Bool = arc12038
+  let arc12041: Bool = arc12024
+  let arc12042: Bool = arc12040
+  let cross120: Bool = arc12039
+  let cross121: Bool = arc12041
+  if arc12042 {
+    if cross120 {
+      if arc12036 {
+        if arc12033 {
+          if arc12030 {
+            if arc12027 {
+              if cross121 {
+                return "package_types_known_package_types_built"
+              }
+              return "wave43_heptant_2_missing"
+            }
+            return "wave43_heptant_0_missing"
+          }
+          return "wave43_heptant_5_missing"
+        }
+        return "wave43_heptant_3_missing"
+      }
+      return "wave43_heptant_1_missing"
+    }
+    return "wave43_heptant_6_missing"
+  }
+  return "wave43_heptant_4_missing"
+}

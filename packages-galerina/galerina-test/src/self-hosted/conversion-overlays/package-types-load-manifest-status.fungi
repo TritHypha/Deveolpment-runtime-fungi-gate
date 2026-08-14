@@ -1,0 +1,80 @@
+@version 1
+// Source-bound decision overlay wave 43 item 015: package-types-load-manifest-status.fungi.
+pure flow packageTypesLoadManifestStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc15001: Bool = heptF000
+  let arc15002: Bool = heptD000
+  let arc15003: Bool = arc15001
+  let arc15004: Bool = arc15002
+  let arc15005: Bool = heptB000
+  let arc15006: Bool = arc15004
+  let arc15007: Bool = arc15005
+  let arc15008: Bool = heptG000
+  let arc15009: Bool = arc15007
+  let arc15010: Bool = arc15008
+  let arc15011: Bool = heptE000
+  let arc15012: Bool = arc15010
+  let arc15013: Bool = arc15011
+  let arc15014: Bool = heptC000
+  let arc15015: Bool = arc15013
+  let arc15016: Bool = arc15014
+  let arc15017: Bool = heptA000
+  let arc15018: Bool = arc15016
+  let arc15019: Bool = arc15017
+  let arc15020: Bool = arc15003
+  let arc15021: Bool = arc15019
+  let arc15022: Bool = arc15020
+  let arc15023: Bool = arc15006
+  let arc15024: Bool = arc15022
+  let arc15025: Bool = arc15023
+  let arc15026: Bool = arc15009
+  let arc15027: Bool = arc15025
+  let arc15028: Bool = arc15026
+  let arc15029: Bool = arc15012
+  let arc15030: Bool = arc15028
+  let arc15031: Bool = arc15029
+  let arc15032: Bool = arc15015
+  let arc15033: Bool = arc15031
+  let arc15034: Bool = arc15032
+  let arc15035: Bool = arc15018
+  let arc15036: Bool = arc15034
+  let arc15037: Bool = arc15035
+  let arc15038: Bool = arc15021
+  let arc15039: Bool = arc15037
+  let arc15040: Bool = arc15038
+  let arc15041: Bool = arc15024
+  let arc15042: Bool = arc15040
+  let arc15043: Bool = arc15041
+  let arc15044: Bool = arc15027
+  let arc15045: Bool = arc15043
+  let cross150: Bool = arc15039
+  let cross151: Bool = arc15045
+  if arc15042 {
+    if cross151 {
+      if arc15044 {
+        if arc15030 {
+          if arc15033 {
+            if arc15036 {
+              if cross150 {
+                return "package_types_load_manifest_built"
+              }
+              return "wave43_heptant_2_missing"
+            }
+            return "wave43_heptant_4_missing"
+          }
+          return "wave43_heptant_6_missing"
+        }
+        return "wave43_heptant_1_missing"
+      }
+      return "wave43_heptant_3_missing"
+    }
+    return "wave43_heptant_5_missing"
+  }
+  return "wave43_heptant_0_missing"
+}

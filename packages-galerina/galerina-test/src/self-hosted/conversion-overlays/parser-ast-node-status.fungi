@@ -1,0 +1,83 @@
+@version 1
+// Source-bound decision overlay wave 43 item 018: parser-ast-node-status.fungi.
+pure flow parserAstNodeStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc18001: Bool = heptB000
+  let arc18002: Bool = heptG000
+  let arc18003: Bool = arc18001
+  let arc18004: Bool = arc18002
+  let arc18005: Bool = heptE000
+  let arc18006: Bool = arc18004
+  let arc18007: Bool = arc18005
+  let arc18008: Bool = heptC000
+  let arc18009: Bool = arc18007
+  let arc18010: Bool = arc18008
+  let arc18011: Bool = heptA000
+  let arc18012: Bool = arc18010
+  let arc18013: Bool = arc18011
+  let arc18014: Bool = heptF000
+  let arc18015: Bool = arc18013
+  let arc18016: Bool = arc18014
+  let arc18017: Bool = heptD000
+  let arc18018: Bool = arc18016
+  let arc18019: Bool = arc18017
+  let arc18020: Bool = arc18003
+  let arc18021: Bool = arc18019
+  let arc18022: Bool = arc18020
+  let arc18023: Bool = arc18006
+  let arc18024: Bool = arc18022
+  let arc18025: Bool = arc18023
+  let arc18026: Bool = arc18009
+  let arc18027: Bool = arc18025
+  let arc18028: Bool = arc18026
+  let arc18029: Bool = arc18012
+  let arc18030: Bool = arc18028
+  let arc18031: Bool = arc18029
+  let arc18032: Bool = arc18015
+  let arc18033: Bool = arc18031
+  let arc18034: Bool = arc18032
+  let arc18035: Bool = arc18018
+  let arc18036: Bool = arc18034
+  let arc18037: Bool = arc18035
+  let arc18038: Bool = arc18021
+  let arc18039: Bool = arc18037
+  let arc18040: Bool = arc18038
+  let arc18041: Bool = arc18024
+  let arc18042: Bool = arc18040
+  let arc18043: Bool = arc18041
+  let arc18044: Bool = arc18027
+  let arc18045: Bool = arc18043
+  let arc18046: Bool = arc18044
+  let arc18047: Bool = arc18030
+  let arc18048: Bool = arc18046
+  let cross180: Bool = arc18039
+  let cross181: Bool = arc18045
+  if arc18042 {
+    if cross180 {
+      if arc18036 {
+        if arc18033 {
+          if arc18047 {
+            if arc18048 {
+              if cross181 {
+                return "parser_ast_node_built"
+              }
+              return "wave43_heptant_1_missing"
+            }
+            return "wave43_heptant_6_missing"
+          }
+          return "wave43_heptant_4_missing"
+        }
+        return "wave43_heptant_2_missing"
+      }
+      return "wave43_heptant_0_missing"
+    }
+    return "wave43_heptant_5_missing"
+  }
+  return "wave43_heptant_3_missing"
+}

@@ -1,0 +1,96 @@
+@version 1
+// Source-bound decision overlay wave 43 item 031: parser-max-record-fields-status.fungi.
+pure flow parserMaxRecordFieldsStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc31001: Bool = heptA000
+  let arc31002: Bool = heptF000
+  let arc31003: Bool = arc31001
+  let arc31004: Bool = arc31002
+  let arc31005: Bool = heptD000
+  let arc31006: Bool = arc31004
+  let arc31007: Bool = arc31005
+  let arc31008: Bool = heptB000
+  let arc31009: Bool = arc31007
+  let arc31010: Bool = arc31008
+  let arc31011: Bool = heptG000
+  let arc31012: Bool = arc31010
+  let arc31013: Bool = arc31011
+  let arc31014: Bool = heptE000
+  let arc31015: Bool = arc31013
+  let arc31016: Bool = arc31014
+  let arc31017: Bool = heptC000
+  let arc31018: Bool = arc31016
+  let arc31019: Bool = arc31017
+  let arc31020: Bool = arc31003
+  let arc31021: Bool = arc31019
+  let arc31022: Bool = arc31020
+  let arc31023: Bool = arc31006
+  let arc31024: Bool = arc31022
+  let arc31025: Bool = arc31023
+  let arc31026: Bool = arc31009
+  let arc31027: Bool = arc31025
+  let arc31028: Bool = arc31026
+  let arc31029: Bool = arc31012
+  let arc31030: Bool = arc31028
+  let arc31031: Bool = arc31029
+  let arc31032: Bool = arc31015
+  let arc31033: Bool = arc31031
+  let arc31034: Bool = arc31032
+  let arc31035: Bool = arc31018
+  let arc31036: Bool = arc31034
+  let arc31037: Bool = arc31035
+  let arc31038: Bool = arc31021
+  let arc31039: Bool = arc31037
+  let arc31040: Bool = arc31038
+  let arc31041: Bool = arc31024
+  let arc31042: Bool = arc31040
+  let arc31043: Bool = arc31041
+  let arc31044: Bool = arc31027
+  let arc31045: Bool = arc31043
+  let arc31046: Bool = arc31044
+  let arc31047: Bool = arc31030
+  let arc31048: Bool = arc31046
+  let arc31049: Bool = arc31047
+  let arc31050: Bool = arc31033
+  let arc31051: Bool = arc31049
+  let arc31052: Bool = arc31050
+  let arc31053: Bool = arc31036
+  let arc31054: Bool = arc31052
+  let arc31055: Bool = arc31053
+  let arc31056: Bool = arc31039
+  let arc31057: Bool = arc31055
+  let arc31058: Bool = arc31056
+  let arc31059: Bool = arc31042
+  let arc31060: Bool = arc31058
+  let arc31061: Bool = arc31059
+  let cross310: Bool = arc31060
+  let cross311: Bool = arc31045
+  if arc31061 {
+    if arc31048 {
+      if arc31054 {
+        if cross310 {
+          if cross311 {
+            if arc31051 {
+              if arc31057 {
+                return "parser_max_record_fields_built"
+              }
+              return "wave43_heptant_6_missing"
+            }
+            return "wave43_heptant_3_missing"
+          }
+          return "wave43_heptant_0_missing"
+        }
+        return "wave43_heptant_4_missing"
+      }
+      return "wave43_heptant_1_missing"
+    }
+    return "wave43_heptant_5_missing"
+  }
+  return "wave43_heptant_2_missing"
+}

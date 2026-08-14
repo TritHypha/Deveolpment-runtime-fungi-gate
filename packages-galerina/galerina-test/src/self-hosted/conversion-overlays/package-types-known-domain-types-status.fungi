@@ -1,0 +1,78 @@
+@version 1
+// Source-bound decision overlay wave 43 item 013: package-types-known-domain-types-status.fungi.
+pure flow packageTypesKnownDomainTypesStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc13001: Bool = heptD000
+  let arc13002: Bool = heptB000
+  let arc13003: Bool = arc13001
+  let arc13004: Bool = arc13002
+  let arc13005: Bool = heptG000
+  let arc13006: Bool = arc13004
+  let arc13007: Bool = arc13005
+  let arc13008: Bool = heptE000
+  let arc13009: Bool = arc13007
+  let arc13010: Bool = arc13008
+  let arc13011: Bool = heptC000
+  let arc13012: Bool = arc13010
+  let arc13013: Bool = arc13011
+  let arc13014: Bool = heptA000
+  let arc13015: Bool = arc13013
+  let arc13016: Bool = arc13014
+  let arc13017: Bool = heptF000
+  let arc13018: Bool = arc13016
+  let arc13019: Bool = arc13017
+  let arc13020: Bool = arc13003
+  let arc13021: Bool = arc13019
+  let arc13022: Bool = arc13020
+  let arc13023: Bool = arc13006
+  let arc13024: Bool = arc13022
+  let arc13025: Bool = arc13023
+  let arc13026: Bool = arc13009
+  let arc13027: Bool = arc13025
+  let arc13028: Bool = arc13026
+  let arc13029: Bool = arc13012
+  let arc13030: Bool = arc13028
+  let arc13031: Bool = arc13029
+  let arc13032: Bool = arc13015
+  let arc13033: Bool = arc13031
+  let arc13034: Bool = arc13032
+  let arc13035: Bool = arc13018
+  let arc13036: Bool = arc13034
+  let arc13037: Bool = arc13035
+  let arc13038: Bool = arc13021
+  let arc13039: Bool = arc13037
+  let arc13040: Bool = arc13038
+  let arc13041: Bool = arc13024
+  let arc13042: Bool = arc13040
+  let arc13043: Bool = arc13041
+  let cross130: Bool = arc13039
+  let cross131: Bool = arc13043
+  if arc13042 {
+    if arc13027 {
+      if arc13033 {
+        if cross130 {
+          if cross131 {
+            if arc13030 {
+              if arc13036 {
+                return "package_types_known_domain_types_built"
+              }
+              return "wave43_heptant_2_missing"
+            }
+            return "wave43_heptant_6_missing"
+          }
+          return "wave43_heptant_3_missing"
+        }
+        return "wave43_heptant_0_missing"
+      }
+      return "wave43_heptant_4_missing"
+    }
+    return "wave43_heptant_1_missing"
+  }
+  return "wave43_heptant_5_missing"
+}

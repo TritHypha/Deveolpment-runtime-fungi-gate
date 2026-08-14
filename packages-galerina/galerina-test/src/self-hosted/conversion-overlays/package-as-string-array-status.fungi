@@ -1,0 +1,71 @@
+@version 1
+// Source-bound decision overlay wave 43 item 006: package-as-string-array-status.fungi.
+pure flow packageAsStringArrayStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc06001: Bool = heptD000
+  let arc06002: Bool = heptB000
+  let arc06003: Bool = arc06001
+  let arc06004: Bool = arc06002
+  let arc06005: Bool = heptG000
+  let arc06006: Bool = arc06004
+  let arc06007: Bool = arc06005
+  let arc06008: Bool = heptE000
+  let arc06009: Bool = arc06007
+  let arc06010: Bool = arc06008
+  let arc06011: Bool = heptC000
+  let arc06012: Bool = arc06010
+  let arc06013: Bool = arc06011
+  let arc06014: Bool = heptA000
+  let arc06015: Bool = arc06013
+  let arc06016: Bool = arc06014
+  let arc06017: Bool = heptF000
+  let arc06018: Bool = arc06016
+  let arc06019: Bool = arc06017
+  let arc06020: Bool = arc06003
+  let arc06021: Bool = arc06019
+  let arc06022: Bool = arc06020
+  let arc06023: Bool = arc06006
+  let arc06024: Bool = arc06022
+  let arc06025: Bool = arc06023
+  let arc06026: Bool = arc06009
+  let arc06027: Bool = arc06025
+  let arc06028: Bool = arc06026
+  let arc06029: Bool = arc06012
+  let arc06030: Bool = arc06028
+  let arc06031: Bool = arc06029
+  let arc06032: Bool = arc06015
+  let arc06033: Bool = arc06031
+  let arc06034: Bool = arc06032
+  let arc06035: Bool = arc06018
+  let arc06036: Bool = arc06034
+  let cross060: Bool = arc06035
+  let cross061: Bool = arc06024
+  if arc06021 {
+    if cross060 {
+      if arc06036 {
+        if arc06033 {
+          if arc06030 {
+            if arc06027 {
+              if cross061 {
+                return "package_as_string_array_built"
+              }
+              return "wave43_heptant_3_missing"
+            }
+            return "wave43_heptant_1_missing"
+          }
+          return "wave43_heptant_6_missing"
+        }
+        return "wave43_heptant_4_missing"
+      }
+      return "wave43_heptant_2_missing"
+    }
+    return "wave43_heptant_0_missing"
+  }
+  return "wave43_heptant_5_missing"
+}

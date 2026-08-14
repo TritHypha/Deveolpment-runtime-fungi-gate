@@ -1,0 +1,105 @@
+@version 1
+// Source-bound decision overlay wave 43 item 040: parser-constructor-status.fungi.
+pure flow parserConstructorStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc40001: Bool = heptC000
+  let arc40002: Bool = heptA000
+  let arc40003: Bool = arc40001
+  let arc40004: Bool = arc40002
+  let arc40005: Bool = heptF000
+  let arc40006: Bool = arc40004
+  let arc40007: Bool = arc40005
+  let arc40008: Bool = heptD000
+  let arc40009: Bool = arc40007
+  let arc40010: Bool = arc40008
+  let arc40011: Bool = heptB000
+  let arc40012: Bool = arc40010
+  let arc40013: Bool = arc40011
+  let arc40014: Bool = heptG000
+  let arc40015: Bool = arc40013
+  let arc40016: Bool = arc40014
+  let arc40017: Bool = heptE000
+  let arc40018: Bool = arc40016
+  let arc40019: Bool = arc40017
+  let arc40020: Bool = arc40003
+  let arc40021: Bool = arc40019
+  let arc40022: Bool = arc40020
+  let arc40023: Bool = arc40006
+  let arc40024: Bool = arc40022
+  let arc40025: Bool = arc40023
+  let arc40026: Bool = arc40009
+  let arc40027: Bool = arc40025
+  let arc40028: Bool = arc40026
+  let arc40029: Bool = arc40012
+  let arc40030: Bool = arc40028
+  let arc40031: Bool = arc40029
+  let arc40032: Bool = arc40015
+  let arc40033: Bool = arc40031
+  let arc40034: Bool = arc40032
+  let arc40035: Bool = arc40018
+  let arc40036: Bool = arc40034
+  let arc40037: Bool = arc40035
+  let arc40038: Bool = arc40021
+  let arc40039: Bool = arc40037
+  let arc40040: Bool = arc40038
+  let arc40041: Bool = arc40024
+  let arc40042: Bool = arc40040
+  let arc40043: Bool = arc40041
+  let arc40044: Bool = arc40027
+  let arc40045: Bool = arc40043
+  let arc40046: Bool = arc40044
+  let arc40047: Bool = arc40030
+  let arc40048: Bool = arc40046
+  let arc40049: Bool = arc40047
+  let arc40050: Bool = arc40033
+  let arc40051: Bool = arc40049
+  let arc40052: Bool = arc40050
+  let arc40053: Bool = arc40036
+  let arc40054: Bool = arc40052
+  let arc40055: Bool = arc40053
+  let arc40056: Bool = arc40039
+  let arc40057: Bool = arc40055
+  let arc40058: Bool = arc40056
+  let arc40059: Bool = arc40042
+  let arc40060: Bool = arc40058
+  let arc40061: Bool = arc40059
+  let arc40062: Bool = arc40045
+  let arc40063: Bool = arc40061
+  let arc40064: Bool = arc40062
+  let arc40065: Bool = arc40048
+  let arc40066: Bool = arc40064
+  let arc40067: Bool = arc40065
+  let arc40068: Bool = arc40051
+  let arc40069: Bool = arc40067
+  let arc40070: Bool = arc40068
+  let cross400: Bool = arc40060
+  let cross401: Bool = arc40066
+  if arc40063 {
+    if arc40054 {
+      if cross401 {
+        if arc40057 {
+          if arc40069 {
+            if cross400 {
+              if arc40070 {
+                return "parser_constructor_built"
+              }
+              return "wave43_heptant_5_missing"
+            }
+            return "wave43_heptant_6_missing"
+          }
+          return "wave43_heptant_0_missing"
+        }
+        return "wave43_heptant_1_missing"
+      }
+      return "wave43_heptant_2_missing"
+    }
+    return "wave43_heptant_3_missing"
+  }
+  return "wave43_heptant_4_missing"
+}

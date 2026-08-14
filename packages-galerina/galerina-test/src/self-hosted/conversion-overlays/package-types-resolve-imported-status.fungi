@@ -1,0 +1,79 @@
+@version 1
+// Source-bound decision overlay wave 43 item 014: package-types-resolve-imported-status.fungi.
+pure flow packageTypesResolveImportedStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc14001: Bool = heptE000
+  let arc14002: Bool = heptC000
+  let arc14003: Bool = arc14001
+  let arc14004: Bool = arc14002
+  let arc14005: Bool = heptA000
+  let arc14006: Bool = arc14004
+  let arc14007: Bool = arc14005
+  let arc14008: Bool = heptF000
+  let arc14009: Bool = arc14007
+  let arc14010: Bool = arc14008
+  let arc14011: Bool = heptD000
+  let arc14012: Bool = arc14010
+  let arc14013: Bool = arc14011
+  let arc14014: Bool = heptB000
+  let arc14015: Bool = arc14013
+  let arc14016: Bool = arc14014
+  let arc14017: Bool = heptG000
+  let arc14018: Bool = arc14016
+  let arc14019: Bool = arc14017
+  let arc14020: Bool = arc14003
+  let arc14021: Bool = arc14019
+  let arc14022: Bool = arc14020
+  let arc14023: Bool = arc14006
+  let arc14024: Bool = arc14022
+  let arc14025: Bool = arc14023
+  let arc14026: Bool = arc14009
+  let arc14027: Bool = arc14025
+  let arc14028: Bool = arc14026
+  let arc14029: Bool = arc14012
+  let arc14030: Bool = arc14028
+  let arc14031: Bool = arc14029
+  let arc14032: Bool = arc14015
+  let arc14033: Bool = arc14031
+  let arc14034: Bool = arc14032
+  let arc14035: Bool = arc14018
+  let arc14036: Bool = arc14034
+  let arc14037: Bool = arc14035
+  let arc14038: Bool = arc14021
+  let arc14039: Bool = arc14037
+  let arc14040: Bool = arc14038
+  let arc14041: Bool = arc14024
+  let arc14042: Bool = arc14040
+  let arc14043: Bool = arc14041
+  let arc14044: Bool = arc14027
+  let cross140: Bool = arc14039
+  let cross141: Bool = arc14043
+  if arc14042 {
+    if arc14036 {
+      if arc14030 {
+        if cross141 {
+          if cross140 {
+            if arc14033 {
+              if arc14044 {
+                return "package_types_resolve_imported_built"
+              }
+              return "wave43_heptant_2_missing"
+            }
+            return "wave43_heptant_5_missing"
+          }
+          return "wave43_heptant_1_missing"
+        }
+        return "wave43_heptant_4_missing"
+      }
+      return "wave43_heptant_0_missing"
+    }
+    return "wave43_heptant_3_missing"
+  }
+  return "wave43_heptant_6_missing"
+}

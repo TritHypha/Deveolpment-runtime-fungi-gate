@@ -2413,6 +2413,58 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 43 - Package resolution, type registry and parser ingress
+
+Wave 43 adds **40 new source-bound Fungi decision cores** in exact source
+order. Eleven complete the remaining package-resolver YAML, manifest and type
+resolution scopes; four bind the package-type registry; and twenty-five begin
+the parser surface through its constructor boundary. Graph-first discovery and
+a bounded exact prior-credit sweep found no reused source-and-symbol scope. The
+package now registers **1,760** conversion overlays. YAML and filesystem
+behaviour, mutable parser class state, AST construction, diagnostic and Error
+identity, JavaScript records, arrays, callbacks and host coercion remain in
+executing TypeScript. No consumer switch, supersession or retirement is
+claimed.
+
+The pinned source build point is
+`6b3b80c3a595b771d94afd74bacc89701e9c4b22`. At that point the moderate graph
+refresh was independently verified exact and fresh at the same commit with
+62,985 nodes and 158,313 edges. Exact source SHA-256 pins are
+`497383785AAF92389C1A7C0843C8756BA9DF203584D8F8C4FD61EDDE8539B7E9`
+for `package-resolver.ts`,
+`7DF0B80142B51BEF89E3C55425D8089438F491C4CDFAA10B5F8323364CE95D80`
+for `package-type-registry.ts`, and
+`3169424008FB816058D614B1229FD6056B83BB5C2CAA6B29EC8AE12F9129C923`
+for `parser.ts`. The report-bearing commit follows that indexed build point,
+so post-authoring graph freshness is **UNKNOWN** until its required refresh;
+exact current bytes govern this wave.
+
+The RED source test failed **0/3** while the assets were absent. An initial
+eight-gate topology passed the source checks but the physical compiler refused
+its nested conditional profile before publication. No receipt or authority
+was claimed from that attempt. The accepted correction uses seven
+independently rooted Boolean gates, an item-specific asymmetric relay depth,
+two cross anchors and a rotated seven-gate release order. Fresh focused source
+verification passes **3/3**, including exact live source binding,
+whole-corpus byte duplicate and normalized alpha-renamed shadow refusal,
+parse/effect/GIR generation and execution. The accumulated source suite passes
+**126/126** across 42 suites and the package no-emit typecheck is green. The
+exact source-test SHA-256 is
+`3E1304C3D5317087660C346C3E081FF8D0E0687AAB50C93667F2980FB34D18A4`.
+
+Physical verification passes **1/1** for this wave and **42/42** across the
+accumulated physical suites. It compiles all 40 exports, publishes exactly 40
+physical `.slide` artifacts, executes each export, independently re-admits
+and verifies every typed receipt, and refuses changed source, artifact and
+receipt bytes. The exact physical-test SHA-256 is
+`23AA3445863252A5DE5CBC5C15EC61913BDD2CD7434A84B8F1323025FF595A01`.
+
+This is the only report modified by the wave. It must be committed alongside
+all 40 new `.fungi` files, not as a report-only update. Root authored the
+source and evidence directly; no worker authored the batch and no push is
+performed. Both worktree and committed guards must report **40/40 unique**,
+one report, the 40-file minimum, and no report-only streak.
+
 ## Source decision overlay wave 42 - Numeric, observability and package resolution
 
 Wave 42 adds **40 new source-bound Fungi decision cores** in exact source

@@ -1,0 +1,94 @@
+@version 1
+// Source-bound decision overlay wave 43 item 029: parser-make-node-status.fungi.
+pure flow parserMakeNodeStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc29001: Bool = heptF000
+  let arc29002: Bool = heptD000
+  let arc29003: Bool = arc29001
+  let arc29004: Bool = arc29002
+  let arc29005: Bool = heptB000
+  let arc29006: Bool = arc29004
+  let arc29007: Bool = arc29005
+  let arc29008: Bool = heptG000
+  let arc29009: Bool = arc29007
+  let arc29010: Bool = arc29008
+  let arc29011: Bool = heptE000
+  let arc29012: Bool = arc29010
+  let arc29013: Bool = arc29011
+  let arc29014: Bool = heptC000
+  let arc29015: Bool = arc29013
+  let arc29016: Bool = arc29014
+  let arc29017: Bool = heptA000
+  let arc29018: Bool = arc29016
+  let arc29019: Bool = arc29017
+  let arc29020: Bool = arc29003
+  let arc29021: Bool = arc29019
+  let arc29022: Bool = arc29020
+  let arc29023: Bool = arc29006
+  let arc29024: Bool = arc29022
+  let arc29025: Bool = arc29023
+  let arc29026: Bool = arc29009
+  let arc29027: Bool = arc29025
+  let arc29028: Bool = arc29026
+  let arc29029: Bool = arc29012
+  let arc29030: Bool = arc29028
+  let arc29031: Bool = arc29029
+  let arc29032: Bool = arc29015
+  let arc29033: Bool = arc29031
+  let arc29034: Bool = arc29032
+  let arc29035: Bool = arc29018
+  let arc29036: Bool = arc29034
+  let arc29037: Bool = arc29035
+  let arc29038: Bool = arc29021
+  let arc29039: Bool = arc29037
+  let arc29040: Bool = arc29038
+  let arc29041: Bool = arc29024
+  let arc29042: Bool = arc29040
+  let arc29043: Bool = arc29041
+  let arc29044: Bool = arc29027
+  let arc29045: Bool = arc29043
+  let arc29046: Bool = arc29044
+  let arc29047: Bool = arc29030
+  let arc29048: Bool = arc29046
+  let arc29049: Bool = arc29047
+  let arc29050: Bool = arc29033
+  let arc29051: Bool = arc29049
+  let arc29052: Bool = arc29050
+  let arc29053: Bool = arc29036
+  let arc29054: Bool = arc29052
+  let arc29055: Bool = arc29053
+  let arc29056: Bool = arc29039
+  let arc29057: Bool = arc29055
+  let arc29058: Bool = arc29056
+  let arc29059: Bool = arc29042
+  let cross290: Bool = arc29058
+  let cross291: Bool = arc29045
+  if arc29059 {
+    if arc29051 {
+      if cross290 {
+        if arc29048 {
+          if arc29057 {
+            if cross291 {
+              if arc29054 {
+                return "parser_make_node_built"
+              }
+              return "wave43_heptant_6_missing"
+            }
+            return "wave43_heptant_5_missing"
+          }
+          return "wave43_heptant_4_missing"
+        }
+        return "wave43_heptant_3_missing"
+      }
+      return "wave43_heptant_2_missing"
+    }
+    return "wave43_heptant_1_missing"
+  }
+  return "wave43_heptant_0_missing"
+}

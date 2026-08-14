@@ -1,0 +1,73 @@
+@version 1
+// Source-bound decision overlay wave 43 item 008: package-parse-manifest-status.fungi.
+pure flow packageParseManifestStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc08001: Bool = heptF000
+  let arc08002: Bool = heptD000
+  let arc08003: Bool = arc08001
+  let arc08004: Bool = arc08002
+  let arc08005: Bool = heptB000
+  let arc08006: Bool = arc08004
+  let arc08007: Bool = arc08005
+  let arc08008: Bool = heptG000
+  let arc08009: Bool = arc08007
+  let arc08010: Bool = arc08008
+  let arc08011: Bool = heptE000
+  let arc08012: Bool = arc08010
+  let arc08013: Bool = arc08011
+  let arc08014: Bool = heptC000
+  let arc08015: Bool = arc08013
+  let arc08016: Bool = arc08014
+  let arc08017: Bool = heptA000
+  let arc08018: Bool = arc08016
+  let arc08019: Bool = arc08017
+  let arc08020: Bool = arc08003
+  let arc08021: Bool = arc08019
+  let arc08022: Bool = arc08020
+  let arc08023: Bool = arc08006
+  let arc08024: Bool = arc08022
+  let arc08025: Bool = arc08023
+  let arc08026: Bool = arc08009
+  let arc08027: Bool = arc08025
+  let arc08028: Bool = arc08026
+  let arc08029: Bool = arc08012
+  let arc08030: Bool = arc08028
+  let arc08031: Bool = arc08029
+  let arc08032: Bool = arc08015
+  let arc08033: Bool = arc08031
+  let arc08034: Bool = arc08032
+  let arc08035: Bool = arc08018
+  let arc08036: Bool = arc08034
+  let arc08037: Bool = arc08035
+  let arc08038: Bool = arc08021
+  let cross080: Bool = arc08037
+  let cross081: Bool = arc08024
+  if arc08038 {
+    if arc08036 {
+      if arc08030 {
+        if cross081 {
+          if cross080 {
+            if arc08033 {
+              if arc08027 {
+                return "package_parse_manifest_built"
+              }
+              return "wave43_heptant_3_missing"
+            }
+            return "wave43_heptant_6_missing"
+          }
+          return "wave43_heptant_2_missing"
+        }
+        return "wave43_heptant_5_missing"
+      }
+      return "wave43_heptant_1_missing"
+    }
+    return "wave43_heptant_4_missing"
+  }
+  return "wave43_heptant_0_missing"
+}

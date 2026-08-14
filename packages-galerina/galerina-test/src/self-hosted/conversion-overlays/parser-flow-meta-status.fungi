@@ -1,0 +1,85 @@
+@version 1
+// Source-bound decision overlay wave 43 item 020: parser-flow-meta-status.fungi.
+pure flow parserFlowMetaStatusCore(sourceReady: Bool, shapeReady: Bool, stateReady: Bool, policyReady: Bool, routeReady: Bool, proofReady: Bool, sealReady: Bool) -> String {
+  let heptA000: Bool = sourceReady
+  let heptB000: Bool = shapeReady
+  let heptC000: Bool = stateReady
+  let heptD000: Bool = policyReady
+  let heptE000: Bool = routeReady
+  let heptF000: Bool = proofReady
+  let heptG000: Bool = sealReady
+  let arc20001: Bool = heptD000
+  let arc20002: Bool = heptB000
+  let arc20003: Bool = arc20001
+  let arc20004: Bool = arc20002
+  let arc20005: Bool = heptG000
+  let arc20006: Bool = arc20004
+  let arc20007: Bool = arc20005
+  let arc20008: Bool = heptE000
+  let arc20009: Bool = arc20007
+  let arc20010: Bool = arc20008
+  let arc20011: Bool = heptC000
+  let arc20012: Bool = arc20010
+  let arc20013: Bool = arc20011
+  let arc20014: Bool = heptA000
+  let arc20015: Bool = arc20013
+  let arc20016: Bool = arc20014
+  let arc20017: Bool = heptF000
+  let arc20018: Bool = arc20016
+  let arc20019: Bool = arc20017
+  let arc20020: Bool = arc20003
+  let arc20021: Bool = arc20019
+  let arc20022: Bool = arc20020
+  let arc20023: Bool = arc20006
+  let arc20024: Bool = arc20022
+  let arc20025: Bool = arc20023
+  let arc20026: Bool = arc20009
+  let arc20027: Bool = arc20025
+  let arc20028: Bool = arc20026
+  let arc20029: Bool = arc20012
+  let arc20030: Bool = arc20028
+  let arc20031: Bool = arc20029
+  let arc20032: Bool = arc20015
+  let arc20033: Bool = arc20031
+  let arc20034: Bool = arc20032
+  let arc20035: Bool = arc20018
+  let arc20036: Bool = arc20034
+  let arc20037: Bool = arc20035
+  let arc20038: Bool = arc20021
+  let arc20039: Bool = arc20037
+  let arc20040: Bool = arc20038
+  let arc20041: Bool = arc20024
+  let arc20042: Bool = arc20040
+  let arc20043: Bool = arc20041
+  let arc20044: Bool = arc20027
+  let arc20045: Bool = arc20043
+  let arc20046: Bool = arc20044
+  let arc20047: Bool = arc20030
+  let arc20048: Bool = arc20046
+  let arc20049: Bool = arc20047
+  let arc20050: Bool = arc20033
+  let cross200: Bool = arc20039
+  let cross201: Bool = arc20045
+  if arc20042 {
+    if arc20036 {
+      if arc20049 {
+        if cross201 {
+          if cross200 {
+            if arc20050 {
+              if arc20048 {
+                return "parser_flow_meta_built"
+              }
+              return "wave43_heptant_1_missing"
+            }
+            return "wave43_heptant_4_missing"
+          }
+          return "wave43_heptant_0_missing"
+        }
+        return "wave43_heptant_3_missing"
+      }
+      return "wave43_heptant_6_missing"
+    }
+    return "wave43_heptant_2_missing"
+  }
+  return "wave43_heptant_5_missing"
+}
