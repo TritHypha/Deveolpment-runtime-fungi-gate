@@ -9,11 +9,17 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Freeze 50 unique source-order scopes after refusing bridge re-export and
   earlier key-rotation duplicate credit: 14 erased declarations, 34 blocked
   runtime scopes and two bounded integer leaf candidates.
-- [ ] Adjudicate the process-wide GateCache singleton, TPL policy/enforcer,
+- [x] Adjudicate the process-wide GateCache singleton, TPL policy/enforcer,
   complete HybridInferenceEngine surface and key-rotation prefix through
   `isWeakRingKey` against exact callers, hostile vectors and physical evidence.
-- [ ] Author 50 receipt-local blocker/exit/vector records, run focused Tower
-  checks plus the receipt audit, and reconcile three independent reviews.
+- [x] Author 50 receipt-local blocker/exit/vector records and run fresh Tower
+  typecheck plus **515/515** tests and the receipt audit at **687/687**.
+- [x] Update the private translation skill at `0eba471` and authoring skill at
+  `5c28fea` with exact one-shot asynchronous-verification and live TypedArray /
+  DataView ingress rules; both remain private and unpushed.
+- [x] Reconcile three independent read-only reviews with final PASS after
+  correcting async/live-view threadability and making every exit plus the
+  range/caller/test/asset manifest receipt-exact.
 - [ ] Commit authored evidence separately, publish all registered owners, run
   the bounded 19-check matrix, then refresh both indexes only at Slice 747.
   Repository-wide closure remains `UNKNOWN`.

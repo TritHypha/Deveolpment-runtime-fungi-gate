@@ -3815,11 +3815,11 @@ green, Myco reports **6,308 files / 83,905 terms**, and codebase-memory reports
 This is bounded navigation/provenance evidence only; repository-wide closure
 remains `UNKNOWN`.
 
-## Fungi conversion checkpoint planned through Slice 747 - 2026-08-14
+## Fungi conversion checkpoint through Slice 747 - 2026-08-14
 
-The next 50 unique scopes finish GateCache, cover Tower's complete TPL
+The 50 unique scopes finish GateCache, cover Tower's complete TPL
 GovernanceEnforcer and HybridInferenceEngine surfaces, and enter key rotation
-through `isWeakRingKey`. Planned arithmetic is 14 erased declarations, 34
+through `isWeakRingKey`. Exact arithmetic is 14 erased declarations, 34
 blocked runtime scopes and two integer leaf candidates. Prior bridge re-export and
 key-rotation credits are retained rather than duplicated.
 
@@ -3829,3 +3829,11 @@ bridge and photonic admission, clock/audit effects, and asynchronous lifecycle
 ordering. The two leaf candidates remain non-authorizing until their exact
 consumer and Fungi-to-physical evidence chains exist. Repository-wide closure
 remains `UNKNOWN`.
+
+Private skills `0eba471` and `5c28fea` now bind one-shot async verification to
+one immutable evidence snapshot and a closed pending/verified/denied state, and
+make live TypedArray/DataView buffer, view, offset, detachment, resizing and
+shared-memory behavior explicit conversion borders. Fresh Tower typecheck plus
+**515/515** tests and **687/687** governed receipts pass. Three independent
+reviews, authored-evidence commit, owner publication, the bounded 19-check
+matrix and final dual-index refresh remain pending.

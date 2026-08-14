@@ -98,26 +98,26 @@ would narrow that observable host contract until an exact border is approved.
 
 ### Task 1: Slices 698-714
 
-- [ ] Pin exact ranges, callers, tests, loaded assets and prior-credit proof.
-- [ ] Record GateCache singleton and TPL policy/enforcer semantics, blockers,
+- [x] Pin exact ranges, callers, tests, loaded assets and prior-credit proof.
+- [x] Record GateCache singleton and TPL policy/enforcer semantics, blockers,
   threadability, exits and hostile vectors.
 
 ### Task 2: Slices 715-731
 
-- [ ] Pin metadata/constants/helpers, declarations, class state, constructor and
+- [x] Pin metadata/constants/helpers, declarations, class state, constructor and
   asynchronous authority admission paths.
-- [ ] Record exact numeric, typed-array, crypto, bridge and lifecycle semantics.
+- [x] Record exact numeric, typed-array, crypto, bridge and lifecycle semantics.
 
 ### Task 3: Slices 732-747
 
-- [ ] Pin planning, sealing, inference, dispatch, shutdown, receipts, factory
+- [x] Pin planning, sealing, inference, dispatch, shutdown, receipts, factory
   and key-rotation prefix evidence.
-- [ ] Reconcile every scope with exact physical Fungi/GIR/SLIDE/VOK authority.
+- [x] Reconcile every scope with exact physical Fungi/GIR/SLIDE/VOK authority.
 
 ### Task 4: Author, verify, review and publish
 
-- [ ] Author 50 unique receipt-local classifications/blockers/exits/vectors.
-- [ ] Run focused Tower checks and the governed receipt audit.
-- [ ] Reconcile three independent read-only reviews.
+- [x] Author 50 unique receipt-local classifications/blockers/exits/vectors.
+- [x] Run focused Tower checks and the governed receipt audit.
+- [x] Reconcile three independent read-only reviews.
 - [ ] Commit authored evidence separately, publish registered owners, run the
   bounded 19-check matrix, then refresh both indexes at Slice 747.

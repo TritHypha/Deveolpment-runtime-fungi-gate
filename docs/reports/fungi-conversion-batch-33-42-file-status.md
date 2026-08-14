@@ -1125,14 +1125,14 @@ edges with `stale:false`. Repository-wide closure stays `UNKNOWN`.
 
 ## Slices 698-747 - Tower cached policy, TPL enforcement and hybrid engine
 
-The next 50 unique source-order scopes finish GateCache, cover the complete
+The 50 unique source-order scopes finish GateCache, cover the complete
 GovernanceEnforcer and HybridInferenceEngine surfaces, and enter key rotation
-through `isWeakRingKey`. Exact planned arithmetic is 14 erased declarations,
+through `isWeakRingKey`. Exact arithmetic is 14 erased declarations,
 34 blocked runtime scopes and two bounded integer leaf candidates. Bridge re-export
 shims retain Slices 165-181 credit and are not renumbered; the prior
 `isWellFormedCommit` Slice 47 remains a future duplicate exclusion.
 
-No candidate authoring or retirement is authorized by this plan. The two exact
+No candidate authoring or retirement is authorized. The two exact
 integer leaves still require candidate-specific
 Fungi, GIR, physical `.slide`, independent re-admission, VOK and consumer
 switch evidence. The live `Uint8Array` view predicate remains blocked pending
@@ -1140,3 +1140,75 @@ an exact snapshot or full live-view ABI. Process-wide mutable cache/policy singl
 Set state, caller-mintable audit/schema authority, host crypto, active typed
 arrays, bridge/clock/audit effects and asynchronous lifecycle ordering remain
 fail-closed blockers. Repository-wide closure stays `UNKNOWN`.
+
+Material findings include the alias-poisonable process-wide policy cache; a
+forgeable truncated SHA-256 value mislabeled `mldsa65`; caller-mintable schema
+authority; fail-open transition handling for malformed Trit numbers; mutable
+metadata/routing state; pre-await one-shot verification latches; non-injective
+plan keys; cleanup failures that can replace original failures; and active
+receipt/audit aliases. `packTrits` also maps every value other than exact -1 or
+0, including holes and non-finite numbers, to the +1 encoding.
+
+Private translation `0eba47133c6d4205f002d2b2217ee3ad9d9a3c1a` and
+authoring `5c28fea04c27c25eb3366a020e56d3c2768f319c` now bind one-shot
+asynchronous verification to a closed pending/verified/denied lifecycle and
+require exact TypedArray/DataView buffer, view, offset, detachment, resizing,
+shared-memory and snapshot/copy semantics before immutable transport is
+claimed. Both remain private and unpushed.
+
+Fresh Tower no-emit typecheck plus **515/515** tests pass, and all **687/687**
+governed receipts are valid with 29 frozen legacy reports. These are bounded
+regression and receipt-shape evidence only. Independent reviews, owner
+publication, the bounded 19-check matrix and final dual-index refresh remain
+pending.
+
+### Slice 698-747 exact evidence manifest
+
+The receipt scopes above bind to these exact source ranges at build point
+`17996b1145cc42067ec76332685b986ca741754f`:
+
+| Slices | Exact owning ranges |
+|---|---|
+| 698-699 | `gate-cache.ts:126`; `:133-135` |
+| 700-710 | `governance-enforcer.ts:16-20`, `:22-27`, `:30-36`, `:38-132`, `:46-48`, `:50-65`, `:72-79`, `:82-84`, `:86-88`, `:95-125`, `:128-131` |
+| 711-720 | `hybrid-engine.ts:47-54`, `:56-67`, `:74-139`, `:141-172`, `:175-183`, `:192`, `:200`, `:202-206`, `:209-223`, `:225-248` |
+| 721-731 | `hybrid-engine.ts:254-260`, `:272-274`, `:292-298`, `:300-316`, `:318`, `:320-989`, `:368-433`, `:443-457`, `:464-503`, `:517-601`, `:603-609` |
+| 732-741 | `hybrid-engine.ts:612-620`, `:630-635`, `:646-766`, `:772-806`, `:813-917`, `:921-924`, `:926-954`, `:956-986`, `:988`, `:995-1124` |
+| 742-747 | `key-rotation.ts:57`, `:64`, `:66-75`, `:78-81`, `:84-91`, `:94-98` |
+
+Caller custody is also bounded. `defaultGateCache` is consumed by
+`compilePolicyCached`; both are public barrel exports and are exercised by the
+GateCache test/benchmark. GovernanceEnforcer is consumed by TPLSimulator and
+the in-package and extension bridge families; its methods form the retained
+per-execution authority lifecycle. Hybrid metadata/helpers feed the engine
+constructor and dispatch path; the admission helpers are called by `infer`;
+`planFor` is called by initialize/seal/infer; governance, dispatch, audit,
+receipt and shutdown helpers are reached from the engine lifecycle; the public
+factory is used by the CLI, tri-pipe factory, benchmark and focused tests.
+Key-rotation declarations are public binding surfaces and `isWeakRingKey` is
+called by ring creation/verification before the already-governed
+`isWellFormedCommit` frontier.
+
+Focused byte pins are `gate-cache.test.mjs`
+`468E5B5EBB0F86229CBA202CDD9B9774524474A49637401C57CB57B0161BADBC`;
+`tpl-simulator.test.mjs`
+`0D58F009D1DDEACFCDC2726BE931A4ECF60D63014D477D84D097B124F5BED3EC`;
+`rd0236-runtime-hardening.test.mjs`
+`977B30D726E5B6265B1084FD2DA559291815E53E98479636AE3835CA0E9A1F03`;
+`hybrid-engine.test.mjs`
+`17B485D225CC09A60997D9D845F1AC20F8786DE008C59A6428D3D9C1D6F0B81C`;
+`dispatch-failsafe.test.mjs`
+`A9416C799F47011863C87046D3A3400DFA46BE6C4273668E0C45775F971230A8`;
+`plan-memoization.test.mjs`
+`14D568659B6CDF631200A128CF4C8CFBC5D51C6D917320B00B50494BAEA7242F`;
+and `key-rotation.test.mjs`
+`950673FF76FC12DDB0C21EC41B42A1611A937A6CB6C39D1859F070454C7ADB25`.
+
+The package boundary loads `authorization-boundary.fungi`,
+`effective-verdict.fungi`, `governance-decisions.fungi`,
+`inference-governance.fungi`, `pq-admission-policy.fungi`,
+`transport-fsm.fungi`, `verdict-not.fungi`, `verdict-or.fungi`, and
+`trit-brand.type-guard.ts`. Exact-name and package-surface reconciliation
+finds no Slice 698-747 Fungi/GIR/physical `.slide`/re-admission/VOK twin:
+these assets are adjacent dependency evidence only and authorize no consumer
+switch or retirement.
