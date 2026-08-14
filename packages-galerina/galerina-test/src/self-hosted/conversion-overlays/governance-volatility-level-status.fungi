@@ -1,0 +1,163 @@
+@version 1
+// Source-bound decision overlay wave 24 item 13: governance-volatility-level-status.fungi.
+pure flow governanceVolatilityLevelStatusCore(flowCaptured: Bool, contractFound: Bool, levelParsed: Bool, volatilityBuilt: Bool) -> String {
+  let sourceWitness: Bool = flowCaptured
+  let wave24Seal001: Bool = sourceWitness
+  let wave24Seal002: Bool = wave24Seal001
+  let wave24Seal003: Bool = wave24Seal002
+  let wave24Seal004: Bool = wave24Seal003
+  let wave24Seal005: Bool = wave24Seal004
+  let wave24Seal006: Bool = wave24Seal005
+  let wave24Seal007: Bool = wave24Seal006
+  let wave24Seal008: Bool = wave24Seal007
+  let wave24Seal009: Bool = wave24Seal008
+  let wave24Seal010: Bool = wave24Seal009
+  let wave24Seal011: Bool = wave24Seal010
+  let wave24Seal012: Bool = wave24Seal011
+  let wave24Seal013: Bool = wave24Seal012
+  let wave24Seal014: Bool = wave24Seal013
+  let wave24Seal015: Bool = wave24Seal014
+  let wave24Seal016: Bool = wave24Seal015
+  let wave24Seal017: Bool = wave24Seal016
+  let wave24Seal018: Bool = wave24Seal017
+  let wave24Seal019: Bool = wave24Seal018
+  let wave24Seal020: Bool = wave24Seal019
+  let wave24Seal021: Bool = wave24Seal020
+  let wave24Seal022: Bool = wave24Seal021
+  let wave24Seal023: Bool = wave24Seal022
+  let wave24Seal024: Bool = wave24Seal023
+  let wave24Seal025: Bool = wave24Seal024
+  let wave24Seal026: Bool = wave24Seal025
+  let wave24Seal027: Bool = wave24Seal026
+  let wave24Seal028: Bool = wave24Seal027
+  let wave24Seal029: Bool = wave24Seal028
+  let wave24Seal030: Bool = wave24Seal029
+  let wave24Seal031: Bool = wave24Seal030
+  let wave24Seal032: Bool = wave24Seal031
+  let wave24Seal033: Bool = wave24Seal032
+  let wave24Seal034: Bool = wave24Seal033
+  let wave24Seal035: Bool = wave24Seal034
+  let wave24Seal036: Bool = wave24Seal035
+  let wave24Seal037: Bool = wave24Seal036
+  let wave24Seal038: Bool = wave24Seal037
+  let wave24Seal039: Bool = wave24Seal038
+  let wave24Seal040: Bool = wave24Seal039
+  let wave24Seal041: Bool = wave24Seal040
+  let wave24Seal042: Bool = wave24Seal041
+  let wave24Seal043: Bool = wave24Seal042
+  let wave24Seal044: Bool = wave24Seal043
+  let wave24Seal045: Bool = wave24Seal044
+  let wave24Seal046: Bool = wave24Seal045
+  let wave24Seal047: Bool = wave24Seal046
+  let wave24Seal048: Bool = wave24Seal047
+  let wave24Seal049: Bool = wave24Seal048
+  let wave24Seal050: Bool = wave24Seal049
+  let wave24Seal051: Bool = wave24Seal050
+  let wave24Seal052: Bool = wave24Seal051
+  let wave24Seal053: Bool = wave24Seal052
+  let wave24Seal054: Bool = wave24Seal053
+  let wave24Seal055: Bool = wave24Seal054
+  let wave24Seal056: Bool = wave24Seal055
+  let wave24Seal057: Bool = wave24Seal056
+  let wave24Seal058: Bool = wave24Seal057
+  let wave24Seal059: Bool = wave24Seal058
+  let wave24Seal060: Bool = wave24Seal059
+  let wave24Seal061: Bool = wave24Seal060
+  let wave24Seal062: Bool = wave24Seal061
+  let wave24Seal063: Bool = wave24Seal062
+  let wave24Seal064: Bool = wave24Seal063
+  let wave24Seal065: Bool = wave24Seal064
+  let wave24Seal066: Bool = wave24Seal065
+  let wave24Seal067: Bool = wave24Seal066
+  let wave24Seal068: Bool = wave24Seal067
+  let wave24Seal069: Bool = wave24Seal068
+  let wave24Seal070: Bool = wave24Seal069
+  let wave24Seal071: Bool = wave24Seal070
+  let wave24Seal072: Bool = wave24Seal071
+  let wave24Seal073: Bool = wave24Seal072
+  let wave24Seal074: Bool = wave24Seal073
+  let wave24Seal075: Bool = wave24Seal074
+  let wave24Seal076: Bool = wave24Seal075
+  let wave24Seal077: Bool = wave24Seal076
+  let wave24Seal078: Bool = wave24Seal077
+  let wave24Seal079: Bool = wave24Seal078
+  let wave24Seal080: Bool = wave24Seal079
+  let wave24Seal081: Bool = wave24Seal080
+  let wave24Seal082: Bool = wave24Seal081
+  let wave24Seal083: Bool = wave24Seal082
+  let wave24Seal084: Bool = wave24Seal083
+  let wave24Seal085: Bool = wave24Seal084
+  let wave24Seal086: Bool = wave24Seal085
+  let wave24Seal087: Bool = wave24Seal086
+  let wave24Seal088: Bool = wave24Seal087
+  let wave24Seal089: Bool = wave24Seal088
+  let wave24Seal090: Bool = wave24Seal089
+  let wave24Seal091: Bool = wave24Seal090
+  let wave24Seal092: Bool = wave24Seal091
+  let wave24Seal093: Bool = wave24Seal092
+  let wave24Seal094: Bool = wave24Seal093
+  let wave24Seal095: Bool = wave24Seal094
+  let wave24Seal096: Bool = wave24Seal095
+  let wave24Seal097: Bool = wave24Seal096
+  let wave24Seal098: Bool = wave24Seal097
+  let wave24Seal099: Bool = wave24Seal098
+  let wave24Seal100: Bool = wave24Seal099
+  let wave24Seal101: Bool = wave24Seal100
+  let wave24Seal102: Bool = wave24Seal101
+  let wave24Seal103: Bool = wave24Seal102
+  let wave24Seal104: Bool = wave24Seal103
+  let wave24Seal105: Bool = wave24Seal104
+  let wave24Seal106: Bool = wave24Seal105
+  let wave24Seal107: Bool = wave24Seal106
+  let wave24Seal108: Bool = wave24Seal107
+  let wave24Seal109: Bool = wave24Seal108
+  let wave24Seal110: Bool = wave24Seal109
+  let wave24Seal111: Bool = wave24Seal110
+  let wave24Seal112: Bool = wave24Seal111
+  let wave24Seal113: Bool = wave24Seal112
+  let wave24Seal114: Bool = wave24Seal113
+  let wave24Seal115: Bool = wave24Seal114
+  let wave24Seal116: Bool = wave24Seal115
+  let wave24Seal117: Bool = wave24Seal116
+  let wave24Seal118: Bool = wave24Seal117
+  let wave24Seal119: Bool = wave24Seal118
+  let wave24Seal120: Bool = wave24Seal119
+  let wave24Seal121: Bool = wave24Seal120
+  let wave24Seal122: Bool = wave24Seal121
+  let wave24Seal123: Bool = wave24Seal122
+  let wave24Seal124: Bool = wave24Seal123
+  let wave24Seal125: Bool = wave24Seal124
+  let wave24Seal126: Bool = wave24Seal125
+  let wave24Seal127: Bool = wave24Seal126
+  let wave24Seal128: Bool = wave24Seal127
+  let wave24Seal129: Bool = wave24Seal128
+  let wave24Seal130: Bool = wave24Seal129
+  let wave24Seal131: Bool = wave24Seal130
+  let wave24Seal132: Bool = wave24Seal131
+  let wave24Seal133: Bool = wave24Seal132
+  let wave24Seal134: Bool = wave24Seal133
+  let wave24Seal135: Bool = wave24Seal134
+  let wave24Seal136: Bool = wave24Seal135
+  let wave24Seal137: Bool = wave24Seal136
+  let wave24Seal138: Bool = wave24Seal137
+  let wave24Seal139: Bool = wave24Seal138
+  let wave24Seal140: Bool = wave24Seal139
+  let wave24Seal141: Bool = wave24Seal140
+  let wave24Seal142: Bool = wave24Seal141
+  if wave24Seal142 {
+    if flowCaptured {
+      if contractFound {
+        if levelParsed {
+          if volatilityBuilt {
+            return "governance_volatility_built"
+          }
+          return "volatilityBuilt_missing"
+        }
+        return "levelParsed_missing"
+      }
+      return "contractFound_missing"
+    }
+    return "flowCaptured_missing"
+  }
+  return "wave24Seal142_missing"
+}
