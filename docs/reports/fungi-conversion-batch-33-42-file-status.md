@@ -2413,6 +2413,39 @@ guards must report 40/40 whole-corpus uniqueness. The report-only streak stays
 zero, no worker authored this wave, no push is authorized, and no report-only
 follow-up commit is permitted.
 
+## Source decision overlay wave 25 - compiler value-state checking
+
+Wave 25 adds **40 new source-bound Fungi decision cores** for previously
+uncredited `value-state-checker.ts` class, helper and method scopes. Four
+Wave-3 scopes in the same file remain excluded. The package now registers
+**1,040** conversion overlays. The pinned source build point is
+`e6a9221b692c8123250df207bcfc31ee965d713a`; the source SHA-256 is
+`D3072891636C321A8C754DDD59A7695918D2ED44FD13CBDD1B37BF27DEF2589B`.
+The graph supplied navigation only: its post-Wave-24 refresh retained the
+Wave-23 build point, so freshness remains **UNKNOWN** and exact bytes govern.
+
+The RED test failed on absent and unregistered assets. The authored sources
+pass **40/40** whole-corpus exact-byte and normalized alpha-renamed shadow
+checks, parse, effect-check, emit GIR and execute. Three initial proof chains
+crossed the physical local bound; isolating each export identified exactly
+those three, which moved to unused 207-209 shapes and remained duplicate-free.
+Focused source evidence passes **3/3**, complete source evidence **77/77**,
+focused physical evidence **1/1**, complete physical evidence **26/26**, and
+package typecheck is green. The final test pins are
+`CDD2FA885DFD21E81082CDEF924F80F2CEB8E3A186402D3B99949ED50A32E193`
+and
+`E409EC8000F01AB7B1FA22290D5BC8C85A7C4ECE4A29A5AC656705E0D3C0D4F3`.
+
+This is bounded post-border decision evidence only. It does not replace AST,
+binding-scope, Map/Set, alias, recursive traversal, diagnostic, taint,
+authority-consumption, egress or error-order semantics; it authorizes no
+compiler consumer switch or TypeScript retirement.
+
+Commit custody remains fail-closed: this is the only report change, all 40 new
+`.fungi` files must be present, committed-object duplicate guards must remain
+40/40, the report-only streak stays zero, no worker authored this wave, and no
+push or report-only follow-up commit is authorized.
+
 ## Source decision overlay wave 24 - compiler substrate inference and governance verification
 
 Wave 24 adds **40 new source-bound Fungi decision cores** and reuses no prior
