@@ -108,7 +108,6 @@ flowchart LR
   T_audit_compiler_stage_twins_mjs --> C_proofs
   T_audit_conversion_report_commit_mjs["audit-conversion-report-commit.mjs"]
   T_audit_conversion_report_commit_mjs --> C_signing_fusion
-  T_audit_conversion_report_commit_mjs --> C_source_hygiene
   T_audit_conversion_report_commit_mjs --> C_doc_drift
   T_audit_conversion_report_commit_mjs --> C_graph_index
   T_audit_conversion_slice_close_mjs["audit-conversion-slice-close.mjs"]
@@ -132,6 +131,12 @@ flowchart LR
   T_audit_coverage_mjs --> C_diagnostics
   T_audit_coverage_mjs --> C_doc_drift
   T_audit_coverage_mjs --> C_graph_index
+  T_audit_detached_slide_authority_path_mjs["audit-detached-slide-authority-path.mjs"]
+  T_audit_detached_slide_authority_path_mjs --> C_signing_fusion
+  T_audit_detached_slide_authority_path_mjs --> C_diagnostics
+  T_audit_detached_slide_authority_path_mjs --> C_source_hygiene
+  T_audit_detached_slide_authority_path_mjs --> C_web_stub
+  T_audit_detached_slide_authority_path_mjs --> C_graph_index
   T_audit_diagnostic_code_collisions_mjs["audit-diagnostic-code-collisions.mjs"]
   T_audit_diagnostic_code_collisions_mjs --> C_governance
   T_audit_diagnostic_code_collisions_mjs --> C_naming
@@ -334,7 +339,6 @@ flowchart LR
   T_audit_perf_hotpath_mjs --> C_graph_index
   T_audit_perf_hotpath_mjs --> C_muted_diagnostics
   T_audit_private_doc_leak_mjs["audit-private-doc-leak.mjs"]
-  T_audit_private_doc_leak_mjs --> C_sinks_taint
   T_audit_private_doc_leak_mjs --> C_signing_fusion
   T_audit_private_doc_leak_mjs --> C_naming
   T_audit_private_doc_leak_mjs --> C_source_hygiene
@@ -472,6 +476,12 @@ flowchart LR
   T_audit_tooling_contract_mjs --> C_diagnostics
   T_audit_tooling_contract_mjs --> C_mutation_testing
   T_audit_tooling_contract_mjs --> C_graph_index
+  T_audit_trit_verdict_js_seam_mjs["audit-trit-verdict-js-seam.mjs"]
+  T_audit_trit_verdict_js_seam_mjs --> C_signing_fusion
+  T_audit_trit_verdict_js_seam_mjs --> C_diagnostics
+  T_audit_trit_verdict_js_seam_mjs --> C_mutation_testing
+  T_audit_trit_verdict_js_seam_mjs --> C_source_hygiene
+  T_audit_trit_verdict_js_seam_mjs --> C_brand
   T_audit_twin_differential_mjs["audit-twin-differential.mjs"]
   T_audit_twin_differential_mjs --> C_effects
   T_audit_twin_differential_mjs --> C_gate_wiring
@@ -508,7 +518,6 @@ flowchart LR
   T_audit_wat_emitter_mutation_mjs --> C_mutation_testing
   T_audit_wat_emitter_mutation_mjs --> C_teaching_corpus
   T_audit_wat_emitter_mutation_mjs --> C_web_stub
-  T_audit_wat_emitter_mutation_mjs --> C_proofs
   T_audit_wat_lowering_mjs["audit-wat-lowering.mjs"]
   T_audit_wat_lowering_mjs --> C_teaching_corpus
   T_audit_wat_lowering_mjs --> C_graph_index
@@ -791,7 +800,6 @@ flowchart LR
   T_fungi_source_capability_inventory_mjs --> C_signing_fusion
   T_fungi_source_capability_inventory_mjs --> C_governance
   T_fungi_source_capability_inventory_mjs --> C_secrets_privacy
-  T_fungi_source_capability_inventory_mjs --> C_source_hygiene
   T_fungi_source_capability_inventory_mjs --> C_graph_index
   T_gather_compiler_stage_hashes_mjs["gather-compiler-stage-hashes.mjs"]
   T_gather_compiler_stage_hashes_mjs --> C_effects
@@ -875,7 +883,6 @@ flowchart LR
   T_rebuild_fusable_packages_mjs["rebuild-fusable-packages.mjs"]
   T_rebuild_fusable_packages_mjs --> C_signing_fusion
   T_rebuild_fusable_packages_mjs --> C_governance
-  T_rebuild_fusable_packages_mjs --> C_graph_index
   T_release_evidence_authority_cli_mjs["release-evidence-authority-cli.mjs"]
   T_release_evidence_authority_cli_mjs --> C_signing_fusion
   T_relink_workspace_mjs["relink-workspace.mjs"]

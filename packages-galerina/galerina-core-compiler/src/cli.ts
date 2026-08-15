@@ -47,6 +47,8 @@ import { loadPackageManifest } from "./package-resolver.js";
 import { generateCycloneDxSbom } from "./sbom.js";
 import { dispatchGateSource, findGateRegistry } from "./gate-dispatch.js";
 import { generateCircuitFromPattern } from "./gate-from-pattern.js";
+import { createFilesystemArtifactRepository } from "./artifact-reference.js";
+import { run as runRuntime } from "./runtime.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
 
@@ -976,6 +978,7 @@ function parseArgs(): { readonly mode: CliMode; readonly targetDir: string } {
         "  build --target=wasm-standalone  Emit WASM/WASI module (no JS required)\n" +
         "  build --target=wasm-wasi       Alias for wasm-standalone (Phase 42)\n" +
         "  build --target=wasm-hybrid   Emit JS shell + WASM pure-flow core\n" +
+        "  detached-reference <file>    Seal checked facts and publish non-authorizing snapshot/GIR references\n" +
         "  fix --effects                Suggest missing effect declarations\n" +
         "  emit --ai-graph              Emit build/semantic/galerina.ai.json\n" +
         "  verify-selfhost              Verify deterministic (reproducible) build\n" +
@@ -1455,9 +1458,79 @@ function runGateFromPattern(args: readonly string[]): boolean {
   return true;
 }
 
-function main(): void {
+function exactOption(args: readonly string[], name: string): string | undefined {
+  const prefix = `--${name}=`;
+  const matches = args.filter((value) => value.startsWith(prefix));
+  if (matches.length !== 1) return undefined;
+  const value = matches[0]?.slice(prefix.length);
+  return value === undefined || value.length === 0 ? undefined : value;
+}
+
+async function runDetachedReferenceCommand(args: readonly string[]): Promise<boolean> {
+  if (args[0] !== "detached-reference") return false;
+  const positional = args.slice(1).filter((value) => !value.startsWith("--"));
+  const filePath = positional.length === 1 ? positional[0] : undefined;
+  const repositoryRoot = exactOption(args, "repository");
+  const compilerCommit = exactOption(args, "compiler-commit");
+  const compilerVersion = exactOption(args, "compiler-version");
+  const checkerProfileVersion = exactOption(args, "checker-profile-version");
+  if (
+    filePath === undefined
+    || !filePath.endsWith(".fungi")
+    || repositoryRoot === undefined
+    || compilerCommit === undefined
+    || !/^git:[0-9a-f]{40}$/u.test(compilerCommit)
+    || compilerVersion === undefined
+    || checkerProfileVersion === undefined
+  ) {
+    process.stderr.write(
+      "Usage: galerina detached-reference <file.fungi> " +
+      "--repository=<owner-store> --compiler-commit=git:<40-lower-hex> " +
+      "--compiler-version=<version> --checker-profile-version=<version>\n" +
+      "This mode is reference-only: it publishes no execution authority.\n",
+    );
+    process.exit(1);
+  }
+  let source: string;
+  try {
+    source = readFileSync(resolvePath(filePath), "utf8");
+  } catch {
+    process.stderr.write("[error] detached-reference could not read the requested .fungi source\n");
+    process.exit(1);
+  }
+  const repository = createFilesystemArtifactRepository({
+    rootDirectory: resolvePath(repositoryRoot),
+    owner: "galerina",
+  });
+  const result = await runRuntime(source, resolvePath(filePath), "", new Map(), {
+    mode: "detached-reference",
+    detachedReference: {
+      repository,
+      compilerCommit: compilerCommit as `git:${string}`,
+      compilerVersion,
+      checkerProfileVersion,
+    },
+  });
+  const detached = result.detachedReference;
+  if (detached === undefined || !detached.accepted) {
+    process.stderr.write(
+      `[error] detached-reference refused: ${detached?.code ?? "SNAPSHOT_UNAVAILABLE"}\n`,
+    );
+    process.exit(1);
+  }
+  process.stdout.write(JSON.stringify({
+    schema: "galerina.detached-reference-output.v1",
+    executionAuthorized: false,
+    snapshot: detached.snapshot,
+    gir: detached.gir.reference,
+  }, null, 2) + "\n");
+  return true;
+}
+
+async function main(): Promise<void> {
   // Before parseArgs — see the note on runGateFromPattern.
   if (runGateFromPattern(process.argv.slice(2))) return;
+  if (await runDetachedReferenceCommand(process.argv.slice(2))) return;
 
   const { mode, targetDir } = parseArgs();
   // Load galerina.check.json / .galerinarc.json if present
@@ -1719,7 +1792,7 @@ function runWatch(targetDir: string): void {
     if (debounce) clearTimeout(debounce);
     debounce = setTimeout(() => {
       process.stdout.write(`\n[galerina watch] Change: ${filename ?? "unknown"} -- re-checking...\n`);
-      main();
+      void main();
     }, 200);
   };
 
@@ -1735,7 +1808,7 @@ function runWatch(targetDir: string): void {
   }
 
   // Initial run
-  main();
+  void main();
 
   // Keep process alive
   (process as unknown as {stdin?:{resume():void}}).stdin?.resume();
@@ -1747,5 +1820,9 @@ if (process.argv.includes("--watch")) {
   const { targetDir } = parseArgs();
   void runWatch(targetDir);
 } else {
-  main();
+  void main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(`[error] galerina CLI failed closed: ${message}\n`);
+    process.exit(1);
+  });
 }

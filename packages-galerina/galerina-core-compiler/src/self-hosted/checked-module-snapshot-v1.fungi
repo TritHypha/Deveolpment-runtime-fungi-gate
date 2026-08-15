@@ -1,0 +1,70 @@
+@version 1
+/// @file: checked-module-snapshot-v1.fungi
+/// @purpose: Define the executable invariant and refusal floor for one closed checked-module snapshot.
+/// @status: Value-only contract; TypeScript remains the retained differential capture and canonical-byte comparator.
+///
+/// This contract does not admit an AST, callback, class instance, Map, Set,
+/// capability, source-byte alias, execution authority, or VOK authority. The
+/// older slide-gfrontend-checked-snapshot.fungi remains a bounded G4 fixture.
+
+record CheckedModuleSnapshotInvariantV1 {
+  schemaExact: Bool
+  sourceReferenceExact: Bool
+  sourceBytesExact: Bool
+  spansBounded: Bool
+  identitiesUnique: Bool
+  semanticFactsComplete: Bool
+  traceStageCount: Int
+  traceOrderExact: Bool
+  traceContinuous: Bool
+  bodyDigestExact: Bool
+  runIdentityExact: Bool
+  containsActiveState: Bool
+}
+
+record CheckedModuleSnapshotInvariantResultV1 {
+  accepted: Bool
+  refusalCode: String
+}
+
+// Construct one terminal non-authorizing refusal result.
+pure flow refuseCheckedModuleSnapshotV1(code: String) -> CheckedModuleSnapshotInvariantResultV1
+contract { intent { "Return one terminal value-only refusal without releasing partial checked facts." } }
+{
+  return { accepted: false refusalCode: code }
+}
+
+// Check every closed snapshot invariant without consulting ambient state.
+pure flow checkCheckedModuleSnapshotInvariantV1(
+  invariant: CheckedModuleSnapshotInvariantV1,
+) -> CheckedModuleSnapshotInvariantResultV1
+contract {
+  intent { "Accept only a closed exact snapshot with six continuous checker stages and no active host state." }
+}
+{
+  if invariant.schemaExact == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-SCHEMA")
+  }
+  if invariant.sourceReferenceExact == false or invariant.sourceBytesExact == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-SOURCE")
+  }
+  if invariant.spansBounded == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-SPANS")
+  }
+  if invariant.identitiesUnique == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-IDENTITIES")
+  }
+  if invariant.semanticFactsComplete == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-FACTS")
+  }
+  if invariant.traceStageCount != 6 or invariant.traceOrderExact == false or invariant.traceContinuous == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-TRACE")
+  }
+  if invariant.bodyDigestExact == false or invariant.runIdentityExact == false {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-IDENTITY")
+  }
+  if invariant.containsActiveState {
+    return refuseCheckedModuleSnapshotV1("CHECKED-SNAPSHOT-ACTIVE-STATE")
+  }
+  return { accepted: true refusalCode: "NONE" }
+}

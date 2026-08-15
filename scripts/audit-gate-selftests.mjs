@@ -69,6 +69,8 @@ const SELFTEST_VIA_TEST = {
   "audit-mutation.mjs":            { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "hermetic KILL/SURVIVE/git-safety fixture (--config); never run via --self-test (it ignores unknown flags → would mutate real security source)" },
   "audit-coverage.mjs":           { test: "scripts/tests/dev-tools-code-catalog.test.mjs", proves: "isolated fixture: curated-registry present→0 phantoms; absent→fail-closed exit 2" },
   "audit-doc-drift.mjs":          { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: living-doc stale count flagged; dated/-log exempt; missing-corpus fail-closed" },
+  "audit-detached-slide-authority-path.mjs": { test: "scripts/tests/detached-slide-authority-path.test.mjs", proves: "hermetic snapshot-only clean control plus planted AST/compiler/Wasm/Tower/Tri-Pipe/Hypha and unknown-import refusals" },
+  "audit-trit-verdict-js-seam.mjs": { test: "scripts/tests/trit-verdict-js-seam.test.mjs", proves: "hermetic exact captured seam control plus planted Trit/Verdict numeric, hostile-record, canonical-byte, live-view, and detached-audit refusals" },
   "audit-provenance.mjs":         { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: stamped+semantic-current clean; mtime-only change clean; content drift→STALE; missing-sidecar→UNSTAMPED" },
   "audit-effect-canonicality.mjs":{ test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: bitmask⊄canonical detected + REAL-repo single-source regression guard" },
   "audit-muted-diagnostics.mjs":  { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: un-allowlisted mode-gated SECURITY mute detected + REAL-repo regression guard" },

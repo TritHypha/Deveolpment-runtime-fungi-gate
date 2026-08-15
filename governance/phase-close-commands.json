@@ -652,6 +652,74 @@
       }
     },
     {
+      "id": "audit:trit-verdict-js-seam",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-TRIT-VERDICT-JS-SEAM",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-TRIT-VERDICT-JS-SEAM"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-trit-verdict-js-seam.mjs",
+          "--entry",
+          "packages-galerina/galerina-core-compiler/src/checked-snapshot-gir-emitter.ts"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-TRIT-VERDICT-JS-SEAM"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "fixture proof is governed by scripts/audit-gate-selftests.mjs"
+      },
+      "predecessors": [
+        "lint:cast-hygiene"
+      ],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
       "id": "registry-index:selftest",
       "requirementId": "REQ-PHASE-CLOSE-REGISTRY-INDEX-SELFTEST",
       "satisfies": [

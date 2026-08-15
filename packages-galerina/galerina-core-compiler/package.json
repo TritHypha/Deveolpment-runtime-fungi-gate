@@ -36,6 +36,7 @@
       "src/self-hosted/tenant-scoped-suffix.fungi",
       "src/self-hosted/bound.fungi",
       "src/self-hosted/capability-normalization.fungi",
+      "src/self-hosted/checked-module-snapshot-v1.fungi",
       "src/self-hosted/collection-name.fungi",
       "src/self-hosted/compiler.capabilities.fungi",
       "src/self-hosted/contract-permission.fungi",

@@ -43,6 +43,8 @@
     "test:ts-to-fungi-sandbox": "node --test scripts/tests/ts-to-fungi-sandbox.test.mjs",
     "audit:conversion-report-commit": "node scripts/audit-conversion-report-commit.mjs --commit HEAD",
     "audit:conversion-report-commit:selftest": "node --test scripts/tests/audit-conversion-report-commit.test.mjs",
+    "audit:detached-slide-authority-path": "node scripts/audit-detached-slide-authority-path.mjs --entry packages-galerina/galerina-core-compiler/src/checked-snapshot-gir-emitter.ts",
+    "audit:trit-verdict-js-seam": "node scripts/audit-trit-verdict-js-seam.mjs --entry packages-galerina/galerina-core-compiler/src/checked-snapshot-gir-emitter.ts",
     "audit:registry-static-host-toolchain": "node scripts/verify-registry-static-host-toolchain.mjs",
     "audit:registry-static-host-toolchain:selftest": "node --test scripts/tests/registry-static-host-toolchain.test.mjs",
     "registry:generation": "npm --prefix packages-galerina/galerina-framework-app-kernel run build && node scripts/registry-generation-cli.mjs build-current",

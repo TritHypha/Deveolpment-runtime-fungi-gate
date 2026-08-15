@@ -26,8 +26,22 @@ import type { ContractEnforcementRecord } from "./runtime/runtimeReport.js";
 import { checkSourceEscapes, type EscapeDiagnostic } from "./source-escape-checker.js";
 import { canonicalHash } from "./runtime/canonicalHash.js";
 import { checkNamingPolicy, type NamingPolicyDiagnostic } from "./naming-policy-checker.js";
+import { types as utilTypes } from "node:util";
+import type { OwnedArtifactRepository } from "./artifact-reference.js";
+import {
+  persistAndEmitDetachedSnapshotV1,
+  type DetachedReferenceResult,
+} from "./detached-scalar-handoff.js";
+import {
+  sealRuntimeCheckedSnapshotV1,
+  type DetachedSnapshotProvenanceV1,
+} from "./runtime-checked-snapshot.js";
 
-export type RuntimeMode = "check-only" | "dev" | "production" | "deterministic";
+export type RuntimeMode = "check-only" | "dev" | "production" | "deterministic" | "detached-reference";
+
+export interface DetachedReferenceRuntimeOptions extends DetachedSnapshotProvenanceV1 {
+  readonly repository: OwnedArtifactRepository<"galerina">;
+}
 
 export interface RuntimeOptions {
   readonly mode?: RuntimeMode;
@@ -50,6 +64,8 @@ export interface RuntimeOptions {
   readonly emitExecutionPlan?: boolean;
   /** When true, naming policy violations are included in the ok=false condition. Default: false. */
   readonly enforceNamingPolicy?: boolean;
+  /** Required only by the non-authorizing detached-reference mode. */
+  readonly detachedReference?: DetachedReferenceRuntimeOptions;
 }
 
 export interface RuntimeResult {
@@ -70,6 +86,8 @@ export interface RuntimeResult {
   readonly executionPlan?: PassiveExecutionPlan;
   /** Phase 16A: canonical hash of the semantic graph. Present when emitSemanticGraph or emitAiGraph is set. */
   readonly semanticGraphHash?: string;
+  /** Non-authorizing result from the sealed snapshot -> canonical GIR reference path. */
+  readonly detachedReference?: DetachedReferenceResult;
 }
 
 interface RuntimeAdmission {
@@ -84,10 +102,69 @@ interface RuntimeAdmission {
 }
 
 function decodeRuntimeMode(value: unknown): RuntimeMode {
-  if (value === "check-only" || value === "dev" || value === "production" || value === "deterministic") {
+  if (
+    value === "check-only"
+    || value === "dev"
+    || value === "production"
+    || value === "deterministic"
+    || value === "detached-reference"
+  ) {
     return value;
   }
   throw new Error(`Galerina: unknown runtime mode '${String(value)}'`);
+}
+
+const DETACHED_REFERENCE_OPTION_KEYS = [
+  "checkerProfileVersion",
+  "compilerCommit",
+  "compilerVersion",
+  "repository",
+] as const;
+
+function captureDetachedReferenceRuntimeOptions(options: RuntimeOptions): DetachedReferenceRuntimeOptions | undefined {
+  if (typeof options !== "object" || options === null || utilTypes.isProxy(options)) return undefined;
+  try {
+    const outer = Object.getOwnPropertyDescriptor(options, "detachedReference");
+    if (outer === undefined || !("value" in outer) || outer.get !== undefined || outer.set !== undefined) return undefined;
+    const input = outer.value as unknown;
+    if (
+      typeof input !== "object"
+      || input === null
+      || utilTypes.isProxy(input)
+      || Object.getPrototypeOf(input) !== Object.prototype
+    ) return undefined;
+    const descriptors = Object.getOwnPropertyDescriptors(input);
+    const keys = Reflect.ownKeys(descriptors);
+    if (
+      keys.length !== DETACHED_REFERENCE_OPTION_KEYS.length
+      || keys.some((key) => typeof key !== "string" || !DETACHED_REFERENCE_OPTION_KEYS.includes(key as typeof DETACHED_REFERENCE_OPTION_KEYS[number]))
+    ) return undefined;
+    const values: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+    for (const key of DETACHED_REFERENCE_OPTION_KEYS) {
+      const descriptor = descriptors[key];
+      if (
+        descriptor === undefined
+        || !("value" in descriptor)
+        || descriptor.get !== undefined
+        || descriptor.set !== undefined
+        || descriptor.enumerable !== true
+      ) return undefined;
+      values[key] = descriptor.value;
+    }
+    if (
+      typeof values["compilerCommit"] !== "string"
+      || typeof values["compilerVersion"] !== "string"
+      || typeof values["checkerProfileVersion"] !== "string"
+    ) return undefined;
+    return Object.freeze({
+      repository: values["repository"] as OwnedArtifactRepository<"galerina">,
+      compilerCommit: values["compilerCommit"] as `git:${string}`,
+      compilerVersion: values["compilerVersion"],
+      checkerProfileVersion: values["checkerProfileVersion"],
+    });
+  } catch {
+    return undefined;
+  }
 }
 
 function admitRuntime(
@@ -140,7 +217,11 @@ function admitRuntime(
     throw new Error("Galerina: runtime admission checker state is incomplete");
   }
 
-  const profile: DeploymentProfile = mode === "check-only" ? "dev" : mode;
+  const profile: DeploymentProfile = mode === "check-only"
+    ? "dev"
+    : mode === "detached-reference"
+      ? "deterministic"
+      : mode;
   const governanceResult = verifyGovernance(
     parseResult.ast,
     parseResult.flows,
@@ -186,6 +267,58 @@ export async function run(
     admission.namingDiagnostics.some((diagnostic) =>
       diagnostic.severity === "error" || diagnostic.severity === "warning"
     );
+
+  if (mode === "detached-reference") {
+    let detachedReference: DetachedReferenceResult;
+    const detachedOptions = captureDetachedReferenceRuntimeOptions(options);
+    if (admission.denied) {
+      detachedReference = Object.freeze({
+        accepted: false,
+        executionAuthorized: false,
+        code: "COMPILER_ADMISSION",
+      });
+    } else if (detachedOptions === undefined) {
+      detachedReference = Object.freeze({
+        accepted: false,
+        executionAuthorized: false,
+        code: "DETACHED_CONFIGURATION",
+      });
+    } else {
+      const sealed = sealRuntimeCheckedSnapshotV1({
+        source,
+        file,
+        parseResult,
+        diagnostics: admission.diagnostics,
+        governanceDiagnostics: admission.governanceDiagnostics,
+        escapeDiagnostics: admission.escapeDiagnostics,
+        namingDiagnostics: admission.namingDiagnostics,
+        provenance: {
+          compilerCommit: detachedOptions.compilerCommit,
+          compilerVersion: detachedOptions.compilerVersion,
+          checkerProfileVersion: detachedOptions.checkerProfileVersion,
+        },
+      });
+      detachedReference = sealed.sealed
+        ? await persistAndEmitDetachedSnapshotV1(
+            sealed.bytes,
+            detachedOptions.repository,
+          )
+        : Object.freeze({
+            accepted: false,
+            executionAuthorized: false,
+            code: sealed.code,
+          });
+    }
+    return {
+      ok: detachedReference.accepted,
+      diagnostics: allDiagnostics,
+      governanceDiagnostics: admission.governanceDiagnostics,
+      escapeDiagnostics: admission.escapeDiagnostics,
+      namingDiagnostics: admission.namingDiagnostics,
+      mode,
+      detachedReference,
+    };
+  }
 
   if (mode === "check-only" || admission.denied) {
     return {
@@ -382,8 +515,8 @@ export async function serve(
     throw new Error(`Galerina: conflicting runtime modes '${String(optionMode)}' and '${String(configMode)}'`);
   }
   const mode = decodeRuntimeMode(optionMode ?? configMode ?? "dev");
-  if (mode === "check-only") {
-    throw new Error("Galerina: check-only mode cannot open a listener");
+  if (mode === "check-only" || mode === "detached-reference") {
+    throw new Error(`Galerina: ${mode} mode cannot open a listener`);
   }
 
   const admission = admitRuntime(source, file, mode, options.enforceNamingPolicy === true);

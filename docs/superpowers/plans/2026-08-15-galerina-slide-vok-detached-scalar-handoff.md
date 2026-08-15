@@ -133,22 +133,30 @@ the exact admitted result before using its private Signet.
 - Modify: `package.json`
 - Modify: `scripts/dev-tool-registry.json` if this registry owns the tool
 
-- [ ] Write a failing self-test fixture whose post-snapshot module imports or
+- [x] Write a failing self-test fixture whose post-snapshot module imports or
   calls `emitGIR(ast, ...)`, TypeScript compiler APIs, WAT/Wasm execution,
   Tower, Tri-Pipe or Hypha. Require the audit to reject each edge.
-- [ ] Write a green fixture whose only input is frozen
+- [x] Write a green fixture whose only input is frozen
   `CheckedModuleSnapshotV1` bytes/reference and whose outputs are typed GIR
   bytes/reference or a typed refusal.
-- [ ] Implement bounded import and call-surface inspection. Unknown/truncated
+- [x] Implement bounded import and call-surface inspection. Unknown/truncated
   analysis is a refusal, not a clean result.
-- [ ] Emit a machine-readable result carrying tool version, ruleset digest,
+- [x] Emit a machine-readable result carrying tool version, ruleset digest,
   repository commit, files inspected and each forbidden edge.
-- [ ] Add `audit:detached-slide-authority-path`; register it through the normal
+- [x] Add `audit:detached-slide-authority-path`; register it through the normal
   dev-tool publisher rather than hand-editing generated indexes.
-- [ ] Run:
+- [x] Run:
   `node --test scripts/tests/detached-slide-authority-path.test.mjs`
-- [ ] Run the planted-red control and prove the audit exits non-zero, then
+- [x] Run the planted-red control and prove the audit exits non-zero, then
   restore the valid fixture and prove it returns green.
+
+Evidence (2026-08-15): the hermetic suite passes 12/12, including six planted
+forbidden authority families, computed-import refusal, a literal-import
+control, inert comment/string controls, repository-containment refusals and a
+commit-binding control for modified/untracked entry bytes.
+The generated dev-tool index reports 177 tools and zero ungated
+audits; its generator check is green. The normal audit command remains
+fail-closed until Task 4 creates `checked-snapshot-gir-emitter.ts`.
 
 ### Task 2: Wire erasure, hostile-number and canonical-byte detectors
 
@@ -158,20 +166,33 @@ the exact admitted result before using its private Signet.
 - Modify: `scripts/audit-detached-slide-authority-path.mjs`
 - Modify: `package.json`
 
-- [ ] Write failing vectors for raw integer laundering between `Trit` and
+- [x] Write failing vectors for raw integer laundering between `Trit` and
   `Verdict`, erased JavaScript objects, `-0`, `NaN`, infinities, missing fields,
   inherited/accessor/proxy fields, repeated getters and caller-mintable success
   booleans.
-- [ ] Require canonical authoritative byte code to reject ambient
+- [x] Require canonical authoritative byte code to reject ambient
   `localeCompare`, delimiter concatenation, unversioned JSON, duplicate keys and
   mutable live typed-array input without an admitted copy/live-view contract.
 - [ ] Reuse the existing mutation, sentinel and conversion-acceptance tools;
   do not duplicate their implementation. Record their exact tool/ruleset
   digests in the later end-to-end receipt fixture.
-- [ ] Add a strict TypeScript brand check and the JavaScript twin-seam audit to
+- [x] Add a strict TypeScript brand check and the JavaScript twin-seam audit to
   the ordinary phase-close path only after both prove red capability.
-- [ ] Run the focused tests and the registered publisher/check for every edited
+- [x] Run the focused tests and the registered publisher/check for every edited
   tool index.
+
+Evidence (2026-08-15): the combined detached-path and JavaScript-seam suites
+pass 27/27. The seam vectors distinguish raw integer and non-finite authority,
+fail-open range guards, negative zero, hostile or repeatedly read authority
+records, caller-mintable Booleans, ambient collation, delimiter framing,
+unversioned JSON, duplicate-key rebuilding and unadmitted typed-array views.
+The meta-gate self-test recognizes both fixture proofs; phase-close/tooling
+tests pass 28/28; the generated dev-tool index reports 177 tools, 40 proofs and
+zero gaps; and the tooling contract reports zero violations. The phase-close
+entry runs after `lint:cast-hygiene`. Both live package commands deliberately
+refuse with `ENTRY_UNREADABLE` until Task 4 creates the approved emitter seam.
+Exact private-KB mutation, sentinel and conversion-acceptance digests remain a
+later end-to-end receipt obligation and are therefore not checked off here.
 
 **Phase 1 stop condition:** both new audits must catch a planted violation. A
 clean scan without a red-capability control does not permit Phase 2.
@@ -187,9 +208,9 @@ clean scan without a red-capability control does not permit Phase 2.
 - Create: `packages-galerina/galerina-core-compiler/tests/artifact-reference.test.mjs`
 - Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
 
-- [ ] Start with failing tests for malformed kind/digest, path substitution,
+- [x] Start with failing tests for malformed kind/digest, path substitution,
   missing body, one-byte mutation, short read, oversized body and backend throw.
-- [ ] Define the boundary:
+- [x] Define the boundary:
 
   ```ts
   export interface ArtifactReferenceV1 {
@@ -233,49 +254,59 @@ clean scan without a red-capability control does not permit Phase 2.
   }
   ```
 
-- [ ] Enforce legal owner/kind pairs: Galerina owns source/snapshot/GIR, SLIDE
+- [x] Enforce legal owner/kind pairs: Galerina owns source/snapshot/GIR, SLIDE
   owns physical packages/admission evidence, Lyth owns proof evidence and VOK
   owns receipt envelopes. DFE and Tower references remain bounded future/input
   surfaces. Reject a wrong owner before reading any bytes.
-- [ ] Capture each owner-local repository capability once. Verify ordinary own-data request
+- [x] Capture each owner-local repository capability once. Verify ordinary own-data request
   records, safe byte lengths and SHA-256 on every read. Return owned bytes, not
   an alias into a mutable caller buffer.
-- [ ] Provide only a bounded filesystem test repository in this phase. Keep the
+- [x] Provide only a bounded filesystem test repository in this phase. Keep the
   interface backend-plural; do not introduce a universal CAS or graph store.
-- [ ] Prove that serialized references contain no absolute path and that a
+- [x] Prove that serialized references contain no absolute path and that a
   different backend returning the same verified bytes is semantically equal.
-- [ ] Pass only a one-reference read capability or owned immutable bytes across
+- [x] Pass only a one-reference read capability or owned immutable bytes across
   a domain boundary. Add wrong-owner, cross-owner repository access, stale
   reference, deleted body, replica mismatch, replayed transfer and retention
   expiry refusal vectors. Neither Galerina nor any other caller may learn the
   layout or API of Lyth's internal memory.
-- [ ] Canonicalize and authenticate `ComputeTransferV1` independently of the
+- [x] Canonicalize and authenticate `ComputeTransferV1` independently of the
   private VOK Signet. Authentication admits the transfer to a receiver's queue;
   it does not prove semantic truth or authorize execution. At VOK ingress,
   construct and exact-key validate the complete existing Envelope field set;
   never treat `ComputeTransferV1` as that Envelope.
-- [ ] At run creation, pin the value-only current VOK authority epoch/context
+- [x] At run creation, pin the value-only current VOK authority epoch/context
   observation into `runIdentity`. Every stage receipt preimage includes the same
   run identity, epoch, stage/domain tag, exact input digest and exact
   output/evidence digest. Context rotation makes the in-flight run refuse at
   its next edge; old evidence cannot be relabelled under the new epoch.
-- [ ] A receipt digest is not authentication. Each owner mints its stage receipt
+- [x] A receipt digest is not authentication. Each owner mints its stage receipt
   through its admitted epoch-scoped receipt capability or authenticated signer,
   and the receiver independently verifies that provenance. Reject caller-made
   records that merely recompute the right digest.
-- [ ] Treat authority as immutable `(owner, kind, digest)` entries, not one
+- [x] Treat authority as immutable `(owner, kind, digest)` entries, not one
   mutable current digest per `(owner, kind)`. Transfer authentication acquires
   a non-authorizing owner-local retention pin scoped to the exact reference,
   `runIdentity` and bounded expiry; terminal receipt/refusal releases it. A pin
   grants neither read access nor admission. Supersession cannot delete a pinned
   older digest, while expiry of a blocked run fails only that run.
-- [ ] `runIdentity` is a public selector/audit field, never retention authority.
+- [x] `runIdentity` is a public selector/audit field, never retention authority.
   Pin acquisition returns an opaque owner-local handle bound to the authenticated
   acquirer. Release is idempotent and requires that handle/acquirer binding.
   Check pin continuity before terminal receipt; a lapsed pin refuses that run.
 - [ ] Treat the retained `.ts` comparator as a bare source digest in the
   converter run identity, not as an `ArtifactReferenceV1`; TypeScript never
   enters the admitted artifact chain.
+
+Evidence (2026-08-15): package typecheck and emitted-build compilation are
+green; `artifact-reference.test.mjs` passes 26/26. The focused evidence covers
+exact/proxy-free records, legal owner/kind pairs, bounded verified repository
+reads, path-free references, replica equivalence, one-use read capabilities,
+authenticated non-authorizing transfers, replay and authority rotation,
+owner-local retention, authenticated stage receipts, closed ordered evidence
+sets, and the existing nine-field VOK Envelope without Signet or execution
+authority. The existing private VOK-host suite remains green 7/7. The retained
+TypeScript comparator obligation remains open for Task 13.
 
 ### Task 4: Seal `CheckedModuleSnapshotV1`
 
@@ -285,24 +316,32 @@ clean scan without a red-capability control does not permit Phase 2.
 - Create: `packages-galerina/galerina-core-compiler/src/self-hosted/checked-module-snapshot-v1.fungi`
 - Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
 
-- [ ] Write failing tests for source/token/declaration/checker mismatch, missing
+- [x] Write failing tests for source/token/declaration/checker mismatch, missing
   effect/value-state/governance facts, duplicate identities, surplus fields,
   mutable aliases, source mutation after checking and incomplete trace inputs.
-- [ ] Define a closed versioned snapshot containing exact source identity,
+- [x] Define a closed versioned snapshot containing exact source identity,
   edition, resolved declaration/type facts, effects, value states, governance
   decisions, constants/domain tags, source spans, checker/profile versions and
   ordered diagnostic identity.
-- [ ] Bind a `SnapshotRunIdentityV1` over source digest, snapshot schema,
+- [x] Bind a `SnapshotRunIdentityV1` over source digest, snapshot schema,
   compiler commit, checker/ruleset digests and snapshot body digest.
-- [ ] Copy/canonicalize all admitted facts once and deep-freeze the internal
+- [x] Copy/canonicalize all admitted facts once and deep-freeze the internal
   representation. Do not store an AST node, callback, class instance, Map/Set,
   host capability or source-object alias.
-- [ ] Make the `.fungi` contract express the invariant/refusal floor. Keep the
+- [x] Make the `.fungi` contract express the invariant/refusal floor. Keep the
   existing `SLIDEG4CheckedSnapshot` fixture as bounded prior evidence; do not
   claim it was generalized or retired.
-- [ ] Mutation vectors must prove that changing source, tokens, facts or trace
+- [x] Mutation vectors must prove that changing source, tokens, facts or trace
   after sealing cannot change the stored bytes and that changing stored bytes
   fails digest verification.
+
+**Fresh Task 4 evidence (2026-08-15):** the retained TypeScript boundary
+typechecks and emits cleanly; `checked-module-snapshot-v1.test.mjs` passes 6/6,
+including source mismatch, missing facts, duplicate/surplus input, incomplete
+trace, caller mutation and stored-byte mutation refusals. The new
+`checked-module-snapshot-v1.fungi` invariant/refusal floor passes strict type and
+governance checking with 0 errors and 0 warnings. It is value-only and does not
+generalize or retire the bounded `SLIDEG4CheckedSnapshot` fixture.
 
 ### Task 5: Implement detached snapshot-to-GIR lowering
 
@@ -311,11 +350,11 @@ clean scan without a red-capability control does not permit Phase 2.
 - Create: `packages-galerina/galerina-core-compiler/tests/checked-snapshot-gir-emitter.test.mjs`
 - Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
 
-- [ ] Write a failing structural test over the **transitive import closure** of
+- [x] Write a failing structural test over the **transitive import closure** of
   the new emitter, proving it reaches no parser AST types/visitors,
   `gir-emitter.ts`, `SemanticGraphBuilder`, `buildExecutionPlan`, TypeScript API,
   callback or ambient registry. A direct-import-only test is insufficient.
-- [ ] Expose:
+- [x] Expose:
 
   ```ts
   export function emitCanonicalGIRFromSnapshot(
@@ -328,54 +367,80 @@ clean scan without a red-capability control does not permit Phase 2.
   `slide.semantic.executable-gir.v2` canonical CBOR bytes, a GIR artifact
   reference and a complete ordered source-to-GIR trace; failure is a closed
   typed refusal.
-- [ ] Emit the existing parent registry exactly:
+- [x] Emit the existing parent registry exactly:
   `slide.registry.executable-gir.v2c`, digest
   `366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66`,
   memory profile `slide.memory.safe-value.v1`, its exact 21-element limits and
   the exact 21-key canonical root in ascending integer-key order. Do not create
   a new registry or translator.
-- [ ] Bound the first family to the parent registry: at most 3 functions, 8
+- [x] Bound the first family to the parent registry: at most 3 functions, 8
   blocks, 32 instructions, call depth 2, no back edges and conservative work
   96. Anything outside the supported opcode/type/descriptor envelope is
   `UNSUPPORTED_SNAPSHOT_SEMANTIC`.
-- [ ] Lower every admitted construct in the bounded family from snapshot facts
+- [x] Lower every admitted construct in the bounded family from snapshot facts
   only. Any unsupported construct is `UNSUPPORTED_SNAPSHOT_SEMANTIC`, not an AST
   fallback or partial GIR success.
-- [ ] Materialize canonical GIR bytes once with injective framing and stable
+- [x] Materialize canonical GIR bytes once with injective framing and stable
   ordering. Double-lower the same snapshot and require byte-identical output.
-- [ ] Retain `emitGIR(ast, ...)` as bootstrap/differential code only. Mark it
+- [x] Retain `emitGIR(ast, ...)` as bootstrap/differential code only. Mark it
   ineligible for the accepted detached route; do not modify, delete or
   reinterpret `gir-emitter.ts` in this task.
-- [ ] As a test-only oracle, compare one equivalent bounded programme against
+- [x] As a test-only oracle, compare one equivalent bounded programme against
   `compileV2CReferenceSource` output. The accepted route never imports or calls
   that frontend.
-- [ ] Test trace completeness: every executable GIR instruction/terminator has
+- [x] Test trace completeness: every executable GIR instruction/terminator has
   one admitted source-fact origin and no unclaimed executable node exists.
+
+**Fresh Task 5 evidence (2026-08-15):** the detached emitter typechecks and its
+5/5 focused tests pass. Its transitive relative-import closure reaches neither
+the parser/AST route nor `gir-emitter.ts`, semantic graph, execution planner or
+TypeScript API. The bounded constant-return family emits byte-identical output
+on repeated runs and matches `compileV2CReferenceSource` byte-for-byte for the
+equivalent test-only programme. A fourth function and unsupported facts refuse
+without partial GIR bytes; every emitted instruction and terminator has exactly
+one snapshot-fact trace entry. The retained AST emitter was not modified.
 
 ### Task 6: Route compiler CLI/runtime through the sealed path
 
 **Files:**
 - Modify: `packages-galerina/galerina-core-compiler/src/runtime.ts`
 - Modify: `packages-galerina/galerina-core-compiler/src/cli.ts`
+- Create: `packages-galerina/galerina-core-compiler/src/runtime-checked-snapshot.ts`
+- Create: `packages-galerina/galerina-core-compiler/src/detached-scalar-handoff.ts`
 - Create: `packages-galerina/galerina-core-compiler/tests/detached-scalar-handoff.test.mjs`
 - Modify: `scripts/lib/ts-to-fungi-sandbox/evidence.mjs` only after reconciling
   the current user-owned worktree changes
 
-- [ ] Add a failing test that plants a changed AST/source/registry after the
+- [x] Add a failing test that plants a changed AST/source/registry after the
   snapshot is sealed and proves the detached GIR bytes remain unchanged.
-- [ ] Introduce an explicit reference-only execution mode that seals, stores,
+- [x] Introduce an explicit reference-only execution mode that seals, stores,
   rereads and verifies the snapshot before calling the detached emitter.
-- [ ] Remove `buildExecutionPlan(parseResult.ast, ...)`,
+- [x] Remove `buildExecutionPlan(parseResult.ast, ...)`,
   `buildSemanticGraph(parseResult.ast, ...)` and other post-snapshot AST reads
   from this accepted mode. Bootstrap modes may remain separately named.
-- [ ] If the snapshot, verified body, detached emitter or downstream repository
+- [x] If the snapshot, verified body, detached emitter or downstream repository
   is unavailable, return one typed refusal. Never rescue through WAT/Wasm,
   cached TypeScript, Tower or Tri-Pipe.
 - [ ] Do not update converter evidence until Tasks 1–5 are green and the dirty
   converter files have a clearly owned baseline. Then replace its direct
   `emitGIR(parsed.ast, ...)` call with the same sealed snapshot/GIR boundary.
-- [ ] Run the authority-path audit and prove Hypha and the TypeScript compiler
+- [x] Run the authority-path audit and prove Hypha and the TypeScript compiler
   API are unreachable after the snapshot handoff.
+
+**Fresh Task 6 evidence (2026-08-15):** `detached-reference` now seals the
+already-admitted compiler result into canonical snapshot bytes, writes and
+rereads those bytes from Galerina's owner-local repository, emits canonical GIR
+from the verified body only, then writes and rereads that GIR from the same
+owner repository. The CLI requires explicit compiler/checker provenance and
+prints only non-authorizing snapshot/GIR references. The focused handoff suite
+passes 5/5, the complete Tasks 1-6 artifact/snapshot/emitter/handoff set passes
+42/42, retained runtime suites pass 36/36 and strict package typechecking is
+green. The authority detector self-tests pass 13/13. After the Galerina
+checkpoint commit, commit-bound live scans of both the handoff and detached
+emitter report `CLEAN`: zero forbidden edges and zero refusals. The Trit/Verdict
+seam audit is likewise `CLEAN` for both entries. This closes the Phase 2
+commit-bound stop condition. Converter evidence remains untouched pending
+owner-baseline reconciliation in Task 13.
 
 **Phase 2 stop condition:** canonical GIR can be reproduced from verified
 snapshot bytes in a fresh process that has no AST/source object. Any attempted
