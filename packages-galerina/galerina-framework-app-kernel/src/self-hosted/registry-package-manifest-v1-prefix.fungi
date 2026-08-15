@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts#REGISTRY_PACKAGE_MANIFEST_V1_PREFIX
+pure flow registryPackageManifestV1Prefix() -> String {
+  return "galerina-hybrid-v1"
+}

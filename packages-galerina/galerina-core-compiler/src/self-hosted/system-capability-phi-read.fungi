@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/capability-types.ts#SystemCapabilityType.PhiRead
+pure flow systemCapabilityTypePhiRead() -> String {
+  return "phi.read"
+}

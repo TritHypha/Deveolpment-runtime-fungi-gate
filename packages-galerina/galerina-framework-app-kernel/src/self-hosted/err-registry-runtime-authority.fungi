@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts#ERR_REGISTRY_RUNTIME_AUTHORITY
+pure flow errRegistryRuntimeAuthority() -> String {
+  return "ERR_REGISTRY_RUNTIME_AUTHORITY"
+}

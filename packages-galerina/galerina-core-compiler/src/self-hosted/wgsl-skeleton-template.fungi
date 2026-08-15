@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/gpu-plan.ts#WGSL_SKELETON_TEMPLATE
+pure flow wgslSkeletonTemplate() -> String {
+  return "@group(0) @binding(0)\u000avar<storage, read_write> output: array<f32>;\u000a\u000a@compute @workgroup_size(64, 1, 1)\u000afn main(@builtin(global_invocation_id) id: vec3<u32>) {\u000a  // Phase 23: full kernel body emitted here\u000a  let i = id.x;\u000a  output[i] = 0.0;\u000a}"
+}

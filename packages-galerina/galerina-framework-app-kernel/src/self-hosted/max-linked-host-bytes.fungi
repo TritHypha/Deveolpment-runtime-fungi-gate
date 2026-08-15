@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts#MAX_LINKED_HOST_BYTES
+pure flow maxLinkedHostBytes() -> Int {
+  return 268435456
+}

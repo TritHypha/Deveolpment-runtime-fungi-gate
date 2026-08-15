@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-durability-artifact.ts#MAX_NATIVE_ARTIFACT_BYTES
+pure flow maxNativeArtifactBytes() -> Int {
+  return 16777216
+}

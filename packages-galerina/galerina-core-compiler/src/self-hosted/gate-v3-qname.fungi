@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/gate-v3-parser.ts#QNAME
+pure flow qname() -> String {
+  return "[A-Za-z_][A-Za-z0-9_]*(?:\u005c.[A-Za-z_][A-Za-z0-9_]*)*"
+}

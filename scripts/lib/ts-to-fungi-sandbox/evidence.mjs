@@ -17,7 +17,7 @@ import {
   verifyGovernance,
 } from "../../../packages-galerina/galerina-core-compiler/dist/index.js";
 
-import { SandboxRefusal } from "./contracts.mjs";
+import { MAX_DIFFERENTIAL_VECTORS, SandboxRefusal } from "./contracts.mjs";
 
 const execFile = promisify(execFileCallback);
 const RESERVED = new Set([
@@ -130,7 +130,9 @@ function runtimeValue(value) {
 
 function admittedVectors(vectors, expected) {
   const selected = vectors ?? [{ arguments: [], expected }];
-  if (!Array.isArray(selected) || selected.length < 1 || selected.length > 16) throw new SandboxRefusal("DIFFERENTIAL_VECTORS_INVALID", "evidence requires 1..16 vectors");
+  if (!Array.isArray(selected) || selected.length < 1 || selected.length > MAX_DIFFERENTIAL_VECTORS) {
+    throw new SandboxRefusal("DIFFERENTIAL_VECTORS_INVALID", `evidence requires 1..${MAX_DIFFERENTIAL_VECTORS} vectors`);
+  }
   return selected;
 }
 

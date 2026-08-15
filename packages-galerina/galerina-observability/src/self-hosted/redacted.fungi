@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-observability/src/logger.ts#REDACTED
+pure flow redactedValue() -> String {
+  return "[redacted]"
+}

@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts#CANARY
+pure flow canary() -> Int {
+  return 2119682814
+}

@@ -23,6 +23,7 @@ function parseArgs(argv) {
   let revision = "HEAD";
   let allowFinalReportOnly = false;
   let worktree = false;
+  let uniquenessOnly = false;
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === "--allow-final-report-only") {
@@ -33,16 +34,20 @@ function parseArgs(argv) {
       worktree = true;
       continue;
     }
+    if (argument === "--uniqueness-only") {
+      uniquenessOnly = true;
+      continue;
+    }
     if ((argument !== "--root" && argument !== "--commit") || index + 1 >= argv.length) {
       throw new Error(
-        "usage: audit-conversion-report-commit [--root path] [--commit revision] [--worktree] [--allow-final-report-only]",
+        "usage: audit-conversion-report-commit [--root path] [--commit revision] [--worktree] [--uniqueness-only] [--allow-final-report-only]",
       );
     }
     const value = argv[++index];
     if (argument === "--root") root = resolve(value);
     else revision = value;
   }
-  return Object.freeze({ root, revision, allowFinalReportOnly, worktree });
+  return Object.freeze({ root, revision, allowFinalReportOnly, worktree, uniquenessOnly });
 }
 
 function git(root, args, encoding = "utf8") {
@@ -296,19 +301,27 @@ function reportOnlyState(root, commit) {
 }
 
 try {
-  const { root, revision, allowFinalReportOnly, worktree } = parseArgs(process.argv.slice(2));
+  const { root, revision, allowFinalReportOnly, worktree, uniquenessOnly } = parseArgs(process.argv.slice(2));
+  if (uniquenessOnly && !worktree) throw new Error("--uniqueness-only requires --worktree");
   if (worktree) {
     const reports = worktreeChangedPaths(root).filter((path) => REPORT.test(path));
     if (reports.length > 1) {
       throw new Error(`worktree changes ${reports.length} conversion reports; maximum 1`);
     }
     const fungi = worktreeAddedFungi(root);
+    auditWorktreeFungiUniqueness(root, fungi);
+    if (uniquenessOnly) {
+      if (fungi.length === 0) throw new Error("uniqueness-only worktree check found no new .fungi files");
+      console.log(
+        `conversion-report-commit: uniqueness-only checked ${fungi.length} new .fungi files; duplication/shadow ${fungi.length}/${fungi.length} unique`,
+      );
+      process.exit(0);
+    }
     if (fungi.length < MINIMUM_FUNGI_FILES) {
       throw new Error(
         `worktree has ${fungi.length} new .fungi files; minimum ${MINIMUM_FUNGI_FILES}; expected ${EXPECTED_FUNGI_FILES}`,
       );
     }
-    auditWorktreeFungiUniqueness(root, fungi);
     console.log(
       `conversion-report-commit: worktree has ${fungi.length} new .fungi files; duplication/shadow ${fungi.length}/${fungi.length} unique; minimum ${MINIMUM_FUNGI_FILES}; expected ${EXPECTED_FUNGI_FILES}`,
     );
@@ -327,7 +340,9 @@ try {
   auditFungiUniqueness(root, commit, fungi);
 
   if (reports.length === 0) {
-    console.log(`conversion-report-commit: ${short} has no added conversion reports`);
+    console.log(
+      `conversion-report-commit: ${short} has no added conversion reports; ${fungi.length} added .fungi files; duplication/shadow ${fungi.length}/${fungi.length} unique`,
+    );
     process.exit(0);
   }
   if (fungi.length < MINIMUM_FUNGI_FILES) {

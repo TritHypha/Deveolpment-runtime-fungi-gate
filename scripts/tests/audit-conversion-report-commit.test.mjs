@@ -67,10 +67,10 @@ function runAudit(root, revision = "HEAD", extraArguments = []) {
   );
 }
 
-function runWorktreeAudit(root) {
+function runWorktreeAudit(root, extraArguments = []) {
   return spawnSync(
     process.execPath,
-    [AUDIT, "--root", root, "--worktree"],
+    [AUDIT, "--root", root, "--worktree", ...extraArguments],
     { cwd: root, encoding: "utf8" },
   );
 }
@@ -82,6 +82,15 @@ test("a commit without conversion reports does not require Fungi additions", () 
   const result = runAudit(root);
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /no added conversion reports/u);
+});
+
+test("a reportless Fungi batch still reports its per-file duplication and shadow audit", () => {
+  const root = createRepo();
+  addFungi(root, 50);
+  commit(root, "reportless fungi batch");
+  const result = runAudit(root);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /no added conversion reports; 50 added \.fungi files; duplication\/shadow 50\/50 unique/u);
 });
 
 test("a conversion-report commit with 39 added Fungi files refuses", () => {
@@ -201,6 +210,26 @@ test("worktree mode checks an uncommitted 40-file Fungi batch before commit", ()
   const result = runWorktreeAudit(root);
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /worktree has 40 new \.fungi files; duplication\/shadow 40\/40 unique/u);
+});
+
+test("uniqueness-only worktree mode checks an undersized batch without weakening the commit minimum", () => {
+  const root = createRepo();
+  addFungi(root, 3);
+  const uniqueness = runWorktreeAudit(root, ["--uniqueness-only"]);
+  assert.equal(uniqueness.status, 0, uniqueness.stderr || uniqueness.stdout);
+  assert.match(uniqueness.stdout, /uniqueness-only checked 3 new \.fungi files; duplication\/shadow 3\/3 unique/u);
+  const commitGate = runWorktreeAudit(root);
+  assert.equal(commitGate.status, 1);
+  assert.match(commitGate.stderr, /worktree has 3 new \.fungi files; minimum 40; expected 50/u);
+});
+
+test("uniqueness-only worktree mode still refuses template shadows", () => {
+  const root = createRepo();
+  write(root, "packages-galerina/example/src/self-hosted/first.fungi", "@version 1\npure flow first() -> String { return \"ALPHA\" }\n");
+  write(root, "packages-galerina/example/src/self-hosted/second.fungi", "@version 1\npure flow second() -> String { return \"ALPHA\" }\n");
+  const result = runWorktreeAudit(root, ["--uniqueness-only"]);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /template shadow/u);
 });
 
 test("worktree mode refuses more than one changed conversion report", () => {

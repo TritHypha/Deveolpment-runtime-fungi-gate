@@ -30,19 +30,46 @@ function freezeValue(value) {
 }
 
 function lowerCamel(name) {
-  const parts = name.replaceAll("$", "_").split(/_+/u).filter(Boolean);
+  const parts = name.replaceAll("$", "_").replaceAll(".", "_").split(/_+/u).filter(Boolean);
   const candidate = parts.map((part, index) => {
-    const lower = part.toLowerCase();
-    return index === 0 ? lower : lower[0].toUpperCase() + lower.slice(1);
+    const word = /^[A-Z0-9]+$/u.test(part)
+      ? part.toLowerCase()
+      : part[0].toLowerCase() + part.slice(1);
+    return index === 0 ? word : word[0].toUpperCase() + word.slice(1);
   }).join("");
   if (!/^[a-z][A-Za-z0-9_]*$/u.test(candidate)) throw new SandboxRefusal("LOWERED_NAME_INVALID", "symbol cannot be represented as a Fungi identifier");
   return candidate;
 }
 
+function fungiStringLiteral(value) {
+  let encoded = "";
+  for (let index = 0; index < value.length; index += 1) {
+    const codeUnit = value.charCodeAt(index);
+    if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
+      const next = value.charCodeAt(index + 1);
+      if (!(next >= 0xdc00 && next <= 0xdfff)) {
+        throw new SandboxRefusal("LOWERER_STRING_SURROGATE_UNSUPPORTED", "selected physical String ABI refuses lone UTF-16 surrogate code units");
+      }
+      encoded += value[index] + value[index + 1];
+      index += 1;
+      continue;
+    }
+    if (codeUnit >= 0xdc00 && codeUnit <= 0xdfff) {
+      throw new SandboxRefusal("LOWERER_STRING_SURROGATE_UNSUPPORTED", "selected physical String ABI refuses lone UTF-16 surrogate code units");
+    }
+    if (codeUnit < 0x20 || codeUnit === 0x22 || codeUnit === 0x5c) {
+      encoded += `\\u${codeUnit.toString(16).padStart(4, "0")}`;
+    } else {
+      encoded += value[index];
+    }
+  }
+  return `"${encoded}"`;
+}
+
 function literal(value) {
   if (value.type === "boolean") return value.value ? "true" : "false";
   if (value.type === "number") return String(value.value);
-  if (value.type === "string") return JSON.stringify(value.value);
+  if (value.type === "string") return fungiStringLiteral(value.value);
   throw new SandboxRefusal("LOWERER_LITERAL_UNSUPPORTED", "unsupported admitted literal");
 }
 
@@ -51,7 +78,7 @@ function expression(node) {
   if (node.kind === ts.SyntaxKind.TrueKeyword) return "true";
   if (node.kind === ts.SyntaxKind.FalseKeyword) return "false";
   if (ts.isNumericLiteral(node)) return String(Number(node.text.replaceAll("_", "")));
-  if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return JSON.stringify(node.text);
+  if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return fungiStringLiteral(node.text);
   if (ts.isIdentifier(node)) return node.text;
   if (ts.isPrefixUnaryExpression(node)) {
     if (node.operator === ts.SyntaxKind.ExclamationToken) return `!${expression(node.operand)}`;
@@ -126,6 +153,13 @@ function statements(block, indent = "  ") {
   for (const statement of block.statements) {
     if (ts.isReturnStatement(statement) && statement.expression !== undefined) {
       lines.push(`${indent}return ${expression(statement.expression)}`);
+    } else if (ts.isIfStatement(statement) && statement.elseStatement === undefined && ts.isBinaryExpression(statement.expression) && statement.expression.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken) {
+      lines.push(`${indent}if ${expression(statement.expression.left)} {`);
+      lines.push(`${indent}  if ${expression(statement.expression.right)} {`);
+      const thenBlock = ts.isBlock(statement.thenStatement) ? statement.thenStatement : { statements: [statement.thenStatement] };
+      lines.push(...statements(thenBlock, `${indent}    `));
+      lines.push(`${indent}  }`);
+      lines.push(`${indent}}`);
     } else if (ts.isIfStatement(statement)) {
       lines.push(`${indent}if ${expression(statement.expression)} {`);
       const thenBlock = ts.isBlock(statement.thenStatement) ? statement.thenStatement : { statements: [statement.thenStatement] };
@@ -147,7 +181,7 @@ export function lowerClassifiedSymbol(classification) {
   if (!isAdmittedClassification(classification) || classification.outcome !== "SUPPORTED" || classification.complete !== true) {
     throw new SandboxRefusal("LOWERER_UNADMITTED_CLASSIFICATION", "lowerer accepts only module-minted complete classifications");
   }
-  const flow = lowerCamel(classification.symbol);
+  const baseFlow = lowerCamel(classification.symbol);
   let body;
   let parameters;
   let returnType;
@@ -163,27 +197,33 @@ export function lowerClassifiedSymbol(classification) {
     body = [`  return ${literal(classification.value)}`];
   } else {
     const node = admittedClassificationNode(classification);
-    if (node === undefined || !ts.isFunctionDeclaration(node) || node.body === undefined) {
+    if (node === undefined || (!ts.isFunctionDeclaration(node) && !ts.isArrowFunction(node)) || node.body === undefined) {
       throw new SandboxRefusal("LOWERER_AST_CUSTODY_MISSING", "admitted function lost private AST custody");
     }
     parameters = classification.parameters.map((parameter) => `${parameter.name}: ${typeMap[parameter.type]}`).join(", ");
     parameterNames = classification.parameters.map((parameter) => parameter.name);
     returnType = typeMap[classification.returnType];
     expected = undefined;
-    body = statements(node.body);
+    body = ts.isBlock(node.body) ? statements(node.body) : [`  return ${expression(node.body)}`];
     vectors = argumentVectors(classification.parameters).map((arguments_) => {
       const bindings = new Map(parameterNames.map((name, index) => [name, arguments_[index]]));
-      const result = evaluateStatements(node.body, bindings);
+      const result = ts.isBlock(node.body)
+        ? evaluateStatements(node.body, bindings)
+        : { returned: true, value: evaluateExpression(node.body, bindings) };
       if (!result.returned) throw new SandboxRefusal("LOWERER_VECTOR_NOT_TOTAL", "admitted function did not return for one differential vector");
       return { arguments: arguments_, expected: result.value };
     });
   }
   if (returnType === undefined) throw new SandboxRefusal("LOWERER_TYPE_UNSUPPORTED", "admitted type lacks a Fungi mapping");
-  const source = `@version 1\n/// Non-authorizing sandbox candidate; TypeScript remains the oracle.\n/// TypeScript oracle: ${classification.file}#${classification.symbol}\npure flow ${flow}(${parameters}) -> ${returnType} {\n${body.join("\n")}\n}\n`;
-  const parsed = parseProgram(source, `sandbox/${flow}.fungi`, { requireVersionHeader: true });
-  const errors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
-  if (errors.length > 0 || parsed.flows.length !== 1 || parsed.flows[0]?.name !== flow) {
-    throw new SandboxRefusal("LOWERER_REPARSE_FAILED", `emitted Fungi was refused: ${errors.map((item) => item.code).join(",")}`);
+  let lastErrors = [];
+  for (const flow of [baseFlow, `${baseFlow}Value`]) {
+    const source = `@version 1\n/// Non-authorizing sandbox candidate; TypeScript remains the oracle.\n/// TypeScript oracle: ${classification.file}#${classification.symbol}\npure flow ${flow}(${parameters}) -> ${returnType} {\n${body.join("\n")}\n}\n`;
+    const parsed = parseProgram(source, `sandbox/${flow}.fungi`, { requireVersionHeader: true });
+    const errors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+    if (errors.length === 0 && parsed.flows.length === 1 && parsed.flows[0]?.name === flow) {
+      return freezeValue({ source, flow, expected, returnType, sourceSymbol: classification.symbol, parameterNames, vectors });
+    }
+    lastErrors = errors;
   }
-  return freezeValue({ source, flow, expected, returnType, sourceSymbol: classification.symbol, parameterNames, vectors });
+  throw new SandboxRefusal("LOWERER_REPARSE_FAILED", `emitted Fungi was refused: ${lastErrors.map((item) => item.code).join(",")}`);
 }

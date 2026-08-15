@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-durability-production-admission.ts#REGISTRY_DURABILITY_PRODUCTION_SIGNATURE_CONTEXT
+pure flow registryDurabilityProductionSignatureContext() -> String {
+  return "galerina.registry.durability.production.sig.v1"
+}

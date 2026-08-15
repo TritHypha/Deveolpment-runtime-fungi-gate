@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, realpathSync } from "node:fs";
-import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
 
 import { parseStrictJsonBytes } from "../assurance-fabric/strict-json.mjs";
@@ -14,9 +14,10 @@ import {
   SandboxRefusal,
   assertPlainRecord,
   canonicalRelativeTsPath,
+  canonicalSourceSymbol,
   codeUnitCompare,
 } from "./contracts.mjs";
-import { classifyTypeScriptSource, discoverTypeScriptScopes } from "./classifier.mjs";
+import { classifyTypeScriptSource, discoverTypeScriptScopes, inventoryTypeScriptScopes } from "./classifier.mjs";
 import {
   buildCompilerEvidence,
   buildPhysicalEvidence,
@@ -45,7 +46,11 @@ function validateRequest(value) {
   const keys = Object.keys(request).sort(codeUnitCompare);
   if (canonicalJson(keys) !== canonicalJson(["file", "symbol"])) throw new SandboxRefusal("REQUEST_FIELDS_INVALID", "request fields must be exactly file and symbol");
   canonicalRelativeTsPath(request.file);
-  if (typeof request.symbol !== "string" || !/^[A-Za-z_$][A-Za-z0-9_$]*$/u.test(request.symbol)) throw new SandboxRefusal("REQUEST_SYMBOL_INVALID", "request symbol must be one identifier");
+  try {
+    canonicalSourceSymbol(request.symbol);
+  } catch {
+    throw new SandboxRefusal("REQUEST_SYMBOL_INVALID", "request symbol must be one identifier or one qualified member");
+  }
   return Object.freeze({ file: request.file, symbol: request.symbol });
 }
 
@@ -269,6 +274,7 @@ function trackedTypeScriptSources(root) {
   return bytes
     .split("\0")
     .filter((file) => /^packages-galerina\/[^/]+\/src\/.+\.ts$/u.test(file))
+    .filter((file) => !file.startsWith("packages-galerina/galerina-test/"))
     .sort(codeUnitCompare);
 }
 
@@ -280,13 +286,17 @@ function discoveryCursor(value) {
   const file = value.slice(0, separator);
   const symbol = value.slice(separator + 1);
   canonicalRelativeTsPath(file);
-  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/u.test(symbol)) throw new SandboxRefusal("DISCOVERY_CURSOR_INVALID", "discovery cursor symbol is invalid");
+  try {
+    canonicalSourceSymbol(symbol);
+  } catch {
+    throw new SandboxRefusal("DISCOVERY_CURSOR_INVALID", "discovery cursor symbol is invalid");
+  }
   return `${file}#${symbol}`;
 }
 
 function oracleScopes(corpus) {
   const scopes = new Set();
-  const pattern = /^\/\/\/ TypeScript oracle: (packages-galerina\/[^\s#]+\.ts)#([A-Za-z_$][A-Za-z0-9_$]*)\r?$/gmu;
+  const pattern = /^\/\/\/ TypeScript oracle: (packages-galerina\/[^\s#]+\.ts)#([A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)?)\r?$/gmu;
   for (const item of corpus) {
     for (const match of item.source.matchAll(pattern)) scopes.add(`${match[1]}#${match[2]}`);
   }
@@ -307,17 +317,88 @@ async function isVendoredPackage(root, file, cache) {
   return vendored;
 }
 
+export async function loadPriorRefusalScopes({ root, project, directory }) {
+  if (typeof project !== "string" || project.length === 0 || !existsSync(directory)) return Object.freeze([]);
+  const scopes = new Set();
+  const sourceDigests = new Map();
+  let inspected = 0;
+  const batches = (await readdir(directory, { withFileTypes: true })).sort((left, right) => codeUnitCompare(left.name, right.name));
+  for (const batch of batches) {
+    if (!batch.isDirectory() || batch.isSymbolicLink()) continue;
+    const recordsDirectory = resolve(directory, batch.name, "records");
+    if (!existsSync(recordsDirectory)) continue;
+    const recordsStat = lstatSync(recordsDirectory);
+    if (!recordsStat.isDirectory() || recordsStat.isSymbolicLink() || realpathSync(recordsDirectory) !== recordsDirectory) continue;
+    const records = (await readdir(recordsDirectory, { withFileTypes: true })).sort((left, right) => codeUnitCompare(left.name, right.name));
+    for (const record of records) {
+      if (inspected >= 1000) return Object.freeze([...scopes].sort(codeUnitCompare));
+      if (!record.isFile() || record.isSymbolicLink() || !record.name.endsWith(".json")) continue;
+      inspected += 1;
+      try {
+        const path = resolve(recordsDirectory, record.name);
+        const bytes = await readFile(path);
+        if (bytes.byteLength > 4 * 1024 * 1024) continue;
+        const parsed = parseStrictJsonBytes(bytes, { label: "sandbox refusal receipt", maxBytes: 4 * 1024 * 1024 });
+        assertPlainRecord(parsed, "sandbox refusal receipt");
+        if (parsed.schema !== SCHEMA || parsed.toolVersion !== TOOL_VERSION || (parsed.outcome !== "BLOCKED" && parsed.outcome !== "MANUAL_REVIEW")) continue;
+        const { receiptSha256, ...unsigned } = parsed;
+        if (receiptSha256 !== sha256(Buffer.from(canonicalJson(unsigned), "utf8"))) continue;
+        if (parsed.source?.graph?.project !== project || parsed.source.graph.stale !== false || parsed.source.graph.indexedHeadSha !== parsed.source.sourceBuildPoint) continue;
+        const file = canonicalRelativeTsPath(parsed.source.file);
+        const symbol = parsed.source.symbol;
+        try {
+          canonicalSourceSymbol(symbol);
+        } catch {
+          continue;
+        }
+        let currentDigest = sourceDigests.get(file);
+        if (currentDigest === undefined) {
+          currentDigest = sha256(await readFile(resolve(root, ...file.split("/"))));
+          sourceDigests.set(file, currentDigest);
+        }
+        if (parsed.source.sourceSha256 !== currentDigest) continue;
+        scopes.add(`${file}#${symbol}`);
+      } catch {
+        continue;
+      }
+    }
+  }
+  return Object.freeze([...scopes].sort(codeUnitCompare));
+}
+
+export function selectedPhysicalProfileRefusal(classification) {
+  if (classification.kind === "function" && classification.parameters.some((parameter) => parameter.type === "string")) {
+    return Object.freeze({
+      code: BLOCKERS.PHYSICAL_STRING_PARAMETER,
+      detail: "selected physical String ABI refuses lone UTF-16 surrogate code units and cannot preserve the complete JavaScript String parameter domain",
+    });
+  }
+  return undefined;
+}
+
 export async function runDiscover({ root, project, out, limit = MAX_BATCH_REQUESTS, after }) {
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > MAX_BATCH_REQUESTS) {
     throw new SandboxRefusal("DISCOVERY_LIMIT_INVALID", `discovery limit must be 1..${MAX_BATCH_REQUESTS}`);
   }
   const cursor = discoveryCursor(after);
   const corpus = [...await loadWorkingFungiCorpus(root)];
-  const existingScopes = oracleScopes(corpus);
+  const fungiScopes = oracleScopes(corpus);
+  const priorRefusals = await loadPriorRefusalScopes({ root, project, directory: dirname(resolve(out)) });
+  const priorRefusalScopes = new Set(priorRefusals);
   const packageCache = new Map();
   const requests = [];
   const skipped = [];
+  const exclusions = {
+    existingFungi: 0,
+    priorReceipt: 0,
+    physicalProfile: 0,
+    loweringRefusal: 0,
+    duplicateOrShadow: 0,
+    identityRefusal: 0,
+  };
+  const exclude = (kind) => { exclusions[kind] += 1; };
   let scanned = 0;
+  let cursorPassed = cursor === undefined;
   for (const file of trackedTypeScriptSources(root)) {
     if (await isVendoredPackage(root, file, packageCache)) continue;
     const sourceBytes = await readFile(resolve(root, ...file.split("/")));
@@ -325,24 +406,76 @@ export async function runDiscover({ root, project, out, limit = MAX_BATCH_REQUES
     const source = sourceBytes.toString("utf8");
     for (const classification of discoverTypeScriptScopes({ source, file })) {
       const key = `${file}#${classification.symbol}`;
-      if (cursor !== undefined && codeUnitCompare(key, cursor) <= 0) continue;
+      if (!cursorPassed) {
+        if (key === cursor) cursorPassed = true;
+        continue;
+      }
       scanned += 1;
-      if (existingScopes.has(key)) continue;
-      const lowered = lowerClassifiedSymbol(classification);
-      if (findCorpusCollision(lowered.source, corpus) !== undefined) continue;
+      if (fungiScopes.has(key)) {
+        exclude("existingFungi");
+        continue;
+      }
+      if (priorRefusalScopes.has(key)) {
+        exclude("priorReceipt");
+        continue;
+      }
+      const physicalRefusal = selectedPhysicalProfileRefusal(classification);
+      if (physicalRefusal !== undefined) {
+        exclude("physicalProfile");
+        if (skipped.length < MAX_BATCH_REQUESTS * 10) {
+          skipped.push(Object.freeze({ scope: key, reasonCode: physicalRefusal.code, reason: physicalRefusal.detail }));
+        }
+        continue;
+      }
+      let lowered;
+      try {
+        lowered = lowerClassifiedSymbol(classification);
+      } catch (error) {
+        exclude("loweringRefusal");
+        const refusal = refusalReason(error);
+        if (skipped.length < MAX_BATCH_REQUESTS * 10) skipped.push(Object.freeze({ scope: key, reasonCode: refusal.code, reason: refusal.detail }));
+        continue;
+      }
+      const collision = findCorpusCollision(lowered.source, corpus);
+      if (collision !== undefined) {
+        exclude("duplicateOrShadow");
+        if (skipped.length < MAX_BATCH_REQUESTS * 10) {
+          skipped.push(Object.freeze({ scope: key, reasonCode: BLOCKERS.DUPLICATE_OR_SHADOW, reason: `${collision.kind} with ${collision.path}` }));
+        }
+        continue;
+      }
       try {
         await resolveSourceIdentity({ root, project, file, symbol: classification.symbol });
       } catch (error) {
+        exclude("identityRefusal");
         const refusal = refusalReason(error);
         if (skipped.length < MAX_BATCH_REQUESTS * 10) skipped.push(Object.freeze({ scope: key, reasonCode: refusal.code, reason: refusal.detail }));
         continue;
       }
       requests.push(Object.freeze({ file, symbol: classification.symbol }));
-      existingScopes.add(key);
       corpus.push(Object.freeze({ path: `discovery/${key}.fungi`, source: lowered.source }));
       if (requests.length === limit) break;
     }
     if (requests.length === limit) break;
+  }
+  const frozenExclusions = Object.freeze({ ...exclusions });
+  const accounted = Object.values(exclusions).reduce((sum, count) => sum + count, requests.length);
+  if (requests.length === 0) {
+    const exhausted = Object.freeze({
+      schema: "galerina.ts-to-fungi-sandbox.discovery.v1",
+      limit,
+      scanned,
+      accounted,
+      selected: 0,
+      exclusions: frozenExclusions,
+      skipped: Object.freeze(skipped),
+      priorRefusals: priorRefusals.length,
+      nextAfter: cursor,
+      exhausted: true,
+      manifest: null,
+    });
+    await atomicWrite(resolve(out), `${canonicalJson(exhausted)}\n`);
+    return exhausted;
   }
   const manifest = validateManifest({ schema: "galerina.ts-to-fungi-sandbox.batch.v1", requests });
   await atomicWrite(resolve(out), `${canonicalJson(manifest)}\n`);
@@ -350,11 +483,53 @@ export async function runDiscover({ root, project, out, limit = MAX_BATCH_REQUES
     schema: "galerina.ts-to-fungi-sandbox.discovery.v1",
     limit,
     scanned,
+    accounted,
     selected: requests.length,
+    exclusions: frozenExclusions,
     skipped: Object.freeze(skipped),
-    nextAfter: requests.length === 0 ? cursor : `${requests.at(-1).file}#${requests.at(-1).symbol}`,
+    priorRefusals: priorRefusals.length,
+    nextAfter: `${requests.at(-1).file}#${requests.at(-1).symbol}`,
+    exhausted: false,
     manifest,
   });
+}
+
+export async function runInventory({ root, project, out, examples = MAX_BATCH_REQUESTS }) {
+  if (!Number.isSafeInteger(examples) || examples < 1 || examples > MAX_BATCH_REQUESTS) {
+    throw new SandboxRefusal("INVENTORY_EXAMPLES_INVALID", `inventory examples must be 1..${MAX_BATCH_REQUESTS}`);
+  }
+  const packageCache = new Map();
+  const totals = Object.fromEntries([...OUTCOMES, "SUPPORTED"].map((outcome) => [outcome, 0]));
+  const groups = new Map();
+  for (const file of trackedTypeScriptSources(root)) {
+    if (await isVendoredPackage(root, file, packageCache)) continue;
+    const sourceBytes = await readFile(resolve(root, ...file.split("/")));
+    if (sourceBytes.byteLength > 4 * 1024 * 1024) continue;
+    const source = sourceBytes.toString("utf8");
+    for (const classification of inventoryTypeScriptScopes({ source, file })) {
+      const outcome = classification.outcome;
+      totals[outcome] = (totals[outcome] ?? 0) + 1;
+      if (outcome === "SUPPORTED") continue;
+      const baseKey = classification.blockers?.[0] ?? classification.reason ?? "UNCLASSIFIED";
+      const detail = classification.obligations?.[0];
+      const key = detail === undefined ? baseKey : `${baseKey} :: ${detail}`;
+      const group = groups.get(key) ?? { key, outcome, count: 0, examples: [] };
+      group.count += 1;
+      if (group.examples.length < examples) group.examples.push(`${file}#${classification.symbol}`);
+      groups.set(key, group);
+    }
+  }
+  const result = Object.freeze({
+    schema: "galerina.ts-to-fungi-sandbox.inventory.v1",
+    project,
+    examples,
+    totals: Object.freeze(totals),
+    groups: Object.freeze([...groups.values()]
+      .sort((left, right) => right.count - left.count || codeUnitCompare(left.key, right.key))
+      .map((group) => Object.freeze({ ...group, examples: Object.freeze(group.examples) }))),
+  });
+  await atomicWrite(resolve(out), `${canonicalJson(result)}\n`);
+  return result;
 }
 
 export async function verifyReceipt({ root, receipt }) {

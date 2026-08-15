@@ -4,7 +4,7 @@ import { execFile as execFileCallback } from "node:child_process";
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 
-import { MAX_SOURCE_BYTES, SandboxRefusal, canonicalRelativeTsPath } from "./contracts.mjs";
+import { MAX_SOURCE_BYTES, SandboxRefusal, canonicalRelativeTsPath, canonicalSourceSymbol } from "./contracts.mjs";
 
 const execFile = promisify(execFileCallback);
 const sha256 = (bytes) => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
@@ -59,9 +59,11 @@ export async function discoverGraphProject(root) {
 
 export async function resolveSourceIdentity({ root, project, file, symbol }) {
   const canonicalFile = canonicalRelativeTsPath(file);
-  if (typeof project !== "string" || project.length === 0 || typeof symbol !== "string" || !/^[A-Za-z_$][A-Za-z0-9_$]*$/u.test(symbol)) {
+  if (typeof project !== "string" || project.length === 0) {
     throw new SandboxRefusal("IDENTITY_INPUT_INVALID", "identity requires graph project and identifier symbol");
   }
+  canonicalSourceSymbol(symbol);
+  const graphSymbol = symbol.split(".")[0];
   const rootPath = resolve(root);
   const rootStat = await lstat(rootPath);
   if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SandboxRefusal("ROOT_IDENTITY_INVALID", "repository root must be a regular directory");
@@ -88,8 +90,8 @@ export async function resolveSourceIdentity({ root, project, file, symbol }) {
   if (status.status !== "ready" || status.stale !== false || status.indexed_head_sha !== head || status.git?.head_sha !== head) {
     throw new SandboxRefusal("GRAPH_STALE", "graph build point is not independently exact");
   }
-  const search = parseJson(await run("codebase-memory-mcp", ["cli", "search_graph", "--project", project, "--name_pattern", `^${escapeRegularExpression(symbol)}$`, "--file_pattern", `*${canonicalFile.split("/").at(-1)}`, "--limit", "20"], realRoot), "search_graph");
-  const matches = Array.isArray(search.results) ? search.results.filter((item) => item?.name === symbol && item?.file_path === canonicalFile) : [];
+  const search = parseJson(await run("codebase-memory-mcp", ["cli", "search_graph", "--project", project, "--name_pattern", `^${escapeRegularExpression(graphSymbol)}$`, "--file_pattern", `*${canonicalFile.split("/").at(-1)}`, "--limit", "20"], realRoot), "search_graph");
+  const matches = Array.isArray(search.results) ? search.results.filter((item) => item?.name === graphSymbol && item?.file_path === canonicalFile) : [];
   if (matches.length !== 1 || search.has_more === true) throw new SandboxRefusal("GRAPH_SYMBOL_AMBIGUOUS", `graph resolved ${matches.length} exact symbols`);
   const bytes = await readFile(realSource);
   if (bytes.length < 1 || bytes.length > MAX_SOURCE_BYTES) throw new SandboxRefusal("SOURCE_SIZE_INVALID", "source byte length is outside the sandbox bounds");

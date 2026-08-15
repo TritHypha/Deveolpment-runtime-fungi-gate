@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts#ERR_REGISTRY_MANIFEST_NO_KEY
+pure flow errRegistryManifestNoKey() -> String {
+  return "ERR_REGISTRY_MANIFEST_NO_KEY"
+}
