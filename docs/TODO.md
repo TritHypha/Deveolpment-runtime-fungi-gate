@@ -4,6 +4,46 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0855 Galerina/SLIDE/VOK architecture reset - 2026-08-15
+
+- [x] Adopt one widthless semantic Trit domain with physical execution profiles
+  **1, 64 and 256**. Treat 32 as a compatibility fallback and 128/512/adaptive
+  widths as measurement-only experiments; there is no universal "256-bit
+  Trit" type.
+- [ ] Pause renewed bulk TypeScript-to-Fungi conversion until the immutable
+  checked-module snapshot, detached source-to-GIR handoff, independent scalar
+  SLIDE re-import and VOK receipt chain are specified and pass hostile controls.
+- [ ] Wire the standing red-capable instruments into the renewed route: brand
+  and JavaScript-seam erasure, NaN-passable guards, MAC framing, mutation,
+  sentinel, acceptance-pack and paper-standard checks.
+- [ ] Establish scalar as the reference physical profile, then admit 64 and
+  finally 256. A fallback is admission-time replanning with a new plan identity,
+  never an unrecorded runtime rescue or semantic reinterpretation.
+- [ ] Resume the sandbox converter only in ten-source trials. Keep every `.ts`
+  input, log refusals, and run duplicate/shadow checks on every proposed output.
+  Normal conversion commits require at least 40 unique new or updated real
+  `.fungi` files (expected 50) and at most one report delta; a report-only streak
+  of two is a hard refusal. The sole exception is final closure bookkeeping.
+- [ ] Reconcile the Galerina source handoff, SLIDE profile registry and VOK
+  evidence schema against private RD-0855 before reopening bulk conversion.
+- [ ] Update `scripts/memory-graph.mjs` and the KB
+  `tools/memory-index-audit.mjs` for the reorganized hierarchical Codex memory
+  layout. Their self-tests pass, but their live flat-file health checks currently
+  refuse `memory_summary` and `raw_memories` as unindexed siblings; do not treat
+  that refusal as a stale-memory finding. The separate Myco hierarchy index is
+  current.
+- [ ] Close the current graph-all refusals before claiming a clean graph refresh:
+  package boundaries report undeclared self-hosted Fungi in core-compiler,
+  ext-secrets-vault, framework-app-kernel, observability and tower-citizen, and
+  the semantic graph reports stale `retirement executableFamily.mjs`. The other
+  five registered graph owners generate and check successfully; do not hide the
+  two red owners or publish their partial outputs as closure evidence.
+- [ ] Restore the external codebase-memory service before claiming graph-index
+  freshness. Both a bounded graph search and the required moderate rebuild hung
+  without a build-point receipt and were terminated; freshness remains
+  `UNKNOWN`. Myco is freshly indexed, but it is not a substitute for the code
+  knowledge graph or an independently verified `indexed_head_sha`.
+
 ### Forty-file primitive Fungi batch - 2026-08-14
 
 - [x] Replace report-only progress with 40 new, one-flow `.fungi` primitive
@@ -483,8 +523,9 @@ counts or open items that a newer section explicitly supersedes.
 
 ### RD-0843 virtual-trit representation follow-up - 2026-08-13
 
-- [x] Record the corrected R&D result from KB commit `2f970fa`: 256-bit
-  `Uint32` batching is the working sweet spot; 512 adds about 8%, while 64/32
+- [x] Record the corrected R&D result from KB commit `2f970fa`: width-256
+  `Uint32` bit-plane batching is the measured throughput sweet spot; 512 adds
+  about 8%, while 64/32
   remain usable fallbacks. BigInt is about 1.01x scalar in the fair lane—it
   buys no width gain, but the earlier 10x-slower claim was a serial-popcount
   confound and must not be repeated.
@@ -1113,31 +1154,18 @@ counts or open items that a newer section explicitly supersedes.
 
 ### RD-0843 virtual-trit representation sandbox - post-.fungi R&D - 2026-08-13
 
-- [ ] Start this programme only after the `.fungi` conversion has completed and
-  its ternary semantic baseline is frozen. Treat every width and encoding as a
-  sandbox candidate; do not preselect 256, 512 or any other winner.
-- [ ] Preserve one invariant logical domain and the existing Verdict/Trit brand
-  separation across every candidate. Retain a scalar reference implementation
-  and require differential equivalence for values, refusal behaviour, evidence
-  behaviour and illegal-state handling before an accelerated lane can qualify.
-- [ ] Benchmark logical and physical widths **1, 32, 64, 128, 256, 512 and
-  adaptive/vector-length** across scalar, packed, two-bit/bit-plane, base-3
-  packed and balanced-ternary encodings. Keep logical width distinct from the
-  CPU, GPU or accelerator carrier used to execute it.
-- [ ] Exercise scalar CPU, CPU SIMD, GPU and NPU/AI-accelerator targets under
-  matched workloads. Measure throughput, latency, memory density and footprint,
-  alignment and encode/decode cost, L1/L2/L3 behavior, bandwidth and energy so
-  a fast lane cannot hide a movement, cache or conversion penalty.
-- [ ] Run a paired security matrix for each representation: sensitive-copy and
-  temporary-state lifetime, protected-memory interaction, zeroisation cost and
-  completeness, constant-time behavior, fault propagation and recovery, and
-  MAC/AEAD, symmetric and post-quantum/hybrid crypto boundary interactions.
-- [ ] Make representation selection capability-, workload-, security-policy-
-  and crypto-policy-aware. Bind the selected representation and target profile
-  into its evidence, and require safe **64 then 32** fallback (ultimately the
-  scalar reference) with identical ternary, governance and security semantics;
-  unsupported capabilities or policies must refuse rather than silently weaken
-  or reinterpret those semantics.
+- [x] Superseded as the current routing source by private RD-0855 and the
+  2026-08-15 architecture-reset checkpoint at the top of this file. Retain this
+  section only as the original experiment brief.
+- [x] Carry forward the invariant semantic domain, Verdict/Trit separation,
+  scalar differential oracle and refusal/evidence/illegal-state parity.
+- [x] Replace the undifferentiated width sweep with the adopted physical profile
+  sequence **1 -> 64 -> 256**. Width 32 is a compatibility fallback; 128, 512
+  and adaptive/vector-length forms remain benchmark-only and cannot authorize
+  execution without a later owner decision.
+- [x] Require target, security and crypto policy to be bound into admission.
+  Unsupported profiles refuse or trigger a newly identified admission plan;
+  they never silently weaken, reinterpret or rescue an executing plan.
 - [ ] Keep the open RD-0840 `enforceDrift(physicalMs, ticksPerMs)` fourth-erasure
   cell separate: an omitted/`undefined` or `NaN` rate makes drift `NaN`, so the
   strict `Math.abs(drift) > max` test can allow a large divergence. It is related
@@ -1508,6 +1536,8 @@ counts or open items that a newer section explicitly supersedes.
 
 ### Slice 83 status, R&D intake and housekeeping - 2026-08-13
 
+- [x] Historical checkpoint only. It is not a current resume pointer; use the
+  first dated section of this file and resolve the live Git and index heads.
 - [x] Publish the current conversion/assurance write-up at
   `docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`.
 - [x] Reconcile the live conversion register through Slice 83: 1,480/1,480
