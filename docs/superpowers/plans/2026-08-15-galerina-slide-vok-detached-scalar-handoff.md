@@ -392,19 +392,19 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Create: `tests/representation-profile-registry.test.mjs`
 - Modify: `src/index.mjs` or the repository's existing public export owner
 
-- [ ] Start with failing tests for unknown, duplicate, mutable and
+- [x] Start with failing tests for unknown, duplicate, mutable and
   caller-invented profiles; unavailable targets; profile fallback; and a
   planner result used as if it were admission authority.
-- [ ] Register exact closed records for `trit.scalar.v1`,
+- [x] Register exact closed records for `trit.scalar.v1`,
   `trit.bitplane64.v1`, `trit.bitplane256.v1` and compatibility
   `trit.bitplane32.v1`. Only scalar is `ACTIVE_REFERENCE`; all packed profiles
   are `INACTIVE` and refuse selection in this phase.
-- [ ] Bind semantic profile, encoding, lane count, illegal codes, tail policy,
+- [x] Bind semantic profile, encoding, lane count, illegal codes, tail policy,
   alignment, endianness, integrity model, numeric model, target/provider set,
   toolchain and work bounds.
-- [ ] Make `planRepresentationProfile(request)` return a frozen candidate plan
+- [x] Make `planRepresentationProfile(request)` return a frozen candidate plan
   or typed refusal. It cannot return a VOK decision, lease or `ALLOW`.
-- [ ] Prove deterministic same-input identity, hostile record refusal and that
+- [x] Prove deterministic same-input identity, hostile record refusal and that
   unavailable scalar ends admission rather than falling through to another
   runtime.
 
@@ -414,16 +414,16 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Create: `src/galerina-artifact-reference.mjs`
 - Create: `tests/galerina-artifact-reference.test.mjs`
 
-- [ ] Implement an independent closed decoder for
+- [x] Implement an independent closed decoder for
   `galerina.artifact-reference.v1`; do not import the Galerina validator.
-- [ ] Require kind, SHA-256 digest and safe byte length; reject surplus,
+- [x] Require kind, SHA-256 digest and safe byte length; reject surplus,
   duplicate-key, accessor/proxy, malformed digest and wrong-kind records.
-- [ ] The physicalizer intake accepts only `canonical-gir`; the package reader
+- [x] The physicalizer intake accepts only `canonical-gir`; the package reader
   accepts only `physical-slide`. Refuse every other kind, including
   `fungi-source` and `checked-module-snapshot`.
-- [ ] Read through a captured repository capability and recompute the digest
+- [x] Read through a captured repository capability and recompute the digest
   before returning an owned `Uint8Array`.
-- [ ] Differentially prove Galerina writer/SLIDE reader agreement and mutation,
+- [x] Differentially prove Galerina writer/SLIDE reader agreement and mutation,
   path-substitution, short-read and backend-fault refusal.
 
 ### Task 9: Compile detached GIR to one scalar physical `.slide`
@@ -438,30 +438,30 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Reference only; do not call from the detached path:
   `src/checked-fungi-slide-compiler.mjs`
 
-- [ ] Write a failing test showing that raw `.fungi` source, AST-shaped data or
+- [x] Write a failing test showing that raw `.fungi` source, AST-shaped data or
   caller-precomputed GIR success cannot enter the new compiler.
-- [ ] Accept only verified canonical-GIR artifact bytes plus the active scalar
+- [x] Accept only verified canonical-GIR artifact bytes plus the active scalar
   profile plan and complete run identity.
-- [ ] Pass the emitted CBOR bytes unmodified to the existing
+- [x] Pass the emitted CBOR bytes unmodified to the existing
   `prepareV2CExecution` surface and require its parent-registry validation.
   Package the validated bytes with `encodeReferenceSlideBundle`; add no GIR
   decoder, registry entry or source frontend.
-- [ ] Derive a closed one-node reference action DAG. Execute it through the
+- [x] Derive a closed one-node reference action DAG. Execute it through the
   named `slide.serial-reference-coordinator.v1` contract in-process with cache
   disabled. This is not DFE; its output is toolchain/work evidence, never an
   admission verdict.
-- [ ] Materialize physical bytes once and bind GIR digest, scalar profile,
+- [x] Materialize physical bytes once and bind GIR digest, scalar profile,
   target/provider, compiler/linker/toolchain, integrity/numeric profile, policy,
   resources and serial-reference action identity into the package manifest.
-- [ ] Prove source/snapshot/GIR/profile/toolchain/target mutation changes or
+- [x] Prove source/snapshot/GIR/profile/toolchain/target mutation changes or
   refuses physical identity. Missing or altered serial-reference contract
   refuses. Missing production DFE takes the same full non-reuse serial path and
   is not a refusal.
-- [ ] Do not call either source-frontending checked-Fungi compiler from this
+- [x] Do not call either source-frontending checked-Fungi compiler from this
   route.
-- [ ] Keep the existing checked-Fungi scalar compiler as bounded prior evidence;
+- [x] Keep the existing checked-Fungi scalar compiler as bounded prior evidence;
   do not call it proof that the new detached-GIR ingress is complete.
-- [ ] Add an end-to-end assertion inside SLIDE's own focused suite that the exact
+- [x] Add an end-to-end assertion inside SLIDE's own focused suite that the exact
   Galerina-emitted bytes enter `prepareV2CExecution` without translation.
 
 ### Task 10: Extend the Lyth adapter without giving it authority
@@ -472,34 +472,34 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Modify: `tools/admission/schema.ts`
 - Modify: `tools/admission/kat-schema.ts`
 
-- [ ] Add a failing fixture for a real scalar package whose source, snapshot,
+- [x] Add a failing fixture for a real scalar package whose source, snapshot,
   GIR, physical package, profile, toolchain, policy or target digest is altered.
-- [ ] Introduce `lyth.admission-work.v2` with one separately length-framed
+- [x] Introduce `lyth.admission-work.v2` with one separately length-framed
   `checkedSnapshotIdentity` field. Do not pack snapshot and GIR digests into
   `proofInputIdentity`; v1 and v2 keys must remain domain-separated.
-- [ ] Extend `tools/adapter/adapter.ts` with the exact detached-scalar lane. Read
+- [x] Extend `tools/adapter/adapter.ts` with the exact detached-scalar lane. Read
   physical bytes by verified `(owner,kind,digest)` reference; never trust a path or
   producer success boolean. `tools/admission/schema.ts` owns only the closure
   key and must not parse packages.
-- [ ] Inspect/extract the existing reference bundle, re-decode the canonical
+- [x] Inspect/extract the existing reference bundle, re-decode the canonical
   GIR structure, recompute its byte identity and static-all-paths work bound,
   and populate the v2 closure. Do not call `compileV2CReferenceSource` or claim
   that Lyth proved the source-to-GIR lowering.
-- [ ] Refuse `sourcePath` or `entryFunction` in the same bundle record as the
+- [x] Refuse `sourcePath` or `entryFunction` in the same bundle record as the
   detached-scalar lane. Keep cost bases mutually exclusive, as
   `declaredCost` already is in `tools/adapter/adapter.ts`; add a KAT for the
   rejected combination.
-- [ ] Give Lyth only a compute-scoped immutable package/GIR input capability.
+- [x] Give Lyth only a compute-scoped immutable package/GIR input capability.
   Galerina and SLIDE must not know or address Lyth's cache keys, storage paths,
   schema objects or retained proof-work state; only the typed evidence result
   crosses back out.
-- [ ] Return only retained
+- [x] Return only retained
   evidence or typed refusal/indeterminate. Preserve the structural absence of
   an `ALLOW` result.
-- [ ] Prove cache hit means “proof bytes eligible for SLIDE re-derivation,” not
+- [x] Prove cache hit means “proof bytes eligible for SLIDE re-derivation,” not
   admission. Stale key/revocation epoch, provenance mismatch or store fault must
   force full recomputation/refusal.
-- [ ] Do not promote laboratory `ReuseStore` to a production store. If the DFE
+- [x] Do not promote laboratory `ReuseStore` to a production store. If the DFE
   domain/host is absent, perform full non-reuse proof work. Missing production
   DFE is expected in this phase and is not a blocker; forged or inconsistent
   cache evidence is a refusal.
@@ -513,49 +513,69 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Reuse unchanged: `src/vok-component-boundary.mjs`
 - Reuse unchanged: `src/verified-object-kernel.mjs`
 
-- [ ] Do not reinterpret receipt v2. Define v3 with exact fields for source,
+- [x] Do not reinterpret receipt v2. Define v3 with exact fields for source,
   snapshot, canonical GIR, representation profile, physical package, target,
   provider, toolchain, integrity, numeric model, execution policy, Lyth evidence,
   SLIDE admission, VOK attempt/lease, input and terminal result/refusal/trap/
   cleanup identities.
-- [ ] Independently re-import physical `.slide` bytes and re-derive every gate.
+- [x] Independently re-import physical `.slide` bytes and re-derive every gate.
   Lyth evidence is an input to verification, never a decision.
-- [ ] Before admission, define one closed
+- [x] Before admission, define one closed
   `slide.detached-scalar-identity.v3` VOK schema containing the source,
   snapshot, GIR, profile, physical, target/provider, toolchain, integrity,
   policy and Lyth-evidence identities as `sha256` fields. Use
   `createVokEvidence` and `createVokProposal` and pass that live proposal to the
   unchanged component boundary. Do not staple identities onto an already
   completed receipt.
-- [ ] Build `evidenceSetDigest` from a domain-separated canonical encoding of
+- [x] Build `evidenceSetDigest` from a domain-separated canonical encoding of
   the pinned `runIdentity`, authority epoch and closed stage-ordered receipt
   digests. Verify every receipt preimage contains that same run/epoch and the
   Envelope epoch equals it. Refuse cross-run splicing, pre-rotation evidence
   under a post-rotation Envelope, duplicate/missing stages and context drift.
-- [ ] Retain the existing live VOK checks in addition to internal equality:
+- [x] Retain the existing live VOK checks in addition to internal equality:
   Envelope epoch/context must match the host's current accepted context, the
   epoch/subject must not be revoked, and every stage receipt must authenticate
   under its declared owner/epoch. A self-consistent retired-epoch evidence set
   cannot be admitted.
-- [ ] Compute `bindingDigest` as a domain-separated digest over the same
+- [x] Compute `bindingDigest` as a domain-separated digest over the same
   canonical evidence bytes, but label it convenience/cross-check data rather
   than authentic authority; the kernel does not derive it from `binding`.
-- [ ] Mint a VOK lease only from the admitted SLIDE result. Make it affine,
+- [x] Mint a VOK lease only from the admitted SLIDE result. Make it affine,
   bounded and exhaustively consumed exactly once.
-- [ ] The v3 binder retains the live evidence and proposal handles, the opaque
+- [x] The v3 binder retains the live evidence and proposal handles, the opaque
   boundary lease handle, returned admission/lease digests and final live VOK
   receipt handle from the **same orchestration**. Authenticate evidence,
   proposal and receipt with `inspectVokObject`; the lease handle is used only by
   boundary `enter`/`consume`. Refuse digest-only/copy-shaped inputs and any
   attempt to wrap the same receipt with different evidence.
-- [ ] Map detailed v3 terminal classes onto the unchanged kernel outcomes:
+- [x] Map detailed v3 terminal classes onto the unchanged kernel outcomes:
   success→`SUCCEEDED`, refusal→`REFUSED`, trap/cleanup-failure→`FAILED`. Do not
   add a ninth gate or a new kernel terminal outcome.
-- [ ] Add mutation negatives for every receipt field, physical bytes, Lyth
+- [x] Add mutation negatives for every receipt field, physical bytes, Lyth
   evidence, gate order, profile and result. Add replay, double-consume,
   cancellation, trap and cleanup-failure vectors.
-- [ ] Prove a profile fallback request produces a new plan/package/admission/
+- [x] Prove a profile fallback request produces a new plan/package/admission/
   receipt chain and cannot reuse the prior lease.
+
+### Implementation checkpoint — 2026-08-16
+
+- Tasks 7–9 and 11 landed in SLIDE commit `ebcbd05`.
+  The repository has no aggregate `src/index.mjs` export owner, so the new
+  direct modules are the public test/import surfaces. The full SLIDE gate is
+  1,039/1,039 across 106 suites; contract, tool-manifest, path-leak,
+  forbidden-state and security-closure gates are green.
+- Task 10 landed in Lyth-Weaver commit `f106172`. Lyth independently decodes
+  canonical GIR and derives static-all-paths work, emits typed evidence rather
+  than its internal closure/cache objects, and retains no admission authority.
+  Its full gate is 633/633 across 14 suites; typecheck, mutation, capability,
+  forbidden-state, document-drift and KB-corpus gates are green.
+- Every file in both commits passed a case-collision, byte-duplicate and
+  normalized-content shadow check. No conversion report is part of either
+  commit, so the conversion-wave 40-new-`.fungi` report gate is not applicable.
+- Task 12 remains deliberately unchecked. Its Galerina integration fixtures
+  depend on Tasks 1–6 producing the real source/snapshot/detached-GIR transfer;
+  this checkpoint does not manufacture those missing artifacts or infer a
+  complete end-to-end production chain from the SLIDE/Lyth subchain.
 
 ### Task 12: Prove the complete scalar chain and retained component boundaries
 
