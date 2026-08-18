@@ -10,22 +10,40 @@ counts or open items that a newer section explicitly supersedes.
   **1, 64 and 256**. Treat 32 as a compatibility fallback and 128/512/adaptive
   widths as measurement-only experiments; there is no universal "256-bit
   Trit" type.
-- [ ] Pause renewed bulk TypeScript-to-Fungi conversion until the immutable
-  checked-module snapshot, detached source-to-GIR handoff, independent scalar
-  SLIDE re-import and VOK receipt chain are specified and pass hostile controls.
+- [x] Build and verify the immutable checked-module snapshot, detached
+  source-to-GIR handoff, independent scalar SLIDE re-import and VOK v3 receipt
+  chain through Tasks 1-12 of the detached-scalar plan. The Galerina-side
+  implementation is locally commit-bound at `439d69e5`; it grants no production
+  or bulk-conversion authority.
+- [x] Close the bounded Galerina verification surface without
+  touching `.fungi`: compiler typecheck and 50/50 focused tests pass, both
+  red-capable detector suites pass 42/42, and duplicate/shadow checks find no
+  case collision or exact-byte twin. At `439d69e5`, the commit-bound authority
+  audit inspects three files with zero violations/refusals and the JavaScript
+  seam audit inspects one with zero violations/refusals. The registered graph
+  refresh reports `status: indexed`, nodes equal to expected nodes and an exact
+  HEAD build point; a fresh symbol lookup finds the new artifact-reference core.
+- [ ] Keep renewed bulk TypeScript-to-Fungi conversion paused while Tasks 13-15
+  rebase the sandbox converter, enforce duplicate/shadow and commit-shape gates,
+  and run only the bounded ten-source pilot.
 - [ ] Wire the standing red-capable instruments into the renewed route: brand
   and JavaScript-seam erasure, NaN-passable guards, MAC framing, mutation,
   sentinel, acceptance-pack and paper-standard checks.
-- [ ] Establish scalar as the reference physical profile, then admit 64 and
-  finally 256. A fallback is admission-time replanning with a new plan identity,
-  never an unrecorded runtime rescue or semantic reinterpretation.
+- [x] Establish scalar as the only active reference physical profile. Keep 64,
+  256 and compatibility 32 registered but inactive; unavailable scalar refuses
+  instead of falling through to another runtime.
+- [ ] Admit 64 and then 256 only through later independent physical evidence.
+  A fallback is admission-time replanning with a new plan identity, never an
+  unrecorded runtime rescue or semantic reinterpretation.
 - [ ] Resume the sandbox converter only in ten-source trials. Keep every `.ts`
   input, log refusals, and run duplicate/shadow checks on every proposed output.
   Normal conversion commits require at least 40 unique new or updated real
   `.fungi` files (expected 50) and at most one report delta; a report-only streak
   of two is a hard refusal. The sole exception is final closure bookkeeping.
-- [ ] Reconcile the Galerina source handoff, SLIDE profile registry and VOK
-  evidence schema against private RD-0855 before reopening bulk conversion.
+- [x] Reconcile the Galerina source handoff, SLIDE profile registry, Lyth
+  non-authorizing evidence and VOK v3 schema against private RD-0855. Preserve
+  the resulting Tasks 7-12 changes unstaged and uncommitted across their owning
+  repositories until the owner resumes the plan.
 - [ ] Update `scripts/memory-graph.mjs` and the KB
   `tools/memory-index-audit.mjs` for the reorganized hierarchical Codex memory
   layout. Their self-tests pass, but their live flat-file health checks currently

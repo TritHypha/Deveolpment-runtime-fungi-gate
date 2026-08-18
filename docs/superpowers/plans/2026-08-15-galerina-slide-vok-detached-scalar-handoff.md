@@ -433,13 +433,18 @@ rereads those bytes from Galerina's owner-local repository, emits canonical GIR
 from the verified body only, then writes and rereads that GIR from the same
 owner repository. The CLI requires explicit compiler/checker provenance and
 prints only non-authorizing snapshot/GIR references. The focused handoff suite
-passes 5/5, the complete Tasks 1-6 artifact/snapshot/emitter/handoff set passes
-42/42, retained runtime suites pass 36/36 and strict package typechecking is
-green. The authority detector self-tests pass 13/13. After the Galerina
-checkpoint commit, commit-bound live scans of both the handoff and detached
-emitter report `CLEAN`: zero forbidden edges and zero refusals. The Trit/Verdict
-seam audit is likewise `CLEAN` for both entries. This closes the Phase 2
-commit-bound stop condition. Converter evidence remains untouched pending
+passes 5/5. The current six-file artifact/snapshot/emitter/handoff and retained
+boundary set passes 50/50, strict package typechecking is green, and the two
+red-capable authority-detector suites pass 42/42. Local implementation commit
+`439d69e5` binds 13 implementation/test/detector paths with zero conversion
+reports and zero `.fungi` changes. The fresh commit-bound authority audit then
+inspected the three-file detached closure with zero violations/refusals, while
+the JavaScript-seam audit inspected its exact entry with zero
+violations/refusals. Duplicate/shadow checks report no case collision or
+exact-byte twin. The Phase 2 commit-bound stop condition is closed. The
+registered graph refresh reports `status: indexed`, nodes equal to expected
+nodes and an exact HEAD build point, and a fresh lookup finds the new
+artifact-reference core. Converter evidence remains untouched pending
 owner-baseline reconciliation in Task 13.
 
 **Phase 2 stop condition:** canonical GIR can be reproduced from verified
@@ -457,21 +462,26 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Create: `tests/representation-profile-registry.test.mjs`
 - Modify: `src/index.mjs` or the repository's existing public export owner
 
-- [ ] Start with failing tests for unknown, duplicate, mutable and
+- [x] Start with failing tests for unknown, duplicate, mutable and
   caller-invented profiles; unavailable targets; profile fallback; and a
   planner result used as if it were admission authority.
-- [ ] Register exact closed records for `trit.scalar.v1`,
+- [x] Register exact closed records for `trit.scalar.v1`,
   `trit.bitplane64.v1`, `trit.bitplane256.v1` and compatibility
   `trit.bitplane32.v1`. Only scalar is `ACTIVE_REFERENCE`; all packed profiles
   are `INACTIVE` and refuse selection in this phase.
-- [ ] Bind semantic profile, encoding, lane count, illegal codes, tail policy,
+- [x] Bind semantic profile, encoding, lane count, illegal codes, tail policy,
   alignment, endianness, integrity model, numeric model, target/provider set,
   toolchain and work bounds.
-- [ ] Make `planRepresentationProfile(request)` return a frozen candidate plan
+- [x] Make `planRepresentationProfile(request)` return a frozen candidate plan
   or typed refusal. It cannot return a VOK decision, lease or `ALLOW`.
-- [ ] Prove deterministic same-input identity, hostile record refusal and that
+- [x] Prove deterministic same-input identity, hostile record refusal and that
   unavailable scalar ends admission rather than falling through to another
   runtime.
+
+Evidence (2026-08-15): the independent SLIDE registry suite passes 6/6. Four
+closed profiles are published, only scalar is active, plan handles are live
+and non-authorizing, and unavailable or hostile requests refuse without
+runtime fallback.
 
 ### Task 8: Independently decode the Galerina artifact references
 
@@ -479,17 +489,21 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Create: `src/galerina-artifact-reference.mjs`
 - Create: `tests/galerina-artifact-reference.test.mjs`
 
-- [ ] Implement an independent closed decoder for
+- [x] Implement an independent closed decoder for
   `galerina.artifact-reference.v1`; do not import the Galerina validator.
-- [ ] Require kind, SHA-256 digest and safe byte length; reject surplus,
+- [x] Require kind, SHA-256 digest and safe byte length; reject surplus,
   duplicate-key, accessor/proxy, malformed digest and wrong-kind records.
-- [ ] The physicalizer intake accepts only `canonical-gir`; the package reader
+- [x] The physicalizer intake accepts only `canonical-gir`; the package reader
   accepts only `physical-slide`. Refuse every other kind, including
   `fungi-source` and `checked-module-snapshot`.
-- [ ] Read through a captured repository capability and recompute the digest
+- [x] Read through a captured repository capability and recompute the digest
   before returning an owned `Uint8Array`.
-- [ ] Differentially prove Galerina writer/SLIDE reader agreement and mutation,
+- [x] Differentially prove Galerina writer/SLIDE reader agreement and mutation,
   path-substitution, short-read and backend-fault refusal.
+
+Evidence (2026-08-15): the independent artifact-reference suite passes 6/6,
+including exact records, disjoint kinds, captured one-reference reads, owned
+bytes, path substitutes, mutations, short reads and backend faults.
 
 ### Task 9: Compile detached GIR to one scalar physical `.slide`
 
@@ -503,31 +517,36 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Reference only; do not call from the detached path:
   `src/checked-fungi-slide-compiler.mjs`
 
-- [ ] Write a failing test showing that raw `.fungi` source, AST-shaped data or
+- [x] Write a failing test showing that raw `.fungi` source, AST-shaped data or
   caller-precomputed GIR success cannot enter the new compiler.
-- [ ] Accept only verified canonical-GIR artifact bytes plus the active scalar
+- [x] Accept only verified canonical-GIR artifact bytes plus the active scalar
   profile plan and complete run identity.
-- [ ] Pass the emitted CBOR bytes unmodified to the existing
+- [x] Pass the emitted CBOR bytes unmodified to the existing
   `prepareV2CExecution` surface and require its parent-registry validation.
   Package the validated bytes with `encodeReferenceSlideBundle`; add no GIR
   decoder, registry entry or source frontend.
-- [ ] Derive a closed one-node reference action DAG. Execute it through the
+- [x] Derive a closed one-node reference action DAG. Execute it through the
   named `slide.serial-reference-coordinator.v1` contract in-process with cache
   disabled. This is not DFE; its output is toolchain/work evidence, never an
   admission verdict.
-- [ ] Materialize physical bytes once and bind GIR digest, scalar profile,
+- [x] Materialize physical bytes once and bind GIR digest, scalar profile,
   target/provider, compiler/linker/toolchain, integrity/numeric profile, policy,
   resources and serial-reference action identity into the package manifest.
-- [ ] Prove source/snapshot/GIR/profile/toolchain/target mutation changes or
+- [x] Prove source/snapshot/GIR/profile/toolchain/target mutation changes or
   refuses physical identity. Missing or altered serial-reference contract
   refuses. Missing production DFE takes the same full non-reuse serial path and
   is not a refusal.
-- [ ] Do not call either source-frontending checked-Fungi compiler from this
+- [x] Do not call either source-frontending checked-Fungi compiler from this
   route.
-- [ ] Keep the existing checked-Fungi scalar compiler as bounded prior evidence;
+- [x] Keep the existing checked-Fungi scalar compiler as bounded prior evidence;
   do not call it proof that the new detached-GIR ingress is complete.
-- [ ] Add an end-to-end assertion inside SLIDE's own focused suite that the exact
+- [x] Add an end-to-end assertion inside SLIDE's own focused suite that the exact
   Galerina-emitted bytes enter `prepareV2CExecution` without translation.
+
+Evidence (2026-08-15): the SLIDE compiler suite passes 6/6 and the fresh-process
+Task 12 integration feeds the exact Galerina-emitted canonical GIR bytes into
+the same compiler and parent-registry executor without a source frontend or
+second GIR decoder. The named serial coordinator runs with reuse disabled.
 
 ### Task 10: Extend the Lyth adapter without giving it authority
 
@@ -537,37 +556,43 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Modify: `tools/admission/schema.ts`
 - Modify: `tools/admission/kat-schema.ts`
 
-- [ ] Add a failing fixture for a real scalar package whose source, snapshot,
+- [x] Add a failing fixture for a real scalar package whose source, snapshot,
   GIR, physical package, profile, toolchain, policy or target digest is altered.
-- [ ] Introduce `lyth.admission-work.v2` with one separately length-framed
+- [x] Introduce `lyth.admission-work.v2` with one separately length-framed
   `checkedSnapshotIdentity` field. Do not pack snapshot and GIR digests into
   `proofInputIdentity`; v1 and v2 keys must remain domain-separated.
-- [ ] Extend `tools/adapter/adapter.ts` with the exact detached-scalar lane. Read
+- [x] Extend `tools/adapter/adapter.ts` with the exact detached-scalar lane. Read
   physical bytes by verified `(owner,kind,digest)` reference; never trust a path or
   producer success boolean. `tools/admission/schema.ts` owns only the closure
   key and must not parse packages.
-- [ ] Inspect/extract the existing reference bundle, re-decode the canonical
+- [x] Inspect/extract the existing reference bundle, re-decode the canonical
   GIR structure, recompute its byte identity and static-all-paths work bound,
   and populate the v2 closure. Do not call `compileV2CReferenceSource` or claim
   that Lyth proved the source-to-GIR lowering.
-- [ ] Refuse `sourcePath` or `entryFunction` in the same bundle record as the
+- [x] Refuse `sourcePath` or `entryFunction` in the same bundle record as the
   detached-scalar lane. Keep cost bases mutually exclusive, as
   `declaredCost` already is in `tools/adapter/adapter.ts`; add a KAT for the
   rejected combination.
-- [ ] Give Lyth only a compute-scoped immutable package/GIR input capability.
+- [x] Give Lyth only a compute-scoped immutable package/GIR input capability.
   Galerina and SLIDE must not know or address Lyth's cache keys, storage paths,
   schema objects or retained proof-work state; only the typed evidence result
   crosses back out.
-- [ ] Return only retained
+- [x] Return only retained
   evidence or typed refusal/indeterminate. Preserve the structural absence of
   an `ALLOW` result.
-- [ ] Prove cache hit means “proof bytes eligible for SLIDE re-derivation,” not
+- [x] Prove cache hit means “proof bytes eligible for SLIDE re-derivation,” not
   admission. Stale key/revocation epoch, provenance mismatch or store fault must
   force full recomputation/refusal.
-- [ ] Do not promote laboratory `ReuseStore` to a production store. If the DFE
+- [x] Do not promote laboratory `ReuseStore` to a production store. If the DFE
   domain/host is absent, perform full non-reuse proof work. Missing production
   DFE is expected in this phase and is not a blocker; forged or inconsistent
   cache evidence is a refusal.
+
+Evidence (2026-08-15): Lyth typecheck, admission-schema KATs and adapter KATs
+are green. The detached lane binds the separately framed checked snapshot,
+recomputes physical/GIR structure and work, refuses identity mutations and
+path/source/cost substitutes, represents no `ALLOW`, and uses full recompute
+when production DFE evidence is absent.
 
 ### Task 11: Re-admit independently in SLIDE and mint VOK v3 receipts
 
@@ -578,49 +603,56 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
 - Reuse unchanged: `src/vok-component-boundary.mjs`
 - Reuse unchanged: `src/verified-object-kernel.mjs`
 
-- [ ] Do not reinterpret receipt v2. Define v3 with exact fields for source,
+- [x] Do not reinterpret receipt v2. Define v3 with exact fields for source,
   snapshot, canonical GIR, representation profile, physical package, target,
   provider, toolchain, integrity, numeric model, execution policy, Lyth evidence,
   SLIDE admission, VOK attempt/lease, input and terminal result/refusal/trap/
   cleanup identities.
-- [ ] Independently re-import physical `.slide` bytes and re-derive every gate.
+- [x] Independently re-import physical `.slide` bytes and re-derive every gate.
   Lyth evidence is an input to verification, never a decision.
-- [ ] Before admission, define one closed
+- [x] Before admission, define one closed
   `slide.detached-scalar-identity.v3` VOK schema containing the source,
   snapshot, GIR, profile, physical, target/provider, toolchain, integrity,
   policy and Lyth-evidence identities as `sha256` fields. Use
   `createVokEvidence` and `createVokProposal` and pass that live proposal to the
   unchanged component boundary. Do not staple identities onto an already
   completed receipt.
-- [ ] Build `evidenceSetDigest` from a domain-separated canonical encoding of
+- [x] Build `evidenceSetDigest` from a domain-separated canonical encoding of
   the pinned `runIdentity`, authority epoch and closed stage-ordered receipt
   digests. Verify every receipt preimage contains that same run/epoch and the
   Envelope epoch equals it. Refuse cross-run splicing, pre-rotation evidence
   under a post-rotation Envelope, duplicate/missing stages and context drift.
-- [ ] Retain the existing live VOK checks in addition to internal equality:
+- [x] Retain the existing live VOK checks in addition to internal equality:
   Envelope epoch/context must match the host's current accepted context, the
   epoch/subject must not be revoked, and every stage receipt must authenticate
   under its declared owner/epoch. A self-consistent retired-epoch evidence set
   cannot be admitted.
-- [ ] Compute `bindingDigest` as a domain-separated digest over the same
+- [x] Compute `bindingDigest` as a domain-separated digest over the same
   canonical evidence bytes, but label it convenience/cross-check data rather
   than authentic authority; the kernel does not derive it from `binding`.
-- [ ] Mint a VOK lease only from the admitted SLIDE result. Make it affine,
+- [x] Mint a VOK lease only from the admitted SLIDE result. Make it affine,
   bounded and exhaustively consumed exactly once.
-- [ ] The v3 binder retains the live evidence and proposal handles, the opaque
+- [x] The v3 binder retains the live evidence and proposal handles, the opaque
   boundary lease handle, returned admission/lease digests and final live VOK
   receipt handle from the **same orchestration**. Authenticate evidence,
   proposal and receipt with `inspectVokObject`; the lease handle is used only by
   boundary `enter`/`consume`. Refuse digest-only/copy-shaped inputs and any
   attempt to wrap the same receipt with different evidence.
-- [ ] Map detailed v3 terminal classes onto the unchanged kernel outcomes:
+- [x] Map detailed v3 terminal classes onto the unchanged kernel outcomes:
   success→`SUCCEEDED`, refusal→`REFUSED`, trap/cleanup-failure→`FAILED`. Do not
   add a ninth gate or a new kernel terminal outcome.
-- [ ] Add mutation negatives for every receipt field, physical bytes, Lyth
+- [x] Add mutation negatives for every receipt field, physical bytes, Lyth
   evidence, gate order, profile and result. Add replay, double-consume,
   cancellation, trap and cleanup-failure vectors.
-- [ ] Prove a profile fallback request produces a new plan/package/admission/
+- [x] Prove a profile fallback request produces a new plan/package/admission/
   receipt chain and cannot reuse the prior lease.
+
+Evidence (2026-08-15): the v3 receipt and unchanged VOK-boundary suites pass
+4/4. Fresh physical bytes are independently re-admitted, all five ordered
+owner receipts authenticate under one live epoch, revoked/copy/splice/mutation
+controls refuse, every v3 field mutation refuses, leases are one-shot, terminal
+states retain the existing VOK outcome set, and fallback creates a distinct
+plan/package/evidence/lease chain.
 
 ### Task 12: Prove the complete scalar chain and retained component boundaries
 
@@ -638,32 +670,59 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
   and
   `packages-galerina/galerina-core-compiler/tests/wat-tri-fuse-b-deny-sentinel.test.mjs`
 
-- [ ] In a fresh process, run one ordinary bounded `.fungi` family through:
+- [x] In a fresh process, run one ordinary bounded `.fungi` family through:
   source bytes → checked snapshot → verified repository read → detached GIR →
   scalar profile plan → named serial-reference work → physical `.slide` → Lyth
   evidence → independent SLIDE admission → VOK lease → bounded execution →
   terminal v3 receipt.
-- [ ] Execute a seeded mutation sweep at every arrow and require zero mutated
+- [x] Execute a seeded mutation sweep at every arrow and require zero mutated
   artifact/evidence/receipt paths to authorize.
-- [ ] Prove there is no import or runtime edge from Hypha into this chain and no
+- [x] Prove there is no import or runtime edge from Hypha into this chain and no
   artifact body is written to the graph/index.
-- [ ] Prove VOK owns lease capability, sink entry, outcome consumption and the
+- [x] Prove VOK owns lease capability, sink entry, outcome consumption and the
   terminal receipt. Tower may be a selected sink, but it cannot mint, consume,
   revoke or reinterpret the lease; its authenticated evidence can only inform
   a new VOK attempt.
-- [ ] Keep the WAT Tri-Fuse tests as historical evidence only; WAT is forbidden
+- [x] Keep the WAT Tri-Fuse tests as historical evidence only; WAT is forbidden
   on the detached route. Prove structurally that a Tri-Pipe or Tri-Fuse proposal
   is non-authorizing. If a later Tri-Fuse implementation transforms
   already-admitted bytes, require a new physical artifact and full fresh
   admission.
-- [ ] Do not require Tower, Tri-Pipe or Tri-Fuse execution inside the ten-source
+- [x] Do not require Tower, Tri-Pipe or Tri-Fuse execution inside the ten-source
   converter pilot; these tests establish boundaries, not artificial workload.
+
+Evidence (2026-08-15): the two Task 12 files pass 6/6. A child process executes
+the complete scalar chain and returns value 42 with a live v3 receipt; seeded
+GIR and physical-byte corruption, source/snapshot/profile/evidence/epoch
+substitution, copied handles and replay all authorize zero paths. Static
+boundary checks retain Tower, Tri-Pipe and historical Tri-Fuse while excluding
+VOK lease operations, Hypha, WAT/Wasm and graph/index body storage from the
+detached route.
 
 **Phase 3 stop condition:** one straight-line/branching scalar `.fungi` family
 inside the exact parent-registry limits must complete the entire chain with an
 independently verified v3 receipt, and every planted mutation/fallback/
 authority-substitution control must refuse. Existing checked-Fungi or v2
 receipts alone do not satisfy this exit.
+
+### Shutdown and compact checkpoint - 2026-08-15
+
+- [x] Tasks 7-12 are implemented and verified in their owning repositories.
+  The Galerina worktree is `codex/detached-scalar-phase1` at `18199d3`; SLIDE is
+  `codex/v2c-independent-frontend` at `3efa2d2`; Lyth-Weaver is
+  `codex/lyth-architecture-reconcile` at `bbbb8fe`.
+- [x] Preserve the task changes unstaged and uncommitted: four Galerina files
+  after this TODO/plan checkpoint, ten SLIDE files and four Lyth-Weaver files.
+  No `.fungi` or `docs/reports` file is part of this handoff, and nothing was
+  pushed.
+- [x] All delegated workers are complete and no repository test/helper process
+  remains active. Exact files and the task-local evidence above are the durable
+  restart surface; memory remains an index to this plan rather than a warehouse.
+- [ ] Resume at Task 13 only. Reconcile the existing user-owned converter
+  changes before editing, keep every `.ts` byte-exact, run at most ten requests,
+  and do not treat pilot output as conversion or commit authority.
+- [ ] Keep graph freshness `UNKNOWN` until committed repository heads are
+  independently re-indexed and the indexed build points are verified.
 
 ---
 
