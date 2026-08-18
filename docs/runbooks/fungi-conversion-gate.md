@@ -64,10 +64,13 @@ of replacing an earlier card.
 
 ## Evidence chain
 
-A `CONVERTED` request must carry verified digests for the retained TypeScript
-source, Fungi candidate, checked snapshot, canonical GIR, physical SLIDE
-package, selected profile and VOK receipt. `BLOCKED` and `MANUAL_REVIEW` are
-terminal evidence outcomes; they do not receive synthetic candidates.
+A `CONVERTED` request must carry a `SUPPORTED` body-free logic-analysis
+envelope plus verified digests for the retained TypeScript source, Fungi
+candidate, checked snapshot, canonical GIR, physical SLIDE package, selected
+profile and VOK receipt. Missing, `BLOCKED` or `MANUAL_REVIEW` logic evidence
+short-circuits before compiler or physical proof. `BLOCKED` and
+`MANUAL_REVIEW` are terminal evidence outcomes; they do not receive synthetic
+candidates.
 
 Lyth supplies non-authorizing proof work only. Its result must be
 `EVIDENCE_READY` with `authorityReleased: false`.

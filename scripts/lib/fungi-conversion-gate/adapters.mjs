@@ -45,11 +45,12 @@ export function chainFromSandboxReceipt(receipt, { expectedSourceSha256, receipt
   const profile = physical?.profileSha256;
   const vokReceipt = Array.isArray(physical?.vokReceiptDigests) ? physical.vokReceiptDigests[0] : undefined;
   const physicalGreen = physical?.green === true && physical?.authorityReleased === false;
+  const logicGreen = receipt?.evidence?.logicAnalysis?.status === "SUPPORTED";
   return Object.freeze({
     source: evidenceEntry(source, receiptValid && source === expectedSourceSha256),
-    candidate: evidenceEntry(candidate, receiptValid),
-    checkedSnapshot: evidenceEntry(checkedSnapshot, receiptValid && compiler?.green === true),
-    gir: evidenceEntry(girFirst, receiptValid && compiler?.green === true && girFirst === girSecond),
+    candidate: evidenceEntry(candidate, receiptValid && logicGreen),
+    checkedSnapshot: evidenceEntry(checkedSnapshot, receiptValid && logicGreen && compiler?.green === true),
+    gir: evidenceEntry(girFirst, receiptValid && logicGreen && compiler?.green === true && girFirst === girSecond),
     physicalPackage: evidenceEntry(artifact, receiptValid && physicalGreen),
     profile: evidenceEntry(profile, receiptValid && physicalGreen),
     vokReceipt: evidenceEntry(vokReceipt, receiptValid && physicalGreen && Array.isArray(physical?.vokReceiptDigests) && physical.vokReceiptDigests.length > 0),

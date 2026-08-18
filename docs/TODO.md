@@ -23,9 +23,10 @@ counts or open items that a newer section explicitly supersedes.
   seam audit inspects one with zero violations/refusals. The registered graph
   refresh reports `status: indexed`, nodes equal to expected nodes and an exact
   HEAD build point; a fresh symbol lookup finds the new artifact-reference core.
-- [ ] Keep renewed bulk TypeScript-to-Fungi conversion paused while Tasks 13-15
-  rebase the sandbox converter, enforce duplicate/shadow and commit-shape gates,
-  and run only the bounded ten-source pilot.
+- [ ] Keep every new project `.fungi` candidate paused until Tasks 1-8 and 10
+  plus final self-review in the 2026-08-18 deterministic tooling plan are
+  complete and freshly verified. Task 9 (the bounded ten-source pilot) runs
+  last; neither tracked nor `build/` candidates may be authored early.
 - [ ] Wire the standing red-capable instruments into the renewed route: brand
   and JavaScript-seam erasure, NaN-passable guards, MAC framing, mutation,
   sentinel, acceptance-pack and paper-standard checks.
@@ -40,6 +41,12 @@ counts or open items that a newer section explicitly supersedes.
   Normal conversion commits require at least 40 unique new or updated real
   `.fungi` files (expected 50) and at most one report delta; a report-only streak
   of two is a hard refusal. The sole exception is final closure bookkeeping.
+- [x] Add one deterministic parser/checker-backed Fungi construct analyzer for
+  `if`, `match`, `check`, `contract`, `flow`, `global`, `vault` and `hallmark`.
+  Its body-free digest-bound envelope now short-circuits the sandbox and
+  conversion gate before compiler/physical proof on `BLOCKED` or
+  `MANUAL_REVIEW`; focused evidence is analyzer **14/14**, conversion gate
+  **18/18** and sandbox **37/37**. No tracked `.fungi` or consumer changed.
 - [x] Reconcile the Galerina source handoff, SLIDE profile registry, Lyth
   non-authorizing evidence and VOK v3 schema against private RD-0855. Preserve
   the resulting Tasks 7-12 changes unstaged and uncommitted across their owning
@@ -56,11 +63,12 @@ counts or open items that a newer section explicitly supersedes.
   the semantic graph reports stale `retirement executableFamily.mjs`. The other
   five registered graph owners generate and check successfully; do not hide the
   two red owners or publish their partial outputs as closure evidence.
-- [ ] Restore the external codebase-memory service before claiming graph-index
-  freshness. Both a bounded graph search and the required moderate rebuild hung
-  without a build-point receipt and were terminated; freshness remains
-  `UNKNOWN`. Myco is freshly indexed, but it is not a substitute for the code
-  knowledge graph or an independently verified `indexed_head_sha`.
+- [x] Restore the external codebase-memory service for the isolated detached
+  scalar worktree. Its pre-tool moderate rebuild reported **27,298 nodes** and
+  an exact `348b170d0747b12a4966ac37bc71bea02862117b` indexed build point; bounded
+  graph queries resolve compiler symbols again. Every later code commit still
+  requires its own exact-head rebuild and symbol probe before freshness is
+  claimed; Myco is complementary, not a substitute.
 
 ### Forty-file primitive Fungi batch - 2026-08-14
 

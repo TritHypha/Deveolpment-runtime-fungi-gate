@@ -57,6 +57,12 @@ Lyth TypeScript KATs.
   owner-gated.
 - The ten-source pilot is evidence only. Its candidates stay outside the test
   package and outside production loaded assets until their exact chain passes.
+- **Hard ordering gate:** complete and freshly verify every non-Fungi
+  prerequisite in Tasks 1-8 and Task 10, plus the final self-review, before
+  Task 9 may create even a `build/` pilot candidate. Execution order is
+  therefore Tasks 1-8, Task 10, final self-review, then Task 9. Until that gate
+  is green, tracked and untracked project `.fungi` authoring is prohibited;
+  analyzer fixtures already present in the repository may only be read.
 - Never push. Stage explicit paths only.
 
 ---
@@ -270,22 +276,41 @@ The registered CLI self-test returns the required green/red pair. No project
 - Create: `docs/runbooks/fungi-logic-analysis.md`
 - Modify: `package.json`
 
-- [ ] Build one shared parser/checker-backed engine with focused subcommands
+- [x] Build one shared parser/checker-backed engine with focused subcommands
   for `if`, `match`, `check`, `contract`, `flow`, `global`, `vault` and
   `hallmark`; do not create eight unrelated process stacks.
-- [ ] Derive the construct registry from canonical parser/AST/checker symbols
+- [x] Derive the construct registry from canonical parser/AST/checker symbols
   and distinguish language constructs from package-specific vault services.
-- [ ] Emit compact body-free `SUPPORTED`, `BLOCKED` or `MANUAL_REVIEW`
+- [x] Emit compact body-free `SUPPORTED`, `BLOCKED` or `MANUAL_REVIEW`
   envelopes with source digest, AST kind, effects, obligations and blocker
   codes; never ask an AI to reclassify a known construct.
-- [ ] Cache only digest-bound analysis facts and invalidate them on source,
+- [x] Cache only digest-bound analysis facts and invalidate them on source,
   compiler, profile or graph build-point drift.
-- [ ] Add red controls for malformed syntax, effectful conditions, incomplete
+- [x] Add red controls for malformed syntax, effectful conditions, incomplete
   matches, failed checks, missing contract evidence, vault capability leakage,
   hallmark misuse and stale cache identities.
-- [ ] Let the conversion gate consume these envelopes and short-circuit before
+- [x] Let the conversion gate consume these envelopes and short-circuit before
   candidate compilation or physical proof when a construct is blocked.
-- [ ] Register one command with subcommands, one self-test and one runbook.
+- [x] Register one command with subcommands, one self-test and one runbook.
+
+**Implemented evidence (2026-08-18):** one engine now owns the exact ordered
+registry `if | match | check | contract | flow | global | vault | hallmark`.
+The analyzer binds source bytes, the complete executable compiler output tree,
+the selected profile, analyzer version and graph build point; every envelope
+is body-free and denies candidate compilation, physical proof, consumer
+switch, TypeScript retirement and production authority. Canonical parser,
+type, effect and governance diagnostics participate in each ruling. The
+`global` view records the current parser's `FUNGI-VAULT-008` refusal for
+`vault global` and `vault session` rather than inventing a construct.
+
+Focused evidence is 14/14 analyzer tests, 18/18 conversion-gate tests and
+37/37 TypeScript-to-Fungi sandbox tests against graph project
+`Galerina-detached-scalar-phase1-20260818-348b170d`. The registered CLI
+self-test returned `SUPPORTED`/`BLOCKED`, and a live scan of tracked real
+project source `packages-galerina/galerina-api-protocol-rest/src/index.fungi`
+returned `SUPPORTED` with five flows and five contracts. The scan only wrote
+an atomic no-overwrite record beneath `build/`; no tracked `.fungi`, test
+overlay, consumer or authority surface changed.
 
 ## Task 6: Add the checked-AST reference manifest to `@galerina/docs`
 
@@ -357,6 +382,10 @@ The registered CLI self-test returns the required green/red pair. No project
   verify node counts, expected counts, indexed HEAD and a new symbol probe.
 
 ## Task 9: Run the controlled ten-source real-package pilot
+
+**Prerequisite:** this task is locked until Tasks 1-8, Task 10 and the final
+self-review are complete with fresh evidence. Do not use Task 9 to finish or
+work around an earlier prerequisite.
 
 **Files:**
 - Create: `build/ts-to-fungi-pilot-2026-08-18/manifest.json`

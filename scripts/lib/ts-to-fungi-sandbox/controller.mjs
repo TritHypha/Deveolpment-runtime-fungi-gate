@@ -23,10 +23,12 @@ import {
   buildPhysicalEvidence,
   findCorpusCollision,
   loadWorkingFungiCorpus,
+  stablePhysicalEvidenceMatches,
 } from "./evidence.mjs";
 import { rehashSource, resolveSourceIdentity } from "./identity.mjs";
 import { appendOutcomeRecord, canonicalJson } from "./journal.mjs";
 import { lowerClassifiedSymbol } from "./lowerer.mjs";
+import { analyzeFungiSource } from "../fungi-logic-analysis/index.mjs";
 
 const sha256 = (bytes) => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 
@@ -185,6 +187,32 @@ async function processRequest({ root, project, request, out, corpus }) {
         },
       });
     }
+    const logicAnalysis = await analyzeFungiSource({
+      source: lowered.source,
+      file: `sandbox/${lowered.flow}.fungi`,
+      command: "scan",
+      graphBuildPoint: identity.graph.indexedHeadSha,
+      profile: "dev",
+    });
+    if (logicAnalysis.status !== "SUPPORTED") {
+      const blockerCodes = logicAnalysis.constructs.flatMap((item) => item.blockerCodes);
+      return writeOutcome({
+        out,
+        request,
+        record: {
+          schema: SCHEMA,
+          toolVersion: TOOL_VERSION,
+          source: sourceRecord(request, identity),
+          classifier: classification,
+          outcome: logicAnalysis.status === "BLOCKED" ? "BLOCKED" : "MANUAL_REVIEW",
+          blockers: blockerCodes,
+          reasonCode: logicAnalysis.status === "BLOCKED" ? "FUNGI_LOGIC_ANALYSIS_BLOCKED" : "FUNGI_LOGIC_ANALYSIS_REVIEW",
+          reason: "construct analysis stopped candidate compilation and physical proof",
+          evidence: { logicAnalysis },
+          authority: { productionAuthorityReleased: false, consumerSwitched: false, typescriptRetired: false },
+        },
+      });
+    }
     const compiler = await buildCompilerEvidence({ source: lowered.source, file: `sandbox/${lowered.flow}.fungi`, flow: lowered.flow, expected: lowered.expected, parameterNames: lowered.parameterNames, vectors: lowered.vectors });
     if (!compiler.green) throw new SandboxRefusal("COMPILER_EVIDENCE_FAILED", "Galerina compiler evidence was not fully green");
     const physical = await buildPhysicalEvidence({ root, source: lowered.source, flow: lowered.flow, expected: lowered.expected, vectors: lowered.vectors });
@@ -198,7 +226,7 @@ async function processRequest({ root, project, request, out, corpus }) {
       classifier: classification,
       outcome: "CONVERTED",
       blockers: [],
-      evidence: { compiler, duplicateShadow: { green: true }, physical },
+      evidence: { logicAnalysis, compiler, duplicateShadow: { green: true }, physical },
       authority: { productionAuthorityReleased: false, consumerSwitched: false, typescriptRetired: false },
     };
     const summary = await writeOutcome({ out, request, record, candidate: lowered });
@@ -556,10 +584,12 @@ export async function verifyReceipt({ root, receipt }) {
       const collision = findCorpusCollision(source, await loadWorkingFungiCorpus(root));
       if (collision !== undefined) return { valid: false, reason: `${collision.kind} with ${collision.path}` };
       const expected = parsed.classifier?.value?.value;
+      const logicAnalysis = await analyzeFungiSource({ source, file: `sandbox/${parsed.candidate.flow}.fungi`, command: "scan", graphBuildPoint: identity.graph.indexedHeadSha, profile: "dev" });
+      if (logicAnalysis.status !== "SUPPORTED" || canonicalJson(logicAnalysis) !== canonicalJson(parsed.evidence.logicAnalysis)) return { valid: false, reason: "logic analysis drift" };
       const compiler = await buildCompilerEvidence({ source, file: `sandbox/${parsed.candidate.flow}.fungi`, flow: parsed.candidate.flow, expected, parameterNames: parsed.candidate.parameterNames, vectors: parsed.candidate.vectors });
       if (!compiler.green || canonicalJson(compiler) !== canonicalJson(parsed.evidence.compiler)) return { valid: false, reason: "compiler evidence drift" };
       const physical = await buildPhysicalEvidence({ root, source, flow: parsed.candidate.flow, expected, vectors: parsed.candidate.vectors });
-      if (!physical.green || canonicalJson(physical) !== canonicalJson(parsed.evidence.physical)) return { valid: false, reason: "physical evidence drift" };
+      if (!physical.green || !stablePhysicalEvidenceMatches(physical, parsed.evidence.physical)) return { valid: false, reason: "physical evidence drift" };
     }
     return { valid: true };
   } catch (error) {

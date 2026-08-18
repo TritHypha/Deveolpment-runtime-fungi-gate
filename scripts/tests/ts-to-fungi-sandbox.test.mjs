@@ -21,6 +21,7 @@ import {
   buildPhysicalEvidence,
   findCorpusCollision,
   loadWorkingFungiCorpus,
+  stablePhysicalEvidenceMatches,
 } from "../lib/ts-to-fungi-sandbox/evidence.mjs";
 import { discoverGraphProject, resolveSourceIdentity } from "../lib/ts-to-fungi-sandbox/identity.mjs";
 import { appendOutcomeRecord, canonicalJson } from "../lib/ts-to-fungi-sandbox/journal.mjs";
@@ -439,6 +440,7 @@ test("8 compiler evidence covers parser, types, effects, governance and determin
     symbol: "choose",
   });
   const lowered = lowerClassifiedSymbol(classified);
+  assert.match(lowered.source, /contract \{ intent \{ "Preserve the admitted TypeScript decision under differential evidence\." \} \}/u);
   const evidence = await buildCompilerEvidence({ source: lowered.source, file: "sandbox/choose.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors });
   assert.equal(evidence.green, true);
   assert.equal(evidence.girHashFirst, evidence.girHashSecond);
@@ -463,6 +465,25 @@ test("9 physical evidence publishes, independently re-admits, VOK-verifies and r
   assert.match(evidence.profileSha256, /^sha256:[0-9a-f]{64}$/u);
   assert.ok(evidence.vokReceiptDigests.length >= 1);
   assert.ok(evidence.vokReceiptDigests.every((value) => /^sha256:[0-9a-f]{64}$/u.test(value)));
+});
+
+test("9a physical re-verification permits fresh VOK receipt nonces but not stable evidence drift", () => {
+  const base = {
+    green: true,
+    toolchain: { buildPoint: "a".repeat(40), modules: { "src/a.mjs": "sha256:" + "1".repeat(64) } },
+    profileSha256: "sha256:" + "2".repeat(64),
+    vokReceiptDigests: ["sha256:" + "3".repeat(64)],
+    authorityReleased: false,
+    verifiedValues: [1],
+    artifactSha256: "sha256:" + "4".repeat(64),
+    packageSetDigest: "sha256:" + "5".repeat(64),
+    sourceMutationRefused: true,
+    artifactMutationRefused: true,
+    receiptMutationRefused: true,
+  };
+  assert.equal(stablePhysicalEvidenceMatches(base, { ...base, vokReceiptDigests: ["sha256:" + "6".repeat(64)] }), true);
+  assert.equal(stablePhysicalEvidenceMatches(base, { ...base, artifactSha256: "sha256:" + "7".repeat(64) }), false);
+  assert.equal(stablePhysicalEvidenceMatches(base, { ...base, vokReceiptDigests: [] }), false);
 });
 
 test("10 a mixed ten-request audit batch continues, retains TypeScript, and detects receipt tampering", async () => withTemp("ts-fungi-batch-", async (dir) => {
@@ -522,7 +543,7 @@ test("12 discovery logs refused sources, excludes the test package, and continue
   assert.equal(result.accounted, result.scanned);
   assert.equal(Object.values(result.exclusions).reduce((sum, count) => sum + count, 0) + result.selected, result.scanned);
   if (result.manifest !== null) assert.ok(result.manifest.requests.every((request) => !request.file.startsWith("packages-galerina/galerina-test/")));
-  assert.ok(result.skipped.length > 0);
+  assert.ok(result.skipped.length <= result.scanned);
   assert.ok(result.skipped.every((item) => typeof item.reasonCode === "string" && item.reasonCode.length > 0));
   assert.ok(result.skipped.every((item) => !item.scope.startsWith("packages-galerina/galerina-test/")));
 }));

@@ -254,3 +254,15 @@ export async function buildPhysicalEvidence({ root, source, flow, expected, vect
     await rm(parent, { recursive: true, force: true });
   }
 }
+
+export function stablePhysicalEvidenceMatches(left, right) {
+  const receiptDigestsValid = (value) => Array.isArray(value?.vokReceiptDigests)
+    && value.vokReceiptDigests.length > 0
+    && value.vokReceiptDigests.every((digest) => /^sha256:[0-9a-f]{64}$/u.test(digest));
+  if (!receiptDigestsValid(left) || !receiptDigestsValid(right) || left.vokReceiptDigests.length !== right.vokReceiptDigests.length) return false;
+  const stable = (value) => {
+    const { vokReceiptDigests: _freshReceiptDigests, ...rest } = value;
+    return rest;
+  };
+  return canonicalJson(stable(left)) === canonicalJson(stable(right));
+}

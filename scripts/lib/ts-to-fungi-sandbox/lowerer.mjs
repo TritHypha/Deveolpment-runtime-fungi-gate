@@ -217,7 +217,7 @@ export function lowerClassifiedSymbol(classification) {
   if (returnType === undefined) throw new SandboxRefusal("LOWERER_TYPE_UNSUPPORTED", "admitted type lacks a Fungi mapping");
   let lastErrors = [];
   for (const flow of [baseFlow, `${baseFlow}Value`]) {
-    const source = `@version 1\n/// Non-authorizing sandbox candidate; TypeScript remains the oracle.\n/// TypeScript oracle: ${classification.file}#${classification.symbol}\npure flow ${flow}(${parameters}) -> ${returnType} {\n${body.join("\n")}\n}\n`;
+    const source = `@version 1\n/// Non-authorizing sandbox candidate; TypeScript remains the oracle.\n/// TypeScript oracle: ${classification.file}#${classification.symbol}\npure flow ${flow}(${parameters}) -> ${returnType}\ncontract { intent { "Preserve the admitted TypeScript decision under differential evidence." } }\n{\n${body.join("\n")}\n}\n`;
     const parsed = parseProgram(source, `sandbox/${flow}.fungi`, { requireVersionHeader: true });
     const errors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     if (errors.length === 0 && parsed.flows.length === 1 && parsed.flows[0]?.name === flow) {

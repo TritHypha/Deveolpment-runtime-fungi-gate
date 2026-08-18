@@ -168,6 +168,7 @@ test("sandbox receipt chain extraction detects every missing or tampered stage",
     source: { sourceSha256: digest("0") },
     candidate: { sha256: digest("1") },
     evidence: {
+      logicAnalysis: { status: "SUPPORTED" },
       compiler: {
         green: true,
         checkedSnapshotSha256: digest("2"),
@@ -201,6 +202,15 @@ test("sandbox receipt chain extraction detects every missing or tampered stage",
     chainFromSandboxReceipt(receipt, { expectedSourceSha256: digest("0"), receiptValid: false }).vokReceipt.verified,
     false,
   );
+  for (const logicAnalysis of [undefined, { status: "BLOCKED" }, { status: "MANUAL_REVIEW" }]) {
+    const changed = structuredClone(receipt);
+    if (logicAnalysis === undefined) delete changed.evidence.logicAnalysis;
+    else changed.evidence.logicAnalysis = logicAnalysis;
+    const chain = chainFromSandboxReceipt(changed, { expectedSourceSha256: digest("0"), receiptValid: true });
+    assert.equal(chain.candidate.verified, false);
+    assert.equal(chain.checkedSnapshot.verified, false);
+    assert.equal(chain.gir.verified, false);
+  }
 });
 
 test("source digest drift and TypeScript removal refuse", () => {
@@ -369,6 +379,7 @@ test("the collector composes one body-free converted chain from bounded owner to
         outcome: "CONVERTED",
         candidate: { sha256: digest("1") },
         evidence: {
+          logicAnalysis: { status: "SUPPORTED" },
           compiler: { green: true, checkedSnapshotSha256: digest("2"), girHashFirst: digest("3"), girHashSecond: digest("3") },
           physical: { green: true, artifactSha256: digest("4"), profileSha256: digest("5"), vokReceiptDigests: [digest("6")], authorityReleased: false },
         },
