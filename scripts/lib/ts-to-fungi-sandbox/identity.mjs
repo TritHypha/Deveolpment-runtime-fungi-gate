@@ -4,6 +4,7 @@ import { execFile as execFileCallback } from "node:child_process";
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 
+import { GraphIdentityError, resolveRegisteredGraphProject } from "../graph-project-identity/index.mjs";
 import { MAX_SOURCE_BYTES, SandboxRefusal, canonicalRelativeTsPath, canonicalSourceSymbol } from "./contracts.mjs";
 
 const execFile = promisify(execFileCallback);
@@ -34,27 +35,23 @@ function contained(root, candidate) {
   return rel !== "" && rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
 }
 
-function comparablePath(value) {
-  return resolve(value).replaceAll("\\", "/").toLowerCase();
-}
-
 function escapeRegularExpression(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 }
 
-export async function discoverGraphProject(root) {
-  const rootPath = await realpath(resolve(root));
-  const head = await run("git", ["rev-parse", "HEAD"], rootPath);
-  const project = rootPath.replace(/[:\\/]+/gu, "-").replace(/^-+|-+$/gu, "");
-  const status = parseJson(await run("codebase-memory-mcp", ["cli", "index_status", "--project", project], rootPath), "index_status");
-  if (status.status !== "ready"
-    || status.stale !== false
-    || status.indexed_head_sha !== head
-    || status.git?.head_sha !== head
-    || comparablePath(status.root_path) !== comparablePath(rootPath)) {
-    throw new SandboxRefusal("GRAPH_PROJECT_NOT_FRESH", "canonical graph project is not independently exact; use an explicit verified --project override");
+function graphRefusal(error) {
+  if (error instanceof GraphIdentityError) {
+    return new SandboxRefusal(error.code, error.message);
   }
-  return project;
+  return error;
+}
+
+export async function discoverGraphProject(root, projectOverride) {
+  try {
+    return (await resolveRegisteredGraphProject({ root, logicalKey: "galerina", projectOverride })).project;
+  } catch (error) {
+    throw graphRefusal(error);
+  }
 }
 
 export async function resolveSourceIdentity({ root, project, file, symbol }) {
@@ -86,9 +83,11 @@ export async function resolveSourceIdentity({ root, project, file, symbol }) {
   if (dirty !== "") throw new SandboxRefusal("SOURCE_DIRTY", "source has uncommitted changes");
   const head = await run("git", ["rev-parse", "HEAD"], realRoot);
   if (!/^[0-9a-f]{40}$/u.test(head)) throw new SandboxRefusal("SOURCE_BUILD_POINT_INVALID", "Git HEAD is not an exact commit");
-  const status = parseJson(await run("codebase-memory-mcp", ["cli", "index_status", "--project", project], realRoot), "index_status");
-  if (status.status !== "ready" || status.stale !== false || status.indexed_head_sha !== head || status.git?.head_sha !== head) {
-    throw new SandboxRefusal("GRAPH_STALE", "graph build point is not independently exact");
+  let graphIdentity;
+  try {
+    graphIdentity = await resolveRegisteredGraphProject({ root: realRoot, logicalKey: "galerina", projectOverride: project });
+  } catch (error) {
+    throw graphRefusal(error);
   }
   const search = parseJson(await run("codebase-memory-mcp", ["cli", "search_graph", "--project", project, "--name_pattern", `^${escapeRegularExpression(graphSymbol)}$`, "--file_pattern", `*${canonicalFile.split("/").at(-1)}`, "--limit", "20"], realRoot), "search_graph");
   const matches = Array.isArray(search.results) ? search.results.filter((item) => item?.name === graphSymbol && item?.file_path === canonicalFile) : [];
@@ -107,7 +106,7 @@ export async function resolveSourceIdentity({ root, project, file, symbol }) {
     sourceSha256: sha256(bytes),
     byteLength: bytes.length,
     source: text,
-    graph: Object.freeze({ project, indexedHeadSha: status.indexed_head_sha, stale: false, qualifiedName: matches[0].qualified_name, label: matches[0].label }),
+    graph: Object.freeze({ project: graphIdentity.project, indexedHeadSha: graphIdentity.indexedHeadSha, stale: false, qualifiedName: matches[0].qualified_name, label: matches[0].label }),
   });
 }
 
