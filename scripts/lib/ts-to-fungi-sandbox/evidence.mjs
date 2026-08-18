@@ -19,6 +19,7 @@ import {
 
 import { MAX_DIFFERENTIAL_VECTORS, SandboxRefusal } from "./contracts.mjs";
 import { alphaFungiFingerprint, findFungiCollision } from "../fungi-shadow.mjs";
+import { canonicalJson } from "./journal.mjs";
 
 const execFile = promisify(execFileCallback);
 const GATES = Object.freeze({ identity: 1, provenance: 1, target: 1, effects: 1, policy: 1, revocation: 1, validation: 1, memory: 1 });
@@ -114,8 +115,17 @@ export async function buildCompilerEvidence({ source, file, flow, expected, para
   const green = first.girHash === second.girHash
     && [...first.parseErrors, ...first.typeErrors, ...first.effectErrors, ...first.governanceErrors, ...first.girErrors, ...executionErrors].length === 0
     && selectedVectors.every((vector, index) => Object.is(executedValues[index], vector.expected));
+  const checkedSnapshotSha256 = sha256(Buffer.from(canonicalJson({
+    sourceSha256: sha256(Buffer.from(source, "utf8")),
+    parseErrors: first.parseErrors,
+    typeErrors: first.typeErrors,
+    effectErrors: first.effectErrors,
+    governanceErrors: first.governanceErrors,
+    girErrors: first.girErrors,
+  }), "utf8"));
   return Object.freeze({
     green,
+    checkedSnapshotSha256,
     compilerEntrypointSha256: sha256(await readFile(COMPILER_ENTRY)),
     parseErrors: first.parseErrors,
     typeErrors: first.typeErrors,
@@ -173,6 +183,7 @@ export async function buildPhysicalEvidence({ root, source, flow, expected, vect
   const toolchain = await slideToolchainIdentity(slideRoot);
   const slide = await loadSlide(slideRoot);
   const context = slide.portableVeoReferenceContext();
+  const profileSha256 = sha256(Buffer.from(canonicalJson({ context, gates: GATES, toolchain }), "utf8"));
   const sourceBytes = Uint8Array.from(Buffer.from(source, "utf8"));
   const request = (bytes) => ({
     packages: [{ identity: "@galerina/ts-to-fungi-sandbox", version: "0.0.1", exports: [{ name: flow, sourceFlowName: flow, sourceBytes: bytes }], dependencies: [], resources: [] }],
@@ -222,9 +233,15 @@ export async function buildPhysicalEvidence({ root, source, flow, expected, vect
     const rejected = await slide.prepareCheckedFungiPackagePublication({ publicationDirectory: publication, packageIdentity: "@galerina/ts-to-fungi-sandbox", exportName: flow, context, gates: GATES });
     const artifactMutationRefused = rejected.verdict === -1;
     const green = sourceMutationRefused && receiptMutationRefused && artifactMutationRefused && authorityReleased.every((value) => value === false);
+    const vokReceiptDigests = receipts.map((item) => item.receiptDigest);
+    if (vokReceiptDigests.some((value) => !/^sha256:[0-9a-f]{64}$/u.test(value))) {
+      throw new SandboxRefusal("PHYSICAL_VOK_RECEIPT_INVALID", "VOK returned a malformed receipt digest");
+    }
     return Object.freeze({
       green,
       toolchain,
+      profileSha256,
+      vokReceiptDigests,
       authorityReleased: authorityReleased.some((value) => value !== false),
       verifiedValues,
       artifactSha256,

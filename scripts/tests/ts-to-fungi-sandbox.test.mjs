@@ -442,6 +442,7 @@ test("8 compiler evidence covers parser, types, effects, governance and determin
   const evidence = await buildCompilerEvidence({ source: lowered.source, file: "sandbox/choose.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors });
   assert.equal(evidence.green, true);
   assert.equal(evidence.girHashFirst, evidence.girHashSecond);
+  assert.match(evidence.checkedSnapshotSha256, /^sha256:[0-9a-f]{64}$/u);
   assert.deepEqual(evidence.executedValues, [0, 37]);
 });
 
@@ -459,6 +460,9 @@ test("9 physical evidence publishes, independently re-admits, VOK-verifies and r
   assert.equal(evidence.sourceMutationRefused, true);
   assert.equal(evidence.artifactMutationRefused, true);
   assert.equal(evidence.receiptMutationRefused, true);
+  assert.match(evidence.profileSha256, /^sha256:[0-9a-f]{64}$/u);
+  assert.ok(evidence.vokReceiptDigests.length >= 1);
+  assert.ok(evidence.vokReceiptDigests.every((value) => /^sha256:[0-9a-f]{64}$/u.test(value)));
 });
 
 test("10 a mixed ten-request audit batch continues, retains TypeScript, and detects receipt tampering", async () => withTemp("ts-fungi-batch-", async (dir) => {

@@ -201,18 +201,26 @@ without leaving a temporary report.
 - Modify: `../AGENTS/skills/codex-querying-galerina-graphs/scripts/probe.test.mjs`
 - Modify: `../AGENTS/skills/codex-querying-galerina-graphs/README.md`
 
-- [ ] In Lyth, write a failing harness that proves each adapter/schema/domain
+- [x] In Lyth, write a failing harness that proves each adapter/schema/domain
   child failure stops the fixed-order command and yields a compact summary.
-- [ ] Implement `npm run verify:detached-scalar` without adding an `ALLOW`
+- [x] Implement `npm run verify:detached-scalar` without adding an `ALLOW`
   result or production authority.
-- [ ] In the graph skill, write an exact Windows path/file-URL invocation test
+- [x] In the graph skill, write an exact Windows path/file-URL invocation test
   that currently fails entry-point detection.
-- [ ] Normalize file URLs and Windows/POSIX paths without changing the exported
+- [x] Normalize file URLs and Windows/POSIX paths without changing the exported
   probe API or case-sensitive repository identity rules.
-- [ ] Run the Lyth focused tests and registered command.
-- [ ] Run the graph-skill gold fixtures, duplicate/shadow checks and Windows CLI
+- [x] Run the Lyth focused tests and registered command.
+- [x] Run the graph-skill gold fixtures, duplicate/shadow checks and Windows CLI
   invocation fixture.
 - [ ] Commit each repository independently with explicit paths; never push.
+
+Evidence (2026-08-18): Lyth passes its 3/3 self-test, typecheck and registered
+fixed-order KAT command, returning `EVIDENCE_READY` while retaining
+`authorityReleased: false`; it is committed locally at `e5c664e8` and not
+pushed. The graph skill passes 22/22 unit checks, 12/12 gold cases, installed
+skill isolation and a real Windows CLI invocation. Its canonical AGENTS tree
+has no `.git` owner, so the verified-in-place repair cannot truthfully be
+marked committed without separate repository authority.
 
 ## Task 5: Add the conversion gate and atomic run card
 
@@ -225,25 +233,59 @@ without leaving a temporary report.
 - Create: `docs/runbooks/fungi-conversion-gate.md`
 - Modify: `package.json`
 
-- [ ] Write failing tests for one-to-ten bounds, absolute/escaping/symlink/test-
+- [x] Write failing tests for one-to-ten bounds, absolute/escaping/symlink/test-
   overlay outputs, dirty/untracked source, stale digest, duplicate identities,
   exact and normalized corpus shadows, retained `.ts`, 39/40/50 files, two
   reports, second report-only commit and final-tail exception.
-- [ ] Add chain-tamper fixtures at source, candidate, checked snapshot, GIR,
+- [x] Add chain-tamper fixtures at source, candidate, checked snapshot, GIR,
   physical package, profile and VOK receipt.
-- [ ] Export one gate roster covering preflight, identity, classifier,
+- [x] Export one gate roster covering preflight, identity, classifier,
   compiler, duplicate/shadow, path, retained source, snapshot/GIR, SLIDE/VOK,
   Lyth and commit policy.
-- [ ] Require a controlled failing-child fixture before grading a real run.
-- [ ] Produce one canonical body-free run card with `CONVERTED`, `BLOCKED` or
+- [x] Require a controlled failing-child fixture before grading a real run.
+- [x] Produce one canonical body-free run card with `CONVERTED`, `BLOCKED` or
   `MANUAL_REVIEW` per request and `ALLOW`, `HOLD`, `REFUSED` or `ERROR` overall.
-- [ ] Bind the card to exact digests and explicitly state no switch, retirement,
+- [x] Bind the card to exact digests and explicitly state no switch, retirement,
   commit, push or production grant occurred.
-- [ ] Write atomically and fail with exit 2 on report-write or detector failure.
-- [ ] Run:
+- [x] Write atomically and fail with exit 2 on report-write or detector failure.
+- [x] Run:
   `node --test scripts/tests/fungi-conversion-gate.test.mjs`
-- [ ] Run:
+- [x] Run:
   `node scripts/fungi-conversion-gate.mjs --self-test`
+
+Evidence (2026-08-18): the gate suite passes 18/18, including a real temporary
+Git source-custody check, Windows junction refusal, atomic no-overwrite,
+39/40/50 commit thresholds, report toggle, every chain-stage tamper and a
+dependency-injected full converted chain. The converter suite separately
+passes 36/36 with compact checked-snapshot, profile and VOK receipt digests.
+The registered CLI self-test returns the required green/red pair. No project
+`.fungi` file is published by this task.
+
+## Task 5a: Add one deterministic construct-analysis engine
+
+**Files:**
+- Create: `scripts/lib/fungi-logic-analysis/`
+- Create: `scripts/fungi-logic-analysis.mjs`
+- Create: `scripts/tests/fungi-logic-analysis.test.mjs`
+- Create: `docs/runbooks/fungi-logic-analysis.md`
+- Modify: `package.json`
+
+- [ ] Build one shared parser/checker-backed engine with focused subcommands
+  for `if`, `match`, `check`, `contract`, `flow`, `global`, `vault` and
+  `hallmark`; do not create eight unrelated process stacks.
+- [ ] Derive the construct registry from canonical parser/AST/checker symbols
+  and distinguish language constructs from package-specific vault services.
+- [ ] Emit compact body-free `SUPPORTED`, `BLOCKED` or `MANUAL_REVIEW`
+  envelopes with source digest, AST kind, effects, obligations and blocker
+  codes; never ask an AI to reclassify a known construct.
+- [ ] Cache only digest-bound analysis facts and invalidate them on source,
+  compiler, profile or graph build-point drift.
+- [ ] Add red controls for malformed syntax, effectful conditions, incomplete
+  matches, failed checks, missing contract evidence, vault capability leakage,
+  hallmark misuse and stale cache identities.
+- [ ] Let the conversion gate consume these envelopes and short-circuit before
+  candidate compilation or physical proof when a construct is blocked.
+- [ ] Register one command with subcommands, one self-test and one runbook.
 
 ## Task 6: Add the checked-AST reference manifest to `@galerina/docs`
 
