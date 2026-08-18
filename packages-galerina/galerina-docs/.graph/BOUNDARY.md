@@ -11,20 +11,24 @@
 
 | Metric | Count |
 |---|---|
-| Files | 7 |
-| Internal edges | 6 |
-| External dependencies | 1 |
-| ├─ Node core | 0 |
-| ├─ Workspace (@galerina/*) | 1 |
+| Files | 11 |
+| Internal edges | 14 |
+| External dependencies | 6 |
+| ├─ Node core | 4 |
+| ├─ Workspace (@galerina/*) | 2 |
 | └─ Third-party | 0 |
 | Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
 ### Node core
-_none_
+- `node:crypto`
+- `node:fs/promises`
+- `node:path`
+- `node:url`
 
 ### Workspace (@galerina/*)
+- `@galerina/core-compiler`
 - `@galerina/framework-app-kernel`
 
 ### Third-party
@@ -38,6 +42,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Entry Points
 - `src/index.ts`
+- `src/reference-cli.ts`
 
 ## Loaded Assets
 - `src/self-hosted/bearer-scheme.fungi`

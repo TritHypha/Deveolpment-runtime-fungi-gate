@@ -19,7 +19,7 @@ import { readFileSync, mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveKbDir, kbCorpusPresent, KB_MARKER } from "../lib/kb-dir.mjs";
+import { resolveKbDir, resolveKbDocument, kbCorpusPresent, KB_MARKER } from "../lib/kb-dir.mjs";
 
 const SCRIPTS = join(dirname(fileURLToPath(import.meta.url)), "..");
 const LIB = join(SCRIPTS, "lib", "kb-dir.mjs");
@@ -46,6 +46,25 @@ test("a path is not a corpus, and an EMPTY dir is not a corpus (the partial-chec
     "an existing-but-empty dir must be ABSENT — else a failed checkout scans nothing and reports a serene zero");
 });
 
+test("KB documents resolve across the reorganized reference custody without hiding a missing file", () => {
+  const tmp = mkdtempSync(join(tmpdir(), "kbdir-layout-"));
+  const language = join(tmp, "reference", "language");
+  const galerina = join(tmp, "reference", "galerina");
+  const specs = join(tmp, "reference", "specs");
+  mkdirSync(language, { recursive: true });
+  mkdirSync(galerina, { recursive: true });
+  mkdirSync(specs, { recursive: true });
+  writeFileSync(join(language, "compiler-diagnostics.md"), "# codes\n");
+  writeFileSync(join(galerina, "galerina-governance-rules.md"), "# rules\n");
+  writeFileSync(join(specs, "stdlib-gates.yaml"), "version: 1\n");
+
+  assert.equal(resolveKbDocument(tmp, "compiler-diagnostics.md"), join(language, "compiler-diagnostics.md"));
+  assert.equal(resolveKbDocument(tmp, "galerina-governance-rules.md"), join(galerina, "galerina-governance-rules.md"));
+  assert.equal(resolveKbDocument(tmp, "stdlib-gates.yaml"), join(specs, "stdlib-gates.yaml"));
+  assert.equal(resolveKbDocument(tmp, "missing.md"), null, "a missing document must remain an explicit miss");
+  assert.equal(kbCorpusPresent({ dir: tmp }), true, "the reorganized canonical marker establishes corpus presence");
+});
+
 // ── the one that catches the NEXT instance, not this one ──────────────────────
 test("REGRESSION: every umbrella check that reads the KB is DECLARED crossRepo", () => {
   const umbrella = readFileSync(join(SCRIPTS, "lint-conventions.mjs"), "utf8");
@@ -63,9 +82,9 @@ test("REGRESSION: every umbrella check that reads the KB is DECLARED crossRepo",
     let src = "";
     try { src = readFileSync(join(SCRIPTS, "..", scriptPath), "utf8"); } catch { continue; }
 
-    // Does the child actually reach for the KB? Its own source is the authority — not a hand-kept list,
-    // which is the thing that decays. (`process.env.GALERINA_KB_DIR` is how all five resolvers spell it.)
-    const readsKb = /process\.env\.GALERINA_KB_DIR/.test(src);
+    // Does the child actually reach for the KB? Its own source is the authority — not a hand-kept list.
+    // Accept the legacy direct environment read and the governed shared resolver during migration.
+    const readsKb = /process\.env\.GALERINA_KB_DIR|\bresolveKbDir\b/.test(src);
     if (readsKb) readsKbCount++;
     const declared = /crossRepo:\s*\{/.test(span);
     if (readsKb && !declared) undeclared.push(scriptPath);

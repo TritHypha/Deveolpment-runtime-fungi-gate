@@ -46,6 +46,19 @@ export function resolveKbDir({ env = process.env, root = process.cwd() } = {}) {
   return env.GALERINA_KB_DIR ? resolve(env.GALERINA_KB_DIR) : join(root, "..", "ZTF-Knowledge-Bases");
 }
 
+/** Resolve one authoritative KB document across the legacy flat and current reference layout. */
+export function resolveKbDocument(kb, name) {
+  for (const candidate of [
+    join(kb, name),
+    join(kb, "reference", "language", name),
+    join(kb, "reference", "galerina", name),
+    join(kb, "reference", "specs", name),
+  ]) {
+    if (existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
 /**
  * Is the KB corpus ACTUALLY readable here? This is the question callers almost always mean.
  *
@@ -61,7 +74,7 @@ export function kbCorpusPresent({ env = process.env, root = process.cwd(), dir =
   } catch {
     return false;
   }
-  return existsSync(join(kb, KB_MARKER));
+  return resolveKbDocument(kb, KB_MARKER) !== null;
 }
 
 // ── self-test ────────────────────────────────────────────────────────────────

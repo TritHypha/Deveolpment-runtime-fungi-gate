@@ -1,8 +1,8 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 975,
+  "total": 976,
   "counts": {
-    "ref": 214,
+    "ref": 215,
     "inline": 364,
     "phantom": 114,
     "live": 170,
@@ -4246,6 +4246,18 @@
       "docs": 2
     },
     {
+      "code": "FUNGI-EXAMPLE-001",
+      "family": "EXAMPLE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 3,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-EXPLAIN-001",
       "family": "EXPLAIN",
       "namespace": "FUNGI",
@@ -5312,7 +5324,7 @@
       ],
       "defs": 1,
       "emits": 2,
-      "tests": 36,
+      "tests": 38,
       "docs": 13
     },
     {
@@ -10986,7 +10998,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 19,
+      "tests": 21,
       "docs": 2
     },
     {
@@ -11426,8 +11438,8 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 0,
-      "docs": 2
+      "tests": 1,
+      "docs": 4
     },
     {
       "code": "FUNGI-VER-001",

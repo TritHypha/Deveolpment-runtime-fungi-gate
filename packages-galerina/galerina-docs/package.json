@@ -6,6 +6,9 @@
   "private": true,
   "type": "module",
   "packageGraph": {
+    "entryPoints": [
+      "src/reference-cli.ts"
+    ],
     "loadedAssets": [
       "src/self-hosted/bearer-scheme.fungi",
       "src/self-hosted/default-version.fungi",

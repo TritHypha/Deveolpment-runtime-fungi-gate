@@ -1,23 +1,23 @@
-# Executable-family retirement graph (1490 tracked package paths; 521 .ts-family)
+# Executable-family retirement graph (1564 tracked package paths; 532 .ts-family)
 
 Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit reads these numbers LIVE.
 
 | Retirement path | Count | Deletes via |
 |---|--:|---|
 | Twinned (.fungi beside it) | 30 | → #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle) |
-| Compiler core | 107 | → bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1) |
+| Compiler core | 113 | → bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1) |
 | Bounded-TCB floor | 17 | → post-beta admitted SLIDE replacement (bounded bootstrap TCB until equivalent crypto/host/algorithm evidence exists) |
-| Migration program | 336 | → the #38 migration codemod program (owner-gated re-sign ceremony) |
+| Migration program | 340 | → the #38 migration codemod program (owner-gated re-sign ceremony) |
 
 Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
-Complete executable family: 506 .ts source · 15 .d.ts · 0 .mts · 0 .cts · 957 .mjs · 12 .js · 0 .cjs.
+Complete executable family: 516 .ts source · 16 .d.ts · 0 .mts · 0 .cts · 1020 .mjs · 12 .js · 0 .cjs.
 
-Terminal physical retirement: OPEN — 1490 tracked package executable-family paths remain.
+Terminal physical retirement: OPEN — 1564 tracked package executable-family paths remain.
 
-Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/149 production Fungi sources cryptographically admitted; 0/54 host boundaries owned; 95 node_modules trees.
+Post-SLIDE authority: OPEN — 0 non-authorizing candidate(s); 0/2548 production Fungi sources cryptographically admitted; 0/56 host boundaries owned; 96 node_modules trees.
 
-`.fungi` in src trees: 149 across 96 packages · staged-index drift: 0
+`.fungi` in src trees: 2548 across 96 packages · staged-index drift: 0
 
 ## Twinned .ts (the #143 flip queue)
 - packages-galerina/galerina-core-compiler/src/effect-checker.ts

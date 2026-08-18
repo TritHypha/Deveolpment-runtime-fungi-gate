@@ -300,7 +300,7 @@
       "tests": 6382,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 231,
+      "files": 267,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -503,7 +503,7 @@
       "tests": 507,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 52,
+      "files": 53,
       "deps": [
         "@galerina/inference-bridge-contract",
         "@galerina/substrate-math"
@@ -555,7 +555,7 @@
       "tests": 231,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 61,
+      "files": 77,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"
@@ -832,7 +832,7 @@
       "tests": 24,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 6,
+      "files": 7,
       "deps": []
     },
     {
@@ -952,7 +952,7 @@
       "tests": 36,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 9,
+      "files": 10,
       "deps": [
         "@galerina/framework-app-kernel"
       ]
@@ -1079,8 +1079,9 @@
       "tests": 27,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 7,
+      "files": 11,
       "deps": [
+        "@galerina/core-compiler",
         "@galerina/framework-app-kernel"
       ]
     }

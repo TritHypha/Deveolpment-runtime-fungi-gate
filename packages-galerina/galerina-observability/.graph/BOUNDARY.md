@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 9 |
+| Files | 10 |
 | Internal edges | 11 |
 | External dependencies | 1 |
 | ├─ Node core | 0 |
@@ -43,6 +43,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/max-detail-len.fungi`
 - `src/self-hosted/max-route-len.fungi`
 - `src/self-hosted/overflow-route.fungi`
+- `src/self-hosted/redacted.fungi`
 
 ## Allowed Orphans
 _none declared_

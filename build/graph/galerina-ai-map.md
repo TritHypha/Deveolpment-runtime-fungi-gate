@@ -41,18 +41,18 @@ Provides:
 Galerina compiler pipeline contracts for parsing, checking, IR, diagnostics and reports.
 
 Provides:
-- GalerinaAttestation
-- AttestationInputs
-- AttestationKeyPair
-- signAttestation
-- verifyAttestation
-- generateAttestationKey
-- HybridAttestationKeyPair
-- attestationToYaml
-- attestationFromJson
-- AttributeDiagnostic
-- AttributeCheckResult
-- FUNGI_ATTR_001
+- ARTIFACT_REFERENCE_SCHEMA
+- MAX_ARTIFACT_BYTES
+- ArtifactOwner
+- ArtifactKind
+- Sha256Digest
+- ArtifactReferenceV1
+- ArtifactReferenceErrorCode
+- ArtifactReferenceError
+- ARTIFACT_SHA256_PATTERN
+- artifactReferenceFail
+- validArtifactMaximum
+- isArtifactOwner
 
 ## galerina-core-runtime
 
@@ -904,16 +904,16 @@ Galerina API documentation generator: emits a valid OpenAPI 3.x document from th
 Provides:
 - generateOpenApi
 - exportOpenApi
-- Reference
-- SchemaOrRef
-- SchemaObject
-- MediaTypeObject
-- RequestBodyObject
-- ResponseObject
-- ParameterLocation
-- ParameterObject
-- SecurityRequirementObject
-- HttpOperationKey
+- buildReferenceManifest
+- assertReferenceManifestIntegrity
+- GraphLinkConfidence
+- ReferenceGraphLink
+- ReferenceGraphEnvelope
+- ReferenceRenderOptions
+- ReferenceOutputFile
+- ReferencePublicationErrorCode
+- ReferencePublicationError
+- buildReferenceOutputFiles
 
 ## galerina-core-cli
 

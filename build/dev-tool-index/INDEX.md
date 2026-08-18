@@ -135,7 +135,7 @@
 | `galerina-ai-neural` | ai | 4 | PASS | 0 | Galerina neural network model, layer, inference and training boundary contracts. |
 | `galerina-ai-neuromorphic` | ai | 18 | PASS | 0 | Galerina neuromorphic and spiking event model contracts. |
 | `galerina-test` | test | 43 | PASS | 0 | The consolidated Galerina test harness for unit, e2e, R6 conformance, fidelity-differential, and exact SLIDE c |
-| `galerina-docs` | docs | 27 | PASS | 1 | Galerina API documentation generator: emits a valid OpenAPI 3.x document from the App Kernel's governed route  |
+| `galerina-docs` | docs | 27 | PASS | 2 | Galerina API documentation generator: emits a valid OpenAPI 3.x document from the App Kernel's governed route  |
 
 ## Dev-tool index
 

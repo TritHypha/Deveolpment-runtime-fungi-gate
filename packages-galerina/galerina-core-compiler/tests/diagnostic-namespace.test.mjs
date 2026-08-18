@@ -9,19 +9,20 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
+import { resolveKbDir, resolveKbDocument } from "../../../scripts/lib/kb-dir.mjs";
 
 const SRC = fileURLToPath(new URL("../src", import.meta.url));
 // KB relocated out of the repo to sibling ../ZTF-Knowledge-Bases (IP protection).
 // Resolve order: GALERINA_KB_DIR env → in-repo docs/ (if restored) → sibling KB.
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
-const KB_DIR = process.env.GALERINA_KB_DIR
-  ? resolve(process.env.GALERINA_KB_DIR)
-  : existsSync(join(REPO_ROOT, "docs", "Knowledge-Bases"))
-    ? join(REPO_ROOT, "docs", "Knowledge-Bases")
-    : join(REPO_ROOT, "..", "ZTF-Knowledge-Bases");
-const REGISTRY_DOCS = ["compiler-diagnostics.md", "galerina-governance-rules.md"].map((f) => join(KB_DIR, f));
+const KB_DIR = existsSync(join(REPO_ROOT, "docs", "Knowledge-Bases"))
+  ? join(REPO_ROOT, "docs", "Knowledge-Bases")
+  : resolveKbDir({ root: REPO_ROOT });
+const REGISTRY_DOCS = ["compiler-diagnostics.md", "galerina-governance-rules.md"]
+  .map((name) => resolveKbDocument(KB_DIR, name))
+  .filter((path) => path !== null);
 const ALLOWLIST_FILE = fileURLToPath(new URL("./fixtures/diagnostic-pending-registration.txt", import.meta.url));
 
 function walkTs(dir) {

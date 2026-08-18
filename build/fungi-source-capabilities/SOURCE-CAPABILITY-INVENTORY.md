@@ -3,42 +3,42 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 149
-- Flows: 885
-- Bytes: 1143362
-- Retirement graph: `sha256:351c851cc0f80d6c2cd54e76e09cff8c7b666c14c8f3b4e04dc85451703d4456`
+- Files: 2548
+- Flows: 3285
+- Bytes: 8340157
+- Retirement graph: `sha256:cd510738e0e5765fffa7a06dde744020dff8f2178080bb0ec878bcf13f31f509`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 19068 |
-| `callExpr` | 7269 |
-| `binaryExpr` | 6106 |
-| `numberLiteral` | 5731 |
-| `block` | 5125 |
-| `stringLiteral` | 4895 |
-| `memberExpr` | 4697 |
-| `returnStmt` | 3173 |
-| `paramDecl` | 2873 |
-| `typeRef` | 2578 |
-| `ifStmt` | 2305 |
+| `identifier` | 169118 |
+| `letDecl` | 139796 |
+| `block` | 19419 |
+| `stringLiteral` | 18473 |
+| `returnStmt` | 17457 |
+| `typeRef` | 15774 |
+| `ifStmt` | 14176 |
+| `paramDecl` | 13683 |
+| `callExpr` | 7279 |
+| `binaryExpr` | 6890 |
+| `numberLiteral` | 6276 |
+| `memberExpr` | 4743 |
+| `pureFlowDecl` | 3273 |
+| `program` | 2548 |
+| `boolLiteral` | 2430 |
 | `assignStmt` | 2120 |
-| `letDecl` | 1865 |
-| `boolLiteral` | 1699 |
-| `matchArm` | 1319 |
-| `pureFlowDecl` | 873 |
-| `contractDecl` | 870 |
-| `intentDecl` | 870 |
+| `matchArm` | 1414 |
+| `contractDecl` | 1312 |
+| `intentDecl` | 1312 |
 | `mutDecl` | 810 |
-| `matchExpr` | 394 |
+| `matchExpr` | 415 |
+| `checkArm` | 351 |
 | `whileStmt` | 340 |
-| `checkArm` | 330 |
-| `unaryExpr` | 251 |
-| `recordDecl` | 210 |
-| `program` | 149 |
+| `unaryExpr` | 300 |
+| `recordDecl` | 212 |
+| `checkExpr` | 117 |
 | `listLiteral` | 115 |
-| `checkExpr` | 110 |
 | `trapDecl` | 50 |
 | `importDecl` | 22 |
 | `charLiteral` | 15 |
@@ -58,12 +58,12 @@ admission, execution parity, retirement credit or production authority.
 
 | Type | Count |
 |---|---:|
-| `Int` | 544 |
-| `String` | 483 |
-| `Bool` | 417 |
+| `Bool` | 10996 |
+| `String` | 2671 |
+| `Int` | 955 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
-| `Verdict` | 46 |
+| `Verdict` | 61 |
 | `Array<Token>` | 44 |
 | `SLIDEV2AImportCursor` | 36 |
 | `Array<Int>` | 22 |
@@ -160,6 +160,7 @@ admission, execution parity, retirement credit or production authority.
 | `AuditEvent` | 2 |
 | `Auto` | 2 |
 | `BitfieldEnv` | 2 |
+| `CheckedModuleSnapshotInvariantResultV1` | 2 |
 | `EffectCheckResult` | 2 |
 | `EnumDecl` | 2 |
 | `EpilogueReceipt` | 2 |
@@ -244,6 +245,7 @@ admission, execution parity, retirement credit or production authority.
 | `Authority<"slide.vok.lease.v1">` | 1 |
 | `BlockParse` | 1 |
 | `CheckArmsResult` | 1 |
+| `CheckedModuleSnapshotInvariantV1` | 1 |
 | `DAGEdgeResult` | 1 |
 | `DotPathParse` | 1 |
 | `DWIHandle` | 1 |
@@ -349,17 +351,17 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1893 |
-| `+` | 1009 |
-| `!=` | 979 |
-| `\|\|` | 762 |
-| `<` | 503 |
+| `==` | 2420 |
+| `+` | 1039 |
+| `!=` | 981 |
+| `\|\|` | 766 |
+| `<` | 620 |
+| `-` | 476 |
 | `&&` | 439 |
-| `-` | 426 |
-| `>` | 180 |
-| `>=` | 67 |
-| `*` | 42 |
+| `>` | 256 |
+| `>=` | 73 |
+| `*` | 57 |
+| `<=` | 29 |
 | `/` | 26 |
-| `<=` | 25 |
-| `%` | 4 |
+| `%` | 6 |
 | `!` | 2 |

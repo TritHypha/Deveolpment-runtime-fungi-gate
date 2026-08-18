@@ -11,10 +11,10 @@
 
 | Metric | Count |
 |---|---|
-| Files | 231 |
-| Internal edges | 367 |
-| External dependencies | 17 |
-| ├─ Node core | 8 |
+| Files | 267 |
+| Internal edges | 388 |
+| External dependencies | 18 |
+| ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 6 |
 | └─ Third-party | 3 |
 | Orphan files | 0 |
@@ -30,6 +30,7 @@
 - `node:module`
 - `node:path`
 - `node:url`
+- `node:util`
 
 ### Workspace (@galerina/*)
 - `@galerina/core-network`
@@ -60,6 +61,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 ## Loaded Assets
 - `src/self-hosted/bound.fungi`
 - `src/self-hosted/capability-normalization.fungi`
+- `src/self-hosted/checked-module-snapshot-v1.fungi`
 - `src/self-hosted/collection-name.fungi`
 - `src/self-hosted/compiler.capabilities.fungi`
 - `src/self-hosted/contract-permission.fungi`
@@ -67,13 +69,26 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/default-max-steps.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/effect-mask-subset.fungi`
+- `src/self-hosted/emergency-signal-any-failure.fungi`
+- `src/self-hosted/emergency-signal-capability-denied.fungi`
+- `src/self-hosted/emergency-signal-fuel-exhausted.fungi`
+- `src/self-hosted/emergency-signal-invariant-failure.fungi`
+- `src/self-hosted/emergency-signal-manifest-tampered.fungi`
+- `src/self-hosted/emergency-signal-quarantine-request.fungi`
 - `src/self-hosted/float-nonfinite-trap.fungi`
 - `src/self-hosted/floor-normalisation.fungi`
+- `src/self-hosted/floor-type-attestation.fungi`
+- `src/self-hosted/floor-type-containment.fungi`
+- `src/self-hosted/floor-type-execution.fungi`
+- `src/self-hosted/floor-type-proof-zone.fungi`
 - `src/self-hosted/fnv-prime.fungi`
 - `src/self-hosted/frontend-evidence-role-id.fungi`
 - `src/self-hosted/fungi-build-001-code.fungi`
 - `src/self-hosted/fungi-proof-cert-001.fungi`
 - `src/self-hosted/fungi-proof-cert-002.fungi`
+- `src/self-hosted/gate-v3-header.fungi`
+- `src/self-hosted/gate-v3-qname.fungi`
+- `src/self-hosted/gate-v3-semver.fungi`
 - `src/self-hosted/gate-v3-version.fungi`
 - `src/self-hosted/gir-emitter.fungi`
 - `src/self-hosted/governance-qualifier-escalation.fungi`
@@ -166,6 +181,21 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-v2e-signing-domain.fungi`
 - `src/self-hosted/slide-v2e-verifier-id.fungi`
 - `src/self-hosted/slide-vok-authority-types.fungi`
+- `src/self-hosted/system-capability-ai-inference.fungi`
+- `src/self-hosted/system-capability-audit-write.fungi`
+- `src/self-hosted/system-capability-database-read.fungi`
+- `src/self-hosted/system-capability-database-write.fungi`
+- `src/self-hosted/system-capability-ledger-mutate.fungi`
+- `src/self-hosted/system-capability-native-call.fungi`
+- `src/self-hosted/system-capability-network-inbound.fungi`
+- `src/self-hosted/system-capability-network-outbound.fungi`
+- `src/self-hosted/system-capability-payment-charge.fungi`
+- `src/self-hosted/system-capability-phi-read.fungi`
+- `src/self-hosted/system-capability-phi-write.fungi`
+- `src/self-hosted/system-capability-pii-read.fungi`
+- `src/self-hosted/system-capability-secret-access.fungi`
+- `src/self-hosted/system-capability-shell-execute.fungi`
+- `src/self-hosted/system-capability-storage-write.fungi`
 - `src/self-hosted/tenant-scope-binding.fungi`
 - `src/self-hosted/tenant-scoped-suffix.fungi`
 - `src/self-hosted/tensor-dimension-count-compatibility.fungi`
@@ -174,6 +204,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/verified-loop-envelope.fungi`
 - `src/self-hosted/verifier-id.fungi`
 - `src/self-hosted/wat-64-bit-type.fungi`
+- `src/self-hosted/wgsl-skeleton-template.fungi`
 
 ## Allowed Orphans
 _none declared_

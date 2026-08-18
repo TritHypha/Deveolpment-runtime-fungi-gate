@@ -27,12 +27,13 @@
 import { readdirSync, statSync, readFileSync, existsSync, realpathSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveKbDir, resolveKbDocument } from "./lib/kb-dir.mjs";
 
 const SRC_ROOT = "packages-galerina";
 // The canonical doc migrated to the sibling ZTF-Knowledge-Bases repo — resolve like kb-index.mjs
 // (GALERINA_KB_DIR override first, sibling default). Still fail-closed below when absent.
-const KB_DIR = process.env.GALERINA_KB_DIR || join(process.cwd(), "..", "ZTF-Knowledge-Bases");
-const DOC = join(KB_DIR, "compiler-diagnostics.md");
+const KB_DIR = resolveKbDir();
+const DOC = resolveKbDocument(KB_DIR, "compiler-diagnostics.md");
 
 // Words too generic to count as agreement between a doc description and a source name/message.
 const STOP = new Set([
@@ -139,8 +140,8 @@ if (isMain && process.argv.includes("--self-test")) {
 
 // ── scan the committed doc + source ───────────────────────────────────────────────────────────────
 if (isMain) {
-  if (!existsSync(DOC)) {
-    console.error(`[doc-drift] ${DOC} not found — fail-closed`);
+  if (DOC === null || !existsSync(DOC)) {
+    console.error(`[doc-drift] compiler-diagnostics.md not found under the selected KB — fail-closed`);
     console.log("VIOLATIONS: 1");
     process.exit(1);
   }
