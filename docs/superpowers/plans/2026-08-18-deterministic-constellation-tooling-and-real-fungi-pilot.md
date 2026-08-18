@@ -581,3 +581,28 @@ double-count the baseline. The fresh graph still resolves Tower Citizen and
 Tri-Pipe surfaces and the retained Tri-Fuse compiler integration; none is
 imported by the docs tool. The local branch has no upstream and no push was
 performed. Exact final-commit graph refresh remains the last Task-8 gate.
+
+## Shutdown maintenance checkpoint - 2026-08-18
+
+The post-pilot maintenance pass is locally committed and unpushed. Commit
+`d1ad6696` refreshes graph/index custody and corrects the reorganized KB
+document locator; commit `155a5635` binds the post-commit graph receipts. The
+registered graph orchestrator now passes all 7/7 owners. The external moderate
+graph is exact at `155a5635528e08a951e22fa07655c215f5e6a708` with
+57,114/57,114 nodes and 305,667/305,667 edges, and a bounded source-symbol
+probe resolves. No maintenance commit adds or changes `.fungi` source.
+
+The complete verification surfaces were executed rather than inferred green.
+The 100-package runner reports 96/100 packages and 9,589 tests; the four red
+packages are benchmarks, example-app, registry and galerina-test. Exhaustive
+phase close completed with twenty recorded red gates. The monolithic
+`fungi:corpus-check` child ran without progress for about 600,208 ms and reached
+its ten-minute cap. The next tooling change should shard that gate with stable
+complete assignment, crash/timeout isolation, stale-resume refusal and compact
+structured receipts; it is a tooling proposal, not conversion authority.
+
+The tracked worktree and index are clean at this checkpoint. One untracked
+`packages-galerina/galerina-devtools-benchmarks/benchmarks/call-chain/Python/`
+directory contains disposable external benchmark output and is excluded from
+Git custody. The separate dirty main checkout remains untouched. The current
+goal remains blocked because the full conversion objective is not complete.

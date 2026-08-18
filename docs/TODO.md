@@ -78,12 +78,35 @@ counts or open items that a newer section explicitly supersedes.
   refuse `memory_summary` and `raw_memories` as unindexed siblings; do not treat
   that refusal as a stale-memory finding. The separate Myco hierarchy index is
   current.
-- [ ] Close the current graph-all refusals before claiming a clean graph refresh:
-  package boundaries report undeclared self-hosted Fungi in core-compiler,
-  ext-secrets-vault, framework-app-kernel, observability and tower-citizen, and
-  the semantic graph reports stale `retirement executableFamily.mjs`. The other
-  five registered graph owners generate and check successfully; do not hide the
-  two red owners or publish their partial outputs as closure evidence.
+- [x] Close the graph-all refusals without hiding or weakening them. Commit
+  `d1ad6696` repairs loaded-asset and boundary custody and refreshes the tracked
+  owners; commit `155a5635` binds their post-commit receipts. A fresh
+  `node scripts/graph-all.mjs --check` passes all **7/7** owners. The external
+  moderate graph for exact HEAD `155a5635` reports **57,114/57,114 nodes** and
+  **305,667/305,667 edges**; a bounded `createSnapshotKeyProvider` lookup
+  resolves.
+- [x] Execute the complete 100-package test runner and exhaustive phase-close
+  cadence before shutdown. The package runner is truthfully red at **96/100**
+  packages and **9,589** tests: benchmarks refuse a SLIDE commit mismatch,
+  example-app signing fixtures fail closed, registry expectations/hash custody
+  have drifted, and the test package still carries stale 1,200/80-vs-2,200
+  overlay assertions. The exhaustive cadence completes but retains twenty red
+  gates; no repository-wide green claim is authorized.
+- [ ] Split `fungi:corpus-check` into deterministic, complete, independently
+  timed shards before relying on it again. The current monolithic child stayed
+  opaque for about **600,208 ms**, reached its ten-minute cap and returned no
+  useful progress. The replacement must prove stable assignment, zero
+  omission/duplication, stale-resume refusal, child-crash isolation, bounded
+  Windows concurrency and compact failure-only output before it replaces the
+  authoritative full gate.
+- [ ] Reconcile the recorded phase-close red set without weakening fail-closed
+  controls: `artifact-drift`, `audit:conversion-queue`, `audit:percent-fresh`,
+  `code-index`, `compiler-stage-twins`, `coverage:codes`, roadmap/status/WAT
+  drift, `fungi:corpus-check`, `fungi:golden`, `governance:diff`,
+  `kernel-fungi-twins`, `path:leak`, `r4-twin-hashes`,
+  `report-blind-consumers`, `silent-overwrite`, all-package tests, benchmark
+  integrity and tooling tests. Prefer exact `--only-red`/sharded reruns once
+  the deterministic closure tooling is approved and implemented.
 - [x] Restore the external codebase-memory service for the isolated detached
   scalar worktree. Its pre-tool moderate rebuild reported **27,298 nodes** and
   an exact `348b170d0747b12a4966ac37bc71bea02862117b` indexed build point; bounded
