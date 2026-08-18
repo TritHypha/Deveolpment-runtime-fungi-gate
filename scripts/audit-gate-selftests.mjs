@@ -38,6 +38,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
+import { discoverManifestSelfTests } from "./lib/tooling-inventory.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
@@ -47,10 +48,9 @@ const rootArg = argv.includes("--root") ? argv[argv.indexOf("--root") + 1] : und
 const SELFTEST = argv.includes("--self-test");
 const RUN_TIMEOUT_MS = 60000; // a single gate self-test that runs longer than this is itself a defect.
 
-// Tools whose non-vacuity is proven by a hermetic FIXTURE TEST rather than a `--self-test` flag. Credited as
-// GUARDED_BY_TEST (honest) — but only after VERIFYING the referenced test still exists and references the tool
-// (a deleted/renamed proof drops the gate to a blocking violation; the map can't lie). Keep this
-// list justified — each entry is a real fixture in scripts/tests/ that runs the tool end-to-end in the cadence.
+// Legacy grouped fixture tests whose evidence predates the phase-close manifest's executable selfTest field.
+// New evidence belongs in governance/phase-close-commands.json, not another entry here. These credits remain
+// fail-closed: a deleted/renamed proof drops the gate to a blocking violation.
 const SELFTEST_VIA_TEST = {
   "audit-gate-selftests.mjs":      { test: "scripts/tests/gate-selftests.test.mjs", proves: "cadence sweep proves every audit/lint proof is present, executable, and non-vacuous" },
   "audit-allowlist-sensitive.mjs": { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic malformed-policy refusal plus clean-policy control" },
@@ -153,22 +153,59 @@ function runSelfTest(scriptsDir, name) {
 
 // Credit a fixture-test proof ONLY if it is real: the referenced test file exists AND still names the tool.
 // Returns the resolved "test — proves" string when valid, or { stale } when the map entry can no longer be honoured.
-function resolveViaTest(scriptsDir, name) {
-  const entry = SELFTEST_VIA_TEST[name];
+function runManifestFixtureTest(scriptsDir, entry) {
+  const [command, ...args] = entry.command;
+  const executable = command === "node" ? process.execPath : command;
+  const result = spawnSync(executable, args, {
+    cwd: dirname(scriptsDir),
+    encoding: "utf8",
+    timeout: Math.min(entry.timeoutMs, RUN_TIMEOUT_MS),
+    shell: false,
+  });
+  if (result.status === null) {
+    return {
+      exit: result.signal ? 124 : 1,
+      note: result.error?.message || `killed by ${result.signal}`,
+    };
+  }
+  return {
+    exit: result.status,
+    note: `${result.stdout || ""}${result.stderr || ""}`.trim().split(/\r?\n/u).slice(-12).join("\n"),
+  };
+}
+
+function resolveViaTest(scriptsDir, name, manifestEvidence = new Map()) {
+  const manifestEntry = manifestEvidence.get(name);
+  const entry = manifestEntry ?? SELFTEST_VIA_TEST[name];
   if (!entry) return { viaTest: null };
   const testAbs = join(dirname(scriptsDir), entry.test);
-  const ok = existsSync(testAbs) && readFileSync(testAbs, "utf8").includes(name);
-  return ok
-    ? { viaTest: `${entry.test} — ${entry.proves}` }
-    : { viaTest: null, stale: `SELFTEST_VIA_TEST maps ${name} to ${entry.test}, but that test is missing or no longer references ${name} — the fixture proof is gone; treat as un-self-tested until restored` };
+  const sourceOk = existsSync(testAbs) && readFileSync(testAbs, "utf8").includes(name);
+  if (!sourceOk) {
+    const owner = manifestEntry?.via ?? "SELFTEST_VIA_TEST";
+    return { viaTest: null, stale: `${owner} maps ${name} to ${entry.test}, but that test is missing or no longer references ${name} — the fixture proof is gone; treat as un-self-tested until restored` };
+  }
+  if (!manifestEntry) return { viaTest: `${entry.test} — ${entry.proves}` };
+  const ran = runManifestFixtureTest(scriptsDir, manifestEntry);
+  if (ran.exit !== 0) {
+    return {
+      viaTest: null,
+      stale: `${manifestEntry.via} selfTest for ${name} exited ${ran.exit}; planted defect ${manifestEntry.plantedDefectId} is not currently proved${ran.note ? `\n${ran.note}` : ""}`,
+    };
+  }
+  return {
+    viaTest: `${entry.test} — ${manifestEntry.via} selfTest passed; planted defect ${manifestEntry.plantedDefectId}`,
+  };
 }
 
 // ── scan: classify every discovered tool ──────────────────────────────────────────────────────────────
 export function scan(scriptsDir = HERE) {
   const results = [];
+  const manifestEvidence = new Map(
+    discoverManifestSelfTests(dirname(scriptsDir)).map((entry) => [entry.tool, entry]),
+  );
   for (const tool of discover(scriptsDir)) {
     const category = toolCategory(tool.name);
-    const { viaTest, stale } = resolveViaTest(scriptsDir, tool.name);
+    const { viaTest, stale } = resolveViaTest(scriptsDir, tool.name, manifestEvidence);
     const declares = declaresSelfTest(tool.src);
     let ran = null;
     if ((category === "audit" || category === "lint") && declares && !viaTest && !NEVER_RUN.has(tool.name)) {
@@ -214,6 +251,13 @@ function selfTest() {
     //     still references the tool) — a renamed/deleted proof makes the credit dishonest, and this catches it.
     for (const key of Object.keys(SELFTEST_VIA_TEST)) {
       checks.push([`via-test credit honest: ${key}`, resolveViaTest(HERE, key).viaTest !== null]);
+    }
+    const manifestEvidence = new Map(
+      discoverManifestSelfTests(dirname(HERE)).map((entry) => [entry.tool, entry]),
+    );
+    for (const key of manifestEvidence.keys()) {
+      checks.push([`manifest via-test credit honest: ${key}`,
+        resolveViaTest(HERE, key, manifestEvidence).viaTest !== null]);
     }
     const failed = checks.filter(([, ok]) => !ok);
     for (const [n, ok] of checks) console.log(`[self-test] ${ok ? "ok" : "FAIL"} — ${n}`);

@@ -4,8 +4,9 @@ import { SandboxRefusal } from "./contracts.mjs";
 import { admittedClassificationNode, isAdmittedClassification } from "./classifier.mjs";
 import { ts } from "./typescript-api.mjs";
 
-const typeMap = Object.freeze({ boolean: "Bool", number: "Int", string: "String" });
+const typeMap = Object.freeze({ boolean: "Bool", number: "Int", string: "String", float: "Float" });
 const binaryMap = new Map([
+  [ts.SyntaxKind.MinusToken, "-"],
   [ts.SyntaxKind.EqualsEqualsEqualsToken, "=="],
   [ts.SyntaxKind.ExclamationEqualsEqualsToken, "!="],
   [ts.SyntaxKind.AmpersandAmpersandToken, "&&"],
@@ -16,6 +17,9 @@ const binaryMap = new Map([
   [ts.SyntaxKind.GreaterThanEqualsToken, ">="],
 ]);
 const stringVectors = Object.freeze(["", "a", "\0", "é", "\uD800"]);
+
+const integerVectors = Object.freeze([-2147483648, -1, 0, 1, 2147483647]);
+const signedI16Vectors = Object.freeze([-32768, -1, 0, 1, 32767]);
 
 function freezeValue(value) {
   if (Array.isArray(value)) {
@@ -69,6 +73,7 @@ function fungiStringLiteral(value) {
 function literal(value) {
   if (value.type === "boolean") return value.value ? "true" : "false";
   if (value.type === "number") return String(value.value);
+  if (value.type === "float" && typeof value.lexeme === "string") return value.lexeme;
   if (value.type === "string") return fungiStringLiteral(value.value);
   throw new SandboxRefusal("LOWERER_LITERAL_UNSUPPORTED", "unsupported admitted literal");
 }
@@ -85,6 +90,7 @@ function expression(node) {
     if (node.operator === ts.SyntaxKind.MinusToken && ts.isNumericLiteral(node.operand)) return `-${expression(node.operand)}`;
   }
   if (ts.isBinaryExpression(node)) {
+    if (node.operatorToken.kind === ts.SyntaxKind.AmpersandToken) return `Int.bitAnd(${expression(node.left)}, ${expression(node.right)})`;
     const operator = binaryMap.get(node.operatorToken.kind);
     if (operator !== undefined) return `${expression(node.left)} ${operator} ${expression(node.right)}`;
   }
@@ -116,6 +122,8 @@ function evaluateExpression(node, bindings) {
     if (node.operatorToken.kind === ts.SyntaxKind.LessThanEqualsToken) return left <= right;
     if (node.operatorToken.kind === ts.SyntaxKind.GreaterThanToken) return left > right;
     if (node.operatorToken.kind === ts.SyntaxKind.GreaterThanEqualsToken) return left >= right;
+    if (node.operatorToken.kind === ts.SyntaxKind.AmpersandToken) return left & right;
+    if (node.operatorToken.kind === ts.SyntaxKind.MinusToken) return left - right;
   }
   throw new SandboxRefusal("LOWERER_VECTOR_EXPRESSION_UNSUPPORTED", `unsupported admitted differential expression ${ts.SyntaxKind[node.kind]}`);
 }
@@ -142,7 +150,11 @@ function evaluateStatements(block, bindings) {
 function argumentVectors(parameters) {
   let vectors = [[]];
   for (const parameter of parameters) {
-    const domain = parameter.type === "boolean" ? [false, true] : stringVectors;
+    const domain = parameter.type === "boolean"
+      ? [false, true]
+      : parameter.type === "number"
+        ? parameter.domain === "signed-i16-subdomain" ? signedI16Vectors : integerVectors
+        : stringVectors;
     vectors = vectors.flatMap((prior) => domain.map((value) => [...prior, value]));
   }
   return vectors;
@@ -181,6 +193,17 @@ export function lowerClassifiedSymbol(classification) {
   if (!isAdmittedClassification(classification) || classification.outcome !== "SUPPORTED" || classification.complete !== true) {
     throw new SandboxRefusal("LOWERER_UNADMITTED_CLASSIFICATION", "lowerer accepts only module-minted complete classifications");
   }
+  const hasBitwiseAnd = classification.operators?.includes("&") === true;
+  if ((hasBitwiseAnd && classification.bitwiseProfile !== "signed-i32-bitwise-and")
+    || (!hasBitwiseAnd && classification.bitwiseProfile !== undefined)) {
+    throw new SandboxRefusal("LOWERER_BITWISE_PROFILE_INVALID", "admitted bitwise operator profile is missing or inconsistent");
+  }
+  const hasSubtraction = classification.operators?.includes("-") === true;
+  if ((hasSubtraction && classification.arithmeticProfile !== "signed-i16-checked-subtraction")
+    || (!hasSubtraction && classification.arithmeticProfile !== undefined)
+    || (hasSubtraction && classification.numericDomain !== "signed-i16-subdomain")) {
+    throw new SandboxRefusal("LOWERER_ARITHMETIC_PROFILE_INVALID", "admitted arithmetic operator profile is missing or inconsistent");
+  }
   const baseFlow = lowerCamel(classification.symbol);
   let body;
   let parameters;
@@ -217,11 +240,37 @@ export function lowerClassifiedSymbol(classification) {
   if (returnType === undefined) throw new SandboxRefusal("LOWERER_TYPE_UNSUPPORTED", "admitted type lacks a Fungi mapping");
   let lastErrors = [];
   for (const flow of [baseFlow, `${baseFlow}Value`]) {
-    const source = `@version 1\n/// Non-authorizing sandbox candidate; TypeScript remains the oracle.\n/// TypeScript oracle: ${classification.file}#${classification.symbol}\npure flow ${flow}(${parameters}) -> ${returnType} {\n${body.join("\n")}\n}\n`;
+    const numericRestriction = classification.numericDomain === "signed-i32-subdomain"
+      ? "/// Restricted input contract: signed-i32 subdomain only; TypeScript remains the whole-Number oracle.\n"
+      : classification.numericDomain === "signed-i16-subdomain"
+        ? "/// Restricted input contract: signed-i16 operands; direct subtraction result remains signed-i32; TypeScript remains the whole-Number oracle.\n"
+        : "";
+    const bitwiseRestriction = classification.bitwiseProfile === "signed-i32-bitwise-and"
+      ? "/// Operator contract: JavaScript signed-i32 binary & lowered to Int.bitAnd; no other bitwise operators admitted.\n"
+      : "";
+    const source = `@version 1\n/// Non-authorizing sandbox candidate; TypeScript remains the oracle.\n/// TypeScript oracle: ${classification.file}#${classification.symbol}\n${numericRestriction}${bitwiseRestriction}pure flow ${flow}(${parameters}) -> ${returnType} {\n${body.join("\n")}\n}\n`;
     const parsed = parseProgram(source, `sandbox/${flow}.fungi`, { requireVersionHeader: true });
     const errors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     if (errors.length === 0 && parsed.flows.length === 1 && parsed.flows[0]?.name === flow) {
-      return freezeValue({ source, flow, expected, returnType, sourceSymbol: classification.symbol, parameterNames, vectors });
+      return freezeValue({
+        source,
+        flow,
+        expected,
+        returnType,
+        sourceSymbol: classification.symbol,
+        parameterNames,
+        vectors,
+        ...(["signed-i32-subdomain", "signed-i16-subdomain"].includes(classification.numericDomain) ? {
+          numericDomain: classification.numericDomain,
+          wholeSourceDomainProved: classification.wholeSourceDomainProved,
+        } : {}),
+        ...(classification.bitwiseProfile === "signed-i32-bitwise-and" ? {
+          bitwiseProfile: classification.bitwiseProfile,
+        } : {}),
+        ...(classification.arithmeticProfile === "signed-i16-checked-subtraction" ? {
+          arithmeticProfile: classification.arithmeticProfile,
+        } : {}),
+      });
     }
     lastErrors = errors;
   }

@@ -50,3 +50,15 @@ test("gate-selftests: audit-mutation is credited by fixture test and NEVER run v
   assert.equal(m?.status, "GUARDED_BY_TEST",
     "audit-mutation must be credited via its hermetic fixture test, not spawned with --self-test (it would mutate real security source)");
 });
+
+test("gate-selftests: conversion gates derive fixture evidence from the phase-close manifest", () => {
+  for (const [name, testPath] of [
+    ["audit-conversion-report-commit.mjs", "scripts/tests/audit-conversion-report-commit.test.mjs"],
+    ["audit-conversion-slice-close.mjs", "scripts/tests/audit-conversion-slice-close.test.mjs"],
+  ]) {
+    const result = sweep.results.find((entry) => entry.name === name);
+    assert.equal(result?.status, "GUARDED_BY_TEST", `${name} must receive executable fixture-test credit`);
+    assert.match(result?.reason ?? "", /governance\/phase-close-commands\.json/u);
+    assert.match(result?.reason ?? "", new RegExp(testPath.replaceAll("/", "\\/"), "u"));
+  }
+});

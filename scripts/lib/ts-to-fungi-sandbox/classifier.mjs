@@ -28,6 +28,8 @@ const allowedFunctionKinds = new Set([
   ts.SyntaxKind.StringLiteral,
   ts.SyntaxKind.PrefixUnaryExpression,
   ts.SyntaxKind.BinaryExpression,
+  ts.SyntaxKind.AmpersandToken,
+  ts.SyntaxKind.MinusToken,
   ts.SyntaxKind.EqualsEqualsEqualsToken,
   ts.SyntaxKind.ExclamationEqualsEqualsToken,
   ts.SyntaxKind.AmpersandAmpersandToken,
@@ -39,6 +41,8 @@ const allowedFunctionKinds = new Set([
   ts.SyntaxKind.ExclamationToken,
 ]);
 const allowedBinary = new Set([
+  ts.SyntaxKind.AmpersandToken,
+  ts.SyntaxKind.MinusToken,
   ts.SyntaxKind.EqualsEqualsEqualsToken,
   ts.SyntaxKind.ExclamationEqualsEqualsToken,
   ts.SyntaxKind.AmpersandAmpersandToken,
@@ -48,6 +52,7 @@ const allowedBinary = new Set([
   ts.SyntaxKind.GreaterThanToken,
   ts.SyntaxKind.GreaterThanEqualsToken,
 ]);
+const allowedFunctionKindNames = new Set([...allowedFunctionKinds].map((kind) => ts.SyntaxKind[kind]));
 
 function freezeResult(value) {
   if (Array.isArray(value)) {
@@ -94,16 +99,27 @@ function enumMemberName(member) {
   return ts.isIdentifier(member.name) || ts.isStringLiteral(member.name) ? member.name.text : undefined;
 }
 
-function findExplicitStringConstEnumMember(sourceFile, symbol) {
+function explicitConstEnumMemberValue(initializer, sourceFile) {
+  const current = unwrapExpression(initializer);
+  if (ts.isStringLiteral(current) || ts.isNoSubstitutionTemplateLiteral(current)) {
+    return physicalStringLiteral(current.text) ? { type: "string", value: current.text } : undefined;
+  }
+  const basePrefixed = basePrefixedI32Literal(current, sourceFile);
+  if (basePrefixed !== undefined) return basePrefixed;
+  if (containsBasePrefixedNumericLiteral(current, sourceFile)) return undefined;
+  const integer = integerLiteral(current);
+  return integer !== undefined && physicalInt(integer) ? { type: "number", value: integer } : undefined;
+}
+
+function findExplicitConstEnumMember(sourceFile, symbol) {
   const parts = symbol.split(".");
   if (parts.length !== 2) return undefined;
   const declarations = sourceFile.statements.filter((statement) => isConstEnum(statement) && statement.name.text === parts[0]);
   if (declarations.length !== 1) return undefined;
   const members = declarations[0].members.filter((member) => enumMemberName(member) === parts[1]);
   if (members.length !== 1 || members[0].initializer === undefined) return undefined;
-  const initializer = unwrapExpression(members[0].initializer);
-  if (!ts.isStringLiteral(initializer) && !ts.isNoSubstitutionTemplateLiteral(initializer)) return undefined;
-  return { node: members[0], value: { type: "string", value: initializer.text } };
+  const value = explicitConstEnumMemberValue(members[0].initializer, sourceFile);
+  return value === undefined ? undefined : { node: members[0], value };
 }
 
 function isTypeOnlyMatch(match) {
@@ -162,11 +178,78 @@ function integerLiteral(node) {
   return undefined;
 }
 
+function numericSourceLexeme(node, sourceFile) {
+  if (sourceFile === undefined) return undefined;
+  const current = unwrapExpression(node);
+  if (ts.isNumericLiteral(current)) return current.getText(sourceFile);
+  if (
+    ts.isPrefixUnaryExpression(current)
+    && (current.operator === ts.SyntaxKind.MinusToken || current.operator === ts.SyntaxKind.PlusToken)
+    && ts.isNumericLiteral(current.operand)
+  ) return current.getText(sourceFile);
+  return undefined;
+}
+
+function containsBasePrefixedNumericLiteral(node, sourceFile) {
+  if (sourceFile === undefined) return false;
+  let found = false;
+  function walk(current) {
+    if (found) return;
+    if (ts.isNumericLiteral(current) && /^0[xob]/iu.test(current.getText(sourceFile))) {
+      found = true;
+      return;
+    }
+    current.forEachChild(walk);
+  }
+  walk(unwrapExpression(node));
+  return found;
+}
+
+function basePrefixedI32Literal(node, sourceFile) {
+  const lexeme = numericSourceLexeme(node, sourceFile);
+  if (lexeme === undefined || !/^-?(?:0[xX][0-9a-fA-F]+|0[oO][0-7]+|0[bB][01]+)$/u.test(lexeme)) return undefined;
+  const negative = lexeme.startsWith("-");
+  const magnitude = Number(negative ? lexeme.slice(1) : lexeme);
+  const value = negative ? -magnitude : magnitude;
+  return physicalInt(value) ? { type: "number", value } : undefined;
+}
+
+function signedI32SubdomainLiteral(node, sourceFile) {
+  const lexeme = numericSourceLexeme(node, sourceFile);
+  if (
+    lexeme === undefined
+    || !/^-?(?:(?:0|[1-9][0-9]*)|0[xX][0-9a-fA-F]+|0[oO][0-7]+|0[bB][01]+)$/u.test(lexeme)
+  ) return undefined;
+  const negative = lexeme.startsWith("-");
+  const magnitude = Number(negative ? lexeme.slice(1) : lexeme);
+  const value = negative ? -magnitude : magnitude;
+  return Object.is(value, -0) || !physicalInt(value) ? undefined : value;
+}
+
+function signedI16SubdomainLiteral(node, sourceFile) {
+  const value = signedI32SubdomainLiteral(node, sourceFile);
+  return value !== undefined && value >= -32768 && value <= 32767 ? value : undefined;
+}
+
+function finiteFloatLiteral(node, sourceFile) {
+  const lexeme = numericSourceLexeme(node, sourceFile);
+  if (lexeme === undefined || !/^-?(?:0|[1-9][0-9]*)\.[0-9]+$/u.test(lexeme)) return undefined;
+  const value = Number(lexeme);
+  return Number.isFinite(value) && !Object.is(value, -0)
+    ? { type: "float", value, lexeme }
+    : undefined;
+}
+
 function literalValue(node, sourceFile, seen = new Set()) {
   const current = unwrapExpression(node);
   if (current.kind === ts.SyntaxKind.TrueKeyword) return { type: "boolean", value: true };
   if (current.kind === ts.SyntaxKind.FalseKeyword) return { type: "boolean", value: false };
   if (ts.isStringLiteral(current) || ts.isNoSubstitutionTemplateLiteral(current)) return { type: "string", value: current.text };
+  const float = finiteFloatLiteral(current, sourceFile);
+  if (float !== undefined) return float;
+  if (containsBasePrefixedNumericLiteral(current, sourceFile)) return undefined;
+  const numericLexeme = numericSourceLexeme(current, sourceFile);
+  if (numericLexeme !== undefined && /[.eE]|^\+|^-?0[xob]/iu.test(numericLexeme)) return undefined;
   const integer = integerLiteral(current);
   if (integer !== undefined) return { type: "number", value: integer };
   if (sourceFile !== undefined && ts.isIdentifier(current) && !seen.has(current.text)) {
@@ -224,11 +307,29 @@ function literalValue(node, sourceFile, seen = new Set()) {
 }
 
 function blocked(base, blockers, obligations) {
-  return freezeResult({ ...base, outcome: "BLOCKED", complete: true, blockers: [...new Set(blockers)].sort(codeUnitCompare), obligations });
+  const uniqueBlockers = [...new Set(blockers)].sort(codeUnitCompare);
+  const unsupportedSyntaxKinds = uniqueBlockers.includes(BLOCKERS.UNSUPPORTED_CONTROL)
+    ? Object.keys(base.inventory ?? {}).filter((name) => {
+      const kind = ts.SyntaxKind[name];
+      return !allowedFunctionKindNames.has(name) && Number.isInteger(kind) && kind > ts.SyntaxKind.LastToken;
+    }).sort(codeUnitCompare)
+    : [];
+  return freezeResult({
+    ...base,
+    outcome: "BLOCKED",
+    complete: true,
+    blockers: uniqueBlockers,
+    obligations,
+    ...(unsupportedSyntaxKinds.length === 0 ? {} : { unsupportedSyntaxKinds }),
+  });
 }
 
 function physicalInt(value) {
-  return Number.isSafeInteger(value) && value >= -2147483648 && value <= 2147483647;
+  return Number.isSafeInteger(value) && !Object.is(value, -0) && value >= -2147483648 && value <= 2147483647;
+}
+
+function physicalFiniteFloat(value) {
+  return typeof value === "number" && Number.isFinite(value) && !Object.is(value, -0);
 }
 
 function physicalStringLiteral(value) {
@@ -259,6 +360,12 @@ function inferredExpressionType(node, parameters) {
   if (ts.isIdentifier(current)) return parameters.get(current.text);
   if (ts.isPrefixUnaryExpression(current) && current.operator === ts.SyntaxKind.ExclamationToken) return "boolean";
   if (ts.isBinaryExpression(current)) {
+    if (current.operatorToken.kind === ts.SyntaxKind.MinusToken
+      && inferredExpressionType(current.left, parameters) === "number"
+      && inferredExpressionType(current.right, parameters) === "number") return "number";
+    if (current.operatorToken.kind === ts.SyntaxKind.AmpersandToken
+      && inferredExpressionType(current.left, parameters) === "number"
+      && inferredExpressionType(current.right, parameters) === "number") return "number";
     if ([
       ts.SyntaxKind.EqualsEqualsEqualsToken,
       ts.SyntaxKind.ExclamationEqualsEqualsToken,
@@ -272,6 +379,38 @@ function inferredExpressionType(node, parameters) {
       && inferredExpressionType(current.right, parameters) === "boolean") return "boolean";
   }
   return undefined;
+}
+
+function isSignedI32BitwiseAndExpression(node, parameters, sourceFile) {
+  const current = unwrapExpression(node);
+  if (ts.isIdentifier(current)) return parameters.get(current.text) === "number";
+  if (signedI32SubdomainLiteral(current, sourceFile) !== undefined) return true;
+  return ts.isBinaryExpression(current)
+    && current.operatorToken.kind === ts.SyntaxKind.AmpersandToken
+    && isSignedI32BitwiseAndExpression(current.left, parameters, sourceFile)
+    && isSignedI32BitwiseAndExpression(current.right, parameters, sourceFile);
+}
+
+function isSignedI16SubtractionOperand(node, parameters, sourceFile) {
+  const current = unwrapExpression(node);
+  if (ts.isIdentifier(current)) return parameters.get(current.text) === "number";
+  return signedI16SubdomainLiteral(current, sourceFile) !== undefined;
+}
+
+function signedI16Subtractions(node, parameters, sourceFile) {
+  const found = [];
+  function walk(current) {
+    if (ts.isBinaryExpression(current) && current.operatorToken.kind === ts.SyntaxKind.MinusToken) {
+      found.push({
+        node: current,
+        direct: isSignedI16SubtractionOperand(current.left, parameters, sourceFile)
+          && isSignedI16SubtractionOperand(current.right, parameters, sourceFile),
+      });
+    }
+    current.forEachChild(walk);
+  }
+  walk(node);
+  return found;
 }
 
 function inferredPrimitiveReturnType(node) {
@@ -312,7 +451,7 @@ function alwaysReturns(statement) {
     && alwaysReturns(statement.elseStatement);
 }
 
-function validateFunction(node, base) {
+function validateFunction(node, base, sourceFile) {
   if (node.asteriskToken !== undefined || node.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword)) {
     return blocked(base, [BLOCKERS.ASYNC_OR_GENERATOR], ["preserve promise/generator scheduling and identity"]);
   }
@@ -321,15 +460,32 @@ function validateFunction(node, base) {
   if (returnType === undefined) {
     return blocked(base, [BLOCKERS.UNSUPPORTED_CONTROL], [node.type === undefined ? "prove one inferred primitive return type" : "admit an explicit primitive return type"]);
   }
-  const parameters = [];
+  let parameters = [];
   for (const parameter of node.parameters) {
     if (!ts.isIdentifier(parameter.name) || parameter.initializer !== undefined || parameter.questionToken !== undefined || parameter.dotDotDotToken !== undefined) {
       return blocked(base, [BLOCKERS.UNSUPPORTED_CONTROL], ["close parameter shape without defaults, optionals or rest"]);
     }
     const type = typeName(parameter.type);
     if (type === undefined) return blocked(base, [BLOCKERS.UNSUPPORTED_CONTROL], ["admit an explicit primitive parameter type"]);
-    if (type === "number") return blocked(base, [BLOCKERS.BINARY64], ["supply an owner-approved bounded integer border"]);
     parameters.push({ name: parameter.name.text, type });
+  }
+  const declaredParameterTypes = new Map(parameters.map((parameter) => [parameter.name, parameter.type]));
+  const subtractionNodes = signedI16Subtractions(node, declaredParameterTypes, sourceFile);
+  const checkedSubtraction = subtractionNodes.length > 0;
+  if (checkedSubtraction && (subtractionNodes.length !== 1 || subtractionNodes[0].direct !== true)) {
+    return blocked(base, [BLOCKERS.COERCION], ["use one direct signed-i16 subtraction with no nesting or mixed arithmetic"]);
+  }
+  const numericDomain = parameters.some((parameter) => parameter.type === "number");
+  if (numericDomain) {
+    if (parameters.length === 0 || parameters.length > 2 || parameters.some((parameter) => parameter.type !== "number" && parameter.type !== "boolean")) {
+      return blocked(base, [BLOCKERS.BINARY64], ["use one or two required parameters drawn only from the signed-i32 and Bool subdomains"]);
+    }
+    if (returnType !== "number" && returnType !== "boolean") {
+      return blocked(base, [BLOCKERS.BINARY64], ["return only signed-i32 Int or Bool inside the restricted numeric kernel"]);
+    }
+    parameters = parameters.map((parameter) => parameter.type === "number"
+      ? { ...parameter, domain: checkedSubtraction ? "signed-i16-subdomain" : "signed-i32-subdomain" }
+      : parameter);
   }
   const vectorCount = parameters.reduce((count, parameter) => count * (parameter.type === "boolean" ? 2 : 5), 1);
   if (vectorCount > MAX_DIFFERENTIAL_VECTORS) {
@@ -337,18 +493,38 @@ function validateFunction(node, base) {
   }
   const blockers = [];
   const operators = new Set();
+  const parameterTypes = new Map(parameters.map((parameter) => [parameter.name, parameter.type]));
   function walk(current) {
+    if (numericDomain) {
+      if (
+        ts.isPrefixUnaryExpression(current)
+        && current.operator === ts.SyntaxKind.MinusToken
+        && ts.isNumericLiteral(current.operand)
+      ) {
+        if ((checkedSubtraction ? signedI16SubdomainLiteral : signedI32SubdomainLiteral)(current, sourceFile) === undefined) blockers.push(BLOCKERS.BINARY64);
+        return;
+      }
+      if (ts.isNumericLiteral(current)) {
+        if ((checkedSubtraction ? signedI16SubdomainLiteral : signedI32SubdomainLiteral)(current, sourceFile) === undefined) blockers.push(BLOCKERS.BINARY64);
+        return;
+      }
+    }
     if (!allowedFunctionKinds.has(current.kind)) blockers.push(BLOCKERS.UNSUPPORTED_CONTROL);
     if (ts.isCallExpression(current) || ts.isNewExpression(current)) blockers.push(BLOCKERS.CALL_OR_HOST_API);
     if (current.kind === ts.SyntaxKind.NullKeyword || current.kind === ts.SyntaxKind.UndefinedKeyword) blockers.push(BLOCKERS.NULLISH);
     if (ts.isBinaryExpression(current)) {
       operators.add(ts.tokenToString(current.operatorToken.kind) ?? String(current.operatorToken.kind));
       if (!allowedBinary.has(current.operatorToken.kind)) blockers.push(BLOCKERS.COERCION);
+      if (current.operatorToken.kind === ts.SyntaxKind.AmpersandToken
+        && (!numericDomain || !isSignedI32BitwiseAndExpression(current, parameterTypes, sourceFile))) blockers.push(BLOCKERS.COERCION);
+      if (current.operatorToken.kind === ts.SyntaxKind.MinusToken
+        && (!checkedSubtraction || subtractionNodes[0]?.node !== current)) blockers.push(BLOCKERS.COERCION);
     }
     if (ts.isPrefixUnaryExpression(current) && current.operator !== ts.SyntaxKind.ExclamationToken && !(current.operator === ts.SyntaxKind.MinusToken && ts.isNumericLiteral(current.operand))) blockers.push(BLOCKERS.COERCION);
     current.forEachChild(walk);
   }
   walk(node);
+  if (checkedSubtraction && (operators.size !== 1 || !operators.has("-"))) blockers.push(BLOCKERS.COERCION);
   if (blockers.length > 0) return blocked(base, blockers, ["select an exact typed representation for every refused construct"]);
   const returnLiterals = [];
   let returnExpressions = 0;
@@ -380,7 +556,25 @@ function validateFunction(node, base) {
   if (returnType === "number" && returnLiterals.some((item) => item.type === "number" && !Number.isSafeInteger(item.value))) return blocked(base, [BLOCKERS.BINARY64], ["admit only exact safe integer function returns"]);
   if (returnType === "number" && returnLiterals.some((item) => item.type === "number" && !physicalInt(item.value))) return blocked(base, [BLOCKERS.PHYSICAL_INT_RANGE], ["remain within the independently proved signed-i32 physical Int profile"]);
   if (returnType === "string" && returnLiterals.some((item) => item.type === "string" && !physicalStringLiteral(item.value))) return blocked(base, [BLOCKERS.PHYSICAL_STRING_LITERAL], ["use only String values that round-trip exactly through the selected Fungi literal profile"]);
-  const result = freezeResult({ ...base, outcome: "SUPPORTED", complete: true, blockers: [], kind: "function", parameters, returnType, operators: [...operators].sort(codeUnitCompare) });
+  const result = freezeResult({
+    ...base,
+    outcome: "SUPPORTED",
+    complete: true,
+    blockers: [],
+    kind: "function",
+    parameters,
+    returnType,
+    operators: [...operators].sort(codeUnitCompare),
+    ...(operators.has("&") ? { bitwiseProfile: "signed-i32-bitwise-and" } : {}),
+    ...(checkedSubtraction ? { arithmeticProfile: "signed-i16-checked-subtraction" } : {}),
+    ...(numericDomain ? {
+      numericDomain: checkedSubtraction ? "signed-i16-subdomain" : "signed-i32-subdomain",
+      wholeSourceDomainProved: false,
+      productionAuthorityReleased: false,
+      consumerSwitched: false,
+      typescriptRetired: false,
+    } : {}),
+  });
   admitted.add(result);
   admittedNodes.set(result, node);
   return result;
@@ -401,7 +595,7 @@ export function classifyTypeScriptSource({ source, file, symbol }) {
   const sourceFile = ts.createSourceFile(file, source, ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
   const parseErrors = sourceFile.parseDiagnostics ?? [];
   if (parseErrors.length > 0) return freezeResult({ ...provenance, outcome: "MANUAL_REVIEW", complete: false, blockers: [], reason: "TypeScript parser diagnostics", diagnostics: parseErrors.map((item) => item.code) });
-  const enumMember = findExplicitStringConstEnumMember(sourceFile, symbol);
+  const enumMember = findExplicitConstEnumMember(sourceFile, symbol);
   if (enumMember !== undefined) {
     const base = {
       ...provenance,
@@ -435,18 +629,24 @@ export function classifyTypeScriptSource({ source, file, symbol }) {
   if (match.kind === "declaration" || declarationKinds.has(node.kind)) {
     return blocked(base, [BLOCKERS.DECLARATION_ONLY], ["retain the public TypeScript declaration until governed binding replacement"]);
   }
-  if (match.kind === "function") return validateFunction(node, base);
+  if (match.kind === "function") return validateFunction(node, base, sourceFile);
   const declaration = node;
   if ((match.statement.declarationList.flags & ts.NodeFlags.Const) === 0 || declaration.initializer === undefined) {
     return blocked(base, [BLOCKERS.ACTIVE_OBJECT], ["preserve mutable binding and initialization semantics"]);
   }
-  const value = literalValue(declaration.initializer, sourceFile);
+  const value = basePrefixedI32Literal(declaration.initializer, sourceFile) ?? literalValue(declaration.initializer, sourceFile);
   if (value !== undefined) {
     if (value.type === "number" && !physicalInt(value.value)) {
       return blocked(base, [BLOCKERS.PHYSICAL_INT_RANGE], ["remain within the independently proved signed-i32 physical Int profile"]);
     }
     if (value.type === "string" && !physicalStringLiteral(value.value)) {
       return blocked(base, [BLOCKERS.PHYSICAL_STRING_LITERAL], ["use only String values that round-trip exactly through the selected Fungi literal profile"]);
+    }
+    if (
+      value.type === "float"
+      && (finiteFloatLiteral(declaration.initializer, sourceFile) === undefined || !physicalFiniteFloat(value.value))
+    ) {
+      return blocked(base, [BLOCKERS.PHYSICAL_FINITE_FLOAT_LITERAL], ["admit one direct finite decimal Float literal with exact binary64 custody"]);
     }
     const result = freezeResult({ ...base, outcome: "SUPPORTED", complete: true, blockers: [], kind: "constant", value });
     admitted.add(result);
@@ -499,8 +699,8 @@ export function discoverTypeScriptScopes({ source, file }) {
     if (isConstEnum(statement)) {
       for (const member of statement.members) {
         const memberName = enumMemberName(member);
-        const initializer = member.initializer === undefined ? undefined : unwrapExpression(member.initializer);
-        if (memberName !== undefined && initializer !== undefined && (ts.isStringLiteral(initializer) || ts.isNoSubstitutionTemplateLiteral(initializer))) symbols.push(`${statement.name.text}.${memberName}`);
+        const value = member.initializer === undefined ? undefined : explicitConstEnumMemberValue(member.initializer);
+        if (memberName !== undefined && value !== undefined) symbols.push(`${statement.name.text}.${memberName}`);
       }
     }
   }
@@ -529,8 +729,8 @@ export function inventoryTypeScriptScopes({ source, file }) {
     if (isConstEnum(statement)) {
       for (const member of statement.members) {
         const memberName = enumMemberName(member);
-        const initializer = member.initializer === undefined ? undefined : unwrapExpression(member.initializer);
-        if (memberName !== undefined && initializer !== undefined && (ts.isStringLiteral(initializer) || ts.isNoSubstitutionTemplateLiteral(initializer))) symbols.push(`${statement.name.text}.${memberName}`);
+        const value = member.initializer === undefined ? undefined : explicitConstEnumMemberValue(member.initializer);
+        if (memberName !== undefined && value !== undefined) symbols.push(`${statement.name.text}.${memberName}`);
       }
     }
   }

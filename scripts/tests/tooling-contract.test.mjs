@@ -151,6 +151,35 @@ test("a phase-close command disposes the exact audit", () => {
   assert.deepEqual(validate(root), []);
 });
 
+test("a manifest self-test command is the fixture-evidence source of truth", () => {
+  const entry = manifestEntry("audit:covered-by-test", "scripts/audit-covered-by-test.mjs");
+  entry.selfTest = {
+    kind: "present",
+    command: ["node", "--test", "scripts/tests/audit-covered-by-test.test.mjs"],
+    plantedDefectId: "missing-required-field",
+  };
+  const root = fixture({
+    "scripts/audit-covered-by-test.mjs": "process.exit(0);\n",
+    "scripts/tests/audit-covered-by-test.test.mjs":
+      'const tool = "audit-covered-by-test.mjs";\nvoid tool;\n',
+    "governance/phase-close-commands.json": JSON.stringify({
+      schemaVersion: 1,
+      entries: [entry],
+    }),
+  });
+
+  const inventory = api.discoverTooling(root);
+  assert.deepEqual(
+    inventory.externalTests.filter((item) => item.tool === "audit-covered-by-test.mjs"),
+    [{
+      tool: "audit-covered-by-test.mjs",
+      test: "scripts/tests/audit-covered-by-test.test.mjs",
+      plantedDefectId: "missing-required-field",
+      via: "governance/phase-close-commands.json",
+    }],
+  );
+});
+
 test("an unregistered package directory is a blocking violation", () => {
   const root = fixture({
     "packages-galerina/hidden/package.json": JSON.stringify({

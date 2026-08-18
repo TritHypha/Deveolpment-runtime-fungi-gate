@@ -200,6 +200,39 @@ function discoverRegisteredFixtureEvidence(root) {
   return evidence.sort((a, b) => a.tool.localeCompare(b.tool));
 }
 
+export function discoverManifestSelfTests(root) {
+  const manifestPath = join(root, "governance", "phase-close-commands.json");
+  if (!existsSync(manifestPath)) return [];
+  const evidence = [];
+  for (const entry of loadAssuranceManifest(root).entries) {
+    if (entry.selfTest.kind !== "present") continue;
+    const tool = manifestToolName(entry);
+    const testPath = entry.selfTest.command.find((item) =>
+      /^scripts\/tests\/[A-Za-z0-9_.-]+\.test\.mjs$/u.test(item));
+    if (tool === undefined || testPath === undefined) continue;
+    const absoluteTest = resolve(root, ...testPath.split("/"));
+    if (!existsSync(absoluteTest) || !readText(absoluteTest).includes(tool)) continue;
+    evidence.push({
+      tool,
+      test: testPath,
+      plantedDefectId: entry.selfTest.plantedDefectId,
+      via: "governance/phase-close-commands.json",
+      command: entry.selfTest.command,
+      timeoutMs: entry.timeoutMs,
+    });
+  }
+  return evidence.sort((a, b) => a.tool.localeCompare(b.tool));
+}
+
+export function discoverManifestFixtureEvidence(root) {
+  return discoverManifestSelfTests(root).map(({
+    tool,
+    test,
+    plantedDefectId,
+    via,
+  }) => ({ tool, test, plantedDefectId, via }));
+}
+
 function discoverMetaGateEvidence(root, tools, registeredEvidence) {
   const meta = registeredEvidence.find((entry) =>
     entry.tool === "audit-gate-selftests.mjs");
@@ -251,15 +284,21 @@ export function discoverTooling(root) {
   const tools = discoverTools(absoluteRoot);
   const registeredEvidence =
     discoverRegisteredFixtureEvidence(absoluteRoot);
+  const manifestEvidence =
+    discoverManifestFixtureEvidence(absoluteRoot);
   const metaGateEvidence =
-    discoverMetaGateEvidence(absoluteRoot, tools, registeredEvidence);
+    discoverMetaGateEvidence(
+      absoluteRoot,
+      tools,
+      [...registeredEvidence, ...manifestEvidence],
+    );
   return {
     root: absoluteRoot,
     packages: discoverPackages(absoluteRoot, errors),
     tools,
     directPhaseClose: [],
     ciCommands: discoverCiCommands(absoluteRoot),
-    externalTests: [...registeredEvidence, ...metaGateEvidence]
+    externalTests: [...registeredEvidence, ...manifestEvidence, ...metaGateEvidence]
       .sort((a, b) => a.tool.localeCompare(b.tool)),
     errors,
   };

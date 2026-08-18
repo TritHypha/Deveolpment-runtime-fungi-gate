@@ -95,7 +95,7 @@ test("4 classifier admits primitive literals and inventories exact source ranges
   }
 });
 
-test("5 classifier admits a closed scalar function and blocks known active or numeric semantics", () => {
+test("5 classifier admits closed scalar functions and exact finite Float literals while blocking active state", () => {
   const fn = classifyTypeScriptSource({
     source: "export function choose(flag: boolean): number { if (flag) { return 1; } return 0; }\n",
     file: "packages-galerina/test/src/value.ts",
@@ -103,8 +103,8 @@ test("5 classifier admits a closed scalar function and blocks known active or nu
   });
   assert.equal(fn.outcome, "SUPPORTED");
   const floating = classifyTypeScriptSource({ source: "export const RATE = 0.1;\n", file: "packages-galerina/test/src/value.ts", symbol: "RATE" });
-  assert.equal(floating.outcome, "BLOCKED");
-  assert.ok(floating.blockers.includes(BLOCKERS.BINARY64));
+  assert.equal(floating.outcome, "SUPPORTED");
+  assert.equal(floating.value.type, "float");
   const active = classifyTypeScriptSource({ source: 'export const ITEMS = new Set(["x"]);\n', file: "packages-galerina/test/src/value.ts", symbol: "ITEMS" });
   assert.equal(active.outcome, "BLOCKED");
   assert.ok(active.blockers.includes(BLOCKERS.ACTIVE_OBJECT));
@@ -181,11 +181,13 @@ test("5e classifier and lowerer admit a const primitive arrow behavior", async (
   assert.equal((await buildCompilerEvidence({ source: lowered.source, file: "sandbox/retain.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors })).green, true);
 });
 
-test("5f finite binary64 constants stay blocked when the physical profile refuses Float", () => {
+test("5f exact finite binary64 constants remain discoverable but are refused by the selected clean physical profile", () => {
   const source = 'export const TOLERANCE = 0.001;\n';
   const classified = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "TOLERANCE" });
-  assert.equal(classified.outcome, "BLOCKED");
-  assert.ok(classified.blockers.includes("BLOCKED_BY_JAVASCRIPT_BINARY64_OR_NON_INTEGER_NUMBER_ABI"));
+  assert.equal(classified.outcome, "SUPPORTED");
+  const refusal = selectedPhysicalProfileRefusal(classified);
+  assert.equal(refusal.code, BLOCKERS.PHYSICAL_FINITE_FLOAT_LITERAL);
+  assert.match(refusal.detail, /clean SLIDE build point/u);
 });
 
 test("5g a same-file string-literal alias stays blocked without a physical String-parameter profile", () => {
@@ -379,7 +381,12 @@ test("5s explicit String const-enum members are retained-oracle primitive leaves
   const allow = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "Mode.Allow" });
   assert.equal(allow.outcome, "SUPPORTED");
   assert.deepEqual(allow.value, { type: "string", value: "allow" });
-  assert.deepEqual(discoverTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" }).map((item) => item.symbol), ["Mode.Allow", "Mode.Deny"]);
+  assert.deepEqual(
+    discoverTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" })
+      .filter((item) => item.value.type === "string")
+      .map((item) => item.symbol),
+    ["Mode.Allow", "Mode.Deny"],
+  );
   const lowered = lowerClassifiedSymbol(allow);
   assert.match(lowered.source, /pure flow modeAllow\(\) -> String/u);
   assert.equal((await buildCompilerEvidence({ source: lowered.source, file: "sandbox/mode-allow.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors })).green, true);
@@ -387,6 +394,495 @@ test("5s explicit String const-enum members are retained-oracle primitive leaves
   const camelSource = 'export const enum SystemCapabilityType { NetworkOutbound = "network.outbound" }';
   const camel = lowerClassifiedSymbol(classifyTypeScriptSource({ source: camelSource, file: "packages-galerina/example/src/value.ts", symbol: "SystemCapabilityType.NetworkOutbound" }));
   assert.match(camel.source, /pure flow systemCapabilityTypeNetworkOutbound\(\) -> String/u);
+});
+
+test("5t explicit i32 const-enum members are retained-oracle primitive leaves", async () => {
+  const source = [
+    "export const enum Op {",
+    "  Zero = 0,",
+    "  Negative = -7,",
+    "  Arithmetic = 6 * 7,",
+    "  Auto,",
+    "  Float = 1.5,",
+    "  NegativeZero = -0,",
+    "  Computed = Number(1),",
+    "}",
+    "export enum RuntimeOp { Value = 9 }",
+  ].join("\n");
+  const discovered = discoverTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" });
+  assert.deepEqual(discovered.map((item) => item.symbol), ["Op.Zero", "Op.Negative", "Op.Arithmetic"]);
+  assert.deepEqual(discovered.map((item) => item.value), [
+    { type: "number", value: 0 },
+    { type: "number", value: -7 },
+    { type: "number", value: 42 },
+  ]);
+  const lowered = lowerClassifiedSymbol(discovered[2]);
+  assert.match(lowered.source, /pure flow opArithmetic\(\) -> Int/u);
+  assert.equal((await buildCompilerEvidence({ source: lowered.source, file: "sandbox/op-arithmetic.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors })).green, true);
+  assert.equal((await buildPhysicalEvidence({ root: ROOT, source: lowered.source, flow: lowered.flow, vectors: lowered.vectors })).green, true);
+  assert.equal(classifyTypeScriptSource({ source: "export const NEGATIVE_ZERO = -0;", file: "packages-galerina/example/src/value.ts", symbol: "NEGATIVE_ZERO" }).outcome, "BLOCKED");
+  assert.equal(classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "RuntimeOp.Value" }).outcome, "MANUAL_REVIEW");
+});
+
+test("5u exact finite decimal consts lower only to zero-parameter Float leaves", async () => {
+  const source = "export const LOOSE_TOLERANCE = 0.001;";
+  const classified = classifyTypeScriptSource({
+    source,
+    file: "packages-galerina/example/src/precision.ts",
+    symbol: "LOOSE_TOLERANCE",
+  });
+  assert.equal(classified.outcome, "SUPPORTED");
+  assert.deepEqual(classified.value, { type: "float", value: 0.001, lexeme: "0.001" });
+  const lowered = lowerClassifiedSymbol(classified);
+  assert.match(lowered.source, /pure flow looseTolerance\(\) -> Float/u);
+  assert.match(lowered.source, /return 0\.001/u);
+  assert.deepEqual(lowered.vectors, [{ arguments: [], expected: 0.001 }]);
+  assert.equal((await buildCompilerEvidence({
+    source: lowered.source,
+    file: "sandbox/loose-tolerance.fungi",
+    flow: lowered.flow,
+    parameterNames: lowered.parameterNames,
+    vectors: lowered.vectors,
+  })).green, true);
+
+  for (const candidate of [
+    "export const VALUE = -0.0;",
+    "export const VALUE = 1e3;",
+    "export const VALUE = 0x1.8p1;",
+    "export const VALUE = 1_0.5;",
+    "export const VALUE = 0.001 + 0.05;",
+    "export const VALUE = Number(0.001);",
+    "export const VALUE = NaN;",
+    "export const VALUE = Infinity;",
+    "export const BASE = 0.001; export const VALUE = BASE;",
+    "export let VALUE = 0.001;",
+  ]) {
+    assert.notEqual(classifyTypeScriptSource({
+      source: candidate,
+      file: "packages-galerina/example/src/precision.ts",
+      symbol: "VALUE",
+    }).outcome, "SUPPORTED", candidate);
+  }
+});
+
+test("5v direct base-prefixed i32 constants lower to canonical decimal Int leaves", () => {
+  const cases = [
+    ["HEX", "0x0601", 1537],
+    ["HEX_UPPER", "0X7fffffff", 2147483647],
+    ["HEX_MIN", "-0x80000000", -2147483648],
+    ["OCTAL", "0o17", 15],
+    ["OCTAL_UPPER", "0O10", 8],
+    ["BINARY", "0b101", 5],
+    ["BINARY_UPPER", "0B111", 7],
+    ["ZERO", "0x0", 0],
+  ];
+  for (const [symbol, lexeme, expected] of cases) {
+    const classified = classifyTypeScriptSource({
+      source: `export const ${symbol} = ${lexeme};`,
+      file: "packages-galerina/example/src/radix.ts",
+      symbol,
+    });
+    assert.equal(classified.outcome, "SUPPORTED", `${symbol} ${lexeme}`);
+    assert.deepEqual(classified.value, { type: "number", value: expected });
+    const lowered = lowerClassifiedSymbol(classified);
+    assert.match(lowered.source, new RegExp(`return ${expected}(?:\\n|$)`, "u"));
+    assert.doesNotMatch(lowered.source, /return -?0[xXoObB]/u);
+    assert.match(lowered.source, new RegExp(`TypeScript oracle: packages-galerina/example/src/radix\\.ts#${symbol}`, "u"));
+  }
+
+  const enumSource = "export const enum Flags { Audit = 0b1010 }";
+  const enumMember = classifyTypeScriptSource({
+    source: enumSource,
+    file: "packages-galerina/example/src/radix.ts",
+    symbol: "Flags.Audit",
+  });
+  assert.equal(enumMember.outcome, "SUPPORTED");
+  assert.deepEqual(enumMember.value, { type: "number", value: 10 });
+});
+
+test("5w base-prefixed i32 capability refuses indirect, coercive, and out-of-range forms", () => {
+  const cases = [
+    "export const VALUE = 0x1_0;",
+    "export const VALUE = +0x1;",
+    "export const VALUE = 077;",
+    "export const VALUE = 0x1n;",
+    "export const VALUE = 1e3;",
+    "export const VALUE = -0x0;",
+    "export const VALUE = 0x80000000;",
+    "export const VALUE = -0x80000001;",
+    "const BASE = 0x1; export const VALUE = BASE;",
+    "export const VALUE = 0x1 + 2;",
+    "export const VALUE = 0x1 << 1;",
+    "export const VALUE = 0x1 | 2;",
+    "const VALUES = { one: 0x1 }; export const VALUE = VALUES.one;",
+    "export const VALUE = Number(0x1);",
+    "export let VALUE = 0x1;",
+  ];
+  for (const source of cases) {
+    assert.notEqual(classifyTypeScriptSource({
+      source,
+      file: "packages-galerina/example/src/radix.ts",
+      symbol: "VALUE",
+    }).outcome, "SUPPORTED", source);
+  }
+  assert.notEqual(classifyTypeScriptSource({
+    source: "export enum RuntimeFlags { Audit = 0b1010 }",
+    file: "packages-galerina/example/src/radix.ts",
+    symbol: "RuntimeFlags.Audit",
+  }).outcome, "SUPPORTED");
+});
+
+test("5x signed-i32 subdomain classification is explicit and non-authorizing", () => {
+  const identity = classifyTypeScriptSource({
+    source: "export function identity(value: number): number { return value; }",
+    file: "packages-galerina/example/src/i32-kernel.ts",
+    symbol: "identity",
+  });
+  assert.equal(identity.outcome, "SUPPORTED");
+  assert.deepEqual(identity.parameters, [
+    { name: "value", type: "number", domain: "signed-i32-subdomain" },
+  ]);
+  assert.equal(identity.numericDomain, "signed-i32-subdomain");
+  assert.equal(identity.wholeSourceDomainProved, false);
+  assert.equal(identity.productionAuthorityReleased, false);
+  assert.equal(identity.consumerSwitched, false);
+  assert.equal(identity.typescriptRetired, false);
+
+  for (const [index, operator] of ["===", "!==", "<", "<=", ">", ">="].entries()) {
+    const symbol = `compare${index}`;
+    const compared = classifyTypeScriptSource({
+      source: `export function ${symbol}(left: number, right: number): boolean { return left ${operator} right; }`,
+      file: "packages-galerina/example/src/i32-kernel.ts",
+      symbol,
+    });
+    assert.equal(compared.outcome, "SUPPORTED", operator);
+    assert.deepEqual(compared.parameters, [
+      { name: "left", type: "number", domain: "signed-i32-subdomain" },
+      { name: "right", type: "number", domain: "signed-i32-subdomain" },
+    ]);
+    assert.equal(compared.numericDomain, "signed-i32-subdomain");
+    assert.equal(compared.wholeSourceDomainProved, false);
+  }
+
+  const mixed = classifyTypeScriptSource({
+    source: "export function choose(value: number, enabled: boolean): number { if (enabled) { return value; } return 0; }",
+    file: "packages-galerina/example/src/i32-kernel.ts",
+    symbol: "choose",
+  });
+  assert.equal(mixed.outcome, "SUPPORTED");
+  assert.deepEqual(mixed.parameters, [
+    { name: "value", type: "number", domain: "signed-i32-subdomain" },
+    { name: "enabled", type: "boolean" },
+  ]);
+});
+
+test("5y signed-i32 subdomain lowering binds the restriction and fixed vectors", async () => {
+  const identity = classifyTypeScriptSource({
+    source: "export function identity(value: number): number { return value; }",
+    file: "packages-galerina/example/src/i32-kernel.ts",
+    symbol: "identity",
+  });
+  const loweredIdentity = lowerClassifiedSymbol(identity);
+  assert.match(loweredIdentity.source, /pure flow identity\(value: Int\) -> Int/u);
+  assert.match(loweredIdentity.source, /\/\/\/ Restricted input contract: signed-i32 subdomain only; TypeScript remains the whole-Number oracle\./u);
+  assert.equal(loweredIdentity.numericDomain, "signed-i32-subdomain");
+  assert.equal(loweredIdentity.wholeSourceDomainProved, false);
+  assert.deepEqual(loweredIdentity.vectors, [
+    { arguments: [-2147483648], expected: -2147483648 },
+    { arguments: [-1], expected: -1 },
+    { arguments: [0], expected: 0 },
+    { arguments: [1], expected: 1 },
+    { arguments: [2147483647], expected: 2147483647 },
+  ]);
+  assert.equal((await buildCompilerEvidence({
+    source: loweredIdentity.source,
+    file: "sandbox/identity.fungi",
+    flow: loweredIdentity.flow,
+    parameterNames: loweredIdentity.parameterNames,
+    vectors: loweredIdentity.vectors,
+  })).green, true);
+  assert.equal((await buildPhysicalEvidence({
+    root: ROOT,
+    source: loweredIdentity.source,
+    flow: loweredIdentity.flow,
+    vectors: loweredIdentity.vectors,
+  })).green, true);
+
+  const radix = lowerClassifiedSymbol(classifyTypeScriptSource({
+    source: "export function radix(value: number): number { if (value < 0o7) { return -0x80000000; } return 0b1; }",
+    file: "packages-galerina/example/src/i32-kernel.ts",
+    symbol: "radix",
+  }));
+  assert.match(radix.source, /if value < 7/u);
+  assert.match(radix.source, /return -2147483648/u);
+  assert.match(radix.source, /return 1/u);
+  assert.doesNotMatch(radix.source, /0[xXoObB]/u);
+
+  const compared = lowerClassifiedSymbol(classifyTypeScriptSource({
+    source: "export function before(left: number, right: number): boolean { return left < right; }",
+    file: "packages-galerina/example/src/i32-kernel.ts",
+    symbol: "before",
+  }));
+  assert.equal(compared.vectors.length, 25);
+  assert.deepEqual(compared.vectors[0], { arguments: [-2147483648, -2147483648], expected: false });
+  assert.deepEqual(compared.vectors.at(-1), { arguments: [2147483647, 2147483647], expected: false });
+});
+
+test("5z signed-i32 subdomain refuses widening and forged classifications", () => {
+  const refusals = [
+    ["three", "export function three(a: number, b: number, c: boolean): number { return a; }"],
+    ["mixedString", "export function mixedString(value: number, label: string): number { return value; }"],
+    ["floating", "export function floating(value: number): number { return 0.5; }"],
+    ["exponent", "export function exponent(value: number): number { return 1e3; }"],
+    ["separator", "export function separator(value: number): number { return 1_000; }"],
+    ["leadingPlus", "export function leadingPlus(value: number): number { return +1; }"],
+    ["negativeZero", "export function negativeZero(value: number): number { return -0; }"],
+    ["outsideI32", "export function outsideI32(value: number): number { return 2147483648; }"],
+    ["outsideHexI32", "export function outsideHexI32(value: number): number { return -0x80000001; }"],
+    ["add", "export function add(value: number): number { return value + 1; }"],
+    ["modulo", "export function modulo(value: number): boolean { return value % 2 === 0; }"],
+    ["bitwise", "export function bitwise(value: number): number { return value | 0; }"],
+    ["leftShift", "export function leftShift(value: number): number { return value << 1; }"],
+    ["rightShift", "export function rightShift(value: number): number { return value >> 1; }"],
+    ["unsignedShift", "export function unsignedShift(value: number): number { return value >>> 1; }"],
+    ["call", "export function call(value: number): number { return Number(value); }"],
+    ["property", "export function property(value: number): boolean { return value.toString() === '1'; }"],
+    ["assign", "export function assign(value: number): number { value = 1; return value; }"],
+    ["conditional", "export function conditional(value: number): number { return value < 0 ? -1 : 1; }"],
+    ["loop", "export function loop(value: number): number { while (value < 1) { return value; } return value; }"],
+    ["asyncValue", "export async function asyncValue(value: number): Promise<number> { return value; }"],
+    ["optional", "export function optional(value?: number): number { return 0; }"],
+    ["defaulted", "export function defaulted(value: number = 0): number { return value; }"],
+    ["rested", "export function rested(...values: number[]): number { return 0; }"],
+    ["destructured", "export function destructured([value]: number[]): number { return value; }"],
+  ];
+  for (const [symbol, source] of refusals) {
+    assert.notEqual(classifyTypeScriptSource({
+      source,
+      file: "packages-galerina/example/src/i32-refusal.ts",
+      symbol,
+    }).outcome, "SUPPORTED", symbol);
+  }
+
+  const admitted = classifyTypeScriptSource({
+    source: "export function identity(value: number): number { return value; }",
+    file: "packages-galerina/example/src/i32-kernel.ts",
+    symbol: "identity",
+  });
+  const { numericDomain: _removed, ...withoutMarker } = admitted;
+  assert.throws(() => lowerClassifiedSymbol(withoutMarker));
+  assert.throws(() => lowerClassifiedSymbol({ ...admitted, numericDomain: "signed-i32-subdomain" }));
+});
+
+test("5aa signed-i32 binary AND classification is explicit and non-authorizing", () => {
+  const mask = classifyTypeScriptSource({
+    source: "export function mask(value: number): number { return value & 0xff; }",
+    file: "packages-galerina/example/src/i32-bitwise.ts",
+    symbol: "mask",
+  });
+  assert.equal(mask.outcome, "SUPPORTED");
+  assert.equal(mask.numericDomain, "signed-i32-subdomain");
+  assert.equal(mask.bitwiseProfile, "signed-i32-bitwise-and");
+  assert.deepEqual(mask.operators, ["&"]);
+  assert.equal(mask.wholeSourceDomainProved, false);
+  assert.equal(mask.productionAuthorityReleased, false);
+  assert.equal(mask.consumerSwitched, false);
+  assert.equal(mask.typescriptRetired, false);
+
+  const nested = classifyTypeScriptSource({
+    source: "export function intersect(left: number, right: number): number { return left & (right & 0xff); }",
+    file: "packages-galerina/example/src/i32-bitwise.ts",
+    symbol: "intersect",
+  });
+  assert.equal(nested.outcome, "SUPPORTED");
+  assert.equal(nested.bitwiseProfile, "signed-i32-bitwise-and");
+  assert.deepEqual(nested.parameters, [
+    { name: "left", type: "number", domain: "signed-i32-subdomain" },
+    { name: "right", type: "number", domain: "signed-i32-subdomain" },
+  ]);
+
+  const predicate = classifyTypeScriptSource({
+    source: "export function has(value: number, expected: number): boolean { return (value & expected) === expected; }",
+    file: "packages-galerina/example/src/i32-bitwise.ts",
+    symbol: "has",
+  });
+  assert.equal(predicate.outcome, "SUPPORTED");
+  assert.equal(predicate.bitwiseProfile, "signed-i32-bitwise-and");
+});
+
+test("5ab signed-i32 binary AND lowers to Int.bitAnd with fixed differential and physical evidence", async () => {
+  const classified = classifyTypeScriptSource({
+    source: "export function mask(value: number): number { return value & 0xff; }",
+    file: "packages-galerina/example/src/i32-bitwise.ts",
+    symbol: "mask",
+  });
+  const lowered = lowerClassifiedSymbol(classified);
+  assert.equal(lowered.bitwiseProfile, "signed-i32-bitwise-and");
+  assert.match(lowered.source, /\/\/\/ Operator contract: JavaScript signed-i32 binary & lowered to Int\.bitAnd; no other bitwise operators admitted\./u);
+  assert.match(lowered.source, /return Int\.bitAnd\(value, 255\)/u);
+  assert.doesNotMatch(lowered.source, /return [^\n]* & [^\n]*/u);
+  assert.deepEqual(lowered.vectors, [
+    { arguments: [-2147483648], expected: 0 },
+    { arguments: [-1], expected: 255 },
+    { arguments: [0], expected: 0 },
+    { arguments: [1], expected: 1 },
+    { arguments: [2147483647], expected: 255 },
+  ]);
+  assert.equal((await buildCompilerEvidence({
+    source: lowered.source,
+    file: "sandbox/mask.fungi",
+    flow: lowered.flow,
+    parameterNames: lowered.parameterNames,
+    vectors: lowered.vectors,
+  })).green, true);
+  assert.equal((await buildPhysicalEvidence({
+    root: ROOT,
+    source: lowered.source,
+    flow: lowered.flow,
+    vectors: lowered.vectors,
+  })).green, true);
+
+  const intersect = lowerClassifiedSymbol(classifyTypeScriptSource({
+    source: "export function intersect(left: number, right: number): number { return left & right; }",
+    file: "packages-galerina/example/src/i32-bitwise.ts",
+    symbol: "intersect",
+  }));
+  assert.equal(intersect.vectors.length, 25);
+  assert.deepEqual(intersect.vectors[0], { arguments: [-2147483648, -2147483648], expected: -2147483648 });
+  assert.deepEqual(intersect.vectors.at(-1), { arguments: [2147483647, 2147483647], expected: 2147483647 });
+});
+
+test("5ac signed-i32 binary AND refuses widening, neighbouring operators, and forged markers", () => {
+  const refusals = [
+    ["or", "export function or(value: number): number { return value | 1; }"],
+    ["xor", "export function xor(value: number): number { return value ^ 1; }"],
+    ["not", "export function not(value: number): number { return ~value; }"],
+    ["leftShift", "export function leftShift(value: number): number { return value << 1; }"],
+    ["rightShift", "export function rightShift(value: number): number { return value >> 1; }"],
+    ["unsignedShift", "export function unsignedShift(value: number): number { return value >>> 1; }"],
+    ["booleanOperand", "export function booleanOperand(value: number): number { return value & true; }"],
+    ["floatOperand", "export function floatOperand(value: number): number { return value & 1.5; }"],
+    ["negativeZero", "export function negativeZero(value: number): number { return value & -0; }"],
+    ["outsideI32", "export function outsideI32(value: number): number { return value & 2147483648; }"],
+    ["addAround", "export function addAround(value: number): number { return (value & 1) + 1; }"],
+    ["callOperand", "export function callOperand(value: number): number { return value & Number(1); }"],
+    ["propertyOperand", "export function propertyOperand(value: number): number { return value & value.valueOf(); }"],
+    ["three", "export function three(a: number, b: number, c: number): number { return a & b; }"],
+  ];
+  for (const [symbol, source] of refusals) {
+    assert.notEqual(classifyTypeScriptSource({
+      source,
+      file: "packages-galerina/example/src/i32-bitwise-refusal.ts",
+      symbol,
+    }).outcome, "SUPPORTED", symbol);
+  }
+
+  const admitted = classifyTypeScriptSource({
+    source: "export function mask(value: number): number { return value & 0xff; }",
+    file: "packages-galerina/example/src/i32-bitwise.ts",
+    symbol: "mask",
+  });
+  const { bitwiseProfile: _removed, ...withoutMarker } = admitted;
+  assert.throws(() => lowerClassifiedSymbol(withoutMarker));
+  assert.throws(() => lowerClassifiedSymbol({ ...admitted, bitwiseProfile: "signed-i32-bitwise-or" }));
+});
+
+test("5ad signed-i16 checked subtraction classification is explicit and non-authorizing", () => {
+  const decrement = classifyTypeScriptSource({
+    source: "export function decrement(value: number): number { return value - 1; }",
+    file: "packages-galerina/example/src/i16-subtraction.ts",
+    symbol: "decrement",
+  });
+  assert.equal(decrement.outcome, "SUPPORTED");
+  assert.equal(decrement.numericDomain, "signed-i16-subdomain");
+  assert.equal(decrement.arithmeticProfile, "signed-i16-checked-subtraction");
+  assert.deepEqual(decrement.operators, ["-"]);
+  assert.deepEqual(decrement.parameters, [
+    { name: "value", type: "number", domain: "signed-i16-subdomain" },
+  ]);
+  assert.equal(decrement.wholeSourceDomainProved, false);
+  assert.equal(decrement.productionAuthorityReleased, false);
+  assert.equal(decrement.consumerSwitched, false);
+  assert.equal(decrement.typescriptRetired, false);
+
+  const difference = classifyTypeScriptSource({
+    source: "export function difference(left: number, right: number): number { return left - right; }",
+    file: "packages-galerina/example/src/i16-subtraction.ts",
+    symbol: "difference",
+  });
+  assert.equal(difference.outcome, "SUPPORTED");
+  assert.equal(difference.arithmeticProfile, "signed-i16-checked-subtraction");
+  assert.deepEqual(difference.parameters, [
+    { name: "left", type: "number", domain: "signed-i16-subdomain" },
+    { name: "right", type: "number", domain: "signed-i16-subdomain" },
+  ]);
+});
+
+test("5ae signed-i16 subtraction lowers to checked Fungi with bounded differential and physical evidence", async () => {
+  const lowered = lowerClassifiedSymbol(classifyTypeScriptSource({
+    source: "export function difference(left: number, right: number): number { return left - right; }",
+    file: "packages-galerina/example/src/i16-subtraction.ts",
+    symbol: "difference",
+  }));
+  assert.equal(lowered.numericDomain, "signed-i16-subdomain");
+  assert.equal(lowered.arithmeticProfile, "signed-i16-checked-subtraction");
+  assert.match(lowered.source, /\/\/\/ Restricted input contract: signed-i16 operands; direct subtraction result remains signed-i32; TypeScript remains the whole-Number oracle\./u);
+  assert.match(lowered.source, /return left - right/u);
+  assert.equal(lowered.vectors.length, 25);
+  assert.deepEqual(lowered.vectors[0], { arguments: [-32768, -32768], expected: 0 });
+  assert.deepEqual(lowered.vectors.find((item) => item.arguments[0] === -32768 && item.arguments[1] === 32767), {
+    arguments: [-32768, 32767], expected: -65535,
+  });
+  assert.deepEqual(lowered.vectors.find((item) => item.arguments[0] === 32767 && item.arguments[1] === -32768), {
+    arguments: [32767, -32768], expected: 65535,
+  });
+  assert.equal((await buildCompilerEvidence({
+    source: lowered.source,
+    file: "sandbox/difference.fungi",
+    flow: lowered.flow,
+    parameterNames: lowered.parameterNames,
+    vectors: lowered.vectors,
+  })).green, true);
+  assert.equal((await buildPhysicalEvidence({
+    root: ROOT,
+    source: lowered.source,
+    flow: lowered.flow,
+    vectors: lowered.vectors,
+  })).green, true);
+});
+
+test("5af signed-i16 subtraction refuses widening, nesting, neighbours, mixing, and forged markers", () => {
+  const refusals = [
+    ["nested", "export function nested(value: number): number { return (value - 1) - 1; }"],
+    ["outsidePositive", "export function outsidePositive(value: number): number { return value - 32768; }"],
+    ["outsideNegative", "export function outsideNegative(value: number): number { return value - -32769; }"],
+    ["negativeZero", "export function negativeZero(value: number): number { return value - -0; }"],
+    ["add", "export function add(value: number): number { return value + 1; }"],
+    ["multiply", "export function multiply(value: number): number { return value * 2; }"],
+    ["divide", "export function divide(value: number): number { return value / 2; }"],
+    ["remainder", "export function remainder(value: number): number { return value % 2; }"],
+    ["mixedAnd", "export function mixedAnd(value: number): number { return (value & 255) - 1; }"],
+    ["booleanOperand", "export function booleanOperand(value: number, flag: boolean): number { return value - flag; }"],
+    ["callOperand", "export function callOperand(value: number): number { return value - Number(1); }"],
+    ["propertyOperand", "export function propertyOperand(value: number): number { return value - value.valueOf(); }"],
+    ["three", "export function three(a: number, b: number, c: number): number { return a - b; }"],
+  ];
+  for (const [symbol, source] of refusals) {
+    assert.notEqual(classifyTypeScriptSource({
+      source,
+      file: "packages-galerina/example/src/i16-subtraction-refusal.ts",
+      symbol,
+    }).outcome, "SUPPORTED", symbol);
+  }
+
+  const admitted = classifyTypeScriptSource({
+    source: "export function decrement(value: number): number { return value - 1; }",
+    file: "packages-galerina/example/src/i16-subtraction.ts",
+    symbol: "decrement",
+  });
+  const { arithmeticProfile: _removed, ...withoutMarker } = admitted;
+  assert.throws(() => lowerClassifiedSymbol(withoutMarker));
+  assert.throws(() => lowerClassifiedSymbol({ ...admitted, arithmeticProfile: "signed-i16-wrapping-subtraction" }));
 });
 
 test("6 lowerer emits documented deterministic Fungi and cannot consume a forged record", () => {
@@ -578,12 +1074,30 @@ test("15 inventory logs bounded blocker groups without treating the test package
   ].join("\n");
   const local = inventoryTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" });
   assert.deepEqual(local.map((item) => item.outcome), ["SUPPORTED", "BLOCKED", "BLOCKED"]);
+  const conditional = classifyTypeScriptSource({
+    source: "export function choose(flag: boolean): boolean { return flag ? false : true; }\n",
+    file: "packages-galerina/example/src/conditional.ts",
+    symbol: "choose",
+  });
+  assert.equal(conditional.outcome, "BLOCKED");
+  assert.deepEqual(conditional.unsupportedSyntaxKinds, ["ConditionalExpression"]);
   const out = join(dir, "inventory.json");
   const result = await runInventory({ root: ROOT, project: await graphProject(), out, examples: 2 });
   assert.equal(result.schema, "galerina.ts-to-fungi-sandbox.inventory.v1");
   assert.ok(result.totals.SUPPORTED > 0);
   assert.ok(result.totals.BLOCKED > 0);
   assert.ok(result.groups.every((group) => group.examples.length <= 2));
+  assert.ok(result.groups.every((group) => Array.isArray(group.syntaxKinds)));
+  assert.ok(result.groups.some((group) => group.key.startsWith(BLOCKERS.UNSUPPORTED_CONTROL) && group.syntaxKinds.length > 0));
+  assert.ok(result.groups.every((group) => group.syntaxKinds.every((kind, index, kinds) => index === 0 || kinds[index - 1] < kind)));
+  assert.ok(Array.isArray(result.syntaxGroups));
+  assert.ok(result.syntaxGroups.some((group) => group.kind === "ConditionalExpression" && group.count > 0));
+  assert.ok(result.syntaxGroups.every((group) => group.examples.length <= 2));
+  assert.ok(result.syntaxGroups.every((group) => Number.isSafeInteger(group.isolatedCount) && group.isolatedCount >= 0 && group.isolatedCount <= group.count));
+  assert.ok(result.syntaxGroups.every((group) => group.isolatedExamples.length <= 2));
+  assert.ok(result.syntaxGroups.flatMap((group) => group.examples).every((scope) => !scope.startsWith("packages-galerina/galerina-test/")));
+  assert.ok(result.syntaxGroups.flatMap((group) => group.isolatedExamples).every((scope) => !scope.startsWith("packages-galerina/galerina-test/")));
+  assert.ok(result.syntaxGroups.every((group, index, groups) => index === 0 || groups[index - 1].count > group.count || (groups[index - 1].count === group.count && groups[index - 1].kind < group.kind)));
   assert.ok(result.groups.flatMap((group) => group.examples).every((scope) => !scope.startsWith("packages-galerina/galerina-test/")));
   assert.deepEqual(JSON.parse(await readFile(out, "utf8")), result);
 }));

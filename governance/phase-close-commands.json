@@ -1098,8 +1098,13 @@
         "darwin"
       ],
       "selfTest": {
-        "kind": "absent",
-        "reason": "hostile receipt cases are covered by the registered tooling test"
+        "kind": "present",
+        "command": [
+          "node",
+          "--test",
+          "scripts/tests/audit-conversion-slice-close.test.mjs"
+        ],
+        "plantedDefectId": "malformed-conversion-slice-receipt"
       },
       "predecessors": [],
       "lifecycle": {
@@ -1164,8 +1169,13 @@
         "darwin"
       ],
       "selfTest": {
-        "kind": "absent",
-        "reason": "commit-shape boundaries are covered by the registered tooling test"
+        "kind": "present",
+        "command": [
+          "node",
+          "--test",
+          "scripts/tests/audit-conversion-report-commit.test.mjs"
+        ],
+        "plantedDefectId": "conversion-report-without-fungi-batch"
       },
       "predecessors": [],
       "lifecycle": {

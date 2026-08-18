@@ -367,6 +367,15 @@ export async function loadPriorRefusalScopes({ root, project, directory }) {
 }
 
 export function selectedPhysicalProfileRefusal(classification) {
+  if (
+    classification.kind === "constant"
+    && classification.value?.type === "float"
+  ) {
+    return Object.freeze({
+      code: BLOCKERS.PHYSICAL_FINITE_FLOAT_LITERAL,
+      detail: "selected clean SLIDE build point does not yet admit the finite Float literal profile",
+    });
+  }
   if (classification.kind === "function" && classification.parameters.some((parameter) => parameter.type === "string")) {
     return Object.freeze({
       code: BLOCKERS.PHYSICAL_STRING_PARAMETER,
@@ -501,6 +510,7 @@ export async function runInventory({ root, project, out, examples = MAX_BATCH_RE
   const packageCache = new Map();
   const totals = Object.fromEntries([...OUTCOMES, "SUPPORTED"].map((outcome) => [outcome, 0]));
   const groups = new Map();
+  const syntaxGroups = new Map();
   for (const file of trackedTypeScriptSources(root)) {
     if (await isVendoredPackage(root, file, packageCache)) continue;
     const sourceBytes = await readFile(resolve(root, ...file.split("/")));
@@ -513,10 +523,23 @@ export async function runInventory({ root, project, out, examples = MAX_BATCH_RE
       const baseKey = classification.blockers?.[0] ?? classification.reason ?? "UNCLASSIFIED";
       const detail = classification.obligations?.[0];
       const key = detail === undefined ? baseKey : `${baseKey} :: ${detail}`;
-      const group = groups.get(key) ?? { key, outcome, count: 0, examples: [] };
+      const group = groups.get(key) ?? { key, outcome, count: 0, examples: [], syntaxKinds: [] };
       group.count += 1;
       if (group.examples.length < examples) group.examples.push(`${file}#${classification.symbol}`);
+      group.syntaxKinds = [...new Set([...group.syntaxKinds, ...(classification.unsupportedSyntaxKinds ?? [])])].sort(codeUnitCompare);
       groups.set(key, group);
+      const unsupportedSyntaxKinds = classification.unsupportedSyntaxKinds ?? [];
+      const isolatedSyntaxKind = classification.blockers?.length === 1 && unsupportedSyntaxKinds.length === 1;
+      for (const kind of unsupportedSyntaxKinds) {
+        const syntaxGroup = syntaxGroups.get(kind) ?? { kind, count: 0, examples: [], isolatedCount: 0, isolatedExamples: [] };
+        syntaxGroup.count += 1;
+        if (syntaxGroup.examples.length < examples) syntaxGroup.examples.push(`${file}#${classification.symbol}`);
+        if (isolatedSyntaxKind) {
+          syntaxGroup.isolatedCount += 1;
+          if (syntaxGroup.isolatedExamples.length < examples) syntaxGroup.isolatedExamples.push(`${file}#${classification.symbol}`);
+        }
+        syntaxGroups.set(kind, syntaxGroup);
+      }
     }
   }
   const result = Object.freeze({
@@ -526,7 +549,14 @@ export async function runInventory({ root, project, out, examples = MAX_BATCH_RE
     totals: Object.freeze(totals),
     groups: Object.freeze([...groups.values()]
       .sort((left, right) => right.count - left.count || codeUnitCompare(left.key, right.key))
-      .map((group) => Object.freeze({ ...group, examples: Object.freeze(group.examples) }))),
+      .map((group) => Object.freeze({ ...group, examples: Object.freeze(group.examples), syntaxKinds: Object.freeze(group.syntaxKinds) }))),
+    syntaxGroups: Object.freeze([...syntaxGroups.values()]
+      .sort((left, right) => right.count - left.count || codeUnitCompare(left.kind, right.kind))
+      .map((group) => Object.freeze({
+        ...group,
+        examples: Object.freeze(group.examples),
+        isolatedExamples: Object.freeze(group.isolatedExamples),
+      }))),
   });
   await atomicWrite(resolve(out), `${canonicalJson(result)}\n`);
   return result;
