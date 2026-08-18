@@ -149,6 +149,11 @@ build/lss-test-*/
 build/fungi-scan/
 build/package-usage/
 build/ts-to-fungi-sandbox/
+# Conversion-gate manifests and run cards are local build evidence. Keeping
+# both paths ignored prevents the gate's clean-owner preflight from refusing
+# its own inputs and outputs before a bounded pilot can run.
+build/ts-to-fungi-pilot-*/
+build/fungi-conversion-gate/
 
 # ── Local retrieval / index MCP artifacts (per-machine; rebuildable; NEVER commit) ──
 # Machine-local caches built by local MCP servers (codebase-memory-mcp's code index). Large binary
