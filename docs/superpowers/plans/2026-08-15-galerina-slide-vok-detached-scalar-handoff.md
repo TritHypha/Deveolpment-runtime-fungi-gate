@@ -577,6 +577,25 @@ AST/TypeScript/Hypha dependency is rejected by the planted-red audit.
   this checkpoint does not manufacture those missing artifacts or infer a
   complete end-to-end production chain from the SLIDE/Lyth subchain.
 
+### Pre-coding decomposition checkpoint — 2026-08-17
+
+- Tasks 1-2 are expanded into
+  `docs/superpowers/plans/2026-08-17-galerina-detached-authority-detectors.md`.
+  The planted red controls and fail-closed closure analysis land before the
+  compiler route can claim detachment.
+- Tasks 3-6 are expanded into
+  `docs/superpowers/plans/2026-08-17-galerina-checked-snapshot-detached-gir.md`.
+  This plan owns artifact references, immutable checked snapshots, detached GIR
+  lowering and the explicit CLI/runtime route.
+- Task 12 is expanded into
+  `docs/superpowers/plans/2026-08-17-galerina-slide-lyth-vok-scalar-chain-integration.md`.
+  It runs each owner in a fresh process, binds only verified references and
+  requires mutation refusal at every edge.
+- These child plans refine, not supersede, the master order. Tasks 13-15 remain
+  paused, the current shared checkout's converter and `.fungi` edits remain
+  user-owned, and no child plan authorizes production, conversion retirement,
+  publication or a graph-freshness claim.
+
 ### Task 12: Prove the complete scalar chain and retained component boundaries
 
 **Files:**

@@ -4,6 +4,45 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Detached scalar implementation route - 2026-08-17
+
+- [x] Retain private RD-0855 as the current architecture decision: one
+  widthless semantic Trit domain, scalar/64/256 physical profiles, 32 only as
+  a compatibility fallback, owner-local storage and typed reference-only
+  transfers.
+- [x] Record the already-landed sibling subchain without promoting it to an
+  end-to-end result: SLIDE Tasks 7-9 and 11 exist at `ebcbd05`; Lyth Task 10
+  exists at `f106172` and remains non-authorizing. VOK authority remains the
+  SLIDE-owned lease/admission/terminal-receipt boundary rather than a separate
+  ordinary compute stage.
+- [x] Decompose the remaining pre-coding work into three executable plans:
+  `docs/superpowers/plans/2026-08-17-galerina-detached-authority-detectors.md`,
+  `docs/superpowers/plans/2026-08-17-galerina-checked-snapshot-detached-gir.md`
+  and
+  `docs/superpowers/plans/2026-08-17-galerina-slide-lyth-vok-scalar-chain-integration.md`.
+- [ ] Execute the detached-authority detector plan first. Its planted red
+  controls must catch AST/TypeScript, WAT/Wasm, Tower/Tri/Hypha and unresolved
+  re-entry before either audit is registered as a gate.
+- [ ] Implement Galerina Tasks 1-6 through the checked-snapshot/detached-GIR
+  plan. `emitGIR(ast, ...)`, the AST interpreter and WAT remain retained
+  bootstrap/differential routes, never fallback authority for detached mode.
+- [ ] Execute the fresh-process scalar integration plan and then close master
+  Task 12. Prove one complete source-to-VOK receipt chain plus a seeded mutation
+  refusal at every transfer; retain Tower Citizen, Tri-Pipe and Tri-Fuse at
+  their existing bounded roles without making them mandatory pilot workload.
+- [ ] Keep Tasks 13-15 and renewed bulk TypeScript-to-Fungi conversion paused
+  until the preceding chain is green. The ten-source sandbox pilot keeps its
+  TypeScript inputs, logs refusals and applies duplicate/shadow and commit-shape
+  controls; no report-only conversion cycle is permitted.
+- [ ] Restore fresh, independently readable graph build points before making
+  an absence or current-call-chain claim. The KB RD query currently returns
+  RD-0855 as `STALE/AMBIGUOUS`; codebase-memory freshness and the hierarchical
+  Codex-memory owner remain `UNKNOWN` until their owning indexes are refreshed.
+- [x] Move shared skills and generic tools to the sibling `AGENTS/skills` and
+  `AGENTS/tools` collection, repoint the active skill junctions and run the
+  isolation/tool self-checks. This relocation changes discovery only and grants
+  no Galerina build, conversion or publication authority.
+
 ### RD-0855 Galerina/SLIDE/VOK architecture reset - 2026-08-15
 
 - [x] Adopt one widthless semantic Trit domain with physical execution profiles
@@ -26,23 +65,23 @@ counts or open items that a newer section explicitly supersedes.
   of two is a hard refusal. The sole exception is final closure bookkeeping.
 - [ ] Reconcile the Galerina source handoff, SLIDE profile registry and VOK
   evidence schema against private RD-0855 before reopening bulk conversion.
-- [ ] Update `scripts/memory-graph.mjs` and the KB
-  `tools/memory-index-audit.mjs` for the reorganized hierarchical Codex memory
-  layout. Their self-tests pass, but their live flat-file health checks currently
-  refuse `memory_summary` and `raw_memories` as unindexed siblings; do not treat
-  that refusal as a stale-memory finding. The separate Myco hierarchy index is
-  current.
+- [x] Supersede the flat-memory repair instruction with the 2026-08-17 owner
+  ruling: the hierarchical Codex memory corpus is not rewritten to satisfy a
+  flat frontmatter-store preflight. Use its owning locator-index surface when
+  available; until then freshness is `UNKNOWN`, while the schema-mismatch
+  refusal remains useful evidence that the wrong instrument did not fail open.
 - [ ] Close the current graph-all refusals before claiming a clean graph refresh:
   package boundaries report undeclared self-hosted Fungi in core-compiler,
   ext-secrets-vault, framework-app-kernel, observability and tower-citizen, and
   the semantic graph reports stale `retirement executableFamily.mjs`. The other
   five registered graph owners generate and check successfully; do not hide the
   two red owners or publish their partial outputs as closure evidence.
-- [ ] Restore the external codebase-memory service before claiming graph-index
-  freshness. Both a bounded graph search and the required moderate rebuild hung
-  without a build-point receipt and were terminated; freshness remains
-  `UNKNOWN`. Myco is freshly indexed, but it is not a substitute for the code
-  knowledge graph or an independently verified `indexed_head_sha`.
+- [ ] Obtain an independently verifiable codebase-memory build point before
+  claiming graph-index freshness. The service now answers bounded graph/code
+  searches, but this client exposes no `index_status` receipt and the shared
+  Galerina worktree is dirty, so a rebuild would misbind uncommitted bytes to
+  the committed HEAD. Freshness remains `UNKNOWN`; Myco is a locator fallback,
+  not a substitute for `indexed_head_sha`.
 
 ### Forty-file primitive Fungi batch - 2026-08-14
 

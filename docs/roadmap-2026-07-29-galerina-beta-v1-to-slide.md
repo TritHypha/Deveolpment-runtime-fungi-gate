@@ -3,6 +3,35 @@
 Date: 2026-08-13
 Branch: `codex/rd-0792-synthesize-only`
 
+## Detached scalar authority route - 2026-08-17
+
+The current route is no longer a report/slice queue. Private RD-0855 and the
+master detached-scalar handoff plan retain one widthless semantic Trit domain
+with scalar, 64 and 256 physical profiles; 32 is compatibility fallback only.
+Each owner stores its own bytes and passes a typed digest/length/provenance
+reference. The graph is a locator surface, not artifact storage. Galerina owns
+source, checked snapshot and canonical GIR; SLIDE owns representation planning,
+physical `.slide` and independent admission; Lyth supplies non-authorizing work
+evidence; VOK owns the affine lease, final execution admission and terminal
+receipt.
+
+SLIDE Tasks 7-9 and 11 are present at `ebcbd05`, and Lyth Task 10 is present at
+`f106172`. That is a verified sibling subchain, not proof of Galerina Tasks 1-6
+or the master Task 12. Remaining pre-coding work is split into these live plans:
+
+- `docs/superpowers/plans/2026-08-17-galerina-detached-authority-detectors.md`;
+- `docs/superpowers/plans/2026-08-17-galerina-checked-snapshot-detached-gir.md`;
+- `docs/superpowers/plans/2026-08-17-galerina-slide-lyth-vok-scalar-chain-integration.md`.
+
+Execution order is detector red/green proof, checked snapshot plus detached GIR,
+fresh-process constellation integration, then and only then the bounded
+ten-source converter pilot. Tower Citizen, Tri-Pipe and Tri-Fuse remain in the
+constellation with their existing governed roles; they do not receive VOK
+authority and are not artificial workload requirements for the converter.
+Bulk conversion and TypeScript retirement remain paused. Current KB RD lookup
+is `STALE/AMBIGUOUS`, and graph freshness is non-authorizing until each owner
+returns an independently checked build point.
+
 ## Slices 998-1047 - Tower transport, Tri-Pipe and TriRegex
 
 These 50 unique source-order scopes close the final TPL simulator boundary,
