@@ -23,10 +23,14 @@ counts or open items that a newer section explicitly supersedes.
   seam audit inspects one with zero violations/refusals. The registered graph
   refresh reports `status: indexed`, nodes equal to expected nodes and an exact
   HEAD build point; a fresh symbol lookup finds the new artifact-reference core.
-- [ ] Keep every new project `.fungi` candidate paused until Tasks 1-8 and 10
+- [x] Keep every new project `.fungi` candidate paused until Tasks 1-8 and 10
   plus final self-review in the 2026-08-18 deterministic tooling plan are
   complete and freshly verified. Task 9 (the bounded ten-source pilot) runs
-  last; neither tracked nor `build/` candidates may be authored early.
+  last; neither tracked nor `build/` candidates was authored early. The
+  pre-Fungi tooling commit is `bc6f2aaf`; its exact graph reports
+  27,364/27,364 nodes and 65,719/65,719 edges, the new
+  `buildReferenceManifest` probe resolves, and the real four-owner preflight
+  returns `ALLOW`. The final bookkeeping commit is re-indexed before Task 9.
 - [x] Reclassify all 2,200 `@galerina/test` conversion overlays as test-fixture
   debt with zero real-package conversion credit. The corpus-disposition report
   records 55 package tests, 55 conditional physical integration tests, exact

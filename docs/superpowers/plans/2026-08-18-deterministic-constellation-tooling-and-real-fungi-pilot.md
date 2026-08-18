@@ -406,7 +406,7 @@ when stale. Two runs are byte-identical.
 - [x] Run the normal tool-index publisher/check and affected phase-close group.
 - [x] Confirm every generated JSON contains no absolute local paths or source
   bodies and every required owner envelope has an exact build point.
-- [ ] Re-index the exact final Galerina commit under its declared project and
+- [x] Re-index the exact final Galerina commit under its declared project and
   verify node counts, expected counts, indexed HEAD and a new symbol probe.
 
 Evidence (2026-08-18, before final commit): all directly affected phase-close
@@ -422,6 +422,21 @@ pre-existing or generated-owner failures); its oversized 2,200-overlay corpus
 scan also reached the governed timeout. Generated JSON is valid and body-free,
 with no absolute local paths or private markers. The final exact-commit graph
 refresh remains the sole open pre-Fungi checkbox.
+
+Final graph/preflight receipt (2026-08-18): the tooling commit `bc6f2aaf`
+indexed under `Galerina-detached-scalar-phase1-20260818` with `status: indexed`,
+27,364/27,364 nodes, 65,719/65,719 edges and exact indexed HEAD
+`bc6f2aaf00830a4a088a4434ada329ae64edd91c`; `buildReferenceManifest`
+resolved from the new docs source. The default Lyth project exposed an old
+build point and was refused. A fresh explicit Lyth project then indexed
+992/992 nodes and 1,104/1,104 edges at exact HEAD
+`e5c664e8276566956ce9408507c086e1d76878c0`, and its `deriveProofWork` probe
+resolved. The real detached-scalar preflight subsequently returned `ALLOW`
+for Galerina, SLIDE, VOK and Lyth with all 13 checks green. After this
+bookkeeping-only plan commit, Galerina is refreshed once more to bind the final
+repository HEAD before Task 9 may run. If the fixed-name project repeats an
+older excluded-doc build point, that receipt is refused and a fresh explicit
+head-scoped project override is required instead.
 
 ## Task 9: Run the controlled ten-source real-package pilot
 
