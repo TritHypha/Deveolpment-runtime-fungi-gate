@@ -63,6 +63,23 @@ async function historyTail(root, currentHasReport) {
   return Object.freeze({ reportOnlyStreak, precedingQualifyingBatch: false });
 }
 
+export function npmRunInvocation(script, {
+  platform = process.platform,
+  nodePath = process.execPath,
+} = {}) {
+  if (platform === "win32") {
+    const npmCli = resolve(dirname(nodePath), "node_modules", "npm", "bin", "npm-cli.js");
+    return Object.freeze({
+      executable: nodePath,
+      args: Object.freeze([npmCli, "run", "--silent", script]),
+    });
+  }
+  return Object.freeze({
+    executable: "npm",
+    args: Object.freeze(["run", "--silent", script]),
+  });
+}
+
 export async function inspectConversionCommitPolicy(root, { finalTailException = false } = {}) {
   const changed = await changedPaths(root);
   const fungi = await addedFungiPaths(root);
@@ -88,10 +105,10 @@ export async function inspectConversionCommitPolicy(root, { finalTailException =
 }
 
 async function runLythProofWork(lythRoot) {
-  const executable = process.platform === "win32" ? "npm.cmd" : "npm";
+  const invocation = npmRunInvocation("verify:detached-scalar");
   let result;
   try {
-    result = await execFile(executable, ["run", "--silent", "verify:detached-scalar"], {
+    result = await execFile(invocation.executable, invocation.args, {
       cwd: lythRoot,
       encoding: "utf8",
       windowsHide: true,

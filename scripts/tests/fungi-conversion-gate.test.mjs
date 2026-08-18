@@ -15,6 +15,7 @@ import {
   chainFromSandboxReceipt,
   collectConversionGateRun,
   inspectSourceRequest,
+  npmRunInvocation,
   runConversionGateSelfTest,
   validateGateManifest,
 } from "../lib/fungi-conversion-gate/index.mjs";
@@ -116,6 +117,26 @@ test("the roster has exactly the twelve declared owners and gates", () => {
     "lyth-proof-work",
     "commit-policy",
   ]);
+});
+
+test("Windows npm scripts run through Node instead of an unspawnable cmd shim", () => {
+  const windows = npmRunInvocation("verify:detached-scalar", {
+    platform: "win32",
+    nodePath: "C:/Program Files/nodejs/node.exe",
+  });
+  assert.equal(windows.executable, "C:/Program Files/nodejs/node.exe");
+  assert.deepEqual(windows.args, [
+    resolve("C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js"),
+    "run",
+    "--silent",
+    "verify:detached-scalar",
+  ]);
+  assert.doesNotMatch(windows.executable, /\.cmd$/iu);
+
+  assert.deepEqual(npmRunInvocation("verify:detached-scalar", { platform: "linux" }), {
+    executable: "npm",
+    args: ["run", "--silent", "verify:detached-scalar"],
+  });
 });
 
 test("manifests admit one to ten unique real-package TypeScript scopes", () => {
