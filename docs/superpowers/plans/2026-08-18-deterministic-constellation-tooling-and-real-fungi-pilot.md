@@ -445,31 +445,76 @@ self-review are complete with fresh evidence. Do not use Task 9 to finish or
 work around an earlier prerequisite.
 
 **Files:**
-- Create: `build/ts-to-fungi-pilot-2026-08-18/manifest.json`
-- Generate: `build/ts-to-fungi-pilot-2026-08-18/run-card.json`
-- Generate: `build/ts-to-fungi-pilot-2026-08-18/candidates/`
-- Generate: `build/ts-to-fungi-pilot-2026-08-18/records/`
+- Create locally: `build/ts-to-fungi-pilot-2026-08-18/manifest.json`
+- Generate: `build/fungi-conversion-gate/pilot-2026-08-18-d-run-card.json`
+- Generate: `build/ts-to-fungi-sandbox/pilot-2026-08-18-d/candidates/`
+- Generate: `build/ts-to-fungi-sandbox/pilot-2026-08-18-d/records/`
 - Modify: `docs/TODO.md`
 
-- [ ] Select exactly ten uncredited real-package symbols from the fresh graph,
+- [x] Select exactly ten uncredited real-package symbols from the fresh graph,
   excluding `@galerina/test`, generated code, overlays, prior receipts and
   loaded-asset aliases.
-- [ ] Read exact source, callers, focused tests and owning package boundary for
+- [x] Read exact source, callers, focused tests and owning package boundary for
   each symbol before classification.
-- [ ] Run the preflight and require all mandatory owners green.
-- [ ] Run the sandbox through the conversion gate; do not call the lowerer
+- [x] Run the preflight and require all mandatory owners green.
+- [x] Run the sandbox through the conversion gate; do not call the lowerer
   directly and do not manufacture candidates for blocked semantics.
-- [ ] Keep every `.ts` byte-identical and record `CONVERTED`, `BLOCKED` or
+- [x] Keep every `.ts` byte-identical and record `CONVERTED`, `BLOCKED` or
   `MANUAL_REVIEW` with exact reason codes.
-- [ ] Run exact and normalized whole-corpus duplicate/shadow checks including
+- [x] Run exact and normalized whole-corpus duplicate/shadow checks including
   all untracked files.
-- [ ] Validate every converted candidate through compiler, checked snapshot,
+- [x] Validate every converted candidate through compiler, checked snapshot,
   GIR, physical SLIDE, independent re-admission and VOK receipt.
-- [ ] Keep pilot candidates in `build/`; do not copy them into package
+- [x] Keep pilot candidates in `build/`; do not copy them into package
   `self-hosted/` roots unless a later real conversion batch reaches the 40-file
   commit floor and passes the report policy.
-- [ ] Update TODO with pilot outcomes and the next genuine blocker; do not claim
+- [x] Update TODO with pilot outcomes and the next genuine blocker; do not claim
   production authority, switch or TypeScript retirement.
+
+Evidence (2026-08-18): discovery scanned 37 real-package scopes and selected
+ten uncredited constants from `artifact-reference-core.ts`,
+`artifact-reference.ts` and `checked-module-snapshot.ts`; 27 scopes already
+had Fungi credit and were excluded. Exact graph caller reads, the green
+`@galerina/core-compiler` package boundary and focused tests
+`artifact-reference.test.mjs` and `checked-module-snapshot-v1.test.mjs` were
+read before classification. The first gate call correctly held because its
+planned manifest/run-card folders were not ignored. Commit `e8431dd6` makes
+those local build-evidence paths non-committable, and commit `3ce5ec0e` fixes a
+Node 24 Windows `npm.cmd` spawn refusal by running npm's JavaScript CLI through
+Node; the regression suite is 19/19.
+
+Fresh graph project `Galerina-detached-scalar-phase1-20260818-3ce5ec0e`
+contains 27,364/27,364 nodes and 65,522/65,522 edges at exact HEAD
+`3ce5ec0ec7f2d018507c7cffbdc1c25d39d9ef71`. Controlled run
+`pilot-2026-08-18-d` is `ALLOW`: all twelve roster checks allow and all ten
+requests are `CONVERTED`. Every request independently verifies source,
+candidate, checked snapshot, deterministic GIR, physical package/profile and
+VOK receipt; Lyth returns `EVIDENCE_READY` with authority unreleased. The
+shared receipt-set digest is
+`sha256:2abc981ba4ac3558f44c7b44fba832fe0a342ada9cc21ae98637808e1b641d4c`.
+The source hashes remain exactly
+`0B7A40D0F4A36285C4FA4201CAE85FF00045BB409510F99C7AF57CD2F7343546`,
+`4D169BD1AE2AB7D7FC75F77564A9F5A19C0B1D4FB3A83C5BDCFC713995782A68`
+and `57B56A9E5454EEBD83FA513A855C20B99337413F790C6AAA762EA34EBC9BC9C9`;
+Git reports no changed or untracked TypeScript.
+
+The sandbox's exact and alpha-normalized collision oracle rechecked the ten
+final candidates against 2,971 tracked/untracked corpus files and against each
+other: zero exact duplicates and zero normalized shadows. The governed
+worktree uniqueness audit is also green. Candidates from the two earlier
+Lyth-refused runs were removed, leaving exactly the ten final build-only
+candidates. No package loadedAsset, consumer, conversion report or TypeScript
+file changed; no commit, switch, retirement, push or production authority was
+issued for candidates. The next genuine blocker is a later owner-reviewed
+batch accumulating at least 40 unique real-project Fungi files (expected 50),
+with package placement and consumer-switch evidence; this ten-source pilot
+cannot satisfy that publication gate by itself.
+
+Final focused verification is green: docs 38/38, artifact/snapshot 34/34 and
+conversion-gate 19/19. The repository-wide TS/Fungi drift report remains a
+truthful `HOLD` at its older baseline: 198 source-build-point drifts, with zero
+symbol, candidate, chain or unbound drift. That broad hold is not relabelled
+green and does not override the pilot's exact three-file digest evidence.
 
 ## Task 10: Review the live overlay fixture corpus without deleting it blindly
 

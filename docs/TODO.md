@@ -49,10 +49,18 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Admit 64 and then 256 only through later independent physical evidence.
   A fallback is admission-time replanning with a new plan identity, never an
   unrecorded runtime rescue or semantic reinterpretation.
-- [ ] Resume the sandbox converter only in ten-source trials. Keep every `.ts`
-  input, log refusals, and run duplicate/shadow checks on every proposed output.
-  Normal conversion commits require at least 40 unique new or updated real
-  `.fungi` files (expected 50) and at most one report delta; a report-only streak
+- [x] Resume the sandbox converter only in ten-source trials. The first
+  real-package trial (`pilot-2026-08-18-d`) selected ten uncredited constants,
+  kept all three TypeScript files byte-identical, converted 10/10 through the
+  governed gate and verified every source -> checked snapshot -> GIR ->
+  physical SLIDE -> independent VOK chain. All twelve gate checks allow; Lyth
+  is `EVIDENCE_READY` with authority unreleased. Exact and normalized checking
+  found zero twins against 2,971 tracked/untracked corpus files and within the
+  batch. Only ten ignored `build/` candidates remain; no loadedAsset, consumer,
+  report or production authority changed. The next blocker is a later
+  owner-reviewed batch reaching at least 40 unique real `.fungi` files
+  (expected 50), with package placement and consumer-switch evidence. Normal
+  conversion commits still allow at most one report delta; a report-only streak
   of two is a hard refusal. The sole exception is final closure bookkeeping.
 - [x] Add one deterministic parser/checker-backed Fungi construct analyzer for
   `if`, `match`, `check`, `contract`, `flow`, `global`, `vault` and `hallmark`.
