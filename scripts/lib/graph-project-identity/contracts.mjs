@@ -17,14 +17,14 @@ export const GRAPH_PROJECT_ALIASES = Object.freeze({
   vok: Object.freeze({
     project: "SLIDE",
     repository: "SLIDE",
-    componentScope: "src/checked-fungi-package-file.mjs",
-    probe: Object.freeze({ name: "verifyTypedCheckedFungiPackageReceipt", label: "Function", filePath: "src/checked-fungi-package-file.mjs" }),
+    componentScope: "src/checked-fungi-package-publication-loader.mjs",
+    probe: Object.freeze({ name: "verifyTypedCheckedFungiPackageReceipt", label: "Function", filePath: "src/checked-fungi-package-publication-loader.mjs" }),
   }),
   lyth: Object.freeze({
     project: "lyth-weaver",
     repository: "lyth-weaver",
     componentScope: ".",
-    probe: Object.freeze({ name: "adaptLythAdmissionWork", label: "Function", filePath: "src/slide-admission-work-adapter.ts" }),
+    probe: Object.freeze({ name: "deriveProofWork", label: "Function", filePath: "experiments/a-lane-harness.ts" }),
   }),
 });
 

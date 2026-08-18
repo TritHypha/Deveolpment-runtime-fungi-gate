@@ -125,22 +125,33 @@ remain a HOLD for later corpus disposition rather than conversion credit.
 - Create: `scripts/tests/graph-project-identity.test.mjs`
 - Modify: `scripts/lib/ts-to-fungi-sandbox/identity.mjs`
 
-- [ ] Write failing tests for logical aliases `galerina`, `slide`, `vok` and
+- [x] Write failing tests for logical aliases `galerina`, `slide`, `vok` and
   `lyth`, plus wrong case, wrong root, stale HEAD, unavailable owner, ambiguous
   owner and missing bounded-symbol controls.
-- [ ] Define a frozen alias table and a small identity envelope containing only
+- [x] Define a frozen alias table and a small identity envelope containing only
   logical key, declared project, component scope, repo-relative root identity,
   Git HEAD, indexed HEAD, freshness and the bounded symbol locator.
-- [ ] Implement pure resolution over injected Git/graph observations; never
+- [x] Implement pure resolution over injected Git/graph observations; never
   derive project identity from a case-folded worktree path.
-- [ ] Add process adapters for exact Git and codebase-memory CLI envelopes with
+- [x] Add process adapters for exact Git and codebase-memory CLI envelopes with
   bounded output and typed failures.
-- [ ] Wire the sandbox identity path to the resolver while preserving explicit
+- [x] Wire the sandbox identity path to the resolver while preserving explicit
   verified `--project` overrides.
-- [ ] Prove the old path-shaped-project failure is red and the declared logical
+- [x] Prove the old path-shaped-project failure is red and the declared logical
   identity is green for the isolated worktree.
-- [ ] Run:
+- [x] Run:
   `node --test scripts/tests/graph-project-identity.test.mjs scripts/tests/ts-to-fungi-sandbox.test.mjs`
+
+Evidence (2026-08-18): the pure resolver suite passes 6/6 and the combined
+converter suite passes 42/42 against the exact registered worktree project
+`Galerina-detached-scalar-phase1-20260818-64db2bbd` at indexed/source HEAD
+`64db2bbd44b535e2248dbeadaeb42185405779e8`. A deliberately path-shaped
+project guess refuses, while an explicit verified project override remains
+root-, case-, build-point-, node-kind- and bounded-symbol-checked. A refresh of
+the earlier project name reported `status: indexed` but retained build point
+`213c81a0`; the gate treated that as stale and created a new exact owner rather
+than accepting the false-green status. Identity envelopes retain locators and
+freshness only; they do not copy source bodies or merge cross-owner edges.
 
 ## Task 3: Add the constellation preflight
 
@@ -152,22 +163,33 @@ remain a HOLD for later corpus disposition rather than conversion credit.
 - Create: `scripts/tests/constellation-preflight.test.mjs`
 - Modify: `package.json`
 
-- [ ] Start with ALLOW, required-owner HOLD, stale graph, unavailable owner,
+- [x] Start with ALLOW, required-owner HOLD, stale graph, unavailable owner,
   malformed envelope and injected failing-child fixtures.
-- [ ] Model Galerina, SLIDE, VOK component and Lyth as separate owner envelopes;
+- [x] Model Galerina, SLIDE, VOK component and Lyth as separate owner envelopes;
   never invent a merged cross-owner graph edge.
-- [ ] Check exact repository/index heads, bounded symbols, installed private
+- [x] Check exact repository/index heads, bounded symbols, installed private
   skill identity without bodies, converter/collision tools, detached scalar
   chain commands, output-root writability and Lyth registered command.
-- [ ] Aggregate by least authority and prove one child denial changes the
+- [x] Aggregate by least authority and prove one child denial changes the
   overall verdict.
-- [ ] Write the selected JSON report atomically and refuse when publication
+- [x] Write the selected JSON report atomically and refuse when publication
   cannot complete.
-- [ ] Add `preflight:detached-scalar` and `preflight:detached-scalar:self-test`.
-- [ ] Run:
+- [x] Add `preflight:detached-scalar` and `preflight:detached-scalar:self-test`.
+- [x] Run:
   `node --test scripts/tests/constellation-preflight.test.mjs`
-- [ ] Run the real preflight and retain any stale/unavailable owner as `HOLD`,
+- [x] Run the real preflight and retain any stale/unavailable owner as `HOLD`,
   not a synthetic green result.
+
+Evidence (2026-08-18): the identity and preflight suites pass 11/11; the
+built-in self-test proves one aggregate `ALLOW` and one controlled child
+`REFUSED`. The real body-free run returns `HOLD`, as required: SLIDE, the VOK
+component and Lyth resolve to exact fresh clean graph owners, both private
+Fungi skills are represented only by installed SHA-256 identity, and every
+Galerina/SLIDE/VOK locator check is available. The Galerina worktree is
+truthfully dirty during implementation and Lyth does not yet register
+`verify:detached-scalar`, so neither condition is upgraded to success. Atomic
+publication is byte-deterministic and a directory-as-target control refuses
+without leaving a temporary report.
 
 ## Task 4: Register Lyth detached-scalar KATs and repair the Windows graph CLI
 
