@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "a2c1b7d89b1133da1d635249bb2216894b5db78ded1b9a443bfef38cd143ac68",
+  "authoritativeInputsDigest": "dce9bad8984f8aa72032ea9fe1e137b6ace2521df63173cf621542b361057a75",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -122,9 +122,9 @@
       "id": "package:galerina-core-compiler",
       "kind": "package",
       "evidencePath": "packages-galerina/galerina-core-compiler/package.json",
-      "declaredFanIn": 9,
+      "declaredFanIn": 10,
       "declaredFanOut": 6,
-      "derivedFanIn": 9,
+      "derivedFanIn": 10,
       "derivedFanOut": 6
     },
     {
@@ -609,9 +609,9 @@
       "kind": "package",
       "evidencePath": "packages-galerina/galerina-docs/package.json",
       "declaredFanIn": 0,
-      "declaredFanOut": 1,
+      "declaredFanOut": 2,
       "derivedFanIn": 0,
-      "derivedFanOut": 1
+      "derivedFanOut": 2
     },
     {
       "id": "package:galerina-ext-bridge-bitnet",
@@ -1176,6 +1176,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-e2474381173174056e69de6e",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/artifact-reference.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-f81da260a6e2ca63c4079c97",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/assuming-178-failclosed.test.mjs",
@@ -1305,6 +1312,20 @@
       "id": "test:auto-b6e4b5edfada8c15342738cb",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/check-construct.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-eb443103b0e78fd7a1843ff1",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/checked-module-snapshot-v1.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0a6eef3259be4fa917a339ac",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/checked-snapshot-gir-emitter.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -1473,6 +1494,20 @@
       "id": "test:auto-752452e9ac6f54d169c73b5f",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/decimal-round-mode-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7d63931466fc228c63fdb5ab",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/detached-scalar-handoff.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-bfba3659c684454567fece88",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/detached-scalar-slide-vok.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -2922,6 +2957,13 @@
       "id": "test:auto-e59331243e6a72bcfa87b6df",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/resource-decl.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8002621d975bdaa121570019",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/retained-tower-tri-boundaries.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -5488,6 +5530,20 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-c597997ee22b52fa37590cbd",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-docs/tests/reference-manifest.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b3f0b0505dc783d263ba6ff1",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-docs/tests/reference-renderers.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-501d14fc1f0e8baf69b88a38",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-docs/tests/validate.test.mjs",
@@ -6051,6 +6107,391 @@
       "id": "test:auto-56ccc7c6bb06e04f9a5669c0",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-test/tests/compiler-build-evidence.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-6eb40e4de6bfd7ff19fd359a",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-decision-cores-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2f8ea85fb73da2b5876f8ab4",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-primitives-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d736c162a3ce95cff7542be1",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-10-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2003121cfafa0435f16fc147",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-11-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f92f2755f5fccd02cf66a9d8",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-12-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7604fd4b74224a37bdd8abfe",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-13-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-4156b44d2e7839efc67ea8b5",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-14-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1bbe999b345b67e2d3bdeaba",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-15-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-07cac61cdfa0d508ccad7992",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-16-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8668544aeeee0a7b9f79c39f",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-17-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1cc1a498e1234df18f31d0df",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-18-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-03150dc07d229eb214cf3401",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-19-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-60e5f45565184db340cf5937",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-2-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b03e0346fd4494f97be6daf0",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-20-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-6361a9af0faf6df29240906b",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-21-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b87be110a009f57b1ab743ec",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-22-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f0ebd3e72d21806b9b51c100",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-23-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b175a4ae4166fe7272814329",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-24-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c60c5c7f8288ac008b500314",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-25-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8362cc72df1c546d44073de1",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-26-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9edab2b848d681d404419b5a",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-27-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1f859d412e96c14215f2ab6b",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-28-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-301a299406392e2da8547420",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-29-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-16561f80a7361f4132401259",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-3-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-abb86163759eaa9a3f9031ed",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-30-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-fee6e09aa571767d3133862d",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-31-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8093887fad7ed4c70ea6246d",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-32-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-99d7858735eb6018dfad77e4",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-33-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-648b0cabb6d0faa0e99bd9d6",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-34-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-955c679912e77a4de55fc824",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-35-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-02c298bde878245abfd6da5f",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-36-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-cbf87943b4dfb18666646652",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-37-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c0871d45fec56412f6b1bc44",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-38-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-442efcfdba468c7a3f3e0360",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-39-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-866bb19d7d5b80c838ac5f51",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-4-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b66451fae680a96eea3cf118",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-40-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9337ba935b86c4f6512c5b0f",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-41-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-413885b92e656d10eefb4a7c",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-42-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-78d7010105519794933ca264",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-43-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-41352de7091532dee66f538f",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-44-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f2272938b7058de749a41b34",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-45-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-35ea9f0f05a2f665f3bcc06e",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-46-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-10a7a962da0ecdef3792fa1c",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-47-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f2f8d0c6677183c060bdbd2e",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-48-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-bcc6001df3fa4dcfc98ac194",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-49-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-3bf21ce03b41e51e902114e8",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-5-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-29a8a48cdf090a080d294177",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-50-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d9e93533d5a7636824ce5af5",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-51-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-04ec11c25abeba76f0be08f7",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-52-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-83e05b0c92839c9b14a35d9a",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-53-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-46e25fb05ec5a7adcae19064",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-54-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d017597190c3f68182271fab",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-6-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-4411c9a792d310772adc17a7",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-7-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0f01f555d707391ddfc9876c",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-8-fungi.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7fa2e5e3b002cb83ed897ae9",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-9-fungi.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6832,6 +7273,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-c29032a02828b6c86d6d69e1",
+      "kind": "test",
+      "evidencePath": "scripts/tests/audit-conversion-report-commit.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-62aea4174f2b062368fb396e",
       "kind": "test",
       "evidencePath": "scripts/tests/audit-conversion-slice-close.test.mjs",
@@ -6884,6 +7332,20 @@
       "id": "test:auto-4e15af440b3fb803d98a71b8",
       "kind": "test",
       "evidencePath": "scripts/tests/audit-generator-contract.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2d778b2860d098081e21b21c",
+      "kind": "test",
+      "evidencePath": "scripts/tests/audit-real-fungi-conversion-baseline.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c060e54aa3822e8b24705e5c",
+      "kind": "test",
+      "evidencePath": "scripts/tests/audit-ts-fungi-drift.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7000,9 +7462,401 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-979ae2ed31d9c1bbdc502d5b",
+      "kind": "test",
+      "evidencePath": "scripts/tests/constellation-preflight.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-d84d61e0699b3c9441ff1657",
       "kind": "test",
       "evidencePath": "scripts/tests/contract-registry-generator.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-78f30188168c0c8aabc82269",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-decision-cores-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-96000cc187e10461a422b457",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-primitives-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-92e0c55a6ab6467212489707",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-10-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0befea2bf8f6936b7a720c35",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-11-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0ee26306b3ba6e5d97ef5f7c",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-12-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-e69f1b5f2a4f9109596a7317",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-13-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b1a69f41d807476e9018d6c6",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-14-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-31c6e6dd95bbde7365406983",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-15-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1fa0fd91069f475b95e9177b",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-16-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-38f538f454694bc03f4caed5",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-17-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-42bc8da1bf864779744b4108",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-18-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8a84273975f4110ef72539cf",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-19-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-78ab29c623c631f6a14d0e1d",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-2-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-18d1ee3f7df19d3935e24c88",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-20-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-501097b418cc857dbe473b82",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-21-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-4c8849d93fd02610512464df",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-22-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-543a274cbcfb2ed6c3acd47b",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-23-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d00c7ccaad716dc923c89992",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-24-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f2ea1b2476456450f65db41e",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-25-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-767cb631e1dfbbc3647733da",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-26-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1d3b97dab4c46296cef51541",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-27-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0d95abc4041d62c79a1285a7",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-28-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f1e6634a72a60c3c585463e2",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-29-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b0f9d6f0023ee7b256c4b5c6",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-3-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f38d6dd2e16a1fdbfffef8db",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-30-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-bfbb82648cf64ee66147dc29",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-31-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d01f7ac2123f85d59b386dd9",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-32-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ea62d091bd4f57d2ad7f78f8",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-33-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-46a705296e71eaaf8b07ce37",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-34-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-038feb49fe89daf55676a86d",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-35-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-771466b28753b035d6298da3",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-36-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9a75db867a30083d563a0e5e",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-37-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-05870cc08e3ceea5769926bf",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-38-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-498f4b51d7404c67fb02e68b",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-39-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b96671923e0df7f0b5871240",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-4-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-47cc73b0b1b63e2d29df6188",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-40-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8c24638b74761a519f4927d0",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-41-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-620525f6544b15b153aa7c2c",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-42-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9f92de59b3ed95924359735d",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-43-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-78d98a853e04af1daf664df0",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-44-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-dcd78ef7b82b51b7ae006ebb",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-45-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c60a7a648a1824fc8781abd7",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-46-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8761e640f1e4cbf71d1b6464",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-47-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-4a81d690d8c69a9c969faeab",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-48-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9864766654e0ee3f19de7d84",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-49-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-4a231511192deab200b49384",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-5-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-73ae16310e947bbb1f8095ce",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-50-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-14f38881f4f3a3832bbcb4e6",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-51-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-83fffc25553361a6a08f7405",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-52-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ac9b6208d37b90128a173619",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-53-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ea8250056295d4a2e75378e5",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-54-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7360518f050032827aa68784",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-6-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-8197ee38b9faadfc9705f443",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-7-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-a93e4c4fe521d421c817e929",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-8-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f50d9c1f9c328caea48f8ab0",
+      "kind": "test",
+      "evidencePath": "scripts/tests/conversion-overlay-source-decisions-wave-9-fungi-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7045,6 +7899,13 @@
       "id": "test:auto-42f46bb54ef3c90053280906",
       "kind": "test",
       "evidencePath": "scripts/tests/descriptive-diagnostic-identities.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2373fef7c2f163cdb7d4635a",
+      "kind": "test",
+      "evidencePath": "scripts/tests/detached-slide-authority-path.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7147,6 +8008,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-bd501531ac20d99100219c50",
+      "kind": "test",
+      "evidencePath": "scripts/tests/fungi-conversion-gate.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-ee35ba774337cd08b209d87f",
       "kind": "test",
       "evidencePath": "scripts/tests/fungi-corpus-ownership.test.mjs",
@@ -7157,6 +8025,20 @@
       "id": "test:auto-344a687f5c1bb3b0e85dd5b7",
       "kind": "test",
       "evidencePath": "scripts/tests/fungi-golden-probe.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9a9d472da5e53b1f9f536ed7",
+      "kind": "test",
+      "evidencePath": "scripts/tests/fungi-logic-analysis.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-61247e112c4db76695d29ed2",
+      "kind": "test",
+      "evidencePath": "scripts/tests/fungi-shadow.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7241,6 +8123,13 @@
       "id": "test:auto-381a0b3549568e050190dba6",
       "kind": "test",
       "evidencePath": "scripts/tests/graph-all.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-a8b059d54f7195776897a173",
+      "kind": "test",
+      "evidencePath": "scripts/tests/graph-project-identity.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7651,9 +8540,23 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-159fbfa010e786e92064a860",
+      "kind": "test",
+      "evidencePath": "scripts/tests/trit-verdict-js-seam.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-ee21d330606127a579200d06",
       "kind": "test",
       "evidencePath": "scripts/tests/ts-retirement-generator.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-56428f5ad266fa90afab3796",
+      "kind": "test",
+      "evidencePath": "scripts/tests/ts-to-fungi-sandbox.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7996,6 +8899,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-e2474381173174056e69de6e",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-f81da260a6e2ca63c4079c97",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -8087,6 +8995,16 @@
     },
     {
       "from": "test:auto-b6e4b5edfada8c15342738cb",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-eb443103b0e78fd7a1843ff1",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0a6eef3259be4fa917a339ac",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -8207,6 +9125,16 @@
     },
     {
       "from": "test:auto-752452e9ac6f54d169c73b5f",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7d63931466fc228c63fdb5ab",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-bfba3659c684454567fece88",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -9242,6 +10170,11 @@
     },
     {
       "from": "test:auto-e59331243e6a72bcfa87b6df",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8002621d975bdaa121570019",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11076,6 +12009,16 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-c597997ee22b52fa37590cbd",
+      "to": "package:galerina-docs",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b3f0b0505dc783d263ba6ff1",
+      "to": "package:galerina-docs",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-501d14fc1f0e8baf69b88a38",
       "to": "package:galerina-docs",
       "type": "CLASSIFIES"
@@ -11477,6 +12420,281 @@
     },
     {
       "from": "test:auto-56ccc7c6bb06e04f9a5669c0",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-6eb40e4de6bfd7ff19fd359a",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2f8ea85fb73da2b5876f8ab4",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d736c162a3ce95cff7542be1",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2003121cfafa0435f16fc147",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f92f2755f5fccd02cf66a9d8",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7604fd4b74224a37bdd8abfe",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-4156b44d2e7839efc67ea8b5",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1bbe999b345b67e2d3bdeaba",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-07cac61cdfa0d508ccad7992",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8668544aeeee0a7b9f79c39f",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1cc1a498e1234df18f31d0df",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-03150dc07d229eb214cf3401",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-60e5f45565184db340cf5937",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b03e0346fd4494f97be6daf0",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-6361a9af0faf6df29240906b",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b87be110a009f57b1ab743ec",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f0ebd3e72d21806b9b51c100",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b175a4ae4166fe7272814329",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c60c5c7f8288ac008b500314",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8362cc72df1c546d44073de1",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9edab2b848d681d404419b5a",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1f859d412e96c14215f2ab6b",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-301a299406392e2da8547420",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-16561f80a7361f4132401259",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-abb86163759eaa9a3f9031ed",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-fee6e09aa571767d3133862d",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8093887fad7ed4c70ea6246d",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-99d7858735eb6018dfad77e4",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-648b0cabb6d0faa0e99bd9d6",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-955c679912e77a4de55fc824",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-02c298bde878245abfd6da5f",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-cbf87943b4dfb18666646652",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c0871d45fec56412f6b1bc44",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-442efcfdba468c7a3f3e0360",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-866bb19d7d5b80c838ac5f51",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b66451fae680a96eea3cf118",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9337ba935b86c4f6512c5b0f",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-413885b92e656d10eefb4a7c",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-78d7010105519794933ca264",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-41352de7091532dee66f538f",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f2272938b7058de749a41b34",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-35ea9f0f05a2f665f3bcc06e",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-10a7a962da0ecdef3792fa1c",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f2f8d0c6677183c060bdbd2e",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-bcc6001df3fa4dcfc98ac194",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-3bf21ce03b41e51e902114e8",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-29a8a48cdf090a080d294177",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d9e93533d5a7636824ce5af5",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-04ec11c25abeba76f0be08f7",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-83e05b0c92839c9b14a35d9a",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-46e25fb05ec5a7adcae19064",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d017597190c3f68182271fab",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-4411c9a792d310772adc17a7",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0f01f555d707391ddfc9876c",
+      "to": "package:galerina-test",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7fa2e5e3b002cb83ed897ae9",
       "to": "package:galerina-test",
       "type": "CLASSIFIES"
     },
@@ -12036,6 +13254,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-c29032a02828b6c86d6d69e1",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-62aea4174f2b062368fb396e",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -12072,6 +13295,16 @@
     },
     {
       "from": "test:auto-4e15af440b3fb803d98a71b8",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2d778b2860d098081e21b21c",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c060e54aa3822e8b24705e5c",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -12156,7 +13389,287 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-979ae2ed31d9c1bbdc502d5b",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-d84d61e0699b3c9441ff1657",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-78f30188168c0c8aabc82269",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-96000cc187e10461a422b457",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-92e0c55a6ab6467212489707",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0befea2bf8f6936b7a720c35",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0ee26306b3ba6e5d97ef5f7c",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-e69f1b5f2a4f9109596a7317",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b1a69f41d807476e9018d6c6",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-31c6e6dd95bbde7365406983",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1fa0fd91069f475b95e9177b",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-38f538f454694bc03f4caed5",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-42bc8da1bf864779744b4108",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8a84273975f4110ef72539cf",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-78ab29c623c631f6a14d0e1d",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-18d1ee3f7df19d3935e24c88",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-501097b418cc857dbe473b82",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-4c8849d93fd02610512464df",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-543a274cbcfb2ed6c3acd47b",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d00c7ccaad716dc923c89992",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f2ea1b2476456450f65db41e",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-767cb631e1dfbbc3647733da",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1d3b97dab4c46296cef51541",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0d95abc4041d62c79a1285a7",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f1e6634a72a60c3c585463e2",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b0f9d6f0023ee7b256c4b5c6",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f38d6dd2e16a1fdbfffef8db",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-bfbb82648cf64ee66147dc29",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d01f7ac2123f85d59b386dd9",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ea62d091bd4f57d2ad7f78f8",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-46a705296e71eaaf8b07ce37",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-038feb49fe89daf55676a86d",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-771466b28753b035d6298da3",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9a75db867a30083d563a0e5e",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-05870cc08e3ceea5769926bf",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-498f4b51d7404c67fb02e68b",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b96671923e0df7f0b5871240",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-47cc73b0b1b63e2d29df6188",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8c24638b74761a519f4927d0",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-620525f6544b15b153aa7c2c",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9f92de59b3ed95924359735d",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-78d98a853e04af1daf664df0",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-dcd78ef7b82b51b7ae006ebb",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c60a7a648a1824fc8781abd7",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8761e640f1e4cbf71d1b6464",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-4a81d690d8c69a9c969faeab",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9864766654e0ee3f19de7d84",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-4a231511192deab200b49384",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-73ae16310e947bbb1f8095ce",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-14f38881f4f3a3832bbcb4e6",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-83fffc25553361a6a08f7405",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ac9b6208d37b90128a173619",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ea8250056295d4a2e75378e5",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7360518f050032827aa68784",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-8197ee38b9faadfc9705f443",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-a93e4c4fe521d421c817e929",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f50d9c1f9c328caea48f8ab0",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -12187,6 +13700,11 @@
     },
     {
       "from": "test:auto-42f46bb54ef3c90053280906",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2373fef7c2f163cdb7d4635a",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -12261,12 +13779,27 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-bd501531ac20d99100219c50",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-ee35ba774337cd08b209d87f",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
     {
       "from": "test:auto-344a687f5c1bb3b0e85dd5b7",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9a9d472da5e53b1f9f536ed7",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-61247e112c4db76695d29ed2",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -12327,6 +13860,11 @@
     },
     {
       "from": "test:auto-381a0b3549568e050190dba6",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-a8b059d54f7195776897a173",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -12621,7 +14159,17 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-159fbfa010e786e92064a860",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-ee21d330606127a579200d06",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-56428f5ad266fa90afab3796",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -12746,9 +14294,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 977,
+    "tests": 1106,
     "detectors": 6,
-    "executableFamily": 1490,
+    "executableFamily": 1564,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
