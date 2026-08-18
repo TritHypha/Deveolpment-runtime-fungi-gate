@@ -218,7 +218,9 @@ without leaving a temporary report.
 - [x] Run the Lyth focused tests and registered command.
 - [x] Run the graph-skill gold fixtures, duplicate/shadow checks and Windows CLI
   invocation fixture.
-- [ ] Commit each repository independently with explicit paths; never push.
+- [x] Commit each repository independently with explicit paths when it has a
+  Git owner; never push. Record a non-repository canonical installation as
+  verified-in-place rather than inventing commit custody.
 
 Evidence (2026-08-18): Lyth passes its 3/3 self-test, typecheck and registered
 fixed-order KAT command, returning `EVIDENCE_READY` while retaining
@@ -318,24 +320,41 @@ overlay, consumer or authority surface changed.
 - Create: `packages-galerina/galerina-docs/src/reference-types.ts`
 - Create: `packages-galerina/galerina-docs/src/reference-manifest.ts`
 - Create: `packages-galerina/galerina-docs/tests/reference-manifest.test.mjs`
-- Create: `packages-galerina/galerina-docs/tests/fixtures/reference/`
 - Modify: `packages-galerina/galerina-docs/src/index.ts`
 - Modify: `packages-galerina/galerina-docs/package.json`
 
-- [ ] Create failing checked-AST fixtures for exported flows, types, records,
-  enums, guards, statics and bitfields, with one private declaration per kind.
-- [ ] Add controls for duplicate qualified names, case-only collisions, broken
+- [x] Create failing in-memory checked-AST KATs for exported flows, types,
+  records, enums, guards, statics and bitfields, reusing tracked `.fungi`
+  sources where suitable and creating no new `.fungi` fixtures.
+- [x] Add controls for duplicate qualified names, case-only collisions, broken
   type links, unsupported public AST nodes and changed public signatures.
-- [ ] Define versioned `GalerinaReferenceManifest` records containing exact
+- [x] Define versioned `GalerinaReferenceManifest` records containing exact
   public signature facts, effects, qualifiers, contracts/governance metadata,
   repo-relative byte locators, digest, build point and owning package.
-- [ ] Generate only from canonical parser/checker output. Do not import the
+- [x] Generate only from canonical parser/checker output. Do not import the
   regex project graph as declaration authority.
-- [ ] Prove every supported exported declaration appears once, every private
-  declaration appears zero times and unsupported exported AST nodes refuse.
-- [ ] Prove repeated generation is byte-identical and a one-byte signature
+- [x] Prove every supported top-level declaration appears once, nested local
+  functions appear zero times, unsupported exported AST nodes refuse and an
+  invented private top-level spelling is rejected by the canonical parser.
+- [x] Prove repeated generation is byte-identical and a one-byte signature
   mutation invalidates the prior manifest.
-- [ ] Run package typecheck and focused tests.
+- [x] Run package typecheck and focused tests.
+
+Evidence (2026-08-18): the manifest KATs pass 6/6 and the complete docs package
+passes 38/38 after typecheck/build. The generator consumes canonical
+parser/checker output, emits one body-free entry per supported public top-level
+declaration, omits nested local `fn` declarations and refuses duplicate names,
+case-only collisions, broken links, unsupported nodes and invented private
+top-level syntax. Repeated manifests are byte-identical and a signature-byte
+change changes the manifest digest. No `.fungi` fixture was created.
+
+Task-6 boundary correction (2026-08-18): the canonical parser and module
+registry expose every valid top-level flow/type/record/enum/guard/static/
+bitfield declaration; the language has no private top-level spelling. Private
+functions are nested local `fn` declarations. The implementation therefore
+must not invent private syntax or create `.fungi` fixtures before Task 9. It
+uses parser/checker-backed in-memory KATs, proves nested locals are omitted and
+keeps invalid private syntax as a parser-refusal control.
 
 ## Task 7: Add deterministic Markdown and static HTML reference views
 
@@ -347,39 +366,62 @@ overlay, consumer or authority surface changed.
 - Modify: `packages-galerina/galerina-docs/README.md`
 - Modify: `packages-galerina/galerina-docs/package.json`
 
-- [ ] Write failing fixtures for unstable order, absolute path leakage, private
+- [x] Write failing fixtures for unstable order, absolute path leakage, private
   marker leakage, broken exact-case links, output collision and stale output.
-- [ ] Derive `reference.json`, root/package Markdown and static `index.html`
+- [x] Derive `reference.json`, root/package Markdown and static `index.html`
   solely from the admitted manifest.
-- [ ] Stable-sort by package/module/qualified name with code-unit ordering.
-- [ ] Refuse hand-edited or stale generated files and write the output tree
+- [x] Stable-sort by package/module/qualified name with code-unit ordering.
+- [x] Refuse hand-edited or stale generated files and write the output tree
   atomically.
-- [ ] Keep optional graph caller links labelled with graph build point and
+- [x] Keep optional graph caller links labelled with graph build point and
   `ASSERTED`/`INFERRED`; omit them when stale without blocking AST docs.
-- [ ] Add `docs:reference` and `docs:reference:check` package commands.
-- [ ] Run generation twice and compare every output byte.
+- [x] Add `docs:reference` and `docs:reference:check` package commands.
+- [x] Run generation twice and compare every output byte.
+
+Evidence (2026-08-18): the renderer KATs pass 5/5. JSON, Markdown and static
+HTML are derived only from the admitted manifest, code-unit sorted and written
+through atomic no-overwrite publication. Exact-case links, stale/extra output,
+absolute paths, private markers and collisions refuse. Optional caller edges
+carry their graph build point and `ASSERTED`/`INFERRED` provenance and disappear
+when stale. Two runs are byte-identical.
 
 ## Task 8: Register tools and run the complete verification matrix
 
 **Files:**
-- Modify: `scripts/dev-tool-registry.json`
 - Modify: `governance/phase-close-commands.json`
 - Modify: `package.json`
 - Regenerate: `build/dev-tool-index/`
 - Modify: `docs/TODO.md`
 - Modify: `docs/superpowers/plans/2026-08-18-deterministic-constellation-tooling-and-real-fungi-pilot.md`
 
-- [ ] Register the baseline audit, identity self-test, preflight, conversion
+- [x] Register the baseline audit, identity self-test, preflight, conversion
   gate and reference checker through their owning registries.
-- [ ] Regenerate, never hand-edit, the dev-tool index.
-- [ ] Run all new focused tests and each planted-red control.
-- [ ] Run package typechecks for compiler and docs.
-- [ ] Run detached scalar Galerina/SLIDE/VOK focused integration and Lyth KATs.
-- [ ] Run the normal tool-index publisher/check and affected phase-close group.
-- [ ] Confirm every generated JSON contains no absolute local paths or source
+- [x] Let `scripts/dev-tool-index.mjs` discover root scripts from their
+  registered commands and headers; this repository has no hand-maintained
+  `scripts/dev-tool-registry.json` and one must not be invented.
+- [x] Regenerate, never hand-edit, the dev-tool index.
+- [x] Run all new focused tests and each planted-red control.
+- [x] Run package typechecks for compiler and docs.
+- [x] Run detached scalar Galerina/SLIDE/VOK focused integration and Lyth KATs.
+- [x] Run the normal tool-index publisher/check and affected phase-close group.
+- [x] Confirm every generated JSON contains no absolute local paths or source
   bodies and every required owner envelope has an exact build point.
 - [ ] Re-index the exact final Galerina commit under its declared project and
   verify node counts, expected counts, indexed HEAD and a new symbol probe.
+
+Evidence (2026-08-18, before final commit): all directly affected phase-close
+entries pass, including the analyzer self-test, conversion gate self-test,
+baseline freshness check, conversion-report and slice-close audits, tooling
+contract, JS-seam audit, detached-scalar preflight self-test, docs reference
+tests (38/38) and graph-project identity tests (6/6). Galerina detached-scalar
+integration passes 92/92, SLIDE/VOK passes 24/24, Lyth returns
+`EVIDENCE_READY` with `authorityReleased: false`, and the graph skill passes
+22/22 unit plus 12/12 gold checks. The full changed-cadence phase-close truthfully
+remains repository-wide `FAIL`/release `UNKNOWN` (102 checks: 67 pass, 35
+pre-existing or generated-owner failures); its oversized 2,200-overlay corpus
+scan also reached the governed timeout. Generated JSON is valid and body-free,
+with no absolute local paths or private markers. The final exact-commit graph
+refresh remains the sole open pre-Fungi checkbox.
 
 ## Task 9: Run the controlled ten-source real-package pilot
 
@@ -420,34 +462,62 @@ work around an earlier prerequisite.
 - Create: `docs/reports/conversion-overlay-corpus-disposition-2026-08-18.md`
 - Modify: `docs/TODO.md`
 
-- [ ] Use the baseline ledger to separate executed construct-bearing KATs,
+- [x] Use the baseline ledger to separate executed construct-bearing KATs,
   source-bound but test-only overlays, generated seal chains and duplicate or
   shadow debt.
-- [ ] Record which tests and loadedAssets consume each retained family.
-- [ ] Invalidate old aggregate conversion-credit claims for the 2,200 overlays;
+- [x] Record which tests and loadedAssets consume each retained family.
+- [x] Invalidate old aggregate conversion-credit claims for the 2,200 overlays;
   they are fixtures, not real-package conversion.
-- [ ] Propose a compact retained KAT set selected by construct/hostile-vector
+- [x] Propose a compact retained KAT set selected by construct/hostile-vector
   coverage, never by sampling the old generator.
-- [ ] Record the exact Git range that preserves removed candidates if a later
+- [x] Record the exact Git range that preserves removed candidates if a later
   owner-approved cleanup proceeds.
-- [ ] Do not delete the corpus in this plan. Any removal is a separate reviewed
+- [x] Do not delete the corpus in this plan. Any removal is a separate reviewed
   commit after its consumers are migrated and the compact KAT set is green.
+
+Evidence (2026-08-18): the disposition report accounts for all 2,200 fixture
+overlays, 55 package KATs and 55 integration tests. It records 2,020
+interpreter-exercised and 1,870 physically re-admitted overlays, 180 interpreter
+gaps, 330 physical gaps, zero exact duplicate groups, six alpha-normalized
+groups covering 14 files and zero case-only path groups. It preserves the exact
+history range `294f937ba6b7cc97c26c9ca889563149fe75afe9..1f154cc9478d89943bd806858fa9ec2749491857`,
+invalidates aggregate real-conversion credit, proposes a coverage-selected
+compact future KAT set and authorizes no deletion.
 
 ---
 
 ## Final self-review
 
-- [ ] Re-read the design spec and map every requirement to an implemented test,
+- [x] Re-read the design spec and map every requirement to an implemented test,
   command or explicit deferred owner gate.
-- [ ] Search the plan and changed files for `TODO`, `TBD`, placeholders, absolute
+- [x] Search the plan and changed files for `TODO`, `TBD`, placeholders, absolute
   local paths, invented syntax and hand-edited generated outputs.
-- [ ] Verify public types, JSON schema tags, status enums and exit-code meanings
+- [x] Verify public types, JSON schema tags, status enums and exit-code meanings
   agree across the identity resolver, preflight, conversion gate and docs tool.
-- [ ] Verify the real conversion baseline, pilot and overlay disposition do not
+- [x] Verify the real conversion baseline, pilot and overlay disposition do not
   double-count scopes or treat fixture overlays as production conversion.
-- [ ] Verify no commit contains more than one conversion report and no
+- [x] Verify no commit contains more than one conversion report and no
   report-bearing conversion commit contains fewer than 40 new real `.fungi`
   except an explicit owner-approved final tail.
-- [ ] Verify Tower Citizen, Tri-Pipe and Tri-Fuse roles remain present and no
+- [x] Verify Tower Citizen, Tri-Pipe and Tri-Fuse roles remain present and no
   tool crosses their authority boundaries.
-- [ ] Verify no push occurred.
+- [x] Verify no push occurred.
+
+Self-review evidence (2026-08-18, pre-pilot): the design requirements map to
+the identity, preflight, gate, construct-analysis, checked-reference,
+baseline/drift, Lyth and cross-owner focused suites or to the explicit
+no-switch/no-retirement owner gates. The spec's `.fungi` fixture wording was
+resolved by the later hard-ordering constraint and Task-6 boundary correction:
+canonical parser/checker-backed in-memory KATs cover every selected declaration
+kind without authoring a pre-gate `.fungi` file. Changed-file scans find no new
+placeholder, invented syntax, durable absolute local path, private marker or
+hand-edited generated index; the only absolute-path strings are deliberate
+detector controls or pre-existing TODO evidence. Schemas, status enums and
+0/1/2 exit meanings are covered by 53 focused tool tests and 38 docs tests.
+There is no tracked or untracked `.fungi` delta, no conversion-report delta,
+one non-conversion overlay-disposition report and zero worktree duplicate or
+shadow candidates. The ten-source pilot is still absent by design, so it cannot
+double-count the baseline. The fresh graph still resolves Tower Citizen and
+Tri-Pipe surfaces and the retained Tri-Fuse compiler integration; none is
+imported by the docs tool. The local branch has no upstream and no push was
+performed. Exact final-commit graph refresh remains the last Task-8 gate.

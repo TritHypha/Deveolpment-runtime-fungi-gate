@@ -4,9 +4,9 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 177,
-    "auditTools": 93,
-    "toolsInCadence": 122,
+    "devTools": 182,
+    "auditTools": 95,
+    "toolsInCadence": 127,
     "proofs": 40
   },
   "packages": [
@@ -1305,6 +1305,7 @@
       "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
+        "source-hygiene",
         "doc-drift",
         "graph/index"
       ]
@@ -1367,7 +1368,6 @@
       "concerns": [
         "signing/fusion",
         "diagnostics",
-        "source-hygiene",
         "web-stub",
         "graph/index"
       ]
@@ -1960,6 +1960,18 @@
       ]
     },
     {
+      "name": "audit-real-fungi-conversion-baseline.mjs",
+      "category": "audit",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
       "name": "audit-reference-doc-drift.mjs",
       "category": "audit",
       "purpose": "fail-CLOSED gate: the docs/reference/ pages must not DRIFT from the",
@@ -2300,6 +2312,18 @@
         "mutation-testing",
         "source-hygiene",
         "brand"
+      ]
+    },
+    {
+      "name": "audit-ts-fungi-drift.mjs",
+      "category": "audit",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
+      "concerns": [
+        "source-hygiene",
+        "graph/index"
       ]
     },
     {
@@ -3076,6 +3100,18 @@
       ]
     },
     {
+      "name": "constellation-preflight.mjs",
+      "category": "util",
+      "purpose": "Body-free Galerina/SLIDE/VOK/Lyth detached-scalar readiness preflight.",
+      "selfTest": true,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "diagnostics",
+        "graph/index"
+      ]
+    },
+    {
       "name": "conversion-queue.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -3160,6 +3196,20 @@
       ]
     },
     {
+      "name": "fungi-conversion-gate.mjs",
+      "category": "util",
+      "purpose": "Grade a bounded real-package TypeScript-to-Fungi batch without releasing authority.",
+      "selfTest": true,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
       "name": "fungi-golden-probe.mjs",
       "category": "util",
       "purpose": "derive fail-closed checker/runtime evidence for the",
@@ -3170,6 +3220,18 @@
         "gate-wiring",
         "diagnostics",
         "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "fungi-logic-analysis.mjs",
+      "category": "util",
+      "purpose": "Analyze canonical Fungi constructs without compiling candidates or releasing authority.",
+      "selfTest": true,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "diagnostics",
         "graph/index"
       ]
     },
@@ -3700,9 +3762,12 @@
       "brand-audit.mjs",
       "build-core-chain.mjs",
       "build-receipt-bound-slide-package.mjs",
+      "constellation-preflight.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
+      "fungi-conversion-gate.mjs",
       "fungi-golden-probe.mjs",
+      "fungi-logic-analysis.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
@@ -3770,6 +3835,7 @@
       "audit-private-doc-leak.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
+      "audit-real-fungi-conversion-baseline.mjs",
       "audit-remote-shell-install.mjs",
       "audit-scratchdir-hygiene.mjs",
       "audit-selfhost-readiness.mjs",
@@ -3782,6 +3848,7 @@
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
       "audit-tooling-contract.mjs",
+      "audit-ts-fungi-drift.mjs",
       "audit-twin-differential.mjs",
       "audit-wasm-validate.mjs",
       "audit-wat-lowering.mjs",
@@ -3818,11 +3885,14 @@
       "build-core-chain.mjs",
       "build-receipt-bound-slide-package.mjs",
       "check-gate-injection.mjs",
+      "constellation-preflight.mjs",
       "conversion-queue.mjs",
       "debug-compiler-globs.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
+      "fungi-conversion-gate.mjs",
       "fungi-golden-probe.mjs",
+      "fungi-logic-analysis.mjs",
       "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
@@ -3980,6 +4050,7 @@
       "check-gate-injection.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
+      "fungi-conversion-gate.mjs",
       "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
@@ -4140,19 +4211,21 @@
       "audit-cast-hygiene.mjs",
       "audit-claim-hygiene.mjs",
       "audit-codes-full.mjs",
+      "audit-conversion-report-commit.mjs",
       "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
-      "audit-detached-slide-authority-path.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-generator-contract.mjs",
       "audit-name-collisions.mjs",
       "audit-papers-index.mjs",
       "audit-private-doc-leak.mjs",
+      "audit-real-fungi-conversion-baseline.mjs",
       "audit-scratchdir-hygiene.mjs",
       "audit-stray-docs.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
       "audit-trit-verdict-js-seam.mjs",
+      "audit-ts-fungi-drift.mjs",
       "fix-logicn-brand.mjs",
       "graph-all.mjs",
       "kb-graph-generator.mjs",
@@ -4175,6 +4248,7 @@
       "conversion-queue.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
+      "fungi-conversion-gate.mjs",
       "fungi-golden-probe.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
@@ -5272,6 +5346,24 @@
       "disposition": "self-test-transitive"
     },
     {
+      "tool": "audit-real-fungi-conversion-baseline.mjs",
+      "directEntryIds": [
+        "audit:real-fungi-conversion-baseline"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
       "tool": "audit-reference-doc-drift.mjs",
       "directEntryIds": [
         "doc:reference-drift"
@@ -5587,6 +5679,15 @@
       "disposition": "scheduled"
     },
     {
+      "tool": "audit-ts-fungi-drift.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
       "tool": "audit-twin-differential.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
@@ -5813,6 +5914,24 @@
       "disposition": "scheduled"
     },
     {
+      "tool": "constellation-preflight.mjs",
+      "directEntryIds": [
+        "preflight:detached-scalar-self-test"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
       "tool": "conversion-queue.mjs",
       "directEntryIds": [
         "audit:conversion-queue"
@@ -5927,9 +6046,45 @@
       "disposition": "on-demand"
     },
     {
+      "tool": "fungi-conversion-gate.mjs",
+      "directEntryIds": [
+        "gate:fungi-conversion-self-test"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
       "tool": "fungi-golden-probe.mjs",
       "directEntryIds": [
         "fungi:golden"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "fungi-logic-analysis.mjs",
+      "directEntryIds": [
+        "analyze:fungi-logic-self-test"
       ],
       "transitiveEntryIds": [],
       "via": [],

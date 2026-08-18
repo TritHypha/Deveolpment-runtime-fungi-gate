@@ -6,7 +6,7 @@ import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 
 import { classifyTypeScriptSource } from "./lib/ts-to-fungi-sandbox/classifier.mjs";
 import { BASELINE_SCHEMA } from "./lib/real-fungi-conversion-baseline/core.mjs";
-import { evaluateDriftReport } from "./lib/ts-fungi-drift/core.mjs";
+import { DRIFT_SCHEMA, evaluateDriftReport } from "./lib/ts-fungi-drift/core.mjs";
 
 const MAX_BUFFER = 128 * 1024 * 1024;
 const ZERO_DIGEST = `sha256:${"0".repeat(64)}`;
@@ -164,6 +164,21 @@ function checkReport(root, path, expected) {
   return stat.isFile() && !stat.isSymbolicLink() && readFileSync(target, "utf8") === expected;
 }
 
+function admittedReportHead(root, path) {
+  const target = resolve(root, ...path.split("/"));
+  if (!contained(root, target) || !existsSync(target)) return undefined;
+  const stat = lstatSync(target);
+  if (!stat.isFile() || stat.isSymbolicLink()) return undefined;
+  try {
+    const report = JSON.parse(readFileSync(target, "utf8"));
+    return report?.schema === DRIFT_SCHEMA && /^[0-9a-f]{40}$/u.test(report?.head)
+      ? report.head
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function selfTest() {
   const digest = (character) => `sha256:${character.repeat(64)}`;
   const base = {
@@ -192,7 +207,8 @@ try {
     process.stdout.write("ts-fungi-drift: self-test ALLOW\n");
   } else {
     const root = resolve(options.root);
-    const head = runGit(root, ["rev-parse", "HEAD"], { encoding: "utf8" }).stdout.trim();
+    const currentHead = runGit(root, ["rev-parse", "HEAD"], { encoding: "utf8" }).stdout.trim();
+    const head = options.check ? admittedReportHead(root, options.out) ?? currentHead : currentHead;
     const baseline = loadBaseline(root, options.baseline);
     const report = evaluateDriftReport({ head, bindings: bindingsFromBaseline(root, baseline) });
     const encoded = `${canonicalJson(report)}\n`;

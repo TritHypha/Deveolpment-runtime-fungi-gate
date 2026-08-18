@@ -108,6 +108,7 @@ flowchart LR
   T_audit_compiler_stage_twins_mjs --> C_proofs
   T_audit_conversion_report_commit_mjs["audit-conversion-report-commit.mjs"]
   T_audit_conversion_report_commit_mjs --> C_signing_fusion
+  T_audit_conversion_report_commit_mjs --> C_source_hygiene
   T_audit_conversion_report_commit_mjs --> C_doc_drift
   T_audit_conversion_report_commit_mjs --> C_graph_index
   T_audit_conversion_slice_close_mjs["audit-conversion-slice-close.mjs"]
@@ -134,7 +135,6 @@ flowchart LR
   T_audit_detached_slide_authority_path_mjs["audit-detached-slide-authority-path.mjs"]
   T_audit_detached_slide_authority_path_mjs --> C_signing_fusion
   T_audit_detached_slide_authority_path_mjs --> C_diagnostics
-  T_audit_detached_slide_authority_path_mjs --> C_source_hygiene
   T_audit_detached_slide_authority_path_mjs --> C_web_stub
   T_audit_detached_slide_authority_path_mjs --> C_graph_index
   T_audit_diagnostic_code_collisions_mjs["audit-diagnostic-code-collisions.mjs"]
@@ -355,6 +355,9 @@ flowchart LR
   T_audit_provenance_mjs --> C_diagnostics
   T_audit_provenance_mjs --> C_doc_drift
   T_audit_provenance_mjs --> C_graph_index
+  T_audit_real_fungi_conversion_baseline_mjs["audit-real-fungi-conversion-baseline.mjs"]
+  T_audit_real_fungi_conversion_baseline_mjs --> C_source_hygiene
+  T_audit_real_fungi_conversion_baseline_mjs --> C_graph_index
   T_audit_reference_doc_drift_mjs["audit-reference-doc-drift.mjs"]
   T_audit_reference_doc_drift_mjs --> C_effects
   T_audit_reference_doc_drift_mjs --> C_signing_fusion
@@ -482,6 +485,9 @@ flowchart LR
   T_audit_trit_verdict_js_seam_mjs --> C_mutation_testing
   T_audit_trit_verdict_js_seam_mjs --> C_source_hygiene
   T_audit_trit_verdict_js_seam_mjs --> C_brand
+  T_audit_ts_fungi_drift_mjs["audit-ts-fungi-drift.mjs"]
+  T_audit_ts_fungi_drift_mjs --> C_source_hygiene
+  T_audit_ts_fungi_drift_mjs --> C_graph_index
   T_audit_twin_differential_mjs["audit-twin-differential.mjs"]
   T_audit_twin_differential_mjs --> C_effects
   T_audit_twin_differential_mjs --> C_gate_wiring
@@ -760,6 +766,9 @@ flowchart LR
   T_check_gate_injection_mjs --> C_secrets_privacy
   T_check_gate_injection_mjs --> C_package_border
   T_check_gate_injection_mjs --> C_graph_index
+  T_constellation_preflight_mjs["constellation-preflight.mjs"]
+  T_constellation_preflight_mjs --> C_diagnostics
+  T_constellation_preflight_mjs --> C_graph_index
   T_conversion_queue_mjs["conversion-queue.mjs"]
   T_conversion_queue_mjs --> C_governance
   T_conversion_queue_mjs --> C_source_hygiene
@@ -790,11 +799,19 @@ flowchart LR
   T_flat_package_root_lock_mjs --> C_diagnostics
   T_fungi_astshape_mjs["fungi-astshape.mjs"]
   T_fungi_astshape_mjs --> C_secrets_privacy
+  T_fungi_conversion_gate_mjs["fungi-conversion-gate.mjs"]
+  T_fungi_conversion_gate_mjs --> C_signing_fusion
+  T_fungi_conversion_gate_mjs --> C_diagnostics
+  T_fungi_conversion_gate_mjs --> C_source_hygiene
+  T_fungi_conversion_gate_mjs --> C_graph_index
   T_fungi_golden_probe_mjs["fungi-golden-probe.mjs"]
   T_fungi_golden_probe_mjs --> C_gate_wiring
   T_fungi_golden_probe_mjs --> C_diagnostics
   T_fungi_golden_probe_mjs --> C_source_hygiene
   T_fungi_golden_probe_mjs --> C_graph_index
+  T_fungi_logic_analysis_mjs["fungi-logic-analysis.mjs"]
+  T_fungi_logic_analysis_mjs --> C_diagnostics
+  T_fungi_logic_analysis_mjs --> C_graph_index
   T_fungi_source_capability_inventory_mjs["fungi-source-capability-inventory.mjs"]
   T_fungi_source_capability_inventory_mjs --> C_effects
   T_fungi_source_capability_inventory_mjs --> C_signing_fusion

@@ -17,12 +17,15 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.json",
-    "test": "npm run typecheck && npm run build && node --test tests/*.test.mjs"
+    "test": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
+    "docs:reference": "node dist/reference-cli.js write",
+    "docs:reference:check": "node dist/reference-cli.js check"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
+    "@galerina/core-compiler": "file:../galerina-core-compiler",
     "@galerina/framework-app-kernel": "file:../galerina-framework-app-kernel"
   },
   "devDependencies": {

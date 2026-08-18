@@ -8,3 +8,6 @@
 export * from "./types.js";
 export { generateOpenApi, exportOpenApi } from "./openapi.js";
 export { OpenApiGenerationError, validateOpenApiDocument } from "./validate.js";
+export * from "./reference-types.js";
+export { assertReferenceManifestIntegrity, buildReferenceManifest } from "./reference-manifest.js";
+export * from "./reference-renderers.js";

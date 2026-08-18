@@ -6658,6 +6658,397 @@
           "reason": "active canonical control"
         }
       }
+    },
+    {
+      "id": "audit:real-fungi-conversion-baseline",
+      "requirementId": "REQ-REAL-FUNGI-CONVERSION-BASELINE",
+      "satisfies": [
+        "REQ-REAL-FUNGI-CONVERSION-BASELINE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-real-fungi-conversion-baseline.mjs",
+          "--out",
+          "docs/reports/real-fungi-conversion-baseline-2026-08-18.json",
+          "--check-current"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-REAL-FUNGI-CONVERSION-BASELINE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 300000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:graph-project-identity",
+      "requirementId": "REQ-GRAPH-PROJECT-IDENTITY",
+      "satisfies": [
+        "REQ-GRAPH-PROJECT-IDENTITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "scripts/tests/graph-project-identity.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-GRAPH-PROJECT-IDENTITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 300000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "preflight:detached-scalar-self-test",
+      "requirementId": "REQ-DETACHED-SCALAR-PREFLIGHT",
+      "satisfies": [
+        "REQ-DETACHED-SCALAR-PREFLIGHT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/constellation-preflight.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-DETACHED-SCALAR-PREFLIGHT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 300000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "gate:fungi-conversion-self-test",
+      "requirementId": "REQ-FUNGI-CONVERSION-GATE",
+      "satisfies": [
+        "REQ-FUNGI-CONVERSION-GATE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/fungi-conversion-gate.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-FUNGI-CONVERSION-GATE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 300000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "analyze:fungi-logic-self-test",
+      "requirementId": "REQ-FUNGI-LOGIC-ANALYSIS",
+      "satisfies": [
+        "REQ-FUNGI-LOGIC-ANALYSIS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/fungi-logic-analysis.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-FUNGI-LOGIC-ANALYSIS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 300000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:checked-reference",
+      "requirementId": "REQ-CHECKED-REFERENCE",
+      "satisfies": [
+        "REQ-CHECKED-REFERENCE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-docs",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-docs"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 600000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
     }
   ]
 }

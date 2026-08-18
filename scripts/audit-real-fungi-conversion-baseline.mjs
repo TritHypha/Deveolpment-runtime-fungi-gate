@@ -33,9 +33,13 @@ function runGit(root, args, { allowFailure = false, encoding = "utf8" } = {}) {
 function parseArgs(argv) {
   if (argv.length === 1 && argv[0] === "--self-test") return Object.freeze({ selfTest: true });
   const checkCount = argv.filter((argument) => argument === "--check").length;
+  const currentOnlyCount = argv.filter((argument) => argument === "--check-current").length;
   if (checkCount > 1) throw new Error("CLI_ARGUMENT_INVALID: --check may appear once");
-  const check = checkCount === 1;
-  const values = argv.filter((argument) => argument !== "--check");
+  if (currentOnlyCount > 1) throw new Error("CLI_ARGUMENT_INVALID: --check-current may appear once");
+  if (checkCount > 0 && currentOnlyCount > 0) throw new Error("CLI_ARGUMENT_INVALID: --check and --check-current are mutually exclusive");
+  const check = checkCount === 1 || currentOnlyCount === 1;
+  const checkCurrent = currentOnlyCount === 1;
+  const values = argv.filter((argument) => argument !== "--check" && argument !== "--check-current");
   let root = resolve(import.meta.dirname, "..");
   let out;
   for (let index = 0; index < values.length; index += 2) {
@@ -50,7 +54,7 @@ function parseArgs(argv) {
   if (typeof out !== "string" || out.length === 0 || out.includes("\\") || isAbsolute(out) || /^[A-Za-z]:\//u.test(out) || out.startsWith("../")) {
     throw new Error("OUTPUT_PATH_INVALID: --out must be a repository-relative JSON path");
   }
-  return Object.freeze({ selfTest: false, root, out, check });
+  return Object.freeze({ selfTest: false, root, out, check, checkCurrent });
 }
 
 function contained(root, target) {
@@ -148,6 +152,21 @@ function checkReport(root, relativePath, expected) {
   return stat.isFile() && !stat.isSymbolicLink() && readFileSync(target, "utf8") === expected;
 }
 
+function admittedReportHead(root, relativePath) {
+  const target = resolve(root, ...relativePath.split("/"));
+  if (!contained(root, target) || !existsSync(target)) return undefined;
+  const stat = lstatSync(target);
+  if (!stat.isFile() || stat.isSymbolicLink()) return undefined;
+  try {
+    const report = JSON.parse(readFileSync(target, "utf8"));
+    return report?.schema === BASELINE_SCHEMA && /^[0-9a-f]{40}$/u.test(report?.head)
+      ? report.head
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function runSelfTest() {
   const head = "a".repeat(40);
   const sourceDigest = "sha256:" + "1".repeat(64);
@@ -174,7 +193,8 @@ try {
     process.stdout.write("real-fungi-conversion-baseline: self-test ALLOW\n");
   } else {
     const root = resolve(options.root);
-    const head = runGit(root, ["rev-parse", "HEAD"]).stdout.trim();
+    const currentHead = runGit(root, ["rev-parse", "HEAD"]).stdout.trim();
+    const head = options.check ? admittedReportHead(root, options.out) ?? currentHead : currentHead;
     const paths = trackedAndUntrackedFungi(root);
     const fungi = readFungi(root, paths, introductionMap(root));
     const report = classifyFungiBaseline({ head, fungi, sourceStates: sourceStates(root, fungi) });
@@ -190,7 +210,7 @@ try {
     const findings = report.counts.UNBOUND + report.counts.STALE + report.counts.SHADOWED;
     if (!options.check || process.exitCode !== 1) {
       process.stdout.write(`real-fungi-conversion-baseline: ${findings === 0 ? "ALLOW" : "HOLD"}; ${options.check ? "report current; " : ""}real=${report.counts.realPackageFungi}; overlays=${report.counts.excludedTestOverlays}; bound=${report.counts.BOUND}; unbound=${report.counts.UNBOUND}; stale=${report.counts.STALE}; shadowed=${report.counts.SHADOWED}\n`);
-      if (findings > 0) process.exitCode = 1;
+      if (findings > 0 && !options.checkCurrent) process.exitCode = 1;
     }
   }
 } catch (error) {

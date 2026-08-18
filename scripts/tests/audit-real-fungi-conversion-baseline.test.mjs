@@ -209,7 +209,22 @@ test("the CLI self-tests before writing one body-free atomic report", () => {
   assert.equal(check.status, 0, check.stderr || check.stdout);
   assert.match(check.stdout, /report current/u);
 
+  git(root, ["add", "--", out]);
+  git(root, ["commit", "-q", "-m", "record baseline"]);
+  const committedCheck = run(root, process.execPath, [CLI, "--root", root, "--out", out, "--check"]);
+  assert.equal(committedCheck.status, 0, committedCheck.stderr || committedCheck.stdout);
+  assert.match(committedCheck.stdout, /report current/u);
+
+  const freshnessOnly = run(root, process.execPath, [CLI, "--root", root, "--out", out, "--check-current"]);
+  assert.equal(freshnessOnly.status, 0, freshnessOnly.stderr || freshnessOnly.stdout);
+  assert.match(freshnessOnly.stdout, /report current/u);
+
   const collision = run(root, process.execPath, [CLI, "--root", root, "--out", out]);
   assert.equal(collision.status, 2);
   assert.match(collision.stderr, /REPORT_EXISTS/u);
+
+  write(root, "packages-galerina/real/src/constants.ts", "export const VALUE = \"CHANGED\";\n");
+  const staleFreshness = run(root, process.execPath, [CLI, "--root", root, "--out", out, "--check-current"]);
+  assert.equal(staleFreshness.status, 1, staleFreshness.stderr || staleFreshness.stdout);
+  assert.match(staleFreshness.stdout, /stale or missing/u);
 });

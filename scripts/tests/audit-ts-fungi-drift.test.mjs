@@ -180,4 +180,10 @@ pure flow value() -> String { return "A" }
   const check = run(root, process.execPath, [DRIFT_CLI, "--root", root, "--baseline", baselinePath, "--out", driftPath, "--check"]);
   assert.equal(check.status, 1, check.stderr || check.stdout);
   assert.match(check.stdout, /report current/u);
+
+  git(root, ["add", "--", baselinePath, driftPath]);
+  git(root, ["commit", "-q", "-m", "record drift reports"]);
+  const committedCheck = run(root, process.execPath, [DRIFT_CLI, "--root", root, "--baseline", baselinePath, "--out", driftPath, "--check"]);
+  assert.equal(committedCheck.status, 1, committedCheck.stderr || committedCheck.stdout);
+  assert.match(committedCheck.stdout, /report current/u);
 });

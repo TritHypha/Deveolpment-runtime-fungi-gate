@@ -93,6 +93,33 @@ node ../galerina-tower-citizen/node_modules/typescript/lib/tsc.js -p tsconfig.js
 node --test tests/*.test.mjs
 ```
 
+## Checked Galerina reference
+
+The package can also build a deterministic reference manifest from canonical
+Galerina parser, type-checker, effect-checker and governance-verifier output.
+The manifest contains public signatures, qualifiers, effects, contract facts,
+repository-relative byte locators and source/build digests. It never embeds a
+source body, absolute path or private-custody document.
+
+`buildReferenceManifest` accepts source bytes supplied by a trusted repository
+walker. `buildReferenceOutputFiles` then derives JSON, Markdown and static HTML
+solely from that admitted manifest. Optional graph caller links are included
+only when their graph build point exactly matches the manifest build point and
+each link remains labelled `ASSERTED` or `INFERRED`; a stale graph is simply
+omitted and never becomes declaration authority.
+
+The CLI publishes a new output tree atomically and without overwrite:
+
+```sh
+npm run docs:reference -- --manifest build/reference-manifest.json --out build/reference
+npm run docs:reference:check -- --manifest build/reference-manifest.json --out build/reference
+```
+
+`write` refuses an existing output root. `check` refuses missing, additional or
+hand-edited generated files. To regenerate, publish to a new root and switch it
+through the owning repository's normal generated-artifact process; do not edit
+the output in place.
+
 ## What this package does NOT do
 
 - It does not serve HTTP, route requests, or run handlers — that is the App
@@ -100,3 +127,6 @@ node --test tests/*.test.mjs
 - It does not own the route model — it reads the App Kernel's types.
 - It is not the source of truth — the governed source and the kernel are. The
   generated OpenAPI is a derived view and is regenerated, never hand-edited.
+- The checked reference is not a replacement for `.fungi`, the compiler, GIR,
+  SLIDE or VOK. It documents admitted AST facts and carries no execution or
+  verification authority.

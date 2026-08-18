@@ -27,6 +27,15 @@ counts or open items that a newer section explicitly supersedes.
   plus final self-review in the 2026-08-18 deterministic tooling plan are
   complete and freshly verified. Task 9 (the bounded ten-source pilot) runs
   last; neither tracked nor `build/` candidates may be authored early.
+- [x] Reclassify all 2,200 `@galerina/test` conversion overlays as test-fixture
+  debt with zero real-package conversion credit. The corpus-disposition report
+  records 55 package tests, 55 conditional physical integration tests, exact
+  execution gaps, six normalized-shadow groups and the reversible 55-commit
+  Git range. No overlay was deleted.
+- [ ] Replace the 2,200-file overlay corpus only through a separately reviewed,
+  owner-approved cleanup after a construct/hostile-vector coverage manifest is
+  green, all 110 consumers and loaded assets are migrated, and the historical
+  Git range is retained for recovery.
 - [ ] Wire the standing red-capable instruments into the renewed route: brand
   and JavaScript-seam erasure, NaN-passable guards, MAC framing, mutation,
   sentinel, acceptance-pack and paper-standard checks.
