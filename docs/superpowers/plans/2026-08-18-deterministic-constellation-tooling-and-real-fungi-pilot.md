@@ -66,26 +66,54 @@ Lyth TypeScript KATs.
 **Files:**
 - Create: `scripts/audit-real-fungi-conversion-baseline.mjs`
 - Create: `scripts/tests/audit-real-fungi-conversion-baseline.test.mjs`
+- Create: `scripts/lib/ts-fungi-drift/core.mjs`
+- Create: `scripts/audit-ts-fungi-drift.mjs`
+- Create: `scripts/tests/audit-ts-fungi-drift.test.mjs`
 - Create: `docs/reports/real-fungi-conversion-baseline-2026-08-18.json`
 - Modify: `package.json`
 
-- [ ] Write a failing fixture containing one test-overlay output, one missing
+- [x] Write a failing fixture containing one test-overlay output, one missing
   TypeScript owner, one changed source digest and one normalized shadow.
-- [ ] Require the audit to enumerate committed non-test `.fungi`, identify the
+- [x] Require the audit to enumerate committed non-test `.fungi`, identify the
   introducing commit, recover source-binding metadata, verify the retained
   `.ts`, and classify each file as `BOUND`, `UNBOUND`, `STALE` or `SHADOWED`.
-- [ ] Explicitly exclude the 2,200 conversion overlays from real conversion
+- [x] Explicitly exclude the 2,200 conversion overlays from real conversion
   credit while reporting their count and tracked Git range as fixture debt.
-- [ ] Implement exact-byte and normalized whole-corpus duplicate detection over
+- [x] Implement exact-byte and normalized whole-corpus duplicate detection over
   tracked and untracked `.fungi`, with case-sensitive and case-folded paths.
-- [ ] Emit a compact body-free JSON ledger using repository-relative locators.
-- [ ] Add `audit:real-fungi-conversion-baseline` to `package.json`.
-- [ ] Run:
+- [x] Emit a compact body-free JSON ledger using repository-relative locators.
+- [x] Add a dedicated TypeScript-to-Fungi drift audit. For legacy candidates,
+  reconstruct the source build point from the candidate's introducing commit
+  and label that provenance `RECONSTRUCTED`; for new run-card candidates,
+  require exact recorded source, symbol, candidate, checked snapshot, GIR,
+  physical package, profile and VOK receipt digests.
+- [x] Distinguish `NO_DRIFT`, `SOURCE_BYTE_DRIFT`, `SYMBOL_DRIFT`,
+  `CANDIDATE_BYTE_DRIFT`, `CHAIN_DRIFT`, `UNBOUND` and `ERROR`. Never claim
+  semantic equivalence merely because bytes or one returned constant match.
+- [x] Add red controls for changed TypeScript bytes, deleted/renamed symbols,
+  changed candidate bytes and each exact chain digest, plus a green unchanged
+  legacy pair and a fully bound run-card pair.
+- [x] Add `audit:real-fungi-conversion-baseline` to `package.json`.
+- [x] Add `audit:ts-fungi-drift` to `package.json`.
+- [x] Run:
   `node --test scripts/tests/audit-real-fungi-conversion-baseline.test.mjs`
-- [ ] Run:
+- [x] Run:
   `npm run audit:real-fungi-conversion-baseline`
-- [ ] Verify the ledger accounts for all four real-package conversion commits
+- [x] Run:
+  `node --test scripts/tests/audit-ts-fungi-drift.test.mjs`
+- [x] Verify the ledger accounts for all four real-package conversion commits
   without conferring retirement, switch or production authority.
+
+Evidence (2026-08-18): the paired suites pass 10/10. The live body-free
+baseline accounts for 2,971 `.fungi`: 771 real-package files and 2,200 excluded
+test overlays introduced by 55 commits with zero conversion credit. Exactly 198
+files are converter candidates, matching the four real conversion commits as
+50 + 50 + 50 + 48. Their candidate bytes and targeted symbol fingerprints are
+unchanged, but every owning TypeScript file has later byte changes, so the
+drift audit truthfully reports 198 `SOURCE_BYTE_DRIFT`, zero `SYMBOL_DRIFT`,
+zero `CANDIDATE_BYTE_DRIFT`, and no semantic-equivalence claim. The baseline
+also records 32 normalized shadows among native/non-conversion Fungi, which
+remain a HOLD for later corpus disposition rather than conversion credit.
 
 ## Task 2: Add the shared graph-project identity resolver
 
