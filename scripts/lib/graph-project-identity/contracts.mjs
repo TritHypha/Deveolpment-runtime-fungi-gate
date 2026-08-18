@@ -6,25 +6,25 @@ export const GRAPH_PROJECT_ALIASES = Object.freeze({
     project: "Galerina",
     repository: "Galerina",
     componentScope: ".",
-    probe: Object.freeze({ name: "parseProgram", filePath: "packages-galerina/galerina-core-compiler/src/parser.ts" }),
+    probe: Object.freeze({ name: "parseProgram", label: "Function", filePath: "packages-galerina/galerina-core-compiler/src/parser.ts" }),
   }),
   slide: Object.freeze({
     project: "SLIDE",
     repository: "SLIDE",
     componentScope: ".",
-    probe: Object.freeze({ name: "compileCheckedFungiPackageSet", filePath: "src/checked-fungi-package-compiler.mjs" }),
+    probe: Object.freeze({ name: "compileCheckedFungiPackageSet", label: "Function", filePath: "src/checked-fungi-package-compiler.mjs" }),
   }),
   vok: Object.freeze({
     project: "SLIDE",
     repository: "SLIDE",
     componentScope: "src/checked-fungi-package-file.mjs",
-    probe: Object.freeze({ name: "verifyTypedCheckedFungiPackageReceipt", filePath: "src/checked-fungi-package-file.mjs" }),
+    probe: Object.freeze({ name: "verifyTypedCheckedFungiPackageReceipt", label: "Function", filePath: "src/checked-fungi-package-file.mjs" }),
   }),
   lyth: Object.freeze({
     project: "lyth-weaver",
     repository: "lyth-weaver",
     componentScope: ".",
-    probe: Object.freeze({ name: "adaptLythAdmissionWork", filePath: "src/slide-admission-work-adapter.ts" }),
+    probe: Object.freeze({ name: "adaptLythAdmissionWork", label: "Function", filePath: "src/slide-admission-work-adapter.ts" }),
   }),
 });
 

@@ -69,7 +69,9 @@ export function resolveGraphIdentity({ logicalKey, expectedRoot, requiredHead, o
     }
     relativePath(symbol.filePath);
   }
-  const probes = observation.symbols.filter((item) => item.name === alias.probe.name && item.filePath === alias.probe.filePath);
+  const probes = observation.symbols.filter((item) => item.name === alias.probe.name
+    && item.label === alias.probe.label
+    && item.filePath === alias.probe.filePath);
   if (probes.length === 0) refuse("PROBE_MISSING", "bounded graph symbol probe is missing");
   if (probes.length !== 1) refuse("PROBE_AMBIGUOUS", `bounded graph symbol probe resolved ${probes.length} times`);
   const probe = probes[0];

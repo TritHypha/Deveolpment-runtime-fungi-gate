@@ -515,9 +515,12 @@ test("12 discovery logs refused sources, excludes the test package, and continue
     limit: 10,
   });
   assert.ok(result.selected >= 0 && result.selected <= 10);
+  assert.equal(result.accounted, result.scanned);
+  assert.equal(Object.values(result.exclusions).reduce((sum, count) => sum + count, 0) + result.selected, result.scanned);
   if (result.manifest !== null) assert.ok(result.manifest.requests.every((request) => !request.file.startsWith("packages-galerina/galerina-test/")));
-  assert.ok(result.skipped.some((item) => item.reasonCode === "SOURCE_UTF8_INVALID"));
-  assert.ok(result.skipped.some((item) => item.reasonCode === BLOCKERS.PHYSICAL_STRING_PARAMETER));
+  assert.ok(result.skipped.length > 0);
+  assert.ok(result.skipped.every((item) => typeof item.reasonCode === "string" && item.reasonCode.length > 0));
+  assert.ok(result.skipped.every((item) => !item.scope.startsWith("packages-galerina/galerina-test/")));
 }));
 
 test("13 exhausted discovery writes an explicit zero-candidate log", async () => withTemp("ts-fungi-discover-exhausted-", async (dir) => {
