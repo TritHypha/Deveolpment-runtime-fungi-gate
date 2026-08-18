@@ -7,7 +7,7 @@ import {
   type ArtifactReferenceV1,
   type Sha256Digest,
   verifyArtifactBytes,
-} from "./artifact-reference.js";
+} from "./artifact-reference-core.js";
 import {
   CheckedModuleSnapshotError,
   type CheckedModuleSnapshotV1,

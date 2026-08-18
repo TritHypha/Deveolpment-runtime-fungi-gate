@@ -180,8 +180,14 @@ test("detached emitter transitive imports cannot reach the AST or bootstrap lowe
   for (const suffix of forbiddenFiles) {
     assert.equal(normalized.some((file) => file.endsWith(suffix)), false, `${suffix} reached from detached emitter`);
   }
+  assert.equal(
+    normalized.some((file) => file.endsWith("/artifact-reference.ts")),
+    false,
+    "filesystem-backed artifact repository reached from detached emitter",
+  );
   const combined = closure.map((file) => readFileSync(file, "utf8")).join("\n");
   assert.doesNotMatch(combined, /\bSemanticGraphBuilder\b|\bbuildExecutionPlan\b|\bemitGIR\s*\(|from\s+["']typescript["']/u);
+  assert.doesNotMatch(combined, /from\s+["']node:(?:fs|path)["']/u);
 });
 
 test("emits the exact parent V2-C canonical CBOR bytes from snapshot facts only", async () => {

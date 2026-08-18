@@ -9,30 +9,46 @@ import {
 import { join, resolve } from "node:path";
 import { types as utilTypes } from "node:util";
 
-export const ARTIFACT_REFERENCE_SCHEMA = "galerina.artifact-reference.v1" as const;
+import {
+  ARTIFACT_REFERENCE_SCHEMA,
+  ARTIFACT_SHA256_PATTERN as SHA256,
+  ArtifactReferenceError,
+  MAX_ARTIFACT_BYTES,
+  artifactReferenceFail as fail,
+  assertLegalArtifactOwnerKind as assertLegalOwnerKind,
+  captureImmutableBytes as ownedBytes,
+  isArtifactKind as isKind,
+  isArtifactOwner as isOwner,
+  sha256ArtifactBytes as sha256,
+  validArtifactMaximum as validMaximum,
+  validateArtifactReferenceV1,
+  verifyArtifactBytes,
+  type ArtifactKind,
+  type ArtifactOwner,
+  type ArtifactReferenceErrorCode,
+  type ArtifactReferenceV1,
+  type Sha256Digest,
+} from "./artifact-reference-core.js";
+
+export {
+  ARTIFACT_REFERENCE_SCHEMA,
+  ArtifactReferenceError,
+  MAX_ARTIFACT_BYTES,
+  validateArtifactReferenceV1,
+  verifyArtifactBytes,
+};
+export type {
+  ArtifactKind,
+  ArtifactOwner,
+  ArtifactReferenceErrorCode,
+  ArtifactReferenceV1,
+  Sha256Digest,
+};
+
 export const COMPUTE_TRANSFER_SCHEMA = "galerina.compute-transfer.v1" as const;
 export const AUTHENTICATED_COMPUTE_TRANSFER_SCHEMA = "galerina.authenticated-compute-transfer.v1" as const;
 export const STAGE_RECEIPT_SCHEMA = "galerina.stage-receipt.v1" as const;
 export const STAGE_EVIDENCE_SET_SCHEMA = "vok.stage-evidence-set.v1" as const;
-export const MAX_ARTIFACT_BYTES = 64 * 1024 * 1024;
-
-export type ArtifactOwner = "galerina" | "slide" | "lyth" | "vok" | "dfe" | "tower";
-export type ArtifactKind =
-  | "fungi-source"
-  | "checked-module-snapshot"
-  | "canonical-gir"
-  | "physical-slide"
-  | "lyth-evidence"
-  | "vok-receipt";
-export type Sha256Digest = `sha256:${string}`;
-
-export interface ArtifactReferenceV1 {
-  readonly schema: typeof ARTIFACT_REFERENCE_SCHEMA;
-  readonly owner: ArtifactOwner;
-  readonly kind: ArtifactKind;
-  readonly digest: Sha256Digest;
-  readonly byteLength: number;
-}
 
 export interface ComputeTransferV1 {
   readonly schema: typeof COMPUTE_TRANSFER_SCHEMA;
@@ -209,209 +225,7 @@ export interface OwnedArtifactRepository<O extends ArtifactOwner> {
   write(kind: ArtifactKind, bytes: Uint8Array): Promise<ArtifactReferenceV1 & { readonly owner: O }>;
 }
 
-export type ArtifactReferenceErrorCode =
-  | "REFERENCE_TYPE"
-  | "REFERENCE_KEYS"
-  | "REFERENCE_DESCRIPTOR"
-  | "REFERENCE_SCHEMA"
-  | "REFERENCE_OWNER"
-  | "REFERENCE_KIND"
-  | "REFERENCE_DIGEST"
-  | "REFERENCE_LENGTH"
-  | "OWNER_KIND"
-  | "REPOSITORY_OWNER"
-  | "REPOSITORY_CAPABILITY"
-  | "BODY_TYPE"
-  | "BODY_MISSING"
-  | "BODY_OVERSIZED"
-  | "BODY_LENGTH"
-  | "BODY_DIGEST"
-  | "BACKEND_READ"
-  | "BACKEND_WRITE"
-  | "CAPABILITY_SPENT"
-  | "TRANSFER_TYPE"
-  | "TRANSFER_KEYS"
-  | "TRANSFER_ROUTE"
-  | "TRANSFER_ARTIFACT_OWNER"
-  | "TRANSFER_PREREQUISITES"
-  | "TRANSFER_OPERATION"
-  | "TRANSFER_AUTHORITY"
-  | "TRANSFER_RUN_IDENTITY"
-  | "AUTHENTICATOR_CAPABILITY"
-  | "AUTHENTICATOR_FAILED"
-  | "RETENTION_REQUEST"
-  | "RETENTION_CAPACITY"
-  | "RECEIPT_TYPE"
-  | "RECEIPT_KEYS"
-  | "RECEIPT_FIELD"
-  | "RECEIPT_BINDING"
-  | "RECEIPT_AUTHENTICATOR"
-  | "EVIDENCE_SET_TYPE"
-  | "EVIDENCE_SET_KEYS"
-  | "EVIDENCE_SET_FIELD"
-  | "EVIDENCE_SET_ORDER"
-  | "EVIDENCE_SET_BINDING"
-  | "EVIDENCE_SET_AUTHENTICATION"
-  | "VOK_ENVELOPE_TYPE"
-  | "VOK_ENVELOPE_KEYS"
-  | "VOK_ENVELOPE_FIELD"
-  | "VOK_ENVELOPE_BINDING";
-
-export class ArtifactReferenceError extends Error {
-  readonly code: ArtifactReferenceErrorCode;
-
-  constructor(code: ArtifactReferenceErrorCode, message: string) {
-    super(`[${code}] ${message}`);
-    this.name = "ArtifactReferenceError";
-    this.code = code;
-  }
-}
-
-const OWNERS = new Set<ArtifactOwner>(["galerina", "slide", "lyth", "vok", "dfe", "tower"]);
-const KINDS = new Set<ArtifactKind>([
-  "fungi-source",
-  "checked-module-snapshot",
-  "canonical-gir",
-  "physical-slide",
-  "lyth-evidence",
-  "vok-receipt",
-]);
-const LEGAL_KINDS: Readonly<Record<ArtifactOwner, ReadonlySet<ArtifactKind>>> = {
-  galerina: new Set(["fungi-source", "checked-module-snapshot", "canonical-gir"]),
-  slide: new Set(["physical-slide"]),
-  lyth: new Set(["lyth-evidence"]),
-  vok: new Set(["vok-receipt"]),
-  dfe: new Set(),
-  tower: new Set(),
-};
-const REFERENCE_KEYS = ["byteLength", "digest", "kind", "owner", "schema"] as const;
-const SHA256 = /^sha256:[0-9a-f]{64}$/;
 const GIT_BUILD_POINT = /^git:[0-9a-f]{40}$/;
-
-function fail(code: ArtifactReferenceErrorCode, message: string): never {
-  throw new ArtifactReferenceError(code, message);
-}
-
-function validMaximum(maxByteLength: number): number {
-  if (!Number.isSafeInteger(maxByteLength) || maxByteLength < 0) {
-    fail("REFERENCE_LENGTH", "maximum byte length must be a non-negative safe integer");
-  }
-  return maxByteLength;
-}
-
-function exactDataValues(input: unknown): Readonly<Record<string, unknown>> {
-  if (typeof input !== "object" || input === null || Array.isArray(input) || utilTypes.isProxy(input)) {
-    fail("REFERENCE_TYPE", "artifact reference must be an ordinary record");
-  }
-  try {
-    const prototype = Object.getPrototypeOf(input);
-    if (prototype !== Object.prototype && prototype !== null) {
-      fail("REFERENCE_TYPE", "artifact reference must have an ordinary or null prototype");
-    }
-    const keys = Reflect.ownKeys(input);
-    if (
-      keys.length !== REFERENCE_KEYS.length
-      || keys.some((key) => typeof key !== "string" || !REFERENCE_KEYS.includes(key as typeof REFERENCE_KEYS[number]))
-      || REFERENCE_KEYS.some((key) => !keys.includes(key))
-    ) {
-      fail("REFERENCE_KEYS", "artifact reference must contain exactly the five version-one fields");
-    }
-    const descriptors = Object.getOwnPropertyDescriptors(input);
-    const values: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
-    for (const key of REFERENCE_KEYS) {
-      const descriptor = descriptors[key];
-      if (descriptor === undefined || !("value" in descriptor)) {
-        fail("REFERENCE_DESCRIPTOR", `artifact reference field '${key}' must be own data`);
-      }
-      values[key] = descriptor.value;
-    }
-    return values;
-  } catch (error: unknown) {
-    if (error instanceof ArtifactReferenceError) throw error;
-    fail("REFERENCE_DESCRIPTOR", "artifact reference descriptors could not be captured");
-  }
-}
-
-function isOwner(value: unknown): value is ArtifactOwner {
-  return typeof value === "string" && OWNERS.has(value as ArtifactOwner);
-}
-
-function isKind(value: unknown): value is ArtifactKind {
-  return typeof value === "string" && KINDS.has(value as ArtifactKind);
-}
-
-function assertLegalOwnerKind(owner: ArtifactOwner, kind: ArtifactKind): void {
-  if (!LEGAL_KINDS[owner].has(kind)) {
-    fail("OWNER_KIND", `owner '${owner}' cannot own artifact kind '${kind}' in schema v1`);
-  }
-}
-
-export function validateArtifactReferenceV1(
-  input: unknown,
-  options: { readonly maxByteLength?: number } = {},
-): ArtifactReferenceV1 {
-  const maxByteLength = validMaximum(options.maxByteLength ?? MAX_ARTIFACT_BYTES);
-  const values = exactDataValues(input);
-  if (values["schema"] !== ARTIFACT_REFERENCE_SCHEMA) fail("REFERENCE_SCHEMA", "unsupported artifact-reference schema");
-  if (!isOwner(values["owner"])) fail("REFERENCE_OWNER", "unknown artifact owner");
-  if (!isKind(values["kind"])) fail("REFERENCE_KIND", "unknown artifact kind");
-  if (typeof values["digest"] !== "string" || !SHA256.test(values["digest"])) {
-    fail("REFERENCE_DIGEST", "digest must be canonical lowercase sha256 hex");
-  }
-  if (
-    typeof values["byteLength"] !== "number"
-    || !Number.isSafeInteger(values["byteLength"])
-    || values["byteLength"] < 0
-    || values["byteLength"] > maxByteLength
-  ) {
-    fail("REFERENCE_LENGTH", "byte length is outside the admitted safe bound");
-  }
-  assertLegalOwnerKind(values["owner"], values["kind"]);
-  return Object.freeze({
-    schema: ARTIFACT_REFERENCE_SCHEMA,
-    owner: values["owner"],
-    kind: values["kind"],
-    digest: values["digest"] as Sha256Digest,
-    byteLength: values["byteLength"],
-  });
-}
-
-function sha256(bytes: Uint8Array): Sha256Digest {
-  return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
-}
-
-function ownedBytes(input: unknown): Uint8Array {
-  if (!(input instanceof Uint8Array)) fail("BODY_TYPE", "artifact body must be a Uint8Array");
-  if (typeof SharedArrayBuffer !== "undefined" && input.buffer instanceof SharedArrayBuffer) {
-    fail("BODY_TYPE", "shared artifact bytes require a separate admitted live-view contract");
-  }
-  try {
-    const capturedLength = input.byteLength;
-    const copy = new Uint8Array(capturedLength);
-    copy.set(input);
-    if (input.byteLength !== capturedLength || copy.byteLength !== capturedLength) {
-      fail("BODY_TYPE", "artifact byte view changed while it was captured");
-    }
-    return copy;
-  } catch (error: unknown) {
-    if (error instanceof ArtifactReferenceError) throw error;
-    fail("BODY_TYPE", "artifact byte view could not be captured");
-  }
-}
-
-export function verifyArtifactBytes(
-  referenceInput: unknown,
-  bytesInput: unknown,
-  options: { readonly maxByteLength?: number } = {},
-): Uint8Array {
-  const maxByteLength = validMaximum(options.maxByteLength ?? MAX_ARTIFACT_BYTES);
-  const reference = validateArtifactReferenceV1(referenceInput, { maxByteLength });
-  const bytes = ownedBytes(bytesInput);
-  if (bytes.byteLength > maxByteLength) fail("BODY_OVERSIZED", "artifact body exceeds the configured byte bound");
-  if (bytes.byteLength !== reference.byteLength) fail("BODY_LENGTH", "artifact body length does not match its reference");
-  if (sha256(bytes) !== reference.digest) fail("BODY_DIGEST", "artifact body digest does not match its reference");
-  return bytes;
-}
 
 interface CapturedReadRepository {
   readonly owner: ArtifactOwner;

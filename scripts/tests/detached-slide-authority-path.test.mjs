@@ -2,6 +2,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 
@@ -40,6 +41,28 @@ function run(root, entries) {
   return { child, report: JSON.parse(child.stdout) };
 }
 
+function runApi(root, options) {
+  const moduleUrl = pathToFileURL(SCRIPT).href;
+  const program = [
+    `import { auditDetachedAuthorityPath } from ${JSON.stringify(moduleUrl)};`,
+    `const result = await auditDetachedAuthorityPath(${JSON.stringify({
+      repoRoot: root,
+      entryFiles: options.entryFiles,
+      expectedHead: options.expectedHead,
+      maximumFiles: options.maximumFiles,
+      maximumEdges: options.maximumEdges,
+    })});`,
+    "process.stdout.write(`${JSON.stringify(result)}\\n`);",
+  ].join("\n");
+  const child = spawnSync(process.execPath, ["--input-type=module", "--eval", program], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.equal(child.signal, null, child.stderr);
+  assert.doesNotThrow(() => JSON.parse(child.stdout), child.stderr || child.stdout);
+  return { child, report: JSON.parse(child.stdout) };
+}
+
 test("a snapshot-only detached GIR module is clean and emits complete provenance", () => {
   const root = fixture({
     "src/detached.ts": [
@@ -54,12 +77,14 @@ test("a snapshot-only detached GIR module is clean and emits complete provenance
 
   assert.equal(child.status, 0, child.stderr);
   assert.equal(report.schema, "galerina.detached-slide-authority-path.v1");
-  assert.equal(report.verdict, "CLEAN");
+  assert.equal(report.status, "CLEAN");
   assert.match(report.toolVersion, /^\d+\.\d+\.\d+$/u);
   assert.match(report.rulesetDigest, /^sha256:[0-9a-f]{64}$/u);
-  assert.match(report.repositoryCommit, /^[0-9a-f]{40}$/u);
-  assert.deepEqual(report.filesInspected.map((file) => file.path), ["src/detached.ts"]);
-  assert.deepEqual(report.forbiddenEdges, []);
+  assert.match(report.repositoryHead, /^[0-9a-f]{40}$/u);
+  assert.equal(report.graphBuildPoint, null);
+  assert.equal(report.graphFreshness, "UNKNOWN");
+  assert.deepEqual(report.inspectedFiles.map((file) => file.path), ["src/detached.ts"]);
+  assert.deepEqual(report.violations, []);
 });
 
 test("the detached snapshot emitter is not confused with the legacy AST GIR emitter", () => {
@@ -74,7 +99,79 @@ test("the detached snapshot emitter is not confused with the legacy AST GIR emit
   const { child, report } = run(root, ["src/detached.ts"]);
 
   assert.equal(child.status, 0, JSON.stringify(report, null, 2));
-  assert.equal(report.verdict, "CLEAN");
+  assert.equal(report.status, "CLEAN");
+});
+
+test("walks the complete local import closure before reporting clean", () => {
+  const root = fixture({
+    "src/detached.ts": "import { execute } from './helper.js';\nexport const run = execute;\n",
+    "src/helper.ts": "export const execute = (bytes) => WebAssembly.instantiate(bytes);\n",
+  });
+  const { child, report } = run(root, ["src/detached.ts"]);
+
+  assert.equal(child.status, 1, child.stderr || JSON.stringify(report, null, 2));
+  assert.equal(report.status, "VIOLATION");
+  assert.deepEqual(
+    report.inspectedFiles.map((file) => file.path),
+    ["src/detached.ts", "src/helper.ts"],
+  );
+  assert.ok(report.violations.some((edge) => edge.code === "WAT_WASM_EXECUTION"));
+});
+
+test("refuses a local import that cannot be resolved exactly", () => {
+  const root = fixture({
+    "src/detached.ts": "import { execute } from './missing.js';\nexport const run = execute;\n",
+  });
+  const { child, report } = run(root, ["src/detached.ts"]);
+
+  assert.equal(child.status, 2, child.stderr || JSON.stringify(report, null, 2));
+  assert.equal(report.status, "REFUSED");
+  assert.ok(report.refusals.some((finding) => finding.code === "UNRESOLVED_CLOSURE"));
+});
+
+test("refuses Node built-ins outside the exact inert package allow-list", () => {
+  const root = fixture({
+    "src/detached.ts": "import { readFileSync } from 'node:fs';\nexport const read = readFileSync;\n",
+  });
+  const { child, report } = run(root, ["src/detached.ts"]);
+
+  assert.equal(child.status, 2, child.stderr || JSON.stringify(report, null, 2));
+  assert.equal(report.status, "REFUSED");
+  assert.ok(report.inspectedEdges.some((edge) => edge.specifier === "node:fs" && edge.to === null));
+  assert.ok(report.refusals.some((finding) => finding.code === "PACKAGE_IMPORT_NOT_INERT_ALLOWLIST"));
+});
+
+test("rejects Tri-Fuse authority bleed", () => {
+  const root = fixture({
+    "src/detached.ts": "import { proposeFusion } from '@galerina/tri-fuse';\nexport const run = proposeFusion;\n",
+  });
+  const { child, report } = run(root, ["src/detached.ts"]);
+
+  assert.equal(child.status, 1, child.stderr || JSON.stringify(report, null, 2));
+  assert.ok(report.violations.some((edge) => edge.code === "TRI_FUSE_RUNTIME"));
+});
+
+test("the exported audit refuses when the file ceiling truncates the closure", () => {
+  const root = fixture({
+    "src/detached.ts": "import { helper } from './helper.js';\nexport const run = helper;\n",
+    "src/helper.ts": "export const helper = (bytes) => bytes;\n",
+  });
+  const expectedHead = execFileSync("git", ["rev-parse", "HEAD"], {
+    cwd: root,
+    encoding: "utf8",
+  }).trim();
+  const { child, report } = runApi(root, {
+    entryFiles: ["src/detached.ts"],
+    expectedHead,
+    maximumFiles: 1,
+    maximumEdges: 8,
+  });
+
+  assert.equal(child.status, 0, child.stderr);
+  assert.equal(report.status, "REFUSED");
+  assert.equal(report.failureId, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+  assert.equal(report.repositoryHead, expectedHead);
+  assert.equal(report.graphFreshness, "UNKNOWN");
 });
 
 const forbidden = [
@@ -116,9 +213,9 @@ for (const vector of forbidden) {
     const { child, report } = run(root, ["src/detached.ts"]);
 
     assert.equal(child.status, 1, child.stderr);
-    assert.equal(report.verdict, "VIOLATION");
+    assert.equal(report.status, "VIOLATION");
     assert.ok(
-      report.forbiddenEdges.some((edge) => edge.code === vector.code),
+      report.violations.some((edge) => edge.code === vector.code),
       JSON.stringify(report, null, 2),
     );
   });
@@ -131,18 +228,19 @@ test("computed dynamic imports refuse as unknown analysis", () => {
   const { child, report } = run(root, ["src/detached.ts"]);
 
   assert.equal(child.status, 2, child.stderr);
-  assert.equal(report.verdict, "REFUSED");
+  assert.equal(report.status, "REFUSED");
   assert.ok(report.refusals.some((finding) => finding.code === "NON_LITERAL_DYNAMIC_IMPORT"));
 });
 
 test("literal dynamic imports remain analyzable", () => {
   const root = fixture({
     "src/detached.ts": "export async function x() { return import('./safe-helper.js'); }\n",
+    "src/safe-helper.ts": "export const safe = true;\n",
   });
   const { child, report } = run(root, ["src/detached.ts"]);
 
   assert.equal(child.status, 0, JSON.stringify(report, null, 2));
-  assert.equal(report.verdict, "CLEAN");
+  assert.equal(report.status, "CLEAN");
 });
 
 test("forbidden-looking text inside comments and ordinary strings is inert", () => {
@@ -157,7 +255,34 @@ test("forbidden-looking text inside comments and ordinary strings is inert", () 
   const { child, report } = run(root, ["src/detached.ts"]);
 
   assert.equal(child.status, 0, JSON.stringify(report, null, 2));
-  assert.equal(report.verdict, "CLEAN");
+  assert.equal(report.status, "CLEAN");
+});
+
+test("template text is inert but executable interpolation remains visible", () => {
+  const inertRoot = fixture({
+    "src/detached.ts": [
+      "export type Digest = `sha256:${string}`;",
+      "export const prose = `WebAssembly.instantiate and import(name) are text`;",
+      "export const ok = true;",
+      "",
+    ].join("\n"),
+  });
+  const inert = run(inertRoot, ["src/detached.ts"]);
+  assert.equal(inert.child.status, 0, JSON.stringify(inert.report, null, 2));
+
+  const dynamicRoot = fixture({
+    "src/detached.ts": "export const load = (name) => `${import(name)}`;\n",
+  });
+  const dynamic = run(dynamicRoot, ["src/detached.ts"]);
+  assert.equal(dynamic.child.status, 2, JSON.stringify(dynamic.report, null, 2));
+  assert.ok(dynamic.report.refusals.some((finding) => finding.code === "NON_LITERAL_DYNAMIC_IMPORT"));
+
+  const wasmRoot = fixture({
+    "src/detached.ts": "export const run = (bytes) => `${WebAssembly.instantiate(bytes)}`;\n",
+  });
+  const wasm = run(wasmRoot, ["src/detached.ts"]);
+  assert.equal(wasm.child.status, 1, JSON.stringify(wasm.report, null, 2));
+  assert.ok(wasm.report.violations.some((finding) => finding.code === "WAT_WASM_EXECUTION"));
 });
 
 test("every requested entry must exist and stay inside the selected repository", () => {

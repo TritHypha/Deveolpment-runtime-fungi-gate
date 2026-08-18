@@ -98,6 +98,21 @@ test("strict numeric membership without a negative-zero refusal is rejected", ()
   ].join("\n"), "NEGATIVE_ZERO_AUTHORITY");
 });
 
+test("a negative-zero refusal in one function cannot excuse another same-named decoder", () => {
+  expectViolation([
+    "export function safe(value) {",
+    "  if (Object.is(value, -0)) return null;",
+    "  if (value === -1 || value === 0 || value === 1) return value;",
+    "  return null;",
+    "}",
+    "export function unsafe(value) {",
+    "  if (value === -1 || value === 0 || value === 1) return value;",
+    "  return null;",
+    "}",
+    "",
+  ].join("\n"), "NEGATIVE_ZERO_AUTHORITY");
+});
+
 test("missing, inherited, accessor and proxy-capable authority fields require exact capture", () => {
   expectViolation([
     "export function readVerdict(input) {",
@@ -118,6 +133,20 @@ test("repeated authority property reads are reported separately", () => {
   ].join("\n"), "REPEATED_AUTHORITY_FIELD_READ");
 });
 
+test("one authority read in each of two functions is not misreported as a split read", () => {
+  const root = fixture({
+    "src/seam.ts": [
+      "export const first = (input) => input.verdict;",
+      "export const second = (input) => input.verdict;",
+      "",
+    ].join("\n"),
+  });
+  const { child, report } = run(SCRIPT, root);
+  assert.equal(child.status, 1, child.stderr || JSON.stringify(report, null, 2));
+  assert.ok(report.violations.some((finding) => finding.code === "ERASED_AUTHORITY_RECORD"));
+  assert.ok(!report.violations.some((finding) => finding.code === "REPEATED_AUTHORITY_FIELD_READ"));
+});
+
 test("caller-mintable success booleans cannot authorize the seam", () => {
   expectViolation("export const admit = (input) => input.verified ? input.value : null;\n", "CALLER_MINTABLE_AUTHORITY_BOOLEAN");
 });
@@ -134,6 +163,43 @@ test("delimiter concatenation cannot authorize a digest preimage", () => {
   ].join("\n"), "NON_INJECTIVE_CANONICAL_FRAMING");
 });
 
+test("an interpolated template passed directly to a digest remains non-injective authority framing", () => {
+  expectViolation([
+    "import { createHash } from 'node:crypto';",
+    "export const digest = (owner, kind) => createHash('sha256').update(`owner:${owner}|kind:${kind}`).digest('hex');",
+    "",
+  ].join("\n"), "NON_INJECTIVE_CANONICAL_FRAMING");
+});
+
+test("a named preimage assembled from interpolated fields remains non-injective authority framing", () => {
+  expectViolation([
+    "import { createHash } from 'node:crypto';",
+    "export function digest(owner, kind) {",
+    "  const preimage = `owner:${owner}|kind:${kind}`;",
+    "  return createHash('sha256').update(preimage).digest('hex');",
+    "}",
+    "",
+  ].join("\n"), "NON_INJECTIVE_CANONICAL_FRAMING");
+});
+
+test("template-literal types and diagnostic text are not authority framing merely because hashing exists elsewhere", () => {
+  const root = fixture({
+    "src/seam.ts": [
+      "import { createHash } from 'node:crypto';",
+      "export type Digest = `sha256:${string}`;",
+      "export interface Receipt { readonly buildPoint: `git:${string}`; }",
+      "export function digest(bytes) {",
+      "  if (!bytes) throw new Error(`missing bytes for ${String(bytes)}`);",
+      "  return createHash('sha256').update(bytes).digest('hex');",
+      "}",
+      "",
+    ].join("\n"),
+  });
+  const { child, report } = run(SCRIPT, root);
+  assert.equal(child.status, 0, child.stderr || JSON.stringify(report, null, 2));
+  assert.equal(report.verdict, "CLEAN");
+});
+
 test("unversioned JSON and duplicate-key object rebuilding cannot define authoritative bytes", () => {
   expectViolation([
     "export function canonical(entries) {",
@@ -143,10 +209,65 @@ test("unversioned JSON and duplicate-key object rebuilding cannot define authori
   ].join("\n"), "UNVERSIONED_JSON_AUTHORITY");
 });
 
+test("version-admitted JSON with an exact captured round trip is clean", () => {
+  const root = fixture({
+    "src/seam.ts": [
+      "function canonicalJson(value) {",
+      "  const admitted = admitVersionedCanonicalJsonRoot(value);",
+      "  return JSON.stringify(admitted);",
+      "}",
+      "export function decode(bytes, text) {",
+      "  const parsed = JSON.parse(text);",
+      "  const captured = captureExactOwnDataRecord(parsed, ['schema', 'value']);",
+      "  assertExactCanonicalJsonBytes(bytes, captured);",
+      "  return captured;",
+      "}",
+      "",
+    ].join("\n"),
+  });
+  const { child, report } = run(SCRIPT, root);
+  assert.equal(child.status, 0, child.stderr || JSON.stringify(report, null, 2));
+  assert.equal(report.verdict, "CLEAN");
+});
+
+test("a JSON admission or round-trip assertion in another function cannot excuse unsafe JSON", () => {
+  expectViolation([
+    "function safeEncode(value) {",
+    "  const admitted = admitVersionedCanonicalJsonRoot(value);",
+    "  return JSON.stringify(admitted);",
+    "}",
+    "function safeDecode(bytes, text) {",
+    "  const parsed = parseWithoutJson(text);",
+    "  const captured = captureExactOwnDataRecord(parsed, ['schema']);",
+    "  assertExactCanonicalJsonBytes(bytes, captured);",
+    "  return captured;",
+    "}",
+    "export function unsafe(value, text) {",
+    "  JSON.stringify(value);",
+    "  return JSON.parse(text);",
+    "}",
+    "",
+  ].join("\n"), "UNVERSIONED_JSON_AUTHORITY");
+});
+
 test("live typed-array inputs cannot enter a digest without an admitted copy or live-view contract", () => {
   expectViolation([
     "import { createHash } from 'node:crypto';",
     "export function digest(bytes: Uint8Array) {",
+    "  return createHash('sha256').update(bytes).digest('hex');",
+    "}",
+    "",
+  ].join("\n"), "UNADMITTED_LIVE_TYPED_ARRAY");
+});
+
+test("a captured byte parameter in one function cannot excuse an unsafe same-named parameter elsewhere", () => {
+  expectViolation([
+    "import { createHash } from 'node:crypto';",
+    "export function safe(bytes: Uint8Array) {",
+    "  const owned = captureImmutableBytes(bytes);",
+    "  return createHash('sha256').update(owned).digest('hex');",
+    "}",
+    "export function unsafe(bytes: Uint8Array) {",
     "  return createHash('sha256').update(bytes).digest('hex');",
     "}",
     "",
@@ -183,5 +304,5 @@ test("the detached authority audit incorporates the Trit/Verdict seam findings",
   const root = fixture({ "src/seam.ts": "export const forged = { verdict: 1 };\n" });
   const { child, report } = run(DETACHED_SCRIPT, root);
   assert.equal(child.status, 1, child.stderr || JSON.stringify(report, null, 2));
-  assert.ok(report.forbiddenEdges.some((finding) => finding.code === "RAW_NUMERIC_AUTHORITY"));
+  assert.ok(report.violations.some((finding) => finding.code === "RAW_NUMERIC_AUTHORITY"));
 });

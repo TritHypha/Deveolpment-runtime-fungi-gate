@@ -232,3 +232,37 @@ test("canonical snapshot verification rejects a one-byte stored-body mutation", 
     assertSnapshotError("SNAPSHOT_BYTES"),
   );
 });
+
+test("canonical snapshot verification rejects duplicate JSON keys before authority release", () => {
+  const { input } = snapshotFixture();
+  const snapshot = sealCheckedModuleSnapshotV1(input);
+  const canonical = new TextDecoder().decode(canonicalCheckedModuleSnapshotBytes(snapshot));
+  const duplicateSchema = canonical.replace(
+    `{"schema":"${CHECKED_MODULE_SNAPSHOT_SCHEMA}"`,
+    `{"schema":"${CHECKED_MODULE_SNAPSHOT_SCHEMA}","schema":"${CHECKED_MODULE_SNAPSHOT_SCHEMA}"`,
+  );
+  assert.notEqual(duplicateSchema, canonical);
+
+  assert.throws(
+    () => verifyCheckedModuleSnapshotBytesV1(new TextEncoder().encode(duplicateSchema)),
+    assertSnapshotError("SNAPSHOT_BYTES"),
+  );
+});
+
+test("canonical snapshot bytes ignore inherited toJSON hooks", () => {
+  const { input } = snapshotFixture();
+  const snapshot = sealCheckedModuleSnapshotV1(input);
+  const expected = canonicalCheckedModuleSnapshotBytes(snapshot);
+  const prior = Object.getOwnPropertyDescriptor(Object.prototype, "toJSON");
+  Object.defineProperty(Object.prototype, "toJSON", {
+    configurable: true,
+    value() { return { schema: "galerina.forged.v1", value: 1 }; },
+  });
+  try {
+    assert.deepEqual(canonicalCheckedModuleSnapshotBytes(snapshot), expected);
+    assert.deepEqual(verifyCheckedModuleSnapshotBytesV1(expected), snapshot);
+  } finally {
+    if (prior === undefined) delete Object.prototype.toJSON;
+    else Object.defineProperty(Object.prototype, "toJSON", prior);
+  }
+});

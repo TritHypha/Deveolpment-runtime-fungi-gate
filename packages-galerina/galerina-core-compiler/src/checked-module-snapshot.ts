@@ -6,9 +6,10 @@ import {
   ArtifactReferenceError,
   type ArtifactReferenceV1,
   type Sha256Digest,
+  captureImmutableBytes,
   validateArtifactReferenceV1,
   verifyArtifactBytes,
-} from "./artifact-reference.js";
+} from "./artifact-reference-core.js";
 
 export const CHECKED_MODULE_SNAPSHOT_SCHEMA = "galerina.checked-module-snapshot.v1" as const;
 export const CHECKED_MODULE_TRACE_STAGES = Object.freeze([
@@ -22,8 +23,15 @@ export const CHECKED_MODULE_TRACE_STAGES = Object.freeze([
 
 const SHA256 = /^sha256:[0-9a-f]{64}$/;
 const GIT_COMMIT = /^git:[0-9a-f]{40}$/;
+const VERSIONED_CANONICAL_JSON_SCHEMAS = new Set<string>([
+  CHECKED_MODULE_SNAPSHOT_SCHEMA,
+  "galerina.checked-module-stage-output.v1",
+  "galerina.checked-module-run-identity.v1",
+]);
 const MAX_ITEMS = 100_000;
 const MAX_TEXT_BYTES = 64 * 1024;
+const MAX_CANONICAL_JSON_DEPTH = 64;
+const MAX_CANONICAL_JSON_NODES = 8_000_000;
 
 export type CheckedModuleTraceStage = typeof CHECKED_MODULE_TRACE_STAGES[number];
 export type CheckedModuleVerdict = "ALLOW" | "DENY" | "INDETERMINATE";
@@ -265,18 +273,104 @@ function safeOffset(value: unknown, label: string): number {
   return value;
 }
 
-function sha256(bytes: Uint8Array): Sha256Digest {
-  return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
+function sha256Text(value: string): Sha256Digest {
+  return `sha256:${createHash("sha256").update(value, "utf8").digest("hex")}`;
 }
 
-function sha256Text(value: string): Sha256Digest {
-  return sha256(new TextEncoder().encode(value));
+interface CanonicalJsonCaptureState {
+  nodes: number;
+  readonly active: WeakSet<object>;
+}
+
+function captureCanonicalJsonValue(value: unknown, state: CanonicalJsonCaptureState, depth: number): unknown {
+  state.nodes += 1;
+  if (state.nodes > MAX_CANONICAL_JSON_NODES || depth > MAX_CANONICAL_JSON_DEPTH) {
+    fail("SNAPSHOT_BYTES", "canonical JSON value exceeds the admitted work bound");
+  }
+  if (value === null || typeof value === "string" || typeof value === "boolean") return value;
+  if (typeof value === "number") {
+    if (!Number.isFinite(value) || Object.is(value, -0)) {
+      fail("SNAPSHOT_BYTES", "canonical JSON numbers must be finite and must not be negative zero");
+    }
+    return value;
+  }
+  if (typeof value !== "object" || utilTypes.isProxy(value)) {
+    fail("SNAPSHOT_BYTES", "canonical JSON contains an unsupported value");
+  }
+  if (state.active.has(value)) fail("SNAPSHOT_BYTES", "canonical JSON must be acyclic");
+  state.active.add(value);
+  try {
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    if (Array.isArray(value)) {
+      if (value.length > MAX_ITEMS) fail("SNAPSHOT_BYTES", "canonical JSON array exceeds the admitted item bound");
+      const allowed = new Set(["length", ...Array.from({ length: value.length }, (_, index) => String(index))]);
+      if (Reflect.ownKeys(value).some((key) => typeof key !== "string" || !allowed.has(key))) {
+        fail("SNAPSHOT_BYTES", "canonical JSON arrays must be dense own-data sequences");
+      }
+      const result: unknown[] = [];
+      for (let index = 0; index < value.length; index += 1) {
+        const descriptor = descriptors[String(index)];
+        if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) {
+          fail("SNAPSHOT_BYTES", "canonical JSON arrays must contain enumerable data elements");
+        }
+        result.push(captureCanonicalJsonValue(descriptor.value, state, depth + 1));
+      }
+      Object.setPrototypeOf(result, null);
+      return Object.freeze(result);
+    }
+
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+      fail("SNAPSHOT_BYTES", "canonical JSON records must have an ordinary or null prototype");
+    }
+    const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+    for (const key of Reflect.ownKeys(value)) {
+      if (typeof key !== "string") fail("SNAPSHOT_BYTES", "canonical JSON records must not contain symbol keys");
+      const descriptor = descriptors[key];
+      if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) {
+        fail("SNAPSHOT_BYTES", "canonical JSON records must contain only enumerable data fields");
+      }
+      result[key] = captureCanonicalJsonValue(descriptor.value, state, depth + 1);
+    }
+    return Object.freeze(result);
+  } catch (error) {
+    if (error instanceof CheckedModuleSnapshotError) throw error;
+    fail("SNAPSHOT_BYTES", "canonical JSON value could not be captured");
+  } finally {
+    state.active.delete(value);
+  }
+}
+
+function admitVersionedCanonicalJsonRoot(value: unknown): object {
+  const admitted = captureCanonicalJsonValue(value, { nodes: 0, active: new WeakSet() }, 0);
+  if (typeof admitted !== "object" || admitted === null || Array.isArray(admitted)) {
+    fail("SNAPSHOT_BYTES", "canonical JSON root must be an admitted versioned record");
+  }
+  const schema = Object.getOwnPropertyDescriptor(admitted, "schema");
+  if (
+    schema === undefined
+    || !("value" in schema)
+    || typeof schema.value !== "string"
+    || !VERSIONED_CANONICAL_JSON_SCHEMAS.has(schema.value)
+  ) {
+    fail("SNAPSHOT_BYTES", "canonical JSON root must carry an admitted version-one schema field");
+  }
+  return admitted;
 }
 
 function canonicalJson(value: unknown): string {
-  const encoded = JSON.stringify(value);
+  const admitted = admitVersionedCanonicalJsonRoot(value);
+  const encoded = JSON.stringify(admitted);
   if (typeof encoded !== "string") fail("SNAPSHOT_BYTES", "snapshot did not encode as JSON text");
   return encoded;
+}
+
+function assertExactCanonicalJsonBytes(bytesInput: unknown, snapshot: CheckedModuleSnapshotV1): void {
+  const bytes = captureImmutableBytes(bytesInput);
+  const canonical = new TextEncoder().encode(canonicalJson(snapshot));
+  if (canonical.byteLength !== bytes.byteLength || canonical.some((value, index) => value !== bytes[index])) {
+    fail("SNAPSHOT_BYTES", "snapshot bytes are not the exact canonical encoding");
+  }
 }
 
 function frozenArray<T>(values: readonly T[]): readonly T[] {
@@ -667,12 +761,9 @@ export function verifyCheckedModuleSnapshotBytesV1(bytesInput: unknown): Checked
     }
     const bytes = Uint8Array.from(bytesInput);
     const textValue = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-    const parsed = JSON.parse(textValue) as unknown;
+    const parsed = JSON.parse(textValue);
     const snapshot = captureStoredSnapshot(parsed);
-    const canonical = new TextEncoder().encode(canonicalJson(snapshot));
-    if (canonical.byteLength !== bytes.byteLength || canonical.some((value, index) => value !== bytes[index])) {
-      fail("SNAPSHOT_BYTES", "snapshot bytes are not the exact canonical encoding");
-    }
+    assertExactCanonicalJsonBytes(bytes, snapshot);
     return snapshot;
   } catch (error) {
     if (error instanceof CheckedModuleSnapshotError && error.code === "SNAPSHOT_BYTES") throw error;
