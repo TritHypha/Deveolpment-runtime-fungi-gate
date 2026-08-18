@@ -18,13 +18,9 @@ import {
 } from "../../../packages-galerina/galerina-core-compiler/dist/index.js";
 
 import { MAX_DIFFERENTIAL_VECTORS, SandboxRefusal } from "./contracts.mjs";
+import { alphaFungiFingerprint, findFungiCollision } from "../fungi-shadow.mjs";
 
 const execFile = promisify(execFileCallback);
-const RESERVED = new Set([
-  "version", "pure", "secure", "flow", "contract", "intent", "record", "return", "if", "else", "match", "check",
-  "deny", "ambig", "mut", "let", "Bool", "Int", "String", "Verdict", "Result", "Option", "Array", "true", "false",
-  "Ok", "Err", "Some", "None", "Allow", "Deny", "Unknown",
-]);
 const GATES = Object.freeze({ identity: 1, provenance: 1, target: 1, effects: 1, policy: 1, revocation: 1, validation: 1, memory: 1 });
 const sha256 = (bytes) => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 const COMPILER_ENTRY = fileURLToPath(new URL("../../../packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url));
@@ -36,72 +32,21 @@ const SLIDE_MODULES = Object.freeze([
   "src/portable-veo.mjs",
 ]);
 
-function protectQuotedLiterals(source) {
-  const literals = [];
-  let protectedSource = "";
-  for (let index = 0; index < source.length;) {
-    const quote = source[index];
-    if (quote !== '"' && quote !== "'") {
-      protectedSource += quote;
-      index += 1;
-      continue;
-    }
-    const start = index;
-    index += 1;
-    let escaped = false;
-    while (index < source.length) {
-      const character = source[index];
-      index += 1;
-      if (escaped) {
-        escaped = false;
-      } else if (character === "\\") {
-        escaped = true;
-      } else if (character === quote) {
-        break;
-      }
-    }
-    const literalIndex = literals.push(source.slice(start, index)) - 1;
-    protectedSource += `\uE000${literalIndex}\uE001`;
-  }
-  return {
-    protectedSource,
-    restore(value) {
-      return value.replace(/\uE000(\d+)\uE001/gu, (_match, literalIndex) => literals[Number(literalIndex)]);
-    },
-  };
-}
-
 export function alphaShadowFingerprint(source) {
   if (typeof source !== "string" || source.length === 0) throw new SandboxRefusal("SHADOW_SOURCE_INVALID", "shadow source must be nonempty text");
-  const protectedLiterals = protectQuotedLiterals(source);
-  const identifiers = new Map();
-  const normalized = protectedLiterals.restore(protectedLiterals.protectedSource
-    .replace(/^\uFEFF/u, " ")
-    .replace(/\/\*[\s\S]*?\*\//gu, " ")
-    .replace(/^\s*\/\/.*$/gmu, " ")
-    .replace(/\b((?:pure|secure)\s+)?flow\s+[A-Za-z_][A-Za-z0-9_]*/gu, (match) => match.replace(/([A-Za-z_][A-Za-z0-9_]*)$/u, "FLOW"))
-    .replace(/\s+/gu, " ")
-    .trim()
-    .replace(/\b[A-Za-z_][A-Za-z0-9_]*\b/gu, (identifier) => {
-      if (RESERVED.has(identifier)) return identifier;
-      let replacement = identifiers.get(identifier);
-      if (replacement === undefined) {
-        replacement = `ID${identifiers.size}`;
-        identifiers.set(identifier, replacement);
-      }
-      return replacement;
-    }));
-  return sha256(Buffer.from(normalized, "utf8"));
+  try {
+    return `sha256:${alphaFungiFingerprint(source)}`;
+  } catch (error) {
+    throw new SandboxRefusal("SHADOW_SOURCE_INVALID", error instanceof Error ? error.message : "shadow source is invalid");
+  }
 }
 
 export function findCorpusCollision(candidateSource, corpus) {
-  const exact = sha256(Buffer.from(candidateSource, "utf8"));
-  const shadow = alphaShadowFingerprint(candidateSource);
-  for (const item of corpus) {
-    if (sha256(Buffer.from(item.source, "utf8")) === exact) return Object.freeze({ kind: "EXACT_DUPLICATE", path: item.path });
-    if (alphaShadowFingerprint(item.source) === shadow) return Object.freeze({ kind: "ALPHA_SHADOW", path: item.path });
+  try {
+    return findFungiCollision(candidateSource, corpus);
+  } catch (error) {
+    throw new SandboxRefusal("SHADOW_SOURCE_INVALID", error instanceof Error ? error.message : "shadow corpus is invalid");
   }
-  return undefined;
 }
 
 export async function loadWorkingFungiCorpus(root) {

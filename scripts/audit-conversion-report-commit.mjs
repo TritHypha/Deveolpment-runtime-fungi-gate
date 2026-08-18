@@ -1,22 +1,17 @@
 #!/usr/bin/env node
 // Refuse conversion-report commits that do not add a substantial Fungi batch.
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { alphaFungiFingerprint, exactFungiFingerprint } from "./lib/fungi-shadow.mjs";
 
 const MINIMUM_FUNGI_FILES = 40;
 const EXPECTED_FUNGI_FILES = 50;
 const GIT_MAX_BUFFER_BYTES = 128 * 1024 * 1024;
 const REPORT = /^docs\/reports\/(?:slice-\d+-[a-z0-9-]+-fungi-conversion-\d{4}-\d{2}-\d{2}|fungi-conversion-[a-z0-9-]+)\.md$/u;
 const FUNGI = /\.fungi$/u;
-const SHADOW_RESERVED_IDENTIFIERS = new Set([
-  "version", "pure", "secure", "flow", "FLOW", "contract", "intent", "record",
-  "return", "if", "match", "check", "deny", "ambig", "mut", "let",
-  "Bool", "Int", "String", "Verdict", "Result", "Option", "Array",
-  "true", "false", "Ok", "Err", "Some", "None", "Allow", "Deny", "Unknown",
-]);
 
 function parseArgs(argv) {
   let root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -116,67 +111,6 @@ function fungiBlobs(root, revision) {
   return blobs;
 }
 
-function exactFingerprint(source) {
-  return createHash("sha256").update(source, "utf8").digest("hex");
-}
-
-function protectQuotedLiterals(source) {
-  const literals = [];
-  let protectedSource = "";
-  for (let index = 0; index < source.length;) {
-    const quote = source[index];
-    if (quote !== '"' && quote !== "'") {
-      protectedSource += quote;
-      index += 1;
-      continue;
-    }
-    const start = index;
-    index += 1;
-    let escaped = false;
-    while (index < source.length) {
-      const character = source[index++];
-      if (escaped) escaped = false;
-      else if (character === "\\") escaped = true;
-      else if (character === quote) break;
-    }
-    const literalIndex = literals.push(source.slice(start, index)) - 1;
-    protectedSource += `\uE000${literalIndex}\uE001`;
-  }
-  return {
-    protectedSource,
-    restore(value) {
-      return value.replace(/\uE000(\d+)\uE001/gu, (_match, literalIndex) => literals[Number(literalIndex)]);
-    },
-  };
-}
-
-function canonicalizeShadowIdentifiers(source) {
-  const identifiers = new Map();
-  return source.replace(/\b[A-Za-z_][A-Za-z0-9_]*\b/gu, (identifier) => {
-    if (SHADOW_RESERVED_IDENTIFIERS.has(identifier)) return identifier;
-    let replacement = identifiers.get(identifier);
-    if (replacement === undefined) {
-      replacement = `ID${identifiers.size}`;
-      identifiers.set(identifier, replacement);
-    }
-    return replacement;
-  });
-}
-
-function shadowFingerprint(source) {
-  const protectedLiterals = protectQuotedLiterals(source);
-  const executable = protectedLiterals.restore(canonicalizeShadowIdentifiers(protectedLiterals.protectedSource
-    .replace(/^\uFEFF/u, "")
-    .replace(/\/\*[\s\S]*?\*\//gu, " ")
-    .replace(/^\s*\/\/.*$/gmu, " ")
-    .replace(/\b((?:pure|secure)\s+)?flow\s+[A-Za-z_][A-Za-z0-9_]*/gu, (match) =>
-      match.replace(/([A-Za-z_][A-Za-z0-9_]*)$/u, "FLOW"))
-    .replace(/\s+/gu, " ")
-    .trim()));
-  if (executable.length === 0) throw new Error("Fungi duplication check found an empty executable source");
-  return createHash("sha256").update(executable, "utf8").digest("hex");
-}
-
 function auditFungiUniqueness(root, commit, addedFungi) {
   if (addedFungi.length === 0) return;
   const parents = git(root, ["rev-list", "--parents", "-n", "1", commit])
@@ -189,18 +123,18 @@ function auditFungiUniqueness(root, commit, addedFungi) {
   const shadows = new Map();
 
   for (const [path, source] of prior) {
-    exact.set(exactFingerprint(source), path);
-    shadows.set(shadowFingerprint(source), path);
+    exact.set(exactFungiFingerprint(source), path);
+    shadows.set(alphaFungiFingerprint(source), path);
   }
   for (const path of [...addedFungi].sort()) {
     const source = current.get(path);
     if (source === undefined) throw new Error(`added Fungi file is missing from commit: ${path}`);
-    const exactKey = exactFingerprint(source);
+    const exactKey = exactFungiFingerprint(source);
     const exactMatch = exact.get(exactKey);
     if (exactMatch !== undefined) {
       throw new Error(`Fungi exact duplicate: ${path} duplicates ${exactMatch}`);
     }
-    const shadowKey = shadowFingerprint(source);
+    const shadowKey = alphaFungiFingerprint(source);
     const shadowMatch = shadows.get(shadowKey);
     if (shadowMatch !== undefined) {
       throw new Error(`Fungi template shadow: ${path} shadows ${shadowMatch}`);
@@ -239,17 +173,17 @@ function auditWorktreeFungiUniqueness(root, addedFungi) {
   const exact = new Map();
   const shadows = new Map();
   for (const [path, source] of prior) {
-    exact.set(exactFingerprint(source), path);
-    shadows.set(shadowFingerprint(source), path);
+    exact.set(exactFungiFingerprint(source), path);
+    shadows.set(alphaFungiFingerprint(source), path);
   }
   for (const path of addedFungi) {
     const source = readFileSync(join(root, path), "utf8");
-    const exactKey = exactFingerprint(source);
+    const exactKey = exactFungiFingerprint(source);
     const exactMatch = exact.get(exactKey);
     if (exactMatch !== undefined) {
       throw new Error(`Fungi exact duplicate: ${path} duplicates ${exactMatch}`);
     }
-    const shadowKey = shadowFingerprint(source);
+    const shadowKey = alphaFungiFingerprint(source);
     const shadowMatch = shadows.get(shadowKey);
     if (shadowMatch !== undefined) {
       throw new Error(`Fungi template shadow: ${path} shadows ${shadowMatch}`);
@@ -311,7 +245,6 @@ try {
     const fungi = worktreeAddedFungi(root);
     auditWorktreeFungiUniqueness(root, fungi);
     if (uniquenessOnly) {
-      if (fungi.length === 0) throw new Error("uniqueness-only worktree check found no new .fungi files");
       console.log(
         `conversion-report-commit: uniqueness-only checked ${fungi.length} new .fungi files; duplication/shadow ${fungi.length}/${fungi.length} unique`,
       );

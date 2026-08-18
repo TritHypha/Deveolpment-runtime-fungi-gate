@@ -739,7 +739,7 @@ receipts alone do not satisfy this exit.
   source identity is byte-pinned and graph-first discovery or the bounded
   fallback is complete
 
-- [ ] First reconcile and preserve the current user-owned converter changes.
+- [x] First reconcile and preserve the current user-owned converter changes.
   Record their baseline before editing overlapping files.
 - [ ] Add terminal outcomes `CONVERTED`, `BLOCKED` and `MANUAL_REVIEW`; unsupported
   syntax/semantics is logged per sibling and never stops the other nine.
@@ -764,7 +764,7 @@ receipts alone do not satisfy this exit.
 - Modify: `scripts/tests/ts-to-fungi-sandbox.test.mjs`
 - Modify: `scripts/tests/audit-conversion-report-commit.test.mjs`
 
-- [ ] Factor the exact and identifier-alpha fingerprint/corpus comparison into
+- [x] Factor the exact and identifier-alpha fingerprint/corpus comparison into
   `scripts/lib/fungi-shadow.mjs`, imported by both the commit audit and sandbox.
   Preserve literal values, types, operators and control-flow shape.
 - [ ] Compare each outside-worktree pilot candidate against the tracked plus
@@ -775,7 +775,7 @@ receipts alone do not satisfy this exit.
   report-bearing commit census only with `--commit <rev>`: at least 40 **added**
   unique real `.fungi`, expected 50 (advisory), at most one report delta; final
   tail only via `--allow-final-report-only`.
-- [ ] Change `--worktree --uniqueness-only` so zero new `.fungi` files is a
+- [x] Change `--worktree --uniqueness-only` so zero new `.fungi` files is a
   successful checked state that prints `uniqueness-only checked 0 new .fungi
   files`; add the positive test. Keep the non-empty requirement inside the
   sandbox candidate check in `fungi-shadow.mjs` and the commit census.
@@ -783,6 +783,18 @@ receipts alone do not satisfy this exit.
   refuses even when the `.fungi` count is sufficient.
 - [ ] Add a negative test for 39 `.fungi`, exact duplicate, alpha shadow,
   test-overlay-only paths and a report-only cycle.
+
+Evidence (2026-08-18, pre-conversion tooling only): the overlapping converter
+baseline was a clean worktree at `5541fb0592a83b6eb03a3b91793a4d2b73dd9d37`.
+Before the shared-helper edit, `evidence.mjs` was SHA-256
+`58D61C3C5C278CACB7E6DEF58A30E96A8A42EDC46E163AEBB59F64CF8AC02974`
+and the commit audit was
+`342F236D103211D087E40F277F0C09086DED552836F4D5719AE0197794310BE4`.
+The common in-memory fingerprint controls pass 2/2, the sandbox compatibility
+wrapper matches the common digest, and the live zero-candidate command prints
+`uniqueness-only checked 0 new .fungi files; duplication/shadow 0/0 unique`.
+No converter batch ran and no tracked, untracked or candidate `.fungi` file was
+created or modified.
 
 ### Task 15: Run only the bounded pilot and decide whether conversion remains paused
 

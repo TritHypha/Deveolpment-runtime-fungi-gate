@@ -223,6 +223,13 @@ test("uniqueness-only worktree mode checks an undersized batch without weakening
   assert.match(commitGate.stderr, /worktree has 3 new \.fungi files; minimum 40; expected 50/u);
 });
 
+test("uniqueness-only worktree mode accepts a checked zero-candidate state", () => {
+  const root = createRepo();
+  const result = runWorktreeAudit(root, ["--uniqueness-only"]);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /uniqueness-only checked 0 new \.fungi files; duplication\/shadow 0\/0 unique/u);
+});
+
 test("uniqueness-only worktree mode still refuses template shadows", () => {
   const root = createRepo();
   write(root, "packages-galerina/example/src/self-hosted/first.fungi", "@version 1\npure flow first() -> String { return \"ALPHA\" }\n");
