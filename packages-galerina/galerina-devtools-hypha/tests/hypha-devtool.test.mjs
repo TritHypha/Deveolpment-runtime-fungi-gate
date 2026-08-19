@@ -22,6 +22,8 @@ import { extractNameSets, extractKindCollections } from "../src/namesets.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CLI = join(HERE, "../bin/galerina-hypha.mjs");
+const CHILD_TIMEOUT_MS = 120_000;
+const CHILD_MAX_BUFFER = 4 * 1024 * 1024;
 
 /** One fixture, every answer known by construction. */
 const FIXTURE = {
@@ -92,19 +94,31 @@ test("surface with no name returns only the asymmetric names", () => {
 });
 
 test("the CLI self-test passes", () => {
-  const r = spawnSync(process.execPath, [CLI, "--self-test"], { encoding: "utf8" });
+  const r = spawnSync(process.execPath, [CLI, "--self-test"], {
+    encoding: "utf8",
+    timeout: CHILD_TIMEOUT_MS,
+    maxBuffer: CHILD_MAX_BUFFER,
+  });
   assert.equal(r.status, 0, r.stdout + r.stderr);
   assert.match(r.stdout, /self-test cases pass/);
 });
 
 test("an unknown scan target exits 2, not 0", () => {
-  const r = spawnSync(process.execPath, [CLI, "--scan", "no-such-query"], { encoding: "utf8" });
+  const r = spawnSync(process.execPath, [CLI, "--scan", "no-such-query"], {
+    encoding: "utf8",
+    timeout: CHILD_TIMEOUT_MS,
+    maxBuffer: CHILD_MAX_BUFFER,
+  });
   assert.equal(r.status, 2, "an unrunnable scan must never look like a clean one");
 });
 
 test("a scan writes nothing into the package directory", () => {
   const before = readdirSync(HERE + "/..").sort().join("|");
-  spawnSync(process.execPath, [CLI, "--scan", "dead-exports"], { encoding: "utf8" });
+  spawnSync(process.execPath, [CLI, "--scan", "dead-exports"], {
+    encoding: "utf8",
+    timeout: CHILD_TIMEOUT_MS,
+    maxBuffer: CHILD_MAX_BUFFER,
+  });
   assert.equal(readdirSync(HERE + "/..").sort().join("|"), before);
 });
 
@@ -570,7 +584,12 @@ const PKG_SRC_FILES = ["bin/galerina-hypha.mjs", "src/queries.mjs", "src/nameset
 const allSource = () => PKG_SRC_FILES.filter(existsSync).map((f) => readFileSync(f, "utf8")).join("\n");
 /** One serial, awaited child with a hard timeout — the bounded runner Q6 requires. */
 const runCli = (args, opts = {}) =>
-  spawnSync(process.execPath, [CLI, ...args], { encoding: "utf8", timeout: 120000, ...opts });
+  spawnSync(process.execPath, [CLI, ...args], {
+    encoding: "utf8",
+    timeout: CHILD_TIMEOUT_MS,
+    maxBuffer: CHILD_MAX_BUFFER,
+    ...opts,
+  });
 
 test('the "nothing installed" claim is true — zero dependencies, no build step', () => {
   const pkg = JSON.parse(readFileSync(join(HERE, "../package.json"), "utf8"));

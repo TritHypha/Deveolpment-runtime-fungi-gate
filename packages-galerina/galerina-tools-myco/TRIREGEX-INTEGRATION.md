@@ -19,11 +19,16 @@ TriRegex backend remains BLOCKED by named compatibility work.**
 - **MEASURED:** TriRegex uses a non-backtracking NFA and produces a compile-time
   work certificate. Its standalone suite includes hostile-pattern, streaming,
   budget, certificate and native-membership differential tests.
-- **MEASURED:** Galerina's `@galerina/tools-myco` package was refreshed on
-  2026-07-28 from standalone Myco commit
-  `889f89f9f6a86e07b60b101c3aac9e38075768d1` and version `0.2.1`.
-  Its `src/` is byte-identical to that source revision; Galerina-specific
-  package metadata, test-directory naming, and integration notes remain local.
+- **MEASURED:** the public source owner is
+  `https://github.com/TritHypha/myco`. Galerina's `@galerina/tools-myco`
+  package records snapshot commit
+  `a48d2c3b5c508ce35346a4dd7aac0278606d10f6`, but it is now an explicit
+  partial fork rather than a byte-identical mirror. A 2026-08-19 blob audit
+  found 12 of 16 snapshot files exact; `src/cli.ts`, `src/graph/model.ts`,
+  `src/graph/store.ts` and `src/ingest/indexer.ts` differ, while
+  `src/query/links.ts` is Galerina-local. Those differences must be upstreamed
+  or classified before the next vendor refresh; neither tree may silently
+  overwrite the other.
 
 What was not checked: browser runtimes, non-Node JavaScript engines, very large
 repository performance, operating-system resource exhaustion, or a production

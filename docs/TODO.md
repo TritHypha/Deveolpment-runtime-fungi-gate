@@ -4,6 +4,38 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Public devtool ownership and bounded execution - 2026-08-19
+
+- [x] Confirm standalone Hypha, Myco and TriRegex repositories as the public
+  source owners. Galerina packages are adapters or explicit snapshots; they do
+  not silently become the source of shared upstream code.
+- [x] Add finite child-process deadlines to the public Myco test runner and
+  child-based regressions, mirror the same harness protection in
+  `@galerina/tools-myco`, and bound the Galerina Hypha adapter's spawned tests.
+  Focused owner/package tests are current evidence only; they grant no Fungi or
+  production authority.
+- [x] Replace the Myco mirror prose with a machine-readable partial-fork
+  declaration and a bounded public-source-owner audit. The live audit resolves
+  the pinned public commit and reproduces exactly 12 identical files, four
+  divergent files, zero missing files and one Galerina-local source file; a
+  controlled growth vector turns the audit red.
+- [ ] Reconcile the existing Myco partial-fork debt before another vendor
+  refresh. The recorded snapshot has 12 of 16 exact source files; four files
+  differ and `src/query/links.ts` is Galerina-local. Upstream or explicitly
+  retain each difference rather than overwriting either owner.
+- [ ] Extend the bounded-execution instrument beyond direct Node child/fetch
+  syntax only when a concrete owner boundary requires it: wrapper/namespace
+  variants, worker-thread and non-fetch network clients, streamed-output
+  outcome identity, child-tree termination, queue/concurrency refusal and
+  stale-lock expiry need their own controlled-red evidence rather than a
+  scanner claim. A model-diverse review returned HOLD on these wider claims;
+  locally reproduced direct-call and provenance evidence remains valid.
+- [ ] Bind independent Codex and model-diverse review receipts to the exact
+  shared-tooling/public-owner diffs, then make separate local commits in each
+  owning repository. Do not push.
+- [ ] Refresh each affected code graph after its commit and require matching
+  indexed build points before making current absence or call-chain claims.
+
 ### Detached scalar implementation route - 2026-08-17
 
 - [x] Retain private RD-0855 as the current architecture decision: one

@@ -22,18 +22,29 @@ import { buildIndex, DEFAULT_INDEX_OPTIONS } from "../src/ingest/indexer.ts";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const cli = path.join(here, "..", "src", "cli.ts");
+const CLI_TIMEOUT_MS = 30_000;
+const CLI_OUTPUT_LIMIT_BYTES = 4 * 1024 * 1024;
 
 function runCli(args: string[]): Promise<{ code: number; out: string; err: string }> {
   return new Promise((resolve) => {
     const child = spawn(
       process.execPath,
       ["--experimental-strip-types", cli, ...args],
-      { stdio: ["ignore", "pipe", "pipe"] },
+      { stdio: ["ignore", "pipe", "pipe"], timeout: CLI_TIMEOUT_MS },
     );
     let out = "";
     let err = "";
-    child.stdout.on("data", (chunk) => { out += chunk; });
-    child.stderr.on("data", (chunk) => { err += chunk; });
+    let outputBytes = 0;
+    const append = (current: string, chunk: Buffer): string => {
+      outputBytes += chunk.byteLength;
+      if (outputBytes > CLI_OUTPUT_LIMIT_BYTES) {
+        child.kill();
+        return current;
+      }
+      return current + chunk.toString("utf8");
+    };
+    child.stdout.on("data", (chunk: Buffer) => { out = append(out, chunk); });
+    child.stderr.on("data", (chunk: Buffer) => { err = append(err, chunk); });
     child.on("exit", (code) => resolve({ code: code ?? -1, out, err }));
   });
 }
