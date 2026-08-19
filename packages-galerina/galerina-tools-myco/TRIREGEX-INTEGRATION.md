@@ -61,8 +61,10 @@ Galerina integration. No performance claim is made.
 6. **Myco:** retain the worker-contained JavaScript backend only as an explicit
    compatibility profile; never silently fall back from a TriRegex refusal.
 7. **Galerina owner:** future Myco updates must re-vendor from a named clean
-   commit, preserve byte-identical `src/`, update mirror provenance, and pass
-   both upstream and Galerina-package tests.
+   public commit, run `npm run audit:public-source`, and either restore an exact
+   mirror or explicitly retain and classify every reported divergence. Never
+   describe a partial fork as byte-identical. Update provenance and pass both
+   upstream and Galerina-package tests before adopting the refresh.
 
 ## Security invariant
 
