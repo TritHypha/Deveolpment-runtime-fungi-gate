@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
 import test from "node:test";
@@ -7,6 +8,10 @@ import { auditDetachedSlideAuthorityPath } from "../audit-detached-slide-authori
 
 const ROOT = resolve(import.meta.dirname, "..", "..");
 const FIXTURES = "scripts/tests/fixtures/detached-authority";
+const REPOSITORY_HEAD = execFileSync("git", ["rev-parse", "HEAD"], {
+  cwd: ROOT,
+  encoding: "utf8",
+}).trim();
 
 function auditFixture(name) {
   return auditDetachedSlideAuthorityPath({
@@ -60,7 +65,8 @@ function assertReceiptContainsOnlyLocatorsAndMetadata(receipt, fixture) {
   assert.match(receipt.freshness.indexed_head_sha, /^[a-f0-9]{40}$/u);
   assert.match(receipt.freshness.repository_head_sha, /^[a-f0-9]{40}$/u);
   assert.equal(receipt.freshness.state, "FRESH");
-  assert.equal(receipt.freshness.indexed_head_sha, receipt.freshness.repository_head_sha);
+  assert.equal(receipt.freshness.repository_head_sha, REPOSITORY_HEAD);
+  assert.equal(receipt.freshness.indexed_head_sha, REPOSITORY_HEAD);
 
   for (const file of receipt.files) {
     assert.deepEqual(Object.keys(file).sort(), ["digest", "locator"]);
