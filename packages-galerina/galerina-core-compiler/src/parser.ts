@@ -1937,7 +1937,23 @@ class Parser {
       this.parsingRequireSubject = false;
     }
     this.skipNewlines();
-    this.expect("symbol", "{");
+    const open = this.expect("symbol", "{");
+    if (open === undefined) {
+      for (const required of ["deny", "ambig"] as const) {
+        this.emit(
+          FUNGI_REQUIREMENT_006.code,
+          FUNGI_REQUIREMENT_006.name,
+          `require is missing the '${required}:' handler. ${FUNGI_REQUIREMENT_006.message}`,
+          start,
+          FUNGI_REQUIREMENT_006.suggestedFix,
+        );
+      }
+      return {
+        kind: "requireStmt",
+        location: this.spanFrom(start, this.peek(-1)),
+        children: [subject],
+      };
+    }
     this.skipNewlines();
 
     const seen = new Set<string>();

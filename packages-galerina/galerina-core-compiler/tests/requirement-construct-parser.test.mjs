@@ -201,6 +201,18 @@ describe("RD-0858 require statement", () => {
     });
   }
 
+  it("does not consume the following statement when the handler block opener is missing", () => {
+    const parsed = L.parseProgram(
+      requireStatementSource("require admitted"),
+      "require-missing-open.fungi",
+    );
+    assert.equal(errorCodes(parsed).filter((code) => code === "FUNGI-PARSE-001").length, 1);
+    assert.equal(errorCodes(parsed).filter((code) => code === "FUNGI-REQUIREMENT-006").length, 2);
+    const statement = nodesOfKind(parsed.ast, "requireStmt")[0];
+    assert.deepEqual(statement?.children?.map((child) => child.kind), ["identifier"]);
+    assert.equal(nodesOfKind(parsed.ast, "returnStmt").length, 1);
+  });
+
   for (const duplicate of ["deny", "ambig"]) {
     it(`refuses and omits a duplicate ${duplicate} arm`, () => {
       const other = duplicate === "deny" ? "ambig: fault Unknown" : "deny: fault Denied";
