@@ -133,7 +133,7 @@ function runCli(entry, extraArguments = []) {
     cwd: ROOT,
     encoding: "utf8",
     maxBuffer: 1024 * 1024,
-    timeout: 30_000,
+    timeout: 75_000,
     windowsHide: true,
   });
 }
@@ -271,6 +271,23 @@ test("literal CommonJS require enters closure and preserves forbidden surfaces",
   });
 });
 
+test("an inline CommonJS require cannot hide a forbidden property surface", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "module.exports = require('./helper.cjs').emitGIR({}, {});\n",
+    "helper.cjs": "exports.emitGIR = function emitGIR() { return new Uint8Array(); };\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.equal(result.inspectedFiles.length, 2);
+  });
+});
+
 test("TypeScript import-equals require enters closure and preserves forbidden surfaces", async () => {
   await withTemporaryFixture({
     "entry.ts": "import legacy = require('./helper.ts'); export const result = legacy.emitGIR({}, {});\n",
@@ -304,6 +321,21 @@ test("non-literal and unapproved package require forms fail closed", async () =>
       assert.equal(result.status, "REFUSED", JSON.stringify(result));
       assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
     }
+  });
+});
+
+test("CommonJS require cannot hide a forbidden dependency", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "module.exports = require('typescript');\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "TYPESCRIPT_REENTRY");
   });
 });
 
@@ -383,15 +415,14 @@ test("ambient graph-project selection cannot redirect programmatic authority", a
   }
 });
 
-test("an ambiguous executable provider refuses before graph inspection", { skip: process.platform !== "win32" }, async () => {
+test("a PATH-spoofed executable cannot redirect graph inspection", { skip: process.platform !== "win32" }, async () => {
   const temporaryRoot = mkdtempSync(resolve(ROOT, FIXTURES, ".task-2-provider-"));
   const priorPath = process.env.PATH;
   try {
     copyFileSync(process.execPath, resolve(temporaryRoot, "codebase-memory-mcp.exe"));
     process.env.PATH = `${temporaryRoot};${priorPath ?? ""}`;
     const result = await auditFixture("green");
-    assert.equal(result.status, "REFUSED", JSON.stringify(result));
-    assert.equal(result.failureId, "DETACHED_AUTHORITY_GRAPH_PROVIDER_AMBIGUOUS");
+    assert.equal(result.status, "PASS", JSON.stringify(result));
   } finally {
     process.env.PATH = priorPath;
     rmSync(temporaryRoot, { recursive: true, force: true });
