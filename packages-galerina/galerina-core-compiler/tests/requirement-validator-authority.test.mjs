@@ -16,6 +16,7 @@ const OTHER_DIGEST = `sha256:${"b".repeat(64)}`;
 const VALID_FROM = "2026-08-20T00:00:00.000Z";
 const EXPIRES_AT = "2026-08-21T00:00:00.000Z";
 const COMPARISON_TIME = "2026-08-20T12:00:00.000Z";
+const SINGLE_ROW_REGISTRY_KAT = "sha256:b6648890dd5a89eec7c4c5baf41a995e98dcb533fa86d35a4c1485aac967c94d";
 
 const baseRow = (overrides = {}) => ({
   authorityVersion: AUTHORITY_VERSION,
@@ -63,6 +64,28 @@ const assertRefused = (actual, reason) => {
   assert.ok(Object.isFrozen(actual));
 };
 
+const freezeRow = (row) => Object.freeze({
+  ...row,
+  taintClasses: Object.freeze([...row.taintClasses]),
+});
+
+const forgeStructuredRegistry = (rows, digest) => Object.freeze({
+  state: "STRUCTURALLY_VALID",
+  rows: Object.freeze(rows.map(freezeRow)),
+  digest,
+  canonicalBytes: 0,
+});
+
+const assertForgedRegistryRefused = (registry) => {
+  const result = verifyRequirementValidatorAuthority(
+    registry,
+    baseRequest(),
+    baseContext({ digest: registry.digest }),
+  );
+  assert.equal(result.state, "REFUSED", JSON.stringify(result));
+  assert.ok(Object.isFrozen(result));
+};
+
 const verifyRows = (rows, requestOverrides = {}, contextOverrides = {}) => {
   const registry = structured(rows);
   return verifyRequirementValidatorAuthority(
@@ -98,6 +121,10 @@ describe("RD-0858 validator authority registry", () => {
     assert.ok(Object.isFrozen(forward.rows));
     assert.ok(forward.rows.every((row) => Object.isFrozen(row)));
     assert.ok(forward.rows.every((row) => Object.isFrozen(row.taintClasses)));
+  });
+
+  it("matches the independent one-row registry digest known answer", () => {
+    assert.equal(structured().digest, SINGLE_ROW_REGISTRY_KAT);
   });
 
   it("does not retain caller-owned row or taint-array references", () => {
@@ -166,6 +193,45 @@ describe("RD-0858 validator authority registry", () => {
     assert.equal("rows" in tooMany, false);
     assert.equal("rows" in tooLarge, false);
   });
+
+  it("accepts exact hard ceilings and refuses caller overrides above either hard maximum", () => {
+    const exactHardRows = Array.from({ length: 256 }, (_, index) => baseRow({
+      qualifiedFlowIdentity: `${SOURCE_UNIT}::validate${index}`,
+    }));
+    const exact = createRequirementValidatorAuthorityRegistry(exactHardRows, {
+      maxRows: 256,
+      maxCanonicalBytes: 1_048_576,
+    });
+
+    assert.equal(exact.state, "STRUCTURALLY_VALID", JSON.stringify(exact));
+    assert.ok(exact.canonicalBytes <= 1_048_576);
+    assertRefused(
+      createRequirementValidatorAuthorityRegistry([baseRow()], { maxRows: 257 }),
+      "INVALID_LIMITS",
+    );
+    assertRefused(
+      createRequirementValidatorAuthorityRegistry([baseRow()], { maxCanonicalBytes: 1_048_577 }),
+      "INVALID_LIMITS",
+    );
+  });
+
+  it("accepts only 40- or 64-hex source build identifiers", () => {
+    for (const length of [40, 64]) {
+      const registry = createRequirementValidatorAuthorityRegistry([
+        baseRow({ sourceBuild: `git:${"c".repeat(length)}` }),
+      ]);
+      assert.equal(registry.state, "STRUCTURALLY_VALID", `accepted length ${length}`);
+    }
+
+    for (let length = 41; length <= 63; length += 1) {
+      assertRefused(
+        createRequirementValidatorAuthorityRegistry([
+          baseRow({ sourceBuild: `git:${"c".repeat(length)}` }),
+        ]),
+        "MALFORMED_ROW",
+      );
+    }
+  });
 });
 
 describe("RD-0858 validator authority verification", () => {
@@ -220,6 +286,33 @@ describe("RD-0858 validator authority verification", () => {
       ),
       "REGISTRY_DIGEST_MISMATCH",
     );
+  });
+
+  it("refuses a frozen forged registry with a copied digest and duplicate identity", () => {
+    const legitimate = structured();
+    assertForgedRegistryRefused(forgeStructuredRegistry([
+      baseRow(),
+      baseRow({ checkedDigest: OTHER_DIGEST }),
+    ], legitimate.digest));
+  });
+
+  it("refuses a frozen forged registry with a copied digest and malformed row", () => {
+    const legitimate = structured();
+    assertForgedRegistryRefused(forgeStructuredRegistry([
+      baseRow(),
+      baseRow({ validFrom: "tomorrow" }),
+    ], legitimate.digest));
+  });
+
+  it("refuses a frozen forged registry with a copied digest and rows over the hard ceiling", () => {
+    const legitimate = structured();
+    const overLimitRows = [
+      baseRow(),
+      ...Array.from({ length: 256 }, (_, index) => baseRow({
+        qualifiedFlowIdentity: `${SOURCE_UNIT}::forged${index}`,
+      })),
+    ];
+    assertForgedRegistryRefused(forgeStructuredRegistry(overLimitRows, legitimate.digest));
   });
 
   for (const [label, overrides] of [
