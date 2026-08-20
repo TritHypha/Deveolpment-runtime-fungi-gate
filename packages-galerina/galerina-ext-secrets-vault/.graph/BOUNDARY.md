@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 6 |
+| Files | 7 |
 | Internal edges | 7 |
 | External dependencies | 2 |
 | ├─ Node core | 2 |
@@ -43,6 +43,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/quiesce-ms.fungi`
+- `src/self-hosted/secrets-gateway-wit.fungi`
 
 ## Allowed Orphans
 _none declared_

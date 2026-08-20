@@ -8,6 +8,7 @@
   "packageGraph": {
     "loadedAssets": [
       "src/self-hosted/authorization-boundary.fungi",
+      "src/self-hosted/canary.fungi",
       "src/self-hosted/challenge-context.fungi",
       "src/self-hosted/demo-count.fungi",
       "src/self-hosted/effective-verdict.fungi",

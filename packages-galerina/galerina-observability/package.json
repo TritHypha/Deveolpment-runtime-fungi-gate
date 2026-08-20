@@ -11,7 +11,8 @@
     "loadedAssets": [
       "src/self-hosted/max-detail-len.fungi",
       "src/self-hosted/max-route-len.fungi",
-      "src/self-hosted/overflow-route.fungi"
+      "src/self-hosted/overflow-route.fungi",
+      "src/self-hosted/redacted.fungi"
     ]
   },
   "scripts": {

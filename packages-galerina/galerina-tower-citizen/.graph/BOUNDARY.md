@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 52 |
+| Files | 53 |
 | Internal edges | 79 |
 | External dependencies | 7 |
 | ├─ Node core | 4 |
@@ -45,6 +45,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Loaded Assets
 - `src/self-hosted/authorization-boundary.fungi`
+- `src/self-hosted/canary.fungi`
 - `src/self-hosted/challenge-context.fungi`
 - `src/self-hosted/demo-count.fungi`
 - `src/self-hosted/effective-verdict.fungi`

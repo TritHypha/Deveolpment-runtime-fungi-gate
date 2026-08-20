@@ -3,42 +3,42 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 149
-- Flows: 885
-- Bytes: 1143362
-- Retirement graph: `sha256:351c851cc0f80d6c2cd54e76e09cff8c7b666c14c8f3b4e04dc85451703d4456`
+- Files: 2547
+- Flows: 3283
+- Bytes: 8338730
+- Retirement graph: `sha256:ddf708a1e5489289186bff8e3c7b127c1a3523f786cf93c3e5abc025f21ad271`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 19068 |
+| `identifier` | 169101 |
+| `letDecl` | 139796 |
+| `block` | 19409 |
+| `stringLiteral` | 18464 |
+| `returnStmt` | 17447 |
+| `typeRef` | 15770 |
+| `ifStmt` | 14168 |
+| `paramDecl` | 13667 |
 | `callExpr` | 7269 |
-| `binaryExpr` | 6106 |
-| `numberLiteral` | 5731 |
-| `block` | 5125 |
-| `stringLiteral` | 4895 |
-| `memberExpr` | 4697 |
-| `returnStmt` | 3173 |
-| `paramDecl` | 2873 |
-| `typeRef` | 2578 |
-| `ifStmt` | 2305 |
+| `binaryExpr` | 6875 |
+| `numberLiteral` | 6275 |
+| `memberExpr` | 4731 |
+| `pureFlowDecl` | 3271 |
+| `program` | 2547 |
+| `boolLiteral` | 2418 |
 | `assignStmt` | 2120 |
-| `letDecl` | 1865 |
-| `boolLiteral` | 1699 |
-| `matchArm` | 1319 |
-| `pureFlowDecl` | 873 |
-| `contractDecl` | 870 |
-| `intentDecl` | 870 |
+| `matchArm` | 1414 |
+| `contractDecl` | 1310 |
+| `intentDecl` | 1310 |
 | `mutDecl` | 810 |
-| `matchExpr` | 394 |
+| `matchExpr` | 415 |
+| `checkArm` | 351 |
 | `whileStmt` | 340 |
-| `checkArm` | 330 |
-| `unaryExpr` | 251 |
+| `unaryExpr` | 300 |
 | `recordDecl` | 210 |
-| `program` | 149 |
+| `checkExpr` | 117 |
 | `listLiteral` | 115 |
-| `checkExpr` | 110 |
 | `trapDecl` | 50 |
 | `importDecl` | 22 |
 | `charLiteral` | 15 |
@@ -58,12 +58,12 @@ admission, execution parity, retirement credit or production authority.
 
 | Type | Count |
 |---|---:|
-| `Int` | 544 |
-| `String` | 483 |
-| `Bool` | 417 |
+| `Bool` | 10996 |
+| `String` | 2670 |
+| `Int` | 955 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
-| `Verdict` | 46 |
+| `Verdict` | 61 |
 | `Array<Token>` | 44 |
 | `SLIDEV2AImportCursor` | 36 |
 | `Array<Int>` | 22 |
@@ -349,17 +349,17 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1893 |
-| `+` | 1009 |
-| `!=` | 979 |
+| `==` | 2410 |
+| `+` | 1039 |
+| `!=` | 980 |
 | `\|\|` | 762 |
-| `<` | 503 |
+| `<` | 620 |
+| `-` | 476 |
 | `&&` | 439 |
-| `-` | 426 |
-| `>` | 180 |
-| `>=` | 67 |
-| `*` | 42 |
+| `>` | 256 |
+| `>=` | 73 |
+| `*` | 57 |
+| `<=` | 29 |
 | `/` | 26 |
-| `<=` | 25 |
-| `%` | 4 |
+| `%` | 6 |
 | `!` | 2 |

@@ -17,7 +17,7 @@
       "ref packages-galerina/galerina-ext-bridge-cpp/src/addon-loader.ts:96",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:58",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:63",
-      "doc docs/TODO.md:9558"
+      "doc docs/TODO.md:9683"
     ]
   },
   {
@@ -39,7 +39,7 @@
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:53",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:68",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:74",
-      "doc docs/TODO.md:9557"
+      "doc docs/TODO.md:9682"
     ]
   },
   {
@@ -107,7 +107,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/compiled-policy.test.mjs:56",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:209",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:215",
-      "doc docs/TODO.md:9879"
+      "doc docs/TODO.md:10004"
     ]
   },
   {
@@ -322,7 +322,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:158",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:177",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:183",
-      "doc docs/TODO.md:9876"
+      "doc docs/TODO.md:10001"
     ]
   },
   {
@@ -544,8 +544,8 @@
       "emit packages-galerina/galerina-tower-citizen/src/hybrid-engine.ts:1085",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:53",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:113",
-      "doc docs/TODO.md:9471",
-      "doc docs/TODO.md:9846"
+      "doc docs/TODO.md:9596",
+      "doc docs/TODO.md:9971"
     ]
   },
   {
@@ -567,8 +567,8 @@
       "ref packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:65",
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:95",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:159",
-      "doc docs/TODO.md:9471",
-      "doc docs/TODO.md:9866"
+      "doc docs/TODO.md:9596",
+      "doc docs/TODO.md:9991"
     ]
   },
   {
@@ -1080,7 +1080,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/governance-hardening.test.mjs:38",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:199",
       "doc docs/reports/galerina-ground-up-security-architectural-audit-report.md:625",
-      "doc docs/TODO.md:9877"
+      "doc docs/TODO.md:10002"
     ]
   },
   {
@@ -1626,7 +1626,7 @@
     "code": "ERR_REGISTRY_DELEGATION_BAD_SIGNATURE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 11,
+    "occurrences": 13,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:27"
@@ -1647,6 +1647,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:402",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:413",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:414",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-bad-signature.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-bad-signature.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:11",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:139",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:236",
@@ -1658,7 +1660,7 @@
     "code": "ERR_REGISTRY_DELEGATION_KEY_MISMATCH",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 24,
+    "occurrences": 26,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:29"
@@ -1694,6 +1696,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:509",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:520",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:521",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-key-mismatch.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-key-mismatch.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:12",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:147",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:156",
@@ -1708,7 +1712,7 @@
     "code": "ERR_REGISTRY_DELEGATION_MALFORMED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 7,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:31"
@@ -1725,6 +1729,8 @@
       "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:31",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:32",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:123",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-malformed.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-malformed.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:13",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:188",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:195",
@@ -1735,7 +1741,7 @@
     "code": "ERR_REGISTRY_DELEGATION_NOT_ACTIVE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 7,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:33"
@@ -1753,6 +1759,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:34",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:360",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:361",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-not-active.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-not-active.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:14",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:163",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:167"
@@ -1762,7 +1770,7 @@
     "code": "ERR_REGISTRY_DELEGATION_REVOKED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 9,
+    "occurrences": 11,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:35"
@@ -1783,6 +1791,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:280",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:325",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:326",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-revoked.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-revoked.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:15",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:177",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:494"
@@ -1792,7 +1802,7 @@
     "code": "ERR_REGISTRY_DELEGATION_ROLE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 7,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:37"
@@ -1810,6 +1820,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:38",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:382",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:383",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-role.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-role.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:16",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:199",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:472"
@@ -1819,7 +1831,7 @@
     "code": "ERR_REGISTRY_DELEGATION_STALE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 7,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:39"
@@ -1837,6 +1849,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:40",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:371",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:372",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-stale.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-stale.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:17",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:206",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:482"
@@ -1846,7 +1860,7 @@
     "code": "ERR_REGISTRY_DELEGATION_UNSIGNED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 9,
+    "occurrences": 11,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:25"
@@ -1867,6 +1881,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:255",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:307",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:308",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-unsigned.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-delegation-unsigned.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:18",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:263",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:276"
@@ -1876,7 +1892,7 @@
     "code": "ERR_REGISTRY_DUPLICATE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 5,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:86"
@@ -1892,6 +1908,8 @@
     "allSites": [
       "def packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:86",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:412",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-duplicate.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-duplicate.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:74",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:24",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:92"
@@ -1901,7 +1919,7 @@
     "code": "ERR_REGISTRY_HASH_MISMATCH",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 7,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:81"
@@ -1917,6 +1935,8 @@
     "allSites": [
       "def packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:81",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:416",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-hash-mismatch.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-hash-mismatch.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:77",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-fuse-e2e.test.mjs:87",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:19",
@@ -1928,7 +1948,7 @@
     "code": "ERR_REGISTRY_INDEX_BAD_SIGNATURE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 23,
+    "occurrences": 25,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:78"
@@ -1954,6 +1974,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:378",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:466",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:466",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-bad-signature.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-bad-signature.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:47",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-fuse-e2e.test.mjs:119",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-hybrid.test.mjs:6",
@@ -1974,7 +1996,7 @@
     "code": "ERR_REGISTRY_INDEX_MALFORMED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 29,
+    "occurrences": 31,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:85"
@@ -2016,6 +2038,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:317",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:327",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:328",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-malformed.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-malformed.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:40",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:50",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-hybrid.test.mjs:7",
@@ -2032,7 +2056,7 @@
     "code": "ERR_REGISTRY_INDEX_NO_KEY",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 16,
+    "occurrences": 18,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:77"
@@ -2058,6 +2082,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:338",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:371",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:372",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-no-key.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-no-key.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:43",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-fuse-e2e.test.mjs:134",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-hybrid.test.mjs:8",
@@ -2071,7 +2097,7 @@
     "code": "ERR_REGISTRY_INDEX_STALE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 12,
+    "occurrences": 14,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:84"
@@ -2093,6 +2119,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:291",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:347",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:348",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-stale.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-stale.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:54",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:22",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:72",
@@ -2105,7 +2133,7 @@
     "code": "ERR_REGISTRY_INDEX_UNSIGNED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 19,
+    "occurrences": 21,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:76"
@@ -2128,6 +2156,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:260",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:321",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:322",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-unsigned.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-index-unsigned.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:33",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:36",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-fuse-e2e.test.mjs:107",
@@ -2146,7 +2176,7 @@
     "code": "ERR_REGISTRY_KEYID_MISMATCH",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 6,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:82"
@@ -2162,6 +2192,8 @@
     "allSites": [
       "def packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:82",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:419",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-keyid-mismatch.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-keyid-mismatch.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:81",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:20",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:168",
@@ -2172,7 +2204,7 @@
     "code": "ERR_REGISTRY_MANIFEST_BAD_SIGNATURE",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 11,
+    "occurrences": 13,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:21"
@@ -2193,6 +2225,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:181",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:192",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:193",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-bad-signature.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-bad-signature.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:6",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:101",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:149",
@@ -2204,7 +2238,7 @@
     "code": "ERR_REGISTRY_MANIFEST_KEY_MISMATCH",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 6,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:25"
@@ -2222,6 +2256,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:26",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:206",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:207",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-key-mismatch.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-key-mismatch.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:7",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:133"
     ]
@@ -2230,7 +2266,7 @@
     "code": "ERR_REGISTRY_MANIFEST_MALFORMED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 7,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:19"
@@ -2248,6 +2284,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:20",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:57",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:58",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-malformed.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-malformed.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:8",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:124",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:171"
@@ -2257,7 +2295,7 @@
     "code": "ERR_REGISTRY_MANIFEST_NO_KEY",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 8,
+    "occurrences": 10,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:23"
@@ -2278,6 +2316,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:187",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:226",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:227",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-no-key.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-no-key.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:9",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:140"
     ]
@@ -2286,7 +2326,7 @@
     "code": "ERR_REGISTRY_MANIFEST_UNSIGNED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 9,
+    "occurrences": 11,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:17"
@@ -2307,6 +2347,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:133",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:215",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:216",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-unsigned.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-manifest-unsigned.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:10",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:123",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:175"
@@ -2316,7 +2358,7 @@
     "code": "ERR_REGISTRY_PACKAGE_UNKNOWN",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 11,
+    "occurrences": 13,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:79"
@@ -2332,6 +2374,8 @@
     "allSites": [
       "def packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:79",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:403",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-package-unknown.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-package-unknown.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:67",
       "test packages-galerina/galerina-framework-app-kernel/tests/fuse-loader.test.mjs:68",
       "test packages-galerina/galerina-framework-app-kernel/tests/fuse-loader.test.mjs:70",
@@ -2347,7 +2391,7 @@
     "code": "ERR_REGISTRY_POLICY_DENIED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 10,
+    "occurrences": 12,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:83"
@@ -2365,6 +2409,8 @@
       "def packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:83",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:438",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:441",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-policy-denied.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-policy-denied.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:94",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:98",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-fuse-e2e.test.mjs:144",
@@ -2378,7 +2424,7 @@
     "code": "ERR_REGISTRY_RUNTIME_AUTHORITY",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 24,
+    "occurrences": 26,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:75"
@@ -2425,14 +2471,16 @@
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:562",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:563",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:584",
-      "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:585"
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:585",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-runtime-authority.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-runtime-authority.fungi:5"
     ]
   },
   {
     "code": "ERR_REGISTRY_RUNTIME_IO",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 14,
+    "occurrences": 16,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:72"
@@ -2461,6 +2509,8 @@
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:160",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:351",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:352",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-runtime-io.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-runtime-io.fungi:5",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs:9",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs:106",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs:123"
@@ -2470,7 +2520,7 @@
     "code": "ERR_REGISTRY_RUNTIME_MALFORMED",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 18,
+    "occurrences": 20,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:73"
@@ -2508,14 +2558,16 @@
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:236",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:237",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:276",
-      "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:277"
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:277",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-runtime-malformed.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-runtime-malformed.fungi:5"
     ]
   },
   {
     "code": "ERR_REGISTRY_VERSION_UNKNOWN",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 5,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:80"
@@ -2531,6 +2583,8 @@
     "allSites": [
       "def packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:80",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:407",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-version-unknown.fungi:3",
+      "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/err-registry-version-unknown.fungi:5",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:70",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:18",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:160"
@@ -2803,7 +2857,7 @@
       "ref packages-galerina/galerina-core-runtime/src/structured-await.ts:585",
       "test packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs:333",
       "doc docs/reports/full-gate-and-host-floor-reconciliation-2026-08-03.md:17",
-      "doc docs/TODO.md:4377"
+      "doc docs/TODO.md:4502"
     ]
   },
   {
@@ -3382,7 +3436,7 @@
       "doc docs/paper/defensive-papers/dp-rd-0271-secure-by-omission-contract-field-defaults.md:62",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:96",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:35",
-      "doc docs/TODO.md:9432"
+      "doc docs/TODO.md:9557"
     ]
   },
   {
@@ -3451,7 +3505,7 @@
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:63",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:73",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:84",
-      "doc docs/TODO.md:8975"
+      "doc docs/TODO.md:9100"
     ]
   },
   {
@@ -3611,7 +3665,7 @@
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:169",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:346",
       "doc docs/superpowers/specs/2026-08-02-generic-runtime-authority-type-design.md:54",
-      "doc docs/TODO.md:5863"
+      "doc docs/TODO.md:5988"
     ]
   },
   {
@@ -3646,7 +3700,7 @@
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:219",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:234",
       "doc docs/superpowers/specs/2026-08-02-generic-runtime-authority-type-design.md:55",
-      "doc docs/TODO.md:5864"
+      "doc docs/TODO.md:5989"
     ]
   },
   {
@@ -3683,7 +3737,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs:121",
       "test packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs:131",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:178",
-      "doc docs/TODO.md:5865"
+      "doc docs/TODO.md:5990"
     ]
   },
   {
@@ -3891,7 +3945,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:77",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:90",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:170",
-      "doc docs/TODO.md:9858",
+      "doc docs/TODO.md:9983",
       "ref scripts/audit-import-governance.mjs:20"
     ]
   },
@@ -3913,7 +3967,7 @@
     "allSites": [
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:165",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:97",
-      "doc docs/TODO.md:9860"
+      "doc docs/TODO.md:9985"
     ]
   },
   {
@@ -4065,7 +4119,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/index.ts:2153",
       "def packages-galerina/galerina-core-compiler/src/index.ts:2169",
-      "doc docs/TODO.md:9380"
+      "doc docs/TODO.md:9505"
     ]
   },
   {
@@ -4089,7 +4143,7 @@
     ],
     "allSites": [
       "def packages-galerina/galerina-core-compiler/src/index.ts:2180",
-      "doc docs/TODO.md:9291"
+      "doc docs/TODO.md:9416"
     ]
   },
   {
@@ -4208,8 +4262,8 @@
       "def packages-galerina/galerina-core-compiler/src/attribute-checker.ts:45",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:101",
-      "doc docs/TODO.md:9703",
-      "doc docs/TODO.md:9717"
+      "doc docs/TODO.md:9828",
+      "doc docs/TODO.md:9842"
     ]
   },
   {
@@ -4459,7 +4513,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-conformance/monkey-patch.test.mjs:12",
       "doc docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md:40",
       "doc docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md:71",
-      "doc docs/TODO.md:6706",
+      "doc docs/TODO.md:6831",
       "ref galerina.mjs:61"
     ]
   },
@@ -4755,7 +4809,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:975",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:976",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:983",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1250"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3722"
     ]
   },
   {
@@ -4895,7 +4949,7 @@
     "code": "FUNGI-BOOL-BOUNDARY-001",
     "namespace": "FUNGI",
     "family": "BOOL",
-    "occurrences": 10,
+    "occurrences": 11,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:12"
@@ -4918,6 +4972,7 @@
       "def packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:12",
       "emit packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:35",
       "ref packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:23",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-bool-boundary-001-failed-closed.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:561",
       "doc packages-galerina/galerina-core-logic/TODO.md:35",
       "doc docs/COVERAGE.md:460",
@@ -4929,7 +4984,7 @@
     "code": "FUNGI-BOOL-BOUNDARY-002",
     "namespace": "FUNGI",
     "family": "BOOL",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:15"
@@ -4950,6 +5005,7 @@
       "ref packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:14",
       "def packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:15",
       "emit packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:48",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-bool-boundary-002-unknown-reason.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:562"
     ]
   },
@@ -4957,7 +5013,7 @@
     "code": "FUNGI-BOOL-BOUNDARY-003",
     "namespace": "FUNGI",
     "family": "BOOL",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:18"
@@ -4978,6 +5034,7 @@
       "ref packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:17",
       "def packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:18",
       "emit packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:57",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-bool-boundary-003-invalid-input.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:563"
     ]
   },
@@ -4985,7 +5042,7 @@
     "code": "FUNGI-BOOL-BOUNDARY-004",
     "namespace": "FUNGI",
     "family": "BOOL",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:21"
@@ -5006,6 +5063,7 @@
       "ref packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:20",
       "def packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:21",
       "emit packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:67",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-bool-boundary-004-missing-boundary-name.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:564"
     ]
   },
@@ -5013,7 +5071,7 @@
     "code": "FUNGI-BOOL-BOUNDARY-005",
     "namespace": "FUNGI",
     "family": "BOOL",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:24"
@@ -5035,6 +5093,7 @@
       "ref packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:23",
       "def packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:24",
       "emit packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:76",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-bool-boundary-005-result-misused.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:565",
       "doc packages-galerina/galerina-core-logic/TODO.md:35"
     ]
@@ -5335,7 +5394,7 @@
     "code": "FUNGI-BUILD-001",
     "namespace": "FUNGI",
     "family": "BUILD",
-    "occurrences": 16,
+    "occurrences": 17,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:2135"
@@ -5360,6 +5419,7 @@
       "ref packages-galerina/galerina-core-compiler/src/index.ts:2131",
       "def packages-galerina/galerina-core-compiler/src/index.ts:2135",
       "ref packages-galerina/galerina-core-compiler/src/production-check.ts:53",
+      "fungi packages-galerina/galerina-core-compiler/src/self-hosted/fungi-build-001-code.fungi:5",
       "test packages-galerina/galerina-core-compiler/tests/phase29.test.mjs:196",
       "test packages-galerina/galerina-core-compiler/tests/phase29.test.mjs:198",
       "test packages-galerina/galerina-core-compiler/tests/phase29.test.mjs:201",
@@ -5384,8 +5444,8 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/cli.ts:664",
-      "doc docs/TODO.md:9704",
-      "doc docs/TODO.md:9708"
+      "doc docs/TODO.md:9829",
+      "doc docs/TODO.md:9833"
     ]
   },
   {
@@ -5780,7 +5840,7 @@
     "code": "FUNGI-CLI-REDACT-001",
     "namespace": "FUNGI",
     "family": "CLI",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-cli/src/security.ts:15"
@@ -5796,6 +5856,7 @@
       "ref packages-galerina/galerina-core-cli/src/security.ts:10",
       "def packages-galerina/galerina-core-cli/src/security.ts:15",
       "ref packages-galerina/galerina-core-cli/src/security.ts:56",
+      "fungi packages-galerina/galerina-core-cli/src/self-hosted/fungi-cli-redact-001.fungi:5",
       "test packages-galerina/galerina-core-cli/tests/security.test.mjs:58"
     ]
   },
@@ -6880,7 +6941,7 @@
     "code": "FUNGI-DECISION-001",
     "namespace": "FUNGI",
     "family": "DECISION",
-    "occurrences": 7,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:12"
@@ -6902,6 +6963,7 @@
       "ref packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:11",
       "def packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:12",
       "emit packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:34",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-decision-001-invalid-decision.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:471",
       "doc packages-galerina/galerina-core-logic/TODO.md:30",
       "doc docs/COVERAGE.md:459"
@@ -6911,7 +6973,7 @@
     "code": "FUNGI-DECISION-002",
     "namespace": "FUNGI",
     "family": "DECISION",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:15"
@@ -6932,6 +6994,7 @@
       "ref packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:14",
       "def packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:15",
       "emit packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:44",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-decision-002-empty-reason.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:472"
     ]
   },
@@ -6939,7 +7002,7 @@
     "code": "FUNGI-DECISION-003",
     "namespace": "FUNGI",
     "family": "DECISION",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:18"
@@ -6960,6 +7023,7 @@
       "ref packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:17",
       "def packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:18",
       "emit packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:54",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-decision-003-empty-unknown-reasons.fungi:5",
       "ref packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:50",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:473"
     ]
@@ -6968,7 +7032,7 @@
     "code": "FUNGI-DECISION-004",
     "namespace": "FUNGI",
     "family": "DECISION",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:21"
@@ -6989,6 +7053,7 @@
       "ref packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:20",
       "def packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:21",
       "emit packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:68",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-decision-004-failed-closed.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:474"
     ]
   },
@@ -6996,7 +7061,7 @@
     "code": "FUNGI-DECISION-005",
     "namespace": "FUNGI",
     "family": "DECISION",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:26"
@@ -7018,6 +7083,7 @@
       "ref packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:25",
       "def packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:26",
       "emit packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:78",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-decision-005-empty-combine.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:475",
       "doc packages-galerina/galerina-core-logic/TODO.md:30"
     ]
@@ -7148,7 +7214,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:54",
-      "doc docs/TODO.md:8990",
+      "doc docs/TODO.md:9115",
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
       "ref scripts/audit-artifact-drift.mjs:172",
@@ -7679,7 +7745,7 @@
       "doc packages-galerina/galerina-devtools-project-graph/README.md:189",
       "doc docs/architecture/self-hosting-readiness-2026-07-09.md:93",
       "doc docs/compiler-effect-and-boundary-checker.md:975",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:627",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3032",
       "doc docs/examples/EXAMPLES_INDEX.md:125",
       "doc docs/examples/EXAMPLES_INDEX.md:135",
       "fungi docs/examples/Level-3-Effects/107-pure-flow-calls-effectful-flow/example.fungi:6",
@@ -7812,7 +7878,7 @@
       "doc docs/patterns/applications/01-crud-resource.md:94",
       "doc docs/reference/effects.md:67",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:16",
-      "doc docs/TODO.md:9097",
+      "doc docs/TODO.md:9222",
       "ref scripts/audit-corpus-effect-names.mjs:15",
       "ref scripts/audit-corpus-effect-names.mjs:17",
       "ref scripts/audit-muted-diagnostics.mjs:46",
@@ -7912,7 +7978,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:222",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:228",
       "doc docs/compiler-effect-and-boundary-checker.md:977",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:628",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3033",
       "fungi docs/examples/Level-3-Effects/119-effect-name-invalid/example.fungi:4",
       "fungi docs/examples/Level-3-Effects/119-effect-name-invalid/example.fungi:5",
       "fungi docs/examples/Level-3-Effects/119-effect-name-invalid/example.fungi:7",
@@ -8004,7 +8070,7 @@
       "doc docs/reference/effects.md:438",
       "doc docs/reference/effects.md:447",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:193",
-      "doc docs/TODO.md:9647",
+      "doc docs/TODO.md:9772",
       "ref scripts/audit-codes-full.mjs:90",
       "ref scripts/audit-codes-full.mjs:93",
       "ref scripts/audit-corpus-effect-names.mjs:134",
@@ -8531,6 +8597,25 @@
     ]
   },
   {
+    "code": "FUNGI-EXAMPLE-001",
+    "namespace": "FUNGI",
+    "family": "EXAMPLE",
+    "occurrences": 3,
+    "docOnly": false,
+    "defs": [],
+    "emits": [],
+    "tests": 3,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "test scripts/tests/ts-to-fungi-sandbox.test.mjs:150",
+      "test scripts/tests/ts-to-fungi-sandbox.test.mjs:152",
+      "test scripts/tests/ts-to-fungi-sandbox.test.mjs:153"
+    ]
+  },
+  {
     "code": "FUNGI-EXPLAIN-001",
     "namespace": "FUNGI",
     "family": "EXPLAIN",
@@ -8731,7 +8816,7 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:53",
       "doc docs/reference/dss-wasm-runtime-errors.md:57",
       "doc docs/reference/dss-wasm-runtime-errors.md:94",
-      "doc docs/TODO.md:9078",
+      "doc docs/TODO.md:9203",
       "ref scripts/audit-artifact-drift.mjs:68"
     ]
   },
@@ -9652,7 +9737,7 @@
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:155",
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:158",
       "doc docs/architecture/gate-cutset-version-gating-decision-2026-07-11.md:42",
-      "doc docs/TODO.md:9529"
+      "doc docs/TODO.md:9654"
     ]
   },
   {
@@ -9708,10 +9793,10 @@
       "doc docs/language/gate/07-cheatsheet-and-gotchas.md:186",
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1447",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1486",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
-      "doc docs/TODO.md:3690",
-      "doc docs/TODO.md:9533",
+      "doc docs/TODO.md:3815",
+      "doc docs/TODO.md:9658",
       "test scripts/tests/gate-admission-envelope.test.mjs:103",
       "test scripts/tests/gate-admission-envelope.test.mjs:298",
       "test scripts/tests/helpers/gate-admission-fixture.mjs:83",
@@ -9875,7 +9960,7 @@
       "doc docs/examples/README.md:130",
       "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:194",
-      "doc docs/TODO.md:9093",
+      "doc docs/TODO.md:9218",
       "ref scripts/audit-mutation.mjs:626",
       "ref scripts/audit-mutation.mjs:630",
       "ref scripts/audit-muted-diagnostics.mjs:49",
@@ -10008,8 +10093,8 @@
       "doc docs/language/fungi/05-bindings-taint-privacy.md:268",
       "doc docs/language/fungi/DO-DONT-TERNARY.md:18",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:36",
-      "doc docs/TODO.md:9747",
-      "doc docs/TODO.md:9804",
+      "doc docs/TODO.md:9872",
+      "doc docs/TODO.md:9929",
       "ref scripts/audit-registry-fixtures.mjs:204",
       "ref scripts/audit-stdlib-gates-parity.mjs:138"
     ]
@@ -10057,7 +10142,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:164",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:520",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:683",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:678",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3107",
       "doc docs/examples/EXAMPLES_INDEX.md:188",
       "fungi docs/examples/Level-5-Governance/205-remote-execution-violation/example.fungi:5",
       "doc docs/examples/Level-5-Governance/AI_SUMMARY.md:73",
@@ -10120,7 +10205,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:528",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:684",
       "doc docs/AI/DO_NOT_USE_YET.md:166",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:680",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3109",
       "doc docs/examples/EXAMPLES_INDEX.md:195",
       "doc docs/examples/EXAMPLES_INDEX.md:318",
       "fungi docs/examples/Level-5-Governance/212-policy-purpose-mismatch/example.fungi:5",
@@ -10134,7 +10219,7 @@
       "doc docs/examples/README.md:139",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:93",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:101",
-      "doc docs/TODO.md:8983",
+      "doc docs/TODO.md:9108",
       "ref scripts/audit-diagnostic-code-collisions.mjs:76"
     ]
   },
@@ -10241,7 +10326,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:15",
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1722",
-      "doc docs/TODO.md:8983"
+      "doc docs/TODO.md:9108"
     ]
   },
   {
@@ -10728,7 +10813,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1092",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1095",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1096",
-      "doc docs/TODO.md:9584"
+      "doc docs/TODO.md:9709"
     ]
   },
   {
@@ -10917,8 +11002,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1920",
       "doc docs/examples/README.md:25",
       "doc docs/examples/README.md:138",
-      "doc docs/TODO.md:9390",
-      "doc docs/TODO.md:9395",
+      "doc docs/TODO.md:9515",
+      "doc docs/TODO.md:9520",
       "ref scripts/audit-codes-full.mjs:50",
       "ref scripts/audit-muted-diagnostics.mjs:53"
     ]
@@ -10963,7 +11048,7 @@
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:5",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:12",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:34",
-      "doc docs/TODO.md:7550"
+      "doc docs/TODO.md:7675"
     ]
   },
   {
@@ -10989,7 +11074,7 @@
     "code": "FUNGI-GOV-3VL-001",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 96,
+    "occurrences": 100,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:119"
@@ -10998,7 +11083,7 @@
       "packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts:566",
       "packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:140"
     ],
-    "tests": 36,
+    "tests": 38,
     "refs": 41,
     "docs": 13,
     "names": [
@@ -11031,6 +11116,8 @@
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:287",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:302",
       "test packages-galerina/galerina-devtools-security/tests/secaudit-indeterminate.test.mjs:25",
+      "fungi packages-galerina/galerina-test/src/self-hosted/conversion-overlays/tower-governance-diagnostic.fungi:9",
+      "test packages-galerina/galerina-test/tests/conversion-overlay-primitives-fungi.test.mjs:50",
       "ref packages-galerina/galerina-tower-citizen/src/epistemic-type-state.ts:19",
       "ref packages-galerina/galerina-tower-citizen/src/epistemic-type-state.ts:40",
       "ref packages-galerina/galerina-tower-citizen/src/epistemic-type-state.ts:229",
@@ -11054,6 +11141,7 @@
       "ref packages-galerina/galerina-tower-citizen/src/quorum.ts:31",
       "ref packages-galerina/galerina-tower-citizen/src/quorum.ts:111",
       "emit packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts:566",
+      "fungi packages-galerina/galerina-tower-citizen/src/self-hosted/gov-3vl-diagnostic.fungi:5",
       "ref packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:22",
       "ref packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:116",
       "def packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:119",
@@ -11103,7 +11191,8 @@
       "ref scripts/rd-0168-graph-pci-compliance-scanner-proof.mjs:126",
       "ref scripts/rd-0168-graph-pci-compliance-scanner-proof.mjs:215",
       "test scripts/tests/codes.test.mjs:14",
-      "test scripts/tests/codes.test.mjs:42"
+      "test scripts/tests/codes.test.mjs:42",
+      "test scripts/tests/conversion-overlay-primitives-fungi-slide.integration.test.mjs:63"
     ]
   },
   {
@@ -11182,7 +11271,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:49",
       "doc docs/roadmap-2026-07-15.md:117",
-      "doc docs/TODO.md:8954",
+      "doc docs/TODO.md:9079",
       "ref galerina.mjs:131",
       "ref galerina.mjs:164"
     ]
@@ -11247,7 +11336,7 @@
       "emit packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:56",
       "ref packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:57",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:39",
-      "doc docs/TODO.md:9849"
+      "doc docs/TODO.md:9974"
     ]
   },
   {
@@ -11881,10 +11970,10 @@
       "doc docs/reference/hardening.md:59",
       "doc docs/reference/hardening.md:84",
       "doc docs/reference/trust-trit.md:93",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:563",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:602",
       "doc docs/superpowers/plans/2026-08-12-spill-retype-fungi-conversion.md:80",
       "doc docs/superpowers/specs/2026-08-12-spill-retype-fungi-conversion-design.md:30",
-      "doc docs/TODO.md:2194",
+      "doc docs/TODO.md:2319",
       "ref scripts/audit-reference-doc-drift.mjs:59",
       "test scripts/tests/spill-retype-fungi-slide.integration.test.mjs:24"
     ]
@@ -11974,7 +12063,7 @@
       "test packages-galerina/galerina-core-compiler/tests/gir-emitter.test.mjs:184",
       "test packages-galerina/galerina-core-compiler/tests/gir-emitter.test.mjs:197",
       "test packages-galerina/galerina-core-compiler/tests/gir-emitter.test.mjs:198",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1675",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:4157",
       "doc docs/examples/EXAMPLES_INDEX.md:240",
       "doc docs/examples/EXAMPLES_INDEX.md:269",
       "fungi docs/examples/Level-6-Compute/318-compute-hint-missing/example.fungi:5",
@@ -12710,8 +12799,8 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:58",
       "doc docs/reference/dss-wasm-runtime-errors.md:90",
       "doc docs/reports/slide-v2-g1-capability-probe-2026-07-29.md:73",
-      "doc docs/TODO.md:8835",
-      "doc docs/TODO.md:9175"
+      "doc docs/TODO.md:8960",
+      "doc docs/TODO.md:9300"
     ]
   },
   {
@@ -12769,7 +12858,7 @@
       "doc packages-galerina/galerina-core-compiler/TODO.md:18",
       "ref packages-galerina/galerina-devtools-wasmtime-oracle/tools/export-corpus-differential.mjs:116",
       "doc docs/reference/dss-wasm-runtime-errors.md:50",
-      "doc docs/TODO.md:9121"
+      "doc docs/TODO.md:9246"
     ]
   },
   {
@@ -12924,7 +13013,7 @@
       "doc docs/examples/README.md:24",
       "doc docs/examples/README.md:150",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
-      "doc docs/TODO.md:9440",
+      "doc docs/TODO.md:9565",
       "ref galerina.mjs:134",
       "ref galerina.mjs:164"
     ]
@@ -13505,7 +13594,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:392",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:393",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:398",
-      "doc docs/TODO.md:9688"
+      "doc docs/TODO.md:9813"
     ]
   },
   {
@@ -14494,9 +14583,9 @@
       "doc docs/SYNTAX_UPDATE_PLAN.md:29",
       "doc docs/SYNTAX_UPDATE_PLAN.md:60",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:33",
-      "doc docs/TODO.md:9262",
-      "doc docs/TODO.md:9428",
-      "doc docs/TODO.md:9540"
+      "doc docs/TODO.md:9387",
+      "doc docs/TODO.md:9553",
+      "doc docs/TODO.md:9665"
     ]
   },
   {
@@ -14973,7 +15062,7 @@
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:45",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:109",
-      "doc docs/TODO.md:8990"
+      "doc docs/TODO.md:9115"
     ]
   },
   {
@@ -15064,8 +15153,8 @@
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:42",
       "doc docs/superpowers/plans/2026-08-04-canonical-records-and-call-resolution.md:29",
       "doc docs/superpowers/plans/2026-08-04-canonical-records-and-call-resolution.md:72",
-      "doc docs/TODO.md:9708",
-      "doc docs/TODO.md:9800"
+      "doc docs/TODO.md:9833",
+      "doc docs/TODO.md:9925"
     ]
   },
   {
@@ -15182,7 +15271,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:418",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:584",
       "doc docs/architecture/stage6-hundred-percent-fungi-roadmap-2026-07-10.md:39",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1256",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3728",
       "doc docs/examples/README.md:98",
       "ref scripts/audit-silent-overwrite.mjs:11",
       "ref scripts/audit-silent-overwrite.mjs:39",
@@ -15835,7 +15924,7 @@
     "code": "FUNGI-OMNI-001",
     "namespace": "FUNGI",
     "family": "OMNI",
-    "occurrences": 8,
+    "occurrences": 9,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:12"
@@ -15857,6 +15946,7 @@
       "ref packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:11",
       "def packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:12",
       "emit packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:32",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-omni-001-direct-boundary-use.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:683",
       "doc packages-galerina/galerina-core-logic/TODO.md:44",
       "doc docs/COVERAGE.md:461",
@@ -15867,7 +15957,7 @@
     "code": "FUNGI-OMNI-002",
     "namespace": "FUNGI",
     "family": "OMNI",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:15"
@@ -15888,6 +15978,7 @@
       "ref packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:14",
       "def packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:15",
       "emit packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:42",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-omni-002-advisory-only-violated.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:684",
       "doc docs/galerina-core-logic-omni-logic.md:774"
     ]
@@ -15896,7 +15987,7 @@
     "code": "FUNGI-OMNI-003",
     "namespace": "FUNGI",
     "family": "OMNI",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:18"
@@ -15917,6 +16008,7 @@
       "ref packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:17",
       "def packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:18",
       "emit packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:55",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-omni-003-confidence-out-of-range.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:685",
       "doc docs/galerina-core-logic-omni-logic.md:775"
     ]
@@ -15925,7 +16017,7 @@
     "code": "FUNGI-OMNI-004",
     "namespace": "FUNGI",
     "family": "OMNI",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:21"
@@ -15946,6 +16038,7 @@
       "ref packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:20",
       "def packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:21",
       "emit packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:65",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-omni-004-malformed-evidence.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:686",
       "doc docs/galerina-core-logic-omni-logic.md:776"
     ]
@@ -15954,7 +16047,7 @@
     "code": "FUNGI-OMNI-005",
     "namespace": "FUNGI",
     "family": "OMNI",
-    "occurrences": 7,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:24"
@@ -15976,6 +16069,7 @@
       "ref packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:23",
       "def packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:24",
       "emit packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:78",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-omni-005-invalid-state.fungi:5",
       "test packages-galerina/galerina-core-logic/tests/logic-v02-contracts.test.mjs:687",
       "doc packages-galerina/galerina-core-logic/TODO.md:44",
       "doc docs/galerina-core-logic-omni-logic.md:777"
@@ -16096,9 +16190,9 @@
       "doc docs/language/fungi/07-control-flow.md:321",
       "doc docs/language/fungi/README.md:78",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:8991",
-      "doc docs/TODO.md:9093",
       "doc docs/TODO.md:9116",
+      "doc docs/TODO.md:9218",
+      "doc docs/TODO.md:9241",
       "ref scripts/audit-syntax.mjs:4",
       "ref scripts/rebuild-fusable-packages.mjs:139",
       "ref galerina.mjs:1182"
@@ -16178,7 +16272,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:127",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:131",
       "doc docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md:450",
-      "doc docs/TODO.md:8641"
+      "doc docs/TODO.md:8766"
     ]
   },
   {
@@ -16275,7 +16369,7 @@
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:59",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:90",
-      "doc docs/TODO.md:8907"
+      "doc docs/TODO.md:9032"
     ]
   },
   {
@@ -16330,8 +16424,8 @@
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:268",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:397",
       "doc docs/language/fungi/04-types-and-values.md:74",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1512",
-      "doc docs/TODO.md:3860"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1551",
+      "doc docs/TODO.md:3985"
     ]
   },
   {
@@ -16395,7 +16489,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/affine-passport-typestate-0111.test.mjs:36",
       "doc docs/reference/value-states.md:118",
       "doc docs/reference/value-states.md:134",
-      "doc docs/TODO.md:9816"
+      "doc docs/TODO.md:9941"
     ]
   },
   {
@@ -17555,7 +17649,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:134",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:162",
       "doc packages-galerina/galerina-registry/README.md:68",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:211"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:2448"
     ]
   },
   {
@@ -17599,7 +17693,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:44",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:148",
       "doc packages-galerina/galerina-registry/README.md:69",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:212",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:2449",
       "ref scripts/registry-index-cli.mjs:261"
     ]
   },
@@ -17656,7 +17750,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:137",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:167",
       "doc packages-galerina/galerina-registry/README.md:70",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:215",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:2452",
       "ref scripts/registry-index-cli.mjs:254"
     ]
   },
@@ -17702,7 +17796,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:109",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:119",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:172",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:214"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:2451"
     ]
   },
   {
@@ -17915,10 +18009,10 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:113",
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:117",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:71",
-      "doc docs/TODO.md:9572",
-      "doc docs/TODO.md:9704",
-      "doc docs/TODO.md:9719",
-      "doc docs/TODO.md:9734"
+      "doc docs/TODO.md:9697",
+      "doc docs/TODO.md:9829",
+      "doc docs/TODO.md:9844",
+      "doc docs/TODO.md:9859"
     ]
   },
   {
@@ -18010,10 +18104,10 @@
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:62",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:102",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:129",
-      "doc docs/TODO.md:3690",
-      "doc docs/TODO.md:9533",
-      "doc docs/TODO.md:9907",
-      "doc docs/TODO.md:9914",
+      "doc docs/TODO.md:3815",
+      "doc docs/TODO.md:9658",
+      "doc docs/TODO.md:10032",
+      "doc docs/TODO.md:10039",
       "ref scripts/audit-muted-diagnostics.mjs:44",
       "ref scripts/code-index.mjs:150",
       "ref scripts/kb-index.mjs:9",
@@ -18436,7 +18530,7 @@
     "code": "FUNGI-PROOF-CERT-001",
     "namespace": "FUNGI",
     "family": "PROOF",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/proof-graph.ts:225"
@@ -18450,6 +18544,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/proof-graph.ts:224",
       "def packages-galerina/galerina-core-compiler/src/proof-graph.ts:225",
+      "fungi packages-galerina/galerina-core-compiler/src/self-hosted/fungi-proof-cert-001.fungi:5",
       "test packages-galerina/galerina-core-compiler/tests/proof-cert-gate-0094.test.mjs:7",
       "test packages-galerina/galerina-core-compiler/tests/proof-cert-gate-0094.test.mjs:33",
       "test packages-galerina/galerina-core-compiler/tests/proof-cert-gate-0094.test.mjs:36",
@@ -18460,7 +18555,7 @@
     "code": "FUNGI-PROOF-CERT-002",
     "namespace": "FUNGI",
     "family": "PROOF",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/proof-graph.ts:227"
@@ -18474,6 +18569,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/proof-graph.ts:226",
       "def packages-galerina/galerina-core-compiler/src/proof-graph.ts:227",
+      "fungi packages-galerina/galerina-core-compiler/src/self-hosted/fungi-proof-cert-002.fungi:5",
       "test packages-galerina/galerina-core-compiler/tests/proof-cert-gate-0094.test.mjs:46",
       "test packages-galerina/galerina-core-compiler/tests/proof-cert-gate-0094.test.mjs:49",
       "test packages-galerina/galerina-core-compiler/tests/proof-cert-gate-0094.test.mjs:55"
@@ -19449,7 +19545,7 @@
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:31",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:85",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:139",
-      "doc docs/TODO.md:9795"
+      "doc docs/TODO.md:9920"
     ]
   },
   {
@@ -19717,8 +19813,8 @@
       "doc docs/patterns/applications/08-secrets.md:14",
       "doc docs/patterns/applications/08-secrets.md:38",
       "doc docs/reference/value-states.md:93",
-      "doc docs/TODO.md:9685",
-      "doc docs/TODO.md:9813",
+      "doc docs/TODO.md:9810",
+      "doc docs/TODO.md:9938",
       "ref scripts/audit-muted-diagnostics.mjs:42",
       "ref scripts/audit-registry-fixtures.mjs:26"
     ]
@@ -19945,7 +20041,7 @@
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:12",
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:30",
       "doc docs/examples/Level-7-AI/358-ai-secure-string-in-ai/notes.md:5",
-      "doc docs/TODO.md:7545"
+      "doc docs/TODO.md:7670"
     ]
   },
   {
@@ -20407,7 +20503,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:46",
-      "doc docs/TODO.md:8990"
+      "doc docs/TODO.md:9115"
     ]
   },
   {
@@ -21316,7 +21412,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:89",
       "doc docs/roadmap-2026-07-15.md:164",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:9429",
+      "doc docs/TODO.md:9554",
       "ref scripts/audit-fungi-corpus-check.mjs:8",
       "ref scripts/audit-fungi-corpus-check.mjs:194",
       "ref scripts/audit-fungi-corpus-check.mjs:251",
@@ -21342,7 +21438,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:137",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:9430"
+      "doc docs/TODO.md:9555"
     ]
   },
   {
@@ -21376,7 +21472,7 @@
       "test packages-galerina/galerina-core-compiler/tests/version-header.test.mjs:69",
       "doc docs/examples/README.md:25",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:37",
-      "doc docs/TODO.md:9433"
+      "doc docs/TODO.md:9558"
     ]
   },
   {
@@ -21854,7 +21950,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:190",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:212",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:213",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1716",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:4198",
       "doc docs/examples/EXAMPLES_INDEX.md:294",
       "doc docs/examples/EXAMPLES_INDEX.md:296",
       "doc docs/examples/Level-6-Compute/AI_SUMMARY.md:47",
@@ -21868,7 +21964,7 @@
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:42",
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:51",
       "doc docs/examples/Level-9-Enterprise/AI_SUMMARY.md:63",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:2905"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:2944"
     ]
   },
   {
@@ -21910,8 +22006,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tenant-isolation.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/leak-proof.test.mjs:55",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:57",
-      "doc docs/TODO.md:9239",
-      "doc docs/TODO.md:9369"
+      "doc docs/TODO.md:9364",
+      "doc docs/TODO.md:9494"
     ]
   },
   {
@@ -22156,7 +22252,7 @@
       "doc docs/reference/effects.md:91",
       "doc docs/reference/effects.md:163",
       "doc docs/roadmap-2026-07-25-cycle2.md:107",
-      "doc docs/TODO.md:8992",
+      "doc docs/TODO.md:9117",
       "ref scripts/audit-example-diagnostics.mjs:230",
       "ref scripts/audit-example-diagnostics.mjs:232",
       "ref scripts/audit-twin-differential.mjs:26",
@@ -22263,7 +22359,7 @@
     "code": "FUNGI-TRI-001",
     "namespace": "FUNGI",
     "family": "TRI",
-    "occurrences": 7,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:12"
@@ -22282,6 +22378,7 @@
     ],
     "allSites": [
       "doc packages-galerina/galerina-core-logic/README.md:358",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-tri-001-invalid-tristate.fungi:5",
       "ref packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:11",
       "def packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:12",
       "emit packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:32",
@@ -22294,7 +22391,7 @@
     "code": "FUNGI-TRI-002",
     "namespace": "FUNGI",
     "family": "TRI",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:15"
@@ -22312,6 +22409,7 @@
       "error"
     ],
     "allSites": [
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-tri-002-empty-unknown-reasons.fungi:5",
       "ref packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:14",
       "def packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:15",
       "emit packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:42",
@@ -22322,7 +22420,7 @@
     "code": "FUNGI-TRI-003",
     "namespace": "FUNGI",
     "family": "TRI",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:18"
@@ -22340,6 +22438,7 @@
       "error"
     ],
     "allSites": [
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-tri-003-invalid-operand.fungi:5",
       "ref packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:17",
       "def packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:18",
       "emit packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:54",
@@ -22350,7 +22449,7 @@
     "code": "FUNGI-TRI-004",
     "namespace": "FUNGI",
     "family": "TRI",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:21"
@@ -22368,6 +22467,7 @@
       "error"
     ],
     "allSites": [
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-tri-004-unknown-leaked.fungi:5",
       "ref packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:20",
       "def packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:21",
       "emit packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:64",
@@ -22378,7 +22478,7 @@
     "code": "FUNGI-TRI-005",
     "namespace": "FUNGI",
     "family": "TRI",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:24"
@@ -22397,6 +22497,7 @@
     ],
     "allSites": [
       "doc packages-galerina/galerina-core-logic/README.md:358",
+      "fungi packages-galerina/galerina-core-logic/src/self-hosted/fungi-tri-005-malformed-unknown-reason.fungi:5",
       "ref packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:23",
       "def packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:24",
       "emit packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:74",
@@ -22419,7 +22520,7 @@
     "severities": [],
     "allSites": [
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11.test.mjs:481",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1256"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3728"
     ]
   },
   {
@@ -22729,9 +22830,9 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-hot-paths.test.mjs:140",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-hot-paths.test.mjs:145",
       "doc packages-galerina/galerina-core-compiler/TODO.md:15",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1243",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1252",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1253",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3715",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3724",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3725",
       "doc docs/examples/EXAMPLES_INDEX.md:100",
       "fungi docs/examples/Level-2-Types/084-unknown-type/example.fungi:5",
       "fungi docs/examples/Level-2-Types/084-unknown-type/example.fungi:6",
@@ -23392,9 +23493,9 @@
       "test packages-galerina/galerina-core-compiler/tests/wat-p9-typechecker-parity.test.mjs:186",
       "doc packages-galerina/galerina-core-compiler/TODO.md:43",
       "doc docs/architecture/self-hosting-evolution-plan-2026-07-10.md:28",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1242",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1244",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1258"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3714",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3716",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3730"
     ]
   },
   {
@@ -23468,7 +23569,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:795",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:805",
       "test packages-galerina/galerina-core-compiler/tests/wat-p9-typechecker-parity.test.mjs:187",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1254",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3726",
       "doc docs/examples/README.md:86"
     ]
   },
@@ -23679,8 +23780,8 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:237",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:249",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:250",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1249",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1693",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3721",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:4175",
       "doc docs/examples/EXAMPLES_INDEX.md:81",
       "doc docs/examples/EXAMPLES_INDEX.md:84",
       "doc docs/examples/EXAMPLES_INDEX.md:97",
@@ -23949,7 +24050,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11-wave2.test.mjs:180",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11-wave2.test.mjs:191",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11-wave2.test.mjs:192",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1245",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3717",
       "ref scripts/audit-codes-full.mjs:81",
       "ref scripts/audit-twin-emit-parity.mjs:176",
       "ref scripts/audit-twin-emit-parity.mjs:181",
@@ -24036,12 +24137,12 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-checker-tensor.test.mjs:88",
       "doc docs/AI/DO_NOT_USE_YET.md:165",
       "doc docs/reports/tensor-dimension-count-compatibility-fungi-conversion-2026-08-12.md:37",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:867",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:906",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:53",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:116",
       "doc docs/superpowers/specs/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion-design.md:28",
       "doc docs/superpowers/specs/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion-design.md:78",
-      "doc docs/TODO.md:2263",
+      "doc docs/TODO.md:2388",
       "ref scripts/audit-codes-full.mjs:83"
     ]
   },
@@ -24111,7 +24212,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11.test.mjs:196",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11.test.mjs:197",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-checker-tensor.test.mjs:4",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1276",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3748",
       "ref scripts/audit-codes-full.mjs:84"
     ]
   },
@@ -24316,7 +24417,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:520",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:529",
       "doc docs/architecture/session4-5hr-autonomous-roadmap-2026-07-11.md:62",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1251",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3723",
       "doc docs/examples/README.md:91",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:352",
       "doc docs/roadmap-2026-07-15.md:97"
@@ -24586,8 +24687,8 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:645",
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:246",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:648",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1540",
-      "doc docs/TODO.md:3903"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1579",
+      "doc docs/TODO.md:4028"
     ]
   },
   {
@@ -24656,12 +24757,12 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:267",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:290",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:295",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1257",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3729",
       "doc docs/reports/tensor-element-type-compatibility-fungi-conversion-2026-08-12.md:26",
       "doc docs/roadmap-2026-07-15.md:53",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:810",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:849",
       "doc docs/superpowers/specs/2026-08-12-tensor-element-type-compatibility-fungi-conversion-design.md:27",
-      "doc docs/TODO.md:2278"
+      "doc docs/TODO.md:2403"
     ]
   },
   {
@@ -24788,7 +24889,7 @@
       "test packages-galerina/galerina-core-compiler/tests/condition-type-gate.test.mjs:32",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:308",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:309",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1246",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3718",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:173",
       "ref galerina.mjs:128",
       "ref galerina.mjs:164"
@@ -24994,10 +25095,10 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:280",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:357",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:114",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:669",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:670",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3098",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:3099",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:9093",
+      "doc docs/TODO.md:9218",
       "ref scripts/audit-codes-full.mjs:91",
       "ref scripts/audit-diagnostic-code-collisions.mjs:179",
       "ref scripts/audit-examples-vs-declared.mjs:94",
@@ -25481,7 +25582,7 @@
       "doc docs/reference/value-states.md:56",
       "doc docs/reference/value-states.md:128",
       "doc docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md:305",
-      "doc docs/TODO.md:9775",
+      "doc docs/TODO.md:9900",
       "ref scripts/audit-mutation.mjs:205",
       "ref scripts/audit-mutation.mjs:212",
       "ref scripts/audit-reference-doc-drift.mjs:65",
@@ -25767,7 +25868,7 @@
       "doc docs/reference/value-states.md:131",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:87",
       "doc docs/security/slsa-deep-bola-pass-2026-07-09.md:45",
-      "doc docs/TODO.md:9814",
+      "doc docs/TODO.md:9939",
       "ref scripts/audit-example-diagnostics.mjs:9",
       "ref scripts/audit-example-diagnostics.mjs:225",
       "ref scripts/audit-muted-diagnostics.mjs:63",
@@ -25927,7 +26028,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
       "doc docs/roadmap-2026-07-25-cycle2.md:109",
-      "doc docs/TODO.md:8992",
+      "doc docs/TODO.md:9117",
       "ref scripts/audit-codes-full.mjs:53",
       "ref scripts/audit-muted-diagnostics.mjs:55",
       "ref galerina.mjs:1381",
@@ -26026,7 +26127,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
       "doc docs/roadmap-2026-07-24.md:16",
-      "doc docs/TODO.md:9051"
+      "doc docs/TODO.md:9176"
     ]
   },
   {
@@ -26199,7 +26300,7 @@
       "doc docs/language/fungi/03-effects-and-capabilities.md:69",
       "doc docs/reference/effects.md:148",
       "doc docs/reference/effects.md:149",
-      "doc docs/TODO.md:8991",
+      "doc docs/TODO.md:9116",
       "ref scripts/audit-example-diagnostics.mjs:125"
     ]
   },
@@ -26320,7 +26421,7 @@
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5922",
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5938",
       "doc docs/roadmap-2026-07-25-cycle2.md:86",
-      "doc docs/TODO.md:8992",
+      "doc docs/TODO.md:9117",
       "ref scripts/audit-diagnostic-code-collisions.mjs:56"
     ]
   },
@@ -26338,7 +26439,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/TODO.md:9783"
+      "doc docs/TODO.md:9908"
     ]
   },
   {
@@ -27813,7 +27914,7 @@
       "doc docs/examples/gate/GATEREGEX.md:325",
       "doc docs/examples/gate/RULES.md:23",
       "doc docs/examples/gate/SEMANTICS.md:53",
-      "doc docs/TODO.md:3655"
+      "doc docs/TODO.md:3780"
     ]
   },
   {
@@ -27975,7 +28076,7 @@
     "allSites": [
       "emit packages-galerina/galerina-core-compiler/src/gate-v3-registry.ts:29",
       "doc docs/examples/gate/CODES.md:60",
-      "doc docs/TODO.md:3656"
+      "doc docs/TODO.md:3781"
     ]
   },
   {
@@ -28853,7 +28954,7 @@
       "doc docs/examples/gate/SEMANTICS.md:274",
       "doc docs/examples/gate/SEMANTICS.md:365",
       "doc docs/examples/gate/SEMANTICS.md:398",
-      "doc docs/TODO.md:3660",
+      "doc docs/TODO.md:3785",
       "test scripts/tests/gate-result-shape.test.mjs:14"
     ]
   },

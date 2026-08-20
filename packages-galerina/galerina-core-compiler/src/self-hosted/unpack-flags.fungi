@@ -1,0 +1,8 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-core-compiler/src/fused-pass.ts#unpackFlags
+/// Restricted input contract: signed-i32 subdomain only; TypeScript remains the whole-Number oracle.
+/// Operator contract: JavaScript signed-i32 binary & lowered to Int.bitAnd; no other bitwise operators admitted.
+pure flow unpackFlags(word: Int) -> Int {
+  return Int.bitAnd(word, 255)
+}
