@@ -215,6 +215,9 @@ export const V1_ACTIVE_KEYWORDS: ReadonlySet<string> = new Set([
   // stay CONTEXTUAL arm labels (not reserved), special only in prefilter-arm
   // position — like check's deny/ambig.
   "prefilter",
+  // RD-0858 requirement blocks. `deny` and `ambig` remain contextual handler
+  // labels so existing identifiers are not captured outside `require` parsing.
+  "requirement", "require",
 ]);
 
 /** Words reserved for post-v1 grammar — produce FUNGI-SYNTAX-003 if used as identifiers. */

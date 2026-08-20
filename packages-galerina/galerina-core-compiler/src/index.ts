@@ -24,6 +24,23 @@ export {
   type LexerDiagnostic,
 } from "./lexer.js";
 
+export {
+  FUNGI_REQUIREMENT_001,
+  FUNGI_REQUIREMENT_002,
+  FUNGI_REQUIREMENT_003,
+  FUNGI_REQUIREMENT_004,
+  FUNGI_REQUIREMENT_005,
+  FUNGI_REQUIREMENT_006,
+  FUNGI_REQUIREMENT_007,
+  FUNGI_REQUIREMENT_008,
+  FUNGI_REQUIREMENT_009,
+  FUNGI_REQUIREMENT_010,
+  FUNGI_REQUIREMENT_011,
+  FUNGI_REQUIREMENT_012,
+  FUNGI_REQUIREMENT_DIAGNOSTICS,
+  type RequirementDiagnosticDefinition,
+} from "./requirement-diagnostics.js";
+
 /** FUNGI-LEX-001: Generic type nesting exceeds maximum depth (8 levels). */
 export const FUNGI_LEX_001 = {
   code: "FUNGI-LEX-001",
