@@ -11,7 +11,7 @@
 | Section | Documents |
 |---|---|
 | [`consultations/`](consultations/INDEX.md) | 20 |
-| [`plans/`](plans/INDEX.md) | 158 |
+| [`plans/`](plans/INDEX.md) | 159 |
 | [`specs/`](specs/INDEX.md) | 124 |
 
 ---
