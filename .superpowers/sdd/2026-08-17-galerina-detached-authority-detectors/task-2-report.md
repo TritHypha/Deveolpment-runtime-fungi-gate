@@ -365,3 +365,109 @@ changed to conceal or reclassify them.
   file/edge ceilings and CLI exit algebra 0/1/2 remain unchanged.
 - A full graph refresh plus independent status and symbol/content probes is
   required at the final fix/report commit before any final freshness claim.
+
+## Fix Round 3
+
+### Status
+
+The third independent HOLD findings were reproduced at the exact committed
+RED checkpoint `f088a91b01e9014204d8f43d3f5e1f89f6f741c3` and fixed only within
+Task 2. Production fixes are committed locally at
+`8cacdd7fe4a4b85552d8eaf151c8bab114fdd3c7`. Task 3 registration remains
+closed, and the result remains **HOLD — independent re-review pending**.
+
+The Fix Round 2 statement that branch and loop joins retained ambiguity was
+too broad. Conditional-expression side effects and switch/try assignment
+branches were still discarded or traversed without a conservative merge.
+This round corrects that overstatement and supplies exact RED/GREEN evidence.
+
+### RED evidence
+
+The two new test files were committed before production changes. At that RED
+checkpoint:
+
+- the eight-case detector subset was **2/8 PASS**, exit `1`; the only passing
+  controls were benign switch/try joins and lexically shadowed
+  `module.require`;
+- conditional-expression, switch/try, `module.require` closure,
+  `module.require` nonliteral/package refusal, escaped-loader, and hostile
+  environment controls all failed as planted; and
+- the provider suite was **3/5 PASS**, exit `1`, because the authenticated
+  command seam did not exist and neither new TOCTOU control could call it.
+
+A full graph refresh was invoked with HEAD at the RED commit, returning 63,903
+nodes and 164,696 edges, but production edits were already present in the
+working tree. That refresh is explicitly excluded as proof of the committed
+RED contents. No MCP structural-freshness claim is made from it.
+
+### Implementation evidence
+
+- Conditional-expression scopes now merge their side effects. Switch paths
+  model possible matching clauses and fall-through; try/catch/finally paths
+  conservatively merge successful and exceptional assignment states. A known
+  forbidden symbol on any continuing branch remains material, while
+  unresolved authority refuses.
+- CommonJS discovery treats unshadowed `module.require` as an intrinsic static
+  loader, closes literal local namespace and inline-member forms, and refuses
+  nonliteral/package loads under the empty allow-list. Direct loader aliases
+  remain supported. Loader escape through parameters, call/new arguments,
+  object/class properties, arrays, returns, yields, or unsupported property
+  assignment refuses; lexical `require` and `module` shadows remain benign.
+- `runAuthenticatedProviderCommand` validates bounded arguments and performs a
+  canonical direct-file snapshot, pinned SHA-256 check, and stable
+  identity/size/mtime comparison immediately before and after every provider
+  command. The version, project enumeration, and index-status invocations all
+  use this seam and fail closed on any mismatch.
+- Provider children no longer receive a spread of ambient variables. Native
+  user-home values are used for home/profile. On Windows, a validated
+  deterministic system/Git path is supplied because experiments proved that
+  omitting PATH lets Windows inherit the hostile parent value; no caller or
+  ambient PATH selects the provider or graph project.
+
+### GREEN evidence
+
+The first full rerun was **42/44 PASS**, exit `1`. Both failures were existing
+supported CommonJS alias controls: an initially over-broad generic escape rule
+mistook `const load = require` for a container escape. Moving refusal to actual
+unsupported sinks made the two aliases plus the escaped-parameter control
+**3/3 PASS**, exit `0`.
+
+Fresh verification of the corrected bytes:
+
+- round-three detector subset — **8/8 PASS**, exit `0`, 70.032 seconds;
+- complete focused detector suite — **44/44 PASS**, exit `0`, 306.162
+  seconds, including the bounded 112.608-second three-process CLI tail;
+- provider authentication — **5/5 PASS**, exit `0`;
+- owned-process and bounded-receipt support — **8/8 PASS**, exit `0`;
+- targeted TypeScript classifier/parser seam — **1/1 PASS**, exit `0`;
+- syntax checks for both production modules and both focused tests — exit `0`;
+  and
+- `git diff --check` — exit `0`, no whitespace findings.
+
+The hostile-environment diagnostic isolated PATH as the only failing planted
+variable. Each of `CODEBASE_MEMORY_DB`, `CODEBASE_MEMORY_HOME`,
+`CODEBASE_MEMORY_PROJECT`, `HOME`, `NODE_OPTIONS`, `NODE_PATH`, `PYTHONHOME`,
+and `PYTHONPATH` independently remained PASS/FRESH. After the deterministic
+validated child-path fix, the complete hostile-variable control passed.
+
+### Graph evidence and limitations
+
+Direct provider status after the production commit was `ready` but correctly
+`stale: true`: graph head remained at the RED commit while Git HEAD was the
+production commit. This is reported separately from MCP state and is not a
+freshness claim. The controller owns the final full MCP refresh and exact-head
+symbol/content probes after the report commit.
+
+Authentication narrows but does not eliminate concurrent replacement risk:
+the provider is re-hashed with stat identity before and after each command,
+but the detector does not claim protection against an attacker able to replace
+bytes while preserving all checked evidence during execution. The
+deterministically selected installed Git-for-Windows binary is canonical and
+not ambient-selected, but is not source-digest-pinned; it remains a protected
+installation trust boundary. Repository HEAD is nevertheless resolved
+independently from bounded stable Git metadata and cross-checked against the
+provider's graph status.
+
+Exact frozen `DetachedAuthorityAuditV1`, receipt confidentiality, canonical
+relative locators, case-sensitive duplicate controls, deterministic work
+bounds, stable ruleset digest, and CLI exit algebra `0/1/2` remain unchanged.
