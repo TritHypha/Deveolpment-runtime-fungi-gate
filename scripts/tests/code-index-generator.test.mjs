@@ -104,3 +104,64 @@ test("code-index keeps one-line diagnostic metadata inside its own definition", 
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("code-index records bounded parser diagnostic emit calls only", () => {
+  const root = mkdtempSync(join(tmpdir(), "code-index-parser-emit-"));
+  try {
+    write(
+      root,
+      "packages-galerina/example/src/diagnostics.ts",
+      [
+        "export const PARSER_DIAGNOSTIC = {",
+        '  code: "FUNGI-TEST-001",',
+        '  name: "PARSER_DIAGNOSTIC",',
+        '  severity: "error",',
+        "} as const;",
+        "",
+      ].join("\n"),
+    );
+    write(
+      root,
+      "packages-galerina/example/src/parser.ts",
+      [
+        "class Parser {",
+        "  parse(): void {",
+        "    this.emit(",
+        "      PARSER_DIAGNOSTIC.code,",
+        "      PARSER_DIAGNOSTIC.name,",
+        '      "message",',
+        "    );",
+        '    this.emit("FUNGI-TEST-003", "LITERAL_DIAGNOSTIC", "message");',
+        "  }",
+        "}",
+        "",
+      ].join("\n"),
+    );
+    write(
+      root,
+      "packages-galerina/example/src/event-bus.ts",
+      'bus.emit("FUNGI-TEST-002", "not a diagnostic");\n',
+    );
+
+    const generated = run(root);
+    assert.equal(generated.status, 0, generated.stderr);
+
+    const index = JSON.parse(
+      readFileSync(join(root, "build", "code-index", "code-index.json"), "utf8"),
+    );
+    const diagnostic = index.find(({ code }) => code === "FUNGI-TEST-001");
+    const unrelated = index.find(({ code }) => code === "FUNGI-TEST-002");
+    const literal = index.find(({ code }) => code === "FUNGI-TEST-003");
+    assert.deepEqual(diagnostic?.emits, [
+      "packages-galerina/example/src/parser.ts:3",
+    ]);
+    assert.deepEqual(diagnostic?.names, ["PARSER_DIAGNOSTIC"]);
+    assert.deepEqual(unrelated?.emits, []);
+    assert.deepEqual(literal?.emits, [
+      "packages-galerina/example/src/parser.ts:8",
+    ]);
+    assert.deepEqual(literal?.names, ["LITERAL_DIAGNOSTIC"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});

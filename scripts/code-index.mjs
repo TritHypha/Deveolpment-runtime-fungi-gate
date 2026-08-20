@@ -134,6 +134,32 @@ for (const file of FILES) {
     const isComment = trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*");
     // type position (not a runtime emit): `readonly code: "FUNGI-X"`, a "X" | "Y" union, or a `type` alias.
     const isTypeDecl = /\breadonly\b/.test(line) || /"\s*\|\s*"/.test(line) || /^(?:export\s+)?type\s+\w+/.test(trimmed);
+    // The compiler parser owns a private diagnostic sink: `this.emit(code, name, message, ...)`.
+    // `emit` is otherwise too generic to classify globally (event buses use the same method name),
+    // so recognize it only in a source file named parser.ts and inspect a bounded argument window.
+    if (!isComment && /(?:^|\/)parser\.ts$/.test(rel) && /\bthis\.emit\s*\(/.test(line)) {
+      const start = line.search(/\bthis\.emit\s*\(/);
+      const callLines = [line.slice(start)];
+      for (let j = i + 1; !/\)\s*;/.test(callLines.at(-1)) && j < Math.min(i + 6, lines.length); j++) {
+        callLines.push(lines[j]);
+      }
+      const win = callLines.join(" ");
+      const args = [...win.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+      const literalCodeIndex = args.findIndex((arg) => CODE_TEST.test(arg));
+      let code = literalCodeIndex >= 0 ? args[literalCodeIndex] : undefined;
+      if (!code) {
+        for (const match of win.matchAll(/\b([A-Za-z_]\w*)(?:\.(?:code|name))?\b/g)) {
+          code = constToCode.get(match[1]);
+          if (code) break;
+        }
+      }
+      if (code) {
+        const entry = get(code);
+        entry.occ.push({ file: rel, line: i + 1, role: isTest ? "test" : "emit" });
+        const name = literalCodeIndex >= 0 ? args[literalCodeIndex + 1] : undefined;
+        if (!isTest && name && /^[A-Za-z][A-Za-z0-9_]*$/.test(name)) entry.names.add(name);
+      }
+    }
     // multi-line make*Diag(code, name, ...): attribute the windowed (code, name) as an emit at the
     // make-line, even when the code/name args sit on the following lines (common in governance-verifier.ts).
     if (!isComment && /make\w*Diag\(/.test(line)) {
