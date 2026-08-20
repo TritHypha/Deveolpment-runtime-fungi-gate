@@ -5,8 +5,8 @@
     "ref": 196,
     "inline": 383,
     "phantom": 114,
-    "live": 180,
-    "referenced": 102,
+    "live": 183,
+    "referenced": 99,
     "dead": 13
   },
   "entries": [
@@ -8967,7 +8967,7 @@
       "code": "FUNGI-REQUIREMENT-002",
       "family": "REQUIREMENT",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "CONSTRAINT_TYPE_MISMATCH"
       ],
@@ -8975,9 +8975,9 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
-      "tests": 1,
-      "docs": 2
+      "emits": 1,
+      "tests": 3,
+      "docs": 3
     },
     {
       "code": "FUNGI-REQUIREMENT-003",
@@ -9047,7 +9047,7 @@
       "code": "FUNGI-REQUIREMENT-007",
       "family": "REQUIREMENT",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "NON_TERMINAL_REQUIRE_HANDLER"
       ],
@@ -9055,9 +9055,9 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
-      "tests": 1,
-      "docs": 2
+      "emits": 1,
+      "tests": 4,
+      "docs": 3
     },
     {
       "code": "FUNGI-REQUIREMENT-008",
@@ -9079,7 +9079,7 @@
       "code": "FUNGI-REQUIREMENT-009",
       "family": "REQUIREMENT",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "REQUIRE_SUBJECT_TYPE_MISMATCH"
       ],
@@ -9087,9 +9087,9 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
-      "tests": 1,
-      "docs": 2
+      "emits": 1,
+      "tests": 2,
+      "docs": 3
     },
     {
       "code": "FUNGI-REQUIREMENT-010",
@@ -10849,7 +10849,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 33,
+      "tests": 34,
       "docs": 1
     },
     {
