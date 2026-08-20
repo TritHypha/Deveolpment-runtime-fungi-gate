@@ -22,6 +22,10 @@ const requirementSource = (body) =>
   `contract { effects {} }\n{\n  let result: Verdict = requirement {\n${body}\n  }\n` +
   `  return result\n}`;
 
+const requireStatementSource = (statement) =>
+  `@version 1\npure flow decide(admitted: Verdict) -> Verdict\n` +
+  `contract { effects {} }\n{\n  ${statement}\n  return admitted\n}`;
+
 function nodesOfKind(ast, kind) {
   const found = [];
   (function walk(node) {
@@ -143,5 +147,100 @@ describe("RD-0858 requirement expression", () => {
       assert.ok(Number.isFinite(node.location?.endOffset));
       assert.ok(node.location.endOffset > node.location.offset);
     }
+  });
+});
+
+describe("RD-0858 require statement", () => {
+  it("stores the subject followed by canonical deny and ambig arms", () => {
+    const source = requireStatementSource(
+      "require admitted {\n    deny: fault Denied\n    ambig: fault Unknown\n  }",
+    );
+    const parsed = L.parseProgram(source, "require-statement.fungi");
+    assert.deepEqual(errorCodes(parsed), []);
+    const statements = nodesOfKind(parsed.ast, "requireStmt");
+    assert.equal(statements.length, 1);
+    assert.deepEqual(
+      statements[0].children.map((child) => [child.kind, child.value]),
+      [
+        ["identifier", "admitted"],
+        ["requireArm", "deny"],
+        ["requireArm", "ambig"],
+      ],
+    );
+  });
+
+  it("retains an inline requirement expression as the require subject", () => {
+    const source = requireStatementSource(
+      "require requirement { admitted } { deny: fault Denied ambig: fault Unknown }",
+    );
+    const parsed = L.parseProgram(source, "require-inline-requirement.fungi");
+    assert.deepEqual(errorCodes(parsed), []);
+    const statement = nodesOfKind(parsed.ast, "requireStmt")[0];
+    assert.equal(statement?.children?.[0]?.kind, "requirementExpr");
+    assert.equal(nodesOfKind(parsed.ast, "requirementExpr").length, 1);
+  });
+
+  it("canonicalizes ambig-before-deny source order to deny then ambig", () => {
+    const source = requireStatementSource(
+      "require admitted { ambig: fault Unknown deny: fault Denied }",
+    );
+    const parsed = L.parseProgram(source, "require-arm-order.fungi");
+    assert.deepEqual(errorCodes(parsed), []);
+    const arms = nodesOfKind(parsed.ast, "requireStmt")[0]?.children?.slice(1) ?? [];
+    assert.deepEqual(arms.map((arm) => arm.value), ["deny", "ambig"]);
+  });
+
+  for (const missing of ["deny", "ambig"]) {
+    it(`emits FUNGI-REQUIREMENT-006 once when ${missing} is missing`, () => {
+      const retained = missing === "deny" ? "ambig: fault Unknown" : "deny: fault Denied";
+      const parsed = L.parseProgram(
+        requireStatementSource(`require admitted { ${retained} }`),
+        `require-missing-${missing}.fungi`,
+      );
+      assert.equal(errorCodes(parsed).filter((code) => code === "FUNGI-REQUIREMENT-006").length, 1);
+    });
+  }
+
+  for (const duplicate of ["deny", "ambig"]) {
+    it(`refuses and omits a duplicate ${duplicate} arm`, () => {
+      const other = duplicate === "deny" ? "ambig: fault Unknown" : "deny: fault Denied";
+      const parsed = L.parseProgram(
+        requireStatementSource(
+          `require admitted { ${duplicate}: fault First ${duplicate}: fault Duplicate ${other} }`,
+        ),
+        `require-duplicate-${duplicate}.fungi`,
+      );
+      assert.equal(errorCodes(parsed).filter((code) => code === "FUNGI-REQUIREMENT-006").length, 1);
+      const statement = nodesOfKind(parsed.ast, "requireStmt")[0];
+      assert.deepEqual(statement?.children?.slice(1).map((arm) => arm.value), ["deny", "ambig"]);
+      assert.equal(nodesOfKind(statement, "identifier").some((node) => node.value === "Duplicate"), false);
+    });
+  }
+
+  for (const unknown of ["allow", "if"]) {
+    it(`refuses and omits the unknown ${unknown}: label`, () => {
+      const parsed = L.parseProgram(
+        requireStatementSource(
+          `require admitted { ${unknown}: fault Unexpected deny: fault Denied ambig: fault Unknown }`,
+        ),
+        `require-unknown-${unknown}.fungi`,
+      );
+      assert.ok(errorCodes(parsed).length > 0);
+      assert.deepEqual(
+        nodesOfKind(parsed.ast, "requireStmt")[0]?.children?.slice(1).map((arm) => arm.value),
+        ["deny", "ambig"],
+      );
+    });
+  }
+
+  it("retains exact arm spans for block and single-statement bodies", () => {
+    const source = requireStatementSource(
+      "require admitted {\n    deny: { fault Denied }\n    ambig: fault Unknown\n  }",
+    );
+    const parsed = L.parseProgram(source, "require-arm-spans.fungi");
+    assert.deepEqual(errorCodes(parsed), []);
+    const arms = nodesOfKind(parsed.ast, "requireStmt")[0]?.children?.slice(1) ?? [];
+    assert.equal(source.slice(arms[0].location.offset, arms[0].location.endOffset), "deny: { fault Denied }");
+    assert.equal(source.slice(arms[1].location.offset, arms[1].location.endOffset), "ambig: fault Unknown");
   });
 });
