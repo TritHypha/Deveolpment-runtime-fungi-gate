@@ -471,3 +471,86 @@ provider's graph status.
 Exact frozen `DetachedAuthorityAuditV1`, receipt confidentiality, canonical
 relative locators, case-sensitive duplicate controls, deterministic work
 bounds, stable ruleset digest, and CLI exit algebra `0/1/2` remain unchanged.
+
+## Fix Round 4
+
+### Status
+
+The fourth independent HOLD finding was reproduced at the exact committed RED
+checkpoint `9bdaf8caa425f19494a03e6eee6d6c9b43c70278` and fixed only within
+Task 2. The production checkpoint is
+`717011e884c590ac68e26e3144b9b7b79aa8655e`; it remains local-only and
+**HOLD — independent re-review pending**. Task 3 registration remains closed.
+
+### RED evidence
+
+Four controls were added and committed before production changed. The targeted
+run at the RED checkpoint was **1/4 PASS**, exit `1`, in 44.252 seconds:
+
+- chained aliases of the intrinsic `module` object followed by renamed
+  `require` destructuring passed without entering the hidden helper closure;
+- literal module indexing was recognised, but concatenated, bound-constant and
+  computed-destructuring `require` keys were omitted, producing only one of
+  four required exact closure edges;
+- an unresolved computed property on the intrinsic module object passed
+  instead of refusing; and
+- the benign locally shadowed `module` control correctly passed with no edges.
+
+The temporary RED fixture directory was owned by the focused test and removed
+by its `finally` cleanup. Custody was clean before the RED commit. A subsequent
+run while the graph still indexed the prior report commit refused as stale;
+that run is excluded from implementation evidence rather than presented as a
+GREEN result.
+
+### Implementation evidence
+
+- CommonJS binding analysis now carries a bounded module-object state through
+  lexical aliases and object-binding patterns, including renamed and computed
+  destructuring.
+- Deterministic string keys are folded through literals, constant bindings,
+  parentheses and bounded string concatenation. The analysis uses the resolved
+  key to map the module object's `require` property to the existing intrinsic
+  loader state.
+- An unresolved computed property on an intrinsic module object records a
+  loader escape and refuses instead of returning PASS. Non-`require` properties
+  remain benign, and a lexically shadowed local `module` never acquires the
+  intrinsic module-object state.
+- Existing direct `module.require`, ordinary `require` aliases, loader-escape
+  refusal, namespace handling, canonical closure and forbidden-surface rules
+  are unchanged.
+
+### GREEN evidence
+
+The controller full-indexed the exact production checkpoint before execution:
+63,906 of 63,906 nodes and 164,726 of 164,726 edges. The four-case targeted
+run was then **4/4 PASS**, exit `0`, in 43.680 seconds.
+
+Fresh verification at the same clean production checkpoint:
+
+- complete focused detector suite — **48/48 PASS**, exit `0`, 311.131
+  seconds, including the bounded 109.391-second three-process CLI tail;
+- provider authentication — **5/5 PASS**, exit `0`;
+- owned-process and bounded-receipt support — **8/8 PASS**, exit `0`;
+- targeted TypeScript classifier/parser seam — **1/1 PASS**, exit `0`;
+- syntax checks for both production modules and both focused tests — exit `0`;
+  and
+- `git diff --check` — exit `0`, no whitespace findings.
+
+### Review notes and limitations
+
+This round closes the confirmed module-object property family with a bounded
+state and constant-key model rather than matching only the two reported source
+strings. Constant folding is intentionally limited to deterministic bounded
+string expressions; unresolved intrinsic-module properties refuse. The benign
+shadow control ensures that this conservative rule does not manufacture
+authority for a local `module` binding.
+
+The report commit necessarily advances HEAD beyond the indexed production
+checkpoint. No post-report graph freshness or MCP structural-freshness claim is
+made here. The controller and independent reviewer own the final full index and
+their own exact-head symbol/content probes.
+
+The exact frozen receipt schema, source-body confidentiality, canonical
+relative locators, case-sensitive duplicate controls, deterministic file/edge/
+byte bounds, stable ruleset digest, and CLI exit algebra `0/1/2` remain
+unchanged.
