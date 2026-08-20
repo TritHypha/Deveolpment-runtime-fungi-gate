@@ -15,9 +15,16 @@ counts or open items that a newer section explicitly supersedes.
   implement and admit RD-0858, and maintenance that creates or converts no
   Fungi behavior. Unknown, missing, stale or ambiguous admission evidence is a
   refusal.
-- [ ] Settle the first-version language contract: exact Bool/Verdict lifting,
+- [x] Settle the first-version language contract: exact Bool/Verdict lifting,
   K3 conjunction, source-order evaluation, explicit `DENY` and `UNKNOWN`
   handling, taint/validator rules, failure redaction and finite work bounds.
+- [x] Complete RD-0858 delivery unit 1 at evidence commit `be4a0a36`:
+  reserve only `requirement`/`require`, export the twelve-code owner family,
+  parse bounded requirement expressions and exhaustive require statements,
+  keep only `001`/`005`/`006`/`008` live, and pass 116/116 parser controls,
+  exact-head graphs and both independent plus model-diverse review. This is
+  parser/AST evidence only; it grants no type, runtime, GIR, SLIDE, VOK or
+  conversion authority.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,
