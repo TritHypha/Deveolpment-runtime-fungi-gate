@@ -11,6 +11,11 @@
 // =============================================================================
 
 import { lex, type Token, type LexerDiagnostic } from "./lexer.js";
+import {
+  FUNGI_REQUIREMENT_001,
+  FUNGI_REQUIREMENT_005,
+  FUNGI_REQUIREMENT_008,
+} from "./requirement-diagnostics.js";
 
 // ---------------------------------------------------------------------------
 // AST types (mirrors @galerina/core)
@@ -418,6 +423,8 @@ class Parser {
   private pos = 0;
   /** Current recursive-descent expression-nesting depth (FUNGI-PARSE-DEPTH-001 stack-exhaustion guard). */
   private exprDepth = 0;
+  /** Nested requirement blocks are refused and never become authorizing requirementExpr nodes. */
+  private requirementDepth = 0;
   private readonly diagnostics: ParseDiagnostic[] = [];
   /** One diagnostic per over-ceiling field array; surplus fields are parsed
    * for recovery but never retained in the authorizing AST. */
@@ -2262,6 +2269,147 @@ class Parser {
     return left;
   }
 
+  /** Parse the bounded, expression-only `requirement { ... }` policy form. */
+  private parseRequirementExpr(): AstNode {
+    const start = this.loc();
+    this.advance(); // requirement
+    const open = this.expect("symbol", "{");
+    if (open === undefined) {
+      return { kind: "identifier", value: "<invalid-requirement>", location: start };
+    }
+
+    this.requirementDepth++;
+    try {
+      if (this.requirementDepth > 1) {
+        this.emit(
+          FUNGI_REQUIREMENT_008.code,
+          FUNGI_REQUIREMENT_008.name,
+          FUNGI_REQUIREMENT_008.message,
+          start,
+          FUNGI_REQUIREMENT_008.suggestedFix,
+        );
+        const close = this.skipBalancedRequirementBlock();
+        return {
+          kind: "identifier",
+          value: "<invalid-requirement>",
+          location: this.spanFrom(start, close),
+        };
+      }
+
+      const constraints: AstNode[] = [];
+      let ceilingReported = false;
+      this.skipNewlines();
+
+      while (!this.currentIs("symbol", "}") && !this.isEof()) {
+        if (this.currentIs("symbol", ";")) {
+          this.advance();
+          this.skipNewlines();
+          continue;
+        }
+
+        const constraintStart = this.loc();
+        if (
+          this.current().kind === "keyword" &&
+          (this.current().value === "let" || this.current().value === "mut" || this.current().value === "readonly")
+        ) {
+          this.emit(
+            "FUNGI-PARSE-001",
+            "UNEXPECTED_TOKEN",
+            `Declarations are not permitted inside requirement expressions; found '${this.current().value}'.`,
+            constraintStart,
+            "Bind the value before the requirement block and reference the immutable result from a constraint.",
+          );
+          this.recoverToStatement();
+        } else {
+          const expression = this.parseExpression();
+          const constraintEnd = this.peek(-1);
+          if (!this.containsInvalidRequirement(expression)) {
+            const constraint: AstNode = {
+              kind: "requirementConstraint",
+              location: this.spanFrom(constraintStart, constraintEnd),
+              children: [expression],
+            };
+            if (constraints.length < MAX_REQUIREMENT_CONSTRAINTS) {
+              constraints.push(constraint);
+            } else if (!ceilingReported) {
+              ceilingReported = true;
+              this.emit(
+                FUNGI_REQUIREMENT_005.code,
+                FUNGI_REQUIREMENT_005.name,
+                FUNGI_REQUIREMENT_005.message,
+                constraint.location ?? constraintStart,
+                FUNGI_REQUIREMENT_005.suggestedFix,
+              );
+            }
+          }
+
+          if (
+            !this.isEof() &&
+            this.current().kind !== "newline" &&
+            !this.currentIs("symbol", ";") &&
+            !this.currentIs("symbol", "}")
+          ) {
+            this.emitUnexpected("Expected a newline, ';', or '}' after a requirement constraint.");
+            this.recoverToStatement();
+          }
+        }
+
+        if (this.currentIs("symbol", ";")) this.advance();
+        this.skipNewlines();
+      }
+
+      const close = this.expect("symbol", "}") ?? this.peek(-1);
+      if (constraints.length === 0) {
+        this.emit(
+          FUNGI_REQUIREMENT_001.code,
+          FUNGI_REQUIREMENT_001.name,
+          FUNGI_REQUIREMENT_001.message,
+          start,
+          FUNGI_REQUIREMENT_001.suggestedFix,
+        );
+      }
+
+      return {
+        kind: "requirementExpr",
+        location: this.spanFrom(start, close),
+        children: constraints,
+      };
+    } finally {
+      this.requirementDepth--;
+    }
+  }
+
+  /** Consume an already-open nested requirement block, including nested braces. */
+  private skipBalancedRequirementBlock(): Token {
+    let depth = 1;
+    let last = this.peek(-1);
+    while (!this.isEof() && depth > 0) {
+      const tok = this.advance();
+      last = tok;
+      if (tok.kind === "symbol" && tok.value === "{") depth++;
+      if (tok.kind === "symbol" && tok.value === "}") depth--;
+    }
+    return last;
+  }
+
+  private containsInvalidRequirement(node: AstNode): boolean {
+    if (node.kind === "identifier" && node.value === "<invalid-requirement>") return true;
+    return (node.children ?? []).some((child) => this.containsInvalidRequirement(child));
+  }
+
+  private spanFrom(start: SourceLocation, end: Token): SourceLocation {
+    const startOffset = start.offset ?? end.start;
+    const endOffset = Math.max(startOffset + 1, end.end);
+    return {
+      ...start,
+      offset: startOffset,
+      endLine: end.endLine,
+      endColumn: end.endColumn,
+      endOffset,
+      length: endOffset - startOffset,
+    };
+  }
+
   /**
    * Parses the `is` readable form: `a is X`, `a is not X`, `a is greater than X`, etc.
    * Called from parseExpression() after consuming the left-hand side.
@@ -2453,6 +2601,10 @@ class Parser {
   private parsePrimary(): AstNode {
     const loc = this.loc();
     const tok = this.current();
+
+    if (tok.kind === "keyword" && tok.value === "requirement") {
+      return this.parseRequirementExpr();
+    }
 
     // Grouped expression
     if (tok.kind === "symbol" && tok.value === "(") {
