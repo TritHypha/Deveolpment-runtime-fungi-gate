@@ -7,7 +7,7 @@ const REGISTRY_DIGEST_DOMAIN = "galerina.requirement-validator-authority.registr
 const MAX_FIELD_CHARS = 512;
 const DIGEST_RE = /^sha256:[0-9a-f]{64}$/;
 const SEMVER_RE = /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)$/;
-const SOURCE_BUILD_RE = /^git:[0-9a-f]{40,64}$/;
+const SOURCE_BUILD_RE = /^git:(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
 const SOURCE_UNIT_RE = /^[A-Za-z0-9](?:[A-Za-z0-9._-]{0,126}[A-Za-z0-9])?$/;
 const LOCAL_FLOW_RE = /^[A-Za-z_][A-Za-z0-9_]{0,127}$/;
 const TYPE_RE = /^[A-Za-z_][A-Za-z0-9_.<>, ]{0,255}$/;
@@ -307,14 +307,38 @@ function sameStrings(left: readonly string[], right: readonly string[]): boolean
   return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
+function revalidateRegistry(
+  value: unknown,
+): RequirementValidatorAuthorityRegistry {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return refused("REGISTRY_REFUSED");
+  }
+  const registry = value as Record<string, unknown>;
+  if (registry.state !== "STRUCTURALLY_VALID" || !Array.isArray(registry.rows)) {
+    return refused("REGISTRY_REFUSED");
+  }
+  const reconstructed = createRequirementValidatorAuthorityRegistry(
+    registry.rows as readonly RequirementValidatorAuthorityRow[],
+  );
+  if (reconstructed.state !== "STRUCTURALLY_VALID") return refused("REGISTRY_REFUSED");
+  if (
+    registry.digest !== reconstructed.digest
+    || registry.canonicalBytes !== reconstructed.canonicalBytes
+  ) {
+    return refused("REGISTRY_DIGEST_MISMATCH");
+  }
+  return reconstructed;
+}
+
 export function verifyRequirementValidatorAuthority(
   registry: RequirementValidatorAuthorityRegistry,
   requestValue: RequirementValidatorAuthorityRequest,
   contextValue: RequirementValidatorAuthorityContext,
 ): RequirementValidatorAuthorityResult {
-  if (registry.state !== "STRUCTURALLY_VALID") return refused("REGISTRY_REFUSED");
   if (!isValidContext(contextValue)) return refused("TRUST_ANCHOR_INVALID");
-  if (registry.digest !== contextValue.expectedRegistryDigest) {
+  const reconstructedRegistry = revalidateRegistry(registry);
+  if (reconstructedRegistry.state !== "STRUCTURALLY_VALID") return reconstructedRegistry;
+  if (reconstructedRegistry.digest !== contextValue.expectedRegistryDigest) {
     return refused("REGISTRY_DIGEST_MISMATCH");
   }
   const request = canonicalRequest(requestValue);
@@ -322,7 +346,7 @@ export function verifyRequirementValidatorAuthority(
   if (request.observedEffects.length !== 0) return refused("EFFECTFUL");
 
   const qualifiedFlowIdentity = `${contextValue.canonicalSourceUnitId}::${request.localFlowName}`;
-  const row = registry.rows.find((candidate) =>
+  const row = reconstructedRegistry.rows.find((candidate) =>
     candidate.qualifiedFlowIdentity === qualifiedFlowIdentity
     && candidate.sourceBuild === contextValue.sourceBuild
     && candidate.inputType === request.inputType
@@ -341,7 +365,7 @@ export function verifyRequirementValidatorAuthority(
   return Object.freeze({
     state: "MATCHED",
     qualifiedFlowIdentity,
-    registryDigest: registry.digest,
+    registryDigest: reconstructedRegistry.digest,
     authorityVersion: row.authorityVersion,
   });
 }
