@@ -10,11 +10,13 @@ through exact, fresh, immutable authority.
 
 **Architecture:** The existing effect checker remains the effect owner and
 adds a bounded requirement-specific closure check over observed direct and
-transitive effects. The existing value-state and taint passes remain live.
-A small validator-authority module owns a frozen, caller-supplied registry and
-an explicit verification instant; no name, qualifier, environment value or
-ambient clock mints authority. The taint checker consumes that registry only
-for validator calls inside requirement constraints.
+transitive effects. Both the existing value-state and taint passes gain an
+explicit requirement context so name-based gates cannot launder inline taint.
+A small validator-authority module treats registry rows as untrusted bytes and
+matches them only against a separate digest-bound trust anchor and explicit
+verification instant. No name, qualifier, environment value, ambient clock or
+self-attested registry mints authority. Version 1 admits only exact bare calls
+to a unique local flow; imported, receiver, aliased and dynamic calls refuse.
 
 **Tech Stack:** Strict TypeScript; existing parser AST, effect, value-state and
 taint checkers; Node.js ESM and `node:test`; Myco/Hypha audit orchestration;
@@ -44,6 +46,19 @@ generated diagnostic/code/document indexes; canonical and external graphs.
   output, observed EffectFree state, checked profile and digest, version and
   unexpired freshness.
 - Missing, duplicate, malformed, stale or mismatched authority refuses.
+- Registry structure is not authority. Verification additionally requires an
+  independently supplied exact registry digest. Unit 3 exposes this low-level
+  match contract; the production CLI and security gate have no trust anchor
+  and therefore refuse. Unit 6 remains the owner of checked-snapshot binding.
+- Version 1 validator identity is
+  `<canonical-source-unit-id>::<local-flow-name>`. The source-unit ID and build
+  point are explicit trusted inputs. Only a bare call resolving uniquely to a
+  local `FlowMeta` may match. Imported, method, receiver, aliased, shadowed or
+  dynamic calls refuse; widening this is a later reviewed unit.
+- Taint provenance uses a closed atomic domain:
+  `web.request`, `process.input`, `environment.input`, `web.storage` and
+  `declared.untrusted`. Propagation retains a sorted, duplicate-free tuple of
+  atoms; the authority row must match the exact tuple and input type.
 - Sanitizers, parsers, converters, Bool helpers and flow names never mint
   validator authority.
 - Authority verification receives its comparison instant and expected build
@@ -66,6 +81,10 @@ generated diagnostic/code/document indexes; canonical and external graphs.
   - bounded requirement constraint effect closure.
 - Modify: `packages-galerina/galerina-core-compiler/src/taint-checker.ts`
   - requirement taint rules and validator registry consumption.
+- Modify:
+  `packages-galerina/galerina-core-compiler/src/value-state-checker.ts`
+  - disable name-only gate declassification inside requirement constraints and
+    consume the same exact validator match contract.
 - Modify: `packages-galerina/galerina-core-compiler/src/cli.ts`
   - pass explicit empty authority by default.
 - Modify: `packages-galerina/galerina-core-compiler/src/security-gate.ts`
@@ -96,7 +115,8 @@ generated diagnostic/code/document indexes; canonical and external graphs.
 
 Prove the public contract is absent, then cover:
 
-- exact admitted row returns a frozen `ADMITTED` result;
+- exact row plus independently matching trust anchor returns a frozen
+  `MATCHED` result; it does not claim checked-snapshot admission;
 - missing row, duplicate identity and empty registry refuse;
 - wrong local flow, qualified identity, source build, input type, taint class,
   output type, effect-free observation, profile, digest or version refuses;
@@ -105,6 +125,8 @@ Prove the public contract is absent, then cover:
 - registry construction clones and deep-freezes rows so caller mutation cannot
   alter later verification;
 - deterministic ordering and registry digest are stable under input order;
+- absent or wrong expected registry digest refuses even when every row is
+  structurally valid;
 - ceilings on rows and bytes refuse without partial admission.
 
 Required RED is the exact missing export. Syntax or path faults do not count.
@@ -119,17 +141,20 @@ git commit -m "test: define RD-0858 validator authority"
 
 - [ ] **Step 3: Implement the minimum frozen registry**
 
-Expose readonly row, registry, request, context and result types plus:
+Expose readonly row, registry, request, trust-anchor context and result types
+plus:
 
 - `createRequirementValidatorAuthorityRegistry(rows, limits)`;
 - `verifyRequirementValidatorAuthority(registry, request, context)`.
 
-The registry must canonicalize, copy, sort and freeze every accepted row. The
-verification context supplies exact expected source build, checked profile,
-accepted authority version and comparison time. Exactly one row must match.
-All failure results are frozen and carry a stable refusal reason. Hashing is
-deterministic and domain-separated. No file, clock, environment or network
-read is permitted.
+The registry must canonicalize, copy, sort and freeze every accepted row, but
+its successful construction means only `STRUCTURALLY_VALID`. The separate
+trust anchor supplies the exact expected registry digest, canonical source-unit
+ID, source build, checked profile, accepted authority version and comparison
+time. Exactly one row must match. All results are frozen and carry a stable
+state or refusal reason. Hashing is deterministic and domain-separated. No
+file, clock, environment or network read is permitted. Direct tests may supply
+a controlled anchor; production paths remain closed until Unit 6 owns it.
 
 - [ ] **Step 4: Prove authority GREEN and commit**
 
@@ -167,8 +192,8 @@ Cover:
   pure;
 - an unresolved or dynamic call emits `003`;
 - an effectful validator row cannot bypass `003`;
-- recursive/cyclic call closure terminates and refuses when EffectFree cannot
-  be proved;
+- recursive/cyclic local closure terminates through a bounded fixed point and
+  refuses only when EffectFree cannot be proved;
 - every constraint is checked in source order after an earlier fault;
 - non-requirement effect diagnostics remain unchanged.
 
@@ -183,19 +208,27 @@ git commit -m "test: expose RD-0858 constraint effects"
 
 - [ ] **Step 3: Add bounded observed-effect closure**
 
-Reuse the existing flow-node index, call graph, alias/shadow resolution and
-direct effect inference. Add a requirement-specific result that:
+Inside `checkEffects`, build exact local flow-node, direct-observed-effect and
+strict-call inventories once. Pass this internal context to
+`checkFlowEffects`, which invokes
+`checkRequirementConstraintEffects(flowNode, context)` before returning its
+result. The helper is the single production emit site for `003` and:
 
 - scans each `requirementConstraint` expression;
 - records direct observed effects;
-- resolves only exact known flow calls;
-- walks their observed effect closure with explicit node/depth ceilings;
-- refuses unknown calls, unresolved cycles and exceeded ceilings;
+- classifies every `callExpr`, rather than relying on effect inference to
+  notice it;
+- resolves only a bare call whose name maps to one unique local `FlowMeta`;
+- refuses receiver, imported, aliased, shadowed and dynamic calls;
+- walks strict local-call SCCs to a bounded observed-effect fixed point;
+- refuses unknown calls, incomplete closure and exceeded ceilings;
 - emits the exported `FUNGI_REQUIREMENT_003` definition without duplicating
   code/name strings.
 
-Do not trust declared effects or `pure` qualifiers without observed closure.
-Do not create a second general effect graph.
+Reuse `inferEffectsFromNode` for direct observed effects and the existing graph
+algorithm package for SCC/fixed-point structure. Do not trust declared effects
+or `pure` qualifiers. Do not create a second general effect graph. Preserve
+the existing public `checkEffects` and `checkFlowEffects` call shapes.
 
 - [ ] **Step 4: Prove effect GREEN and commit**
 
@@ -216,6 +249,8 @@ git commit -m "feat: prove RD-0858 constraint effects"
 **Files:**
 
 - Modify: `packages-galerina/galerina-core-compiler/src/taint-checker.ts`
+- Modify:
+  `packages-galerina/galerina-core-compiler/src/value-state-checker.ts`
 - Modify: `packages-galerina/galerina-core-compiler/src/cli.ts`
 - Modify: `packages-galerina/galerina-core-compiler/src/security-gate.ts`
 - Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
@@ -241,6 +276,14 @@ Cover:
   requirement leaves a clean value that passes both value-state and taint;
 - calling that same sanitizer inside the requirement is not validator
   authority;
+- `validate*`, `sanitize*`, `check*`, `verify*`, `parse*`, `decode*` and a
+  registered user gate cannot clear requirement-local taint by name in the
+  value-state pass;
+- local-flow validator identity is derived only as
+  `<source-unit-id>::<flow-name>`; imported, receiver, aliased, shadowed and
+  dynamic collisions refuse;
+- mixed taint atoms propagate as a canonical exact tuple; a subset/superset
+  authority row refuses;
 - every constraint is checked after an earlier failure;
 - CLI and production security gate use the empty registry and therefore refuse
   any authority-bearing validator until a later checked snapshot supplies it;
@@ -257,9 +300,11 @@ git commit -m "test: expose RD-0858 requirement taint"
 
 - [ ] **Step 3: Add the narrow requirement taint pass**
 
-Extend the existing binding walk so requirement constraints see the same
-source-ordered taint state as surrounding statements. Preserve taint class on
-propagation. For each constraint:
+Add exported frozen `RequirementTaintAtom` and bounded canonical taint-tuple
+helpers. Extend the existing binding walk so requirement constraints see the
+same source-ordered taint state as surrounding statements. Map sources to the
+closed atoms and union them on propagation without widening to generic
+`tainted`. For each constraint:
 
 - refuse direct raw taint with `004`;
 - recognize only exact user-flow validator calls;
@@ -269,9 +314,16 @@ propagation. For each constraint:
 - still require the validator flow's observed effect closure to be empty;
 - continue scanning later constraints after a diagnostic.
 
-`checkTaint` accepts an explicit optional authority input whose default is an
-empty frozen registry and closed context. CLI and security gate pass that
-default explicitly. No checked-snapshot authority is invented in this unit.
+Give the value-state walk an explicit `insideRequirementConstraint` context.
+In that context, `isGateCallName` cannot declassify by prefix or registry name;
+only the shared exact validator match may discharge the taint. The dedicated
+taint pass applies the same match. A shared stable diagnostic-key helper merges
+duplicate `004`/`010` reports from the two mandatory passes by exact
+code/location/constraint identity; it never suppresses distinct constraints.
+
+`checkTaint` and `checkValueStates` accept an optional validator input whose
+default is an empty frozen registry and no trust anchor. CLI and security gate
+pass that default explicitly. No checked-snapshot authority is invented.
 
 - [ ] **Step 4: Prove taint/value-state GREEN and commit**
 
@@ -346,28 +398,58 @@ production or `.fungi` conversion authority.
 
 ## Audit Pre-Manifest
 
-Publish this map before every long verification. A wrong path or option is
-`[X]`, never evidence, and must be disclosed and rerun correctly.
+Use the installed `audit-map` skill before every run containing two or more
+commands. Copy its example outside the skill into the task evidence directory,
+bind `subject.locator` and every `build` field to the exact current Git commit,
+then validate, draw and digest it with the maintained AGENTS tool. A changed
+HEAD, argv, dependency, timeout, output ceiling, exit algebra or evidence
+locator makes the prior digest stale. A wrong path or option is `[X]`, never
+evidence, and must be disclosed and rerun through a newly validated manifest.
 
-- [ ] core typecheck
-- [ ] compiler typecheck
-- [ ] compiler build
-- [ ] Unit 3 authority tests
-- [ ] Unit 3 effect/taint tests
-- [ ] Unit 1 and Unit 2 requirement regressions
-- [ ] effect-checker regressions
-- [ ] value-state and taint regressions
-- [ ] CLI and production security-gate regressions
-- [ ] parser and type-checker regressions
-- [ ] code-index check
-- [ ] diagnostic-registry check
-- [ ] documentation-index check
-- [ ] canonical project-graph check
-- [ ] graph integrity
-- [ ] diagnostic ownership/collision/catalog gates
-- [ ] path-leak gate
-- [ ] soft convention report with truthful pre-existing finding count
-- [ ] diff/custody check
-- [ ] external exact-head graph and symbol/content probes
-- [ ] independent review
-- [ ] model-diverse review
+Every manifest uses:
+
+- owner `Galerina`;
+- cwd `repo://Galerina`;
+- ordered argv arrays, never shell command strings;
+- pass `[0]`, finding `[1]`, refused `[2]`; any other exit is refused;
+- 1 MiB captured-output ceiling per node unless a smaller bound is listed;
+- exact prerequisite IDs;
+- receipt locators under the task evidence directory;
+- an outer process supervisor that enforces timeout and output bounds;
+- no approval claim. These are non-admission engineering audits. Any later
+  authority-bearing use requires an exact digest-bound `APPROVED` record and
+  `check --require-approved`.
+
+Minimum final nodes, in dependency order:
+
+| ID | argv | depends | timeout |
+| --- | --- | --- | ---: |
+| `core-typecheck` | `npm --prefix packages-galerina/galerina-core run typecheck` | none | 180000 ms |
+| `compiler-typecheck` | `npm --prefix packages-galerina/galerina-core-compiler run typecheck` | none | 180000 ms |
+| `compiler-build` | `npm --prefix packages-galerina/galerina-core-compiler run build` | compiler-typecheck | 300000 ms |
+| `unit3-authority` | `node --test packages-galerina/galerina-core-compiler/tests/requirement-validator-authority.test.mjs` | compiler-build | 180000 ms |
+| `unit3-effect-taint` | `node --test packages-galerina/galerina-core-compiler/tests/requirement-effect-taint.test.mjs` | compiler-build | 300000 ms |
+| `requirement-regressions` | `node --test packages-galerina/galerina-core-compiler/tests/requirement-construct-parser.test.mjs packages-galerina/galerina-core-compiler/tests/requirement-semantics.test.mjs packages-galerina/galerina-core-compiler/tests/requirement-type-terminality.test.mjs` | compiler-build | 300000 ms |
+| `effect-regressions` | `node --test packages-galerina/galerina-core-compiler/tests/effect-checker.test.mjs packages-galerina/galerina-core-compiler/tests/effect-inference.test.mjs` | compiler-build | 300000 ms |
+| `taint-regressions` | `node --test packages-galerina/galerina-core-compiler/tests/value-state-checker.test.mjs packages-galerina/galerina-core-compiler/tests/phase28-profile-taint.test.mjs packages-galerina/galerina-core-compiler/tests/security-boundary.test.mjs packages-galerina/galerina-core-compiler/tests/security-denial-paths.test.mjs` | compiler-build | 300000 ms |
+| `parser-type-regressions` | `node --test packages-galerina/galerina-core-compiler/tests/parser.test.mjs packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs` | compiler-build | 300000 ms |
+| `code-index` | `node scripts/code-index.mjs --check` | unit3-authority, unit3-effect-taint, requirement-regressions, effect-regressions, taint-regressions, parser-type-regressions | 180000 ms |
+| `code-registry` | `node scripts/gen-code-registry.mjs --check` | code-index | 180000 ms |
+| `docs-index` | `node scripts/docs-index.mjs --check` | code-registry | 180000 ms |
+| `project-graph` | `node scripts/project-graph-generator.mjs --check` | docs-index | 300000 ms |
+| `graph-integrity` | `node scripts/audit-graph-integrity.mjs` | project-graph | 300000 ms |
+| `diagnostic-gates` | `node scripts/audit-diagnostic-codes.mjs` plus separate exact manifest nodes for collision and catalog commands | graph-integrity | 300000 ms each |
+| `path-leak` | `node scripts/audit-path-leak.mjs` | diagnostic-gates | 180000 ms |
+| `conventions` | `node scripts/lint-conventions.mjs --soft` | path-leak | 300000 ms |
+| `custody` | `git diff --check` plus separate exact status/head nodes | conventions | 60000 ms each |
+| `external-graph` | maintained full codebase-memory index plus exact status and symbol/body probes | custody | 900000 ms |
+| `reviews` | independent and model-diverse exact-head reviews | external-graph | 900000 ms each |
+
+Do not encode `plus separate` as one node: expand each named command into its
+own argv array when materializing the JSON manifest.
+
+Each receipt records schema, plan digest, node ID, exact build locator, argv,
+start/end timestamps, elapsed milliseconds, actual exit, timeout flag,
+truncation flag, captured-output digest, evidence locator and outcome. The plan
+result is exactly `PASS`, `FINDING` or `REFUSED`; `PASS` requires every
+mandatory node at one validated digest.
