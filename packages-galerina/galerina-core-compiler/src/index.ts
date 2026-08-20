@@ -41,6 +41,13 @@ export {
   type RequirementDiagnosticDefinition,
 } from "./requirement-diagnostics.js";
 
+export {
+  liftRequirementValue,
+  foldRequirementValues,
+  type RequirementVerdict,
+  type RequirementSemanticResult,
+} from "./requirement-semantics.js";
+
 /** FUNGI-LEX-001: Generic type nesting exceeds maximum depth (8 levels). */
 export const FUNGI_LEX_001 = {
   code: "FUNGI-LEX-001",
