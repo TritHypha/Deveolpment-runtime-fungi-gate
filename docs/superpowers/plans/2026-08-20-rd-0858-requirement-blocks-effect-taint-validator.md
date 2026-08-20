@@ -398,6 +398,16 @@ production or `.fungi` conversion authority.
 
 ## Audit Pre-Manifest
 
+The normative executable pre-manifest is
+`docs/superpowers/audits/2026-08-20-rd-0858-unit3-final-audit-map.json`.
+It contains one exact node per command, graph operation and review, including
+the formerly grouped diagnostic, custody, external-graph and review rows below.
+The table in this section is explanatory only and cannot authorize or execute
+an audit. Before each multi-command run, rebind every manifest build locator
+and the subject locator to the exact source/plan commit, then validate, draw
+and digest that exact JSON. The manifest commit itself is evidence-only and is
+not the audited source build point.
+
 Use the installed `audit-map` skill before every run containing two or more
 commands. Copy its example outside the skill into the task evidence directory,
 bind `subject.locator` and every `build` field to the exact current Git commit,
