@@ -47,4 +47,13 @@ describe("RD-0858 requirement parser boundary", () => {
       ),
     );
   });
+
+  it("exports the bounded parser ceiling and actionable diagnostics", () => {
+    assert.equal(L.MAX_REQUIREMENT_CONSTRAINTS, 64);
+    assert.ok(
+      L.FUNGI_REQUIREMENT_DIAGNOSTICS.every(
+        (diagnostic) => typeof diagnostic.suggestedFix === "string" && diagnostic.suggestedFix.length > 0,
+      ),
+    );
+  });
 });
