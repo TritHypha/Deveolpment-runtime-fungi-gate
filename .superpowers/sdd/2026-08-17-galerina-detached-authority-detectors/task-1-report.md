@@ -60,3 +60,33 @@ pushed, as `303a5e1b276ad5a8b1937125ed2c25214dad5b1f`
   or unrelated failing test.
 - Local commits are not pushed. An independent audit remains pending for any
   later implementation.
+
+## Fix Round 1
+
+Strengthened `scripts/tests/detached-slide-authority-path.test.mjs` and the
+five red fixture entries. The receipt now requires `FRESH` state with matching
+40-character `indexed_head_sha` and `repository_head_sha` values, normalized
+repository-contained file and edge locators, and recursive rejection of both
+literal and JSON-escaped fixture source bodies. The planted controls now cover
+all named AST, TypeScript, legacy execution, component, and unresolved-import
+forms, with exact repeated failure identifiers for every required form.
+
+Covering test:
+
+```text
+scripts/tests/detached-slide-authority-path.test.mjs
+```
+
+Command:
+
+```text
+node --test scripts/tests/detached-slide-authority-path.test.mjs
+```
+
+Expected RED output: exit `1` and `ERR_MODULE_NOT_FOUND`, reporting that
+`scripts/audit-detached-slide-authority-path.mjs` cannot be imported from the
+covering test. This remains expected because Task 1 must not implement the
+detector.
+
+Fix commit: `4b82189722e5bee680028a1126871086f50884b2`
+(`test: strengthen detached authority controls`), local only and not pushed.
