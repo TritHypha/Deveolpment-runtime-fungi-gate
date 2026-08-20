@@ -25,6 +25,16 @@ counts or open items that a newer section explicitly supersedes.
   exact-head graphs and both independent plus model-diverse review. This is
   parser/AST evidence only; it grants no type, runtime, GIR, SLIDE, VOK or
   conversion authority.
+- [x] Complete RD-0858 delivery unit 2 at evidence commit `f2d40ee8`:
+  require exact Bool/Verdict constraint and subject types, implement the closed
+  numeric K3 minimum fold without post-DENY short-circuiting, and prove both
+  handlers structurally terminal before guarded continuation. The proportional
+  matrix passes 227/227; the canonical graph passes at 13,266 nodes / 13,177
+  edges with zero violations; the exact external graph at `f2d40ee8` contains
+  63,874 nodes / 163,171 edges with expected counts equal; and independent plus
+  model-diverse review both return PASS. Only `002`/`007`/`009` become live in
+  this unit. Effect, taint, interpreter, runtime, GIR, SLIDE, VOK, admission,
+  production and `.fungi` conversion authority remain `HOLD`.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,
