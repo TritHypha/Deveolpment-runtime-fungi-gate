@@ -288,6 +288,33 @@ describe("RD-0858 validator authority verification", () => {
     );
   });
 
+  it("binds consumed frozen rows to both the trusted digest and canonical byte count", () => {
+    const legitimate = structured();
+    const substitutedRow = baseRow({
+      qualifiedFlowIdentity: `${SOURCE_UNIT}::validateKey`,
+    });
+    const substituted = structured([substitutedRow]);
+    const forged = Object.freeze({
+      state: "STRUCTURALLY_VALID",
+      rows: Object.freeze([freezeRow(substitutedRow)]),
+      digest: legitimate.digest,
+      canonicalBytes: legitimate.canonicalBytes,
+    });
+
+    assert.notEqual(substituted.digest, legitimate.digest);
+    assert.equal(substituted.canonicalBytes, legitimate.canonicalBytes);
+    const result = verifyRequirementValidatorAuthority(
+      forged,
+      baseRequest({ localFlowName: "validateKey" }),
+      baseContext(legitimate),
+    );
+
+    assertRefused(result, "REGISTRY_DIGEST_MISMATCH");
+    assert.equal("qualifiedFlowIdentity" in result, false);
+    assert.equal("registryDigest" in result, false);
+    assert.equal("authorityVersion" in result, false);
+  });
+
   it("refuses a frozen forged registry with a copied digest and duplicate identity", () => {
     const legitimate = structured();
     assertForgedRegistryRefused(forgeStructuredRegistry([
