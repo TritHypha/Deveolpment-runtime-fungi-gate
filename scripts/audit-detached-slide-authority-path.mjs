@@ -378,6 +378,66 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
     });
   }
 
+  function constantString(node, scope, depth = 0) {
+    if (node === undefined || depth > 32) return null;
+    if (ts.isStringLiteralLike(node)) return node.text;
+    if (ts.isIdentifier(node)) {
+      const state = lookupState(scope, node.text);
+      return state?.kind === "constant" ? state.value : null;
+    }
+    if (ts.isParenthesizedExpression(node)
+        || ts.isAsExpression(node)
+        || ts.isTypeAssertionExpression(node)
+        || ts.isNonNullExpression(node)) return constantString(node.expression, scope, depth + 1);
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+      const left = constantString(node.left, scope, depth + 1);
+      const right = constantString(node.right, scope, depth + 1);
+      return left === null || right === null ? null : `${left}${right}`;
+    }
+    return null;
+  }
+
+  function moduleObjectPropertyState(source, property, node) {
+    if (source.kind === "namespace") return NAMESPACE_STATE;
+    if (source.kind === "ambiguous-loader") return AMBIGUOUS_LOADER_STATE;
+    if (source.kind !== "module") return BENIGN_STATE;
+    if (property === null) {
+      recordLoaderEscape(node);
+      return AMBIGUOUS_LOADER_STATE;
+    }
+    return property === "require" ? LOADER_STATE : BENIGN_STATE;
+  }
+
+  function bindingProperty(element, scope) {
+    if (element.propertyName === undefined) {
+      return ts.isIdentifier(element.name) ? element.name.text : null;
+    }
+    if (ts.isIdentifier(element.propertyName) || ts.isStringLiteralLike(element.propertyName)) {
+      return element.propertyName.text;
+    }
+    if (ts.isComputedPropertyName(element.propertyName)) {
+      return constantString(element.propertyName.expression, scope);
+    }
+    return null;
+  }
+
+  function assignCommonJsPattern(scope, name, state) {
+    if (ts.isIdentifier(name)) {
+      assignState(scope, name.text, state);
+      return;
+    }
+    if (ts.isObjectBindingPattern(name)) {
+      for (const element of name.elements) {
+        const property = element.dotDotDotToken === undefined ? bindingProperty(element, scope) : null;
+        const nextState = moduleObjectPropertyState(state, property, element);
+        if (ts.isIdentifier(element.name)) assignState(scope, element.name.text, nextState);
+        else for (const identifier of bindingNames(ts, element.name)) assignState(scope, identifier, nextState);
+      }
+      return;
+    }
+    for (const identifier of bindingNames(ts, name)) assignState(scope, identifier, BENIGN_STATE);
+  }
+
   function mergeBranches(scope, branches) {
     if (branches.length === 0) return;
     let merged = branches[0];
@@ -409,7 +469,7 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       for (const parameter of node.parameters) {
         if (parameter.initializer === undefined) continue;
         const parameterState = scan(parameter.initializer, child);
-        assignPatternState(ts, child, parameter.name, parameterState);
+        assignCommonJsPattern(child, parameter.name, parameterState);
         if (parameterState.kind === "loader" || parameterState.kind === "ambiguous-loader") {
           recordLoaderEscape(parameter.initializer);
         }
@@ -440,7 +500,7 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       for (const parameter of node.parameters) {
         if (parameter.initializer === undefined) continue;
         const parameterState = scan(parameter.initializer, child);
-        assignPatternState(ts, child, parameter.name, parameterState);
+        assignCommonJsPattern(child, parameter.name, parameterState);
         if (parameterState.kind === "loader" || parameterState.kind === "ambiguous-loader") {
           recordLoaderEscape(parameter.initializer);
         }
@@ -570,7 +630,7 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
     }
     if (ts.isVariableDeclaration(node)) {
       const state = node.initializer === undefined ? BENIGN_STATE : scan(node.initializer, scope);
-      assignPatternState(ts, scope, node.name, state, (source) => source.kind === "namespace" ? NAMESPACE_STATE : BENIGN_STATE);
+      assignCommonJsPattern(scope, node.name, state);
       return state;
     }
     if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
@@ -584,6 +644,11 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       }
       return state;
     }
+    if (ts.isStringLiteralLike(node)) return Object.freeze({ kind: "constant", value: node.text });
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+      const value = constantString(node, scope);
+      if (value !== null) return Object.freeze({ kind: "constant", value });
+    }
     if (ts.isIdentifier(node)) return lookupState(scope, node.text) ?? BENIGN_STATE;
     if (ts.isParenthesizedExpression(node)
         || ts.isAsExpression(node)
@@ -591,11 +656,11 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
         || ts.isNonNullExpression(node)) return scan(node.expression, scope);
     if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
       const source = scan(node.expression, scope);
-      const property = propertyName(ts, node);
+      const property = propertyName(ts, node, (argument) => constantString(argument, scope));
       if (ts.isElementAccessExpression(node) && node.argumentExpression !== undefined) {
         scan(node.argumentExpression, scope);
       }
-      if (source.kind === "module" && property === "require") return LOADER_STATE;
+      if (source.kind === "module") return moduleObjectPropertyState(source, property, node);
       if (source.kind === "loader" || source.kind === "ambiguous-loader") {
         recordLoaderEscape(node);
       }
@@ -708,10 +773,12 @@ function rootIdentifier(ts, expression) {
   return ts.isIdentifier(current) ? current.text : null;
 }
 
-function propertyName(ts, expression) {
+function propertyName(ts, expression, resolveComputed = () => null) {
   if (ts.isPropertyAccessExpression(expression)) return expression.name.text;
-  if (ts.isElementAccessExpression(expression) && expression.argumentExpression !== undefined && ts.isStringLiteralLike(expression.argumentExpression)) {
-    return expression.argumentExpression.text;
+  if (ts.isElementAccessExpression(expression) && expression.argumentExpression !== undefined) {
+    return ts.isStringLiteralLike(expression.argumentExpression)
+      ? expression.argumentExpression.text
+      : resolveComputed(expression.argumentExpression);
   }
   return null;
 }
