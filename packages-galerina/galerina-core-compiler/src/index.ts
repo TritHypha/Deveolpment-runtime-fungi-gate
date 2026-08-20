@@ -57,6 +57,25 @@ export {
   type RequirementTerminalityOptions,
 } from "./requirement-terminality.js";
 
+export {
+  createRequirementValidatorAuthorityRegistry,
+  verifyRequirementValidatorAuthority,
+  MAX_REQUIREMENT_VALIDATOR_AUTHORITY_ROWS,
+  MAX_REQUIREMENT_VALIDATOR_AUTHORITY_BYTES,
+  REQUIREMENT_TAINT_CLASSES,
+  type RequirementTaintClass,
+  type RequirementValidatorAuthorityRow,
+  type RequirementValidatorAuthorityLimits,
+  type RequirementValidatorAuthorityRefusalReason,
+  type RequirementValidatorAuthorityRefused,
+  type StructurallyValidRequirementValidatorAuthorityRegistry,
+  type RequirementValidatorAuthorityRegistry,
+  type RequirementValidatorAuthorityRequest,
+  type RequirementValidatorAuthorityContext,
+  type MatchedRequirementValidatorAuthority,
+  type RequirementValidatorAuthorityResult,
+} from "./requirement-validator-authority.js";
+
 /** FUNGI-LEX-001: Generic type nesting exceeds maximum depth (8 levels). */
 export const FUNGI_LEX_001 = {
   code: "FUNGI-LEX-001",
