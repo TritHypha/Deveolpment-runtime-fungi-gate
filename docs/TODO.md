@@ -102,18 +102,22 @@ counts or open items that a newer section explicitly supersedes.
   flat frontmatter-store preflight. Use its owning locator-index surface when
   available; until then freshness is `UNKNOWN`, while the schema-mismatch
   refusal remains useful evidence that the wrong instrument did not fail open.
-- [ ] Close the current graph-all refusals before claiming a clean graph refresh:
-  package boundaries report undeclared self-hosted Fungi in core-compiler,
-  ext-secrets-vault, framework-app-kernel, observability and tower-citizen, and
-  the semantic graph reports stale `retirement executableFamily.mjs`. The other
-  five registered graph owners generate and check successfully; do not hide the
-  two red owners or publish their partial outputs as closure evidence.
-- [ ] Obtain an independently verifiable codebase-memory build point before
-  claiming graph-index freshness. The service now answers bounded graph/code
-  searches, but this client exposes no `index_status` receipt and the shared
-  Galerina worktree is dirty, so a rebuild would misbind uncommitted bytes to
-  the committed HEAD. Freshness remains `UNKNOWN`; Myco is a locator fallback,
-  not a substitute for `indexed_head_sha`.
+- [x] Close the graph-all refusals at the reviewed implementation head
+  `916834c0`: commit `d418af3d` declares all 52 package orphans as loaded assets
+  with zero removals or duplicate entries, and `916834c0` publishes the semantic
+  outputs only after that clean source commit. Fresh independent evidence passes
+  graph-all **7/7**, package graph **100 packages / 201 outputs**, semantic graph
+  **3/3**, strict and runtime checks for all four scalar candidates, Golden
+  **11/11** plus **11/11** vectors, and full-corpus duplicate/alpha-shadow/
+  case-shadow controls. The candidates remain non-authorizing and retain their
+  TypeScript oracles; no production, conversion-retirement or push authority
+  follows.
+- [x] Obtain an independently readable codebase-memory build point for the
+  reviewed implementation: `indexed_head_sha` is exactly `916834c059498b90c80bc47437bf5da7f8be7e3f`,
+  with **63,763/63,763 nodes** and **160,803/160,803 edges**, plus a bounded
+  `unpackFlags` symbol probe. Myco remains locator-only rather than a substitute
+  for graph provenance. Refresh the external graph again after this closure
+  record is committed before making a new current absence or call-chain claim.
 
 ### Forty-file primitive Fungi batch - 2026-08-14
 
