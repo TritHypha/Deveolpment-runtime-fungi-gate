@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
 import test from "node:test";
 
@@ -122,13 +122,13 @@ async function withTemporaryFixture(files, callback) {
   }
 }
 
-function runCli(entry) {
+function runCli(entry, extraArguments = []) {
   return spawnSync(process.execPath, [
     resolve(ROOT, "scripts/audit-detached-slide-authority-path.mjs"),
     "--repo-root", ROOT,
     "--entry", entry,
     "--expected-head", REPOSITORY_HEAD,
-    "--graph-project", GRAPH_PROJECT,
+    ...extraArguments,
   ], {
     cwd: ROOT,
     encoding: "utf8",
@@ -203,6 +203,110 @@ test("renamed imports and namespace calls cannot hide forbidden symbols", async 
   });
 });
 
+test("a forbidden default export cannot hide behind a default import name", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import lower from './helper.ts'; export const result = lower({}, {});\n",
+    "helper.ts": "export default function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.deepEqual(result.violations.map((finding) => finding.id), ["AST_REENTRY"]);
+  });
+});
+
+test("a forbidden imported binding cannot hide behind an assignment alias", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import { emitGIR as imported } from './helper.ts'; const lower = imported; export const result = lower({}, {});\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.deepEqual(result.violations.map((finding) => finding.id), ["AST_REENTRY"]);
+  });
+});
+
+test("a forbidden namespace member cannot hide behind destructuring", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import * as legacy from './helper.ts'; const { emitGIR: lower } = legacy; export const result = lower({}, {});\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.deepEqual(result.violations.map((finding) => finding.id), ["AST_REENTRY"]);
+  });
+});
+
+test("literal CommonJS require enters closure and preserves forbidden surfaces", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const legacy = require('./helper.cjs'); module.exports = legacy.emitGIR({}, {});\n",
+    "helper.cjs": "exports.emitGIR = function emitGIR() { return new Uint8Array(); };\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.equal(result.inspectedFiles.length, 2);
+  });
+});
+
+test("TypeScript import-equals require enters closure and preserves forbidden surfaces", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import legacy = require('./helper.ts'); export const result = legacy.emitGIR({}, {});\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.equal(result.inspectedFiles.length, 2);
+  });
+});
+
+test("non-literal and unapproved package require forms fail closed", async () => {
+  await withTemporaryFixture({
+    "nonliteral.cjs": "const target = './helper.cjs'; module.exports = require(target);\n",
+    "package.cjs": "module.exports = require('left-pad');\n",
+    "helper.cjs": "module.exports = 1;\n",
+  }, async (locator) => {
+    for (const entry of ["nonliteral.cjs", "package.cjs"]) {
+      const result = await auditDetachedAuthorityPath({
+        repoRoot: ROOT,
+        entryFiles: [`${locator}/${entry}`],
+        expectedHead: REPOSITORY_HEAD,
+      });
+
+      assert.equal(result.status, "REFUSED", JSON.stringify(result));
+      assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
+    }
+  });
+});
+
 test("forbidden module rules do not match benign substring collisions", async () => {
   await withTemporaryFixture({
     "entry.ts": "import { forecast } from './forecast.ts'; export const value = forecast;\n",
@@ -265,6 +369,40 @@ test("ruleset digest is stable across entry order", async () => {
   });
 
   assert.equal(forward.rulesetDigest, reverse.rulesetDigest);
+});
+
+test("ambient graph-project selection cannot redirect programmatic authority", async () => {
+  const prior = process.env.GALERINA_DETACHED_AUTHORITY_GRAPH_PROJECT;
+  process.env.GALERINA_DETACHED_AUTHORITY_GRAPH_PROJECT = "attacker-selected-project";
+  try {
+    const result = await auditFixture("green");
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+  } finally {
+    if (prior === undefined) delete process.env.GALERINA_DETACHED_AUTHORITY_GRAPH_PROJECT;
+    else process.env.GALERINA_DETACHED_AUTHORITY_GRAPH_PROJECT = prior;
+  }
+});
+
+test("an ambiguous executable provider refuses before graph inspection", { skip: process.platform !== "win32" }, async () => {
+  const temporaryRoot = mkdtempSync(resolve(ROOT, FIXTURES, ".task-2-provider-"));
+  const priorPath = process.env.PATH;
+  try {
+    copyFileSync(process.execPath, resolve(temporaryRoot, "codebase-memory-mcp.exe"));
+    process.env.PATH = `${temporaryRoot};${priorPath ?? ""}`;
+    const result = await auditFixture("green");
+    assert.equal(result.status, "REFUSED", JSON.stringify(result));
+    assert.equal(result.failureId, "DETACHED_AUTHORITY_GRAPH_PROVIDER_AMBIGUOUS");
+  } finally {
+    process.env.PATH = priorPath;
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+});
+
+test("CLI rejects caller-selected graph authority", () => {
+  const spoofed = runCli(`${FIXTURES}/green/entry.ts`, ["--graph-project", GRAPH_PROJECT]);
+
+  assert.equal(spoofed.status, 2, spoofed.stderr || spoofed.stdout);
+  assert.equal(JSON.parse(spoofed.stdout).failureId, "DETACHED_AUTHORITY_REQUEST_INVALID");
 });
 
 test("CLI preserves exit algebra 0 for PASS, 1 for findings and 2 for refusal", () => {
