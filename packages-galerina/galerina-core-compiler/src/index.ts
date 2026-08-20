@@ -48,6 +48,15 @@ export {
   type RequirementSemanticResult,
 } from "./requirement-semantics.js";
 
+export {
+  proveRequirementHandlerTerminality,
+  MAX_REQUIREMENT_TERMINALITY_DEPTH,
+  MAX_REQUIREMENT_TERMINALITY_NODES,
+  type RequirementTerminalityState,
+  type RequirementTerminalityResult,
+  type RequirementTerminalityOptions,
+} from "./requirement-terminality.js";
+
 /** FUNGI-LEX-001: Generic type nesting exceeds maximum depth (8 levels). */
 export const FUNGI_LEX_001 = {
   code: "FUNGI-LEX-001",

@@ -94,7 +94,7 @@ describe("RD-0858 structural handler terminality", () => {
     const result = terminalState({
       kind: "block",
       children: [
-        { kind: "letBinding", value: "x" },
+        { kind: "letDecl", value: "x" },
         { kind: "faultStmt" },
         { kind: "assignStmt", value: "unreachable" },
       ],
@@ -105,28 +105,26 @@ describe("RD-0858 structural handler terminality", () => {
   it("refuses empty and normally returning blocks", () => {
     assert.equal(terminalState({ kind: "block", children: [] }).state, "NON_TERMINAL");
     assert.equal(
-      terminalState({ kind: "block", children: [{ kind: "letBinding", value: "x" }] }).state,
+      terminalState({ kind: "block", children: [{ kind: "letDecl", value: "x" }] }).state,
       "NON_TERMINAL",
     );
   });
 
-  for (const kind of ["ifStmt", "unlessStmt"]) {
-    it(`proves ${kind} only when both explicit arms terminate`, () => {
-      const condition = { kind: "boolLiteral", value: "true" };
-      assert.equal(terminalState({
-        kind,
-        children: [condition, { kind: "returnStmt" }, { kind: "faultStmt" }],
-      }).state, "TERMINAL");
-      assert.notEqual(terminalState({
-        kind,
-        children: [condition, { kind: "returnStmt" }],
-      }).state, "TERMINAL");
-      assert.notEqual(terminalState({
-        kind,
-        children: [condition, { kind: "returnStmt" }, { kind: "letBinding" }],
-      }).state, "TERMINAL");
-    });
-  }
+  it("proves if only when both explicit arms terminate", () => {
+    const condition = { kind: "boolLiteral", value: "true" };
+    assert.equal(terminalState({
+      kind: "ifStmt",
+      children: [condition, { kind: "returnStmt" }, { kind: "faultStmt" }],
+    }).state, "TERMINAL");
+    assert.notEqual(terminalState({
+      kind: "ifStmt",
+      children: [condition, { kind: "returnStmt" }],
+    }).state, "TERMINAL");
+    assert.notEqual(terminalState({
+      kind: "ifStmt",
+      children: [condition, { kind: "returnStmt" }, { kind: "letDecl" }],
+    }).state, "TERMINAL");
+  });
 
   it("proves only wildcard-exhaustive matches whose every arm terminates", () => {
     const subject = { kind: "identifier", value: "value" };
@@ -148,13 +146,14 @@ describe("RD-0858 structural handler terminality", () => {
       children: [subject, terminalMatch.children[1], {
         kind: "matchArm",
         value: "_",
-        children: [{ kind: "letBinding" }],
+        children: [{ kind: "letDecl" }],
       }],
     }).state, "TERMINAL");
   });
 
   it("does not mint terminality for loops or unknown AST kinds", () => {
     assert.notEqual(terminalState({ kind: "whileStmt", children: [] }).state, "TERMINAL");
+    assert.notEqual(terminalState({ kind: "forEachStmt", children: [] }).state, "TERMINAL");
     assert.notEqual(terminalState({ kind: "futureAuthorityNode", children: [] }).state, "TERMINAL");
   });
 

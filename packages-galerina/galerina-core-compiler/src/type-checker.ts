@@ -55,8 +55,10 @@ import { KNOWN_DOMAIN_TYPES } from "./package-type-registry.js";
 import { MONEY_UNIT_TAGS } from "./unit-registry.generated.js";
 import {
   FUNGI_REQUIREMENT_002,
+  FUNGI_REQUIREMENT_007,
   FUNGI_REQUIREMENT_009,
 } from "./requirement-diagnostics.js";
+import { proveRequirementHandlerTerminality } from "./requirement-terminality.js";
 
 // RD-0349 I1: the pinned ISO-4217 currency set — the SAME generated table the runtime `Money.of`
 // enforces (stdlib.ts). A Money<CCY> whose tag is not here now fails at COMPILE time (FUNGI-TYPE-032),
@@ -2587,16 +2589,30 @@ class TypeChecker {
   private checkRequireStatement(node: AstNode): void {
     const subject = node.children?.[0];
     const inferred = subject === undefined ? undefined : this.inferType(subject);
-    if (inferred === "Bool" || inferred === "Verdict") return;
+    if (inferred !== "Bool" && inferred !== "Verdict") {
+      const actual = inferred ?? "unresolved";
+      this.diagnostics.push(makeTCDiag(
+        FUNGI_REQUIREMENT_009.code,
+        FUNGI_REQUIREMENT_009.name,
+        `${FUNGI_REQUIREMENT_009.message} Subject type is '${actual}'.`,
+        subject?.location ?? node.location,
+        FUNGI_REQUIREMENT_009.suggestedFix,
+      ));
+    }
 
-    const actual = inferred ?? "unresolved";
-    this.diagnostics.push(makeTCDiag(
-      FUNGI_REQUIREMENT_009.code,
-      FUNGI_REQUIREMENT_009.name,
-      `${FUNGI_REQUIREMENT_009.message} Subject type is '${actual}'.`,
-      subject?.location ?? node.location,
-      FUNGI_REQUIREMENT_009.suggestedFix,
-    ));
+    for (const arm of (node.children ?? []).slice(1)) {
+      if (arm.kind !== "requireArm") continue;
+      const proof = proveRequirementHandlerTerminality(arm);
+      if (proof.state === "TERMINAL") continue;
+      const label = arm.value ?? "unknown";
+      this.diagnostics.push(makeTCDiag(
+        FUNGI_REQUIREMENT_007.code,
+        FUNGI_REQUIREMENT_007.name,
+        `require '${label}:' handler is not terminal (${proof.reason}). ${FUNGI_REQUIREMENT_007.message}`,
+        arm.location ?? node.location,
+        FUNGI_REQUIREMENT_007.suggestedFix,
+      ));
+    }
   }
 
   /**
