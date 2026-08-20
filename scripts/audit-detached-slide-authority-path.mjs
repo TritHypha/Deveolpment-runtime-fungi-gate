@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
 import { lstat, readFile, realpath } from "node:fs/promises";
-import { createRequire } from "node:module";
 import { userInfo } from "node:os";
 import {
   extname,
@@ -14,10 +13,11 @@ import {
 } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { authenticateDetachedAuthorityProvider } from "./lib/detached-authority-provider.mjs";
+import {
+  authenticateDetachedAuthorityProvider,
+  runAuthenticatedProviderCommand,
+} from "./lib/detached-authority-provider.mjs";
 import { loadTypeScript } from "./lib/ts-to-fungi-sandbox/typescript-api.mjs";
-
-const { runOwnedProcess } = createRequire(import.meta.url)("./lib/owned-process-tree.cjs");
 
 const SCHEMA = "DetachedAuthorityAuditV1";
 const TOOL_VERSION = "1.0.0";
@@ -252,6 +252,8 @@ const BENIGN_STATE = Object.freeze({ kind: "benign" });
 const LOADER_STATE = Object.freeze({ kind: "loader" });
 const AMBIGUOUS_LOADER_STATE = Object.freeze({ kind: "ambiguous-loader" });
 const NAMESPACE_STATE = Object.freeze({ kind: "namespace" });
+const MODULE_STATE = Object.freeze({ kind: "module" });
+const AMBIGUOUS_STATE = Object.freeze({ kind: "ambiguous" });
 
 function bindingNames(ts, name, names = []) {
   if (ts.isIdentifier(name)) names.push(name.text);
@@ -265,6 +267,40 @@ function bindingNames(ts, name, names = []) {
 
 function createScope(parent = null) {
   return { parent, bindings: new Map() };
+}
+
+function sameState(left, right) {
+  return left.kind === right.kind
+    && left.ruleId === right.ruleId
+    && left.surface === right.surface
+    && left.value === right.value;
+}
+
+function mergeState(left, right) {
+  if (sameState(left, right)) return left;
+  if (left.kind === "symbol" && right.kind !== "symbol") return left;
+  if (right.kind === "symbol" && left.kind !== "symbol") return right;
+  if (left.kind === "ambiguous-loader" || right.kind === "ambiguous-loader") return AMBIGUOUS_LOADER_STATE;
+  if (left.kind === "loader" || right.kind === "loader") return AMBIGUOUS_LOADER_STATE;
+  return AMBIGUOUS_STATE;
+}
+
+function cloneScope(scope) {
+  if (scope === null) return null;
+  const clone = createScope(cloneScope(scope.parent));
+  for (const [name, state] of scope.bindings) clone.bindings.set(name, state);
+  return clone;
+}
+
+function mergeScopes(target, left, right) {
+  if (target.parent !== null) mergeScopes(target.parent, left.parent, right.parent);
+  const names = new Set([...target.bindings.keys(), ...left.bindings.keys(), ...right.bindings.keys()]);
+  for (const name of names) {
+    const original = target.bindings.get(name) ?? BENIGN_STATE;
+    const leftState = left.bindings.get(name) ?? original;
+    const rightState = right.bindings.get(name) ?? original;
+    target.bindings.set(name, mergeState(leftState, rightState));
+  }
 }
 
 function lookupState(scope, name) {
@@ -325,8 +361,33 @@ function assignPatternState(ts, scope, name, state, propertyState = () => BENIGN
 
 function scanCommonJsDependencies(ts, sourceFile, imports) {
   const root = createScope();
+  const escapePositions = new Set();
   predeclareScope(ts, root, sourceFile.statements);
   if (!root.bindings.has("require")) root.bindings.set("require", LOADER_STATE);
+  if (!root.bindings.has("module")) root.bindings.set("module", MODULE_STATE);
+
+  function recordLoaderEscape(node) {
+    const position = node.getStart(sourceFile);
+    if (escapePositions.has(position)) return;
+    escapePositions.add(position);
+    imports.push({
+      kind: "require-escape",
+      specifier: null,
+      position,
+      bindings: [],
+    });
+  }
+
+  function mergeBranches(scope, branches) {
+    if (branches.length === 0) return;
+    let merged = branches[0];
+    for (let index = 1; index < branches.length; index += 1) {
+      const next = cloneScope(scope);
+      mergeScopes(next, merged, branches[index]);
+      merged = next;
+    }
+    mergeScopes(scope, merged, merged);
+  }
 
   function scan(node, scope) {
     if (ts.isSourceFile(node)) {
@@ -345,11 +406,166 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       const statements = ts.isBlock(node.body) ? node.body.statements : [];
       predeclareScope(ts, child, statements, node.parameters);
       if (node.name !== undefined) child.bindings.set(node.name.text, BENIGN_STATE);
+      for (const parameter of node.parameters) {
+        if (parameter.initializer === undefined) continue;
+        const parameterState = scan(parameter.initializer, child);
+        assignPatternState(ts, child, parameter.name, parameterState);
+        if (parameterState.kind === "loader" || parameterState.kind === "ambiguous-loader") {
+          recordLoaderEscape(parameter.initializer);
+        }
+      }
       if (ts.isBlock(node.body)) {
         for (const statement of node.body.statements) scan(statement, child);
       } else {
-        scan(node.body, child);
+        const bodyState = scan(node.body, child);
+        if (bodyState.kind === "loader" || bodyState.kind === "ambiguous-loader") {
+          recordLoaderEscape(node.body);
+        }
       }
+      return BENIGN_STATE;
+    }
+    if (ts.isMethodDeclaration(node)
+        || ts.isGetAccessorDeclaration(node)
+        || ts.isSetAccessorDeclaration(node)
+        || ts.isConstructorDeclaration(node)) {
+      if (node.name !== undefined && ts.isComputedPropertyName(node.name)) {
+        const nameState = scan(node.name.expression, scope);
+        if (nameState.kind === "loader" || nameState.kind === "ambiguous-loader") {
+          recordLoaderEscape(node.name.expression);
+        }
+      }
+      if (node.body === undefined) return BENIGN_STATE;
+      const child = createScope(scope);
+      predeclareScope(ts, child, node.body.statements, node.parameters);
+      for (const parameter of node.parameters) {
+        if (parameter.initializer === undefined) continue;
+        const parameterState = scan(parameter.initializer, child);
+        assignPatternState(ts, child, parameter.name, parameterState);
+        if (parameterState.kind === "loader" || parameterState.kind === "ambiguous-loader") {
+          recordLoaderEscape(parameter.initializer);
+        }
+      }
+      for (const statement of node.body.statements) scan(statement, child);
+      return BENIGN_STATE;
+    }
+    if (ts.isPropertyAssignment(node)) {
+      if (ts.isComputedPropertyName(node.name)) {
+        const nameState = scan(node.name.expression, scope);
+        if (nameState.kind === "loader" || nameState.kind === "ambiguous-loader") {
+          recordLoaderEscape(node.name.expression);
+        }
+      }
+      const initializerState = scan(node.initializer, scope);
+      if (initializerState.kind === "loader" || initializerState.kind === "ambiguous-loader") {
+        recordLoaderEscape(node.initializer);
+      }
+      return BENIGN_STATE;
+    }
+    if (ts.isPropertyDeclaration(node)) {
+      if (ts.isComputedPropertyName(node.name)) {
+        const nameState = scan(node.name.expression, scope);
+        if (nameState.kind === "loader" || nameState.kind === "ambiguous-loader") {
+          recordLoaderEscape(node.name.expression);
+        }
+      }
+      if (node.initializer === undefined) return BENIGN_STATE;
+      const initializerState = scan(node.initializer, scope);
+      if (initializerState.kind === "loader" || initializerState.kind === "ambiguous-loader") {
+        recordLoaderEscape(node.initializer);
+      }
+      return BENIGN_STATE;
+    }
+    if (ts.isShorthandPropertyAssignment(node)) {
+      const shorthandState = scan(node.name, scope);
+      if (shorthandState.kind === "loader" || shorthandState.kind === "ambiguous-loader") {
+        recordLoaderEscape(node.name);
+      }
+      return BENIGN_STATE;
+    }
+    if (ts.isArrayLiteralExpression(node)) {
+      for (const element of node.elements) {
+        const elementState = scan(element, scope);
+        if (elementState.kind === "loader" || elementState.kind === "ambiguous-loader") {
+          recordLoaderEscape(element);
+        }
+      }
+      return BENIGN_STATE;
+    }
+    if (ts.isReturnStatement(node) || ts.isYieldExpression(node)) {
+      if (node.expression === undefined) return BENIGN_STATE;
+      const returnedState = scan(node.expression, scope);
+      if (returnedState.kind === "loader" || returnedState.kind === "ambiguous-loader") {
+        recordLoaderEscape(node.expression);
+      }
+      return BENIGN_STATE;
+    }
+    if (ts.isIfStatement(node)) {
+      scan(node.expression, scope);
+      const left = cloneScope(scope);
+      const right = cloneScope(scope);
+      scan(node.thenStatement, left);
+      if (node.elseStatement !== undefined) scan(node.elseStatement, right);
+      mergeScopes(scope, left, right);
+      return BENIGN_STATE;
+    }
+    if (ts.isConditionalExpression(node)) {
+      scan(node.condition, scope);
+      const leftScope = cloneScope(scope);
+      const rightScope = cloneScope(scope);
+      const left = scan(node.whenTrue, leftScope);
+      const right = scan(node.whenFalse, rightScope);
+      mergeScopes(scope, leftScope, rightScope);
+      return mergeState(left, right);
+    }
+    if (ts.isSwitchStatement(node)) {
+      scan(node.expression, scope);
+      const clauses = node.caseBlock.clauses;
+      const branches = [];
+      const hasDefault = clauses.some((clause) => ts.isDefaultClause(clause));
+      for (let start = 0; start < clauses.length; start += 1) {
+        const branch = cloneScope(scope);
+        for (let tested = 0; tested <= start; tested += 1) {
+          const clause = clauses[tested];
+          if (ts.isCaseClause(clause)) scan(clause.expression, branch);
+        }
+        let stopped = false;
+        for (let index = start; index < clauses.length && !stopped; index += 1) {
+          for (const statement of clauses[index].statements) {
+            if (ts.isBreakStatement(statement)) {
+              stopped = true;
+              break;
+            }
+            scan(statement, branch);
+          }
+        }
+        branches.push(branch);
+      }
+      if (!hasDefault) branches.push(cloneScope(scope));
+      mergeBranches(scope, branches);
+      return BENIGN_STATE;
+    }
+    if (ts.isTryStatement(node)) {
+      const before = cloneScope(scope);
+      const successful = cloneScope(scope);
+      scan(node.tryBlock, successful);
+      const branches = [successful];
+      if (node.catchClause !== undefined) {
+        const caught = cloneScope(scope);
+        mergeScopes(caught, before, successful);
+        const catchScope = createScope(caught);
+        if (node.catchClause.variableDeclaration !== undefined) {
+          for (const name of bindingNames(ts, node.catchClause.variableDeclaration.name)) {
+            catchScope.bindings.set(name, BENIGN_STATE);
+          }
+        }
+        predeclareScope(ts, catchScope, node.catchClause.block.statements);
+        for (const statement of node.catchClause.block.statements) scan(statement, catchScope);
+        branches.push(caught);
+      }
+      if (node.finallyBlock !== undefined) {
+        for (const branch of branches) scan(node.finallyBlock, branch);
+      }
+      mergeBranches(scope, branches);
       return BENIGN_STATE;
     }
     if (ts.isVariableDeclaration(node)) {
@@ -360,7 +576,12 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
     if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
       const state = scan(node.right, scope);
       if (ts.isIdentifier(node.left)) assignState(scope, node.left.text, state);
-      else scan(node.left, scope);
+      else {
+        scan(node.left, scope);
+        if (state.kind === "loader" || state.kind === "ambiguous-loader") {
+          recordLoaderEscape(node.right);
+        }
+      }
       return state;
     }
     if (ts.isIdentifier(node)) return lookupState(scope, node.text) ?? BENIGN_STATE;
@@ -368,9 +589,26 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
         || ts.isAsExpression(node)
         || ts.isTypeAssertionExpression(node)
         || ts.isNonNullExpression(node)) return scan(node.expression, scope);
+    if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+      const source = scan(node.expression, scope);
+      const property = propertyName(ts, node);
+      if (ts.isElementAccessExpression(node) && node.argumentExpression !== undefined) {
+        scan(node.argumentExpression, scope);
+      }
+      if (source.kind === "module" && property === "require") return LOADER_STATE;
+      if (source.kind === "loader" || source.kind === "ambiguous-loader") {
+        recordLoaderEscape(node);
+      }
+      return BENIGN_STATE;
+    }
     if (ts.isCallExpression(node)) {
       const callee = scan(node.expression, scope);
-      for (const argument of node.arguments) scan(argument, scope);
+      for (const argument of node.arguments) {
+        const argumentState = scan(argument, scope);
+        if (argumentState.kind === "loader" || argumentState.kind === "ambiguous-loader") {
+          recordLoaderEscape(argument);
+        }
+      }
       if (callee.kind === "loader" || callee.kind === "ambiguous-loader") {
         const argument = node.arguments.length === 1 ? node.arguments[0] : undefined;
         imports.push({
@@ -387,10 +625,27 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       }
       return BENIGN_STATE;
     }
+    if (ts.isNewExpression(node)) {
+      const constructorState = scan(node.expression, scope);
+      if (constructorState.kind === "loader" || constructorState.kind === "ambiguous-loader") {
+        recordLoaderEscape(node.expression);
+      }
+      for (const argument of node.arguments ?? []) {
+        const argumentState = scan(argument, scope);
+        if (argumentState.kind === "loader" || argumentState.kind === "ambiguous-loader") {
+          recordLoaderEscape(argument);
+        }
+      }
+      return BENIGN_STATE;
+    }
     let state = BENIGN_STATE;
     ts.forEachChild(node, (child) => {
       const childState = scan(child, scope);
-      if (childState.kind === "ambiguous-loader") state = AMBIGUOUS_LOADER_STATE;
+      if (childState.kind === "loader" || childState.kind === "ambiguous-loader") {
+        state = childState;
+      } else if (childState.kind === "ambiguous") {
+        state = AMBIGUOUS_STATE;
+      }
     });
     return state;
   }
@@ -542,45 +797,12 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
   const SYMBOL_STATE = (ruleId, surface) => Object.freeze({ kind: "symbol", ruleId, surface });
   const CONSTANT_STATE = (value) => Object.freeze({ kind: "constant", value });
   const COVERED_STATE = Object.freeze({ kind: "covered" });
-  const AMBIGUOUS_STATE = Object.freeze({ kind: "ambiguous" });
   const loadByPosition = new Map(imports
     .filter((imported) => imported.kind === "require")
     .map((imported) => [imported.position, imported]));
 
   function add(id, node, surface) {
     found.push(violation(id, locator, `surface:${surface}@${node.getStart(sourceFile)}`));
-  }
-
-  function sameState(left, right) {
-    return left.kind === right.kind
-      && left.ruleId === right.ruleId
-      && left.surface === right.surface
-      && left.value === right.value;
-  }
-
-  function mergeState(left, right) {
-    if (sameState(left, right)) return left;
-    if (left.kind === "ambiguous-loader" || right.kind === "ambiguous-loader") return AMBIGUOUS_LOADER_STATE;
-    if (left.kind === "loader" || right.kind === "loader") return AMBIGUOUS_LOADER_STATE;
-    return AMBIGUOUS_STATE;
-  }
-
-  function cloneScope(scope) {
-    if (scope === null) return null;
-    const clone = createScope(cloneScope(scope.parent));
-    for (const [name, state] of scope.bindings) clone.bindings.set(name, state);
-    return clone;
-  }
-
-  function mergeScopes(target, left, right) {
-    if (target.parent !== null) mergeScopes(target.parent, left.parent, right.parent);
-    const names = new Set([...target.bindings.keys(), ...left.bindings.keys(), ...right.bindings.keys()]);
-    for (const name of names) {
-      const original = target.bindings.get(name) ?? BENIGN_STATE;
-      const leftState = left.bindings.get(name) ?? original;
-      const rightState = right.bindings.get(name) ?? original;
-      target.bindings.set(name, mergeState(leftState, rightState));
-    }
   }
 
   function directDeclarationStates(scope, statements) {
@@ -621,6 +843,7 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
     if (source.kind === "covered") return COVERED_STATE;
     if (source.kind === "ambiguous" || source.kind === "ambiguous-loader") return AMBIGUOUS_STATE;
     if (source.kind === "symbol") return source;
+    if (source.kind === "module") return property === "require" ? LOADER_STATE : BENIGN_STATE;
     if (source.kind === "namespace") {
       if (property === null) return AMBIGUOUS_STATE;
       const rule = symbolRule(property);
@@ -668,8 +891,11 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
     }
     if (ts.isConditionalExpression(node)) {
       evaluate(node.condition, scope);
-      const left = evaluate(node.whenTrue, cloneScope(scope));
-      const right = evaluate(node.whenFalse, cloneScope(scope));
+      const leftScope = cloneScope(scope);
+      const rightScope = cloneScope(scope);
+      const left = evaluate(node.whenTrue, leftScope);
+      const right = evaluate(node.whenFalse, rightScope);
+      mergeScopes(scope, leftScope, rightScope);
       return mergeState(left, right);
     }
     if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
@@ -753,6 +979,70 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
       mergeScopes(scope, left, right);
       return;
     }
+    if (ts.isSwitchStatement(statement)) {
+      evaluate(statement.expression, scope);
+      const clauses = statement.caseBlock.clauses;
+      const branches = [];
+      const hasDefault = clauses.some((clause) => ts.isDefaultClause(clause));
+      for (let start = 0; start < clauses.length; start += 1) {
+        const branch = cloneScope(scope);
+        for (let tested = 0; tested <= start; tested += 1) {
+          const clause = clauses[tested];
+          if (ts.isCaseClause(clause)) evaluate(clause.expression, branch);
+        }
+        let stopped = false;
+        for (let index = start; index < clauses.length && !stopped; index += 1) {
+          for (const clauseStatement of clauses[index].statements) {
+            if (ts.isBreakStatement(clauseStatement)) {
+              stopped = true;
+              break;
+            }
+            processStatement(clauseStatement, branch);
+          }
+        }
+        branches.push(branch);
+      }
+      if (!hasDefault) branches.push(cloneScope(scope));
+      let merged = branches[0];
+      for (let index = 1; index < branches.length; index += 1) {
+        const next = cloneScope(scope);
+        mergeScopes(next, merged, branches[index]);
+        merged = next;
+      }
+      if (merged !== undefined) mergeScopes(scope, merged, merged);
+      return;
+    }
+    if (ts.isTryStatement(statement)) {
+      const before = cloneScope(scope);
+      const successful = cloneScope(scope);
+      processStatement(statement.tryBlock, successful);
+      const branches = [successful];
+      if (statement.catchClause !== undefined) {
+        const caught = cloneScope(scope);
+        mergeScopes(caught, before, successful);
+        const catchScope = createScope(caught);
+        if (statement.catchClause.variableDeclaration !== undefined) {
+          for (const name of bindingNames(ts, statement.catchClause.variableDeclaration.name)) {
+            catchScope.bindings.set(name, BENIGN_STATE);
+          }
+        }
+        predeclareScope(ts, catchScope, statement.catchClause.block.statements);
+        directDeclarationStates(catchScope, statement.catchClause.block.statements);
+        processStatements(statement.catchClause.block.statements, catchScope);
+        branches.push(caught);
+      }
+      if (statement.finallyBlock !== undefined) {
+        for (const branch of branches) processStatement(statement.finallyBlock, branch);
+      }
+      let merged = branches[0];
+      for (let index = 1; index < branches.length; index += 1) {
+        const next = cloneScope(scope);
+        mergeScopes(next, merged, branches[index]);
+        merged = next;
+      }
+      mergeScopes(scope, merged, merged);
+      return;
+    }
     if (ts.isWhileStatement(statement) || ts.isDoStatement(statement) || ts.isForStatement(statement) || ts.isForInStatement(statement) || ts.isForOfStatement(statement)) {
       const zeroIterations = cloneScope(scope);
       const oneIteration = cloneScope(scope);
@@ -777,6 +1067,7 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
   predeclareScope(ts, root, sourceFile.statements);
   directDeclarationStates(root, sourceFile.statements);
   if (!root.bindings.has("require")) root.bindings.set("require", LOADER_STATE);
+  if (!root.bindings.has("module")) root.bindings.set("module", MODULE_STATE);
   for (const imported of imports) {
     if (imported.kind === "require" || imported.kind === "re-export") continue;
     for (const binding of imported.bindings) {
@@ -807,19 +1098,24 @@ function deadlineExpired(deadline) {
   return deadlineRemaining(deadline) === 0;
 }
 
-async function runCommand(command, args, cwd, deadline, env = process.env) {
+async function runProviderCommand(provider, args, cwd, deadline) {
   const remaining = deadlineRemaining(deadline);
   if (remaining === 0) throw new Error("audit deadline expired");
-  const outcome = await runOwnedProcess({
-    command,
+  const outcome = await runAuthenticatedProviderCommand({
+    executable: provider.executable,
+    expectedDigest: provider.digest,
     args,
     cwd,
-    env,
-    timeoutMs: Math.max(1, Math.min(COMMAND_TIMEOUT_MS, remaining)),
+    env: provider.environment,
+    deadline,
+    timeoutMs: COMMAND_TIMEOUT_MS,
     maxOutputBytes: COMMAND_OUTPUT_BYTES,
-    windowsHide: true,
   });
-  if (outcome.error !== undefined || outcome.status !== 0 || outcome.signal !== null) {
+  if (outcome === null
+      || outcome.error !== undefined
+      || outcome.spawnError !== null
+      || outcome.status !== 0
+      || outcome.signal !== null) {
     throw new Error("bounded command refused");
   }
   return outcome.stdout.trim();
@@ -944,8 +1240,34 @@ async function resolveGraphProvider(repoRoot, deadline) {
     "bin",
     process.platform === "win32" ? "codebase-memory-mcp.exe" : "codebase-memory-mcp",
   );
-  const environment = { ...process.env, HOME: nativeHome };
-  if (process.platform === "win32") environment.USERPROFILE = nativeHome;
+  const environment = { HOME: nativeHome };
+  if (process.platform === "win32") {
+    const systemRoot = resolve(win32.parse(nativeHome).root, "Windows");
+    const systemDirectory = resolve(systemRoot, "System32");
+    const gitDirectory = resolve(win32.parse(nativeHome).root, "Program Files", "Git", "cmd");
+    const gitExecutable = resolve(gitDirectory, "git.exe");
+    let pathStats;
+    try {
+      pathStats = await Promise.all([
+        lstat(systemRoot),
+        lstat(systemDirectory),
+        lstat(gitDirectory),
+        lstat(gitExecutable),
+      ]);
+    } catch {
+      return null;
+    }
+    if (pathStats.slice(0, 3).some((stat) => !stat.isDirectory() || stat.isSymbolicLink())
+        || !pathStats[3].isFile()
+        || pathStats[3].isSymbolicLink()
+        || !samePath(await realpath(systemRoot), systemRoot)
+        || !samePath(await realpath(systemDirectory), systemDirectory)
+        || !samePath(await realpath(gitDirectory), gitDirectory)
+        || !samePath(await realpath(gitExecutable), gitExecutable)) return null;
+    environment.USERPROFILE = nativeHome;
+    environment.SystemRoot = systemRoot;
+    environment.PATH = `${gitDirectory}${win32.delimiter}${systemDirectory}`;
+  }
   const authenticated = await authenticateDetachedAuthorityProvider({
     executable,
     expectedDigest: GRAPH_PROVIDER_DIGEST,
@@ -956,18 +1278,21 @@ async function resolveGraphProvider(repoRoot, deadline) {
   });
   return authenticated === null
     ? null
-    : Object.freeze({ executable: authenticated.executable, environment: Object.freeze(environment) });
+    : Object.freeze({
+      executable: authenticated.executable,
+      digest: authenticated.digest,
+      environment: Object.freeze(environment),
+    });
 }
 
 async function discoverGraphProject(repoRoot, provider, deadline) {
   const cacheKey = `${comparablePath(repoRoot)}\0${provider.executable}`;
   if (graphProjectCache?.key === cacheKey) return graphProjectCache.project;
-  const raw = await runCommand(
-    provider.executable,
+  const raw = await runProviderCommand(
+    provider,
     ["cli", "list_projects"],
     repoRoot,
     deadline,
-    provider.environment,
   );
   const listed = parseJsonObject(raw);
   if (!Array.isArray(listed.projects)) throw new Error("graph project list malformed");
@@ -984,12 +1309,11 @@ async function inspectGraph(repoRoot, expectedHead, deadline) {
   const provider = await resolveGraphProvider(repoRoot, deadline);
   if (provider === null) throw new Error("graph provider unavailable");
   const project = await discoverGraphProject(repoRoot, provider, deadline);
-  const raw = await runCommand(
-    provider.executable,
+  const raw = await runProviderCommand(
+    provider,
     ["cli", "index_status", "--project", project],
     repoRoot,
     deadline,
-    provider.environment,
   );
   const status = parseJsonObject(raw);
   const buildPoint = typeof status.indexed_head_sha === "string" ? status.indexed_head_sha : null;
