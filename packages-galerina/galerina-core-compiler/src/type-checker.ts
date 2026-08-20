@@ -53,6 +53,10 @@ import {
 } from "./type-registry.js";
 import { KNOWN_DOMAIN_TYPES } from "./package-type-registry.js";
 import { MONEY_UNIT_TAGS } from "./unit-registry.generated.js";
+import {
+  FUNGI_REQUIREMENT_002,
+  FUNGI_REQUIREMENT_009,
+} from "./requirement-diagnostics.js";
 
 // RD-0349 I1: the pinned ISO-4217 currency set — the SAME generated table the runtime `Money.of`
 // enforces (stdlib.ts). A Money<CCY> whose tag is not here now fails at COMPILE time (FUNGI-TYPE-032),
@@ -1002,6 +1006,7 @@ class TypeChecker {
       case "stringLiteral": return "String";
       case "charLiteral":   return "Char";
       case "boolLiteral":   return "Bool";
+      case "requirementExpr": return "Verdict";
 
       case "identifier": {
         const name = node.value ?? "";
@@ -1344,6 +1349,8 @@ class TypeChecker {
     if (node.kind === "checkExpr") this.checkCheckSubject(node);
     // W5b T2.4: prefilter(subject){…} is also verdict-only (same A9 rationale).
     if (node.kind === "prefilterExpr") this.checkPrefilterSubject(node);
+    if (node.kind === "requirementExpr") this.checkRequirementExpression(node);
+    if (node.kind === "requireStmt") this.checkRequireStatement(node);
     // S1 (bridge 0148, F1 fix): `if`/`while` branch control flow on a BOOLEAN. A non-Bool condition
     // (Int, Verdict, …) is the F1 fail-open — `if <Int>` / `if <Verdict>` compiled clean, even --strict-types.
     // check(){} is the K3 Verdict-dispatch construct (checkCheckSubject); if/while are Bool-only.
@@ -2556,6 +2563,40 @@ class TypeChecker {
         `Make the subject a Verdict, or use 'match' for '${t}'.`,
       ));
     }
+  }
+
+  /** Require every retained requirement constraint to resolve to Bool or Verdict. */
+  private checkRequirementExpression(node: AstNode): void {
+    for (const constraint of node.children ?? []) {
+      const expression = constraint.children?.[0];
+      const inferred = expression === undefined ? undefined : this.inferType(expression);
+      if (inferred === "Bool" || inferred === "Verdict") continue;
+
+      const actual = inferred ?? "unresolved";
+      this.diagnostics.push(makeTCDiag(
+        FUNGI_REQUIREMENT_002.code,
+        FUNGI_REQUIREMENT_002.name,
+        `${FUNGI_REQUIREMENT_002.message} Constraint type is '${actual}'.`,
+        expression?.location ?? constraint.location ?? node.location,
+        FUNGI_REQUIREMENT_002.suggestedFix,
+      ));
+    }
+  }
+
+  /** Require the guarded subject to resolve to Bool or Verdict without coercion. */
+  private checkRequireStatement(node: AstNode): void {
+    const subject = node.children?.[0];
+    const inferred = subject === undefined ? undefined : this.inferType(subject);
+    if (inferred === "Bool" || inferred === "Verdict") return;
+
+    const actual = inferred ?? "unresolved";
+    this.diagnostics.push(makeTCDiag(
+      FUNGI_REQUIREMENT_009.code,
+      FUNGI_REQUIREMENT_009.name,
+      `${FUNGI_REQUIREMENT_009.message} Subject type is '${actual}'.`,
+      subject?.location ?? node.location,
+      FUNGI_REQUIREMENT_009.suggestedFix,
+    ));
   }
 
   /**
