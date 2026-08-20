@@ -112,3 +112,14 @@ specified pre-implementation result; no detector code was added.
 
 Code/control commit: `a35480cb2d0c010abbc10f961b6df142a7015495`
 (`test: bind detached receipt to repository head`), local only and not pushed.
+Prior evidence-only report commit: `f2198844468cd4279ca01341d08fcca0b34b1493`
+(`docs: record detached authority fix round 2`); it is not the control commit.
+
+## Fix Round 3
+
+Provenance correction only: Fix Round 2 now explicitly records both its
+code/control commit (`a35480cb2d0c010abbc10f961b6df142a7015495`) and its
+prior evidence-only report commit (`f2198844468cd4279ca01341d08fcca0b34b1493`).
+This new report-only correction is intentionally not self-named before its
+commit exists; its resulting SHA is recorded in the task handoff as evidence,
+never represented as a control change.
