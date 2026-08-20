@@ -1,10 +1,17 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync, symlinkSync } from "node:fs";
+import {
+  copyFileSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  symlinkSync,
+} from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
 
-import { authenticateDetachedAuthorityProvider } from "../lib/detached-authority-provider.mjs";
+import * as provider from "../lib/detached-authority-provider.mjs";
 
 const ROOT = resolve(import.meta.dirname, "..", "..");
 const FIXTURES = resolve(ROOT, "scripts/tests/fixtures/detached-authority");
@@ -16,7 +23,7 @@ function digest(path) {
 }
 
 function authenticate(executable, expectedDigest) {
-  return authenticateDetachedAuthorityProvider({
+  return provider.authenticateDetachedAuthorityProvider({
     executable,
     expectedDigest,
     expectedVersion: EXPECTED_VERSION,
@@ -31,6 +38,58 @@ test("missing and wrong-digest providers refuse authentication", async () => {
 
   assert.equal(missing, null);
   assert.equal(wrongDigest, null);
+});
+
+test("an authority-bearing provider command requires stable authenticated bytes", async () => {
+  assert.equal(typeof provider.runAuthenticatedProviderCommand, "function");
+  const temporaryRoot = mkdtempSync(resolve(FIXTURES, ".task-2-provider-command-"));
+  const executable = resolve(temporaryRoot, process.platform === "win32" ? "provider.exe" : "provider");
+  try {
+    copyFileSync(process.execPath, executable);
+    const result = await provider.runAuthenticatedProviderCommand({
+      executable,
+      expectedDigest: digest(executable),
+      args: ["-e", "process.stdout.write('authenticated')"],
+      cwd: ROOT,
+      env: {},
+      deadline: Date.now() + 10_000,
+      timeoutMs: 5_000,
+      maxOutputBytes: 4 * 1024,
+    });
+
+    assert.equal(result?.stdout, "authenticated");
+    assert.equal(result?.status, 0);
+  } finally {
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+});
+
+test("a provider command refuses when its authenticated snapshot changes during execution", async () => {
+  assert.equal(typeof provider.runAuthenticatedProviderCommand, "function");
+  const temporaryRoot = mkdtempSync(resolve(FIXTURES, ".task-2-provider-race-"));
+  const executable = resolve(temporaryRoot, process.platform === "win32" ? "provider.exe" : "provider");
+  try {
+    copyFileSync(process.execPath, executable);
+    const before = statSync(executable).mtimeMs;
+    const result = await provider.runAuthenticatedProviderCommand({
+      executable,
+      expectedDigest: digest(executable),
+      args: [
+        "-e",
+        "require('node:fs').utimesSync(process.execPath, new Date(1000), new Date(1000));",
+      ],
+      cwd: ROOT,
+      env: {},
+      deadline: Date.now() + 10_000,
+      timeoutMs: 5_000,
+      maxOutputBytes: 4 * 1024,
+    });
+
+    assert.notEqual(statSync(executable).mtimeMs, before);
+    assert.equal(result, null);
+  } finally {
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
 });
 
 test("a provider with authenticated bytes but the wrong version refuses", async () => {
