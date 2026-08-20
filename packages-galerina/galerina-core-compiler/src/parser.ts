@@ -14,6 +14,7 @@ import { lex, type Token, type LexerDiagnostic } from "./lexer.js";
 import {
   FUNGI_REQUIREMENT_001,
   FUNGI_REQUIREMENT_005,
+  FUNGI_REQUIREMENT_006,
   FUNGI_REQUIREMENT_008,
 } from "./requirement-diagnostics.js";
 
@@ -425,6 +426,8 @@ class Parser {
   private exprDepth = 0;
   /** Nested requirement blocks are refused and never become authorizing requirementExpr nodes. */
   private requirementDepth = 0;
+  /** Prevent the following require-handler block from being consumed as a named record constructor. */
+  private parsingRequireSubject = false;
   private readonly diagnostics: ParseDiagnostic[] = [];
   /** One diagnostic per over-ceiling field array; surplus fields are parsed
    * for recovery but never retained in the authorizing AST. */
@@ -1445,6 +1448,7 @@ class Parser {
         case "unless":   return this.parseUnlessStmt();
         case "match":    return this.parseMatchExpr();
         case "check":    return this.parseCheckStmt();
+        case "require":  return this.parseRequireStmt();
         case "fault":    return this.parseFaultStmt();
         case "prefilter": return this.parsePrefilterStmt();
         case "compute":  return this.parseComputeTarget();
@@ -1919,6 +1923,107 @@ class Parser {
       ? this.parseBlock()
       : (this.parseStatement() ?? { kind: "block", location: loc });
     return { kind: "checkArm", value: label, location: loc, children: [body] };
+  }
+
+  /** Parse the fail-closed `require subject { deny: ... ambig: ... }` gate. */
+  private parseRequireStmt(): AstNode {
+    const start = this.loc();
+    this.advance(); // require
+    this.parsingRequireSubject = true;
+    let subject: AstNode;
+    try {
+      subject = this.parseExpression();
+    } finally {
+      this.parsingRequireSubject = false;
+    }
+    this.skipNewlines();
+    this.expect("symbol", "{");
+    this.skipNewlines();
+
+    const seen = new Set<string>();
+    const arms = new Map<string, AstNode>();
+    while (!this.currentIs("symbol", "}") && !this.isEof()) {
+      const arm = this.parseRequireArm(seen);
+      if (arm !== undefined) arms.set(arm.value ?? "", arm);
+      this.skipNewlines();
+    }
+    const close = this.expect("symbol", "}") ?? this.peek(-1);
+
+    for (const required of ["deny", "ambig"] as const) {
+      if (seen.has(required)) continue;
+      this.emit(
+        FUNGI_REQUIREMENT_006.code,
+        FUNGI_REQUIREMENT_006.name,
+        `require is missing the '${required}:' handler. ${FUNGI_REQUIREMENT_006.message}`,
+        start,
+        FUNGI_REQUIREMENT_006.suggestedFix,
+      );
+    }
+
+    const children: AstNode[] = [subject];
+    const deny = arms.get("deny");
+    const ambig = arms.get("ambig");
+    if (deny !== undefined) children.push(deny);
+    if (ambig !== undefined) children.push(ambig);
+    return {
+      kind: "requireStmt",
+      location: this.spanFrom(start, close),
+      children,
+    };
+  }
+
+  /** Parse one contextual deny/ambig handler and consume invalid bodies for recovery. */
+  private parseRequireArm(seen: Set<string>): AstNode | undefined {
+    const start = this.loc();
+    const labelTok = this.current();
+    const label = labelTok.value;
+    const validLabel = labelTok.kind === "identifier" && (label === "deny" || label === "ambig");
+
+    if (!validLabel) {
+      this.emit(
+        "FUNGI-PARSE-001",
+        "UNEXPECTED_TOKEN",
+        `Expected a require handler label (deny:/ambig:), got '${label}'.`,
+        start,
+        "Use exactly one deny: handler and one ambig: handler.",
+      );
+      this.advance();
+      if (this.currentIs("symbol", ":")) this.advance();
+      this.skipNewlines();
+      this.consumeRequireArmBody(start);
+      return undefined;
+    }
+
+    const duplicate = seen.has(label);
+    if (duplicate) {
+      this.emit(
+        FUNGI_REQUIREMENT_006.code,
+        FUNGI_REQUIREMENT_006.name,
+        `Duplicate '${label}:' require handler. ${FUNGI_REQUIREMENT_006.message}`,
+        start,
+        FUNGI_REQUIREMENT_006.suggestedFix,
+      );
+    } else {
+      seen.add(label);
+    }
+
+    this.advance();
+    this.expect("symbol", ":");
+    this.skipNewlines();
+    const body = this.consumeRequireArmBody(start);
+    const end = this.peek(-1);
+    if (duplicate) return undefined;
+    return {
+      kind: "requireArm",
+      value: label,
+      location: this.spanFrom(start, end),
+      children: [body],
+    };
+  }
+
+  private consumeRequireArmBody(fallbackLocation: SourceLocation): AstNode {
+    if (this.currentIs("symbol", "{")) return this.parseBlock();
+    return this.parseStatement() ?? { kind: "block", location: fallbackLocation, children: [] };
   }
 
   /**
@@ -2735,7 +2840,7 @@ class Parser {
       // Disambiguate by lookahead: only treat as constructor if contents look
       // like `field :` pairs (same heuristic as anonymous record literals above).
       // This allows `let x = TypeName { a: 1, b: 2 }` in any expression position.
-      if (this.currentIs("symbol", "{")) {
+      if (!this.parsingRequireSubject && this.currentIs("symbol", "{")) {
         let peekOff = 1;
         while (this.peek(peekOff).kind === "newline") peekOff++;
         const firstInside  = this.peek(peekOff);
