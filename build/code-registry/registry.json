@@ -7658,7 +7658,7 @@
       "severities": [],
       "defs": 0,
       "emits": 5,
-      "tests": 25,
+      "tests": 26,
       "docs": 14
     },
     {
@@ -9039,8 +9039,8 @@
         "error"
       ],
       "defs": 1,
-      "emits": 2,
-      "tests": 4,
+      "emits": 3,
+      "tests": 5,
       "docs": 5
     },
     {
