@@ -44,6 +44,12 @@ must not provide production code that could satisfy it.
 - `scripts/tests/fixtures/detached-authority/red-unresolved/entry.ts`
 - `.superpowers/sdd/2026-08-17-galerina-detached-authority-detectors/task-1-report.md`
 
+## Commit
+
+The planted controls and this initial report were committed locally, not
+pushed, as `303a5e1b276ad5a8b1937125ed2c25214dad5b1f`
+(`test: specify detached authority path controls`).
+
 ## Self-review
 
 - No detector, CLI registration, package script, generated artifact, or other
