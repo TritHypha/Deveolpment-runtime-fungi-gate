@@ -456,6 +456,79 @@ test("module.require enters closure for namespace and inline forbidden surfaces"
   });
 });
 
+test("chained module aliases and renamed destructuring retain loader closure", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const first = module; const second = first; const { require: load } = second; module.exports = load('./helper.cjs');\n",
+    "helper.cjs": "module.exports = require('typescript');\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+    const entry = `${locator}/entry.cjs`;
+    const helper = `${locator}/helper.cjs`;
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "TYPESCRIPT_REENTRY");
+    assert.equal(result.inspectedFiles.some((file) => file.locator === helper), true);
+    assert.equal(result.inspectedEdges.filter((edge) => edge.from === entry && edge.to === helper).length, 1);
+    assert.equal(result.violations.some((finding) => finding.id === "TYPESCRIPT_REENTRY" && finding.file === helper), true);
+  });
+});
+
+test("deterministic computed module properties retain exact loader closure", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const literal = module['require']('./helper.cjs'); const concatenated = module['re' + 'quire']('./helper.cjs'); const member = 'require'; const bound = module[member]('./helper.cjs'); const mod = module; const { [member]: load } = mod; const destructured = load('./helper.cjs'); module.exports = [literal, concatenated, bound, destructured];\n",
+    "helper.cjs": "module.exports = require('typescript');\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+    const entry = `${locator}/entry.cjs`;
+    const helper = `${locator}/helper.cjs`;
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "TYPESCRIPT_REENTRY");
+    assert.equal(result.inspectedFiles.some((file) => file.locator === helper), true);
+    assert.equal(result.inspectedEdges.filter((edge) => edge.from === entry && edge.to === helper).length, 4);
+    assert.equal(result.violations.some((finding) => finding.id === "TYPESCRIPT_REENTRY" && finding.file === helper), true);
+  });
+});
+
+test("an unresolved computed property on the intrinsic module object refuses", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const member = process.argv[0]; module.exports = module[member]('./helper.cjs');\n",
+    "helper.cjs": "module.exports = 1;\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "REFUSED", JSON.stringify(result));
+    assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
+  });
+});
+
+test("computed and destructured properties on a shadowed module stay benign", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const module = { require() { return { safe() { return 1; } }; } }; const member = 'require'; const { require: load } = module; const first = load('./missing.cjs').safe(); const second = module[member]('./missing.cjs').safe(); module.value = [first, second];\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+    assert.equal(result.inspectedEdges.length, 0);
+  });
+});
+
 test("module.require nonliteral and package loads fail closed", async () => {
   await withTemporaryFixture({
     "nonliteral.cjs": "const target = './helper.cjs'; module.exports = module.require(target);\n",
