@@ -12,7 +12,7 @@
 |---|---|
 | [`consultations/`](consultations/INDEX.md) | 20 |
 | [`plans/`](plans/INDEX.md) | 158 |
-| [`specs/`](specs/INDEX.md) | 123 |
+| [`specs/`](specs/INDEX.md) | 124 |
 
 ---
 
