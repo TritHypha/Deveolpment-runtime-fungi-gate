@@ -1174,10 +1174,8 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
     if (ts.isImportDeclaration(statement) || ts.isImportEqualsDeclaration(statement) || ts.isExportDeclaration(statement)) return;
     if (ts.isVariableStatement(statement)) {
       for (const declaration of statement.declarationList.declarations) {
-        const state = declaration.initializer === undefined
-          ? BENIGN_STATE
-          : evaluate(declaration.initializer, scope);
-        bindPattern(scope, declaration.name, state);
+        if (declaration.initializer === undefined) continue;
+        bindPattern(scope, declaration.name, evaluate(declaration.initializer, scope));
       }
       return;
     }
