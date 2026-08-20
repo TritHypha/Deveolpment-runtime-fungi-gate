@@ -162,7 +162,7 @@ state as Step 3. Do not claim enforcement for a reserved code.
 Run with an outer 15-minute deadline:
 
 ```powershell
-node ..\skills\session-upkeep\scripts\card.mjs --seq .upkeep-close.json
+node ..\AGENTS\skills\session-upkeep\scripts\card.mjs --seq .upkeep-close.json
 ```
 
 Expected: every configured generator/gate exits zero. A gate finding is
@@ -590,12 +590,14 @@ git commit -m "feat: parse exhaustive require statements"
 - [ ] **Step 1: Regenerate diagnostic and code indexes to a fixed point**
 
 ```powershell
-node scripts\gen-code-registry.mjs
 node scripts\code-index.mjs
+node scripts\gen-code-registry.mjs
 node scripts\docs-index.mjs
 ```
 
-Run the three commands again and compare SHA-256 values of every changed
+The registry consumes `build/code-index/code-index.json`, so code-index
+generation must run first. Run the three commands again in the same order and
+compare SHA-256 values of every changed
 generated file. Any second-run change is `HOLD`.
 
 - [ ] **Step 2: Regenerate and audit the project graph**
@@ -613,11 +615,15 @@ Expected: generation and integrity exit zero with nonzero node/edge counts.
 node scripts\audit-diagnostic-codes.mjs
 node scripts\audit-diagnostic-code-collisions.mjs
 node scripts\audit-code-catalog-coverage.mjs
-node scripts\lint-conventions.mjs
+node scripts\lint-conventions.mjs --soft
 node scripts\audit-path-leak.mjs
 ```
 
-Expected: every gate exits zero. The registry must show one owner per new code;
+Expected: every zero-baseline gate exits zero. The conventions report is
+retained through its declared `--soft` mode while the pre-existing `.fungi`
+quality baseline remains above zero; it is not reported as a clean conventions
+pass and does not authorize `.fungi` conversion. The registry must show one
+owner per new code;
 `001`, `005`, `006`, `008` must have emit and test sites; reserved codes must
 not be represented as live blockers.
 

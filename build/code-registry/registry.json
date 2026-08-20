@@ -1,12 +1,12 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 976,
+  "total": 988,
   "counts": {
-    "ref": 215,
-    "inline": 364,
+    "ref": 196,
+    "inline": 383,
     "phantom": 114,
-    "live": 170,
-    "referenced": 100,
+    "live": 180,
+    "referenced": 102,
     "dead": 13
   },
   "entries": [
@@ -1822,11 +1822,13 @@
       "code": "FUNGI-ADMIT-004",
       "family": "ADMIT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "ADMISSION_ON_FN_PARAM"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 3,
       "docs": 0
     },
@@ -3002,11 +3004,13 @@
       "code": "FUNGI-CHECK-001",
       "family": "CHECK",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "NON_EXHAUSTIVE_CHECK"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 6,
       "docs": 7
     },
@@ -3604,11 +3608,13 @@
       "code": "FUNGI-CONTRACT-017",
       "family": "CONTRACT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PERMISSIONS_BLOCK_REQUIRED"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 0,
       "docs": 0
     },
@@ -3616,11 +3622,13 @@
       "code": "FUNGI-CONTRACT-018",
       "family": "CONTRACT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PERMISSION_IDENTIFIER_REQUIRED"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 0,
       "docs": 0
     },
@@ -3628,11 +3636,13 @@
       "code": "FUNGI-CONTRACT-019",
       "family": "CONTRACT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PERMISSION_ENTRY_NOT_EXACT"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 0,
       "docs": 0
     },
@@ -3640,11 +3650,13 @@
       "code": "FUNGI-CONTRACT-020",
       "family": "CONTRACT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "UNKNOWN_PERMISSION_ENTRY"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 0
     },
@@ -3652,11 +3664,13 @@
       "code": "FUNGI-CONTRACT-021",
       "family": "CONTRACT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PERMISSION_TARGET_REQUIRED"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 0,
       "docs": 0
     },
@@ -7637,11 +7651,13 @@
       "code": "FUNGI-PARSE-001",
       "family": "PARSE",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "UNEXPECTED_TOKEN"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 5,
       "tests": 25,
       "docs": 14
     },
@@ -7649,11 +7665,13 @@
       "code": "FUNGI-PARSE-002",
       "family": "PARSE",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "EXPECTED_FLOW_KEYWORD"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 4,
       "tests": 8,
       "docs": 0
     },
@@ -7709,11 +7727,13 @@
       "code": "FUNGI-PARSE-007",
       "family": "PARSE",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "BLOCK_TYPE_REQUIRES_RECORD"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 2,
       "docs": 6
     },
@@ -7721,11 +7741,13 @@
       "code": "FUNGI-PARSE-008",
       "family": "PARSE",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "RECORD_FIELD_CEILING"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 6,
       "docs": 5
     },
@@ -7733,11 +7755,13 @@
       "code": "FUNGI-PARSE-DEPTH-001",
       "family": "PARSE",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "EXCESSIVE_NESTING"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 2,
       "tests": 8,
       "docs": 0
     },
@@ -8489,11 +8513,13 @@
       "code": "FUNGI-PREFILTER-001",
       "family": "PREFILTER",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "NON_EXHAUSTIVE_PREFILTER"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 6,
       "docs": 3
     },
@@ -8517,11 +8543,13 @@
       "code": "FUNGI-PREFILTER-003",
       "family": "PREFILTER",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PREFILTER_CANNOT_ALLOW"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 4,
       "docs": 2
     },
@@ -8920,6 +8948,198 @@
       "docs": 2
     },
     {
+      "code": "FUNGI-REQUIREMENT-001",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "EMPTY_REQUIREMENT"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
+      "docs": 6
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-002",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "CONSTRAINT_TYPE_MISMATCH"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-003",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "CONSTRAINT_EFFECTFUL"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-004",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "TAINT_AUTHORITY_MISSING"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-005",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "CONSTRAINT_CEILING"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
+      "docs": 3
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-006",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "NON_EXHAUSTIVE_REQUIRE"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 2,
+      "tests": 4,
+      "docs": 5
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-007",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "NON_TERMINAL_REQUIRE_HANDLER"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-008",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "NESTED_REQUIREMENT"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
+      "docs": 3
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-009",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "REQUIRE_SUBJECT_TYPE_MISMATCH"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-010",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "VALIDATOR_AUTHORITY_INVALID"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-011",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "REQUIREMENT_LOWERING_UNSUPPORTED"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-REQUIREMENT-012",
+      "family": "REQUIREMENT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "REQUIREMENT_RECEIPT_MISMATCH"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
       "code": "FUNGI-RES-001",
       "family": "RES",
       "namespace": "FUNGI",
@@ -9254,11 +9474,13 @@
       "code": "FUNGI-SEC-014",
       "family": "SEC",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "FN_CANNOT_DECLARE_EFFECTS"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 3,
       "docs": 3
     },
@@ -9898,11 +10120,13 @@
       "code": "FUNGI-SYNTAX-005",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "FN_AT_TOP_LEVEL"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 3,
       "docs": 6
     },
@@ -9910,7 +10134,7 @@
       "code": "FUNGI-SYNTAX-006",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "LET_AT_TOP_LEVEL"
       ],
@@ -9918,7 +10142,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
+      "emits": 2,
       "tests": 3,
       "docs": 7
     },
@@ -9926,7 +10150,7 @@
       "code": "FUNGI-SYNTAX-007",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "MUT_AT_TOP_LEVEL"
       ],
@@ -9934,7 +10158,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 2
     },
@@ -9942,7 +10166,7 @@
       "code": "FUNGI-SYNTAX-008",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "UNSAFE_LET_AT_TOP_LEVEL"
       ],
@@ -9950,7 +10174,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 5,
       "docs": 4
     },
@@ -9958,7 +10182,7 @@
       "code": "FUNGI-SYNTAX-009",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "EMIT_AT_TOP_LEVEL"
       ],
@@ -9966,7 +10190,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 0,
       "docs": 4
     },
@@ -9974,11 +10198,13 @@
       "code": "FUNGI-SYNTAX-010",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "ElseIfNotAllowed"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 0,
       "docs": 3
     },
@@ -9986,11 +10212,13 @@
       "code": "FUNGI-SYNTAX-011",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "UNKNOWN_GOVERNANCE_BLOCK"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 10,
       "docs": 5
     },
@@ -9998,11 +10226,13 @@
       "code": "FUNGI-SYNTAX-013",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "INERT_GOVERNANCE_BLOCK"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 3,
       "docs": 2
     },
@@ -10066,7 +10296,7 @@
       "code": "FUNGI-SYNTAX-LEGACY-001",
       "family": "SYNTAX",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "LEGACY_EFFECTS_SYNTAX"
       ],
@@ -10074,7 +10304,7 @@
         "warning"
       ],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 15,
       "docs": 1
     },
@@ -10317,7 +10547,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 7,
+      "tests": 9,
       "docs": 0
     },
     {
@@ -10329,7 +10559,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 3,
+      "tests": 5,
       "docs": 0
     },
     {
@@ -10341,7 +10571,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 1,
+      "tests": 3,
       "docs": 0
     },
     {
@@ -11325,7 +11555,7 @@
         "error"
       ],
       "defs": 2,
-      "emits": 1,
+      "emits": 2,
       "tests": 1,
       "docs": 7
     },
@@ -11341,7 +11571,7 @@
         "error"
       ],
       "defs": 2,
-      "emits": 1,
+      "emits": 2,
       "tests": 1,
       "docs": 1
     },
@@ -11429,7 +11659,7 @@
       "code": "FUNGI-VAULT-008",
       "family": "VAULT",
       "namespace": "FUNGI",
-      "status": "referenced",
+      "status": "live",
       "names": [
         "VAULT_MISSING_SCOPE"
       ],
@@ -11437,7 +11667,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 0,
+      "emits": 2,
       "tests": 0,
       "docs": 2
     },

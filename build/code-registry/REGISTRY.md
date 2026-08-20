@@ -13,12 +13,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | status | count | meaning |
 |---|---|---|
-| live | 170 | emitted with an exported constant |
-| inline | 364 | emitted, NO exported constant (R4 — Stage F) |
-| referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
+| live | 180 | emitted with an exported constant |
+| inline | 383 | emitted, NO exported constant (R4 — Stage F) |
+| referenced | 102 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 114 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 215 | referenced only (no def/emit) |
+| ref | 196 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -58,7 +58,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ADMIT-001 | inline | — | — |
 | FUNGI-ADMIT-002 | inline | — | — |
 | FUNGI-ADMIT-003 | inline | ADMISSION_PREDICATE_TYPE | error |
-| FUNGI-ADMIT-004 | ref | — | — |
+| FUNGI-ADMIT-004 | inline | ADMISSION_ON_FN_PARAM | — |
 | GATE-ADMIT-001 | inline | GATE_V3_ADMISSION_NO_TARGET | — |
 | GATE-ADMIT-002 | inline | GATE_V3_ADMISSION_PROOFS_ABSENT | — |
 | GATE-ADMIT-003 | inline | GATE_V3_ADMISSION_VERIFIER_UNIDENTIFIED | — |
@@ -278,7 +278,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-CHECK-001 | ref | — | — |
+| FUNGI-CHECK-001 | inline | NON_EXHAUSTIVE_CHECK | — |
 | FUNGI-CHECK-002 | inline | CHECK_SUBJECT_NOT_VERDICT | error |
 
 ### CLI (1)
@@ -367,11 +367,11 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-CONTRACT-003 | phantom | — | — |
 | FUNGI-CONTRACT-004 | phantom | — | — |
-| FUNGI-CONTRACT-017 | ref | — | — |
-| FUNGI-CONTRACT-018 | ref | — | — |
-| FUNGI-CONTRACT-019 | ref | — | — |
-| FUNGI-CONTRACT-020 | ref | — | — |
-| FUNGI-CONTRACT-021 | ref | — | — |
+| FUNGI-CONTRACT-017 | inline | PERMISSIONS_BLOCK_REQUIRED | — |
+| FUNGI-CONTRACT-018 | inline | PERMISSION_IDENTIFIER_REQUIRED | — |
+| FUNGI-CONTRACT-019 | inline | PERMISSION_ENTRY_NOT_EXACT | — |
+| FUNGI-CONTRACT-020 | inline | UNKNOWN_PERMISSION_ENTRY | — |
+| FUNGI-CONTRACT-021 | inline | PERMISSION_TARGET_REQUIRED | — |
 
 ### CRYPTO (1)
 
@@ -1115,15 +1115,15 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-PARSE-00 | ref | — | — |
-| FUNGI-PARSE-001 | ref | — | — |
-| FUNGI-PARSE-002 | ref | — | — |
+| FUNGI-PARSE-001 | inline | UNEXPECTED_TOKEN | — |
+| FUNGI-PARSE-002 | inline | EXPECTED_FLOW_KEYWORD | — |
 | FUNGI-PARSE-003 | ref | — | — |
 | FUNGI-PARSE-004 | ref | — | — |
 | FUNGI-PARSE-005 | ref | — | — |
 | FUNGI-PARSE-006 | ref | — | — |
-| FUNGI-PARSE-007 | ref | — | — |
-| FUNGI-PARSE-008 | ref | — | — |
-| FUNGI-PARSE-DEPTH-001 | ref | — | — |
+| FUNGI-PARSE-007 | inline | BLOCK_TYPE_REQUIRES_RECORD | — |
+| FUNGI-PARSE-008 | inline | RECORD_FIELD_CEILING | — |
+| FUNGI-PARSE-DEPTH-001 | inline | EXCESSIVE_NESTING | — |
 | GATE-PARSE-002 | inline | GATE_V3_BAD_VERSION_HEADER | — |
 | GATE-PARSE-003 | inline | GATE_V3_NON_ASCII | — |
 | GATE-PARSE-004 | inline | GATE_V3_MISSING_CIRCUIT | — |
@@ -1265,9 +1265,9 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-PREFILTER-001 | ref | — | — |
+| FUNGI-PREFILTER-001 | inline | NON_EXHAUSTIVE_PREFILTER | — |
 | FUNGI-PREFILTER-002 | inline | PREFILTER_SUBJECT_NOT_VERDICT | error |
-| FUNGI-PREFILTER-003 | ref | — | — |
+| FUNGI-PREFILTER-003 | inline | PREFILTER_CANNOT_ALLOW | — |
 
 ### PRIVACY (4)
 
@@ -1363,6 +1363,23 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-REPORT-001 | inline | — | — |
 | FUNGI-REPORT-005 | inline | — | — |
+
+### REQUIREMENT (12)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-REQUIREMENT-001 | live | EMPTY_REQUIREMENT | error |
+| FUNGI-REQUIREMENT-002 | referenced | CONSTRAINT_TYPE_MISMATCH | error |
+| FUNGI-REQUIREMENT-003 | referenced | CONSTRAINT_EFFECTFUL | error |
+| FUNGI-REQUIREMENT-004 | referenced | TAINT_AUTHORITY_MISSING | error |
+| FUNGI-REQUIREMENT-005 | live | CONSTRAINT_CEILING | error |
+| FUNGI-REQUIREMENT-006 | live | NON_EXHAUSTIVE_REQUIRE | error |
+| FUNGI-REQUIREMENT-007 | referenced | NON_TERMINAL_REQUIRE_HANDLER | error |
+| FUNGI-REQUIREMENT-008 | live | NESTED_REQUIREMENT | error |
+| FUNGI-REQUIREMENT-009 | referenced | REQUIRE_SUBJECT_TYPE_MISMATCH | error |
+| FUNGI-REQUIREMENT-010 | referenced | VALIDATOR_AUTHORITY_INVALID | error |
+| FUNGI-REQUIREMENT-011 | referenced | REQUIREMENT_LOWERING_UNSUPPORTED | error |
+| FUNGI-REQUIREMENT-012 | referenced | REQUIREMENT_RECEIPT_MISMATCH | error |
 
 ### RES (3)
 
@@ -1463,7 +1480,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-SEC-014 | ref | — | — |
+| FUNGI-SEC-014 | inline | FN_CANNOT_DECLARE_EFFECTS | — |
 | FUNGI-SEC-020 | live | RUNTIME_MUTATION_PROHIBITED | error |
 | FUNGI-SEC-021 | live | PROTOTYPE_MUTATION_PROHIBITED | error |
 | FUNGI-SEC-PATCH-001 | phantom | — | — |
@@ -1587,19 +1604,19 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SYNTAX-001 | live | VAR_NOT_SUPPORTED | error |
 | FUNGI-SYNTAX-002 | live | CONST_NOT_SUPPORTED | error |
 | FUNGI-SYNTAX-003 | ref | — | — |
-| FUNGI-SYNTAX-005 | ref | — | — |
-| FUNGI-SYNTAX-006 | referenced | LET_AT_TOP_LEVEL | error |
-| FUNGI-SYNTAX-007 | referenced | MUT_AT_TOP_LEVEL | error |
-| FUNGI-SYNTAX-008 | referenced | UNSAFE_LET_AT_TOP_LEVEL | error |
-| FUNGI-SYNTAX-009 | referenced | EMIT_AT_TOP_LEVEL | error |
-| FUNGI-SYNTAX-010 | ref | — | — |
-| FUNGI-SYNTAX-011 | ref | — | — |
-| FUNGI-SYNTAX-013 | ref | — | — |
+| FUNGI-SYNTAX-005 | inline | FN_AT_TOP_LEVEL | — |
+| FUNGI-SYNTAX-006 | live | LET_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-007 | live | MUT_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-008 | live | UNSAFE_LET_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-009 | live | EMIT_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-010 | inline | ElseIfNotAllowed | — |
+| FUNGI-SYNTAX-011 | inline | UNKNOWN_GOVERNANCE_BLOCK | — |
+| FUNGI-SYNTAX-013 | inline | INERT_GOVERNANCE_BLOCK | — |
 | FUNGI-SYNTAX-014 | inline | VERSION_HEADER_INVALID | error |
 | FUNGI-SYNTAX-015 | inline | VERSION_HEADER_MISSING | error |
 | FUNGI-SYNTAX-BRACE | inline | — | — |
 | FUNGI-SYNTAX-CONTRACT-IN-BODY | inline | — | — |
-| FUNGI-SYNTAX-LEGACY-001 | referenced | LEGACY_EFFECTS_SYNTAX | warning |
+| FUNGI-SYNTAX-LEGACY-001 | live | LEGACY_EFFECTS_SYNTAX | warning |
 | FUNGI-SYNTAX-LEGACY-002 | ref | — | — |
 | FUNGI-SYNTAX-LEGACY-003 | ref | — | — |
 | FUNGI-SYNTAX-RLF-001 | phantom | — | — |
@@ -1768,7 +1785,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-VAULT-005 | live | VAULT_WRITE_WITHOUT_MUT | error |
 | FUNGI-VAULT-006 | referenced | VAULT_PERMISSION_DENIED | error |
 | FUNGI-VAULT-007 | referenced | VAULT_READONLY_WRITE | error |
-| FUNGI-VAULT-008 | referenced | VAULT_MISSING_SCOPE | error |
+| FUNGI-VAULT-008 | live | VAULT_MISSING_SCOPE | error |
 
 ### VER (1)
 
