@@ -554,3 +554,87 @@ The exact frozen receipt schema, source-body confidentiality, canonical
 relative locators, case-sensitive duplicate controls, deterministic file/edge/
 byte bounds, stable ruleset digest, and CLI exit algebra `0/1/2` remain
 unchanged.
+
+## Fix Round 5
+
+### Status
+
+The fifth and final allowed architectural fix round addresses the confirmed
+binding-initializer false-PASS family only. The RED tests are committed at
+`cdf9a33a71aff087413fa353782ad2b695015a75`; the shared-evaluator production
+checkpoint is `4f6a5e3ee62264fcb89c4065ae2b370f8131a510`; and the exact verified
+correction checkpoint is `9853580f0d8e5e1c6f0e3e8987c68926c4dbe2c8`.
+All commits remain local-only, Task 3 remains closed, and status is
+**HOLD — final independent re-review pending**. If this architecture fails that
+review, Task 2 stops at HOLD; no sixth patch round is authorised.
+
+### RED evidence
+
+The seven new controls were executed before production changed, with the graph
+fresh at the unchanged production baseline. The exact targeted result was
+**1/7 PASS**, exit `1`, in 56.426 seconds. Object, nested-object, array,
+function-parameter and destructuring-assignment defaults all returned PASS with
+zero closure edges; an authority-sensitive nested rest pattern also returned
+PASS. Only the locally shadowed `require`/`module` benign-default control
+passed. The test-only checkpoint was then committed with a clean worktree.
+
+### Implementation evidence
+
+- Closure discovery and surface analysis now use one generic binding-pattern
+  evaluator instead of separate shallow destructuring implementations.
+- The evaluator processes declaration, function-parameter and destructuring-
+  assignment targets recursively, including object, array, nested, default and
+  rest forms. Property keys and initializers are evaluated in source order in
+  the current lexical scope.
+- Source-present and default-initializer states are merged conservatively.
+  Authority survives a benign alternative; incompatible authority states and
+  unsupported authority-sensitive targets refuse instead of passing.
+- A single source pass is bounded to 4,096 binding-pattern nodes and depth 128.
+  Both limits are included in the stable ruleset digest. Existing source-byte,
+  file, edge, deadline and owned-child bounds are unchanged.
+- Intrinsic loader/module state therefore reaches nested and parameter body
+  bindings, while locally shadowed `require`/`module` and wholly benign defaults
+  remain benign.
+
+### GREEN and regression evidence
+
+The controller full-indexed the shared-evaluator checkpoint exactly: 63,915 of
+63,915 nodes and 164,778 of 164,778 edges. The seven Round-5 controls were then
+**7/7 PASS**, exit `0`, in 53.447 seconds.
+
+The first complete focused rerun was **54/55 PASS**, exit `1`. The single
+regression was the existing component-authority fixture. Root-cause inspection
+showed that no-initializer ambient declarations were being rebound from their
+pre-seeded forbidden symbol states to benign. Restoring the no-initializer skip
+preserved those declaration states without changing the shared pattern route.
+
+After the controller full-indexed the correction checkpoint exactly at 63,915
+nodes and 164,778 edges:
+
+- component-authority plus all Round-5 controls — **8/8 PASS**, exit `0`,
+  58.176 seconds;
+- complete focused detector suite — **55/55 PASS**, exit `0`, 324.640
+  seconds, including the bounded 106.883-second three-process CLI tail;
+- provider authentication — **5/5 PASS**, exit `0`;
+- owned-process and bounded-receipt support — **8/8 PASS**, exit `0`;
+- targeted TypeScript classifier/parser seam — **1/1 PASS**, exit `0`;
+- syntax checks for both production modules and both focused tests — exit `0`;
+  and
+- `git diff --check` — exit `0`, with a clean worktree.
+
+### Review notes and final graph boundary
+
+The tests assert an exact entry-to-helper edge for each of the five hidden
+local-helper forms, not only a refusal status. The nested-rest control proves
+that unsupported authority-sensitive structure refuses, and the shadow control
+guards against manufacturing intrinsic authority for local names.
+
+This report commit advances HEAD beyond the verified source checkpoint. It is
+not a graph-fresh final claim. One reviewed source-bearing finalization commit
+may follow under controller coordination solely to create a meaningful final
+indexed source HEAD; the controller and independent reviewer own the final full
+index and exact symbol/content probes.
+
+The exact frozen receipt schema, source-body confidentiality, canonical
+relative locators, case-sensitive duplicate controls, stable ruleset digest,
+and CLI exit algebra `0/1/2` remain unchanged.
