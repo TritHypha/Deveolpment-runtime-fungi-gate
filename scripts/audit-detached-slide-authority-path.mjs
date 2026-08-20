@@ -26,6 +26,8 @@ const DEFAULT_MAXIMUM_EDGES = 2048;
 const HARD_MAXIMUM_FILES = 4096;
 const HARD_MAXIMUM_EDGES = 32768;
 const MAXIMUM_SOURCE_BYTES = 4 * 1024 * 1024;
+const MAXIMUM_BINDING_PATTERN_DEPTH = 128;
+const MAXIMUM_BINDING_PATTERN_NODES = 4096;
 const MAXIMUM_GIT_METADATA_BYTES = 8 * 1024 * 1024;
 const AUDIT_DEADLINE_MS = 60_000;
 const COMMAND_TIMEOUT_MS = 50_000;
@@ -43,6 +45,8 @@ const RULES = Object.freeze({
   auditDeadlineMs: AUDIT_DEADLINE_MS,
   hardMaximumEdges: HARD_MAXIMUM_EDGES,
   hardMaximumFiles: HARD_MAXIMUM_FILES,
+  maximumBindingPatternDepth: MAXIMUM_BINDING_PATTERN_DEPTH,
+  maximumBindingPatternNodes: MAXIMUM_BINDING_PATTERN_NODES,
   maximumSourceBytes: MAXIMUM_SOURCE_BYTES,
   providerDigest: GRAPH_PROVIDER_DIGEST,
   providerVersion: GRAPH_PROVIDER_VERSION,
@@ -72,6 +76,8 @@ function stableRulesetEncoding() {
       .sort((left, right) => compareText(left.id, right.id)),
     hardMaximumEdges: RULES.hardMaximumEdges,
     hardMaximumFiles: RULES.hardMaximumFiles,
+    maximumBindingPatternDepth: RULES.maximumBindingPatternDepth,
+    maximumBindingPatternNodes: RULES.maximumBindingPatternNodes,
     maximumSourceBytes: RULES.maximumSourceBytes,
     providerDigest: RULES.providerDigest,
     providerVersion: RULES.providerVersion,
@@ -339,29 +345,169 @@ function predeclareScope(ts, scope, statements, parameters = []) {
   }
 }
 
-function assignPatternState(ts, scope, name, state, propertyState = () => BENIGN_STATE) {
-  if (ts.isIdentifier(name)) {
-    assignState(scope, name.text, state);
-    return;
+function authoritySensitiveState(state) {
+  return state.kind !== "benign" && state.kind !== "constant";
+}
+
+function mergePatternStates(left, right, onUnsupported, node) {
+  if (sameState(left, right)) return left;
+  const leftAuthority = authoritySensitiveState(left);
+  const rightAuthority = authoritySensitiveState(right);
+  if (!leftAuthority && !rightAuthority) return BENIGN_STATE;
+  if (leftAuthority !== rightAuthority) {
+    const authority = leftAuthority ? left : right;
+    if (authority.kind === "ambiguous" || authority.kind === "ambiguous-loader") onUnsupported(node);
+    return authority;
   }
-  if (ts.isObjectBindingPattern(name)) {
-    for (const element of name.elements) {
-      if (!ts.isIdentifier(element.name)) continue;
-      const property = element.propertyName === undefined
-        ? element.name.text
-        : ts.isIdentifier(element.propertyName) || ts.isStringLiteralLike(element.propertyName)
-          ? element.propertyName.text
-          : null;
-      assignState(scope, element.name.text, propertyState(state, property));
+  onUnsupported(node);
+  return mergeState(left, right);
+}
+
+function assignPatternState(ts, {
+  scope,
+  pattern,
+  sourceState,
+  evaluateExpression,
+  propertyState,
+  onUnsupported,
+  budget,
+}) {
+  function consume(node, depth) {
+    budget.nodes += 1;
+    if (budget.nodes <= MAXIMUM_BINDING_PATTERN_NODES && depth <= MAXIMUM_BINDING_PATTERN_DEPTH) return true;
+    onUnsupported(node);
+    return false;
+  }
+
+  function propertyName(name) {
+    if (ts.isIdentifier(name) || ts.isStringLiteralLike(name) || ts.isNumericLiteral(name)) return name.text;
+    if (!ts.isComputedPropertyName(name)) return null;
+    const state = evaluateExpression(name.expression, scope);
+    return state.kind === "constant" ? state.value : null;
+  }
+
+  function readProperty(state, property, node) {
+    if (state.kind === "ambiguous" || state.kind === "ambiguous-loader") {
+      onUnsupported(node);
+      return state;
     }
-    return;
+    if (property === null && authoritySensitiveState(state)) {
+      onUnsupported(node);
+      return AMBIGUOUS_STATE;
+    }
+    const derived = propertyState(state, property, node) ?? AMBIGUOUS_STATE;
+    if (derived.kind === "ambiguous" || derived.kind === "ambiguous-loader") onUnsupported(node);
+    return derived;
   }
-  for (const identifier of bindingNames(ts, name)) assignState(scope, identifier, BENIGN_STATE);
+
+  function withDefault(state, initializer, node) {
+    if (initializer === undefined) return state;
+    const defaultState = evaluateExpression(initializer, scope);
+    return mergePatternStates(state, defaultState, onUnsupported, node);
+  }
+
+  function assignRest(target, state, node, depth) {
+    const restState = authoritySensitiveState(state) ? AMBIGUOUS_STATE : BENIGN_STATE;
+    if (authoritySensitiveState(state)) onUnsupported(node);
+    return assign(target, restState, depth + 1);
+  }
+
+  function assign(node, state, depth) {
+    if (!consume(node, depth)) return AMBIGUOUS_STATE;
+    if (ts.isParenthesizedExpression(node)
+        || ts.isAsExpression(node)
+        || ts.isTypeAssertionExpression(node)
+        || ts.isNonNullExpression(node)) return assign(node.expression, state, depth + 1);
+    if (ts.isIdentifier(node)) {
+      assignState(scope, node.text, state);
+      return state;
+    }
+    if (ts.isObjectBindingPattern(node)) {
+      for (const element of node.elements) {
+        if (!consume(element, depth + 1)) continue;
+        if (element.dotDotDotToken !== undefined) {
+          assignRest(element.name, state, element, depth + 1);
+          continue;
+        }
+        const property = element.propertyName === undefined
+          ? ts.isIdentifier(element.name) ? element.name.text : null
+          : propertyName(element.propertyName);
+        const memberState = withDefault(readProperty(state, property, element), element.initializer, element);
+        assign(element.name, memberState, depth + 1);
+      }
+      return state;
+    }
+    if (ts.isArrayBindingPattern(node)) {
+      for (let index = 0; index < node.elements.length; index += 1) {
+        const element = node.elements[index];
+        if (ts.isOmittedExpression(element)) {
+          consume(element, depth + 1);
+          continue;
+        }
+        if (!consume(element, depth + 1)) continue;
+        if (element.dotDotDotToken !== undefined) {
+          assignRest(element.name, state, element, depth + 1);
+          continue;
+        }
+        const memberState = withDefault(readProperty(state, String(index), element), element.initializer, element);
+        assign(element.name, memberState, depth + 1);
+      }
+      return state;
+    }
+    if (ts.isObjectLiteralExpression(node)) {
+      for (const member of node.properties) {
+        if (!consume(member, depth + 1)) continue;
+        if (ts.isShorthandPropertyAssignment(member)) {
+          const memberState = withDefault(
+            readProperty(state, member.name.text, member),
+            member.objectAssignmentInitializer,
+            member,
+          );
+          assign(member.name, memberState, depth + 1);
+        } else if (ts.isPropertyAssignment(member)) {
+          assign(member.initializer, readProperty(state, propertyName(member.name), member), depth + 1);
+        } else if (ts.isSpreadAssignment(member)) {
+          assignRest(member.expression, state, member, depth + 1);
+        } else if (authoritySensitiveState(state)) {
+          onUnsupported(member);
+        }
+      }
+      return state;
+    }
+    if (ts.isArrayLiteralExpression(node)) {
+      for (let index = 0; index < node.elements.length; index += 1) {
+        const element = node.elements[index];
+        if (ts.isOmittedExpression(element)) {
+          consume(element, depth + 1);
+          continue;
+        }
+        if (!consume(element, depth + 1)) continue;
+        if (ts.isSpreadElement(element)) assignRest(element.expression, state, element, depth + 1);
+        else assign(element, readProperty(state, String(index), element), depth + 1);
+      }
+      return state;
+    }
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
+      const merged = withDefault(state, node.right, node);
+      return assign(node.left, merged, depth + 1);
+    }
+    if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+      evaluateExpression(node, scope);
+      if (authoritySensitiveState(state)) onUnsupported(node);
+      return state;
+    }
+    evaluateExpression(node, scope);
+    if (authoritySensitiveState(state)) onUnsupported(node);
+    return state;
+  }
+
+  return assign(pattern, sourceState, 0);
 }
 
 function scanCommonJsDependencies(ts, sourceFile, imports) {
   const root = createScope();
   const escapePositions = new Set();
+  const bindingPatternBudget = { nodes: 0 };
   predeclareScope(ts, root, sourceFile.statements);
   if (!root.bindings.has("require")) root.bindings.set("require", LOADER_STATE);
   if (!root.bindings.has("module")) root.bindings.set("module", MODULE_STATE);
@@ -408,34 +554,27 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
     return property === "require" ? LOADER_STATE : BENIGN_STATE;
   }
 
-  function bindingProperty(element, scope) {
-    if (element.propertyName === undefined) {
-      return ts.isIdentifier(element.name) ? element.name.text : null;
-    }
-    if (ts.isIdentifier(element.propertyName) || ts.isStringLiteralLike(element.propertyName)) {
-      return element.propertyName.text;
-    }
-    if (ts.isComputedPropertyName(element.propertyName)) {
-      return constantString(element.propertyName.expression, scope);
-    }
-    return null;
+  function bindPattern(scope, pattern, state) {
+    return assignPatternState(ts, {
+      scope,
+      pattern,
+      sourceState: state,
+      evaluateExpression: scan,
+      propertyState: moduleObjectPropertyState,
+      onUnsupported: recordLoaderEscape,
+      budget: bindingPatternBudget,
+    });
   }
 
-  function assignCommonJsPattern(scope, name, state) {
-    if (ts.isIdentifier(name)) {
-      assignState(scope, name.text, state);
-      return;
+  function bindParameter(scope, parameter) {
+    const defaultState = parameter.initializer === undefined ? null : scan(parameter.initializer, scope);
+    const state = defaultState === null
+      ? BENIGN_STATE
+      : mergePatternStates(BENIGN_STATE, defaultState, recordLoaderEscape, parameter.initializer);
+    bindPattern(scope, parameter.name, state);
+    if (defaultState?.kind === "loader" || defaultState?.kind === "ambiguous-loader") {
+      recordLoaderEscape(parameter.initializer);
     }
-    if (ts.isObjectBindingPattern(name)) {
-      for (const element of name.elements) {
-        const property = element.dotDotDotToken === undefined ? bindingProperty(element, scope) : null;
-        const nextState = moduleObjectPropertyState(state, property, element);
-        if (ts.isIdentifier(element.name)) assignState(scope, element.name.text, nextState);
-        else for (const identifier of bindingNames(ts, element.name)) assignState(scope, identifier, nextState);
-      }
-      return;
-    }
-    for (const identifier of bindingNames(ts, name)) assignState(scope, identifier, BENIGN_STATE);
   }
 
   function mergeBranches(scope, branches) {
@@ -466,14 +605,7 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       const statements = ts.isBlock(node.body) ? node.body.statements : [];
       predeclareScope(ts, child, statements, node.parameters);
       if (node.name !== undefined) child.bindings.set(node.name.text, BENIGN_STATE);
-      for (const parameter of node.parameters) {
-        if (parameter.initializer === undefined) continue;
-        const parameterState = scan(parameter.initializer, child);
-        assignCommonJsPattern(child, parameter.name, parameterState);
-        if (parameterState.kind === "loader" || parameterState.kind === "ambiguous-loader") {
-          recordLoaderEscape(parameter.initializer);
-        }
-      }
+      for (const parameter of node.parameters) bindParameter(child, parameter);
       if (ts.isBlock(node.body)) {
         for (const statement of node.body.statements) scan(statement, child);
       } else {
@@ -497,14 +629,7 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
       if (node.body === undefined) return BENIGN_STATE;
       const child = createScope(scope);
       predeclareScope(ts, child, node.body.statements, node.parameters);
-      for (const parameter of node.parameters) {
-        if (parameter.initializer === undefined) continue;
-        const parameterState = scan(parameter.initializer, child);
-        assignCommonJsPattern(child, parameter.name, parameterState);
-        if (parameterState.kind === "loader" || parameterState.kind === "ambiguous-loader") {
-          recordLoaderEscape(parameter.initializer);
-        }
-      }
+      for (const parameter of node.parameters) bindParameter(child, parameter);
       for (const statement of node.body.statements) scan(statement, child);
       return BENIGN_STATE;
     }
@@ -630,12 +755,15 @@ function scanCommonJsDependencies(ts, sourceFile, imports) {
     }
     if (ts.isVariableDeclaration(node)) {
       const state = node.initializer === undefined ? BENIGN_STATE : scan(node.initializer, scope);
-      assignCommonJsPattern(scope, node.name, state);
+      bindPattern(scope, node.name, state);
       return state;
     }
     if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
       const state = scan(node.right, scope);
       if (ts.isIdentifier(node.left)) assignState(scope, node.left.text, state);
+      else if (ts.isObjectLiteralExpression(node.left) || ts.isArrayLiteralExpression(node.left)) {
+        bindPattern(scope, node.left, state);
+      }
       else {
         scan(node.left, scope);
         if (state.kind === "loader" || state.kind === "ambiguous-loader") {
@@ -861,6 +989,7 @@ function resolveExportRules(ts, parsedModules, deadline) {
 
 function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindings, exportRulesByLocator) {
   const found = [];
+  const bindingPatternBudget = { nodes: 0 };
   const SYMBOL_STATE = (ruleId, surface) => Object.freeze({ kind: "symbol", ruleId, surface });
   const CONSTANT_STATE = (value) => Object.freeze({ kind: "constant", value });
   const COVERED_STATE = Object.freeze({ kind: "covered" });
@@ -921,8 +1050,28 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
     return compound === null ? BENIGN_STATE : SYMBOL_STATE(compound, `${root}.${property}`);
   }
 
-  function bindPattern(scope, name, state) {
-    assignPatternState(ts, scope, name, state, (source, property) => propertyState(source, property, name));
+  function refusePattern(node) {
+    add("UNRESOLVED_CLOSURE", node, "binding-pattern");
+  }
+
+  function bindPattern(scope, pattern, state) {
+    return assignPatternState(ts, {
+      scope,
+      pattern,
+      sourceState: state,
+      evaluateExpression: evaluate,
+      propertyState,
+      onUnsupported: refusePattern,
+      budget: bindingPatternBudget,
+    });
+  }
+
+  function bindParameter(scope, parameter) {
+    const defaultState = parameter.initializer === undefined ? null : evaluate(parameter.initializer, scope);
+    const state = defaultState === null
+      ? BENIGN_STATE
+      : mergePatternStates(BENIGN_STATE, defaultState, refusePattern, parameter.initializer);
+    bindPattern(scope, parameter.name, state);
   }
 
   function evaluate(node, scope, asCallee = false) {
@@ -945,6 +1094,9 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
       if (node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
         const state = evaluate(node.right, scope);
         if (ts.isIdentifier(node.left)) assignState(scope, node.left.text, state);
+        else if (ts.isObjectLiteralExpression(node.left) || ts.isArrayLiteralExpression(node.left)) {
+          bindPattern(scope, node.left, state);
+        }
         else evaluate(node.left, scope);
         return state;
       }
@@ -1009,6 +1161,7 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
     predeclareScope(ts, child, statements, node.parameters);
     directDeclarationStates(child, statements);
     if (node.name !== undefined) child.bindings.set(node.name.text, BENIGN_STATE);
+    for (const parameter of node.parameters) bindParameter(child, parameter);
     if (ts.isBlock(node.body)) processStatements(node.body.statements, child);
     else evaluate(node.body, child);
   }
@@ -1021,8 +1174,10 @@ function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindi
     if (ts.isImportDeclaration(statement) || ts.isImportEqualsDeclaration(statement) || ts.isExportDeclaration(statement)) return;
     if (ts.isVariableStatement(statement)) {
       for (const declaration of statement.declarationList.declarations) {
-        if (declaration.initializer === undefined) continue;
-        bindPattern(scope, declaration.name, evaluate(declaration.initializer, scope));
+        const state = declaration.initializer === undefined
+          ? BENIGN_STATE
+          : evaluate(declaration.initializer, scope);
+        bindPattern(scope, declaration.name, state);
       }
       return;
     }
