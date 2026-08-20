@@ -248,3 +248,120 @@ required before final freshness is claimed.
 - Exact frozen `DetachedAuthorityAuditV1`, receipt confidentiality, canonical
   relative locators, case-variant duplicate refusal, stable ruleset digest and
   CLI exit algebra `0/1/2` are preserved.
+
+## Fix Round 2
+
+### Status
+
+The second independent HOLD findings were reproduced at an exact committed
+RED checkpoint and fixed only within Task 2. The work remains local-only and
+**HOLD — independent re-review pending**. Task 3 registration was not started.
+
+### RED evidence
+
+The new adversarial controls were committed before production changes at
+914ee7fdfd44969d0255c4d70bef75f7c712a69a. A full graph refresh at that
+exact checkpoint reported 63,855 nodes and 164,389 edges, with expected counts
+equal, matching graph/Git heads, ready, and stale: false.
+
+The provider-authentication suite then failed at import time with exact
+ERR_MODULE_NOT_FOUND for scripts/lib/detached-authority-provider.mjs. The
+focused detector suite was **25/36 PASS**, exit 1, with eleven intended RED
+controls:
+
+- a default export passed through a default re-export barrel;
+- a later assignment alias passed;
+- constant-computed and unresolvable-computed namespace members passed;
+- aliased CommonJS loader, inline member and destructured member forms passed;
+- aliased non-literal and package loads passed instead of refusing;
+- the locally shadowed require control was misclassified;
+- a spoofed USERPROFILE redirected provider discovery; and
+- provider authentication had no pinned byte-identity seam.
+
+The strict source-byte ceiling was already red-capable and passed at the RED
+checkpoint; it was retained as a regression control.
+
+### Implementation evidence
+
+- Forbidden export rules now propagate through a bounded module-level
+  re-export fixpoint, including default re-export barrels.
+- Binding analysis is flow-sensitive within lexical scopes. Initialisers and
+  later assignments propagate authority, benign reassignment clears it, local
+  shadowing does not inherit an outer binding, and branch/loop joins retain
+  ambiguity rather than silently erasing authority.
+- Constant string property expressions are folded within a depth bound.
+  Unresolvable computed access from an authority-tainted namespace refuses
+  instead of passing.
+- CommonJS dependency discovery tracks the intrinsic require loader through
+  aliases and assignments while distinguishing a lexically shadowed require.
+  Literal local loads enter the exact closure; non-literal and package loads
+  refuse under the empty package allow-list. Inline, namespace and destructured
+  surfaces retain forbidden-symbol authority.
+- The provider path derives from native os.userInfo().homedir, not
+  environment-sensitive os.homedir(), PATH, a caller argument or a graph
+  project environment variable. Owned provider children receive an environment
+  rebound to that native home.
+- The maintained provider executable is pinned to exact version
+  codebase-memory-mcp 0.9.0+dumpswap and SHA-256
+  445dff9d06d613a33a5943c17cc808eca438b1a4922140e9d73400f7ac84bd7f.
+  Authentication rejects missing, non-regular, symlinked, oversized,
+  wrong-digest and wrong-version providers, and rechecks the exact file
+  snapshot after the bounded version process. Provider digest and version are
+  inputs to the stable ruleset digest.
+- The 4 MiB per-source byte ceiling is applied before reads and parsing and is
+  part of the deterministic rules. The unchanged hard ceilings are 4,096 files
+  and 32,768 edges. Deadline checks surround asynchronous metadata/source I/O,
+  TypeScript loading and parsing, import collection, the bounded re-export
+  fixpoint, surface analysis passes and the final HEAD read.
+
+### GREEN evidence
+
+The first targeted production rerun was **10/11 PASS**. Its sole failure proved
+that the authenticated graph child still inherited the spoofed USERPROFILE;
+rebinding its explicit owned-process environment to the native home made that
+exact control **1/1 PASS**, exit 0.
+
+Provider authentication is **3/3 PASS**, exit 0, covering missing/wrong digest,
+authenticated bytes with wrong version, and symlink refusal.
+
+The first complete regression run was **31/36 PASS**. All five failures had one
+root cause: the CommonJS walker passed the absent body of a TypeScript declare
+function to a syntax predicate. The body-less declaration guard then made the
+affected AST, TypeScript, legacy execution and ceiling subset **4/4 PASS**,
+exit 0.
+
+Fresh verification of the corrected working bytes:
+
+- node --test scripts/tests/detached-slide-authority-path.test.mjs —
+  **36/36 PASS**, exit 0, 212.899 seconds;
+- node --test scripts/tests/detached-authority-provider.test.mjs —
+  **3/3 PASS**, exit 0;
+- node --test scripts/tests/owned-process-tree.test.mjs
+  scripts/tests/bounded-closure-receipt.test.mjs — **8/8 PASS**, exit 0;
+- targeted TypeScript classifier/parser seam — **1/1 PASS**, exit 0;
+- syntax checks for both production modules — exit 0; and
+- git diff --check — exit 0, no whitespace findings.
+
+The earlier broader sandbox result remains truthfully external-environment
+red: 14 refusals, split between seven independent-SLIDE-unavailable cases and
+seven older sandbox graph-discovery nonzero cases. No unrelated control was
+changed to conceal or reclassify them.
+
+### Review notes and limitations
+
+- The 60-second in-process audit deadline is cooperative, not a hard
+  interruption of synchronous TypeScript parsing. Owned provider commands have
+  hard process-tree timeouts. Total in-process input is deterministically
+  bounded by the unchanged file/edge hard ceilings and the new strict 4 MiB
+  per-file ceiling; checks between I/O, parse and bounded analysis passes stop
+  further work after expiry.
+- Provider upgrades are reviewed fail-closed changes: changed installed bytes
+  refuse until the source-controlled digest/version contract is deliberately
+  updated. The residual trust boundary is the reviewed pinned digest and the
+  operating system's execution of the authenticated fixed-path bytes; no
+  caller-selected provider or self-reported version alone grants authority.
+- The exact frozen receipt schema, source-body confidentiality, canonical
+  relative locators, case-sensitive duplicate controls, stable ruleset digest,
+  file/edge ceilings and CLI exit algebra 0/1/2 remain unchanged.
+- A full graph refresh plus independent status and symbol/content probes is
+  required at the final fix/report commit before any final freshness claim.

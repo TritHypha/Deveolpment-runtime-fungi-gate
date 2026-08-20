@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { homedir } from "node:os";
+import { userInfo } from "node:os";
 import {
   extname,
   isAbsolute,
@@ -14,6 +14,7 @@ import {
 } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { authenticateDetachedAuthorityProvider } from "./lib/detached-authority-provider.mjs";
 import { loadTypeScript } from "./lib/ts-to-fungi-sandbox/typescript-api.mjs";
 
 const { runOwnedProcess } = createRequire(import.meta.url)("./lib/owned-process-tree.cjs");
@@ -32,12 +33,19 @@ const COMMAND_OUTPUT_BYTES = 512 * 1024;
 const SOURCE_EXTENSIONS = Object.freeze([".ts", ".tsx", ".mts", ".cts", ".js", ".mjs", ".cjs"]);
 const HEAD = /^[0-9a-f]{40}$/u;
 const GRAPH_PROJECT = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/u;
-const GRAPH_PROVIDER_VERSION = /^codebase-memory-mcp [0-9]+\.[0-9]+\.[0-9]+\+dumpswap$/u;
+const GRAPH_PROVIDER_VERSION = "codebase-memory-mcp 0.9.0+dumpswap";
+const GRAPH_PROVIDER_DIGEST = "445dff9d06d613a33a5943c17cc808eca438b1a4922140e9d73400f7ac84bd7f";
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 let graphProjectCache = null;
 
 const RULES = Object.freeze({
   allowedPackageImports: Object.freeze([]),
+  auditDeadlineMs: AUDIT_DEADLINE_MS,
+  hardMaximumEdges: HARD_MAXIMUM_EDGES,
+  hardMaximumFiles: HARD_MAXIMUM_FILES,
+  maximumSourceBytes: MAXIMUM_SOURCE_BYTES,
+  providerDigest: GRAPH_PROVIDER_DIGEST,
+  providerVersion: GRAPH_PROVIDER_VERSION,
   forbiddenModules: Object.freeze([
     Object.freeze({ id: "AST_REENTRY", patterns: Object.freeze(["ast", "execution-plan", "parser", "semantic-graph"]) }),
     Object.freeze({ id: "COMPONENT_AUTHORITY_BLEED", patterns: Object.freeze(["hypha", "tower", "tri-fuse", "tri-pipe"]) }),
@@ -55,12 +63,18 @@ const RULES = Object.freeze({
 function stableRulesetEncoding() {
   const normalized = {
     allowedPackageImports: [...RULES.allowedPackageImports].sort(),
+    auditDeadlineMs: RULES.auditDeadlineMs,
     forbiddenModules: RULES.forbiddenModules
       .map((rule) => ({ id: rule.id, patterns: [...rule.patterns].sort() }))
       .sort((left, right) => compareText(left.id, right.id)),
     forbiddenSymbols: RULES.forbiddenSymbols
       .map((rule) => ({ id: rule.id, symbols: [...rule.symbols].sort() }))
       .sort((left, right) => compareText(left.id, right.id)),
+    hardMaximumEdges: RULES.hardMaximumEdges,
+    hardMaximumFiles: RULES.hardMaximumFiles,
+    maximumSourceBytes: RULES.maximumSourceBytes,
+    providerDigest: RULES.providerDigest,
+    providerVersion: RULES.providerVersion,
   };
   return JSON.stringify(normalized);
 }
@@ -202,6 +216,16 @@ function importBindings(ts, statement) {
   return bindings;
 }
 
+function reExportBindings(ts, statement) {
+  if (!ts.isExportDeclaration(statement)
+      || statement.exportClause === undefined
+      || !ts.isNamedExports(statement.exportClause)) return [];
+  return statement.exportClause.elements.map((element) => ({
+    imported: (element.propertyName ?? element.name).text,
+    exported: element.name.text,
+  }));
+}
+
 function requireBindings(ts, call) {
   const declaration = ts.isVariableDeclaration(call.parent) && call.parent.initializer === call
     ? call.parent
@@ -224,6 +248,156 @@ function requireBindings(ts, call) {
   return bindings;
 }
 
+const BENIGN_STATE = Object.freeze({ kind: "benign" });
+const LOADER_STATE = Object.freeze({ kind: "loader" });
+const AMBIGUOUS_LOADER_STATE = Object.freeze({ kind: "ambiguous-loader" });
+const NAMESPACE_STATE = Object.freeze({ kind: "namespace" });
+
+function bindingNames(ts, name, names = []) {
+  if (ts.isIdentifier(name)) names.push(name.text);
+  else if (ts.isObjectBindingPattern(name) || ts.isArrayBindingPattern(name)) {
+    for (const element of name.elements) {
+      if (ts.isBindingElement(element)) bindingNames(ts, element.name, names);
+    }
+  }
+  return names;
+}
+
+function createScope(parent = null) {
+  return { parent, bindings: new Map() };
+}
+
+function lookupState(scope, name) {
+  for (let current = scope; current !== null; current = current.parent) {
+    if (current.bindings.has(name)) return current.bindings.get(name);
+  }
+  return null;
+}
+
+function assignState(scope, name, state) {
+  for (let current = scope; current !== null; current = current.parent) {
+    if (current.bindings.has(name)) {
+      current.bindings.set(name, state);
+      return;
+    }
+  }
+  scope.bindings.set(name, state);
+}
+
+function predeclareScope(ts, scope, statements, parameters = []) {
+  for (const parameter of parameters) {
+    for (const name of bindingNames(ts, parameter.name)) scope.bindings.set(name, BENIGN_STATE);
+  }
+  for (const statement of statements) {
+    if ((ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement)) && statement.name !== undefined) {
+      scope.bindings.set(statement.name.text, BENIGN_STATE);
+    } else if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        for (const name of bindingNames(ts, declaration.name)) scope.bindings.set(name, BENIGN_STATE);
+      }
+    } else if (ts.isImportDeclaration(statement)) {
+      for (const binding of importBindings(ts, statement)) scope.bindings.set(binding.local, BENIGN_STATE);
+    } else if (ts.isImportEqualsDeclaration(statement)) {
+      scope.bindings.set(statement.name.text, BENIGN_STATE);
+    }
+  }
+}
+
+function assignPatternState(ts, scope, name, state, propertyState = () => BENIGN_STATE) {
+  if (ts.isIdentifier(name)) {
+    assignState(scope, name.text, state);
+    return;
+  }
+  if (ts.isObjectBindingPattern(name)) {
+    for (const element of name.elements) {
+      if (!ts.isIdentifier(element.name)) continue;
+      const property = element.propertyName === undefined
+        ? element.name.text
+        : ts.isIdentifier(element.propertyName) || ts.isStringLiteralLike(element.propertyName)
+          ? element.propertyName.text
+          : null;
+      assignState(scope, element.name.text, propertyState(state, property));
+    }
+    return;
+  }
+  for (const identifier of bindingNames(ts, name)) assignState(scope, identifier, BENIGN_STATE);
+}
+
+function scanCommonJsDependencies(ts, sourceFile, imports) {
+  const root = createScope();
+  predeclareScope(ts, root, sourceFile.statements);
+  if (!root.bindings.has("require")) root.bindings.set("require", LOADER_STATE);
+
+  function scan(node, scope) {
+    if (ts.isSourceFile(node)) {
+      for (const statement of node.statements) scan(statement, scope);
+      return BENIGN_STATE;
+    }
+    if (ts.isBlock(node)) {
+      const child = createScope(scope);
+      predeclareScope(ts, child, node.statements);
+      for (const statement of node.statements) scan(statement, child);
+      return BENIGN_STATE;
+    }
+    if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
+      if (node.body === undefined) return BENIGN_STATE;
+      const child = createScope(scope);
+      const statements = ts.isBlock(node.body) ? node.body.statements : [];
+      predeclareScope(ts, child, statements, node.parameters);
+      if (node.name !== undefined) child.bindings.set(node.name.text, BENIGN_STATE);
+      if (ts.isBlock(node.body)) {
+        for (const statement of node.body.statements) scan(statement, child);
+      } else {
+        scan(node.body, child);
+      }
+      return BENIGN_STATE;
+    }
+    if (ts.isVariableDeclaration(node)) {
+      const state = node.initializer === undefined ? BENIGN_STATE : scan(node.initializer, scope);
+      assignPatternState(ts, scope, node.name, state, (source) => source.kind === "namespace" ? NAMESPACE_STATE : BENIGN_STATE);
+      return state;
+    }
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
+      const state = scan(node.right, scope);
+      if (ts.isIdentifier(node.left)) assignState(scope, node.left.text, state);
+      else scan(node.left, scope);
+      return state;
+    }
+    if (ts.isIdentifier(node)) return lookupState(scope, node.text) ?? BENIGN_STATE;
+    if (ts.isParenthesizedExpression(node)
+        || ts.isAsExpression(node)
+        || ts.isTypeAssertionExpression(node)
+        || ts.isNonNullExpression(node)) return scan(node.expression, scope);
+    if (ts.isCallExpression(node)) {
+      const callee = scan(node.expression, scope);
+      for (const argument of node.arguments) scan(argument, scope);
+      if (callee.kind === "loader" || callee.kind === "ambiguous-loader") {
+        const argument = node.arguments.length === 1 ? node.arguments[0] : undefined;
+        imports.push({
+          kind: "require",
+          specifier: callee.kind === "loader"
+            && argument !== undefined
+            && (ts.isStringLiteral(argument) || ts.isNoSubstitutionTemplateLiteral(argument))
+            ? argument.text
+            : null,
+          position: node.getStart(sourceFile),
+          bindings: requireBindings(ts, node),
+        });
+        return NAMESPACE_STATE;
+      }
+      return BENIGN_STATE;
+    }
+    let state = BENIGN_STATE;
+    ts.forEachChild(node, (child) => {
+      const childState = scan(child, scope);
+      if (childState.kind === "ambiguous-loader") state = AMBIGUOUS_LOADER_STATE;
+    });
+    return state;
+  }
+
+  scan(sourceFile, root);
+}
+
 function collectImports(ts, sourceFile) {
   const imports = [];
   for (const statement of sourceFile.statements) {
@@ -240,6 +414,7 @@ function collectImports(ts, sourceFile) {
         specifier: ts.isStringLiteralLike(statement.moduleSpecifier) ? statement.moduleSpecifier.text : null,
         position: statement.getStart(sourceFile),
         bindings: [],
+        reExports: reExportBindings(ts, statement),
       });
     } else if (ts.isImportEqualsDeclaration(statement)
         && ts.isExternalModuleReference(statement.moduleReference)) {
@@ -264,22 +439,11 @@ function collectImports(ts, sourceFile) {
         position: node.getStart(sourceFile),
         bindings: [],
       });
-    } else if (ts.isCallExpression(node)
-        && ts.isIdentifier(node.expression)
-        && node.expression.text === "require") {
-      const argument = node.arguments.length === 1 ? node.arguments[0] : undefined;
-      imports.push({
-        kind: "require",
-        specifier: argument !== undefined && (ts.isStringLiteral(argument) || ts.isNoSubstitutionTemplateLiteral(argument))
-          ? argument.text
-          : null,
-        position: node.getStart(sourceFile),
-        bindings: requireBindings(ts, node),
-      });
     }
     ts.forEachChild(node, visit);
   }
   ts.forEachChild(sourceFile, visit);
+  scanCommonJsDependencies(ts, sourceFile, imports);
   return imports.sort((left, right) => left.position - right.position || compareText(left.kind, right.kind));
 }
 
@@ -305,10 +469,17 @@ function collectExportRules(ts, sourceFile) {
   const rules = new Map();
   for (const statement of sourceFile.statements) {
     if ((ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement))
-        && statement.name !== undefined
-        && hasModifier(ts, statement, ts.SyntaxKind.DefaultKeyword)) {
+        && statement.name !== undefined) {
       const rule = symbolRule(statement.name.text);
-      if (rule !== null) rules.set("default", rule);
+      if (rule !== null && hasModifier(ts, statement, ts.SyntaxKind.ExportKeyword)) {
+        rules.set(hasModifier(ts, statement, ts.SyntaxKind.DefaultKeyword) ? "default" : statement.name.text, rule);
+      }
+    } else if (ts.isVariableStatement(statement) && hasModifier(ts, statement, ts.SyntaxKind.ExportKeyword)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (!ts.isIdentifier(declaration.name)) continue;
+        const rule = symbolRule(declaration.name.text);
+        if (rule !== null) rules.set(declaration.name.text, rule);
+      }
     } else if (ts.isExportAssignment(statement) && ts.isIdentifier(statement.expression)) {
       const rule = symbolRule(statement.expression.text);
       if (rule !== null) rules.set("default", rule);
@@ -326,116 +497,305 @@ function collectExportRules(ts, sourceFile) {
   return rules;
 }
 
-function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindings, exportRulesByLocator) {
-  const found = [];
-  const bindings = new Map();
-  for (const imported of imports) {
-    for (const binding of imported.bindings) {
-      const exportedRule = binding.imported === "default" && imported.targetLocator !== undefined
-        ? exportRulesByLocator.get(imported.targetLocator)?.get("default") ?? null
-        : null;
-      bindings.set(binding.local, {
-        imported: binding.imported,
-        namespace: binding.namespace,
-        moduleRuleId: moduleRule(imported.specifier ?? ""),
-        ruleId: exportedRule ?? symbolRule(binding.imported),
-      });
-    }
+function resolveExportRules(ts, parsedModules, deadline) {
+  const rulesByLocator = new Map();
+  for (const [locator, parsed] of parsedModules) {
+    if (deadlineExpired(deadline)) return null;
+    rulesByLocator.set(locator, collectExportRules(ts, parsed.sourceFile));
   }
 
-  function deriveAliases(node) {
-    if (ts.isVariableDeclaration(node) && node.initializer !== undefined) {
-      if (ts.isIdentifier(node.name) && ts.isIdentifier(node.initializer)) {
-        const source = bindings.get(node.initializer.text);
-        if (source !== undefined) bindings.set(node.name.text, { ...source });
-      } else if (ts.isObjectBindingPattern(node.name) && ts.isIdentifier(node.initializer)) {
-        const source = bindings.get(node.initializer.text);
-        if (source?.namespace === true) {
-          for (const element of node.name.elements) {
-            if (!ts.isIdentifier(element.name)) continue;
-            const imported = element.propertyName === undefined
-              ? element.name.text
-              : ts.isIdentifier(element.propertyName) || ts.isStringLiteralLike(element.propertyName)
-                ? element.propertyName.text
-                : null;
-            if (imported === null) continue;
-            bindings.set(element.name.text, {
-              imported,
-              namespace: false,
-              moduleRuleId: source.moduleRuleId,
-              ruleId: symbolRule(imported),
-            });
+  const maximumPasses = parsedModules.size + 1;
+  for (let pass = 0; pass < maximumPasses; pass += 1) {
+    if (deadlineExpired(deadline)) return null;
+    let changed = false;
+    for (const [locator, parsed] of parsedModules) {
+      if (deadlineExpired(deadline)) return null;
+      const localRules = rulesByLocator.get(locator);
+      for (const imported of parsed.imports) {
+        if (deadlineExpired(deadline)) return null;
+        if (imported.kind !== "re-export" || imported.targetLocator === undefined) continue;
+        const targetRules = rulesByLocator.get(imported.targetLocator);
+        if (targetRules === undefined) continue;
+        if ((imported.reExports ?? []).length === 0) {
+          for (const [name, rule] of targetRules) {
+            if (name === "default" || localRules.has(name)) continue;
+            localRules.set(name, rule);
+            changed = true;
+          }
+        } else {
+          for (const binding of imported.reExports) {
+            const rule = targetRules.get(binding.imported);
+            if (rule === undefined || localRules.get(binding.exported) === rule) continue;
+            localRules.set(binding.exported, rule);
+            changed = true;
           }
         }
       }
     }
-    ts.forEachChild(node, deriveAliases);
+    if (!changed) return rulesByLocator;
   }
-  ts.forEachChild(sourceFile, deriveAliases);
+  return null;
+}
+
+function collectSurfaceViolations(ts, sourceFile, locator, imports, coveredBindings, exportRulesByLocator) {
+  const found = [];
+  const SYMBOL_STATE = (ruleId, surface) => Object.freeze({ kind: "symbol", ruleId, surface });
+  const CONSTANT_STATE = (value) => Object.freeze({ kind: "constant", value });
+  const COVERED_STATE = Object.freeze({ kind: "covered" });
+  const AMBIGUOUS_STATE = Object.freeze({ kind: "ambiguous" });
+  const loadByPosition = new Map(imports
+    .filter((imported) => imported.kind === "require")
+    .map((imported) => [imported.position, imported]));
 
   function add(id, node, surface) {
     found.push(violation(id, locator, `surface:${surface}@${node.getStart(sourceFile)}`));
   }
 
-  function inlineRequireProperty(expression) {
-    if (!ts.isPropertyAccessExpression(expression) && !ts.isElementAccessExpression(expression)) return null;
-    const base = expression.expression;
-    if (!ts.isCallExpression(base) || !ts.isIdentifier(base.expression) || base.expression.text !== "require") return null;
-    const property = propertyName(ts, expression);
-    if (property === null) return null;
-    const ruleId = symbolRule(property);
-    return ruleId === null ? null : { property, ruleId };
+  function sameState(left, right) {
+    return left.kind === right.kind
+      && left.ruleId === right.ruleId
+      && left.surface === right.surface
+      && left.value === right.value;
   }
 
-  function visit(node) {
-    if (ts.isInterfaceDeclaration(node) && node.name.text === "AstNode") add("AST_REENTRY", node, "AstNode");
+  function mergeState(left, right) {
+    if (sameState(left, right)) return left;
+    if (left.kind === "ambiguous-loader" || right.kind === "ambiguous-loader") return AMBIGUOUS_LOADER_STATE;
+    if (left.kind === "loader" || right.kind === "loader") return AMBIGUOUS_LOADER_STATE;
+    return AMBIGUOUS_STATE;
+  }
 
-    if (ts.isCallExpression(node)) {
-      const expression = node.expression;
-      if (ts.isIdentifier(expression)) {
-        const binding = bindings.get(expression.text);
-        if (binding !== undefined) {
-          const importedRule = binding.ruleId;
-          if (importedRule !== null && !coveredBindings.has(expression.text)) add(importedRule, node, binding.imported);
-        } else {
-          const directRule = symbolRule(expression.text);
-          if (directRule !== null) add(directRule, node, expression.text);
-        }
-      } else if (ts.isPropertyAccessExpression(expression) || ts.isElementAccessExpression(expression)) {
-        const required = inlineRequireProperty(expression);
-        if (required !== null) add(required.ruleId, node, `require.${required.property}`);
-        const root = rootIdentifier(ts, expression);
-        const property = propertyName(ts, expression);
-        const binding = root === null ? undefined : bindings.get(root);
-        if (binding !== undefined) {
-          const importedRule = property === null ? null : symbolRule(property);
-          if (importedRule !== null && !coveredBindings.has(root)) add(importedRule, node, `${root}.${property}`);
-        } else if (root !== null && property !== null) {
-          const compoundRule = symbolRule(`${root}.${property}`) ?? symbolRule(root);
-          if (compoundRule !== null) add(compoundRule, node, `${root}.${property}`);
-        }
-      }
-    } else if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
-      const parentIsCall = ts.isCallExpression(node.parent) && node.parent.expression === node;
-      if (!parentIsCall) {
-        const required = inlineRequireProperty(node);
-        if (required !== null) add(required.ruleId, node, `require.${required.property}`);
-        const root = rootIdentifier(ts, node);
-        const property = propertyName(ts, node);
-        const binding = root === null ? undefined : bindings.get(root);
-        if (binding !== undefined) {
-          const importedRule = property === null ? null : symbolRule(property);
-          if (importedRule !== null && !coveredBindings.has(root)) add(importedRule, node, `${root}.${property}`);
-        } else if (root !== null) {
-          const compoundRule = property === null ? symbolRule(root) : (symbolRule(`${root}.${property}`) ?? symbolRule(root));
-          if (compoundRule !== null) add(compoundRule, node, property === null ? root : `${root}.${property}`);
+  function cloneScope(scope) {
+    if (scope === null) return null;
+    const clone = createScope(cloneScope(scope.parent));
+    for (const [name, state] of scope.bindings) clone.bindings.set(name, state);
+    return clone;
+  }
+
+  function mergeScopes(target, left, right) {
+    if (target.parent !== null) mergeScopes(target.parent, left.parent, right.parent);
+    const names = new Set([...target.bindings.keys(), ...left.bindings.keys(), ...right.bindings.keys()]);
+    for (const name of names) {
+      const original = target.bindings.get(name) ?? BENIGN_STATE;
+      const leftState = left.bindings.get(name) ?? original;
+      const rightState = right.bindings.get(name) ?? original;
+      target.bindings.set(name, mergeState(leftState, rightState));
+    }
+  }
+
+  function directDeclarationStates(scope, statements) {
+    for (const statement of statements) {
+      if ((ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement)) && statement.name !== undefined) {
+        const rule = symbolRule(statement.name.text);
+        if (rule !== null) scope.bindings.set(statement.name.text, SYMBOL_STATE(rule, statement.name.text));
+      } else if (ts.isVariableStatement(statement)) {
+        for (const declaration of statement.declarationList.declarations) {
+          if (!ts.isIdentifier(declaration.name)) continue;
+          const rule = symbolRule(declaration.name.text);
+          if (rule !== null) scope.bindings.set(declaration.name.text, SYMBOL_STATE(rule, declaration.name.text));
         }
       }
     }
-    ts.forEachChild(node, visit);
   }
 
-  ts.forEachChild(sourceFile, visit);
+  function constantString(node, scope, depth = 0) {
+    if (node === undefined || depth > 32) return null;
+    if (ts.isStringLiteralLike(node)) return node.text;
+    if (ts.isIdentifier(node)) {
+      const state = lookupState(scope, node.text);
+      return state?.kind === "constant" ? state.value : null;
+    }
+    if (ts.isParenthesizedExpression(node)
+        || ts.isAsExpression(node)
+        || ts.isTypeAssertionExpression(node)
+        || ts.isNonNullExpression(node)) return constantString(node.expression, scope, depth + 1);
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+      const left = constantString(node.left, scope, depth + 1);
+      const right = constantString(node.right, scope, depth + 1);
+      return left === null || right === null ? null : `${left}${right}`;
+    }
+    return null;
+  }
+
+  function propertyState(source, property, node) {
+    if (source.kind === "covered") return COVERED_STATE;
+    if (source.kind === "ambiguous" || source.kind === "ambiguous-loader") return AMBIGUOUS_STATE;
+    if (source.kind === "symbol") return source;
+    if (source.kind === "namespace") {
+      if (property === null) return AMBIGUOUS_STATE;
+      const rule = symbolRule(property);
+      return rule === null ? BENIGN_STATE : SYMBOL_STATE(rule, property);
+    }
+    const root = rootIdentifier(ts, node);
+    const compound = root === null || property === null ? null : symbolRule(`${root}.${property}`);
+    return compound === null ? BENIGN_STATE : SYMBOL_STATE(compound, `${root}.${property}`);
+  }
+
+  function bindPattern(scope, name, state) {
+    assignPatternState(ts, scope, name, state, (source, property) => propertyState(source, property, name));
+  }
+
+  function evaluate(node, scope, asCallee = false) {
+    if (ts.isIdentifier(node)) {
+      const bound = lookupState(scope, node.text);
+      if (bound !== null) return bound;
+      const rule = symbolRule(node.text);
+      return rule === null ? BENIGN_STATE : SYMBOL_STATE(rule, node.text);
+    }
+    if (ts.isStringLiteralLike(node)) return CONSTANT_STATE(node.text);
+    if (ts.isParenthesizedExpression(node)
+        || ts.isAsExpression(node)
+        || ts.isTypeAssertionExpression(node)
+        || ts.isNonNullExpression(node)) return evaluate(node.expression, scope, asCallee);
+    if (ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
+      analyzeFunction(node, scope);
+      return BENIGN_STATE;
+    }
+    if (ts.isBinaryExpression(node)) {
+      if (node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
+        const state = evaluate(node.right, scope);
+        if (ts.isIdentifier(node.left)) assignState(scope, node.left.text, state);
+        else evaluate(node.left, scope);
+        return state;
+      }
+      if (node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+        const constant = constantString(node, scope);
+        if (constant !== null) return CONSTANT_STATE(constant);
+      }
+      evaluate(node.left, scope);
+      evaluate(node.right, scope);
+      return BENIGN_STATE;
+    }
+    if (ts.isConditionalExpression(node)) {
+      evaluate(node.condition, scope);
+      const left = evaluate(node.whenTrue, cloneScope(scope));
+      const right = evaluate(node.whenFalse, cloneScope(scope));
+      return mergeState(left, right);
+    }
+    if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+      const source = evaluate(node.expression, scope);
+      const property = ts.isPropertyAccessExpression(node)
+        ? node.name.text
+        : constantString(node.argumentExpression, scope);
+      if (ts.isElementAccessExpression(node) && node.argumentExpression !== undefined) evaluate(node.argumentExpression, scope);
+      const state = propertyState(source, property, node);
+      if (!asCallee && state.kind === "symbol") add(state.ruleId, node, state.surface);
+      else if (!asCallee && state.kind === "ambiguous") add("UNRESOLVED_CLOSURE", node, "computed-authority");
+      return state;
+    }
+    if (ts.isCallExpression(node)) {
+      const callee = evaluate(node.expression, scope, true);
+      for (const argument of node.arguments) evaluate(argument, scope);
+      if (callee.kind === "symbol") add(callee.ruleId, node, callee.surface);
+      else if (callee.kind === "ambiguous" || callee.kind === "ambiguous-loader") {
+        add("UNRESOLVED_CLOSURE", node, "ambiguous-authority");
+      }
+      if (callee.kind === "loader") {
+        const imported = loadByPosition.get(node.getStart(sourceFile));
+        if (imported === undefined) return AMBIGUOUS_STATE;
+        return imported.bindings.some((binding) => coveredBindings.has(binding.local))
+          || moduleRule(imported.specifier ?? "") !== null
+          ? COVERED_STATE
+          : NAMESPACE_STATE;
+      }
+      return BENIGN_STATE;
+    }
+    let state = BENIGN_STATE;
+    ts.forEachChild(node, (child) => {
+      const childState = evaluate(child, scope);
+      if (childState.kind === "ambiguous") state = AMBIGUOUS_STATE;
+    });
+    return state;
+  }
+
+  function analyzeFunction(node, outerScope) {
+    if (node.body === undefined) return;
+    const isolatedOuter = cloneScope(outerScope);
+    const child = createScope(isolatedOuter);
+    const statements = ts.isBlock(node.body) ? node.body.statements : [];
+    predeclareScope(ts, child, statements, node.parameters);
+    directDeclarationStates(child, statements);
+    if (node.name !== undefined) child.bindings.set(node.name.text, BENIGN_STATE);
+    if (ts.isBlock(node.body)) processStatements(node.body.statements, child);
+    else evaluate(node.body, child);
+  }
+
+  function processStatement(statement, scope) {
+    if (ts.isInterfaceDeclaration(statement) && statement.name.text === "AstNode") {
+      add("AST_REENTRY", statement, "AstNode");
+      return;
+    }
+    if (ts.isImportDeclaration(statement) || ts.isImportEqualsDeclaration(statement) || ts.isExportDeclaration(statement)) return;
+    if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (declaration.initializer === undefined) continue;
+        bindPattern(scope, declaration.name, evaluate(declaration.initializer, scope));
+      }
+      return;
+    }
+    if (ts.isFunctionDeclaration(statement)) {
+      if (statement.body !== undefined) analyzeFunction(statement, scope);
+      return;
+    }
+    if (ts.isBlock(statement)) {
+      const child = createScope(scope);
+      predeclareScope(ts, child, statement.statements);
+      directDeclarationStates(child, statement.statements);
+      processStatements(statement.statements, child);
+      return;
+    }
+    if (ts.isIfStatement(statement)) {
+      evaluate(statement.expression, scope);
+      const left = cloneScope(scope);
+      const right = cloneScope(scope);
+      processStatement(statement.thenStatement, left);
+      if (statement.elseStatement !== undefined) processStatement(statement.elseStatement, right);
+      mergeScopes(scope, left, right);
+      return;
+    }
+    if (ts.isWhileStatement(statement) || ts.isDoStatement(statement) || ts.isForStatement(statement) || ts.isForInStatement(statement) || ts.isForOfStatement(statement)) {
+      const zeroIterations = cloneScope(scope);
+      const oneIteration = cloneScope(scope);
+      ts.forEachChild(statement, (child) => {
+        if (ts.isStatement(child)) processStatement(child, oneIteration);
+        else evaluate(child, oneIteration);
+      });
+      mergeScopes(scope, zeroIterations, oneIteration);
+      return;
+    }
+    ts.forEachChild(statement, (child) => {
+      if (ts.isStatement(child)) processStatement(child, scope);
+      else evaluate(child, scope);
+    });
+  }
+
+  function processStatements(statements, scope) {
+    for (const statement of statements) processStatement(statement, scope);
+  }
+
+  const root = createScope();
+  predeclareScope(ts, root, sourceFile.statements);
+  directDeclarationStates(root, sourceFile.statements);
+  if (!root.bindings.has("require")) root.bindings.set("require", LOADER_STATE);
+  for (const imported of imports) {
+    if (imported.kind === "require" || imported.kind === "re-export") continue;
+    for (const binding of imported.bindings) {
+      if (coveredBindings.has(binding.local)) {
+        root.bindings.set(binding.local, COVERED_STATE);
+        continue;
+      }
+      if (binding.namespace) {
+        root.bindings.set(binding.local, NAMESPACE_STATE);
+        continue;
+      }
+      const exportedRule = imported.targetLocator === undefined
+        ? null
+        : exportRulesByLocator.get(imported.targetLocator)?.get(binding.imported) ?? null;
+      const rule = exportedRule ?? symbolRule(binding.imported);
+      root.bindings.set(binding.local, rule === null ? BENIGN_STATE : SYMBOL_STATE(rule, binding.imported));
+    }
+  }
+  processStatements(sourceFile.statements, root);
   return found;
 }
 
@@ -447,13 +807,14 @@ function deadlineExpired(deadline) {
   return deadlineRemaining(deadline) === 0;
 }
 
-async function runCommand(command, args, cwd, deadline) {
+async function runCommand(command, args, cwd, deadline, env = process.env) {
   const remaining = deadlineRemaining(deadline);
   if (remaining === 0) throw new Error("audit deadline expired");
   const outcome = await runOwnedProcess({
     command,
     args,
     cwd,
+    env,
     timeoutMs: Math.max(1, Math.min(COMMAND_TIMEOUT_MS, remaining)),
     maxOutputBytes: COMMAND_OUTPUT_BYTES,
     windowsHide: true,
@@ -470,17 +831,24 @@ function parseJsonObject(text) {
   return value;
 }
 
-async function readStableMetadataFile(path, maximumBytes = MAXIMUM_GIT_METADATA_BYTES) {
+async function readStableMetadataFile(path, maximumBytes = MAXIMUM_GIT_METADATA_BYTES, deadline) {
+  if (deadlineExpired(deadline)) return null;
   let before;
   try {
     before = await lstat(path);
   } catch {
     return null;
   }
-  if (!before.isFile() || before.isSymbolicLink() || before.size < 1 || before.size > maximumBytes) return null;
+  if (deadlineExpired(deadline)
+      || !before.isFile()
+      || before.isSymbolicLink()
+      || before.size < 1
+      || before.size > maximumBytes) return null;
   const canonical = resolve(path);
   if (await realpath(path) !== canonical) return null;
+  if (deadlineExpired(deadline)) return null;
   const first = await readFile(path);
+  if (deadlineExpired(deadline)) return null;
   let after;
   try {
     after = await lstat(path);
@@ -489,10 +857,11 @@ async function readStableMetadataFile(path, maximumBytes = MAXIMUM_GIT_METADATA_
   }
   if (!after.isFile() || after.isSymbolicLink() || after.size !== before.size) return null;
   const second = await readFile(path);
-  return first.equals(second) ? first : null;
+  return !deadlineExpired(deadline) && first.equals(second) ? first : null;
 }
 
-async function resolveGitHead(repoRoot) {
+async function resolveGitHead(repoRoot, deadline) {
+  if (deadlineExpired(deadline)) return null;
   const dotGit = resolve(repoRoot, ".git");
   let dotGitStat;
   try {
@@ -505,7 +874,7 @@ async function resolveGitHead(repoRoot) {
   if (dotGitStat.isDirectory() && !dotGitStat.isSymbolicLink()) {
     gitDirectory = dotGit;
   } else if (dotGitStat.isFile() && !dotGitStat.isSymbolicLink()) {
-    const pointer = await readStableMetadataFile(dotGit, 4096);
+    const pointer = await readStableMetadataFile(dotGit, 4096, deadline);
     const text = pointer?.toString("utf8").trim() ?? "";
     if (!text.startsWith("gitdir: ")) return null;
     gitDirectory = resolve(repoRoot, text.slice("gitdir: ".length));
@@ -521,7 +890,7 @@ async function resolveGitHead(repoRoot) {
   }
   if (!gitDirectoryStat.isDirectory() || gitDirectoryStat.isSymbolicLink() || await realpath(gitDirectory) !== gitDirectory) return null;
 
-  const commonPointer = await readStableMetadataFile(resolve(gitDirectory, "commondir"), 4096);
+  const commonPointer = await readStableMetadataFile(resolve(gitDirectory, "commondir"), 4096, deadline);
   const commonDirectory = commonPointer === null
     ? gitDirectory
     : resolve(gitDirectory, commonPointer.toString("utf8").trim());
@@ -533,7 +902,7 @@ async function resolveGitHead(repoRoot) {
   }
   if (!commonStat.isDirectory() || commonStat.isSymbolicLink() || await realpath(commonDirectory) !== commonDirectory) return null;
 
-  const headBytes = await readStableMetadataFile(resolve(gitDirectory, "HEAD"), 4096);
+  const headBytes = await readStableMetadataFile(resolve(gitDirectory, "HEAD"), 4096, deadline);
   const head = headBytes?.toString("utf8").trim() ?? "";
   if (HEAD.test(head)) return head;
   if (!head.startsWith("ref: ")) return null;
@@ -545,11 +914,11 @@ async function resolveGitHead(repoRoot) {
 
   const loosePath = resolve(commonDirectory, ...reference.split("/"));
   if (!contained(commonDirectory, loosePath)) return null;
-  const loose = await readStableMetadataFile(loosePath, 4096);
+  const loose = await readStableMetadataFile(loosePath, 4096, deadline);
   const looseHead = loose?.toString("utf8").trim() ?? "";
   if (HEAD.test(looseHead)) return looseHead;
 
-  const packed = await readStableMetadataFile(resolve(commonDirectory, "packed-refs"));
+  const packed = await readStableMetadataFile(resolve(commonDirectory, "packed-refs"), MAXIMUM_GIT_METADATA_BYTES, deadline);
   if (packed === null) return null;
   for (const line of packed.toString("utf8").split(/\r?\n/u)) {
     if (line.startsWith("#") || line.startsWith("^")) continue;
@@ -562,27 +931,44 @@ async function resolveGitHead(repoRoot) {
 }
 
 async function resolveGraphProvider(repoRoot, deadline) {
+  let nativeHome;
+  try {
+    nativeHome = userInfo().homedir;
+  } catch {
+    return null;
+  }
+  if (typeof nativeHome !== "string" || nativeHome.length === 0 || !isAbsolute(nativeHome)) return null;
   const executable = resolve(
-    homedir(),
+    nativeHome,
     ".local",
     "bin",
     process.platform === "win32" ? "codebase-memory-mcp.exe" : "codebase-memory-mcp",
   );
-  let stat;
-  try {
-    stat = await lstat(executable);
-  } catch {
-    return null;
-  }
-  if (!stat.isFile() || stat.isSymbolicLink() || await realpath(executable) !== executable) return null;
-  const version = await runCommand(executable, ["--version"], repoRoot, deadline);
-  return GRAPH_PROVIDER_VERSION.test(version) ? executable : null;
+  const environment = { ...process.env, HOME: nativeHome };
+  if (process.platform === "win32") environment.USERPROFILE = nativeHome;
+  const authenticated = await authenticateDetachedAuthorityProvider({
+    executable,
+    expectedDigest: GRAPH_PROVIDER_DIGEST,
+    expectedVersion: GRAPH_PROVIDER_VERSION,
+    cwd: repoRoot,
+    env: environment,
+    deadline,
+  });
+  return authenticated === null
+    ? null
+    : Object.freeze({ executable: authenticated.executable, environment: Object.freeze(environment) });
 }
 
 async function discoverGraphProject(repoRoot, provider, deadline) {
-  const cacheKey = `${comparablePath(repoRoot)}\0${provider}`;
+  const cacheKey = `${comparablePath(repoRoot)}\0${provider.executable}`;
   if (graphProjectCache?.key === cacheKey) return graphProjectCache.project;
-  const raw = await runCommand(provider, ["cli", "list_projects"], repoRoot, deadline);
+  const raw = await runCommand(
+    provider.executable,
+    ["cli", "list_projects"],
+    repoRoot,
+    deadline,
+    provider.environment,
+  );
   const listed = parseJsonObject(raw);
   if (!Array.isArray(listed.projects)) throw new Error("graph project list malformed");
   const matches = listed.projects.filter((project) => project !== null
@@ -599,10 +985,11 @@ async function inspectGraph(repoRoot, expectedHead, deadline) {
   if (provider === null) throw new Error("graph provider unavailable");
   const project = await discoverGraphProject(repoRoot, provider, deadline);
   const raw = await runCommand(
-    provider,
+    provider.executable,
     ["cli", "index_status", "--project", project],
     repoRoot,
     deadline,
+    provider.environment,
   );
   const status = parseJsonObject(raw);
   const buildPoint = typeof status.indexed_head_sha === "string" ? status.indexed_head_sha : null;
@@ -615,7 +1002,8 @@ async function inspectGraph(repoRoot, expectedHead, deadline) {
   return { buildPoint, exact, project };
 }
 
-async function statRegularFile(repoRoot, locator) {
+async function statRegularFile(repoRoot, locator, deadline) {
+  if (deadlineExpired(deadline)) return null;
   const absolute = resolve(repoRoot, ...locator.split("/"));
   if (!contained(repoRoot, absolute)) return null;
   let stat;
@@ -624,24 +1012,31 @@ async function statRegularFile(repoRoot, locator) {
   } catch {
     return null;
   }
-  if (!stat.isFile() || stat.isSymbolicLink() || stat.size < 1 || stat.size > MAXIMUM_SOURCE_BYTES) return null;
+  if (deadlineExpired(deadline)
+      || !stat.isFile()
+      || stat.isSymbolicLink()
+      || stat.size < 1
+      || stat.size > MAXIMUM_SOURCE_BYTES) return null;
   const actual = await realpath(absolute);
+  if (deadlineExpired(deadline)) return null;
   const actualLocator = relativeLocator(repoRoot, actual);
   if (actualLocator !== locator) return null;
   return { absolute };
 }
 
-async function readStableFile(repoRoot, locator) {
-  const before = await statRegularFile(repoRoot, locator);
+async function readStableFile(repoRoot, locator, deadline) {
+  const before = await statRegularFile(repoRoot, locator, deadline);
   if (before === null) return null;
   const first = await readFile(before.absolute);
-  const after = await statRegularFile(repoRoot, locator);
+  if (deadlineExpired(deadline)) return null;
+  const after = await statRegularFile(repoRoot, locator, deadline);
   if (after === null || after.absolute !== before.absolute) return null;
   const second = await readFile(after.absolute);
-  return first.equals(second) ? first : null;
+  return !deadlineExpired(deadline) && first.equals(second) ? first : null;
 }
 
-async function resolveLocalImport(repoRoot, fromLocator, specifier) {
+async function resolveLocalImport(repoRoot, fromLocator, specifier, deadline) {
+  if (deadlineExpired(deadline)) return { kind: "deadline" };
   if (typeof specifier !== "string" || !specifier.startsWith(".")) return { kind: "package" };
   const fromDirectory = posix.dirname(fromLocator);
   const joined = posix.normalize(posix.join(fromDirectory, specifier.replaceAll("\\", "/")));
@@ -657,7 +1052,8 @@ async function resolveLocalImport(repoRoot, fromLocator, specifier) {
     ];
 
   for (const candidate of candidates) {
-    const file = await statRegularFile(repoRoot, candidate);
+    const file = await statRegularFile(repoRoot, candidate, deadline);
+    if (deadlineExpired(deadline)) return { kind: "deadline" };
     if (file !== null) return { kind: "local", locator: candidate };
   }
   return { kind: "missing", locator: canonicalBase };
@@ -709,6 +1105,7 @@ async function auditDetachedAuthorityPathInternal({
   if (canonicalEntries === null) return refused(baseContext, "DETACHED_AUTHORITY_REQUEST_INVALID");
 
   const root = resolve(repoRoot);
+  if (deadlineExpired(deadline)) return refused(baseContext, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
   let rootStat;
   try {
     rootStat = await lstat(root);
@@ -718,6 +1115,7 @@ async function auditDetachedAuthorityPathInternal({
   if (!rootStat.isDirectory() || rootStat.isSymbolicLink() || await realpath(root) !== root) {
     return refused(baseContext, "DETACHED_AUTHORITY_REQUEST_INVALID");
   }
+  if (deadlineExpired(deadline)) return refused(baseContext, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
 
   const context = { ...baseContext, entryFiles: canonicalEntries };
   const caseEntries = new Map();
@@ -735,7 +1133,7 @@ async function auditDetachedAuthorityPathInternal({
 
   let repositoryHead;
   try {
-    repositoryHead = await resolveGitHead(root);
+    repositoryHead = await resolveGitHead(root, deadline);
   } catch {
     return refused(context, "DETACHED_AUTHORITY_REPOSITORY_UNAVAILABLE");
   }
@@ -751,6 +1149,7 @@ async function auditDetachedAuthorityPathInternal({
     context.graphFreshness = graph.exact ? "FRESH" : "STALE";
     if (!graph.exact) return refused(context, "DETACHED_AUTHORITY_GRAPH_STALE");
   } catch {
+    if (deadlineExpired(deadline)) return refused(context, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
     context.graphFreshness = "UNAVAILABLE";
     return refused(context, "DETACHED_AUTHORITY_GRAPH_UNAVAILABLE");
   }
@@ -759,7 +1158,9 @@ async function auditDetachedAuthorityPathInternal({
     return refused(context, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
   }
 
+  if (deadlineExpired(deadline)) return refused(context, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
   const ts = loadTypeScript(root);
+  if (deadlineExpired(deadline)) return refused(context, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
   const queue = [...canonicalEntries].sort();
   let queueIndex = 0;
   const pending = new Set(queue);
@@ -798,7 +1199,10 @@ async function auditDetachedAuthorityPathInternal({
     pending.delete(locator);
     visited.add(locator);
 
-    const bytes = await readStableFile(root, locator);
+    const bytes = await readStableFile(root, locator, deadline);
+    if (deadlineExpired(deadline)) {
+      return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+    }
     if (bytes === null) {
       violations.push(violation("UNRESOLVED_CLOSURE", locator, "entry:unresolved"));
       continue;
@@ -817,13 +1221,22 @@ async function auditDetachedAuthorityPathInternal({
       continue;
     }
 
+    if (deadlineExpired(deadline)) {
+      return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+    }
     const sourceFile = ts.createSourceFile(locator, source, ts.ScriptTarget.ESNext, true, scriptKind(ts, locator));
+    if (deadlineExpired(deadline)) {
+      return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+    }
     if ((sourceFile.parseDiagnostics ?? []).length > 0) {
       violations.push(violation("UNRESOLVED_CLOSURE", locator, "source:parse-diagnostic"));
       continue;
     }
 
     const imports = collectImports(ts, sourceFile);
+    if (deadlineExpired(deadline)) {
+      return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+    }
     const coveredBindings = new Set();
     for (const imported of imports) {
       if (inspectedEdges.length >= maximumEdges) {
@@ -837,7 +1250,10 @@ async function auditDetachedAuthorityPathInternal({
       }
 
       const forbiddenModule = moduleRule(imported.specifier);
-      const resolution = await resolveLocalImport(root, locator, imported.specifier);
+      const resolution = await resolveLocalImport(root, locator, imported.specifier, deadline);
+      if (resolution.kind === "deadline") {
+        return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+      }
       if (resolution.kind === "package") {
         inspectedEdges.push(Object.freeze({ from: locator, to: locator, id: idForEdge }));
         if (forbiddenModule !== null) {
@@ -878,9 +1294,16 @@ async function auditDetachedAuthorityPathInternal({
     parsedModules.set(locator, { sourceFile, imports, coveredBindings });
   }
 
-  const exportRulesByLocator = new Map();
-  for (const [locator, parsed] of parsedModules) {
-    exportRulesByLocator.set(locator, collectExportRules(ts, parsed.sourceFile));
+  if (deadlineExpired(deadline)) {
+    return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+  }
+  const exportRulesByLocator = resolveExportRules(ts, parsedModules, deadline);
+  if (exportRulesByLocator === null) {
+    if (deadlineExpired(deadline)) {
+      return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+    }
+    violations.push(violation("UNRESOLVED_CLOSURE", canonicalEntries[0], "exports:fixpoint-truncated"));
+    return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "UNRESOLVED_CLOSURE");
   }
   for (const [locator, parsed] of parsedModules) {
     if (deadlineExpired(deadline)) {
@@ -894,11 +1317,14 @@ async function auditDetachedAuthorityPathInternal({
       parsed.coveredBindings,
       exportRulesByLocator,
     ));
+    if (deadlineExpired(deadline)) {
+      return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
+    }
   }
 
   let finalRepositoryHead;
   try {
-    finalRepositoryHead = await resolveGitHead(root);
+    finalRepositoryHead = await resolveGitHead(root, deadline);
   } catch {
     return refused({ ...context, inspectedFiles, inspectedEdges, violations }, "DETACHED_AUTHORITY_REPOSITORY_UNAVAILABLE");
   }
