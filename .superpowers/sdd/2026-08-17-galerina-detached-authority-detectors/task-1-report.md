@@ -88,5 +88,27 @@ Expected RED output: exit `1` and `ERR_MODULE_NOT_FOUND`, reporting that
 covering test. This remains expected because Task 1 must not implement the
 detector.
 
-Fix commit: `4b82189722e5bee680028a1126871086f50884b2`
+Code/control commit: `4b82189722e5bee680028a1126871086f50884b2`
 (`test: strengthen detached authority controls`), local only and not pushed.
+Evidence-only report commit: `a049dd3a2798dead9b12d037270bec5e9145829d`
+(`docs: record detached authority fix round 1`); it is not the fix commit.
+
+## Fix Round 2
+
+Strengthened the receipt freshness contract so the covering test independently
+runs `git rev-parse HEAD` in the repository root and requires both
+`repository_head_sha` and `indexed_head_sha` to exactly equal that live value.
+Matching arbitrary 40-character values can no longer satisfy the test.
+
+Covering test and command:
+
+```text
+node --test scripts/tests/detached-slide-authority-path.test.mjs
+```
+
+Expected RED output: exit `1` with `ERR_MODULE_NOT_FOUND`, reporting the
+absent `scripts/audit-detached-slide-authority-path.mjs` import. This is the
+specified pre-implementation result; no detector code was added.
+
+Code/control commit: `a35480cb2d0c010abbc10f961b6df142a7015495`
+(`test: bind detached receipt to repository head`), local only and not pushed.
