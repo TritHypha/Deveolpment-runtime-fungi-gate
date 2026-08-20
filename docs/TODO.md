@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Requirement blocks pre-conversion stop - 2026-08-20
+
+- [x] Record owner-supplied requirement/require blocks as private RD-0858,
+  `SOURCE-CHECKED` and `HOLD`. The useful capability is adopted for design;
+  the proposed Bool-only syntax, inferred early return and omitted-check safety
+  claims are not implementation authority.
+- [ ] Stop every new `.fungi` authoring or source-to-Fungi conversion before it
+  starts. The only exceptions are controlled-red fixtures, work required to
+  implement and admit RD-0858, and maintenance that creates or converts no
+  Fungi behavior. Unknown, missing, stale or ambiguous admission evidence is a
+  refusal.
+- [ ] Settle the first-version language contract: exact Bool/Verdict lifting,
+  K3 conjunction, source-order evaluation, explicit `DENY` and `UNKNOWN`
+  handling, taint/validator rules, failure redaction and finite work bounds.
+- [ ] Implement one complete route through lexer, parser/AST, type, effect,
+  taint/value-state, governance, interpreter, checked snapshot, detached GIR,
+  canonicalization, SLIDE re-derivation and VOK admission. Parser-only,
+  interpreter-only or WAT fallback evidence is not completion.
+- [ ] Plant same-axis hostile controls for missing constraints and handlers,
+  coercion, taint/sanitizer spoofing, hidden effects, empty blocks, work
+  ceilings, fallback re-entry and source/GIR/physical/receipt mutation.
+- [ ] Keep the canonical Fungi authoring and TypeScript-conversion skills on the
+  same fail-closed stop, and require an approved audit pre-manifest before any
+  implementation or admission suite runs.
+- [ ] Reopen conversion only through a later source-checked RD/TODO decision
+  bound to the exact implementation HEAD, fresh indexes, independent review
+  and complete checked-snapshot/GIR/SLIDE/VOK receipts. RD-0858 alone cannot
+  reopen conversion.
+
 ### Public devtool ownership and bounded execution - 2026-08-19
 
 - [x] Confirm standalone Hypha, Myco and TriRegex repositories as the public
