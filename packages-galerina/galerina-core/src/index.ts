@@ -347,10 +347,14 @@ export type AstNodeKind =
   | "typedContentBlockExpr"
   | "matchExpr"
   | "matchArm"
+  | "requirementExpr"
+  | "requirementConstraint"
   // ── Statements ──
   | "ifStmt"
   | "block"
   | "returnStmt"
+  | "requireStmt"
+  | "requireArm"
   // ── Concurrency ──
   | "parallelBlock"
   | "workerDecl"

@@ -63,6 +63,10 @@ export type AstNodeKind =
   | "matchArm"
   | "checkExpr"   // W5b T2.2: check(v){ if:/deny:/ambig: } — K3 tri-branch
   | "checkArm"    // one arm of a checkExpr (value = "if"|"deny"|"ambig")
+  | "requirementExpr"
+  | "requirementConstraint"
+  | "requireStmt"
+  | "requireArm"
   | "faultStmt"   // W5b T2.2: fault <expr> — raise an audited, terminal, fail-closed fault (A10)
   | "prefilterExpr" // W5b T2.4: prefilter(v){ deny:/maybe: } — the DENY-ONLY gate (can never ALLOW)
   | "prefilterArm"  // one arm of a prefilterExpr (value = "deny"|"maybe")
@@ -404,6 +408,7 @@ const MAX_EXPR_DEPTH = 256;
  * admission to O(d + c). The independent SLIDE record ABI remains the narrower
  * eight-field profile; this parser ceiling does not widen that authority. */
 export const MAX_RECORD_FIELDS = 64;
+export const MAX_REQUIREMENT_CONSTRAINTS = 64;
 
 /** Thrown by the depth guard to unwind the recursion to parseProgram's per-declaration catch — fail-closed,
  *  never a host crash. The FUNGI-PARSE-DEPTH-001 diagnostic is recorded before the throw. */
