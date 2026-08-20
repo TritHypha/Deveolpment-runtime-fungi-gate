@@ -220,6 +220,24 @@ test("a forbidden default export cannot hide behind a default import name", asyn
   });
 });
 
+test("a forbidden default export cannot hide behind a re-export barrel", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import lower from './barrel.ts'; export const result = lower({}, {});\n",
+    "barrel.ts": "export { default } from './helper.ts';\n",
+    "helper.ts": "export default function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.equal(result.inspectedFiles.length, 3);
+  });
+});
+
 test("a forbidden imported binding cannot hide behind an assignment alias", async () => {
   await withTemporaryFixture({
     "entry.ts": "import { emitGIR as imported } from './helper.ts'; const lower = imported; export const result = lower({}, {});\n",
@@ -237,6 +255,52 @@ test("a forbidden imported binding cannot hide behind an assignment alias", asyn
   });
 });
 
+test("a later assignment propagates forbidden authority to its lexical binding", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import { emitGIR as imported } from './helper.ts'; let lower; lower = imported; export const result = lower({}, {});\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+  });
+});
+
+test("a local shadow does not inherit an outer imported authority binding", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import { emitGIR as lower } from './helper.ts'; function localOnly() { const lower = () => 1; return lower(); } export const result = localOnly();\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+  });
+});
+
+test("a later benign reassignment clears authority before a subsequent call", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import { emitGIR as imported } from './helper.ts'; let lower = imported; lower = () => 1; export const result = lower();\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+  });
+});
+
 test("a forbidden namespace member cannot hide behind destructuring", async () => {
   await withTemporaryFixture({
     "entry.ts": "import * as legacy from './helper.ts'; const { emitGIR: lower } = legacy; export const result = lower({}, {});\n",
@@ -251,6 +315,38 @@ test("a forbidden namespace member cannot hide behind destructuring", async () =
     assert.equal(result.status, "FAIL", JSON.stringify(result));
     assert.equal(result.failureId, "AST_REENTRY");
     assert.deepEqual(result.violations.map((finding) => finding.id), ["AST_REENTRY"]);
+  });
+});
+
+test("a constant-computed namespace member retains its forbidden surface", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import * as legacy from './helper.ts'; export const result = legacy['emit' + 'GIR']({}, {});\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+  });
+});
+
+test("an unresolvable computed member on a tainted namespace refuses", async () => {
+  await withTemporaryFixture({
+    "entry.ts": "import * as legacy from './helper.ts'; const member = process.argv[2]; export const result = legacy[member]({}, {});\n",
+    "helper.ts": "export function emitGIR() { return new Uint8Array(); }\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "REFUSED", JSON.stringify(result));
+    assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
   });
 });
 
@@ -285,6 +381,74 @@ test("an inline CommonJS require cannot hide a forbidden property surface", asyn
     assert.equal(result.status, "FAIL", JSON.stringify(result));
     assert.equal(result.failureId, "AST_REENTRY");
     assert.equal(result.inspectedFiles.length, 2);
+  });
+});
+
+test("an aliased CommonJS loader retains closure and member authority", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const load = require; const legacy = load('./helper.cjs'); module.exports = legacy.emitGIR({}, {});\n",
+    "helper.cjs": "exports.emitGIR = function emitGIR() { return new Uint8Array(); };\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.equal(result.inspectedFiles.length, 2);
+  });
+});
+
+test("aliased CommonJS inline and destructured members retain authority", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const load = require; const first = load('./helper.cjs').emitGIR({}, {}); const { emitGIR: lower } = load('./helper.cjs'); module.exports = [first, lower({}, {})];\n",
+    "helper.cjs": "exports.emitGIR = function emitGIR() { return new Uint8Array(); };\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "FAIL", JSON.stringify(result));
+    assert.equal(result.failureId, "AST_REENTRY");
+    assert.equal(result.inspectedFiles.length, 2);
+  });
+});
+
+test("a locally shadowed require is not treated as the intrinsic loader", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "function require() { return { safe() { return 1; } }; } module.exports = require('./missing.cjs').safe();\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+    assert.equal(result.inspectedEdges.length, 0);
+  });
+});
+
+test("aliased CommonJS nonliteral and package loads fail closed", async () => {
+  await withTemporaryFixture({
+    "nonliteral.cjs": "const load = require; const target = './helper.cjs'; module.exports = load(target);\n",
+    "package.cjs": "const load = require; module.exports = load('left-pad');\n",
+    "helper.cjs": "module.exports = 1;\n",
+  }, async (locator) => {
+    for (const entry of ["nonliteral.cjs", "package.cjs"]) {
+      const result = await auditDetachedAuthorityPath({
+        repoRoot: ROOT,
+        entryFiles: [`${locator}/${entry}`],
+        expectedHead: REPOSITORY_HEAD,
+      });
+
+      assert.equal(result.status, "REFUSED", JSON.stringify(result));
+      assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
+    }
   });
 });
 
@@ -384,6 +548,22 @@ test("file and edge ceilings refuse rather than returning partial PASS", async (
   assert.equal(edgeLimited.failureId, "DETACHED_AUTHORITY_ANALYSIS_TRUNCATED");
 });
 
+test("the per-file byte ceiling refuses before parsing oversized source", async () => {
+  await withTemporaryFixture({
+    "entry.ts": `export const oversized = '${"x".repeat((4 * 1024 * 1024) + 1)}';\n`,
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.ts`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "REFUSED", JSON.stringify(result));
+    assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
+    assert.deepEqual(result.inspectedFiles, []);
+  });
+});
+
 test("ruleset digest is stable across entry order", async () => {
   const entries = [
     `${FIXTURES}/green/entry.ts`,
@@ -425,6 +605,20 @@ test("a PATH-spoofed executable cannot redirect graph inspection", { skip: proce
     assert.equal(result.status, "PASS", JSON.stringify(result));
   } finally {
     process.env.PATH = priorPath;
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+});
+
+test("a USERPROFILE spoof cannot redirect the native graph provider home", { skip: process.platform !== "win32" }, async () => {
+  const temporaryRoot = mkdtempSync(resolve(ROOT, FIXTURES, ".task-2-userprofile-"));
+  const priorProfile = process.env.USERPROFILE;
+  try {
+    process.env.USERPROFILE = temporaryRoot;
+    const result = await auditFixture("green");
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+  } finally {
+    if (priorProfile === undefined) delete process.env.USERPROFILE;
+    else process.env.USERPROFILE = priorProfile;
     rmSync(temporaryRoot, { recursive: true, force: true });
   }
 });
