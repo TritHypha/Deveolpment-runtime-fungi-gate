@@ -530,6 +530,81 @@ test("computed and destructured properties on a shadowed module stay benign", as
   });
 });
 
+for (const { name, source } of [
+  {
+    name: "an object binding default retains intrinsic loader closure",
+    source: "const { load = require } = {}; module.exports = load('./helper.cjs');\n",
+  },
+  {
+    name: "a nested object binding default retains intrinsic loader closure",
+    source: "const { nested: { load = require } = {} } = {}; module.exports = load('./helper.cjs');\n",
+  },
+  {
+    name: "an array binding default retains intrinsic loader closure",
+    source: "const [load = require] = []; module.exports = load('./helper.cjs');\n",
+  },
+  {
+    name: "a function parameter binding default retains intrinsic loader closure",
+    source: "function invoke({ load = require } = {}) { return load('./helper.cjs'); } module.exports = invoke({});\n",
+  },
+  {
+    name: "a destructuring assignment default retains intrinsic loader closure",
+    source: "let load; ({ load = require } = {}); module.exports = load('./helper.cjs');\n",
+  },
+]) {
+  test(name, async () => {
+    await withTemporaryFixture({
+      "entry.cjs": source,
+      "helper.cjs": "module.exports = require('typescript');\n",
+    }, async (locator) => {
+      const result = await auditDetachedAuthorityPath({
+        repoRoot: ROOT,
+        entryFiles: [`${locator}/entry.cjs`],
+        expectedHead: REPOSITORY_HEAD,
+      });
+      const entry = `${locator}/entry.cjs`;
+      const helper = `${locator}/helper.cjs`;
+
+      assert.equal(result.status, "FAIL", JSON.stringify(result));
+      assert.equal(result.failureId, "TYPESCRIPT_REENTRY");
+      assert.equal(result.inspectedFiles.some((file) => file.locator === helper), true);
+      assert.equal(result.inspectedEdges.filter((edge) => edge.from === entry && edge.to === helper).length, 1);
+      assert.equal(result.violations.some((finding) => finding.id === "TYPESCRIPT_REENTRY" && finding.file === helper), true);
+    });
+  });
+}
+
+test("authority-sensitive nested rest binding ambiguity refuses", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "const { nested: { ...rest } = module } = {}; module.exports = rest.require('./helper.cjs');\n",
+    "helper.cjs": "module.exports = 1;\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "REFUSED", JSON.stringify(result));
+    assert.equal(result.failureId, "UNRESOLVED_CLOSURE");
+  });
+});
+
+test("locally shadowed require and module binding defaults stay benign", async () => {
+  await withTemporaryFixture({
+    "entry.cjs": "function require() { return { safe() { return 1; } }; } const module = { safe: 1 }; const { load = require, mod = module } = {}; module.value = [load().safe(), mod.safe];\n",
+  }, async (locator) => {
+    const result = await auditDetachedAuthorityPath({
+      repoRoot: ROOT,
+      entryFiles: [`${locator}/entry.cjs`],
+      expectedHead: REPOSITORY_HEAD,
+    });
+
+    assert.equal(result.status, "PASS", JSON.stringify(result));
+    assert.equal(result.inspectedEdges.length, 0);
+  });
+});
+
 test("module.require nonliteral and package loads fail closed", async () => {
   await withTemporaryFixture({
     "nonliteral.cjs": "const target = './helper.cjs'; module.exports = module.require(target);\n",
