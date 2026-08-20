@@ -20,7 +20,7 @@ import {
 import { loadTypeScript } from "./lib/ts-to-fungi-sandbox/typescript-api.mjs";
 
 const SCHEMA = "DetachedAuthorityAuditV1";
-const TOOL_VERSION = "1.0.1";
+const TOOL_VERSION = "1.1.0";
 const DEFAULT_MAXIMUM_FILES = 256;
 const DEFAULT_MAXIMUM_EDGES = 2048;
 const HARD_MAXIMUM_FILES = 4096;

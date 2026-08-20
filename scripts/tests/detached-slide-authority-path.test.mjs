@@ -143,7 +143,7 @@ test("green closure accepts snapshot bytes and typed GIR/refusal only", async ()
 
   assert.equal(result.status, "PASS", JSON.stringify(result));
   assert.equal(result.failureId, null);
-  assert.equal(result.toolVersion, "1.0.1");
+  assert.equal(result.toolVersion, "1.1.0");
   assert.deepEqual(result.violations, []);
   assertDetachedAuthorityAuditV1(result, "green");
 });
