@@ -94,7 +94,7 @@ contract {
     assert.equal(checked.requirement003.length, 5);
     assert.deepEqual(
       checked.requirement003.map((diagnostic) => diagnostic.location?.line),
-      [16, 17, 18, 19, 20],
+      [14, 15, 16, 17, 18],
     );
   });
 
@@ -155,6 +155,28 @@ contract { effects {} }
       checked.requirement003.map((diagnostic) => diagnostic.location?.line),
       [7, 8, 9, 10, 11],
     );
+  });
+
+  it("rejects a typed local binding that shadows an otherwise unique local flow", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow decide(age: Int, seed: Bool) -> Verdict
+contract { effects {} }
+{
+  let localPolicy: Bool = seed
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+    );
+    assert.equal(checked.requirement003.length, 1);
   });
 
   it("does not let a validator-like name or pure declaration bypass observed effects", () => {

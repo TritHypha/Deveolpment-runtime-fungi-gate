@@ -8,10 +8,11 @@
 // =============================================================================
 
 import { type AstNode, type ParseDiagnostic, type FlowMeta, type SourceLocation } from "./parser.js";
-import { isFlowDeclNamed } from "./flow-name.js";
+import { decodeFlowDecl, isFlowDeclNamed } from "./flow-name.js";
 import { buildCallGraph, topoSort, detectCycle } from "@galerina/devtools-graph-algorithms";
 import { effectsToFlags, type EffectFlagsMask, EffectCheckerFlags, type EffectCheckerFlagsMask } from "./type-registry.js";
 import { getStdlibRequiredEffects, getStdlibModuleKind } from "./stdlib-registry.js";
+import { FUNGI_REQUIREMENT_003 } from "./requirement-diagnostics.js";
 
 // ---------------------------------------------------------------------------
 // FlowEffectSummary — per-flow effect inference summary
@@ -708,6 +709,244 @@ function buildContractEffectsBlock(effects: readonly string[]): string {
   return lines.join("\n");
 }
 
+interface RequirementStrictCallInventory {
+  readonly targets: ReadonlySet<string>;
+  readonly complete: boolean;
+}
+
+interface RequirementConstraintObservation extends RequirementStrictCallInventory {
+  readonly directEffects: ReadonlySet<string>;
+}
+
+interface RequirementEffectContext {
+  readonly withinBounds: boolean;
+  readonly constraintObservations: ReadonlyMap<AstNode, RequirementConstraintObservation>;
+  readonly closureEffects: ReadonlyMap<string, ReadonlySet<string>>;
+  readonly closureComplete: ReadonlyMap<string, boolean>;
+}
+
+interface MutableRequirementCallBudget {
+  calls: number;
+  exceeded: boolean;
+}
+
+const REQUIREMENT_EFFECT_MAX_FLOWS = 4096;
+const REQUIREMENT_EFFECT_MAX_CALLS = 16384;
+
+function buildRequirementEffectContext(
+  flows: readonly FlowMeta[],
+  ast: AstNode,
+): RequirementEffectContext {
+  if (flows.length > REQUIREMENT_EFFECT_MAX_FLOWS) {
+    return {
+      withinBounds: false,
+      constraintObservations: new Map(),
+      closureEffects: new Map(),
+      closureComplete: new Map(),
+    };
+  }
+
+  const metasByName = new Map<string, FlowMeta[]>();
+  for (const flow of flows) {
+    const sameName = metasByName.get(flow.name);
+    if (sameName === undefined) {
+      metasByName.set(flow.name, [flow]);
+    } else {
+      sameName.push(flow);
+    }
+  }
+
+  const flowNodesByName = new Map<string, AstNode[]>();
+  const knownNames = new Set(metasByName.keys());
+  function collectFlowNodes(node: AstNode): void {
+    const decoded = decodeFlowDecl(node);
+    if (decoded !== undefined && !("error" in decoded) && knownNames.has(decoded.name)) {
+      const sameName = flowNodesByName.get(decoded.name);
+      if (sameName === undefined) {
+        flowNodesByName.set(decoded.name, [node]);
+      } else {
+        sameName.push(node);
+      }
+      return;
+    }
+    for (const child of node.children ?? []) collectFlowNodes(child);
+  }
+  collectFlowNodes(ast);
+
+  const uniqueFlowNames = new Set<string>();
+  for (const [name, metas] of metasByName) {
+    if (metas.length === 1 && flowNodesByName.get(name)?.length === 1) {
+      uniqueFlowNames.add(name);
+    }
+  }
+
+  const constraintObservations = new Map<AstNode, RequirementConstraintObservation>();
+  const directEffects = new Map<string, ReadonlySet<string>>();
+  const strictCalls = new Map<string, RequirementStrictCallInventory>();
+  const budget: MutableRequirementCallBudget = { calls: 0, exceeded: false };
+
+  function classifyCall(
+    node: AstNode,
+    localBindings: ReadonlySet<string>,
+    targets: Set<string>,
+  ): boolean {
+    budget.calls += 1;
+    if (budget.calls > REQUIREMENT_EFFECT_MAX_CALLS) {
+      budget.exceeded = true;
+      return false;
+    }
+    const name = node.value ?? "";
+    const bare =
+      node.callStyle === undefined
+      && /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+    if (!bare || localBindings.has(name) || !uniqueFlowNames.has(name)) {
+      return false;
+    }
+    targets.add(name);
+    return true;
+  }
+
+  for (const name of uniqueFlowNames) {
+    const flowNode = flowNodesByName.get(name)?.[0];
+    if (flowNode === undefined) continue;
+    const localBindings = new Set(
+      [...collectLocalBindings(flowNode)].map((binding) => {
+        const beforeColon = binding.split(":")[0] ?? "";
+        return beforeColon.trim().split(/\s+/).pop() ?? "";
+      }),
+    );
+    const flowTargets = new Set<string>();
+    let flowComplete = true;
+
+    function walk(
+      node: AstNode,
+      constraintTargets?: Set<string>,
+      constraintState?: { complete: boolean },
+    ): void {
+      if (node.kind === "fnDecl" || budget.exceeded) return;
+      if (node.kind === "requirementConstraint") {
+        const expression = node.children?.[0];
+        const targets = new Set<string>();
+        const state = { complete: expression !== undefined };
+        if (expression !== undefined) walk(expression, targets, state);
+        constraintObservations.set(node, {
+          directEffects: expression === undefined
+            ? new Set<string>()
+            : inferEffectsFromNode(expression),
+          targets,
+          complete: state.complete,
+        });
+        return;
+      }
+      if (node.kind === "callExpr") {
+        const resolved = classifyCall(node, localBindings, flowTargets);
+        if (!resolved) flowComplete = false;
+        if (constraintTargets !== undefined && constraintState !== undefined) {
+          if (resolved) {
+            const target = node.value;
+            if (target !== undefined) constraintTargets.add(target);
+          } else {
+            constraintState.complete = false;
+          }
+        }
+      }
+      for (const child of node.children ?? []) {
+        walk(child, constraintTargets, constraintState);
+      }
+    }
+
+    walk(flowNode);
+    directEffects.set(name, inferEffectsFromNode(flowNode));
+    strictCalls.set(name, {
+      targets: flowTargets,
+      complete: flowComplete && !budget.exceeded,
+    });
+  }
+
+  const closureEffects = new Map<string, Set<string>>();
+  const closureComplete = new Map<string, boolean>();
+  for (const name of uniqueFlowNames) {
+    closureEffects.set(name, new Set(directEffects.get(name) ?? []));
+    closureComplete.set(name, strictCalls.get(name)?.complete === true);
+  }
+
+  let settled = false;
+  for (let pass = 0; pass <= uniqueFlowNames.size; pass += 1) {
+    let changed = false;
+    for (const name of uniqueFlowNames) {
+      const effects = closureEffects.get(name);
+      if (effects === undefined) continue;
+      for (const target of strictCalls.get(name)?.targets ?? []) {
+        const targetEffects = closureEffects.get(target);
+        if (targetEffects === undefined || closureComplete.get(target) !== true) {
+          if (closureComplete.get(name) !== false) {
+            closureComplete.set(name, false);
+            changed = true;
+          }
+        }
+        for (const effect of targetEffects ?? []) {
+          if (!effects.has(effect)) {
+            effects.add(effect);
+            changed = true;
+          }
+        }
+      }
+    }
+    if (!changed) {
+      settled = true;
+      break;
+    }
+  }
+
+  return {
+    withinBounds:
+      flows.length <= REQUIREMENT_EFFECT_MAX_FLOWS
+      && !budget.exceeded
+      && settled,
+    constraintObservations,
+    closureEffects,
+    closureComplete,
+  };
+}
+
+function checkRequirementConstraintEffects(
+  flowNode: AstNode,
+  context: RequirementEffectContext,
+): readonly EffectDiagnostic[] {
+  const diagnostics: EffectDiagnostic[] = [];
+
+  function walk(node: AstNode): void {
+    if (node.kind === "fnDecl") return;
+    if (node.kind === "requirementConstraint") {
+      const observation = context.constraintObservations.get(node);
+      let effectFree =
+        context.withinBounds
+        && observation !== undefined
+        && observation.complete
+        && observation.directEffects.size === 0;
+      for (const target of observation?.targets ?? []) {
+        if (
+          context.closureComplete.get(target) !== true
+          || (context.closureEffects.get(target)?.size ?? 0) !== 0
+        ) {
+          effectFree = false;
+        }
+      }
+      if (!effectFree) {
+        diagnostics.push({
+          ...FUNGI_REQUIREMENT_003,
+          ...(node.location !== undefined ? { location: node.location } : {}),
+        });
+      }
+      return;
+    }
+    for (const child of node.children ?? []) walk(child);
+  }
+
+  walk(flowNode);
+  return diagnostics;
+}
+
 // ---------------------------------------------------------------------------
 // Public checker entry points
 // ---------------------------------------------------------------------------
@@ -724,8 +963,18 @@ export function checkEffects(
       .map((flow) => flow.name),
   );
   const callGraph = buildFlowCallGraph(flows, ast);
+  const requirementContext = buildRequirementEffectContext(flows, ast);
 
-  return flows.map((flow) => checkFlowEffects(flow, ast, flows, callGraph, effectfulFlows, mode, enforceTierFloor));
+  return flows.map((flow) => checkFlowEffectsInternal(
+    flow,
+    ast,
+    flows,
+    callGraph,
+    effectfulFlows,
+    mode,
+    enforceTierFloor,
+    requirementContext,
+  ));
 }
 
 export function checkFlowEffects(
@@ -740,6 +989,28 @@ export function checkFlowEffects(
   ),
   mode: EffectCheckerMode = "production",
   enforceTierFloor = false,
+): EffectCheckResult {
+  return checkFlowEffectsInternal(
+    flow,
+    ast,
+    allFlows,
+    callGraph,
+    effectfulFlows,
+    mode,
+    enforceTierFloor,
+    buildRequirementEffectContext(allFlows, ast),
+  );
+}
+
+function checkFlowEffectsInternal(
+  flow: FlowMeta,
+  ast: AstNode,
+  allFlows: readonly FlowMeta[],
+  callGraph: ReadonlyMap<string, ReadonlySet<string>>,
+  effectfulFlows: ReadonlySet<string>,
+  mode: EffectCheckerMode,
+  enforceTierFloor: boolean,
+  requirementContext: RequirementEffectContext,
 ): EffectCheckResult {
   const diagnostics: EffectDiagnostic[] = [];
   const flowNode = findFlowNode(ast, flow.name);
@@ -921,6 +1192,9 @@ export function checkFlowEffects(
   // FUNGI-STDLIB-001: check stdlib calls against STDLIB_CAPABILITY_MAP
   if (flowNode !== undefined) {
     for (const diag of checkStdlibEffects(flow, flowNode, mode)) {
+      diagnostics.push(diag);
+    }
+    for (const diag of checkRequirementConstraintEffects(flowNode, requirementContext)) {
       diagnostics.push(diag);
     }
   }
