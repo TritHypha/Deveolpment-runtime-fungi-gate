@@ -13,7 +13,7 @@
 // A value made SafeFor<HtmlContent> is still tainted for a SQL sink.
 // =============================================================================
 
-import { type AstNode, type FlowMeta } from "./parser.js";
+import { type AstNode, type FlowMeta, type SourceLocation } from "./parser.js";
 import { decodeFlowDecl } from "./flow-name.js";
 import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
 import { hashSource } from "./runtime/canonicalHash.js";
@@ -468,6 +468,11 @@ interface CheckedFlowSnapshot {
   readonly ast: AstNode;
 }
 
+interface ValidatedCheckedFlow {
+  readonly digest: string;
+  readonly snapshot: CheckedFlowSnapshot;
+}
+
 function snapshotCheckedFlow(
   flow: FlowMeta,
   flowNode: AstNode,
@@ -633,10 +638,10 @@ function canonicalCheckedFlowNode(node: AstNode): CanonicalCheckedFlowNode {
  * semantics between files cannot mint or invalidate authority. Every compiler-semantic
  * AstNode field and ordered child is included under a domain-separated SHA-256 preimage.
  */
-export function computeRequirementValidatorCheckedFlowDigest(
+function validateRequirementValidatorCheckedFlow(
   flow: FlowMeta | undefined,
   flowNode: AstNode | undefined,
-): string | undefined {
+): ValidatedCheckedFlow | undefined {
   try {
     if (flow === undefined || flow === null || typeof flow !== "object" || Array.isArray(flow)
       || flowNode === undefined || flowNode === null
@@ -671,7 +676,113 @@ export function computeRequirementValidatorCheckedFlowDigest(
       ],
       ast: canonicalCheckedFlowNode(snapshot.ast),
     });
-    return hashSource(canonical);
+    return Object.freeze({
+      digest: hashSource(canonical),
+      snapshot,
+    });
+  } catch {
+    return undefined;
+  }
+}
+
+export function computeRequirementValidatorCheckedFlowDigest(
+  flow: FlowMeta | undefined,
+  flowNode: AstNode | undefined,
+): string | undefined {
+  return validateRequirementValidatorCheckedFlow(flow, flowNode)?.digest;
+}
+
+const MAX_REQUIREMENT_VALIDATOR_ANALYSIS_FLOWS = 4_096;
+
+function snapshotFlowLocation(value: unknown): SourceLocation | undefined {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const location = value as SourceLocation;
+  const file = location.file;
+  const line = location.line;
+  const column = location.column;
+  const offset = location.offset;
+  const endLine = location.endLine;
+  const endColumn = location.endColumn;
+  const endOffset = location.endOffset;
+  const length = location.length;
+  if (!boundedCheckedFlowString(file)
+    || !Number.isSafeInteger(line) || line < 0
+    || !Number.isSafeInteger(column) || column < 0
+    || [offset, endLine, endColumn, endOffset, length].some((part) =>
+      part !== undefined && (!Number.isSafeInteger(part) || part < 0))) return undefined;
+  return Object.freeze({
+    file,
+    line,
+    column,
+    ...(offset === undefined ? {} : { offset }),
+    ...(endLine === undefined ? {} : { endLine }),
+    ...(endColumn === undefined ? {} : { endColumn }),
+    ...(endOffset === undefined ? {} : { endOffset }),
+    ...(length === undefined ? {} : { length }),
+  });
+}
+
+function snapshotAnalysisFlow(flow: FlowMeta): FlowMeta | undefined {
+  if (flow === null || typeof flow !== "object" || Array.isArray(flow)) return undefined;
+  const name = flow.name;
+  const qualifier = flow.qualifier;
+  const inputParams = flow.params;
+  const returnType = flow.returnType;
+  const inputEffects = flow.declaredEffects;
+  const inputLocation = flow.location;
+  const decreasesMetric = flow.decreasesMetric;
+  if (!boundedCheckedFlowString(name)
+    || !["flow", "secure", "pure", "guarded"].includes(qualifier)
+    || !Array.isArray(inputParams)
+    || !boundedCheckedFlowString(returnType)
+    || !Array.isArray(inputEffects)
+    || (decreasesMetric !== undefined && !boundedCheckedFlowString(decreasesMetric))) {
+    return undefined;
+  }
+  const paramCount = inputParams.length;
+  const effectCount = inputEffects.length;
+  if (!Number.isSafeInteger(paramCount) || paramCount < 0
+    || paramCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_PARAMS
+    || !Number.isSafeInteger(effectCount) || effectCount < 0
+    || effectCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS) return undefined;
+  const params: string[] = [];
+  for (let index = 0; index < paramCount; index += 1) {
+    const param = inputParams[index];
+    if (!boundedCheckedFlowString(param)) return undefined;
+    params.push(param);
+  }
+  const declaredEffects: string[] = [];
+  for (let index = 0; index < effectCount; index += 1) {
+    const effect = inputEffects[index];
+    if (!boundedCheckedFlowString(effect)) return undefined;
+    declaredEffects.push(effect);
+  }
+  const location = snapshotFlowLocation(inputLocation);
+  if (location === undefined) return undefined;
+  return Object.freeze({
+    name,
+    qualifier,
+    params: Object.freeze(params),
+    returnType,
+    declaredEffects: Object.freeze(declaredEffects),
+    location,
+    ...(decreasesMetric === undefined ? {} : { decreasesMetric }),
+  });
+}
+
+function snapshotAnalysisFlows(flows: readonly FlowMeta[]): readonly FlowMeta[] | undefined {
+  try {
+    if (!Array.isArray(flows)) return undefined;
+    const count = flows.length;
+    if (!Number.isSafeInteger(count) || count < 0
+      || count > MAX_REQUIREMENT_VALIDATOR_ANALYSIS_FLOWS) return undefined;
+    const snapshots: FlowMeta[] = [];
+    for (let index = 0; index < count; index += 1) {
+      const snapshot = snapshotAnalysisFlow(flows[index]!);
+      if (snapshot === undefined) return undefined;
+      snapshots.push(snapshot);
+    }
+    return Object.freeze(snapshots);
   } catch {
     return undefined;
   }
@@ -890,6 +1001,13 @@ export function analyzeRequirementTaint(
   const diagnostics: TaintDiagnostic[] = [];
   const matchedValidatorCalls = new Set<AstNode>();
   const imports = collectImportBindings(ast);
+  // Authority-relevant metadata is copied once into bounded immutable records.
+  // Candidate selection, Task-2 effect closure, digest validation and Task-1
+  // verification all consume this same view; caller-owned FlowMeta is never
+  // reread after the snapshot boundary.
+  const snapshottedFlows = snapshotAnalysisFlows(flows);
+  const flowSnapshotFailed = snapshottedFlows === undefined;
+  const analysisFlows = snapshottedFlows ?? Object.freeze([]);
   const flowNodes = new Map<string, AstNode[]>();
   for (const child of ast.children ?? []) {
     const decoded = decodeFlowDecl(child);
@@ -914,7 +1032,7 @@ export function analyzeRequirementTaint(
     occurrences.push(result);
     effectsByName.set(result.flowName, occurrences);
   }
-  const actualEffectResults = checkEffects(flows, ast);
+  const actualEffectResults = checkEffects(analysisFlows, ast);
   const actualEffectsByName = new Map<string, EffectCheckResult[]>();
   for (const result of actualEffectResults) {
     const occurrences = actualEffectsByName.get(result.flowName) ?? [];
@@ -940,7 +1058,7 @@ export function analyzeRequirementTaint(
     }
     const call = candidates[0]!;
     const localName = call.value ?? "";
-    const targetFlows = flows.filter((flow) => flow.name === localName);
+    const targetFlows = analysisFlows.filter((flow) => flow.name === localName);
     const targetNodes = flowNodes.get(localName) ?? [];
     const checked = checkedByName.get(localName) ?? [];
     const effects = effectsByName.get(localName) ?? [];
@@ -948,6 +1066,10 @@ export function analyzeRequirementTaint(
     const registryAbsent = validatorInput.registry.state === "REFUSED"
       && validatorInput.registry.reason === "EMPTY_REGISTRY";
 
+    if (flowSnapshotFailed && !registryAbsent) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
+      return;
+    }
     if (registryAbsent || imports.has(localName) || shadowed.has(localName)
       || targetFlows.length !== 1 || targetNodes.length !== 1) {
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_004, flowName, constraint));
@@ -964,16 +1086,18 @@ export function analyzeRequirementTaint(
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
       return;
     }
-    const actualCheckedDigest = computeRequirementValidatorCheckedFlowDigest(
+    const validatedCheckedFlow = validateRequirementValidatorCheckedFlow(
       target,
       targetNodes[0]!,
     );
-    if (actualCheckedDigest === undefined || checked[0]!.checkedDigest !== actualCheckedDigest) {
+    if (validatedCheckedFlow === undefined
+      || checked[0]!.checkedDigest !== validatedCheckedFlow.digest) {
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
       return;
     }
+    const checkedSnapshot = validatedCheckedFlow.snapshot;
     if (validatorInput.registry.state === "STRUCTURALLY_VALID") {
-      const qualifiedIdentity = `${validatorInput.context.canonicalSourceUnitId}::${localName}`;
+      const qualifiedIdentity = `${validatorInput.context.canonicalSourceUnitId}::${checkedSnapshot.name}`;
       if (!validatorInput.registry.rows.some((row) => row.qualifiedFlowIdentity === qualifiedIdentity)) {
         diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_004, flowName, constraint));
         return;
@@ -982,12 +1106,12 @@ export function analyzeRequirementTaint(
     const result = verifyRequirementValidatorAuthority(
       validatorInput.registry,
       {
-        localFlowName: localName,
-        inputType: paramType(target.params[0]),
+        localFlowName: checkedSnapshot.name,
+        inputType: paramType(checkedSnapshot.params[0]),
         taintClasses: state.atoms,
-        outputType: target.returnType,
+        outputType: checkedSnapshot.returnType,
         observedEffects: actualEffects[0]!.observedEffects,
-        checkedDigest: checked[0]!.checkedDigest,
+        checkedDigest: validatedCheckedFlow.digest,
       },
       validatorInput.context,
     );
