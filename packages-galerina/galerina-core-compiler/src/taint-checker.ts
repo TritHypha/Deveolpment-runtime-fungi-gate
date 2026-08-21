@@ -1062,17 +1062,26 @@ function snapshotRequirementValidatorInput(
   try {
     if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
     const inputRegistry = value.registry;
+    const registry = snapshotRequirementValidatorRegistry(inputRegistry, budget);
+    const emptyRegistry = registry?.state === "REFUSED"
+      && registry.reason === "EMPTY_REGISTRY";
+    if (emptyRegistry) {
+      const flows = snapshotFlowsFromInput
+        ? EMPTY_REQUIREMENT_VALIDATOR_INPUT.flows
+        : snapshottedFlows;
+      if (flows === undefined) return undefined;
+      return Object.freeze({
+        registry,
+        checkedFlows: EMPTY_REQUIREMENT_VALIDATOR_INPUT.checkedFlows,
+        effectResults: EMPTY_REQUIREMENT_VALIDATOR_INPUT.effectResults,
+        flows,
+      });
+    }
     const inputContext = value.context;
     const inputCheckedFlows = value.checkedFlows;
     const inputEffectResults = value.effectResults;
     const inputFlows = snapshotFlowsFromInput ? value.flows : undefined;
-    const registry = snapshotRequirementValidatorRegistry(inputRegistry, budget);
-    const emptyRegistry = registry?.state === "REFUSED"
-      && registry.reason === "EMPTY_REGISTRY";
-    // Empty registry is the public no-authority sentinel. Its context cannot be
-    // consulted or mint authority, so discard it after the top-level one-read
-    // copy instead of converting legacy placeholder fields into a global 010.
-    const context = inputContext === undefined || emptyRegistry
+    const context = inputContext === undefined
       ? undefined
       : snapshotRequirementValidatorContext(inputContext, budget);
     const checkedFlows = snapshotRequirementValidatorCheckedFlows(inputCheckedFlows, budget);
@@ -1081,7 +1090,7 @@ function snapshotRequirementValidatorInput(
       ? snapshotAnalysisFlows(inputFlows!, budget)
       : snapshottedFlows;
     if (registry === undefined
-      || (inputContext !== undefined && !emptyRegistry && context === undefined)
+      || (inputContext !== undefined && context === undefined)
       || checkedFlows === undefined || effectResults === undefined || flows === undefined) {
       return undefined;
     }
