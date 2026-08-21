@@ -442,10 +442,10 @@ contract { effects {} }
     assert.deepEqual(checked.requirement003, []);
   });
 
-  it("refuses a local-flow call colliding with an actual named import binding", () => {
+  it("refuses a local-flow call colliding with an actual named import alias", () => {
     const checked = checkRequirementEffects(
       `@version 1
-import { localPolicy } from "./policies.fungi"
+import { remotePolicy as localPolicy } from "./policies.fungi"
 
 pure flow decide(age: Int) -> Verdict
 contract { effects {} }
@@ -465,6 +465,37 @@ contract { effects {} }
     assert.equal(checked.requirement003.length, 1);
     assert.equal(checked.requirement003[0]?.location?.line, 8);
   });
+
+  for (const [label, importLine] of [
+    ["a safe plugin alias", 'import plugin safe "./policies.fungi" as localPolicy'],
+    ["an assimilated plugin alias", 'import plugin assimilate "./policies.fungi" as localPolicy'],
+    ["a default import binding", 'import localPolicy from "./policies.fungi"'],
+    ["a namespace import alias", 'import * as localPolicy from "./policies.fungi"'],
+  ]) {
+    it(`refuses a local-flow call colliding with ${label}`, () => {
+      const checked = checkRequirementEffects(
+        `@version 1
+${importLine}
+
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+      );
+      assert.equal(checked.requirement003.length, 1);
+      assert.equal(checked.requirement003[0]?.location?.line, 8);
+    });
+  }
 
   it("admits exactly 4,096 flows and refuses 4,097 flows", () => {
     const makeFixture = (flowCount) => {
