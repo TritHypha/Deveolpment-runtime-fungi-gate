@@ -2482,3 +2482,142 @@ describe("RD-0858 Task 3 fix round 9", () => {
     assert.deepEqual(requirementCodesOnly(checkTaint(clean.ast, clean.flows)), []);
   });
 });
+
+describe("RD-0858 Task 3 fix round 10", () => {
+  const source = `@version 1
+secure flow q(req: Request) -> Response
+contract { effects { database.read } }
+{
+  let allowed: Verdict = requirement {
+    req.body == "allow"
+  }
+  let userId: String = req.body
+  let result: String = Database.query(userId)
+  return result
+}`;
+
+  const parse = (file) => {
+    const parsed = parseProgram(source, file);
+    assert.deepEqual(
+      parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    assert.equal(parsed.flows.length, 1);
+    assert.equal(parsed.flows[0].name, "q");
+    return parsed;
+  };
+
+  const emptyValidatorInput = (flows) => ({
+    registry: createRequirementValidatorAuthorityRegistry([]),
+    checkedFlows: [],
+    effectResults: [],
+    flows,
+  });
+
+  const relevantCodes = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-TAINT-001")
+    .map((diagnostic) => diagnostic.code);
+
+  const assertTaintPass = (ast, flows) => {
+    let diagnostics;
+    assert.doesNotThrow(() => {
+      diagnostics = checkTaint(ast, flows);
+    });
+    assert.deepEqual(relevantCodes(diagnostics), [
+      "FUNGI-REQUIREMENT-004",
+      "FUNGI-TAINT-001",
+    ]);
+    return diagnostics;
+  };
+
+  it("never invokes the caller-owned flow iterator after indexed snapshotting", () => {
+    const parsed = parse("round-10-flow-iterator.fungi");
+    const hostileFlows = new Proxy(parsed.flows, {
+      get(target, property, receiver) {
+        if (property === Symbol.iterator) throw new Error("hostile flow iterator");
+        return Reflect.get(target, property, receiver);
+      },
+    });
+
+    assertTaintPass(parsed.ast, hostileFlows);
+    let valueStateDiagnostics;
+    assert.doesNotThrow(() => {
+      valueStateDiagnostics = checkValueStates(
+        parsed.ast,
+        "development",
+        emptyValidatorInput(hostileFlows),
+      ).diagnostics;
+    });
+    assert.deepEqual(
+      valueStateDiagnostics
+        .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004")
+        .map((diagnostic) => diagnostic.code),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+  });
+
+  it("uses the snapshotted flow name when a later raw read changes it", () => {
+    const parsed = parse("round-10-flow-name-mutation.fungi");
+    let nameReads = 0;
+    const hostileFlow = new Proxy(parsed.flows[0], {
+      get(target, property, receiver) {
+        if (property === "name") {
+          nameReads += 1;
+          return nameReads === 1 ? "q" : "not-q";
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+
+    assertTaintPass(parsed.ast, [hostileFlow]);
+  });
+
+  it("does not throw when a raw flow name getter throws after snapshotting", () => {
+    const parsed = parse("round-10-flow-name-throw.fungi");
+    let nameReads = 0;
+    const hostileFlow = new Proxy(parsed.flows[0], {
+      get(target, property, receiver) {
+        if (property === "name" && ++nameReads > 1) {
+          throw new Error("hostile flow name");
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+
+    assertTaintPass(parsed.ast, [hostileFlow]);
+  });
+
+  it("attributes injection diagnostics to the snapshotted flow name", () => {
+    const parsed = parse("round-10-flow-name-attribution.fungi");
+    let nameReads = 0;
+    const hostileFlow = new Proxy(parsed.flows[0], {
+      get(target, property, receiver) {
+        if (property === "name") {
+          nameReads += 1;
+          return nameReads <= 2 ? "q" : "not-q";
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+
+    const diagnostics = assertTaintPass(parsed.ast, [hostileFlow]);
+    assert.deepEqual(
+      diagnostics
+        .filter((diagnostic) => diagnostic.code === "FUNGI-TAINT-001")
+        .map((diagnostic) => diagnostic.flowName),
+      ["q"],
+    );
+  });
+
+  it("keeps stable injection taint and stable requirement 004 discriminating", () => {
+    const parsed = parse("round-10-stable-controls.fungi");
+    assertTaintPass(parsed.ast, parsed.flows);
+    assert.deepEqual(
+      checkValueStates(parsed.ast).diagnostics
+        .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004")
+        .map((diagnostic) => diagnostic.code),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+  });
+});
