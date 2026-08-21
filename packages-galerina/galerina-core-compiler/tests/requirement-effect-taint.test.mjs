@@ -301,6 +301,59 @@ contract { effects {} }
     assert.equal(checked.requirement003[0]?.location?.line, 10);
   });
 
+  it("does not let a helper nested in an uncalled sibling scope shadow an outer requirement", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  fn container(value: Int) -> Bool {
+    fn localPolicy(inner: Int) -> Bool {
+      let stored = AgesDB.get(inner)
+      return stored >= 18
+    }
+    return value >= 18
+  }
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+    );
+    assert.deepEqual(checked.requirement003, []);
+  });
+
+  it("does not let a later helper declaration shadow an earlier requirement call", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  fn localPolicy(value: Int) -> Bool {
+    let stored = AgesDB.get(value)
+    return stored >= 18
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+    );
+    assert.deepEqual(checked.requirement003, []);
+  });
+
   it("checks the later AST body when duplicate FlowMeta and flow nodes share a name", () => {
     const checked = checkRequirementEffects(
       `@version 1
@@ -323,10 +376,76 @@ contract { effects {} }
     assert.equal(checked.requirement003[0]?.location?.line, 12);
   });
 
-  it("refuses a bare local-flow call when an actual importDecl makes resolution ambiguous", () => {
+  it("matches a cloned later duplicate FlowMeta by stable occurrence evidence", () => {
+    const parsed = parseProgram(
+      `@version 1
+pure flow duplicate(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}
+
+pure flow duplicate(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    AgesDB.get(age)
+  }
+  return result
+}`,
+      "requirement-effects-cloned-meta.fungi",
+    );
+    assert.deepEqual(
+      parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    const later = parsed.flows[1];
+    assert.notEqual(later, undefined);
+    const clonedLater = {
+      ...later,
+      location: later.location === undefined ? undefined : { ...later.location },
+    };
+    const result = checkFlowEffects(
+      clonedLater,
+      parsed.ast ?? { kind: "program" },
+      parsed.flows,
+      new Map(),
+      new Set(),
+    );
+    const requirement003 = effectResultsToDiagnostics([result]).filter(
+      (diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-003",
+    );
+    assert.equal(requirement003.length, 1);
+    assert.equal(requirement003[0]?.location?.line, 12);
+  });
+
+  it("allows a unique effect-free local flow call beside an unrelated side-effect import", () => {
     const checked = checkRequirementEffects(
       `@version 1
 import "./policies.fungi"
+
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+    );
+    assert.deepEqual(checked.requirement003, []);
+  });
+
+  it("refuses a local-flow call colliding with an actual named import binding", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+import { localPolicy } from "./policies.fungi"
 
 pure flow decide(age: Int) -> Verdict
 contract { effects {} }
