@@ -32,6 +32,7 @@ function fixture() {
     "kb-graph-generator.mjs",
     "dev-tool-index.mjs",
     "fungi-source-capability-inventory.mjs",
+    "ts-retirement-graph.mjs",
     "gen-assurance-semantic-graph.mjs",
     "gen-roadmap.mjs",
   ];
@@ -57,14 +58,14 @@ function run(root, kb, args = [], failChild = "") {
   });
 }
 
-test("graph-all routes seven graph owners then the canonical roadmap in dependency order", () => {
+test("graph-all refreshes retirement evidence before semantic assurance and the canonical roadmap", () => {
   const { root, kb } = fixture();
   try {
     const passed = run(root, kb, ["--check"]);
     assert.equal(passed.status, 0, `${passed.stdout}\n${passed.stderr}`);
     const calls = readFileSync(join(root, "calls.log"), "utf8");
     const callLines = calls.trim().split(/\r?\n/);
-    assert.equal(callLines.length, 8);
+    assert.equal(callLines.length, 9);
     assert.deepEqual(
       callLines.map((line) => line.split(" ")[0]),
       [
@@ -74,6 +75,7 @@ test("graph-all routes seven graph owners then the canonical roadmap in dependen
         "kb-graph-generator.mjs",
         "dev-tool-index.mjs",
         "fungi-source-capability-inventory.mjs",
+        "ts-retirement-graph.mjs",
         "gen-assurance-semantic-graph.mjs",
         "gen-roadmap.mjs",
       ],
@@ -84,6 +86,7 @@ test("graph-all routes seven graph owners then the canonical roadmap in dependen
     assert.doesNotMatch(calls, /memory-graph\.mjs/);
     assert.match(calls, /dev-tool-index\.mjs .*--generator-check/);
     assert.match(calls, /fungi-source-capability-inventory\.mjs .*--root .*--check/);
+    assert.match(calls, /ts-retirement-graph\.mjs .*--check/);
     assert.match(calls, /gen-assurance-semantic-graph\.mjs .*--root .*--check/);
     assert.match(calls, /gen-roadmap\.mjs .*--root .*--check/);
 
@@ -112,7 +115,7 @@ test("graph-all never runs the roadmap after an upstream refusal", () => {
     assert.match(refused.stderr, /package graph.*exit 7/i);
     assert.equal(
       readFileSync(join(root, "calls.log"), "utf8").trim().split(/\r?\n/).length,
-      7,
+      8,
       "the orchestrator gathers every upstream result but does not create a roadmap from refused evidence",
     );
     assert.doesNotMatch(readFileSync(join(root, "calls.log"), "utf8"), /gen-roadmap\.mjs/);
