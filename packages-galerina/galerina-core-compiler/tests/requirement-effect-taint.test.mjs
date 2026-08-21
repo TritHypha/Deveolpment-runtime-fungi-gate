@@ -2987,3 +2987,134 @@ describe("RD-0858 Task 3 fix round 12", () => {
     assert.deepEqual(authority.valueState, []);
   });
 });
+
+describe("RD-0858 Task 3 fix round 13", () => {
+  const requirementCodesOnly = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-REQUIREMENT-010")
+    .map((diagnostic) => diagnostic.code);
+
+  const parseRaw = (file, expression = 'input == "allow"') => {
+    const parsed = parseProgram(taintProgram(expression), file);
+    assert.deepEqual(
+      parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    return parsed;
+  };
+
+  const emptyInput = (flows) => ({
+    registry: createRequirementValidatorAuthorityRegistry([]),
+    context: Object.freeze({ unusable: true }),
+    checkedFlows: [],
+    effectResults: [],
+    flows,
+  });
+
+  const hostileUnusedField = (flows, field) => new Proxy(emptyInput(flows), {
+    get(target, property, receiver) {
+      if (property === field) throw new Error(`unused empty-registry field: ${String(field)}`);
+      return Reflect.get(target, property, receiver);
+    },
+  });
+
+  it("does not consult authority-irrelevant fields after the canonical empty sentinel", () => {
+    for (const field of ["context", "checkedFlows", "effectResults", "flows"]) {
+      const taintParsed = parseRaw(`round-13-${field}-taint.fungi`);
+      let taintDiagnostics;
+      assert.doesNotThrow(() => {
+        taintDiagnostics = checkTaint(
+          taintParsed.ast,
+          taintParsed.flows,
+          hostileUnusedField(taintParsed.flows, field),
+        );
+      });
+      assert.deepEqual(
+        requirementCodesOnly(taintDiagnostics),
+        ["FUNGI-REQUIREMENT-004"],
+        `checkTaint consulted empty-sentinel ${field}`,
+      );
+
+      const valueStateParsed = parseRaw(`round-13-${field}-value-state.fungi`);
+      let valueStateDiagnostics;
+      assert.doesNotThrow(() => {
+        valueStateDiagnostics = checkValueStates(
+          valueStateParsed.ast,
+          "development",
+          hostileUnusedField(valueStateParsed.flows, field),
+        ).diagnostics;
+      });
+      assert.deepEqual(
+        requirementCodesOnly(valueStateDiagnostics),
+        ["FUNGI-REQUIREMENT-004"],
+        `checkValueStates consulted empty-sentinel ${field}`,
+      );
+    }
+  });
+
+  it("keeps the registry getter itself fail-closed as exact 010", () => {
+    const parsed = parseRaw("round-13-registry-getter.fungi");
+    const input = () => new Proxy(emptyInput(parsed.flows), {
+      get(target, property, receiver) {
+        if (property === "registry") throw new Error("hostile registry trust anchor");
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    let taintDiagnostics;
+    let valueStateDiagnostics;
+    assert.doesNotThrow(() => {
+      taintDiagnostics = checkTaint(parsed.ast, parsed.flows, input());
+      valueStateDiagnostics = checkValueStates(
+        parsed.ast,
+        "development",
+        input(),
+      ).diagnostics;
+    });
+    assert.deepEqual(requirementCodesOnly(taintDiagnostics), ["FUNGI-REQUIREMENT-010"]);
+    assert.deepEqual(requirementCodesOnly(valueStateDiagnostics), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("fully snapshots malformed present authority instead of treating it as empty", () => {
+    const parsed = parseRaw("round-13-present-authority.fungi", "validateInput(input)");
+    const malformedPresent = {
+      registry: {
+        state: "STRUCTURALLY_VALID",
+        rows: [],
+        digest: TAINT_DIGEST,
+        canonicalBytes: 0,
+      },
+      context: Object.freeze({}),
+      checkedFlows: [],
+      effectResults: [],
+      flows: parsed.flows,
+    };
+    assert.deepEqual(
+      requirementCodesOnly(checkTaint(parsed.ast, parsed.flows, malformedPresent)),
+      ["FUNGI-REQUIREMENT-010"],
+    );
+    assert.deepEqual(
+      requirementCodesOnly(checkValueStates(
+        parsed.ast,
+        "development",
+        malformedPresent,
+      ).diagnostics),
+      ["FUNGI-REQUIREMENT-010"],
+    );
+  });
+
+  it("keeps stable raw, clean and exact authority routes discriminating", () => {
+    const raw = parseRaw("round-13-stable-raw.fungi");
+    const clean = parseRaw("round-13-stable-clean.fungi", "true");
+    assert.deepEqual(requirementCodesOnly(checkTaint(raw.ast, raw.flows)), [
+      "FUNGI-REQUIREMENT-004",
+    ]);
+    assert.deepEqual(requirementCodesOnly(checkValueStates(raw.ast).diagnostics), [
+      "FUNGI-REQUIREMENT-004",
+    ]);
+    assert.deepEqual(requirementCodesOnly(checkTaint(clean.ast, clean.flows)), []);
+    assert.deepEqual(requirementCodesOnly(checkValueStates(clean.ast).diagnostics), []);
+    const authority = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
+    assert.deepEqual(authority.taint, []);
+    assert.deepEqual(authority.valueState, []);
+  });
+});
