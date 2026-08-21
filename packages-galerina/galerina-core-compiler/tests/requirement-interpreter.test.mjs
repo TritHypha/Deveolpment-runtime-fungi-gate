@@ -44,6 +44,21 @@ async function runRequirement(flowName, constraints, runtimeOptions) {
   return await L.executeFlow(flowName, new Map(), parsed.ast, parsed.flows, undefined, undefined, runtimeOptions);
 }
 
+const sourceForEcho = (flowName, subjectType) =>
+  `@version 1\npure flow ${flowName}(subject: ${subjectType}) -> ${subjectType}\n` +
+  `contract { effects {} }\n{\n  return subject\n}`;
+
+function changingBool(laterValue) {
+  let reads = 0;
+  return {
+    __tag: "bool",
+    get value() {
+      reads += 1;
+      return reads <= 2 ? true : laterValue;
+    },
+  };
+}
+
 describe("RD-0858 Unit 4 requirement expression runtime", () => {
   const cases = [
     ["runtimeBoolAllow", "    true", 1],
@@ -92,6 +107,24 @@ describe("RD-0858 Unit 4 requirement expression runtime", () => {
     const result = await L.executeFlow(
       flowName,
       new Map([["subject", { __tag: "bool", value: 0 }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
+  });
+
+  it("refuses a changing Bool accessor instead of minting Verdict.Unknown", async () => {
+    const flowName = "runtimeChangingBoolConstraint";
+    const parsed = prepare(
+      `@version 1\npure flow ${flowName}(subject: Bool) -> Verdict\n` +
+      `contract { effects {} }\n{\n  return requirement {\n    subject\n  }\n}`,
+      `${flowName}.fungi`,
+    );
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", changingBool(0)]]),
       parsed.ast,
       parsed.flows,
     );
@@ -181,6 +214,21 @@ describe("RD-0858 Unit 4 require statement runtime", () => {
     assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
   });
 
+  it("refuses a changing Bool accessor before guarded ALLOW continuation", async () => {
+    const flowName = "runtimeChangingRequireBool";
+    const parsed = prepare(sourceForRequire(flowName, "Bool"));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", changingBool(1)]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.notDeepEqual(result.value, { __tag: "string", value: "allow" });
+    assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
+  });
+
   it("refuses a forged missing handler instead of reaching guarded continuation", async () => {
     const flowName = "runtimeMissingHandler";
     const parsed = prepare(sourceForRequire(flowName));
@@ -231,6 +279,75 @@ describe("RD-0858 Unit 4 require statement runtime", () => {
 });
 
 describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
+  it("keeps a canonical Bool parameter stable on the governed default path", async () => {
+    const flowName = "runtimeCanonicalBoolEcho";
+    const parsed = prepare(sourceForEcho(flowName, "Bool"));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: true }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "ok");
+    assert.deepEqual(result.value, { __tag: "bool", value: true });
+  });
+
+  it("refuses a malformed Bool before the pure-fast bytecode tier", async () => {
+    const flowName = "runtimeMalformedBoolBytecode";
+    const parsed = prepare(sourceForEcho(flowName, "Bool"));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: 1 }]]),
+      parsed.ast,
+      parsed.flows,
+      undefined,
+      undefined,
+      { pureFastPath: true, sourceTag: "rd-0858-malformed-bool-bytecode" },
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+  });
+
+  it("refuses a malformed Bool before the execution-graph tier", async () => {
+    const flowName = "runtimeMalformedBoolEgraph";
+    const parsed = prepare(sourceForEcho(flowName, "Bool"));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: 1 }]]),
+      parsed.ast,
+      parsed.flows,
+      undefined,
+      undefined,
+      { egraphFastPath: true },
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+  });
+
+  it("declines both sync entry points for unadmitted Bool parameters", () => {
+    const flowName = "runtimeMalformedBoolSync";
+    const parsed = prepare(sourceForEcho(flowName, "Bool"));
+    const args = new Map([["subject", { __tag: "bool", value: 1 }]]);
+    assert.equal(L.executeFlowSync(flowName, args, parsed.ast, parsed.flows), null);
+    assert.equal(L.tryPureFlowSync(parsed.ast, parsed.flows, flowName, args), null);
+  });
+
+  it("refuses a malformed Verdict before the execution-graph tier", async () => {
+    const flowName = "runtimeMalformedVerdictEgraph";
+    const parsed = prepare(sourceForEcho(flowName, "Verdict"));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "verdict", value: 2 }]]),
+      parsed.ast,
+      parsed.flows,
+      undefined,
+      undefined,
+      { egraphFastPath: true },
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+  });
+
   it("declines the sync-only API for requirement semantics", () => {
     const flowName = "runtimeSyncDeferral";
     const parsed = prepare(sourceForRequirement(flowName, "    true"));
