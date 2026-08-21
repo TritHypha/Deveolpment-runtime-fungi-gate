@@ -799,6 +799,12 @@ function buildRequirementEffectContext(
   function collectFlowNodes(node: AstNode): void {
     if (node.kind === "importDecl" && node.value !== undefined) {
       collectImportBindings(node.value);
+    } else if (
+      (node.kind === "importPluginDecl" || node.kind === "assimilatedPluginDecl")
+      && node.value !== undefined
+      && node.value !== ""
+    ) {
+      importedBindings.add(node.value);
     }
     const decoded = decodeFlowDecl(node);
     if (decoded !== undefined && !("error" in decoded) && knownNames.has(decoded.name)) {
