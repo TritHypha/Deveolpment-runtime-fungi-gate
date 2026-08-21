@@ -1132,7 +1132,7 @@ function analyzeRequirementTaintFromSnapshot(
   const analysisFlows = snapshottedFlows ?? Object.freeze([]);
   const registryAbsentAtBoundary = validatorInput.registry.state === "REFUSED"
     && validatorInput.registry.reason === "EMPTY_REGISTRY";
-  if ((astSnapshotFailed || flowSnapshotFailed) && !registryAbsentAtBoundary) {
+  if (astSnapshotFailed || (flowSnapshotFailed && !registryAbsentAtBoundary)) {
     diagnostics.push(requirementDiagnostic(
       FUNGI_REQUIREMENT_010,
       "<analysis>",
