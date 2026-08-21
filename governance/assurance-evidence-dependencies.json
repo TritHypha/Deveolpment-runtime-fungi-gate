@@ -126,10 +126,10 @@
     }
   ],
   "root": {
-    "id": "roadmap-subway",
-    "evidencePath": "build/component-health/roadmap-subway.svg",
-    "toolPath": "scripts/gen-roadmap-subway.mjs",
-    "expectedTool": "gen-roadmap-subway",
+    "id": "roadmap",
+    "evidencePath": "build/roadmap/roadmap.svg",
+    "toolPath": "scripts/gen-roadmap.mjs",
+    "expectedTool": "gen-roadmap",
     "predecessors": [
       "project-graph",
       "kb-graph",

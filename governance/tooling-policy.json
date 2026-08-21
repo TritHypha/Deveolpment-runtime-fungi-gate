@@ -143,7 +143,7 @@
       "provenance": "required",
       "tier": "phase-close"
     },
-    "scripts/gen-roadmap-subway.mjs": {
+    "scripts/gen-roadmap.mjs": {
       "inputs": [
         "AGENTS.md",
         "README.md",
@@ -160,21 +160,19 @@
         "version.json"
       ],
       "outputs": [
-        "README.md",
-        "build/component-health/roadmap-subway.svg",
-        "build/component-health/subway-provenance.json",
-        "docs/roadmap-2026-07-25-cycle2.md",
-        "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md"
+        "build/roadmap/provenance.json",
+        "build/roadmap/roadmap.svg",
+        "docs/ROADMAP.md"
       ],
       "tracked": true,
       "generate": [
         "node",
-        "scripts/gen-roadmap-subway.mjs",
+        "scripts/gen-roadmap.mjs",
         "--write"
       ],
       "check": [
         "node",
-        "scripts/gen-roadmap-subway.mjs",
+        "scripts/gen-roadmap.mjs",
         "--check"
       ],
       "provenance": "required",

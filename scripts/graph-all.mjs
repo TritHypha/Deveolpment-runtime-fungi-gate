@@ -63,7 +63,7 @@ try {
 
 const node = process.execPath;
 const mode = options.check ? "check" : "generate";
-const children = [
+const upstreamChildren = [
   {
     name: "package graph",
     args: [
@@ -120,7 +120,31 @@ const children = [
 ];
 
 const results = [];
-for (const child of children) {
+for (const child of upstreamChildren) {
+  const result = spawnSync(node, child.args, {
+    cwd: options.root,
+    encoding: "utf8",
+    env: { ...process.env, GALERINA_KB_DIR: options.kbDir },
+  });
+  const status = result.error || result.signal || result.status !== 0
+    ? result.status ?? 1
+    : 0;
+  results.push({ ...child, status, stdout: result.stdout ?? "", stderr: result.stderr ?? "" });
+  if (!options.quiet) {
+    console.log(`${status === 0 ? "PASS" : "FAIL"} ${child.name} (${mode}; exit ${status})`);
+  }
+}
+
+const upstreamFailed = results.filter((result) => result.status !== 0);
+if (upstreamFailed.length === 0) {
+  const child = {
+    name: "roadmap",
+    args: [
+      "scripts/gen-roadmap.mjs",
+      "--root", options.root,
+      options.check ? "--check" : "--write",
+    ],
+  };
   const result = spawnSync(node, child.args, {
     cwd: options.root,
     encoding: "utf8",
@@ -148,9 +172,9 @@ if (failed.length > 0) {
     console.error(`graph-all: ${result.name} refused with exit ${result.status}${detail ? `\n${detail}` : ""}`);
   }
   if (options.json) process.stdout.write(`${JSON.stringify(report)}\n`);
-  else console.error(`graph-all: FAIL ${children.length - failed.length}/${children.length} ${mode} children passed`);
+  else console.error(`graph-all: FAIL ${results.length - failed.length}/${results.length} ${mode} children passed`);
   process.exit(1);
 }
 
 if (options.json) process.stdout.write(`${JSON.stringify(report)}\n`);
-else console.log(`graph-all: PASS ${children.length}/${children.length} ${mode} children passed`);
+else console.log(`graph-all: PASS ${results.length}/${results.length} ${mode} children passed`);

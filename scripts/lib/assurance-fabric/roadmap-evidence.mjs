@@ -79,10 +79,10 @@ function descriptorIsClosed(value) {
   if (!exactArray(ids, EXPECTED_NODE_IDS)) return false;
   if (!value.nodes.every((node) => Array.isArray(node?.predecessors) && node.predecessors.length === 0)) return false;
   if (!exactKeys(value.root, AGGREGATE_KEYS)) return false;
-  return value.root.id === "roadmap-subway"
-    && value.root.expectedTool === "gen-roadmap-subway"
-    && value.root.toolPath === "scripts/gen-roadmap-subway.mjs"
-    && value.root.evidencePath === "build/component-health/roadmap-subway.svg"
+  return value.root.id === "roadmap"
+    && value.root.expectedTool === "gen-roadmap"
+    && value.root.toolPath === "scripts/gen-roadmap.mjs"
+    && value.root.evidencePath === "build/roadmap/roadmap.svg"
     && canonicalPath(value.root.toolPath)
     && canonicalPath(value.root.evidencePath)
     && exactArray(value.root.predecessors, EXPECTED_NODE_IDS);
@@ -129,7 +129,7 @@ function repositoryHead(root) {
 
 function aggregateDigest(nodes) {
   const hash = createHash("sha256");
-  hash.update("galerina-roadmap-assurance-root-v1\0");
+  hash.update("galerina-roadmap-assurance-root-v2\0");
   for (const node of nodes) {
     hash.update(node.id);
     hash.update("\0");
