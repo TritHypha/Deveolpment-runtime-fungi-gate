@@ -196,6 +196,11 @@ function isCanonicalVerdict(value: GalerinaValue): boolean {
   return value.__tag === "verdict" &&
     (value.value === -1 || value.value === 0 || value.value === 1);
 }
+
+/** Runtime belt for untyped host boundaries: Bool is exactly true or false. */
+function isCanonicalBool(value: GalerinaValue): boolean {
+  return value.__tag === "bool" && typeof value.value === "boolean";
+}
 // W5a K3: clamp to the lattice {-1,0,1} so an arithmetic slip can never mint an
 // out-of-range verdict (defense-in-depth; Math.min/max over valid trits stays exact).
 const verdictVal = (v: number): GalerinaValue => ({ __tag: "verdict", value: v < 0 ? -1 : v > 0 ? 1 : 0 });
@@ -1334,18 +1339,29 @@ class Interpreter {
       return this.buildResult(flowName, qualifier, startedAt, value, msg);
     }
 
-    // Closed-domain runtime admission for all Verdict parameters. TypeScript
-    // callers cannot normally construct a fourth value, but executeFlow is also
-    // an untyped JS/host boundary. Validate before preconditions, parameter
-    // admission, execution-plan fast paths, or body work can observe the value.
+    // Closed-domain runtime admission for all Verdict and Bool parameters.
+    // TypeScript callers cannot normally forge these payloads, but executeFlow
+    // is also an untyped JS/host boundary. Validate before preconditions,
+    // parameter admission, execution-plan fast paths, or body work can observe
+    // the value.
     for (const child of flowNode.children ?? []) {
-      if (child.kind !== "paramDecl" || bindingTypeName(child.value ?? "") !== "Verdict") continue;
+      if (child.kind !== "paramDecl") continue;
+      const paramType = bindingTypeName(child.value ?? "");
+      if (paramType !== "Verdict" && paramType !== "Bool") continue;
       const paramName = extractParamName(child.value ?? "");
       const argVal = args.get(paramName) ?? FUNGI_VOID;
-      if (!isCanonicalVerdict(argVal)) {
+      if (paramType === "Verdict" && !isCanonicalVerdict(argVal)) {
         const message =
           `Flow '${flowName}' received malformed Verdict argument '${paramName}' — ` +
           `expected exactly Deny(-1), Unknown(0), or Allow(+1); fail-closed`;
+        this.diagnostics.push({ code: "FUNGI-RUNTIME-003", message });
+        const value: GalerinaValue = { __tag: "runtimeError", message };
+        return this.buildResult(flowName, qualifier, startedAt, value, message);
+      }
+      if (paramType === "Bool" && !isCanonicalBool(argVal)) {
+        const message =
+          `Flow '${flowName}' received malformed Bool argument '${paramName}' — ` +
+          `expected exactly true or false; fail-closed`;
         this.diagnostics.push({ code: "FUNGI-RUNTIME-003", message });
         const value: GalerinaValue = { __tag: "runtimeError", message };
         return this.buildResult(flowName, qualifier, startedAt, value, message);
@@ -2387,7 +2403,10 @@ class Interpreter {
     if (value.__tag === "runtimeError" || value.__tag === "error") {
       throw new Error(`${context} failed: ${value.message}`);
     }
-    if (value.__tag === "bool" || value.__tag === "verdict") {
+    if (
+      (value.__tag === "bool" && isCanonicalBool(value)) ||
+      (value.__tag === "verdict" && isCanonicalVerdict(value))
+    ) {
       const lifted = liftRequirementPrimitive(value.value);
       if (lifted !== undefined) return lifted;
     }
