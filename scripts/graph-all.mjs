@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // graph-all.mjs — fail-closed orchestrator for repository-owned Galerina graph surfaces.
-// Version: 3.0.0 · governed-memory migration.
+// Version: 3.1.0 · retirement evidence is an explicit semantic-graph prerequisite.
 //
 // Personal/agent memory is deliberately excluded: it is private untrusted
 // development data, not a reproducible build input. Use memory-graph.mjs
@@ -106,6 +106,13 @@ const upstreamChildren = [
     args: [
       "scripts/fungi-source-capability-inventory.mjs",
       "--root", options.root,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
+    name: "executable-family retirement graph",
+    args: [
+      "scripts/ts-retirement-graph.mjs",
       ...(options.check ? ["--check"] : []),
     ],
   },
