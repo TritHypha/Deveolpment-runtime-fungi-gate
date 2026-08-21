@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   checkEffects,
+  checkFlowEffects,
   effectResultsToDiagnostics,
   parseProgram,
 } from "../dist/index.js";
@@ -37,6 +38,57 @@ ${constraints}
   }
   return result
 }`;
+
+const syntheticLocation = (line = 1) => ({
+  file: "requirement-effects-boundary.fungi",
+  line,
+  column: 1,
+  offset: line - 1,
+  endLine: line,
+  endColumn: 2,
+  endOffset: line,
+  length: 1,
+});
+
+function syntheticFlow(name, line) {
+  return {
+    name,
+    qualifier: "pure",
+    params: [],
+    returnType: "Bool",
+    declaredEffects: [],
+    location: syntheticLocation(line),
+  };
+}
+
+function syntheticFlowNode(name, line, constraintExpression) {
+  const bodyChildren = constraintExpression === undefined
+    ? []
+    : [{
+        kind: "requirementConstraint",
+        location: syntheticLocation(line),
+        children: [constraintExpression],
+      }];
+  return {
+    kind: "pureFlowDecl",
+    value: name,
+    location: syntheticLocation(line),
+    children: [{ kind: "block", children: bodyChildren }],
+  };
+}
+
+function syntheticRequirementDiagnostics(flows, ast, focus = flows[0]) {
+  const result = checkFlowEffects(
+    focus,
+    ast,
+    flows,
+    new Map(),
+    new Set(),
+  );
+  return effectResultsToDiagnostics([result]).filter(
+    (diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-003",
+  );
+}
 
 describe("RD-0858 requirement constraint effect closure", () => {
   it("keeps literals, comparisons, Boolean expressions, and Verdict values effect-free", () => {
@@ -177,6 +229,167 @@ contract { effects {} }
 }`,
     );
     assert.equal(checked.requirement003.length, 1);
+  });
+
+  it("checks an effectful requirement inside a flow-local fn declaration", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow decide(age: Int) -> Bool
+contract { effects {} }
+{
+  fn inspect(value: Int) -> Verdict {
+    let result: Verdict = requirement {
+      AgesDB.get(value)
+    }
+    return result
+  }
+  return true
+}`,
+    );
+    assert.equal(checked.requirement003.length, 1);
+    assert.equal(checked.requirement003[0]?.location?.line, 7);
+  });
+
+  it("does not add an uncalled helper body's effects to the containing flow closure", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    outerPolicy(age)
+  }
+  return result
+}
+
+pure flow outerPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  fn unused(value: Int) -> Bool {
+    let stored = AgesDB.get(value)
+    return stored >= 18
+  }
+  return age >= 18
+}`,
+    );
+    assert.deepEqual(checked.requirement003, []);
+  });
+
+  it("refuses a same-named local fn helper instead of resolving the top-level flow", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  fn localPolicy(value: Int) -> Bool {
+    let stored = AgesDB.get(value)
+    return stored >= 18
+  }
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+    );
+    assert.equal(checked.requirement003.length, 1);
+    assert.equal(checked.requirement003[0]?.location?.line, 10);
+  });
+
+  it("checks the later AST body when duplicate FlowMeta and flow nodes share a name", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+pure flow duplicate(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}
+
+pure flow duplicate(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    AgesDB.get(age)
+  }
+  return result
+}`,
+    );
+    assert.equal(checked.requirement003.length, 1);
+    assert.equal(checked.requirement003[0]?.location?.line, 12);
+  });
+
+  it("refuses a bare local-flow call when an actual importDecl makes resolution ambiguous", () => {
+    const checked = checkRequirementEffects(
+      `@version 1
+import "./policies.fungi"
+
+pure flow decide(age: Int) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    localPolicy(age)
+  }
+  return result
+}
+
+pure flow localPolicy(age: Int) -> Bool
+contract { effects {} }
+{
+  return age >= 18
+}`,
+    );
+    assert.equal(checked.requirement003.length, 1);
+    assert.equal(checked.requirement003[0]?.location?.line, 8);
+  });
+
+  it("admits exactly 4,096 flows and refuses 4,097 flows", () => {
+    const makeFixture = (flowCount) => {
+      const flows = Array.from(
+        { length: flowCount },
+        (_, index) => syntheticFlow(`flow${index}`, index + 1),
+      );
+      const ast = {
+        kind: "program",
+        children: flows.map((flow, index) => syntheticFlowNode(
+          flow.name,
+          index + 1,
+          index === 0 ? { kind: "boolLiteral", value: "true" } : undefined,
+        )),
+      };
+      return syntheticRequirementDiagnostics(flows, ast);
+    };
+
+    assert.equal(makeFixture(4_096).length, 0);
+    assert.equal(makeFixture(4_097).length, 1);
+  });
+
+  it("admits exactly 16,384 classified calls and refuses 16,385 calls", () => {
+    const makeFixture = (callCount) => {
+      const flows = [syntheticFlow("focus", 1), syntheticFlow("callee", 2)];
+      const expression = {
+        kind: "arrayLiteral",
+        children: Array.from(
+          { length: callCount },
+          () => ({ kind: "callExpr", value: "callee", children: [] }),
+        ),
+      };
+      const ast = {
+        kind: "program",
+        children: [
+          syntheticFlowNode("focus", 1, expression),
+          syntheticFlowNode("callee", 2),
+        ],
+      };
+      return syntheticRequirementDiagnostics(flows, ast);
+    };
+
+    assert.equal(makeFixture(16_384).length, 0);
+    assert.equal(makeFixture(16_385).length, 1);
   });
 
   it("does not let a validator-like name or pure declaration bypass observed effects", () => {
