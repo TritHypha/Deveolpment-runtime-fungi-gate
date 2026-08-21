@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { types as nodeUtilTypes } from "node:util";
 import * as L from "../dist/index.js";
 
 const sourceForRequirement = (flowName, constraints) =>
@@ -412,6 +413,27 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
     assert.equal(result.audit.result, "error");
     assert.equal(result.value.__tag, "runtimeError");
     assert.equal(hostile.descriptorReads(), 0);
+  });
+
+  it("refuses a Proxy even after the shared Node detector property is replaced", async () => {
+    const flowName = "runtimeTamperedProxyDetector";
+    const parsed = prepare(sourceForEcho(flowName, "Bool"));
+    const hostile = proxyScalar("bool", true);
+    const originalIsProxy = nodeUtilTypes.isProxy;
+    try {
+      nodeUtilTypes.isProxy = () => false;
+      const result = await L.executeFlow(
+        flowName,
+        new Map([["subject", hostile.value]]),
+        parsed.ast,
+        parsed.flows,
+      );
+      assert.equal(result.audit.result, "error");
+      assert.equal(result.value.__tag, "runtimeError");
+      assert.equal(hostile.descriptorReads(), 0);
+    } finally {
+      nodeUtilTypes.isProxy = originalIsProxy;
+    }
   });
 
   it("declines the sync-only API for requirement semantics", () => {
