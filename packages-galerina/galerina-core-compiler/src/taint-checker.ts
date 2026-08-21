@@ -280,6 +280,9 @@ export const MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS = 4_096;
 export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES = 4_096;
 export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH = 128;
 export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES = 262_144;
+export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_PARAMS = 256;
+export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS = 256;
+export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_ITEM_BYTES = 32_768;
 
 const REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN = "galerina.requirement-validator.checked-flow.v1";
 
@@ -344,10 +347,183 @@ function canonicalAtoms(atoms: readonly RequirementTaintClass[]): readonly Requi
   return canonicalRequirementTaintTuple(atoms) ?? Object.freeze([]);
 }
 
+const CHECKED_FLOW_TEXT_ENCODER = new TextEncoder();
+
 function boundedCheckedFlowString(value: unknown): value is string {
   return typeof value === "string"
-    && value.length <= MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES
-    && new TextEncoder().encode(value).byteLength <= MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES;
+    && value.length <= MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_ITEM_BYTES
+    && CHECKED_FLOW_TEXT_ENCODER.encode(value).byteLength
+      <= MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_ITEM_BYTES;
+}
+
+interface CheckedFlowCanonicalBudget {
+  remaining: number;
+}
+
+function spendCheckedFlowCanonicalText(
+  budget: CheckedFlowCanonicalBudget,
+  text: string,
+): boolean {
+  if (text.length > budget.remaining) return false;
+  const bytes = CHECKED_FLOW_TEXT_ENCODER.encode(text).byteLength;
+  if (bytes > budget.remaining) return false;
+  budget.remaining -= bytes;
+  return true;
+}
+
+function spendCheckedFlowCanonicalString(
+  budget: CheckedFlowCanonicalBudget,
+  value: unknown,
+): value is string {
+  if (!boundedCheckedFlowString(value)) return false;
+  return spendCheckedFlowCanonicalText(budget, JSON.stringify(value));
+}
+
+function spendCheckedFlowCanonicalOptionalString(
+  budget: CheckedFlowCanonicalBudget,
+  value: unknown,
+): boolean {
+  return value === undefined
+    ? spendCheckedFlowCanonicalText(budget, "null")
+    : spendCheckedFlowCanonicalString(budget, value);
+}
+
+function spendCheckedFlowCanonicalNode(
+  node: AstNode,
+  depth: number,
+  budget: CheckedFlowCanonicalBudget,
+  nodeCounter: { value: number },
+): boolean {
+  if (node === null || typeof node !== "object" || Array.isArray(node)
+    || depth > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH
+    || ++nodeCounter.value > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES
+    || !boundedCheckedFlowString(node.kind)
+    || (node.callStyle !== undefined && node.callStyle !== "method")
+    || (node.flags !== undefined && (!Number.isSafeInteger(node.flags) || node.flags < 0))
+    || (node.children !== undefined && !Array.isArray(node.children))) return false;
+
+  const children = node.children ?? [];
+  if (children.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES) return false;
+  if (!spendCheckedFlowCanonicalText(budget, "[")
+    || !spendCheckedFlowCanonicalString(budget, node.kind)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalOptionalString(budget, node.value)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalOptionalString(budget, node.callStyle)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalOptionalString(budget, node.typeName)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalOptionalString(budget, node.conformsTo)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalOptionalString(budget, node.flowRef)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalOptionalString(budget, node.claim)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalText(budget, node.flags === undefined
+      ? "null"
+      : JSON.stringify(node.flags))
+    || !spendCheckedFlowCanonicalText(budget, ",[")) return false;
+  for (let index = 0; index < children.length; index += 1) {
+    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
+      || !spendCheckedFlowCanonicalNode(children[index]!, depth + 1, budget, nodeCounter)) {
+      return false;
+    }
+  }
+  return spendCheckedFlowCanonicalText(budget, "]]");
+}
+
+interface CheckedFlowAstContract {
+  readonly qualifier: FlowMeta["qualifier"];
+  readonly params: readonly string[];
+  readonly returnType: string;
+  readonly declaredEffects: readonly string[];
+}
+
+function deriveCheckedFlowAstContract(flowNode: AstNode): CheckedFlowAstContract | undefined {
+  let qualifier: FlowMeta["qualifier"];
+  switch (flowNode.kind) {
+    case "flowDecl": qualifier = "flow"; break;
+    case "secureFlowDecl": qualifier = "secure"; break;
+    case "pureFlowDecl": qualifier = "pure"; break;
+    case "guardedFlowDecl":
+    case "governedFlowDecl": qualifier = "guarded"; break;
+    default: return undefined;
+  }
+
+  const children = flowNode.children ?? [];
+  const params: string[] = [];
+  let returnType: string | undefined;
+  let effectsNode: AstNode | undefined;
+  for (let index = 0; index < children.length; index += 1) {
+    const child = children[index]!;
+    if (child.kind === "paramDecl") {
+      if (typeof child.value !== "string") return undefined;
+      params.push(child.value);
+    } else if (child.kind === "typeRef") {
+      if (returnType !== undefined || typeof child.value !== "string") return undefined;
+      returnType = child.value;
+    } else if (child.kind === "effectsDecl") {
+      if (effectsNode !== undefined) return undefined;
+      effectsNode = child;
+    }
+  }
+  if (returnType === undefined || params.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_PARAMS) {
+    return undefined;
+  }
+
+  const declaredEffects: string[] = [];
+  if (effectsNode !== undefined) {
+    for (const child of effectsNode.children ?? []) {
+      if (child.kind !== "effectRef" || typeof child.value !== "string") return undefined;
+      declaredEffects.push(child.value);
+    }
+  }
+  if (declaredEffects.length === 0) {
+    for (const child of children) {
+      if (child.kind !== "contractDecl") continue;
+      let effectsBlock: AstNode | undefined;
+      for (const contractChild of child.children ?? []) {
+        if (contractChild.kind === "identifier"
+          && (contractChild.value === "effects:block" || contractChild.value === "effects:")) {
+          effectsBlock = contractChild;
+          break;
+        }
+      }
+      if (effectsBlock === undefined) continue;
+      for (const effectChild of effectsBlock.children ?? []) {
+        if (effectChild.kind === "identifier" && typeof effectChild.value === "string"
+          && effectChild.value.startsWith("effect:")) {
+          declaredEffects.push(effectChild.value.slice("effect:".length));
+        }
+      }
+    }
+  }
+  if (declaredEffects.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS) return undefined;
+  return { qualifier, params, returnType, declaredEffects };
+}
+
+function checkedFlowStringsEqual(left: readonly string[], right: readonly string[]): boolean {
+  if (left.length !== right.length) return false;
+  for (let index = 0; index < left.length; index += 1) {
+    if (left[index] !== right[index]) return false;
+  }
+  return true;
+}
+
+function canonicalCheckedFlowNode(node: AstNode): CanonicalCheckedFlowNode {
+  const children: CanonicalCheckedFlowNode[] = [];
+  for (const child of node.children ?? []) children.push(canonicalCheckedFlowNode(child));
+  return [
+    node.kind,
+    node.value ?? null,
+    node.callStyle ?? null,
+    node.typeName ?? null,
+    node.conformsTo ?? null,
+    node.flowRef ?? null,
+    node.claim ?? null,
+    node.flags ?? null,
+    children,
+  ];
 }
 
 /**
@@ -365,55 +541,50 @@ export function computeRequirementValidatorCheckedFlowDigest(
     || typeof flowNode !== "object" || Array.isArray(flowNode)
     || !boundedCheckedFlowString(flow.name)
     || !["flow", "secure", "pure", "guarded"].includes(flow.qualifier)
-    || !Array.isArray(flow.params) || flow.params.some((param) => !boundedCheckedFlowString(param))
+    || !Array.isArray(flow.params)
+    || flow.params.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_PARAMS
     || !boundedCheckedFlowString(flow.returnType)
     || !Array.isArray(flow.declaredEffects)
-    || flow.declaredEffects.some((effect) => !boundedCheckedFlowString(effect))
-    || (flow.decreasesMetric !== undefined && !boundedCheckedFlowString(flow.decreasesMetric))) {
+    || flow.declaredEffects.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS
+    // The parser does not preserve decreases in AstNode, so Task 3 cannot prove coherence.
+    || flow.decreasesMetric !== undefined) {
     return undefined;
   }
+  // Account the exact JSON preimage in source order. Refuse before copying arrays,
+  // building AST tuples, or stringifying the complete canonical object.
+  const budget = { remaining: MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES };
+  if (!spendCheckedFlowCanonicalText(budget, "{\"domain\":")
+    || !spendCheckedFlowCanonicalString(budget, REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN)
+    || !spendCheckedFlowCanonicalText(budget, ",\"flow\":[")
+    || !spendCheckedFlowCanonicalString(budget, flow.name)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalString(budget, flow.qualifier)
+    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
+  for (let index = 0; index < flow.params.length; index += 1) {
+    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
+      || !spendCheckedFlowCanonicalString(budget, flow.params[index])) return undefined;
+  }
+  if (!spendCheckedFlowCanonicalText(budget, "],")
+    || !spendCheckedFlowCanonicalString(budget, flow.returnType)
+    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
+  for (let index = 0; index < flow.declaredEffects.length; index += 1) {
+    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
+      || !spendCheckedFlowCanonicalString(budget, flow.declaredEffects[index])) return undefined;
+  }
+  if (!spendCheckedFlowCanonicalText(budget, "],null],\"ast\":")
+    || !spendCheckedFlowCanonicalNode(flowNode, 1, budget, { value: 0 })
+    || !spendCheckedFlowCanonicalText(budget, "}")) return undefined;
+
   const decoded = decodeFlowDecl(flowNode);
   if (decoded === undefined || "error" in decoded || decoded.name !== flow.name) return undefined;
+  const astContract = deriveCheckedFlowAstContract(flowNode);
+  if (astContract === undefined
+    || astContract.qualifier !== flow.qualifier
+    || astContract.returnType !== flow.returnType
+    || !checkedFlowStringsEqual(astContract.params, flow.params)
+    || !checkedFlowStringsEqual(astContract.declaredEffects, flow.declaredEffects)) return undefined;
 
-  let nodeCount = 0;
-  const canonicalNode = (node: AstNode, depth: number): CanonicalCheckedFlowNode | undefined => {
-    if (node === null || typeof node !== "object" || Array.isArray(node)
-      || !boundedCheckedFlowString(node.kind)
-      || depth > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH
-      || ++nodeCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES) return undefined;
-    const semanticStrings = [
-      node.value,
-      node.callStyle,
-      node.typeName,
-      node.conformsTo,
-      node.flowRef,
-      node.claim,
-    ];
-    if (semanticStrings.some((value) => value !== undefined && !boundedCheckedFlowString(value))
-      || (node.callStyle !== undefined && node.callStyle !== "method")
-      || (node.flags !== undefined && (!Number.isSafeInteger(node.flags) || node.flags < 0))
-      || (node.children !== undefined && !Array.isArray(node.children))) return undefined;
-    const children: CanonicalCheckedFlowNode[] = [];
-    for (const child of node.children ?? []) {
-      const canonical = canonicalNode(child, depth + 1);
-      if (canonical === undefined) return undefined;
-      children.push(canonical);
-    }
-    return [
-      node.kind,
-      node.value ?? null,
-      node.callStyle ?? null,
-      node.typeName ?? null,
-      node.conformsTo ?? null,
-      node.flowRef ?? null,
-      node.claim ?? null,
-      node.flags ?? null,
-      children,
-    ];
-  };
-
-  const ast = canonicalNode(flowNode, 1);
-  if (ast === undefined) return undefined;
+  const ast = canonicalCheckedFlowNode(flowNode);
   const canonical = JSON.stringify({
     domain: REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN,
     flow: [
@@ -426,8 +597,6 @@ export function computeRequirementValidatorCheckedFlowDigest(
     ],
     ast,
   });
-  if (new TextEncoder().encode(canonical).byteLength
-    > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES) return undefined;
   return hashSource(canonical);
 }
 
