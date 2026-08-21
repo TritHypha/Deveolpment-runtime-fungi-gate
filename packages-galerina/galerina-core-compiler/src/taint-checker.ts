@@ -1428,8 +1428,12 @@ export function checkTaint(
   flows: readonly FlowMeta[],
   validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
 ): TaintDiagnostic[] {
+  const {
+    ast: analysisAst,
+    analysis: requirementAnalysis,
+  } = analyzeRequirementTaintForValueState(ast, flows, validatorInput);
   const diagnostics: TaintDiagnostic[] = [
-    ...analyzeRequirementTaint(ast, flows, validatorInput).diagnostics,
+    ...requirementAnalysis.diagnostics,
   ];
 
   // Index top-level flow nodes by name once — the per-flow .find scanned all of ast.children (O(flows²)).
@@ -1441,7 +1445,7 @@ export function checkTaint(
   // tainted value reaching an injection sink signed CLEAN at the highest
   // governance tier. Both close through the one decoder (flow-name.ts).
   const flowNodeByName = new Map<string, AstNode>();
-  for (const c of ast.children ?? []) {
+  for (const c of analysisAst.children ?? []) {
     const decoded = decodeFlowDecl(c);
     if (decoded === undefined || "error" in decoded || decoded.name === "") continue;
     if (!flowNodeByName.has(decoded.name)) flowNodeByName.set(decoded.name, c);
