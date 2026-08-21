@@ -1983,3 +1983,125 @@ describe("RD-0858 Task 3 fix round 4", () => {
     assert.equal(second, first);
   });
 });
+
+describe("RD-0858 Task 3 fix round 5", () => {
+  const exactPair = (source = taintProgram("validateInput(input)")) => {
+    const parsed = parseProgram(source, "round-5-pair.fungi");
+    const { flow, node } = findFlowNode(parsed);
+    assert.notEqual(flow, undefined);
+    assert.notEqual(node, undefined);
+    const digest = checkedFlowDigest(flow, node);
+    assert.match(digest ?? "", /^sha256:[0-9a-f]{64}$/);
+    return { source, parsed, flow, node, digest };
+  };
+
+  const authorityInput = (pair, hostileFlow, rowOverride) => {
+    const effectResults = checkEffects(pair.parsed.flows, pair.parsed.ast);
+    const row = {
+      authorityVersion: TAINT_VERSION,
+      qualifiedFlowIdentity: "package.example.policy::validateInput",
+      sourceBuild: TAINT_SOURCE_BUILD,
+      inputType: "String",
+      taintClasses: ["declared.untrusted"],
+      outputType: "Verdict",
+      observedEffect: "EffectFree",
+      checkedProfile: TAINT_PROFILE,
+      checkedDigest: pair.digest,
+      validFrom: "2026-08-20T00:00:00.000Z",
+      expiresAt: "2026-08-22T00:00:00.000Z",
+      ...rowOverride,
+    };
+    const registry = createRequirementValidatorAuthorityRegistry([row]);
+    return {
+      registry,
+      context: {
+        expectedRegistryDigest: registry.digest,
+        canonicalSourceUnitId: "package.example.policy",
+        sourceBuild: TAINT_SOURCE_BUILD,
+        checkedProfile: TAINT_PROFILE,
+        acceptedAuthorityVersion: TAINT_VERSION,
+        comparisonTime: "2026-08-21T00:00:00.000Z",
+      },
+      checkedFlows: [{
+        localFlowName: "validateInput",
+        checkedDigest: pair.digest,
+      }],
+      effectResults,
+      flows: pair.parsed.flows.map((flow) =>
+        flow.name === "validateInput" ? hostileFlow : flow),
+    };
+  };
+
+  const authorityCodes = (pair, makeHostileFlow, rowOverride) => {
+    const taintFlow = makeHostileFlow();
+    const taintInput = authorityInput(pair, taintFlow, rowOverride);
+    const taint = checkTaint(pair.parsed.ast, taintInput.flows, taintInput)
+      .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+        || diagnostic.code === "FUNGI-REQUIREMENT-010")
+      .map((diagnostic) => diagnostic.code);
+
+    const valueFlow = makeHostileFlow();
+    const valueInput = authorityInput(pair, valueFlow, rowOverride);
+    const valueState = checkValueStates(pair.parsed.ast, "development", valueInput).diagnostics
+      .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+        || diagnostic.code === "FUNGI-REQUIREMENT-010")
+      .map((diagnostic) => diagnostic.code);
+    return { taint, valueState };
+  };
+
+  it("refuses authority when an indexed parameter changes after checked-flow validation", () => {
+    const pair = exactPair();
+    const makeHostileFlow = () => {
+      let indexedReads = 0;
+      const params = new Proxy([...pair.flow.params], {
+        get(target, property, receiver) {
+          if (property === "0") {
+            indexedReads += 1;
+            return indexedReads === 1 ? "value: String" : "value: Bytes";
+          }
+          return Reflect.get(target, property, receiver);
+        },
+      });
+      return { ...pair.flow, params };
+    };
+    assert.deepEqual(authorityCodes(pair, makeHostileFlow, { inputType: "Bytes" }), {
+      taint: ["FUNGI-REQUIREMENT-010"],
+      valueState: ["FUNGI-REQUIREMENT-010"],
+    });
+  });
+
+  it("refuses authority when returnType changes after checked-flow validation", () => {
+    const pair = exactPair(taintProgram("validateInput(input)").replace(
+      "pure flow validateInput(value: String) -> Verdict",
+      "pure flow validateInput(value: String) -> Bool",
+    ));
+    const makeHostileFlow = () => {
+      let returnTypeReads = 0;
+      return new Proxy({
+        ...pair.flow,
+        params: [...pair.flow.params],
+        declaredEffects: [...pair.flow.declaredEffects],
+      }, {
+        get(target, property, receiver) {
+          if (property === "returnType") {
+            returnTypeReads += 1;
+            return returnTypeReads === 1 ? "Bool" : "Verdict";
+          }
+          return Reflect.get(target, property, receiver);
+        },
+      });
+    };
+    assert.deepEqual(authorityCodes(pair, makeHostileFlow, {}), {
+      taint: ["FUNGI-REQUIREMENT-010"],
+      valueState: ["FUNGI-REQUIREMENT-010"],
+    });
+  });
+
+  it("keeps an exact stable parser-produced semantic pair authoritative", () => {
+    const pair = exactPair();
+    assert.deepEqual(authorityCodes(pair, () => pair.flow, {}), {
+      taint: [],
+      valueState: [],
+    });
+  });
+});
