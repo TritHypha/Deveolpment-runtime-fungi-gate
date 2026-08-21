@@ -720,6 +720,7 @@ interface RequirementConstraintObservation extends RequirementStrictCallInventor
 
 interface RequirementEffectContext {
   readonly withinBounds: boolean;
+  readonly flowNodesByMeta: ReadonlyMap<FlowMeta, readonly AstNode[]>;
   readonly constraintObservations: ReadonlyMap<AstNode, RequirementConstraintObservation>;
   readonly closureEffects: ReadonlyMap<string, ReadonlySet<string>>;
   readonly closureComplete: ReadonlyMap<string, boolean>;
@@ -740,6 +741,7 @@ function buildRequirementEffectContext(
   if (flows.length > REQUIREMENT_EFFECT_MAX_FLOWS) {
     return {
       withinBounds: false,
+      flowNodesByMeta: new Map(),
       constraintObservations: new Map(),
       closureEffects: new Map(),
       closureComplete: new Map(),
@@ -758,7 +760,15 @@ function buildRequirementEffectContext(
 
   const flowNodesByName = new Map<string, AstNode[]>();
   const knownNames = new Set(metasByName.keys());
+  let hasImports = false;
   function collectFlowNodes(node: AstNode): void {
+    if (
+      node.kind === "importDecl"
+      || node.kind === "importPluginDecl"
+      || node.kind === "assimilatedPluginDecl"
+    ) {
+      hasImports = true;
+    }
     const decoded = decodeFlowDecl(node);
     if (decoded !== undefined && !("error" in decoded) && knownNames.has(decoded.name)) {
       const sameName = flowNodesByName.get(decoded.name);
@@ -772,6 +782,26 @@ function buildRequirementEffectContext(
     for (const child of node.children ?? []) collectFlowNodes(child);
   }
   collectFlowNodes(ast);
+
+  const flowNodesByMeta = new Map<FlowMeta, readonly AstNode[]>();
+  for (const [name, metas] of metasByName) {
+    const nodes = flowNodesByName.get(name) ?? [];
+    if (metas.length === nodes.length) {
+      for (let index = 0; index < metas.length; index += 1) {
+        const meta = metas[index];
+        const node = nodes[index];
+        if (meta !== undefined && node !== undefined) flowNodesByMeta.set(meta, [node]);
+      }
+    } else if (metas[0] !== undefined) {
+      // An unequal duplicate set is itself ambiguous. Assign every matching AST
+      // body to one result so no requirement constraint can disappear.
+      flowNodesByMeta.set(metas[0], nodes);
+      for (let index = 1; index < metas.length; index += 1) {
+        const meta = metas[index];
+        if (meta !== undefined) flowNodesByMeta.set(meta, []);
+      }
+    }
+  }
 
   const uniqueFlowNames = new Set<string>();
   for (const [name, metas] of metasByName) {
@@ -788,7 +818,6 @@ function buildRequirementEffectContext(
   function classifyCall(
     node: AstNode,
     localBindings: ReadonlySet<string>,
-    targets: Set<string>,
   ): boolean {
     budget.calls += 1;
     if (budget.calls > REQUIREMENT_EFFECT_MAX_CALLS) {
@@ -799,68 +828,91 @@ function buildRequirementEffectContext(
     const bare =
       node.callStyle === undefined
       && /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
-    if (!bare || localBindings.has(name) || !uniqueFlowNames.has(name)) {
+    if (
+      !bare
+      || hasImports
+      || localBindings.has(name)
+      || !uniqueFlowNames.has(name)
+    ) {
       return false;
     }
-    targets.add(name);
     return true;
   }
 
-  for (const name of uniqueFlowNames) {
-    const flowNode = flowNodesByName.get(name)?.[0];
-    if (flowNode === undefined) continue;
-    const localBindings = new Set(
-      [...collectLocalBindings(flowNode)].map((binding) => {
-        const beforeColon = binding.split(":")[0] ?? "";
-        return beforeColon.trim().split(/\s+/).pop() ?? "";
-      }),
-    );
-    const flowTargets = new Set<string>();
-    let flowComplete = true;
+  for (const [name, flowNodes] of flowNodesByName) {
+    for (const flowNode of flowNodes) {
+      const localBindings = new Set(
+        [...collectLocalBindings(flowNode)].map((binding) => {
+          const beforeColon = binding.split(":")[0] ?? "";
+          return beforeColon.trim().split(/\s+/).pop() ?? "";
+        }),
+      );
 
-    function walk(
-      node: AstNode,
-      constraintTargets?: Set<string>,
-      constraintState?: { complete: boolean },
-    ): void {
-      if (node.kind === "fnDecl" || budget.exceeded) return;
-      if (node.kind === "requirementConstraint") {
-        const expression = node.children?.[0];
-        const targets = new Set<string>();
-        const state = { complete: expression !== undefined };
-        if (expression !== undefined) walk(expression, targets, state);
-        constraintObservations.set(node, {
-          directEffects: expression === undefined
-            ? new Set<string>()
-            : inferEffectsFromNode(expression),
-          targets,
-          complete: state.complete,
-        });
-        return;
+      function collectLocalFnNames(node: AstNode): void {
+        if (node.kind === "fnDecl" && node.value !== undefined) {
+          localBindings.add(node.value);
+        }
+        for (const child of node.children ?? []) collectLocalFnNames(child);
       }
-      if (node.kind === "callExpr") {
-        const resolved = classifyCall(node, localBindings, flowTargets);
-        if (!resolved) flowComplete = false;
-        if (constraintTargets !== undefined && constraintState !== undefined) {
-          if (resolved) {
-            const target = node.value;
-            if (target !== undefined) constraintTargets.add(target);
-          } else {
-            constraintState.complete = false;
+      collectLocalFnNames(flowNode);
+
+      const flowTargets = new Set<string>();
+      let flowComplete = true;
+
+      function walk(
+        node: AstNode,
+        insideFn: boolean,
+        constraintTargets?: Set<string>,
+        constraintState?: { complete: boolean },
+      ): void {
+        if (budget.exceeded) return;
+        if (node.kind === "requirementConstraint") {
+          const expression = node.children?.[0];
+          const targets = new Set<string>();
+          const state = { complete: expression !== undefined };
+          if (expression !== undefined) walk(expression, insideFn, targets, state);
+          constraintObservations.set(node, {
+            directEffects: expression === undefined
+              ? new Set<string>()
+              : inferEffectsFromNode(expression),
+            targets,
+            complete: state.complete,
+          });
+          return;
+        }
+        if (node.kind === "callExpr") {
+          const target = node.value;
+          const resolved = classifyCall(node, localBindings);
+          if (!insideFn) {
+            if (resolved && target !== undefined) {
+              flowTargets.add(target);
+            } else {
+              flowComplete = false;
+            }
+          }
+          if (constraintTargets !== undefined && constraintState !== undefined) {
+            if (resolved && target !== undefined) {
+              constraintTargets.add(target);
+            } else {
+              constraintState.complete = false;
+            }
           }
         }
+        const childInsideFn = insideFn || node.kind === "fnDecl";
+        for (const child of node.children ?? []) {
+          walk(child, childInsideFn, constraintTargets, constraintState);
+        }
       }
-      for (const child of node.children ?? []) {
-        walk(child, constraintTargets, constraintState);
+
+      walk(flowNode, false);
+      if (uniqueFlowNames.has(name)) {
+        directEffects.set(name, inferEffectsFromNode(flowNode));
+        strictCalls.set(name, {
+          targets: flowTargets,
+          complete: flowComplete && !budget.exceeded,
+        });
       }
     }
-
-    walk(flowNode);
-    directEffects.set(name, inferEffectsFromNode(flowNode));
-    strictCalls.set(name, {
-      targets: flowTargets,
-      complete: flowComplete && !budget.exceeded,
-    });
   }
 
   const closureEffects = new Map<string, Set<string>>();
@@ -870,13 +922,33 @@ function buildRequirementEffectContext(
     closureComplete.set(name, strictCalls.get(name)?.complete === true);
   }
 
+  const strictCallGraph = buildCallGraph(
+    [...uniqueFlowNames].map((name) => ({
+      name,
+      qualifier: metasByName.get(name)?.[0]?.qualifier ?? "",
+      calledFlows: [...(strictCalls.get(name)?.targets ?? [])],
+    })),
+  );
+  const cycleResult = detectCycle(strictCallGraph);
+  const topoResult = topoSort(strictCallGraph);
+  const topoNames = [...topoResult.order].reverse();
+  const topologicallyOrdered = new Set(topoNames);
+  const orderedNames = [
+    ...topoNames,
+    ...[...strictCallGraph.nodes()]
+      .map((node) => node.id)
+      .filter((name) => !topologicallyOrdered.has(name)),
+  ];
+
   let settled = false;
-  for (let pass = 0; pass <= uniqueFlowNames.size; pass += 1) {
+  const maxPasses = cycleResult.hasCycle ? strictCallGraph.nodeCount + 1 : 1;
+  for (let pass = 0; pass < maxPasses; pass += 1) {
     let changed = false;
-    for (const name of uniqueFlowNames) {
+    for (const name of orderedNames) {
       const effects = closureEffects.get(name);
       if (effects === undefined) continue;
-      for (const target of strictCalls.get(name)?.targets ?? []) {
+      for (const edge of strictCallGraph.outEdges(name)) {
+        const target = edge.to;
         const targetEffects = closureEffects.get(target);
         if (targetEffects === undefined || closureComplete.get(target) !== true) {
           if (closureComplete.get(name) !== false) {
@@ -896,6 +968,12 @@ function buildRequirementEffectContext(
       settled = true;
       break;
     }
+    if (!cycleResult.hasCycle) {
+      // Reverse topological order visits every callee before its caller, so one
+      // monotone pass is complete for an acyclic strict graph.
+      settled = true;
+      break;
+    }
   }
 
   return {
@@ -903,6 +981,7 @@ function buildRequirementEffectContext(
       flows.length <= REQUIREMENT_EFFECT_MAX_FLOWS
       && !budget.exceeded
       && settled,
+    flowNodesByMeta,
     constraintObservations,
     closureEffects,
     closureComplete,
@@ -916,7 +995,6 @@ function checkRequirementConstraintEffects(
   const diagnostics: EffectDiagnostic[] = [];
 
   function walk(node: AstNode): void {
-    if (node.kind === "fnDecl") return;
     if (node.kind === "requirementConstraint") {
       const observation = context.constraintObservations.get(node);
       let effectFree =
@@ -1014,6 +1092,8 @@ function checkFlowEffectsInternal(
 ): EffectCheckResult {
   const diagnostics: EffectDiagnostic[] = [];
   const flowNode = findFlowNode(ast, flow.name);
+  const requirementFlowNodes = requirementContext.flowNodesByMeta.get(flow)
+    ?? (flowNode === undefined ? [] : [flowNode]);
   // Task 4: infer effects together with call locations so we can point to specific calls
   const observedEffects = flowNode === undefined ? new Set<string>() : inferEffectsFromNode(flowNode);
   const effectCallLocations = flowNode === undefined ? new Map<string, SourceLocation>() : inferEffectCallLocations(flowNode);
@@ -1194,7 +1274,9 @@ function checkFlowEffectsInternal(
     for (const diag of checkStdlibEffects(flow, flowNode, mode)) {
       diagnostics.push(diag);
     }
-    for (const diag of checkRequirementConstraintEffects(flowNode, requirementContext)) {
+  }
+  for (const requirementFlowNode of requirementFlowNodes) {
+    for (const diag of checkRequirementConstraintEffects(requirementFlowNode, requirementContext)) {
       diagnostics.push(diag);
     }
   }
