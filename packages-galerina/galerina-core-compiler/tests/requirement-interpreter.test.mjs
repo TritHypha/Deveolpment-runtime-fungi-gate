@@ -81,6 +81,25 @@ describe("RD-0858 Unit 4 requirement expression runtime", () => {
     assert.match(result.value.message, /Bool or Verdict|fail-closed/);
   });
 
+  it("refuses a forged Bool payload instead of minting Verdict.Unknown", async () => {
+    const flowName = "runtimeForgedBoolConstraint";
+    const parsed = prepare(
+      `@version 1\npure flow ${flowName}(subject: Bool) -> Verdict\n` +
+      `contract { effects {} }\n{\n  return requirement {\n    subject\n  }\n}`,
+      `${flowName}.fungi`,
+    );
+
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: 0 }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
+  });
+
   it("refuses a forged requirement with no constraints", async () => {
     const parsed = prepare(sourceForRequirement("runtimeEmptyConstraint", "    true"));
     firstNode(parsed.ast, "requirementExpr").children = [];
@@ -145,6 +164,21 @@ describe("RD-0858 Unit 4 require statement runtime", () => {
     assert.equal(denied.value.value, "deny");
     assert.equal(allowed.value.__tag, "string");
     assert.equal(allowed.value.value, "allow");
+  });
+
+  it("refuses a forged Bool payload before guarded ALLOW continuation", async () => {
+    const flowName = "runtimeForgedRequireBool";
+    const parsed = prepare(sourceForRequire(flowName, "Bool"));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: 1 }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.notDeepEqual(result.value, { __tag: "string", value: "allow" });
+    assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
   });
 
   it("refuses a forged missing handler instead of reaching guarded continuation", async () => {
