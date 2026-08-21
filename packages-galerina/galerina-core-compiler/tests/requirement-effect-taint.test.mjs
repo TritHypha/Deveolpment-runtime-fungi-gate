@@ -1832,3 +1832,154 @@ describe("RD-0858 Task 3 fix round 3", () => {
     assert.equal(checkedFlowDigest(relocatedFlow, relocatedNode), exactDigest);
   });
 });
+
+describe("RD-0858 Task 3 fix round 4", () => {
+  const exactPair = () => {
+    const source = taintProgram("validateInput(input)");
+    const parsed = parseProgram(source, "round-4-pair.fungi");
+    const { flow, node } = findFlowNode(parsed);
+    assert.notEqual(flow, undefined);
+    assert.notEqual(node, undefined);
+    return {
+      source,
+      parsed,
+      flow: { ...flow, params: [...flow.params], declaredEffects: [...flow.declaredEffects] },
+      node: structuredClone(node),
+    };
+  };
+
+  const iteratorChangedArray = (stable, changed) => {
+    let iteratorReads = 0;
+    let indexedReads = 0;
+    const array = new Proxy([...stable], {
+      get(target, property, receiver) {
+        if (property === Symbol.iterator) {
+          iteratorReads += 1;
+          return function* changedIterator() {
+            yield* changed;
+          };
+        }
+        if (typeof property === "string" && /^\d+$/.test(property)) indexedReads += 1;
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    return { array, iteratorReads: () => iteratorReads, indexedReads: () => indexedReads };
+  };
+
+  it("hashes the bounded indexed parameter snapshot, never a changed iterator view", () => {
+    const pair = exactPair();
+    const exactDigest = checkedFlowDigest(pair.flow, pair.node);
+    const probe = iteratorChangedArray(pair.flow.params, ["forged: Bytes"]);
+    const hostileFlow = { ...pair.flow, params: probe.array };
+    assert.equal(checkedFlowDigest(hostileFlow, pair.node), exactDigest);
+    assert.equal(probe.iteratorReads(), 0);
+    assert.ok(probe.indexedReads() > 0);
+  });
+
+  it("emits 010 for authority carrying the changed parameter iterator digest", () => {
+    const pair = exactPair();
+    const probe = iteratorChangedArray(pair.flow.params, ["forged: Bytes"]);
+    const hostileFlow = { ...pair.flow, params: probe.array };
+    const attackerDigest = referenceCheckedFlowDigest(hostileFlow, pair.node);
+    assert.match(attackerDigest ?? "", /^sha256:[0-9a-f]{64}$/);
+    const flows = pair.parsed.flows.map((flow) =>
+      flow.name === hostileFlow.name ? hostileFlow : flow);
+    const checked = requirementTaintDiagnostics(pair.source, {
+      flows,
+      digest: attackerDigest,
+      row: { checkedDigest: attackerDigest },
+    });
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+    assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("never expands a bounded parameter collection through a later iterator", () => {
+    const pair = exactPair();
+    const exactDigest = checkedFlowDigest(pair.flow, pair.node);
+    const expanded = Array.from({ length: CHECKED_FLOW_MAX_PARAMS + 1 },
+      (_, index) => `forged${index}: Bytes`);
+    const probe = iteratorChangedArray(pair.flow.params, expanded);
+    assert.equal(checkedFlowDigest({ ...pair.flow, params: probe.array }, pair.node), exactDigest);
+    assert.equal(probe.iteratorReads(), 0);
+  });
+
+  it("hashes the bounded indexed effect snapshot, never a changed iterator view", () => {
+    const pair = exactPair();
+    const exactDigest = checkedFlowDigest(pair.flow, pair.node);
+    const probe = iteratorChangedArray(pair.flow.declaredEffects, ["database.read"]);
+    const hostileFlow = { ...pair.flow, declaredEffects: probe.array };
+    assert.equal(checkedFlowDigest(hostileFlow, pair.node), exactDigest);
+    assert.equal(probe.iteratorReads(), 0);
+  });
+
+  it("emits 010 for authority carrying the changed effect iterator digest", () => {
+    const pair = exactPair();
+    const probe = iteratorChangedArray(pair.flow.declaredEffects, ["database.read"]);
+    const hostileFlow = { ...pair.flow, declaredEffects: probe.array };
+    const attackerDigest = referenceCheckedFlowDigest(hostileFlow, pair.node);
+    assert.match(attackerDigest ?? "", /^sha256:[0-9a-f]{64}$/);
+    const flows = pair.parsed.flows.map((flow) =>
+      flow.name === hostileFlow.name ? hostileFlow : flow);
+    const checked = requirementTaintDiagnostics(pair.source, {
+      flows,
+      digest: attackerDigest,
+      row: { checkedDigest: attackerDigest },
+    });
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+    assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("hashes one AST field snapshot when a getter changes on later reads", () => {
+    const pair = exactPair();
+    const exactDigest = checkedFlowDigest(pair.flow, pair.node);
+    let valueReads = 0;
+    const hostileNode = new Proxy(pair.node, {
+      get(target, property, receiver) {
+        if (property === "value") {
+          valueReads += 1;
+          return valueReads <= 2 ? target.value : "forgedValidator";
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    assert.equal(checkedFlowDigest(pair.flow, hostileNode), exactDigest);
+    assert.equal(valueReads, 1);
+  });
+
+  it("hashes one AST child snapshot when children change before final canonicalization", () => {
+    const pair = exactPair();
+    const exactDigest = checkedFlowDigest(pair.flow, pair.node);
+    const changedChildren = structuredClone(pair.node.children ?? []);
+    const body = changedChildren.find((child) => child.kind === "block");
+    assert.notEqual(body, undefined);
+    body.children = [{ kind: "identifier", value: "forgedBody" }];
+    let childrenReads = 0;
+    const hostileNode = new Proxy(pair.node, {
+      get(target, property, receiver) {
+        if (property === "children") {
+          childrenReads += 1;
+          return childrenReads <= 3 ? target.children : changedChildren;
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    assert.equal(checkedFlowDigest(pair.flow, hostileNode), exactDigest);
+    assert.equal(childrenReads, 1);
+  });
+
+  it("keeps the stable plain parser-produced pair deterministic", () => {
+    const pair = exactPair();
+    const first = checkedFlowDigest(pair.flow, pair.node);
+    const second = checkedFlowDigest(pair.flow, pair.node);
+    assert.match(first ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(second, first);
+  });
+});
