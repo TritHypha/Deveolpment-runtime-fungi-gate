@@ -13,8 +13,8 @@
 |---|---|
 | Files | 268 |
 | Internal edges | 382 |
-| External dependencies | 17 |
-| ├─ Node core | 8 |
+| External dependencies | 18 |
+| ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 6 |
 | └─ Third-party | 3 |
 | Orphan files | 0 |
@@ -30,6 +30,7 @@
 - `node:module`
 - `node:path`
 - `node:url`
+- `node:util`
 
 ### Workspace (@galerina/*)
 - `@galerina/core-network`
