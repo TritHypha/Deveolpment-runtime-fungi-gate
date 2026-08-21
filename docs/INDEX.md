@@ -29,7 +29,7 @@
 | [`research-prompts/`](research-prompts/INDEX.md) | 15 |
 | [`rules/`](rules/INDEX.md) | 11 |
 | [`security/`](security/INDEX.md) | 23 |
-| [`superpowers/`](superpowers/INDEX.md) | 304 |
+| [`superpowers/`](superpowers/INDEX.md) | 305 |
 
 ---
 
