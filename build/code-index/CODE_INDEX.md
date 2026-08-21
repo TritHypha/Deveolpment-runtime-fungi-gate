@@ -1414,7 +1414,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-RUNTIME-002 | — | — | — | 2 | 4 | 0 |
 | FUNGI-RUNTIME-003 | — | — | — | 3 | 8 | 0 |
 | FUNGI-RUNTIME-004 | — | — | — | 1 | 2 | 0 |
-| FUNGI-RUNTIME-005 | UNAUTHORIZED_GOVERNED_VALUE_ACCESS | error | packages-galerina/galerina-core-compiler/src/interpreter.ts:520 | 1 | 9 | 0 |
+| FUNGI-RUNTIME-005 | UNAUTHORIZED_GOVERNED_VALUE_ACCESS | error | packages-galerina/galerina-core-compiler/src/interpreter.ts:521 | 1 | 9 | 0 |
 | FUNGI-RUNTIME-006 | RATE_LIMIT_EXCEEDED / RateLimitExceeded | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:115 | 3 | 21 | 1 |
 | FUNGI-RUNTIME-007 | — | — | — | 1 | 3 | 0 |
 

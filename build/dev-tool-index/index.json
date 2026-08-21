@@ -2474,7 +2474,6 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
-        "governance",
         "package-border",
         "source-hygiene",
         "graph/index"
@@ -4076,7 +4075,6 @@
       "audit-wasm-validate.mjs",
       "audit-web-stub-guard.mjs",
       "galerina-new.mjs",
-      "graph-all.mjs",
       "kb-graph-generator.mjs",
       "package-graph-generator.mjs",
       "project-graph-generator.mjs",

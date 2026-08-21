@@ -66849,7 +66849,7 @@
   "schema": "galerina.fungi-source-capability-inventory.v1",
   "source": {
     "retirementField": "unexecutedFungiPaths",
-    "retirementGraphSha256": "sha256:ad312178df8568444d31e1a43d669fd15e558b0a7908fe468954dbbc9d352580"
+    "retirementGraphSha256": "sha256:b3eb6a6dce671e7d1f25d841b4d16ca18814d152fc9776f9c9021de340c09cc7"
   },
   "totals": {
     "astKinds": {
