@@ -720,7 +720,8 @@ interface RequirementConstraintObservation extends RequirementStrictCallInventor
 
 interface RequirementEffectContext {
   readonly withinBounds: boolean;
-  readonly flowNodesByMeta: ReadonlyMap<FlowMeta, readonly AstNode[]>;
+  readonly flowNodesByEvidence: ReadonlyMap<string, readonly AstNode[]>;
+  readonly flowNodesByName: ReadonlyMap<string, readonly AstNode[]>;
   readonly constraintObservations: ReadonlyMap<AstNode, RequirementConstraintObservation>;
   readonly closureEffects: ReadonlyMap<string, ReadonlySet<string>>;
   readonly closureComplete: ReadonlyMap<string, boolean>;
@@ -734,20 +735,29 @@ interface MutableRequirementCallBudget {
 const REQUIREMENT_EFFECT_MAX_FLOWS = 4096;
 const REQUIREMENT_EFFECT_MAX_CALLS = 16384;
 
+function requirementFlowEvidenceBase(
+  name: string,
+  location: SourceLocation | undefined,
+): string {
+  const locationParts = location === undefined
+    ? ["<unknown>"]
+    : [
+        location.file,
+        location.line,
+        location.column,
+        location.offset,
+        location.endLine,
+        location.endColumn,
+        location.endOffset,
+        location.length,
+      ];
+  return `${name}\u001f${locationParts.join("\u001f")}`;
+}
+
 function buildRequirementEffectContext(
   flows: readonly FlowMeta[],
   ast: AstNode,
 ): RequirementEffectContext {
-  if (flows.length > REQUIREMENT_EFFECT_MAX_FLOWS) {
-    return {
-      withinBounds: false,
-      flowNodesByMeta: new Map(),
-      constraintObservations: new Map(),
-      closureEffects: new Map(),
-      closureComplete: new Map(),
-    };
-  }
-
   const metasByName = new Map<string, FlowMeta[]>();
   for (const flow of flows) {
     const sameName = metasByName.get(flow.name);
@@ -760,14 +770,35 @@ function buildRequirementEffectContext(
 
   const flowNodesByName = new Map<string, AstNode[]>();
   const knownNames = new Set(metasByName.keys());
-  let hasImports = false;
+  const importedBindings = new Set<string>();
+
+  function collectImportBindings(raw: string): void {
+    const fromIndex = raw.lastIndexOf(" from ");
+    if (fromIndex === -1) return;
+    const clause = raw.slice(0, fromIndex).trim();
+    if (clause.startsWith("{")) {
+      const closeIndex = clause.lastIndexOf("}");
+      if (closeIndex === -1) return;
+      for (const imported of clause.slice(1, closeIndex).split(",")) {
+        const parts = imported.trim().split(/\s+as\s+/);
+        const localName = (parts[1] ?? parts[0] ?? "").trim();
+        if (localName !== "") importedBindings.add(localName);
+      }
+      return;
+    }
+    if (clause.startsWith("*")) {
+      const parts = clause.split(/\s+as\s+/);
+      const localName = (parts[1] ?? "").trim();
+      if (localName !== "") importedBindings.add(localName);
+      return;
+    }
+    const localName = clause.split(/\s+/)[0]?.trim() ?? "";
+    if (localName !== "") importedBindings.add(localName);
+  }
+
   function collectFlowNodes(node: AstNode): void {
-    if (
-      node.kind === "importDecl"
-      || node.kind === "importPluginDecl"
-      || node.kind === "assimilatedPluginDecl"
-    ) {
-      hasImports = true;
+    if (node.kind === "importDecl" && node.value !== undefined) {
+      collectImportBindings(node.value);
     }
     const decoded = decodeFlowDecl(node);
     if (decoded !== undefined && !("error" in decoded) && knownNames.has(decoded.name)) {
@@ -783,24 +814,55 @@ function buildRequirementEffectContext(
   }
   collectFlowNodes(ast);
 
-  const flowNodesByMeta = new Map<FlowMeta, readonly AstNode[]>();
-  for (const [name, metas] of metasByName) {
-    const nodes = flowNodesByName.get(name) ?? [];
-    if (metas.length === nodes.length) {
-      for (let index = 0; index < metas.length; index += 1) {
-        const meta = metas[index];
-        const node = nodes[index];
-        if (meta !== undefined && node !== undefined) flowNodesByMeta.set(meta, [node]);
-      }
-    } else if (metas[0] !== undefined) {
-      // An unequal duplicate set is itself ambiguous. Assign every matching AST
-      // body to one result so no requirement constraint can disappear.
-      flowNodesByMeta.set(metas[0], nodes);
-      for (let index = 1; index < metas.length; index += 1) {
-        const meta = metas[index];
-        if (meta !== undefined) flowNodesByMeta.set(meta, []);
-      }
+  const metaKeysByEvidence = new Map<string, string[]>();
+  const metaOrdinals = new Map<string, number>();
+  for (const flow of flows) {
+    const evidence = requirementFlowEvidenceBase(flow.name, flow.location);
+    const ordinal = metaOrdinals.get(evidence) ?? 0;
+    metaOrdinals.set(evidence, ordinal + 1);
+    const key = `${evidence}\u001f${ordinal}`;
+    const keys = metaKeysByEvidence.get(evidence);
+    if (keys === undefined) metaKeysByEvidence.set(evidence, [key]);
+    else keys.push(key);
+  }
+
+  const nodesByStableKey = new Map<string, AstNode>();
+  const nodeKeysByEvidence = new Map<string, string[]>();
+  const nodeOrdinals = new Map<string, number>();
+  for (const [name, nodes] of flowNodesByName) {
+    for (const node of nodes) {
+      const evidence = requirementFlowEvidenceBase(name, node.location);
+      const ordinal = nodeOrdinals.get(evidence) ?? 0;
+      nodeOrdinals.set(evidence, ordinal + 1);
+      const key = `${evidence}\u001f${ordinal}`;
+      nodesByStableKey.set(key, node);
+      const keys = nodeKeysByEvidence.get(evidence);
+      if (keys === undefined) nodeKeysByEvidence.set(evidence, [key]);
+      else keys.push(key);
     }
+  }
+
+  const flowNodesByEvidence = new Map<string, readonly AstNode[]>();
+  for (const [evidence, metaKeys] of metaKeysByEvidence) {
+    const nodeKeys = nodeKeysByEvidence.get(evidence) ?? [];
+    if (metaKeys.length === 1 && nodeKeys.length === 1) {
+      const node = nodesByStableKey.get(nodeKeys[0]!);
+      if (node !== undefined) flowNodesByEvidence.set(evidence, [node]);
+    } else {
+      const flowName = evidence.split("\u001f", 1)[0] ?? "";
+      flowNodesByEvidence.set(evidence, flowNodesByName.get(flowName) ?? []);
+    }
+  }
+
+  if (flows.length > REQUIREMENT_EFFECT_MAX_FLOWS) {
+    return {
+      withinBounds: false,
+      flowNodesByEvidence,
+      flowNodesByName,
+      constraintObservations: new Map(),
+      closureEffects: new Map(),
+      closureComplete: new Map(),
+    };
   }
 
   const uniqueFlowNames = new Set<string>();
@@ -817,7 +879,7 @@ function buildRequirementEffectContext(
 
   function classifyCall(
     node: AstNode,
-    localBindings: ReadonlySet<string>,
+    isLocallyBound: (name: string) => boolean,
   ): boolean {
     budget.calls += 1;
     if (budget.calls > REQUIREMENT_EFFECT_MAX_CALLS) {
@@ -830,8 +892,8 @@ function buildRequirementEffectContext(
       && /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
     if (
       !bare
-      || hasImports
-      || localBindings.has(name)
+      || importedBindings.has(name)
+      || isLocallyBound(name)
       || !uniqueFlowNames.has(name)
     ) {
       return false;
@@ -841,20 +903,20 @@ function buildRequirementEffectContext(
 
   for (const [name, flowNodes] of flowNodesByName) {
     for (const flowNode of flowNodes) {
-      const localBindings = new Set(
-        [...collectLocalBindings(flowNode)].map((binding) => {
-          const beforeColon = binding.split(":")[0] ?? "";
-          return beforeColon.trim().split(/\s+/).pop() ?? "";
-        }),
-      );
-
-      function collectLocalFnNames(node: AstNode): void {
-        if (node.kind === "fnDecl" && node.value !== undefined) {
-          localBindings.add(node.value);
+      const scopes: Array<Set<string>> = [];
+      const pushScope = (): void => { scopes.push(new Set()); };
+      const popScope = (): void => { scopes.pop(); };
+      const declare = (rawName: string): void => {
+        const beforeColon = rawName.split(":")[0] ?? "";
+        const bindingName = beforeColon.trim().split(/\s+/).pop() ?? "";
+        if (bindingName !== "") scopes[scopes.length - 1]?.add(bindingName);
+      };
+      const isLocallyBound = (bindingName: string): boolean => {
+        for (let index = scopes.length - 1; index >= 0; index -= 1) {
+          if (scopes[index]?.has(bindingName) === true) return true;
         }
-        for (const child of node.children ?? []) collectLocalFnNames(child);
-      }
-      collectLocalFnNames(flowNode);
+        return false;
+      };
 
       const flowTargets = new Set<string>();
       let flowComplete = true;
@@ -866,6 +928,78 @@ function buildRequirementEffectContext(
         constraintState?: { complete: boolean },
       ): void {
         if (budget.exceeded) return;
+        if (decodeFlowDecl(node) !== undefined) {
+          pushScope();
+          for (const child of node.children ?? []) {
+            if (child.kind === "paramDecl") walk(child, insideFn);
+          }
+          for (const child of node.children ?? []) {
+            if (child.kind !== "paramDecl") walk(child, insideFn);
+          }
+          popScope();
+          return;
+        }
+        if (node.kind === "block") {
+          pushScope();
+          for (const child of node.children ?? []) {
+            walk(child, insideFn, constraintTargets, constraintState);
+          }
+          popScope();
+          return;
+        }
+        if (node.kind === "fnDecl") {
+          declare(node.value ?? "");
+          pushScope();
+          for (const child of node.children ?? []) {
+            walk(child, true, constraintTargets, constraintState);
+          }
+          popScope();
+          return;
+        }
+        if (node.kind === "paramDecl") {
+          declare(node.value ?? "");
+          return;
+        }
+        if (
+          node.kind === "letDecl"
+          || node.kind === "mutDecl"
+          || node.kind === "readonlyDecl"
+        ) {
+          const initializer = node.children?.[0];
+          if (initializer !== undefined) {
+            walk(initializer, insideFn, constraintTargets, constraintState);
+          }
+          declare(node.value ?? "");
+          for (const child of (node.children ?? []).slice(1)) {
+            walk(child, insideFn, constraintTargets, constraintState);
+          }
+          return;
+        }
+        if (node.kind === "matchArm" && node.value !== "__guard__") {
+          pushScope();
+          for (const child of node.children ?? []) {
+            if (child.kind === "identifier") declare(child.value ?? "");
+            else walk(child, insideFn, constraintTargets, constraintState);
+          }
+          popScope();
+          return;
+        }
+        if (node.kind === "forEachStmt") {
+          const collection = node.children?.[0];
+          const body = node.children?.[1];
+          const whereGuard = node.children?.[2];
+          if (collection !== undefined) {
+            walk(collection, insideFn, constraintTargets, constraintState);
+          }
+          pushScope();
+          declare(node.value ?? "");
+          if (whereGuard !== undefined) {
+            walk(whereGuard, insideFn, constraintTargets, constraintState);
+          }
+          if (body !== undefined) walk(body, insideFn, constraintTargets, constraintState);
+          popScope();
+          return;
+        }
         if (node.kind === "requirementConstraint") {
           const expression = node.children?.[0];
           const targets = new Set<string>();
@@ -882,25 +1016,18 @@ function buildRequirementEffectContext(
         }
         if (node.kind === "callExpr") {
           const target = node.value;
-          const resolved = classifyCall(node, localBindings);
+          const resolved = classifyCall(node, isLocallyBound);
           if (!insideFn) {
-            if (resolved && target !== undefined) {
-              flowTargets.add(target);
-            } else {
-              flowComplete = false;
-            }
+            if (resolved && target !== undefined) flowTargets.add(target);
+            else flowComplete = false;
           }
           if (constraintTargets !== undefined && constraintState !== undefined) {
-            if (resolved && target !== undefined) {
-              constraintTargets.add(target);
-            } else {
-              constraintState.complete = false;
-            }
+            if (resolved && target !== undefined) constraintTargets.add(target);
+            else constraintState.complete = false;
           }
         }
-        const childInsideFn = insideFn || node.kind === "fnDecl";
         for (const child of node.children ?? []) {
-          walk(child, childInsideFn, constraintTargets, constraintState);
+          walk(child, insideFn, constraintTargets, constraintState);
         }
       }
 
@@ -981,7 +1108,8 @@ function buildRequirementEffectContext(
       flows.length <= REQUIREMENT_EFFECT_MAX_FLOWS
       && !budget.exceeded
       && settled,
-    flowNodesByMeta,
+    flowNodesByEvidence,
+    flowNodesByName,
     constraintObservations,
     closureEffects,
     closureComplete,
@@ -1092,8 +1220,10 @@ function checkFlowEffectsInternal(
 ): EffectCheckResult {
   const diagnostics: EffectDiagnostic[] = [];
   const flowNode = findFlowNode(ast, flow.name);
-  const requirementFlowNodes = requirementContext.flowNodesByMeta.get(flow)
-    ?? (flowNode === undefined ? [] : [flowNode]);
+  const flowEvidence = requirementFlowEvidenceBase(flow.name, flow.location);
+  const requirementFlowNodes = requirementContext.flowNodesByEvidence.get(flowEvidence)
+    ?? requirementContext.flowNodesByName.get(flow.name)
+    ?? [];
   // Task 4: infer effects together with call locations so we can point to specific calls
   const observedEffects = flowNode === undefined ? new Set<string>() : inferEffectsFromNode(flowNode);
   const effectCallLocations = flowNode === undefined ? new Map<string, SourceLocation>() : inferEffectCallLocations(flowNode);
