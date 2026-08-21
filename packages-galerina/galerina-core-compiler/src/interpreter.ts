@@ -21,7 +21,7 @@ import { i64AddChecked, i64SubChecked, i64MulChecked, i64DivChecked, i64ModCheck
 import { u64AddChecked, u64SubChecked, u64MulChecked, u64DivChecked, u64ModChecked, u64NegChecked, isU64Trap, type U64Result } from "./u64-arith.js";
 import { decAdd, decSub, decMul, decCompare, isDecTrap, decDiv, decRem, isRoundMode, type DecResult } from "./decimal-arith.js";
 import { numericBaseType, parseI64Literal, parseU64Literal, isI64LiteralError, flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
-import { foldRequirementValues, liftRequirementValue as liftRequirementPrimitive } from "./requirement-semantics.js";
+import { foldRequirementValues } from "./requirement-semantics.js";
 import { compareUtf16CodeUnits } from "@galerina/core-runtime-wasm";
 
 export type GalerinaValue =
@@ -191,15 +191,36 @@ function coerceToDeclaredNumeric(declaredBase: string, value: GalerinaValue, ini
 const BOOL_TRUE:  GalerinaValue = { __tag: "bool", value: true };
 const BOOL_FALSE: GalerinaValue = { __tag: "bool", value: false };
 const boolVal = (b: boolean): GalerinaValue => b ? BOOL_TRUE : BOOL_FALSE;
-/** Runtime belt for untyped host boundaries: Verdict is a closed three-value domain. */
-function isCanonicalVerdict(value: GalerinaValue): boolean {
-  return value.__tag === "verdict" &&
-    (value.value === -1 || value.value === 0 || value.value === 1);
+function ownDataValue(value: unknown, key: "__tag" | "value"): unknown {
+  if (typeof value !== "object" || value === null) return undefined;
+  try {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    return descriptor !== undefined && "value" in descriptor ? descriptor.value : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
-/** Runtime belt for untyped host boundaries: Bool is exactly true or false. */
+/** Snapshot one exact Bool payload without invoking caller-owned accessors. */
+function snapshotCanonicalBool(value: GalerinaValue): boolean | undefined {
+  if (ownDataValue(value, "__tag") !== "bool") return undefined;
+  const payload = ownDataValue(value, "value");
+  return typeof payload === "boolean" ? payload : undefined;
+}
+
+/** Snapshot one exact closed-domain Verdict payload without invoking accessors. */
+function snapshotCanonicalVerdict(value: GalerinaValue): -1 | 0 | 1 | undefined {
+  if (ownDataValue(value, "__tag") !== "verdict") return undefined;
+  const payload = ownDataValue(value, "value");
+  return payload === -1 || payload === 0 || payload === 1 ? payload : undefined;
+}
+
+function isCanonicalVerdict(value: GalerinaValue): boolean {
+  return snapshotCanonicalVerdict(value) !== undefined;
+}
+
 function isCanonicalBool(value: GalerinaValue): boolean {
-  return value.__tag === "bool" && typeof value.value === "boolean";
+  return snapshotCanonicalBool(value) !== undefined;
 }
 // W5a K3: clamp to the lattice {-1,0,1} so an arithmetic slip can never mint an
 // out-of-range verdict (defense-in-depth; Math.min/max over valid trits stays exact).
@@ -922,6 +943,7 @@ export function tryPureFlowSync(
   const flowMeta = flows.find(f => f.name === flowName);
   if (flowMeta === undefined) return null;
   if (flowMeta.qualifier !== "pure") return null;
+  if (flowRequiresGovernedPath(ast, flowName)) return null;
 
   try {
     const interp = new SyncInterpreter(ast, flows, maxIterations, maxSteps);
@@ -1344,13 +1366,18 @@ class Interpreter {
     // is also an untyped JS/host boundary. Validate before preconditions,
     // parameter admission, execution-plan fast paths, or body work can observe
     // the value.
+    const admittedArgs = new Map<string, GalerinaValue>();
     for (const child of flowNode.children ?? []) {
       if (child.kind !== "paramDecl") continue;
       const paramType = bindingTypeName(child.value ?? "");
-      if (paramType !== "Verdict" && paramType !== "Bool") continue;
       const paramName = extractParamName(child.value ?? "");
       const argVal = args.get(paramName) ?? FUNGI_VOID;
-      if (paramType === "Verdict" && !isCanonicalVerdict(argVal)) {
+      if (paramType === "Verdict") {
+        const payload = snapshotCanonicalVerdict(argVal);
+        if (payload !== undefined) {
+          admittedArgs.set(paramName, { __tag: "verdict", value: payload });
+          continue;
+        }
         const message =
           `Flow '${flowName}' received malformed Verdict argument '${paramName}' — ` +
           `expected exactly Deny(-1), Unknown(0), or Allow(+1); fail-closed`;
@@ -1358,7 +1385,12 @@ class Interpreter {
         const value: GalerinaValue = { __tag: "runtimeError", message };
         return this.buildResult(flowName, qualifier, startedAt, value, message);
       }
-      if (paramType === "Bool" && !isCanonicalBool(argVal)) {
+      if (paramType === "Bool") {
+        const payload = snapshotCanonicalBool(argVal);
+        if (payload !== undefined) {
+          admittedArgs.set(paramName, { __tag: "bool", value: payload });
+          continue;
+        }
         const message =
           `Flow '${flowName}' received malformed Bool argument '${paramName}' — ` +
           `expected exactly true or false; fail-closed`;
@@ -1366,7 +1398,9 @@ class Interpreter {
         const value: GalerinaValue = { __tag: "runtimeError", message };
         return this.buildResult(flowName, qualifier, startedAt, value, message);
       }
+      admittedArgs.set(paramName, argVal);
     }
+    args = admittedArgs;
 
     // A7 (owner-ruled 2026-07-23, RD-0529): enforce INPUT pre-conditions at flow ENTRY. An
     // `invariant { ensure … }` that does NOT reference `result` is a parameter pre-condition; it is
@@ -2403,13 +2437,10 @@ class Interpreter {
     if (value.__tag === "runtimeError" || value.__tag === "error") {
       throw new Error(`${context} failed: ${value.message}`);
     }
-    if (
-      (value.__tag === "bool" && isCanonicalBool(value)) ||
-      (value.__tag === "verdict" && isCanonicalVerdict(value))
-    ) {
-      const lifted = liftRequirementPrimitive(value.value);
-      if (lifted !== undefined) return lifted;
-    }
+    const boolPayload = snapshotCanonicalBool(value);
+    if (boolPayload !== undefined) return boolPayload ? 1 : -1;
+    const verdictPayload = snapshotCanonicalVerdict(value);
+    if (verdictPayload !== undefined) return verdictPayload;
     throw new Error(`${context} must evaluate to Bool or canonical Verdict, got '${value.__tag}' — fail-closed`);
   }
 
@@ -3668,7 +3699,10 @@ function flowRequiresGovernedPath(ast: AstNode, flowName: string): boolean {
       node.value === flowName &&
       (extractOutputPostconditions(node).length > 0 || extractInputPreconditions(node).length > 0 ||
         extractParamAdmissions(node).length > 0 || astContainsKind(node, "trapDecl") ||
-        astContainsKind(node, "requirementExpr") || astContainsKind(node, "requireStmt"))
+        astContainsKind(node, "requirementExpr") || astContainsKind(node, "requireStmt") ||
+        (node.children ?? []).some((child) =>
+          child.kind === "paramDecl" &&
+          (bindingTypeName(child.value ?? "") === "Bool" || bindingTypeName(child.value ?? "") === "Verdict")))
     ) {
       found = true;
       return;
