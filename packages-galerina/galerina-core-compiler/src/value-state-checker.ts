@@ -39,7 +39,7 @@ import { decodeFlowDecl } from "./flow-name.js"; // Q2: governed-aware shadow-fl
 import { buildModuleAliasMap } from "./effect-checker.js"; // C1: resolve `let x = Module` aliases at sinks
 import { numericBaseType, BACKEND_UNLOWERABLE_SCALAR } from "./numeric-lowering.js";
 import {
-  analyzeRequirementTaint,
+  analyzeRequirementTaintForValueState,
   EMPTY_REQUIREMENT_VALIDATOR_INPUT,
   type RequirementValidatorInput,
 } from "./taint-checker.js";
@@ -2617,16 +2617,19 @@ export function checkValueStates(
   mode: "production" | "development" = "development",
   validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
 ): ValueStateCheckResult {
-  const requirementAnalysis = analyzeRequirementTaint(
+  const {
+    ast: analysisAst,
+    analysis: requirementAnalysis,
+  } = analyzeRequirementTaintForValueState(
     ast,
     validatorInput.flows,
     validatorInput,
   );
   // Phase 11B.2: collect user-defined gate functions before running the checker
-  const userGates = collectUserGates(ast);
+  const userGates = collectUserGates(analysisAst);
   // Phase 4.3: collect user-defined flow names for inter-flow call-site warnings
-  const userFlows = collectUserFlows(ast);
-  const authorityTypes = collectAuthorityTypes(ast);
+  const userFlows = collectUserFlows(analysisAst);
+  const authorityTypes = collectAuthorityTypes(analysisAst);
   const checker = new ValueStateChecker(
     userGates,
     userFlows,
@@ -2634,14 +2637,14 @@ export function checkValueStates(
     mode,
     requirementAnalysis.matchedValidatorCalls,
   );
-  checker.check(ast);
+  checker.check(analysisAst);
   const result = checker.getResult();
   // FUNGI-NUMERIC-001: fail-closed scan for scalar 64-bit widths the WASM backend would truncate.
   // Always-on (correctness, not a taint rule) — merged into the result the governed runtime +
   // production build already surface as fail-closed errors.
-  const numericDiags = scanUnlowerableNumerics(ast);
+  const numericDiags = scanUnlowerableNumerics(analysisAst);
   // FUNGI-VALUESTATE-011: fail-closed floor against declassifier-name shadowing (CWE-501, R&D 0200).
-  const shadowDiags = scanDeclassifierShadows(ast);
+  const shadowDiags = scanDeclassifierShadows(analysisAst);
   // Requirement constraints use a stricter value-state context: legacy name-based
   // gates cannot declassify taint there. The shared taint analysis admits only an
   // exact Task-1 validator-authority match backed by Task-2 EffectFree evidence.

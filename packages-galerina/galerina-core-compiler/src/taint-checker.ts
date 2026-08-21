@@ -1107,16 +1107,21 @@ function joinTaintStates(left: TaintState, right: TaintState): TaintState {
   return { kind: "clean" };
 }
 
-export function analyzeRequirementTaint(
-  ast: AstNode,
+const EMPTY_REQUIREMENT_ANALYSIS_AST: AstNode = Object.freeze({
+  kind: "program",
+  children: Object.freeze([]),
+});
+
+function analyzeRequirementTaintFromSnapshot(
+  snapshottedAst: AnalysisAstSnapshot | undefined,
   flows: readonly FlowMeta[],
-  validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+  validatorInput: RequirementValidatorInput,
+  preserveOriginalCallIdentity: boolean,
 ): RequirementTaintAnalysis {
   const diagnostics: TaintDiagnostic[] = [];
   const matchedValidatorCalls = new Set<AstNode>();
-  const snapshottedAst = snapshotAnalysisAst(ast);
   const astSnapshotFailed = snapshottedAst === undefined;
-  const analysisAst = snapshottedAst?.ast ?? Object.freeze({ kind: "program", children: Object.freeze([]) });
+  const analysisAst = snapshottedAst?.ast ?? EMPTY_REQUIREMENT_ANALYSIS_AST;
   const imports = collectImportBindings(analysisAst);
   // Authority-relevant AST and metadata are copied once into bounded immutable
   // records. Candidate selection, Task-2 effect closure, digest validation and
@@ -1246,7 +1251,9 @@ export function analyzeRequirementTaint(
       validatorInput.context,
     );
     if (result.state === "MATCHED") {
-      matchedValidatorCalls.add(snapshottedAst?.originals.get(call) ?? call);
+      matchedValidatorCalls.add(preserveOriginalCallIdentity
+        ? (snapshottedAst?.originals.get(call) ?? call)
+        : call);
       return;
     }
     diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
@@ -1369,6 +1376,38 @@ export function analyzeRequirementTaint(
   return Object.freeze({
     diagnostics: Object.freeze(diagnostics),
     matchedValidatorCalls,
+  });
+}
+
+export function analyzeRequirementTaint(
+  ast: AstNode,
+  flows: readonly FlowMeta[],
+  validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+): RequirementTaintAnalysis {
+  return analyzeRequirementTaintFromSnapshot(
+    snapshotAnalysisAst(ast),
+    flows,
+    validatorInput,
+    true,
+  );
+}
+
+/** @internal One immutable AST view shared by requirement and value-state analysis. */
+export function analyzeRequirementTaintForValueState(
+  ast: AstNode,
+  flows: readonly FlowMeta[],
+  validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+): { readonly ast: AstNode; readonly analysis: RequirementTaintAnalysis } {
+  const snapshot = snapshotAnalysisAst(ast);
+  const analysis = analyzeRequirementTaintFromSnapshot(
+    snapshot,
+    flows,
+    validatorInput,
+    false,
+  );
+  return Object.freeze({
+    ast: snapshot?.ast ?? EMPTY_REQUIREMENT_ANALYSIS_AST,
+    analysis,
   });
 }
 
