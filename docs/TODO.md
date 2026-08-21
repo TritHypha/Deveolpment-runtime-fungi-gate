@@ -62,11 +62,15 @@ counts or open items that a newer section explicitly supersedes.
   this as a process-root trust-boundary defect, not another scalar JavaScript
   patch. Grok independently supports the architecture `HOLD`, but finds a
   sealed native bootstrap only plausible—not proven uniquely minimal against
-  freeze-and-refuse or clean-worker isolation. The next step is an owner-
-  approved comparative boundary design with fixed runtime and worker
-  identities, bounded canonical input/output and a refusal receipt. Interpreter,
-  checked snapshot, GIR, SLIDE, VOK, admission, production and `.fungi`
-  conversion authority remain `HOLD`; `011` and `012` remain reserved.
+  freeze-and-refuse or clean-worker isolation. The owner-approved comparative
+  design is now recorded in
+  `docs/superpowers/specs/2026-08-21-rd-0858-unit4-process-root-boundary-design.md`.
+  It selects a native admitted launcher plus one single-use clean worker, fixed
+  runtime/package identities, bounded canonical input/output and a
+  non-authorizing refusal receipt. Implementation remains blocked until the
+  design receives an independent PASS. Interpreter, checked snapshot, GIR,
+  SLIDE, VOK, admission, production and `.fungi` conversion authority remain
+  `HOLD`; `011` and `012` remain reserved.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,
