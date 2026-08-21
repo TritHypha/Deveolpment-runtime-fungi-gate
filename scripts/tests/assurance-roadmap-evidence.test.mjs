@@ -52,10 +52,10 @@ function descriptor() {
       predecessors: [],
     })),
     root: {
-      id: "roadmap-subway",
-      evidencePath: "build/component-health/roadmap-subway.svg",
-      toolPath: "scripts/gen-roadmap-subway.mjs",
-      expectedTool: "gen-roadmap-subway",
+      id: "roadmap",
+      evidencePath: "build/roadmap/roadmap.svg",
+      toolPath: "scripts/gen-roadmap.mjs",
+      expectedTool: "gen-roadmap",
       predecessors: UPSTREAM.map(([id]) => id),
     },
   };
@@ -86,7 +86,7 @@ function fixture() {
       ...external,
     }, undefined, 2)}\n`);
   }
-  write(root, "scripts/gen-roadmap-subway.mjs", "export const generator = true;\n");
+  write(root, "scripts/gen-roadmap.mjs", "export const generator = true;\n");
   return { root, head };
 }
 
@@ -97,11 +97,11 @@ describe("roadmap assurance dependency derivation", () => {
       const result = deriveRoadmapEvidence(root);
       assert.equal(result.kind, "accepted", JSON.stringify(result));
       assert.equal(result.value.verdictTrit, 0);
-      assert.deepEqual(result.value.roots, ["roadmap-subway"]);
+      assert.deepEqual(result.value.roots, ["roadmap"]);
       assert.equal(result.value.authorizing, false);
       assert.equal(result.value.nodes.length, UPSTREAM.length + 1);
       assert.equal(result.value.edges.length, UPSTREAM.length);
-      assert.equal(result.value.nodes.find((node) => node.id === "roadmap-subway").effectiveTrit, 0);
+      assert.equal(result.value.nodes.find((node) => node.id === "roadmap").effectiveTrit, 0);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -113,7 +113,9 @@ describe("roadmap assurance dependency derivation", () => {
       write(root, ".gitkeep", "output-only commit\n");
       execFileSync("git", ["add", "--", ".gitkeep"], { cwd: root });
       execFileSync("git", ["commit", "-m", "output-only fixture"], { cwd: root, stdio: "ignore" });
-      assert.equal(deriveRoadmapEvidence(root).value.verdictTrit, 0);
+      const current = deriveRoadmapEvidence(root);
+      assert.equal(current.kind, "accepted", JSON.stringify(current));
+      assert.equal(current.value.verdictTrit, 0);
       const stable = deriveRoadmapEvidence(root, { repositoryBuildPoint: head });
       assert.equal(stable.kind, "accepted", JSON.stringify(stable));
       assert.equal(stable.value.verdictTrit, 0);
@@ -154,7 +156,7 @@ describe("roadmap assurance dependency derivation", () => {
       assert.equal(result.kind, "accepted", JSON.stringify(result));
       assert.equal(result.value.verdictTrit, 0);
       assert.equal(result.value.nodes.find((node) => node.id === "project-graph").localTrit, 0);
-      assert.equal(result.value.nodes.find((node) => node.id === "roadmap-subway").effectiveTrit, 0);
+      assert.equal(result.value.nodes.find((node) => node.id === "roadmap").effectiveTrit, 0);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -171,7 +173,7 @@ describe("roadmap assurance dependency derivation", () => {
       assert.equal(result.kind, "accepted", JSON.stringify(result));
       assert.equal(result.value.verdictTrit, 0);
       assert.equal(result.value.nodes.find((node) => node.id === "semantic-coverage").localTrit, 0);
-      assert.equal(result.value.nodes.find((node) => node.id === "roadmap-subway").effectiveTrit, 0);
+      assert.equal(result.value.nodes.find((node) => node.id === "roadmap").effectiveTrit, 0);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

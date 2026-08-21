@@ -33,6 +33,7 @@ function fixture() {
     "dev-tool-index.mjs",
     "fungi-source-capability-inventory.mjs",
     "gen-assurance-semantic-graph.mjs",
+    "gen-roadmap.mjs",
   ];
   for (const name of children) {
     write(root, `scripts/${name}`, `
@@ -56,14 +57,14 @@ function run(root, kb, args = [], failChild = "") {
   });
 }
 
-test("graph-all routes all seven repository checks in dependency order and propagates a child refusal", () => {
+test("graph-all routes seven graph owners then the canonical roadmap in dependency order", () => {
   const { root, kb } = fixture();
   try {
     const passed = run(root, kb, ["--check"]);
     assert.equal(passed.status, 0, `${passed.stdout}\n${passed.stderr}`);
     const calls = readFileSync(join(root, "calls.log"), "utf8");
     const callLines = calls.trim().split(/\r?\n/);
-    assert.equal(callLines.length, 7);
+    assert.equal(callLines.length, 8);
     assert.deepEqual(
       callLines.map((line) => line.split(" ")[0]),
       [
@@ -74,6 +75,7 @@ test("graph-all routes all seven repository checks in dependency order and propa
         "dev-tool-index.mjs",
         "fungi-source-capability-inventory.mjs",
         "gen-assurance-semantic-graph.mjs",
+        "gen-roadmap.mjs",
       ],
     );
     assert.match(calls, /project-graph-generator\.mjs .*--check/);
@@ -83,6 +85,21 @@ test("graph-all routes all seven repository checks in dependency order and propa
     assert.match(calls, /dev-tool-index\.mjs .*--generator-check/);
     assert.match(calls, /fungi-source-capability-inventory\.mjs .*--root .*--check/);
     assert.match(calls, /gen-assurance-semantic-graph\.mjs .*--root .*--check/);
+    assert.match(calls, /gen-roadmap\.mjs .*--root .*--check/);
+
+    writeFileSync(join(root, "calls.log"), "");
+    const generated = run(root, kb);
+    assert.equal(generated.status, 0, `${generated.stdout}\n${generated.stderr}`);
+    assert.match(readFileSync(join(root, "calls.log"), "utf8"), /gen-roadmap\.mjs .*--root .*--write/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(kb, { recursive: true, force: true });
+  }
+});
+
+test("graph-all never runs the roadmap after an upstream refusal", () => {
+  const { root, kb } = fixture();
+  try {
 
     writeFileSync(join(root, "calls.log"), "");
     const refused = run(
@@ -96,8 +113,9 @@ test("graph-all routes all seven repository checks in dependency order and propa
     assert.equal(
       readFileSync(join(root, "calls.log"), "utf8").trim().split(/\r?\n/).length,
       7,
-      "the orchestrator aggregates all child results instead of stopping before evidence is complete",
+      "the orchestrator gathers every upstream result but does not create a roadmap from refused evidence",
     );
+    assert.doesNotMatch(readFileSync(join(root, "calls.log"), "utf8"), /gen-roadmap\.mjs/);
   } finally {
     rmSync(root, { recursive: true, force: true });
     rmSync(kb, { recursive: true, force: true });
