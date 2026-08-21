@@ -388,48 +388,149 @@ function spendCheckedFlowCanonicalOptionalString(
     : spendCheckedFlowCanonicalString(budget, value);
 }
 
-function spendCheckedFlowCanonicalNode(
+function snapshotCheckedFlowCanonicalNode(
   node: AstNode,
   depth: number,
   budget: CheckedFlowCanonicalBudget,
   nodeCounter: { value: number },
-): boolean {
-  if (node === null || typeof node !== "object" || Array.isArray(node)
-    || depth > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH
+): AstNode | undefined {
+  if (node === null || typeof node !== "object" || Array.isArray(node)) return undefined;
+  const kind = node.kind;
+  const value = node.value;
+  const callStyle = node.callStyle;
+  const typeName = node.typeName;
+  const conformsTo = node.conformsTo;
+  const flowRef = node.flowRef;
+  const claim = node.claim;
+  const flags = node.flags;
+  const inputChildren = node.children;
+  if (depth > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH
     || ++nodeCounter.value > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES
-    || !boundedCheckedFlowString(node.kind)
-    || (node.callStyle !== undefined && node.callStyle !== "method")
-    || (node.flags !== undefined && (!Number.isSafeInteger(node.flags) || node.flags < 0))
-    || (node.children !== undefined && !Array.isArray(node.children))) return false;
+    || !boundedCheckedFlowString(kind)
+    || (callStyle !== undefined && callStyle !== "method")
+    || (flags !== undefined && (!Number.isSafeInteger(flags) || flags < 0))
+    || (inputChildren !== undefined && !Array.isArray(inputChildren))) return undefined;
 
-  const children = node.children ?? [];
-  if (children.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES) return false;
+  const childCount = inputChildren?.length ?? 0;
+  if (!Number.isSafeInteger(childCount) || childCount < 0
+    || childCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES) return undefined;
   if (!spendCheckedFlowCanonicalText(budget, "[")
-    || !spendCheckedFlowCanonicalString(budget, node.kind)
+    || !spendCheckedFlowCanonicalString(budget, kind)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalOptionalString(budget, node.value)
+    || !spendCheckedFlowCanonicalOptionalString(budget, value)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalOptionalString(budget, node.callStyle)
+    || !spendCheckedFlowCanonicalOptionalString(budget, callStyle)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalOptionalString(budget, node.typeName)
+    || !spendCheckedFlowCanonicalOptionalString(budget, typeName)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalOptionalString(budget, node.conformsTo)
+    || !spendCheckedFlowCanonicalOptionalString(budget, conformsTo)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalOptionalString(budget, node.flowRef)
+    || !spendCheckedFlowCanonicalOptionalString(budget, flowRef)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalOptionalString(budget, node.claim)
+    || !spendCheckedFlowCanonicalOptionalString(budget, claim)
     || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalText(budget, node.flags === undefined
+    || !spendCheckedFlowCanonicalText(budget, flags === undefined
       ? "null"
-      : JSON.stringify(node.flags))
-    || !spendCheckedFlowCanonicalText(budget, ",[")) return false;
-  for (let index = 0; index < children.length; index += 1) {
-    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
-      || !spendCheckedFlowCanonicalNode(children[index]!, depth + 1, budget, nodeCounter)) {
-      return false;
-    }
+      : JSON.stringify(flags))
+    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
+  const children: AstNode[] = [];
+  for (let index = 0; index < childCount; index += 1) {
+    if (index > 0 && !spendCheckedFlowCanonicalText(budget, ",")) return undefined;
+    const child = snapshotCheckedFlowCanonicalNode(
+      inputChildren![index]!,
+      depth + 1,
+      budget,
+      nodeCounter,
+    );
+    if (child === undefined) return undefined;
+    children.push(child);
   }
-  return spendCheckedFlowCanonicalText(budget, "]]");
+  if (!spendCheckedFlowCanonicalText(budget, "]]")) return undefined;
+  return Object.freeze({
+    kind,
+    children: Object.freeze(children),
+    ...(value === undefined ? {} : { value }),
+    ...(callStyle === undefined ? {} : { callStyle }),
+    ...(typeName === undefined ? {} : { typeName }),
+    ...(conformsTo === undefined ? {} : { conformsTo }),
+    ...(flowRef === undefined ? {} : { flowRef }),
+    ...(claim === undefined ? {} : { claim }),
+    ...(flags === undefined ? {} : { flags }),
+  });
+}
+
+interface CheckedFlowSnapshot {
+  readonly name: string;
+  readonly qualifier: FlowMeta["qualifier"];
+  readonly params: readonly string[];
+  readonly returnType: string;
+  readonly declaredEffects: readonly string[];
+  readonly ast: AstNode;
+}
+
+function snapshotCheckedFlow(
+  flow: FlowMeta,
+  flowNode: AstNode,
+): CheckedFlowSnapshot | undefined {
+  const name = flow.name;
+  const qualifier = flow.qualifier;
+  const inputParams = flow.params;
+  const returnType = flow.returnType;
+  const inputEffects = flow.declaredEffects;
+  const decreasesMetric = flow.decreasesMetric;
+  if (!boundedCheckedFlowString(name)
+    || !["flow", "secure", "pure", "guarded"].includes(qualifier)
+    || !Array.isArray(inputParams)
+    || !boundedCheckedFlowString(returnType)
+    || !Array.isArray(inputEffects)
+    // The parser does not preserve decreases in AstNode, so Task 3 cannot prove coherence.
+    || decreasesMetric !== undefined) return undefined;
+
+  const paramCount = inputParams.length;
+  const effectCount = inputEffects.length;
+  if (!Number.isSafeInteger(paramCount) || paramCount < 0
+    || paramCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_PARAMS
+    || !Number.isSafeInteger(effectCount) || effectCount < 0
+    || effectCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS) return undefined;
+
+  const budget = { remaining: MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES };
+  if (!spendCheckedFlowCanonicalText(budget, "{\"domain\":")
+    || !spendCheckedFlowCanonicalString(budget, REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN)
+    || !spendCheckedFlowCanonicalText(budget, ",\"flow\":[")
+    || !spendCheckedFlowCanonicalString(budget, name)
+    || !spendCheckedFlowCanonicalText(budget, ",")
+    || !spendCheckedFlowCanonicalString(budget, qualifier)
+    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
+
+  const params: string[] = [];
+  for (let index = 0; index < paramCount; index += 1) {
+    const param = inputParams[index];
+    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
+      || !spendCheckedFlowCanonicalString(budget, param)) return undefined;
+    params.push(param);
+  }
+  if (!spendCheckedFlowCanonicalText(budget, "],")
+    || !spendCheckedFlowCanonicalString(budget, returnType)
+    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
+
+  const declaredEffects: string[] = [];
+  for (let index = 0; index < effectCount; index += 1) {
+    const effect = inputEffects[index];
+    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
+      || !spendCheckedFlowCanonicalString(budget, effect)) return undefined;
+    declaredEffects.push(effect);
+  }
+  if (!spendCheckedFlowCanonicalText(budget, "],null],\"ast\":")) return undefined;
+  const ast = snapshotCheckedFlowCanonicalNode(flowNode, 1, budget, { value: 0 });
+  if (ast === undefined || !spendCheckedFlowCanonicalText(budget, "}")) return undefined;
+  return Object.freeze({
+    name,
+    qualifier,
+    params: Object.freeze(params),
+    returnType,
+    declaredEffects: Object.freeze(declaredEffects),
+    ast,
+  });
 }
 
 interface CheckedFlowAstContract {
@@ -536,68 +637,44 @@ export function computeRequirementValidatorCheckedFlowDigest(
   flow: FlowMeta | undefined,
   flowNode: AstNode | undefined,
 ): string | undefined {
-  if (flow === undefined || flow === null || typeof flow !== "object" || Array.isArray(flow)
-    || flowNode === undefined || flowNode === null
-    || typeof flowNode !== "object" || Array.isArray(flowNode)
-    || !boundedCheckedFlowString(flow.name)
-    || !["flow", "secure", "pure", "guarded"].includes(flow.qualifier)
-    || !Array.isArray(flow.params)
-    || flow.params.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_PARAMS
-    || !boundedCheckedFlowString(flow.returnType)
-    || !Array.isArray(flow.declaredEffects)
-    || flow.declaredEffects.length > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS
-    // The parser does not preserve decreases in AstNode, so Task 3 cannot prove coherence.
-    || flow.decreasesMetric !== undefined) {
+  try {
+    if (flow === undefined || flow === null || typeof flow !== "object" || Array.isArray(flow)
+      || flowNode === undefined || flowNode === null
+      || typeof flowNode !== "object" || Array.isArray(flowNode)) return undefined;
+
+    // The original caller-owned graph is read exactly once into this bounded snapshot.
+    // All coherence checks and canonicalization below consume only the frozen copy.
+    const snapshot = snapshotCheckedFlow(flow, flowNode);
+    if (snapshot === undefined) return undefined;
+    const decoded = decodeFlowDecl(snapshot.ast);
+    if (decoded === undefined || "error" in decoded || decoded.name !== snapshot.name) {
+      return undefined;
+    }
+    const astContract = deriveCheckedFlowAstContract(snapshot.ast);
+    if (astContract === undefined
+      || astContract.qualifier !== snapshot.qualifier
+      || astContract.returnType !== snapshot.returnType
+      || !checkedFlowStringsEqual(astContract.params, snapshot.params)
+      || !checkedFlowStringsEqual(astContract.declaredEffects, snapshot.declaredEffects)) {
+      return undefined;
+    }
+
+    const canonical = JSON.stringify({
+      domain: REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN,
+      flow: [
+        snapshot.name,
+        snapshot.qualifier,
+        snapshot.params,
+        snapshot.returnType,
+        snapshot.declaredEffects,
+        null,
+      ],
+      ast: canonicalCheckedFlowNode(snapshot.ast),
+    });
+    return hashSource(canonical);
+  } catch {
     return undefined;
   }
-  // Account the exact JSON preimage in source order. Refuse before copying arrays,
-  // building AST tuples, or stringifying the complete canonical object.
-  const budget = { remaining: MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES };
-  if (!spendCheckedFlowCanonicalText(budget, "{\"domain\":")
-    || !spendCheckedFlowCanonicalString(budget, REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN)
-    || !spendCheckedFlowCanonicalText(budget, ",\"flow\":[")
-    || !spendCheckedFlowCanonicalString(budget, flow.name)
-    || !spendCheckedFlowCanonicalText(budget, ",")
-    || !spendCheckedFlowCanonicalString(budget, flow.qualifier)
-    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
-  for (let index = 0; index < flow.params.length; index += 1) {
-    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
-      || !spendCheckedFlowCanonicalString(budget, flow.params[index])) return undefined;
-  }
-  if (!spendCheckedFlowCanonicalText(budget, "],")
-    || !spendCheckedFlowCanonicalString(budget, flow.returnType)
-    || !spendCheckedFlowCanonicalText(budget, ",[")) return undefined;
-  for (let index = 0; index < flow.declaredEffects.length; index += 1) {
-    if ((index > 0 && !spendCheckedFlowCanonicalText(budget, ","))
-      || !spendCheckedFlowCanonicalString(budget, flow.declaredEffects[index])) return undefined;
-  }
-  if (!spendCheckedFlowCanonicalText(budget, "],null],\"ast\":")
-    || !spendCheckedFlowCanonicalNode(flowNode, 1, budget, { value: 0 })
-    || !spendCheckedFlowCanonicalText(budget, "}")) return undefined;
-
-  const decoded = decodeFlowDecl(flowNode);
-  if (decoded === undefined || "error" in decoded || decoded.name !== flow.name) return undefined;
-  const astContract = deriveCheckedFlowAstContract(flowNode);
-  if (astContract === undefined
-    || astContract.qualifier !== flow.qualifier
-    || astContract.returnType !== flow.returnType
-    || !checkedFlowStringsEqual(astContract.params, flow.params)
-    || !checkedFlowStringsEqual(astContract.declaredEffects, flow.declaredEffects)) return undefined;
-
-  const ast = canonicalCheckedFlowNode(flowNode);
-  const canonical = JSON.stringify({
-    domain: REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN,
-    flow: [
-      flow.name,
-      flow.qualifier,
-      [...flow.params],
-      flow.returnType,
-      [...flow.declaredEffects],
-      flow.decreasesMetric ?? null,
-    ],
-    ast,
-  });
-  return hashSource(canonical);
 }
 
 /**
