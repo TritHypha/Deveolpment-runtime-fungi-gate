@@ -46,6 +46,10 @@ counts or open items that a newer section explicitly supersedes.
   Only `003`, `004` and `010` become live in this unit. Governance,
   interpreter, checked snapshot, GIR, SLIDE, VOK, admission, production and
   `.fungi` conversion authority remain `HOLD`; `011` and `012` stay reserved.
+  The mandatory Grok chapter-close gate is now satisfied: attempt 1 was
+  preserved as the non-authorizing refusal RD-0859; attempt 2 is independently
+  reproduced and adjudicated `PASS` in private RD-0860. Grok did not rerun the
+  historical 690/690 matrix and grants no downstream authority.
 - [!] RD-0858 delivery unit 4 remains on an architecture `HOLD`. The
   TypeScript differential interpreter is green at source commit `fd90d7ea`
   and exact graph/index head `1f7fc227`: focused controls pass 37/37, the
@@ -56,9 +60,11 @@ counts or open items that a newer section explicitly supersedes.
   four fresh-process pre-bootstrap Node-root poisonings that restore the
   visible built-ins before execution and still reach guarded `ALLOW`. Treat
   this as a process-root trust-boundary defect, not another scalar JavaScript
-  patch. The pending design is a sealed native bootstrap with fixed runtime
-  and worker identities, bounded canonical input/output and a refusal receipt;
-  it requires explicit owner approval before implementation. Interpreter,
+  patch. Grok independently supports the architecture `HOLD`, but finds a
+  sealed native bootstrap only plausible—not proven uniquely minimal against
+  freeze-and-refuse or clean-worker isolation. The next step is an owner-
+  approved comparative boundary design with fixed runtime and worker
+  identities, bounded canonical input/output and a refusal receipt. Interpreter,
   checked snapshot, GIR, SLIDE, VOK, admission, production and `.fungi`
   conversion authority remain `HOLD`; `011` and `012` remain reserved.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
