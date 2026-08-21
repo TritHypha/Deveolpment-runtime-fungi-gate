@@ -59,6 +59,9 @@ const CHECKED_FLOW_DIGEST_DOMAIN = "galerina.requirement-validator.checked-flow.
 const CHECKED_FLOW_MAX_NODES = 4_096;
 const CHECKED_FLOW_MAX_DEPTH = 128;
 const CHECKED_FLOW_MAX_BYTES = 262_144;
+const CHECKED_FLOW_MAX_PARAMS = 256;
+const CHECKED_FLOW_MAX_EFFECTS = 256;
+const CHECKED_FLOW_MAX_ITEM_BYTES = 32_768;
 
 const taintProgram = (constraint, validatorBody = "return true") =>
   `@version 1
@@ -77,7 +80,7 @@ contract { effects {} }
   ${validatorBody}
 }`;
 
-function referenceCheckedFlowDigest(flow, flowNode) {
+function referenceCheckedFlowCanonical(flow, flowNode) {
   if (flow === undefined || flowNode === undefined) return undefined;
   const qualifier = flow.qualifier;
   if (typeof flow.name !== "string"
@@ -138,7 +141,14 @@ function referenceCheckedFlowDigest(flow, flowNode) {
     ],
     ast,
   });
-  if (Buffer.byteLength(canonical, "utf8") > CHECKED_FLOW_MAX_BYTES) return undefined;
+  return canonical;
+}
+
+function referenceCheckedFlowDigest(flow, flowNode) {
+  const canonical = referenceCheckedFlowCanonical(flow, flowNode);
+  if (canonical === undefined || Buffer.byteLength(canonical, "utf8") > CHECKED_FLOW_MAX_BYTES) {
+    return undefined;
+  }
   return `sha256:${createHash("sha256").update(canonical, "utf8").digest("hex")}`;
 }
 
@@ -174,12 +184,13 @@ function requirementTaintDiagnostics(source, authorityOverrides = {}) {
     `unexpected parser errors: ${JSON.stringify(parsed.diagnostics)}`,
   );
   const ast = authorityOverrides.ast ?? parsed.ast ?? { kind: "program" };
+  const analysisFlows = authorityOverrides.flows ?? parsed.flows;
   const { flow: validatorFlow, node: validatorNode } = findFlowNode(parsed, "validateInput", ast);
   const checkedDigest = authorityOverrides.digest
     ?? checkedFlowDigest(validatorFlow, validatorNode)
     ?? TAINT_DIGEST;
   assert.match(checkedDigest ?? "", /^sha256:[0-9a-f]{64}$/);
-  const effectResults = checkEffects(parsed.flows, ast);
+  const effectResults = checkEffects(analysisFlows, ast);
   const row = {
     authorityVersion: TAINT_VERSION,
     qualifiedFlowIdentity: "package.example.policy::validateInput",
@@ -213,11 +224,11 @@ function requirementTaintDiagnostics(source, authorityOverrides = {}) {
       ...(authorityOverrides.checkedFlow ?? {}),
     }],
     effectResults,
-    flows: parsed.flows,
+    flows: analysisFlows,
     ...(authorityOverrides.input ?? {}),
   };
   return {
-    taint: checkTaint(ast, parsed.flows, input).filter((diagnostic) =>
+    taint: checkTaint(ast, analysisFlows, input).filter((diagnostic) =>
       diagnostic.code === "FUNGI-REQUIREMENT-004"
         || diagnostic.code === "FUNGI-REQUIREMENT-010"),
     valueState: checkValueStates(ast, "development", input).diagnostics.filter((diagnostic) =>
@@ -1493,5 +1504,331 @@ describe("RD-0858 Task 3 fix round 2", () => {
     const checked = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
     assert.deepEqual(checked.taint, []);
     assert.deepEqual(checked.valueState, []);
+  });
+});
+
+describe("RD-0858 Task 3 fix round 3", () => {
+  const exactPair = (source = taintProgram("validateInput(input)")) => {
+    const parsed = parseProgram(source, "round-3-pair.fungi");
+    const { flow, node } = findFlowNode(parsed);
+    assert.notEqual(flow, undefined);
+    assert.notEqual(node, undefined);
+    return {
+      parsed,
+      flow: { ...flow, params: [...flow.params], declaredEffects: [...flow.declaredEffects] },
+      node: structuredClone(node),
+    };
+  };
+
+  const bodyOf = (node) => {
+    const body = (node.children ?? []).find((child) => child.kind === "block");
+    assert.notEqual(body, undefined);
+    return body;
+  };
+
+  const setParams = (pair, params) => {
+    pair.flow.params = params;
+    const rest = (pair.node.children ?? []).filter((child) => child.kind !== "paramDecl");
+    pair.node.children = [
+      ...params.map((value) => ({ kind: "paramDecl", value })),
+      ...rest,
+    ];
+  };
+
+  const setEffects = (pair, effects) => {
+    pair.flow.declaredEffects = effects;
+    const contract = (pair.node.children ?? []).find((child) => child.kind === "contractDecl");
+    assert.notEqual(contract, undefined);
+    const effectsBlock = (contract.children ?? []).find((child) =>
+      child.kind === "identifier" && child.value === "effects:block");
+    assert.notEqual(effectsBlock, undefined);
+    effectsBlock.children = [];
+    const children = pair.node.children ?? [];
+    const returnIndex = children.findIndex((child) => child.kind === "typeRef");
+    assert.notEqual(returnIndex, -1);
+    pair.node.children = [
+      ...children.slice(0, returnIndex + 1),
+      {
+        kind: "effectsDecl",
+        value: effects.join(", "),
+        children: effects.map((effect) => ({ kind: "effectRef", value: effect })),
+      },
+      ...children.slice(returnIndex + 1).filter((child) => child.kind !== "effectsDecl"),
+    ];
+  };
+
+  const accessBoundedArray = (length, valueAt, accessLimit) => {
+    let accesses = 0;
+    const target = [];
+    const array = new Proxy(target, {
+      get(inner, property, receiver) {
+        if (property === "length") return length;
+        if (typeof property === "string" && /^\d+$/.test(property)) {
+          accesses += 1;
+          if (accesses > accessLimit) {
+            throw new Error(`UNBOUNDED_ARRAY_ACCESS:${accesses}`);
+          }
+          return valueAt(Number(property));
+        }
+        return Reflect.get(inner, property, receiver);
+      },
+      has(inner, property) {
+        if (typeof property === "string" && /^\d+$/.test(property)) {
+          return Number(property) < length;
+        }
+        return Reflect.has(inner, property);
+      },
+    });
+    return { array, accesses: () => accesses };
+  };
+
+  for (const [label, field] of [
+    ["parameter", "params"],
+    ["effect", "declaredEffects"],
+  ]) {
+    it(`refuses over-cardinality ${label} collections before reading their items`, () => {
+      const pair = exactPair();
+      const probe = accessBoundedArray(
+        Number.MAX_SAFE_INTEGER,
+        (index) => `${label}${index}: String`,
+        8,
+      );
+      pair.flow[field] = probe.array;
+      assert.equal(checkedFlowDigest(pair.flow, pair.node), undefined);
+      assert.equal(probe.accesses(), 0);
+    });
+
+    it(`stops cumulative ${label} byte accounting before scanning the full bounded collection`, () => {
+      const pair = exactPair();
+      const probe = accessBoundedArray(
+        field === "params" ? CHECKED_FLOW_MAX_PARAMS : CHECKED_FLOW_MAX_EFFECTS,
+        () => "x".repeat(CHECKED_FLOW_MAX_ITEM_BYTES),
+        16,
+      );
+      pair.flow[field] = probe.array;
+      assert.equal(checkedFlowDigest(pair.flow, pair.node), undefined);
+      assert.ok(probe.accesses() <= 16);
+    });
+  }
+
+  it("stops cumulative AST byte accounting before materializing every child tuple", () => {
+    const pair = exactPair();
+    const probe = accessBoundedArray(
+      100,
+      () => ({ kind: "identifier", value: "x".repeat(CHECKED_FLOW_MAX_ITEM_BYTES) }),
+      16,
+    );
+    bodyOf(pair.node).children = probe.array;
+    assert.equal(checkedFlowDigest(pair.flow, pair.node), undefined);
+    assert.ok(probe.accesses() <= 16);
+  });
+
+  it("admits the exact parameter cardinality ceiling and refuses one over it", () => {
+    const exact = exactPair();
+    setParams(exact, Array.from(
+      { length: CHECKED_FLOW_MAX_PARAMS },
+      (_, index) => `p${index}: String`,
+    ));
+    const over = exactPair();
+    setParams(over, Array.from(
+      { length: CHECKED_FLOW_MAX_PARAMS + 1 },
+      (_, index) => `p${index}: String`,
+    ));
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(over.flow, over.node), undefined);
+  });
+
+  it("admits the exact effect cardinality ceiling and refuses one over it", () => {
+    const exact = exactPair();
+    setEffects(exact, Array.from(
+      { length: CHECKED_FLOW_MAX_EFFECTS },
+      (_, index) => `effect.${index}`,
+    ));
+    const over = exactPair();
+    setEffects(over, Array.from(
+      { length: CHECKED_FLOW_MAX_EFFECTS + 1 },
+      (_, index) => `effect.${index}`,
+    ));
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(over.flow, over.node), undefined);
+  });
+
+  it("admits the exact semantic-item byte ceiling and refuses one byte over for params", () => {
+    const exact = exactPair();
+    setParams(exact, ["p".repeat(CHECKED_FLOW_MAX_ITEM_BYTES)]);
+    const over = exactPair();
+    setParams(over, ["p".repeat(CHECKED_FLOW_MAX_ITEM_BYTES + 1)]);
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(over.flow, over.node), undefined);
+  });
+
+  it("admits the exact semantic-item byte ceiling and refuses one byte over for effects", () => {
+    const exact = exactPair();
+    setEffects(exact, ["e".repeat(CHECKED_FLOW_MAX_ITEM_BYTES)]);
+    const over = exactPair();
+    setEffects(over, ["e".repeat(CHECKED_FLOW_MAX_ITEM_BYTES + 1)]);
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(over.flow, over.node), undefined);
+  });
+
+  const pairAtCanonicalBytes = (targetBytes) => {
+    const pair = exactPair();
+    const body = bodyOf(pair.node);
+    body.children = [];
+    while (true) {
+      const current = referenceCheckedFlowCanonical(pair.flow, pair.node);
+      assert.notEqual(current, undefined);
+      const currentBytes = Buffer.byteLength(current, "utf8");
+      if (currentBytes === targetBytes) return pair;
+      assert.ok(currentBytes < targetBytes);
+      body.children.push({ kind: "identifier", value: "" });
+      const withEmpty = referenceCheckedFlowCanonical(pair.flow, pair.node);
+      assert.notEqual(withEmpty, undefined);
+      const itemOverhead = Buffer.byteLength(withEmpty, "utf8") - currentBytes;
+      body.children.pop();
+      const remainingValueBytes = targetBytes - currentBytes - itemOverhead;
+      if (remainingValueBytes <= CHECKED_FLOW_MAX_ITEM_BYTES) {
+        assert.ok(remainingValueBytes >= 0);
+        body.children.push({ kind: "identifier", value: "x".repeat(remainingValueBytes) });
+        continue;
+      }
+      body.children.push({ kind: "identifier", value: "x".repeat(30_000) });
+    }
+  };
+
+  it("admits the exact aggregate canonical-byte ceiling and refuses one byte over", () => {
+    const exact = pairAtCanonicalBytes(CHECKED_FLOW_MAX_BYTES);
+    const over = pairAtCanonicalBytes(CHECKED_FLOW_MAX_BYTES + 1);
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(over.flow, over.node), undefined);
+  });
+
+  const countNodes = (node) => 1 + (node.children ?? [])
+    .reduce((total, child) => total + countNodes(child), 0);
+
+  it("admits the exact AST node ceiling and refuses one node over", () => {
+    const exact = exactPair();
+    const body = bodyOf(exact.node);
+    body.children = [];
+    const baseNodes = countNodes(exact.node);
+    body.children = Array.from(
+      { length: CHECKED_FLOW_MAX_NODES - baseNodes },
+      () => ({ kind: "identifier" }),
+    );
+    const over = structuredClone(exact.node);
+    bodyOf(over).children.push({ kind: "identifier" });
+    assert.equal(countNodes(exact.node), CHECKED_FLOW_MAX_NODES);
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(exact.flow, over), undefined);
+  });
+
+  it("admits the exact AST depth ceiling and refuses one level over", () => {
+    const nestedPair = (blockCount) => {
+      const pair = exactPair();
+      let nested = { kind: "identifier" };
+      for (let depth = 0; depth < blockCount; depth += 1) {
+        nested = { kind: "block", children: [nested] };
+      }
+      bodyOf(pair.node).children = [nested];
+      return pair;
+    };
+    const exact = nestedPair(CHECKED_FLOW_MAX_DEPTH - 3);
+    const over = nestedPair(CHECKED_FLOW_MAX_DEPTH - 2);
+    assert.match(checkedFlowDigest(exact.flow, exact.node) ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(over.flow, over.node), undefined);
+  });
+
+  const forgedCases = [
+    {
+      label: "return type",
+      source: taintProgram("validateInput(input)").replace(
+        "pure flow validateInput(value: String) -> Verdict",
+        "pure flow validateInput(value: String) -> Bool",
+      ),
+      mutate(flow) { flow.returnType = "Verdict"; },
+      row: { outputType: "Verdict" },
+    },
+    {
+      label: "parameters",
+      source: taintProgram("validateInput(input)"),
+      mutate(flow) { flow.params = ["value: Bytes"]; },
+      row: { inputType: "Bytes" },
+    },
+    {
+      label: "qualifier",
+      source: taintProgram("validateInput(input)"),
+      mutate(flow) { flow.qualifier = "guarded"; },
+      row: {},
+    },
+    {
+      label: "declared effects",
+      source: taintProgram("validateInput(input)"),
+      mutate(flow) { flow.declaredEffects = ["database.read"]; },
+      row: {},
+    },
+    {
+      label: "decreases metric",
+      source: taintProgram("validateInput(input)"),
+      mutate(flow) { flow.decreasesMetric = "value"; },
+      row: {},
+    },
+  ];
+
+  const forgedFlowInput = ({ source, mutate }) => {
+    const parsed = parseProgram(source, "round-3-forged-flow.fungi");
+    const { flow, node } = findFlowNode(parsed);
+    assert.notEqual(flow, undefined);
+    assert.notEqual(node, undefined);
+    const forged = {
+      ...flow,
+      params: [...flow.params],
+      declaredEffects: [...flow.declaredEffects],
+    };
+    mutate(forged);
+    const flows = parsed.flows.map((candidate) => candidate === flow ? forged : candidate);
+    const legacyDigest = referenceCheckedFlowDigest(forged, node);
+    assert.match(legacyDigest ?? "", /^sha256:[0-9a-f]{64}$/);
+    return { parsed, forged, node, flows, legacyDigest };
+  };
+
+  for (const testCase of forgedCases) {
+    it(`refuses a digest for FlowMeta ${testCase.label} that disagrees with the AST`, () => {
+      const forged = forgedFlowInput(testCase);
+      assert.equal(checkedFlowDigest(forged.forged, forged.node), undefined);
+    });
+
+    it(`emits 010 when forged FlowMeta ${testCase.label} evidence is present`, () => {
+      const forged = forgedFlowInput(testCase);
+      const checked = requirementTaintDiagnostics(testCase.source, {
+        flows: forged.flows,
+        digest: forged.legacyDigest,
+        row: { ...testCase.row, checkedDigest: forged.legacyDigest },
+      });
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-010",
+      ]);
+      assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-010",
+      ]);
+    });
+  }
+
+  it("keeps an exact parser-produced pair and SourceLocation-only drift valid", () => {
+    const pair = exactPair();
+    const exactDigest = checkedFlowDigest(pair.flow, pair.node);
+    const relocatedFlow = {
+      ...pair.flow,
+      location: { ...pair.flow.location, file: "relocated.fungi", offset: 1_000 },
+    };
+    const relocatedNode = structuredClone(pair.node);
+    const relocate = (node) => {
+      if (node.location !== undefined) {
+        node.location = { ...node.location, file: "relocated.fungi", offset: node.location.offset + 1_000 };
+      }
+      for (const child of node.children ?? []) relocate(child);
+    };
+    relocate(relocatedNode);
+    assert.match(exactDigest ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(checkedFlowDigest(relocatedFlow, relocatedNode), exactDigest);
   });
 });
