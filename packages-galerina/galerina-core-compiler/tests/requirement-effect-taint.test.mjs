@@ -2195,3 +2195,120 @@ describe("RD-0858 Task 3 fix round 6", () => {
     ]);
   });
 });
+
+describe("RD-0858 Task 3 fix round 7", () => {
+  const requirementCodesOnly = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-REQUIREMENT-010")
+    .map((diagnostic) => diagnostic.code);
+
+  const findNode = (node, kind) => {
+    if (node.kind === kind) return node;
+    for (const child of node.children ?? []) {
+      const found = findNode(child, kind);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  };
+
+  const replaceNode = (node, target, replacement) => {
+    if (node === target) return replacement;
+    if (node.children === undefined) return node;
+    return {
+      ...node,
+      children: node.children.map((child) => replaceNode(child, target, replacement)),
+    };
+  };
+
+  const exactAuthorityInput = (parsed) => {
+    const { flow, node } = findFlowNode(parsed);
+    assert.notEqual(flow, undefined);
+    assert.notEqual(node, undefined);
+    const digest = checkedFlowDigest(flow, node);
+    assert.match(digest ?? "", /^sha256:[0-9a-f]{64}$/);
+    const effectResults = checkEffects(parsed.flows, parsed.ast);
+    const registry = createRequirementValidatorAuthorityRegistry([{
+      authorityVersion: TAINT_VERSION,
+      qualifiedFlowIdentity: "package.example.policy::validateInput",
+      sourceBuild: TAINT_SOURCE_BUILD,
+      inputType: "String",
+      taintClasses: ["declared.untrusted"],
+      outputType: "Verdict",
+      observedEffect: "EffectFree",
+      checkedProfile: TAINT_PROFILE,
+      checkedDigest: digest,
+      validFrom: "2026-08-20T00:00:00.000Z",
+      expiresAt: "2026-08-22T00:00:00.000Z",
+    }]);
+    return {
+      registry,
+      context: {
+        expectedRegistryDigest: registry.digest,
+        canonicalSourceUnitId: "package.example.policy",
+        sourceBuild: TAINT_SOURCE_BUILD,
+        checkedProfile: TAINT_PROFILE,
+        acceptedAuthorityVersion: TAINT_VERSION,
+        comparisonTime: "2026-08-21T00:00:00.000Z",
+      },
+      checkedFlows: [{ localFlowName: "validateInput", checkedDigest: digest }],
+      effectResults,
+      flows: parsed.flows,
+    };
+  };
+
+  it("uses one caller-owned AST snapshot for public value-state requirement authority", () => {
+    const file = "round-7-value-state-atomic-view.fungi";
+    const authoritative = parseProgram(taintProgram("validateInput(input)"), file);
+    const raw = parseProgram(taintProgram('input == "allow"'), file);
+    const authoritativeConstraint = findNode(authoritative.ast, "requirementConstraint");
+    const rawConstraint = findNode(raw.ast, "requirementConstraint");
+    assert.notEqual(authoritativeConstraint, undefined);
+    assert.notEqual(rawConstraint, undefined);
+
+    let callerChildrenReads = 0;
+    let postSnapshotReads = 0;
+    const mutatingConstraint = new Proxy(authoritativeConstraint, {
+      get(target, property, receiver) {
+        if (property !== "children") return Reflect.get(target, property, receiver);
+        callerChildrenReads += 1;
+        if (callerChildrenReads === 1) return target.children;
+        postSnapshotReads += 1;
+        return rawConstraint.children;
+      },
+    });
+    const hostileAst = replaceNode(
+      authoritative.ast,
+      authoritativeConstraint,
+      mutatingConstraint,
+    );
+    const diagnostics = checkValueStates(
+      hostileAst,
+      "development",
+      exactAuthorityInput(authoritative),
+    ).diagnostics;
+
+    assert.deepEqual(requirementCodesOnly(diagnostics), []);
+    assert.equal(callerChildrenReads, 1);
+    assert.equal(postSnapshotReads, 0);
+  });
+
+  it("keeps stable authoritative and stable raw public value-state views discriminating", () => {
+    const authoritative = parseProgram(
+      taintProgram("validateInput(input)"),
+      "round-7-stable-authority.fungi",
+    );
+    const raw = parseProgram(
+      taintProgram('input == "allow"'),
+      "round-7-stable-raw.fungi",
+    );
+    assert.deepEqual(requirementCodesOnly(checkValueStates(
+      authoritative.ast,
+      "development",
+      exactAuthorityInput(authoritative),
+    ).diagnostics), []);
+    assert.deepEqual(
+      requirementCodesOnly(checkValueStates(raw.ast).diagnostics),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+  });
+});
