@@ -474,6 +474,21 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
       import { types as nodeUtilTypes } from "node:util";
       const { parseProgram } = await import(process.argv[1]);
       const { checkTypes } = await import(process.argv[2]);
+      const source = "@version 1\\npure flow preImportBindPoison(subject: Bool) -> String\\n" +
+        "contract { effects {} }\\n{\\n" +
+        "  require subject {\\n" +
+        "    deny: return \\\"deny\\\"\\n" +
+        "    ambig: return \\\"ambig\\\"\\n" +
+        "  }\\n" +
+        "  return \\\"allow\\\"\\n}";
+      const parsed = parseProgram(source, "pre-import-bind-poison.fungi");
+      const parserErrors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+      const typeErrors = checkTypes(parsed.ast).diagnostics.filter(
+        (diagnostic) => diagnostic.severity === "error",
+      );
+      if (parserErrors.length > 0 || typeErrors.length > 0) {
+        throw new Error("unexpected parser or type errors in bind-poison fixture");
+      }
       const originalBind = Function.prototype.bind;
       Function.prototype.bind = function (...args) {
         if (this === nodeUtilTypes.isProxy) return () => false;
@@ -481,21 +496,6 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
       };
       try {
         const L = await import(process.argv[3] + "?pre-import-bind-poison=1");
-        const source = "@version 1\\npure flow preImportBindPoison(subject: Bool) -> String\\n" +
-          "contract { effects {} }\\n{\\n" +
-          "  require subject {\\n" +
-          "    deny: return \\\"deny\\\"\\n" +
-          "    ambig: return \\\"ambig\\\"\\n" +
-          "  }\\n" +
-          "  return \\\"allow\\\"\\n}";
-        const parsed = parseProgram(source, "pre-import-bind-poison.fungi");
-        const parserErrors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
-        const typeErrors = checkTypes(parsed.ast).diagnostics.filter(
-          (diagnostic) => diagnostic.severity === "error",
-        );
-        if (parserErrors.length > 0 || typeErrors.length > 0) {
-          throw new Error("unexpected parser or type errors in bind-poison fixture");
-        }
         let descriptorReads = 0;
         const subject = new Proxy({}, {
           getOwnPropertyDescriptor(_target, key) {
