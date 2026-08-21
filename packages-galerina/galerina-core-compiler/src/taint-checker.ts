@@ -788,6 +788,120 @@ function snapshotAnalysisFlows(flows: readonly FlowMeta[]): readonly FlowMeta[] 
   }
 }
 
+const MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_NODES = 131_072;
+const MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_DEPTH = 512;
+const MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_BYTES = 16_777_216;
+
+interface AnalysisAstSnapshot {
+  readonly ast: AstNode;
+  readonly originals: ReadonlyMap<AstNode, AstNode>;
+}
+
+function snapshotAnalysisAstNode(
+  node: AstNode,
+  depth: number,
+  budget: CheckedFlowCanonicalBudget,
+  nodeCounter: { value: number },
+  originals: Map<AstNode, AstNode>,
+): AstNode | undefined {
+  if (node === null || typeof node !== "object" || Array.isArray(node)) return undefined;
+  const kind = node.kind;
+  const inputLocation = node.location;
+  const inputChildren = node.children;
+  const value = node.value;
+  const readableForm = node.readableForm;
+  const callStyle = node.callStyle;
+  const typeName = node.typeName;
+  const conformsTo = node.conformsTo;
+  const flowRef = node.flowRef;
+  const claim = node.claim;
+  const flags = node.flags;
+  if (depth > MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_DEPTH
+    || ++nodeCounter.value > MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_NODES
+    || !boundedCheckedFlowString(kind)
+    || (inputChildren !== undefined && !Array.isArray(inputChildren))
+    || (callStyle !== undefined && callStyle !== "method")
+    || (flags !== undefined && (!Number.isSafeInteger(flags) || flags < 0))) return undefined;
+
+  const strings = [value, readableForm, typeName, conformsTo, flowRef, claim];
+  if (strings.some((field) => field !== undefined && !boundedCheckedFlowString(field))) {
+    return undefined;
+  }
+  if (!spendCheckedFlowCanonicalText(budget, "node")
+    || !spendCheckedFlowCanonicalString(budget, kind)) return undefined;
+  for (const field of strings) {
+    if (!spendCheckedFlowCanonicalOptionalString(budget, field)) return undefined;
+  }
+  if (!spendCheckedFlowCanonicalOptionalString(budget, callStyle)
+    || !spendCheckedFlowCanonicalText(budget, flags === undefined ? "null" : String(flags))) {
+    return undefined;
+  }
+
+  const location = inputLocation === undefined
+    ? undefined
+    : snapshotFlowLocation(inputLocation);
+  if (inputLocation !== undefined && location === undefined) return undefined;
+  if (location !== undefined
+    && (!spendCheckedFlowCanonicalString(budget, location.file)
+      || !spendCheckedFlowCanonicalText(budget, JSON.stringify([
+        location.line,
+        location.column,
+        location.offset ?? null,
+        location.endLine ?? null,
+        location.endColumn ?? null,
+        location.endOffset ?? null,
+        location.length ?? null,
+      ])))) return undefined;
+
+  const childCount = inputChildren?.length ?? 0;
+  if (!Number.isSafeInteger(childCount) || childCount < 0
+    || childCount > MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_NODES) return undefined;
+  const children: AstNode[] = [];
+  for (let index = 0; index < childCount; index += 1) {
+    const child = snapshotAnalysisAstNode(
+      inputChildren![index]!,
+      depth + 1,
+      budget,
+      nodeCounter,
+      originals,
+    );
+    if (child === undefined) return undefined;
+    children.push(child);
+  }
+  const snapshot = Object.freeze({
+    kind,
+    ...(location === undefined ? {} : { location }),
+    children: Object.freeze(children),
+    ...(value === undefined ? {} : { value }),
+    ...(readableForm === undefined ? {} : { readableForm }),
+    ...(callStyle === undefined ? {} : { callStyle }),
+    ...(typeName === undefined ? {} : { typeName }),
+    ...(conformsTo === undefined ? {} : { conformsTo }),
+    ...(flowRef === undefined ? {} : { flowRef }),
+    ...(claim === undefined ? {} : { claim }),
+    ...(flags === undefined ? {} : { flags }),
+  });
+  originals.set(snapshot, node);
+  return snapshot;
+}
+
+function snapshotAnalysisAst(ast: AstNode): AnalysisAstSnapshot | undefined {
+  try {
+    const originals = new Map<AstNode, AstNode>();
+    const snapshot = snapshotAnalysisAstNode(
+      ast,
+      1,
+      { remaining: MAX_REQUIREMENT_VALIDATOR_ANALYSIS_AST_BYTES },
+      { value: 0 },
+      originals,
+    );
+    if (snapshot === undefined) return undefined;
+    return Object.freeze({ ast: snapshot, originals });
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Render a receiver EXPRESSION to a dotted name: `db` → "db", `this.db` → "this.db".
  * Returns null for a receiver shape we can't name (e.g. a call result); callers fall back
@@ -1000,16 +1114,32 @@ export function analyzeRequirementTaint(
 ): RequirementTaintAnalysis {
   const diagnostics: TaintDiagnostic[] = [];
   const matchedValidatorCalls = new Set<AstNode>();
-  const imports = collectImportBindings(ast);
-  // Authority-relevant metadata is copied once into bounded immutable records.
-  // Candidate selection, Task-2 effect closure, digest validation and Task-1
-  // verification all consume this same view; caller-owned FlowMeta is never
+  const snapshottedAst = snapshotAnalysisAst(ast);
+  const astSnapshotFailed = snapshottedAst === undefined;
+  const analysisAst = snapshottedAst?.ast ?? Object.freeze({ kind: "program", children: Object.freeze([]) });
+  const imports = collectImportBindings(analysisAst);
+  // Authority-relevant AST and metadata are copied once into bounded immutable
+  // records. Candidate selection, Task-2 effect closure, digest validation and
+  // Task-1 verification all consume this same view; caller-owned inputs are not
   // reread after the snapshot boundary.
   const snapshottedFlows = snapshotAnalysisFlows(flows);
   const flowSnapshotFailed = snapshottedFlows === undefined;
   const analysisFlows = snapshottedFlows ?? Object.freeze([]);
+  const registryAbsentAtBoundary = validatorInput.registry.state === "REFUSED"
+    && validatorInput.registry.reason === "EMPTY_REGISTRY";
+  if ((astSnapshotFailed || flowSnapshotFailed) && !registryAbsentAtBoundary) {
+    diagnostics.push(requirementDiagnostic(
+      FUNGI_REQUIREMENT_010,
+      "<analysis>",
+      Object.freeze({ kind: "program" }),
+    ));
+    return Object.freeze({
+      diagnostics: Object.freeze(diagnostics),
+      matchedValidatorCalls,
+    });
+  }
   const flowNodes = new Map<string, AstNode[]>();
-  for (const child of ast.children ?? []) {
+  for (const child of analysisAst.children ?? []) {
     const decoded = decodeFlowDecl(child);
     if (decoded === undefined || "error" in decoded || decoded.name === "") continue;
     const occurrences = flowNodes.get(decoded.name) ?? [];
@@ -1032,7 +1162,7 @@ export function analyzeRequirementTaint(
     occurrences.push(result);
     effectsByName.set(result.flowName, occurrences);
   }
-  const actualEffectResults = checkEffects(analysisFlows, ast);
+  const actualEffectResults = checkEffects(analysisFlows, analysisAst);
   const actualEffectsByName = new Map<string, EffectCheckResult[]>();
   for (const result of actualEffectResults) {
     const occurrences = actualEffectsByName.get(result.flowName) ?? [];
@@ -1066,7 +1196,7 @@ export function analyzeRequirementTaint(
     const registryAbsent = validatorInput.registry.state === "REFUSED"
       && validatorInput.registry.reason === "EMPTY_REGISTRY";
 
-    if (flowSnapshotFailed && !registryAbsent) {
+    if ((flowSnapshotFailed || astSnapshotFailed) && !registryAbsent) {
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
       return;
     }
@@ -1116,7 +1246,7 @@ export function analyzeRequirementTaint(
       validatorInput.context,
     );
     if (result.state === "MATCHED") {
-      matchedValidatorCalls.add(call);
+      matchedValidatorCalls.add(snapshottedAst?.originals.get(call) ?? call);
       return;
     }
     diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
@@ -1216,7 +1346,7 @@ export function analyzeRequirementTaint(
     if (body !== undefined) walkRequirementBody(body, bindings, shadowed, flowName);
   };
 
-  if (flows.length === 0) {
+  if (analysisFlows.length === 0) {
     // Public default callers may hold a parsed AST without retaining ParseResult.flows.
     // Walk those parser-proven flow nodes for raw 004 diagnostics only. Authority still
     // resolves exclusively through the caller-supplied FlowMeta/evidence arrays above.
@@ -1224,7 +1354,7 @@ export function analyzeRequirementTaint(
       for (const node of nodes) walkFlowNode(node, flowName);
     }
   } else {
-    for (const flow of flows) {
+    for (const flow of analysisFlows) {
       const nodes = flowNodes.get(flow.name) ?? [];
       const exactNodes = nodes.filter((candidate) =>
         candidate.location?.file === flow.location?.file
