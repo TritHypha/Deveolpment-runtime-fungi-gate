@@ -2621,3 +2621,228 @@ contract { effects { database.read } }
     );
   });
 });
+
+describe("RD-0858 Task 3 fix round 11", () => {
+  const authorityFields = [
+    "authorityVersion",
+    "qualifiedFlowIdentity",
+    "sourceBuild",
+    "inputType",
+    "taintClasses",
+    "outputType",
+    "observedEffect",
+    "checkedProfile",
+    "checkedDigest",
+    "validFrom",
+    "expiresAt",
+  ];
+  const contextFields = [
+    "expectedRegistryDigest",
+    "canonicalSourceUnitId",
+    "sourceBuild",
+    "checkedProfile",
+    "acceptedAuthorityVersion",
+    "comparisonTime",
+  ];
+
+  const requirementCodesOnly = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-REQUIREMENT-010")
+    .map((diagnostic) => diagnostic.code);
+
+  const fixture = (file) => {
+    const parsed = parseProgram(taintProgram("validateInput(input)"), file);
+    assert.deepEqual(
+      parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    const { flow, node } = findFlowNode(parsed);
+    assert.notEqual(flow, undefined);
+    assert.notEqual(node, undefined);
+    const digest = checkedFlowDigest(flow, node);
+    assert.match(digest ?? "", /^sha256:[0-9a-f]{64}$/);
+    const effectResults = checkEffects(parsed.flows, parsed.ast);
+    const registry = createRequirementValidatorAuthorityRegistry([{
+      authorityVersion: TAINT_VERSION,
+      qualifiedFlowIdentity: "package.example.policy::validateInput",
+      sourceBuild: TAINT_SOURCE_BUILD,
+      inputType: "String",
+      taintClasses: ["declared.untrusted"],
+      outputType: "Verdict",
+      observedEffect: "EffectFree",
+      checkedProfile: TAINT_PROFILE,
+      checkedDigest: digest,
+      validFrom: "2026-08-20T00:00:00.000Z",
+      expiresAt: "2026-08-22T00:00:00.000Z",
+    }]);
+    assert.equal(registry.state, "STRUCTURALLY_VALID");
+    return {
+      parsed,
+      input: {
+        registry,
+        context: {
+          expectedRegistryDigest: registry.digest,
+          canonicalSourceUnitId: "package.example.policy",
+          sourceBuild: TAINT_SOURCE_BUILD,
+          checkedProfile: TAINT_PROFILE,
+          acceptedAuthorityVersion: TAINT_VERSION,
+          comparisonTime: "2026-08-21T00:00:00.000Z",
+        },
+        checkedFlows: [{ localFlowName: "validateInput", checkedDigest: digest }],
+        effectResults,
+        flows: parsed.flows,
+      },
+    };
+  };
+
+  const runPass = (kind, file, transform) => {
+    const current = fixture(file);
+    const input = transform(current.input);
+    let diagnostics;
+    assert.doesNotThrow(() => {
+      diagnostics = kind === "taint"
+        ? checkTaint(current.parsed.ast, current.parsed.flows, input)
+        : checkValueStates(current.parsed.ast, "development", input).diagnostics;
+    });
+    return requirementCodesOnly(diagnostics);
+  };
+
+  const assertBoth = (name, transform, expected) => {
+    assert.deepEqual(runPass("taint", `${name}-taint.fungi`, transform), expected);
+    assert.deepEqual(runPass("value-state", `${name}-value-state.fungi`, transform), expected);
+  };
+
+  it("contains a throwing validatorInput registry accessor as exact 010", () => {
+    assertBoth("round-11-registry-throw", (input) => new Proxy(input, {
+      get(target, property, receiver) {
+        if (property === "registry") throw new Error("hostile registry accessor");
+        return Reflect.get(target, property, receiver);
+      },
+    }), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("uses indexed checked-flow and effect-result copies without caller iterators", () => {
+    assertBoth("round-11-evidence-iterator", (input) => ({
+      ...input,
+      checkedFlows: new Proxy([...input.checkedFlows], {
+        get(target, property, receiver) {
+          if (property === Symbol.iterator) throw new Error("hostile checked-flow iterator");
+          return Reflect.get(target, property, receiver);
+        },
+      }),
+      effectResults: new Proxy([...input.effectResults], {
+        get(target, property, receiver) {
+          if (property === Symbol.iterator) throw new Error("hostile effect-result iterator");
+          return Reflect.get(target, property, receiver);
+        },
+      }),
+    }), []);
+  });
+
+  it("contains throwing indexed evidence access as exact 010", () => {
+    assertBoth("round-11-checked-index-throw", (input) => ({
+      ...input,
+      checkedFlows: new Proxy([...input.checkedFlows], {
+        get(target, property, receiver) {
+          if (property === "0") throw new Error("hostile checked-flow entry");
+          return Reflect.get(target, property, receiver);
+        },
+      }),
+    }), ["FUNGI-REQUIREMENT-010"]);
+    assertBoth("round-11-effect-index-throw", (input) => ({
+      ...input,
+      effectResults: new Proxy([...input.effectResults], {
+        get(target, property, receiver) {
+          if (property === "0") throw new Error("hostile effect-result entry");
+          return Reflect.get(target, property, receiver);
+        },
+      }),
+    }), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("refuses unreadable or oversized observed-effects evidence", () => {
+    assertBoth("round-11-observed-effects-throw", (input) => ({
+      ...input,
+      effectResults: [new Proxy(input.effectResults[0], {
+        get(target, property, receiver) {
+          if (property === "observedEffects") throw new Error("hostile observed effects");
+          return Reflect.get(target, property, receiver);
+        },
+      })],
+    }), ["FUNGI-REQUIREMENT-010"]);
+    assertBoth("round-11-observed-effects-cardinality", (input) => ({
+      ...input,
+      effectResults: [{
+        ...input.effectResults[0],
+        observedEffects: Array.from({ length: 257 }, (_, index) => `effect.${index}`),
+      }],
+    }), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("reads registry, row and context authority fields once", () => {
+    const oneRead = (value, fields, counts) => new Proxy(value, {
+      get(target, property, receiver) {
+        if (!fields.includes(property)) return Reflect.get(target, property, receiver);
+        const count = (counts.get(property) ?? 0) + 1;
+        counts.set(property, count);
+        if (count > 1) throw new Error(`authority field reread: ${String(property)}`);
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    const transform = (input) => {
+      const rowCounts = new Map();
+      const contextCounts = new Map();
+      const registryCounts = new Map();
+      const row = oneRead(input.registry.rows[0], authorityFields, rowCounts);
+      const registry = oneRead({
+        ...input.registry,
+        rows: [row],
+      }, ["state", "rows", "digest", "canonicalBytes"], registryCounts);
+      const context = oneRead(input.context, contextFields, contextCounts);
+      return {
+        ...input,
+        registry,
+        context,
+      };
+    };
+    assertBoth("round-11-one-read-authority", transform, []);
+  });
+
+  it("refuses over-item and cumulative checked-flow evidence bytes", () => {
+    assertBoth("round-11-checked-item-bytes", (input) => ({
+      ...input,
+      checkedFlows: [
+        ...input.checkedFlows,
+        { localFlowName: "x".repeat(CHECKED_FLOW_MAX_ITEM_BYTES + 1), checkedDigest: TAINT_DIGEST },
+      ],
+    }), ["FUNGI-REQUIREMENT-010"]);
+
+    const wideName = "x".repeat(CHECKED_FLOW_MAX_ITEM_BYTES - 8);
+    assertBoth("round-11-checked-total-bytes", (input) => ({
+      ...input,
+      checkedFlows: [
+        ...input.checkedFlows,
+        ...Array.from({ length: 33 }, (_, index) => ({
+          localFlowName: `${wideName}${index.toString().padStart(8, "0")}`,
+          checkedDigest: TAINT_DIGEST,
+        })),
+      ],
+    }), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("keeps stable raw 004 and exact authority discriminating in both passes", () => {
+    assertBoth("round-11-stable-authority", (input) => input, []);
+    const raw = parseProgram(
+      taintProgram('input == "allow"'),
+      "round-11-stable-raw.fungi",
+    );
+    assert.deepEqual(
+      requirementCodesOnly(checkTaint(raw.ast, raw.flows)),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+    assert.deepEqual(
+      requirementCodesOnly(checkValueStates(raw.ast).diagnostics),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+  });
+});
