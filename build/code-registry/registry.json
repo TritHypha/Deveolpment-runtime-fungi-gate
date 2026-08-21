@@ -3997,7 +3997,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 80,
+      "tests": 81,
       "docs": 51
     },
     {
@@ -8992,8 +8992,8 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 1,
-      "docs": 2
+      "tests": 4,
+      "docs": 4
     },
     {
       "code": "FUNGI-REQUIREMENT-004",
@@ -9008,8 +9008,8 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 1,
-      "docs": 2
+      "tests": 53,
+      "docs": 3
     },
     {
       "code": "FUNGI-REQUIREMENT-005",
@@ -9104,8 +9104,8 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 1,
-      "docs": 2
+      "tests": 70,
+      "docs": 3
     },
     {
       "code": "FUNGI-REQUIREMENT-011",
@@ -10381,7 +10381,7 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 44,
+      "tests": 47,
       "docs": 3
     },
     {

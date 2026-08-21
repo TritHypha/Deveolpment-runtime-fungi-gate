@@ -3,29 +3,29 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 2547
-- Flows: 3283
-- Bytes: 8338730
-- Retirement graph: `sha256:ddf708a1e5489289186bff8e3c7b127c1a3523f786cf93c3e5abc025f21ad271`
+- Files: 2551
+- Flows: 3287
+- Bytes: 8339889
+- Retirement graph: `sha256:ad312178df8568444d31e1a43d669fd15e558b0a7908fe468954dbbc9d352580`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 169101 |
+| `identifier` | 169103 |
 | `letDecl` | 139796 |
-| `block` | 19409 |
+| `block` | 19413 |
 | `stringLiteral` | 18464 |
-| `returnStmt` | 17447 |
-| `typeRef` | 15770 |
+| `returnStmt` | 17451 |
+| `typeRef` | 15775 |
 | `ifStmt` | 14168 |
-| `paramDecl` | 13667 |
-| `callExpr` | 7269 |
+| `paramDecl` | 13668 |
+| `callExpr` | 7270 |
 | `binaryExpr` | 6875 |
-| `numberLiteral` | 6275 |
+| `numberLiteral` | 6279 |
 | `memberExpr` | 4731 |
-| `pureFlowDecl` | 3271 |
-| `program` | 2547 |
+| `pureFlowDecl` | 3275 |
+| `program` | 2551 |
 | `boolLiteral` | 2418 |
 | `assignStmt` | 2120 |
 | `matchArm` | 1414 |
@@ -60,7 +60,7 @@ admission, execution parity, retirement credit or production authority.
 |---|---:|
 | `Bool` | 10996 |
 | `String` | 2670 |
-| `Int` | 955 |
+| `Int` | 960 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Verdict` | 61 |
@@ -319,8 +319,8 @@ admission, execution parity, retirement credit or production authority.
 | `unwrapOr` | 35 |
 | `sha256Hex` | 33 |
 | `charAt` | 25 |
+| `bitAnd` | 14 |
 | `isEmpty` | 14 |
-| `bitAnd` | 13 |
 | `fromHex` | 13 |
 | `toInt` | 12 |
 | `isDigit` | 11 |
