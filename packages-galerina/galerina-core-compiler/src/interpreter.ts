@@ -23,6 +23,7 @@ import { decAdd, decSub, decMul, decCompare, isDecTrap, decDiv, decRem, isRoundM
 import { numericBaseType, parseI64Literal, parseU64Literal, isI64LiteralError, flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
 import { foldRequirementValues } from "./requirement-semantics.js";
 import { compareUtf16CodeUnits } from "@galerina/core-runtime-wasm";
+import { types as nodeUtilTypes } from "node:util";
 
 export type GalerinaValue =
   | { readonly __tag: "int";       readonly value: number }
@@ -192,7 +193,7 @@ const BOOL_TRUE:  GalerinaValue = { __tag: "bool", value: true };
 const BOOL_FALSE: GalerinaValue = { __tag: "bool", value: false };
 const boolVal = (b: boolean): GalerinaValue => b ? BOOL_TRUE : BOOL_FALSE;
 function ownDataValue(value: unknown, key: "__tag" | "value"): unknown {
-  if (typeof value !== "object" || value === null) return undefined;
+  if (typeof value !== "object" || value === null || nodeUtilTypes.isProxy(value)) return undefined;
   try {
     const descriptor = Object.getOwnPropertyDescriptor(value, key);
     return descriptor !== undefined && "value" in descriptor ? descriptor.value : undefined;
