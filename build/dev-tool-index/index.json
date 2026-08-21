@@ -2430,13 +2430,15 @@
       ]
     },
     {
-      "name": "gen-roadmap-subway.mjs",
+      "name": "gen-roadmap.mjs",
       "category": "generator",
-      "purpose": "the ROADMAP as a subway map, generated from live ledgers (owner ask 2026-07-25).",
+      "purpose": "the canonical living ROADMAP generated from live ledgers.",
       "selfTest": true,
       "inCadence": true,
       "cadenceDisposition": "scheduled",
-      "concerns": []
+      "concerns": [
+        "doc-drift"
+      ]
     },
     {
       "name": "gen-status-blocks.mjs",
@@ -2447,7 +2449,6 @@
       "cadenceDisposition": "scheduled",
       "concerns": [
         "provenance",
-        "doc-drift",
         "graph/index"
       ]
     },
@@ -4007,7 +4008,7 @@
       "audit-syntax-reference-links.mjs",
       "audit-wasm-validate.mjs",
       "fix-logicn-brand.mjs",
-      "gen-status-blocks.mjs",
+      "gen-roadmap.mjs",
       "code-index.mjs",
       "docs-index.mjs",
       "gen-code-registry.mjs",
@@ -6015,7 +6016,7 @@
       "disposition": "on-demand"
     },
     {
-      "tool": "gen-roadmap-subway.mjs",
+      "tool": "gen-roadmap.mjs",
       "directEntryIds": [
         "doc:roadmap-drift"
       ],

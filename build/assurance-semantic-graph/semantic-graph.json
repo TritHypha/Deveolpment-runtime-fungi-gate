@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "c8bddc5ab862d4aec19f662648f8c12d1b5e37be5400b1da7dff3a26efb9cf12",
+  "authoritativeInputsDigest": "270a6507d513e064931eee196f40c9469acee4886a0d019ca67bcf426e5c5107",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -8330,9 +8330,9 @@
       "polarity": "neutral"
     },
     {
-      "id": "test:auto-7bd4330412bab61352babe24",
+      "id": "test:auto-74663738dd1296f31726fae2",
       "kind": "test",
-      "evidencePath": "scripts/tests/roadmap-subway-generator.test.mjs",
+      "evidencePath": "scripts/tests/roadmap-generator.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -13939,7 +13939,7 @@
       "type": "CLASSIFIES"
     },
     {
-      "from": "test:auto-7bd4330412bab61352babe24",
+      "from": "test:auto-74663738dd1296f31726fae2",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
