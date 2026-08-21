@@ -15,7 +15,7 @@
 
 import { type AstNode, type FlowMeta } from "./parser.js";
 import { decodeFlowDecl } from "./flow-name.js";
-import { type EffectCheckResult } from "./effect-checker.js";
+import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
 import {
   createRequirementValidatorAuthorityRegistry,
   REQUIREMENT_TAINT_CLASSES,
@@ -520,6 +520,17 @@ function candidateValidatorCalls(node: AstNode, bindings: Map<string, TaintState
   return args.some((arg) => taintOf(arg, bindings, true).kind === "tainted") ? [node] : [];
 }
 
+function joinTaintStates(left: TaintState, right: TaintState): TaintState {
+  const atoms: RequirementTaintClass[] = [];
+  if (left.kind === "tainted") atoms.push(...left.atoms);
+  if (right.kind === "tainted") atoms.push(...right.atoms);
+  if (atoms.length > 0) return { kind: "tainted", atoms: canonicalAtoms(atoms) };
+  if (left.kind === "safeFor" && right.kind === "safeFor" && left.context === right.context) {
+    return left;
+  }
+  return { kind: "clean" };
+}
+
 export function analyzeRequirementTaint(
   ast: AstNode,
   flows: readonly FlowMeta[],
@@ -552,6 +563,13 @@ export function analyzeRequirementTaint(
     occurrences.push(result);
     effectsByName.set(result.flowName, occurrences);
   }
+  const actualEffectResults = checkEffects(flows, ast);
+  const actualEffectsByName = new Map<string, EffectCheckResult[]>();
+  for (const result of actualEffectResults) {
+    const occurrences = actualEffectsByName.get(result.flowName) ?? [];
+    occurrences.push(result);
+    actualEffectsByName.set(result.flowName, occurrences);
+  }
 
   const inspectConstraint = (
     constraint: AstNode,
@@ -575,6 +593,7 @@ export function analyzeRequirementTaint(
     const targetNodes = flowNodes.get(localName) ?? [];
     const checked = checkedByName.get(localName) ?? [];
     const effects = effectsByName.get(localName) ?? [];
+    const actualEffects = actualEffectsByName.get(localName) ?? [];
     const registryAbsent = validatorInput.registry.state === "REFUSED"
       && validatorInput.registry.reason === "EMPTY_REGISTRY";
 
@@ -583,7 +602,8 @@ export function analyzeRequirementTaint(
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_004, flowName, constraint));
       return;
     }
-    if (validatorInput.context === undefined || checked.length !== 1 || effects.length !== 1) {
+    if (validatorInput.context === undefined || checked.length !== 1 || effects.length !== 1
+      || actualEffects.length !== 1) {
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
       return;
     }
@@ -607,7 +627,7 @@ export function analyzeRequirementTaint(
         inputType: paramType(target.params[0]),
         taintClasses: state.atoms,
         outputType: target.returnType,
-        observedEffects: effects[0]!.observedEffects,
+        observedEffects: actualEffects[0]!.observedEffects,
         checkedDigest: checked[0]!.checkedDigest,
       },
       validatorInput.context,
@@ -639,7 +659,38 @@ export function analyzeRequirementTaint(
     bindings: Map<string, TaintState>,
     shadowed: Set<string>,
     flowName: string,
-  ): void => {
+    joinableBindings?: ReadonlySet<string>,
+  ): ReadonlySet<string> => {
+    const localDeclarations = new Set<string>();
+    const changedOuterBindings = new Set<string>();
+
+    const walkChildBlocks = (node: AstNode, joinsParent: boolean): void => {
+      for (const child of node.children ?? []) {
+        if (child.kind === "block") {
+          const childBindings = new Map(bindings);
+          const changedByChild = walkRequirementBody(
+            child,
+            childBindings,
+            new Set(shadowed),
+            flowName,
+            new Set(bindings.keys()),
+          );
+          if (!joinsParent) continue;
+          for (const name of changedByChild) {
+            const current = bindings.get(name);
+            const branch = childBindings.get(name);
+            if (current === undefined || branch === undefined) continue;
+            bindings.set(name, joinTaintStates(current, branch));
+            if (joinableBindings?.has(name) === true && !localDeclarations.has(name)) {
+              changedOuterBindings.add(name);
+            }
+          }
+          continue;
+        }
+        walkChildBlocks(child, joinsParent && child.kind !== "fnDecl");
+      }
+    };
+
     for (const stmt of block.children ?? []) {
       inspectNode(stmt, bindings, shadowed, flowName);
       if (stmt.kind === "letDecl" || stmt.kind === "mutDecl" || stmt.kind === "assignStmt") {
@@ -647,17 +698,22 @@ export function analyzeRequirementTaint(
         const name = ((raw.split(":")[0] ?? raw).trim().split(/\s+/).at(-1)) ?? "";
         const init = stmt.children?.[0];
         if (name !== "") {
+          if (stmt.kind !== "assignStmt") localDeclarations.add(name);
           shadowed.add(name);
           bindings.set(name, init === undefined ? { kind: "clean" } : taintOf(init, bindings));
+          if (stmt.kind === "assignStmt" && joinableBindings?.has(name) === true
+            && !localDeclarations.has(name)) {
+            changedOuterBindings.add(name);
+          }
         }
       }
-      if (stmt.kind === "fnDecl" && stmt.value !== undefined) shadowed.add(stmt.value);
-      for (const child of stmt.children ?? []) {
-        if (child.kind === "block") {
-          walkRequirementBody(child, new Map(bindings), new Set(shadowed), flowName);
-        }
+      if (stmt.kind === "fnDecl" && stmt.value !== undefined) {
+        localDeclarations.add(stmt.value);
+        shadowed.add(stmt.value);
       }
+      walkChildBlocks(stmt, stmt.kind !== "fnDecl");
     }
+    return changedOuterBindings;
   };
 
   for (const flow of flows) {
