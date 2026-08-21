@@ -46,6 +46,21 @@ counts or open items that a newer section explicitly supersedes.
   Only `003`, `004` and `010` become live in this unit. Governance,
   interpreter, checked snapshot, GIR, SLIDE, VOK, admission, production and
   `.fungi` conversion authority remain `HOLD`; `011` and `012` stay reserved.
+- [!] RD-0858 delivery unit 4 remains on an architecture `HOLD`. The
+  TypeScript differential interpreter is green at source commit `fd90d7ea`
+  and exact graph/index head `1f7fc227`: focused controls pass 37/37, the
+  nine-file matrix passes 335/335, roadmap generation passes 4/4 and the
+  repository graph check passes 9/9; the exact external graph contains 64,170
+  nodes and 164,256 edges with expected counts equal. Model-diverse review
+  passes ordinary post-bootstrap inputs, but independent review reproduces
+  four fresh-process pre-bootstrap Node-root poisonings that restore the
+  visible built-ins before execution and still reach guarded `ALLOW`. Treat
+  this as a process-root trust-boundary defect, not another scalar JavaScript
+  patch. The pending design is a sealed native bootstrap with fixed runtime
+  and worker identities, bounded canonical input/output and a refusal receipt;
+  it requires explicit owner approval before implementation. Interpreter,
+  checked snapshot, GIR, SLIDE, VOK, admission, production and `.fungi`
+  conversion authority remain `HOLD`; `011` and `012` remain reserved.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,

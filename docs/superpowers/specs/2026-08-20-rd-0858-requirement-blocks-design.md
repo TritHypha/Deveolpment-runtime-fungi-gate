@@ -2,24 +2,46 @@
 
 ## Status and authority
 
-The owner approved the hybrid design direction in chat on 2026-08-20. This
-written specification awaits owner review before an implementation plan or
-production change begins.
+The owner approved the hybrid design direction in chat on 2026-08-20. Delivery
+units 1–3 are implemented and independently reviewed. Delivery unit 4 remains
+on an architecture `HOLD`; this specification does not authorize the pending
+process-boundary implementation.
 
 This design implements the adopted decision in private RD-0858 without copying
 private R&D prose into the public repository. Its checked inputs are:
 
-- RD-0858 at KB source commit
-  `ec3b8422075aeda2235b259ae4e6d8fe6aa505db`;
+- RD-0858 at recovered KB source commit
+  `11199e25dd9ba6cc9a995b7e9e0dd79293e061bf`;
 - the owner-supplied requirement-block proposal with SHA-256
   `ce6bafeecac358732a09a970b7e18353d44bd6d48e72b90982c0c1d5b7ff6ecf`;
-- Galerina source and graph at
-  `120ed070c231332a8261a76ab0e02f3a42675e45`.
+- the Unit 4 Galerina source commit
+  `fd90d7ea7bdbf861d550f1ad192b1da276c75705` and exact graph/index head
+  `1f7fc227e1c1303da259329a5067a5c22cf6aab7`.
 
 RD-0858 remains `HOLD` for compiler implementation and language admission
 until the complete route in this specification passes its controlled-red and
 green evidence gates. No new `.fungi` conversion may rely on these constructs
 before that admission.
+
+### Current Unit 4 checkpoint — 2026-08-21
+
+- [x] Post-bootstrap Bool/Verdict admission and all governed execution tiers
+  pass the focused 37/37 controls and the 335/335 proportional matrix.
+- [x] Repository roadmap and graph checks pass 4/4 and 9/9; the external index
+  is exact at 64,170 nodes and 164,256 edges.
+- [x] Model-diverse review finds no ordinary-input bypass after trusted process
+  bootstrap.
+- [!] Independent review reproduces four pre-bootstrap attacks against
+  `node:util/types` and `node:vm`, including retained-state variants. Each
+  restores the visible built-in before execution yet reaches guarded `ALLOW`.
+- [!] No further in-process JavaScript reflection patch may claim closure. The
+  pending design is a sealed native bootstrap that fixes runtime and worker
+  identities, accepts only bounded canonical bytes and emits a bounded refusal
+  or result receipt. Implementation requires explicit owner approval.
+
+The TypeScript interpreter remains differential evidence only. Checked
+snapshot, canonical GIR, SLIDE re-admission and VOK remain the authorizing
+route, and `.fungi` conversion remains stopped.
 
 ## Decision
 
