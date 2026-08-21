@@ -16,6 +16,7 @@
 import { type AstNode, type FlowMeta } from "./parser.js";
 import { decodeFlowDecl } from "./flow-name.js";
 import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
+import { hashSource } from "./runtime/canonicalHash.js";
 import {
   createRequirementValidatorAuthorityRegistry,
   REQUIREMENT_TAINT_CLASSES,
@@ -276,6 +277,23 @@ export type RequirementTaintAtom = RequirementTaintClass;
 export const MAX_REQUIREMENT_TAINT_ATOMS = REQUIREMENT_TAINT_CLASSES.length;
 export const MAX_REQUIREMENT_VALIDATOR_CHECKED_FLOWS = 256;
 export const MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS = 4_096;
+export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES = 4_096;
+export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH = 128;
+export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES = 262_144;
+
+const REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN = "galerina.requirement-validator.checked-flow.v1";
+
+type CanonicalCheckedFlowNode = readonly [
+  string,
+  string | null,
+  string | null,
+  string | null,
+  string | null,
+  string | null,
+  string | null,
+  number | null,
+  readonly CanonicalCheckedFlowNode[],
+];
 
 export interface RequirementValidatorCheckedFlowEvidence {
   readonly localFlowName: string;
@@ -324,6 +342,93 @@ export function canonicalRequirementTaintTuple(
 
 function canonicalAtoms(atoms: readonly RequirementTaintClass[]): readonly RequirementTaintClass[] {
   return canonicalRequirementTaintTuple(atoms) ?? Object.freeze([]);
+}
+
+function boundedCheckedFlowString(value: unknown): value is string {
+  return typeof value === "string"
+    && value.length <= MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES
+    && new TextEncoder().encode(value).byteLength <= MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES;
+}
+
+/**
+ * Bind checked-snapshot evidence to one exact validator semantic contract and AST subtree.
+ * Source locations and readable presentation are deliberately excluded: moving identical
+ * semantics between files cannot mint or invalidate authority. Every compiler-semantic
+ * AstNode field and ordered child is included under a domain-separated SHA-256 preimage.
+ */
+export function computeRequirementValidatorCheckedFlowDigest(
+  flow: FlowMeta | undefined,
+  flowNode: AstNode | undefined,
+): string | undefined {
+  if (flow === undefined || flow === null || typeof flow !== "object" || Array.isArray(flow)
+    || flowNode === undefined || flowNode === null
+    || typeof flowNode !== "object" || Array.isArray(flowNode)
+    || !boundedCheckedFlowString(flow.name)
+    || !["flow", "secure", "pure", "guarded"].includes(flow.qualifier)
+    || !Array.isArray(flow.params) || flow.params.some((param) => !boundedCheckedFlowString(param))
+    || !boundedCheckedFlowString(flow.returnType)
+    || !Array.isArray(flow.declaredEffects)
+    || flow.declaredEffects.some((effect) => !boundedCheckedFlowString(effect))
+    || (flow.decreasesMetric !== undefined && !boundedCheckedFlowString(flow.decreasesMetric))) {
+    return undefined;
+  }
+  const decoded = decodeFlowDecl(flowNode);
+  if (decoded === undefined || "error" in decoded || decoded.name !== flow.name) return undefined;
+
+  let nodeCount = 0;
+  const canonicalNode = (node: AstNode, depth: number): CanonicalCheckedFlowNode | undefined => {
+    if (node === null || typeof node !== "object" || Array.isArray(node)
+      || !boundedCheckedFlowString(node.kind)
+      || depth > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH
+      || ++nodeCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES) return undefined;
+    const semanticStrings = [
+      node.value,
+      node.callStyle,
+      node.typeName,
+      node.conformsTo,
+      node.flowRef,
+      node.claim,
+    ];
+    if (semanticStrings.some((value) => value !== undefined && !boundedCheckedFlowString(value))
+      || (node.callStyle !== undefined && node.callStyle !== "method")
+      || (node.flags !== undefined && (!Number.isSafeInteger(node.flags) || node.flags < 0))
+      || (node.children !== undefined && !Array.isArray(node.children))) return undefined;
+    const children: CanonicalCheckedFlowNode[] = [];
+    for (const child of node.children ?? []) {
+      const canonical = canonicalNode(child, depth + 1);
+      if (canonical === undefined) return undefined;
+      children.push(canonical);
+    }
+    return [
+      node.kind,
+      node.value ?? null,
+      node.callStyle ?? null,
+      node.typeName ?? null,
+      node.conformsTo ?? null,
+      node.flowRef ?? null,
+      node.claim ?? null,
+      node.flags ?? null,
+      children,
+    ];
+  };
+
+  const ast = canonicalNode(flowNode, 1);
+  if (ast === undefined) return undefined;
+  const canonical = JSON.stringify({
+    domain: REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN,
+    flow: [
+      flow.name,
+      flow.qualifier,
+      [...flow.params],
+      flow.returnType,
+      [...flow.declaredEffects],
+      flow.decreasesMetric ?? null,
+    ],
+    ast,
+  });
+  if (new TextEncoder().encode(canonical).byteLength
+    > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES) return undefined;
+  return hashSource(canonical);
 }
 
 /**
@@ -613,6 +718,14 @@ export function analyzeRequirementTaint(
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
       return;
     }
+    const actualCheckedDigest = computeRequirementValidatorCheckedFlowDigest(
+      target,
+      targetNodes[0]!,
+    );
+    if (actualCheckedDigest === undefined || checked[0]!.checkedDigest !== actualCheckedDigest) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
+      return;
+    }
     if (validatorInput.registry.state === "STRUCTURALLY_VALID") {
       const qualifiedIdentity = `${validatorInput.context.canonicalSourceUnitId}::${localName}`;
       if (!validatorInput.registry.rows.some((row) => row.qualifiedFlowIdentity === qualifiedIdentity)) {
@@ -716,15 +829,7 @@ export function analyzeRequirementTaint(
     return changedOuterBindings;
   };
 
-  for (const flow of flows) {
-    const nodes = flowNodes.get(flow.name) ?? [];
-    const exactNodes = nodes.filter((candidate) =>
-      candidate.location?.file === flow.location?.file
-      && candidate.location?.offset === flow.location?.offset);
-    const node = exactNodes.length === 1
-      ? exactNodes[0]
-      : (nodes.length === 1 ? nodes[0] : undefined);
-    if (node === undefined) continue;
+  const walkFlowNode = (node: AstNode, flowName: string): void => {
     const bindings = new Map<string, TaintState>();
     const shadowed = new Set<string>();
     for (const param of (node.children ?? []).filter((child) => child.kind === "paramDecl")) {
@@ -738,7 +843,27 @@ export function analyzeRequirementTaint(
         : { kind: "tainted", atoms: Object.freeze([atom]) });
     }
     const body = (node.children ?? []).find((child) => child.kind === "block");
-    if (body !== undefined) walkRequirementBody(body, bindings, shadowed, flow.name);
+    if (body !== undefined) walkRequirementBody(body, bindings, shadowed, flowName);
+  };
+
+  if (flows.length === 0) {
+    // Public default callers may hold a parsed AST without retaining ParseResult.flows.
+    // Walk those parser-proven flow nodes for raw 004 diagnostics only. Authority still
+    // resolves exclusively through the caller-supplied FlowMeta/evidence arrays above.
+    for (const [flowName, nodes] of flowNodes) {
+      for (const node of nodes) walkFlowNode(node, flowName);
+    }
+  } else {
+    for (const flow of flows) {
+      const nodes = flowNodes.get(flow.name) ?? [];
+      const exactNodes = nodes.filter((candidate) =>
+        candidate.location?.file === flow.location?.file
+        && candidate.location?.offset === flow.location?.offset);
+      const node = exactNodes.length === 1
+        ? exactNodes[0]
+        : (nodes.length === 1 ? nodes[0] : undefined);
+      if (node !== undefined) walkFlowNode(node, flow.name);
+    }
   }
 
   return Object.freeze({
