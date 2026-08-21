@@ -59,6 +59,23 @@ function changingBool(laterValue) {
   };
 }
 
+function proxyScalar(tag, payload) {
+  let descriptorReads = 0;
+  const value = new Proxy({}, {
+    getOwnPropertyDescriptor(_target, key) {
+      descriptorReads += 1;
+      if (key === "__tag") {
+        return { configurable: true, enumerable: true, writable: true, value: tag };
+      }
+      if (key === "value") {
+        return { configurable: true, enumerable: true, writable: true, value: payload };
+      }
+      return undefined;
+    },
+  });
+  return { value, descriptorReads: () => descriptorReads };
+}
+
 describe("RD-0858 Unit 4 requirement expression runtime", () => {
   const cases = [
     ["runtimeBoolAllow", "    true", 1],
@@ -131,6 +148,25 @@ describe("RD-0858 Unit 4 requirement expression runtime", () => {
     assert.equal(result.audit.result, "error");
     assert.equal(result.value.__tag, "runtimeError");
     assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
+  });
+
+  it("refuses a Proxy-forged Bool descriptor without consulting its traps", async () => {
+    const flowName = "runtimeProxyBoolConstraint";
+    const parsed = prepare(
+      `@version 1\npure flow ${flowName}(subject: Bool) -> Verdict\n` +
+      `contract { effects {} }\n{\n  return requirement {\n    subject\n  }\n}`,
+      `${flowName}.fungi`,
+    );
+    const hostile = proxyScalar("bool", true);
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", hostile.value]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.equal(hostile.descriptorReads(), 0);
   });
 
   it("refuses a forged requirement with no constraints", async () => {
@@ -227,6 +263,21 @@ describe("RD-0858 Unit 4 require statement runtime", () => {
     assert.equal(result.value.__tag, "runtimeError");
     assert.notDeepEqual(result.value, { __tag: "string", value: "allow" });
     assert.match(result.value.message, /malformed Bool|Bool.*fail-closed/);
+  });
+
+  it("refuses a Proxy-forged Bool descriptor before guarded ALLOW continuation", async () => {
+    const flowName = "runtimeProxyRequireBool";
+    const parsed = prepare(sourceForRequire(flowName, "Bool"));
+    const hostile = proxyScalar("bool", true);
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", hostile.value]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.equal(hostile.descriptorReads(), 0);
   });
 
   it("refuses a forged missing handler instead of reaching guarded continuation", async () => {
@@ -346,6 +397,21 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
     );
     assert.equal(result.audit.result, "error");
     assert.equal(result.value.__tag, "runtimeError");
+  });
+
+  it("refuses a Proxy-forged Verdict descriptor on the governed tree tier", async () => {
+    const flowName = "runtimeProxyVerdict";
+    const parsed = prepare(sourceForEcho(flowName, "Verdict"));
+    const hostile = proxyScalar("verdict", 1);
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", hostile.value]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.equal(hostile.descriptorReads(), 0);
   });
 
   it("declines the sync-only API for requirement semantics", () => {
