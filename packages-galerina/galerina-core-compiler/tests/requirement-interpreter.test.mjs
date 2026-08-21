@@ -537,6 +537,118 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
     assert.equal(result.descriptorReads, 0);
   });
 
+  for (const mode of [
+    "detector-direct",
+    "detector-retained",
+    "descriptor-direct",
+    "descriptor-retained",
+  ]) {
+    it(`refuses ${mode} poisoning before first interpreter evaluation`, () => {
+      const parserUrl = new URL("../dist/parser.js", import.meta.url).href;
+      const typeCheckerUrl = new URL("../dist/type-checker.js", import.meta.url).href;
+      const interpreterUrl = new URL("../dist/interpreter.js", import.meta.url).href;
+      const fixtureSource = sourceForRequire(`preImport_${mode.replaceAll("-", "_")}`, "Bool");
+      const childSource = String.raw`
+        import { types as nodeUtilTypes } from "node:util";
+        const { parseProgram } = await import(process.argv[1]);
+        const { checkTypes } = await import(process.argv[2]);
+        const mode = process.argv[5];
+        const flowName = "preImport_" + mode.replaceAll("-", "_");
+        const parsed = parseProgram(process.argv[4], mode + ".fungi");
+        const parserErrors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+        const typeErrors = checkTypes(parsed.ast).diagnostics.filter(
+          (diagnostic) => diagnostic.severity === "error",
+        );
+        if (parserErrors.length > 0 || typeErrors.length > 0) {
+          throw new Error("unexpected parser or type errors in intrinsic-poison fixture");
+        }
+
+        let armed = mode.endsWith("-direct");
+        let descriptorReads = 0;
+        let forgedReads = 0;
+        let subject;
+        const originalIsProxy = nodeUtilTypes.isProxy;
+        const originalGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+        if (mode.startsWith("detector-")) {
+          subject = new Proxy({}, {
+            getOwnPropertyDescriptor(_target, key) {
+              descriptorReads += 1;
+              if (key === "__tag") return { configurable: true, value: "bool" };
+              if (key === "value") return { configurable: true, value: true };
+              return undefined;
+            },
+          });
+          nodeUtilTypes.isProxy = new Proxy(originalIsProxy, {
+            apply(target, thisArg, args) {
+              return armed ? false : Reflect.apply(target, thisArg, args);
+            },
+          });
+        } else {
+          subject = { __tag: "bool", value: 0 };
+          Object.getOwnPropertyDescriptor = new Proxy(originalGetOwnPropertyDescriptor, {
+            apply(target, thisArg, args) {
+              const [candidate, key] = args;
+              if (armed && candidate === subject && (key === "__tag" || key === "value")) {
+                forgedReads += 1;
+                return {
+                  configurable: true,
+                  enumerable: true,
+                  writable: true,
+                  value: key === "__tag" ? "bool" : true,
+                };
+              }
+              return Reflect.apply(target, thisArg, args);
+            },
+          });
+        }
+
+        let L;
+        try {
+          L = await import(process.argv[3] + "?" + mode);
+        } finally {
+          nodeUtilTypes.isProxy = originalIsProxy;
+          Object.getOwnPropertyDescriptor = originalGetOwnPropertyDescriptor;
+        }
+        armed = true;
+        const result = await L.executeFlow(
+          flowName,
+          new Map([["subject", subject]]),
+          parsed.ast,
+          parsed.flows,
+        );
+        process.stdout.write(JSON.stringify({
+          audit: result.audit.result,
+          tag: result.value?.__tag,
+          value: result.value?.value,
+          descriptorReads,
+          forgedReads,
+        }));
+      `;
+      const child = spawnSync(
+        process.execPath,
+        [
+          "--input-type=module",
+          "--eval",
+          childSource,
+          parserUrl,
+          typeCheckerUrl,
+          interpreterUrl,
+          fixtureSource,
+          mode,
+        ],
+        { encoding: "utf8", timeout: 30_000, windowsHide: true },
+      );
+      assert.equal(child.error, undefined);
+      assert.equal(child.status, 0, child.stderr);
+      const result = JSON.parse(child.stdout);
+      assert.equal(result.audit, "error");
+      assert.equal(result.tag, "runtimeError");
+      assert.equal(result.descriptorReads, 0);
+      assert.equal(result.forgedReads, 0);
+    });
+  }
+
   it("declines the sync-only API for requirement semantics", () => {
     const flowName = "runtimeSyncDeferral";
     const parsed = prepare(sourceForRequirement(flowName, "    true"));
