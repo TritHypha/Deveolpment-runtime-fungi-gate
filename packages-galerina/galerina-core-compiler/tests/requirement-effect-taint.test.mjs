@@ -2920,12 +2920,12 @@ describe("RD-0858 Task 3 fix round 12", () => {
     });
   });
 
-  it("refuses one byte above the shared aggregate ceiling in both public passes", () => {
+  it("refuses explicit taint flows above the ceiling while empty value-state ignores them", () => {
     const current = rawFixture("round-12-over-budget.fungi");
     const flow = flowAtSharedBudget(current.flow, 1);
     assert.deepEqual(publicCodes(current, flow), {
       taint: ["FUNGI-REQUIREMENT-010"],
-      valueState: ["FUNGI-REQUIREMENT-010"],
+      valueState: ["FUNGI-REQUIREMENT-004"],
     });
   });
 
@@ -2970,7 +2970,7 @@ describe("RD-0858 Task 3 fix round 12", () => {
         "development",
         emptyValidatorInput([valueStateFlow]),
       ).diagnostics),
-      ["FUNGI-REQUIREMENT-010"],
+      ["FUNGI-REQUIREMENT-004"],
     );
     assert.equal(taintBeyondBudgetReads, 0);
     assert.equal(valueStateBeyondBudgetReads, 0);
