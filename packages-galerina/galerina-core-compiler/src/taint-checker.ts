@@ -19,11 +19,15 @@ import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
 import { hashSource } from "./runtime/canonicalHash.js";
 import {
   createRequirementValidatorAuthorityRegistry,
+  MAX_REQUIREMENT_VALIDATOR_AUTHORITY_BYTES,
+  MAX_REQUIREMENT_VALIDATOR_AUTHORITY_ROWS,
   REQUIREMENT_TAINT_CLASSES,
   verifyRequirementValidatorAuthority,
   type RequirementTaintClass,
   type RequirementValidatorAuthorityContext,
+  type RequirementValidatorAuthorityRefusalReason,
   type RequirementValidatorAuthorityRegistry,
+  type RequirementValidatorAuthorityRow,
 } from "./requirement-validator-authority.js";
 import {
   FUNGI_REQUIREMENT_004,
@@ -277,6 +281,7 @@ export type RequirementTaintAtom = RequirementTaintClass;
 export const MAX_REQUIREMENT_TAINT_ATOMS = REQUIREMENT_TAINT_CLASSES.length;
 export const MAX_REQUIREMENT_VALIDATOR_CHECKED_FLOWS = 256;
 export const MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS = 4_096;
+const MAX_REQUIREMENT_VALIDATOR_INPUT_BYTES = 1_048_576;
 export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_NODES = 4_096;
 export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_DEPTH = 128;
 export const MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_BYTES = 262_144;
@@ -694,7 +699,10 @@ export function computeRequirementValidatorCheckedFlowDigest(
 
 const MAX_REQUIREMENT_VALIDATOR_ANALYSIS_FLOWS = 4_096;
 
-function snapshotFlowLocation(value: unknown): SourceLocation | undefined {
+function snapshotFlowLocation(
+  value: unknown,
+  budget?: CheckedFlowCanonicalBudget,
+): SourceLocation | undefined {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
   const location = value as SourceLocation;
   const file = location.file;
@@ -710,6 +718,7 @@ function snapshotFlowLocation(value: unknown): SourceLocation | undefined {
     || !Number.isSafeInteger(column) || column < 0
     || [offset, endLine, endColumn, endOffset, length].some((part) =>
       part !== undefined && (!Number.isSafeInteger(part) || part < 0))) return undefined;
+  if (budget !== undefined && !spendCheckedFlowCanonicalString(budget, file)) return undefined;
   return Object.freeze({
     file,
     line,
@@ -722,7 +731,10 @@ function snapshotFlowLocation(value: unknown): SourceLocation | undefined {
   });
 }
 
-function snapshotAnalysisFlow(flow: FlowMeta): FlowMeta | undefined {
+function snapshotAnalysisFlow(
+  flow: FlowMeta,
+  budget?: CheckedFlowCanonicalBudget,
+): FlowMeta | undefined {
   if (flow === null || typeof flow !== "object" || Array.isArray(flow)) return undefined;
   const name = flow.name;
   const qualifier = flow.qualifier;
@@ -739,6 +751,12 @@ function snapshotAnalysisFlow(flow: FlowMeta): FlowMeta | undefined {
     || (decreasesMetric !== undefined && !boundedCheckedFlowString(decreasesMetric))) {
     return undefined;
   }
+  if (budget !== undefined
+    && (!spendCheckedFlowCanonicalString(budget, name)
+      || !spendCheckedFlowCanonicalString(budget, qualifier)
+      || !spendCheckedFlowCanonicalString(budget, returnType)
+      || (decreasesMetric !== undefined
+        && !spendCheckedFlowCanonicalString(budget, decreasesMetric)))) return undefined;
   const paramCount = inputParams.length;
   const effectCount = inputEffects.length;
   if (!Number.isSafeInteger(paramCount) || paramCount < 0
@@ -748,16 +766,22 @@ function snapshotAnalysisFlow(flow: FlowMeta): FlowMeta | undefined {
   const params: string[] = [];
   for (let index = 0; index < paramCount; index += 1) {
     const param = inputParams[index];
-    if (!boundedCheckedFlowString(param)) return undefined;
+    if (!boundedCheckedFlowString(param)
+      || (budget !== undefined && !spendCheckedFlowCanonicalString(budget, param))) {
+      return undefined;
+    }
     params.push(param);
   }
   const declaredEffects: string[] = [];
   for (let index = 0; index < effectCount; index += 1) {
     const effect = inputEffects[index];
-    if (!boundedCheckedFlowString(effect)) return undefined;
+    if (!boundedCheckedFlowString(effect)
+      || (budget !== undefined && !spendCheckedFlowCanonicalString(budget, effect))) {
+      return undefined;
+    }
     declaredEffects.push(effect);
   }
-  const location = snapshotFlowLocation(inputLocation);
+  const location = snapshotFlowLocation(inputLocation, budget);
   if (location === undefined) return undefined;
   return Object.freeze({
     name,
@@ -770,7 +794,10 @@ function snapshotAnalysisFlow(flow: FlowMeta): FlowMeta | undefined {
   });
 }
 
-function snapshotAnalysisFlows(flows: readonly FlowMeta[]): readonly FlowMeta[] | undefined {
+function snapshotAnalysisFlows(
+  flows: readonly FlowMeta[],
+  budget?: CheckedFlowCanonicalBudget,
+): readonly FlowMeta[] | undefined {
   try {
     if (!Array.isArray(flows)) return undefined;
     const count = flows.length;
@@ -778,11 +805,295 @@ function snapshotAnalysisFlows(flows: readonly FlowMeta[]): readonly FlowMeta[] 
       || count > MAX_REQUIREMENT_VALIDATOR_ANALYSIS_FLOWS) return undefined;
     const snapshots: FlowMeta[] = [];
     for (let index = 0; index < count; index += 1) {
-      const snapshot = snapshotAnalysisFlow(flows[index]!);
+      const snapshot = snapshotAnalysisFlow(flows[index]!, budget);
       if (snapshot === undefined) return undefined;
       snapshots.push(snapshot);
     }
     return Object.freeze(snapshots);
+  } catch {
+    return undefined;
+  }
+}
+
+const REQUIREMENT_VALIDATOR_REFUSAL_REASONS: ReadonlySet<string> = new Set([
+  "INVALID_LIMITS",
+  "EMPTY_REGISTRY",
+  "ROW_LIMIT_EXCEEDED",
+  "BYTE_LIMIT_EXCEEDED",
+  "MALFORMED_ROW",
+  "DUPLICATE_IDENTITY",
+  "REGISTRY_REFUSED",
+  "TRUST_ANCHOR_INVALID",
+  "REGISTRY_DIGEST_MISMATCH",
+  "REQUEST_INVALID",
+  "EFFECTFUL",
+  "NO_MATCH",
+  "NOT_YET_VALID",
+  "EXPIRED",
+]);
+
+function spendRequirementValidatorInputString(
+  budget: CheckedFlowCanonicalBudget,
+  value: unknown,
+): value is string {
+  return typeof value === "string"
+    && value.length > 0
+    && spendCheckedFlowCanonicalString(budget, value);
+}
+
+function snapshotRequirementValidatorAuthorityRow(
+  value: unknown,
+  budget: CheckedFlowCanonicalBudget,
+): RequirementValidatorAuthorityRow | undefined {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const row = value as RequirementValidatorAuthorityRow;
+  const authorityVersion = row.authorityVersion;
+  const qualifiedFlowIdentity = row.qualifiedFlowIdentity;
+  const sourceBuild = row.sourceBuild;
+  const inputType = row.inputType;
+  const inputTaintClasses = row.taintClasses;
+  const outputType = row.outputType;
+  const observedEffect = row.observedEffect;
+  const checkedProfile = row.checkedProfile;
+  const checkedDigest = row.checkedDigest;
+  const validFrom = row.validFrom;
+  const expiresAt = row.expiresAt;
+  if (!Array.isArray(inputTaintClasses)) return undefined;
+  const taintCount = inputTaintClasses.length;
+  if (!Number.isSafeInteger(taintCount) || taintCount < 0
+    || taintCount > REQUIREMENT_TAINT_CLASSES.length
+    || !spendRequirementValidatorInputString(budget, authorityVersion)
+    || !spendRequirementValidatorInputString(budget, qualifiedFlowIdentity)
+    || !spendRequirementValidatorInputString(budget, sourceBuild)
+    || !spendRequirementValidatorInputString(budget, inputType)
+    || !spendRequirementValidatorInputString(budget, outputType)
+    || !spendRequirementValidatorInputString(budget, observedEffect)
+    || !spendRequirementValidatorInputString(budget, checkedProfile)
+    || !spendRequirementValidatorInputString(budget, checkedDigest)
+    || !spendRequirementValidatorInputString(budget, validFrom)
+    || !spendRequirementValidatorInputString(budget, expiresAt)) return undefined;
+  const taintClasses: RequirementTaintClass[] = [];
+  const seenTaintClasses = new Set<string>();
+  for (let index = 0; index < taintCount; index += 1) {
+    const taintClass = inputTaintClasses[index];
+    if (!spendRequirementValidatorInputString(budget, taintClass)
+      || seenTaintClasses.has(taintClass)) return undefined;
+    seenTaintClasses.add(taintClass);
+    taintClasses.push(taintClass as RequirementTaintClass);
+  }
+  return Object.freeze({
+    authorityVersion,
+    qualifiedFlowIdentity,
+    sourceBuild,
+    inputType,
+    taintClasses: Object.freeze(taintClasses),
+    outputType: outputType as "Verdict",
+    observedEffect: observedEffect as "EffectFree",
+    checkedProfile,
+    checkedDigest,
+    validFrom,
+    expiresAt,
+  });
+}
+
+function snapshotRequirementValidatorRegistry(
+  value: unknown,
+  budget: CheckedFlowCanonicalBudget,
+): RequirementValidatorAuthorityRegistry | undefined {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const registry = value as RequirementValidatorAuthorityRegistry;
+  const state = registry.state;
+  if (state === "REFUSED") {
+    const reason = registry.reason;
+    if (!spendRequirementValidatorInputString(budget, reason)
+      || !REQUIREMENT_VALIDATOR_REFUSAL_REASONS.has(reason)) return undefined;
+    return Object.freeze({
+      state: "REFUSED",
+      reason: reason as RequirementValidatorAuthorityRefusalReason,
+    });
+  }
+  if (state !== "STRUCTURALLY_VALID") return undefined;
+  const inputRows = registry.rows;
+  const suppliedDigest = registry.digest;
+  const suppliedCanonicalBytes = registry.canonicalBytes;
+  if (!Array.isArray(inputRows)
+    || !spendRequirementValidatorInputString(budget, suppliedDigest)
+    || !Number.isSafeInteger(suppliedCanonicalBytes)
+    || suppliedCanonicalBytes < 0
+    || suppliedCanonicalBytes > MAX_REQUIREMENT_VALIDATOR_AUTHORITY_BYTES) return undefined;
+  const rowCount = inputRows.length;
+  if (!Number.isSafeInteger(rowCount) || rowCount < 1
+    || rowCount > MAX_REQUIREMENT_VALIDATOR_AUTHORITY_ROWS) return undefined;
+  const rows: RequirementValidatorAuthorityRow[] = [];
+  for (let index = 0; index < rowCount; index += 1) {
+    const row = snapshotRequirementValidatorAuthorityRow(inputRows[index], budget);
+    if (row === undefined) return undefined;
+    rows.push(row);
+  }
+  const reconstructed = createRequirementValidatorAuthorityRegistry(Object.freeze(rows));
+  if (reconstructed.state !== "STRUCTURALLY_VALID"
+    || reconstructed.digest !== suppliedDigest
+    || reconstructed.canonicalBytes !== suppliedCanonicalBytes) return undefined;
+  return reconstructed;
+}
+
+function snapshotRequirementValidatorContext(
+  value: unknown,
+  budget: CheckedFlowCanonicalBudget,
+): RequirementValidatorAuthorityContext | undefined {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const context = value as RequirementValidatorAuthorityContext;
+  const expectedRegistryDigest = context.expectedRegistryDigest;
+  const canonicalSourceUnitId = context.canonicalSourceUnitId;
+  const sourceBuild = context.sourceBuild;
+  const checkedProfile = context.checkedProfile;
+  const acceptedAuthorityVersion = context.acceptedAuthorityVersion;
+  const comparisonTime = context.comparisonTime;
+  if (!spendRequirementValidatorInputString(budget, expectedRegistryDigest)
+    || !spendRequirementValidatorInputString(budget, canonicalSourceUnitId)
+    || !spendRequirementValidatorInputString(budget, sourceBuild)
+    || !spendRequirementValidatorInputString(budget, checkedProfile)
+    || !spendRequirementValidatorInputString(budget, acceptedAuthorityVersion)
+    || !spendRequirementValidatorInputString(budget, comparisonTime)) return undefined;
+  return Object.freeze({
+    expectedRegistryDigest,
+    canonicalSourceUnitId,
+    sourceBuild,
+    checkedProfile,
+    acceptedAuthorityVersion,
+    comparisonTime,
+  });
+}
+
+function snapshotRequirementValidatorCheckedFlows(
+  value: unknown,
+  budget: CheckedFlowCanonicalBudget,
+): readonly RequirementValidatorCheckedFlowEvidence[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const count = value.length;
+  if (!Number.isSafeInteger(count) || count < 0
+    || count > MAX_REQUIREMENT_VALIDATOR_CHECKED_FLOWS) return undefined;
+  const checkedFlows: RequirementValidatorCheckedFlowEvidence[] = [];
+  const names = new Set<string>();
+  for (let index = 0; index < count; index += 1) {
+    const entry = value[index] as RequirementValidatorCheckedFlowEvidence | undefined;
+    if (entry === undefined || entry === null || typeof entry !== "object"
+      || Array.isArray(entry)) return undefined;
+    const localFlowName = entry.localFlowName;
+    const checkedDigest = entry.checkedDigest;
+    if (!spendRequirementValidatorInputString(budget, localFlowName)
+      || !spendRequirementValidatorInputString(budget, checkedDigest)
+      || names.has(localFlowName)) return undefined;
+    names.add(localFlowName);
+    checkedFlows.push(Object.freeze({ localFlowName, checkedDigest }));
+  }
+  return Object.freeze(checkedFlows);
+}
+
+function snapshotRequirementValidatorEffectResults(
+  value: unknown,
+  budget: CheckedFlowCanonicalBudget,
+): readonly EffectCheckResult[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const count = value.length;
+  if (!Number.isSafeInteger(count) || count < 0
+    || count > MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS) return undefined;
+  const results: EffectCheckResult[] = [];
+  const names = new Set<string>();
+  for (let index = 0; index < count; index += 1) {
+    const input = value[index] as EffectCheckResult | undefined;
+    if (input === undefined || input === null || typeof input !== "object"
+      || Array.isArray(input)) return undefined;
+    const flowName = input.flowName;
+    const qualifier = input.qualifier;
+    const inputDeclaredEffects = input.declaredEffects;
+    const inputObservedEffects = input.observedEffects;
+    const checkerFlags = input.checkerFlags;
+    if (!spendRequirementValidatorInputString(budget, flowName)
+      || !spendRequirementValidatorInputString(budget, qualifier)
+      || !["flow", "secure", "pure", "guarded"].includes(qualifier)
+      || !Array.isArray(inputDeclaredEffects)
+      || !Array.isArray(inputObservedEffects)
+      || !Number.isSafeInteger(checkerFlags) || checkerFlags < 0
+      || names.has(flowName)) return undefined;
+    const declaredCount = inputDeclaredEffects.length;
+    const observedCount = inputObservedEffects.length;
+    if (!Number.isSafeInteger(declaredCount) || declaredCount < 0
+      || declaredCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS
+      || !Number.isSafeInteger(observedCount) || observedCount < 0
+      || observedCount > MAX_REQUIREMENT_CHECKED_FLOW_DIGEST_EFFECTS) return undefined;
+    const declaredEffects: string[] = [];
+    const observedEffects: string[] = [];
+    const declaredSet = new Set<string>();
+    const observedSet = new Set<string>();
+    for (let effectIndex = 0; effectIndex < declaredCount; effectIndex += 1) {
+      const effect = inputDeclaredEffects[effectIndex];
+      if (!spendRequirementValidatorInputString(budget, effect)
+        || declaredSet.has(effect)) return undefined;
+      declaredSet.add(effect);
+      declaredEffects.push(effect);
+    }
+    for (let effectIndex = 0; effectIndex < observedCount; effectIndex += 1) {
+      const effect = inputObservedEffects[effectIndex];
+      if (!spendRequirementValidatorInputString(budget, effect)
+        || observedSet.has(effect)) return undefined;
+      observedSet.add(effect);
+      observedEffects.push(effect);
+    }
+    names.add(flowName);
+    results.push(Object.freeze({
+      flowName,
+      qualifier,
+      declaredEffects: Object.freeze(declaredEffects),
+      observedEffects: Object.freeze(observedEffects),
+      diagnostics: Object.freeze([]),
+      checkerFlags,
+    }));
+  }
+  return Object.freeze(results);
+}
+
+function snapshotRequirementValidatorInput(
+  value: RequirementValidatorInput,
+  snapshottedFlows: readonly FlowMeta[] | undefined,
+  snapshotFlowsFromInput: boolean,
+): RequirementValidatorInput | undefined {
+  try {
+    if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
+    const inputRegistry = value.registry;
+    const inputContext = value.context;
+    const inputCheckedFlows = value.checkedFlows;
+    const inputEffectResults = value.effectResults;
+    const inputFlows = snapshotFlowsFromInput ? value.flows : undefined;
+    const budget: CheckedFlowCanonicalBudget = {
+      remaining: MAX_REQUIREMENT_VALIDATOR_INPUT_BYTES,
+    };
+    const registry = snapshotRequirementValidatorRegistry(inputRegistry, budget);
+    const emptyRegistry = registry?.state === "REFUSED"
+      && registry.reason === "EMPTY_REGISTRY";
+    // Empty registry is the public no-authority sentinel. Its context cannot be
+    // consulted or mint authority, so discard it after the top-level one-read
+    // copy instead of converting legacy placeholder fields into a global 010.
+    const context = inputContext === undefined || emptyRegistry
+      ? undefined
+      : snapshotRequirementValidatorContext(inputContext, budget);
+    const checkedFlows = snapshotRequirementValidatorCheckedFlows(inputCheckedFlows, budget);
+    const effectResults = snapshotRequirementValidatorEffectResults(inputEffectResults, budget);
+    const flows = snapshotFlowsFromInput
+      ? snapshotAnalysisFlows(inputFlows!, budget)
+      : snapshottedFlows;
+    if (registry === undefined
+      || (inputContext !== undefined && !emptyRegistry && context === undefined)
+      || checkedFlows === undefined || effectResults === undefined || flows === undefined) {
+      return undefined;
+    }
+    return Object.freeze({
+      registry,
+      ...(context === undefined ? {} : { context }),
+      checkedFlows,
+      effectResults,
+      flows,
+    });
   } catch {
     return undefined;
   }
@@ -1107,6 +1418,11 @@ function joinTaintStates(left: TaintState, right: TaintState): TaintState {
   return { kind: "clean" };
 }
 
+function sameOrderedStrings(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length
+    && left.every((value, index) => value === right[index]);
+}
+
 const EMPTY_REQUIREMENT_ANALYSIS_AST: AstNode = Object.freeze({
   kind: "program",
   children: Object.freeze([]),
@@ -1116,7 +1432,7 @@ const EMPTY_REQUIREMENT_ANALYSIS_FLOWS: readonly FlowMeta[] = Object.freeze([]);
 function analyzeRequirementTaintFromSnapshot(
   snapshottedAst: AnalysisAstSnapshot | undefined,
   snapshottedFlows: readonly FlowMeta[] | undefined,
-  validatorInput: RequirementValidatorInput,
+  validatorInput: RequirementValidatorInput | undefined,
   preserveOriginalCallIdentity: boolean,
 ): RequirementTaintAnalysis {
   const diagnostics: TaintDiagnostic[] = [];
@@ -1130,6 +1446,17 @@ function analyzeRequirementTaintFromSnapshot(
   // reread after the snapshot boundary.
   const flowSnapshotFailed = snapshottedFlows === undefined;
   const analysisFlows = snapshottedFlows ?? EMPTY_REQUIREMENT_ANALYSIS_FLOWS;
+  if (validatorInput === undefined) {
+    diagnostics.push(requirementDiagnostic(
+      FUNGI_REQUIREMENT_010,
+      "<analysis>",
+      Object.freeze({ kind: "program" }),
+    ));
+    return Object.freeze({
+      diagnostics: Object.freeze(diagnostics),
+      matchedValidatorCalls,
+    });
+  }
   const registryAbsentAtBoundary = validatorInput.registry.state === "REFUSED"
     && validatorInput.registry.reason === "EMPTY_REGISTRY";
   if (astSnapshotFailed || (flowSnapshotFailed && !registryAbsentAtBoundary)) {
@@ -1153,16 +1480,13 @@ function analyzeRequirementTaintFromSnapshot(
   }
 
   const checkedByName = new Map<string, RequirementValidatorCheckedFlowEvidence[]>();
-  const validatorInputExceeded = validatorInput.checkedFlows.length
-    > MAX_REQUIREMENT_VALIDATOR_CHECKED_FLOWS
-    || validatorInput.effectResults.length > MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS;
-  for (const checked of validatorInputExceeded ? [] : validatorInput.checkedFlows) {
+  for (const checked of validatorInput.checkedFlows) {
     const occurrences = checkedByName.get(checked.localFlowName) ?? [];
     occurrences.push(checked);
     checkedByName.set(checked.localFlowName, occurrences);
   }
   const effectsByName = new Map<string, EffectCheckResult[]>();
-  for (const result of validatorInputExceeded ? [] : validatorInput.effectResults) {
+  for (const result of validatorInput.effectResults) {
     const occurrences = effectsByName.get(result.flowName) ?? [];
     occurrences.push(result);
     effectsByName.set(result.flowName, occurrences);
@@ -1217,16 +1541,21 @@ function analyzeRequirementTaintFromSnapshot(
     }
 
     const target = targetFlows[0]!;
-    if (validatorInputExceeded) {
-      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
-      return;
-    }
     const validatedCheckedFlow = validateRequirementValidatorCheckedFlow(
       target,
       targetNodes[0]!,
     );
     if (validatedCheckedFlow === undefined
       || checked[0]!.checkedDigest !== validatedCheckedFlow.digest) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
+      return;
+    }
+    const suppliedEffect = effects[0]!;
+    const actualEffect = actualEffects[0]!;
+    if (suppliedEffect.qualifier !== actualEffect.qualifier
+      || suppliedEffect.checkerFlags !== actualEffect.checkerFlags
+      || !sameOrderedStrings(suppliedEffect.declaredEffects, actualEffect.declaredEffects)
+      || !sameOrderedStrings(suppliedEffect.observedEffects, actualEffect.observedEffects)) {
       diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
       return;
     }
@@ -1245,7 +1574,7 @@ function analyzeRequirementTaintFromSnapshot(
         inputType: paramType(checkedSnapshot.params[0]),
         taintClasses: state.atoms,
         outputType: checkedSnapshot.returnType,
-        observedEffects: actualEffects[0]!.observedEffects,
+        observedEffects: actualEffect.observedEffects,
         checkedDigest: validatedCheckedFlow.digest,
       },
       validatorInput.context,
@@ -1390,13 +1719,22 @@ function analyzeRequirementTaintWithSnapshot(
   flows: readonly FlowMeta[],
   validatorInput: RequirementValidatorInput,
   preserveOriginalCallIdentity: boolean,
+  useValidatorInputFlows = false,
 ): RequirementTaintSnapshotResult {
   const astSnapshot = snapshotAnalysisAst(ast);
-  const flowSnapshot = snapshotAnalysisFlows(flows);
+  const explicitFlowSnapshot = useValidatorInputFlows
+    ? undefined
+    : snapshotAnalysisFlows(flows);
+  const validatorInputSnapshot = snapshotRequirementValidatorInput(
+    validatorInput,
+    explicitFlowSnapshot,
+    useValidatorInputFlows,
+  );
+  const flowSnapshot = validatorInputSnapshot?.flows;
   const analysis = analyzeRequirementTaintFromSnapshot(
     astSnapshot,
     flowSnapshot,
-    validatorInput,
+    validatorInputSnapshot,
     preserveOriginalCallIdentity,
   );
   return Object.freeze({
@@ -1430,6 +1768,7 @@ export function analyzeRequirementTaintForValueState(
     flows,
     validatorInput,
     false,
+    true,
   );
   return Object.freeze({
     ast: snapshot.ast,

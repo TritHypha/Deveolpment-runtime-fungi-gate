@@ -2622,7 +2622,7 @@ export function checkValueStates(
     analysis: requirementAnalysis,
   } = analyzeRequirementTaintForValueState(
     ast,
-    validatorInput.flows,
+    EMPTY_REQUIREMENT_VALIDATOR_INPUT.flows,
     validatorInput,
   );
   // Phase 11B.2: collect user-defined gate functions before running the checker
