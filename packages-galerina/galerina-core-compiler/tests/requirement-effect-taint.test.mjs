@@ -2312,3 +2312,82 @@ describe("RD-0858 Task 3 fix round 7", () => {
     );
   });
 });
+
+describe("RD-0858 Task 3 fix round 8", () => {
+  const requirementCodesOnly = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-REQUIREMENT-010")
+    .map((diagnostic) => diagnostic.code);
+
+  const findNode = (node, kind) => {
+    if (node.kind === kind) return node;
+    for (const child of node.children ?? []) {
+      const found = findNode(child, kind);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  };
+
+  const replaceNode = (node, target, replacement) => {
+    if (node === target) return replacement;
+    if (node.children === undefined) return node;
+    return {
+      ...node,
+      children: node.children.map((child) => replaceNode(child, target, replacement)),
+    };
+  };
+
+  const malformedRequirementAst = (parsed) => {
+    const constraint = findNode(parsed.ast, "requirementConstraint");
+    assert.notEqual(constraint, undefined);
+    const malformedConstraint = new Proxy(constraint, {
+      get(target, property, receiver) {
+        if (property === "flags") return "malformed-authority-field";
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    return replaceNode(parsed.ast, constraint, malformedConstraint);
+  };
+
+  it("refuses a malformed requirement AST through the public taint default", () => {
+    const parsed = parseProgram(
+      taintProgram('input == "allow"'),
+      "round-8-malformed-taint.fungi",
+    );
+    const diagnostics = checkTaint(
+      malformedRequirementAst(parsed),
+      parsed.flows,
+    );
+    assert.deepEqual(requirementCodesOnly(diagnostics), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("refuses a malformed requirement AST through the public value-state default", () => {
+    const parsed = parseProgram(
+      taintProgram('input == "allow"'),
+      "round-8-malformed-value-state.fungi",
+    );
+    const diagnostics = checkValueStates(malformedRequirementAst(parsed)).diagnostics;
+    assert.deepEqual(requirementCodesOnly(diagnostics), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("keeps stable raw and stable clean defaults discriminating in both public passes", () => {
+    const raw = parseProgram(
+      taintProgram('input == "allow"'),
+      "round-8-stable-raw.fungi",
+    );
+    const clean = parseProgram(
+      taintProgram("true"),
+      "round-8-stable-clean.fungi",
+    );
+    assert.deepEqual(
+      requirementCodesOnly(checkTaint(raw.ast, raw.flows)),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+    assert.deepEqual(
+      requirementCodesOnly(checkValueStates(raw.ast).diagnostics),
+      ["FUNGI-REQUIREMENT-004"],
+    );
+    assert.deepEqual(requirementCodesOnly(checkTaint(clean.ast, clean.flows)), []);
+    assert.deepEqual(requirementCodesOnly(checkValueStates(clean.ast).diagnostics), []);
+  });
+});
