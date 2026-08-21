@@ -2105,3 +2105,93 @@ describe("RD-0858 Task 3 fix round 5", () => {
     });
   });
 });
+
+describe("RD-0858 Task 3 fix round 6", () => {
+  const effectfulSource = () => taintProgram(
+    "validateInput(input)",
+    "let stored = AgesDB.get(value)\n  return stored == value",
+  );
+
+  const splitReadDiagnostics = () => {
+    const source = effectfulSource();
+    const effectful = parseProgram(source, "round-6-split-read.fungi");
+    const clean = parseProgram(
+      taintProgram("validateInput(input)"),
+      "round-6-split-read.fungi",
+    );
+    assert.deepEqual(
+      effectful.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    assert.deepEqual(
+      clean.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    const effectfulPair = findFlowNode(effectful);
+    const cleanPair = findFlowNode(clean);
+    assert.notEqual(effectfulPair.flow, undefined);
+    assert.notEqual(effectfulPair.node, undefined);
+    assert.notEqual(cleanPair.node, undefined);
+    const digest = checkedFlowDigest(effectfulPair.flow, effectfulPair.node);
+    assert.match(digest ?? "", /^sha256:[0-9a-f]{64}$/);
+
+    const effectfulBody = (effectfulPair.node.children ?? [])
+      .find((child) => child.kind === "block");
+    const cleanBody = (cleanPair.node.children ?? [])
+      .find((child) => child.kind === "block");
+    assert.notEqual(effectfulBody, undefined);
+    assert.notEqual(cleanBody, undefined);
+    const splitBody = new Proxy(effectfulBody, {
+      get(target, property, receiver) {
+        if (property !== "children") return Reflect.get(target, property, receiver);
+        const stack = new Error().stack ?? "";
+        if (stack.includes("effect-checker.js")) {
+          return cleanBody.children;
+        }
+        return target.children;
+      },
+    });
+    const validatorNode = {
+      ...effectfulPair.node,
+      children: (effectfulPair.node.children ?? []).map((child) =>
+        child === effectfulBody ? splitBody : child),
+    };
+    const hostileAst = {
+      ...effectful.ast,
+      children: (effectful.ast.children ?? []).map((child) =>
+        child === effectfulPair.node ? validatorNode : child),
+    };
+    const diagnostics = requirementTaintDiagnostics(source, {
+      ast: hostileAst,
+      digest,
+    });
+    return diagnostics;
+  };
+
+  it("refuses split-read AST authority through the full taint pass", () => {
+    const checked = splitReadDiagnostics();
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("refuses split-read AST authority through the public value-state pass", () => {
+    const checked = splitReadDiagnostics();
+    assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("keeps stable clean and stable effectful AST controls discriminating", () => {
+    const clean = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
+    const effectful = requirementTaintDiagnostics(effectfulSource());
+    assert.deepEqual(clean.taint, []);
+    assert.deepEqual(clean.valueState, []);
+    assert.deepEqual(effectful.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+    assert.deepEqual(effectful.valueState.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+});
