@@ -50,7 +50,7 @@ counts or open items that a newer section explicitly supersedes.
   preserved as the non-authorizing refusal RD-0859; attempt 2 is independently
   reproduced and adjudicated `PASS` in private RD-0860. Grok did not rerun the
   historical 690/690 matrix and grants no downstream authority.
-- [!] RD-0858 delivery unit 4 remains on an architecture `HOLD`. The
+- [!] RD-0858 delivery unit 4 remains on an implementation `HOLD`. The
   TypeScript differential interpreter is green at source commit `fd90d7ea`
   and exact graph/index head `1f7fc227`: focused controls pass 37/37, the
   nine-file matrix passes 335/335, roadmap generation passes 4/4 and the
@@ -67,8 +67,11 @@ counts or open items that a newer section explicitly supersedes.
   `docs/superpowers/specs/2026-08-21-rd-0858-unit4-process-root-boundary-design.md`.
   It selects a native admitted launcher plus one single-use clean worker, fixed
   runtime/package identities, bounded canonical input/output and a
-  non-authorizing refusal receipt. Implementation remains blocked until the
-  design receives an independent PASS. Interpreter, checked snapshot, GIR,
+  non-authorizing refusal receipt. Independent review at exact clean HEAD
+  `6f1726f3` returned `PASS` after matching the refreshed structural graph at
+  64,197 nodes and 164,284 edges and finding no material architecture defect.
+  The design gate is closed; implementation may now begin RED-first under its
+  recorded stop conditions. Interpreter, checked snapshot, GIR,
   SLIDE, VOK, admission, production and `.fungi` conversion authority remain
   `HOLD`; `011` and `012` remain reserved.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
