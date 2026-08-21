@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { describe, it } from "node:test";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -15,6 +16,7 @@ import {
   runProductionSecurityGate,
 } from "../dist/index.js";
 import { compileFile } from "../dist/cli.js";
+import * as compiler from "../dist/index.js";
 
 function checkRequirementEffects(source, file = "requirement-effects.fungi") {
   const parsed = parseProgram(source, file);
@@ -53,6 +55,11 @@ const TAINT_PROFILE = "slide.scalar-1";
 const TAINT_VERSION = "1.0.0";
 const TAINT_DIGEST = `sha256:${"a".repeat(64)}`;
 
+const CHECKED_FLOW_DIGEST_DOMAIN = "galerina.requirement-validator.checked-flow.v1";
+const CHECKED_FLOW_MAX_NODES = 4_096;
+const CHECKED_FLOW_MAX_DEPTH = 128;
+const CHECKED_FLOW_MAX_BYTES = 262_144;
+
 const taintProgram = (constraint, validatorBody = "return true") =>
   `@version 1
 pure flow decide(tainted input: String) -> Verdict
@@ -70,14 +77,109 @@ contract { effects {} }
   ${validatorBody}
 }`;
 
+function referenceCheckedFlowDigest(flow, flowNode) {
+  if (flow === undefined || flowNode === undefined) return undefined;
+  const qualifier = flow.qualifier;
+  if (typeof flow.name !== "string"
+    || !["flow", "secure", "pure", "guarded"].includes(qualifier)
+    || !Array.isArray(flow.params) || flow.params.some((param) => typeof param !== "string")
+    || typeof flow.returnType !== "string"
+    || !Array.isArray(flow.declaredEffects)
+    || flow.declaredEffects.some((effect) => typeof effect !== "string")
+    || (flow.decreasesMetric !== undefined && typeof flow.decreasesMetric !== "string")) {
+    return undefined;
+  }
+
+  let nodeCount = 0;
+  const normalizeNode = (node, depth) => {
+    if (node === null || typeof node !== "object" || Array.isArray(node)
+      || typeof node.kind !== "string" || depth > CHECKED_FLOW_MAX_DEPTH
+      || ++nodeCount > CHECKED_FLOW_MAX_NODES) return undefined;
+    const stringFields = [
+      node.value,
+      node.callStyle,
+      node.typeName,
+      node.conformsTo,
+      node.flowRef,
+      node.claim,
+    ];
+    if (stringFields.some((value) => value !== undefined && typeof value !== "string")
+      || (node.flags !== undefined && (!Number.isSafeInteger(node.flags) || node.flags < 0))
+      || (node.children !== undefined && !Array.isArray(node.children))) return undefined;
+    const children = [];
+    for (const child of node.children ?? []) {
+      const normalized = normalizeNode(child, depth + 1);
+      if (normalized === undefined) return undefined;
+      children.push(normalized);
+    }
+    return [
+      node.kind,
+      node.value ?? null,
+      node.callStyle ?? null,
+      node.typeName ?? null,
+      node.conformsTo ?? null,
+      node.flowRef ?? null,
+      node.claim ?? null,
+      node.flags ?? null,
+      children,
+    ];
+  };
+  const ast = normalizeNode(flowNode, 1);
+  if (ast === undefined) return undefined;
+  const canonical = JSON.stringify({
+    domain: CHECKED_FLOW_DIGEST_DOMAIN,
+    flow: [
+      flow.name,
+      qualifier,
+      [...flow.params],
+      flow.returnType,
+      [...flow.declaredEffects],
+      flow.decreasesMetric ?? null,
+    ],
+    ast,
+  });
+  if (Buffer.byteLength(canonical, "utf8") > CHECKED_FLOW_MAX_BYTES) return undefined;
+  return `sha256:${createHash("sha256").update(canonical, "utf8").digest("hex")}`;
+}
+
+function findFlowNode(parsed, name = "validateInput", ast = parsed.ast) {
+  const flow = parsed.flows.find((candidate) => candidate.name === name);
+  if (flow === undefined) return { flow: undefined, node: undefined };
+  const candidates = (ast?.children ?? []).filter((candidate) =>
+    candidate.location?.file === flow.location.file
+      && candidate.location?.offset === flow.location.offset);
+  return { flow, node: candidates.length === 1 ? candidates[0] : undefined };
+}
+
+function checkedFlowDigest(flow, node) {
+  const publicHelper = compiler.computeRequirementValidatorCheckedFlowDigest;
+  return typeof publicHelper === "function"
+    ? publicHelper(flow, node)
+    : referenceCheckedFlowDigest(flow, node);
+}
+
+function checkedFlowDigestForSource(source, file = "requirement-taint.fungi") {
+  const parsed = parseProgram(source, file);
+  const { flow, node } = findFlowNode(parsed);
+  const digest = checkedFlowDigest(flow, node);
+  assert.match(digest ?? "", /^sha256:[0-9a-f]{64}$/);
+  return digest;
+}
+
 function requirementTaintDiagnostics(source, authorityOverrides = {}) {
-  const parsed = parseProgram(source, "requirement-taint.fungi");
+  const parsed = parseProgram(source, authorityOverrides.file ?? "requirement-taint.fungi");
   assert.deepEqual(
     parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
     [],
     `unexpected parser errors: ${JSON.stringify(parsed.diagnostics)}`,
   );
-  const effectResults = checkEffects(parsed.flows, parsed.ast ?? { kind: "program" });
+  const ast = authorityOverrides.ast ?? parsed.ast ?? { kind: "program" };
+  const { flow: validatorFlow, node: validatorNode } = findFlowNode(parsed, "validateInput", ast);
+  const checkedDigest = authorityOverrides.digest
+    ?? checkedFlowDigest(validatorFlow, validatorNode)
+    ?? TAINT_DIGEST;
+  assert.match(checkedDigest ?? "", /^sha256:[0-9a-f]{64}$/);
+  const effectResults = checkEffects(parsed.flows, ast);
   const row = {
     authorityVersion: TAINT_VERSION,
     qualifiedFlowIdentity: "package.example.policy::validateInput",
@@ -87,7 +189,7 @@ function requirementTaintDiagnostics(source, authorityOverrides = {}) {
     outputType: "Verdict",
     observedEffect: "EffectFree",
     checkedProfile: TAINT_PROFILE,
-    checkedDigest: TAINT_DIGEST,
+    checkedDigest,
     validFrom: "2026-08-20T00:00:00.000Z",
     expiresAt: "2026-08-22T00:00:00.000Z",
     ...(authorityOverrides.row ?? {}),
@@ -107,14 +209,13 @@ function requirementTaintDiagnostics(source, authorityOverrides = {}) {
     },
     checkedFlows: [{
       localFlowName: "validateInput",
-      checkedDigest: TAINT_DIGEST,
+      checkedDigest,
       ...(authorityOverrides.checkedFlow ?? {}),
     }],
     effectResults,
     flows: parsed.flows,
     ...(authorityOverrides.input ?? {}),
   };
-  const ast = parsed.ast ?? { kind: "program" };
   return {
     taint: checkTaint(ast, parsed.flows, input).filter((diagnostic) =>
       diagnostic.code === "FUNGI-REQUIREMENT-004"
@@ -890,17 +991,19 @@ describe("RD-0858 requirement constraint taint authority", () => {
   });
 
   it("admits the exact checked-flow evidence ceiling and refuses one above it", () => {
+    const source = taintProgram("validateInput(input)");
+    const exactDigest = checkedFlowDigestForSource(source);
     const checkedFlows = [
-      { localFlowName: "validateInput", checkedDigest: TAINT_DIGEST },
+      { localFlowName: "validateInput", checkedDigest: exactDigest },
       ...Array.from({ length: 255 }, (_, index) => ({
         localFlowName: `other${index}`,
         checkedDigest: `sha256:${"b".repeat(64)}`,
       })),
     ];
-    const exact = requirementTaintDiagnostics(taintProgram("validateInput(input)"), {
+    const exact = requirementTaintDiagnostics(source, {
       input: { checkedFlows },
     });
-    const exceeded = requirementTaintDiagnostics(taintProgram("validateInput(input)"), {
+    const exceeded = requirementTaintDiagnostics(source, {
       input: {
         checkedFlows: [...checkedFlows, {
           localFlowName: "overflow",
@@ -1183,6 +1286,211 @@ ${taintProgram("validateInput(input)").replace("@version 1\n", "")}`;
     const checked = requirementTaintDiagnostics(source, {
       registry: createRequirementValidatorAuthorityRegistry([]),
     });
+    assert.deepEqual(checked.taint, []);
+    assert.deepEqual(checked.valueState, []);
+  });
+});
+
+describe("RD-0858 Task 3 fix round 2", () => {
+  const requirementCodes = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-REQUIREMENT-010")
+    .map((diagnostic) => diagnostic.code);
+
+  const findNode = (node, predicate) => {
+    if (predicate(node)) return node;
+    for (const child of node.children ?? []) {
+      const found = findNode(child, predicate);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  };
+
+  const mutateValidatorAst = (source, mutate) => {
+    const parsed = parseProgram(source, "requirement-taint.fungi");
+    const ast = structuredClone(parsed.ast ?? { kind: "program" });
+    const { node } = findFlowNode(parsed, "validateInput", ast);
+    assert.notEqual(node, undefined);
+    mutate(node);
+    return ast;
+  };
+
+  it("binds a checked digest to the exact validator body semantics", () => {
+    const exactSource = taintProgram("validateInput(input)");
+    const exactDigest = checkedFlowDigestForSource(exactSource);
+    const exact = requirementTaintDiagnostics(exactSource, { digest: exactDigest });
+    const changed = requirementTaintDiagnostics(
+      taintProgram("validateInput(input)", 'return value == "allow"'),
+      { digest: exactDigest },
+    );
+    assert.deepEqual(exact.taint, []);
+    assert.deepEqual(exact.valueState, []);
+    assert.deepEqual(requirementCodes(changed.taint), ["FUNGI-REQUIREMENT-010"]);
+    assert.deepEqual(requirementCodes(changed.valueState), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  for (const [label, changedSource, row] of [
+    [
+      "parameter contract",
+      taintProgram("validateInput(input)").replace(
+        "validateInput(value: String)",
+        "validateInput(candidate: String)",
+      ),
+      {},
+    ],
+    [
+      "return contract",
+      taintProgram("validateInput(input)").replace(
+        "pure flow validateInput(value: String) -> Verdict",
+        "pure flow validateInput(value: String) -> Bool",
+      ),
+      { outputType: "Bool" },
+    ],
+    [
+      "qualifier contract",
+      taintProgram("validateInput(input)").replace(
+        "pure flow validateInput(value: String) -> Verdict",
+        "secure flow validateInput(value: String) -> Verdict",
+      ),
+      {},
+    ],
+  ]) {
+    it(`binds the checked digest to the exact ${label}`, () => {
+      const exactDigest = checkedFlowDigestForSource(taintProgram("validateInput(input)"));
+      const checked = requirementTaintDiagnostics(changedSource, {
+        digest: exactDigest,
+        row: { ...row, checkedDigest: exactDigest },
+      });
+      assert.deepEqual(requirementCodes(checked.taint), ["FUNGI-REQUIREMENT-010"]);
+      assert.deepEqual(requirementCodes(checked.valueState), ["FUNGI-REQUIREMENT-010"]);
+    });
+  }
+
+  for (const [label, mutate] of [
+    ["AST value", (node) => {
+      const literal = findNode(node, (candidate) => candidate.kind === "boolLiteral");
+      assert.notEqual(literal, undefined);
+      literal.value = literal.value === "true" ? "false" : "true";
+    }],
+    ["AST child", (node) => {
+      const body = (node.children ?? []).find((child) => child.kind === "block");
+      assert.notEqual(body, undefined);
+      body.children = [...(body.children ?? []), { kind: "boolLiteral", value: "true" }];
+    }],
+  ]) {
+    it(`binds the checked digest to every exact ${label} field`, () => {
+      const source = taintProgram("validateInput(input)");
+      const exactDigest = checkedFlowDigestForSource(source);
+      const ast = mutateValidatorAst(source, mutate);
+      const checked = requirementTaintDiagnostics(source, { ast, digest: exactDigest });
+      assert.deepEqual(requirementCodes(checked.taint), ["FUNGI-REQUIREMENT-010"]);
+      assert.deepEqual(requirementCodes(checked.valueState), ["FUNGI-REQUIREMENT-010"]);
+    });
+  }
+
+  it("excludes source locations, and only source locations, from checked-flow identity", () => {
+    const source = taintProgram("validateInput(input)");
+    const first = parseProgram(source, "first-location.fungi");
+    const second = parseProgram(source, "second-location.fungi");
+    const firstTarget = findFlowNode(first);
+    const secondTarget = findFlowNode(second);
+    const firstDigest = checkedFlowDigest(firstTarget.flow, firstTarget.node);
+    const secondDigest = checkedFlowDigest(secondTarget.flow, secondTarget.node);
+    assert.match(firstDigest ?? "", /^sha256:[0-9a-f]{64}$/);
+    assert.equal(firstDigest, secondDigest);
+    const checked = requirementTaintDiagnostics(source, {
+      file: "second-location.fungi",
+      digest: firstDigest,
+    });
+    assert.deepEqual(checked.taint, []);
+    assert.deepEqual(checked.valueState, []);
+  });
+
+  it("refuses missing, duplicate, malformed, and well-formed unknown checked digests", () => {
+    const source = taintProgram("validateInput(input)");
+    const exactDigest = checkedFlowDigestForSource(source);
+    const unknownDigest = `sha256:${"f".repeat(64)}`;
+    const cases = [
+      { input: { checkedFlows: [] } },
+      { input: { checkedFlows: [
+        { localFlowName: "validateInput", checkedDigest: exactDigest },
+        { localFlowName: "validateInput", checkedDigest: exactDigest },
+      ] } },
+      { checkedFlow: { checkedDigest: "unknown" } },
+      {
+        digest: unknownDigest,
+        row: { checkedDigest: unknownDigest },
+      },
+    ];
+    for (const overrides of cases) {
+      const checked = requirementTaintDiagnostics(source, overrides);
+      assert.deepEqual(requirementCodes(checked.taint), ["FUNGI-REQUIREMENT-010"]);
+      assert.deepEqual(requirementCodes(checked.valueState), ["FUNGI-REQUIREMENT-010"]);
+    }
+  });
+
+  for (const [label, mutate] of [
+    ["node ceiling", (node) => {
+      const body = (node.children ?? []).find((child) => child.kind === "block");
+      assert.notEqual(body, undefined);
+      body.children = Array.from(
+        { length: CHECKED_FLOW_MAX_NODES + 1 },
+        () => ({ kind: "boolLiteral", value: "true" }),
+      );
+    }],
+    ["depth ceiling", (node) => {
+      const body = (node.children ?? []).find((child) => child.kind === "block");
+      assert.notEqual(body, undefined);
+      let nested = { kind: "boolLiteral", value: "true" };
+      for (let depth = 0; depth <= CHECKED_FLOW_MAX_DEPTH; depth += 1) {
+        nested = { kind: "block", children: [nested] };
+      }
+      body.children = [nested];
+    }],
+    ["canonical byte ceiling", (node) => {
+      const body = (node.children ?? []).find((child) => child.kind === "block");
+      assert.notEqual(body, undefined);
+      body.children = [{ kind: "identifier", value: "x".repeat(CHECKED_FLOW_MAX_BYTES + 1) }];
+    }],
+    ["malformed node", (node) => {
+      const body = (node.children ?? []).find((child) => child.kind === "block");
+      assert.notEqual(body, undefined);
+      body.children = [{ kind: "boolLiteral", value: "true", flags: "invalid" }];
+    }],
+  ]) {
+    it(`refuses a checked validator AST over the ${label}`, () => {
+      const source = taintProgram("validateInput(input)");
+      const exactDigest = checkedFlowDigestForSource(source);
+      const ast = mutateValidatorAst(source, mutate);
+      const checked = requirementTaintDiagnostics(source, { ast, digest: exactDigest });
+      assert.deepEqual(requirementCodes(checked.taint), ["FUNGI-REQUIREMENT-010"]);
+      assert.deepEqual(requirementCodes(checked.valueState), ["FUNGI-REQUIREMENT-010"]);
+    });
+  }
+
+  it("checks raw requirement taint through the public checkValueStates default", () => {
+    const parsed = parseProgram(taintProgram('input == "allow"'), "default-value-state.fungi");
+    const diagnostics = checkValueStates(parsed.ast ?? { kind: "program" }).diagnostics;
+    assert.deepEqual(requirementCodes(diagnostics), ["FUNGI-REQUIREMENT-004"]);
+  });
+
+  it("keeps a clean requirement clean through the public checkValueStates default", () => {
+    const parsed = parseProgram(taintProgram("true"), "default-clean-value-state.fungi");
+    const diagnostics = checkValueStates(parsed.ast ?? { kind: "program" }).diagnostics;
+    assert.deepEqual(requirementCodes(diagnostics), []);
+  });
+
+  it("never mints authority from a local validator when default flows and evidence are empty", () => {
+    const parsed = parseProgram(
+      taintProgram("validateInput(input)"),
+      "default-validator-value-state.fungi",
+    );
+    const diagnostics = checkValueStates(parsed.ast ?? { kind: "program" }).diagnostics;
+    assert.deepEqual(requirementCodes(diagnostics), ["FUNGI-REQUIREMENT-004"]);
+  });
+
+  it("preserves the explicit exact valid authority route", () => {
+    const checked = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
     assert.deepEqual(checked.taint, []);
     assert.deepEqual(checked.valueState, []);
   });
