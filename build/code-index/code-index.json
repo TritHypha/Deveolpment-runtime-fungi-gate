@@ -7238,17 +7238,16 @@
     "code": "FUNGI-DRIFT-002",
     "namespace": "FUNGI",
     "family": "DRIFT",
-    "occurrences": 14,
+    "occurrences": 13,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 12,
-    "docs": 2,
+    "docs": 1,
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/roadmap-2026-07-25-cycle2.md:54",
       "doc docs/TODO.md:9165",
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
@@ -8183,7 +8182,7 @@
     "code": "FUNGI-EFFECT-008",
     "namespace": "FUNGI",
     "family": "EFFECT",
-    "occurrences": 20,
+    "occurrences": 19,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -8191,7 +8190,7 @@
     ],
     "tests": 12,
     "refs": 0,
-    "docs": 1,
+    "docs": 0,
     "names": [
       "PRIVILEGED_EFFECT_ON_PLAIN_FLOW"
     ],
@@ -8217,8 +8216,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:620",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:398",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:202",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:208",
-      "doc docs/roadmap-2026-07-15.md:59"
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:208"
     ]
   },
   {
@@ -9829,7 +9827,7 @@
       "doc docs/language/gate/07-cheatsheet-and-gotchas.md:186",
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1486",
+      "doc docs/ROADMAP.md:1486",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
       "doc docs/TODO.md:3865",
       "doc docs/TODO.md:9708",
@@ -9924,7 +9922,7 @@
     "code": "FUNGI-GOV-002",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 67,
+    "occurrences": 66,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -9933,7 +9931,7 @@
     ],
     "tests": 34,
     "refs": 19,
-    "docs": 7,
+    "docs": 6,
     "names": [
       "MISSING_AUDIT_FOR_GOVERNED_SINK"
     ],
@@ -9994,7 +9992,6 @@
       "doc docs/examples/Level-5-Governance/224-contract-best-practices/notes.md:47",
       "doc docs/examples/Level-5-Governance/AI_SUMMARY.md:71",
       "doc docs/examples/README.md:130",
-      "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:194",
       "doc docs/TODO.md:9268",
       "ref scripts/audit-mutation.mjs:626",
@@ -11275,7 +11272,7 @@
     "code": "FUNGI-GOV-3VL-004",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 19,
+    "occurrences": 18,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -11283,7 +11280,7 @@
     ],
     "tests": 12,
     "refs": 4,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "ORDERED_COMPARISON_ON_VERDICT"
     ],
@@ -11306,7 +11303,6 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:28",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:49",
-      "doc docs/roadmap-2026-07-15.md:117",
       "doc docs/TODO.md:9129",
       "ref galerina.mjs:131",
       "ref galerina.mjs:164"
@@ -12006,7 +12002,7 @@
       "doc docs/reference/hardening.md:59",
       "doc docs/reference/hardening.md:84",
       "doc docs/reference/trust-trit.md:93",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:602",
+      "doc docs/ROADMAP.md:602",
       "doc docs/superpowers/plans/2026-08-12-spill-retype-fungi-conversion.md:80",
       "doc docs/superpowers/specs/2026-08-12-spill-retype-fungi-conversion-design.md:30",
       "doc docs/TODO.md:2369",
@@ -13343,8 +13339,8 @@
       "ref scripts/audit-wat-lowering.mjs:138",
       "ref scripts/audit-wat-lowering.mjs:140",
       "ref scripts/audit-wat-lowering.mjs:192",
-      "ref scripts/run-phase-close-legacy.mjs:859",
-      "ref scripts/run-phase-close-legacy.mjs:860"
+      "ref scripts/run-phase-close-legacy.mjs:860",
+      "ref scripts/run-phase-close-legacy.mjs:861"
     ]
   },
   {
@@ -14567,7 +14563,7 @@
     "code": "FUNGI-MATCH-001",
     "namespace": "FUNGI",
     "family": "MATCH",
-    "occurrences": 41,
+    "occurrences": 40,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -14575,7 +14571,7 @@
     ],
     "tests": 5,
     "refs": 9,
-    "docs": 26,
+    "docs": 25,
     "names": [
       "MATCH_NON_EXHAUSTIVE"
     ],
@@ -14615,7 +14611,6 @@
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:84",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:85",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:86",
-      "doc docs/roadmap-2026-07-15.md:49",
       "doc docs/SYNTAX_UPDATE_PLAN.md:29",
       "doc docs/SYNTAX_UPDATE_PLAN.md:60",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:33",
@@ -15086,17 +15081,16 @@
     "code": "FUNGI-MUTATION-001",
     "namespace": "FUNGI",
     "family": "MUTATION",
-    "occurrences": 3,
+    "occurrences": 2,
     "docOnly": true,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 0,
-    "docs": 3,
+    "docs": 2,
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/roadmap-2026-07-25-cycle2.md:45",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:109",
       "doc docs/TODO.md:9165"
     ]
@@ -16155,7 +16149,7 @@
     "code": "FUNGI-PARSE-001",
     "namespace": "FUNGI",
     "family": "PARSE",
-    "occurrences": 75,
+    "occurrences": 74,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -16167,7 +16161,7 @@
     ],
     "tests": 26,
     "refs": 22,
-    "docs": 14,
+    "docs": 13,
     "names": [
       "UNEXPECTED_TOKEN"
     ],
@@ -16241,7 +16235,6 @@
       "doc docs/language/fungi/07-control-flow.md:280",
       "doc docs/language/fungi/07-control-flow.md:321",
       "doc docs/language/fungi/README.md:78",
-      "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/TODO.md:9166",
       "doc docs/TODO.md:9268",
       "doc docs/TODO.md:9291",
@@ -16366,13 +16359,13 @@
     "code": "FUNGI-PARSE-005",
     "namespace": "FUNGI",
     "family": "PARSE",
-    "occurrences": 7,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 3,
     "refs": 0,
-    "docs": 2,
+    "docs": 1,
     "names": [],
     "severities": [],
     "allSites": [
@@ -16381,7 +16374,6 @@
       "test packages-galerina/galerina-core-compiler/tests/rd0528-fungi-ts-edge-differential.test.mjs:201",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:140",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:145",
-      "doc docs/roadmap-2026-07-25.md:42",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:131"
     ]
   },
@@ -16389,13 +16381,13 @@
     "code": "FUNGI-PARSE-006",
     "namespace": "FUNGI",
     "family": "PARSE",
-    "occurrences": 34,
+    "occurrences": 32,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 17,
     "refs": 0,
-    "docs": 6,
+    "docs": 4,
     "names": [],
     "severities": [],
     "allSites": [
@@ -16427,8 +16419,6 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:204",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:207",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:215",
-      "doc docs/roadmap-2026-07-25.md:42",
-      "doc docs/roadmap-2026-07-25.md:50",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:59",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:90",
@@ -16497,7 +16487,7 @@
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:268",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:397",
       "doc docs/language/fungi/04-types-and-values.md:74",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1551",
+      "doc docs/ROADMAP.md:1551",
       "doc docs/TODO.md:4035"
     ]
   },
@@ -19941,7 +19931,7 @@
     "code": "FUNGI-SAFETY-006",
     "namespace": "FUNGI",
     "family": "SAFETY",
-    "occurrences": 5,
+    "occurrences": 4,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:2375"
@@ -19951,7 +19941,7 @@
     ],
     "tests": 2,
     "refs": 0,
-    "docs": 1,
+    "docs": 0,
     "names": [
       "TRI_MATCH_NOT_EXHAUSTIVE"
     ],
@@ -19962,8 +19952,7 @@
       "def packages-galerina/galerina-core-compiler/src/index.ts:2375",
       "emit packages-galerina/galerina-core-compiler/src/index.ts:2982",
       "test packages-galerina/galerina-core-compiler/tests/compiler-safety-contracts.test.mjs:113",
-      "test packages-galerina/galerina-core-compiler/tests/compiler-safety-contracts.test.mjs:508",
-      "doc docs/roadmap-2026-07-15.md:49"
+      "test packages-galerina/galerina-core-compiler/tests/compiler-safety-contracts.test.mjs:508"
     ]
   },
   {
@@ -21077,17 +21066,16 @@
     "code": "FUNGI-STEP-001",
     "namespace": "FUNGI",
     "family": "STEP",
-    "occurrences": 2,
+    "occurrences": 1,
     "docOnly": true,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 0,
-    "docs": 2,
+    "docs": 1,
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/roadmap-2026-07-25-cycle2.md:46",
       "doc docs/TODO.md:9165"
     ]
   },
@@ -21995,7 +21983,7 @@
     "code": "FUNGI-SYNTAX-011",
     "namespace": "FUNGI",
     "family": "SYNTAX",
-    "occurrences": 22,
+    "occurrences": 21,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -22003,7 +21991,7 @@
     ],
     "tests": 10,
     "refs": 5,
-    "docs": 5,
+    "docs": 4,
     "names": [
       "UNKNOWN_GOVERNANCE_BLOCK"
     ],
@@ -22024,13 +22012,12 @@
       "doc docs/ANTI_HALLUCINATION.md:61",
       "fungi docs/examples/Level-9-Enterprise/465-enterprise-summary/example.fungi:29",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:89",
-      "doc docs/roadmap-2026-07-15.md:164",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
       "doc docs/TODO.md:9604",
       "ref scripts/audit-fungi-corpus-check.mjs:8",
       "ref scripts/audit-fungi-corpus-check.mjs:194",
       "ref scripts/audit-fungi-corpus-check.mjs:251",
-      "ref scripts/run-phase-close-legacy.mjs:519"
+      "ref scripts/run-phase-close-legacy.mjs:520"
     ]
   },
   {
@@ -22589,7 +22576,7 @@
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:42",
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:51",
       "doc docs/examples/Level-9-Enterprise/AI_SUMMARY.md:63",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:2944"
+      "doc docs/ROADMAP.md:2944"
     ]
   },
   {
@@ -22827,7 +22814,7 @@
     "code": "FUNGI-TIER-001",
     "namespace": "FUNGI",
     "family": "TIER",
-    "occurrences": 55,
+    "occurrences": 54,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -22835,7 +22822,7 @@
     ],
     "tests": 26,
     "refs": 15,
-    "docs": 11,
+    "docs": 10,
     "names": [
       "UNDER_DECLARED_FLOW_TIER"
     ],
@@ -22882,7 +22869,6 @@
       "doc docs/reference/effects.md:70",
       "doc docs/reference/effects.md:91",
       "doc docs/reference/effects.md:163",
-      "doc docs/roadmap-2026-07-25-cycle2.md:107",
       "doc docs/TODO.md:9167",
       "ref scripts/audit-example-diagnostics.mjs:230",
       "ref scripts/audit-example-diagnostics.mjs:232",
@@ -24275,7 +24261,7 @@
     "code": "FUNGI-TYPE-009",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 148,
+    "occurrences": 147,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -24283,7 +24269,7 @@
     ],
     "tests": 99,
     "refs": 14,
-    "docs": 17,
+    "docs": 16,
     "names": [
       "INVALID_GENERIC_INSTANTIATION"
     ],
@@ -24436,7 +24422,6 @@
       "doc docs/examples/README.md:88",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:57",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:64",
-      "doc docs/roadmap-2026-07-15.md:84",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:47",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:51"
     ]
@@ -24473,7 +24458,7 @@
     "code": "FUNGI-TYPE-011",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 76,
+    "occurrences": 75,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:563"
@@ -24483,7 +24468,7 @@
     ],
     "tests": 62,
     "refs": 4,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "INVALID_COLLECTION_ELEMENT"
     ],
@@ -24565,7 +24550,6 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11.test.mjs:137",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11.test.mjs:138",
       "doc docs/AI/DO_NOT_USE_YET.md:165",
-      "doc docs/roadmap-2026-07-15.md:100",
       "ref scripts/audit-codes-full.mjs:78"
     ]
   },
@@ -24769,7 +24753,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-checker-tensor.test.mjs:88",
       "doc docs/AI/DO_NOT_USE_YET.md:165",
       "doc docs/reports/tensor-dimension-count-compatibility-fungi-conversion-2026-08-12.md:37",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:906",
+      "doc docs/ROADMAP.md:906",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:53",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:116",
       "doc docs/superpowers/specs/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion-design.md:28",
@@ -24886,7 +24870,7 @@
     "code": "FUNGI-TYPE-019",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 18,
+    "occurrences": 17,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:571"
@@ -24894,7 +24878,7 @@
     "emits": [],
     "tests": 7,
     "refs": 7,
-    "docs": 1,
+    "docs": 0,
     "names": [
       "UNKNOWN_SYMBOL"
     ],
@@ -24913,7 +24897,6 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:727",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:739",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:749",
-      "doc docs/roadmap-2026-07-15.md:79",
       "ref scripts/audit-codes-full.mjs:86",
       "ref scripts/audit-twin-emit-parity.mjs:177",
       "ref scripts/audit-twin-emit-parity.mjs:182",
@@ -24983,13 +24966,13 @@
     "code": "FUNGI-TYPE-021",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 9,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 3,
     "refs": 2,
-    "docs": 3,
+    "docs": 2,
     "names": [],
     "severities": [],
     "allSites": [
@@ -25000,15 +24983,14 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:422",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:603",
       "doc docs/architecture/stage6-hundred-percent-fungi-roadmap-2026-07-10.md:24",
-      "doc docs/examples/README.md:90",
-      "doc docs/roadmap-2026-07-15.md:98"
+      "doc docs/examples/README.md:90"
     ]
   },
   {
     "code": "FUNGI-TYPE-022",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 29,
+    "occurrences": 28,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -25016,7 +24998,7 @@
     ],
     "tests": 12,
     "refs": 3,
-    "docs": 5,
+    "docs": 4,
     "names": [
       "UNREACHABLE_PATTERN"
     ],
@@ -25051,15 +25033,14 @@
       "doc docs/architecture/session4-5hr-autonomous-roadmap-2026-07-11.md:62",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:3723",
       "doc docs/examples/README.md:91",
-      "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:352",
-      "doc docs/roadmap-2026-07-15.md:97"
+      "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:352"
     ]
   },
   {
     "code": "FUNGI-TYPE-023",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 46,
+    "occurrences": 45,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -25067,7 +25048,7 @@
     ],
     "tests": 20,
     "refs": 8,
-    "docs": 7,
+    "docs": 6,
     "names": [
       "MISSING_WILDCARD_ARM"
     ],
@@ -25116,7 +25097,6 @@
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:101",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:350",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:67",
-      "doc docs/roadmap-2026-07-15.md:98",
       "ref scripts/galerina-new.mjs:23",
       "ref scripts/galerina-new.mjs:154",
       "ref scripts/galerina-new.mjs:196",
@@ -25264,18 +25244,17 @@
     "code": "FUNGI-TYPE-027",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 4,
+    "occurrences": 3,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 2,
-    "docs": 1,
+    "docs": 0,
     "names": [],
     "severities": [],
     "allSites": [
       "fungi packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi:1804",
-      "doc docs/roadmap-2026-07-15.md:80",
       "ref scripts/audit-twin-emit-parity.mjs:178",
       "ref scripts/audit-twin-emit-parity.mjs:182"
     ]
@@ -25319,7 +25298,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:645",
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:246",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:648",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1579",
+      "doc docs/ROADMAP.md:1579",
       "doc docs/TODO.md:4078"
     ]
   },
@@ -25327,7 +25306,7 @@
     "code": "FUNGI-TYPE-030",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 50,
+    "occurrences": 49,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:597"
@@ -25337,7 +25316,7 @@
     ],
     "tests": 25,
     "refs": 7,
-    "docs": 6,
+    "docs": 5,
     "names": [
       "TENSOR_ELEMENT_TYPE_MISMATCH"
     ],
@@ -25391,8 +25370,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:295",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:3729",
       "doc docs/reports/tensor-element-type-compatibility-fungi-conversion-2026-08-12.md:26",
-      "doc docs/roadmap-2026-07-15.md:53",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:849",
+      "doc docs/ROADMAP.md:849",
       "doc docs/superpowers/specs/2026-08-12-tensor-element-type-compatibility-fungi-conversion-design.md:27",
       "doc docs/TODO.md:2453"
     ]
@@ -25655,7 +25633,7 @@
     "code": "FUNGI-VAL-001",
     "namespace": "FUNGI",
     "family": "VAL",
-    "occurrences": 64,
+    "occurrences": 63,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:575"
@@ -25663,7 +25641,7 @@
     "emits": [],
     "tests": 42,
     "refs": 8,
-    "docs": 5,
+    "docs": 4,
     "names": [
       "SAFETY_CRITICAL_MISSING_AUDIT"
     ],
@@ -25729,7 +25707,6 @@
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:114",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:3098",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:3099",
-      "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/TODO.md:9268",
       "ref scripts/audit-codes-full.mjs:91",
       "ref scripts/audit-diagnostic-code-collisions.mjs:179",
@@ -26588,7 +26565,7 @@
     "code": "FUNGI-VALUESTATE-008",
     "namespace": "FUNGI",
     "family": "VALUESTATE",
-    "occurrences": 65,
+    "occurrences": 64,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -26596,7 +26573,7 @@
     ],
     "tests": 31,
     "refs": 14,
-    "docs": 11,
+    "docs": 10,
     "names": [
       "BOUNDARY_INPUT_UNCLEAN"
     ],
@@ -26659,7 +26636,6 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:85",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
-      "doc docs/roadmap-2026-07-25-cycle2.md:109",
       "doc docs/TODO.md:9167",
       "ref scripts/audit-codes-full.mjs:53",
       "ref scripts/audit-muted-diagnostics.mjs:55",
@@ -26727,7 +26703,7 @@
     "code": "FUNGI-VALUESTATE-011",
     "namespace": "FUNGI",
     "family": "VALUESTATE",
-    "occurrences": 17,
+    "occurrences": 16,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -26735,7 +26711,7 @@
     ],
     "tests": 11,
     "refs": 3,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "DECLASSIFIER_NAME_SHADOWED"
     ],
@@ -26758,7 +26734,6 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:38",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
-      "doc docs/roadmap-2026-07-24.md:16",
       "doc docs/TODO.md:9226"
     ]
   },
@@ -27036,7 +27011,7 @@
     "code": "FUNGI-VAULT-008",
     "namespace": "FUNGI",
     "family": "VAULT",
-    "occurrences": 9,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:270"
@@ -27047,7 +27022,7 @@
     ],
     "tests": 0,
     "refs": 4,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "VAULT_MISSING_SCOPE"
     ],
@@ -27061,7 +27036,6 @@
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:6200",
       "emit packages-galerina/galerina-core-compiler/src/parser.ts:6216",
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:6216",
-      "doc docs/roadmap-2026-07-25-cycle2.md:86",
       "doc docs/TODO.md:9167",
       "ref scripts/audit-diagnostic-code-collisions.mjs:56"
     ]
