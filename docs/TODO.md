@@ -35,6 +35,17 @@ counts or open items that a newer section explicitly supersedes.
   model-diverse review both return PASS. Only `002`/`007`/`009` become live in
   this unit. Effect, taint, interpreter, runtime, GIR, SLIDE, VOK, admission,
   production and `.fungi` conversion authority remain `HOLD`.
+- [x] Complete RD-0858 delivery unit 3 at implementation commit `7c91ad19`
+  and reviewed evidence fixed point `997fa8df`: admit only a frozen exact
+  validator registry, prove bounded transitive EffectFree constraint closure,
+  bind taint/value-state checks to one immutable AST, FlowMeta and authority
+  snapshot, and keep hostile or ambiguous evidence fail-closed. The current
+  exact-head matrix passes 690/690 across 158 suites with zero skips; diagnostic
+  ownership passes 470/470 names; the external graph is exact at 64,143 nodes
+  and 164,126 edges; and independent plus model-diverse reviews return PASS.
+  Only `003`, `004` and `010` become live in this unit. Governance,
+  interpreter, checked snapshot, GIR, SLIDE, VOK, admission, production and
+  `.fungi` conversion authority remain `HOLD`; `011` and `012` stay reserved.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,
