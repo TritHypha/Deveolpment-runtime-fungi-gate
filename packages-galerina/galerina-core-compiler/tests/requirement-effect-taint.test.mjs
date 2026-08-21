@@ -1041,3 +1041,149 @@ describe("RD-0858 requirement constraint taint authority", () => {
     }
   });
 });
+
+describe("RD-0858 Task 3 fix round 1", () => {
+  const effectfulValidatorSource = () => taintProgram(
+    "validateInput(input)",
+    "let stored = AgesDB.get(value)\n  return stored == value",
+  ).replace(
+    "pure flow validateInput(value: String) -> Verdict\ncontract { effects {} }",
+    "secure flow validateInput(value: String) -> Verdict\ncontract { effects { database.read } }",
+  );
+
+  it("binds EffectFree evidence to the actual validator AST instead of a same-name clean source", () => {
+    const evidenceSource = `@version 1
+pure flow unrelated() -> Bool
+contract { effects {} }
+{
+  return true
+}
+
+${taintProgram("validateInput(input)").replace("@version 1\n", "")}`;
+    const evidence = parseProgram(evidenceSource, "different-evidence-source.fungi");
+    assert.deepEqual(
+      evidence.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    const forgedCleanResults = checkEffects(
+      evidence.flows,
+      evidence.ast ?? { kind: "program" },
+    );
+    const checked = requirementTaintDiagnostics(effectfulValidatorSource(), {
+      input: { effectResults: forgedCleanResults },
+    });
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+    assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("keeps same-AST clean evidence valid and same-AST effectful evidence invalid", () => {
+    const clean = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
+    const effectful = requirementTaintDiagnostics(effectfulValidatorSource());
+    assert.deepEqual(clean.taint, []);
+    assert.deepEqual(clean.valueState, []);
+    assert.deepEqual(effectful.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+    assert.deepEqual(effectful.valueState.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("refuses duplicate checked-flow and effect evidence instead of choosing one", () => {
+    const source = taintProgram("validateInput(input)");
+    const parsed = parseProgram(source, "duplicate-evidence.fungi");
+    const effects = checkEffects(parsed.flows, parsed.ast ?? { kind: "program" });
+    const checkedDuplicate = requirementTaintDiagnostics(source, {
+      input: {
+        checkedFlows: [
+          { localFlowName: "validateInput", checkedDigest: TAINT_DIGEST },
+          { localFlowName: "validateInput", checkedDigest: TAINT_DIGEST },
+        ],
+      },
+    });
+    const effectDuplicate = requirementTaintDiagnostics(source, {
+      input: {
+        effectResults: [
+          ...effects,
+          effects.find((result) => result.flowName === "validateInput"),
+        ].filter(Boolean),
+      },
+    });
+    assert.deepEqual(checkedDuplicate.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+    assert.deepEqual(effectDuplicate.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  const joinProgram = (control, params = "") => taintProgram("candidate == \"allow\"")
+    .replace("tainted input: String", `tainted input: String${params}`)
+    .replace(
+      "let result: Verdict = requirement",
+      `mut candidate: String = "clean"\n  ${control}\n  let result: Verdict = requirement`,
+    );
+
+  for (const [label, source] of [
+    ["if", joinProgram("if true {\n    candidate = input\n  }")],
+    ["while", joinProgram("while true {\n    candidate = input\n  }")],
+    ["for", joinProgram("for item in items {\n    candidate = input\n  }", ", items: List<String>")],
+    ["conditional join", joinProgram(
+      "if flag {\n    candidate = input\n  } else {\n    candidate = \"clean\"\n  }",
+      ", flag: Bool",
+    )],
+    ["match", joinProgram(
+      "match flag {\n    true => { candidate = input }\n    _ => { candidate = \"clean\" }\n  }",
+      ", flag: Bool",
+    )],
+  ]) {
+    it(`joins ${label} child assignments back into an outer binding with taint dominance`, () => {
+      const checked = requirementTaintDiagnostics(source, {
+        registry: createRequirementValidatorAuthorityRegistry([]),
+      });
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-004",
+      ]);
+      assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-004",
+      ]);
+    });
+  }
+
+  it("does not leak a branch-local binding name into the outer scope", () => {
+    const source = taintProgram("true").replace(
+      "let result: Verdict = requirement",
+      "if true {\n    let branchOnly: String = input\n  }\n  let result: Verdict = requirement",
+    );
+    const checked = requirementTaintDiagnostics(source, {
+      registry: createRequirementValidatorAuthorityRegistry([]),
+    });
+    assert.deepEqual(checked.taint, []);
+    assert.deepEqual(checked.valueState, []);
+  });
+
+  it("does not join a branch-local shadow over an outer binding with the same name", () => {
+    const source = joinProgram("if true {\n    let candidate: String = input\n  }");
+    const checked = requirementTaintDiagnostics(source, {
+      registry: createRequirementValidatorAuthorityRegistry([]),
+    });
+    assert.deepEqual(checked.taint, []);
+    assert.deepEqual(checked.valueState, []);
+  });
+
+  it("keeps an outer binding clean when every child assignment is clean", () => {
+    const source = joinProgram(
+      "if flag {\n    candidate = \"allow\"\n  } else {\n    candidate = \"deny\"\n  }",
+      ", flag: Bool",
+    );
+    const checked = requirementTaintDiagnostics(source, {
+      registry: createRequirementValidatorAuthorityRegistry([]),
+    });
+    assert.deepEqual(checked.taint, []);
+    assert.deepEqual(checked.valueState, []);
+  });
+});
