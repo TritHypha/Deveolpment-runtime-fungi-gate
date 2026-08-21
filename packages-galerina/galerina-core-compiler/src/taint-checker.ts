@@ -1111,10 +1111,11 @@ const EMPTY_REQUIREMENT_ANALYSIS_AST: AstNode = Object.freeze({
   kind: "program",
   children: Object.freeze([]),
 });
+const EMPTY_REQUIREMENT_ANALYSIS_FLOWS: readonly FlowMeta[] = Object.freeze([]);
 
 function analyzeRequirementTaintFromSnapshot(
   snapshottedAst: AnalysisAstSnapshot | undefined,
-  flows: readonly FlowMeta[],
+  snapshottedFlows: readonly FlowMeta[] | undefined,
   validatorInput: RequirementValidatorInput,
   preserveOriginalCallIdentity: boolean,
 ): RequirementTaintAnalysis {
@@ -1127,9 +1128,8 @@ function analyzeRequirementTaintFromSnapshot(
   // records. Candidate selection, Task-2 effect closure, digest validation and
   // Task-1 verification all consume this same view; caller-owned inputs are not
   // reread after the snapshot boundary.
-  const snapshottedFlows = snapshotAnalysisFlows(flows);
   const flowSnapshotFailed = snapshottedFlows === undefined;
-  const analysisFlows = snapshottedFlows ?? Object.freeze([]);
+  const analysisFlows = snapshottedFlows ?? EMPTY_REQUIREMENT_ANALYSIS_FLOWS;
   const registryAbsentAtBoundary = validatorInput.registry.state === "REFUSED"
     && validatorInput.registry.reason === "EMPTY_REGISTRY";
   if (astSnapshotFailed || (flowSnapshotFailed && !registryAbsentAtBoundary)) {
@@ -1379,17 +1379,44 @@ function analyzeRequirementTaintFromSnapshot(
   });
 }
 
+interface RequirementTaintSnapshotResult {
+  readonly ast: AstNode;
+  readonly flows: readonly FlowMeta[];
+  readonly analysis: RequirementTaintAnalysis;
+}
+
+function analyzeRequirementTaintWithSnapshot(
+  ast: AstNode,
+  flows: readonly FlowMeta[],
+  validatorInput: RequirementValidatorInput,
+  preserveOriginalCallIdentity: boolean,
+): RequirementTaintSnapshotResult {
+  const astSnapshot = snapshotAnalysisAst(ast);
+  const flowSnapshot = snapshotAnalysisFlows(flows);
+  const analysis = analyzeRequirementTaintFromSnapshot(
+    astSnapshot,
+    flowSnapshot,
+    validatorInput,
+    preserveOriginalCallIdentity,
+  );
+  return Object.freeze({
+    ast: astSnapshot?.ast ?? EMPTY_REQUIREMENT_ANALYSIS_AST,
+    flows: flowSnapshot ?? EMPTY_REQUIREMENT_ANALYSIS_FLOWS,
+    analysis,
+  });
+}
+
 export function analyzeRequirementTaint(
   ast: AstNode,
   flows: readonly FlowMeta[],
   validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
 ): RequirementTaintAnalysis {
-  return analyzeRequirementTaintFromSnapshot(
-    snapshotAnalysisAst(ast),
+  return analyzeRequirementTaintWithSnapshot(
+    ast,
     flows,
     validatorInput,
     true,
-  );
+  ).analysis;
 }
 
 /** @internal One immutable AST view shared by requirement and value-state analysis. */
@@ -1398,16 +1425,15 @@ export function analyzeRequirementTaintForValueState(
   flows: readonly FlowMeta[],
   validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
 ): { readonly ast: AstNode; readonly analysis: RequirementTaintAnalysis } {
-  const snapshot = snapshotAnalysisAst(ast);
-  const analysis = analyzeRequirementTaintFromSnapshot(
-    snapshot,
+  const snapshot = analyzeRequirementTaintWithSnapshot(
+    ast,
     flows,
     validatorInput,
     false,
   );
   return Object.freeze({
-    ast: snapshot?.ast ?? EMPTY_REQUIREMENT_ANALYSIS_AST,
-    analysis,
+    ast: snapshot.ast,
+    analysis: snapshot.analysis,
   });
 }
 
@@ -1430,8 +1456,9 @@ export function checkTaint(
 ): TaintDiagnostic[] {
   const {
     ast: analysisAst,
+    flows: analysisFlows,
     analysis: requirementAnalysis,
-  } = analyzeRequirementTaintForValueState(ast, flows, validatorInput);
+  } = analyzeRequirementTaintWithSnapshot(ast, flows, validatorInput, false);
   const diagnostics: TaintDiagnostic[] = [
     ...requirementAnalysis.diagnostics,
   ];
@@ -1450,7 +1477,7 @@ export function checkTaint(
     if (decoded === undefined || "error" in decoded || decoded.name === "") continue;
     if (!flowNodeByName.has(decoded.name)) flowNodeByName.set(decoded.name, c);
   }
-  for (const flow of flows) {
+  for (const flow of analysisFlows) {
     const flowNode = flowNodeByName.get(flow.name);
     if (flowNode === undefined) continue;
 
