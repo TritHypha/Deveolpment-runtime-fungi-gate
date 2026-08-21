@@ -470,17 +470,12 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
     const parserUrl = new URL("../dist/parser.js", import.meta.url).href;
     const typeCheckerUrl = new URL("../dist/type-checker.js", import.meta.url).href;
     const interpreterUrl = new URL("../dist/interpreter.js", import.meta.url).href;
+    const fixtureSource = sourceForRequire("preImportBindPoison", "Bool");
     const childSource = String.raw`
       import { types as nodeUtilTypes } from "node:util";
       const { parseProgram } = await import(process.argv[1]);
       const { checkTypes } = await import(process.argv[2]);
-      const source = "@version 1\\npure flow preImportBindPoison(subject: Bool) -> String\\n" +
-        "contract { effects {} }\\n{\\n" +
-        "  require subject {\\n" +
-        "    deny: return \\\"deny\\\"\\n" +
-        "    ambig: return \\\"ambig\\\"\\n" +
-        "  }\\n" +
-        "  return \\\"allow\\\"\\n}";
+      const source = process.argv[4];
       const parsed = parseProgram(source, "pre-import-bind-poison.fungi");
       const parserErrors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
       const typeErrors = checkTypes(parsed.ast).diagnostics.filter(
@@ -523,7 +518,15 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
     `;
     const child = spawnSync(
       process.execPath,
-      ["--input-type=module", "--eval", childSource, parserUrl, typeCheckerUrl, interpreterUrl],
+      [
+        "--input-type=module",
+        "--eval",
+        childSource,
+        parserUrl,
+        typeCheckerUrl,
+        interpreterUrl,
+        fixtureSource,
+      ],
       { encoding: "utf8", timeout: 30_000, windowsHide: true },
     );
     assert.equal(child.error, undefined);
