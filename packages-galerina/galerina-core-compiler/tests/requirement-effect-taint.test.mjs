@@ -2846,3 +2846,144 @@ describe("RD-0858 Task 3 fix round 11", () => {
     );
   });
 });
+
+describe("RD-0858 Task 3 fix round 12", () => {
+  const VALIDATOR_INPUT_MAX_BYTES = 1_048_576;
+
+  const requirementCodesOnly = (diagnostics) => diagnostics
+    .filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004"
+      || diagnostic.code === "FUNGI-REQUIREMENT-010")
+    .map((diagnostic) => diagnostic.code);
+
+  const emptyValidatorInput = (flows) => ({
+    registry: createRequirementValidatorAuthorityRegistry([]),
+    checkedFlows: [],
+    effectResults: [],
+    flows,
+  });
+
+  const rawFixture = (file) => {
+    const parsed = parseProgram(taintProgram('input == "allow"'), file);
+    assert.deepEqual(
+      parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    const flow = parsed.flows.find((candidate) => candidate.name === "decide");
+    assert.notEqual(flow, undefined);
+    return { parsed, flow };
+  };
+
+  const jsonBytes = (value) => Buffer.byteLength(JSON.stringify(value), "utf8");
+
+  const flowAtSharedBudget = (flow, delta) => {
+    const fixedBytes = [
+      flow.name,
+      flow.qualifier,
+      flow.returnType,
+      flow.location.file,
+      "EMPTY_REGISTRY",
+    ].reduce((total, value) => total + jsonBytes(value), 0);
+    const maxParam = "x".repeat(CHECKED_FLOW_MAX_ITEM_BYTES);
+    const maxParamBytes = jsonBytes(maxParam);
+    let remaining = VALIDATOR_INPUT_MAX_BYTES - fixedBytes;
+    const params = [];
+    while (remaining > maxParamBytes) {
+      params.push(maxParam);
+      remaining -= maxParamBytes;
+    }
+    assert.ok(remaining > 2);
+    const tailLength = remaining - 2 + delta;
+    assert.ok(tailLength > 0 && tailLength <= CHECKED_FLOW_MAX_ITEM_BYTES);
+    params.push("y".repeat(tailLength));
+    return {
+      ...flow,
+      params,
+      declaredEffects: [],
+    };
+  };
+
+  const publicCodes = (fixture, flow) => ({
+    taint: requirementCodesOnly(checkTaint(fixture.parsed.ast, [flow])),
+    valueState: requirementCodesOnly(checkValueStates(
+      fixture.parsed.ast,
+      "development",
+      emptyValidatorInput([flow]),
+    ).diagnostics),
+  });
+
+  it("admits the exact shared aggregate byte ceiling in both public passes", () => {
+    const current = rawFixture("round-12-exact-budget.fungi");
+    const flow = flowAtSharedBudget(current.flow, 0);
+    assert.deepEqual(publicCodes(current, flow), {
+      taint: ["FUNGI-REQUIREMENT-004"],
+      valueState: ["FUNGI-REQUIREMENT-004"],
+    });
+  });
+
+  it("refuses one byte above the shared aggregate ceiling in both public passes", () => {
+    const current = rawFixture("round-12-over-budget.fungi");
+    const flow = flowAtSharedBudget(current.flow, 1);
+    assert.deepEqual(publicCodes(current, flow), {
+      taint: ["FUNGI-REQUIREMENT-010"],
+      valueState: ["FUNGI-REQUIREMENT-010"],
+    });
+  });
+
+  it("stops explicit-flow indexed reads immediately after the shared budget refusal", () => {
+    const current = rawFixture("round-12-early-refusal.fungi");
+    const maxParam = "x".repeat(CHECKED_FLOW_MAX_ITEM_BYTES);
+    let taintBeyondBudgetReads = 0;
+    let valueStateBeyondBudgetReads = 0;
+    const hostileParams = (recordBeyondBudgetRead) => new Proxy(
+      Array.from({ length: CHECKED_FLOW_MAX_PARAMS }, () => maxParam),
+      {
+        get(target, property, receiver) {
+          const index = typeof property === "string" && /^[0-9]+$/.test(property)
+            ? Number(property)
+            : undefined;
+          if (index !== undefined && index >= 32) {
+            recordBeyondBudgetRead();
+            throw new Error("read beyond shared aggregate budget");
+          }
+          return Reflect.get(target, property, receiver);
+        },
+      },
+    );
+    const taintFlow = {
+      ...current.flow,
+      params: hostileParams(() => { taintBeyondBudgetReads += 1; }),
+      declaredEffects: [],
+    };
+    const valueStateFlow = {
+      ...current.flow,
+      params: hostileParams(() => { valueStateBeyondBudgetReads += 1; }),
+      declaredEffects: [],
+    };
+
+    assert.deepEqual(
+      requirementCodesOnly(checkTaint(current.parsed.ast, [taintFlow])),
+      ["FUNGI-REQUIREMENT-010"],
+    );
+    assert.deepEqual(
+      requirementCodesOnly(checkValueStates(
+        current.parsed.ast,
+        "development",
+        emptyValidatorInput([valueStateFlow]),
+      ).diagnostics),
+      ["FUNGI-REQUIREMENT-010"],
+    );
+    assert.equal(taintBeyondBudgetReads, 0);
+    assert.equal(valueStateBeyondBudgetReads, 0);
+  });
+
+  it("keeps stable raw and exact authority routes discriminating", () => {
+    const raw = rawFixture("round-12-stable-raw.fungi");
+    assert.deepEqual(publicCodes(raw, raw.flow), {
+      taint: ["FUNGI-REQUIREMENT-004"],
+      valueState: ["FUNGI-REQUIREMENT-004"],
+    });
+    const authority = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
+    assert.deepEqual(authority.taint, []);
+    assert.deepEqual(authority.valueState, []);
+  });
+});
