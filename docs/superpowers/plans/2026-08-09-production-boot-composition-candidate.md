@@ -54,7 +54,7 @@ all malformed absence/non-number inputs reach an explicit total refusal exit.
 - Create `packages-galerina/galerina-framework-app-kernel/tests/production-boot-composition-candidate.test.mjs`: candidate, forgery and mismatch evidence.
 - Modify `packages-galerina/galerina-framework-app-kernel/src/index.ts`: export the two new modules only.
 - Modify `scripts/tests/restore-verdict-slide-candidate.integration.test.mjs`: bind the real Contract 85 receipt observations to the new profiles and candidate while driving the real consumer.
-- Modify `docs/TODO.md` and `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`: record the candidate honestly and retain the open authority gate.
+- Modify `docs/TODO.md` and `docs/ROADMAP.md`: record the candidate honestly and retain the open authority gate.
 - Create `docs/reports/production-boot-composition-candidate-2026-08-09.md`: fresh evidence and owner-only input manifest.
 - Create the sibling KB private RD-0791 adjudication record: source-linked adjudication, evidence tiers and R&D wish list.
 - Append the sibling KB private catch-up ledger: dated evidence-state entry; never rewrite prior entries.
@@ -710,7 +710,7 @@ this public repository, use a directory pathspec, or push.
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Create: `docs/reports/production-boot-composition-candidate-2026-08-09.md`
 - Regenerate: only files selected by their owning graph, code-index, registry, component-health and phase-close generators.
 

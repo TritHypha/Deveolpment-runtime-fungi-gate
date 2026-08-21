@@ -96,7 +96,7 @@ typed Boolean receipts and fail-closed mutation evidence.
 **Files:**
 - Create: `docs/reports/boundary-auth-requirement-fungi-conversion-2026-08-12.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Generated: bounded package, project, KB, inventory, semantic, code-index,
   count, status, percent and roadmap/subway owners.
 

@@ -60,7 +60,7 @@ policy, ledger, documentation, or undeclared output paths still refuse.
 
 Rename intact:
 
-- `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` to
+- `docs/ROADMAP.md` to
   `docs/ROADMAP.md`
 
 Delete after inbound references are migrated:

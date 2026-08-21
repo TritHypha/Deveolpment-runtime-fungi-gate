@@ -115,7 +115,7 @@ deterministic dependency graph and provenance receipt.
 This is a forward replacement rule. Existing TypeScript and `node_modules`
 bootstrap dependencies remain until executable SLIDE integration provides and
 verifies their replacements. See
-`docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` and the executable
+`docs/ROADMAP.md` and the executable
 migration contract in
 `docs/architecture/flat-package-topology-and-post-slide-migration.md`.
 

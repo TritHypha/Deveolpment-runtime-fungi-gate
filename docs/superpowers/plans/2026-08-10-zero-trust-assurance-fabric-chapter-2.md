@@ -205,7 +205,7 @@ git commit -m "feat: bind generated assurance evidence"
 - Create: `governance/assurance-evidence-dependencies.json`
 - Create: `scripts/lib/assurance-fabric/roadmap-evidence.mjs`
 - Test: `scripts/tests/assurance-roadmap-evidence.test.mjs`
-- Modify: `scripts/gen-roadmap-subway.mjs`
+- Modify: `scripts/gen-roadmap.mjs`
 - Modify: `scripts/tests/roadmap-subway-generator.test.mjs`
 
 **Interfaces:**
@@ -224,7 +224,7 @@ test("roadmap becomes unknown when a displayed upstream build point is stale", (
   writeFileSync(graphProvenance, JSON.stringify(stale, null, 2) + "\n");
   const result = run(harness, selected, ["--write"]);
   assert.equal(result.status, 0);
-  assert.match(readFileSync(join(selected, "build/component-health/roadmap-subway.svg"), "utf8"), /Assurance DAG: UNKNOWN/);
+  assert.match(readFileSync(join(selected, "build/roadmap/roadmap.svg"), "utf8"), /Assurance DAG: UNKNOWN/);
 });
 
 test("roadmap denies malformed external-input provenance", () => {
@@ -256,7 +256,7 @@ The descriptor must enumerate these exact node IDs and routes:
     { "id": "ts-retirement", "provenancePath": "build/ts-retirement/provenance.json", "toolPath": "scripts/ts-retirement-graph.mjs", "expectedTool": "ts-retirement-graph" },
     { "id": "status-ledger", "provenancePath": "build/status/provenance.json", "toolPath": "scripts/gen-status-blocks.mjs", "expectedTool": "gen-status-blocks" },
     { "id": "slide-reference", "provenancePath": "governance/slide-reference-evidence.json", "toolPath": "scripts/verify-slide-reference-evidence.mjs", "expectedTool": "verify-slide-reference-evidence" },
-    { "id": "roadmap-subway", "provenancePath": "build/component-health/subway-provenance.json", "toolPath": "scripts/gen-roadmap-subway.mjs", "expectedTool": "gen-roadmap-subway" }
+    { "id": "roadmap-subway", "provenancePath": "build/roadmap/provenance.json", "toolPath": "scripts/gen-roadmap.mjs", "expectedTool": "gen-roadmap-subway" }
   ]
 }
 ```
@@ -265,7 +265,7 @@ The implementation may add exact artifact arrays and predecessor arrays required
 
 - [ ] **Step 4: Split component-health provenance ownership and render DAG state**
 
-`component-health.mjs` writes `percent-provenance.json`; `gen-roadmap-subway.mjs` writes `subway-provenance.json`. The roadmap generator calls `deriveRoadmapEvidence(ROOT)`, adds the DAG state to its model, and renders the same state and root digest into its generated Markdown block and SVG. `DENY` exits nonzero; `UNKNOWN` renders visibly and remains non-authorizing; only `CURRENT` means the dependency view is current, never production-authorizing.
+`component-health.mjs` writes `percent-provenance.json`; `gen-roadmap.mjs` writes `subway-provenance.json`. The roadmap generator calls `deriveRoadmapEvidence(ROOT)`, adds the DAG state to its model, and renders the same state and root digest into its generated Markdown block and SVG. `DENY` exits nonzero; `UNKNOWN` renders visibly and remains non-authorizing; only `CURRENT` means the dependency view is current, never production-authorizing.
 
 - [ ] **Step 5: Run integration tests and verify GREEN**
 
@@ -276,7 +276,7 @@ Expected: all tests pass, including stale predecessor, malformed external proven
 - [ ] **Step 6: Commit roadmap binding**
 
 ```powershell
-git add -- governance/assurance-evidence-dependencies.json scripts/lib/assurance-fabric/roadmap-evidence.mjs scripts/tests/assurance-roadmap-evidence.test.mjs scripts/gen-roadmap-subway.mjs scripts/tests/roadmap-subway-generator.test.mjs scripts/component-health.mjs
+git add -- governance/assurance-evidence-dependencies.json scripts/lib/assurance-fabric/roadmap-evidence.mjs scripts/tests/assurance-roadmap-evidence.test.mjs scripts/gen-roadmap.mjs scripts/tests/roadmap-subway-generator.test.mjs scripts/component-health.mjs
 git commit -m "feat: bind roadmap to assurance evidence dag"
 ```
 
@@ -285,7 +285,7 @@ git commit -m "feat: bind roadmap to assurance evidence dag"
 **Files:**
 - Modify: `docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate: declared graph, index, component-health, status, retirement, roadmap and provenance outputs through owning tools.
 
 **Interfaces:**
@@ -304,7 +304,7 @@ Expected: zero failures and zero unexpected skips.
 node scripts/graph-all.mjs
 node scripts/ts-retirement-graph.mjs --write
 node scripts/gen-status-blocks.mjs --write
-node scripts/gen-roadmap-subway.mjs --write
+node scripts/gen-roadmap.mjs --write
 ```
 
 Then run each owning `--check` mode. A stale or missing predecessor must remain visible; do not hand-edit generated output or claim K3 `+1`.
@@ -320,7 +320,7 @@ Record exact focused/broad counts, the DAG root state, every predecessor state, 
 - [ ] **Step 5: Commit the Chapter 2 evidence checkpoint**
 
 ```powershell
-git add -- docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md docs/TODO.md docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md build
+git add -- docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md docs/TODO.md docs/ROADMAP.md build
 git diff --cached --check
 git commit -m "docs: close assurance fabric chapter two"
 ```
@@ -333,4 +333,4 @@ Run Myco indexing, then codebase-memory moderate indexing. Require `nodes == exp
 
 - Spec coverage: Chapter 2 sections 4, data-flow steps 8-11, refusal paths for stale/malformed predecessors, tests 6-7, and acceptance criteria for roadmap freshness and Git/external provenance map to Tasks 1-4.
 - Placeholder scan: every production interface, exact file, test command, failure expectation and commit boundary is stated; there are no deferred implementation blanks.
-- Type consistency: `EvidenceNodeCandidate.localTrit` enters `evaluateEvidenceDag`; `deriveRoadmapEvidence` returns the branded report consumed by `gen-roadmap-subway.mjs`; no later task renames these interfaces.
+- Type consistency: `EvidenceNodeCandidate.localTrit` enters `evaluateEvidenceDag`; `deriveRoadmapEvidence` returns the branded report consumed by `gen-roadmap.mjs`; no later task renames these interfaces.

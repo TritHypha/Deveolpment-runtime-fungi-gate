@@ -102,7 +102,7 @@ SLIDE/VOK evidence, Myco and the codebase-memory graph.
   `docs/reports/slice-372-*-fungi-conversion-2026-08-13.md`
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 
 - [x] Give each receipt exactly one full source identity, classification,
   blocker/prerequisite, truthful threadability, both skill dispositions and

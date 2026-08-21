@@ -385,7 +385,7 @@ git commit -m "docs(registry): replace false package stubs"
 - Modify: `docs/security/galerina-72-signed-registry-index-walkthrough.md`
 - Modify:
   `docs/reports/zero-trust-tooling-refactor-completion-2026-07-29.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `../SLIDE/TODO.md`
 - Modify: `../SLIDE/QUESTIONS-FOR-OWNER.md`
 - Update the relevant public Knowledge Base architecture/status record without
@@ -483,8 +483,8 @@ owner-only signing refusal remains named, not bypassed.
 
 ```powershell
 node scripts/component-health.mjs --audit-html
-node scripts/gen-roadmap-subway.mjs --write
-node scripts/gen-roadmap-subway.mjs --check
+node scripts/gen-roadmap.mjs --write
+node scripts/gen-roadmap.mjs --check
 ```
 
 Manually adjudicate the roadmap so generated percentages do not imply a signed

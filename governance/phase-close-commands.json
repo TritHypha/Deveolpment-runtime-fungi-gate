@@ -532,7 +532,7 @@
         "kind": "process",
         "command": [
           "node",
-          "scripts/gen-roadmap-subway.mjs",
+          "scripts/gen-roadmap.mjs",
           "--check"
         ]
       },

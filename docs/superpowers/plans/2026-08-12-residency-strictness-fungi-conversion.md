@@ -122,7 +122,7 @@ independent SLIDE checked-package compilation and VOK typed receipts.
 **Files:**
 - Create: `docs/reports/residency-strictness-fungi-conversion-2026-08-12.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate: registered Golden, retirement, graph, status, component-health,
   code-index and roadmap-subway owners.
 

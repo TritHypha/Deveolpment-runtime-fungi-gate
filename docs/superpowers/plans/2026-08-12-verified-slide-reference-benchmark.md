@@ -81,7 +81,7 @@ Run the focused test, the benchmark package test suite, and the benchmark truth 
 - Update: `packages-galerina/galerina-devtools-benchmarks/contracts/slide-verified-native-operation-admission-v1.json`
 - Update through benchmark owners: `packages-galerina/galerina-devtools-benchmarks/results/**`
 - Update after evidence: `docs/TODO.md`
-- Update after evidence: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Update after evidence: `docs/ROADMAP.md`
 
 **Interfaces:**
 - Consumes: the fresh SLIDE verified-loop publication and the full Galerina benchmark runner.

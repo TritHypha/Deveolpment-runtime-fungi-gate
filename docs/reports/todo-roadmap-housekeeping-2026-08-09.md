@@ -16,7 +16,7 @@ The tracked-document inventory contains:
 
 Historical dated roadmaps remain chronological evidence. They were not
 rewritten to look current. The active route is the canonical
-`docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`; generator-owned views
+`docs/ROADMAP.md`; generator-owned views
 were regenerated through their owning tools, and long-lived scope roadmaps now
 point readers back to that authority.
 

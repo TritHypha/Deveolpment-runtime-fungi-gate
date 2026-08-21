@@ -82,7 +82,7 @@ _ => return false
 **Files:**
 - Modify owner-generated Golden, retirement, graph, code-index, component-health, roadmap, and canonical-count outputs as required.
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Create: `docs/reports/can-honour-fungi-conversion-2026-08-12.md`
 
 **Interfaces:**

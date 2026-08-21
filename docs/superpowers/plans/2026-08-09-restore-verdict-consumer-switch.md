@@ -114,7 +114,7 @@ the test remains an explicit skip when the checkout is unavailable.
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `scripts/component-health.mjs`
 - Create: `docs/reports/restore-verdict-consumer-switch-2026-08-09.md`
 - Regenerate: graph, code/contract registry, component-health and canonical test counts through owning tools only.

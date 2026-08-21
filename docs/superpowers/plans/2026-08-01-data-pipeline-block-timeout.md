@@ -86,7 +86,7 @@ pass without warnings.
 **Files:**
 - Modify: `packages-galerina/galerina-data-pipeline/README.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: generated indexes and `version.json` only through owned tools
 
 **Interfaces:**

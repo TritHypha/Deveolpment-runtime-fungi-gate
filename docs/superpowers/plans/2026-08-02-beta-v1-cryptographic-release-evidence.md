@@ -102,7 +102,7 @@
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `governance/status-ledger.json`
 - Modify: `docs/superpowers/plans/2026-08-01-beta-v1-platform-durability-release-admission.md`
 - Modify: `AGENTS.md`

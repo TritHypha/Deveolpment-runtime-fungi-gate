@@ -177,7 +177,7 @@ git commit -m "test: admit tensor rank fungi through slide"
 **Files:**
 - Create: `docs/reports/tensor-dimension-count-compatibility-fungi-conversion-2026-08-12.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate through owners: retirement, code registry/index, semantic graph, component health, status, pinned SLIDE evidence, roadmap subway and canonical counts.
 
 **Interfaces:**

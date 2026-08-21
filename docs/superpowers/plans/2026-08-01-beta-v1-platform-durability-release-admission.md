@@ -514,7 +514,7 @@ git commit -m "feat(release): add beta-v1 platform admission"
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `docs/reports/beta-v1-platform-matrix-2026-07-29.md`
 - Create: `docs/reports/beta-v1-platform-durability-completion-2026-08-01.md`
 - Modify: `packages-galerina/galerina-framework-app-kernel/native/registry-durability/README.md`

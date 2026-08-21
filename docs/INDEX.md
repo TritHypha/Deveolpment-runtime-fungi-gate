@@ -107,7 +107,7 @@
 | [`roadmap-2026-07-24.md`](roadmap-2026-07-24.md) | Galerina Roadmap — 2026-07-24 |
 | [`roadmap-2026-07-25-cycle2.md`](roadmap-2026-07-25-cycle2.md) | Galerina Roadmap — 2026-07-25 (cycle 2) |
 | [`roadmap-2026-07-25.md`](roadmap-2026-07-25.md) | Galerina Roadmap — 2026-07-25 |
-| [`roadmap-2026-07-29-galerina-beta-v1-to-slide.md`](roadmap-2026-07-29-galerina-beta-v1-to-slide.md) | Galerina beta v1 to SLIDE roadmap |
+| [`ROADMAP.md`](ROADMAP.md) | Galerina beta v1 to SLIDE roadmap |
 | [`runtime-audit-log-schema-and-execution-proof.md`](runtime-audit-log-schema-and-execution-proof.md) | Galerina Runtime Audit Log Schema and Execution Proof |
 | [`testing.md`](testing.md) | Testing |
 | [`why-controllers-not-used-in-Galerina.md`](why-controllers-not-used-in-Galerina.md) | Why Controllers Are Not Core Galerina |

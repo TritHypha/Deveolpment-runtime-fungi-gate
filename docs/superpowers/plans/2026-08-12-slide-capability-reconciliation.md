@@ -176,7 +176,7 @@ Stage only Task 3 source, tests and generated outputs; commit `publish pin-bound
 - Modify: `governance/phase-close-commands.json`
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `../skills/translating-typescript-to-fungi/SKILL.md` only if a fresh no-skill baseline misses the pin/composition rule
 - Test: `scripts/tests/slide-capability-matrix.integration.test.mjs`
 
@@ -236,7 +236,7 @@ Run each owner separately with its check mode. Do not substitute `graph-all`.
 
 - [ ] **Step 2: Publish roadmap and subway**
 
-Update the authored checkpoint, regenerate `build/component-health/roadmap-subway.svg`, and require the roadmap owner to pass 5/5 plus its self-test.
+Update the authored checkpoint, regenerate `build/roadmap/roadmap.svg`, and require the roadmap owner to pass 5/5 plus its self-test.
 
 - [ ] **Step 3: Refresh navigation indexes**
 

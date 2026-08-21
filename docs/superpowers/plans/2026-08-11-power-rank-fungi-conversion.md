@@ -146,7 +146,7 @@ Expected: 1/1 pass, zero skips.
 - Modify: `governance/phase-close-commands.json`
 - Create: `docs/reports/power-rank-fungi-conversion-2026-08-11.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: generated outputs selected by their owning tools
 
 **Interfaces:**

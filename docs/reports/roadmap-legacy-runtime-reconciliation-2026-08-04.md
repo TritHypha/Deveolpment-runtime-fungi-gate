@@ -68,4 +68,4 @@ the completed DSS decision-core plus optional-oracle row to remain visible as a
 shipped asset.
 
 The source of the generated subway map is `scripts/component-health.mjs`.
-Regenerate the map only through `scripts/gen-roadmap-subway.mjs --write`.
+Regenerate the map only through `scripts/gen-roadmap.mjs --write`.

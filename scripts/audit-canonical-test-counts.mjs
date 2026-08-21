@@ -9,22 +9,18 @@ import { tmpdir } from "node:os";
 const DOT = "\u00b7";
 const TICK = "\u2705";
 const CONSUMER_SPECS = Object.freeze([
-  Object.freeze({ id: "readme-subway", path: "README.md", capture: "subway" }),
-  Object.freeze({ id: "cycle-roadmap-subway", path: "docs/roadmap-2026-07-25-cycle2.md", capture: "subway" }),
-  Object.freeze({ id: "active-roadmap-subway", path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "subway" }),
+  Object.freeze({ id: "roadmap-current", path: "docs/ROADMAP.md", capture: "roadmap" }),
   Object.freeze({ id: "readme-full-suite", path: "README.md", capture: "readme-full-suite" }),
   Object.freeze({ id: "readme-tests-table", path: "README.md", capture: "readme-tests-table" }),
   Object.freeze({ id: "todo-assurance-fabric", path: "docs/TODO.md", capture: "todo-assurance-fabric" }),
-  Object.freeze({ id: "active-roadmap-chapter-3", path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "active-roadmap-chapter-3" }),
+  Object.freeze({ id: "roadmap-chapter-3", path: "docs/ROADMAP.md", capture: "roadmap-chapter-3" }),
 ]);
 const REQUIRED_CONSUMERS = Object.freeze(new Map([
-  ["readme-subway", Object.freeze({ path: "README.md", capture: "subway" })],
-  ["cycle-roadmap-subway", Object.freeze({ path: "docs/roadmap-2026-07-25-cycle2.md", capture: "subway" })],
-  ["active-roadmap-subway", Object.freeze({ path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "subway" })],
+  ["roadmap-current", Object.freeze({ path: "docs/ROADMAP.md", capture: "roadmap" })],
   ["readme-full-suite", Object.freeze({ path: "README.md", capture: "readme-full-suite" })],
   ["readme-tests-table", Object.freeze({ path: "README.md", capture: "readme-tests-table" })],
   ["todo-assurance-fabric", Object.freeze({ path: "docs/TODO.md", capture: "todo-assurance-fabric" })],
-  ["active-roadmap-chapter-3", Object.freeze({ path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "active-roadmap-chapter-3" })],
+  ["roadmap-chapter-3", Object.freeze({ path: "docs/ROADMAP.md", capture: "roadmap-chapter-3" })],
 ]));
 
 function parseArgs(argv) {
@@ -136,18 +132,18 @@ function patternOffsets(text, expression) {
     .map((match) => match.index);
 }
 
-function subwayBlock(text, consumer, violations, expected) {
-  const begins = patternOffsets(text, /<!-- SUBWAY:BEGIN(?=\s|-->)/u);
-  const ends = literalOffsets(text, "<!-- SUBWAY:END -->");
+function roadmapBlock(text, consumer, violations, expected) {
+  const begins = patternOffsets(text, /<!-- ROADMAP:BEGIN(?=\s|-->)/u);
+  const ends = literalOffsets(text, "<!-- ROADMAP:END -->");
   if (begins.length === 0 || ends.length === 0) {
-    violations.push({ consumer, code: "COUNT_CONSUMER_MISSING", detail: "generated subway block is missing" });
+    violations.push({ consumer, code: "COUNT_CONSUMER_MISSING", detail: "generated roadmap block is missing" });
     return;
   }
   if (begins.length !== 1 || ends.length !== 1 || begins[0] >= ends[0]) {
     violations.push({
       consumer,
       code: "COUNT_CONSUMER_DUPLICATE",
-      detail: `expected one ordered subway marker pair; found ${begins.length} begin and ${ends.length} end markers`,
+      detail: `expected one ordered roadmap marker pair; found ${begins.length} begin and ${ends.length} end markers`,
     });
     return;
   }
@@ -181,8 +177,8 @@ function activeChapter(text, consumer, violations) {
 }
 
 function auditConsumer(consumer, text, violations, expected) {
-  if (consumer.capture === "subway") {
-    subwayBlock(text, consumer.id, violations, expected);
+  if (consumer.capture === "roadmap") {
+    roadmapBlock(text, consumer.id, violations, expected);
     return;
   }
   if (consumer.capture === "readme-full-suite") {
@@ -197,7 +193,7 @@ function auditConsumer(consumer, text, violations, expected) {
     capture(text, /complete package lane passes\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u, consumer.id, violations, expected);
     return;
   }
-  if (consumer.capture === "active-roadmap-chapter-3") {
+  if (consumer.capture === "roadmap-chapter-3") {
     const chapter = activeChapter(text, consumer.id, violations);
     if (chapter !== null) {
       capture(chapter, /complete package lane is\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u, consumer.id, violations, expected);
@@ -245,18 +241,16 @@ function writeFixture(root, staleConsumer) {
     const value = consumer === staleConsumer ? 9498 : 9499;
     return plain ? String(value) : value.toLocaleString("en-GB");
   };
-  const subway = (consumer) => `**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} ${claim(consumer, true)} tests ${DOT} ship-readiness 100.0%**`;
+  const roadmap = (consumer) => `**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} ${claim(consumer, true)} tests ${DOT} ship-readiness 100.0%**`;
   write("version.json", `${JSON.stringify({ testCount: 9499, packageCount: 100 })}\n`);
   write("README.md", [
-    "<!-- SUBWAY:BEGIN -->", subway("readme-subway"), "<!-- SUBWAY:END -->",
     `**v1.0.0-beta.2 ${DOT} full suite 100/100 packages ${DOT} ${claim("readme-full-suite")} tests ${DOT} 0 failures.**`,
     `| **Tests** | ${TICK} green | 100/100 ${DOT} ${claim("readme-tests-table")} ${DOT} 0 fail |`,
   ].join("\n"));
-  write("docs/roadmap-2026-07-25-cycle2.md", `<!-- SUBWAY:BEGIN -->\n${subway("cycle-roadmap-subway")}\n<!-- SUBWAY:END -->\n`);
-  write("docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
-    "<!-- SUBWAY:BEGIN -->", subway("active-roadmap-subway"), "<!-- SUBWAY:END -->",
+  write("docs/ROADMAP.md", [
+    "<!-- ROADMAP:BEGIN -->", roadmap("roadmap-current"), "<!-- ROADMAP:END -->",
     "## VOK assurance fabric Chapter 3 - 2026-08-10",
-    `The complete package lane is **100/100 packages and ${claim("active-roadmap-chapter-3")} tests** in 1s.`,
+    `The complete package lane is **100/100 packages and ${claim("roadmap-chapter-3")} tests** in 1s.`,
   ].join("\n"));
   write("docs/TODO.md", `The complete package lane passes **100/100 packages and ${claim("todo-assurance-fabric")} tests**.\n`);
 }

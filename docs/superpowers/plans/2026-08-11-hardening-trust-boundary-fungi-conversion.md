@@ -175,8 +175,8 @@ contract manifest, complete suite and local commit before returning here.
 **Files:**
 - Create: `docs/reports/hardening-trust-boundary-fungi-conversion-2026-08-11.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
-- Regenerate: `build/component-health/roadmap-subway.svg`
+- Modify: `docs/ROADMAP.md`
+- Regenerate: `build/roadmap/roadmap.svg`
 - Regenerate: registered graph, index, status, Golden, percent and retirement owners as required by their drift checks.
 
 **Interfaces:**

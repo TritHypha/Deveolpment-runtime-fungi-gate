@@ -203,6 +203,7 @@ const GRAPH_ALL_CHILD_NAMES = Object.freeze([
   "dev-tool index",
   "Fungi source capability inventory",
   "semantic assurance graph",
+  "roadmap",
 ]);
 
 function isExactObject(value, keys) {
@@ -530,15 +531,15 @@ run("fungi:golden", "node", ["scripts/fungi-golden-probe.mjs", "--check"]);
 // (emit-doc-wat.mjs regenerates the excerpts through the real pipeline; --check fails on drift.)
 run("doc:wat-drift", "node", ["scripts/emit-doc-wat.mjs", "--check"]);
 
-// ── 1b4. Status-block drift gate (#74) — doc status sections must match component-health (the source) ──
-// (gen-status-blocks.mjs regenerates the ship-readiness/ZT/Build/registry block; --check fails on drift.)
+// ── 1b4. Status-artifact drift gate (#74) — the standalone status receipt must match component-health ──
+// (gen-status-blocks.mjs owns build/status only; the roadmap is owned by the graph-derived generator.)
 run("doc:status-drift", "node", ["scripts/gen-status-blocks.mjs", "--check"]);
 
-// ── 1b4b. Subway-roadmap drift gate — the generated roadmap block/SVG must match the live ledgers ──
-// (gen-roadmap-subway.mjs derives stations from the RD-0528/RD-0361 authority ledgers + component-health;
+// ── 1b4b. Graph-owned roadmap drift gate — the canonical roadmap/SVG must match admitted receipts ──
+// (gen-roadmap.mjs derives the route from the closed assurance DAG plus admitted generated graphs;
 // --check fails on drift AND on a missing target/markers — R&D 0422 found the day-one version was wired
 // into nothing and failed open on absence; both closed the same tick.)
-run("doc:roadmap-drift", "node", ["scripts/gen-roadmap-subway.mjs", "--check"]);
+run("doc:roadmap-drift", "node", ["scripts/gen-roadmap.mjs", "--check"]);
 
 // ── 1b5. Cast-hygiene lint (R&D sorted-path S0) — no NEW bare `as Verdict`/`as Trit` authority cast ──
 // A bare cast MINTS governance authority past every gate (the laundering a type-brand cannot see; SUITE 5:

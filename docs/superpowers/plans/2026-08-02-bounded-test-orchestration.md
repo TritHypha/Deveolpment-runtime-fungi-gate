@@ -223,7 +223,7 @@ filesystem operations, Windows process-tree adapter, POSIX process groups.
 **Files:**
 
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Create: `docs/reports/bounded-test-orchestration-completion-2026-08-02.md`
 
 - [x] **Step 1: Run all focused orchestration tests at concurrency one**

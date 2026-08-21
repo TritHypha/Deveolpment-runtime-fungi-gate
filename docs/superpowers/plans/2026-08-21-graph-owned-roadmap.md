@@ -131,7 +131,7 @@ locally with message: `test: expose graph-owned roadmap gaps`.
 ### Task 3: Implement the canonical generator and orchestration
 
 **Files:**
-- Rename: `scripts/gen-roadmap-subway.mjs` to `scripts/gen-roadmap.mjs`
+- Rename: `scripts/gen-roadmap.mjs` to `scripts/gen-roadmap.mjs`
 - Modify: `scripts/gen-roadmap.mjs`
 - Modify: `scripts/graph-all.mjs`
 - Modify: `scripts/lib/assurance-fabric/roadmap-evidence.mjs`
@@ -200,7 +200,7 @@ tooling policy. Commit locally with message:
 ### Task 4: Migrate the canonical document and remove dated living roadmaps
 
 **Files:**
-- Rename: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` to `docs/ROADMAP.md`
+- Rename: `docs/ROADMAP.md` to `docs/ROADMAP.md`
 - Delete: `docs/roadmap-2026-07-15.md`
 - Delete: `docs/roadmap-2026-07-23.md`
 - Delete: `docs/roadmap-2026-07-24.md`
@@ -215,7 +215,7 @@ tooling policy. Commit locally with message:
 - Modify: `scripts/tests/status-blocks-generator.test.mjs`
 - Modify: `scripts/audit-canonical-test-counts.mjs`
 - Modify: `scripts/tests/canonical-test-count-consistency.test.mjs`
-- Modify: graph-discovered tracked text consumers of `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: graph-discovered tracked text consumers of `docs/ROADMAP.md`
 - Regenerate: `build/code-index/CODE_INDEX.md`
 - Regenerate: `build/code-index/code-index.json`
 - Regenerate: `build/code-index/provenance.json`
@@ -315,7 +315,7 @@ Require:
 ```text
 docs/ROADMAP.md exists
 five superseded dated roadmap paths absent
-scripts/gen-roadmap-subway.mjs absent
+scripts/gen-roadmap.mjs absent
 current subway-named build artifacts absent
 no staged, tracked, or untracked residue
 git diff --check exits 0

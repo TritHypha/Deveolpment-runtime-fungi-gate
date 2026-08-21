@@ -164,7 +164,7 @@ superseded scopes or retirement credit.
   `docs/reports/slice-947-*-fungi-conversion-2026-08-14.md`
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 
 - [x] Author 50 receipt-local classifications, exact exits, vectors,
   threadability, source hashes, focused evidence pins and a common manifest.

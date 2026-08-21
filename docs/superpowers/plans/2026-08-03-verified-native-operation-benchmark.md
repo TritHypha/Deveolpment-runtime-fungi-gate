@@ -188,7 +188,7 @@ Run the Step 2 set and the benchmark integrity self-test.
 - Create: `docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi`
 - Modify: `docs/examples/VERIFIED-NATIVE-OPERATION-BOUNDARY.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Generate: benchmark package focused result/report artifacts under `results/`
 
 **Interfaces:**

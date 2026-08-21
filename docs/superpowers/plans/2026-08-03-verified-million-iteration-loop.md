@@ -276,7 +276,7 @@ git commit -m "docs: add verified million-read loop example"
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `docs/reports/zero-trust-tooling-refactor-completion-2026-07-29.md` only if its current scope explicitly tracks this boundary.
 
 **Interfaces:**
@@ -333,7 +333,7 @@ silence.
 - [ ] **Step 5: Commit Task 4**
 
 ```powershell
-git add -- docs/TODO.md docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md
+git add -- docs/TODO.md docs/ROADMAP.md
 git commit -m "docs: record verified loop proposal status"
 ```
 

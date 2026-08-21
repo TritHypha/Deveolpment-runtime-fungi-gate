@@ -190,7 +190,7 @@ git commit -m "feat(bench): explain winners and Galerina placement"
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: generated `build/` indexes and graph evidence as required.
 
 **Interfaces:**

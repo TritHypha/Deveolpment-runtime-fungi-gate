@@ -67,7 +67,7 @@ frontend evidence.
 
 **Files:**
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 
 - [ ] Check all manifest paths against current Git-tracked source.
 - [ ] Scan the handover for unresolved placeholders and forbidden private/local

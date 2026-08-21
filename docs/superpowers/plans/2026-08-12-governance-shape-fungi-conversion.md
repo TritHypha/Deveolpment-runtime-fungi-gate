@@ -80,7 +80,7 @@ pure flow sharesGovernanceShapeFungi(leftSignatureHash: String, rightSignatureHa
 **Files:**
 - Modify owner-generated Golden, retirement, graph, code-index, component-health, roadmap, and count outputs only when their checks report drift.
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Create: `docs/reports/governance-shape-fungi-conversion-2026-08-12.md`
 
 **Interfaces:**

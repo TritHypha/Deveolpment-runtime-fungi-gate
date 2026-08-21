@@ -172,7 +172,7 @@ Run `gh repo edit TritHypha/translating-typescript-to-fungi --visibility public 
 ### Task 5: Close custody without resuming slices
 
 **Files:**
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: the active conversion register/ledger and batch status file identified through current Galerina navigation.
 - Modify: `docs/superpowers/plans/2026-08-12-fungi-skills-public-release.md`
 

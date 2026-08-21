@@ -3959,7 +3959,7 @@ authority may be inferred from this TODO.
 
 - [x] Recovered the original dev-tool chain:
   `component-health.mjs --audit-html` supplies the three-section evidence
-  audit and `gen-roadmap-subway.mjs --write` renders the SVG, provenance and
+  audit and `gen-roadmap.mjs --write` renders the SVG, provenance and
   marker-owned documentation blocks.
 - [x] Reconciled the hand-maintained source records with the current ledgers:
   98/98 component families, 8,956 tests, 1,456 contracts across 534 `.fungi`,
@@ -7799,7 +7799,7 @@ planning checkbox must never be used to imply that implementation exists.
 - **Current safe boundary:** proceed to the complete
   graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
-  `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+  `docs/ROADMAP.md`.
 - **Task 9 terminal checkpoint (2026-07-30):** graph generation and check mode
   are green for project, integrity, Knowledge Base, package, and dev-tool
   indexes; the memory graph alone refuses because four candidate external
@@ -8437,7 +8437,7 @@ planning checkbox must never be used to imply that implementation exists.
   isolated fixture proves a markerless twin cannot partially update the
   TypeScript output. Its built-in evidence is 10/10, the focused fixture is
   1/1, the combined affected suite is 31/31, and the live audit passes 8/8.
-- **Task 7 ninth live generator:** `gen-roadmap-subway.mjs` now honors one
+- **Task 7 ninth live generator:** `gen-roadmap.mjs` now honors one
   selected root, derives both complete marker-owned documents before
   mutation, refuses missing/duplicated/misordered markers, preserves each
   target's newline convention, and treats the SVG plus provenance as

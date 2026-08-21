@@ -1093,7 +1093,7 @@ so repository-wide closure remains `UNKNOWN`.
 | Closure item | Status |
 |---|---|
 | `docs/TODO.md` | `DONE` for the authored Slice 247 status, defects, individual owner results and post-commit Myco proof |
-| `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` | `DONE` for the authored Slice 247 narrative and generated subway block |
+| `docs/ROADMAP.md` | `DONE` for the authored Slice 247 narrative and generated subway block |
 | Retirement and conversion queue | `DONE` at 1,486/1,486, seven scoped candidates and 856 blockers |
 | Package, project and KB graphs | `DONE` at 100/201, 5/5 and 4/4 |
 | Dev-tool and Fungi-source inventories | `DONE` at 100 packages / 172 tools / 40 proofs and 147 Fungi files |

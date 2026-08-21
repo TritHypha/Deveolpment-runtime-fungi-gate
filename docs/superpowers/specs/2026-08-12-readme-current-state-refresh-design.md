@@ -57,7 +57,7 @@ Selected. Preserve useful product explanations and generated owner regions, but 
 
 ## Generated ownership
 
-The `SUBWAY:BEGIN` to `SUBWAY:END` region remains generator-owned. The rewrite must preserve its markers and use `scripts/gen-roadmap-subway.mjs` for any generated change.
+The `SUBWAY:BEGIN` to `SUBWAY:END` region remains generator-owned. The rewrite must preserve its markers and use `scripts/gen-roadmap.mjs` for any generated change.
 
 ## Acceptance
 

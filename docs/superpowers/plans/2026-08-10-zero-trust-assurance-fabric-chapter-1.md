@@ -46,9 +46,9 @@
 - `scripts/tests/assurance-legacy-adapter.test.mjs` — legacy exit and process-boundary tests.
 - `scripts/tests/run-assurance-shadow.test.mjs` — end-to-end differential shadow tests.
 - `docs/TODO.md` — closes only the Chapter 1 and `unsafe let` linter rows supported by fresh evidence.
-- `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` — records Chapter 1 as non-authorizing evidence without changing conversion readiness.
+- `docs/ROADMAP.md` — records Chapter 1 as non-authorizing evidence without changing conversion readiness.
 - `build/graph/Galerina_GRAPH_REPORT.md` and `build/graph/provenance.json` — regenerated through the owning graph tool.
-- `build/component-health/roadmap-subway.svg` — regenerated only through `scripts/gen-roadmap-subway.mjs` if the roadmap ledger changes its generated state.
+- `build/roadmap/roadmap.svg` — regenerated only through `scripts/gen-roadmap.mjs` if the roadmap ledger changes its generated state.
 
 ---
 
@@ -929,10 +929,10 @@ git commit -m "feat: add non-authorizing assurance shadow runner"
 **Files:**
 - Modify: `docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate: `build/graph/Galerina_GRAPH_REPORT.md`
 - Regenerate: `build/graph/provenance.json`
-- Regenerate when changed by the owning tool: `build/component-health/roadmap-subway.svg`
+- Regenerate when changed by the owning tool: `build/roadmap/roadmap.svg`
 
 **Interfaces:**
 - Consumes: fresh outputs from Tasks 1–7.
@@ -978,8 +978,8 @@ moving conversion readiness or K3 production authority above `0`.
 - [ ] **Step 4: Regenerate the roadmap and project graph through their owners**
 
 ```powershell
-node scripts/gen-roadmap-subway.mjs
-node scripts/gen-roadmap-subway.mjs --check
+node scripts/gen-roadmap.mjs
+node scripts/gen-roadmap.mjs --check
 node scripts/project-graph-generator.mjs --root .
 node scripts/project-graph-generator.mjs --root . --check
 node scripts/audit-graph-integrity.mjs
@@ -1003,7 +1003,7 @@ Expected: no new claim-hygiene baseline violation, no overclaim/path/private lea
 - [ ] **Step 6: Commit the Chapter 1 evidence checkpoint**
 
 ```powershell
-git add -- docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md docs/TODO.md docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md build/graph/Galerina_GRAPH_REPORT.md build/graph/provenance.json build/component-health/roadmap-subway.svg
+git add -- docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md docs/TODO.md docs/ROADMAP.md build/graph/Galerina_GRAPH_REPORT.md build/graph/provenance.json build/roadmap/roadmap.svg
 git commit -m "docs: record assurance fabric chapter one"
 ```
 

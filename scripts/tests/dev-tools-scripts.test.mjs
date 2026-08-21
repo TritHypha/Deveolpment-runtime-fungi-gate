@@ -422,7 +422,7 @@ writeFileSync(statusLedger, JSON.stringify({
   schema: "galerina.status-ledger.v1",
   asOf: "2026-08-01",
   milestone: "Fixture platform-admission closure",
-  roadmap: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
+  roadmap: "docs/ROADMAP.md",
   openGates: [
     {
       id: "PLATFORM-EVIDENCE",
@@ -446,7 +446,7 @@ test("status: a validated bounded ledger supplies current milestone, gate, date,
   assert.match(structuredStatus.stdout, /2026-08-01/);
   assert.match(structuredStatus.stdout, /Fixture platform-admission closure/);
   assert.match(structuredStatus.stdout, /\[PLATFORM-EVIDENCE\] Collect admitted cross-platform durability evidence\./);
-  assert.match(structuredStatus.stdout, /docs\/roadmap-2026-07-29-galerina-beta-v1-to-slide\.md/);
+  assert.match(structuredStatus.stdout, /docs\/ROADMAP\.md/);
   assert.doesNotMatch(structuredStatus.stdout, /SESSION CLOSE 2026-06-25/,
     "historical version.json prose cannot re-enter the live status view");
 });
@@ -483,7 +483,7 @@ writeFileSync(duplicateStatusLedger, [
   `  "schema": "galerina.status-ledger.v1",`,
   `  "asOf": "2026-08-01",`,
   `  "milestone": "Duplicate field fixture",`,
-  `  "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",`,
+  `  "roadmap": "docs/ROADMAP.md",`,
   `  "openGates": []`,
   `}`,
 ].join("\n") + "\n");
@@ -505,7 +505,7 @@ writeFileSync(escapedDuplicateStatusLedger, [
   `  "\\u0073chema": "galerina.status-ledger.v1",`,
   `  "asOf": "2026-08-01",`,
   `  "milestone": "Escaped duplicate field fixture",`,
-  `  "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",`,
+  `  "roadmap": "docs/ROADMAP.md",`,
   `  "openGates": []`,
   `}`,
 ].join("\n") + "\n");

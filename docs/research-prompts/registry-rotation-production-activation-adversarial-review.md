@@ -17,7 +17,7 @@ Repository:
 Read at minimum:
 
 - `docs/architecture/audit-key-rotation-triple-lock-design-2026-07-10.md`
-- `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- `docs/ROADMAP.md`
 - `packages-galerina/galerina-tower-citizen/src/key-rotation.ts`
 - `packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts`
 - `packages-galerina/galerina-framework-app-kernel/src/registry-rotation-authority.ts`

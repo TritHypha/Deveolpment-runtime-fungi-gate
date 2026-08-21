@@ -106,7 +106,7 @@ Stage only the new integration test and commit with `prove slice 90 through phys
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/reports/galerina-conversion-and-assurance-status-2026-08-13.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate only registered relevant outputs after authored inputs are committed.
 
 **Interfaces:**

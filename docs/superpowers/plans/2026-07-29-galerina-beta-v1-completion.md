@@ -534,8 +534,8 @@ npm.cmd run phase-close
 npm.cmd run phase-close:exhaustive
 node scripts/rebuild-fusable-packages.mjs --strict
 node scripts/component-health.mjs --audit-html
-node scripts/gen-roadmap-subway.mjs --write
-node scripts/gen-roadmap-subway.mjs --check
+node scripts/gen-roadmap.mjs --write
+node scripts/gen-roadmap.mjs --check
 ```
 
 Run every direct graph, audit, generator, and package test required by the

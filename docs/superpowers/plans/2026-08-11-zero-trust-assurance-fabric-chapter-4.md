@@ -367,7 +367,7 @@ git commit -m "feat: switch phase close to governed manifest"
 - Modify: `governance/generator-policy.json` when an owner artifact set changes
 - Modify: `docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate: `build/dev-tool-index/*`
 - Regenerate: `build/code-index/*`
 - Regenerate: `build/assurance-semantic-graph/*`
@@ -415,7 +415,7 @@ Add a Chapter 4 checkpoint to the design, a new first dated section to
 counts, the old/new differential result, transitive tool coverage, deduplicated
 obligation count, WAT/Wasm/DSS active lifecycle, legacy-oracle custody and the
 explicit statement that VOK/release authority remains K3 `0`. Regenerate
-`build/component-health/roadmap-subway.svg` through its owner; do not hand-edit
+`build/roadmap/roadmap.svg` through its owner; do not hand-edit
 generated regions.
 
 - [ ] **Step 6: Review, commit and refresh indexes**

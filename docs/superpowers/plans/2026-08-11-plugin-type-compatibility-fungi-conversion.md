@@ -64,7 +64,7 @@
 **Files:**
 - Create: `docs/reports/plugin-type-compatibility-fungi-conversion-2026-08-11.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: generated owner outputs selected by their owning tools
 
 **Interfaces:**

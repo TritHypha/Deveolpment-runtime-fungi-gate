@@ -2,7 +2,7 @@
   "schema": "galerina.status-ledger.v1",
   "asOf": "2026-08-12",
   "milestone": "Receipt-bound Galerina-to-SLIDE package execution before terminal TypeScript and dependency retirement",
-  "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
+  "roadmap": "docs/ROADMAP.md",
   "openGates": [
     {
       "id": "PLATFORM-DURABILITY",
@@ -32,7 +32,7 @@
     {
       "id": "PLATFORM-MATRIX",
       "summary": "The seven-OS digest-pinned release gate and public receipt workflow are implemented; return Windows 10, Windows 11, Ubuntu, Debian, Fedora, Linux Mint and macOS receipts without inferring untested hosts.",
-      "evidence": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md"
+      "evidence": "docs/ROADMAP.md"
     }
   ]
 }

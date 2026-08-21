@@ -124,7 +124,7 @@ Queue reconciliation: graph-first discovery found 41 distinct graph nodes in `ep
 - Create: `docs/reports/slice-648-*-fungi-conversion-2026-08-14.md` through `docs/reports/slice-697-*-fungi-conversion-2026-08-14.md`.
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`.
 - Modify: `docs/TODO.md`.
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+- Modify: `docs/ROADMAP.md`.
 
 - [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
 - [x] Run focused Tower checks and the receipt audit: Tower typecheck plus 515/515 and 637/637 governed receipts.

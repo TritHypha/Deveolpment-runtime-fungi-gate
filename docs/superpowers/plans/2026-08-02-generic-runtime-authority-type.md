@@ -320,7 +320,7 @@ git commit -m "feat(vok): add native authority type contract"
 - Modify: `packages-galerina/galerina-core/docs/type-system.md`
 - Modify: `packages-galerina/galerina-core/examples/examples-manifest.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: `../ZTF-Knowledge-Bases/reference/language/compiler-diagnostics.md`
 - Modify: `../ZTF-Knowledge-Bases/research/rd/RD-0659-generic-affine-runtime-authority-type.md`
 
@@ -373,7 +373,7 @@ counts.
 - [x] **Step 5: Commit Galerina and KB documentation separately**
 
 ```powershell
-git add -- build/code-registry/REGISTRY.md build/code-index/CODE_INDEX.md docs/language/fungi/SYNTAX-REFERENCE.md packages-galerina/galerina-core/docs/type-system.md packages-galerina/galerina-core/examples/examples-manifest.md docs/TODO.md docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md
+git add -- build/code-registry/REGISTRY.md build/code-index/CODE_INDEX.md docs/language/fungi/SYNTAX-REFERENCE.md packages-galerina/galerina-core/docs/type-system.md packages-galerina/galerina-core/examples/examples-manifest.md docs/TODO.md docs/ROADMAP.md
 git commit -m "docs: record authority type evidence"
 git -C ..\ZTF-Knowledge-Bases add compiler-diagnostics.md RD-0659-generic-affine-runtime-authority-type.md
 git -C ..\ZTF-Knowledge-Bases commit -m "docs: record authority compiler evidence"

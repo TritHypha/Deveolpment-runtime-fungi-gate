@@ -159,7 +159,7 @@ git commit -m "test: prove effect mask subset slide execution"
 **Files:**
 - Modify only owner-generated Golden, retirement, graph, code-index, component-health, roadmap, and count outputs when their exact checks refuse as stale.
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Create: `docs/reports/effect-mask-subset-fungi-conversion-2026-08-12.md`
 
 **Interfaces:**

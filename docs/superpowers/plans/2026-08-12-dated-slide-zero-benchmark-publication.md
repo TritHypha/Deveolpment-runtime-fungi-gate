@@ -92,7 +92,7 @@ Expected: both exit 0.
 - Update through registered owners: `build/**`
 - Update through benchmark owner: `packages-galerina/galerina-devtools-benchmarks/results/**`
 - Modify after evidence: `docs/TODO.md`
-- Modify after evidence: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify after evidence: `docs/ROADMAP.md`
 
 **Interfaces:**
 - Consumes: authoritative generator policy, safe package rebuild, native benchmark builders, full benchmark runner.

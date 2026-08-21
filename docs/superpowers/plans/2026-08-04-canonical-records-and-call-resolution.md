@@ -191,7 +191,7 @@ git commit -m "feat(self-hosted): align canonical record admission"
 - Modify: `docs/reference/` language/type documentation found by exact links
 - Modify: generated capability/code/contract indexes through their owning scripts
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify: restart/handover documents that describe the current compiler boundary
 
 - [x] Document `record` versus `type Alias = ...` with checker-passing and governed-execution commands.

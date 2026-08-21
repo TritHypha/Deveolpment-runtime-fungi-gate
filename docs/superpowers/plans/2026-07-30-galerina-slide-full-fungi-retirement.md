@@ -88,7 +88,7 @@ a release failure.
 - Create: `scripts/tests/full-fungi-retirement-gate.test.mjs`
 - Regenerate: `build/ts-retirement/**`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 
 **Produces:** one machine-readable ledger containing every tracked package
 `.ts` path, package dependency tranche, present `.fungi` replacement,
@@ -220,7 +220,7 @@ authorization.
 **Files:**
 
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Modify:
   `docs/reports/zero-trust-tooling-refactor-completion-2026-07-29.md`
 

@@ -286,11 +286,11 @@ git commit -m "feat: generate semantic assurance coverage"
 - Modify: `scripts/graph-all.mjs`
 - Modify: `scripts/run-phase-close.mjs`
 - Modify: `scripts/tests/dev-tools-scripts.test.mjs`
-- Modify: `scripts/gen-roadmap-subway.mjs`
+- Modify: `scripts/gen-roadmap.mjs`
 - Modify: `scripts/tests/roadmap-subway-generator.test.mjs`
 - Modify: `docs/superpowers/specs/2026-08-10-zero-trust-assurance-fabric-design.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate: graph, dev-tool, code, retirement, semantic, component-health, status, roadmap and provenance outputs.
 
 **Interfaces:**

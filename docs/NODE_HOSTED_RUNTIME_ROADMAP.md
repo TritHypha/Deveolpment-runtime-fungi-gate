@@ -4,7 +4,7 @@
 > execution shape and standalone scope constraints. The current migration route
 > is Galerina source -> canonical GIR -> physical SLIDE -> independent
 > re-admission/VOK, and its security/authority state is owned by
-> `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+> `docs/ROADMAP.md`.
 
 Galerina's practical web/API execution path is currently Node-hosted.
 

@@ -222,7 +222,7 @@ Require all three observations, package-specific refusal suites, strict checks, 
 **Files:**
 - Update through owners: `packages-galerina/galerina-devtools-benchmarks/results/**`
 - Modify through tested report owners: the SLIDE-zero chart/table and historic-WASM page
-- Update: `README.md`, `docs/TODO.md`, and `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Update: `README.md`, `docs/TODO.md`, and `docs/ROADMAP.md`
 - Update registered generated indexes, graph and subway outputs
 - Review both public skill repositories and update only reusable verified guidance
 

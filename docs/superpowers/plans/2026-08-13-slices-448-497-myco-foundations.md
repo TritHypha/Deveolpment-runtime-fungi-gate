@@ -119,7 +119,7 @@
 - Create: `docs/reports/slice-448-*-fungi-conversion-2026-08-13.md` through `docs/reports/slice-497-*-fungi-conversion-2026-08-13.md`
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 
 - [x] Root reconciles all three dossiers to exact live source and authors 50 receipts with no duplicate credit.
 - [x] No exact candidate is admitted under mirror custody; no `.fungi` was authored.

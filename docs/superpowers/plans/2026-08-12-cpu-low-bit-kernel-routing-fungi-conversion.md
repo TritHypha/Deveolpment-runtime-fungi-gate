@@ -156,7 +156,7 @@ Stage only the integration test; commit as
 - Create: `docs/reports/cpu-low-bit-kernel-routing-fungi-conversion-2026-08-12.md`
 - Modify: `packages-galerina/galerina-cpu-kernels/TODO.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 - Regenerate: registered graph, inventory, status, count, subway and index owners
   whose exact freshness checks refuse.
 

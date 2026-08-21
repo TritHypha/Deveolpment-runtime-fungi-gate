@@ -123,7 +123,7 @@
 - Create: `docs/reports/slice-548-*-fungi-conversion-2026-08-13.md` through `docs/reports/slice-597-*-fungi-conversion-2026-08-13.md`
 - Modify: `docs/reports/fungi-conversion-batch-33-42-file-status.md`
 - Modify: `docs/TODO.md`
-- Modify: `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
+- Modify: `docs/ROADMAP.md`
 
 - [x] Root reconciles all three dossiers against exact live source and authors 50 unique receipts.
 - [x] Run focused Myco and Tower checks, receipt audit and leak checks.

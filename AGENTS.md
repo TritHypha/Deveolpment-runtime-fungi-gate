@@ -90,7 +90,7 @@ intent → governed execution plan → coordinated compute → audit proof
 > but production boot composition and authenticated platform evidence,
 > general source families, literal `.ts` retirement and production authority
 > remain later gates; see
-> `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+> `docs/ROADMAP.md`.
 >
 > **Legacy-runtime reconciliation (2026-08-04):** do not treat the former
 > production `dss-host`/Wasmtime supervisor (`#102–#106`) as one intact new

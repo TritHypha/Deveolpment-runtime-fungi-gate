@@ -771,7 +771,7 @@ wrong mode.
 
 - Cover at minimum:
   `code-index.mjs`, `dev-tool-index.mjs`, `gen-code-registry.mjs`,
-  `gen-contract-registry.mjs`, `gen-roadmap-subway.mjs`,
+  `gen-contract-registry.mjs`, `gen-roadmap.mjs`,
   `gen-status-blocks.mjs`, `gen-unit-registry.mjs`, `generate-sbom.mjs`,
   `graph-all.mjs`, `kb-index.mjs`, `memory-graph.mjs`,
   `ts-retirement-graph.mjs`, and project/package graph generation.
@@ -1265,8 +1265,8 @@ status. Change the deciding source in `component-health.mjs` only where fresh
 evidence justifies it. Preserve measured/asserted classification. Then:
 
 ```powershell
-node scripts/gen-roadmap-subway.mjs --write
-node scripts/gen-roadmap-subway.mjs --check
+node scripts/gen-roadmap.mjs --write
+node scripts/gen-roadmap.mjs --check
 ```
 
 Review the generated README block, roadmap document block, SVG, percentage
@@ -1303,7 +1303,7 @@ Repeat Steps 2-4 in non-mutating/check mode, plus:
 
 ```powershell
 node scripts/component-health.mjs --audit-check
-node scripts/gen-roadmap-subway.mjs --check
+node scripts/gen-roadmap.mjs --check
 node scripts/audit-provenance.mjs
 node scripts/audit-artifact-drift.mjs
 ```
