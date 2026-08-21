@@ -34,7 +34,7 @@ function write(root, relativePath, content) {
 }
 
 /**
- * Create a minimal component-health source and both required target docs.
+ * Create a minimal component-health source with no documentation targets.
  */
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "status-blocks-generator-"));
@@ -66,12 +66,6 @@ function fixture() {
     "scripts/component-health.mjs",
     `console.log(${JSON.stringify(JSON.stringify({ percentAudit }))});\n`,
   );
-  for (const target of [
-    "docs/roadmap-2026-07-15.md",
-    "docs/roadmap-2026-07-23.md",
-  ]) {
-    write(root, target, `before\n${BEGIN}\nstale\n${END}\nafter\n`);
-  }
   return root;
 }
 
@@ -95,8 +89,6 @@ function run(root, args) {
 test("status-block --check refuses missing and drifted outputs without writing", () => {
   const root = fixture();
   const artifact = join(root, "build", "status", "STATUS.md");
-  const firstTarget = join(root, "docs", "roadmap-2026-07-15.md");
-  const secondTarget = join(root, "docs", "roadmap-2026-07-23.md");
   try {
     const missing = run(root, ["--check"]);
     assert.notEqual(missing.status, 0);
@@ -108,13 +100,9 @@ test("status-block --check refuses missing and drifted outputs without writing",
     assert.equal(run(root, ["--check"]).status, 0);
 
     writeFileSync(artifact, "tampered\n");
-    const targetBefore = readFileSync(firstTarget, "utf8");
-    rmSync(secondTarget);
     const drifted = run(root, ["--check"]);
     assert.notEqual(drifted.status, 0);
     assert.equal(readFileSync(artifact, "utf8"), "tampered\n");
-    assert.equal(readFileSync(firstTarget, "utf8"), targetBefore);
-    assert.equal(existsSync(secondTarget), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

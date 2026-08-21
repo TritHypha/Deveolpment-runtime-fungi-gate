@@ -16,13 +16,11 @@ const roots = [];
 const DOT = "\u00b7";
 const TICK = "\u2705";
 const CONSUMER_IDS = Object.freeze([
-  "readme-subway",
-  "cycle-roadmap-subway",
-  "active-roadmap-subway",
+  "roadmap-current",
   "readme-full-suite",
   "readme-tests-table",
   "todo-assurance-fabric",
-  "active-roadmap-chapter-3",
+  "roadmap-chapter-3",
 ]);
 
 after(() => {
@@ -42,22 +40,18 @@ function fixture(staleConsumer) {
     const value = consumer === staleConsumer ? 9498 : 9499;
     return plain ? String(value) : value.toLocaleString("en-GB");
   };
-  const subway = (consumer) => `**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} ${claim(consumer, true)} tests ${DOT} ship-readiness 100.0%**`;
+  const roadmap = (consumer) => `**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} ${claim(consumer, true)} tests ${DOT} ship-readiness 100.0%**`;
   write(root, "version.json", `${JSON.stringify({ testCount: 9499, packageCount: 100 })}\n`);
   write(root, "README.md", [
-    "<!-- SUBWAY:BEGIN -->",
-    subway("readme-subway"),
-    "<!-- SUBWAY:END -->",
     `**v1.0.0-beta.2 ${DOT} full suite 100/100 packages ${DOT} ${claim("readme-full-suite")} tests ${DOT} 0 failures.**`,
     `| **Tests** | ${TICK} green | 100/100 ${DOT} ${claim("readme-tests-table")} ${DOT} 0 fail |`,
   ].join("\n"));
-  write(root, "docs/roadmap-2026-07-25-cycle2.md", `<!-- SUBWAY:BEGIN -->\n${subway("cycle-roadmap-subway")}\n<!-- SUBWAY:END -->\n`);
-  write(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
-    "<!-- SUBWAY:BEGIN -->",
-    subway("active-roadmap-subway"),
-    "<!-- SUBWAY:END -->",
+  write(root, "docs/ROADMAP.md", [
+    "<!-- ROADMAP:BEGIN -->",
+    roadmap("roadmap-current"),
+    "<!-- ROADMAP:END -->",
     "## VOK assurance fabric Chapter 3 - 2026-08-10",
-    `The complete package lane is **100/100 packages and ${claim("active-roadmap-chapter-3")} tests** in 1s.`,
+    `The complete package lane is **100/100 packages and ${claim("roadmap-chapter-3")} tests** in 1s.`,
   ].join("\n"));
   write(root, "docs/TODO.md", `Fresh evidence: the complete package lane passes **100/100 packages and ${claim("todo-assurance-fabric")} tests**.\n`);
   return root;
@@ -95,7 +89,7 @@ test("canonical test-count owner self-test proves every registered capture", () 
   const result = spawnSync(process.execPath, [SCRIPT, "--self-test"], { encoding: "utf8" });
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
   assert.match(result.stdout, /self-test.*PASS/i);
-  assert.match(result.stdout, /7\/7/i);
+    assert.match(result.stdout, /5\/5/i);
 });
 
 test("canonical test-count owner rejects duplicate claims, marker pairs and chapter headings", () => {
@@ -115,28 +109,28 @@ test("canonical test-count owner rejects duplicate claims, marker pairs and chap
       },
     },
     {
-      name: "duplicate subway marker pairs",
-      consumer: "cycle-roadmap-subway",
+      name: "duplicate roadmap marker pairs",
+      consumer: "roadmap-current",
       apply(root) {
-        mutate(root, "docs/roadmap-2026-07-25-cycle2.md", (text) => (
-          `${text}\n<!-- SUBWAY:BEGIN -->\n**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} 9499 tests ${DOT} ship-readiness 100.0%**\n<!-- SUBWAY:END -->\n`
+        mutate(root, "docs/ROADMAP.md", (text) => (
+          `${text}\n<!-- ROADMAP:BEGIN -->\n**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} 9499 tests ${DOT} ship-readiness 100.0%**\n<!-- ROADMAP:END -->\n`
         ));
       },
     },
     {
       name: "duplicate Chapter 3 headings",
-      consumer: "active-roadmap-chapter-3",
+      consumer: "roadmap-chapter-3",
       apply(root) {
-        mutate(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", (text) => (
+        mutate(root, "docs/ROADMAP.md", (text) => (
           `${text}\n## VOK assurance fabric Chapter 3 - 2026-08-10\nThe complete package lane is **100/100 packages and 9,498 tests** in 1s.\n`
         ));
       },
     },
     {
       name: "contradictory claims inside the Chapter 3 section",
-      consumer: "active-roadmap-chapter-3",
+      consumer: "roadmap-chapter-3",
       apply(root) {
-        mutate(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", (text) => (
+        mutate(root, "docs/ROADMAP.md", (text) => (
           `${text}\nThe complete package lane is **100/100 packages and 9,498 tests** in 2s.\n`
         ));
       },
