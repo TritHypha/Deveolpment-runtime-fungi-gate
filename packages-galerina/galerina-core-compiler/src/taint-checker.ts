@@ -15,6 +15,19 @@
 
 import { type AstNode, type FlowMeta } from "./parser.js";
 import { decodeFlowDecl } from "./flow-name.js";
+import { type EffectCheckResult } from "./effect-checker.js";
+import {
+  createRequirementValidatorAuthorityRegistry,
+  REQUIREMENT_TAINT_CLASSES,
+  verifyRequirementValidatorAuthority,
+  type RequirementTaintClass,
+  type RequirementValidatorAuthorityContext,
+  type RequirementValidatorAuthorityRegistry,
+} from "./requirement-validator-authority.js";
+import {
+  FUNGI_REQUIREMENT_004,
+  FUNGI_REQUIREMENT_010,
+} from "./requirement-diagnostics.js";
 
 // ---------------------------------------------------------------------------
 // Sink contexts (closed set)
@@ -212,6 +225,7 @@ export interface TaintDiagnostic {
   readonly severity: "error" | "warning";
   readonly message: string;
   readonly flowName?: string;
+  readonly location?: NonNullable<AstNode["location"]>;
 }
 
 /** FUNGI-TAINT-001: Raw tainted value reaches an injection sink. */
@@ -253,9 +267,64 @@ export const FUNGI_TAINT_004 = {
 
 /** What a binding currently holds, from a taint perspective. */
 type TaintState =
-  | { kind: "tainted" }
+  | { kind: "tainted"; atoms: readonly RequirementTaintClass[] }
   | { kind: "safeFor"; context: SinkContext }
   | { kind: "clean" };
+
+export const REQUIREMENT_TAINT_ATOMS = REQUIREMENT_TAINT_CLASSES;
+export type RequirementTaintAtom = RequirementTaintClass;
+export const MAX_REQUIREMENT_TAINT_ATOMS = REQUIREMENT_TAINT_CLASSES.length;
+export const MAX_REQUIREMENT_VALIDATOR_CHECKED_FLOWS = 256;
+export const MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS = 4_096;
+
+export interface RequirementValidatorCheckedFlowEvidence {
+  readonly localFlowName: string;
+  readonly checkedDigest: string;
+}
+
+export interface RequirementValidatorInput {
+  readonly registry: RequirementValidatorAuthorityRegistry;
+  readonly context?: RequirementValidatorAuthorityContext;
+  readonly checkedFlows: readonly RequirementValidatorCheckedFlowEvidence[];
+  readonly effectResults: readonly EffectCheckResult[];
+  readonly flows: readonly FlowMeta[];
+}
+
+const EMPTY_REQUIREMENT_VALIDATOR_REGISTRY = createRequirementValidatorAuthorityRegistry([]);
+
+export const EMPTY_REQUIREMENT_VALIDATOR_INPUT: RequirementValidatorInput = Object.freeze({
+  registry: EMPTY_REQUIREMENT_VALIDATOR_REGISTRY,
+  checkedFlows: Object.freeze([]),
+  effectResults: Object.freeze([]),
+  flows: Object.freeze([]),
+});
+
+const DECLARED_UNTRUSTED = Object.freeze(["declared.untrusted"] as const);
+
+function sourceAtom(name: string, declaredTainted = false): RequirementTaintClass | undefined {
+  if (declaredTainted) return "declared.untrusted";
+  if (name === "env") return "environment.input";
+  if (name === "stdin" || name === "argv" || name === "input") return "process.input";
+  if (name === "cookies" || name === "session" || name === "sessionStorage"
+    || name === "localStorage" || name === "formData" || name === "searchParams"
+    || name === "queryString" || name === "querystring") return "web.storage";
+  if (TAINT_SOURCES.has(name)) return "web.request";
+  return undefined;
+}
+
+export function canonicalRequirementTaintTuple(
+  atoms: readonly string[],
+): readonly RequirementTaintAtom[] | undefined {
+  const allowed = new Set<string>(REQUIREMENT_TAINT_CLASSES);
+  if (atoms.some((atom) => !allowed.has(atom))) return undefined;
+  const canonical = [...new Set(atoms)].sort();
+  if (canonical.length > MAX_REQUIREMENT_TAINT_ATOMS) return undefined;
+  return Object.freeze(canonical as RequirementTaintAtom[]);
+}
+
+function canonicalAtoms(atoms: readonly RequirementTaintClass[]): readonly RequirementTaintClass[] {
+  return canonicalRequirementTaintTuple(atoms) ?? Object.freeze([]);
+}
 
 /**
  * Render a receiver EXPRESSION to a dotted name: `db` → "db", `this.db` → "this.db".
@@ -313,14 +382,19 @@ function callArgsOf(node: AstNode): readonly AstNode[] {
 }
 
 /** Determine the taint state produced by an expression. */
-function taintOf(expr: AstNode, bindings: Map<string, TaintState>): TaintState {
+function taintOf(
+  expr: AstNode,
+  bindings: Map<string, TaintState>,
+  insideRequirement = false,
+): TaintState {
   switch (expr.kind) {
     case "identifier": {
       const name = expr.value ?? "";
-      // direct taint source
-      if (TAINT_SOURCES.has(name)) return { kind: "tainted" };
       const bound = bindings.get(name);
       if (bound !== undefined) return bound;
+      // direct taint source
+      const atom = sourceAtom(name);
+      if (atom !== undefined) return { kind: "tainted", atoms: Object.freeze([atom]) };
       // literals / unknown → clean
       return { kind: "clean" };
     }
@@ -338,9 +412,10 @@ function taintOf(expr: AstNode, bindings: Map<string, TaintState>): TaintState {
         while ((m = holes.exec(raw)) !== null) {
           const ids = (m[1] ?? "").match(/[A-Za-z_]\w*/g) ?? [];
           for (const id of ids) {
-            if (TAINT_SOURCES.has(id)) return { kind: "tainted" };
             const bound = bindings.get(id);
-            if (bound?.kind === "tainted") return { kind: "tainted" };
+            if (bound?.kind === "tainted") return bound;
+            const atom = sourceAtom(id);
+            if (atom !== undefined) return { kind: "tainted", atoms: Object.freeze([atom]) };
           }
         }
       }
@@ -353,47 +428,289 @@ function taintOf(expr: AstNode, bindings: Map<string, TaintState>): TaintState {
     case "memberExpr": {
       // request.body, req.params → tainted
       const receiver = expr.children?.[0];
-      if (receiver?.kind === "identifier" && TAINT_SOURCES.has(receiver.value ?? "")) {
-        return { kind: "tainted" };
+      if (receiver?.kind === "identifier") {
+        const bound = bindings.get(receiver.value ?? "");
+        if (bound?.kind === "tainted") return bound;
+        if (TAINT_SOURCES.has(receiver.value ?? "")) {
+          const atom = sourceAtom(receiver.value ?? "");
+          return { kind: "tainted", atoms: Object.freeze([atom ?? "web.request"]) };
+        }
       }
       // untaint boundary call as member? handled in callExpr
-      return taintPropagate(expr, bindings);
+      return taintPropagate(expr, bindings, insideRequirement);
     }
 
     case "callExpr": {
       const callee = calleeNameOf(expr);
       if (callee !== null) {
         const boundary = BOUNDARY_BY_FN.get(callee);
-        if (boundary !== undefined) {
+        if (boundary !== undefined && !insideRequirement) {
           return { kind: "safeFor", context: boundary.produces };
         }
       }
-      return taintPropagate(expr, bindings);
+      return taintPropagate(expr, bindings, insideRequirement);
     }
 
     case "binaryExpr":
-      return taintPropagate(expr, bindings);
+      return taintPropagate(expr, bindings, insideRequirement);
 
     default:
-      return taintPropagate(expr, bindings);
+      return taintPropagate(expr, bindings, insideRequirement);
   }
 }
 
 /** If any sub-expression is tainted, the result is tainted (taint propagates through ops). */
-function taintPropagate(expr: AstNode, bindings: Map<string, TaintState>): TaintState {
+function taintPropagate(
+  expr: AstNode,
+  bindings: Map<string, TaintState>,
+  insideRequirement = false,
+): TaintState {
+  const atoms: RequirementTaintClass[] = [];
   for (const child of expr.children ?? []) {
-    const t = taintOf(child, bindings);
-    if (t.kind === "tainted") return { kind: "tainted" };
+    const t = taintOf(child, bindings, insideRequirement);
+    if (t.kind === "tainted") atoms.push(...t.atoms);
   }
+  if (atoms.length > 0) return { kind: "tainted", atoms: canonicalAtoms(atoms) };
   return { kind: "clean" };
+}
+
+export interface RequirementTaintAnalysis {
+  readonly diagnostics: readonly TaintDiagnostic[];
+  readonly matchedValidatorCalls: ReadonlySet<AstNode>;
+}
+
+function requirementDiagnostic(
+  definition: typeof FUNGI_REQUIREMENT_004 | typeof FUNGI_REQUIREMENT_010,
+  flowName: string,
+  constraint: AstNode,
+): TaintDiagnostic {
+  return {
+    code: definition.code,
+    name: definition.name,
+    severity: definition.severity,
+    message: definition.message,
+    flowName,
+    ...(constraint.location === undefined ? {} : { location: constraint.location }),
+  };
+}
+
+function collectImportBindings(ast: AstNode): ReadonlySet<string> {
+  const out = new Set<string>();
+  const visit = (node: AstNode): void => {
+    if (node.kind.toLowerCase().includes("import")) {
+      for (const candidate of [node.value, ...(node.children ?? []).map((child) => child.value)]) {
+        for (const name of candidate?.match(/[A-Za-z_]\w*/g) ?? []) out.add(name);
+      }
+    }
+    for (const child of node.children ?? []) visit(child);
+  };
+  visit(ast);
+  return out;
+}
+
+function paramType(param: string | undefined): string {
+  if (param === undefined) return "";
+  const colon = param.indexOf(":");
+  return colon < 0 ? "" : param.slice(colon + 1).trim();
+}
+
+function candidateValidatorCalls(node: AstNode, bindings: Map<string, TaintState>): AstNode[] {
+  if (node.kind !== "callExpr" || node.callStyle === "method") return [];
+  const args = callArgsOf(node);
+  return args.some((arg) => taintOf(arg, bindings, true).kind === "tainted") ? [node] : [];
+}
+
+export function analyzeRequirementTaint(
+  ast: AstNode,
+  flows: readonly FlowMeta[],
+  validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+): RequirementTaintAnalysis {
+  const diagnostics: TaintDiagnostic[] = [];
+  const matchedValidatorCalls = new Set<AstNode>();
+  const imports = collectImportBindings(ast);
+  const flowNodes = new Map<string, AstNode[]>();
+  for (const child of ast.children ?? []) {
+    const decoded = decodeFlowDecl(child);
+    if (decoded === undefined || "error" in decoded || decoded.name === "") continue;
+    const occurrences = flowNodes.get(decoded.name) ?? [];
+    occurrences.push(child);
+    flowNodes.set(decoded.name, occurrences);
+  }
+
+  const checkedByName = new Map<string, RequirementValidatorCheckedFlowEvidence[]>();
+  const validatorInputExceeded = validatorInput.checkedFlows.length
+    > MAX_REQUIREMENT_VALIDATOR_CHECKED_FLOWS
+    || validatorInput.effectResults.length > MAX_REQUIREMENT_VALIDATOR_EFFECT_RESULTS;
+  for (const checked of validatorInputExceeded ? [] : validatorInput.checkedFlows) {
+    const occurrences = checkedByName.get(checked.localFlowName) ?? [];
+    occurrences.push(checked);
+    checkedByName.set(checked.localFlowName, occurrences);
+  }
+  const effectsByName = new Map<string, EffectCheckResult[]>();
+  for (const result of validatorInputExceeded ? [] : validatorInput.effectResults) {
+    const occurrences = effectsByName.get(result.flowName) ?? [];
+    occurrences.push(result);
+    effectsByName.set(result.flowName, occurrences);
+  }
+
+  const inspectConstraint = (
+    constraint: AstNode,
+    bindings: Map<string, TaintState>,
+    shadowed: ReadonlySet<string>,
+    flowName: string,
+  ): void => {
+    const expression = constraint.children?.[0];
+    if (expression === undefined) return;
+    const state = taintOf(expression, bindings, true);
+    if (state.kind !== "tainted") return;
+
+    const candidates = candidateValidatorCalls(expression, bindings);
+    if (candidates.length !== 1) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_004, flowName, constraint));
+      return;
+    }
+    const call = candidates[0]!;
+    const localName = call.value ?? "";
+    const targetFlows = flows.filter((flow) => flow.name === localName);
+    const targetNodes = flowNodes.get(localName) ?? [];
+    const checked = checkedByName.get(localName) ?? [];
+    const effects = effectsByName.get(localName) ?? [];
+    const registryAbsent = validatorInput.registry.state === "REFUSED"
+      && validatorInput.registry.reason === "EMPTY_REGISTRY";
+
+    if (registryAbsent || imports.has(localName) || shadowed.has(localName)
+      || targetFlows.length !== 1 || targetNodes.length !== 1) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_004, flowName, constraint));
+      return;
+    }
+    if (validatorInput.context === undefined || checked.length !== 1 || effects.length !== 1) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
+      return;
+    }
+
+    const target = targetFlows[0]!;
+    if (validatorInputExceeded) {
+      diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
+      return;
+    }
+    if (validatorInput.registry.state === "STRUCTURALLY_VALID") {
+      const qualifiedIdentity = `${validatorInput.context.canonicalSourceUnitId}::${localName}`;
+      if (!validatorInput.registry.rows.some((row) => row.qualifiedFlowIdentity === qualifiedIdentity)) {
+        diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_004, flowName, constraint));
+        return;
+      }
+    }
+    const result = verifyRequirementValidatorAuthority(
+      validatorInput.registry,
+      {
+        localFlowName: localName,
+        inputType: paramType(target.params[0]),
+        taintClasses: state.atoms,
+        outputType: target.returnType,
+        observedEffects: effects[0]!.observedEffects,
+        checkedDigest: checked[0]!.checkedDigest,
+      },
+      validatorInput.context,
+    );
+    if (result.state === "MATCHED") {
+      matchedValidatorCalls.add(call);
+      return;
+    }
+    diagnostics.push(requirementDiagnostic(FUNGI_REQUIREMENT_010, flowName, constraint));
+  };
+
+  const inspectNode = (
+    node: AstNode,
+    bindings: Map<string, TaintState>,
+    shadowed: ReadonlySet<string>,
+    flowName: string,
+  ): void => {
+    if (node.kind === "requirementConstraint") {
+      inspectConstraint(node, bindings, shadowed, flowName);
+      return;
+    }
+    for (const child of node.children ?? []) {
+      if (child.kind !== "block") inspectNode(child, bindings, shadowed, flowName);
+    }
+  };
+
+  const walkRequirementBody = (
+    block: AstNode,
+    bindings: Map<string, TaintState>,
+    shadowed: Set<string>,
+    flowName: string,
+  ): void => {
+    for (const stmt of block.children ?? []) {
+      inspectNode(stmt, bindings, shadowed, flowName);
+      if (stmt.kind === "letDecl" || stmt.kind === "mutDecl" || stmt.kind === "assignStmt") {
+        const raw = stmt.value ?? "";
+        const name = ((raw.split(":")[0] ?? raw).trim().split(/\s+/).at(-1)) ?? "";
+        const init = stmt.children?.[0];
+        if (name !== "") {
+          shadowed.add(name);
+          bindings.set(name, init === undefined ? { kind: "clean" } : taintOf(init, bindings));
+        }
+      }
+      if (stmt.kind === "fnDecl" && stmt.value !== undefined) shadowed.add(stmt.value);
+      for (const child of stmt.children ?? []) {
+        if (child.kind === "block") {
+          walkRequirementBody(child, new Map(bindings), new Set(shadowed), flowName);
+        }
+      }
+    }
+  };
+
+  for (const flow of flows) {
+    const nodes = flowNodes.get(flow.name) ?? [];
+    const exactNodes = nodes.filter((candidate) =>
+      candidate.location?.file === flow.location?.file
+      && candidate.location?.offset === flow.location?.offset);
+    const node = exactNodes.length === 1
+      ? exactNodes[0]
+      : (nodes.length === 1 ? nodes[0] : undefined);
+    if (node === undefined) continue;
+    const bindings = new Map<string, TaintState>();
+    const shadowed = new Set<string>();
+    for (const param of (node.children ?? []).filter((child) => child.kind === "paramDecl")) {
+      const head = ((param.value ?? "").split(":")[0] ?? "").trim();
+      const words = head.split(/\s+/);
+      const name = words.at(-1) ?? "";
+      const atom = sourceAtom(name, words.slice(0, -1).includes("tainted"));
+      if (name !== "") shadowed.add(name);
+      bindings.set(name, atom === undefined
+        ? { kind: "clean" }
+        : { kind: "tainted", atoms: Object.freeze([atom]) });
+    }
+    const body = (node.children ?? []).find((child) => child.kind === "block");
+    if (body !== undefined) walkRequirementBody(body, bindings, shadowed, flow.name);
+  }
+
+  return Object.freeze({
+    diagnostics: Object.freeze(diagnostics),
+    matchedValidatorCalls,
+  });
+}
+
+export function requirementAuthorityDiagnosticKey(
+  diagnostic: Pick<TaintDiagnostic, "code" | "flowName" | "location">,
+): string | undefined {
+  if (diagnostic.code !== FUNGI_REQUIREMENT_004.code
+    && diagnostic.code !== FUNGI_REQUIREMENT_010.code) return undefined;
+  return `${diagnostic.code}|${diagnostic.flowName ?? ""}|${diagnostic.location?.file ?? ""}|${diagnostic.location?.offset ?? -1}`;
 }
 
 /**
  * Phase 28: Check a program for taint violations.
  * Tracks tainted values flowing from sources into injection sinks.
  */
-export function checkTaint(ast: AstNode, flows: readonly FlowMeta[]): TaintDiagnostic[] {
-  const diagnostics: TaintDiagnostic[] = [];
+export function checkTaint(
+  ast: AstNode,
+  flows: readonly FlowMeta[],
+  validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+): TaintDiagnostic[] {
+  const diagnostics: TaintDiagnostic[] = [
+    ...analyzeRequirementTaint(ast, flows, validatorInput).diagnostics,
+  ];
 
   // Index top-level flow nodes by name once — the per-flow .find scanned all of ast.children (O(flows²)).
   //
@@ -425,7 +742,11 @@ export function checkTaint(ast: AstNode, flows: readonly FlowMeta[]): TaintDiagn
       const words = head.split(/\s+/);
       const pname = words[words.length - 1] ?? "";
       const declaredTainted = words.slice(0, -1).includes("tainted");
-      if (declaredTainted || TAINT_SOURCES.has(pname)) bindings.set(pname, { kind: "tainted" });
+      const atom = sourceAtom(pname, declaredTainted);
+      if (atom !== undefined) bindings.set(pname, {
+        kind: "tainted",
+        atoms: declaredTainted ? DECLARED_UNTRUSTED : Object.freeze([atom]),
+      });
     }
 
     const body = (flowNode.children ?? []).find(c => c.kind === "block"); // perf-allow: loop-array-find — bounded N over a flow node's children (find body block)

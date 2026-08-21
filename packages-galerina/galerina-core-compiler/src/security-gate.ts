@@ -30,7 +30,11 @@ import { checkValueStates } from "./value-state-checker.js";
 import { checkEffects } from "./effect-checker.js";
 import { checkSourceEscapes } from "./source-escape-checker.js";
 import { verifyGovernance } from "./governance-verifier.js";
-import { checkTaint } from "./taint-checker.js";
+import {
+  checkTaint,
+  EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+  requirementAuthorityDiagnosticKey,
+} from "./taint-checker.js";
 import { checkMonkeyPatching, checkMonkeyPatchingSource } from "./monkey-patch-checker.js";
 import { checkAttributeDirectives } from "./attribute-checker.js";
 
@@ -85,12 +89,23 @@ export function runProductionSecurityGate(
   filePath: string,
 ): GateDiagnostic[] {
   const out: GateDiagnostic[] = [];
+  const effectResults = checkEffects(flows, ast, "production", true);
+  const validatorInput = Object.freeze({
+    ...EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+    effectResults,
+    flows,
+  });
+  const requirementAuthorityKeys = new Set<string>();
 
   // Source-level dynamic-code / eval escapes.
   for (const d of checkSourceEscapes(ast).diagnostics) out.push(normalize(d));
 
   // OWASP taint tracking → injection sinks (GNG-01 dead gate).
-  for (const d of checkTaint(ast, flows)) out.push(normalize(d));
+  for (const d of checkTaint(ast, flows, validatorInput)) {
+    const key = requirementAuthorityDiagnosticKey(d);
+    if (key !== undefined) requirementAuthorityKeys.add(key);
+    out.push(normalize(d));
+  }
 
   // Runtime / prototype monkey-patching (FUNGI-SEC-020/021 dead gate, Class A).
   // The text scan dedups against AST-reported lines to avoid a double report.
@@ -105,10 +120,14 @@ export function runProductionSecurityGate(
   for (const d of checkAttributeDirectives(ast).diagnostics) out.push(normalize(d));
 
   // Value-state safety at PRODUCTION strictness.
-  for (const d of checkValueStates(ast, "production").diagnostics) out.push(normalize(d));
+  for (const d of checkValueStates(ast, "production", validatorInput).diagnostics) {
+    const key = requirementAuthorityDiagnosticKey(d);
+    if (key !== undefined && requirementAuthorityKeys.has(key)) continue;
+    if (key !== undefined) requirementAuthorityKeys.add(key);
+    out.push(normalize(d));
+  }
 
   // Effect declaration matching at PRODUCTION strictness + tier floor.
-  const effectResults = checkEffects(flows, ast, "production", true);
   for (const r of effectResults) for (const d of r.diagnostics) out.push(normalize(d));
 
   // Governance verification at PRODUCTION strictness (incl. privacy-deny — GNG-03).

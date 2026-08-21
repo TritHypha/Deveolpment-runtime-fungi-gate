@@ -29,7 +29,11 @@ import { checkEffects } from "./effect-checker.js";
 import { checkSourceEscapes } from "./source-escape-checker.js";
 import { verifyGovernance } from "./governance-verifier.js";
 import { checkNamingPolicy } from "./naming-policy-checker.js";
-import { checkTaint } from "./taint-checker.js";
+import {
+  checkTaint,
+  EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+  requirementAuthorityDiagnosticKey,
+} from "./taint-checker.js";
 import { checkLint, checkUnusedBindings } from "./lint-checker.js";
 import { checkMonkeyPatching, checkMonkeyPatchingSource } from "./monkey-patch-checker.js";
 import { checkAttributeDirectives } from "./attribute-checker.js";
@@ -49,6 +53,7 @@ import { dispatchGateSource, findGateRegistry } from "./gate-dispatch.js";
 import { generateCircuitFromPattern } from "./gate-from-pattern.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // =============================================================================
 // galerina.check.json -- project-level configuration for `galerina check`
@@ -369,12 +374,11 @@ interface FileCompileResult {
   readonly manifestJson?: string;
 }
 
-// `findGateRegistry` now lives in gate-dispatch.ts and is imported above. It
-// moved because BOTH CLI entry points need it — this one and the root
-// galerina.mjs — and it cannot be re-exported from here: this module ends in a
-// bare `main()`, so anything importing it would run the CLI as a side effect.
+// `findGateRegistry` lives in gate-dispatch.ts because both CLI entry points
+// need it. This module now guards its process entry point so focused compiler
+// tests can import `compileFile` without executing the CLI as a side effect.
 
-function compileFile(
+export function compileFile(
   filePath: string,
   mode: CliMode,
 ): FileCompileResult {
@@ -515,8 +519,17 @@ function compileFile(
   // else, so all other checkEffects call sites are unaffected.
   const enforceTierFloor = PRODUCTION_STRICTNESS_MODES.has(mode);
 
-  const valueStateResult = checkValueStates(parseResult.ast, effectCheckerMode);
+  const effectResults = checkEffects(parseResult.flows, parseResult.ast, effectCheckerMode, enforceTierFloor);
+  const validatorInput = Object.freeze({
+    ...EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+    effectResults,
+    flows: parseResult.flows,
+  });
+  const requirementAuthorityKeys = new Set<string>();
+  const valueStateResult = checkValueStates(parseResult.ast, effectCheckerMode, validatorInput);
   for (const d of valueStateResult.diagnostics) {
+    const key = requirementAuthorityDiagnosticKey(d);
+    if (key !== undefined) requirementAuthorityKeys.add(key);
     pushDiag(
       diagnostics,
       d.code,
@@ -530,7 +543,6 @@ function compileFile(
     );
   }
 
-  const effectResults = checkEffects(parseResult.flows, parseResult.ast, effectCheckerMode, enforceTierFloor);
   for (const result of effectResults) {
     for (const d of result.diagnostics) {
       // FUNGI-EFFECT-001 and FUNGI-STDLIB-001 are downgraded to warning in dev/check/build modes.
@@ -576,8 +588,11 @@ function compileFile(
   // AND minted a signed .lmanifest. Wired here so they surface in EVERY mode (check
   // included) and, being errors, block the signing gate below. checkTaint returns a flat
   // array (no `.diagnostics`, no location); the other two return `{ diagnostics }`.
-  for (const d of checkTaint(parseResult.ast, parseResult.flows)) {
-    pushDiag(diagnostics, d.code, d.severity as CliDiagnostic["severity"], d.message, filePath, undefined, undefined);
+  for (const d of checkTaint(parseResult.ast, parseResult.flows, validatorInput)) {
+    const key = requirementAuthorityDiagnosticKey(d);
+    if (key !== undefined && requirementAuthorityKeys.has(key)) continue;
+    if (key !== undefined) requirementAuthorityKeys.add(key);
+    pushDiag(diagnostics, d.code, d.severity as CliDiagnostic["severity"], d.message, filePath, d.location?.line, d.location?.column);
   }
   const monkeyAstLines = new Set<number>();
   for (const d of checkMonkeyPatching(parseResult.ast).diagnostics) {
@@ -1742,10 +1757,15 @@ function runWatch(targetDir: string): void {
   process.stdout.write("[galerina watch] Press Ctrl+C to stop.\n");
 }
 
-// Check for --watch flag BEFORE calling main()
-if (process.argv.includes("--watch")) {
-  const { targetDir } = parseArgs();
-  void runWatch(targetDir);
-} else {
-  main();
+// Importing this module for the focused compiler harness must not execute the
+// process entry point. Only the exact invoked CLI path may run `main()`.
+const invokedCliPath = process.argv[1];
+if (invokedCliPath !== undefined
+  && resolvePath(invokedCliPath) === resolvePath(fileURLToPath(import.meta.url))) {
+  if (process.argv.includes("--watch")) {
+    const { targetDir } = parseArgs();
+    void runWatch(targetDir);
+  } else {
+    main();
+  }
 }

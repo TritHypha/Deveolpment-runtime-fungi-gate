@@ -38,6 +38,11 @@ import { type AstNode, type SourceLocation } from "./parser.js";
 import { decodeFlowDecl } from "./flow-name.js"; // Q2: governed-aware shadow-floor scan
 import { buildModuleAliasMap } from "./effect-checker.js"; // C1: resolve `let x = Module` aliases at sinks
 import { numericBaseType, BACKEND_UNLOWERABLE_SCALAR } from "./numeric-lowering.js";
+import {
+  analyzeRequirementTaint,
+  EMPTY_REQUIREMENT_VALIDATOR_INPUT,
+  type RequirementValidatorInput,
+} from "./taint-checker.js";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -1100,17 +1105,23 @@ class ValueStateChecker {
   private moduleAliases: ReadonlyMap<string, string> = new Map();
   // R&D 0093 stage-2: production/deterministic builds escalate FUNGI-VALUESTATE-008 to error.
   private readonly mode: "production" | "development";
+  // RD-0858: name-based gates are never declassifiers while traversing a
+  // requirement constraint. Only shared exact Task-1/Task-2 matches discharge.
+  private insideRequirementConstraint = false;
+  private readonly matchedRequirementValidators: ReadonlySet<AstNode>;
 
   constructor(
     userGates: ReadonlySet<string> = new Set(),
     userFlows: ReadonlySet<string> = new Set(),
     authorityTypes: ReadonlySet<string> = new Set(),
     mode: "production" | "development" = "development",
+    matchedRequirementValidators: ReadonlySet<AstNode> = new Set(),
   ) {
     this.userGates = userGates;
     this.userFlows = userFlows;
     this.authorityTypes = authorityTypes;
     this.mode = mode;
+    this.matchedRequirementValidators = matchedRequirementValidators;
   }
 
   check(ast: AstNode): void {
@@ -1271,6 +1282,14 @@ class ValueStateChecker {
         this.walkChildren(node);
         this.popScope();
         break;
+
+      case "requirementConstraint": {
+        const previous = this.insideRequirementConstraint;
+        this.insideRequirementConstraint = true;
+        this.walkChildren(node);
+        this.insideRequirementConstraint = previous;
+        break;
+      }
 
       case "letDecl":
         this.handleLetDecl(node);
@@ -1703,6 +1722,9 @@ class ValueStateChecker {
     // may treat the first argument as the receiver for standalone calls like
     // validateEmail(rawEmail) → "rawEmail.validateEmail" instead of "validateEmail".
     if (node.kind === "callExpr") {
+      if (this.insideRequirementConstraint) {
+        return this.matchedRequirementValidators.has(node);
+      }
       const methodNameOnly = node.value ?? "";
       return (
         isGateCallName(buildFullCallName(node), this.userGates) ||
@@ -1876,7 +1898,14 @@ class ValueStateChecker {
     // own body — not a call-site error; tainted reaching a non-clearing governed SINK stays
     // covered by VALUESTATE-003.)
     const calleeName = node.value ?? "";
-    if (this.userFlows.has(calleeName) && !isGateCallName(calleeName, this.userGates)) {
+    const requirementValidatorMatched = this.insideRequirementConstraint
+      && this.matchedRequirementValidators.has(node);
+    const nameGateMayClear = !this.insideRequirementConstraint
+      && isGateCallName(calleeName, this.userGates);
+    if (this.userFlows.has(calleeName) && !nameGateMayClear && !requirementValidatorMatched) {
+      // The shared requirement pass owns the exact 004/010 diagnostic. Do not
+      // add the generic cross-flow warning for the same constraint identity.
+      if (this.insideRequirementConstraint) return;
       // All children are arguments (no "method" style for user flow calls)
       const callArgs = node.children ?? [];
       for (const arg of callArgs) {
@@ -2586,13 +2615,25 @@ export function checkValueStates(
   // R&D 0093 stage-2: in production/deterministic builds, FUNGI-VALUESTATE-008 (the 34B-hole
   // boundary-input warning) escalates to an error; dev/check keep it a warning (migration).
   mode: "production" | "development" = "development",
+  validatorInput: RequirementValidatorInput = EMPTY_REQUIREMENT_VALIDATOR_INPUT,
 ): ValueStateCheckResult {
+  const requirementAnalysis = analyzeRequirementTaint(
+    ast,
+    validatorInput.flows,
+    validatorInput,
+  );
   // Phase 11B.2: collect user-defined gate functions before running the checker
   const userGates = collectUserGates(ast);
   // Phase 4.3: collect user-defined flow names for inter-flow call-site warnings
   const userFlows = collectUserFlows(ast);
   const authorityTypes = collectAuthorityTypes(ast);
-  const checker = new ValueStateChecker(userGates, userFlows, authorityTypes, mode);
+  const checker = new ValueStateChecker(
+    userGates,
+    userFlows,
+    authorityTypes,
+    mode,
+    requirementAnalysis.matchedValidatorCalls,
+  );
   checker.check(ast);
   const result = checker.getResult();
   // FUNGI-NUMERIC-001: fail-closed scan for scalar 64-bit widths the WASM backend would truncate.
@@ -2601,7 +2642,11 @@ export function checkValueStates(
   const numericDiags = scanUnlowerableNumerics(ast);
   // FUNGI-VALUESTATE-011: fail-closed floor against declassifier-name shadowing (CWE-501, R&D 0200).
   const shadowDiags = scanDeclassifierShadows(ast);
-  const extraDiags = [...numericDiags, ...shadowDiags];
+  // Requirement constraints use a stricter value-state context: legacy name-based
+  // gates cannot declassify taint there. The shared taint analysis admits only an
+  // exact Task-1 validator-authority match backed by Task-2 EffectFree evidence.
+  const requirementDiags = requirementAnalysis.diagnostics;
+  const extraDiags = [...requirementDiags, ...numericDiags, ...shadowDiags];
   if (extraDiags.length === 0) return result;
   return { ...result, diagnostics: [...result.diagnostics, ...extraDiags] };
 }

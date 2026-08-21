@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
+  canonicalRequirementTaintTuple,
   checkTaint,
   checkValueStates,
   checkEffects,
@@ -10,6 +14,7 @@ import {
   parseProgram,
   runProductionSecurityGate,
 } from "../dist/index.js";
+import { compileFile } from "../dist/cli.js";
 
 function checkRequirementEffects(source, file = "requirement-effects.fungi") {
   const parsed = parseProgram(source, file);
@@ -106,6 +111,8 @@ function requirementTaintDiagnostics(source, authorityOverrides = {}) {
       ...(authorityOverrides.checkedFlow ?? {}),
     }],
     effectResults,
+    flows: parsed.flows,
+    ...(authorityOverrides.input ?? {}),
   };
   const ast = parsed.ast ?? { kind: "program" };
   return {
@@ -736,6 +743,33 @@ contract { effects {} }
 });
 
 describe("RD-0858 requirement constraint taint authority", () => {
+  it("canonicalizes the closed provenance domain as sorted unique bounded tuples", () => {
+    assert.deepEqual(
+      canonicalRequirementTaintTuple([
+        "web.storage",
+        "declared.untrusted",
+        "web.storage",
+        "environment.input",
+      ]),
+      ["declared.untrusted", "environment.input", "web.storage"],
+    );
+    assert.equal(canonicalRequirementTaintTuple(["attacker.named"]), undefined);
+    assert.deepEqual(canonicalRequirementTaintTuple([
+      "declared.untrusted",
+      "environment.input",
+      "process.input",
+      "web.request",
+      "web.storage",
+      "web.storage",
+    ]), [
+      "declared.untrusted",
+      "environment.input",
+      "process.input",
+      "web.request",
+      "web.storage",
+    ]);
+  });
+
   for (const [label, expression] of [
     ["direct identifier", "input"],
     ["member access", "input.length"],
@@ -784,13 +818,140 @@ describe("RD-0858 requirement constraint taint authority", () => {
     assert.deepEqual(checked.valueState, []);
   });
 
+  it("retains taint through aliases and refuses nested validator-shaped expressions", () => {
+    const alias = requirementTaintDiagnostics(taintProgram("alias == \"allow\"").replace(
+      "let result: Verdict = requirement",
+      "let alias: String = input\n  let result: Verdict = requirement",
+    ), { registry: createRequirementValidatorAuthorityRegistry([]) });
+    const nested = requirementTaintDiagnostics(
+      taintProgram("validateInput(input) == Verdict.Allow"),
+    );
+    assert.deepEqual(alias.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-004"]);
+    assert.deepEqual(nested.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-004"]);
+  });
+
+  it("admits a pre-checked boundary before requirement but not the same boundary inside it", () => {
+    const before = requirementTaintDiagnostics(taintProgram("checked == \"allow\"").replace(
+      "let result: Verdict = requirement",
+      "let checked: String = Sql.parameterize(input)\n  let result: Verdict = requirement",
+    ), { registry: createRequirementValidatorAuthorityRegistry([]) });
+    const inside = requirementTaintDiagnostics(
+      taintProgram("Sql.parameterize(input)"),
+      { registry: createRequirementValidatorAuthorityRegistry([]) },
+    );
+    assert.deepEqual(before.taint, []);
+    assert.deepEqual(before.valueState, []);
+    assert.deepEqual(inside.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-004"]);
+  });
+
+  it("requires the exact mixed provenance tuple and refuses a subset", () => {
+    const source = taintProgram("validateInput(input, env, request)")
+      .replace("tainted input: String", "tainted input: String, env: String, request: String")
+      .replace("value: String", "value: String, envValue: String, requestValue: String");
+    const exact = requirementTaintDiagnostics(source, {
+      row: { taintClasses: ["web.request", "declared.untrusted", "environment.input"] },
+    });
+    const subset = requirementTaintDiagnostics(source, {
+      row: { taintClasses: ["declared.untrusted", "environment.input"] },
+    });
+    assert.deepEqual(exact.taint, []);
+    assert.deepEqual(subset.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("maps an unregistered exact local validator to 004", () => {
+    const checked = requirementTaintDiagnostics(taintProgram("validateInput(input)"), {
+      row: { qualifiedFlowIdentity: "package.example.policy::otherValidator" },
+    });
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-004"]);
+  });
+
+  it("refuses malformed and duplicate present registries with 010", () => {
+    const malformed = createRequirementValidatorAuthorityRegistry([{
+      authorityVersion: "bad",
+    }]);
+    const base = {
+      authorityVersion: TAINT_VERSION,
+      qualifiedFlowIdentity: "package.example.policy::validateInput",
+      sourceBuild: TAINT_SOURCE_BUILD,
+      inputType: "String",
+      taintClasses: ["declared.untrusted"],
+      outputType: "Verdict",
+      observedEffect: "EffectFree",
+      checkedProfile: TAINT_PROFILE,
+      checkedDigest: TAINT_DIGEST,
+      validFrom: "2026-08-20T00:00:00.000Z",
+      expiresAt: "2026-08-22T00:00:00.000Z",
+    };
+    const duplicate = createRequirementValidatorAuthorityRegistry([base, base]);
+    for (const registry of [malformed, duplicate]) {
+      const checked = requirementTaintDiagnostics(taintProgram("validateInput(input)"), { registry });
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-010"]);
+    }
+  });
+
+  it("admits the exact checked-flow evidence ceiling and refuses one above it", () => {
+    const checkedFlows = [
+      { localFlowName: "validateInput", checkedDigest: TAINT_DIGEST },
+      ...Array.from({ length: 255 }, (_, index) => ({
+        localFlowName: `other${index}`,
+        checkedDigest: `sha256:${"b".repeat(64)}`,
+      })),
+    ];
+    const exact = requirementTaintDiagnostics(taintProgram("validateInput(input)"), {
+      input: { checkedFlows },
+    });
+    const exceeded = requirementTaintDiagnostics(taintProgram("validateInput(input)"), {
+      input: {
+        checkedFlows: [...checkedFlows, {
+          localFlowName: "overflow",
+          checkedDigest: `sha256:${"c".repeat(64)}`,
+        }],
+      },
+    });
+    assert.deepEqual(exact.taint, []);
+    assert.deepEqual(exceeded.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-010"]);
+  });
+
+  it("refuses imported and dynamic validator collisions", () => {
+    const imported = taintProgram("validateInput(input)").replace(
+      "@version 1",
+      '@version 1\nimport { remote as validateInput } from "./policy.fungi"',
+    );
+    const dynamic = taintProgram("validators.validateInput(input)");
+    for (const source of [imported, dynamic]) {
+      const checked = requirementTaintDiagnostics(source);
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), ["FUNGI-REQUIREMENT-004"]);
+    }
+  });
+
+  it("refuses receiver, aliased and shadowed validator collisions", () => {
+    const fixtures = [
+      taintProgram("policy.validateInput(input)"),
+      taintProgram("alias(input)").replace(
+        "let result: Verdict = requirement",
+        "let alias = validateInput\n  let result: Verdict = requirement",
+      ),
+      taintProgram("validateInput(input)").replace(
+        "let result: Verdict = requirement",
+        "let validateInput: Bool = true\n  let result: Verdict = requirement",
+      ),
+    ];
+    for (const source of fixtures) {
+      const checked = requirementTaintDiagnostics(source);
+      assert.equal(checked.taint.length, 1);
+      assert.ok(["FUNGI-REQUIREMENT-004", "FUNGI-REQUIREMENT-010"].includes(checked.taint[0].code));
+    }
+  });
+
   for (const [label, overrides] of [
     ["wrong source build", { context: { sourceBuild: `git:${"f".repeat(40)}` } }],
     ["wrong profile", { context: { checkedProfile: "slide.scalar-64" } }],
     ["wrong checked digest", { checkedFlow: { checkedDigest: `sha256:${"b".repeat(64)}` } }],
+    ["wrong registry digest", { context: { expectedRegistryDigest: `sha256:${"b".repeat(64)}` } }],
     ["wrong accepted version", { context: { acceptedAuthorityVersion: "2.0.0" } }],
     ["expired authority", { context: { comparisonTime: "2026-08-22T00:00:00.000Z" } }],
     ["wrong taint tuple", { row: { taintClasses: ["web.request"] } }],
+    ["wrong input type", { row: { inputType: "Bytes" } }],
     ["non-Verdict validator", { row: { outputType: "Bool" } }],
   ]) {
     it(`emits 010 for ${label} instead of silently accepting it`, () => {
@@ -863,5 +1024,20 @@ describe("RD-0858 requirement constraint taint authority", () => {
       diagnostics.filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004").length,
       1,
     );
+  });
+
+  it("keeps the CLI fail-closed with explicit empty validator authority", () => {
+    const directory = mkdtempSync(join(tmpdir(), "galerina-rd0858-"));
+    try {
+      const file = join(directory, "requirement-source.txt");
+      writeFileSync(file, taintProgram("validateInput(input)"), "utf8");
+      const result = compileFile(file, "check");
+      assert.equal(
+        result.diagnostics.filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004").length,
+        1,
+      );
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
 });
