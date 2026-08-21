@@ -192,11 +192,12 @@ function coerceToDeclaredNumeric(declaredBase: string, value: GalerinaValue, ini
 const BOOL_TRUE:  GalerinaValue = { __tag: "bool", value: true };
 const BOOL_FALSE: GalerinaValue = { __tag: "bool", value: false };
 const boolVal = (b: boolean): GalerinaValue => b ? BOOL_TRUE : BOOL_FALSE;
-const isNodeProxy = nodeUtilTypes.isProxy.bind(nodeUtilTypes);
+const isNodeProxy = nodeUtilTypes.isProxy;
+const getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 function ownDataValue(value: unknown, key: "__tag" | "value"): unknown {
   if (typeof value !== "object" || value === null || isNodeProxy(value)) return undefined;
   try {
-    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    const descriptor = getOwnPropertyDescriptor(value, key);
     return descriptor !== undefined && "value" in descriptor ? descriptor.value : undefined;
   } catch {
     return undefined;
