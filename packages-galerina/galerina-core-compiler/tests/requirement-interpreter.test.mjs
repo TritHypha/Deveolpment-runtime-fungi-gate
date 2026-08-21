@@ -1,0 +1,244 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import * as L from "../dist/index.js";
+
+const sourceForRequirement = (flowName, constraints) =>
+  `@version 1\npure flow ${flowName}() -> Verdict\n` +
+  `contract { effects {} }\n{\n` +
+  `  return requirement {\n${constraints}\n  }\n}`;
+
+const sourceForRequire = (flowName, subjectType = "Verdict") =>
+  `@version 1\npure flow ${flowName}(subject: ${subjectType}) -> String\n` +
+  `contract { effects {} }\n{\n` +
+  `  require subject {\n` +
+  `    deny: return "deny"\n` +
+  `    ambig: return "ambig"\n` +
+  `  }\n` +
+  `  return "allow"\n}`;
+
+function prepare(source, file = "requirement-interpreter.fungi") {
+  const parsed = L.parseProgram(source, file);
+  const parserErrors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+  assert.deepEqual(parserErrors, [], `unexpected parser errors: ${JSON.stringify(parserErrors)}`);
+  const typeErrors = L.checkTypes(parsed.ast).diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+  assert.deepEqual(typeErrors, [], `unexpected type errors: ${JSON.stringify(typeErrors)}`);
+  return parsed;
+}
+
+function firstNode(ast, kind) {
+  let found;
+  (function walk(node) {
+    if (found !== undefined || node === undefined || node === null || typeof node !== "object") return;
+    if (node.kind === kind) {
+      found = node;
+      return;
+    }
+    for (const child of node.children ?? []) walk(child);
+  })(ast);
+  assert.ok(found, `expected ${kind} node`);
+  return found;
+}
+
+async function runRequirement(flowName, constraints, runtimeOptions) {
+  const parsed = prepare(sourceForRequirement(flowName, constraints), `${flowName}.fungi`);
+  return await L.executeFlow(flowName, new Map(), parsed.ast, parsed.flows, undefined, undefined, runtimeOptions);
+}
+
+describe("RD-0858 Unit 4 requirement expression runtime", () => {
+  const cases = [
+    ["runtimeBoolAllow", "    true", 1],
+    ["runtimeBoolDeny", "    false", -1],
+    ["runtimeMixedUnknown", "    true\n    Verdict.Unknown\n    Verdict.Allow", 0],
+    ["runtimeMixedDeny", "    Verdict.Allow\n    false\n    Verdict.Unknown", -1],
+  ];
+
+  for (const [flowName, constraints, expected] of cases) {
+    it(`${flowName} lifts Bool and computes the complete K3 minimum`, async () => {
+      const result = await runRequirement(flowName, constraints);
+      assert.equal(result.audit.result, "ok");
+      assert.deepEqual(result.value, { __tag: "verdict", value: expected });
+    });
+  }
+
+  it("does not short-circuit after DENY before a later operational failure", async () => {
+    const result = await runRequirement(
+      "runtimeCompleteEvaluation",
+      "    false\n    (1 / 0) == 0",
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /DivisionByZero|operational failure|fail-closed/);
+  });
+
+  it("refuses a forged non-Bool, non-Verdict constraint", async () => {
+    const parsed = prepare(sourceForRequirement("runtimeBadConstraint", "    true"));
+    const constraint = firstNode(parsed.ast, "requirementConstraint");
+    constraint.children = [{ kind: "numberLiteral", value: "1", location: constraint.location }];
+
+    const result = await L.executeFlow("runtimeBadConstraint", new Map(), parsed.ast, parsed.flows);
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /Bool or Verdict|fail-closed/);
+  });
+
+  it("refuses a forged requirement with no constraints", async () => {
+    const parsed = prepare(sourceForRequirement("runtimeEmptyConstraint", "    true"));
+    firstNode(parsed.ast, "requirementExpr").children = [];
+
+    const result = await L.executeFlow("runtimeEmptyConstraint", new Map(), parsed.ast, parsed.flows);
+    assert.equal(result.audit.result, "error");
+    assert.match(result.value.message, /at least one constraint|fail-closed/);
+  });
+
+  it("refuses a forged 65th constraint before evaluating a truncated prefix", async () => {
+    const parsed = prepare(sourceForRequirement("runtimeConstraintCeiling", "    true"));
+    const requirement = firstNode(parsed.ast, "requirementExpr");
+    const original = requirement.children[0];
+    requirement.children = Array.from({ length: 65 }, () => ({
+      ...original,
+      children: [...(original.children ?? [])],
+    }));
+
+    const result = await L.executeFlow("runtimeConstraintCeiling", new Map(), parsed.ast, parsed.flows);
+    assert.equal(result.audit.result, "error");
+    assert.match(result.value.message, /64 constraints|ceiling|fail-closed/);
+  });
+});
+
+describe("RD-0858 Unit 4 require statement runtime", () => {
+  const cases = [
+    ["runtimeRequireDeny", -1, "deny"],
+    ["runtimeRequireUnknown", 0, "ambig"],
+    ["runtimeRequireAllow", 1, "allow"],
+  ];
+
+  for (const [flowName, trit, expected] of cases) {
+    it(`${flowName} selects the exact terminal route`, async () => {
+      const parsed = prepare(sourceForRequire(flowName), `${flowName}.fungi`);
+      const result = await L.executeFlow(
+        flowName,
+        new Map([["subject", { __tag: "verdict", value: trit }]]),
+        parsed.ast,
+        parsed.flows,
+      );
+      assert.equal(result.audit.result, "ok");
+      assert.deepEqual(result.value, { __tag: "string", value: expected });
+    });
+  }
+
+  it("lifts a Bool subject through the same deny/allow mapping", async () => {
+    const flowName = "runtimeRequireBool";
+    const parsed = prepare(sourceForRequire(flowName, "Bool"));
+    const denied = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: false }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    const allowed = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "bool", value: true }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(denied.value.__tag, "string");
+    assert.equal(denied.value.value, "deny");
+    assert.equal(allowed.value.__tag, "string");
+    assert.equal(allowed.value.value, "allow");
+  });
+
+  it("refuses a forged missing handler instead of reaching guarded continuation", async () => {
+    const flowName = "runtimeMissingHandler";
+    const parsed = prepare(sourceForRequire(flowName));
+    const statement = firstNode(parsed.ast, "requireStmt");
+    statement.children = statement.children.filter((child) => child.value !== "ambig");
+
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "verdict", value: 0 }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.notEqual(result.value.value, "allow");
+    assert.match(result.value.message, /deny.*ambig|handlers|fail-closed/);
+  });
+
+  it("refuses a forged handler that returns normally", async () => {
+    const flowName = "runtimeNonTerminalHandler";
+    const parsed = prepare(sourceForRequire(flowName));
+    const denyArm = firstNode(parsed.ast, "requireStmt").children.find((child) => child.value === "deny");
+    denyArm.children = [{ kind: "block", children: [], location: denyArm.location }];
+
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "verdict", value: -1 }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.match(result.value.message, /handler returned normally|non-terminal|fail-closed/);
+  });
+
+  it("refuses a forged fourth Verdict before selecting either handler", async () => {
+    const flowName = "runtimeForgedVerdict";
+    const parsed = prepare(sourceForRequire(flowName));
+    const result = await L.executeFlow(
+      flowName,
+      new Map([["subject", { __tag: "verdict", value: 2 }]]),
+      parsed.ast,
+      parsed.flows,
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /malformed Verdict|fail-closed/);
+  });
+});
+
+describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
+  it("declines the sync-only API for requirement semantics", () => {
+    const flowName = "runtimeSyncDeferral";
+    const parsed = prepare(sourceForRequirement(flowName, "    true"));
+    assert.equal(L.executeFlowSync(flowName, new Map(), parsed.ast, parsed.flows), null);
+    assert.equal(L.tryPureFlowSync(parsed.ast, parsed.flows, flowName, new Map()), null);
+  });
+
+  it("keeps every pure-fast-path invocation on the governed tree tier", async () => {
+    const flowName = "runtimeFastPathDeferral";
+    const parsed = prepare(sourceForRequirement(flowName, "    true"));
+    const options = { pureFastPath: true, egraphFastPath: true, sourceTag: "rd-0858-unit4" };
+
+    const first = await L.executeFlow(flowName, new Map(), parsed.ast, parsed.flows, undefined, undefined, options);
+    const second = await L.executeFlow(flowName, new Map(), parsed.ast, parsed.flows, undefined, undefined, options);
+
+    assert.deepEqual(first.value, { __tag: "verdict", value: 1 });
+    assert.deepEqual(second.value, first.value);
+    assert.equal(first.executionTier, "tree");
+    assert.equal(second.executionTier, "tree");
+  });
+
+  it("returns byte-identical semantic results on default and opt-in execution", async () => {
+    const flowName = "runtimeDifferential";
+    const parsed = prepare(sourceForRequirement(
+      flowName,
+      "    Verdict.Allow\n    true\n    Verdict.Unknown",
+    ));
+    const governed = await L.executeFlow(flowName, new Map(), parsed.ast, parsed.flows);
+    const optedIn = await L.executeFlow(
+      flowName,
+      new Map(),
+      parsed.ast,
+      parsed.flows,
+      undefined,
+      undefined,
+      { pureFastPath: true, egraphFastPath: true, sourceTag: "rd-0858-differential" },
+    );
+
+    assert.deepEqual(governed.value, { __tag: "verdict", value: 0 });
+    assert.deepEqual(optedIn.value, governed.value);
+    assert.equal(governed.audit.result, "ok");
+    assert.equal(optedIn.audit.result, "ok");
+    assert.equal(optedIn.executionTier, "tree");
+  });
+});
