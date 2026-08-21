@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { describe, it } from "node:test";
 import { types as nodeUtilTypes } from "node:util";
 import * as L from "../dist/index.js";
@@ -434,6 +435,103 @@ describe("RD-0858 Unit 4 execution-tier differential boundary", () => {
     } finally {
       nodeUtilTypes.isProxy = originalIsProxy;
     }
+  });
+
+  it("refuses a malformed Bool after the shared descriptor reader is replaced", async () => {
+    const flowName = "runtimeTamperedDescriptorReader";
+    const parsed = prepare(sourceForRequire(flowName, "Bool"));
+    const subject = { __tag: "bool", value: 0 };
+    const originalGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+    try {
+      Object.getOwnPropertyDescriptor = (target, key) => {
+        if (target === subject && key === "__tag") {
+          return { configurable: true, enumerable: true, writable: true, value: "bool" };
+        }
+        if (target === subject && key === "value") {
+          return { configurable: true, enumerable: true, writable: true, value: true };
+        }
+        return originalGetOwnPropertyDescriptor(target, key);
+      };
+      const result = await L.executeFlow(
+        flowName,
+        new Map([["subject", subject]]),
+        parsed.ast,
+        parsed.flows,
+      );
+      assert.equal(result.audit.result, "error");
+      assert.equal(result.value.__tag, "runtimeError");
+      assert.notDeepEqual(result.value, { __tag: "string", value: "allow" });
+    } finally {
+      Object.getOwnPropertyDescriptor = originalGetOwnPropertyDescriptor;
+    }
+  });
+
+  it("refuses Proxy-forged Bool when Function bind is poisoned before module import", () => {
+    const parserUrl = new URL("../dist/parser.js", import.meta.url).href;
+    const typeCheckerUrl = new URL("../dist/type-checker.js", import.meta.url).href;
+    const interpreterUrl = new URL("../dist/interpreter.js", import.meta.url).href;
+    const childSource = String.raw`
+      import { types as nodeUtilTypes } from "node:util";
+      const { parseProgram } = await import(process.argv[1]);
+      const { checkTypes } = await import(process.argv[2]);
+      const originalBind = Function.prototype.bind;
+      Function.prototype.bind = function (...args) {
+        if (this === nodeUtilTypes.isProxy) return () => false;
+        return Reflect.apply(originalBind, this, args);
+      };
+      try {
+        const L = await import(process.argv[3] + "?pre-import-bind-poison=1");
+        const source = "@version 1\\npure flow preImportBindPoison(subject: Bool) -> String\\n" +
+          "contract { effects {} }\\n{\\n" +
+          "  require subject {\\n" +
+          "    deny: return \\\"deny\\\"\\n" +
+          "    ambig: return \\\"ambig\\\"\\n" +
+          "  }\\n" +
+          "  return \\\"allow\\\"\\n}";
+        const parsed = parseProgram(source, "pre-import-bind-poison.fungi");
+        const parserErrors = parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+        const typeErrors = checkTypes(parsed.ast).diagnostics.filter(
+          (diagnostic) => diagnostic.severity === "error",
+        );
+        if (parserErrors.length > 0 || typeErrors.length > 0) {
+          throw new Error("unexpected parser or type errors in bind-poison fixture");
+        }
+        let descriptorReads = 0;
+        const subject = new Proxy({}, {
+          getOwnPropertyDescriptor(_target, key) {
+            descriptorReads += 1;
+            if (key === "__tag") return { configurable: true, value: "bool" };
+            if (key === "value") return { configurable: true, value: true };
+            return undefined;
+          },
+        });
+        const result = await L.executeFlow(
+          "preImportBindPoison",
+          new Map([["subject", subject]]),
+          parsed.ast,
+          parsed.flows,
+        );
+        process.stdout.write(JSON.stringify({
+          audit: result.audit.result,
+          tag: result.value?.__tag,
+          value: result.value?.value,
+          descriptorReads,
+        }));
+      } finally {
+        Function.prototype.bind = originalBind;
+      }
+    `;
+    const child = spawnSync(
+      process.execPath,
+      ["--input-type=module", "--eval", childSource, parserUrl, typeCheckerUrl, interpreterUrl],
+      { encoding: "utf8", timeout: 30_000, windowsHide: true },
+    );
+    assert.equal(child.error, undefined);
+    assert.equal(child.status, 0, child.stderr);
+    const result = JSON.parse(child.stdout);
+    assert.equal(result.audit, "error");
+    assert.equal(result.tag, "runtimeError");
+    assert.equal(result.descriptorReads, 0);
   });
 
   it("declines the sync-only API for requirement semantics", () => {
