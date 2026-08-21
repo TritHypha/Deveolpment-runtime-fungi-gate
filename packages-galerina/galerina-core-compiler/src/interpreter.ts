@@ -21,6 +21,7 @@ import { i64AddChecked, i64SubChecked, i64MulChecked, i64DivChecked, i64ModCheck
 import { u64AddChecked, u64SubChecked, u64MulChecked, u64DivChecked, u64ModChecked, u64NegChecked, isU64Trap, type U64Result } from "./u64-arith.js";
 import { decAdd, decSub, decMul, decCompare, isDecTrap, decDiv, decRem, isRoundMode, type DecResult } from "./decimal-arith.js";
 import { numericBaseType, parseI64Literal, parseU64Literal, isI64LiteralError, flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
+import { foldRequirementValues, liftRequirementValue as liftRequirementPrimitive } from "./requirement-semantics.js";
 import { compareUtf16CodeUnits } from "@galerina/core-runtime-wasm";
 
 export type GalerinaValue =
@@ -752,6 +753,9 @@ class SyncInterpreter {
         // interpret an unknown statement as a discarded expression.
         throw new SyncNotSupported("trap declaration requires governed execution");
 
+      case "requireStmt":
+        throw new SyncNotSupported("require statement requires governed execution");
+
       case "block":
         // FAIL-CLOSED (2026-06-19): propagate non-SyncReturn throws (was swallowed → fail-open).
         return this.execBlock(node);
@@ -768,6 +772,9 @@ class SyncInterpreter {
       throw new SyncNotSupported(`compute budget exceeded (${this.maxSteps} steps) — defer to the async cap`);
     }
     switch (node.kind) {
+      case "requirementExpr":
+        throw new SyncNotSupported("requirement expression requires governed execution");
+
       case "numberLiteral": {
         const raw = (node.value ?? "0").replace(/_/g, "");
         // A float literal has a '.' OR a decimal exponent (`1e400`, `9e9`). The dotless-exponent form was
@@ -1100,6 +1107,8 @@ class Interpreter {
   private flowReturnBase = "";
   /** R4C: maps binding name → the flow that declared it as a governed value. */
   private readonly governedBindingSource = new Map<string, string>();
+  /** Requirement expressions are non-nestable in the current admitted language surface. */
+  private requirementDepth = 0;
   /** Fail-closed recursion-depth counter (logical flow/fn-call nesting). runNestedFlow sets it on the
    *  nested Interpreter to parent+1; runLocalFn increments it; both trap against maxCallDepth. */
   callDepth = 0;
@@ -1975,6 +1984,44 @@ class Interpreter {
         return undefined;
       }
 
+      case "requireStmt": {
+        const children = node.children;
+        if (!Array.isArray(children) || children.length !== 3) {
+          throw new Error("require must contain one subject, one deny handler, and one ambig handler — fail-closed");
+        }
+
+        const subject = children[0];
+        const arms = [children[1], children[2]];
+        if (subject === undefined || arms.some((arm) => arm === undefined || arm.kind !== "requireArm")) {
+          throw new Error("require contains a malformed subject or handler — fail-closed");
+        }
+
+        let denyBody: AstNode | undefined;
+        let ambigBody: AstNode | undefined;
+        for (const arm of arms) {
+          if (arm === undefined || !Array.isArray(arm.children) || arm.children.length !== 1 || arm.children[0] === undefined) {
+            throw new Error("require handler must contain exactly one terminal body — fail-closed");
+          }
+          if (arm.value === "deny" && denyBody === undefined) denyBody = arm.children[0];
+          else if (arm.value === "ambig" && ambigBody === undefined) ambigBody = arm.children[0];
+          else throw new Error("require handlers must be exactly one deny and one ambig arm — fail-closed");
+        }
+        if (denyBody === undefined || ambigBody === undefined) {
+          throw new Error("require is missing a deny or ambig handler — fail-closed");
+        }
+
+        const verdict = this.liftRequirementValue(await this.evalExpr(subject), "require subject");
+        if (verdict === 1) return undefined;
+        const body = verdict === -1 ? denyBody : ambigBody;
+        const result = body.kind === "block"
+          ? await this.executeBlock(body)
+          : await this.executeStatement(body);
+        if (result === undefined) {
+          throw new Error(`require ${verdict === -1 ? "deny" : "ambig"} handler completed without a terminal exit — fail-closed`);
+        }
+        return result;
+      }
+
       case "matchExpr": {
         const matchResult = await this.evalExpr(node);
         return matchResult.__tag === "void" ? undefined : matchResult;
@@ -2156,6 +2203,9 @@ class Interpreter {
   private async evalExpr(node: AstNode): Promise<GalerinaValue> {
     this.chargeStep();
     switch (node.kind) {
+      case "requirementExpr":
+        return await this.evalRequirementExpression(node);
+
       // Phase 41: returnStmt inside match arm bodies — `match x { _ => return "found" }`
       // evalExpr is called from evalMatch for arm bodies. returnStmt needs to
       // return its inner value rather than falling to default:FUNGI_VOID.
@@ -2330,6 +2380,59 @@ class Interpreter {
 
       default:
         return FUNGI_VOID;
+    }
+  }
+
+  private liftRequirementValue(value: GalerinaValue, context: string): -1 | 0 | 1 {
+    if (value.__tag === "runtimeError" || value.__tag === "error") {
+      throw new Error(`${context} failed: ${value.message}`);
+    }
+    if (value.__tag === "bool" || value.__tag === "verdict") {
+      const lifted = liftRequirementPrimitive(value.value);
+      if (lifted !== undefined) return lifted;
+    }
+    throw new Error(`${context} must evaluate to Bool or canonical Verdict, got '${value.__tag}' — fail-closed`);
+  }
+
+  private async evalRequirementExpression(node: AstNode): Promise<GalerinaValue> {
+    if (this.requirementDepth !== 0) {
+      throw new Error("nested requirement expressions are not admitted — fail-closed");
+    }
+    const constraints = node.children;
+    if (!Array.isArray(constraints) || constraints.length < 1 || constraints.length > 64) {
+      throw new Error("requirement must contain between 1 and 64 constraints — fail-closed");
+    }
+
+    const expressions: AstNode[] = [];
+    for (let index = 0; index < constraints.length; index += 1) {
+      const constraint = constraints[index];
+      if (
+        constraint === undefined ||
+        constraint.kind !== "requirementConstraint" ||
+        !Array.isArray(constraint.children) ||
+        constraint.children.length !== 1 ||
+        constraint.children[0] === undefined
+      ) {
+        throw new Error(`requirement constraint ${index + 1} is malformed — fail-closed`);
+      }
+      expressions.push(constraint.children[0]);
+    }
+
+    this.requirementDepth += 1;
+    try {
+      const values: Array<-1 | 0 | 1> = [];
+      for (let index = 0; index < expressions.length; index += 1) {
+        this.enforcer?.checkDeadline();
+        const value = await this.evalExpr(expressions[index]!);
+        values.push(this.liftRequirementValue(value, `requirement constraint ${index + 1}`));
+      }
+      const folded = foldRequirementValues(values);
+      if (!folded.ok) {
+        throw new Error(`requirement fold refused '${folded.reason}' at constraint ${folded.ordinal + 1} — fail-closed`);
+      }
+      return { __tag: "verdict", value: folded.verdict };
+    } finally {
+      this.requirementDepth -= 1;
     }
   }
 
@@ -3545,7 +3648,8 @@ function flowRequiresGovernedPath(ast: AstNode, flowName: string): boolean {
       FLOW_KINDS.has(node.kind) &&
       node.value === flowName &&
       (extractOutputPostconditions(node).length > 0 || extractInputPreconditions(node).length > 0 ||
-        extractParamAdmissions(node).length > 0 || astContainsKind(node, "trapDecl"))
+        extractParamAdmissions(node).length > 0 || astContainsKind(node, "trapDecl") ||
+        astContainsKind(node, "requirementExpr") || astContainsKind(node, "requireStmt"))
     ) {
       found = true;
       return;
