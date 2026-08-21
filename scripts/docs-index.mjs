@@ -16,6 +16,7 @@
  *
  *   --selftest    fixtures with known answers
  *   --dry-run     report what would change
+ *   --check       compare every expected index without writing
  *   --apply       write the indexes
  */
 
@@ -184,17 +185,41 @@ function selftest() {
 
 const mode = process.argv[2];
 if (mode === '--selftest') process.exit(selftest() ? 0 : 1);
+if (!['--dry-run', '--check', '--apply'].includes(mode)) {
+  console.error('usage: docs-index.mjs <--selftest|--dry-run|--check|--apply>');
+  process.exit(2);
+}
 if (!selftest()) { console.error('KATs failed — refusing to write indexes from an unproven generator.'); process.exit(1); }
 if (!existsSync(DOCS)) { console.error(`no docs/ at ${DOCS}`); process.exit(2); }
 
 const dry = mode === '--dry-run';
-let written = 0, linked = 0;
+const check = mode === '--check';
+let written = 0, linked = 0, drifted = 0;
 for (const d of allDirs(DOCS)) {
   if (!willIndex(d)) continue;   // same predicate the Sections rows use — see willIndex()
   const { files } = listDir(d);
   const text = buildIndex(d);
+  const target = join(d, GENERATED);
   linked += files.length;
-  if (!dry) writeFileSync(join(d, GENERATED), text);
+  if (check) {
+    let current;
+    try { current = readFileSync(target, 'utf8'); } catch { /* missing or unreadable is drift */ }
+    if (current !== text) {
+      console.error(`[check] drift ${toPosix(relative(ROOT, target))}`);
+      drifted++;
+    }
+  } else if (!dry) {
+    writeFileSync(target, text);
+  }
   written++;
 }
-console.log(`${dry ? '[dry-run] would write' : 'wrote'} ${written} INDEX.md file(s), linking ${linked} documents`);
+if (check) {
+  if (drifted > 0) {
+    console.error(`[check] ${drifted} of ${written} INDEX.md file(s) missing or drifted; wrote 0`);
+    process.exitCode = 1;
+  } else {
+    console.log(`[check] ${written} INDEX.md file(s) exact, linking ${linked} documents; wrote 0`);
+  }
+} else {
+  console.log(`${dry ? '[dry-run] would write' : 'wrote'} ${written} INDEX.md file(s), linking ${linked} documents`);
+}
