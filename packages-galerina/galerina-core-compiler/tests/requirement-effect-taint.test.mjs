@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  checkTaint,
+  checkValueStates,
   checkEffects,
   checkFlowEffects,
+  createRequirementValidatorAuthorityRegistry,
   effectResultsToDiagnostics,
   parseProgram,
+  runProductionSecurityGate,
 } from "../dist/index.js";
 
 function checkRequirementEffects(source, file = "requirement-effects.fungi") {
@@ -38,6 +42,82 @@ ${constraints}
   }
   return result
 }`;
+
+const TAINT_SOURCE_BUILD = "git:0123456789abcdef0123456789abcdef01234567";
+const TAINT_PROFILE = "slide.scalar-1";
+const TAINT_VERSION = "1.0.0";
+const TAINT_DIGEST = `sha256:${"a".repeat(64)}`;
+
+const taintProgram = (constraint, validatorBody = "return true") =>
+  `@version 1
+pure flow decide(tainted input: String) -> Verdict
+contract { effects {} }
+{
+  let result: Verdict = requirement {
+    ${constraint}
+  }
+  return result
+}
+
+pure flow validateInput(value: String) -> Verdict
+contract { effects {} }
+{
+  ${validatorBody}
+}`;
+
+function requirementTaintDiagnostics(source, authorityOverrides = {}) {
+  const parsed = parseProgram(source, "requirement-taint.fungi");
+  assert.deepEqual(
+    parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+    [],
+    `unexpected parser errors: ${JSON.stringify(parsed.diagnostics)}`,
+  );
+  const effectResults = checkEffects(parsed.flows, parsed.ast ?? { kind: "program" });
+  const row = {
+    authorityVersion: TAINT_VERSION,
+    qualifiedFlowIdentity: "package.example.policy::validateInput",
+    sourceBuild: TAINT_SOURCE_BUILD,
+    inputType: "String",
+    taintClasses: ["declared.untrusted"],
+    outputType: "Verdict",
+    observedEffect: "EffectFree",
+    checkedProfile: TAINT_PROFILE,
+    checkedDigest: TAINT_DIGEST,
+    validFrom: "2026-08-20T00:00:00.000Z",
+    expiresAt: "2026-08-22T00:00:00.000Z",
+    ...(authorityOverrides.row ?? {}),
+  };
+  const registry = authorityOverrides.registry
+    ?? createRequirementValidatorAuthorityRegistry([row]);
+  const input = {
+    registry,
+    context: {
+      expectedRegistryDigest: registry.digest,
+      canonicalSourceUnitId: "package.example.policy",
+      sourceBuild: TAINT_SOURCE_BUILD,
+      checkedProfile: TAINT_PROFILE,
+      acceptedAuthorityVersion: TAINT_VERSION,
+      comparisonTime: "2026-08-21T00:00:00.000Z",
+      ...(authorityOverrides.context ?? {}),
+    },
+    checkedFlows: [{
+      localFlowName: "validateInput",
+      checkedDigest: TAINT_DIGEST,
+      ...(authorityOverrides.checkedFlow ?? {}),
+    }],
+    effectResults,
+  };
+  const ast = parsed.ast ?? { kind: "program" };
+  return {
+    taint: checkTaint(ast, parsed.flows, input).filter((diagnostic) =>
+      diagnostic.code === "FUNGI-REQUIREMENT-004"
+        || diagnostic.code === "FUNGI-REQUIREMENT-010"),
+    valueState: checkValueStates(ast, "development", input).diagnostics.filter((diagnostic) =>
+      diagnostic.code === "FUNGI-REQUIREMENT-004"
+        || diagnostic.code === "FUNGI-REQUIREMENT-010"),
+    parsed,
+  };
+}
 
 const syntheticLocation = (line = 1) => ({
   file: "requirement-effects-boundary.fungi",
@@ -651,6 +731,137 @@ contract { effects {} }
     assert.deepEqual(
       checked.diagnostics.map((diagnostic) => diagnostic.code),
       ["FUNGI-EFFECT-001"],
+    );
+  });
+});
+
+describe("RD-0858 requirement constraint taint authority", () => {
+  for (const [label, expression] of [
+    ["direct identifier", "input"],
+    ["member access", "input.length"],
+    ["comparison", "input == \"allow\""],
+    ["Boolean expression", "input == \"allow\" && true"],
+  ]) {
+    it(`rejects ${label} taint without a validator-authority route`, () => {
+      const checked = requirementTaintDiagnostics(taintProgram(expression), {
+        registry: createRequirementValidatorAuthorityRegistry([]),
+      });
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-004",
+      ]);
+      assert.deepEqual(checked.valueState.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-004",
+      ]);
+    });
+  }
+
+  for (const [label, name] of [
+    ["validate", "validate"],
+    ["sanitize", "sanitize"],
+    ["check", "checkInput"],
+    ["verify", "verify"],
+    ["parse", "parse"],
+    ["decode", "decode"],
+    ["helper", "helper"],
+  ]) {
+    it(`does not let an ordinary ${label} name mint validator authority`, () => {
+      const source = taintProgram(`${name}(input)`).replace(
+        "pure flow validateInput(value: String)",
+        `pure flow ${name}(value: String)`,
+      );
+      const checked = requirementTaintDiagnostics(source, {
+        registry: createRequirementValidatorAuthorityRegistry([]),
+      });
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-004",
+      ]);
+    });
+  }
+
+  it("accepts only the exact local Verdict validator with matched fresh authority", () => {
+    const checked = requirementTaintDiagnostics(taintProgram("validateInput(input)"));
+    assert.deepEqual(checked.taint, []);
+    assert.deepEqual(checked.valueState, []);
+  });
+
+  for (const [label, overrides] of [
+    ["wrong source build", { context: { sourceBuild: `git:${"f".repeat(40)}` } }],
+    ["wrong profile", { context: { checkedProfile: "slide.scalar-64" } }],
+    ["wrong checked digest", { checkedFlow: { checkedDigest: `sha256:${"b".repeat(64)}` } }],
+    ["wrong accepted version", { context: { acceptedAuthorityVersion: "2.0.0" } }],
+    ["expired authority", { context: { comparisonTime: "2026-08-22T00:00:00.000Z" } }],
+    ["wrong taint tuple", { row: { taintClasses: ["web.request"] } }],
+    ["non-Verdict validator", { row: { outputType: "Bool" } }],
+  ]) {
+    it(`emits 010 for ${label} instead of silently accepting it`, () => {
+      let source = taintProgram("validateInput(input)");
+      if (label === "non-Verdict validator") {
+        source = source
+          .replace("pure flow validateInput(value: String) -> Verdict", "pure flow validateInput(value: String) -> Bool")
+          .replace("let result: Verdict = requirement", "let result: Verdict = requirement");
+      }
+      const checked = requirementTaintDiagnostics(source, overrides);
+      assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+        "FUNGI-REQUIREMENT-010",
+      ]);
+    });
+  }
+
+  it("emits 010 when the exact validator has a real observed effect", () => {
+    const source = taintProgram(
+      "validateInput(input)",
+      "let stored = AgesDB.get(value)\n  return stored == value",
+    ).replace(
+      "pure flow validateInput(value: String) -> Verdict\ncontract { effects {} }",
+      "secure flow validateInput(value: String) -> Verdict\ncontract { effects { database.read } }",
+    );
+    const checked = requirementTaintDiagnostics(source);
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-010",
+    ]);
+  });
+
+  it("keeps a legacy sanitizer valid outside requirement but not as requirement authority", () => {
+    const source = taintProgram("sanitize(input)").replace(
+      "pure flow validateInput(value: String)",
+      "pure flow sanitize(value: String)",
+    );
+    const parsed = parseProgram(source, "requirement-sanitizer.fungi");
+    assert.deepEqual(
+      parsed.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+      [],
+    );
+    assert.equal(
+      checkTaint(parsed.ast, parsed.flows).filter((diagnostic) =>
+        diagnostic.code === "FUNGI-REQUIREMENT-004").length,
+      1,
+    );
+  });
+
+  it("checks every later tainted constraint after the first refusal", () => {
+    const checked = requirementTaintDiagnostics(
+      taintProgram("input\n    input.length\n    input == \"allow\""),
+      { registry: createRequirementValidatorAuthorityRegistry([]) },
+    );
+    assert.deepEqual(checked.taint.map((diagnostic) => diagnostic.code), [
+      "FUNGI-REQUIREMENT-004",
+      "FUNGI-REQUIREMENT-004",
+      "FUNGI-REQUIREMENT-004",
+    ]);
+  });
+
+  it("keeps the production security gate fail-closed with empty validator authority", () => {
+    const source = taintProgram("validateInput(input)");
+    const parsed = parseProgram(source, "requirement-security-gate.fungi");
+    const diagnostics = runProductionSecurityGate(
+      parsed.ast,
+      parsed.flows,
+      source,
+      "requirement-security-gate.fungi",
+    );
+    assert.equal(
+      diagnostics.filter((diagnostic) => diagnostic.code === "FUNGI-REQUIREMENT-004").length,
+      1,
     );
   });
 });
