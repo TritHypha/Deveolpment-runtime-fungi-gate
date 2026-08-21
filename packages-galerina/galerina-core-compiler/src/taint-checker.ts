@@ -1057,6 +1057,7 @@ function snapshotRequirementValidatorInput(
   value: RequirementValidatorInput,
   snapshottedFlows: readonly FlowMeta[] | undefined,
   snapshotFlowsFromInput: boolean,
+  budget: CheckedFlowCanonicalBudget,
 ): RequirementValidatorInput | undefined {
   try {
     if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
@@ -1065,9 +1066,6 @@ function snapshotRequirementValidatorInput(
     const inputCheckedFlows = value.checkedFlows;
     const inputEffectResults = value.effectResults;
     const inputFlows = snapshotFlowsFromInput ? value.flows : undefined;
-    const budget: CheckedFlowCanonicalBudget = {
-      remaining: MAX_REQUIREMENT_VALIDATOR_INPUT_BYTES,
-    };
     const registry = snapshotRequirementValidatorRegistry(inputRegistry, budget);
     const emptyRegistry = registry?.state === "REFUSED"
       && registry.reason === "EMPTY_REGISTRY";
@@ -1722,13 +1720,17 @@ function analyzeRequirementTaintWithSnapshot(
   useValidatorInputFlows = false,
 ): RequirementTaintSnapshotResult {
   const astSnapshot = snapshotAnalysisAst(ast);
+  const validatorInputBudget: CheckedFlowCanonicalBudget = {
+    remaining: MAX_REQUIREMENT_VALIDATOR_INPUT_BYTES,
+  };
   const explicitFlowSnapshot = useValidatorInputFlows
     ? undefined
-    : snapshotAnalysisFlows(flows);
+    : snapshotAnalysisFlows(flows, validatorInputBudget);
   const validatorInputSnapshot = snapshotRequirementValidatorInput(
     validatorInput,
     explicitFlowSnapshot,
     useValidatorInputFlows,
+    validatorInputBudget,
   );
   const flowSnapshot = validatorInputSnapshot?.flows;
   const analysis = analyzeRequirementTaintFromSnapshot(
