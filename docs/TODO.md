@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Chapter close and process-root gate - 2026-08-22
+
+- [x] Create and verify a complete Git bundle of the Codex memory index at
+  `%USERPROFILE%\.codex\backups\memory\codex-memories-20260822T083626Z.bundle`.
+  The bundle resolves `master` and `HEAD` to memory commit `a712d95c` and has
+  SHA-256 `AA1D31D123B0126BE479745D26591C4793F4D193EF4ABCEA2A69D82411792417`.
+  This is recovery evidence only; `MEMORY.md` remains a locator index, not a
+  content warehouse.
+- [!] Keep memory health fail-closed. The strict preflight currently refuses
+  because generated top-level `memory_summary.md` and `raw_memories.md` are
+  being classified as governed memory nodes, and the active working set cannot
+  resolve the Galerina owner. Repair those two tool/policy seams before claiming
+  the memory index healthy; do not hand-edit `MEMORY.md` to hide them.
+- [x] Record the approved RD-0858 Unit 4 process-root design and its independent
+  architecture review. The design gate is closed; it does not prove an
+  implementation, a trusted process root, or an admitted execution route.
+- [!] Keep Unit 4 implementation on `HOLD` until the native admitted launcher,
+  single-use clean worker, fixed runtime/package identities, bounded canonical
+  protocol and hostile pre-bootstrap controls are implemented RED-first and
+  independently reviewed at one exact graph build point.
+- [!] Keep the separate Agent Operations prompt-span classifier under its own
+  repository custody and immutable review. Its graph or green counts are not
+  Galerina evidence, and no in-progress candidate can reopen conversion.
+- [ ] Preserve the global pre-conversion stop. No new `.fungi` authoring,
+  TypeScript-to-Fungi conversion, GIR authority, SLIDE admission or VOK lease is
+  authorized by this chapter-close record.
+
 ### Requirement blocks pre-conversion stop - 2026-08-20
 
 - [x] Record owner-supplied requirement/require blocks as private RD-0858,
