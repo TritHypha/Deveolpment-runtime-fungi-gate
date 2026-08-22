@@ -1,9 +1,16 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import {
+  existsSync,
+  linkSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
-import { describe, it } from "node:test";
+import { before, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
   decodeCanonicalFrame,
@@ -12,6 +19,7 @@ import {
 
 const ROOT = join(fileURLToPath(new URL("../..", import.meta.url)));
 const BUILD_SCRIPT = join(ROOT, "scripts", "build-requirement-launcher.mjs");
+const OUTPUT = join(ROOT, "build", "rd0858-requirement-launcher");
 const BINARY = join(
   ROOT,
   "build",
@@ -21,18 +29,17 @@ const BINARY = join(
   "galerina-requirement-launcher.exe",
 );
 const BUILD_RECEIPT = join(
-  ROOT,
-  "build",
-  "rd0858-requirement-launcher",
+  OUTPUT,
   "build-receipt.json",
 );
+const REGISTRY = join(OUTPUT, "test-registry.json");
 
-const request = () => ({
+const request = (flowLocator = "rd0858/unit4/scalar-oracle") => ({
   schemaVersion: 1,
   nonce: "00112233445566778899aabbccddeeff",
   runtimeProfile: "scalar-1",
   subjectDigest: "0".repeat(64),
-  flowLocator: "rd0858/unit4/scalar-oracle",
+  flowLocator,
   flowDigest: "1".repeat(64),
   argumentDigest: "2".repeat(64),
   argumentBytes: "eyJzdWJqZWN0Ijp0cnVlfQ==",
@@ -47,7 +54,7 @@ function buildLauncher() {
   });
 }
 
-function runLauncher(input, args = ["--decode-only"]) {
+function runLauncher(input, args = ["--decode-only"], env = process.env) {
   return spawnSync(BINARY, args, {
     cwd: ROOT,
     input,
@@ -55,7 +62,25 @@ function runLauncher(input, args = ["--decode-only"]) {
     timeout: 10_000,
     windowsHide: true,
     maxBuffer: 1024 * 1024,
+    env,
   });
+}
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function registryFixture(mutate) {
+  const directory = mkdtempSync(join(OUTPUT, "registry-fixture-"));
+  const value = JSON.parse(readFileSync(REGISTRY, "utf8"));
+  mutate(value, directory);
+  const path = join(directory, "registry.json");
+  writeFileSync(path, canonicalJson(value), "utf8");
+  return { directory, path };
 }
 
 function rawFrame(body, declaredLength = body.length) {
@@ -74,13 +99,16 @@ function refusalReceipt(child) {
 }
 
 describe("RD-0858 Unit 4 native launcher skeleton", () => {
-  it("builds one dependency-free launcher with a bounded receipt", () => {
+  before(() => {
     const build = buildLauncher();
     assert.equal(build.error, undefined);
     assert.equal(build.status, 0, build.stderr);
+  });
+
+  it("builds one dependency-free launcher with a bounded receipt", () => {
     assert.equal(existsSync(BINARY), true);
-    const evidence = JSON.parse(build.stdout);
-    assert.equal(evidence.schema, "galerina.requirement-launcher-build.v1");
+    const evidence = JSON.parse(readFileSync(BUILD_RECEIPT, "utf8"));
+    assert.equal(evidence.schemaVersion, 1);
     assert.equal(evidence.verdict, "BUILT_NON_AUTHORIZING");
     assert.match(evidence.binarySha256, /^[0-9a-f]{64}$/);
     const receipt = JSON.parse(readFileSync(BUILD_RECEIPT, "utf8"));
@@ -114,6 +142,95 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       join(ROOT, "build", "does-not-exist", "registry.json"),
     ]));
     assert.equal(missingAbsolute.refusalCode, "WORKER_NOT_ADMITTED");
+  });
+
+  it("admits one registry-bound sentinel process but never authorizes it", () => {
+    assert.equal(existsSync(REGISTRY), true);
+    const child = runLauncher(
+      encodeCanonicalFrame("launcher-request", request()),
+      ["--registry", REGISTRY],
+    );
+    const receipt = refusalReceipt(child);
+    assert.equal(receipt.refusalCode, "SENTINEL_REFUSED");
+    assert.notEqual(receipt.runtimeDigest, "0".repeat(64));
+    assert.notEqual(receipt.workerDigest, "0".repeat(64));
+    assert.notEqual(receipt.environmentPolicyDigest, "0".repeat(64));
+    assert.equal(receipt.processPolicyEvidenceLocator, "evidence/process/owned-worker-v1");
+  });
+
+  it("refuses registry runtime identity mismatch before process authority", () => {
+    const fixture = registryFixture((value) => {
+      value.runtime.digest = "f".repeat(64);
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", fixture.path],
+      ));
+      assert.equal(receipt.refusalCode, "RUNTIME_DIGEST");
+    } finally {
+      rmSync(fixture.directory, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a hard-linked worker and case-shadowed locator", () => {
+    const linked = registryFixture((value, directory) => {
+      const path = join(directory, "sentinel-hardlink.mjs");
+      linkSync(value.worker.path, path);
+      value.worker.path = path;
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", linked.path],
+      ));
+      assert.equal(receipt.refusalCode, "FILE_LINK_COUNT");
+    } finally {
+      rmSync(linked.directory, { recursive: true, force: true });
+    }
+
+    const shadowed = registryFixture((value) => {
+      value.worker.path = value.worker.path.toUpperCase();
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", shadowed.path],
+      ));
+      assert.equal(receipt.refusalCode, "FILE_PATH_CASE");
+    } finally {
+      rmSync(shadowed.directory, { recursive: true, force: true });
+    }
+  });
+
+  it("ignores ambient execution variables and binds one environment digest", () => {
+    const hostile = {
+      ...process.env,
+      PATH: join(OUTPUT, "hostile-path"),
+      NODE_OPTIONS: "--inspect=0.0.0.0:9229",
+      NODE_PATH: join(OUTPUT, "hostile-node-path"),
+      GALERINA_PRELOAD: join(OUTPUT, "hostile-preload.mjs"),
+    };
+    const clean = refusalReceipt(runLauncher(
+      encodeCanonicalFrame("launcher-request", request()),
+      ["--registry", REGISTRY],
+    ));
+    const spoofed = refusalReceipt(runLauncher(
+      encodeCanonicalFrame("launcher-request", request()),
+      ["--registry", REGISTRY],
+      hostile,
+    ));
+    assert.equal(spoofed.refusalCode, "SENTINEL_REFUSED");
+    assert.equal(spoofed.environmentPolicyDigest, clean.environmentPolicyDigest);
+  });
+
+  it("closes the owned process tree on timeout", () => {
+    const receipt = refusalReceipt(runLauncher(
+      encodeCanonicalFrame("launcher-request", request("rd0858/unit4/timeout")),
+      ["--registry", REGISTRY],
+    ));
+    assert.equal(receipt.refusalCode, "WORKER_TIMEOUT");
+    assert.equal(receipt.timedOut, true);
   });
 
   for (const [name, input, code] of [
