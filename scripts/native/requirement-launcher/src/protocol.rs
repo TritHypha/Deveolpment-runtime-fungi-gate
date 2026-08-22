@@ -6,7 +6,7 @@ const MAX_VALUES: usize = 4_096;
 const MAX_FIELDS: usize = 128;
 
 #[derive(Clone, Debug)]
-enum Value {
+pub(crate) enum Value {
     Null,
     Bool(bool),
     Number(i64),
@@ -19,6 +19,7 @@ enum Value {
 pub struct RequestEvidence {
     pub nonce: String,
     pub request_digest: String,
+    pub flow_locator: String,
 }
 
 #[derive(Debug)]
@@ -27,7 +28,7 @@ pub struct Refusal {
 }
 
 impl Refusal {
-    fn new(code: &'static str) -> Self {
+    pub(crate) fn new(code: &'static str) -> Self {
         Self { code }
     }
 }
@@ -250,7 +251,10 @@ impl<'a> Parser<'a> {
     }
 }
 
-fn string_value<'a>(fields: &'a BTreeMap<String, Value>, key: &str) -> Result<&'a str, Refusal> {
+pub(crate) fn string_value<'a>(
+    fields: &'a BTreeMap<String, Value>,
+    key: &str,
+) -> Result<&'a str, Refusal> {
     match fields.get(key) {
         Some(Value::String(value)) => Ok(value),
         _ => Err(Refusal::new("FIELD_TYPE")),
@@ -298,7 +302,7 @@ fn escape_json(value: &str) -> String {
     result
 }
 
-fn canonical(value: &Value) -> String {
+pub(crate) fn canonical(value: &Value) -> String {
     match value {
         Value::Null => "null".to_string(),
         Value::Bool(value) => value.to_string(),
@@ -319,7 +323,7 @@ fn canonical(value: &Value) -> String {
     }
 }
 
-fn validate_request(value: &Value) -> Result<String, Refusal> {
+fn validate_request(value: &Value) -> Result<(String, String), Refusal> {
     let fields = match value {
         Value::Object(fields) => fields,
         _ => return Err(Refusal::new("RECORD_REQUIRED")),
@@ -374,7 +378,26 @@ fn validate_request(value: &Value) -> Result<String, Refusal> {
     {
         return Err(Refusal::new("ARGUMENT_BYTES"));
     }
-    Ok(nonce.to_string())
+    Ok((nonce.to_string(), locator.to_string()))
+}
+
+fn parse_body(body: &[u8]) -> Result<(Value, &str), Refusal> {
+    if body.is_empty() || body.len() > MAX_FRAME_BYTES {
+        return Err(Refusal::new("FRAME_BOUND"));
+    }
+    let source = std::str::from_utf8(body).map_err(|_| Refusal::new("UTF8_INVALID"))?;
+    if contains_outer_whitespace(source) {
+        return Err(Refusal::new("JSON_NON_CANONICAL"));
+    }
+    Ok((Parser::new(source).parse()?, source))
+}
+
+pub(crate) fn parse_canonical_body(body: &[u8]) -> Result<Value, Refusal> {
+    let (parsed, source) = parse_body(body)?;
+    if canonical(&parsed) != source {
+        return Err(Refusal::new("JSON_NON_CANONICAL"));
+    }
+    Ok(parsed)
 }
 
 pub fn decode_request(frame: &[u8]) -> Result<RequestEvidence, Refusal> {
@@ -395,18 +418,15 @@ pub fn decode_request(frame: &[u8]) -> Result<RequestEvidence, Refusal> {
     if frame.len() != declared as usize + 8 {
         return Err(Refusal::new("FRAME_LENGTH"));
     }
-    let source = std::str::from_utf8(&frame[8..]).map_err(|_| Refusal::new("UTF8_INVALID"))?;
-    if contains_outer_whitespace(source) {
-        return Err(Refusal::new("JSON_NON_CANONICAL"));
-    }
-    let parsed = Parser::new(source).parse()?;
-    let nonce = validate_request(&parsed)?;
+    let (parsed, source) = parse_body(&frame[8..])?;
+    let (nonce, flow_locator) = validate_request(&parsed)?;
     if canonical(&parsed) != source {
         return Err(Refusal::new("JSON_NON_CANONICAL"));
     }
     Ok(RequestEvidence {
         nonce,
         request_digest: sha256_hex(frame),
+        flow_locator,
     })
 }
 
@@ -415,7 +435,40 @@ fn field(object: &mut BTreeMap<String, Value>, key: &str, value: Value) {
 }
 
 pub fn refusal_frame(nonce: &str, refusal_code: &str, request_digest: &str) -> Vec<u8> {
+    refusal_frame_with_evidence(nonce, refusal_code, request_digest, None, false)
+}
+
+pub struct ReceiptEvidence<'a> {
+    pub launcher_digest: &'a str,
+    pub runtime_digest: &'a str,
+    pub worker_digest: &'a str,
+    pub environment_policy_digest: &'a str,
+    pub scalar_profile_digest: &'a str,
+}
+
+pub fn refusal_frame_with_evidence(
+    nonce: &str,
+    refusal_code: &str,
+    request_digest: &str,
+    evidence: Option<ReceiptEvidence<'_>>,
+    timed_out: bool,
+) -> Vec<u8> {
     let zero = "0".repeat(64);
+    let runtime_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.runtime_digest);
+    let worker_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.worker_digest);
+    let environment_policy_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.environment_policy_digest);
+    let launcher_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.launcher_digest);
+    let scalar_profile_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.scalar_profile_digest);
     let mut receipt = BTreeMap::new();
     field(&mut receipt, "schemaVersion", Value::Number(1));
     field(
@@ -423,14 +476,26 @@ pub fn refusal_frame(nonce: &str, refusal_code: &str, request_digest: &str) -> V
         "hashAlgorithm",
         Value::String("sha256".to_string()),
     );
-    field(&mut receipt, "launcherDigest", Value::String(zero.clone()));
+    field(
+        &mut receipt,
+        "launcherDigest",
+        Value::String(launcher_digest.to_string()),
+    );
     field(
         &mut receipt,
         "processOwnerDigest",
         Value::String(zero.clone()),
     );
-    field(&mut receipt, "runtimeDigest", Value::String(zero.clone()));
-    field(&mut receipt, "workerDigest", Value::String(zero.clone()));
+    field(
+        &mut receipt,
+        "runtimeDigest",
+        Value::String(runtime_digest.to_string()),
+    );
+    field(
+        &mut receipt,
+        "workerDigest",
+        Value::String(worker_digest.to_string()),
+    );
     field(&mut receipt, "registryDigest", Value::String(zero.clone()));
     field(
         &mut receipt,
@@ -440,17 +505,21 @@ pub fn refusal_frame(nonce: &str, refusal_code: &str, request_digest: &str) -> V
     field(
         &mut receipt,
         "processPolicyEvidenceLocator",
-        Value::String("evidence/process/no-worker-v1".to_string()),
+        Value::String(if evidence.is_some() {
+            "evidence/process/owned-worker-v1".to_string()
+        } else {
+            "evidence/process/no-worker-v1".to_string()
+        }),
     );
     field(
         &mut receipt,
         "environmentPolicyDigest",
-        Value::String(zero.clone()),
+        Value::String(environment_policy_digest.to_string()),
     );
     field(
         &mut receipt,
         "scalarProfileDigest",
-        Value::String(zero.clone()),
+        Value::String(scalar_profile_digest.to_string()),
     );
     field(
         &mut receipt,
@@ -470,7 +539,7 @@ pub fn refusal_frame(nonce: &str, refusal_code: &str, request_digest: &str) -> V
         "executionState",
         Value::String("REFUSED".to_string()),
     );
-    field(&mut receipt, "timedOut", Value::Bool(false));
+    field(&mut receipt, "timedOut", Value::Bool(timed_out));
     field(&mut receipt, "truncated", Value::Bool(false));
     field(&mut receipt, "partial", Value::Bool(false));
     field(&mut receipt, "missingEvidence", Value::Array(Vec::new()));

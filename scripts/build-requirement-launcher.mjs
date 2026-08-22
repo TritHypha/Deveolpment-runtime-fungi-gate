@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import {
+  copyFileSync,
   existsSync,
   lstatSync,
   mkdirSync,
@@ -19,15 +20,34 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CRATE = join(ROOT, "scripts", "native", "requirement-launcher");
 const OUTPUT = join(ROOT, "build", "rd0858-requirement-launcher");
 const TARGET = join(OUTPUT, "target");
-const BINARY = join(TARGET, "release", "galerina-requirement-launcher.exe");
+const CARGO_BINARY = join(TARGET, "release", "galerina-requirement-launcher.exe");
+const BINARY = join(OUTPUT, "galerina-requirement-launcher.exe");
 const RECEIPT = join(OUTPUT, "build-receipt.json");
+const REGISTRY = join(OUTPUT, "test-registry.json");
+const WORKER = join(OUTPUT, "sentinel-worker.mjs");
 const WARDEN_BUILD = join(ROOT, "scripts", "build-process-warden.mjs");
 const INPUTS = [
   join(CRATE, "Cargo.toml"),
   join(CRATE, "Cargo.lock"),
   join(CRATE, "src", "protocol.rs"),
+  join(CRATE, "src", "identity.rs"),
+  join(CRATE, "src", "windows.rs"),
   join(CRATE, "src", "main.rs"),
 ];
+
+const SENTINEL_SOURCE = `import { spawn } from "node:child_process";
+const mode = process.argv[2] || "sentinel";
+if (mode === "timeout") {
+  setInterval(() => {}, 1000);
+} else if (mode === "extra-child") {
+  const child = spawn(process.execPath, ["-e", "setTimeout(() => {}, 200)"], { stdio: "ignore" });
+  child.once("error", () => process.exit(87));
+  child.once("spawn", () => setTimeout(() => process.exit(88), 50));
+  setTimeout(() => process.exit(89), 500);
+} else {
+  process.exit(86);
+}
+`;
 
 function digest(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
@@ -43,6 +63,34 @@ function regularFile(path, code) {
     throw new Error(`${code}_OUTSIDE_ROOT`);
   }
   return resolved;
+}
+
+function externalRegularFile(path, code) {
+  if (!existsSync(path) || lstatSync(path).isSymbolicLink() || !statSync(path).isFile()) {
+    throw new Error(code);
+  }
+  return realpathSync.native(path);
+}
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function fileRecord(path, code, requireRoot) {
+  const resolved = requireRoot ? regularFile(path, code) : externalRegularFile(path, code);
+  const stat = statSync(resolved, { bigint: true });
+  if (stat.nlink !== 1n) fail(`${code}_LINK_COUNT`);
+  return Object.freeze({
+    path: resolved,
+    digest: digest(resolved),
+    volumeSerial: BigInt.asUintN(32, stat.dev).toString(10),
+    fileIndex: BigInt.asUintN(64, stat.ino).toString(10),
+    byteLength: stat.size.toString(10),
+  });
 }
 
 function snapshotInputs() {
@@ -89,6 +137,12 @@ const cargoCandidate = firstWhereResult("cargo.exe", "REQUIREMENT_LAUNCHER_CARGO
 const cargo = cargoCandidate;
 const rustc = firstWhereResult("rustc.exe", "REQUIREMENT_LAUNCHER_RUSTC_REFUSED");
 const git = firstWhereResult("git.exe", "REQUIREMENT_LAUNCHER_GIT_REFUSED");
+const runtime = externalRegularFile(process.execPath, "REQUIREMENT_LAUNCHER_RUNTIME_REFUSED");
+
+mkdirSync(OUTPUT, { recursive: true });
+writeFileSync(WORKER, SENTINEL_SOURCE, "utf8");
+const runtimeDigest = digest(runtime);
+const workerDigest = digest(WORKER);
 
 const warden = spawnSync(process.execPath, [WARDEN_BUILD], {
   cwd: ROOT,
@@ -141,6 +195,8 @@ const build = await runOwnedProcess({
     RUSTC: rustc,
     RUSTC_WRAPPER: "",
     RUSTFLAGS: "--cfg test_contract",
+    GALERINA_TEST_RUNTIME_DIGEST: runtimeDigest,
+    GALERINA_TEST_WORKER_DIGEST: workerDigest,
   },
   timeoutMs: 120_000,
   cleanupGraceMs: 5_000,
@@ -150,6 +206,10 @@ const build = await runOwnedProcess({
 if (build.spawnError || build.timedOut || build.outputLimitExceeded || build.status !== 0 || build.signal !== null) {
   fail("REQUIREMENT_LAUNCHER_BUILD_REFUSED", `${build.stdout || ""}${build.stderr || ""}`);
 }
+if (!existsSync(CARGO_BINARY) || !statSync(CARGO_BINARY).isFile()) {
+  fail("REQUIREMENT_LAUNCHER_CARGO_BINARY_MISSING");
+}
+copyFileSync(CARGO_BINARY, BINARY);
 
 let after;
 try {
@@ -168,6 +228,27 @@ try {
   fail(error.message || "REQUIREMENT_LAUNCHER_BINARY_MISSING");
 }
 const binarySha256 = digest(binary);
+const environment = Object.freeze({
+  COMSPEC: process.env.COMSPEC || join(process.env.SystemRoot || "C:\\Windows", "System32", "cmd.exe"),
+  SystemRoot: process.env.SystemRoot || "C:\\Windows",
+  TEMP: process.env.TEMP || join(process.env.SystemRoot || "C:\\Windows", "Temp"),
+  TMP: process.env.TMP || process.env.TEMP || join(process.env.SystemRoot || "C:\\Windows", "Temp"),
+  WINDIR: process.env.WINDIR || process.env.SystemRoot || "C:\\Windows",
+});
+const packageRoot = realpathSync.native(ROOT);
+const registry = Object.freeze({
+  schemaVersion: 1,
+  launcher: fileRecord(binary, "REQUIREMENT_LAUNCHER_BINARY", true),
+  runtime: fileRecord(runtime, "REQUIREMENT_LAUNCHER_RUNTIME", false),
+  worker: fileRecord(WORKER, "REQUIREMENT_LAUNCHER_WORKER", true),
+  packageRoot,
+  packageRootDigest: createHash("sha256").update(packageRoot).digest("hex"),
+  scalarProfileDigest: createHash("sha256").update("scalar-1").digest("hex"),
+  timeoutMs: 250,
+  environment,
+});
+writeFileSync(REGISTRY, canonicalJson(registry), "utf8");
+const registrySha256 = digest(REGISTRY);
 const receipt = Object.freeze({
   schemaVersion: 1,
   verdict: "BUILT_NON_AUTHORIZING",
@@ -177,10 +258,14 @@ const receipt = Object.freeze({
   rustcVersion,
   command,
   compileCfg: ["test_contract"],
+  compilePins: { runtimeDigest, workerDigest },
   cargoExecutable: basename(cargo),
   cargoSha256: digest(cargo),
   inputs: before,
   binarySha256,
+  registrySha256,
+  registryFile: basename(REGISTRY),
+  workerFile: basename(WORKER),
 });
 mkdirSync(dirname(RECEIPT), { recursive: true });
 writeFileSync(RECEIPT, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");

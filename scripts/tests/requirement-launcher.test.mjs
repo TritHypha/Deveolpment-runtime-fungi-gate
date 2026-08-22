@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
@@ -20,14 +21,7 @@ import {
 const ROOT = join(fileURLToPath(new URL("../..", import.meta.url)));
 const BUILD_SCRIPT = join(ROOT, "scripts", "build-requirement-launcher.mjs");
 const OUTPUT = join(ROOT, "build", "rd0858-requirement-launcher");
-const BINARY = join(
-  ROOT,
-  "build",
-  "rd0858-requirement-launcher",
-  "target",
-  "release",
-  "galerina-requirement-launcher.exe",
-);
+const BINARY = join(OUTPUT, "galerina-requirement-launcher.exe");
 const BUILD_RECEIPT = join(
   OUTPUT,
   "build-receipt.json",
@@ -118,7 +112,7 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.deepEqual(receipt.command, ["cargo", "build", "--release", "--locked"]);
     assert.deepEqual(receipt.compileCfg, ["test_contract"]);
     assert.equal(receipt.binarySha256, evidence.binarySha256);
-    assert.equal(Object.keys(receipt.inputs).length, 4);
+    assert.equal(Object.keys(receipt.inputs).length, 6);
   });
 
   it("decodes the TypeScript request vector and refuses absent worker admission", () => {
@@ -141,7 +135,7 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       "--registry",
       join(ROOT, "build", "does-not-exist", "registry.json"),
     ]));
-    assert.equal(missingAbsolute.refusalCode, "WORKER_NOT_ADMITTED");
+    assert.equal(missingAbsolute.refusalCode, "REGISTRY_OPEN");
   });
 
   it("admits one registry-bound sentinel process but never authorizes it", () => {
@@ -203,6 +197,23 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     }
   });
 
+  it("refuses a worker path through a junction before hashing", () => {
+    const fixture = registryFixture((value, directory) => {
+      const junction = join(directory, "worker-junction");
+      symlinkSync(OUTPUT, junction, "junction");
+      value.worker.path = join(junction, "sentinel-worker.mjs");
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", fixture.path],
+      ));
+      assert.equal(receipt.refusalCode, "FILE_REPARSE");
+    } finally {
+      rmSync(fixture.directory, { recursive: true, force: true });
+    }
+  });
+
   it("ignores ambient execution variables and binds one environment digest", () => {
     const hostile = {
       ...process.env,
@@ -231,6 +242,24 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     ));
     assert.equal(receipt.refusalCode, "WORKER_TIMEOUT");
     assert.equal(receipt.timedOut, true);
+  });
+
+  it("blocks an extra child inside the owned Job Object", () => {
+    const registry = JSON.parse(readFileSync(REGISTRY, "utf8"));
+    const unowned = spawnSync(registry.runtime.path, [registry.worker.path, "extra-child"], {
+      cwd: ROOT,
+      env: process.env,
+      encoding: "utf8",
+      timeout: 5_000,
+      windowsHide: true,
+    });
+    assert.equal(unowned.status, 88, unowned.stderr);
+    const receipt = refusalReceipt(runLauncher(
+      encodeCanonicalFrame("launcher-request", request("rd0858/unit4/extra-child")),
+      ["--registry", REGISTRY],
+    ));
+    assert.equal(receipt.refusalCode, "CHILD_BLOCKED");
+    assert.equal(receipt.authorizing, false);
   });
 
   for (const [name, input, code] of [
