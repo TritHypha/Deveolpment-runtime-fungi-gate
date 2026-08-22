@@ -12,11 +12,12 @@ counts or open items that a newer section explicitly supersedes.
   SHA-256 `AA1D31D123B0126BE479745D26591C4793F4D193EF4ABCEA2A69D82411792417`.
   This is recovery evidence only; `MEMORY.md` remains a locator index, not a
   content warehouse.
-- [!] Keep memory health fail-closed. The strict preflight currently refuses
-  because generated top-level `memory_summary.md` and `raw_memories.md` are
-  being classified as governed memory nodes, and the active working set cannot
-  resolve the Galerina owner. Repair those two tool/policy seams before claiming
-  the memory index healthy; do not hand-edit `MEMORY.md` to hide them.
+- [!] Keep memory health fail-closed. The flat frontmatter-store preflight is
+  not authoritative for the hierarchical Codex corpus because it classifies
+  generated top-level support files as governed memory nodes. The locator-only
+  working-set route now resolves the Galerina owner but returns `STALE` for the
+  repository head and TODO digest. Refresh it only through the governed memory
+  update route; do not hand-edit generated `MEMORY.md` to hide either state.
 - [x] Record the approved RD-0858 Unit 4 process-root design and its independent
   architecture review. The design gate is closed; it does not prove an
   implementation, a trusted process root, or an admitted execution route.
