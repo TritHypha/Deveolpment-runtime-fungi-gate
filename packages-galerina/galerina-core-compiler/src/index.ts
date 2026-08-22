@@ -887,6 +887,27 @@ export {
   type PlanAdmissionResult,
 } from "./runtime/executionPlan.js";
 
+// RD-0858 Unit 4 - non-authorizing process protocol
+export {
+  PROTOCOL_SCHEMA_VERSION,
+  SCALAR_PROFILE,
+  MAX_FRAME_BYTES,
+  MAX_JSON_DEPTH,
+  MAX_JSON_VALUES,
+  ProtocolRefusal,
+  encodeCanonicalFrame,
+  decodeCanonicalFrame,
+  hashProtocolBytes,
+  validateNonAuthorizingReceipt,
+  type FrameKind,
+  type ExecutionState,
+  type LauncherRequest,
+  type WorkerReady,
+  type WorkerResult,
+  type NonAuthorizingReceipt,
+  type CanonicalValue,
+} from "./requirement-process-protocol.js";
+
 // Stage A - AST Interpreter
 export {
   executeFlow,
