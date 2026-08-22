@@ -1,4 +1,7 @@
 build/target-cache/
+# RD-0858 Unit 4 native launcher build/check outputs and evidence receipt.
+build/rd0858-requirement-launcher/
+scripts/native/requirement-launcher/target/
 build/.fungi-cache/
 **/.fungi-cache/
 **/*.egraph.json
