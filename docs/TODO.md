@@ -21,10 +21,11 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Record the approved RD-0858 Unit 4 process-root design and its independent
   architecture review. The design gate is closed; it does not prove an
   implementation, a trusted process root, or an admitted execution route.
-- [!] Keep Unit 4 implementation on `HOLD` until the native admitted launcher,
-  single-use clean worker, fixed runtime/package identities, bounded canonical
-  protocol and hostile pre-bootstrap controls are implemented RED-first and
-  independently reviewed at one exact graph build point.
+- [!] The Unit 4 pre-conversion implementation milestone is locally implemented
+  at `c667f00b`: native admitted launcher, single-use clean worker, fixed
+  runtime/package identities, bounded canonical protocol and hostile bootstrap
+  controls. Keep the milestone on `HOLD` until an exact-head graph refresh and
+  fresh independent review both pass.
 - [!] Keep the separate Agent Operations prompt-span classifier under its own
   repository custody and immutable review. Its graph or green counts are not
   Galerina evidence, and no in-progress candidate can reopen conversion.
@@ -102,6 +103,16 @@ counts or open items that a newer section explicitly supersedes.
   recorded stop conditions. Interpreter, checked snapshot, GIR,
   SLIDE, VOK, admission, production and `.fungi` conversion authority remain
   `HOLD`; `011` and `012` remain reserved.
+- [!] The approved pre-conversion implementation plan has now completed Tasks
+  1-5 locally through `c667f00b`. Task 5 adds one bootstrap-only clean worker
+  and an explicit anonymous-pipe handle whitelist. Fresh author evidence at
+  that commit is typecheck/build/native PASS, focused 37/37 and Unit 4
+  regression 87/87. The worker accepts only `bootstrap-probe`, rejects
+  `COMPLETE`, emits a non-authorizing refusal result and closes after one
+  request. No `.fungi` path changed from Unit 4 start `895fde40`. This is an
+  implemented checkpoint, not closure: exact-head graph refresh and independent
+  review are still pending, Tasks 6-8 remain locked, and the global conversion
+  stop remains in force.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,
