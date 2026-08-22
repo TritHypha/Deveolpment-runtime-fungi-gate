@@ -20,6 +20,26 @@ pub struct RequestEvidence {
     pub nonce: String,
     pub request_digest: String,
     pub flow_locator: String,
+    pub subject_digest: String,
+    pub flow_digest: String,
+    pub argument_digest: String,
+}
+
+pub struct WorkerReadyEvidence {
+    pub nonce: String,
+    pub worker_digest: String,
+    pub runtime_digest: String,
+    pub bootstrap_control_digest: String,
+}
+
+pub struct WorkerResultEvidence {
+    pub nonce: String,
+    pub execution_state: String,
+    pub refusal_code: String,
+    pub bootstrap_control_digest: String,
+    pub response_digest: String,
+    pub value_digest: String,
+    pub audit_digest: String,
 }
 
 #[derive(Debug)]
@@ -323,7 +343,7 @@ pub(crate) fn canonical(value: &Value) -> String {
     }
 }
 
-fn validate_request(value: &Value) -> Result<(String, String), Refusal> {
+fn validate_request(value: &Value) -> Result<(String, String, String, String, String), Refusal> {
     let fields = match value {
         Value::Object(fields) => fields,
         _ => return Err(Refusal::new("RECORD_REQUIRED")),
@@ -378,7 +398,13 @@ fn validate_request(value: &Value) -> Result<(String, String), Refusal> {
     {
         return Err(Refusal::new("ARGUMENT_BYTES"));
     }
-    Ok((nonce.to_string(), locator.to_string()))
+    Ok((
+        nonce.to_string(),
+        locator.to_string(),
+        string_value(fields, "subjectDigest")?.to_string(),
+        string_value(fields, "flowDigest")?.to_string(),
+        string_value(fields, "argumentDigest")?.to_string(),
+    ))
 }
 
 fn parse_body(body: &[u8]) -> Result<(Value, &str), Refusal> {
@@ -419,7 +445,8 @@ pub fn decode_request(frame: &[u8]) -> Result<RequestEvidence, Refusal> {
         return Err(Refusal::new("FRAME_LENGTH"));
     }
     let (parsed, source) = parse_body(&frame[8..])?;
-    let (nonce, flow_locator) = validate_request(&parsed)?;
+    let (nonce, flow_locator, subject_digest, flow_digest, argument_digest) =
+        validate_request(&parsed)?;
     if canonical(&parsed) != source {
         return Err(Refusal::new("JSON_NON_CANONICAL"));
     }
@@ -427,6 +454,179 @@ pub fn decode_request(frame: &[u8]) -> Result<RequestEvidence, Refusal> {
         nonce,
         request_digest: sha256_hex(frame),
         flow_locator,
+        subject_digest,
+        flow_digest,
+        argument_digest,
+    })
+}
+
+fn decode_worker_frame(frame: &[u8]) -> Result<(Value, String), Refusal> {
+    if frame.len() < 9 {
+        return Err(Refusal::new("WORKER_FRAME_TRUNCATED"));
+    }
+    let declared = u64::from_be_bytes(
+        frame[0..8]
+            .try_into()
+            .map_err(|_| Refusal::new("WORKER_FRAME_TRUNCATED"))?,
+    );
+    if declared == 0 || declared as usize > MAX_FRAME_BYTES {
+        return Err(Refusal::new("WORKER_FRAME_BOUND"));
+    }
+    if frame.len() != declared as usize + 8 {
+        return Err(Refusal::new("WORKER_FRAME_LENGTH"));
+    }
+    let (parsed, source) = parse_body(&frame[8..])?;
+    if canonical(&parsed) != source {
+        return Err(Refusal::new("WORKER_JSON_NON_CANONICAL"));
+    }
+    Ok((parsed, sha256_hex(frame)))
+}
+
+fn exact_worker_fields(fields: &BTreeMap<String, Value>, expected: &[&str]) -> Result<(), Refusal> {
+    if fields.len() != expected.len() || expected.iter().any(|key| !fields.contains_key(*key)) {
+        return Err(Refusal::new("WORKER_UNKNOWN_FIELD"));
+    }
+    Ok(())
+}
+
+fn checked_worker_digest(fields: &BTreeMap<String, Value>, key: &str) -> Result<String, Refusal> {
+    let digest = string_value(fields, key)?;
+    if digest.len() != 64
+        || !digest
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+    {
+        return Err(Refusal::new("WORKER_DIGEST"));
+    }
+    Ok(digest.to_string())
+}
+
+fn checked_worker_nonce(fields: &BTreeMap<String, Value>) -> Result<String, Refusal> {
+    let nonce = string_value(fields, "nonce")?;
+    if nonce.len() != 32
+        || !nonce
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+    {
+        return Err(Refusal::new("WORKER_NONCE"));
+    }
+    Ok(nonce.to_string())
+}
+
+pub fn decode_worker_ready(frame: &[u8]) -> Result<WorkerReadyEvidence, Refusal> {
+    let (value, _) = decode_worker_frame(frame)?;
+    let fields = match value {
+        Value::Object(fields) => fields,
+        _ => return Err(Refusal::new("WORKER_READY_RECORD")),
+    };
+    exact_worker_fields(
+        &fields,
+        &[
+            "bootstrapControlDigest",
+            "nonce",
+            "runtimeDigest",
+            "schemaVersion",
+            "workerDigest",
+        ],
+    )?;
+    if !matches!(fields.get("schemaVersion"), Some(Value::Number(1))) {
+        return Err(Refusal::new("WORKER_SCHEMA_VERSION"));
+    }
+    Ok(WorkerReadyEvidence {
+        nonce: checked_worker_nonce(&fields)?,
+        worker_digest: checked_worker_digest(&fields, "workerDigest")?,
+        runtime_digest: checked_worker_digest(&fields, "runtimeDigest")?,
+        bootstrap_control_digest: checked_worker_digest(&fields, "bootstrapControlDigest")?,
+    })
+}
+
+pub fn decode_worker_result(frame: &[u8]) -> Result<WorkerResultEvidence, Refusal> {
+    let (value, response_digest) = decode_worker_frame(frame)?;
+    let fields = match value {
+        Value::Object(fields) => fields,
+        _ => return Err(Refusal::new("WORKER_RESULT_RECORD")),
+    };
+    exact_worker_fields(
+        &fields,
+        &[
+            "auditDigest",
+            "boundedAudit",
+            "boundedValue",
+            "executionState",
+            "nonce",
+            "schemaVersion",
+            "valueDigest",
+        ],
+    )?;
+    if !matches!(fields.get("schemaVersion"), Some(Value::Number(1))) {
+        return Err(Refusal::new("WORKER_SCHEMA_VERSION"));
+    }
+    let execution_state = string_value(&fields, "executionState")?;
+    if execution_state != "REFUSED" && execution_state != "ERROR" {
+        return Err(Refusal::new("WORKER_EXECUTION_STATE"));
+    }
+    let bounded_value = match fields.get("boundedValue") {
+        Some(Value::Object(value)) => value,
+        _ => return Err(Refusal::new("WORKER_BOUNDED_VALUE")),
+    };
+    exact_worker_fields(
+        bounded_value,
+        &["admitted", "authorizing", "operation", "scalarProfile"],
+    )?;
+    if !matches!(bounded_value.get("admitted"), Some(Value::Bool(false)))
+        || !matches!(bounded_value.get("authorizing"), Some(Value::Bool(false)))
+        || string_value(bounded_value, "operation")? != "bootstrap-probe"
+        || string_value(bounded_value, "scalarProfile")? != "scalar-1"
+    {
+        return Err(Refusal::new("WORKER_BOUNDED_VALUE"));
+    }
+    let bounded_audit = match fields.get("boundedAudit") {
+        Some(Value::Object(value)) => value,
+        _ => return Err(Refusal::new("WORKER_BOUNDED_AUDIT")),
+    };
+    exact_worker_fields(
+        bounded_audit,
+        &[
+            "authorizing",
+            "bootstrapControlDigest",
+            "executionState",
+            "flowDigest",
+            "operation",
+            "refusalCode",
+            "subjectDigest",
+        ],
+    )?;
+    if !matches!(bounded_audit.get("authorizing"), Some(Value::Bool(false)))
+        || string_value(bounded_audit, "operation")? != "bootstrap-probe"
+        || string_value(bounded_audit, "executionState")? != execution_state
+    {
+        return Err(Refusal::new("WORKER_BOUNDED_AUDIT"));
+    }
+    let value_digest = checked_worker_digest(&fields, "valueDigest")?;
+    let audit_digest = checked_worker_digest(&fields, "auditDigest")?;
+    if value_digest != sha256_hex(canonical(fields.get("boundedValue").unwrap()).as_bytes())
+        || audit_digest != sha256_hex(canonical(fields.get("boundedAudit").unwrap()).as_bytes())
+    {
+        return Err(Refusal::new("WORKER_RESULT_DIGEST"));
+    }
+    let refusal_code = string_value(bounded_audit, "refusalCode")?;
+    if refusal_code.is_empty()
+        || refusal_code.len() > 64
+        || !refusal_code
+            .bytes()
+            .all(|byte| byte.is_ascii_uppercase() || byte.is_ascii_digit() || byte == b'_')
+    {
+        return Err(Refusal::new("WORKER_REFUSAL_CODE"));
+    }
+    let bootstrap_control_digest = checked_worker_digest(bounded_audit, "bootstrapControlDigest")?;
+    Ok(WorkerResultEvidence {
+        nonce: checked_worker_nonce(&fields)?,
+        execution_state: execution_state.to_string(),
+        refusal_code: refusal_code.to_string(),
+        bootstrap_control_digest,
+        response_digest,
+        value_digest,
+        audit_digest,
     })
 }
 
@@ -444,6 +644,12 @@ pub struct ReceiptEvidence<'a> {
     pub worker_digest: &'a str,
     pub environment_policy_digest: &'a str,
     pub scalar_profile_digest: &'a str,
+    pub subject_digest: &'a str,
+    pub flow_digest: &'a str,
+    pub argument_digest: &'a str,
+    pub response_digest: &'a str,
+    pub value_digest: &'a str,
+    pub audit_digest: &'a str,
 }
 
 pub fn refusal_frame_with_evidence(
@@ -526,12 +732,54 @@ pub fn refusal_frame_with_evidence(
         "requestDigest",
         Value::String(request_digest.to_string()),
     );
-    field(&mut receipt, "subjectDigest", Value::String(zero.clone()));
-    field(&mut receipt, "flowDigest", Value::String(zero.clone()));
-    field(&mut receipt, "argumentDigest", Value::String(zero.clone()));
-    field(&mut receipt, "responseDigest", Value::String(zero.clone()));
-    field(&mut receipt, "valueDigest", Value::String(zero.clone()));
-    field(&mut receipt, "auditDigest", Value::String(zero));
+    let subject_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.subject_digest);
+    let flow_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.flow_digest);
+    let argument_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.argument_digest);
+    let response_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.response_digest);
+    let value_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.value_digest);
+    let audit_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.audit_digest);
+    field(
+        &mut receipt,
+        "subjectDigest",
+        Value::String(subject_digest.to_string()),
+    );
+    field(
+        &mut receipt,
+        "flowDigest",
+        Value::String(flow_digest.to_string()),
+    );
+    field(
+        &mut receipt,
+        "argumentDigest",
+        Value::String(argument_digest.to_string()),
+    );
+    field(
+        &mut receipt,
+        "responseDigest",
+        Value::String(response_digest.to_string()),
+    );
+    field(
+        &mut receipt,
+        "valueDigest",
+        Value::String(value_digest.to_string()),
+    );
+    field(
+        &mut receipt,
+        "auditDigest",
+        Value::String(audit_digest.to_string()),
+    );
     field(&mut receipt, "nonce", Value::String(nonce.to_string()));
     field(&mut receipt, "monotonicDurationMs", Value::Number(0));
     field(

@@ -22,11 +22,18 @@ const ROOT = join(fileURLToPath(new URL("../..", import.meta.url)));
 const BUILD_SCRIPT = join(ROOT, "scripts", "build-requirement-launcher.mjs");
 const OUTPUT = join(ROOT, "build", "rd0858-requirement-launcher");
 const BINARY = join(OUTPUT, "galerina-requirement-launcher.exe");
+const WORKER_BINARY = join(OUTPUT, "galerina-requirement-worker-launcher.exe");
 const BUILD_RECEIPT = join(
   OUTPUT,
   "build-receipt.json",
 );
 const REGISTRY = join(OUTPUT, "test-registry.json");
+const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
+
+const BOOTSTRAP_ARGUMENT = Buffer.from(
+  '{"operation":"bootstrap-probe","requestedEffects":[]}',
+  "utf8",
+);
 
 const request = (flowLocator = "rd0858/unit4/scalar-oracle") => ({
   schemaVersion: 1,
@@ -37,6 +44,12 @@ const request = (flowLocator = "rd0858/unit4/scalar-oracle") => ({
   flowDigest: "1".repeat(64),
   argumentDigest: "2".repeat(64),
   argumentBytes: "eyJzdWJqZWN0Ijp0cnVlfQ==",
+});
+
+const bootstrapRequest = () => ({
+  ...request("rd0858/unit4/bootstrap-probe"),
+  argumentDigest: createHash("sha256").update(BOOTSTRAP_ARGUMENT).digest("hex"),
+  argumentBytes: BOOTSTRAP_ARGUMENT.toString("base64"),
 });
 
 function buildLauncher() {
@@ -60,6 +73,18 @@ function runLauncher(input, args = ["--decode-only"], env = process.env) {
   });
 }
 
+function runWorkerLauncher(input, args = ["--registry", WORKER_REGISTRY], env = process.env) {
+  return spawnSync(WORKER_BINARY, args, {
+    cwd: ROOT,
+    input,
+    encoding: null,
+    timeout: 10_000,
+    windowsHide: true,
+    maxBuffer: 1024 * 1024,
+    env,
+  });
+}
+
 function canonicalJson(value) {
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
   if (value && typeof value === "object") {
@@ -68,9 +93,9 @@ function canonicalJson(value) {
   return JSON.stringify(value);
 }
 
-function registryFixture(mutate) {
+function registryFixture(mutate, source = REGISTRY) {
   const directory = mkdtempSync(join(OUTPUT, "registry-fixture-"));
-  const value = JSON.parse(readFileSync(REGISTRY, "utf8"));
+  const value = JSON.parse(readFileSync(source, "utf8"));
   mutate(value, directory);
   const path = join(directory, "registry.json");
   writeFileSync(path, canonicalJson(value), "utf8");
@@ -112,7 +137,58 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.deepEqual(receipt.command, ["cargo", "build", "--release", "--locked"]);
     assert.deepEqual(receipt.compileCfg, ["test_contract"]);
     assert.equal(receipt.binarySha256, evidence.binarySha256);
-    assert.equal(Object.keys(receipt.inputs).length, 6);
+    assert.equal(Object.keys(receipt.inputs).length, 8);
+  });
+
+  it("builds a separately pinned single-use worker launcher and registry", () => {
+    assert.equal(existsSync(WORKER_BINARY), true);
+    assert.equal(existsSync(WORKER_REGISTRY), true);
+    const evidence = JSON.parse(readFileSync(BUILD_RECEIPT, "utf8"));
+    const registry = JSON.parse(readFileSync(WORKER_REGISTRY, "utf8"));
+    assert.match(evidence.workerLauncherBinarySha256, /^[0-9a-f]{64}$/u);
+    assert.match(evidence.workerRegistrySha256, /^[0-9a-f]{64}$/u);
+    assert.equal(registry.launcher.digest, evidence.workerLauncherBinarySha256);
+    assert.equal(registry.worker.digest, evidence.compilePins.requirementWorkerDigest);
+    assert.match(registry.worker.path, /requirement-process-worker\.js$/u);
+    assert.equal(registry.timeoutMs, 1_500);
+  });
+
+  it("exchanges READY -> one bootstrap request -> one non-authorizing REFUSED result", () => {
+    const admittedRequest = bootstrapRequest();
+    const child = runWorkerLauncher(
+      encodeCanonicalFrame("launcher-request", admittedRequest),
+    );
+    const receipt = refusalReceipt(child);
+    const registry = JSON.parse(readFileSync(WORKER_REGISTRY, "utf8"));
+    assert.equal(receipt.refusalCode, "BOOTSTRAP_PROBE_ONLY");
+    assert.equal(receipt.executionState, "REFUSED");
+    assert.equal(receipt.authorizing, false);
+    assert.equal(receipt.workerDigest, registry.worker.digest);
+    assert.equal(receipt.runtimeDigest, registry.runtime.digest);
+    assert.equal(receipt.subjectDigest, admittedRequest.subjectDigest);
+    assert.equal(receipt.flowDigest, admittedRequest.flowDigest);
+    assert.equal(receipt.argumentDigest, admittedRequest.argumentDigest);
+    assert.notEqual(receipt.responseDigest, "0".repeat(64));
+    assert.notEqual(receipt.valueDigest, "0".repeat(64));
+    assert.notEqual(receipt.auditDigest, "0".repeat(64));
+    assert.equal(receipt.partial, false);
+    assert.equal(receipt.truncated, false);
+  });
+
+  it("refuses a changed worker digest before the READY exchange", () => {
+    const fixture = registryFixture((value) => {
+      value.worker.digest = "f".repeat(64);
+    }, WORKER_REGISTRY);
+    try {
+      const receipt = refusalReceipt(runWorkerLauncher(
+        encodeCanonicalFrame("launcher-request", bootstrapRequest()),
+        ["--registry", fixture.path],
+      ));
+      assert.equal(receipt.refusalCode, "WORKER_DIGEST");
+      assert.equal(receipt.responseDigest, "0".repeat(64));
+    } finally {
+      rmSync(fixture.directory, { recursive: true, force: true });
+    }
   });
 
   it("decodes the TypeScript request vector and refuses absent worker admission", () => {

@@ -22,9 +22,24 @@ const OUTPUT = join(ROOT, "build", "rd0858-requirement-launcher");
 const TARGET = join(OUTPUT, "target");
 const CARGO_BINARY = join(TARGET, "release", "galerina-requirement-launcher.exe");
 const BINARY = join(OUTPUT, "galerina-requirement-launcher.exe");
+const WORKER_TARGET = join(OUTPUT, "worker-target");
+const WORKER_CARGO_BINARY = join(
+  WORKER_TARGET,
+  "release",
+  "galerina-requirement-launcher.exe",
+);
+const WORKER_BINARY = join(OUTPUT, "galerina-requirement-worker-launcher.exe");
 const RECEIPT = join(OUTPUT, "build-receipt.json");
 const REGISTRY = join(OUTPUT, "test-registry.json");
+const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
 const WORKER = join(OUTPUT, "sentinel-worker.mjs");
+const REQUIREMENT_WORKER = join(
+  ROOT,
+  "packages-galerina",
+  "galerina-core-compiler",
+  "dist",
+  "requirement-process-worker.js",
+);
 const WARDEN_BUILD = join(ROOT, "scripts", "build-process-warden.mjs");
 const INPUTS = [
   join(CRATE, "Cargo.toml"),
@@ -33,6 +48,14 @@ const INPUTS = [
   join(CRATE, "src", "identity.rs"),
   join(CRATE, "src", "windows.rs"),
   join(CRATE, "src", "main.rs"),
+  join(
+    ROOT,
+    "packages-galerina",
+    "galerina-core-compiler",
+    "src",
+    "requirement-process-worker.ts",
+  ),
+  REQUIREMENT_WORKER,
 ];
 
 const SENTINEL_SOURCE = `import { spawn } from "node:child_process";
@@ -138,11 +161,16 @@ const cargo = cargoCandidate;
 const rustc = firstWhereResult("rustc.exe", "REQUIREMENT_LAUNCHER_RUSTC_REFUSED");
 const git = firstWhereResult("git.exe", "REQUIREMENT_LAUNCHER_GIT_REFUSED");
 const runtime = externalRegularFile(process.execPath, "REQUIREMENT_LAUNCHER_RUNTIME_REFUSED");
+const requirementWorker = regularFile(
+  REQUIREMENT_WORKER,
+  "REQUIREMENT_PROCESS_WORKER_BUILD_REFUSED",
+);
 
 mkdirSync(OUTPUT, { recursive: true });
 writeFileSync(WORKER, SENTINEL_SOURCE, "utf8");
 const runtimeDigest = digest(runtime);
 const workerDigest = digest(WORKER);
+const requirementWorkerDigest = digest(requirementWorker);
 
 const warden = spawnSync(process.execPath, [WARDEN_BUILD], {
   cwd: ROOT,
@@ -182,34 +210,51 @@ if (!/^rustc \S+/.test(rustcVersion) || !/^[0-9a-f]{40}$/.test(gitHead)) {
   fail("REQUIREMENT_LAUNCHER_BUILD_IDENTITY_REFUSED");
 }
 
-mkdirSync(TARGET, { recursive: true });
 const command = ["cargo", "build", "--release", "--locked"];
-const build = await runOwnedProcess({
-  command: cargo,
-  args: command.slice(1),
-  cwd: CRATE,
-  env: {
-    ...process.env,
-    CARGO_INCREMENTAL: "0",
-    CARGO_TARGET_DIR: TARGET,
-    RUSTC: rustc,
-    RUSTC_WRAPPER: "",
-    RUSTFLAGS: "--cfg test_contract",
-    GALERINA_TEST_RUNTIME_DIGEST: runtimeDigest,
-    GALERINA_TEST_WORKER_DIGEST: workerDigest,
-  },
-  timeoutMs: 120_000,
-  cleanupGraceMs: 5_000,
-  maxOutputBytes: 16 * 1024 * 1024,
-  windowsHide: true,
-});
-if (build.spawnError || build.timedOut || build.outputLimitExceeded || build.status !== 0 || build.signal !== null) {
-  fail("REQUIREMENT_LAUNCHER_BUILD_REFUSED", `${build.stdout || ""}${build.stderr || ""}`);
+async function buildPinnedLauncher(target, cargoBinary, outputBinary, admittedWorkerDigest, code) {
+  mkdirSync(target, { recursive: true });
+  const build = await runOwnedProcess({
+    command: cargo,
+    args: command.slice(1),
+    cwd: CRATE,
+    env: {
+      ...process.env,
+      CARGO_INCREMENTAL: "0",
+      CARGO_TARGET_DIR: target,
+      RUSTC: rustc,
+      RUSTC_WRAPPER: "",
+      RUSTFLAGS: "--cfg test_contract",
+      GALERINA_TEST_RUNTIME_DIGEST: runtimeDigest,
+      GALERINA_TEST_WORKER_DIGEST: admittedWorkerDigest,
+    },
+    timeoutMs: 120_000,
+    cleanupGraceMs: 5_000,
+    maxOutputBytes: 16 * 1024 * 1024,
+    windowsHide: true,
+  });
+  if (build.spawnError || build.timedOut || build.outputLimitExceeded || build.status !== 0 || build.signal !== null) {
+    fail(code, `${build.stdout || ""}${build.stderr || ""}`);
+  }
+  if (!existsSync(cargoBinary) || !statSync(cargoBinary).isFile()) {
+    fail(`${code}_BINARY_MISSING`);
+  }
+  copyFileSync(cargoBinary, outputBinary);
 }
-if (!existsSync(CARGO_BINARY) || !statSync(CARGO_BINARY).isFile()) {
-  fail("REQUIREMENT_LAUNCHER_CARGO_BINARY_MISSING");
-}
-copyFileSync(CARGO_BINARY, BINARY);
+
+await buildPinnedLauncher(
+  TARGET,
+  CARGO_BINARY,
+  BINARY,
+  workerDigest,
+  "REQUIREMENT_LAUNCHER_BUILD_REFUSED",
+);
+await buildPinnedLauncher(
+  WORKER_TARGET,
+  WORKER_CARGO_BINARY,
+  WORKER_BINARY,
+  requirementWorkerDigest,
+  "REQUIREMENT_WORKER_LAUNCHER_BUILD_REFUSED",
+);
 
 let after;
 try {
@@ -222,12 +267,15 @@ if (JSON.stringify(after) !== JSON.stringify(before)) {
 }
 
 let binary;
+let workerBinary;
 try {
   binary = regularFile(BINARY, "REQUIREMENT_LAUNCHER_BINARY_MISSING");
+  workerBinary = regularFile(WORKER_BINARY, "REQUIREMENT_WORKER_LAUNCHER_BINARY_MISSING");
 } catch (error) {
   fail(error.message || "REQUIREMENT_LAUNCHER_BINARY_MISSING");
 }
 const binarySha256 = digest(binary);
+const workerLauncherBinarySha256 = digest(workerBinary);
 const environment = Object.freeze({
   COMSPEC: process.env.COMSPEC || join(process.env.SystemRoot || "C:\\Windows", "System32", "cmd.exe"),
   SystemRoot: process.env.SystemRoot || "C:\\Windows",
@@ -249,6 +297,19 @@ const registry = Object.freeze({
 });
 writeFileSync(REGISTRY, canonicalJson(registry), "utf8");
 const registrySha256 = digest(REGISTRY);
+const workerRegistry = Object.freeze({
+  schemaVersion: 1,
+  launcher: fileRecord(workerBinary, "REQUIREMENT_WORKER_LAUNCHER_BINARY", true),
+  runtime: fileRecord(runtime, "REQUIREMENT_LAUNCHER_RUNTIME", false),
+  worker: fileRecord(requirementWorker, "REQUIREMENT_PROCESS_WORKER", true),
+  packageRoot,
+  packageRootDigest: createHash("sha256").update(packageRoot).digest("hex"),
+  scalarProfileDigest: createHash("sha256").update("scalar-1").digest("hex"),
+  timeoutMs: 1_500,
+  environment,
+});
+writeFileSync(WORKER_REGISTRY, canonicalJson(workerRegistry), "utf8");
+const workerRegistrySha256 = digest(WORKER_REGISTRY);
 const receipt = Object.freeze({
   schemaVersion: 1,
   verdict: "BUILT_NON_AUTHORIZING",
@@ -258,13 +319,16 @@ const receipt = Object.freeze({
   rustcVersion,
   command,
   compileCfg: ["test_contract"],
-  compilePins: { runtimeDigest, workerDigest },
+  compilePins: { runtimeDigest, workerDigest, requirementWorkerDigest },
   cargoExecutable: basename(cargo),
   cargoSha256: digest(cargo),
   inputs: before,
   binarySha256,
+  workerLauncherBinarySha256,
   registrySha256,
+  workerRegistrySha256,
   registryFile: basename(REGISTRY),
+  workerRegistryFile: basename(WORKER_REGISTRY),
   workerFile: basename(WORKER),
 });
 mkdirSync(dirname(RECEIPT), { recursive: true });

@@ -908,6 +908,19 @@ export {
   type CanonicalValue,
 } from "./requirement-process-protocol.js";
 
+// RD-0858 Unit 4 - single-use, non-authorizing fresh-process worker
+export {
+  BOOTSTRAP_PROBE_ARGUMENT_BYTES,
+  BOOTSTRAP_PROBE_FLOW,
+  runRequirementProcessWorker,
+  runRequirementProcessWorkerCli,
+  type RequirementWorkerBootstrap,
+  type RequirementWorkerInput,
+  type RequirementWorkerOutcome,
+  type RequirementWorkerOutput,
+  type RequirementWorkerSelfControls,
+} from "./requirement-process-worker.js";
+
 // Stage A - AST Interpreter
 export {
   executeFlow,

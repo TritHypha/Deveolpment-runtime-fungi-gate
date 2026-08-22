@@ -3,18 +3,23 @@ use std::ffi::{c_void, OsStr, OsString};
 use std::mem::{size_of, zeroed};
 use std::os::windows::ffi::{OsStrExt, OsStringExt};
 use std::path::Path;
-use std::ptr::null;
+use std::ptr::{null, null_mut};
 
-use crate::protocol::sha256_hex;
+use crate::protocol::{sha256_hex, MAX_FRAME_BYTES};
 
 type Bool = i32;
 type Dword = u32;
 type Handle = *mut c_void;
 
 const FALSE: Bool = 0;
+const TRUE: Bool = 1;
 const CREATE_SUSPENDED: Dword = 0x0000_0004;
 const CREATE_NEW_PROCESS_GROUP: Dword = 0x0000_0200;
 const CREATE_UNICODE_ENVIRONMENT: Dword = 0x0000_0400;
+const EXTENDED_STARTUPINFO_PRESENT: Dword = 0x0008_0000;
+const STARTF_USESTDHANDLES: Dword = 0x0000_0100;
+const HANDLE_FLAG_INHERIT: Dword = 0x0000_0001;
+const PROC_THREAD_ATTRIBUTE_HANDLE_LIST: usize = 0x0002_0002;
 const JOB_OBJECT_EXTENDED_LIMIT_INFORMATION: i32 = 9;
 const JOB_OBJECT_LIMIT_ACTIVE_PROCESS: Dword = 0x0000_0008;
 const JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE: Dword = 0x0000_2000;
@@ -43,6 +48,19 @@ struct StartupInfoW {
     h_std_input: Handle,
     h_std_output: Handle,
     h_std_error: Handle,
+}
+
+#[repr(C)]
+struct StartupInfoExW {
+    startup_info: StartupInfoW,
+    attribute_list: *mut c_void,
+}
+
+#[repr(C)]
+struct SecurityAttributes {
+    length: Dword,
+    security_descriptor: *mut c_void,
+    inherit_handle: Bool,
 }
 
 #[repr(C)]
@@ -107,6 +125,29 @@ unsafe extern "system" {
         startup_info: *mut StartupInfoW,
         process_information: *mut ProcessInformation,
     ) -> Bool;
+    fn CreatePipe(
+        read_pipe: *mut Handle,
+        write_pipe: *mut Handle,
+        attributes: *const SecurityAttributes,
+        size: Dword,
+    ) -> Bool;
+    fn SetHandleInformation(handle: Handle, mask: Dword, flags: Dword) -> Bool;
+    fn InitializeProcThreadAttributeList(
+        attribute_list: *mut c_void,
+        attribute_count: Dword,
+        flags: Dword,
+        size: *mut usize,
+    ) -> Bool;
+    fn UpdateProcThreadAttribute(
+        attribute_list: *mut c_void,
+        flags: Dword,
+        attribute: usize,
+        value: *mut c_void,
+        size: usize,
+        previous_value: *mut c_void,
+        return_size: *mut usize,
+    ) -> Bool;
+    fn DeleteProcThreadAttributeList(attribute_list: *mut c_void);
     fn AssignProcessToJobObject(job: Handle, process: Handle) -> Bool;
     fn QueryFullProcessImageNameW(
         process: Handle,
@@ -118,6 +159,30 @@ unsafe extern "system" {
     fn WaitForSingleObject(handle: Handle, milliseconds: Dword) -> Dword;
     fn GetExitCodeProcess(process: Handle, exit_code: *mut Dword) -> Bool;
     fn TerminateJobObject(job: Handle, exit_code: Dword) -> Bool;
+    fn ReadFile(
+        file: Handle,
+        buffer: *mut c_void,
+        bytes_to_read: Dword,
+        bytes_read: *mut Dword,
+        overlapped: *mut c_void,
+    ) -> Bool;
+    fn WriteFile(
+        file: Handle,
+        buffer: *const c_void,
+        bytes_to_write: Dword,
+        bytes_written: *mut Dword,
+        overlapped: *mut c_void,
+    ) -> Bool;
+    fn PeekNamedPipe(
+        pipe: Handle,
+        buffer: *mut c_void,
+        buffer_size: Dword,
+        bytes_read: *mut Dword,
+        total_bytes_available: *mut Dword,
+        bytes_left_this_message: *mut Dword,
+    ) -> Bool;
+    fn GetTickCount64() -> u64;
+    fn Sleep(milliseconds: Dword);
     fn CloseHandle(handle: Handle) -> Bool;
 }
 
@@ -125,6 +190,9 @@ pub struct OwnedWorker {
     job: Handle,
     process: Handle,
     thread: Handle,
+    stdin_write: Handle,
+    stdout_read: Handle,
+    stderr_read: Handle,
     resumed: bool,
 }
 
@@ -133,12 +201,21 @@ pub struct WorkerOutcome {
     pub timed_out: bool,
 }
 
+pub struct WorkerExchange {
+    pub ready_frame: Vec<u8>,
+    pub result_frame: Vec<u8>,
+    pub elapsed_ms: u32,
+}
+
 impl Drop for OwnedWorker {
     fn drop(&mut self) {
         if !self.job.is_null() {
             unsafe { TerminateJobObject(self.job, TERMINATION_EXIT) };
         }
         close(self.thread);
+        close(self.stdin_write);
+        close(self.stdout_read);
+        close(self.stderr_read);
         close(self.process);
         close(self.job);
     }
@@ -243,6 +320,100 @@ pub fn create_suspended_worker(
         return Err("JOB_POLICY");
     }
 
+    let security = SecurityAttributes {
+        length: size_of::<SecurityAttributes>() as Dword,
+        security_descriptor: null_mut(),
+        inherit_handle: TRUE,
+    };
+    let mut child_stdin_read: Handle = null_mut();
+    let mut parent_stdin_write: Handle = null_mut();
+    let mut parent_stdout_read: Handle = null_mut();
+    let mut child_stdout_write: Handle = null_mut();
+    let mut parent_stderr_read: Handle = null_mut();
+    let mut child_stderr_write: Handle = null_mut();
+    let pipes_created = unsafe {
+        CreatePipe(&mut child_stdin_read, &mut parent_stdin_write, &security, 0) != FALSE
+            && CreatePipe(
+                &mut parent_stdout_read,
+                &mut child_stdout_write,
+                &security,
+                0,
+            ) != FALSE
+            && CreatePipe(
+                &mut parent_stderr_read,
+                &mut child_stderr_write,
+                &security,
+                0,
+            ) != FALSE
+    };
+    if !pipes_created
+        || unsafe { SetHandleInformation(parent_stdin_write, HANDLE_FLAG_INHERIT, 0) } == FALSE
+        || unsafe { SetHandleInformation(parent_stdout_read, HANDLE_FLAG_INHERIT, 0) } == FALSE
+        || unsafe { SetHandleInformation(parent_stderr_read, HANDLE_FLAG_INHERIT, 0) } == FALSE
+    {
+        close(child_stdin_read);
+        close(parent_stdin_write);
+        close(parent_stdout_read);
+        close(child_stdout_write);
+        close(parent_stderr_read);
+        close(child_stderr_write);
+        close(job);
+        return Err("PROCESS_PIPE");
+    }
+
+    let mut attribute_bytes = 0usize;
+    unsafe {
+        InitializeProcThreadAttributeList(null_mut(), 1, 0, &mut attribute_bytes);
+    }
+    if attribute_bytes == 0 {
+        close(child_stdin_read);
+        close(parent_stdin_write);
+        close(parent_stdout_read);
+        close(child_stdout_write);
+        close(parent_stderr_read);
+        close(child_stderr_write);
+        close(job);
+        return Err("PROCESS_HANDLE_POLICY");
+    }
+    let attribute_words = attribute_bytes.div_ceil(size_of::<usize>());
+    let mut attribute_storage = vec![0usize; attribute_words];
+    let attribute_list = attribute_storage.as_mut_ptr().cast::<c_void>();
+    if unsafe { InitializeProcThreadAttributeList(attribute_list, 1, 0, &mut attribute_bytes) }
+        == FALSE
+    {
+        close(child_stdin_read);
+        close(parent_stdin_write);
+        close(parent_stdout_read);
+        close(child_stdout_write);
+        close(parent_stderr_read);
+        close(child_stderr_write);
+        close(job);
+        return Err("PROCESS_HANDLE_POLICY");
+    }
+    let mut inherited = [child_stdin_read, child_stdout_write, child_stderr_write];
+    if unsafe {
+        UpdateProcThreadAttribute(
+            attribute_list,
+            0,
+            PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
+            inherited.as_mut_ptr().cast::<c_void>(),
+            size_of::<Handle>() * inherited.len(),
+            null_mut(),
+            null_mut(),
+        )
+    } == FALSE
+    {
+        unsafe { DeleteProcThreadAttributeList(attribute_list) };
+        close(child_stdin_read);
+        close(parent_stdin_write);
+        close(parent_stdout_read);
+        close(child_stdout_write);
+        close(parent_stderr_read);
+        close(child_stderr_write);
+        close(job);
+        return Err("PROCESS_HANDLE_POLICY");
+    }
+
     let runtime_wide = wide_nul(runtime.as_os_str());
     let root_wide = wide_nul(package_root.as_os_str());
     let mut command = command_line(&[
@@ -250,8 +421,13 @@ pub fn create_suspended_worker(
         worker.as_os_str().to_os_string(),
         OsString::from(mode),
     ]);
-    let mut startup: StartupInfoW = unsafe { zeroed() };
-    startup.cb = size_of::<StartupInfoW>() as Dword;
+    let mut startup: StartupInfoExW = unsafe { zeroed() };
+    startup.startup_info.cb = size_of::<StartupInfoExW>() as Dword;
+    startup.startup_info.dw_flags = STARTF_USESTDHANDLES;
+    startup.startup_info.h_std_input = child_stdin_read;
+    startup.startup_info.h_std_output = child_stdout_write;
+    startup.startup_info.h_std_error = child_stderr_write;
+    startup.attribute_list = attribute_list;
     let mut information: ProcessInformation = unsafe { zeroed() };
     let created = unsafe {
         CreateProcessW(
@@ -259,15 +435,25 @@ pub fn create_suspended_worker(
             command.as_mut_ptr(),
             null(),
             null(),
-            FALSE,
-            CREATE_SUSPENDED | CREATE_NEW_PROCESS_GROUP | CREATE_UNICODE_ENVIRONMENT,
+            TRUE,
+            CREATE_SUSPENDED
+                | CREATE_NEW_PROCESS_GROUP
+                | CREATE_UNICODE_ENVIRONMENT
+                | EXTENDED_STARTUPINFO_PRESENT,
             environment.as_mut_ptr().cast::<c_void>(),
             root_wide.as_ptr(),
-            &mut startup,
+            &mut startup.startup_info,
             &mut information,
         )
     };
+    unsafe { DeleteProcThreadAttributeList(attribute_list) };
+    close(child_stdin_read);
+    close(child_stdout_write);
+    close(child_stderr_write);
     if created == FALSE {
+        close(parent_stdin_write);
+        close(parent_stdout_read);
+        close(parent_stderr_read);
         close(job);
         return Err("PROCESS_CREATE");
     }
@@ -275,6 +461,9 @@ pub fn create_suspended_worker(
         unsafe { TerminateJobObject(job, TERMINATION_EXIT) };
         close(information.h_thread);
         close(information.h_process);
+        close(parent_stdin_write);
+        close(parent_stdout_read);
+        close(parent_stderr_read);
         close(job);
         return Err("PROCESS_ASSIGN");
     }
@@ -282,7 +471,130 @@ pub fn create_suspended_worker(
         job,
         process: information.h_process,
         thread: information.h_thread,
+        stdin_write: parent_stdin_write,
+        stdout_read: parent_stdout_read,
+        stderr_read: parent_stderr_read,
         resumed: false,
+    })
+}
+
+fn remaining(deadline: u64) -> Result<Dword, &'static str> {
+    let now = unsafe { GetTickCount64() };
+    if now >= deadline {
+        return Err("WORKER_TIMEOUT");
+    }
+    Ok((deadline - now).min(Dword::MAX as u64) as Dword)
+}
+
+fn wait_pipe(pipe: Handle, process: Handle, deadline: u64) -> Result<(), &'static str> {
+    loop {
+        let mut available = 0u32;
+        if unsafe { PeekNamedPipe(pipe, null_mut(), 0, null_mut(), &mut available, null_mut()) }
+            == FALSE
+        {
+            return Err("WORKER_PIPE_READ");
+        }
+        if available > 0 {
+            return Ok(());
+        }
+        if unsafe { WaitForSingleObject(process, 0) } == WAIT_OBJECT_0 {
+            return Err("WORKER_PIPE_EOF");
+        }
+        remaining(deadline)?;
+        unsafe { Sleep(1) };
+    }
+}
+
+fn read_exact(
+    pipe: Handle,
+    process: Handle,
+    length: usize,
+    deadline: u64,
+) -> Result<Vec<u8>, &'static str> {
+    let mut output = vec![0u8; length];
+    let mut offset = 0usize;
+    while offset < length {
+        wait_pipe(pipe, process, deadline)?;
+        let mut read = 0u32;
+        let requested = (length - offset).min(Dword::MAX as usize) as Dword;
+        if unsafe {
+            ReadFile(
+                pipe,
+                output[offset..].as_mut_ptr().cast::<c_void>(),
+                requested,
+                &mut read,
+                null_mut(),
+            )
+        } == FALSE
+            || read == 0
+        {
+            return Err("WORKER_PIPE_READ");
+        }
+        offset += read as usize;
+    }
+    Ok(output)
+}
+
+fn read_frame(worker: &OwnedWorker, deadline: u64) -> Result<Vec<u8>, &'static str> {
+    let prefix = read_exact(worker.stdout_read, worker.process, 8, deadline)?;
+    let declared = u64::from_be_bytes(prefix[..8].try_into().map_err(|_| "WORKER_FRAME")?);
+    if declared == 0 || declared as usize > MAX_FRAME_BYTES {
+        return Err("WORKER_FRAME_BOUND");
+    }
+    let body = read_exact(
+        worker.stdout_read,
+        worker.process,
+        declared as usize,
+        deadline,
+    )?;
+    let mut frame = prefix;
+    frame.extend_from_slice(&body);
+    Ok(frame)
+}
+
+fn write_all(pipe: Handle, bytes: &[u8]) -> Result<(), &'static str> {
+    let mut offset = 0usize;
+    while offset < bytes.len() {
+        let mut written = 0u32;
+        let requested = (bytes.len() - offset).min(Dword::MAX as usize) as Dword;
+        if unsafe {
+            WriteFile(
+                pipe,
+                bytes[offset..].as_ptr().cast::<c_void>(),
+                requested,
+                &mut written,
+                null_mut(),
+            )
+        } == FALSE
+            || written == 0
+        {
+            return Err("WORKER_PIPE_WRITE");
+        }
+        offset += written as usize;
+    }
+    Ok(())
+}
+
+pub fn exchange_worker(
+    worker: &mut OwnedWorker,
+    request: &[u8],
+    timeout_ms: u32,
+) -> Result<WorkerExchange, &'static str> {
+    if !worker.resumed {
+        return Err("PROCESS_NOT_RESUMED");
+    }
+    let started = unsafe { GetTickCount64() };
+    let deadline = started.saturating_add(timeout_ms as u64);
+    let ready_frame = read_frame(worker, deadline)?;
+    write_all(worker.stdin_write, request)?;
+    close(worker.stdin_write);
+    worker.stdin_write = null_mut();
+    let result_frame = read_frame(worker, deadline)?;
+    let elapsed = unsafe { GetTickCount64() }.saturating_sub(started);
+    Ok(WorkerExchange {
+        ready_frame,
+        result_frame,
+        elapsed_ms: elapsed.min(Dword::MAX as u64) as u32,
     })
 }
 

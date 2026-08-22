@@ -3,14 +3,12 @@ import { createHash } from "node:crypto";
 import { describe, it } from "node:test";
 
 import {
-  decodeCanonicalFrame,
-  encodeCanonicalFrame,
-} from "../dist/requirement-process-protocol.js";
-import {
   BOOTSTRAP_PROBE_ARGUMENT_BYTES,
   BOOTSTRAP_PROBE_FLOW,
+  decodeCanonicalFrame,
+  encodeCanonicalFrame,
   runRequirementProcessWorker,
-} from "../dist/requirement-process-worker.js";
+} from "../dist/index.js";
 
 const NONCE = "00112233445566778899aabbccddeeff";
 const WORKER_DIGEST = "a".repeat(64);
@@ -156,6 +154,26 @@ describe("RD-0858 Unit 4 single-use requirement worker", () => {
     }
     assert.equal(proxyReads, 0);
     assert.equal(accessorReads, 0);
+  });
+
+  it("refuses a Proxy bootstrap object without consulting any caller trap", async () => {
+    let trapReads = 0;
+    const h = harness();
+    const hostileBootstrap = new Proxy(h.bootstrap, {
+      get() {
+        trapReads += 1;
+        throw new Error("bootstrap getter invoked");
+      },
+      getOwnPropertyDescriptor() {
+        trapReads += 1;
+        throw new Error("bootstrap descriptor invoked");
+      },
+    });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, hostileBootstrap);
+    assert.equal(outcome.refusalCode, "BOOTSTRAP_CONTROL");
+    assert.equal(outcome.executionState, "REFUSED");
+    assert.equal(h.counts().reads, 0);
+    assert.equal(trapReads, 0);
   });
 
   it("refuses a worker-result sent where the one launcher request is required", async () => {

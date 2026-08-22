@@ -286,32 +286,38 @@ Commit: `git add scripts/native/requirement-launcher/src/identity.rs scripts/nat
 **Files:**
 - Create: `packages-galerina/galerina-core-compiler/src/requirement-process-worker.ts`
 - Create: `packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs`
+- Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
 - Modify: `scripts/tests/requirement-launcher.test.mjs`
 - Modify: `scripts/build-requirement-launcher.mjs`
+- Modify: `scripts/native/requirement-launcher/src/main.rs`
+- Modify: `scripts/native/requirement-launcher/src/protocol.rs`
+- Modify: `scripts/native/requirement-launcher/src/windows.rs`
 
 **Interfaces:**
 - Consumes: Task 1 protocol and Task 4 admitted worker process.
 - Produces: `runRequirementProcessWorker(input, output, bootstrap)` for tests and a CLI entry that emits one `WorkerReady`, accepts one `LauncherRequest`, emits one closed non-authorizing `WorkerResult`, then exits.
 
-- [ ] **Step 1: Plant bootstrap/order/single-use RED tests**
+- [x] **Step 1: Plant bootstrap/order/single-use RED tests**
 
 Assert roots are captured before the input reader is invoked; canonical own-data Bool/Verdict self-controls pass; Proxy/accessor controls refuse without trap access; result-before-ready, request-before-ready, nonce mismatch, second request, dynamic import, child/network attempt, unknown effect, oversized audit/result, timeout and crash cannot become `COMPLETE`.
 
-- [ ] **Step 2: Run focused worker tests and capture RED**
+- [x] **Step 2: Run focused worker tests and capture RED**
 
 Run: `npm --prefix packages-galerina/galerina-core-compiler run build && node --test packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs`
 
 Expected: FAIL because the worker entry does not exist.
 
-- [ ] **Step 3: Implement capture-before-input bootstrap**
+- [x] **Step 3: Implement capture-before-input bootstrap**
 
 At module evaluation, capture only the exact owned-data descriptor reader, Proxy detector, UTF-8 decoder, SHA-256 constructor, monotonic clock and immutable protocol functions required by the worker. Run fixed self-controls before calling `input.read()`. If any root or self-control is unavailable, accessor-backed, proxy-selected or inconsistent, emit `REFUSED/BOOTSTRAP_CONTROL` and exit.
 
-- [ ] **Step 4: Implement one-frame state machine**
+- [x] **Step 4: Implement one-frame state machine**
 
 States are `BOOTSTRAP -> READY_SENT -> REQUEST_READ -> RESULT_SENT -> CLOSED`. Every out-of-order frame, second read/write, nonce mismatch or caught exception transitions once to closed `REFUSED` or `ERROR`. In this pre-conversion task the only admitted operation is `bootstrap-probe`, which returns bounded self-control digests and `executionState:"REFUSED"`; it never parses or admits Galerina source.
 
-- [ ] **Step 5: Run worker plus launcher tests and commit**
+The Task 4 launcher must add only an explicit three-handle anonymous-pipe whitelist. It verifies `WorkerReady` before writing the request, closes worker stdin after the one frame, verifies the one `WorkerResult`, and rejects `COMPLETE`. No other inherited handle or worker operation is admitted.
+
+- [x] **Step 5: Run worker plus launcher tests and commit**
 
 Run: `npm --prefix packages-galerina/galerina-core-compiler run typecheck`
 
@@ -319,7 +325,7 @@ Run: `npm --prefix packages-galerina/galerina-core-compiler run build`
 
 Run: `node --test packages-galerina/galerina-core-compiler/tests/requirement-process-protocol.test.mjs packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs scripts/tests/requirement-launcher.test.mjs`
 
-Commit: `git add packages-galerina/galerina-core-compiler/src/requirement-process-worker.ts packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs scripts/tests/requirement-launcher.test.mjs scripts/build-requirement-launcher.mjs && git commit -m "feat: bootstrap single-use RD-0858 worker"`
+Commit the exact Task 5 source, test, builder, protocol and native launcher paths only with message `feat: bootstrap single-use RD-0858 worker`.
 
 ## Pre-Conversion Stop Gate
 
