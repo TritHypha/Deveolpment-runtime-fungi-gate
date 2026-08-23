@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "b9677bcc874dd295f415402e0bdcca4f680876b865c0245b1c627e120ecad558",
+  "authoritativeInputsDigest": "1b3bc734ac7af145c5d654f1c2a20528a762117c2dbf28849fce7d5113f9784c",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -2915,6 +2915,13 @@
       "id": "test:auto-a294376f0f85a6e2a5dac0f5",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/requirement-process-protocol.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-5159376cef48c6b36e275ffc",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/requirement-process-root-red.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10102,6 +10109,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-5159376cef48c6b36e275ffc",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-5bad9f046172f4781b3c2b7c",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -14222,9 +14234,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1100,
+    "tests": 1101,
     "detectors": 6,
-    "executableFamily": 1562,
+    "executableFamily": 1563,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
