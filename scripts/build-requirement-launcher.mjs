@@ -29,10 +29,19 @@ const WORKER_CARGO_BINARY = join(
   "galerina-requirement-launcher.exe",
 );
 const WORKER_BINARY = join(OUTPUT, "galerina-requirement-worker-launcher.exe");
+const BAD_READY_TARGET = join(OUTPUT, "bad-ready-target");
+const BAD_READY_CARGO_BINARY = join(
+  BAD_READY_TARGET,
+  "release",
+  "galerina-requirement-launcher.exe",
+);
+const BAD_READY_BINARY = join(OUTPUT, "galerina-bad-ready-launcher.exe");
 const RECEIPT = join(OUTPUT, "build-receipt.json");
 const REGISTRY = join(OUTPUT, "test-registry.json");
 const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
+const BAD_READY_REGISTRY = join(OUTPUT, "bad-ready-registry.json");
 const WORKER = join(OUTPUT, "sentinel-worker.mjs");
+const BAD_READY_WORKER = join(OUTPUT, "bad-ready-worker.mjs");
 const REQUIREMENT_WORKER = join(
   ROOT,
   "packages-galerina",
@@ -70,6 +79,19 @@ if (mode === "timeout") {
 } else {
   process.exit(86);
 }
+`;
+
+const BAD_READY_SOURCE = `import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+const body = Buffer.from('{"bootstrapControlDigest":"${"0".repeat(64)}","nonce":"${"0".repeat(32)}","runtimeDigest":"${"0".repeat(64)}","schemaVersion":2,"workerDigest":"${"0".repeat(64)}"}', "utf8");
+const prefix = Buffer.alloc(8);
+prefix.writeBigUInt64BE(BigInt(body.length));
+process.stdout.write(Buffer.concat([prefix, body]));
+process.stdin.once("data", () => {
+  writeFileSync(join(process.cwd(), "build", "rd0858-requirement-launcher", "bad-ready-request-received.txt"), "received", "utf8");
+  process.exit(91);
+});
+setTimeout(() => process.exit(92), 5_000);
 `;
 
 function digest(path) {
@@ -168,9 +190,11 @@ const requirementWorker = regularFile(
 
 mkdirSync(OUTPUT, { recursive: true });
 writeFileSync(WORKER, SENTINEL_SOURCE, "utf8");
+writeFileSync(BAD_READY_WORKER, BAD_READY_SOURCE, "utf8");
 const runtimeDigest = digest(runtime);
 const workerDigest = digest(WORKER);
 const requirementWorkerDigest = digest(requirementWorker);
+const badReadyWorkerDigest = digest(BAD_READY_WORKER);
 
 const warden = spawnSync(process.execPath, [WARDEN_BUILD], {
   cwd: ROOT,
@@ -255,6 +279,13 @@ await buildPinnedLauncher(
   requirementWorkerDigest,
   "REQUIREMENT_WORKER_LAUNCHER_BUILD_REFUSED",
 );
+await buildPinnedLauncher(
+  BAD_READY_TARGET,
+  BAD_READY_CARGO_BINARY,
+  BAD_READY_BINARY,
+  badReadyWorkerDigest,
+  "REQUIREMENT_BAD_READY_LAUNCHER_BUILD_REFUSED",
+);
 
 let after;
 try {
@@ -268,14 +299,17 @@ if (JSON.stringify(after) !== JSON.stringify(before)) {
 
 let binary;
 let workerBinary;
+let badReadyBinary;
 try {
   binary = regularFile(BINARY, "REQUIREMENT_LAUNCHER_BINARY_MISSING");
   workerBinary = regularFile(WORKER_BINARY, "REQUIREMENT_WORKER_LAUNCHER_BINARY_MISSING");
+  badReadyBinary = regularFile(BAD_READY_BINARY, "REQUIREMENT_BAD_READY_LAUNCHER_BINARY_MISSING");
 } catch (error) {
   fail(error.message || "REQUIREMENT_LAUNCHER_BINARY_MISSING");
 }
 const binarySha256 = digest(binary);
 const workerLauncherBinarySha256 = digest(workerBinary);
+const badReadyLauncherBinarySha256 = digest(badReadyBinary);
 const environment = Object.freeze({
   COMSPEC: process.env.COMSPEC || join(process.env.SystemRoot || "C:\\Windows", "System32", "cmd.exe"),
   SystemRoot: process.env.SystemRoot || "C:\\Windows",
@@ -310,6 +344,14 @@ const workerRegistry = Object.freeze({
 });
 writeFileSync(WORKER_REGISTRY, canonicalJson(workerRegistry), "utf8");
 const workerRegistrySha256 = digest(WORKER_REGISTRY);
+const badReadyRegistry = Object.freeze({
+  ...workerRegistry,
+  launcher: fileRecord(badReadyBinary, "REQUIREMENT_BAD_READY_LAUNCHER_BINARY", true),
+  worker: fileRecord(BAD_READY_WORKER, "REQUIREMENT_BAD_READY_WORKER", true),
+  timeoutMs: 1_500,
+});
+writeFileSync(BAD_READY_REGISTRY, canonicalJson(badReadyRegistry), "utf8");
+const badReadyRegistrySha256 = digest(BAD_READY_REGISTRY);
 const receipt = Object.freeze({
   schemaVersion: 1,
   verdict: "BUILT_NON_AUTHORIZING",
@@ -319,17 +361,21 @@ const receipt = Object.freeze({
   rustcVersion,
   command,
   compileCfg: ["test_contract"],
-  compilePins: { runtimeDigest, workerDigest, requirementWorkerDigest },
+  compilePins: { runtimeDigest, workerDigest, requirementWorkerDigest, badReadyWorkerDigest },
   cargoExecutable: basename(cargo),
   cargoSha256: digest(cargo),
   inputs: before,
   binarySha256,
   workerLauncherBinarySha256,
+  badReadyLauncherBinarySha256,
   registrySha256,
   workerRegistrySha256,
+  badReadyRegistrySha256,
   registryFile: basename(REGISTRY),
   workerRegistryFile: basename(WORKER_REGISTRY),
+  badReadyRegistryFile: basename(BAD_READY_REGISTRY),
   workerFile: basename(WORKER),
+  badReadyWorkerFile: basename(BAD_READY_WORKER),
 });
 mkdirSync(dirname(RECEIPT), { recursive: true });
 writeFileSync(RECEIPT, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");

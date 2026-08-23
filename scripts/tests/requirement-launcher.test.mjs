@@ -23,12 +23,15 @@ const BUILD_SCRIPT = join(ROOT, "scripts", "build-requirement-launcher.mjs");
 const OUTPUT = join(ROOT, "build", "rd0858-requirement-launcher");
 const BINARY = join(OUTPUT, "galerina-requirement-launcher.exe");
 const WORKER_BINARY = join(OUTPUT, "galerina-requirement-worker-launcher.exe");
+const BAD_READY_BINARY = join(OUTPUT, "galerina-bad-ready-launcher.exe");
 const BUILD_RECEIPT = join(
   OUTPUT,
   "build-receipt.json",
 );
 const REGISTRY = join(OUTPUT, "test-registry.json");
 const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
+const BAD_READY_REGISTRY = join(OUTPUT, "bad-ready-registry.json");
+const BAD_READY_MARKER = join(OUTPUT, "bad-ready-request-received.txt");
 
 const BOOTSTRAP_ARGUMENT = Buffer.from(
   '{"operation":"bootstrap-probe","requestedEffects":[]}',
@@ -57,6 +60,7 @@ function buildLauncher() {
     cwd: ROOT,
     encoding: "utf8",
     timeout: 180_000,
+    maxBuffer: 16 * 1024 * 1024,
     windowsHide: true,
   });
 }
@@ -82,6 +86,18 @@ function runWorkerLauncher(input, args = ["--registry", WORKER_REGISTRY], env = 
     windowsHide: true,
     maxBuffer: 1024 * 1024,
     env,
+  });
+}
+
+function runBadReadyLauncher(input, args = ["--registry", BAD_READY_REGISTRY]) {
+  return spawnSync(BAD_READY_BINARY, args, {
+    cwd: ROOT,
+    input,
+    encoding: null,
+    timeout: 10_000,
+    windowsHide: true,
+    maxBuffer: 1024 * 1024,
+    env: process.env,
   });
 }
 
@@ -189,6 +205,15 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     } finally {
       rmSync(fixture.directory, { recursive: true, force: true });
     }
+  });
+
+  it("validates WorkerReady before disclosing the one launcher request", () => {
+    rmSync(BAD_READY_MARKER, { force: true });
+    const receipt = refusalReceipt(runBadReadyLauncher(
+      encodeCanonicalFrame("launcher-request", bootstrapRequest()),
+    ));
+    assert.equal(receipt.refusalCode, "WORKER_SCHEMA_VERSION");
+    assert.equal(existsSync(BAD_READY_MARKER), false);
   });
 
   it("decodes the TypeScript request vector and refuses absent worker admission", () => {
@@ -327,6 +352,7 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       env: process.env,
       encoding: "utf8",
       timeout: 5_000,
+      maxBuffer: 1024 * 1024,
       windowsHide: true,
     });
     assert.equal(unowned.status, 88, unowned.stderr);

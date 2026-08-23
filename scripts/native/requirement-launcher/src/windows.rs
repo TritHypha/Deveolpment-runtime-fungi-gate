@@ -201,8 +201,8 @@ pub struct WorkerOutcome {
     pub timed_out: bool,
 }
 
-pub struct WorkerExchange {
-    pub ready_frame: Vec<u8>,
+pub struct WorkerExchange<Ready> {
+    pub ready: Ready,
     pub result_frame: Vec<u8>,
     pub elapsed_ms: u32,
 }
@@ -575,24 +575,29 @@ fn write_all(pipe: Handle, bytes: &[u8]) -> Result<(), &'static str> {
     Ok(())
 }
 
-pub fn exchange_worker(
+pub fn exchange_worker<Ready, VerifyReady>(
     worker: &mut OwnedWorker,
     request: &[u8],
     timeout_ms: u32,
-) -> Result<WorkerExchange, &'static str> {
+    verify_ready: VerifyReady,
+) -> Result<WorkerExchange<Ready>, &'static str>
+where
+    VerifyReady: FnOnce(&[u8]) -> Result<Ready, &'static str>,
+{
     if !worker.resumed {
         return Err("PROCESS_NOT_RESUMED");
     }
     let started = unsafe { GetTickCount64() };
     let deadline = started.saturating_add(timeout_ms as u64);
     let ready_frame = read_frame(worker, deadline)?;
+    let ready = verify_ready(&ready_frame)?;
     write_all(worker.stdin_write, request)?;
     close(worker.stdin_write);
     worker.stdin_write = null_mut();
     let result_frame = read_frame(worker, deadline)?;
     let elapsed = unsafe { GetTickCount64() }.saturating_sub(started);
     Ok(WorkerExchange {
-        ready_frame,
+        ready,
         result_frame,
         elapsed_ms: elapsed.min(Dword::MAX as u64) as u32,
     })

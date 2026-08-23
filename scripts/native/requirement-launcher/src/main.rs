@@ -99,50 +99,50 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
     let mut worker_result = None;
     let mut remaining_timeout = package.timeout_ms;
     if worker_mode == "bootstrap-probe" {
-        let exchange =
-            match windows::exchange_worker(&mut worker, request_frame, package.timeout_ms) {
-                Ok(exchange) => exchange,
-                Err(code) => {
-                    windows::kill_owned_tree(&mut worker);
-                    let frame = refusal_frame_with_evidence(
-                        &request.nonce,
-                        code,
-                        &request.request_digest,
-                        Some(ReceiptEvidence {
-                            launcher_digest: &package.launcher.digest,
-                            runtime_digest: &package.runtime.digest,
-                            worker_digest: &package.worker.digest,
-                            environment_policy_digest: &environment_digest,
-                            scalar_profile_digest: &package.scalar_profile_digest,
-                            subject_digest: &request.subject_digest,
-                            flow_digest: &request.flow_digest,
-                            argument_digest: &request.argument_digest,
-                            response_digest: ZERO_DIGEST,
-                            value_digest: ZERO_DIGEST,
-                            audit_digest: ZERO_DIGEST,
-                        }),
-                        code == "WORKER_TIMEOUT",
-                    );
-                    let _ = io::stdout().write_all(&frame);
-                    let _ = io::stdout().flush();
-                    eprintln!("UNIT4_REFUSED:{code}");
-                    std::process::exit(1);
+        let exchange = match windows::exchange_worker(
+            &mut worker,
+            request_frame,
+            package.timeout_ms,
+            |ready_frame| {
+                let ready = decode_worker_ready(ready_frame).map_err(|error| error.code)?;
+                if ready.nonce != request.nonce
+                    || ready.worker_digest != package.worker.digest
+                    || ready.runtime_digest != package.runtime.digest
+                {
+                    return Err("WORKER_READY_IDENTITY");
                 }
-            };
-        let ready = match decode_worker_ready(&exchange.ready_frame) {
-            Ok(ready) => ready,
-            Err(error) => refuse(error.code, &request.nonce, &request.request_digest),
+                Ok(ready)
+            },
+        ) {
+            Ok(exchange) => exchange,
+            Err(code) => {
+                windows::kill_owned_tree(&mut worker);
+                let frame = refusal_frame_with_evidence(
+                    &request.nonce,
+                    code,
+                    &request.request_digest,
+                    Some(ReceiptEvidence {
+                        launcher_digest: &package.launcher.digest,
+                        runtime_digest: &package.runtime.digest,
+                        worker_digest: &package.worker.digest,
+                        environment_policy_digest: &environment_digest,
+                        scalar_profile_digest: &package.scalar_profile_digest,
+                        subject_digest: &request.subject_digest,
+                        flow_digest: &request.flow_digest,
+                        argument_digest: &request.argument_digest,
+                        response_digest: ZERO_DIGEST,
+                        value_digest: ZERO_DIGEST,
+                        audit_digest: ZERO_DIGEST,
+                    }),
+                    code == "WORKER_TIMEOUT",
+                );
+                let _ = io::stdout().write_all(&frame);
+                let _ = io::stdout().flush();
+                eprintln!("UNIT4_REFUSED:{code}");
+                std::process::exit(1);
+            }
         };
-        if ready.nonce != request.nonce
-            || ready.worker_digest != package.worker.digest
-            || ready.runtime_digest != package.runtime.digest
-        {
-            refuse(
-                "WORKER_READY_IDENTITY",
-                &request.nonce,
-                &request.request_digest,
-            );
-        }
+        let ready = exchange.ready;
         let result = match decode_worker_result(&exchange.result_frame) {
             Ok(result) => result,
             Err(error) => refuse(error.code, &request.nonce, &request.request_digest),
