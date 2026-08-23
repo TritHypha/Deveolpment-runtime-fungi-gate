@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "49c82782a889835140e8888dda9ec33b0f44277037fcf29ffdc72c203b44aeda",
+  "authoritativeInputsDigest": "26b9636a6b1f7478945750437de2b840045a9d9085120ee63c02011dc472d401",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -2908,6 +2908,20 @@
       "id": "test:auto-d791af09508d84172b0dd6bf",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/requirement-interpreter.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-a294376f0f85a6e2a5dac0f5",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/requirement-process-protocol.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-5bad9f046172f4781b3c2b7c",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -8302,6 +8316,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-9d22be7119785b71dbd003f3",
+      "kind": "test",
+      "evidencePath": "scripts/tests/requirement-launcher.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-dbd2ee0da5a45d07f858df12",
       "kind": "test",
       "evidencePath": "scripts/tests/residency-strictness-fungi-slide.integration.test.mjs",
@@ -10072,6 +10093,16 @@
     },
     {
       "from": "test:auto-d791af09508d84172b0dd6bf",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-a294376f0f85a6e2a5dac0f5",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-5bad9f046172f4781b3c2b7c",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -13926,6 +13957,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-9d22be7119785b71dbd003f3",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-dbd2ee0da5a45d07f858df12",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -14186,9 +14222,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1097,
+    "tests": 1100,
     "detectors": 6,
-    "executableFamily": 1558,
+    "executableFamily": 1562,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

@@ -1,6 +1,6 @@
 # VOK Semantic Assurance Graph
 
-Conserved authoritative-input digest: `49c82782a889835140e8888dda9ec33b0f44277037fcf29ffdc72c203b44aeda`
+Conserved authoritative-input digest: `26b9636a6b1f7478945750437de2b840045a9d9085120ee63c02011dc472d401`
 
 K3 evidence state: **ALLOW (1)**
 
@@ -12,9 +12,9 @@ This generated graph is an index of conserved evidence identities. It is non-aut
 - System contracts: 1
 - Canonical parser-proven routes: 0
 - Registered packages: 100
-- Test evidence nodes: 1097
+- Test evidence nodes: 1100
 - Live detector mappings: 6
-- Complete executable-family paths: 1558
+- Complete executable-family paths: 1562
 - Legacy unmapped tests: 0
 
 ## Zero-trust boundaries
