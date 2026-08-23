@@ -10,7 +10,7 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { before, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
@@ -32,6 +32,7 @@ const REGISTRY = join(OUTPUT, "test-registry.json");
 const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
 const BAD_READY_REGISTRY = join(OUTPUT, "bad-ready-registry.json");
 const BAD_READY_MARKER = join(OUTPUT, "bad-ready-request-received.txt");
+const PROTOCOL_TAMPER_MARKER = join(OUTPUT, "protocol-tamper-executed.txt");
 
 const BOOTSTRAP_ARGUMENT = Buffer.from(
   '{"operation":"bootstrap-probe","requestedEffects":[]}',
@@ -218,20 +219,27 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.deepEqual(receipt.missingEvidence, []);
   });
 
-  it("refuses a changed imported protocol digest before worker bootstrap", () => {
-    const fixture = registryFixture((value) => {
-      value.protocol.digest = "f".repeat(64);
-      value.packageRootDigest = packageGraphDigest(value.worker.digest, value.protocol.digest);
-    }, WORKER_REGISTRY);
+  it("refuses changed imported protocol bytes before worker bootstrap", () => {
+    const registry = JSON.parse(readFileSync(WORKER_REGISTRY, "utf8"));
+    const protocolPath = registry.protocol?.path
+      ?? join(dirname(registry.worker.path), "requirement-process-protocol.js");
+    const originalProtocol = readFileSync(protocolPath);
+    rmSync(PROTOCOL_TAMPER_MARKER, { force: true });
     try {
+      const markerStatement = Buffer.from(
+        `\nglobalThis.process.getBuiltinModule("node:fs").writeFileSync(${JSON.stringify(PROTOCOL_TAMPER_MARKER)}, "executed");\n`,
+        "utf8",
+      );
+      writeFileSync(protocolPath, Buffer.concat([originalProtocol, markerStatement]));
       const receipt = refusalReceipt(runWorkerLauncher(
         encodeCanonicalFrame("launcher-request", bootstrapRequest()),
-        ["--registry", fixture.path],
       ));
-      assert.equal(receipt.refusalCode, "PROTOCOL_DIGEST");
+      assert.match(receipt.refusalCode, /^(?:FILE_IDENTITY|FILE_SIZE|PROTOCOL_DIGEST)$/u);
       assert.equal(receipt.responseDigest, "0".repeat(64));
+      assert.equal(existsSync(PROTOCOL_TAMPER_MARKER), false);
     } finally {
-      rmSync(fixture.directory, { recursive: true, force: true });
+      writeFileSync(protocolPath, originalProtocol);
+      rmSync(PROTOCOL_TAMPER_MARKER, { force: true });
     }
   });
 
