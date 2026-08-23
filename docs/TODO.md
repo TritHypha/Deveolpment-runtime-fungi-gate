@@ -47,14 +47,19 @@ counts or open items that a newer section explicitly supersedes.
   non-`.fungi` prerequisites until `.fungi` authoring or conversion is the next
   action. Execute those tasks sequentially and stop before creating, editing,
   building or admitting any `.fungi` file.
-- [ ] Execute Unit 4 Task 2 next: add the permanent test-only causal controls
-  for `detector-direct`, `detector-retained`, `descriptor-direct` and
-  `descriptor-retained`; prove exactly four intended old-route RED failures,
-  preserve the stable discriminators, and change no production or `.fungi`
-  source.
-- [!] Before Task 6, resolve the required already owner-admitted checked scalar
-  flow artifact. If no such artifact exists, return `HOLD` and stop at the
-  `.fungi` boundary instead of generating or admitting one.
+- [x] Complete Unit 4 Task 2 at test-only commit `dd7a17c0` and exact graph
+  checkpoint `e093d484`: two stable discriminators pass and the four named
+  old-route security assertions fail exactly as intended. Independent review
+  returns `PASS` with zero findings; the receipt is in
+  `docs/reports/rd-0858-unit4-task2-independent-review-pass-2026-08-23.md`.
+- [X] Task 6 Step 1 is `HOLD`: the exact graph and admitted registry contain no
+  already owner-admitted fixed checked scalar-flow artifact. The registry binds
+  launcher, runtime, worker and protocol only, while the worker admits only the
+  bootstrap probe. Evidence is in
+  `docs/reports/rd-0858-unit4-task6-admitted-flow-gate-hold-2026-08-23.md`.
+- [!] Tasks 6 Steps 2-5 and Tasks 7-8 remain locked. Creating or admitting the
+  missing checked flow is the next productive action and crosses the active
+  `.fungi` stop boundary, so stop here until that boundary is explicitly opened.
 
 ### Chapter close and process-root gate - 2026-08-22
 

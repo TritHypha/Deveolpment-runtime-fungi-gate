@@ -163,7 +163,7 @@ Commit: `git add packages-galerina/galerina-core-compiler/src/requirement-proces
 
 ## Task 2: Permanent Causal Process-Root RED Controls
 
-**Current owner gate:** Released on 2026-08-23 for this non-`.fungi` control task. The controls may parse inline Galerina source to prove the old route, but no `.fungi` file may be created, edited, built or admitted.
+**Current owner gate:** Complete at exact graph checkpoint `e093d484` with independent `PASS` and zero findings. The controls parse inline Galerina source only; no `.fungi` file was created, edited, built or admitted.
 
 **Files:**
 - Create: `packages-galerina/galerina-core-compiler/tests/requirement-process-root-red.test.mjs`
@@ -172,7 +172,7 @@ Commit: `git add packages-galerina/galerina-core-compiler/src/requirement-proces
 - Consumes: current public `parseProgram`, `checkTypes` and `executeFlow`; later consumes `executeRequirementProcess` from Task 7.
 - Produces: four permanent same-process attack fixtures named `detector-direct`, `detector-retained`, `descriptor-direct` and `descriptor-retained`.
 
-- [ ] **Step 1: Write four secure-expectation tests in fresh child processes**
+- [x] **Step 1: Write four secure-expectation tests in fresh child processes**
 
 Each child must poison the CommonJS backing object before the first cache-busted interpreter import, visibly restore the shared property, arm retained state where applicable and invoke a complete `require` flow. Assert that the old route does **not** return guarded `allow`.
 
@@ -186,15 +186,20 @@ for (const mode of ["detector-direct", "detector-retained", "descriptor-direct",
 }
 ```
 
-- [ ] **Step 2: Reproduce the causal RED against the old route**
+- [x] **Step 2: Reproduce the causal RED against the old route**
 
 Run: `node --test packages-galerina/galerina-core-compiler/tests/requirement-process-root-red.test.mjs`
 
 Expected: exactly four security assertions FAIL because the poisoned old route reaches `audit: "ok"` and guarded `allow`; stable unpoisoned and malformed-value discriminators PASS.
 
-- [ ] **Step 3: Commit the test-only RED checkpoint**
+- [x] **Step 3: Commit the test-only RED checkpoint**
 
 Commit: `git add packages-galerina/galerina-core-compiler/tests/requirement-process-root-red.test.mjs && git commit -m "test: expose RD-0858 process-root attacks"`
+
+Result: test-only commit `dd7a17c0`; exactly two stable discriminators pass and
+four causal old-route assertions fail as required. Independent review passes at
+exact graph checkpoint `e093d484`; receipt:
+`docs/reports/rd-0858-unit4-task2-independent-review-pass-2026-08-23.md`.
 
 ## Task 3: Dependency-Free Native Launcher Protocol Skeleton
 
@@ -387,6 +392,11 @@ Stop here while the no-`.fungi` boundary remains active. Tasks 6–8 are specifi
 
 ## Task 6: One Complete Governed Scalar Flow in the Clean Worker
 
+**Current owner gate:** **HOLD** at exact checkpoint `e093d484`. No already
+owner-admitted fixed checked scalar-flow artifact exists. The bounded evidence
+is in
+`docs/reports/rd-0858-unit4-task6-admitted-flow-gate-hold-2026-08-23.md`.
+
 **Files:**
 - Modify: `packages-galerina/galerina-core-compiler/src/requirement-process-worker.ts`
 - Modify: `packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs`
@@ -398,7 +408,7 @@ Stop here while the no-`.fungi` boundary remains active. Tasks 6–8 are specifi
 - Consumes: a later owner-admitted, fixed, checked scalar flow package resolved by `flowLocator`; Task 5 worker; current `executeFlow` inside the clean worker only.
 - Produces: one `COMPLETE` worker result containing bounded value/audit plus recomputed subject/flow/argument/value/audit digests; no authorizing Boolean leaves the worker.
 
-- [ ] **Step 1: Bind the selected checked scalar flow as a registry artifact**
+- [X] **Step 1: Bind the selected checked scalar flow as a registry artifact - HOLD**
 
 The build tool must consume an already owner-admitted checked artifact, hold and hash it as a direct regular file, bind its `flowLocator`, flow digest and exact core-compiler package graph into the protected registry and refuse any `.fungi` source path. If no admitted artifact exists, return HOLD rather than generating one.
 
