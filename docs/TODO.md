@@ -47,6 +47,14 @@ counts or open items that a newer section explicitly supersedes.
   non-`.fungi` prerequisites until `.fungi` authoring or conversion is the next
   action. Execute those tasks sequentially and stop before creating, editing,
   building or admitting any `.fungi` file.
+- [ ] Execute Unit 4 Task 2 next: add the permanent test-only causal controls
+  for `detector-direct`, `detector-retained`, `descriptor-direct` and
+  `descriptor-retained`; prove exactly four intended old-route RED failures,
+  preserve the stable discriminators, and change no production or `.fungi`
+  source.
+- [!] Before Task 6, resolve the required already owner-admitted checked scalar
+  flow artifact. If no such artifact exists, return `HOLD` and stop at the
+  `.fungi` boundary instead of generating or admitting one.
 
 ### Chapter close and process-root gate - 2026-08-22
 
