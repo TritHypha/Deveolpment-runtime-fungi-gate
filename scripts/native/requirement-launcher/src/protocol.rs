@@ -640,8 +640,10 @@ pub fn refusal_frame(nonce: &str, refusal_code: &str, request_digest: &str) -> V
 
 pub struct ReceiptEvidence<'a> {
     pub launcher_digest: &'a str,
+    pub process_owner_digest: &'a str,
     pub runtime_digest: &'a str,
     pub worker_digest: &'a str,
+    pub registry_digest: &'a str,
     pub environment_policy_digest: &'a str,
     pub scalar_profile_digest: &'a str,
     pub subject_digest: &'a str,
@@ -650,7 +652,19 @@ pub struct ReceiptEvidence<'a> {
     pub response_digest: &'a str,
     pub value_digest: &'a str,
     pub audit_digest: &'a str,
+    pub monotonic_duration_ms: u32,
+    pub execution_state: &'a str,
+    pub exit_code: u32,
+    pub missing_evidence: &'a [&'a str],
 }
+
+const DEFAULT_MISSING_EVIDENCE: [&str; 5] = [
+    "evidence/launcher",
+    "evidence/process-owner",
+    "evidence/registry",
+    "evidence/runtime",
+    "evidence/worker",
+];
 
 pub fn refusal_frame_with_evidence(
     nonce: &str,
@@ -672,6 +686,12 @@ pub fn refusal_frame_with_evidence(
     let launcher_digest = evidence
         .as_ref()
         .map_or(zero.as_str(), |value| value.launcher_digest);
+    let process_owner_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.process_owner_digest);
+    let registry_digest = evidence
+        .as_ref()
+        .map_or(zero.as_str(), |value| value.registry_digest);
     let scalar_profile_digest = evidence
         .as_ref()
         .map_or(zero.as_str(), |value| value.scalar_profile_digest);
@@ -690,7 +710,7 @@ pub fn refusal_frame_with_evidence(
     field(
         &mut receipt,
         "processOwnerDigest",
-        Value::String(zero.clone()),
+        Value::String(process_owner_digest.to_string()),
     );
     field(
         &mut receipt,
@@ -702,7 +722,11 @@ pub fn refusal_frame_with_evidence(
         "workerDigest",
         Value::String(worker_digest.to_string()),
     );
-    field(&mut receipt, "registryDigest", Value::String(zero.clone()));
+    field(
+        &mut receipt,
+        "registryDigest",
+        Value::String(registry_digest.to_string()),
+    );
     field(
         &mut receipt,
         "osEvidenceLocator",
@@ -781,17 +805,46 @@ pub fn refusal_frame_with_evidence(
         Value::String(audit_digest.to_string()),
     );
     field(&mut receipt, "nonce", Value::String(nonce.to_string()));
-    field(&mut receipt, "monotonicDurationMs", Value::Number(0));
+    let monotonic_duration_ms = evidence
+        .as_ref()
+        .map_or(0, |value| value.monotonic_duration_ms);
+    let execution_state = if timed_out {
+        "ERROR"
+    } else {
+        evidence
+            .as_ref()
+            .map_or("REFUSED", |value| value.execution_state)
+    };
+    let exit_code = evidence.as_ref().map_or(1, |value| value.exit_code);
+    let missing_evidence = evidence
+        .as_ref()
+        .map_or(DEFAULT_MISSING_EVIDENCE.as_slice(), |value| {
+            value.missing_evidence
+        });
+    field(
+        &mut receipt,
+        "monotonicDurationMs",
+        Value::Number(monotonic_duration_ms.into()),
+    );
     field(
         &mut receipt,
         "executionState",
-        Value::String("REFUSED".to_string()),
+        Value::String(execution_state.to_string()),
     );
     field(&mut receipt, "timedOut", Value::Bool(timed_out));
     field(&mut receipt, "truncated", Value::Bool(false));
     field(&mut receipt, "partial", Value::Bool(false));
-    field(&mut receipt, "missingEvidence", Value::Array(Vec::new()));
-    field(&mut receipt, "exitCode", Value::Number(1));
+    field(
+        &mut receipt,
+        "missingEvidence",
+        Value::Array(
+            missing_evidence
+                .iter()
+                .map(|value| Value::String((*value).to_string()))
+                .collect(),
+        ),
+    );
+    field(&mut receipt, "exitCode", Value::Number(exit_code.into()));
     field(
         &mut receipt,
         "refusalCode",

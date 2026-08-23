@@ -64,7 +64,10 @@ pub struct AdmittedPackage {
     pub launcher: AdmittedFile,
     pub runtime: AdmittedFile,
     pub worker: AdmittedFile,
+    #[allow(dead_code)]
+    pub protocol: AdmittedFile,
     pub package_root: PathBuf,
+    pub registry_digest: String,
     pub environment: BTreeMap<String, String>,
     pub scalar_profile_digest: String,
     pub timeout_ms: u32,
@@ -278,6 +281,7 @@ fn pinned_test_digest(name: &str) -> Option<&'static str> {
         return match name {
             "runtime" => option_env!("GALERINA_TEST_RUNTIME_DIGEST"),
             "worker" => option_env!("GALERINA_TEST_WORKER_DIGEST"),
+            "protocol" => option_env!("GALERINA_TEST_PROTOCOL_DIGEST"),
             _ => None,
         };
     }
@@ -286,6 +290,14 @@ fn pinned_test_digest(name: &str) -> Option<&'static str> {
         let _ = name;
         None
     }
+}
+
+fn package_graph_digest(worker_digest: &str, protocol_digest: &str) -> String {
+    let mut bytes = b"galerina.requirement-worker-package.v1\0".to_vec();
+    bytes.extend_from_slice(worker_digest.as_bytes());
+    bytes.push(0);
+    bytes.extend_from_slice(protocol_digest.as_bytes());
+    sha256_hex(&bytes)
 }
 
 pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal> {
@@ -312,7 +324,7 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
     if before.links != 1 {
         return Err(refusal("REGISTRY_LINK_COUNT"));
     }
-    let (bytes, _) = read_and_hash(&file)?;
+    let (bytes, registry_digest) = read_and_hash(&file)?;
     if handle_identity(&file)? != before {
         return Err(refusal("REGISTRY_CHANGED"));
     }
@@ -325,6 +337,7 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
             "launcher",
             "packageRoot",
             "packageRootDigest",
+            "protocol",
             "runtime",
             "scalarProfileDigest",
             "schemaVersion",
@@ -351,12 +364,20 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
             .get("worker")
             .ok_or_else(|| refusal("REGISTRY_SCHEMA"))?,
     )?;
+    let protocol_record = registered_file(
+        fields
+            .get("protocol")
+            .ok_or_else(|| refusal("REGISTRY_SCHEMA"))?,
+    )?;
 
     if Some(runtime_record.digest.as_str()) != pinned_test_digest("runtime") {
         return Err(refusal("RUNTIME_DIGEST"));
     }
     if Some(worker_record.digest.as_str()) != pinned_test_digest("worker") {
         return Err(refusal("WORKER_DIGEST"));
+    }
+    if Some(protocol_record.digest.as_str()) != pinned_test_digest("protocol") {
+        return Err(refusal("PROTOCOL_DIGEST"));
     }
     let current = std::env::current_exe().map_err(|_| refusal("LAUNCHER_PATH"))?;
     if display_canonical(&current)? != launcher_record.path.to_string_lossy() {
@@ -366,6 +387,15 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
     let (launcher, _) = open_admitted(&launcher_record, "LAUNCHER_DIGEST")?;
     let (runtime, _) = open_admitted(&runtime_record, "RUNTIME_DIGEST")?;
     let (worker, _) = open_admitted(&worker_record, "WORKER_DIGEST")?;
+    let (protocol, _) = open_admitted(&protocol_record, "PROTOCOL_DIGEST")?;
+    let expected_protocol = worker
+        .path
+        .parent()
+        .ok_or_else(|| refusal("PROTOCOL_PATH"))?
+        .join("requirement-process-protocol.js");
+    if protocol.path != expected_protocol {
+        return Err(refusal("PROTOCOL_PATH"));
+    }
 
     let package_root = PathBuf::from(string_field(fields, "packageRoot", "PACKAGE_ROOT")?);
     if !package_root.is_absolute()
@@ -374,7 +404,7 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
         return Err(refusal("PACKAGE_ROOT"));
     }
     let package_root_digest = string_field(fields, "packageRootDigest", "PACKAGE_ROOT")?;
-    if sha256_hex(package_root.to_string_lossy().as_bytes()) != package_root_digest {
+    if package_graph_digest(&worker.digest, &protocol.digest) != package_root_digest {
         return Err(refusal("PACKAGE_ROOT"));
     }
 
@@ -412,7 +442,9 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
         launcher,
         runtime,
         worker,
+        protocol,
         package_root,
+        registry_digest,
         environment,
         scalar_profile_digest: scalar_profile_digest.to_string(),
         timeout_ms,

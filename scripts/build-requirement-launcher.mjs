@@ -42,12 +42,20 @@ const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
 const BAD_READY_REGISTRY = join(OUTPUT, "bad-ready-registry.json");
 const WORKER = join(OUTPUT, "sentinel-worker.mjs");
 const BAD_READY_WORKER = join(OUTPUT, "bad-ready-worker.mjs");
+const PROTOCOL_COPY = join(OUTPUT, "requirement-process-protocol.js");
 const REQUIREMENT_WORKER = join(
   ROOT,
   "packages-galerina",
   "galerina-core-compiler",
   "dist",
   "requirement-process-worker.js",
+);
+const REQUIREMENT_PROTOCOL = join(
+  ROOT,
+  "packages-galerina",
+  "galerina-core-compiler",
+  "dist",
+  "requirement-process-protocol.js",
 );
 const WARDEN_BUILD = join(ROOT, "scripts", "build-process-warden.mjs");
 const INPUTS = [
@@ -64,7 +72,15 @@ const INPUTS = [
     "src",
     "requirement-process-worker.ts",
   ),
+  join(
+    ROOT,
+    "packages-galerina",
+    "galerina-core-compiler",
+    "src",
+    "requirement-process-protocol.ts",
+  ),
   REQUIREMENT_WORKER,
+  REQUIREMENT_PROTOCOL,
 ];
 
 const SENTINEL_SOURCE = `import { spawn } from "node:child_process";
@@ -96,6 +112,15 @@ setTimeout(() => process.exit(92), 5_000);
 
 function digest(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
+}
+
+function packageGraphDigest(workerDigest, protocolDigest) {
+  return createHash("sha256")
+    .update("galerina.requirement-worker-package.v1\0")
+    .update(workerDigest)
+    .update("\0")
+    .update(protocolDigest)
+    .digest("hex");
 }
 
 function regularFile(path, code) {
@@ -187,13 +212,19 @@ const requirementWorker = regularFile(
   REQUIREMENT_WORKER,
   "REQUIREMENT_PROCESS_WORKER_BUILD_REFUSED",
 );
+const requirementProtocol = regularFile(
+  REQUIREMENT_PROTOCOL,
+  "REQUIREMENT_PROCESS_PROTOCOL_BUILD_REFUSED",
+);
 
 mkdirSync(OUTPUT, { recursive: true });
 writeFileSync(WORKER, SENTINEL_SOURCE, "utf8");
 writeFileSync(BAD_READY_WORKER, BAD_READY_SOURCE, "utf8");
+copyFileSync(requirementProtocol, PROTOCOL_COPY);
 const runtimeDigest = digest(runtime);
 const workerDigest = digest(WORKER);
 const requirementWorkerDigest = digest(requirementWorker);
+const requirementProtocolDigest = digest(requirementProtocol);
 const badReadyWorkerDigest = digest(BAD_READY_WORKER);
 
 const warden = spawnSync(process.execPath, [WARDEN_BUILD], {
@@ -235,7 +266,14 @@ if (!/^rustc \S+/.test(rustcVersion) || !/^[0-9a-f]{40}$/.test(gitHead)) {
 }
 
 const command = ["cargo", "build", "--release", "--locked"];
-async function buildPinnedLauncher(target, cargoBinary, outputBinary, admittedWorkerDigest, code) {
+async function buildPinnedLauncher(
+  target,
+  cargoBinary,
+  outputBinary,
+  admittedWorkerDigest,
+  admittedProtocolDigest,
+  code,
+) {
   mkdirSync(target, { recursive: true });
   const build = await runOwnedProcess({
     command: cargo,
@@ -250,6 +288,7 @@ async function buildPinnedLauncher(target, cargoBinary, outputBinary, admittedWo
       RUSTFLAGS: "--cfg test_contract",
       GALERINA_TEST_RUNTIME_DIGEST: runtimeDigest,
       GALERINA_TEST_WORKER_DIGEST: admittedWorkerDigest,
+      GALERINA_TEST_PROTOCOL_DIGEST: admittedProtocolDigest,
     },
     timeoutMs: 120_000,
     cleanupGraceMs: 5_000,
@@ -270,6 +309,7 @@ await buildPinnedLauncher(
   CARGO_BINARY,
   BINARY,
   workerDigest,
+  requirementProtocolDigest,
   "REQUIREMENT_LAUNCHER_BUILD_REFUSED",
 );
 await buildPinnedLauncher(
@@ -277,6 +317,7 @@ await buildPinnedLauncher(
   WORKER_CARGO_BINARY,
   WORKER_BINARY,
   requirementWorkerDigest,
+  requirementProtocolDigest,
   "REQUIREMENT_WORKER_LAUNCHER_BUILD_REFUSED",
 );
 await buildPinnedLauncher(
@@ -284,6 +325,7 @@ await buildPinnedLauncher(
   BAD_READY_CARGO_BINARY,
   BAD_READY_BINARY,
   badReadyWorkerDigest,
+  requirementProtocolDigest,
   "REQUIREMENT_BAD_READY_LAUNCHER_BUILD_REFUSED",
 );
 
@@ -323,10 +365,11 @@ const registry = Object.freeze({
   launcher: fileRecord(binary, "REQUIREMENT_LAUNCHER_BINARY", true),
   runtime: fileRecord(runtime, "REQUIREMENT_LAUNCHER_RUNTIME", false),
   worker: fileRecord(WORKER, "REQUIREMENT_LAUNCHER_WORKER", true),
+  protocol: fileRecord(PROTOCOL_COPY, "REQUIREMENT_PROCESS_PROTOCOL", true),
   packageRoot,
-  packageRootDigest: createHash("sha256").update(packageRoot).digest("hex"),
+  packageRootDigest: packageGraphDigest(workerDigest, requirementProtocolDigest),
   scalarProfileDigest: createHash("sha256").update("scalar-1").digest("hex"),
-  timeoutMs: 250,
+  timeoutMs: 1_500,
   environment,
 });
 writeFileSync(REGISTRY, canonicalJson(registry), "utf8");
@@ -336,8 +379,9 @@ const workerRegistry = Object.freeze({
   launcher: fileRecord(workerBinary, "REQUIREMENT_WORKER_LAUNCHER_BINARY", true),
   runtime: fileRecord(runtime, "REQUIREMENT_LAUNCHER_RUNTIME", false),
   worker: fileRecord(requirementWorker, "REQUIREMENT_PROCESS_WORKER", true),
+  protocol: fileRecord(requirementProtocol, "REQUIREMENT_PROCESS_PROTOCOL", true),
   packageRoot,
-  packageRootDigest: createHash("sha256").update(packageRoot).digest("hex"),
+  packageRootDigest: packageGraphDigest(requirementWorkerDigest, requirementProtocolDigest),
   scalarProfileDigest: createHash("sha256").update("scalar-1").digest("hex"),
   timeoutMs: 1_500,
   environment,
@@ -348,6 +392,8 @@ const badReadyRegistry = Object.freeze({
   ...workerRegistry,
   launcher: fileRecord(badReadyBinary, "REQUIREMENT_BAD_READY_LAUNCHER_BINARY", true),
   worker: fileRecord(BAD_READY_WORKER, "REQUIREMENT_BAD_READY_WORKER", true),
+  protocol: fileRecord(PROTOCOL_COPY, "REQUIREMENT_PROCESS_PROTOCOL", true),
+  packageRootDigest: packageGraphDigest(badReadyWorkerDigest, requirementProtocolDigest),
   timeoutMs: 1_500,
 });
 writeFileSync(BAD_READY_REGISTRY, canonicalJson(badReadyRegistry), "utf8");
@@ -361,7 +407,13 @@ const receipt = Object.freeze({
   rustcVersion,
   command,
   compileCfg: ["test_contract"],
-  compilePins: { runtimeDigest, workerDigest, requirementWorkerDigest, badReadyWorkerDigest },
+  compilePins: {
+    runtimeDigest,
+    workerDigest,
+    requirementWorkerDigest,
+    requirementProtocolDigest,
+    badReadyWorkerDigest,
+  },
   cargoExecutable: basename(cargo),
   cargoSha256: digest(cargo),
   inputs: before,

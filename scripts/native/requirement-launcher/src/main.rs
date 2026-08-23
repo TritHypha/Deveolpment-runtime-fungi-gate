@@ -14,6 +14,9 @@ use protocol::{
 
 const ZERO_NONCE: &str = "00000000000000000000000000000000";
 const ZERO_DIGEST: &str = "0000000000000000000000000000000000000000000000000000000000000000";
+const NO_MISSING_EVIDENCE: [&str; 0] = [];
+const MISSING_RESULT_EVIDENCE: [&str; 3] =
+    ["evidence/audit", "evidence/response", "evidence/value"];
 
 fn refuse(code: &str, nonce: &str, request_digest: &str) -> ! {
     let frame = refusal_frame(nonce, code, request_digest);
@@ -54,6 +57,7 @@ fn validate_mode() -> Mode {
 
 #[cfg(windows)]
 fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_frame: &[u8]) -> ! {
+    let operation_started = windows::monotonic_millis();
     let registry = match mode {
         Mode::Registry(path) => path,
         _ => refuse(
@@ -66,6 +70,8 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
         Ok(package) => package,
         Err(error) => refuse(error.code, &request.nonce, &request.request_digest),
     };
+    let operation_deadline = operation_started.saturating_add(package.timeout_ms as u64);
+    let process_owner_digest = windows::process_owner_digest();
     let (mut environment, environment_digest) =
         match windows::environment_block(&package.environment, &request.nonce) {
             Ok(value) => value,
@@ -97,12 +103,11 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
         refuse(code, &request.nonce, &request.request_digest);
     }
     let mut worker_result = None;
-    let mut remaining_timeout = package.timeout_ms;
     if worker_mode == "bootstrap-probe" {
         let exchange = match windows::exchange_worker(
             &mut worker,
             request_frame,
-            package.timeout_ms,
+            operation_deadline,
             |ready_frame| {
                 let ready = decode_worker_ready(ready_frame).map_err(|error| error.code)?;
                 if ready.nonce != request.nonce
@@ -123,8 +128,10 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
                     &request.request_digest,
                     Some(ReceiptEvidence {
                         launcher_digest: &package.launcher.digest,
+                        process_owner_digest: &process_owner_digest,
                         runtime_digest: &package.runtime.digest,
                         worker_digest: &package.worker.digest,
+                        registry_digest: &package.registry_digest,
                         environment_policy_digest: &environment_digest,
                         scalar_profile_digest: &package.scalar_profile_digest,
                         subject_digest: &request.subject_digest,
@@ -133,6 +140,17 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
                         response_digest: ZERO_DIGEST,
                         value_digest: ZERO_DIGEST,
                         audit_digest: ZERO_DIGEST,
+                        monotonic_duration_ms: windows::monotonic_millis()
+                            .saturating_sub(operation_started)
+                            .min(u32::MAX as u64)
+                            as u32,
+                        execution_state: if code == "WORKER_TIMEOUT" {
+                            "ERROR"
+                        } else {
+                            "REFUSED"
+                        },
+                        exit_code: windows::TERMINATION_EXIT,
+                        missing_evidence: &MISSING_RESULT_EVIDENCE,
                     }),
                     code == "WORKER_TIMEOUT",
                 );
@@ -163,13 +181,9 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
                 &request.request_digest,
             );
         }
-        remaining_timeout = package
-            .timeout_ms
-            .saturating_sub(exchange.elapsed_ms)
-            .max(1);
         worker_result = Some(result);
     }
-    let outcome = match windows::wait_owned_worker(&mut worker, remaining_timeout) {
+    let outcome = match windows::wait_owned_worker(&mut worker, operation_deadline) {
         Ok(outcome) => outcome,
         Err(code) => refuse(code, &request.nonce, &request.request_digest),
     };
@@ -195,14 +209,28 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
     let audit_digest = worker_result
         .as_ref()
         .map_or(ZERO_DIGEST, |value| value.audit_digest.as_str());
+    let missing_evidence = if worker_result.is_some() {
+        NO_MISSING_EVIDENCE.as_slice()
+    } else {
+        MISSING_RESULT_EVIDENCE.as_slice()
+    };
+    let execution_state = if outcome.timed_out {
+        "ERROR"
+    } else {
+        worker_result
+            .as_ref()
+            .map_or("REFUSED", |value| value.execution_state.as_str())
+    };
     let frame = refusal_frame_with_evidence(
         &request.nonce,
         code,
         &request.request_digest,
         Some(ReceiptEvidence {
             launcher_digest: &package.launcher.digest,
+            process_owner_digest: &process_owner_digest,
             runtime_digest: &package.runtime.digest,
             worker_digest: &package.worker.digest,
+            registry_digest: &package.registry_digest,
             environment_policy_digest: &environment_digest,
             scalar_profile_digest: &package.scalar_profile_digest,
             subject_digest: &request.subject_digest,
@@ -211,6 +239,12 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
             response_digest,
             value_digest,
             audit_digest,
+            monotonic_duration_ms: windows::monotonic_millis()
+                .saturating_sub(operation_started)
+                .min(u32::MAX as u64) as u32,
+            execution_state,
+            exit_code: outcome.exit_code,
+            missing_evidence,
         }),
         outcome.timed_out,
     );

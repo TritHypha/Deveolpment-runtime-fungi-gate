@@ -38,6 +38,18 @@ const BOOTSTRAP_ARGUMENT = Buffer.from(
   "utf8",
 );
 
+const PROCESS_OWNER_POLICY =
+  "galerina.windows-job-policy.v1\0active-process=1\0kill-on-close=true";
+
+function packageGraphDigest(workerDigest, protocolDigest) {
+  return createHash("sha256")
+    .update("galerina.requirement-worker-package.v1\0")
+    .update(workerDigest)
+    .update("\0")
+    .update(protocolDigest)
+    .digest("hex");
+}
+
 const request = (flowLocator = "rd0858/unit4/scalar-oracle") => ({
   schemaVersion: 1,
   nonce: "00112233445566778899aabbccddeeff",
@@ -124,12 +136,12 @@ function rawFrame(body, declaredLength = body.length) {
   return Buffer.concat([prefix, Buffer.from(body)]);
 }
 
-function refusalReceipt(child) {
+function refusalReceipt(child, expectedState = "REFUSED") {
   assert.equal(child.error, undefined);
   assert.equal(child.status, 1, child.stderr?.toString("utf8"));
   const receipt = decodeCanonicalFrame("receipt", child.stdout);
   assert.equal(receipt.authorizing, false);
-  assert.equal(receipt.executionState, "REFUSED");
+  assert.equal(receipt.executionState, expectedState);
   return receipt;
 }
 
@@ -153,7 +165,7 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.deepEqual(receipt.command, ["cargo", "build", "--release", "--locked"]);
     assert.deepEqual(receipt.compileCfg, ["test_contract"]);
     assert.equal(receipt.binarySha256, evidence.binarySha256);
-    assert.equal(Object.keys(receipt.inputs).length, 8);
+    assert.equal(Object.keys(receipt.inputs).length, 10);
   });
 
   it("builds a separately pinned single-use worker launcher and registry", () => {
@@ -166,6 +178,12 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.equal(registry.launcher.digest, evidence.workerLauncherBinarySha256);
     assert.equal(registry.worker.digest, evidence.compilePins.requirementWorkerDigest);
     assert.match(registry.worker.path, /requirement-process-worker\.js$/u);
+    assert.equal(registry.protocol.digest, evidence.compilePins.requirementProtocolDigest);
+    assert.match(registry.protocol.path, /requirement-process-protocol\.js$/u);
+    assert.equal(
+      registry.packageRootDigest,
+      packageGraphDigest(registry.worker.digest, registry.protocol.digest),
+    );
     assert.equal(registry.timeoutMs, 1_500);
   });
 
@@ -181,6 +199,14 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.equal(receipt.authorizing, false);
     assert.equal(receipt.workerDigest, registry.worker.digest);
     assert.equal(receipt.runtimeDigest, registry.runtime.digest);
+    assert.equal(
+      receipt.registryDigest,
+      createHash("sha256").update(readFileSync(WORKER_REGISTRY)).digest("hex"),
+    );
+    assert.equal(
+      receipt.processOwnerDigest,
+      createHash("sha256").update(PROCESS_OWNER_POLICY).digest("hex"),
+    );
     assert.equal(receipt.subjectDigest, admittedRequest.subjectDigest);
     assert.equal(receipt.flowDigest, admittedRequest.flowDigest);
     assert.equal(receipt.argumentDigest, admittedRequest.argumentDigest);
@@ -189,6 +215,24 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.notEqual(receipt.auditDigest, "0".repeat(64));
     assert.equal(receipt.partial, false);
     assert.equal(receipt.truncated, false);
+    assert.deepEqual(receipt.missingEvidence, []);
+  });
+
+  it("refuses a changed imported protocol digest before worker bootstrap", () => {
+    const fixture = registryFixture((value) => {
+      value.protocol.digest = "f".repeat(64);
+      value.packageRootDigest = packageGraphDigest(value.worker.digest, value.protocol.digest);
+    }, WORKER_REGISTRY);
+    try {
+      const receipt = refusalReceipt(runWorkerLauncher(
+        encodeCanonicalFrame("launcher-request", bootstrapRequest()),
+        ["--registry", fixture.path],
+      ));
+      assert.equal(receipt.refusalCode, "PROTOCOL_DIGEST");
+      assert.equal(receipt.responseDigest, "0".repeat(64));
+    } finally {
+      rmSync(fixture.directory, { recursive: true, force: true });
+    }
   });
 
   it("refuses a changed worker digest before the READY exchange", () => {
@@ -340,9 +384,22 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     const receipt = refusalReceipt(runLauncher(
       encodeCanonicalFrame("launcher-request", request("rd0858/unit4/timeout")),
       ["--registry", REGISTRY],
-    ));
+    ), "ERROR");
+    const registryDigest = createHash("sha256").update(readFileSync(REGISTRY)).digest("hex");
     assert.equal(receipt.refusalCode, "WORKER_TIMEOUT");
     assert.equal(receipt.timedOut, true);
+    assert.equal(receipt.registryDigest, registryDigest);
+    assert.equal(
+      receipt.processOwnerDigest,
+      createHash("sha256").update(PROCESS_OWNER_POLICY).digest("hex"),
+    );
+    assert.ok(receipt.monotonicDurationMs >= 1);
+    assert.equal(receipt.exitCode, 126);
+    assert.deepEqual(receipt.missingEvidence, [
+      "evidence/audit",
+      "evidence/response",
+      "evidence/value",
+    ]);
   });
 
   it("blocks an extra child inside the owned Job Object", () => {

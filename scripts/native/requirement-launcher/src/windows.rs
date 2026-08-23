@@ -26,7 +26,9 @@ const JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE: Dword = 0x0000_2000;
 const WAIT_OBJECT_0: Dword = 0;
 const WAIT_TIMEOUT: Dword = 0x102;
 const STILL_ACTIVE: Dword = 259;
-const TERMINATION_EXIT: Dword = 126;
+pub const TERMINATION_EXIT: Dword = 126;
+const PROCESS_OWNER_POLICY: &[u8] =
+    b"galerina.windows-job-policy.v1\0active-process=1\0kill-on-close=true";
 
 #[repr(C)]
 struct StartupInfoW {
@@ -204,7 +206,6 @@ pub struct WorkerOutcome {
 pub struct WorkerExchange<Ready> {
     pub ready: Ready,
     pub result_frame: Vec<u8>,
-    pub elapsed_ms: u32,
 }
 
 impl Drop for OwnedWorker {
@@ -225,6 +226,14 @@ fn close(handle: Handle) {
     if !handle.is_null() {
         unsafe { CloseHandle(handle) };
     }
+}
+
+pub fn monotonic_millis() -> u64 {
+    unsafe { GetTickCount64() }
+}
+
+pub fn process_owner_digest() -> String {
+    sha256_hex(PROCESS_OWNER_POLICY)
 }
 
 fn wide_nul(value: &OsStr) -> Vec<u16> {
@@ -479,7 +488,7 @@ pub fn create_suspended_worker(
 }
 
 fn remaining(deadline: u64) -> Result<Dword, &'static str> {
-    let now = unsafe { GetTickCount64() };
+    let now = monotonic_millis();
     if now >= deadline {
         return Err("WORKER_TIMEOUT");
     }
@@ -578,7 +587,7 @@ fn write_all(pipe: Handle, bytes: &[u8]) -> Result<(), &'static str> {
 pub fn exchange_worker<Ready, VerifyReady>(
     worker: &mut OwnedWorker,
     request: &[u8],
-    timeout_ms: u32,
+    deadline: u64,
     verify_ready: VerifyReady,
 ) -> Result<WorkerExchange<Ready>, &'static str>
 where
@@ -587,19 +596,15 @@ where
     if !worker.resumed {
         return Err("PROCESS_NOT_RESUMED");
     }
-    let started = unsafe { GetTickCount64() };
-    let deadline = started.saturating_add(timeout_ms as u64);
     let ready_frame = read_frame(worker, deadline)?;
     let ready = verify_ready(&ready_frame)?;
     write_all(worker.stdin_write, request)?;
     close(worker.stdin_write);
     worker.stdin_write = null_mut();
     let result_frame = read_frame(worker, deadline)?;
-    let elapsed = unsafe { GetTickCount64() }.saturating_sub(started);
     Ok(WorkerExchange {
         ready,
         result_frame,
-        elapsed_ms: elapsed.min(Dword::MAX as u64) as u32,
     })
 }
 
@@ -637,11 +642,22 @@ pub fn kill_owned_tree(worker: &mut OwnedWorker) {
 
 pub fn wait_owned_worker(
     worker: &mut OwnedWorker,
-    timeout_ms: u32,
+    deadline: u64,
 ) -> Result<WorkerOutcome, &'static str> {
     if !worker.resumed {
         return Err("PROCESS_NOT_RESUMED");
     }
+    let timeout_ms = match remaining(deadline) {
+        Ok(value) => value,
+        Err("WORKER_TIMEOUT") => {
+            kill_owned_tree(worker);
+            return Ok(WorkerOutcome {
+                exit_code: TERMINATION_EXIT,
+                timed_out: true,
+            });
+        }
+        Err(code) => return Err(code),
+    };
     let wait = unsafe { WaitForSingleObject(worker.process, timeout_ms) };
     if wait == WAIT_TIMEOUT {
         kill_owned_tree(worker);
