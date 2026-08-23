@@ -8,13 +8,14 @@ IMPLEMENTATION REVIEW HOLD
 **Decision basis:** RD-0858 Unit 4 independent re-review Fix Round 6 at
 `.superpowers/sdd/2026-08-21-rd-0858-requirement-interpreter/task-1-independent-rereview-6.md`
 
-**Implementation checkpoint:** Independent review of exact HEAD `a1544200`
-returned `HOLD` on package-graph identity, receipt truth and whole-operation
-deadline coverage. Local repair `8f76ff45` binds the imported protocol bytes,
-uses one pre-registry deadline and reports the available execution evidence;
-fresh author verification passes. A new exact-head graph and independent review
-are still required. This checkpoint does not authorize Task 2, Tasks 6-8,
-`.fungi` authoring or conversion, GIR authority, SLIDE admission or a VOK lease.
+**Implementation checkpoint:** Independent review of exact graph target
+`918f6259` confirmed that the product refuses actual imported-protocol mutation
+and accounts for pre-registry time, but returned `HOLD` because the permanent
+test mutated only registry metadata and the checkpoint text was stale. Local
+test repair `f1c470a2` now mutates the actual imported bytes and has causal
+RED/GREEN evidence. A new exact-head graph and independent review are still
+required. This checkpoint does not authorize Task 2, Tasks 6-8, `.fungi`
+authoring or conversion, GIR authority, SLIDE admission or a VOK lease.
 
 ## 1. Decision
 

@@ -21,11 +21,23 @@ counts or open items that a newer section explicitly supersedes.
   permanent protocol-digest and timeout receipt controls were RED before the
   repair and GREEN after it.
 - [x] Re-prove the stop boundary from Unit 4 start `895fde40`: 37 changed paths,
-  zero `.fungi` paths; the worker admits only `rd0858/unit4/bootstrap-probe` and
-  emits only non-authorizing `REFUSED` or `ERROR` evidence.
-- [!] Keep Task 5 on implementation-review `HOLD` until the repaired exact HEAD
-  has a fresh exact graph and a new independent PASS. Task 2, Tasks 6-8,
-  `.fungi`, GIR, SLIDE, VOK and production authority remain locked.
+  zero `.fungi` paths at the source-repair checkpoint; the worker admits only
+  `rd0858/unit4/bootstrap-probe` and emits only non-authorizing `REFUSED` or
+  `ERROR` evidence.
+- [X] Independent review of exact graph checkpoint `918f6259` returned `HOLD`:
+  product behavior refused an actual imported-protocol mutation and honored the
+  pre-registry deadline, but the permanent test changed registry metadata rather
+  than imported bytes and this checkpoint text was stale. The receipt is in
+  `docs/reports/rd-0858-unit4-task5-repair-independent-review-hold-2026-08-23.md`.
+- [x] Replace the non-discriminating protocol control at local commit `f1c470a2`.
+  The permanent test now changes the actual imported protocol bytes and proves
+  the injected marker remains absent. A controlled admission-bypass mutation
+  made that test fail before the real admission code was restored and the test
+  returned GREEN.
+- [!] Keep Task 5 on implementation-review `HOLD` until the new exact checkpoint
+  has a fresh graph and a new independent PASS. The current range is 39 changed
+  paths with zero `.fungi` paths after recording this HOLD receipt. Task 2,
+  Tasks 6-8, `.fungi`, GIR, SLIDE, VOK and production authority remain locked.
 
 ### Chapter close and process-root gate - 2026-08-22
 

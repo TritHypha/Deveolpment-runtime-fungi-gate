@@ -18,7 +18,7 @@
 | 2 - causal old-route controls | LOCKED | Not implemented; the pre-conversion stop does not authorize this source-bearing task. |
 | 3 - native launcher skeleton | COMPLETE | Local commit `c85dd500`; current native and launcher checks pass. |
 | 4 - process identity and ownership | COMPLETE | Local commit `ffe47734`; current launcher controls pass. |
-| 5 - single-use clean worker | REPAIRED / REVIEW HOLD | Independent review held `a1544200`; package/evidence/deadline repair is local at `8f76ff45`, author gates pass, and fresh graph plus independent re-review remain pending. |
+| 5 - single-use clean worker | REPAIRED / REVIEW HOLD | Product repair `8f76ff45` and graph target `918f6259` passed hostile behavior checks, but review held the non-discriminating permanent test; test repair `f1c470a2` has causal RED/GREEN evidence and needs a fresh exact graph plus independent re-review. |
 | 6-8 - execution, adapter and admission | LOCKED | No implementation or conversion authority. |
 
 This table is the current checkpoint. The task checkboxes below preserve the
@@ -360,6 +360,15 @@ execution evidence into the receipt, and uses one deadline created before
 registry verification. The repaired focused suite passes 52/52 and the adjacent
 semantic/interpreter/owned-process suite passes 50/50. These remain author
 results until a fresh exact-head graph and independent re-review PASS.
+
+Independent review of the repaired graph target `918f6259` confirmed the
+actual imported-protocol mutation is refused before bootstrap and a pre-registry
+delay consumes the same timeout, with truthful `ERROR` evidence. It still held
+the checkpoint because the committed mutation test changed only registry
+metadata. Commit `f1c470a2` replaces that control with an actual imported-byte
+mutation and proves causal RED under an admission bypass and GREEN after the
+real admission path is restored. Task 5 remains on HOLD until that checkpoint
+has a fresh exact graph and independent PASS.
 
 ## Pre-Conversion Stop Gate
 
