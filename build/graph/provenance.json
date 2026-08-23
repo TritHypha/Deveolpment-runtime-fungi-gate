@@ -1,7 +1,7 @@
 {
   "tool": "project-graph-generator",
   "authority": "NONE",
-  "gitCommit": "fe7330565a5c87bdc38ef42eb48e839bdc7f7b69",
-  "builtAt": "2026-08-23T19:14:01.000Z",
+  "gitCommit": "511e23a7e36f1a87ed9f68f340257f0b0b913783",
+  "builtAt": "2026-08-23T19:20:19.000Z",
   "node": "v24.18.0"
 }
