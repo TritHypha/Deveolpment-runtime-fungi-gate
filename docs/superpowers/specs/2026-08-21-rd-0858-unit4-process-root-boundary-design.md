@@ -8,12 +8,13 @@ IMPLEMENTATION REVIEW HOLD
 **Decision basis:** RD-0858 Unit 4 independent re-review Fix Round 6 at
 `.superpowers/sdd/2026-08-21-rd-0858-requirement-interpreter/task-1-independent-rereview-6.md`
 
-**Implementation checkpoint:** The pre-conversion milestone is implemented
-through the ready-before-request repair and its graph/documentation fixed point.
-Current author verification is green, but an independent exact-head
-implementation review is still required. This checkpoint does not authorize
-Task 2, Tasks 6-8, `.fungi` authoring or conversion, GIR authority, SLIDE
-admission or a VOK lease.
+**Implementation checkpoint:** Independent review of exact HEAD `a1544200`
+returned `HOLD` on package-graph identity, receipt truth and whole-operation
+deadline coverage. Local repair `8f76ff45` binds the imported protocol bytes,
+uses one pre-registry deadline and reports the available execution evidence;
+fresh author verification passes. A new exact-head graph and independent review
+are still required. This checkpoint does not authorize Task 2, Tasks 6-8,
+`.fungi` authoring or conversion, GIR authority, SLIDE admission or a VOK lease.
 
 ## 1. Decision
 

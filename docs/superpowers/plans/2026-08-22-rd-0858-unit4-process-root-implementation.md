@@ -18,7 +18,7 @@
 | 2 - causal old-route controls | LOCKED | Not implemented; the pre-conversion stop does not authorize this source-bearing task. |
 | 3 - native launcher skeleton | COMPLETE | Local commit `c85dd500`; current native and launcher checks pass. |
 | 4 - process identity and ownership | COMPLETE | Local commit `ffe47734`; current launcher controls pass. |
-| 5 - single-use clean worker | IMPLEMENTED / REVIEW HOLD | Local implementation `c667f00b`, ready-before-request repair `cf768e90`, graph/documentation fixed point `55f53c62`; current author evidence passes, independent exact-head review remains pending. |
+| 5 - single-use clean worker | REPAIRED / REVIEW HOLD | Independent review held `a1544200`; package/evidence/deadline repair is local at `8f76ff45`, author gates pass, and fresh graph plus independent re-review remain pending. |
 | 6-8 - execution, adapter and admission | LOCKED | No implementation or conversion authority. |
 
 This table is the current checkpoint. The task checkboxes below preserve the
@@ -350,6 +350,16 @@ pass, the focused protocol/worker/launcher suite is 51/51, and the broader
 semantics/interpreter/process regression is 96/96. This remains author evidence
 only. Independent exact-head review is pending and does not reopen Task 6 or
 `.fungi` authority.
+
+The first independent implementation review at `a1544200` then returned HOLD:
+the worker's imported protocol module was outside the content-bound registry,
+the receipt hard-coded absent evidence and timeout state, and the launcher reset
+its deadline after admission/setup. Repair `8f76ff45` adds an exact pinned
+protocol record and package-graph digest, carries registry/process-owner and
+execution evidence into the receipt, and uses one deadline created before
+registry verification. The repaired focused suite passes 52/52 and the adjacent
+semantic/interpreter/owned-process suite passes 50/50. These remain author
+results until a fresh exact-head graph and independent re-review PASS.
 
 ## Pre-Conversion Stop Gate
 

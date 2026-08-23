@@ -6,20 +6,26 @@ counts or open items that a newer section explicitly supersedes.
 
 ### Unit 4 Task 5 exact-head verification - 2026-08-23
 
-- [x] Rebind the pre-conversion milestone to clean exact HEAD `55f53c62` and a
-  fresh external graph with 64,682/64,682 nodes, 166,029/166,029 edges and zero
-  skipped files.
-- [x] Replay the current implementation gates: TypeScript typecheck/build and
+- [X] Independent review of exact HEAD `a1544200` returned `HOLD`: the imported
+  protocol module was not content-bound, receipts omitted or misstated material
+  evidence, the deadline started after admission/setup, and this section was
+  stale. The bounded receipt is recorded in
+  `docs/reports/rd-0858-unit4-task5-independent-review-hold-2026-08-23.md`.
+- [x] Repair the three implementation roots at local commit `8f76ff45`: pin and
+  retain the worker's exact protocol dependency, bind the package graph by
+  content, start one deadline before registry verification, and emit truthful
+  registry/process-owner/duration/state/exit/missing-evidence fields.
+- [x] Replay author gates after the repair: TypeScript typecheck/build and
   native format/check pass; the focused protocol/worker/launcher suite passes
-  51/51; the broader semantics/interpreter/process regression passes 96/96.
-  These current counts supersede the older 38/38 and 88/88 author counts below.
-- [x] Re-prove the stop boundary from Unit 4 start `895fde40`: 36 changed paths,
+  52/52; the semantic/interpreter/owned-process regression passes 50/50. The
+  permanent protocol-digest and timeout receipt controls were RED before the
+  repair and GREEN after it.
+- [x] Re-prove the stop boundary from Unit 4 start `895fde40`: 37 changed paths,
   zero `.fungi` paths; the worker admits only `rd0858/unit4/bootstrap-probe` and
   emits only non-authorizing `REFUSED` or `ERROR` evidence.
-- [!] Keep Task 5 on implementation-review `HOLD`. The design already has an
-  independent PASS, but this session's implementation/documentation evidence
-  is author evidence and cannot independently certify itself. Task 2, Tasks
-  6-8, `.fungi`, GIR, SLIDE, VOK and production authority remain locked.
+- [!] Keep Task 5 on implementation-review `HOLD` until the repaired exact HEAD
+  has a fresh exact graph and a new independent PASS. Task 2, Tasks 6-8,
+  `.fungi`, GIR, SLIDE, VOK and production authority remain locked.
 
 ### Chapter close and process-root gate - 2026-08-22
 
