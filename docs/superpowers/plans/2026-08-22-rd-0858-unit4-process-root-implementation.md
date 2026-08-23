@@ -10,6 +10,20 @@
 
 **Spec:** `docs/superpowers/specs/2026-08-21-rd-0858-unit4-process-root-boundary-design.md`
 
+## Live Milestone Status - 2026-08-23
+
+| Task | State | Exact evidence boundary |
+|---|---|---|
+| 1 - bounded protocol | COMPLETE | Local commit `230bada6`; current exact-head tests pass. |
+| 2 - causal old-route controls | LOCKED | Not implemented; the pre-conversion stop does not authorize this source-bearing task. |
+| 3 - native launcher skeleton | COMPLETE | Local commit `c85dd500`; current native and launcher checks pass. |
+| 4 - process identity and ownership | COMPLETE | Local commit `ffe47734`; current launcher controls pass. |
+| 5 - single-use clean worker | IMPLEMENTED / REVIEW HOLD | Local implementation `c667f00b`, ready-before-request repair `cf768e90`, graph/documentation fixed point `55f53c62`; current author evidence passes, independent exact-head review remains pending. |
+| 6-8 - execution, adapter and admission | LOCKED | No implementation or conversion authority. |
+
+This table is the current checkpoint. The task checkboxes below preserve the
+original RED-first procedure and are not a substitute for exact-head evidence.
+
 ## Global Constraints
 
 - Treat the calling Node process, its globals, environment, current directory, PATH, module cache and claimed digests as untrusted.
@@ -330,10 +344,12 @@ Commit the exact Task 5 source, test, builder, protocol and native launcher path
 Implementation review correction: exact review found that the original native
 exchange read `WorkerReady` but wrote the request before validating the ready
 frame. A pinned hostile worker proved the disclosure at 23/24 before the repair.
-Commit `cf768e90` makes ready validation a required pre-write exchange step; the
-same control and the existing valid exchange pass, focused evidence is 38/38 and
-the Unit 4 regression is 88/88. This remains author evidence only. Independent
-exact-head review is pending and does not reopen Task 6 or `.fungi` authority.
+Commit `cf768e90` makes ready validation a required pre-write exchange step. At
+exact checkpoint `55f53c62`, the same hostile control and the valid exchange
+pass, the focused protocol/worker/launcher suite is 51/51, and the broader
+semantics/interpreter/process regression is 96/96. This remains author evidence
+only. Independent exact-head review is pending and does not reopen Task 6 or
+`.fungi` authority.
 
 ## Pre-Conversion Stop Gate
 

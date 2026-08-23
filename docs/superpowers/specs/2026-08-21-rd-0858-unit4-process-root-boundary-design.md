@@ -1,11 +1,19 @@
 # RD-0858 Unit 4 process-root boundary design
 
-**Status:** INDEPENDENT DESIGN PASS; IMPLEMENTATION AUTHORIZED BUT NOT STARTED
+**Status:** INDEPENDENT DESIGN PASS; TASKS 1, 3, 4 AND 5 LOCALLY IMPLEMENTED;
+IMPLEMENTATION REVIEW HOLD
 
 **Date:** 2026-08-21
 
 **Decision basis:** RD-0858 Unit 4 independent re-review Fix Round 6 at
 `.superpowers/sdd/2026-08-21-rd-0858-requirement-interpreter/task-1-independent-rereview-6.md`
+
+**Implementation checkpoint:** The pre-conversion milestone is implemented
+through the ready-before-request repair and its graph/documentation fixed point.
+Current author verification is green, but an independent exact-head
+implementation review is still required. This checkpoint does not authorize
+Task 2, Tasks 6-8, `.fungi` authoring or conversion, GIR authority, SLIDE
+admission or a VOK lease.
 
 ## 1. Decision
 

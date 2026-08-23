@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Unit 4 Task 5 exact-head verification - 2026-08-23
+
+- [x] Rebind the pre-conversion milestone to clean exact HEAD `55f53c62` and a
+  fresh external graph with 64,682/64,682 nodes, 166,029/166,029 edges and zero
+  skipped files.
+- [x] Replay the current implementation gates: TypeScript typecheck/build and
+  native format/check pass; the focused protocol/worker/launcher suite passes
+  51/51; the broader semantics/interpreter/process regression passes 96/96.
+  These current counts supersede the older 38/38 and 88/88 author counts below.
+- [x] Re-prove the stop boundary from Unit 4 start `895fde40`: 36 changed paths,
+  zero `.fungi` paths; the worker admits only `rd0858/unit4/bootstrap-probe` and
+  emits only non-authorizing `REFUSED` or `ERROR` evidence.
+- [!] Keep Task 5 on implementation-review `HOLD`. The design already has an
+  independent PASS, but this session's implementation/documentation evidence
+  is author evidence and cannot independently certify itself. Task 2, Tasks
+  6-8, `.fungi`, GIR, SLIDE, VOK and production authority remain locked.
+
 ### Chapter close and process-root gate - 2026-08-22
 
 - [x] Create and verify a complete Git bundle of the Codex memory index at
