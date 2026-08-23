@@ -103,16 +103,22 @@ counts or open items that a newer section explicitly supersedes.
   recorded stop conditions. Interpreter, checked snapshot, GIR,
   SLIDE, VOK, admission, production and `.fungi` conversion authority remain
   `HOLD`; `011` and `012` remain reserved.
-- [!] The approved pre-conversion implementation plan has now completed Tasks
-  1-5 locally through `c667f00b`. Task 5 adds one bootstrap-only clean worker
-  and an explicit anonymous-pipe handle whitelist. Fresh author evidence at
-  that commit is typecheck/build/native PASS, focused 37/37 and Unit 4
-  regression 87/87. The worker accepts only `bootstrap-probe`, rejects
-  `COMPLETE`, emits a non-authorizing refusal result and closes after one
-  request. No `.fungi` path changed from Unit 4 start `895fde40`. This is an
-  implemented checkpoint, not closure: exact-head graph refresh and independent
-  review are still pending, Tasks 6-8 remain locked, and the global conversion
-  stop remains in force.
+- [!] The approved pre-conversion implementation plan has completed Tasks 1-5
+  locally through repair commit `cf768e90`. Exact review found that `c667f00b`
+  read `WorkerReady` but disclosed the request before validating that frame. A
+  pinned hostile worker made the control RED at 23/24 with marker `received` and
+  `WORKER_PIPE_READ`; `cf768e90` moves validation ahead of the write and turns
+  the unchanged control green. Fresh exact-commit author evidence is
+  typecheck/build/native PASS, focused 38/38 and Unit 4 regression 88/88. The
+  external graph is exact at 64,688 nodes and 166,994 edges with zero skipped
+  files; Myco indexes 9,134 files and resolves the new verifier seam; Hypha
+  self-tests 58/58 while preserving its unreachable-upstream provenance check
+  as SKIPPED. No `.fungi` path changed from Unit 4 start `895fde40`. The audit
+  map is still DRAFT at digest `46e6d2ba`; exact-head independent implementation
+  review remains pending, Tasks 6-8 stay locked, and the conversion stop remains
+  in force. The AGENTS bounded scanner reports zero findings in the changed
+  JavaScript paths but 418 historical findings across the wider `scripts` tree,
+  so it is not repository-wide closure evidence.
 - [ ] Implement one complete route through lexer, parser/AST, type, effect,
   taint/value-state, governance, interpreter, checked snapshot, detached GIR,
   canonicalization, SLIDE re-derivation and VOK admission. Parser-only,

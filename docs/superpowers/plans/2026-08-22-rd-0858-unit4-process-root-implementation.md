@@ -327,6 +327,14 @@ Run: `node --test packages-galerina/galerina-core-compiler/tests/requirement-pro
 
 Commit the exact Task 5 source, test, builder, protocol and native launcher paths only with message `feat: bootstrap single-use RD-0858 worker`.
 
+Implementation review correction: exact review found that the original native
+exchange read `WorkerReady` but wrote the request before validating the ready
+frame. A pinned hostile worker proved the disclosure at 23/24 before the repair.
+Commit `cf768e90` makes ready validation a required pre-write exchange step; the
+same control and the existing valid exchange pass, focused evidence is 38/38 and
+the Unit 4 regression is 88/88. This remains author evidence only. Independent
+exact-head review is pending and does not reopen Task 6 or `.fungi` authority.
+
 ## Pre-Conversion Stop Gate
 
 Tasks 1, 3, 4 and 5 form the current owner-authorized milestone. Before proceeding, prove:
