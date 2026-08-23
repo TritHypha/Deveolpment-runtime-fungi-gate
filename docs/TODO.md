@@ -34,10 +34,19 @@ counts or open items that a newer section explicitly supersedes.
   the injected marker remains absent. A controlled admission-bypass mutation
   made that test fail before the real admission code was restored and the test
   returned GREEN.
-- [!] Keep Task 5 on implementation-review `HOLD` until the new exact checkpoint
-  has a fresh graph and a new independent PASS. The current range is 39 changed
-  paths with zero `.fungi` paths after recording this HOLD receipt. Task 2,
-  Tasks 6-8, `.fungi`, GIR, SLIDE, VOK and production authority remain locked.
+- [x] Fresh independent review of exact checkpoint `e55c7b9e` returned `PASS`
+  with zero findings. It independently reproduced a discriminating 0/1 RED
+  under protocol-admission bypass, then 52/52 GREEN on the unchanged target;
+  typecheck/build, Rust checks, 50/50 adjacent regressions, 9/9 graph checks,
+  39 changed paths and zero `.fungi` paths also passed. The receipt is in
+  `docs/reports/rd-0858-unit4-task5-independent-review-pass-2026-08-23.md`.
+- [x] Close Task 5 at the non-authorizing pre-conversion boundary. The launcher
+  and worker still admit only the scalar bootstrap probe; this PASS does not
+  grant GIR, SLIDE, VOK, production or `.fungi` authority.
+- [!] Owner direction on 2026-08-23 authorizes continuing the remaining
+  non-`.fungi` prerequisites until `.fungi` authoring or conversion is the next
+  action. Execute those tasks sequentially and stop before creating, editing,
+  building or admitting any `.fungi` file.
 
 ### Chapter close and process-root gate - 2026-08-22
 
@@ -56,17 +65,17 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Record the approved RD-0858 Unit 4 process-root design and its independent
   architecture review. The design gate is closed; it does not prove an
   implementation, a trusted process root, or an admitted execution route.
-- [!] The Unit 4 pre-conversion implementation milestone is locally implemented
-  at `c667f00b`: native admitted launcher, single-use clean worker, fixed
-  runtime/package identities, bounded canonical protocol and hostile bootstrap
-  controls. Keep the milestone on `HOLD` until an exact-head graph refresh and
-  fresh independent review both pass.
+- [x] The Unit 4 Task 5 pre-conversion checkpoint is independently `PASS` at
+  exact target `e55c7b9e`; its launcher, worker, package identity, deadline and
+  permanent hostile-protocol controls have current evidence. Later tasks retain
+  their own gates and cannot inherit this verdict.
 - [!] Keep the separate Agent Operations prompt-span classifier under its own
   repository custody and immutable review. Its graph or green counts are not
   Galerina evidence, and no in-progress candidate can reopen conversion.
-- [ ] Preserve the global pre-conversion stop. No new `.fungi` authoring,
-  TypeScript-to-Fungi conversion, GIR authority, SLIDE admission or VOK lease is
-  authorized by this chapter-close record.
+- [ ] Preserve the global `.fungi` stop while completing only the remaining
+  non-`.fungi` prerequisites. No `.fungi` authoring, TypeScript-to-Fungi
+  conversion, GIR authority, SLIDE admission or VOK lease is authorized by this
+  chapter-close record.
 
 ### Requirement blocks pre-conversion stop - 2026-08-20
 

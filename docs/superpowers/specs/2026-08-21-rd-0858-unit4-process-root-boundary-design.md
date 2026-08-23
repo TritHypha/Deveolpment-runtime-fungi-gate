@@ -1,21 +1,21 @@
 # RD-0858 Unit 4 process-root boundary design
 
-**Status:** INDEPENDENT DESIGN PASS; TASKS 1, 3, 4 AND 5 LOCALLY IMPLEMENTED;
-IMPLEMENTATION REVIEW HOLD
+**Status:** INDEPENDENT DESIGN PASS; TASKS 1, 3, 4 AND 5 IMPLEMENTED;
+TASK 5 INDEPENDENT IMPLEMENTATION PASS
 
 **Date:** 2026-08-21
 
 **Decision basis:** RD-0858 Unit 4 independent re-review Fix Round 6 at
 `.superpowers/sdd/2026-08-21-rd-0858-requirement-interpreter/task-1-independent-rereview-6.md`
 
-**Implementation checkpoint:** Independent review of exact graph target
-`918f6259` confirmed that the product refuses actual imported-protocol mutation
-and accounts for pre-registry time, but returned `HOLD` because the permanent
-test mutated only registry metadata and the checkpoint text was stale. Local
-test repair `f1c470a2` now mutates the actual imported bytes and has causal
-RED/GREEN evidence. A new exact-head graph and independent review are still
-required. This checkpoint does not authorize Task 2, Tasks 6-8, `.fungi`
-authoring or conversion, GIR authority, SLIDE admission or a VOK lease.
+**Implementation checkpoint:** Fresh independent review of exact graph target
+`e55c7b9e` returned `PASS` with zero findings. The permanent test mutates the
+actual imported protocol bytes, independently turns RED when protocol admission
+is bypassed, and returns GREEN on the unchanged target. Package identity,
+receipt truth, the whole-operation deadline, proportional gates and the
+39-path/zero-`.fungi` range also passed. Owner direction permits the remaining
+non-`.fungi` prerequisites to continue, but this checkpoint does not authorize
+`.fungi` authoring or conversion, GIR authority, SLIDE admission or a VOK lease.
 
 ## 1. Decision
 

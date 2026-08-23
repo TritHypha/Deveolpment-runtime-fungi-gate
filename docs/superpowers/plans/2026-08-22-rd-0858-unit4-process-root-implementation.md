@@ -15,11 +15,11 @@
 | Task | State | Exact evidence boundary |
 |---|---|---|
 | 1 - bounded protocol | COMPLETE | Local commit `230bada6`; current exact-head tests pass. |
-| 2 - causal old-route controls | LOCKED | Not implemented; the pre-conversion stop does not authorize this source-bearing task. |
+| 2 - causal old-route controls | READY | Owner released the remaining non-`.fungi` prerequisites on 2026-08-23; implement without creating or editing `.fungi` files. |
 | 3 - native launcher skeleton | COMPLETE | Local commit `c85dd500`; current native and launcher checks pass. |
 | 4 - process identity and ownership | COMPLETE | Local commit `ffe47734`; current launcher controls pass. |
-| 5 - single-use clean worker | REPAIRED / REVIEW HOLD | Product repair `8f76ff45` and graph target `918f6259` passed hostile behavior checks, but review held the non-discriminating permanent test; test repair `f1c470a2` has causal RED/GREEN evidence and needs a fresh exact graph plus independent re-review. |
-| 6-8 - execution, adapter and admission | LOCKED | No implementation or conversion authority. |
+| 5 - single-use clean worker | COMPLETE / INDEPENDENT PASS | Exact target `e55c7b9e`; independent RED/GREEN review passed with zero findings, 52/52 focused, 50/50 adjacent, 9/9 graph and zero `.fungi`. |
+| 6-8 - execution, adapter and admission | SEQUENTIALLY GATED | Non-`.fungi` prerequisites may continue after Task 2; stop if any step requires `.fungi`, GIR, SLIDE or VOK authority. |
 
 This table is the current checkpoint. The task checkboxes below preserve the
 original RED-first procedure and are not a substitute for exact-head evidence.
@@ -39,7 +39,7 @@ original RED-first procedure and are not a substitute for exact-head evidence.
 - There is no in-process rescue.
 - Unsupported platforms refuse.
 - Commit locally only. Do not push, open a pull request, merge, reset, clean, restore or discard unrelated work.
-- Before and after every task, require an empty `.fungi` path set in the task diff. Under the current owner boundary, stop before Task 6: do not create, edit, convert, stage, build or admit any `.fungi` file.
+- Before and after every task, require an empty `.fungi` path set in the task diff. Owner direction permits sequential non-`.fungi` prerequisite work through the pre-conversion boundary; stop before creating, editing, converting, staging, building or admitting any `.fungi` file.
 - Refresh the full code graph after every source-bearing checkpoint and require `indexed_head_sha` to equal Git HEAD before claiming fresh structural evidence.
 
 ---
@@ -163,7 +163,7 @@ Commit: `git add packages-galerina/galerina-core-compiler/src/requirement-proces
 
 ## Task 2: Permanent Causal Process-Root RED Controls
 
-**Current owner gate:** Do not execute this task while the no-`.fungi` boundary is active. The controls parse inline Galerina source to prove the old route; wait for an explicit boundary release.
+**Current owner gate:** Released on 2026-08-23 for this non-`.fungi` control task. The controls may parse inline Galerina source to prove the old route, but no `.fungi` file may be created, edited, built or admitted.
 
 **Files:**
 - Create: `packages-galerina/galerina-core-compiler/tests/requirement-process-root-red.test.mjs`
