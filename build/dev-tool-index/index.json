@@ -4,7 +4,7 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 175,
+    "devTools": 176,
     "auditTools": 91,
     "toolsInCadence": 120,
     "proofs": 40
@@ -300,7 +300,7 @@
       "tests": 6382,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 268,
+      "files": 270,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -1908,7 +1908,6 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
-        "sinks/taint",
         "signing/fusion",
         "naming",
         "source-hygiene",
@@ -2369,8 +2368,7 @@
         "diagnostics",
         "mutation-testing",
         "teaching-corpus",
-        "web-stub",
-        "proofs"
+        "web-stub"
       ]
     },
     {
@@ -3031,6 +3029,15 @@
       ]
     },
     {
+      "name": "build-requirement-launcher.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": []
+    },
+    {
       "name": "check-gate-injection.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -3157,7 +3164,6 @@
         "signing/fusion",
         "governance",
         "secrets/privacy",
-        "source-hygiene",
         "graph/index"
       ]
     },
@@ -3402,8 +3408,7 @@
       "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
-        "governance",
-        "graph/index"
+        "governance"
       ]
     },
     {
@@ -3807,7 +3812,6 @@
       "package-usage.mjs",
       "phase-close-hook.mjs",
       "rd-absorb.mjs",
-      "rebuild-fusable-packages.mjs",
       "relink-workspace.mjs",
       "repoint-kb-refs.mjs",
       "subject-galerina-compile.mjs",
@@ -4141,7 +4145,6 @@
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
-      "fungi-source-capability-inventory.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
       "validate-workspace-pointers.mjs"
@@ -4154,7 +4157,6 @@
       "audit-license-compat.mjs",
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
-      "audit-wat-emitter-mutation.mjs",
       "run-proofs.mjs",
       "license-rollout.mjs"
     ],
@@ -4166,7 +4168,6 @@
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
       "audit-papers-index.mjs",
-      "audit-private-doc-leak.mjs",
       "audit-registry-fixtures.mjs",
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
@@ -5699,6 +5700,15 @@
     },
     {
       "tool": "build-receipt-bound-slide-package.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "build-requirement-launcher.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
       "via": [],
