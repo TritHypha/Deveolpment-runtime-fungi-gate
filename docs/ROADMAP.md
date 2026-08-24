@@ -1,7 +1,28 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-13
-Branch: `codex/rd-0792-synthesize-only`
+Date: 2026-08-24
+Branch: `codex/rd-0858-unit4-process-root`
+
+## Current pre-Fungi boundary - 2026-08-24
+
+The current executable route is Galerina checked source -> immutable checked
+snapshot -> width-independent canonical GIR -> detached artifact -> SLIDE
+registered physical profile and independent re-derivation -> VOK admission ->
+one affine lease -> terminal receipt or refusal. Lyth supplies reusable proof
+work but cannot mint `ALLOW`. The later `.gate` synthesis experiment remains a
+separate non-authorizing laboratory branch.
+
+Scalar profile `1` is the current active reference. Profiles `32`, `64` and
+`256` are registered but inactive in current SLIDE source. The adopted build
+order remains `1`, then `64`, then `256`; `32` is an explicit compatibility
+replan, never a preferred profile or silent runtime rescue.
+
+The current stop is still RD-0858 Unit 4 Task 6 Step 1: no already admitted
+fixed checked scalar-flow artifact exists. Creating or admitting that artifact
+crosses the owner-enforced `.fungi` boundary. All work in this checkpoint stops
+before that action. See
+`docs/architecture/galerina-slide-vok-current-flow-2026-08-24.md` for the
+source-verified flow, graph-view design and phased verification map.
 
 ## Detached scalar authority route - 2026-08-17
 

@@ -4,6 +4,37 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Pre-Fungi flow, graph and verification checkpoint - 2026-08-24
+
+- [x] Re-derive the current Galerina -> detached canonical GIR -> SLIDE -> VOK
+  route from exact source and fresh structural graphs. Galerina owns semantic
+  bytes; SLIDE owns profile planning and physical re-derivation; VOK owns the
+  affine lease and terminal receipt; Lyth remains non-authorizing.
+- [x] Confirm the current physical-profile state: scalar `1` is the active
+  reference; `32`, `64` and `256` are registered but inactive. The adopted
+  implementation order remains `1`, then `64`, then `256`, with `32` only an
+  explicit admission-time compatibility replan.
+- [x] Map future `.fungi` work with Myco positive discovery and the structural
+  graph without creating or changing any `.fungi` or `.gate` source. The map is
+  in `docs/architecture/galerina-slide-vok-current-flow-2026-08-24.md`.
+- [x] Review the built-in assurance shape. `run-phase-close.mjs` consumes one
+  governed manifest and runs entries sequentially under one suite lease with
+  per-entry deadlines, output caps and explicit receipts. Do not run the
+  independent estates concurrently.
+- [!] The locator-only Codex memory working set is `STALE` on both the Galerina
+  repository head and TODO digest. Refresh it only through the governed memory
+  update route; do not turn `MEMORY.md` into a task-body warehouse.
+- [!] Roadmap drift was detected before this checkpoint. Regenerate its single
+  canonical generated region, SVG and provenance only after the owner inputs
+  are committed, then recheck exact bytes.
+- [ ] Add three typed filtered views over one exact-head structural graph:
+  host `.ts/.mjs`, Fungi semantic `.fungi`, and non-authorizing Gate laboratory
+  `.gate`. Bind all view digests and rules to one manifest; do not create
+  independent competing authority graphs or combine `.fungi` and `.gate`.
+- [ ] Keep the `.fungi` stop closed. Task 6 Step 1 still lacks an already
+  admitted fixed checked scalar-flow artifact; creating or admitting it is the
+  next productive action and requires an explicit boundary reopening.
+
 ### Unit 4 Task 5 exact-head verification - 2026-08-23
 
 - [X] Independent review of exact HEAD `a1544200` returned `HOLD`: the imported
