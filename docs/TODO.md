@@ -32,9 +32,15 @@ counts or open items that a newer section explicitly supersedes.
 - [!] The locator-only Codex memory working set is `STALE` on both the Galerina
   repository head and TODO digest. Refresh it only through the governed memory
   update route; do not turn `MEMORY.md` into a task-body warehouse.
-- [!] Roadmap drift was detected before this checkpoint. Regenerate its single
-  canonical generated region, SVG and provenance only after the owner inputs
-  are committed, then recheck exact bytes.
+- [x] Resolve the detected roadmap drift through its provenance guard. The
+  owner inputs, graph/registry outputs and roadmap outputs are committed in
+  dependency order; the final repository graph check passes 9/9.
+- [x] Close the tracked index estate sequentially: code index and diagnostic
+  registry reach a fixed point at 987 codes; unit registry checks 157
+  currencies; contract registry checks 3,938 contracts across 2,974 `.fungi`
+  files; 296 documentation indexes link 1,992 documents; and the KB index
+  checks 1,956 documents. Myco and the external structural graphs are refreshed
+  only after the final tracked commit.
 - [ ] Add three typed filtered views over one exact-head structural graph:
   host `.ts/.mjs`, Fungi semantic `.fungi`, and non-authorizing Gate laboratory
   `.gate`. Bind all view digests and rules to one manifest; do not create
