@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { BENCHMARK_TO_GRAPH_STAGES, runBenchmarkToGraph } from "../src/run-to-graph.mjs";
@@ -14,6 +15,8 @@ const EXPECTED_IDS = Object.freeze([
   "history",
   "guard",
 ]);
+
+const PACKAGE = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
 function harness(overrides = {}) {
   const calls = [];
@@ -63,6 +66,16 @@ test("the full benchmark automation has one closed direct-argv stage order", () 
   assert.equal(receipt.stages.every((stage) => stage.status === "PASS"), true);
   assert.equal(JSON.stringify(receipt).includes("C:\\"), false);
   assert.equal(state.published.length, 1);
+});
+
+test("the standard bench command delegates to the full publication pipeline", () => {
+  assert.equal(PACKAGE.scripts.bench, "npm run benchmark:publish");
+  assert.equal(PACKAGE.scripts["benchmark:publish"], "node src/run-to-graph.mjs");
+
+  const render = BENCHMARK_TO_GRAPH_STAGES.find((stage) => stage.id === "render");
+  assert.ok(render);
+  assert.equal(render.outputs.includes("results/benchmark-chart-latest.html"), true);
+  assert.equal(render.outputs.includes("results/benchmark-chart-standalone.html"), true);
 });
 
 test("the first nonzero child stops every later stage and publishes no receipt", () => {

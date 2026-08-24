@@ -95,7 +95,7 @@
     "audit:slide-vade": "node src/audit-slide-vade.mjs",
     "audit:slide-vade:selftest": "node src/audit-slide-vade.mjs --self-test",
     "snapshot": "node src/snapshot.mjs",
-    "bench": "node --expose-gc src/runner.mjs --quick && node src/compare.mjs && npm run audit",
+    "bench": "npm run benchmark:publish",
     "run:diagnostic": "node src/diagnostic-runner.mjs",
     "run:diagnostic-suite": "node --expose-gc src/runner.mjs --diagnostic",
     "run:fault-injection": "node src/diagnostic-runner.mjs --benchmark toxic-input --benchmark governance-violation",

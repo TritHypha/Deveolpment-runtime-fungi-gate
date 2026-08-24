@@ -4,7 +4,7 @@ Worktree session deliverable. Authoritative roadmap entry: `../../../ZTF-Knowled
 
 ## OWNER POLICY (do this in the main session)
 When the owner asks for benchmarks: run the **FULL** suite (no `--quick`), tables **ordered by winners**, plus the audit.
-- `npm run bench` = `node --expose-gc src/runner.mjs` (full) → `compare` → `audit`.
+- `npm run bench` delegates to the fail-closed `benchmark:publish` pipeline: full measurement → noise gate → audits → reports/charts → history → regression guard.
 - Never use `run:quick` for owner-facing results (it's CI/dev only: 3s compute-mix, reduced iterations).
 
 ## What changed
@@ -32,5 +32,5 @@ Confirmed three language gaps (full detail + suggested R&D job in roadmap §8):
 cd packages-galerina/galerina-devtools-benchmarks
 npm test          # synthetic truth logic (28 cases)
 npm run audit     # truth invariants over results/latest.json
-npm run bench     # full run + compare + audit (owner-facing)
+npm run bench     # full owner-facing run + audits + reports/charts + history/guard
 ```

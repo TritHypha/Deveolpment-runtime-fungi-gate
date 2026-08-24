@@ -86,10 +86,10 @@ Fail-closed and topological (leaves first); a build failure aborts the whole cha
 For the next publication-quality run, use the repository-owned automation:
 
 ```powershell
-npm run benchmark:publish
+npm run bench
 ```
 
-This is the full measurement-to-graph path. It runs the unfiltered benchmark,
+`bench` delegates to `benchmark:publish`, the full measurement-to-graph path. It runs the unfiltered benchmark,
 fresh noise measurement, SLIDE and truth audits, all current report/chart/table
 owners, the historic WASM-zero page, history snapshot and regression guard in
 one fail-closed order. The first failed or stale stage stops publication. A
