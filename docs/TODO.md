@@ -41,17 +41,24 @@ counts or open items that a newer section explicitly supersedes.
   files; 296 documentation indexes link 1,992 documents; and the KB index
   checks 1,956 documents. Myco and the external structural graphs are refreshed
   only after the final tracked commit.
-- [ ] Add three typed filtered views over one exact-head structural graph:
-  host `.ts/.mjs`, Fungi semantic `.fungi`, and non-authorizing Gate laboratory
-  `.gate`. Bind all view digests and rules to one manifest; do not create
-  independent competing authority graphs or combine `.fungi` and `.gate`.
+- [x] Build one reusable typed-view envelope over a supplied `PROJECT` graph:
+  HOST `.ts/.mjs` and related host suffixes, FUNGI `.fungi`, and experimental
+  GATE `.gate`. The isolated AGENTS candidate at `6a89ab8` fixes the three
+  rules in one manifest, keeps node sets disjoint, binds per-view and cross-view
+  topology digests, accounts for unclassified rows, and preserves an explicit
+  empty GATE view. It creates no competing graphs and grants no authority.
 - [x] Build the reusable lower-scope graph mechanism outside Galerina without
-  touching language source. The isolated AGENTS candidate at `887e5ef` now
+  touching language source. The isolated AGENTS candidate through `6a89ab8` now
   validates one complete `PROJECT` receipt, derives a digest-bound `WORKSET`,
-  and exposes read-only `scan`, `draw` and `index` modes. Its focused suite is
-  33/33 and the complete AGENTS tool estate is 230/230 at concurrency one.
-  This does not complete the three Galerina views: exact graph-HEAD evidence,
-  independent review, active-skill isolation and integration remain `HOLD`.
+  exposes read-only `scan`, `view`, `draw` and `index` modes, and derives the
+  fixed typed-view envelope independently of WORKSET scope. Its focused suite
+  is 37/37, embedded controls are 15/15 and the complete AGENTS tool estate is
+  234/234 at concurrency one.
+- [ ] Materialize the Galerina HOST/FUNGI/GATE manifest and view envelope only
+  from a complete exact-head `PROJECT` receipt after the AGENTS candidate has
+  independent review, active-skill isolation and integration. The current
+  external index is structurally complete but exposes no exact Git-head field,
+  so this repository-specific output remains `HOLD`, not inferred evidence.
 - [ ] Keep the `.fungi` stop closed. Task 6 Step 1 still lacks an already
   admitted fixed checked scalar-flow artifact; creating or admitting it is the
   next productive action and requires an explicit boundary reopening.

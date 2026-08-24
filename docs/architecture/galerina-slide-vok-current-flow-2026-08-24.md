@@ -62,18 +62,23 @@ graphs.
 | Fungi semantics | `.fungi`, compiler stages, checked snapshot and GIR edges | language and semantic ownership |
 | Gate laboratory | `.gate` and synthesis-only edges | experimental, non-authorizing |
 
-The three views should share one manifest containing the repository build
-point, unified-graph digest, view rule digest and each view digest. Myco remains
-the lexical discovery overlay. Hypha remains a passive scanner. Neither stores
-source bodies in the structural graph or upgrades a miss into absence.
+The three views share one fixed manifest bound to the repository build point
+and complete PROJECT receipt. Each view has its own graph digest; cross-view
+topology has a separate digest; unclassified nodes and edges remain visible;
+an empty GATE view is explicit. Myco remains the lexical discovery overlay.
+Hypha remains a passive scanner. Neither stores source bodies in the structural
+graph or upgrades a miss into absence.
 
-The isolated AGENTS Code Logic Workbench candidate now supplies the reusable
-mechanism: one complete `PROJECT` graph receipt and one lower-scope `WORKSET`
-clone using the same schema, decoder, IDs, relationships and refusal rules.
-Its `scan`, `draw` and `index` modes are read-only and non-authorizing. It is
-not yet installed or integrated: exact graph-HEAD evidence, independent review
-and active-skill isolation remain open. The Galerina-specific HOST/FUNGI/GATE
-manifest and view rules therefore remain TODO items, not inferred outputs.
+The isolated AGENTS Code Logic Workbench candidate through `6a89ab8` supplies
+the reusable mechanism: one complete `PROJECT` graph receipt, one lower-scope
+`WORKSET` clone using the same schema and refusal rules, and one orthogonal
+HOST/FUNGI/GATE typed-view envelope. Its `scan`, `view`, `draw` and `index`
+modes are read-only and non-authorizing. The implementation passes 37/37
+focused tests, 15/15 embedded controls and 234/234 complete tool-estate tests
+at concurrency one. It is not yet installed or integrated: exact graph-HEAD
+evidence, independent review and active-skill isolation remain open. The
+Galerina-specific manifest and materialized view bytes therefore remain TODO
+outputs, not inferred evidence.
 
 Do not combine `.fungi` and `.gate` into one authority view: `.gate` is a later
 laboratory lane and cannot inherit Galerina or VOK authority.
