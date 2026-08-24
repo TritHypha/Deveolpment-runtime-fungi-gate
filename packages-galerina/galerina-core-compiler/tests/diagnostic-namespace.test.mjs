@@ -16,12 +16,15 @@ const SRC = fileURLToPath(new URL("../src", import.meta.url));
 // KB relocated out of the repo to sibling ../ZTF-Knowledge-Bases (IP protection).
 // Resolve order: GALERINA_KB_DIR env → in-repo docs/ (if restored) → sibling KB.
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
-const KB_DIR = process.env.GALERINA_KB_DIR
+const KB_ROOT = process.env.GALERINA_KB_DIR
   ? resolve(process.env.GALERINA_KB_DIR)
   : existsSync(join(REPO_ROOT, "docs", "Knowledge-Bases"))
     ? join(REPO_ROOT, "docs", "Knowledge-Bases")
     : join(REPO_ROOT, "..", "ZTF-Knowledge-Bases");
-const REGISTRY_DOCS = ["compiler-diagnostics.md", "galerina-governance-rules.md"].map((f) => join(KB_DIR, f));
+const REGISTRY_DOCS = [
+  join(KB_ROOT, "reference", "language", "compiler-diagnostics.md"),
+  join(KB_ROOT, "reference", "galerina", "galerina-governance-rules.md"),
+];
 const ALLOWLIST_FILE = fileURLToPath(new URL("./fixtures/diagnostic-pending-registration.txt", import.meta.url));
 
 function walkTs(dir) {

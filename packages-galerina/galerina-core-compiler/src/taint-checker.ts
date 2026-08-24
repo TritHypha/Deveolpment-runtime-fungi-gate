@@ -293,13 +293,13 @@ const REQUIREMENT_CHECKED_FLOW_DIGEST_DOMAIN = "galerina.requirement-validator.c
 
 type CanonicalCheckedFlowNode = readonly [
   string,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  number | null,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  number | undefined,
   readonly CanonicalCheckedFlowNode[],
 ];
 
@@ -626,13 +626,13 @@ function canonicalCheckedFlowNode(node: AstNode): CanonicalCheckedFlowNode {
   for (const child of node.children ?? []) children.push(canonicalCheckedFlowNode(child));
   return [
     node.kind,
-    node.value ?? null,
-    node.callStyle ?? null,
-    node.typeName ?? null,
-    node.conformsTo ?? null,
-    node.flowRef ?? null,
-    node.claim ?? null,
-    node.flags ?? null,
+    node.value,
+    node.callStyle,
+    node.typeName,
+    node.conformsTo,
+    node.flowRef,
+    node.claim,
+    node.flags,
     children,
   ];
 }
@@ -705,7 +705,11 @@ function snapshotFlowLocation(
 ): SourceLocation | undefined {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
   const location = value as SourceLocation;
-  const file = location.file;
+  // Public parser callers may omit a source filename. The runtime parser then
+  // carries an anonymous location even though the structural type requires a
+  // string. Preserve that admitted legacy surface as one canonical empty
+  // locator instead of discarding the entire AST snapshot.
+  const file = typeof location.file === "string" ? location.file : "";
   const line = location.line;
   const column = location.column;
   const offset = location.offset;

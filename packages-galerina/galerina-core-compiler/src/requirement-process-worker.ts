@@ -415,10 +415,10 @@ async function readOneStdinFrame(): Promise<Uint8Array> {
 
 async function writeStdoutFrame(frame: Uint8Array): Promise<void> {
   const stdout = process.stdout as unknown as {
-    write(data: Uint8Array, callback: (error?: Error | null) => void): boolean;
+    write(data: Uint8Array, callback: (error?: Error) => void): boolean;
   };
   await new Promise<void>((resolveWrite, rejectWrite) => {
-    stdout.write(frame, (error?: Error | null) => {
+    stdout.write(frame, (error?: Error) => {
       if (error) rejectWrite(error);
       else resolveWrite();
     });

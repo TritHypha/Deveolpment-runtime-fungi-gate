@@ -25,6 +25,12 @@ const getPrototypeOf = Object.getPrototypeOf;
 export type FrameKind = "launcher-request" | "worker-ready" | "worker-result" | "receipt";
 export type ExecutionState = "COMPLETE" | "REFUSED" | "ERROR" | "CANCELLED";
 
+// NULL AUDIT 2026-08-24: JSON null is one required canonical wire token, not
+// an absence convention for product state. Naming it keeps that wire-only
+// boundary distinct from ordinary optional product state.
+const CANONICAL_NULL = null;
+export type CanonicalNull = typeof CANONICAL_NULL;
+
 export interface LauncherRequest {
   readonly schemaVersion: 1;
   readonly nonce: string;
@@ -80,13 +86,13 @@ export interface NonAuthorizingReceipt {
   readonly truncated: boolean;
   readonly partial: boolean;
   readonly missingEvidence: readonly string[];
-  readonly exitCode: number | null;
-  readonly refusalCode: string | null;
+  readonly exitCode: number | CanonicalNull;
+  readonly refusalCode: string | CanonicalNull;
   readonly authorizing: false;
 }
 
 export type CanonicalValue =
-  | null
+  | CanonicalNull
   | boolean
   | number
   | string
@@ -391,8 +397,8 @@ function validateReceiptRecord(record: Readonly<Record<string, CanonicalValue>>)
     truncated: booleanField(record, "truncated"),
     partial: booleanField(record, "partial"),
     missingEvidence: checkedMissing,
-    exitCode: exitCode as number | null,
-    refusalCode: refusalCode as string | null,
+    exitCode: exitCode as number | CanonicalNull,
+    refusalCode: refusalCode as string | CanonicalNull,
     authorizing: false,
   });
 }
