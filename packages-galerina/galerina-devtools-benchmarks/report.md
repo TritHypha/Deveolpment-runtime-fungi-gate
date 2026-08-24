@@ -39,23 +39,23 @@
 
 | Benchmark | Galerina/WASM legacy lane | vs Rust | vs Node | Galerina governed ⟨interp⟩ | Implication |
 |---|---|---|---|---|---|
-| compute-mix | 71.70M/s | ⚪ 1.8× slower | ⚪ 1.8× slower | 1.67M/s | WASM near native |
-| arithmetic-threshold | 450.35M/s | UNCERTIFIED | UNCERTIFIED | 4.19M/s | not yet work-equivalence-certified (N/work mismatch) |
-| six-digit-guess | 33.40M/s | UNCERTIFIED | UNCERTIFIED | 42.3K/s | not yet work-equivalence-certified (N/work mismatch) |
-| fibonacci-recursive | 16.5K/s | UNCERTIFIED | UNCERTIFIED | 11.0/s | not yet work-equivalence-certified (N/work mismatch) |
-| tower-of-hanoi | 117.34M/s | 🟡 2.1× slower | 🟢 1.0× slower | 79.8K/s | WASM usable |
-| hardware-targets | 35.52M/s | UNCERTIFIED | UNCERTIFIED | 3.3K/s | not yet work-equivalence-certified (N/work mismatch) |
-| matrix-multiply | 418.29M/s | 🟡 3.6× slower | ⚪ 1.4× slower | 605.2K/s | WASM usable |
-| tri-logic | 450.19M/s | 🟡 3.0× slower | 🟡 2.0× slower | 285.1K/s | WASM usable |
+| compute-mix | 80.51M/s | ⚪ 1.7× slower | ⚪ 1.7× slower | 1.74M/s | WASM near native |
+| arithmetic-threshold | 510.54M/s | UNCERTIFIED | UNCERTIFIED | 5.42M/s | not yet work-equivalence-certified (N/work mismatch) |
+| six-digit-guess | 37.44M/s | UNCERTIFIED | UNCERTIFIED | 46.9K/s | not yet work-equivalence-certified (N/work mismatch) |
+| fibonacci-recursive | 17.9K/s | UNCERTIFIED | UNCERTIFIED | 12.0/s | not yet work-equivalence-certified (N/work mismatch) |
+| tower-of-hanoi | 118.01M/s | 🟡 2.1× slower | 🟢 1.1× slower | 83.9K/s | WASM usable |
+| hardware-targets | 40.46M/s | UNCERTIFIED | UNCERTIFIED | 3.1K/s | not yet work-equivalence-certified (N/work mismatch) |
+| matrix-multiply | 461.79M/s | 🟡 3.3× slower | ⚪ 1.4× slower | 771.0K/s | WASM usable |
+| tri-logic | 490.75M/s | 🟡 2.9× slower | 🟡 2.1× slower | 315.5K/s | WASM usable |
 | verified-native-operation | no WASM build | — | — | not run | WASM not built for this lane yet |
-| data-query | no WASM build | — | — | 206.4K/s | WASM not built for this lane yet |
-| call-chain | 51.61M/s | 🟡 3.0× slower | 🟢 1.3× | 45.6K/s | WASM usable |
-| nbody | 28.15M/s | — | 🟡 4.3× slower | 53.1K/s | WASM 2–10× under Node |
-| mandelbrot | 8.67M/s | 🟡 2.7× slower | 🟢 1.4× | 6.6K/s | WASM usable |
+| data-query | no WASM build | — | — | 257.2K/s | WASM not built for this lane yet |
+| call-chain | 56.90M/s | 🟡 2.7× slower | 🟢 1.2× | 52.5K/s | WASM usable |
+| nbody | 30.53M/s | — | 🟡 4.1× slower | 61.1K/s | WASM 2–10× under Node |
+| mandelbrot | 9.20M/s | 🟡 2.7× slower | 🟢 1.4× | 7.5K/s | WASM usable |
 | spectral-norm | no WASM build | — | — | not run | WASM not built for this lane yet |
 
 > 🚦 🟢 ≥0.9 (≈native) · ⚪ ≥0.5 (within 2×) · 🟡 ≥0.1 (2–10× slower) · 🔴 ≥0.01 (10–100×) · ⚫ <0.01 (100×+).
-> **Ceiling (fastest certified lane):** Python — 27.99B/s on matrix-multiply.
+> **Ceiling (fastest certified lane):** Python — 28.78B/s on matrix-multiply.
 
 ### Memory — heap bytes per operation (the honest metric; lower is better)
 
@@ -64,10 +64,10 @@
 
 | Benchmark | 🏆 Best (lowest heap B/op) | Node.js | Python | Galerina/WASM legacy lane | Galerina governed ⟨interp⟩ | Galerina manifest ⟨interp⟩ |
 |---|---|---|---|---|---|---|
-| record-allocation | **Galerina/WASM legacy lane** (~0) | ~0 | ~0 | ~0 | 6 B/op | 8 B/op |
-| collection-pipeline | **Galerina/WASM legacy lane** (~0) | ~0 | ~0 | ~0 | 17 B/op | 14 B/op |
-| low-memory | **Node.js** (~0) | ~0 | ~0 | ~0 | 56 B/op | 195 B/op |
-| binary-trees | **Python** (~0) | 3 B/op | ~0 | ~0 | 9 B/op | 5 B/op |
+| record-allocation | **Galerina/WASM legacy lane** (~0) | 1 B/op | ~0 | ~0 | 7 B/op | 8 B/op |
+| collection-pipeline | **Galerina/WASM legacy lane** (~0) | ~0 | ~0 | ~0 | 18 B/op | 15 B/op |
+| low-memory | **Node.js** (~0) | ~0 | ~0 | ~0 | 16 B/op | 57 B/op |
+| binary-trees | **Python** (~0) | 3 B/op | ~0 | ~0 | 7 B/op | 13 B/op |
 
 > **No throughput ratio, no ⚫ here** — a memory benchmark ranked by throughput is exactly the
 > cross-metric bug this section removes. record-allocation / binary-trees / collection-pipeline live
@@ -80,8 +80,8 @@
 
 | Benchmark | 🏆 Winner | Speed | Galerina/WASM legacy lane | GPU (Deno WebGPU) | vs Node (WASM) | Implication |
 |---|---|---|---|---|---|---|
-| gpu-compute | Rust AVX2 | 1.17B/s | 446.64M/s | 3.85M/s | 🟡 2.1× slower | CPU/WASM lanes lead — real GPU dispatch pending (see §4b) |
-| matrix-multiply | Python | 27.99B/s | 418.29M/s | 1.51B/s | ⚪ 1.4× slower | CPU/WASM lanes lead — real GPU dispatch pending (see §4b) |
+| gpu-compute | Rust AVX2 | 1.23B/s | 495.71M/s | 4.22M/s | 🟡 2.1× slower | CPU/WASM lanes lead — real GPU dispatch pending (see §4b) |
+| matrix-multiply | Python | 28.78B/s | 461.79M/s | 1.71B/s | ⚪ 1.4× slower | CPU/WASM lanes lead — real GPU dispatch pending (see §4b) |
 
 > **vs Node (WASM)** compares the Galerina/WASM legacy lane to Node.js on the kernel. matrix-multiply also
 > appears in the CPU Throughput table (dual-home) — it has both a compute lane and a WebGPU lane.
@@ -93,16 +93,16 @@
 
 | Benchmark | Unit (native) | 🏆 Fastest lane | Node.js | Python | Rust (generic) | Galerina/WASM legacy lane | Galerina governed ⟨interp⟩ |
 |---|---|---|---|---|---|---|---|
-| crypto-ops | ops/s | **Galerina governed ⟨interp⟩** (124.0/s) | no comparable metric | no comparable metric | no comparable metric | no WASM — strings/records | 124.0/s |
-| text-html | ops/s | **Galerina governed ⟨interp⟩** (699.0/s) | no comparable metric | no comparable metric | no comparable metric | no WASM — strings/records | 699.0/s |
-| json-parse | records/s | **Node.js** (2.99M/s) | 2.99M/s | 438.0K/s | not run — no native impl | no WASM — strings/records | 4.8K/s |
-| spore-container | containers/s | **Rust (generic)** (150.0K/s) | 39.8K/s | 59.4K/s | 150.0K/s | no WASM — strings/records | not run |
-| framework-pipeline | requests/s | **Node.js** (117.9K/s) | 117.9K/s | 94.3K/s | not run — no native impl | no WASM — strings/records | not run |
-| http-throughput | requests/s | **Node.js** (3.5K/s) | 3.5K/s | not run | not run — no native impl | no WASM build | not run |
-| naming-check | files/s | **Node.js** (5.9K/s) | 5.9K/s | not run | not run — no native impl | no WASM build | not run |
-| context-receipt | receipts/s | **Node.js** (15.0K/s) | 15.0K/s | not run | not run — no native impl | no WASM build | not run |
-| intelligence-search | queries/s | **Node.js** (106.4K/s) | 106.4K/s | not run | not run — no native impl | no WASM build | not run |
-| provenance-trace | files/s | **Node.js** (717.0/s) | 717.0/s | not run | not run — no native impl | no WASM build | not run |
+| crypto-ops | ops/s | **Galerina governed ⟨interp⟩** (197.0/s) | no comparable metric | no comparable metric | no comparable metric | no WASM — strings/records | 197.0/s |
+| text-html | ops/s | **Galerina governed ⟨interp⟩** (943.0/s) | no comparable metric | no comparable metric | no comparable metric | no WASM — strings/records | 943.0/s |
+| json-parse | records/s | **Node.js** (3.68M/s) | 3.68M/s | 435.5K/s | not run — no native impl | no WASM — strings/records | 5.3K/s |
+| spore-container | containers/s | **Rust (generic)** (147.1K/s) | 43.9K/s | 61.8K/s | 147.1K/s | no WASM — strings/records | not run |
+| framework-pipeline | requests/s | **Node.js** (132.5K/s) | 132.5K/s | 114.2K/s | not run — no native impl | no WASM — strings/records | not run |
+| http-throughput | requests/s | **Node.js** (3.6K/s) | 3.6K/s | not run | not run — no native impl | no WASM build | not run |
+| naming-check | files/s | **Node.js** (7.0K/s) | 7.0K/s | not run | not run — no native impl | no WASM build | not run |
+| context-receipt | receipts/s | **Node.js** (18.6K/s) | 18.6K/s | not run | not run — no native impl | no WASM build | not run |
+| intelligence-search | queries/s | **Node.js** (113.1K/s) | 113.1K/s | not run | not run — no native impl | no WASM build | not run |
+| provenance-trace | files/s | **Node.js** (345.0/s) | 345.0/s | not run | not run — no native impl | no WASM build | not run |
 
 > Values are native rates (records/s, containers/s, requests/s, files/s, …), shown for transparency —
 > NOT a cross-runtime ranking. The inner-op-normalised throughput lives in the CPU table above.
@@ -115,7 +115,7 @@
 
 | Benchmark | Galerina governed ⟨interp⟩ | Galerina manifest ⟨interp⟩ | Galerina/WASM legacy lane | governed/manifest (gov overhead) |
 |---|---|---|---|---|
-| governance-cost | 660.0/s | 571.0/s | 2.22M/s | 1.16× governed/manifest (gov overhead ≈ 0.87×) |
+| governance-cost | 710.0/s | 884.0/s | 3.06M/s | 0.80× governed/manifest (gov overhead ≈ 1.25×) |
 
 > **governed/manifest** is governance-cost's honest headline: the same-N cost of always-on governance
 > (capabilities + audit + proof) vs the pre-verified manifest. `gov overhead` = manifest ÷ governed.
@@ -125,31 +125,31 @@
 
 | Benchmark | Rust AVX-512 | Rust AVX2 | Rust (generic) | C++ | Node.js | Python | Galerina passive ⟨interp⟩ | Galerina manifest ⟨interp⟩ | Galerina governed ⟨interp⟩ | Galerina/WASM legacy lane | Deno WebGPU (NVIDIA GeForce RTX 2060) | Node/Galerina† (🖥️ CPU) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| compute-mix | not run — no AVX-512 | **124.82M/s** | **126.80M/s** | not run — no C++ impl | **131.25M/s** | 724.9K/s | 2.19M/s | 1.74M/s | 1.67M/s | 71.70M/s | not run — no GPU path | 78.6× |
-| arithmetic-threshold | not run — no AVX-512 | **1.56B/s** | **1.56B/s** | not run — no C++ impl | 958.99M/s | 3.69M/s | 28.5K/s | 4.90M/s | 4.19M/s | 450.35M/s | not run — no GPU path | 229.1× |
-| six-digit-guess | not run — no AVX-512 | **75.11M/s** | **77.12M/s** | not run — no C++ impl | 2.47M/s | 84.3K/s | 21.9K/s | 44.0K/s | 42.3K/s | 33.40M/s | not run — no GPU path | 58.4× |
-| record-allocation | not run — no AVX-512 | **1.16B/s** | **1.17B/s** | not run — no C++ impl | 55.87M/s | 3.78M/s | 6.42M/s | 1.89M/s | 1.89M/s | 484.09M/s | not run — no GPU path | 29.6× |
-| fibonacci-recursive | not run — no AVX-512 | 450.8/s | 496.5/s | not run — no C++ impl | 102.5/s | 4.2/s | **73.9K/s** | 16.0/s | 11.0/s | 16.5K/s | not run — no GPU path | 9.32× |
-| tower-of-hanoi | not run — no AVX-512 | 230.82M/s | **249.54M/s** | not run — no C++ impl | 118.27M/s | 2.79M/s | 80.0K/s | 77.3K/s | 79.8K/s | 117.34M/s | not run — no GPU path | 1.5K× |
-| collection-pipeline | not run — no AVX-512 | **12.37B/s** | 4.16B/s | not run — no C++ impl | 68.70M/s | 10.01M/s | 8.06M/s | 1.82M/s | 2.16M/s | 384.15M/s | not run — no GPU path | 31.9× |
+| compute-mix | not run — no AVX-512 | **134.50M/s** | **137.03M/s** | not run — no C++ impl | **140.68M/s** | 755.3K/s | 2.25M/s | 1.79M/s | 1.74M/s | 80.51M/s | not run — no GPU path | 80.9× |
+| arithmetic-threshold | not run — no AVX-512 | **1.58B/s** | **1.60B/s** | not run — no C++ impl | 988.80M/s | 3.91M/s | 33.4K/s | 5.50M/s | 5.42M/s | 510.54M/s | not run — no GPU path | 182.6× |
+| six-digit-guess | not run — no AVX-512 | 74.95M/s | **79.48M/s** | not run — no C++ impl | 2.82M/s | 90.8K/s | 22.9K/s | 46.5K/s | 46.9K/s | 37.44M/s | not run — no GPU path | 60.2× |
+| record-allocation | not run — no AVX-512 | **1.19B/s** | **1.20B/s** | not run — no C++ impl | 61.31M/s | 3.22M/s | 7.91M/s | 2.73M/s | 2.55M/s | 567.29M/s | not run — no GPU path | 24.0× |
+| fibonacci-recursive | not run — no AVX-512 | 514.1/s | 520.0/s | not run — no C++ impl | 132.1/s | 4.1/s | **68.8K/s** | 16.0/s | 12.0/s | 17.9K/s | not run — no GPU path | 11.0× |
+| tower-of-hanoi | not run — no AVX-512 | **251.40M/s** | **248.19M/s** | not run — no C++ impl | 129.19M/s | 2.63M/s | 92.4K/s | 86.1K/s | 83.9K/s | 118.01M/s | not run — no GPU path | 1.5K× |
+| collection-pipeline | not run — no AVX-512 | **13.52B/s** | 4.43B/s | not run — no C++ impl | 74.02M/s | 13.75M/s | 8.63M/s | 2.54M/s | 2.34M/s | 439.42M/s | not run — no GPU path | 31.6× |
 | governance-cost ⚠️ | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | N/A — excluded | ⚠️ excluded — not unit-aligned |
-| hardware-targets | not run — no AVX-512 | 1.16M/s | 1.16M/s | not run — no C++ impl | 824.1K/s | not run | 87.2K/s | 3.8K/s | 3.3K/s | **35.52M/s** | not run — no GPU path | 247.3× |
-| low-memory | not run — no AVX-512 | **5.69B/s** | 1.32B/s | not run — no C++ impl | 702.95M/s | 2.64M/s | 147.8K/s | 84.6K/s | 110.0K/s | 453.30M/s | not run — no GPU path | 6.4K× |
-| gpu-compute | not run — no AVX-512 | **1.17B/s** | **1.17B/s** | not run — no C++ impl | 954.12M/s | 5.34M/s | 335.0K/s | 296.9K/s | 302.4K/s | 446.64M/s | 3.85M/s | 3.2K× |
-| matrix-multiply | not run — no AVX-512 | 1.22B/s | 1.51B/s | not run — no C++ impl | 587.37M/s | **27.99B/s** | 794.3K/s | 584.8K/s | 605.2K/s | 418.29M/s | 1.51B/s | 970.5× |
-| crypto-ops | not run — no AVX-512 | no comparable metric | no comparable metric | not run — no C++ impl | no comparable metric | no comparable metric | **3.5K/s** | 1.9K/s | 124.0/s | no WASM — strings/records | not run — no GPU path | N/A — no Node.js |
-| text-html | not run — no AVX-512 | no comparable metric | no comparable metric | not run — no C++ impl | no comparable metric | no comparable metric | **54.6K/s** | 2.4K/s | 699.0/s | no WASM — strings/records | not run — no GPU path | N/A — no Node.js |
-| tri-logic | not run — no AVX-512 | 1.27B/s | **1.36B/s** | not run — no C++ impl | 913.98M/s | 6.41M/s | 303.0K/s | 287.3K/s | 285.1K/s | 450.19M/s | not run — no GPU path | 3.2K× |
-| verified-native-operation | not run — no AVX-512 | **3.65B/s** | 2.35B/s | not run — no C++ impl | 1.99B/s | 8.84M/s | not run | not run | not run | no WASM build | not run — no GPU path | N/A — no governed ⟨interp⟩ |
-| data-query | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **384.44M/s** | 3.07M/s | 265.8K/s | 215.9K/s | 206.4K/s | no WASM build | not run — no GPU path | 1.9K× |
-| call-chain | not run — no AVX-512 | **154.46M/s** | **154.46M/s** | not run — no C++ impl | 40.61M/s | 1.27M/s | 48.5K/s | 45.5K/s | 45.6K/s | 51.61M/s | not run — no GPU path | 891.0× |
-| nbody | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **121.48M/s** | 952.2K/s | 55.7K/s | 54.3K/s | 53.1K/s | 28.15M/s | not run — no GPU path | 2.3K× |
-| json-parse | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **2.99M/s** | 438.0K/s | 8.5K/s | 4.4K/s | 4.8K/s | no WASM — strings/records | not run — no GPU path | 617.5× |
-| mandelbrot | not run — no AVX-512 | **23.01M/s** | **23.41M/s** | not run — no C++ impl | 6.23M/s | 130.9K/s | 6.7K/s | 6.7K/s | 6.6K/s | 8.67M/s | not run — no GPU path | 943.3× |
-| spectral-norm | not run — no AVX-512 | **370.02M/s** | **370.82M/s** | not run — no C++ impl | 221.83M/s | 1.51M/s | not run | not run | not run | no WASM build | not run — no GPU path | N/A — no governed ⟨interp⟩ |
-| binary-trees | not run — no AVX-512 | 13.54M/s | 14.16M/s | not run — no C++ impl | 62.08M/s | 2.72M/s | 364.1K/s | 310.2K/s | 296.8K/s | **543.35M/s** | not run — no GPU path | 209.1× |
-| spore-container | not run — no AVX-512 | **146.5K/s** | **150.0K/s** | not run — no C++ impl | 39.8K/s | 59.4K/s | not run | not run | not run | no WASM — strings/records | not run — no GPU path | N/A — no governed ⟨interp⟩ |
-| framework-pipeline | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **117.9K/s** | 94.3K/s | not run | not run | not run | no WASM — strings/records | not run — no GPU path | N/A — no governed ⟨interp⟩ |
+| hardware-targets | not run — no AVX-512 | 1.21M/s | 1.24M/s | not run — no C++ impl | 949.8K/s | not run | 89.5K/s | 2.3K/s | 3.1K/s | **40.46M/s** | not run — no GPU path | 303.9× |
+| low-memory | not run — no AVX-512 | **6.34B/s** | 1.39B/s | not run — no C++ impl | 720.26M/s | 3.63M/s | 182.5K/s | 137.7K/s | 144.3K/s | 489.98M/s | not run — no GPU path | 5.0K× |
+| gpu-compute | not run — no AVX-512 | **1.23B/s** | **1.23B/s** | not run — no C++ impl | 1.02B/s | 5.79M/s | 377.0K/s | 348.5K/s | 328.1K/s | 495.71M/s | 4.22M/s | 3.1K× |
+| matrix-multiply | not run — no AVX-512 | 1.46B/s | 1.54B/s | not run — no C++ impl | 637.52M/s | **28.78B/s** | 900.5K/s | 678.4K/s | 771.0K/s | 461.79M/s | 1.71B/s | 826.9× |
+| crypto-ops | not run — no AVX-512 | no comparable metric | no comparable metric | not run — no C++ impl | no comparable metric | no comparable metric | **5.8K/s** | 1.9K/s | 197.0/s | no WASM — strings/records | not run — no GPU path | N/A — no Node.js |
+| text-html | not run — no AVX-512 | no comparable metric | no comparable metric | not run — no C++ impl | no comparable metric | no comparable metric | **60.0K/s** | 2.5K/s | 943.0/s | no WASM — strings/records | not run — no GPU path | N/A — no Node.js |
+| tri-logic | not run — no AVX-512 | **1.43B/s** | **1.40B/s** | not run — no C++ impl | 1.03B/s | 7.30M/s | 327.0K/s | 311.5K/s | 315.5K/s | 490.75M/s | not run — no GPU path | 3.3K× |
+| verified-native-operation | not run — no AVX-512 | **3.73B/s** | **3.75B/s** | not run — no C++ impl | 2.04B/s | 9.48M/s | not run | not run | not run | no WASM build | not run — no GPU path | N/A — no governed ⟨interp⟩ |
+| data-query | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **392.71M/s** | 5.89M/s | 301.5K/s | 259.3K/s | 257.2K/s | no WASM build | not run — no GPU path | 1.5K× |
+| call-chain | not run — no AVX-512 | **154.51M/s** | 138.39M/s | not run — no C++ impl | 47.41M/s | 2.49M/s | 54.0K/s | 50.3K/s | 52.5K/s | 56.90M/s | not run — no GPU path | 903.4× |
+| nbody | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **125.43M/s** | 1.69M/s | 60.6K/s | 61.2K/s | 61.1K/s | 30.53M/s | not run — no GPU path | 2.1K× |
+| json-parse | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **3.68M/s** | 435.5K/s | 9.6K/s | 4.8K/s | 5.3K/s | no WASM — strings/records | not run — no GPU path | 692.4× |
+| mandelbrot | not run — no AVX-512 | **24.39M/s** | **23.63M/s** | not run — no C++ impl | 6.47M/s | 167.9K/s | 8.2K/s | 7.6K/s | 7.5K/s | 9.20M/s | not run — no GPU path | 867.3× |
+| spectral-norm | not run — no AVX-512 | **393.17M/s** | **390.26M/s** | not run — no C++ impl | 245.33M/s | 1.74M/s | not run | not run | not run | no WASM build | not run — no GPU path | N/A — no governed ⟨interp⟩ |
+| binary-trees | not run — no AVX-512 | 20.68M/s | 21.46M/s | not run — no C++ impl | 81.35M/s | 2.92M/s | 400.8K/s | 349.8K/s | 331.9K/s | **608.78M/s** | not run — no GPU path | 245.1× |
+| spore-container | not run — no AVX-512 | **145.4K/s** | **147.1K/s** | not run — no C++ impl | 43.9K/s | 61.8K/s | not run | not run | not run | no WASM — strings/records | not run — no GPU path | N/A — no governed ⟨interp⟩ |
+| framework-pipeline | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | **132.5K/s** | 114.2K/s | not run | not run | not run | no WASM — strings/records | not run — no GPU path | N/A — no governed ⟨interp⟩ |
 | http-throughput | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | no comparable metric | not run | not run | not run | not run | no WASM build | not run — no GPU path | N/A — neither ran |
 | naming-check | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | no comparable metric | not run | not run | not run | not run | no WASM build | not run — no GPU path | N/A — neither ran |
 | context-receipt | not run — no AVX-512 | not run — no native impl | not run — no native impl | not run — no C++ impl | no comparable metric | not run | not run | not run | not run | no WASM build | not run — no GPU path | N/A — neither ran |
@@ -210,14 +210,14 @@
 
 | # | 🚦 | Runtime | Bytes/Op | Throughput | Total Ops | Heap Δ |
 |---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 0.00 bytes/op ⚡ ~0 — no boxing | 5.69B/s | — | — |
-| 🥈 | 🟢 | Rust (generic) | 0.00 bytes/op ⚡ ~0 — no boxing | 1.32B/s | — | — |
-| 🥉 | 🟢 | Node.js | 0.00 bytes/op ⚡ ~0 — no boxing | 702.95M/s | — | 20KB |
-| 4 | ⚪ | Galerina/WASM legacy lane | 0.00 bytes/op ⚡ ~0 — no boxing | 453.30M/s | — | 6KB |
-| 5 | ⚫ | Python | 0.03 bytes/op ⚡ ~0 — no boxing | 2.64M/s | — | 272B |
-| 6 | ⚫ | Galerina governed ⟨interp⟩ | 56 bytes/op ⚠ moderate | 110.0K/s | — | 563KB |
-| 7 | ⚫ | Galerina passive ⟨interp⟩ | 67 bytes/op ⚠ moderate | 147.8K/s | — | 666KB |
-| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 195 bytes/op ✗ high — object per node | 84.6K/s | — | 1.9MB |
+| 🥇 | 🟢 | Rust AVX2 | 0.00 bytes/op ⚡ ~0 — no boxing | 6.34B/s | — | — |
+| 🥈 | 🟢 | Rust (generic) | 0.00 bytes/op ⚡ ~0 — no boxing | 1.39B/s | — | — |
+| 🥉 | 🟢 | Node.js | 0.00 bytes/op ⚡ ~0 — no boxing | 720.26M/s | — | 17KB |
+| 4 | ⚪ | Galerina/WASM legacy lane | 0.00 bytes/op ⚡ ~0 — no boxing | 489.98M/s | — | 42KB |
+| 5 | ⚫ | Python | 0.03 bytes/op ⚡ ~0 — no boxing | 3.63M/s | — | 272B |
+| 6 | ⚫ | Galerina governed ⟨interp⟩ | 16 bytes/op ⚠ moderate | 144.3K/s | — | 162KB |
+| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 57 bytes/op ⚠ moderate | 137.7K/s | — | 572KB |
+| 8 | ⚫ | Galerina passive ⟨interp⟩ | 70 bytes/op ⚠ moderate | 182.5K/s | — | 701KB |
 
 > **Why this matters:** Every byte allocated is a byte the GC must later collect.
 > WASM and the bytecode VM run with zero allocation — ideal for high-throughput governed services.
@@ -230,176 +230,176 @@
 |---|---|---|---|---|---|
 | compute-mix | Rust AVX2 | — | — | — | — |
 | compute-mix | Rust (generic) | — | — | — | — |
-| compute-mix | Node.js | 66.9MB | 67.2MB | 5.0MB | 925KB |
+| compute-mix | Node.js | 50.2MB | 50.2MB | 4.6MB | 584KB |
 | compute-mix | Python | — | — | 3KB | 3KB |
-| compute-mix | Galerina passive ⟨interp⟩ | 105.0MB | 105.0MB | 22.0MB | 301KB |
-| compute-mix | Galerina manifest ⟨interp⟩ | 104.8MB | 104.8MB | 25.4MB | 4.5MB |
-| compute-mix | Galerina governed ⟨interp⟩ | 104.6MB | 104.6MB | 25.1MB | 4.4MB |
-| compute-mix | Galerina/WASM legacy lane | 94.1MB | 94.1MB | 18.3MB | 22KB |
+| compute-mix | Galerina passive ⟨interp⟩ | 89.2MB | 89.2MB | 22.8MB | 175KB |
+| compute-mix | Galerina manifest ⟨interp⟩ | 89.0MB | 89.0MB | 26.2MB | 4.5MB |
+| compute-mix | Galerina governed ⟨interp⟩ | 88.9MB | 88.9MB | 25.9MB | 4.5MB |
+| compute-mix | Galerina/WASM legacy lane | 77.8MB | 77.8MB | 19.1MB | 22KB |
 | arithmetic-threshold | Rust AVX2 | — | — | — | — |
 | arithmetic-threshold | Rust (generic) | — | — | — | — |
-| arithmetic-threshold | Node.js | 66.3MB | 66.5MB | 4.4MB | 286KB |
+| arithmetic-threshold | Node.js | 49.7MB | 50.0MB | 4.3MB | 205KB |
 | arithmetic-threshold | Python | — | — | 4KB | 4KB |
-| arithmetic-threshold | Galerina passive ⟨interp⟩ | 105.5MB | 105.5MB | 23.1MB | 57KB |
-| arithmetic-threshold | Galerina manifest ⟨interp⟩ | 105.3MB | 105.3MB | 22.0MB | 867KB |
-| arithmetic-threshold | Galerina governed ⟨interp⟩ | 105.2MB | 105.2MB | 22.1MB | 946KB |
-| arithmetic-threshold | Galerina/WASM legacy lane | 107.5MB | 107.5MB | 21.4MB | 6KB |
+| arithmetic-threshold | Galerina passive ⟨interp⟩ | 89.6MB | 89.6MB | 24.0MB | 96KB |
+| arithmetic-threshold | Galerina manifest ⟨interp⟩ | 89.5MB | 89.5MB | 22.8MB | 860KB |
+| arithmetic-threshold | Galerina governed ⟨interp⟩ | 89.5MB | 89.5MB | 22.8MB | 858KB |
+| arithmetic-threshold | Galerina/WASM legacy lane | 91.9MB | 91.9MB | 22.2MB | 6KB |
 | six-digit-guess | Rust AVX2 | — | — | — | — |
 | six-digit-guess | Rust (generic) | — | — | — | — |
-| six-digit-guess | Node.js | 71.0MB | 71.0MB | 5.8MB | 1.1MB |
+| six-digit-guess | Node.js | 54.4MB | 54.4MB | 5.8MB | 1.1MB |
 | six-digit-guess | Python | — | — | 583B | 583B |
-| six-digit-guess | Galerina passive ⟨interp⟩ | 106.2MB | 106.2MB | 23.7MB | 100KB |
-| six-digit-guess | Galerina manifest ⟨interp⟩ | 106.0MB | 106.0MB | 22.9MB | 1.1MB |
-| six-digit-guess | Galerina governed ⟨interp⟩ | 105.9MB | 105.9MB | 23.0MB | 1.6MB |
-| six-digit-guess | Galerina/WASM legacy lane | 108.2MB | 108.2MB | 21.8MB | 1KB |
+| six-digit-guess | Galerina passive ⟨interp⟩ | 90.6MB | 90.6MB | 24.7MB | 130KB |
+| six-digit-guess | Galerina manifest ⟨interp⟩ | 90.9MB | 90.9MB | 23.6MB | 1.1MB |
+| six-digit-guess | Galerina governed ⟨interp⟩ | 90.5MB | 90.5MB | 23.8MB | 1.6MB |
+| six-digit-guess | Galerina/WASM legacy lane | 92.3MB | 92.3MB | 22.5MB | 1KB |
 | record-allocation | Rust AVX2 | — | — | — | — |
 | record-allocation | Rust (generic) | — | — | — | — |
-| record-allocation | Node.js | 67.1MB | 67.1MB | 4.3MB | 194KB |
+| record-allocation | Node.js | 50.4MB | 50.4MB | 4.4MB | 288KB |
 | record-allocation | Python | — | — | 492B | 492B |
-| record-allocation | Galerina passive ⟨interp⟩ | 106.9MB | 106.9MB | 22.6MB | 258KB |
-| record-allocation | Galerina manifest ⟨interp⟩ | 106.6MB | 106.6MB | 22.0MB | 76KB |
-| record-allocation | Galerina governed ⟨interp⟩ | 107.0MB | 107.0MB | 22.0MB | 60KB |
-| record-allocation | Galerina/WASM legacy lane | 108.4MB | 108.4MB | 22.3MB | 50KB |
+| record-allocation | Galerina passive ⟨interp⟩ | 91.3MB | 91.3MB | 23.6MB | 418KB |
+| record-allocation | Galerina manifest ⟨interp⟩ | 91.3MB | 91.3MB | 22.8MB | 84KB |
+| record-allocation | Galerina governed ⟨interp⟩ | 91.9MB | 91.9MB | 22.8MB | 68KB |
+| record-allocation | Galerina/WASM legacy lane | 93.3MB | 93.3MB | 23.1MB | 49KB |
 | fibonacci-recursive | Rust AVX2 | — | — | — | — |
 | fibonacci-recursive | Rust (generic) | — | — | — | — |
-| fibonacci-recursive | Node.js | 65.1MB | 65.1MB | 4.1MB | 5KB |
+| fibonacci-recursive | Node.js | 48.4MB | 48.4MB | 4.1MB | 5KB |
 | fibonacci-recursive | Python | — | — | 464B | 464B |
-| fibonacci-recursive | Galerina passive ⟨interp⟩ | 106.3MB | 106.3MB | 23.4MB | 61KB |
-| fibonacci-recursive | Galerina manifest ⟨interp⟩ | 106.3MB | 106.3MB | 23.0MB | 812KB |
-| fibonacci-recursive | Galerina governed ⟨interp⟩ | 106.4MB | 106.4MB | 22.8MB | 677KB |
-| fibonacci-recursive | Galerina/WASM legacy lane | 108.6MB | 108.6MB | 22.3MB | 3KB |
+| fibonacci-recursive | Galerina passive ⟨interp⟩ | 91.9MB | 91.9MB | 24.2MB | 69KB |
+| fibonacci-recursive | Galerina manifest ⟨interp⟩ | 91.9MB | 91.9MB | 23.8MB | 778KB |
+| fibonacci-recursive | Galerina governed ⟨interp⟩ | 91.6MB | 91.6MB | 23.7MB | 782KB |
+| fibonacci-recursive | Galerina/WASM legacy lane | 94.0MB | 94.0MB | 23.1MB | 3KB |
 | tower-of-hanoi | Rust AVX2 | — | — | — | — |
 | tower-of-hanoi | Rust (generic) | — | — | — | — |
-| tower-of-hanoi | Node.js | 65.3MB | 65.3MB | 4.1MB | 15KB |
+| tower-of-hanoi | Node.js | 48.5MB | 48.5MB | 4.1MB | 17KB |
 | tower-of-hanoi | Python | — | — | 1KB | 1KB |
-| tower-of-hanoi | Galerina passive ⟨interp⟩ | 106.7MB | 106.7MB | 27.4MB | 49KB |
-| tower-of-hanoi | Galerina manifest ⟨interp⟩ | 106.5MB | 106.5MB | 25.2MB | 4.0MB |
-| tower-of-hanoi | Galerina governed ⟨interp⟩ | 106.7MB | 106.7MB | 22.1MB | 881KB |
-| tower-of-hanoi | Galerina/WASM legacy lane | 108.6MB | 108.6MB | 21.6MB | 1KB |
+| tower-of-hanoi | Galerina passive ⟨interp⟩ | 92.0MB | 92.0MB | 24.6MB | 54KB |
+| tower-of-hanoi | Galerina manifest ⟨interp⟩ | 92.0MB | 92.0MB | 23.9MB | 1.9MB |
+| tower-of-hanoi | Galerina governed ⟨interp⟩ | 91.8MB | 91.8MB | 24.0MB | 2.0MB |
+| tower-of-hanoi | Galerina/WASM legacy lane | 93.8MB | 93.8MB | 22.3MB | 1KB |
 | collection-pipeline | Rust AVX2 | — | — | — | — |
 | collection-pipeline | Rust (generic) | — | — | — | — |
-| collection-pipeline | Node.js | 82.1MB | 82.1MB | 12.3MB | 8.1MB |
+| collection-pipeline | Node.js | 65.6MB | 65.6MB | 12.3MB | 8.1MB |
 | collection-pipeline | Python | — | — | 224B | 224B |
-| collection-pipeline | Galerina passive ⟨interp⟩ | 107.0MB | 107.0MB | 22.2MB | 379KB |
-| collection-pipeline | Galerina manifest ⟨interp⟩ | 107.0MB | 107.0MB | 21.5MB | 145KB |
-| collection-pipeline | Galerina governed ⟨interp⟩ | 108.0MB | 108.0MB | 21.5MB | 168KB |
-| collection-pipeline | Galerina/WASM legacy lane | 109.6MB | 109.6MB | 21.4MB | 24KB |
+| collection-pipeline | Galerina passive ⟨interp⟩ | 91.5MB | 91.5MB | 23.3MB | 626KB |
+| collection-pipeline | Galerina manifest ⟨interp⟩ | 91.5MB | 91.5MB | 22.3MB | 148KB |
+| collection-pipeline | Galerina governed ⟨interp⟩ | 92.4MB | 92.4MB | 22.3MB | 176KB |
+| collection-pipeline | Galerina/WASM legacy lane | 94.1MB | 94.1MB | 22.2MB | 24KB |
 | governance-cost | Rust AVX2 | — | — | — | — |
 | governance-cost | Rust (generic) | — | — | — | — |
-| governance-cost | Node.js | 65.3MB | 65.3MB | 4.1MB | 26KB |
+| governance-cost | Node.js | 48.3MB | 48.3MB | 4.1MB | 26KB |
 | governance-cost | Python | — | — | 272B | 272B |
-| governance-cost | Galerina passive ⟨interp⟩ | 107.9MB | 107.9MB | 22.4MB | 514KB |
-| governance-cost | Galerina manifest ⟨interp⟩ | 110.8MB | 110.8MB | 22.0MB | 486KB |
-| governance-cost | Galerina governed ⟨interp⟩ | 108.6MB | 108.6MB | 22.0MB | 518KB |
-| governance-cost | Galerina/WASM legacy lane | 109.5MB | 109.5MB | 21.8MB | 53KB |
+| governance-cost | Galerina passive ⟨interp⟩ | 78.6MB | 78.6MB | 22.4MB | -345KB |
+| governance-cost | Galerina manifest ⟨interp⟩ | 80.5MB | 80.5MB | 22.7MB | 489KB |
+| governance-cost | Galerina governed ⟨interp⟩ | 77.8MB | 77.8MB | 22.7MB | 530KB |
+| governance-cost | Galerina/WASM legacy lane | 78.0MB | 78.0MB | 22.6MB | 49KB |
 | hardware-targets | Rust AVX2 | — | — | — | — |
 | hardware-targets | Rust (generic) | — | — | — | — |
-| hardware-targets | Node.js | 66.9MB | 66.9MB | 4.5MB | 364KB |
-| hardware-targets | Galerina passive ⟨interp⟩ | 108.8MB | 108.8MB | 22.6MB | 267KB |
-| hardware-targets | Galerina manifest ⟨interp⟩ | 107.6MB | 107.6MB | 21.7MB | 91KB |
-| hardware-targets | Galerina governed ⟨interp⟩ | 107.2MB | 107.2MB | 21.7MB | 83KB |
-| hardware-targets | Galerina/WASM legacy lane | 109.9MB | 109.9MB | 22.0MB | 80KB |
+| hardware-targets | Node.js | 50.4MB | 50.4MB | 4.5MB | 382KB |
+| hardware-targets | Galerina passive ⟨interp⟩ | 78.8MB | 78.8MB | 23.2MB | -178KB |
+| hardware-targets | Galerina manifest ⟨interp⟩ | 78.3MB | 78.3MB | 22.5MB | 119KB |
+| hardware-targets | Galerina governed ⟨interp⟩ | 78.5MB | 78.5MB | 22.6MB | 111KB |
+| hardware-targets | Galerina/WASM legacy lane | 80.9MB | 80.9MB | 22.8MB | 86KB |
 | low-memory | Rust AVX2 | — | — | — | — |
 | low-memory | Rust (generic) | — | — | — | — |
-| low-memory | Node.js | 65.4MB | 65.4MB | 4.1MB | 20KB |
+| low-memory | Node.js | 49.1MB | 49.1MB | 4.1MB | 17KB |
 | low-memory | Python | — | — | 272B | 272B |
-| low-memory | Galerina passive ⟨interp⟩ | 109.1MB | 109.1MB | 23.7MB | 666KB |
-| low-memory | Galerina manifest ⟨interp⟩ | 107.7MB | 107.7MB | 23.6MB | 1.9MB |
-| low-memory | Galerina governed ⟨interp⟩ | 108.0MB | 108.0MB | 22.2MB | 563KB |
-| low-memory | Galerina/WASM legacy lane | 110.6MB | 110.6MB | 21.9MB | 6KB |
+| low-memory | Galerina passive ⟨interp⟩ | 80.3MB | 80.3MB | 24.3MB | 701KB |
+| low-memory | Galerina manifest ⟨interp⟩ | 78.8MB | 78.8MB | 23.1MB | 572KB |
+| low-memory | Galerina governed ⟨interp⟩ | 78.7MB | 78.7MB | 22.6MB | 162KB |
+| low-memory | Galerina/WASM legacy lane | 81.0MB | 81.0MB | 22.8MB | 42KB |
 | gpu-compute | Rust AVX2 | — | — | — | — |
 | gpu-compute | Rust (generic) | — | — | — | — |
-| gpu-compute | Node.js | 65.6MB | 65.6MB | 4.1MB | 17KB |
+| gpu-compute | Node.js | 48.8MB | 48.8MB | 4.1MB | 17KB |
 | gpu-compute | Python | — | — | 304B | 304B |
-| gpu-compute | Galerina passive ⟨interp⟩ | 109.6MB | 109.6MB | 22.3MB | 195KB |
-| gpu-compute | Galerina manifest ⟨interp⟩ | 109.6MB | 109.6MB | 23.0MB | 1.2MB |
-| gpu-compute | Galerina governed ⟨interp⟩ | 107.5MB | 107.5MB | 22.0MB | 164KB |
-| gpu-compute | Galerina/WASM legacy lane | 111.8MB | 111.8MB | 22.0MB | 2KB |
+| gpu-compute | Galerina passive ⟨interp⟩ | 81.4MB | 81.4MB | 23.2MB | 212KB |
+| gpu-compute | Galerina manifest ⟨interp⟩ | 81.3MB | 81.3MB | 23.9MB | 1.3MB |
+| gpu-compute | Galerina governed ⟨interp⟩ | 81.1MB | 81.1MB | 22.9MB | 332KB |
+| gpu-compute | Galerina/WASM legacy lane | 83.5MB | 83.5MB | 22.8MB | 2KB |
 | gpu-compute | Deno WebGPU (NVIDIA GeForce RTX 2060) | — | — | — | — |
 | matrix-multiply | Rust AVX2 | — | — | — | — |
 | matrix-multiply | Rust (generic) | — | — | — | — |
-| matrix-multiply | Node.js | 67.1MB | 67.1MB | 4.6MB | 439KB |
+| matrix-multiply | Node.js | 50.4MB | 50.4MB | 4.8MB | 672KB |
 | matrix-multiply | Python | — | — | 17KB | 17KB |
-| matrix-multiply | Galerina passive ⟨interp⟩ | 109.4MB | 109.4MB | 22.4MB | 165KB |
-| matrix-multiply | Galerina manifest ⟨interp⟩ | 109.4MB | 109.4MB | 22.3MB | 540KB |
-| matrix-multiply | Galerina governed ⟨interp⟩ | 109.4MB | 109.4MB | 22.3MB | 441KB |
-| matrix-multiply | Galerina/WASM legacy lane | 111.9MB | 111.9MB | 22.4MB | 2KB |
+| matrix-multiply | Galerina passive ⟨interp⟩ | 81.4MB | 81.4MB | 23.4MB | 173KB |
+| matrix-multiply | Galerina manifest ⟨interp⟩ | 81.4MB | 81.4MB | 24.8MB | 2.2MB |
+| matrix-multiply | Galerina governed ⟨interp⟩ | 81.2MB | 81.2MB | 23.7MB | 1.1MB |
+| matrix-multiply | Galerina/WASM legacy lane | 83.7MB | 83.7MB | 22.9MB | 3KB |
 | matrix-multiply | Deno WebGPU (NVIDIA GeForce RTX 2060) | — | — | — | — |
 | crypto-ops | Rust AVX2 | — | — | — | — |
 | crypto-ops | Rust (generic) | — | — | — | — |
-| crypto-ops | Node.js | 79.6MB | 79.6MB | 8.0MB | 2.5MB |
+| crypto-ops | Node.js | 62.4MB | 62.4MB | 10.0MB | 4.5MB |
 | crypto-ops | Python | — | — | 208B | 208B |
-| crypto-ops | Galerina passive ⟨interp⟩ | 109.8MB | 109.8MB | 22.6MB | 26KB |
-| crypto-ops | Galerina manifest ⟨interp⟩ | 109.5MB | 109.5MB | 22.1MB | 190KB |
-| crypto-ops | Galerina governed ⟨interp⟩ | 109.5MB | 109.5MB | 22.1MB | 342KB |
+| crypto-ops | Galerina passive ⟨interp⟩ | 81.6MB | 81.6MB | 23.4MB | -159KB |
+| crypto-ops | Galerina manifest ⟨interp⟩ | 81.5MB | 81.5MB | 22.9MB | 198KB |
+| crypto-ops | Galerina governed ⟨interp⟩ | 81.5MB | 81.5MB | 22.9MB | 346KB |
 | text-html | Rust AVX2 | — | — | — | — |
 | text-html | Rust (generic) | — | — | — | — |
 | text-html | Node.js | — | — | — | 472KB |
 | text-html | Python | — | — | 208B | 208B |
-| text-html | Galerina passive ⟨interp⟩ | 108.0MB | 108.0MB | 23.0MB | -296KB |
-| text-html | Galerina manifest ⟨interp⟩ | 108.6MB | 108.6MB | 22.4MB | 156KB |
-| text-html | Galerina governed ⟨interp⟩ | 108.4MB | 108.4MB | 22.5MB | 176KB |
+| text-html | Galerina passive ⟨interp⟩ | 82.5MB | 82.5MB | 23.3MB | -34KB |
+| text-html | Galerina manifest ⟨interp⟩ | 81.6MB | 81.6MB | 23.2MB | 177KB |
+| text-html | Galerina governed ⟨interp⟩ | 81.6MB | 81.6MB | 23.3MB | 197KB |
 | tri-logic | Rust AVX2 | — | — | — | — |
 | tri-logic | Rust (generic) | — | — | — | — |
-| tri-logic | Node.js | — | — | — | 219KB |
+| tri-logic | Node.js | — | — | — | 329KB |
 | tri-logic | Python | — | — | — | — |
-| tri-logic | Galerina passive ⟨interp⟩ | 109.9MB | 109.9MB | 23.1MB | 268KB |
-| tri-logic | Galerina manifest ⟨interp⟩ | 109.9MB | 109.9MB | 22.7MB | 402KB |
-| tri-logic | Galerina governed ⟨interp⟩ | 109.6MB | 109.6MB | 22.7MB | 495KB |
-| tri-logic | Galerina/WASM legacy lane | 112.2MB | 112.2MB | 22.6MB | 1KB |
+| tri-logic | Galerina passive ⟨interp⟩ | 81.6MB | 81.6MB | 24.9MB | 439KB |
+| tri-logic | Galerina manifest ⟨interp⟩ | 81.6MB | 81.6MB | 24.3MB | 1.1MB |
+| tri-logic | Galerina governed ⟨interp⟩ | 79.6MB | 79.6MB | 24.5MB | 1.5MB |
+| tri-logic | Galerina/WASM legacy lane | 84.6MB | 84.6MB | 23.4MB | 1KB |
 | verified-native-operation | Rust AVX2 | — | — | — | — |
 | verified-native-operation | Rust (generic) | — | — | — | — |
 | verified-native-operation | Node.js | — | — | — | — |
 | verified-native-operation | Python | — | — | — | — |
-| data-query | Node.js | — | — | — | 27KB |
+| data-query | Node.js | — | — | — | 22KB |
 | data-query | Python | — | — | — | — |
-| data-query | Galerina passive ⟨interp⟩ | 109.3MB | 109.3MB | 26.9MB | 1.2MB |
-| data-query | Galerina manifest ⟨interp⟩ | 109.1MB | 109.1MB | 24.2MB | 1.3MB |
-| data-query | Galerina governed ⟨interp⟩ | 110.5MB | 110.5MB | 25.3MB | 2.3MB |
+| data-query | Galerina passive ⟨interp⟩ | 85.6MB | 85.6MB | 27.7MB | 1.3MB |
+| data-query | Galerina manifest ⟨interp⟩ | 86.7MB | 86.7MB | 24.7MB | 804KB |
+| data-query | Galerina governed ⟨interp⟩ | 87.0MB | 87.0MB | 26.4MB | 2.4MB |
 | call-chain | Rust AVX2 | — | — | — | — |
 | call-chain | Rust (generic) | — | — | — | — |
-| call-chain | Node.js | 65.6MB | 65.6MB | 4.1MB | 8KB |
+| call-chain | Node.js | 48.6MB | 48.6MB | 4.1MB | 14KB |
 | call-chain | Python | — | — | 368B | 368B |
-| call-chain | Galerina passive ⟨interp⟩ | 110.4MB | 110.4MB | 25.0MB | 96KB |
-| call-chain | Galerina manifest ⟨interp⟩ | 110.4MB | 110.4MB | 26.4MB | 3.2MB |
-| call-chain | Galerina governed ⟨interp⟩ | 110.2MB | 110.2MB | 26.5MB | 3.4MB |
-| call-chain | Galerina/WASM legacy lane | 112.1MB | 112.1MB | 23.2MB | 1KB |
-| nbody | Node.js | 67.4MB | 67.4MB | 4.2MB | 30KB |
+| call-chain | Galerina passive ⟨interp⟩ | 94.7MB | 94.7MB | 29.6MB | 127KB |
+| call-chain | Galerina manifest ⟨interp⟩ | 94.7MB | 94.7MB | 30.9MB | 6.8MB |
+| call-chain | Galerina governed ⟨interp⟩ | 96.8MB | 96.8MB | 30.8MB | 6.7MB |
+| call-chain | Galerina/WASM legacy lane | 89.6MB | 89.6MB | 24.2MB | 1KB |
+| nbody | Node.js | 50.5MB | 50.5MB | 4.2MB | 30KB |
 | nbody | Python | — | — | 624B | 624B |
-| nbody | Galerina passive ⟨interp⟩ | 113.0MB | 113.0MB | 24.7MB | 236KB |
-| nbody | Galerina manifest ⟨interp⟩ | 113.0MB | 113.0MB | 24.2MB | 982KB |
-| nbody | Galerina governed ⟨interp⟩ | 110.4MB | 110.4MB | 24.3MB | 1.1MB |
-| nbody | Galerina/WASM legacy lane | 113.0MB | 113.0MB | 23.5MB | 1KB |
-| json-parse | Node.js | — | — | — | 255KB |
+| nbody | Galerina passive ⟨interp⟩ | 97.3MB | 97.3MB | 25.5MB | 246KB |
+| nbody | Galerina manifest ⟨interp⟩ | 97.3MB | 97.3MB | 24.7MB | 550KB |
+| nbody | Galerina governed ⟨interp⟩ | 96.4MB | 96.4MB | 25.5MB | 1.3MB |
+| nbody | Galerina/WASM legacy lane | 97.1MB | 97.1MB | 24.5MB | 1KB |
+| json-parse | Node.js | — | — | — | 254KB |
 | json-parse | Python | — | — | 520B | 520B |
-| json-parse | Galerina passive ⟨interp⟩ | 113.6MB | 113.6MB | 25.5MB | 435KB |
-| json-parse | Galerina manifest ⟨interp⟩ | 111.4MB | 111.4MB | 28.3MB | 4.6MB |
-| json-parse | Galerina governed ⟨interp⟩ | 119.4MB | 119.4MB | 25.9MB | 2.6MB |
+| json-parse | Galerina passive ⟨interp⟩ | 103.1MB | 103.1MB | 27.0MB | 467KB |
+| json-parse | Galerina manifest ⟨interp⟩ | 100.1MB | 100.1MB | 27.6MB | 2.9MB |
+| json-parse | Galerina governed ⟨interp⟩ | 104.2MB | 104.2MB | 26.6MB | 2.4MB |
 | mandelbrot | Rust AVX2 | — | — | — | — |
 | mandelbrot | Rust (generic) | — | — | — | — |
-| mandelbrot | Node.js | 67.6MB | 67.6MB | 4.4MB | 279KB |
+| mandelbrot | Node.js | 50.6MB | 50.6MB | 4.4MB | 233KB |
 | mandelbrot | Python | — | — | 3KB | 3KB |
-| mandelbrot | Galerina passive ⟨interp⟩ | 114.4MB | 114.4MB | 24.3MB | 168KB |
-| mandelbrot | Galerina manifest ⟨interp⟩ | 114.4MB | 114.4MB | 27.9MB | 4.3MB |
-| mandelbrot | Galerina governed ⟨interp⟩ | 114.4MB | 114.4MB | 26.1MB | 2.2MB |
-| mandelbrot | Galerina/WASM legacy lane | 118.2MB | 118.2MB | 24.2MB | 1KB |
+| mandelbrot | Galerina passive ⟨interp⟩ | 98.9MB | 98.9MB | 28.3MB | 175KB |
+| mandelbrot | Galerina manifest ⟨interp⟩ | 98.9MB | 98.9MB | 27.6MB | 3.0MB |
+| mandelbrot | Galerina governed ⟨interp⟩ | 98.1MB | 98.1MB | 25.0MB | 152KB |
+| mandelbrot | Galerina/WASM legacy lane | 103.2MB | 103.2MB | 25.1MB | 1KB |
 | spectral-norm | Rust AVX2 | — | — | — | — |
 | spectral-norm | Rust (generic) | — | — | — | — |
-| spectral-norm | Node.js | 67.1MB | 67.1MB | 4.4MB | 294KB |
+| spectral-norm | Node.js | 50.3MB | 50.3MB | 4.4MB | 293KB |
 | spectral-norm | Python | — | — | 4KB | 4KB |
 | binary-trees | Rust AVX2 | — | — | — | — |
 | binary-trees | Rust (generic) | — | — | — | — |
-| binary-trees | Node.js | 67.3MB | 67.3MB | 4.6MB | 429KB |
+| binary-trees | Node.js | 50.5MB | 50.5MB | 4.6MB | 428KB |
 | binary-trees | Python | — | — | 368B | 368B |
-| binary-trees | Galerina passive ⟨interp⟩ | 114.2MB | 114.2MB | 27.3MB | 70KB |
-| binary-trees | Galerina manifest ⟨interp⟩ | 114.2MB | 114.2MB | 24.3MB | 619KB |
-| binary-trees | Galerina governed ⟨interp⟩ | 112.1MB | 112.1MB | 24.9MB | 1.2MB |
-| binary-trees | Galerina/WASM legacy lane | 116.5MB | 116.5MB | 24.0MB | 1KB |
+| binary-trees | Galerina passive ⟨interp⟩ | 97.6MB | 97.6MB | 25.1MB | 74KB |
+| binary-trees | Galerina manifest ⟨interp⟩ | 97.6MB | 97.6MB | 26.4MB | 1.8MB |
+| binary-trees | Galerina governed ⟨interp⟩ | 98.3MB | 98.3MB | 25.6MB | 977KB |
+| binary-trees | Galerina/WASM legacy lane | 99.3MB | 99.3MB | 24.9MB | 2KB |
 | spore-container | Rust AVX2 | — | — | — | — |
 | spore-container | Rust (generic) | — | — | — | — |
-| spore-container | Node.js | 83.0MB | 83.0MB | 9.2MB | 2.0MB |
+| spore-container | Node.js | 66.1MB | 66.1MB | 8.8MB | 1.6MB |
 | spore-container | Python | — | — | 5KB | 5KB |
-| framework-pipeline | Node.js | 93.6MB | 93.6MB | 21.9MB | 11.2MB |
+| framework-pipeline | Node.js | 77.3MB | 77.3MB | 19.2MB | 13.0MB |
 | framework-pipeline | Python | — | — | 2KB | 2KB |
 | http-throughput | Node.js | — | — | — | — |
 | naming-check | Node.js | — | — | — | — |
@@ -416,168 +416,168 @@
 |---|---|---|---|---|---|
 | compute-mix | Rust AVX2 | 5.00s | — | — | — |
 | compute-mix | Rust (generic) | 5.00s | — | — | — |
-| compute-mix | Node.js | 5.00s | 5.00s | 100% | 131.3K ops/CPU-ms |
-| compute-mix | Python | 5.04s | 5.05s | 100% | 723.22 ops/CPU-ms |
-| compute-mix | Galerina passive ⟨interp⟩ | 0.5ms | 0.0ms | 0% | — |
-| compute-mix | Galerina manifest ⟨interp⟩ | 28.8ms | 47.0ms | 163% | 1.1K ops/CPU-ms |
-| compute-mix | Galerina governed ⟨interp⟩ | 30.0ms | 15.0ms | 50% | 3.3K ops/CPU-ms |
-| compute-mix | Galerina/WASM legacy lane | 1.39s | 1.39s | 100% | 71.9K ops/CPU-ms |
-| arithmetic-threshold | Rust AVX2 | 12.8ms | — | — | — |
-| arithmetic-threshold | Rust (generic) | 12.8ms | — | — | — |
-| arithmetic-threshold | Node.js | 20.9ms | 15.0ms | 72% | 1.33M ops/CPU-ms |
-| arithmetic-threshold | Python | 5.42s | 5.41s | 100% | 3.7K ops/CPU-ms |
+| compute-mix | Node.js | 3.00s | 3.00s | 100% | 140.7K ops/CPU-ms |
+| compute-mix | Python | 3.05s | 3.05s | 100% | 754.87 ops/CPU-ms |
+| compute-mix | Galerina passive ⟨interp⟩ | 0.3ms | 0.0ms | 0% | — |
+| compute-mix | Galerina manifest ⟨interp⟩ | 27.9ms | 94.0ms | 336% | 531.91 ops/CPU-ms |
+| compute-mix | Galerina governed ⟨interp⟩ | 28.8ms | 47.0ms | 163% | 1.1K ops/CPU-ms |
+| compute-mix | Galerina/WASM legacy lane | 1.24s | 1.23s | 99% | 81.0K ops/CPU-ms |
+| arithmetic-threshold | Rust AVX2 | 12.7ms | — | — | — |
+| arithmetic-threshold | Rust (generic) | 12.5ms | — | — | — |
+| arithmetic-threshold | Node.js | 20.2ms | 31.0ms | 153% | 645.2K ops/CPU-ms |
+| arithmetic-threshold | Python | 5.12s | 5.13s | 100% | 3.9K ops/CPU-ms |
 | arithmetic-threshold | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
-| arithmetic-threshold | Galerina manifest ⟨interp⟩ | 12.9ms | 32.0ms | 248% | 2.0K ops/CPU-ms |
-| arithmetic-threshold | Galerina governed ⟨interp⟩ | 15.1ms | 15.0ms | 99% | 4.2K ops/CPU-ms |
-| arithmetic-threshold | Galerina/WASM legacy lane | 1.12s | 1.13s | 100% | 449.8K ops/CPU-ms |
+| arithmetic-threshold | Galerina manifest ⟨interp⟩ | 11.5ms | 31.0ms | 269% | 2.0K ops/CPU-ms |
+| arithmetic-threshold | Galerina governed ⟨interp⟩ | 11.7ms | 31.0ms | 265% | 2.0K ops/CPU-ms |
+| arithmetic-threshold | Galerina/WASM legacy lane | 1.11s | 1.13s | 101% | 506.0K ops/CPU-ms |
 | six-digit-guess | Rust AVX2 | 0.6ms | — | — | — |
 | six-digit-guess | Rust (generic) | 0.5ms | — | — | — |
-| six-digit-guess | Node.js | 17.0ms | 16.0ms | 94% | 2.6K ops/CPU-ms |
-| six-digit-guess | Python | 499.1ms | 500.0ms | 100% | 84.14 ops/CPU-ms |
-| six-digit-guess | Galerina passive ⟨interp⟩ | 0.1ms | 15.0ms | 10949% | — |
-| six-digit-guess | Galerina manifest ⟨interp⟩ | 956.4ms | 984.0ms | 103% | 42.75 ops/CPU-ms |
-| six-digit-guess | Galerina governed ⟨interp⟩ | 994.5ms | 999.0ms | 100% | 42.11 ops/CPU-ms |
-| six-digit-guess | Galerina/WASM legacy lane | 1.26s | 1.27s | 101% | 33.2K ops/CPU-ms |
-| record-allocation | Rust AVX2 | 8.6ms | — | — | — |
-| record-allocation | Rust (generic) | 8.5ms | — | — | — |
-| record-allocation | Node.js | 3.6ms | 0.0ms | 0% | — |
-| record-allocation | Python | 52.9ms | 46.9ms | 89% | 4.3K ops/CPU-ms |
-| record-allocation | Galerina passive ⟨interp⟩ | 0.5ms | 0.0ms | 0% | — |
-| record-allocation | Galerina manifest ⟨interp⟩ | 5.3ms | 47.0ms | 890% | 212.77 ops/CPU-ms |
-| record-allocation | Galerina governed ⟨interp⟩ | 5.3ms | 0.0ms | 0% | — |
-| record-allocation | Galerina/WASM legacy lane | 1.01s | 1.00s | 99% | 490.0K ops/CPU-ms |
-| fibonacci-recursive | Rust AVX2 | 443.7ms | — | — | — |
-| fibonacci-recursive | Rust (generic) | 402.8ms | — | — | — |
-| fibonacci-recursive | Node.js | 975.6ms | 969.0ms | 99% | 0.10 ops/CPU-ms |
-| fibonacci-recursive | Python | 4.80s | 4.80s | 100% | 0.00 ops/CPU-ms |
+| six-digit-guess | Node.js | 14.9ms | 31.0ms | 208% | 1.4K ops/CPU-ms |
+| six-digit-guess | Python | 463.4ms | 468.8ms | 101% | 89.75 ops/CPU-ms |
+| six-digit-guess | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
+| six-digit-guess | Galerina manifest ⟨interp⟩ | 904.2ms | 969.0ms | 107% | 43.41 ops/CPU-ms |
+| six-digit-guess | Galerina governed ⟨interp⟩ | 897.2ms | 1.02s | 113% | 41.41 ops/CPU-ms |
+| six-digit-guess | Galerina/WASM legacy lane | 1.12s | 1.13s | 100% | 37.4K ops/CPU-ms |
+| record-allocation | Rust AVX2 | 8.4ms | — | — | — |
+| record-allocation | Rust (generic) | 8.4ms | — | — | — |
+| record-allocation | Node.js | 3.3ms | 0.0ms | 0% | — |
+| record-allocation | Python | 62.0ms | 62.5ms | 101% | 3.2K ops/CPU-ms |
+| record-allocation | Galerina passive ⟨interp⟩ | 0.3ms | 0.0ms | 0% | — |
+| record-allocation | Galerina manifest ⟨interp⟩ | 3.7ms | 0.0ms | 0% | — |
+| record-allocation | Galerina governed ⟨interp⟩ | 3.9ms | 31.0ms | 791% | 322.58 ops/CPU-ms |
+| record-allocation | Galerina/WASM legacy lane | 1.00s | 1.00s | 100% | 570.0K ops/CPU-ms |
+| fibonacci-recursive | Rust AVX2 | 389.0ms | — | — | — |
+| fibonacci-recursive | Rust (generic) | 384.6ms | — | — | — |
+| fibonacci-recursive | Node.js | 757.2ms | 766.0ms | 101% | 0.13 ops/CPU-ms |
+| fibonacci-recursive | Python | 4.85s | 4.86s | 100% | 0.00 ops/CPU-ms |
 | fibonacci-recursive | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
-| fibonacci-recursive | Galerina manifest ⟨interp⟩ | 61.8ms | 140.0ms | 227% | 0.01 ops/CPU-ms |
-| fibonacci-recursive | Galerina governed ⟨interp⟩ | 91.0ms | 156.0ms | 171% | 0.01 ops/CPU-ms |
-| fibonacci-recursive | Galerina/WASM legacy lane | 1.03s | 1.03s | 100% | 16.47 ops/CPU-ms |
-| tower-of-hanoi | Rust AVX2 | 567.8ms | — | — | — |
-| tower-of-hanoi | Rust (generic) | 525.2ms | — | — | — |
-| tower-of-hanoi | Node.js | 110.8ms | 109.0ms | 98% | 120.2K ops/CPU-ms |
-| tower-of-hanoi | Python | 469.7ms | 468.8ms | 100% | 2.8K ops/CPU-ms |
+| fibonacci-recursive | Galerina manifest ⟨interp⟩ | 60.9ms | 63.0ms | 103% | 0.02 ops/CPU-ms |
+| fibonacci-recursive | Galerina governed ⟨interp⟩ | 82.4ms | 109.0ms | 132% | 0.01 ops/CPU-ms |
+| fibonacci-recursive | Galerina/WASM legacy lane | 1.00s | 1.01s | 101% | 17.73 ops/CPU-ms |
+| tower-of-hanoi | Rust AVX2 | 521.4ms | — | — | — |
+| tower-of-hanoi | Rust (generic) | 528.1ms | — | — | — |
+| tower-of-hanoi | Node.js | 101.5ms | 109.0ms | 107% | 120.2K ops/CPU-ms |
+| tower-of-hanoi | Python | 498.7ms | 484.4ms | 97% | 2.7K ops/CPU-ms |
 | tower-of-hanoi | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
-| tower-of-hanoi | Galerina manifest ⟨interp⟩ | 847.6ms | 860.0ms | 101% | 76.20 ops/CPU-ms |
-| tower-of-hanoi | Galerina governed ⟨interp⟩ | 821.7ms | 829.0ms | 101% | 79.05 ops/CPU-ms |
-| tower-of-hanoi | Galerina/WASM legacy lane | 1.12s | 1.11s | 99% | 118.2K ops/CPU-ms |
-| collection-pipeline | Rust AVX2 | 80.8ms | — | — | — |
-| collection-pipeline | Rust (generic) | 240.3ms | — | — | — |
-| collection-pipeline | Node.js | 727.8ms | 734.0ms | 101% | 68.1K ops/CPU-ms |
-| collection-pipeline | Python | 4.99s | 5.00s | 100% | 10.0K ops/CPU-ms |
-| collection-pipeline | Galerina passive ⟨interp⟩ | 0.3ms | 0.0ms | 0% | — |
-| collection-pipeline | Galerina manifest ⟨interp⟩ | 5.5ms | 31.0ms | 564% | 322.58 ops/CPU-ms |
-| collection-pipeline | Galerina governed ⟨interp⟩ | 4.6ms | 0.0ms | 0% | — |
-| collection-pipeline | Galerina/WASM legacy lane | 1.02s | 1.01s | 100% | 384.2K ops/CPU-ms |
-| governance-cost | Rust AVX2 | 12.5ms | — | — | — |
-| governance-cost | Rust (generic) | 11.4ms | — | — | — |
-| governance-cost | Node.js | 51.9ms | 47.0ms | 91% | — |
-| governance-cost | Python | 4.73s | 4.72s | 100% | — |
-| governance-cost | Galerina passive ⟨interp⟩ | 2.7ms | 32.0ms | 1204% | — |
-| governance-cost | Galerina manifest ⟨interp⟩ | 1.8ms | 0.0ms | 0% | — |
-| governance-cost | Galerina governed ⟨interp⟩ | 1.5ms | 0.0ms | 0% | — |
-| governance-cost | Galerina/WASM legacy lane | 1.00s | 985.0ms | 98% | — |
-| hardware-targets | Rust AVX2 | 860.3ms | — | — | — |
-| hardware-targets | Rust (generic) | 862.0ms | — | — | — |
-| hardware-targets | Node.js | 1.21s | 1.22s | 100% | 820.34 ops/CPU-ms |
-| hardware-targets | Galerina passive ⟨interp⟩ | 11.5ms | 15.0ms | 131% | — |
-| hardware-targets | Galerina manifest ⟨interp⟩ | 0.3ms | 0.0ms | 0% | — |
+| tower-of-hanoi | Galerina manifest ⟨interp⟩ | 761.3ms | 812.0ms | 107% | 80.71 ops/CPU-ms |
+| tower-of-hanoi | Galerina governed ⟨interp⟩ | 781.3ms | 797.0ms | 102% | 82.23 ops/CPU-ms |
+| tower-of-hanoi | Galerina/WASM legacy lane | 1.11s | 1.11s | 100% | 118.2K ops/CPU-ms |
+| collection-pipeline | Rust AVX2 | 73.9ms | — | — | — |
+| collection-pipeline | Rust (generic) | 225.8ms | — | — | — |
+| collection-pipeline | Node.js | 675.5ms | 702.0ms | 104% | 71.2K ops/CPU-ms |
+| collection-pipeline | Python | 3.64s | 3.64s | 100% | 13.7K ops/CPU-ms |
+| collection-pipeline | Galerina passive ⟨interp⟩ | 0.4ms | 0.0ms | 0% | — |
+| collection-pipeline | Galerina manifest ⟨interp⟩ | 3.9ms | 0.0ms | 0% | — |
+| collection-pipeline | Galerina governed ⟨interp⟩ | 4.3ms | 0.0ms | 0% | — |
+| collection-pipeline | Galerina/WASM legacy lane | 1.00s | 1.00s | 100% | 440.0K ops/CPU-ms |
+| governance-cost | Rust AVX2 | 11.0ms | — | — | — |
+| governance-cost | Rust (generic) | 10.9ms | — | — | — |
+| governance-cost | Node.js | 46.2ms | 63.0ms | 137% | — |
+| governance-cost | Python | 4.92s | 4.92s | 100% | — |
+| governance-cost | Galerina passive ⟨interp⟩ | 1.7ms | 0.0ms | 0% | — |
+| governance-cost | Galerina manifest ⟨interp⟩ | 1.1ms | 0.0ms | 0% | — |
+| governance-cost | Galerina governed ⟨interp⟩ | 1.4ms | 0.0ms | 0% | — |
+| governance-cost | Galerina/WASM legacy lane | 1.00s | 1.00s | 100% | — |
+| hardware-targets | Rust AVX2 | 825.0ms | — | — | — |
+| hardware-targets | Rust (generic) | 806.6ms | — | — | — |
+| hardware-targets | Node.js | 1.05s | 1.09s | 104% | 914.08 ops/CPU-ms |
+| hardware-targets | Galerina passive ⟨interp⟩ | 11.2ms | 0.0ms | 0% | — |
+| hardware-targets | Galerina manifest ⟨interp⟩ | 0.4ms | 0.0ms | 0% | — |
 | hardware-targets | Galerina governed ⟨interp⟩ | 0.3ms | 0.0ms | 0% | — |
-| hardware-targets | Galerina/WASM legacy lane | 1.00s | 1.00s | 100% | 35.5K ops/CPU-ms |
-| low-memory | Rust AVX2 | 175.7ms | — | — | — |
-| low-memory | Rust (generic) | 757.1ms | — | — | — |
-| low-memory | Node.js | 71.1ms | 62.0ms | 87% | 806.5K ops/CPU-ms |
-| low-memory | Python | 3.79s | 3.80s | 100% | 2.6K ops/CPU-ms |
-| low-memory | Galerina passive ⟨interp⟩ | 0.9ms | 0.0ms | 0% | — |
-| low-memory | Galerina manifest ⟨interp⟩ | 118.2ms | 172.0ms | 146% | 58.14 ops/CPU-ms |
-| low-memory | Galerina governed ⟨interp⟩ | 90.9ms | 109.0ms | 120% | 91.74 ops/CPU-ms |
-| low-memory | Galerina/WASM legacy lane | 1.01s | 1.02s | 100% | 452.8K ops/CPU-ms |
-| gpu-compute | Rust AVX2 | 4.26s | — | — | — |
-| gpu-compute | Rust (generic) | 4.26s | — | — | — |
-| gpu-compute | Node.js | 524.0ms | 516.0ms | 98% | 969.0K ops/CPU-ms |
-| gpu-compute | Python | 9.37s | 9.36s | 100% | 5.3K ops/CPU-ms |
+| hardware-targets | Galerina/WASM legacy lane | 1.00s | 1.00s | 100% | 40.5K ops/CPU-ms |
+| low-memory | Rust AVX2 | 157.7ms | — | — | — |
+| low-memory | Rust (generic) | 720.3ms | — | — | — |
+| low-memory | Node.js | 69.4ms | 63.0ms | 91% | 793.7K ops/CPU-ms |
+| low-memory | Python | 2.75s | 2.75s | 100% | 3.6K ops/CPU-ms |
+| low-memory | Galerina passive ⟨interp⟩ | 0.5ms | 0.0ms | 0% | — |
+| low-memory | Galerina manifest ⟨interp⟩ | 72.6ms | 94.0ms | 129% | 106.38 ops/CPU-ms |
+| low-memory | Galerina governed ⟨interp⟩ | 69.3ms | 110.0ms | 159% | 90.91 ops/CPU-ms |
+| low-memory | Galerina/WASM legacy lane | 1.00s | 1.02s | 102% | 482.3K ops/CPU-ms |
+| gpu-compute | Rust AVX2 | 4.05s | — | — | — |
+| gpu-compute | Rust (generic) | 4.07s | — | — | — |
+| gpu-compute | Node.js | 490.3ms | 485.0ms | 99% | 1.03M ops/CPU-ms |
+| gpu-compute | Python | 8.64s | 8.64s | 100% | 5.8K ops/CPU-ms |
 | gpu-compute | Galerina passive ⟨interp⟩ | 0.2ms | 0.0ms | 0% | — |
-| gpu-compute | Galerina manifest ⟨interp⟩ | 336.8ms | 344.0ms | 102% | 290.70 ops/CPU-ms |
-| gpu-compute | Galerina governed ⟨interp⟩ | 330.7ms | 375.0ms | 113% | 266.67 ops/CPU-ms |
-| gpu-compute | Galerina/WASM legacy lane | 1.12s | 1.13s | 100% | 444.4K ops/CPU-ms |
-| gpu-compute | Deno WebGPU (NVIDIA GeForce RTX 2060) | 25.9ms | — | — | — |
-| matrix-multiply | Rust AVX2 | 107.0ms | — | — | — |
-| matrix-multiply | Rust (generic) | 86.8ms | — | — | — |
-| matrix-multiply | Node.js | 223.2ms | 219.0ms | 98% | 598.5K ops/CPU-ms |
+| gpu-compute | Galerina manifest ⟨interp⟩ | 286.9ms | 297.0ms | 104% | 336.70 ops/CPU-ms |
+| gpu-compute | Galerina governed ⟨interp⟩ | 304.8ms | 329.0ms | 108% | 303.95 ops/CPU-ms |
+| gpu-compute | Galerina/WASM legacy lane | 1.01s | 1.01s | 101% | 492.6K ops/CPU-ms |
+| gpu-compute | Deno WebGPU (NVIDIA GeForce RTX 2060) | 23.7ms | — | — | — |
+| matrix-multiply | Rust AVX2 | 89.7ms | — | — | — |
+| matrix-multiply | Rust (generic) | 85.0ms | — | — | — |
+| matrix-multiply | Node.js | 205.6ms | 219.0ms | 107% | 598.5K ops/CPU-ms |
 | matrix-multiply | Python | 0.5ms | — | — | — |
 | matrix-multiply | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
-| matrix-multiply | Galerina manifest ⟨interp⟩ | 56.0ms | 47.0ms | 84% | 697.19 ops/CPU-ms |
-| matrix-multiply | Galerina governed ⟨interp⟩ | 54.1ms | 94.0ms | 174% | 348.60 ops/CPU-ms |
-| matrix-multiply | Galerina/WASM legacy lane | 1.02s | 1.02s | 100% | 419.3K ops/CPU-ms |
-| matrix-multiply | Deno WebGPU (NVIDIA GeForce RTX 2060) | 13.9ms | — | — | — |
-| crypto-ops | Galerina passive ⟨interp⟩ | 28.7ms | 31.0ms | 108% | — |
-| crypto-ops | Galerina manifest ⟨interp⟩ | 0.5ms | 0.0ms | 0% | — |
-| crypto-ops | Galerina governed ⟨interp⟩ | 8.1ms | 16.0ms | 199% | 0.06 ops/CPU-ms |
-| text-html | Galerina passive ⟨interp⟩ | 1.8ms | 0.0ms | 0% | — |
+| matrix-multiply | Galerina manifest ⟨interp⟩ | 48.3ms | 94.0ms | 195% | 348.60 ops/CPU-ms |
+| matrix-multiply | Galerina governed ⟨interp⟩ | 42.5ms | 78.0ms | 184% | 420.10 ops/CPU-ms |
+| matrix-multiply | Galerina/WASM legacy lane | 1.06s | 1.06s | 100% | 462.4K ops/CPU-ms |
+| matrix-multiply | Deno WebGPU (NVIDIA GeForce RTX 2060) | 12.3ms | — | — | — |
+| crypto-ops | Galerina passive ⟨interp⟩ | 17.2ms | 31.0ms | 181% | — |
+| crypto-ops | Galerina manifest ⟨interp⟩ | 0.5ms | 78.0ms | 14717% | 0.01 ops/CPU-ms |
+| crypto-ops | Galerina governed ⟨interp⟩ | 5.1ms | 0.0ms | 0% | — |
+| text-html | Galerina passive ⟨interp⟩ | 1.7ms | 0.0ms | 0% | — |
 | text-html | Galerina manifest ⟨interp⟩ | 0.4ms | 0.0ms | 0% | — |
-| text-html | Galerina governed ⟨interp⟩ | 1.4ms | 0.0ms | 0% | — |
-| tri-logic | Rust AVX2 | 473.0ms | — | — | — |
-| tri-logic | Rust (generic) | 442.4ms | — | — | — |
-| tri-logic | Node.js | 328.2ms | — | — | — |
-| tri-logic | Python | 1.87s | — | — | — |
-| tri-logic | Galerina passive ⟨interp⟩ | 1.6ms | 0.0ms | 0% | — |
-| tri-logic | Galerina manifest ⟨interp⟩ | 1.04s | 1.14s | 109% | 263.16 ops/CPU-ms |
-| tri-logic | Galerina governed ⟨interp⟩ | 1.05s | 1.08s | 103% | 278.03 ops/CPU-ms |
-| tri-logic | Galerina/WASM legacy lane | 1.33s | 1.33s | 100% | 451.5K ops/CPU-ms |
-| data-query | Node.js | 130.1ms | — | — | — |
-| data-query | Python | 978.2ms | — | — | — |
-| data-query | Galerina passive ⟨interp⟩ | 0.7ms | 0.0ms | 0% | — |
-| data-query | Galerina manifest ⟨interp⟩ | 46.3ms | 47.0ms | 101% | 212.77 ops/CPU-ms |
-| data-query | Galerina governed ⟨interp⟩ | 48.4ms | 63.0ms | 130% | 158.73 ops/CPU-ms |
+| text-html | Galerina governed ⟨interp⟩ | 1.1ms | 0.0ms | 0% | — |
+| tri-logic | Rust AVX2 | 419.6ms | — | — | — |
+| tri-logic | Rust (generic) | 429.3ms | — | — | — |
+| tri-logic | Node.js | 292.4ms | — | — | — |
+| tri-logic | Python | 1.64s | — | — | — |
+| tri-logic | Galerina passive ⟨interp⟩ | 1.9ms | 0.0ms | 0% | — |
+| tri-logic | Galerina manifest ⟨interp⟩ | 963.1ms | 1.05s | 109% | 286.53 ops/CPU-ms |
+| tri-logic | Galerina governed ⟨interp⟩ | 950.9ms | 985.0ms | 104% | 304.57 ops/CPU-ms |
+| tri-logic | Galerina/WASM legacy lane | 1.22s | 1.22s | 100% | 492.6K ops/CPU-ms |
+| data-query | Node.js | 127.3ms | — | — | — |
+| data-query | Python | 509.5ms | — | — | — |
+| data-query | Galerina passive ⟨interp⟩ | 0.5ms | 0.0ms | 0% | — |
+| data-query | Galerina manifest ⟨interp⟩ | 38.6ms | 47.0ms | 122% | 212.77 ops/CPU-ms |
+| data-query | Galerina governed ⟨interp⟩ | 38.9ms | 47.0ms | 121% | 212.77 ops/CPU-ms |
 | call-chain | Rust AVX2 | 0.3ms | — | — | — |
-| call-chain | Rust (generic) | 0.3ms | — | — | — |
-| call-chain | Node.js | 1.2ms | 0.0ms | 0% | — |
-| call-chain | Python | 39.3ms | 46.9ms | 119% | 1.1K ops/CPU-ms |
+| call-chain | Rust (generic) | 0.4ms | — | — | — |
+| call-chain | Node.js | 1.1ms | 0.0ms | 0% | — |
+| call-chain | Python | 20.1ms | 31.3ms | 156% | 1.6K ops/CPU-ms |
 | call-chain | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
-| call-chain | Galerina manifest ⟨interp⟩ | 1.10s | 1.14s | 104% | 43.82 ops/CPU-ms |
-| call-chain | Galerina governed ⟨interp⟩ | 1.10s | 1.11s | 101% | 45.09 ops/CPU-ms |
-| call-chain | Galerina/WASM legacy lane | 1.94s | 1.94s | 100% | 51.6K ops/CPU-ms |
-| nbody | Node.js | 53.9ms | 63.0ms | 117% | 104.0K ops/CPU-ms |
-| nbody | Python | 1.72s | — | — | — |
+| call-chain | Galerina manifest ⟨interp⟩ | 995.0ms | 1.00s | 100% | 50.00 ops/CPU-ms |
+| call-chain | Galerina governed ⟨interp⟩ | 952.8ms | 1.03s | 108% | 48.45 ops/CPU-ms |
+| call-chain | Galerina/WASM legacy lane | 1.76s | 1.76s | 100% | 56.7K ops/CPU-ms |
+| nbody | Node.js | 52.3ms | 62.0ms | 119% | 105.7K ops/CPU-ms |
+| nbody | Python | 967.6ms | — | — | — |
 | nbody | Galerina passive ⟨interp⟩ | 0.2ms | 0.0ms | 0% | — |
-| nbody | Galerina manifest ⟨interp⟩ | 603.2ms | 609.0ms | 101% | 53.81 ops/CPU-ms |
-| nbody | Galerina governed ⟨interp⟩ | 617.4ms | 687.0ms | 111% | 47.70 ops/CPU-ms |
-| nbody | Galerina/WASM legacy lane | 1.16s | 1.17s | 101% | 28.0K ops/CPU-ms |
-| json-parse | Galerina passive ⟨interp⟩ | 0.5ms | 15.0ms | 2762% | — |
-| json-parse | Galerina manifest ⟨interp⟩ | 112.8ms | 156.0ms | 138% | 3.20 ops/CPU-ms |
-| json-parse | Galerina governed ⟨interp⟩ | 103.1ms | 187.0ms | 181% | 2.67 ops/CPU-ms |
-| mandelbrot | Rust AVX2 | 142.4ms | — | — | — |
-| mandelbrot | Rust (generic) | 139.9ms | — | — | — |
-| mandelbrot | Node.js | 526.2ms | 547.0ms | 104% | 6.0K ops/CPU-ms |
-| mandelbrot | Python | 25.03s | — | — | — |
+| nbody | Galerina manifest ⟨interp⟩ | 535.4ms | 563.0ms | 105% | 58.20 ops/CPU-ms |
+| nbody | Galerina governed ⟨interp⟩ | 536.1ms | 609.0ms | 114% | 53.81 ops/CPU-ms |
+| nbody | Galerina/WASM legacy lane | 1.07s | 1.08s | 100% | 30.4K ops/CPU-ms |
+| json-parse | Galerina passive ⟨interp⟩ | 0.4ms | 0.0ms | 0% | — |
+| json-parse | Galerina manifest ⟨interp⟩ | 103.5ms | 109.0ms | 105% | 4.59 ops/CPU-ms |
+| json-parse | Galerina governed ⟨interp⟩ | 94.2ms | 140.0ms | 149% | 3.57 ops/CPU-ms |
+| mandelbrot | Rust AVX2 | 134.3ms | — | — | — |
+| mandelbrot | Rust (generic) | 138.7ms | — | — | — |
+| mandelbrot | Node.js | 506.2ms | 531.0ms | 105% | 6.2K ops/CPU-ms |
+| mandelbrot | Python | 19.52s | — | — | — |
 | mandelbrot | Galerina passive ⟨interp⟩ | 0.2ms | 0.0ms | 0% | — |
-| mandelbrot | Galerina manifest ⟨interp⟩ | 2.46s | 2.56s | 104% | 6.39 ops/CPU-ms |
-| mandelbrot | Galerina governed ⟨interp⟩ | 2.48s | 2.53s | 102% | 6.47 ops/CPU-ms |
-| mandelbrot | Galerina/WASM legacy lane | 1.89s | 1.89s | 100% | 8.7K ops/CPU-ms |
-| spectral-norm | Rust AVX2 | 27.0ms | — | — | — |
-| spectral-norm | Rust (generic) | 27.0ms | — | — | — |
-| spectral-norm | Node.js | 45.1ms | 31.0ms | 69% | 322.6K ops/CPU-ms |
-| spectral-norm | Python | 6.62s | — | — | — |
-| binary-trees | Rust AVX2 | 10.0ms | — | — | — |
-| binary-trees | Rust (generic) | 9.6ms | — | — | — |
-| binary-trees | Node.js | 2.2ms | 0.0ms | 0% | — |
-| binary-trees | Python | 49.9ms | 46.9ms | 94% | 2.9K ops/CPU-ms |
+| mandelbrot | Galerina manifest ⟨interp⟩ | 2.14s | 2.25s | 105% | 7.28 ops/CPU-ms |
+| mandelbrot | Galerina governed ⟨interp⟩ | 2.19s | 2.22s | 101% | 7.39 ops/CPU-ms |
+| mandelbrot | Galerina/WASM legacy lane | 1.78s | 1.78s | 100% | 9.2K ops/CPU-ms |
+| spectral-norm | Rust AVX2 | 25.4ms | — | — | — |
+| spectral-norm | Rust (generic) | 25.6ms | — | — | — |
+| spectral-norm | Node.js | 40.8ms | 31.0ms | 76% | 322.6K ops/CPU-ms |
+| spectral-norm | Python | 5.75s | — | — | — |
+| binary-trees | Rust AVX2 | 6.6ms | — | — | — |
+| binary-trees | Rust (generic) | 6.3ms | — | — | — |
+| binary-trees | Node.js | 1.7ms | 0.0ms | 0% | — |
+| binary-trees | Python | 46.5ms | 46.9ms | 101% | 2.9K ops/CPU-ms |
 | binary-trees | Galerina passive ⟨interp⟩ | 0.1ms | 0.0ms | 0% | — |
-| binary-trees | Galerina manifest ⟨interp⟩ | 438.0ms | 453.0ms | 103% | 299.90 ops/CPU-ms |
-| binary-trees | Galerina governed ⟨interp⟩ | 457.7ms | 453.0ms | 99% | 299.90 ops/CPU-ms |
-| binary-trees | Galerina/WASM legacy lane | 1.00s | 984.0ms | 98% | 552.3K ops/CPU-ms |
-| spore-container | Rust AVX2 | 2.05s | — | — | — |
-| spore-container | Rust (generic) | 2.00s | — | — | — |
-| spore-container | Node.js | 7.53s | 9.03s | 120% | 33.22 ops/CPU-ms |
-| spore-container | Python | 1.68s | — | — | — |
-| framework-pipeline | Node.js | 1.70s | 2.52s | 148% | 79.49 ops/CPU-ms |
-| framework-pipeline | Python | 2.12s | — | — | — |
-| http-throughput | Node.js | 87.0ms | — | — | — |
-| naming-check | Node.js | 523.0ms | — | — | — |
-| context-receipt | Node.js | 386.0ms | — | — | — |
-| intelligence-search | Node.js | 47.0ms | — | — | — |
-| provenance-trace | Node.js | 2.16s | — | — | — |
+| binary-trees | Galerina manifest ⟨interp⟩ | 388.4ms | 406.0ms | 105% | 334.62 ops/CPU-ms |
+| binary-trees | Galerina governed ⟨interp⟩ | 409.4ms | 437.0ms | 107% | 310.88 ops/CPU-ms |
+| binary-trees | Galerina/WASM legacy lane | 1.12s | 1.13s | 101% | 603.8K ops/CPU-ms |
+| spore-container | Rust AVX2 | 2.06s | — | — | — |
+| spore-container | Rust (generic) | 2.04s | — | — | — |
+| spore-container | Node.js | 6.83s | 8.09s | 118% | 37.06 ops/CPU-ms |
+| spore-container | Python | 1.62s | — | — | — |
+| framework-pipeline | Node.js | 1.51s | 2.25s | 149% | 88.89 ops/CPU-ms |
+| framework-pipeline | Python | 1.75s | — | — | — |
+| http-throughput | Node.js | 83.0ms | — | — | — |
+| naming-check | Node.js | 444.0ms | — | — | — |
+| context-receipt | Node.js | 312.0ms | — | — | — |
+| intelligence-search | Node.js | 44.0ms | — | — | — |
+| provenance-trace | Node.js | 4.49s | — | — | — |
 
 > **CPU utilisation** = CPU ms ÷ wall ms × 100. Node.js approaches 100% (single-thread JIT). Python may show <100% on Windows where process_time measures differently.
 
@@ -592,106 +592,106 @@
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Node.js | 131.25M/s | 5.00s | 5.00s | 66.9MB | ~0 | 181.1× | 1.00× |
-| 🥈 | 🟢 | Rust (generic) | 126.80M/s | 5.00s | — | — | ~0 (native) | 174.9× | 0.97× |
-| 🥉 | 🟢 | Rust AVX2 | 124.82M/s | 5.00s | — | — | ~0 (native) | 172.2× | 0.95× |
-| 4 | ⚪ | Galerina/WASM legacy lane | 71.70M/s | 1.39s | 1.39s | 94.1MB | ~0 | 98.9× | 0.55× |
-| 5 | 🔴 | Galerina passive ⟨interp⟩ | 2.19M/s | 0.5ms | 0.0ms | 105.0MB | 303 B/op | 3.02× | 0.02× |
-| 6 | 🔴 | Galerina manifest ⟨interp⟩ | 1.74M/s | 28.8ms | 47.0ms | 104.8MB | 89 B/op | 2.39× | 0.01× |
-| 7 | 🔴 | Galerina governed ⟨interp⟩ | 1.67M/s | 30.0ms | 15.0ms | 104.6MB | 88 B/op | 2.30× | 0.01× |
-| 8 | ⚫ | Python | 724.9K/s | 5.04s | 5.05s | — | ~0 | 1.00× | 0.01× |
+| 🥇 | 🟢 | Node.js | 140.68M/s | 3.00s | 3.00s | 50.2MB | ~0 | 186.2× | 1.00× |
+| 🥈 | 🟢 | Rust (generic) | 137.03M/s | 5.00s | — | — | ~0 (native) | 181.4× | 0.97× |
+| 🥉 | 🟢 | Rust AVX2 | 134.50M/s | 5.00s | — | — | ~0 (native) | 178.1× | 0.96× |
+| 4 | ⚪ | Galerina/WASM legacy lane | 80.51M/s | 1.24s | 1.23s | 77.8MB | ~0 | 106.6× | 0.57× |
+| 5 | 🔴 | Galerina passive ⟨interp⟩ | 2.25M/s | 0.3ms | 0.0ms | 89.2MB | 265 B/op | 2.98× | 0.02× |
+| 6 | 🔴 | Galerina manifest ⟨interp⟩ | 1.79M/s | 27.9ms | 94.0ms | 89.0MB | 91 B/op | 2.37× | 0.01× |
+| 7 | 🔴 | Galerina governed ⟨interp⟩ | 1.74M/s | 28.8ms | 47.0ms | 88.9MB | 90 B/op | 2.30× | 0.01× |
+| 8 | ⚫ | Python | 755.3K/s | 3.05s | 3.05s | — | ~0 | 1.00× | 0.01× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (303 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (265 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### arithmetic-threshold
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 1.56B/s | 12.8ms | — | — | ~0 (native) | 423.8× | 1.63× |
-| 🥈 | 🟢 | Rust AVX2 | 1.56B/s | 12.8ms | — | — | ~0 (native) | 421.9× | 1.62× |
-| 🥉 | 🟢 | Node.js | 958.99M/s | 20.9ms | 15.0ms | 66.3MB | ~0 | 259.8× | 1.00× |
-| 4 | 🟡 | Galerina/WASM legacy lane | 450.35M/s | 1.12s | 1.13s | 107.5MB | ~0 | 122.0× | 0.47× |
-| 5 | ⚫ | Galerina manifest ⟨interp⟩ | 4.90M/s | 12.9ms | 32.0ms | 105.3MB | 14 B/op | 1.33× | 0.01× |
-| 6 | ⚫ | Galerina governed ⟨interp⟩ | 4.19M/s | 15.1ms | 15.0ms | 105.2MB | 15 B/op | 1.13× | 0.00× |
-| 7 | ⚫ | Python | 3.69M/s | 5.42s | 5.41s | — | ~0 | 1.00× | 0.00× |
-| 8 | ⚫ | Galerina passive ⟨interp⟩ | 28.5K/s | 0.1ms | 0.0ms | 105.5MB | 18.6 KB/op | 0.01× | 0.00× |
+| 🥇 | 🟢 | Rust (generic) | 1.60B/s | 12.5ms | — | — | ~0 (native) | 408.9× | 1.62× |
+| 🥈 | 🟢 | Rust AVX2 | 1.58B/s | 12.7ms | — | — | ~0 (native) | 403.6× | 1.59× |
+| 🥉 | 🟢 | Node.js | 988.80M/s | 20.2ms | 31.0ms | 49.7MB | ~0 | 253.1× | 1.00× |
+| 4 | ⚪ | Galerina/WASM legacy lane | 510.54M/s | 1.11s | 1.13s | 91.9MB | ~0 | 130.7× | 0.52× |
+| 5 | ⚫ | Galerina manifest ⟨interp⟩ | 5.50M/s | 11.5ms | 31.0ms | 89.5MB | 14 B/op | 1.41× | 0.01× |
+| 6 | ⚫ | Galerina governed ⟨interp⟩ | 5.42M/s | 11.7ms | 31.0ms | 89.5MB | 14 B/op | 1.39× | 0.01× |
+| 7 | ⚫ | Python | 3.91M/s | 5.12s | 5.13s | — | ~0 | 1.00× | 0.00× |
+| 8 | ⚫ | Galerina passive ⟨interp⟩ | 33.4K/s | 0.1ms | 0.0ms | 89.6MB | 31.1 KB/op | 0.01× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (18.6 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (31.1 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### six-digit-guess
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 77.12M/s | 0.5ms | — | — | ~0 (native) | 914.9× | 31.2× |
-| 🥈 | 🟢 | Rust AVX2 | 75.11M/s | 0.6ms | — | — | ~0 (native) | 891.1× | 30.4× |
-| 🥉 | 🟢 | Galerina/WASM legacy lane | 33.40M/s | 1.26s | 1.27s | 108.2MB | ~0 | 396.2× | 13.5× |
-| 4 | 🟢 | Node.js | 2.47M/s | 17.0ms | 16.0ms | 71.0MB | 26 B/op | 29.3× | 1.00× |
-| 5 | 🔴 | Python | 84.3K/s | 499.1ms | 500.0ms | — | ~0 | 1.00× | 0.03× |
-| 6 | 🔴 | Galerina manifest ⟨interp⟩ | 44.0K/s | 956.4ms | 984.0ms | 106.0MB | 26 B/op | 0.52× | 0.02× |
-| 7 | 🔴 | Galerina governed ⟨interp⟩ | 42.3K/s | 994.5ms | 999.0ms | 105.9MB | 37 B/op | 0.50× | 0.02× |
-| 8 | ⚫ | Galerina passive ⟨interp⟩ | 21.9K/s | 0.1ms | 15.0ms | 106.2MB | 32.5 KB/op | 0.26× | 0.01× |
+| 🥇 | 🟢 | Rust (generic) | 79.48M/s | 0.5ms | — | — | ~0 (native) | 875.5× | 28.2× |
+| 🥈 | 🟢 | Rust AVX2 | 74.95M/s | 0.6ms | — | — | ~0 (native) | 825.6× | 26.6× |
+| 🥉 | 🟢 | Galerina/WASM legacy lane | 37.44M/s | 1.12s | 1.13s | 92.3MB | ~0 | 412.3× | 13.3× |
+| 4 | 🟢 | Node.js | 2.82M/s | 14.9ms | 31.0ms | 54.4MB | 26 B/op | 31.1× | 1.00× |
+| 5 | 🔴 | Python | 90.8K/s | 463.4ms | 468.8ms | — | ~0 | 1.00× | 0.03× |
+| 6 | 🔴 | Galerina governed ⟨interp⟩ | 46.9K/s | 897.2ms | 1.02s | 90.5MB | 37 B/op | 0.52× | 0.02× |
+| 7 | 🔴 | Galerina manifest ⟨interp⟩ | 46.5K/s | 904.2ms | 969.0ms | 90.9MB | 25 B/op | 0.51× | 0.02× |
+| 8 | ⚫ | Galerina passive ⟨interp⟩ | 22.9K/s | 0.1ms | 0.0ms | 90.6MB | 42.1 KB/op | 0.25× | 0.01× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (32.5 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (42.1 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### record-allocation
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 1.17B/s | 8.5ms | — | — | ~0 (native) | 310.3× | 21.0× |
-| 🥈 | 🟢 | Rust AVX2 | 1.16B/s | 8.6ms | — | — | ~0 (native) | 306.6× | 20.8× |
-| 🥉 | 🟢 | Galerina/WASM legacy lane | 484.09M/s | 1.01s | 1.00s | 108.4MB | ~0 | 128.0× | 8.66× |
-| 4 | 🟢 | Node.js | 55.87M/s | 3.6ms | 0.0ms | 67.1MB | ~0 | 14.8× | 1.00× |
-| 5 | 🟡 | Galerina passive ⟨interp⟩ | 6.42M/s | 0.5ms | 0.0ms | 106.9MB | 80 B/op | 1.70× | 0.11× |
-| 6 | 🔴 | Python | 3.78M/s | 52.9ms | 46.9ms | — | ~0 | 1.00× | 0.07× |
-| 7 | 🔴 | Galerina manifest ⟨interp⟩ | 1.89M/s | 5.3ms | 47.0ms | 106.6MB | 8 B/op | 0.50× | 0.03× |
-| 8 | 🔴 | Galerina governed ⟨interp⟩ | 1.89M/s | 5.3ms | 0.0ms | 107.0MB | 6 B/op | 0.50× | 0.03× |
+| 🥇 | 🟢 | Rust (generic) | 1.20B/s | 8.4ms | — | — | ~0 (native) | 371.0× | 19.5× |
+| 🥈 | 🟢 | Rust AVX2 | 1.19B/s | 8.4ms | — | — | ~0 (native) | 370.3× | 19.5× |
+| 🥉 | 🟢 | Galerina/WASM legacy lane | 567.29M/s | 1.00s | 1.00s | 93.3MB | ~0 | 175.9× | 9.25× |
+| 4 | 🟢 | Node.js | 61.31M/s | 3.3ms | 0.0ms | 50.4MB | 1 B/op | 19.0× | 1.00× |
+| 5 | 🟡 | Galerina passive ⟨interp⟩ | 7.91M/s | 0.3ms | 0.0ms | 91.3MB | 172 B/op | 2.45× | 0.13× |
+| 6 | 🔴 | Python | 3.22M/s | 62.0ms | 62.5ms | — | ~0 | 1.00× | 0.05× |
+| 7 | 🔴 | Galerina manifest ⟨interp⟩ | 2.73M/s | 3.7ms | 0.0ms | 91.3MB | 8 B/op | 0.85× | 0.04× |
+| 8 | 🔴 | Galerina governed ⟨interp⟩ | 2.55M/s | 3.9ms | 31.0ms | 91.9MB | 7 B/op | 0.79× | 0.04× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (80 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (172 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### fibonacci-recursive
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Galerina passive ⟨interp⟩ | 73.9K/s | 0.1ms | 0.0ms | 106.3MB | 11.8 KB/op | 17.7K× | 720.5× |
-| 🥈 | 🟢 | Galerina/WASM legacy lane | 16.5K/s | 1.03s | 1.03s | 108.6MB | ~0 | 4.0K× | 161.3× |
-| 🥉 | 🟢 | Rust (generic) | 496.5/s | 402.8ms | — | — | ~0 (native) | 119.1× | 4.84× |
-| 4 | 🟢 | Rust AVX2 | 450.8/s | 443.7ms | — | — | ~0 (native) | 108.1× | 4.40× |
-| 5 | 🟢 | Node.js | 102.5/s | 975.6ms | 969.0ms | 65.1MB | 53 B/op | 24.6× | 1.00× |
-| 6 | 🟡 | Galerina manifest ⟨interp⟩ | 16.0/s | 61.8ms | 140.0ms | 106.3MB | 802.7 KB/op | 3.84× | 0.16× |
-| 7 | 🟡 | Galerina governed ⟨interp⟩ | 11.0/s | 91.0ms | 156.0ms | 106.4MB | 660.6 KB/op | 2.64× | 0.11× |
-| 8 | 🔴 | Python | 4.2/s | 4.80s | 4.80s | — | 23 B/op | 1.00× | 0.04× |
+| 🥇 | 🟢 | Galerina passive ⟨interp⟩ | 68.8K/s | 0.1ms | 0.0ms | 91.9MB | 13.5 KB/op | 16.7K× | 520.8× |
+| 🥈 | 🟢 | Galerina/WASM legacy lane | 17.9K/s | 1.00s | 1.01s | 94.0MB | ~0 | 4.3K× | 135.7× |
+| 🥉 | 🟢 | Rust (generic) | 520.0/s | 384.6ms | — | — | ~0 (native) | 126.2× | 3.94× |
+| 4 | 🟢 | Rust AVX2 | 514.1/s | 389.0ms | — | — | ~0 (native) | 124.8× | 3.89× |
+| 5 | 🟢 | Node.js | 132.1/s | 757.2ms | 766.0ms | 48.4MB | 53 B/op | 32.1× | 1.00× |
+| 6 | 🟡 | Galerina manifest ⟨interp⟩ | 16.0/s | 60.9ms | 63.0ms | 91.9MB | 779.7 KB/op | 3.88× | 0.12× |
+| 7 | 🔴 | Galerina governed ⟨interp⟩ | 12.0/s | 82.4ms | 109.0ms | 91.6MB | 772.4 KB/op | 2.91× | 0.09× |
+| 8 | 🔴 | Python | 4.1/s | 4.85s | 4.86s | — | 23 B/op | 1.00× | 0.03× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina manifest ⟨interp⟩ (802.7 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina manifest ⟨interp⟩ (779.7 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### tower-of-hanoi
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 249.54M/s | 525.2ms | — | — | ~0 (native) | 89.4× | 2.11× |
-| 🥈 | 🟢 | Rust AVX2 | 230.82M/s | 567.8ms | — | — | ~0 (native) | 82.7× | 1.95× |
-| 🥉 | 🟢 | Node.js | 118.27M/s | 110.8ms | 109.0ms | 65.3MB | ~0 | 42.4× | 1.00× |
-| 4 | 🟢 | Galerina/WASM legacy lane | 117.34M/s | 1.12s | 1.11s | 108.6MB | ~0 | 42.1× | 0.99× |
-| 5 | 🔴 | Python | 2.79M/s | 469.7ms | 468.8ms | — | ~0 | 1.00× | 0.02× |
-| 6 | ⚫ | Galerina passive ⟨interp⟩ | 80.0K/s | 0.1ms | 0.0ms | 106.7MB | 9.8 KB/op | 0.03× | 0.00× |
-| 7 | ⚫ | Galerina governed ⟨interp⟩ | 79.8K/s | 821.7ms | 829.0ms | 106.7MB | 13 B/op | 0.03× | 0.00× |
-| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 77.3K/s | 847.6ms | 860.0ms | 106.5MB | 61 B/op | 0.03× | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 251.40M/s | 521.4ms | — | — | ~0 (native) | 95.6× | 1.95× |
+| 🥈 | 🟢 | Rust (generic) | 248.19M/s | 528.1ms | — | — | ~0 (native) | 94.4× | 1.92× |
+| 🥉 | 🟢 | Node.js | 129.19M/s | 101.5ms | 109.0ms | 48.5MB | ~0 | 49.2× | 1.00× |
+| 4 | 🟢 | Galerina/WASM legacy lane | 118.01M/s | 1.11s | 1.11s | 93.8MB | ~0 | 44.9× | 0.91× |
+| 5 | 🔴 | Python | 2.63M/s | 498.7ms | 484.4ms | — | ~0 | 1.00× | 0.02× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 92.4K/s | 0.1ms | 0.0ms | 92.0MB | 9.9 KB/op | 0.04× | 0.00× |
+| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 86.1K/s | 761.3ms | 812.0ms | 92.0MB | 29 B/op | 0.03× | 0.00× |
+| 8 | ⚫ | Galerina governed ⟨interp⟩ | 83.9K/s | 781.3ms | 797.0ms | 91.8MB | 31 B/op | 0.03× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (9.8 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (9.9 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### collection-pipeline
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 12.37B/s | 80.8ms | — | — | ~0 (native) | 1.2K× | 180.1× |
-| 🥈 | 🟢 | Rust (generic) | 4.16B/s | 240.3ms | — | — | ~0 (native) | 415.6× | 60.6× |
-| 🥉 | 🟢 | Galerina/WASM legacy lane | 384.15M/s | 1.02s | 1.01s | 109.6MB | ~0 | 38.4× | 5.59× |
-| 4 | 🟢 | Node.js | 68.70M/s | 727.8ms | 734.0ms | 82.1MB | ~0 | 6.86× | 1.00× |
-| 5 | 🟡 | Python | 10.01M/s | 4.99s | 5.00s | — | ~0 | 1.00× | 0.15× |
-| 6 | 🟡 | Galerina passive ⟨interp⟩ | 8.06M/s | 0.3ms | 0.0ms | 107.0MB | 143 B/op | 0.80× | 0.12× |
-| 7 | 🔴 | Galerina governed ⟨interp⟩ | 2.16M/s | 4.6ms | 0.0ms | 108.0MB | 17 B/op | 0.22× | 0.03× |
-| 8 | 🔴 | Galerina manifest ⟨interp⟩ | 1.82M/s | 5.5ms | 31.0ms | 107.0MB | 14 B/op | 0.18× | 0.03× |
+| 🥇 | 🟢 | Rust AVX2 | 13.52B/s | 73.9ms | — | — | ~0 (native) | 983.7× | 182.7× |
+| 🥈 | 🟢 | Rust (generic) | 4.43B/s | 225.8ms | — | — | ~0 (native) | 322.1× | 59.8× |
+| 🥉 | 🟢 | Galerina/WASM legacy lane | 439.42M/s | 1.00s | 1.00s | 94.1MB | ~0 | 32.0× | 5.94× |
+| 4 | 🟢 | Node.js | 74.02M/s | 675.5ms | 702.0ms | 65.6MB | ~0 | 5.38× | 1.00× |
+| 5 | 🟡 | Python | 13.75M/s | 3.64s | 3.64s | — | ~0 | 1.00× | 0.19× |
+| 6 | 🟡 | Galerina passive ⟨interp⟩ | 8.63M/s | 0.4ms | 0.0ms | 91.5MB | 177 B/op | 0.63× | 0.12× |
+| 7 | 🔴 | Galerina manifest ⟨interp⟩ | 2.54M/s | 3.9ms | 0.0ms | 91.5MB | 15 B/op | 0.19× | 0.03× |
+| 8 | 🔴 | Galerina governed ⟨interp⟩ | 2.34M/s | 4.3ms | 0.0ms | 92.4MB | 18 B/op | 0.17× | 0.03× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (143 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (177 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### governance-cost ⚠️ (excluded — not unit-aligned)
 
@@ -699,195 +699,195 @@
 
 | Runtime | Raw reported throughput (native unit — **NOT comparable**) | Wall |
 |---|---|---|
-| Rust AVX2 | 799.62M/s | 12.5ms |
-| Rust (generic) | 877.62M/s | 11.4ms |
-| Node.js | 1.93M/s | 51.9ms |
-| Python | 21.1K/s | 4.73s |
-| Galerina passive ⟨interp⟩ | 1.2K/s | 2.7ms |
-| Galerina manifest ⟨interp⟩ | 571.0/s | 1.8ms |
-| Galerina governed ⟨interp⟩ | 660.0/s | 1.5ms |
-| Galerina/WASM legacy lane | 2.22M/s | 1.00s |
+| Rust AVX2 | 912.44M/s | 11.0ms |
+| Rust (generic) | 916.62M/s | 10.9ms |
+| Node.js | 2.17M/s | 46.2ms |
+| Python | 20.3K/s | 4.92s |
+| Galerina passive ⟨interp⟩ | 2.3K/s | 1.7ms |
+| Galerina manifest ⟨interp⟩ | 884.0/s | 1.1ms |
+| Galerina governed ⟨interp⟩ | 710.0/s | 1.4ms |
+| Galerina/WASM legacy lane | 3.06M/s | 1.00s |
 
 ### hardware-targets
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Galerina/WASM legacy lane | 35.52M/s | 1.00s | 1.00s | 109.9MB | ~0 | — | 43.1× |
-| 🥈 | 🟢 | Rust AVX2 | 1.16M/s | 860.3ms | — | — | ~0 (native) | — | 1.41× |
-| 🥉 | 🟢 | Rust (generic) | 1.16M/s | 862.0ms | — | — | ~0 (native) | — | 1.41× |
-| 4 | 🟢 | Node.js | 824.1K/s | 1.21s | 1.22s | 66.9MB | ~0 | — | 1.00× |
-| 5 | 🟡 | Galerina passive ⟨interp⟩ | 87.2K/s | 11.5ms | 15.0ms | 108.8MB | 267 B/op | — | 0.11× |
-| 6 | ⚫ | Galerina manifest ⟨interp⟩ | 3.8K/s | 0.3ms | 0.0ms | 107.6MB | 89.3 KB/op | — | 0.00× |
-| 7 | ⚫ | Galerina governed ⟨interp⟩ | 3.3K/s | 0.3ms | 0.0ms | 107.2MB | 81.5 KB/op | — | 0.00× |
+| 🥇 | 🟢 | Galerina/WASM legacy lane | 40.46M/s | 1.00s | 1.00s | 80.9MB | ~0 | — | 42.6× |
+| 🥈 | 🟢 | Rust (generic) | 1.24M/s | 806.6ms | — | — | ~0 (native) | — | 1.31× |
+| 🥉 | 🟢 | Rust AVX2 | 1.21M/s | 825.0ms | — | — | ~0 (native) | — | 1.28× |
+| 4 | 🟢 | Node.js | 949.8K/s | 1.05s | 1.09s | 50.4MB | ~0 | — | 1.00× |
+| 5 | 🔴 | Galerina passive ⟨interp⟩ | 89.5K/s | 11.2ms | 0.0ms | 78.8MB | -178 B/op | — | 0.09× |
+| 6 | ⚫ | Galerina governed ⟨interp⟩ | 3.1K/s | 0.3ms | 0.0ms | 78.5MB | 107.9 KB/op | — | 0.00× |
+| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 2.3K/s | 0.4ms | 0.0ms | 78.3MB | 115.8 KB/op | — | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina manifest ⟨interp⟩ (89.3 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina passive ⟨interp⟩ (-178 B/op) · **highest:** Galerina manifest ⟨interp⟩ (115.8 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### low-memory
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 5.69B/s | 175.7ms | — | — | ~0 | 2.2K× | 8.10× |
-| 🥈 | 🟢 | Rust (generic) | 1.32B/s | 757.1ms | — | — | ~0 | 501.2× | 1.88× |
-| 🥉 | 🟢 | Node.js | 702.95M/s | 71.1ms | 62.0ms | 65.4MB | ~0 | 266.7× | 1.00× |
-| 4 | ⚪ | Galerina/WASM legacy lane | 453.30M/s | 1.01s | 1.02s | 110.6MB | ~0 | 172.0× | 0.64× |
-| 5 | ⚫ | Python | 2.64M/s | 3.79s | 3.80s | — | ~0 | 1.00× | 0.00× |
-| 6 | ⚫ | Galerina passive ⟨interp⟩ | 147.8K/s | 0.9ms | 0.0ms | 109.1MB | 4.7 KB/op | 0.06× | 0.00× |
-| 7 | ⚫ | Galerina governed ⟨interp⟩ | 110.0K/s | 90.9ms | 109.0ms | 108.0MB | 56 B/op | 0.04× | 0.00× |
-| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 84.6K/s | 118.2ms | 172.0ms | 107.7MB | 195 B/op | 0.03× | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 6.34B/s | 157.7ms | — | — | ~0 | 1.7K× | 8.80× |
+| 🥈 | 🟢 | Rust (generic) | 1.39B/s | 720.3ms | — | — | ~0 | 381.9× | 1.93× |
+| 🥉 | 🟢 | Node.js | 720.26M/s | 69.4ms | 63.0ms | 49.1MB | ~0 | 198.1× | 1.00× |
+| 4 | ⚪ | Galerina/WASM legacy lane | 489.98M/s | 1.00s | 1.02s | 81.0MB | ~0 | 134.8× | 0.68× |
+| 5 | ⚫ | Python | 3.63M/s | 2.75s | 2.75s | — | ~0 | 1.00× | 0.01× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 182.5K/s | 0.5ms | 0.0ms | 80.3MB | 7.5 KB/op | 0.05× | 0.00× |
+| 7 | ⚫ | Galerina governed ⟨interp⟩ | 144.3K/s | 69.3ms | 110.0ms | 78.7MB | 16 B/op | 0.04× | 0.00× |
+| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 137.7K/s | 72.6ms | 94.0ms | 78.8MB | 57 B/op | 0.04× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Rust AVX2 (~0) · **highest:** Galerina passive ⟨interp⟩ (4.7 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Rust AVX2 (~0) · **highest:** Galerina passive ⟨interp⟩ (7.5 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### gpu-compute
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 1.17B/s | 4.26s | — | — | ~0 (native) | 219.8× | 1.23× |
-| 🥈 | 🟢 | Rust (generic) | 1.17B/s | 4.26s | — | — | ~0 (native) | 219.8× | 1.23× |
-| 🥉 | 🟢 | Node.js | 954.12M/s | 524.0ms | 516.0ms | 65.6MB | ~0 | 178.7× | 1.00× |
-| 4 | 🟡 | Galerina/WASM legacy lane | 446.64M/s | 1.12s | 1.13s | 111.8MB | ~0 | 83.7× | 0.47× |
-| 5 | ⚫ | Python | 5.34M/s | 9.37s | 9.36s | — | ~0 | 1.00× | 0.01× |
-| 6 | ⚫ | Deno WebGPU (NVIDIA GeForce RTX 2060) | 3.85M/s | 25.9ms | — | — | — | 0.72× | 0.00× |
-| 7 | ⚫ | Galerina passive ⟨interp⟩ | 335.0K/s | 0.2ms | 0.0ms | 109.6MB | 3.1 KB/op | 0.06× | 0.00× |
-| 8 | ⚫ | Galerina governed ⟨interp⟩ | 302.4K/s | 330.7ms | 375.0ms | 107.5MB | 2 B/op | 0.06× | 0.00× |
-| 9 | ⚫ | Galerina manifest ⟨interp⟩ | 296.9K/s | 336.8ms | 344.0ms | 109.6MB | 12 B/op | 0.06× | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 1.23B/s | 4.05s | — | — | ~0 (native) | 213.1× | 1.21× |
+| 🥈 | 🟢 | Rust (generic) | 1.23B/s | 4.07s | — | — | ~0 (native) | 212.4× | 1.21× |
+| 🥉 | 🟢 | Node.js | 1.02B/s | 490.3ms | 485.0ms | 48.8MB | ~0 | 176.2× | 1.00× |
+| 4 | 🟡 | Galerina/WASM legacy lane | 495.71M/s | 1.01s | 1.01s | 83.5MB | ~0 | 85.6× | 0.49× |
+| 5 | ⚫ | Python | 5.79M/s | 8.64s | 8.64s | — | ~0 | 1.00× | 0.01× |
+| 6 | ⚫ | Deno WebGPU (NVIDIA GeForce RTX 2060) | 4.22M/s | 23.7ms | — | — | — | 0.73× | 0.00× |
+| 7 | ⚫ | Galerina passive ⟨interp⟩ | 377.0K/s | 0.2ms | 0.0ms | 81.4MB | 3.2 KB/op | 0.07× | 0.00× |
+| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 348.5K/s | 286.9ms | 297.0ms | 81.3MB | 13 B/op | 0.06× | 0.00× |
+| 9 | ⚫ | Galerina governed ⟨interp⟩ | 328.1K/s | 304.8ms | 329.0ms | 81.1MB | 3 B/op | 0.06× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (3.1 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (3.2 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### matrix-multiply
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Python | 27.99B/s | 0.5ms | — | — | 332 B/op | 1.00× | 47.7× |
-| 🥈 | 🟢 | Deno WebGPU (NVIDIA GeForce RTX 2060) | 1.51B/s | 13.9ms | — | — | — | 0.05× | 2.58× |
-| 🥉 | 🟢 | Rust (generic) | 1.51B/s | 86.8ms | — | — | ~0 (native) | 0.05× | 2.57× |
-| 4 | 🟢 | Rust AVX2 | 1.22B/s | 107.0ms | — | — | ~0 (native) | 0.04× | 2.08× |
-| 5 | 🟢 | Node.js | 587.37M/s | 223.2ms | 219.0ms | 67.1MB | ~0 | 0.02× | 1.00× |
-| 6 | ⚪ | Galerina/WASM legacy lane | 418.29M/s | 1.02s | 1.02s | 111.9MB | ~0 | 0.01× | 0.71× |
-| 7 | ⚫ | Galerina passive ⟨interp⟩ | 794.3K/s | 0.1ms | 0.0ms | 109.4MB | 1.4 KB/op | 0.00× | 0.00× |
-| 8 | ⚫ | Galerina governed ⟨interp⟩ | 605.2K/s | 54.1ms | 94.0ms | 109.4MB | 13 B/op | 0.00× | 0.00× |
-| 9 | ⚫ | Galerina manifest ⟨interp⟩ | 584.8K/s | 56.0ms | 47.0ms | 109.4MB | 16 B/op | 0.00× | 0.00× |
+| 🥇 | 🟢 | Python | 28.78B/s | 0.5ms | — | — | 332 B/op | 1.00× | 45.1× |
+| 🥈 | 🟢 | Deno WebGPU (NVIDIA GeForce RTX 2060) | 1.71B/s | 12.3ms | — | — | — | 0.06× | 2.68× |
+| 🥉 | 🟢 | Rust (generic) | 1.54B/s | 85.0ms | — | — | ~0 (native) | 0.05× | 2.42× |
+| 4 | 🟢 | Rust AVX2 | 1.46B/s | 89.7ms | — | — | ~0 (native) | 0.05× | 2.29× |
+| 5 | 🟢 | Node.js | 637.52M/s | 205.6ms | 219.0ms | 50.4MB | ~0 | 0.02× | 1.00× |
+| 6 | ⚪ | Galerina/WASM legacy lane | 461.79M/s | 1.06s | 1.06s | 83.7MB | ~0 | 0.02× | 0.72× |
+| 7 | ⚫ | Galerina passive ⟨interp⟩ | 900.5K/s | 0.1ms | 0.0ms | 81.4MB | 1.5 KB/op | 0.00× | 0.00× |
+| 8 | ⚫ | Galerina governed ⟨interp⟩ | 771.0K/s | 42.5ms | 78.0ms | 81.2MB | 33 B/op | 0.00× | 0.00× |
+| 9 | ⚫ | Galerina manifest ⟨interp⟩ | 678.4K/s | 48.3ms | 94.0ms | 81.4MB | 66 B/op | 0.00× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (1.4 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (1.5 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### crypto-ops
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Galerina passive ⟨interp⟩ | 3.5K/s | 28.7ms | 31.0ms | 109.8MB | 263 B/op | — | — |
-| 🥈 | ⚪ | Galerina manifest ⟨interp⟩ | 1.9K/s | 0.5ms | 0.0ms | 109.5MB | 185.8 KB/op | — | — |
-| 🥉 | 🔴 | Galerina governed ⟨interp⟩ | 124.0/s | 8.1ms | 16.0ms | 109.5MB | 334.1 KB/op | — | — |
+| 🥇 | 🟢 | Galerina passive ⟨interp⟩ | 5.8K/s | 17.2ms | 31.0ms | 81.6MB | -1.6 KB/op | — | — |
+| 🥈 | 🟡 | Galerina manifest ⟨interp⟩ | 1.9K/s | 0.5ms | 78.0ms | 81.5MB | 193.8 KB/op | — | — |
+| 🥉 | 🔴 | Galerina governed ⟨interp⟩ | 197.0/s | 5.1ms | 0.0ms | 81.5MB | 337.6 KB/op | — | — |
 
-> 🧠 **Lowest heap/op:** Galerina passive ⟨interp⟩ (263 B/op) · **highest:** Galerina governed ⟨interp⟩ (334.1 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina passive ⟨interp⟩ (-1.6 KB/op) · **highest:** Galerina governed ⟨interp⟩ (337.6 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### text-html
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Galerina passive ⟨interp⟩ | 54.6K/s | 1.8ms | 0.0ms | 108.0MB | -2.9 KB/op | — | — |
-| 🥈 | 🔴 | Galerina manifest ⟨interp⟩ | 2.4K/s | 0.4ms | 0.0ms | 108.6MB | 152.2 KB/op | — | — |
-| 🥉 | 🔴 | Galerina governed ⟨interp⟩ | 699.0/s | 1.4ms | 0.0ms | 108.4MB | 171.8 KB/op | — | — |
+| 🥇 | 🟢 | Galerina passive ⟨interp⟩ | 60.0K/s | 1.7ms | 0.0ms | 82.5MB | -337 B/op | — | — |
+| 🥈 | 🔴 | Galerina manifest ⟨interp⟩ | 2.5K/s | 0.4ms | 0.0ms | 81.6MB | 172.9 KB/op | — | — |
+| 🥉 | 🔴 | Galerina governed ⟨interp⟩ | 943.0/s | 1.1ms | 0.0ms | 81.6MB | 192.5 KB/op | — | — |
 
-> 🧠 **Lowest heap/op:** Galerina passive ⟨interp⟩ (-2.9 KB/op) · **highest:** Galerina governed ⟨interp⟩ (171.8 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina passive ⟨interp⟩ (-337 B/op) · **highest:** Galerina governed ⟨interp⟩ (192.5 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### tri-logic
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 1.36B/s | 442.4ms | — | — | ~0 (native) | 211.5× | 1.48× |
-| 🥈 | 🟢 | Rust AVX2 | 1.27B/s | 473.0ms | — | — | ~0 (native) | 197.8× | 1.39× |
-| 🥉 | 🟢 | Node.js | 913.98M/s | 328.2ms | — | — | ~0 | 142.5× | 1.00× |
-| 4 | 🟡 | Galerina/WASM legacy lane | 450.19M/s | 1.33s | 1.33s | 112.2MB | ~0 | 70.2× | 0.49× |
-| 5 | ⚫ | Python | 6.41M/s | 1.87s | — | — | — | 1.00× | 0.01× |
-| 6 | ⚫ | Galerina passive ⟨interp⟩ | 303.0K/s | 1.6ms | 0.0ms | 109.9MB | 551 B/op | 0.05× | 0.00× |
-| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 287.3K/s | 1.04s | 1.14s | 109.9MB | 1 B/op | 0.04× | 0.00× |
-| 8 | ⚫ | Galerina governed ⟨interp⟩ | 285.1K/s | 1.05s | 1.08s | 109.6MB | 2 B/op | 0.04× | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 1.43B/s | 419.6ms | — | — | ~0 (native) | 195.8× | 1.39× |
+| 🥈 | 🟢 | Rust (generic) | 1.40B/s | 429.3ms | — | — | ~0 (native) | 191.4× | 1.36× |
+| 🥉 | 🟢 | Node.js | 1.03B/s | 292.4ms | — | — | ~0 | 140.5× | 1.00× |
+| 4 | 🟡 | Galerina/WASM legacy lane | 490.75M/s | 1.22s | 1.22s | 84.6MB | ~0 | 67.2× | 0.48× |
+| 5 | ⚫ | Python | 7.30M/s | 1.64s | — | — | — | 1.00× | 0.01× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 327.0K/s | 1.9ms | 0.0ms | 81.6MB | 724 B/op | 0.04× | 0.00× |
+| 7 | ⚫ | Galerina governed ⟨interp⟩ | 315.5K/s | 950.9ms | 985.0ms | 79.6MB | 5 B/op | 0.04× | 0.00× |
+| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 311.5K/s | 963.1ms | 1.05s | 81.6MB | 4 B/op | 0.04× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (551 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (724 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### verified-native-operation
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 3.65B/s | — | — | — | ~0 (native) | 412.2× | 1.83× |
-| 🥈 | 🟢 | Rust (generic) | 2.35B/s | — | — | — | ~0 (native) | 266.2× | 1.18× |
-| 🥉 | 🟢 | Node.js | 1.99B/s | — | — | — | — | 224.8× | 1.00× |
-| 4 | ⚫ | Python | 8.84M/s | — | — | — | — | 1.00× | 0.00× |
+| 🥇 | 🟢 | Rust (generic) | 3.75B/s | — | — | — | ~0 (native) | 395.5× | 1.84× |
+| 🥈 | 🟢 | Rust AVX2 | 3.73B/s | — | — | — | ~0 (native) | 393.9× | 1.83× |
+| 🥉 | 🟢 | Node.js | 2.04B/s | — | — | — | — | 214.8× | 1.00× |
+| 4 | ⚫ | Python | 9.48M/s | — | — | — | — | 1.00× | 0.00× |
 
 ### data-query
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Node.js | 384.44M/s | 130.1ms | — | — | ~0 | 125.3× | 1.00× |
-| 🥈 | ⚫ | Python | 3.07M/s | 978.2ms | — | — | — | 1.00× | 0.01× |
-| 🥉 | ⚫ | Galerina passive ⟨interp⟩ | 265.8K/s | 0.7ms | 0.0ms | 109.3MB | 5.7 KB/op | 0.09× | 0.00× |
-| 4 | ⚫ | Galerina manifest ⟨interp⟩ | 215.9K/s | 46.3ms | 47.0ms | 109.1MB | 126 B/op | 0.07× | 0.00× |
-| 5 | ⚫ | Galerina governed ⟨interp⟩ | 206.4K/s | 48.4ms | 63.0ms | 110.5MB | 228 B/op | 0.07× | 0.00× |
+| 🥇 | 🟢 | Node.js | 392.71M/s | 127.3ms | — | — | ~0 | 66.7× | 1.00× |
+| 🥈 | 🔴 | Python | 5.89M/s | 509.5ms | — | — | — | 1.00× | 0.01× |
+| 🥉 | ⚫ | Galerina passive ⟨interp⟩ | 301.5K/s | 0.5ms | 0.0ms | 85.6MB | 7.8 KB/op | 0.05× | 0.00× |
+| 4 | ⚫ | Galerina manifest ⟨interp⟩ | 259.3K/s | 38.6ms | 47.0ms | 86.7MB | 80 B/op | 0.04× | 0.00× |
+| 5 | ⚫ | Galerina governed ⟨interp⟩ | 257.2K/s | 38.9ms | 47.0ms | 87.0MB | 245 B/op | 0.04× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Node.js (~0) · **highest:** Galerina passive ⟨interp⟩ (5.7 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Node.js (~0) · **highest:** Galerina passive ⟨interp⟩ (7.8 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### call-chain
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 154.46M/s | 0.3ms | — | — | ~0 (native) | 121.5× | 3.80× |
-| 🥈 | 🟢 | Rust (generic) | 154.46M/s | 0.3ms | — | — | ~0 (native) | 121.5× | 3.80× |
-| 🥉 | 🟢 | Galerina/WASM legacy lane | 51.61M/s | 1.94s | 1.94s | 112.1MB | ~0 | 40.6× | 1.27× |
-| 4 | 🟢 | Node.js | 40.61M/s | 1.2ms | 0.0ms | 65.6MB | ~0 | 32.0× | 1.00× |
-| 5 | 🔴 | Python | 1.27M/s | 39.3ms | 46.9ms | — | ~0 | 1.00× | 0.03× |
-| 6 | ⚫ | Galerina passive ⟨interp⟩ | 48.5K/s | 0.1ms | 0.0ms | 110.4MB | 18.8 KB/op | 0.04× | 0.00× |
-| 7 | ⚫ | Galerina governed ⟨interp⟩ | 45.6K/s | 1.10s | 1.11s | 110.2MB | 67 B/op | 0.04× | 0.00× |
-| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 45.5K/s | 1.10s | 1.14s | 110.4MB | 65 B/op | 0.04× | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 154.51M/s | 0.3ms | — | — | ~0 (native) | 62.0× | 3.26× |
+| 🥈 | 🟢 | Rust (generic) | 138.39M/s | 0.4ms | — | — | ~0 (native) | 55.6× | 2.92× |
+| 🥉 | 🟢 | Galerina/WASM legacy lane | 56.90M/s | 1.76s | 1.76s | 89.6MB | ~0 | 22.8× | 1.20× |
+| 4 | 🟢 | Node.js | 47.41M/s | 1.1ms | 0.0ms | 48.6MB | ~0 | 19.0× | 1.00× |
+| 5 | 🔴 | Python | 2.49M/s | 20.1ms | 31.3ms | — | ~0 | 1.00× | 0.05× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 54.0K/s | 0.1ms | 0.0ms | 94.7MB | 17.9 KB/op | 0.02× | 0.00× |
+| 7 | ⚫ | Galerina governed ⟨interp⟩ | 52.5K/s | 952.8ms | 1.03s | 96.8MB | 134 B/op | 0.02× | 0.00× |
+| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 50.3K/s | 995.0ms | 1.00s | 94.7MB | 136 B/op | 0.02× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (18.8 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (17.9 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### nbody
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Node.js | 121.48M/s | 53.9ms | 63.0ms | 67.4MB | ~0 | 127.6× | 1.00× |
-| 🥈 | 🟡 | Galerina/WASM legacy lane | 28.15M/s | 1.16s | 1.17s | 113.0MB | ~0 | 29.6× | 0.23× |
-| 🥉 | ⚫ | Python | 952.2K/s | 1.72s | — | — | 12 B/op | 1.00× | 0.01× |
-| 4 | ⚫ | Galerina passive ⟨interp⟩ | 55.7K/s | 0.2ms | 0.0ms | 113.0MB | 17.9 KB/op | 0.06× | 0.00× |
-| 5 | ⚫ | Galerina manifest ⟨interp⟩ | 54.3K/s | 603.2ms | 609.0ms | 113.0MB | 30 B/op | 0.06× | 0.00× |
-| 6 | ⚫ | Galerina governed ⟨interp⟩ | 53.1K/s | 617.4ms | 687.0ms | 110.4MB | 33 B/op | 0.06× | 0.00× |
+| 🥇 | 🟢 | Node.js | 125.43M/s | 52.3ms | 62.0ms | 50.5MB | ~0 | 74.1× | 1.00× |
+| 🥈 | 🟡 | Galerina/WASM legacy lane | 30.53M/s | 1.07s | 1.08s | 97.1MB | ~0 | 18.0× | 0.24× |
+| 🥉 | 🔴 | Python | 1.69M/s | 967.6ms | — | — | 12 B/op | 1.00× | 0.01× |
+| 4 | ⚫ | Galerina manifest ⟨interp⟩ | 61.2K/s | 535.4ms | 563.0ms | 97.3MB | 17 B/op | 0.04× | 0.00× |
+| 5 | ⚫ | Galerina governed ⟨interp⟩ | 61.1K/s | 536.1ms | 609.0ms | 96.4MB | 41 B/op | 0.04× | 0.00× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 60.6K/s | 0.2ms | 0.0ms | 97.3MB | 17.1 KB/op | 0.04× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (17.9 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (17.1 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### json-parse
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Node.js | 2.99M/s | — | — | — | — | 6.83× | 1.00× |
-| 🥈 | 🟡 | Python | 438.0K/s | — | — | — | 1 B/op | 1.00× | 0.15× |
-| 🥉 | ⚫ | Galerina passive ⟨interp⟩ | 8.5K/s | 0.5ms | 15.0ms | 113.6MB | 91.8 KB/op | 0.02× | 0.00× |
-| 4 | ⚫ | Galerina governed ⟨interp⟩ | 4.8K/s | 103.1ms | 187.0ms | 119.4MB | 5.1 KB/op | 0.01× | 0.00× |
-| 5 | ⚫ | Galerina manifest ⟨interp⟩ | 4.4K/s | 112.8ms | 156.0ms | 111.4MB | 8.9 KB/op | 0.01× | 0.00× |
+| 🥇 | 🟢 | Node.js | 3.68M/s | — | — | — | — | 8.44× | 1.00× |
+| 🥈 | 🟡 | Python | 435.5K/s | — | — | — | 1 B/op | 1.00× | 0.12× |
+| 🥉 | ⚫ | Galerina passive ⟨interp⟩ | 9.6K/s | 0.4ms | 0.0ms | 103.1MB | 111.2 KB/op | 0.02× | 0.00× |
+| 4 | ⚫ | Galerina governed ⟨interp⟩ | 5.3K/s | 94.2ms | 140.0ms | 104.2MB | 4.8 KB/op | 0.01× | 0.00× |
+| 5 | ⚫ | Galerina manifest ⟨interp⟩ | 4.8K/s | 103.5ms | 109.0ms | 100.1MB | 5.7 KB/op | 0.01× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Python (1 B/op) · **highest:** Galerina passive ⟨interp⟩ (91.8 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Python (1 B/op) · **highest:** Galerina passive ⟨interp⟩ (111.2 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### mandelbrot
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 23.41M/s | 139.9ms | — | — | ~0 (native) | 178.9× | 3.76× |
-| 🥈 | 🟢 | Rust AVX2 | 23.01M/s | 142.4ms | — | — | ~0 (native) | 175.7× | 3.69× |
-| 🥉 | 🟢 | Galerina/WASM legacy lane | 8.67M/s | 1.89s | 1.89s | 118.2MB | ~0 | 66.2× | 1.39× |
-| 4 | 🟢 | Node.js | 6.23M/s | 526.2ms | 547.0ms | 67.6MB | ~0 | 47.6× | 1.00× |
-| 5 | 🔴 | Python | 130.9K/s | 25.03s | — | — | ~0 | 1.00× | 0.02× |
-| 6 | ⚫ | Galerina passive ⟨interp⟩ | 6.7K/s | 0.2ms | 0.0ms | 114.4MB | 146.2 KB/op | 0.05× | 0.00× |
-| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 6.7K/s | 2.46s | 2.56s | 114.4MB | 261 B/op | 0.05× | 0.00× |
-| 8 | ⚫ | Galerina governed ⟨interp⟩ | 6.6K/s | 2.48s | 2.53s | 114.4MB | 132 B/op | 0.05× | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 24.39M/s | 134.3ms | — | — | ~0 (native) | 145.3× | 3.77× |
+| 🥈 | 🟢 | Rust (generic) | 23.63M/s | 138.7ms | — | — | ~0 (native) | 140.8× | 3.65× |
+| 🥉 | 🟢 | Galerina/WASM legacy lane | 9.20M/s | 1.78s | 1.78s | 103.2MB | ~0 | 54.8× | 1.42× |
+| 4 | 🟢 | Node.js | 6.47M/s | 506.2ms | 531.0ms | 50.6MB | ~0 | 38.6× | 1.00× |
+| 5 | 🔴 | Python | 167.9K/s | 19.52s | — | — | ~0 | 1.00× | 0.03× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 8.2K/s | 0.2ms | 0.0ms | 98.9MB | 137.4 KB/op | 0.05× | 0.00× |
+| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 7.6K/s | 2.14s | 2.25s | 98.9MB | 185 B/op | 0.05× | 0.00× |
+| 8 | ⚫ | Galerina governed ⟨interp⟩ | 7.5K/s | 2.19s | 2.22s | 98.1MB | 9 B/op | 0.04× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (146.2 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Galerina/WASM legacy lane (~0) · **highest:** Galerina passive ⟨interp⟩ (137.4 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### spectral-norm
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 370.82M/s | 27.0ms | — | — | ~0 (native) | 245.6× | 1.67× |
-| 🥈 | 🟢 | Rust AVX2 | 370.02M/s | 27.0ms | — | — | ~0 (native) | 245.1× | 1.67× |
-| 🥉 | 🟢 | Node.js | 221.83M/s | 45.1ms | 31.0ms | 67.1MB | ~0 | 146.9× | 1.00× |
-| 4 | ⚫ | Python | 1.51M/s | 6.62s | — | — | ~0 | 1.00× | 0.01× |
+| 🥇 | 🟢 | Rust AVX2 | 393.17M/s | 25.4ms | — | — | ~0 (native) | 226.0× | 1.60× |
+| 🥈 | 🟢 | Rust (generic) | 390.26M/s | 25.6ms | — | — | ~0 (native) | 224.4× | 1.59× |
+| 🥉 | 🟢 | Node.js | 245.33M/s | 40.8ms | 31.0ms | 50.3MB | ~0 | 141.0× | 1.00× |
+| 4 | ⚫ | Python | 1.74M/s | 5.75s | — | — | ~0 | 1.00× | 0.01× |
 
 > 🧠 **Lowest heap/op:** Python (~0) · **highest:** Node.js (~0). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
@@ -895,36 +895,36 @@
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Galerina/WASM legacy lane | 543.35M/s | 1.00s | 984.0ms | 116.5MB | ~0 | 199.6× | 8.75× |
-| 🥈 | 🟢 | Node.js | 62.08M/s | 2.2ms | 0.0ms | 67.3MB | 3 B/op | 22.8× | 1.00× |
-| 🥉 | 🟡 | Rust (generic) | 14.16M/s | 9.6ms | — | — | ~0 (native) | 5.20× | 0.23× |
-| 4 | 🟡 | Rust AVX2 | 13.54M/s | 10.0ms | — | — | ~0 (native) | 4.98× | 0.22× |
-| 5 | 🔴 | Python | 2.72M/s | 49.9ms | 46.9ms | — | ~0 | 1.00× | 0.04× |
-| 6 | ⚫ | Galerina passive ⟨interp⟩ | 364.1K/s | 0.1ms | 0.0ms | 114.2MB | 2.2 KB/op | 0.13× | 0.01× |
-| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 310.2K/s | 438.0ms | 453.0ms | 114.2MB | 5 B/op | 0.11× | 0.00× |
-| 8 | ⚫ | Galerina governed ⟨interp⟩ | 296.8K/s | 457.7ms | 453.0ms | 112.1MB | 9 B/op | 0.11× | 0.00× |
+| 🥇 | 🟢 | Galerina/WASM legacy lane | 608.78M/s | 1.12s | 1.13s | 99.3MB | ~0 | 208.2× | 7.48× |
+| 🥈 | 🟢 | Node.js | 81.35M/s | 1.7ms | 0.0ms | 50.5MB | 3 B/op | 27.8× | 1.00× |
+| 🥉 | 🟡 | Rust (generic) | 21.46M/s | 6.3ms | — | — | ~0 (native) | 7.34× | 0.26× |
+| 4 | 🟡 | Rust AVX2 | 20.68M/s | 6.6ms | — | — | ~0 (native) | 7.07× | 0.25× |
+| 5 | 🔴 | Python | 2.92M/s | 46.5ms | 46.9ms | — | ~0 | 1.00× | 0.04× |
+| 6 | ⚫ | Galerina passive ⟨interp⟩ | 400.8K/s | 0.1ms | 0.0ms | 97.6MB | 2.5 KB/op | 0.14× | 0.00× |
+| 7 | ⚫ | Galerina manifest ⟨interp⟩ | 349.8K/s | 388.4ms | 406.0ms | 97.6MB | 13 B/op | 0.12× | 0.00× |
+| 8 | ⚫ | Galerina governed ⟨interp⟩ | 331.9K/s | 409.4ms | 437.0ms | 98.3MB | 7 B/op | 0.11× | 0.00× |
 
-> 🧠 **Lowest heap/op:** Python (~0) · **highest:** Galerina passive ⟨interp⟩ (2.2 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Python (~0) · **highest:** Galerina passive ⟨interp⟩ (2.5 KB/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### spore-container
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust (generic) | 150.0K/s | 2.00s | — | — | ~0 (native) | 2.53× | 3.77× |
-| 🥈 | 🟢 | Rust AVX2 | 146.5K/s | 2.05s | — | — | ~0 (native) | 2.47× | 3.68× |
-| 🥉 | 🟢 | Python | 59.4K/s | 1.68s | — | — | ~0 | 1.00× | 1.49× |
-| 4 | 🟢 | Node.js | 39.8K/s | 7.53s | 9.03s | 83.0MB | 7 B/op | 0.67× | 1.00× |
+| 🥇 | 🟢 | Rust (generic) | 147.1K/s | 2.04s | — | — | ~0 (native) | 2.38× | 3.35× |
+| 🥈 | 🟢 | Rust AVX2 | 145.4K/s | 2.06s | — | — | ~0 (native) | 2.35× | 3.31× |
+| 🥉 | 🟢 | Python | 61.8K/s | 1.62s | — | — | ~0 | 1.00× | 1.41× |
+| 4 | 🟢 | Node.js | 43.9K/s | 6.83s | 8.09s | 66.1MB | 5 B/op | 0.71× | 1.00× |
 
-> 🧠 **Lowest heap/op:** Python (~0) · **highest:** Node.js (7 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Python (~0) · **highest:** Node.js (5 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### framework-pipeline
 
 | # | 🚦 | Runtime | Throughput | Wall | CPU | RSS | Heap/op | vs Python | vs Node |
 |---|---|---|---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Node.js | 117.9K/s | 1.70s | 2.52s | 93.6MB | 56 B/op | 1.25× | 1.00× |
-| 🥈 | ⚪ | Python | 94.3K/s | 2.12s | — | — | ~0 | 1.00× | 0.80× |
+| 🥇 | 🟢 | Node.js | 132.5K/s | 1.51s | 2.25s | 77.3MB | 65 B/op | 1.16× | 1.00× |
+| 🥈 | ⚪ | Python | 114.2K/s | 1.75s | — | — | ~0 | 1.00× | 0.86× |
 
-> 🧠 **Lowest heap/op:** Python (~0) · **highest:** Node.js (56 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
+> 🧠 **Lowest heap/op:** Python (~0) · **highest:** Node.js (65 B/op). Native Rust/C++ allocate ~0 (no GC heap); a positive figure is GC-managed allocation pressure.
 
 ### http-throughput
 
@@ -964,15 +964,15 @@
 
 | # | 🚦 | Runtime | Device (🖥️ CPU / 🎮 GPU) | Throughput (kernel ops/s) | Wall | vs Node |
 |---|---|---|---|---|---|---|
-| 🥇 | 🟢 | Rust AVX2 | 🖥️ CPU (cpu (serial)) | 1.17B/s | 4.26s | 1.23× |
-| 🥈 | 🟢 | Rust (generic) | 🖥️ CPU (cpu (serial)) | 1.17B/s | 4.26s | 1.23× |
-| 🥉 | 🟢 | Node.js | 🖥️ CPU (cpu (serial)) | 954.12M/s | 524.0ms | 1.00× |
-| 4 | 🟡 | Galerina/WASM legacy lane | 🖥️ CPU (cpu (wasm)) | 446.64M/s | 1.12s | 0.47× |
-| 5 | ⚫ | Python | 🖥️ CPU (cpu (serial)) | 5.34M/s | 9.37s | 0.01× |
-| 6 | ⚫ | Deno WebGPU (NVIDIA GeForce RTX 2060) | 🎮 GPU (gpu (WebGPU — NVIDIA GeForce RTX 2060)) | 3.85M/s | 25.9ms | 0.00× |
-| 7 | ⚫ | Galerina passive ⟨interp⟩ | 🖥️ CPU (cpu) | 335.0K/s | 0.2ms | 0.00× |
-| 8 | ⚫ | Galerina governed ⟨interp⟩ | 🖥️ CPU (cpu) | 302.4K/s | 330.7ms | 0.00× |
-| 9 | ⚫ | Galerina manifest ⟨interp⟩ | 🖥️ CPU (cpu) | 296.9K/s | 336.8ms | 0.00× |
+| 🥇 | 🟢 | Rust AVX2 | 🖥️ CPU (cpu (serial)) | 1.23B/s | 4.05s | 1.21× |
+| 🥈 | 🟢 | Rust (generic) | 🖥️ CPU (cpu (serial)) | 1.23B/s | 4.07s | 1.21× |
+| 🥉 | 🟢 | Node.js | 🖥️ CPU (cpu (serial)) | 1.02B/s | 490.3ms | 1.00× |
+| 4 | 🟡 | Galerina/WASM legacy lane | 🖥️ CPU (cpu (wasm)) | 495.71M/s | 1.01s | 0.49× |
+| 5 | ⚫ | Python | 🖥️ CPU (cpu (serial)) | 5.79M/s | 8.64s | 0.01× |
+| 6 | ⚫ | Deno WebGPU (NVIDIA GeForce RTX 2060) | 🎮 GPU (gpu (WebGPU — NVIDIA GeForce RTX 2060)) | 4.22M/s | 23.7ms | 0.00× |
+| 7 | ⚫ | Galerina passive ⟨interp⟩ | 🖥️ CPU (cpu) | 377.0K/s | 0.2ms | 0.00× |
+| 8 | ⚫ | Galerina manifest ⟨interp⟩ | 🖥️ CPU (cpu) | 348.5K/s | 286.9ms | 0.00× |
+| 9 | ⚫ | Galerina governed ⟨interp⟩ | 🖥️ CPU (cpu) | 328.1K/s | 304.8ms | 0.00× |
 
 **GPU execution status (archived run):**
 
@@ -1042,30 +1042,30 @@
 
 | Benchmark | 🏆 Winner | Rust AVX2 | Rust (generic) | Node.js | Python | Galerina passive ⟨interp⟩ | Galerina manifest ⟨interp⟩ | Galerina governed ⟨interp⟩ | Galerina/WASM legacy lane | Deno WebGPU (NVIDIA GeForce RTX 2060) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| **compute-mix** | Node.js | 1.1× slower | **🏆 winner** | **🏆 winner** | **181× slower** | **60× slower** | **76× slower** | **79× slower** | 2× slower | not run — no GPU path |
-| **arithmetic-threshold** | Rust (generic) | **🏆 winner** | **🏆 winner** | 2× slower | **424× slower** | **54.9K× slower** | **319× slower** | **374× slower** | 3× slower | not run — no GPU path |
-| **six-digit-guess** | Rust (generic) | **🏆 winner** | **🏆 winner** | **31× slower** | **915× slower** | **3.5K× slower** | **1.8K× slower** | **1.8K× slower** | 2× slower | not run — no GPU path |
-| **record-allocation** | Rust (generic) | **🏆 winner** | **🏆 winner** | **21× slower** | **310× slower** | **183× slower** | **620× slower** | **622× slower** | 2× slower | not run — no GPU path |
-| **fibonacci-recursive** | Galerina passive ⟨interp⟩ | **164× slower** | **149× slower** | **721× slower** | **17.7K× slower** | **🏆 winner** | **4.6K× slower** | **6.7K× slower** | 4× slower | not run — no GPU path |
-| **tower-of-hanoi** | Rust (generic) | 1.1× slower | **🏆 winner** | 2× slower | **89× slower** | **3.1K× slower** | **3.2K× slower** | **3.1K× slower** | 2× slower | not run — no GPU path |
-| **collection-pipeline** | Rust AVX2 | **🏆 winner** | 3× slower | **180× slower** | **1.2K× slower** | **1.5K× slower** | **6.8K× slower** | **5.7K× slower** | **32× slower** | not run — no GPU path |
-| **hardware-targets** | Galerina/WASM legacy lane | **31× slower** | **31× slower** | **43× slower** | not run | **407× slower** | **9.2K× slower** | **10.7K× slower** | **🏆 winner** | not run — no GPU path |
-| **low-memory** | Rust AVX2 | **🏆 winner** | 4× slower | 8× slower | **2.2K× slower** | **38.5K× slower** | **67.3K× slower** | **51.7K× slower** | **13× slower** | not run — no GPU path |
-| **gpu-compute** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 1.2× slower | **220× slower** | **3.5K× slower** | **4.0K× slower** | **3.9K× slower** | 3× slower | **304× slower** |
-| **matrix-multiply** | Python | **23× slower** | **19× slower** | **48× slower** | **🏆 winner** | **35.2K× slower** | **47.9K× slower** | **46.3K× slower** | **67× slower** | **19× slower** |
-| **crypto-ops** | Galerina passive ⟨interp⟩ | no comparable metric | no comparable metric | no comparable metric | no comparable metric | **🏆 winner** | 2× slower | **28× slower** | no WASM — strings/records | not run — no GPU path |
-| **text-html** | Galerina passive ⟨interp⟩ | no comparable metric | no comparable metric | no comparable metric | no comparable metric | **🏆 winner** | **23× slower** | **78× slower** | no WASM — strings/records | not run — no GPU path |
-| **tri-logic** | Rust (generic) | 1.1× slower | **🏆 winner** | 1.5× slower | **211× slower** | **4.5K× slower** | **4.7K× slower** | **4.8K× slower** | 3× slower | not run — no GPU path |
-| **verified-native-operation** | Rust AVX2 | **🏆 winner** | 2× slower | 2× slower | **412× slower** | not run | not run | not run | no WASM build | not run — no GPU path |
-| **data-query** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | **125× slower** | **1.4K× slower** | **1.8K× slower** | **1.9K× slower** | no WASM build | not run — no GPU path |
-| **call-chain** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 4× slower | **122× slower** | **3.2K× slower** | **3.4K× slower** | **3.4K× slower** | 3× slower | not run — no GPU path |
-| **nbody** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | **128× slower** | **2.2K× slower** | **2.2K× slower** | **2.3K× slower** | 4× slower | not run — no GPU path |
-| **json-parse** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | 7× slower | **351× slower** | **675× slower** | **617× slower** | no WASM — strings/records | not run — no GPU path |
-| **mandelbrot** | Rust (generic) | **🏆 winner** | **🏆 winner** | 4× slower | **179× slower** | **3.5K× slower** | **3.5K× slower** | **3.5K× slower** | 3× slower | not run — no GPU path |
-| **spectral-norm** | Rust (generic) | **🏆 winner** | **🏆 winner** | 2× slower | **246× slower** | not run | not run | not run | no WASM build | not run — no GPU path |
-| **binary-trees** | Galerina/WASM legacy lane | **40× slower** | **38× slower** | 9× slower | **200× slower** | **1.5K× slower** | **1.8K× slower** | **1.8K× slower** | **🏆 winner** | not run — no GPU path |
-| **spore-container** | Rust (generic) | **🏆 winner** | **🏆 winner** | 4× slower | 3× slower | not run | not run | not run | no WASM — strings/records | not run — no GPU path |
-| **framework-pipeline** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | 1.3× slower | not run | not run | not run | no WASM — strings/records | not run — no GPU path |
+| **compute-mix** | Node.js | **🏆 winner** | **🏆 winner** | **🏆 winner** | **186× slower** | **62× slower** | **79× slower** | **81× slower** | 2× slower | not run — no GPU path |
+| **arithmetic-threshold** | Rust (generic) | **🏆 winner** | **🏆 winner** | 2× slower | **409× slower** | **47.8K× slower** | **291× slower** | **295× slower** | 3× slower | not run — no GPU path |
+| **six-digit-guess** | Rust (generic) | 1.1× slower | **🏆 winner** | **28× slower** | **875× slower** | **3.5K× slower** | **1.7K× slower** | **1.7K× slower** | 2× slower | not run — no GPU path |
+| **record-allocation** | Rust (generic) | **🏆 winner** | **🏆 winner** | **20× slower** | **371× slower** | **151× slower** | **438× slower** | **469× slower** | 2× slower | not run — no GPU path |
+| **fibonacci-recursive** | Galerina passive ⟨interp⟩ | **134× slower** | **132× slower** | **521× slower** | **16.7K× slower** | **🏆 winner** | **4.3K× slower** | **5.7K× slower** | 4× slower | not run — no GPU path |
+| **tower-of-hanoi** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 2× slower | **96× slower** | **2.7K× slower** | **2.9K× slower** | **3.0K× slower** | 2× slower | not run — no GPU path |
+| **collection-pipeline** | Rust AVX2 | **🏆 winner** | 3× slower | **183× slower** | **984× slower** | **1.6K× slower** | **5.3K× slower** | **5.8K× slower** | **31× slower** | not run — no GPU path |
+| **hardware-targets** | Galerina/WASM legacy lane | **33× slower** | **33× slower** | **43× slower** | not run | **452× slower** | **17.4K× slower** | **12.9K× slower** | **🏆 winner** | not run — no GPU path |
+| **low-memory** | Rust AVX2 | **🏆 winner** | 5× slower | 9× slower | **1.7K× slower** | **34.7K× slower** | **46.1K× slower** | **43.9K× slower** | **13× slower** | not run — no GPU path |
+| **gpu-compute** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 1.2× slower | **213× slower** | **3.3K× slower** | **3.5K× slower** | **3.8K× slower** | 2× slower | **292× slower** |
+| **matrix-multiply** | Python | **20× slower** | **19× slower** | **45× slower** | **🏆 winner** | **32.0K× slower** | **42.4K× slower** | **37.3K× slower** | **62× slower** | **17× slower** |
+| **crypto-ops** | Galerina passive ⟨interp⟩ | no comparable metric | no comparable metric | no comparable metric | no comparable metric | **🏆 winner** | 3× slower | **30× slower** | no WASM — strings/records | not run — no GPU path |
+| **text-html** | Galerina passive ⟨interp⟩ | no comparable metric | no comparable metric | no comparable metric | no comparable metric | **🏆 winner** | **24× slower** | **64× slower** | no WASM — strings/records | not run — no GPU path |
+| **tri-logic** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 1.4× slower | **196× slower** | **4.4K× slower** | **4.6K× slower** | **4.5K× slower** | 3× slower | not run — no GPU path |
+| **verified-native-operation** | Rust (generic) | **🏆 winner** | **🏆 winner** | 2× slower | **396× slower** | not run | not run | not run | no WASM build | not run — no GPU path |
+| **data-query** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | **67× slower** | **1.3K× slower** | **1.5K× slower** | **1.5K× slower** | no WASM build | not run — no GPU path |
+| **call-chain** | Rust AVX2 | **🏆 winner** | 1.1× slower | 3× slower | **62× slower** | **2.9K× slower** | **3.1K× slower** | **2.9K× slower** | 3× slower | not run — no GPU path |
+| **nbody** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | **74× slower** | **2.1K× slower** | **2.0K× slower** | **2.1K× slower** | 4× slower | not run — no GPU path |
+| **json-parse** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | 8× slower | **381× slower** | **761× slower** | **692× slower** | no WASM — strings/records | not run — no GPU path |
+| **mandelbrot** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 4× slower | **145× slower** | **3.0K× slower** | **3.2K× slower** | **3.3K× slower** | 3× slower | not run — no GPU path |
+| **spectral-norm** | Rust AVX2 | **🏆 winner** | **🏆 winner** | 2× slower | **226× slower** | not run | not run | not run | no WASM build | not run — no GPU path |
+| **binary-trees** | Galerina/WASM legacy lane | **29× slower** | **28× slower** | 7× slower | **208× slower** | **1.5K× slower** | **1.7K× slower** | **1.8K× slower** | **🏆 winner** | not run — no GPU path |
+| **spore-container** | Rust (generic) | **🏆 winner** | **🏆 winner** | 3× slower | 2× slower | not run | not run | not run | no WASM — strings/records | not run — no GPU path |
+| **framework-pipeline** | Node.js | not run — no native impl | not run — no native impl | **🏆 winner** | 1.2× slower | not run | not run | not run | no WASM — strings/records | not run — no GPU path |
 
 > Bold = significantly behind (>10×). A non-numeric cell states why that runtime has no figure (e.g. "not run — no native impl", "errored", "no WASM build") — never a silent blank.
 > Fibonacci passive is excluded from 'winner' comparison — LRU cache hit is not a fair race.
@@ -1080,258 +1080,258 @@
 ### compute-mix
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Node.js | 131.25M/s | 🏆 winner | 181× faster |
-| 🥈 | Rust (generic) | 126.80M/s | 1.0× slower | 175× faster |
-| 🥉 | Rust AVX2 | 124.82M/s | 1.1× slower | 172× faster |
-| 4 | Galerina/WASM legacy lane | 71.70M/s | 1.8× slower | 99× faster |
-| 5 | Galerina passive ⟨interp⟩ ⚠️cache | 2.19M/s | 60× slower | 3.0× faster |
-| 6 | Galerina manifest ⟨interp⟩ | 1.74M/s | 76× slower | 2.4× faster |
-| 7 | Galerina governed ⟨interp⟩ | 1.67M/s | 79× slower | 2.3× faster |
-| 8 | Python | 724.9K/s | 181× slower | — (slowest) |
+| 🥇 | Node.js | 140.68M/s | 🏆 winner | 186× faster |
+| 🥈 | Rust (generic) | 137.03M/s | 1.0× slower | 181× faster |
+| 🥉 | Rust AVX2 | 134.50M/s | 1.0× slower | 178× faster |
+| 4 | Galerina/WASM legacy lane | 80.51M/s | 1.7× slower | 107× faster |
+| 5 | Galerina passive ⟨interp⟩ ⚠️cache | 2.25M/s | 62× slower | 3.0× faster |
+| 6 | Galerina manifest ⟨interp⟩ | 1.79M/s | 79× slower | 2.4× faster |
+| 7 | Galerina governed ⟨interp⟩ | 1.74M/s | 81× slower | 2.3× faster |
+| 8 | Python | 755.3K/s | 186× slower | — (slowest) |
 
 ### arithmetic-threshold
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 1.56B/s | 🏆 winner | 54.9K× faster |
-| 🥈 | Rust AVX2 | 1.56B/s | 1.0× slower | 54.7K× faster |
-| 🥉 | Node.js | 958.99M/s | 1.6× slower | 33.7K× faster |
-| 4 | Galerina/WASM legacy lane | 450.35M/s | 3.5× slower | 15.8K× faster |
-| 5 | Galerina manifest ⟨interp⟩ | 4.90M/s | 319× slower | 172× faster |
-| 6 | Galerina governed ⟨interp⟩ | 4.19M/s | 374× slower | 147× faster |
-| 7 | Python | 3.69M/s | 424× slower | 130× faster |
-| 8 | Galerina passive ⟨interp⟩ ⚠️cache | 28.5K/s | 54.9K× slower | — (slowest) |
+| 🥇 | Rust (generic) | 1.60B/s | 🏆 winner | 47.8K× faster |
+| 🥈 | Rust AVX2 | 1.58B/s | 1.0× slower | 47.2K× faster |
+| 🥉 | Node.js | 988.80M/s | 1.6× slower | 29.6K× faster |
+| 4 | Galerina/WASM legacy lane | 510.54M/s | 3.1× slower | 15.3K× faster |
+| 5 | Galerina manifest ⟨interp⟩ | 5.50M/s | 291× slower | 164× faster |
+| 6 | Galerina governed ⟨interp⟩ | 5.42M/s | 295× slower | 162× faster |
+| 7 | Python | 3.91M/s | 409× slower | 117× faster |
+| 8 | Galerina passive ⟨interp⟩ ⚠️cache | 33.4K/s | 47.8K× slower | — (slowest) |
 
 ### six-digit-guess
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 77.12M/s | 🏆 winner | 3.5K× faster |
-| 🥈 | Rust AVX2 | 75.11M/s | 1.0× slower | 3.4K× faster |
-| 🥉 | Galerina/WASM legacy lane | 33.40M/s | 2.3× slower | 1.5K× faster |
-| 4 | Node.js | 2.47M/s | 31× slower | 113× faster |
-| 5 | Python | 84.3K/s | 915× slower | 3.9× faster |
-| 6 | Galerina manifest ⟨interp⟩ | 44.0K/s | 1.8K× slower | 2.0× faster |
-| 7 | Galerina governed ⟨interp⟩ | 42.3K/s | 1.8K× slower | 1.9× faster |
-| 8 | Galerina passive ⟨interp⟩ ⚠️cache | 21.9K/s | 3.5K× slower | — (slowest) |
+| 🥇 | Rust (generic) | 79.48M/s | 🏆 winner | 3.5K× faster |
+| 🥈 | Rust AVX2 | 74.95M/s | 1.1× slower | 3.3K× faster |
+| 🥉 | Galerina/WASM legacy lane | 37.44M/s | 2.1× slower | 1.6K× faster |
+| 4 | Node.js | 2.82M/s | 28× slower | 123× faster |
+| 5 | Python | 90.8K/s | 875× slower | 4.0× faster |
+| 6 | Galerina governed ⟨interp⟩ | 46.9K/s | 1.7K× slower | 2.0× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 46.5K/s | 1.7K× slower | 2.0× faster |
+| 8 | Galerina passive ⟨interp⟩ ⚠️cache | 22.9K/s | 3.5K× slower | — (slowest) |
 
 ### record-allocation
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 1.17B/s | 🏆 winner | 622× faster |
-| 🥈 | Rust AVX2 | 1.16B/s | 1.0× slower | 615× faster |
-| 🥉 | Galerina/WASM legacy lane | 484.09M/s | 2.4× slower | 257× faster |
-| 4 | Node.js | 55.87M/s | 21× slower | 30× faster |
-| 5 | Galerina passive ⟨interp⟩ ⚠️cache | 6.42M/s | 183× slower | 3.4× faster |
-| 6 | Python | 3.78M/s | 310× slower | 2.0× faster |
-| 7 | Galerina manifest ⟨interp⟩ | 1.89M/s | 620× slower | 1.0× faster |
-| 8 | Galerina governed ⟨interp⟩ | 1.89M/s | 622× slower | — (slowest) |
+| 🥇 | Rust (generic) | 1.20B/s | 🏆 winner | 469× faster |
+| 🥈 | Rust AVX2 | 1.19B/s | 1.0× slower | 468× faster |
+| 🥉 | Galerina/WASM legacy lane | 567.29M/s | 2.1× slower | 222× faster |
+| 4 | Node.js | 61.31M/s | 20× slower | 24× faster |
+| 5 | Galerina passive ⟨interp⟩ ⚠️cache | 7.91M/s | 151× slower | 3.1× faster |
+| 6 | Python | 3.22M/s | 371× slower | 1.3× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 2.73M/s | 438× slower | 1.1× faster |
+| 8 | Galerina governed ⟨interp⟩ | 2.55M/s | 469× slower | — (slowest) |
 
 ### fibonacci-recursive
-> 🏆 cache-hit "winner" is Galerina passive (memoised); **real compute winner: Galerina/WASM legacy lane at 16.5K/s**.
+> 🏆 cache-hit "winner" is Galerina passive (memoised); **real compute winner: Galerina/WASM legacy lane at 17.9K/s**.
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Galerina passive ⟨interp⟩ ⚠️cache | 73.9K/s | 🏆 winner | 17.7K× faster |
-| 🥈 | Galerina/WASM legacy lane | 16.5K/s | 4.5× slower | 4.0K× faster |
-| 🥉 | Rust (generic) | 496.5/s | 149× slower | 119× faster |
-| 4 | Rust AVX2 | 450.8/s | 164× slower | 108× faster |
-| 5 | Node.js | 102.5/s | 721× slower | 25× faster |
-| 6 | Galerina manifest ⟨interp⟩ | 16.0/s | 4.6K× slower | 3.8× faster |
-| 7 | Galerina governed ⟨interp⟩ | 11.0/s | 6.7K× slower | 2.6× faster |
-| 8 | Python | 4.2/s | 17.7K× slower | — (slowest) |
+| 🥇 | Galerina passive ⟨interp⟩ ⚠️cache | 68.8K/s | 🏆 winner | 16.7K× faster |
+| 🥈 | Galerina/WASM legacy lane | 17.9K/s | 3.8× slower | 4.3K× faster |
+| 🥉 | Rust (generic) | 520.0/s | 132× slower | 126× faster |
+| 4 | Rust AVX2 | 514.1/s | 134× slower | 125× faster |
+| 5 | Node.js | 132.1/s | 521× slower | 32× faster |
+| 6 | Galerina manifest ⟨interp⟩ | 16.0/s | 4.3K× slower | 3.9× faster |
+| 7 | Galerina governed ⟨interp⟩ | 12.0/s | 5.7K× slower | 2.9× faster |
+| 8 | Python | 4.1/s | 16.7K× slower | — (slowest) |
 
 ### tower-of-hanoi
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 249.54M/s | 🏆 winner | 3.2K× faster |
-| 🥈 | Rust AVX2 | 230.82M/s | 1.1× slower | 3.0K× faster |
-| 🥉 | Node.js | 118.27M/s | 2.1× slower | 1.5K× faster |
-| 4 | Galerina/WASM legacy lane | 117.34M/s | 2.1× slower | 1.5K× faster |
-| 5 | Python | 2.79M/s | 89× slower | 36× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 80.0K/s | 3.1K× slower | 1.0× faster |
-| 7 | Galerina governed ⟨interp⟩ | 79.8K/s | 3.1K× slower | 1.0× faster |
-| 8 | Galerina manifest ⟨interp⟩ | 77.3K/s | 3.2K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 251.40M/s | 🏆 winner | 3.0K× faster |
+| 🥈 | Rust (generic) | 248.19M/s | 1.0× slower | 3.0K× faster |
+| 🥉 | Node.js | 129.19M/s | 1.9× slower | 1.5K× faster |
+| 4 | Galerina/WASM legacy lane | 118.01M/s | 2.1× slower | 1.4K× faster |
+| 5 | Python | 2.63M/s | 96× slower | 31× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 92.4K/s | 2.7K× slower | 1.1× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 86.1K/s | 2.9K× slower | 1.0× faster |
+| 8 | Galerina governed ⟨interp⟩ | 83.9K/s | 3.0K× slower | — (slowest) |
 
 ### collection-pipeline
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust AVX2 | 12.37B/s | 🏆 winner | 6.8K× faster |
-| 🥈 | Rust (generic) | 4.16B/s | 3.0× slower | 2.3K× faster |
-| 🥉 | Galerina/WASM legacy lane | 384.15M/s | 32× slower | 211× faster |
-| 4 | Node.js | 68.70M/s | 180× slower | 38× faster |
-| 5 | Python | 10.01M/s | 1.2K× slower | 5.5× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 8.06M/s | 1.5K× slower | 4.4× faster |
-| 7 | Galerina governed ⟨interp⟩ | 2.16M/s | 5.7K× slower | 1.2× faster |
-| 8 | Galerina manifest ⟨interp⟩ | 1.82M/s | 6.8K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 13.52B/s | 🏆 winner | 5.8K× faster |
+| 🥈 | Rust (generic) | 4.43B/s | 3.1× slower | 1.9K× faster |
+| 🥉 | Galerina/WASM legacy lane | 439.42M/s | 31× slower | 188× faster |
+| 4 | Node.js | 74.02M/s | 183× slower | 32× faster |
+| 5 | Python | 13.75M/s | 984× slower | 5.9× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 8.63M/s | 1.6K× slower | 3.7× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 2.54M/s | 5.3K× slower | 1.1× faster |
+| 8 | Galerina governed ⟨interp⟩ | 2.34M/s | 5.8K× slower | — (slowest) |
 
 ### hardware-targets
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Galerina/WASM legacy lane | 35.52M/s | 🏆 winner | 10.7K× faster |
-| 🥈 | Rust AVX2 | 1.16M/s | 31× slower | 349× faster |
-| 🥉 | Rust (generic) | 1.16M/s | 31× slower | 348× faster |
-| 4 | Node.js | 824.1K/s | 43× slower | 247× faster |
-| 5 | Galerina passive ⟨interp⟩ ⚠️cache | 87.2K/s | 407× slower | 26× faster |
-| 6 | Galerina manifest ⟨interp⟩ | 3.8K/s | 9.2K× slower | 1.2× faster |
-| 7 | Galerina governed ⟨interp⟩ | 3.3K/s | 10.7K× slower | — (slowest) |
+| 🥇 | Galerina/WASM legacy lane | 40.46M/s | 🏆 winner | 17.4K× faster |
+| 🥈 | Rust (generic) | 1.24M/s | 33× slower | 533× faster |
+| 🥉 | Rust AVX2 | 1.21M/s | 33× slower | 521× faster |
+| 4 | Node.js | 949.8K/s | 43× slower | 408× faster |
+| 5 | Galerina passive ⟨interp⟩ ⚠️cache | 89.5K/s | 452× slower | 38× faster |
+| 6 | Galerina governed ⟨interp⟩ | 3.1K/s | 12.9K× slower | 1.3× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 2.3K/s | 17.4K× slower | — (slowest) |
 
 ### low-memory
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust AVX2 | 5.69B/s | 🏆 winner | 67.3K× faster |
-| 🥈 | Rust (generic) | 1.32B/s | 4.3× slower | 15.6K× faster |
-| 🥉 | Node.js | 702.95M/s | 8.1× slower | 8.3K× faster |
-| 4 | Galerina/WASM legacy lane | 453.30M/s | 13× slower | 5.4K× faster |
-| 5 | Python | 2.64M/s | 2.2K× slower | 31× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 147.8K/s | 38.5K× slower | 1.7× faster |
-| 7 | Galerina governed ⟨interp⟩ | 110.0K/s | 51.7K× slower | 1.3× faster |
-| 8 | Galerina manifest ⟨interp⟩ | 84.6K/s | 67.3K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 6.34B/s | 🏆 winner | 46.1K× faster |
+| 🥈 | Rust (generic) | 1.39B/s | 4.6× slower | 10.1K× faster |
+| 🥉 | Node.js | 720.26M/s | 8.8× slower | 5.2K× faster |
+| 4 | Galerina/WASM legacy lane | 489.98M/s | 13× slower | 3.6K× faster |
+| 5 | Python | 3.63M/s | 1.7K× slower | 26× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 182.5K/s | 34.7K× slower | 1.3× faster |
+| 7 | Galerina governed ⟨interp⟩ | 144.3K/s | 43.9K× slower | 1.0× faster |
+| 8 | Galerina manifest ⟨interp⟩ | 137.7K/s | 46.1K× slower | — (slowest) |
 
 ### gpu-compute
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust AVX2 | 1.17B/s | 🏆 winner | 4.0K× faster |
-| 🥈 | Rust (generic) | 1.17B/s | 1.0× slower | 4.0K× faster |
-| 🥉 | Node.js | 954.12M/s | 1.2× slower | 3.2K× faster |
-| 4 | Galerina/WASM legacy lane | 446.64M/s | 2.6× slower | 1.5K× faster |
-| 5 | Python | 5.34M/s | 220× slower | 18× faster |
-| 6 | Deno WebGPU (NVIDIA GeForce RTX 2060) | 3.85M/s | 304× slower | 13× faster |
-| 7 | Galerina passive ⟨interp⟩ ⚠️cache | 335.0K/s | 3.5K× slower | 1.1× faster |
-| 8 | Galerina governed ⟨interp⟩ | 302.4K/s | 3.9K× slower | 1.0× faster |
-| 9 | Galerina manifest ⟨interp⟩ | 296.9K/s | 4.0K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 1.23B/s | 🏆 winner | 3.8K× faster |
+| 🥈 | Rust (generic) | 1.23B/s | 1.0× slower | 3.7K× faster |
+| 🥉 | Node.js | 1.02B/s | 1.2× slower | 3.1K× faster |
+| 4 | Galerina/WASM legacy lane | 495.71M/s | 2.5× slower | 1.5K× faster |
+| 5 | Python | 5.79M/s | 213× slower | 18× faster |
+| 6 | Deno WebGPU (NVIDIA GeForce RTX 2060) | 4.22M/s | 292× slower | 13× faster |
+| 7 | Galerina passive ⟨interp⟩ ⚠️cache | 377.0K/s | 3.3K× slower | 1.1× faster |
+| 8 | Galerina manifest ⟨interp⟩ | 348.5K/s | 3.5K× slower | 1.1× faster |
+| 9 | Galerina governed ⟨interp⟩ | 328.1K/s | 3.8K× slower | — (slowest) |
 
 ### matrix-multiply
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Python | 27.99B/s | 🏆 winner | 47.9K× faster |
-| 🥈 | Deno WebGPU (NVIDIA GeForce RTX 2060) | 1.51B/s | 19× slower | 2.6K× faster |
-| 🥉 | Rust (generic) | 1.51B/s | 19× slower | 2.6K× faster |
-| 4 | Rust AVX2 | 1.22B/s | 23× slower | 2.1K× faster |
-| 5 | Node.js | 587.37M/s | 48× slower | 1.0K× faster |
-| 6 | Galerina/WASM legacy lane | 418.29M/s | 67× slower | 715× faster |
-| 7 | Galerina passive ⟨interp⟩ ⚠️cache | 794.3K/s | 35.2K× slower | 1.4× faster |
-| 8 | Galerina governed ⟨interp⟩ | 605.2K/s | 46.3K× slower | 1.0× faster |
-| 9 | Galerina manifest ⟨interp⟩ | 584.8K/s | 47.9K× slower | — (slowest) |
+| 🥇 | Python | 28.78B/s | 🏆 winner | 42.4K× faster |
+| 🥈 | Deno WebGPU (NVIDIA GeForce RTX 2060) | 1.71B/s | 17× slower | 2.5K× faster |
+| 🥉 | Rust (generic) | 1.54B/s | 19× slower | 2.3K× faster |
+| 4 | Rust AVX2 | 1.46B/s | 20× slower | 2.2K× faster |
+| 5 | Node.js | 637.52M/s | 45× slower | 940× faster |
+| 6 | Galerina/WASM legacy lane | 461.79M/s | 62× slower | 681× faster |
+| 7 | Galerina passive ⟨interp⟩ ⚠️cache | 900.5K/s | 32.0K× slower | 1.3× faster |
+| 8 | Galerina governed ⟨interp⟩ | 771.0K/s | 37.3K× slower | 1.1× faster |
+| 9 | Galerina manifest ⟨interp⟩ | 678.4K/s | 42.4K× slower | — (slowest) |
 
 ### crypto-ops
 > 🏆 cache-hit "winner" is Galerina passive (memoised); **real compute winner: Galerina manifest ⟨interp⟩ at 1.9K/s**.
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Galerina passive ⟨interp⟩ ⚠️cache | 3.5K/s | 🏆 winner | 28× faster |
-| 🥈 | Galerina manifest ⟨interp⟩ | 1.9K/s | 1.8× slower | 15× faster |
-| 🥉 | Galerina governed ⟨interp⟩ | 124.0/s | 28× slower | — (slowest) |
+| 🥇 | Galerina passive ⟨interp⟩ ⚠️cache | 5.8K/s | 🏆 winner | 30× faster |
+| 🥈 | Galerina manifest ⟨interp⟩ | 1.9K/s | 3.1× slower | 9.6× faster |
+| 🥉 | Galerina governed ⟨interp⟩ | 197.0/s | 30× slower | — (slowest) |
 
 ### text-html
-> 🏆 cache-hit "winner" is Galerina passive (memoised); **real compute winner: Galerina manifest ⟨interp⟩ at 2.4K/s**.
+> 🏆 cache-hit "winner" is Galerina passive (memoised); **real compute winner: Galerina manifest ⟨interp⟩ at 2.5K/s**.
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Galerina passive ⟨interp⟩ ⚠️cache | 54.6K/s | 🏆 winner | 78× faster |
-| 🥈 | Galerina manifest ⟨interp⟩ | 2.4K/s | 23× slower | 3.4× faster |
-| 🥉 | Galerina governed ⟨interp⟩ | 699.0/s | 78× slower | — (slowest) |
+| 🥇 | Galerina passive ⟨interp⟩ ⚠️cache | 60.0K/s | 🏆 winner | 64× faster |
+| 🥈 | Galerina manifest ⟨interp⟩ | 2.5K/s | 24× slower | 2.7× faster |
+| 🥉 | Galerina governed ⟨interp⟩ | 943.0/s | 64× slower | — (slowest) |
 
 ### tri-logic
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 1.36B/s | 🏆 winner | 4.8K× faster |
-| 🥈 | Rust AVX2 | 1.27B/s | 1.1× slower | 4.4K× faster |
-| 🥉 | Node.js | 913.98M/s | 1.5× slower | 3.2K× faster |
-| 4 | Galerina/WASM legacy lane | 450.19M/s | 3.0× slower | 1.6K× faster |
-| 5 | Python | 6.41M/s | 211× slower | 22× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 303.0K/s | 4.5K× slower | 1.1× faster |
-| 7 | Galerina manifest ⟨interp⟩ | 287.3K/s | 4.7K× slower | 1.0× faster |
-| 8 | Galerina governed ⟨interp⟩ | 285.1K/s | 4.8K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 1.43B/s | 🏆 winner | 4.6K× faster |
+| 🥈 | Rust (generic) | 1.40B/s | 1.0× slower | 4.5K× faster |
+| 🥉 | Node.js | 1.03B/s | 1.4× slower | 3.3K× faster |
+| 4 | Galerina/WASM legacy lane | 490.75M/s | 2.9× slower | 1.6K× faster |
+| 5 | Python | 7.30M/s | 196× slower | 23× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 327.0K/s | 4.4K× slower | 1.0× faster |
+| 7 | Galerina governed ⟨interp⟩ | 315.5K/s | 4.5K× slower | 1.0× faster |
+| 8 | Galerina manifest ⟨interp⟩ | 311.5K/s | 4.6K× slower | — (slowest) |
 
 ### verified-native-operation
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust AVX2 | 3.65B/s | 🏆 winner | 412× faster |
-| 🥈 | Rust (generic) | 2.35B/s | 1.5× slower | 266× faster |
-| 🥉 | Node.js | 1.99B/s | 1.8× slower | 225× faster |
-| 4 | Python | 8.84M/s | 412× slower | — (slowest) |
+| 🥇 | Rust (generic) | 3.75B/s | 🏆 winner | 396× faster |
+| 🥈 | Rust AVX2 | 3.73B/s | 1.0× slower | 394× faster |
+| 🥉 | Node.js | 2.04B/s | 1.8× slower | 215× faster |
+| 4 | Python | 9.48M/s | 396× slower | — (slowest) |
 
 ### data-query
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Node.js | 384.44M/s | 🏆 winner | 1.9K× faster |
-| 🥈 | Python | 3.07M/s | 125× slower | 15× faster |
-| 🥉 | Galerina passive ⟨interp⟩ ⚠️cache | 265.8K/s | 1.4K× slower | 1.3× faster |
-| 4 | Galerina manifest ⟨interp⟩ | 215.9K/s | 1.8K× slower | 1.0× faster |
-| 5 | Galerina governed ⟨interp⟩ | 206.4K/s | 1.9K× slower | — (slowest) |
+| 🥇 | Node.js | 392.71M/s | 🏆 winner | 1.5K× faster |
+| 🥈 | Python | 5.89M/s | 67× slower | 23× faster |
+| 🥉 | Galerina passive ⟨interp⟩ ⚠️cache | 301.5K/s | 1.3K× slower | 1.2× faster |
+| 4 | Galerina manifest ⟨interp⟩ | 259.3K/s | 1.5K× slower | 1.0× faster |
+| 5 | Galerina governed ⟨interp⟩ | 257.2K/s | 1.5K× slower | — (slowest) |
 
 ### call-chain
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust AVX2 | 154.46M/s | 🏆 winner | 3.4K× faster |
-| 🥈 | Rust (generic) | 154.46M/s | 1.0× slower | 3.4K× faster |
-| 🥉 | Galerina/WASM legacy lane | 51.61M/s | 3.0× slower | 1.1K× faster |
-| 4 | Node.js | 40.61M/s | 3.8× slower | 892× faster |
-| 5 | Python | 1.27M/s | 122× slower | 28× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 48.5K/s | 3.2K× slower | 1.1× faster |
-| 7 | Galerina governed ⟨interp⟩ | 45.6K/s | 3.4K× slower | 1.0× faster |
-| 8 | Galerina manifest ⟨interp⟩ | 45.5K/s | 3.4K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 154.51M/s | 🏆 winner | 3.1K× faster |
+| 🥈 | Rust (generic) | 138.39M/s | 1.1× slower | 2.8K× faster |
+| 🥉 | Galerina/WASM legacy lane | 56.90M/s | 2.7× slower | 1.1K× faster |
+| 4 | Node.js | 47.41M/s | 3.3× slower | 944× faster |
+| 5 | Python | 2.49M/s | 62× slower | 50× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 54.0K/s | 2.9K× slower | 1.1× faster |
+| 7 | Galerina governed ⟨interp⟩ | 52.5K/s | 2.9K× slower | 1.0× faster |
+| 8 | Galerina manifest ⟨interp⟩ | 50.3K/s | 3.1K× slower | — (slowest) |
 
 ### nbody
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Node.js | 121.48M/s | 🏆 winner | 2.3K× faster |
-| 🥈 | Galerina/WASM legacy lane | 28.15M/s | 4.3× slower | 530× faster |
-| 🥉 | Python | 952.2K/s | 128× slower | 18× faster |
-| 4 | Galerina passive ⟨interp⟩ ⚠️cache | 55.7K/s | 2.2K× slower | 1.0× faster |
-| 5 | Galerina manifest ⟨interp⟩ | 54.3K/s | 2.2K× slower | 1.0× faster |
-| 6 | Galerina governed ⟨interp⟩ | 53.1K/s | 2.3K× slower | — (slowest) |
+| 🥇 | Node.js | 125.43M/s | 🏆 winner | 2.1K× faster |
+| 🥈 | Galerina/WASM legacy lane | 30.53M/s | 4.1× slower | 504× faster |
+| 🥉 | Python | 1.69M/s | 74× slower | 28× faster |
+| 4 | Galerina manifest ⟨interp⟩ | 61.2K/s | 2.0K× slower | 1.0× faster |
+| 5 | Galerina governed ⟨interp⟩ | 61.1K/s | 2.1K× slower | 1.0× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 60.6K/s | 2.1K× slower | — (slowest) |
 
 ### json-parse
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Node.js | 2.99M/s | 🏆 winner | 675× faster |
-| 🥈 | Python | 438.0K/s | 6.8× slower | 99× faster |
-| 🥉 | Galerina passive ⟨interp⟩ ⚠️cache | 8.5K/s | 351× slower | 1.9× faster |
-| 4 | Galerina governed ⟨interp⟩ | 4.8K/s | 617× slower | 1.1× faster |
-| 5 | Galerina manifest ⟨interp⟩ | 4.4K/s | 675× slower | — (slowest) |
+| 🥇 | Node.js | 3.68M/s | 🏆 winner | 761× faster |
+| 🥈 | Python | 435.5K/s | 8.4× slower | 90× faster |
+| 🥉 | Galerina passive ⟨interp⟩ ⚠️cache | 9.6K/s | 381× slower | 2.0× faster |
+| 4 | Galerina governed ⟨interp⟩ | 5.3K/s | 692× slower | 1.1× faster |
+| 5 | Galerina manifest ⟨interp⟩ | 4.8K/s | 761× slower | — (slowest) |
 
 ### mandelbrot
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 23.41M/s | 🏆 winner | 3.5K× faster |
-| 🥈 | Rust AVX2 | 23.01M/s | 1.0× slower | 3.5K× faster |
-| 🥉 | Galerina/WASM legacy lane | 8.67M/s | 2.7× slower | 1.3K× faster |
-| 4 | Node.js | 6.23M/s | 3.8× slower | 943× faster |
-| 5 | Python | 130.9K/s | 179× slower | 20× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 6.7K/s | 3.5K× slower | 1.0× faster |
-| 7 | Galerina manifest ⟨interp⟩ | 6.7K/s | 3.5K× slower | 1.0× faster |
-| 8 | Galerina governed ⟨interp⟩ | 6.6K/s | 3.5K× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 24.39M/s | 🏆 winner | 3.3K× faster |
+| 🥈 | Rust (generic) | 23.63M/s | 1.0× slower | 3.2K× faster |
+| 🥉 | Galerina/WASM legacy lane | 9.20M/s | 2.7× slower | 1.2K× faster |
+| 4 | Node.js | 6.47M/s | 3.8× slower | 867× faster |
+| 5 | Python | 167.9K/s | 145× slower | 22× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 8.2K/s | 3.0K× slower | 1.1× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 7.6K/s | 3.2K× slower | 1.0× faster |
+| 8 | Galerina governed ⟨interp⟩ | 7.5K/s | 3.3K× slower | — (slowest) |
 
 ### spectral-norm
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 370.82M/s | 🏆 winner | 246× faster |
-| 🥈 | Rust AVX2 | 370.02M/s | 1.0× slower | 245× faster |
-| 🥉 | Node.js | 221.83M/s | 1.7× slower | 147× faster |
-| 4 | Python | 1.51M/s | 246× slower | — (slowest) |
+| 🥇 | Rust AVX2 | 393.17M/s | 🏆 winner | 226× faster |
+| 🥈 | Rust (generic) | 390.26M/s | 1.0× slower | 224× faster |
+| 🥉 | Node.js | 245.33M/s | 1.6× slower | 141× faster |
+| 4 | Python | 1.74M/s | 226× slower | — (slowest) |
 
 ### binary-trees
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Galerina/WASM legacy lane | 543.35M/s | 🏆 winner | 1.8K× faster |
-| 🥈 | Node.js | 62.08M/s | 8.8× slower | 209× faster |
-| 🥉 | Rust (generic) | 14.16M/s | 38× slower | 48× faster |
-| 4 | Rust AVX2 | 13.54M/s | 40× slower | 46× faster |
-| 5 | Python | 2.72M/s | 200× slower | 9.2× faster |
-| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 364.1K/s | 1.5K× slower | 1.2× faster |
-| 7 | Galerina manifest ⟨interp⟩ | 310.2K/s | 1.8K× slower | 1.0× faster |
-| 8 | Galerina governed ⟨interp⟩ | 296.8K/s | 1.8K× slower | — (slowest) |
+| 🥇 | Galerina/WASM legacy lane | 608.78M/s | 🏆 winner | 1.8K× faster |
+| 🥈 | Node.js | 81.35M/s | 7.5× slower | 245× faster |
+| 🥉 | Rust (generic) | 21.46M/s | 28× slower | 65× faster |
+| 4 | Rust AVX2 | 20.68M/s | 29× slower | 62× faster |
+| 5 | Python | 2.92M/s | 208× slower | 8.8× faster |
+| 6 | Galerina passive ⟨interp⟩ ⚠️cache | 400.8K/s | 1.5K× slower | 1.2× faster |
+| 7 | Galerina manifest ⟨interp⟩ | 349.8K/s | 1.7K× slower | 1.1× faster |
+| 8 | Galerina governed ⟨interp⟩ | 331.9K/s | 1.8K× slower | — (slowest) |
 
 ### spore-container
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Rust (generic) | 150.0K/s | 🏆 winner | 3.8× faster |
-| 🥈 | Rust AVX2 | 146.5K/s | 1.0× slower | 3.7× faster |
-| 🥉 | Python | 59.4K/s | 2.5× slower | 1.5× faster |
-| 4 | Node.js | 39.8K/s | 3.8× slower | — (slowest) |
+| 🥇 | Rust (generic) | 147.1K/s | 🏆 winner | 3.4× faster |
+| 🥈 | Rust AVX2 | 145.4K/s | 1.0× slower | 3.3× faster |
+| 🥉 | Python | 61.8K/s | 2.4× slower | 1.4× faster |
+| 4 | Node.js | 43.9K/s | 3.4× slower | — (slowest) |
 
 ### framework-pipeline
 | # | Runtime | Throughput | ×vs winner | ×vs slowest |
 |---|---|---|---|---|
-| 🥇 | Node.js | 117.9K/s | 🏆 winner | 1.3× faster |
-| 🥈 | Python | 94.3K/s | 1.3× slower | — (slowest) |
+| 🥇 | Node.js | 132.5K/s | 🏆 winner | 1.2× faster |
+| 🥈 | Python | 114.2K/s | 1.2× slower | — (slowest) |
 
 
 ---

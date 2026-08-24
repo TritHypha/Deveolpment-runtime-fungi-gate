@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-08-12T22:35:29.152Z",
+  "generatedAt": "2026-08-24T15:48:05.620Z",
   "references": {
-    "generatedAt": "2026-08-12T22:35:10.039Z",
-    "resultSha256": "d9cd32273a941025f844a55543dabc5e01ba86d619a7ae7237a4f71117bce462",
-    "galerinaCommit": "27b19a2a2eeae2303f7c969825e5d5ea02327e4f",
-    "slideCommit": "370aa805e55ad011320c7c5b1d03724fe860b6af",
+    "generatedAt": "2026-08-24T15:05:55.865Z",
+    "resultSha256": "e1bd429b1c4540a39e72ab901a5b58346e8c9ad3ec9942b49bc9dfa4c4e596bf",
+    "galerinaCommit": "c401105fd515ccb687f2b18f00a30c7f20215800",
+    "slideCommit": "c33894d23a7b25e02bddaa6631225e0afcf8288c",
     "toolchains": {
       "go": "go version go1.26.5 windows/amd64",
       "node": "v24.18.0",
@@ -12,9 +12,9 @@
       "rust": "rustc 1.96.1 (31fca3adb 2026-06-26)"
     },
     "publication": {
-      "generatedAt": "2026-08-12T22:35:29.152Z",
-      "galerinaCommit": "27b19a2a2eeae2303f7c969825e5d5ea02327e4f",
-      "slideCommit": "370aa805e55ad011320c7c5b1d03724fe860b6af"
+      "generatedAt": "2026-08-24T15:48:05.620Z",
+      "galerinaCommit": "1cab23e6073db604abd6615bf8e92cc5c4be5ef1",
+      "slideCommit": "c33894d23a7b25e02bddaa6631225e0afcf8288c"
     },
     "wasmReference": {
       "archiveDirectory": "2026-08-02_galerina-wasm-before-slide",
@@ -95,805 +95,805 @@
       "benchmark": "matrix-multiply",
       "runtime": "Python",
       "pre": 7198474,
-      "post": 27994874184,
-      "deltaPct": 388800.1222203484
+      "post": 28775410565,
+      "deltaPct": 399643.2034206139
     },
     {
       "benchmark": "call-chain",
       "runtime": "Node.js",
       "pre": 277596568.91,
-      "post": 40610786.22,
-      "deltaPct": -85.37057342622758
-    },
-    {
-      "benchmark": "framework-pipeline",
-      "runtime": "Node.js",
-      "pre": 392897,
-      "post": 117943,
-      "deltaPct": -69.98119099916772
-    },
-    {
-      "benchmark": "crypto-ops",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 208,
-      "post": 124,
-      "deltaPct": -40.38461538461539
-    },
-    {
-      "benchmark": "gpu-compute",
-      "runtime": "Python",
-      "pre": 7998483,
-      "post": 5338804,
-      "deltaPct": -33.25229296605369
-    },
-    {
-      "benchmark": "low-memory",
-      "runtime": "Python",
-      "pre": 3695600,
-      "post": 2635400,
-      "deltaPct": -28.688169715337157
-    },
-    {
-      "benchmark": "text-html",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 953,
-      "post": 698,
-      "deltaPct": -26.75760755508919
-    },
-    {
-      "benchmark": "low-memory",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 149611,
-      "post": 110035,
-      "deltaPct": -26.45260041039763
-    },
-    {
-      "benchmark": "data-query",
-      "runtime": "Python",
-      "pre": 4116844,
-      "post": 3066984,
-      "deltaPct": -25.5015735354558
-    },
-    {
-      "benchmark": "governance-cost",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 2898640.54,
-      "post": 2224439.22,
-      "deltaPct": -23.25922482268187
-    },
-    {
-      "benchmark": "record-allocation",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 2415459,
-      "post": 1886792,
-      "deltaPct": -21.886813230942856
-    },
-    {
-      "benchmark": "binary-trees",
-      "runtime": "Node.js",
-      "pre": 78005282,
-      "post": 62079145,
-      "deltaPct": -20.416741779101574
-    },
-    {
-      "benchmark": "record-allocation",
-      "runtime": "Python",
-      "pre": 3143146.76,
-      "post": 3782555.99,
-      "deltaPct": 20.342964513690113
-    },
-    {
-      "benchmark": "arithmetic-threshold",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 82,
-      "post": 66,
-      "deltaPct": -19.51219512195122
-    },
-    {
-      "benchmark": "binary-trees",
-      "runtime": "Rust AVX2",
-      "pre": 16640821,
-      "post": 13544901,
-      "deltaPct": -18.60437054157364
-    },
-    {
-      "benchmark": "fibonacci-recursive",
-      "runtime": "Node.js",
-      "pre": 124.87,
-      "post": 102.5,
-      "deltaPct": -17.914631216465125
-    },
-    {
-      "benchmark": "framework-pipeline",
-      "runtime": "Python",
-      "pre": 114449,
-      "post": 94340,
-      "deltaPct": -17.570271474630623
-    },
-    {
-      "benchmark": "matrix-multiply",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 714678,
-      "post": 605246,
-      "deltaPct": -15.312070610820538
-    },
-    {
-      "benchmark": "governance-cost",
-      "runtime": "Python",
-      "pre": 24905.03,
-      "post": 21119.38,
-      "deltaPct": -15.200343063228585
-    },
-    {
-      "benchmark": "governance-cost",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 769,
-      "post": 660,
-      "deltaPct": -14.174252275682706
-    },
-    {
-      "benchmark": "matrix-multiply",
-      "runtime": "Rust AVX2",
-      "pre": 1425431593,
-      "post": 1224574239,
-      "deltaPct": -14.090985143472965
-    },
-    {
-      "benchmark": "json-parse",
-      "runtime": "Python",
-      "pre": 504500,
-      "post": 438000,
-      "deltaPct": -13.181367690782952
-    },
-    {
-      "benchmark": "spectral-norm",
-      "runtime": "Python",
-      "pre": 1728515,
-      "post": 1509849,
-      "deltaPct": -12.650512144817952
-    },
-    {
-      "benchmark": "binary-trees",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 338046,
-      "post": 296825,
-      "deltaPct": -12.193902604970921
-    },
-    {
-      "benchmark": "governance-cost",
-      "runtime": "Rust",
-      "pre": 782925950.86,
-      "post": 877616393.87,
-      "deltaPct": 12.094431523950364
-    },
-    {
-      "benchmark": "nbody",
-      "runtime": "Python",
-      "pre": 1083101,
-      "post": 952188,
-      "deltaPct": -12.086869091617494
-    },
-    {
-      "benchmark": "collection-pipeline",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 2450980,
-      "post": 2155172,
-      "deltaPct": -12.068968331034933
-    },
-    {
-      "benchmark": "json-parse",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 5488,
-      "post": 4848,
-      "deltaPct": -11.661807580174926
-    },
-    {
-      "benchmark": "mandelbrot",
-      "runtime": "Python",
-      "pre": 147816,
-      "post": 130916,
-      "deltaPct": -11.433133084375168
-    },
-    {
-      "benchmark": "spore-container",
-      "runtime": "Python",
-      "pre": 66847,
-      "post": 59353,
-      "deltaPct": -11.210675123790148
+      "post": 47411340.79,
+      "deltaPct": -82.92077565073534
     },
     {
       "benchmark": "call-chain",
       "runtime": "Python",
       "pre": 1427457.81,
-      "post": 1271029.18,
-      "deltaPct": -10.958546648744743
+      "post": 2490957.82,
+      "deltaPct": 74.50307830814276
     },
     {
-      "benchmark": "governance-cost",
-      "runtime": "Rust AVX2",
-      "pre": 892769460.14,
-      "post": 799622578.14,
-      "deltaPct": -10.433475399728968
-    },
-    {
-      "benchmark": "spore-container",
-      "runtime": "Rust AVX2",
-      "pre": 163353,
-      "post": 146505,
-      "deltaPct": -10.31386016785734
-    },
-    {
-      "benchmark": "tower-of-hanoi",
+      "benchmark": "framework-pipeline",
       "runtime": "Node.js",
-      "pre": 131139635.15,
-      "post": 118273301.83,
-      "deltaPct": -9.811170593301751
+      "pre": 392897,
+      "post": 132509,
+      "deltaPct": -66.27385803403946
     },
     {
-      "benchmark": "record-allocation",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 536475400,
-      "post": 484093400,
-      "deltaPct": -9.764101019357085
-    },
-    {
-      "benchmark": "governance-cost",
-      "runtime": "Node.js",
-      "pre": 2129408.41,
-      "post": 1927090.46,
-      "deltaPct": -9.501134167118282
-    },
-    {
-      "benchmark": "hardware-targets",
-      "runtime": "Node.js",
-      "pre": 909842.44,
-      "post": 824103.04,
-      "deltaPct": -9.423543707193954
-    },
-    {
-      "benchmark": "tower-of-hanoi",
-      "runtime": "Rust AVX2",
-      "pre": 254654927.71,
-      "post": 230822225.15,
-      "deltaPct": -9.35882245606517
-    },
-    {
-      "benchmark": "mandelbrot",
-      "runtime": "Node.js",
-      "pre": 6869463,
-      "post": 6227023,
-      "deltaPct": -9.35211384063063
-    },
-    {
-      "benchmark": "tri-logic",
-      "runtime": "Rust AVX2",
-      "pre": 1399098421,
-      "post": 1268590668,
-      "deltaPct": -9.327989442423936
-    },
-    {
-      "benchmark": "compute-mix",
+      "benchmark": "nbody",
       "runtime": "Python",
-      "pre": 797787.48,
-      "post": 724910.61,
-      "deltaPct": -9.13487261043505
+      "pre": 1083101,
+      "post": 1693179,
+      "deltaPct": 56.326972276823675
     },
     {
-      "benchmark": "spore-container",
-      "runtime": "Node.js",
-      "pre": 43788,
-      "post": 39815,
-      "deltaPct": -9.073262080935416
-    },
-    {
-      "benchmark": "mandelbrot",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 7241,
-      "post": 6601,
-      "deltaPct": -8.838558210191962
-    },
-    {
-      "benchmark": "fibonacci-recursive",
-      "runtime": "Rust AVX2",
-      "pre": 494.33,
-      "post": 450.78,
-      "deltaPct": -8.809904314931325
-    },
-    {
-      "benchmark": "arithmetic-threshold",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 493793580.48,
-      "post": 450347264.32,
-      "deltaPct": -8.798477314704524
-    },
-    {
-      "benchmark": "collection-pipeline",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 420973500,
-      "post": 384146300,
-      "deltaPct": -8.748104096813696
-    },
-    {
-      "benchmark": "tri-logic",
-      "runtime": "Node.js",
-      "pre": 1000505255,
-      "post": 913981820,
-      "deltaPct": -8.647974067862343
-    },
-    {
-      "benchmark": "tower-of-hanoi",
+      "benchmark": "data-query",
       "runtime": "Python",
-      "pre": 3052533.05,
-      "post": 2790347.74,
-      "deltaPct": -8.589106348905858
-    },
-    {
-      "benchmark": "fibonacci-recursive",
-      "runtime": "Python",
-      "pre": 4.56,
-      "post": 4.17,
-      "deltaPct": -8.552631578947361
-    },
-    {
-      "benchmark": "hardware-targets",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 3610,
-      "post": 3305,
-      "deltaPct": -8.448753462603879
-    },
-    {
-      "benchmark": "compute-mix",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 78313000,
-      "post": 71704000,
-      "deltaPct": -8.43921188053069
-    },
-    {
-      "benchmark": "fibonacci-recursive",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 12,
-      "post": 11,
-      "deltaPct": -8.333333333333332
-    },
-    {
-      "benchmark": "spore-container",
-      "runtime": "Rust",
-      "pre": 163552,
-      "post": 150008,
-      "deltaPct": -8.281158286049697
-    },
-    {
-      "benchmark": "binary-trees",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 591100754,
-      "post": 543348073,
-      "deltaPct": -8.078602620087336
-    },
-    {
-      "benchmark": "spectral-norm",
-      "runtime": "Node.js",
-      "pre": 241130032,
-      "post": 221826385,
-      "deltaPct": -8.00549265468517
-    },
-    {
-      "benchmark": "low-memory",
-      "runtime": "Rust AVX2",
-      "pre": 6177255100,
-      "post": 5691254000,
-      "deltaPct": -7.8675899267945075
-    },
-    {
-      "benchmark": "six-digit-guess",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 36202898.64,
-      "post": 33398579.099999998,
-      "deltaPct": -7.746118806358658
+      "pre": 4116844,
+      "post": 5887851,
+      "deltaPct": 43.018559848272126
     },
     {
       "benchmark": "binary-trees",
       "runtime": "Rust",
       "pre": 15341374,
-      "post": 14160604,
-      "deltaPct": -7.696637863075368
+      "post": 21460910,
+      "deltaPct": 39.88909989418158
     },
     {
-      "benchmark": "hardware-targets",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 38420830.95,
-      "post": 35521619.92,
-      "deltaPct": -7.545935260413729
-    },
-    {
-      "benchmark": "six-digit-guess",
-      "runtime": "Node.js",
-      "pre": 2300566.53,
-      "post": 2472204.59,
-      "deltaPct": 7.460686650952889
-    },
-    {
-      "benchmark": "collection-pipeline",
-      "runtime": "Rust AVX2",
-      "pre": 13351099200,
-      "post": 12372547300,
-      "deltaPct": -7.329373299840361
-    },
-    {
-      "benchmark": "record-allocation",
-      "runtime": "Node.js",
-      "pre": 52057575.68,
-      "post": 55872164.49,
-      "deltaPct": 7.327634374386608
+      "benchmark": "gpu-compute",
+      "runtime": "Python",
+      "pre": 7998483,
+      "post": 5788955,
+      "deltaPct": -27.62433826514353
     },
     {
       "benchmark": "collection-pipeline",
       "runtime": "Python",
       "pre": 10796300,
-      "post": 10014700,
-      "deltaPct": -7.239517242018099
-    },
-    {
-      "benchmark": "call-chain",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 55187000,
-      "post": 51611000,
-      "deltaPct": -6.479786906336638
-    },
-    {
-      "benchmark": "tri-logic",
-      "runtime": "Python",
-      "pre": 6838698,
-      "post": 6413266,
-      "deltaPct": -6.220950245207494
-    },
-    {
-      "benchmark": "nbody",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 56560,
-      "post": 53078,
-      "deltaPct": -6.156294200848656
-    },
-    {
-      "benchmark": "call-chain",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 48523,
-      "post": 45577,
-      "deltaPct": -6.0713476083506785
-    },
-    {
-      "benchmark": "gpu-compute",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 472776000,
-      "post": 446639000,
-      "deltaPct": -5.528410917643874
-    },
-    {
-      "benchmark": "arithmetic-threshold",
-      "runtime": "Python",
-      "pre": 3903660.33,
-      "post": 3691930.78,
-      "deltaPct": -5.423872266058565
-    },
-    {
-      "benchmark": "binary-trees",
-      "runtime": "Python",
-      "pre": 2876867,
-      "post": 2721898,
-      "deltaPct": -5.386727992639215
-    },
-    {
-      "benchmark": "matrix-multiply",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 441902367,
-      "post": 418285486,
-      "deltaPct": -5.344366259074597
-    },
-    {
-      "benchmark": "json-parse",
-      "runtime": "Node.js",
-      "pre": 3160500,
-      "post": 2993500,
-      "deltaPct": -5.283974054738174
-    },
-    {
-      "benchmark": "tower-of-hanoi",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 83945,
-      "post": 79754,
-      "deltaPct": -4.992554648877241
-    },
-    {
-      "benchmark": "tri-logic",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 299437,
-      "post": 285111,
-      "deltaPct": -4.784311891983957
-    },
-    {
-      "benchmark": "compute-mix",
-      "runtime": "Rust",
-      "pre": 132847356.34,
-      "post": 126802921.86,
-      "deltaPct": -4.549909495022477
-    },
-    {
-      "benchmark": "mandelbrot",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 9064940,
-      "post": 8670577,
-      "deltaPct": -4.350420410945908
-    },
-    {
-      "benchmark": "compute-mix",
-      "runtime": "Rust AVX2",
-      "pre": 130343110.06,
-      "post": 124815217.08,
-      "deltaPct": -4.241031978948013
-    },
-    {
-      "benchmark": "matrix-multiply",
-      "runtime": "Node.js",
-      "pre": 611395830,
-      "post": 587372954,
-      "deltaPct": -3.929185450937734
-    },
-    {
-      "benchmark": "nbody",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 29297869,
-      "post": 28148040,
-      "deltaPct": -3.9246164968516997
-    },
-    {
-      "benchmark": "compute-mix",
-      "runtime": "Node.js",
-      "pre": 136214524.18,
-      "post": 131250788.82,
-      "deltaPct": -3.644057335208036
-    },
-    {
-      "benchmark": "tower-of-hanoi",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 121727986,
-      "post": 117343694,
-      "deltaPct": -3.6017124279046233
-    },
-    {
-      "benchmark": "gpu-compute",
-      "runtime": "Node.js",
-      "pre": 989289947,
-      "post": 954123819,
-      "deltaPct": -3.5546836502928705
-    },
-    {
-      "benchmark": "gpu-compute",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 313440,
-      "post": 302352,
-      "deltaPct": -3.537519142419602
-    },
-    {
-      "benchmark": "collection-pipeline",
-      "runtime": "Rust",
-      "pre": 4314322600,
-      "post": 4162140300,
-      "deltaPct": -3.5273741467548114
-    },
-    {
-      "benchmark": "fibonacci-recursive",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 17085.93,
-      "post": 16533.39,
-      "deltaPct": -3.233888936686507
-    },
-    {
-      "benchmark": "tri-logic",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 463593000,
-      "post": 450186000,
-      "deltaPct": -2.8919763672014027
-    },
-    {
-      "benchmark": "tri-logic",
-      "runtime": "Rust",
-      "pre": 1396275899,
-      "post": 1356165740,
-      "deltaPct": -2.872652820887801
-    },
-    {
-      "benchmark": "collection-pipeline",
-      "runtime": "Node.js",
-      "pre": 70636000,
-      "post": 68702800,
-      "deltaPct": -2.736848066141911
-    },
-    {
-      "benchmark": "six-digit-guess",
-      "runtime": "Python",
-      "pre": 86450.92,
-      "post": 84291.67,
-      "deltaPct": -2.4976599439311924
-    },
-    {
-      "benchmark": "low-memory",
-      "runtime": "Rust",
-      "pre": 1354122500,
-      "post": 1320863000,
-      "deltaPct": -2.4561662626534897
-    },
-    {
-      "benchmark": "hardware-targets",
-      "runtime": "Rust AVX2",
-      "pre": 1189159.34,
-      "post": 1162328.2,
-      "deltaPct": -2.256311588991945
-    },
-    {
-      "benchmark": "spectral-norm",
-      "runtime": "Rust",
-      "pre": 379246135,
-      "post": 370822224,
-      "deltaPct": -2.2212252736603366
-    },
-    {
-      "benchmark": "hardware-targets",
-      "runtime": "Rust",
-      "pre": 1182819.83,
-      "post": 1160089.98,
-      "deltaPct": -1.9216662946883543
-    },
-    {
-      "benchmark": "mandelbrot",
-      "runtime": "Rust AVX2",
-      "pre": 23431774,
-      "post": 23006438,
-      "deltaPct": -1.8152104061775265
-    },
-    {
-      "benchmark": "arithmetic-threshold",
-      "runtime": "Rust AVX2",
-      "pre": 1585552604.67,
-      "post": 1557790274.72,
-      "deltaPct": -1.7509560936818114
-    },
-    {
-      "benchmark": "gpu-compute",
-      "runtime": "Rust AVX2",
-      "pre": 1193018513,
-      "post": 1173497580,
-      "deltaPct": -1.6362640468094731
-    },
-    {
-      "benchmark": "gpu-compute",
-      "runtime": "Rust",
-      "pre": 1192621916,
-      "post": 1173380869,
-      "deltaPct": -1.6133400486663538
-    },
-    {
-      "benchmark": "record-allocation",
-      "runtime": "Rust AVX2",
-      "pre": 1176747469.99,
-      "post": 1159877516.93,
-      "deltaPct": -1.4336086110423762
-    },
-    {
-      "benchmark": "fibonacci-recursive",
-      "runtime": "Rust",
-      "pre": 489.63,
-      "post": 496.54,
-      "deltaPct": 1.4112697342891622
-    },
-    {
-      "benchmark": "arithmetic-threshold",
-      "runtime": "Node.js",
-      "pre": 972223669.76,
-      "post": 958988938.06,
-      "deltaPct": -1.3612846623315733
-    },
-    {
-      "benchmark": "low-memory",
-      "runtime": "Node.js",
-      "pre": 712349100,
-      "post": 702952100,
-      "deltaPct": -1.3191565764594915
-    },
-    {
-      "benchmark": "compute-mix",
-      "runtime": "Galerina governed diagnostic",
-      "pre": 1690331,
-      "post": 1668892,
-      "deltaPct": -1.268331468806997
-    },
-    {
-      "benchmark": "low-memory",
-      "runtime": "Galerina/Wasm legacy lane",
-      "pre": 459060300,
-      "post": 453295400,
-      "deltaPct": -1.2558045206697246
-    },
-    {
-      "benchmark": "six-digit-guess",
-      "runtime": "Rust AVX2",
-      "pre": 76048445.41,
-      "post": 75111587.22,
-      "deltaPct": -1.2319228683099488
-    },
-    {
-      "benchmark": "spectral-norm",
-      "runtime": "Rust AVX2",
-      "pre": 374471527,
-      "post": 370015430,
-      "deltaPct": -1.1899695113535294
+      "post": 13747800,
+      "deltaPct": 27.33806952381834
     },
     {
       "benchmark": "data-query",
       "runtime": "Galerina governed diagnostic",
       "pre": 204541,
-      "post": 206441,
-      "deltaPct": 0.9289091184652466
+      "post": 257202,
+      "deltaPct": 25.745938467104395
     },
     {
-      "benchmark": "data-query",
-      "runtime": "Node.js",
-      "pre": 387907526,
-      "post": 384435291,
-      "deltaPct": -0.8951192661314852
+      "benchmark": "binary-trees",
+      "runtime": "Rust AVX2",
+      "pre": 16640821,
+      "post": 20680133,
+      "deltaPct": 24.27351390895918
     },
     {
       "benchmark": "six-digit-guess",
+      "runtime": "Node.js",
+      "pre": 2300566.53,
+      "post": 2822296.61,
+      "deltaPct": 22.678330454542433
+    },
+    {
+      "benchmark": "governance-cost",
+      "runtime": "Python",
+      "pre": 24905.03,
+      "post": 20332.55,
+      "deltaPct": -18.35966469424048
+    },
+    {
+      "benchmark": "record-allocation",
+      "runtime": "Node.js",
+      "pre": 52057575.68,
+      "post": 61306440.24,
+      "deltaPct": 17.76660637608855
+    },
+    {
+      "benchmark": "governance-cost",
       "runtime": "Rust",
-      "pre": 77806547.07,
-      "post": 77121906.51,
-      "deltaPct": -0.8799266717028823
+      "pre": 782925950.86,
+      "post": 916615488.97,
+      "deltaPct": 17.075629944715665
+    },
+    {
+      "benchmark": "json-parse",
+      "runtime": "Node.js",
+      "pre": 3160500,
+      "post": 3676500,
+      "deltaPct": 16.3265306122449
+    },
+    {
+      "benchmark": "tower-of-hanoi",
+      "runtime": "Python",
+      "pre": 3052533.05,
+      "post": 2628356.21,
+      "deltaPct": -13.895896720921657
+    },
+    {
+      "benchmark": "json-parse",
+      "runtime": "Python",
+      "pre": 504500,
+      "post": 435500,
+      "deltaPct": -13.676907829534194
+    },
+    {
+      "benchmark": "mandelbrot",
+      "runtime": "Python",
+      "pre": 147816,
+      "post": 167880,
+      "deltaPct": 13.573632083130377
+    },
+    {
+      "benchmark": "hardware-targets",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 3610,
+      "post": 3164,
+      "deltaPct": -12.354570637119114
+    },
+    {
+      "benchmark": "spore-container",
+      "runtime": "Rust AVX2",
+      "pre": 163353,
+      "post": 145366,
+      "deltaPct": -11.0111231504778
+    },
+    {
+      "benchmark": "spore-container",
+      "runtime": "Rust",
+      "pre": 163552,
+      "post": 147122,
+      "deltaPct": -10.045734689884563
+    },
+    {
+      "benchmark": "fibonacci-recursive",
+      "runtime": "Python",
+      "pre": 4.56,
+      "post": 4.12,
+      "deltaPct": -9.649122807017534
+    },
+    {
+      "benchmark": "call-chain",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 48523,
+      "post": 52479,
+      "deltaPct": 8.152834738165406
+    },
+    {
+      "benchmark": "nbody",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 56560,
+      "post": 61124,
+      "deltaPct": 8.06930693069307
+    },
+    {
+      "benchmark": "matrix-multiply",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 714678,
+      "post": 771012,
+      "deltaPct": 7.882430968911873
+    },
+    {
+      "benchmark": "governance-cost",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 769,
+      "post": 710,
+      "deltaPct": -7.672301690507152
+    },
+    {
+      "benchmark": "spore-container",
+      "runtime": "Python",
+      "pre": 66847,
+      "post": 61816,
+      "deltaPct": -7.526141786467605
+    },
+    {
+      "benchmark": "tri-logic",
+      "runtime": "Python",
+      "pre": 6838698,
+      "post": 7302568,
+      "deltaPct": 6.783016299301417
+    },
+    {
+      "benchmark": "low-memory",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 459060300,
+      "post": 489975300,
+      "deltaPct": 6.734409401117893
+    },
+    {
+      "benchmark": "fibonacci-recursive",
+      "runtime": "Rust",
+      "pre": 489.63,
+      "post": 520.03,
+      "deltaPct": 6.208769887466041
+    },
+    {
+      "benchmark": "tri-logic",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 463593000,
+      "post": 490752000,
+      "deltaPct": 5.858371459448266
+    },
+    {
+      "benchmark": "fibonacci-recursive",
+      "runtime": "Node.js",
+      "pre": 124.87,
+      "post": 132.07,
+      "deltaPct": 5.765996636501953
+    },
+    {
+      "benchmark": "mandelbrot",
+      "runtime": "Node.js",
+      "pre": 6869463,
+      "post": 6473438,
+      "deltaPct": -5.765006667915673
+    },
+    {
+      "benchmark": "record-allocation",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 536475400,
+      "post": 567292900,
+      "deltaPct": 5.744438607995819
+    },
+    {
+      "benchmark": "governance-cost",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 2898640.54,
+      "post": 3061615.77,
+      "deltaPct": 5.622471215420177
+    },
+    {
+      "benchmark": "record-allocation",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 2415459,
+      "post": 2551020,
+      "deltaPct": 5.612225254082143
+    },
+    {
+      "benchmark": "tri-logic",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 299437,
+      "post": 315477,
+      "deltaPct": 5.356719443488948
+    },
+    {
+      "benchmark": "compute-mix",
+      "runtime": "Python",
+      "pre": 797787.48,
+      "post": 755314.19,
+      "deltaPct": -5.3238852532506575
+    },
+    {
+      "benchmark": "hardware-targets",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 38420830.95,
+      "post": 40464073.37,
+      "deltaPct": 5.318058900545446
+    },
+    {
+      "benchmark": "crypto-ops",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 208,
+      "post": 197,
+      "deltaPct": -5.288461538461538
+    },
+    {
+      "benchmark": "six-digit-guess",
+      "runtime": "Python",
+      "pre": 86450.92,
+      "post": 90788.01,
+      "deltaPct": 5.016823418420529
+    },
+    {
+      "benchmark": "spectral-norm",
+      "runtime": "Rust AVX2",
+      "pre": 374471527,
+      "post": 393169853,
+      "deltaPct": 4.9932570707839155
+    },
+    {
+      "benchmark": "arithmetic-threshold",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 82,
+      "post": 86,
+      "deltaPct": 4.878048780487805
+    },
+    {
+      "benchmark": "fibonacci-recursive",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 17085.93,
+      "post": 17918.8,
+      "deltaPct": 4.87459564682753
+    },
+    {
+      "benchmark": "gpu-compute",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 472776000,
+      "post": 495715000,
+      "deltaPct": 4.851980641995364
+    },
+    {
+      "benchmark": "hardware-targets",
+      "runtime": "Rust",
+      "pre": 1182819.83,
+      "post": 1239780.64,
+      "deltaPct": 4.815679324551045
+    },
+    {
+      "benchmark": "collection-pipeline",
+      "runtime": "Node.js",
+      "pre": 70636000,
+      "post": 74016100,
+      "deltaPct": 4.785236989637013
+    },
+    {
+      "benchmark": "gpu-compute",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 313440,
+      "post": 328106,
+      "deltaPct": 4.679045431342522
+    },
+    {
+      "benchmark": "matrix-multiply",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 441902367,
+      "post": 461785006,
+      "deltaPct": 4.499328468181751
+    },
+    {
+      "benchmark": "collection-pipeline",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 2450980,
+      "post": 2341920,
+      "deltaPct": -4.449648711943794
+    },
+    {
+      "benchmark": "hardware-targets",
+      "runtime": "Node.js",
+      "pre": 909842.44,
+      "post": 949827.54,
+      "deltaPct": 4.39472794872045
+    },
+    {
+      "benchmark": "collection-pipeline",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 420973500,
+      "post": 439418100,
+      "deltaPct": 4.381415932356787
+    },
+    {
+      "benchmark": "binary-trees",
+      "runtime": "Node.js",
+      "pre": 78005282,
+      "post": 81354572,
+      "deltaPct": 4.293670779883855
+    },
+    {
+      "benchmark": "matrix-multiply",
+      "runtime": "Node.js",
+      "pre": 611395830,
+      "post": 637518479,
+      "deltaPct": 4.272624659543393
+    },
+    {
+      "benchmark": "nbody",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 29297869,
+      "post": 30530929,
+      "deltaPct": 4.208702004913737
+    },
+    {
+      "benchmark": "mandelbrot",
+      "runtime": "Rust AVX2",
+      "pre": 23431774,
+      "post": 24390589,
+      "deltaPct": 4.091943700037394
+    },
+    {
+      "benchmark": "fibonacci-recursive",
+      "runtime": "Rust AVX2",
+      "pre": 494.33,
+      "post": 514.08,
+      "deltaPct": 3.9953067788724246
+    },
+    {
+      "benchmark": "low-memory",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 149611,
+      "post": 144321,
+      "deltaPct": -3.5358362687235565
+    },
+    {
+      "benchmark": "six-digit-guess",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 36202898.64,
+      "post": 37436361.72,
+      "deltaPct": 3.4070837594124708
+    },
+    {
+      "benchmark": "gpu-compute",
+      "runtime": "Rust AVX2",
+      "pre": 1193018513,
+      "post": 1233610619,
+      "deltaPct": 3.402470754450061
+    },
+    {
+      "benchmark": "arithmetic-threshold",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 493793580.48,
+      "post": 510544813.28,
+      "deltaPct": 3.3923553205605965
+    },
+    {
+      "benchmark": "compute-mix",
+      "runtime": "Node.js",
+      "pre": 136214524.18,
+      "post": 140675028.82,
+      "deltaPct": 3.274617495345558
+    },
+    {
+      "benchmark": "json-parse",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 5488,
+      "post": 5310,
+      "deltaPct": -3.2434402332361514
+    },
+    {
+      "benchmark": "compute-mix",
+      "runtime": "Rust AVX2",
+      "pre": 130343110.06,
+      "post": 134496648.34,
+      "deltaPct": 3.186618976705428
+    },
+    {
+      "benchmark": "compute-mix",
+      "runtime": "Rust",
+      "pre": 132847356.34,
+      "post": 137028994.21,
+      "deltaPct": 3.1477012303487775
+    },
+    {
+      "benchmark": "call-chain",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 55187000,
+      "post": 56903500,
+      "deltaPct": 3.110333955460525
+    },
+    {
+      "benchmark": "gpu-compute",
+      "runtime": "Rust",
+      "pre": 1192621916,
+      "post": 1229700867,
+      "deltaPct": 3.109028142327044
+    },
+    {
+      "benchmark": "gpu-compute",
+      "runtime": "Node.js",
+      "pre": 989289947,
+      "post": 1019846831,
+      "deltaPct": 3.0887692827227324
+    },
+    {
+      "benchmark": "mandelbrot",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 7241,
+      "post": 7464,
+      "deltaPct": 3.0796851263637617
+    },
+    {
+      "benchmark": "tower-of-hanoi",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 121727986,
+      "post": 118013462,
+      "deltaPct": -3.0514954876522804
+    },
+    {
+      "benchmark": "binary-trees",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 591100754,
+      "post": 608783511,
+      "deltaPct": 2.991496268671652
     },
     {
       "benchmark": "arithmetic-threshold",
       "runtime": "Rust",
       "pre": 1551217472.91,
-      "post": 1564529155,
-      "deltaPct": 0.858144155959507
+      "post": 1597099826.71,
+      "deltaPct": 2.9578285831145994
+    },
+    {
+      "benchmark": "spectral-norm",
+      "runtime": "Rust",
+      "pre": 379246135,
+      "post": 390256086,
+      "deltaPct": 2.9031148860620557
+    },
+    {
+      "benchmark": "compute-mix",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 1690331,
+      "post": 1739130,
+      "deltaPct": 2.8869493608056644
+    },
+    {
+      "benchmark": "compute-mix",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 78313000,
+      "post": 80508000,
+      "deltaPct": 2.802855209224522
+    },
+    {
+      "benchmark": "low-memory",
+      "runtime": "Rust AVX2",
+      "pre": 6177255100,
+      "post": 6340828400,
+      "deltaPct": 2.647993281028656
+    },
+    {
+      "benchmark": "collection-pipeline",
+      "runtime": "Rust",
+      "pre": 4314322600,
+      "post": 4428458700,
+      "deltaPct": 2.6455161234349975
+    },
+    {
+      "benchmark": "record-allocation",
+      "runtime": "Python",
+      "pre": 3143146.76,
+      "post": 3224839,
+      "deltaPct": 2.599059039801254
+    },
+    {
+      "benchmark": "tri-logic",
+      "runtime": "Node.js",
+      "pre": 1000505255,
+      "post": 1026100227,
+      "deltaPct": 2.5582046543073877
+    },
+    {
+      "benchmark": "matrix-multiply",
+      "runtime": "Rust AVX2",
+      "pre": 1425431593,
+      "post": 1461783101,
+      "deltaPct": 2.550210629434253
+    },
+    {
+      "benchmark": "low-memory",
+      "runtime": "Rust",
+      "pre": 1354122500,
+      "post": 1388246100,
+      "deltaPct": 2.519978805462578
     },
     {
       "benchmark": "nbody",
       "runtime": "Node.js",
       "pre": 122521013,
-      "post": 121477242,
-      "deltaPct": -0.8519118267492614
+      "post": 125425591,
+      "deltaPct": 2.3706774282057235
     },
     {
-      "benchmark": "tower-of-hanoi",
-      "runtime": "Rust",
-      "pre": 248169355.75,
-      "post": 249540120.42,
-      "deltaPct": 0.5523504970455995
+      "benchmark": "governance-cost",
+      "runtime": "Rust AVX2",
+      "pre": 892769460.14,
+      "post": 912442059.93,
+      "deltaPct": 2.2035475750833813
     },
     {
-      "benchmark": "matrix-multiply",
-      "runtime": "Rust",
-      "pre": 1514835804,
-      "post": 1509288837,
-      "deltaPct": -0.36617612188416426
+      "benchmark": "tri-logic",
+      "runtime": "Rust AVX2",
+      "pre": 1399098421,
+      "post": 1429872272,
+      "deltaPct": 2.1995486906492623
     },
     {
-      "benchmark": "mandelbrot",
+      "benchmark": "six-digit-guess",
       "runtime": "Rust",
-      "pre": 23340877,
-      "post": 23414762,
-      "deltaPct": 0.3165476601414763
+      "pre": 77806547.07,
+      "post": 79482335.16,
+      "deltaPct": 2.1537880205535305
+    },
+    {
+      "benchmark": "hardware-targets",
+      "runtime": "Rust AVX2",
+      "pre": 1189159.34,
+      "post": 1212132.67,
+      "deltaPct": 1.9318966960306463
     },
     {
       "benchmark": "record-allocation",
       "runtime": "Rust",
       "pre": 1173929376.41,
-      "post": 1173598723.12,
-      "deltaPct": -0.028166369855346235
+      "post": 1196315348.73,
+      "deltaPct": 1.906926666104787
+    },
+    {
+      "benchmark": "binary-trees",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 338046,
+      "post": 331861,
+      "deltaPct": -1.8296326535441922
+    },
+    {
+      "benchmark": "matrix-multiply",
+      "runtime": "Rust",
+      "pre": 1514835804,
+      "post": 1542429082,
+      "deltaPct": 1.8215359002697562
+    },
+    {
+      "benchmark": "governance-cost",
+      "runtime": "Node.js",
+      "pre": 2129408.41,
+      "post": 2166823.76,
+      "deltaPct": 1.75707721563848
+    },
+    {
+      "benchmark": "spectral-norm",
+      "runtime": "Node.js",
+      "pre": 241130032,
+      "post": 245333752,
+      "deltaPct": 1.743341534496209
+    },
+    {
+      "benchmark": "arithmetic-threshold",
+      "runtime": "Node.js",
+      "pre": 972223669.76,
+      "post": 988797029.65,
+      "deltaPct": 1.7046859077285408
+    },
+    {
+      "benchmark": "binary-trees",
+      "runtime": "Python",
+      "pre": 2876867,
+      "post": 2924100,
+      "deltaPct": 1.6418207723888523
+    },
+    {
+      "benchmark": "low-memory",
+      "runtime": "Python",
+      "pre": 3695600,
+      "post": 3635000,
+      "deltaPct": -1.639787855828553
+    },
+    {
+      "benchmark": "tower-of-hanoi",
+      "runtime": "Node.js",
+      "pre": 131139635.15,
+      "post": 129187480.04,
+      "deltaPct": -1.4886080076150032
+    },
+    {
+      "benchmark": "mandelbrot",
+      "runtime": "Galerina/Wasm legacy lane",
+      "pre": 9064940,
+      "post": 9199288,
+      "deltaPct": 1.4820616573303298
+    },
+    {
+      "benchmark": "record-allocation",
+      "runtime": "Rust AVX2",
+      "pre": 1176747469.99,
+      "post": 1194115399.31,
+      "deltaPct": 1.4759266336172812
+    },
+    {
+      "benchmark": "six-digit-guess",
+      "runtime": "Rust AVX2",
+      "pre": 76048445.41,
+      "post": 74951006.59,
+      "deltaPct": -1.443078571933155
+    },
+    {
+      "benchmark": "collection-pipeline",
+      "runtime": "Rust AVX2",
+      "pre": 13351099200,
+      "post": 13523381900,
+      "deltaPct": 1.2904008682670862
+    },
+    {
+      "benchmark": "tower-of-hanoi",
+      "runtime": "Rust AVX2",
+      "pre": 254654927.71,
+      "post": 251396085.49,
+      "deltaPct": -1.2797090750630025
+    },
+    {
+      "benchmark": "mandelbrot",
+      "runtime": "Rust",
+      "pre": 23340877,
+      "post": 23630133,
+      "deltaPct": 1.2392679161112927
+    },
+    {
+      "benchmark": "data-query",
+      "runtime": "Node.js",
+      "pre": 387907526,
+      "post": 392705110,
+      "deltaPct": 1.2367854909832299
+    },
+    {
+      "benchmark": "low-memory",
+      "runtime": "Node.js",
+      "pre": 712349100,
+      "post": 720263900,
+      "deltaPct": 1.1110844387955288
+    },
+    {
+      "benchmark": "text-html",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 953,
+      "post": 947,
+      "deltaPct": -0.6295907660020986
+    },
+    {
+      "benchmark": "spectral-norm",
+      "runtime": "Python",
+      "pre": 1728515,
+      "post": 1739341,
+      "deltaPct": 0.6263179665782479
+    },
+    {
+      "benchmark": "arithmetic-threshold",
+      "runtime": "Rust AVX2",
+      "pre": 1585552604.67,
+      "post": 1576503945.2,
+      "deltaPct": -0.570694371372391
+    },
+    {
+      "benchmark": "spore-container",
+      "runtime": "Node.js",
+      "pre": 43788,
+      "post": 43900,
+      "deltaPct": 0.25577783867726317
+    },
+    {
+      "benchmark": "framework-pipeline",
+      "runtime": "Python",
+      "pre": 114449,
+      "post": 114205,
+      "deltaPct": -0.21319539707642704
+    },
+    {
+      "benchmark": "tri-logic",
+      "runtime": "Rust",
+      "pre": 1396275899,
+      "post": 1397574556,
+      "deltaPct": 0.09300862393529002
+    },
+    {
+      "benchmark": "tower-of-hanoi",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 83945,
+      "post": 83882,
+      "deltaPct": -0.07504913931741021
+    },
+    {
+      "benchmark": "arithmetic-threshold",
+      "runtime": "Python",
+      "pre": 3903660.33,
+      "post": 3906188.9,
+      "deltaPct": 0.06477433450260854
+    },
+    {
+      "benchmark": "tower-of-hanoi",
+      "runtime": "Rust",
+      "pre": 248169355.75,
+      "post": 248194074.25,
+      "deltaPct": 0.009960335322343682
     },
     {
       "benchmark": "six-digit-guess",
       "runtime": "Galerina governed diagnostic",
       "pre": 1,
       "post": 1,
+      "deltaPct": 0
+    },
+    {
+      "benchmark": "fibonacci-recursive",
+      "runtime": "Galerina governed diagnostic",
+      "pre": 12,
+      "post": 12,
       "deltaPct": 0
     }
   ],
@@ -905,15 +905,15 @@
       "aligned": true,
       "unit": "mix-ops/s",
       "scoreUnit": "mix-ops/s",
-      "rustAvx2": 124815217.08,
-      "rust": 126802921.86,
+      "rustAvx2": 134496648.34,
+      "rust": 137028994.21,
       "cpp": null,
-      "nodejs": 131250788.82,
-      "wasm": 71704000,
+      "nodejs": 140675028.82,
+      "wasm": 80508000,
       "checkedReference": null,
-      "slideReference": 171526.76314932725,
-      "galerinaGoverned": 1668892,
-      "python": 724910.61,
+      "slideReference": 182050.87593779,
+      "galerinaGoverned": 1739130,
+      "python": 755314.19,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
@@ -929,15 +929,15 @@
       "aligned": false,
       "unit": "per-call",
       "scoreUnit": "per-call",
-      "rustAvx2": 1557790274.72,
-      "rust": 1564529155,
+      "rustAvx2": 1576503945.2,
+      "rust": 1597099826.71,
       "cpp": null,
-      "nodejs": 958988938.06,
-      "wasm": 450347264.32,
+      "nodejs": 988797029.65,
+      "wasm": 510544813.28,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 66,
-      "python": 3691930.78,
+      "galerinaGoverned": 86,
+      "python": 3906188.9,
       "interpretation": {
         "direction": "not certified",
         "winner": "no admitted winner",
@@ -953,15 +953,15 @@
       "aligned": false,
       "unit": "per-call",
       "scoreUnit": "per-call",
-      "rustAvx2": 75111587.22,
-      "rust": 77121906.51,
+      "rustAvx2": 74951006.59,
+      "rust": 79482335.16,
       "cpp": null,
-      "nodejs": 2472204.59,
-      "wasm": 33398579.099999998,
+      "nodejs": 2822296.61,
+      "wasm": 37436361.72,
       "checkedReference": null,
       "slideReference": null,
       "galerinaGoverned": 1,
-      "python": 84291.67,
+      "python": 90788.01,
       "interpretation": {
         "direction": "not certified",
         "winner": "no admitted winner",
@@ -977,24 +977,24 @@
       "aligned": true,
       "unit": "records/s",
       "scoreUnit": "heap bytes/op",
-      "rustAvx2": 1159877516.93,
-      "rust": 1173598723.12,
+      "rustAvx2": 1194115399.31,
+      "rust": 1196315348.73,
       "cpp": null,
-      "nodejs": 55872164.49,
-      "wasm": 484093400,
+      "nodejs": 61306440.24,
+      "wasm": 567292900,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 1886792,
-      "python": 3782555.99,
+      "galerinaGoverned": 2551020,
+      "python": 3224839,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
         "winner": "Galerina/Wasm legacy lane",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
-          "nodejs": 0.9691317049872099,
-          "wasm": 0.00010127350585171489,
-          "galerinaGoverned": 6.0272014465283466,
+          "nodejs": 1.4409725113791045,
+          "wasm": 0.00008642806688225633,
+          "galerinaGoverned": 6.832801093248174,
           "python": 0.01
         }
       }
@@ -1006,15 +1006,15 @@
       "aligned": false,
       "unit": "per-call",
       "scoreUnit": "per-call",
-      "rustAvx2": 450.78,
-      "rust": 496.54,
+      "rustAvx2": 514.08,
+      "rust": 520.03,
       "cpp": null,
-      "nodejs": 102.5,
-      "wasm": 16533.39,
+      "nodejs": 132.07,
+      "wasm": 17918.8,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 11,
-      "python": 4.17,
+      "galerinaGoverned": 12,
+      "python": 4.12,
       "interpretation": {
         "direction": "not certified",
         "winner": "no admitted winner",
@@ -1030,18 +1030,18 @@
       "aligned": true,
       "unit": "moves/s",
       "scoreUnit": "moves/s",
-      "rustAvx2": 230822225.15,
-      "rust": 249540120.42,
+      "rustAvx2": 251396085.49,
+      "rust": 248194074.25,
       "cpp": null,
-      "nodejs": 118273301.83,
-      "wasm": 117343694,
+      "nodejs": 129187480.04,
+      "wasm": 118013462,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 79754,
-      "python": 2790347.74,
+      "galerinaGoverned": 83882,
+      "python": 2628356.21,
       "interpretation": {
         "direction": "higher is better",
-        "winner": "Rust",
+        "winner": "Rust AVX2",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
@@ -1054,24 +1054,24 @@
       "aligned": true,
       "unit": "elements/s",
       "scoreUnit": "heap bytes/op",
-      "rustAvx2": 12372547300,
-      "rust": 4162140300,
+      "rustAvx2": 13523381900,
+      "rust": 4428458700,
       "cpp": null,
-      "nodejs": 68702800,
-      "wasm": 384146300,
+      "nodejs": 74016100,
+      "wasm": 439418100,
       "checkedReference": null,
-      "slideReference": 517681,
-      "galerinaGoverned": 2155172,
-      "python": 10014700,
+      "slideReference": 559613,
+      "galerinaGoverned": 2341920,
+      "python": 13747800,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
         "winner": "Galerina/Wasm legacy lane",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
-          "nodejs": 0.16289106035544865,
-          "wasm": 0.00006153847395354886,
-          "galerinaGoverned": 16.75120321623102,
+          "nodejs": 0.16289112827284635,
+          "wasm": 0.000055218195677396757,
+          "galerinaGoverned": 17.569602811136452,
           "python": 0.04
         }
       }
@@ -1083,15 +1083,15 @@
       "aligned": false,
       "unit": "gov-factor",
       "scoreUnit": "gov-factor",
-      "rustAvx2": 799622578.14,
-      "rust": 877616393.87,
+      "rustAvx2": 912442059.93,
+      "rust": 916615488.97,
       "cpp": null,
-      "nodejs": 1927090.46,
-      "wasm": 2224439.22,
+      "nodejs": 2166823.76,
+      "wasm": 3061615.77,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 660,
-      "python": 21119.38,
+      "galerinaGoverned": 710,
+      "python": 20332.55,
       "interpretation": {
         "direction": "internal only",
         "winner": "no cross-runtime winner",
@@ -1107,14 +1107,14 @@
       "aligned": false,
       "unit": "per-call",
       "scoreUnit": "per-call",
-      "rustAvx2": 1162328.2,
-      "rust": 1160089.98,
+      "rustAvx2": 1212132.67,
+      "rust": 1239780.64,
       "cpp": null,
-      "nodejs": 824103.04,
-      "wasm": 35521619.92,
+      "nodejs": 949827.54,
+      "wasm": 40464073.37,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 3305,
+      "galerinaGoverned": 3164,
       "python": null,
       "interpretation": {
         "direction": "not certified",
@@ -1131,15 +1131,15 @@
       "aligned": true,
       "unit": "items/s",
       "scoreUnit": "heap bytes/op",
-      "rustAvx2": 5691254000,
-      "rust": 1320863000,
+      "rustAvx2": 6340828400,
+      "rust": 1388246100,
       "cpp": null,
-      "nodejs": 702952100,
-      "wasm": 453295400,
+      "nodejs": 720263900,
+      "wasm": 489975300,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 110035,
-      "python": 2635400,
+      "galerinaGoverned": 144321,
+      "python": 3635000,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
         "winner": "Rust AVX2 + Rust + Node.js + Galerina/Wasm legacy lane (tie)",
@@ -1150,7 +1150,7 @@
           "rust": 0,
           "nodejs": 0,
           "wasm": 0,
-          "galerinaGoverned": 56.33930817147169,
+          "galerinaGoverned": 16.21279661152551,
           "python": 0.27
         }
       }
@@ -1162,15 +1162,15 @@
       "aligned": true,
       "unit": "kernel-evals/s",
       "scoreUnit": "kernel-evals/s",
-      "rustAvx2": 1173497580,
-      "rust": 1173380869,
+      "rustAvx2": 1233610619,
+      "rust": 1229700867,
       "cpp": null,
-      "nodejs": 954123819,
-      "wasm": 446639000,
+      "nodejs": 1019846831,
+      "wasm": 495715000,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 302352,
-      "python": 5338804,
+      "galerinaGoverned": 328106,
+      "python": 5788955,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust AVX2",
@@ -1186,15 +1186,15 @@
       "aligned": true,
       "unit": "mul-adds/s",
       "scoreUnit": "mul-adds/s",
-      "rustAvx2": 1224574239,
-      "rust": 1509288837,
+      "rustAvx2": 1461783101,
+      "rust": 1542429082,
       "cpp": null,
-      "nodejs": 587372954,
-      "wasm": 418285486,
+      "nodejs": 637518479,
+      "wasm": 461785006,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 605246,
-      "python": 27994874184,
+      "galerinaGoverned": 771012,
+      "python": 28775410565,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Python",
@@ -1217,7 +1217,7 @@
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 124,
+      "galerinaGoverned": 197,
       "python": null,
       "interpretation": {
         "direction": "not certified",
@@ -1241,7 +1241,7 @@
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 698,
+      "galerinaGoverned": 947,
       "python": null,
       "interpretation": {
         "direction": "not certified",
@@ -1258,18 +1258,18 @@
       "aligned": true,
       "unit": "trit-ops/s",
       "scoreUnit": "trit-ops/s",
-      "rustAvx2": 1268590668,
-      "rust": 1356165740,
+      "rustAvx2": 1429872272,
+      "rust": 1397574556,
       "cpp": null,
-      "nodejs": 913981820,
-      "wasm": 450186000,
+      "nodejs": 1026100227,
+      "wasm": 490752000,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 285111,
-      "python": 6413266,
+      "galerinaGoverned": 315477,
+      "python": 7302568,
       "interpretation": {
         "direction": "higher is better",
-        "winner": "Rust",
+        "winner": "Rust AVX2",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
@@ -1282,18 +1282,18 @@
       "aligned": true,
       "unit": "element-reads/s",
       "scoreUnit": "element-reads/s",
-      "rustAvx2": 3645643456,
-      "rust": 2354048964,
+      "rustAvx2": 3732736095,
+      "rust": 3748125937,
       "cpp": null,
-      "nodejs": 1987676406,
+      "nodejs": 2035830618,
       "wasm": null,
       "checkedReference": 583737084,
       "slideReference": 1529285823,
       "galerinaGoverned": null,
-      "python": 8843421,
+      "python": 9476229,
       "interpretation": {
         "direction": "higher is better",
-        "winner": "Rust AVX2",
+        "winner": "Rust",
         "galerinaPlace": "not applicable - references are unranked",
         "explanation": "Native controls may be ranked; the checked and SLIDE reference lanes remain visible but unranked.",
         "memoryBytesPerOp": {}
@@ -1309,12 +1309,12 @@
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
-      "nodejs": 384435291,
+      "nodejs": 392705110,
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 206441,
-      "python": 3066984,
+      "galerinaGoverned": 257202,
+      "python": 5887851,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
@@ -1330,18 +1330,18 @@
       "aligned": true,
       "unit": "chains/s",
       "scoreUnit": "chains/s",
-      "rustAvx2": 154464009.885697,
-      "rust": 154464009.885697,
+      "rustAvx2": 154511742.89246,
+      "rust": 138389150.290617,
       "cpp": null,
-      "nodejs": 40610786.22,
-      "wasm": 51611000,
+      "nodejs": 47411340.79,
+      "wasm": 56903500,
       "checkedReference": null,
-      "slideReference": 172356.97473522488,
-      "galerinaGoverned": 45577,
-      "python": 1271029.18,
+      "slideReference": 195070.71898775833,
+      "galerinaGoverned": 52479,
+      "python": 2490957.82,
       "interpretation": {
         "direction": "higher is better",
-        "winner": "Rust AVX2 + Rust (tie)",
+        "winner": "Rust AVX2",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
@@ -1357,12 +1357,12 @@
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
-      "nodejs": 121477242,
-      "wasm": 28148040,
+      "nodejs": 125425591,
+      "wasm": 30530929,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 53078,
-      "python": 952188,
+      "galerinaGoverned": 61124,
+      "python": 1693179,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
@@ -1381,12 +1381,12 @@
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
-      "nodejs": 2993500,
+      "nodejs": 3676500,
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 4848,
-      "python": 438000,
+      "galerinaGoverned": 5310,
+      "python": 435500,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
@@ -1402,18 +1402,18 @@
       "aligned": true,
       "unit": "pixels/s",
       "scoreUnit": "pixels/s",
-      "rustAvx2": 23006438,
-      "rust": 23414762,
+      "rustAvx2": 24390589,
+      "rust": 23630133,
       "cpp": null,
-      "nodejs": 6227023,
-      "wasm": 8670577,
+      "nodejs": 6473438,
+      "wasm": 9199288,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 6601,
-      "python": 130916,
+      "galerinaGoverned": 7464,
+      "python": 167880,
       "interpretation": {
         "direction": "higher is better",
-        "winner": "Rust",
+        "winner": "Rust AVX2",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the highest admitted same-unit throughput.",
         "memoryBytesPerOp": {}
@@ -1426,18 +1426,18 @@
       "aligned": true,
       "unit": "A-evals/s",
       "scoreUnit": "A-evals/s",
-      "rustAvx2": 370015430,
-      "rust": 370822224,
+      "rustAvx2": 393169853,
+      "rust": 390256086,
       "cpp": null,
-      "nodejs": 221826385,
+      "nodejs": 245333752,
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
       "galerinaGoverned": null,
-      "python": 1509849,
+      "python": 1739341,
       "interpretation": {
         "direction": "higher is better",
-        "winner": "Rust",
+        "winner": "Rust AVX2",
         "galerinaPlace": "not applicable - native controls only",
         "explanation": "This workload deliberately excludes a Galerina subject; it ranks only equivalent native controls.",
         "memoryBytesPerOp": {}
@@ -1450,24 +1450,24 @@
       "aligned": true,
       "unit": "nodes/s",
       "scoreUnit": "heap bytes/op",
-      "rustAvx2": 13544901,
-      "rust": 14160604,
+      "rustAvx2": 20680133,
+      "rust": 21460910,
       "cpp": null,
-      "nodejs": 62079145,
-      "wasm": 543348073,
+      "nodejs": 81354572,
+      "wasm": 608783511,
       "checkedReference": null,
       "slideReference": null,
-      "galerinaGoverned": 296825,
-      "python": 2721898,
+      "galerinaGoverned": 331861,
+      "python": 2924100,
       "interpretation": {
         "direction": "lower is better (heap bytes/op)",
         "winner": "Python",
         "galerinaPlace": "not measured",
         "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
         "memoryBytesPerOp": {
-          "nodejs": 3.16,
-          "wasm": 0.0000027382337348366636,
-          "galerinaGoverned": 8.67285054194192,
+          "nodejs": 3.15,
+          "wasm": 0.00000234369148504501,
+          "galerinaGoverned": 7.189427244217637,
           "python": 0
         }
       }
@@ -1479,15 +1479,15 @@
       "aligned": true,
       "unit": "containers/s",
       "scoreUnit": "containers/s",
-      "rustAvx2": 146505,
-      "rust": 150008,
+      "rustAvx2": 145366,
+      "rust": 147122,
       "cpp": null,
-      "nodejs": 39815,
+      "nodejs": 43900,
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
       "galerinaGoverned": null,
-      "python": 59353,
+      "python": 61816,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Rust",
@@ -1506,12 +1506,12 @@
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
-      "nodejs": 117943,
+      "nodejs": 132509,
       "wasm": null,
       "checkedReference": null,
       "slideReference": null,
       "galerinaGoverned": null,
-      "python": 94340,
+      "python": 114205,
       "interpretation": {
         "direction": "higher is better",
         "winner": "Node.js",
