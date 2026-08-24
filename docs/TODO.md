@@ -39,8 +39,23 @@ counts or open items that a newer section explicitly supersedes.
   registry reach a fixed point at 987 codes; unit registry checks 157
   currencies; contract registry checks 3,938 contracts across 2,974 `.fungi`
   files; 296 documentation indexes link 1,992 documents; and the KB index
-  checks 1,956 documents. Myco and the external structural graphs are refreshed
-  only after the final tracked commit.
+  checks 1,956 documents.
+- [x] Refresh the local Myco discovery cache after the final tracked index
+  commit: 9,245 files, 136,935 terms, zero over-size skips. A scoped regex
+  replay searches both current checkpoint documents, finds the new `3ab43f2`
+  locator four times and finds no old `887e5ef` locator.
+- [X] Refresh the external codebase-memory graph at the current Galerina HEAD.
+  The full request was refused before transmission because it would send
+  private source-derived content and metadata to an untrusted MCP destination;
+  broad graph-refresh authority is not specific approval for that disclosure.
+  The existing external graph is bound to older HEAD `426ef71e` and cannot
+  support current-head claims. Do not workaround the refusal.
+- [!] Re-run the complementary Hypha scanner without persistent state. Its
+  self-test passes 58/58; the full scan completes with candidate drift,
+  duplicate, kind-gap, dead-export and layer-asymmetry findings. The owning
+  checker-wiring audit independently passes all 61 exported checkers (46 direct
+  and 15 explicitly allowlisted), so Hypha remains a broad review surface, not
+  repository-wide failure or closure evidence.
 - [x] Build one reusable typed-view envelope over a supplied `PROJECT` graph:
   HOST `.ts/.mjs` and related host suffixes, FUNGI `.fungi`, and experimental
   GATE `.gate`. The isolated AGENTS implementation checkpoint `7b265e2` fixes
