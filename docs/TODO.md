@@ -95,7 +95,7 @@ counts or open items that a newer section explicitly supersedes.
 ### Chapter close and process-root gate - 2026-08-22
 
 - [x] Create and verify a complete Git bundle of the Codex memory index at
-  `%USERPROFILE%\.codex\backups\memory\codex-memories-20260822T083626Z.bundle`.
+  `~/.codex/backups/memory/codex-memories-20260822T083626Z.bundle`.
   The bundle resolves `master` and `HEAD` to memory commit `a712d95c` and has
   SHA-256 `AA1D31D123B0126BE479745D26591C4793F4D193EF4ABCEA2A69D82411792417`.
   This is recovery evidence only; `MEMORY.md` remains a locator index, not a
