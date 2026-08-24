@@ -40,11 +40,16 @@ Each twin's execution-cutover differential asserts the **WASM verdict === the re
 | Twin | bytes | sha256 |
 |---|---|---|
 | `synchronization-gate` | 132 | `3c697b6241fb777e652312a064c6bf6d6dd0e16794ce2ae01ea1641d0fe54eac` |
-| `power-governor` | 288 | `371e2efe31c335163267f654652e259e92ef112444d51fe4c79fcb56ff051126` |
+| `power-governor` | 361 | `95d7238c37511e1f7a1622c08ef9305e8eb891b4eb435282f0b73cc8a5d3a237` |
 | `cold-boot` | 87 | `19632e4aaadc65a1498daaba7bc61a86959a08621c4f577651b73a10be7ad093` |
 | `audit-egress` | 299 | `ccd7e7c9dd3c439f26ccc435bb6321ac8c7724b47603633901e813373deda115` |
 
 > These hashes are the current emitter's deterministic output; a change to a twin or the emitter moves the hash. Re-run the gatherer immediately before the flip and re-pin if they have moved.
+
+> **Rebind note (2026-08-24):** committed feature `c8b9d8203` added the
+> `powerRank` projection. The current source remained checker-clean, its named
+> RD-0361 differential passed 1/1, and the R4 verifier re-derived and admitted
+> the 361-byte hash above. This rebind does not change the authority class.
 
 ### (e) Measured perf for hot-path twins — N/A
 The T1 sentinels are tiny pure verdict folds (87–299-byte modules), not a hot path. No perf waiver needed.

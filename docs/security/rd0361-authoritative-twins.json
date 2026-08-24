@@ -17,7 +17,7 @@
       "dir": "packages-galerina/galerina-core-sentinel-power/src/self-hosted",
       "tranche": "T1",
       "surface": "thermal band + kernel up-tier gate (LSP-*)",
-      "sha256": "371e2efe31c335163267f654652e259e92ef112444d51fe4c79fcb56ff051126",
+      "sha256": "95d7238c37511e1f7a1622c08ef9305e8eb891b4eb435282f0b73cc8a5d3a237",
       "evidencePack": "docs/security/rd0361-t1-r4-evidence-pack.md",
       "ownerNod": "2026-07-18 — '#143 R4 flip go for it'",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete post-bake)"
@@ -187,7 +187,7 @@
       "dir": "packages-galerina/galerina-tower-citizen/src/self-hosted",
       "tranche": "T4",
       "surface": "S4 transport recovery state, erase, key and epoch transition projections",
-      "sha256": "b8d06787f88e3046bd697e55f0291dd69bd8be719f2476d71e146dee700019d1",
+      "sha256": "5c91fbbb1002a421662d2a9f93801421b1055f026c9ec5ec54b6cf29d24733f8",
       "evidencePack": "docs/security/rd0361-t4-tower-citizen-r4-evidence-pack.md",
       "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T4 tower-citizen flipped only after the complete fail-closed evidence pack passed",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"

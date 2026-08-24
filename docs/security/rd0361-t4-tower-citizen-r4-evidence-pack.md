@@ -48,7 +48,12 @@ WebAssembly imports.
 | `governance-decisions` | 149 | `e62b1cc37b97744d507a77f578fda9f9435a46816e640f08cfcc74700fb43560` |
 | `inference-governance` | 475 | `04121436b8e1c879f52959b9d902e698b135b2ada2060967f08ee7269bc70a18` |
 | `pq-admission-policy` | 323 | `a19a80c26528de4001f8348044727519eaf848b54f9e4576bfbc8b5e86b434aa` |
-| `transport-fsm` | 594 | `b8d06787f88e3046bd697e55f0291dd69bd8be719f2476d71e146dee700019d1` |
+| `transport-fsm` | 631 | `5c91fbbb1002a421662d2a9f93801421b1055f026c9ec5ec54b6cf29d24733f8` |
+
+Committed feature `165c7a3dc` later added the fail-closed `s4PermitData`
+projection. On 2026-08-24 the current source remained checker-clean, its named
+RD-0361 differential passed 1/1, and the R4 verifier re-derived and admitted
+the 631-byte hash above. This rebind does not change the authority class.
 
 The live phase-close hash verifier re-derives these entries and refuses hash
 drift, admission failure, malformed or duplicate ledger state, and ambient
