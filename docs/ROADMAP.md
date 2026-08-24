@@ -25,11 +25,15 @@ before that action. See
 source-verified flow, graph-view design and phased verification map.
 
 The reusable graph mechanism is now implemented on the isolated AGENTS
-candidate `887e5ef`: one full `PROJECT` receipt can derive one lower-scope,
-digest-bound `WORKSET` for read-only `scan`, `draw` and `index` operations.
-This is enabling tooling only. The Galerina HOST/FUNGI/GATE view manifest is
-still open, and exact graph-HEAD evidence, independent review, active-skill
-isolation and integration remain `HOLD`.
+candidate through `3ab43f2` (implementation checkpoint `7b265e2`): one full
+`PROJECT` receipt can derive one lower-scope, digest-bound `WORKSET` for
+read-only `scan`, `view`, `draw` and `index` operations. The generic
+HOST/FUNGI/GATE typed-view envelope is also implemented. This is enabling
+tooling only; Galerina-specific materialization remains `HOLD` because exact
+graph-HEAD binding is unavailable and active-skill isolation/integration is
+not closed. Independent review verified the implementation evidence but did
+not grant installation authority; its documentation correction is clean at
+`3ab43f2`.
 
 ## Detached scalar authority route - 2026-08-17
 

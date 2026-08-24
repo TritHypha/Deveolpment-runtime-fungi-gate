@@ -43,17 +43,21 @@ counts or open items that a newer section explicitly supersedes.
   only after the final tracked commit.
 - [x] Build one reusable typed-view envelope over a supplied `PROJECT` graph:
   HOST `.ts/.mjs` and related host suffixes, FUNGI `.fungi`, and experimental
-  GATE `.gate`. The isolated AGENTS candidate at `6a89ab8` fixes the three
-  rules in one manifest, keeps node sets disjoint, binds per-view and cross-view
-  topology digests, accounts for unclassified rows, and preserves an explicit
-  empty GATE view. It creates no competing graphs and grants no authority.
+  GATE `.gate`. The isolated AGENTS implementation checkpoint `7b265e2` fixes
+  the three rules in one manifest, keeps node sets disjoint, binds per-view and
+  cross-view topology digests, accounts for unclassified rows, and preserves an
+  explicit empty GATE view. It creates no competing graphs and grants no
+  authority.
 - [x] Build the reusable lower-scope graph mechanism outside Galerina without
-  touching language source. The isolated AGENTS candidate through `6a89ab8` now
-  validates one complete `PROJECT` receipt, derives a digest-bound `WORKSET`,
-  exposes read-only `scan`, `view`, `draw` and `index` modes, and derives the
-  fixed typed-view envelope independently of WORKSET scope. Its focused suite
-  is 37/37, embedded controls are 15/15 and the complete AGENTS tool estate is
-  234/234 at concurrency one.
+  touching language source. The isolated AGENTS candidate through documentation
+  checkpoint `3ab43f2` validates one complete `PROJECT` receipt, derives a
+  digest-bound `WORKSET`, exposes read-only `scan`, `view`, `draw` and `index`
+  modes, and derives the fixed typed-view envelope independently of WORKSET
+  scope. Fresh independent evidence at implementation checkpoint `7b265e2`
+  confirms 37/37 focused, 15/15 embedded and 235/235 complete-tool checks. The
+  independent verdict remains `HOLD` for installation because the active skill
+  resolves to shared `main`; the doc-only correction is independently clean at
+  `3ab43f2`.
 - [ ] Materialize the Galerina HOST/FUNGI/GATE manifest and view envelope only
   from a complete exact-head `PROJECT` receipt after the AGENTS candidate has
   independent review, active-skill isolation and integration. The current
