@@ -45,7 +45,7 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.GALERINA_ROOT || join(HERE, "..");
 const BASELINE = join(ROOT, "packages-galerina/galerina-core-compiler/tests/fixtures/auto-erasure-baseline.json");
-const SKIP_DIRS = new Set(["node_modules", ".git", "dist"]);
+const SKIP_DIRS = new Set(["node_modules", ".git", ".worktrees", "dist"]);
 
 /** The self-hosted compiler stages — the P9 debt proper, reported as its own subtotal. */
 const STAGE_DIR = "packages-galerina/galerina-core-compiler/src/self-hosted/";
@@ -139,6 +139,9 @@ function selfTest() {
   const { counts, scanned } = measure();
   if (scanned > 0) { pass++; console.log(`  ok   surface non-empty (${scanned} .fungi files scanned)`); }
   else { fail++; console.log(`  FAIL surface EMPTY — 0 .fungi files found`); }
+  const nestedWorktreePaths = Object.keys(counts).filter((path) => path.startsWith(".worktrees/"));
+  if (nestedWorktreePaths.length === 0) { pass++; console.log("  ok   nested worktrees are outside the measured product surface"); }
+  else { fail++; console.log(`  FAIL nested worktrees entered the measurement: ${nestedWorktreePaths.length}`); }
   for (const a of SURFACE_ANCHORS) {
     if (counts[a] !== undefined) { pass++; console.log(`  ok   anchor carries Auto and is in scope: ${a}`); }
     else { fail++; console.log(`  FAIL anchor MISSING from the measurement: ${a}`); }
