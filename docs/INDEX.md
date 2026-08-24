@@ -11,7 +11,7 @@
 | Section | Documents |
 |---|---|
 | [`AI/`](AI/INDEX.md) | 4 |
-| [`architecture/`](architecture/INDEX.md) | 20 |
+| [`architecture/`](architecture/INDEX.md) | 21 |
 | [`contract-registry/`](contract-registry/INDEX.md) | 1 |
 | [`contracts/`](contracts/INDEX.md) | 7 |
 | [`devtools/`](devtools/INDEX.md) | 2 |
@@ -24,12 +24,12 @@
 | [`patterns/`](patterns/INDEX.md) | 21 |
 | [`platform-handover/`](platform-handover/INDEX.md) | 13 |
 | [`reference/`](reference/INDEX.md) | 10 |
-| [`reports/`](reports/INDEX.md) | 1103 |
+| [`reports/`](reports/INDEX.md) | 1108 |
 | [`research/`](research/INDEX.md) | 1 |
 | [`research-prompts/`](research-prompts/INDEX.md) | 15 |
 | [`rules/`](rules/INDEX.md) | 11 |
 | [`security/`](security/INDEX.md) | 23 |
-| [`superpowers/`](superpowers/INDEX.md) | 307 |
+| [`superpowers/`](superpowers/INDEX.md) | 309 |
 
 ---
 
