@@ -19,8 +19,16 @@ counts or open items that a newer section explicitly supersedes.
   in `docs/architecture/galerina-slide-vok-current-flow-2026-08-24.md`.
 - [x] Review the built-in assurance shape. `run-phase-close.mjs` consumes one
   governed manifest and runs entries sequentially under one suite lease with
-  per-entry deadlines, output caps and explicit receipts. Do not run the
-  independent estates concurrently.
+  per-entry deadlines, output caps and explicit receipts. The governed tooling,
+  core and exhaustive test commands now also pin package/test concurrency to
+  `1`; focused manifest/cadence controls pass 33/33. Do not run independent
+  estates concurrently.
+- [x] Repair every ordinary compiler regression found by the bounded core run.
+  The diagnostic namespace, null ratchet, affine-state and passport controls
+  are green. The only remaining compiler failures are the four documented
+  Unit 4 Task 2 causal RED controls: two stable discriminators pass and four
+  old-route security assertions fail until Task 6 admits the checked scalar
+  flow. Do not weaken, exclude or relabel those RED controls as regressions.
 - [!] The locator-only Codex memory working set is `STALE` on both the Galerina
   repository head and TODO digest. Refresh it only through the governed memory
   update route; do not turn `MEMORY.md` into a task-body warehouse.
@@ -34,6 +42,10 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Keep the `.fungi` stop closed. Task 6 Step 1 still lacks an already
   admitted fixed checked scalar-flow artifact; creating or admitting it is the
   next productive action and requires an explicit boundary reopening.
+- [!] Do not run the Fungi corpus/admission estate as part of this pre-Fungi
+  close. Its last bounded attempt exceeded its 600-second envelope, and a new
+  run would cross the active stop. Preserve that coverage as `UNKNOWN`, not
+  `PASS`, until the boundary is explicitly reopened.
 
 ### Unit 4 Task 5 exact-head verification - 2026-08-23
 

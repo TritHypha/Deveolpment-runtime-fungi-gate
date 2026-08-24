@@ -101,7 +101,9 @@ Run one phase at a time. Preserve every refusal.
 3. **Generated owners:** graph, registries, indexes and documents in declared
    dependency order.
 4. **Governed assurance:** the manifest runner executes entries sequentially
-   under one suite lease, with per-entry deadlines and output caps.
+   under one suite lease, with per-entry deadlines and output caps. Tooling,
+   core and exhaustive package tests are pinned to one worker at each governed
+   concurrency boundary on this host profile.
 5. **Independent checks:** exact committed bytes, hostile controls and claim
    hygiene.
 6. **Final indexes:** Myco, structural graph and typed view receipts at the
@@ -109,3 +111,9 @@ Run one phase at a time. Preserve every refusal.
 
 Do not launch package, audit, graph and index estates concurrently. A skipped,
 timed-out or unexamined phase is `UNKNOWN` or `REFUSED`, never a pass.
+
+The bounded compiler close currently has exactly four expected causal RED
+controls. They prove the pre-Task-6 route remains unusable; every ordinary
+diagnostic, null, affine-state and passport regression is green. Those four
+REDs are not candidates for deletion or exclusion. Running the Fungi corpus or
+admission estate remains outside this pre-Fungi checkpoint.
