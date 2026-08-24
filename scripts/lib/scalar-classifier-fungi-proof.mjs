@@ -66,8 +66,9 @@ async function compileCandidate({ packageRoot, assetRelative, flowName }) {
     buildWATModuleFromGIR(gir, undefined, flowName, program.ast, true),
   );
   const assembled = await assembleWAT(wat);
-  assert.equal(assembled.valid, true, JSON.stringify(assembled.diagnostics));
-  assert.deepEqual(assembled.diagnostics, []);
+  if (!assembled.valid || assembled.diagnostics.length > 0) {
+    assert.fail(JSON.stringify(assembled.diagnostics));
+  }
 
   const host = createHostRuntime();
   let nextHandle = 1;

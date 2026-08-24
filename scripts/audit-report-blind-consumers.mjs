@@ -69,7 +69,16 @@ const WATCHED = [
   },
 ];
 
-const SKIP_DIRS = new Set(["node_modules", "dist", "build", ".git", ".github", "coverage", "docs"]);
+const SKIP_DIRS = new Set([
+  "node_modules",
+  "dist",
+  "build",
+  ".git",
+  ".github",
+  ".worktrees",
+  "coverage",
+  "docs",
+]);
 const SOURCE_EXT = /\.(?:ts|mts|cts|mjs|cjs|js)$/;
 
 /** Anchors that MUST be in the scanned set. If the walk stops seeing these, the surface broke. */
@@ -315,6 +324,13 @@ function selfTest() {
   // The surface assertion a fixture can never make: the real tree must still be walkable and the
   // named consumers still in scope.
   const scanned = new Set(walk(ROOT).map(rel));
+  if ([...scanned].some((path) => path.startsWith(".worktrees/"))) {
+    fail++;
+    console.log("  FAIL nested worktree content entered the product scan");
+  } else {
+    pass++;
+    console.log("  ok   nested worktree content excluded from the product scan");
+  }
   for (const a of SURFACE_ANCHORS) {
     if (scanned.has(a)) { pass++; console.log(`  ok   surface anchor present: ${a}`); }
     else { fail++; console.log(`  FAIL surface anchor MISSING from the scan: ${a}`); }
