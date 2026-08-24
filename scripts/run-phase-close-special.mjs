@@ -9,6 +9,7 @@ const { runOwnedProcessSync } = ownedProcessTree;
 const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const MODES = new Set(["patterns", "security", "naming", "cbor", "governance-diff"]);
 const MAX_SOURCE_BYTES = 16 * 1024 * 1024;
+const GOVERNANCE_DIFF_TIMEOUT_MS = 180_000;
 
 function parseArguments(argv) {
   const result = { root: DEFAULT_ROOT, mode: "" };
@@ -51,7 +52,7 @@ function readBounded(path) {
   return bytes.toString("utf8");
 }
 
-function childEnvironment() {
+function childEnvironment(gitRoot) {
   const admitted = {};
   const entries = Object.entries(process.env);
   const copy = (name, aliases) => {
@@ -69,6 +70,12 @@ function childEnvironment() {
   }
   admitted.GIT_CONFIG_NOSYSTEM = "1";
   admitted.GIT_CONFIG_GLOBAL = process.platform === "win32" ? "NUL" : "/dev/null";
+  if (gitRoot !== undefined) {
+    const safeRoot = realpathSync(gitRoot);
+    admitted.GIT_CONFIG_COUNT = "1";
+    admitted.GIT_CONFIG_KEY_0 = "safe.directory";
+    admitted.GIT_CONFIG_VALUE_0 = safeRoot;
+  }
   return admitted;
 }
 
@@ -173,7 +180,7 @@ async function checkCbor(root) {
 function checkGovernanceDiff(root) {
   const base = runOwnedProcessSync({
     command: "git", args: ["rev-parse", "--verify", "HEAD~1"], cwd: root,
-    env: childEnvironment(), timeoutMs: 30_000, maxOutputBytes: 1_048_576, windowsHide: true,
+    env: childEnvironment(root), timeoutMs: 30_000, maxOutputBytes: 1_048_576, windowsHide: true,
   });
   if (base.error !== undefined || typeof base.signal === "string" || base.status !== 0) {
     throw new Error("GOVERNANCE-DIFF-BASE-MISSING: HEAD~1 could not be verified");
@@ -183,8 +190,8 @@ function checkGovernanceDiff(root) {
     command: process.execPath,
     args: ["packages-galerina/galerina-core-compiler/dist/cli.js", "diff", "HEAD~1", "--json"],
     cwd: root,
-    env: childEnvironment(),
-    timeoutMs: 30_000,
+    env: childEnvironment(root),
+    timeoutMs: GOVERNANCE_DIFF_TIMEOUT_MS,
     maxOutputBytes: 4_194_304,
     windowsHide: true,
   });

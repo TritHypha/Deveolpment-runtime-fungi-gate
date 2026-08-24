@@ -32,6 +32,11 @@ function run(root, mode) {
   });
 }
 
+function git(root, args) {
+  const result = spawnSync("git", args, { cwd: root, encoding: "utf8" });
+  assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+}
+
 test("patterns checks every admitted Fungi fixture and refuses one failure", () => {
   const root = fixture();
   write(root, "tests/patterns/green.fungi", "flow green() -> Int { 1 }\n");
@@ -117,6 +122,27 @@ test("governance diff refuses when HEAD~1 is not an admitted base", () => {
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /BASE-MISSING|REFUSED/);
+});
+
+test("governance diff admits only its exact repository root without global Git config", () => {
+  const root = fixture();
+  write(root, "packages-galerina/galerina-core-compiler/dist/cli.js", [
+    "process.stdout.write(JSON.stringify({",
+    "  changeClass: 'governed',",
+    "  summary: 'fixture governance diff admitted',",
+    "}));",
+  ].join("\n"));
+  git(root, ["init"]);
+  git(root, ["add", "."]);
+  git(root, ["-c", "user.name=Galerina Test", "-c", "user.email=test@example.invalid", "commit", "-m", "first"]);
+  write(root, "second.txt", "second\n");
+  git(root, ["add", "second.txt"]);
+  git(root, ["-c", "user.name=Galerina Test", "-c", "user.email=test@example.invalid", "commit", "-m", "second"]);
+
+  const result = run(root, "governance-diff");
+
+  assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+  assert.match(result.stdout, /GOVERNANCE-DIFF-ACCEPTED/);
 });
 
 test("unknown and duplicate options refuse", () => {
