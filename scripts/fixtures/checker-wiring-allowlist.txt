@@ -23,6 +23,7 @@
 #    and the compiler test-suite, not the internal compile pipeline). Not compile
 #    gates that mint manifests — they are library entry points. ──────────────────
 checkBindingReassignment   # public API (index.ts); exercised by tests/compiler-safety-contracts.test.mjs
+checkFlowEffects           # public per-flow API (index.ts); bulk compile path uses checkEffects; exercised by tests/requirement-effect-taint.test.mjs
 verifyAdmissionBindings    # .gate v3 host primitive; called only after signed-envelope verification in scripts/lib/gate-admission-envelope.mjs
 checkReadonlyMutation      # public API (index.ts); exercised by tests/compiler-safety-contracts.test.mjs
 checkMutInPureContext      # public API (index.ts, binding-level Phase 3); exercised by compiler-safety-contracts.test.mjs
