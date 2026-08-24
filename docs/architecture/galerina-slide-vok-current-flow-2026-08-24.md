@@ -69,16 +69,19 @@ an empty GATE view is explicit. Myco remains the lexical discovery overlay.
 Hypha remains a passive scanner. Neither stores source bodies in the structural
 graph or upgrades a miss into absence.
 
-The isolated AGENTS Code Logic Workbench candidate through `6a89ab8` supplies
-the reusable mechanism: one complete `PROJECT` graph receipt, one lower-scope
+The isolated AGENTS Code Logic Workbench candidate through documentation
+checkpoint `3ab43f2` (implementation checkpoint `7b265e2`) supplies the
+reusable mechanism: one complete `PROJECT` graph receipt, one lower-scope
 `WORKSET` clone using the same schema and refusal rules, and one orthogonal
 HOST/FUNGI/GATE typed-view envelope. Its `scan`, `view`, `draw` and `index`
-modes are read-only and non-authorizing. The implementation passes 37/37
-focused tests, 15/15 embedded controls and 234/234 complete tool-estate tests
-at concurrency one. It is not yet installed or integrated: exact graph-HEAD
-evidence, independent review and active-skill isolation remain open. The
-Galerina-specific manifest and materialized view bytes therefore remain TODO
-outputs, not inferred evidence.
+modes are read-only and non-authorizing. Fresh independent evidence confirms
+37/37 focused tests, 15/15 embedded controls and 235/235 complete tool-estate
+tests at concurrency one. Installation remains `HOLD`: the active skill still
+resolves to shared `main`, exact external graph-HEAD binding is unavailable,
+and Phase 7 integration has not released its future `tools/README.md` custody.
+The doc-only correction is independently clean at `3ab43f2`; it grants no
+installation authority. The Galerina-specific manifest and materialized view
+bytes therefore remain TODO outputs, not inferred evidence.
 
 Do not combine `.fungi` and `.gate` into one authority view: `.gate` is a later
 laboratory lane and cannot inherit Galerina or VOK authority.
@@ -119,8 +122,10 @@ Run one phase at a time. Preserve every refusal.
    concurrency boundary on this host profile.
 5. **Independent checks:** exact committed bytes, hostile controls and claim
    hygiene.
-6. **Final indexes:** Myco, structural graph and typed view receipts at the
-   final committed head.
+6. **Final indexes:** local Myco and repository-owned structural graphs at the
+   final committed head. External codebase-memory and typed-view receipts stay
+   `HOLD` when their destination, exact build point or integration custody is
+   unavailable.
 
 Do not launch package, audit, graph and index estates concurrently. A skipped,
 timed-out or unexamined phase is `UNKNOWN` or `REFUSED`, never a pass.
