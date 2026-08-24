@@ -1,10 +1,10 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 988,
+  "total": 987,
   "counts": {
     "ref": 196,
     "inline": 383,
-    "phantom": 114,
+    "phantom": 113,
     "live": 183,
     "referenced": 99,
     "dead": 13
@@ -1533,18 +1533,6 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
-    },
-    {
-      "code": "ERR_STDOUT_EXIT_ORDER_ABI",
-      "family": "ERR_*",
-      "namespace": "ERR",
-      "status": "phantom",
-      "names": [],
-      "severities": [],
-      "defs": 0,
-      "emits": 0,
-      "tests": 0,
-      "docs": 1
     },
     {
       "code": "ERR_STRING_TOO_LONG",

@@ -2,7 +2,7 @@
 
 Scope: `packages-galerina/galerina-test/src/cli.ts#fail`.
 
-BLOCKED_BY_CLI_STDERR_STDOUT_EXIT_ORDER_ABI: ordered streams and non-returning exit 2 lack physical proof. No placeholder Fungi was created and TypeScript remains.
+BLOCKED_BY_CLI_STREAM_ORDER_ABI: ordered stderr/stdout streams and non-returning exit 2 lack physical proof. No placeholder Fungi was created and TypeScript remains.
 
 Evidence: source build point `ce842d8e20c2139f7bfc65f212a635cac224e8f9`;
 source SHA-256 `855D7882F41EA7D870A99C7C3F81BA5655C74415A36646E6FC2B0F3A003C1158`; package typecheck and focused **41/41** foundation/runner tests pass.

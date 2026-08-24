@@ -17,7 +17,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | inline | 383 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 114 | doc-only mention, not in source (drift — DOC-004) |
+| phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
 | ref | 196 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
@@ -465,7 +465,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-EMIT-STUB | inline | — | — |
 
-### ERR_* (144)
+### ERR_* (143)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -596,7 +596,6 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_SCHEMA_UNSUPPORTED_INPUT_TYPE | inline | — | — |
 | ERR_SIZE_EXCEEDED | ref | — | — |
 | ERR_SOME_CODE | ref | — | — |
-| ERR_STDOUT_EXIT_ORDER_ABI | phantom | — | — |
 | ERR_STRING_TOO_LONG | ref | — | — |
 | ERR_TOO_SHORT | ref | — | — |
 | ERR_TOXIC_NEGATIVE | ref | — | — |

@@ -3059,23 +3059,6 @@
     ]
   },
   {
-    "code": "ERR_STDOUT_EXIT_ORDER_ABI",
-    "namespace": "ERR",
-    "family": "ERR_*",
-    "occurrences": 1,
-    "docOnly": true,
-    "defs": [],
-    "emits": [],
-    "tests": 0,
-    "refs": 0,
-    "docs": 1,
-    "names": [],
-    "severities": [],
-    "allSites": [
-      "doc docs/reports/slice-384-test-fail-fungi-conversion-2026-08-13.md:5"
-    ]
-  },
-  {
     "code": "ERR_STRING_TOO_LONG",
     "namespace": "ERR",
     "family": "ERR_*",
