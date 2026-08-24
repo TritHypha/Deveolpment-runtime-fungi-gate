@@ -1,14 +1,14 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "351c851cc0f80d6c2cd54e76e09cff8c7b666c14c8f3b4e04dc85451703d4456",
+  "sourceDigest": "502a579231d078d147e2eb05f71e81aa45f22dbb0c12b3c5994080c35a3ca4c1",
   "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
-    "total": 1490,
+    "total": 1563,
     "CANDIDATE": 0,
-    "BLOCKED": 860,
+    "BLOCKED": 917,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 630
+    "BOOTSTRAP_FLOOR": 646
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -1098,6 +1098,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-core-compiler/src/node-util-shim.d.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-core-compiler/src/numeric-lowering.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -1187,6 +1195,54 @@
     },
     {
       "path": "packages-galerina/galerina-core-compiler/src/register-vm.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/src/requirement-process-protocol.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/src/requirement-process-worker.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/src/requirement-semantics.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/src/requirement-terminality.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/src/requirement-validator-authority.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -3579,6 +3635,78 @@
     },
     {
       "path": "packages-galerina/galerina-core-compiler/tests/record-update-spread.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-construct-parser.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-effect-taint.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-interpreter.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-process-protocol.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-process-root-red.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-process-worker.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-semantics.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-type-terminality.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-compiler/tests/requirement-validator-authority.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -10650,6 +10778,446 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-decision-cores-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-primitives-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-10-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-11-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-12-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-13-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-14-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-15-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-16-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-17-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-18-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-19-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-2-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-20-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-21-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-22-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-23-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-24-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-25-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-26-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-27-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-28-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-29-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-3-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-30-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-31-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-32-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-33-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-34-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-35-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-36-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-37-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-38-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-39-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-4-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-40-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-41-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-42-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-43-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-44-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-45-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-46-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-47-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-48-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-49-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-5-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-50-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-51-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-52-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-53-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-54-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-6-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-7-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-8-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/conversion-overlay-source-decisions-wave-9-fungi.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-test/tests/foundation.test.mjs",
       "package": "galerina-test",
       "tranche": "T3-package-graph",
@@ -10700,6 +11268,14 @@
     {
       "path": "packages-galerina/galerina-tools-benchmark/tests/benchmark-contracts.test.mjs",
       "package": "galerina-tools-benchmark",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-tools-myco/scripts/audit-public-source-owner.mjs",
+      "package": "galerina-tools-myco",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
       "reason": "DOSSIER_REQUIRED",
@@ -10883,6 +11459,14 @@
     },
     {
       "path": "packages-galerina/galerina-tools-myco/tests/path-filter.test.ts",
+      "package": "galerina-tools-myco",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-tools-myco/tests/public-source-owner-audit.test.ts",
       "package": "galerina-tools-myco",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
