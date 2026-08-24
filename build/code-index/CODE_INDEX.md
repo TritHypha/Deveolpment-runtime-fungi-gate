@@ -1595,8 +1595,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-TAINT-002 | UNVALIDATED_VALUE_AT_LOGIC_SINK | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:246 | 0 | 0 | 1 |
 | FUNGI-TAINT-003 | WRONG_CONTEXT_UNTAINT | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:254 | 0 | 12 | 2 |
 | FUNGI-TAINT-004 | DISCOURAGED_SANITISER | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:262 | 0 | 11 | 1 |
-| FUNGI-TAINT-005 | TAINTED_VALUE_AT_HEADER_SINK | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:1972 | 0 | 1 | 0 |
-| FUNGI-TAINT-006 | SSRF_POLICY_INSUFFICIENT | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:1981 | 0 | 1 | 0 |
+| FUNGI-TAINT-005 | TAINTED_VALUE_AT_HEADER_SINK | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:1976 | 0 | 1 | 0 |
+| FUNGI-TAINT-006 | SSRF_POLICY_INSUFFICIENT | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:1985 | 0 | 1 | 0 |
 
 ## TARGET (1)
 
