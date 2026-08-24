@@ -12,7 +12,11 @@
         "command": [
           "node",
           "scripts/run-all-tests.cjs",
-          "--core"
+          "--core",
+          "--package-concurrency",
+          "1",
+          "--test-concurrency",
+          "1"
         ]
       },
       "acceptedExitCodes": [
@@ -5141,7 +5145,7 @@
         "command": [
           "node",
           "--test",
-          "--test-concurrency=4",
+          "--test-concurrency=1",
           "scripts/tests/aerospace-examples.test.mjs",
           "scripts/tests/allowlist-sensitive.test.mjs",
           "scripts/tests/assurance-cadence-plan.test.mjs",
@@ -6453,7 +6457,11 @@
         "command": [
           "node",
           "scripts/run-all-tests.cjs",
-          "--json"
+          "--json",
+          "--package-concurrency",
+          "1",
+          "--test-concurrency",
+          "1"
         ]
       },
       "acceptedExitCodes": [

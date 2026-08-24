@@ -97,7 +97,27 @@ test("phase-close bounds its repository-wide tooling test workers", () => {
   assert.ok(entry);
   assert.deepEqual(
     entry.execution.command.slice(0, 3),
-    ["node", "--test", "--test-concurrency=4"],
+    ["node", "--test", "--test-concurrency=1"],
     "the governed Node tooling suite must not inherit the host CPU count as its worker ceiling",
   );
+});
+
+test("phase-close serialises package and test workers for the core and exhaustive estates", () => {
+  const repositoryRoot = join(scriptsRoot, "..");
+  const raw = JSON.parse(readFileSync(
+    join(repositoryRoot, "governance", "phase-close-commands.json"),
+    "utf8",
+  ));
+  const admitted = validateAssuranceManifest(raw, repositoryRoot);
+  assert.equal(admitted.kind, "accepted");
+
+  for (const id of ["tests:core", "tests:all-packages"]) {
+    const entry = admitted.value.entries.find((candidate) => candidate.id === id);
+    assert.ok(entry, `${id} must remain governed`);
+    assert.deepEqual(
+      entry.execution.command.slice(-4),
+      ["--package-concurrency", "1", "--test-concurrency", "1"],
+      `${id} must remain single-package and single-test-worker on the bounded host profile`,
+    );
+  }
 });
