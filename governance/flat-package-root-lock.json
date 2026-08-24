@@ -999,7 +999,7 @@
       "identity": "@galerina/devtools-benchmarks",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-benchmarks",
-      "contentDigest": "9149450fb273cd26739b384f05868fb9d6d98a3add9b62b5b2ecd6c8094fee57",
+      "contentDigest": "863f8dc2e33d805934dc28ecb6005ea768d845e41517392668a97e8f543cb824",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3273,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "f94d5370cd6e51dfbf6692ee7f8d3bfc5c8f51561d395d58ffe8fcbd22abb504"
+  "rootDigest": "aca1156d7a340a0433c3fba3e546bea7f0d8e98ab2b8f935487f2ddb94e17cc8"
 }
