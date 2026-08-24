@@ -15,7 +15,7 @@ Complete executable family: 513 .ts source · 16 .d.ts · 0 .mts · 0 .cts · 10
 
 Terminal physical retirement: OPEN — 1563 tracked package executable-family paths remain.
 
-Post-SLIDE authority: OPEN — 0 non-authorizing candidate(s); 0/2551 production Fungi sources cryptographically admitted; 0/56 host boundaries owned; 16 node_modules trees.
+Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/2551 production Fungi sources cryptographically admitted; 0/56 host boundaries owned; 95 node_modules trees.
 
 `.fungi` in src trees: 2551 across 96 packages · staged-index drift: 0
 

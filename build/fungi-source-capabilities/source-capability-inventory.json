@@ -23,7 +23,7 @@
         "returnStmt": 15,
         "typeRef": 10
       },
-      "byteLength": 4290,
+      "byteLength": 4397,
       "diagnosticCodes": [],
       "flowCount": 5,
       "memberCalls": {},
@@ -31,7 +31,7 @@
         "<=": 1
       },
       "path": "packages-galerina/galerina-api-protocol-rest/src/index.fungi",
-      "sourceSha256": "sha256:def2b58dfb8b4e7e17839edaf261f73a7a0b0dbe96d10375ba2808eb1f3637d7",
+      "sourceSha256": "sha256:8ae9a00a601ab64d1f3e914910c8dbb68a7118e0023e8a4e215d233bbc61cd26",
       "typeRefs": {
         "Int": 10
       }
@@ -163,7 +163,7 @@
         "stringLiteral": 25,
         "typeRef": 14
       },
-      "byteLength": 4441,
+      "byteLength": 4582,
       "diagnosticCodes": [],
       "flowCount": 8,
       "memberCalls": {
@@ -174,7 +174,7 @@
         "+": 1
       },
       "path": "packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi",
-      "sourceSha256": "sha256:baa1b62c571a1784abcdcc991090b80ce0afd63365d73ea325ecacfd819bb4d4",
+      "sourceSha256": "sha256:bc33a6d0875334f71af0a8e4b41456663ea5be286d3085365ac544a09f4062c4",
       "typeRefs": {
         "Bool": 4,
         "Int": 4,
@@ -6451,7 +6451,7 @@
         "stringLiteral": 14,
         "typeRef": 5
       },
-      "byteLength": 2389,
+      "byteLength": 2438,
       "diagnosticCodes": [],
       "flowCount": 2,
       "memberCalls": {
@@ -6462,7 +6462,7 @@
         "==": 15
       },
       "path": "packages-galerina/galerina-core-security/src/dss/capability-map.fungi",
-      "sourceSha256": "sha256:e1325753b299282ca698fb8a2822c45d4f5f2de3fb28b81c47b73ee1b1d55557",
+      "sourceSha256": "sha256:b7c997a27c18c1797c8f3bf724d910f2927a00222a75ebf9994b58f9242b4414",
       "typeRefs": {
         "Bool": 1,
         "Int": 2,
@@ -6488,7 +6488,7 @@
         "returnStmt": 2,
         "typeRef": 6
       },
-      "byteLength": 2210,
+      "byteLength": 2262,
       "diagnosticCodes": [],
       "flowCount": 2,
       "memberCalls": {
@@ -6497,7 +6497,7 @@
       },
       "operators": {},
       "path": "packages-galerina/galerina-core-security/src/dss/dag-validator.fungi",
-      "sourceSha256": "sha256:5e8eacc051a7882b5d93197c26b62a7a758542857ceba46ff5b02da935ee4508",
+      "sourceSha256": "sha256:0c12f33cf0e4b0402aa8daa400fa4c592953c78eb8ddfd904227529518625f6f",
       "typeRefs": {
         "DAGEdgeResult": 1,
         "Int": 3,
@@ -6527,7 +6527,7 @@
         "trapDecl": 1,
         "typeRef": 7
       },
-      "byteLength": 4311,
+      "byteLength": 4422,
       "diagnosticCodes": [],
       "flowCount": 3,
       "memberCalls": {
@@ -6539,7 +6539,7 @@
         ">=": 1
       },
       "path": "packages-galerina/galerina-core-security/src/dss/dss-supervisor.fungi",
-      "sourceSha256": "sha256:6db71fd64255fb10e2e482512331406fd0dff68877a71da3650be23235088e56",
+      "sourceSha256": "sha256:f1c037d710a23849d8b588090b6d45d1f2bca7a6dcacbe0fa3b4be256a5953b9",
       "typeRefs": {
         "Bool": 1,
         "DSSState": 4,
@@ -6568,7 +6568,7 @@
         "trapDecl": 2,
         "typeRef": 3
       },
-      "byteLength": 1940,
+      "byteLength": 1996,
       "diagnosticCodes": [],
       "flowCount": 1,
       "memberCalls": {},
@@ -6579,7 +6579,7 @@
         ">": 1
       },
       "path": "packages-galerina/galerina-core-security/src/dss/dwi-allocator.fungi",
-      "sourceSha256": "sha256:fc4d1183e0ac66a8f2f06b972bf18dd15326414177b0ec978d12fffaf2df0188",
+      "sourceSha256": "sha256:e5cb30dc9e8450d2ea0e9df77677146c571d279ec4f8846ae71054de21270fe4",
       "typeRefs": {
         "DWIHandle": 1,
         "Int": 1,
@@ -6605,7 +6605,7 @@
         "returnStmt": 3,
         "typeRef": 6
       },
-      "byteLength": 3729,
+      "byteLength": 3809,
       "diagnosticCodes": [],
       "flowCount": 3,
       "memberCalls": {
@@ -6614,7 +6614,7 @@
       },
       "operators": {},
       "path": "packages-galerina/galerina-core-security/src/dss/emergency-sm.fungi",
-      "sourceSha256": "sha256:78a676d43a69f2122e1e8d867a182de5257e14a0ae832f5a3efe81a762eb8de2",
+      "sourceSha256": "sha256:f822eed24d2cea20f7099b3f1f262695934c7cbe8a3f11f0a2cec1b3862da3ea",
       "typeRefs": {
         "EmergencyTransitionResult": 3,
         "Int": 3
@@ -6642,7 +6642,7 @@
         "trapDecl": 5,
         "typeRef": 8
       },
-      "byteLength": 3292,
+      "byteLength": 3383,
       "diagnosticCodes": [],
       "flowCount": 2,
       "memberCalls": {},
@@ -6652,7 +6652,7 @@
         "==": 5
       },
       "path": "packages-galerina/galerina-core-security/src/dss/epilogue-receipt.fungi",
-      "sourceSha256": "sha256:fc59ae75e7cc2e43132620c8600f865ac0aac39fcc25b086deadf116f1f9f543",
+      "sourceSha256": "sha256:aa18c021775bb8a084556e8057689f3df25e4fd08f3bc741da0fc964de9361cf",
       "typeRefs": {
         "Bool": 1,
         "EpilogueReceipt": 2,
@@ -6663,13 +6663,13 @@
       "astKinds": {
         "program": 1
       },
-      "byteLength": 922,
+      "byteLength": 938,
       "diagnosticCodes": [],
       "flowCount": 0,
       "memberCalls": {},
       "operators": {},
       "path": "packages-galerina/galerina-core-security/src/dss/index.fungi",
-      "sourceSha256": "sha256:a56826a9cd3d8218157fcca4e98e70179a54bb4d9964adf87a80e2b793e00555",
+      "sourceSha256": "sha256:291ff998bb988574710d83ae80d1fa8e8d942edda28e17dd9b57f7f518db8bc3",
       "typeRefs": {}
     },
     {
@@ -6694,7 +6694,7 @@
         "stringLiteral": 9,
         "typeRef": 5
       },
-      "byteLength": 2505,
+      "byteLength": 2558,
       "diagnosticCodes": [],
       "flowCount": 2,
       "memberCalls": {
@@ -6706,7 +6706,7 @@
         "==": 10
       },
       "path": "packages-galerina/galerina-core-security/src/dss/mmcp-registry.fungi",
-      "sourceSha256": "sha256:3912ac9fe7852c41d1ead1f0e0465ad65f54a0a1a9b0bc9d5caecde5c46cc721",
+      "sourceSha256": "sha256:3e7a5437271227bc1d359e12ebe565cd460d478c1689008bfb78c005c2cc995a",
       "typeRefs": {
         "Bool": 1,
         "Int": 2,
@@ -6735,7 +6735,7 @@
         "trapDecl": 3,
         "typeRef": 4
       },
-      "byteLength": 2584,
+      "byteLength": 2659,
       "diagnosticCodes": [],
       "flowCount": 2,
       "memberCalls": {},
@@ -6744,7 +6744,7 @@
         "==": 3
       },
       "path": "packages-galerina/galerina-core-security/src/dss/trap-handler.fungi",
-      "sourceSha256": "sha256:5e9c50db53398d765464a132895ae75ac71b1a181e5d6297cd2870d1bb47d506",
+      "sourceSha256": "sha256:d1fd21441cdbfb98d19b992945e3bc9330e9b939c5eb884dad2eba35caf97904",
       "typeRefs": {
         "AuditEvent": 2,
         "PluginEvictionSignal": 1,
@@ -6759,13 +6759,13 @@
         "staticDecl": 7,
         "stringLiteral": 7
       },
-      "byteLength": 1651,
+      "byteLength": 1684,
       "diagnosticCodes": [],
       "flowCount": 0,
       "memberCalls": {},
       "operators": {},
       "path": "packages-galerina/galerina-core-security/src/dss/types/audit-event.fungi",
-      "sourceSha256": "sha256:bc50640c145d00e202ffee39b3db0bea1fe8db6fc0238b71a55acc6b0707be7f",
+      "sourceSha256": "sha256:1983780228d1c7158e4d4d645b25372c697cdc69e5e4488d6372486694ec00d0",
       "typeRefs": {}
     },
     {
@@ -6774,13 +6774,13 @@
         "program": 1,
         "recordDecl": 2
       },
-      "byteLength": 1061,
+      "byteLength": 1081,
       "diagnosticCodes": [],
       "flowCount": 0,
       "memberCalls": {},
       "operators": {},
       "path": "packages-galerina/galerina-core-security/src/dss/types/trap-signal.fungi",
-      "sourceSha256": "sha256:389749b68ee4ba38ab43e03fb232f0c000e4c3839c2b314f6c2e340ca7ecfe0d",
+      "sourceSha256": "sha256:95f3e5d41605bfd51ebe97286659650a8dab8d839c1ab84ea85ea78e9121735b",
       "typeRefs": {}
     },
     {
@@ -6805,7 +6805,7 @@
         "stringLiteral": 12,
         "typeRef": 11
       },
-      "byteLength": 9965,
+      "byteLength": 10163,
       "diagnosticCodes": [],
       "flowCount": 5,
       "memberCalls": {
@@ -6817,7 +6817,7 @@
         "==": 14
       },
       "path": "packages-galerina/galerina-core-security/src/dss/vdpm.fungi",
-      "sourceSha256": "sha256:978c02039676ea1fbd5f827a07534e5ea186a03099161d5d0d014ae6dbff83fb",
+      "sourceSha256": "sha256:8e70938fca545613cfcce9c4c5440ca6eef1ae24ef7d56883c9e969ffcc2a755",
       "typeRefs": {
         "Bool": 1,
         "Int": 8,
@@ -6847,7 +6847,7 @@
         "typeRef": 8,
         "unaryExpr": 2
       },
-      "byteLength": 7622,
+      "byteLength": 7784,
       "diagnosticCodes": [],
       "flowCount": 3,
       "memberCalls": {
@@ -6862,7 +6862,7 @@
         "||": 2
       },
       "path": "packages-galerina/galerina-core-security/src/interim.fungi",
-      "sourceSha256": "sha256:876a33e5d328f144a19a1e4b9f40b43cd28ddd297c68b3ae9e0fc2a0c3f98a98",
+      "sourceSha256": "sha256:455330e351071c370c000ec230826fe45b7ca6c3ee6d07f1f8d51943596eb93b",
       "typeRefs": {
         "Int": 1,
         "SinkScanResult": 1,
@@ -9569,13 +9569,13 @@
         "returnStmt": 2,
         "typeRef": 1
       },
-      "byteLength": 1433,
+      "byteLength": 1463,
       "diagnosticCodes": [],
       "flowCount": 1,
       "memberCalls": {},
       "operators": {},
       "path": "packages-galerina/galerina-framework-example-app/src/App.fungi",
-      "sourceSha256": "sha256:40b96e79e92e359c25ad4cad66986509cf5cd865d59956c21dfad6bd2104c02e",
+      "sourceSha256": "sha256:f7c08da7d3da6ed6bfe00c2d1234bc19a578d20a18603bc3bc275ad37ab4e63d",
       "typeRefs": {
         "Int": 1
       }
@@ -9595,13 +9595,13 @@
         "returnStmt": 2,
         "typeRef": 1
       },
-      "byteLength": 925,
+      "byteLength": 948,
       "diagnosticCodes": [],
       "flowCount": 1,
       "memberCalls": {},
       "operators": {},
       "path": "packages-galerina/galerina-framework-example-app/src/flows/greeting.fungi",
-      "sourceSha256": "sha256:33581b797f7ddc9c16cd5bbe0c37e561ae1056b7a96c571f47f35595f8297fd6",
+      "sourceSha256": "sha256:5a44a5976907293b342729a6100fa715d8366d1dcd5221d327ce5ce033f73b62",
       "typeRefs": {
         "Int": 1
       }
@@ -66849,7 +66849,7 @@
   "schema": "galerina.fungi-source-capability-inventory.v1",
   "source": {
     "retirementField": "unexecutedFungiPaths",
-    "retirementGraphSha256": "sha256:aca86134528c1fe8546ef173f3d7f35f06e18a529a902cab93598d5249aee36a"
+    "retirementGraphSha256": "sha256:087350042739cf2bc36a2198c1ab2b118c99edcd1b860452f376546cc476b9c2"
   },
   "totals": {
     "astKinds": {
@@ -66895,7 +66895,7 @@
       "unaryExpr": 300,
       "whileStmt": 340
     },
-    "bytes": 8338592,
+    "bytes": 8339889,
     "files": 2551,
     "flows": 3287,
     "memberCalls": {

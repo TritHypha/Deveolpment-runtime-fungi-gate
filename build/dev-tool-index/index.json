@@ -1908,6 +1908,7 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
+        "sinks/taint",
         "signing/fusion",
         "naming",
         "source-hygiene",
@@ -2368,7 +2369,8 @@
         "diagnostics",
         "mutation-testing",
         "teaching-corpus",
-        "web-stub"
+        "web-stub",
+        "proofs"
       ]
     },
     {
@@ -3164,6 +3166,7 @@
         "signing/fusion",
         "governance",
         "secrets/privacy",
+        "source-hygiene",
         "graph/index"
       ]
     },
@@ -3408,7 +3411,8 @@
       "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
-        "governance"
+        "governance",
+        "graph/index"
       ]
     },
     {
@@ -3812,6 +3816,7 @@
       "package-usage.mjs",
       "phase-close-hook.mjs",
       "rd-absorb.mjs",
+      "rebuild-fusable-packages.mjs",
       "relink-workspace.mjs",
       "repoint-kb-refs.mjs",
       "subject-galerina-compile.mjs",
@@ -4145,6 +4150,7 @@
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
+      "fungi-source-capability-inventory.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
       "validate-workspace-pointers.mjs"
@@ -4157,6 +4163,7 @@
       "audit-license-compat.mjs",
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
+      "audit-wat-emitter-mutation.mjs",
       "run-proofs.mjs",
       "license-rollout.mjs"
     ],
@@ -4168,6 +4175,7 @@
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
       "audit-papers-index.mjs",
+      "audit-private-doc-leak.mjs",
       "audit-registry-fixtures.mjs",
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
