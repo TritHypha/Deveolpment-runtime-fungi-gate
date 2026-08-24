@@ -41,9 +41,10 @@ counts or open items that a newer section explicitly supersedes.
   files; 296 documentation indexes link 1,992 documents; and the KB index
   checks 1,956 documents.
 - [x] Refresh the local Myco discovery cache after the final tracked index
-  commit: 9,245 files, 136,935 terms, zero over-size skips. A scoped regex
-  replay searches both current checkpoint documents, finds the new `3ab43f2`
-  locator four times and finds no old `887e5ef` locator.
+  commit: 9,245 files and zero over-size skips. Keep the exact term count in
+  the generated cache receipt rather than this task index. A scoped replay
+  confirms current AGENTS checkpoint locators and finds no old `887e5ef`
+  locator.
 - [X] Refresh the external codebase-memory graph at the current Galerina HEAD.
   The full request was refused before transmission because it would send
   private source-derived content and metadata to an untrusted MCP destination;
@@ -73,6 +74,21 @@ counts or open items that a newer section explicitly supersedes.
   independent verdict remains `HOLD` for installation because the active skill
   resolves to shared `main`; the doc-only correction is independently clean at
   `3ab43f2`.
+- [x] Apply the read-only Git Custody Audit to the current repository and bind
+  its provenance questions to the emitted classified snapshot. Exact repair
+  `d3718f1` is independently `PASS` with zero Critical and zero Important
+  findings, 55/55 focused tests and 236/236 complete-tool tests. The generated
+  non-authorizing plan reports one local current-to-main fast-forward proposal,
+  five already-contained historical branches and ten owner decisions. It did
+  not fetch, merge, delete, publish or change Galerina; Phase 7 still owns the
+  future `tools/README.md` reconciliation and remote freshness remains unknown.
+- [!] Prior-session advisory evidence identifies only
+  `codex/detached-scalar-phase1` at `354cb7e4` and detached Unit 4 tip
+  `a4f42ce4` as earlier live `HOLD` checkpoints with durable branch/document
+  locators. Their current liveness still requires live reopening. No verified
+  provenance or recovery receipt was found for the other requested diverged
+  refs and detached tips, so they remain `UNKNOWN`; advisory context cannot
+  authorize merge, retirement, deletion or publication.
 - [ ] Materialize the Galerina HOST/FUNGI/GATE manifest and view envelope only
   from a complete exact-head `PROJECT` receipt after the AGENTS candidate has
   independent review, active-skill isolation and integration. The current

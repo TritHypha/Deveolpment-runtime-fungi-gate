@@ -25,15 +25,18 @@ before that action. See
 source-verified flow, graph-view design and phased verification map.
 
 The reusable graph mechanism is now implemented on the isolated AGENTS
-candidate through `3ab43f2` (implementation checkpoint `7b265e2`): one full
-`PROJECT` receipt can derive one lower-scope, digest-bound `WORKSET` for
+candidate through Git-custody repair `d3718f1` (Code Logic Workbench
+implementation checkpoint `7b265e2`, documentation checkpoint `3ab43f2`): one
+full `PROJECT` receipt can derive one lower-scope, digest-bound `WORKSET` for
 read-only `scan`, `view`, `draw` and `index` operations. The generic
 HOST/FUNGI/GATE typed-view envelope is also implemented. This is enabling
 tooling only; Galerina-specific materialization remains `HOLD` because exact
 graph-HEAD binding is unavailable and active-skill isolation/integration is
-not closed. Independent review verified the implementation evidence but did
-not grant installation authority; its documentation correction is clean at
-`3ab43f2`.
+not closed. Independent review verified the workbench implementation evidence
+but did not grant installation authority. A separate exact-revision review of
+`d3718f1` passed with zero Critical and zero Important findings after 55/55
+focused and 236/236 complete-tool checks; this repairs Git-custody snapshot
+binding only and does not release installation or integration custody.
 
 ## Detached scalar authority route - 2026-08-17
 

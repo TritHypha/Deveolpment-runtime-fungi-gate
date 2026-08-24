@@ -69,19 +69,24 @@ an empty GATE view is explicit. Myco remains the lexical discovery overlay.
 Hypha remains a passive scanner. Neither stores source bodies in the structural
 graph or upgrades a miss into absence.
 
-The isolated AGENTS Code Logic Workbench candidate through documentation
-checkpoint `3ab43f2` (implementation checkpoint `7b265e2`) supplies the
+The isolated AGENTS candidate through Git-custody repair `d3718f1` (Code Logic
+Workbench implementation checkpoint `7b265e2`, documentation checkpoint
+`3ab43f2`) supplies the
 reusable mechanism: one complete `PROJECT` graph receipt, one lower-scope
 `WORKSET` clone using the same schema and refusal rules, and one orthogonal
 HOST/FUNGI/GATE typed-view envelope. Its `scan`, `view`, `draw` and `index`
 modes are read-only and non-authorizing. Fresh independent evidence confirms
-37/37 focused tests, 15/15 embedded controls and 235/235 complete tool-estate
-tests at concurrency one. Installation remains `HOLD`: the active skill still
+37/37 workbench tests and 15/15 embedded controls; after the separate custody
+digest repair, the candidate passes 55/55 focused Git-custody tests and 236/236
+complete tool-estate tests at concurrency one. Independent review of `d3718f1`
+returned zero Critical and zero Important findings. Installation remains
+`HOLD`: the active skill still
 resolves to shared `main`, exact external graph-HEAD binding is unavailable,
 and Phase 7 integration has not released its future `tools/README.md` custody.
-The doc-only correction is independently clean at `3ab43f2`; it grants no
-installation authority. The Galerina-specific manifest and materialized view
-bytes therefore remain TODO outputs, not inferred evidence.
+The doc-only correction remains independently clean at `3ab43f2`; neither it
+nor the Git-custody repair grants installation authority. The Galerina-specific
+manifest and materialized view bytes therefore remain TODO outputs, not
+inferred evidence.
 
 Do not combine `.fungi` and `.gate` into one authority view: `.gate` is a later
 laboratory lane and cannot inherit Galerina or VOK authority.
