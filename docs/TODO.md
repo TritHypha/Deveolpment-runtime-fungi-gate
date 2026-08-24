@@ -82,6 +82,12 @@ counts or open items that a newer section explicitly supersedes.
   five already-contained historical branches and ten owner decisions. It did
   not fetch, merge, delete, publish or change Galerina; Phase 7 still owns the
   future `tools/README.md` reconciliation and remote freshness remains unknown.
+- [!] The current exact-head custody snapshot is non-authorizing and remains
+  `REVIEW`. The active worktree is clean and ahead of its locally observed
+  upstream, but two registered temporary worktrees report large deletion sets:
+  4,904 paths (40 staged) in detached security-range tip `77057ef1`, and 4,011
+  paths on `codex/fix-secret-scan-ci`. Do not restore, remove, prune, merge or
+  publish either worktree without separate live custody and a fetch receipt.
 - [!] Prior-session advisory evidence identifies only
   `codex/detached-scalar-phase1` at `354cb7e4` and detached Unit 4 tip
   `a4f42ce4` as earlier live `HOLD` checkpoints with durable branch/document
@@ -10422,19 +10428,3 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
   environment before assigning a cause or making a performance claim.
 - [ ] Expand Go beyond the single verified-native-operation control and add a
   C++ lane only when an exact recorded compiler is available.
-
-## Git custody auxiliary-worktree hold - 2026-08-24
-
-- [x] Rebind the non-authorizing Git custody scan, plan and diagram to exact
-  HEAD `5c5053e5e2b6778776312d21c7cbf8546c193c54`.
-- [!] Keep the active `codex/rd-0858-unit4-process-root` worktree clean; it is
-  21 commits ahead of its locally observed upstream and has no fetch receipt.
-- [!] Adjudicate two registered temporary worktrees before branch reduction:
-  the detached security-range worktree reports 4,904 deletions (40 staged),
-  and `codex/fix-secret-scan-ci` reports 4,011 deletions. Do not restore,
-  remove, prune, merge or publish either worktree from this checkpoint.
-- [!] Preserve earlier HOLD provenance only for `codex/detached-scalar-phase1`
-  at `354cb7e4` and detached tip `a4f42ce4`; all other questionable tips remain
-  `UNKNOWN` until live custody is reopened.
-- [ ] Obtain an explicit fetch receipt, then regenerate the custody snapshot
-  before making any merge, branch-retirement or publication decision.
