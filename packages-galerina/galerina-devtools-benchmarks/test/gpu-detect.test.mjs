@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,7 @@ import { resolvePythonExecutable } from "../src/python-runtime.mjs";
 
 const GPU_DETECT = fileURLToPath(new URL("../src/gpu-detect.mjs", import.meta.url));
 const BENCHMARK_AUDIT = fileURLToPath(new URL("../src/audit-benchmark-integrity.mjs", import.meta.url));
+const CALL_CHAIN_TEST = fileURLToPath(new URL("call-chain-work-equivalence.test.mjs", import.meta.url));
 const TEMP = mkdtempSync(join(tmpdir(), "galerina-gpu-detect-test-"));
 
 after(() => rmSync(TEMP, { recursive: true, force: true }));
@@ -60,5 +61,22 @@ test("GPU probes execute argv directly without a shell-injection surface", () =>
     0,
     `benchmark publication changed under the minimal environment:\n${publication.stdout}\n${publication.stderr}`,
   );
+  assert.equal(existsSync(join(TEMP, "Python")), false);
+});
+
+test("call-chain controls refuse the Windows Store Python alias without mutating the benchmark tree", () => {
+  const manager = join(TEMP, "call-chain", "WindowsApps");
+  mkdirSync(manager, { recursive: true });
+  copyFileSync(process.execPath, join(manager, "python.exe"));
+
+  const env = minimalEnvironment();
+  env.PATH = manager;
+  const result = spawnSync(
+    process.execPath,
+    ["--test", CALL_CHAIN_TEST],
+    { cwd: TEMP, encoding: "utf8", env, timeout: 60_000 },
+  );
+
+  assert.equal(result.status, 0, `call-chain control admitted a WindowsApps alias:\n${result.stdout}\n${result.stderr}`);
   assert.equal(existsSync(join(TEMP, "Python")), false);
 });

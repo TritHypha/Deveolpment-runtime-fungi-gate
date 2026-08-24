@@ -4,7 +4,7 @@ import { performance } from "node:perf_hooks";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SLIDE_ROOT = new URL("../../../../SLIDE/", import.meta.url);
-const EXPECTED_SLIDE_COMMIT = "370aa805e55ad011320c7c5b1d03724fe860b6af";
+const EXPECTED_SLIDE_COMMIT = "c33894d23a7b25e02bddaa6631225e0afcf8288c";
 const EXPECTED_REGISTRY_ID = "slide.registry.executable-gir.v2c-benchmark-counted-control.v1";
 const EXPECTED_REGISTRY_DIGEST = "56a815aea2264b840892acca1f1ddc5e27bac792d2feed40e4c6b99d9a16c266";
 

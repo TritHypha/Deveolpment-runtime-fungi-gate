@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
+import { resolvePythonExecutable } from "../src/python-runtime.mjs";
 
 const BENCH = new URL("../benchmarks/call-chain/", import.meta.url);
 const EXPECTED_RESULT = 57984;
@@ -23,9 +24,14 @@ function assertEquivalent(result, runtime) {
   assert.ok(result.iterationsPerSecond > 0);
 }
 
-test("Node and Python controls execute the exact call-chain workload", () => {
+test("Node control executes the exact call-chain workload", () => {
   assertEquivalent(runJson(process.execPath, ["node.mjs", "--iterations", "50000"]), "nodejs");
-  assertEquivalent(runJson("python", ["python.py", "--iterations", "50000"]), "python");
+});
+
+test("admitted Python control executes the exact call-chain workload", (context) => {
+  const python = resolvePythonExecutable();
+  if (python === undefined) return context.skip("An admitted Python runtime is not installed");
+  assertEquivalent(runJson(python, ["python.py", "--iterations", "50000"]), "python");
 });
 
 test("Go control executes the exact call-chain workload", (context) => {
