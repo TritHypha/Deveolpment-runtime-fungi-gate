@@ -24,6 +24,13 @@ before that action. See
 `docs/architecture/galerina-slide-vok-current-flow-2026-08-24.md` for the
 source-verified flow, graph-view design and phased verification map.
 
+The reusable graph mechanism is now implemented on the isolated AGENTS
+candidate `887e5ef`: one full `PROJECT` receipt can derive one lower-scope,
+digest-bound `WORKSET` for read-only `scan`, `draw` and `index` operations.
+This is enabling tooling only. The Galerina HOST/FUNGI/GATE view manifest is
+still open, and exact graph-HEAD evidence, independent review, active-skill
+isolation and integration remain `HOLD`.
+
 ## Detached scalar authority route - 2026-08-17
 
 The current route is no longer a report/slice queue. Private RD-0855 and the

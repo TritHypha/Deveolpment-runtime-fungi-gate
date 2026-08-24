@@ -67,6 +67,14 @@ point, unified-graph digest, view rule digest and each view digest. Myco remains
 the lexical discovery overlay. Hypha remains a passive scanner. Neither stores
 source bodies in the structural graph or upgrades a miss into absence.
 
+The isolated AGENTS Code Logic Workbench candidate now supplies the reusable
+mechanism: one complete `PROJECT` graph receipt and one lower-scope `WORKSET`
+clone using the same schema, decoder, IDs, relationships and refusal rules.
+Its `scan`, `draw` and `index` modes are read-only and non-authorizing. It is
+not yet installed or integrated: exact graph-HEAD evidence, independent review
+and active-skill isolation remain open. The Galerina-specific HOST/FUNGI/GATE
+manifest and view rules therefore remain TODO items, not inferred outputs.
+
 Do not combine `.fungi` and `.gate` into one authority view: `.gate` is a later
 laboratory lane and cannot inherit Galerina or VOK authority.
 

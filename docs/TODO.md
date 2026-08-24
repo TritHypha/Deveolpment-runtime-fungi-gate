@@ -45,6 +45,13 @@ counts or open items that a newer section explicitly supersedes.
   host `.ts/.mjs`, Fungi semantic `.fungi`, and non-authorizing Gate laboratory
   `.gate`. Bind all view digests and rules to one manifest; do not create
   independent competing authority graphs or combine `.fungi` and `.gate`.
+- [x] Build the reusable lower-scope graph mechanism outside Galerina without
+  touching language source. The isolated AGENTS candidate at `887e5ef` now
+  validates one complete `PROJECT` receipt, derives a digest-bound `WORKSET`,
+  and exposes read-only `scan`, `draw` and `index` modes. Its focused suite is
+  33/33 and the complete AGENTS tool estate is 230/230 at concurrency one.
+  This does not complete the three Galerina views: exact graph-HEAD evidence,
+  independent review, active-skill isolation and integration remain `HOLD`.
 - [ ] Keep the `.fungi` stop closed. Task 6 Step 1 still lacks an already
   admitted fixed checked scalar-flow artifact; creating or admitting it is the
   next productive action and requires an explicit boundary reopening.
