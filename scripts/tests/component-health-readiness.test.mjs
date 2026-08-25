@@ -46,7 +46,7 @@ test("component health counts the benchmark package's governed test/ surface", (
   assert.ok(benchmark, "benchmark package must be in the reconciled workspace");
   assert.equal(benchmark.testScript, true);
   assert.equal(benchmark.hasTestsDir, true);
-  assert.equal(benchmark.testFiles, 15);
+  assert.equal(benchmark.testFiles, 24);
   assert.deepEqual(benchmark.gaps, []);
 
   const tracking = report.percentAudit.sections.find(
@@ -57,7 +57,7 @@ test("component health counts the benchmark package's governed test/ surface", (
     (row) => row.item === "Execution-cutover (RD-0361)",
   );
   assert.ok(governed);
-  assert.match(governed.detail, /7 differential/);
+  assert.match(governed.detail, /75 differential/);
   assert.match(governed.detail, /29 authoritative/);
   const compiler = tracking.rows.find(
     (row) => row.item === "Compiler authority (RD-0528)",

@@ -404,7 +404,7 @@ test("the live example diagnostic gate admits the measured Windows runtime envel
   assert.equal(entry.timeoutMs >= 180_000, true);
 });
 
-test("measured phase-close gates retain non-racy Windows timeout floors", () => {
+test("owner-selected phase-close gates retain the 130-second Windows timeout floor", () => {
   for (const [id, minimumTimeoutMs] of [
     ["compiler-stage-twins", 130_000],
     ["kernel-fungi-twins", 130_000],
@@ -412,6 +412,6 @@ test("measured phase-close gates retain non-racy Windows timeout floors", () => 
   ]) {
     const entry = liveManifest.entries.find((candidate) => candidate.id === id);
     assert.equal(Number.isSafeInteger(entry?.timeoutMs), true, `${id} must declare a finite timeout`);
-    assert.equal(entry.timeoutMs >= minimumTimeoutMs, true, `${id} timeout is below the measured floor`);
+    assert.equal(entry.timeoutMs >= minimumTimeoutMs, true, `${id} timeout is below the owner-selected floor`);
   }
 });
