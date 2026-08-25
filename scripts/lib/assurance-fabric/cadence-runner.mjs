@@ -31,6 +31,8 @@ function childEnvironment() {
   } else {
     copy("TMPDIR", ["tmpdir"]); copy("LANG", ["lang"]); copy("LC_ALL", ["lc_all"]);
   }
+  const cacheRoot = admitted.TEMP ?? admitted.TMP ?? admitted.TMPDIR;
+  if (cacheRoot) admitted.GOCACHE = resolve(cacheRoot, "galerina-go-build-cache");
   admitted.GIT_CONFIG_NOSYSTEM = "1";
   admitted.GIT_CONFIG_GLOBAL = process.platform === "win32" ? "NUL" : "/dev/null";
   admitted.NPM_CONFIG_USERCONFIG = process.platform === "win32" ? "NUL" : "/dev/null";

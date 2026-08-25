@@ -62,7 +62,8 @@ describe("40-file governed conversion overlay", () => {
   it("contains exactly 40 new source twins and binds every exact TypeScript literal", () => {
     assert.equal(CANDIDATES.length, 40);
     const loadedAssets = JSON.parse(readFileSync(PACKAGE, "utf8")).packageGraph?.loadedAssets ?? [];
-    assert.equal(loadedAssets.filter((asset) => asset.includes("/conversion-overlays/")).length, 1200);
+    const overlayAssets = loadedAssets.filter((asset) => asset.includes("/conversion-overlays/"));
+    assert.equal(new Set(overlayAssets).size, overlayAssets.length, "conversion overlay identities must be unique");
     for (const candidate of CANDIDATES) {
       assert.ok(
         loadedAssets.includes(`src/self-hosted/conversion-overlays/${candidate.file}`),

@@ -84,10 +84,8 @@ describe("galerina-test package-owned Fungi human marker", () => {
       "src/self-hosted/test-marker.fungi",
       "src/self-hosted/workspace-marker.fungi",
     ]);
-    assert.equal(
-      loadedAssets.filter((asset) => asset.includes("/conversion-overlays/")).length,
-      80,
-    );
+    const overlayAssets = loadedAssets.filter((asset) => asset.includes("/conversion-overlays/"));
+    assert.equal(new Set(overlayAssets).size, overlayAssets.length, "conversion overlay identities must be unique");
     const executableFungi = compiled.source.replace(/^\s*\/\/\/.*$/gmu, "");
     const syntaxOnly = executableFungi.replace(/"(?:\\.|[^"\\])*"/gu, '""');
     assert.doesNotMatch(

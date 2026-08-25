@@ -147,6 +147,23 @@ test("the branded plan supplies the exact cadence to child wrappers", () => {
   assert.equal(JSON.parse(result.stdout).results[0].detail, "normal");
 });
 
+test("phase-close supplies a bounded Go cache outside the repository", () => {
+  const root = fixture({
+    phaseClose: [{ name: "go-cache", command: ["node", "go-cache.mjs"] }],
+  });
+  write(root, "go-cache.mjs", [
+    'import { isAbsolute, relative } from "node:path";',
+    'const cache = process.env.GOCACHE ?? "";',
+    'if (!isAbsolute(cache)) process.exit(8);',
+    'if (!relative(process.cwd(), cache).startsWith("..")) process.exit(9);',
+    'if (!cache.endsWith("galerina-go-build-cache")) process.exit(10);',
+  ].join("\n"));
+
+  const result = run(root);
+
+  assert.equal(result.status, 0, result.stderr);
+});
+
 test("--report-only cannot describe a failed run as green", () => {
   const root = fixture({
     phaseClose: [{ name: "red", command: ["node", "red.mjs"] }],
@@ -385,4 +402,16 @@ test("the live example diagnostic gate admits the measured Windows runtime envel
   assert.deepEqual(entry?.execution?.command, ["node", "scripts/audit-example-diagnostics.mjs"]);
   assert.equal(Number.isSafeInteger(entry?.timeoutMs), true);
   assert.equal(entry.timeoutMs >= 180_000, true);
+});
+
+test("measured phase-close gates retain non-racy Windows timeout floors", () => {
+  for (const [id, minimumTimeoutMs] of [
+    ["compiler-stage-twins", 130_000],
+    ["kernel-fungi-twins", 130_000],
+    ["governance:diff", 130_000],
+  ]) {
+    const entry = liveManifest.entries.find((candidate) => candidate.id === id);
+    assert.equal(Number.isSafeInteger(entry?.timeoutMs), true, `${id} must declare a finite timeout`);
+    assert.equal(entry.timeoutMs >= minimumTimeoutMs, true, `${id} timeout is below the measured floor`);
+  }
 });

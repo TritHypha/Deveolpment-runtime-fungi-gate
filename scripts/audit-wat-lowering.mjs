@@ -89,12 +89,15 @@ const keyA = (s) => `${s.rel}::${s.container}.${s.name}::${s.type}`;
 const keyC = (s) => `${s.rel}::${s.kind}::${s.container}.${s.name}::${s.type}`;
 
 // ── corpus discovery ──────────────────────────────────────────────────────────
+const IGNORED_CORPUS_DIRECTORIES = new Set(["node_modules", ".git", ".worktrees", "dist", "build"]);
+function shouldSkipDirectory(name) { return IGNORED_CORPUS_DIRECTORIES.has(name); }
+
 function fungiFiles(root) {
   const out = [];
   (function walk(d) {
     let ents; try { ents = readdirSync(d); } catch { return; }
     for (const e of ents) {
-      if (e === "node_modules" || e === ".git" || e === "dist" || e === "build") continue;
+      if (shouldSkipDirectory(e)) continue;
       const p = join(d, e); let st; try { st = statSync(p); } catch { continue; }
       if (st.isDirectory()) walk(p);
       else if (e.endsWith(".fungi")) out.push(p);
@@ -177,6 +180,8 @@ function selfTest() {
   const green = collectSites(`@version 1\nrecord R { a: Int; s: String; xs: Array<Float>; b: Bool }\npure flow f() -> Int contract { intent { "x" } } { return 0 }\n`, "green");
   ok(legA(green.sites).length === 0, "GREEN: an all-i32/handle record (Int/String/Array<Float>/Bool) has no Leg-A site (no false-positive)");
   ok(legC(green.sites).length === 0, "GREEN: no Decimal → no Leg-C occurrence");
+
+  ok(shouldSkipDirectory(".worktrees"), "BOUNDARY: nested Git worktrees are not part of the selected checkout corpus");
 
   // fabricated off-baseline regression: a NEW affected site must be a violation against an empty baseline
   const fabricated = legA(red1.sites);
