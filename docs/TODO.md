@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Pre-Fungi flow, graph and verification checkpoint - 2026-08-24
+### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 
 - [x] Re-derive the current Galerina -> detached canonical GIR -> SLIDE -> VOK
   route from exact source and fresh structural graphs. Galerina owns semantic
@@ -29,6 +29,14 @@ counts or open items that a newer section explicitly supersedes.
   Unit 4 Task 2 causal RED controls: two stable discriminators pass and four
   old-route security assertions fail until Task 6 admits the checked scalar
   flow. Do not weaken, exclude or relabel those RED controls as regressions.
+- [x] Replay all 100 packages sequentially after repairing the non-Fungi drift:
+  99 packages pass; the compiler alone remains 6,701/6,705 because the same four
+  admitted Unit 4 causal RED controls still fail. The registered tooling estate
+  then passes 592/592 executed tests with 52 intentional skips and zero failures.
+- [!] Preserve the owner-selected 130-second limits for compiler twins, kernel
+  twins and governance diff. All three pass, but governance diff measured about
+  129 seconds on this host, so the one-second margin is a reliability issue and
+  must not be described as non-racy.
 - [!] The locator-only Codex memory working set is `STALE` on both the Galerina
   repository head and TODO digest. Refresh it only through the governed memory
   update route; do not turn `MEMORY.md` into a task-body warehouse.
@@ -41,7 +49,7 @@ counts or open items that a newer section explicitly supersedes.
   files; 296 documentation indexes link 1,992 documents; and the KB index
   checks 1,956 documents.
 - [x] Refresh the local Myco discovery cache after the final tracked index
-  commit: 9,245 files and zero over-size skips. Keep the exact term count in
+  commit: 9,249 files and zero over-size skips. Keep the exact term count in
   the generated cache receipt rather than this task index. A scoped replay
   confirms current AGENTS checkpoint locators and finds no old `887e5ef`
   locator.
