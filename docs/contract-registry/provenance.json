@@ -1,7 +1,7 @@
 {
   "tool": "gen-contract-registry",
   "authority": "NONE",
-  "gitCommit": "82531b506a087e00c5526c7f78fabd96e428673f",
-  "builtAt": "2026-08-25T11:50:08.000Z",
+  "gitCommit": "98fc1023102989362950c2315a6836a83d548179",
+  "builtAt": "2026-08-25T12:09:02.000Z",
   "node": "v24.18.0"
 }
