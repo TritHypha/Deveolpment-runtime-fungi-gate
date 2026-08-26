@@ -7,6 +7,8 @@
     "post-SLIDE flat topology forbids nested native package 'galerina-framework-example-app/packages/greeting/package.fungi.json'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-cli/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-compiler/node_modules'",
+    "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-config/node_modules'",
+    "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-economics/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-network/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-runtime-wasm/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-core-runtime/node_modules'",
@@ -17,8 +19,10 @@
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-devtools-kb-graph/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-devtools-package-graph/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-devtools-project-graph/node_modules'",
+    "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-framework-app-kernel/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-inference-bridge-contract/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-substrate-math/node_modules'",
+    "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-tools-myco/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-tower-citizen/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-tri-regex/node_modules'",
     "post-SLIDE retirement requires zero tracked package executable-family paths; found 1571",
@@ -27794,6 +27798,8 @@
     "nodeModulesPaths": [
       "galerina-core-cli/node_modules",
       "galerina-core-compiler/node_modules",
+      "galerina-core-config/node_modules",
+      "galerina-core-economics/node_modules",
       "galerina-core-network/node_modules",
       "galerina-core-runtime-wasm/node_modules",
       "galerina-core-runtime/node_modules",
@@ -27804,8 +27810,10 @@
       "galerina-devtools-kb-graph/node_modules",
       "galerina-devtools-package-graph/node_modules",
       "galerina-devtools-project-graph/node_modules",
+      "galerina-framework-app-kernel/node_modules",
       "galerina-inference-bridge-contract/node_modules",
       "galerina-substrate-math/node_modules",
+      "galerina-tools-myco/node_modules",
       "galerina-tower-citizen/node_modules",
       "galerina-tri-regex/node_modules"
     ]
@@ -27843,7 +27851,7 @@
     "ownedHostBridges": 0,
     "unownedHostBridges": 56,
     "nestedNativePackages": 1,
-    "nodeModulesTrees": 16
+    "nodeModulesTrees": 20
   },
   "retirementPaths": {
     "twinned": "→ #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle)",

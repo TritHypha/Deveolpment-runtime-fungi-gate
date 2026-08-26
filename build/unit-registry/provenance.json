@@ -1,7 +1,7 @@
 {
   "tool": "gen-unit-registry",
   "authority": "NONE",
-  "gitCommit": "a9b43c9b5cb121d1c3173869dfbe6107a5c0fc4e",
-  "builtAt": "2026-08-24T02:49:52.000Z",
+  "gitCommit": "36113ac65279bd7d02e33476616553cdc01c458a",
+  "builtAt": "2026-08-26T17:13:18.000Z",
   "node": "v24.18.0"
 }
