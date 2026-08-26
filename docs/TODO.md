@@ -23,8 +23,8 @@ counts or open items that a newer section explicitly supersedes.
   topology 7/7, root-lock 7/7, economics 15/15, security 17/17, graph
   algorithms 97/97, generator contracts 19/19, and compiler 6,717/6,721 with
   only the four intentional RD-0858 causal RED controls retained.
-- [x] Refresh the full external graph exactly at `1f06fc476`: 65,560/65,560
-  nodes, 167,278/167,278 edges and zero skipped files. The product-boundary
+- [x] Refresh the full external graph exactly at `751f54e18`: 65,558/65,558
+  nodes, 167,282/167,282 edges and zero skipped files. The product-boundary
   audit passes for 100 packages and 10,826 checked edges.
 - [x] Refresh Myco at the same worktree state: 9,280 files, 63 binary skips,
   zero over-size skips. Active scripts and root configuration contain zero
@@ -44,27 +44,35 @@ counts or open items that a newer section explicitly supersedes.
 - [!] The signed production-registry generator remains correctly refused
   because private `packages-ts/galerina-registry/registry-index-v2.json` is not
   present. Do not fabricate, copy or sign substitute registry bytes.
-- [!] The final read-only Git Custody Audit at `7df16f46` classifies this clean
+- [!] The final read-only Git Custody Audit at `7df16f46` classified this clean
   feature branch as local-only, unpublished and without an upstream. The
   repository-wide snapshot reports 8,989 findings because registered
   historical/dirty worktrees are included, and remote fetch freshness remains
   unknown. Do not infer that those other worktrees are disposable or enter the
   integration task from this snapshot.
-- [!] The three-node audit map is structurally valid but remains `DRAFT` with
-  digest `e5489615a9903db92edb59d90152d094b18490db3e6c548c9aa90edcb8835653`.
-  `bounded-tool-batch` must not execute it until an exact post-KB approval
-  receipt exists; Myco, Hypha and graph refreshes remain sequential outside
-  the batcher's admitted release-one policy.
-- [!] KB main-only custody is not satisfied. Fresh fetch shows `main` and
-  `origin/main` at `dc111bcb`, while three local topic branches each retain
-  318–333 unique commits and `origin/codex/ctll-v2-architecture` retains 333
-  unique commits. RD-0861 lookup is `STALE`; therefore no new RD was allocated
-  and Task 7 remains `HOLD` until those unique histories are integrated and
-  the remote topic branch is retired by the publication owner.
-- [ ] After KB main-only closure, allocate the new product-family RD on KB
-  `main`, refresh its metadata indexes, finish immutable multi-vector review,
-  and integrate this planning branch. Stop before creating, editing, building
-  or admitting any `.fungi` or `.gate` file.
+- [x] Bind the four-node audit map to owner-approved private RD-0863. Its
+  workspace-root neighbour runs the canonical topology audit, whose admitted
+  root is exactly `packages-ts`; unopened `packages/fungi` and `packages/gate`
+  roots therefore cannot enter Galerina through workspace enumeration. Myco,
+  Hypha and graph refreshes remain sequential outside the batcher's
+  release-one policy.
+- [x] Select the first unopened native locator from the existing conversion
+  queue without materializing it:
+  `packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/`. Directory
+  presence remains non-authorizing and unknown family, product or profile
+  values refuse.
+- [x] Consolidate every proven KB topic history into local KB `main` and add
+  private RD-0863 plus deterministic metadata indexes. Exact query status is
+  `PRIVATE / CURRENT / FRESH`; all former topic tips are ancestors of local
+  `main` and retain zero unique commits outside it.
+- [!] KB publication and main-only topology remain `HOLD`. The mandatory close
+  card passes generator self-tests, path leak, path portability, encoding and
+  0-broken-link checks, but memory preflight reports stale volatile facts and
+  case-drift findings. The old remote `main` and its topic branch are therefore
+  preserved; do not push or retire them through a red gate.
+- [ ] Finish Task 8 immutable multi-vector review, exact-head fixed points and
+  branch integration. Stop before creating, editing, building or admitting
+  any `.fungi` or `.gate` file.
 
 ### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 

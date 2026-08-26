@@ -6,19 +6,31 @@
     "locator": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125"
   },
   "approval": {
-    "status": "DRAFT",
-    "planDigest": null,
-    "authority": null,
-    "evidence": null
+    "status": "APPROVED",
+    "planDigest": "a36ff6d31e09a9ae19daa7e69ae03b24f541f02cf822fef267f80ee9a152ab58",
+    "authority": "authority://kb/rd-0863-product-family-package-readiness",
+    "evidence": "receipt://kb/rd-0863-product-family-package-readiness"
   },
   "audits": [
+    {
+      "id": "workspace-root-selection",
+      "owner": "galerina",
+      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "cwd": "repo://galerina",
+      "argv": ["npm", "run", "audit:package-topology"],
+      "dependsOn": [],
+      "timeoutMs": 130000,
+      "maxOutputBytes": 1048576,
+      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "evidence": "receipt://galerina/product-family-pre-fungi/workspace-root-selection"
+    },
     {
       "id": "project-graph",
       "owner": "galerina",
       "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
       "cwd": "repo://galerina",
       "argv": ["node", "scripts/project-graph-generator.mjs", "--check"],
-      "dependsOn": [],
+      "dependsOn": ["workspace-root-selection"],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
       "exit": { "pass": [0], "finding": [1], "refused": [2] },

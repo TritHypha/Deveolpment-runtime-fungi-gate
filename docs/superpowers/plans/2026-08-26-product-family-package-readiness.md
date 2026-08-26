@@ -786,14 +786,23 @@ Require local and remote KB branches to be `main` only or produce a precise
 HOLD. Do not allocate an RD on a topic branch. Preserve all unknown unique
 commits until their integration status is proven.
 
-- [ ] **Step 3: Allocate and write one new RD on KB main**
+Every known topic tip is now an ancestor of local KB `main` and has zero
+remaining unique commits outside it. Remote publication and topic retirement
+remain `HOLD`: the mandatory close card passes repository/index gates but
+memory preflight reports stale volatile facts and case drift. Remote refs are
+preserved until that red gate is resolved.
+
+- [x] **Step 3: Allocate and write one new RD on KB main**
 
 Use the canonical KB allocator to obtain the next available RD identity. The RD
 records the product registry, `packages-ts/`, typed native root, width state,
 Gate non-authority, migration receipts and the exact relationship to RD-0861.
 It stores locators and decisions, not source bodies.
 
-- [ ] **Step 4: Amend the pre-Fungi locator set**
+Private RD-0863 is committed on local KB `main`; its deterministic indexes are
+at fixed point and the canonical query returns `PRIVATE / CURRENT / FRESH`.
+
+- [x] **Step 4: Amend the pre-Fungi locator set**
 
 Change the first scalar native locator to:
 
@@ -804,7 +813,13 @@ packages/fungi/products/galerina/<scalar-oracle-package>/
 The concrete package leaf is selected from the existing conversion queue by
 the canonical Myco/Hypha audit map; no file is created by this task.
 
-- [ ] **Step 5: Update roadmap, task ledger and audit percentage**
+Selected unopened locator:
+
+```text
+packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/
+```
+
+- [x] **Step 5: Update roadmap, task ledger and audit percentage**
 
 Mark Tasks 1-7 with evidence locators. Leave first native authoring at `[ ]`
 and product-boundary assurance below 100% until independent immutable review.
@@ -812,10 +827,19 @@ Record the command matrix from Task 4 as the single red-capable pre-Fungi
 control and add a workspace-glob neighbour proving unadmitted roots are not
 enumerated into Galerina.
 
-- [ ] **Step 6: Commit documentation in each repository**
+The audit map now has four ordered nodes. Its workspace-root neighbour invokes
+the canonical topology audit, whose graph-verified default root is exactly
+`packages-ts`; unopened `packages/fungi` and `packages/gate` roots cannot be
+enumerated into the admitted Galerina package set. Task 7 is locally complete,
+so the chapter is 77% prepared, while the KB publish HOLD keeps closure at 66%.
+
+- [x] **Step 6: Commit documentation in each repository**
 
 Use separate path-scoped commits. KB commit occurs on `main`; Galerina commit
 occurs on the feature branch.
+
+KB RD and generated-index commits are separate on local `main`. This Galerina
+documentation set is committed independently on the feature branch.
 
 ---
 

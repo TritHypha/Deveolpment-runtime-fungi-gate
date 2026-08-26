@@ -25,22 +25,32 @@ Profiles `128`, `512` and adaptive widths remain measurement-only. Profile
 selection is deterministic, pre-admitted and receipt-bound, and every fallback
 creates a new identity before execution.
 
-Tasks 1–6 are complete through exact implementation checkpoint `1f06fc476`,
-placing the nine-task chapter at **66%** before the KB/review/integration gates.
-The full external graph is exact at 65,560 nodes and 167,278 edges with zero
+Tasks 1–6 are complete through exact implementation checkpoint `1f06fc476`.
+Task 7's locator and governing-record work is locally complete, placing the
+nine-task chapter at **77% prepared** but still **66% closed** until the KB
+publication gate is green. The full external graph is exact at documentation
+checkpoint `751f54e18`, with 65,558 nodes and 167,282 edges and zero
 skips; the product audit passes across 100 packages and 10,826 checked edges;
 Myco indexes 9,280 files with zero over-size skips; Hypha's self-test passes
 58/58. Myco also exposes 208 stale TypeScript-oracle comments in 205 existing
 `.fungi` files. Those comments are deliberately deferred because this chapter
 must not edit native source.
 
-The remaining gate is KB topology, not implementation. Fresh evidence shows
-three KB topic branches with 318–333 unique commits and one corresponding
-remote topic branch; RD-0861 metadata is `STALE`. The new product-family RD,
-immutable chapter review and branch integration therefore remain `HOLD` until
-KB work is losslessly consolidated to `main`. The signed production registry
-is separately refused because its private index input is absent. Neither HOLD
-may be normalized into a clean pre-Fungi PASS.
+The first unopened native locator is
+`packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/`. Private
+RD-0863 binds that locator, the product-family roots, the physical-profile
+state and Gate non-authority without creating a directory or native file. The
+four-node audit map adds a workspace-root neighbour: the canonical topology
+scan admits only `packages-ts`, so unopened native roots are not discovered as
+Galerina packages.
+
+KB histories are losslessly consolidated on local `main`; all former topic
+tips are ancestors and RD-0863 resolves `PRIVATE / CURRENT / FRESH`. Remote
+publication and main-only retirement remain `HOLD`, however, because the
+mandatory KB close card is red on pre-existing memory staleness and case drift.
+Remote `main` and its topic branch are therefore preserved. The signed
+production registry is separately refused because its private index input is
+absent. Neither HOLD may be normalized into a clean pre-Fungi PASS.
 
 The current Galerina feature worktree is clean, but Git Custody Audit labels
 the branch local-only/unpublished with no upstream and remote freshness
