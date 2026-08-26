@@ -1,0 +1,809 @@
+# Product-family Package Readiness Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Prepare Galerina for an extensible Galerina/Trametes/future-product family, migrate the TypeScript root safely, and stop at a verified boundary immediately before the first new native `.fungi` file.
+
+**Architecture:** Introduce a closed product registry, a product-neutral policy seam and product-bound artifact identities while `packages-galerina/` remains stable. After negative controls and rollback gates pass, move the TypeScript root to `packages-ts/`, reserve typed native families below `packages/fungi/` and `packages/gate/`, amend the governing pre-Fungi locators, and pause before native source creation.
+
+**Tech Stack:** Node.js 18+, TypeScript 5.5+, ESM, Node test runner, existing Galerina graph/index/audit tools, Myco, Hypha and Git Custody Audit.
+
+**Spec:** `docs/superpowers/specs/2026-08-26-product-family-package-readiness-design.md`
+
+## Global Constraints
+
+- A Trit remains one width-independent value in `{−1, 0, +1}`.
+- Executable physical profiles remain `{1}`; `64`, `32` and `256` refuse.
+- Product identity, safety profile, build mode and physical profile are four independent closed axes.
+- There is no product default, governance-off flag, runtime rescue or silent profile substitution.
+- Galerina remains the only admitted product during this plan; Trametes stays `planned`.
+- Gate synthesis remains laboratory, non-authorizing and outside the GIR/SLIDE/VOK route.
+- No new `.fungi` or `.gate` source is created by this plan.
+- No new dependency is added.
+- All implementation work uses a fresh isolated worktree from the live integrated design target.
+- Each task commits only its listed paths after fresh focused checks.
+- Publication names remain unchanged during the physical root migration.
+- KB integration uses `main` only; no KB topic branch is permitted.
+
+---
+
+## File structure
+
+### New focused source files
+
+- `product-registry/product-profiles.source.v1.json` — human-reviewed closed product declarations.
+- `product-registry/product-profiles.v1.schema.json` — closed JSON shape and enums.
+- `product-registry/product-profiles.v1.json` — generated policy-digest-bound registry.
+- `packages-galerina/galerina-core-compiler/src/product-profile.ts` — registry validation and selection.
+- `packages-galerina/galerina-core-compiler/src/product-policy.ts` — product-neutral policy dispatch.
+- `packages-galerina/galerina-core-compiler/src/product-artifact-identity.ts` — product/cache/artifact binding.
+- `scripts/generate-product-profiles.mjs` — deterministic generated registry builder/checker.
+- `scripts/audit-product-package-boundaries.mjs` — graph-owned product/lab authority check.
+
+### Focused tests
+
+- `packages-galerina/galerina-core-compiler/tests/product-profile.test.mjs`
+- `packages-galerina/galerina-core-compiler/tests/product-policy.test.mjs`
+- `packages-galerina/galerina-core-compiler/tests/product-artifact-identity.test.mjs`
+- `scripts/tests/generate-product-profiles.test.mjs`
+- `scripts/tests/audit-product-package-boundaries.test.mjs`
+
+### Existing files changed by design
+
+- `packages-galerina/galerina-core-compiler/src/index.ts` — exports the three new modules.
+- `packages-galerina/galerina-core-compiler/src/cli.ts` — binds the Galerina product and routes policy through the seam.
+- `packages-galerina/galerina-core-compiler/src/runtime.ts` — routes runtime admission through the seam.
+- `packages-galerina/galerina-core-compiler/src/execution-graph.ts` — product-bound cache key.
+- `packages-galerina/galerina-core-compiler/src/pure-flow-cache.ts` — product-bound cache key.
+- `package.json` — registry scripts and later physical path updates.
+- generated registry, package, docs, contract, code and graph indexes owned by their existing generators.
+
+The physical `packages-galerina/` to `packages-ts/` move happens only in Task 6.
+
+---
+
+### Task 1: Closed product registry
+
+**Files:**
+- Create: `product-registry/product-profiles.source.v1.json`
+- Create: `product-registry/product-profiles.v1.schema.json`
+- Create: `scripts/generate-product-profiles.mjs`
+- Create: `scripts/tests/generate-product-profiles.test.mjs`
+- Create: `packages-galerina/galerina-core-compiler/src/product-profile.ts`
+- Create: `packages-galerina/galerina-core-compiler/tests/product-profile.test.mjs`
+- Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
+- Modify: `package.json`
+
+**Interfaces:**
+- Consumes: exact policy source bytes at `packages-galerina/galerina-core-compiler/src/governance-verifier.ts`.
+- Produces: `ProductId`, `ProductSelection`, `AdmittedProductProfile`, `loadProductRegistry(bytes)`, `resolveProductProfile(registry, selection)` and deterministic `product-profiles.v1.json`.
+
+- [ ] **Step 1: Add RED registry fixtures**
+
+Add a focused test with these exact neighbours:
+
+```js
+assert.equal(L.resolveProductProfile(registry, selection()).ok, true);
+assert.equal(L.resolveProductProfile(registry, selection({ productId: "trametes" })).code, "PRODUCT_NOT_ADMITTED");
+assert.equal(L.resolveProductProfile(registry, selection({ productId: "quantum-research" })).code, "PRODUCT_UNKNOWN");
+assert.equal(L.resolveProductProfile(registry, selection({ physicalProfile: "64" })).code, "PHYSICAL_PROFILE_NOT_ADMITTED");
+assert.equal(L.resolveProductProfile(registry, selection({ physicalProfile: "32" })).code, "PHYSICAL_PROFILE_NOT_ADMITTED");
+assert.equal(L.resolveProductProfile(registry, selection({ physicalProfile: "256" })).code, "PHYSICAL_PROFILE_NOT_ADMITTED");
+assert.throws(() => L.loadProductRegistry('{"schemaVersion":1,"products":[],"extra":true}'), /REGISTRY_FIELDS/);
+```
+
+- [ ] **Step 2: Run the focused test and preserve RED**
+
+Run:
+
+```powershell
+npm --prefix packages-galerina/galerina-core-compiler run build
+node --test packages-galerina/galerina-core-compiler/tests/product-profile.test.mjs
+```
+
+Expected: FAIL because `loadProductRegistry` and `resolveProductProfile` are not exported.
+
+- [ ] **Step 3: Create the source registry**
+
+Use this closed initial state:
+
+```json
+{
+  "schemaVersion": 1,
+  "products": [
+    {
+      "productId": "galerina",
+      "productClass": "production",
+      "governanceClass": "zero-trust",
+      "compatibilityState": "admitted",
+      "policyId": "galerina-governance-v1",
+      "policyPath": "packages-galerina/galerina-core-compiler/src/governance-verifier.ts",
+      "packageNamespaces": ["@galerina/"],
+      "artifactNamespace": "galerina/v1",
+      "admittedSafetyProfiles": ["strict", "high_integrity", "deterministic"],
+      "admittedBuildModes": ["build-production", "build-deterministic", "build-wasm-standalone", "build-wasm-hybrid"],
+      "admittedPhysicalProfiles": ["1"],
+      "entrypointId": "galerina",
+      "externalAuthorizerId": "vok"
+    },
+    {
+      "productId": "trametes",
+      "productClass": "production",
+      "governanceClass": "admitted-closed-network",
+      "compatibilityState": "planned",
+      "policyId": "trametes-policy-unavailable",
+      "policyPath": "",
+      "packageNamespaces": [],
+      "artifactNamespace": "trametes/planned/v1",
+      "admittedSafetyProfiles": [],
+      "admittedBuildModes": [],
+      "admittedPhysicalProfiles": [],
+      "entrypointId": "trametes-unavailable",
+      "externalAuthorizerId": "vok"
+    }
+  ]
+}
+```
+
+The schema sets `additionalProperties: false` at every object and enumerates
+all closed values. Empty policy path is valid only when state is `planned` and
+all admitted arrays are empty.
+
+- [ ] **Step 4: Generate policy digests deterministically**
+
+Implement `generate-product-profiles.mjs` so `--write` reads the source file,
+hashes every admitted policy path with SHA-256, adds `policyDigest`, sorts
+products by `productId`, writes one terminal LF, and refuses a missing or
+escaping path. `--check` recomputes bytes and exits non-zero on drift without
+writing.
+
+The key implementation shape is:
+
+```js
+const policyBytes = readFileSync(resolve(repoRoot, row.policyPath));
+row.policyDigest = `sha256:${createHash("sha256").update(policyBytes).digest("hex")}`;
+const output = `${JSON.stringify({ schemaVersion: 1, products: rows }, null, 2)}\n`;
+```
+
+- [ ] **Step 5: Implement closed registry admission**
+
+Define:
+
+```ts
+export type PhysicalProfile = "1" | "32" | "64" | "256";
+export interface ProductSelection {
+  readonly productId: string;
+  readonly safetyProfile: string;
+  readonly buildMode: string;
+  readonly physicalProfile: PhysicalProfile;
+}
+export type ProductProfileResult =
+  | { readonly ok: true; readonly profile: AdmittedProductProfile }
+  | { readonly ok: false; readonly code: "PRODUCT_UNKNOWN" | "PRODUCT_NOT_ADMITTED" | "SAFETY_PROFILE_NOT_ADMITTED" | "BUILD_MODE_NOT_ADMITTED" | "PHYSICAL_PROFILE_NOT_ADMITTED" };
+```
+
+`resolveProductProfile` performs exact membership checks in that order and
+returns frozen values. It never substitutes a product or profile.
+
+- [ ] **Step 6: Run GREEN and generator fixed-point checks**
+
+Run:
+
+```powershell
+node scripts/generate-product-profiles.mjs --write
+node scripts/generate-product-profiles.mjs --check
+npm --prefix packages-galerina/galerina-core-compiler run build
+node --test scripts/tests/generate-product-profiles.test.mjs packages-galerina/galerina-core-compiler/tests/product-profile.test.mjs
+```
+
+Expected: both generator modes and all focused tests PASS.
+
+- [ ] **Step 7: Commit Task 1**
+
+Stage only the listed Task 1 paths and generated registry. Commit:
+
+```text
+feat: add closed product profile registry
+```
+
+---
+
+### Task 2: Product-neutral policy seam
+
+**Files:**
+- Create: `packages-galerina/galerina-core-compiler/src/product-policy.ts`
+- Create: `packages-galerina/galerina-core-compiler/tests/product-policy.test.mjs`
+- Modify: `packages-galerina/galerina-core-compiler/src/cli.ts`
+- Modify: `packages-galerina/galerina-core-compiler/src/runtime.ts`
+- Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
+
+**Interfaces:**
+- Consumes: `AdmittedProductProfile` from Task 1 and existing `verifyGovernance` inputs.
+- Produces: `evaluateProductPolicy(profile, input): ProductPolicyResult` and `GALERINA_SELECTION`.
+
+- [ ] **Step 1: Add RED behavioural-equivalence and refusal tests**
+
+Use one valid and one governance-denied `.fungi` fixture. Assert:
+
+```js
+assert.deepEqual(
+  L.evaluateProductPolicy(galerinaProfile, policyInput).diagnostics,
+  L.verifyGovernance(policyInput.ast, policyInput.flows, policyInput.effectResults, policyInput.deploymentProfile, policyInput.sourceFile).diagnostics,
+);
+assert.equal(L.evaluateProductPolicy(plannedTrametes, policyInput).code, "PRODUCT_POLICY_NOT_ADMITTED");
+```
+
+Add a source-wiring control that fails if `cli.ts` or `runtime.ts` contains a
+direct `verifyGovernance(` call outside `product-policy.ts`.
+
+- [ ] **Step 2: Run RED**
+
+Run the new focused test. Expected: missing export and direct-call control FAIL.
+
+- [ ] **Step 3: Implement the seam**
+
+Define:
+
+```ts
+export interface ProductPolicyInput {
+  readonly ast: AstNode;
+  readonly flows: readonly FlowMeta[];
+  readonly effectResults: readonly EffectCheckResult[];
+  readonly deploymentProfile: DeploymentProfile;
+  readonly sourceFile?: string;
+}
+
+export function evaluateProductPolicy(
+  profile: AdmittedProductProfile,
+  input: ProductPolicyInput,
+): ProductPolicyResult {
+  if (profile.productId !== "galerina" || profile.policyId !== "galerina-governance-v1") {
+    return Object.freeze({ ok: false, code: "PRODUCT_POLICY_NOT_ADMITTED", diagnostics: [] });
+  }
+  const result = verifyGovernance(input.ast, input.flows, input.effectResults, input.deploymentProfile, input.sourceFile);
+  return Object.freeze({ ok: true, diagnostics: result.diagnostics, evidence: result });
+}
+```
+
+The optional `sourceFile` property must be conditionally spread to satisfy
+`exactOptionalPropertyTypes`.
+
+- [ ] **Step 4: Route compiler and runtime through the seam**
+
+Resolve the exact fixed Galerina selection once per admission:
+
+```ts
+const product = requireAdmittedProductProfile(GALERINA_SELECTION);
+const policy = evaluateProductPolicy(product, {
+  ast: parseResult.ast,
+  flows: parseResult.flows,
+  effectResults,
+  deploymentProfile: profile,
+  ...(filePath === undefined ? {} : { sourceFile: filePath }),
+});
+```
+
+Preserve all existing diagnostic severities, signing boundaries and return
+shapes. A refused policy adds a hard diagnostic and cannot reach manifest
+generation.
+
+- [ ] **Step 5: Run focused and existing governance suites**
+
+Run:
+
+```powershell
+npm --prefix packages-galerina/galerina-core-compiler run build
+node --test packages-galerina/galerina-core-compiler/tests/product-policy.test.mjs packages-galerina/galerina-core-compiler/tests/governance/*.test.mjs
+```
+
+Expected: new tests PASS and existing governance behaviour remains unchanged.
+
+- [ ] **Step 6: Commit Task 2**
+
+Commit only Task 2 paths:
+
+```text
+refactor: route governance through product policy
+```
+
+---
+
+### Task 3: Product-bound artifact and cache identities
+
+**Files:**
+- Create: `packages-galerina/galerina-core-compiler/src/product-artifact-identity.ts`
+- Create: `packages-galerina/galerina-core-compiler/tests/product-artifact-identity.test.mjs`
+- Modify: `packages-galerina/galerina-core-compiler/src/execution-graph.ts`
+- Modify: `packages-galerina/galerina-core-compiler/src/pure-flow-cache.ts`
+- Modify: `packages-galerina/galerina-core-compiler/src/interpreter.ts`
+- Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
+
+**Interfaces:**
+- Consumes: `AdmittedProductProfile`, four-axis selection and existing semantic digests.
+- Produces: `ProductArtifactContext`, `canonicalProductArtifactIdentity`, `productArtifactKey`, product-bound execution and pure-flow cache keys.
+
+- [ ] **Step 1: Add RED one-field-neighbour tests**
+
+Build one baseline context and change each field independently:
+
+```js
+for (const [field, value] of [
+  ["productId", "trametes"],
+  ["governanceClass", "admitted-closed-network"],
+  ["policyDigest", `sha256:${"1".repeat(64)}`],
+  ["safetyProfile", "deterministic"],
+  ["buildMode", "build-deterministic"],
+  ["physicalProfile", "64"],
+]) {
+  assert.notEqual(L.productArtifactKey(base, digest), L.productArtifactKey({ ...base, [field]: value }, digest));
+}
+```
+
+Also assert `computeGIRHash` remains identical for identical width-independent
+GIR bytes; product identity wraps the semantic digest rather than changing it.
+
+- [ ] **Step 2: Run RED**
+
+Expected: `productArtifactKey` is absent and current cache keys do not accept a
+bound context.
+
+- [ ] **Step 3: Implement canonical identity**
+
+Use exact ordered fields and hash the canonical UTF-8 record:
+
+```ts
+export interface ProductArtifactContext {
+  readonly schemaVersion: 1;
+  readonly artifactNamespace: string;
+  readonly productId: string;
+  readonly governanceClass: string;
+  readonly policyDigest: string;
+  readonly safetyProfile: string;
+  readonly buildMode: string;
+  readonly physicalProfile: PhysicalProfile;
+}
+
+export function productArtifactKey(context: ProductArtifactContext, contentDigest: string): string {
+  const canonical = canonicalProductArtifactIdentity(context, contentDigest);
+  return `product-artifact-v1:${createHash("sha256").update(canonical, "utf8").digest("hex")}`;
+}
+```
+
+Reject unknown keys, invalid digests, missing fields and unsupported physical
+profiles before hashing.
+
+- [ ] **Step 4: Bind both process-local caches**
+
+Change signatures to:
+
+```ts
+executionGraphCacheKey(context: ProductArtifactContext, flowName: string, sourceHash: string): string
+pureFlowCacheKey(context: ProductArtifactContext, flowName: string, args: ReadonlyMap<string, GalerinaValue>, sourceTag?: string): string
+```
+
+Update every graph-discovered caller. No legacy overload is retained because an
+unbound cache call would reintroduce the ambiguity.
+
+- [ ] **Step 5: Run focused cache and determinism suites**
+
+Run:
+
+```powershell
+npm --prefix packages-galerina/galerina-core-compiler run build
+node --test packages-galerina/galerina-core-compiler/tests/product-artifact-identity.test.mjs packages-galerina/galerina-core-compiler/tests/bootstrap-determinism/canonical-hash.test.mjs packages-galerina/galerina-core-compiler/tests/bytecode-vm-followups.test.mjs
+```
+
+Expected: context neighbours produce different keys, semantic GIR hashes remain
+stable, and historical cache-collision controls PASS.
+
+- [ ] **Step 6: Commit Task 3**
+
+```text
+fix: bind artifacts to product identity
+```
+
+---
+
+### Task 4: Closed CLI identity without a governance-off route
+
+**Files:**
+- Create: `packages-galerina/galerina-core-compiler/src/product-cli.ts`
+- Create: `packages-galerina/galerina-core-compiler/tests/product-cli.test.mjs`
+- Modify: `packages-galerina/galerina-core-compiler/src/cli.ts`
+- Modify: `packages-galerina/galerina-core-compiler/src/index.ts`
+- Modify: `galerina.mjs`
+- Modify: `package.json`
+
+**Interfaces:**
+- Consumes: Task 1 registry and four-axis selection.
+- Produces: `parseProductCliSelection(entrypointId, args)` and product-bound CLI receipts.
+
+- [ ] **Step 1: Add RED CLI controls**
+
+Assert:
+
+```js
+assert.deepEqual(L.parseProductCliSelection("galerina", []), { ok: true, productId: "galerina" });
+assert.deepEqual(L.parseProductCliSelection("fungi", ["--product=galerina"]), { ok: true, productId: "galerina" });
+assert.equal(L.parseProductCliSelection("fungi", []).code, "PRODUCT_REQUIRED");
+assert.equal(L.parseProductCliSelection("fungi", ["--product=trametes"]).code, "PRODUCT_NOT_ADMITTED");
+assert.equal(L.parseProductCliSelection("galerina", ["--product=trametes"]).code, "ENTRYPOINT_PRODUCT_MISMATCH");
+assert.equal(L.parseProductCliSelection("galerina", ["--governance=off"]).code, "GOVERNANCE_OFF_FORBIDDEN");
+```
+
+- [ ] **Step 2: Run RED**
+
+Expected: the parser export is absent.
+
+- [ ] **Step 3: Implement the pure CLI parser**
+
+Scan each argument once, reject duplicate `--product`, reject every
+`--governance` spelling, and return a closed result. `galerina` binds the fixed
+product. `fungi` requires an explicit admitted product. No environment or file
+path participates.
+
+- [ ] **Step 4: Wire the fixed current entrypoint**
+
+At CLI startup, resolve the product before file discovery or policy execution.
+Remove `--product=` from downstream argument parsing only after it has been
+validated. Add product identity to generated manifest/receipt envelopes without
+changing semantic GIR bytes.
+
+Keep Trametes refused; do not add a `trametes` binary in this task.
+
+- [ ] **Step 5: Run CLI controls and production signing tests**
+
+Run:
+
+```powershell
+npm --prefix packages-galerina/galerina-core-compiler run build
+node --test packages-galerina/galerina-core-compiler/tests/product-cli.test.mjs packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs packages-galerina/galerina-core-compiler/tests/manifest*.test.mjs
+```
+
+Expected: all product controls and existing signing boundaries PASS.
+
+- [ ] **Step 6: Commit Task 4**
+
+```text
+feat: bind cli execution to product identity
+```
+
+---
+
+### Task 5: Product package-boundary assurance
+
+**Files:**
+- Create: `scripts/audit-product-package-boundaries.mjs`
+- Create: `scripts/tests/audit-product-package-boundaries.test.mjs`
+- Modify: `package.json`
+- Modify: `docs/audit-map.json`
+
+**Interfaces:**
+- Consumes: generated package/code graph, product registry and product artifact namespaces.
+- Produces: bounded JSON receipt with `PASS | HOLD | REFUSED`, exact build point, checked package count, checked edge count and closed finding codes.
+
+- [ ] **Step 1: Add RED hostile graph fixtures**
+
+Use four minimal graphs:
+
+```text
+trametes -> galerina governance verifier              HOLD PRODUCT_BOUNDARY_001
+gate-lab -> VOK lease issuer                          HOLD PRODUCT_BOUNDARY_002
+research product -> admitted production artifact     HOLD PRODUCT_BOUNDARY_003
+galerina -> shared trit semantics                     PASS
+```
+
+Also refuse zero packages, stale build point, unknown product, missing registry
+digest, skipped files and truncated edge input.
+
+- [ ] **Step 2: Run RED**
+
+Run the new test. Expected: missing tool failure.
+
+- [ ] **Step 3: Implement graph-owned evaluation**
+
+The tool reads only the generated graph receipt and locator-only package nodes.
+It does not rescan source bodies. It validates the exact Git HEAD, registry
+digest and counts before evaluating directed edges. Inferred edges may create a
+review finding but cannot create authority or a PASS absence claim.
+
+- [ ] **Step 4: Register the audit**
+
+Add:
+
+```json
+"audit:product-boundaries": "node scripts/audit-product-package-boundaries.mjs --check",
+"audit:product-boundaries:selftest": "node --test scripts/tests/audit-product-package-boundaries.test.mjs"
+```
+
+Record the new pre-Fungi gate in `docs/audit-map.json` with `0%` until its
+immutable implementation review passes.
+
+- [ ] **Step 5: Run GREEN and red-capability mutation**
+
+Run the self-test, the live audit and one controlled fixture mutation that
+removes the Galerina/Trametes boundary check. The mutation must turn a hostile
+fixture green and therefore make the test fail.
+
+- [ ] **Step 6: Commit Task 5**
+
+```text
+feat: add product package boundary audit
+```
+
+---
+
+### Task 6: Controlled TypeScript root migration
+
+**Files:**
+- Move: `packages-galerina/` to `packages-ts/`
+- Modify: every tracked configuration, script, document and generated locator that contains the old physical root.
+- Modify: `package.json`
+- Modify: package-root lock and package-topology generated outputs.
+
+**Interfaces:**
+- Consumes: Tasks 1-5 exact PASS receipts and Git Custody Audit plan.
+- Produces: one mechanical rename commit with unchanged package publication names and zero authoritative `packages-galerina/` locators.
+
+- [ ] **Step 1: Generate the pre-move inventory without mutation**
+
+Use the exact code graph, Myco, Hypha and Git Custody Audit to produce:
+
+- all tracked paths below `packages-galerina/`;
+- every code/config/document locator containing `packages-galerina/`;
+- package dependency edges and publication names;
+- generated outputs that must be regenerated rather than hand-edited;
+- worktree/branch custody and the exact rollback command set.
+
+Refuse if the four inventories disagree or any result lacks an exact build
+point.
+
+- [ ] **Step 2: Run existing topology gates before movement**
+
+```powershell
+npm run audit:package-topology
+npm run audit:package-root-lock
+npm run audit:package-topology:selftest
+npm run audit:package-root-lock:selftest
+```
+
+Expected: current baseline PASS. Preserve the receipts.
+
+- [ ] **Step 3: Perform one Git-aware move**
+
+```powershell
+git mv -- packages-galerina packages-ts
+```
+
+Do not rename package `name` fields. Update path dependencies, scripts, package
+graph roots and documentation locators from the generated inventory only.
+
+- [ ] **Step 4: Regenerate owned outputs in dependency order**
+
+Run the repository's canonical registry, package topology, diagnostic, docs,
+contract, KB and code-index generators sequentially. Repeat deterministic
+generators until the second check writes zero bytes. Do not run all estates in
+parallel.
+
+- [ ] **Step 5: Prove zero authoritative old-root references**
+
+The code graph, Myco and Hypha must each return zero live authoritative
+references to `packages-galerina/`. Historical receipts may retain the old
+locator when clearly marked with their immutable build point.
+
+- [ ] **Step 6: Run package builds and proportional suites sequentially**
+
+Run Task 1-5 focused suites, core compiler build/tests, package topology/root
+lock, import governance, code/document/contract registries and the phase-close
+runner in its existing phased order.
+
+- [ ] **Step 7: Run rollback drill**
+
+In a disposable detached copy of the candidate commit, reverse the Git move,
+restore the pre-move generated identities and prove the baseline topology gates
+return. Delete only the disposable clean copy after exact path verification.
+
+- [ ] **Step 8: Commit the mechanical move**
+
+Commit only after zero old-root references and fixed-point indexes:
+
+```text
+refactor: move typescript packages to packages-ts
+```
+
+---
+
+### Task 7: Typed native-root readiness and governing documents
+
+**Files:**
+- Create: `packages/README.md`
+- Create: `packages/fungi/README.md`
+- Create: `packages/gate/README.md`
+- Modify: `docs/TODO.md`
+- Modify: `docs/ROADMAP.md`
+- Modify: `docs/audit-map.json`
+- Modify: the single pre-Fungi plan after KB-main adjudication.
+- Create on KB `main`: one allocated product-family RD that amends/supersedes the affected RD-0861 locators.
+
+**Interfaces:**
+- Consumes: migrated `packages-ts/`, design, plan, product registry and owner-required KB-main topology.
+- Produces: one governing pre-Fungi locator set and explicit native family custody without native source.
+
+- [ ] **Step 1: Write family custody READMEs**
+
+Each README states:
+
+```text
+packages/fungi: native .fungi source only; first admitted product is Galerina scalar-1.
+packages/gate: native .gate laboratory source only; non-authorizing; not the GIR backend.
+unknown family/product/profile: REFUSED.
+```
+
+Do not create a `.fungi` or `.gate` file.
+
+- [ ] **Step 2: Verify KB main-only custody**
+
+Require local and remote KB branches to be `main` only or produce a precise
+HOLD. Do not allocate an RD on a topic branch. Preserve all unknown unique
+commits until their integration status is proven.
+
+- [ ] **Step 3: Allocate and write one new RD on KB main**
+
+Use the canonical KB allocator to obtain the next available RD identity. The RD
+records the product registry, `packages-ts/`, typed native root, width state,
+Gate non-authority, migration receipts and the exact relationship to RD-0861.
+It stores locators and decisions, not source bodies.
+
+- [ ] **Step 4: Amend the pre-Fungi locator set**
+
+Change the first scalar native locator to:
+
+```text
+packages/fungi/products/galerina/<scalar-oracle-package>/
+```
+
+The concrete package leaf is selected from the existing conversion queue by
+the canonical Myco/Hypha audit map; no file is created by this task.
+
+- [ ] **Step 5: Update roadmap, task ledger and audit percentage**
+
+Mark Tasks 1-7 with evidence locators. Leave first native authoring at `[ ]`
+and product-boundary assurance below 100% until independent immutable review.
+
+- [ ] **Step 6: Commit documentation in each repository**
+
+Use separate path-scoped commits. KB commit occurs on `main`; Galerina commit
+occurs on the feature branch.
+
+---
+
+### Task 8: Pre-Fungi closure verification
+
+**Files:**
+- Modify only deterministic generated indexes/reports proven owned by their generators.
+- Create: `docs/reports/product-family-package-readiness-closure-2026-08-26.md`
+
+**Interfaces:**
+- Consumes: Tasks 1-7 immutable commits.
+- Produces: exact-head closure receipt with `PASS | HOLD`, no native source change and a reopenable first-Fungi queue locator.
+
+- [ ] **Step 1: Prove the `.fungi` and `.gate` boundary**
+
+Compare the candidate against its base and assert zero new or modified `.fungi`
+and `.gate` files. Existing self-hosted files are not reclassified as changes.
+
+- [ ] **Step 2: Run focused LF and physical-CRLF controls**
+
+Run product registry, policy, artifact, CLI and package-boundary suites on true
+LF and materialized physical CRLF copies. Refuse a converted copy that is only
+an escaped newline string.
+
+- [ ] **Step 3: Run the full estate sequentially**
+
+Use the repository's phased runner. Do not launch all packages simultaneously.
+Record exact package counts, pass/refusal counts, elapsed seconds and every
+timeout. A timeout is not a PASS; rerun only its owning phase with the admitted
+130-second ceiling when the suite contract permits it.
+
+- [ ] **Step 4: Reach deterministic index fixed points**
+
+Run documentation, registry, contract, code and diagnostic checks after their
+generators. The docs index must pass after a second no-write check; the current
+planning baseline's 287/296 drift cannot be normalized into closure.
+
+- [ ] **Step 5: Refresh the exact full graph**
+
+Build one full zero-skipped code graph at the candidate HEAD. Verify node/edge
+actual equals expected, exact indexed HEAD matches Git, and new product symbols
+plus package-boundary edges are discoverable.
+
+- [ ] **Step 6: Obtain multi-vector external and independent reviews**
+
+Send one source-minimal Grok/Claude challenge with at least three independent
+vectors: authority/cache contamination, migration/rollback, and hostile future
+product/width controls. Preserve prompt and reply bytes/digests. Then obtain a
+separate immutable LF/CRLF code review. External advice cannot mint PASS.
+
+- [ ] **Step 7: Write the closure receipt**
+
+The receipt states exact branch, HEAD, tree, changed paths, test/gate counts,
+graph identity, docs fixed point, reviews, Git Custody result, KB main identity,
+zero native-source delta and the first unopened scalar queue locator.
+
+- [ ] **Step 8: Commit closure**
+
+```text
+docs: close product family package readiness
+```
+
+---
+
+### Task 9: Integrate and pause before native source
+
+**Files:**
+- No new source files.
+
+**Interfaces:**
+- Consumes: clean immutable Task 8 PASS and live Git Custody Audit.
+- Produces: fast-forward integration into the active product branch and a clean planning-branch retirement receipt.
+
+- [ ] **Step 1: Recheck live target custody**
+
+Verify the target remains `codex/rd-0858-unit4-process-root` at the expected
+ancestor, clean and staged-empty. If it advanced, recompute intersections and
+rerun affected evidence rather than rebasing silently.
+
+- [ ] **Step 2: Require the Git Custody plan**
+
+The only acceptable recommendation is:
+
+```text
+source: codex/product-family-package-readiness
+target: codex/rd-0858-unit4-process-root
+relation: TARGET_ANCESTOR_OF_SOURCE
+action: FAST_FORWARD
+```
+
+- [ ] **Step 3: Fast-forward the active product branch**
+
+Perform the exact fast-forward, verify target HEAD/tree, rerun quick closure
+checks and refresh any branch-bound registry view. Do not merge directly to
+`main`; later product-branch consolidation owns that transition.
+
+- [ ] **Step 4: Retire the planning worktree safely**
+
+Prove the source commit is an ancestor of the integrated target, the worktree
+is clean, and all receipts are reachable. Remove the worktree and delete the
+local planning branch. Delete no remote branch without separate publication
+evidence.
+
+- [ ] **Step 5: Emit the hard pause**
+
+Report:
+
+```text
+PRE-FUNGI READY
+Next unopened work: first Galerina scalar-1 native package locator
+Native source changed: 0 files
+Owner decision required before .fungi authoring: YES
+```
+
+Do not open, create or edit the first `.fungi` file in this plan.
+
+---
+
+## Self-review record
+
+- Spec coverage: package taxonomy, registry, four axes, policy seam, artifact
+  identity, widths, Gate custody, migration, benchmark evidence, Git integration
+  and hard pre-Fungi pause each map to a task.
+- Placeholder scan: no unspecified implementation step remains; the future
+  scalar package leaf is deterministically selected from the existing queue and
+  deliberately remains unopened.
+- Type consistency: `ProductSelection`, `AdmittedProductProfile`,
+  `ProductArtifactContext`, `ProductPolicyInput` and `PhysicalProfile` are
+  introduced once and consumed by later tasks under the same names.
+- Scope check: although the design spans multiple seams, the tasks form one
+  dependent product-readiness chain and satisfy the owner's single-plan
+  requirement. Trametes implementation, wider widths and Gate synthesis remain
+  separate later chapters.
