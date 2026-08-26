@@ -26,19 +26,22 @@ selection is deterministic, pre-admitted and receipt-bound, and every fallback
 creates a new identity before execution.
 
 Tasks 1–6 are closed. Task 7's locator and governing-record work is locally
-complete, and Task 8's non-native verification repair and graph/index fixed
-points are committed through `93b3e3670`. The nine-task audit map is therefore
+complete. Task 8's non-native verification repair now includes repository-
+pinned whole-package TypeScript authentication at `35b9832d8`, and the code
+index is clean at `0e53a9fb`; the final external graph and immutable replay are
+still open. The nine-task audit map is therefore
 **89% prepared** (8/9) but still **67% closed** (6/9): KB publication, fresh
 immutable review and live Git integration remain fail-closed. The final
-sequential estate executed all 100 packages in 460.502 seconds: 97 packages
+sequential repair estate executed all 100 packages in 476.755 seconds: 97 packages
 passed and only the three predeclared HOLD packages failed. The compiler
 retained four RD-0858 native RED controls, the example app retained three
 legacy signing refusals, and `galerina-test` retained one existing `.fungi`
 locator assertion. There were zero timeouts.
 
-All nine repository graph families pass exact check. The external full graph
-at `93b3e3670` contains 65,694/65,694 nodes and 167,582/167,582 edges with zero
-skipped files. Exhaustive generator contracts pass 19/19; code and diagnostic
+All nine repository graph families passed the pre-review check. The external
+full graph at `93b3e3670` contains 65,694/65,694 nodes and 167,582/167,582 edges
+with zero skipped files, but it is historical after the toolchain repair and
+cannot close the current target. Exhaustive generator contracts pass 19/19; code and diagnostic
 registries contain 987 identities, the contract registry contains 3,938
 contracts across 2,974 `.fungi` files, documentation contains 299 indexes for
 2,007 documents, and the KB index contains 1,956 documents. The earlier Myco

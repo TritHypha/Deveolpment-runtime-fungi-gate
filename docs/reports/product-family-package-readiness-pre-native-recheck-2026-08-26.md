@@ -1,6 +1,6 @@
 # Product-family package readiness pre-native recheck
 
-Status: `HOLD AT NATIVE BOUNDARY`
+Status: `HOLD PENDING FRESH IMMUTABLE REVIEW AT NATIVE BOUNDARY`
 
 This receipt supersedes the verification counts in
 `product-family-package-readiness-closure-2026-08-26.md`. It does not replace
@@ -11,9 +11,11 @@ integration or publication work.
 
 - Branch: `codex/product-family-package-readiness`
 - Parent: `6d8a91646550245cbf496cf316aad0481836efea`
-- Implementation commit: `00baabc7944a60cfbe2860f41fd2d37e5de1414a`
-- Implementation tree: `25bd2e4cdba729f19723e908aa57859872a86b63`
-- Changed paths: 12, all non-native.
+- Initial implementation commit: `00baabc7944a60cfbe2860f41fd2d37e5de1414a`
+- Initial implementation tree: `25bd2e4cdba729f19723e908aa57859872a86b63`
+- Toolchain-authentication repair: `35b9832d800e5778f7966ce6535246dee45d80ea`.
+- Exact code-index fixed point after repair: `0e53a9fbbfe20ed47f3ff843717dcc3d4da88a41`.
+- Initial changed paths: 12, all non-native; repair changed paths are also non-native.
 - `.fungi` changes: 0.
 - `.gate` changes: 0.
 - First unopened native locator:
@@ -22,9 +24,11 @@ integration or publication work.
 ## Repair scope
 
 - The root package runner admits one repository-contained, lockfile-matched
-  TypeScript 5.9.3 launcher when a package has no local compiler. A hostile
-  ambient `tsc` cannot win, version drift refuses before package execution and
-  the private launcher directory is removed under a checked temp-root guard.
+  TypeScript 5.9.3 package when a package has no local compiler. Its complete
+  deterministic package-tree digest must match `scripts/toolchain-integrity.json`;
+  only a private authenticated copy executes. Ambient launchers, version drift
+  and byte substitution refuse before package execution, and the private root
+  is removed under a checked temp-root guard.
 - Tower Citizen builds every sibling `dist/index.js` prerequisite through the
   governed build-chain tool; its static manifest control derives the required
   list from the tests.
@@ -40,8 +44,8 @@ integration or publication work.
 
 ## Focused evidence
 
-- Root runner controls: 13/13 PASS; combined runner/Tower manifest controls:
-  14/14 PASS.
+- Root runner controls: 14/14 PASS, including a RED-first byte-substitution
+  refusal; combined runner/Tower controls are 15/15 PASS.
 - Tower Citizen: 516/516 PASS.
 - Benchmark package: 113/113 PASS.
 - Registry package: 35/35 PASS.
@@ -62,7 +66,7 @@ integration or publication work.
 - Observed package outputs across all packages: 10,235 tests, 10,227 passing
   and 8 failing.
 - Timeouts: 0.
-- Wall time: 460,502 milliseconds (460.502 seconds).
+- Wall time: 476,755 milliseconds (476.755 seconds).
 
 The exact fail-closed set is:
 
@@ -85,11 +89,12 @@ The exact fail-closed set is:
   publication hygiene, the signing ceremony and the explicit owner reopening
   of native authoring.
 
-## Exact derived-evidence closure
+## Derived-evidence position
 
-- Graph/index commit: `93b3e3670e07ccebca5a3d855a6766ad9e54e709`.
+- Historical graph/index commit: `93b3e3670e07ccebca5a3d855a6766ad9e54e709`.
+- Current code-index fixed point: `0e53a9fbbfe20ed47f3ff843717dcc3d4da88a41`.
 - Repository graph checks: 9/9 PASS.
-- External full graph:
+- Historical external full graph:
   `Galerina-product-family-readiness-pre-native-93b3e3670-full`.
 - External graph counts: 65,694/65,694 nodes and 167,582/167,582 edges;
   skipped files: 0; indexed HEAD matches the graph/index commit exactly.
@@ -101,10 +106,16 @@ The exact fail-closed set is:
 - Unit registry: 157 currencies, checked read-only so the `.fungi` twin was
   not regenerated.
 
+The historical external graph cannot close the repaired target. A final exact
+zero-skipped graph and fresh immutable review remain mandatory before Git
+integration.
+
 ## Disposition
 
-`HOLD AT NATIVE BOUNDARY`
+`HOLD PENDING FRESH IMMUTABLE REVIEW AT NATIVE BOUNDARY`
 
-All repairable non-native setup failures are closed. The next implementation
-action would create or admit the scalar-1 native artifact, so execution stops
-before every `.fungi` and `.gate` write.
+All known repairable non-native setup failures are closed. Integration remains
+closed until the final graph and independent review pass. The next product
+implementation action after integration would create or admit the scalar-1
+native artifact, so execution still stops before every `.fungi` and `.gate`
+write.

@@ -918,6 +918,14 @@ upheld H4 as an evidence gap already represented by the full-estate HOLD. The
 fresh read-only Codex review stalled after a graph-service warning and emitted
 no verdict. Independent-review status is therefore `EVIDENCE_INSUFFICIENT`.
 
+The later pre-native closure replay supplied a new four-vector Grok Expert
+challenge and exact byte/digest receipt. Local adjudication upheld its
+toolchain-authentication concern. A separate immutable review of `32055d8`
+returned `HOLD` C0/I2/M0 for the same compiler-byte gap and stale exact-target
+index locators. The byte-substitution control is now RED-first/GREEN at
+`35b9832d8`, the code index is clean at `0e53a9fb`, and a fresh exact-head graph
+plus immutable replacement review remain mandatory before this step can close.
+
 - [x] **Step 7: Write the closure receipt**
 
 The receipt states exact branch, HEAD, tree, changed paths, test/gate counts,

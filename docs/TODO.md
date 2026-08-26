@@ -23,21 +23,23 @@ counts or open items that a newer section explicitly supersedes.
   topology 7/7, root-lock 7/7, economics 15/15, security 17/17, graph
   algorithms 97/97, generator contracts 19/19, and compiler 6,717/6,721 with
   only the four intentional RD-0858 causal RED controls retained.
-- [x] Repair the non-native verification setup at `00baabc79`: the governed
-  root runner now admits one lock-bound TypeScript 5.9.3 fallback instead of
-  the broken ambient launcher; Tower declares all sibling build prerequisites;
+- [x] Repair the non-native verification setup at `00baabc79` and harden it at
+  `35b9832d8`: the governed root runner now pins the complete TypeScript 5.9.3
+  package-tree digest, executes a private authenticated copy instead of an
+  ambient launcher, and refuses version or byte drift; Tower declares all
+  sibling build prerequisites;
   benchmark tools admit one explicit absolute SLIDE root; registry absence is
   a canonical empty-catalog refusal; and the unsigned auth candidate binds the
   moved artifact bytes.
 - [x] Replay the complete 100-package estate sequentially with package and test
   concurrency fixed at `1`: 100/100 executed, 97 packages passed, 3 failed,
   3,296 tests were counted in passing packages, zero timeouts occurred and the
-  exact wall time was 460.502 seconds. The only failures are the four native
+  exact repair-replay wall time was 476.755 seconds. The only failures are the four native
   process-root RED controls, three legacy greeting-signature refusals and one
   existing `.fungi` locator assertion.
-- [x] Close the exact-head graph and index fixed points at `93b3e3670` without
-  touching native source. Repository graph checks pass 9/9; the external full
-  graph has 65,694/65,694 nodes, 167,582/167,582 edges and zero skipped files;
+- [x] Close the pre-review graph and index fixed points at `93b3e3670` without
+  touching native source. Repository graph checks pass 9/9; that historical
+  external full graph has 65,694/65,694 nodes, 167,582/167,582 edges and zero skipped files;
   exhaustive generator contracts pass 19/19. Code index/registry remain at 987
   identities, the contract registry at 3,938 contracts across 2,974 `.fungi`
   files, documentation at 299 indexes covering 2,007 documents, KB index at
@@ -89,9 +91,17 @@ counts or open items that a newer section explicitly supersedes.
   0-broken-link checks, but memory preflight reports stale volatile facts and
   case-drift findings. The old remote `main` and its topic branch are therefore
   preserved; do not push or retire them through a red gate.
-- [ ] Obtain fresh immutable review of exact closure target `93b3e3670`, then
-  run the live Git Custody integration plan. Stop before creating, editing,
-  building or admitting any `.fungi` or `.gate` file.
+- [x] Adjudicate the first immutable review of `32055d8`: HOLD C0/I2/M0.
+  Compiler-byte substitution and stale exact-target index evidence were both
+  reproduced. The compiler package is now content-authenticated at `35b9832d8`
+  and the code index reached a clean fixed point at `0e53a9fb`.
+- [x] Complete a four-vector Grok Expert advisory. Exact prompt and reply bytes,
+  digests and local adjudication are preserved in
+  `docs/independent-audits/2026-08-26-rd0863-pre-native-grok-advisory.md`;
+  external advice remains non-authorizing.
+- [ ] Build the final exact-head external graph, obtain fresh immutable review
+  of that clean target, then rerun the live Git Custody integration plan. Stop
+  before creating, editing, building or admitting any `.fungi` or `.gate` file.
 
 ### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 
