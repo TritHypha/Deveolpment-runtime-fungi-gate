@@ -164,7 +164,17 @@ const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/inde
 const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-TYPE-034", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003", "FUNGI-K3-002", "FUNGI-K3-003", "FUNGI-K3-004", "FUNGI-K3-005"]);
 
 async function main() {
-  let [, , command = "help", ...rest] = process.argv;
+  const invokedName = basename(process.argv[1] ?? "galerina")
+    .toLowerCase()
+    .replace(/\.(?:cmd|exe|mjs|js)$/, "");
+  const entrypointId = invokedName === "fungi" ? "fungi" : "galerina";
+  const productModule = await import(compilerPath);
+  const productAdmission = productModule.resolveProductCliSelection(entrypointId, process.argv.slice(2));
+  if (!productAdmission.ok) {
+    console.error(`${productAdmission.code}: product selection refused before discovery`);
+    process.exit(2);
+  }
+  let [command = "help", ...rest] = productAdmission.remainingArgs;
 
   if (command === "build-slide-package") {
     const { emitReceiptBoundSlidePackageResult, runReceiptBoundSlidePackageCli } = await import(
@@ -880,7 +890,7 @@ Baseline comparison (governance-cost):
   // Importing it here first made FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE
   // unreachable: a missing verifier crashed as an unlabelled module-load error
   // before the fail-closed fuse catch could run.
-  const m = command === "fuse" ? undefined : await import(compilerPath);
+  const m = command === "fuse" ? undefined : productModule;
 
   // ── //fungi: whole-app refresh helpers (R&D 0045 — `deps --all` and the build auto-refresh) ──────
   // Recursively collect every .fungi source under a root (skipping build/vendor dirs), then run a
@@ -1677,6 +1687,26 @@ Baseline comparison (governance-cost):
         process.exit(1);
       }
 
+      // Check 4: product identity is inside the signed manifest and must bind
+      // exactly to this already-admitted CLI selection plus the semantic source
+      // digest. Old/unbound, cross-product and relabelled manifests refuse.
+      let expectedProductArtifactKey;
+      let expectedProductIdentity;
+      let actualProductIdentity;
+      try {
+        expectedProductArtifactKey = m.productArtifactKey(productAdmission.context, actualHash);
+        expectedProductIdentity = m.canonicalProductArtifactIdentity(productAdmission.context, actualHash);
+        actualProductIdentity = m.canonicalProductArtifactIdentity(manifest.productIdentity, actualHash);
+      } catch (error) {
+        console.error(`❌ PRODUCT_ARTIFACT_CONTEXT: manifest product identity is invalid (${error instanceof Error ? error.message : String(error)})`);
+        process.exit(1);
+      }
+      if (manifest.productArtifactKey !== expectedProductArtifactKey
+          || actualProductIdentity !== expectedProductIdentity) {
+        console.error("❌ PRODUCT_ARTIFACT_MISMATCH: manifest product identity does not match the admitted CLI selection");
+        process.exit(1);
+      }
+
       // ── CERTIFIED-CONSUME PQ FLOOR (consume-side mirror of the sign-side certified gate, galerina.mjs:1917-1932) ──
       // The SIGN side mandates a hybrid Ed25519+ML-DSA-65 manifest when GALERINA_MANIFEST_PROFILE=certified, but the
       // CONSUME side only gated on GALERINA_PROFILE=production (= "a signature is required"), so a v1 (Ed25519-only)
@@ -2404,7 +2434,16 @@ Baseline comparison (governance-cost):
         m.checkEffects(parsed.flows, parsed.ast), "dev");
       const source = readUntrustedSource(fungiFile);
       if (source === null) process.exit(1); // fail-closed: oversized/unreadable .fungi rejected
-      const baseManifest = generateManifest(source, toRepoRelative(fungiFile), parsed.flows, govResult);
+      const baseManifest = generateManifest(
+        source,
+        toRepoRelative(fungiFile),
+        parsed.flows,
+        govResult,
+        undefined,
+        undefined,
+        undefined,
+        productAdmission.context,
+      );
 
       // ── Net a: embed the fusion descriptor INTO the manifest BEFORE signing ──────
       // (Fuse B2 STEP A) The fuse fields (kind/provides/seam/capabilities) and the

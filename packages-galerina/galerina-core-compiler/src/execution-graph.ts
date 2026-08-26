@@ -17,6 +17,7 @@ import { BoundedCache, cachePolicyFromEnv } from "./bounded-cache.js";
 import { fileURLToPath } from "node:url";
 import type { AstNode } from "./parser.js";
 import type { GalerinaValue } from "./interpreter.js";
+import { productArtifactKey, type ProductArtifactContext } from "./product-artifact-identity.js";
 
 export const enum ExecOp {
   LOAD_CONST    = 0,   // dest = constants[imm]
@@ -58,7 +59,7 @@ export interface ExecutionGraph {
 // ── Memory cache ──────────────────────────────────────────────────────────────
 //
 // ★ BOUNDED, and the bounds are MEASURED. This was an unbounded `Map` keyed by
-// `executionGraphCacheKey(flowName, canonicalHash(flowNode))` — a CONTENT hash — so
+// `executionGraphCacheKey(productContext, flowName, canonicalHash(flowNode))` — a product-bound CONTENT hash — so
 // every source version of every flow was retained for the life of the process.
 // Harmless in a CLI that exits; monotonic in watch mode, a REPL, a language server
 // or any hosted evaluator. Proven twice: by a paired KAT on the key space, and
@@ -331,8 +332,12 @@ export function buildExecutionGraph(
   };
 }
 
-export function executionGraphCacheKey(flowName: string, sourceHash: string): string {
-  return `${flowName}:${sourceHash}`;
+export function executionGraphCacheKey(
+  context: ProductArtifactContext,
+  flowName: string,
+  sourceHash: string,
+): string {
+  return `${productArtifactKey(context, sourceHash)}:${flowName}`;
 }
 
 /**

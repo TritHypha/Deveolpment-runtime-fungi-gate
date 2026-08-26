@@ -1,11 +1,11 @@
 {
   "name": "@galerina/cli",
   "version": "1.0.0-beta.2",
-  "description": "Galerina compiler and runtime CLI — compile .fungi programs to WASM, run them, type-check with governance.",
+  "description": "Product-selected Fungi compiler and runtime CLI — Galerina is fixed; the generic Fungi entrypoint requires an explicit admitted product.",
   "type": "module",
   "bin": {
     "galerina": "./galerina.mjs",
-    "fungi": "./galerina.mjs"
+    "fungi": "./fungi.mjs"
   },
   "scripts": {
     "test": "node scripts/run-all-tests.cjs",

@@ -32,6 +32,22 @@ export {
 } from "./product-policy.js";
 
 export {
+  createProductArtifactContext,
+  canonicalProductArtifactIdentity,
+  productArtifactKey,
+  type ProductArtifactContext,
+} from "./product-artifact-identity.js";
+
+export {
+  parseProductCliSelection,
+  resolveProductCliSelection,
+  requireFixedGalerinaProductContext,
+  type ProductCliAdmission,
+  type ProductCliRefusalCode,
+  type ProductCliReceipt,
+} from "./product-cli.js";
+
+export {
   lex,
   V1_ACTIVE_KEYWORDS,
   V1_FUTURE_RESERVED,
@@ -837,6 +853,7 @@ export {
 // Pass 8 - GIR Emitter
 export {
   emitGIR,
+  computeGIRHash,
   emitExpr,
   buildSemanticGraph,
   buildAiGraph,

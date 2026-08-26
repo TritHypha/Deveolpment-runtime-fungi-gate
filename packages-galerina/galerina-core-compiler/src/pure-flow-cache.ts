@@ -13,6 +13,7 @@
 
 import { canonicalHash } from "./runtime/canonicalHash.js";
 import type { GalerinaValue } from "./interpreter.js";
+import { productArtifactKey, type ProductArtifactContext } from "./product-artifact-identity.js";
 
 const MAX_ENTRIES = 1000;
 
@@ -206,6 +207,7 @@ export function galerinaValueFingerprint(v: GalerinaValue): number {
  *                   pollution when multiple files have a flow named "main".
  */
 export function pureFlowCacheKey(
+  context: ProductArtifactContext,
   flowName: string,
   args: ReadonlyMap<string, GalerinaValue>,
   sourceTag?: string,
@@ -216,8 +218,8 @@ export function pureFlowCacheKey(
   for (const [k, v] of args) {
     parts.push(`${k}=${galerinaValueFingerprint(v)}`);
   }
-  const base = `${flowName}:${parts.join(",")}`;
-  return sourceTag ? `${sourceTag}:${base}` : base;
+  const semanticDigest = canonicalHash({ flowName, args: parts, sourceTag: sourceTag ?? null });
+  return `${productArtifactKey(context, semanticDigest)}:${flowName}`;
 }
 
 export function getCachedPureFlow(key: string): GalerinaValue | undefined {

@@ -9,6 +9,13 @@ export interface ProductSelection {
   readonly physicalProfile: PhysicalProfile;
 }
 
+export const GALERINA_SELECTION: Readonly<ProductSelection> = Object.freeze({
+  productId: "galerina",
+  safetyProfile: "strict",
+  buildMode: "build-production",
+  physicalProfile: "1",
+});
+
 export interface AdmittedProductProfile {
   readonly productId: ProductId;
   readonly productClass: "production" | "research-nonprod";

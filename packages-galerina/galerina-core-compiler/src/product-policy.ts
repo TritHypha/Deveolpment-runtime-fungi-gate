@@ -12,21 +12,17 @@ import type { AstNode, FlowMeta } from "./parser.js";
 import {
   loadProductRegistry,
   resolveProductProfile,
+  GALERINA_SELECTION,
   type AdmittedProductProfile,
   type ProductSelection,
 } from "./product-profile.js";
+
+export { GALERINA_SELECTION } from "./product-profile.js";
 
 const GENERATED_REGISTRY_URL = new URL(
   "../../../product-registry/product-profiles.v1.json",
   import.meta.url,
 );
-
-export const GALERINA_SELECTION: Readonly<ProductSelection> = Object.freeze({
-  productId: "galerina",
-  safetyProfile: "strict",
-  buildMode: "build-production",
-  physicalProfile: "1",
-});
 
 export interface ProductPolicyInput {
   readonly ast: AstNode;

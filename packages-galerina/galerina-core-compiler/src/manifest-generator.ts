@@ -43,6 +43,11 @@ import { dirname, join } from "node:path";
 import type { GovernanceVerifyResult } from "./governance-verifier.js";
 import type { FlowMeta } from "./parser.js";
 import { resolveCompositeBitmask } from "./capability-types.js";
+import { requireFixedGalerinaProductContext } from "./product-cli.js";
+import {
+  productArtifactKey as bindProductArtifactKey,
+  type ProductArtifactContext,
+} from "./product-artifact-identity.js";
 
 export const MANIFEST_SCHEMA_VERSION = "fungi.manifest.v1";
 
@@ -113,6 +118,10 @@ export interface LManifest {
    *  (member of the manifest body). Absent on pre-floor manifests; once U2 enforcement
    *  flips, absent ⇒ refuse. */
   readonly compilerVersion: string;
+  /** Closed product identity and all four admitted selection axes. Part of the signed body. */
+  readonly productIdentity: Readonly<ProductArtifactContext>;
+  /** Product-bound identity over the semantic source digest and all admitted selection axes. */
+  readonly productArtifactKey: string;
   readonly policyResolutionDag?: PolicyResolutionDag;    // CBOR Tag 416 — Topological Graph Engine (#79)
   readonly behavioralFingerprint?: string;               // CBOR Tag 417 — CFG path hash (#80)
   readonly derivedConstraints: readonly string[];
@@ -540,8 +549,11 @@ export function generateManifest(
   generatedAt?: string,
   ast?: { readonly children?: readonly { readonly kind: string; readonly value?: string; readonly children?: readonly unknown[] }[] },
   sourceText?: string,
+  productContext: Readonly<ProductArtifactContext> = requireFixedGalerinaProductContext(),
 ): LManifest {
   const sourceHash = `sha256:${sha256Hex(source)}`;
+  const boundProductArtifactKey = bindProductArtifactKey(productContext, sourceHash);
+  const productIdentity = Object.freeze({ ...productContext });
 
   // ── Collect governance annotations (;; govComment tokens) from source ────────────────────
   // Re-lex the source text to extract all govComment tokens.
@@ -746,6 +758,8 @@ export function generateManifest(
     sourceFile: sourceFile.replace(/\\/g, "/"),
     flowCount: flows.length,
     compilerVersion: resolveCompilerVersion(),   // U2 floor — signed provenance, never optional at mint time
+    productIdentity,
+    productArtifactKey: boundProductArtifactKey,
     policyResolutionDag,
     behavioralFingerprint,
     derivedConstraints: [...derivedConstraints].sort(),

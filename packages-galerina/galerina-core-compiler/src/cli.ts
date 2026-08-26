@@ -59,6 +59,8 @@ import { generateCircuitFromPattern } from "./gate-from-pattern.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
+import { requireFixedGalerinaProductContext, resolveProductCliSelection } from "./product-cli.js";
+import type { ProductArtifactContext } from "./product-artifact-identity.js";
 
 function evaluateGalerinaGovernance(
   ast: AstNode,
@@ -406,6 +408,7 @@ interface FileCompileResult {
 export function compileFile(
   filePath: string,
   mode: CliMode,
+  productContext: Readonly<ProductArtifactContext> = requireFixedGalerinaProductContext(),
 ): FileCompileResult {
   let source: string;
   try {
@@ -761,7 +764,7 @@ export function compileFile(
           undefined,
         );
       } else {
-        const manifest = generateManifest(source, filePath, parseResult.flows, policyResult.evidence, undefined, parseResult.ast, source);
+        const manifest = generateManifest(source, filePath, parseResult.flows, policyResult.evidence, undefined, parseResult.ast, source, productContext);
         const manifestJson = serializeManifest(manifest);
         return { file: filePath, diagnostics, manifestJson };
       }
@@ -971,8 +974,7 @@ function printDiagnostic(d: CliDiagnostic): void {
 // Parse CLI arguments
 // ---------------------------------------------------------------------------
 
-function parseArgs(): { readonly mode: CliMode; readonly targetDir: string } {
-  const args = process.argv.slice(2) as string[];
+function parseArgs(args: readonly string[] = process.argv.slice(2)): { readonly mode: CliMode; readonly targetDir: string } {
 
   const command = args[0] ?? "";
   const flags = new Set(args.slice(1).filter((a: string) => a.startsWith("--")));
@@ -1529,10 +1531,16 @@ function runGateFromPattern(args: readonly string[]): boolean {
 }
 
 function main(): void {
+  const productAdmission = resolveProductCliSelection("galerina", process.argv.slice(2));
+  if (!productAdmission.ok) {
+    process.stderr.write(`[error] ${productAdmission.code}: product selection refused before discovery\n`);
+    process.exit(2);
+  }
+  const admittedArgs = productAdmission.remainingArgs;
   // Before parseArgs — see the note on runGateFromPattern.
-  if (runGateFromPattern(process.argv.slice(2))) return;
+  if (runGateFromPattern(admittedArgs)) return;
 
-  const { mode, targetDir } = parseArgs();
+  const { mode, targetDir } = parseArgs(admittedArgs);
   // Load galerina.check.json / .galerinarc.json if present
   const checkConfig: CheckConfig = (mode === "check" || mode === "check-strict")
     ? loadCheckConfig(targetDir)
@@ -1612,7 +1620,7 @@ function main(): void {
   const wantFix  = process.argv.includes("--fix") || process.argv.includes("--fix-confirm");
 
   for (const filePath of filteredFiles) {
-    const result = compileFile(filePath, mode);
+    const result = compileFile(filePath, mode, productAdmission.context);
 
     // Parse per-file disable directives from the source
     let directives: DisableDirectives = { fileDisabled: new Set(), lineDisabled: new Map() };
@@ -1821,7 +1829,7 @@ const invokedCliPath = process.argv[1];
 if (invokedCliPath !== undefined
   && resolvePath(invokedCliPath) === resolvePath(fileURLToPath(import.meta.url))) {
   if (process.argv.includes("--watch")) {
-    const { targetDir } = parseArgs();
+    const { targetDir } = parseArgs(process.argv.slice(2));
     void runWatch(targetDir);
   } else {
     main();

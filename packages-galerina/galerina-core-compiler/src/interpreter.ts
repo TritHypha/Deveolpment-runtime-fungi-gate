@@ -16,6 +16,8 @@ import { activeSinkMonitor } from "./security-sink-monitor.js";
 import { buildExecutionGraph, getOrLoadGraph, storeGraph, executionGraphCacheKey, ExecOp, type ExecutionGraph } from "./execution-graph.js";
 import { compileToBytecode, runBytecode } from "./bytecode-vm.js";
 import { canonicalHash } from "./runtime/canonicalHash.js";
+import { requireFixedGalerinaProductContext } from "./product-cli.js";
+import type { ProductArtifactContext } from "./product-artifact-identity.js";
 import { i32AddChecked, i32SubChecked, i32MulChecked, i32DivChecked, i32ModChecked, i32NegChecked, isI32Trap, type I32Result } from "./i32-arith.js";
 import { i64AddChecked, i64SubChecked, i64MulChecked, i64DivChecked, i64ModChecked, i64NegChecked, isI64Trap, type I64Result } from "./i64-arith.js";
 import { u64AddChecked, u64SubChecked, u64MulChecked, u64DivChecked, u64ModChecked, u64NegChecked, isU64Trap, type U64Result } from "./u64-arith.js";
@@ -574,6 +576,8 @@ interface BindingEntry {
 }
 
 export interface InterpreterRuntimeOptions {
+  /** Closed product identity for cache and artifact isolation. Defaults explicitly to fixed Galerina. */
+  readonly productArtifactContext?: Readonly<ProductArtifactContext>;
   /** When true, use a PassiveExecutionPlan for execution if available. */
   readonly useExecutionPlan?: boolean;
   /** Actor identity for context propagation (accessible as context.actor). */
@@ -3972,6 +3976,8 @@ export async function executeFlow(
   executionPlans?: ReadonlyMap<string, PassiveExecutionPlan>,
   manifest?: RuntimeManifest,
 ): Promise<FlowExecutionResult> {
+  const productContext = runtimeOptions?.productArtifactContext
+    ?? requireFixedGalerinaProductContext();
   // Pure flow erasure fast path:
   // When pureFastPath is explicitly set to true AND the flow is provably
   // IsPure + EffectFree (no declared effects), skip all governance overhead
@@ -3996,7 +4002,7 @@ export async function executeFlow(
     const opts = runtimeOptions as Record<string, unknown>;
     const sourceTag = (typeof opts?.sourceTag === "string" ? opts.sourceTag : undefined)
       ?? (typeof opts?.traceId === "string" ? `req:${opts.traceId}` : undefined);
-    const cacheKey = pureFlowCacheKey(flowName, args, sourceTag);
+    const cacheKey = pureFlowCacheKey(productContext, flowName, args, sourceTag);
     const cached = getCachedPureFlow(cacheKey);
     if (cached !== undefined) {
       // Return a synthetic result wrapping the cached value
@@ -4086,7 +4092,7 @@ export async function executeFlow(
           } satisfies ExecutionAuditRecord,
         } satisfies FlowExecutionResult;
         if (intResult.__tag !== "runtimeError") {
-          const cacheKey3 = pureFlowCacheKey(flowName, args, typeof (runtimeOptions as Record<string, unknown>)?.sourceTag === "string" ? (runtimeOptions as Record<string, unknown>).sourceTag as string : undefined);
+          const cacheKey3 = pureFlowCacheKey(productContext, flowName, args, typeof (runtimeOptions as Record<string, unknown>)?.sourceTag === "string" ? (runtimeOptions as Record<string, unknown>).sourceTag as string : undefined);
           setCachedPureFlow(cacheKey3, intResult);
         }
         return bcAuditResult;
@@ -4119,7 +4125,7 @@ export async function executeFlow(
       } satisfies FlowExecutionResult;
       // Cache the sync result too
       if (syncResult.__tag !== "runtimeError") {
-        const cacheKey2 = pureFlowCacheKey(flowName, args, typeof (runtimeOptions as Record<string, unknown>)?.sourceTag === "string" ? (runtimeOptions as Record<string, unknown>).sourceTag as string : undefined);
+        const cacheKey2 = pureFlowCacheKey(productContext, flowName, args, typeof (runtimeOptions as Record<string, unknown>)?.sourceTag === "string" ? (runtimeOptions as Record<string, unknown>).sourceTag as string : undefined);
         setCachedPureFlow(cacheKey2, syncResult);
       }
       return syncAuditResult;
@@ -4160,7 +4166,7 @@ export async function executeFlow(
       // graph was served for the SECOND (the same class as the bytecode-cache-by-name bug, and every benchmark's
       // entry flow is named `main`). External audit 2026-07-17, RD-0455 B.
       const sourceHash = canonicalHash(flowNode);
-      const egKey = executionGraphCacheKey(flowName, sourceHash);
+      const egKey = executionGraphCacheKey(productContext, flowName, sourceHash);
       let egraph  = getOrLoadGraph(egKey);
       if (egraph === null) {
         const qualifier      = qualifierFromFlowKind(flowNode.kind);

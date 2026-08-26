@@ -6,7 +6,7 @@
 //
 // It was written as `kat-execution-graph-cache-unbounded.mjs`, red-first, to prove
 // the ORIGINAL defect: `interpreter.ts` keys the cache by
-// `executionGraphCacheKey(flowName, canonicalHash(flowNode))` — a CONTENT hash — so
+// `executionGraphCacheKey(productContext, flowName, canonicalHash(flowNode))` — a product-bound CONTENT hash — so
 // every distinct SOURCE VERSION of a flow minted a permanent entry, and the module
 // had no delete, no clear and no size cap. It proved that (25 source versions -> 25
 // permanent entries, identical-source control adding none) and exited 1 by design.
@@ -76,6 +76,7 @@ if (missing.length) {
 }
 const { parseProgram, canonicalHash } = M;
 const { executionGraphCacheKey, storeGraph, getGraphCacheStats: stats, __resetGraphCacheForTest: reset } = G;
+const productContext = M.requireFixedGalerinaProductContext();
 
 const stub = { slotCount: 0, slotNames: new Map(), isPure: true, effectMask: 0, nodes: [] };
 
@@ -140,7 +141,7 @@ function keyFor(text) {
   const p = parseProgram(text, "probe.fungi");
   const flowNode = (p.ast.children ?? []).find((c) => /FlowDecl$/.test(c.kind));
   if (flowNode === undefined) throw new Error("fixture has no flow declaration — the probe is malformed");
-  return executionGraphCacheKey("probe", canonicalHash(flowNode));
+  return executionGraphCacheKey(productContext, "probe", canonicalHash(flowNode));
 }
 
 const N = 25;

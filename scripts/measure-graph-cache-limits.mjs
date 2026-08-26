@@ -100,7 +100,7 @@ for (const rel of files) {
     try { g = G.buildExecutionGraph(node, decodedName(node), qualifier, [], isPure); } catch { failed++; continue; }
     if (!g) continue;
     built++;
-    keys.add(G.executionGraphCacheKey(decodedName(node), M.canonicalHash(node)));
+    keys.add(G.executionGraphCacheKey(M.requireFixedGalerinaProductContext(), decodedName(node), M.canonicalHash(node)));
     weights.push(weigh(g));
   }
 }

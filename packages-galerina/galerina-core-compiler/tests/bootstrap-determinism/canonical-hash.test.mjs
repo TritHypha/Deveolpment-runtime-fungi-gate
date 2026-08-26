@@ -31,9 +31,12 @@ import {
   storeGraph,
   getOrLoadGraph,
   executionGraphCacheKey,
+  requireFixedGalerinaProductContext,
   getGraphCacheStats,
 } from "../../dist/index.js";
 import { __diskCacheDirForTest } from "../../dist/execution-graph.js";
+
+const PRODUCT_CONTEXT = requireFixedGalerinaProductContext();
 
 // ExecOp.BINOP = 3 (const enum inlined at compile time)
 const EXEC_OP_BINOP       = 3;
@@ -348,7 +351,7 @@ describe("ExecutionGraph: build and cache", () => {
   it("storeGraph + getOrLoadGraph returns the same process-local graph without persistence", () => {
     const flowNode = makeAddFlowNode();
     const graph = buildExecutionGraph(flowNode, "addCacheTest", "pure", [], true);
-    const key = executionGraphCacheKey("addCacheTest", `testhash-${process.pid}-${Date.now()}`);
+    const key = executionGraphCacheKey(PRODUCT_CONTEXT, "addCacheTest", hashSource(`testhash-${process.pid}-${Date.now()}`));
     const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);
     const historicalDiskPath = join(__diskCacheDirForTest, `${safe}.egraph.json`);
     rmSync(historicalDiskPath, { force: true });
@@ -366,7 +369,7 @@ describe("ExecutionGraph: build and cache", () => {
   });
 
   it("refuses a syntactically valid graph placed in the historical disk cache", () => {
-    const key = executionGraphCacheKey("forgedDiskGraph", `testhash-${process.pid}-${Date.now()}`);
+    const key = executionGraphCacheKey(PRODUCT_CONTEXT, "forgedDiskGraph", hashSource(`testhash-${process.pid}-${Date.now()}`));
     const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);
     const historicalDiskPath = join(__diskCacheDirForTest, `${safe}.egraph.json`);
     const forged = {
@@ -394,13 +397,14 @@ describe("ExecutionGraph: build and cache", () => {
   });
 
   it("executionGraphCacheKey is deterministic", () => {
-    const k1 = executionGraphCacheKey("myFlow", "abc123");
-    const k2 = executionGraphCacheKey("myFlow", "abc123");
+    const digest = hashSource("abc123");
+    const k1 = executionGraphCacheKey(PRODUCT_CONTEXT, "myFlow", digest);
+    const k2 = executionGraphCacheKey(PRODUCT_CONTEXT, "myFlow", digest);
     assert.equal(k1, k2, "Same inputs must produce same cache key");
     assert.ok(k1.includes("myFlow"), "Cache key must contain flowName");
-    assert.ok(k1.includes("abc123"), "Cache key must contain sourceHash");
+    assert.match(k1, /^product-artifact-v1:[0-9a-f]{64}:myFlow$/, "Cache key must carry an opaque product-bound identity");
 
-    const k3 = executionGraphCacheKey("otherFlow", "abc123");
+    const k3 = executionGraphCacheKey(PRODUCT_CONTEXT, "otherFlow", digest);
     assert.notEqual(k1, k3, "Different flowName must produce different cache key");
   });
 
@@ -408,7 +412,7 @@ describe("ExecutionGraph: build and cache", () => {
     const before = getGraphCacheStats();
     const flowNode = makeAddFlowNode();
     const graph = buildExecutionGraph(flowNode, "statsTestFlow", "pure", [], true);
-    const key = executionGraphCacheKey("statsTestFlow", "statshash99");
+    const key = executionGraphCacheKey(PRODUCT_CONTEXT, "statsTestFlow", hashSource("statshash99"));
     storeGraph(key, graph);
     const after = getGraphCacheStats();
 

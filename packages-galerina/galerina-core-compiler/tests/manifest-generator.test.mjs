@@ -97,6 +97,8 @@ describe("manifest-generator: sourceFile presence", () => {
     const m = makeManifest(WIN_PATH);
     assert.equal(typeof m.sourceFile, "string");
     assert.ok(m.sourceFile.length > 0, "sourceFile must not be empty");
+    assert.equal(m.productIdentity.productId, "galerina");
+    assert.match(m.productArtifactKey, /^product-artifact-v1:[0-9a-f]{64}$/);
   });
 
   it("sourceFile is a member of the SIGNED body, not the signature wrapper", () => {
@@ -118,6 +120,9 @@ describe("manifest-generator: compiler-version provenance", () => {
       mkdirSync(dist, { recursive: true });
       cpSync(join(import.meta.dirname, "..", "dist", "manifest-generator.js"), join(dist, "manifest-generator.js"));
       cpSync(join(import.meta.dirname, "..", "dist", "capability-types.js"), join(dist, "capability-types.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "product-artifact-identity.js"), join(dist, "product-artifact-identity.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "product-cli.js"), join(dist, "product-cli.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "product-profile.js"), join(dist, "product-profile.js"));
       writeFileSync(join(root, "package.json"), JSON.stringify({ type: "module" }));
 
       const isolated = await import(pathToFileURL(join(dist, "manifest-generator.js")).href);
