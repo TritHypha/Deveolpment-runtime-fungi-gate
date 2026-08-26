@@ -3,8 +3,11 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import * as L from "../dist/index.js";
+
+const REPOSITORY_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 
 test("fixed and generic entrypoints select only an admitted explicit product", () => {
   assert.deepEqual(L.parseProductCliSelection("galerina", []), { ok: true, productId: "galerina" });
@@ -66,8 +69,8 @@ test("the product and width refusal matrix cannot produce an admitted context", 
 });
 
 test("both executable surfaces perform product admission before discovery", () => {
-  const compilerCli = readFileSync(resolve("packages-ts/galerina-core-compiler/src/cli.ts"), "utf8");
-  const rootCli = readFileSync(resolve("galerina.mjs"), "utf8");
+  const compilerCli = readFileSync(resolve(REPOSITORY_ROOT, "packages-ts/galerina-core-compiler/src/cli.ts"), "utf8");
+  const rootCli = readFileSync(resolve(REPOSITORY_ROOT, "galerina.mjs"), "utf8");
   const compilerMain = compilerCli.slice(compilerCli.indexOf("function main(): void"));
   const rootMain = rootCli.slice(rootCli.indexOf("async function main()"));
   assert.match(compilerMain, /resolveProductCliSelection\("galerina"/);
@@ -75,14 +78,14 @@ test("both executable surfaces perform product admission before discovery", () =
   assert.match(rootMain, /resolveProductCliSelection\(entrypointId/);
   assert.ok(rootMain.indexOf("resolveProductCliSelection(entrypointId") < rootMain.indexOf("readUntrustedSource(fungiFile)"));
 
-  const rootPackage = JSON.parse(readFileSync(resolve("package.json"), "utf8"));
+  const rootPackage = JSON.parse(readFileSync(resolve(REPOSITORY_ROOT, "package.json"), "utf8"));
   assert.equal(rootPackage.bin.galerina, "./galerina.mjs");
   assert.equal(rootPackage.bin.fungi, "./fungi.mjs");
 });
 
 test("physical launchers preserve fixed versus generic product admission", () => {
   const run = (script, args) => spawnSync(process.execPath, [script, ...args], {
-    cwd: process.cwd(),
+    cwd: REPOSITORY_ROOT,
     encoding: "utf8",
     shell: false,
   });

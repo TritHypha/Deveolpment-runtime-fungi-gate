@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import * as L from "../dist/index.js";
 
+const REPOSITORY_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+
 const registry = L.loadProductRegistry(
-  readFileSync(resolve("product-registry/product-profiles.v1.json")),
+  readFileSync(resolve(REPOSITORY_ROOT, "product-registry/product-profiles.v1.json")),
 );
 const galerinaProfile = L.resolveProductProfile(registry, {
   productId: "galerina",
@@ -89,7 +92,7 @@ test("CLI and runtime cannot bypass the product policy seam", () => {
     "packages-ts/galerina-core-compiler/src/cli.ts",
     "packages-ts/galerina-core-compiler/src/runtime.ts",
   ]) {
-    const source = readFileSync(resolve(path), "utf8");
+    const source = readFileSync(resolve(REPOSITORY_ROOT, path), "utf8");
     assert.doesNotMatch(source, /\bverifyGovernance\s*\(/, `${path} contains a direct governance call`);
     assert.match(source, /\bevaluateProductPolicy\s*\(/, `${path} does not route through product policy`);
   }
