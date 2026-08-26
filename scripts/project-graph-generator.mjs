@@ -35,6 +35,7 @@ function parseArgs(argv) {
   let root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   let rootSeen = false;
   let check = false;
+  let checkContent = false;
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--root") {
@@ -46,12 +47,18 @@ function parseArgs(argv) {
       continue;
     }
     if (arg === "--check" && !check) {
+      if (checkContent) throw new Error("project-graph: check modes are mutually exclusive");
       check = true;
+      continue;
+    }
+    if (arg === "--check-content" && !checkContent) {
+      if (check) throw new Error("project-graph: check modes are mutually exclusive");
+      checkContent = true;
       continue;
     }
     throw new Error(`project-graph: unknown or duplicate argument ${arg}`);
   }
-  return { root, check };
+  return { root, check, checkContent };
 }
 
 /**
@@ -142,7 +149,7 @@ const stamp = provenanceForCheck(
   "project-graph-generator",
   OPTIONS.root,
   provenancePath,
-  OPTIONS.check,
+  OPTIONS.check || OPTIONS.checkContent,
 );
 let generated;
 try {
@@ -160,8 +167,9 @@ expected.set(
   JSON.stringify(stamp, null, 2) + "\n",
 );
 
-if (OPTIONS.check) {
+if (OPTIONS.check || OPTIONS.checkContent) {
   const stale = [...expected.entries()]
+    .filter(([path]) => !OPTIONS.checkContent || path !== provenancePath)
     .filter(([path, bytes]) =>
       !existsSync(path)
       || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))

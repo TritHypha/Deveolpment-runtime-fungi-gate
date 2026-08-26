@@ -213,7 +213,7 @@ import { join, resolve } from "node:path";
 const index = process.argv.indexOf("--root");
 const root = resolve(process.argv[index + 1]);
 const graph = JSON.parse(readFileSync(join(root, "build/graph/galerina-devtools-project-graph.json"), "utf8"));
-process.exit(graph.version === "fixture.v1" ? 0 : 1);
+process.exit(process.argv.includes("--check-content") && graph.version === "fixture.v1" ? 0 : 1);
 `);
     git(root, ["add", "--", "."]);
     git(root, ["commit", "-m", "fixture inputs"]);
