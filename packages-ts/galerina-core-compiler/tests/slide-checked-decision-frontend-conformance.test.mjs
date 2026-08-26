@@ -33,7 +33,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { parseProgram, executeFlow } from "../dist/index.js";
@@ -41,7 +41,10 @@ import { parseProgram, executeFlow } from "../dist/index.js";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PKG = join(HERE, "..");
 const VALIDATOR = join(PKG, "src", "self-hosted", "slide-checked-decision-frontend.fungi");
-const SLIDE_ORACLE = join(PKG, "..", "..", "..", "SLIDE", "src", "checked-decision-frontend-receipt.mjs");
+const SLIDE_ROOT = process.env.GALERINA_SLIDE_DIR
+  ? resolve(process.env.GALERINA_SLIDE_DIR)
+  : join(PKG, "..", "..", "..", "SLIDE");
+const SLIDE_ORACLE = join(SLIDE_ROOT, "src", "checked-decision-frontend-receipt.mjs");
 
 // ---------- domain-constant extraction (live, with a self-test) ----------
 
