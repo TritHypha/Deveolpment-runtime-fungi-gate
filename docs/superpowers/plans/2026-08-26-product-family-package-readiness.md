@@ -115,24 +115,30 @@ assert.throws(() => generateProductProfiles(plannedWithAdmittedWidth, readExactP
 const sourceWithEscapedDuplicateKey = Buffer.from(
   sourceRegistryBytes.toString("utf8").replace(
     '"schema": "product-profiles.source.v1",',
-    '"schema": "product-profiles.source.v1", "\\u0073chema": "product-profiles.v1",',
+    '"schema": "product-profiles.source.v1", "\\u0073chema": "product-profiles.source.v1",',
   ),
   "utf8",
 );
-const invalidSourceBytes = [
+const sourceSchemaRefusals = [
   sourceWithPolicyDigest,
   sourceWithWrongSchema,
   sourceWithUnknownField,
-  sourceWithEscapedDuplicateKey,
 ];
-for (const sourceBytes of invalidSourceBytes) {
+for (const sourceBytes of sourceSchemaRefusals) {
   let policyReads = 0;
   assert.throws(() => generateProductProfiles(sourceBytes, () => {
     policyReads += 1;
     return Buffer.from("forbidden policy read", "utf8");
-  }), /SOURCE_SCHEMA_REFUSED|STRICT_JSON_DUPLICATE/);
+  }), /SOURCE_SCHEMA_REFUSED/);
   assert.equal(policyReads, 0);
 }
+
+let duplicatePolicyReads = 0;
+assert.throws(() => generateProductProfiles(sourceWithEscapedDuplicateKey, () => {
+  duplicatePolicyReads += 1;
+  return Buffer.from("forbidden policy read", "utf8");
+}), /STRICT_JSON_DUPLICATE/);
+assert.equal(duplicatePolicyReads, 0);
 ```
 
 These controls use exact source bytes and prove that a generated-only field, a
@@ -141,6 +147,12 @@ escape-equivalent duplicate key refuse before policy access. The duplicate
 fixture must reach the existing decoded-key detector in
 `scripts/lib/assurance-fabric/strict-json.mjs`; ordinary `JSON.parse` is not an
 admitted substitute.
+
+The duplicate fixture gives both decoded `schema` members the independently
+valid value `product-profiles.source.v1` and requires only
+`STRICT_JSON_DUPLICATE`. A controlled substitution of `JSON.parse` for
+`parseStrictJsonBytes` therefore produces a source-schema-valid last-value
+object and must fail the focused test rather than satisfying another refusal.
 
 The CLI fixture builds an isolated minimal repository-shaped directory by
 copying the exact generator and strict-JSON module bytes under test, then invokes
