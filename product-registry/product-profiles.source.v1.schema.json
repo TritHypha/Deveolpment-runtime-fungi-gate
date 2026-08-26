@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "product-profiles.source.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "products"
+  ],
+  "properties": {
+    "schema": {
+      "const": "product-profiles.source.v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "products": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/product"
+      }
+    }
+  },
+  "$defs": {
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "productId",
+        "productClass",
+        "governanceClass",
+        "compatibilityState",
+        "policyId",
+        "policyPath",
+        "packageNamespaces",
+        "artifactNamespace",
+        "admittedSafetyProfiles",
+        "admittedBuildModes",
+        "admittedPhysicalProfiles",
+        "entrypointId",
+        "externalAuthorizerId"
+      ],
+      "properties": {
+        "productId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,63}$"
+        },
+        "productClass": {
+          "enum": [
+            "production",
+            "research-nonprod"
+          ]
+        },
+        "governanceClass": {
+          "enum": [
+            "zero-trust",
+            "admitted-closed-network",
+            "research-only"
+          ]
+        },
+        "compatibilityState": {
+          "enum": [
+            "planned",
+            "admitted",
+            "lab",
+            "retired"
+          ]
+        },
+        "policyId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,127}$"
+        },
+        "policyPath": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "packageNamespaces": {
+          "$ref": "#/$defs/stringSet"
+        },
+        "artifactNamespace": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9/-]{0,127}$"
+        },
+        "admittedSafetyProfiles": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "strict",
+              "high_integrity",
+              "deterministic"
+            ]
+          }
+        },
+        "admittedBuildModes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "build-production",
+              "build-deterministic",
+              "build-wasm-standalone",
+              "build-wasm-hybrid"
+            ]
+          }
+        },
+        "admittedPhysicalProfiles": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "1",
+              "32",
+              "64",
+              "256"
+            ]
+          }
+        },
+        "entrypointId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,127}$"
+        },
+        "externalAuthorizerId": {
+          "enum": [
+            "vok"
+          ]
+        }
+      }
+    },
+    "stringSet": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    }
+  }
+}

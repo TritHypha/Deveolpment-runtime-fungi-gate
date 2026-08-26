@@ -1,0 +1,49 @@
+{
+  "schema": "product-profiles.source.v1",
+  "schemaVersion": 1,
+  "products": [
+    {
+      "productId": "galerina",
+      "productClass": "production",
+      "governanceClass": "zero-trust",
+      "compatibilityState": "admitted",
+      "policyId": "galerina-governance-v1",
+      "policyPath": "packages-galerina/galerina-core-compiler/src/governance-verifier.ts",
+      "packageNamespaces": [
+        "@galerina/"
+      ],
+      "artifactNamespace": "galerina/v1",
+      "admittedSafetyProfiles": [
+        "strict",
+        "high_integrity",
+        "deterministic"
+      ],
+      "admittedBuildModes": [
+        "build-production",
+        "build-deterministic",
+        "build-wasm-standalone",
+        "build-wasm-hybrid"
+      ],
+      "admittedPhysicalProfiles": [
+        "1"
+      ],
+      "entrypointId": "galerina",
+      "externalAuthorizerId": "vok"
+    },
+    {
+      "productId": "trametes",
+      "productClass": "production",
+      "governanceClass": "admitted-closed-network",
+      "compatibilityState": "planned",
+      "policyId": "trametes-policy-unavailable",
+      "policyPath": "",
+      "packageNamespaces": [],
+      "artifactNamespace": "trametes/planned/v1",
+      "admittedSafetyProfiles": [],
+      "admittedBuildModes": [],
+      "admittedPhysicalProfiles": [],
+      "entrypointId": "trametes-unavailable",
+      "externalAuthorizerId": "vok"
+    }
+  ]
+}

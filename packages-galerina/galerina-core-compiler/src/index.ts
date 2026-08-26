@@ -12,6 +12,18 @@
 
 // Phase 4 — Lexer
 export {
+  loadProductRegistry,
+  resolveProductProfile,
+  type ProductId,
+  type PhysicalProfile,
+  type ProductSelection,
+  type ProductCompatibilityState,
+  type AdmittedProductProfile,
+  type ProductRegistry,
+  type ProductProfileResult,
+} from "./product-profile.js";
+
+export {
   lex,
   V1_ACTIVE_KEYWORDS,
   V1_FUTURE_RESERVED,

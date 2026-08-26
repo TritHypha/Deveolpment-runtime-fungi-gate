@@ -1,0 +1,49 @@
+{
+  "schema": "product-profiles.v1",
+  "schemaVersion": 1,
+  "products": [
+    {
+      "productId": "galerina",
+      "productClass": "production",
+      "governanceClass": "zero-trust",
+      "compatibilityState": "admitted",
+      "policyId": "galerina-governance-v1",
+      "packageNamespaces": [
+        "@galerina/"
+      ],
+      "artifactNamespace": "galerina/v1",
+      "admittedSafetyProfiles": [
+        "strict",
+        "high_integrity",
+        "deterministic"
+      ],
+      "admittedBuildModes": [
+        "build-production",
+        "build-deterministic",
+        "build-wasm-standalone",
+        "build-wasm-hybrid"
+      ],
+      "admittedPhysicalProfiles": [
+        "1"
+      ],
+      "entrypointId": "galerina",
+      "externalAuthorizerId": "vok",
+      "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b"
+    },
+    {
+      "productId": "trametes",
+      "productClass": "production",
+      "governanceClass": "admitted-closed-network",
+      "compatibilityState": "planned",
+      "policyId": "trametes-policy-unavailable",
+      "packageNamespaces": [],
+      "artifactNamespace": "trametes/planned/v1",
+      "admittedSafetyProfiles": [],
+      "admittedBuildModes": [],
+      "admittedPhysicalProfiles": [],
+      "entrypointId": "trametes-unavailable",
+      "externalAuthorizerId": "vok",
+      "policyDigest": "sha256:c3e325e1caa958f4b6ce231d1726e60ea768c3116e166355bf6cdd05fdb33a88"
+    }
+  ]
+}

@@ -46,7 +46,9 @@
     "audit:registry-static-host-toolchain": "node scripts/verify-registry-static-host-toolchain.mjs",
     "audit:registry-static-host-toolchain:selftest": "node --test scripts/tests/registry-static-host-toolchain.test.mjs",
     "registry:generation": "npm --prefix packages-galerina/galerina-framework-app-kernel run build && node scripts/registry-generation-cli.mjs build-current",
-    "registry:generation:check": "npm --prefix packages-galerina/galerina-framework-app-kernel run build && node scripts/registry-generation-cli.mjs check-current"
+    "registry:generation:check": "npm --prefix packages-galerina/galerina-framework-app-kernel run build && node scripts/registry-generation-cli.mjs check-current",
+    "registry:products": "node scripts/generate-product-profiles.mjs --write",
+    "registry:products:check": "node scripts/generate-product-profiles.mjs --check"
   },
   "engines": {
     "node": ">=18.0.0"
