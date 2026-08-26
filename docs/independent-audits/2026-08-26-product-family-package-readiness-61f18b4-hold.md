@@ -42,7 +42,8 @@ Smallest required correction:
 - Exact graph `Galerina-product-family-readiness-61f18b4-full`: 65,208 nodes,
   166,636 edges, zero skipped files and exact target HEAD.
 - Documentation fixed point: 298 indexes and 2,000 documents.
-- Prompt-lint 570 fixtures with zero findings.
+- Separately author-reported evidence, not rerun by this independent review:
+  prompt-lint 570 fixtures with zero findings.
 - No `.fungi`, `.gate`, native-package or code changes.
 
 This receipt records a historical immutable HOLD. A later replacement requires
