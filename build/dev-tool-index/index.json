@@ -1924,7 +1924,8 @@
       "inCadence": false,
       "cadenceDisposition": "on-demand",
       "concerns": [
-        "diagnostics",
+        "signing/fusion",
+        "provenance",
         "source-hygiene",
         "graph/index"
       ]
@@ -3659,7 +3660,6 @@
       "audit-package-border.mjs",
       "audit-path-leak.mjs",
       "audit-perf-hotpath.mjs",
-      "audit-product-package-boundaries.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
@@ -3929,6 +3929,7 @@
       "audit-overclaim-phrases.mjs",
       "audit-perf-hotpath.mjs",
       "audit-private-doc-leak.mjs",
+      "audit-product-package-boundaries.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
       "audit-registry-fixtures.mjs",
@@ -4310,6 +4311,7 @@
     "provenance": [
       "audit-coverage.mjs",
       "audit-path-leak.mjs",
+      "audit-product-package-boundaries.mjs",
       "audit-provenance.mjs",
       "audit-u2-version-floor.mjs",
       "audit-wasm-validate.mjs",
