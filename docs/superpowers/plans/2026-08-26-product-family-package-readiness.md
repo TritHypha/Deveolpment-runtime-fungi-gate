@@ -891,7 +891,7 @@ Run documentation, registry, contract, code and diagnostic checks after their
 generators. The docs index must pass after a second no-write check; the current
 planning baseline's 287/296 drift cannot be normalized into closure.
 
-Fixed points are reached: docs 298 indexes/2,004 documents, code index and
+Fixed points are reached: docs 299 indexes/2,006 documents, code index and
 registry 987 entries, contracts 3,938 across 2,974 `.fungi` files, unit registry
 157, KB index 1,956 and graph orchestration 9/9.
 
@@ -935,6 +935,11 @@ docs: close product family package readiness
 
 Closure receipt and review evidence committed at
 `f837ebc0e4ba819db7445a3bde1f707be5d9f813`.
+
+A clean-commit replay then exposed and closed the real-generator provenance
+mismatch at `fb1fde58c62f789b5ed5143fd5666511e2eeac13`. The product audit now passes
+on that clean commit over 100 packages and 11,087 edges while the strict
+generator check remains available separately.
 
 ---
 
