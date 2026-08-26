@@ -863,43 +863,69 @@ mechanical `packages-galerina/` -> `packages-ts/` path prefix yields 3,001
 native `.fungi`/`.gate` blobs before and after, with zero additions, removals
 or content-identity changes.
 
-- [ ] **Step 2: Run focused LF and physical-CRLF controls**
+- [x] **Step 2: Run focused LF and physical-CRLF controls**
 
 Run product registry, policy, artifact, CLI and package-boundary suites on true
 LF and materialized physical CRLF copies. Refuse a converted copy that is only
 an escaped newline string.
 
-- [ ] **Step 3: Run the full estate sequentially**
+Exact implementation HEAD `0aa4bcc08a3a45d25e2393627161ce31a2805c01`
+passes 30/30 on true LF and 30/30 on a detached copy where 19 relevant files
+were materialized with physical CRLF and verified to contain zero lone LF.
+
+- [x] **Step 3: Run the full estate sequentially**
 
 Use the repository's phased runner. Do not launch all packages simultaneously.
 Record exact package counts, pass/refusal counts, elapsed seconds and every
 timeout. A timeout is not a PASS; rerun only its owning phase with the admitted
 130-second ceiling when the suite contract permits it.
 
-- [ ] **Step 4: Reach deterministic index fixed points**
+The bounded runner executed 100/100 packages sequentially and observed 1,190
+tests: 25 packages passed and 75 failed, with zero observed timeout. The
+compiler completed in 130.9 seconds. The exact total elapsed seconds were not
+durably retained, so that field is `UNVERIFIED` and contributes to `HOLD`.
+
+- [x] **Step 4: Reach deterministic index fixed points**
 
 Run documentation, registry, contract, code and diagnostic checks after their
 generators. The docs index must pass after a second no-write check; the current
 planning baseline's 287/296 drift cannot be normalized into closure.
 
-- [ ] **Step 5: Refresh the exact full graph**
+Fixed points are reached: docs 298 indexes/2,004 documents, code index and
+registry 987 entries, contracts 3,938 across 2,974 `.fungi` files, unit registry
+157, KB index 1,956 and graph orchestration 9/9.
+
+- [x] **Step 5: Refresh the exact full graph**
 
 Build one full zero-skipped code graph at the candidate HEAD. Verify node/edge
 actual equals expected, exact indexed HEAD matches Git, and new product symbols
 plus package-boundary edges are discoverable.
 
-- [ ] **Step 6: Obtain multi-vector external and independent reviews**
+`Galerina-product-family-readiness-0aa4bcc0-full` is exact at the candidate:
+65,603/65,603 nodes, 167,380/167,380 edges and zero skipped files. All named
+product APIs plus `evaluateProductPackageBoundaries` are discoverable.
+
+- [!] **Step 6: Obtain multi-vector external and independent reviews**
 
 Send one source-minimal Grok/Claude challenge with at least three independent
 vectors: authority/cache contamination, migration/rollback, and hostile future
 product/width controls. Preserve prompt and reply bytes/digests. Then obtain a
 separate immutable LF/CRLF code review. External advice cannot mint PASS.
 
-- [ ] **Step 7: Write the closure receipt**
+Grok Expert completed four independent vectors and its exact prompt/reply bytes
+and digests are preserved. Local adjudication rejected H1-H3 and partially
+upheld H4 as an evidence gap already represented by the full-estate HOLD. The
+fresh read-only Codex review stalled after a graph-service warning and emitted
+no verdict. Independent-review status is therefore `EVIDENCE_INSUFFICIENT`.
+
+- [x] **Step 7: Write the closure receipt**
 
 The receipt states exact branch, HEAD, tree, changed paths, test/gate counts,
 graph identity, docs fixed point, reviews, Git Custody result, KB main identity,
 zero native-source delta and the first unopened scalar queue locator.
+
+Receipt: `docs/reports/product-family-package-readiness-closure-2026-08-26.md`.
+Verdict: `HOLD`.
 
 - [ ] **Step 8: Commit closure**
 

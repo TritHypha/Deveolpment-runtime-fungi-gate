@@ -1,0 +1,110 @@
+Worked for 1m 7s
+Adversarial readiness review — Galerina 0aa4bcc08a3a45d25e2393627161ce31a2805c01
+
+Read-only review of supplied claims. No repository objects inspected. No PASS, integration permission, or native Fungi/Gate authority is minted. Estate-red HOLD is left in place.
+
+Weakest claim: product-bound artifact and cache identities (asserted; no negative substitution evidence).
+
+Control that cannot fail if ordered first: closed admission of Galerina only, evaluated before cache lookup, graph plan, or receipt write.
+
+Evidence that would reverse added-defect concern: local proof that product+profile+width are in every cache/artifact/receipt key, leftover packages-galerina is unread, and refuse of Trametes/unknown/32/64/256 occurs before any shared-state read.
+
+Q1 — Authority and cache-contamination
+
+Affected invariant: only Galerina is admitted; artifacts and caches are product-bound; planned products must not appear admitted.
+
+CONFIRMED (supplied): closed registry, product-neutral policy seam, product-bound artifact/cache identities, explicit CLI product selection, only Galerina admitted, Trametes planned.
+
+NOT VERIFIABLE: key composition; whether policy decisions are keyed by product; order of admission vs cache hit; whether publication names (unchanged) participate in identity.
+
+PLAUSIBLE defect: a product-neutral policy or content-only cache key lets a Galerina-admitted object satisfy a later non-Galerina or product-omitted request.
+
+Smallest hostile fixture: keep blob and graph node IDs fixed. Run the same locator twice: (1) --product galerina profile 1; (2) identical invocation with product omitted, defaulted, or trametes. Variant: copy a Galerina cache entry and rewrite only the product field in the key or envelope.
+
+Expected safe result: (2) refuses before cache hit; no Galerina receipt reused; planned product never stamped admitted.
+
+Local evidence needed: cache-key schema; admission-before-lookup; miss/refuse traces for the fixture.
+
+Hypothesis H1 (Q1): Product-neutral policy cache or content-hash artifact key can cross the closed Galerina boundary. PLAUSIBLE.
+
+Q2 — Migration and rollback
+
+Affected invariant: packages-galerina → packages-ts is complete and reversible; execution must not still depend on the old root; publication names unchanged must not hide a split brain.
+
+CONFIRMED (supplied): mechanical TS root move; publication names unchanged; native roots unopened; no Fungi/Gate blob change.
+
+NOT VERIFIABLE: workspace globs, path mappings, generated locators, dual-tree presence, launcher resolution, rollback mapping.
+
+PLAUSIBLE defect: move looks complete in the graph while the missing global TypeScript launcher, process-root, or a generated locator still resolves packages-galerina (or a symlink). Unchanged publication names make producer and consumer disagree about the root without a name change.
+
+Smallest hostile fixture: after the move, leave packages-galerina in place and alter one file only there. Invoke the same publication name / CLI product selection. For rollback: restore the old root and replay one generated locator written under packages-ts.
+
+Expected safe result: live execution reads only packages-ts; leftover old root is unused; rollback either restores a recorded locator map or refuses mixed locators.
+
+Local evidence needed: resolved realpaths for launcher, evaluator, and one generated locator; proof both trees are not simultaneously readable as the same package.
+
+Hypothesis H2 (Q2): Unchanged publication names plus a leftover or generated packages-galerina locator can make the move look complete while execution is not reversible or not moved. PLAUSIBLE.
+
+Q3 — Hostile future-product and width
+
+Affected invariant: unknown products, governance-off, and physical profiles 32/64/256 refuse; scalar 1 is the only executable profile; Trametes is planned, not admitted; a scalar-1 receipt must not absorb another width or laboratory identity.
+
+CONFIRMED (supplied): the refuse/admit matrix above; Gate blobs unchanged.
+
+NOT VERIFIABLE: whether refuse is a closed enum before planning; whether receipts bind product+width+laboratory; neighbour-field parsing (product, family, profile, width, Gate laboratory id).
+
+PLAUSIBLE defect: one adjacent field is not in the refuse path. Trametes or width 32 is refused at CLI but still planned or cached under a Galerina/scalar-1 receipt if identity is incomplete.
+
+Smallest one-field neighbours:
+
+product=trametes (planned), all else Galerina/scalar-1.
+product=galerina, profile=1, width=32 (or 64/256).
+product=galerina, profile=1, Gate laboratory identity set, no other change.
+product=<unknown> or governance-off true, same object IDs.
+
+Expected safe result: refuse before replan and before cache write; no scalar-1 receipt emitted.
+
+Local evidence needed: field-level refuse traces; receipt schema showing product+width+laboratory; no graph mutation on refuse.
+
+Hypothesis H3 (Q3): A one-field neighbour (Trametes, unknown, Gate laboratory, or width 32/64/256) can refuse at the CLI yet still replan or stamp a scalar-1 receipt. PLAUSIBLE.
+
+Q4 — Evidence and failure-recovery
+
+Affected invariant: exact-head graph and focused LF/CRLF greens do not conceal a product-isolation or producer-consumer asymmetry.
+
+CONFIRMED (supplied): focused controls 30/30 on true LF and materialized CRLF; estate 25/100 pass, 75 fail (missing global TS launcher; known process-root and Tower Citizen failures); graph 65,603/65,603 nodes, 167,380/167,380 edges, zero skipped; product APIs and package-boundary evaluator discoverable.
+
+NOT VERIFIABLE: that graph completeness implies product-keyed edges; that LF/CRLF copies exercise identity; that launcher failure is independent of product selection; producer vs consumer identity functions.
+
+PLAUSIBLE defect: exact counts only prove closure of the scanned tree. Shared publication names plus a missing launcher can hide an asymmetric pair: Galerina producer writes a bound artifact; consumer resolves by name/path and accepts it under another product or width. CRLF copies that are source-equivalent do not discriminate cache keys.
+
+Strongest discriminating local test: pick one focused green package and one estate-red package that share a publication name. Produce under Galerina scalar-1. Consume the same object IDs four ways: Galerina/1, product omitted, Trametes, width 32. Assert refuse vs hit at the cache and at the package-boundary evaluator. Separately, hash the LF vs CRLF cache keys; they must differ if line-ending is in-scope, and both must include product+width.
+
+Hypothesis H4 (Q4): Exact graph counts and focused LF/CRLF greens cannot detect a publication-name consumer accepting a Galerina producer object under another product or width, especially while the estate launcher is missing. PLAUSIBLE.
+
+Highest-value additional test
+
+Single test covering H1–H4: product-and-width substitution on a fixed object ID, with realpath tracing.
+
+Produce one artifact under Galerina, profile 1, from packages-ts.
+Record cache key, receipt fields, evaluator decision, and resolved paths (prove packages-galerina is not read).
+Replay the same bytes/IDs with one-field changes only: omitted product, trametes, unknown, width 32, Gate laboratory set.
+Require refuse-before-lookup; no receipt reuse; package-boundary evaluator sees the substituted field.
+
+This is the smallest fixture that can falsify bound identity, the move, future-product refuse, and evidence sufficiency together.
+
+Architecture pressure
+
+Smallest design that preserves stated invariants: closed product enum and closed executable profile, both applied before cache, graph plan, or receipt; identity tuple (product, profile, width, artifact-hash) on every owned object; filesystem root not part of publication identity but part of resolved-path audit; leftover packages-galerina treated as hostile if present.
+
+Component whose measured benefit may not justify complexity: product-neutral policy seam. Neutrality is useful only if every decision record is still product-keyed. Neutrality plus shared cache is the contamination path.
+
+Focused 30/30 does not justify estate-red integration. Graph exactness does not justify product-isolation claims.
+
+Verdict
+
+Material claims: H1–H4 all PLAUSIBLE; implementation facts beyond the packet NOT VERIFIABLE. Estate-red HOLD stands. Do not treat this review as repair authority.
+
+PROCEED_TO_LOCAL_ADJUDICATION
+
+25 sources
