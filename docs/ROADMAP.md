@@ -25,16 +25,21 @@ Profiles `128`, `512` and adaptive widths remain measurement-only. Profile
 selection is deterministic, pre-admitted and receipt-bound, and every fallback
 creates a new identity before execution.
 
-Tasks 1–6 are complete through exact implementation checkpoint `1f06fc476`.
-Task 7's locator and governing-record work is locally complete, placing the
-nine-task chapter at **77% prepared** but still **66% closed** until the KB
-publication gate is green. The full external graph is exact at documentation
-checkpoint `751f54e18`, with 65,558 nodes and 167,282 edges and zero
-skips; the product audit passes across 100 packages and 10,826 checked edges;
-Myco indexes 9,280 files with zero over-size skips; Hypha's self-test passes
-58/58. Myco also exposes 208 stale TypeScript-oracle comments in 205 existing
-`.fungi` files. Those comments are deliberately deferred because this chapter
-must not edit native source.
+Tasks 1–6 are closed. Task 7's locator and governing-record work is locally
+complete, and Task 8's non-native verification repair is committed at
+`00baabc79`. The nine-task audit map is therefore **89% prepared** (8/9) but
+still **67% closed** (6/9): KB publication, fresh immutable review and live Git
+integration remain fail-closed. The final sequential estate executed all 100
+packages in 460.502 seconds: 97 packages passed and only the three predeclared
+HOLD packages failed. The compiler retained four RD-0858 native RED controls,
+the example app retained three legacy signing refusals, and `galerina-test`
+retained one existing `.fungi` locator assertion. There were zero timeouts.
+
+The prior external graph at `751f54e18`, Myco inventory and Hypha scan remain
+historical evidence only until the exact `00baabc79` closure graph/index refresh
+completes. Myco previously exposed 208 stale TypeScript-oracle comments in 205
+existing `.fungi` files; those comments remain deliberately deferred because
+this chapter must not edit native source.
 
 The first unopened native locator is
 `packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/`. Private
