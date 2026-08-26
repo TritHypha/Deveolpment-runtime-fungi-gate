@@ -6,7 +6,7 @@
     "tests": 9612,
     "devTools": 178,
     "auditTools": 92,
-    "toolsInCadence": 120,
+    "toolsInCadence": 121,
     "proofs": 40
   },
   "packages": [
@@ -1921,8 +1921,8 @@
       "category": "audit",
       "purpose": "(no header description)",
       "selfTest": false,
-      "inCadence": false,
-      "cadenceDisposition": "on-demand",
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -4373,17 +4373,9 @@
   "gaps": {
     "packagesNoTests": [],
     "concernsNoTool": [],
-    "toolsNotInCadence": [
-      "audit-product-package-boundaries.mjs"
-    ]
+    "toolsNotInCadence": []
   },
-  "contractViolations": [
-    {
-      "code": "TOOLING-AUDIT-UNCOVERED",
-      "subject": "audit-product-package-boundaries.mjs",
-      "detail": "Audit/lint has no phase-close command, CI command, registered fixture evidence, or valid exception."
-    }
-  ],
+  "contractViolations": [],
   "cadenceCoverage": [
     {
       "tool": "audit-allowlist-sensitive.mjs",
@@ -5256,12 +5248,21 @@
     },
     {
       "tool": "audit-product-package-boundaries.mjs",
-      "directEntryIds": [],
+      "directEntryIds": [
+        "audit:product-boundaries"
+      ],
       "transitiveEntryIds": [],
       "via": [],
-      "cadences": [],
-      "lifecycle": "not-applicable",
-      "disposition": "on-demand"
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
     },
     {
       "tool": "audit-production-blockers.mjs",
