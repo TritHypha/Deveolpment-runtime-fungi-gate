@@ -44,6 +44,17 @@ counts or open items that a newer section explicitly supersedes.
 - [!] The signed production-registry generator remains correctly refused
   because private `packages-ts/galerina-registry/registry-index-v2.json` is not
   present. Do not fabricate, copy or sign substitute registry bytes.
+- [!] The final read-only Git Custody Audit at `7df16f46` classifies this clean
+  feature branch as local-only, unpublished and without an upstream. The
+  repository-wide snapshot reports 8,989 findings because registered
+  historical/dirty worktrees are included, and remote fetch freshness remains
+  unknown. Do not infer that those other worktrees are disposable or enter the
+  integration task from this snapshot.
+- [!] The three-node audit map is structurally valid but remains `DRAFT` with
+  digest `e5489615a9903db92edb59d90152d094b18490db3e6c548c9aa90edcb8835653`.
+  `bounded-tool-batch` must not execute it until an exact post-KB approval
+  receipt exists; Myco, Hypha and graph refreshes remain sequential outside
+  the batcher's admitted release-one policy.
 - [!] KB main-only custody is not satisfied. Fresh fetch shows `main` and
   `origin/main` at `dc111bcb`, while three local topic branches each retain
   318–333 unique commits and `origin/codex/ctll-v2-architecture` retains 333

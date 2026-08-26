@@ -42,6 +42,13 @@ KB work is losslessly consolidated to `main`. The signed production registry
 is separately refused because its private index input is absent. Neither HOLD
 may be normalized into a clean pre-Fungi PASS.
 
+The current Galerina feature worktree is clean, but Git Custody Audit labels
+the branch local-only/unpublished with no upstream and remote freshness
+unknown. Its repository-wide scan also retains thousands of findings from
+registered historical and dirty worktrees. Integration must re-open those
+exact worktree owners and obtain a fresh fetch receipt; it may not turn this
+chapter's clean worktree into a repository-wide clean claim.
+
 ## Current pre-Fungi boundary - 2026-08-24
 
 The current executable route is Galerina checked source -> immutable checked
