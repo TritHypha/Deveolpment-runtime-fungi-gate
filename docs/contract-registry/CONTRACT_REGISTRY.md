@@ -3855,7 +3855,7 @@
 | `validateQualifier` | `pure flow validateQualifier(qualifier: String) -> String` | — | Accept a governance verification request. Return APPROVED or DENIED with reason. |
 | `verifyFlowGovernance` | `secure flow verifyFlowGovernance(readonly request: Request) -> VerifyResult` | `network.inbound` `audit.write` | Accept a governance verification request. Return APPROVED or DENIED with reason. |
 | `healthCheck` | `secure flow healthCheck(readonly request: Request) -> HealthStatus` | `network.inbound` `audit.write` | — |
-| `isValidGovernanceFlags` | `pure flow isValidGovernanceFlags(flags: Int) -> Bool` | — | — |
+| `isValidGovernanceFlags` | `pure flow isValidGovernanceFlags(flags: Int) -> Bool` | — | Verify a runtime manifest's schema version and signature status. |
 | `isValidManifestVersion` | `pure flow isValidManifestVersion(version: String) -> Bool` | — | — |
 | `manifestTrustLevel` | `pure flow manifestTrustLevel(verified: Bool, versionValid: Bool, hasSignature: Bool, flagsValid: Bool) -> Int` | — | Verify a runtime manifest's schema version and signature status. |
 | `validateFlagsMask` | `pure flow validateFlagsMask(n: Int) -> Int` | — | Verify a runtime manifest's schema version and signature status. |

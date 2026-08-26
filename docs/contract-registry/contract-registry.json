@@ -1,7 +1,7 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-25T12:09:02.000Z",
-  "sha": "98fc10231",
+  "generatedAt": "2026-08-26T15:56:54.000Z",
+  "sha": "1cdeb8a0a",
   "contracts": 3938,
   "parsed": 2974,
   "rows": [
@@ -3237,7 +3237,7 @@
       "qualifier": "pure",
       "signature": "pure flow isValidGovernanceFlags(flags: Int) -> Bool",
       "effects": [],
-      "intent": ""
+      "intent": "Verify a runtime manifest's schema version and signature status."
     },
     {
       "file": "examples/auth-service/manifestVerificationService.fungi",

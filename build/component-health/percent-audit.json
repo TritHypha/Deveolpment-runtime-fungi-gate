@@ -2,8 +2,8 @@
   "generatedBy": "scripts/component-health.mjs --audit-html",
   "provenance": {
     "available": true,
-    "branch": "codex/rd-0858-unit4-process-root",
-    "sha": "9aac3798b",
+    "branch": "codex/product-family-package-readiness",
+    "sha": "1cdeb8a0a",
     "detached": false,
     "dirty": true
   },
@@ -36,7 +36,7 @@
         {
           "label": "Packages",
           "pct": 98,
-          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 529 tracked package TypeScript paths, 2551 unexecuted .fungi sources, 56 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
+          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 533 tracked package TypeScript paths, 2551 unexecuted .fungi sources, 56 unowned host boundaries, 16 node_modules trees and 1 nested native identity",
           "evidence": {
             "asserted": "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger"
           }
@@ -341,7 +341,7 @@
         {
           "item": "Package retirement",
           "state": "building",
-          "detail": "529 tracked package TypeScript paths · 2551/2551 .fungi sources unexecuted · 0/56 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
+          "detail": "533 tracked package TypeScript paths · 2551/2551 .fungi sources unexecuted · 0/56 host bridges owned · 16 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
         },
         {
           "item": "Value-unit types (RD-0349)",
