@@ -56,7 +56,7 @@ test("audit-syntax-reference-links refuses a dangling target and accepts an exis
 
 test("audit-syntax reports malformed TypeScript and clears a valid control", () => {
   withFixture("galerina-syntax-gate-", (root) => {
-    const sourcePath = "packages-galerina/probe/src/index.ts";
+    const sourcePath = "packages-ts/probe/src/index.ts";
     write(root, sourcePath, "export const broken = ;\n");
     const planted = run("audit-syntax.mjs", ["--root", root, "--json"]);
     assert.equal(planted.status, 0, planted.stdout + planted.stderr);

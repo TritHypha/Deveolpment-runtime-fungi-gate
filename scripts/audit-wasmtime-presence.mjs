@@ -101,7 +101,7 @@ function probeHarness() {
   if (!cargoOk) return false;
   const toml = join(
     ROOT,
-    "packages-galerina",
+    "packages-ts",
     "galerina-devtools-wasmtime-oracle",
     "Cargo.toml",
   );

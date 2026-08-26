@@ -20,7 +20,7 @@ import {
 } from "./lib/flat-package-root-lock.mjs";
 
 const MAX_TRACKED_FILE_BYTES = 16 * 1024 * 1024;
-const PACKAGE_ROOT_NAME = "packages-galerina";
+const PACKAGE_ROOT_NAME = "packages-ts";
 const OUTPUT_RELATIVE = "governance/flat-package-root-lock.json";
 const DEPENDENCY_SECTIONS = [
   ["dependencies", "runtime"],

@@ -8,7 +8,7 @@ import { it } from "node:test";
 
 const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO;
 const AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs"));
-const ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays");
+const ROOT=join(process.cwd(),"packages-ts","galerina-test","src","self-hosted","conversion-overlays");
 const GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
 const CANDIDATES=Object.freeze([
   ["registry-index-admit-from-registry-status.fungi","registryIndexAdmitFromRegistryStatusCore",5,"registry_index_admission_granted"],

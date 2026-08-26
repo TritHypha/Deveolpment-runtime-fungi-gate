@@ -253,7 +253,7 @@ The following must never be committed:
 
 ## Core Security Primitives
 
-`packages-galerina/galerina-core-security/` owns reusable security primitives. Redaction
+`packages-ts/galerina-core-security/` owns reusable security primitives. Redaction
 must fail closed by default: malformed rules, oversized inputs or replacements
 that can re-emit matched secrets must produce redacted output instead of leaking
 raw text. Permission models must deny by default, and matching deny grants must
@@ -265,12 +265,12 @@ fingerprints, safe sink decisions and report shapes for secret use. The app
 kernel and compiler should use those primitives to deny secret flow into logs,
 errors, cache, LLM input, build output and undeclared network destinations.
 
-`packages-galerina/galerina-core-logic/` owns `Tri` and `Galerina` semantics used by core
+`packages-ts/galerina-core-logic/` owns `Tri` and `Galerina` semantics used by core
 policy checks. `Tri` unknown states must not implicitly convert to `Bool` or
 security decisions; callers must choose an explicit conversion policy and should
 use `unknown_as_error` or `unknown_as_false` for security-sensitive decisions.
 
-`packages-galerina/galerina-core-compiler/` must catch the same risks before execution when
+`packages-ts/galerina-core-compiler/` must catch the same risks before execution when
 source text is available. The interim syntax safety scan reports direct Tri
 branch conditions, implicit Tri/Decision/Bool conversions, non-exhaustive Tri
 matches, risky `unknown_as: true` use in secure flows, raw secret-like literals

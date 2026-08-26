@@ -21,7 +21,7 @@ test("the checked-in lock exactly accounts for every current direct package peer
   assert.equal(actual.developmentVersionDrift.length, 2);
   verifyFlatPackageRootLock(actual);
 
-  const directPackageDirectories = readdirSync(join(REPO, "packages-galerina"), { withFileTypes: true })
+  const directPackageDirectories = readdirSync(join(REPO, "packages-ts"), { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
     .length;
   assert.equal(actual.packages.length, directPackageDirectories);

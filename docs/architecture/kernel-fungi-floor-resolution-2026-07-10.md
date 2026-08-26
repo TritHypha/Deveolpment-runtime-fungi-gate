@@ -39,7 +39,7 @@ This is not an accident. It is the project's stated doctrine already realised: *
 
 Concretely, "kernel `.fungi`-complete" means **all three** of:
 
-1. **Every decision** — admission gate order, hash-pin compare, signature-*result* fold, capability-mask intersection, revocation verdict, route defaults, secret gating — is authored in `.fungi` and gated by the differential-parity harness (the same loop the [effect-checker pilot](../../packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi) just proved).
+1. **Every decision** — admission gate order, hash-pin compare, signature-*result* fold, capability-mask intersection, revocation verdict, route defaults, secret gating — is authored in `.fungi` and gated by the differential-parity harness (the same loop the [effect-checker pilot](../../packages-ts/galerina-core-compiler/src/self-hosted/effect-checker.fungi) just proved).
 2. **The host floor is the declared manifest** — seven fixed module/WASM surfaces, narrowed into exact per-consumer callable/data slices — and **nothing else** in the kernel names a host module or invokes the WASM host. The `.fungi` decision logic receives the *outputs* of these primitives (a computed digest, a boolean verify result, a byte buffer) and folds them — exactly as `cert-gate.ts` already folds a TLS library's outputs without doing ASN.1 itself.
 3. **The floor can only shrink, never sprawl** — enforced by a check (below), so a future edit cannot quietly re-introduce a host call into governed logic.
 

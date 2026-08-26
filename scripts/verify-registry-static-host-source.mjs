@@ -211,7 +211,7 @@ if (invoked) {
   const root = resolve(import.meta.dirname, "..");
   const hostDirectory = join(
     root,
-    "packages-galerina",
+    "packages-ts",
     "galerina-framework-app-kernel",
     "native",
     "registry-activation-host",

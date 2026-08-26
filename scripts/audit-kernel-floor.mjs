@@ -27,7 +27,7 @@ if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("-
 const ROOT = rootIndex >= 0
   ? resolve(argv[rootIndex + 1])
   : join(dirname(fileURLToPath(import.meta.url)), "..");
-const KERNEL_SRC = join(ROOT, "packages-galerina", "galerina-framework-app-kernel", "src");
+const KERNEL_SRC = join(ROOT, "packages-ts", "galerina-framework-app-kernel", "src");
 const AS_JSON = argv.includes("--json");
 
 // The ONE file permitted to hold the host floor — the declared TCB seam.

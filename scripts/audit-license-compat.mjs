@@ -143,7 +143,7 @@ function loadOverrides(root) {
 
 // ── The gate ─────────────────────────────────────────────────────────────────────────
 export function auditLicenses(root) {
-  const pkgsDir = join(root, "packages-galerina");
+  const pkgsDir = join(root, "packages-ts");
   const firstParty = readdirSync(pkgsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
   const { byKey: overrides } = loadOverrides(root);
   const reds = [];
@@ -206,21 +206,21 @@ function selfTest() {
   try {
     const mk = (rel, obj) => { const d = join(tmp, rel); mkdirSync(d, { recursive: true }); writeFileSync(join(d, "package.json"), JSON.stringify(obj)); return d; };
     // MIT package with a planted GPL dep → (1) RED.
-    mk("packages-galerina/mit-pkg", { name: "@galerina/mit-pkg", license: "MIT", dependencies: { "evil-gpl": "1.0.0" } });
-    mk("packages-galerina/mit-pkg/node_modules/evil-gpl", { name: "evil-gpl", version: "1.0.0", license: "GPL-3.0" });
+    mk("packages-ts/mit-pkg", { name: "@galerina/mit-pkg", license: "MIT", dependencies: { "evil-gpl": "1.0.0" } });
+    mk("packages-ts/mit-pkg/node_modules/evil-gpl", { name: "evil-gpl", version: "1.0.0", license: "GPL-3.0" });
     // Package with an UNKNOWN dep and NO override → (2) RED.
-    mk("packages-galerina/unk-pkg", { name: "@galerina/unk-pkg", license: "MIT", dependencies: { "mystery": "1.0.0" } });
-    mk("packages-galerina/unk-pkg/node_modules/mystery", { name: "mystery", version: "1.0.0" });
+    mk("packages-ts/unk-pkg", { name: "@galerina/unk-pkg", license: "MIT", dependencies: { "mystery": "1.0.0" } });
+    mk("packages-ts/unk-pkg/node_modules/mystery", { name: "mystery", version: "1.0.0" });
     // Package with an UNKNOWN dep COVERED by an evidenced override (matching hash) → green.
-    const okDir = mk("packages-galerina/ovr-pkg", { name: "@galerina/ovr-pkg", license: "MIT", dependencies: { "oldbsd": "1.2.5" } });
-    const depDir = mk("packages-galerina/ovr-pkg/node_modules/oldbsd", { name: "oldbsd", version: "1.2.5", licenses: [{ type: "BSD" }] });
+    const okDir = mk("packages-ts/ovr-pkg", { name: "@galerina/ovr-pkg", license: "MIT", dependencies: { "oldbsd": "1.2.5" } });
+    const depDir = mk("packages-ts/ovr-pkg/node_modules/oldbsd", { name: "oldbsd", version: "1.2.5", licenses: [{ type: "BSD" }] });
     writeFileSync(join(depDir, "LICENSE"), "the 2-clause bsd text\n");
     const licHash = createHash("sha256").update(readFileSync(join(depDir, "LICENSE"))).digest("hex");
     // The sanctioned GPL extension: GPL in its tree is OK → green (no (1) RED).
-    mk("packages-galerina/galerina-ext-proof-snarkjs", { name: "@galerina/ext-proof-snarkjs", license: "GPL-3.0-only", dependencies: { "snarkjs": "0.7.0" } });
-    mk("packages-galerina/galerina-ext-proof-snarkjs/node_modules/snarkjs", { name: "snarkjs", version: "0.7.0", license: "GPL-3.0" });
+    mk("packages-ts/galerina-ext-proof-snarkjs", { name: "@galerina/ext-proof-snarkjs", license: "GPL-3.0-only", dependencies: { "snarkjs": "0.7.0" } });
+    mk("packages-ts/galerina-ext-proof-snarkjs/node_modules/snarkjs", { name: "snarkjs", version: "0.7.0", license: "GPL-3.0" });
     // A DIFFERENT @galerina pkg declaring the extension as a dep → (4) RED.
-    mk("packages-galerina/bad-consumer", { name: "@galerina/bad-consumer", license: "MIT", dependencies: { "@galerina/ext-proof-snarkjs": "1.0.0" } });
+    mk("packages-ts/bad-consumer", { name: "@galerina/bad-consumer", license: "MIT", dependencies: { "@galerina/ext-proof-snarkjs": "1.0.0" } });
     mkdirSync(join(tmp, "governance"), { recursive: true });
     writeFileSync(join(tmp, "governance", "license-overrides.json"), JSON.stringify({
       overrides: [{ package: "oldbsd", version: "1.2.5", declaredLicense: "BSD", resolvedLicense: "BSD-2-Clause", licenseFileSha256: licHash, reviewer: "self-test", date: "2026-07-11" }],

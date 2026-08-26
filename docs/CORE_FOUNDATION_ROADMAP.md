@@ -29,7 +29,7 @@ Anything outside that list is post-v1 unless it is needed to define core
 semantics.
 
 The language-core maturity roadmap lives in
-`packages-galerina/galerina-core/docs/language-core-maturity-roadmap.md`. It is the
+`packages-ts/galerina-core/docs/language-core-maturity-roadmap.md`. It is the
 foundation checklist for making Galerina credible without pretending the current
 prototype is already a production compiler.
 

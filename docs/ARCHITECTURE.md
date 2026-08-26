@@ -102,7 +102,7 @@ diagnostic code namespace table live in
 The post-SLIDE Galerina-native package resolver must not reproduce npm's nested
 dependency-tree layout. Every independently resolvable Galerina package or
 plugin has exactly one canonical direct-child location under
-`packages-galerina/`. Packages reference canonical peers through admitted
+`packages-ts/`. Packages reference canonical peers through admitted
 manifests; they do not embed copied package instances inside child dependency
 trees.
 
@@ -150,99 +150,99 @@ not be implemented until reconciled:
 
 
 Language documentation, compiler notes, examples and schemas live in
-`packages-galerina/galerina-core/`
+`packages-ts/galerina-core/`
 .
 
  Compiler pipeline contracts live in
-`packages-galerina/galerina-core-compiler/`.
+`packages-ts/galerina-core-compiler/`.
 
  Runtime execution contracts live in
-`packages-galerina/galerina-core-runtime/`.
+`packages-ts/galerina-core-runtime/`.
 
  Network I/O policy, profile, permission
-and report contracts live in `packages-galerina/galerina-core-network/`.
+and report contracts live in `packages-ts/galerina-core-network/`.
 
- Security primitives live in `packages-galerina/galerina-core-security/`.
-
-
-Configuration and shared reports live in `packages-galerina/galerina-core-config/` and
-`packages-galerina/galerina-core-reports/`.
-
- Multi-state logic concepts live in `packages-galerina/galerina-core-logic/`.
+ Security primitives live in `packages-ts/galerina-core-security/`.
 
 
-Vector concepts live in `packages-galerina/galerina-core-vector/`.
+Configuration and shared reports live in `packages-ts/galerina-core-config/` and
+`packages-ts/galerina-core-reports/`.
+
+ Multi-state logic concepts live in `packages-ts/galerina-core-logic/`.
+
+
+Vector concepts live in `packages-ts/galerina-core-vector/`.
 
  Compute planning concepts live in
-`packages-galerina/galerina-core-compute/`.
+`packages-ts/galerina-core-compute/`.
 
  Generic AI inference contracts live in
-`packages-galerina/galerina-ai/`, and low-bit/ternary AI inference support lives in
-`packages-galerina/galerina-ai-lowbit/`.
+`packages-ts/galerina-ai/`, and low-bit/ternary AI inference support lives in
+`packages-ts/galerina-ai-lowbit/`.
 
  Supervised AI agent contracts live in
-`packages-galerina/galerina-ai-agent/`.
+`packages-ts/galerina-ai-agent/`.
 
  Neural-network workload contracts live in
-`packages-galerina/galerina-ai-neural/`, and neuromorphic spike/event contracts live in
-`packages-galerina/galerina-ai-neuromorphic/`.
+`packages-ts/galerina-ai-neural/`, and neuromorphic spike/event contracts live in
+`packages-ts/galerina-ai-neuromorphic/`.
 
  Enterprise compliance and privacy
 policy contracts live outside the active workspace in
-`packages-galerina-enterprise/galerina-compliance/` and the
-`packages-galerina-enterprise/galerina-compliance-*` package family.
+`packages-ts-enterprise/galerina-compliance/` and the
+`packages-ts-enterprise/galerina-compliance-*` package family.
 
  They are not
 part of the active v1 build graph unless explicitly unlocked.
 
  Data-processing contracts
-live in `packages-galerina/galerina-data/` and the
-`packages-galerina/galerina-data-*` package family.
+live in `packages-ts/galerina-data/` and the
+`packages-ts/galerina-data-*` package family.
 
  Database provider adapter
-contracts live in `packages-galerina/galerina-db-*`.
+contracts live in `packages-ts/galerina-db-*`.
 
  BitNet is one optional backend for low-bit AI.
 
 
 Photonic and wavelength concepts live in
-`packages-galerina/galerina-core-photonic/`.
+`packages-ts/galerina-core-photonic/`.
 
 CPU target planning lives in
-`packages-galerina/galerina-target-cpu/`, optimized CPU kernel contracts live in
-`packages-galerina/galerina-cpu-kernels/`, and future native executable target
-planning lives in `packages-galerina/galerina-target-native/`. Future portable
+`packages-ts/galerina-target-cpu/`, optimized CPU kernel contracts live in
+`packages-ts/galerina-cpu-kernels/`, and future native executable target
+planning lives in `packages-ts/galerina-target-native/`. Future portable
 systems output planning should start as native target work only after ABI,
 layout, memory and report rules stabilise. WebAssembly target planning lives in
-`packages-galerina/galerina-target-wasm/`, GPU target planning lives in
-`packages-galerina/galerina-target-gpu/`, AI accelerator target planning lives in
-`packages-galerina/galerina-target-ai-accelerator/` with passive backend profiles for devices
+`packages-ts/galerina-target-wasm/`, GPU target planning lives in
+`packages-ts/galerina-target-gpu/`, AI accelerator target planning lives in
+`packages-ts/galerina-target-ai-accelerator/` with passive backend profiles for devices
 such as Intel Gaudi 3, and photonic target backend planning lives in
-`packages-galerina/galerina-target-photonic/`, including optical I/O interconnect planning as a
+`packages-ts/galerina-target-photonic/`, including optical I/O interconnect planning as a
 data-movement target.
 
  The
-optional Secure App Kernel design lives in `packages-galerina/galerina-framework-app-kernel/`.
+optional Secure App Kernel design lives in `packages-ts/galerina-framework-app-kernel/`.
 
  The
-built-in HTTP API server package lives in `packages-galerina/galerina-framework-api-server/`.
+built-in HTTP API server package lives in `packages-ts/galerina-framework-api-server/`.
 
  Developer command
-tooling lives in `packages-galerina/galerina-core-cli/`, and safe project automation lives in
-`packages-galerina/galerina-core-tasks/`.
+tooling lives in `packages-ts/galerina-core-cli/`, and safe project automation lives in
+`packages-ts/galerina-core-tasks/`.
 
  Development benchmark diagnostics live in
-`packages-galerina/galerina-tools-benchmark/`.
+`packages-ts/galerina-tools-benchmark/`.
 
  Project knowledge graph tooling lives in
-`packages-galerina/galerina-devtools-graph-project/`.
+`packages-ts/galerina-devtools-graph-project/`.
 
  App source and build configuration live in
-`packages-galerina/galerina-framework-example-app/`.
+`packages-ts/galerina-framework-example-app/`.
 
  Finance, electrical and
 operational-technology package planning is archived outside the active
-workspace under `C:\laragon\www\Galerina_Archive\packages-galerina\` and is not part of the
+workspace under `C:\laragon\www\Galerina_Archive\packages-ts\` and is not part of the
 v1 build graph.
 
  App planning and operational documentation live in `docs/`.
@@ -785,7 +785,7 @@ Current single-repository structure:
 galerina-app/
 |-- docs/
 |-- packages/               # normal app/vendor package space
-|-- packages-galerina/
+|-- packages-ts/
 |   |-- galerina-core/
 |   |-- galerina-core-compiler/
 |   |-- galerina-core-runtime/
@@ -833,7 +833,7 @@ galerina-app/
 |   |-- galerina-tools-benchmark/
 |   |-- galerina-devtools-graph-project/
 |   |-- galerina-framework-example-app/
-|-- packages-galerina-enterprise/
+|-- packages-ts-enterprise/
 |   |-- galerina-compliance/
 |   `-- galerina-compliance-*/
 `-- tools/
@@ -848,7 +848,7 @@ light-framework/
 git
 |-- packages/
 |   `-- normal app/vendor packages
-|-- packages-galerina/
+|-- packages-ts/
 |   |-- .
 
 git
@@ -885,7 +885,7 @@ git
 `-- framework files
 ```
 
-In the current and future structure, `packages-galerina/` is the reusable Galerina package repository that
+In the current and future structure, `packages-ts/` is the reusable Galerina package repository that
 can be imported by multiple frameworks.
 
  It should be mounted intentionally, for
@@ -926,7 +926,7 @@ lock.
 
 json
 packages/
-packages-galerina/
+packages-ts/
 ```
 
 `package-galerina.
@@ -1563,13 +1563,13 @@ package boundaries are still being shaped.
 
 
 
-Later, split reusable Galerina packages into their own `packages-galerina/` repository:
+Later, split reusable Galerina packages into their own `packages-ts/` repository:
 
 ```text
 light-framework/.
 
 git
-light-framework/packages-galerina/.
+light-framework/packages-ts/.
 
 git
 ```
@@ -1578,7 +1578,7 @@ This is appropriate when the same packages need to be imported into different
 framework repositories.
 
  At that point, the root framework repository should
-treat `packages-galerina/` as an external dependency, not as ordinary tracked child
+treat `packages-ts/` as an external dependency, not as ordinary tracked child
 files.
 
 
@@ -1593,7 +1593,7 @@ fungi` test fixtures.
 
 
 ```text
-packages-galerina/galerina-framework-app-kernel/tests/
+packages-ts/galerina-framework-app-kernel/tests/
 `-- hello-world.
 
 fungi
@@ -1604,7 +1604,7 @@ The current smoke test runs through the Galerina core prototype:
 ```bash
 npm.
 
-cmd --prefix packages-galerina/galerina-framework-app-kernel run test:hello
+cmd --prefix packages-ts/galerina-framework-app-kernel run test:hello
 ```
 
 ## Generative Runtime Mapper

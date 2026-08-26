@@ -6,7 +6,7 @@
 // Surfaces one honest SHIP-READINESS % over the FULL component set (orphans counted in, no gap class masked).
 // Complements status.mjs (headline counts) with a per-package breakdown + gap detector:
 //   which workspace packages have a test script, a tests/ dir + test files, a recorded test count,
-//   and which packages-galerina/ dirs are ORPHANS (a package.json on disk but absent from the workspace).
+//   and which packages-ts/ dirs are ORPHANS (a package.json on disk but absent from the workspace).
 //
 //   node scripts/component-health.mjs            # full matrix, grouped by family
 //   node scripts/component-health.mjs --gaps     # only rows with a readiness gap
@@ -34,7 +34,7 @@ import {
 } from "./lib/provenance.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const PKG_DIR = join(ROOT, "packages-galerina");
+const PKG_DIR = join(ROOT, "packages-ts");
 
 const argv = new Set(process.argv.slice(2));
 const ONLY_GAPS = argv.has("--gaps");
@@ -206,7 +206,7 @@ const gapsFor = (r) => {
 };
 for (const r of rows) r.gaps = gapsFor(r);
 
-// ── orphans: packages-galerina/ dirs with a package.json, absent from the workspace ─
+// ── orphans: packages-ts/ dirs with a package.json, absent from the workspace ─
 const wsDirs = new Set(wsPackages.map((p) => basename(p)));
 const orphans = [];
 for (const e of listDir(PKG_DIR) || []) {
@@ -240,10 +240,10 @@ const conversion = (() => {
   if (!trackedFiles) return { available: false };
   const isImplTs = (f) => f.endsWith(".ts") && !f.endsWith(".d.ts");
   const tsImplAll = trackedFiles.filter(isImplTs);
-  const tsImplPkgs = tsImplAll.filter((f) => f.startsWith("packages-galerina/")); // the convertible universe (Stage 6 converts packages; root CLI/scripts stay host-side)
+  const tsImplPkgs = tsImplAll.filter((f) => f.startsWith("packages-ts/")); // the convertible universe (Stage 6 converts packages; root CLI/scripts stay host-side)
   const tsDecl = trackedFiles.filter((f) => f.endsWith(".d.ts")).length;
   const fungiAll = trackedFiles.filter((f) => f.endsWith(".fungi"));
-  const SELF_HOSTED = "packages-galerina/galerina-core-compiler/src/self-hosted/";
+  const SELF_HOSTED = "packages-ts/galerina-core-compiler/src/self-hosted/";
   const fungiSelfHosted = fungiAll.filter((f) => f.startsWith(SELF_HOSTED)).length;
   // "examples" counts BOTH the top-level examples/ tree AND per-package */examples/ trees —
   // a top-level-only filter undercounted 309 example files as 52 (verified 2026-07-10).
@@ -312,7 +312,7 @@ summary.components = rows.length + orphans.length;
 summary.totalGaps = summary.withGaps + orphans.length;
 summary.readinessPct = summary.components ? (summary.green / summary.components) * 100 : 0;
 // ── scope declaration: this % measures WORKSPACE PACKAGES ONLY (galerina.workspace.json +
-//    packages-galerina/ orphans). It does NOT cover the root CLI (galerina.mjs), root tests/,
+//    packages-ts/ orphans). It does NOT cover the root CLI (galerina.mjs), root tests/,
 //    the scripts/ dev-tool suite, examples/, docs/, or the self-hosted .fungi corpus — those
 //    have their own gates (phase-close, lint-conventions, keep-green). Say so in EVERY output
 //    mode, so the headline % can never silently read as whole-project readiness. ──────────────

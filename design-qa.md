@@ -3,7 +3,7 @@
 ## Scope
 
 - Reference: owner-supplied 2026 benchmark screenshot with a dark, per-workload diverging chart.
-- Implementation: `packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html`.
+- Implementation: `packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html`.
 - Intended desktop comparison viewport: 2048 × 2048.
 - Responsive requirement: retain the full comparison canvas through horizontal scrolling on narrow mobile and tablet viewports.
 

@@ -69,7 +69,7 @@ function isPopulated(p) {
 
 const report = { ok: 0, recreated: [], created: [], missingTarget: [], leftCopy: [] };
 
-const pkgJsons = findPackageJsons(join(ROOT, "packages-galerina"))
+const pkgJsons = findPackageJsons(join(ROOT, "packages-ts"))
   .concat(findPackageJsons(join(ROOT, "packages")))
   .concat([join(ROOT, "package.json")].filter(existsSync));
 

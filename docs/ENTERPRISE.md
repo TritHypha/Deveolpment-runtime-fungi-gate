@@ -38,13 +38,13 @@ Enterprise-only packages and features must remain documentation/planning items
 unless explicitly unlocked.
 
 Enterprise-only package **names** live in this document only — there is intentionally
-**no `packages-galerina-enterprise/` scaffold directory** in the tree. The reserved names
+**no `packages-ts-enterprise/` scaffold directory** in the tree. The reserved names
 (see "Enterprise-Only Scope" and the per-area "Reserved package names") are roadmap
 placeholders, not on-disk packages.
 
 An explicit owner unlock is what first creates a named enterprise package folder. When
 unlocked, an enterprise package must live in its own clearly-marked location and must not
-be placed under the active `packages-galerina/` collection until the owner explicitly moves
+be placed under the active `packages-ts/` collection until the owner explicitly moves
 it into the active workspace.
 
 AI coding tools must not:

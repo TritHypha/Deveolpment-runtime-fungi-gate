@@ -10,7 +10,7 @@
 // If the "off" arm also remembers, the option is not doing anything and a green here
 // would be measuring nothing.
 // =============================================================================
-import { BoundedCache } from "../packages-galerina/galerina-core-compiler/src/bounded-cache.ts";
+import { BoundedCache } from "../packages-ts/galerina-core-compiler/src/bounded-cache.ts";
 
 const P = console.log;
 const mk = (opts) => new BoundedCache({ maxEntries: 4, maxWeight: 10_000, maxItemWeight: 100, weigh: () => 1, ...opts });

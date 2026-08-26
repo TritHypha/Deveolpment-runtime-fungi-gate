@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { it } from "node:test";
 
-const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
+const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-ts","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
 const CANDIDATES=Object.freeze([
   ["gate-v3-privacy-verify-taint-reaches-sink-status.fungi","gateV3PrivacyVerifyTaintReachesSinkStatusCore",6,"gate_v3_privacy_verify_taint_reaches_sink_built"],
   ["gate-v3-registry-canonical-json-status.fungi","gateV3RegistryCanonicalJsonStatusCore",6,"gate_v3_registry_canonical_json_built"],

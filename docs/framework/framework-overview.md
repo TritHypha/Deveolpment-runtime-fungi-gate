@@ -34,9 +34,9 @@ reports
 ## Where It Lives
 
 ```text
-packages-galerina/galerina-framework-app-kernel/
-packages-galerina/galerina-framework-api-server/
-packages-galerina/galerina-framework-example-app/
+packages-ts/galerina-framework-app-kernel/
+packages-ts/galerina-framework-api-server/
+packages-ts/galerina-framework-example-app/
 docs/framework/
 ```
 

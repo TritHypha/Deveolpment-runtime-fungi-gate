@@ -12,7 +12,7 @@ import {
 const ROOT = resolve(import.meta.dirname, "..", "..");
 const HOST = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-framework-app-kernel",
   "native",
   "registry-activation-host",

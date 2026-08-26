@@ -6,7 +6,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const ORACLE = resolve(
-  "packages-galerina",
+  "packages-ts",
   "galerina-devtools-wasmtime-oracle",
 );
 const LEGACY = resolve("subprojects", "dss-host");

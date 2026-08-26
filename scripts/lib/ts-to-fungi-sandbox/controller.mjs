@@ -262,7 +262,7 @@ export async function runInspect({ root, project, file, symbol, out, auditOnly =
 function trackedTypeScriptSources(root) {
   let bytes;
   try {
-    bytes = execFileSync("git", ["ls-files", "-z", "--", "packages-galerina"], {
+    bytes = execFileSync("git", ["ls-files", "-z", "--", "packages-ts"], {
       cwd: root,
       encoding: "utf8",
       windowsHide: true,
@@ -273,8 +273,8 @@ function trackedTypeScriptSources(root) {
   }
   return bytes
     .split("\0")
-    .filter((file) => /^packages-galerina\/[^/]+\/src\/.+\.ts$/u.test(file))
-    .filter((file) => !file.startsWith("packages-galerina/galerina-test/"))
+    .filter((file) => /^packages-ts\/[^/]+\/src\/.+\.ts$/u.test(file))
+    .filter((file) => !file.startsWith("packages-ts/galerina-test/"))
     .sort(codeUnitCompare);
 }
 
@@ -296,7 +296,7 @@ function discoveryCursor(value) {
 
 function oracleScopes(corpus) {
   const scopes = new Set();
-  const pattern = /^\/\/\/ TypeScript oracle: (packages-galerina\/[^\s#]+\.ts)#([A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)?)\r?$/gmu;
+  const pattern = /^\/\/\/ TypeScript oracle: (packages-ts\/[^\s#]+\.ts)#([A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)?)\r?$/gmu;
   for (const item of corpus) {
     for (const match of item.source.matchAll(pattern)) scopes.add(`${match[1]}#${match[2]}`);
   }

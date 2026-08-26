@@ -103,13 +103,13 @@ function discoverPackages(root, errors) {
     }
   }
 
-  const packageDirectory = join(root, "packages-galerina");
+  const packageDirectory = join(root, "packages-ts");
   const actualPaths = existsSync(packageDirectory)
     ? readdirSync(packageDirectory, { withFileTypes: true })
       .filter((entry) =>
         entry.isDirectory()
         && existsSync(join(packageDirectory, entry.name, "package.json")))
-      .map((entry) => `packages-galerina/${entry.name}`)
+      .map((entry) => `packages-ts/${entry.name}`)
     : [];
   const allPaths = sortedUnique([...declaredPaths, ...actualPaths]);
 

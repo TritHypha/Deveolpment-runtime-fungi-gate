@@ -38,13 +38,13 @@ import {
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const compilerRequire = createRequire(
-  join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json"),
+  join(ROOT, "packages-ts", "galerina-core-compiler", "package.json"),
 );
 const { ml_dsa65: mlDsa65 } = await import(
   pathToFileURL(compilerRequire.resolve("@noble/post-quantum/ml-dsa.js")).href
 );
 const compiler = await import(
-  pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href
+  pathToFileURL(join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js")).href
 );
 
 const AT = "2026-08-07T12:00:00.000Z";

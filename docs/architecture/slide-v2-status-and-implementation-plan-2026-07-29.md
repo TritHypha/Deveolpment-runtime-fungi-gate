@@ -149,7 +149,7 @@ Planning completion and implementation completion are deliberately separate.
 The current compiler exposes:
 
 - `GIRProgram`, `GIRFlow`, and a small `GIRExpr` union in
-  `packages-galerina/galerina-core-compiler/src/gir-emitter.ts`;
+  `packages-ts/galerina-core-compiler/src/gir-emitter.ts`;
 - `emitGIR(...)` and `buildWATModuleFromGIR(...)`;
 - effect, capability, proof, tensor, execution-plan, entry-point, and hash
   metadata.

@@ -4,7 +4,7 @@
   "verificationTime": null,
   "candidates": [
     {
-      "path": "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+      "path": "packages-ts/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
       "ownerPackage": "galerina-core-sentinel-state",
       "tranche": "T2-runtime-core",
       "profileId": "galerina.package.restore-verdict.v1",
@@ -15,7 +15,7 @@
       "evidenceSha256": "ed87224ca519dc35f259e73c5ad38852ceaa3ac2841f285495f8a9736d4316a9"
     },
     {
-      "path": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi",
+      "path": "packages-ts/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi",
       "ownerPackage": "galerina-framework-app-kernel",
       "tranche": "T1-trust-root",
       "profileId": "galerina.package.registry-durability-admission.v1",

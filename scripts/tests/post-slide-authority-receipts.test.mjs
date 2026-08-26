@@ -29,7 +29,7 @@ import { verifyPostSlideAuthorityLedgerEntries } from "../lib/post-slide-authori
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const compilerRequire = createRequire(
-  join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json"),
+  join(ROOT, "packages-ts", "galerina-core-compiler", "package.json"),
 );
 const { ml_dsa65: mlDsa65 } = await import(
   pathToFileURL(compilerRequire.resolve("@noble/post-quantum/ml-dsa.js")).href
@@ -70,7 +70,7 @@ function fungiInput() {
     issuedAt: "2026-08-02T10:00:00.000Z",
     expiresAt: "2026-08-03T10:00:00.000Z",
     ownerPackage: "galerina-core-sentinel-state",
-    sourcePath: "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+    sourcePath: "packages-ts/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
     sourceSha256: sha("1"),
     frontendReceiptSha256: sha("2"),
     decisionGraphSha256: sha("3"),
@@ -97,7 +97,7 @@ function hostInput() {
     issuedAt: "2026-08-02T10:00:00.000Z",
     expiresAt: "2026-08-03T10:00:00.000Z",
     ownerPackage: "galerina-tools-myco",
-    sourcePath: "packages-galerina/galerina-tools-myco/src/query/regex-worker.js",
+    sourcePath: "packages-ts/galerina-tools-myco/src/query/regex-worker.js",
     sourceSha256: sha("1"),
     boundaryKind: "isolated-worker",
     capabilityPolicySha256: sha("2"),
@@ -131,7 +131,7 @@ test("Fungi execution refuses a wrong path, digest, subject or surplus field", (
     evidenceBundleSha256: createHash("sha256").update(evidenceBytes).digest("hex"),
   };
   assert.throws(
-    () => deriveFungiExecutionStatement({ ...input, sourcePath: "packages-galerina/other/src/x.fungi" }),
+    () => deriveFungiExecutionStatement({ ...input, sourcePath: "packages-ts/other/src/x.fungi" }),
     /POST_SLIDE_FUNGI_INPUT_REFUSED/,
   );
   assert.throws(

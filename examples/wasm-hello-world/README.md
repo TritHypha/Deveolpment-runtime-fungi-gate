@@ -56,6 +56,6 @@ The compiled `greet` flow emits WAT like:
 ## Running the Phase 24 test
 
 ```
-cd packages-galerina/galerina-core-compiler
+cd packages-ts/galerina-core-compiler
 npm run build && npm test -- --test-name-pattern "Phase 24"
 ```

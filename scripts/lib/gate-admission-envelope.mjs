@@ -27,7 +27,7 @@ import {
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const compiler = await import(
-  pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href
+  pathToFileURL(join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js")).href
 );
 
 const KEY_ID = /^[0-9a-f]{16}$/u;

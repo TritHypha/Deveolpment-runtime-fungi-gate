@@ -3,7 +3,7 @@
 // validate-workspace-pointers.mjs — CI guard for galerina.workspace.json
 //
 // Every STRING value in the workspace file that looks like a package path
-// (starts with "packages-galerina/") must resolve to a real directory on disk.
+// (starts with "packages-ts/") must resolve to a real directory on disk.
 // Every STRING value that ends with ".md" or ".mjs" must resolve to a real file.
 // The packages[] array is also checked for orphan entries (a package.json exists
 // but is not listed) and missing entries (listed but directory absent).
@@ -44,7 +44,7 @@ const warnings = [];
 function checkValue(keyPath, value) {
   if (typeof value !== "string") return;
   // Only check values that look like relative paths
-  if (!value.startsWith("packages-galerina/") && !value.startsWith("docs") && !value.startsWith("tests")) return;
+  if (!value.startsWith("packages-ts/") && !value.startsWith("docs") && !value.startsWith("tests")) return;
 
   const absPath = join(ROOT, value);
   if (!existsSync(absPath)) {
@@ -86,13 +86,13 @@ for (const pkg of listedPackages) {
 // ── 3. Orphan detection (--orphans flag) ──────────────────────────────────────
 
 if (checkOrphans) {
-  const pkgRoot = join(ROOT, "packages-galerina");
+  const pkgRoot = join(ROOT, "packages-ts");
   let entries;
   try { entries = readdirSync(pkgRoot, { withFileTypes: true }); } catch { entries = []; }
 
   for (const ent of entries) {
     if (!ent.isDirectory()) continue;
-    const rel = `packages-galerina/${ent.name}`;
+    const rel = `packages-ts/${ent.name}`;
     const hasPkgJson = existsSync(join(pkgRoot, ent.name, "package.json"));
     if (hasPkgJson && !listedPackages.has(rel)) {
       warnings.push(`  ⚠  ORPHAN: "${rel}" has package.json but is NOT in workspace packages[]`);

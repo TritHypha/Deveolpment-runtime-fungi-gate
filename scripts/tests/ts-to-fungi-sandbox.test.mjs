@@ -28,7 +28,7 @@ import { lowerClassifiedSymbol } from "../lib/ts-to-fungi-sandbox/lowerer.mjs";
 import { assertCliInput, assertCliOutput, loadPriorRefusalScopes, runBatch, runDiscover, runInventory, selectedPhysicalProfileRefusal, verifyReceipt } from "../lib/ts-to-fungi-sandbox/controller.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
-const SNAPSHOT_FILE = "packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts";
+const SNAPSHOT_FILE = "packages-ts/galerina-tower-citizen/src/snapshot-key-provider.ts";
 const SNAPSHOT_SYMBOL = "SNAPSHOT_KEY_CONTEXT";
 const sha256 = (bytes) => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 
@@ -46,8 +46,8 @@ async function graphProject() {
 }
 
 test("1 contracts accept only canonical repository-relative TypeScript paths", () => {
-  assert.equal(canonicalRelativeTsPath("packages-galerina/x/src/value.ts"), "packages-galerina/x/src/value.ts");
-  for (const value of ["", "../value.ts", "packages-galerina\\x\\value.ts", "C:/value.ts", "packages-galerina/x/value.mjs", "packages-galerina//x/value.ts"]) {
+  assert.equal(canonicalRelativeTsPath("packages-ts/x/src/value.ts"), "packages-ts/x/src/value.ts");
+  for (const value of ["", "../value.ts", "packages-ts\\x\\value.ts", "C:/value.ts", "packages-ts/x/value.mjs", "packages-ts//x/value.ts"]) {
     assert.throws(() => canonicalRelativeTsPath(value));
   }
   assert.deepEqual([...OUTCOMES], ["CONVERTED", "BLOCKED", "MANUAL_REVIEW"]);
@@ -88,7 +88,7 @@ test("4 classifier admits primitive literals and inventories exact source ranges
     'export const CONTEXT = "sandbox.v1";\n',
   ]) {
     const symbol = source.match(/const\s+(\w+)/u)[1];
-    const result = classifyTypeScriptSource({ source, file: "packages-galerina/test/src/value.ts", symbol });
+    const result = classifyTypeScriptSource({ source, file: "packages-ts/test/src/value.ts", symbol });
     assert.equal(result.outcome, "SUPPORTED");
     assert.equal(result.complete, true);
     assert.ok(result.range.end > result.range.start);
@@ -98,14 +98,14 @@ test("4 classifier admits primitive literals and inventories exact source ranges
 test("5 classifier admits closed scalar functions and exact finite Float literals while blocking active state", () => {
   const fn = classifyTypeScriptSource({
     source: "export function choose(flag: boolean): number { if (flag) { return 1; } return 0; }\n",
-    file: "packages-galerina/test/src/value.ts",
+    file: "packages-ts/test/src/value.ts",
     symbol: "choose",
   });
   assert.equal(fn.outcome, "SUPPORTED");
-  const floating = classifyTypeScriptSource({ source: "export const RATE = 0.1;\n", file: "packages-galerina/test/src/value.ts", symbol: "RATE" });
+  const floating = classifyTypeScriptSource({ source: "export const RATE = 0.1;\n", file: "packages-ts/test/src/value.ts", symbol: "RATE" });
   assert.equal(floating.outcome, "SUPPORTED");
   assert.equal(floating.value.type, "float");
-  const active = classifyTypeScriptSource({ source: 'export const ITEMS = new Set(["x"]);\n', file: "packages-galerina/test/src/value.ts", symbol: "ITEMS" });
+  const active = classifyTypeScriptSource({ source: 'export const ITEMS = new Set(["x"]);\n', file: "packages-ts/test/src/value.ts", symbol: "ITEMS" });
   assert.equal(active.outcome, "BLOCKED");
   assert.ok(active.blockers.includes(BLOCKERS.ACTIVE_OBJECT));
 });
@@ -117,14 +117,14 @@ test("5a discovery returns only supported top-level scopes in source order", () 
     'export interface Shape { readonly value: string }',
     'export function choose(flag: boolean): string { if (flag) { return "yes"; } return "no"; }',
   ].join("\n");
-  const discovered = discoverTypeScriptScopes({ source, file: "packages-galerina/test/src/value.ts" });
+  const discovered = discoverTypeScriptScopes({ source, file: "packages-ts/test/src/value.ts" });
   assert.deepEqual(discovered.map((item) => item.symbol), ["CONTEXT", "choose"]);
   assert.ok(discovered.every((item) => item.outcome === "SUPPORTED"));
 });
 
 test("5b classifier admits closed primitive binary predicates", async () => {
   const source = 'export function same(left: string, right: string): boolean { return left === right; }\n';
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/test/src/value.ts", symbol: "same" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/test/src/value.ts", symbol: "same" });
   assert.equal(classified.outcome, "SUPPORTED");
   const lowered = lowerClassifiedSymbol(classified);
   assert.match(lowered.source, /return left == right/u);
@@ -138,8 +138,8 @@ test("5c classifier resolves earlier primitive constants in static templates and
     'export const HEADER = `@gate ${VERSION}`;',
     'export const PAGES = (1024 * 1024) / 65536;',
   ].join("\n");
-  const header = classifyTypeScriptSource({ source, file: "packages-galerina/test/src/value.ts", symbol: "HEADER" });
-  const pages = classifyTypeScriptSource({ source, file: "packages-galerina/test/src/value.ts", symbol: "PAGES" });
+  const header = classifyTypeScriptSource({ source, file: "packages-ts/test/src/value.ts", symbol: "HEADER" });
+  const pages = classifyTypeScriptSource({ source, file: "packages-ts/test/src/value.ts", symbol: "PAGES" });
   assert.deepEqual(header.value, { type: "string", value: "@gate 1.2.3" });
   assert.deepEqual(pages.value, { type: "number", value: 16 });
   assert.match(lowerClassifiedSymbol(header).source, /return "@gate 1\.2\.3"/u);
@@ -148,7 +148,7 @@ test("5c classifier resolves earlier primitive constants in static templates and
 
 test("5ca classifier treats satisfies as its runtime-erased operand", () => {
   const source = 'export const CODE = "FUNGI-EXAMPLE-001" satisfies string;\n';
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "CODE" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "CODE" });
   assert.deepEqual(classified.value, { type: "string", value: "FUNGI-EXAMPLE-001" });
   assert.match(lowerClassifiedSymbol(classified).source, /return "FUNGI-EXAMPLE-001"/u);
 });
@@ -158,14 +158,14 @@ test("5cb classifier resolves primitive fields from an earlier inert object for 
     'const FLAGS = { SEALED: 1 << 0, SIGNED: 1 << 1, ERASED: 1 << 2 } as const;',
     'export const DEFINED = FLAGS.SEALED | FLAGS.SIGNED | FLAGS.ERASED;',
   ].join("\n");
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "DEFINED" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "DEFINED" });
   assert.deepEqual(classified.value, { type: "number", value: 7 });
   assert.match(lowerClassifiedSymbol(classified).source, /return 7/u);
 });
 
 test("5d lowerer preserves primitive conjunction through compiler-admitted nested guards", async () => {
   const source = 'export function both(left: string, right: string): boolean { if (left === "x" && right === "y") return true; return false; }\n';
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/test/src/value.ts", symbol: "both" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/test/src/value.ts", symbol: "both" });
   const lowered = lowerClassifiedSymbol(classified);
   assert.match(lowered.source, /if left == "x" \{\n    if right == "y" \{/u);
   assert.equal((await buildCompilerEvidence({ source: lowered.source, file: "sandbox/both.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors })).green, true);
@@ -173,7 +173,7 @@ test("5d lowerer preserves primitive conjunction through compiler-admitted neste
 
 test("5e classifier and lowerer admit a const primitive arrow behavior", async () => {
   const source = 'export const retain = (value: string): string => value;\n';
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "retain" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "retain" });
   assert.equal(classified.outcome, "SUPPORTED");
   const lowered = lowerClassifiedSymbol(classified);
   assert.match(lowered.source, /pure flow retain\(value: String\) -> String/u);
@@ -183,7 +183,7 @@ test("5e classifier and lowerer admit a const primitive arrow behavior", async (
 
 test("5f exact finite binary64 constants remain discoverable but are refused by the selected clean physical profile", () => {
   const source = 'export const TOLERANCE = 0.001;\n';
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "TOLERANCE" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "TOLERANCE" });
   assert.equal(classified.outcome, "SUPPORTED");
   const refusal = selectedPhysicalProfileRefusal(classified);
   assert.equal(refusal.code, BLOCKERS.PHYSICAL_FINITE_FLOAT_LITERAL);
@@ -192,7 +192,7 @@ test("5f exact finite binary64 constants remain discoverable but are refused by 
 
 test("5g a same-file string-literal alias stays blocked without a physical String-parameter profile", () => {
   const source = 'type Mode = "allow" | "deny";\nexport function isAllow(mode: Mode): boolean { return mode === "allow"; }\n';
-  const classified = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "isAllow" });
+  const classified = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "isAllow" });
   assert.equal(classified.outcome, "BLOCKED");
   assert.ok(classified.blockers.includes("BLOCKED_BY_UNSUPPORTED_CONTROL_FLOW_OR_AST_NODE"));
 });
@@ -204,7 +204,7 @@ test("5h Int candidates are limited to the independently proved signed-i32 physi
     ["ABOVE_I32", "2147483648", "BLOCKED"],
     ["BELOW_I32", "-2147483649", "BLOCKED"],
   ]) {
-    const classified = classifyTypeScriptSource({ source: `export const ${symbol} = ${value};\n`, file: "packages-galerina/example/src/value.ts", symbol });
+    const classified = classifyTypeScriptSource({ source: `export const ${symbol} = ${value};\n`, file: "packages-ts/example/src/value.ts", symbol });
     assert.equal(classified.outcome, expected);
     if (expected === "BLOCKED") assert.ok(classified.blockers.includes("BLOCKED_BY_SELECTED_PHYSICAL_INT_RANGE_ABI"));
   }
@@ -218,7 +218,7 @@ test("5i String candidates encode scalar escapes exactly and still refuse lone s
     ["QUOTE", '"a\\\"b"', "SUPPORTED", "a\\u0022b"],
     ["LONE", '"\\uD800"', "BLOCKED", null],
   ]) {
-    const classified = classifyTypeScriptSource({ source: `export const ${symbol} = ${literal};\n`, file: "packages-galerina/example/src/value.ts", symbol });
+    const classified = classifyTypeScriptSource({ source: `export const ${symbol} = ${literal};\n`, file: "packages-ts/example/src/value.ts", symbol });
     assert.equal(classified.outcome, expected);
     if (expected === "BLOCKED") {
       assert.ok(classified.blockers.includes("BLOCKED_BY_SELECTED_PHYSICAL_STRING_LITERAL_ABI"));
@@ -234,12 +234,12 @@ test("5i String candidates encode scalar escapes exactly and still refuse lone s
 test("5j discovery preflights the selected physical profile without narrowing compiler-level String lowering", () => {
   const stringPredicate = classifyTypeScriptSource({
     source: 'export function same(left: string, right: string): boolean { return left === right; }\n',
-    file: "packages-galerina/example/src/value.ts",
+    file: "packages-ts/example/src/value.ts",
     symbol: "same",
   });
   const booleanFlow = classifyTypeScriptSource({
     source: 'export function choose(flag: boolean): string { if (flag) return "yes"; return "no"; }\n',
-    file: "packages-galerina/example/src/value.ts",
+    file: "packages-ts/example/src/value.ts",
     symbol: "choose",
   });
   assert.equal(stringPredicate.outcome, "SUPPORTED");
@@ -255,8 +255,8 @@ test("5k classifier infers only one visibly closed primitive return type", async
     "export function invert(flag: boolean) { if (flag) return false; return true; }",
     'export function mixed(flag: boolean) { if (flag) return false; return "no"; }',
   ].join("\n");
-  const invert = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "invert" });
-  const mixed = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "mixed" });
+  const invert = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "invert" });
+  const mixed = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "mixed" });
   assert.equal(invert.outcome, "SUPPORTED");
   assert.equal(invert.returnType, "boolean");
   assert.match(lowerClassifiedSymbol(invert).source, /pure flow invert\(flag: Bool\) -> Bool/u);
@@ -274,7 +274,7 @@ test("5k classifier infers only one visibly closed primitive return type", async
 test("5l classifier logs RegExp constants as active identity-bearing state", () => {
   const classified = classifyTypeScriptSource({
     source: "export const KEY_ID = /^[0-9a-f]{16}$/;\n",
-    file: "packages-galerina/example/src/value.ts",
+    file: "packages-ts/example/src/value.ts",
     symbol: "KEY_ID",
   });
   assert.equal(classified.outcome, "BLOCKED");
@@ -285,7 +285,7 @@ test("5m classifier logs positive and negative BigInt literals against the selec
   for (const [symbol, literal] of [["BIG", "1n"], ["NEGATIVE_BIG", "-1n"]]) {
     const classified = classifyTypeScriptSource({
       source: `export const ${symbol} = ${literal};\n`,
-      file: "packages-galerina/example/src/value.ts",
+      file: "packages-ts/example/src/value.ts",
       symbol,
     });
     assert.equal(classified.outcome, "BLOCKED");
@@ -302,7 +302,7 @@ test("5n classifier logs unresolved identifier and property observations instead
   for (const [symbol, source] of cases) {
     const classified = classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/value.ts",
+      file: "packages-ts/example/src/value.ts",
       symbol,
     });
     assert.equal(classified.outcome, "BLOCKED");
@@ -318,7 +318,7 @@ test("5o classifier logs unresolved binary and conditional initializers with eff
   for (const [symbol, source] of cases) {
     const classified = classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/value.ts",
+      file: "packages-ts/example/src/value.ts",
       symbol,
     });
     assert.equal(classified.outcome, "BLOCKED");
@@ -327,7 +327,7 @@ test("5o classifier logs unresolved binary and conditional initializers with eff
 });
 
 test("5p ambiguous overload review retains exact file and symbol provenance", () => {
-  const file = "packages-galerina/example/src/value.ts";
+  const file = "packages-ts/example/src/value.ts";
   const source = [
     "export function choose(value: string): string;",
     "export function choose(value: number): number;",
@@ -350,7 +350,7 @@ test("5q classes and enums are logged as runtime active objects, not erased decl
   ]) {
     const classified = classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/value.ts",
+      file: "packages-ts/example/src/value.ts",
       symbol,
     });
     assert.equal(classified.outcome, "BLOCKED");
@@ -362,7 +362,7 @@ test("5q classes and enums are logged as runtime active objects, not erased decl
 test("5r one runtime value plus a same-name type declaration selects the runtime declaration", () => {
   const classified = classifyTypeScriptSource({
     source: 'export type Mode = "allow" | "deny";\nexport const Mode = { Allow: "allow", Deny: "deny" } as const;\n',
-    file: "packages-galerina/example/src/value.ts",
+    file: "packages-ts/example/src/value.ts",
     symbol: "Mode",
   });
   assert.equal(classified.outcome, "BLOCKED");
@@ -378,11 +378,11 @@ test("5s explicit String const-enum members are retained-oracle primitive leaves
     "  Numeric = 7,",
     "}",
   ].join("\n");
-  const allow = classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "Mode.Allow" });
+  const allow = classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "Mode.Allow" });
   assert.equal(allow.outcome, "SUPPORTED");
   assert.deepEqual(allow.value, { type: "string", value: "allow" });
   assert.deepEqual(
-    discoverTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" })
+    discoverTypeScriptScopes({ source, file: "packages-ts/example/src/value.ts" })
       .filter((item) => item.value.type === "string")
       .map((item) => item.symbol),
     ["Mode.Allow", "Mode.Deny"],
@@ -392,7 +392,7 @@ test("5s explicit String const-enum members are retained-oracle primitive leaves
   assert.equal((await buildCompilerEvidence({ source: lowered.source, file: "sandbox/mode-allow.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors })).green, true);
   assert.equal((await buildPhysicalEvidence({ root: ROOT, source: lowered.source, flow: lowered.flow, vectors: lowered.vectors })).green, true);
   const camelSource = 'export const enum SystemCapabilityType { NetworkOutbound = "network.outbound" }';
-  const camel = lowerClassifiedSymbol(classifyTypeScriptSource({ source: camelSource, file: "packages-galerina/example/src/value.ts", symbol: "SystemCapabilityType.NetworkOutbound" }));
+  const camel = lowerClassifiedSymbol(classifyTypeScriptSource({ source: camelSource, file: "packages-ts/example/src/value.ts", symbol: "SystemCapabilityType.NetworkOutbound" }));
   assert.match(camel.source, /pure flow systemCapabilityTypeNetworkOutbound\(\) -> String/u);
 });
 
@@ -409,7 +409,7 @@ test("5t explicit i32 const-enum members are retained-oracle primitive leaves", 
     "}",
     "export enum RuntimeOp { Value = 9 }",
   ].join("\n");
-  const discovered = discoverTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" });
+  const discovered = discoverTypeScriptScopes({ source, file: "packages-ts/example/src/value.ts" });
   assert.deepEqual(discovered.map((item) => item.symbol), ["Op.Zero", "Op.Negative", "Op.Arithmetic"]);
   assert.deepEqual(discovered.map((item) => item.value), [
     { type: "number", value: 0 },
@@ -420,15 +420,15 @@ test("5t explicit i32 const-enum members are retained-oracle primitive leaves", 
   assert.match(lowered.source, /pure flow opArithmetic\(\) -> Int/u);
   assert.equal((await buildCompilerEvidence({ source: lowered.source, file: "sandbox/op-arithmetic.fungi", flow: lowered.flow, parameterNames: lowered.parameterNames, vectors: lowered.vectors })).green, true);
   assert.equal((await buildPhysicalEvidence({ root: ROOT, source: lowered.source, flow: lowered.flow, vectors: lowered.vectors })).green, true);
-  assert.equal(classifyTypeScriptSource({ source: "export const NEGATIVE_ZERO = -0;", file: "packages-galerina/example/src/value.ts", symbol: "NEGATIVE_ZERO" }).outcome, "BLOCKED");
-  assert.equal(classifyTypeScriptSource({ source, file: "packages-galerina/example/src/value.ts", symbol: "RuntimeOp.Value" }).outcome, "MANUAL_REVIEW");
+  assert.equal(classifyTypeScriptSource({ source: "export const NEGATIVE_ZERO = -0;", file: "packages-ts/example/src/value.ts", symbol: "NEGATIVE_ZERO" }).outcome, "BLOCKED");
+  assert.equal(classifyTypeScriptSource({ source, file: "packages-ts/example/src/value.ts", symbol: "RuntimeOp.Value" }).outcome, "MANUAL_REVIEW");
 });
 
 test("5u exact finite decimal consts lower only to zero-parameter Float leaves", async () => {
   const source = "export const LOOSE_TOLERANCE = 0.001;";
   const classified = classifyTypeScriptSource({
     source,
-    file: "packages-galerina/example/src/precision.ts",
+    file: "packages-ts/example/src/precision.ts",
     symbol: "LOOSE_TOLERANCE",
   });
   assert.equal(classified.outcome, "SUPPORTED");
@@ -459,7 +459,7 @@ test("5u exact finite decimal consts lower only to zero-parameter Float leaves",
   ]) {
     assert.notEqual(classifyTypeScriptSource({
       source: candidate,
-      file: "packages-galerina/example/src/precision.ts",
+      file: "packages-ts/example/src/precision.ts",
       symbol: "VALUE",
     }).outcome, "SUPPORTED", candidate);
   }
@@ -479,7 +479,7 @@ test("5v direct base-prefixed i32 constants lower to canonical decimal Int leave
   for (const [symbol, lexeme, expected] of cases) {
     const classified = classifyTypeScriptSource({
       source: `export const ${symbol} = ${lexeme};`,
-      file: "packages-galerina/example/src/radix.ts",
+      file: "packages-ts/example/src/radix.ts",
       symbol,
     });
     assert.equal(classified.outcome, "SUPPORTED", `${symbol} ${lexeme}`);
@@ -487,13 +487,13 @@ test("5v direct base-prefixed i32 constants lower to canonical decimal Int leave
     const lowered = lowerClassifiedSymbol(classified);
     assert.match(lowered.source, new RegExp(`return ${expected}(?:\\n|$)`, "u"));
     assert.doesNotMatch(lowered.source, /return -?0[xXoObB]/u);
-    assert.match(lowered.source, new RegExp(`TypeScript oracle: packages-galerina/example/src/radix\\.ts#${symbol}`, "u"));
+    assert.match(lowered.source, new RegExp(`TypeScript oracle: packages-ts/example/src/radix\\.ts#${symbol}`, "u"));
   }
 
   const enumSource = "export const enum Flags { Audit = 0b1010 }";
   const enumMember = classifyTypeScriptSource({
     source: enumSource,
-    file: "packages-galerina/example/src/radix.ts",
+    file: "packages-ts/example/src/radix.ts",
     symbol: "Flags.Audit",
   });
   assert.equal(enumMember.outcome, "SUPPORTED");
@@ -521,13 +521,13 @@ test("5w base-prefixed i32 capability refuses indirect, coercive, and out-of-ran
   for (const source of cases) {
     assert.notEqual(classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/radix.ts",
+      file: "packages-ts/example/src/radix.ts",
       symbol: "VALUE",
     }).outcome, "SUPPORTED", source);
   }
   assert.notEqual(classifyTypeScriptSource({
     source: "export enum RuntimeFlags { Audit = 0b1010 }",
-    file: "packages-galerina/example/src/radix.ts",
+    file: "packages-ts/example/src/radix.ts",
     symbol: "RuntimeFlags.Audit",
   }).outcome, "SUPPORTED");
 });
@@ -535,7 +535,7 @@ test("5w base-prefixed i32 capability refuses indirect, coercive, and out-of-ran
 test("5x signed-i32 subdomain classification is explicit and non-authorizing", () => {
   const identity = classifyTypeScriptSource({
     source: "export function identity(value: number): number { return value; }",
-    file: "packages-galerina/example/src/i32-kernel.ts",
+    file: "packages-ts/example/src/i32-kernel.ts",
     symbol: "identity",
   });
   assert.equal(identity.outcome, "SUPPORTED");
@@ -552,7 +552,7 @@ test("5x signed-i32 subdomain classification is explicit and non-authorizing", (
     const symbol = `compare${index}`;
     const compared = classifyTypeScriptSource({
       source: `export function ${symbol}(left: number, right: number): boolean { return left ${operator} right; }`,
-      file: "packages-galerina/example/src/i32-kernel.ts",
+      file: "packages-ts/example/src/i32-kernel.ts",
       symbol,
     });
     assert.equal(compared.outcome, "SUPPORTED", operator);
@@ -566,7 +566,7 @@ test("5x signed-i32 subdomain classification is explicit and non-authorizing", (
 
   const mixed = classifyTypeScriptSource({
     source: "export function choose(value: number, enabled: boolean): number { if (enabled) { return value; } return 0; }",
-    file: "packages-galerina/example/src/i32-kernel.ts",
+    file: "packages-ts/example/src/i32-kernel.ts",
     symbol: "choose",
   });
   assert.equal(mixed.outcome, "SUPPORTED");
@@ -579,7 +579,7 @@ test("5x signed-i32 subdomain classification is explicit and non-authorizing", (
 test("5y signed-i32 subdomain lowering binds the restriction and fixed vectors", async () => {
   const identity = classifyTypeScriptSource({
     source: "export function identity(value: number): number { return value; }",
-    file: "packages-galerina/example/src/i32-kernel.ts",
+    file: "packages-ts/example/src/i32-kernel.ts",
     symbol: "identity",
   });
   const loweredIdentity = lowerClassifiedSymbol(identity);
@@ -610,7 +610,7 @@ test("5y signed-i32 subdomain lowering binds the restriction and fixed vectors",
 
   const radix = lowerClassifiedSymbol(classifyTypeScriptSource({
     source: "export function radix(value: number): number { if (value < 0o7) { return -0x80000000; } return 0b1; }",
-    file: "packages-galerina/example/src/i32-kernel.ts",
+    file: "packages-ts/example/src/i32-kernel.ts",
     symbol: "radix",
   }));
   assert.match(radix.source, /if value < 7/u);
@@ -620,7 +620,7 @@ test("5y signed-i32 subdomain lowering binds the restriction and fixed vectors",
 
   const compared = lowerClassifiedSymbol(classifyTypeScriptSource({
     source: "export function before(left: number, right: number): boolean { return left < right; }",
-    file: "packages-galerina/example/src/i32-kernel.ts",
+    file: "packages-ts/example/src/i32-kernel.ts",
     symbol: "before",
   }));
   assert.equal(compared.vectors.length, 25);
@@ -659,14 +659,14 @@ test("5z signed-i32 subdomain refuses widening and forged classifications", () =
   for (const [symbol, source] of refusals) {
     assert.notEqual(classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/i32-refusal.ts",
+      file: "packages-ts/example/src/i32-refusal.ts",
       symbol,
     }).outcome, "SUPPORTED", symbol);
   }
 
   const admitted = classifyTypeScriptSource({
     source: "export function identity(value: number): number { return value; }",
-    file: "packages-galerina/example/src/i32-kernel.ts",
+    file: "packages-ts/example/src/i32-kernel.ts",
     symbol: "identity",
   });
   const { numericDomain: _removed, ...withoutMarker } = admitted;
@@ -677,7 +677,7 @@ test("5z signed-i32 subdomain refuses widening and forged classifications", () =
 test("5aa signed-i32 binary AND classification is explicit and non-authorizing", () => {
   const mask = classifyTypeScriptSource({
     source: "export function mask(value: number): number { return value & 0xff; }",
-    file: "packages-galerina/example/src/i32-bitwise.ts",
+    file: "packages-ts/example/src/i32-bitwise.ts",
     symbol: "mask",
   });
   assert.equal(mask.outcome, "SUPPORTED");
@@ -691,7 +691,7 @@ test("5aa signed-i32 binary AND classification is explicit and non-authorizing",
 
   const nested = classifyTypeScriptSource({
     source: "export function intersect(left: number, right: number): number { return left & (right & 0xff); }",
-    file: "packages-galerina/example/src/i32-bitwise.ts",
+    file: "packages-ts/example/src/i32-bitwise.ts",
     symbol: "intersect",
   });
   assert.equal(nested.outcome, "SUPPORTED");
@@ -703,7 +703,7 @@ test("5aa signed-i32 binary AND classification is explicit and non-authorizing",
 
   const predicate = classifyTypeScriptSource({
     source: "export function has(value: number, expected: number): boolean { return (value & expected) === expected; }",
-    file: "packages-galerina/example/src/i32-bitwise.ts",
+    file: "packages-ts/example/src/i32-bitwise.ts",
     symbol: "has",
   });
   assert.equal(predicate.outcome, "SUPPORTED");
@@ -713,7 +713,7 @@ test("5aa signed-i32 binary AND classification is explicit and non-authorizing",
 test("5ab signed-i32 binary AND lowers to Int.bitAnd with fixed differential and physical evidence", async () => {
   const classified = classifyTypeScriptSource({
     source: "export function mask(value: number): number { return value & 0xff; }",
-    file: "packages-galerina/example/src/i32-bitwise.ts",
+    file: "packages-ts/example/src/i32-bitwise.ts",
     symbol: "mask",
   });
   const lowered = lowerClassifiedSymbol(classified);
@@ -744,7 +744,7 @@ test("5ab signed-i32 binary AND lowers to Int.bitAnd with fixed differential and
 
   const intersect = lowerClassifiedSymbol(classifyTypeScriptSource({
     source: "export function intersect(left: number, right: number): number { return left & right; }",
-    file: "packages-galerina/example/src/i32-bitwise.ts",
+    file: "packages-ts/example/src/i32-bitwise.ts",
     symbol: "intersect",
   }));
   assert.equal(intersect.vectors.length, 25);
@@ -772,14 +772,14 @@ test("5ac signed-i32 binary AND refuses widening, neighbouring operators, and fo
   for (const [symbol, source] of refusals) {
     assert.notEqual(classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/i32-bitwise-refusal.ts",
+      file: "packages-ts/example/src/i32-bitwise-refusal.ts",
       symbol,
     }).outcome, "SUPPORTED", symbol);
   }
 
   const admitted = classifyTypeScriptSource({
     source: "export function mask(value: number): number { return value & 0xff; }",
-    file: "packages-galerina/example/src/i32-bitwise.ts",
+    file: "packages-ts/example/src/i32-bitwise.ts",
     symbol: "mask",
   });
   const { bitwiseProfile: _removed, ...withoutMarker } = admitted;
@@ -790,7 +790,7 @@ test("5ac signed-i32 binary AND refuses widening, neighbouring operators, and fo
 test("5ad signed-i16 checked subtraction classification is explicit and non-authorizing", () => {
   const decrement = classifyTypeScriptSource({
     source: "export function decrement(value: number): number { return value - 1; }",
-    file: "packages-galerina/example/src/i16-subtraction.ts",
+    file: "packages-ts/example/src/i16-subtraction.ts",
     symbol: "decrement",
   });
   assert.equal(decrement.outcome, "SUPPORTED");
@@ -807,7 +807,7 @@ test("5ad signed-i16 checked subtraction classification is explicit and non-auth
 
   const difference = classifyTypeScriptSource({
     source: "export function difference(left: number, right: number): number { return left - right; }",
-    file: "packages-galerina/example/src/i16-subtraction.ts",
+    file: "packages-ts/example/src/i16-subtraction.ts",
     symbol: "difference",
   });
   assert.equal(difference.outcome, "SUPPORTED");
@@ -821,7 +821,7 @@ test("5ad signed-i16 checked subtraction classification is explicit and non-auth
 test("5ae signed-i16 subtraction lowers to checked Fungi with bounded differential and physical evidence", async () => {
   const lowered = lowerClassifiedSymbol(classifyTypeScriptSource({
     source: "export function difference(left: number, right: number): number { return left - right; }",
-    file: "packages-galerina/example/src/i16-subtraction.ts",
+    file: "packages-ts/example/src/i16-subtraction.ts",
     symbol: "difference",
   }));
   assert.equal(lowered.numericDomain, "signed-i16-subdomain");
@@ -870,14 +870,14 @@ test("5af signed-i16 subtraction refuses widening, nesting, neighbours, mixing, 
   for (const [symbol, source] of refusals) {
     assert.notEqual(classifyTypeScriptSource({
       source,
-      file: "packages-galerina/example/src/i16-subtraction-refusal.ts",
+      file: "packages-ts/example/src/i16-subtraction-refusal.ts",
       symbol,
     }).outcome, "SUPPORTED", symbol);
   }
 
   const admitted = classifyTypeScriptSource({
     source: "export function decrement(value: number): number { return value - 1; }",
-    file: "packages-galerina/example/src/i16-subtraction.ts",
+    file: "packages-ts/example/src/i16-subtraction.ts",
     symbol: "decrement",
   });
   const { arithmeticProfile: _removed, ...withoutMarker } = admitted;
@@ -886,17 +886,17 @@ test("5af signed-i16 subtraction refuses widening, nesting, neighbours, mixing, 
 });
 
 test("6 lowerer emits documented deterministic Fungi and cannot consume a forged record", () => {
-  const constant = classifyTypeScriptSource({ source: 'export const CONTEXT = "sandbox.v1";\n', file: "packages-galerina/test/src/value.ts", symbol: "CONTEXT" });
+  const constant = classifyTypeScriptSource({ source: 'export const CONTEXT = "sandbox.v1";\n', file: "packages-ts/test/src/value.ts", symbol: "CONTEXT" });
   const lowered = lowerClassifiedSymbol(constant);
   assert.match(lowered.source, /^@version 1\n/u);
-  assert.match(lowered.source, /TypeScript oracle: packages-galerina\/test\/src\/value\.ts#CONTEXT/u);
+  assert.match(lowered.source, /TypeScript oracle: packages-ts\/test\/src\/value\.ts#CONTEXT/u);
   assert.match(lowered.source, /pure flow context\(\) -> String/u);
   assert.match(lowered.source, /return "sandbox\.v1"/u);
   assert.deepEqual(lowered.parameterNames, []);
   assert.deepEqual(lowered.vectors, [{ arguments: [], expected: "sandbox.v1" }]);
   const fn = classifyTypeScriptSource({
     source: "export function choose(flag: boolean): number { if (flag) { return 1; } return 0; }\n",
-    file: "packages-galerina/test/src/value.ts",
+    file: "packages-ts/test/src/value.ts",
     symbol: "choose",
   });
   const loweredFunction = lowerClassifiedSymbol(fn);
@@ -905,7 +905,7 @@ test("6 lowerer emits documented deterministic Fungi and cannot consume a forged
     { arguments: [false], expected: 0 },
     { arguments: [true], expected: 1 },
   ]);
-  const reserved = classifyTypeScriptSource({ source: 'export const REDACTED = "[redacted]";\n', file: "packages-galerina/test/src/value.ts", symbol: "REDACTED" });
+  const reserved = classifyTypeScriptSource({ source: 'export const REDACTED = "[redacted]";\n', file: "packages-ts/test/src/value.ts", symbol: "REDACTED" });
   const loweredReserved = lowerClassifiedSymbol(reserved);
   assert.equal(loweredReserved.flow, "redactedValue");
   assert.match(loweredReserved.source, /pure flow redactedValue\(\) -> String/u);
@@ -931,7 +931,7 @@ test("7 exact and identifier-alpha shadow checks include tracked and untracked w
 test("8 compiler evidence covers parser, types, effects, governance and deterministic GIR", async () => {
   const classified = classifyTypeScriptSource({
     source: "export function choose(flag: boolean): number { if (flag) { return 37; } return 0; }\n",
-    file: "packages-galerina/test/src/value.ts",
+    file: "packages-ts/test/src/value.ts",
     symbol: "choose",
   });
   const lowered = lowerClassifiedSymbol(classified);
@@ -944,7 +944,7 @@ test("8 compiler evidence covers parser, types, effects, governance and determin
 test("9 physical evidence publishes, independently re-admits, VOK-verifies and rejects mutations", async () => {
   const classified = classifyTypeScriptSource({
     source: 'export function token(flag: boolean): string { if (flag) { return "sandbox.physical.unique.v1"; } return "sandbox.physical.unique.v0"; }\n',
-    file: "packages-galerina/test/src/value.ts",
+    file: "packages-ts/test/src/value.ts",
     symbol: "token",
   });
   const lowered = lowerClassifiedSymbol(classified);
@@ -996,7 +996,7 @@ test("11 bounded discovery writes a unique real-package manifest or an explicit 
     assert.deepEqual(JSON.parse(await readFile(out, "utf8")), JSON.parse(canonicalJson(result)));
   } else {
     assert.equal(result.manifest.requests.length, result.selected);
-    assert.ok(result.manifest.requests.every((request) => request.file.startsWith("packages-galerina/") && request.file.includes("/src/") && request.file.endsWith(".ts")));
+    assert.ok(result.manifest.requests.every((request) => request.file.startsWith("packages-ts/") && request.file.includes("/src/") && request.file.endsWith(".ts")));
     assert.equal(new Set(result.manifest.requests.map((request) => `${request.file}#${request.symbol}`)).size, result.selected);
     assert.deepEqual(JSON.parse(await readFile(out, "utf8")), result.manifest);
   }
@@ -1011,7 +1011,7 @@ test("12 discovery logs refused sources, excludes the test package, and continue
     limit: 10,
   });
   assert.ok(result.selected >= 0 && result.selected <= 10);
-  if (result.manifest !== null) assert.ok(result.manifest.requests.every((request) => !request.file.startsWith("packages-galerina/galerina-test/")));
+  if (result.manifest !== null) assert.ok(result.manifest.requests.every((request) => !request.file.startsWith("packages-ts/galerina-test/")));
   assert.ok(result.skipped.some((item) => item.reasonCode === "SOURCE_UTF8_INVALID"));
   assert.ok(result.skipped.some((item) => item.reasonCode === BLOCKERS.PHYSICAL_STRING_PARAMETER));
 }));
@@ -1024,7 +1024,7 @@ test("13 exhausted discovery writes an explicit zero-candidate log", async () =>
     project,
     out,
     limit: 10,
-    after: "packages-galerina/zzzz/src/zzzz.ts#Z",
+    after: "packages-ts/zzzz/src/zzzz.ts#Z",
   });
   assert.equal(result.exhausted, true);
   assert.equal(result.selected, 0);
@@ -1072,11 +1072,11 @@ test("15 inventory logs bounded blocker groups without treating the test package
     'export const ACTIVE = new Set(["x"]);',
     'export interface Shape { readonly value: string }',
   ].join("\n");
-  const local = inventoryTypeScriptScopes({ source, file: "packages-galerina/example/src/value.ts" });
+  const local = inventoryTypeScriptScopes({ source, file: "packages-ts/example/src/value.ts" });
   assert.deepEqual(local.map((item) => item.outcome), ["SUPPORTED", "BLOCKED", "BLOCKED"]);
   const conditional = classifyTypeScriptSource({
     source: "export function choose(flag: boolean): boolean { return flag ? false : true; }\n",
-    file: "packages-galerina/example/src/conditional.ts",
+    file: "packages-ts/example/src/conditional.ts",
     symbol: "choose",
   });
   assert.equal(conditional.outcome, "BLOCKED");
@@ -1095,9 +1095,9 @@ test("15 inventory logs bounded blocker groups without treating the test package
   assert.ok(result.syntaxGroups.every((group) => group.examples.length <= 2));
   assert.ok(result.syntaxGroups.every((group) => Number.isSafeInteger(group.isolatedCount) && group.isolatedCount >= 0 && group.isolatedCount <= group.count));
   assert.ok(result.syntaxGroups.every((group) => group.isolatedExamples.length <= 2));
-  assert.ok(result.syntaxGroups.flatMap((group) => group.examples).every((scope) => !scope.startsWith("packages-galerina/galerina-test/")));
-  assert.ok(result.syntaxGroups.flatMap((group) => group.isolatedExamples).every((scope) => !scope.startsWith("packages-galerina/galerina-test/")));
+  assert.ok(result.syntaxGroups.flatMap((group) => group.examples).every((scope) => !scope.startsWith("packages-ts/galerina-test/")));
+  assert.ok(result.syntaxGroups.flatMap((group) => group.isolatedExamples).every((scope) => !scope.startsWith("packages-ts/galerina-test/")));
   assert.ok(result.syntaxGroups.every((group, index, groups) => index === 0 || groups[index - 1].count > group.count || (groups[index - 1].count === group.count && groups[index - 1].kind < group.kind)));
-  assert.ok(result.groups.flatMap((group) => group.examples).every((scope) => !scope.startsWith("packages-galerina/galerina-test/")));
+  assert.ok(result.groups.flatMap((group) => group.examples).every((scope) => !scope.startsWith("packages-ts/galerina-test/")));
   assert.deepEqual(JSON.parse(await readFile(out, "utf8")), result);
 }));

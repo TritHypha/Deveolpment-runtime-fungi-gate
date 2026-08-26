@@ -32,14 +32,14 @@ import {
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DECIDER_PATH = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-framework-app-kernel",
   "dist",
   "index.js",
 );
 const COMPILER_PACKAGE = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-compiler",
   "package.json",
 );

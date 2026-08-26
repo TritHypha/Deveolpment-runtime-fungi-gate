@@ -16,7 +16,7 @@
  * `scripts/p9-100-site-mapper.mjs` turns each site into a proposed concrete type with evidence.
  *
  * ★ MEASURED 2026-07-19, AND IT DID NOT MATCH THE RECORDED FIGURE. The number carried in the
- * coordination trail was "3,419 occurrences across 78 .fungi files in packages-galerina". A direct
+ * coordination trail was "3,419 occurrences across 78 .fungi files in packages-ts". A direct
  * count finds 263 in SIX files (271 in ten repo-wide) — off by ~13x in both dimensions. The measured
  * distribution is coherent in a way the recorded one is not: the erasure sits almost entirely in the
  * five self-hosted stages, which is exactly where #100 traps. Since the blast radius was the stated
@@ -44,11 +44,11 @@ import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.GALERINA_ROOT || join(HERE, "..");
-const BASELINE = join(ROOT, "packages-galerina/galerina-core-compiler/tests/fixtures/auto-erasure-baseline.json");
+const BASELINE = join(ROOT, "packages-ts/galerina-core-compiler/tests/fixtures/auto-erasure-baseline.json");
 const SKIP_DIRS = new Set(["node_modules", ".git", ".worktrees", "dist"]);
 
 /** The self-hosted compiler stages — the P9 debt proper, reported as its own subtotal. */
-const STAGE_DIR = "packages-galerina/galerina-core-compiler/src/self-hosted/";
+const STAGE_DIR = "packages-ts/galerina-core-compiler/src/self-hosted/";
 
 /** If these leave the scan, the surface broke — fail rather than report a smaller number. */
 const SURFACE_ANCHORS = [

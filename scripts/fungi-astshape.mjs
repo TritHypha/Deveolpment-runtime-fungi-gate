@@ -31,7 +31,7 @@ import { dirname, join } from "node:path";
 import { readFileSync } from "node:fs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const DIST = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const DIST = join(HERE, "..", "packages-ts", "galerina-core-compiler", "dist", "index.js");
 let L, parseProgram;
 try {
   L = await import(pathToFileURL(DIST).href);
@@ -47,7 +47,7 @@ try {
 // / type-checker.fungi / gir-emitter.fungi see — they consume the SELF-HOSTED parser's output. Auditing those
 // against the host shape is the RD-0122 blind spot; this closes it. Reuses the self-hosted-pipeline path:
 // host-parse lexer.fungi + parser.fungi, run their tokenize→parseFlows via the shipped walker, print the result.
-const SH_DIR = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "src", "self-hosted");
+const SH_DIR = join(HERE, "..", "packages-ts", "galerina-core-compiler", "src", "self-hosted");
 function loadSelfHosted(file) {
   const { resolveSymbols, checkTypes } = L;
   if (typeof resolveSymbols !== "function" || typeof checkTypes !== "function") {

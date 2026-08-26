@@ -213,12 +213,12 @@ Use placeholders; do not put private values in commands.
 Set-Location <clean-galerina-checkout>
 git status --short
 git rev-parse HEAD
-npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test
-npm.cmd --prefix packages-galerina/galerina-registry test
+npm.cmd --prefix packages-ts/galerina-framework-app-kernel test
+npm.cmd --prefix packages-ts/galerina-registry test
 node scripts/registry-index-cli.mjs --self-test
 node scripts/registry-index-cli.mjs build `
-  --registry-dir packages-galerina/galerina-registry/packages `
-  --workspace-packages-dir packages-galerina `
+  --registry-dir packages-ts/galerina-registry/packages `
+  --workspace-packages-dir packages-ts `
   --delegation <offline-staging>/registry-delegation-v1.json `
   --root-pubkey governance/signing-key-21415420b447e219.pub.pem `
   --root-mldsa65-pubkey governance/signing-key-21415420b447e219.mldsa.pub.b64 `
@@ -363,9 +363,9 @@ $env:GALERINA_SIGNING_KEY_ID = "f3172a48372bfb23"
 $env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.slide-hybrid-f3172a48372bfb23"
 
 node scripts/registry-authority-cli.mjs sign-manifest `
-  --in packages-galerina\galerina-registry\candidates\@galerina\auth\package.galerina.yaml `
+  --in packages-ts\galerina-registry\candidates\@galerina\auth\package.galerina.yaml `
   --out <offline-staging>\auth.package.galerina.yaml `
-  --workspace-packages-dir packages-galerina `
+  --workspace-packages-dir packages-ts `
   --delegation governance\registry-delegation-f3172a48372bfb23-v1.json `
   --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
   --root-mldsa65-pubkey governance\signing-key-21415420b447e219.mldsa.pub.b64 `
@@ -378,7 +378,7 @@ node scripts/registry-authority-cli.mjs sign-manifest `
 
 node scripts/registry-authority-cli.mjs verify-manifest `
   --in <offline-staging>\auth.package.galerina.yaml `
-  --workspace-packages-dir packages-galerina `
+  --workspace-packages-dir packages-ts `
   --delegation governance\registry-delegation-f3172a48372bfb23-v1.json `
   --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
   --root-mldsa65-pubkey governance\signing-key-21415420b447e219.mldsa.pub.b64 `
@@ -392,15 +392,15 @@ node scripts/registry-authority-cli.mjs verify-manifest `
 New-Item `
   -ItemType Directory `
   -Force `
-  -Path packages-galerina\galerina-registry\packages\@galerina\auth |
+  -Path packages-ts\galerina-registry\packages\@galerina\auth |
   Out-Null
 Copy-Item `
   -LiteralPath <offline-staging>\auth.package.galerina.yaml `
-  -Destination packages-galerina\galerina-registry\packages\@galerina\auth\package.galerina.yaml
+  -Destination packages-ts\galerina-registry\packages\@galerina\auth\package.galerina.yaml
 
 node scripts/registry-index-cli.mjs sign `
-  --registry-dir packages-galerina/galerina-registry/packages `
-  --workspace-packages-dir packages-galerina `
+  --registry-dir packages-ts/galerina-registry/packages `
+  --workspace-packages-dir packages-ts `
   --registry "https://registry.galerina.dev" `
   --delegation <offline-staging>\registry-delegation-v1.json `
   --root-pubkey governance\signing-key-21415420b447e219.pub.pem `

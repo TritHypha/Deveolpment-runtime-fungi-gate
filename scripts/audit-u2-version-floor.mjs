@@ -56,7 +56,7 @@ export function readManifestVersion(manifestPath) {
 async function collectRows() {
   const { findFusablePackages } = await import("./lib/signed-lmanifest.mjs");
   const rows = [];
-  for (const p of findFusablePackages([join(ROOT, "packages-galerina")], { gitRoot: ROOT })) {
+  for (const p of findFusablePackages([join(ROOT, "packages-ts")], { gitRoot: ROOT })) {
     if (!existsSync(p.manifestPath)) continue; // package never built → nothing minted to measure
     const { version, unreadable } = readManifestVersion(p.manifestPath);
     rows.push({

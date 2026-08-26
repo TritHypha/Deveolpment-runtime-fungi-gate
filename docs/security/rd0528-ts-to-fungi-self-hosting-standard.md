@@ -22,8 +22,8 @@ each step requires**.
 
 | Artifact | Location | Role | Executes? |
 |---|---|---|---|
-| **`.ts` implementation** | `packages-galerina/galerina-core-compiler/src/*.ts` → built to `dist/` | The **decider of record** for every stage | **Yes** — `galerina check`/`build`/`run` import `packages-galerina/galerina-core-compiler/dist/index.js` |
-| **`.fungi` twin** | `packages-galerina/galerina-core-compiler/src/self-hosted/*.fungi` | A self-hosted implementation, proven **R3 byte-parity** with its `.ts` (the WASM the twin emits ≡ the `.ts`-produced WASM) | **Not as the production backend** — it executes only in the differential/evidence harness (built + #105-admitted), never in `galerina check`/`build`/`run` |
+| **`.ts` implementation** | `packages-ts/galerina-core-compiler/src/*.ts` → built to `dist/` | The **decider of record** for every stage | **Yes** — `galerina check`/`build`/`run` import `packages-ts/galerina-core-compiler/dist/index.js` |
+| **`.fungi` twin** | `packages-ts/galerina-core-compiler/src/self-hosted/*.fungi` | A self-hosted implementation, proven **R3 byte-parity** with its `.ts` (the WASM the twin emits ≡ the `.ts`-produced WASM) | **Not as the production backend** — it executes only in the differential/evidence harness (built + #105-admitted), never in `galerina check`/`build`/`run` |
 
 The seven compiler stages: **lexer · parser · gir-emitter · runtime · type-checker · effect-checker ·
 governance-verifier.**
@@ -123,7 +123,7 @@ hand. Run these from the Galerina repo root:
 | *Each stage's evidence hash (item d)?* | `node scripts/gather-compiler-stage-hashes.mjs --json` | Builds all 7 stages → signed (ephemeral dev key) → #105-admitted; deterministic sha256 per stage (build-order-independent since #163) |
 | *Is the hash still at its reviewed baseline?* | `node scripts/audit-compiler-stage-hashes.mjs` | Gates the baseline JSON; REDs visibly on drift — review, then `--update-baseline` (per §5a for authoritative stages) |
 | *Is the evidence non-vacuous?* | `node scripts/audit-mutation.mjs` | Mutation-kill catalog (`RD0528_COMPILER`) — proves the parity evidence can actually fail |
-| *Does the twin still byte-match its `.ts`?* | the `wat-p9-*-parity` tests | 11 files in `packages-galerina/galerina-core-compiler/tests/` — part of the core-compiler suite |
+| *Does the twin still byte-match its `.ts`?* | the `wat-p9-*-parity` tests | 11 files in `packages-ts/galerina-core-compiler/tests/` — part of the core-compiler suite |
 | *Is the twin functionally correct?* | `self-hosted-i3-functional-corpus.test.mjs` | The I-3 oracle: MUST-pass / MUST-fail corpus — functional correctness, not just byte-identity |
 | *Twin behaviour in depth?* | the `self-hosted-*.test.mjs` family | 15 files, same tests dir |
 | *Is a new governance code fail-closed?* | `security-type-codes-invariant.test.mjs` + `cli-security-type-gate.test.mjs` | The invariant gate REDs any type-checker FUNGI-K3/GOV-3VL code missing from `SECURITY_TYPE_CODES`; the CLI gate proves check exit 1 + build refusal through the real `galerina.mjs` |

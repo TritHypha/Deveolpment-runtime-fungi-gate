@@ -14,14 +14,14 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const COMPILER = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-compiler",
   "dist",
   "index.js",
 );
 const WAT_EMITTER_SOURCE = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-compiler",
   "src",
   "wat-emitter.ts",
@@ -133,7 +133,7 @@ const CANDIDATES = [
   pkg,
   stem,
   module,
-  path: `packages-galerina/${pkg}/src/self-hosted/${stem}.fungi`,
+  path: `packages-ts/${pkg}/src/self-hosted/${stem}.fungi`,
 }));
 
 const EXISTING_AUTHORITY = [
@@ -151,7 +151,7 @@ const EXISTING_AUTHORITY = [
   pkg,
   stem,
   module,
-  path: `packages-galerina/${pkg}/src/self-hosted/${stem}.fungi`,
+  path: `packages-ts/${pkg}/src/self-hosted/${stem}.fungi`,
 }));
 const ALL_TWINS = [...EXISTING_AUTHORITY, ...CANDIDATES];
 
@@ -255,7 +255,7 @@ if (LIST_ONLY) {
 if (!existsSync(COMPILER)) {
   console.error(
     "gather-r4-twin-hashes: compiler dist is missing; rebuild " +
-      "packages-galerina/galerina-core-compiler first",
+      "packages-ts/galerina-core-compiler first",
   );
   process.exit(1);
 }

@@ -107,7 +107,7 @@ function checkPatterns(root) {
 }
 
 async function loadAudit(root, packageName, exportName) {
-  const modulePath = admittedPath(root, `packages-galerina/${packageName}/dist/index.js`, "file");
+  const modulePath = admittedPath(root, `packages-ts/${packageName}/dist/index.js`, "file");
   const module = await import(pathToFileURL(modulePath).href);
   if (typeof module[exportName] !== "function") throw new Error(`${packageName} omits ${exportName}`);
   return module[exportName];
@@ -151,7 +151,7 @@ async function checkCbor(root) {
     .map((name) => ({ name, path: admittedPath(root, `build/${name}`, "file") }));
   const modulePath = admittedPath(
     root,
-    "packages-galerina/galerina-core-compiler/dist/manifest-generator.js",
+    "packages-ts/galerina-core-compiler/dist/manifest-generator.js",
     "file",
   );
   const { decodeCBOR, encodeCBOR } = await import(pathToFileURL(modulePath).href);
@@ -185,10 +185,10 @@ function checkGovernanceDiff(root) {
   if (base.error !== undefined || typeof base.signal === "string" || base.status !== 0) {
     throw new Error("GOVERNANCE-DIFF-BASE-MISSING: HEAD~1 could not be verified");
   }
-  admittedPath(root, "packages-galerina/galerina-core-compiler/dist/cli.js", "file");
+  admittedPath(root, "packages-ts/galerina-core-compiler/dist/cli.js", "file");
   const child = runOwnedProcessSync({
     command: process.execPath,
-    args: ["packages-galerina/galerina-core-compiler/dist/cli.js", "diff", "HEAD~1", "--json"],
+    args: ["packages-ts/galerina-core-compiler/dist/cli.js", "diff", "HEAD~1", "--json"],
     cwd: root,
     env: childEnvironment(root),
     timeoutMs: GOVERNANCE_DIFF_TIMEOUT_MS,

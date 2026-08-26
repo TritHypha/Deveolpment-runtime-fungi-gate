@@ -10,7 +10,7 @@
 // (On the prototype branch this is the standalone auditor; the merge step wires the same output behind
 // `galerina check --show-derived`. Auto-derivation is a checker-verified shadow — not build-wired, #143.)
 import { readFileSync } from "node:fs";
-import { parseProgram, deriveAuto, showDerived } from "../packages-galerina/galerina-core-compiler/dist/index.js";
+import { parseProgram, deriveAuto, showDerived } from "../packages-ts/galerina-core-compiler/dist/index.js";
 
 const FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl", "governedFlowDecl"]);
 

@@ -19,28 +19,28 @@ target packages map planned work to CPU, GPU, AI accelerator or photonic plans.
 ## Package Split
 
 ```text
-packages-galerina/galerina-core-vector
+packages-ts/galerina-core-vector
   Vector<T, N>, Matrix<T, R, C>, Tensor<T, Shape>, numeric element contracts
 
-packages-galerina/galerina-ai-neural
+packages-ts/galerina-ai-neural
   neural models, layers, activations, inference, training boundaries
 
-packages-galerina/galerina-ai-neuromorphic
+packages-ts/galerina-ai-neuromorphic
   Spike, SpikeTrain, EventSignal<T>, spiking models
 
-packages-galerina/galerina-ai
+packages-ts/galerina-ai
   generic AI model metadata, safety policy and AI inference reports
 
-packages-galerina/galerina-ai-lowbit
+packages-ts/galerina-ai-lowbit
   low-bit, quantized and ternary AI backend contracts
 
-packages-galerina/galerina-core-compute
+packages-ts/galerina-core-compute
   compute auto, target selection and fallback reports
 
-packages-galerina/galerina-target-ai-accelerator
+packages-ts/galerina-target-ai-accelerator
   NPU, TPU, AI-chip and passive accelerator backend profile planning
 
-packages-galerina/galerina-target-photonic
+packages-ts/galerina-target-photonic
   future photonic target planning
 ```
 

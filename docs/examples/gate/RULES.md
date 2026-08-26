@@ -1,7 +1,7 @@
 # `.gate` v3 — the fail-closed invariants
 
 Every rule below is enforced by the v3 frontend in
-`packages-galerina/galerina-core-compiler/`, and each names the **diagnostic code
+`packages-ts/galerina-core-compiler/`, and each names the **diagnostic code
 that fires** — so a rule can be tested, not merely believed. The master rule is
 unchanged from v1: **unknown ⇒ REJECT, never ignore.** There is no best-effort
 parse and no silent-skip path; that is how dialects are born.

@@ -6,7 +6,7 @@
 // routes whose patterns can match a common concrete path must be disambiguated, or the build is rejected —
 // the same checker class as match-exhaustiveness. The runtime HOLD arm is separate.
 //
-// Grounded in the REAL pattern language of packages-galerina/galerina-core-compiler/src/route-registry.ts
+// Grounded in the REAL pattern language of packages-ts/galerina-core-compiler/src/route-registry.ts
 // (parseRouteEntry) + its tests:
 //   surface:  route <METHOD> "<path>" { ... flow <name> ... }   — only flow-bearing routes register.
 //   a "{name}" path segment compiles to ([^/]+): exactly ONE non-empty, non-slash segment;

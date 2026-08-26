@@ -34,7 +34,7 @@ The current benchmark is useful, but it must be interpreted carefully.
 This command was used:
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --runs 3 --operations 5000000 --warmup-ms 1000 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --runs 3 --operations 5000000 --warmup-ms 1000 --batch-size 100000 --buffer-size 65536
 ```
 
 The result produced different checksums across runs and runtimes.
@@ -74,7 +74,7 @@ That makes the checksum different, even if the measured operation count is fixed
 This command was used:
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --runs 3 --operations 5000000 --warmup-ms 0 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --runs 3 --operations 5000000 --warmup-ms 0 --batch-size 100000 --buffer-size 65536
 ```
 
 This produced the same checksum for all runtimes:
@@ -96,7 +96,7 @@ This proves that the benchmark can succeed, but the warm-up design needs changin
 This command was used:
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --runs 5 --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --runs 5 --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
 ```
 
 The 20-second benchmark produced these median results:
@@ -322,7 +322,7 @@ same expected checksum
 Example:
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --validate --operations 5000000 --warmup-ms 0 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --validate --operations 5000000 --warmup-ms 0 --batch-size 100000 --buffer-size 65536
 ```
 
 Expected result:
@@ -348,7 +348,7 @@ Use it only for correctness validation.
 The official speed result should come from timed mode:
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --runs 5 --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --runs 5 --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
 ```
 
 Official score:
@@ -530,7 +530,7 @@ median
 ## Step 1: validation
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --runs 3 --operations 5000000 --warmup-ms 0 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --runs 3 --operations 5000000 --warmup-ms 0 --batch-size 100000 --buffer-size 65536
 ```
 
 Pass condition:
@@ -548,7 +548,7 @@ PASS: checksum 889735480
 ## Step 2: speed test
 
 ```powershell
-node packages-galerina\galerina-core\examples\benchmark-runner.node.js --runs 5 --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
+node packages-ts\galerina-core\examples\benchmark-runner.node.js --runs 5 --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
 ```
 
 Pass condition:

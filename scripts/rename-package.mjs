@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // rename-package.mjs — mechanical, exact-token rename of a monorepo package across TRACKED files.
-// Renames packages-galerina/<oldDir> -> <newDir> (git mv) and rewrites every tracked TEXT file,
+// Renames packages-ts/<oldDir> -> <newDir> (git mv) and rewrites every tracked TEXT file,
 // replacing the directory token and the derived @galerina/<...> package-name token. Exact-substring
 // replacement — monorepo package/dir names are unique, so there is no word-boundary hazard (e.g.
 // `galerina-ext-spore` is NOT a substring of `galerina-ext-secrets-spore`). Binary files (NUL sniff) are
@@ -27,7 +27,7 @@ const IS_WIN = process.platform === "win32";
 const git = (...a) => execFileSync("git", a, { cwd: ROOT, encoding: "utf8", shell: IS_WIN });
 
 // 1. git mv the package directory (moves tracked files + records the rename).
-const oldPath = join("packages-galerina", oldDir), newPath = join("packages-galerina", newDir);
+const oldPath = join("packages-ts", oldDir), newPath = join("packages-ts", newDir);
 if (existsSync(join(ROOT, oldPath))) {
   git("mv", oldPath, newPath);
   console.log(`  git mv ${oldPath} -> ${newPath}`);

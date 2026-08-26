@@ -1,7 +1,7 @@
 # 03 — Effects & Capabilities
 
 > **This page's effect vocabulary is copied from the compiler, not from a doc table.**
-> Source of truth: `packages-galerina/galerina-core-compiler/src/effect-checker.ts` —
+> Source of truth: `packages-ts/galerina-core-compiler/src/effect-checker.ts` —
 > `CANONICAL_EFFECTS` (lines ~298-355), `EFFECT_REGISTRY` (lines ~45-132),
 > `EFFECT_NAME_ALIASES` (~367-397), `DENY_ONLY_EFFECTS` (~363-365). Contract-clause wiring:
 > `parser.ts:4080`. Real examples: `examples/healthcare/getPatient.fungi`,

@@ -1657,7 +1657,7 @@ counts or open items that a newer section explicitly supersedes.
 ### Dependency deduplication and root-workspace migration - 2026-08-13
 
 - [x] Verify the current layout rather than assume hoisting: the repository
-  root and `packages-galerina/` have no `node_modules`; 95 package-level
+  root and `packages-ts/` have no `node_modules`; 95 package-level
   dependency trees and 97 package-owned lockfiles exist.
 - [x] Confirm the current flat-package topology gate is green only as a
   pre-SLIDE debt ratchet; it is not evidence that dependencies are deduplicated.
@@ -4054,7 +4054,7 @@ outside this repository.
 
 ### Passive capability-map devtool verified against its spec - 2026-08-08
 
-`packages-galerina/galerina-devtools-hypha` meets all five spec points, verified
+`packages-ts/galerina-devtools-hypha` meets all five spec points, verified
 rather than assumed: self-locating root, in-memory by default (no db/cache/socket
 module, zero dependencies, no build step), `--scan full|<target>`, CI exit codes
 0/1/2 with every documented code reachable, and writes nothing unless `--out`.
@@ -4072,7 +4072,7 @@ module, zero dependencies, no build step), `--scan full|<target>`, CI exit codes
 Supersedes the `.gate` posture recorded in the 2026-07-03/04 ledger sections
 below (the reference checker era: "`parseGate` not wired to `cli.ts`",
 front-end = `gate-check.mjs`). The v3 frontend now lives in
-`packages-galerina/galerina-core-compiler/` (`gate-v3-*.ts`) behind one shared
+`packages-ts/galerina-core-compiler/` (`gate-v3-*.ts`) behind one shared
 dispatcher (`gate-dispatch.ts`) reached by BOTH CLIs — the root `galerina.mjs`
 routes `.gate` directly. Programme workspace: the
 `ZT-Galerina-GRAPH-ASCII-v3-KTA` repository (plan/decision/exit documents and
@@ -4134,7 +4134,7 @@ document.
   from target/platform packs such as ARM64 Linux and exact Raspberry Pi model
   profiles; neither grants device effects.
 - [ ] Keep every source package as one top-level
-  `packages-galerina/galerina-[category]-[name]` peer. Source presence is not
+  `packages-ts/galerina-[category]-[name]` peer. Source presence is not
   installation. After canonical GIR first detects a requirement, offer an
   interactive local-only choice: install for this build, automatically install
   that exact identity/version/digest for this project, or refuse by default.
@@ -4147,7 +4147,7 @@ document.
 - [ ] Add explicit CLI installation profiles such as
   `galerina pack install galerina-pack-algebra` and
   `galerina pack install galerina-pack-quantum-simulation`. Pack manifests
-  must expand to exact top-level peers under `packages-galerina`; nested
+  must expand to exact top-level peers under `packages-ts`; nested
   dependency trees, ambient lookup and install scripts remain refused.
 - [ ] Make the production route AOT-only: resolve, verify and directly link
   selected providers during build, installation, update or admitted boot
@@ -5279,7 +5279,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   refuses a Galerina production lane in that scope and the aggregate explicitly
   reports both references as visible but unranked.
 - Report:
-  `packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.md`.
+  `packages-ts/galerina-devtools-benchmarks/results/verified-native-operation-latest.md`.
 - **Open:** this is JavaScript reference evidence, not a production/native or
   general-loop speed claim. Production tool/source authentication,
   native/platform durability and authority release remain required.
@@ -5368,7 +5368,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
 ### External package conversion Round 4 issued - 2026-08-03
 
 - A reproducible 20-file sample now covers 20 different top-level
-  `packages-galerina` packages and excludes every package attempted in earlier
+  `packages-ts` packages and excludes every package attempted in earlier
   staging rounds plus the superseded Round 4 draft.
 - The binding translator map is now maintained in
   `docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md`: subject type
@@ -6227,7 +6227,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   23 shared, 1 added and 5 present-but-unmeasured.
 - **Evidence:**
   `docs/reports/full-publication-benchmark-2026-08-02.md` and
-  `packages-galerina/galerina-devtools-benchmarks/results/`.
+  `packages-ts/galerina-devtools-benchmarks/results/`.
 - **Still deferred honestly:** this is Galerina's current Wasm/reference/native
   benchmark, not the terminal independent SLIDE comparison. Do that only when
   SLIDE has an executable backend and equivalent admitted workloads.
@@ -6665,7 +6665,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   seams, privacy/custody effects, cryptographic-suite agility and exact target
   manifests. These are implementation prerequisites, not current claims.
 - **Package topology unchanged:** every first-party package exists once as a
-  top-level peer under `packages-galerina`; dependencies are exact manifest
+  top-level peer under `packages-ts`; dependencies are exact manifest
   edges, never nested package copies.
 - **Performance boundary:** build B0 and exact action-cache BA before attaching
   VPEG. Typed-hole VPEG needs a BA-miss/VPEG-hit value fixture; B2/NSE/
@@ -7551,7 +7551,7 @@ planning checkbox must never be used to imply that implementation exists.
   Batch 01 assigns eight self-contained packages in
   `docs/research-prompts/galerina-package-fungi-conversion-batch-01.md`.
   They may also be separately assigned one candidate translation under the
-  external `../Galerina-Fungi-Package-Staging/packages-galerina/<PACKAGE>/`
+  external `../Galerina-Fungi-Package-Staging/packages-ts/<PACKAGE>/`
   quarantine. That workspace enforces one flat top-level copy of every
   package/plugin, forbids npm-style nested dependencies, and keeps Galerina,
   SLIDE and KB read-only. The coordinator reference
@@ -7669,7 +7669,7 @@ planning checkbox must never be used to imply that implementation exists.
   `docs/superpowers/specs/2026-07-30-registry-live-artifact-and-manifest-admission-design.md`
   and
   `docs/superpowers/plans/2026-07-30-registry-live-artifact-and-manifest-admission.md`.
-  They require one canonical direct child of `packages-galerina`, one sorted
+  They require one canonical direct child of `packages-ts`, one sorted
   declared file set, deterministic byte framing, a hybrid manifest envelope,
   and an independently verified root-to-operational delegation.
 - **Completed and committed:** local commit `4b7c7dff` adds
@@ -7841,7 +7841,7 @@ planning checkbox must never be used to imply that implementation exists.
   differential, reset, and attestation evidence while removing the pre-SLIDE
   production-sidecar framing. The 14 tracked files moved from
   `subprojects/dss-host` to the single flat development package
-  `packages-galerina/galerina-devtools-wasmtime-oracle`.
+  `packages-ts/galerina-devtools-wasmtime-oracle`.
 - **Fresh focused evidence:** the no-sidecar/injection/layout suite is 8/8;
   memory-graph self-test is 6/6; all eight Rust oracle tests pass after explicit
   fixture generation; Wasmtime-presence self-test and flat topology are green.
@@ -8794,7 +8794,7 @@ planning checkbox must never be used to imply that implementation exists.
   independent structural admission, closed-profile fresh-process reference
   execution, SLIDE naming migration, and nesting/XOR adjudication.
 - **Completed:** the first verified reconstruction checkpoint in
-  `packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi`
+  `packages-ts/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi`
   decodes canonical fields into importer-owned typed program records (local
   commit `bc5bd9d7`).
 - **Completed:** local commit `3cd1f3d2` adds the independent semantic gate,
@@ -9874,7 +9874,7 @@ Handover to R&D: `../ZTF-Knowledge-Bases/coordination/to-rnd/2026-07-18-CLOSING-
   A13/A14/A15/A24/A25/A26/A19 · RD-0238 P0 follow-through · C2 upgrade.
 - **Structural (owner, 2026-07-08): `galerina-ext-bridge-quantum` MOVED OUT of this repo** →
   `<GitHub>\galerina-ext-bridge-quantum` (to become its own project). Its file:/import
-  deps now point INTO this checkout (`../Galerina/packages-galerina/{tower-citizen,inference-bridge-contract}`);
+  deps now point INTO this checkout (`../Galerina/packages-ts/{tower-citizen,inference-bridge-contract}`);
   21/21 green standalone. Galerina side: workspace.json/version.json/README updated; suite **61/61 · 6,115**
   (exactly −21). Removal is uncommitted (git shows deletions; commit/push held). Name-only refs in
   inference-bridge-contract tests are fixtures — intentionally kept.
@@ -10119,7 +10119,7 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
       guard's `enforced_limits{}` ceiling (same canonical name + unit family) fails closed. Conservative (unknown
       unit family → no false fire). +tests `tests/governance/guard-decl.test.mjs`.
 - [~] **B5a signed registry index** — the exact hybrid-signed one-entry index is now distributed at
-      `packages-galerina/galerina-registry/registry-index-v2.json` and independently verifies. The module remains
+      `packages-ts/galerina-registry/registry-index-v2.json` and independently verifies. The module remains
       fail-closed *when injected* (`fuse-loader.ts:694/951`); default-on runtime wiring is still open.
 - [ ] Drive the `lint:conventions` umbrella (270 report-only findings) to 0, then drop `--soft`.
 

@@ -277,7 +277,7 @@ function cloneRoute(value, index) {
   const fields = exactRecord(value, ROUTE_KEYS, label);
   const sourcePath = canonicalPath(fields.sourcePath, `${label}.sourcePath`);
   if (
-    !/^packages-galerina\/[^/]+\/src\/.+\.fungi$/u.test(sourcePath)
+    !/^packages-ts\/[^/]+\/src\/.+\.fungi$/u.test(sourcePath)
     || fields.parserProvenance !== "canonical-fungi-ast"
     || !Number.isSafeInteger(fields.line)
     || fields.line < 1

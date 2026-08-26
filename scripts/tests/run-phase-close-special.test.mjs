@@ -68,12 +68,12 @@ test("patterns refuses an absent or empty corpus", () => {
 test("security and naming preserve the legacy finding and error policy", () => {
   const root = fixture();
   write(root, "examples/auth-service/one.fungi", "flow one() -> Int { 1 }\n");
-  write(root, "packages-galerina/galerina-devtools-security/package.json", "{\"type\":\"module\"}\n");
-  write(root, "packages-galerina/galerina-devtools-security/dist/index.js", [
+  write(root, "packages-ts/galerina-devtools-security/package.json", "{\"type\":\"module\"}\n");
+  write(root, "packages-ts/galerina-devtools-security/dist/index.js", [
     "export async function runSecurityAudit() { return { findings: [{ code: 'KNOWN' }] }; }",
   ].join("\n"));
-  write(root, "packages-galerina/galerina-devtools-naming/package.json", "{\"type\":\"module\"}\n");
-  write(root, "packages-galerina/galerina-devtools-naming/dist/index.js", [
+  write(root, "packages-ts/galerina-devtools-naming/package.json", "{\"type\":\"module\"}\n");
+  write(root, "packages-ts/galerina-devtools-naming/dist/index.js", [
     "export function runNamingAudit() { return { findings: [{ code: 'KNOWN' }] }; }",
   ].join("\n"));
 
@@ -88,8 +88,8 @@ test("security and naming preserve the legacy finding and error policy", () => {
 
 test("CBOR refuses non-canonical bytes and passes exact re-encoding", () => {
   const root = fixture();
-  write(root, "packages-galerina/galerina-core-compiler/package.json", "{\"type\":\"module\"}\n");
-  write(root, "packages-galerina/galerina-core-compiler/dist/manifest-generator.js", [
+  write(root, "packages-ts/galerina-core-compiler/package.json", "{\"type\":\"module\"}\n");
+  write(root, "packages-ts/galerina-core-compiler/dist/manifest-generator.js", [
     "export function decodeCBOR(bytes) { return { value: [...bytes] }; }",
     "export function encodeCBOR(value) { return Uint8Array.from(value); }",
   ].join("\n"));
@@ -103,8 +103,8 @@ test("CBOR refuses non-canonical bytes and passes exact re-encoding", () => {
 
 test("CBOR does not admit a non-CBOR local artifact as canonical evidence", () => {
   const root = fixture();
-  write(root, "packages-galerina/galerina-core-compiler/package.json", "{\"type\":\"module\"}\n");
-  write(root, "packages-galerina/galerina-core-compiler/dist/manifest-generator.js", [
+  write(root, "packages-ts/galerina-core-compiler/package.json", "{\"type\":\"module\"}\n");
+  write(root, "packages-ts/galerina-core-compiler/dist/manifest-generator.js", [
     "export function decodeCBOR(bytes) { return { value: [...bytes] }; }",
     "export function encodeCBOR(value) { return Uint8Array.from(value); }",
   ].join("\n"));
@@ -126,7 +126,7 @@ test("governance diff refuses when HEAD~1 is not an admitted base", () => {
 
 test("governance diff admits only its exact repository root without global Git config", () => {
   const root = fixture();
-  write(root, "packages-galerina/galerina-core-compiler/dist/cli.js", [
+  write(root, "packages-ts/galerina-core-compiler/dist/cli.js", [
     "process.stdout.write(JSON.stringify({",
     "  changeClass: 'governed',",
     "  summary: 'fixture governance diff admitted',",

@@ -50,7 +50,7 @@ const ok = (cond, label) => {
 const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 0) Minimal graph kernel — mirrors the SHAPE of packages-galerina/
+// 0) Minimal graph kernel — mirrors the SHAPE of packages-ts/
 //    galerina-devtools-project-graph (Graph<N,E>: outEdges/inEdges/node/hasNode,
 //    bfsReachable, bfsPath). Reimplemented with node built-ins so the proof has
 //    NO repo imports, but the data model is 1:1 with what RD-0168 would consume.

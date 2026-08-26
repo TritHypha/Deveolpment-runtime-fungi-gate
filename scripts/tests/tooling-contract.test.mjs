@@ -182,7 +182,7 @@ test("a manifest self-test command is the fixture-evidence source of truth", () 
 
 test("an unregistered package directory is a blocking violation", () => {
   const root = fixture({
-    "packages-galerina/hidden/package.json": JSON.stringify({
+    "packages-ts/hidden/package.json": JSON.stringify({
       name: "@galerina/hidden",
       scripts: { test: "node --test" },
     }),
@@ -196,7 +196,7 @@ test("an unregistered package directory is a blocking violation", () => {
 test("a missing workspace package target is a blocking violation", () => {
   const root = fixture({
     "galerina.workspace.json": JSON.stringify({
-      packages: ["packages-galerina/missing"],
+      packages: ["packages-ts/missing"],
     }),
   });
 
@@ -208,9 +208,9 @@ test("a missing workspace package target is a blocking violation", () => {
 test("a registered package without a test requires an exact exception", () => {
   const root = fixture({
     "galerina.workspace.json": JSON.stringify({
-      packages: ["packages-galerina/empty"],
+      packages: ["packages-ts/empty"],
     }),
-    "packages-galerina/empty/package.json":
+    "packages-ts/empty/package.json":
       JSON.stringify({ name: "@galerina/empty" }),
   });
 
@@ -223,9 +223,9 @@ test("an exact no-test exception disposes only its discovered package", () => {
   const root = fixture(
     {
       "galerina.workspace.json": JSON.stringify({
-        packages: ["packages-galerina/empty"],
+        packages: ["packages-ts/empty"],
       }),
-      "packages-galerina/empty/package.json":
+      "packages-ts/empty/package.json":
         JSON.stringify({ name: "@galerina/empty" }),
     },
     validEmptyPolicy({

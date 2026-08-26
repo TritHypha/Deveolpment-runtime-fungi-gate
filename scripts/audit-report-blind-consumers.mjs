@@ -52,7 +52,7 @@ import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.GALERINA_ROOT || join(HERE, "..");
-const BASELINE = join(ROOT, "packages-galerina/galerina-core-compiler/tests/fixtures/report-blind-consumers-baseline.json");
+const BASELINE = join(ROOT, "packages-ts/galerina-core-compiler/tests/fixtures/report-blind-consumers-baseline.json");
 
 /**
  * APIs that hand back a value AND a qualifying report. To add one: give the call name, the field a
@@ -83,9 +83,9 @@ const SOURCE_EXT = /\.(?:ts|mts|cts|mjs|cjs|js)$/;
 
 /** Anchors that MUST be in the scanned set. If the walk stops seeing these, the surface broke. */
 const SURFACE_ANCHORS = [
-  "packages-galerina/galerina-core-compiler/src/wat-assembler.ts",
-  "packages-galerina/galerina-core-compiler/src/cli.ts",
-  "packages-galerina/galerina-devtools-benchmarks/src/wasm-runner.mjs",
+  "packages-ts/galerina-core-compiler/src/wat-assembler.ts",
+  "packages-ts/galerina-core-compiler/src/cli.ts",
+  "packages-ts/galerina-devtools-benchmarks/src/wasm-runner.mjs",
   "galerina.mjs",
 ];
 

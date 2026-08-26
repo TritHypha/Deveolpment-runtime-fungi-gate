@@ -70,7 +70,7 @@ function parseArgs(argv) {
 
 const OPTIONS = parseArgs(process.argv.slice(2));
 const ROOT = OPTIONS.root;
-const COMPILER = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
+const COMPILER = join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js");
 const OUT_DIR = join(ROOT, "docs/contract-registry");
 const SKIP = new Set(["node_modules", "dist", "build", ".git", ".graph", ".galerina"]);
 
@@ -121,7 +121,7 @@ async function collect() {
 function bucket(rel) {
   if (rel.startsWith("docs/examples/")) return "docs/examples (curriculum)";
   if (rel.startsWith("examples/")) return "examples (showcase)";
-  const m = rel.match(/^packages-galerina\/([^/]+)\//);
+  const m = rel.match(/^packages-ts\/([^/]+)\//);
   if (m) return `package: ${m[1]}`;
   return rel.split("/").slice(0, 2).join("/");
 }
@@ -137,7 +137,7 @@ function render({ rows, files, parsed, parseFail }) {
   const secureByPkg = {};
   for (const r of rows) {
     if (r.qualifier === "secure") {
-      const m = r.file.match(/^packages-galerina\/([^/]+)\//);
+      const m = r.file.match(/^packages-ts\/([^/]+)\//);
       const pkg = m ? m[1] : r.file.split("/").slice(0, 2).join("/");
       secureByPkg[pkg] = (secureByPkg[pkg] ?? 0) + 1;
     }

@@ -4,7 +4,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const compilerDir = path.join(__dirname, '..', 'packages-galerina', 'galerina-core-compiler');
+const compilerDir = path.join(__dirname, '..', 'packages-ts', 'galerina-core-compiler');
 
 const subdirs = ['bootstrap-determinism','governance-conformance','parser','package-resolver',
   'value-state','type-registry','effect-checker','governance','stdlib','lexer'];

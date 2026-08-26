@@ -383,7 +383,7 @@ so source-field reordering cannot change record layout.
 
 * `examples/auth-service/createSession.fungi` — alias, canonical `record`, `enum`, `Brand`.
 * `examples/healthcare/getPatient.fungi` — `record` with a `redacted` field, `enum`, `Brand`, `Result`.
-* `packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi` — top-level `record`/`enum`,
+* `packages-ts/galerina-core-compiler/src/self-hosted/lexer.fungi` — top-level `record`/`enum`,
   `Option<Char>`, `Array<String>`, real `match`/`Some`/`None` usage.
 
 Next: **[05 — Bindings, taint & privacy](05-bindings-taint-privacy.md)**.

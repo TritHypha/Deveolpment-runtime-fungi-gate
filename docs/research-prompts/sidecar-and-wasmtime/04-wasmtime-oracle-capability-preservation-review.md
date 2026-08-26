@@ -3,7 +3,7 @@
 Perform a read-only code and history audit of the Rust/Wasmtime work migrated
 from `subprojects/dss-host` to:
 
-`packages-galerina/galerina-devtools-wasmtime-oracle/`
+`packages-ts/galerina-devtools-wasmtime-oracle/`
 
 Do not crawl Cargo `target`, registry sources, generated fixtures, or
 `node_modules`. The tracked review set is the package's source, tests, tools,

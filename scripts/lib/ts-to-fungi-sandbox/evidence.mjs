@@ -15,7 +15,7 @@ import {
   hashGIR,
   parseProgram,
   verifyGovernance,
-} from "../../../packages-galerina/galerina-core-compiler/dist/index.js";
+} from "../../../packages-ts/galerina-core-compiler/dist/index.js";
 
 import { MAX_DIFFERENTIAL_VECTORS, SandboxRefusal } from "./contracts.mjs";
 
@@ -27,7 +27,7 @@ const RESERVED = new Set([
 ]);
 const GATES = Object.freeze({ identity: 1, provenance: 1, target: 1, effects: 1, policy: 1, revocation: 1, validation: 1, memory: 1 });
 const sha256 = (bytes) => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
-const COMPILER_ENTRY = fileURLToPath(new URL("../../../packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url));
+const COMPILER_ENTRY = fileURLToPath(new URL("../../../packages-ts/galerina-core-compiler/dist/index.js", import.meta.url));
 const SLIDE_MODULES = Object.freeze([
   "src/checked-fungi-package-compiler.mjs",
   "src/checked-fungi-package-file.mjs",

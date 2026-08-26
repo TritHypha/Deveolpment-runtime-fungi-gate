@@ -28,7 +28,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const COMPILER = join(HERE, "..", "..", "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const COMPILER = join(HERE, "..", "..", "packages-ts", "galerina-core-compiler", "dist", "index.js");
 
 // One module, two flows: the runaway loop (must trap at the fuel cap) and a
 // bounded control (must complete — proves the cap does not false-trap real work).

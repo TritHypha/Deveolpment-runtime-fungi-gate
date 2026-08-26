@@ -28,8 +28,8 @@ import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.GALERINA_ROOT || join(HERE, "..");
-const DIST = `file:///${join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js").replace(/\\/g, "/")}`;
-const BASELINE = join(ROOT, "packages-galerina/galerina-core-compiler/tests/fixtures/arithmetic-conformance-baseline.json");
+const DIST = `file:///${join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js").replace(/\\/g, "/")}`;
+const BASELINE = join(ROOT, "packages-ts/galerina-core-compiler/tests/fixtures/arithmetic-conformance-baseline.json");
 const L = await import(DIST);
 
 for (const [n, ok] of [

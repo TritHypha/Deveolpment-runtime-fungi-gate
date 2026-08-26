@@ -3,7 +3,7 @@
 Date: 2026-07-30
 
 Use this template once per direct child of
-`<WORKSPACE>/Galerina/packages-galerina`.
+`<WORKSPACE>/Galerina/packages-ts`.
 Replace every `<PACKAGE>` placeholder before giving it to an AI.
 
 ## Current permitted phase: dossier plus external quarantined candidate
@@ -17,7 +17,7 @@ write exactly one dossier:
 
 and, only when separately assigned, write one candidate under:
 
-`<WORKSPACE>/Galerina-Fungi-Package-Staging/packages-galerina/<PACKAGE>/`
+`<WORKSPACE>/Galerina-Fungi-Package-Staging/packages-ts/<PACKAGE>/`
 
 The candidate assignment is governed by the staging workspace's
 `HANDOVER.md`, `STAGING-RULES.md` and `AI-ASSIGNMENT-TEMPLATE.md`. All
@@ -31,7 +31,7 @@ executable or an implemented replacement.
 
 Package directory:
 
-`<WORKSPACE>/Galerina/packages-galerina/<PACKAGE>`
+`<WORKSPACE>/Galerina/packages-ts/<PACKAGE>`
 
 Cross-check:
 
@@ -69,7 +69,7 @@ Treat generated evidence as potentially stale until its check mode passes.
 5. Developer-managed raw pointers and manual frees are not admitted. Values
    are flow-owned unless deliberately placed in the governed Global Vault;
    flow-local values must become unreachable/erased at the flow boundary.
-6. Every package/plugin is one direct child of `packages-galerina`. Dependencies
+6. Every package/plugin is one direct child of `packages-ts`. Dependencies
    are references to those top-level packages. Never reproduce an npm-style
    nested dependency tree and never add package-local dependency copies.
 7. Do not add a sidecar to the trusted path. Temporary compatibility/oracle
@@ -113,7 +113,7 @@ Answer with file/line evidence and label each conclusion `VERIFIED`,
 10. Propose the exact future file layout in the same Galerina package
     directory. Do not create it there. If separately assigned a quarantined
     candidate, create only the matching top-level peer directory in
-    `Galerina-Fungi-Package-Staging/packages-galerina/`. Include `.fungi`
+    `Galerina-Fungi-Package-Staging/packages-ts/`. Include `.fungi`
     sources, retained differential fixtures, generated artifacts and deletion
     gates for `.ts`, package-local `node_modules` and obsolete
     Wasm/Rust/sidecar material.

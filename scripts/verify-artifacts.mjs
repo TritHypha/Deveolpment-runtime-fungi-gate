@@ -47,7 +47,7 @@ const HAVE_BACKUP = BACKUP && existsSync(BACKUP);
 const SKIP_DIRS = new Set([".git", "node_modules"]);
 const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
 
-/** A path key with brand tokens collapsed, so packages-galerina/... maps to packages-logicn/... */
+/** A path key with brand tokens collapsed, so packages-ts/... maps to packages-logicn/... */
 function brandKey(relPath) {
   return relPath
     .split(sep)
@@ -184,7 +184,7 @@ function wasmCrossCheck(cur) {
 // ── crypto wire-format string scan (compiler source) ─────────────────────────
 function wireScan() {
   const hits = [];
-  const srcRoot = join(REPO, "packages-galerina");
+  const srcRoot = join(REPO, "packages-ts");
   // Canonical wire format (owner decision 2026-06-26): product/governance contexts =
   // galerina.*.v2 ; format/schema tags = fungi.* . Flag anything OFF that canonical —
   // the galerina.* truncation, or residual un-migrated logicn.*/fungi-.* old-brand tags.

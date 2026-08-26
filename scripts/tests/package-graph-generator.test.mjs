@@ -33,7 +33,7 @@ function write(root, relativePath, content) {
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "package-graph-generator-"));
   write(root, "package.json", '{"type":"module"}\n');
-  const dist = "packages-galerina/galerina-devtools-package-graph/dist";
+  const dist = "packages-ts/galerina-devtools-package-graph/dist";
   write(
     root,
     `${dist}/scanner.js`,
@@ -67,12 +67,12 @@ function fixture() {
   for (const name of ["alpha", "beta"]) {
     write(
       root,
-      `packages-galerina/${name}/package.json`,
+      `packages-ts/${name}/package.json`,
       JSON.stringify({ name: `@fixture/${name}`, version: "1.0.0" }),
     );
     write(
       root,
-      `packages-galerina/${name}/.graph/boundary-policy.json`,
+      `packages-ts/${name}/.graph/boundary-policy.json`,
       JSON.stringify({ packageName: name, allowedExternal: [] }, null, 2),
     );
   }
@@ -81,8 +81,8 @@ function fixture() {
     "galerina.workspace.json",
     JSON.stringify({
       packages: [
-        "packages-galerina/alpha",
-        "packages-galerina/beta",
+        "packages-ts/alpha",
+        "packages-ts/beta",
       ],
     }),
   );
@@ -107,8 +107,8 @@ function run(root, args = [], extraEnv = {}) {
 
 test("package graph preflights every package before publishing any output", () => {
   const root = fixture();
-  const alpha = join(root, "packages-galerina/alpha/.graph/package-graph.json");
-  const beta = join(root, "packages-galerina/beta/.graph/BOUNDARY.md");
+  const alpha = join(root, "packages-ts/alpha/.graph/package-graph.json");
+  const beta = join(root, "packages-ts/beta/.graph/BOUNDARY.md");
   const provenance = join(root, "build/package-graphs/provenance.json");
   try {
     const missing = run(root, ["--check"]);

@@ -194,7 +194,7 @@ async function digestFiles(repositoryRoot, paths) {
 async function runtimeClosureFiles(repositoryRoot) {
   const compilerDist = join(
     repositoryRoot,
-    "packages-galerina",
+    "packages-ts",
     "galerina-core-compiler",
     "dist",
   );

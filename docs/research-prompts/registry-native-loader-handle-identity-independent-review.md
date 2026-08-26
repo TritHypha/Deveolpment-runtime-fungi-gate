@@ -19,7 +19,7 @@ sign, edit source, commit or push.
 
 - `Galerina/docs/research/registry-native-loader-content-identity-limit-2026-07-31.md`
 - `Galerina/docs/architecture/registry-generation-platform-durability-2026-07-30.md`
-- `Galerina/packages-galerina/galerina-framework-app-kernel/src/registry-durability-artifact.ts`
+- `Galerina/packages-ts/galerina-framework-app-kernel/src/registry-durability-artifact.ts`
 - its focused tests and `.fungi` terminal contract
 - the native Windows host-probe crate
 - `ZTF-Knowledge-Bases/ai-reviews/ZERO-TRUST-ADOPTION-SCORE.md`

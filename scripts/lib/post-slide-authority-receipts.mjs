@@ -125,7 +125,7 @@ function canonicalInstant(value, code) {
 
 function validateCommon(value, keys, code) {
   exactObject(value, keys, code);
-  const sourcePrefix = `packages-galerina/${value.ownerPackage}/`;
+  const sourcePrefix = `packages-ts/${value.ownerPackage}/`;
   const sourceSegments = typeof value.sourcePath === "string"
     ? value.sourcePath.split("/")
     : [];

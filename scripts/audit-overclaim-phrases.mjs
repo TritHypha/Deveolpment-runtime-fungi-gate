@@ -6,7 +6,7 @@
 // zero-wipe as "O(1) memory.fill", a "constant-time zero-wipe", or a "single-clock-cycle wipe". That is
 // settled-false. `memory.fill(0)` is ONE WASM opcode (0xFC 0x0B) — but it does Θ(arena-size) work,
 // linear in the number of bytes zeroed. One *instruction* is not one *clock*, and a single opcode over a
-// region is not O(1). The SHIPPED emitter (packages-galerina/galerina-core-compiler/src/wat-emitter.ts) already
+// region is not O(1). The SHIPPED emitter (packages-ts/galerina-core-compiler/src/wat-emitter.ts) already
 // phrases it correctly — "ONE atomic instruction" doing work "over [base, heap)". This lint stops the
 // false complexity claim from re-entering the docs/source where the emitter got it right.
 //

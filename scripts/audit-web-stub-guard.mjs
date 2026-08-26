@@ -30,7 +30,7 @@ import { realpathSync } from "node:fs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTRACT_PATH = join(ROOT, "governance", "web-failclosed-contract.json");
-const PKG_ROOT = join(ROOT, "packages-galerina");
+const PKG_ROOT = join(ROOT, "packages-ts");
 const ACCEPTANCE_RE = /(failclosed|acceptance)\.test\./i;
 
 // ── Pure core: classify a package from its probed state (unit-testable, no FS) ─────────────────────

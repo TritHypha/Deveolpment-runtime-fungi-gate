@@ -46,7 +46,7 @@ const REGISTRY = [
 ];
 
 /** Where baseline artifacts live. Scanned wholesale — no per-file allowlist to drift. */
-const BASELINE_DIRS = ["packages-galerina/galerina-core-compiler/tests/fixtures"];
+const BASELINE_DIRS = ["packages-ts/galerina-core-compiler/tests/fixtures"];
 
 const rel = (p) => relative(ROOT, p).replace(/\\/g, "/");
 const posOf = (f) => `${f.file ?? "?"}:${f.line ?? "?"}`;

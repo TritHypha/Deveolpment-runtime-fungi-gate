@@ -18,7 +18,7 @@
 //   meaningful-token overlap (when both sides are substantive) means the doc is describing a different
 //   fault entirely — exactly the RUNTIME-006 failure. Reported as a hard violation.
 //
-// Scope: source = packages-galerina/<pkg>/src/**/*.ts structured diagnostic objects (those with a
+// Scope: source = packages-ts/<pkg>/src/**/*.ts structured diagnostic objects (those with a
 // `name:`); doc = <KB>/compiler-diagnostics.md (sibling ZTF-Knowledge-Bases repo; GALERINA_KB_DIR
 // overrides) fenced `CODE   description` lines.
 // Exit code = violation count (0 = clean). Run from repo root.
@@ -28,7 +28,7 @@ import { readdirSync, statSync, readFileSync, existsSync, realpathSync } from "n
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const SRC_ROOT = "packages-galerina";
+const SRC_ROOT = "packages-ts";
 // The canonical doc migrated to the sibling ZTF-Knowledge-Bases repo — resolve like kb-index.mjs
 // (GALERINA_KB_DIR override first, sibling default). Still fail-closed below when absent.
 const KB_DIR = process.env.GALERINA_KB_DIR || join(process.cwd(), "..", "ZTF-Knowledge-Bases");

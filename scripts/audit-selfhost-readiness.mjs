@@ -32,7 +32,7 @@ if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("-
 const ROOT = rootIndex >= 0
   ? resolve(argv[rootIndex + 1])
   : join(dirname(fileURLToPath(import.meta.url)), "..");
-const PKGDIR = join(ROOT, "packages-galerina");
+const PKGDIR = join(ROOT, "packages-ts");
 const JSON_OUT = argv.includes("--json");
 const CHECK = argv.includes("--check");
 const POST_SLIDE = argv.includes("--post-slide");
@@ -125,7 +125,7 @@ if (JSON_OUT) {
   process.exit(process.exitCode ?? 0);
 }
 
-console.log("\n  Self-hosting readiness — packages-galerina (runtime-stack order; the HONEST map, no deletion)\n");
+console.log("\n  Self-hosting readiness — packages-ts (runtime-stack order; the HONEST map, no deletion)\n");
 console.log("  pkg".padEnd(42) + "fungi  ts   %fungi  status / floors");
 console.log("  " + "-".repeat(88));
 for (const r of rows) {

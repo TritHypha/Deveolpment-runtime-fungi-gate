@@ -14,7 +14,7 @@ The compiler remains authoritative. The primary references are:
 - [Control flow](../language/fungi/07-control-flow.md);
 - [Effects and capabilities](../language/fungi/03-effects-and-capabilities.md);
 - [Effect reference](../reference/effects.md); and
-- `packages-galerina/galerina-core-compiler/src/type-checker.ts` and
+- `packages-ts/galerina-core-compiler/src/type-checker.ts` and
   `effect-checker.ts`.
 
 If prose and an executable example appear to disagree, rerun
@@ -83,36 +83,36 @@ implementation/evidence chain is:
 
 | Layer | Component | Responsibility |
 |---|---|---|
-| keyword/token authority | `packages-galerina/galerina-core-compiler/src/lexer.ts` | recognises active keywords, operators, literals and `_`; `try`, `catch` and `throw` are not `.fungi` exception constructs |
-| shared AST contract | `packages-galerina/galerina-core/src/index.ts` | defines `AstNode`, `AstNodeKind`, tokens, locations and diagnostics shared by compiler stages |
-| grammar and AST construction | `packages-galerina/galerina-core-compiler/src/parser.ts` | parses `ifStmt`, `matchExpr`, `checkExpr`, `trapDecl`, `faultStmt`, `return` and postfix `?`; requires all three `check` arms at parse time |
-| type semantics | `packages-galerina/galerina-core-compiler/src/type-checker.ts` | enforces Bool-only `if`/`while`, Verdict-only `check`, mandatory match wildcard, arm reachability, pattern/payload types and return compatibility |
-| type vocabulary | `packages-galerina/galerina-core-compiler/src/type-registry.ts` and `package-type-registry.ts` | resolve built-in and admitted package types; a name or integer that resembles `Verdict` does not acquire K3 authority |
-| name and call resolution | `packages-galerina/galerina-core-compiler/src/symbol-resolver.ts`, `stdlib-registry.ts`, and `stdlib.ts` | distinguish language constructs from callable flows/methods and type `Ok`, `Err`, `Some`, `None`, and registered operations |
-| governance semantics | `packages-galerina/galerina-core-compiler/src/governance-verifier.ts` | rejects non-exhaustive matches and unsafe K3/fault/governance paths |
-| effects | `packages-galerina/galerina-core-compiler/src/effect-checker.ts` | walks branch and arm bodies, derives operations/effects and prevents a branch from hiding an undeclared effect |
-| fault policy | `packages-galerina/galerina-core-compiler/src/resilience-inference.ts` | checks declared fault handling, including deny monotonicity; it does not introduce local `try`/`catch` syntax |
-| reference execution | `packages-galerina/galerina-core-compiler/src/interpreter.ts` | executes the AST, dispatches K3 exactly, propagates typed returns, audits faults and refuses malformed runtime states |
-| current target lowering | `packages-galerina/galerina-core-compiler/src/wat-emitter.ts` | lowers admitted control flow and retains explicit traps for missing arms, malformed Verdicts and faults |
-| GIR stage | `packages-galerina/galerina-core-compiler/src/gir-emitter.ts` | emits the governed intermediate representation; acceptance still requires proof that the chosen construct survives the applicable GIR/target profile |
-| auxiliary prototype | `packages-galerina/galerina-core-compiler/src/bytecode-vm.ts` | executes its own admitted subset; it is not authority for constructs it does not implement |
-| pipeline wiring | `packages-galerina/galerina-core-compiler/src/cli.ts` and `galerina.mjs` | select and run parser, type, effect, governance, execution and build stages; parser success alone is not admission |
-| release/diagnostic gate | `packages-galerina/galerina-core-compiler/src/production-check.ts` and `security-gate.ts` | stop production output when an applicable error/refusal remains; never reinterpret a missing pass as success |
-| structural lint | `packages-galerina/galerina-core-compiler/src/lint-checker.ts` and `scripts/lint-fungi.mjs` | enforce additional coding-shape rules; lint is supplemental and cannot override parser/type/governance semantics |
-| self-hosted lexer | `packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi` | canonical `.fungi` lexer specification and parity surface |
-| self-hosted parser | `packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi` | canonical parser specification; currently refuses any construct it has not yet modelled rather than guessing |
-| self-hosted type checker | `packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi` | mirrors Bool-condition and match-wildcard diagnostics in `.fungi` |
-| self-hosted effect checker | `packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi` | mirrors effect derivation/admission in `.fungi` |
-| self-hosted governance | `packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi` | mirrors governance decisions in `.fungi` |
-| self-hosted GIR/runtime | `packages-galerina/galerina-core-compiler/src/self-hosted/gir-emitter.fungi` and `runtime.fungi` | canonical `.fungi` specifications for lowering and execution; parity tests, not filenames, establish implemented coverage |
+| keyword/token authority | `packages-ts/galerina-core-compiler/src/lexer.ts` | recognises active keywords, operators, literals and `_`; `try`, `catch` and `throw` are not `.fungi` exception constructs |
+| shared AST contract | `packages-ts/galerina-core/src/index.ts` | defines `AstNode`, `AstNodeKind`, tokens, locations and diagnostics shared by compiler stages |
+| grammar and AST construction | `packages-ts/galerina-core-compiler/src/parser.ts` | parses `ifStmt`, `matchExpr`, `checkExpr`, `trapDecl`, `faultStmt`, `return` and postfix `?`; requires all three `check` arms at parse time |
+| type semantics | `packages-ts/galerina-core-compiler/src/type-checker.ts` | enforces Bool-only `if`/`while`, Verdict-only `check`, mandatory match wildcard, arm reachability, pattern/payload types and return compatibility |
+| type vocabulary | `packages-ts/galerina-core-compiler/src/type-registry.ts` and `package-type-registry.ts` | resolve built-in and admitted package types; a name or integer that resembles `Verdict` does not acquire K3 authority |
+| name and call resolution | `packages-ts/galerina-core-compiler/src/symbol-resolver.ts`, `stdlib-registry.ts`, and `stdlib.ts` | distinguish language constructs from callable flows/methods and type `Ok`, `Err`, `Some`, `None`, and registered operations |
+| governance semantics | `packages-ts/galerina-core-compiler/src/governance-verifier.ts` | rejects non-exhaustive matches and unsafe K3/fault/governance paths |
+| effects | `packages-ts/galerina-core-compiler/src/effect-checker.ts` | walks branch and arm bodies, derives operations/effects and prevents a branch from hiding an undeclared effect |
+| fault policy | `packages-ts/galerina-core-compiler/src/resilience-inference.ts` | checks declared fault handling, including deny monotonicity; it does not introduce local `try`/`catch` syntax |
+| reference execution | `packages-ts/galerina-core-compiler/src/interpreter.ts` | executes the AST, dispatches K3 exactly, propagates typed returns, audits faults and refuses malformed runtime states |
+| current target lowering | `packages-ts/galerina-core-compiler/src/wat-emitter.ts` | lowers admitted control flow and retains explicit traps for missing arms, malformed Verdicts and faults |
+| GIR stage | `packages-ts/galerina-core-compiler/src/gir-emitter.ts` | emits the governed intermediate representation; acceptance still requires proof that the chosen construct survives the applicable GIR/target profile |
+| auxiliary prototype | `packages-ts/galerina-core-compiler/src/bytecode-vm.ts` | executes its own admitted subset; it is not authority for constructs it does not implement |
+| pipeline wiring | `packages-ts/galerina-core-compiler/src/cli.ts` and `galerina.mjs` | select and run parser, type, effect, governance, execution and build stages; parser success alone is not admission |
+| release/diagnostic gate | `packages-ts/galerina-core-compiler/src/production-check.ts` and `security-gate.ts` | stop production output when an applicable error/refusal remains; never reinterpret a missing pass as success |
+| structural lint | `packages-ts/galerina-core-compiler/src/lint-checker.ts` and `scripts/lint-fungi.mjs` | enforce additional coding-shape rules; lint is supplemental and cannot override parser/type/governance semantics |
+| self-hosted lexer | `packages-ts/galerina-core-compiler/src/self-hosted/lexer.fungi` | canonical `.fungi` lexer specification and parity surface |
+| self-hosted parser | `packages-ts/galerina-core-compiler/src/self-hosted/parser.fungi` | canonical parser specification; currently refuses any construct it has not yet modelled rather than guessing |
+| self-hosted type checker | `packages-ts/galerina-core-compiler/src/self-hosted/type-checker.fungi` | mirrors Bool-condition and match-wildcard diagnostics in `.fungi` |
+| self-hosted effect checker | `packages-ts/galerina-core-compiler/src/self-hosted/effect-checker.fungi` | mirrors effect derivation/admission in `.fungi` |
+| self-hosted governance | `packages-ts/galerina-core-compiler/src/self-hosted/governance-verifier.fungi` | mirrors governance decisions in `.fungi` |
+| self-hosted GIR/runtime | `packages-ts/galerina-core-compiler/src/self-hosted/gir-emitter.fungi` and `runtime.fungi` | canonical `.fungi` specifications for lowering and execution; parity tests, not filenames, establish implemented coverage |
 | independent SLIDE frontend | `SLIDE/src/checked-fungi-pure-scalar-compiler.mjs`, `checked-fungi-slide-compiler.mjs`, and `checked-fungi-package-compiler.mjs` | independently re-parse/re-admit their bounded `.fungi` profiles and emit checked `.slide`; unsupported syntax refuses |
-| Galerina-to-SLIDE decision contract | `packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi` | defines the checked K3 decision subset supplied to independent SLIDE |
+| Galerina-to-SLIDE decision contract | `packages-ts/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi` | defines the checked K3 decision subset supplied to independent SLIDE |
 | minimal examples | `docs/examples/golden/001-bool-if.fungi` through `004-k3-check.fungi` | checker-proven copy shapes for Bool `if`, non-K3 `match`, `Result` refusal and K3 `check` |
 | focused regression tests | `condition-type-gate.test.mjs`, `check-construct.test.mjs`, `type-checker.test.mjs`, `governance/match-exhaustiveness.test.mjs`, `governance/tri-lint-verdict-match.test.mjs`, `fault-construct.test.mjs`, `wat-match-wildcard-fallback.test.mjs`, `wat-k3-constructs.test.mjs`, and `wat-try-propagation.test.mjs` | prove rejection and execution/lowering behavior at the named layer |
 | independent SLIDE tests | `SLIDE/tests/checked-fungi-pure-scalar-compiler.test.mjs`, `checked-fungi-slide-compiler.test.mjs`, and `checked-fungi-package-compiler.test.mjs` | prove only the bounded independent profiles named by those suites |
 | serial corpus tools | `scripts/fungi-golden-probe.mjs` and `scripts/audit-fungi-corpus-check.mjs` | replay golden vectors and audit tracked `.fungi` without treating a text count as semantic proof |
 | generated diagnostic evidence | `build/code-registry/REGISTRY.md` and `build/code-index/CODE_INDEX.md` | map live diagnostic codes to declarations, emitters, tests and docs; regenerate rather than hand-edit |
-| passive capability map | `packages-galerina/galerina-devtools-hypha` and the sibling `subprojects/hypha` research tool | find static dispatch, sentinel, checker-wiring and diagnostic candidates; never converts a text match or an empty result into a semantic verdict |
+| passive capability map | `packages-ts/galerina-devtools-hypha` and the sibling `subprojects/hypha` research tool | find static dispatch, sentinel, checker-wiring and diagnostic candidates; never converts a text match or an empty result into a semantic verdict |
 
 The compiled `dist/` files are generated execution artefacts. A source edit is
 not behaviorally proved until the package is rebuilt and the tests execute the
@@ -499,7 +499,7 @@ deletion, package retirement, `.slide` execution, signing, or production use.
 ## Integration and retirement checklist
 
 The production package layout is flat: every Galerina package is one peer named
-`packages-galerina/galerina-[category]-[name]`. Do not reproduce an npm-style
+`packages-ts/galerina-[category]-[name]`. Do not reproduce an npm-style
 tree by placing packages or repeated dependency identities inside other
 packages.
 

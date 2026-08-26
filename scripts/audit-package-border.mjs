@@ -2,7 +2,7 @@
 /**
  * audit-package-border.mjs — Hardened Border CI gate (#149), ENFORCING + fail-closed.
  *
- * Re-scans EVERY package under packages-galerina/ FROM SOURCE with the real scanner and enforces that
+ * Re-scans EVERY package under packages-ts/ FROM SOURCE with the real scanner and enforces that
  * package's committed `.graph/boundary-policy.json` allowlist. This is the zero-trust gate: it does NOT
  * trust the committed `.graph/package-graph.json` (the artifact a drift-introducer controls) — it
  * RE-DERIVES the external import surface from source, then FAILS the build on:
@@ -35,8 +35,8 @@ import { tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = join(ROOT, "packages-galerina", "galerina-devtools-package-graph", "dist");
-const PKG_ROOT = join(ROOT, "packages-galerina");
+const DIST = join(ROOT, "packages-ts", "galerina-devtools-package-graph", "dist");
+const PKG_ROOT = join(ROOT, "packages-ts");
 
 // A "vacuous PASS" is a green border over an UNSCANNED package: the scanner matched ZERO files, yet the
 // package's source roots DO contain code — the extension just isn't in the scan set (the .mjs blind-spot
@@ -69,7 +69,7 @@ async function loadScanner() {
     if (!existsSync(join(DIST, f))) {
       console.error(
         `FAIL: the package-graph scanner is not built (${join(DIST, f)} missing).\n` +
-        `       Build it first:  npx -p typescript tsc -p packages-galerina/galerina-devtools-package-graph/tsconfig.json\n` +
+        `       Build it first:  npx -p typescript tsc -p packages-ts/galerina-devtools-package-graph/tsconfig.json\n` +
         `       (A border gate that cannot run must not silently pass.)`,
       );
       process.exit(2);
@@ -277,7 +277,7 @@ async function main() {
   console.log(`\n  ✅ every package's external surface is within its Hardened Border.`);
   console.log(`     SURFACE: external (npm) specifiers vs each package's declared allowedExternal, re-derived from source.`);
   console.log(`     ALSO CHECKED: cross-package relative imports — ${crossings.length} at baseline ${CROSSING_BASELINE} (declared debt, shrink-only).`);
-  console.log(`     NOT CHECKED: runtime reach-through, dynamic import() specifiers, or imports outside packages-galerina/*/src.\n`);
+  console.log(`     NOT CHECKED: runtime reach-through, dynamic import() specifiers, or imports outside packages-ts/*/src.\n`);
   process.exit(0);
 }
 

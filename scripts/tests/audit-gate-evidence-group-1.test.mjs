@@ -83,7 +83,7 @@ test("audit-corpus-effect-names refuses an unknown teaching effect and accepts c
   withFixture("galerina-effect-corpus-gate-", (root) => {
     write(
       root,
-      "packages-galerina/galerina-core-compiler/src/effect-checker.ts",
+      "packages-ts/galerina-core-compiler/src/effect-checker.ts",
       [
         'const CANONICAL_EFFECTS = new Set(["database.read"]);',
         "const EFFECT_NAME_ALIASES = new Map([]);",

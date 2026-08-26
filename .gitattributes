@@ -19,8 +19,8 @@ build/dev-tool-index/*  text eol=lf
 
 # Hybrid-signed registry manifests have public byte pins. Preserve identical
 # bytes across Windows, macOS and Linux checkouts.
-packages-galerina/galerina-registry/**/package.galerina.yaml text eol=lf
-packages-galerina/galerina-registry/registry-index-v2.json text eol=lf
+packages-ts/galerina-registry/**/package.galerina.yaml text eol=lf
+packages-ts/galerina-registry/registry-index-v2.json text eol=lf
 
 # Platform evidence receipts are hashed as raw UTF-8 bytes. Preserve the
 # Ubuntu-produced LF representation across every checkout.
@@ -33,9 +33,9 @@ docs/security/slide-frontend-receipts/*.frontend.json text eol=lf
 # ── Benchmark result artifacts (written LF by the runner/snapshot scripts). Pin eol=lf so the committed
 #    baseline (results/latest.json) + saved snapshots (results/archive/**) don't phantom-churn under Windows
 #    autocrlf; a saved run then diffs cleanly and the NEXT benchmark's real change is visible against it.
-packages-galerina/galerina-devtools-benchmarks/results/**   text eol=lf
+packages-ts/galerina-devtools-benchmarks/results/**   text eol=lf
 
 # Benchmark admission contracts and evidence are verified as exact raw bytes.
 # Preserve their authored LF representation in every checkout before hashing.
-packages-galerina/galerina-devtools-benchmarks/contracts/*.json text eol=lf
-packages-galerina/galerina-devtools-benchmarks/evidence/*.json  text eol=lf
+packages-ts/galerina-devtools-benchmarks/contracts/*.json text eol=lf
+packages-ts/galerina-devtools-benchmarks/evidence/*.json  text eol=lf

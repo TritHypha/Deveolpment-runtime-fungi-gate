@@ -155,7 +155,7 @@ function walkSrc(dir) {
 const galerinaEnvRefs = new Map(); // name -> { readSites: [], docSites: [], writeSites: [] }
 const GALERINA_ENV_RE = /GALERINA_[A-Z0-9_]+/g;
 
-for (const file of walkSrc(join(ROOT, "packages-galerina"))) {
+for (const file of walkSrc(join(ROOT, "packages-ts"))) {
   const rel = relative(ROOT, file).replace(/\\/g, "/");
   const isDoc = rel.endsWith(".md");
   let txt; try { txt = readFileSync(file, "utf8"); } catch { continue; }

@@ -5,7 +5,7 @@ The memory-residency, erase, timing, and substrate ceilings a value may carry. T
 **Table 2 (auto-derived)** feature: you almost never write it — the compiler derives the safe floor from the value's
 type — and when you do write it, an explicit value may only ever **tighten** that floor.
 
-**Source of truth:** `packages-galerina/galerina-core-compiler/src/hardening-residency.ts` (RD-0358). **Verified
+**Source of truth:** `packages-ts/galerina-core-compiler/src/hardening-residency.ts` (RD-0358). **Verified
 against source 2026-07-15.** Two things the overview table doesn't show, documented here: a **4th dimension
 `substrate`**, and a **5th residency tier `unrestricted`** (the non-secret default / top of the lattice).
 

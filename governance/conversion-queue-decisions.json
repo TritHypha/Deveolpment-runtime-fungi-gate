@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "decisions": [
     {
-      "path": "packages-galerina/galerina-core-config/src/index.ts",
+      "path": "packages-ts/galerina-core-config/src/index.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "isEnvironmentMode"
@@ -12,7 +12,7 @@
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-galerina/galerina-core-logic/src/omni/omni-state.ts",
+      "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "isOmniUncertain"
@@ -22,7 +22,7 @@
       "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     },
     {
-      "path": "packages-galerina/galerina-core-runtime/src/structured-await.ts",
+      "path": "packages-ts/galerina-core-runtime/src/structured-await.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "isTerminalScope"
@@ -32,7 +32,7 @@
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-galerina/galerina-core-tasks/src/load-tasks.ts",
+      "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "isTaskEffect"
@@ -42,7 +42,7 @@
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-galerina/galerina-data-model/src/index.ts",
+      "path": "packages-ts/galerina-data-model/src/index.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "isResponseSafeClassification"
@@ -52,7 +52,7 @@
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-galerina/galerina-devtools-context/src/receipt-generator.ts",
+      "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "isBuiltin"
@@ -62,7 +62,7 @@
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+      "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
       "scope": "SYMBOLS",
       "symbols": [
         "validateTransition"

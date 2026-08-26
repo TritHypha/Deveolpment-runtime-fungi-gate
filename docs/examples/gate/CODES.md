@@ -5,7 +5,7 @@
 **GENERATED FILE — do not edit by hand.** Regenerate with:
 
 ```bash
-node packages-galerina/galerina-core-compiler/scripts/write-gate-code-reference.mjs
+node packages-ts/galerina-core-compiler/scripts/write-gate-code-reference.mjs
 ```
 
 Derived from the compiler source declaration sites; a test fails if this

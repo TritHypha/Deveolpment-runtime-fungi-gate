@@ -16,8 +16,8 @@ RUN apk add --no-cache curl && \
 
 # Copy project (production files only)
 COPY package.json galerina.mjs ./
-COPY packages-galerina/galerina-core-compiler/dist/ packages-galerina/galerina-core-compiler/dist/
-COPY packages-galerina/galerina-core-security/src/dss/ packages-galerina/galerina-core-security/src/dss/
+COPY packages-ts/galerina-core-compiler/dist/ packages-ts/galerina-core-compiler/dist/
+COPY packages-ts/galerina-core-security/src/dss/ packages-ts/galerina-core-security/src/dss/
 COPY governance/ governance/
 COPY build/ build/
 

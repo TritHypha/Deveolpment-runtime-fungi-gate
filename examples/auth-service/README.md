@@ -72,7 +72,7 @@ verifyPassword.fungi
 
 ```bash
 # Build the compiler package
-cd packages-galerina/galerina-core-compiler
+cd packages-ts/galerina-core-compiler
 npm run build
 
 # Parse and check the example (Phase 25A)

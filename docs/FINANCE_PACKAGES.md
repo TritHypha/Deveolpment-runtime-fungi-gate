@@ -5,7 +5,7 @@ Status: archived post-v2 planning.
 Finance package folders have been moved out of the active workspace to:
 
 ```text
-C:\laragon\www\Galerina_Archive\packages-galerina\Galerina-finance-core
+C:\laragon\www\Galerina_Archive\packages-ts\Galerina-finance-core
 ```
 
 This document is retained as planning context only. Finance packages must not
@@ -59,38 +59,38 @@ References:
 Start grouped:
 
 ```text
-packages-galerina/Galerina-finance-core/
+packages-ts/Galerina-finance-core/
 ```
 
 Split later only after contracts are stable:
 
 ```text
-packages-galerina/Galerina-finance-core-math/
-packages-galerina/Galerina-finance-core-calendar/
-packages-galerina/Galerina-finance-core-market-data/
-packages-galerina/Galerina-finance-core-order/
-packages-galerina/Galerina-finance-core-fix/
-packages-galerina/Galerina-finance-core-audit/
-packages-galerina/Galerina-finance-core-compliance/
-packages-galerina/Galerina-finance-core-risk/
-packages-galerina/Galerina-finance-core-pricing/
-packages-galerina/Galerina-finance-core-products/
-packages-galerina/Galerina-finance-core-scenarios/
-packages-galerina/Galerina-finance-core-fdc3/
+packages-ts/Galerina-finance-core-math/
+packages-ts/Galerina-finance-core-calendar/
+packages-ts/Galerina-finance-core-market-data/
+packages-ts/Galerina-finance-core-order/
+packages-ts/Galerina-finance-core-fix/
+packages-ts/Galerina-finance-core-audit/
+packages-ts/Galerina-finance-core-compliance/
+packages-ts/Galerina-finance-core-risk/
+packages-ts/Galerina-finance-core-pricing/
+packages-ts/Galerina-finance-core-products/
+packages-ts/Galerina-finance-core-scenarios/
+packages-ts/Galerina-finance-core-fdc3/
 ```
 
 Keep general infrastructure outside finance:
 
 ```text
-packages-galerina/Galerina-stream/
-packages-galerina/Galerina-stream-kafka/
-packages-galerina/Galerina-schema-registry/
-packages-galerina/Galerina-ffi/
-packages-galerina/Galerina-ffi-cpp/
-packages-galerina/Galerina-ffi-java/
-packages-galerina/Galerina-ffi-python/
-packages-galerina/Galerina-replay/
-packages-galerina/galerina-core-runtime-low-latency/
+packages-ts/Galerina-stream/
+packages-ts/Galerina-stream-kafka/
+packages-ts/Galerina-schema-registry/
+packages-ts/Galerina-ffi/
+packages-ts/Galerina-ffi-cpp/
+packages-ts/Galerina-ffi-java/
+packages-ts/Galerina-ffi-python/
+packages-ts/Galerina-replay/
+packages-ts/galerina-core-runtime-low-latency/
 ```
 
 ## First Phase

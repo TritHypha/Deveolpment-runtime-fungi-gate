@@ -6,7 +6,7 @@
  *   2. `galerina build` must produce a .lmanifest.json with sourceHash + proofObligations
  *
  * This is the root-level companion to the deeper Stage A == Stage B value-parity
- * tests in packages-galerina/galerina-core-compiler/tests/self-hosted-bootstrap.test.mjs.
+ * tests in packages-ts/galerina-core-compiler/tests/self-hosted-bootstrap.test.mjs.
  * Both must pass for the R6 gate to be considered closed.
  *
  * EXPECT: all 10 assertions pass (5 check + 5 manifest)

@@ -116,7 +116,7 @@ function blacklistPlugin(pluginId, reason) {
 }
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href;
+const compilerPath = new URL("packages-ts/galerina-core-compiler/dist/index.js", import.meta.url).href;
 
 // ── Always-counted SECURITY type-checker codes (S1/S2, battery bridge 0148 F1/F2) ──
 // The rest of the FUNGI-TYPE-* class is DEV-ADVISORY in plain `check` / tolerated by `build`
@@ -217,7 +217,7 @@ async function main() {
   // metacharacters) and must never reach a shell string.
   if (command === "gate") {
     const cliPath = new URL(
-      "./packages-galerina/galerina-core-compiler/dist/cli.js",
+      "./packages-ts/galerina-core-compiler/dist/cli.js",
       import.meta.url,
     );
     const result = spawnSync(process.execPath, [fileURLToPath(cliPath), "gate", ...rest], {
@@ -457,7 +457,7 @@ Baseline comparison (governance-cost):
     // Ed25519 material stays byte-compatible with the legacy path (DER→PEM) so existing verify works.
     if (rest.includes("--hybrid") || rest.includes("--pq")) {
       const keyId = randomBytes(8).toString("hex");
-      const cc = await import(new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href);
+      const cc = await import(new URL("packages-ts/galerina-core-compiler/dist/index.js", import.meta.url).href);
       const kp = await cc.generateHybridGovernanceKeyPair(keyId);
       const pubPem = createPublicKey({ key: Buffer.from(kp.publicKey), format: "der", type: "spki" }).export({ type: "spki", format: "pem" });
       const privPem = createPrivateKey({ key: Buffer.from(kp.privateKey), format: "der", type: "pkcs8" }).export({ type: "pkcs8", format: "pem" });
@@ -694,7 +694,7 @@ Baseline comparison (governance-cost):
     // the SAME schema the fusion gate is drift-checked against — so the two
     // admission gates validate against ONE list and can't silently diverge.
     const { isAdmissibleCapability, normalizeCapability } = await import(
-      new URL("packages-galerina/galerina-core-compiler/dist/capability-types.js", import.meta.url).href
+      new URL("packages-ts/galerina-core-compiler/dist/capability-types.js", import.meta.url).href
     );
     const CEILINGS = { maxMemoryMB: 4096, maxCpuCycles: 1e10, maxWallMs: 60000 };
     // High-authority (sandbox-escape / secret-reading) capabilities are admissible
@@ -769,7 +769,7 @@ Baseline comparison (governance-cost):
     const { spawnSync } = await import("node:child_process");
     const r = spawnSync(
       process.execPath,
-      ["packages-galerina/galerina-devtools-kb-graph/dist/cli.js", ...(rest.length ? rest : ["--all"])],
+      ["packages-ts/galerina-devtools-kb-graph/dist/cli.js", ...(rest.length ? rest : ["--all"])],
       { stdio: "inherit", cwd: process.cwd(), shell: false }
     );
     process.exit(r.status ?? 0);
@@ -785,7 +785,7 @@ Baseline comparison (governance-cost):
     }
     const r = spawnSync(
       process.execPath,
-      ["packages-galerina/galerina-devtools-pci/dist/cli.js", "ledger", ...rest],
+      ["packages-ts/galerina-devtools-pci/dist/cli.js", "ledger", ...rest],
       { stdio: "inherit", cwd: process.cwd(), shell: false }
     );
     process.exit(r.status ?? 0);
@@ -809,7 +809,7 @@ Baseline comparison (governance-cost):
 
   // ── galerina bridge-attest — sign / verify bridge manifests (CF-3/CF-7) ───────
   if (command === "bridge-attest") {
-    const tc = await import(new URL("packages-galerina/galerina-tower-citizen/dist/index.js", import.meta.url).href);
+    const tc = await import(new URL("packages-ts/galerina-tower-citizen/dist/index.js", import.meta.url).href);
     const sub = rest[0];
     if (sub === "keygen") {
       const { publicKeyPem, privateKeyPem } = tc.generateAttestationKeypair();
@@ -880,7 +880,7 @@ Baseline comparison (governance-cost):
     const { spawnSync } = await import("node:child_process");
     const r = spawnSync(
       process.execPath,
-      ["packages-galerina/galerina-devtools-benchmarks/src/diagnostic-runner.mjs", ...rest],
+      ["packages-ts/galerina-devtools-benchmarks/src/diagnostic-runner.mjs", ...rest],
       { stdio: "inherit", cwd: process.cwd(), shell: false }
     );
     process.exit(r.status ?? 0);
@@ -1136,7 +1136,7 @@ Baseline comparison (governance-cost):
         process.exit(1);
       }
     }
-    const ak = await import(new URL("packages-galerina/galerina-framework-app-kernel/dist/index.js", import.meta.url).href);
+    const ak = await import(new URL("packages-ts/galerina-framework-app-kernel/dist/index.js", import.meta.url).href);
     try {
       const opts = { allowUnsigned, warn: (msg) => console.warn(`  ⚠ ${msg}`) };
       if (governanceDir) opts.governanceDir = governanceDir;
@@ -1156,7 +1156,7 @@ Baseline comparison (governance-cost):
       // verifyGovernanceSignatureHybrid, proofgraph context, base64url). Fail-closed / NO PQ downgrade —
       // a missing/malformed ML-DSA key for a v2 manifest is a hard deny. Classical Ed25519 manifests unaffected.
       try {
-        const cc = await import(new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href);
+        const cc = await import(new URL("packages-ts/galerina-core-compiler/dist/index.js", import.meta.url).href);
         opts.hybridVerifier = cc.makeLmanifestHybridVerifier();
       } catch (e) {
         console.error(`❌ FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE: ${e.message} — refusing to fuse (fail-closed)`);
@@ -1267,10 +1267,10 @@ Baseline comparison (governance-cost):
     const tier = ai.governanceTier ?? 1;
 
     // Brain (engine) + Brawn (cpp BitNet bridge registry).
-    const tc = await import(new URL("packages-galerina/galerina-tower-citizen/dist/index.js", import.meta.url).href);
+    const tc = await import(new URL("packages-ts/galerina-tower-citizen/dist/index.js", import.meta.url).href);
     let registry;
     try {
-      const cpp = await import(new URL("packages-galerina/galerina-ext-bridge-cpp/dist/index.js", import.meta.url).href);
+      const cpp = await import(new URL("packages-ts/galerina-ext-bridge-cpp/dist/index.js", import.meta.url).href);
       registry = cpp.createCppBridgeRegistry();
     } catch { registry = undefined; } // fall back to the in-package stub registry
 
@@ -1487,7 +1487,7 @@ Baseline comparison (governance-cost):
       try {
         const { spawnSync } = await import("node:child_process");
         const { diffGovernance, renderGovernanceDiff } = await import(
-          new URL("packages-galerina/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
+          new URL("packages-ts/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
         );
         // Get the HEAD~1 version of this file from git
         const gitResult = spawnSync("git", ["show", `HEAD~1:${fungiFile}`],
@@ -1559,7 +1559,7 @@ Baseline comparison (governance-cost):
     }
     try {
       const { decodeCBOR } = await import(
-        new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+        new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
       );
       const manifestBytes = new Uint8Array(readFileSync(manifestPath));
       const { value: manifest } = decodeCBOR(manifestBytes);
@@ -1656,7 +1656,7 @@ Baseline comparison (governance-cost):
     }
     try {
       const { decodeCBOR, encodeCBOR } = await import(
-        new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+        new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
       );
       const manifestBytes = new Uint8Array(readFileSync(manifestPath));
       const { value: manifest } = decodeCBOR(manifestBytes);
@@ -1806,9 +1806,9 @@ Baseline comparison (governance-cost):
                 }
                 const { createPublicKey } = await import("node:crypto");
                 const { manifestSigningInput, manifestSigCanon } = await import(
-                  new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+                  new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
                 );
-                const cc = await import(new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href);
+                const cc = await import(new URL("packages-ts/galerina-core-compiler/dist/index.js", import.meta.url).href);
                 // RE-DERIVE bodyHash from the actual body over the SIGNER's canon — NEVER trust sig.bodyHash as
                 // the signed input (Adv-1 #8). The recomputed hash is what goes into the reconstructed
                 // envelope, so the signature only validates if it matches what was signed.
@@ -1867,7 +1867,7 @@ Baseline comparison (governance-cost):
                 try {
                   const { verify: cryptoVerify, createPublicKey } = await import("node:crypto");
                   const { manifestSigningInput, manifestSigCanon } = await import(
-                    new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+                    new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
                   );
                   const pubKeyPem = readFileSync(pubKeyPath, "utf-8");
                   const publicKey = createPublicKey(pubKeyPem);
@@ -1965,7 +1965,7 @@ Baseline comparison (governance-cost):
       let manifest;
       try {
         const { decodeCBOR } = await import(
-          new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+          new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
         );
         const manifestBytes = new Uint8Array(readFileSync(manifestPath));
         manifest = decodeCBOR(manifestBytes).value;
@@ -2038,7 +2038,7 @@ Baseline comparison (governance-cost):
           // never consulted. This is possible because new builds sign over RFC 8785 canonical JSON, which
           // is representation-independent, so the signed bytes reconstruct identically from the decoded CBOR.
           const { manifestSigningInput, manifestSigCanon } = await import(
-            new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+            new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
           );
           const sig = manifest && manifest.governanceSignature;
           if (!sig || typeof sig !== "object" || !(sig.algorithm && sig.keyId && sig.signature)) {
@@ -2068,7 +2068,7 @@ Baseline comparison (governance-cost):
               process.exit(1);
             }
             const { createPublicKey } = await import("node:crypto");
-            const cc = await import(new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href);
+            const cc = await import(new URL("packages-ts/galerina-core-compiler/dist/index.js", import.meta.url).href);
             const { governanceSignature: _omitH, ...withoutSigH } = manifest;
             // RE-DERIVE bodyHash from the decoded CBOR body over sig's canon (jcs → representation-independent,
             // self-verifiable from CBOR per #67); never trust sig.bodyHash as the signed input.
@@ -2247,7 +2247,7 @@ Baseline comparison (governance-cost):
 
   // Compile to WASM
   // ── Production-gated governance floor (mirror of
-  //    packages-galerina/galerina-core-compiler/src/cli.ts:405-450) ───────────────────────────────────
+  //    packages-ts/galerina-core-compiler/src/cli.ts:405-450) ───────────────────────────────────
   // The internal compiler bin (cli.ts) derives the effect-checker mode + FUNGI-TIER-001 tier-floor flag
   // from the build mode and SURFACES checkValueStates / checkEffects ERROR diagnostics so an
   // under-declared flow fails the build. The user-facing `galerina build` path did NEITHER: checkEffects
@@ -2428,7 +2428,7 @@ Baseline comparison (governance-cost):
     // .lmanifest generation (DRCM Phase 3 task #67 — binary CBOR RFC 8949)
     if (mintManifest) try {
       const { generateManifest, serializeManifest, serializeManifestCBOR, prettyManifest, verifyManifestRoundTrip, manifestSigningInput } = await import(
-        new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
+        new URL("packages-ts/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
       );
       const govResult = m.verifyGovernance(parsed.ast, parsed.flows,
         m.checkEffects(parsed.flows, parsed.ast), "dev");
@@ -2630,7 +2630,7 @@ Baseline comparison (governance-cost):
             // raw import stack trace. With a hybrid key in hand this is always fail-closed (intent is explicit).
             let cc;
             try {
-              cc = await import(new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href);
+              cc = await import(new URL("packages-ts/galerina-core-compiler/dist/index.js", import.meta.url).href);
               if (typeof cc.signProofGraphHybrid !== "function" || typeof cc.makeManifestEnvelope !== "function") {
                 throw new Error("shipped dist does not export signProofGraphHybrid/makeManifestEnvelope");
               }
@@ -2723,7 +2723,7 @@ Baseline comparison (governance-cost):
       // Used by AI agents to self-assess proposals, and by CI to post PR comments.
       try {
         const { diffGovernance, flowShape } = await import(
-          new URL("packages-galerina/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
+          new URL("packages-ts/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
         );
         const impactArtifact = {
           schemaVersion: "fungi.governance-impact.v1",

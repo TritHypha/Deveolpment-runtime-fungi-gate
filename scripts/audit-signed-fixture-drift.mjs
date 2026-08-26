@@ -35,7 +35,7 @@ const ROOT = rootIdx >= 0 && argv[rootIdx + 1]
 
 const baseDirs = rootIdx >= 0
   ? [ROOT]
-  : [join(ROOT, "packages-galerina"), join(ROOT, "examples")].filter(existsSync);
+  : [join(ROOT, "packages-ts"), join(ROOT, "examples")].filter(existsSync);
 
 // Protection comes from the COMMITTED state (#21 unification, 2026-07-10):
 // tracked + real-signed in HEAD — the same predicate rebuild-fusable-packages

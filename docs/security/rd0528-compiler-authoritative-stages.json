@@ -4,7 +4,7 @@
   "prerequisites": "TWO-TIER (owner-ruled 2026-07-22 in self-hosted-i3-functional-corpus.test.mjs:7-27, where I-3 is FUNCTIONAL correctness — NOT byte-identity with .ts — and the self-hosted backend is DEFERRED). TIER 1 = AUTHORITY-FLIP (a `twins` entry): the stage's .fungi becomes the authoritative SPEC of record and the co-located .ts is RETAINED as a running differential SHADOW the gate holds === (nothing deleted; the .ts still executes). Stands on: (a) R3 byte-parity [wat-p9-*-parity] + (c) mutation-kill non-vacuity [scripts/audit-mutation.mjs] + (d) hash-pin + #105 admission [scripts/gather-compiler-stage-hashes.mjs] + the I-3 FUNCTIONAL oracle [self-hosted-i3-functional-corpus]. Does NOT require I-2: a flip declares the SPEC of record, not a running self-hosted backend. Each flip is owner-gated (I-4: condition-form nod over the evidence pack -> ledger entry). TIER 2 = FULL RETIREMENT (deleting the .ts): HARD, NOT pre-emptible — I-2 bootstrap-seed (a trusted stage0 .fungi->WASM compiler so .fungi compiles .fungi with no .ts) + I-3 oracle-before-.ts-deletion + a shadow-bake window. DEFERRED: the self-hosted backend is absent, so NO .ts is deleted and every tier-1 flip keeps its running .ts.",
   "twins": [
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "type-checker.fungi",
       "tier": "authority-flip (tier 1): type-checker.fungi is the authoritative SPEC of record; the co-located type-checker.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-23",
@@ -18,7 +18,7 @@
       }
     },
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "effect-checker.fungi",
       "tier": "authority-flip (tier 1): effect-checker.fungi is the authoritative SPEC of record; the co-located effect-checker.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-24",
@@ -32,7 +32,7 @@
       }
     },
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "gir-emitter.fungi",
       "tier": "authority-flip (tier 1): gir-emitter.fungi is the authoritative SPEC of record; the co-located src/gir-emitter.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-24",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "runtime.fungi",
       "tier": "authority-flip (tier 1): runtime.fungi is the authoritative SPEC of record; the co-located interpreter.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-25",
@@ -60,7 +60,7 @@
       }
     },
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "lexer.fungi",
       "tier": "authority-flip (tier 1): lexer.fungi is the authoritative SPEC of record; the co-located lexer.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-25",
@@ -74,7 +74,7 @@
       }
     },
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "parser.fungi",
       "tier": "authority-flip (tier 1): parser.fungi is the authoritative SPEC of record; the co-located parser.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-29",
@@ -88,7 +88,7 @@
       }
     },
     {
-      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "dir": "packages-ts/galerina-core-compiler/src/self-hosted",
       "file": "governance-verifier.fungi",
       "tier": "authority-flip (tier 1): governance-verifier.fungi is the authoritative SPEC of record; the co-located governance-verifier.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
       "flipped": "2026-07-29",

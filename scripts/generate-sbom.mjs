@@ -4,7 +4,7 @@
 // Born from the RD-0317 finding: a well-tested CycloneDX emitter existed for the Stage-1
 // `.fungi` package graph nobody uses, while the 95 npm lockfiles that actually build Galerina
 // had no SBOM at all. This script covers that graph: the root package, every first-party
-// packages-galerina/* package, and every third-party dependency pinned by any package-lock.json
+// packages-ts/* package, and every third-party dependency pinned by any package-lock.json
 // — emitted as CycloneDX 1.5 JSON that two runs reproduce byte-for-byte.
 //
 // THE INVARIANTS:
@@ -66,7 +66,7 @@ import {
 const SCRIPT_NAME = "generate-sbom.mjs";
 const SCRIPT_VERSION = "1.0.0";
 const SPEC_VERSION = "1.5";
-const PKG_ROOT = "packages-galerina";
+const PKG_ROOT = "packages-ts";
 const DEFAULT_OUT = "build/sbom/sbom.json";
 // The neutral value substituted for metadata.timestamp when computing the content digest —
 // so the digest is identical for two runs that differ only in generation time.
@@ -712,7 +712,7 @@ function runSelfTest() {
   const happy = () => {
     write("package.json", J({ name: "@fix/root", version: "1.0.0", license: "Apache-2.0" }));
     write(
-      "packages-galerina/pkg-a/package.json",
+      "packages-ts/pkg-a/package.json",
       J({
         name: "@fix/a",
         version: "2.0.0",
@@ -721,7 +721,7 @@ function runSelfTest() {
       }),
     );
     write(
-      "packages-galerina/pkg-a/package-lock.json",
+      "packages-ts/pkg-a/package-lock.json",
       J({
         name: "@fix/a",
         version: "2.0.0",
@@ -739,18 +739,18 @@ function runSelfTest() {
         },
       }),
     );
-    write("packages-galerina/pkg-b/package.json", J({ name: "@fix/b", version: "2.0.0", license: "Apache-2.0" }));
+    write("packages-ts/pkg-b/package.json", J({ name: "@fix/b", version: "2.0.0", license: "Apache-2.0" }));
   };
 
   // 1) happy path: components, purls, hex hashes, graph edges, complete=true
   happy();
-  write("packages-galerina/.metadata/README.md", "scanner metadata, not a package");
+  write("packages-ts/.metadata/README.md", "scanner metadata, not a package");
   {
     const { bom, errors, warnings } = collectSbom({ rootDir: base, sourceDateEpoch: "0" });
     check("happy: no errors", errors.length === 0, errors.join(" | "));
     check(
       "happy: hidden metadata directories are not treated as packages",
-      !warnings.some((warning) => warning.includes("packages-galerina/.metadata/package.json")),
+      !warnings.some((warning) => warning.includes("packages-ts/.metadata/package.json")),
       warnings.join(" | "),
     );
     const refs = bom === null ? [] : bom.components.map((c) => c["bom-ref"]);
@@ -795,14 +795,14 @@ function runSelfTest() {
   }
 
   // 3) malformed package.json → fail-closed
-  write("packages-galerina/pkg-a/package.json", "{ this is not json");
+  write("packages-ts/pkg-a/package.json", "{ this is not json");
   {
     const { bom, errors } = collectSbom({ rootDir: base, sourceDateEpoch: "0" });
     check("malformed package.json: errors + no bom", bom === null && errors.some((e) => e.includes("malformed JSON")));
   }
 
   // 4) missing version → fail-closed
-  write("packages-galerina/pkg-a/package.json", J({ name: "@fix/a" }));
+  write("packages-ts/pkg-a/package.json", J({ name: "@fix/a" }));
   {
     const { bom, errors } = collectSbom({ rootDir: base, sourceDateEpoch: "0" });
     check("missing version: errors + no bom", bom === null && errors.some((e) => e.includes('"version" missing')));
@@ -811,7 +811,7 @@ function runSelfTest() {
   // 5) integrity conflict across two lockfiles → fail-closed
   happy();
   write(
-    "packages-galerina/pkg-b/package-lock.json",
+    "packages-ts/pkg-b/package-lock.json",
     J({
       name: "@fix/b",
       version: "2.0.0",
@@ -830,12 +830,12 @@ function runSelfTest() {
     const { bom, errors } = collectSbom({ rootDir: base, sourceDateEpoch: "0" });
     check("integrity conflict: errors + no bom", bom === null && errors.some((e) => e.includes("integrity conflict")));
   }
-  rmSync(join(base, "packages-galerina/pkg-b/package-lock.json"), { force: true });
+  rmSync(join(base, "packages-ts/pkg-b/package-lock.json"), { force: true });
 
   // 6) duplicated node_modules/* lockfile key → fail-closed (hand-built raw JSON text)
   happy();
   write(
-    "packages-galerina/pkg-a/package-lock.json",
+    "packages-ts/pkg-a/package-lock.json",
     `{
   "name": "@fix/a", "version": "2.0.0", "lockfileVersion": 3,
   "packages": {
@@ -856,7 +856,7 @@ function runSelfTest() {
   // 7) duplicated benign key → warning only (matches real lockfiles observed in this repo)
   happy();
   write(
-    "packages-galerina/pkg-a/package-lock.json",
+    "packages-ts/pkg-a/package-lock.json",
     `{
   "name": "@fix/a", "version": "2.0.0", "lockfileVersion": 3,
   "packages": {
@@ -878,7 +878,7 @@ function runSelfTest() {
   // 8) missing integrity → UNVERIFIED + complete=false (never silently dropped)
   happy();
   write(
-    "packages-galerina/pkg-a/package-lock.json",
+    "packages-ts/pkg-a/package-lock.json",
     J({
       name: "@fix/a",
       version: "2.0.0",
@@ -906,7 +906,7 @@ function runSelfTest() {
   // 9) dangling file: internal ref → fail-closed
   happy();
   write(
-    "packages-galerina/pkg-a/package.json",
+    "packages-ts/pkg-a/package.json",
     J({ name: "@fix/a", version: "2.0.0", dependencies: { "@fix/gone": "file:../pkg-gone" } }),
   );
   {

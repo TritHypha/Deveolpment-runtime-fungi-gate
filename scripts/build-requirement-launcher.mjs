@@ -45,14 +45,14 @@ const BAD_READY_WORKER = join(OUTPUT, "bad-ready-worker.mjs");
 const PROTOCOL_COPY = join(OUTPUT, "requirement-process-protocol.js");
 const REQUIREMENT_WORKER = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-compiler",
   "dist",
   "requirement-process-worker.js",
 );
 const REQUIREMENT_PROTOCOL = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-compiler",
   "dist",
   "requirement-process-protocol.js",
@@ -67,14 +67,14 @@ const INPUTS = [
   join(CRATE, "src", "main.rs"),
   join(
     ROOT,
-    "packages-galerina",
+    "packages-ts",
     "galerina-core-compiler",
     "src",
     "requirement-process-worker.ts",
   ),
   join(
     ROOT,
-    "packages-galerina",
+    "packages-ts",
     "galerina-core-compiler",
     "src",
     "requirement-process-protocol.ts",

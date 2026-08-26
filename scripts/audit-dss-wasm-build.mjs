@@ -35,8 +35,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { createHash } from "node:crypto";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const DSS = join(ROOT, "packages-galerina", "galerina-core-security", "src", "dss");
-const COMPILER = join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const DSS = join(ROOT, "packages-ts", "galerina-core-security", "src", "dss");
+const COMPILER = join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js");
 const BASELINE = join(ROOT, "scripts", "baselines", "dss-wasm-build.json");
 
 const read = (p) => { const s = readFileSync(p, "utf8"); return s.charCodeAt(0) === 0xFEFF ? s.slice(1) : s; };

@@ -10,7 +10,7 @@
  *   node scripts/galerina-new.mjs app <target-dir> [--name <app>]
  *     → a COMPLETE, runnable governed APPLICATION — a byte-for-byte copy (with the
  *       app name substituted) of the canonical golden template
- *       `packages-galerina/galerina-framework-example-app`. That single source of truth
+ *       `packages-ts/galerina-framework-example-app`. That single source of truth
  *       is the "hello, governed world" app: a governed flow compiled to a signed
  *       .wasm, fused into the App Kernel at a route, served over HTTP, with an
  *       end-to-end test. Build outputs (dist/, build/) are NOT copied — the new app
@@ -38,7 +38,7 @@ const MODES = new Set(["app", "package"]);
 // so it works from any cwd in the repo. Kept as the SINGLE source of truth: edit the
 // example app, and every newly-scaffolded app inherits the change (no template drift).
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const APP_TEMPLATE_DIR = resolve(SCRIPT_DIR, "..", "packages-galerina", "galerina-framework-example-app");
+const APP_TEMPLATE_DIR = resolve(SCRIPT_DIR, "..", "packages-ts", "galerina-framework-example-app");
 // The example app's own identity strings, replaced with the new app's name on copy.
 const TEMPLATE_PKG_NAME = "galerina-framework-example-app";
 const TEMPLATE_SCOPED_NAME = "@galerina/framework-example-app";
@@ -272,7 +272,7 @@ function copyTree(srcDir, dstDir, name) {
 
 function scaffoldApp(absTarget, name, targetDir) {
   if (!existsSync(APP_TEMPLATE_DIR) || !statSync(APP_TEMPLATE_DIR).isDirectory()) {
-    fail(`golden app template not found at ${APP_TEMPLATE_DIR} (expected packages-galerina/galerina-framework-example-app)`);
+    fail(`golden app template not found at ${APP_TEMPLATE_DIR} (expected packages-ts/galerina-framework-example-app)`);
   }
   console.log(`galerina-new — scaffolding secure app "${name}" into ${absTarget}`);
   console.log(`   (copying the golden template ${TEMPLATE_PKG_NAME}; build outputs excluded)`);

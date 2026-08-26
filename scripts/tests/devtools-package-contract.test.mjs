@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(TEST_DIR, "..", "..");
-const PACKAGES = join(ROOT, "packages-galerina");
+const PACKAGES = join(ROOT, "packages-ts");
 
 function walkHasTypeScript(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {

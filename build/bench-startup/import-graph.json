@@ -31,147 +31,147 @@
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/index.js",
+      "id": "packages-ts/galerina-core-compiler/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/lexer.js",
+      "id": "packages-ts/galerina-core-compiler/dist/lexer.js",
       "selfMs": 1.114
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/parser.js",
+      "id": "packages-ts/galerina-core-compiler/dist/parser.js",
       "selfMs": 3.353
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/gate-parser.js",
+      "id": "packages-ts/galerina-core-compiler/dist/gate-parser.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/hardening-residency.js",
+      "id": "packages-ts/galerina-core-compiler/dist/hardening-residency.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/effect-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/effect-checker.js",
       "selfMs": 3.389
     },
     {
-      "id": "packages-galerina/galerina-devtools-graph-algorithms/dist/index.js",
+      "id": "packages-ts/galerina-devtools-graph-algorithms/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/type-registry.js",
+      "id": "packages-ts/galerina-core-compiler/dist/type-registry.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/stdlib-registry.js",
+      "id": "packages-ts/galerina-core-compiler/dist/stdlib-registry.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/leak-proof.js",
+      "id": "packages-ts/galerina-core-compiler/dist/leak-proof.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/manifest-generator.js",
+      "id": "packages-ts/galerina-core-compiler/dist/manifest-generator.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/capability-types.js",
+      "id": "packages-ts/galerina-core-compiler/dist/capability-types.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/proof-graph.js",
+      "id": "packages-ts/galerina-core-compiler/dist/proof-graph.js",
       "selfMs": 1.121
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/canonicalHash.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/canonicalHash.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/fix-edit.js",
+      "id": "packages-ts/galerina-core-compiler/dist/fix-edit.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
+      "id": "packages-ts/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/value-state-checker.js",
       "selfMs": 2.257
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js",
+      "id": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/i64-arith.js",
+      "id": "packages-ts/galerina-core-compiler/dist/i64-arith.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/u64-arith.js",
+      "id": "packages-ts/galerina-core-compiler/dist/u64-arith.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/type-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/type-checker.js",
       "selfMs": 2.236
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/package-type-registry.js",
+      "id": "packages-ts/galerina-core-compiler/dist/package-type-registry.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/symbol-resolver.js",
+      "id": "packages-ts/galerina-core-compiler/dist/symbol-resolver.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/import-resolver.js",
+      "id": "packages-ts/galerina-core-compiler/dist/import-resolver.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/package-resolver.js",
+      "id": "packages-ts/galerina-core-compiler/dist/package-resolver.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/sbom.js",
+      "id": "packages-ts/galerina-core-compiler/dist/sbom.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/naming-policy-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/naming-policy-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
+      "id": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/resilience-inference.js",
+      "id": "packages-ts/galerina-core-compiler/dist/resilience-inference.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/executionPlan.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/executionPlan.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/lowering-plan.js",
+      "id": "packages-ts/galerina-core-compiler/dist/lowering-plan.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/test-generator.js",
+      "id": "packages-ts/galerina-core-compiler/dist/test-generator.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/flow-dependency-analysis.js",
+      "id": "packages-ts/galerina-core-compiler/dist/flow-dependency-analysis.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/flow-complexity.js",
+      "id": "packages-ts/galerina-core-compiler/dist/flow-complexity.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
+      "id": "packages-ts/galerina-core-compiler/dist/interpreter.js",
       "selfMs": 1.15
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
+      "id": "packages-ts/galerina-core-compiler/dist/stdlib.js",
       "selfMs": 0
     },
     {
@@ -179,371 +179,371 @@
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/index.js",
+      "id": "packages-ts/galerina-core-network/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/egress-guard.js",
+      "id": "packages-ts/galerina-core-network/dist/egress-guard.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/inbound-guard.js",
+      "id": "packages-ts/galerina-core-network/dist/inbound-guard.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/cert-gate.js",
+      "id": "packages-ts/galerina-core-network/dist/cert-gate.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/index.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/transport-fsm.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/transport-fsm.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/tpl-simulator.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/tpl-simulator.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/tower-runtime.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/tower-runtime.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/audit-logger.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/audit-logger.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/plugin-sandbox.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/plugin-sandbox.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/plugin-manifest.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/plugin-manifest.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/precision-strategy.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/precision-strategy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/bridge/stub-provider.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/bridge/stub-provider.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/governance-enforcer.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/governance-enforcer.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/bridge/interface.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/bridge/interface.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-inference-bridge-contract/dist/index.js",
+      "id": "packages-ts/galerina-inference-bridge-contract/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-inference-bridge-contract/dist/bridge.js",
+      "id": "packages-ts/galerina-inference-bridge-contract/dist/bridge.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-inference-bridge-contract/dist/manifest.js",
+      "id": "packages-ts/galerina-inference-bridge-contract/dist/manifest.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-inference-bridge-contract/dist/oracle.js",
+      "id": "packages-ts/galerina-inference-bridge-contract/dist/oracle.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/bridge-attestation.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/bridge-attestation.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/capability-grant.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/capability-grant.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/compiled-policy.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/compiled-policy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/epistemic-type-state.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/epistemic-type-state.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/data-plane-border.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/data-plane-border.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/ai-governance.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/ai-governance.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/partial-return.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/partial-return.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/photonic-admission.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/photonic-admission.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/lease.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/lease.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/key-rotation.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/key-rotation.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/quorum.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/quorum.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/substrate-erasure.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/substrate-erasure.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/substrate-model.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/deadzone-dispatcher.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/deadzone-dispatcher.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-substrate-math/dist/index.js",
+      "id": "packages-ts/galerina-substrate-math/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/substrate-snapshot.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/substrate-snapshot.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-tower-citizen/dist/gate-cache.js",
+      "id": "packages-ts/galerina-tower-citizen/dist/gate-cache.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/admission-feedback.js",
+      "id": "packages-ts/galerina-core-network/dist/admission-feedback.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/cors-policy.js",
+      "id": "packages-ts/galerina-core-network/dist/cors-policy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-network/dist/defensive-controls.js",
+      "id": "packages-ts/galerina-core-network/dist/defensive-controls.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/node_modules/bcryptjs/index.js",
+      "id": "packages-ts/galerina-core-compiler/node_modules/bcryptjs/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/security-policy.js",
+      "id": "packages-ts/galerina-core-compiler/dist/security-policy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/pure-flow-cache.js",
+      "id": "packages-ts/galerina-core-compiler/dist/pure-flow-cache.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/security-sink-monitor.js",
+      "id": "packages-ts/galerina-core-compiler/dist/security-sink-monitor.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/execution-graph.js",
+      "id": "packages-ts/galerina-core-compiler/dist/execution-graph.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/bytecode-vm.js",
+      "id": "packages-ts/galerina-core-compiler/dist/bytecode-vm.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/i32-arith.js",
+      "id": "packages-ts/galerina-core-compiler/dist/i32-arith.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/decimal-arith.js",
+      "id": "packages-ts/galerina-core-compiler/dist/decimal-arith.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/production-check.js",
+      "id": "packages-ts/galerina-core-compiler/dist/production-check.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/audit-writer.js",
+      "id": "packages-ts/galerina-core-compiler/dist/audit-writer.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-security/dist/index.js",
+      "id": "packages-ts/galerina-core-security/dist/index.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/wat-assembler.js",
+      "id": "packages-ts/galerina-core-compiler/dist/wat-assembler.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/wasm-runtime.js",
+      "id": "packages-ts/galerina-core-compiler/dist/wasm-runtime.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/wat-emitter.js",
+      "id": "packages-ts/galerina-core-compiler/dist/wat-emitter.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
+      "id": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
       "selfMs": 5.615
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/observability-inference.js",
+      "id": "packages-ts/galerina-core-compiler/dist/observability-inference.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/substrate-inference.js",
+      "id": "packages-ts/galerina-core-compiler/dist/substrate-inference.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/substrate-math.js",
+      "id": "packages-ts/galerina-core-compiler/dist/substrate-math.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/limitPolicy.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/limitPolicy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/proof-chain.js",
+      "id": "packages-ts/galerina-core-compiler/dist/proof-chain.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/route-dispatcher.js",
+      "id": "packages-ts/galerina-core-compiler/dist/route-dispatcher.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/route-registry.js",
+      "id": "packages-ts/galerina-core-compiler/dist/route-registry.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/attestation.js",
+      "id": "packages-ts/galerina-core-compiler/dist/attestation.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/runtimeContext.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/runtimeContext.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/timeoutPolicy.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/timeoutPolicy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/retryPolicy.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/retryPolicy.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/runtimeReport.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/runtimeReport.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/capabilityHost.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/capabilityHost.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/source-escape-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/source-escape-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/profile-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/profile-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/governance-diff.js",
+      "id": "packages-ts/galerina-core-compiler/dist/governance-diff.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/taint-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/taint-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/economics-inference.js",
+      "id": "packages-ts/galerina-core-compiler/dist/economics-inference.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/boundary-graph.js",
+      "id": "packages-ts/galerina-core-compiler/dist/boundary-graph.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/event-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/event-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/governedMemory.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/governedMemory.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/runtime/rootCapabilityProvider.js",
+      "id": "packages-ts/galerina-core-compiler/dist/runtime/rootCapabilityProvider.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/gpu-plan.js",
+      "id": "packages-ts/galerina-core-compiler/dist/gpu-plan.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/register-vm.js",
+      "id": "packages-ts/galerina-core-compiler/dist/register-vm.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/views.js",
+      "id": "packages-ts/galerina-core-compiler/dist/views.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/stage-b-report.js",
+      "id": "packages-ts/galerina-core-compiler/dist/stage-b-report.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/unified-annotator.js",
+      "id": "packages-ts/galerina-core-compiler/dist/unified-annotator.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/soa-arena.js",
+      "id": "packages-ts/galerina-core-compiler/dist/soa-arena.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/flat-token-stream.js",
+      "id": "packages-ts/galerina-core-compiler/dist/flat-token-stream.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/fused-pass.js",
+      "id": "packages-ts/galerina-core-compiler/dist/fused-pass.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/monkey-patch-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/monkey-patch-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/attribute-checker.js",
+      "id": "packages-ts/galerina-core-compiler/dist/attribute-checker.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
+      "id": "packages-ts/galerina-core-compiler/dist/security-gate.js",
       "selfMs": 0
     },
     {
-      "id": "packages-galerina/galerina-core-compiler/node_modules/argon2/argon2.cjs",
+      "id": "packages-ts/galerina-core-compiler/node_modules/argon2/argon2.cjs",
       "selfMs": 0
     }
   ],
@@ -574,1099 +574,1099 @@
     },
     {
       "from": "galerina.mjs",
-      "to": "packages-galerina/galerina-core-compiler/dist/index.js"
+      "to": "packages-ts/galerina-core-compiler/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/lexer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/lexer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/parser.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/parser.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/parser.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/lexer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/parser.js",
+      "to": "packages-ts/galerina-core-compiler/dist/lexer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/gate-parser.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/gate-parser.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/hardening-residency.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/hardening-residency.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/effect-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/effect-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/effect-checker.js",
-      "to": "packages-galerina/galerina-devtools-graph-algorithms/dist/index.js"
+      "from": "packages-ts/galerina-core-compiler/dist/effect-checker.js",
+      "to": "packages-ts/galerina-devtools-graph-algorithms/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/effect-checker.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/effect-checker.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/effect-checker.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stdlib-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/effect-checker.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stdlib-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/leak-proof.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/leak-proof.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/leak-proof.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/effect-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/leak-proof.js",
+      "to": "packages-ts/galerina-core-compiler/dist/effect-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/leak-proof.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/manifest-generator.js"
+      "from": "packages-ts/galerina-core-compiler/dist/leak-proof.js",
+      "to": "packages-ts/galerina-core-compiler/dist/manifest-generator.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/manifest-generator.js",
+      "from": "packages-ts/galerina-core-compiler/dist/manifest-generator.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/manifest-generator.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/capability-types.js"
+      "from": "packages-ts/galerina-core-compiler/dist/manifest-generator.js",
+      "to": "packages-ts/galerina-core-compiler/dist/capability-types.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/proof-graph.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/proof-graph.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/proof-graph.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/canonicalHash.js"
+      "from": "packages-ts/galerina-core-compiler/dist/proof-graph.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/canonicalHash.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/canonicalHash.js",
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/canonicalHash.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/proof-graph.js",
+      "from": "packages-ts/galerina-core-compiler/dist/proof-graph.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/fix-edit.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/fix-edit.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
+      "from": "packages-ts/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
+      "from": "packages-ts/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
       "to": "node:fs"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
+      "from": "packages-ts/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
       "to": "node:path"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/proof-graph.js"
+      "from": "packages-ts/galerina-core-compiler/dist/lmanifest-hybrid-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/proof-graph.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/value-state-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/effect-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/value-state-checker.js",
+      "to": "packages-ts/galerina-core-compiler/dist/effect-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js"
+      "from": "packages-ts/galerina-core-compiler/dist/value-state-checker.js",
+      "to": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/i64-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js",
+      "to": "packages-ts/galerina-core-compiler/dist/i64-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/u64-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js",
+      "to": "packages-ts/galerina-core-compiler/dist/u64-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/type-checker.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/type-checker.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/type-checker.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/package-type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/type-checker.js",
+      "to": "packages-ts/galerina-core-compiler/dist/package-type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/symbol-resolver.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/symbol-resolver.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/symbol-resolver.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/package-type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/symbol-resolver.js",
+      "to": "packages-ts/galerina-core-compiler/dist/package-type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/import-resolver.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/import-resolver.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/import-resolver.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/package-resolver.js"
+      "from": "packages-ts/galerina-core-compiler/dist/import-resolver.js",
+      "to": "packages-ts/galerina-core-compiler/dist/package-resolver.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/package-resolver.js",
+      "from": "packages-ts/galerina-core-compiler/dist/package-resolver.js",
       "to": "node:fs"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/package-resolver.js",
+      "from": "packages-ts/galerina-core-compiler/dist/package-resolver.js",
       "to": "node:path"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/package-type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/package-type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/package-resolver.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/package-resolver.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/sbom.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/sbom.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/naming-policy-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/naming-policy-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/gir-emitter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
+      "from": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/resilience-inference.js"
+      "from": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/resilience-inference.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
-      "to": "packages-galerina/galerina-devtools-graph-algorithms/dist/index.js"
+      "from": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
+      "to": "packages-ts/galerina-devtools-graph-algorithms/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/executionPlan.js"
+      "from": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/executionPlan.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/executionPlan.js",
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/executionPlan.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/executionPlan.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/executionPlan.js",
+      "to": "packages-ts/galerina-core-compiler/dist/gir-emitter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/lowering-plan.js"
+      "from": "packages-ts/galerina-core-compiler/dist/gir-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/lowering-plan.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/test-generator.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/test-generator.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/test-generator.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/test-generator.js",
+      "to": "packages-ts/galerina-core-compiler/dist/value-state-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/flow-dependency-analysis.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/flow-dependency-analysis.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/flow-dependency-analysis.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/flow-dependency-analysis.js",
+      "to": "packages-ts/galerina-core-compiler/dist/gir-emitter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/flow-complexity.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/flow-complexity.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/executionPlan.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/executionPlan.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/interpreter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/interpreter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/parser.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/parser.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stdlib.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stdlib.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/interpreter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
+      "to": "packages-ts/galerina-core-compiler/dist/interpreter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
       "to": "node:module"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
-      "to": "packages-galerina/galerina-core-network/dist/index.js"
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
+      "to": "packages-ts/galerina-core-network/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/index.js",
-      "to": "packages-galerina/galerina-core-network/dist/egress-guard.js"
+      "from": "packages-ts/galerina-core-network/dist/index.js",
+      "to": "packages-ts/galerina-core-network/dist/egress-guard.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/index.js",
-      "to": "packages-galerina/galerina-core-network/dist/inbound-guard.js"
+      "from": "packages-ts/galerina-core-network/dist/index.js",
+      "to": "packages-ts/galerina-core-network/dist/inbound-guard.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/index.js",
-      "to": "packages-galerina/galerina-core-network/dist/cert-gate.js"
+      "from": "packages-ts/galerina-core-network/dist/index.js",
+      "to": "packages-ts/galerina-core-network/dist/cert-gate.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/cert-gate.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/index.js"
+      "from": "packages-ts/galerina-core-network/dist/cert-gate.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/transport-fsm.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/transport-fsm.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/transport-fsm.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/transport-fsm.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/tpl-simulator.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/tpl-simulator.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/tower-runtime.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/tower-runtime.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/tower-runtime.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/audit-logger.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/tower-runtime.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/audit-logger.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/audit-logger.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/audit-logger.js",
       "to": "node:fs"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/audit-logger.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/audit-logger.js",
       "to": "node:path"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/tower-runtime.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/plugin-sandbox.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/tower-runtime.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/plugin-sandbox.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/plugin-sandbox.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/plugin-sandbox.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/tower-runtime.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/plugin-manifest.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/tower-runtime.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/plugin-manifest.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/plugin-manifest.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/plugin-manifest.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/audit-logger.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/audit-logger.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/plugin-sandbox.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/plugin-sandbox.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/tower-runtime.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/tower-runtime.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/precision-strategy.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/precision-strategy.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/bridge/stub-provider.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/bridge/stub-provider.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/bridge/stub-provider.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/tpl-simulator.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/bridge/stub-provider.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/tpl-simulator.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/bridge/stub-provider.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/governance-enforcer.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/bridge/stub-provider.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/governance-enforcer.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/governance-enforcer.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/governance-enforcer.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/bridge/stub-provider.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/audit-logger.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/bridge/stub-provider.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/audit-logger.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/bridge/interface.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/bridge/interface.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/bridge/interface.js",
-      "to": "packages-galerina/galerina-inference-bridge-contract/dist/index.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/bridge/interface.js",
+      "to": "packages-ts/galerina-inference-bridge-contract/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-inference-bridge-contract/dist/index.js",
-      "to": "packages-galerina/galerina-inference-bridge-contract/dist/bridge.js"
+      "from": "packages-ts/galerina-inference-bridge-contract/dist/index.js",
+      "to": "packages-ts/galerina-inference-bridge-contract/dist/bridge.js"
     },
     {
-      "from": "packages-galerina/galerina-inference-bridge-contract/dist/index.js",
-      "to": "packages-galerina/galerina-inference-bridge-contract/dist/manifest.js"
+      "from": "packages-ts/galerina-inference-bridge-contract/dist/index.js",
+      "to": "packages-ts/galerina-inference-bridge-contract/dist/manifest.js"
     },
     {
-      "from": "packages-galerina/galerina-inference-bridge-contract/dist/index.js",
-      "to": "packages-galerina/galerina-inference-bridge-contract/dist/oracle.js"
+      "from": "packages-ts/galerina-inference-bridge-contract/dist/index.js",
+      "to": "packages-ts/galerina-inference-bridge-contract/dist/oracle.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/bridge-attestation.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/bridge-attestation.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/bridge-attestation.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/bridge-attestation.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/bridge-attestation.js",
-      "to": "packages-galerina/galerina-inference-bridge-contract/dist/index.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/bridge-attestation.js",
+      "to": "packages-ts/galerina-inference-bridge-contract/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/capability-grant.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/capability-grant.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/capability-grant.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/capability-grant.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/hybrid-engine.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/compiled-policy.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/hybrid-engine.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/compiled-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/precision-strategy.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/precision-strategy.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/tpl-simulator.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/tpl-simulator.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/governance-enforcer.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/governance-enforcer.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/epistemic-type-state.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/epistemic-type-state.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/epistemic-type-state.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/epistemic-type-state.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/data-plane-border.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/data-plane-border.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/data-plane-border.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/data-plane-border.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/ai-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/ai-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/ai-governance.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/ai-governance.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/partial-return.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/partial-return.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/partial-return.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/partial-return.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/photonic-admission.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/photonic-admission.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/photonic-admission.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/photonic-admission.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/photonic-admission.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/photonic-admission.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/lease.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/lease.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/lease.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/lease.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/key-rotation.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/key-rotation.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/key-rotation.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/key-rotation.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/key-rotation.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/key-rotation.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/key-rotation.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/quorum.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/key-rotation.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/quorum.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/quorum.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/quorum.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/quorum.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/quorum.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/substrate-erasure.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/substrate-erasure.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-erasure.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-erasure.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-erasure.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-erasure.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/substrate-model.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/tpl-simulator.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-model.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/tpl-simulator.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/three-valued-governance.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-model.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/deadzone-dispatcher.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-model.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/deadzone-dispatcher.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js",
-      "to": "packages-galerina/galerina-substrate-math/dist/index.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-model.js",
+      "to": "packages-ts/galerina-substrate-math/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/deadzone-dispatcher.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/deadzone-dispatcher.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/substrate-snapshot.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/substrate-snapshot.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/substrate-snapshot.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/substrate-model.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/substrate-snapshot.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/substrate-model.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/bridge/interface.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/bridge/interface.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/bridge-attestation.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/bridge-attestation.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/capability-grant.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/capability-grant.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/plugin-manifest.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/plugin-manifest.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/compiled-policy.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/compiled-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/gate-cache.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/gate-cache.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/gate-cache.js",
+      "from": "packages-ts/galerina-tower-citizen/dist/gate-cache.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/gate-cache.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/compiled-policy.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/gate-cache.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/compiled-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-tower-citizen/dist/index.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/bridge/stub-provider.js"
+      "from": "packages-ts/galerina-tower-citizen/dist/index.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/bridge/stub-provider.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/index.js",
-      "to": "packages-galerina/galerina-core-network/dist/admission-feedback.js"
+      "from": "packages-ts/galerina-core-network/dist/index.js",
+      "to": "packages-ts/galerina-core-network/dist/admission-feedback.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/admission-feedback.js",
-      "to": "packages-galerina/galerina-tower-citizen/dist/index.js"
+      "from": "packages-ts/galerina-core-network/dist/admission-feedback.js",
+      "to": "packages-ts/galerina-tower-citizen/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/admission-feedback.js",
-      "to": "packages-galerina/galerina-core-network/dist/cert-gate.js"
+      "from": "packages-ts/galerina-core-network/dist/admission-feedback.js",
+      "to": "packages-ts/galerina-core-network/dist/cert-gate.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/index.js",
-      "to": "packages-galerina/galerina-core-network/dist/cors-policy.js"
+      "from": "packages-ts/galerina-core-network/dist/index.js",
+      "to": "packages-ts/galerina-core-network/dist/cors-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-network/dist/index.js",
-      "to": "packages-galerina/galerina-core-network/dist/defensive-controls.js"
+      "from": "packages-ts/galerina-core-network/dist/index.js",
+      "to": "packages-ts/galerina-core-network/dist/defensive-controls.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
-      "to": "packages-galerina/galerina-core-compiler/node_modules/bcryptjs/index.js"
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
+      "to": "packages-ts/galerina-core-compiler/node_modules/bcryptjs/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/node_modules/bcryptjs/index.js",
+      "from": "packages-ts/galerina-core-compiler/node_modules/bcryptjs/index.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
       "to": "node:path"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/executionPlan.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/executionPlan.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/security-policy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/security-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/pure-flow-cache.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/pure-flow-cache.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/pure-flow-cache.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/canonicalHash.js"
+      "from": "packages-ts/galerina-core-compiler/dist/pure-flow-cache.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/canonicalHash.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/security-sink-monitor.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/security-sink-monitor.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/execution-graph.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/execution-graph.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/execution-graph.js",
+      "from": "packages-ts/galerina-core-compiler/dist/execution-graph.js",
       "to": "node:fs"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/execution-graph.js",
+      "from": "packages-ts/galerina-core-compiler/dist/execution-graph.js",
       "to": "node:path"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/bytecode-vm.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/bytecode-vm.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/bytecode-vm.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/i32-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/bytecode-vm.js",
+      "to": "packages-ts/galerina-core-compiler/dist/i32-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/bytecode-vm.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js"
+      "from": "packages-ts/galerina-core-compiler/dist/bytecode-vm.js",
+      "to": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/i32-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/i32-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/i64-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/i64-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/u64-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/u64-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/decimal-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/decimal-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/interpreter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js"
+      "from": "packages-ts/galerina-core-compiler/dist/interpreter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/production-check.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/production-check.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/pure-flow-cache.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/pure-flow-cache.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/execution-graph.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/execution-graph.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/audit-writer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/audit-writer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/audit-writer.js",
+      "from": "packages-ts/galerina-core-compiler/dist/audit-writer.js",
       "to": "node:fs"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/audit-writer.js",
-      "to": "packages-galerina/galerina-core-security/dist/index.js"
+      "from": "packages-ts/galerina-core-compiler/dist/audit-writer.js",
+      "to": "packages-ts/galerina-core-security/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/wat-assembler.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/wat-assembler.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/wasm-runtime.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/wasm-runtime.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/wasm-runtime.js",
+      "from": "packages-ts/galerina-core-compiler/dist/wasm-runtime.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/wasm-runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/wat-emitter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/wasm-runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/wat-emitter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/wat-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stdlib-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/wat-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stdlib-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/wat-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/i32-arith.js"
+      "from": "packages-ts/galerina-core-compiler/dist/wat-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/i32-arith.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/wat-emitter.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/numeric-lowering.js"
+      "from": "packages-ts/galerina-core-compiler/dist/wat-emitter.js",
+      "to": "packages-ts/galerina-core-compiler/dist/numeric-lowering.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/wat-emitter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/wat-emitter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/security-policy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/security-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/parser.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/parser.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/symbol-resolver.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/symbol-resolver.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/value-state-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/effect-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/effect-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/governance-verifier.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/capability-types.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/capability-types.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/effect-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/effect-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/proof-graph.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/proof-graph.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/resilience-inference.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/resilience-inference.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/observability-inference.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/observability-inference.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/substrate-inference.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/substrate-inference.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/substrate-inference.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/substrate-math.js"
+      "from": "packages-ts/galerina-core-compiler/dist/substrate-inference.js",
+      "to": "packages-ts/galerina-core-compiler/dist/substrate-math.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/substrate-math.js",
-      "to": "packages-galerina/galerina-substrate-math/dist/index.js"
+      "from": "packages-ts/galerina-core-compiler/dist/substrate-math.js",
+      "to": "packages-ts/galerina-substrate-math/dist/index.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/limitPolicy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/limitPolicy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/hardening-residency.js"
+      "from": "packages-ts/galerina-core-compiler/dist/governance-verifier.js",
+      "to": "packages-ts/galerina-core-compiler/dist/hardening-residency.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/gir-emitter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/gir-emitter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/interpreter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/interpreter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/audit-writer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/audit-writer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/proof-chain.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/proof-chain.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/proof-chain.js",
+      "from": "packages-ts/galerina-core-compiler/dist/proof-chain.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/route-dispatcher.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/route-dispatcher.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/route-dispatcher.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/interpreter.js"
+      "from": "packages-ts/galerina-core-compiler/dist/route-dispatcher.js",
+      "to": "packages-ts/galerina-core-compiler/dist/interpreter.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/route-dispatcher.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/route-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/route-dispatcher.js",
+      "to": "packages-ts/galerina-core-compiler/dist/route-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/route-dispatcher.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stdlib.js"
+      "from": "packages-ts/galerina-core-compiler/dist/route-dispatcher.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stdlib.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/route-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/route-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/attestation.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/attestation.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/attestation.js",
+      "from": "packages-ts/galerina-core-compiler/dist/attestation.js",
       "to": "node:crypto"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/runtimeContext.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/runtimeContext.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/timeoutPolicy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/timeoutPolicy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/timeoutPolicy.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/runtimeContext.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/timeoutPolicy.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/runtimeContext.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/retryPolicy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/retryPolicy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/limitPolicy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/limitPolicy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/runtimeReport.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/runtimeReport.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/capabilityHost.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/capabilityHost.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime/capabilityHost.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/security-policy.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime/capabilityHost.js",
+      "to": "packages-ts/galerina-core-compiler/dist/security-policy.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/source-escape-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/source-escape-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/canonicalHash.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/canonicalHash.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/runtime.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/naming-policy-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/runtime.js",
+      "to": "packages-ts/galerina-core-compiler/dist/naming-policy-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/route-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/route-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/route-dispatcher.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/route-dispatcher.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stdlib.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stdlib.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stdlib-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stdlib-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/proof-chain.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/proof-chain.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/governance-verifier.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/substrate-inference.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/substrate-inference.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/substrate-math.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/substrate-math.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/profile-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/profile-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/governance-diff.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/governance-diff.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/bytecode-vm.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/bytecode-vm.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/taint-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/taint-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/economics-inference.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/economics-inference.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/boundary-graph.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/boundary-graph.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/event-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/event-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/attestation.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/attestation.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/contractEnforcer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/contractEnforcer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/runtimeContext.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/runtimeContext.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/capabilityHost.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/capabilityHost.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/governedMemory.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/governedMemory.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/rootCapabilityProvider.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/rootCapabilityProvider.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/runtime/canonicalHash.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/runtime/canonicalHash.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/lowering-plan.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/lowering-plan.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/gpu-plan.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/gpu-plan.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/register-vm.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/register-vm.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/views.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/views.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/stage-b-report.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/stage-b-report.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/unified-annotator.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/unified-annotator.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/unified-annotator.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/unified-annotator.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/unified-annotator.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/unified-annotator.js",
+      "to": "packages-ts/galerina-core-compiler/dist/value-state-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/soa-arena.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/soa-arena.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/flat-token-stream.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/flat-token-stream.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/fused-pass.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/fused-pass.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/fused-pass.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/lexer.js"
+      "from": "packages-ts/galerina-core-compiler/dist/fused-pass.js",
+      "to": "packages-ts/galerina-core-compiler/dist/lexer.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/fused-pass.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/type-registry.js"
+      "from": "packages-ts/galerina-core-compiler/dist/fused-pass.js",
+      "to": "packages-ts/galerina-core-compiler/dist/type-registry.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/source-escape-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/source-escape-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/monkey-patch-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/monkey-patch-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/attribute-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/attribute-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/index.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/security-gate.js"
+      "from": "packages-ts/galerina-core-compiler/dist/index.js",
+      "to": "packages-ts/galerina-core-compiler/dist/security-gate.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/value-state-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/value-state-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/effect-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/effect-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/source-escape-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/source-escape-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/governance-verifier.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/governance-verifier.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/taint-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/taint-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/monkey-patch-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/monkey-patch-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/security-gate.js",
-      "to": "packages-galerina/galerina-core-compiler/dist/attribute-checker.js"
+      "from": "packages-ts/galerina-core-compiler/dist/security-gate.js",
+      "to": "packages-ts/galerina-core-compiler/dist/attribute-checker.js"
     },
     {
-      "from": "packages-galerina/galerina-core-compiler/dist/stdlib.js",
-      "to": "packages-galerina/galerina-core-compiler/node_modules/argon2/argon2.cjs"
+      "from": "packages-ts/galerina-core-compiler/dist/stdlib.js",
+      "to": "packages-ts/galerina-core-compiler/node_modules/argon2/argon2.cjs"
     }
   ]
 }

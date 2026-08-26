@@ -41,9 +41,9 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
 | FUNGI-AFFINE-001 | PASSPORT_CONSUMED_TWICE | error | — | 1 | 3 | 7 |
-| FUNGI-AFFINE-002 | AUTHORITY_CONSUMED_TWICE | error | packages-galerina/galerina-core-compiler/src/index.ts:485 | 1 | 5 | 13 |
-| FUNGI-AFFINE-003 | AUTHORITY_PERSISTENCE_FORBIDDEN | error | packages-galerina/galerina-core-compiler/src/index.ts:495 | 1 | 2 | 5 |
-| FUNGI-AFFINE-004 | AUTHORITY_CONTAINMENT_FORBIDDEN | error | packages-galerina/galerina-core-compiler/src/index.ts:505 | 2 | 4 | 2 |
+| FUNGI-AFFINE-002 | AUTHORITY_CONSUMED_TWICE | error | packages-ts/galerina-core-compiler/src/index.ts:485 | 1 | 5 | 13 |
+| FUNGI-AFFINE-003 | AUTHORITY_PERSISTENCE_FORBIDDEN | error | packages-ts/galerina-core-compiler/src/index.ts:495 | 1 | 2 | 5 |
+| FUNGI-AFFINE-004 | AUTHORITY_CONTAINMENT_FORBIDDEN | error | packages-ts/galerina-core-compiler/src/index.ts:505 | 2 | 4 | 2 |
 
 ## AMD (1)
 
@@ -55,7 +55,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-ANTI-ABUSE-001 | UNGOVERNES_BACKGROUND_EXECUTION | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:158 | 0 | 1 | 2 |
+| FUNGI-ANTI-ABUSE-001 | UNGOVERNES_BACKGROUND_EXECUTION | error | packages-ts/galerina-core-compiler/src/security-policy.ts:158 | 0 | 1 | 2 |
 
 ## ARCH (2)
 
@@ -87,25 +87,25 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-ASYNC-001 | AWAIT_EFFECT_NOT_DECLARED | error | packages-galerina/galerina-core-compiler/src/index.ts:2275 | 0 | 0 | 1 |
-| FUNGI-ASYNC-002 | EXTERNAL_AWAIT_MISSING_TIMEOUT | warning | packages-galerina/galerina-core-compiler/src/index.ts:2286 | 0 | 0 | 1 |
-| FUNGI-ASYNC-003 | ORPHANED_TASK | error | packages-galerina/galerina-core-compiler/src/index.ts:2297 | 0 | 0 | 0 |
-| FUNGI-ASYNC-004 | UNVALIDATED_EXTERNAL_RESULT | warning | packages-galerina/galerina-core-compiler/src/index.ts:2308 | 0 | 0 | 0 |
-| FUNGI-ASYNC-005 | FN_IN_ASYNCFLOW_BODY | error | packages-galerina/galerina-core-compiler/src/index.ts:2319 | 0 | 0 | 0 |
-| FUNGI-ASYNC-006 | ASYNCFLOW_MISSING_CONTRACT | error | packages-galerina/galerina-core-compiler/src/index.ts:2330 | 0 | 0 | 0 |
+| FUNGI-ASYNC-001 | AWAIT_EFFECT_NOT_DECLARED | error | packages-ts/galerina-core-compiler/src/index.ts:2275 | 0 | 0 | 1 |
+| FUNGI-ASYNC-002 | EXTERNAL_AWAIT_MISSING_TIMEOUT | warning | packages-ts/galerina-core-compiler/src/index.ts:2286 | 0 | 0 | 1 |
+| FUNGI-ASYNC-003 | ORPHANED_TASK | error | packages-ts/galerina-core-compiler/src/index.ts:2297 | 0 | 0 | 0 |
+| FUNGI-ASYNC-004 | UNVALIDATED_EXTERNAL_RESULT | warning | packages-ts/galerina-core-compiler/src/index.ts:2308 | 0 | 0 | 0 |
+| FUNGI-ASYNC-005 | FN_IN_ASYNCFLOW_BODY | error | packages-ts/galerina-core-compiler/src/index.ts:2319 | 0 | 0 | 0 |
+| FUNGI-ASYNC-006 | ASYNCFLOW_MISSING_CONTRACT | error | packages-ts/galerina-core-compiler/src/index.ts:2330 | 0 | 0 | 0 |
 
 ## ATTR (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-ATTR-001 | UNVERIFIED_ATTRIBUTE_BLOCK | error | packages-galerina/galerina-core-compiler/src/attribute-checker.ts:45 | 0 | 2 | 2 |
-| FUNGI-ATTR-002 | UNKNOWN_ATTRIBUTE_DIRECTIVE | error | packages-galerina/galerina-core-compiler/src/attribute-checker.ts:54 | 0 | 1 | 0 |
+| FUNGI-ATTR-001 | UNVERIFIED_ATTRIBUTE_BLOCK | error | packages-ts/galerina-core-compiler/src/attribute-checker.ts:45 | 0 | 2 | 2 |
+| FUNGI-ATTR-002 | UNKNOWN_ATTRIBUTE_DIRECTIVE | error | packages-ts/galerina-core-compiler/src/attribute-checker.ts:54 | 0 | 1 | 0 |
 
 ## AU (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-AU-001 | EPILOGUE_NONE_ON_HIGH_TRUST | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:718 | 0 | 0 | 0 |
+| FUNGI-AU-001 | EPILOGUE_NONE_ON_HIGH_TRUST | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:718 | 0 | 0 | 0 |
 
 ## AUDIT (7)
 
@@ -136,7 +136,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-BACKEND-001 | BACKEND_ERROR | error | packages-galerina/galerina-core-compiler/src/index.ts:2250 | 1 | 2 | 3 |
+| FUNGI-BACKEND-001 | BACKEND_ERROR | error | packages-ts/galerina-core-compiler/src/index.ts:2250 | 1 | 2 | 3 |
 
 ## BF (2)
 
@@ -149,31 +149,31 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-BINDING-001 | IMMUTABLE_LET_REASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1785 | 1 | 1 | 6 |
-| FUNGI-BINDING-002 | READONLY_REASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1793 | 1 | 1 | 2 |
-| FUNGI-BINDING-003 | READONLY_PROPERTY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1801 | 1 | 1 | 3 |
-| FUNGI-BINDING-004 | MUT_IN_PURE_CONTEXT | error | packages-galerina/galerina-core-compiler/src/index.ts:1809 | 2 | 6 | 5 |
-| FUNGI-BINDING-005 | IMMUTABLE_BINDING_REASSIGNED | error | packages-galerina/galerina-core-compiler/src/index.ts:1817 | 1 | 45 | 1 |
-| FUNGI-BINDING-006 | MUT_TYPE_CHANGE | error | packages-galerina/galerina-core-compiler/src/index.ts:1825 | 0 | 1 | 0 |
+| FUNGI-BINDING-001 | IMMUTABLE_LET_REASSIGNMENT | error | packages-ts/galerina-core-compiler/src/index.ts:1785 | 1 | 1 | 6 |
+| FUNGI-BINDING-002 | READONLY_REASSIGNMENT | error | packages-ts/galerina-core-compiler/src/index.ts:1793 | 1 | 1 | 2 |
+| FUNGI-BINDING-003 | READONLY_PROPERTY_MUTATION | error | packages-ts/galerina-core-compiler/src/index.ts:1801 | 1 | 1 | 3 |
+| FUNGI-BINDING-004 | MUT_IN_PURE_CONTEXT | error | packages-ts/galerina-core-compiler/src/index.ts:1809 | 2 | 6 | 5 |
+| FUNGI-BINDING-005 | IMMUTABLE_BINDING_REASSIGNED | error | packages-ts/galerina-core-compiler/src/index.ts:1817 | 1 | 45 | 1 |
+| FUNGI-BINDING-006 | MUT_TYPE_CHANGE | error | packages-ts/galerina-core-compiler/src/index.ts:1825 | 0 | 1 | 0 |
 
 ## BLOCK (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-BLOCK-001 | UNKNOWN_CONTENT_BLOCK_TYPE | error | packages-galerina/galerina-core-compiler/src/index.ts:1917 | 1 | 2 | 2 |
-| FUNGI-BLOCK-002 | UNCLOSED_CONTENT_BLOCK | error | packages-galerina/galerina-core-compiler/src/index.ts:1925 | 1 | 2 | 1 |
-| FUNGI-BLOCK-003 | MISMATCHED_CONTENT_BLOCK_MARKER | error | packages-galerina/galerina-core-compiler/src/index.ts:1933 | 0 | 0 | 0 |
-| FUNGI-BLOCK-004 | SECRET_IN_CONTENT_BLOCK | error | packages-galerina/galerina-core-compiler/src/index.ts:1941 | 0 | 0 | 0 |
+| FUNGI-BLOCK-001 | UNKNOWN_CONTENT_BLOCK_TYPE | error | packages-ts/galerina-core-compiler/src/index.ts:1917 | 1 | 2 | 2 |
+| FUNGI-BLOCK-002 | UNCLOSED_CONTENT_BLOCK | error | packages-ts/galerina-core-compiler/src/index.ts:1925 | 1 | 2 | 1 |
+| FUNGI-BLOCK-003 | MISMATCHED_CONTENT_BLOCK_MARKER | error | packages-ts/galerina-core-compiler/src/index.ts:1933 | 0 | 0 | 0 |
+| FUNGI-BLOCK-004 | SECRET_IN_CONTENT_BLOCK | error | packages-ts/galerina-core-compiler/src/index.ts:1941 | 0 | 0 | 0 |
 
 ## BOOL (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-BOOL-BOUNDARY-001 | FAILED_CLOSED | error | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:12 | 1 | 2 | 3 |
-| FUNGI-BOOL-BOUNDARY-002 | UNKNOWN_REASON | info | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:15 | 1 | 1 | 0 |
-| FUNGI-BOOL-BOUNDARY-003 | INVALID_INPUT | error | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:18 | 1 | 1 | 0 |
-| FUNGI-BOOL-BOUNDARY-004 | MISSING_BOUNDARY_NAME | error | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:21 | 1 | 1 | 0 |
-| FUNGI-BOOL-BOUNDARY-005 | RESULT_MISUSED | error | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:24 | 1 | 1 | 2 |
+| FUNGI-BOOL-BOUNDARY-001 | FAILED_CLOSED | error | packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:12 | 1 | 2 | 3 |
+| FUNGI-BOOL-BOUNDARY-002 | UNKNOWN_REASON | info | packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:15 | 1 | 1 | 0 |
+| FUNGI-BOOL-BOUNDARY-003 | INVALID_INPUT | error | packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:18 | 1 | 1 | 0 |
+| FUNGI-BOOL-BOUNDARY-004 | MISSING_BOUNDARY_NAME | error | packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:21 | 1 | 1 | 0 |
+| FUNGI-BOOL-BOUNDARY-005 | RESULT_MISUSED | error | packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:24 | 1 | 1 | 2 |
 
 ## BORDER (5)
 
@@ -203,7 +203,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-BUILD-001 | NON_DETERMINISTIC_BUILD | error | packages-galerina/galerina-core-compiler/src/index.ts:2241 | 0 | 4 | 5 |
+| FUNGI-BUILD-001 | NON_DETERMINISTIC_BUILD | error | packages-ts/galerina-core-compiler/src/index.ts:2241 | 0 | 4 | 5 |
 | FUNGI-BUILD-002 | — | — | — | 0 | 0 | 2 |
 | FUNGI-BUILD-005 | — | — | — | 0 | 0 | 2 |
 
@@ -211,11 +211,11 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-BYTE-001 | BYTE_OUT_OF_RANGE | error | packages-galerina/galerina-core-compiler/src/index.ts:2046 | 0 | 1 | 4 |
-| FUNGI-BYTE-002 | BYTE_OVERFLOW | error | packages-galerina/galerina-core-compiler/src/index.ts:2054 | 0 | 0 | 0 |
-| FUNGI-BYTE-003 | IMPLICIT_BYTE_STRING_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:2062 | 0 | 0 | 0 |
-| FUNGI-BYTE-004 | RAW_BYTES_LOGGED | error | packages-galerina/galerina-core-compiler/src/index.ts:2070 | 0 | 1 | 0 |
-| FUNGI-BYTE-005 | UNBOUNDED_BYTES_READ | error | packages-galerina/galerina-core-compiler/src/index.ts:2078 | 0 | 0 | 0 |
+| FUNGI-BYTE-001 | BYTE_OUT_OF_RANGE | error | packages-ts/galerina-core-compiler/src/index.ts:2046 | 0 | 1 | 4 |
+| FUNGI-BYTE-002 | BYTE_OVERFLOW | error | packages-ts/galerina-core-compiler/src/index.ts:2054 | 0 | 0 | 0 |
+| FUNGI-BYTE-003 | IMPLICIT_BYTE_STRING_CONVERSION | error | packages-ts/galerina-core-compiler/src/index.ts:2062 | 0 | 0 | 0 |
+| FUNGI-BYTE-004 | RAW_BYTES_LOGGED | error | packages-ts/galerina-core-compiler/src/index.ts:2070 | 0 | 1 | 0 |
+| FUNGI-BYTE-005 | UNBOUNDED_BYTES_READ | error | packages-ts/galerina-core-compiler/src/index.ts:2078 | 0 | 0 | 0 |
 
 ## CAP (2)
 
@@ -234,10 +234,10 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-CHAR-001 | CHAR_BYTE_CONFUSION | error | packages-galerina/galerina-core-compiler/src/index.ts:2003 | 0 | 1 | 4 |
-| FUNGI-CHAR-002 | INVALID_CHAR_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:2011 | 0 | 0 | 0 |
-| FUNGI-CHAR-003 | MULTI_CHAR_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:2019 | 0 | 4 | 0 |
-| FUNGI-CHAR-004 | IMPLICIT_CHAR_NUMBER_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:2027 | 0 | 0 | 0 |
+| FUNGI-CHAR-001 | CHAR_BYTE_CONFUSION | error | packages-ts/galerina-core-compiler/src/index.ts:2003 | 0 | 1 | 4 |
+| FUNGI-CHAR-002 | INVALID_CHAR_LITERAL | error | packages-ts/galerina-core-compiler/src/index.ts:2011 | 0 | 0 | 0 |
+| FUNGI-CHAR-003 | MULTI_CHAR_LITERAL | error | packages-ts/galerina-core-compiler/src/index.ts:2019 | 0 | 4 | 0 |
+| FUNGI-CHAR-004 | IMPLICIT_CHAR_NUMBER_CONVERSION | error | packages-ts/galerina-core-compiler/src/index.ts:2027 | 0 | 0 | 0 |
 
 ## CHECK (2)
 
@@ -250,7 +250,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-CLI-REDACT-001 | — | — | packages-galerina/galerina-core-cli/src/security.ts:15 | 0 | 1 | 0 |
+| FUNGI-CLI-REDACT-001 | — | — | packages-ts/galerina-core-cli/src/security.ts:15 | 0 | 1 | 0 |
 
 ## COMMAND (2)
 
@@ -271,7 +271,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-COMPUTE-001 | COMPUTE_TARGET_INCOMPATIBLE_PATTERN | warning | packages-galerina/galerina-core-compiler/src/index.ts:2220 | 0 | 2 | 3 |
+| FUNGI-COMPUTE-001 | COMPUTE_TARGET_INCOMPATIBLE_PATTERN | warning | packages-ts/galerina-core-compiler/src/index.ts:2220 | 0 | 2 | 3 |
 | FUNGI-COMPUTE-002 | — | — | — | 0 | 0 | 1 |
 | FUNGI-COMPUTE-003 | — | — | — | 0 | 0 | 1 |
 | FUNGI-COMPUTE-004 | — | — | — | 0 | 0 | 1 |
@@ -324,7 +324,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-CONTEXT-001 | REQUIRED_CONTEXT_NOT_ACCESSED | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:229 | 1 | 35 | 12 |
+| FUNGI-CONTEXT-001 | REQUIRED_CONTEXT_NOT_ACCESSED | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:229 | 1 | 35 | 12 |
 
 ## CONTRACT (7)
 
@@ -342,7 +342,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-CRYPTO-PQ-001 | SIGN_EFFECT_NOT_POST_QUANTUM | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:381 | 1 | 6 | 1 |
+| FUNGI-CRYPTO-PQ-001 | SIGN_EFFECT_NOT_POST_QUANTUM | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:381 | 1 | 6 | 1 |
 
 ## DAG (2)
 
@@ -355,11 +355,11 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-DECISION-001 | INVALID_DECISION | error | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:12 | 1 | 1 | 3 |
-| FUNGI-DECISION-002 | EMPTY_REASON | error | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:15 | 1 | 1 | 0 |
-| FUNGI-DECISION-003 | EMPTY_UNKNOWN_REASONS | error | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:18 | 1 | 1 | 0 |
-| FUNGI-DECISION-004 | DECISION_FAILED_CLOSED | error | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:21 | 1 | 1 | 0 |
-| FUNGI-DECISION-005 | EMPTY_COMBINE | warning | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:26 | 1 | 1 | 2 |
+| FUNGI-DECISION-001 | INVALID_DECISION | error | packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts:12 | 1 | 1 | 3 |
+| FUNGI-DECISION-002 | EMPTY_REASON | error | packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts:15 | 1 | 1 | 0 |
+| FUNGI-DECISION-003 | EMPTY_UNKNOWN_REASONS | error | packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts:18 | 1 | 1 | 0 |
+| FUNGI-DECISION-004 | DECISION_FAILED_CLOSED | error | packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts:21 | 1 | 1 | 0 |
+| FUNGI-DECISION-005 | EMPTY_COMBINE | warning | packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts:26 | 1 | 1 | 2 |
 
 ## DENIAL (2)
 
@@ -393,16 +393,16 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-EC-001 | ECONOMICS_COST_OVERFLOW | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:694 | 0 | 0 | 0 |
-| FUNGI-EC-002 | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:702 | 0 | 0 | 0 |
+| FUNGI-EC-001 | ECONOMICS_COST_OVERFLOW | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:694 | 0 | 0 | 0 |
+| FUNGI-EC-002 | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:702 | 0 | 0 | 0 |
 
 ## ECON (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-ECON-001 | BUDGET_EXCEEDED | warning | packages-galerina/galerina-core-compiler/src/index.ts:1305 | 0 | 3 | 0 |
-| FUNGI-ECON-002 | LINEAGE_MISSING | info | packages-galerina/galerina-core-compiler/src/index.ts:1315 | 0 | 0 | 0 |
-| FUNGI-ECON-003 | AI_MODEL_UNAPPROVED | error | packages-galerina/galerina-core-compiler/src/index.ts:1325 | 0 | 0 | 0 |
+| FUNGI-ECON-001 | BUDGET_EXCEEDED | warning | packages-ts/galerina-core-compiler/src/index.ts:1305 | 0 | 3 | 0 |
+| FUNGI-ECON-002 | LINEAGE_MISSING | info | packages-ts/galerina-core-compiler/src/index.ts:1315 | 0 | 0 | 0 |
+| FUNGI-ECON-003 | AI_MODEL_UNAPPROVED | error | packages-ts/galerina-core-compiler/src/index.ts:1325 | 0 | 0 | 0 |
 
 ## EFFECT (15)
 
@@ -413,8 +413,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-EFFECT-002 | TRANSITIVE_EFFECT_NOT_DECLARED | error | — | 2 | 31 | 17 |
 | FUNGI-EFFECT-003 | EFFECT_BOUNDARY_VIOLATION | error | — | 3 | 49 | 19 |
 | FUNGI-EFFECT-004 | UNKNOWN_EFFECT | error | — | 1 | 57 | 20 |
-| FUNGI-EFFECT-005 | BROAD_ALIAS_USED / DENY_ONLY_EFFECT | warning/error | packages-galerina/galerina-core-compiler/src/index.ts:1365 | 1 | 47 | 9 |
-| FUNGI-EFFECT-006 | DENY_ONLY_EFFECT | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:1382 | 1 | 21 | 15 |
+| FUNGI-EFFECT-005 | BROAD_ALIAS_USED / DENY_ONLY_EFFECT | warning/error | packages-ts/galerina-core-compiler/src/index.ts:1365 | 1 | 47 | 9 |
+| FUNGI-EFFECT-006 | DENY_ONLY_EFFECT | error/warning | packages-ts/galerina-core-compiler/src/index.ts:1382 | 1 | 21 | 15 |
 | FUNGI-EFFECT-007 | OVERDECLARED_EFFECT | warning | — | 1 | 20 | 0 |
 | FUNGI-EFFECT-008 | PRIVILEGED_EFFECT_ON_PLAIN_FLOW | warning | — | 1 | 12 | 0 |
 | FUNGI-EFFECT-009 | NON_CANONICAL_EFFECT | error | — | 1 | 25 | 0 |
@@ -514,49 +514,49 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | ERR_PAYLOAD_TOO_LARGE | — | — | — | 0 | 0 | 1 |
 | ERR_PLAN_NOT_PREFLIGHTED | — | — | — | 1 | 1 | 0 |
 | ERR_REGISTRY | — | — | — | 0 | 1 | 0 |
-| ERR_REGISTRY_DELEGATION_BAD_SIGNATURE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:27 | 2 | 5 | 0 |
-| ERR_REGISTRY_DELEGATION_KEY_MISMATCH | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:29 | 7 | 8 | 0 |
-| ERR_REGISTRY_DELEGATION_MALFORMED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:31 | 1 | 4 | 0 |
-| ERR_REGISTRY_DELEGATION_NOT_ACTIVE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:33 | 1 | 3 | 0 |
-| ERR_REGISTRY_DELEGATION_REVOKED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:35 | 2 | 3 | 0 |
-| ERR_REGISTRY_DELEGATION_ROLE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:37 | 1 | 3 | 0 |
-| ERR_REGISTRY_DELEGATION_STALE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:39 | 1 | 3 | 0 |
-| ERR_REGISTRY_DELEGATION_UNSIGNED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:25 | 2 | 3 | 0 |
-| ERR_REGISTRY_DUPLICATE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:86 | 1 | 2 | 0 |
-| ERR_REGISTRY_HASH_MISMATCH | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:81 | 1 | 3 | 0 |
-| ERR_REGISTRY_INDEX_BAD_SIGNATURE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:78 | 4 | 9 | 0 |
-| ERR_REGISTRY_INDEX_MALFORMED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:85 | 10 | 7 | 0 |
-| ERR_REGISTRY_INDEX_NO_KEY | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:77 | 4 | 5 | 0 |
-| ERR_REGISTRY_INDEX_STALE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:84 | 3 | 4 | 0 |
-| ERR_REGISTRY_INDEX_UNSIGNED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:76 | 3 | 8 | 0 |
-| ERR_REGISTRY_KEYID_MISMATCH | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:82 | 1 | 2 | 0 |
-| ERR_REGISTRY_MANIFEST_BAD_SIGNATURE | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:21 | 2 | 5 | 0 |
-| ERR_REGISTRY_MANIFEST_KEY_MISMATCH | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:25 | 1 | 2 | 0 |
-| ERR_REGISTRY_MANIFEST_MALFORMED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:19 | 1 | 3 | 0 |
-| ERR_REGISTRY_MANIFEST_NO_KEY | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:23 | 2 | 2 | 0 |
-| ERR_REGISTRY_MANIFEST_UNSIGNED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:17 | 2 | 3 | 0 |
-| ERR_REGISTRY_PACKAGE_UNKNOWN | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:79 | 1 | 7 | 0 |
-| ERR_REGISTRY_POLICY_DENIED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:83 | 2 | 5 | 0 |
-| ERR_REGISTRY_RUNTIME_AUTHORITY | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:75 | 11 | 0 | 0 |
-| ERR_REGISTRY_RUNTIME_IO | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:72 | 5 | 3 | 0 |
-| ERR_REGISTRY_RUNTIME_MALFORMED | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:73 | 8 | 0 | 0 |
-| ERR_REGISTRY_VERSION_UNKNOWN | — | — | packages-galerina/galerina-framework-app-kernel/src/registry-index.ts:80 | 1 | 2 | 0 |
+| ERR_REGISTRY_DELEGATION_BAD_SIGNATURE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:27 | 2 | 5 | 0 |
+| ERR_REGISTRY_DELEGATION_KEY_MISMATCH | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:29 | 7 | 8 | 0 |
+| ERR_REGISTRY_DELEGATION_MALFORMED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:31 | 1 | 4 | 0 |
+| ERR_REGISTRY_DELEGATION_NOT_ACTIVE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:33 | 1 | 3 | 0 |
+| ERR_REGISTRY_DELEGATION_REVOKED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:35 | 2 | 3 | 0 |
+| ERR_REGISTRY_DELEGATION_ROLE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:37 | 1 | 3 | 0 |
+| ERR_REGISTRY_DELEGATION_STALE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:39 | 1 | 3 | 0 |
+| ERR_REGISTRY_DELEGATION_UNSIGNED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-authority.ts:25 | 2 | 3 | 0 |
+| ERR_REGISTRY_DUPLICATE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:86 | 1 | 2 | 0 |
+| ERR_REGISTRY_HASH_MISMATCH | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:81 | 1 | 3 | 0 |
+| ERR_REGISTRY_INDEX_BAD_SIGNATURE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:78 | 4 | 9 | 0 |
+| ERR_REGISTRY_INDEX_MALFORMED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:85 | 10 | 7 | 0 |
+| ERR_REGISTRY_INDEX_NO_KEY | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:77 | 4 | 5 | 0 |
+| ERR_REGISTRY_INDEX_STALE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:84 | 3 | 4 | 0 |
+| ERR_REGISTRY_INDEX_UNSIGNED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:76 | 3 | 8 | 0 |
+| ERR_REGISTRY_KEYID_MISMATCH | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:82 | 1 | 2 | 0 |
+| ERR_REGISTRY_MANIFEST_BAD_SIGNATURE | — | — | packages-ts/galerina-framework-app-kernel/src/registry-package-manifest.ts:21 | 2 | 5 | 0 |
+| ERR_REGISTRY_MANIFEST_KEY_MISMATCH | — | — | packages-ts/galerina-framework-app-kernel/src/registry-package-manifest.ts:25 | 1 | 2 | 0 |
+| ERR_REGISTRY_MANIFEST_MALFORMED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-package-manifest.ts:19 | 1 | 3 | 0 |
+| ERR_REGISTRY_MANIFEST_NO_KEY | — | — | packages-ts/galerina-framework-app-kernel/src/registry-package-manifest.ts:23 | 2 | 2 | 0 |
+| ERR_REGISTRY_MANIFEST_UNSIGNED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-package-manifest.ts:17 | 2 | 3 | 0 |
+| ERR_REGISTRY_PACKAGE_UNKNOWN | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:79 | 1 | 7 | 0 |
+| ERR_REGISTRY_POLICY_DENIED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:83 | 2 | 5 | 0 |
+| ERR_REGISTRY_RUNTIME_AUTHORITY | — | — | packages-ts/galerina-framework-app-kernel/src/registry-runtime.ts:75 | 11 | 0 | 0 |
+| ERR_REGISTRY_RUNTIME_IO | — | — | packages-ts/galerina-framework-app-kernel/src/registry-runtime.ts:72 | 5 | 3 | 0 |
+| ERR_REGISTRY_RUNTIME_MALFORMED | — | — | packages-ts/galerina-framework-app-kernel/src/registry-runtime.ts:73 | 8 | 0 | 0 |
+| ERR_REGISTRY_VERSION_UNKNOWN | — | — | packages-ts/galerina-framework-app-kernel/src/registry-index.ts:80 | 1 | 2 | 0 |
 | ERR_REPEAT_THRESHOLD | — | — | — | 0 | 0 | 0 |
-| ERR_RUNTIME_AWAIT_COMPLETION | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:41 | 1 | 2 | 0 |
-| ERR_RUNTIME_AWAIT_CONCURRENCY | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:37 | 1 | 2 | 0 |
-| ERR_RUNTIME_AWAIT_EVENT | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:49 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_PLAN_SHAPE | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:9 | 1 | 2 | 0 |
-| ERR_RUNTIME_AWAIT_PLAN_VERSION | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:13 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_SCOPE_ID | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:17 | 1 | 2 | 0 |
-| ERR_RUNTIME_AWAIT_STATE | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:45 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_TASK_DUPLICATE | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:29 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_TASK_ID | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:25 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_TASK_STATE | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:61 | 1 | 1 | 2 |
-| ERR_RUNTIME_AWAIT_TASKS | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:21 | 1 | 2 | 0 |
-| ERR_RUNTIME_AWAIT_TERMINAL_STATE | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:65 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_TIME_REGRESSION | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:53 | 1 | 1 | 0 |
-| ERR_RUNTIME_AWAIT_TIMEOUT | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:33 | 1 | 2 | 0 |
-| ERR_RUNTIME_AWAIT_UNKNOWN_TASK | — | — | packages-galerina/galerina-core-runtime/src/structured-await.ts:57 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_COMPLETION | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:41 | 1 | 2 | 0 |
+| ERR_RUNTIME_AWAIT_CONCURRENCY | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:37 | 1 | 2 | 0 |
+| ERR_RUNTIME_AWAIT_EVENT | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:49 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_PLAN_SHAPE | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:9 | 1 | 2 | 0 |
+| ERR_RUNTIME_AWAIT_PLAN_VERSION | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:13 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_SCOPE_ID | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:17 | 1 | 2 | 0 |
+| ERR_RUNTIME_AWAIT_STATE | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:45 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_TASK_DUPLICATE | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:29 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_TASK_ID | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:25 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_TASK_STATE | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:61 | 1 | 1 | 2 |
+| ERR_RUNTIME_AWAIT_TASKS | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:21 | 1 | 2 | 0 |
+| ERR_RUNTIME_AWAIT_TERMINAL_STATE | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:65 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_TIME_REGRESSION | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:53 | 1 | 1 | 0 |
+| ERR_RUNTIME_AWAIT_TIMEOUT | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:33 | 1 | 2 | 0 |
+| ERR_RUNTIME_AWAIT_UNKNOWN_TASK | — | — | packages-ts/galerina-core-runtime/src/structured-await.ts:57 | 1 | 1 | 0 |
 | ERR_SCHEMA | — | — | — | 1 | 1 | 0 |
 | ERR_SCHEMA_UNSUPPORTED_INPUT_TYPE | — | — | — | 2 | 0 | 0 |
 | ERR_SIZE_EXCEEDED | — | — | — | 0 | 0 | 0 |
@@ -582,11 +582,11 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-EVENT-001 | EVENT_NOT_DECLARED | error | packages-galerina/galerina-core-compiler/src/event-checker.ts:39 | 1 | 37 | 9 |
-| FUNGI-EVENT-002 | EVENT_NEVER_EMITTED | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:46 | 1 | 28 | 4 |
-| FUNGI-EVENT-003 | CONTRACT_EMITS_UNDECLARED_EVENT | error | packages-galerina/galerina-core-compiler/src/event-checker.ts:53 | 1 | 13 | 2 |
-| FUNGI-EVENT-004 | DUPLICATE_EVENT_EMISSION | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:60 | 1 | 14 | 2 |
-| FUNGI-EVENT-005 | EVENT_EMITTED_NOT_IN_CONTRACT | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:67 | 1 | 15 | 0 |
+| FUNGI-EVENT-001 | EVENT_NOT_DECLARED | error | packages-ts/galerina-core-compiler/src/event-checker.ts:39 | 1 | 37 | 9 |
+| FUNGI-EVENT-002 | EVENT_NEVER_EMITTED | warning | packages-ts/galerina-core-compiler/src/event-checker.ts:46 | 1 | 28 | 4 |
+| FUNGI-EVENT-003 | CONTRACT_EMITS_UNDECLARED_EVENT | error | packages-ts/galerina-core-compiler/src/event-checker.ts:53 | 1 | 13 | 2 |
+| FUNGI-EVENT-004 | DUPLICATE_EVENT_EMISSION | warning | packages-ts/galerina-core-compiler/src/event-checker.ts:60 | 1 | 14 | 2 |
+| FUNGI-EVENT-005 | EVENT_EMITTED_NOT_IN_CONTRACT | warning | packages-ts/galerina-core-compiler/src/event-checker.ts:67 | 1 | 15 | 0 |
 
 ## EVIDENCE (2)
 
@@ -695,14 +695,14 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 |---|---|---|---|---|---|---|
 | FUNGI-GATE-001 | GATE_UNKNOWN_CONDITION | — | — | 1 | 13 | 0 |
 | FUNGI-GATE-002 | GATE_WRAPS_PURE_FLOW | — | — | 1 | 12 | 0 |
-| FUNGI-GATE-003 | GATE_ANNOTATION_REQUIRED | error | packages-galerina/galerina-core-compiler/src/index.ts:526 | 0 | 1 | 0 |
+| FUNGI-GATE-003 | GATE_ANNOTATION_REQUIRED | error | packages-ts/galerina-core-compiler/src/index.ts:526 | 0 | 1 | 0 |
 
 ## GATELANG (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-GATELANG-001 | MALFORMED_GATE_HEADER | error | packages-galerina/galerina-core-compiler/src/gate-parser.ts:28 | 0 | 9 | 2 |
-| FUNGI-GATELANG-002 | GATE_PRODUCTION_EMIT_GATED_ON_BACKSTOP | error | packages-galerina/galerina-core-compiler/src/gate-parser.ts:42 | 0 | 22 | 12 |
+| FUNGI-GATELANG-001 | MALFORMED_GATE_HEADER | error | packages-ts/galerina-core-compiler/src/gate-parser.ts:28 | 0 | 9 | 2 |
+| FUNGI-GATELANG-002 | GATE_PRODUCTION_EMIT_GATED_ON_BACKSTOP | error | packages-ts/galerina-core-compiler/src/gate-parser.ts:42 | 0 | 22 | 12 |
 
 ## GEN (1)
 
@@ -714,33 +714,33 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-GOV-001 | INTENT_BEHAVIOR_MISMATCH | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:502 | 2 | 23 | 3 |
+| FUNGI-GOV-001 | INTENT_BEHAVIOR_MISMATCH | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:502 | 2 | 23 | 3 |
 | FUNGI-GOV-002 | MISSING_AUDIT_FOR_GOVERNED_SINK | — | — | 2 | 34 | 6 |
-| FUNGI-GOV-003 | PROTECTED_DATA_IN_RESPONSE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:209 | 1 | 60 | 26 |
+| FUNGI-GOV-003 | PROTECTED_DATA_IN_RESPONSE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:209 | 1 | 60 | 26 |
 | FUNGI-GOV-004 | DENIED_TARGET_SELECTED | — | — | 1 | 14 | 4 |
-| FUNGI-GOV-005 | POLICY_PURPOSE_MISMATCH | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:528 | 2 | 17 | 12 |
-| FUNGI-GOV-006 | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:494 | 1 | 11 | 0 |
-| FUNGI-GOV-007 | AUTHORITY_BLOCK_MISSING_REASON | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:536 | 2 | 10 | 1 |
+| FUNGI-GOV-005 | POLICY_PURPOSE_MISMATCH | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:528 | 2 | 17 | 12 |
+| FUNGI-GOV-006 | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:494 | 1 | 11 | 0 |
+| FUNGI-GOV-007 | AUTHORITY_BLOCK_MISSING_REASON | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:536 | 2 | 10 | 1 |
 | FUNGI-GOV-008 | — | — | — | 0 | 0 | 1 |
-| FUNGI-GOV-009 | PRIVILEGED_FLOW_MISSING_CAPABILITY | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:557 | 1 | 8 | 2 |
+| FUNGI-GOV-009 | PRIVILEGED_FLOW_MISSING_CAPABILITY | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:557 | 1 | 8 | 2 |
 | FUNGI-GOV-010 | INTENT_MISSING_ON_SECURE_FLOW | — | — | 3 | 31 | 7 |
-| FUNGI-GOV-011 | UNKNOWN_CONTRACT_SET | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:237 | 1 | 29 | 4 |
-| FUNGI-GOV-012 | CONTRACT_SET_REQUIREMENT_NOT_MET | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:245 | 1 | 29 | 4 |
-| FUNGI-GOV-013 | BOUNDARY_VIOLATION | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:518 | 1 | 1 | 1 |
-| FUNGI-GOV-014 | MISSING_FALLBACK_TARGET | warning | packages-galerina/galerina-core-compiler/src/index.ts:1335 | 0 | 4 | 0 |
+| FUNGI-GOV-011 | UNKNOWN_CONTRACT_SET | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:237 | 1 | 29 | 4 |
+| FUNGI-GOV-012 | CONTRACT_SET_REQUIREMENT_NOT_MET | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:245 | 1 | 29 | 4 |
+| FUNGI-GOV-013 | BOUNDARY_VIOLATION | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:518 | 1 | 1 | 1 |
+| FUNGI-GOV-014 | MISSING_FALLBACK_TARGET | warning | packages-ts/galerina-core-compiler/src/index.ts:1335 | 0 | 4 | 0 |
 | FUNGI-GOV-015 | EPILOGUE_INVALID_STRATEGY | — | — | 1 | 12 | 0 |
 | FUNGI-GOV-016 | EPILOGUE_INVALID_FAILURE_ACTION | — | — | 1 | 4 | 0 |
 | FUNGI-GOV-017 | INVALID_PHYSICAL_HARDENING_VALUE | — | — | 2 | 12 | 0 |
 | FUNGI-GOV-018 | MANUAL_LIABILITY_DECLARATION | — | — | 1 | 9 | 0 |
-| FUNGI-GOV-019 | LIMITS_UNKNOWN_FIELD | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:478 | 1 | 18 | 1 |
-| FUNGI-GOV-020 | AUTHORITY_OVERLY_BROAD | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:486 | 1 | 9 | 0 |
+| FUNGI-GOV-019 | LIMITS_UNKNOWN_FIELD | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:478 | 1 | 18 | 1 |
+| FUNGI-GOV-020 | AUTHORITY_OVERLY_BROAD | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:486 | 1 | 9 | 0 |
 | FUNGI-GOV-021 | DOMAIN_GUARD_NOT_FOUND | — | — | 1 | 4 | 0 |
 | FUNGI-GOV-022 | DOMAIN_GUARD_POLICY_VIOLATION | — | — | 1 | 28 | 0 |
 | FUNGI-GOV-023 | PHYSICAL_HARDENING_ON_LOW_RISK_FLOW | — | — | 1 | 3 | 0 |
-| FUNGI-GOV-024 | SANDBOX_REQUIRED_BUT_UNAVAILABLE | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:747 | 1 | 10 | 4 |
-| FUNGI-GOV-025 | PROTECTED_EGRESS_AUTHORITY_MISSING | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:544 | 1 | 7 | 4 |
+| FUNGI-GOV-024 | SANDBOX_REQUIRED_BUT_UNAVAILABLE | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:747 | 1 | 10 | 4 |
+| FUNGI-GOV-025 | PROTECTED_EGRESS_AUTHORITY_MISSING | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:544 | 1 | 7 | 4 |
 | FUNGI-GOV-3V | — | — | — | 0 | 2 | 0 |
-| FUNGI-GOV-3VL-001 | INDETERMINATE_COLLAPSED_TO_DENY | warning | packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:119 | 2 | 38 | 13 |
+| FUNGI-GOV-3VL-001 | INDETERMINATE_COLLAPSED_TO_DENY | warning | packages-ts/galerina-tower-citizen/src/three-valued-governance.ts:119 | 2 | 38 | 13 |
 | FUNGI-GOV-3VL-003 | WILDCARD_OVER_DENY_ON_VERDICT_MATCH | error | — | 1 | 13 | 0 |
 | FUNGI-GOV-3VL-004 | ORDERED_COMPARISON_ON_VERDICT | error | — | 1 | 12 | 1 |
 | FUNGI-GOV-902 | — | — | — | 0 | 0 | 0 |
@@ -762,25 +762,25 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-HALLMARK-001 | RESERVED_TYPE_NAME | error | packages-galerina/galerina-core-compiler/src/index.ts:626 | 1 | 8 | 8 |
-| FUNGI-HALLMARK-002 | NON_ASCII_HALLMARK_NAME | error | packages-galerina/galerina-core-compiler/src/index.ts:636 | 1 | 0 | 2 |
-| FUNGI-HALLMARK-003 | HALLMARK_GATE_REQUIRED | error | packages-galerina/galerina-core-compiler/src/index.ts:645 | 1 | 3 | 2 |
-| FUNGI-HALLMARK-004 | UNKNOWN_HALLMARK_OP | error | packages-galerina/galerina-core-compiler/src/index.ts:655 | 1 | 5 | 2 |
-| FUNGI-HALLMARK-005 | UNDECLARED_HALLMARK_OP | error | packages-galerina/galerina-core-compiler/src/index.ts:664 | 1 | 5 | 2 |
+| FUNGI-HALLMARK-001 | RESERVED_TYPE_NAME | error | packages-ts/galerina-core-compiler/src/index.ts:626 | 1 | 8 | 8 |
+| FUNGI-HALLMARK-002 | NON_ASCII_HALLMARK_NAME | error | packages-ts/galerina-core-compiler/src/index.ts:636 | 1 | 0 | 2 |
+| FUNGI-HALLMARK-003 | HALLMARK_GATE_REQUIRED | error | packages-ts/galerina-core-compiler/src/index.ts:645 | 1 | 3 | 2 |
+| FUNGI-HALLMARK-004 | UNKNOWN_HALLMARK_OP | error | packages-ts/galerina-core-compiler/src/index.ts:655 | 1 | 5 | 2 |
+| FUNGI-HALLMARK-005 | UNDECLARED_HALLMARK_OP | error | packages-ts/galerina-core-compiler/src/index.ts:664 | 1 | 5 | 2 |
 
 ## HARDEN (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
 | FUNGI-HARDEN-00 | — | — | — | 0 | 1 | 0 |
-| FUNGI-HARDEN-001 | UNKNOWN_RESIDENCY_TIER | error | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:44 | 1 | 2 | 5 |
-| FUNGI-HARDEN-002 | UNKNOWN_ERASE_MODE | error | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:52 | 1 | 0 | 2 |
-| FUNGI-HARDEN-003 | UNKNOWN_TIMING_DISCIPLINE | error | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:60 | 1 | 0 | 1 |
-| FUNGI-HARDEN-004 | HARDENING_LOOSEN_NOT_AUDITED | error | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:68 | 2 | 4 | 7 |
-| FUNGI-HARDEN-005 | RESIDENCY_CEILING_UNHONOURABLE | error | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:76 | 1 | 7 | 12 |
-| FUNGI-HARDEN-006 | SECRET_DEPENDENT_TIMING | warning | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:84 | 1 | 2 | 4 |
-| FUNGI-HARDEN-007 | SPILL_REFUTED | error | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:92 | 2 | 6 | 12 |
-| FUNGI-HARDEN-008 | RESIDENCY_NOT_ENFORCED_AT_RUNTIME | warning | packages-galerina/galerina-core-compiler/src/hardening-residency.ts:106 | 1 | 3 | 1 |
+| FUNGI-HARDEN-001 | UNKNOWN_RESIDENCY_TIER | error | packages-ts/galerina-core-compiler/src/hardening-residency.ts:44 | 1 | 2 | 5 |
+| FUNGI-HARDEN-002 | UNKNOWN_ERASE_MODE | error | packages-ts/galerina-core-compiler/src/hardening-residency.ts:52 | 1 | 0 | 2 |
+| FUNGI-HARDEN-003 | UNKNOWN_TIMING_DISCIPLINE | error | packages-ts/galerina-core-compiler/src/hardening-residency.ts:60 | 1 | 0 | 1 |
+| FUNGI-HARDEN-004 | HARDENING_LOOSEN_NOT_AUDITED | error | packages-ts/galerina-core-compiler/src/hardening-residency.ts:68 | 2 | 4 | 7 |
+| FUNGI-HARDEN-005 | RESIDENCY_CEILING_UNHONOURABLE | error | packages-ts/galerina-core-compiler/src/hardening-residency.ts:76 | 1 | 7 | 12 |
+| FUNGI-HARDEN-006 | SECRET_DEPENDENT_TIMING | warning | packages-ts/galerina-core-compiler/src/hardening-residency.ts:84 | 1 | 2 | 4 |
+| FUNGI-HARDEN-007 | SPILL_REFUTED | error | packages-ts/galerina-core-compiler/src/hardening-residency.ts:92 | 2 | 6 | 12 |
+| FUNGI-HARDEN-008 | RESIDENCY_NOT_ENFORCED_AT_RUNTIME | warning | packages-ts/galerina-core-compiler/src/hardening-residency.ts:106 | 1 | 3 | 1 |
 
 ## HINT (1)
 
@@ -792,16 +792,16 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-HW-001 | QUANTUM_TARGET_REQUIRES_FORMAL_PROOF | error | packages-galerina/galerina-core-compiler/src/proof-graph.ts:421 | 0 | 23 | 2 |
-| FUNGI-HW-002 | SEALED_TARGET_REQUIRES_AUDIT_TRACE | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:435 | 0 | 22 | 1 |
-| FUNGI-HW-003 | ACCELERATOR_PLANE_REQUIRES_ATTESTATION | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:449 | 0 | 2 | 1 |
-| FUNGI-HW-004 | UNKNOWN_HARDWARE_TARGET | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:465 | 0 | 9 | 2 |
+| FUNGI-HW-001 | QUANTUM_TARGET_REQUIRES_FORMAL_PROOF | error | packages-ts/galerina-core-compiler/src/proof-graph.ts:421 | 0 | 23 | 2 |
+| FUNGI-HW-002 | SEALED_TARGET_REQUIRES_AUDIT_TRACE | warning | packages-ts/galerina-core-compiler/src/proof-graph.ts:435 | 0 | 22 | 1 |
+| FUNGI-HW-003 | ACCELERATOR_PLANE_REQUIRES_ATTESTATION | warning | packages-ts/galerina-core-compiler/src/proof-graph.ts:449 | 0 | 2 | 1 |
+| FUNGI-HW-004 | UNKNOWN_HARDWARE_TARGET | warning | packages-ts/galerina-core-compiler/src/proof-graph.ts:465 | 0 | 9 | 2 |
 
 ## ID (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-ID-001 | MANIFEST_VERIFICATION_FAILED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:710 | 0 | 0 | 0 |
+| FUNGI-ID-001 | MANIFEST_VERIFICATION_FAILED | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:710 | 0 | 0 | 0 |
 
 ## IMPORT (8)
 
@@ -835,10 +835,10 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
 | FUNGI-INTENT-001 | — | — | — | 0 | 0 | 6 |
-| FUNGI-INTENT-002 | MISSING_REQUIRED_INTENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1660 | 0 | 0 | 0 |
-| FUNGI-INTENT-003 | UNSAFE_MISSING_REASON_OR_FALLBACK | error | packages-galerina/galerina-core-compiler/src/index.ts:1668 | 0 | 0 | 0 |
-| FUNGI-INTENT-004 | PRIVILEGED_MISSING_CAPABILITY | error | packages-galerina/galerina-core-compiler/src/index.ts:1676 | 0 | 0 | 0 |
-| FUNGI-INTENT-005 | EXPERIMENTAL_IN_PRODUCTION | error | packages-galerina/galerina-core-compiler/src/index.ts:1684 | 0 | 0 | 0 |
+| FUNGI-INTENT-002 | MISSING_REQUIRED_INTENT | error | packages-ts/galerina-core-compiler/src/index.ts:1660 | 0 | 0 | 0 |
+| FUNGI-INTENT-003 | UNSAFE_MISSING_REASON_OR_FALLBACK | error | packages-ts/galerina-core-compiler/src/index.ts:1668 | 0 | 0 | 0 |
+| FUNGI-INTENT-004 | PRIVILEGED_MISSING_CAPABILITY | error | packages-ts/galerina-core-compiler/src/index.ts:1676 | 0 | 0 | 0 |
+| FUNGI-INTENT-005 | EXPERIMENTAL_IN_PRODUCTION | error | packages-ts/galerina-core-compiler/src/index.ts:1684 | 0 | 0 | 0 |
 
 ## INV (5)
 
@@ -880,18 +880,18 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-LAYOUT-001 | UNSUPPORTED_RECORD_LAYOUT | error | packages-galerina/galerina-core-compiler/src/wat-emitter.ts:586 | 0 | 6 | 1 |
+| FUNGI-LAYOUT-001 | UNSUPPORTED_RECORD_LAYOUT | error | packages-ts/galerina-core-compiler/src/wat-emitter.ts:586 | 0 | 6 | 1 |
 
 ## LEX (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-LEX-001 | EXCESSIVE_NESTING | error | packages-galerina/galerina-core-compiler/src/index.ts:81 | 0 | 23 | 2 |
-| FUNGI-LEX-002 | OVERSIZED_TOKEN | error | packages-galerina/galerina-core-compiler/src/index.ts:90 | 0 | 12 | 1 |
-| FUNGI-LEX-003 | INVALID_UNICODE_ESCAPE | error | packages-galerina/galerina-core-compiler/src/index.ts:99 | 0 | 11 | 1 |
-| FUNGI-LEX-004 | FILE_TOO_LARGE | error | packages-galerina/galerina-core-compiler/src/index.ts:108 | 2 | 5 | 0 |
-| FUNGI-LEX-005 | LINE_TOO_LONG | warning | packages-galerina/galerina-core-compiler/src/index.ts:116 | 1 | 9 | 0 |
-| FUNGI-LEX-006 | TOO_MANY_DIAGNOSTICS | error | packages-galerina/galerina-core-compiler/src/index.ts:124 | 1 | 0 | 0 |
+| FUNGI-LEX-001 | EXCESSIVE_NESTING | error | packages-ts/galerina-core-compiler/src/index.ts:81 | 0 | 23 | 2 |
+| FUNGI-LEX-002 | OVERSIZED_TOKEN | error | packages-ts/galerina-core-compiler/src/index.ts:90 | 0 | 12 | 1 |
+| FUNGI-LEX-003 | INVALID_UNICODE_ESCAPE | error | packages-ts/galerina-core-compiler/src/index.ts:99 | 0 | 11 | 1 |
+| FUNGI-LEX-004 | FILE_TOO_LARGE | error | packages-ts/galerina-core-compiler/src/index.ts:108 | 2 | 5 | 0 |
+| FUNGI-LEX-005 | LINE_TOO_LONG | warning | packages-ts/galerina-core-compiler/src/index.ts:116 | 1 | 9 | 0 |
+| FUNGI-LEX-006 | TOO_MANY_DIAGNOSTICS | error | packages-ts/galerina-core-compiler/src/index.ts:124 | 1 | 0 | 0 |
 
 ## LIMIT (1)
 
@@ -903,8 +903,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-LINT-001 | FLOW_EXCESSIVE_NESTING | info | packages-galerina/galerina-core-compiler/src/lint-checker.ts:26 | 1 | 1 | 0 |
-| FUNGI-LINT-002 | UNUSED_BINDING | warning | packages-galerina/galerina-core-compiler/src/lint-checker.ts:149 | 1 | 2 | 0 |
+| FUNGI-LINT-001 | FLOW_EXCESSIVE_NESTING | info | packages-ts/galerina-core-compiler/src/lint-checker.ts:26 | 1 | 1 | 0 |
+| FUNGI-LINT-002 | UNUSED_BINDING | warning | packages-ts/galerina-core-compiler/src/lint-checker.ts:149 | 1 | 2 | 0 |
 | FUNGI-LINT-AUTO-SETTING | — | — | — | 1 | 0 | 0 |
 | FUNGI-LINT-COMMENT | — | — | — | 1 | 0 | 0 |
 | FUNGI-LINT-CONTRACT | — | — | — | 1 | 0 | 0 |
@@ -972,14 +972,14 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-MEMORY-001 | USE_AFTER_MOVE | error | packages-galerina/galerina-core-compiler/src/index.ts:2130 | 0 | 3 | 9 |
-| FUNGI-MEMORY-002 | BORROW_AFTER_MOVE | error | packages-galerina/galerina-core-compiler/src/index.ts:2138 | 0 | 1 | 0 |
-| FUNGI-MEMORY-003 | BORROW_ESCAPES_SCOPE | error | packages-galerina/galerina-core-compiler/src/index.ts:2146 | 0 | 2 | 1 |
-| FUNGI-MEMORY-004 | READONLY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:2154 | 0 | 1 | 0 |
-| FUNGI-MEMORY-005 | MUTABLE_ALIAS | error | packages-galerina/galerina-core-compiler/src/index.ts:2162 | 0 | 2 | 1 |
-| FUNGI-MEMORY-006 | BOUNDS_VIOLATION | error | packages-galerina/galerina-core-compiler/src/index.ts:2170 | 0 | 2 | 2 |
-| FUNGI-MEMORY-007 | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error | packages-galerina/galerina-core-compiler/src/index.ts:2178 | 0 | 1 | 0 |
-| FUNGI-MEMORY-008 | UNSAFE_MEMORY_REQUIRES_FALLBACK | error | packages-galerina/galerina-core-compiler/src/index.ts:2188 | 1 | 11 | 3 |
+| FUNGI-MEMORY-001 | USE_AFTER_MOVE | error | packages-ts/galerina-core-compiler/src/index.ts:2130 | 0 | 3 | 9 |
+| FUNGI-MEMORY-002 | BORROW_AFTER_MOVE | error | packages-ts/galerina-core-compiler/src/index.ts:2138 | 0 | 1 | 0 |
+| FUNGI-MEMORY-003 | BORROW_ESCAPES_SCOPE | error | packages-ts/galerina-core-compiler/src/index.ts:2146 | 0 | 2 | 1 |
+| FUNGI-MEMORY-004 | READONLY_MUTATION | error | packages-ts/galerina-core-compiler/src/index.ts:2154 | 0 | 1 | 0 |
+| FUNGI-MEMORY-005 | MUTABLE_ALIAS | error | packages-ts/galerina-core-compiler/src/index.ts:2162 | 0 | 2 | 1 |
+| FUNGI-MEMORY-006 | BOUNDS_VIOLATION | error | packages-ts/galerina-core-compiler/src/index.ts:2170 | 0 | 2 | 2 |
+| FUNGI-MEMORY-007 | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error | packages-ts/galerina-core-compiler/src/index.ts:2178 | 0 | 1 | 0 |
+| FUNGI-MEMORY-008 | UNSAFE_MEMORY_REQUIRES_FALLBACK | error | packages-ts/galerina-core-compiler/src/index.ts:2188 | 1 | 11 | 3 |
 
 ## MODULE (6)
 
@@ -1012,7 +1012,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 |---|---|---|---|---|---|---|
 | FUNGI-NAME-001 | UNDECLARED_NAME | error | — | 2 | 46 | 8 |
 | FUNGI-NAME-002 | DUPLICATE_NAME | error | — | 9 | 59 | 3 |
-| FUNGI-NAME-003 | CROSS_MODULE_SHADOW | warning | packages-galerina/galerina-core-compiler/src/index.ts:699 | 1 | 11 | 1 |
+| FUNGI-NAME-003 | CROSS_MODULE_SHADOW | warning | packages-ts/galerina-core-compiler/src/index.ts:699 | 1 | 11 | 1 |
 
 ## NAMING (5)
 
@@ -1028,8 +1028,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-NET-001 | NETWORK_DESTINATION_DENIED | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:67 | 0 | 9 | 2 |
-| FUNGI-NET-002 | PRIVATE_RANGE_ACCESS | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:89 | 0 | 3 | 1 |
+| FUNGI-NET-001 | NETWORK_DESTINATION_DENIED | error | packages-ts/galerina-core-compiler/src/security-policy.ts:67 | 0 | 9 | 2 |
+| FUNGI-NET-002 | PRIVATE_RANGE_ACCESS | error | packages-ts/galerina-core-compiler/src/security-policy.ts:89 | 0 | 3 | 1 |
 
 ## NETWORK (8)
 
@@ -1055,18 +1055,18 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-OBS-001 | OBSERVABILITY_ON_PURE_FLOW | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:639 | 1 | 6 | 0 |
+| FUNGI-OBS-001 | OBSERVABILITY_ON_PURE_FLOW | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:639 | 1 | 6 | 0 |
 | FUNGI-OBS-002 | OBSERVABILITY_ACCESSES_PRIVACY_SCOPE | — | — | 1 | 0 | 0 |
 
 ## OMNI (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-OMNI-001 | DIRECT_BOUNDARY_USE | error | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:12 | 1 | 1 | 4 |
-| FUNGI-OMNI-002 | ADVISORY_ONLY_VIOLATED | error | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:15 | 1 | 1 | 1 |
-| FUNGI-OMNI-003 | CONFIDENCE_OUT_OF_RANGE | error | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:18 | 1 | 1 | 1 |
-| FUNGI-OMNI-004 | MALFORMED_EVIDENCE | error | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:21 | 1 | 1 | 1 |
-| FUNGI-OMNI-005 | INVALID_STATE | error | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:24 | 1 | 1 | 3 |
+| FUNGI-OMNI-001 | DIRECT_BOUNDARY_USE | error | packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts:12 | 1 | 1 | 4 |
+| FUNGI-OMNI-002 | ADVISORY_ONLY_VIOLATED | error | packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts:15 | 1 | 1 | 1 |
+| FUNGI-OMNI-003 | CONFIDENCE_OUT_OF_RANGE | error | packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts:18 | 1 | 1 | 1 |
+| FUNGI-OMNI-004 | MALFORMED_EVIDENCE | error | packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts:21 | 1 | 1 | 1 |
+| FUNGI-OMNI-005 | INVALID_STATE | error | packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts:24 | 1 | 1 | 3 |
 
 ## OTHER (1)
 
@@ -1147,20 +1147,20 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-PGRAPH-001 | CYCLE_DETECTED | error | packages-galerina/galerina-devtools-project-graph/src/core/types.ts:82 | 0 | 2 | 0 |
-| FUNGI-PGRAPH-002 | NODE_NOT_FOUND | error | packages-galerina/galerina-devtools-project-graph/src/core/types.ts:90 | 0 | 1 | 0 |
-| FUNGI-PGRAPH-003 | DEPENDENCY_MISSING | error | packages-galerina/galerina-devtools-project-graph/src/core/types.ts:98 | 0 | 2 | 0 |
-| FUNGI-PGRAPH-004 | FIXPOINT_TIMEOUT | error | packages-galerina/galerina-devtools-project-graph/src/core/types.ts:106 | 0 | 1 | 0 |
-| FUNGI-PGRAPH-005 | INVALID_TRANSITION | error | packages-galerina/galerina-devtools-project-graph/src/core/types.ts:114 | 0 | 1 | 0 |
-| FUNGI-PGRAPH-010 | UNDECLARED_EFFECT_IN_GRAPH | error | packages-galerina/galerina-devtools-project-graph/src/graphs/effect-graph.ts:51 | 0 | 2 | 0 |
-| FUNGI-PGRAPH-011 | EFFECT_NOT_INFERRED | error | packages-galerina/galerina-devtools-project-graph/src/graphs/effect-graph.ts:58 | 0 | 0 | 0 |
-| FUNGI-PGRAPH-012 | UNSAFE_EFFECT_IN_SAFE_FLOW | error | packages-galerina/galerina-devtools-project-graph/src/graphs/effect-graph.ts:65 | 0 | 2 | 0 |
-| FUNGI-PGRAPH-013 | TRANSITIVE_EFFECT_UNDECLARED | error | packages-galerina/galerina-devtools-project-graph/src/graphs/effect-graph.ts:72 | 0 | 0 | 0 |
-| FUNGI-PGRAPH-020 | EFFECT_CROSSES_BOUNDARY | error | packages-galerina/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:56 | 0 | 2 | 0 |
-| FUNGI-PGRAPH-021 | SECRET_CROSSES_UNSAFE_BOUNDARY | error | packages-galerina/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:63 | 0 | 2 | 0 |
-| FUNGI-PGRAPH-022 | UNTRUSTED_INPUT_UNVALIDATED | error | packages-galerina/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:70 | 0 | 0 | 0 |
-| FUNGI-PGRAPH-023 | REQUIRED_POLICY_MISSING | error | packages-galerina/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:77 | 0 | 0 | 0 |
-| FUNGI-PGRAPH-030 | CAPABILITY_NOT_GRANTED | error | packages-galerina/galerina-devtools-project-graph/src/graphs/capability-graph.ts:38 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-001 | CYCLE_DETECTED | error | packages-ts/galerina-devtools-project-graph/src/core/types.ts:82 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-002 | NODE_NOT_FOUND | error | packages-ts/galerina-devtools-project-graph/src/core/types.ts:90 | 0 | 1 | 0 |
+| FUNGI-PGRAPH-003 | DEPENDENCY_MISSING | error | packages-ts/galerina-devtools-project-graph/src/core/types.ts:98 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-004 | FIXPOINT_TIMEOUT | error | packages-ts/galerina-devtools-project-graph/src/core/types.ts:106 | 0 | 1 | 0 |
+| FUNGI-PGRAPH-005 | INVALID_TRANSITION | error | packages-ts/galerina-devtools-project-graph/src/core/types.ts:114 | 0 | 1 | 0 |
+| FUNGI-PGRAPH-010 | UNDECLARED_EFFECT_IN_GRAPH | error | packages-ts/galerina-devtools-project-graph/src/graphs/effect-graph.ts:51 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-011 | EFFECT_NOT_INFERRED | error | packages-ts/galerina-devtools-project-graph/src/graphs/effect-graph.ts:58 | 0 | 0 | 0 |
+| FUNGI-PGRAPH-012 | UNSAFE_EFFECT_IN_SAFE_FLOW | error | packages-ts/galerina-devtools-project-graph/src/graphs/effect-graph.ts:65 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-013 | TRANSITIVE_EFFECT_UNDECLARED | error | packages-ts/galerina-devtools-project-graph/src/graphs/effect-graph.ts:72 | 0 | 0 | 0 |
+| FUNGI-PGRAPH-020 | EFFECT_CROSSES_BOUNDARY | error | packages-ts/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:56 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-021 | SECRET_CROSSES_UNSAFE_BOUNDARY | error | packages-ts/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:63 | 0 | 2 | 0 |
+| FUNGI-PGRAPH-022 | UNTRUSTED_INPUT_UNVALIDATED | error | packages-ts/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:70 | 0 | 0 | 0 |
+| FUNGI-PGRAPH-023 | REQUIRED_POLICY_MISSING | error | packages-ts/galerina-devtools-project-graph/src/graphs/boundary-graph.ts:77 | 0 | 0 | 0 |
+| FUNGI-PGRAPH-030 | CAPABILITY_NOT_GRANTED | error | packages-ts/galerina-devtools-project-graph/src/graphs/capability-graph.ts:38 | 0 | 2 | 0 |
 
 ## PHI (1)
 
@@ -1189,22 +1189,22 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-PIPELINE-001 | UNKNOWN_PIPELINE_METHOD | error | packages-galerina/galerina-core-compiler/src/index.ts:1865 | 0 | 0 | 2 |
-| FUNGI-PIPELINE-002 | PIPELINE_TYPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:1873 | 0 | 0 | 0 |
-| FUNGI-PIPELINE-003 | UNHANDLED_FALLIBLE_PIPELINE | error | packages-galerina/galerina-core-compiler/src/index.ts:1881 | 0 | 0 | 0 |
-| FUNGI-PIPELINE-004 | PIPELINE_UNDECLARED_EFFECT | error | packages-galerina/galerina-core-compiler/src/index.ts:1889 | 0 | 0 | 0 |
-| FUNGI-PIPELINE-005 | PIPELINE_READONLY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1897 | 0 | 0 | 0 |
+| FUNGI-PIPELINE-001 | UNKNOWN_PIPELINE_METHOD | error | packages-ts/galerina-core-compiler/src/index.ts:1865 | 0 | 0 | 2 |
+| FUNGI-PIPELINE-002 | PIPELINE_TYPE_MISMATCH | error | packages-ts/galerina-core-compiler/src/index.ts:1873 | 0 | 0 | 0 |
+| FUNGI-PIPELINE-003 | UNHANDLED_FALLIBLE_PIPELINE | error | packages-ts/galerina-core-compiler/src/index.ts:1881 | 0 | 0 | 0 |
+| FUNGI-PIPELINE-004 | PIPELINE_UNDECLARED_EFFECT | error | packages-ts/galerina-core-compiler/src/index.ts:1889 | 0 | 0 | 0 |
+| FUNGI-PIPELINE-005 | PIPELINE_READONLY_MUTATION | error | packages-ts/galerina-core-compiler/src/index.ts:1897 | 0 | 0 | 0 |
 
 ## PKG (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-PKG-001 | CAPABILITY_EXPANDED | error | packages-galerina/galerina-core-compiler/src/index.ts:748 | 1 | 9 | 1 |
-| FUNGI-PKG-002 | UNTRUSTED_REGISTRY | error | packages-galerina/galerina-core-compiler/src/index.ts:758 | 2 | 14 | 1 |
-| FUNGI-PKG-003 | MISSING_HASH | warning | packages-galerina/galerina-core-compiler/src/index.ts:768 | 1 | 33 | 2 |
-| FUNGI-PKG-004 | INSTALL_SCRIPT_DENIED | error | packages-galerina/galerina-core-compiler/src/index.ts:778 | 1 | 10 | 2 |
-| FUNGI-PKG-005 | MISSING_SIGNATURE | warning | packages-galerina/galerina-core-compiler/src/index.ts:788 | 1 | 18 | 2 |
-| FUNGI-PKG-006 | REVOKED_SIGNER | error | packages-galerina/galerina-core-compiler/src/index.ts:798 | 1 | 13 | 1 |
+| FUNGI-PKG-001 | CAPABILITY_EXPANDED | error | packages-ts/galerina-core-compiler/src/index.ts:748 | 1 | 9 | 1 |
+| FUNGI-PKG-002 | UNTRUSTED_REGISTRY | error | packages-ts/galerina-core-compiler/src/index.ts:758 | 2 | 14 | 1 |
+| FUNGI-PKG-003 | MISSING_HASH | warning | packages-ts/galerina-core-compiler/src/index.ts:768 | 1 | 33 | 2 |
+| FUNGI-PKG-004 | INSTALL_SCRIPT_DENIED | error | packages-ts/galerina-core-compiler/src/index.ts:778 | 1 | 10 | 2 |
+| FUNGI-PKG-005 | MISSING_SIGNATURE | warning | packages-ts/galerina-core-compiler/src/index.ts:788 | 1 | 18 | 2 |
+| FUNGI-PKG-006 | REVOKED_SIGNER | error | packages-ts/galerina-core-compiler/src/index.ts:798 | 1 | 13 | 1 |
 
 ## PLAN (2)
 
@@ -1237,8 +1237,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-PRIVACY-001 | PROTECTED_DATA_IN_RESPONSE_PRIVACY_DENY | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:221 | 1 | 23 | 4 |
-| FUNGI-PRIVACY-002 | EMBEDDING_EGRESS_DENIED | error | packages-galerina/galerina-core-compiler/src/gate-parser.ts:45 | 2 | 39 | 16 |
+| FUNGI-PRIVACY-001 | PROTECTED_DATA_IN_RESPONSE_PRIVACY_DENY | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:221 | 1 | 23 | 4 |
+| FUNGI-PRIVACY-002 | EMBEDDING_EGRESS_DENIED | error | packages-ts/galerina-core-compiler/src/gate-parser.ts:45 | 2 | 39 | 16 |
 | FUNGI-PRIVACY-003 | — | — | — | 0 | 0 | 0 |
 | FUNGI-PRIVACY-004 | EMBEDDING_CROSSES_FLOW_BOUNDARY | — | — | 1 | 5 | 0 |
 
@@ -1253,14 +1253,14 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-PROFILE-001 | RECURSION_IN_RESTRICTED_PROFILE | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:37 | 0 | 18 | 1 |
-| FUNGI-PROFILE-002 | UNBOUNDED_LOOP_IN_STRICT_PROFILE | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:45 | 0 | 14 | 1 |
-| FUNGI-PROFILE-003 | EXCEPTION_CONTROL_FLOW_PROHIBITED | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:53 | 0 | 0 | 0 |
-| FUNGI-PROFILE-004 | JIT_PROHIBITED_IN_STRICT_PROFILE | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:61 | 0 | 0 | 1 |
-| FUNGI-PROFILE-005 | DYNAMIC_PACKAGE_LOAD_PROHIBITED | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:69 | 0 | 2 | 1 |
-| FUNGI-PROFILE-005B | DYNAMIC_REGEX_IN_STRICT_PROFILE | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:77 | 0 | 9 | 0 |
-| FUNGI-PROFILE-006 | MISSING_RUNTIME_BUDGET | warning | packages-galerina/galerina-core-compiler/src/profile-checker.ts:86 | 0 | 10 | 1 |
-| FUNGI-PROFILE-007 | DYNAMIC_RUNTIME_MUTATION_PROHIBITED | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:94 | 0 | 0 | 1 |
+| FUNGI-PROFILE-001 | RECURSION_IN_RESTRICTED_PROFILE | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:37 | 0 | 18 | 1 |
+| FUNGI-PROFILE-002 | UNBOUNDED_LOOP_IN_STRICT_PROFILE | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:45 | 0 | 14 | 1 |
+| FUNGI-PROFILE-003 | EXCEPTION_CONTROL_FLOW_PROHIBITED | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:53 | 0 | 0 | 0 |
+| FUNGI-PROFILE-004 | JIT_PROHIBITED_IN_STRICT_PROFILE | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:61 | 0 | 0 | 1 |
+| FUNGI-PROFILE-005 | DYNAMIC_PACKAGE_LOAD_PROHIBITED | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:69 | 0 | 2 | 1 |
+| FUNGI-PROFILE-005B | DYNAMIC_REGEX_IN_STRICT_PROFILE | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:77 | 0 | 9 | 0 |
+| FUNGI-PROFILE-006 | MISSING_RUNTIME_BUDGET | warning | packages-ts/galerina-core-compiler/src/profile-checker.ts:86 | 0 | 10 | 1 |
+| FUNGI-PROFILE-007 | DYNAMIC_RUNTIME_MUTATION_PROHIBITED | error | packages-ts/galerina-core-compiler/src/profile-checker.ts:94 | 0 | 0 | 1 |
 | FUNGI-PROFILE-UNRECOGNIZED | — | — | — | 1 | 0 | 0 |
 
 ## PROOF (5)
@@ -1270,8 +1270,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-PROOF-001 | — | — | — | 0 | 0 | 2 |
 | FUNGI-PROOF-005 | — | — | — | 0 | 0 | 2 |
 | FUNGI-PROOF-CERT-00 | — | — | — | 0 | 1 | 0 |
-| FUNGI-PROOF-CERT-001 | — | — | packages-galerina/galerina-core-compiler/src/proof-graph.ts:225 | 0 | 4 | 0 |
-| FUNGI-PROOF-CERT-002 | — | — | packages-galerina/galerina-core-compiler/src/proof-graph.ts:227 | 0 | 3 | 0 |
+| FUNGI-PROOF-CERT-001 | — | — | packages-ts/galerina-core-compiler/src/proof-graph.ts:225 | 0 | 4 | 0 |
+| FUNGI-PROOF-CERT-002 | — | — | packages-ts/galerina-core-compiler/src/proof-graph.ts:227 | 0 | 3 | 0 |
 
 ## PROTECTED (1)
 
@@ -1298,7 +1298,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-RAWPTR-001 | RAW_POINTER_OUTSIDE_UNSAFE | error | packages-galerina/galerina-core-compiler/src/index.ts:1851 | 1 | 1 | 5 |
+| FUNGI-RAWPTR-001 | RAW_POINTER_OUTSIDE_UNSAFE | error | packages-ts/galerina-core-compiler/src/index.ts:1851 | 1 | 1 | 5 |
 
 ## REGISTRY (16)
 
@@ -1332,25 +1332,25 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-REQUIREMENT-001 | EMPTY_REQUIREMENT | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:10 | 1 | 2 | 6 |
-| FUNGI-REQUIREMENT-002 | CONSTRAINT_TYPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:18 | 1 | 3 | 3 |
-| FUNGI-REQUIREMENT-003 | CONSTRAINT_EFFECTFUL | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:26 | 0 | 4 | 4 |
-| FUNGI-REQUIREMENT-004 | TAINT_AUTHORITY_MISSING | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:34 | 0 | 53 | 3 |
-| FUNGI-REQUIREMENT-005 | CONSTRAINT_CEILING | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:42 | 1 | 2 | 3 |
-| FUNGI-REQUIREMENT-006 | NON_EXHAUSTIVE_REQUIRE | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:50 | 3 | 5 | 5 |
-| FUNGI-REQUIREMENT-007 | NON_TERMINAL_REQUIRE_HANDLER | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:58 | 1 | 4 | 3 |
-| FUNGI-REQUIREMENT-008 | NESTED_REQUIREMENT | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:66 | 1 | 2 | 3 |
-| FUNGI-REQUIREMENT-009 | REQUIRE_SUBJECT_TYPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:74 | 1 | 2 | 3 |
-| FUNGI-REQUIREMENT-010 | VALIDATOR_AUTHORITY_INVALID | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:82 | 0 | 70 | 3 |
-| FUNGI-REQUIREMENT-011 | REQUIREMENT_LOWERING_UNSUPPORTED | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:90 | 0 | 1 | 2 |
-| FUNGI-REQUIREMENT-012 | REQUIREMENT_RECEIPT_MISMATCH | error | packages-galerina/galerina-core-compiler/src/requirement-diagnostics.ts:98 | 0 | 1 | 2 |
+| FUNGI-REQUIREMENT-001 | EMPTY_REQUIREMENT | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:10 | 1 | 2 | 6 |
+| FUNGI-REQUIREMENT-002 | CONSTRAINT_TYPE_MISMATCH | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:18 | 1 | 3 | 3 |
+| FUNGI-REQUIREMENT-003 | CONSTRAINT_EFFECTFUL | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:26 | 0 | 4 | 4 |
+| FUNGI-REQUIREMENT-004 | TAINT_AUTHORITY_MISSING | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:34 | 0 | 53 | 3 |
+| FUNGI-REQUIREMENT-005 | CONSTRAINT_CEILING | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:42 | 1 | 2 | 3 |
+| FUNGI-REQUIREMENT-006 | NON_EXHAUSTIVE_REQUIRE | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:50 | 3 | 5 | 5 |
+| FUNGI-REQUIREMENT-007 | NON_TERMINAL_REQUIRE_HANDLER | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:58 | 1 | 4 | 3 |
+| FUNGI-REQUIREMENT-008 | NESTED_REQUIREMENT | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:66 | 1 | 2 | 3 |
+| FUNGI-REQUIREMENT-009 | REQUIRE_SUBJECT_TYPE_MISMATCH | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:74 | 1 | 2 | 3 |
+| FUNGI-REQUIREMENT-010 | VALIDATOR_AUTHORITY_INVALID | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:82 | 0 | 70 | 3 |
+| FUNGI-REQUIREMENT-011 | REQUIREMENT_LOWERING_UNSUPPORTED | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:90 | 0 | 1 | 2 |
+| FUNGI-REQUIREMENT-012 | REQUIREMENT_RECEIPT_MISMATCH | error | packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts:98 | 0 | 1 | 2 |
 
 ## RES (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-RES-001 | RESILIENCE_RETRY_ON_MUTATION | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:622 | 1 | 9 | 1 |
-| FUNGI-RES-002 | SUBSTRATE_HEAL_NOT_AUDITED | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:631 | 1 | 0 | 0 |
+| FUNGI-RES-001 | RESILIENCE_RETRY_ON_MUTATION | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:622 | 1 | 9 | 1 |
+| FUNGI-RES-002 | SUBSTRATE_HEAL_NOT_AUDITED | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:631 | 1 | 0 | 0 |
 | FUNGI-RES-CB-PENDING | — | — | — | 1 | 0 | 0 |
 
 ## RESOLVE (21)
@@ -1413,20 +1413,20 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-RUNTIME-002 | — | — | — | 2 | 4 | 0 |
 | FUNGI-RUNTIME-003 | — | — | — | 4 | 8 | 0 |
 | FUNGI-RUNTIME-004 | — | — | — | 1 | 2 | 0 |
-| FUNGI-RUNTIME-005 | UNAUTHORIZED_GOVERNED_VALUE_ACCESS | error | packages-galerina/galerina-core-compiler/src/interpreter.ts:561 | 1 | 9 | 0 |
-| FUNGI-RUNTIME-006 | RATE_LIMIT_EXCEEDED / RateLimitExceeded | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:115 | 3 | 21 | 1 |
+| FUNGI-RUNTIME-005 | UNAUTHORIZED_GOVERNED_VALUE_ACCESS | error | packages-ts/galerina-core-compiler/src/interpreter.ts:561 | 1 | 9 | 0 |
+| FUNGI-RUNTIME-006 | RATE_LIMIT_EXCEEDED / RateLimitExceeded | error | packages-ts/galerina-core-compiler/src/security-policy.ts:115 | 3 | 21 | 1 |
 | FUNGI-RUNTIME-007 | — | — | — | 1 | 3 | 0 |
 
 ## SAFETY (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-SAFETY-001 | TRI_BRANCH_CONDITION | error | packages-galerina/galerina-core-compiler/src/index.ts:2369 | 1 | 2 | 1 |
-| FUNGI-SAFETY-002 | UNSAFE_LOGIC_ASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:2377 | 1 | 2 | 0 |
-| FUNGI-SAFETY-003 | TRI_UNKNOWN_AS_TRUE | error | packages-galerina/galerina-core-compiler/src/index.ts:2385 | 2 | 5 | 0 |
-| FUNGI-SAFETY-004 | SECRET_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:2393 | 1 | 5 | 0 |
-| FUNGI-SAFETY-005 | UNSAFE_DYNAMIC_CODE | error | packages-galerina/galerina-core-compiler/src/index.ts:2401 | 1 | 2 | 0 |
-| FUNGI-SAFETY-006 | TRI_MATCH_NOT_EXHAUSTIVE | error | packages-galerina/galerina-core-compiler/src/index.ts:2409 | 1 | 2 | 0 |
+| FUNGI-SAFETY-001 | TRI_BRANCH_CONDITION | error | packages-ts/galerina-core-compiler/src/index.ts:2369 | 1 | 2 | 1 |
+| FUNGI-SAFETY-002 | UNSAFE_LOGIC_ASSIGNMENT | error | packages-ts/galerina-core-compiler/src/index.ts:2377 | 1 | 2 | 0 |
+| FUNGI-SAFETY-003 | TRI_UNKNOWN_AS_TRUE | error | packages-ts/galerina-core-compiler/src/index.ts:2385 | 2 | 5 | 0 |
+| FUNGI-SAFETY-004 | SECRET_LITERAL | error | packages-ts/galerina-core-compiler/src/index.ts:2393 | 1 | 5 | 0 |
+| FUNGI-SAFETY-005 | UNSAFE_DYNAMIC_CODE | error | packages-ts/galerina-core-compiler/src/index.ts:2401 | 1 | 2 | 0 |
+| FUNGI-SAFETY-006 | TRI_MATCH_NOT_EXHAUSTIVE | error | packages-ts/galerina-core-compiler/src/index.ts:2409 | 1 | 2 | 0 |
 
 ## SBOM (1)
 
@@ -1445,8 +1445,8 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
 | FUNGI-SEC-014 | FN_CANNOT_DECLARE_EFFECTS | — | — | 1 | 3 | 3 |
-| FUNGI-SEC-020 | RUNTIME_MUTATION_PROHIBITED | error | packages-galerina/galerina-core-compiler/src/index.ts:2463 | 1 | 41 | 1 |
-| FUNGI-SEC-021 | PROTOTYPE_MUTATION_PROHIBITED | error | packages-galerina/galerina-core-compiler/src/index.ts:2472 | 1 | 24 | 0 |
+| FUNGI-SEC-020 | RUNTIME_MUTATION_PROHIBITED | error | packages-ts/galerina-core-compiler/src/index.ts:2463 | 1 | 41 | 1 |
+| FUNGI-SEC-021 | PROTOTYPE_MUTATION_PROHIBITED | error | packages-ts/galerina-core-compiler/src/index.ts:2472 | 1 | 24 | 0 |
 | FUNGI-SEC-PATCH-001 | — | — | — | 0 | 0 | 1 |
 
 ## SECRET (8)
@@ -1495,7 +1495,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-SOURCE-ESCAPE-001 | SOURCE_LEVEL_EVAL_ESCAPE | error | packages-galerina/galerina-core-compiler/src/index.ts:2351 | 1 | 35 | 1 |
+| FUNGI-SOURCE-ESCAPE-001 | SOURCE_LEVEL_EVAL_ESCAPE | error | packages-ts/galerina-core-compiler/src/index.ts:2351 | 1 | 35 | 1 |
 
 ## STATE (5)
 
@@ -1518,7 +1518,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-STDLIB-001 | STDLIB_EFFECT_NOT_DECLARED | error | packages-galerina/galerina-core-compiler/src/index.ts:1128 | 1 | 18 | 2 |
+| FUNGI-STDLIB-001 | STDLIB_EFFECT_NOT_DECLARED | error | packages-ts/galerina-core-compiler/src/index.ts:1128 | 1 | 18 | 2 |
 | FUNGI-STDLIB-002 | UNKNOWN_EFFECTFUL_STDLIB_CALL | — | — | 1 | 17 | 5 |
 
 ## STEP (1)
@@ -1537,42 +1537,42 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-STRING-001 | INVALID_UTF8_DECODE | error | packages-galerina/galerina-core-compiler/src/index.ts:1960 | 0 | 1 | 4 |
-| FUNGI-STRING-002 | SECRET_STORED_AS_STRING | error | packages-galerina/galerina-core-compiler/src/index.ts:1968 | 0 | 1 | 0 |
-| FUNGI-STRING-003 | IMPLICIT_STRING_BYTE_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1976 | 0 | 0 | 0 |
-| FUNGI-STRING-004 | AMBIGUOUS_STRING_LENGTH | warning | packages-galerina/galerina-core-compiler/src/index.ts:1984 | 0 | 0 | 0 |
+| FUNGI-STRING-001 | INVALID_UTF8_DECODE | error | packages-ts/galerina-core-compiler/src/index.ts:1960 | 0 | 1 | 4 |
+| FUNGI-STRING-002 | SECRET_STORED_AS_STRING | error | packages-ts/galerina-core-compiler/src/index.ts:1968 | 0 | 1 | 0 |
+| FUNGI-STRING-003 | IMPLICIT_STRING_BYTE_CONVERSION | error | packages-ts/galerina-core-compiler/src/index.ts:1976 | 0 | 0 | 0 |
+| FUNGI-STRING-004 | AMBIGUOUS_STRING_LENGTH | warning | packages-ts/galerina-core-compiler/src/index.ts:1984 | 0 | 0 | 0 |
 
 ## STYLE (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-STYLE-001 | FLOW_NAME_CAMEL_CASE | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:17 | 1 | 35 | 0 |
-| FUNGI-STYLE-002 | TYPE_NAME_PASCAL_CASE | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:24 | 1 | 36 | 0 |
-| FUNGI-STYLE-SEC-001 | SENSITIVE_BINDING_TYPE | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:31 | 1 | 30 | 0 |
+| FUNGI-STYLE-001 | FLOW_NAME_CAMEL_CASE | warning | packages-ts/galerina-core-compiler/src/naming-policy-checker.ts:17 | 1 | 35 | 0 |
+| FUNGI-STYLE-002 | TYPE_NAME_PASCAL_CASE | warning | packages-ts/galerina-core-compiler/src/naming-policy-checker.ts:24 | 1 | 36 | 0 |
+| FUNGI-STYLE-SEC-001 | SENSITIVE_BINDING_TYPE | warning | packages-ts/galerina-core-compiler/src/naming-policy-checker.ts:31 | 1 | 30 | 0 |
 
 ## SUBSTRATE (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-SUBSTRATE-001 | CRYPTO_ON_NOISY_LANE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:392 | 1 | 27 | 8 |
-| FUNGI-SUBSTRATE-002 | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:400 | 2 | 32 | 0 |
-| FUNGI-SUBSTRATE-003 | REDUNDANCY_INSUFFICIENT | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:408 | 2 | 12 | 0 |
-| FUNGI-SUBSTRATE-004 | UNVOTED_ANALOG_INTO_DETERMINISTIC | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:416 | 1 | 11 | 0 |
-| FUNGI-SUBSTRATE-005 | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:427 | 1 | 10 | 0 |
+| FUNGI-SUBSTRATE-001 | CRYPTO_ON_NOISY_LANE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:392 | 1 | 27 | 8 |
+| FUNGI-SUBSTRATE-002 | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:400 | 2 | 32 | 0 |
+| FUNGI-SUBSTRATE-003 | REDUNDANCY_INSUFFICIENT | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:408 | 2 | 12 | 0 |
+| FUNGI-SUBSTRATE-004 | UNVOTED_ANALOG_INTO_DETERMINISTIC | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:416 | 1 | 11 | 0 |
+| FUNGI-SUBSTRATE-005 | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:427 | 1 | 10 | 0 |
 | FUNGI-SUBSTRATE-DEADZONE | — | — | — | 1 | 0 | 0 |
 
 ## SYNTAX (21)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-SYNTAX-001 | VAR_NOT_SUPPORTED | error | packages-galerina/galerina-core-compiler/src/index.ts:1704 | 1 | 1 | 3 |
-| FUNGI-SYNTAX-002 | CONST_NOT_SUPPORTED | error | packages-galerina/galerina-core-compiler/src/index.ts:1712 | 1 | 1 | 1 |
+| FUNGI-SYNTAX-001 | VAR_NOT_SUPPORTED | error | packages-ts/galerina-core-compiler/src/index.ts:1704 | 1 | 1 | 3 |
+| FUNGI-SYNTAX-002 | CONST_NOT_SUPPORTED | error | packages-ts/galerina-core-compiler/src/index.ts:1712 | 1 | 1 | 1 |
 | FUNGI-SYNTAX-003 | — | — | — | 0 | 4 | 1 |
 | FUNGI-SYNTAX-005 | FN_AT_TOP_LEVEL | — | — | 1 | 3 | 6 |
-| FUNGI-SYNTAX-006 | LET_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1720 | 2 | 3 | 7 |
-| FUNGI-SYNTAX-007 | MUT_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1728 | 1 | 1 | 2 |
-| FUNGI-SYNTAX-008 | UNSAFE_LET_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1736 | 1 | 5 | 4 |
-| FUNGI-SYNTAX-009 | EMIT_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1744 | 1 | 0 | 4 |
+| FUNGI-SYNTAX-006 | LET_AT_TOP_LEVEL | error | packages-ts/galerina-core-compiler/src/index.ts:1720 | 2 | 3 | 7 |
+| FUNGI-SYNTAX-007 | MUT_AT_TOP_LEVEL | error | packages-ts/galerina-core-compiler/src/index.ts:1728 | 1 | 1 | 2 |
+| FUNGI-SYNTAX-008 | UNSAFE_LET_AT_TOP_LEVEL | error | packages-ts/galerina-core-compiler/src/index.ts:1736 | 1 | 5 | 4 |
+| FUNGI-SYNTAX-009 | EMIT_AT_TOP_LEVEL | error | packages-ts/galerina-core-compiler/src/index.ts:1744 | 1 | 0 | 4 |
 | FUNGI-SYNTAX-010 | ElseIfNotAllowed | — | — | 1 | 0 | 3 |
 | FUNGI-SYNTAX-011 | UNKNOWN_GOVERNANCE_BLOCK | — | — | 1 | 10 | 4 |
 | FUNGI-SYNTAX-013 | INERT_GOVERNANCE_BLOCK | — | — | 1 | 3 | 2 |
@@ -1580,7 +1580,7 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-SYNTAX-015 | VERSION_HEADER_MISSING | error | — | 1 | 10 | 4 |
 | FUNGI-SYNTAX-BRACE | — | — | — | 1 | 0 | 0 |
 | FUNGI-SYNTAX-CONTRACT-IN-BODY | — | — | — | 1 | 0 | 0 |
-| FUNGI-SYNTAX-LEGACY-001 | LEGACY_EFFECTS_SYNTAX | warning | packages-galerina/galerina-core-compiler/src/index.ts:1772 | 1 | 15 | 1 |
+| FUNGI-SYNTAX-LEGACY-001 | LEGACY_EFFECTS_SYNTAX | warning | packages-ts/galerina-core-compiler/src/index.ts:1772 | 1 | 15 | 1 |
 | FUNGI-SYNTAX-LEGACY-002 | — | — | — | 0 | 0 | 0 |
 | FUNGI-SYNTAX-LEGACY-003 | — | — | — | 0 | 1 | 1 |
 | FUNGI-SYNTAX-RLF-001 | — | — | — | 0 | 0 | 1 |
@@ -1591,12 +1591,12 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-TAINT-001 | TAINTED_VALUE_AT_INJECTION_SINK | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:238 | 0 | 47 | 3 |
-| FUNGI-TAINT-002 | UNVALIDATED_VALUE_AT_LOGIC_SINK | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:246 | 0 | 0 | 1 |
-| FUNGI-TAINT-003 | WRONG_CONTEXT_UNTAINT | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:254 | 0 | 12 | 2 |
-| FUNGI-TAINT-004 | DISCOURAGED_SANITISER | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:262 | 0 | 11 | 1 |
-| FUNGI-TAINT-005 | TAINTED_VALUE_AT_HEADER_SINK | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:1976 | 0 | 1 | 0 |
-| FUNGI-TAINT-006 | SSRF_POLICY_INSUFFICIENT | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:1985 | 0 | 1 | 0 |
+| FUNGI-TAINT-001 | TAINTED_VALUE_AT_INJECTION_SINK | error | packages-ts/galerina-core-compiler/src/taint-checker.ts:238 | 0 | 47 | 3 |
+| FUNGI-TAINT-002 | UNVALIDATED_VALUE_AT_LOGIC_SINK | warning | packages-ts/galerina-core-compiler/src/taint-checker.ts:246 | 0 | 0 | 1 |
+| FUNGI-TAINT-003 | WRONG_CONTEXT_UNTAINT | error | packages-ts/galerina-core-compiler/src/taint-checker.ts:254 | 0 | 12 | 2 |
+| FUNGI-TAINT-004 | DISCOURAGED_SANITISER | warning | packages-ts/galerina-core-compiler/src/taint-checker.ts:262 | 0 | 11 | 1 |
+| FUNGI-TAINT-005 | TAINTED_VALUE_AT_HEADER_SINK | error | packages-ts/galerina-core-compiler/src/taint-checker.ts:1976 | 0 | 1 | 0 |
+| FUNGI-TAINT-006 | SSRF_POLICY_INSUFFICIENT | warning | packages-ts/galerina-core-compiler/src/taint-checker.ts:1985 | 0 | 1 | 0 |
 
 ## TARGET (1)
 
@@ -1608,15 +1608,15 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-TENANT-001 | DANGLING_TENANT_SCOPE_BINDING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:359 | 1 | 9 | 3 |
-| FUNGI-TENANT-002 | UNSCOPED_TENANT_DATA_ACCESS | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:367 | 1 | 25 | 0 |
+| FUNGI-TENANT-001 | DANGLING_TENANT_SCOPE_BINDING | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:359 | 1 | 9 | 3 |
+| FUNGI-TENANT-002 | UNSCOPED_TENANT_DATA_ACCESS | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:367 | 1 | 25 | 0 |
 | FUNGI-TENANT-003 | — | — | — | 0 | 1 | 0 |
 
 ## TERM (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-TERM-001 | TERMINATION_ANNOTATION_MISSING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:510 | 1 | 11 | 0 |
+| FUNGI-TERM-001 | TERMINATION_ANNOTATION_MISSING | warning | packages-ts/galerina-core-compiler/src/governance-verifier.ts:510 | 1 | 11 | 0 |
 | GATE-TERM-001 | GATE_V3_DUPLICATE_BUDGET | — | — | 1 | 1 | 2 |
 | GATE-TERM-002 | GATE_V3_INVALID_BUDGET | — | — | 1 | 0 | 1 |
 | GATE-TERM-003 | GATE_V3_UNBOUNDED_CYCLE | — | — | 1 | 6 | 7 |
@@ -1653,11 +1653,11 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-TRI-001 | INVALID_TRISTATE | error | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:12 | 1 | 1 | 3 |
-| FUNGI-TRI-002 | TRI_EMPTY_UNKNOWN_REASONS | error | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:15 | 1 | 1 | 0 |
-| FUNGI-TRI-003 | INVALID_OPERAND | error | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:18 | 1 | 1 | 0 |
-| FUNGI-TRI-004 | UNKNOWN_LEAKED | error | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:21 | 1 | 1 | 0 |
-| FUNGI-TRI-005 | MALFORMED_UNKNOWN_REASON | error | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:24 | 1 | 1 | 2 |
+| FUNGI-TRI-001 | INVALID_TRISTATE | error | packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts:12 | 1 | 1 | 3 |
+| FUNGI-TRI-002 | TRI_EMPTY_UNKNOWN_REASONS | error | packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts:15 | 1 | 1 | 0 |
+| FUNGI-TRI-003 | INVALID_OPERAND | error | packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts:18 | 1 | 1 | 0 |
+| FUNGI-TRI-004 | UNKNOWN_LEAKED | error | packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts:21 | 1 | 1 | 0 |
+| FUNGI-TRI-005 | MALFORMED_UNKNOWN_REASON | error | packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts:24 | 1 | 1 | 2 |
 
 ## TYPE (37)
 
@@ -1665,24 +1665,24 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 |---|---|---|---|---|---|---|
 | FUNGI-TYPE-0 | — | — | — | 0 | 1 | 1 |
 | FUNGI-TYPE-001 | UNKNOWN_TYPE / Y / X | error/warning | — | 1 | 236 | 24 |
-| FUNGI-TYPE-002 | QUANTIZED_PRECISION_MISMATCH / TYPE_MISMATCH / X / a / WRONG_NAME | warning/error | packages-galerina/galerina-core-compiler/src/index.ts:569 | 1 | 96 | 9 |
-| FUNGI-TYPE-003 | INVALID_NOMINAL_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:553 | 1 | 64 | 15 |
+| FUNGI-TYPE-002 | QUANTIZED_PRECISION_MISMATCH / TYPE_MISMATCH / X / a / WRONG_NAME | warning/error | packages-ts/galerina-core-compiler/src/index.ts:569 | 1 | 96 | 9 |
+| FUNGI-TYPE-003 | INVALID_NOMINAL_CONVERSION | error | packages-ts/galerina-core-compiler/src/index.ts:553 | 1 | 64 | 15 |
 | FUNGI-TYPE-004 | INVALID_BINARY_OPERATION | error | — | 16 | 137 | 19 |
 | FUNGI-TYPE-005 | INVALID_CALL_ARG_TYPE | error | — | 1 | 26 | 5 |
 | FUNGI-TYPE-006 | — | — | — | 0 | 0 | 5 |
 | FUNGI-TYPE-007 | INVALID_ARGUMENT_COUNT | error | — | 1 | 13 | 2 |
 | FUNGI-TYPE-008 | INVALID_RETURN_TYPE | error | — | 1 | 34 | 1 |
 | FUNGI-TYPE-009 | INVALID_GENERIC_INSTANTIATION | error | — | 1 | 99 | 16 |
-| FUNGI-TYPE-010 | UNSATISFIED_GENERIC_CONSTRAINT | error | packages-galerina/galerina-core-compiler/src/index.ts:562 | 0 | 1 | 0 |
-| FUNGI-TYPE-011 | INVALID_COLLECTION_ELEMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:563 | 1 | 62 | 1 |
-| FUNGI-TYPE-012 | INVALID_RESULT_TYPE | error | packages-galerina/galerina-core-compiler/src/index.ts:564 | 0 | 0 | 0 |
-| FUNGI-TYPE-013 | INVALID_SECRET_OPERATION | error | packages-galerina/galerina-core-compiler/src/index.ts:565 | 0 | 1 | 0 |
-| FUNGI-TYPE-014 | MISSING_REQUIRED_EFFECT / Y / WRONG_NAME | error | packages-galerina/galerina-core-compiler/src/index.ts:566 | 1 | 24 | 1 |
-| FUNGI-TYPE-015 | GOVERNED_SINK_VIOLATION | error | packages-galerina/galerina-core-compiler/src/index.ts:567 | 0 | 0 | 0 |
-| FUNGI-TYPE-016 | TENSOR_SHAPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:568 | 1 | 15 | 8 |
-| FUNGI-TYPE-017 | QUANTIZED_PRECISION_MISMATCH | warning | packages-galerina/galerina-core-compiler/src/index.ts:569 | 1 | 31 | 1 |
-| FUNGI-TYPE-018 | INVALID_RUNTIME_TARGET_TYPE | error | packages-galerina/galerina-core-compiler/src/index.ts:570 | 0 | 9 | 0 |
-| FUNGI-TYPE-019 | UNKNOWN_SYMBOL | error | packages-galerina/galerina-core-compiler/src/index.ts:571 | 0 | 7 | 0 |
+| FUNGI-TYPE-010 | UNSATISFIED_GENERIC_CONSTRAINT | error | packages-ts/galerina-core-compiler/src/index.ts:562 | 0 | 1 | 0 |
+| FUNGI-TYPE-011 | INVALID_COLLECTION_ELEMENT | error | packages-ts/galerina-core-compiler/src/index.ts:563 | 1 | 62 | 1 |
+| FUNGI-TYPE-012 | INVALID_RESULT_TYPE | error | packages-ts/galerina-core-compiler/src/index.ts:564 | 0 | 0 | 0 |
+| FUNGI-TYPE-013 | INVALID_SECRET_OPERATION | error | packages-ts/galerina-core-compiler/src/index.ts:565 | 0 | 1 | 0 |
+| FUNGI-TYPE-014 | MISSING_REQUIRED_EFFECT / Y / WRONG_NAME | error | packages-ts/galerina-core-compiler/src/index.ts:566 | 1 | 24 | 1 |
+| FUNGI-TYPE-015 | GOVERNED_SINK_VIOLATION | error | packages-ts/galerina-core-compiler/src/index.ts:567 | 0 | 0 | 0 |
+| FUNGI-TYPE-016 | TENSOR_SHAPE_MISMATCH | error | packages-ts/galerina-core-compiler/src/index.ts:568 | 1 | 15 | 8 |
+| FUNGI-TYPE-017 | QUANTIZED_PRECISION_MISMATCH | warning | packages-ts/galerina-core-compiler/src/index.ts:569 | 1 | 31 | 1 |
+| FUNGI-TYPE-018 | INVALID_RUNTIME_TARGET_TYPE | error | packages-ts/galerina-core-compiler/src/index.ts:570 | 0 | 9 | 0 |
+| FUNGI-TYPE-019 | UNKNOWN_SYMBOL | error | packages-ts/galerina-core-compiler/src/index.ts:571 | 0 | 7 | 0 |
 | FUNGI-TYPE-020 | SHADOWED_BINDING / X | warning | — | 1 | 18 | 1 |
 | FUNGI-TYPE-021 | — | — | — | 0 | 3 | 2 |
 | FUNGI-TYPE-022 | UNREACHABLE_PATTERN | error | — | 1 | 12 | 4 |
@@ -1691,13 +1691,13 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-TYPE-025 | SILENT_NULL_DENIED | error | — | 1 | 22 | 0 |
 | FUNGI-TYPE-026 | DEFERRED_TYPE_CHECK | warning | — | 2 | 14 | 0 |
 | FUNGI-TYPE-027 | — | — | — | 0 | 0 | 0 |
-| FUNGI-TYPE-028 | DISCARDED_IMMUTABLE_RESULT | error | packages-galerina/galerina-core-compiler/src/index.ts:575 | 1 | 6 | 4 |
-| FUNGI-TYPE-030 | TENSOR_ELEMENT_TYPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:597 | 1 | 25 | 5 |
-| FUNGI-TYPE-031 | TENSOR_DIMENSION_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:607 | 0 | 4 | 0 |
+| FUNGI-TYPE-028 | DISCARDED_IMMUTABLE_RESULT | error | packages-ts/galerina-core-compiler/src/index.ts:575 | 1 | 6 | 4 |
+| FUNGI-TYPE-030 | TENSOR_ELEMENT_TYPE_MISMATCH | error | packages-ts/galerina-core-compiler/src/index.ts:597 | 1 | 25 | 5 |
+| FUNGI-TYPE-031 | TENSOR_DIMENSION_MISMATCH | error | packages-ts/galerina-core-compiler/src/index.ts:607 | 0 | 4 | 0 |
 | FUNGI-TYPE-032 | INVALID_CURRENCY_TAG | error | — | 1 | 10 | 0 |
 | FUNGI-TYPE-033 | CONDITION_NOT_BOOL | error | — | 1 | 19 | 2 |
 | FUNGI-TYPE-034 | GOVERNANCE_QUALIFIER_MISMATCH | error | — | 1 | 7 | 3 |
-| FUNGI-TYPE-035 | INVALID_AUTHORITY_TAG | error | packages-galerina/galerina-core-compiler/src/index.ts:585 | 1 | 2 | 2 |
+| FUNGI-TYPE-035 | INVALID_AUTHORITY_TAG | error | packages-ts/galerina-core-compiler/src/index.ts:585 | 1 | 2 | 2 |
 | FUNGI-TYPE-099 | — | — | — | 0 | 0 | 0 |
 | FUNGI-TYPE-903 | — | — | — | 0 | 0 | 0 |
 
@@ -1706,9 +1706,9 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
 | FUNGI-VAL-00 | — | — | — | 0 | 1 | 0 |
-| FUNGI-VAL-001 | SAFETY_CRITICAL_MISSING_AUDIT | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:575 | 0 | 42 | 4 |
-| FUNGI-VAL-002 | SAFETY_CRITICAL_MISSING_DETERMINISM | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:591 | 0 | 30 | 1 |
-| FUNGI-VAL-003 | UNKNOWN_VALUE_CLASSIFICATION | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:607 | 0 | 16 | 1 |
+| FUNGI-VAL-001 | SAFETY_CRITICAL_MISSING_AUDIT | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:575 | 0 | 42 | 4 |
+| FUNGI-VAL-002 | SAFETY_CRITICAL_MISSING_DETERMINISM | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:591 | 0 | 30 | 1 |
+| FUNGI-VAL-003 | UNKNOWN_VALUE_CLASSIFICATION | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:607 | 0 | 16 | 1 |
 
 ## VALIDATE (1)
 
@@ -1731,9 +1731,9 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 | FUNGI-VALUESTATE-002 | UNSAFE_CONDITIONAL_UPGRADE | error | — | 2 | 15 | 3 |
 | FUNGI-VALUESTATE-003 | UNSAFE_VALUE_REACHED_GOVERNED_SINK | error | — | 1 | 127 | 34 |
 | FUNGI-VALUESTATE-004 | TAINTED_VALUE_PROPAGATION | error | — | 2 | 22 | 16 |
-| FUNGI-VALUESTATE-005 | DERIVED_UNSAFE_VALUE_AT_SINK | error | packages-galerina/galerina-core-compiler/src/index.ts:536 | 1 | 45 | 6 |
-| FUNGI-VALUESTATE-006 | PROTECTED_BOUNDARY_VIOLATION | error | packages-galerina/galerina-core-compiler/src/index.ts:673 | 1 | 60 | 15 |
-| FUNGI-VALUESTATE-007 | REDACTED_BOUNDARY_VIOLATION | error | packages-galerina/galerina-core-compiler/src/index.ts:681 | 1 | 40 | 1 |
+| FUNGI-VALUESTATE-005 | DERIVED_UNSAFE_VALUE_AT_SINK | error | packages-ts/galerina-core-compiler/src/index.ts:536 | 1 | 45 | 6 |
+| FUNGI-VALUESTATE-006 | PROTECTED_BOUNDARY_VIOLATION | error | packages-ts/galerina-core-compiler/src/index.ts:673 | 1 | 60 | 15 |
+| FUNGI-VALUESTATE-007 | REDACTED_BOUNDARY_VIOLATION | error | packages-ts/galerina-core-compiler/src/index.ts:681 | 1 | 40 | 1 |
 | FUNGI-VALUESTATE-008 | BOUNDARY_INPUT_UNCLEAN | error | — | 1 | 31 | 10 |
 | FUNGI-VALUESTATE-009 | PROTECTED_VALUE_AT_AUDIT_LOG | error | — | 1 | 22 | 1 |
 | FUNGI-VALUESTATE-011 | DECLASSIFIER_NAME_SHADOWED | error | — | 1 | 11 | 1 |
@@ -1742,14 +1742,14 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| FUNGI-VAULT-001 | VAULT_MISSING_OPEN_BRACE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:276 | 2 | 1 | 7 |
-| FUNGI-VAULT-002 | VAULT_ENTRY_MISSING_PERMISSIONS | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:285 | 2 | 1 | 1 |
-| FUNGI-VAULT-003 | VAULT_READ_EFFECT_MISSING | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:291 | 2 | 1 | 4 |
-| FUNGI-VAULT-004 | VAULT_WRITE_EFFECT_MISSING | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:297 | 2 | 1 | 5 |
-| FUNGI-VAULT-005 | VAULT_WRITE_WITHOUT_MUT | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:303 | 1 | 1 | 8 |
-| FUNGI-VAULT-006 | VAULT_PERMISSION_DENIED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:309 | 0 | 0 | 3 |
-| FUNGI-VAULT-007 | VAULT_READONLY_WRITE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:315 | 0 | 0 | 1 |
-| FUNGI-VAULT-008 | VAULT_MISSING_SCOPE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:270 | 2 | 0 | 1 |
+| FUNGI-VAULT-001 | VAULT_MISSING_OPEN_BRACE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:276 | 2 | 1 | 7 |
+| FUNGI-VAULT-002 | VAULT_ENTRY_MISSING_PERMISSIONS | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:285 | 2 | 1 | 1 |
+| FUNGI-VAULT-003 | VAULT_READ_EFFECT_MISSING | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:291 | 2 | 1 | 4 |
+| FUNGI-VAULT-004 | VAULT_WRITE_EFFECT_MISSING | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:297 | 2 | 1 | 5 |
+| FUNGI-VAULT-005 | VAULT_WRITE_WITHOUT_MUT | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:303 | 1 | 1 | 8 |
+| FUNGI-VAULT-006 | VAULT_PERMISSION_DENIED | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:309 | 0 | 0 | 3 |
+| FUNGI-VAULT-007 | VAULT_READONLY_WRITE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:315 | 0 | 0 | 1 |
+| FUNGI-VAULT-008 | VAULT_MISSING_SCOPE | error | packages-ts/galerina-core-compiler/src/governance-verifier.ts:270 | 2 | 0 | 1 |
 
 ## VER (1)
 

@@ -46,7 +46,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const ROOT = join(import.meta.dirname, "..", "..");
-const compiler = await import(pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href);
+const compiler = await import(pathToFileURL(join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js")).href);
 const lib = await import(pathToFileURL(join(ROOT, "scripts", "lib", "beta-release-evidence-envelope.mjs")).href);
 const gate = await import(pathToFileURL(join(ROOT, "scripts", "lib", "gate-admission-envelope.mjs")).href);
 const seams = { canonicalBytes: lib.canonicalReleaseEvidenceBytes };

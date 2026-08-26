@@ -38,7 +38,7 @@ const includeAll = argv.includes("--all");      // also scan the known non-prod 
 // Vendored / generated / VCS noise — never scanned (matches audit-stray-docs.mjs).
 const SKIP_DIRS = new Set(["node_modules", "dist", "build", ".git", ".graph", ".pytest_cache", ".cache", "coverage", "out", "target", ".next", ".turbo"]);
 // .ts scan is scoped to first-party source roots (the rest is vendored or generated).
-const TS_ROOTS = ["packages-galerina", "scripts"];
+const TS_ROOTS = ["packages-ts", "scripts"];
 
 // ── file walker ──────────────────────────────────────────────────────────────────
 // Collect files matching `pred(name)` under `dir`, skipping noise dirs + dotdirs.
@@ -69,12 +69,12 @@ function isExpectedCorpus(r) {
   if (r.startsWith("_audit_tmp/") || r.startsWith("_scratch/") || r.startsWith("tmp/")) return true;
   const seg = r.split("/");
   if (seg.includes("tests")) return true;
-  if (r.startsWith("packages-galerina/") && seg.includes("examples")) return true; // per-package prototype corpora (NOT repo-root examples/)
+  if (r.startsWith("packages-ts/") && seg.includes("examples")) return true; // per-package prototype corpora (NOT repo-root examples/)
   return false;
 }
 
 // ── .fungi : SHIPPED core-compiler parser, resolved relative to THIS script (works from any checkout) ──
-const DIST = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const DIST = join(HERE, "..", "packages-ts", "galerina-core-compiler", "dist", "index.js");
 let parseProgram = null;
 let fungiLoadError = null;
 try {
@@ -120,7 +120,7 @@ let ts = null;
 let tsLoadError = null;
 try {
   // The compiler package carries typescript as a devDependency; resolve from there.
-  const require = createRequire(join(HERE, "..", "packages-galerina", "galerina-core-compiler", "package.json"));
+  const require = createRequire(join(HERE, "..", "packages-ts", "galerina-core-compiler", "package.json"));
   ts = require("typescript");
 } catch (e1) {
   try {

@@ -47,7 +47,7 @@ function fixture() {
   );
   write(
     root,
-    "packages-galerina/example/package.json",
+    "packages-ts/example/package.json",
     JSON.stringify({
       name: "@fixture/example",
       version: "1.0.0",

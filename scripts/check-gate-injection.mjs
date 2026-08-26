@@ -22,7 +22,7 @@ import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO = join(fileURLToPath(new URL(".", import.meta.url)), "..");
-const SCAN_DIRS = ["packages-galerina", "scripts"]; // recursive
+const SCAN_DIRS = ["packages-ts", "scripts"]; // recursive
 const SCAN_TOPLEVEL = true;                         // top-level *.mjs/*.js (galerina.mjs)
 
 const ADMIT_CALLS = ["fusePackage(", "fusePackages(", "buildImportClosure("];

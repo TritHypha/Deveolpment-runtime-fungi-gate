@@ -31,8 +31,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SELF_HOSTED = join(ROOT, "packages-galerina/galerina-core-compiler/src/self-hosted");
-const TESTS = join(ROOT, "packages-galerina/galerina-core-compiler/tests");
+const SELF_HOSTED = join(ROOT, "packages-ts/galerina-core-compiler/src/self-hosted");
+const TESTS = join(ROOT, "packages-ts/galerina-core-compiler/tests");
 
 // ── pure core (self-tested, no I/O) ─────────────────────────────────────────
 

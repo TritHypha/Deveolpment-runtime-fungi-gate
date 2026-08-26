@@ -316,7 +316,7 @@ test("row 13: repeated construction from ONE capability is byte-identical", () =
 // ── row 14 · the composite chapter gate ─────────────────────────────────────
 
 test("row 14: the owning flow-hash suite is INVOKED and its failure propagates", () => {
-  const suite = join(ROOT, "packages-galerina", "galerina-core-compiler", "tests", "gate-v3-flow-hash-invariance.test.mjs");
+  const suite = join(ROOT, "packages-ts", "galerina-core-compiler", "tests", "gate-v3-flow-hash-invariance.test.mjs");
   const childEnv = { ...process.env };
   delete childEnv.NODE_TEST_CONTEXT;
   let out;

@@ -94,7 +94,7 @@ No work on TritMesh or optional engines begins until Core ships.
 
 These codes belong **exclusively to Galerina:Core** and stay with this project through any split:
 
-- Defined in `packages-galerina/galerina-core-compiler/src/index.ts`
+- Defined in `packages-ts/galerina-core-compiler/src/index.ts`
 - Emitted by: `type-checker.ts` · `effect-checker.ts` · `governance-verifier.ts` and other compiler stages
 - **No optional engine defines a FUNGI-* or GALERINA-* code**
 
@@ -169,5 +169,5 @@ Not blockers for Core v1.0. Preconditions for a clean split later.
 | Lego critical assessment | `../ZTF-Knowledge-Bases/reference/galerina/galerina-lego-rules-critical-assessment-security-vs-performance-2026-07-18.md` |
 | R&D primary architecture doc | `../new/galerina-constellation-rd-architecture.md` |
 | AI builder handover doc | `../new/galerina-constellation-ai-builder-handover.md` |
-| Runtime seam implementation | `packages-galerina/galerina-core-runtime-wasm/src/seam-adapters.ts` |
+| Runtime seam implementation | `packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts` |
 | Package graph (authority map) | `build/graph/galerina-devtools-project-graph.json` |

@@ -11,7 +11,7 @@
 //
 // This gate is the ENFORCEMENT half (the brand is cosmetic without it — R&D). It is a pure detector with a
 // SHRINK-ONLY, location-keyed BASELINE of the casts that exist today (all in tower-citizen). Any authority
-// cast NOT in the baseline — anywhere in packages-galerina src — is a VIOLATION (exit = count). The baseline
+// cast NOT in the baseline — anywhere in packages-ts src — is a VIOLATION (exit = count). The baseline
 // documents the known debt to remediate (behind a blessed `asVerdict()` / a gate), it does not bless growth:
 // a moved or added cast fails, and a baseline entry that no longer matches is surfaced (prune it — don't let
 // the allowlist outlive the debt). Additive: it touches no governance code, so it cannot regress the kernel.
@@ -45,7 +45,7 @@ const CAST_RE = new RegExp(`\\bas\\s+(${BANNED.join("|")})\\b`, "g");
 // validated first (SecurityTrap on a non-trit). Everything else is ZERO-TOLERANCE: any other `as Verdict`/`as
 // Trit` anywhere is a violation. A future blessed cast goes here WITH a note — but a mint is the only door.
 const BASELINE = [
-  { file: "packages-galerina/galerina-tower-citizen/src/tpl-simulator.ts", line: "return n as Trit;",
+  { file: "packages-ts/galerina-tower-citizen/src/tpl-simulator.ts", line: "return n as Trit;",
     note: "the ONE blessed number→Trit mint, inside asTrit() (validates -1|0|1 first; mirrors asVerdict). RD-0510 brand." },
 ];
 const baseKey = (file, line) => `${file}::${line}`;
@@ -83,7 +83,7 @@ function walk(dir, out = []) {
 
 // Pure core (unit-testable): scan `scanRoot` for banned authority casts, classify against `baseline`. Paths
 // are keyed relative to `relBase` (default: scanRoot) so the baseline can use repo-root-relative paths while
-// the walk starts inside a subtree (real run: walk packages-galerina, key from repo root).
+// the walk starts inside a subtree (real run: walk packages-ts, key from repo root).
 export function scanCasts(scanRoot, baseline = BASELINE, relBase = scanRoot) {
   const known = new Set(baseline.map((b) => baseKey(b.file, b.line)));
   const seen = new Set();
@@ -147,7 +147,7 @@ function selfTest() {
 // ── main ────────────────────────────────────────────────────────────────────────────────────────────────
 if (SELFTEST) { selfTest(); process.exit(0); }
 
-const { violations, debt, stale } = scanCasts(join(ROOT, "packages-galerina"), BASELINE, ROOT);
+const { violations, debt, stale } = scanCasts(join(ROOT, "packages-ts"), BASELINE, ROOT);
 
 if (asJson) {
   console.log(JSON.stringify({ tool: "cast-hygiene", banned: BANNED, violations, debt, stale }, null, 2));

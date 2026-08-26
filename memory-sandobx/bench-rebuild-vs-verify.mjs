@@ -20,7 +20,7 @@ import { writeFileSync, readFileSync, mkdirSync, rmSync, existsSync } from "node
 import { dirname, join } from "node:path";
 
 const HERE = dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
-const DIST = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "dist") + "/";
+const DIST = join(HERE, "..", "packages-ts", "galerina-core-compiler", "dist") + "/";
 if (!existsSync(DIST + "index.js")) { console.error("DENY: no dist — build it or point elsewhere."); process.exit(2); }
 const M = await import(pathToFileURL(DIST + "index.js").href);
 const G = await import(pathToFileURL(DIST + "execution-graph.js").href);

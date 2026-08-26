@@ -6,8 +6,8 @@ accept.
 
 > **Ground rule of this library: the parser is the source of truth.**
 > Every construct on these pages is grounded in a real source — the parser
-> (`packages-galerina/galerina-core-compiler/src/parser.ts`), the lexer keyword table
-> (`packages-galerina/galerina-core-compiler/src/lexer.ts`), a passing example under
+> (`packages-ts/galerina-core-compiler/src/parser.ts`), the lexer keyword table
+> (`packages-ts/galerina-core-compiler/src/lexer.ts`), a passing example under
 > `examples/`, the self-hosted compiler (`.../src/self-hosted/*.fungi`), or a Knowledge-Base
 > spec. Where the older docs disagree with the parser, the parser wins and we say so.
 > If you can't cite it, don't write it. **Verify by running the compiler**, not by trusting a doc.

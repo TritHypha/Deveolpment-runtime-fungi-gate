@@ -482,7 +482,7 @@ run(
   "npm",
   ["test"],
   {
-    cwd: join(ROOT, "packages-galerina", "galerina-devtools-benchmarks"),
+    cwd: join(ROOT, "packages-ts", "galerina-devtools-benchmarks"),
   },
 );
 
@@ -570,7 +570,7 @@ if (existsSync(goalsDir)) {
 
 // ── 2. DevTools + ext package tests ──
 for (const p of ["naming", "context", "intelligence", "provenance", "pci"]) {
-  const dir = join(ROOT, "packages-galerina", `galerina-devtools-${p}`);
+  const dir = join(ROOT, "packages-ts", `galerina-devtools-${p}`);
   if (existsSync(join(dir, "tests"))) run(`tests:devtools-${p}`, "npm", ["test", "--silent"], { cwd: dir });
 }
 // Non-core extension packages. ext-bridge-cpp is gated HERE (not just in the full suite) because it
@@ -578,7 +578,7 @@ for (const p of ["naming", "context", "intelligence", "provenance", "pci"]) {
 // be REFUSED before require() — so a regression that re-opens the native-load fail-open (arbitrary code
 // execution, CWE-494/-347) fails the phase-close gate, not only the full run.
 for (const p of ["galerina-ext-secrets-vault", "galerina-ext-proof-snarkjs", "galerina-ext-bridge-cpp"]) {
-  const dir = join(ROOT, "packages-galerina", p);
+  const dir = join(ROOT, "packages-ts", p);
   const label = p.replace("galerina-ext-", "");
   if (existsSync(join(dir, "tests"))) run(`tests:ext-${label}`, "npm", ["test", "--silent"], { cwd: dir });
 }
@@ -592,8 +592,8 @@ if (existsSync(corpus)) {
   } else {
     const fungiFiles = readdirSync(corpus).filter((f) => f.endsWith(".fungi"));
     try {
-    const sec = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-security/dist/index.js")).href);
-    const nam = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-naming/dist/index.js")).href);
+    const sec = await import(pathToFileURL(join(ROOT, "packages-ts/galerina-devtools-security/dist/index.js")).href);
+    const nam = await import(pathToFileURL(join(ROOT, "packages-ts/galerina-devtools-naming/dist/index.js")).href);
     let secFindings = 0, secErrors = 0, namFindings = 0;
     for (const f of fungiFiles) {
       const src = readFileSync(join(corpus, f), "utf8");
@@ -620,7 +620,7 @@ if (existsSync(corpus)) {
   }
   // provenance directory audit — exit 2 = "risk flows found" is INFORMATIONAL, not a failure.
   run("audit:provenance", "node",
-    ["packages-galerina/galerina-devtools-provenance/dist/cli.js", "audit", corpus], { okCodes: [0, 2] });
+    ["packages-ts/galerina-devtools-provenance/dist/cli.js", "audit", corpus], { okCodes: [0, 2] });
 }
 
 // ── 4b. CBOR round-trip verification (task #67) ──
@@ -635,7 +635,7 @@ if (options.staticOracle) {
       const manifestFiles = readdirSync(buildDir).filter(f => f.endsWith(".lmanifest") && !f.endsWith(".json"));
       if (manifestFiles.length > 0) {
         const { decodeCBOR, encodeCBOR } = await import(
-          pathToFileURL(join(ROOT, "packages-galerina/galerina-core-compiler/dist/manifest-generator.js")).href
+          pathToFileURL(join(ROOT, "packages-ts/galerina-core-compiler/dist/manifest-generator.js")).href
         );
         let allOk = true;
         const failures = [];
@@ -809,7 +809,7 @@ run("private-doc-leak", "node", ["scripts/audit-private-doc-leak.mjs"]);
 //   a pure integrity defect that silently re-opens. --stale-only gates freshness ALONE (the Check-B
 //   uncertified-ratio/admission gate wires in after the per-metric-table restructure). Regenerate with
 //   `node src/compare.mjs > report.md`. Exit 3 on staleness. Blocking.
-run("bench-report-stale", "node", ["packages-galerina/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs", "--stale-only"]);
+run("bench-report-stale", "node", ["packages-ts/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs", "--stale-only"]);
 // artifact-drift — RD-0499 family A (2026-07-18): a count STATED in a doc must equal the GENERATED
 //   registry (A1 marker + prose forms — the "90 vs 133" class), and dead/phantom are shrink-only (A3).
 //   The structural stamp (gen-code-registry overwrites the markers) makes count-drift unrepresentable;
@@ -930,7 +930,7 @@ run("doc:reference-drift", "node", ["scripts/audit-reference-doc-drift.mjs"]);
 run("name:collisions", "node", ["scripts/audit-name-collisions.mjs"]);
 
 // workspace:pointers — CI guard for galerina.workspace.json named pointer fields (Bob review 2026-07).
-//   Every packages-galerina/* path in the workspace file must resolve to a real directory. Catches a
+//   Every packages-ts/* path in the workspace file must resolve to a real directory. Catches a
 //   renamed package that didn't update the workspace file, a stale named-pointer key, or a missing
 //   package.json — the class the myco orphan detection was doing manually. Exit 1 on broken pointers.
 run("workspace:pointers", "node", ["scripts/validate-workspace-pointers.mjs"]);
@@ -1028,7 +1028,7 @@ run("doc:stray", "node", ["scripts/audit-stray-docs.mjs"]);
 run("doc:drift", "node", ["scripts/audit-doc-drift.mjs", "--soft"]);
 
 // ── 5d. Dev-tool script tests (scripts/tests/) ──
-// These live OUTSIDE packages-galerina, so the package runner (run-all-tests.cjs) never sees them. Run them
+// These live OUTSIDE packages-ts, so the package runner (run-all-tests.cjs) never sees them. Run them
 // here so the audit/index/registry tooling is regression-gated (e.g. the shared code-regex self-test).
 const toolingTests = existsSync(join(ROOT, "scripts", "tests"))
   ? readdirSync(join(ROOT, "scripts", "tests")).filter((f) => f.endsWith(".test.mjs")).map((f) => join("scripts", "tests", f))
@@ -1064,7 +1064,7 @@ if (options.staticOracle) {
       const diffResult = runOwnedProcessSync({
         command: process.execPath,
         args: [
-          "packages-galerina/galerina-core-compiler/dist/cli.js",
+          "packages-ts/galerina-core-compiler/dist/cli.js",
           "diff",
           "HEAD~1",
           "--json",

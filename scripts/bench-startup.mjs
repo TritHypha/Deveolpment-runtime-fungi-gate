@@ -81,7 +81,7 @@ function runFloors(pairs) {
 // ── phases: in-process marks over the real pipeline ────────────────────────────────────────────
 async function runPhases() {
   const marks = [["t0", performance.now()]];
-  const L = await import(pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href);
+  const L = await import(pathToFileURL(join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js")).href);
   marks.push(["import-done", performance.now()]);
   const src = readFileSync(join(ROOT, FIXTURE), "utf8");
   const prog = L.parseProgram(src, FIXTURE);

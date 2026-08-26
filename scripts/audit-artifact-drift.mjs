@@ -338,10 +338,10 @@ if (process.argv.includes("--self-test")) {
   ok(isScanSurface("README.md") && isScanSurface("build/status/STATUS.md") && isScanSurface("docs/a/b.md"), "surface INCLUDES the dirs that state registry counts (a drift there is visible)");
   ok(!isScanSurface("node_modules/p/README.md") && !isScanSurface("dist/x.md"), "surface EXCLUDES vendored + build-output trees");
   ok(!isScanSurface("build/code-registry/registry.json"), "a non-markdown artifact is not scanned as a doc");
-  // The wrong-scan-surface fixture: a count in packages-galerina/ is OUTSIDE A1's glob, so A1 would
+  // The wrong-scan-surface fixture: a count in packages-ts/ is OUTSIDE A1's glob, so A1 would
   // MISS it. This is a deliberate, PINNED blind spot (package notes are not a registry-count source);
   // if the surface is ever silently narrowed or this dir is meant to count, this assertion breaks first.
-  ok(!isScanSurface("packages-galerina/foo/NOTES.md"), "★ wrong-scan-surface: a count in packages-galerina/ is outside A1's surface — pinned blind spot, not a silent miss");
+  ok(!isScanSurface("packages-ts/foo/NOTES.md"), "★ wrong-scan-surface: a count in packages-ts/ is outside A1's surface — pinned blind spot, not a silent miss");
 
   console.log(`\n${fail === 0 ? "✅" : "❌"} artifact-drift self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail === 0 ? 0 : 1);

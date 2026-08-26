@@ -6,8 +6,8 @@ Electrical and OT package folders have been moved out of the active workspace
 to:
 
 ```text
-C:\laragon\www\Galerina_Archive\packages-galerina\Galerina-electrical-core
-C:\laragon\www\Galerina_Archive\packages-galerina\Galerina-ot-core
+C:\laragon\www\Galerina_Archive\packages-ts\Galerina-electrical-core
+C:\laragon\www\Galerina_Archive\packages-ts\Galerina-ot-core
 ```
 
 This document is retained as planning context only. Electrical and OT packages

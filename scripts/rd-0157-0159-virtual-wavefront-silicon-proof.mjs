@@ -28,7 +28,7 @@
 
 import { createHash, randomBytes } from "node:crypto";
 import { performance } from "node:perf_hooks";
-import { Verdict, vAnd, vNot, authorize } from "../packages-galerina/galerina-tower-citizen/dist/index.js";
+import { Verdict, vAnd, vNot, authorize } from "../packages-ts/galerina-tower-citizen/dist/index.js";
 
 const { DENY, INDETERMINATE, ALLOW } = Verdict;
 const TRITS = [DENY, INDETERMINATE, ALLOW];

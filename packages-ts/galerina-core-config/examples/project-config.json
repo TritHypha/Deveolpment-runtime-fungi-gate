@@ -1,0 +1,40 @@
+{
+  "project": {
+    "name": "galerina-app",
+    "version": "0.1.0",
+    "root": ".",
+    "entryFiles": ["packages-ts/galerina-framework-example-app/src/index.fungi"],
+    "packages": [
+      "packages-ts/galerina-core",
+      "packages-ts/galerina-core-config",
+      "packages-ts/galerina-framework-example-app"
+    ],
+    "production": {
+      "packageOverrides": []
+    },
+    "strict": true,
+    "targets": ["cpu", "wasm"],
+    "defaultPackage": "packages-ts/galerina-framework-example-app",
+    "docs": {
+      "app": "docs",
+      "config": "packages-ts/galerina-core-config"
+    }
+  },
+  "environment": {
+    "mode": "production",
+    "variables": [
+      {
+        "name": "Galerina_APP_ENV",
+        "required": true,
+        "scope": "runtime"
+      }
+    ],
+    "secrets": [
+      {
+        "name": "Galerina_APP_SECRET",
+        "required": true,
+        "scope": "runtime"
+      }
+    ]
+  }
+}

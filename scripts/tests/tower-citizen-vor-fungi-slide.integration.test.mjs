@@ -77,7 +77,7 @@ describe("Slice 92 Tower-Citizen vOr through physical SLIDE/VOK", () => {
     const context = slide.portableVeoReferenceContext();
     const sourcePath = join(
       ROOT,
-      "packages-galerina",
+      "packages-ts",
       "galerina-tower-citizen",
       "src",
       "self-hosted",

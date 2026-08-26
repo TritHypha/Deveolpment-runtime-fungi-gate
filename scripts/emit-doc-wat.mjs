@@ -28,7 +28,7 @@ const DOCS = ["docs/reference/cost-model-nesting.md"]; // add pages that quote W
 const BEGIN_RE = /<!--\s*emit-doc-wat:BEGIN\s+source=(\S+)\s+flows=(\S+)\s*-->/g;
 
 async function loadCompiler() {
-  return import(pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href);
+  return import(pathToFileURL(join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js")).href);
 }
 
 // Extract one `(func $name …)` s-expression by paren balancing — the same shape the emitter renders.
@@ -87,7 +87,7 @@ const L = await loadCompiler();
 
 if (mode === "self-test") {
   const ok = (c, m) => { console.log(`  ${c ? "✅" : "❌"} ${m}`); if (!c) process.exitCode = 1; };
-  const TWIN = "packages-galerina/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi";
+  const TWIN = "packages-ts/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi";
   const excerpt = await generateExcerpt(L, TWIN, ["syncGateVerdict", "driftGateVerdict"]);
   ok(excerpt.includes("(func $syncGateVerdict") && excerpt.includes("(func $driftGateVerdict"), "both flows extracted from the real emitted WAT");
   ok(excerpt.includes("call $syncGateVerdict"), "the flow-call row is real: driftGateVerdict contains `call $syncGateVerdict`");

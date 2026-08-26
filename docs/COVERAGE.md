@@ -1251,24 +1251,24 @@ downloaded update  = http/https/tcp/udp/grpc/websocket/quic                    (
 
 ### Package docs updated
 
-- `packages-galerina/galerina-core/docs/README.md`
-- `packages-galerina/galerina-core/docs/package-boundaries.md`
-- `packages-galerina/galerina-core/docs/webhooks.md`
-- `packages-galerina/galerina-core/docs/tri-logic.md`
-- `packages-galerina/galerina-core/docs/omni-logic.md`
-- `packages-galerina/galerina-core/docs/backend-compute-support-targets.md`
-- `packages-galerina/galerina-core-photonic/README.md`
-- `packages-galerina/galerina-core-vector/README.md`
-- `packages-galerina/galerina-core-logic/README.md`
-- `packages-galerina/galerina-core-network/README.md`
-- `packages-galerina/galerina-framework-api-server/README.md`
-- `packages-galerina/galerina-core-security/README.md`
-- `packages-galerina/galerina-core-photonic/TODO.md`
-- `packages-galerina/galerina-core-vector/TODO.md`
-- `packages-galerina/galerina-core-logic/TODO.md`
-- `packages-galerina/galerina-core-network/TODO.md`
-- `packages-galerina/galerina-framework-api-server/TODO.md`
-- `packages-galerina/galerina-core-security/TODO.md`
+- `packages-ts/galerina-core/docs/README.md`
+- `packages-ts/galerina-core/docs/package-boundaries.md`
+- `packages-ts/galerina-core/docs/webhooks.md`
+- `packages-ts/galerina-core/docs/tri-logic.md`
+- `packages-ts/galerina-core/docs/omni-logic.md`
+- `packages-ts/galerina-core/docs/backend-compute-support-targets.md`
+- `packages-ts/galerina-core-photonic/README.md`
+- `packages-ts/galerina-core-vector/README.md`
+- `packages-ts/galerina-core-logic/README.md`
+- `packages-ts/galerina-core-network/README.md`
+- `packages-ts/galerina-framework-api-server/README.md`
+- `packages-ts/galerina-core-security/README.md`
+- `packages-ts/galerina-core-photonic/TODO.md`
+- `packages-ts/galerina-core-vector/TODO.md`
+- `packages-ts/galerina-core-logic/TODO.md`
+- `packages-ts/galerina-core-network/TODO.md`
+- `packages-ts/galerina-framework-api-server/TODO.md`
+- `packages-ts/galerina-core-security/TODO.md`
 
 ### Workspace docs updated
 

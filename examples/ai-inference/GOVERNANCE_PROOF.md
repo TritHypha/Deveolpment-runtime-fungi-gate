@@ -117,4 +117,4 @@ Neither recovers the other directly. The supervisor manages both.
 
 - `../../../ZTF-Knowledge-Bases/reference/galerina/galerina-hybrid-wasm-architecture.md` — architecture decisions and rules
 - `../../../ZTF-Knowledge-Bases/reference/galerina/galerina-phase-27-ai-native.md` — Phase 27 KB doc
-- `packages-galerina/galerina-core-compiler/src/type-registry.ts` — `NativePluginManifest` type
+- `packages-ts/galerina-core-compiler/src/type-registry.ts` — `NativePluginManifest` type

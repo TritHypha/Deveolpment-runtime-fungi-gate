@@ -364,7 +364,7 @@ The project should keep a clear boundary between:
 
 ```text
 packages/          normal app/vendor package space
-packages-galerina/   Galerina language, runtime, tooling, target and domain packages
+packages-ts/   Galerina language, runtime, tooling, target and domain packages
 ```
 
 Core package families may include:

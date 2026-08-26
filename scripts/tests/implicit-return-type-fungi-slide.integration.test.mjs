@@ -6,8 +6,8 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { it } from "node:test";
 
-import { parseProgram } from "../../packages-galerina/galerina-core-compiler/dist/index.js";
-import { checkNaming } from "../../packages-galerina/galerina-devtools-naming/dist/index.js";
+import { parseProgram } from "../../packages-ts/galerina-core-compiler/dist/index.js";
+import { checkNaming } from "../../packages-ts/galerina-devtools-naming/dist/index.js";
 
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
@@ -16,7 +16,7 @@ const SLIDE_AVAILABLE =
   && existsSync(join(SLIDE_ROOT, "src", "checked-fungi-package-compiler.mjs"));
 const SOURCE = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-devtools-naming",
   "src",
   "self-hosted",

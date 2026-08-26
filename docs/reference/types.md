@@ -6,7 +6,7 @@ developer extends the set. This is the detail page behind the "Typed boundary" t
 boundary, and the type checker holds you to it.
 
 **Source of truth — one function, not one table:** `isBuiltInType()` in
-`packages-galerina/galerina-core-compiler/src/type-checker.ts` (the R5A unified gate). A bare type name is accepted
+`packages-ts/galerina-core-compiler/src/type-checker.ts` (the R5A unified gate). A bare type name is accepted
 **iff** it passes this gate (or is developer-declared / imported); otherwise `FUNGI-TYPE-001`. The gate is the
 **union of three tables**:
 

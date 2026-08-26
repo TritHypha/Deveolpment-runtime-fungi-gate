@@ -205,7 +205,7 @@ All notable changes to this app should be documented here.
   fallback reporting, on-device/no-network checks and tensor shape validation.
 - Added bounded Omni logic rules in `galerina-core-logic` and the 20th core
   `.fungi` example, `logic-review-scale.fungi`.
-- Added `packages-galerina/galerina-core/docs/syntax-logic-status.md` with a
+- Added `packages-ts/galerina-core/docs/syntax-logic-status.md` with a
   compact Galerina syntax and logic status table.
 - Expanded the syntax and logic status table with detailed entries for loops,
   flow modifiers, vector flows, class/object-model decisions, I/O, memory,
@@ -304,23 +304,23 @@ All notable changes to this app should be documented here.
   evidence and local AI review.
 - Reworked `docs/README.md` into a navigation page for framework concepts,
   contract types, generated reports, rules and package-level references.
-- Added `packages-galerina/galerina-core/docs/language-core-maturity-roadmap.md` to
+- Added `packages-ts/galerina-core/docs/language-core-maturity-roadmap.md` to
   track missing Galerina language-core maturity items, including compiler
   pipeline, protocols, deterministic cleanup, trusted interop, package
   management, testing, async runtime, source-mapped runtime errors and standard
   library work.
-- Added `packages-galerina/galerina-core/docs/compliance-and-privacy.md` plus the
+- Added `packages-ts/galerina-core/docs/compliance-and-privacy.md` plus the
   `galerina-compliance` package family for privacy, security control mapping,
   data governance, audit, retention, AI governance, accessibility, deployment
   policy and compliance report contracts.
 - Moved the `galerina-compliance*` package family to
-  `packages-galerina-enterprise/` so enterprise-only compliance and audit package
-  contracts are no longer part of the active `packages-galerina/` workspace graph.
-- Added `packages-galerina/galerina-core/docs/data-processing.md` plus the
+  `packages-ts-enterprise/` so enterprise-only compliance and audit package
+  contracts are no longer part of the active `packages-ts/` workspace graph.
+- Added `packages-ts/galerina-core/docs/data-processing.md` plus the
   `galerina-data` package family for HTML, search, archive, JSON, database
   archive, streaming pipeline, memory-limit, security and data-processing
   report contracts.
-- Expanded `packages-galerina/galerina-core/docs/data-processing.md` with typed
+- Expanded `packages-ts/galerina-core/docs/data-processing.md` with typed
   database model, query, command, response and archive boundaries, and added
   `galerina-data-db`, `galerina-data-model`, `galerina-data-query`,
   `galerina-data-response` and initial `galerina-db-*` provider adapter scaffolds.
@@ -363,7 +363,7 @@ All notable changes to this app should be documented here.
 - Added `docs/SECURE_WEB_RUNTIME_FIRST.md` to position Galerina's first milestone
   as a secure web runtime with application policy, deployment checks, package
   permissions, typed APIs, security reports and AI-safe context.
-- Added `docs/NETWORK_ETHERNET_IO.md` and `packages-galerina/galerina-core-network/`
+- Added `docs/NETWORK_ETHERNET_IO.md` and `packages-ts/galerina-core-network/`
   to define Galerina network and Ethernet I/O positioning, deny-by-default
   network policy, TLS policy, backpressure, zero-copy planning, XDP/eBPF and
   DPDK adapter boundaries, deployment profiles and network reports.
@@ -387,7 +387,7 @@ All notable changes to this app should be documented here.
   `package.json` remains NPM/host tooling and Galerina package graph fields stay in
   future `package-galerina.json`/`galerina.lock.json` manifests.
 - Documented the completed move of Galerina packages from `packages/` to
-  `packages-galerina/`, with `packages/` reserved for normal app/vendor package
+  `packages-ts/`, with `packages/` reserved for normal app/vendor package
   space.
 - Added `docs/PACKAGE_NAMING.md` with naming prefix rules, staged rename
   candidates and future `galerina-io-*` package guidance.
@@ -399,7 +399,7 @@ All notable changes to this app should be documented here.
   diagnostic and experimental packages that production applications should not
   download by default.
 - Added `docs/PACKAGE_LAYOUT.md` for the proposed `package-galerina.json`,
-  `galerina.lock.json`, `packages/` and `packages-galerina/` split.
+  `galerina.lock.json`, `packages/` and `packages-ts/` split.
 - Added `docs/PROFILE_INSTALLERS.md` to define one Galerina language with
   profile-aware installer presets for web, server, agent, systems and future
   kernel project types.
@@ -427,46 +427,46 @@ All notable changes to this app should be documented here.
   treated as untrusted by default until validated, typed, permissioned,
   provenance-checked or policy-reviewed, with trust transitions represented in
   types, policies or reports.
-- Added `docs/FINANCE_PACKAGES.md` and `packages-galerina/galerina-finance-core/` as a grouped
+- Added `docs/FINANCE_PACKAGES.md` and `packages-ts/galerina-finance-core/` as a grouped
   beta finance package area covering finance maths, market data, FIX, audit,
   risk, pricing and desktop interoperability boundaries.
-- Added `packages-galerina/galerina-core/docs/language-positioning-principles.md`
+- Added `packages-ts/galerina-core/docs/language-positioning-principles.md`
   to keep Galerina positioning focused on secure runtime behavior,
   AI-readability and target-aware planning.
 - Initial documentation structure.
-- Added `packages-galerina/galerina-framework-app-kernel/` as the optional partial framework
+- Added `packages-ts/galerina-framework-app-kernel/` as the optional partial framework
   layer for secure runtime boundaries.
 - Added a checked Run Mode hello-world test fixture for the app kernel package.
 - Added the Galerina logic, compute type and secure runtime future-support proposal.
 - Removed active legacy extension warning comments from Galerina core documentation.
-- Added `packages-galerina/galerina-framework-api-server/` documentation as the built-in HTTP API
+- Added `packages-ts/galerina-framework-api-server/` documentation as the built-in HTTP API
   serving layer for Galerina App Kernel.
-- Added `packages-galerina/galerina-core-cli/` as the Galerina developer command-line package scaffold.
-- Added `packages-galerina/galerina-core-tasks/` as the safe typed project automation package
+- Added `packages-ts/galerina-core-cli/` as the Galerina developer command-line package scaffold.
+- Added `packages-ts/galerina-core-tasks/` as the safe typed project automation package
   scaffold.
-- Added `packages-galerina/galerina-core-logic/` for `Tri`, `Galerina` and future Omni logic.
-- Added `packages-galerina/galerina-core-photonic/` for photonic and wavelength hardware concepts.
-- Added `packages-galerina/galerina-core-vector/` for vector value, lane and operation concepts.
-- Added `packages-galerina/galerina-core-compute/` for compute planning and target selection
+- Added `packages-ts/galerina-core-logic/` for `Tri`, `Galerina` and future Omni logic.
+- Added `packages-ts/galerina-core-photonic/` for photonic and wavelength hardware concepts.
+- Added `packages-ts/galerina-core-vector/` for vector value, lane and operation concepts.
+- Added `packages-ts/galerina-core-compute/` for compute planning and target selection
   concepts.
-- Added `packages-galerina/galerina-target-native/` for future native executable
+- Added `packages-ts/galerina-target-native/` for future native executable
   target planning.
-- Added `packages-galerina/galerina-target-wasm/` for WebAssembly target planning.
-- Added `packages-galerina/galerina-target-gpu/` for GPU target planning.
-- Added `packages-galerina/galerina-target-photonic/` for photonic backend target planning.
-- Added `packages-galerina/galerina-core-compiler/` for compiler pipeline contracts.
-- Added `packages-galerina/galerina-core-runtime/` for checked and compiled execution contracts.
-- Added `packages-galerina/galerina-core-security/` for reusable security primitives and report
+- Added `packages-ts/galerina-target-wasm/` for WebAssembly target planning.
+- Added `packages-ts/galerina-target-gpu/` for GPU target planning.
+- Added `packages-ts/galerina-target-photonic/` for photonic backend target planning.
+- Added `packages-ts/galerina-core-compiler/` for compiler pipeline contracts.
+- Added `packages-ts/galerina-core-runtime/` for checked and compiled execution contracts.
+- Added `packages-ts/galerina-core-security/` for reusable security primitives and report
   contracts.
-- Added `packages-galerina/galerina-core-config/` for project configuration and environment mode
+- Added `packages-ts/galerina-core-config/` for project configuration and environment mode
   contracts.
-- Added `packages-galerina/galerina-core-reports/` for shared report schemas and report-writing
+- Added `packages-ts/galerina-core-reports/` for shared report schemas and report-writing
   contracts.
-- Added TODO documents for `packages-galerina/galerina-framework-api-server/` and
-  `packages-galerina/galerina-framework-app-kernel/`.
-- Added README and TODO documents for `packages-galerina/galerina-framework-example-app/`.
+- Added TODO documents for `packages-ts/galerina-framework-api-server/` and
+  `packages-ts/galerina-framework-app-kernel/`.
+- Added README and TODO documents for `packages-ts/galerina-framework-example-app/`.
 - Added CLI and task runner requirements in
-  `packages-galerina/galerina-core-cli-and-galerina-core-tasks-requirements.md`.
+  `packages-ts/galerina-core-cli-and-galerina-core-tasks-requirements.md`.
 - Added `galerina-core-config` project config parsing, environment mode loading,
   production strictness policy, safe environment variable references, runtime
   handoff contracts, examples and tests.
@@ -476,17 +476,17 @@ All notable changes to this app should be documented here.
 - Added `galerina-core-security` SecureString references, redaction helpers, permission
   decisions, safe token/cookie/header references, crypto policy validation,
   security reports, examples and tests.
-- Added `packages-galerina/galerina-ai/` for generic AI inference contracts, safety policy and
+- Added `packages-ts/galerina-ai/` for generic AI inference contracts, safety policy and
   AI inference reports.
-- Added `packages-galerina/galerina-ai-lowbit/` for low-bit and ternary AI inference contracts,
+- Added `packages-ts/galerina-ai-lowbit/` for low-bit and ternary AI inference contracts,
   with BitNet represented as an optional backend.
-- Added `packages-galerina/galerina-target-cpu/` for CPU capability, fallback and execution
+- Added `packages-ts/galerina-target-cpu/` for CPU capability, fallback and execution
   planning contracts.
-- Added `packages-galerina/galerina-cpu-kernels/` for optimized CPU kernel contracts.
+- Added `packages-ts/galerina-cpu-kernels/` for optimized CPU kernel contracts.
 - Added a low-bit AI backend architecture note.
-- Added `packages-galerina/galerina-devtools-project-graph/` for project knowledge graph contracts,
+- Added `packages-ts/galerina-devtools-project-graph/` for project knowledge graph contracts,
   graph scan policy, output manifests and AI assistant map support.
-- Added local `node packages-galerina\galerina-core-cli\dist\index.js graph --out build\graph`
+- Added local `node packages-ts\galerina-core-cli\dist\index.js graph --out build\graph`
   run instructions for project graph generation.
 - Added AI-facing instructions to consult and regenerate `build\graph` project
   graph outputs when graph data is missing or stale.
@@ -507,26 +507,26 @@ All notable changes to this app should be documented here.
 - Reworked `docs/DESIGN.md` from generic UI placeholders into a template and
   developer-experience design guide for docs, tooling, reports and future app
   UX boundaries.
-- Added `packages-galerina/galerina-ai-neural/` for neural model, layer, inference and training
+- Added `packages-ts/galerina-ai-neural/` for neural model, layer, inference and training
   boundary contracts.
-- Added `packages-galerina/galerina-ai-neuromorphic/` for spike, event-signal and spiking model
+- Added `packages-ts/galerina-ai-neuromorphic/` for spike, event-signal and spiking model
   contracts.
-- Added `packages-galerina/galerina-target-ai-accelerator/` for NPU, TPU and AI-chip target
+- Added `packages-ts/galerina-target-ai-accelerator/` for NPU, TPU and AI-chip target
   planning contracts.
 - Added `docs/NEURAL_ACCELERATOR_PACKAGES.md` to document neural,
   neuromorphic, low-bit, AI accelerator and photonic package boundaries.
 - Expanded `galerina-core-vector` with matrix, tensor, shape and numeric element contract
   placeholders.
-- Added `packages-galerina/galerina-ai-agent/` for supervised AI agent, tool permission, task
+- Added `packages-ts/galerina-ai-agent/` for supervised AI agent, tool permission, task
   group, merge policy and report contracts.
-- Added `packages-galerina/galerina-ai-agent-parallel-compute.md` documenting parallel AI agents,
+- Added `packages-ts/galerina-ai-agent-parallel-compute.md` documenting parallel AI agents,
   CPU/GPU compute separation, supervised task groups, target fallback and agent
   safety rules.
 - Added `docs/RESILIENT_FLOWS.md` documenting controlled recovery, resilient
   flows, retries, quarantine, checkpoints, memory/system failure policy and
   partial success reporting.
 - Added `galerina-core-reports` processing report contracts for resilient/batch flows.
-- Added `packages-galerina/galerina-tools-benchmark/` for Galerina benchmark and diagnostics contracts,
+- Added `packages-ts/galerina-tools-benchmark/` for Galerina benchmark and diagnostics contracts,
   including light/full modes, target fallback checks, privacy-safe reports and
   optional future sharing payloads.
 - Added a placeholder `Galerina benchmark` CLI command entry for the future benchmark
@@ -552,8 +552,8 @@ All notable changes to this app should be documented here.
   development-only packages such as `galerina-tools-benchmark` and `galerina-devtools-*`,
   with explicit reported production package overrides required when policy
   allows them.
-- Added `docs/ELECTRICAL_INFRASTRUCTURE.md`, `packages-galerina/galerina-electrical-core/`
-  and `packages-galerina/galerina-ot-core/` for electrical infrastructure and
+- Added `docs/ELECTRICAL_INFRASTRUCTURE.md`, `packages-ts/galerina-electrical-core/`
+  and `packages-ts/galerina-ot-core/` for electrical infrastructure and
   operational-technology package planning, with explicit safety boundaries
   against replacing certified protection equipment, PLC safety systems, SCADA
   products or qualified electrical engineering judgement.
@@ -564,17 +564,17 @@ All notable changes to this app should be documented here.
 
 ### Changed
 
-- Renamed the generic `packages-galerina/app/` folder to
-  `packages-galerina/galerina-framework-example-app/` so the package collection does not contain an
+- Renamed the generic `packages-ts/app/` folder to
+  `packages-ts/galerina-framework-example-app/` so the package collection does not contain an
   ambiguous `app` package name.
-- Updated workspace documentation and configuration to use `packages-galerina/galerina-core/`
+- Updated workspace documentation and configuration to use `packages-ts/galerina-core/`
   for the Galerina language package.
 - Renamed the legacy language install script to `install-Galerina.sh`.
 - Clarified that Galerina core is the language/compiler layer, while the Secure App
   Kernel is the optional runtime layer and full frameworks remain separate.
 - Clarified that `galerina-framework-api-server` serves HTTP and delegates validation, auth and
   typed execution to `galerina-framework-app-kernel`.
-- Documented the future split-repository layout where `packages-galerina/` can become
+- Documented the future split-repository layout where `packages-ts/` can become
   its own reusable Git repository imported by multiple frameworks.
 - Added simple `console.log("...")` output support to Galerina core checked Run Mode.
 - Expanded `galerina-core-compute` target selection contracts with `low_bit_ai`,
@@ -617,11 +617,11 @@ All notable changes to this app should be documented here.
 ### Removed
 
 - Removed stale generated-output-only duplicate package folders
-  `packages-galerina/galerina-cli/`, `packages-galerina/galerina-compute/` and
-  `packages-galerina/galerina-config/` after confirming the canonical `galerina-core-*` packages
+  `packages-ts/galerina-cli/`, `packages-ts/galerina-compute/` and
+  `packages-ts/galerina-config/` after confirming the canonical `galerina-core-*` packages
   contain the current source, tests, manifests and newer contracts.
-- Moved `packages-galerina/galerina-finance-core/`, `packages-galerina/galerina-electrical-core/` and
-  `packages-galerina/galerina-ot-core/` to `C:\laragon\www\Galerina_Archive\packages-galerina\` and
+- Moved `packages-ts/galerina-finance-core/`, `packages-ts/galerina-electrical-core/` and
+  `packages-ts/galerina-ot-core/` to `C:\laragon\www\Galerina_Archive\packages-ts\` and
   removed them from active workspace package resolution.
 
 ### Fixed

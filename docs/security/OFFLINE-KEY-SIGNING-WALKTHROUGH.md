@@ -23,7 +23,7 @@ mount it again for this artifact.
 The verified public index is tracked at:
 
 ```text
-packages-galerina/galerina-registry/registry-index-v2.json
+packages-ts/galerina-registry/registry-index-v2.json
 ```
 
 Production registry signing is green. This does not independently authorize

@@ -8,12 +8,12 @@ Authority: owner decision — one package/plugin, one top-level canonical instan
 
 Galerina will not reproduce npm's recursive dependency forest. Every
 independently resolvable package or plugin has exactly one canonical direct
-child directory under `packages-galerina/`. A package may contain ordinary
+child directory under `packages-ts/`. A package may contain ordinary
 source, tests, assets and build outputs, but it may not contain another
 resolvable package identity.
 
 ```text
-packages-galerina/
+packages-ts/
 ├── galerina-core/
 ├── galerina-core-security/
 ├── galerina-ext-tritsocket/
@@ -45,7 +45,7 @@ current audit. The `--post-slide` profile rejects the greeting debt and all 95
 
 For each dependency edge, the resolver must verify all of:
 
-1. the requested identity names one direct child of `packages-galerina/`;
+1. the requested identity names one direct child of `packages-ts/`;
 2. exactly one manifest claims the canonical identity;
 3. the admitted version, public ABI, source/content digest and signer match the
    root lock authority;
@@ -62,7 +62,7 @@ Flat placement is necessary but not sufficient. The terminal migration gate is
 `node scripts/ts-retirement-graph.mjs --post-slide`. It requires all of the
 following in one independently re-derived decision:
 
-1. zero tracked `packages-galerina/**/*.ts` paths;
+1. zero tracked `packages-ts/**/*.ts` paths;
 2. zero nested native package identities;
 3. zero package-local `node_modules` trees;
 4. every production `.fungi` source under a package `src/` tree admitted by

@@ -75,7 +75,7 @@ function sourceDateEpoch(builtAt) {
 function derive(root, builtAt) {
   const cli = join(
     root,
-    "packages-galerina",
+    "packages-ts",
     "galerina-core-cli",
     "dist",
     "index.js",

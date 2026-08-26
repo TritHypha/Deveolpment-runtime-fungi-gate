@@ -171,13 +171,13 @@ Once `galerina` is on your PATH, try the governance-cost benchmark — it comput
 
 **Run it:**
 ```bash
-galerina run packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi --invoke main
+galerina run packages-ts/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi --invoke main
 # → 5050
 ```
 
 **Compile to WebAssembly:**
 ```bash
-galerina build packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi
+galerina build packages-ts/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi
 # → build/benchmark.wasm  (~130 bytes — governance compiled in, no runtime attached)
 # → build/benchmark.wat
 ```
@@ -201,7 +201,7 @@ galerina check examples/auth-service/verifyPassword.fungi
 The benchmark suite compares Galerina's WASM output against Rust (generic + AVX2), Node.js, Python, and real GPU across 36 workloads.
 
 ```bash
-cd packages-galerina/galerina-devtools-benchmarks
+cd packages-ts/galerina-devtools-benchmarks
 
 # Run all benchmarks (takes 5–10 minutes):
 npm run run
@@ -231,7 +231,7 @@ Galerina/
 │       ├── sovereignTransaction.fungi  Tier 1 ASIC hardening example
 │       └── ...28 more flows
 │
-├── packages-galerina/
+├── packages-ts/
 │   └── galerina-devtools-benchmarks/
 │       └── benchmarks/
 │           ├── governance-cost/    benchmark.fungi ← good starting point

@@ -1,15 +1,15 @@
 {
   "schema": "galerina.ts-to-fungi-sandbox.batch.v1",
   "requests": [
-    { "file": "packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_INPUT_BYTES" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_INPUT_DEPTH" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_INPUT_NODES" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_CONTAINER_FIELDS" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts", "symbol": "SNAPSHOT_KEY_CONTEXT" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/substrate-erasure.ts", "symbol": "STORAGE_ADMIT_CAP" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/photonic-admission.ts", "symbol": "PHOTONIC_REPROGRAM_CAP" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/precision-strategy.ts", "symbol": "LOOSE_TOLERANCE" },
-    { "file": "packages-galerina/galerina-core-compiler/src/resilience-inference.ts", "symbol": "NETWORK_EFFECTS" },
-    { "file": "packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts", "symbol": "MISSING_SANDBOX_SYMBOL" }
+    { "file": "packages-ts/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_INPUT_BYTES" },
+    { "file": "packages-ts/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_INPUT_DEPTH" },
+    { "file": "packages-ts/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_INPUT_NODES" },
+    { "file": "packages-ts/galerina-tower-citizen/src/plugin-sandbox.ts", "symbol": "MAX_CONTAINER_FIELDS" },
+    { "file": "packages-ts/galerina-tower-citizen/src/snapshot-key-provider.ts", "symbol": "SNAPSHOT_KEY_CONTEXT" },
+    { "file": "packages-ts/galerina-tower-citizen/src/substrate-erasure.ts", "symbol": "STORAGE_ADMIT_CAP" },
+    { "file": "packages-ts/galerina-tower-citizen/src/photonic-admission.ts", "symbol": "PHOTONIC_REPROGRAM_CAP" },
+    { "file": "packages-ts/galerina-tower-citizen/src/precision-strategy.ts", "symbol": "LOOSE_TOLERANCE" },
+    { "file": "packages-ts/galerina-core-compiler/src/resilience-inference.ts", "symbol": "NETWORK_EFFECTS" },
+    { "file": "packages-ts/galerina-tower-citizen/src/snapshot-key-provider.ts", "symbol": "MISSING_SANDBOX_SYMBOL" }
   ]
 }

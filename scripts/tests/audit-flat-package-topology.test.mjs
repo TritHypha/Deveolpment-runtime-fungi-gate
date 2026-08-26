@@ -105,7 +105,7 @@ describe("flat Galerina package topology audit", () => {
 
   it("refuses a symlinked package subtree instead of following or ignoring it", () => {
     const root = mkdtempSync(join(tmpdir(), "flat-topology-symlink-"));
-    const packageRoot = join(root, "packages-galerina");
+    const packageRoot = join(root, "packages-ts");
     const owner = join(packageRoot, "galerina-core");
     const external = join(root, "external-package");
     try {

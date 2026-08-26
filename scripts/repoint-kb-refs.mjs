@@ -51,7 +51,7 @@
 //     scripts/status.mjs, scripts/rd-absorb.mjs, scripts/tests/dev-tools-scripts.test.mjs,
 //     scripts/kb-index.mjs, scripts/audit-coverage.mjs, and
 //     docs/paper/defensive-papers/*fail-open-taxonomy*.md.
-//   • packages-galerina/galerina-core-compiler/docs/Knowledge-Bases/ — an in-repo
+//   • packages-ts/galerina-core-compiler/docs/Knowledge-Bases/ — an in-repo
 //     VESTIGE dir that still exists; refs that legitimately point INTO it resolve
 //     in-repo and must stay. (The matcher also structurally refuses a nested
 //     `…/docs/Knowledge-Bases/`, so this is belt-and-suspenders.)
@@ -105,7 +105,7 @@ const EXCLUDE_PREFIXES = [
   "node_modules/",
   "build/",
   // In-repo vestige KB dir — files inside it, and refs pointing into it, stay put.
-  "packages-galerina/galerina-core-compiler/docs/Knowledge-Bases/",
+  "packages-ts/galerina-core-compiler/docs/Knowledge-Bases/",
 ];
 
 // Named tooling defaults — rewritten with the canonical sibling path (like all
@@ -113,8 +113,8 @@ const EXCLUDE_PREFIXES = [
 const TOOLING_FILES = new Set([
   "galerina.mjs",
   "galerina.check.json",
-  "packages-galerina/galerina-devtools-kb-graph/src/scanner.ts",
-  "packages-galerina/galerina-devtools-kb-graph/src/cli.ts",
+  "packages-ts/galerina-devtools-kb-graph/src/scanner.ts",
+  "packages-ts/galerina-devtools-kb-graph/src/cli.ts",
 ]);
 
 // Binary-ish extensions we never scan (defensive; git-tracked corpus is mostly text).

@@ -16,7 +16,7 @@ deletion?
 - `scripts/audit-flat-package-topology.mjs`
 - `scripts/tests/audit-flat-package-topology.test.mjs`
 - `galerina.workspace.json`
-- `packages-galerina/galerina-devtools-wasmtime-oracle/`
+- `packages-ts/galerina-devtools-wasmtime-oracle/`
 - `../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
 - package graph, provenance, SBOM, naming, registry, and test tools
 

@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const REPOSITORY_ROOT = resolve(dirname(SCRIPT_PATH), "..");
-const COMPILER_DIRECTORY = "packages-galerina/galerina-core-compiler";
+const COMPILER_DIRECTORY = "packages-ts/galerina-core-compiler";
 const STRICT_FIXTURE = "examples/wasm-hello-world/greet.fungi";
 const ALLOWED_PLATFORMS = new Set(["win32", "darwin", "linux"]);
 const ALLOWED_ARCHITECTURES = new Set(["x64", "arm64"]);

@@ -7,7 +7,7 @@ import {
 } from "../verify-registry-static-host-build-recipe.mjs";
 
 const recipePath = new URL(
-  "../../packages-galerina/galerina-framework-app-kernel/native/registry-activation-host/host-build-recipe.json",
+  "../../packages-ts/galerina-framework-app-kernel/native/registry-activation-host/host-build-recipe.json",
   import.meta.url,
 );
 

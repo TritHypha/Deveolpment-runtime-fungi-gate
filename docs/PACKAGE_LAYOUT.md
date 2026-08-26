@@ -5,7 +5,7 @@
 This document describes the proposed split between normal app/vendor packages
 and reusable Galerina packages.
 
-The current beta workspace has moved Galerina packages under `packages-galerina/`. The
+The current beta workspace has moved Galerina packages under `packages-ts/`. The
 `packages/` directory is reserved for normal app/vendor package space.
 
 ## Proposed App Layout
@@ -19,7 +19,7 @@ my-galerina-app/
 |-- main.fungi
 |-- packages/
 |   `-- normal app/vendor packages
-`-- packages-galerina/
+`-- packages-ts/
     |-- .git
     |-- galerina-core/
     |-- galerina-core-compiler/
@@ -84,7 +84,7 @@ certification level, selected profile and approved runtime targets.
 `packages/` should be for normal app/vendor packages used by the host
 ecosystem.
 
-`packages-galerina/` is for Galerina packages. It may later be a Git submodule or
+`packages-ts/` is for Galerina packages. It may later be a Git submodule or
 standalone nested repository, but that must be intentional. In this beta repo it
 also contains `galerina-framework-example-app/`, a clearly named example/template app package.
 
@@ -140,7 +140,7 @@ Example object-shaped policy:
   "production": {
     "packageOverrides": [
       {
-        "path": "packages-galerina/galerina-tools-benchmark",
+        "path": "packages-ts/galerina-tools-benchmark",
         "reason": "One-off production hardware validation before launch.",
         "expires": "2026-06-01"
       }
@@ -154,5 +154,5 @@ Example object-shaped policy:
 Do not add root `package-galerina.json` or `galerina.lock.json` as decorative files. Add
 them only when their schemas and resolver behaviour are documented and tested.
 
-Current beta work may add new experimental Galerina packages under `packages-galerina/` as
+Current beta work may add new experimental Galerina packages under `packages-ts/` as
 long as documentation states their status clearly.

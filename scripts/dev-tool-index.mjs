@@ -45,7 +45,7 @@ const ROOT = ROOT_ARG >= 0 && process.argv[ROOT_ARG + 1]
   ? resolve(process.argv[ROOT_ARG + 1])
   : join(HERE, "..");
 const SCRIPTS_DIR = join(ROOT, "scripts");
-const PKG_DIR = join(ROOT, "packages-galerina");
+const PKG_DIR = join(ROOT, "packages-ts");
 const OUT_DIR = join(ROOT, "build", "dev-tool-index");
 const JSON_OUT = process.argv.includes("--json");
 const CHECK = process.argv.includes("--check");

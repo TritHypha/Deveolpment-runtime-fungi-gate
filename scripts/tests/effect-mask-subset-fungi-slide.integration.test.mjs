@@ -9,7 +9,7 @@ import { it } from "node:test";
 import {
   EffectFlags,
   effectsSubset,
-} from "../../packages-galerina/galerina-core-compiler/dist/index.js";
+} from "../../packages-ts/galerina-core-compiler/dist/index.js";
 
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
 const SLIDE_AVAILABLE =
@@ -17,7 +17,7 @@ const SLIDE_AVAILABLE =
   && existsSync(join(SLIDE_ROOT, "src", "checked-fungi-package-compiler.mjs"));
 const SOURCE = join(
   process.cwd(),
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-compiler",
   "src",
   "self-hosted",

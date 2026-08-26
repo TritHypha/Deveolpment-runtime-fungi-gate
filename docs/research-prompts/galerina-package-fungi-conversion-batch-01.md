@@ -16,7 +16,7 @@ once per assigned package.
 
 This batch does not authorize Galerina source edits. A separately assigned AI
 may write one candidate only under the external
-`Galerina-Fungi-Package-Staging/packages-galerina/<PACKAGE>/` quarantine,
+`Galerina-Fungi-Package-Staging/packages-ts/<PACKAGE>/` quarantine,
 following that workspace's handover and flat-topology audit. The executable
 SLIDE package ABI, host-effect boundary and differential harness are not yet
 frozen, so such a candidate is syntax/parity preparation rather than an
@@ -39,7 +39,7 @@ Each package has one assigned reviewer and one named report. Reviewers must not
 share an editable worktree or edit a shared/generated file.
 
 The coordinator-authored reference candidate is
-`Galerina-Fungi-Package-Staging/packages-galerina/galerina-substrate-math/`.
+`Galerina-Fungi-Package-Staging/packages-ts/galerina-substrate-math/`.
 It passes current plain and strict Galerina frontend checks, but remains
 `PENDING` because executable SLIDE parity and mutation evidence do not yet
 exist.

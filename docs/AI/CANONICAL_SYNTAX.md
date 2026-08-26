@@ -269,7 +269,7 @@ Available effect names:
 | `ledger.mutate` | The `storage.write` + `audit.write` composite |
 
 > **Authoritative set (corrected 2026-07-04):** the full canonical effect vocabulary is `CANONICAL_EFFECTS` in
-> `packages-galerina/galerina-core-compiler/src/effect-checker.ts` (single-source, validated by
+> `packages-ts/galerina-core-compiler/src/effect-checker.ts` (single-source, validated by
 > `scripts/audit-effect-canonicality.mjs`). A declared effect **outside** that set fails a production compile
 > (`FUNGI-EFFECT-004`). This table previously listed `network.egress` / `vault.read` / `queue.publish`, which the
 > compiler does **not** accept — the real names are `network.outbound` / `secret.read` / `message.publish`. See

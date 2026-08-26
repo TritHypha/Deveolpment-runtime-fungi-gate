@@ -31,7 +31,7 @@ claim.
 `scripts/fungi-source-capability-inventory.mjs`:
 
 - accepts only sorted, unique, repository-confined
-  `packages-galerina/**/*.fungi` paths from the retirement graph;
+  `packages-ts/**/*.fungi` paths from the retirement graph;
 - refuses redirected roots, symlinked/redirected inputs, traversal, invalid
   UTF-8, duplicate JSON fields, parser errors and unknown AST kinds;
 - bounds the corpus to 4,096 files, 10 MiB per file and 128 MiB total;

@@ -26,7 +26,7 @@ function write(root, relativePath, content) {
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "kb-graph-root-"));
   const kb = mkdtempSync(join(tmpdir(), "kb-graph-corpus-"));
-  const dist = "packages-galerina/galerina-devtools-kb-graph/dist";
+  const dist = "packages-ts/galerina-devtools-kb-graph/dist";
   write(root, "package.json", '{"type":"module"}\n');
   write(root, `${dist}/scanner.js`, `
     import { readdirSync, readFileSync, statSync } from "node:fs";

@@ -3,7 +3,7 @@
 // written in) for the properties that must hold before they lower kernel → GIR → WASM. 2026-07-03.
 //
 // Owner ask: "audit .fungi files written for the runtime, tests including for the kernel→GIR→WASM." The
-// Stage-B runtime is authored in packages-galerina/galerina-core-compiler/src/self-hosted/*.fungi and lowers
+// Stage-B runtime is authored in packages-ts/galerina-core-compiler/src/self-hosted/*.fungi and lowers
 // through the SAME GIR→WASM backend as `.gate`. Two 2026-07-03 fail-closed fixes bound what runtime `.fungi`
 // may contain, and this auditor enforces them on the corpus as a standing gate:
 //
@@ -28,7 +28,7 @@ import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CORE = join(ROOT, "packages-galerina", "galerina-core-compiler");
+const CORE = join(ROOT, "packages-ts", "galerina-core-compiler");
 const SELF_HOSTED = join(CORE, "src", "self-hosted");
 const TESTS_DIR = join(CORE, "tests");
 // The kernel→GIR→WASM path tests that must exist (parity oracle + Stage-B pipeline/compile).

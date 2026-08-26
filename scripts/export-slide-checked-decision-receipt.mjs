@@ -21,8 +21,8 @@ import {
   parseProgram,
   resolveSymbols,
   verifyGovernance,
-} from "../packages-galerina/galerina-core-compiler/dist/index.js";
-import { computeGIRHash } from "../packages-galerina/galerina-core-compiler/dist/gir-emitter.js";
+} from "../packages-ts/galerina-core-compiler/dist/index.js";
+import { computeGIRHash } from "../packages-ts/galerina-core-compiler/dist/gir-emitter.js";
 
 const REQUEST_KEYS = Object.freeze([
   "packageId",

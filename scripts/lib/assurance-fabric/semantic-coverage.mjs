@@ -29,9 +29,9 @@ const MANIFEST_KEYS = Object.freeze([
   "systemContracts",
 ]);
 const TEST_PATTERN = /(?:^|\/)[^/]+\.(?:test|spec)\.(?:mjs|js|ts)$/u;
-const PACKAGE_PATH_PATTERN = /^packages-galerina\/([^/]+)$/u;
-const FUNGI_PATH_PATTERN = /^packages-galerina\/([^/]+)\/src\/.+\.fungi$/u;
-const PACKAGE_JSON_PATTERN = /^packages-galerina\/([^/]+)\/package\.json$/u;
+const PACKAGE_PATH_PATTERN = /^packages-ts\/([^/]+)$/u;
+const FUNGI_PATH_PATTERN = /^packages-ts\/([^/]+)\/src\/.+\.fungi$/u;
+const PACKAGE_JSON_PATTERN = /^packages-ts\/([^/]+)\/package\.json$/u;
 const MAX_INPUT_BYTES = 67_108_864;
 const MAX_TOTAL_BYTES = 536_870_912;
 const AUTHORITATIVE_INPUT_DOMAIN = Buffer.from(
@@ -337,7 +337,7 @@ function executableClass(path) {
 function deriveExecutableFamily(tracked, retirement) {
   const family = Object.fromEntries(EXECUTABLE_KEYS.map((key) => [key, []]));
   for (const path of tracked) {
-    if (!path.startsWith("packages-galerina/") || path.includes("/node_modules/")) continue;
+    if (!path.startsWith("packages-ts/") || path.includes("/node_modules/")) continue;
     const key = executableClass(path);
     if (key !== "outside-family") family[key].push(path);
   }
@@ -359,17 +359,17 @@ function deriveExecutableFamily(tracked, retirement) {
 
 function conserveExecutableSourceBytes(tracked, reader) {
   for (const path of tracked) {
-    if (!path.startsWith("packages-galerina/") || path.includes("/node_modules/")) continue;
+    if (!path.startsWith("packages-ts/") || path.includes("/node_modules/")) continue;
     if (executableClass(path) !== "outside-family") reader.read(path);
   }
 }
 
 function packageIdentity(packagePath) {
-  return `package:${packagePath.slice("packages-galerina/".length)}`;
+  return `package:${packagePath.slice("packages-ts/".length)}`;
 }
 
 function packageSpecifier(packagePath) {
-  const name = packagePath.slice("packages-galerina/".length);
+  const name = packagePath.slice("packages-ts/".length);
   return `@galerina/${name.replace(/^galerina-/u, "")}`;
 }
 
@@ -593,10 +593,10 @@ async function canonicalCompiler(root, reader, override) {
     return override;
   }
   const compilerFiles = [
-    "packages-galerina/galerina-core-compiler/dist/index.js",
-    "packages-galerina/galerina-core-compiler/dist/lexer.js",
-    "packages-galerina/galerina-core-compiler/dist/parser.js",
-    "packages-galerina/galerina-core-compiler/dist/route-registry.js",
+    "packages-ts/galerina-core-compiler/dist/index.js",
+    "packages-ts/galerina-core-compiler/dist/lexer.js",
+    "packages-ts/galerina-core-compiler/dist/parser.js",
+    "packages-ts/galerina-core-compiler/dist/route-registry.js",
   ];
   for (const path of compilerFiles) reader.read(path);
   const module = await import(pathToFileURL(resolve(root, ...compilerFiles[0].split("/"))).href);

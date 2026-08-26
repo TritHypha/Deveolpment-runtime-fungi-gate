@@ -326,7 +326,7 @@ contract {
 
 ## Real files to open
 
-* `packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi` — the richest real control
+* `packages-ts/galerina-core-compiler/src/self-hosted/lexer.fungi` — the richest real control
   flow: `while`, `match`/`Some`/`None`, `is`, sequential-`if` (no `else if`) dispatch.
 * `examples/foundations/validation-utils.fungi` — `trap` + `return` in tiny pure flows.
 * `examples/foundations/gate-access-example.fungi` — `trap` guards inside gated flows.

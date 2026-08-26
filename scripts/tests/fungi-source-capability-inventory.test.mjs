@@ -29,7 +29,7 @@ contract { intent { "Inventory fixture." } }
 
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "galerina-fungi-inventory-"));
-  const relativePath = "packages-galerina/galerina-test-probe/src/index.fungi";
+  const relativePath = "packages-ts/galerina-test-probe/src/index.fungi";
   const sourcePath = join(root, ...relativePath.split("/"));
   mkdirSync(join(sourcePath, ".."), { recursive: true });
   writeFileSync(sourcePath, SOURCE, "utf8");

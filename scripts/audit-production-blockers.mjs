@@ -20,8 +20,8 @@ import { readdirSync, statSync, readFileSync, existsSync, realpathSync } from "n
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const GATE = "packages-galerina/galerina-core-compiler/src/production-check.ts";
-const SRC_ROOT = "packages-galerina";
+const GATE = "packages-ts/galerina-core-compiler/src/production-check.ts";
+const SRC_ROOT = "packages-ts";
 
 // ── pure core ─────────────────────────────────────────────────────────────────────────────────────
 /** Parse the PRODUCTION_BLOCKERS Set literal -> array of codes. */

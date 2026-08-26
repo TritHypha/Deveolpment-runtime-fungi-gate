@@ -2,8 +2,8 @@
 // PostToolUse hook (Write|Edit): writes a sentinel file when any relevant
 // file is edited during a Claude turn. Watched paths:
 //
-//   packages-galerina/galerina-core*           — all galerina-core packages
-//   packages-galerina/galerina-devtools-graph-project — now depends on fungi-graph
+//   packages-ts/galerina-core*           — all galerina-core packages
+//   packages-ts/galerina-devtools-graph-project — now depends on fungi-graph
 //   FUNGI-Graph/src                          — the standalone library itself
 //
 // The Stop hook reads this sentinel to decide whether to run tests.
@@ -24,8 +24,8 @@ process.stdin.on('end', () => {
     const filePath = rawPath.replace(/\\/g, '/');
 
     const isRelevant =
-      /packages-galerina\/galerina-core/.test(filePath) ||
-      /packages-galerina\/galerina-devtools-graph-project/.test(filePath) ||
+      /packages-ts\/galerina-core/.test(filePath) ||
+      /packages-ts\/galerina-devtools-graph-project/.test(filePath) ||
       /FUNGI-Graph[\\/]src/.test(filePath);
 
     if (isRelevant) {

@@ -33,10 +33,10 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SH = join(ROOT, "packages-galerina/galerina-core-compiler/src/self-hosted");
-const DIST = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
+const SH = join(ROOT, "packages-ts/galerina-core-compiler/src/self-hosted");
+const DIST = join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js");
 const REGISTRY = join(ROOT, "docs/contract-registry/contract-registry.json");
-const TESTS = join(ROOT, "packages-galerina/galerina-core-compiler/tests");
+const TESTS = join(ROOT, "packages-ts/galerina-core-compiler/tests");
 
 // ── the declared surface ─────────────────────────────────────────────────────
 // Every entry is CHECKED against the Contract Registry before the sweep. A hand list that silently rots

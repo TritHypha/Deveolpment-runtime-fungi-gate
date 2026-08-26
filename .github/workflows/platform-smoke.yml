@@ -32,9 +32,9 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+          cache-dependency-path: packages-ts/galerina-core-compiler/package-lock.json
       - name: Install the pinned compiler floor
-        run: npm ci --prefix packages-galerina/galerina-core-compiler
+        run: npm ci --prefix packages-ts/galerina-core-compiler
       - name: Prove platform-smoke refusal contracts
         run: node --test scripts/tests/platform-smoke.test.mjs
       - name: Run hermetic platform smoke
@@ -66,9 +66,9 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+          cache-dependency-path: packages-ts/galerina-core-compiler/package-lock.json
       - name: Install the pinned compiler floor
-        run: npm ci --prefix packages-galerina/galerina-core-compiler
+        run: npm ci --prefix packages-ts/galerina-core-compiler
       - name: Prove platform-smoke refusal contracts
         run: node --test scripts/tests/platform-smoke.test.mjs
       - name: Run hermetic platform smoke
@@ -90,8 +90,8 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
-      - run: npm ci --prefix packages-galerina/galerina-core-compiler
+          cache-dependency-path: packages-ts/galerina-core-compiler/package-lock.json
+      - run: npm ci --prefix packages-ts/galerina-core-compiler
       - run: node --test scripts/tests/platform-smoke.test.mjs
       - run: node scripts/platform-smoke.mjs --json --expect-os windows-11 > functional-windows-11.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -109,8 +109,8 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
-      - run: npm ci --prefix packages-galerina/galerina-core-compiler
+          cache-dependency-path: packages-ts/galerina-core-compiler/package-lock.json
+      - run: npm ci --prefix packages-ts/galerina-core-compiler
       - run: node --test scripts/tests/platform-smoke.test.mjs
       - run: node scripts/platform-smoke.mjs --json --expect-os windows-10 > functional-windows-10.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -130,8 +130,8 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
-      - run: npm ci --prefix packages-galerina/galerina-core-compiler
+          cache-dependency-path: packages-ts/galerina-core-compiler/package-lock.json
+      - run: npm ci --prefix packages-ts/galerina-core-compiler
       - run: node --test scripts/tests/platform-smoke.test.mjs
       - run: node scripts/platform-smoke.mjs --json --expect-os linuxmint > functional-linuxmint.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

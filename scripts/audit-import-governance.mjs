@@ -32,7 +32,7 @@ const root = resolve(scriptDir, '..');
 const selfTest = process.argv.includes('--self-test');
 
 const { parseProgram } = await import(
-  new URL('../packages-galerina/galerina-core-compiler/dist/index.js', import.meta.url).href
+  new URL('../packages-ts/galerina-core-compiler/dist/index.js', import.meta.url).href
 );
 
 // Does a plugin import node carry an access { grant } contract? Mirrors the walk in

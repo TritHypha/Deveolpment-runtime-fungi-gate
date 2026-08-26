@@ -5,7 +5,7 @@ architecture for secure, AI-native and hardware-neutral computation across
 heterogeneous compute systems.
 
 This folder contains framework and app/workspace documentation. Language-core
-documentation lives in `../packages-galerina/galerina-core/`.
+documentation lives in `../packages-ts/galerina-core/`.
 
 ## Start Here
 
@@ -37,12 +37,12 @@ documentation lives in `../packages-galerina/galerina-core/`.
 26. [Built-In View Levels](../../ZTF-Knowledge-Bases/reference/language/builtin-view-levels.md)
 27. [Standard View Behaviour](../../ZTF-Knowledge-Bases/reference/language/standard-view-behaviour.md)
 28. [Preplanned Startup And Fast Response](../../ZTF-Knowledge-Bases/reference/language/preplanned-startup-and-fast-response.md)
-29. [Trust Conversion And Data Safety](../packages-galerina/galerina-core/docs/trust-conversion-and-data-safety.md)
-30. [Security Invariants And Policy Proof](../packages-galerina/galerina-core/docs/security-invariants-and-policy-proof.md)
-31. [AI Understandable Architecture Policy](../packages-galerina/galerina-core/docs/ai-understandable-architecture-policy.md)
-32. [Context Tagged Verified Execution Cache](../packages-galerina/galerina-core/docs/context-tagged-verified-execution-cache.md)
-33. [Package Resolver](../packages-galerina/galerina-core/docs/package-resolver.md)
-34. [Certified Package Registry](../packages-galerina/galerina-core/docs/certified-package-registry.md)
+29. [Trust Conversion And Data Safety](../packages-ts/galerina-core/docs/trust-conversion-and-data-safety.md)
+30. [Security Invariants And Policy Proof](../packages-ts/galerina-core/docs/security-invariants-and-policy-proof.md)
+31. [AI Understandable Architecture Policy](../packages-ts/galerina-core/docs/ai-understandable-architecture-policy.md)
+32. [Context Tagged Verified Execution Cache](../packages-ts/galerina-core/docs/context-tagged-verified-execution-cache.md)
+33. [Package Resolver](../packages-ts/galerina-core/docs/package-resolver.md)
+34. [Certified Package Registry](../packages-ts/galerina-core/docs/certified-package-registry.md)
 
 ## Core Framework Concepts
 
@@ -67,8 +67,8 @@ documentation lives in `../packages-galerina/galerina-core/`.
 - [Adapters And Connectors](framework/framework-adapters-connectors.md)
 - [MCP AI Tool Boundaries](framework/framework-mcp-ai-tool-boundaries.md)
 - [Packages](framework/framework-packages.md)
-- [Package Resolver](../packages-galerina/galerina-core/docs/package-resolver.md)
-- [Certified Package Registry](../packages-galerina/galerina-core/docs/certified-package-registry.md)
+- [Package Resolver](../packages-ts/galerina-core/docs/package-resolver.md)
+- [Certified Package Registry](../packages-ts/galerina-core/docs/certified-package-registry.md)
 - [Scoped Vaults](framework/framework-scoped-vaults.md)
 - [Reports](framework/framework-reports.md)
 - [Tests](framework/framework-tests.md)
@@ -111,7 +111,7 @@ documentation lives in `../packages-galerina/galerina-core/`.
 
 - [Core Application Model](../../ZTF-Knowledge-Bases/reference/language/core-application-model.md)
 - [Architecture Charter](../../ZTF-Knowledge-Bases/reference/language/architecture-charter.md)
-- [AI Understandable Architecture Policy](../packages-galerina/galerina-core/docs/ai-understandable-architecture-policy.md)
+- [AI Understandable Architecture Policy](../packages-ts/galerina-core/docs/ai-understandable-architecture-policy.md)
 - [Galerina Concept Map](../../ZTF-Knowledge-Bases/reference/galerina/galerina-concept-map.md)
 - [Developer-Friendly Permission Model](../../ZTF-Knowledge-Bases/reference/language/developer-friendly-permission-model.md)
 - [Policy Architecture](../../ZTF-Knowledge-Bases/reference/language/policy-architecture.md)
@@ -126,13 +126,13 @@ documentation lives in `../packages-galerina/galerina-core/`.
 - [Local Low-Bit AI Review](../../ZTF-Knowledge-Bases/reference/language/local-low-bit-ai-review.md)
 - [Software As Declared Intent](../../ZTF-Knowledge-Bases/reference/language/software-as-declared-intent.md)
 - [Securely Governed Runtime](../../ZTF-Knowledge-Bases/reference/language/securely-governed-runtime.md)
-- [Security Invariants And Policy Proof](../packages-galerina/galerina-core/docs/security-invariants-and-policy-proof.md)
+- [Security Invariants And Policy Proof](../packages-ts/galerina-core/docs/security-invariants-and-policy-proof.md)
 - [AI Compute Plan](../../ZTF-Knowledge-Bases/reference/language/ai-compute-plan.md)
 - [Specialist AI Hardware Compute Targets](../../ZTF-Knowledge-Bases/reference/language/specialist-ai-hardware-compute-targets.md)
 - [AI Self-Modification Governance](../../ZTF-Knowledge-Bases/reference/language/ai-self-modification-governance.md)
 - [Malicious Data And Exploit Resistance](../../ZTF-Knowledge-Bases/reference/language/malicious-data-and-exploit-resistance.md)
 - [Verified Fast Paths](../../ZTF-Knowledge-Bases/reference/language/verified-fast-paths.md)
-- [Context Tagged Verified Execution Cache](../packages-galerina/galerina-core/docs/context-tagged-verified-execution-cache.md)
+- [Context Tagged Verified Execution Cache](../packages-ts/galerina-core/docs/context-tagged-verified-execution-cache.md)
 - [Deny By Default Risk Features](../../ZTF-Knowledge-Bases/reference/language/deny-by-default-risk-features.md)
 - [Benchmark Success Plan](../../ZTF-Knowledge-Bases/reference/language/benchmark-success-plan.md)
 - [Match Catch-All Branch](../../ZTF-Knowledge-Bases/reference/language/match-catch-all-branch.md)
@@ -140,7 +140,7 @@ documentation lives in `../packages-galerina/galerina-core/`.
 - [Fast Response And Keep-Alive](../../ZTF-Knowledge-Bases/reference/language/fast-response-and-keep-alive.md)
 - [Preplanned Startup And Fast Response](../../ZTF-Knowledge-Bases/reference/language/preplanned-startup-and-fast-response.md)
 - [Boundary Extension Concepts](../../ZTF-Knowledge-Bases/reference/language/boundary-extension-concepts.md)
-- [Polymorphism](../packages-galerina/galerina-core/docs/polymorphism.md)
+- [Polymorphism](../packages-ts/galerina-core/docs/polymorphism.md)
 - [Priority Categories](../../ZTF-Knowledge-Bases/reference/language/priority-categories.md)
 - [Encapsulation Model](../../ZTF-Knowledge-Bases/reference/language/encapsulation-model.md)
 - [Model Security Contracts](../../ZTF-Knowledge-Bases/reference/language/model-security-contracts.md)
@@ -158,7 +158,7 @@ documentation lives in `../packages-galerina/galerina-core/`.
 - [Variable Mutation Vault Design](../../ZTF-Knowledge-Bases/reference/language/variable-mutation-vault-design.md)
 - [Explicit Mutation And Vault Writes](../../ZTF-Knowledge-Bases/reference/language/explicit-mutation-and-vault-writes.md)
 - [Secure By Default Syntax Principles](../../ZTF-Knowledge-Bases/reference/language/secure-by-default-syntax-principles.md)
-- [Trust Conversion And Data Safety](../packages-galerina/galerina-core/docs/trust-conversion-and-data-safety.md)
+- [Trust Conversion And Data Safety](../packages-ts/galerina-core/docs/trust-conversion-and-data-safety.md)
 - [Field Read Rules](../../ZTF-Knowledge-Bases/reference/language/field-read-rules.md)
 - [Audit Actor Model](../../ZTF-Knowledge-Bases/reference/language/audit-actor-model.md)
 - [Multi-Actor Audit Events](../../ZTF-Knowledge-Bases/reference/language/multi-actor-audit-events.md)
@@ -190,8 +190,8 @@ documentation and are not part of this public repository.
 
 ## Package-Level References
 
-- [Language Core Maturity Roadmap](../packages-galerina/galerina-core/docs/language-core-maturity-roadmap.md)
-- [Syntax And Logic Status](../packages-galerina/galerina-core/docs/syntax-logic-status.md)
-- [Polymorphism Direction](../packages-galerina/galerina-core/docs/polymorphism.md)
-- [Machine Profile Bridge](../packages-galerina/galerina-core/docs/machine-profile-bridge.md)
-- [Benchmark Diagnostics](../packages-galerina/galerina-tools-benchmark/README.md)
+- [Language Core Maturity Roadmap](../packages-ts/galerina-core/docs/language-core-maturity-roadmap.md)
+- [Syntax And Logic Status](../packages-ts/galerina-core/docs/syntax-logic-status.md)
+- [Polymorphism Direction](../packages-ts/galerina-core/docs/polymorphism.md)
+- [Machine Profile Bridge](../packages-ts/galerina-core/docs/machine-profile-bridge.md)
+- [Benchmark Diagnostics](../packages-ts/galerina-tools-benchmark/README.md)

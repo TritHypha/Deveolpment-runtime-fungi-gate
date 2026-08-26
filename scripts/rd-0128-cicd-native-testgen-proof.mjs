@@ -24,27 +24,27 @@ const section = (t) => console.log(`\n${t}`);
 
 // ── 1. SHIPPED EVIDENCE (verify-before-build: ~81% already re-derives shipped code) ──────────────
 section("1. Shipped machinery the four claims re-derive (read from source, not assumed)");
-const tg = read("packages-galerina/galerina-core-compiler/src/test-generator.ts");
+const tg = read("packages-ts/galerina-core-compiler/src/test-generator.ts");
 ok(/generateBoundaryTests/.test(tg), "CLAIM 1 +1 invariant-edge lane ships: generateBoundaryTests");
 ok(/generateFaultInjectionTests/.test(tg), "CLAIM 1  0 friction lane ships: generateFaultInjectionTests");
 ok(/generateCapabilityDenialTests/.test(tg), "CLAIM 1 -1 breach lane ships: generateCapabilityDenialTests");
 ok(/generateContractTestSuite/.test(tg), "CLAIM 1 aggregate ships: generateContractTestSuite");
 ok(/BOUNDARY_VALUES/.test(tg), "edge values come from a literal table BOUNDARY_VALUES (not a solver)");
-const parity = read("packages-galerina/galerina-ext-photonic-emulator/src/parity-conformance.ts");
+const parity = read("packages-ts/galerina-ext-photonic-emulator/src/parity-conformance.ts");
 ok(parity.length > 0 && /binary|emulat|parity/i.test(parity), "CLAIM 4(2) dual-substrate parity check ships: parity-conformance.ts");
-const fuse = read("packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts");
+const fuse = read("packages-ts/galerina-framework-app-kernel/src/fuse-loader.ts");
 ok(fuse.length > 1000 && /\bthrow\b/.test(fuse) && /(revok|signature|attest|tamper|sha256|verif)/i.test(fuse),
   "CLAIM 4(3) refuse-to-boot ships: fuse-loader throws on tamper/unsigned/revoked integrity failure");
-const lp = read("packages-galerina/galerina-core-compiler/src/leak-proof.ts");
+const lp = read("packages-ts/galerina-core-compiler/src/leak-proof.ts");
 ok(/canonicalLeakProof/.test(lp), "CLAIM 3 deterministic leak receipt ships: canonicalLeakProof");
 ok(/fungi\.leakproof\.v1/.test(lp), "CLAIM 3 stable schema ships: fungi.leakproof.v1");
-const gv = read("packages-galerina/galerina-core-compiler/src/governance-verifier.ts");
+const gv = read("packages-ts/galerina-core-compiler/src/governance-verifier.ts");
 ok(/CAPABILITY INTERSECTION/i.test(gv) || /intersection/i.test(gv), "CLAIM 3 capability-intersection ships: governance-verifier.ts");
 
 // ── 2. THE GAP IS BINDING, NOT NEW ENGINES (descriptors are inert; CLI absent; witness aspirational)
 section("2. The genuine gap: descriptor→executable binding + a signed receipt (no new engine)");
 ok(/#\s*TODO inject fault/.test(tg), "generator emits TODO descriptors, NOT executable assertions (renderFaultInjectionTAP)");
-const cli = read("packages-galerina/galerina-core-compiler/src/cli.ts");
+const cli = read("packages-ts/galerina-core-compiler/src/cli.ts");
 ok(cli.length > 0 && !/\btest\s*--?generate\b/.test(cli) && !/['\"]test:generate['\"]/.test(cli),
   "no `galerina test --generate` CLI command exists (net-new surface, not a new analysis)");
 // TestWitness TYPE seam LANDED (b8cef3b4, 2026-07-02) — increment 1 shipped (type+digest+pre-image);
@@ -101,7 +101,7 @@ ok(smtIsFutureCommentOnly || !/SMT/i.test(gv), '  the sole "SMT" reference is a 
 
 // ── 4. THE ONE BUILDABLE SEAM reuses shipped crypto (no new crypto/analysis invented) ─────────────
 section("4. Highest-value honest build: signed TestWitness through the EXISTING envelope");
-const ba = read("packages-galerina/galerina-tower-citizen/src/bridge-attestation.ts");
+const ba = read("packages-ts/galerina-tower-citizen/src/bridge-attestation.ts");
 ok(/attestationHash|signManifest|verifyAttestation/.test(ba), "existing attestation envelope present (attestationHash/signManifest/verifyAttestation)");
 ok(/ml[-_]?dsa|mldsa|dilithium/i.test(ba) && /ed25519/i.test(ba), "  hybrid Ed25519 + ML-DSA already shipped — the receipt reuses it, invents no crypto");
 ok(/canonicalLeakProof/.test(lp), "  determinism primitive already shipped — canonicalTestWitness mirrors canonicalLeakProof (no new serializer)");

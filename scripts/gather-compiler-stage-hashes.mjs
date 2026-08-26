@@ -21,7 +21,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_OUT = process.argv.includes("--json");
-const COMPILER = join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const COMPILER = join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js");
 
 // The 7 R3-byte-parity self-hosted compiler stages (RD-0528 §1). The stage basename is the
 // buildWATModuleFromGIR module name the wat-p9-*-parity test uses (verified: lexer → "lexer"). All
@@ -31,7 +31,7 @@ const STAGES = ["lexer", "parser", "gir-emitter", "runtime", "type-checker", "ef
 const L = await import(pathToFileURL(COMPILER).href);
 const rows = [];
 for (const stage of STAGES) {
-  const path = join(ROOT, "packages-galerina", "galerina-core-compiler", "src", "self-hosted", `${stage}.fungi`);
+  const path = join(ROOT, "packages-ts", "galerina-core-compiler", "src", "self-hosted", `${stage}.fungi`);
   let src = readFileSync(path, "utf8");
   if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
   const prog = L.parseProgram(src, `${stage}.fungi`);

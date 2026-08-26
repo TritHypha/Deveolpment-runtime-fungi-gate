@@ -1,4 +1,4 @@
-import { parseProgram } from "../../../packages-galerina/galerina-core-compiler/dist/index.js";
+import { parseProgram } from "../../../packages-ts/galerina-core-compiler/dist/index.js";
 
 import { SandboxRefusal } from "./contracts.mjs";
 import { admittedClassificationNode, isAdmittedClassification } from "./classifier.mjs";

@@ -19,11 +19,11 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const ROOT = join(import.meta.dirname, "..", "..", "..");
-const compilerRequire = createRequire(join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json"));
+const compilerRequire = createRequire(join(ROOT, "packages-ts", "galerina-core-compiler", "package.json"));
 
 export const lib = await import(pathToFileURL(join(ROOT, "scripts", "lib", "beta-release-evidence-envelope.mjs")).href);
 export const gate = await import(pathToFileURL(join(ROOT, "scripts", "lib", "gate-admission-envelope.mjs")).href);
-export const compiler = await import(pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href);
+export const compiler = await import(pathToFileURL(join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js")).href);
 const { ml_dsa65: mlDsa65 } = await import(pathToFileURL(compilerRequire.resolve("@noble/post-quantum/ml-dsa.js")).href);
 
 export const AT = "2026-08-07T12:00:00.000Z";

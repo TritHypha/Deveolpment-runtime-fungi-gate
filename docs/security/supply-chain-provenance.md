@@ -75,7 +75,7 @@ under an active pin all throw.
 **b. Verify a signed application artifact through the full admission gate (links 2–5):**
 
 ```sh
-node --input-type=module -e "const m = await import('./packages-galerina/galerina-framework-example-app/dist/server.js'); await m.fuseGreeting(); console.log('fuse gate: ACCEPT');"
+node --input-type=module -e "const m = await import('./packages-ts/galerina-framework-example-app/dist/server.js'); await m.fuseGreeting(); console.log('fuse gate: ACCEPT');"
 ```
 
 This is byte-for-byte the same gate the production image build runs (`Dockerfile`, builder

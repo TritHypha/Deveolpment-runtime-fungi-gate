@@ -144,7 +144,7 @@ test("kb-index: --code lists only the doc mentioning the code", () => {
 // Repointed 2026-07-17 from kb-index to code-index: kb-index was REMOVED from audit-provenance's ARTIFACTS when
 // build/kb-index/ was untracked + gitignored (it indexed the PRIVATE sibling KB and leaked -PRIVATE doc titles
 // into public Galerina). The STALE / UNSTAMPED / fresh DETECTION is artifact-agnostic, so the coverage moves to
-// code-index — a still-tracked in-repo artifact (sources: packages-galerina/docs/scripts). No coverage lost.
+// code-index — a still-tracked in-repo artifact (sources: packages-ts/docs/scripts). No coverage lost.
 const tmp7 = mkdtempSync(join(tmpdir(), "fungi-prov-"));
 after(() => { try { rmSync(tmp7, { recursive: true, force: true }); } catch { /* best effort */ } });
 const provRepo = join(tmp7, "repo");
@@ -238,7 +238,7 @@ test("overclaim-phrases: the fixture yields exactly the two intended violations"
 // or vice-versa, this goes red).
 const tmp9 = mkdtempSync(join(tmpdir(), "fungi-effcanon-"));
 after(() => { try { rmSync(tmp9, { recursive: true, force: true }); } catch { /* best effort */ } });
-const ec9 = join(tmp9, "packages-galerina", "galerina-core-compiler", "src");
+const ec9 = join(tmp9, "packages-ts", "galerina-core-compiler", "src");
 mkdirSync(ec9, { recursive: true });
 const writeEffFixture = (canon, flagNames) => {
   writeFileSync(join(ec9, "effect-checker.ts"), [
@@ -346,7 +346,7 @@ test("effect-canonicality C11: a clean allowlist (⊆ recognised) yields no C11 
 // is asserted to have NO silently-muted security/governance codes (regression guard).
 const tmp10 = mkdtempSync(join(tmpdir(), "fungi-muted-"));
 after(() => { try { rmSync(tmp10, { recursive: true, force: true }); } catch { /* best effort */ } });
-const mSrc = join(tmp10, "packages-galerina", "galerina-core-compiler", "src");
+const mSrc = join(tmp10, "packages-ts", "galerina-core-compiler", "src");
 mkdirSync(mSrc, { recursive: true });
 writeFileSync(join(mSrc, "x.ts"), [
   `export function f(mode) {`,

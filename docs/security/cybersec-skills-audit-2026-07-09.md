@@ -47,8 +47,8 @@ only; defensive, find-and-fix.
 ### F1 — `.lmanifest` verification is algorithm-pinned, not `alg`-driven (0294t) · **CONFIRMED**
 
 *Skill:* `exploiting-jwt-algorithm-confusion-attack`, `performing-cryptographic-audit-of-application`.
-*Code:* `packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts` `verifyManifestSignature` (L380-469);
-`packages-galerina/galerina-core-compiler/src/lmanifest-hybrid-verifier.ts` `makeLmanifestHybridVerifier`.
+*Code:* `packages-ts/galerina-framework-app-kernel/src/fuse-loader.ts` `verifyManifestSignature` (L380-469);
+`packages-ts/galerina-core-compiler/src/lmanifest-hybrid-verifier.ts` `makeLmanifestHybridVerifier`.
 
 The classic algorithm-confusion attack (attacker sets `alg` to `none`, or to a primitive that reuses the
 public key as an HMAC secret) is **unrepresentable** here, because the `algorithm` field is a **gate/router,
@@ -76,7 +76,7 @@ is non-authoritative.**
 
 ### F2 — `.spore` is genuinely unsigned-v0, fail-closed on any signed file (0294m) · **CONFIRMED**
 
-*Skill:* `implementing-code-signing-for-artifacts`. *Code:* `packages-galerina/galerina-ext-spore/src/container.ts`.
+*Skill:* `implementing-code-signing-for-artifacts`. *Code:* `packages-ts/galerina-ext-spore/src/container.ts`.
 
 - `writeSpore` writes an **UNSIGNED** container (`flags.signed = 0`) and *never writes a fake signature* —
   "real signing is slice 4 / #7". So the RD-0294m claim (`.spore` UNSIGNED) is accurate in the code, today.

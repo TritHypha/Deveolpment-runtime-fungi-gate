@@ -26,7 +26,7 @@ import {
 const ROOT = resolve(import.meta.dirname, "..", "..");
 const CLI = join(ROOT, "scripts", "release-evidence-authority-cli.mjs");
 const compilerRequire = createRequire(
-  join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json"),
+  join(ROOT, "packages-ts", "galerina-core-compiler", "package.json"),
 );
 const { ml_dsa65: mlDsa65 } = await import(
   pathToFileURL(compilerRequire.resolve("@noble/post-quantum/ml-dsa.js")).href

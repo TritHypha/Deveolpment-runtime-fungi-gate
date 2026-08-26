@@ -33,7 +33,7 @@ const CANDIDATES = [process.env.GALERINA_ROOT, process.cwd(), join(HERE, "../../
 const ROOT = CANDIDATES.find((c) => existsSync(join(c, "galerina.mjs")));
 assert.ok(ROOT, `Galerina repo not found (tried: ${CANDIDATES.join(" | ")})`);
 
-const dist = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js")).href);
+const dist = await import(pathToFileURL(join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js")).href);
 const { parseProgram, checkEffects, effectsToFlags } = dist;
 const INVENTED = ["mission.read", "orbit.compute", "propulsion.plan", "navigation.compute", "flight_control.propose"];
 
@@ -79,8 +79,8 @@ console.log("N3 ✅ lenient build mints NO signed manifest for an invented-name 
 {
   const tmp = mkdtempSync(join(tmpdir(), "fungi-proof-ns4-"));
   try {
-    mkdirSync(join(tmp, "packages-galerina", "galerina-core-compiler", "src"), { recursive: true });
-    writeFileSync(join(tmp, "packages-galerina", "galerina-core-compiler", "src", "effect-checker.ts"), [
+    mkdirSync(join(tmp, "packages-ts", "galerina-core-compiler", "src"), { recursive: true });
+    writeFileSync(join(tmp, "packages-ts", "galerina-core-compiler", "src", "effect-checker.ts"), [
       `const CANONICAL_EFFECTS = new Set(["audit.write"]);`,
       `const EFFECT_NAME_ALIASES: ReadonlyMap<string, string> = new Map([]);`,
       `const BROAD_EFFECT_ALIASES: ReadonlySet<string> = new Set([]);`,

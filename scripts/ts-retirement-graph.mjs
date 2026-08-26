@@ -3,7 +3,7 @@
 // "build a dev tool as part of the % to track .ts using graph").
 //
 // WHY: "why does *.ts still exist?" must be answerable with a NUMBER per retirement path, not prose.
-// Every tracked `.ts` under packages-galerina/*/src retires through exactly one of three events:
+// Every tracked `.ts` under packages-ts/*/src retires through exactly one of three events:
 //   1. #143 R4 flip     — it has a `.fungi` TWIN beside it (same package, same stem); an authority
 //                          ledger records whether TypeScript remains the differential oracle or the
 //                          checked `.fungi` twin is authoritative. Physical `.ts` retirement waits
@@ -83,7 +83,7 @@ const POST_SLIDE = process.argv.includes("--post-slide");
 // are not a permanent TypeScript exemption either.
 const FLOOR_PACKAGES = new Set(["galerina-substrate-math", "galerina-devtools-graph-algorithms", "galerina-core-security"]);
 const FLOOR_PATHS = new Set([
-  "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts",
+  "packages-ts/galerina-framework-app-kernel/src/host-floor.ts",
 ]);
 
 function isBoundedBootstrapFloor(path, packageName) {
@@ -108,16 +108,16 @@ const COMPILER_STAGE_FILES = new Set([
   "type-checker.fungi",
 ]);
 const GOVERNED_TWIN_DIRS = [
-  "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
-  "packages-galerina/galerina-tower-citizen/src/self-hosted",
-  "packages-galerina/galerina-core-runtime/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-io/src/self-hosted",
-  "packages-galerina/galerina-core-network/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-time/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-power/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-egress/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-state/src/self-hosted",
+  "packages-ts/galerina-framework-app-kernel/src/self-hosted",
+  "packages-ts/galerina-tower-citizen/src/self-hosted",
+  "packages-ts/galerina-core-runtime/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-memory/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-io/src/self-hosted",
+  "packages-ts/galerina-core-network/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-time/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-power/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-egress/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-state/src/self-hosted",
 ];
 
 const SOURCE_CANDIDATE_FIELDS = new Set([
@@ -272,7 +272,7 @@ function registeredPackageRoots(root, entries) {
   for (const [index, value] of workspace.packages.entries()) {
     if (
       typeof value !== "string"
-      || !/^packages-galerina\/[A-Za-z0-9][A-Za-z0-9._-]*$/.test(value)
+      || !/^packages-ts\/[A-Za-z0-9][A-Za-z0-9._-]*$/.test(value)
     ) {
       throw new Error(`${workspacePath} packages[${index}] is not one canonical owned package`);
     }
@@ -299,10 +299,10 @@ function frozenRetirementCorpus(root) {
     .map((entry) => entry.path);
   const packagePaths = [];
   for (const entry of entries) {
-    if (!entry.path.startsWith("packages-galerina/")) continue;
+    if (!entry.path.startsWith("packages-ts/")) continue;
     if (entry.mode === "160000") continue;
     const parts = entry.path.split("/");
-    // Root metadata such as packages-galerina/README.md has no package owner.
+    // Root metadata such as packages-ts/README.md has no package owner.
     if (parts.length < 3) continue;
     const packageRoot = parts.slice(0, 2).join("/");
     if (!packageRoots.has(packageRoot)) {
@@ -762,7 +762,7 @@ function authoritativeTwins(root, ledgerPath, fungiFiles) {
 }
 
 export function buildRetirementGraph(root = ROOT) {
-  const scope = /^packages-galerina\/[^/]+\/src\//;
+  const scope = /^packages-ts\/[^/]+\/src\//;
   const corpus = frozenRetirementCorpus(root);
   const trackedRepositoryFiles = new Set(corpus.repositoryPaths);
   const allTrackedPackageFiles = [...corpus.packagePaths];
@@ -829,7 +829,7 @@ export function buildRetirementGraph(root = ROOT) {
     }
     if (
       !fungiPath.startsWith(
-        "packages-galerina/galerina-core-compiler/src/self-hosted/",
+        "packages-ts/galerina-core-compiler/src/self-hosted/",
       )
       || !COMPILER_STAGE_FILES.has(basename(fungiPath))
     ) {
@@ -851,7 +851,7 @@ export function buildRetirementGraph(root = ROOT) {
     compilerAuthoritativeFlips + governedAuthoritativeFlips;
   const compilerStageTotal = fungi.filter((path) =>
     path.startsWith(
-      "packages-galerina/galerina-core-compiler/src/self-hosted/",
+      "packages-ts/galerina-core-compiler/src/self-hosted/",
     ) && COMPILER_STAGE_FILES.has(basename(path))
   ).length;
   const governedTwinTotal = fungi.filter((path) =>
@@ -927,7 +927,7 @@ export function buildRetirementGraph(root = ROOT) {
   };
   try {
     const baseline = loadTopologyBaseline(root);
-    const scan = scanWorkspace(join(root, "packages-galerina"));
+    const scan = scanWorkspace(join(root, "packages-ts"));
     const result = analyzeTopologyRecords({
       records: scan.records,
       legacyNestedNativeManifests: baseline.legacyNestedNativeManifests,
@@ -1042,10 +1042,10 @@ if (process.argv.includes("--self-test")) {
     g.totals.finderDrift === 0,
     "one staged-index snapshot conserves the tracked retirement corpus",
   );
-  ok(g.twinnedPairs.includes("packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts"), "known twin pair detected: secret-gate.ts ↔ secret-gate.fungi");
+  ok(g.twinnedPairs.includes("packages-ts/galerina-framework-app-kernel/src/secret-gate.ts"), "known twin pair detected: secret-gate.ts ↔ secret-gate.fungi");
   ok(
     g.retirementLedger.some((entry) =>
-      entry.path === "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts"
+      entry.path === "packages-ts/galerina-framework-app-kernel/src/host-floor.ts"
       && entry.declaredFloor === "bounded-bootstrap-floor"
     ),
     "single app-kernel host seam is classified as bounded bootstrap floor",

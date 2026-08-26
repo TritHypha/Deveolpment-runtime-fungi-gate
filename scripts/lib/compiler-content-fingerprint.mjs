@@ -12,7 +12,7 @@ function lengthPrefixed(hash, value) {
 
 function compilerFiles(root) {
   const files = [join(root, "galerina.mjs")];
-  const dist = join(root, "packages-galerina", "galerina-core-compiler", "dist");
+  const dist = join(root, "packages-ts", "galerina-core-compiler", "dist");
   function walk(directory) {
     let entries;
     try {

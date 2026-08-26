@@ -2,11 +2,11 @@
 
 ## Purpose
 
-This document defines the package naming scheme for `packages-galerina/`.
+This document defines the package naming scheme for `packages-ts/`.
 
 ```text
 packages/       normal app/vendor package space
-packages-galerina/    Galerina language, runtime, tooling, target and domain packages
+packages-ts/    Galerina language, runtime, tooling, target and domain packages
 ```
 
 Use grouped names so package purpose is visible from the directory alone.
@@ -16,7 +16,7 @@ Use grouped names so package purpose is visible from the directory alone.
 Use:
 
 ```text
-packages-galerina/galerina-[category]-[name]
+packages-ts/galerina-[category]-[name]
 ```
 
 `[category]` and `[name]` use registered lowercase kebab-case identifiers.
@@ -46,7 +46,7 @@ galerina-platform-raspberry-pi-5
 galerina-device-raspberry-pi-gpio
 ```
 
-The presence of one of these sources under `packages-galerina` means
+The presence of one of these sources under `packages-ts` means
 **source-present**, not installed. Consent-based local installation and exact
 project automatic-install policy are defined in
 `architecture/demand-admitted-native-provider-packs-2026-08-04.md` and
@@ -153,7 +153,7 @@ Galerina-electrical-core
 Galerina-ot-core
 ```
 
-These packages are preserved under `C:\laragon\www\Galerina_Archive\packages-galerina\`
+These packages are preserved under `C:\laragon\www\Galerina_Archive\packages-ts\`
 and must not be part of the active v1 build graph.
 
 ## Devtools Rule
@@ -174,10 +174,10 @@ explicit production package override with a reason and report output.
 Enterprise-only packages live outside the active package collection:
 
 ```text
-packages-galerina-enterprise/
+packages-ts-enterprise/
 ```
 
-Do not add packages from `packages-galerina-enterprise/` to `galerina.workspace.json`
+Do not add packages from `packages-ts-enterprise/` to `galerina.workspace.json`
 or production package profiles unless the project owner explicitly unlocks the
 named enterprise package or feature area.
 

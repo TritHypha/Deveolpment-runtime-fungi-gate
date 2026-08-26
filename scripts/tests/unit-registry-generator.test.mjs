@@ -20,9 +20,9 @@ const SCRIPT = resolve("scripts/gen-unit-registry.mjs");
 const PROVENANCE = resolve("scripts/lib/provenance.mjs");
 const SNAPSHOT = resolve("data/iso-4217/list-one-2026-07-16.xml");
 const TWIN_REL =
-  "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi";
+  "packages-ts/galerina-core-compiler/src/self-hosted/type-checker.fungi";
 const OUT_REL =
-  "packages-galerina/galerina-core-compiler/src/unit-registry.generated.ts";
+  "packages-ts/galerina-core-compiler/src/unit-registry.generated.ts";
 
 /**
  * Write one fixture file, creating its parent directories.

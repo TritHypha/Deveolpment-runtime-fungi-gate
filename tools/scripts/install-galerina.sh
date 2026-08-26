@@ -2,7 +2,7 @@
 
 set -e
 
-Galerina_DIR="packages-galerina/galerina-core"
+Galerina_DIR="packages-ts/galerina-core"
 Galerina_REPO="https://github.com/phillbooth/Galerina.git"
 
 if [ -d "$Galerina_DIR/.git" ]; then

@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 import {
   decodeCanonicalFrame,
   encodeCanonicalFrame,
-} from "../../packages-galerina/galerina-core-compiler/dist/index.js";
+} from "../../packages-ts/galerina-core-compiler/dist/index.js";
 
 const ROOT = join(fileURLToPath(new URL("../..", import.meta.url)));
 const BUILD_SCRIPT = join(ROOT, "scripts", "build-requirement-launcher.mjs");

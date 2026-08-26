@@ -61,7 +61,7 @@ export function escapesRoot(abs, root) {
 }
 
 /** Which package directory (if any) does an absolute path live in, given the packages root? */
-export function packageOf(abs, root, packagesDirName = "packages-galerina") {
+export function packageOf(abs, root, packagesDirName = "packages-ts") {
   const rel = relative(join(root, packagesDirName), abs);
   if (rel.startsWith("..") || isAbsolute(rel)) return null;
   const seg = rel.split(/[\\/]/)[0];
@@ -127,33 +127,33 @@ export function classifyRewrite({ fromFile, oldTarget, newTarget, repoRoot, pack
 
 function selfTest() {
   const R = "/repo";
-  const P = "packages-galerina";
+  const P = "packages-ts";
   const c = (fromFile, oldTarget, newTarget) =>
     classifyRewrite({ fromFile, oldTarget, newTarget, repoRoot: R, packagesDirName: P });
 
   const checks = [
     // ── SILENT: the legitimate rebrands. If these fire, the helper gets switched off and nothing asks. ──
     ["rebrand IN PLACE is silent (logicn-foo → galerina-foo, same dir)",
-      c("packages-galerina/pkg-a/src/x.ts", "./logicn-foo.js", "./galerina-foo.js").verdict === "silent"],
+      c("packages-ts/pkg-a/src/x.ts", "./logicn-foo.js", "./galerina-foo.js").verdict === "silent"],
     ["intra-package move is silent (./a.js → ../lib/a.js, same package)",
-      c("packages-galerina/pkg-a/src/x.ts", "./a.js", "../lib/a.js").verdict === "silent"],
+      c("packages-ts/pkg-a/src/x.ts", "./a.js", "../lib/a.js").verdict === "silent"],
     ["a docs-internal repoint is silent (docs/x.md → docs/y/z.md)",
       c("docs/README.md", "./old.md", "./sub/new.md").verdict === "silent"],
     ["a rewrite that PRESERVES an existing crossing is silent — the rename didn't create it",
-      c("packages-galerina/pkg-a/src/x.ts", "../../pkg-b/dist/old.js", "../../pkg-b/dist/new.js").verdict === "silent"],
+      c("packages-ts/pkg-a/src/x.ts", "../../pkg-b/dist/old.js", "../../pkg-b/dist/new.js").verdict === "silent"],
 
     // ── REFUSE: the two real cases, reconstructed from the actual defects. ──
     ["#34's ACTUAL rewrite refuses — docs/Knowledge-Bases/ → ../../ZTF-Knowledge-Bases/ escapes the root",
       c("docs/README.md", "./Knowledge-Bases/architecture-charter.md", "../../ZTF-Knowledge-Bases/architecture-charter.md").claim === "escapes-repo-root"],
     ["a NEW cross-package reach refuses (./config.js → ../../pkg-b/dist/config.js)",
-      c("packages-galerina/pkg-a/src/x.ts", "./config.js", "../../pkg-b/dist/config.js").claim === "crosses-package"],
+      c("packages-ts/pkg-a/src/x.ts", "./config.js", "../../pkg-b/dist/config.js").claim === "crosses-package"],
     ["…and it names both packages in the reason (so the message is actionable, not just a verdict)",
-      /from package 'pkg-a' into sibling 'pkg-b'/.test(c("packages-galerina/pkg-a/src/x.ts", "./config.js", "../../pkg-b/dist/config.js").reason)],
+      /from package 'pkg-a' into sibling 'pkg-b'/.test(c("packages-ts/pkg-a/src/x.ts", "./config.js", "../../pkg-b/dist/config.js").reason)],
 
     // ── the predicates themselves ──
     ["escapesRoot is arithmetic, never the filesystem", escapesRoot("/repo/../x", "/repo") && !escapesRoot("/repo/a/b", "/repo")],
     ["escapesRoot compares SEGMENTS not prefixes (/repo-evil is not inside /repo)", escapesRoot("/repo-evil/x", "/repo")],
-    ["packageOf finds the owning package", packageOf("/repo/packages-galerina/pkg-a/src/x.ts", R, P) === "pkg-a"],
+    ["packageOf finds the owning package", packageOf("/repo/packages-ts/pkg-a/src/x.ts", R, P) === "pkg-a"],
     ["packageOf returns null outside packages/", packageOf("/repo/docs/x.md", R, P) === null],
   ];
 

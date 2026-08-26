@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";import { existsSync, readFileSync } from "node:fs";import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";import { tmpdir } from "node:os";import { join } from "node:path";import { pathToFileURL } from "node:url";import { it } from "node:test";
-const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
+const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-ts","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
 const CANDIDATES=Object.freeze([
   ["fused-pass-pack-opcode-status.fungi","fusedPassPackOpcodeStatusCore",6,"fused_pass_pack_opcode_built"],
   ["fused-pass-unpack-op-status.fungi","fusedPassUnpackOpStatusCore",6,"fused_pass_unpack_op_built"],

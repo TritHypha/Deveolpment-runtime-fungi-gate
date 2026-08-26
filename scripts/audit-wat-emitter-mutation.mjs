@@ -40,7 +40,7 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const EMITTER = "packages-galerina/galerina-core-compiler/dist/wat-emitter.js";
+const EMITTER = "packages-ts/galerina-core-compiler/dist/wat-emitter.js";
 const DETECTOR_TIMEOUT_MS = 600000; // FULL timeout — a detector must never be SIGTERM'd before it verdicts.
 const isWin = process.platform === "win32";
 

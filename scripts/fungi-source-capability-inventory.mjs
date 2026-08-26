@@ -11,7 +11,7 @@ import {
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { parseProgram } from "../packages-galerina/galerina-core-compiler/dist/index.js";
+import { parseProgram } from "../packages-ts/galerina-core-compiler/dist/index.js";
 import { parseStrictJsonObject } from "./lib/flat-package-root-lock.mjs";
 
 const MAX_FILES = 4096;
@@ -82,7 +82,7 @@ function confinedFile(root, relativePath) {
     || relativePath.includes("\\")
     || isAbsolute(relativePath)
     || relativePath.split("/").some((part) => part === "" || part === "." || part === "..")
-    || !relativePath.startsWith("packages-galerina/")
+    || !relativePath.startsWith("packages-ts/")
     || !relativePath.endsWith(".fungi")
   ) {
     throw new Error(`non-canonical source path: ${String(relativePath)}`);

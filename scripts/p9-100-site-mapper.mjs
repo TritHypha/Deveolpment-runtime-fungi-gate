@@ -69,8 +69,8 @@ function argVal(flag) {
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : null;
 }
 const GALERINA = resolve(argVal("--galerina") ?? process.env.GALERINA_ROOT ?? join(KB, "..", "Galerina"));
-const SH = join(GALERINA, "packages-galerina/galerina-core-compiler/src/self-hosted");
-const DIST = join(GALERINA, "packages-galerina/galerina-core-compiler/dist/index.js");
+const SH = join(GALERINA, "packages-ts/galerina-core-compiler/src/self-hosted");
+const DIST = join(GALERINA, "packages-ts/galerina-core-compiler/dist/index.js");
 
 // The Option-Y concat prelude per stage: lexer alone; parser = lexer+parser; every
 // other stage = lexer+parser+stage (parser's AST records in scope — the ruling).

@@ -3,7 +3,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dir = path.join(__dirname, '..', 'packages-galerina', 'galerina-core-compiler');
+const dir = path.join(__dirname, '..', 'packages-ts', 'galerina-core-compiler');
 
 function expandTestGlob(baseDir, glob) {
   const slash = glob.lastIndexOf('/');

@@ -65,7 +65,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
-const DIST = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
+const DIST = join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js");
 const KB_DIR = process.env.GALERINA_KB_DIR || join(ROOT, "../ZTF-Knowledge-Bases");
 const regIdx = process.argv.indexOf("--registry");
 const REGISTRY = regIdx !== -1 ? process.argv[regIdx + 1] : join(KB_DIR, "stdlib-gates.yaml");

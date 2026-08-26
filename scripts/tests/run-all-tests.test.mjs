@@ -36,7 +36,7 @@ function workspaceFixture(packageName, packageJson, files = {}) {
   const root = mkdtempSync(join(tmpdir(), "galerina-run-all-"));
   roots.push(root);
   write(root, "galerina.workspace.json", JSON.stringify({
-    packages: [`packages-galerina/${packageName}`],
+    packages: [`packages-ts/${packageName}`],
   }));
   write(root, "governance/tooling-policy.json", JSON.stringify({
     schemaVersion: 1,
@@ -46,11 +46,11 @@ function workspaceFixture(packageName, packageJson, files = {}) {
   }));
   write(
     root,
-    `packages-galerina/${packageName}/package.json`,
+    `packages-ts/${packageName}/package.json`,
     JSON.stringify(packageJson),
   );
   for (const [relativePath, contents] of Object.entries(files)) {
-    write(root, `packages-galerina/${packageName}/${relativePath}`, contents);
+    write(root, `packages-ts/${packageName}/${relativePath}`, contents);
   }
   return root;
 }
@@ -60,7 +60,7 @@ function parallelWorkspaceFixture() {
   roots.push(root);
   const packageNames = ["parallel-a", "parallel-b"];
   write(root, "galerina.workspace.json", JSON.stringify({
-    packages: packageNames.map((name) => `packages-galerina/${name}`),
+    packages: packageNames.map((name) => `packages-ts/${name}`),
   }));
   write(root, "governance/tooling-policy.json", JSON.stringify({
     schemaVersion: 1,
@@ -70,11 +70,11 @@ function parallelWorkspaceFixture() {
   }));
   for (const packageName of packageNames) {
     const peerName = packageName === "parallel-a" ? "parallel-b" : "parallel-a";
-    write(root, `packages-galerina/${packageName}/package.json`, JSON.stringify({
+    write(root, `packages-ts/${packageName}/package.json`, JSON.stringify({
       name: `@galerina/${packageName}`,
       scripts: { test: "node concurrent-proof.cjs" },
     }));
-    write(root, `packages-galerina/${packageName}/concurrent-proof.cjs`, [
+    write(root, `packages-ts/${packageName}/concurrent-proof.cjs`, [
       `const fs = require("node:fs");`,
       `const path = require("node:path");`,
       `const root = path.resolve(__dirname, "..", "..");`,
@@ -96,8 +96,8 @@ function compilerIsolationFixture() {
   roots.push(root);
   write(root, "galerina.workspace.json", JSON.stringify({
     packages: [
-      "packages-galerina/galerina-core-compiler",
-      "packages-galerina/galerina-dependent",
+      "packages-ts/galerina-core-compiler",
+      "packages-ts/galerina-dependent",
     ],
   }));
   write(root, "governance/tooling-policy.json", JSON.stringify({
@@ -106,11 +106,11 @@ function compilerIsolationFixture() {
     toolExceptions: {},
     generators: {},
   }));
-  write(root, "packages-galerina/galerina-core-compiler/package.json", JSON.stringify({
+  write(root, "packages-ts/galerina-core-compiler/package.json", JSON.stringify({
     name: "@galerina/core-compiler",
     scripts: { test: "node isolation-proof.cjs" },
   }));
-  write(root, "packages-galerina/galerina-core-compiler/isolation-proof.cjs", [
+  write(root, "packages-ts/galerina-core-compiler/isolation-proof.cjs", [
     `const fs = require("node:fs");`,
     `const path = require("node:path");`,
     `const root = path.resolve(__dirname, "..", "..");`,
@@ -123,11 +123,11 @@ function compilerIsolationFixture() {
     `fs.writeFileSync(done, "done");`,
     `console.log("tests 1\\npass 1\\nfail 0");`,
   ].join("\n") + "\n");
-  write(root, "packages-galerina/galerina-dependent/package.json", JSON.stringify({
+  write(root, "packages-ts/galerina-dependent/package.json", JSON.stringify({
     name: "@galerina/dependent",
     scripts: { test: "node isolation-proof.cjs" },
   }));
-  write(root, "packages-galerina/galerina-dependent/isolation-proof.cjs", [
+  write(root, "packages-ts/galerina-dependent/isolation-proof.cjs", [
     `const fs = require("node:fs");`,
     `const path = require("node:path");`,
     `const root = path.resolve(__dirname, "..", "..");`,
@@ -185,7 +185,7 @@ test("an existing dist directory never bypasses the declared test and build chai
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.equal(
     readFileSync(
-      join(root, "packages-galerina", "build-current", "dist", "marker.txt"),
+      join(root, "packages-ts", "build-current", "dist", "marker.txt"),
       "utf8",
     ),
     "fresh",
@@ -370,7 +370,7 @@ test("a held checkout lease refuses before a package child starts", () => {
   assert.equal(report.ok, false);
   assert.equal(report.violations[0].code, "SUITE-LEASE-HELD");
   assert.equal(
-    existsSync(join(root, "packages-galerina", "must-not-run", "ran.txt")),
+    existsSync(join(root, "packages-ts", "must-not-run", "ran.txt")),
     false,
   );
   assert.equal(lease.release(), true);

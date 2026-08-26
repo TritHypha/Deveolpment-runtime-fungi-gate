@@ -30,7 +30,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
 const wantJson = process.argv.includes("--json");
-const EFFECT_CHECKER = join(ROOT, "packages-galerina/galerina-core-compiler/src/effect-checker.ts");
+const EFFECT_CHECKER = join(ROOT, "packages-ts/galerina-core-compiler/src/effect-checker.ts");
 
 // ── table extraction (same regex-over-source approach as audit-effect-canonicality) ──
 function sliceBlock(src, declName) {

@@ -26,10 +26,10 @@ import { join, resolve, dirname, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
-const RECORD_ABI = join(ROOT, "packages-galerina/galerina-core-runtime-wasm/src/record-abi.ts");
-const WAT_EMITTER = join(ROOT, "packages-galerina/galerina-core-compiler/src/wat-emitter.ts");
-const BASELINE = join(ROOT, "packages-galerina/galerina-core-compiler/tests/fixtures/wat-lowering-baseline.json");
+const DIST = join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js");
+const RECORD_ABI = join(ROOT, "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts");
+const WAT_EMITTER = join(ROOT, "packages-ts/galerina-core-compiler/src/wat-emitter.ts");
+const BASELINE = join(ROOT, "packages-ts/galerina-core-compiler/tests/fixtures/wat-lowering-baseline.json");
 
 const args = new Set(process.argv.slice(2));
 const JSON_OUT = args.has("--json");
@@ -38,7 +38,7 @@ const UPDATE = args.has("--update-baseline");
 
 const L = await import(pathToFileURL(DIST).href);
 if (typeof L.galerinaTypeToWAT !== "function" || typeof L.isWATRecordFieldTypeSupported !== "function" || typeof L.parseProgram !== "function") {
-  console.error("FATAL: compiler dist missing galerinaTypeToWAT/parseProgram — build packages-galerina/galerina-core-compiler first.");
+  console.error("FATAL: compiler dist missing galerinaTypeToWAT/parseProgram — build packages-ts/galerina-core-compiler first.");
   process.exit(2);
 }
 

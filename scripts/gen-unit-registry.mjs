@@ -73,11 +73,11 @@ function parseArgs(argv) {
 const OPTIONS = parseArgs(process.argv.slice(2));
 const ROOT = OPTIONS.root;
 const SNAPSHOT = join(ROOT, "data", "iso-4217", "list-one-2026-07-16.xml");
-const OUT = join(ROOT, "packages-galerina", "galerina-core-compiler", "src", "unit-registry.generated.ts");
+const OUT = join(ROOT, "packages-ts", "galerina-core-compiler", "src", "unit-registry.generated.ts");
 // #124 — the self-hosted type-checker twin validates Money<CCY> IN-LANGUAGE (FUNGI-TYPE-032). Its
 // isKnownCurrency body is generated ONE-WAY from the SAME snapshot as MONEY_UNIT_TAGS and injected between
 // these markers, so the twin's currency set can never drift from the TS side (R&D STOPPER-1 option (a)).
-const TWIN = join(ROOT, "packages-galerina", "galerina-core-compiler", "src", "self-hosted", "type-checker.fungi");
+const TWIN = join(ROOT, "packages-ts", "galerina-core-compiler", "src", "self-hosted", "type-checker.fungi");
 const TWIN_MARK_OPEN = "  // <generated:currency-set>";
 const TWIN_MARK_CLOSE = "  // </generated:currency-set>";
 const PROVENANCE = join(ROOT, "build", "unit-registry", "provenance.json");

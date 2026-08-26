@@ -109,7 +109,7 @@ benchmark adapter and remains `referenceOnly: true` with
 
 The benchmark now admits its two source roles only after checking the exact
 manifest at
-`packages-galerina/galerina-devtools-benchmarks/contracts/million-iteration-source-pair-v1.json`.
+`packages-ts/galerina-devtools-benchmarks/contracts/million-iteration-source-pair-v1.json`.
 That gate binds both repository-relative paths and SHA-256 digests, reruns the
 production parser/type/value-state/effect/governance gates, proves the parsed
 flow signature and executable body are equal, and re-derives the closed role
@@ -119,9 +119,9 @@ source files refuse. Its receipt remains `referenceOnly: true` and
 `authorityReleased: false`.
 
 The focused report is
-[Verified native-operation benchmark](../../packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.md),
+[Verified native-operation benchmark](../../packages-ts/galerina-devtools-benchmarks/results/verified-native-operation-latest.md),
 with an accompanying
-[SVG chart](../../packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.svg).
+[SVG chart](../../packages-ts/galerina-devtools-benchmarks/results/verified-native-operation-latest.svg).
 It compares the same one-million-element traversal and the same final value
 `999999`:
 

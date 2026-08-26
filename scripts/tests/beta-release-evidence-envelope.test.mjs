@@ -21,7 +21,7 @@ import {
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const compilerRequire = createRequire(
-  join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json"),
+  join(ROOT, "packages-ts", "galerina-core-compiler", "package.json"),
 );
 const { ml_dsa65: mlDsa65 } = await import(
   pathToFileURL(

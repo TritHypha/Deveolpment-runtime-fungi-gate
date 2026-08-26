@@ -28,7 +28,7 @@ would be a security lie, so this section is blunt.
    ahead of time. (Source: `SPEC-gate-language.md` §0; `README.md` §3 hard-locks.)
 
 2. **In PRODUCTION, `.gate` is currently FAIL-CLOSED OFF.**
-   The production compiler's `.gate` front-end (`packages-galerina/galerina-core-compiler/src/gate-parser.ts`)
+   The production compiler's `.gate` front-end (`packages-ts/galerina-core-compiler/src/gate-parser.ts`)
    parses and validates the declarative header, then **refuses to sign** a `.gate` artifact by
    emitting the error **`FUNGI-GATELANG-002` (`GateProductionEmitGatedOnBackstop`)**. Production
    signing is gated on a sound compile-time privacy backstop (`FUNGI-PRIVACY-002` / RD-0234c) that

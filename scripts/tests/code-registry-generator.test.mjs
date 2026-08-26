@@ -53,8 +53,8 @@ function fixture({ includeDescriptiveIndex = true, sourceExtra = "" } = {}) {
     family: "TEST",
     namespace: "FUNGI",
     docOnly: false,
-    defs: ["packages-galerina/example/src/index.ts:1"],
-    emits: ["packages-galerina/example/src/index.ts:2"],
+    defs: ["packages-ts/example/src/index.ts:1"],
+    emits: ["packages-ts/example/src/index.ts:2"],
     tests: 1,
     refs: 0,
     docs: 0,
@@ -67,7 +67,7 @@ function fixture({ includeDescriptiveIndex = true, sourceExtra = "" } = {}) {
     namespace: "FUNGI",
     docOnly: false,
     defs: [],
-    emits: ["packages-galerina/example/src/index.ts:2"],
+    emits: ["packages-ts/example/src/index.ts:2"],
     tests: 0,
     refs: 0,
     docs: 0,
@@ -81,7 +81,7 @@ function fixture({ includeDescriptiveIndex = true, sourceExtra = "" } = {}) {
   );
   write(
     root,
-    "packages-galerina/example/src/index.ts",
+    "packages-ts/example/src/index.ts",
     'export const D = { code: "FUNGI-TEST-001", name: "TEST_FAILURE", severity: "error" };\n'
       + 'throw new Error("FUNGI-FUSE-HASH-MISMATCH");\n'
       + sourceExtra,
@@ -92,7 +92,7 @@ function fixture({ includeDescriptiveIndex = true, sourceExtra = "" } = {}) {
     "live <!-- registry:counts.live -->0 of <!-- registry:counts.total -->0\n",
   );
   assert.equal(runCommand(root, "git", ["init"]).status, 0);
-  assert.equal(runCommand(root, "git", ["add", "--", "AGENTS.md", "packages-galerina/example/src/index.ts"]).status, 0);
+  assert.equal(runCommand(root, "git", ["add", "--", "AGENTS.md", "packages-ts/example/src/index.ts"]).status, 0);
   return root;
 }
 

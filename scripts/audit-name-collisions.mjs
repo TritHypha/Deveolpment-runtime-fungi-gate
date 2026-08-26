@@ -14,7 +14,7 @@
 //       governance/name-registry.json `knownCollisions` (documented + with a decided resolution). A
 //       known-but-undocumented collision is a violation; a new collision is a violation.
 //
-// Package names are read LIVE from packages-galerina/*/package.json (source of truth). The registry holds
+// Package names are read LIVE from packages-ts/*/package.json (source of truth). The registry holds
 // POLICY (the allowlist of known collisions + any extra names to also guard via otherGuardedNames).
 //
 // Exit code = violation count (0 = clean). Run from repo root.
@@ -24,7 +24,7 @@ import { readdirSync, readFileSync, existsSync, realpathSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const PKG_ROOT = "packages-galerina";
+const PKG_ROOT = "packages-ts";
 const REGISTRY = "governance/name-registry.json";
 
 // ── pure detectors (also exercised by --self-test) ───────────────────────────────────────────────

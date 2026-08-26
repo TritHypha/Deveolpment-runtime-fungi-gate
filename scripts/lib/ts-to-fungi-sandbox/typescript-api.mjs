@@ -6,7 +6,7 @@ import { SandboxRefusal } from "./contracts.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = resolve(HERE, "..", "..", "..");
-const TYPESCRIPT_PATH = resolve(DEFAULT_ROOT, "packages-galerina", "galerina-core-compiler", "node_modules", "typescript", "lib", "typescript.js");
+const TYPESCRIPT_PATH = resolve(DEFAULT_ROOT, "packages-ts", "galerina-core-compiler", "node_modules", "typescript", "lib", "typescript.js");
 
 function contained(root, candidate) {
   const rel = relative(root, candidate);
@@ -14,7 +14,7 @@ function contained(root, candidate) {
 }
 
 export function loadTypeScript(root = DEFAULT_ROOT) {
-  const requested = resolve(root, "packages-galerina", "galerina-core-compiler", "node_modules", "typescript", "lib", "typescript.js");
+  const requested = resolve(root, "packages-ts", "galerina-core-compiler", "node_modules", "typescript", "lib", "typescript.js");
   if (!contained(resolve(root), requested) || requested !== TYPESCRIPT_PATH) {
     throw new SandboxRefusal("TYPESCRIPT_COMPILER_IDENTITY", "TypeScript must resolve from the pinned core-compiler workspace");
   }

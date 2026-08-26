@@ -39,7 +39,7 @@ function fixture() {
   write(root, "package.json", '{"type":"module"}\n');
   write(
     root,
-    "packages-galerina/galerina-core-cli/dist/index.js",
+    "packages-ts/galerina-core-cli/dist/index.js",
     [
       'import { mkdirSync, writeFileSync } from "node:fs";',
       'import { join } from "node:path";',

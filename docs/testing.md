@@ -11,17 +11,17 @@ artefacts.
 The app-kernel package has checked Run Mode fixtures:
 
 ```text
-packages-galerina/galerina-framework-app-kernel/tests/hello-world.fungi
-packages-galerina/galerina-framework-app-kernel/tests/vector-function.fungi
-packages-galerina/galerina-framework-app-kernel/tests/sum.fungi
-packages-galerina/galerina-framework-app-kernel/tests/decimal-sum.fungi
-packages-galerina/galerina-framework-app-kernel/tests/json-return.fungi
+packages-ts/galerina-framework-app-kernel/tests/hello-world.fungi
+packages-ts/galerina-framework-app-kernel/tests/vector-function.fungi
+packages-ts/galerina-framework-app-kernel/tests/sum.fungi
+packages-ts/galerina-framework-app-kernel/tests/decimal-sum.fungi
+packages-ts/galerina-framework-app-kernel/tests/json-return.fungi
 ```
 
 Run all app-kernel fixtures from the workspace root:
 
 ```bash
-npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test
+npm.cmd --prefix packages-ts/galerina-framework-app-kernel test
 ```
 
 Expected output includes:
@@ -46,11 +46,11 @@ json ids: 1,2,3 test: xxx
 ## Test Structure
 
 ```text
-packages-galerina/galerina-framework-example-app/tests/
+packages-ts/galerina-framework-example-app/tests/
 |-- unit/
 `-- integration/
 
-packages-galerina/galerina-framework-app-kernel/tests/
+packages-ts/galerina-framework-app-kernel/tests/
 |-- hello-world.fungi
 |-- vector-function.fungi
 |-- sum.fungi

@@ -101,7 +101,7 @@ gate(AdminOperationsGuard) {
 ```
 
 > **`gate(...)` inline vs the `.gate` file format.** There is a *separate* `.gate` file parser
-> (`packages-galerina/galerina-core-compiler/src/gate-parser.ts`) — an ASCII authoring surface for
+> (`packages-ts/galerina-core-compiler/src/gate-parser.ts`) — an ASCII authoring surface for
 > writing gate/policy files. That is a different thing. This page is about the **inline `gate(...)`
 > construct inside `.fungi`**.
 

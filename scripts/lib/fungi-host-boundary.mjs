@@ -29,7 +29,7 @@
 // Writes nothing. No network. Pure function of source text.
 // =============================================================================
 
-import { parseProgram } from "../../packages-galerina/galerina-core-compiler/dist/index.js";
+import { parseProgram } from "../../packages-ts/galerina-core-compiler/dist/index.js";
 
 /**
  * Effects that constitute crossing into host/native authority. Kept as a named

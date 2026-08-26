@@ -49,7 +49,7 @@
 ### W1 — Planning + todo ledger *(this document)*
 Plan + tracker written; harness task list updated. **Done when:** both docs exist, tasks registered.
 
-### W2 — Dev tool: `packages-galerina/galerina-devtools-fungi-scan`
+### W2 — Dev tool: `packages-ts/galerina-devtools-fungi-scan`
 **Owner ask.** A corpus scanner that walks **every `.fungi` (and `.gate`) file in the repo** and reports syntax/logic-migration state **using the real compiler lexer — NOT regex/grep** (regex misses `@…`/`…/…` forms; the lexer tokenizes them correctly).
 - Reports per file + rollup: `@version` header present/valid · old forms (`&&`/`||`, any `vAnd`/`vOr`/`vNot` identifiers) · `match` blocks without `_` arm · new-construct adoption (`check`/`fault`/`flip`/`all`/`any`/`sealed`/`schema`/`prefilter`/`secure flow`/`through`) · alias-keyword usage · unknown/malformed first-line headers.
 - Output: console summary + `build/fungi-scan/FUNGI-SCAN.md` + `--json`; exit non-zero on `--strict` findings so it can gate.

@@ -74,9 +74,9 @@ d3f83a58fb79ddd97138287097d1daa87fedf9fc:examples/auth-service/workspace.lindex:
 2a10af09044969c16ee94d96091bb79e54248f4e:examples/auth-service/workspace.lindex:generic-api-key:8801
 3b9340e1c67c1ed2d6115a61b50827549efe80b5:examples/auth-service/workspace.lindex:generic-api-key:8801
 4b760b6a6a0fce0a427738bde87570ede648e514:examples/auth-service/workspace.lindex:generic-api-key:8801
-4e764063a90581e1366960b1a9f8ab3343fdfbcf:packages-galerina/galerina-core-compiler/src/effect-checker.ts:generic-api-key:599
-63cb5bfdd11258a72523467599755adc91b56c04:packages-galerina/galerina-core-compiler/tests/slide-v2b-capability-request.test.mjs:generic-api-key:168
-23e8fcf144cfbaa170d735e98a6df97716f9c2a7:packages-galerina/galerina-core-security/README.md:generic-api-key:409
+4e764063a90581e1366960b1a9f8ab3343fdfbcf:packages-ts/galerina-core-compiler/src/effect-checker.ts:generic-api-key:599
+63cb5bfdd11258a72523467599755adc91b56c04:packages-ts/galerina-core-compiler/tests/slide-v2b-capability-request.test.mjs:generic-api-key:168
+23e8fcf144cfbaa170d735e98a6df97716f9c2a7:packages-ts/galerina-core-security/README.md:generic-api-key:409
 a4ca7dadb3395a8d3141de7c9be4258a3da4931d:packages-logicn/logicn-ext-tmf/spec/tmf-encryption-v0.md:generic-api-key:356
 310e513b475d38f8a47c1601f299bee9fcd1b032:README.md:generic-api-key:152
 23e8fcf144cfbaa170d735e98a6df97716f9c2a7:README.md:generic-api-key:320

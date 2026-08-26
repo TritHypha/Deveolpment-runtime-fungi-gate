@@ -43,7 +43,7 @@ holds them there (see *Verifying*, below).
 The standing gate is the regression suite, run from the compiler package:
 
 ```bash
-node --test packages-galerina/galerina-core-compiler/tests/gate-v3-shipped-examples.test.mjs
+node --test packages-ts/galerina-core-compiler/tests/gate-v3-shipped-examples.test.mjs
 ```
 
 It asserts the exact `@gate 3.0.0` header, a clean parse and a clean structural

@@ -84,7 +84,7 @@ package -> module -> exported symbols -> required capabilities -> runtime policy
 Example package layout:
 
 ```text
-packages-galerina/
+packages-ts/
   galerina-core/
     src/
       string.fungi

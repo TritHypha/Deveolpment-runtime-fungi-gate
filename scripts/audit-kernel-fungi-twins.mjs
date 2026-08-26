@@ -24,16 +24,16 @@ const GALERINA = join(ROOT, "galerina.mjs");
 
 // Declared self-hosted twin dirs (repo-relative). Add a package's `src/self-hosted` here when it gains twins.
 const TWIN_DIRS = [
-  "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
-  "packages-galerina/galerina-tower-citizen/src/self-hosted",
-  "packages-galerina/galerina-core-runtime/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-io/src/self-hosted",
-  "packages-galerina/galerina-core-network/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-time/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-power/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-egress/src/self-hosted",
-  "packages-galerina/galerina-core-sentinel-state/src/self-hosted",
+  "packages-ts/galerina-framework-app-kernel/src/self-hosted",
+  "packages-ts/galerina-tower-citizen/src/self-hosted",
+  "packages-ts/galerina-core-runtime/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-memory/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-io/src/self-hosted",
+  "packages-ts/galerina-core-network/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-time/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-power/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-egress/src/self-hosted",
+  "packages-ts/galerina-core-sentinel-state/src/self-hosted",
 ];
 
 // ── RD-0361 R4 AUTHORITY LEDGER (the trust-root flip). A twin listed in docs/security/rd0361-authoritative-

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { it } from "node:test";
-const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
+const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-ts","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
 const STEMS=Object.freeze([
 "manifest-read-cbor-head","manifest-require-cbor-bytes","manifest-sha256-hex","manifest-generate-manifest","manifest-generate-manifest-extract-grants","manifest-serialize-manifest","manifest-serialize-manifest-cbor","manifest-verify-round-trip","manifest-pretty-manifest",
 "module-extract-file-path","module-extract-symbols","module-import-containment-root","module-is-within-root","module-resolve-file-imports","module-check-symbol-collisions","module-gather-file-imports",

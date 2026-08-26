@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";import { existsSync, readFileSync } from "node:fs";import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";import { tmpdir } from "node:os";import { join } from "node:path";import { pathToFileURL } from "node:url";import { it } from "node:test";
-const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
+const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-ts","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
 const CANDIDATES=Object.freeze([
   ["value-state-value-state-checker-status.fungi","valueStateValueStateCheckerStatusCore",3,"value_state_value_state_checker_built"],
   ["value-state-build-full-call-name-status.fungi","valueStateBuildFullCallNameStatusCore",3,"value_state_build_full_call_name_built"],

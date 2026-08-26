@@ -33,11 +33,11 @@ function writeOwnedWorkspace(root) {
   write(
     root,
     "galerina.workspace.json",
-    `${JSON.stringify({ packages: ["packages-galerina/galerina-core"] }, null, 2)}\n`,
+    `${JSON.stringify({ packages: ["packages-ts/galerina-core"] }, null, 2)}\n`,
   );
   write(
     root,
-    "packages-galerina/galerina-core/package.json",
+    "packages-ts/galerina-core/package.json",
     `${JSON.stringify({ name: "@galerina/core", version: "1.0.0" }, null, 2)}\n`,
   );
 }
@@ -47,22 +47,22 @@ function fixture() {
   writeOwnedWorkspace(root);
   write(
     root,
-    "packages-galerina/galerina-core/src/index.ts",
+    "packages-ts/galerina-core/src/index.ts",
     "export const value = 1;\n",
   );
   write(
     root,
-    "packages-galerina/galerina-core/src/index.fungi",
+    "packages-ts/galerina-core/src/index.fungi",
     "pure flow value() -> Int { return 1 }\n",
   );
   write(
     root,
-    "packages-galerina/galerina-core/tests/index.test.ts",
+    "packages-ts/galerina-core/tests/index.test.ts",
     "export const testValue = true;\n",
   );
   write(
     root,
-    "packages-galerina/galerina-core/host/bridge.ts",
+    "packages-ts/galerina-core/host/bridge.ts",
     "export const bridge = true;\n",
   );
   write(
@@ -77,7 +77,7 @@ function fixture() {
   );
   assert.equal(command(root, "git", ["init"]).status, 0);
   assert.equal(
-    command(root, "git", ["add", "--", "galerina.workspace.json", "packages-galerina", "docs"]).status,
+    command(root, "git", ["add", "--", "galerina.workspace.json", "packages-ts", "docs"]).status,
     0,
   );
   return root;
@@ -126,12 +126,12 @@ function postSlideFixture({
   }, null, 2)}\n`;
   write(
     root,
-    "packages-galerina/galerina-core/src/index.fungi",
+    "packages-ts/galerina-core/src/index.fungi",
     storedSource,
   );
   write(
     root,
-    "packages-galerina/galerina-core/package.fungi.json",
+    "packages-ts/galerina-core/package.fungi.json",
     JSON.stringify({ name: "galerina-core", version: "1.0.0" }),
   );
   write(root, "evidence/index.txt", evidence);
@@ -154,7 +154,7 @@ function postSlideFixture({
       verificationTime: null,
       candidates: candidateFungi
         ? [{
-          path: "packages-galerina/galerina-core/src/index.fungi",
+          path: "packages-ts/galerina-core/src/index.fungi",
           ownerPackage: "galerina-core",
           tranche: "core",
           profileId: "galerina.package.test.v1",
@@ -167,7 +167,7 @@ function postSlideFixture({
         : [],
       fungiSources: authorizeFungi
         ? [{
-          path: "packages-galerina/galerina-core/src/index.fungi",
+          path: "packages-ts/galerina-core/src/index.fungi",
           ownerPackage: "galerina-core",
           tranche: "core",
           authority: "executed",
@@ -210,9 +210,9 @@ test("terminal retirement refuses every tracked package TypeScript path", () => 
     const evidence = JSON.parse(result.stdout);
     assert.equal(evidence.totals.allTrackedTs, 3);
     assert.deepEqual(evidence.allTrackedTsPaths, [
-      "packages-galerina/galerina-core/host/bridge.ts",
-      "packages-galerina/galerina-core/src/index.ts",
-      "packages-galerina/galerina-core/tests/index.test.ts",
+      "packages-ts/galerina-core/host/bridge.ts",
+      "packages-ts/galerina-core/src/index.ts",
+      "packages-ts/galerina-core/tests/index.test.ts",
     ]);
     assert.equal(evidence.terminalReady, false);
   } finally {
@@ -233,14 +233,14 @@ test("moving TypeScript outside src cannot hide retirement debt", () => {
   try {
     const source = join(
       root,
-      "packages-galerina",
+      "packages-ts",
       "galerina-core",
       "src",
       "index.ts",
     );
     const hidden = join(
       root,
-      "packages-galerina",
+      "packages-ts",
       "galerina-core",
       "legacy",
       "index.ts",
@@ -248,7 +248,7 @@ test("moving TypeScript outside src cannot hide retirement debt", () => {
     mkdirSync(dirname(hidden), { recursive: true });
     renameSync(source, hidden);
     assert.equal(
-      command(root, "git", ["add", "-A", "--", "packages-galerina"]).status,
+      command(root, "git", ["add", "-A", "--", "packages-ts"]).status,
       0,
     );
 
@@ -258,7 +258,7 @@ test("moving TypeScript outside src cannot hide retirement debt", () => {
     assert.equal(evidence.totals.allTrackedTs, 3);
     assert.ok(
       evidence.allTrackedTsPaths.includes(
-        "packages-galerina/galerina-core/legacy/index.ts",
+        "packages-ts/galerina-core/legacy/index.ts",
       ),
     );
   } finally {
@@ -297,7 +297,7 @@ test("post-SLIDE records an exact candidate without counting it as executed", ()
     const evidence = JSON.parse(result.stdout);
     assert.equal(evidence.totals.candidateFungi, 1);
     assert.deepEqual(evidence.candidateFungiPaths, [
-      "packages-galerina/galerina-core/src/index.fungi",
+      "packages-ts/galerina-core/src/index.fungi",
     ]);
     assert.equal(evidence.totals.executedFungi, 0);
     assert.equal(evidence.totals.unexecutedFungi, 1);
@@ -347,7 +347,7 @@ test("post-SLIDE refuses an unexecuted Fungi source", () => {
     assert.notEqual(result.status, 0);
     const evidence = JSON.parse(result.stdout);
     assert.deepEqual(evidence.unexecutedFungiPaths, [
-      "packages-galerina/galerina-core/src/index.fungi",
+      "packages-ts/galerina-core/src/index.fungi",
     ]);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -359,10 +359,10 @@ test("post-SLIDE refuses nested package identities and package node_modules", ()
   try {
     write(
       root,
-      "packages-galerina/galerina-core/plugins/copied/package.fungi.json",
+      "packages-ts/galerina-core/plugins/copied/package.fungi.json",
       JSON.stringify({ name: "copied", version: "1.0.0" }),
     );
-    write(root, "packages-galerina/galerina-core/node_modules/x/index.js", "x\n");
+    write(root, "packages-ts/galerina-core/node_modules/x/index.js", "x\n");
     assert.equal(command(root, "git", ["add", "-A"]).status, 0);
 
     const result = run(root, ["--post-slide", "--json"]);
@@ -380,7 +380,7 @@ test("post-SLIDE refuses a host bridge without digest-bound ownership", () => {
   try {
     write(
       root,
-      "packages-galerina/galerina-core/host/bridge.mjs",
+      "packages-ts/galerina-core/host/bridge.mjs",
       "export const opaqueHostAdapter = 1;\n",
     );
     assert.equal(command(root, "git", ["add", "-A"]).status, 0);
@@ -389,7 +389,7 @@ test("post-SLIDE refuses a host bridge without digest-bound ownership", () => {
     assert.notEqual(result.status, 0);
     const evidence = JSON.parse(result.stdout);
     assert.deepEqual(evidence.unownedHostBridgePaths, [
-      "packages-galerina/galerina-core/host/bridge.mjs",
+      "packages-ts/galerina-core/host/bridge.mjs",
     ]);
   } finally {
     rmSync(root, { recursive: true, force: true });

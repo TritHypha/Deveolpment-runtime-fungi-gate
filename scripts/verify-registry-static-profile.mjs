@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const nativeRoot = join(
   repoRoot,
-  "packages-galerina",
+  "packages-ts",
   "galerina-framework-app-kernel",
   "native",
   "registry-durability",
@@ -25,7 +25,7 @@ const nativeRoot = join(
 const adapterSource = join(nativeRoot, "src", "lib.rs");
 const fungiContract = join(
   repoRoot,
-  "packages-galerina",
+  "packages-ts",
   "galerina-framework-app-kernel",
   "src",
   "self-hosted",

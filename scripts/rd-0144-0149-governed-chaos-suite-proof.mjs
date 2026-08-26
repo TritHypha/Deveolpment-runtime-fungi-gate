@@ -13,7 +13,7 @@
 
 import {
   Verdict, vAnd, authorize, admitRow, intersectUserScope,
-} from "../packages-galerina/galerina-tower-citizen/dist/index.js";
+} from "../packages-ts/galerina-tower-citizen/dist/index.js";
 
 const { DENY, INDETERMINATE, ALLOW } = Verdict;
 const TRITS = [DENY, INDETERMINATE, ALLOW];

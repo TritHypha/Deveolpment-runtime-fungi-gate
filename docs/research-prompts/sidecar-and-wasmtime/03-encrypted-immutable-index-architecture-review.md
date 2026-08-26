@@ -27,9 +27,9 @@ encryption”.
 
 - `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
 - `scripts/memory-graph.mjs`
-- `packages-galerina/galerina-core-sentinel-state/`
-- `packages-galerina/galerina-core-sentinel-memory/`
-- `packages-galerina/galerina-devtools-provenance/`
+- `packages-ts/galerina-core-sentinel-state/`
+- `packages-ts/galerina-core-sentinel-memory/`
+- `packages-ts/galerina-devtools-provenance/`
 - `../SLIDE/docs/NEURAL-SHAPE-ENGINE-RESEARCH-ARCHITECTURE.md` if present
 - NIST FIPS 203, FIPS 204, SP 800-207, and primary storage/AEAD guidance
 

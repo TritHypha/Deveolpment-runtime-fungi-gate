@@ -55,11 +55,11 @@ WORKDIR /app
 COPY package.json package-lock.json version.json LICENSE THIRD-PARTY-NOTICES.md ./
 COPY governance/ governance/
 COPY scripts/ scripts/
-COPY packages-galerina/ packages-galerina/
+COPY packages-ts/ packages-ts/
 
 # GATE — refuse the build if any secret-shaped file entered the context. Belt for the
 # ignore-file braces: a pre-BuildKit builder silently skips Dockerfile.dockerignore, and a
-# live .env.galerina-signing HAS been observed inside packages-galerina on dev machines.
+# live .env.galerina-signing HAS been observed inside packages-ts on dev machines.
 # A production layer must never contain key material; on detection the build fails closed.
 RUN if find . -type f \( -name ".env*" -o -name "*.signing" -o -name "*.key" -o -name "*private*.pem" \) | grep -q .; then \
       echo "FATAL: secret-shaped file(s) in build context — refusing to bake a layer:" >&2; \
@@ -73,13 +73,13 @@ RUN if find . -type f \( -name ".env*" -o -name "*.signing" -o -name "*.key" -o 
 # first. `npm ci`, never `npm install`: only the lockfile's SRI-hashed, pinned versions can
 # be fetched — any registry substitution fails the build. --ignore-scripts: none of these
 # deps needs an install script, so none is allowed to run one (fail-closed default).
-RUN cd packages-galerina/galerina-substrate-math && npm ci --ignore-scripts --no-audit --no-fund && npm run build
-RUN cd packages-galerina/galerina-inference-bridge-contract && npm ci --ignore-scripts --no-audit --no-fund && npm run build
-RUN cd packages-galerina/galerina-tower-citizen && npm ci --ignore-scripts --no-audit --no-fund && npm run build
-RUN cd packages-galerina/galerina-core-network && npm ci --ignore-scripts --no-audit --no-fund && npm run build
-RUN cd packages-galerina/galerina-framework-app-kernel && npm ci --ignore-scripts --no-audit --no-fund && npm run build
-RUN cd packages-galerina/galerina-framework-api-server && npm ci --ignore-scripts --no-audit --no-fund && npm run build
-RUN cd packages-galerina/galerina-framework-example-app && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-substrate-math && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-inference-bridge-contract && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-tower-citizen && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-core-network && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-framework-app-kernel && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-framework-api-server && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+RUN cd packages-ts/galerina-framework-example-app && npm ci --ignore-scripts --no-audit --no-fund && npm run build
 
 # Drop the toolchain (typescript, @types) AFTER all builds — pruned here in the builder so
 # the runtime stage ships no compiler and never runs a package manager. Pruning must not
@@ -88,7 +88,7 @@ RUN cd packages-galerina/galerina-framework-example-app && npm ci --ignore-scrip
 RUN for p in galerina-substrate-math galerina-inference-bridge-contract galerina-tower-citizen \
              galerina-core-network galerina-framework-app-kernel galerina-framework-api-server \
              galerina-framework-example-app; do \
-      (cd "packages-galerina/$p" && npm prune --omit=dev --ignore-scripts --no-audit --no-fund) || exit 1; \
+      (cd "packages-ts/$p" && npm prune --omit=dev --ignore-scripts --no-audit --no-fund) || exit 1; \
     done
 
 # Emit the source SBOM (deterministic CycloneDX 1.5 — scripts/generate-sbom.mjs) so the
@@ -102,7 +102,7 @@ RUN node scripts/generate-sbom.mjs --out build/sbom/sbom.json
 # pinned trust anchor (assertRegistryTrustworthy throws on tamper / rogue or revoked signer
 # / unsigned-under-pin). A bad greeting.wasm fails the IMAGE BUILD; the server re-runs this
 # same gate on every boot. Verify twice, trust never.
-RUN node --input-type=module -e "const m = await import('/app/packages-galerina/galerina-framework-example-app/dist/server.js'); await m.fuseGreeting(); console.log('fuse gate: ACCEPT (sha256 pin -> Ed25519 -> revocation registry)');"
+RUN node --input-type=module -e "const m = await import('/app/packages-ts/galerina-framework-example-app/dist/server.js'); await m.fuseGreeting(); console.log('fuse gate: ACCEPT (sha256 pin -> Ed25519 -> revocation registry)');"
 
 # ─────────────────────────────────────────────────────────────────────────────────────────
 # Stage 2: runtime — minimal, non-root, explicitly enumerated. No sources, no tests, no
@@ -131,29 +131,29 @@ COPY --from=builder /app/governance/trust-anchor.json governance/trust-anchor.js
 COPY --from=builder /app/governance/signing-key-*.pub.pem governance/
 COPY --from=builder /app/governance/signing-key-*.mldsa.pub.b64 governance/
 
-COPY --from=builder /app/packages-galerina/galerina-substrate-math/package.json packages-galerina/galerina-substrate-math/package.json
-COPY --from=builder /app/packages-galerina/galerina-substrate-math/dist packages-galerina/galerina-substrate-math/dist
-COPY --from=builder /app/packages-galerina/galerina-substrate-math/node_modules packages-galerina/galerina-substrate-math/node_modules
-COPY --from=builder /app/packages-galerina/galerina-inference-bridge-contract/package.json packages-galerina/galerina-inference-bridge-contract/package.json
-COPY --from=builder /app/packages-galerina/galerina-inference-bridge-contract/dist packages-galerina/galerina-inference-bridge-contract/dist
-COPY --from=builder /app/packages-galerina/galerina-inference-bridge-contract/node_modules packages-galerina/galerina-inference-bridge-contract/node_modules
-COPY --from=builder /app/packages-galerina/galerina-tower-citizen/package.json packages-galerina/galerina-tower-citizen/package.json
-COPY --from=builder /app/packages-galerina/galerina-tower-citizen/dist packages-galerina/galerina-tower-citizen/dist
-COPY --from=builder /app/packages-galerina/galerina-tower-citizen/node_modules packages-galerina/galerina-tower-citizen/node_modules
-COPY --from=builder /app/packages-galerina/galerina-core-network/package.json packages-galerina/galerina-core-network/package.json
-COPY --from=builder /app/packages-galerina/galerina-core-network/dist packages-galerina/galerina-core-network/dist
-COPY --from=builder /app/packages-galerina/galerina-core-network/node_modules packages-galerina/galerina-core-network/node_modules
-COPY --from=builder /app/packages-galerina/galerina-framework-app-kernel/package.json packages-galerina/galerina-framework-app-kernel/package.json
-COPY --from=builder /app/packages-galerina/galerina-framework-app-kernel/dist packages-galerina/galerina-framework-app-kernel/dist
-COPY --from=builder /app/packages-galerina/galerina-framework-app-kernel/node_modules packages-galerina/galerina-framework-app-kernel/node_modules
-COPY --from=builder /app/packages-galerina/galerina-framework-api-server/package.json packages-galerina/galerina-framework-api-server/package.json
-COPY --from=builder /app/packages-galerina/galerina-framework-api-server/dist packages-galerina/galerina-framework-api-server/dist
-COPY --from=builder /app/packages-galerina/galerina-framework-api-server/node_modules packages-galerina/galerina-framework-api-server/node_modules
-COPY --from=builder /app/packages-galerina/galerina-framework-example-app/package.json packages-galerina/galerina-framework-example-app/package.json
-COPY --from=builder /app/packages-galerina/galerina-framework-example-app/App.manifest packages-galerina/galerina-framework-example-app/App.manifest
-COPY --from=builder /app/packages-galerina/galerina-framework-example-app/dist packages-galerina/galerina-framework-example-app/dist
-COPY --from=builder /app/packages-galerina/galerina-framework-example-app/node_modules packages-galerina/galerina-framework-example-app/node_modules
-COPY --from=builder /app/packages-galerina/galerina-framework-example-app/packages/greeting packages-galerina/galerina-framework-example-app/packages/greeting
+COPY --from=builder /app/packages-ts/galerina-substrate-math/package.json packages-ts/galerina-substrate-math/package.json
+COPY --from=builder /app/packages-ts/galerina-substrate-math/dist packages-ts/galerina-substrate-math/dist
+COPY --from=builder /app/packages-ts/galerina-substrate-math/node_modules packages-ts/galerina-substrate-math/node_modules
+COPY --from=builder /app/packages-ts/galerina-inference-bridge-contract/package.json packages-ts/galerina-inference-bridge-contract/package.json
+COPY --from=builder /app/packages-ts/galerina-inference-bridge-contract/dist packages-ts/galerina-inference-bridge-contract/dist
+COPY --from=builder /app/packages-ts/galerina-inference-bridge-contract/node_modules packages-ts/galerina-inference-bridge-contract/node_modules
+COPY --from=builder /app/packages-ts/galerina-tower-citizen/package.json packages-ts/galerina-tower-citizen/package.json
+COPY --from=builder /app/packages-ts/galerina-tower-citizen/dist packages-ts/galerina-tower-citizen/dist
+COPY --from=builder /app/packages-ts/galerina-tower-citizen/node_modules packages-ts/galerina-tower-citizen/node_modules
+COPY --from=builder /app/packages-ts/galerina-core-network/package.json packages-ts/galerina-core-network/package.json
+COPY --from=builder /app/packages-ts/galerina-core-network/dist packages-ts/galerina-core-network/dist
+COPY --from=builder /app/packages-ts/galerina-core-network/node_modules packages-ts/galerina-core-network/node_modules
+COPY --from=builder /app/packages-ts/galerina-framework-app-kernel/package.json packages-ts/galerina-framework-app-kernel/package.json
+COPY --from=builder /app/packages-ts/galerina-framework-app-kernel/dist packages-ts/galerina-framework-app-kernel/dist
+COPY --from=builder /app/packages-ts/galerina-framework-app-kernel/node_modules packages-ts/galerina-framework-app-kernel/node_modules
+COPY --from=builder /app/packages-ts/galerina-framework-api-server/package.json packages-ts/galerina-framework-api-server/package.json
+COPY --from=builder /app/packages-ts/galerina-framework-api-server/dist packages-ts/galerina-framework-api-server/dist
+COPY --from=builder /app/packages-ts/galerina-framework-api-server/node_modules packages-ts/galerina-framework-api-server/node_modules
+COPY --from=builder /app/packages-ts/galerina-framework-example-app/package.json packages-ts/galerina-framework-example-app/package.json
+COPY --from=builder /app/packages-ts/galerina-framework-example-app/App.manifest packages-ts/galerina-framework-example-app/App.manifest
+COPY --from=builder /app/packages-ts/galerina-framework-example-app/dist packages-ts/galerina-framework-example-app/dist
+COPY --from=builder /app/packages-ts/galerina-framework-example-app/node_modules packages-ts/galerina-framework-example-app/node_modules
+COPY --from=builder /app/packages-ts/galerina-framework-example-app/packages/greeting packages-ts/galerina-framework-example-app/packages/greeting
 
 # Production app config, written HERE and not copied from the repo: the committed file is
 # the developer template (env=development, loopback). parseConfig() validates this file
@@ -161,7 +161,7 @@ COPY --from=builder /app/packages-galerina/galerina-framework-example-app/packag
 # 0.0.0.0 *inside the container network namespace*: the container boundary plus the
 # operator's published-port mapping / host firewall is the exposure control (today's
 # listen() does not consume the host field; this value is correct for the day it does).
-COPY <<"EOF" packages-galerina/galerina-framework-example-app/config/app.config.json
+COPY <<"EOF" packages-ts/galerina-framework-example-app/config/app.config.json
 {
   "name": "galerina-framework-example-app",
   "env": "production",
@@ -195,4 +195,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
 # Boot the governed server; dist/server.js re-runs the fail-closed fuse gate on every
 # start. Exec form: node is PID 1 and receives SIGTERM directly (no shell swallowing
 # signals). Add `docker run --init` only if the app ever spawns child processes.
-CMD ["node", "packages-galerina/galerina-framework-example-app/dist/server.js"]
+CMD ["node", "packages-ts/galerina-framework-example-app/dist/server.js"]

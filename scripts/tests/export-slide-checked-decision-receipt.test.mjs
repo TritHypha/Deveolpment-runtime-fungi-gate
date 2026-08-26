@@ -11,11 +11,11 @@ const ROOT = resolve(".");
 const COMPILER_VERSION = "1.0.0-beta.2";
 const COLD_BOOT = Uint8Array.from(readFileSync(join(
   ROOT,
-  "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+  "packages-ts/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
 )));
 const REGISTRY = Uint8Array.from(readFileSync(join(
   ROOT,
-  "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi",
+  "packages-ts/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi",
 )));
 const SYNTHETIC_TEXT = `@version 1
 pure flow syntheticDecision(first: Bool, second: Bool, third: Bool) -> Int

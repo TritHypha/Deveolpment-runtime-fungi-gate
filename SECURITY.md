@@ -117,7 +117,7 @@ exhaustive `check` or `match` with an explicit exit.
 - Package installation and imports do not confer trust. Resolution verifies the
   flat top-level package identity, version, hash/signature, dependency graph,
   capabilities, effects, licence and current policy before linking.
-- Packages live once at the top level under `packages-galerina`; recursive
+- Packages live once at the top level under `packages-ts`; recursive
   package-within-package authority is forbidden. Host `node_modules` is a
   temporary bootstrap/tooling boundary, not Galerina package authority.
 - A cache, graph index, VPEG atlas or prepared shape is re-admitted in the

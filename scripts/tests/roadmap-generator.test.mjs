@@ -105,8 +105,8 @@ function installRepository(root) {
   );
   write(root, "README.md", "canonical roadmap: docs/ROADMAP.md\r\n");
   write(root, "docs/ROADMAP.md", `before\r\n${BEGIN}\r\nstale\r\n${END}\r\nafter\r\n`);
-  write(root, "packages-galerina/fixture/.graph/BOUNDARY.md", "generated boundary\n");
-  write(root, "packages-galerina/fixture/src/index.ts", "export const authority = 1;\n");
+  write(root, "packages-ts/fixture/.graph/BOUNDARY.md", "generated boundary\n");
+  write(root, "packages-ts/fixture/src/index.ts", "export const authority = 1;\n");
 }
 
 function sha256(value) {
@@ -249,14 +249,14 @@ test("roadmap admits declared package graph output dirt but refuses source dirt"
     assert.equal(initial.status, 0, `${initial.stdout}\n${initial.stderr}`);
 
     writeFileSync(
-      join(selected, "packages-galerina/fixture/.graph/BOUNDARY.md"),
+      join(selected, "packages-ts/fixture/.graph/BOUNDARY.md"),
       "refreshed generated boundary\n",
     );
     const generatedDirt = run(harness, selected, ["--write"]);
     assert.equal(generatedDirt.status, 0, `${generatedDirt.stdout}\n${generatedDirt.stderr}`);
 
     writeFileSync(
-      join(selected, "packages-galerina/fixture/src/index.ts"),
+      join(selected, "packages-ts/fixture/src/index.ts"),
       "export const authority = 2;\n",
     );
     const sourceDirt = run(harness, selected, ["--write"]);

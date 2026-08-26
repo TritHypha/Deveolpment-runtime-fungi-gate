@@ -15,7 +15,7 @@ import {
   parseProgram,
   renderWAT,
   signWasm,
-} from "../../packages-galerina/galerina-core-compiler/dist/index.js";
+} from "../../packages-ts/galerina-core-compiler/dist/index.js";
 
 function readUtf8(path) {
   return readFileSync(path, "utf8").replace(/^\uFEFF/u, "");

@@ -41,7 +41,7 @@ authority, select stale output as safe, create unproved rewrites, change K3
 outcomes, or bypass deterministic verification.
 
 The Galerina package topology is also constrained: every package/plugin exists
-once as a direct child of `packages-galerina/`; dependencies reference that
+once as a direct child of `packages-ts/`; dependencies reference that
 canonical peer through manifests. There is no npm-style nested child dependency
 forest or duplicated package instance.
 

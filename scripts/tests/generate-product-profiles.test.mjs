@@ -20,7 +20,7 @@ const SCRIPT = resolve("scripts/generate-product-profiles.mjs");
 const STRICT_JSON = resolve("scripts/lib/assurance-fabric/strict-json.mjs");
 const SOURCE_SCHEMA = resolve("product-registry/product-profiles.source.v1.schema.json");
 const GENERATED_SCHEMA = resolve("product-registry/product-profiles.v1.schema.json");
-const POLICY_PATH = "packages-galerina/galerina-core-compiler/src/governance-verifier.ts";
+const POLICY_PATH = "packages-ts/galerina-core-compiler/src/governance-verifier.ts";
 const POLICY_BYTES = Buffer.from("export const policy = true;\n", "utf8");
 
 function sha256Utf8(value) {

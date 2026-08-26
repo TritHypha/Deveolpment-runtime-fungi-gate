@@ -4,8 +4,8 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 176,
-    "auditTools": 91,
+    "devTools": 178,
+    "auditTools": 92,
     "toolsInCadence": 120,
     "proofs": 40
   },
@@ -300,7 +300,7 @@
       "tests": 6382,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 270,
+      "files": 274,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -1908,13 +1908,25 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
-        "sinks/taint",
         "signing/fusion",
         "naming",
         "source-hygiene",
         "doc-drift",
         "graph/index",
         "muted-diagnostics"
+      ]
+    },
+    {
+      "name": "audit-product-package-boundaries.mjs",
+      "category": "audit",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "diagnostics",
+        "source-hygiene",
+        "graph/index"
       ]
     },
     {
@@ -2369,8 +2381,7 @@
         "diagnostics",
         "mutation-testing",
         "teaching-corpus",
-        "web-stub",
-        "proofs"
+        "web-stub"
       ]
     },
     {
@@ -3166,7 +3177,6 @@
         "signing/fusion",
         "governance",
         "secrets/privacy",
-        "source-hygiene",
         "graph/index"
       ]
     },
@@ -3227,6 +3237,19 @@
         "signing/fusion",
         "diagnostics",
         "graph/index"
+      ]
+    },
+    {
+      "name": "generate-product-profiles.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "source-hygiene"
       ]
     },
     {
@@ -3411,8 +3434,7 @@
       "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
-        "governance",
-        "graph/index"
+        "governance"
       ]
     },
     {
@@ -3637,6 +3659,7 @@
       "audit-package-border.mjs",
       "audit-path-leak.mjs",
       "audit-perf-hotpath.mjs",
+      "audit-product-package-boundaries.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
@@ -3687,6 +3710,7 @@
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
+      "generate-product-profiles.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-executeflow-cache-growth.mjs",
@@ -3748,6 +3772,7 @@
       "audit-path-leak.mjs",
       "audit-perf-hotpath.mjs",
       "audit-private-doc-leak.mjs",
+      "audit-product-package-boundaries.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
       "audit-remote-shell-install.mjs",
@@ -3816,7 +3841,6 @@
       "package-usage.mjs",
       "phase-close-hook.mjs",
       "rd-absorb.mjs",
-      "rebuild-fusable-packages.mjs",
       "relink-workspace.mjs",
       "repoint-kb-refs.mjs",
       "subject-galerina-compile.mjs",
@@ -3964,6 +3988,7 @@
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
+      "generate-product-profiles.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-primitives-are-collected.mjs",
@@ -4123,6 +4148,7 @@
       "audit-name-collisions.mjs",
       "audit-papers-index.mjs",
       "audit-private-doc-leak.mjs",
+      "audit-product-package-boundaries.mjs",
       "audit-scratchdir-hygiene.mjs",
       "audit-stray-docs.mjs",
       "audit-syntax.mjs",
@@ -4150,7 +4176,7 @@
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
-      "fungi-source-capability-inventory.mjs",
+      "generate-product-profiles.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
       "validate-workspace-pointers.mjs"
@@ -4163,7 +4189,6 @@
       "audit-license-compat.mjs",
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
-      "audit-wat-emitter-mutation.mjs",
       "run-proofs.mjs",
       "license-rollout.mjs"
     ],
@@ -4175,7 +4200,6 @@
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
       "audit-papers-index.mjs",
-      "audit-private-doc-leak.mjs",
       "audit-registry-fixtures.mjs",
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
@@ -4347,9 +4371,17 @@
   "gaps": {
     "packagesNoTests": [],
     "concernsNoTool": [],
-    "toolsNotInCadence": []
+    "toolsNotInCadence": [
+      "audit-product-package-boundaries.mjs"
+    ]
   },
-  "contractViolations": [],
+  "contractViolations": [
+    {
+      "code": "TOOLING-AUDIT-UNCOVERED",
+      "subject": "audit-product-package-boundaries.mjs",
+      "detail": "Audit/lint has no phase-close command, CI command, registered fixture evidence, or valid exception."
+    }
+  ],
   "cadenceCoverage": [
     {
       "tool": "audit-allowlist-sensitive.mjs",
@@ -5221,6 +5253,15 @@
       "disposition": "scheduled"
     },
     {
+      "tool": "audit-product-package-boundaries.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
       "tool": "audit-production-blockers.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
@@ -6069,6 +6110,15 @@
     },
     {
       "tool": "gen-unit-registry.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "generate-product-profiles.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
       "via": [],

@@ -46,11 +46,11 @@ Galerina/SLIDE path.
    retirement and bootstrap gates. A focused regression check pins those
    non-authority claims.
 
-Primary evidence locations are `packages-galerina/galerina-core-compiler/src/runtime.ts`,
-`packages-galerina/galerina-core-compiler/src/route-dispatcher.ts`,
-`packages-galerina/galerina-devtools-security/src/cli.ts`,
-`packages-galerina/galerina-devtools-security/src/risk-calculator.ts`,
-`packages-galerina/galerina-devtools-security/src/path-sandbox.ts`, and
+Primary evidence locations are `packages-ts/galerina-core-compiler/src/runtime.ts`,
+`packages-ts/galerina-core-compiler/src/route-dispatcher.ts`,
+`packages-ts/galerina-devtools-security/src/cli.ts`,
+`packages-ts/galerina-devtools-security/src/risk-calculator.ts`,
+`packages-ts/galerina-devtools-security/src/path-sandbox.ts`, and
 `KNOWN-ISSUES.md`.
 
 ## SLIDE findings

@@ -8,7 +8,7 @@ import { compilerContentFingerprint } from "../lib/compiler-content-fingerprint.
 
 test("compiler fingerprint ignores timestamps but changes with executable content", async () => {
   const root = await mkdtemp(join(tmpdir(), "galerina-compiler-fingerprint-"));
-  const dist = join(root, "packages-galerina", "galerina-core-compiler", "dist");
+  const dist = join(root, "packages-ts", "galerina-core-compiler", "dist");
   await mkdir(dist, { recursive: true });
   const entrypoint = join(root, "galerina.mjs");
   const compiler = join(dist, "compiler.js");
@@ -27,7 +27,7 @@ test("compiler fingerprint ignores timestamps but changes with executable conten
 
 test("compiler fingerprint binds relative file identity as well as bytes", async () => {
   const root = await mkdtemp(join(tmpdir(), "galerina-compiler-fingerprint-path-"));
-  const dist = join(root, "packages-galerina", "galerina-core-compiler", "dist");
+  const dist = join(root, "packages-ts", "galerina-core-compiler", "dist");
   await mkdir(dist, { recursive: true });
   await writeFile(join(root, "galerina.mjs"), "same\n");
   await writeFile(join(dist, "a.js"), "same\n");

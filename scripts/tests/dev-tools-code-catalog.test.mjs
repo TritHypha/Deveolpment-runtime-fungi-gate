@@ -26,7 +26,7 @@ after(() => {
   }
 });
 
-const src = join(tmp, "packages-galerina", "fx", "src");
+const src = join(tmp, "packages-ts", "fx", "src");
 mkdirSync(src, { recursive: true });
 writeFileSync(join(src, "diag.ts"), [
   'export const FUNGI_FX_001 = { code: "FUNGI-FX-001", name: "FxDefinedNeverUsed", severity: "error" };',
@@ -72,7 +72,7 @@ const git = (...args) => spawnSync(
 );
 assert.equal(git("init", "--quiet").status, 0);
 assert.equal(
-  git("add", "--", "AGENTS.md", "docs/example.md", "packages-galerina/fx/src/diag.ts").status,
+  git("add", "--", "AGENTS.md", "docs/example.md", "packages-ts/fx/src/diag.ts").status,
   0,
 );
 

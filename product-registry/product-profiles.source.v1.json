@@ -8,7 +8,7 @@
       "governanceClass": "zero-trust",
       "compatibilityState": "admitted",
       "policyId": "galerina-governance-v1",
-      "policyPath": "packages-galerina/galerina-core-compiler/src/governance-verifier.ts",
+      "policyPath": "packages-ts/galerina-core-compiler/src/governance-verifier.ts",
       "packageNamespaces": [
         "@galerina/"
       ],

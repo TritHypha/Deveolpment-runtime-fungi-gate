@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { it } from "node:test";
-const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-galerina","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
+const SLIDE_ROOT=process.env.GALERINA_SLIDE_REPO,AVAILABLE=typeof SLIDE_ROOT==="string"&&existsSync(join(SLIDE_ROOT,"src","checked-fungi-package-compiler.mjs")),ROOT=join(process.cwd(),"packages-ts","galerina-test","src","self-hosted","conversion-overlays"),GATES=Object.freeze({identity:1,provenance:1,target:1,effects:1,policy:1,revocation:1,validation:1,memory:1});
 const STEMS=Object.freeze([
 "interpreter-resolve-char-escape","interpreter-title-case","interpreter-void-identifier","interpreter-find-string-literals","interpreter-find-string-literals-walk","interpreter-make-response-value","interpreter-make-api-error-value","interpreter-resolve-capability-effect","interpreter-extract-output-postconditions","interpreter-expr-references-result",
 "interpreter-extract-input-preconditions","interpreter-extract-param-admissions","interpreter-ast-contains-kind","interpreter-flow-requires-governed-path","interpreter-flow-requires-governed-path-walk","interpreter-describe-ensure-expr","interpreter-extract-request-time-ms","interpreter-extract-network-requests-limit","interpreter-is-pure-effect-free","interpreter-execute-flow-sync",

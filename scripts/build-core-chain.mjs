@@ -18,7 +18,7 @@ import { join, dirname, resolve, basename, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const PKG_DIR = join(ROOT, "packages-galerina");
+const PKG_DIR = join(ROOT, "packages-ts");
 
 export function packageManagerInvocation(
   platform = process.platform,
@@ -60,7 +60,7 @@ export function packageManagerInvocation(
  *
  * A hand-listed second root would fix today and rot tomorrow — the NEXT devtools-backed gate
  * reintroduces it silently, which is precisely the drift this tool exists to encode away. So the
- * roots are READ OUT OF THE GATES: any `packages-galerina/<pkg>/dist` a gate references makes <pkg>
+ * roots are READ OUT OF THE GATES: any `packages-ts/<pkg>/dist` a gate references makes <pkg>
  * a root. A new devtools-backed gate is then covered the day it lands, with no list to update.
  *
  * Fail-open note: if the scan finds nothing (a refactor changes how gates reference dist), we still
@@ -73,11 +73,11 @@ export function deriveGateSubjects(scriptsDir, readdir, readfile) {
     const src = readfile(join(scriptsDir, f));
     // TWO forms, both live in-tree. A single-pattern scan misses one of them — I shipped exactly that
     // mistake and the derivation silently returned only the compiler:
-    //   (a) LITERAL   import … from "../packages-galerina/<pkg>/dist/index.js"
-    //   (b) JOIN-FORM join(ROOT, "packages-galerina", "<pkg>", "dist")   ← audit-package-border:38
-    // In (b) the path never exists as one string, so a `packages-galerina/…/dist` regex cannot see it.
-    for (const m of src.matchAll(/packages-galerina\/([a-z0-9-]+)\/dist/g)) roots.add(m[1]);
-    for (const m of src.matchAll(/["']packages-galerina["']\s*,\s*["']([a-z0-9-]+)["']/g)) roots.add(m[1]);
+    //   (a) LITERAL   import … from "../packages-ts/<pkg>/dist/index.js"
+    //   (b) JOIN-FORM join(ROOT, "packages-ts", "<pkg>", "dist")   ← audit-package-border:38
+    // In (b) the path never exists as one string, so a `packages-ts/…/dist` regex cannot see it.
+    for (const m of src.matchAll(/packages-ts\/([a-z0-9-]+)\/dist/g)) roots.add(m[1]);
+    for (const m of src.matchAll(/["']packages-ts["']\s*,\s*["']([a-z0-9-]+)["']/g)) roots.add(m[1]);
   }
   return [...roots].sort();
 }
@@ -87,10 +87,10 @@ export function deriveGateSubjects(scriptsDir, readdir, readfile) {
 //    filesystem: injected readdir/readfile (a DI seam, no monkeypatching).
 function selfTest() {
   const FIX = {
-    "audit-literal.mjs": 'import { x } from "../packages-galerina/galerina-core-compiler/dist/index.js";',
-    "audit-joinform.mjs": 'const DIST = join(ROOT, "packages-galerina", "galerina-devtools-package-graph", "dist");',
+    "audit-literal.mjs": 'import { x } from "../packages-ts/galerina-core-compiler/dist/index.js";',
+    "audit-joinform.mjs": 'const DIST = join(ROOT, "packages-ts", "galerina-devtools-package-graph", "dist");',
     "audit-none.mjs": "// a pure-source gate — reads git-tracked files only, needs no build",
-    "helper-not-a-gate.mjs": 'join(ROOT, "packages-galerina", "galerina-should-be-ignored", "dist")',
+    "helper-not-a-gate.mjs": 'join(ROOT, "packages-ts", "galerina-should-be-ignored", "dist")',
   };
   const got = deriveGateSubjects("/x", () => Object.keys(FIX), (p) => FIX[basename(p)]);
   const windowsNpm = packageManagerInvocation(
@@ -101,8 +101,8 @@ function selfTest() {
   );
   const posixNpm = packageManagerInvocation("linux");
   const checks = [
-    ["LITERAL form is seen (…/packages-galerina/<pkg>/dist/…)", got.includes("galerina-core-compiler")],
-    ["JOIN form is seen (join(ROOT,'packages-galerina','<pkg>','dist')) — the one that broke CI", got.includes("galerina-devtools-package-graph")],
+    ["LITERAL form is seen (…/packages-ts/<pkg>/dist/…)", got.includes("galerina-core-compiler")],
+    ["JOIN form is seen (join(ROOT,'packages-ts','<pkg>','dist')) — the one that broke CI", got.includes("galerina-devtools-package-graph")],
     ["a gate needing no build contributes nothing", !got.includes("audit-none")],
     ["non-gate files are NOT scanned (surface is audit-*/lint-* only)", !got.includes("galerina-should-be-ignored")],
     ["result is deterministic + sorted", got.join() === [...got].sort().join()],

@@ -13,7 +13,7 @@
         {
           "name": "vokAuthorityVerdict",
           "sourceFlowName": "vokAuthorityVerdict",
-          "source": "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi"
+          "source": "packages-ts/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi"
         }
       ],
       "dependencies": [],

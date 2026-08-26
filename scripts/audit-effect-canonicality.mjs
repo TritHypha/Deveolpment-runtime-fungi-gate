@@ -36,12 +36,12 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 // --root <dir> overrides the repo root (used by the fixture tests); default = repo.
 const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
-const EFFECT_CHECKER = join(ROOT, "packages-galerina/galerina-core-compiler/src/effect-checker.ts");
-const TYPE_REGISTRY = join(ROOT, "packages-galerina/galerina-core-compiler/src/type-registry.ts");
+const EFFECT_CHECKER = join(ROOT, "packages-ts/galerina-core-compiler/src/effect-checker.ts");
+const TYPE_REGISTRY = join(ROOT, "packages-ts/galerina-core-compiler/src/type-registry.ts");
 // Commit 2 extension — the additional tables the SoT must also govern (effect <-> capability <-> Stage-B):
-const CAP_TYPES = join(ROOT, "packages-galerina/galerina-core-compiler/src/capability-types.ts");
-const GIR_EMITTER = join(ROOT, "packages-galerina/galerina-core-compiler/src/gir-emitter.ts");
-const STAGE_B = join(ROOT, "packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi");
+const CAP_TYPES = join(ROOT, "packages-ts/galerina-core-compiler/src/capability-types.ts");
+const GIR_EMITTER = join(ROOT, "packages-ts/galerina-core-compiler/src/gir-emitter.ts");
+const STAGE_B = join(ROOT, "packages-ts/galerina-core-compiler/src/self-hosted/effect-checker.fungi");
 // The KB lives OUTSIDE the repo (IP separation); resolve via env, default sibling.
 const KB_DIR = process.env.GALERINA_KB_DIR || join(ROOT, "../ZTF-Knowledge-Bases");
 const KB_REGISTRY = join(KB_DIR, "galerina-rules-master-registry.md");

@@ -6,7 +6,7 @@ This is the detail page behind the "Audit receipts" row in
 [governance-automated-floor.md](../governance-automated-floor.md). Receipts are a **Table 2/3 (automated)** element:
 you do **not** write the strategy in the contract — it is **profile-driven** — and a receipt is emitted regardless.
 
-**Source of truth:** `packages-galerina/galerina-core-security/src/dss/epilogue-receipt.fungi` (the final DSS file,
+**Source of truth:** `packages-ts/galerina-core-security/src/dss/epilogue-receipt.fungi` (the final DSS file,
 build order 7 of 7). **Verified against source 2026-07-15.**
 
 > **Honest scope:** `sha256_seal` is implemented (the TypeScript mirror computes it in Stage A); `zk_snark_receipt`

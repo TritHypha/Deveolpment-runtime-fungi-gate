@@ -24,7 +24,7 @@ import {
   admitRegistryDurabilityProfile,
   isProductionBootCompositionCandidate,
   verifyRegistryDurabilityEvidence,
-} from "../../packages-galerina/galerina-framework-app-kernel/dist/index.js";
+} from "../../packages-ts/galerina-framework-app-kernel/dist/index.js";
 
 const ROOT = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
@@ -34,7 +34,7 @@ const MANIFEST_PATH = join(ROOT, "docs", "security", "slide-source-manifests", "
 const PUBLICATION = join(ROOT, "build", "slide-package-candidates", "restore-verdict-v1", "publication");
 const SOURCE_PATH = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-sentinel-state",
   "src",
   "self-hosted",

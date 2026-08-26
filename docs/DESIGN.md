@@ -35,8 +35,8 @@ change and friendly to both humans and AI coding tools.
 4. Query the graph if needed:
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js graph query galerina-core-security --out build\graph
-node packages-galerina\galerina-core-cli\dist\index.js graph explain package:galerina-core-security --out build\graph
+node packages-ts\galerina-core-cli\dist\index.js graph query galerina-core-security --out build\graph
+node packages-ts\galerina-core-cli\dist\index.js graph explain package:galerina-core-security --out build\graph
 ```
 
 ### Refresh Project Context
@@ -45,7 +45,7 @@ node packages-galerina\galerina-core-cli\dist\index.js graph explain package:gal
 2. Regenerate the project graph:
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js graph --out build\graph
+node packages-ts\galerina-core-cli\dist\index.js graph --out build\graph
 ```
 
 3. Review generated graph output when the change affects package ownership,
@@ -56,13 +56,13 @@ node packages-galerina\galerina-core-cli\dist\index.js graph --out build\graph
 1. Inspect task definitions.
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js task --file packages-galerina\galerina-core-tasks\examples\tasks.fungi
+node packages-ts\galerina-core-cli\dist\index.js task --file packages-ts\galerina-core-tasks\examples\tasks.fungi
 ```
 
 2. Dry-run a task before execution.
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js task buildApi --file packages-galerina\galerina-core-tasks\examples\tasks.fungi --dry-run
+node packages-ts\galerina-core-cli\dist\index.js task buildApi --file packages-ts\galerina-core-tasks\examples\tasks.fungi --dry-run
 ```
 
 3. Review the task report at `build/reports/task-report.json` unless a custom
@@ -83,7 +83,7 @@ node packages-galerina\galerina-core-cli\dist\index.js task buildApi --file pack
 
 1. Add product requirements to `docs/REQUIREMENTS.md`.
 2. Add product UX rules and screens to this document.
-3. Add app source under `packages-galerina/galerina-framework-example-app/`.
+3. Add app source under `packages-ts/galerina-framework-example-app/`.
 4. Keep reusable language, runtime, security and tooling contracts in their
    owning packages.
 
@@ -95,9 +95,9 @@ node packages-galerina\galerina-core-cli\dist\index.js task buildApi --file pack
 | `AGENTS.md` | AI coding tool instructions and package boundary rules. |
 | `galerina.workspace.json` | Machine-readable workspace package and docs index. |
 | `docs/` | App/workspace requirements, design, architecture, security and operations. |
-| `packages-galerina/galerina-core/` | Galerina language introduction and language documentation. |
-| `packages-galerina/*/README.md` | Galerina package-specific purpose, boundaries and contracts. |
-| `packages-galerina/*/TODO.md` | Galerina package-specific remaining work. |
+| `packages-ts/galerina-core/` | Galerina language introduction and language documentation. |
+| `packages-ts/*/README.md` | Galerina package-specific purpose, boundaries and contracts. |
+| `packages-ts/*/TODO.md` | Galerina package-specific remaining work. |
 | `build/graph/` | Generated graph, report, AI map and HTML overview. |
 | `build/reports/` | Generated task and future CLI/runtime reports. |
 
@@ -112,7 +112,7 @@ Docs should be scannable and role-oriented.
 - Record completed work in `docs/CHANGELOG.md`.
 - Mark planning tasks in `docs/TASKS.md` when a document becomes usable.
 - Do not duplicate large language specifications in `docs/`; link to
-  `packages-galerina/galerina-core/` instead.
+  `packages-ts/galerina-core/` instead.
 
 ## CLI Output Design
 
@@ -137,7 +137,7 @@ Graph report: build\graph\Galerina_GRAPH_REPORT.md
 
 ```text
 Task buildApi dry-run planned.
-Task file: packages-galerina\galerina-core-tasks\examples\tasks.fungi
+Task file: packages-ts\galerina-core-tasks\examples\tasks.fungi
 Dependency order: generateReports -> buildApi
 Task report: build\reports\task-report.json
 ```

@@ -32,7 +32,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // Reuse the fungi-scan corpus walker + header grammar (single source of truth).
-const scanPkg = join(ROOT, "packages-galerina", "galerina-devtools-fungi-scan", "dist", "index.js");
+const scanPkg = join(ROOT, "packages-ts", "galerina-devtools-fungi-scan", "dist", "index.js");
 const { discoverCorpus, readVersionHeader } = await import(
   new URL(`file:///${scanPkg.replace(/\\/g, "/")}`).href
 );
@@ -57,7 +57,7 @@ const isTracked = (p) => {
     return false;
   }
 };
-const SIGNED_DIRS = findFusablePackages([join(ROOT, "packages-galerina"), join(ROOT, "packages")])
+const SIGNED_DIRS = findFusablePackages([join(ROOT, "packages-ts"), join(ROOT, "packages")])
   .filter((p) => p.signed && isTracked(p.manifestPath))
   .map((p) => p.dir.replace(/\\/g, "/") + "/");
 const isSignedFrozen = (abs) => {
@@ -65,7 +65,7 @@ const isSignedFrozen = (abs) => {
   return SIGNED_DIRS.some((d) => norm.startsWith(d));
 };
 // The real lexer — for --ops token offsets (regex misses x&&y and quoted forms).
-const compilerPkg = join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const compilerPkg = join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js");
 const { lex } = await import(new URL(`file:///${compilerPkg.replace(/\\/g, "/")}`).href);
 
 const args = process.argv.slice(2);
@@ -194,5 +194,5 @@ console.log(
   (DO_GATE ? ` · ${gateStamped}/${gate.length} .gate → @version 1.0.0` : ""),
 );
 if (!APPLY && (stamped > 0 || opsFiles > 0)) {
-  console.log("  re-run with --apply to write. Verify after with: node packages-galerina/galerina-devtools-fungi-scan/dist/cli.js");
+  console.log("  re-run with --apply to write. Verify after with: node packages-ts/galerina-devtools-fungi-scan/dist/cli.js");
 }

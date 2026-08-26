@@ -220,7 +220,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-devtools-benchmarks",
+      "cwd": "packages-ts/galerina-devtools-benchmarks",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -794,7 +794,7 @@
         "kind": "process",
         "command": [
           "node",
-          "packages-galerina/galerina-devtools-provenance/dist/cli.js",
+          "packages-ts/galerina-devtools-provenance/dist/cli.js",
           "audit",
           "examples/auth-service"
         ]
@@ -2756,7 +2756,7 @@
         "kind": "process",
         "command": [
           "node",
-          "packages-galerina/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs",
+          "packages-ts/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs",
           "--stale-only"
         ]
       },
@@ -5484,7 +5484,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-devtools-naming",
+      "cwd": "packages-ts/galerina-devtools-naming",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5549,7 +5549,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-devtools-context",
+      "cwd": "packages-ts/galerina-devtools-context",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5614,7 +5614,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-devtools-intelligence",
+      "cwd": "packages-ts/galerina-devtools-intelligence",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5679,7 +5679,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-devtools-provenance",
+      "cwd": "packages-ts/galerina-devtools-provenance",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5744,7 +5744,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-devtools-pci",
+      "cwd": "packages-ts/galerina-devtools-pci",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5809,7 +5809,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-ext-secrets-vault",
+      "cwd": "packages-ts/galerina-ext-secrets-vault",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5874,7 +5874,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-ext-proof-snarkjs",
+      "cwd": "packages-ts/galerina-ext-proof-snarkjs",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [
@@ -5939,7 +5939,7 @@
         0
       ],
       "leasePolicy": "none",
-      "cwd": "packages-galerina/galerina-ext-bridge-cpp",
+      "cwd": "packages-ts/galerina-ext-bridge-cpp",
       "toolClass": "test-runner",
       "authorityClass": "blocking",
       "cadences": [

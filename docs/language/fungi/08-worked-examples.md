@@ -3,7 +3,7 @@
 > Three real `.fungi` files read end-to-end, plus a tour of the corpus. Every line below is copied
 > from a real file — no invented syntax. Files:
 > `examples/auth-service/verifyPassword.fungi`, `examples/foundations/gate-access-example.fungi`,
-> `packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi`.
+> `packages-ts/galerina-core-compiler/src/self-hosted/lexer.fungi`.
 
 If you've read pages 01-07, this page ties the constructs together. Read the three files with the
 annotations, then open a few more from the tour at the end.
@@ -246,7 +246,7 @@ There are ~52 example files. A representative spread, by what each teaches:
 * When you write a snippet, find the matching real file in the table above and diff your syntax
   against it.
 * If your snippet uses a construct no example uses, check it against the parser
-  (`packages-galerina/galerina-core-compiler/src/parser.ts`) and the keyword table
+  (`packages-ts/galerina-core-compiler/src/parser.ts`) and the keyword table
   (`lexer.ts:131-187`) before trusting it.
 * Run the compiler over your file. If the compiler disagrees with anything on these pages, **the
   compiler is right** — please fix the doc.

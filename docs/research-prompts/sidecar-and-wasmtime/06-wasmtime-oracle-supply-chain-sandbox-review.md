@@ -7,7 +7,7 @@ unrelated packages.
 
 ## Question
 
-Is `packages-galerina/galerina-devtools-wasmtime-oracle` sufficiently pinned,
+Is `packages-ts/galerina-devtools-wasmtime-oracle` sufficiently pinned,
 isolated, and non-authoritative to serve as trustworthy differential evidence?
 
 ## Required checks

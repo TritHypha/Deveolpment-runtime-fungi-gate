@@ -70,15 +70,15 @@ import {
 } from "./lib/registry-package-manifest-yaml.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const DEFAULT_REGISTRY_DIR = join(ROOT, "packages-galerina", "galerina-registry", "packages");
+const DEFAULT_REGISTRY_DIR = join(ROOT, "packages-ts", "galerina-registry", "packages");
 const DECIDER_PATH = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-framework-app-kernel",
   "dist",
   "index.js",
 );
-const COMPILER_PACKAGE = join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json");
+const COMPILER_PACKAGE = join(ROOT, "packages-ts", "galerina-core-compiler", "package.json");
 const REVOCATION_GATE_PATH = join(ROOT, "governance", "revocation-registry.mjs");
 
 const CERT_LEVELS = ["uncertified", "community", "verified", "certified", "enterprise", "regulated"];
@@ -687,7 +687,7 @@ async function selfTest() {
     const KEY_ID = "test-authority-1";
     const ROOT_KEY_ID = "test-root-1";
     const put = (rel, text) => { const p = join(tmp, rel); mkdirSync(dirname(p), { recursive: true }); writeFileSync(p, text); return p; };
-    const workspace = join(tmp, "packages-galerina");
+    const workspace = join(tmp, "packages-ts");
     mkdirSync(workspace);
     const packageArtifact = (name, directory, index) => {
       const packageRoot = join(workspace, directory);

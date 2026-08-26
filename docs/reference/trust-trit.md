@@ -10,7 +10,7 @@ gates that move it. This is the detail page behind the "Epistemic trust-trit" ro
 the type-state tracks the trit for you; your only levers are the explicit gates below, and the underlying algebra is
 **Table 3 (fixed)** — you cannot redefine how trust composes.
 
-**Source of truth:** runtime `packages-galerina/galerina-tower-citizen/src/epistemic-type-state.ts`; the compiler
+**Source of truth:** runtime `packages-ts/galerina-tower-citizen/src/epistemic-type-state.ts`; the compiler
 carries a lock-step mirror in `galerina-core-compiler/src/hardening-residency.ts` (`CompilerTrust`). **Verified
 against source 2026-07-15.**
 

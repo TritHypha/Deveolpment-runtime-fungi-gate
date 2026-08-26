@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { it } from "node:test";
 
-import { authorize } from "../../packages-galerina/galerina-tower-citizen/dist/index.js";
+import { authorize } from "../../packages-ts/galerina-tower-citizen/dist/index.js";
 
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
 const SLIDE_AVAILABLE =
@@ -14,7 +14,7 @@ const SLIDE_AVAILABLE =
   && existsSync(join(SLIDE_ROOT, "src", "checked-fungi-package-compiler.mjs"));
 const SOURCE = join(
   process.cwd(),
-  "packages-galerina",
+  "packages-ts",
   "galerina-tower-citizen",
   "src",
   "self-hosted",

@@ -20,7 +20,7 @@ import {
 
 function withWorkspace(run) {
   const root = mkdtempSync(join(tmpdir(), "galerina-flat-artifact-"));
-  const packages = join(root, "packages-galerina");
+  const packages = join(root, "packages-ts");
   mkdirSync(packages);
   try {
     return run({ root, packages });

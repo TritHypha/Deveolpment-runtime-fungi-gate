@@ -16,7 +16,7 @@ const path = require('path');
 const fs = require('fs');
 
 const ROOT        = path.join(__dirname, '..');
-const PACKAGES_DIR = path.join(ROOT, 'packages-galerina');
+const PACKAGES_DIR = path.join(ROOT, 'packages-ts');
 const FUNGI_GRAPH_DIR = path.join(ROOT, '..', 'FUNGI-Graph');
 const SENTINEL    = path.join(ROOT, '.claude', '.core-changed');
 const GRAPH_PKG   = 'galerina-devtools-graph-project';

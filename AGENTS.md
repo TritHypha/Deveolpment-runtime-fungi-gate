@@ -212,7 +212,7 @@ Galerina is structured as a **Core-first product constellation**. Core ships fir
 | Diagnostic-code CONVENTIONS (binding) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-diagnostic-code-conventions.md` |
 | Audit Coverage & R&D Standards (20, research-grounded) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-audit-coverage-and-rd-standards.md` |
 | Language classification (canonical) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-language-classification.md` |
-| AST contract (AstNodeKind, Token, etc.) | `packages-galerina/galerina-core/src/index.ts` |
+| AST contract (AstNodeKind, Token, etc.) | `packages-ts/galerina-core/src/index.ts` |
 | Phase 4 plan | `../ZTF-Knowledge-Bases/reference/language/phase-4-parser-ast-plan.md` |
 | Concept model | `../ZTF-Knowledge-Bases/reference/galerina/galerina-concept-map.md` |
 | Code examples (corrected) | `../ZTF-Knowledge-Bases/reference/galerina/galerina-code-examples-full-flow.md` |
@@ -222,13 +222,13 @@ Galerina is structured as a **Core-first product constellation**. Core ships fir
 
 | Package | Role |
 |---|---|
-| `packages-galerina/galerina-core/` | Canonical shared types: Token, AstNode, AstNodeKind, diagnostics |
-| `packages-galerina/galerina-core-compiler/` | Compiler pipeline: scanner, lexer, parser, effect checker |
-| `packages-galerina/galerina-core-cli/` | CLI entry point and graph commands |
-| `packages-galerina/galerina-core-tasks/` | Task dependency resolution |
-| `packages-galerina/galerina-devtools-graph-project/` | Workspace knowledge graph |
-| `packages-galerina/galerina-framework-app-kernel/` | Secure app kernel design |
-| `packages-galerina/galerina-framework-example-app/` | Example app source |
+| `packages-ts/galerina-core/` | Canonical shared types: Token, AstNode, AstNodeKind, diagnostics |
+| `packages-ts/galerina-core-compiler/` | Compiler pipeline: scanner, lexer, parser, effect checker |
+| `packages-ts/galerina-core-cli/` | CLI entry point and graph commands |
+| `packages-ts/galerina-core-tasks/` | Task dependency resolution |
+| `packages-ts/galerina-devtools-graph-project/` | Workspace knowledge graph |
+| `packages-ts/galerina-framework-app-kernel/` | Secure app kernel design |
+| `packages-ts/galerina-framework-example-app/` | Example app source |
 
 ## Diagnostic Code Format
 
@@ -262,10 +262,10 @@ one-code-one-fault, one owner per code, emit via an exported constant. Enforced 
 - Do not use `safe flow`, `unsafe flow`, or `guard flow` in `.fungi` examples.
 - `mut name: Type = value` — not `let mut`.
 - Use `FUNGI-CATEGORY-NNN` for all new diagnostic codes; do not extend `Galerina_COMPILER_*`.
-- Do not place app-specific documentation inside `packages-galerina/galerina-core/`.
+- Do not place app-specific documentation inside `packages-ts/galerina-core/`.
 - Do not place Galerina language documentation inside `docs/`.
 - Finance, electrical and OT package planning is archived under
-  `C:\laragon\www\Galerina_Archive\packages-galerina\` — not part of the active v1 build.
+  `C:\laragon\www\Galerina_Archive\packages-ts\` — not part of the active v1 build.
 - Keep the repository root clean. Do not commit secrets.
 - Do not invent Galerina syntax without documenting it in a KB doc.
 - For a minimal construct shape, read `docs/examples/golden/` before prose and
@@ -287,7 +287,7 @@ Regenerate after changes to `AGENTS.md`, `galerina.workspace.json`, `docs/`, pac
 READMEs, or package source contracts:
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js graph --out build\graph
+node packages-ts\galerina-core-cli\dist\index.js graph --out build\graph
 ```
 
 ## Coding Rules

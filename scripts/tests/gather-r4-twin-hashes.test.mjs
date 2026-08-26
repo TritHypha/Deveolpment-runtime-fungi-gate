@@ -32,7 +32,7 @@ describe("RD-0361 remaining-tranche hash gatherer", () => {
     assert.ok(
       report.rows.every(
         (row) =>
-          row.path.startsWith("packages-galerina/") &&
+          row.path.startsWith("packages-ts/") &&
           row.path.endsWith(".fungi") &&
           typeof row.module === "string" &&
           row.module.length > 0,

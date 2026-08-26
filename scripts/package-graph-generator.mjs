@@ -57,11 +57,11 @@ function registeredPackages(root) {
     !Array.isArray(workspace?.packages)
     || workspace.packages.length === 0
     || !workspace.packages.every((entry) =>
-      typeof entry === "string" && /^packages-galerina\/[^/]+$/.test(entry))
+      typeof entry === "string" && /^packages-ts\/[^/]+$/.test(entry))
   ) {
     throw new Error("package-graph: workspace package list is empty or malformed");
   }
-  const packages = workspace.packages.map((entry) => entry.slice("packages-galerina/".length));
+  const packages = workspace.packages.map((entry) => entry.slice("packages-ts/".length));
   if (new Set(packages).size !== packages.length) {
     throw new Error("package-graph: workspace package list contains duplicates");
   }
@@ -73,7 +73,7 @@ function registeredPackages(root) {
  * package.json so neither side can silently omit a boundary.
  */
 function verifyPackageSet(root, registered) {
-  const packageRoot = join(root, "packages-galerina");
+  const packageRoot = join(root, "packages-ts");
   const actual = readdirSync(packageRoot, { withFileTypes: true })
     .filter((entry) =>
       entry.isDirectory() && existsSync(join(packageRoot, entry.name, "package.json")))
@@ -93,7 +93,7 @@ function verifyPackageSet(root, registered) {
 async function derive(root) {
   const dist = join(
     root,
-    "packages-galerina",
+    "packages-ts",
     "galerina-devtools-package-graph",
     "dist",
   );
@@ -123,7 +123,7 @@ async function derive(root) {
   const outputs = new Map();
   const refusals = [];
   for (const name of packages) {
-    const scope = join(root, "packages-galerina", name);
+    const scope = join(root, "packages-ts", name);
     const policy = join(scope, ".graph", "boundary-policy.json");
     if (!existsSync(policy)) {
       refusals.push(`${name}: boundary-policy.json missing`);

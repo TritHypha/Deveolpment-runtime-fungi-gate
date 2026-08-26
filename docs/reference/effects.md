@@ -6,7 +6,7 @@ effects sit in the three-tier model. Each effect is a **Table 1 (standard)** ele
 compiler holds you to it.
 
 **Source of truth:** `CANONICAL_EFFECTS` and `DENY_ONLY_EFFECTS` in
-`packages-galerina/galerina-core-compiler/src/effect-checker.ts`, kept drift-free by
+`packages-ts/galerina-core-compiler/src/effect-checker.ts`, kept drift-free by
 `scripts/audit-effect-canonicality.mjs`. **Verified against source 2026-07-23: 50 canonical effects + 2 deny-only,
 no drift.** Regenerate this page from that file if in doubt — do not hand-edit the set. *(The per-section counts
 below — "the 45", "23 of the 45 are secure-required" — are pre-2026-07-23 and pending a recount; the coverage gate

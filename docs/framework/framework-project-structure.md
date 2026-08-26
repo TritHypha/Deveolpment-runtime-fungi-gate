@@ -13,7 +13,7 @@ language-core documentation and generated output.
 ## Recommended Structure
 
 ```text
-packages-galerina/
+packages-ts/
   galerina-core/
   galerina-framework-app-kernel/
   galerina-framework-api-server/
@@ -37,8 +37,8 @@ build/
 
 - Keep secrets out of source control.
 - Keep generated machine-local capability profiles out of Git.
-- Keep app-specific docs in `docs/`, not in `packages-galerina/galerina-core/`.
-- Keep Galerina language-core docs in `packages-galerina/galerina-core/`, not in app docs.
+- Keep app-specific docs in `docs/`, not in `packages-ts/galerina-core/`.
+- Keep Galerina language-core docs in `packages-ts/galerina-core/`, not in app docs.
 
 ## AI-Friendly Output
 

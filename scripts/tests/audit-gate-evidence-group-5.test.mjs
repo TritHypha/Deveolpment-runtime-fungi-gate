@@ -32,14 +32,14 @@ function write(root, relativePath, contents) {
 function run(root) {
   return spawnSync(
     process.execPath,
-    [TOOL, "--json", "--no-default-whitelist", "packages-galerina"],
+    [TOOL, "--json", "--no-default-whitelist", "packages-ts"],
     { cwd: root, encoding: "utf8", shell: false },
   );
 }
 
 test("lint-fungi refuses an invalid flow and accepts a documented, contracted control", () => {
   withFixture("galerina-fungi-lint-gate-", (root) => {
-    const sourcePath = "packages-galerina/probe/src/index.fungi";
+    const sourcePath = "packages-ts/probe/src/index.fungi";
     write(root, sourcePath, "flow foo() -> Bool {\n\treturn true  \n");
     const planted = run(root);
     assert.notEqual(planted.status, 0, planted.stdout + planted.stderr);
@@ -69,7 +69,7 @@ test("lint-fungi refuses an invalid flow and accepts a documented, contracted co
 
 test("lint-fungi recognizes contracts and intents after CRLF line endings", () => {
   withFixture("galerina-fungi-lint-crlf-", (root) => {
-    const sourcePath = "packages-galerina/probe/src/index.fungi";
+    const sourcePath = "packages-ts/probe/src/index.fungi";
     const bodyPadding = Array.from(
       { length: 300 },
       () => "  if accept(true) { return true }",
@@ -103,7 +103,7 @@ test("lint-fungi recognizes contracts and intents after CRLF line endings", () =
 
 test("lint-fungi recognizes an attached Galerina semicolon comment", () => {
   withFixture("galerina-fungi-lint-semicolon-comment-", (root) => {
-    write(root, "packages-galerina/probe/src/index.fungi", [
+    write(root, "packages-ts/probe/src/index.fungi", [
       "@version 1",
       ";; Return a deterministic fixture verdict.",
       "pure flow fixtureVerdict() -> Bool",

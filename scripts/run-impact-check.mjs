@@ -2,8 +2,8 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { discoverChangedPaths } from "../packages-galerina/galerina-devtools-impact/src/git-changes.mjs";
-import { buildImpactPlan } from "../packages-galerina/galerina-devtools-impact/src/impact-plan.mjs";
+import { discoverChangedPaths } from "../packages-ts/galerina-devtools-impact/src/git-changes.mjs";
+import { buildImpactPlan } from "../packages-ts/galerina-devtools-impact/src/impact-plan.mjs";
 import { executeImpactPlan } from "./lib/impact-executor.mjs";
 
 const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");

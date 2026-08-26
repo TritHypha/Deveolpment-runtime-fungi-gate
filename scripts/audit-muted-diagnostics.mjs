@@ -28,7 +28,7 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
-const COMPILER_SRC = join(ROOT, "packages-galerina/galerina-core-compiler");
+const COMPILER_SRC = join(ROOT, "packages-ts/galerina-core-compiler");
 
 // Code families that are SECURITY / GOVERNANCE / SAFETY (muting these = fail-open).
 const SECURITY_GOV = /^FUNGI-(SECRET|PRIVACY|GOV|EFFECT|VALUESTATE|TENANT|PII|PHI|AUDIT|INTENT|CAP|TIER|CRYPTO|SUBSTRATE|RETAIN|SECURITY|SEC|TAINT)\b/;

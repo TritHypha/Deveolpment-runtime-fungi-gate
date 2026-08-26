@@ -40,10 +40,10 @@ if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("-
 const ROOT = rootIndex >= 0
   ? resolve(argv[rootIndex + 1])
   : join(fileURLToPath(new URL(".", import.meta.url)), "..");
-const PKGS = join(ROOT, "packages-galerina");
+const PKGS = join(ROOT, "packages-ts");
 const asJson = argv.includes("--json");
 
-// ── walk packages-galerina/*/tests/**/*.mjs ──────────────────────────────────
+// ── walk packages-ts/*/tests/**/*.mjs ──────────────────────────────────
 function walk(dir, out) {
   let entries;
   try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return out; }

@@ -33,16 +33,16 @@ import process from "node:process";
 function findGalerina() {
   const here = dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
   const root = dirname(here);
-  if (!existsSync(join(root, "packages-galerina"))) {
-    throw new Error(`cannot locate the Galerina checkout: no packages-galerina under ${root}`);
+  if (!existsSync(join(root, "packages-ts"))) {
+    throw new Error(`cannot locate the Galerina checkout: no packages-ts under ${root}`);
   }
   return root.replace(/\\/g, "/");
 }
 const ROOT = findGalerina();
 const SCRIPTS = ROOT + "/scripts";
 const BASELINE = SCRIPTS + "/fixtures/retention-baseline.json";
-const SCAN_ROOT = ROOT + "/packages-galerina/galerina-core-compiler/src";
-const CORPUS_ROOT = ROOT + "/packages-galerina/galerina-core-compiler";
+const SCAN_ROOT = ROOT + "/packages-ts/galerina-core-compiler/src";
+const CORPUS_ROOT = ROOT + "/packages-ts/galerina-core-compiler";
 
 const P = console.log;
 let failed = false;

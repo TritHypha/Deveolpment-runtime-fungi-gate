@@ -2,22 +2,22 @@
 
 ## Phase 1: Planning
 
-- [x] Update workspace documentation for the `packages-galerina/galerina-core/` language package move
+- [x] Update workspace documentation for the `packages-ts/galerina-core/` language package move
 - [x] Mark the current workspace version as beta rather than a stable release
 - [x] Document that maintained repo structure takes precedence over generated
   document suggestions
 - [x] Document the proposed `package-galerina.json`, `galerina.lock.json` and
-  `packages-galerina/` package split
+  `packages-ts/` package split
 - [x] Document the governed Package Resolver concept for package/module
   resolution, verification, capability/effect checks, Governed IR linking and
   provenance reporting
 - [x] Document the Certified Package Registry concept for signed, versioned,
   capability-declared, policy-rated package publication before resolver use
-- [x] Add grouped `packages-galerina/galerina-finance-core` beta package scaffold
+- [x] Add grouped `packages-ts/galerina-finance-core` beta package scaffold
 - [x] Add F# comparison and Galerina positioning guidance
-- [x] Split partial framework guidance into `packages-galerina/galerina-framework-app-kernel/`
+- [x] Split partial framework guidance into `packages-ts/galerina-framework-app-kernel/`
 - [x] Add Galerina logic, compute type and secure runtime future-support proposal
-- [x] Add `packages-galerina/galerina-framework-api-server/` HTTP API serving package documentation
+- [x] Add `packages-ts/galerina-framework-api-server/` HTTP API serving package documentation
 - [x] Add CSRF protection policy for cookie-authenticated state-changing routes
 - [x] Add API response/error-handling style guidance for `try`/`catch`,
   `match`, `Result<T, E>` and route response contracts
@@ -159,7 +159,7 @@
 
 ## Phase 2: App Setup
 
-- [ ] Create app entry files in `packages-galerina/galerina-framework-example-app/`
+- [ ] Create app entry files in `packages-ts/galerina-framework-example-app/`
 - [ ] Add app config
 - [ ] Add environment schema
 - [ ] Add basic route/module structure
@@ -208,7 +208,7 @@
 - [ ] Define OWASP/CWE baseline mapping for Galerina diagnostics
 - [ ] Define crypto inventory and post-quantum readiness report schemas
 - [x] Add TODO documents for `galerina-framework-api-server` and `galerina-framework-app-kernel`
-- [x] Add README and TODO documents for `packages-galerina/galerina-framework-example-app`
+- [x] Add README and TODO documents for `packages-ts/galerina-framework-example-app`
 - [ ] Add unit tests
 - [ ] Add integration tests
 - [ ] Add manual test checklist
@@ -359,10 +359,10 @@
 
 ## Phase 9: Package Collection Split
 
-- [x] Move Galerina packages from `packages/` into `packages-galerina/`
-- [x] Rename ambiguous app package folder to `packages-galerina/galerina-framework-example-app`
+- [x] Move Galerina packages from `packages/` into `packages-ts/`
+- [x] Rename ambiguous app package folder to `packages-ts/galerina-framework-example-app`
 - [x] Document package naming rules and staged rename candidates
-- [ ] Decide when `packages-galerina/` is stable enough to become a reusable package
+- [ ] Decide when `packages-ts/` is stable enough to become a reusable package
   repository
 - [ ] Define `package-galerina.json` schema for Galerina package dependencies and profiles
 - [ ] Define `galerina.lock.json` schema for locked Galerina package refs, checksums and
@@ -381,8 +381,8 @@
   NPM/host tooling and Galerina package graph fields stay out of host manifests
 - [x] Define production boot/profile defaults that disable benchmark and
   development-only packages unless explicitly overridden and reported
-- [ ] Split `packages-galerina/` into its own Git repository
-- [ ] Mount `packages-galerina/` in framework repositories as a submodule or explicit
+- [ ] Split `packages-ts/` into its own Git repository
+- [ ] Mount `packages-ts/` in framework repositories as a submodule or explicit
   nested repository
 - [ ] Document package import workflow for different frameworks
 - [ ] Add release/versioning rules for reusable Galerina packages

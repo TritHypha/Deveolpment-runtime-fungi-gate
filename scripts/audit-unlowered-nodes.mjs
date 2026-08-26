@@ -42,8 +42,8 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SH = join(ROOT, "packages-galerina/galerina-core-compiler/src/self-hosted");
-const DIST = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
+const SH = join(ROOT, "packages-ts/galerina-core-compiler/src/self-hosted");
+const DIST = join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js");
 
 // The emitter's own fail-closed lowering-stub phrase. Distinct from every runtime-guard `unreachable`.
 const MARKER = "emitter cannot lower";

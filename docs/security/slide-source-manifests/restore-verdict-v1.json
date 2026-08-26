@@ -13,7 +13,7 @@
         {
           "name": "restoreVerdict",
           "sourceFlowName": "restoreVerdict",
-          "source": "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi"
+          "source": "packages-ts/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi"
         }
       ],
       "dependencies": [],

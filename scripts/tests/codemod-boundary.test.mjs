@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 import { classifyRewrite, escapesRoot, packageOf } from "../lib/codemod-boundary.mjs";
 
 const TOOL = join(dirname(fileURLToPath(import.meta.url)), "..", "lib", "codemod-boundary.mjs");
-const R = "/repo", P = "packages-galerina";
+const R = "/repo", P = "packages-ts";
 const c = (fromFile, oldTarget, newTarget) =>
   classifyRewrite({ fromFile, oldTarget, newTarget, repoRoot: R, packagesDirName: P });
 
@@ -31,7 +31,7 @@ test("REGRESSION #34: repointing docs into the sibling KB is REFUSED (123 links,
 });
 
 test("REGRESSION app-kernel: a NEW cross-package reach into a sibling's dist is REFUSED", () => {
-  const r = c("packages-galerina/galerina-framework-app-kernel/src/kernel.ts", "./posture.js", "../../galerina-core-config/dist/posture.js");
+  const r = c("packages-ts/galerina-framework-app-kernel/src/kernel.ts", "./posture.js", "../../galerina-core-config/dist/posture.js");
   assert.equal(r.verdict, "refuse");
   assert.equal(r.claim, "crosses-package");
   assert.match(r.reason, /galerina-core-config/);
@@ -40,19 +40,19 @@ test("REGRESSION app-kernel: a NEW cross-package reach into a sibling's dist is 
 // The direction that decides whether this helper survives contact with real work. A helper that refuses
 // legitimate rebrands gets switched off inside a day — and then nothing asks the boundary question at all.
 test("SILENT: a rebrand in place is not a boundary claim (the case that must never fire)", () => {
-  assert.equal(c("packages-galerina/pkg-a/src/x.ts", "./logicn-foo.js", "./galerina-foo.js").verdict, "silent");
-  assert.equal(c("packages-galerina/pkg-a/src/x.ts", "./a.js", "../lib/a.js").verdict, "silent");
+  assert.equal(c("packages-ts/pkg-a/src/x.ts", "./logicn-foo.js", "./galerina-foo.js").verdict, "silent");
+  assert.equal(c("packages-ts/pkg-a/src/x.ts", "./a.js", "../lib/a.js").verdict, "silent");
   assert.equal(c("docs/README.md", "./old.md", "./sub/new.md").verdict, "silent");
 });
 
 test("SILENT: a rewrite that PRESERVES an existing crossing — the rename didn't create it (that's the audit half's job)", () => {
-  assert.equal(c("packages-galerina/pkg-a/src/x.ts", "../../pkg-b/dist/old.js", "../../pkg-b/dist/new.js").verdict, "silent");
+  assert.equal(c("packages-ts/pkg-a/src/x.ts", "../../pkg-b/dist/old.js", "../../pkg-b/dist/new.js").verdict, "silent");
 });
 
 test("the predicates are arithmetic, never the filesystem (the disk answers for the AUTHOR, not the reader)", () => {
   assert.ok(escapesRoot("/repo/../x", "/repo"));
   assert.ok(!escapesRoot("/repo/a/b", "/repo"));
   assert.ok(escapesRoot("/repo-evil/x", "/repo"), "segments, not string prefixes");
-  assert.equal(packageOf("/repo/packages-galerina/pkg-a/src/x.ts", R, P), "pkg-a");
+  assert.equal(packageOf("/repo/packages-ts/pkg-a/src/x.ts", R, P), "pkg-a");
   assert.equal(packageOf("/repo/docs/x.md", R, P), null);
 });

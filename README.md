@@ -246,9 +246,9 @@ Benchmark publication follows three rules:
 
 Current views:
 
-- [Production SLIDE-zero chart](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-latest.html) — deliberately reports “not measured” because no admitted production SLIDE lane exists.
-- [Production SLIDE-zero HTML table](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-zero-table-latest.html) — the same fail-closed production status in table form.
-- [Verified SLIDE reference and historic WASM page](packages-galerina/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html) — the upper chart and table put the non-authorizing Galerina/SLIDE reference at zero and show faster peers as positive and slower peers as negative. The lower chart retains the archived Galerina/WASM results with old WASM at zero for each workload.
+- [Production SLIDE-zero chart](packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-zero-latest.html) — deliberately reports “not measured” because no admitted production SLIDE lane exists.
+- [Production SLIDE-zero HTML table](packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-zero-table-latest.html) — the same fail-closed production status in table form.
+- [Verified SLIDE reference and historic WASM page](packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html) — the upper chart and table put the non-authorizing Galerina/SLIDE reference at zero and show faster peers as positive and slower peers as negative. The lower chart retains the archived Galerina/WASM results with old WASM at zero for each workload.
 
 On the exact one-million-element reference workload, Rust AVX2 wins and the
 Galerina/SLIDE reference is fourth of six, ahead of Go and Python. This is
@@ -290,4 +290,4 @@ Generated artifacts are bounded evidence. Their freshness and build point must b
 
 ## Licence
 
-Galerina is licensed under the [Apache License 2.0](LICENSE). See [NOTICE.md](packages-galerina/galerina-core/NOTICE.md) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for attribution and dependency notices.
+Galerina is licensed under the [Apache License 2.0](LICENSE). See [NOTICE.md](packages-ts/galerina-core/NOTICE.md) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for attribution and dependency notices.

@@ -26,8 +26,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const MYCO = join(ROOT, "packages-galerina", "galerina-tools-myco", "dist", "cli.js");
-const SCAN = "packages-galerina/galerina-core-compiler/src";
+const MYCO = join(ROOT, "packages-ts", "galerina-tools-myco", "dist", "cli.js");
+const SCAN = "packages-ts/galerina-core-compiler/src";
 const GUARD_WINDOW = 18; // lines: a guard this close to a write counts as protecting it
 
 // ── SHRINK-ONLY baseline: reviewed name-keyed writes that legitimately overwrite (caches / non-name
@@ -155,7 +155,7 @@ if (process.argv.includes("--self-test")) {
 
 // ── main — report-only backlog ────────────────────────────────────────────────
 if (!existsSync(MYCO)) {
-  console.error(`❌ silent-overwrite: myco is not built at ${MYCO.replace(ROOT, ".")} — run its build first (npm --prefix packages-galerina/galerina-tools-myco run build). Fail-closed: this hunt needs the finder.`);
+  console.error(`❌ silent-overwrite: myco is not built at ${MYCO.replace(ROOT, ".")} — run its build first (npm --prefix packages-ts/galerina-tools-myco run build). Fail-closed: this hunt needs the finder.`);
   process.exit(2);
 }
 

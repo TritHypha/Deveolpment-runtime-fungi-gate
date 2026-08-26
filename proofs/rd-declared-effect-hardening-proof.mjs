@@ -30,7 +30,7 @@ const CANDIDATES = [process.env.GALERINA_ROOT, process.cwd(), join(HERE, "../../
 const ROOT = CANDIDATES.find((c) => existsSync(join(c, "galerina.mjs")));
 assert.ok(ROOT, `Galerina repo not found (tried: ${CANDIDATES.join(" | ")}) — refusing to report green on nothing`);
 
-const dist = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js")).href);
+const dist = await import(pathToFileURL(join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js")).href);
 const { parseProgram, checkEffects, effectsToFlags } = dist;
 
 const diagsFor = (name) => {

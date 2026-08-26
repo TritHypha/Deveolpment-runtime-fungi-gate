@@ -39,7 +39,7 @@ function run(script, args) {
 
 test("audit-diagnostic-codes refuses a name collision and accepts one-to-one identity", () => {
   withFixture("galerina-diagnostic-gate-", (root) => {
-    const sourcePath = "packages-galerina/probe/src/index.ts";
+    const sourcePath = "packages-ts/probe/src/index.ts";
     write(root, sourcePath, [
       'const first = { code: "FUNGI-PROBE-001", name: "SAME_NAME", severity: "error" };',
       'const second = { code: "FUNGI-PROBE-002", name: "SAME_NAME", severity: "error" };',
@@ -61,7 +61,7 @@ test("audit-diagnostic-codes refuses a name collision and accepts one-to-one ide
 
 test("audit-kernel-floor refuses host reach outside the seam and accepts confinement", () => {
   withFixture("galerina-kernel-floor-gate-", (root) => {
-    const sourceRoot = "packages-galerina/galerina-framework-app-kernel/src";
+    const sourceRoot = "packages-ts/galerina-framework-app-kernel/src";
     write(root, `${sourceRoot}/host-floor.ts`, 'import { readFileSync } from "node:fs";\n');
     write(root, `${sourceRoot}/governed.ts`, 'import { existsSync } from "node:fs";\n');
     const planted = run("audit-kernel-floor.mjs", ["--root", root, "--json"]);
@@ -86,7 +86,7 @@ test("audit-kernel-floor refuses host reach outside the seam and accepts confine
 
 test("audit-scratchdir-hygiene refuses a leak and accepts own-PID cleanup", () => {
   withFixture("galerina-scratchdir-gate-", (root) => {
-    const testPath = "packages-galerina/probe/tests/scratch.test.mjs";
+    const testPath = "packages-ts/probe/tests/scratch.test.mjs";
     write(root, testPath, "const scratch = `build/probe-${process.pid}-1`;\n");
     const planted = run("audit-scratchdir-hygiene.mjs", ["--root", root, "--json"]);
     assert.equal(planted.status, 1, planted.stdout + planted.stderr);

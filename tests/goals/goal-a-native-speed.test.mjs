@@ -13,7 +13,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { parseProgram, resolveSymbols, checkTypes, executeFlow } from
-  "../../packages-galerina/galerina-core-compiler/dist/index.js";
+  "../../packages-ts/galerina-core-compiler/dist/index.js";
 
 // ── Gauss sum: sum of 1..N — simple pure arithmetic with no I/O ──────────────
 // This is the canonical benchmark used in wasmtime baseline tests.

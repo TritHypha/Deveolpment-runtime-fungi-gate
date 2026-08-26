@@ -112,7 +112,7 @@ function newestFungi(dir, depth = 0) {
 // --root fixtures are scanned directly; the real repo scans its two package roots.
 const baseDirs = customRoot
   ? [ROOT]
-  : [join(ROOT, "packages-galerina"), join(ROOT, "examples")];
+  : [join(ROOT, "packages-ts"), join(ROOT, "examples")];
 const packages = findFusablePackages(baseDirs, { gitRoot: ROOT });
 
 let rebuilt = 0, fresh = 0, failed = 0, skipped = 0, lockedSigned = 0;

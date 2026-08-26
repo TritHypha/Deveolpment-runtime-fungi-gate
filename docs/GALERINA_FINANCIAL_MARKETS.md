@@ -18,7 +18,7 @@ This document covers Galerina positioning for:
 - latency, throughput and failure-behaviour requirements
 
 It is an application and architecture document. Galerina language syntax belongs
-in `packages-galerina/galerina-core/`, not in this file.
+in `packages-ts/galerina-core/`, not in this file.
 
 ## Galerina Responsibilities
 

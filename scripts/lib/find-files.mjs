@@ -31,7 +31,7 @@ export function findTrackedAt(root, ...globs) {
 
 /** Graph-finder (myco) filename search for an extension; null when unavailable/truncated (degrade loudly). */
 export function graphFindByExt(ext, { limit = 40000, root = DEFAULT_ROOT } = {}) {
-  const myco = resolve(root, "packages-galerina", "galerina-tools-myco", "dist", "cli.js");
+  const myco = resolve(root, "packages-ts", "galerina-tools-myco", "dist", "cli.js");
   if (!existsSync(myco)) return null;
   // myco 0.1.1: a leading-dot filename query IS an extension match (the 0.1.0 word-mode under-match
   // was fixed at the root). If an older dist under-matches, the git-union + drift report catch it.

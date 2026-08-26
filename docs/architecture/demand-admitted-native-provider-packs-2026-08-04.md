@@ -14,7 +14,7 @@ the complete provider set before emitting the final `.slide` application
 object.
 
 All optional source packages may remain as flat top-level peers under
-`packages-galerina` without being installed. After canonical GIR first proves
+`packages-ts` without being installed. After canonical GIR first proves
 that one is required, an interactive build asks whether to install the exact
 local package for that build, permit that exact identity for the project, or
 refuse. Installation does not activate code, grant a capability or change an
@@ -43,7 +43,7 @@ paths.
 
 | state | meaning | authority |
 |---|---|---:|
-| source-present | exact source exists once under `packages-galerina` with the canonical name | none; not installed |
+| source-present | exact source exists once under `packages-ts` with the canonical name | none; not installed |
 | installed/registered | exact identity/version/digest was accepted and locally verified | none |
 | selected | checked GIR and target profile require the provider | none |
 | verified | exact identity, provenance, ABI and semantics pass | none |
@@ -147,7 +147,7 @@ This build requires:
   galerina-numeric-bigfloat
   Version: <exact>
   Digest: <exact>
-  Source: local packages-galerina peer
+  Source: local packages-ts peer
   Effects: <exact set or none>
   Reason: BigFloat<256> is required by canonical GIR
 
@@ -190,14 +190,14 @@ A pack is a signed convenience manifest, not a nested dependency directory.
 Every pack/provider source follows the binding folder and identity form:
 
 ```text
-packages-galerina/galerina-[category]-[name]
+packages-ts/galerina-[category]-[name]
 ```
 
 `[category]` and `[name]` are registered lowercase kebab-case identifiers.
 Examples of exact top-level peers are:
 
 ```text
-packages-galerina/
+packages-ts/
   galerina-pack-scientific
   galerina-numeric-binary128
   galerina-numeric-bigfloat

@@ -88,7 +88,7 @@ async function derive(options) {
 
   const dist = join(
     options.root,
-    "packages-galerina",
+    "packages-ts",
     "galerina-devtools-kb-graph",
     "dist",
   );

@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, it } from "node:test";
 
-import { DOCUMENTATION_PATH_CASES } from "../../packages-galerina/galerina-devtools-impact/tests/documentation-path-cases.mjs";
+import { DOCUMENTATION_PATH_CASES } from "../../packages-ts/galerina-devtools-impact/tests/documentation-path-cases.mjs";
 
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
@@ -238,7 +238,7 @@ async function proveCandidate(slide, candidate) {
   const context = slide.portableVeoReferenceContext();
   const source = join(
     ROOT,
-    "packages-galerina",
+    "packages-ts",
     candidate.packageDirectory,
     "src",
     "self-hosted",
@@ -420,7 +420,7 @@ describe("scalar classifiers through physical SLIDE/VOK", () => {
       const context = slide.portableVeoReferenceContext();
       const sourceBytes = Uint8Array.from(readFileSync(join(
         ROOT,
-        "packages-galerina",
+        "packages-ts",
         "galerina-devtools-project-graph",
         "src",
         "self-hosted",

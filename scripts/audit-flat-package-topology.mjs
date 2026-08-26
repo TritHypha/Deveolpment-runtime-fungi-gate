@@ -3,7 +3,7 @@
  * Zero-trust flat-package topology audit.
  *
  * Galerina-native package identities must resolve from exactly one canonical
- * direct child of packages-galerina/. The pre-SLIDE mode ratchets the one
+ * direct child of packages-ts/. The pre-SLIDE mode ratchets the one
  * existing nested native example as explicit migration debt and refuses any
  * growth or stale exception. --post-slide removes that exception and also
  * refuses every node_modules tree.
@@ -90,7 +90,7 @@ export function analyzeTopologyRecords({
       );
     } else if (!legacySet.has(path)) {
       violations.push(
-        `nested native package '${path}' is not a canonical direct child of packages-galerina`,
+        `nested native package '${path}' is not a canonical direct child of packages-ts`,
       );
     }
   }
@@ -172,7 +172,7 @@ function walkForNativeManifests(
   }
 }
 
-export function scanWorkspace(packageRoot = join(DEFAULT_ROOT, "packages-galerina")) {
+export function scanWorkspace(packageRoot = join(DEFAULT_ROOT, "packages-ts")) {
   if (!existsSync(packageRoot)) {
     return {
       records: [],
@@ -250,7 +250,7 @@ async function main() {
     return;
   }
   const root = rootIndex >= 0 ? resolve(argv[rootIndex + 1]) : DEFAULT_ROOT;
-  const packageRoot = join(root, "packages-galerina");
+  const packageRoot = join(root, "packages-ts");
   const postSlide = argv.includes("--post-slide");
   const selfTest = argv.includes("--self-test");
   const jsonOut = argv.includes("--json");

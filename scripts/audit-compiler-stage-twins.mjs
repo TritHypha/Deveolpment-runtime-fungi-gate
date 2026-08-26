@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const GALERINA = join(ROOT, "galerina.mjs");
-const STAGE_DIR = "packages-galerina/galerina-core-compiler/src/self-hosted";
+const STAGE_DIR = "packages-ts/galerina-core-compiler/src/self-hosted";
 const LEDGER_PATH = join(ROOT, "docs", "security", "rd0528-compiler-authoritative-stages.json");
 const FIXTURE_ROOT = resolve(ROOT, "scripts", "fixtures");
 const CANONICAL_STAGES = new Set([
@@ -78,7 +78,7 @@ function loadAuthoritative(ledgerPath) {
 // A stage is `differential` if a package test references its filename AND calls admitAndInstantiate
 // (proves it builds → #105-admits → executes); else `shadow`. Same rule as the kernel gate.
 function rawExecutionState(stageFile) {
-  const testsDir = join(ROOT, "packages-galerina", "galerina-core-compiler", "tests");
+  const testsDir = join(ROOT, "packages-ts", "galerina-core-compiler", "tests");
   if (!existsSync(testsDir)) return "shadow";
   for (const f of readdirSync(testsDir)) {
     if (!f.endsWith(".test.mjs")) continue;

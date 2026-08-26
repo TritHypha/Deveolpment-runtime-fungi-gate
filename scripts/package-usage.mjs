@@ -24,7 +24,7 @@ import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const PKG_ROOTS = ["packages-galerina", "packages"].map(p => join(ROOT, p)).filter(existsSync);
+const PKG_ROOTS = ["packages-ts", "packages"].map(p => join(ROOT, p)).filter(existsSync);
 const REF_RE = /@galerina\/[a-z0-9._-]+/gi;
 const CODE_EXT = new Set([".ts", ".mts", ".cts", ".mjs", ".cjs", ".js"]);
 

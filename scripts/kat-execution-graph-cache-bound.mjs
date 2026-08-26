@@ -52,12 +52,12 @@ function findGalerina() {
   // tool that cannot find its subject must say so, not return an empty result.
   const here = dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
   const root = dirname(here);
-  if (!existsSync(join(root, "packages-galerina"))) {
-    throw new Error(`cannot locate the Galerina checkout: no packages-galerina under ${root}`);
+  if (!existsSync(join(root, "packages-ts"))) {
+    throw new Error(`cannot locate the Galerina checkout: no packages-ts under ${root}`);
   }
   return root.replace(/\\/g, "/") + "/";
 }
-const DIST = findGalerina() + "packages-galerina/galerina-core-compiler/dist/";
+const DIST = findGalerina() + "packages-ts/galerina-core-compiler/dist/";
 const M = await import(pathToFileURL(DIST + "index.js").href);
 // ESM caches by URL, so this is the SAME module instance the interpreter uses; a
 // second copy would have its own empty cache and would silently prove nothing.

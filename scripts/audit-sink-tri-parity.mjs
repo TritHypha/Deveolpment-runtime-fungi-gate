@@ -62,7 +62,7 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
-const SRC = join(ROOT, "packages-galerina/galerina-core-compiler/src");
+const SRC = join(ROOT, "packages-ts/galerina-core-compiler/src");
 const TAINT = join(SRC, "taint-checker.ts");
 const VALUE_STATE = join(SRC, "value-state-checker.ts");
 const EFFECT = join(SRC, "effect-checker.ts");

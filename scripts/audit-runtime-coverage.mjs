@@ -21,7 +21,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const INTERP = join(ROOT, "packages-galerina/galerina-core-compiler/src/interpreter.ts");
+const INTERP = join(ROOT, "packages-ts/galerina-core-compiler/src/interpreter.ts");
 
 // The total operator set a numeric tag is expected to service (==/!= are handled by the generic
 // galerinaValuesEqual fallback for every tag, so they are excluded from the per-tag arithmetic expectation).

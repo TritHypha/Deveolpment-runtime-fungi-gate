@@ -18,7 +18,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_OUT = process.argv.includes("--json");
-const COMPILER = join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js");
+const COMPILER = join(ROOT, "packages-ts", "galerina-core-compiler", "dist", "index.js");
 
 // The RD-0361 T2 Memory tranche: [package, twin filename (no .fungi), the emitter module name the differential
 // test uses (buildWATModuleFromGIR's 3rd arg — verified against each rd0361-*-execution.test.mjs)].
@@ -33,7 +33,7 @@ const T2_TWINS = [
 const L = await import(pathToFileURL(COMPILER).href);
 const rows = [];
 for (const [pkg, fname, mod] of T2_TWINS) {
-  const path = join(ROOT, "packages-galerina", pkg, "src", "self-hosted", `${fname}.fungi`);
+  const path = join(ROOT, "packages-ts", pkg, "src", "self-hosted", `${fname}.fungi`);
   let src = readFileSync(path, "utf8");
   if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
   const prog = L.parseProgram(src, `${fname}.fungi`);

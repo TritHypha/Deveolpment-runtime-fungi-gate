@@ -27,34 +27,34 @@
           },
           {
             "type": "command",
-            "command": "node packages-galerina/galerina-devtools-pci/dist/cli.js audit examples/auth-service >/dev/null 2>&1; c=$?; if [ \"$c\" = \"0\" ]; then echo \"{\\\"systemMessage\\\":\\\"PCI/DSS auth-service: PASS\\\",\\\"suppressOutput\\\":true}\"; else echo \"{\\\"systemMessage\\\":\\\"PCI/DSS auth-service: findings - run galerina-pci audit for detail\\\",\\\"suppressOutput\\\":true}\"; fi; exit 0",
+            "command": "node packages-ts/galerina-devtools-pci/dist/cli.js audit examples/auth-service >/dev/null 2>&1; c=$?; if [ \"$c\" = \"0\" ]; then echo \"{\\\"systemMessage\\\":\\\"PCI/DSS auth-service: PASS\\\",\\\"suppressOutput\\\":true}\"; else echo \"{\\\"systemMessage\\\":\\\"PCI/DSS auth-service: findings - run galerina-pci audit for detail\\\",\\\"suppressOutput\\\":true}\"; fi; exit 0",
             "description": "PCI/DSS compliance heartbeat (RD-0168 context): galerina-pci audit over examples/auth-service. Informational, always exits 0 — surfaces PASS/findings via systemMessage. CLI is non-recursive (audits a dir with .fungi files directly); broaden the target as the surface grows."
           },
           {
             "type": "command",
-            "command": "f=packages-galerina/galerina-devtools-keepgreen/src/cli.mjs; [ -f \"$f\" ] || f=../Galerina-R-AND-D/build-staging/galerina-devtools-keepgreen/src/cli.mjs; node \"$f\" --hook; exit 0",
-            "description": "Keep-green heartbeat (RD-0232/0232c): re-runs proofs + gate-check self-test + .gate corpus + zero-trust vocabulary drift guards (effect + sensitivity vocab machine-extracted from effect-checker.ts / type-registry.ts, fail-closed; W7 = the ZT-1 sens-drift check). Informational, --hook mode always exits 0 — surfaces 'N pass / N red / N skip' via systemMessage. Prefers the absorbed packages-galerina location, falls back to build-staging while unabsorbed. NOTE: plain node path on purpose — never invoke via the scoped package name (an at-sign-prefixed token is a PowerShell splatting hazard). Full detail: run the same path without --hook, or --json/--strict for CI."
+            "command": "f=packages-ts/galerina-devtools-keepgreen/src/cli.mjs; [ -f \"$f\" ] || f=../Galerina-R-AND-D/build-staging/galerina-devtools-keepgreen/src/cli.mjs; node \"$f\" --hook; exit 0",
+            "description": "Keep-green heartbeat (RD-0232/0232c): re-runs proofs + gate-check self-test + .gate corpus + zero-trust vocabulary drift guards (effect + sensitivity vocab machine-extracted from effect-checker.ts / type-registry.ts, fail-closed; W7 = the ZT-1 sens-drift check). Informational, --hook mode always exits 0 — surfaces 'N pass / N red / N skip' via systemMessage. Prefers the absorbed packages-ts location, falls back to build-staging while unabsorbed. NOTE: plain node path on purpose — never invoke via the scoped package name (an at-sign-prefixed token is a PowerShell splatting hazard). Full detail: run the same path without --hook, or --json/--strict for CI."
           }
         ]
       }
     ]
   },
   "env": {
-    "GALERINA_DEVTOOLS_NAMING_CLI": "packages-galerina/galerina-devtools-naming/dist/cli.js",
-    "GALERINA_DEVTOOLS_CONTEXT_CLI": "packages-galerina/galerina-devtools-context/dist/cli.js",
-    "GALERINA_DEVTOOLS_INTELLIGENCE_CLI": "packages-galerina/galerina-devtools-intelligence/dist/cli.js",
-    "GALERINA_DEVTOOLS_PROVENANCE_CLI": "packages-galerina/galerina-devtools-provenance/dist/cli.js",
-    "GALERINA_DEVTOOLS_SECURITY_CLI": "packages-galerina/galerina-devtools-security/dist/cli.js",
-    "GALERINA_DEVTOOLS_KEEPGREEN_CLI": "packages-galerina/galerina-devtools-keepgreen/src/cli.mjs"
+    "GALERINA_DEVTOOLS_NAMING_CLI": "packages-ts/galerina-devtools-naming/dist/cli.js",
+    "GALERINA_DEVTOOLS_CONTEXT_CLI": "packages-ts/galerina-devtools-context/dist/cli.js",
+    "GALERINA_DEVTOOLS_INTELLIGENCE_CLI": "packages-ts/galerina-devtools-intelligence/dist/cli.js",
+    "GALERINA_DEVTOOLS_PROVENANCE_CLI": "packages-ts/galerina-devtools-provenance/dist/cli.js",
+    "GALERINA_DEVTOOLS_SECURITY_CLI": "packages-ts/galerina-devtools-security/dist/cli.js",
+    "GALERINA_DEVTOOLS_KEEPGREEN_CLI": "packages-ts/galerina-devtools-keepgreen/src/cli.mjs"
   },
   "notes": {
     "devtools-standard-commands": {
-      "keepgreen": "node packages-galerina/galerina-devtools-keepgreen/src/cli.mjs [--json|--strict|--hook]   (RE-RUN EVERYTHING, TRUST NOTHING: proofs incl. KB copies + gate-check self-test + .gate corpus + vocab drift guards K1/K2/W7; sibling-defaults find ../ZT-Galerina-GRAPH-ASCII-v2 + ../ZTF-Knowledge-Bases; while unabsorbed use ../Galerina-R-AND-D/build-staging/galerina-devtools-keepgreen/src/cli.mjs; NEVER invoke via the scoped name — at-sign token = PowerShell splatting hazard)",
-      "naming-check": "node packages-galerina/galerina-devtools-naming/dist/cli.js check <file.fungi>",
-      "context-receipt": "node packages-galerina/galerina-devtools-context/dist/cli.js receipt <file.fungi> [--markdown]",
-      "intelligence": "node packages-galerina/galerina-devtools-intelligence/dist/cli.js search \"<query>\" [--effects <effect>]",
+      "keepgreen": "node packages-ts/galerina-devtools-keepgreen/src/cli.mjs [--json|--strict|--hook]   (RE-RUN EVERYTHING, TRUST NOTHING: proofs incl. KB copies + gate-check self-test + .gate corpus + vocab drift guards K1/K2/W7; sibling-defaults find ../ZT-Galerina-GRAPH-ASCII-v2 + ../ZTF-Knowledge-Bases; while unabsorbed use ../Galerina-R-AND-D/build-staging/galerina-devtools-keepgreen/src/cli.mjs; NEVER invoke via the scoped name — at-sign token = PowerShell splatting hazard)",
+      "naming-check": "node packages-ts/galerina-devtools-naming/dist/cli.js check <file.fungi>",
+      "context-receipt": "node packages-ts/galerina-devtools-context/dist/cli.js receipt <file.fungi> [--markdown]",
+      "intelligence": "node packages-ts/galerina-devtools-intelligence/dist/cli.js search \"<query>\" [--effects <effect>]",
       "provenance": "node scripts/audit-provenance.mjs   (BLD-003 #219/#216: generated artifacts carry a provenance sidecar + are fresh vs sources; registered in lint-conventions)",
-      "security-audit": "node packages-galerina/galerina-devtools-security/dist/cli.js audit <file.fungi>",
+      "security-audit": "node packages-ts/galerina-devtools-security/dist/cli.js audit <file.fungi>",
       "test-core": "node scripts/run-all-tests.cjs --core",
       "test-all": "node scripts/run-all-tests.cjs",
       "test-tooling": "node --test scripts/tests/codes.test.mjs scripts/tests/dev-tools-scripts.test.mjs",
@@ -76,16 +76,16 @@
       "doc-drift": "node scripts/audit-doc-drift.mjs   (DOC-004 #219: doc test/package COUNTS vs version.json authority; registered in lint-conventions)",
       "mutation": "node scripts/audit-mutation.mjs   (SEC-002 #219: re-introduce each fail-closed gate's hole, assert its test kills it; git-backed safety; ~40s)",
       "fuse-rebuild": "node scripts/rebuild-fusable-packages.mjs",
-      "benchmark": "cd packages-galerina/galerina-devtools-benchmarks && npm run run",
-      "benchmark-quick": "cd packages-galerina/galerina-devtools-benchmarks && npm run run:quick",
+      "benchmark": "cd packages-ts/galerina-devtools-benchmarks && npm run run",
+      "benchmark-quick": "cd packages-ts/galerina-devtools-benchmarks && npm run run:quick",
       "graph-all": "node scripts/graph-all.mjs   (THIS IS 'run graph' — the single source of truth. Runs the ENTIRE graph family, six tools: 1 project graph (build/graph) + 2 graph-integrity validation (RD-0121) + 3 kb graph (build/kb-graph) + 4 per-package Hardened Border --check + 5 memory graph (.claude health) + 6 dev-tool index/graph (build/dev-tool-index). run-phase-close §5 delegates its whole graph phase here, so add/remove graph tools in graph-all.mjs, not there. Pure INDEXES (code-index/code-registry/kb-index) are a separate family, kept in run-phase-close §5a. The bare 'graph' below is PROJECT-only.)",
-      "graph": "node packages-galerina/galerina-core-cli/dist/index.js graph --out build/graph   (PROJECT graph only — one of three; prefer graph-all)",
-      "kb-graph": "node packages-galerina/galerina-devtools-kb-graph/dist/cli.js --out build/kb-graph   (KB cross-ref graph: orphans + broken-links → build/kb-graph; the signal audit-stray-docs reads, so refresh before it)",
-      "package-graph": "node packages-galerina/galerina-devtools-package-graph/dist/cli.js --scope <package-path>",
-      "package-graph-check": "node packages-galerina/galerina-devtools-package-graph/dist/cli.js --scope <package-path> --check   (Hardened Border gate for ONE package; graph-all runs it for ALL)",
-      "tower-citizen": "node packages-galerina/galerina-tower-citizen/dist/index.js",
-      "bridge-bitnet": "node packages-galerina/galerina-ext-bridge-bitnet/dist/index.js",
-      "bridge-cpp": "node packages-galerina/galerina-ext-bridge-cpp/dist/index.js"
+      "graph": "node packages-ts/galerina-core-cli/dist/index.js graph --out build/graph   (PROJECT graph only — one of three; prefer graph-all)",
+      "kb-graph": "node packages-ts/galerina-devtools-kb-graph/dist/cli.js --out build/kb-graph   (KB cross-ref graph: orphans + broken-links → build/kb-graph; the signal audit-stray-docs reads, so refresh before it)",
+      "package-graph": "node packages-ts/galerina-devtools-package-graph/dist/cli.js --scope <package-path>",
+      "package-graph-check": "node packages-ts/galerina-devtools-package-graph/dist/cli.js --scope <package-path> --check   (Hardened Border gate for ONE package; graph-all runs it for ALL)",
+      "tower-citizen": "node packages-ts/galerina-tower-citizen/dist/index.js",
+      "bridge-bitnet": "node packages-ts/galerina-ext-bridge-bitnet/dist/index.js",
+      "bridge-cpp": "node packages-ts/galerina-ext-bridge-cpp/dist/index.js"
     },
     "devtools-added-2026-06-03": [
       "galerina-devtools-naming       — FUNGI-NAMING-001..005 naming standard enforcement (abbreviations, missing intent, generic types)",

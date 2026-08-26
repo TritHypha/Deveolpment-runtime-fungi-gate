@@ -16,7 +16,7 @@ import { describe, it } from "node:test";
 import {
   buildRouteRegistry,
   parseProgram,
-} from "../../packages-galerina/galerina-core-compiler/dist/index.js";
+} from "../../packages-ts/galerina-core-compiler/dist/index.js";
 import {
   deriveSemanticCoverage,
 } from "../lib/assurance-fabric/semantic-coverage.mjs";
@@ -124,20 +124,20 @@ function fixture() {
   writeJson(root, "galerina.workspace.json", {
     name: "semantic-fixture",
     packages: [
-      "packages-galerina/galerina-alpha",
-      "packages-galerina/galerina-beta",
+      "packages-ts/galerina-alpha",
+      "packages-ts/galerina-beta",
     ],
   });
   writeJson(root, "governance/assurance-semantic-coverage.json", manifest());
-  writeJson(root, "packages-galerina/galerina-alpha/package.json", {
+  writeJson(root, "packages-ts/galerina-alpha/package.json", {
     name: "@galerina/alpha",
   });
-  writeJson(root, "packages-galerina/galerina-beta/package.json", {
+  writeJson(root, "packages-ts/galerina-beta/package.json", {
     name: "@galerina/beta",
   });
   write(
     root,
-    "packages-galerina/galerina-alpha/src/api.fungi",
+    "packages-ts/galerina-alpha/src/api.fungi",
     [
       "@version 1",
       "route GET \"/health\" { flow health }",
@@ -147,18 +147,18 @@ function fixture() {
   );
   write(
     root,
-    "packages-galerina/galerina-alpha/src/a.ts",
+    "packages-ts/galerina-alpha/src/a.ts",
     "export const routeLike = /route POST \\\"/not-live\\\"/;\n",
   );
-  write(root, "packages-galerina/galerina-beta/src/b.mjs", "export const b = 1;\n");
+  write(root, "packages-ts/galerina-beta/src/b.mjs", "export const b = 1;\n");
   write(root, "docs/routes.md", "route DELETE \"/not-live\" { flow falseRoute }\n");
   write(root, "scripts/gen-assurance-semantic-graph.mjs", "// fixture semantic generator\n");
   write(root, "scripts/lib/assurance-fabric/semantic-coverage.mjs", "// fixture semantic derivation\n");
   write(root, "scripts/lib/assurance-fabric/semantic-graph.mjs", "// fixture semantic graph\n");
   write(root, "scripts/lib/assurance-fabric/strict-json.mjs", "// fixture strict JSON parser\n");
   write(root, "scripts/tests/semantic.test.mjs", "// requirement evidence\n");
-  write(root, "packages-galerina/galerina-alpha/tests/alpha.test.mjs", "// package test\n");
-  writeJson(root, "packages-galerina/galerina-alpha/.graph/package-graph.json", {
+  write(root, "packages-ts/galerina-alpha/tests/alpha.test.mjs", "// package test\n");
+  writeJson(root, "packages-ts/galerina-alpha/.graph/package-graph.json", {
     packageName: "@galerina/alpha",
     externalDeps: [{
       specifier: "@galerina/beta",
@@ -166,7 +166,7 @@ function fixture() {
       importedBy: ["src/a.ts"],
     }],
   });
-  writeJson(root, "packages-galerina/galerina-beta/.graph/package-graph.json", {
+  writeJson(root, "packages-ts/galerina-beta/.graph/package-graph.json", {
     packageName: "@galerina/beta",
     externalDeps: [],
   });
@@ -179,18 +179,18 @@ function fixture() {
       to: "package:galerina-beta",
       kind: "depends_on",
       confidence: "EXTRACTED",
-      evidencePath: "packages-galerina/galerina-alpha/.graph/package-graph.json",
+      evidencePath: "packages-ts/galerina-alpha/.graph/package-graph.json",
     }],
   });
   writeJson(root, "build/ts-retirement/ts-retirement.json", {
     executableFamily: {
-      ts: ["packages-galerina/galerina-alpha/src/a.ts"],
+      ts: ["packages-ts/galerina-alpha/src/a.ts"],
       declarationTs: [],
       mts: [],
       cts: [],
       mjs: [
-        "packages-galerina/galerina-alpha/tests/alpha.test.mjs",
-        "packages-galerina/galerina-beta/src/b.mjs",
+        "packages-ts/galerina-alpha/tests/alpha.test.mjs",
+        "packages-ts/galerina-beta/src/b.mjs",
       ],
       js: [],
       cjs: [],
@@ -238,7 +238,7 @@ describe("semantic coverage derivation", () => {
         [{
           id: report.nodes.find((node) => node.kind === "route").id,
           kind: "route",
-          evidencePath: "packages-galerina/galerina-alpha/src/api.fungi",
+          evidencePath: "packages-ts/galerina-alpha/src/api.fungi",
           line: 2,
           method: "GET",
           path: "/health",
@@ -251,7 +251,7 @@ describe("semantic coverage derivation", () => {
         {
           id: "package:galerina-alpha",
           kind: "package",
-          evidencePath: "packages-galerina/galerina-alpha/package.json",
+          evidencePath: "packages-ts/galerina-alpha/package.json",
           declaredFanIn: 0,
           declaredFanOut: 1,
           derivedFanIn: 0,
@@ -312,7 +312,7 @@ describe("semantic coverage derivation", () => {
   it("refuses a missing package graph", async () => {
     const root = fixture();
     try {
-      rmSync(join(root, "packages-galerina/galerina-beta/.graph/package-graph.json"));
+      rmSync(join(root, "packages-ts/galerina-beta/.graph/package-graph.json"));
       refused(await derive(root), "SEMANTIC_PACKAGE_GRAPH_MISSING");
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -469,7 +469,7 @@ describe("semantic coverage derivation", () => {
       git(root, ["commit", "--quiet", "-m", "fixture authoritative input"]);
       result = await generateSemanticGraph({ root, derive });
       assert.equal(result.kind, "published", JSON.stringify(result));
-      write(root, "packages-galerina/galerina-alpha/src/a.ts", "export const routeLike = /route POST \\\"/not-live\\\"/; // changed source bytes\n");
+      write(root, "packages-ts/galerina-alpha/src/a.ts", "export const routeLike = /route POST \\\"/not-live\\\"/; // changed source bytes\n");
       result = await generateSemanticGraph({ root, check: true, derive });
       assert.equal(result.kind, "stale", JSON.stringify(result));
     } finally {

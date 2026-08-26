@@ -12,7 +12,7 @@ const SLIDE_AVAILABLE =
   && existsSync(join(SLIDE_ROOT, "src", "checked-fungi-package-compiler.mjs"));
 const SOURCE_ROOT = join(
   process.cwd(),
-  "packages-galerina",
+  "packages-ts",
   "galerina-test",
   "src",
   "self-hosted",

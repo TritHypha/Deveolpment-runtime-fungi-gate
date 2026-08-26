@@ -1,6 +1,6 @@
 {
   "$schema": "./name-registry.schema.note",
-  "purpose": "Canonical name policy for the Galerina monorepo, so confusingly-similar names cannot recur (RD-0124). Born from the graph-project / project-graph near-anagram tangle. Enforced by scripts/audit-name-collisions.mjs. The package set is the SOURCE OF TRUTH (read live from packages-galerina/*/package.json) — this file holds POLICY (conventions, the collision rule, the known-collision allowlist + decided resolutions, and any extra named entities to also guard).",
+  "purpose": "Canonical name policy for the Galerina monorepo, so confusingly-similar names cannot recur (RD-0124). Born from the graph-project / project-graph near-anagram tangle. Enforced by scripts/audit-name-collisions.mjs. The package set is the SOURCE OF TRUTH (read live from packages-ts/*/package.json) — this file holds POLICY (conventions, the collision rule, the known-collision allowlist + decided resolutions, and any extra named entities to also guard).",
   "scope": "@galerina",
   "dirConvention": {
     "pattern": "galerina-<area>-<name>",

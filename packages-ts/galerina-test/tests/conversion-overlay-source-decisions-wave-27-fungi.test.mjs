@@ -1,0 +1,60 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { describe, it } from "node:test";
+import { checkEffects, emitGIR, executeFlow, parseProgram } from "../../galerina-core-compiler/dist/index.js";
+
+const ROOT=join(import.meta.dirname,"..","..",".."),PACKAGE_ROOT=join(ROOT,"packages-ts","galerina-test"),OVERLAY_ROOT=join(PACKAGE_ROOT,"src","self-hosted","conversion-overlays"),PACKAGE=join(PACKAGE_ROOT,"package.json");
+const bool=value=>({__tag:"bool",value}),string=value=>({__tag:"string",value}),args=names=>new Map(names.map(name=>[name,bool(true)]));
+const RESERVED=new Set(["version","pure","secure","flow","FLOW","contract","intent","record","return","if","match","check","deny","ambig","mut","let","Bool","Int","String","Verdict","Result","Option","Array","true","false","Ok","Err","Some","None","Allow","Deny","Unknown"]);
+const CANDIDATES=Object.freeze([
+  ["type-checker-check-types-status.fungi","typeCheckerCheckTypesStatusCore","galerina-core-compiler/src/type-checker.ts","checkTypes","type_checker_check_types_built"],
+  ["type-checker-levenshtein-status.fungi","typeCheckerLevenshteinStatusCore","galerina-core-compiler/src/type-checker.ts","levenshtein","type_checker_levenshtein_built"],
+  ["type-checker-parse-binding-name-status.fungi","typeCheckerParseBindingNameStatusCore","galerina-core-compiler/src/type-checker.ts","parseBindingName","type_checker_parse_binding_name_built"],
+  ["type-checker-parse-param-name-status.fungi","typeCheckerParseParamNameStatusCore","galerina-core-compiler/src/type-checker.ts","parseParamName","type_checker_parse_param_name_built"],
+  ["type-checker-type-checker-status.fungi","typeCheckerTypeCheckerStatusCore","galerina-core-compiler/src/type-checker.ts","class TypeChecker","type_checker_type_checker_built"],
+  ["type-checker-constructor-status.fungi","typeCheckerConstructorStatusCore","galerina-core-compiler/src/type-checker.ts","constructor(","type_checker_constructor_built"],
+  ["type-checker-check-status.fungi","typeCheckerCheckStatusCore","galerina-core-compiler/src/type-checker.ts","check(ast: AstNode)","type_checker_check_built"],
+  ["type-checker-check-and-register-binding-type-status.fungi","typeCheckerCheckAndRegisterBindingTypeStatusCore","galerina-core-compiler/src/type-checker.ts","checkAndRegisterBindingType","type_checker_check_and_register_binding_type_built"],
+  ["type-checker-check-binary-operator-types-status.fungi","typeCheckerCheckBinaryOperatorTypesStatusCore","galerina-core-compiler/src/type-checker.ts","checkBinaryOperatorTypes","type_checker_check_binary_operator_types_built"],
+  ["type-checker-check-binding-type-annotation-status.fungi","typeCheckerCheckBindingTypeAnnotationStatusCore","galerina-core-compiler/src/type-checker.ts","checkBindingTypeAnnotation","type_checker_check_binding_type_annotation_built"],
+  ["type-checker-check-check-subject-status.fungi","typeCheckerCheckCheckSubjectStatusCore","galerina-core-compiler/src/type-checker.ts","checkCheckSubject","type_checker_check_check_subject_built"],
+  ["type-checker-check-condition-bool-status.fungi","typeCheckerCheckConditionBoolStatusCore","galerina-core-compiler/src/type-checker.ts","checkConditionBool","type_checker_check_condition_bool_built"],
+  ["type-checker-check-int-literal-range-status.fungi","typeCheckerCheckIntLiteralRangeStatusCore","galerina-core-compiler/src/type-checker.ts","checkIntLiteralRange","type_checker_check_int_literal_range_built"],
+  ["type-checker-check-k3-unary-and-folds-status.fungi","typeCheckerCheckK3UnaryAndFoldsStatusCore","galerina-core-compiler/src/type-checker.ts","checkK3UnaryAndFolds","type_checker_check_k3_unary_and_folds_built"],
+  ["type-checker-check-match-exhaustiveness-status.fungi","typeCheckerCheckMatchExhaustivenessStatusCore","galerina-core-compiler/src/type-checker.ts","checkMatchExhaustiveness","type_checker_check_match_exhaustiveness_built"],
+  ["type-checker-check-money-currency-tag-status.fungi","typeCheckerCheckMoneyCurrencyTagStatusCore","galerina-core-compiler/src/type-checker.ts","checkMoneyCurrencyTag","type_checker_check_money_currency_tag_built"],
+  ["type-checker-check-prefilter-subject-status.fungi","typeCheckerCheckPrefilterSubjectStatusCore","galerina-core-compiler/src/type-checker.ts","checkPrefilterSubject","type_checker_check_prefilter_subject_built"],
+  ["type-checker-check-shadowed-binding-status.fungi","typeCheckerCheckShadowedBindingStatusCore","galerina-core-compiler/src/type-checker.ts","checkShadowedBinding","type_checker_check_shadowed_binding_built"],
+  ["type-checker-check-type-ref-status.fungi","typeCheckerCheckTypeRefStatusCore","galerina-core-compiler/src/type-checker.ts","checkTypeRef","type_checker_check_type_ref_built"],
+  ["type-checker-emit-hallmark-op-denied-status.fungi","typeCheckerEmitHallmarkOpDeniedStatusCore","galerina-core-compiler/src/type-checker.ts","emitHallmarkOpDenied","type_checker_emit_hallmark_op_denied_built"],
+  ["type-checker-fuzzy-single-candidate-status.fungi","typeCheckerFuzzySingleCandidateStatusCore","galerina-core-compiler/src/type-checker.ts","fuzzySingleCandidate","type_checker_fuzzy_single_candidate_built"],
+  ["type-checker-fuzzy-type-suggestion-status.fungi","typeCheckerFuzzyTypeSuggestionStatusCore","galerina-core-compiler/src/type-checker.ts","fuzzyTypeSuggestion","type_checker_fuzzy_type_suggestion_built"],
+  ["type-checker-infer-type-status.fungi","typeCheckerInferTypeStatusCore","galerina-core-compiler/src/type-checker.ts","inferType","type_checker_infer_type_built"],
+  ["type-checker-is-reserved-hallmark-name-status.fungi","typeCheckerIsReservedHallmarkNameStatusCore","galerina-core-compiler/src/type-checker.ts","isReservedHallmarkName","type_checker_is_reserved_hallmark_name_built"],
+  ["type-checker-lookup-binding-status.fungi","typeCheckerLookupBindingStatusCore","galerina-core-compiler/src/type-checker.ts","lookupBinding","type_checker_lookup_binding_built"],
+  ["type-checker-lookup-binding-type-status.fungi","typeCheckerLookupBindingTypeStatusCore","galerina-core-compiler/src/type-checker.ts","lookupBindingType","type_checker_lookup_binding_type_built"],
+  ["type-checker-match-arm-payload-type-status.fungi","typeCheckerMatchArmPayloadTypeStatusCore","galerina-core-compiler/src/type-checker.ts","matchArmPayloadType","type_checker_match_arm_payload_type_built"],
+  ["type-checker-pop-type-scope-status.fungi","typeCheckerPopTypeScopeStatusCore","galerina-core-compiler/src/type-checker.ts","popTypeScope","type_checker_pop_type_scope_built"],
+  ["type-checker-push-type-scope-status.fungi","typeCheckerPushTypeScopeStatusCore","galerina-core-compiler/src/type-checker.ts","pushTypeScope","type_checker_push_type_scope_built"],
+  ["type-checker-register-binding-status.fungi","typeCheckerRegisterBindingStatusCore","galerina-core-compiler/src/type-checker.ts","registerBinding","type_checker_register_binding_built"],
+  ["type-checker-register-binding-type-status.fungi","typeCheckerRegisterBindingTypeStatusCore","galerina-core-compiler/src/type-checker.ts","registerBindingType","type_checker_register_binding_type_built"],
+  ["type-checker-walk-node-status.fungi","typeCheckerWalkNodeStatusCore","galerina-core-compiler/src/type-checker.ts","walkNode","type_checker_walk_node_built"],
+  ["type-registry-effects-subset-status.fungi","typeRegistryEffectsSubsetStatusCore","galerina-core-compiler/src/type-registry.ts","effectsSubset","type_registry_effects_subset_built"],
+  ["type-registry-effects-to-flags-status.fungi","typeRegistryEffectsToFlagsStatusCore","galerina-core-compiler/src/type-registry.ts","effectsToFlags","type_registry_effects_to_flags_built"],
+  ["type-registry-parse-tensor-type-status.fungi","typeRegistryParseTensorTypeStatusCore","galerina-core-compiler/src/type-registry.ts","parseTensorType","type_registry_parse_tensor_type_built"],
+  ["type-registry-resolve-type-id-status.fungi","typeRegistryResolveTypeIdStatusCore","galerina-core-compiler/src/type-registry.ts","resolveTypeId","type_registry_resolve_type_id_built"],
+  ["type-registry-tensor-dimension-counts-compatible-status.fungi","typeRegistryTensorDimensionCountsCompatibleStatusCore","galerina-core-compiler/src/type-registry.ts","tensorDimensionCountsCompatible","type_registry_tensor_dimension_counts_compatible_built"],
+  ["type-registry-tensor-element-types-compatible-status.fungi","typeRegistryTensorElementTypesCompatibleStatusCore","galerina-core-compiler/src/type-registry.ts","tensorElementTypesCompatible","type_registry_tensor_element_types_compatible_built"],
+  ["effect-checker-format-effects-status.fungi","effectCheckerFormatEffectsStatusCore","galerina-core-compiler/src/effect-checker.ts","formatEffects","effect_checker_format_effects_built"],
+  ["effect-checker-unique-status.fungi","effectCheckerUniqueStatusCore","galerina-core-compiler/src/effect-checker.ts","unique","effect_checker_unique_built"],
+].map(([file,flow,source,symbol,expected])=>Object.freeze({file,flow,source,symbol,input:args(["inputCaptured","stateChecked","decisionBuilt","evidenceBound"]),expected:string(expected)})));
+
+function shadowFingerprint(source){const identifiers=new Map();return createHash("sha256").update(source.replace(/^\uFEFF/u," ").replace(/\/\*[\s\S]*?\*\//gu," ").replace(/^\s*\/\/.*$/gmu," ").replace(/\b((?:pure|secure)\s+)?flow\s+[A-Za-z_][A-Za-z0-9_]*/gu,m=>m.replace(/([A-Za-z_][A-Za-z0-9_]*)$/u,"FLOW")).replace(/"(?:\\.|[^"\\])*"/gu,'"STRING"').replace(/\b-?(?:0x[0-9a-fA-F_]+|\d[\d_]*)\b/gu,"NUMBER").replace(/\s+/gu," ").trim().replace(/\b[A-Za-z_][A-Za-z0-9_]*\b/gu,id=>{if(RESERVED.has(id))return id;let r=identifiers.get(id);if(r===undefined){r="ID"+identifiers.size;identifiers.set(id,r);}return r;}),"utf8").digest("hex");}
+
+describe("40-file source-bound Fungi decision-core overlay wave 27",()=>{
+  it("binds 40 distinct, previously uncredited live source behaviours and package assets",()=>{assert.equal(CANDIDATES.length,40);const loaded=JSON.parse(readFileSync(PACKAGE,"utf8")).packageGraph?.loadedAssets??[],scopes=new Set(),sources=new Map();for(const c of CANDIDATES){assert.ok(loaded.includes(`src/self-hosted/conversion-overlays/${c.file}`),`${c.file} must be a loaded asset`);let source=sources.get(c.source);if(source===undefined){source=readFileSync(join(ROOT,"packages-ts",c.source),"utf8");sources.set(c.source,source);}assert.ok(source.includes(c.symbol),`${c.source} must contain ${c.symbol}`);const scope=`${c.source}#${c.symbol}`;assert.equal(scopes.has(scope),false);scopes.add(scope);}});
+  it("has no exact duplicate or normalized whole-corpus template shadow",()=>{const seen=new Map(),files=new Set(CANDIDATES.map(c=>c.file));for(const file of readdirSync(OVERLAY_ROOT).filter(f=>f.endsWith(".fungi")&&!files.has(f))){const source=readFileSync(join(OVERLAY_ROOT,file),"utf8");seen.set(createHash("sha256").update(source).digest("hex"),file);seen.set(shadowFingerprint(source),file);}const collisions=[];for(const c of CANDIDATES){const p=join(OVERLAY_ROOT,c.file);assert.ok(existsSync(p),`${c.file} must exist`);const source=readFileSync(p,"utf8");for(const [kind,fp] of [["exact duplicate",createHash("sha256").update(source).digest("hex")],["template shadow",shadowFingerprint(source)]]){if(seen.has(fp))collisions.push(`${c.file} ${kind} of ${seen.get(fp)}`);seen.set(fp,c.file);}}assert.deepEqual(collisions,[]);});
+  it("parses, effect-checks, emits GIR and executes every decision core",async()=>{for(const c of CANDIDATES){const source=readFileSync(join(OVERLAY_ROOT,c.file),"utf8"),program=parseProgram(source,c.file);assert.deepEqual((program.diagnostics??[]).filter(d=>d.severity==="error"),[],c.file);const effects=checkEffects(program.flows,program.ast);assert.deepEqual(effects.flatMap(r=>r.diagnostics).filter(d=>d.severity==="error"),[],c.file);assert.equal(emitGIR(program.ast,program.flows,effects).gir.flows.length,1,c.file);assert.deepEqual((await executeFlow(c.flow,c.input,program.ast,program.flows)).value,c.expected,c.file);}});
+});

@@ -30,7 +30,7 @@ test("scrubPaths: SAFE tokens are untouched (no over-scrub)", () => {
   // A bare word `userprofile` (no %%) must NOT be genericized — it never trips the %-anchored gate.
   assert.equal(scrubPaths("the userprofile field"), "the userprofile field");
   // A placeholder / repo-relative path is already portable — left alone.
-  assert.equal(scrubPaths("read <path>/a and packages-galerina/x/src/y.ts"), "read <path>/a and packages-galerina/x/src/y.ts");
+  assert.equal(scrubPaths("read <path>/a and packages-ts/x/src/y.ts"), "read <path>/a and packages-ts/x/src/y.ts");
   assert.equal(scrubPaths("~/notes and $HOME/x"), "~/notes and $HOME/x");
   assert.equal(scrubPaths("/home/<user>/notes and /Users/<name>/work"), "/home/<user>/notes and /Users/<name>/work");
   assert.equal(scrubPaths("https://example.test/Users/alice/profile"), "https://example.test/Users/alice/profile");

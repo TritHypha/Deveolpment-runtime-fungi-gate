@@ -18,11 +18,11 @@ Read at minimum:
 
 - `docs/architecture/audit-key-rotation-triple-lock-design-2026-07-10.md`
 - `docs/ROADMAP.md`
-- `packages-galerina/galerina-tower-citizen/src/key-rotation.ts`
-- `packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts`
-- `packages-galerina/galerina-framework-app-kernel/src/registry-rotation-authority.ts`
-- `packages-galerina/galerina-framework-app-kernel/src/registry-rotation-controller.ts`
-- `packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts`
+- `packages-ts/galerina-tower-citizen/src/key-rotation.ts`
+- `packages-ts/galerina-tower-citizen/src/registry-key-rotation.ts`
+- `packages-ts/galerina-framework-app-kernel/src/registry-rotation-authority.ts`
+- `packages-ts/galerina-framework-app-kernel/src/registry-rotation-controller.ts`
+- `packages-ts/galerina-framework-app-kernel/src/registry-runtime.ts`
 - `governance/revocation-registry.mjs`
 - `scripts/registry-authority-cli.mjs`
 - `scripts/registry-index-cli.mjs`
@@ -52,8 +52,8 @@ Verified current boundary:
 Also inspect:
 
 - `docs/superpowers/specs/2026-07-30-content-addressed-registry-generation-activation.md`
-- `packages-galerina/galerina-framework-app-kernel/src/registry-generation.ts`
-- `packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts`
+- `packages-ts/galerina-framework-app-kernel/src/registry-generation.ts`
+- `packages-ts/galerina-framework-app-kernel/src/registry-generation-store.ts`
 - `scripts/registry-generation-cli.mjs`
 
 Answer these questions with file/line evidence:

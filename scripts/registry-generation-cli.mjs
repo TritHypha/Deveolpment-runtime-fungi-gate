@@ -16,12 +16,12 @@ import {
   registryGenerationFileName,
   registryGenerationId,
   verifyRegistryGeneration,
-} from "../packages-galerina/galerina-framework-app-kernel/dist/registry-generation.js";
+} from "../packages-ts/galerina-framework-app-kernel/dist/registry-generation.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const registryRoot = join(
   root,
-  "packages-galerina",
+  "packages-ts",
   "galerina-registry",
 );
 const governanceRoot = join(root, "governance");

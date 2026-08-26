@@ -24,8 +24,8 @@ import { dirname, join } from "node:path";
 import { readFileSync } from "node:fs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const DIST = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "dist", "index.js");
-const SH_DIR = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "src", "self-hosted");
+const DIST = join(HERE, "..", "packages-ts", "galerina-core-compiler", "dist", "index.js");
+const SH_DIR = join(HERE, "..", "packages-ts", "galerina-core-compiler", "src", "self-hosted");
 
 let L;
 try {

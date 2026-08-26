@@ -43,8 +43,8 @@ import { join, resolve, dirname, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
-const BASELINE = join(ROOT, "packages-galerina/galerina-core-compiler/tests/fixtures/emitter-completeness-baseline.json");
+const DIST = join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js");
+const BASELINE = join(ROOT, "packages-ts/galerina-core-compiler/tests/fixtures/emitter-completeness-baseline.json");
 
 const argv = new Set(process.argv.slice(2));
 const JSON_OUT = argv.has("--json");

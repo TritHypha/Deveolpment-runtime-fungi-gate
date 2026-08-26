@@ -32,7 +32,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 // --root <dir> overrides the repo root (used by fixture tests); default = repo.
 const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
-const SRC_DIR = join(ROOT, "packages-galerina/galerina-core-compiler/src");
+const SRC_DIR = join(ROOT, "packages-ts/galerina-core-compiler/src");
 const ALLOWLIST = join(HERE, "fixtures/checker-wiring-allowlist.txt");
 
 // An exported checker: `export function check|verify|detect` + Capital.  We treat

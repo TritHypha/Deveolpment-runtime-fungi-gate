@@ -25,7 +25,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const EMITTER = path.resolve(
   __dirname,
-  "../packages-galerina/galerina-core-compiler/src/wat-emitter.ts",
+  "../packages-ts/galerina-core-compiler/src/wat-emitter.ts",
 );
 
 let PASS = 0;

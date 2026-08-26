@@ -11,7 +11,7 @@
 // Run:  node scripts/rd-0151-0153-assimilation-ambiguity-neural-proof.mjs    (exit 0 iff every V# holds)
 // =============================================================================
 
-import { Verdict, vAnd, authorize, maskByVerdict, isMasked } from "../packages-galerina/galerina-tower-citizen/dist/index.js";
+import { Verdict, vAnd, authorize, maskByVerdict, isMasked } from "../packages-ts/galerina-tower-citizen/dist/index.js";
 
 const { DENY, INDETERMINATE, ALLOW } = Verdict;
 const TRITS = [DENY, INDETERMINATE, ALLOW];

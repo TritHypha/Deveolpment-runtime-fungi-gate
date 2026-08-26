@@ -22,7 +22,7 @@ after(() => {
 function fixture(source) {
   const root = mkdtempSync(join(tmpdir(), "diagnostic-code-audit-"));
   roots.push(root);
-  const sourceDirectory = join(root, "packages-galerina", "fixture", "src");
+  const sourceDirectory = join(root, "packages-ts", "fixture", "src");
   mkdirSync(sourceDirectory, { recursive: true });
   writeFileSync(join(sourceDirectory, "diagnostics.ts"), source);
   return root;

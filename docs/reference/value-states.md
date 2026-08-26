@@ -5,7 +5,7 @@ its sensitivity. This is the detail page behind the "Value-states" row in
 [contract-authoring-model.md](../contract-authoring-model.md). Value-states are **Table 2 (auto-derived / tracked)**:
 the checker propagates them from the boundary; your levers are the recognised **gate** and **declassifier** calls.
 
-**Source of truth:** `packages-galerina/galerina-core-compiler/src/value-state-checker.ts` (`ValueStateFlags`,
+**Source of truth:** `packages-ts/galerina-core-compiler/src/value-state-checker.ts` (`ValueStateFlags`,
 `SINK_REQUIREMENTS`, `PassportStage`); canonical sink registry `stdlib-gates.yaml §sinks`. **Verified against source
 2026-07-15.** Two elements beyond the overview table are documented here: the **`ReadOnly`** flag and the **Passport
 typestate** (Raw → Verified → Authorized → Sealed).

@@ -196,7 +196,7 @@ traps, all refused:
 ## The verify loop
 
 ```bash
-node --test packages-galerina/galerina-core-compiler/tests/gate-v3-shipped-examples.test.mjs
+node --test packages-ts/galerina-core-compiler/tests/gate-v3-shipped-examples.test.mjs
 ```
 
 Author by **composing the verified patterns above and re-checking after every

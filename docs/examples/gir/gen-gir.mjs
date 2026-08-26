@@ -15,15 +15,15 @@ import { dirname, join } from 'node:path';
 function findRepo(start) {
   let d = start;
   for (let i = 0; i < 10; i++) {
-    if (existsSync(join(d, 'packages-galerina/galerina-core-compiler/dist/index.js'))) return d;
+    if (existsSync(join(d, 'packages-ts/galerina-core-compiler/dist/index.js'))) return d;
     const up = dirname(d);
     if (up === d) break;
     d = up;
   }
-  throw new Error('repo root (packages-galerina/galerina-core-compiler/dist) not found above ' + start);
+  throw new Error('repo root (packages-ts/galerina-core-compiler/dist) not found above ' + start);
 }
 const REPO = findRepo(dirname(fileURLToPath(import.meta.url)));
-const COMPILER = join(REPO, 'packages-galerina/galerina-core-compiler/dist/index.js');
+const COMPILER = join(REPO, 'packages-ts/galerina-core-compiler/dist/index.js');
 const { parseProgram, checkEffects, emitGIR } = await import(pathToFileURL(COMPILER).href);
 
 // curated set: name -> source .fungi directory (relative to docs/examples)

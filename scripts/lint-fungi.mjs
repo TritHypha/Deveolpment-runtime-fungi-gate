@@ -23,7 +23,7 @@
 //   - inline `//fungi-allow: CODE[,CODE]` on the offending line OR the line directly above a flow.
 //
 // Flags:  --json   --soft (always exit 0)   --summary   --whitelist <f>   --no-default-whitelist
-//         [paths…]  (default scan roots: packages-galerina, examples, tests)
+//         [paths…]  (default scan roots: packages-ts, examples, tests)
 // Prints `VIOLATIONS: N` for the lint-conventions umbrella. Run from repo root.
 
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
@@ -37,7 +37,7 @@ const noDefaultWl = argv.includes("--no-default-whitelist");
 const wlArg = argv.includes("--whitelist") ? argv[argv.indexOf("--whitelist") + 1] : undefined;
 const ROOT = process.cwd();
 const paths = argv.filter((a, i) => !a.startsWith("--") && argv[i - 1] !== "--whitelist");
-const SCAN_ROOTS = paths.length > 0 ? paths : ["packages-galerina", "examples", "tests"];
+const SCAN_ROOTS = paths.length > 0 ? paths : ["packages-ts", "examples", "tests"];
 const SKIP_DIRS = new Set(["node_modules", "dist", "build", ".git"]);
 
 // ── Slop dictionaries (tight on purpose — only egregious tells) ─────────────────────────────────

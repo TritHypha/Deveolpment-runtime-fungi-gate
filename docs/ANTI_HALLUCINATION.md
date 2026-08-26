@@ -102,7 +102,7 @@ asserting each is rejected. If a future edit defangs a phase, the corpus goes re
 
 ## 5. The corpus — verify-by-running the guarantee
 
-`packages-galerina/galerina-core-compiler/tests/anti-hallucination-corpus.test.mjs` (in the
+`packages-ts/galerina-core-compiler/tests/anti-hallucination-corpus.test.mjs` (in the
 6131-test suite). It feeds 11 hallucination classes and 2 valid **controls** through the
 *real* phase entry points (`parseProgram`, `checkEffects`, `checkTypes`,
 `verifyGovernance`) and asserts:
@@ -118,7 +118,7 @@ asserting each is rejected. If a future edit defangs a phase, the corpus goes re
 Run it:
 
 ```
-cd packages-galerina/galerina-core-compiler && node --test tests/anti-hallucination-corpus.test.mjs
+cd packages-ts/galerina-core-compiler && node --test tests/anti-hallucination-corpus.test.mjs
 ```
 
 The corpus is designed to grow: every new fail-open we find or fix should add an entry, so

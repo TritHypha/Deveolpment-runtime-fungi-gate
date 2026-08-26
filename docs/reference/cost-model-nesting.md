@@ -21,7 +21,7 @@ compiled language.
 
 | Construct | Real example | What happens |
 |---|---|---|
-| The `flow` wrapper | [`synchronization-gate.fungi`](../../packages-galerina/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi) → the WAT below | the body IS the function; params become indexed locals (`$p0…`); no wrapper scope survives lowering |
+| The `flow` wrapper | [`synchronization-gate.fungi`](../../packages-ts/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi) → the WAT below | the body IS the function; params become indexed locals (`$p0…`); no wrapper scope survives lowering |
 | The `contract` block | the same flow — its `contract { intent … }` | **zero instructions emitted** — checked at compile time, carried in the signed manifest, enforced at the border; its text appears nowhere in the WAT below |
 | Block nesting | [`nesting-shape.fungi`](examples/cost-model/nesting-shape.fungi) — `classifyDeep` vs `classifyFlat` | the deep-styled and flat-styled flows lower to the same control-flow structure; shape is for the reader |
 | Comments · annotations · types | any example file here | comments/annotations are erased; types resolve at compile time and emit nothing of themselves |
@@ -32,7 +32,7 @@ compiled language.
 Three things to read off it: the `contract` text is absent (level 0); the params are indexed locals; and
 `driftGateVerdict` contains a real `call $syncGateVerdict` — which is Table B row 1.
 
-<!-- emit-doc-wat:BEGIN source=packages-galerina/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi flows=syncGateVerdict,driftGateVerdict -->
+<!-- emit-doc-wat:BEGIN source=packages-ts/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi flows=syncGateVerdict,driftGateVerdict -->
 ```wat
 (func $syncGateVerdict (param $p0 i32) (result i32)
     (if (i32.eq (local.get $p0) (i32.const 0))
@@ -65,7 +65,7 @@ Three things to read off it: the `contract` text is absent (level 0); the params
 |---|---|---|
 | Flow **calls** | `driftGateVerdict` → `call $syncGateVerdict` in the WAT above | a call carries frame/arg cost today (see the call-chain benchmark). Compose small flows for correctness and let the compiler pay the call cost — the planned inliner is the fix; hand-flattening a security fold is never the fix |
 | Nested **loops** | [`loops-cost.fungi`](examples/cost-model/loops-cost.fungi) — `gridChecksum(rows, cols)` | the body runs rows×cols times: algorithmic complexity, true in every language. "Nest away" is about *blocks*, not O(n·m). The emitted per-loop fuel counter traps at the platform cap, so even a mis-bounded nest is bounded by construction |
-| **Host-boundary** crossings | [`secret-gate.fungi`](../../packages-galerina/galerina-framework-app-kernel/src/self-hosted/secret-gate.fungi) — each `required.count()` / `.get(i)` crosses the host bridge | each crossing is real overhead — batch the work per crossing rather than chattering across the seam |
+| **Host-boundary** crossings | [`secret-gate.fungi`](../../packages-ts/galerina-framework-app-kernel/src/self-hosted/secret-gate.fungi) — each `required.count()` / `.get(i)` crosses the host bridge | each crossing is real overhead — batch the work per crossing rather than chattering across the seam |
 | The **dev/check lane** | — | the tree-walking interpreter pays per AST node; that is the dev/verification lane (being retired by the execution cutover). The compiled lane is the product — read the WASM ▶ production benchmark row, not the interpreter rows |
 
 ## Table C — code that still causes nesting (the honest residuals)
@@ -98,7 +98,7 @@ algorithm choice are the two costs no compiler will ever pay for you.
 ## Declare the contraction — the compiler owns the depth
 
 Prefer a **declared fold/contraction** to a hand-written nest. The in-tree shape is the
-[`b8-admission.fungi`](../../packages-galerina/galerina-core-network/src/self-hosted/b8-admission.fungi) twin: the
+[`b8-admission.fungi`](../../packages-ts/galerina-core-network/src/self-hosted/b8-admission.fungi) twin: the
 request verdict is a declared K3 conjunction — `vAnd` (min) folded over every gate verdict — not an opaque ladder
 of nested `if`s. The difference is not style:
 

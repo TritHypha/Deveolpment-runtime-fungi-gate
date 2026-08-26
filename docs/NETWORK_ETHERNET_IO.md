@@ -43,7 +43,7 @@ Therefore Galerina must encrypt, authenticate, validate, minimise and report net
 Core network contracts belong in:
 
 ```text
-packages-galerina/galerina-core-network/
+packages-ts/galerina-core-network/
 ```
 
 That package should own typed, permissioned and reportable network I/O

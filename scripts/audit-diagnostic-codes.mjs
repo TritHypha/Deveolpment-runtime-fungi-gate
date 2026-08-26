@@ -15,7 +15,7 @@ const rootIndex = argv.indexOf("--root");
 const root = rootIndex >= 0 && typeof argv[rootIndex + 1] === "string"
   ? resolve(argv[rootIndex + 1])
   : process.cwd();
-const sourceRoot = join(root, "packages-galerina");
+const sourceRoot = join(root, "packages-ts");
 const canonicalSeverities = new Set(["error", "warning", "info"]);
 
 function walk(directory) {

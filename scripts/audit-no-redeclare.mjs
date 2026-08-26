@@ -20,7 +20,7 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SH = join(ROOT, "packages-galerina/galerina-core-compiler/src/self-hosted");
+const SH = join(ROOT, "packages-ts/galerina-core-compiler/src/self-hosted");
 
 // The upstream that every stage concatenates (the shared-AST-type "prelude", Option Y).
 const UPSTREAM = ["lexer.fungi", "parser.fungi"];

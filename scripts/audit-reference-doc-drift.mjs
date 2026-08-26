@@ -17,7 +17,7 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const CC = join(ROOT, "packages-galerina", "galerina-core-compiler", "src");
+const CC = join(ROOT, "packages-ts", "galerina-core-compiler", "src");
 const readSrc = (p) => { try { return readFileSync(join(ROOT, p), "utf8"); } catch { return ""; } };
 
 // Extract the quoted members of a `new Set([ … ])` block named `setName` from a source string.
@@ -30,8 +30,8 @@ function extractSetMembers(src, setName) {
 
 // ── The source-of-truth map: each reference page → the vocabulary it MUST cover, extracted from source ──
 function buildChecks() {
-  const effectChecker = readSrc("packages-galerina/galerina-core-compiler/src/effect-checker.ts");
-  const typeChecker = readSrc("packages-galerina/galerina-core-compiler/src/type-checker.ts");
+  const effectChecker = readSrc("packages-ts/galerina-core-compiler/src/effect-checker.ts");
+  const typeChecker = readSrc("packages-ts/galerina-core-compiler/src/type-checker.ts");
   const canonical = extractSetMembers(effectChecker, "CANONICAL_EFFECTS");
   const denyOnly = extractSetMembers(effectChecker, "DENY_ONLY_EFFECTS");
   // A representative slice of BUILT_IN_TYPES (the string set that contributes Verdict + families) —

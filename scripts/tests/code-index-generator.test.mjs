@@ -51,7 +51,7 @@ test("code-index --check refuses missing and drifted output without writing", ()
   try {
     write(
       root,
-      "packages-galerina/example/src/index.ts",
+      "packages-ts/example/src/index.ts",
       'export const EXAMPLE = { code: "FUNGI-TEST-001", name: "EXAMPLE", severity: "error" };\n',
     );
 
@@ -79,7 +79,7 @@ test("code-index keeps one-line diagnostic metadata inside its own definition", 
   try {
     write(
       root,
-      "packages-galerina/example/src/index.ts",
+      "packages-ts/example/src/index.ts",
       [
         'export const FIRST = { code: "FUNGI-TEST-001", name: "FIRST", severity: "error" } as const;',
         "export const SECOND = {",
@@ -110,7 +110,7 @@ test("code-index records bounded parser diagnostic emit calls only", () => {
   try {
     write(
       root,
-      "packages-galerina/example/src/diagnostics.ts",
+      "packages-ts/example/src/diagnostics.ts",
       [
         "export const PARSER_DIAGNOSTIC = {",
         '  code: "FUNGI-TEST-001",',
@@ -122,7 +122,7 @@ test("code-index records bounded parser diagnostic emit calls only", () => {
     );
     write(
       root,
-      "packages-galerina/example/src/parser.ts",
+      "packages-ts/example/src/parser.ts",
       [
         "class Parser {",
         "  parse(): void {",
@@ -139,7 +139,7 @@ test("code-index records bounded parser diagnostic emit calls only", () => {
     );
     write(
       root,
-      "packages-galerina/example/src/event-bus.ts",
+      "packages-ts/example/src/event-bus.ts",
       'bus.emit("FUNGI-TEST-002", "not a diagnostic");\n',
     );
 
@@ -153,12 +153,12 @@ test("code-index records bounded parser diagnostic emit calls only", () => {
     const unrelated = index.find(({ code }) => code === "FUNGI-TEST-002");
     const literal = index.find(({ code }) => code === "FUNGI-TEST-003");
     assert.deepEqual(diagnostic?.emits, [
-      "packages-galerina/example/src/parser.ts:3",
+      "packages-ts/example/src/parser.ts:3",
     ]);
     assert.deepEqual(diagnostic?.names, ["PARSER_DIAGNOSTIC"]);
     assert.deepEqual(unrelated?.emits, []);
     assert.deepEqual(literal?.emits, [
-      "packages-galerina/example/src/parser.ts:8",
+      "packages-ts/example/src/parser.ts:8",
     ]);
     assert.deepEqual(literal?.names, ["LITERAL_DIAGNOSTIC"]);
   } finally {

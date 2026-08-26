@@ -34,7 +34,7 @@ Bounded closure: COMPLETE
 
 const forward = `# Slice 323 Candidate Fungi conversion adjudication
 
-Scope: \`packages-galerina/example/src/index.ts#Candidate\`.
+Scope: \`packages-ts/example/src/index.ts#Candidate\`.
 
 Evidence: source build point \`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\`;
 source SHA-256 \`BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\`;
@@ -50,8 +50,8 @@ Bounded closure: COMPLETE
 
 const qualifiedScript = forward
   .replace(
-    "packages-galerina/example/src/index.ts#Candidate",
-    "packages-galerina/example/scripts/run-tests.mjs#SearchGraph.setFile",
+    "packages-ts/example/src/index.ts#Candidate",
+    "packages-ts/example/scripts/run-tests.mjs#SearchGraph.setFile",
   );
 
 test("complete exact slice-close receipt passes", () => {
@@ -102,11 +102,11 @@ test("forward scopes accept scripts and qualified methods", () => {
 test("forward scopes accept canonical tests and bench module scopes", () => {
   const name = "slice-583-test-module-fungi-conversion-2026-08-13.md";
   for (const scope of [
-    "packages-galerina/example/tests/search.test.ts#module",
-    "packages-galerina/example/bench/flight-boot.mjs#module",
+    "packages-ts/example/tests/search.test.ts#module",
+    "packages-ts/example/bench/flight-boot.mjs#module",
   ]) {
     const body = forward.replace(
-      "packages-galerina/example/src/index.ts#Candidate",
+      "packages-ts/example/src/index.ts#Candidate",
       scope,
     );
     const result = run(fixture(body, name));
@@ -117,14 +117,14 @@ test("forward scopes accept canonical tests and bench module scopes", () => {
 test("forward scopes refuse traversal and empty path segments", () => {
   const name = "slice-448-noncanonical-scope-fungi-conversion-2026-08-13.md";
   for (const scope of [
-    "packages-galerina/example/scripts/../src/index.ts#Candidate",
-    "packages-galerina/example/scripts/./run-tests.mjs#module",
-    "packages-galerina/example/scripts//run-tests.mjs#module",
-    "packages-galerina/example/tests/../src/index.ts#Candidate",
-    "packages-galerina/example/bench//flight-boot.mjs#module",
+    "packages-ts/example/scripts/../src/index.ts#Candidate",
+    "packages-ts/example/scripts/./run-tests.mjs#module",
+    "packages-ts/example/scripts//run-tests.mjs#module",
+    "packages-ts/example/tests/../src/index.ts#Candidate",
+    "packages-ts/example/bench//flight-boot.mjs#module",
   ]) {
     const body = forward.replace(
-      "packages-galerina/example/src/index.ts#Candidate",
+      "packages-ts/example/src/index.ts#Candidate",
       scope,
     );
     assert.equal(run(fixture(body, name)).status, 1);

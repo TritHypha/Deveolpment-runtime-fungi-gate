@@ -33,8 +33,8 @@ import process from "node:process";
 function findGalerina() {
   const here = dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
   const root = dirname(here);
-  if (!existsSync(join(root, "packages-galerina"))) {
-    throw new Error(`cannot locate the Galerina checkout: no packages-galerina under ${root}`);
+  if (!existsSync(join(root, "packages-ts"))) {
+    throw new Error(`cannot locate the Galerina checkout: no packages-ts under ${root}`);
   }
   return root.replace(/\\/g, "/");
 }

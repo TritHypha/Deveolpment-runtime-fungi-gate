@@ -20,7 +20,7 @@ import {
 
 const ROOT = process.cwd();
 const CHECK = process.argv.includes("--check");
-const SCAN = ["packages-galerina", "docs", "scripts", "governance"].map((d) => join(ROOT, d));
+const SCAN = ["packages-ts", "docs", "scripts", "governance"].map((d) => join(ROOT, d));
 const ROOT_SOURCES = [join(ROOT, "galerina.mjs")];
 const OUT = join(ROOT, "build", "code-index");
 const EXT = /\.(ts|mjs|cjs|fungi|md)$/;
@@ -279,7 +279,7 @@ for (const file of FILES) {
 }
 
 // ── assemble ──
-// A diagnostic code is DEFINED + EMITTED by compiler source (packages-galerina/*/src), never by a dev-tool
+// A diagnostic code is DEFINED + EMITTED by compiler source (packages-ts/*/src), never by a dev-tool
 // SCRIPT — scripts only reference or self-test codes. So a def/emit the heuristic scored inside scripts/ is
 // really a REF: e.g. audit-twin-emit-parity.mjs's self-test fixture `makeTCDiag("FUNGI-TYPE-002", …)`, or the
 // negative case `// dead: no FUNGI-TYPE-019 emit here — this comment must NOT count`. Downgrading them keeps a

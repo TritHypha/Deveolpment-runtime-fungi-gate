@@ -98,7 +98,7 @@ const RELEVANT_PREFIXES = Object.freeze([
   "docs/",
   "examples/",
   "governance/",
-  "packages-galerina/",
+  "packages-ts/",
   "proofs/",
   "scripts/",
   "tests/",
@@ -229,7 +229,7 @@ function declaredGraphOutputs() {
 
 function declaredGeneratedGraphPath(path) {
   return declaredGraphOutputs().has(path)
-    || /^packages-galerina\/[^/]+\/\.graph\/(?:BOUNDARY\.md|package-graph\.json)$/u.test(path);
+    || /^packages-ts\/[^/]+\/\.graph\/(?:BOUNDARY\.md|package-graph\.json)$/u.test(path);
 }
 
 function relevantOrdinaryPath(path) {

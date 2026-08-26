@@ -33,7 +33,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CC = join(ROOT, "packages-galerina", "galerina-core-compiler", "src");
+const CC = join(ROOT, "packages-ts", "galerina-core-compiler", "src");
 const TWIN = join(CC, "self-hosted", "type-checker.fungi");
 const TYPE_CHECKER = join(CC, "type-checker.ts");
 const SYMBOL_RESOLVER = join(CC, "symbol-resolver.ts");

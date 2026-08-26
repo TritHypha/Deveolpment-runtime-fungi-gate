@@ -28,11 +28,11 @@ validity is necessary but insufficient for Galerina's zero-trust model.
 ## Local evidence to inspect
 
 - `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
-- `packages-galerina/galerina-core-compiler/src/escape-analysis.ts`
-- `packages-galerina/galerina-core-compiler/src/source-escape-checker.ts`
-- `packages-galerina/galerina-core-compiler/src/hardening-residency.ts`
-- `packages-galerina/galerina-core-sentinel-memory/`
-- `packages-galerina/galerina-tower-citizen/`
+- `packages-ts/galerina-core-compiler/src/escape-analysis.ts`
+- `packages-ts/galerina-core-compiler/src/source-escape-checker.ts`
+- `packages-ts/galerina-core-compiler/src/hardening-residency.ts`
+- `packages-ts/galerina-core-sentinel-memory/`
+- `packages-ts/galerina-tower-citizen/`
 - `../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
 - `../ZTF-Knowledge-Bases/research/rd/RD-0384-faster-mushroom-trusted-environment-threat-model-delta.md`
 

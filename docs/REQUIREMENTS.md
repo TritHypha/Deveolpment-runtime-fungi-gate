@@ -8,14 +8,14 @@ the template, package boundaries and developer tooling must provide so a
 bespoke application can be built on top of Galerina safely.
 
 Product-specific requirements belong in this file once an app domain is chosen.
-Until then, `packages-galerina/galerina-framework-example-app/` remains a minimal app area and feature placeholders
+Until then, `packages-ts/galerina-framework-example-app/` remains a minimal app area and feature placeholders
 must not be treated as implemented app functionality.
 
 ## Template Goals
 
 - Provide a clear workspace for Galerina language, compiler/runtime contracts,
   security primitives, tooling packages and bespoke app code.
-- Keep language documentation in `packages-galerina/galerina-core/` and app/workspace
+- Keep language documentation in `packages-ts/galerina-core/` and app/workspace
   documentation in `docs/`.
 - Support CPU-compatible checked execution and deterministic reports as the
   practical baseline.
@@ -620,14 +620,14 @@ must not be treated as implemented app functionality.
 - Before adding more active packages, the project must include at least 20 real
   `.fungi` example programs covering basic, intermediate and advanced syntax.
   This requirement is currently satisfied by the 20 source fixtures in
-  `packages-galerina/galerina-core/examples/`.
+  `packages-ts/galerina-core/examples/`.
 
 ## Users
 
 | User Type | Description |
 |---|---|
-| App developer | Builds bespoke application source in `packages-galerina/galerina-framework-example-app/` using Galerina packages. |
-| Package maintainer | Evolves reusable Galerina package contracts under `packages-galerina/`. |
+| App developer | Builds bespoke application source in `packages-ts/galerina-framework-example-app/` using Galerina packages. |
+| Package maintainer | Evolves reusable Galerina package contracts under `packages-ts/`. |
 | Security reviewer | Reviews policy, secret handling, reports and package boundaries. |
 | AI coding assistant | Uses `AGENTS.md` and `build/graph` to navigate the project safely. |
 | Learner | Uses Learning Mode, examples and guided diagnostics to learn Galerina safely. |
@@ -669,7 +669,7 @@ must not be treated as implemented app functionality.
 - The future Galerina package split should be documented before implementation:
   `package.json` for normal app/vendor packages, `package-galerina.json` for Galerina
   package dependencies, `galerina.lock.json` for locked Galerina package graphs,
-  `packages/` for normal vendor packages and `packages-galerina/` for Galerina packages.
+  `packages/` for normal vendor packages and `packages-ts/` for Galerina packages.
 - NPM and `package.json` must remain host ecosystem tooling only. They may run
   current JavaScript/TypeScript prototype checks and package generated JS/TS
   interop, but they must not define Galerina package graph resolution, Galerina runtime
@@ -704,15 +704,15 @@ must not be treated as implemented app functionality.
 
 The app package must remain deliberately small until a product domain is chosen.
 
-- Bespoke app source must live in `packages-galerina/galerina-framework-example-app/`.
-- App routes, modules, tests and app configuration must stay in `packages-galerina/galerina-framework-example-app/`
+- Bespoke app source must live in `packages-ts/galerina-framework-example-app/`.
+- App routes, modules, tests and app configuration must stay in `packages-ts/galerina-framework-example-app/`
   or app-specific docs.
 - App-specific requirements must be added to this document before implementing
   product features.
 - App source must use explicit validation, explicit error handling and safe
   configuration references.
-- App features must not be implemented inside `packages-galerina/galerina-core/`.
-- App features must not turn `packages-galerina/galerina-framework-app-kernel/` into a full framework,
+- App features must not be implemented inside `packages-ts/galerina-core/`.
+- App features must not turn `packages-ts/galerina-framework-app-kernel/` into a full framework,
   CMS, admin dashboard, ORM or frontend framework.
 
 ## Non-Functional Requirements
@@ -825,36 +825,36 @@ The app package must remain deliberately small until a product domain is chosen.
 
 ## Workspace Package Requirements
 
-- The Galerina language core must live in `packages-galerina/galerina-core/`.
-- Compiler pipeline contracts must live in `packages-galerina/galerina-core-compiler/`.
-- Runtime execution contracts must live in `packages-galerina/galerina-core-runtime/`.
-- Shared security primitives must live in `packages-galerina/galerina-core-security/`.
-- Project configuration contracts must live in `packages-galerina/galerina-core-config/`.
-- Shared report contracts must live in `packages-galerina/galerina-core-reports/`.
+- The Galerina language core must live in `packages-ts/galerina-core/`.
+- Compiler pipeline contracts must live in `packages-ts/galerina-core-compiler/`.
+- Runtime execution contracts must live in `packages-ts/galerina-core-runtime/`.
+- Shared security primitives must live in `packages-ts/galerina-core-security/`.
+- Project configuration contracts must live in `packages-ts/galerina-core-config/`.
+- Shared report contracts must live in `packages-ts/galerina-core-reports/`.
 - Galerina multi-state logic concepts such as `Tri`, `Galerina` and future Omni logic
-  must live in `packages-galerina/galerina-core-logic/`.
+  must live in `packages-ts/galerina-core-logic/`.
 - Galerina vector value, lane and operation concepts must live in
-  `packages-galerina/galerina-core-vector/`.
+  `packages-ts/galerina-core-vector/`.
 - Galerina compute planning, capability, budget and target selection concepts must
-  live in `packages-galerina/galerina-core-compute/`.
+  live in `packages-ts/galerina-core-compute/`.
 - Generic AI inference contracts, model metadata, safety policy and AI reports
-  must live in `packages-galerina/galerina-ai/`.
+  must live in `packages-ts/galerina-ai/`.
 - Low-bit and ternary AI inference contracts must live in
-  `packages-galerina/galerina-ai-lowbit/`, with BitNet represented only as a backend.
+  `packages-ts/galerina-ai-lowbit/`, with BitNet represented only as a backend.
 - Supervised AI agent definitions, tool permissions, task groups, merge
-  policies and reports must live in `packages-galerina/galerina-ai-agent/`.
+  policies and reports must live in `packages-ts/galerina-ai-agent/`.
 - Neural-network model, layer, inference and training boundary contracts must
-  live in `packages-galerina/galerina-ai-neural/`.
+  live in `packages-ts/galerina-ai-neural/`.
 - Neuromorphic spike, event-signal and spiking model contracts must live in
-  `packages-galerina/galerina-ai-neuromorphic/`.
+  `packages-ts/galerina-ai-neuromorphic/`.
 - Photonic and wavelength hardware concepts must live in
-  `packages-galerina/galerina-core-photonic/`.
+  `packages-ts/galerina-core-photonic/`.
 - CPU target planning, feature detection and fallback reports must live in
-  `packages-galerina/galerina-target-cpu/`.
-- Optimized CPU kernel contracts must live in `packages-galerina/galerina-cpu-kernels/`.
-- Native executable target planning must live in `packages-galerina/galerina-target-native/`.
+  `packages-ts/galerina-target-cpu/`.
+- Optimized CPU kernel contracts must live in `packages-ts/galerina-cpu-kernels/`.
+- Native executable target planning must live in `packages-ts/galerina-target-native/`.
 - Portable systems output planning may start in
-  `packages-galerina/galerina-target-native/` only after ABI, layout and memory
+  `packages-ts/galerina-target-native/` only after ABI, layout and memory
   report rules stabilise.
 - Galerina must treat systems output as a generated backend/interop target, not
   as normal unsafe application source style.
@@ -888,37 +888,37 @@ The app package must remain deliberately small until a product domain is chosen.
   outside this workstream. Any unavoidable bootstrap shim requires an explicit
   boundary, reproducible build, least authority and an owner-approved removal
   plan.
-- JavaScript target planning must live in `packages-galerina/galerina-target-js/`.
-- WebAssembly target planning must live in `packages-galerina/galerina-target-wasm/`.
-- GPU target planning must live in `packages-galerina/galerina-target-gpu/`.
+- JavaScript target planning must live in `packages-ts/galerina-target-js/`.
+- WebAssembly target planning must live in `packages-ts/galerina-target-wasm/`.
+- GPU target planning must live in `packages-ts/galerina-target-gpu/`.
 - AI accelerator target planning for NPU, TPU and AI-chip backends must live in
-  `packages-galerina/galerina-target-ai-accelerator/`.
+  `packages-ts/galerina-target-ai-accelerator/`.
 - Photonic backend target planning must live in
-  `packages-galerina/galerina-target-photonic/`.
-- The optional Galerina Secure App Kernel must live in `packages-galerina/galerina-framework-app-kernel/`.
-- The built-in Galerina HTTP API server must live in `packages-galerina/galerina-framework-api-server/`.
+  `packages-ts/galerina-target-photonic/`.
+- The optional Galerina Secure App Kernel must live in `packages-ts/galerina-framework-app-kernel/`.
+- The built-in Galerina HTTP API server must live in `packages-ts/galerina-framework-api-server/`.
 - Server platform support must distinguish deployment targets, runtime targets
   and adapters. Nginx, Apache and Caddy must be treated as reverse-proxy
   deployment targets; Node.js may be a tooling platform and optional runtime
   target; Express/Fastify/Hono-style integrations must be optional adapters;
   the Galerina-native API server remains the long-term preferred secure runtime.
-- Browser-safe web rendering contracts must live in `packages-galerina/galerina-web/`
+- Browser-safe web rendering contracts must live in `packages-ts/galerina-web/`
   and focused `galerina-web-*` packages, not in `galerina-core`, the app kernel or
   the API server.
-- The Galerina developer CLI must live in `packages-galerina/galerina-core-cli/`.
-- Safe Galerina project automation must live in `packages-galerina/galerina-core-tasks/`.
-- Galerina benchmark and diagnostics tooling must live in `packages-galerina/galerina-tools-benchmark/`.
-- Galerina project knowledge graph tooling must live in `packages-galerina/galerina-devtools-project-graph/`.
-- Bespoke app source must live in `packages-galerina/galerina-framework-example-app/`.
+- The Galerina developer CLI must live in `packages-ts/galerina-core-cli/`.
+- Safe Galerina project automation must live in `packages-ts/galerina-core-tasks/`.
+- Galerina benchmark and diagnostics tooling must live in `packages-ts/galerina-tools-benchmark/`.
+- Galerina project knowledge graph tooling must live in `packages-ts/galerina-devtools-project-graph/`.
+- Bespoke app source must live in `packages-ts/galerina-framework-example-app/`.
 - App documentation must live in `docs/`.
-- Language documentation must stay within `packages-galerina/galerina-core/`.
-- Full framework features must stay outside `packages-galerina/galerina-core/` and
-  `packages-galerina/galerina-framework-app-kernel/`.
+- Language documentation must stay within `packages-ts/galerina-core/`.
+- Full framework features must stay outside `packages-ts/galerina-core/` and
+  `packages-ts/galerina-framework-app-kernel/`.
 - Current development may use one root Git repository while package boundaries
   are still being shaped.
-- Later, `packages-galerina/` may become its own Git repository so the Galerina packages can be
+- Later, `packages-ts/` may become its own Git repository so the Galerina packages can be
   imported into different frameworks.
-- If `packages-galerina/` has its own `.git`, it must be added intentionally as a
+- If `packages-ts/` has its own `.git`, it must be added intentionally as a
   submodule or standalone nested repository, and the framework root must treat
   it as an external dependency.
 - Development-only packages must use `galerina-devtools-*` or `galerina-tools-*` names for
@@ -935,7 +935,7 @@ The app package must remain deliberately small until a product domain is chosen.
 - The exact developer package folder name remains provisional, but its boundary
   must stay separate from production runtime package manifests.
 - Finance, electrical and OT package planning must stay archived outside the
-  active workspace under `C:\laragon\www\Galerina_Archive\packages-galerina\` until post-v2
+  active workspace under `C:\laragon\www\Galerina_Archive\packages-ts\` until post-v2
   package planning resumes.
 - Finance, electrical and OT packages must not be part of active v1 package
   resolution, build graph generation, compiler targets or runtime profiles.
@@ -1173,7 +1173,7 @@ the active v1 build graph.
   reports when unlocked. They must not provide legal advice, certification
   claims, audit databases, identity providers, data warehouses, frontend
   frameworks or CI/CD systems.
-- Compliance packages must live under `packages-galerina-enterprise/` and must
+- Compliance packages must live under `packages-ts-enterprise/` and must
   not be part of the active workspace, active v1 build graph, production
   package resolution or default runtime profiles unless explicitly unlocked by
   the project owner.

@@ -36,7 +36,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
 const read = (rel) => readFileSync(join(ROOT, rel), "utf8");
 
-const DSS = "packages-galerina/galerina-core-security/src/dss/";
+const DSS = "packages-ts/galerina-core-security/src/dss/";
 
 test("CONTROL: a REAL effects{ native.call } declaration is classified a boundary", () => {
   const r = classifyFungiHostBoundary(`@version 1

@@ -41,7 +41,7 @@ const PUBLICATION = join(
 );
 const SOURCE_PATH = join(
   ROOT,
-  "packages-galerina",
+  "packages-ts",
   "galerina-core-runtime",
   "src",
   "self-hosted",

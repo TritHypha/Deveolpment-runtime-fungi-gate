@@ -48,7 +48,7 @@ function git(root, args) {
 
 test("audit-selfhost-readiness reports a host floor and a fully-Fungi control", () => {
   withFixture("galerina-selfhost-gate-", (root) => {
-    const sourceRoot = "packages-galerina/probe/src";
+    const sourceRoot = "packages-ts/probe/src";
     write(root, `${sourceRoot}/index.ts`, 'import { readFileSync } from "node:fs";\n');
     const planted = run("audit-selfhost-readiness.mjs", ["--root", root, "--json"]);
     assert.equal(planted.status, 0, planted.stdout + planted.stderr);
@@ -95,15 +95,15 @@ test("audit-signed-fixture-drift blocks modification of a committed signed packa
 
 test("audit-stray-docs reports an outside document and clears when it is under docs", () => {
   withFixture("galerina-stray-docs-gate-", (root) => {
-    write(root, "packages-galerina/probe/NOTES.md", "# outside\n");
+    write(root, "packages-ts/probe/NOTES.md", "# outside\n");
     const planted = run("audit-stray-docs.mjs", ["--root", root, "--json"]);
     assert.equal(planted.status, 0, planted.stdout + planted.stderr);
     const plantedReport = JSON.parse(planted.stdout);
     assert.equal(plantedReport.authority, "report-only");
     assert.equal(plantedReport.strayCount, 1);
-    assert.equal(plantedReport.byDir[0]?.files[0]?.rel, "packages-galerina/probe/NOTES.md");
+    assert.equal(plantedReport.byDir[0]?.files[0]?.rel, "packages-ts/probe/NOTES.md");
 
-    rmSync(join(root, "packages-galerina/probe/NOTES.md"));
+    rmSync(join(root, "packages-ts/probe/NOTES.md"));
     write(root, "docs/NOTES.md", "# contained\n");
     const control = run("audit-stray-docs.mjs", ["--root", root, "--json"]);
     assert.equal(control.status, 0, control.stdout + control.stderr);

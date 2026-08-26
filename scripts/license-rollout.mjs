@@ -6,7 +6,7 @@
 // a relicense.
 //
 //   L1  — an Apache-2.0 LICENSE (short-pointer form, matching the repo's per-package convention) into
-//         every packages-galerina/* that lacks one, EXCEPT ext-proof-snarkjs.
+//         every packages-ts/* that lacks one, EXCEPT ext-proof-snarkjs.
 //   L2  — ext-proof-snarkjs is a combined work with snarkjs (GPL-3.0): LICENSE = the official GPLv3
 //         application notice (verbatim-safe, references gnu.org; the full text ships in snarkjs's tree
 //         and at gnu.org), license field = GPL-3.0-only, + an opt-in README banner. The ONE deliberate
@@ -22,7 +22,7 @@ import { join } from "node:path";
 
 const APPLY = process.argv.includes("--apply");
 const ROOT = process.cwd();
-const PKGS = join(ROOT, "packages-galerina");
+const PKGS = join(ROOT, "packages-ts");
 const EXT_GPL = "galerina-ext-proof-snarkjs";   // the one GPL combined-work extension
 const COPYRIGHT = "Copyright (C) 2026 TritHypha";
 

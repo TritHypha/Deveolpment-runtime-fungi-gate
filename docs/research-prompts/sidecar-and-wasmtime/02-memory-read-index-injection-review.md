@@ -22,9 +22,9 @@ is consumed.
 - `scripts/memory-graph.mjs`
 - `scripts/tests/memory-graph-generator.test.mjs`
 - `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
-- `packages-galerina/galerina-tools-myco/`
-- `packages-galerina/galerina-devtools-provenance/`
-- `packages-galerina/galerina-devtools-security/`
+- `packages-ts/galerina-tools-myco/`
+- `packages-ts/galerina-devtools-provenance/`
+- `packages-ts/galerina-devtools-security/`
 - `../Anthropic-Cybersecurity-Skills/` only as an untrusted secondary checklist,
   not as authority
 

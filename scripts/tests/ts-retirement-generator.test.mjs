@@ -53,59 +53,59 @@ function fixture() {
     "galerina.workspace.json",
     `${JSON.stringify({
       packages: [
-        "packages-galerina/galerina-core-compiler",
-        "packages-galerina/galerina-framework-app-kernel",
+        "packages-ts/galerina-core-compiler",
+        "packages-ts/galerina-framework-app-kernel",
       ],
     })}\n`,
   );
   write(
     root,
-    "packages-galerina/galerina-core-compiler/package.json",
+    "packages-ts/galerina-core-compiler/package.json",
     '{"name":"@galerina/core-compiler"}\n',
   );
   write(
     root,
-    "packages-galerina/galerina-framework-app-kernel/package.json",
+    "packages-ts/galerina-framework-app-kernel/package.json",
     '{"name":"@galerina/framework-app-kernel"}\n',
   );
   write(
     root,
-    "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
+    "packages-ts/galerina-framework-app-kernel/src/secret-gate.ts",
     "export const gate = true;\n",
   );
   write(
     root,
-    "packages-galerina/galerina-framework-app-kernel/src/self-hosted/secret-gate.fungi",
+    "packages-ts/galerina-framework-app-kernel/src/self-hosted/secret-gate.fungi",
     "pure flow gate() -> Bool { return true }\n",
   );
   write(
     root,
-    "packages-galerina/galerina-core-compiler/src/compiler.ts",
+    "packages-ts/galerina-core-compiler/src/compiler.ts",
     "export const compiler = true;\n",
   );
   write(
     root,
-    "packages-galerina/galerina-core-compiler/src/parser.ts",
+    "packages-ts/galerina-core-compiler/src/parser.ts",
     "export const parse = true;\n",
   );
   write(
     root,
-    "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+    "packages-ts/galerina-core-compiler/src/self-hosted/parser.fungi",
     "pure flow parse() -> Bool { return true }\n",
   );
-  write(root, "packages-galerina/galerina-core-compiler/types/api.d.ts", "export type Api = string;\n");
-  write(root, "packages-galerina/galerina-core-compiler/src/module.mts", "export const moduleValue = 1;\n");
-  write(root, "packages-galerina/galerina-core-compiler/src/common.cts", "export const commonValue = 1;\n");
-  write(root, "packages-galerina/galerina-core-compiler/src/runtime.mjs", "export const runtimeValue = 1;\n");
-  write(root, "packages-galerina/galerina-core-compiler/src/legacy.js", "export const legacyValue = 1;\n");
-  write(root, "packages-galerina/galerina-core-compiler/src/legacy-common.cjs", "exports.value = 1;\n");
+  write(root, "packages-ts/galerina-core-compiler/types/api.d.ts", "export type Api = string;\n");
+  write(root, "packages-ts/galerina-core-compiler/src/module.mts", "export const moduleValue = 1;\n");
+  write(root, "packages-ts/galerina-core-compiler/src/common.cts", "export const commonValue = 1;\n");
+  write(root, "packages-ts/galerina-core-compiler/src/runtime.mjs", "export const runtimeValue = 1;\n");
+  write(root, "packages-ts/galerina-core-compiler/src/legacy.js", "export const legacyValue = 1;\n");
+  write(root, "packages-ts/galerina-core-compiler/src/legacy-common.cjs", "exports.value = 1;\n");
   write(root, "docs/executable-family-example.md", "A literal example named pretend.mjs is documentation only.\n");
   write(
     root,
     "docs/security/rd0528-compiler-authoritative-stages.json",
     JSON.stringify({
       twins: [{
-        dir: "packages-galerina/galerina-core-compiler/src/self-hosted",
+        dir: "packages-ts/galerina-core-compiler/src/self-hosted",
         file: "parser.fungi",
       }],
     }),
@@ -115,7 +115,7 @@ function fixture() {
     "docs/security/rd0361-authoritative-twins.json",
     JSON.stringify({
       twins: [{
-        dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+        dir: "packages-ts/galerina-framework-app-kernel/src/self-hosted",
         file: "secret-gate.fungi",
       }],
     }),
@@ -124,13 +124,13 @@ function fixture() {
   assert.equal(command(root, "git", ["config", "user.email", "fixture@example.invalid"]).status, 0);
   assert.equal(command(root, "git", ["config", "user.name", "Fixture"]).status, 0);
   assert.equal(
-    command(root, "git", ["add", "--", "packages-galerina", "docs", "galerina.workspace.json"]).status,
+    command(root, "git", ["add", "--", "packages-ts", "docs", "galerina.workspace.json"]).status,
     0,
   );
   assert.equal(command(root, "git", ["commit", "-m", "fixture"]).status, 0);
   write(
     root,
-    "packages-galerina/galerina-core-compiler/src/untracked.mjs",
+    "packages-ts/galerina-core-compiler/src/untracked.mjs",
     "export const untracked = true;\n",
   );
   return root;
@@ -140,8 +140,8 @@ test("staged-index reader takes one checked bounded NUL snapshot", async () => {
   const { readStagedGitIndex } = await import(pathToFileURL(STAGED_INDEX).href);
   const calls = [];
   const stdout = Buffer.from([
-    `100644 ${HASH} 0\tpackages-galerina/pkg/src/line\nbreak.mjs\0`,
-    `160000 ${HASH} 0\tpackages-galerina/vendor-submodule\0`,
+    `100644 ${HASH} 0\tpackages-ts/pkg/src/line\nbreak.mjs\0`,
+    `160000 ${HASH} 0\tpackages-ts/vendor-submodule\0`,
   ].join(""), "utf8");
   const entries = readStagedGitIndex("C:/fixture", {
     run(commandName, args, options) {
@@ -156,12 +156,12 @@ test("staged-index reader takes one checked bounded NUL snapshot", async () => {
     {
       mode: "100644",
       stage: 0,
-      path: "packages-galerina/pkg/src/line\nbreak.mjs",
+      path: "packages-ts/pkg/src/line\nbreak.mjs",
     },
     {
       mode: "160000",
       stage: 0,
-      path: "packages-galerina/vendor-submodule",
+      path: "packages-ts/vendor-submodule",
     },
   ]);
 
@@ -261,27 +261,27 @@ test("ts-retirement --check refuses drift and uses only the selected root", () =
       "cjs",
     ]);
     assert.deepEqual(graph.executableFamily.ts, [
-      "packages-galerina/galerina-core-compiler/src/compiler.ts",
-      "packages-galerina/galerina-core-compiler/src/parser.ts",
-      "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
+      "packages-ts/galerina-core-compiler/src/compiler.ts",
+      "packages-ts/galerina-core-compiler/src/parser.ts",
+      "packages-ts/galerina-framework-app-kernel/src/secret-gate.ts",
     ]);
     assert.deepEqual(graph.executableFamily.declarationTs, [
-      "packages-galerina/galerina-core-compiler/types/api.d.ts",
+      "packages-ts/galerina-core-compiler/types/api.d.ts",
     ]);
     assert.deepEqual(graph.executableFamily.mts, [
-      "packages-galerina/galerina-core-compiler/src/module.mts",
+      "packages-ts/galerina-core-compiler/src/module.mts",
     ]);
     assert.deepEqual(graph.executableFamily.cts, [
-      "packages-galerina/galerina-core-compiler/src/common.cts",
+      "packages-ts/galerina-core-compiler/src/common.cts",
     ]);
     assert.deepEqual(graph.executableFamily.mjs, [
-      "packages-galerina/galerina-core-compiler/src/runtime.mjs",
+      "packages-ts/galerina-core-compiler/src/runtime.mjs",
     ]);
     assert.deepEqual(graph.executableFamily.js, [
-      "packages-galerina/galerina-core-compiler/src/legacy.js",
+      "packages-ts/galerina-core-compiler/src/legacy.js",
     ]);
     assert.deepEqual(graph.executableFamily.cjs, [
-      "packages-galerina/galerina-core-compiler/src/legacy-common.cjs",
+      "packages-ts/galerina-core-compiler/src/legacy-common.cjs",
     ]);
     assert.deepEqual(graph.allTrackedExecutablePaths, [
       ...graph.executableFamily.ts,
@@ -319,8 +319,8 @@ test("ts-retirement --check refuses drift and uses only the selected root", () =
 test("ts-retirement excludes gitlinks and vendored node_modules from its frozen index", () => {
   const root = fixture();
   try {
-    const spacedPath = "packages-galerina/galerina-core-compiler/src/space name.mjs";
-    const vendoredPath = "packages-galerina/galerina-core-compiler/node_modules/vendor/index.mjs";
+    const spacedPath = "packages-ts/galerina-core-compiler/src/space name.mjs";
+    const vendoredPath = "packages-ts/galerina-core-compiler/node_modules/vendor/index.mjs";
     write(root, spacedPath, "export const spacedPath = true;\n");
     write(root, vendoredPath, "export const vendored = true;\n");
     assert.equal(command(root, "git", ["add", "-f", "--", spacedPath, vendoredPath]).status, 0);
@@ -329,7 +329,7 @@ test("ts-retirement excludes gitlinks and vendored node_modules from its frozen 
       "update-index",
       "--add",
       "--cacheinfo",
-      `160000,${head},packages-galerina/vendor-submodule`,
+      `160000,${head},packages-ts/vendor-submodule`,
     ]).status, 0);
 
     const generated = run(root);
@@ -341,7 +341,7 @@ test("ts-retirement excludes gitlinks and vendored node_modules from its frozen 
     assert.ok(graph.executableFamily.mjs.includes(spacedPath));
     assert.equal(graph.allTrackedExecutablePaths.includes(vendoredPath), false);
     assert.equal(
-      graph.allTrackedExecutablePaths.some((path) => path.startsWith("packages-galerina/vendor-submodule/")),
+      graph.allTrackedExecutablePaths.some((path) => path.startsWith("packages-ts/vendor-submodule/")),
       false,
     );
   } finally {
@@ -362,7 +362,7 @@ test("ts-retirement refuses Git-index failure and unregistered owned package pat
 
   const unownedRoot = fixture();
   try {
-    const unowned = "packages-galerina/not-registered/src/escape.mjs";
+    const unowned = "packages-ts/not-registered/src/escape.mjs";
     write(unownedRoot, unowned, "export const escape = true;\n");
     assert.equal(command(unownedRoot, "git", ["add", "--", unowned]).status, 0);
     const result = run(unownedRoot);
@@ -376,7 +376,7 @@ test("ts-retirement refuses Git-index failure and unregistered owned package pat
 test("ts-retirement binds package ownership to the staged workspace registry blob", () => {
   const root = fixture();
   try {
-    const packageRoot = "packages-galerina/unstaged-registry-package";
+    const packageRoot = "packages-ts/unstaged-registry-package";
     const manifest = `${packageRoot}/package.json`;
     const source = `${packageRoot}/src/escape.mjs`;
     write(root, manifest, '{"name":"@galerina/unstaged-registry-package"}\n');
@@ -414,7 +414,7 @@ const INVALID_AUTHORITIES = [
         "docs/security/rd0361-authoritative-twins.json",
         JSON.stringify({
           twins: [{
-            dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+            dir: "packages-ts/galerina-framework-app-kernel/src/self-hosted",
             file: "missing.fungi",
           }],
         }),
@@ -425,7 +425,7 @@ const INVALID_AUTHORITIES = [
     name: "duplicate source",
     prepare(root) {
       const entry = {
-        dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+        dir: "packages-ts/galerina-framework-app-kernel/src/self-hosted",
         file: "secret-gate.fungi",
       };
       write(
@@ -440,7 +440,7 @@ const INVALID_AUTHORITIES = [
     prepare(root) {
       write(
         root,
-        "packages-galerina/galerina-example/src/self-hosted/orphan.fungi",
+        "packages-ts/galerina-example/src/self-hosted/orphan.fungi",
         "pure flow orphan() -> Bool { return false }\n",
       );
       write(
@@ -448,7 +448,7 @@ const INVALID_AUTHORITIES = [
         "docs/security/rd0361-authoritative-twins.json",
         JSON.stringify({
           twins: [{
-            dir: "packages-galerina/galerina-example/src/self-hosted",
+            dir: "packages-ts/galerina-example/src/self-hosted",
             file: "orphan.fungi",
           }],
         }),
@@ -463,7 +463,7 @@ const INVALID_AUTHORITIES = [
         "docs/security/rd0361-authoritative-twins.json",
         JSON.stringify({
           twins: [{
-            dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted/..",
+            dir: "packages-ts/galerina-framework-app-kernel/src/self-hosted/..",
             file: "secret-gate.fungi",
           }],
         }),
@@ -478,7 +478,7 @@ const INVALID_AUTHORITIES = [
         "docs/security/rd0528-compiler-authoritative-stages.json",
         JSON.stringify({
           twins: [{
-            dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+            dir: "packages-ts/galerina-framework-app-kernel/src/self-hosted",
             file: "secret-gate.fungi",
           }],
         }),
@@ -493,7 +493,7 @@ for (const invalid of INVALID_AUTHORITIES) {
     try {
       invalid.prepare(root);
       assert.equal(
-        command(root, "git", ["add", "--", "packages-galerina", "docs"]).status,
+        command(root, "git", ["add", "--", "packages-ts", "docs"]).status,
         0,
       );
       const result = run(root);

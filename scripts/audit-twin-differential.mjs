@@ -41,7 +41,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const CC = join(ROOT, "packages-galerina", "galerina-core-compiler");
+const CC = join(ROOT, "packages-ts", "galerina-core-compiler");
 
 // ── pure comparison core (self-testable without either engine) ──────────────
 

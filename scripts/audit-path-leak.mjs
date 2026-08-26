@@ -191,7 +191,7 @@ export function scanTargets(targets) {
 function selfTest() {
   const fires = (s) => scanText(s).length > 0;
   const checks = [
-    ["clean repo-relative path is silent", !fires("packages-galerina/foo/src/index.ts")],
+    ["clean repo-relative path is silent", !fires("packages-ts/foo/src/index.ts")],
     ["windows-user-home fires", fires("see C:\\Users\\someone\\Documents\\GitHub\\x")],
     ["forward-slash user-home fires", fires("C:/Users/someone/dev")],
     ["linux user-home fires", fires("/home/someone/Documents/GitHub/x")],
@@ -287,7 +287,7 @@ function selfTest() {
     ["★ targeted: a NEVER_TRACKED target fires structurally (no read needed)",
       scanTargets([{ rel: "pkg/x/.codebase-memory/a.json", read: () => Buffer.from("{}") }]).leakCount === 1],
     ["tracked .codebase-memory dir fires", scanTrackedList([".codebase-memory/graph.db.zst"]).length === 1],
-    ["tracked NESTED .codebase-memory fires", scanTrackedList(["packages-galerina/x/src/.codebase-memory/artifact.json"]).length === 1],
+    ["tracked NESTED .codebase-memory fires", scanTrackedList(["packages-ts/x/src/.codebase-memory/artifact.json"]).length === 1],
     ["tracked graph.db.zst anywhere fires", scanTrackedList(["some/dir/graph.db.zst"]).length === 1],
     ["ordinary tracked paths are silent", scanTrackedList(["docs/a.md", "build/kb-graph/foo.json", "src/codebase-memory-notes.md"]).length === 0],
   ];

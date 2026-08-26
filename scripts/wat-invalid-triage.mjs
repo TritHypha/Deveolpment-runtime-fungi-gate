@@ -35,7 +35,7 @@ import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.GALERINA_ROOT || join(HERE, "..");
-const DIST = `file:///${join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js").replace(/\\/g, "/")}`;
+const DIST = `file:///${join(ROOT, "packages-ts/galerina-core-compiler/dist/index.js").replace(/\\/g, "/")}`;
 const L = await import(DIST);
 
 // ── existence-checked anchors: if the API moves, fail closed rather than silently misreport ──

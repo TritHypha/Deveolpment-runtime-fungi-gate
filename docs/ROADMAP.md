@@ -3176,7 +3176,7 @@ remain absent.
 
 The registry mechanism no longer trusts a path supplied by a manifest or a
 non-empty signature string. A live entry must resolve one direct
-`packages-galerina/` child, declare a sorted bounded file set, re-derive its
+`packages-ts/` child, declare a sorted bounded file set, re-derive its
 exact length-framed digest, and verify both hybrid manifest signatures through
 an active root-signed operational delegation.
 
@@ -3215,7 +3215,7 @@ The public-only one-entry index built at `2026-07-30T16:33:10.307Z` has
 SHA-256
 `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
 The returned signed index is byte-identical at
-`packages-galerina/galerina-registry/registry-index-v2.json`. Its SHA-256 is
+`packages-ts/galerina-registry/registry-index-v2.json`. Its SHA-256 is
 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`;
 both signature components verify, its signed payload exactly matches the
 public-only rebuild, and 7/7 tampered copies refuse. The live walkthrough now
@@ -3226,10 +3226,10 @@ records completion and authorizes no further signing action.
 The future Galerina-native package system is not an npm-shaped dependency
 forest.
 
-`packages-galerina/` is the single canonical package registry:
+`packages-ts/` is the single canonical package registry:
 
 ```text
-packages-galerina/
+packages-ts/
 ├── galerina-core/
 ├── galerina-core-compiler/
 ├── galerina-core-security/
@@ -3256,7 +3256,7 @@ provenance and migration contract is detailed in
 
 Rules:
 
-- every package or plugin identity is a direct child of `packages-galerina/`;
+- every package or plugin identity is a direct child of `packages-ts/`;
 - a package may contain its own source, tests and assets, but must not contain
   another independently resolvable package;
 - dependencies are manifest references to canonical peer identities, not

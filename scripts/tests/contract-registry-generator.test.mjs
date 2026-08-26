@@ -54,17 +54,17 @@ function fixture() {
     "}",
     "",
   ].join("\n");
-  write(harness, "packages-galerina/galerina-core-compiler/dist/index.js", compiler);
+  write(harness, "packages-ts/galerina-core-compiler/dist/index.js", compiler);
   write(selected, "package.json", '{"type":"module"}\n');
-  write(selected, "packages-galerina/galerina-core-compiler/dist/index.js", compiler);
+  write(selected, "packages-ts/galerina-core-compiler/dist/index.js", compiler);
   write(
     selected,
-    "packages-galerina/example/src/fixture.fungi",
+    "packages-ts/example/src/fixture.fungi",
     'secure flow fixtureFlow() -> Bool contract { intent { "fixture contract" } effects { audit.write } }\n',
   );
   assert.equal(spawnSync("git", ["init"], { cwd: selected }).status, 0);
   assert.equal(
-    spawnSync("git", ["add", "--", "packages-galerina"], { cwd: selected }).status,
+    spawnSync("git", ["add", "--", "packages-ts"], { cwd: selected }).status,
     0,
   );
   return { harness, selected };

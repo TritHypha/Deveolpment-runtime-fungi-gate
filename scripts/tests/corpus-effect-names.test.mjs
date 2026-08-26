@@ -17,7 +17,7 @@ const tmp = mkdtempSync(join(tmpdir(), "fungi-corpus-effects-"));
 after(() => { try { rmSync(tmp, { recursive: true, force: true }); } catch { /* best effort */ } });
 
 // Mini SoT the scanner extracts (shapes mirror effect-checker.ts).
-const CHECKER_DIR = join(tmp, "packages-galerina", "galerina-core-compiler", "src");
+const CHECKER_DIR = join(tmp, "packages-ts", "galerina-core-compiler", "src");
 mkdirSync(CHECKER_DIR, { recursive: true });
 writeFileSync(join(CHECKER_DIR, "effect-checker.ts"), [
   `const CANONICAL_EFFECTS = new Set([`,

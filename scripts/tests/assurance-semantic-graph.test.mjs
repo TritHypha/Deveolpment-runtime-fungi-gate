@@ -33,7 +33,7 @@ function testNode(id, polarity, requirementIds = ["vok-sem-001"], overrides = {}
 function route(overrides = {}) {
   return {
     id: "route:get:/health",
-    sourcePath: "packages-galerina/galerina-core/src/health.fungi",
+    sourcePath: "packages-ts/galerina-core/src/health.fungi",
     line: 3,
     method: "GET",
     path: "/health",
@@ -46,7 +46,7 @@ function route(overrides = {}) {
 function packageNode(overrides = {}) {
   return {
     id: "package:galerina-core",
-    sourcePath: "packages-galerina/galerina-core/package.json",
+    sourcePath: "packages-ts/galerina-core/package.json",
     declaredFanIn: 0,
     declaredFanOut: 1,
     derivedFanIn: 0,
@@ -67,11 +67,11 @@ function detector(overrides = {}) {
 
 function executableFamily(overrides = {}) {
   return {
-    ts: ["packages-galerina/galerina-core/src/a.ts"],
+    ts: ["packages-ts/galerina-core/src/a.ts"],
     declarationTs: [],
     mts: [],
     cts: [],
-    mjs: ["packages-galerina/galerina-core/src/a.mjs"],
+    mjs: ["packages-ts/galerina-core/src/a.mjs"],
     js: [],
     cjs: [],
     total: 2,
@@ -148,7 +148,7 @@ describe("closed semantic assurance graph", () => {
       {
         id: "route:get:/health",
         kind: "route",
-        evidencePath: "packages-galerina/galerina-core/src/health.fungi",
+        evidencePath: "packages-ts/galerina-core/src/health.fungi",
         line: 3,
         method: "GET",
         path: "/health",
@@ -161,7 +161,7 @@ describe("closed semantic assurance graph", () => {
       {
         id: "package:galerina-core",
         kind: "package",
-        evidencePath: "packages-galerina/galerina-core/package.json",
+        evidencePath: "packages-ts/galerina-core/package.json",
         declaredFanIn: 0,
         declaredFanOut: 1,
         derivedFanIn: 0,
@@ -331,8 +331,8 @@ describe("closed semantic assurance graph", () => {
     refused(graph({
       executableFamily: executableFamily({
         mjs: [
-          "packages-galerina/galerina-core/src/a.mjs",
-          "packages-galerina/galerina-core/src/a.mjs",
+          "packages-ts/galerina-core/src/a.mjs",
+          "packages-ts/galerina-core/src/a.mjs",
         ],
       }),
     }), "ASSURANCE-SEMANTIC-DUPLICATE");
@@ -361,7 +361,7 @@ describe("closed semantic assurance graph", () => {
     refused({ ...graph(), surplus: true }, "ASSURANCE-SEMANTIC-SHAPE");
     refused(graph({ authoritativeInputsDigest: "short" }), "ASSURANCE-SEMANTIC-DIGEST");
     refused(graph({ routes: [route({ sourcePath: "../escape.fungi" })] }), "ASSURANCE-SEMANTIC-PATH");
-    refused(graph({ routes: [route({ sourcePath: "packages-galerina/core/src/a.fungi:stream" })] }), "ASSURANCE-SEMANTIC-PATH");
+    refused(graph({ routes: [route({ sourcePath: "packages-ts/core/src/a.fungi:stream" })] }), "ASSURANCE-SEMANTIC-PATH");
   });
 
   it("refuses sparse arrays, proxies and accessors without invoking them", () => {

@@ -15,7 +15,7 @@
 // (a POST-signature inject fails artifact verification) needs the real signer and is design-stage.
 import {
   deriveAuto, reconcileExplicit, fingerprint, canonicalize,
-} from "../packages-galerina/galerina-core-compiler/dist/index.js";
+} from "../packages-ts/galerina-core-compiler/dist/index.js";
 
 const SECRET = { isSecret: true, isTainted: false, hasSecretReadEffect: false };
 const TAINT = { isSecret: false, isTainted: true, hasSecretReadEffect: false };

@@ -155,7 +155,7 @@ The compiler stages have **no comprehensive, enforced `.fungi ≡ .ts`-equivalen
 
 ## The seven stages
 
-All live in `packages-galerina/galerina-core-compiler/src/self-hosted/`.
+All live in `packages-ts/galerina-core-compiler/src/self-hosted/`.
 
 | Stage | `.fungi` | Role |
 |---|---|---|
