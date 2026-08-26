@@ -7,7 +7,7 @@
   },
   "approval": {
     "status": "APPROVED",
-    "planDigest": "a36ff6d31e09a9ae19daa7e69ae03b24f541f02cf822fef267f80ee9a152ab58",
+    "planDigest": "c9de00c11025b03245847c69dc7ea0d56a89ec0b065666cb771eea1d789f94bf",
     "authority": "authority://kb/rd-0863-product-family-package-readiness",
     "evidence": "receipt://kb/rd-0863-product-family-package-readiness"
   },
@@ -53,7 +53,7 @@
       "owner": "galerina",
       "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
       "cwd": "repo://galerina",
-      "argv": ["node", "scripts/audit-flat-package-root-lock.mjs", "--check"],
+      "argv": ["node", "scripts/flat-package-root-lock.mjs", "--check"],
       "dependsOn": ["product-package-boundaries"],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
