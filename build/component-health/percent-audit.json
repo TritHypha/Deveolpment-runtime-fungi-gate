@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "codex/product-family-package-readiness",
-    "sha": "44e950ab5",
+    "sha": "b12733c1e",
     "detached": false,
-    "dirty": false
+    "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
