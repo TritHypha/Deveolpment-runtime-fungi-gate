@@ -6,7 +6,7 @@ admission, execution parity, retirement credit or production authority.
 - Files: 2551
 - Flows: 3287
 - Bytes: 8338592
-- Retirement graph: `sha256:3d957c8bfa323e275fd429f4f836fa8e0bef8fe7e00e1e66ca5504503640a860`
+- Retirement graph: `sha256:8e306a59314711be49af9f1ba95d523423a1d7cd0abe6a154d0d7c6a18a13da4`
 
 ## AST kinds
 
