@@ -26,20 +26,25 @@ selection is deterministic, pre-admitted and receipt-bound, and every fallback
 creates a new identity before execution.
 
 Tasks 1–6 are closed. Task 7's locator and governing-record work is locally
-complete, and Task 8's non-native verification repair is committed at
-`00baabc79`. The nine-task audit map is therefore **89% prepared** (8/9) but
-still **67% closed** (6/9): KB publication, fresh immutable review and live Git
-integration remain fail-closed. The final sequential estate executed all 100
-packages in 460.502 seconds: 97 packages passed and only the three predeclared
-HOLD packages failed. The compiler retained four RD-0858 native RED controls,
-the example app retained three legacy signing refusals, and `galerina-test`
-retained one existing `.fungi` locator assertion. There were zero timeouts.
+complete, and Task 8's non-native verification repair and graph/index fixed
+points are committed through `93b3e3670`. The nine-task audit map is therefore
+**89% prepared** (8/9) but still **67% closed** (6/9): KB publication, fresh
+immutable review and live Git integration remain fail-closed. The final
+sequential estate executed all 100 packages in 460.502 seconds: 97 packages
+passed and only the three predeclared HOLD packages failed. The compiler
+retained four RD-0858 native RED controls, the example app retained three
+legacy signing refusals, and `galerina-test` retained one existing `.fungi`
+locator assertion. There were zero timeouts.
 
-The prior external graph at `751f54e18`, Myco inventory and Hypha scan remain
-historical evidence only until the exact `00baabc79` closure graph/index refresh
-completes. Myco previously exposed 208 stale TypeScript-oracle comments in 205
-existing `.fungi` files; those comments remain deliberately deferred because
-this chapter must not edit native source.
+All nine repository graph families pass exact check. The external full graph
+at `93b3e3670` contains 65,694/65,694 nodes and 167,582/167,582 edges with zero
+skipped files. Exhaustive generator contracts pass 19/19; code and diagnostic
+registries contain 987 identities, the contract registry contains 3,938
+contracts across 2,974 `.fungi` files, documentation contains 299 indexes for
+2,007 documents, and the KB index contains 1,956 documents. The earlier Myco
+inventory and Hypha scan remain historical evidence: Myco exposed 208 stale
+TypeScript-oracle comments in 205 existing `.fungi` files, deliberately
+deferred because this chapter must not edit native source.
 
 The first unopened native locator is
 `packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/`. Private

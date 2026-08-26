@@ -81,9 +81,25 @@ The exact fail-closed set is:
 
 - Prepared: 8/9 tasks, 89%.
 - Fully closed: 6/9 tasks, 67%.
-- Open gates: exact-head graph/index refresh, fresh immutable review, live Git
-  Custody integration, KB publication hygiene, the signing ceremony and the
-  explicit owner reopening of native authoring.
+- Open gates: fresh immutable review, live Git Custody integration, KB
+  publication hygiene, the signing ceremony and the explicit owner reopening
+  of native authoring.
+
+## Exact derived-evidence closure
+
+- Graph/index commit: `93b3e3670e07ccebca5a3d855a6766ad9e54e709`.
+- Repository graph checks: 9/9 PASS.
+- External full graph:
+  `Galerina-product-family-readiness-pre-native-93b3e3670-full`.
+- External graph counts: 65,694/65,694 nodes and 167,582/167,582 edges;
+  skipped files: 0; indexed HEAD matches the graph/index commit exactly.
+- Exhaustive generator contracts: 19/19 PASS with explicit KB and SLIDE roots.
+- Code index and derived registry: 987 identities.
+- Contract registry: 3,938 contracts across 2,974 `.fungi` files.
+- Documentation index: 299 indexes covering 2,007 documents.
+- KB index: 1,956 documents.
+- Unit registry: 157 currencies, checked read-only so the `.fungi` twin was
+  not regenerated.
 
 ## Disposition
 

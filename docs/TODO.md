@@ -35,6 +35,13 @@ counts or open items that a newer section explicitly supersedes.
   exact wall time was 460.502 seconds. The only failures are the four native
   process-root RED controls, three legacy greeting-signature refusals and one
   existing `.fungi` locator assertion.
+- [x] Close the exact-head graph and index fixed points at `93b3e3670` without
+  touching native source. Repository graph checks pass 9/9; the external full
+  graph has 65,694/65,694 nodes, 167,582/167,582 edges and zero skipped files;
+  exhaustive generator contracts pass 19/19. Code index/registry remain at 987
+  identities, the contract registry at 3,938 contracts across 2,974 `.fungi`
+  files, documentation at 299 indexes covering 2,007 documents, KB index at
+  1,956 documents and the read-only unit check at 157 currencies.
 - [x] Refresh the full external graph exactly at `751f54e18`: 65,558/65,558
   nodes, 167,282/167,282 edges and zero skipped files. The product-boundary
   audit passes for 100 packages and 10,826 checked edges.
@@ -82,9 +89,9 @@ counts or open items that a newer section explicitly supersedes.
   0-broken-link checks, but memory preflight reports stale volatile facts and
   case-drift findings. The old remote `main` and its topic branch are therefore
   preserved; do not push or retire them through a red gate.
-- [ ] Finish Task 8 exact-head fixed points and fresh immutable review of
-  `00baabc79`, then run the live Git Custody integration plan. Stop before
-  creating, editing, building or admitting any `.fungi` or `.gate` file.
+- [ ] Obtain fresh immutable review of exact closure target `93b3e3670`, then
+  run the live Git Custody integration plan. Stop before creating, editing,
+  building or admitting any `.fungi` or `.gate` file.
 
 ### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 
