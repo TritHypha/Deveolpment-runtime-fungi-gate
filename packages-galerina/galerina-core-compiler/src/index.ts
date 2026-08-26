@@ -24,6 +24,14 @@ export {
 } from "./product-profile.js";
 
 export {
+  GALERINA_SELECTION,
+  requireAdmittedProductProfile,
+  evaluateProductPolicy,
+  type ProductPolicyInput,
+  type ProductPolicyResult,
+} from "./product-policy.js";
+
+export {
   lex,
   V1_ACTIVE_KEYWORDS,
   V1_FUTURE_RESERVED,

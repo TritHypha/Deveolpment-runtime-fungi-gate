@@ -11,7 +11,12 @@ import { resolveSymbols } from "./symbol-resolver.js";
 import { checkTypes } from "./type-checker.js";
 import { checkValueStates } from "./value-state-checker.js";
 import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
-import { verifyGovernance, type GovernanceDiagnostic, type DeploymentProfile } from "./governance-verifier.js";
+import type { GovernanceDiagnostic, DeploymentProfile } from "./governance-verifier.js";
+import {
+  evaluateProductPolicy,
+  GALERINA_SELECTION,
+  requireAdmittedProductProfile,
+} from "./product-policy.js";
 import { emitGIR, buildSemanticGraph, buildAiGraph, buildExecutionPlan } from "./gir-emitter.js";
 import type { SemanticGraph, GalerinaAiGraph, PassiveExecutionPlan } from "./gir-emitter.js";
 import { executeFlow, type FlowExecutionResult, type GalerinaValue } from "./interpreter.js";
@@ -141,12 +146,21 @@ function admitRuntime(
   }
 
   const profile: DeploymentProfile = mode === "check-only" ? "dev" : mode;
-  const governanceResult = verifyGovernance(
-    parseResult.ast,
-    parseResult.flows,
+  const product = requireAdmittedProductProfile(GALERINA_SELECTION);
+  const policyResult = evaluateProductPolicy(product, {
+    ast: parseResult.ast,
+    flows: parseResult.flows,
     effectResults,
-    profile,
-  );
+    deploymentProfile: profile,
+  });
+  const governanceDiagnostics: readonly GovernanceDiagnostic[] = policyResult.ok
+    ? policyResult.diagnostics
+    : Object.freeze([{
+        code: policyResult.code,
+        name: "PRODUCT_POLICY_NOT_ADMITTED",
+        severity: "error",
+        message: "The selected product policy is not admitted for runtime execution.",
+      }]);
 
   const namingDenied =
     enforceNamingPolicy &&
@@ -155,7 +169,7 @@ function admitRuntime(
     );
   const denied =
     allDiagnostics.some((diagnostic) => diagnostic.severity === "error") ||
-    governanceResult.diagnostics.some((diagnostic) => diagnostic.severity === "error") ||
+    governanceDiagnostics.some((diagnostic) => diagnostic.severity === "error") ||
     namingDenied;
 
   return {
@@ -163,7 +177,7 @@ function admitRuntime(
     parseResult,
     effectResults,
     diagnostics: allDiagnostics,
-    governanceDiagnostics: governanceResult.diagnostics,
+    governanceDiagnostics,
     escapeDiagnostics: escapeResult.diagnostics,
     namingDiagnostics: namingResult.diagnostics,
     denied,

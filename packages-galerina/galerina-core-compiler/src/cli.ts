@@ -19,15 +19,20 @@ import {
   existsSync,
 } from "node:fs";
 import { execSync, spawnSync } from "node:child_process";
-import { parseProgram, type FlowMeta } from "./parser.js";
+import { parseProgram, type AstNode, type FlowMeta } from "./parser.js";
 import { diffGovernance, renderGovernanceDiff } from "./governance-diff.js";
 import { excludeGitIgnored } from "./git-ignore-filter.js";
 import { resolveSymbols } from "./symbol-resolver.js";
 import { checkTypes } from "./type-checker.js";
 import { checkValueStates } from "./value-state-checker.js";
-import { checkEffects } from "./effect-checker.js";
+import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
 import { checkSourceEscapes } from "./source-escape-checker.js";
-import { verifyGovernance } from "./governance-verifier.js";
+import type { DeploymentProfile } from "./governance-verifier.js";
+import {
+  evaluateProductPolicy,
+  GALERINA_SELECTION,
+  requireAdmittedProductProfile,
+} from "./product-policy.js";
 import { checkNamingPolicy } from "./naming-policy-checker.js";
 import {
   checkTaint,
@@ -54,6 +59,26 @@ import { generateCircuitFromPattern } from "./gate-from-pattern.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
+
+function evaluateGalerinaGovernance(
+  ast: AstNode,
+  flows: readonly FlowMeta[],
+  effectResults: readonly EffectCheckResult[],
+  deploymentProfile: DeploymentProfile,
+  sourceFile?: string,
+) {
+  const product = requireAdmittedProductProfile(GALERINA_SELECTION);
+  return evaluateProductPolicy(product, {
+    ast,
+    flows,
+    effectResults,
+    deploymentProfile,
+    ...(sourceFile === undefined ? {} : { sourceFile }),
+  });
+}
+
+const PRODUCT_POLICY_REFUSAL_MESSAGE =
+  "The selected product policy is not admitted for compiler execution.";
 
 // =============================================================================
 // galerina.check.json -- project-level configuration for `galerina check`
@@ -645,14 +670,25 @@ export function compileFile(
   // above); running governance here aligns it, so its errors land in `diagnostics` and
   // the signing gate below withholds the credential.
   if (PRODUCTION_STRICTNESS_MODES.has(mode)) {
-    const govResult = verifyGovernance(
+    const policyResult = evaluateGalerinaGovernance(
       parseResult.ast,
       parseResult.flows,
       effectResults,
       "production",
       filePath,
     );
-    for (const d of govResult.diagnostics) {
+    if (!policyResult.ok) {
+      pushDiag(
+        diagnostics,
+        policyResult.code,
+        "error",
+        PRODUCT_POLICY_REFUSAL_MESSAGE,
+        filePath,
+        undefined,
+        undefined,
+      );
+    }
+    for (const d of policyResult.diagnostics) {
       pushDiag(
         diagnostics,
         d.code,
@@ -711,12 +747,24 @@ export function compileFile(
       runProductionSecurityGate(parseResult.ast, parseResult.flows, source, filePath),
     );
     if (!gateBlocksSigning && !diagnostics.some(d => d.severity === "error")) {
-      const govResultForManifest = verifyGovernance(
+      const policyResult = evaluateGalerinaGovernance(
         parseResult.ast, parseResult.flows, effectResults, "dev", filePath
       );
-      const manifest = generateManifest(source, filePath, parseResult.flows, govResultForManifest, undefined, parseResult.ast, source);
-      const manifestJson = serializeManifest(manifest);
-      return { file: filePath, diagnostics, manifestJson };
+      if (!policyResult.ok) {
+        pushDiag(
+          diagnostics,
+          policyResult.code,
+          "error",
+          PRODUCT_POLICY_REFUSAL_MESSAGE,
+          filePath,
+          undefined,
+          undefined,
+        );
+      } else {
+        const manifest = generateManifest(source, filePath, parseResult.flows, policyResult.evidence, undefined, parseResult.ast, source);
+        const manifestJson = serializeManifest(manifest);
+        return { file: filePath, diagnostics, manifestJson };
+      }
     }
   }
 
@@ -1069,7 +1117,17 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
     for (const d of checkTypes(parseResult.ast).diagnostics) {
       if (d.severity === "error") gateErrors.push(`${d.code}: ${d.message}`);
     }
-    for (const d of verifyGovernance(parseResult.ast, parseResult.flows, effectResults, "production", filePath).diagnostics) {
+    const policyResult = evaluateGalerinaGovernance(
+      parseResult.ast,
+      parseResult.flows,
+      effectResults,
+      "production",
+      filePath,
+    );
+    if (!policyResult.ok) {
+      gateErrors.push(`${policyResult.code}: ${PRODUCT_POLICY_REFUSAL_MESSAGE}`);
+    }
+    for (const d of policyResult.diagnostics) {
       if (d.severity === "error") gateErrors.push(`${d.code}: ${d.message}`);
     }
     const gateBlocks = productionGateBlocks(
