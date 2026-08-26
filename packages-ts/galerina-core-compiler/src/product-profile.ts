@@ -173,7 +173,7 @@ function decodeRegistry(input: string | Uint8Array): unknown {
 function stringArray(
   value: unknown,
   field: string,
-  admitted: ReadonlySet<string> | null = null,
+  admitted?: ReadonlySet<string>,
 ): readonly string[] {
   if (!Array.isArray(value) || value.length > 64 || !value.every((entry) => typeof entry === "string")) {
     refuse("REGISTRY_PRODUCT_FIELDS", `${field} must be a bounded string array`);
@@ -182,7 +182,7 @@ function stringArray(
   if (new Set(strings).size !== strings.length) {
     refuse("REGISTRY_PRODUCT_FIELDS", `${field} must not contain duplicates`);
   }
-  if (admitted !== null && strings.some((entry) => !admitted.has(entry))) {
+  if (admitted !== undefined && strings.some((entry) => !admitted.has(entry))) {
     refuse("REGISTRY_PRODUCT_FIELDS", `${field} contains an unknown value`);
   }
   return Object.freeze([...strings]);
