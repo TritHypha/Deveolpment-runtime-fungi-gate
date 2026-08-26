@@ -4,6 +4,57 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Product-family package readiness checkpoint - 2026-08-26
+
+- [x] Move the TypeScript host estate from `packages-galerina/` to
+  `packages-ts/` without changing published package names. The dependency
+  graph, package registry, package-root lock, generated indexes and roadmap
+  have converged at implementation checkpoint `1f06fc476`.
+- [x] Keep future native roots locator-only. `packages/fungi/` is reserved for
+  native `.fungi` packages and `packages/gate/` for non-authorizing laboratory
+  `.gate` packages; neither directory exists and neither is a discovery or
+  readiness signal. Unknown product, family or profile values refuse.
+- [x] Preserve one widthless semantic Trit in `{−1, 0, +1}`. Physical profiles
+  remain scalar `1`, preferred packed `64`, and admitted high-throughput `256`;
+  `32` is compatibility fallback, while `128`, `512` and adaptive widths are
+  measurement-only. Every fallback is admission-time replanning with a new
+  identity and receipt, never silent runtime substitution.
+- [x] Prove the moved host estate sequentially: product controls 10/10,
+  topology 7/7, root-lock 7/7, economics 15/15, security 17/17, graph
+  algorithms 97/97, generator contracts 19/19, and compiler 6,717/6,721 with
+  only the four intentional RD-0858 causal RED controls retained.
+- [x] Refresh the full external graph exactly at `1f06fc476`: 65,560/65,560
+  nodes, 167,278/167,278 edges and zero skipped files. The product-boundary
+  audit passes for 100 packages and 10,826 checked edges.
+- [x] Refresh Myco at the same worktree state: 9,280 files, 63 binary skips,
+  zero over-size skips. Active scripts and root configuration contain zero
+  `packages-galerina/` references.
+- [!] Myco finds 208 old TypeScript-oracle locator comments across 205 existing
+  `.fungi` files under `packages-ts/`. They are known migration debt, not host
+  routing, and must remain untouched until the owner reopens the `.fungi`
+  boundary.
+- [!] Hypha passes 58/58 self-tests and its full passive scan completes with
+  420 advisory candidates: 113 duplicate/drift, 18 kind gaps, 125 dead
+  exports, and 164 surface asymmetries. These are review inputs, not an
+  authorization failure or a clean absence claim.
+- [x] Complete the disposable reverse-move drill. The old root and its
+  regenerated root lock pass both topology suites; later generated-evidence
+  commits mean rollback requires the recorded conflict-aware sequence rather
+  than a plain one-command revert.
+- [!] The signed production-registry generator remains correctly refused
+  because private `packages-ts/galerina-registry/registry-index-v2.json` is not
+  present. Do not fabricate, copy or sign substitute registry bytes.
+- [!] KB main-only custody is not satisfied. Fresh fetch shows `main` and
+  `origin/main` at `dc111bcb`, while three local topic branches each retain
+  318–333 unique commits and `origin/codex/ctll-v2-architecture` retains 333
+  unique commits. RD-0861 lookup is `STALE`; therefore no new RD was allocated
+  and Task 7 remains `HOLD` until those unique histories are integrated and
+  the remote topic branch is retired by the publication owner.
+- [ ] After KB main-only closure, allocate the new product-family RD on KB
+  `main`, refresh its metadata indexes, finish immutable multi-vector review,
+  and integrate this planning branch. Stop before creating, editing, building
+  or admitting any `.fungi` or `.gate` file.
+
 ### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 
 - [x] Re-derive the current Galerina -> detached canonical GIR -> SLIDE -> VOK

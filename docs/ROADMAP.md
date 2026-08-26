@@ -1,7 +1,46 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-24
-Branch: `codex/rd-0858-unit4-process-root`
+Date: 2026-08-26
+Branch: `codex/product-family-package-readiness`
+
+## Product-family package readiness - 2026-08-26
+
+The TypeScript host estate now lives under `packages-ts/`; package publication
+names and language semantics are unchanged. Future native roots remain
+locator-only: `packages/fungi/` will own `.fungi` packages and
+`packages/gate/` will own non-authorizing `.gate` laboratory packages. No
+native directory or native source was created by this chapter.
+
+The future product registry is open to Galerina, Trametes and later research
+products but closed to unknown identities. Galerina keeps the governed
+checked-snapshot -> detached canonical GIR -> SLIDE physical planning and
+re-admission -> VOK affine lease route. Trametes may later select a different
+policy product while reusing admitted shared substrate; removing governance is
+not permission to bypass admission, target evidence, bounded execution or
+receipt identity.
+
+One Trit remains a widthless semantic value in `{−1, 0, +1}`. The implementation
+order is scalar `1`, then `64`, then `256`; `32` is compatibility fallback.
+Profiles `128`, `512` and adaptive widths remain measurement-only. Profile
+selection is deterministic, pre-admitted and receipt-bound, and every fallback
+creates a new identity before execution.
+
+Tasks 1–6 are complete through exact implementation checkpoint `1f06fc476`,
+placing the nine-task chapter at **66%** before the KB/review/integration gates.
+The full external graph is exact at 65,560 nodes and 167,278 edges with zero
+skips; the product audit passes across 100 packages and 10,826 checked edges;
+Myco indexes 9,280 files with zero over-size skips; Hypha's self-test passes
+58/58. Myco also exposes 208 stale TypeScript-oracle comments in 205 existing
+`.fungi` files. Those comments are deliberately deferred because this chapter
+must not edit native source.
+
+The remaining gate is KB topology, not implementation. Fresh evidence shows
+three KB topic branches with 318–333 unique commits and one corresponding
+remote topic branch; RD-0861 metadata is `STALE`. The new product-family RD,
+immutable chapter review and branch integration therefore remain `HOLD` until
+KB work is losslessly consolidated to `main`. The signed production registry
+is separately refused because its private index input is absent. Neither HOLD
+may be normalized into a clean pre-Fungi PASS.
 
 ## Current pre-Fungi boundary - 2026-08-24
 

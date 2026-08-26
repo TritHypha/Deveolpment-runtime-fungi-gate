@@ -3,7 +3,7 @@
   "subject": {
     "id": "product-family-pre-fungi",
     "owner": "galerina",
-    "locator": "repo://galerina/docs/audit-map.json"
+    "locator": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125"
   },
   "approval": {
     "status": "DRAFT",
@@ -11,16 +11,23 @@
     "authority": null,
     "evidence": null
   },
-  "progress": {
-    "percent": 0,
-    "state": "HOLD",
-    "reason": "Immutable implementation review has not passed."
-  },
   "audits": [
+    {
+      "id": "project-graph",
+      "owner": "galerina",
+      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "cwd": "repo://galerina",
+      "argv": ["node", "scripts/project-graph-generator.mjs", "--check"],
+      "dependsOn": [],
+      "timeoutMs": 130000,
+      "maxOutputBytes": 1048576,
+      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "evidence": "receipt://galerina/product-family-pre-fungi/project-graph"
+    },
     {
       "id": "product-package-boundaries",
       "owner": "galerina",
-      "build": "git://galerina/PENDING_IMMUTABLE_REVIEW",
+      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
       "cwd": "repo://galerina",
       "argv": ["node", "scripts/audit-product-package-boundaries.mjs", "--check"],
       "dependsOn": ["project-graph"],
@@ -28,6 +35,18 @@
       "maxOutputBytes": 1048576,
       "exit": { "pass": [0], "finding": [1], "refused": [2] },
       "evidence": "receipt://galerina/product-family-pre-fungi/product-package-boundaries"
+    },
+    {
+      "id": "typescript-root-migration",
+      "owner": "galerina",
+      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "cwd": "repo://galerina",
+      "argv": ["node", "scripts/audit-flat-package-root-lock.mjs", "--check"],
+      "dependsOn": ["product-package-boundaries"],
+      "timeoutMs": 130000,
+      "maxOutputBytes": 1048576,
+      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "evidence": "receipt://galerina/product-family-pre-fungi/typescript-root-migration"
     }
   ]
 }
