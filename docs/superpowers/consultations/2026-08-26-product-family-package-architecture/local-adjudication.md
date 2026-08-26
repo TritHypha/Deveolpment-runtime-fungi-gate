@@ -7,7 +7,8 @@
 
 **Exact Git target:** `c3360c143db4659ae18560322dc6b7a3cf3e122a`
 
-**External recommendation:** `REVISE_BEFORE_PLANNING`
+**External article recommendation:** `REVISE_BEFORE_PLANNING`; locally
+`SELF_REJECTED` for its missing inline primary-source links
 
 The external response is advisory. This record checks its actionable claims
 against exact graph/source evidence and records which corrections entered the
@@ -32,7 +33,7 @@ design.
 | Extensibility | SUSTAINED | Add one closed versioned product registry; keep future products registry-driven rather than pairwise. |
 | Authority isolation | SUSTAINED AS FUTURE GAP | Direct governance calls are exact. Add a neutral policy seam before Trametes admission. No present cross-product exploit is claimed because only Galerina is admitted. |
 | CLI identity | SUSTAINED | Keep product, safety, build mode and width separate. Refuse governance-off and ambient defaults. |
-| Migration | SUSTAINED | Registry/seam/identity first; logical alias second; physical Git move only after graph and rollback gates. |
+| Migration | SUSTAINED WITH NARROWING | Registry/seam/identity first; keep one TypeScript root while inventory and rollback gates run; then perform one physical Git move without a dual-root alias. |
 | Fungi/Gate custody | SUSTAINED WITH OWNER ROOT | Native families are typed below `packages/`; Gate remains lab-only and outside GIR/SLIDE/VOK authority. |
 | Performance | SUSTAINED | Existing passive benchmark cannot establish Trametes value because governance is outside its timed loop. |
 | Assurance | SUSTAINED | Add product-boundary graph checks, one-field negative controls, scalar-only preservation and an explicit pre-Fungi pause. |
@@ -78,6 +79,12 @@ The registry may represent future widths, but its executable Galerina set stays
 `{1}` until each separate profile chapter passes.
 
 ## External precedent checked locally
+
+The stored first Grok article did not include the inline primary-source URLs
+required by its prompt and therefore fails its own self-rejection gate. Its
+provider source panel exposed links, but those links are not part of the
+captured response bytes. No external precedent is accepted from that article.
+The following sources were opened and checked locally instead:
 
 - Cargo workspaces separate workspace membership from package selection and
   identity: <https://doc.rust-lang.org/cargo/reference/workspaces.html>.

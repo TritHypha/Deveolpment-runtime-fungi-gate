@@ -3,6 +3,7 @@
   "authorizing": false,
   "provider": "Grok",
   "model": "Expert",
+  "outputContractStatus": "SELF_REJECTED_MISSING_INLINE_PRIMARY_SOURCE_LINKS",
   "targetRepositoryRevision": "c3360c143db4659ae18560322dc6b7a3cf3e122a",
   "conversationUrl": "https://grok.com/c/10f55573-02ed-42ae-a6cd-131b2a4bfe11?rid=ca3e9483-ad48-4eb1-ab44-9dc46b6a2790",
   "submittedAtUtc": "2026-08-26T11:53:31.006Z",
@@ -31,9 +32,9 @@
     },
     "recommendation": "REVISE_BEFORE_PLANNING"
   },
-  "directPrimarySourceLinksVisibleInReply": [
+  "primarySourceLinksVisibleInProviderSourcePanelOnly": [
     "https://doc.rust-lang.org/cargo/reference/pkgid-spec.html",
     "https://doc.rust-lang.org/cargo/reference/workspaces.html"
   ],
-  "note": "The provider editor normalized paragraph spacing. Both the repository prompt and exact submitted innerText are bound separately. This receipt is evidence only and cannot authorize implementation, integration, publication, execution or Fungi source creation."
+  "note": "The provider editor normalized paragraph spacing. Both the repository prompt and exact submitted innerText are bound separately. The stored article contains no inline primary-source URLs, so local adjudication applies the prompt's SELF-REJECTED gate; provider source-panel links are recorded only as non-response metadata. This receipt is evidence only and cannot authorize implementation, integration, publication, execution or Fungi source creation."
 }

@@ -68,6 +68,8 @@ The physical `packages-galerina/` to `packages-ts/` move happens only in Task 6.
 
 **Files:**
 - Create: `product-registry/product-profiles.source.v1.json`
+- Create: `product-registry/product-profiles.source.v1.schema.json`
+- Create: `product-registry/product-profiles.v1.json`
 - Create: `product-registry/product-profiles.v1.schema.json`
 - Create: `scripts/generate-product-profiles.mjs`
 - Create: `scripts/tests/generate-product-profiles.test.mjs`
@@ -77,7 +79,8 @@ The physical `packages-galerina/` to `packages-ts/` move happens only in Task 6.
 - Modify: `package.json`
 
 **Interfaces:**
-- Consumes: exact policy source bytes at `packages-galerina/galerina-core-compiler/src/governance-verifier.ts`.
+- Consumes: the closed source registry and exact admitted-policy source bytes at
+  `packages-galerina/galerina-core-compiler/src/governance-verifier.ts`.
 - Produces: `ProductId`, `ProductSelection`, `AdmittedProductProfile`, `loadProductRegistry(bytes)`, `resolveProductProfile(registry, selection)` and deterministic `product-profiles.v1.json`.
 
 - [ ] **Step 1: Add RED registry fixtures**
@@ -91,7 +94,23 @@ assert.equal(L.resolveProductProfile(registry, selection({ productId: "quantum-r
 assert.equal(L.resolveProductProfile(registry, selection({ physicalProfile: "64" })).code, "PHYSICAL_PROFILE_NOT_ADMITTED");
 assert.equal(L.resolveProductProfile(registry, selection({ physicalProfile: "32" })).code, "PHYSICAL_PROFILE_NOT_ADMITTED");
 assert.equal(L.resolveProductProfile(registry, selection({ physicalProfile: "256" })).code, "PHYSICAL_PROFILE_NOT_ADMITTED");
-assert.throws(() => L.loadProductRegistry('{"schemaVersion":1,"products":[],"extra":true}'), /REGISTRY_FIELDS/);
+assert.throws(() => L.loadProductRegistry('{"schema":"product-profiles.v1","schemaVersion":1,"products":[],"extra":true}'), /REGISTRY_FIELDS/);
+
+const generated = generateProductProfiles(sourceRegistryBytes, readExactPolicy);
+const roundTrip = L.loadProductRegistry(generated);
+const plannedBinding = JSON.stringify({
+  domain: "product-policy-unavailable.v1",
+  productId: "trametes",
+  compatibilityState: "planned",
+  policyId: "trametes-policy-unavailable",
+});
+assert.equal(
+  roundTrip.products.find((row) => row.productId === "trametes").policyDigest,
+  `sha256:${sha256Utf8(plannedBinding)}`,
+);
+assert.equal(L.resolveProductProfile(roundTrip, selection({ productId: "trametes" })).code, "PRODUCT_NOT_ADMITTED");
+assert.throws(() => generateProductProfiles(plannedWithPolicyPath, readExactPolicy), /PLANNED_POLICY_PATH/);
+assert.throws(() => generateProductProfiles(plannedWithAdmittedWidth, readExactPolicy), /PLANNED_ADMISSION/);
 ```
 
 - [ ] **Step 2: Run the focused test and preserve RED**
@@ -111,6 +130,7 @@ Use this closed initial state:
 
 ```json
 {
+  "schema": "product-profiles.source.v1",
   "schemaVersion": 1,
   "products": [
     {
@@ -147,25 +167,43 @@ Use this closed initial state:
 }
 ```
 
-The schema sets `additionalProperties: false` at every object and enumerates
-all closed values. Empty policy path is valid only when state is `planned` and
-all admitted arrays are empty.
+The source and generated schemas set `additionalProperties: false` at every
+object and enumerate all closed values. The source schema requires
+`schema: "product-profiles.source.v1"`, `policyPath`, and no
+`policyDigest`. The generated schema requires
+`schema: "product-profiles.v1"`, `policyDigest`, and no `policyPath`.
+Empty policy path is valid only when state is `planned` and all admitted
+arrays are empty.
 
 - [ ] **Step 4: Generate policy digests deterministically**
 
 Implement `generate-product-profiles.mjs` so `--write` reads the source file,
-hashes every admitted policy path with SHA-256, adds `policyDigest`, sorts
-products by `productId`, writes one terminal LF, and refuses a missing or
-escaping path. `--check` recomputes bytes and exits non-zero on drift without
-writing.
+hashes every admitted policy path with SHA-256, replaces `policyPath` with
+`policyDigest`, sorts products by `productId`, writes one terminal LF, and
+refuses a missing or escaping path. For `planned`, `lab` or `retired`, it
+requires an empty policy path and empty admitted arrays, then hashes the exact
+domain-separated unavailable-policy record. `--check` recomputes bytes and
+exits non-zero on drift without writing.
 
 The key implementation shape is:
 
 ```js
-const policyBytes = readFileSync(resolve(repoRoot, row.policyPath));
-row.policyDigest = `sha256:${createHash("sha256").update(policyBytes).digest("hex")}`;
-const output = `${JSON.stringify({ schemaVersion: 1, products: rows }, null, 2)}\n`;
+const bindingBytes = row.compatibilityState === "admitted"
+  ? readFileSync(resolve(repoRoot, row.policyPath))
+  : Buffer.from(JSON.stringify({
+      domain: "product-policy-unavailable.v1",
+      productId: row.productId,
+      compatibilityState: row.compatibilityState,
+      policyId: row.policyId,
+    }), "utf8");
+row.policyDigest = `sha256:${createHash("sha256").update(bindingBytes).digest("hex")}`;
+delete row.policyPath;
+const output = `${JSON.stringify({ schema: "product-profiles.v1", schemaVersion: 1, products: rows }, null, 2)}\n`;
 ```
+
+Validate the generated bytes against the generated schema, load those exact
+bytes with `loadProductRegistry`, and require the Trametes round trip to return
+`PRODUCT_NOT_ADMITTED` before any policy lookup.
 
 - [ ] **Step 5: Implement closed registry admission**
 

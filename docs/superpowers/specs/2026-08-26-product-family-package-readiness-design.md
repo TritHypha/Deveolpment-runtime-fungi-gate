@@ -137,13 +137,14 @@ Each product entry binds:
 
 | Field | Closed rule |
 |---|---|
+| `schema` | Exact `product-profiles.v1` for the generated runtime registry. |
 | `schemaVersion` | Exact supported registry schema; unknown version refuses. |
 | `productId` | Stable lowercase identifier; no aliases or default fallback. |
 | `productClass` | `production` or `research-nonprod`. |
 | `governanceClass` | `zero-trust`, `admitted-closed-network` or `research-only`. |
 | `compatibilityState` | `planned`, `admitted`, `lab` or `retired`. |
 | `policyId` | Product-neutral policy implementation identity. |
-| `policyDigest` | Exact admitted policy bytes or package digest. |
+| `policyDigest` | Mandatory generated SHA-256 binding: admitted policy bytes for `admitted`; a domain-separated unavailable-policy record for every non-admitted state. |
 | `packageNamespaces` | Closed package roots visible to the product. |
 | `artifactNamespace` | Mandatory independent cache/artifact namespace. |
 | `admittedSafetyProfiles` | Closed set; empty means execution refuses. |
@@ -155,6 +156,26 @@ Each product entry binds:
 Unknown fields, missing fields, duplicate keys, unknown values and unsupported
 combinations refuse. A product cannot write its own `externalAuthorizerId`,
 change its compatibility state or authorize its own selection.
+
+The editable source registry and generated runtime registry are distinct closed
+schemas:
+
+- `product-profiles.source.v1` includes repository-relative `policyPath` and
+  omits `policyDigest`;
+- `product-profiles.v1` removes `policyPath` and requires `policyDigest` on
+  every product row.
+
+For `admitted`, the generator hashes exact policy bytes. For `planned`,
+`lab` or `retired`, `policyPath` must be empty, all admitted arrays must be
+empty, and the generator hashes this exact canonical record:
+
+```text
+{"domain":"product-policy-unavailable.v1","productId":"<id>","compatibilityState":"<state>","policyId":"<id>"}
+```
+
+The unavailable digest binds identity but never represents executable policy.
+Resolution checks `compatibilityState` first and returns
+`PRODUCT_NOT_ADMITTED` without loading or dispatching a policy.
 
 ### 4.1 Initial entries
 
@@ -297,7 +318,7 @@ amended and all gates below pass.
 |---|---|---|---|
 | P0 | `packages-galerina/` | This design, registry schema and exact migration inventory | Independent design PASS |
 | P1 | `packages-galerina/` | Product registry, policy seam, explicit product selection and namespaced artifact identities in one atomic gate; Galerina behavior only | Missing/unknown product matrix, cache neighbours and exact graph PASS |
-| P2 | Existing root plus logical `packages-ts` aliases | Workspace/path compatibility; no native source | Import, package and rollback gates PASS |
+| P2 | `packages-galerina/` remains the sole physical and logical TypeScript root | Complete import inventory, package-name preservation and rollback rehearsal; no alias and no native source | Import, package, single-root and rollback gates PASS |
 | P3 | Physical `git mv` to `packages-ts/` | Mechanical root migration; published package names unchanged | Zero authoritative old-root references and fixed-point indexes |
 | P4 | `packages-ts/` plus locator-only typed native-root contract | Amend RD-0861 and allocate a new product-family RD on KB `main` only; create no native directories | Pre-Fungi plan, Git Custody and independent review PASS |
 | P5 | `packages/fungi/products/galerina/` | First scalar Galerina `.fungi` slice only | Existing conversion gates and fresh exact-head receipts |
@@ -323,7 +344,8 @@ reversible and must not widen the `.fungi` boundary.
   separate implementation gates pass;
 - a no-product generic CLI request refuses;
 - a governance-off flag is rejected by parser and policy;
-- compatibility alias removal and old-root restoration are rehearsed.
+- old-root restoration and package-name preservation are rehearsed without a
+  dual-root compatibility alias.
 
 ### Before the first `.fungi` file
 
@@ -397,8 +419,11 @@ this documentation chapter.
 
 ## 14. External review adjudication
 
-Grok Expert returned `REVISE_BEFORE_PLANNING`. The following findings are
-sustained and incorporated:
+The first Grok Expert article ended with `REVISE_BEFORE_PLANNING`, but local
+adjudication marks the article `SELF_REJECTED` because its stored response did
+not carry the required inline primary-source links. The following hypotheses
+are sustained only because they were independently rechecked against exact
+local source and separately opened primary sources:
 
 - bare `packages/` needs typed `fungi/` and `gate/` subfamilies;
 - a pairwise Galerina/Trametes selector is not extensible;
