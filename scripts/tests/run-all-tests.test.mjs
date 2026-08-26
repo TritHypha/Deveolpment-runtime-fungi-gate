@@ -1,12 +1,14 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import {
   chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -151,6 +153,48 @@ function run(root, ...args) {
   );
 }
 
+function packageTreeDigest(directory) {
+  const hash = createHash("sha256");
+  const visit = (current, prefix) => {
+    const entries = readdirSync(current, { withFileTypes: true })
+      .sort((left, right) => Buffer.compare(Buffer.from(left.name), Buffer.from(right.name)));
+    for (const entry of entries) {
+      const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+      const absolute = join(current, entry.name);
+      if (entry.isDirectory()) {
+        hash.update(`D\0${relative}\0`);
+        visit(absolute, relative);
+      } else if (entry.isFile()) {
+        const bytes = readFileSync(absolute);
+        hash.update(`F\0${relative}\0${bytes.length}\0`);
+        hash.update(bytes);
+      } else {
+        throw new Error(`unsupported fixture package entry: ${relative}`);
+      }
+    }
+  };
+  visit(directory, "");
+  return `sha256:${hash.digest("hex")}`;
+}
+
+function writeTypeScriptIntegrity(root) {
+  const directory = join(
+    root,
+    "packages-ts",
+    "galerina-core-compiler",
+    "node_modules",
+    "typescript",
+  );
+  write(root, "scripts/toolchain-integrity.json", JSON.stringify({
+    schema: "galerina-toolchain-integrity.v1",
+    packages: [{
+      name: "typescript",
+      version: "5.9.3",
+      treeDigest: packageTreeDigest(directory),
+    }],
+  }));
+}
+
 function runWithEnvironment(root, environment, ...args) {
   return spawnSync(
     process.execPath,
@@ -210,6 +254,7 @@ function typescriptFallbackFixture({ lockVersion = "5.9.3" } = {}) {
     "const path = require('node:path');",
     "fs.writeFileSync(path.join(process.cwd(), 'canonical-tsc.txt'), 'used');",
   ].join("\n") + "\n");
+  writeTypeScriptIntegrity(root);
   return root;
 }
 
@@ -325,8 +370,34 @@ test("a validated canonical TypeScript fallback outranks a hostile ambient launc
   assert.deepEqual(JSON.parse(result.stdout).controls.typescriptFallback, {
     used: true,
     version: "5.9.3",
+    treeDigest: JSON.parse(readFileSync(
+      join(root, "scripts", "toolchain-integrity.json"),
+      "utf8",
+    )).packages[0].treeDigest,
     packages: ["galerina-needs-tsc"],
   });
+});
+
+test("a byte-substituted canonical TypeScript fallback refuses before execution", () => {
+  const root = typescriptFallbackFixture();
+  write(
+    root,
+    "packages-ts/galerina-core-compiler/node_modules/typescript/bin/tsc",
+    "require('node:fs').writeFileSync('substituted-tsc.txt', 'used');\n",
+  );
+
+  const result = runWithEnvironment(
+    root,
+    environmentWithPathPrefix(hostilePath(root)),
+    "--json",
+  );
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.violations[0].code, "TEST-TOOLCHAIN-REFUSED");
+  assert.deepEqual(report.results, []);
+  assert.equal(existsSync(join(root, "packages-ts", "needs-tsc", "substituted-tsc.txt")), false);
+  assert.equal(existsSync(join(root, "packages-ts", "needs-tsc", "hostile-tsc.txt")), false);
 });
 
 test("a mismatched canonical TypeScript fallback refuses before package execution", () => {

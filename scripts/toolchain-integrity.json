@@ -1,0 +1,10 @@
+{
+  "schema": "galerina-toolchain-integrity.v1",
+  "packages": [
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "treeDigest": "sha256:07ea875a82ac2d2f798be2e6e734e26194396d1c65876ff40f0c81c084d023d3"
+    }
+  ]
+}

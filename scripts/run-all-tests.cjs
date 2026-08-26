@@ -89,11 +89,69 @@ function lockedTypeScriptVersion(packageDirectory, locator) {
   return version;
 }
 
+function packageTreeDigest(packageDirectory) {
+  const realPackageDirectory = fs.realpathSync(packageDirectory);
+  const hash = createHash("sha256");
+  const visit = (current, prefix) => {
+    const entries = fs.readdirSync(current, { withFileTypes: true })
+      .sort((left, right) => Buffer.compare(Buffer.from(left.name), Buffer.from(right.name)));
+    for (const entry of entries) {
+      const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+      const absolute = path.join(current, entry.name);
+      if (entry.isSymbolicLink()) {
+        throw refuseToolchain(`The canonical TypeScript package contains a linked entry: ${relative}.`);
+      }
+      let realEntry;
+      try {
+        realEntry = fs.realpathSync(absolute);
+      } catch (error) {
+        throw refuseToolchain(`The canonical TypeScript package entry is unavailable: ${relative}: ${error.message}`);
+      }
+      if (!isContained(realPackageDirectory, realEntry)) {
+        throw refuseToolchain(`The canonical TypeScript package entry escaped its root: ${relative}.`);
+      }
+      if (entry.isDirectory()) {
+        hash.update(`D\0${relative}\0`);
+        visit(realEntry, relative);
+      } else if (entry.isFile()) {
+        const bytes = fs.readFileSync(realEntry);
+        hash.update(`F\0${relative}\0${bytes.length}\0`);
+        hash.update(bytes);
+      } else {
+        throw refuseToolchain(`The canonical TypeScript package contains an unsupported entry: ${relative}.`);
+      }
+    }
+  };
+  visit(realPackageDirectory, "");
+  return `sha256:${hash.digest("hex")}`;
+}
+
+function lockedTypeScriptTreeDigest(root, version) {
+  const locator = "scripts/toolchain-integrity.json";
+  const lock = readJsonFile(path.join(root, locator), locator);
+  if (lock === null || typeof lock !== "object" || Array.isArray(lock)
+      || Object.keys(lock).sort().join("\0") !== ["packages", "schema"].sort().join("\0")
+      || lock.schema !== "galerina-toolchain-integrity.v1"
+      || !Array.isArray(lock.packages)
+      || lock.packages.length !== 1) {
+    throw refuseToolchain(`${locator} has an unsupported closed shape.`);
+  }
+  const record = lock.packages[0];
+  if (record === null || typeof record !== "object" || Array.isArray(record)
+      || Object.keys(record).sort().join("\0") !== ["name", "treeDigest", "version"].sort().join("\0")
+      || record.name !== "typescript"
+      || record.version !== version
+      || !/^sha256:[0-9a-f]{64}$/u.test(record.treeDigest)) {
+    throw refuseToolchain(`${locator} does not bind the admitted TypeScript package identity.`);
+  }
+  return record.treeDigest;
+}
+
 function shellQuote(value) {
   return `'${value.replace(/'/gu, `'"'"'`)}'`;
 }
 
-function createTypeScriptShim(compilerPath) {
+function createTypeScriptShim(installedDirectory, expectedTreeDigest) {
   const tempRoot = path.resolve(os.tmpdir());
   const prefix = path.join(tempRoot, "galerina-tsc-");
   const shimDirectory = fs.mkdtempSync(prefix);
@@ -102,6 +160,24 @@ function createTypeScriptShim(compilerPath) {
     throw refuseToolchain("The private TypeScript shim directory escaped the admitted temp root.");
   }
   try {
+    const privatePackageDirectory = path.join(shimDirectory, "typescript");
+    fs.cpSync(installedDirectory, privatePackageDirectory, {
+      recursive: true,
+      errorOnExist: true,
+      force: false,
+      dereference: false,
+    });
+    const observedTreeDigest = packageTreeDigest(privatePackageDirectory);
+    if (observedTreeDigest !== expectedTreeDigest) {
+      throw refuseToolchain(
+        `The installed canonical TypeScript bytes do not match the repository toolchain lock (${observedTreeDigest} != ${expectedTreeDigest}).`,
+      );
+    }
+    const compilerPath = fs.realpathSync(path.join(privatePackageDirectory, "bin", "tsc"));
+    if (!isContained(fs.realpathSync(privatePackageDirectory), compilerPath)
+        || !fs.statSync(compilerPath).isFile()) {
+      throw refuseToolchain("The private TypeScript launcher escaped its authenticated package root.");
+    }
     if (process.platform === "win32") {
       if (/[\r\n%"]/u.test(process.execPath) || /[\r\n%"]/u.test(compilerPath)) {
         throw refuseToolchain("The admitted TypeScript launcher contains unsafe command characters.");
@@ -177,6 +253,7 @@ function prepareTypeScriptFallback(root, selection) {
       "The installed canonical TypeScript identity does not match the core-compiler lockfile.",
     );
   }
+  const expectedTreeDigest = lockedTypeScriptTreeDigest(absoluteRoot, canonicalVersion);
   for (const record of required) {
     const lockedVersion = lockedTypeScriptVersion(record.absolutePath, record.path);
     if (lockedVersion !== canonicalVersion) {
@@ -186,10 +263,11 @@ function prepareTypeScriptFallback(root, selection) {
     }
   }
 
-  const shim = createTypeScriptShim(realCompilerPath);
+  const shim = createTypeScriptShim(realInstalledDirectory, expectedTreeDigest);
   return Object.freeze({
     binDirectory: shim.directory,
     version: canonicalVersion,
+    treeDigest: expectedTreeDigest,
     packages: Object.freeze(required.map((record) => record.subject)),
     release: shim.release,
   });
@@ -808,6 +886,7 @@ async function main() {
         typescriptFallback: {
           used: true,
           version: typeScriptFallback.version,
+          treeDigest: typeScriptFallback.treeDigest,
           packages: typeScriptFallback.packages,
         },
       }),
