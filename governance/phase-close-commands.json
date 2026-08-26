@@ -138,6 +138,79 @@
       }
     },
     {
+      "id": "audit:product-boundaries",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-PRODUCT-BOUNDARIES",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-PRODUCT-BOUNDARIES"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-product-package-boundaries.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-PRODUCT-BOUNDARIES"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "present",
+        "command": [
+          "node",
+          "--test",
+          "--test-concurrency=1",
+          "scripts/tests/audit-product-package-boundaries.test.mjs"
+        ],
+        "plantedDefectId": "stale-or-missing-product-graph"
+      },
+      "predecessors": [
+        "graph:all"
+      ],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
       "id": "audit:generator-contract",
       "requirementId": "REQ-PHASE-CLOSE-AUDIT-GENERATOR-CONTRACT",
       "satisfies": [
