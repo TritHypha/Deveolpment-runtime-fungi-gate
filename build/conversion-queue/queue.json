@@ -1,14 +1,14 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "502a579231d078d147e2eb05f71e81aa45f22dbb0c12b3c5994080c35a3ca4c1",
-  "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
+  "sourceDigest": "bf870dd4452b8a3801cbd68839ae4a762a610d8c0d03d19f127a3d1539db0736",
+  "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
   "counts": {
-    "total": 1563,
+    "total": 1571,
     "CANDIDATE": 0,
     "BLOCKED": 917,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 646
+    "BOOTSTRAP_FLOOR": 654
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -1147,6 +1147,38 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/plugin-schema.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/product-artifact-identity.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/product-cli.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/product-policy.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/product-profile.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -3459,6 +3491,38 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/prefilter-construct.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/product-artifact-identity.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/product-cli.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/product-policy.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/product-profile.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
