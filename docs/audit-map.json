@@ -1,0 +1,33 @@
+{
+  "schema": "audit-map.v1",
+  "subject": {
+    "id": "product-family-pre-fungi",
+    "owner": "galerina",
+    "locator": "repo://galerina/docs/audit-map.json"
+  },
+  "approval": {
+    "status": "DRAFT",
+    "planDigest": null,
+    "authority": null,
+    "evidence": null
+  },
+  "progress": {
+    "percent": 0,
+    "state": "HOLD",
+    "reason": "Immutable implementation review has not passed."
+  },
+  "audits": [
+    {
+      "id": "product-package-boundaries",
+      "owner": "galerina",
+      "build": "git://galerina/PENDING_IMMUTABLE_REVIEW",
+      "cwd": "repo://galerina",
+      "argv": ["node", "scripts/audit-product-package-boundaries.mjs", "--check"],
+      "dependsOn": ["project-graph"],
+      "timeoutMs": 130000,
+      "maxOutputBytes": 1048576,
+      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "evidence": "receipt://galerina/product-family-pre-fungi/product-package-boundaries"
+    }
+  ]
+}
