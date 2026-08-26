@@ -581,7 +581,7 @@
       "tests": 57,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 45,
+      "files": 46,
       "deps": [
         "@galerina/core-compiler"
       ]
@@ -2836,7 +2836,6 @@
       "concerns": [
         "signing/fusion",
         "diagnostics",
-        "source-hygiene",
         "graph/index"
       ]
     },
@@ -4164,7 +4163,6 @@
       "verify-registry-static-host-build-recipe.mjs",
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
-      "run-all-tests.cjs",
       "run-assurance-shadow.mjs",
       "run-generator-contract-cadence.mjs",
       "run-impact-check.mjs",
