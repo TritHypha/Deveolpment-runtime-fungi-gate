@@ -14,7 +14,7 @@
 <text x="342" y="34" text-anchor="end" class="title">Where the project is</text>
 <text x="360" y="34" class="sub">v1.0.0-beta.2 · 100 packages · 9612 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
 <text x="360" y="50" class="sub">generated from the closed assurance dependency DAG + component-health + the RD-0528/RD-0361 authority ledgers; exact producer identities are in focused provenance sidecars</text>
-<text x="360" y="66" class="stn">Assurance DAG: UNKNOWN · root b33920c015ed8affac88166743370c5857294941f5797d6a2249b099bf798e67 · non-authorizing</text>
+<text x="360" y="66" class="stn">Assurance DAG: UNKNOWN · root 38d10f1bf679db85c3db842b4961564b91deb0d4fa62a93595d6f976f06bbf7e · non-authorizing</text>
 <text x="342" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="342" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
 <line x1="360" y1="96" x2="1470" y2="96" stroke="#c8102e" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
