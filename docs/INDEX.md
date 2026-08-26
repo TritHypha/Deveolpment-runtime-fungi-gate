@@ -19,7 +19,7 @@
 | [`examples/`](examples/INDEX.md) | 271 |
 | [`framework/`](framework/INDEX.md) | 28 |
 | [`handover/`](handover/INDEX.md) | 2 |
-| [`independent-audits/`](independent-audits/INDEX.md) | 4 |
+| [`independent-audits/`](independent-audits/INDEX.md) | 5 |
 | [`language/`](language/INDEX.md) | 21 |
 | [`paper/`](paper/INDEX.md) | 54 |
 | [`patterns/`](patterns/INDEX.md) | 21 |
