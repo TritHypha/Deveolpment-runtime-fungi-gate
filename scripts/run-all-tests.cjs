@@ -6,6 +6,7 @@
 
 const { createHash } = require("node:crypto");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const {
@@ -31,6 +32,174 @@ const RUN_LAST = new Set(["galerina-devtools-graph-project"]);
 const TIMEOUT_MS = 600_000;
 const MAX_DIAGNOSTIC_LINES = 32;
 const MAX_DIAGNOSTIC_LINE_LENGTH = 1024;
+
+function refuseToolchain(detail) {
+  return Object.assign(new Error(detail), { code: "TEST-TOOLCHAIN-REFUSED" });
+}
+
+function readJsonFile(absolutePath, locator) {
+  try {
+    return JSON.parse(fs.readFileSync(absolutePath, "utf8"));
+  } catch (error) {
+    throw refuseToolchain(`${locator} is missing or malformed: ${error.message}`);
+  }
+}
+
+function isContained(root, candidate) {
+  const relative = path.relative(root, candidate);
+  return relative !== ""
+    && !relative.startsWith(`..${path.sep}`)
+    && relative !== ".."
+    && !path.isAbsolute(relative);
+}
+
+function usesBareTypeScriptCompiler(scripts) {
+  return Object.values(scripts || {}).some((script) =>
+    typeof script === "string"
+    && script.split(/&&|\|\||;/u).some((segment) => /^\s*tsc(?:\s|$)/u.test(segment)));
+}
+
+function packageNeedsTypeScriptFallback(record) {
+  const localCompiler = path.join(
+    record.absolutePath,
+    "node_modules",
+    "typescript",
+    "bin",
+    "tsc",
+  );
+  if (fs.existsSync(localCompiler)) return false;
+  const manifest = readJsonFile(
+    path.join(record.absolutePath, "package.json"),
+    `${record.path}/package.json`,
+  );
+  return usesBareTypeScriptCompiler(manifest.scripts);
+}
+
+function lockedTypeScriptVersion(packageDirectory, locator) {
+  const lock = readJsonFile(
+    path.join(packageDirectory, "package-lock.json"),
+    `${locator}/package-lock.json`,
+  );
+  const version = lock.packages?.["node_modules/typescript"]?.version;
+  if (typeof version !== "string" || version.length === 0) {
+    throw refuseToolchain(
+      `${locator}/package-lock.json does not bind node_modules/typescript.version.`,
+    );
+  }
+  return version;
+}
+
+function shellQuote(value) {
+  return `'${value.replace(/'/gu, `'"'"'`)}'`;
+}
+
+function createTypeScriptShim(compilerPath) {
+  const tempRoot = path.resolve(os.tmpdir());
+  const prefix = path.join(tempRoot, "galerina-tsc-");
+  const shimDirectory = fs.mkdtempSync(prefix);
+  if (path.dirname(shimDirectory) !== tempRoot
+      || !path.basename(shimDirectory).startsWith("galerina-tsc-")) {
+    throw refuseToolchain("The private TypeScript shim directory escaped the admitted temp root.");
+  }
+  try {
+    if (process.platform === "win32") {
+      if (/[\r\n%"]/u.test(process.execPath) || /[\r\n%"]/u.test(compilerPath)) {
+        throw refuseToolchain("The admitted TypeScript launcher contains unsafe command characters.");
+      }
+      fs.writeFileSync(
+        path.join(shimDirectory, "tsc.cmd"),
+        `@echo off\r\n"${process.execPath}" "${compilerPath}" %*\r\n`,
+        { encoding: "utf8", mode: 0o700 },
+      );
+    } else {
+      fs.writeFileSync(
+        path.join(shimDirectory, "tsc"),
+        `#!/bin/sh\nexec ${shellQuote(process.execPath)} ${shellQuote(compilerPath)} "$@"\n`,
+        { encoding: "utf8", mode: 0o700 },
+      );
+    }
+  } catch (error) {
+    fs.rmSync(shimDirectory, { recursive: true, force: true });
+    throw error;
+  }
+  return {
+    directory: shimDirectory,
+    release() {
+      const resolved = path.resolve(shimDirectory);
+      if (path.dirname(resolved) !== tempRoot
+          || !path.basename(resolved).startsWith("galerina-tsc-")) {
+        throw refuseToolchain("Private TypeScript shim cleanup target is outside its admitted root.");
+      }
+      fs.rmSync(resolved, { recursive: true, force: true });
+    },
+  };
+}
+
+function prepareTypeScriptFallback(root, selection) {
+  const required = selection.filter(packageNeedsTypeScriptFallback);
+  if (required.length === 0) return null;
+
+  const absoluteRoot = fs.realpathSync(root);
+  const compilerDirectory = path.join(
+    absoluteRoot,
+    "packages-ts",
+    "galerina-core-compiler",
+  );
+  const installedDirectory = path.join(compilerDirectory, "node_modules", "typescript");
+  const compilerPath = path.join(installedDirectory, "bin", "tsc");
+  let realInstalledDirectory;
+  let realCompilerPath;
+  try {
+    realInstalledDirectory = fs.realpathSync(installedDirectory);
+    realCompilerPath = fs.realpathSync(compilerPath);
+  } catch (error) {
+    throw refuseToolchain(
+      `packages-ts/galerina-core-compiler/node_modules/typescript is unavailable: ${error.message}`,
+    );
+  }
+  if (!isContained(absoluteRoot, realInstalledDirectory)
+      || !isContained(realInstalledDirectory, realCompilerPath)
+      || !fs.statSync(realCompilerPath).isFile()) {
+    throw refuseToolchain("The canonical TypeScript launcher escaped its admitted package root.");
+  }
+
+  const installedManifest = readJsonFile(
+    path.join(realInstalledDirectory, "package.json"),
+    "packages-ts/galerina-core-compiler/node_modules/typescript/package.json",
+  );
+  const canonicalVersion = lockedTypeScriptVersion(
+    compilerDirectory,
+    "packages-ts/galerina-core-compiler",
+  );
+  if (installedManifest.name !== "typescript"
+      || installedManifest.version !== canonicalVersion) {
+    throw refuseToolchain(
+      "The installed canonical TypeScript identity does not match the core-compiler lockfile.",
+    );
+  }
+  for (const record of required) {
+    const lockedVersion = lockedTypeScriptVersion(record.absolutePath, record.path);
+    if (lockedVersion !== canonicalVersion) {
+      throw refuseToolchain(
+        `${record.path}/package-lock.json binds TypeScript ${lockedVersion}, not ${canonicalVersion}.`,
+      );
+    }
+  }
+
+  const shim = createTypeScriptShim(realCompilerPath);
+  return Object.freeze({
+    binDirectory: shim.directory,
+    version: canonicalVersion,
+    packages: Object.freeze(required.map((record) => record.subject)),
+    release: shim.release,
+  });
+}
+
+function prependPath(environment, directory) {
+  const key = Object.keys(environment).find((candidate) => candidate.toLowerCase() === "path")
+    || "PATH";
+  environment[key] = `${directory}${path.delimiter}${environment[key] || ""}`;
+}
 
 function failureEvidence(child, output) {
   const diagnosticLines = output
@@ -122,7 +291,7 @@ function parseCounts(output) {
   };
 }
 
-async function runNpmTest(directory, testScript, testConcurrency) {
+async function runNpmTest(directory, testScript, testConcurrency, toolchainBinDirectory) {
   const childEnv = { ...process.env };
   // A runner invoked by node:test must start a new top-level test process.
   // Inheriting this marker makes Node treat the package suite as recursive
@@ -132,6 +301,7 @@ async function runNpmTest(directory, testScript, testConcurrency) {
   delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
   delete childEnv.GALERINA_SUITE_LEASE_OWNER_PID;
   delete childEnv.GALERINA_SUITE_LEASE_MEDIATOR_PID;
+  if (toolchainBinDirectory !== null) prependPath(childEnv, toolchainBinDirectory);
   const common = {
     cwd: directory,
     env: childEnv,
@@ -220,7 +390,7 @@ function failureFor(child, counts) {
   return null;
 }
 
-async function runPackage(record, testConcurrency) {
+async function runPackage(record, testConcurrency, toolchainBinDirectory) {
   const started = Date.now();
   process.stderr.write(
     `[run-all-tests] START ${record.subject} (test-file ceiling ${testConcurrency})\n`,
@@ -229,6 +399,7 @@ async function runPackage(record, testConcurrency) {
     record.absolutePath,
     record.testScript,
     testConcurrency,
+    toolchainBinDirectory,
   );
   const child = invocation.child;
   const durationMs = Date.now() - started;
@@ -277,7 +448,11 @@ async function runPackageGroup(records, options) {
       const index = nextIndex;
       nextIndex += 1;
       if (index >= records.length) return;
-      const result = await runPackage(records[index], options.testConcurrency);
+      const result = await runPackage(
+        records[index],
+        options.testConcurrency,
+        options.toolchainBinDirectory,
+      );
       results[index] = result;
       if (options.bail && result.status === "fail") refusedNewWork = true;
     }
@@ -416,6 +591,7 @@ function humanReport(report, results) {
 }
 
 async function main() {
+  const suiteStarted = Date.now();
   let options;
   try {
     options = parseArguments(process.argv.slice(2));
@@ -532,6 +708,26 @@ async function main() {
     process.exit(0);
   }
 
+  let typeScriptFallback;
+  try {
+    typeScriptFallback = prepareTypeScriptFallback(options.root, selection);
+  } catch (error) {
+    const report = {
+      tool: "run-all-tests",
+      schemaVersion: 1,
+      ok: false,
+      root: options.root,
+      violations: [{
+        code: error.code || "TEST-TOOLCHAIN-REFUSED",
+        detail: error.message,
+      }],
+      results: [],
+    };
+    if (options.json) process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    else process.stderr.write(`${report.violations[0].code}: ${error.message}\n`);
+    process.exit(1);
+  }
+
   const runFirstRecords = selection.filter((record) => RUN_FIRST.has(record.subject));
   const serialRecords = selection.filter((record) =>
     !RUN_FIRST.has(record.subject)
@@ -544,12 +740,27 @@ async function main() {
   const runLastRecords = selection.filter((record) => RUN_LAST.has(record.subject));
   const executed = [];
   const isolatedGroups = [runFirstRecords, parallelRecords, serialRecords, runLastRecords];
-  for (const group of isolatedGroups) {
-    if (options.bail && executed.some((result) => result.status === "fail")) break;
-    executed.push(...await runPackageGroup(group, {
-      ...options,
-      packageConcurrency: group === parallelRecords ? options.packageConcurrency : 1,
-    }));
+  let toolchainCleanupViolation = null;
+  try {
+    for (const group of isolatedGroups) {
+      if (options.bail && executed.some((result) => result.status === "fail")) break;
+      executed.push(...await runPackageGroup(group, {
+        ...options,
+        toolchainBinDirectory: typeScriptFallback?.binDirectory ?? null,
+        packageConcurrency: group === parallelRecords ? options.packageConcurrency : 1,
+      }));
+    }
+  } finally {
+    if (typeScriptFallback !== null) {
+      try {
+        typeScriptFallback.release();
+      } catch (error) {
+        toolchainCleanupViolation = {
+          code: error.code || "TEST-TOOLCHAIN-REFUSED",
+          detail: error.message,
+        };
+      }
+    }
   }
   const resultByPackage = new Map(executed.map((result) => [result.package, result]));
   const results = selection
@@ -562,7 +773,9 @@ async function main() {
     (sum, result) => sum + (result.status === "pass" ? result.tests : 0),
     0,
   );
-  const complete = failed === 0 && results.length === selection.length;
+  const complete = failed === 0
+    && results.length === selection.length
+    && toolchainCleanupViolation === null;
   const scope = options.named.length > 0
     ? "named"
     : options.core
@@ -586,10 +799,18 @@ async function main() {
     ok,
     root: options.root,
     scope,
+    durationMs: Date.now() - suiteStarted,
     controls: {
       testConcurrency: options.testConcurrency,
       packageConcurrency: options.packageConcurrency,
       processIsolation: "process",
+      ...(typeScriptFallback === null ? {} : {
+        typescriptFallback: {
+          used: true,
+          version: typeScriptFallback.version,
+          packages: typeScriptFallback.packages,
+        },
+      }),
     },
     totals: {
       selected: selection.length,
@@ -599,6 +820,9 @@ async function main() {
       tests: totalTests,
     },
     results: visibleResults,
+    ...(toolchainCleanupViolation === null
+      ? {}
+      : { violations: [toolchainCleanupViolation] }),
     ...(countWrite === null ? {} : { countWrite }),
   };
 

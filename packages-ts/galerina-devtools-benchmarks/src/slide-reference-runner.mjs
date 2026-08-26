@@ -1,9 +1,17 @@
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { resolveSlideRepository } from "./repository-roots.mjs";
 
-const SLIDE_ROOT = new URL("../../../../SLIDE/", import.meta.url);
+const GALERINA_REPOSITORY = resolve(
+  fileURLToPath(new URL(".", import.meta.url)),
+  "..",
+  "..",
+  "..",
+);
+const SLIDE_ROOT = resolveSlideRepository({ galerinaRepository: GALERINA_REPOSITORY });
 const EXPECTED_SLIDE_COMMIT = "c33894d23a7b25e02bddaa6631225e0afcf8288c";
 const EXPECTED_REGISTRY_ID = "slide.registry.executable-gir.v2c-benchmark-counted-control.v1";
 const EXPECTED_REGISTRY_DIGEST = "56a815aea2264b840892acca1f1ddc5e27bac792d2feed40e4c6b99d9a16c266";
@@ -54,7 +62,7 @@ function median(values) {
 }
 
 function verifySlideBuildPoint() {
-  const root = fileURLToPath(SLIDE_ROOT);
+  const root = SLIDE_ROOT;
   const head = execFileSync("git", ["-C", root, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
   if (head !== EXPECTED_SLIDE_COMMIT) refused("SLIDE_COMMIT_MISMATCH");
   const relevant = [
@@ -75,7 +83,7 @@ function verifySlideBuildPoint() {
 }
 
 async function slideApi() {
-  const moduleUrl = (path) => pathToFileURL(fileURLToPath(new URL(path, SLIDE_ROOT))).href;
+  const moduleUrl = (path) => pathToFileURL(join(SLIDE_ROOT, path)).href;
   const compiler = await import(moduleUrl("src/checked-fungi-pure-scalar-compiler.mjs"));
   const bundle = await import(moduleUrl("src/reference-slide-bundle.mjs"));
   const veo = await import(moduleUrl("src/portable-veo.mjs"));

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import {
+  chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -11,7 +12,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { delimiter, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
@@ -150,6 +151,102 @@ function run(root, ...args) {
   );
 }
 
+function runWithEnvironment(root, environment, ...args) {
+  return spawnSync(
+    process.execPath,
+    [RUNNER, "--root", root, ...args],
+    { encoding: "utf8", timeout: 30_000, env: environment },
+  );
+}
+
+function typescriptFallbackFixture({ lockVersion = "5.9.3" } = {}) {
+  const root = workspaceFixture("needs-tsc", {
+    name: "@galerina/needs-tsc",
+    scripts: {
+      typecheck: "tsc --noEmit",
+      test: "npm run typecheck && node --test tests/current.test.mjs",
+    },
+    devDependencies: { typescript: "^5.5.0" },
+  }, {
+    "tests/current.test.mjs":
+      "import test from 'node:test'; test('current', () => {});\n",
+    "package-lock.json": JSON.stringify({
+      lockfileVersion: 3,
+      packages: {
+        "": { devDependencies: { typescript: "^5.5.0" } },
+        "node_modules/typescript": { version: lockVersion },
+      },
+    }),
+  });
+  write(root, "galerina.workspace.json", JSON.stringify({
+    packages: [
+      "packages-ts/galerina-core-compiler",
+      "packages-ts/needs-tsc",
+    ],
+  }));
+  write(root, "packages-ts/galerina-core-compiler/package.json", JSON.stringify({
+    name: "@galerina/core-compiler",
+    scripts: { test: "node compiler-pass.cjs" },
+    devDependencies: { typescript: "^5.5.0" },
+  }));
+  write(
+    root,
+    "packages-ts/galerina-core-compiler/compiler-pass.cjs",
+    "console.log('tests 1\\npass 1\\nfail 0');\n",
+  );
+  write(root, "packages-ts/galerina-core-compiler/package-lock.json", JSON.stringify({
+    lockfileVersion: 3,
+    packages: {
+      "": { devDependencies: { typescript: "^5.5.0" } },
+      "node_modules/typescript": { version: "5.9.3" },
+    },
+  }));
+  write(root, "packages-ts/galerina-core-compiler/node_modules/typescript/package.json", JSON.stringify({
+    name: "typescript",
+    version: "5.9.3",
+  }));
+  write(root, "packages-ts/galerina-core-compiler/node_modules/typescript/bin/tsc", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "fs.writeFileSync(path.join(process.cwd(), 'canonical-tsc.txt'), 'used');",
+  ].join("\n") + "\n");
+  return root;
+}
+
+function hostilePath(root) {
+  const directory = join(root, "hostile-bin");
+  const script = join(directory, "hostile-tsc.cjs");
+  write(root, "hostile-bin/hostile-tsc.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "fs.writeFileSync(path.join(process.cwd(), 'hostile-tsc.txt'), 'used');",
+    "process.exit(41);",
+  ].join("\n") + "\n");
+  write(
+    root,
+    "hostile-bin/tsc.cmd",
+    `@echo off\r\n"${process.execPath}" "${script}" %*\r\n`,
+  );
+  write(
+    root,
+    "hostile-bin/tsc",
+    `#!/bin/sh\nexec "${process.execPath}" "${script}" "$@"\n`,
+  );
+  chmodSync(join(directory, "tsc"), 0o755);
+  return directory;
+}
+
+function environmentWithPathPrefix(prefix) {
+  const environment = { ...process.env };
+  const currentPath = Object.entries(environment)
+    .find(([key]) => key.toLowerCase() === "path")?.[1] || "";
+  for (const key of Object.keys(environment)) {
+    if (key.toLowerCase() === "path") delete environment[key];
+  }
+  environment.PATH = `${prefix}${delimiter}${currentPath}`;
+  return environment;
+}
+
 test("full discovery includes every registered package with a test script", () => {
   const root = workspaceFixture("custom", {
     name: "@galerina/custom",
@@ -191,6 +288,8 @@ test("an existing dist directory never bypasses the declared test and build chai
     "fresh",
   );
   const report = JSON.parse(result.stdout);
+  assert.equal(typeof report.durationMs, "number");
+  assert.ok(report.durationMs >= 0);
   assert.deepEqual(report.controls, {
     testConcurrency: 2,
     packageConcurrency: 2,
@@ -204,6 +303,74 @@ test("an existing dist directory never bypasses the declared test and build chai
     ownedTree: true,
     cleanupAttempted: false,
   });
+});
+
+test("a validated canonical TypeScript fallback outranks a hostile ambient launcher", () => {
+  const root = typescriptFallbackFixture();
+  const result = runWithEnvironment(
+    root,
+    environmentWithPathPrefix(hostilePath(root)),
+    "--json",
+  );
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    true,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "hostile-tsc.txt")),
+    false,
+  );
+  assert.deepEqual(JSON.parse(result.stdout).controls.typescriptFallback, {
+    used: true,
+    version: "5.9.3",
+    packages: ["galerina-needs-tsc"],
+  });
+});
+
+test("a mismatched canonical TypeScript fallback refuses before package execution", () => {
+  const root = typescriptFallbackFixture({ lockVersion: "5.9.2" });
+  const result = runWithEnvironment(
+    root,
+    environmentWithPathPrefix(hostilePath(root)),
+    "--json",
+  );
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.violations[0].code, "TEST-TOOLCHAIN-REFUSED");
+  assert.deepEqual(report.results, []);
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "hostile-tsc.txt")),
+    false,
+  );
+});
+
+test("a missing canonical TypeScript fallback refuses before package execution", () => {
+  const root = typescriptFallbackFixture();
+  rmSync(
+    join(root, "packages-ts", "galerina-core-compiler", "node_modules", "typescript"),
+    { recursive: true, force: true },
+  );
+  const result = runWithEnvironment(
+    root,
+    environmentWithPathPrefix(hostilePath(root)),
+    "--json",
+  );
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.violations[0].code, "TEST-TOOLCHAIN-REFUSED");
+  assert.deepEqual(report.results, []);
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "hostile-tsc.txt")),
+    false,
+  );
 });
 
 test("a caller may lower but never raise the test concurrency ceiling", () => {

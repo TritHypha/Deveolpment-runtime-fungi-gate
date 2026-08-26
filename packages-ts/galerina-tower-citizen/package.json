@@ -40,7 +40,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && node --test tests/*.test.mjs",
+    "test": "node ../../scripts/build-core-chain.mjs galerina-core-compiler galerina-core-sentinel-egress galerina-core-sentinel-io galerina-core-sentinel-memory galerina-core-sentinel-power galerina-core-sentinel-state galerina-core-sentinel-time galerina-ext-photonic-emulator && npm run build && node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

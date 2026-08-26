@@ -8,12 +8,13 @@ import { benchmarkSpec, normalizeThroughput, assertBenchmarkUnits, metricClassOf
 import { admitSlideVadeEvidence } from "./slide-vade-adapter.mjs";
 import { resolvePythonExecutable } from "./python-runtime.mjs";
 import { buildMeasurementRecord } from "./measurement-provenance.mjs";
+import { resolveSlideRepository } from "./repository-roots.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const benchDir   = join(__dirname, "..", "benchmarks");
 const resultsDir  = join(__dirname, "..", "results");
 const galerinaRepository = resolve(__dirname, "..", "..", "..");
-const slideRepository = resolve(galerinaRepository, "..", "SLIDE");
+const slideRepository = resolveSlideRepository({ galerinaRepository });
 const DEFAULT_SLIDE_VADE_EVIDENCE = join(
   __dirname,
   "..",

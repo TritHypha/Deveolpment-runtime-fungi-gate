@@ -40,6 +40,7 @@
 // =============================================================================
 
 import {
+  existsSync,
   lstatSync,
   mkdirSync,
   mkdtempSync,
@@ -274,6 +275,7 @@ export function reviewGate(manifest, path) {
 
 function collectManifests(registryDir) {
   const found = [];
+  if (!existsSync(registryDir)) return found;
   const walk = (dir) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const path = join(dir, entry.name);

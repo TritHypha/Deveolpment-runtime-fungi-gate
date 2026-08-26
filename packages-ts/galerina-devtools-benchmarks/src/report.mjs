@@ -24,6 +24,7 @@ import {
   buildSlideZeroTableHtml,
 } from "./slide-zero-report.mjs";
 import { publishSlideZeroArtifacts } from "./slide-zero-publication.mjs";
+import { resolveSlideRepository } from "./repository-roots.mjs";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const resultsDir = join(root, "results");
@@ -145,7 +146,7 @@ const slideTransition = buildSlideTransition({
 });
 
 const galerinaRepository = resolve(root, "..", "..");
-const slideRepository = resolve(galerinaRepository, "..", "SLIDE");
+const slideRepository = resolveSlideRepository({ galerinaRepository });
 const generatedAt = new Date().toISOString();
 const runMetadata = Object.freeze({
   generatedAt: measurement.measuredAt,
