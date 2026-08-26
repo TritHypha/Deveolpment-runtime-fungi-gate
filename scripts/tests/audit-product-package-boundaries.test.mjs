@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 
@@ -56,6 +56,22 @@ function edge(from, to, confidence = "EXTRACTED") {
     confidence,
     evidencePath: "package.json",
   };
+}
+
+function write(root, relativePath, bytes) {
+  const path = join(root, relativePath);
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, bytes);
+}
+
+function git(root, args) {
+  const result = spawnSync("git", args, {
+    cwd: root,
+    encoding: "utf8",
+    windowsHide: true,
+  });
+  assert.equal(result.status, 0, result.stderr);
+  return result.stdout.trim();
 }
 
 function run(nodes, edges, receiptOverrides = {}) {
@@ -179,6 +195,65 @@ test("CLI reports a stable refusal when the generated graph is absent", () => {
     );
     assert.equal(result.status, 2);
     assert.deepEqual(JSON.parse(result.stdout).findingCodes, ["PRODUCT_GRAPH_MISSING"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("CLI binds a checked graph snapshot to current HEAD without trusting stale informational provenance", () => {
+  const root = mkdtempSync(join(tmpdir(), "product-boundary-current-"));
+  try {
+    git(root, ["init"]);
+    git(root, ["config", "user.email", "fixture@example.invalid"]);
+    git(root, ["config", "user.name", "Fixture"]);
+    write(root, "product-registry/product-profiles.v1.json", `${REGISTRY_BYTES}\n`);
+    write(root, "scripts/project-graph-generator.mjs", `
+import { readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+const index = process.argv.indexOf("--root");
+const root = resolve(process.argv[index + 1]);
+const graph = JSON.parse(readFileSync(join(root, "build/graph/galerina-devtools-project-graph.json"), "utf8"));
+process.exit(graph.version === "fixture.v1" ? 0 : 1);
+`);
+    git(root, ["add", "--", "."]);
+    git(root, ["commit", "-m", "fixture inputs"]);
+    const generatedAt = git(root, ["rev-parse", "HEAD"]);
+    const graph = {
+      version: "fixture.v1",
+      generatedAt: "2026-08-26T00:00:00.000Z",
+      nodes: [packageNode("@galerina/core", ["product:galerina"])],
+      edges: [],
+    };
+    write(root, "build/graph/galerina-devtools-project-graph.json", `${JSON.stringify(graph)}\n`);
+    write(root, "build/graph/provenance.json", `${JSON.stringify({
+      tool: "project-graph-generator",
+      authority: "NONE",
+      gitCommit: generatedAt,
+      builtAt: "2026-08-26T00:00:00.000Z",
+      node: process.version,
+    })}\n`);
+    git(root, ["add", "--", "."]);
+    git(root, ["commit", "-m", "fixture generated evidence"]);
+    const currentHead = git(root, ["rev-parse", "HEAD"]);
+    assert.notEqual(currentHead, generatedAt);
+
+    const accepted = spawnSync(
+      process.execPath,
+      [resolve("scripts/audit-product-package-boundaries.mjs"), "--check", "--root", root],
+      { encoding: "utf8" },
+    );
+    assert.equal(accepted.status, 0, accepted.stderr);
+    assert.equal(JSON.parse(accepted.stdout).buildPoint, currentHead);
+
+    graph.version = "fixture.v2";
+    write(root, "build/graph/galerina-devtools-project-graph.json", `${JSON.stringify(graph)}\n`);
+    const refused = spawnSync(
+      process.execPath,
+      [resolve("scripts/audit-product-package-boundaries.mjs"), "--check", "--root", root],
+      { encoding: "utf8" },
+    );
+    assert.notEqual(refused.status, 0);
+    assert.deepEqual(JSON.parse(refused.stdout).findingCodes, ["PRODUCT_GRAPH_STALE"]);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

@@ -5,6 +5,8 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 
+import { validGeneratedProvenance } from "./lib/provenance.mjs";
+
 const MAX_GRAPH_BYTES = 64 * 1024 * 1024;
 const MAX_REGISTRY_BYTES = 1024 * 1024;
 const MAX_NODES = 200_000;
@@ -49,6 +51,43 @@ function allowedFields(value, fields) {
 
 function digest(bytes) {
   return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
+}
+
+function currentProjectGraphSnapshot(root, graphBytes, provenanceBytes, provenance) {
+  if (
+    !validGeneratedProvenance(provenance)
+    || provenance.tool !== "project-graph-generator"
+  ) {
+    return false;
+  }
+  const check = spawnSync(
+    process.execPath,
+    [join(root, "scripts", "project-graph-generator.mjs"), "--root", root, "--check"],
+    {
+      cwd: root,
+      encoding: "utf8",
+      windowsHide: true,
+      timeout: 60_000,
+      maxBuffer: 4 * 1024 * 1024,
+    },
+  );
+  if (check.error || check.signal || check.status !== 0) return false;
+  try {
+    const checkedGraphBytes = readBounded(
+      join(root, "build", "graph", "galerina-devtools-project-graph.json"),
+      MAX_GRAPH_BYTES,
+      "PRODUCT_GRAPH_MISSING",
+    );
+    const checkedProvenanceBytes = readBounded(
+      join(root, "build", "graph", "provenance.json"),
+      64 * 1024,
+      "PRODUCT_GRAPH_RECEIPT_MISSING",
+    );
+    return graphBytes.equals(checkedGraphBytes)
+      && provenanceBytes.equals(checkedProvenanceBytes);
+  } catch {
+    return false;
+  }
 }
 
 function boundedReceipt(status, expectedHead, graphReceipt, codes, findings = []) {
@@ -344,6 +383,13 @@ function runCli(argv) {
       timeout: 10_000,
     });
     if (headResult.status !== 0 || !COMMIT.test(headResult.stdout.trim())) throw new Error("PRODUCT_GIT_HEAD_REFUSED");
+    const expectedHead = headResult.stdout.trim();
+    const graphIsCurrent = currentProjectGraphSnapshot(
+      options.root,
+      graphBytes,
+      provenanceBytes,
+      provenance,
+    );
     const packages = Array.isArray(graph.nodes)
       ? graph.nodes.filter((node) => node?.kind === "Package" && node?.tags?.includes("package"))
       : [];
@@ -351,9 +397,7 @@ function runCli(argv) {
       graph,
       graphReceipt: {
         schema: "product-package-graph-input.v1",
-        gitHead: provenance?.tool === "project-graph-generator" && provenance?.authority === "NONE"
-          ? provenance.gitCommit
-          : null,
+        gitHead: graphIsCurrent ? expectedHead : null,
         registryDigest: digest(registryBytes),
         packageCount: packages.length,
         edgeCount: Array.isArray(graph.edges) ? graph.edges.length : -1,
@@ -361,7 +405,7 @@ function runCli(argv) {
         truncated: false,
       },
       registryBytes,
-      expectedHead: headResult.stdout.trim(),
+      expectedHead,
     });
     process.stdout.write(`${JSON.stringify(result)}\n`);
     process.exitCode = result.status === "PASS" ? 0 : result.status === "HOLD" ? 1 : 2;
