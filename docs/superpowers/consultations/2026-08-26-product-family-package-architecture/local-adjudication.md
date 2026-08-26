@@ -1,8 +1,9 @@
 # Local adjudication of the product-family architecture review
 
-**State:** ADJUDICATED; DESIGN REVIEW PENDING
+**State:** MULTI-VECTOR ADJUDICATED; INDEPENDENT REVIEW PENDING
 
-**Exact repository graph:** `Galerina-trametes-architecture-c3360c1-full`
+**Exact repository graphs:** `Galerina-trametes-architecture-c3360c1-full`;
+`Galerina-product-family-readiness-1d2827c-full`
 
 **Exact Git target:** `c3360c143db4659ae18560322dc6b7a3cf3e122a`
 
@@ -94,6 +95,24 @@ not prescribe Galerina's exact directory names or authorize implementation.
 ## Outcome
 
 The external `REVISE_BEFORE_PLANNING` recommendation is satisfied at the design
-level by the accompanying spec and implementation plan. This is not an
-implementation PASS. Independent review, exact documentation fixed point, Git
-Custody evidence and the hard pre-Fungi pause remain required.
+level by the accompanying spec and implementation plan.
+
+The follow-up review of exact candidate `1d2827cd15eccc77d761cfc3a2c00f5aabea1f5c`
+returned `REVISE_BEFORE_INDEPENDENT_REVIEW`. Local adjudication sustains:
+
+- explicit product selection must be atomic with product-bound artifact/cache
+  identity, so no intermediate committed state can mint an ambient-product
+  artifact;
+- native `packages`, `fungi` and `gate` directories must not be created as
+  readiness evidence; the contract remains locator-only until the later
+  source-authoring chapter;
+- the hard pre-Fungi control is one matrix covering omitted/wrong/unadmitted
+  product, Gate family, wrong root and unadmitted widths, plus a workspace-glob
+  neighbour;
+- local ancestry supports this planning chapter, but unknown remote freshness
+  refuses the later fast-forward integration step.
+
+These revisions are incorporated in the design and plan. This is not an
+implementation or independent-review PASS. Exact documentation fixed point,
+fresh exact-head graph, independent review, fresh remote custody evidence and
+the hard pre-Fungi pause remain required.

@@ -1,6 +1,6 @@
 # Product-family package readiness design
 
-**Status:** DRAFT; LOCAL ADJUDICATION COMPLETE; INDEPENDENT REVIEW PENDING
+**Status:** DRAFT; MULTI-VECTOR ADJUDICATION COMPLETE; INDEPENDENT REVIEW PENDING
 
 **Date:** 2026-08-26
 
@@ -23,7 +23,8 @@ Adopt an extensible product-family architecture with these rules:
    `packages-ts/` through a controlled compatibility migration.
 3. Future native source lives below a typed native root:
    `packages/fungi/` for `.fungi` packages and `packages/gate/` for `.gate`
-   laboratory packages.
+   laboratory packages. These remain locator contracts, not materialized
+   directories, until the applicable native-source chapter opens.
 4. Shared code is capability-scoped. A generic `zero-trust` or `shared` label
    does not make a package authorizing.
 5. Product identity, safety profile, build mode and physical Trit width remain
@@ -32,8 +33,9 @@ Adopt an extensible product-family architecture with these rules:
    Gate-native work remain closed until their later gates pass.
 
 Do not rename `packages-galerina/` immediately. First introduce the closed
-product registry, product-neutral policy seam and product-bound artifact/cache
-identity while the current physical tree is stable. The physical move to
+product registry and product-neutral policy seam. Then bind explicit product
+selection and product-bound artifact/cache identity in one atomic admission
+gate while the current physical tree is stable. The physical move to
 `packages-ts/` happens only after graph and rollback gates prove it reversible.
 
 ## 2. Why this resolves the naming question
@@ -294,10 +296,10 @@ amended and all gates below pass.
 | Phase | Physical state | Allowed work | Exit gate |
 |---|---|---|---|
 | P0 | `packages-galerina/` | This design, registry schema and exact migration inventory | Independent design PASS |
-| P1 | `packages-galerina/` | Product registry, policy seam, namespaced artifact identities; Galerina behavior only | Negative controls and exact graph PASS |
+| P1 | `packages-galerina/` | Product registry, policy seam, explicit product selection and namespaced artifact identities in one atomic gate; Galerina behavior only | Missing/unknown product matrix, cache neighbours and exact graph PASS |
 | P2 | Existing root plus logical `packages-ts` aliases | Workspace/path compatibility; no native source | Import, package and rollback gates PASS |
 | P3 | Physical `git mv` to `packages-ts/` | Mechanical root migration; published package names unchanged | Zero authoritative old-root references and fixed-point indexes |
-| P4 | `packages-ts/` plus typed native root plan | Amend RD-0861 and allocate a new product-family RD on KB `main` only | Pre-Fungi plan, Git Custody and independent review PASS |
+| P4 | `packages-ts/` plus locator-only typed native-root contract | Amend RD-0861 and allocate a new product-family RD on KB `main` only; create no native directories | Pre-Fungi plan, Git Custody and independent review PASS |
 | P5 | `packages/fungi/products/galerina/` | First scalar Galerina `.fungi` slice only | Existing conversion gates and fresh exact-head receipts |
 | Later | Trametes and `packages/gate/lab/` | Separately measured/admitted product and laboratory Gate work | Separate chapters; no authority inheritance |
 
@@ -325,6 +327,12 @@ reversible and must not widen the `.fungi` boundary.
 
 ### Before the first `.fungi` file
 
+- explicit product selection and product-bound artifact/cache identities pass
+  as one atomic gate on the active product tip;
+- the command matrix refuses omitted product, Trametes, Gate family, wrong
+  native root and every unadmitted width;
+- workspace globs, generated indexes and project references cannot make an
+  unadmitted directory or product executable;
 - RD-0861 provisional paths are amended to the final native locator;
 - a new product-family RD is allocated and integrated on KB `main` only;
 - the current Galerina TODO and roadmap point to one governing plan;
@@ -409,8 +417,22 @@ The following recommendations are narrowed locally:
 - Trametes enablement is deferred so the first scalar Galerina slice remains
   the immediate native objective.
 
-The external review remains advisory and non-authorizing. Its complete prompt,
-response and receipt are preserved under the matching consultation directory.
+The exact committed candidate then received a second four-vector challenge.
+Its `REVISE_BEFORE_INDEPENDENT_REVIEW` recommendation is sustained in two
+places:
+
+- explicit product selection and product-bound artifact/cache identity now
+  form one atomic admission gate;
+- typed native roots remain locator-only until the later source chapter, so an
+  empty directory or broad workspace glob cannot masquerade as admission.
+
+Its remote-freshness concern is also sustained as an integration gate. Local
+ancestry supports planning, but no fast-forward may occur from an
+unknown-fresh remote view.
+
+Both reviews remain advisory and non-authorizing. Their complete prompts,
+responses and receipts are preserved under the matching consultation
+directory.
 
 ## 15. Stop conditions
 
@@ -420,6 +442,10 @@ Return HOLD if any of these occur:
 - Trametes is implemented as Galerina plus a governance-off switch;
 - a product can select or authorize its own policy, width or target;
 - a cache, GIR package or receipt lacks bound product/governance identity;
+- product-bound artifacts can be minted before explicit product selection is
+  admitted in the same atomic gate;
+- a native directory or alias is materialized merely as readiness before the
+  product, boundary and workspace-glob controls pass;
 - the physical root moves before rollback and graph gates pass;
 - Gate source appears on the authoritative GIR/SLIDE/VOK route;
 - width `64`, `32` or `256` executes before its exact profile admission;

@@ -4,7 +4,7 @@
 
 **Goal:** Prepare Galerina for an extensible Galerina/Trametes/future-product family, migrate the TypeScript root safely, and stop at a verified boundary immediately before the first new native `.fungi` file.
 
-**Architecture:** Introduce a closed product registry, a product-neutral policy seam and product-bound artifact identities while `packages-galerina/` remains stable. After negative controls and rollback gates pass, move the TypeScript root to `packages-ts/`, reserve typed native families below `packages/fungi/` and `packages/gate/`, amend the governing pre-Fungi locators, and pause before native source creation.
+**Architecture:** Introduce a closed product registry and product-neutral policy seam while `packages-galerina/` remains stable, then bind explicit product selection and product-bound artifact identities in one atomic gate. After negative controls and rollback gates pass, move the TypeScript root to `packages-ts/`, record locator-only native family contracts for `packages/fungi/` and `packages/gate/`, amend the governing pre-Fungi locators, and pause before creating those directories or any native source.
 
 **Tech Stack:** Node.js 18+, TypeScript 5.5+, ESM, Node test runner, existing Galerina graph/index/audit tools, Myco, Hypha and Git Custody Audit.
 
@@ -18,6 +18,8 @@
 - There is no product default, governance-off flag, runtime rescue or silent profile substitution.
 - Galerina remains the only admitted product during this plan; Trametes stays `planned`.
 - Gate synthesis remains laboratory, non-authorizing and outside the GIR/SLIDE/VOK route.
+- Directory presence is never admission; this plan creates no `packages/`,
+  `packages/fungi/` or `packages/gate/` directory.
 - No new `.fungi` or `.gate` source is created by this plan.
 - No new dependency is added.
 - All implementation work uses a fresh isolated worktree from the live integrated design target.
@@ -308,7 +310,7 @@ refactor: route governance through product policy
 
 ---
 
-### Task 3: Product-bound artifact and cache identities
+### Task 3: Product-bound artifact and cache identities — held for the atomic selection gate
 
 **Files:**
 - Create: `packages-galerina/galerina-core-compiler/src/product-artifact-identity.ts`
@@ -320,7 +322,12 @@ refactor: route governance through product policy
 
 **Interfaces:**
 - Consumes: `AdmittedProductProfile`, four-axis selection and existing semantic digests.
-- Produces: `ProductArtifactContext`, `canonicalProductArtifactIdentity`, `productArtifactKey`, product-bound execution and pure-flow cache keys.
+- Produces: draft `ProductArtifactContext`,
+  `canonicalProductArtifactIdentity`, `productArtifactKey`, product-bound
+  execution and pure-flow cache keys.
+- Admission rule: no public caller may construct or use this context until
+  Task 4 supplies an explicit closed product selection. Tasks 3 and 4 are one
+  atomic integration unit.
 
 - [ ] **Step 1: Add RED one-field-neighbour tests**
 
@@ -396,15 +403,16 @@ node --test packages-galerina/galerina-core-compiler/tests/product-artifact-iden
 Expected: context neighbours produce different keys, semantic GIR hashes remain
 stable, and historical cache-collision controls PASS.
 
-- [ ] **Step 6: Commit Task 3**
+- [ ] **Step 6: Hold Task 3 for the atomic Task 3–4 commit**
 
-```text
-fix: bind artifacts to product identity
-```
+Do not commit, publish or treat the Task 3 bytes as admissible alone. Proceed
+directly to Task 4 with the same bounded custody. If interrupted, record HOLD;
+do not leave a product-bound artifact API reachable without explicit product
+selection.
 
 ---
 
-### Task 4: Closed CLI identity without a governance-off route
+### Task 4: Complete the atomic closed-selection and artifact-identity gate
 
 **Files:**
 - Create: `packages-galerina/galerina-core-compiler/src/product-cli.ts`
@@ -415,8 +423,11 @@ fix: bind artifacts to product identity
 - Modify: `package.json`
 
 **Interfaces:**
-- Consumes: Task 1 registry and four-axis selection.
-- Produces: `parseProductCliSelection(entrypointId, args)` and product-bound CLI receipts.
+- Consumes: Task 1 registry, four-axis selection and the uncommitted Task 3
+  identity work.
+- Produces: `parseProductCliSelection(entrypointId, args)`, product-bound CLI
+  receipts and the only admitted constructor path for product artifact/cache
+  contexts.
 
 - [ ] **Step 1: Add RED CLI controls**
 
@@ -451,21 +462,26 @@ changing semantic GIR bytes.
 
 Keep Trametes refused; do not add a `trametes` binary in this task.
 
-- [ ] **Step 5: Run CLI controls and production signing tests**
+- [ ] **Step 5: Run the combined selection, artifact and signing matrix**
 
 Run:
 
 ```powershell
 npm --prefix packages-galerina/galerina-core-compiler run build
-node --test packages-galerina/galerina-core-compiler/tests/product-cli.test.mjs packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs packages-galerina/galerina-core-compiler/tests/manifest*.test.mjs
+node --test packages-galerina/galerina-core-compiler/tests/product-cli.test.mjs packages-galerina/galerina-core-compiler/tests/product-artifact-identity.test.mjs packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs packages-galerina/galerina-core-compiler/tests/manifest*.test.mjs
 ```
 
-Expected: all product controls and existing signing boundaries PASS.
+Expected: all product controls and existing signing boundaries PASS. Add one
+matrix proving that omitted product, Trametes, Gate family, wrong native root
+and widths `64`, `32`, `256` cannot mint an artifact, enter a cache, issue a
+receipt or reach VOK. The only product/width cell available to later admission
+is explicit Galerina scalar `1`; it remains closed to native authoring in this
+chapter.
 
-- [ ] **Step 6: Commit Task 4**
+- [ ] **Step 6: Commit Tasks 3 and 4 atomically**
 
 ```text
-feat: bind cli execution to product identity
+feat: bind selection and artifacts to product identity
 ```
 
 ---
@@ -613,12 +629,9 @@ refactor: move typescript packages to packages-ts
 
 ---
 
-### Task 7: Typed native-root readiness and governing documents
+### Task 7: Locator-only native-root contract and governing documents
 
 **Files:**
-- Create: `packages/README.md`
-- Create: `packages/fungi/README.md`
-- Create: `packages/gate/README.md`
 - Modify: `docs/TODO.md`
 - Modify: `docs/ROADMAP.md`
 - Modify: `docs/audit-map.json`
@@ -627,11 +640,12 @@ refactor: move typescript packages to packages-ts
 
 **Interfaces:**
 - Consumes: migrated `packages-ts/`, design, plan, product registry and owner-required KB-main topology.
-- Produces: one governing pre-Fungi locator set and explicit native family custody without native source.
+- Produces: one governing pre-Fungi locator set and explicit native family
+  custody without materializing a native root.
 
-- [ ] **Step 1: Write family custody READMEs**
+- [ ] **Step 1: Record the family custody contract without creating directories**
 
-Each README states:
+The TODO, roadmap, audit map and new RD state:
 
 ```text
 packages/fungi: native .fungi source only; first admitted product is Galerina scalar-1.
@@ -639,7 +653,9 @@ packages/gate: native .gate laboratory source only; non-authorizing; not the GIR
 unknown family/product/profile: REFUSED.
 ```
 
-Do not create a `.fungi` or `.gate` file.
+Do not create `packages/`, `packages/fungi/`, `packages/gate/`, a native
+README, a compatibility alias, a `.fungi` file or a `.gate` file. Directory
+presence is not readiness and cannot be used for product discovery.
 
 - [ ] **Step 2: Verify KB main-only custody**
 
@@ -669,6 +685,9 @@ the canonical Myco/Hypha audit map; no file is created by this task.
 
 Mark Tasks 1-7 with evidence locators. Leave first native authoring at `[ ]`
 and product-boundary assurance below 100% until independent immutable review.
+Record the command matrix from Task 4 as the single red-capable pre-Fungi
+control and add a workspace-glob neighbour proving unadmitted roots are not
+enumerated into Galerina.
 
 - [ ] **Step 6: Commit documentation in each repository**
 
@@ -763,6 +782,10 @@ target: codex/rd-0858-unit4-process-root
 relation: TARGET_ANCESTOR_OF_SOURCE
 action: FAST_FORWARD
 ```
+
+Also require a successful exact fetch receipt or equivalent fresh remote
+evidence before integration. `FETCH_FRESHNESS_UNKNOWN` is acceptable for
+local planning but refuses Step 3.
 
 - [ ] **Step 3: Fast-forward the active product branch**
 

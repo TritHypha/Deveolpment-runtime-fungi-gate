@@ -12,7 +12,7 @@
 |---|---|
 | [`2026-08-10-assurance-chapter-1-plan/`](2026-08-10-assurance-chapter-1-plan/INDEX.md) | 8 |
 | [`2026-08-10-assurance-state/`](2026-08-10-assurance-state/INDEX.md) | 12 |
-| [`2026-08-26-product-family-package-architecture/`](2026-08-26-product-family-package-architecture/INDEX.md) | 3 |
+| [`2026-08-26-product-family-package-architecture/`](2026-08-26-product-family-package-architecture/INDEX.md) | 5 |
 
 ---
 
