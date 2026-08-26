@@ -936,10 +936,11 @@ docs: close product family package readiness
 Closure receipt and review evidence committed at
 `f837ebc0e4ba819db7445a3bde1f707be5d9f813`.
 
-A clean-commit replay then exposed and closed the real-generator provenance
-mismatch at `fb1fde58c62f789b5ed5143fd5666511e2eeac13`. The product audit now passes
-on that clean commit over 100 packages and 11,087 edges while the strict
-generator check remains available separately.
+A clean-commit replay found stale project-graph content after closure-document
+updates. The governed project graph was regenerated and its existing strict
+full-output check retained. A proposed content-only checker was rejected because
+it would weaken the existing time-of-check provenance guard. The product audit
+then passed over 100 packages and 11,087 edges.
 
 ---
 

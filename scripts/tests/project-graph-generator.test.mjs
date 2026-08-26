@@ -95,19 +95,10 @@ test("project graph publishes only a complete validated child output set", () =>
     assert.equal(existsSync(provenance), true);
     assert.equal(run(root, ["--check"]).status, 0);
 
-    const provenanceBefore = readFileSync(provenance, "utf8");
-    const staleProvenance = JSON.parse(provenanceBefore);
-    staleProvenance.gitCommit = "f".repeat(40);
-    writeFileSync(provenance, `${JSON.stringify(staleProvenance, null, 2)}\n`);
-    assert.notEqual(run(root, ["--check"]).status, 0);
-    assert.equal(run(root, ["--check-content"]).status, 0);
-    writeFileSync(provenance, provenanceBefore);
-
     writeFileSync(report, "tampered\n");
     const jsonBefore = readFileSync(json, "utf8");
     const drifted = run(root, ["--check"]);
     assert.notEqual(drifted.status, 0);
-    assert.notEqual(run(root, ["--check-content"]).status, 0);
     assert.equal(readFileSync(report, "utf8"), "tampered\n");
     assert.equal(readFileSync(json, "utf8"), jsonBefore);
 

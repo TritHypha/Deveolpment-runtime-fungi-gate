@@ -53,7 +53,7 @@ function digest(bytes) {
   return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 }
 
-function currentProjectGraphSnapshot(root, graphBytes, provenance) {
+function currentProjectGraphSnapshot(root, graphBytes, provenanceBytes, provenance) {
   if (
     !validGeneratedProvenance(provenance)
     || provenance.tool !== "project-graph-generator"
@@ -62,7 +62,7 @@ function currentProjectGraphSnapshot(root, graphBytes, provenance) {
   }
   const check = spawnSync(
     process.execPath,
-    [join(root, "scripts", "project-graph-generator.mjs"), "--root", root, "--check-content"],
+    [join(root, "scripts", "project-graph-generator.mjs"), "--root", root, "--check"],
     {
       cwd: root,
       encoding: "utf8",
@@ -78,7 +78,13 @@ function currentProjectGraphSnapshot(root, graphBytes, provenance) {
       MAX_GRAPH_BYTES,
       "PRODUCT_GRAPH_MISSING",
     );
-    return graphBytes.equals(checkedGraphBytes);
+    const checkedProvenanceBytes = readBounded(
+      join(root, "build", "graph", "provenance.json"),
+      64 * 1024,
+      "PRODUCT_GRAPH_RECEIPT_MISSING",
+    );
+    return graphBytes.equals(checkedGraphBytes)
+      && provenanceBytes.equals(checkedProvenanceBytes);
   } catch {
     return false;
   }
@@ -381,6 +387,7 @@ function runCli(argv) {
     const graphIsCurrent = currentProjectGraphSnapshot(
       options.root,
       graphBytes,
+      provenanceBytes,
       provenance,
     );
     const packages = Array.isArray(graph.nodes)

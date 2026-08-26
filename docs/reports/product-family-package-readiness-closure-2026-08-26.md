@@ -34,13 +34,11 @@ authorize integration, publication, `.fungi` authoring or `.gate` authoring.
 - The detached worktree registration was retired. A non-Git directory residue
   containing only the temporary dependency junction remains because the local
   destructive-operation guard refused its deletion.
-- A clean-commit replay exposed a mismatch between the product audit fixture
-  and the real project-graph checker: informational provenance made an otherwise
-  current graph fail after its publication commit. The bounded repair at
-  `fb1fde58c62f789b5ed5143fd5666511e2eeac13` adds a content-only, non-mutating
-  graph check while retaining the strict full-output check. Both modes pass on
-  the clean repair commit, and the product audit binds the checked graph content
-  to that commit without trusting the stale informational commit field.
+- A clean-commit replay found that the project graph content was stale after
+  the closure-document updates. Regenerating the governed project graph restored
+  the existing strict full-output check and product audit. An initially proposed
+  content-only checker was rejected before closure because it would weaken the
+  existing time-of-check provenance guard.
 
 ## Full sequential estate
 
@@ -71,8 +69,8 @@ they also do not prove the affected packages correct.
 - Contract registry: 3,938 contracts across 2,974 `.fungi` files.
 - Unit registry: 157 currencies.
 - KB index: 1,956 documents.
-- Product boundary audit: PASS over 100 packages and 11,087 edges on clean
-  commit `fb1fde58c62f789b5ed5143fd5666511e2eeac13`.
+- Product boundary audit: PASS over 100 packages and 11,087 edges after the
+  governed project-graph refresh.
 - Registered generator-contract verifier: 17/17 PASS after excluding the two
   native-writing contracts from this non-native chapter.
 - Conversion queue: 1,571 classified, 0 whole-file candidates, 7 scoped
