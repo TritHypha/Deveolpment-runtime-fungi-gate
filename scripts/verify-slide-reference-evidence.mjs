@@ -5,7 +5,7 @@ import {
   readFileSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { verifySlideReferenceEvidence } from "./lib/assurance-fabric/slide-reference-evidence.mjs";
@@ -13,8 +13,17 @@ import { generatedOutputMatches } from "./lib/provenance.mjs";
 
 function parseArgs(argv) {
   const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+  const configuredSlideRoot = process.env.GALERINA_SLIDE_DIR;
+  if (
+    configuredSlideRoot !== undefined
+    && (configuredSlideRoot.trim() === "" || !isAbsolute(configuredSlideRoot))
+  ) {
+    throw new Error("GALERINA_SLIDE_DIR requires an absolute path");
+  }
   let root = defaultRoot;
-  let slideRoot = resolve(defaultRoot, "..", "SLIDE");
+  let slideRoot = configuredSlideRoot === undefined
+    ? resolve(defaultRoot, "..", "SLIDE")
+    : resolve(configuredSlideRoot);
   let mode = "print";
   const seen = new Set();
   for (let index = 0; index < argv.length; index += 1) {

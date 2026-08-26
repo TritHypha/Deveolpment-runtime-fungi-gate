@@ -144,4 +144,27 @@ describe("pinned SLIDE reference evidence", () => {
       rmSync(value.base, { recursive: true, force: true });
     }
   });
+
+  it("uses an explicit environment root when the repository is in a worktree", () => {
+    const value = fixture();
+    try {
+      const env = { ...process.env, GALERINA_SLIDE_DIR: value.slide };
+      const written = spawnSync(
+        process.execPath,
+        [CLI, "--root", value.root, "--write"],
+        { encoding: "utf8", env },
+      );
+      assert.equal(written.status, 0, written.stderr);
+      assert.equal(
+        spawnSync(
+          process.execPath,
+          [CLI, "--root", value.root, "--check"],
+          { encoding: "utf8", env },
+        ).status,
+        0,
+      );
+    } finally {
+      rmSync(value.base, { recursive: true, force: true });
+    }
+  });
 });
