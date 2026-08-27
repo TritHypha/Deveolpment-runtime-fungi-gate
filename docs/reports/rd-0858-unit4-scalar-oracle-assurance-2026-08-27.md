@@ -5,8 +5,8 @@ Date: 2026-08-27
 ## Identity
 
 - Branch: `codex/rd-0858-unit4-scalar-oracle`.
-- Frozen graph candidate: `bfac23ece9e45f97f5020422affcfeee18331c2f`.
-- Frozen graph tree: `755fc5a08048bc27b6290bb83e22bed90c4a5e2e`.
+- Frozen implementation candidate: `c2c48b526fda8d5a5821fa4a9d720d67c0013e01`.
+- Frozen implementation tree: `aa0c90555da646e8f2f81a6010e17f85c61205dc`.
 - Start boundary: `9a64384f10b150609331935108e6ac056c82075f`.
 - Platform: Windows; Node `v24.18.0`; Rust/Cargo `1.96.1`.
 - Authority: non-authorizing. No production switch, GIR/SLIDE/VOK admission,
@@ -43,6 +43,13 @@ Date: 2026-08-27
   fixed point.
 - Repository-owned graph orchestrator: 9/9 generation/check children PASS at
   deterministic fixed point.
+- Complete governed tooling estate: PASS in 325,940 ms under concurrency `1`.
+- Complete core-package estate: PASS in 103,918 ms.
+- Conversion controller estate: 49/49 after the repository-wide source-encoding
+  preflight was made independent of the ten-candidate selection limit.
+- Final effective phase-close state: 94/96 current. The only two non-green
+  entries are the inherited historical conversion-receipt scope refusal and
+  the bounded Fungi corpus watchdog.
 
 ## Controlled-red evidence
 
@@ -72,9 +79,9 @@ Date: 2026-08-27
 - Standalone Hypha layout repair: local commit `9a15296b`; independent review
   PASS, Critical 0 / Important 0 / Minor 0; current and legacy layouts pass,
   missing and ambiguous layouts refuse.
-- Complete external graph
-  `Galerina-rd0858-unit4-scalar-bfac23e-full`: 66,028/66,028 nodes,
-  168,823/168,823 edges, zero skipped files, exact indexed HEAD.
+- Interim complete external graph at the encoding-repair commit: 66,032/66,032
+  nodes, 171,202/171,202 edges, zero skipped files. A final exact review-target
+  refresh is required after this receipt is committed.
 - Repository project graph: 10,960 nodes and 10,857 edges; SHA-256
   `f46972b1a8cf4afa6b5b36da4432542bcd02d8c5a7c3a8866a9e705d7d2c8506`.
 - Code Logic Workbench capsule: `HOLD`, non-authorizing, with only `GIR` and
@@ -86,18 +93,25 @@ Date: 2026-08-27
 
 ## Phased repository gate state
 
-- Initial governed phase-close discovery executed all 96 registered checks:
-  66 passed and 30 refused or failed.
-- Proven missing-build/dependency roots were repaired through bounded local
-  prerequisites and rerun sequentially.
-- No claim is made that the final 96-check phase-close is clean yet.
-- Remaining known non-green roots are the bounded Fungi corpus watchdog and
-  historical conversion-slice receipt scope. Final regeneration and targeted
-  reruns remain required.
+- The governed phase-close runner executed all 96 registered checks
+  sequentially.
+- The first pass reported seven non-green entries. Five were stale generated
+  evidence or predecessor-receipt consequences: `graph:all`, `code-index`,
+  `doc:roadmap-drift`, `fungi:golden` and `semantic:coverage`.
+- Deterministic regeneration closed all five: graph generation/check is 9/9,
+  code index is 987/987, roadmap is 3/3, golden evidence is 11/11 examples and
+  11/11 vectors, and semantic coverage independently accepts the exact
+  graph-all JSON receipt.
+- `audit:conversion-slice-close` remains REFUSED because historical slice
+  receipts omit exact conversion scope. Dated evidence was not rewritten.
+- `fungi:corpus-check` remains HOLD after active progress reached its governed
+  600,000 ms watchdog. It is not normalized to a correctness failure or PASS.
+- Effective current state is therefore 94/96, with no open scalar-profile
+  correctness root.
 
 ## Current verdict
 
-`HOLD` at the intentional GIR/admission boundary. Scalar implementation,
-documentation, project graphs and the exact-head external graph are closed;
-final phased gates, independent exact-revision review and the multi-vector
-chapter challenge remain required before local integration.
+`HOLD` at the intentional GIR/admission boundary. Scalar implementation and
+repository assurance are closed apart from the two inherited global HOLDs.
+The final exact-head external graph, independent exact-revision review and
+multi-vector chapter challenge remain required before local integration.

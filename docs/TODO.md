@@ -134,9 +134,12 @@ counts or open items that a newer section explicitly supersedes.
   retains explicit current, legacy, missing and ambiguous layout controls.
 - [!] Retain Hypha's 12 existing `governedFlowDecl` kind-set gaps as review
   findings outside the scalar artifact's changed surface.
-- [!] Final chapter closure remains `HOLD` pending the Code Logic Workbench
-  capsule, documentation and graph fixed point, final phased gates, exact-head
-  independent review and multi-vector model challenge. Evidence is in
+- [x] Close the Code Logic Workbench, documentation, graph and phased-assurance
+  work. The effective phase-close state is 94/96: the two retained non-green
+  entries are the inherited 600-second corpus watchdog and historical
+  conversion-slice receipt-scope refusal, not scalar-profile correctness roots.
+- [!] Final chapter integration remains `HOLD` pending the exact-head external
+  graph, independent review and multi-vector model challenge. Evidence is in
   `docs/reports/rd-0858-unit4-scalar-oracle-assurance-2026-08-27.md`.
 - [!] Keep profiles `64` and `256`, compatibility profile `32`, broader
   conversion, TypeScript retirement, detached GIR, SLIDE/VOK admission,
