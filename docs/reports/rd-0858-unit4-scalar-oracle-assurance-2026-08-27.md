@@ -5,8 +5,8 @@ Date: 2026-08-27
 ## Identity
 
 - Branch: `codex/rd-0858-unit4-scalar-oracle`.
-- Current candidate: `542221b334060e0061d8d7875beb098ae01c93c7`.
-- Current tree: `b8af2488463bbf6fb8a0ef415c024f9192ed199c`.
+- Frozen graph candidate: `bfac23ece9e45f97f5020422affcfeee18331c2f`.
+- Frozen graph tree: `755fc5a08048bc27b6290bb83e22bed90c4a5e2e`.
 - Start boundary: `9a64384f10b150609331935108e6ac056c82075f`.
 - Platform: Windows; Node `v24.18.0`; Rust/Cargo `1.96.1`.
 - Authority: non-authorizing. No production switch, GIR/SLIDE/VOK admission,
@@ -38,6 +38,11 @@ Date: 2026-08-27
 - WAT drift, code index, code registry, conversion queue, status and coverage:
   PASS after deterministic regeneration.
 - Code inventory: 987/987 codes; zero registry phantoms.
+- Contract registry: 3,939 contracts across 2,975 `.fungi` files.
+- Documentation index: 299 indexes and 2,012 documents at deterministic
+  fixed point.
+- Repository-owned graph orchestrator: 9/9 generation/check children PASS at
+  deterministic fixed point.
 
 ## Controlled-red evidence
 
@@ -54,19 +59,30 @@ Date: 2026-08-27
 
 ## Graph and discovery receipts
 
-- Myco selected-worktree query: `COMPLETE` / `HIT` at exact candidate HEAD.
+- Myco selected-worktree query: `COMPLETE` / `HIT` at exact candidate HEAD;
+  freshness remains `UNKNOWN` by the controller's deliberate `--no-refresh`
+  contract, so it is locator evidence only.
   Report digest:
-  `c9302b35aad7cca1dca2980589a5b2475f45aa4fa417a6fa6bb17ef57669f3de`.
+  `76a0ed434960a81cc2f2663f0f6cf618107e853011bd5da7fea3bcdd7c5c6054`.
 - Hypha selected-worktree query: `COMPLETE` / `HIT`, `FRESH`, exact candidate
   HEAD. Report digest:
-  `ca6e6cb7323ffb66929b35282552ca5dcb72602314bdd2f8e047b53b008f6a03`.
+  `fde677bc789bebaad99eccf310eb76a9ffb431d7a05d8e47f83f982919b4bb6e`.
 - Hypha reports 12 existing `governedFlowDecl` kind-set gaps. They are retained
   as review findings and are outside this scalar artifact's changed surface.
 - Standalone Hypha layout repair: local commit `9a15296b`; independent review
   PASS, Critical 0 / Important 0 / Minor 0; current and legacy layouts pass,
   missing and ambiguous layouts refuse.
-- Code Logic Workbench and final exact project graph receipts remain pending
-  until the documentation build point is frozen.
+- Complete external graph
+  `Galerina-rd0858-unit4-scalar-bfac23e-full`: 66,028/66,028 nodes,
+  168,823/168,823 edges, zero skipped files, exact indexed HEAD.
+- Repository project graph: 10,960 nodes and 10,857 edges; SHA-256
+  `f46972b1a8cf4afa6b5b36da4432542bcd02d8c5a7c3a8866a9e705d7d2c8506`.
+- Code Logic Workbench capsule: `HOLD`, non-authorizing, with only `GIR` and
+  `ADMISSION` unknown because both are outside this scalar chapter. Request
+  digest:
+  `0777860fb0fe56fa125651d82fd3326311bfa427badf86e48febede9ee41a890`;
+  profile digest:
+  `3f1a3ff1fdac4e458ec6976a2e2cc8077260254f673ac4e6704467bc9d6c9568`.
 
 ## Phased repository gate state
 
@@ -81,6 +97,7 @@ Date: 2026-08-27
 
 ## Current verdict
 
-`HOLD` pending the final documentation fixed point, Code Logic Workbench
-receipt, exact-head project and external graphs, final phased gates, independent
-exact-revision review and model-diverse chapter challenge.
+`HOLD` at the intentional GIR/admission boundary. Scalar implementation,
+documentation, project graphs and the exact-head external graph are closed;
+final phased gates, independent exact-revision review and the multi-vector
+chapter challenge remain required before local integration.
