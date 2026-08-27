@@ -107,6 +107,44 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     }
   });
 
+  it("keeps generated package graph reports outside compiler package identity", async () => {
+    const generator = await loadGenerator();
+    const executableDigest = `sha256:${"e".repeat(64)}`;
+    const packageJson = {
+      mode: "100644",
+      blob: "1".repeat(40),
+      path: "packages-ts/galerina-core-compiler/package.json",
+    };
+    const source = {
+      mode: "100644",
+      blob: "2".repeat(40),
+      path: "packages-ts/galerina-core-compiler/src/index.ts",
+    };
+    const boundary = {
+      mode: "100644",
+      blob: "3".repeat(40),
+      path: "packages-ts/galerina-core-compiler/.graph/BOUNDARY.md",
+    };
+    const baseline = generator.digestCompilerPackageIdentityEntries(
+      [packageJson, source, boundary],
+      executableDigest,
+    );
+    assert.equal(
+      generator.digestCompilerPackageIdentityEntries(
+        [packageJson, source, { ...boundary, blob: "4".repeat(40) }],
+        executableDigest,
+      ),
+      baseline,
+    );
+    assert.notEqual(
+      generator.digestCompilerPackageIdentityEntries(
+        [packageJson, { ...source, blob: "5".repeat(40) }, boundary],
+        executableDigest,
+      ),
+      baseline,
+    );
+  });
+
   it("refuses stale source/artifact and toolchain/artifact pairs", async () => {
     const generator = await loadGenerator();
     const candidate = await generator.buildScalarOracleArtifactCandidate();

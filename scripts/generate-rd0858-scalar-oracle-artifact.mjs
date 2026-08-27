@@ -134,16 +134,36 @@ function readHeadBlob(relativePath) {
   return bytes;
 }
 
-function computePackageGraphDigest(compilerExecutableGraphDigest) {
-  const entries = headEntries(COMPILER_PACKAGE_RELATIVE);
-  if (entries.length < 1) refuse("PACKAGE_GRAPH_HEAD");
+export function digestCompilerPackageIdentityEntries(entries, compilerExecutableGraphDigest) {
+  if (!Array.isArray(entries) || !/^sha256:[0-9a-f]{64}$/u.test(compilerExecutableGraphDigest)) {
+    refuse("PACKAGE_GRAPH_INPUT");
+  }
+  const generatedGraphPrefix = `${COMPILER_PACKAGE_RELATIVE}/.graph/`;
+  const admitted = entries.filter((entry) => {
+    if (entry === null || typeof entry !== "object" || Array.isArray(entry)
+      || !/^100\d{3}$/u.test(entry.mode) || !/^[0-9a-f]{40,64}$/u.test(entry.blob)
+      || typeof entry.path !== "string"
+      || !entry.path.startsWith(`${COMPILER_PACKAGE_RELATIVE}/`)
+      || entry.path.includes("\\") || entry.path.includes("\0")) {
+      refuse("PACKAGE_GRAPH_ENTRY");
+    }
+    return !entry.path.startsWith(generatedGraphPrefix);
+  });
+  if (admitted.length < 1) refuse("PACKAGE_GRAPH_HEAD");
   const hash = createHash("sha256");
-  hash.update("galerina.compiler-package-graph.v2\0", "utf8");
-  for (const entry of entries) {
+  hash.update("galerina.compiler-package-identity.v3\0", "utf8");
+  for (const entry of admitted) {
     hash.update(`${entry.mode} ${entry.blob}\t${entry.path}\n`, "utf8");
   }
   hash.update(`${compilerExecutableGraphDigest}\n`, "utf8");
   return `sha256:${hash.digest("hex")}`;
+}
+
+function computePackageGraphDigest(compilerExecutableGraphDigest) {
+  return digestCompilerPackageIdentityEntries(
+    headEntries(COMPILER_PACKAGE_RELATIVE),
+    compilerExecutableGraphDigest,
+  );
 }
 
 function computeCheckerSetDigest() {
