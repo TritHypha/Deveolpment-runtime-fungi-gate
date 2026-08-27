@@ -191,11 +191,11 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "ed0e254f3a8c78d7b49f7c15e3e8331077840be0e785e2b6b8f9cb11cd07e035",
+      "contentDigest": "7b5f65311ea60efd5d8e270469e0f0f6bb3e85c2aade2279ff59d84796c83da0",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "93110acf307be65a9bfb8d1540e72699baab897fa627d2ac193f3cb1da2fa8ae"
+          "digest": "282abceec437c718180ab5da7f9b109af67a6118dc5c66942535da4f28effa8f"
         }
       ],
       "dependencies": [
@@ -3273,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "2edefe95e6247e66edb411f928685bc3610c104dbcef8523d2705fb0aa6476bd"
+  "rootDigest": "7929333269ac0e56866fca566c6a3b735ba8ab0a2f7216dc274297551f8e6044"
 }
