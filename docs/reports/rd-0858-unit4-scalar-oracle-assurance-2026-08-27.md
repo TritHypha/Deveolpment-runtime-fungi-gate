@@ -42,7 +42,7 @@ Date: 2026-08-27
   PASS after deterministic regeneration.
 - Code inventory: 987/987 codes; zero registry phantoms.
 - Contract registry: 3,939 contracts across 2,975 `.fungi` files.
-- Documentation index: 299 indexes and 2,013 documents at deterministic
+- Documentation index: 299 indexes and 2,014 documents at deterministic
   fixed point.
 - Repository-owned graph orchestrator: 9/9 generation/check children PASS at
   deterministic fixed point.
