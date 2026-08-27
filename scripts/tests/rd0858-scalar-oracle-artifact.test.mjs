@@ -209,13 +209,106 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     }
   });
 
-  it("declares a closed scalar-only module entry and v2 executable identity", async () => {
-    const source = await readFile(generatorPath, "utf8");
-    assert.match(source, /rd0858-scalar-compiler-entry\.js/u);
-    assert.match(source, /galerina\.compiler-executable-graph\.v2/u);
-    assert.match(source, /COMPILER_MODULE_(?:UNEXPECTED|RESOLUTION|TRACE)/u);
-    assert.match(source, /mkdtemp/u);
-    assert.doesNotMatch(source, /pathToFileURL\(compilerEntryPath\)/u);
+  it("causally binds Node and the TypeScript compiler closure", async () => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-toolchain-causality-"));
+    const nodeExecutable = join(temporary, "node.exe");
+    const typeScriptRoot = join(temporary, "typescript");
+    try {
+      await mkdir(join(typeScriptRoot, "bin"), { recursive: true });
+      await mkdir(join(typeScriptRoot, "lib"), { recursive: true });
+      await writeFile(nodeExecutable, "node-v1\n", "utf8");
+      await writeFile(join(typeScriptRoot, "bin", "tsc"), "tsc-v1\n", "utf8");
+      await writeFile(join(typeScriptRoot, "lib", "tsc.js"), "compiler-v1\n", "utf8");
+      const baseline = generator.digestBuildToolchainClosure(nodeExecutable, typeScriptRoot);
+      await writeFile(join(typeScriptRoot, "lib", "tsc.js"), "compiler-hostile\n", "utf8");
+      const hostile = generator.digestBuildToolchainClosure(nodeExecutable, typeScriptRoot);
+      assert.notEqual(hostile, baseline);
+      assert.throws(
+        () => generator.requireBuildToolchainClosure(nodeExecutable, typeScriptRoot, baseline),
+        /TOOLCHAIN_DRIFT.*refused/u,
+      );
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("causally refuses runtime mutation after admission", async () => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-runtime-causality-"));
+    try {
+      await writeFile(join(temporary, "index.js"), "export const value = 1;\n", "utf8");
+      const locators = ["index.js"];
+      const baseline = generator.digestCompilerExecutableClosure(temporary, locators);
+      await writeFile(join(temporary, "index.js"), "export const value = 2;\n", "utf8");
+      assert.throws(
+        () => generator.requireCompilerExecutableClosure(temporary, locators, baseline),
+        /COMPILER_BUILD_DRIFT.*refused/u,
+      );
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a consumed module byte/hash mismatch", async () => {
+    const generator = await loadGenerator();
+    const expected = Object.freeze({
+      "file:///runtime/entry.js": `sha256:${"1".repeat(64)}`,
+    });
+    assert.throws(
+      () => generator.validateConsumedModuleTrace(
+        [{ url: "file:///runtime/entry.js", digest: `sha256:${"2".repeat(64)}` }],
+        expected,
+      ),
+      /COMPILER_MODULE_(?:BYTES|TRACE).*refused/u,
+    );
+  });
+
+  it("binds the exact non-filesystem loader bytes into its invocation", async () => {
+    const generator = await loadGenerator();
+    const baseline = generator.buildStrictLoaderInvocation("export const loader = 1;\n");
+    const hostile = generator.buildStrictLoaderInvocation("export const loader = 2;\n");
+    assert.match(baseline.url, /^data:text\/javascript;base64,/u);
+    assert.match(baseline.digest, /^sha256:[0-9a-f]{64}$/u);
+    assert.notEqual(hostile.url, baseline.url);
+    assert.notEqual(hostile.digest, baseline.digest);
+    const encoded = baseline.url.slice(baseline.url.indexOf(",") + 1);
+    assert.equal(Buffer.from(encoded, "base64").toString("utf8"), "export const loader = 1;\n");
+  });
+
+  it("bounds toolchain traversal and refuses reparses", async (context) => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-toolchain-bound-"));
+    const nodeExecutable = join(temporary, "node.exe");
+    const typeScriptRoot = join(temporary, "typescript");
+    try {
+      await writeFile(nodeExecutable, "node\n", "utf8");
+      let deep = join(typeScriptRoot, "bin");
+      for (let index = 0; index < 20; index += 1) deep = join(deep, `d${index}`);
+      await mkdir(deep, { recursive: true });
+      await mkdir(join(typeScriptRoot, "lib"), { recursive: true });
+      await writeFile(join(deep, "tsc"), "deep\n", "utf8");
+      await writeFile(join(typeScriptRoot, "lib", "tsc.js"), "compiler\n", "utf8");
+      assert.throws(
+        () => generator.digestBuildToolchainClosure(nodeExecutable, typeScriptRoot),
+        /TOOLCHAIN_(?:DEPTH|BOUND).*refused/u,
+      );
+      if (process.platform === "win32") {
+        await rm(join(typeScriptRoot, "bin"), { recursive: true, force: true });
+        const target = join(temporary, "target");
+        await mkdir(target);
+        await writeFile(join(target, "tsc"), "linked\n", "utf8");
+        await symlink(target, join(typeScriptRoot, "bin"), "junction");
+        assert.throws(
+          () => generator.digestBuildToolchainClosure(nodeExecutable, typeScriptRoot),
+          /TOOLCHAIN_REPARSE.*refused/u,
+        );
+      } else {
+        context.diagnostic("Windows junction neighbour not applicable");
+      }
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
   });
 
   it("keeps unowned temporary residue when the ownership token does not match", async () => {

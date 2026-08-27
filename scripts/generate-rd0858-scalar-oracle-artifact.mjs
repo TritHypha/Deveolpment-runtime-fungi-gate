@@ -30,6 +30,13 @@ const PACKAGE_LOCK_RELATIVE = "package-lock.json";
 const SOURCE_MAX_BYTES = 65_536;
 const CHILD_MAX_BYTES = 1_048_576;
 const CHILD_TIMEOUT_MS = 130_000;
+const TOOLCHAIN_MAX_FILES = 4_096;
+const TOOLCHAIN_MAX_BYTES = 268_435_456;
+const TOOLCHAIN_MAX_FILE_BYTES = 134_217_728;
+const TOOLCHAIN_MAX_DEPTH = 16;
+const RUNTIME_MAX_FILES = 4_096;
+const RUNTIME_MAX_BYTES = 67_108_864;
+const RUNTIME_MAX_DEPTH = 32;
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = join(root, ...SCALAR_ORACLE_SOURCE_RELATIVE.split("/"));
 const artifactPath = join(root, ...SCALAR_ORACLE_ARTIFACT_RELATIVE.split("/"));
@@ -256,39 +263,152 @@ function allHeadTypeScriptLocators(packageRelative) {
   return Object.freeze(locators);
 }
 
-function runTypeScriptBuild(configPath) {
-  const tscPath = join(
-    root,
-    COMPILER_PACKAGE_RELATIVE,
-    "node_modules",
-    "typescript",
-    "bin",
-    "tsc",
-  );
-  const result = spawnSync(process.execPath, [tscPath, "-p", configPath], {
+export function digestBuildToolchainClosure(nodeExecutablePath, typeScriptRoot) {
+  const hash = createHash("sha256");
+  hash.update("galerina.scalar-build-toolchain.v1\0", "utf8");
+  let nodeStat;
+  try {
+    nodeStat = lstatSync(nodeExecutablePath, { bigint: true });
+  } catch {
+    refuse("TOOLCHAIN_NODE");
+  }
+  if (!nodeStat.isFile() || nodeStat.isSymbolicLink()
+    || nodeStat.size < 1n || nodeStat.size > BigInt(TOOLCHAIN_MAX_FILE_BYTES)) {
+    refuse("TOOLCHAIN_NODE");
+  }
+  const nodeBytes = stableRead(nodeExecutablePath, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_NODE");
+  hash.update(`node-executable\0${nodeBytes.byteLength}\0`, "utf8");
+  hash.update(nodeBytes);
+
+  const canonicalRoot = assertContainedRegularRoot(typeScriptRoot, "TOOLCHAIN");
+  const rootPrefix = canonicalRoot.endsWith(sep) ? canonicalRoot : `${canonicalRoot}${sep}`;
+  let files = 0;
+  let bytesTotal = nodeBytes.byteLength;
+  const required = new Set(["bin/tsc", "lib/tsc.js"]);
+  const visit = (directory, depth) => {
+    if (depth > TOOLCHAIN_MAX_DEPTH) refuse("TOOLCHAIN_DEPTH");
+    let entries;
+    try {
+      entries = readdirSync(directory).sort();
+    } catch {
+      refuse("TOOLCHAIN_READ");
+    }
+    for (const name of entries) {
+      const path = join(directory, name);
+      let stat;
+      let canonicalPath;
+      try {
+        stat = lstatSync(path, { bigint: true });
+        canonicalPath = realpathSync.native(path);
+      } catch {
+        refuse("TOOLCHAIN_READ");
+      }
+      if (stat.isSymbolicLink()) refuse("TOOLCHAIN_REPARSE");
+      if (canonicalPath !== canonicalRoot && !canonicalPath.startsWith(rootPrefix)) {
+        refuse("TOOLCHAIN_CONTAINMENT");
+      }
+      if (stat.isDirectory()) {
+        visit(path, depth + 1);
+        continue;
+      }
+      if (!stat.isFile() || stat.size < 1n || stat.size > BigInt(TOOLCHAIN_MAX_FILE_BYTES)) {
+        refuse("TOOLCHAIN_FILE");
+      }
+      files += 1;
+      bytesTotal += Number(stat.size);
+      if (files > TOOLCHAIN_MAX_FILES || bytesTotal > TOOLCHAIN_MAX_BYTES) {
+        refuse("TOOLCHAIN_BOUND");
+      }
+      const locator = relative(typeScriptRoot, path).replaceAll("\\", "/");
+      if (locator.startsWith("../") || locator.includes("\0") || locator.length > 1_024) {
+        refuse("TOOLCHAIN_LOCATOR");
+      }
+      const fileBytes = stableRead(path, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_FILE");
+      hash.update(`${locator}\0${fileBytes.byteLength}\0`, "utf8");
+      hash.update(fileBytes);
+      required.delete(locator);
+    }
+  };
+  for (const locator of ["bin", "lib"]) {
+    const directory = join(typeScriptRoot, locator);
+    let stat;
+    try {
+      stat = lstatSync(directory, { bigint: true });
+    } catch {
+      refuse("TOOLCHAIN_MANIFEST");
+    }
+    if (!stat.isDirectory() || stat.isSymbolicLink()) refuse("TOOLCHAIN_REPARSE");
+    visit(directory, 1);
+  }
+  if (required.size !== 0 || files < 2) refuse("TOOLCHAIN_MANIFEST");
+  return `sha256:${hash.digest("hex")}`;
+}
+
+export function requireBuildToolchainClosure(nodeExecutablePath, typeScriptRoot, expectedDigest) {
+  if (!/^sha256:[0-9a-f]{64}$/u.test(expectedDigest)
+    || digestBuildToolchainClosure(nodeExecutablePath, typeScriptRoot) !== expectedDigest) {
+    refuse("TOOLCHAIN_DRIFT");
+  }
+}
+
+function runTypeScriptBuild(configPath, toolchain) {
+  requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
+  const result = spawnSync(process.execPath, [toolchain.tscPath, "-p", configPath], {
     cwd: dirname(configPath),
     encoding: "utf8",
     env: closedChildEnv(),
     maxBuffer: CHILD_MAX_BYTES * 16,
     timeout: CHILD_TIMEOUT_MS,
   });
+  requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
   if (result.status !== 0 || result.error !== undefined) refuse("COMPILER_BUILD");
 }
 
 function runtimeExecutableLocators(runtimeRoot) {
   const locators = [];
-  const visit = (directory) => {
-    for (const name of readdirSync(directory).sort()) {
+  const canonicalRoot = assertContainedRegularRoot(runtimeRoot, "COMPILER_BUILD");
+  const rootPrefix = canonicalRoot.endsWith(sep) ? canonicalRoot : `${canonicalRoot}${sep}`;
+  let files = 0;
+  let bytes = 0;
+  const visit = (directory, depth) => {
+    if (depth > RUNTIME_MAX_DEPTH) refuse("COMPILER_BUILD_DEPTH");
+    let entries;
+    try {
+      entries = readdirSync(directory).sort();
+    } catch {
+      refuse("COMPILER_BUILD_READ");
+    }
+    for (const name of entries) {
       const path = join(directory, name);
-      const stat = lstatSync(path, { bigint: true });
+      let stat;
+      let canonicalPath;
+      try {
+        stat = lstatSync(path, { bigint: true });
+        canonicalPath = realpathSync.native(path);
+      } catch {
+        refuse("COMPILER_BUILD_READ");
+      }
       if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
-      if (stat.isDirectory()) visit(path);
-      else if (stat.isFile() && [".js", ".mjs", ".json"].includes(extname(name))) {
+      if (canonicalPath !== canonicalRoot && !canonicalPath.startsWith(rootPrefix)) {
+        refuse("COMPILER_BUILD_CONTAINMENT");
+      }
+      if (stat.isDirectory()) {
+        visit(path, depth + 1);
+        continue;
+      }
+      if (!stat.isFile() || stat.size < 1n) refuse("COMPILER_BUILD_FILE");
+      files += 1;
+      bytes += Number(stat.size);
+      if (files > RUNTIME_MAX_FILES || bytes > RUNTIME_MAX_BYTES) refuse("COMPILER_BUILD_BOUND");
+      if (![".js", ".mjs", ".json", ".ts"].includes(extname(name))) {
+        refuse("COMPILER_BUILD_EXTENSION");
+      }
+      if ([".js", ".mjs", ".json"].includes(extname(name))) {
         locators.push(relative(runtimeRoot, path).replaceAll("\\", "/"));
       }
     }
   };
-  visit(runtimeRoot);
+  visit(runtimeRoot, 0);
   locators.sort();
   if (locators.length < 3 || new Set(locators).size !== locators.length) {
     refuse("COMPILER_BUILD_MANIFEST");
@@ -318,14 +438,21 @@ export function cleanupOwnedTemporary(directory, token) {
 }
 
 const STRICT_LOADER_SOURCE = `
+import { createHash } from "node:crypto";
 import { appendFileSync, readFileSync } from "node:fs";
-const config = JSON.parse(readFileSync(process.env.RD0858_LOADER_CONFIG, "utf8"));
-const files = new Set(config.files);
-const builtins = new Set(config.builtins);
+const configBytes = readFileSync(process.env.RD0858_LOADER_CONFIG);
+const configDigest = "sha256:" + createHash("sha256").update(configBytes).digest("hex");
+if (configDigest !== process.env.RD0858_LOADER_CONFIG_DIGEST) {
+  throw new Error("RD0858_SCALAR_ARTIFACT_COMPILER_MODULE_CONFIG: refused");
+}
+const config = JSON.parse(configBytes.toString("utf8"));
+const files = new Map(Object.entries(config.files));
+const builtinParents = new Map(Object.entries(config.builtinParents));
 function deny(code) { throw new Error("RD0858_SCALAR_ARTIFACT_COMPILER_MODULE_" + code + ": refused"); }
 export async function resolve(specifier, context, nextResolve) {
   if (specifier.startsWith("node:")) {
-    if (!builtins.has(specifier)) deny("UNEXPECTED");
+    const parents = builtinParents.get(specifier);
+    if (!Array.isArray(parents) || !parents.includes(context.parentURL)) deny("UNEXPECTED");
     return nextResolve(specifier, context);
   }
   const result = await nextResolve(specifier, context);
@@ -333,13 +460,37 @@ export async function resolve(specifier, context, nextResolve) {
   return result;
 }
 export async function load(url, context, nextLoad) {
-  if (url.startsWith("file:")) {
-    if (!files.has(url)) deny("UNEXPECTED");
-    appendFileSync(config.trace, url + "\\n", "utf8");
-  }
-  return nextLoad(url, context);
+  const result = await nextLoad(url, context);
+  if (!url.startsWith("file:")) return result;
+  const expected = files.get(url);
+  if (expected === undefined || result.source === null || result.source === undefined) deny("UNEXPECTED");
+  const source = typeof result.source === "string"
+    ? Buffer.from(result.source, "utf8")
+    : result.source instanceof ArrayBuffer
+      ? Buffer.from(result.source)
+      : ArrayBuffer.isView(result.source)
+        ? Buffer.from(result.source.buffer, result.source.byteOffset, result.source.byteLength)
+        : deny("BYTES");
+  const digest = "sha256:" + createHash("sha256").update(source).digest("hex");
+  if (digest !== expected) deny("BYTES");
+  appendFileSync(config.trace, JSON.stringify({ url, digest }) + "\\n", "utf8");
+  return { ...result, source };
 }
 `;
+
+export function buildStrictLoaderInvocation(source) {
+  if (typeof source !== "string" || source.length < 1 || source.length > SOURCE_MAX_BYTES) {
+    refuse("COMPILER_MODULE_LOADER");
+  }
+  const bytes = Buffer.from(source, "utf8");
+  if (bytes.byteLength < 1 || bytes.byteLength > SOURCE_MAX_BYTES) {
+    refuse("COMPILER_MODULE_LOADER");
+  }
+  return Object.freeze({
+    digest: sha256(bytes),
+    url: `data:text/javascript;base64,${bytes.toString("base64")}`,
+  });
+}
 
 const SCALAR_RUNNER_SOURCE = `
 import { readFileSync } from "node:fs";
@@ -561,6 +712,52 @@ export function digestCompilerExecutableClosure(directory, admittedLocators) {
   return `sha256:${hash.digest("hex")}`;
 }
 
+export function requireCompilerExecutableClosure(directory, admittedLocators, expectedDigest) {
+  if (!/^sha256:[0-9a-f]{64}$/u.test(expectedDigest)
+    || digestCompilerExecutableClosure(directory, admittedLocators) !== expectedDigest) {
+    refuse("COMPILER_BUILD_DRIFT");
+  }
+}
+
+export function validateConsumedModuleTrace(entries, expectedHashes) {
+  if (!Array.isArray(entries) || entries.length < 1 || entries.length > 4_096
+    || expectedHashes === null || typeof expectedHashes !== "object" || Array.isArray(expectedHashes)) {
+    refuse("COMPILER_MODULE_TRACE");
+  }
+  const compareUrl = ([left], [right]) => left < right ? -1 : left > right ? 1 : 0;
+  const expected = Object.entries(expectedHashes).sort(compareUrl);
+  if (expected.length < 1 || expected.length > 4_096 || entries.length !== expected.length) {
+    refuse("COMPILER_MODULE_TRACE");
+  }
+  const seen = new Set();
+  const actual = entries.map((entry) => {
+    if (entry === null || typeof entry !== "object" || Array.isArray(entry)
+      || typeof entry.url !== "string" || !entry.url.startsWith("file:")
+      || !/^sha256:[0-9a-f]{64}$/u.test(entry.digest) || seen.has(entry.url)) {
+      refuse("COMPILER_MODULE_TRACE");
+    }
+    seen.add(entry.url);
+    return [entry.url, entry.digest];
+  }).sort(compareUrl);
+  for (let index = 0; index < expected.length; index += 1) {
+    if (actual[index]?.[0] !== expected[index]?.[0]) refuse("COMPILER_MODULE_TRACE");
+    if (actual[index]?.[1] !== expected[index]?.[1]) refuse("COMPILER_MODULE_BYTES");
+  }
+  return Object.freeze(actual.map(([url, digest]) => Object.freeze({ url, digest })));
+}
+
+function digestCompilerExecutionIdentity(runtimeDigest, toolchainDigest, loaderDigest) {
+  if (!/^sha256:[0-9a-f]{64}$/u.test(runtimeDigest)
+    || !/^sha256:[0-9a-f]{64}$/u.test(toolchainDigest)
+    || !/^sha256:[0-9a-f]{64}$/u.test(loaderDigest)) {
+    refuse("COMPILER_EXECUTION_IDENTITY");
+  }
+  const hash = createHash("sha256");
+  hash.update("galerina.compiler-execution-identity.v3\0", "utf8");
+  hash.update(`${runtimeDigest}\n${toolchainDigest}\n${loaderDigest}\n`, "utf8");
+  return `sha256:${hash.digest("hex")}`;
+}
+
 export async function buildFreshHeadCompiler() {
   const governedPaths = [
     SCALAR_ORACLE_SOURCE_RELATIVE,
@@ -573,6 +770,17 @@ export async function buildFreshHeadCompiler() {
   ];
   requireHeadMatchesWorktree(governedPaths);
   const headBefore = String(git(["rev-parse", "HEAD"])).trim();
+  const typeScriptRoot = join(
+    root,
+    COMPILER_PACKAGE_RELATIVE,
+    "node_modules",
+    "typescript",
+  );
+  const toolchain = Object.freeze({
+    typeScriptRoot,
+    tscPath: join(typeScriptRoot, "bin", "tsc"),
+    digest: digestBuildToolchainClosure(process.execPath, typeScriptRoot),
+  });
   const token = randomBytes(16).toString("hex");
   const temporaryRoot = mkdtempSync(join(tmpdir(), "rd0858-scalar-build-"));
   const stageRoot = join(temporaryRoot, "stage");
@@ -620,7 +828,7 @@ export async function buildFreshHeadCompiler() {
       },
       include: [join(graphStage, "src", "**", "*.ts")],
     }), "utf8"));
-    runTypeScriptBuild(graphConfig);
+    runTypeScriptBuild(graphConfig, toolchain);
     const graphTypeOnlyOutput = join(graphOut, "core", "types.js");
     if (textDecoder.decode(stableRead(graphTypeOnlyOutput, 64, "COMPILER_BUILD")) !== "export {};\n") {
       refuse("COMPILER_BUILD_TYPE_ONLY");
@@ -644,7 +852,7 @@ export async function buildFreshHeadCompiler() {
       },
       include: [join(substrateStage, "src", "**", "*.ts")],
     }), "utf8"));
-    runTypeScriptBuild(substrateConfig);
+    runTypeScriptBuild(substrateConfig, toolchain);
     writeExclusive(join(substrateOut, "package.json"), Buffer.from(JSON.stringify({
       name: "@galerina/substrate-math",
       type: "module",
@@ -671,19 +879,34 @@ export async function buildFreshHeadCompiler() {
       },
       include: [join(compilerStage, "src", "**", "*.ts")],
     }), "utf8"));
-    runTypeScriptBuild(compilerConfig);
+    runTypeScriptBuild(compilerConfig, toolchain);
 
-    writeExclusive(join(runtimeRoot, "strict-loader.mjs"), Buffer.from(STRICT_LOADER_SOURCE, "utf8"));
     writeExclusive(join(runtimeRoot, "scalar-runner.mjs"), Buffer.from(SCALAR_RUNNER_SOURCE, "utf8"));
     const executableLocators = runtimeExecutableLocators(runtimeRoot);
-    const compilerExecutableGraphDigest = digestCompilerExecutableClosure(runtimeRoot, executableLocators);
+    const runtimeExecutableGraphDigest = digestCompilerExecutableClosure(runtimeRoot, executableLocators);
+    const strictLoader = buildStrictLoaderInvocation(STRICT_LOADER_SOURCE);
+    const compilerExecutableGraphDigest = digestCompilerExecutionIdentity(
+      runtimeExecutableGraphDigest,
+      toolchain.digest,
+      strictLoader.digest,
+    );
     const executableUrls = executableLocators
       .filter((locator) => locator.endsWith(".js") || locator.endsWith(".mjs"))
-      .filter((locator) => locator !== "strict-loader.mjs")
       .map((locator) => pathToFileURL(join(runtimeRoot, ...locator.split("/"))).href)
       .sort();
+    const executableHashes = Object.freeze(Object.fromEntries(executableUrls.map((url) => {
+      const path = fileURLToPath(url);
+      return [url, sha256(stableRead(path, CHILD_MAX_BYTES * 16, "COMPILER_MODULE"))];
+    })));
     const entryUrl = pathToFileURL(join(runtimeRoot, ...SCALAR_ENTRY_LOCATOR.split("/"))).href;
     if (!executableUrls.includes(entryUrl)) refuse("COMPILER_MODULE_ENTRY");
+    const runnerUrl = pathToFileURL(join(runtimeRoot, "scalar-runner.mjs")).href;
+    const cryptoParents = [
+      "core/checked-flow-artifact.js",
+      "core/proof-graph.js",
+      "core/requirement-validator-authority.js",
+      "core/runtime/canonicalHash.js",
+    ].map((locator) => pathToFileURL(join(runtimeRoot, ...locator.split("/"))).href).sort();
     requireHeadMatchesWorktree(governedPaths);
     if (String(git(["rev-parse", "HEAD"])).trim() !== headBefore) refuse("HEAD_DRIFT");
 
@@ -692,39 +915,53 @@ export async function buildFreshHeadCompiler() {
       const tracePath = join(temporaryRoot, `trace-${invocation}.txt`);
       const configPath = join(temporaryRoot, `loader-${invocation}.json`);
       writeExclusive(tracePath, Buffer.from("", "utf8"));
-      writeExclusive(configPath, Buffer.from(JSON.stringify({
-        files: executableUrls,
-        builtins: ["node:crypto", "node:fs"],
-        trace: tracePath,
-      }), "utf8"));
-      const result = spawnSync(
-        process.execPath,
-        ["--experimental-loader", pathToFileURL(join(runtimeRoot, "strict-loader.mjs")).href,
-          join(runtimeRoot, "scalar-runner.mjs")],
-        {
-          cwd: temporaryRoot,
-          encoding: "utf8",
-          input: JSON.stringify(request),
-          env: closedChildEnv({
-            RD0858_LOADER_CONFIG: configPath,
-            RD0858_SCALAR_ENTRY_URL: entryUrl,
-          }),
-          maxBuffer: CHILD_MAX_BYTES,
-          timeout: CHILD_TIMEOUT_MS,
+      const configBytes = Buffer.from(JSON.stringify({
+        files: executableHashes,
+        builtinParents: {
+          "node:crypto": cryptoParents,
+          "node:fs": [runnerUrl],
         },
-      );
+        trace: tracePath,
+      }), "utf8");
+      writeExclusive(configPath, configBytes);
+      let result;
       let trace = [];
       try {
-        trace = readFileSync(tracePath, "utf8").split("\n").filter(Boolean).sort();
+        requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
+        requireCompilerExecutableClosure(runtimeRoot, executableLocators, runtimeExecutableGraphDigest);
+        result = spawnSync(
+          process.execPath,
+          ["--experimental-loader", strictLoader.url,
+            join(runtimeRoot, "scalar-runner.mjs")],
+          {
+            cwd: temporaryRoot,
+            encoding: "utf8",
+            input: JSON.stringify(request),
+            env: closedChildEnv({
+              RD0858_LOADER_CONFIG: configPath,
+              RD0858_LOADER_CONFIG_DIGEST: sha256(configBytes),
+              RD0858_SCALAR_ENTRY_URL: entryUrl,
+            }),
+            maxBuffer: CHILD_MAX_BYTES,
+            timeout: CHILD_TIMEOUT_MS,
+          },
+        );
+        requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
+        requireCompilerExecutableClosure(runtimeRoot, executableLocators, runtimeExecutableGraphDigest);
+        const traceBytes = stableRead(tracePath, CHILD_MAX_BYTES, "COMPILER_MODULE_TRACE");
+        trace = textDecoder.decode(traceBytes).split("\n").filter(Boolean).map((line) => {
+          try {
+            return JSON.parse(line);
+          } catch {
+            refuse("COMPILER_MODULE_TRACE");
+          }
+        });
       } finally {
         unlinkSync(tracePath);
         unlinkSync(configPath);
       }
       if (result.status !== 0 || result.error !== undefined) refuse("COMPILER_MODULE_CHILD");
-      if (trace.length !== executableUrls.length
-        || trace.some((url, index) => url !== executableUrls[index])) {
-        refuse("COMPILER_MODULE_TRACE");
-      }
+      validateConsumedModuleTrace(trace, executableHashes);
       let parsed;
       try {
         parsed = JSON.parse(result.stdout);
