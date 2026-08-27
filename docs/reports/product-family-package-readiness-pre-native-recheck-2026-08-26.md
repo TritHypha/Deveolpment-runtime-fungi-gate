@@ -103,11 +103,11 @@ focused or composite package evidence above.
 ## Derived-evidence position
 
 - Implementation commit: `b3d4a41e38ecdbed0b4636eb92c1fc9bcc2ddcda`.
-- Exact tracked graph/index fixed point: `4f6a760c3d65a46bd561a158d95e8f9fb3553de0`.
+- Repaired tracked graph/index checkpoint: `418b65be10c787538c7b101fa8f62509807afac8`.
 - Repository graph checks: 9/9 PASS.
 - Exact external full graph:
-  `Galerina-product-family-readiness-closure-4f6a760c-full`.
-- External graph counts: 65,745/65,745 nodes and 167,866/167,866 edges;
+  `Galerina-product-family-readiness-closure-418b65be-full`.
+- External graph counts: 65,746/65,746 nodes and 167,843/167,843 edges;
   skipped files: 0; indexed HEAD matches the tracked fixed point exactly.
 - Exhaustive generator contracts: 19/19 PASS with explicit KB and SLIDE roots.
 - Code index and derived registry: 987 identities.

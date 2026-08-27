@@ -904,8 +904,8 @@ Build one full zero-skipped code graph at the candidate HEAD. Verify node/edge
 actual equals expected, exact indexed HEAD matches Git, and new product symbols
 plus package-boundary edges are discoverable.
 
-`Galerina-product-family-readiness-closure-4f6a760c-full` is exact at tracked
-fixed point `4f6a760c3`: 65,745/65,745 nodes, 167,866/167,866 edges and zero
+`Galerina-product-family-readiness-closure-418b65be-full` is exact at tracked
+checkpoint `418b65be1`: 65,746/65,746 nodes, 167,843/167,843 edges and zero
 skipped files. `parseJUnitCounts`, `admitFallbackPlatform`,
 `cleanFallbackEnvironment` and `runFallbackTestPlan` are discoverable.
 
@@ -929,8 +929,9 @@ returned `HOLD` C0/I2/M0; both implementation roots are closed. A scoped
 immutable review of implementation `b3d4a41e3` returned PASS C0/I0/M0. The
 first clean-target readback at graph/index fixed point `4f6a760c3` returned
 `HOLD` C0/I1/M0 only because the closure documents retained older graph and
-document counts. This documentation-only finding is repaired here; one fresh
-immutable readback remains mandatory before this step can close.
+document counts. This documentation-only finding is repaired at tracked graph
+checkpoint `418b65be1`; one final exact-head immutable readback remains
+mandatory before this step can close.
 
 - [x] **Step 7: Write the closure receipt**
 

@@ -39,9 +39,9 @@ counts or open items that a newer section explicitly supersedes.
   run. The only remaining failures are the four native process-root RED
   controls, three legacy greeting-signature refusals and one existing `.fungi`
   locator assertion.
-- [x] Close the final pre-native graph and index fixed points at `4f6a760c3`
+- [x] Close the final pre-native tracked graph/index fixed points at `418b65be1`
   without touching native source. Repository graph checks pass 9/9; the exact
-  external graph has 65,745/65,745 nodes, 167,866/167,866 edges and zero
+  external graph has 65,746/65,746 nodes, 167,843/167,843 edges and zero
   skipped files; exhaustive generator contracts pass 19/19. Code
   index/registry remain at 987 identities, the contract registry at 3,938
   contracts across 2,974 existing `.fungi` files, documentation at 299 indexes
@@ -102,13 +102,14 @@ counts or open items that a newer section explicitly supersedes.
   digests and local adjudication are preserved in
   `docs/independent-audits/2026-08-26-rd0863-pre-native-grok-advisory.md`;
   external advice remains non-authorizing.
-- [x] Build the final exact-head external graph at `4f6a760c3` and complete the
-  first immutable readback. It returned `HOLD` C0/I1/M0 only because these
-  closure records still cited the older graph and document counts; that
-  documentation finding is repaired here without changing native source.
-- [ ] Obtain the replacement immutable review of the repaired clean target,
-  then rerun the live Git Custody integration plan. Stop before creating,
-  editing, building or admitting any `.fungi` or `.gate` file.
+- [x] Build the exact-head external graph at `418b65be1` after repairing the
+  stale records identified by the first immutable readback. That readback at
+  the earlier fixed point returned `HOLD` C0/I1/M0 only because the closure
+  records still cited older graph and document counts; no code finding
+  remained.
+- [ ] Obtain the replacement immutable review and bind it to a final clean
+  exact-head graph, then rerun the live Git Custody integration plan. Stop
+  before creating, editing, building or admitting any `.fungi` or `.gate` file.
 
 ### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 

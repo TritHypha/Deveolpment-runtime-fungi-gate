@@ -28,8 +28,8 @@ creates a new identity before execution.
 Tasks 1–6 are closed. Task 7's locator and governing-record work is locally
 complete. Task 8's non-native verification repair now includes repository-
 pinned whole-package TypeScript authentication at `35b9832d8`; its final
-implementation is `b3d4a41e3`, and the tracked graph/index fixed point is
-`4f6a760c3`. The first exact-target review found only stale closure prose, now
+implementation is `b3d4a41e3`, and the repaired tracked graph/index checkpoint
+is `418b65be1`. The first exact-target review found only stale closure prose, now
 repaired; its replacement immutable readback remains open. The nine-task audit map is therefore
 **89% prepared** (8/9) but still **67% closed** (6/9): KB publication, fresh
 immutable review and live Git integration remain fail-closed. One sequential
@@ -42,9 +42,9 @@ legacy signing refusals, and `galerina-test` retained one existing `.fungi`
 locator assertion. There were zero timeouts.
 
 All nine repository graph families pass. The exact external full graph
-`Galerina-product-family-readiness-closure-4f6a760c-full` contains
-65,745/65,745 nodes and 167,866/167,866 edges with zero skipped files and is
-bound to tracked fixed point `4f6a760c3`. Exhaustive generator contracts pass 19/19; code and diagnostic
+`Galerina-product-family-readiness-closure-418b65be-full` contains
+65,746/65,746 nodes and 167,843/167,843 edges with zero skipped files and is
+bound to tracked checkpoint `418b65be1`. Exhaustive generator contracts pass 19/19; code and diagnostic
 registries contain 987 identities, the contract registry contains 3,938
 contracts across 2,974 `.fungi` files, documentation contains 299 indexes for
 2,009 documents, and the KB index contains 1,956 documents. The earlier Myco
