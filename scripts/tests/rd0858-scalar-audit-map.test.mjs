@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -20,6 +21,44 @@ describe("RD-0858 scalar audit-map generator", () => {
     assert.deepEqual(second, first);
     assert.match(first.implementationCommit, /^[0-9a-f]{40}$/u);
     assert.match(first.planDigest, /^[0-9a-f]{64}$/u);
+  });
+
+  it("reads the governing plan from exact committed Git bytes", async () => {
+    const generator = await loadGenerator();
+    const committed = Buffer.from("approved plan\n", "utf8");
+    const calls = [];
+    const actual = generator.readCommittedPlanBytes((...args) => {
+      calls.push(args);
+      return committed;
+    });
+
+    assert.deepEqual(actual, committed);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0][0], "git");
+    assert.deepEqual(calls[0][1], ["show", `HEAD:${generator.GOVERNING_PLAN_RELATIVE}`]);
+    assert.equal(calls[0][2].cwd, root);
+    assert.equal(calls[0][2].encoding, null);
+
+    const committedPlan = spawnSync(
+      "git",
+      ["show", `HEAD:${generator.GOVERNING_PLAN_RELATIVE}`],
+      { cwd: root, encoding: null, timeout: 30_000 },
+    );
+    assert.equal(committedPlan.status, 0, committedPlan.stderr?.toString("utf8"));
+    assert.equal(
+      generator.buildAuditMapCandidate().planDigest,
+      createHash("sha256").update(committedPlan.stdout).digest("hex"),
+    );
+
+    for (const runner of [
+      () => Buffer.alloc(0),
+      () => "not bytes",
+      () => {
+        throw new Error("git failed");
+      },
+    ]) {
+      assert.throws(() => generator.readCommittedPlanBytes(runner), /PLAN_REFUSED/u);
+    }
   });
 
   it("binds every audit to the same implementation commit and exact plan digest", async () => {

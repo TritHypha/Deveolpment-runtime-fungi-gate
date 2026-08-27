@@ -117,9 +117,28 @@ export const implementationCommit = () => {
   return commit;
 };
 
+export const readCommittedPlanBytes = (runner = execFileSync) => {
+  let bytes;
+  try {
+    bytes = runner("git", ["show", `HEAD:${GOVERNING_PLAN_RELATIVE}`], {
+      cwd: root,
+      encoding: null,
+      timeout: 30_000,
+      windowsHide: true,
+      maxBuffer: 1_048_576,
+    });
+  } catch {
+    throw new Error("AUDIT_MAP_PLAN_REFUSED");
+  }
+  if (!Buffer.isBuffer(bytes) || bytes.length === 0) {
+    throw new Error("AUDIT_MAP_PLAN_REFUSED");
+  }
+  return Buffer.from(bytes);
+};
+
 export const buildAuditMapCandidate = () => {
   const commit = implementationCommit();
-  const planBytes = readFileSync(join(root, GOVERNING_PLAN_RELATIVE));
+  const planBytes = readCommittedPlanBytes();
   const planDigest = sha256(planBytes);
   const locator = `git://galerina/${commit}`;
   const value = {
