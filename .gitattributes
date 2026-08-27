@@ -8,6 +8,10 @@
 # Canonical checked-flow receipts are verified as exact UTF-8/LF bytes.
 packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/*.checked.json text eol=lf
 
+# Model-review prompt and reply are raw evidence. Keep their captured bytes
+# unchanged so their recorded SHA-256 digests remain reproducible.
+docs/reports/evidence/rd-0858-unit4-scalar-oracle-grok-*.txt -text
+
 # Shell hooks must stay LF — a CRLF in the #!/bin/sh shebang breaks execution under sh.
 scripts/hooks/* text eol=lf
 

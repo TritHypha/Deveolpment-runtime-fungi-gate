@@ -1,0 +1,115 @@
+Worked for 1m 4sAdversarial review — Galerina scalar chapter
+Subject: supplied claims for ec97fb0152fed2a16b90edd7abbf080705ddd68f vs base 9a64384f10b150609331935108e6ac056c82075f
+Mode: read-only, non-authorizing. No PASS, permission, or integration authority is granted.
+Claim labels
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Supplied claimLabelOne scalar .fungi flow maps DENY→deny, AMBIG→ambig, ALLOW→allow; no declared effects; explicit return on every admitted armNOT VERIFIABLEBounded generator validates and canonically encodes a detached checked-flow artifact binding source, compiler graph, checker set, generator, product, package, flow, and runtime-profile identitiesNOT VERIFIABLETS adapter, worker, and native launcher refuse malformed / stale / mismatched / over-budget / unavailable / non-canonical inputs and never silently select another profileNOT VERIFIABLEFocused tests, controlled mutants, LF and physical-CRLF controls, generator fixed points, and registry checks passed; 96 gates ran sequentiallyPLAUSIBLE (author process assertion, not correctness proof)Effective phase-close 94/96; inherited conversion-slice receipt refusal and 600s whole-corpus watchdog are not scalar PASSPLAUSIBLE (internally consistent status)External code graph 66032 nodes / 168946 edges / 0 skipped / head ec97fb…NOT VERIFIABLEMyco completed with branch/commit custody and 11 locator findings; Hypha fresh with no matching diagnostic; both snapshot-only, non-authorizingPLAUSIBLE as coverage limitCode Logic Workbench remains HOLD; no admitted graph-receipt pair; no substitute inventedPLAUSIBLE and correctly fail-closed
+Implementation statements cannot be confirmed from this packet. Graph counts and green-gate lists do not establish semantic or identity correctness.
+
+Q1 — Semantic authority
+Invariant: a Trit is exactly one of {-1, 0, +1}; profile width 1 is the mandatory scalar oracle and must not become self-authorizing; unmapped or extra values fail closed.
+Smallest hostile fixtures
+
+One extra JSON field "width": 64 (or "profile": "packed-64") on an otherwise well-formed width-1 artifact.
+Input trit 2, -2, true, "ALLOW", or U+FF0B lookalike plus-one where an admitted arm is expected.
+Three-arm flow with one arm deleted so control falls off the last admitted return.
+K3 neighbour: AMBIG input evaluated under a “best-effort / treat unknown as allow” host default.
+
+Expected safe result: refuse before execution, or emit the mapped deny/ambig/allow of the admitted arm only. Width must stay 1. Trit set must not enlarge. No implicit default allow.
+Architectural inference: if any host Boolean or optional field can stand in for a Trit, the oracle is no longer the authority.
+
+Q2 — Identity and canonicalization
+Invariant: validation success may bind only the bytes named in the artifact; equivocation is refusal.
+Smallest fixtures
+
+Duplicate key ("source" twice, last-wins parser).
+Key reorder plus one unknown field accepted by a non-strict JSON decoder.
+NFC vs NFD in a source path or package id (same Unicode string, different bytes).
+Stale generator or compiler-graph id with a current schema version.
+TOC/TOU: artifact validates, then host file bytes for source or product are replaced before launch.
+
+Responsibility split
+
+Repository: canonical encode, field order, forbidden extras, pinned identities, detached artifact as the only admission object.
+Host: atomic replace, no decode-then-reencode, no clock as identity, no second read of unbound paths after validate.
+
+Expected safe result: non-canonical or rebound bytes → refuse. Valid artifact + mutated bound bytes → mismatch refuse. Host must not “repair” encoding.
+
+Q3 — Execution and exits
+Invariant: every admitted path has an explicit exit; unavailable evidence is not execution; no rescue, no second run, no undeclared effect.
+Smallest transitions
+
+Worker prints a partial frame, then SIGKILL; adapter treats empty/partial product as allow.
+Timeout then automatic retry of a flow that already began a host effect.
+Two concatenated JSON values in one stream; second object executed.
+Native launcher invoked after provider marked unavailable.
+Process crash with exit 0 and no framed result.
+
+Expected safe result: non-zero explicit exit, no product object, no retry, evidence remains unavailable. Partial output is malformed, not success.
+
+Q4 — Assurance and red capability
+94/96, fixed-point registries, the 66k-node graph, Myco’s 11 locators, and Hypha’s empty diagnostic cannot conceal or disprove a scalar mapping defect. They also cannot support an absence claim beyond their own coverage. Workbench HOLD is the honest bound: no admitted graph-receipt pair exists.
+The two red gates (conversion-slice receipt migration; 600s corpus watchdog) are correctly not sold as scalar PASS, but sequential “all 96 ran” language can be misread as close-enough authority.
+Discriminating test (more valuable than widening the chapter): one checked artifact whose flow is the three-arm DENY/AMBIG/ALLOW identity, plus exactly one hostile neighbour in turn: (a) trit 2, (b) "width":64, (c) duplicate "source" key, (d) deleted ALLOW arm, (e) worker killed after first byte of stdout. Expect refuse or the single mapped Trit; never profile promotion, never implicit allow, never a second execution. Compare Git objects at ec97fb… to the bound identities in that artifact.
+
+Q5 — Lifecycle (chapter boundary only)
+Unsafe coupling: a width or profile field that is optional-on-scalar but meaningful-to-planner-64; a generator id of “current” rather than a pinned width-1 product; shared artifact type that later admission can reinterpret without a new bind.
+Rollback risk: if local integration keys “latest checked flow” instead of the width-1 oracle identity, rollback drops the universal fallback.
+Smallest design that preserves the oracle: width-1 identity is mandatory, distinct, and the only legal fallback key. Profile 64 remains unmentioned in this artifact type except as a refused neighbour.
+
+Material hypotheses (≤5)
+
+V1 / Trit set. Extra or host-Boolean value becomes allow. Counterexample: trit 2 or missing arm. Safe: refuse. Evidence: scalar interpreter + K3 table at ec97fb….
+V1 / width self-authorization. "width":64 on scalar artifact selects packed path. Safe: refuse, stay width 1. Evidence: launcher profile-match before exec.
+V2 / non-canonical accept. Duplicate field or Unicode-normalized path validates against different bytes. Safe: refuse. Evidence: generator canonical encoder vs host JSON parse.
+V3 / partial-output success. Crash or timeout mapped to allow or retry. Safe: unavailable + explicit fail. Evidence: adapter framing and exit map.
+V4 / coverage-as-proof. 94/96 + graph + Hypha-empty treated as scalar absence of defects. Safe: HOLD until Workbench pair and the neighbour fixtures above. Evidence: those fixtures against exact objects.
+
+Weakest supplied claim
+That sequential gate execution plus focused tests and registries establish the scalar chapter as ready, while two global gates remain non-green and Workbench is HOLD. Process evidence is not a semantic oracle.
+Control that must be impossible to bypass
+Non-canonical, stale, mismatched, or non-width-1 input must never cause selection of another profile or an implicit allow.
+Evidence that would reverse this review
+Exact Git objects and tests at the named commits showing: (i) the three-arm mapping with exhaustive off-set refusals, (ii) canonical encoder rejecting every one-field neighbour listed, (iii) launcher/adapter exit map with no rescue path, (iv) an admitted Workbench graph-receipt pair for this chapter.
+Recommendation: PROCEED_TO_LOCAL_ADJUDICATION
+Do not mint PASS. Do not widen to profile 64. Adjudicate the five fixtures against repository objects before any local branch integration.30 sources

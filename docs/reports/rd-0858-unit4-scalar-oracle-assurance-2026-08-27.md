@@ -5,8 +5,8 @@ Date: 2026-08-27
 ## Identity
 
 - Branch: `codex/rd-0858-unit4-scalar-oracle`.
-- Frozen implementation candidate: `c2c48b526fda8d5a5821fa4a9d720d67c0013e01`.
-- Frozen implementation tree: `aa0c90555da646e8f2f81a6010e17f85c61205dc`.
+- Implementation checkpoint: `5e6ba2f4784ffa8959c1d5f2dafa4b2611f5338a`.
+- Implementation tree: `3f2f3f3d5fe5c046225695cde73074dd06485665`.
 - Start boundary: `9a64384f10b150609331935108e6ac056c82075f`.
 - Platform: Windows; Node `v24.18.0`; Rust/Cargo `1.96.1`.
 - Authority: non-authorizing. No production switch, GIR/SLIDE/VOK admission,
@@ -26,12 +26,12 @@ Date: 2026-08-27
 
 ## Sequential evidence
 
-- Focused true-LF estate: 106/106.
+- Current focused scalar estate: 117/117.
 - Focused physical-CRLF estate: 106/106.
-- Core compiler: 6,753/6,753 tests across 1,292 suites.
+- Core compiler: 6,755/6,755 tests across 1,292 suites.
 - Task 5 focused boundary: 86/86.
 - Repaired dependent package suites: 299/299 across nine packages.
-- Product boundary: 10/10; 100 packages; 10,710 edges.
+- Product boundary: 10/10; 100 packages; 10,858 edges.
 - Fungi golden controls: 11/11 examples and 11/11 vectors.
 - Typecheck/build: PASS.
 - Rust format/test: PASS.
@@ -43,7 +43,10 @@ Date: 2026-08-27
   fixed point.
 - Repository-owned graph orchestrator: 9/9 generation/check children PASS at
   deterministic fixed point.
-- Complete governed tooling estate: PASS in 325,940 ms under concurrency `1`.
+- Generator contract: 20/20.
+- Benchmark integrity: 113/113.
+- Complete governed tooling estate: 668 tests; 616 pass; 52 explicit skips;
+  zero failures in 336,528 ms under concurrency `1`.
 - Complete core-package estate: PASS in 103,918 ms.
 - Conversion controller estate: 49/49 after the repository-wide source-encoding
   preflight was made independent of the ten-candidate selection limit.
@@ -81,9 +84,8 @@ Date: 2026-08-27
   missing and ambiguous layouts refuse.
 - Interim complete external graph at the encoding-repair commit: 66,032/66,032
   nodes, 171,202/171,202 edges, zero skipped files. A final exact review-target
-  refresh is required after this receipt is committed.
-- Repository project graph: 10,960 nodes and 10,857 edges; SHA-256
-  `f46972b1a8cf4afa6b5b36da4432542bcd02d8c5a7c3a8866a9e705d7d2c8506`.
+  refresh remains required after the closure candidate is committed.
+- Repository project graph: 10,961 nodes and 10,858 edges.
 - Code Logic Workbench capsule: `HOLD`, non-authorizing, with only `GIR` and
   `ADMISSION` unknown because both are outside this scalar chapter. Request
   digest:
@@ -95,13 +97,14 @@ Date: 2026-08-27
 
 - The governed phase-close runner executed all 96 registered checks
   sequentially.
-- The first pass reported seven non-green entries. Five were stale generated
-  evidence or predecessor-receipt consequences: `graph:all`, `code-index`,
-  `doc:roadmap-drift`, `fungi:golden` and `semantic:coverage`.
-- Deterministic regeneration closed all five: graph generation/check is 9/9,
-  code index is 987/987, roadmap is 3/3, golden evidence is 11/11 examples and
-  11/11 vectors, and semantic coverage independently accepts the exact
-  graph-all JSON receipt.
+- The first pass reported four non-green entries. Two were inherited global
+  gates and two were stale generated-evidence consequences:
+  `semantic:coverage` used a seven-child predecessor receipt and the tooling
+  estate detected a stale flat package-root lock.
+- RED-first focused controls repaired both current roots. The phase-close
+  runner now admits the complete nine-child graph receipt; the package-root
+  lock was deterministically regenerated; the affected focused suites pass;
+  and the complete tooling estate passes with zero failures.
 - `audit:conversion-slice-close` remains REFUSED because historical slice
   receipts omit exact conversion scope. Dated evidence was not rewritten.
 - `fungi:corpus-check` remains HOLD after active progress reached its governed
@@ -113,5 +116,6 @@ Date: 2026-08-27
 
 `HOLD` at the intentional GIR/admission boundary. Scalar implementation and
 repository assurance are closed apart from the two inherited global HOLDs.
-The final exact-head external graph, independent exact-revision review and
-multi-vector chapter challenge remain required before local integration.
+The multi-vector Grok challenge is captured and locally adjudicated as
+non-authorizing advice. The final exact-head external graph and independent
+exact-revision reviews remain required before local integration.
