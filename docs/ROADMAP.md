@@ -93,14 +93,17 @@ current SLIDE source. The adopted build order remains `1`, then `64`, then
 `256`; `32` is an explicit admission-time compatibility replan, never a
 preferred profile or silent runtime rescue.
 
-The scalar fixed-point repair is independently `PASS` at exact implementation
-target `0106957`, Critical 0 / Important 0 / Minor 0 in both code and assurance
-reviews. Its canonical selected-worktree graph contains 66,086/66,086 nodes
-and 171,186/171,186 edges with zero skipped files. Focused LF and physical-CRLF
-estates pass 118/118, the core compiler passes 6,755/6,755, and benchmark
-integrity passes 113/113. The exact-target five-vector Grok advisory is captured
-and locally adjudicated without a new material root. The remaining stop is the
-documentation-only closure check and local fast-forward integration boundary.
+The original scalar fixed-point repair is independently `PASS` at exact
+implementation target `0106957`, Critical 0 / Important 0 / Minor 0 in both
+code and assurance reviews. Its exact-target LF and physical-CRLF estates pass
+118/118. A later owner-visible-checkout replay exposed persistent `dist`
+residue and ambient module-resolution gaps. The replacement candidate now
+builds a scalar-only compiler closure from exact `HEAD` blobs in an owned
+temporary root, binds the actually loaded module set, sanitizes ambient Node
+resolution state, refuses reparse or escaped roots and preserves unrelated
+owner residue. Its current LF scalar estate passes 126/126. Physical-CRLF,
+fresh independent review, exact graph refresh and documentation closure remain
+required before local fast-forward integration.
 The last complete phase-close remains explicitly 94/96: 726 historical
 conversion receipts omit exact scope and the corpus child has no terminal
 receipt within 600 seconds. Those global blockers continue to block `main`,

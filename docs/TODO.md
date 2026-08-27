@@ -124,8 +124,9 @@ counts or open items that a newer section explicitly supersedes.
   clean worker, exact terminal receipt algebra and non-authorizing TypeScript
   and Rust adapters. The worker decodes checked bytes only; source parsing,
   compiler loading, fallback and profile substitution refuse.
-- [x] Prove the scalar boundary sequentially: current focused estate 118/118,
-  physical-CRLF estate 118/118, core compiler 6,755/6,755 across 1,292 suites, dependent
+- [x] Prove the original scalar boundary sequentially at implementation target
+  `0106957`: focused LF and physical-CRLF estates 118/118, core compiler
+  6,755/6,755 across 1,292 suites, dependent
   packages 299/299, product boundary 10/10, and Fungi golden examples/vectors
   11/11 plus 11/11.
 - [x] Refresh Myco at the exact selected worktree and repair standalone Hypha's
@@ -153,10 +154,15 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Complete independent code and assurance reviews of `0106957`; both return
   `PASS` at Critical 0 / Important 0 / Minor 0 with fresh LF and physical-CRLF
   estates at 118/118 each.
-- [!] Final chapter integration remains `HOLD` only until the documentation-only
-  closure delta is committed, fixed-point checked and fast-forwarded locally.
-  Evidence is in
-  `docs/reports/rd-0858-unit4-scalar-oracle-assurance-2026-08-27.md`.
+- [x] Repair the later checkout-isolation defect with a scalar-only temporary
+  compiler closure. Persistent `dist`, ambient `node_modules`, `NODE_OPTIONS`,
+  `NODE_PATH`, reparse-point roots and stale same-name outputs are not admitted;
+  ignored owner residue is neither executed nor deleted. The current LF scalar
+  estate passes 126/126.
+- [!] Final chapter integration remains `HOLD` until the repaired exact target
+  passes physical-CRLF, independent code and assurance review, deterministic
+  graph refresh and documentation closure. Historical 118/118 receipts remain
+  exact evidence for `0106957` and are not rewritten.
 - [!] Keep profiles `64` and `256`, compatibility profile `32`, broader
   conversion, TypeScript retirement, detached GIR, SLIDE/VOK admission,
   `.gate`, Trametes, production selection and runtime rescue closed.

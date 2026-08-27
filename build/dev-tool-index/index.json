@@ -300,7 +300,7 @@
       "tests": 6382,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 276,
+      "files": 278,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -3275,13 +3275,13 @@
       "inCadence": false,
       "cadenceDisposition": "on-demand",
       "concerns": [
-        "sinks/taint",
         "effects",
         "governance",
         "naming",
         "gate-wiring",
         "diagnostics",
-        "graph/index"
+        "graph/index",
+        "proofs"
       ]
     },
     {
@@ -4230,6 +4230,7 @@
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
       "run-proofs.mjs",
+      "generate-rd0858-scalar-oracle-artifact.mjs",
       "license-rollout.mjs"
     ],
     "sinks/taint": [
@@ -4247,7 +4248,6 @@
       "gen-code-registry.mjs",
       "verify-registry-static-host-build-recipe.mjs",
       "check-gate-injection.mjs",
-      "generate-rd0858-scalar-oracle-artifact.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "subject-galerina-compile.mjs"

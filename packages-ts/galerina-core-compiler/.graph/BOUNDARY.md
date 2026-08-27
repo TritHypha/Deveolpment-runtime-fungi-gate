@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 276 |
-| Internal edges | 409 |
+| Files | 278 |
+| Internal edges | 421 |
 | External dependencies | 19 |
 | ├─ Node core | 10 |
 | ├─ Workspace (@galerina/*) | 6 |
@@ -57,6 +57,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/governance-mode.ts`
 - `src/index.ts`
 - `src/plugin-schema.ts`
+- `src/rd0858-scalar-compiler-entry.ts`
 - `src/runtime/index.ts`
 
 ## Loaded Assets
