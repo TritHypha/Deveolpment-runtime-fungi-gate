@@ -241,7 +241,7 @@ function selfTest() {
     ["★ subject: the verdict names its tree by BASENAME and leaks no absolute path",
       (() => {
         const line = `  ✅ path-leak [${basename(ROOT)}/]: no absolute-local-path leaks.`;
-        return line.includes("[Galerina/]") && scanText(line).length === 0 && !/[A-Za-z]:[\\/]/.test(line);
+        return line.includes(`[${basename(ROOT)}/]`) && scanText(line).length === 0 && !/[A-Za-z]:[\\/]/.test(line);
       })()],
     ["★ subject: the outside-the-tree warning itself carries no absolute path either",
       (() => {

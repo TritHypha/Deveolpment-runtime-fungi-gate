@@ -88,8 +88,14 @@ function decode(bytes) {
   return value;
 }
 
-function digest(bytes) {
-  return createHash("sha256").update(bytes).digest("hex");
+function canonicalText(bytes) {
+  const value = decode(bytes);
+  if (/\r(?!\n)/u.test(value)) stop("STATIC_HOST_SOURCE_ENCODING_REFUSED");
+  return value.replace(/\r\n/gu, "\n");
+}
+
+function digestText(value) {
+  return createHash("sha256").update(value, "utf8").digest("hex");
 }
 
 export async function verifyRegistryStaticHostSource(options) {
@@ -110,7 +116,7 @@ export async function verifyRegistryStaticHostSource(options) {
     readDirect(join(hostDirectory, "node-v24.18.0-galerina-host.patch")),
     readDirect(join(hostDirectory, "node-v24.18.0-clang22-histogram.patch")),
   ]);
-  const manifestText = decode(manifestBytes);
+  const manifestText = canonicalText(manifestBytes);
   let manifest;
   try {
     manifest = JSON.parse(manifestText);
@@ -140,15 +146,14 @@ export async function verifyRegistryStaticHostSource(options) {
     || manifest.childProcessPresent !== false
     || manifest.productionAuthorizing !== false
   ) stop("STATIC_HOST_MANIFEST_REFUSED");
+  const binding = canonicalText(bindingBytes);
+  const patch = canonicalText(patchBytes);
+  const compatibilityPatch = canonicalText(compatibilityPatchBytes);
   if (
-    digest(bindingBytes) !== manifest.bindingSourceSha256
-    || digest(patchBytes) !== manifest.patchSha256
-    || digest(compatibilityPatchBytes) !== manifest.compatibilityPatchSha256
+    digestText(binding) !== manifest.bindingSourceSha256
+    || digestText(patch) !== manifest.patchSha256
+    || digestText(compatibilityPatch) !== manifest.compatibilityPatchSha256
   ) stop("STATIC_HOST_SOURCE_DIGEST_MISMATCH");
-
-  const binding = decode(bindingBytes);
-  const patch = decode(patchBytes);
-  const compatibilityPatch = decode(compatibilityPatchBytes);
   if (
     /process\.dlopen|LoadLibrary|dlopen\s*\(|\.node(?:['"\s)]|$)|child_process|\bspawn\s*\(|\bsystem\s*\(/i
       .test(binding)

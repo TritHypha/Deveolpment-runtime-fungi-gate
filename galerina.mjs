@@ -168,7 +168,17 @@ async function main() {
     .toLowerCase()
     .replace(/\.(?:cmd|exe|mjs|js)$/, "");
   const entrypointId = invokedName === "fungi" ? "fungi" : "galerina";
-  const productModule = await import(compilerPath);
+  let productModule;
+  try {
+    productModule = await import(compilerPath);
+  } catch (error) {
+    const requestedCommand = process.argv[2] ?? "help";
+    const code = requestedCommand === "fuse"
+      ? "FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE"
+      : "FUNGI-COMPILER-UNAVAILABLE";
+    console.error(`${code}: ${error instanceof Error ? error.message : "compiler module unavailable"} — refusing (fail-closed)`);
+    process.exit(1);
+  }
   const productAdmission = productModule.resolveProductCliSelection(entrypointId, process.argv.slice(2));
   if (!productAdmission.ok) {
     console.error(`${productAdmission.code}: product selection refused before discovery`);
