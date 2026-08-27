@@ -584,6 +584,21 @@ class JsonScanner {
   }
 }
 
+export function decodeCanonicalJsonValue(bytes: Uint8Array): CanonicalValue {
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength < 1 || bytes.byteLength > MAX_FRAME_BYTES) {
+    refuse("JSON_BOUND");
+  }
+  let source: string;
+  try {
+    source = textDecoder.decode(bytes);
+  } catch {
+    refuse("UTF8_INVALID");
+  }
+  const parsed = new JsonScanner(source).parse();
+  if (JSON.stringify(parsed) !== source) refuse("JSON_NON_CANONICAL");
+  return parsed;
+}
+
 export function hashProtocolBytes(bytes: Uint8Array): string {
   if (!(bytes instanceof Uint8Array) || bytes.byteLength > MAX_FRAME_BYTES + 8) refuse("HASH_INPUT_BOUND");
   return createHash("sha256").update(bytes).digest("hex");

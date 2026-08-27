@@ -7,9 +7,14 @@ const sha256 = (digit) => `sha256:${digit.repeat(64)}`;
 const checkedAst = () => ({
   kind: "pureFlowDecl",
   value: "scalarOracle",
+  flags: 33,
   children: [
-    { kind: "paramDecl", value: "subject: Verdict" },
-    { kind: "typeRef", value: "String" },
+    {
+      kind: "paramDecl",
+      value: "subject: Verdict",
+      children: [{ kind: "typeRef", value: "Verdict", children: [] }],
+    },
+    { kind: "typeRef", value: "String", children: [] },
     {
       kind: "contractDecl",
       children: [{ kind: "identifier", value: "effects:block", children: [] }],
@@ -19,10 +24,18 @@ const checkedAst = () => ({
       children: [{
         kind: "checkExpr",
         children: [
-          { kind: "identifier", value: "subject" },
-          { kind: "checkArm", value: "deny", children: [{ kind: "stringLiteral", value: "deny" }] },
-          { kind: "checkArm", value: "ambig", children: [{ kind: "stringLiteral", value: "ambig" }] },
-          { kind: "checkArm", value: "if", children: [{ kind: "stringLiteral", value: "allow" }] },
+          { kind: "identifier", value: "subject", children: [] },
+          ...[["deny", "deny"], ["ambig", "ambig"], ["if", "allow"]].map(([arm, value]) => ({
+            kind: "checkArm",
+            value: arm,
+            children: [{
+              kind: "block",
+              children: [{
+                kind: "returnStmt",
+                children: [{ kind: "stringLiteral", value: `"${value}"`, children: [] }],
+              }],
+            }],
+          })),
         ],
       }],
     },
@@ -163,6 +176,22 @@ describe("RD-0858 closed checked-flow artifact", () => {
     assert.throws(
       () => call("encodeCheckedFlowArtifact", { ...artifact(), returnType: "Bool" }),
       /CONTRACT|AST|return|refus/i,
+    );
+  });
+
+  it("refuses surplus root and block nodes outside the exact scalar body", () => {
+    const surplusRoot = artifact();
+    surplusRoot.checkedAst.children.push({ kind: "identifier", value: "surplus" });
+    assert.throws(
+      () => call("encodeCheckedFlowArtifact", surplusRoot),
+      /AST|CONTRACT|UNKNOWN|refus/i,
+    );
+
+    const surplusBlock = artifact();
+    surplusBlock.checkedAst.children[3].children.push({ kind: "identifier", value: "surplus" });
+    assert.throws(
+      () => call("encodeCheckedFlowArtifact", surplusBlock),
+      /AST|CONTRACT|UNKNOWN|refus/i,
     );
   });
 

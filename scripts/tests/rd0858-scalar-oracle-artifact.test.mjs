@@ -59,9 +59,18 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     assert.match(candidate.identity.compilerPackageGraphDigest, /^sha256:[0-9a-f]{64}$/);
     assert.match(candidate.identity.checkerSetDigest, /^sha256:[0-9a-f]{64}$/);
     assert.match(candidate.identity.generatorSourceDigest, /^sha256:[0-9a-f]{64}$/);
+    assert.match(candidate.identity.compilerExecutableGraphDigest, /^sha256:[0-9a-f]{64}$/);
     assert.equal(candidate.artifact.productId, "galerina");
     assert.equal(candidate.artifact.runtimeProfile, "scalar-1");
     assert.equal(candidate.artifact.checkedAst.location, undefined);
+  });
+
+  it("builds the compiler from HEAD-bound inputs instead of importing ambient dist", async () => {
+    const source = await readFile(generatorPath, "utf8");
+    assert.doesNotMatch(source, /import\s+\*\s+as\s+compiler\s+from\s+["'][^"']*\/dist\/index\.js["']/u);
+    assert.match(source, /requireHeadMatchesWorktree/u);
+    assert.match(source, /buildFreshHeadCompiler/u);
+    assert.match(source, /compilerExecutableGraphDigest/u);
   });
 
   it("refuses stale source/artifact and toolchain/artifact pairs", async () => {
@@ -69,12 +78,12 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     const candidate = await generator.buildScalarOracleArtifactCandidate();
     const source = await readFile(sourcePath);
     const staleSource = Buffer.from(source.toString("utf8").replace('"deny"', '"closed"'), "utf8");
-    assert.throws(
-      () => generator.verifyScalarOraclePair(staleSource, candidate.bytes, candidate.identity),
+    await assert.rejects(
+      generator.verifyScalarOraclePair(staleSource, candidate.bytes, candidate.identity),
       /SOURCE_DIGEST|PAIR|refus/i,
     );
-    assert.throws(
-      () => generator.verifyScalarOraclePair(source, candidate.bytes, {
+    await assert.rejects(
+      generator.verifyScalarOraclePair(source, candidate.bytes, {
         ...candidate.identity,
         checkerSetDigest: `sha256:${"f".repeat(64)}`,
       }),

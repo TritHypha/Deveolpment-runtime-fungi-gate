@@ -138,6 +138,13 @@ function resultFrame(frames) {
 }
 
 describe("RD-0858 Unit 4 single-use requirement worker", () => {
+  it("keeps the executable closure to the registered worker and protocol", () => {
+    const source = readFileSync(new URL("../src/requirement-process-worker.ts", import.meta.url), "utf8");
+    assert.doesNotMatch(source, /from\s+["']\.\/(?:checked-flow-artifact|interpreter)\.js["']/u);
+    assert.match(source, /from\s+["']\.\/requirement-process-protocol\.js["']/u);
+    assert.match(source, /function\s+executeExactScalarAst/u);
+  });
+
   for (const [subject, decision] of [[-1, "deny"], [0, "ambig"], [1, "allow"]]) {
     it(`executes canonical Verdict ${subject} only on the tree tier`, async () => {
       const h = harness({ frame: executionFrame(subject) });
@@ -206,7 +213,7 @@ describe("RD-0858 Unit 4 single-use requirement worker", () => {
   it("independently refuses a checked AST outside the exact scalar oracle shape", async () => {
     const artifact = JSON.parse(ARTIFACT_BYTES.toString("utf8"));
     artifact.checkedAst.children[3].children[0].children[3].value = "surplus";
-    const bytes = encodeCheckedFlowArtifact(artifact);
+    const bytes = Buffer.from(`${JSON.stringify(artifact)}\n`, "utf8");
     const h = harness({ frame: executionFrame(1, { artifactBytes: bytes }) });
     const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
     assert.equal(outcome.executionState, "REFUSED");

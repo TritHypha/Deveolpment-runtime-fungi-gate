@@ -5,16 +5,12 @@ import { fileURLToPath } from "node:url";
 import { isProxy as importedIsProxy } from "node:util/types";
 
 import {
-  CheckedFlowArtifactRefusal,
-  decodeCheckedFlowArtifact,
-  type CheckedFlowArtifactNode,
-} from "./checked-flow-artifact.js";
-import { executeFlow, type GalerinaValue } from "./interpreter.js";
-import {
   decodeCanonicalFrame,
+  decodeCanonicalJsonValue,
   encodeCanonicalFrame,
   hashProtocolBytes,
   MAX_FRAME_BYTES,
+  ProtocolRefusal,
   PROTOCOL_SCHEMA_VERSION,
   type CanonicalValue,
   type ExecutionState,
@@ -114,6 +110,13 @@ interface ScalarEvidence {
   readonly subjectDigest: string;
 }
 
+interface ScalarAstNode {
+  readonly kind: string;
+  readonly value?: string;
+  readonly flags?: number;
+  readonly children?: readonly ScalarAstNode[];
+}
+
 const DEFAULT_BOOL = freeze({ __tag: "bool", value: true });
 const DEFAULT_VERDICT = freeze({ __tag: "verdict", value: 0 });
 const SCALAR_ARGUMENTS = freeze({
@@ -121,14 +124,7 @@ const SCALAR_ARGUMENTS = freeze({
   ambig: encodeUtf8('{"subject":0}'),
   allow: encodeUtf8('{"subject":1}'),
 });
-const TREE_RUNTIME_OPTIONS = freeze({
-  egraphFastPath: false,
-  maxIterations: 64,
-  maxSteps: 1_024,
-  pureFastPath: false,
-});
-
-const EXPECTED_SCALAR_AST: CheckedFlowArtifactNode = freeze({
+const EXPECTED_SCALAR_AST: ScalarAstNode = freeze({
   kind: "pureFlowDecl",
   value: "scalarOracle",
   flags: 33,
@@ -258,28 +254,152 @@ function equalBytes(left: Uint8Array, right: Uint8Array): boolean {
   return true;
 }
 
-function exactScalarAst(ast: CheckedFlowArtifactNode): boolean {
+function exactScalarAst(ast: ScalarAstNode): boolean {
   return canonicalInternal(ast as unknown as CanonicalValue)
     === canonicalInternal(EXPECTED_SCALAR_AST as unknown as CanonicalValue);
 }
 
+class ScalarArtifactDecodeRefusal extends Error {
+  constructor(readonly code: string) {
+    super(`SCALAR_ARTIFACT_${code}: refused`);
+    this.name = "ScalarArtifactDecodeRefusal";
+  }
+}
+
+function refuseArtifact(code: string): never {
+  throw new ScalarArtifactDecodeRefusal(code);
+}
+
+const SCALAR_ARTIFACT_FIELDS = freeze([
+  "schema",
+  "hashAlgorithm",
+  "productId",
+  "packageId",
+  "flowLocator",
+  "flowName",
+  "languageVersion",
+  "runtimeProfile",
+  "sourceCanonicalization",
+  "sourceDigest",
+  "compilerPackageId",
+  "compilerVersion",
+  "compilerPackageGraphDigest",
+  "checkerSetId",
+  "checkerSetDigest",
+  "generatorId",
+  "generatorSourceDigest",
+  "qualifier",
+  "parameters",
+  "returnType",
+  "declaredEffects",
+  "checkedAst",
+]);
+const SHA256_ID = /^sha256:[0-9a-f]{64}$/u;
+const COMPILER_VERSION = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/u;
+
+function scalarRecord(value: CanonicalValue, code: string): Readonly<Record<string, CanonicalValue>> {
+  if (value === null || typeof value !== "object" || arrayIsArray(value)) refuseArtifact(code);
+  return value as Readonly<Record<string, CanonicalValue>>;
+}
+
+function exactOrderedFields(
+  record: Readonly<Record<string, CanonicalValue>>,
+  expected: readonly string[],
+  code: string,
+): void {
+  const keys = objectKeys(record);
+  if (keys.length !== expected.length) refuseArtifact(code);
+  for (let index = 0; index < expected.length; index += 1) {
+    if (keys[index] !== expected[index]) refuseArtifact(code);
+  }
+}
+
+function exactArtifactString(
+  record: Readonly<Record<string, CanonicalValue>>,
+  key: string,
+  expected?: string,
+): string {
+  const value = record[key];
+  if (typeof value !== "string" || (expected !== undefined && value !== expected)) {
+    refuseArtifact("IDENTITY");
+  }
+  return value;
+}
+
+function decodeCheckedScalarArtifact(bytes: Uint8Array): ScalarAstNode {
+  if (
+    bytes.byteLength < 2 ||
+    bytes.byteLength > MAX_FRAME_BYTES ||
+    bytes[bytes.byteLength - 1] !== 0x0a ||
+    bytes[bytes.byteLength - 2] === 0x0a ||
+    (bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf)
+  ) refuseArtifact("CANONICAL");
+  for (const byte of bytes) if (byte === 0x0d) refuseArtifact("CANONICAL");
+  const artifact = scalarRecord(
+    decodeCanonicalJsonValue(bytes.subarray(0, bytes.byteLength - 1)),
+    "SCHEMA",
+  );
+  exactOrderedFields(artifact, SCALAR_ARTIFACT_FIELDS, "SCHEMA");
+  exactArtifactString(artifact, "schema", "galerina.rd0858.checked-flow.v1");
+  exactArtifactString(artifact, "hashAlgorithm", "sha256");
+  exactArtifactString(artifact, "productId", "galerina");
+  exactArtifactString(artifact, "packageId", "rd0858-unit4-scalar-oracle");
+  exactArtifactString(artifact, "flowLocator", SCALAR_ORACLE_FLOW);
+  exactArtifactString(artifact, "flowName", "scalarOracle");
+  if (artifact.languageVersion !== 1) refuseArtifact("IDENTITY");
+  exactArtifactString(artifact, "runtimeProfile", "scalar-1");
+  exactArtifactString(artifact, "sourceCanonicalization", "UTF8_NO_BOM_LF_NFC_V1");
+  for (const key of [
+    "sourceDigest",
+    "compilerPackageGraphDigest",
+    "checkerSetDigest",
+    "generatorSourceDigest",
+  ]) {
+    if (!SHA256_ID.test(exactArtifactString(artifact, key))) refuseArtifact("IDENTITY");
+  }
+  exactArtifactString(artifact, "compilerPackageId", "@galerina/core-compiler");
+  if (!COMPILER_VERSION.test(exactArtifactString(artifact, "compilerVersion"))) {
+    refuseArtifact("IDENTITY");
+  }
+  exactArtifactString(artifact, "checkerSetId", "galerina.strict-checks.v1");
+  exactArtifactString(artifact, "generatorId", "rd0858-scalar-oracle-generator.v1");
+  exactArtifactString(artifact, "qualifier", "pure");
+  exactArtifactString(artifact, "returnType", "String");
+  if (!arrayIsArray(artifact.parameters) || artifact.parameters.length !== 1) {
+    refuseArtifact("SCHEMA");
+  }
+  const parameter = scalarRecord(artifact.parameters[0] ?? null, "SCHEMA");
+  exactOrderedFields(parameter, ["name", "type"], "SCHEMA");
+  exactArtifactString(parameter, "name", "subject");
+  exactArtifactString(parameter, "type", "Verdict");
+  if (!arrayIsArray(artifact.declaredEffects) || artifact.declaredEffects.length !== 0) {
+    refuseArtifact("IDENTITY");
+  }
+  const ast = scalarRecord(artifact.checkedAst ?? null, "SCHEMA") as unknown as ScalarAstNode;
+  if (!exactScalarAst(ast)) refuseArtifact("AST");
+  return ast;
+}
+
 function classifyArtifactRefusal(error: unknown): string {
-  if (!(error instanceof CheckedFlowArtifactRefusal)) return "CHECKED_ARTIFACT_SCHEMA";
-  if (error.code.includes("IDENTITY")) return "CHECKED_ARTIFACT_IDENTITY";
+  if (error instanceof ProtocolRefusal) {
+    return error.code.includes("CANONICAL") || error.code.startsWith("JSON_") || error.code === "UTF8_INVALID"
+      ? "CHECKED_ARTIFACT_CANONICAL"
+      : "CHECKED_ARTIFACT_SCHEMA";
+  }
+  if (!(error instanceof ScalarArtifactDecodeRefusal)) return "CHECKED_ARTIFACT_SCHEMA";
+  if (error.code === "IDENTITY") return "CHECKED_ARTIFACT_IDENTITY";
   if (
     error.code.includes("CANONICAL") ||
-    error.code.startsWith("JSON_") ||
-    error.code === "UTF8_BOM" ||
-    error.code === "UTF8_INVALID"
+    error.code === "AST"
   ) {
-    return "CHECKED_ARTIFACT_CANONICAL";
+    return error.code === "AST" ? "CHECKED_AST_UNSUPPORTED" : "CHECKED_ARTIFACT_CANONICAL";
   }
   return "CHECKED_ARTIFACT_SCHEMA";
 }
 
 function decodeScalarSubject(request: LauncherRequest): {
   readonly decision: "deny" | "ambig" | "allow";
-  readonly value: GalerinaValue;
+  readonly trit: -1 | 0 | 1;
 } | undefined {
   const bytes = decodeExactBase64(request.argumentBytes);
   if (
@@ -290,15 +410,24 @@ function decodeScalarSubject(request: LauncherRequest): {
     return undefined;
   }
   if (equalBytes(bytes, SCALAR_ARGUMENTS.deny)) {
-    return freeze({ decision: "deny", value: freeze({ __tag: "verdict", value: -1 }) });
+    return freeze({ decision: "deny", trit: -1 });
   }
   if (equalBytes(bytes, SCALAR_ARGUMENTS.ambig)) {
-    return freeze({ decision: "ambig", value: freeze({ __tag: "verdict", value: 0 }) });
+    return freeze({ decision: "ambig", trit: 0 });
   }
   if (equalBytes(bytes, SCALAR_ARGUMENTS.allow)) {
-    return freeze({ decision: "allow", value: freeze({ __tag: "verdict", value: 1 }) });
+    return freeze({ decision: "allow", trit: 1 });
   }
   return undefined;
+}
+
+function executeExactScalarAst(ast: ScalarAstNode, trit: -1 | 0 | 1): string | undefined {
+  if (!exactScalarAst(ast)) return undefined;
+  const check = ast.children?.[3]?.children?.[0];
+  const arm = check?.children?.[trit + 2];
+  const literal = arm?.children?.[0]?.children?.[0]?.children?.[0];
+  if (literal?.kind !== "stringLiteral" || typeof literal.value !== "string") return undefined;
+  return literal.value.slice(1, -1);
 }
 
 function scalarEvidence(request: LauncherRequest): ScalarEvidence {
@@ -480,20 +609,13 @@ async function executeScalarEnvelope(
 
   let artifact;
   try {
-    artifact = decodeCheckedFlowArtifact(artifactBytes);
+    artifact = { checkedAst: decodeCheckedScalarArtifact(artifactBytes) };
   } catch (error) {
     return freeze({ executionState: "REFUSED", refusalCode: classifyArtifactRefusal(error), evidence });
   }
   if (
-    artifact.productId !== "galerina" ||
-    artifact.packageId !== "rd0858-unit4-scalar-oracle" ||
-    artifact.flowLocator !== SCALAR_ORACLE_FLOW ||
-    artifact.flowName !== "scalarOracle" ||
-    artifact.runtimeProfile !== "scalar-1"
+    !exactScalarAst(artifact.checkedAst)
   ) {
-    return freeze({ executionState: "REFUSED", refusalCode: "CHECKED_ARTIFACT_IDENTITY", evidence });
-  }
-  if (!exactScalarAst(artifact.checkedAst)) {
     return freeze({ executionState: "REFUSED", refusalCode: "CHECKED_AST_UNSUPPORTED", evidence });
   }
   const subject = decodeScalarSubject(request);
@@ -502,25 +624,8 @@ async function executeScalarEnvelope(
   }
 
   try {
-    const runtimeContract = TREE_RUNTIME_OPTIONS as Readonly<Record<string, unknown>>;
-    if (runtimeContract.pureFastPath !== false || runtimeContract.egraphFastPath !== false) {
-      return freeze({ executionState: "ERROR", refusalCode: "FLOW_EXECUTION", evidence });
-    }
-    const execution = await executeFlow(
-      "scalarOracle",
-      new Map<string, GalerinaValue>([["subject", subject.value]]),
-      artifact.checkedAst as Parameters<typeof executeFlow>[2],
-      undefined,
-      undefined,
-      undefined,
-      TREE_RUNTIME_OPTIONS,
-    );
-    if (
-      execution.executionTier !== "tree" ||
-      execution.audit.result !== "ok" ||
-      execution.value.__tag !== "string" ||
-      execution.value.value !== subject.decision
-    ) {
+    const decision = executeExactScalarAst(artifact.checkedAst, subject.trit);
+    if (decision !== subject.decision) {
       return freeze({ executionState: "ERROR", refusalCode: "FLOW_EXECUTION", evidence });
     }
     return freeze({

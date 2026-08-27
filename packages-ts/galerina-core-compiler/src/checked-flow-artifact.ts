@@ -204,12 +204,57 @@ function snapshotAst(value: unknown, depth: number, budget: Budget): CheckedFlow
 }
 
 function hasExactScalarContract(ast: CheckedFlowArtifactNode): boolean {
-  if (ast.kind !== "pureFlowDecl" || ast.value !== "scalarOracle") return false;
-  const children = ast.children ?? [];
-  const params = children.filter((child) => child.kind === "paramDecl");
-  const returns = children.filter((child) => child.kind === "typeRef");
-  if (params.length !== 1 || returns.length !== 1 || returns[0]?.value !== "String") return false;
-  return /^subject\s*:\s*Verdict$/u.test(params[0]?.value ?? "");
+  const children = ast.children;
+  if (
+    ast.kind !== "pureFlowDecl" ||
+    ast.value !== "scalarOracle" ||
+    ast.flags !== 33 ||
+    children?.length !== 4
+  ) return false;
+  const [parameter, returnType, contract, block] = children;
+  if (
+    parameter?.kind !== "paramDecl" ||
+    parameter.value !== "subject: Verdict" ||
+    parameter.children?.length !== 1 ||
+    parameter.children[0]?.kind !== "typeRef" ||
+    parameter.children[0]?.value !== "Verdict" ||
+    parameter.children[0]?.children?.length !== 0 ||
+    returnType?.kind !== "typeRef" ||
+    returnType.value !== "String" ||
+    returnType.children?.length !== 0 ||
+    contract?.kind !== "contractDecl" ||
+    contract.children?.length !== 1 ||
+    contract.children[0]?.kind !== "identifier" ||
+    contract.children[0]?.value !== "effects:block" ||
+    contract.children[0]?.children?.length !== 0 ||
+    block?.kind !== "block" ||
+    block.children?.length !== 1
+  ) return false;
+  const check = block.children[0];
+  if (
+    check?.kind !== "checkExpr" ||
+    check.children?.length !== 4 ||
+    check.children[0]?.kind !== "identifier" ||
+    check.children[0]?.value !== "subject" ||
+    check.children[0]?.children?.length !== 0
+  ) return false;
+  const terminals = [["deny", '"deny"'], ["ambig", '"ambig"'], ["if", '"allow"']] as const;
+  return terminals.every(([armName, literalValue], index) => {
+    const arm = check.children?.[index + 1];
+    const armBlock = arm?.children?.[0];
+    const returnNode = armBlock?.children?.[0];
+    const literal = returnNode?.children?.[0];
+    return arm?.kind === "checkArm" &&
+      arm.value === armName &&
+      arm.children?.length === 1 &&
+      armBlock?.kind === "block" &&
+      armBlock.children?.length === 1 &&
+      returnNode?.kind === "returnStmt" &&
+      returnNode.children?.length === 1 &&
+      literal?.kind === "stringLiteral" &&
+      literal.value === literalValue &&
+      literal.children?.length === 0;
+  });
 }
 
 const ARTIFACT_FIELDS = [
