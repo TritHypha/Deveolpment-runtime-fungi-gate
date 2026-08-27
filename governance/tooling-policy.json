@@ -178,6 +178,42 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/generate-rd0858-scalar-audit-map.mjs": {
+      "inputs": [
+        "docs/superpowers/plans/2026-08-27-rd-0858-unit4-scalar-oracle-admission.md",
+        "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json",
+        "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi",
+        "packages-ts/galerina-core-compiler/package.json",
+        "packages-ts/galerina-core-compiler/src/checked-flow-artifact.ts",
+        "packages-ts/galerina-core-compiler/src/index.ts",
+        "packages-ts/galerina-core-compiler/src/requirement-process-adapter.ts",
+        "packages-ts/galerina-core-compiler/src/requirement-process-protocol.ts",
+        "packages-ts/galerina-core-compiler/src/requirement-process-worker.ts",
+        "scripts/build-requirement-launcher.mjs",
+        "scripts/generate-rd0858-scalar-audit-map.mjs",
+        "scripts/generate-rd0858-scalar-oracle-artifact.mjs",
+        "scripts/native/requirement-launcher/src/identity.rs",
+        "scripts/native/requirement-launcher/src/main.rs",
+        "scripts/native/requirement-launcher/src/protocol.rs",
+        "scripts/native/requirement-launcher/src/windows.rs"
+      ],
+      "outputs": [
+        "docs/audit-map.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/generate-rd0858-scalar-audit-map.mjs",
+        "--write"
+      ],
+      "check": [
+        "node",
+        "scripts/generate-rd0858-scalar-audit-map.mjs",
+        "--check"
+      ],
+      "provenance": "embedded",
+      "tier": "phase-close"
+    },
     "scripts/gen-status-blocks.mjs": {
       "inputs": [
         "AGENTS.md",

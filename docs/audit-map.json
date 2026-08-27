@@ -3,11 +3,11 @@
   "subject": {
     "id": "rd0858-unit4-scalar-profile-1",
     "owner": "galerina",
-    "locator": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7"
+    "locator": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d"
   },
   "approval": {
     "status": "APPROVED",
-    "planDigest": "9834cb4fa9d1daf390b3b7112c393d8bb73049edab44e74e06761752bfe7341b",
+    "planDigest": "4135dbca833469d096f8f6b39fb50cc2baa8a809634037a954a081b1a57ff3bb",
     "authority": "authority://owner/rd0858-unit4-scalar-profile-1",
     "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/approved-plan"
   },
@@ -15,85 +15,201 @@
     {
       "id": "compiler-build",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["npm", "--prefix", "packages-ts/galerina-core-compiler", "run", "build"],
+      "argv": [
+        "npm",
+        "--prefix",
+        "packages-ts/galerina-core-compiler",
+        "run",
+        "build"
+      ],
       "dependsOn": [],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/compiler-build"
     },
     {
       "id": "scalar-artifact-codec",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["node", "--test", "packages-ts/galerina-core-compiler/tests/checked-flow-artifact.test.mjs", "scripts/tests/rd0858-scalar-oracle-artifact.test.mjs"],
-      "dependsOn": ["compiler-build"],
+      "argv": [
+        "node",
+        "--test",
+        "packages-ts/galerina-core-compiler/tests/checked-flow-artifact.test.mjs",
+        "scripts/tests/rd0858-scalar-oracle-artifact.test.mjs"
+      ],
+      "dependsOn": [
+        "compiler-build"
+      ],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/scalar-artifact-codec"
     },
     {
       "id": "scalar-process-boundary",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["node", "--test", "packages-ts/galerina-core-compiler/tests/requirement-process-protocol.test.mjs", "packages-ts/galerina-core-compiler/tests/requirement-process-worker.test.mjs", "packages-ts/galerina-core-compiler/tests/requirement-process-root-red.test.mjs", "packages-ts/galerina-core-compiler/tests/requirement-process-adapter.test.mjs"],
-      "dependsOn": ["scalar-artifact-codec"],
+      "argv": [
+        "node",
+        "--test",
+        "packages-ts/galerina-core-compiler/tests/requirement-process-protocol.test.mjs",
+        "packages-ts/galerina-core-compiler/tests/requirement-process-worker.test.mjs",
+        "packages-ts/galerina-core-compiler/tests/requirement-process-root-red.test.mjs",
+        "packages-ts/galerina-core-compiler/tests/requirement-process-adapter.test.mjs"
+      ],
+      "dependsOn": [
+        "scalar-artifact-codec"
+      ],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/scalar-process-boundary"
     },
     {
       "id": "scalar-native-launcher",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["node", "--test", "scripts/tests/requirement-launcher.test.mjs"],
-      "dependsOn": ["scalar-process-boundary"],
+      "argv": [
+        "node",
+        "--test",
+        "scripts/tests/requirement-launcher.test.mjs"
+      ],
+      "dependsOn": [
+        "scalar-process-boundary"
+      ],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/scalar-native-launcher"
     },
     {
       "id": "scalar-rust-launcher",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["cargo", "test", "--manifest-path", "scripts/native/requirement-launcher/Cargo.toml"],
-      "dependsOn": ["scalar-native-launcher"],
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "scripts/native/requirement-launcher/Cargo.toml"
+      ],
+      "dependsOn": [
+        "scalar-native-launcher"
+      ],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/scalar-rust-launcher"
     },
     {
       "id": "repository-graphs",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["node", "scripts/graph-all.mjs", "--check"],
-      "dependsOn": ["scalar-rust-launcher"],
+      "argv": [
+        "node",
+        "scripts/graph-all.mjs",
+        "--check"
+      ],
+      "dependsOn": [
+        "scalar-rust-launcher"
+      ],
       "timeoutMs": 130000,
       "maxOutputBytes": 1048576,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/repository-graphs"
     },
     {
       "id": "repository-phase-close",
       "owner": "galerina",
-      "build": "git://galerina/542221b334060e0061d8d7875beb098ae01c93c7",
+      "build": "git://galerina/0fdf78fde90cbe951dcd201e21adf3fda90e5f5d",
       "cwd": "repo://galerina",
-      "argv": ["node", "scripts/run-phase-close.mjs"],
-      "dependsOn": ["repository-graphs"],
+      "argv": [
+        "node",
+        "scripts/run-phase-close.mjs"
+      ],
+      "dependsOn": [
+        "repository-graphs"
+      ],
       "timeoutMs": 600000,
       "maxOutputBytes": 8388608,
-      "exit": { "pass": [0], "finding": [1], "refused": [2] },
+      "exit": {
+        "pass": [
+          0
+        ],
+        "finding": [
+          1
+        ],
+        "refused": [
+          2
+        ]
+      },
       "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/repository-phase-close"
     }
   ]
