@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, readFile, rm, rmdir, symlink, unlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -103,6 +103,151 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     } finally {
       await rm(residueDirectory, { recursive: true, force: true });
     }
+  });
+
+  it("does not resolve compiler dependencies from persistent dist node_modules", async () => {
+    const dependencyRoot = join(
+      compilerDistPath,
+      "node_modules",
+      "@galerina",
+      "devtools-graph-algorithms",
+    );
+    await assert.rejects(lstat(dependencyRoot), { code: "ENOENT" });
+    await mkdir(dependencyRoot, { recursive: true });
+    try {
+      await writeFile(join(dependencyRoot, "package.json"), JSON.stringify({
+        name: "@galerina/devtools-graph-algorithms",
+        type: "module",
+        exports: "./index.js",
+      }), "utf8");
+      await writeFile(
+        join(dependencyRoot, "index.js"),
+        "throw new Error(\"RD0858_AMBIENT_DEPENDENCY_EXECUTED\");\n",
+        "utf8",
+      );
+      const result = spawnSync(process.execPath, [generatorPath, "--check"], {
+        cwd: root,
+        encoding: "utf8",
+        timeout: 130_000,
+      });
+      assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+      assert.doesNotMatch(`${result.stdout}\n${result.stderr}`, /AMBIENT_DEPENDENCY_EXECUTED/u);
+      assert.match(await readFile(join(dependencyRoot, "index.js"), "utf8"), /AMBIENT_DEPENDENCY_EXECUTED/u);
+    } finally {
+      await unlink(join(dependencyRoot, "index.js")).catch(() => {});
+      await unlink(join(dependencyRoot, "package.json")).catch(() => {});
+      await rmdir(dependencyRoot).catch(() => {});
+      await rmdir(dirname(dependencyRoot)).catch(() => {});
+      await rmdir(join(compilerDistPath, "node_modules")).catch(() => {});
+    }
+  });
+
+  it("refuses missing executable locators without disclosing the local path", async () => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-missing-locator-"));
+    try {
+      assert.throws(
+        () => generator.digestCompilerExecutableClosure(temporary, ["missing.js"]),
+        (error) => {
+          assert.match(String(error), /COMPILER_BUILD_(?:MISSING|MANIFEST).*refused/u);
+          assert.doesNotMatch(String(error), new RegExp(temporary.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&"), "u"));
+          return true;
+        },
+      );
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a reparse-point executable root", async (context) => {
+    if (process.platform !== "win32") {
+      context.skip("Windows junction control");
+      return;
+    }
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-root-junction-"));
+    const target = join(temporary, "target");
+    const junction = join(temporary, "junction");
+    try {
+      await mkdir(target);
+      await writeFile(join(target, "index.js"), "export const value = 1;\n", "utf8");
+      await symlink(target, junction, "junction");
+      assert.throws(
+        () => generator.digestCompilerExecutableClosure(junction, ["index.js"]),
+        /COMPILER_BUILD_(?:REPARSE|SYMLINK).*refused/u,
+      );
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("sanitizes ambient module-resolution controls in isolated children", async () => {
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-node-options-"));
+    const marker = join(temporary, "loads.txt");
+    const preload = join(temporary, "preload.mjs");
+    try {
+      await writeFile(preload, [
+        "import { appendFileSync } from 'node:fs';",
+        `appendFileSync(${JSON.stringify(marker)}, String(process.pid) + "\\n");`,
+        "",
+      ].join("\n"), "utf8");
+      const result = spawnSync(process.execPath, [generatorPath, "--check"], {
+        cwd: root,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: `--import=${pathToFileURL(preload).href}`,
+          NODE_PATH: join(temporary, "ambient-node-path"),
+        },
+        timeout: 130_000,
+      });
+      assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+      const pids = (await readFile(marker, "utf8")).trim().split("\n");
+      assert.equal(pids.length, 1, `ambient preload reached isolated children: ${pids.length}`);
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("declares a closed scalar-only module entry and v2 executable identity", async () => {
+    const source = await readFile(generatorPath, "utf8");
+    assert.match(source, /rd0858-scalar-compiler-entry\.js/u);
+    assert.match(source, /galerina\.compiler-executable-graph\.v2/u);
+    assert.match(source, /COMPILER_MODULE_(?:UNEXPECTED|RESOLUTION|TRACE)/u);
+    assert.match(source, /mkdtemp/u);
+    assert.doesNotMatch(source, /pathToFileURL\(compilerEntryPath\)/u);
+  });
+
+  it("keeps unowned temporary residue when the ownership token does not match", async () => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-scalar-build-"));
+    const marker = join(temporary, ".rd0858-scalar-owned.json");
+    const residue = join(temporary, "owner-residue.txt");
+    try {
+      await writeFile(marker, JSON.stringify({
+        schema: "rd0858.scalar-temp-owner.v1",
+        token: "0".repeat(32),
+      }), "utf8");
+      await writeFile(residue, "preserve\n", "utf8");
+      assert.throws(
+        () => generator.cleanupOwnedTemporary(temporary, "1".repeat(32)),
+        /TEMP_OWNERSHIP.*refused/u,
+      );
+      assert.equal(await readFile(residue, "utf8"), "preserve\n");
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps check mode output-free", async () => {
+    const before = await readFile(artifactPath);
+    const result = spawnSync(process.execPath, [generatorPath, "--check"], {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 130_000,
+    });
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+    assert.deepEqual(await readFile(artifactPath), before);
   });
 
   it("keeps non-executable build evidence outside executable identity", async () => {

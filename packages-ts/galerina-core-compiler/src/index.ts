@@ -10,6 +10,47 @@
 // Phase 5: effect checker (checkEffects, checkFlowEffects)
 // =============================================================================
 
+import {
+  FUNGI_BINDING_001,
+  FUNGI_BINDING_002,
+  FUNGI_BINDING_003,
+  FUNGI_BINDING_004,
+  FUNGI_BLOCK_001,
+  FUNGI_BLOCK_002,
+  FUNGI_MEMORY_008,
+  FUNGI_RAWPTR_001,
+  FUNGI_SAFETY_001,
+  FUNGI_SAFETY_002,
+  FUNGI_SAFETY_003,
+  FUNGI_SAFETY_004,
+  FUNGI_SAFETY_005,
+  FUNGI_SAFETY_006,
+  FUNGI_SYNTAX_001,
+  FUNGI_SYNTAX_002,
+} from "./core-syntax-safety.js";
+
+export {
+  FUNGI_BINDING_001,
+  FUNGI_BINDING_002,
+  FUNGI_BINDING_003,
+  FUNGI_BINDING_004,
+  FUNGI_BLOCK_001,
+  FUNGI_BLOCK_002,
+  FUNGI_MEMORY_008,
+  FUNGI_RAWPTR_001,
+  FUNGI_SAFETY_001,
+  FUNGI_SAFETY_002,
+  FUNGI_SAFETY_003,
+  FUNGI_SAFETY_004,
+  FUNGI_SAFETY_005,
+  FUNGI_SAFETY_006,
+  FUNGI_SYNTAX_001,
+  FUNGI_SYNTAX_002,
+  validateCoreSyntaxSafety,
+  type CoreSyntaxSafetyOptions,
+} from "./core-syntax-safety.js";
+
+
 // Phase 4 — Lexer
 export {
   loadProductRegistry,
@@ -1655,10 +1696,6 @@ export interface CompilerSourceText {
   readonly text: string;
 }
 
-export interface CoreSyntaxSafetyOptions {
-  readonly scanSecrets?: boolean;
-  readonly scanUnsafeDynamicCode?: boolean;
-}
 
 // ---------------------------------------------------------------------------
 // Intent and safety level types
@@ -1765,20 +1802,8 @@ export const FUNGI_INTENT_DIAGNOSTICS = [
 // ---------------------------------------------------------------------------
 
 /** `var` is not a valid Galerina keyword. Use `let` or `mut`. */
-export const FUNGI_SYNTAX_001 = {
-  code: "FUNGI-SYNTAX-001",
-  name: "VAR_NOT_SUPPORTED",
-  severity: "error",
-  message: "Galerina does not support var. Use let for immutable bindings or mut for mutable bindings.",
-} as const;
 
 /** `const` is not a valid Galerina keyword. Use `let` or `readonly`. */
-export const FUNGI_SYNTAX_002 = {
-  code: "FUNGI-SYNTAX-002",
-  name: "CONST_NOT_SUPPORTED",
-  severity: "error",
-  message: "Galerina does not support const. Use let for immutable bindings or readonly for read-only values.",
-} as const;
 
 /** `let` binding at top level — must be inside a flow. */
 export const FUNGI_SYNTAX_006 = {
@@ -1846,36 +1871,12 @@ export const FUNGI_SYNTAX_LEGACY_001 = {
 // ---------------------------------------------------------------------------
 
 /** Attempt to reassign an immutable `let` binding. */
-export const FUNGI_BINDING_001 = {
-  code: "FUNGI-BINDING-001",
-  name: "IMMUTABLE_LET_REASSIGNMENT",
-  severity: "error",
-  message: "Cannot reassign immutable let binding. Use mut only if reassignment is required.",
-} as const;
 
 /** Attempt to reassign a `readonly` binding. */
-export const FUNGI_BINDING_002 = {
-  code: "FUNGI-BINDING-002",
-  name: "READONLY_REASSIGNMENT",
-  severity: "error",
-  message: "Cannot reassign readonly binding.",
-} as const;
 
 /** Attempt to mutate a value through a `readonly` binding. */
-export const FUNGI_BINDING_003 = {
-  code: "FUNGI-BINDING-003",
-  name: "READONLY_PROPERTY_MUTATION",
-  severity: "error",
-  message: "Cannot mutate a value through a readonly binding.",
-} as const;
 
 /** `mut` binding used in a pure or safe context where mutation is forbidden. */
-export const FUNGI_BINDING_004 = {
-  code: "FUNGI-BINDING-004",
-  name: "MUT_IN_PURE_CONTEXT",
-  severity: "error",
-  message: "mut binding used where mutation is forbidden. Use let or a functional accumulator (fold, count, filter).",
-} as const;
 
 /** FUNGI-BINDING-005: Reassignment of immutable let binding denied. */
 export const FUNGI_BINDING_005 = {
@@ -1912,12 +1913,6 @@ export const FUNGI_BINDING_DIAGNOSTICS = [
  * Galerina bans raw pointer access in normal code. Only approved unsafe blocks
  * may use raw pointer expressions, and they must declare reason + fallback.
  */
-export const FUNGI_RAWPTR_001 = {
-  code: "FUNGI-RAWPTR-001",
-  name: "RAW_POINTER_OUTSIDE_UNSAFE",
-  severity: "error",
-  message: "Raw pointer access is not allowed in normal Galerina code. Move this into an approved unsafe block with declared reason and fallback.",
-} as const;
 
 export const FUNGI_RAWPTR_DIAGNOSTICS = [FUNGI_RAWPTR_001] as const;
 
@@ -1978,20 +1973,8 @@ export const FUNGI_PIPELINE_DIAGNOSTICS = [
 // ---------------------------------------------------------------------------
 
 /** Unknown typed content block type — only html, dom, script, css are valid. */
-export const FUNGI_BLOCK_001 = {
-  code: "FUNGI-BLOCK-001",
-  name: "UNKNOWN_CONTENT_BLOCK_TYPE",
-  severity: "error",
-  message: "Unknown typed content block type. Valid types are: html, dom, script, css.",
-} as const;
 
 /** Typed content block was opened but its closing marker was never found. */
-export const FUNGI_BLOCK_002 = {
-  code: "FUNGI-BLOCK-002",
-  name: "UNCLOSED_CONTENT_BLOCK",
-  severity: "error",
-  message: "Typed content block is never closed. The closing marker must appear alone at the start of a line.",
-} as const;
 
 /** The closing marker does not match the opening marker. */
 export const FUNGI_BLOCK_003 = {
@@ -2249,12 +2232,6 @@ export const FUNGI_MEMORY_007 = {
 // --- FUNGI-MEMORY-008: the ONE WIRED memory code (emitter: detectUnsafeBlockWithoutReason) ---
 
 /** An unsafe memory operation has no declared safe fallback. (WIRED — emitted by detectUnsafeBlockWithoutReason.) */
-export const FUNGI_MEMORY_008 = {
-  code: "FUNGI-MEMORY-008",
-  name: "UNSAFE_MEMORY_REQUIRES_FALLBACK",
-  severity: "error",
-  message: "Unsafe memory operation must declare a safe fallback. Every unsafe block requires a fallback flow.",
-} as const;
 
 export const FUNGI_MEMORY_DIAGNOSTICS = [
   FUNGI_MEMORY_001,
@@ -2430,52 +2407,16 @@ export const FUNGI_SOURCE_ESCAPE_001 = {
 // ---------------------------------------------------------------------------
 
 /** A Tri value was used directly as a branch condition without explicit conversion. */
-export const FUNGI_SAFETY_001 = {
-  code: "FUNGI-SAFETY-001",
-  name: "TRI_BRANCH_CONDITION",
-  severity: "error",
-  message: "Tri values must not be used directly as branch conditions. Use exhaustive match or an explicit conversion policy.",
-} as const;
 
 /** An unsafe implicit assignment occurred between Bool, Tri, or Decision types. */
-export const FUNGI_SAFETY_002 = {
-  code: "FUNGI-SAFETY-002",
-  name: "UNSAFE_LOGIC_ASSIGNMENT",
-  severity: "error",
-  message: "Implicit conversion between Tri, Bool, and Decision is not allowed. Use an explicit policy-bearing conversion flow.",
-} as const;
 
 /** A Tri unknown value was mapped to true without policy justification. */
-export const FUNGI_SAFETY_003 = {
-  code: "FUNGI-SAFETY-003",
-  name: "TRI_UNKNOWN_AS_TRUE",
-  severity: "error",
-  message: "Converting Tri unknown to true requires explicit policy justification. In secure flows, this is always an error.",
-} as const;
 
 /** A raw secret literal was detected in source code. */
-export const FUNGI_SAFETY_004 = {
-  code: "FUNGI-SAFETY-004",
-  name: "SECRET_LITERAL",
-  severity: "error",
-  message: "Source must not contain raw secret literals. Use SecureString or an environment reference.",
-} as const;
 
 /** An unsafe dynamic code execution call was detected. */
-export const FUNGI_SAFETY_005 = {
-  code: "FUNGI-SAFETY-005",
-  name: "UNSAFE_DYNAMIC_CODE",
-  severity: "error",
-  message: "Unsafe dynamic code execution must not appear in Galerina source. Declare intent and use a governed flow.",
-} as const;
 
 /** A Tri match block is missing one or more required cases. */
-export const FUNGI_SAFETY_006 = {
-  code: "FUNGI-SAFETY-006",
-  name: "TRI_MATCH_NOT_EXHAUSTIVE",
-  severity: "error",
-  message: "Tri match must handle all three cases: Positive, Neutral, and Negative.",
-} as const;
 
 export const FUNGI_SAFETY_DIAGNOSTICS = [
   FUNGI_SAFETY_001,
@@ -2609,121 +2550,6 @@ interface MatchBlock {
 
 const TRI_CASES = ["Positive", "Neutral", "Negative"] as const;
 
-export function validateCoreSyntaxSafety(
-  source: CompilerSourceText,
-  options: CoreSyntaxSafetyOptions = {},
-): CompilerResult {
-  const diagnostics: CompilerDiagnostic[] = [];
-  const symbols = new Map<string, KnownSymbol>();
-  const lines = source.text.split(/\r?\n/);
-  let flowScope: FlowScope | undefined;
-  let matchBlock: MatchBlock | undefined;
-  let contentBlockScope: ContentBlockScope | undefined;
-  let braceDepth = 0;
-
-  lines.forEach((line, index) => {
-    const lineNumber = index + 1;
-    const trimmed = line.trim();
-
-    // ── Typed content block tracking ─────────────────────────────────────
-    // When inside a block, skip all other checks. Brace depth is not updated
-    // so that { } in HTML/CSS/JS do not affect Galerina scope tracking.
-    if (contentBlockScope !== undefined) {
-      if (trimmed === contentBlockScope.marker) {
-        contentBlockScope = undefined;
-      }
-      return;
-    }
-
-    // Detect typed content block opens (html/dom/script/css <<MARKER).
-    const blockOpen = parseContentBlockOpen(source.file, line, lineNumber);
-    if (blockOpen !== undefined) {
-      if (blockOpen.kind === "entered") {
-        contentBlockScope = blockOpen.scope;
-      } else {
-        diagnostics.push(...blockOpen.diagnostics);
-      }
-      return; // block opener line needs no further processing
-    }
-    // ─────────────────────────────────────────────────────────────────────
-
-    collectFlowSymbols(source.file, line, lineNumber, symbols);
-    collectVariableSymbol(source.file, line, lineNumber, symbols);
-
-    const flowStart = parseFlowStart(line, lineNumber, braceDepth);
-
-    if (flowStart !== undefined) {
-      flowScope = flowStart;
-    }
-
-    if (matchBlock !== undefined) {
-      collectMatchCases(line, matchBlock);
-    }
-
-    if (matchBlock === undefined) {
-      matchBlock = parseTriMatchStart(source.file, line, lineNumber, braceDepth, symbols);
-    }
-
-    diagnostics.push(
-      ...detectTriBranchCondition(source.file, line, lineNumber, symbols),
-      ...detectUnsafeCoreAssignment(source.file, line, lineNumber, symbols),
-      ...detectRiskyTriBoolPolicy(source.file, line, lineNumber, flowScope),
-      ...detectUnsupportedBindingKeyword(source.file, line, lineNumber),
-      ...detectMutInPureFlow(source.file, line, lineNumber, flowScope),
-      ...detectUnsafeBlockWithoutReason(source.file, line, lineNumber),
-      ...detectRawPointerOutsideUnsafe(source.file, line, lineNumber, flowScope),
-    );
-
-    if (options.scanSecrets ?? true) {
-      diagnostics.push(...detectSecretLiteral(source.file, line, lineNumber));
-    }
-
-    if (options.scanUnsafeDynamicCode ?? true) {
-      diagnostics.push(...detectUnsafeDynamicCode(source.file, line, lineNumber));
-    }
-
-    braceDepth += countBraceDelta(line);
-
-    if (
-      matchBlock !== undefined &&
-      braceDepth < matchBlock.braceDepth
-    ) {
-      diagnostics.push(...validateTriMatchExhaustive(source.file, matchBlock));
-      matchBlock = undefined;
-    }
-
-    if (flowScope !== undefined && braceDepth < flowScope.braceDepth) {
-      flowScope = undefined;
-    }
-
-    if (trimmed === "") {
-      return;
-    }
-  });
-
-  if (matchBlock !== undefined) {
-    diagnostics.push(...validateTriMatchExhaustive(source.file, matchBlock));
-  }
-
-  // Report any typed content block that was opened but never closed.
-  if (contentBlockScope !== undefined) {
-    diagnostics.push(
-      createCompilerDiagnostic(
-        FUNGI_BLOCK_002.code,
-        FUNGI_BLOCK_002.name,
-        FUNGI_BLOCK_002.severity,
-        `${contentBlockScope.blockType} block opened with marker ${contentBlockScope.marker} is never closed.`,
-        { file: source.file, line: contentBlockScope.startLine, column: 1 },
-      ),
-    );
-  }
-
-  return {
-    ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
-    diagnostics,
-    reports: [],
-  };
-}
 
 /**
  * Validates a typed content block at the AST level.

@@ -4,14 +4,19 @@ import {
   closeSync,
   existsSync,
   lstatSync,
+  mkdirSync,
+  mkdtempSync,
   openSync,
   readFileSync,
   readdirSync,
+  realpathSync,
   renameSync,
+  rmSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, extname, join, relative, resolve } from "node:path";
+import { tmpdir } from "node:os";
+import { basename, dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 export const SCALAR_ORACLE_SOURCE_RELATIVE = "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi";
@@ -19,6 +24,8 @@ export const SCALAR_ORACLE_ARTIFACT_RELATIVE = "packages/fungi/products/galerina
 
 const GENERATOR_RELATIVE = "scripts/generate-rd0858-scalar-oracle-artifact.mjs";
 const COMPILER_PACKAGE_RELATIVE = "packages-ts/galerina-core-compiler";
+const GRAPH_PACKAGE_RELATIVE = "packages-ts/galerina-devtools-graph-algorithms";
+const SUBSTRATE_PACKAGE_RELATIVE = "packages-ts/galerina-substrate-math";
 const PACKAGE_LOCK_RELATIVE = "package-lock.json";
 const SOURCE_MAX_BYTES = 65_536;
 const CHILD_MAX_BYTES = 1_048_576;
@@ -28,9 +35,50 @@ const sourcePath = join(root, ...SCALAR_ORACLE_SOURCE_RELATIVE.split("/"));
 const artifactPath = join(root, ...SCALAR_ORACLE_ARTIFACT_RELATIVE.split("/"));
 const generatorPath = join(root, ...GENERATOR_RELATIVE.split("/"));
 const packageJsonPath = join(root, COMPILER_PACKAGE_RELATIVE, "package.json");
-const compilerDistPath = join(root, COMPILER_PACKAGE_RELATIVE, "dist");
-const compilerEntryPath = join(compilerDistPath, "index.js");
 const textDecoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+
+const SCALAR_COMPILER_SOURCE_LOCATORS = Object.freeze([
+  "bounded-cache.ts",
+  "capability-types.ts",
+  "checked-flow-artifact.ts",
+  "core-syntax-safety.ts",
+  "effect-checker.ts",
+  "flow-name.ts",
+  "governance-verifier.ts",
+  "hardening-residency.ts",
+  "i64-arith.ts",
+  "invariant-discharge.ts",
+  "lexer.ts",
+  "naming-policy-checker.ts",
+  "numeric-lowering.ts",
+  "observability-inference.ts",
+  "package-type-registry.ts",
+  "parser.ts",
+  "proof-graph.ts",
+  "rd0858-scalar-compiler-entry.ts",
+  "requirement-diagnostics.ts",
+  "requirement-terminality.ts",
+  "requirement-validator-authority.ts",
+  "resilience-inference.ts",
+  "runtime/canonicalHash.ts",
+  "runtime/limitPolicy.ts",
+  "source-escape-checker.ts",
+  "stdlib-registry.ts",
+  "substrate-inference.ts",
+  "substrate-math.ts",
+  "symbol-resolver.ts",
+  "taint-checker.ts",
+  "type-checker.ts",
+  "type-registry.ts",
+  "u64-arith.ts",
+  "unit-registry.generated.ts",
+  "value-state-checker.ts",
+  "globals.d.ts",
+  "node-crypto-shim.d.ts",
+]);
+
+const SCALAR_ENTRY_LOCATOR = "core/rd0858-scalar-compiler-entry.js";
+const OWNERSHIP_MARKER = ".rd0858-scalar-owned.json";
 
 const CHECKER_PATHS = Object.freeze([
   "packages-ts/galerina-core-compiler/src/parser.ts",
@@ -147,6 +195,172 @@ function readHeadBlob(relativePath) {
   return bytes;
 }
 
+function closedChildEnv(extra = {}) {
+  const admitted = {};
+  for (const name of ["SystemRoot", "WINDIR", "ComSpec", "PATHEXT", "TEMP", "TMP"]) {
+    if (typeof process.env[name] === "string") admitted[name] = process.env[name];
+  }
+  return Object.freeze({ ...admitted, ...extra, NODE_OPTIONS: "", NODE_PATH: "" });
+}
+
+function assertContainedRegularRoot(directory, code) {
+  let stat;
+  let canonical;
+  try {
+    stat = lstatSync(directory, { bigint: true });
+    canonical = realpathSync.native(directory);
+  } catch {
+    refuse(`${code}_ROOT`);
+  }
+  if (!stat.isDirectory() || stat.isSymbolicLink()) refuse(`${code}_REPARSE`);
+  return canonical;
+}
+
+function writeExclusive(path, bytes) {
+  let descriptor;
+  try {
+    mkdirSync(dirname(path), { recursive: true });
+    descriptor = openSync(path, "wx", 0o600);
+    writeFileSync(descriptor, bytes);
+    closeSync(descriptor);
+    descriptor = undefined;
+  } catch {
+    if (descriptor !== undefined) closeSync(descriptor);
+    refuse("TEMP_WRITE");
+  }
+}
+
+function materializeHeadFiles(destination, packageRelative, locators) {
+  let total = 0;
+  for (const locator of locators) {
+    if (typeof locator !== "string" || locator.length < 1 || locator.length > 1_024
+      || locator.includes("\\") || locator.includes("\0")
+      || locator.split("/").some((segment) => segment === "" || segment === "." || segment === "..")) {
+      refuse("HEAD_LOCATOR");
+    }
+    const bytes = readHeadBlob(`${packageRelative}/src/${locator}`);
+    total += bytes.byteLength;
+    if (bytes.byteLength < 1 || bytes.byteLength > CHILD_MAX_BYTES * 4 || total > CHILD_MAX_BYTES * 32) {
+      refuse("HEAD_SOURCE_BOUND");
+    }
+    writeExclusive(join(destination, "src", ...locator.split("/")), bytes);
+  }
+}
+
+function allHeadTypeScriptLocators(packageRelative) {
+  const prefix = `${packageRelative}/src/`;
+  const locators = headEntries(`${packageRelative}/src`)
+    .filter((entry) => entry.mode === "100644" && entry.path.endsWith(".ts"))
+    .map((entry) => entry.path.slice(prefix.length));
+  if (locators.length < 1 || new Set(locators).size !== locators.length) refuse("HEAD_SOURCE_MANIFEST");
+  return Object.freeze(locators);
+}
+
+function runTypeScriptBuild(configPath) {
+  const tscPath = join(
+    root,
+    COMPILER_PACKAGE_RELATIVE,
+    "node_modules",
+    "typescript",
+    "bin",
+    "tsc",
+  );
+  const result = spawnSync(process.execPath, [tscPath, "-p", configPath], {
+    cwd: dirname(configPath),
+    encoding: "utf8",
+    env: closedChildEnv(),
+    maxBuffer: CHILD_MAX_BYTES * 16,
+    timeout: CHILD_TIMEOUT_MS,
+  });
+  if (result.status !== 0 || result.error !== undefined) refuse("COMPILER_BUILD");
+}
+
+function runtimeExecutableLocators(runtimeRoot) {
+  const locators = [];
+  const visit = (directory) => {
+    for (const name of readdirSync(directory).sort()) {
+      const path = join(directory, name);
+      const stat = lstatSync(path, { bigint: true });
+      if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
+      if (stat.isDirectory()) visit(path);
+      else if (stat.isFile() && [".js", ".mjs", ".json"].includes(extname(name))) {
+        locators.push(relative(runtimeRoot, path).replaceAll("\\", "/"));
+      }
+    }
+  };
+  visit(runtimeRoot);
+  locators.sort();
+  if (locators.length < 3 || new Set(locators).size !== locators.length) {
+    refuse("COMPILER_BUILD_MANIFEST");
+  }
+  return Object.freeze(locators);
+}
+
+export function cleanupOwnedTemporary(directory, token) {
+  if (typeof token !== "string" || !/^[0-9a-f]{32}$/u.test(token)) refuse("TEMP_TOKEN");
+  const expectedParent = realpathSync.native(tmpdir());
+  const canonical = assertContainedRegularRoot(directory, "TEMP_CLEANUP");
+  const parentPrefix = expectedParent.endsWith(sep) ? expectedParent : `${expectedParent}${sep}`;
+  if (!canonical.startsWith(parentPrefix) || !basename(canonical).startsWith("rd0858-scalar-build-")) {
+    refuse("TEMP_CLEANUP_SCOPE");
+  }
+  let marker;
+  try {
+    marker = JSON.parse(textDecoder.decode(stableRead(join(directory, OWNERSHIP_MARKER), 256, "TEMP_MARKER")));
+  } catch (error) {
+    if (error instanceof ScalarArtifactRefusal) throw error;
+    refuse("TEMP_MARKER");
+  }
+  if (marker?.schema !== "rd0858.scalar-temp-owner.v1" || marker.token !== token) {
+    refuse("TEMP_OWNERSHIP");
+  }
+  rmSync(directory, { recursive: true, force: false });
+}
+
+const STRICT_LOADER_SOURCE = `
+import { appendFileSync, readFileSync } from "node:fs";
+const config = JSON.parse(readFileSync(process.env.RD0858_LOADER_CONFIG, "utf8"));
+const files = new Set(config.files);
+const builtins = new Set(config.builtins);
+function deny(code) { throw new Error("RD0858_SCALAR_ARTIFACT_COMPILER_MODULE_" + code + ": refused"); }
+export async function resolve(specifier, context, nextResolve) {
+  if (specifier.startsWith("node:")) {
+    if (!builtins.has(specifier)) deny("UNEXPECTED");
+    return nextResolve(specifier, context);
+  }
+  const result = await nextResolve(specifier, context);
+  if (!files.has(result.url)) deny("RESOLUTION");
+  return result;
+}
+export async function load(url, context, nextLoad) {
+  if (url.startsWith("file:")) {
+    if (!files.has(url)) deny("UNEXPECTED");
+    appendFileSync(config.trace, url + "\\n", "utf8");
+  }
+  return nextLoad(url, context);
+}
+`;
+
+const SCALAR_RUNNER_SOURCE = `
+import { readFileSync } from "node:fs";
+const request = JSON.parse(readFileSync(0, "utf8"));
+const compiler = await import(process.env.RD0858_SCALAR_ENTRY_URL);
+let result;
+if (request.mode === "candidate") {
+  const built = compiler.buildRd0858ScalarArtifact(request.source, request.identity);
+  result = { artifact: built.artifact, bytes: Buffer.from(built.bytes).toString("base64") };
+} else if (request.mode === "verify") {
+  result = compiler.verifyRd0858ScalarArtifact(
+    request.source,
+    Buffer.from(request.bytes, "base64"),
+    request.identity,
+  );
+} else {
+  throw new Error("RD0858_SCALAR_ARTIFACT_COMPILER_MODULE_REQUEST: refused");
+}
+process.stdout.write(JSON.stringify(result) + "\\n");
+`;
+
 export function digestCompilerPackageIdentityEntries(entries, compilerExecutableGraphDigest) {
   if (!Array.isArray(entries) || !/^sha256:[0-9a-f]{64}$/u.test(compilerExecutableGraphDigest)) {
     refuse("PACKAGE_GRAPH_INPUT");
@@ -218,40 +432,6 @@ export function inspectScalarOracleSource(bytes) {
   return Object.freeze({ source, sourceDigest: sha256(bytes) });
 }
 
-function compileCheckedAst(compiler, source) {
-  const fileLabel = SCALAR_ORACLE_SOURCE_RELATIVE;
-  const safety = compiler.validateCoreSyntaxSafety({ file: fileLabel, text: source });
-  const parsed = compiler.parseProgram(source, fileLabel, { requireVersionHeader: true });
-  const symbols = compiler.resolveSymbols(parsed.ast);
-  const types = compiler.checkTypes(parsed.ast);
-  const values = compiler.checkValueStates(parsed.ast, "production");
-  const effects = compiler.checkEffects(parsed.flows, parsed.ast);
-  const governance = compiler.verifyGovernance(parsed.ast, parsed.flows, effects, "production", fileLabel);
-  const escapes = compiler.checkSourceEscapes(parsed.ast);
-  const naming = compiler.checkNamingPolicy(parsed.ast);
-  const diagnostics = [
-    ...safety.diagnostics,
-    ...parsed.diagnostics,
-    ...symbols.diagnostics,
-    ...types.diagnostics,
-    ...values.diagnostics,
-    ...compiler.effectResultsToDiagnostics(effects),
-    ...governance.diagnostics,
-    ...escapes.diagnostics,
-    ...naming.diagnostics,
-  ];
-  if (parsed.flows.length !== 1 || diagnostics.some((entry) => entry.severity === "error" || entry.severity === "warning")) {
-    refuse("CHECKER", diagnostics.map((entry) => entry.code ?? entry.message).join(",").slice(0, 512));
-  }
-  const flow = parsed.flows[0];
-  const flowNode = (parsed.ast.children ?? []).find((node) =>
-    node.kind === "pureFlowDecl" && node.value === "scalarOracle");
-  if (flow === undefined || flow.name !== "scalarOracle" || flowNode === undefined) refuse("FLOW_IDENTITY");
-  const snapshot = compiler.snapshotCheckedFlow(flow, flowNode);
-  if (snapshot === undefined) refuse("CHECKED_SNAPSHOT");
-  assertExactScalarAst(snapshot.ast);
-  return snapshot.ast;
-}
 
 function assertExactScalarAst(ast) {
   const children = ast.children ?? [];
@@ -284,6 +464,18 @@ function currentIdentity(sourceDigest, compilerExecutableGraphDigest) {
 
 export function digestCompilerExecutableClosure(directory, admittedLocators) {
   const files = [];
+  let rootStat;
+  let canonicalRoot;
+  try {
+    rootStat = lstatSync(directory, { bigint: true });
+    canonicalRoot = realpathSync.native(directory);
+  } catch {
+    refuse("COMPILER_BUILD_ROOT");
+  }
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) {
+    refuse("COMPILER_BUILD_REPARSE");
+  }
+  const rootPrefix = canonicalRoot.endsWith(sep) ? canonicalRoot : `${canonicalRoot}${sep}`;
   if (admittedLocators === undefined) {
     const visit = (current) => {
       for (const name of readdirSync(current).sort()) {
@@ -322,7 +514,7 @@ export function digestCompilerExecutableClosure(directory, admittedLocators) {
         || locator.startsWith("/") || /^[A-Za-z]:/u.test(locator)
         || locator.includes("\\") || locator.includes("\0")
         || locator.split("/").some((segment) => segment === "" || segment === "." || segment === "..")
-        || ![".js", ".json", ".wasm", ".fungi"].includes(extname(locator))
+        || ![".js", ".mjs", ".json", ".wasm", ".fungi"].includes(extname(locator))
         || locator === "build-evidence.json") {
         refuse("COMPILER_BUILD_MANIFEST");
       }
@@ -330,8 +522,26 @@ export function digestCompilerExecutableClosure(directory, admittedLocators) {
       const segments = locator.split("/");
       for (let index = 0; index < segments.length; index += 1) {
         path = join(path, segments[index]);
-        const stat = lstatSync(path, { bigint: true });
+        let stat;
+        let canonicalPath;
+        try {
+          const siblings = readdirSync(dirname(path));
+          const exactMatches = siblings.filter((name) => name === segments[index]);
+          const foldedMatches = siblings.filter((name) => name.toUpperCase() === segments[index].toUpperCase());
+          if (foldedMatches.length === 0) refuse("COMPILER_BUILD_MISSING");
+          if (exactMatches.length !== 1 || foldedMatches.length !== 1) {
+            refuse("COMPILER_BUILD_CASE");
+          }
+          stat = lstatSync(path, { bigint: true });
+          canonicalPath = realpathSync.native(path);
+        } catch (error) {
+          if (error instanceof ScalarArtifactRefusal) throw error;
+          refuse("COMPILER_BUILD_MISSING");
+        }
         if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
+        if (canonicalPath !== canonicalRoot && !canonicalPath.startsWith(rootPrefix)) {
+          refuse("COMPILER_BUILD_CONTAINMENT");
+        }
         if (index < segments.length - 1 ? !stat.isDirectory() : !stat.isFile()) {
           refuse("COMPILER_BUILD_MANIFEST");
         }
@@ -341,7 +551,7 @@ export function digestCompilerExecutableClosure(directory, admittedLocators) {
   }
   if (files.length < 1) refuse("COMPILER_BUILD_EMPTY");
   const hash = createHash("sha256");
-  hash.update("galerina.compiler-executable-graph.v1\0", "utf8");
+  hash.update("galerina.compiler-executable-graph.v2\0", "utf8");
   for (const path of files) {
     const locator = relative(directory, path).replaceAll("\\", "/");
     const bytes = stableRead(path, CHILD_MAX_BYTES * 16, "COMPILER_BUILD");
@@ -351,126 +561,237 @@ export function digestCompilerExecutableClosure(directory, admittedLocators) {
   return `sha256:${hash.digest("hex")}`;
 }
 
-let freshCompilerPromise;
 export async function buildFreshHeadCompiler() {
-  if (freshCompilerPromise !== undefined) return freshCompilerPromise;
-  freshCompilerPromise = (async () => {
-    const governedPaths = [
-      SCALAR_ORACLE_SOURCE_RELATIVE,
-      SCALAR_ORACLE_ARTIFACT_RELATIVE,
-      GENERATOR_RELATIVE,
-      COMPILER_PACKAGE_RELATIVE,
-      PACKAGE_LOCK_RELATIVE,
-    ];
-    requireHeadMatchesWorktree(governedPaths);
-    const headBefore = String(git(["rev-parse", "HEAD"])).trim();
-    const npmCli = join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js");
-    const built = spawnSync(
-      process.execPath,
-      [npmCli, "--prefix", COMPILER_PACKAGE_RELATIVE, "run", "build"],
-      {
-        cwd: root,
-        encoding: "utf8",
-        maxBuffer: CHILD_MAX_BYTES * 16,
-        timeout: CHILD_TIMEOUT_MS,
+  const governedPaths = [
+    SCALAR_ORACLE_SOURCE_RELATIVE,
+    SCALAR_ORACLE_ARTIFACT_RELATIVE,
+    GENERATOR_RELATIVE,
+    COMPILER_PACKAGE_RELATIVE,
+    GRAPH_PACKAGE_RELATIVE,
+    SUBSTRATE_PACKAGE_RELATIVE,
+    PACKAGE_LOCK_RELATIVE,
+  ];
+  requireHeadMatchesWorktree(governedPaths);
+  const headBefore = String(git(["rev-parse", "HEAD"])).trim();
+  const token = randomBytes(16).toString("hex");
+  const temporaryRoot = mkdtempSync(join(tmpdir(), "rd0858-scalar-build-"));
+  const stageRoot = join(temporaryRoot, "stage");
+  const runtimeRoot = join(temporaryRoot, "runtime");
+  const compilerStage = join(stageRoot, "compiler");
+  const graphStage = join(stageRoot, "graph");
+  const substrateStage = join(stageRoot, "substrate");
+  try {
+    assertContainedRegularRoot(temporaryRoot, "TEMP");
+    writeExclusive(join(temporaryRoot, OWNERSHIP_MARKER), Buffer.from(JSON.stringify({
+      schema: "rd0858.scalar-temp-owner.v1",
+      token,
+    }), "utf8"));
+    materializeHeadFiles(compilerStage, COMPILER_PACKAGE_RELATIVE, SCALAR_COMPILER_SOURCE_LOCATORS);
+    materializeHeadFiles(graphStage, GRAPH_PACKAGE_RELATIVE, allHeadTypeScriptLocators(GRAPH_PACKAGE_RELATIVE));
+    materializeHeadFiles(substrateStage, SUBSTRATE_PACKAGE_RELATIVE, allHeadTypeScriptLocators(SUBSTRATE_PACKAGE_RELATIVE));
+
+    writeExclusive(join(graphStage, "package.json"), Buffer.from('{"type":"module"}\n', "utf8"));
+    writeExclusive(join(substrateStage, "package.json"), Buffer.from('{"type":"module"}\n', "utf8"));
+    writeExclusive(join(compilerStage, "package.json"), Buffer.from('{"type":"module"}\n', "utf8"));
+    writeExclusive(join(compilerStage, "src", "rd0858-external-shim.d.ts"), Buffer.from(
+      'declare module "@noble/post-quantum/ml-dsa.js" { export const ml_dsa65: any; }\n',
+      "utf8",
+    ));
+
+    const graphOut = join(runtimeRoot, "node_modules", "@galerina", "devtools-graph-algorithms");
+    const substrateOut = join(runtimeRoot, "node_modules", "@galerina", "substrate-math");
+    const compilerOut = join(runtimeRoot, "core");
+    const commonOptions = {
+      target: "ES2022",
+      strict: true,
+      skipLibCheck: true,
+      declaration: true,
+      declarationMap: false,
+      sourceMap: false,
+    };
+    const graphConfig = join(graphStage, "tsconfig.json");
+    writeExclusive(graphConfig, Buffer.from(JSON.stringify({
+      compilerOptions: {
+        ...commonOptions,
+        module: "NodeNext",
+        moduleResolution: "NodeNext",
+        rootDir: join(graphStage, "src"),
+        outDir: graphOut,
       },
-    );
-    if (built.status !== 0 || built.error !== undefined) {
-      refuse("COMPILER_BUILD", String(built.stderr ?? built.error ?? "unknown").slice(0, 512));
+      include: [join(graphStage, "src", "**", "*.ts")],
+    }), "utf8"));
+    runTypeScriptBuild(graphConfig);
+    const graphTypeOnlyOutput = join(graphOut, "core", "types.js");
+    if (textDecoder.decode(stableRead(graphTypeOnlyOutput, 64, "COMPILER_BUILD")) !== "export {};\n") {
+      refuse("COMPILER_BUILD_TYPE_ONLY");
     }
+    unlinkSync(graphTypeOnlyOutput);
+    writeExclusive(join(graphOut, "package.json"), Buffer.from(JSON.stringify({
+      name: "@galerina/devtools-graph-algorithms",
+      type: "module",
+      main: "index.js",
+      types: "index.d.ts",
+    }), "utf8"));
+
+    const substrateConfig = join(substrateStage, "tsconfig.json");
+    writeExclusive(substrateConfig, Buffer.from(JSON.stringify({
+      compilerOptions: {
+        ...commonOptions,
+        module: "NodeNext",
+        moduleResolution: "NodeNext",
+        rootDir: join(substrateStage, "src"),
+        outDir: substrateOut,
+      },
+      include: [join(substrateStage, "src", "**", "*.ts")],
+    }), "utf8"));
+    runTypeScriptBuild(substrateConfig);
+    writeExclusive(join(substrateOut, "package.json"), Buffer.from(JSON.stringify({
+      name: "@galerina/substrate-math",
+      type: "module",
+      main: "index.js",
+      types: "index.d.ts",
+      exports: "./index.js",
+    }), "utf8"));
+
+    const compilerConfig = join(compilerStage, "tsconfig.json");
+    writeExclusive(compilerConfig, Buffer.from(JSON.stringify({
+      compilerOptions: {
+        ...commonOptions,
+        module: "NodeNext",
+        moduleResolution: "NodeNext",
+        noUncheckedIndexedAccess: true,
+        exactOptionalPropertyTypes: true,
+        rootDir: join(compilerStage, "src"),
+        outDir: compilerOut,
+        baseUrl: compilerStage,
+        paths: {
+          "@galerina/devtools-graph-algorithms": [join(graphOut, "index.d.ts")],
+          "@galerina/substrate-math": [join(substrateOut, "index.d.ts")],
+        },
+      },
+      include: [join(compilerStage, "src", "**", "*.ts")],
+    }), "utf8"));
+    runTypeScriptBuild(compilerConfig);
+
+    writeExclusive(join(runtimeRoot, "strict-loader.mjs"), Buffer.from(STRICT_LOADER_SOURCE, "utf8"));
+    writeExclusive(join(runtimeRoot, "scalar-runner.mjs"), Buffer.from(SCALAR_RUNNER_SOURCE, "utf8"));
+    const executableLocators = runtimeExecutableLocators(runtimeRoot);
+    const compilerExecutableGraphDigest = digestCompilerExecutableClosure(runtimeRoot, executableLocators);
+    const executableUrls = executableLocators
+      .filter((locator) => locator.endsWith(".js") || locator.endsWith(".mjs"))
+      .filter((locator) => locator !== "strict-loader.mjs")
+      .map((locator) => pathToFileURL(join(runtimeRoot, ...locator.split("/"))).href)
+      .sort();
+    const entryUrl = pathToFileURL(join(runtimeRoot, ...SCALAR_ENTRY_LOCATOR.split("/"))).href;
+    if (!executableUrls.includes(entryUrl)) refuse("COMPILER_MODULE_ENTRY");
     requireHeadMatchesWorktree(governedPaths);
     if (String(git(["rev-parse", "HEAD"])).trim() !== headBefore) refuse("HEAD_DRIFT");
-    const compilerExecutableLocators = compilerExecutableLocatorsFromHead();
-    const compilerExecutableGraphDigest = digestCompilerExecutableClosure(
-      compilerDistPath,
-      compilerExecutableLocators,
-    );
-    const compiler = await import(
-      `${pathToFileURL(compilerEntryPath).href}?${headBefore}-${compilerExecutableGraphDigest.slice(7)}`
-    );
-    for (const name of [
-      "validateCoreSyntaxSafety",
-      "parseProgram",
-      "resolveSymbols",
-      "checkTypes",
-      "checkValueStates",
-      "checkEffects",
-      "verifyGovernance",
-      "checkSourceEscapes",
-      "checkNamingPolicy",
-      "effectResultsToDiagnostics",
-      "snapshotCheckedFlow",
-      "encodeCheckedFlowArtifact",
-      "decodeCheckedFlowArtifact",
-      "digestCheckedFlowArtifact",
-    ]) {
-      if (typeof compiler[name] !== "function") refuse("COMPILER_EXPORT", name);
+
+    const execute = (request) => {
+      const invocation = randomBytes(16).toString("hex");
+      const tracePath = join(temporaryRoot, `trace-${invocation}.txt`);
+      const configPath = join(temporaryRoot, `loader-${invocation}.json`);
+      writeExclusive(tracePath, Buffer.from("", "utf8"));
+      writeExclusive(configPath, Buffer.from(JSON.stringify({
+        files: executableUrls,
+        builtins: ["node:crypto", "node:fs"],
+        trace: tracePath,
+      }), "utf8"));
+      const result = spawnSync(
+        process.execPath,
+        ["--experimental-loader", pathToFileURL(join(runtimeRoot, "strict-loader.mjs")).href,
+          join(runtimeRoot, "scalar-runner.mjs")],
+        {
+          cwd: temporaryRoot,
+          encoding: "utf8",
+          input: JSON.stringify(request),
+          env: closedChildEnv({
+            RD0858_LOADER_CONFIG: configPath,
+            RD0858_SCALAR_ENTRY_URL: entryUrl,
+          }),
+          maxBuffer: CHILD_MAX_BYTES,
+          timeout: CHILD_TIMEOUT_MS,
+        },
+      );
+      let trace = [];
+      try {
+        trace = readFileSync(tracePath, "utf8").split("\n").filter(Boolean).sort();
+      } finally {
+        unlinkSync(tracePath);
+        unlinkSync(configPath);
+      }
+      if (result.status !== 0 || result.error !== undefined) refuse("COMPILER_MODULE_CHILD");
+      if (trace.length !== executableUrls.length
+        || trace.some((url, index) => url !== executableUrls[index])) {
+        refuse("COMPILER_MODULE_TRACE");
+      }
+      let parsed;
+      try {
+        parsed = JSON.parse(result.stdout);
+      } catch {
+        refuse("COMPILER_MODULE_FRAME");
+      }
+      return parsed;
+    };
+    return Object.freeze({
+      compilerExecutableGraphDigest,
+      execute,
+      dispose: () => cleanupOwnedTemporary(temporaryRoot, token),
+    });
+  } catch (error) {
+    try {
+      cleanupOwnedTemporary(temporaryRoot, token);
+    } catch {
+      // Preserve unowned or structurally changed residue for owner adjudication.
     }
-    if (digestCompilerExecutableClosure(
-      compilerDistPath,
-      compilerExecutableLocators,
-    ) !== compilerExecutableGraphDigest) {
-      refuse("COMPILER_BUILD_DRIFT");
-    }
-    return Object.freeze({ compiler, compilerExecutableGraphDigest });
-  })();
-  return freshCompilerPromise;
+    throw error;
+  }
 }
 
 export async function buildScalarOracleArtifactCandidate() {
   const sourceBytes = stableRead(sourcePath, SOURCE_MAX_BYTES, "SOURCE");
   const inspected = inspectScalarOracleSource(sourceBytes);
-  const { compiler, compilerExecutableGraphDigest } = await buildFreshHeadCompiler();
-  const identity = currentIdentity(inspected.sourceDigest, compilerExecutableGraphDigest);
-  const checkedAst = compileCheckedAst(compiler, inspected.source);
-  const artifact = Object.freeze({
-    schema: "galerina.rd0858.checked-flow.v1",
-    hashAlgorithm: "sha256",
-    productId: "galerina",
-    packageId: "rd0858-unit4-scalar-oracle",
-    flowLocator: "rd0858/unit4/scalar-oracle",
-    flowName: "scalarOracle",
-    languageVersion: 1,
-    runtimeProfile: "scalar-1",
-    sourceCanonicalization: "UTF8_NO_BOM_LF_NFC_V1",
-    sourceDigest: identity.sourceDigest,
-    compilerPackageId: "@galerina/core-compiler",
-    compilerVersion: compilerVersion(),
-    compilerPackageGraphDigest: identity.compilerPackageGraphDigest,
-    checkerSetId: "galerina.strict-checks.v1",
-    checkerSetDigest: identity.checkerSetDigest,
-    generatorId: "rd0858-scalar-oracle-generator.v1",
-    generatorSourceDigest: identity.generatorSourceDigest,
-    qualifier: "pure",
-    parameters: Object.freeze([Object.freeze({ name: "subject", type: "Verdict" })]),
-    returnType: "String",
-    declaredEffects: Object.freeze([]),
-    checkedAst,
-  });
-  const bytes = compiler.encodeCheckedFlowArtifact(artifact);
-  const decoded = compiler.decodeCheckedFlowArtifact(bytes);
-  assertExactScalarAst(decoded.checkedAst);
-  return Object.freeze({ artifact: decoded, bytes, identity });
+  const isolated = await buildFreshHeadCompiler();
+  try {
+    const identity = currentIdentity(inspected.sourceDigest, isolated.compilerExecutableGraphDigest);
+    const result = isolated.execute({
+      mode: "candidate",
+      source: inspected.source,
+      identity: { ...identity, compilerVersion: compilerVersion() },
+    });
+    if (result?.artifact === null || typeof result?.artifact !== "object"
+      || typeof result?.bytes !== "string") refuse("COMPILER_MODULE_FRAME");
+    const bytes = Buffer.from(result.bytes, "base64");
+    if (bytes.toString("base64") !== result.bytes) refuse("COMPILER_MODULE_FRAME");
+    assertExactScalarAst(result.artifact.checkedAst);
+    return Object.freeze({ artifact: Object.freeze(result.artifact), bytes, identity });
+  } finally {
+    isolated.dispose();
+  }
 }
 
 export async function verifyScalarOraclePair(sourceBytes, artifactBytes, identity) {
-  const { compiler, compilerExecutableGraphDigest } = await buildFreshHeadCompiler();
   const inspected = inspectScalarOracleSource(sourceBytes);
-  const artifact = compiler.decodeCheckedFlowArtifact(artifactBytes);
-  assertExactScalarAst(artifact.checkedAst);
-  if (artifact.sourceDigest !== inspected.sourceDigest || artifact.sourceDigest !== identity?.sourceDigest) {
-    refuse("PAIR_SOURCE_DIGEST");
+  const isolated = await buildFreshHeadCompiler();
+  try {
+    const current = currentIdentity(inspected.sourceDigest, isolated.compilerExecutableGraphDigest);
+    for (const field of ["sourceDigest", "compilerPackageGraphDigest", "checkerSetDigest",
+      "generatorSourceDigest", "compilerExecutableGraphDigest"]) {
+      if (identity?.[field] !== current[field]) refuse(`PAIR_${field.toUpperCase()}`);
+    }
+    const result = isolated.execute({
+      mode: "verify",
+      source: inspected.source,
+      bytes: Buffer.from(artifactBytes).toString("base64"),
+      identity: { ...current, compilerVersion: compilerVersion() },
+    });
+    if (typeof result?.artifactDigest !== "string" || result.sourceDigest !== inspected.sourceDigest) {
+      refuse("COMPILER_MODULE_FRAME");
+    }
+    return Object.freeze(result);
+  } finally {
+    isolated.dispose();
   }
-  if (artifact.compilerPackageGraphDigest !== identity?.compilerPackageGraphDigest) refuse("PAIR_TOOLCHAIN_GRAPH");
-  if (artifact.checkerSetDigest !== identity?.checkerSetDigest) refuse("PAIR_CHECKER_SET");
-  if (artifact.generatorSourceDigest !== identity?.generatorSourceDigest) refuse("PAIR_GENERATOR");
-  if (compilerExecutableGraphDigest !== identity?.compilerExecutableGraphDigest) {
-    refuse("PAIR_EXECUTABLE_GRAPH");
-  }
-  return Object.freeze({
-    artifactDigest: compiler.digestCheckedFlowArtifact(artifactBytes),
-    sourceDigest: inspected.sourceDigest,
-  });
 }
 
 function isolatedCandidate() {
@@ -478,7 +799,7 @@ function isolatedCandidate() {
   const result = spawnSync(process.execPath, [generatorPath, "--internal-candidate"], {
     cwd: root,
     encoding: "utf8",
-    env: { ...process.env, GALERINA_SCALAR_GENERATOR_INTERNAL: token },
+    env: closedChildEnv({ GALERINA_SCALAR_GENERATOR_INTERNAL: token }),
     maxBuffer: CHILD_MAX_BYTES,
     timeout: CHILD_TIMEOUT_MS,
   });
