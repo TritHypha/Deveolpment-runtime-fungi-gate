@@ -34,6 +34,7 @@ function validateInput({
   timeoutMs,
   cleanupGraceMs,
   maxOutputBytes,
+  protectedReadTree = null,
 }) {
   if (typeof command !== "string" || command.length === 0
       || !Array.isArray(args)
@@ -42,7 +43,11 @@ function validateInput({
       || (env !== undefined && (env === null || typeof env !== "object" || Array.isArray(env)))
       || !Number.isSafeInteger(timeoutMs) || timeoutMs < 1
       || !Number.isSafeInteger(cleanupGraceMs) || cleanupGraceMs < 1
-      || !Number.isSafeInteger(maxOutputBytes) || maxOutputBytes < 1) {
+      || !Number.isSafeInteger(maxOutputBytes) || maxOutputBytes < 1
+      || (protectedReadTree !== null
+        && (typeof protectedReadTree !== "string"
+          || !path.isAbsolute(protectedReadTree)
+          || protectedReadTree.includes("\0")))) {
     throw inputError("Owned process command, arguments, paths, limits, or environment are invalid.");
   }
 }
@@ -135,6 +140,7 @@ async function runOwnedProcess({
   cleanupGraceMs = DEFAULT_CLEANUP_GRACE_MS,
   maxOutputBytes = DEFAULT_MAX_OUTPUT_BYTES,
   windowsHide = true,
+  protectedReadTree = null,
 }) {
   validateInput({
     command,
@@ -144,6 +150,7 @@ async function runOwnedProcess({
     timeoutMs,
     cleanupGraceMs,
     maxOutputBytes,
+    protectedReadTree,
   });
 
   return new Promise((resolve) => {
@@ -211,6 +218,14 @@ async function runOwnedProcess({
     let spawnCommand = command;
     let spawnArgs = args;
     const wardenManaged = process.platform === "win32";
+    if (protectedReadTree !== null && !wardenManaged) {
+      spawnError = {
+        code: "PROCESS-WARDEN-IMMUTABILITY-UNAVAILABLE",
+        message: "A protected read tree requires the verified Windows process warden.",
+      };
+      finish(null, null);
+      return;
+    }
     if (wardenManaged) {
       try {
         spawnCommand = verifiedWindowsWarden();
@@ -219,6 +234,9 @@ async function runOwnedProcess({
           String(timeoutMs),
           "--owner-pid",
           String(process.pid),
+          ...(protectedReadTree === null
+            ? []
+            : ["--protect-read-tree", protectedReadTree]),
           "--",
           command,
           ...args,

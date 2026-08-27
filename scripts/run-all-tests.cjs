@@ -6,7 +6,6 @@
 
 const { createHash } = require("node:crypto");
 const fs = require("node:fs");
-const os = require("node:os");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const {
@@ -32,9 +31,16 @@ const RUN_LAST = new Set(["galerina-devtools-graph-project"]);
 const TIMEOUT_MS = 600_000;
 const MAX_DIAGNOSTIC_LINES = 32;
 const MAX_DIAGNOSTIC_LINE_LENGTH = 1024;
+const MAX_FALLBACK_PLAN_STEPS = 128;
+const MAX_FALLBACK_PLAN_DEPTH = 16;
 
 function refuseToolchain(detail) {
   return Object.assign(new Error(detail), { code: "TEST-TOOLCHAIN-REFUSED" });
+}
+
+function normalizeToolchainError(error) {
+  if (error?.code === "TEST-TOOLCHAIN-REFUSED") return error;
+  return refuseToolchain(error instanceof Error ? error.message : String(error));
 }
 
 function readJsonFile(absolutePath, locator) {
@@ -147,70 +153,6 @@ function lockedTypeScriptTreeDigest(root, version) {
   return record.treeDigest;
 }
 
-function shellQuote(value) {
-  return `'${value.replace(/'/gu, `'"'"'`)}'`;
-}
-
-function createTypeScriptShim(installedDirectory, expectedTreeDigest) {
-  const tempRoot = path.resolve(os.tmpdir());
-  const prefix = path.join(tempRoot, "galerina-tsc-");
-  const shimDirectory = fs.mkdtempSync(prefix);
-  if (path.dirname(shimDirectory) !== tempRoot
-      || !path.basename(shimDirectory).startsWith("galerina-tsc-")) {
-    throw refuseToolchain("The private TypeScript shim directory escaped the admitted temp root.");
-  }
-  try {
-    const privatePackageDirectory = path.join(shimDirectory, "typescript");
-    fs.cpSync(installedDirectory, privatePackageDirectory, {
-      recursive: true,
-      errorOnExist: true,
-      force: false,
-      dereference: false,
-    });
-    const observedTreeDigest = packageTreeDigest(privatePackageDirectory);
-    if (observedTreeDigest !== expectedTreeDigest) {
-      throw refuseToolchain(
-        `The installed canonical TypeScript bytes do not match the repository toolchain lock (${observedTreeDigest} != ${expectedTreeDigest}).`,
-      );
-    }
-    const compilerPath = fs.realpathSync(path.join(privatePackageDirectory, "bin", "tsc"));
-    if (!isContained(fs.realpathSync(privatePackageDirectory), compilerPath)
-        || !fs.statSync(compilerPath).isFile()) {
-      throw refuseToolchain("The private TypeScript launcher escaped its authenticated package root.");
-    }
-    if (process.platform === "win32") {
-      if (/[\r\n%"]/u.test(process.execPath) || /[\r\n%"]/u.test(compilerPath)) {
-        throw refuseToolchain("The admitted TypeScript launcher contains unsafe command characters.");
-      }
-      fs.writeFileSync(
-        path.join(shimDirectory, "tsc.cmd"),
-        `@echo off\r\n"${process.execPath}" "${compilerPath}" %*\r\n`,
-        { encoding: "utf8", mode: 0o700 },
-      );
-    } else {
-      fs.writeFileSync(
-        path.join(shimDirectory, "tsc"),
-        `#!/bin/sh\nexec ${shellQuote(process.execPath)} ${shellQuote(compilerPath)} "$@"\n`,
-        { encoding: "utf8", mode: 0o700 },
-      );
-    }
-  } catch (error) {
-    fs.rmSync(shimDirectory, { recursive: true, force: true });
-    throw error;
-  }
-  return {
-    directory: shimDirectory,
-    release() {
-      const resolved = path.resolve(shimDirectory);
-      if (path.dirname(resolved) !== tempRoot
-          || !path.basename(resolved).startsWith("galerina-tsc-")) {
-        throw refuseToolchain("Private TypeScript shim cleanup target is outside its admitted root.");
-      }
-      fs.rmSync(resolved, { recursive: true, force: true });
-    },
-  };
-}
-
 function prepareTypeScriptFallback(root, selection) {
   const required = selection.filter(packageNeedsTypeScriptFallback);
   if (required.length === 0) return null;
@@ -254,6 +196,20 @@ function prepareTypeScriptFallback(root, selection) {
     );
   }
   const expectedTreeDigest = lockedTypeScriptTreeDigest(absoluteRoot, canonicalVersion);
+  const verifyCanonicalTree = () => {
+    let observedTreeDigest;
+    try {
+      observedTreeDigest = packageTreeDigest(realInstalledDirectory);
+    } catch (error) {
+      throw normalizeToolchainError(error);
+    }
+    if (observedTreeDigest !== expectedTreeDigest) {
+      throw refuseToolchain(
+        `The installed canonical TypeScript bytes do not match the repository toolchain lock (${observedTreeDigest} != ${expectedTreeDigest}).`,
+      );
+    }
+  };
+  verifyCanonicalTree();
   for (const record of required) {
     const lockedVersion = lockedTypeScriptVersion(record.absolutePath, record.path);
     if (lockedVersion !== canonicalVersion) {
@@ -263,20 +219,96 @@ function prepareTypeScriptFallback(root, selection) {
     }
   }
 
-  const shim = createTypeScriptShim(realInstalledDirectory, expectedTreeDigest);
+  const packageSubjects = new Set(required.map((record) => record.subject));
   return Object.freeze({
-    binDirectory: shim.directory,
     version: canonicalVersion,
     treeDigest: expectedTreeDigest,
-    packages: Object.freeze(required.map((record) => record.subject)),
-    release: shim.release,
+    packages: Object.freeze([...packageSubjects]),
+    compilerPath: realCompilerPath,
+    compilerDirectory: realInstalledDirectory,
+    requires(subject) {
+      return packageSubjects.has(subject);
+    },
+    verifyCanonical: verifyCanonicalTree,
   });
 }
 
-function prependPath(environment, directory) {
-  const key = Object.keys(environment).find((candidate) => candidate.toLowerCase() === "path")
-    || "PATH";
-  environment[key] = `${directory}${path.delimiter}${environment[key] || ""}`;
+function closedCommandTokens(segment, scriptName) {
+  if (segment.length === 0
+      || /[\0\r\n|;<>^`$%!'"(){}\[\]\\]/u.test(segment)) {
+    throw refuseToolchain(`Package script ${scriptName} is outside the closed fallback command grammar.`);
+  }
+  const tokens = segment.trim().split(/\s+/u);
+  if (tokens.some((token) => token.length === 0 || token.length > 512)) {
+    throw refuseToolchain(`Package script ${scriptName} contains an invalid fallback token.`);
+  }
+  return tokens;
+}
+
+function compileFallbackTestPlan(directory) {
+  const manifest = readJsonFile(
+    path.join(directory, "package.json"),
+    `${directory}/package.json`,
+  );
+  const scripts = manifest?.scripts;
+  if (scripts === null || typeof scripts !== "object" || Array.isArray(scripts)) {
+    throw refuseToolchain("A fallback package must declare a closed scripts object.");
+  }
+  const plan = [];
+  const active = new Set();
+
+  const appendScript = (scriptName, includeLifecycle, depth) => {
+    if (depth > MAX_FALLBACK_PLAN_DEPTH || active.has(scriptName)) {
+      throw refuseToolchain(`Package script recursion is not admitted: ${scriptName}.`);
+    }
+    const script = scripts[scriptName];
+    if (typeof script !== "string" || script.trim().length === 0) {
+      throw refuseToolchain(`Package script is missing or empty: ${scriptName}.`);
+    }
+    active.add(scriptName);
+    try {
+      if (includeLifecycle && typeof scripts[`pre${scriptName}`] === "string") {
+        appendScript(`pre${scriptName}`, false, depth + 1);
+      }
+      if (/\|\||(^|[^&])&([^&]|$)/u.test(script)) {
+        throw refuseToolchain(`Package script ${scriptName} uses an unadmitted control operator.`);
+      }
+      for (const rawSegment of script.split("&&")) {
+        const tokens = closedCommandTokens(rawSegment.trim(), scriptName);
+        if (tokens[0] === "npm"
+            && tokens.length === 3
+            && tokens[1] === "run"
+            && /^[A-Za-z0-9:_-]+$/u.test(tokens[2])) {
+          appendScript(tokens[2], true, depth + 1);
+        } else if (tokens[0] === "node" && tokens.length >= 2) {
+          plan.push(Object.freeze({ kind: "node", args: Object.freeze(tokens.slice(1)) }));
+        } else if (tokens[0] === "tsc") {
+          plan.push(Object.freeze({ kind: "tsc", args: Object.freeze(tokens.slice(1)) }));
+        } else {
+          throw refuseToolchain(
+            `Package script ${scriptName} invokes an unadmitted fallback command: ${tokens[0]}.`,
+          );
+        }
+        if (plan.length > MAX_FALLBACK_PLAN_STEPS) {
+          throw refuseToolchain("The fallback package execution plan exceeds its step bound.");
+        }
+      }
+      if (includeLifecycle && typeof scripts[`post${scriptName}`] === "string") {
+        appendScript(`post${scriptName}`, false, depth + 1);
+      }
+    } finally {
+      active.delete(scriptName);
+    }
+  };
+
+  appendScript("test", true, 0);
+  if (plan.length === 0 || !plan.some((step) => step.kind === "tsc")) {
+    throw refuseToolchain("The fallback package plan does not contain an authenticated compiler step.");
+  }
+  if (plan.filter((step) => step.kind === "node" && step.args[0] === "--test").length !== 1) {
+    throw refuseToolchain("The fallback package plan must contain exactly one bounded node:test step.");
+  }
+  return Object.freeze(plan);
 }
 
 function failureEvidence(child, output) {
@@ -369,7 +401,7 @@ function parseCounts(output) {
   };
 }
 
-async function runNpmTest(directory, testScript, testConcurrency, toolchainBinDirectory) {
+function cleanChildEnvironment() {
   const childEnv = { ...process.env };
   // A runner invoked by node:test must start a new top-level test process.
   // Inheriting this marker makes Node treat the package suite as recursive
@@ -379,10 +411,80 @@ async function runNpmTest(directory, testScript, testConcurrency, toolchainBinDi
   delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
   delete childEnv.GALERINA_SUITE_LEASE_OWNER_PID;
   delete childEnv.GALERINA_SUITE_LEASE_MEDIATOR_PID;
-  if (toolchainBinDirectory !== null) prependPath(childEnv, toolchainBinDirectory);
+  return childEnv;
+}
+
+function cleanFallbackEnvironment() {
+  const childEnv = cleanChildEnvironment();
+  for (const key of Object.keys(childEnv)) {
+    if (key.toUpperCase() === "NODE_OPTIONS" || key.toUpperCase() === "NODE_PATH") {
+      delete childEnv[key];
+    }
+  }
+  return childEnv;
+}
+
+function admitFallbackPlatform(platform) {
+  if (platform !== "win32") {
+    throw refuseToolchain(
+      "The authenticated TypeScript fallback requires the admitted Windows process warden before any lifecycle step can run.",
+    );
+  }
+  return true;
+}
+
+function parseJUnitCounts(output) {
+  if (typeof output !== "string" || Buffer.byteLength(output, "utf8") > 64 * 1024 * 1024) {
+    return { tests: null, pass: null, fail: null };
+  }
+  const normalized = output.replace(/\r\n/gu, "\n");
+  const trailer = normalized.match(
+    /\n\t<!-- tests (\d+) -->\n\t<!-- suites (\d+) -->\n\t<!-- pass (\d+) -->\n\t<!-- fail (\d+) -->\n\t<!-- cancelled (\d+) -->\n\t<!-- skipped (\d+) -->\n\t<!-- todo (\d+) -->\n\t<!-- duration_ms (?:\d+(?:\.\d+)?|\.\d+) -->\n<\/testsuites>\n?$/u,
+  );
+  if (trailer === null
+      || !normalized.startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n")) {
+    return { tests: null, pass: null, fail: null };
+  }
+  const values = trailer.slice(1, 8).map((value) => Number(value));
+  if (values.some((value) => !Number.isSafeInteger(value) || value < 0)) {
+    return { tests: null, pass: null, fail: null };
+  }
+  const [tests, , pass, fail, cancelled, skipped, todo] = values;
+  if (pass + fail + cancelled + skipped + todo !== tests) {
+    return { tests: null, pass: null, fail: null };
+  }
+  return { tests, pass, fail };
+}
+
+function ownedProcessError(owned) {
+  if (owned.spawnError !== null) {
+    return Object.assign(new Error(owned.spawnError.message), {
+      code: owned.spawnError.code,
+    });
+  }
+  if (owned.outputLimitExceeded) {
+    return Object.assign(new Error("Owned process exceeded its bounded output limit."), {
+      code: "OWNED-PROCESS-OUTPUT-LIMIT",
+    });
+  }
+  if (owned.timedOut) {
+    return Object.assign(
+      new Error(owned.cleanupDetail),
+      { code: owned.cleanupAcknowledged ? "ETIMEDOUT" : "OWNED-PROCESS-TREE-CLEANUP-REFUSED" },
+    );
+  }
+  if (owned.cleanupAttempted && !owned.cleanupAcknowledged) {
+    return Object.assign(new Error(owned.cleanupDetail), {
+      code: "OWNED-PROCESS-TREE-CLEANUP-REFUSED",
+    });
+  }
+  return null;
+}
+
+async function runNpmTest(directory, testScript, testConcurrency) {
   const common = {
     cwd: directory,
-    env: childEnv,
+    env: cleanChildEnvironment(),
     timeoutMs: TIMEOUT_MS,
     maxOutputBytes: 64 * 1024 * 1024,
     windowsHide: true,
@@ -398,25 +500,7 @@ async function runNpmTest(directory, testScript, testConcurrency, toolchainBinDi
     args: invocation.args,
     ...common,
   });
-  let error;
-  if (owned.spawnError !== null) {
-    error = Object.assign(new Error(owned.spawnError.message), {
-      code: owned.spawnError.code,
-    });
-  } else if (owned.outputLimitExceeded) {
-    error = Object.assign(new Error("Owned process exceeded its bounded output limit."), {
-      code: "OWNED-PROCESS-OUTPUT-LIMIT",
-    });
-  } else if (owned.timedOut) {
-    error = Object.assign(
-      new Error(owned.cleanupDetail),
-      { code: owned.cleanupAcknowledged ? "ETIMEDOUT" : "OWNED-PROCESS-TREE-CLEANUP-REFUSED" },
-    );
-  } else if (owned.cleanupAttempted && !owned.cleanupAcknowledged) {
-    error = Object.assign(new Error(owned.cleanupDetail), {
-      code: "OWNED-PROCESS-TREE-CLEANUP-REFUSED",
-    });
-  }
+  const error = ownedProcessError(owned);
   return {
     child: {
       status: owned.status,
@@ -427,6 +511,97 @@ async function runNpmTest(directory, testScript, testConcurrency, toolchainBinDi
       owned,
     },
     boundedNodeTest: invocation.boundedNodeTest,
+    countOutput: `${owned.stdout || ""}\n${owned.stderr || ""}`,
+  };
+}
+
+async function runFallbackTestPlan(record, testConcurrency, typeScriptFallback) {
+  admitFallbackPlatform(process.platform);
+  const plan = compileFallbackTestPlan(record.absolutePath);
+  const started = Date.now();
+  let stdout = "";
+  let stderr = "";
+  let boundedNodeTest = false;
+  let countOutput = "";
+  let lastOwned = null;
+  let error = null;
+
+  for (const step of plan) {
+    const elapsed = Date.now() - started;
+    const remaining = TIMEOUT_MS - elapsed;
+    if (remaining < 1) {
+      error = Object.assign(new Error("The closed fallback plan exceeded its deadline."), {
+        code: "ETIMEDOUT",
+      });
+      break;
+    }
+    const nodeTest = step.kind === "node" && step.args[0] === "--test";
+    const args = [...step.args];
+    if (nodeTest) {
+      if (args.some((argument) => argument === "--test-concurrency"
+          || argument.startsWith("--test-concurrency=")
+          || argument === "--test-reporter"
+          || argument.startsWith("--test-reporter=")
+          || argument === "--test-reporter-destination"
+          || argument.startsWith("--test-reporter-destination="))) {
+        throw refuseToolchain(
+          "A fallback package cannot override the governed node:test concurrency or reporter.",
+        );
+      }
+      args.splice(
+        1,
+        0,
+        `--test-concurrency=${testConcurrency}`,
+        "--test-reporter=junit",
+      );
+    }
+    boundedNodeTest ||= nodeTest;
+
+    let command = process.execPath;
+    let protectedReadTree = null;
+    if (step.kind === "tsc") {
+      typeScriptFallback.verifyCanonical();
+      args.unshift(typeScriptFallback.compilerPath);
+      protectedReadTree = typeScriptFallback.compilerDirectory;
+    }
+    const owned = await runOwnedProcess({
+      command,
+      args,
+      cwd: record.absolutePath,
+      env: cleanFallbackEnvironment(),
+      timeoutMs: remaining,
+      maxOutputBytes: 64 * 1024 * 1024,
+      windowsHide: true,
+      protectedReadTree,
+    });
+    lastOwned = owned;
+    stdout += owned.stdout || "";
+    stderr += owned.stderr || "";
+    if (nodeTest) countOutput = owned.stdout || "";
+    if (Buffer.byteLength(stdout, "utf8") + Buffer.byteLength(stderr, "utf8")
+        > 64 * 1024 * 1024) {
+      error = Object.assign(new Error("Fallback plan output exceeded its bounded limit."), {
+        code: "OWNED-PROCESS-OUTPUT-LIMIT",
+      });
+      break;
+    }
+    if (step.kind === "tsc") typeScriptFallback.verifyCanonical();
+    error = ownedProcessError(owned);
+    if (error !== null || owned.status !== 0 || owned.signal !== null) break;
+  }
+
+  return {
+    child: {
+      status: error === null ? (lastOwned?.status ?? null) : lastOwned?.status ?? null,
+      signal: lastOwned?.signal ?? null,
+      stdout,
+      stderr,
+      ...(error ? { error } : {}),
+      owned: lastOwned,
+    },
+    boundedNodeTest,
+    countOutput,
+    counts: parseJUnitCounts(countOutput),
   };
 }
 
@@ -468,22 +643,62 @@ function failureFor(child, counts) {
   return null;
 }
 
-async function runPackage(record, testConcurrency, toolchainBinDirectory) {
+function toolchainRefusalResult(record, started, error, cleanupAttempted) {
+  const output = `Error: ${error.message}\n`;
+  return {
+    package: record.subject,
+    status: "fail",
+    exitCode: 1,
+    tests: null,
+    pass: null,
+    fail: null,
+    built: false,
+    boundedNodeTest: false,
+    processControl: {
+      ownedTree: false,
+      cleanupAttempted,
+    },
+    durationMs: Date.now() - started,
+    failureCode: error.code || "TEST-TOOLCHAIN-REFUSED",
+    detail: error.message,
+    failureEvidence: failureEvidence({ status: null, signal: null }, output),
+    _output: output,
+  };
+}
+
+async function runPackage(record, testConcurrency, typeScriptFallback) {
   const started = Date.now();
   process.stderr.write(
     `[run-all-tests] START ${record.subject} (test-file ceiling ${testConcurrency})\n`,
   );
-  const invocation = await runNpmTest(
-    record.absolutePath,
-    record.testScript,
-    testConcurrency,
-    toolchainBinDirectory,
-  );
+  let invocation = null;
+  let toolchainError = null;
+  try {
+    invocation = typeScriptFallback?.requires(record.subject) === true
+      ? await runFallbackTestPlan(record, testConcurrency, typeScriptFallback)
+      : await runNpmTest(record.absolutePath, record.testScript, testConcurrency);
+  } catch (error) {
+    toolchainError = normalizeToolchainError(error);
+  }
+  if (invocation === null) {
+    const result = toolchainRefusalResult(
+      record,
+      started,
+      toolchainError || refuseToolchain("TypeScript fallback execution was not admitted."),
+      false,
+    );
+    process.stderr.write(
+      `[run-all-tests] END ${record.subject} (${result.status}, ${(result.durationMs / 1000).toFixed(1)}s)\n`,
+    );
+    return result;
+  }
   const child = invocation.child;
   const durationMs = Date.now() - started;
   const output = `${child.stdout || ""}\n${child.stderr || ""}`;
-  const counts = parseCounts(output);
-  const failure = failureFor(child, counts);
+  const counts = invocation.counts ?? parseCounts(invocation.countOutput ?? output);
+  const failure = toolchainError === null
+    ? failureFor(child, counts)
+    : [toolchainError.code || "TEST-TOOLCHAIN-REFUSED", toolchainError.message];
   const result = {
     package: record.subject,
     status: failure === null ? "pass" : "fail",
@@ -518,7 +733,11 @@ async function runPackageGroup(records, options) {
   const results = new Array(records.length);
   let nextIndex = 0;
   let refusedNewWork = false;
-  const workerCount = Math.min(options.packageConcurrency, records.length);
+  const usesTypeScriptFallback = records.some((record) =>
+    options.typeScriptFallback?.requires(record.subject) === true);
+  const workerCount = usesTypeScriptFallback
+    ? 1
+    : Math.min(options.packageConcurrency, records.length);
 
   async function worker() {
     while (true) {
@@ -529,7 +748,7 @@ async function runPackageGroup(records, options) {
       const result = await runPackage(
         records[index],
         options.testConcurrency,
-        options.toolchainBinDirectory,
+        options.typeScriptFallback,
       );
       results[index] = result;
       if (options.bail && result.status === "fail") refusedNewWork = true;
@@ -818,27 +1037,13 @@ async function main() {
   const runLastRecords = selection.filter((record) => RUN_LAST.has(record.subject));
   const executed = [];
   const isolatedGroups = [runFirstRecords, parallelRecords, serialRecords, runLastRecords];
-  let toolchainCleanupViolation = null;
-  try {
-    for (const group of isolatedGroups) {
-      if (options.bail && executed.some((result) => result.status === "fail")) break;
-      executed.push(...await runPackageGroup(group, {
-        ...options,
-        toolchainBinDirectory: typeScriptFallback?.binDirectory ?? null,
-        packageConcurrency: group === parallelRecords ? options.packageConcurrency : 1,
-      }));
-    }
-  } finally {
-    if (typeScriptFallback !== null) {
-      try {
-        typeScriptFallback.release();
-      } catch (error) {
-        toolchainCleanupViolation = {
-          code: error.code || "TEST-TOOLCHAIN-REFUSED",
-          detail: error.message,
-        };
-      }
-    }
+  for (const group of isolatedGroups) {
+    if (options.bail && executed.some((result) => result.status === "fail")) break;
+    executed.push(...await runPackageGroup(group, {
+      ...options,
+      typeScriptFallback,
+      packageConcurrency: group === parallelRecords ? options.packageConcurrency : 1,
+    }));
   }
   const resultByPackage = new Map(executed.map((result) => [result.package, result]));
   const results = selection
@@ -852,8 +1057,7 @@ async function main() {
     0,
   );
   const complete = failed === 0
-    && results.length === selection.length
-    && toolchainCleanupViolation === null;
+    && results.length === selection.length;
   const scope = options.named.length > 0
     ? "named"
     : options.core
@@ -899,9 +1103,6 @@ async function main() {
       tests: totalTests,
     },
     results: visibleResults,
-    ...(toolchainCleanupViolation === null
-      ? {}
-      : { violations: [toolchainCleanupViolation] }),
     ...(countWrite === null ? {} : { countWrite }),
   };
 
@@ -916,7 +1117,13 @@ async function main() {
   process.exit(ok ? 0 : 1);
 }
 
-main().catch((error) => {
-  process.stderr.write(`run-all-tests: ${error.stack || error.message}\n`);
-  process.exit(1);
+if (require.main === module) {
+  main().catch((error) => {
+    process.stderr.write(`run-all-tests: ${error.stack || error.message}\n`);
+    process.exit(1);
+  });
+}
+
+module.exports = Object.freeze({
+  admitFallbackPlatform,
 });

@@ -1,7 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -83,6 +89,39 @@ test("invalid command and timeout inputs refuse before spawning", async () => {
     }),
     (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
   );
+});
+
+test("the Windows warden prevents writes inside a protected read tree", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-protected-"));
+  const protectedTree = join(root, "protected");
+  const protectedFile = join(protectedTree, "locked.txt");
+  mkdirSync(protectedTree, { recursive: true });
+  writeFileSync(protectedFile, "authenticated", "utf8");
+  try {
+    const result = await runOwnedProcess({
+      command: process.execPath,
+      args: [
+        "-e",
+        [
+          "const fs = require('node:fs');",
+          `const file = ${JSON.stringify(protectedFile)};`,
+          "if (fs.readFileSync(file, 'utf8') !== 'authenticated') process.exit(22);",
+          "try { fs.writeFileSync(file, 'substituted'); process.exit(23); } catch { process.exit(24); }",
+        ].join(" "),
+      ],
+      cwd: root,
+      env: process.env,
+      timeoutMs: 2_000,
+      protectedReadTree: protectedTree,
+    });
+
+    assert.equal(result.status, 24, result.stderr);
+    assert.equal(readFileSync(protectedFile, "utf8"), "authenticated");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("the synchronous adapter preserves owned output and exit semantics", () => {

@@ -10,8 +10,10 @@ fn main() {
 mod windows {
     use std::env;
     use std::ffi::{c_void, OsStr, OsString};
+    use std::fs;
     use std::mem::{size_of, zeroed};
     use std::os::windows::ffi::OsStrExt;
+    use std::path::Path;
     use std::process;
     use std::ptr::null;
 
@@ -26,12 +28,19 @@ mod windows {
     const JOB_OBJECT_EXTENDED_LIMIT_INFORMATION: i32 = 9;
     const JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE: Dword = 0x0000_2000;
     const SYNCHRONIZE: Dword = 0x0010_0000;
+    const GENERIC_READ: Dword = 0x8000_0000;
+    const FILE_READ_ATTRIBUTES: Dword = 0x0000_0080;
+    const FILE_SHARE_READ: Dword = 0x0000_0001;
+    const OPEN_EXISTING: Dword = 3;
+    const FILE_ATTRIBUTE_NORMAL: Dword = 0x0000_0080;
+    const FILE_FLAG_BACKUP_SEMANTICS: Dword = 0x0200_0000;
     const WAIT_OBJECT_0: Dword = 0x0000_0000;
     const WAIT_TIMEOUT: Dword = 0x0000_0102;
     const INFINITE: Dword = 0xffff_ffff;
     const WARDEN_TIMEOUT_EXIT: Dword = 124;
     const WARDEN_OWNER_EXIT: Dword = 125;
     const WARDEN_SETUP_EXIT: Dword = 126;
+    const INVALID_HANDLE_VALUE: Handle = -1isize as Handle;
 
     #[repr(C)]
     struct StartupInfoW {
@@ -120,6 +129,15 @@ mod windows {
         fn AssignProcessToJobObject(job: Handle, process: Handle) -> Bool;
         fn ResumeThread(thread: Handle) -> Dword;
         fn OpenProcess(access: Dword, inherit_handle: Bool, process_id: Dword) -> Handle;
+        fn CreateFileW(
+            file_name: *const u16,
+            desired_access: Dword,
+            share_mode: Dword,
+            security_attributes: *const c_void,
+            creation_disposition: Dword,
+            flags_and_attributes: Dword,
+            template_file: Handle,
+        ) -> Handle;
         fn WaitForMultipleObjects(
             count: Dword,
             handles: *const Handle,
@@ -197,12 +215,75 @@ mod windows {
         value.encode_wide().chain(std::iter::once(0)).collect()
     }
 
-    fn parse() -> (Dword, Dword, Vec<OsString>) {
+    fn open_protected_handle(path: &Path, directory: bool) -> Handle {
+        let wide = wide_nul(path.as_os_str());
+        let handle = unsafe {
+            CreateFileW(
+                wide.as_ptr(),
+                if directory {
+                    FILE_READ_ATTRIBUTES
+                } else {
+                    GENERIC_READ
+                },
+                FILE_SHARE_READ,
+                null(),
+                OPEN_EXISTING,
+                if directory {
+                    FILE_FLAG_BACKUP_SEMANTICS
+                } else {
+                    FILE_ATTRIBUTE_NORMAL
+                },
+                null::<c_void>() as Handle,
+            )
+        };
+        if handle == INVALID_HANDLE_VALUE {
+            fail(&last_error("CreateFileW(protected-read-tree)"));
+        }
+        handle
+    }
+
+    fn protect_read_tree(root: &OsStr) -> Vec<Handle> {
+        fn visit(path: &Path, handles: &mut Vec<Handle>) {
+            let metadata = fs::symlink_metadata(path)
+                .unwrap_or_else(|error| fail(&format!("protected-read-tree metadata: {error}")));
+            if metadata.file_type().is_symlink() {
+                fail("protected-read-tree symlink");
+            }
+            if !metadata.is_dir() && !metadata.is_file() {
+                fail("protected-read-tree unsupported entry");
+            }
+            handles.push(open_protected_handle(path, metadata.is_dir()));
+            if metadata.is_dir() {
+                let mut entries: Vec<_> = fs::read_dir(path)
+                    .unwrap_or_else(|error| fail(&format!("protected-read-tree read: {error}")))
+                    .map(|entry| {
+                        entry.unwrap_or_else(|error| {
+                            fail(&format!("protected-read-tree entry: {error}"))
+                        })
+                    })
+                    .collect();
+                entries.sort_by_key(|entry| entry.file_name());
+                for entry in entries {
+                    visit(&entry.path(), handles);
+                }
+            }
+        }
+
+        let canonical = fs::canonicalize(root)
+            .unwrap_or_else(|error| fail(&format!("protected-read-tree canonical: {error}")));
+        let mut handles = Vec::new();
+        visit(&canonical, &mut handles);
+        if handles.is_empty() {
+            fail("protected-read-tree empty");
+        }
+        handles
+    }
+
+    fn parse() -> (Dword, Dword, Option<OsString>, Vec<OsString>) {
         let arguments: Vec<OsString> = env::args_os().skip(1).collect();
         if arguments.len() < 6
             || arguments[0] != "--timeout-ms"
             || arguments[2] != "--owner-pid"
-            || arguments[4] != "--"
         {
             fail("arguments");
         }
@@ -218,15 +299,33 @@ mod windows {
             .ok()
             .filter(|value| *value > 0)
             .unwrap_or_else(|| fail("owner-pid"));
-        let command = arguments[5..].to_vec();
+        let mut index = 4usize;
+        let protected_read_tree = if arguments.get(index).is_some_and(|value| value == "--protect-read-tree") {
+            let value = arguments
+                .get(index + 1)
+                .cloned()
+                .unwrap_or_else(|| fail("protected-read-tree"));
+            index += 2;
+            Some(value)
+        } else {
+            None
+        };
+        if arguments.get(index).is_none_or(|value| value != "--") {
+            fail("arguments");
+        }
+        let command = arguments[index + 1..].to_vec();
         if command.is_empty() {
             fail("command");
         }
-        (timeout, owner_pid, command)
+        (timeout, owner_pid, protected_read_tree, command)
     }
 
     pub fn main() {
-        let (timeout, owner_pid, command) = parse();
+        let (timeout, owner_pid, protected_read_tree, command) = parse();
+        let protected_handles = protected_read_tree
+            .as_deref()
+            .map(protect_read_tree)
+            .unwrap_or_default();
         let owner = unsafe { OpenProcess(SYNCHRONIZE, FALSE, owner_pid) };
         if owner.is_null() {
             fail(&last_error("OpenProcess(owner)"));
@@ -337,6 +436,9 @@ mod windows {
         close(process_info.h_process);
         close(job);
         close(owner);
+        for handle in protected_handles {
+            close(handle);
+        }
         process::exit(exit as i32);
     }
 }

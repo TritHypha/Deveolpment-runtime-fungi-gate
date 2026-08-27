@@ -21,6 +21,7 @@ const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const RUNNER = join(TEST_DIR, "..", "run-all-tests.cjs");
 const require = createRequire(import.meta.url);
 const { acquireSuiteLease } = require("../lib/suite-run-lease.cjs");
+const { admitFallbackPlatform } = require("../run-all-tests.cjs");
 const roots = [];
 
 after(() => {
@@ -258,6 +259,284 @@ function typescriptFallbackFixture({ lockVersion = "5.9.3" } = {}) {
   return root;
 }
 
+function crossPackageTypeScriptMutationFixture() {
+  const root = typescriptFallbackFixture();
+  write(
+    root,
+    "packages-ts/galerina-core-compiler/compiler-pass.cjs",
+    [
+      "const fs = require('node:fs');",
+      "const path = require('node:path');",
+      "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+      "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+      "if (shim) {",
+      "  fs.writeFileSync(path.join(__dirname, 'shim-disclosed.txt'), shim);",
+      "  fs.writeFileSync(path.join(shim, 'typescript', 'bin', 'tsc'), [",
+      "    \"const fs = require('node:fs');\",",
+      "    \"const path = require('node:path');\",",
+      "    \"fs.writeFileSync(path.join(process.cwd(), 'hijacked-tsc.txt'), 'executed');\",",
+      "  ].join('\\n') + '\\n');",
+      "}",
+      "console.log('tests 1\\npass 1\\nfail 0');",
+    ].join("\n") + "\n",
+  );
+  return root;
+}
+
+function canonicalTypeScriptMutationFixture() {
+  const root = typescriptFallbackFixture();
+  write(
+    root,
+    "packages-ts/galerina-core-compiler/compiler-pass.cjs",
+    [
+      "const fs = require('node:fs');",
+      "const path = require('node:path');",
+      "const root = path.resolve(__dirname, '..', '..');",
+      "const compiler = path.join(root, 'packages-ts', 'galerina-core-compiler', 'node_modules', 'typescript', 'bin', 'tsc');",
+      "fs.writeFileSync(compiler, [",
+      "  \"const fs = require('node:fs');\",",
+      "  \"const path = require('node:path');\",",
+      "  \"fs.writeFileSync(path.join(process.cwd(), 'canonical-source-hijacked.txt'), 'executed');\",",
+      "].join('\\n') + '\\n');",
+      "console.log('tests 1\\npass 1\\nfail 0');",
+    ].join("\n") + "\n",
+  );
+  return root;
+}
+
+function selfMutatingTypeScriptFixture() {
+  const root = typescriptFallbackFixture();
+  write(
+    root,
+    "packages-ts/galerina-core-compiler/node_modules/typescript/bin/tsc",
+    [
+      "const fs = require('node:fs');",
+      "const path = require('node:path');",
+      "fs.writeFileSync(path.join(process.cwd(), 'self-mutating-tsc.txt'), 'executed');",
+      "fs.appendFileSync(__filename, '\\n// changed during execution\\n');",
+    ].join("\n") + "\n",
+  );
+  writeTypeScriptIntegrity(root);
+  return root;
+}
+
+function transientTypeScriptSubstitutionFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/package.json", JSON.stringify({
+    name: "@galerina/needs-tsc",
+    scripts: {
+      pretypecheck: "node transient-pre.cjs",
+      typecheck: "tsc --noEmit",
+      posttypecheck: "node transient-post.cjs",
+      test: "npm run typecheck && node --test tests/current.test.mjs",
+    },
+    devDependencies: { typescript: "^5.5.0" },
+  }));
+  write(root, "packages-ts/needs-tsc/transient-pre.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+    "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+    "if (!shim) process.exit(2);",
+    "const compiler = path.join(shim, 'typescript', 'bin', 'tsc');",
+    "const backup = path.join(__dirname, 'authenticated-tsc.backup');",
+    "fs.writeFileSync(backup, fs.readFileSync(compiler));",
+    "try {",
+    "  fs.writeFileSync(compiler, [",
+    "    \"const fs = require('node:fs');\",",
+    "    \"const path = require('node:path');\",",
+    "    \"fs.writeFileSync(path.join(process.cwd(), 'transient-hijack.txt'), 'executed');\",",
+    "  ].join('\\n') + '\\n');",
+    "} catch (error) {",
+    "  fs.writeFileSync(path.join(__dirname, 'transient-write-refused.txt'), error.code || 'refused');",
+    "}",
+  ].join("\n") + "\n");
+  write(root, "packages-ts/needs-tsc/transient-post.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+    "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+    "const compiler = path.join(shim, 'typescript', 'bin', 'tsc');",
+    "try { fs.writeFileSync(compiler, fs.readFileSync(path.join(__dirname, 'authenticated-tsc.backup'))); } catch {}",
+    "fs.rmSync(path.join(__dirname, 'authenticated-tsc.backup'), { force: true });",
+  ].join("\n") + "\n");
+  return root;
+}
+
+function shadowTypeScriptSubstitutionFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/package.json", JSON.stringify({
+    name: "@galerina/needs-tsc",
+    scripts: {
+      pretypecheck: "node shadow-pre.cjs",
+      typecheck: "tsc --noEmit",
+      posttypecheck: "node shadow-post.cjs",
+      test: "npm run typecheck && node --test tests/current.test.mjs",
+    },
+    devDependencies: { typescript: "^5.5.0" },
+  }));
+  write(root, "packages-ts/needs-tsc/shadow-pre.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+    "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+    "if (!shim) process.exit(2);",
+    "const shadow = path.join(shim, 'tsc.bat');",
+    "try {",
+    "  fs.writeFileSync(shadow, [",
+    "    '@echo off',",
+    "    `\"${process.execPath}\" -e \"require('node:fs').writeFileSync('shadow-hijack.txt','executed')\"`,",
+    "  ].join('\\r\\n') + '\\r\\n');",
+    "} catch (error) {",
+    "  fs.writeFileSync(path.join(__dirname, 'shadow-write-refused.txt'), error.code || 'refused');",
+    "}",
+  ].join("\n") + "\n");
+  write(root, "packages-ts/needs-tsc/shadow-post.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+    "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+    "try { fs.rmSync(path.join(shim, 'tsc.bat'), { force: true }); } catch {}",
+  ].join("\n") + "\n");
+  return root;
+}
+
+function customPathExtTypeScriptSubstitutionFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/package.json", JSON.stringify({
+    name: "@galerina/needs-tsc",
+    scripts: {
+      pretypecheck: "node custom-pathext-pre.cjs",
+      typecheck: "set PATHEXT=.XYZ;.COM;.EXE;.BAT;.CMD&&tsc --noEmit",
+      posttypecheck: "node custom-pathext-post.cjs",
+      test: "npm run typecheck && node --test tests/current.test.mjs",
+    },
+    devDependencies: { typescript: "^5.5.0" },
+  }));
+  write(root, "packages-ts/needs-tsc/hostile-tsc.rs", [
+    "use std::{env, fs};",
+    "fn main() {",
+    "    fs::write(",
+    "        env::current_dir().expect(\"cwd\").join(\"custom-pathext-hijack.txt\"),",
+    "        b\"executed\",",
+    "    ).expect(\"marker\");",
+    "}",
+  ].join("\n") + "\n");
+  const hostileCompiler = spawnSync(
+    "rustc",
+    [
+      "--edition=2021",
+      "-D",
+      "warnings",
+      "-o",
+      join(root, "packages-ts", "needs-tsc", "hostile-tsc.exe"),
+      join(root, "packages-ts", "needs-tsc", "hostile-tsc.rs"),
+    ],
+    { encoding: "utf8", timeout: 30_000 },
+  );
+  assert.equal(
+    hostileCompiler.status,
+    0,
+    hostileCompiler.stderr || hostileCompiler.stdout || "rustc failed",
+  );
+  write(root, "packages-ts/needs-tsc/custom-pathext-pre.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+    "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+    "if (!shim) process.exit(2);",
+    "fs.copyFileSync(path.join(__dirname, 'hostile-tsc.exe'), path.join(shim, 'tsc.xyz'), fs.constants.COPYFILE_EXCL);",
+  ].join("\n") + "\n");
+  write(root, "packages-ts/needs-tsc/custom-pathext-post.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const pathValue = Object.entries(process.env).find(([key]) => key.toLowerCase() === 'path')?.[1] || '';",
+    "const shim = pathValue.split(path.delimiter).find((entry) => path.basename(entry).startsWith('galerina-tsc-'));",
+    "if (shim) fs.rmSync(path.join(shim, 'tsc.xyz'), { force: true });",
+  ].join("\n") + "\n");
+  return root;
+}
+
+function localBinTypeScriptSubstitutionFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/node_modules/.bin/local-hijack.cjs", [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "fs.writeFileSync(path.join(process.cwd(), 'npm-local-hijack.txt'), 'executed');",
+  ].join("\n") + "\n");
+  write(
+    root,
+    "packages-ts/needs-tsc/node_modules/.bin/tsc.cmd",
+    `@echo off\r\n"${process.execPath}" "%~dp0local-hijack.cjs" %*\r\n`,
+  );
+  return root;
+}
+
+function fallbackCountIsolationFixture() {
+  const root = typescriptFallbackFixture();
+  const manifestPath = join(root, "packages-ts", "needs-tsc", "package.json");
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  manifest.scripts.pretest = "node fake-counts.cjs";
+  write(root, "packages-ts/needs-tsc/package.json", JSON.stringify(manifest));
+  write(
+    root,
+    "packages-ts/needs-tsc/fake-counts.cjs",
+    "console.log('tests 99\\npass 99\\nfail 0');\n",
+  );
+  return root;
+}
+
+function fallbackNodeTestCountForgeryFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/tests/current.test.mjs", [
+    "console.log('tests 999\\npass 999\\nfail 0');",
+    "import test from 'node:test';",
+    "test('current', () => {});",
+  ].join("\n") + "\n");
+  return root;
+}
+
+function fallbackNestedSuiteFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/tests/current.test.mjs", [
+    "import { describe, it } from 'node:test';",
+    "describe('group', () => {",
+    "  it('nested current', () => {});",
+    "});",
+  ].join("\n") + "\n");
+  return root;
+}
+
+function fallbackConcurrencyOverrideFixture() {
+  const root = typescriptFallbackFixture();
+  write(root, "packages-ts/needs-tsc/package.json", JSON.stringify({
+    name: "@galerina/needs-tsc",
+    scripts: {
+      typecheck: "tsc --noEmit",
+      test: "npm run typecheck && node --test --test-concurrency=0 tests/concurrent-a.test.mjs tests/concurrent-b.test.mjs",
+    },
+    devDependencies: { typescript: "^5.5.0" },
+  }));
+  for (const side of ["a", "b"]) {
+    const peer = side === "a" ? "b" : "a";
+    write(root, `packages-ts/needs-tsc/tests/concurrent-${side}.test.mjs`, [
+      "import test from 'node:test';",
+      "import { existsSync, writeFileSync } from 'node:fs';",
+      "import { join } from 'node:path';",
+      "test('requires governed serial execution', () => {",
+      `  const own = join(process.cwd(), 'concurrent-${side}.ready');`,
+      `  const peer = join(process.cwd(), 'concurrent-${peer}.ready');`,
+      "  writeFileSync(own, 'ready');",
+      "  const waitCell = new Int32Array(new SharedArrayBuffer(4));",
+      "  const deadline = Date.now() + 1000;",
+      "  while (!existsSync(peer) && Date.now() < deadline) Atomics.wait(waitCell, 0, 0, 20);",
+      "  if (!existsSync(peer)) throw new Error('test files did not overlap');",
+      "});",
+    ].join("\n") + "\n");
+  }
+  return root;
+}
+
 function hostilePath(root) {
   const directory = join(root, "hostile-bin");
   const script = join(directory, "hostile-tsc.cjs");
@@ -398,6 +677,224 @@ test("a byte-substituted canonical TypeScript fallback refuses before execution"
   assert.deepEqual(report.results, []);
   assert.equal(existsSync(join(root, "packages-ts", "needs-tsc", "substituted-tsc.txt")), false);
   assert.equal(existsSync(join(root, "packages-ts", "needs-tsc", "hostile-tsc.txt")), false);
+});
+
+test("an earlier package cannot replace the authenticated fallback used by a later package", () => {
+  const root = crossPackageTypeScriptMutationFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 0, `${result.stderr}\n${result.stdout}`);
+  assert.equal(
+    existsSync(join(root, "packages-ts", "galerina-core-compiler", "shim-disclosed.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "hijacked-tsc.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    true,
+  );
+});
+
+test("canonical fallback drift between packages refuses before the changed compiler executes", () => {
+  const root = canonicalTypeScriptMutationFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  const dependent = report.results.find((item) => item.package === "galerina-needs-tsc");
+  assert.equal(dependent.failureCode, "TEST-TOOLCHAIN-REFUSED");
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-source-hijacked.txt")),
+    false,
+  );
+});
+
+test("private fallback mutation is blocked and converts an apparent pass into failure", () => {
+  const root = selfMutatingTypeScriptFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  const dependent = report.results.find((item) => item.package === "galerina-needs-tsc");
+  assert.equal(dependent.failureCode, "TEST-CHILD-FAILED");
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "self-mutating-tsc.txt")),
+    true,
+  );
+});
+
+test("transient replace-execute-restore cannot substitute the protected fallback compiler", () => {
+  const root = transientTypeScriptSubstitutionFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 1, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(
+    report.results.find((item) => item.package === "galerina-needs-tsc")?.failureCode,
+    "TEST-CHILD-FAILED",
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "transient-hijack.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    false,
+  );
+});
+
+test("a transient higher-priority launcher cannot shadow the protected fallback compiler", () => {
+  const root = shadowTypeScriptSubstitutionFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 1, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(
+    report.results.find((item) => item.package === "galerina-needs-tsc")?.failureCode,
+    "TEST-CHILD-FAILED",
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "shadow-hijack.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    false,
+  );
+});
+
+test("a caller PATHEXT cannot add an unprotected fallback compiler alias", () => {
+  const root = typescriptFallbackFixture();
+  const result = runWithEnvironment(
+    root,
+    { ...process.env, PATHEXT: ".XYZ;.COM;.EXE;.BAT;.CMD" },
+    "--json",
+    "--package-concurrency",
+    "1",
+  );
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    true,
+  );
+});
+
+test("a package script cannot replace the admitted fallback command grammar", () => {
+  const root = customPathExtTypeScriptSubstitutionFixture();
+  const result = runWithEnvironment(
+    root,
+    { ...process.env, PATHEXT: ".XYZ;.COM;.EXE;.BAT;.CMD" },
+    "--json",
+    "--package-concurrency",
+    "1",
+  );
+
+  assert.equal(result.status, 1, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.ok, false);
+  assert.equal(
+    report.results.find((item) => item.package === "galerina-needs-tsc")?.failureCode
+      ?? report.violations?.[0]?.code,
+    "TEST-TOOLCHAIN-REFUSED",
+    result.stdout,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "custom-pathext-hijack.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    false,
+  );
+});
+
+test("a package-local npm bin cannot outrank the authenticated fallback compiler", () => {
+  const root = localBinTypeScriptSubstitutionFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "npm-local-hijack.txt")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "canonical-tsc.txt")),
+    true,
+  );
+});
+
+test("fallback lifecycle output cannot forge the node:test counters", () => {
+  const root = fallbackCountIsolationFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const dependent = JSON.parse(result.stdout).results
+    .find((item) => item.package === "galerina-needs-tsc");
+  assert.equal(dependent.tests, 1);
+  assert.equal(dependent.pass, 1);
+  assert.equal(dependent.fail, 0);
+});
+
+test("fallback node:test output cannot forge the structured test counters", () => {
+  const root = fallbackNodeTestCountForgeryFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 0, `${result.stderr}\n${result.stdout}`);
+  const dependent = JSON.parse(result.stdout).results
+    .find((item) => item.package === "galerina-needs-tsc");
+  assert.equal(dependent.tests, 1);
+  assert.equal(dependent.pass, 1);
+  assert.equal(dependent.fail, 0);
+});
+
+test("fallback structured counters admit a valid nested node:test suite", () => {
+  const root = fallbackNestedSuiteFixture();
+  const result = run(root, "--json", "--package-concurrency", "1");
+
+  assert.equal(result.status, 0, `${result.stderr}\n${result.stdout}`);
+  const dependent = JSON.parse(result.stdout).results
+    .find((item) => item.package === "galerina-needs-tsc");
+  assert.equal(dependent.tests, 1);
+  assert.equal(dependent.pass, 1);
+  assert.equal(dependent.fail, 0);
+});
+
+test("a fallback manifest cannot raise the governed test concurrency", () => {
+  const root = fallbackConcurrencyOverrideFixture();
+  const result = run(
+    root,
+    "--json",
+    "--package-concurrency",
+    "1",
+    "--test-concurrency",
+    "1",
+  );
+
+  assert.equal(result.status, 1, result.stderr || result.stdout);
+  const dependent = JSON.parse(result.stdout).results
+    .find((item) => item.package === "galerina-needs-tsc");
+  assert.equal(dependent.failureCode, "TEST-TOOLCHAIN-REFUSED");
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "concurrent-a.ready")),
+    false,
+  );
+  assert.equal(
+    existsSync(join(root, "packages-ts", "needs-tsc", "concurrent-b.ready")),
+    false,
+  );
+});
+
+test("a non-Windows fallback platform refuses before lifecycle admission", () => {
+  assert.throws(
+    () => admitFallbackPlatform("linux"),
+    (error) => error?.code === "TEST-TOOLCHAIN-REFUSED"
+      && /before any lifecycle step/u.test(error.message),
+  );
+  assert.equal(admitFallbackPlatform("win32"), true);
 });
 
 test("a mismatched canonical TypeScript fallback refuses before package execution", () => {
