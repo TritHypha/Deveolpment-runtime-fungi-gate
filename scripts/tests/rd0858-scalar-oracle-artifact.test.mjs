@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, it } from "node:test";
@@ -71,6 +72,29 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     assert.match(source, /requireHeadMatchesWorktree/u);
     assert.match(source, /buildFreshHeadCompiler/u);
     assert.match(source, /compilerExecutableGraphDigest/u);
+  });
+
+  it("keeps non-executable build evidence outside executable identity", async () => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-executable-closure-"));
+    const left = join(temporary, "left");
+    const right = join(temporary, "right");
+    try {
+      await mkdir(left);
+      await mkdir(right);
+      for (const directory of [left, right]) {
+        await writeFile(join(directory, "index.js"), "export const value = 1;\n", "utf8");
+        await writeFile(join(directory, "runtime.json"), "{\"profile\":\"scalar-1\"}\n", "utf8");
+      }
+      await writeFile(join(left, "build-evidence.json"), "{\"inputDigest\":\"lf\"}\n", "utf8");
+      await writeFile(join(right, "build-evidence.json"), "{\"inputDigest\":\"crlf\"}\r\n", "utf8");
+      const baseline = generator.digestCompilerExecutableClosure(left);
+      assert.equal(generator.digestCompilerExecutableClosure(right), baseline);
+      await writeFile(join(right, "runtime.json"), "{\"profile\":\"scalar-64\"}\n", "utf8");
+      assert.notEqual(generator.digestCompilerExecutableClosure(right), baseline);
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
   });
 
   it("refuses stale source/artifact and toolchain/artifact pairs", async () => {

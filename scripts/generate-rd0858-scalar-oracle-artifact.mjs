@@ -246,7 +246,7 @@ function currentIdentity(sourceDigest, compilerExecutableGraphDigest) {
   });
 }
 
-function executableClosureDigest(directory) {
+export function digestCompilerExecutableClosure(directory) {
   const files = [];
   const visit = (current) => {
     for (const name of readdirSync(current).sort()) {
@@ -255,7 +255,11 @@ function executableClosureDigest(directory) {
       if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
       if (stat.isDirectory()) {
         visit(path);
-      } else if (stat.isFile() && [".js", ".json", ".wasm", ".fungi"].includes(extname(name))) {
+      } else if (
+        stat.isFile() &&
+        name !== "build-evidence.json" &&
+        [".js", ".json", ".wasm", ".fungi"].includes(extname(name))
+      ) {
         files.push(path);
       }
     }
@@ -265,7 +269,7 @@ function executableClosureDigest(directory) {
   const hash = createHash("sha256");
   hash.update("galerina.compiler-executable-graph.v1\0", "utf8");
   for (const path of files) {
-    const locator = relative(compilerDistPath, path).replaceAll("\\", "/");
+    const locator = relative(directory, path).replaceAll("\\", "/");
     const bytes = stableRead(path, CHILD_MAX_BYTES * 16, "COMPILER_BUILD");
     hash.update(`${locator}\0${bytes.byteLength}\0`, "utf8");
     hash.update(bytes);
@@ -302,7 +306,7 @@ export async function buildFreshHeadCompiler() {
     }
     requireHeadMatchesWorktree(governedPaths);
     if (String(git(["rev-parse", "HEAD"])).trim() !== headBefore) refuse("HEAD_DRIFT");
-    const compilerExecutableGraphDigest = executableClosureDigest(compilerDistPath);
+    const compilerExecutableGraphDigest = digestCompilerExecutableClosure(compilerDistPath);
     const compiler = await import(
       `${pathToFileURL(compilerEntryPath).href}?${headBefore}-${compilerExecutableGraphDigest.slice(7)}`
     );
@@ -324,7 +328,7 @@ export async function buildFreshHeadCompiler() {
     ]) {
       if (typeof compiler[name] !== "function") refuse("COMPILER_EXPORT", name);
     }
-    if (executableClosureDigest(compilerDistPath) !== compilerExecutableGraphDigest) {
+    if (digestCompilerExecutableClosure(compilerDistPath) !== compilerExecutableGraphDigest) {
       refuse("COMPILER_BUILD_DRIFT");
     }
     return Object.freeze({ compiler, compilerExecutableGraphDigest });
