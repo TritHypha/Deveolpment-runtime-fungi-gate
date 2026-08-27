@@ -198,7 +198,8 @@ for execution. It excludes source locations, comments and presentation fields.
 
 The decoder separately derives qualifier, parameters, return type and declared
 effects from `checkedAst` and requires equality with the top-level fields. It
-also requires the exact `require` shape and the three terminal string values.
+also requires the exact exhaustive `check` shape and the three terminal string
+values.
 
 ## 8. Toolchain identity
 

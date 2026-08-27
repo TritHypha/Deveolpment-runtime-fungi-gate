@@ -171,6 +171,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.json && node scripts/write-hallmark-non-authorities.mjs && node scripts/write-build-evidence.mjs",
+    "test:checked-flow-artifact": "npm run build && node --test tests/checked-flow-artifact.test.mjs",
     "test:requirement-process-protocol": "npm run build && node --test tests/requirement-process-protocol.test.mjs",
     "test": "npm run typecheck && npm run build && node --test tests/*.test.mjs tests/bootstrap-determinism/*.test.mjs tests/governance-conformance/*.test.mjs tests/parser/*.test.mjs tests/package-resolver/*.test.mjs tests/value-state/*.test.mjs tests/type-registry/*.test.mjs tests/effect-checker/*.test.mjs tests/governance/*.test.mjs tests/stdlib/*.test.mjs tests/lexer/*.test.mjs"
   },

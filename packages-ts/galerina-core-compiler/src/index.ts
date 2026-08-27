@@ -39,6 +39,21 @@ export {
 } from "./product-artifact-identity.js";
 
 export {
+  CHECKED_FLOW_ARTIFACT_MAX_BYTES,
+  CHECKED_FLOW_ARTIFACT_MAX_DEPTH,
+  CHECKED_FLOW_ARTIFACT_MAX_VALUES,
+  CHECKED_FLOW_ARTIFACT_MAX_AST_NODES,
+  CheckedFlowArtifactRefusal,
+  validateCheckedFlowArtifact,
+  encodeCheckedFlowArtifact,
+  decodeCheckedFlowArtifact,
+  digestCheckedFlowArtifact,
+  type CheckedFlowArtifact,
+  type CheckedFlowArtifactNode,
+  type CheckedFlowArtifactParameter,
+} from "./checked-flow-artifact.js";
+
+export {
   parseProductCliSelection,
   resolveProductCliSelection,
   requireFixedGalerinaProductContext,
