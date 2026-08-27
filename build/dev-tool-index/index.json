@@ -3280,8 +3280,7 @@
         "naming",
         "gate-wiring",
         "diagnostics",
-        "graph/index",
-        "proofs"
+        "graph/index"
       ]
     },
     {
@@ -4230,7 +4229,6 @@
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
       "run-proofs.mjs",
-      "generate-rd0858-scalar-oracle-artifact.mjs",
       "license-rollout.mjs"
     ],
     "sinks/taint": [
