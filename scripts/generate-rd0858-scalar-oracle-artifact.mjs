@@ -307,7 +307,17 @@ export function digestCompilerExecutableClosure(directory, admittedLocators) {
       || admittedLocators.length > 4_096 || new Set(admittedLocators).size !== admittedLocators.length) {
       refuse("COMPILER_BUILD_MANIFEST");
     }
-    for (const locator of [...admittedLocators].sort()) {
+    const orderedLocators = [...admittedLocators].sort((left, right) => {
+      const leftSegments = left.split("/");
+      const rightSegments = right.split("/");
+      const length = Math.min(leftSegments.length, rightSegments.length);
+      for (let index = 0; index < length; index += 1) {
+        if (leftSegments[index] < rightSegments[index]) return -1;
+        if (leftSegments[index] > rightSegments[index]) return 1;
+      }
+      return leftSegments.length - rightSegments.length;
+    });
+    for (const locator of orderedLocators) {
       if (typeof locator !== "string" || locator.length < 1 || locator.length > 1_024
         || locator.startsWith("/") || /^[A-Za-z]:/u.test(locator)
         || locator.includes("\\") || locator.includes("\0")
