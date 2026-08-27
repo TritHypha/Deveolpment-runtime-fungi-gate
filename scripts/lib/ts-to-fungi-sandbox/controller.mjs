@@ -408,11 +408,32 @@ export async function runDiscover({ root, project, out, limit = MAX_BATCH_REQUES
   const exclude = (kind) => { exclusions[kind] += 1; };
   let scanned = 0;
   let cursorPassed = cursor === undefined;
-  for (const file of trackedTypeScriptSources(root)) {
+  const trackedSources = trackedTypeScriptSources(root);
+  const invalidSources = new Set();
+  for (const file of trackedSources) {
     if (await isVendoredPackage(root, file, packageCache)) continue;
     const sourceBytes = await readFile(resolve(root, ...file.split("/")));
     if (sourceBytes.byteLength > 4 * 1024 * 1024) continue;
-    const source = sourceBytes.toString("utf8");
+    try {
+      const source = new TextDecoder("utf-8", { fatal: true }).decode(sourceBytes);
+      if (!Buffer.from(source, "utf8").equals(sourceBytes)) throw new TypeError("non-canonical UTF-8");
+    } catch {
+      invalidSources.add(file);
+      if (skipped.length < MAX_BATCH_REQUESTS * 10) {
+        skipped.push(Object.freeze({
+          scope: `${file}#source`,
+          reasonCode: "SOURCE_UTF8_INVALID",
+          reason: "source is not canonical UTF-8",
+        }));
+      }
+    }
+  }
+  for (const file of trackedSources) {
+    if (await isVendoredPackage(root, file, packageCache)) continue;
+    if (invalidSources.has(file)) continue;
+    const sourceBytes = await readFile(resolve(root, ...file.split("/")));
+    if (sourceBytes.byteLength > 4 * 1024 * 1024) continue;
+    const source = new TextDecoder("utf-8", { fatal: true }).decode(sourceBytes);
     for (const classification of discoverTypeScriptScopes({ source, file })) {
       const key = `${file}#${classification.symbol}`;
       if (!cursorPassed) {
