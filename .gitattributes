@@ -23,6 +23,7 @@ build/code-index/* text eol=lf
 build/code-registry/* text eol=lf
 build/component-health/* text eol=lf
 build/conversion-queue/* text eol=lf
+build/coverage/* text eol=lf
 build/fungi-capabilities/*.json text eol=lf
 build/fungi-source-capabilities/* text eol=lf
 build/package-graphs/*.json text eol=lf
