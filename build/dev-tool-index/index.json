@@ -2871,7 +2871,6 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
-        "signing/fusion",
         "tier-floor",
         "source-hygiene"
       ]
@@ -3992,7 +3991,6 @@
       "component-health.mjs",
       "run-all-tests.cjs",
       "run-assurance-shadow.mjs",
-      "run-generator-contract-cadence.mjs",
       "run-impact-check.mjs",
       "run-phase-close.mjs",
       "status.mjs",

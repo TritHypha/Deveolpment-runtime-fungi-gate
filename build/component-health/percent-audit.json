@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0858-unit4-scalar-oracle",
-    "sha": "bc865d4f8",
+    "sha": "7b3dcc974",
     "detached": false,
     "dirty": true
   },
@@ -281,7 +281,7 @@
         {
           "item": "Contract Registry (RD-0359)",
           "state": "shipped",
-          "detail": "generated authority is current at 3,938 contracts across 2974 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
+          "detail": "generated authority is current at 3,939 contracts across 2975 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
         },
         {
           "item": "DSS decision core + optional Wasm oracle",
