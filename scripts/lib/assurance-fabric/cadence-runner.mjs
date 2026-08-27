@@ -1,4 +1,4 @@
-import { resolve } from "node:path";
+import { isAbsolute, resolve } from "node:path";
 import ownedProcessTree from "../owned-process-tree.cjs";
 import {
   RESULT_TAG,
@@ -23,6 +23,15 @@ function childEnvironment() {
       && typeof value === "string" && value.length > 0);
     if (item) admitted[name] = item[1];
   };
+  const copyAbsolute = (name) => {
+    const item = entries.find(([key]) => key.toLowerCase() === name.toLowerCase());
+    if (!item) return;
+    const value = item[1];
+    if (typeof value !== "string" || value.trim() === "" || !isAbsolute(value)) {
+      throw new Error(`${name} requires an absolute path`);
+    }
+    admitted[name] = value;
+  };
   copy("PATH", ["path"]);
   if (process.platform === "win32") {
     copy("SystemRoot", ["systemroot"]); copy("WINDIR", ["windir"]);
@@ -37,6 +46,8 @@ function childEnvironment() {
   admitted.GIT_CONFIG_GLOBAL = process.platform === "win32" ? "NUL" : "/dev/null";
   admitted.NPM_CONFIG_USERCONFIG = process.platform === "win32" ? "NUL" : "/dev/null";
   admitted.NO_UPDATE_NOTIFIER = "1";
+  copyAbsolute("GALERINA_KB_DIR");
+  copyAbsolute("GALERINA_SLIDE_DIR");
   return admitted;
 }
 

@@ -93,6 +93,14 @@ function run(root, ...args) {
   );
 }
 
+function runWithEnvironment(root, environment, ...args) {
+  return spawnSync(
+    process.execPath,
+    [RUNNER, "--root", root, ...args, "--json"],
+    { encoding: "utf8", timeout: 30_000, env: { ...process.env, ...environment } },
+  );
+}
+
 test("one failed child makes phase-close exit non-zero", () => {
   const root = fixture({
     phaseClose: [
@@ -145,6 +153,42 @@ test("the branded plan supplies the exact cadence to child wrappers", () => {
 
   assert.equal(result.status, 0);
   assert.equal(JSON.parse(result.stdout).results[0].detail, "normal");
+});
+
+test("phase-close supplies explicit absolute KB and SLIDE roots to governed children", () => {
+  const root = fixture({
+    phaseClose: [{ name: "external-roots", command: ["node", "external-roots.mjs"] }],
+  });
+  const kb = join(root, "kb");
+  const slide = join(root, "slide");
+  mkdirSync(kb);
+  mkdirSync(slide);
+  write(root, "external-roots.mjs", [
+    `if (process.env.GALERINA_KB_DIR !== ${JSON.stringify(kb)}) process.exit(8);`,
+    `if (process.env.GALERINA_SLIDE_DIR !== ${JSON.stringify(slide)}) process.exit(9);`,
+  ].join("\n"));
+
+  const result = runWithEnvironment(root, {
+    GALERINA_KB_DIR: kb,
+    GALERINA_SLIDE_DIR: slide,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test("phase-close refuses relative external repository roots before child execution", () => {
+  const root = fixture({
+    phaseClose: [{ name: "must-not-run", command: ["node", "must-not-run.mjs"] }],
+  });
+  write(root, "must-not-run.mjs", 'import { writeFileSync } from "node:fs"; writeFileSync("ran.txt", "yes");\n');
+
+  const result = runWithEnvironment(root, { GALERINA_SLIDE_DIR: "relative-slide" });
+
+  assert.notEqual(result.status, 0);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.verdict, "REFUSED");
+  assert.match(report.detail, /GALERINA_SLIDE_DIR requires an absolute path/u);
+  assert.equal(existsSync(join(root, "ran.txt")), false);
 });
 
 test("phase-close supplies a bounded Go cache outside the repository", () => {
