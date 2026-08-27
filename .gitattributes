@@ -18,12 +18,20 @@ build/graph/*.json      text eol=lf
 build/graph/*.html      text eol=lf
 build/kb-graph/*.md     text eol=lf
 build/dev-tool-index/*  text eol=lf
+build/assurance-semantic-graph/* text eol=lf
+build/code-index/* text eol=lf
+build/code-registry/* text eol=lf
+build/component-health/* text eol=lf
+build/conversion-queue/* text eol=lf
 build/fungi-capabilities/*.json text eol=lf
 build/fungi-source-capabilities/* text eol=lf
 build/package-graphs/*.json text eol=lf
+build/roadmap/* text eol=lf
+build/status/* text eol=lf
 build/ts-retirement/* text eol=lf
 build/unit-registry/provenance.json text eol=lf
 packages-ts/galerina-core-compiler/src/unit-registry.generated.ts text eol=lf
+docs/reference/cost-model-nesting.md text eol=lf
 
 # Hybrid-signed registry manifests have public byte pins. Preserve identical
 # bytes across Windows, macOS and Linux checkouts.

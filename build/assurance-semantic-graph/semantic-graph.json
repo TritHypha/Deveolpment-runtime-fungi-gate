@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "692aec186d47417f1e8afc052cc1fe79c82b6a414f1c0b4bd64a1d707fde6c3d",
+  "authoritativeInputsDigest": "68d946684441d2ab0f45a5b63b94e0126f23375c592092d8c4bc60955fba7cf0",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -1305,6 +1305,13 @@
       "id": "test:auto-5750e58229d4f8ad46525d5a",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/check-construct.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-e43d7db9de3f2050c83f4aa1",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/checked-flow-artifact.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -2936,6 +2943,13 @@
       "id": "test:auto-5dd0907a74f4327dbf9e6f7a",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/requirement-interpreter.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d6b87dcd14c27803ac84dfc5",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/requirement-process-adapter.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -8316,6 +8330,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-87456e2fd5736661d3cf5f00",
+      "kind": "test",
+      "evidencePath": "scripts/tests/rd0858-scalar-oracle-artifact.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-4a178096a24b13a3b23d1d84",
       "kind": "test",
       "evidencePath": "scripts/tests/receipt-bound-slide-build.integration.test.mjs",
@@ -9011,6 +9032,11 @@
     },
     {
       "from": "test:auto-5750e58229d4f8ad46525d5a",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-e43d7db9de3f2050c83f4aa1",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -10176,6 +10202,11 @@
     },
     {
       "from": "test:auto-5dd0907a74f4327dbf9e6f7a",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d6b87dcd14c27803ac84dfc5",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -14020,6 +14051,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-87456e2fd5736661d3cf5f00",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-4a178096a24b13a3b23d1d84",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -14330,9 +14366,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1109,
+    "tests": 1112,
     "detectors": 6,
-    "executableFamily": 1574,
+    "executableFamily": 1578,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "bf870dd4452b8a3801cbd68839ae4a762a610d8c0d03d19f127a3d1539db0736",
+  "sourceDigest": "3398d91fbf1ba815532cafa918815a5a6caa8cec7929e956195b7562a5da5022",
   "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
   "counts": {
-    "total": 1571,
+    "total": 1578,
     "CANDIDATE": 0,
-    "BLOCKED": 917,
+    "BLOCKED": 920,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 654
+    "BOOTSTRAP_FLOOR": 658
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -595,6 +595,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/capability-types.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/checked-flow-artifact.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -1242,6 +1250,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/src/requirement-process-adapter.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/src/requirement-process-protocol.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -1835,6 +1851,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/check-construct.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/checked-flow-artifact.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -3723,6 +3747,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/requirement-interpreter.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/requirement-process-adapter.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -7850,6 +7882,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-devtools-benchmarks/src/repository-roots.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-devtools-benchmarks/src/run-to-graph.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
@@ -8051,6 +8091,14 @@
     },
     {
       "path": "packages-ts/galerina-devtools-benchmarks/test/report-model.test.mjs",
+      "package": "galerina-devtools-benchmarks",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-devtools-benchmarks/test/repository-roots.test.mjs",
       "package": "galerina-devtools-benchmarks",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
@@ -12251,6 +12299,14 @@
     },
     {
       "path": "packages-ts/galerina-tower-citizen/tests/ternary-ops.test.mjs",
+      "package": "galerina-tower-citizen",
+      "tranche": "T2-runtime-core",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-tower-citizen/tests/test-prerequisite-builds.test.mjs",
       "package": "galerina-tower-citizen",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
