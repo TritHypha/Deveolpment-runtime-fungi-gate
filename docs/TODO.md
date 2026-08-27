@@ -154,13 +154,14 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Complete independent code and assurance reviews of `0106957`; both return
   `PASS` at Critical 0 / Important 0 / Minor 0 with fresh LF and physical-CRLF
   estates at 118/118 each.
-- [x] Repair the later checkout-isolation defect with a scalar-only temporary
-  compiler closure. Persistent `dist`, ambient `node_modules`, `NODE_OPTIONS`,
-  `NODE_PATH`, reparse-point roots and stale same-name outputs are not admitted;
-  ignored owner residue is neither executed nor deleted. Node and the bounded
-  TypeScript compiler closure are byte-bound before and after every build; the
-  content-bound loader verifies consumed module bytes and the runtime closure
-  is revalidated after every child. The current LF scalar estate passes 130/130.
+- [x] Repair the later checkout-isolation and compiler-consumption defects with
+  a scalar-only temporary closure. Commit `8464d9557` compiles exact admitted
+  TypeScript, library and `HEAD` project bytes through a closed virtual host;
+  hostile path substitution and restoration cannot change output or identity.
+  The content-bound runtime loader verifies consumed module bytes, and commit
+  `988cb1d2` refreshes the checked artifact. The current LF scalar estate passes
+  131/131. Persistent `dist`, ambient resolution and owner residue stay outside
+  the admitted closure and are neither executed nor deleted.
 - [!] Final chapter integration remains `HOLD` until the repaired exact target
   passes physical-CRLF, independent code and assurance review, deterministic
   graph refresh and documentation closure. Historical 118/118 receipts remain

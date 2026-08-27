@@ -97,13 +97,14 @@ The original scalar fixed-point repair is independently `PASS` at exact
 implementation target `0106957`, Critical 0 / Important 0 / Minor 0 in both
 code and assurance reviews. Its exact-target LF and physical-CRLF estates pass
 118/118. A later owner-visible-checkout replay exposed persistent `dist`
-residue and ambient module-resolution gaps. The replacement candidate now
-builds a scalar-only compiler closure from exact `HEAD` blobs in an owned
-temporary root, binds the actually loaded module set, sanitizes ambient Node
-resolution state, byte-binds the Node/TypeScript build trust base and a
-non-filesystem loader, revalidates consumed module bytes after execution,
-refuses reparse or escaped roots and preserves unrelated owner residue. Its
-current LF scalar estate passes 130/130. Physical-CRLF, fresh independent
+residue and ambient module-resolution gaps. The replacement candidate at
+`8464d9557` compiles admitted TypeScript, library and exact `HEAD` project bytes
+through a closed virtual host, binds the actually loaded runtime module set,
+sanitizes ambient Node resolution state, and uses a content-bound loader.
+Hostile compiler/library path substitution cannot change emitted bytes or
+identity; reparse or escaped roots refuse and unrelated owner residue remains
+preserved. Artifact commit `988cb1d2` is fixed-point exact, and the current LF
+scalar estate passes 131/131. Physical-CRLF, fresh independent
 review, exact graph refresh and documentation closure remain required before
 local fast-forward integration.
 The last complete phase-close remains explicitly 94/96: 726 historical
