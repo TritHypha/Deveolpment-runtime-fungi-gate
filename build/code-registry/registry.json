@@ -2408,7 +2408,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 2,
+      "emits": 3,
       "tests": 6,
       "docs": 5
     },
@@ -2456,7 +2456,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 2,
       "docs": 2
     },
@@ -7083,7 +7083,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 11,
       "docs": 3
     },
@@ -8907,7 +8907,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 1,
       "docs": 5
     },
@@ -9348,7 +9348,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 2,
       "docs": 1
     },
@@ -9364,7 +9364,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 2,
       "docs": 0
     },
@@ -9380,7 +9380,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 2,
+      "emits": 4,
       "tests": 5,
       "docs": 0
     },
@@ -9396,7 +9396,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 5,
       "docs": 0
     },
@@ -9412,7 +9412,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 2,
       "docs": 0
     },
@@ -9428,7 +9428,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 2,
       "docs": 0
     },
@@ -10072,7 +10072,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 1,
       "docs": 3
     },
@@ -10088,7 +10088,7 @@
         "error"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 1,
       "docs": 1
     },
