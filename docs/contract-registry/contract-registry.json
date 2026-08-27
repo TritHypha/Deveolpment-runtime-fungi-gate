@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-27T01:34:56.000Z",
-  "sha": "b3d4a41e3",
-  "contracts": 3938,
-  "parsed": 2974,
+  "generatedAt": "2026-08-27T06:19:49.000Z",
+  "sha": "c2eea0df2",
+  "contracts": 3939,
+  "parsed": 2975,
   "rows": [
     {
       "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
@@ -31537,6 +31537,14 @@
       "name": "vOrVerdict",
       "qualifier": "pure",
       "signature": "pure flow vOrVerdict(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi",
+      "name": "scalarOracle",
+      "qualifier": "pure",
+      "signature": "pure flow scalarOracle(subject: Verdict) -> String",
       "effects": [],
       "intent": ""
     },

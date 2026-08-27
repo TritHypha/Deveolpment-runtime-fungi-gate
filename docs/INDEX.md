@@ -25,12 +25,12 @@
 | [`patterns/`](patterns/INDEX.md) | 21 |
 | [`platform-handover/`](platform-handover/INDEX.md) | 13 |
 | [`reference/`](reference/INDEX.md) | 10 |
-| [`reports/`](reports/INDEX.md) | 1111 |
+| [`reports/`](reports/INDEX.md) | 1112 |
 | [`research/`](research/INDEX.md) | 1 |
 | [`research-prompts/`](research-prompts/INDEX.md) | 15 |
 | [`rules/`](rules/INDEX.md) | 11 |
 | [`security/`](security/INDEX.md) | 23 |
-| [`superpowers/`](superpowers/INDEX.md) | 316 |
+| [`superpowers/`](superpowers/INDEX.md) | 318 |
 
 ---
 
