@@ -117,10 +117,10 @@ export const implementationCommit = () => {
   return commit;
 };
 
-export const readCommittedPlanBytes = (runner = execFileSync) => {
+const readCommittedFileBytes = (relative, refusal, runner) => {
   let bytes;
   try {
-    bytes = runner("git", ["show", `HEAD:${GOVERNING_PLAN_RELATIVE}`], {
+    bytes = runner("git", ["show", `HEAD:${relative}`], {
       cwd: root,
       encoding: null,
       timeout: 30_000,
@@ -128,12 +128,49 @@ export const readCommittedPlanBytes = (runner = execFileSync) => {
       maxBuffer: 1_048_576,
     });
   } catch {
-    throw new Error("AUDIT_MAP_PLAN_REFUSED");
+    throw new Error(refusal);
   }
   if (!Buffer.isBuffer(bytes) || bytes.length === 0) {
-    throw new Error("AUDIT_MAP_PLAN_REFUSED");
+    throw new Error(refusal);
   }
   return Buffer.from(bytes);
+};
+
+export const readCommittedPlanBytes = (runner = execFileSync) =>
+  readCommittedFileBytes(GOVERNING_PLAN_RELATIVE, "AUDIT_MAP_PLAN_REFUSED", runner);
+
+export const readCommittedAuditMapBytes = (runner = execFileSync) =>
+  readCommittedFileBytes(AUDIT_MAP_RELATIVE, "AUDIT_MAP_COMMITTED_VIEW_REFUSED", runner);
+
+export const assertAuditMapCheckoutProjection = (canonical, checkout) => {
+  if (
+    !Buffer.isBuffer(canonical) ||
+    canonical.length === 0 ||
+    canonical.includes(0x0d) ||
+    !Buffer.isBuffer(checkout) ||
+    checkout.length === 0
+  ) {
+    throw new Error("AUDIT_MAP_FIXED_POINT_REFUSED");
+  }
+  if (checkout.equals(canonical)) return;
+
+  let checkoutOffset = 0;
+  for (const byte of canonical) {
+    if (byte === 0x0a) {
+      if (checkout[checkoutOffset] !== 0x0d || checkout[checkoutOffset + 1] !== 0x0a) {
+        throw new Error("AUDIT_MAP_FIXED_POINT_REFUSED");
+      }
+      checkoutOffset += 2;
+    } else {
+      if (checkout[checkoutOffset] !== byte) {
+        throw new Error("AUDIT_MAP_FIXED_POINT_REFUSED");
+      }
+      checkoutOffset += 1;
+    }
+  }
+  if (checkoutOffset !== checkout.length) {
+    throw new Error("AUDIT_MAP_FIXED_POINT_REFUSED");
+  }
 };
 
 export const buildAuditMapCandidate = () => {
@@ -165,10 +202,10 @@ export const buildAuditMapCandidate = () => {
 
 const check = () => {
   const candidate = buildAuditMapCandidate();
-  const actual = readFileSync(join(root, AUDIT_MAP_RELATIVE));
-  if (!actual.equals(candidate.bytes)) {
-    throw new Error("AUDIT_MAP_FIXED_POINT_REFUSED");
-  }
+  const committed = readCommittedAuditMapBytes();
+  if (!committed.equals(candidate.bytes)) throw new Error("AUDIT_MAP_FIXED_POINT_REFUSED");
+  const checkout = readFileSync(join(root, AUDIT_MAP_RELATIVE));
+  assertAuditMapCheckoutProjection(committed, checkout);
   process.stdout.write(
     `AUDIT_MAP PASS fixed-point ${candidate.implementationCommit} ${candidate.planDigest}\n`,
   );

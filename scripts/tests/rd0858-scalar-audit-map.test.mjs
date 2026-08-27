@@ -82,6 +82,27 @@ describe("RD-0858 scalar audit-map generator", () => {
     assert.deepEqual(Buffer.from(`${JSON.stringify(JSON.parse(text), null, 2)}\n`, "utf8"), bytes);
   });
 
+  it("admits only the exact LF or whole-file CRLF checkout projection", async () => {
+    const generator = await loadGenerator();
+    const canonical = Buffer.from("{\n  \"status\": \"PASS\"\n}\n", "utf8");
+    const crlf = Buffer.from("{\r\n  \"status\": \"PASS\"\r\n}\r\n", "utf8");
+
+    assert.doesNotThrow(() => generator.assertAuditMapCheckoutProjection(canonical, canonical));
+    assert.doesNotThrow(() => generator.assertAuditMapCheckoutProjection(canonical, crlf));
+    for (const refused of [
+      Buffer.from("{\r\n  \"status\": \"PASS\"\n}\r\n", "utf8"),
+      Buffer.from("{\r  \"status\": \"PASS\"\r}\r", "utf8"),
+      Buffer.from("{\n  \"status\": \"PASS\" \n}\n", "utf8"),
+      Buffer.alloc(0),
+      "not bytes",
+    ]) {
+      assert.throws(
+        () => generator.assertAuditMapCheckoutProjection(canonical, refused),
+        /FIXED_POINT_REFUSED/u,
+      );
+    }
+  });
+
   it("matches the committed map and passes its bounded self-test", () => {
     for (const mode of ["--check", "--self-test"]) {
       const result = spawnSync(process.execPath, [generatorPath, mode], {
