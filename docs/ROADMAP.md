@@ -109,8 +109,14 @@ at 33/33, and independent code plus assurance review at C0/I0/M0. Its exact
 external graph reports 66,199 nodes, 169,860 edges and zero skipped files. The
 consumed-byte Grok Expert challenge is captured and locally adjudicated; it
 found no new code root and sustained only the existing lifecycle boundary. The
-candidate is ready for the owner-approved scalar-local fast-forward into the
-active RD-0858 Unit 4 process-root branch.
+first owner-visible fast-forward then exposed an audit-map checkout portability
+false refusal: the same committed plan and map were materialized with CRLF.
+Exact repair `e045e8388` now binds the governing plan and canonical map through
+committed Git-object bytes while accepting only exact LF or its exact whole-file
+CRLF checkout projection. Immutable review passes C0/I0/M0 with 8/8 under both
+line-ending estates and hostile mixed, dirty and semantic neighbours refused.
+The repaired candidate is ready for the owner-approved scalar-local
+fast-forward into the active RD-0858 Unit 4 process-root branch.
 The last complete phase-close remains explicitly 94/96: 726 historical
 conversion receipts omit exact scope and the corpus child has no terminal
 receipt within 600 seconds. Those global blockers continue to block `main`,

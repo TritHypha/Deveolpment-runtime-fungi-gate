@@ -172,6 +172,11 @@ counts or open items that a newer section explicitly supersedes.
   Its four independent vectors produced no new code root; the lifecycle vector
   is retained as the explicit rule that the scalar-local fast-forward leaves
   the global phase-close at 94/96 and cannot admit another profile.
+- [x] Repair the owner-checkout audit-map false refusal at exact code target
+  `e045e8388`. Governing-plan identity now uses committed Git-object bytes;
+  the checkout view admits only exact canonical LF or its exact whole-file
+  CRLF projection. Fresh immutable review is `PASS` C0/I0/M0 with 8/8 on LF
+  and physical CRLF; mixed, bare-CR, dirty and semantic neighbours refuse.
 - [!] Keep profiles `64` and `256`, compatibility profile `32`, broader
   conversion, TypeScript retirement, detached GIR, SLIDE/VOK admission,
   `.gate`, Trametes, production selection and runtime rescue closed.
