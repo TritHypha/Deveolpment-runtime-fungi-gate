@@ -589,6 +589,14 @@ export function hashProtocolBytes(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+export function hashCanonicalProtocolValue(value: unknown): string {
+  const budget: Budget = { values: 0, bytes: 0 };
+  const snapshot = snapshotCanonical(value, 1, budget);
+  const bytes = textEncoder.encode(canonicalJson(snapshot));
+  if (bytes.byteLength > MAX_FRAME_BYTES) refuse("HASH_INPUT_BOUND");
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
 export function encodeCanonicalFrame(kind: FrameKind, value: unknown): Uint8Array {
   if (!(kind in FRAME_KEYS)) refuse("FRAME_KIND");
   const validated = validateKind(kind, value);

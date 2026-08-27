@@ -81,6 +81,22 @@ const bootstrapRequest = () => ({
   argumentBytes: BOOTSTRAP_ARGUMENT.toString("base64"),
 });
 
+const scalarRequest = (subject) => {
+  const artifactBytes = readFileSync(CHECKED_ARTIFACT);
+  const argument = Buffer.from(`{"subject":${subject}}`, "utf8");
+  const argumentDigest = createHash("sha256").update(argument).digest("hex");
+  return {
+    schemaVersion: 1,
+    nonce: "00112233445566778899aabbccddeeff",
+    runtimeProfile: "scalar-1",
+    subjectDigest: argumentDigest,
+    flowLocator: "rd0858/unit4/scalar-oracle",
+    flowDigest: createHash("sha256").update(artifactBytes).digest("hex"),
+    argumentDigest,
+    argumentBytes: argument.toString("base64"),
+  };
+};
+
 function buildLauncher() {
   return spawnSync(process.execPath, [BUILD_SCRIPT], {
     cwd: ROOT,
@@ -275,6 +291,50 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.equal(result.boundedValue.decision, "allow");
     assert.equal(result.boundedAudit.executionTier, "tree");
     assert.equal(result.boundedAudit.authorizing, false);
+  });
+
+  it("returns one terminal COMPLETE receipt through the native parent route", () => {
+    for (const subject of [-1, 0, 1]) {
+      const admittedRequest = scalarRequest(subject);
+      const requestFrame = encodeCanonicalFrame("launcher-request", admittedRequest);
+      const child = runWorkerLauncher(requestFrame);
+      assert.equal(child.error, undefined);
+      assert.equal(child.status, 0, child.stderr?.toString("utf8"));
+      const receipt = decodeCanonicalFrame("receipt", child.stdout);
+      assert.equal(receipt.authorizing, false);
+      assert.equal(receipt.executionState, "COMPLETE");
+      assert.equal(receipt.refusalCode, "NONE");
+      assert.equal(receipt.requestDigest, createHash("sha256").update(requestFrame).digest("hex"));
+      assert.equal(receipt.subjectDigest, admittedRequest.subjectDigest);
+      assert.equal(receipt.flowDigest, admittedRequest.flowDigest);
+      assert.equal(receipt.argumentDigest, admittedRequest.argumentDigest);
+      assert.deepEqual(receipt.missingEvidence, []);
+      assert.equal(receipt.exitCode, 1);
+      assert.equal(receipt.timedOut, false);
+      assert.equal(receipt.truncated, false);
+      assert.equal(receipt.partial, false);
+    }
+  });
+
+  it("returns one terminal refusal for a digest-bound non-Verdict argument", () => {
+    const bytes = Buffer.from('{"subject":true}', "utf8");
+    const argumentDigest = createHash("sha256").update(bytes).digest("hex");
+    const admittedRequest = {
+      ...scalarRequest(1),
+      subjectDigest: argumentDigest,
+      argumentDigest,
+      argumentBytes: bytes.toString("base64"),
+    };
+    const receipt = refusalReceipt(runWorkerLauncher(
+      encodeCanonicalFrame("launcher-request", admittedRequest),
+    ));
+    assert.equal(receipt.refusalCode, "ARGUMENT_CONTRACT");
+    assert.equal(receipt.executionState, "REFUSED");
+    assert.notEqual(receipt.responseDigest, "0".repeat(64));
+    assert.notEqual(receipt.valueDigest, "0".repeat(64));
+    assert.notEqual(receipt.auditDigest, "0".repeat(64));
+    assert.deepEqual(receipt.missingEvidence, []);
+    assert.equal(receipt.authorizing, false);
   });
 
   it("binds both registries to the exact checked scalar artifact and complete identity", () => {
@@ -522,7 +582,7 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
   it("admits one registry-bound sentinel process but never authorizes it", () => {
     assert.equal(existsSync(REGISTRY), true);
     const child = runLauncher(
-      encodeCanonicalFrame("launcher-request", request()),
+      encodeCanonicalFrame("launcher-request", request("rd0858/unit4/sentinel")),
       ["--registry", REGISTRY],
     );
     const receipt = refusalReceipt(child);
@@ -604,11 +664,11 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       GALERINA_PRELOAD: join(OUTPUT, "hostile-preload.mjs"),
     };
     const clean = refusalReceipt(runLauncher(
-      encodeCanonicalFrame("launcher-request", request()),
+      encodeCanonicalFrame("launcher-request", request("rd0858/unit4/sentinel")),
       ["--registry", REGISTRY],
     ));
     const spoofed = refusalReceipt(runLauncher(
-      encodeCanonicalFrame("launcher-request", request()),
+      encodeCanonicalFrame("launcher-request", request("rd0858/unit4/sentinel")),
       ["--registry", REGISTRY],
       hostile,
     ));

@@ -37,6 +37,10 @@ pub struct WorkerResultEvidence {
     pub execution_state: String,
     pub refusal_code: String,
     pub bootstrap_control_digest: String,
+    pub operation: String,
+    pub flow_digest: String,
+    pub subject_digest: String,
+    pub decision: Option<String>,
     pub response_digest: String,
     pub value_digest: String,
     pub audit_digest: String,
@@ -470,6 +474,66 @@ pub fn decode_request(frame: &[u8]) -> Result<RequestEvidence, Refusal> {
     })
 }
 
+fn base64_encode(bytes: &[u8]) -> String {
+    const ALPHABET: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut encoded = String::with_capacity(((bytes.len() + 2) / 3) * 4);
+    for chunk in bytes.chunks(3) {
+        let first = chunk[0];
+        let second = chunk.get(1).copied().unwrap_or(0);
+        let third = chunk.get(2).copied().unwrap_or(0);
+        encoded.push(ALPHABET[(first >> 2) as usize] as char);
+        encoded.push(ALPHABET[(((first & 0x03) << 4) | (second >> 4)) as usize] as char);
+        if chunk.len() > 1 {
+            encoded.push(ALPHABET[(((second & 0x0f) << 2) | (third >> 6)) as usize] as char);
+        } else {
+            encoded.push('=');
+        }
+        if chunk.len() > 2 {
+            encoded.push(ALPHABET[(third & 0x3f) as usize] as char);
+        } else {
+            encoded.push('=');
+        }
+    }
+    encoded
+}
+
+pub fn worker_execution_frame(
+    nonce: &str,
+    artifact_digest: &str,
+    artifact_bytes: &[u8],
+    request_digest: &str,
+    request_frame: &[u8],
+) -> Result<Vec<u8>, Refusal> {
+    let mut envelope = BTreeMap::new();
+    field(&mut envelope, "schemaVersion", Value::Number(1));
+    field(&mut envelope, "nonce", Value::String(nonce.to_string()));
+    field(
+        &mut envelope,
+        "artifactDigest",
+        Value::String(artifact_digest.to_string()),
+    );
+    field(
+        &mut envelope,
+        "artifactBytes",
+        Value::String(base64_encode(artifact_bytes)),
+    );
+    field(
+        &mut envelope,
+        "requestDigest",
+        Value::String(request_digest.to_string()),
+    );
+    field(
+        &mut envelope,
+        "requestBytes",
+        Value::String(base64_encode(request_frame)),
+    );
+    let frame = encode_frame(canonical(&Value::Object(envelope)).as_bytes());
+    if frame.len() > MAX_FRAME_BYTES + 8 {
+        return Err(Refusal::new("WORKER_EXECUTION_BOUND"));
+    }
+    Ok(frame)
+}
+
 fn decode_worker_frame(frame: &[u8]) -> Result<(Value, String), Refusal> {
     if frame.len() < 9 {
         return Err(Refusal::new("WORKER_FRAME_TRUNCATED"));
@@ -572,20 +636,59 @@ pub fn decode_worker_result(frame: &[u8]) -> Result<WorkerResultEvidence, Refusa
         return Err(Refusal::new("WORKER_SCHEMA_VERSION"));
     }
     let execution_state = string_value(&fields, "executionState")?;
-    if execution_state != "REFUSED" && execution_state != "ERROR" {
+    if execution_state != "COMPLETE" && execution_state != "REFUSED" && execution_state != "ERROR" {
         return Err(Refusal::new("WORKER_EXECUTION_STATE"));
     }
     let bounded_value = match fields.get("boundedValue") {
         Some(Value::Object(value)) => value,
         _ => return Err(Refusal::new("WORKER_BOUNDED_VALUE")),
     };
-    exact_worker_fields(
-        bounded_value,
-        &["admitted", "authorizing", "operation", "scalarProfile"],
-    )?;
-    if !matches!(bounded_value.get("admitted"), Some(Value::Bool(false)))
-        || !matches!(bounded_value.get("authorizing"), Some(Value::Bool(false)))
-        || string_value(bounded_value, "operation")? != "bootstrap-probe"
+    let operation = string_value(bounded_value, "operation")?;
+    let complete = execution_state == "COMPLETE";
+    let decision = if operation == "bootstrap-probe" {
+        exact_worker_fields(
+            bounded_value,
+            &["admitted", "authorizing", "operation", "scalarProfile"],
+        )?;
+        if complete || !matches!(bounded_value.get("admitted"), Some(Value::Bool(false))) {
+            return Err(Refusal::new("WORKER_BOUNDED_VALUE"));
+        }
+        None
+    } else if operation == "scalar-oracle" {
+        if complete {
+            exact_worker_fields(
+                bounded_value,
+                &[
+                    "admitted",
+                    "authorizing",
+                    "decision",
+                    "operation",
+                    "scalarProfile",
+                ],
+            )?;
+        } else {
+            exact_worker_fields(
+                bounded_value,
+                &["admitted", "authorizing", "operation", "scalarProfile"],
+            )?;
+        }
+        if !matches!(bounded_value.get("admitted"), Some(Value::Bool(value)) if *value == complete)
+        {
+            return Err(Refusal::new("WORKER_BOUNDED_VALUE"));
+        }
+        if complete {
+            let value = string_value(bounded_value, "decision")?;
+            if value != "deny" && value != "ambig" && value != "allow" {
+                return Err(Refusal::new("WORKER_BOUNDED_VALUE"));
+            }
+            Some(value.to_string())
+        } else {
+            None
+        }
+    } else {
+        return Err(Refusal::new("WORKER_BOUNDED_VALUE"));
+    };
+    if !matches!(bounded_value.get("authorizing"), Some(Value::Bool(false)))
         || string_value(bounded_value, "scalarProfile")? != "scalar-1"
     {
         return Err(Refusal::new("WORKER_BOUNDED_VALUE"));
@@ -594,23 +697,45 @@ pub fn decode_worker_result(frame: &[u8]) -> Result<WorkerResultEvidence, Refusa
         Some(Value::Object(value)) => value,
         _ => return Err(Refusal::new("WORKER_BOUNDED_AUDIT")),
     };
-    exact_worker_fields(
-        bounded_audit,
-        &[
-            "authorizing",
-            "bootstrapControlDigest",
-            "executionState",
-            "flowDigest",
-            "operation",
-            "refusalCode",
-            "subjectDigest",
-        ],
-    )?;
+    if operation == "scalar-oracle" {
+        exact_worker_fields(
+            bounded_audit,
+            &[
+                "authorizing",
+                "bootstrapControlDigest",
+                "executionState",
+                "executionTier",
+                "flowDigest",
+                "operation",
+                "refusalCode",
+                "subjectDigest",
+            ],
+        )?;
+    } else {
+        exact_worker_fields(
+            bounded_audit,
+            &[
+                "authorizing",
+                "bootstrapControlDigest",
+                "executionState",
+                "flowDigest",
+                "operation",
+                "refusalCode",
+                "subjectDigest",
+            ],
+        )?;
+    }
     if !matches!(bounded_audit.get("authorizing"), Some(Value::Bool(false)))
-        || string_value(bounded_audit, "operation")? != "bootstrap-probe"
+        || string_value(bounded_audit, "operation")? != operation
         || string_value(bounded_audit, "executionState")? != execution_state
     {
         return Err(Refusal::new("WORKER_BOUNDED_AUDIT"));
+    }
+    if operation == "scalar-oracle" {
+        let tier = string_value(bounded_audit, "executionTier")?;
+        if (complete && tier != "tree") || (!complete && tier != "none") {
+            return Err(Refusal::new("WORKER_BOUNDED_AUDIT"));
+        }
     }
     let value_digest = checked_worker_digest(&fields, "valueDigest")?;
     let audit_digest = checked_worker_digest(&fields, "auditDigest")?;
@@ -628,12 +753,19 @@ pub fn decode_worker_result(frame: &[u8]) -> Result<WorkerResultEvidence, Refusa
     {
         return Err(Refusal::new("WORKER_REFUSAL_CODE"));
     }
+    if (complete && refusal_code != "NONE") || (!complete && refusal_code == "NONE") {
+        return Err(Refusal::new("WORKER_REFUSAL_CODE"));
+    }
     let bootstrap_control_digest = checked_worker_digest(bounded_audit, "bootstrapControlDigest")?;
     Ok(WorkerResultEvidence {
         nonce: checked_worker_nonce(&fields)?,
         execution_state: execution_state.to_string(),
         refusal_code: refusal_code.to_string(),
         bootstrap_control_digest,
+        operation: operation.to_string(),
+        flow_digest: checked_worker_digest(bounded_audit, "flowDigest")?,
+        subject_digest: checked_worker_digest(bounded_audit, "subjectDigest")?,
+        decision,
         response_digest,
         value_digest,
         audit_digest,
@@ -682,6 +814,24 @@ pub fn refusal_frame_with_evidence(
     request_digest: &str,
     evidence: Option<ReceiptEvidence<'_>>,
     timed_out: bool,
+) -> Vec<u8> {
+    terminal_frame_with_evidence(
+        nonce,
+        refusal_code,
+        request_digest,
+        evidence,
+        timed_out,
+        false,
+    )
+}
+
+pub fn terminal_frame_with_evidence(
+    nonce: &str,
+    refusal_code: &str,
+    request_digest: &str,
+    evidence: Option<ReceiptEvidence<'_>>,
+    timed_out: bool,
+    truncated: bool,
 ) -> Vec<u8> {
     let zero = "0".repeat(64);
     let runtime_digest = evidence
@@ -842,7 +992,7 @@ pub fn refusal_frame_with_evidence(
         Value::String(execution_state.to_string()),
     );
     field(&mut receipt, "timedOut", Value::Bool(timed_out));
-    field(&mut receipt, "truncated", Value::Bool(false));
+    field(&mut receipt, "truncated", Value::Bool(truncated));
     field(&mut receipt, "partial", Value::Bool(false));
     field(
         &mut receipt,

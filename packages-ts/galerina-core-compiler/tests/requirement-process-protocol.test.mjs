@@ -108,6 +108,26 @@ describe("RD-0858 Unit 4 bounded process protocol", () => {
     assert.match(call("hashProtocolBytes", first), /^[0-9a-f]{64}$/);
   });
 
+  it("hashes bounded canonical values without invoking accessors", () => {
+    const forward = { admitted: true, authorizing: false, decision: "allow" };
+    const reversed = Object.fromEntries(Object.entries(forward).reverse());
+    assert.equal(
+      call("hashCanonicalProtocolValue", forward),
+      call("hashCanonicalProtocolValue", reversed),
+    );
+    let reads = 0;
+    const hostile = { ...forward };
+    Object.defineProperty(hostile, "decision", {
+      enumerable: true,
+      get() {
+        reads += 1;
+        return "allow";
+      },
+    });
+    assert.throws(() => call("hashCanonicalProtocolValue", hostile), /ACCESSOR|refus/i);
+    assert.equal(reads, 0);
+  });
+
   it("refuses a duplicate key before object construction", () => {
     assert.equal(typeof L.decodeCanonicalFrame, "function", "decodeCanonicalFrame must be exported");
     const canonical = JSON.stringify(request());

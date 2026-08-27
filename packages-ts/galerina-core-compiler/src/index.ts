@@ -955,6 +955,7 @@ export {
   encodeCanonicalFrame,
   decodeCanonicalFrame,
   hashProtocolBytes,
+  hashCanonicalProtocolValue,
   validateNonAuthorizingReceipt,
   type FrameKind,
   type ExecutionState,
@@ -964,6 +965,13 @@ export {
   type NonAuthorizingReceipt,
   type CanonicalValue,
 } from "./requirement-process-protocol.js";
+
+export {
+  adaptRequirementProcessReceipt,
+  RequirementProcessAdapterRefusal,
+  type RequirementProcessReceiptBinding,
+  type AdaptedRequirementProcessReceipt,
+} from "./requirement-process-adapter.js";
 
 // RD-0858 Unit 4 - single-use, non-authorizing fresh-process worker
 export {
