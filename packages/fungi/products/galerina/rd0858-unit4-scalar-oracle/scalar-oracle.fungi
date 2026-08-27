@@ -1,0 +1,10 @@
+@version 1
+pure flow scalarOracle(subject: Verdict) -> String
+contract { effects {} }
+{
+  check(subject) {
+    deny: { return "deny" }
+    ambig: { return "ambig" }
+    if: { return "allow" }
+  }
+}

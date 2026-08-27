@@ -464,7 +464,7 @@ function snapshotCheckedFlowCanonicalNode(
   });
 }
 
-interface CheckedFlowSnapshot {
+export interface CheckedFlowSnapshot {
   readonly name: string;
   readonly qualifier: FlowMeta["qualifier"];
   readonly params: readonly string[];
@@ -478,7 +478,7 @@ interface ValidatedCheckedFlow {
   readonly snapshot: CheckedFlowSnapshot;
 }
 
-function snapshotCheckedFlow(
+export function snapshotCheckedFlow(
   flow: FlowMeta,
   flowNode: AstNode,
 ): CheckedFlowSnapshot | undefined {

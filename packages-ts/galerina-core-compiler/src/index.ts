@@ -100,6 +100,11 @@ export {
 } from "./requirement-semantics.js";
 
 export {
+  snapshotCheckedFlow,
+  type CheckedFlowSnapshot,
+} from "./taint-checker.js";
+
+export {
   proveRequirementHandlerTerminality,
   MAX_REQUIREMENT_TERMINALITY_DEPTH,
   MAX_REQUIREMENT_TERMINALITY_NODES,
