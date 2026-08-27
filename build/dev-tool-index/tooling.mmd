@@ -333,7 +333,6 @@ flowchart LR
   T_audit_perf_hotpath_mjs --> C_graph_index
   T_audit_perf_hotpath_mjs --> C_muted_diagnostics
   T_audit_private_doc_leak_mjs["audit-private-doc-leak.mjs"]
-  T_audit_private_doc_leak_mjs --> C_sinks_taint
   T_audit_private_doc_leak_mjs --> C_signing_fusion
   T_audit_private_doc_leak_mjs --> C_naming
   T_audit_private_doc_leak_mjs --> C_source_hygiene
@@ -821,6 +820,15 @@ flowchart LR
   T_generate_product_profiles_mjs --> C_signing_fusion
   T_generate_product_profiles_mjs --> C_diagnostics
   T_generate_product_profiles_mjs --> C_source_hygiene
+  T_generate_rd0858_scalar_oracle_artifact_mjs["generate-rd0858-scalar-oracle-artifact.mjs"]
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_sinks_taint
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_effects
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_signing_fusion
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_governance
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_naming
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_gate_wiring
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_diagnostics
+  T_generate_rd0858_scalar_oracle_artifact_mjs --> C_graph_index
   T_generate_sbom_mjs["generate-sbom.mjs"]
   T_generate_sbom_mjs --> C_sinks_taint
   T_generate_sbom_mjs --> C_signing_fusion
