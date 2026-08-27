@@ -1908,6 +1908,7 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
+        "sinks/taint",
         "signing/fusion",
         "naming",
         "source-hygiene",
@@ -4199,6 +4200,7 @@
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
       "audit-papers-index.mjs",
+      "audit-private-doc-leak.mjs",
       "audit-registry-fixtures.mjs",
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
