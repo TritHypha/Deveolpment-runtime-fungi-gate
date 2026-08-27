@@ -37,6 +37,7 @@ verifyManifestRoundTrip    # called by galerina.mjs (manifest emit path) + tests
 verifyGovernanceSignature  # proof-graph signature verify; exercised by hybrid-pq-signature + phase35-39-features tests
 verifyProofChain           # proof-chain verify primitive; exercised by tests/proof-chain.test.mjs (host/verify-side)
 verifyRuntimeManifestHash  # runtime host binds GIR↔manifest at load; exercised by tests/runtime-manifest-r6.test.mjs
+verifyRd0858ScalarArtifact # RD-0858 checked-artifact verifier; invoked by scripts/generate-rd0858-scalar-oracle-artifact.mjs outside compiler src
 
 # ── Checkers wired via a DIFFERENT entry (another package / resolver / devtools),
 #    not the single-file compile pipeline in cli.ts. ────────────────────────────

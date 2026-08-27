@@ -282,7 +282,7 @@
   "exhaustiveLanguageManifest": false,
   "inputs": {
     "caseDefinition": "docs/examples/golden/cases.json",
-    "caseDefinitionSha256": "sha256:22f4215b5e134aeaa96741dfb9c9808c8c0ceee945fbe063382bb2ded6ab21f8",
+    "caseDefinitionSha256": "sha256:62bc3954227e50a59c59a0ab7e3b6c058e01b29ee8288768c92c82d5af877b4a",
     "probeRunner": "scripts/fungi-golden-probe.mjs",
     "probeRunnerSha256": "sha256:587efed39c4e340ca0da30a6004a0127d2e9381e8787a69cc930282cfca27bcf"
   },
@@ -295,7 +295,7 @@
     "notExecutedExamples": 3
   },
   "toolchain": {
-    "runtimeClosureFileCount": 286,
-    "runtimeClosureSha256": "sha256:ae64d0f8ec059e50d9c3a2eea505288bc578115e443d63f572930313fcb4cfd7"
+    "runtimeClosureFileCount": 294,
+    "runtimeClosureSha256": "sha256:ce430cee98228cb18976046fb8935e9b3f4476dd476c4a8518c46ce64d19958e"
   }
 }
