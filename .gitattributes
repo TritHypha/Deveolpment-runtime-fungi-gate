@@ -8,6 +8,13 @@
 # Canonical checked-flow receipts are verified as exact UTF-8/LF bytes.
 packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/*.checked.json text eol=lf
 
+# Scalar closure governance and generated views are exact-byte inputs. Do not
+# let ambient Windows autocrlf change their checkout representation.
+docs/ROADMAP.md text eol=lf
+docs/TODO.md text eol=lf
+docs/audit-map.json text eol=lf
+docs/superpowers/plans/2026-08-27-rd-0858-unit4-scalar-oracle-admission.md text eol=lf
+
 # Model-review prompt and reply are raw evidence. Keep their captured bytes
 # unchanged so their recorded SHA-256 digests remain reproducible.
 docs/reports/evidence/rd-0858-unit4-scalar-oracle-grok-*.txt -text

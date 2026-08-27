@@ -115,6 +115,8 @@ Exact repair `e045e8388` now binds the governing plan and canonical map through
 committed Git-object bytes while accepting only exact LF or its exact whole-file
 CRLF checkout projection. Immutable review passes C0/I0/M0 with 8/8 under both
 line-ending estates and hostile mixed, dirty and semantic neighbours refused.
+The four scalar governance/view files are now explicitly pinned to LF checkout
+bytes so Windows autocrlf cannot recreate the false refusal.
 The repaired candidate is ready for the owner-approved scalar-local
 fast-forward into the active RD-0858 Unit 4 process-root branch.
 The last complete phase-close remains explicitly 94/96: 726 historical
