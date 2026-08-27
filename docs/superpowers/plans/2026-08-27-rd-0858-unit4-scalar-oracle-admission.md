@@ -356,7 +356,13 @@ temporary copies. Do not rewrite repository files.
 Run the core-compiler typecheck/build/full package test, Rust launcher tests,
 product-boundary self-tests/check, Fungi golden audit and the maintained
 phased impact/phase-close runner. Stop on the first nonzero result, preserve
-the exact failure and repair only a demonstrated root.
+the exact failure and repair only a demonstrated root. The owner-approved
+scalar-local integration addendum preserves `audit:conversion-slice-close`
+and `fungi:corpus-check` as global blocking `HOLD` gates; it does not authorize
+rewriting historical receipts or widening this chapter to repair broad
+conversion/corpus ownership. Continue scalar-local assurance only when every
+scalar-specific phase result is green and both global outcomes remain recorded
+as non-PASS.
 
 ### Step 4: Run Myco, Hypha and Code Logic Workbench through the controller
 
@@ -459,9 +465,13 @@ one exact build point.
 
 Recompute ancestry, changed-path intersections, branch/worktree custody and
 target status. Merge into `codex/rd-0858-unit4-process-root` only when every
-gate is PASS, the target is clean and no concurrent path ownership exists.
-Delete the feature worktree/branch only after ancestor and recoverability
-proof. Do not push and do not merge to `main` in this chapter.
+scalar-local gate is PASS at one exact build point, both independent review
+modes have no Critical or Important finding, the target is clean and no
+concurrent path ownership exists. The canonical phase-close receipt must still
+show the two retained global blocking HOLDs; it is not a chapter PASS and
+cannot authorize `main`, release, production, broader conversion or another
+native source. Delete the feature worktree/branch only after ancestor and
+recoverability proof. Do not push and do not merge to `main` in this chapter.
 
 ## Completion boundary
 

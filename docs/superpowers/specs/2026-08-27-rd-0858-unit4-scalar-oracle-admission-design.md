@@ -209,6 +209,16 @@ set covers parser, symbol resolution, type checking, value-state checking,
 effect checking, governance verification, source-escape checking, naming
 policy and the checked-artifact codec.
 
+The compiler package identity domain is `galerina.compiler-package-identity.v3`.
+It covers every tracked compiler-package entry except generated `.graph/`
+reporting surfaces, then binds the freshly derived executable-closure digest.
+Generated boundary reports are evidence about the package, not executable or
+source inputs to the compiler. A graph refresh therefore cannot invalidate an
+otherwise unchanged checked artifact; changing compiler source, package
+metadata or executable bytes still changes the identity and refuses a stale
+artifact. The permanent discriminator changes `.graph/BOUNDARY.md` while
+holding source fixed, then changes source while holding the report fixed.
+
 The generator reads each toolchain file as a held direct regular file, hashes
 it before use, performs the generation twice in separate clean Node processes,
 and rechecks every held identity/digest afterwards. Drift refuses and leaves
@@ -356,6 +366,15 @@ authority.
 - Merge into `codex/rd-0858-unit4-process-root` only after exact-head tests,
   controlled red capability, full zero-exclusion graph and independent plus
   model-diverse review all pass at one build point.
+- The owner-approved scalar-local integration scope treats
+  `audit:conversion-slice-close` and `fungi:corpus-check` as retained global
+  `HOLD` gates rather than scalar implementation gates. They remain blocking
+  for `main`, release, production admission, broader conversion and every new
+  native source chapter. They are never relabelled PASS. A local fast-forward
+  into the RD-0858 process-root branch may proceed only when every
+  scalar-local gate passes at one exact build point, both independent review
+  modes return no Critical or Important finding, and the global 94/96 receipt
+  remains explicitly non-green.
 - Do not merge to `main` from this chapter unless a later owner integration
   gate separately proves ancestry, custody and publication authority.
 
