@@ -7782,10 +7782,10 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:90",
       "ref scripts/audit-examples-vs-declared.mjs:92",
       "ref scripts/audit-examples-vs-declared.mjs:102",
-      "ref galerina.mjs:1397",
-      "ref galerina.mjs:1405",
-      "ref galerina.mjs:2279",
-      "ref galerina.mjs:2285"
+      "ref galerina.mjs:1407",
+      "ref galerina.mjs:1415",
+      "ref galerina.mjs:2289",
+      "ref galerina.mjs:2295"
     ]
   },
   {
@@ -8106,10 +8106,10 @@
       "ref scripts/audit-twin-emit-parity.mjs:209",
       "ref scripts/component-health.mjs:389",
       "test scripts/tests/cg4-signing-boundary.test.mjs:80",
-      "ref galerina.mjs:1403",
-      "ref galerina.mjs:1405",
-      "ref galerina.mjs:2283",
-      "ref galerina.mjs:2285"
+      "ref galerina.mjs:1413",
+      "ref galerina.mjs:1415",
+      "ref galerina.mjs:2293",
+      "ref galerina.mjs:2295"
     ]
   },
   {
@@ -8281,8 +8281,8 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:2362",
-      "galerina.mjs:2366"
+      "galerina.mjs:2372",
+      "galerina.mjs:2376"
     ],
     "tests": 0,
     "refs": 0,
@@ -8290,8 +8290,8 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:2362",
-      "emit galerina.mjs:2366"
+      "emit galerina.mjs:2372",
+      "emit galerina.mjs:2376"
     ]
   },
   {
@@ -8845,7 +8845,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:2422"
+      "galerina.mjs:2432"
     ],
     "tests": 0,
     "refs": 0,
@@ -8853,7 +8853,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:2422"
+      "emit galerina.mjs:2432"
     ]
   },
   {
@@ -9020,7 +9020,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1162"
+      "galerina.mjs:1172"
     ],
     "tests": 0,
     "refs": 0,
@@ -9028,7 +9028,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1162"
+      "emit galerina.mjs:1172"
     ]
   },
   {
@@ -9215,7 +9215,7 @@
     "defs": [],
     "emits": [
       "packages-ts/galerina-framework-example-app/host/server.ts:94",
-      "galerina.mjs:1151"
+      "galerina.mjs:1161"
     ],
     "tests": 0,
     "refs": 0,
@@ -9224,7 +9224,7 @@
     "severities": [],
     "allSites": [
       "emit packages-ts/galerina-framework-example-app/host/server.ts:94",
-      "emit galerina.mjs:1151"
+      "emit galerina.mjs:1161"
     ]
   },
   {
@@ -9430,7 +9430,7 @@
       "packages-ts/galerina-framework-app-kernel/src/fuse-loader.ts:683",
       "packages-ts/galerina-framework-app-kernel/src/fuse-loader.ts:689",
       "scripts/audit-signed-fixture-drift.mjs:80",
-      "galerina.mjs:2406"
+      "galerina.mjs:2416"
     ],
     "tests": 0,
     "refs": 0,
@@ -9441,7 +9441,7 @@
       "emit packages-ts/galerina-framework-app-kernel/src/fuse-loader.ts:683",
       "emit packages-ts/galerina-framework-app-kernel/src/fuse-loader.ts:689",
       "emit scripts/audit-signed-fixture-drift.mjs:80",
-      "emit galerina.mjs:2406"
+      "emit galerina.mjs:2416"
     ]
   },
   {
@@ -9473,7 +9473,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1135"
+      "galerina.mjs:1145"
     ],
     "tests": 0,
     "refs": 0,
@@ -9481,7 +9481,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1135"
+      "emit galerina.mjs:1145"
     ]
   },
   {
@@ -9818,7 +9818,7 @@
       "test scripts/tests/gate-admission-envelope.test.mjs:298",
       "test scripts/tests/helpers/gate-admission-fixture.mjs:83",
       "test scripts/tests/helpers/gate-admission-fixture.mjs:86",
-      "ref galerina.mjs:1196"
+      "ref galerina.mjs:1206"
     ]
   },
   {
@@ -13244,7 +13244,7 @@
     "allSites": [
       "ref governance/key-lifecycle.mjs:30",
       "emit governance/key-lifecycle.mjs:98",
-      "ref galerina.mjs:2536"
+      "ref galerina.mjs:2546"
     ]
   },
   {
@@ -14235,10 +14235,10 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1933",
-      "galerina.mjs:1947",
-      "galerina.mjs:1984",
-      "galerina.mjs:2122"
+      "galerina.mjs:1943",
+      "galerina.mjs:1957",
+      "galerina.mjs:1994",
+      "galerina.mjs:2132"
     ],
     "tests": 0,
     "refs": 0,
@@ -14246,10 +14246,10 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1933",
-      "emit galerina.mjs:1947",
-      "emit galerina.mjs:1984",
-      "emit galerina.mjs:2122"
+      "emit galerina.mjs:1943",
+      "emit galerina.mjs:1957",
+      "emit galerina.mjs:1994",
+      "emit galerina.mjs:2132"
     ]
   },
   {
@@ -14260,7 +14260,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:2094"
+      "galerina.mjs:2104"
     ],
     "tests": 0,
     "refs": 0,
@@ -14268,7 +14268,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:2094"
+      "emit galerina.mjs:2104"
     ]
   },
   {
@@ -14304,7 +14304,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1653"
+      "galerina.mjs:1663"
     ],
     "tests": 0,
     "refs": 0,
@@ -14312,7 +14312,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1653"
+      "emit galerina.mjs:1663"
     ]
   },
   {
@@ -14323,7 +14323,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1680"
+      "galerina.mjs:1690"
     ],
     "tests": 0,
     "refs": 0,
@@ -14331,7 +14331,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1680"
+      "emit galerina.mjs:1690"
     ]
   },
   {
@@ -14342,14 +14342,14 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1738",
-      "galerina.mjs:1787",
-      "galerina.mjs:2013",
-      "galerina.mjs:2055",
-      "galerina.mjs:2550",
-      "galerina.mjs:2570",
-      "galerina.mjs:2638",
-      "galerina.mjs:2680"
+      "galerina.mjs:1748",
+      "galerina.mjs:1797",
+      "galerina.mjs:2023",
+      "galerina.mjs:2065",
+      "galerina.mjs:2560",
+      "galerina.mjs:2580",
+      "galerina.mjs:2648",
+      "galerina.mjs:2690"
     ],
     "tests": 0,
     "refs": 0,
@@ -14357,14 +14357,14 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1738",
-      "emit galerina.mjs:1787",
-      "emit galerina.mjs:2013",
-      "emit galerina.mjs:2055",
-      "emit galerina.mjs:2550",
-      "emit galerina.mjs:2570",
-      "emit galerina.mjs:2638",
-      "emit galerina.mjs:2680"
+      "emit galerina.mjs:1748",
+      "emit galerina.mjs:1797",
+      "emit galerina.mjs:2023",
+      "emit galerina.mjs:2065",
+      "emit galerina.mjs:2560",
+      "emit galerina.mjs:2580",
+      "emit galerina.mjs:2648",
+      "emit galerina.mjs:2690"
     ]
   },
   {
@@ -14375,9 +14375,9 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1729",
-      "galerina.mjs:2004",
-      "galerina.mjs:2563"
+      "galerina.mjs:1739",
+      "galerina.mjs:2014",
+      "galerina.mjs:2573"
     ],
     "tests": 0,
     "refs": 0,
@@ -14385,9 +14385,9 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1729",
-      "emit galerina.mjs:2004",
-      "emit galerina.mjs:2563"
+      "emit galerina.mjs:1739",
+      "emit galerina.mjs:2014",
+      "emit galerina.mjs:2573"
     ]
   },
   {
@@ -14398,10 +14398,10 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1804",
-      "galerina.mjs:1901",
-      "galerina.mjs:2067",
-      "galerina.mjs:2107"
+      "galerina.mjs:1814",
+      "galerina.mjs:1911",
+      "galerina.mjs:2077",
+      "galerina.mjs:2117"
     ],
     "tests": 0,
     "refs": 0,
@@ -14409,10 +14409,10 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1804",
-      "emit galerina.mjs:1901",
-      "emit galerina.mjs:2067",
-      "emit galerina.mjs:2107"
+      "emit galerina.mjs:1814",
+      "emit galerina.mjs:1911",
+      "emit galerina.mjs:2077",
+      "emit galerina.mjs:2117"
     ]
   },
   {
@@ -14423,10 +14423,10 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1798",
-      "galerina.mjs:1857",
-      "galerina.mjs:2061",
-      "galerina.mjs:2101"
+      "galerina.mjs:1808",
+      "galerina.mjs:1867",
+      "galerina.mjs:2071",
+      "galerina.mjs:2111"
     ],
     "tests": 0,
     "refs": 0,
@@ -14434,10 +14434,10 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1798",
-      "emit galerina.mjs:1857",
-      "emit galerina.mjs:2061",
-      "emit galerina.mjs:2101"
+      "emit galerina.mjs:1808",
+      "emit galerina.mjs:1867",
+      "emit galerina.mjs:2071",
+      "emit galerina.mjs:2111"
     ]
   },
   {
@@ -14448,16 +14448,16 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1667",
-      "galerina.mjs:1819",
-      "galerina.mjs:1837",
-      "galerina.mjs:1841",
-      "galerina.mjs:1887",
-      "galerina.mjs:1895",
-      "galerina.mjs:1974",
-      "galerina.mjs:2077",
+      "galerina.mjs:1677",
+      "galerina.mjs:1829",
+      "galerina.mjs:1847",
+      "galerina.mjs:1851",
+      "galerina.mjs:1897",
+      "galerina.mjs:1905",
+      "galerina.mjs:1984",
       "galerina.mjs:2087",
-      "galerina.mjs:2114"
+      "galerina.mjs:2097",
+      "galerina.mjs:2124"
     ],
     "tests": 0,
     "refs": 0,
@@ -14465,16 +14465,16 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1667",
-      "emit galerina.mjs:1819",
-      "emit galerina.mjs:1837",
-      "emit galerina.mjs:1841",
-      "emit galerina.mjs:1887",
-      "emit galerina.mjs:1895",
-      "emit galerina.mjs:1974",
-      "emit galerina.mjs:2077",
+      "emit galerina.mjs:1677",
+      "emit galerina.mjs:1829",
+      "emit galerina.mjs:1847",
+      "emit galerina.mjs:1851",
+      "emit galerina.mjs:1897",
+      "emit galerina.mjs:1905",
+      "emit galerina.mjs:1984",
       "emit galerina.mjs:2087",
-      "emit galerina.mjs:2114"
+      "emit galerina.mjs:2097",
+      "emit galerina.mjs:2124"
     ]
   },
   {
@@ -14485,11 +14485,11 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1908",
-      "galerina.mjs:1917",
-      "galerina.mjs:1924",
-      "galerina.mjs:1941",
-      "galerina.mjs:2045"
+      "galerina.mjs:1918",
+      "galerina.mjs:1927",
+      "galerina.mjs:1934",
+      "galerina.mjs:1951",
+      "galerina.mjs:2055"
     ],
     "tests": 0,
     "refs": 0,
@@ -14497,11 +14497,11 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1908",
-      "emit galerina.mjs:1917",
-      "emit galerina.mjs:1924",
-      "emit galerina.mjs:1941",
-      "emit galerina.mjs:2045"
+      "emit galerina.mjs:1918",
+      "emit galerina.mjs:1927",
+      "emit galerina.mjs:1934",
+      "emit galerina.mjs:1951",
+      "emit galerina.mjs:2055"
     ]
   },
   {
@@ -14512,7 +14512,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1686"
+      "galerina.mjs:1696"
     ],
     "tests": 0,
     "refs": 0,
@@ -14520,7 +14520,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1686"
+      "emit galerina.mjs:1696"
     ]
   },
   {
@@ -15826,9 +15826,9 @@
       "test packages-ts/galerina-core-compiler/tests/wat-i64-lift-readiness.test.mjs:25",
       "test packages-ts/galerina-core-compiler/tests/wat-i64-milestone.test.mjs:9",
       "ref packages-ts/galerina-devtools-hypha/src/extract.mjs:359",
-      "ref galerina.mjs:1416",
-      "ref galerina.mjs:1514",
-      "ref galerina.mjs:2293"
+      "ref galerina.mjs:1426",
+      "ref galerina.mjs:1524",
+      "ref galerina.mjs:2303"
     ]
   },
   {
@@ -16223,7 +16223,7 @@
       "doc docs/TODO.md:9684",
       "ref scripts/audit-syntax.mjs:4",
       "ref scripts/rebuild-fusable-packages.mjs:139",
-      "ref galerina.mjs:1192"
+      "ref galerina.mjs:1202"
     ]
   },
   {
@@ -19466,7 +19466,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1861"
+      "galerina.mjs:1871"
     ],
     "tests": 0,
     "refs": 0,
@@ -19474,7 +19474,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1861"
+      "emit galerina.mjs:1871"
     ]
   },
   {
@@ -19485,8 +19485,8 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:1795",
-      "galerina.mjs:1854"
+      "galerina.mjs:1805",
+      "galerina.mjs:1864"
     ],
     "tests": 0,
     "refs": 0,
@@ -19494,8 +19494,8 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:1795",
-      "emit galerina.mjs:1854"
+      "emit galerina.mjs:1805",
+      "emit galerina.mjs:1864"
     ]
   },
   {
@@ -19983,7 +19983,7 @@
     "docOnly": false,
     "defs": [],
     "emits": [
-      "galerina.mjs:435"
+      "galerina.mjs:445"
     ],
     "tests": 0,
     "refs": 0,
@@ -19991,7 +19991,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "emit galerina.mjs:435"
+      "emit galerina.mjs:445"
     ]
   },
   {
@@ -21041,10 +21041,10 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:87",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
-      "ref galerina.mjs:1398",
-      "ref galerina.mjs:1405",
-      "ref galerina.mjs:2280",
-      "ref galerina.mjs:2285"
+      "ref galerina.mjs:1408",
+      "ref galerina.mjs:1415",
+      "ref galerina.mjs:2290",
+      "ref galerina.mjs:2295"
     ]
   },
   {
@@ -21452,7 +21452,7 @@
       "ref scripts/rd-0156-photonic-wavefront-db-proof.mjs:16",
       "ref scripts/rd-0156-photonic-wavefront-db-proof.mjs:293",
       "ref scripts/rd-0157-0159-virtual-wavefront-silicon-proof.mjs:514",
-      "ref galerina.mjs:1436"
+      "ref galerina.mjs:1446"
     ]
   },
   {
@@ -22102,7 +22102,7 @@
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:50",
       "doc docs/language/fungi/01-flows-and-functions.md:34",
       "doc docs/language/fungi/README.md:53",
-      "ref galerina.mjs:1190"
+      "ref galerina.mjs:1200"
     ]
   },
   {
@@ -22861,12 +22861,12 @@
       "ref scripts/audit-twin-differential.mjs:143",
       "ref scripts/audit-twin-differential.mjs:145",
       "ref scripts/audit-twin-emit-parity.mjs:115",
-      "ref galerina.mjs:1391",
-      "ref galerina.mjs:1396",
-      "ref galerina.mjs:1399",
-      "ref galerina.mjs:2251",
-      "ref galerina.mjs:2255",
-      "ref galerina.mjs:2265"
+      "ref galerina.mjs:1401",
+      "ref galerina.mjs:1406",
+      "ref galerina.mjs:1409",
+      "ref galerina.mjs:2261",
+      "ref galerina.mjs:2265",
+      "ref galerina.mjs:2275"
     ]
   },
   {
@@ -26624,12 +26624,12 @@
       "doc docs/TODO.md:9560",
       "ref scripts/audit-codes-full.mjs:53",
       "ref scripts/audit-muted-diagnostics.mjs:55",
-      "ref galerina.mjs:1391",
-      "ref galerina.mjs:1415",
-      "ref galerina.mjs:1424",
-      "ref galerina.mjs:2255",
-      "ref galerina.mjs:2266",
-      "ref galerina.mjs:2298"
+      "ref galerina.mjs:1401",
+      "ref galerina.mjs:1425",
+      "ref galerina.mjs:1434",
+      "ref galerina.mjs:2265",
+      "ref galerina.mjs:2276",
+      "ref galerina.mjs:2308"
     ]
   },
   {
