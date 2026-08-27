@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "15d06ccc967e5279bcbe527475815081a3c4ee5e37431a265ea3985b8dfdd648",
+  "authoritativeInputsDigest": "7759eb2ee5906df3055be00632ec839ac46ba11648c28413b3036969004d05d3",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -8330,6 +8330,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-c8ef92b515a406a97514e5f5",
+      "kind": "test",
+      "evidencePath": "scripts/tests/rd0858-scalar-audit-map.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-87456e2fd5736661d3cf5f00",
       "kind": "test",
       "evidencePath": "scripts/tests/rd0858-scalar-oracle-artifact.test.mjs",
@@ -14051,6 +14058,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-c8ef92b515a406a97514e5f5",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-87456e2fd5736661d3cf5f00",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -14366,7 +14378,7 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1112,
+    "tests": 1113,
     "detectors": 6,
     "executableFamily": 1578,
     "legacyUnmapped": 0

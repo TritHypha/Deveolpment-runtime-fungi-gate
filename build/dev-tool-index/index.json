@@ -4,7 +4,7 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 179,
+    "devTools": 180,
     "auditTools": 92,
     "toolsInCadence": 121,
     "proofs": 40
@@ -3252,6 +3252,22 @@
       ]
     },
     {
+      "name": "generate-rd0858-scalar-audit-map.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "diagnostics",
+        "source-hygiene",
+        "doc-drift",
+        "graph/index"
+      ]
+    },
+    {
       "name": "generate-rd0858-scalar-oracle-artifact.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -3261,7 +3277,6 @@
       "concerns": [
         "sinks/taint",
         "effects",
-        "signing/fusion",
         "governance",
         "naming",
         "gate-wiring",
@@ -3727,6 +3742,7 @@
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
       "generate-product-profiles.mjs",
+      "generate-rd0858-scalar-audit-map.mjs",
       "generate-rd0858-scalar-oracle-artifact.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
@@ -3850,6 +3866,7 @@
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
+      "generate-rd0858-scalar-audit-map.mjs",
       "generate-rd0858-scalar-oracle-artifact.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
@@ -4008,7 +4025,7 @@
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
       "generate-product-profiles.mjs",
-      "generate-rd0858-scalar-oracle-artifact.mjs",
+      "generate-rd0858-scalar-audit-map.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-primitives-are-collected.mjs",
@@ -4074,6 +4091,7 @@
       "status.mjs",
       "emit-doc-wat.mjs",
       "gather-r4-twin-hashes.mjs",
+      "generate-rd0858-scalar-audit-map.mjs",
       "generate-sbom.mjs",
       "migrate-fungi.mjs",
       "rd-absorb.mjs",
@@ -4150,6 +4168,7 @@
       "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
+      "generate-rd0858-scalar-audit-map.mjs",
       "generate-rd0858-scalar-oracle-artifact.mjs",
       "hardening-show-derived.mjs",
       "license-rollout.mjs",
@@ -4197,6 +4216,7 @@
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
       "generate-product-profiles.mjs",
+      "generate-rd0858-scalar-audit-map.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
       "validate-workspace-pointers.mjs"
@@ -6144,6 +6164,15 @@
     },
     {
       "tool": "generate-product-profiles.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "generate-rd0858-scalar-audit-map.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
       "via": [],
