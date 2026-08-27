@@ -100,10 +100,12 @@ code and assurance reviews. Its exact-target LF and physical-CRLF estates pass
 residue and ambient module-resolution gaps. The replacement candidate now
 builds a scalar-only compiler closure from exact `HEAD` blobs in an owned
 temporary root, binds the actually loaded module set, sanitizes ambient Node
-resolution state, refuses reparse or escaped roots and preserves unrelated
-owner residue. Its current LF scalar estate passes 126/126. Physical-CRLF,
-fresh independent review, exact graph refresh and documentation closure remain
-required before local fast-forward integration.
+resolution state, byte-binds the Node/TypeScript build trust base and a
+non-filesystem loader, revalidates consumed module bytes after execution,
+refuses reparse or escaped roots and preserves unrelated owner residue. Its
+current LF scalar estate passes 130/130. Physical-CRLF, fresh independent
+review, exact graph refresh and documentation closure remain required before
+local fast-forward integration.
 The last complete phase-close remains explicitly 94/96: 726 historical
 conversion receipts omit exact scope and the corpus child has no terminal
 receipt within 600 seconds. Those global blockers continue to block `main`,

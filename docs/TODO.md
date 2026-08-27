@@ -157,8 +157,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Repair the later checkout-isolation defect with a scalar-only temporary
   compiler closure. Persistent `dist`, ambient `node_modules`, `NODE_OPTIONS`,
   `NODE_PATH`, reparse-point roots and stale same-name outputs are not admitted;
-  ignored owner residue is neither executed nor deleted. The current LF scalar
-  estate passes 126/126.
+  ignored owner residue is neither executed nor deleted. Node and the bounded
+  TypeScript compiler closure are byte-bound before and after every build; the
+  content-bound loader verifies consumed module bytes and the runtime closure
+  is revalidated after every child. The current LF scalar estate passes 130/130.
 - [!] Final chapter integration remains `HOLD` until the repaired exact target
   passes physical-CRLF, independent code and assurance review, deterministic
   graph refresh and documentation closure. Historical 118/118 receipts remain
