@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { lstat, mkdir, mkdtemp, readFile, rm, rmdir, symlink, unlink, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdir, mkdtemp, readFile, rm, rmdir, symlink, unlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -228,6 +228,79 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
         () => generator.requireBuildToolchainClosure(nodeExecutable, typeScriptRoot, baseline),
         /TOOLCHAIN_DRIFT.*refused/u,
       );
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("executes admitted TypeScript and library bytes after hostile path substitution and restoration", async () => {
+    const generator = await loadGenerator();
+    const temporary = await mkdtemp(join(tmpdir(), "rd0858-admitted-typescript-"));
+    const typeScriptRoot = join(temporary, "typescript");
+    const sourceRoot = join(temporary, "project");
+    const sourceFile = join(sourceRoot, "input.ts");
+    const outDir = join(temporary, "out");
+    const installedTypeScriptRoot = join(
+      root,
+      "packages-ts",
+      "galerina-core-compiler",
+      "node_modules",
+      "typescript",
+    );
+    try {
+      await cp(installedTypeScriptRoot, typeScriptRoot, { recursive: true, force: false });
+      const admitted = generator.admitTypeScriptCompiler(process.execPath, typeScriptRoot);
+      const project = Object.freeze({
+        currentDirectory: sourceRoot,
+        identityRoot: temporary,
+        rootNames: Object.freeze([sourceFile]),
+        files: Object.freeze({
+          [sourceFile]: Buffer.from("export const scalar: number = 1;\n", "utf8"),
+          [join(sourceRoot, "package.json")]: Buffer.from('{"type":"module"}\n', "utf8"),
+        }),
+        options: Object.freeze({
+          target: "ES2022",
+          module: "NodeNext",
+          moduleResolution: "NodeNext",
+          strict: true,
+          declaration: true,
+          rootDir: sourceRoot,
+          outDir,
+        }),
+      });
+      const compilerPath = join(typeScriptRoot, "lib", "typescript.js");
+      const libraryPath = join(typeScriptRoot, "lib", "lib.es2022.d.ts");
+      const originalCompiler = await readFile(compilerPath);
+      const originalLibrary = await readFile(libraryPath);
+      const marker = join(temporary, "hostile-compiler-ran.txt");
+      let afterSubstitution;
+      try {
+        await writeFile(
+          compilerPath,
+          `require("fs").writeFileSync(${JSON.stringify(marker)}, "executed\\n"); module.exports = {};\n`,
+          "utf8",
+        );
+        await writeFile(libraryPath, "declare const hostileAmbientLibrary: unique symbol;\n", "utf8");
+        afterSubstitution = generator.compileAdmittedTypeScriptProject(admitted, project);
+        assert.ok(Object.values(afterSubstitution.outputs).includes("export const scalar = 1;\n"));
+        await assert.rejects(lstat(marker), { code: "ENOENT" });
+      } finally {
+        await writeFile(compilerPath, originalCompiler);
+        await writeFile(libraryPath, originalLibrary);
+      }
+      const afterRestoration = generator.compileAdmittedTypeScriptProject(admitted, project);
+      assert.deepEqual(afterRestoration.outputs, afterSubstitution.outputs);
+      assert.equal(afterRestoration.inputDigest, afterSubstitution.inputDigest);
+      const changedProject = Object.freeze({
+        ...project,
+        files: Object.freeze({
+          ...project.files,
+          [sourceFile]: Buffer.from("export const scalar: number = 2;\n", "utf8"),
+        }),
+      });
+      const changed = generator.compileAdmittedTypeScriptProject(admitted, changedProject);
+      assert.notEqual(changed.inputDigest, afterSubstitution.inputDigest);
+      assert.notDeepEqual(changed.outputs, afterSubstitution.outputs);
     } finally {
       await rm(temporary, { recursive: true, force: true });
     }

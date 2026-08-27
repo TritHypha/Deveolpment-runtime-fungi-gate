@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import {
   closeSync,
   existsSync,
@@ -18,6 +19,7 @@ import {
 import { tmpdir } from "node:os";
 import { basename, dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { compileFunction } from "node:vm";
 
 export const SCALAR_ORACLE_SOURCE_RELATIVE = "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi";
 export const SCALAR_ORACLE_ARTIFACT_RELATIVE = "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json";
@@ -43,6 +45,8 @@ const artifactPath = join(root, ...SCALAR_ORACLE_ARTIFACT_RELATIVE.split("/"));
 const generatorPath = join(root, ...GENERATOR_RELATIVE.split("/"));
 const packageJsonPath = join(root, COMPILER_PACKAGE_RELATIVE, "package.json");
 const textDecoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+const nativeRequire = createRequire(import.meta.url);
+const admittedCompilerCache = new WeakMap();
 
 const SCALAR_COMPILER_SOURCE_LOCATORS = Object.freeze([
   "bounded-cache.ts",
@@ -239,6 +243,7 @@ function writeExclusive(path, bytes) {
 
 function materializeHeadFiles(destination, packageRelative, locators) {
   let total = 0;
+  const files = {};
   for (const locator of locators) {
     if (typeof locator !== "string" || locator.length < 1 || locator.length > 1_024
       || locator.includes("\\") || locator.includes("\0")
@@ -250,8 +255,11 @@ function materializeHeadFiles(destination, packageRelative, locators) {
     if (bytes.byteLength < 1 || bytes.byteLength > CHILD_MAX_BYTES * 4 || total > CHILD_MAX_BYTES * 32) {
       refuse("HEAD_SOURCE_BOUND");
     }
-    writeExclusive(join(destination, "src", ...locator.split("/")), bytes);
+    const path = join(destination, "src", ...locator.split("/"));
+    writeExclusive(path, bytes);
+    files[path] = Buffer.from(bytes);
   }
+  return Object.freeze(files);
 }
 
 function allHeadTypeScriptLocators(packageRelative) {
@@ -351,17 +359,287 @@ export function requireBuildToolchainClosure(nodeExecutablePath, typeScriptRoot,
   }
 }
 
-function runTypeScriptBuild(configPath, toolchain) {
-  requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
-  const result = spawnSync(process.execPath, [toolchain.tscPath, "-p", configPath], {
-    cwd: dirname(configPath),
-    encoding: "utf8",
-    env: closedChildEnv(),
-    maxBuffer: CHILD_MAX_BYTES * 16,
-    timeout: CHILD_TIMEOUT_MS,
+function requireNodeExecutableIdentity(nodeExecutablePath, expectedDigest) {
+  if (!/^sha256:[0-9a-f]{64}$/u.test(expectedDigest)
+    || sha256(stableRead(nodeExecutablePath, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_NODE")) !== expectedDigest) {
+    refuse("TOOLCHAIN_NODE_DRIFT");
+  }
+}
+
+function boundedUtf8(bytes, maxBytes, code) {
+  if (!(bytes instanceof Buffer) || bytes.byteLength < 1 || bytes.byteLength > maxBytes) refuse(code);
+  try {
+    return textDecoder.decode(bytes);
+  } catch {
+    refuse(code);
+  }
+}
+
+export function admitTypeScriptCompiler(nodeExecutablePath, typeScriptRoot) {
+  const closureDigest = digestBuildToolchainClosure(nodeExecutablePath, typeScriptRoot);
+  const nodeBytes = stableRead(nodeExecutablePath, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_NODE");
+  const compilerPath = join(typeScriptRoot, "lib", "typescript.js");
+  const compilerBytes = stableRead(compilerPath, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_COMPILER");
+  const libraries = {};
+  let libraryBytes = 0;
+  let libraryFiles = 0;
+  let entries;
+  try {
+    entries = readdirSync(join(typeScriptRoot, "lib")).sort();
+  } catch {
+    refuse("TOOLCHAIN_LIBRARY_READ");
+  }
+  for (const name of entries) {
+    if (!/^lib(?:\.[a-z0-9-]+)*\.d\.ts$/u.test(name)) continue;
+    const path = join(typeScriptRoot, "lib", name);
+    const bytes = stableRead(path, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_LIBRARY");
+    libraryFiles += 1;
+    libraryBytes += bytes.byteLength;
+    if (libraryFiles > TOOLCHAIN_MAX_FILES || libraryBytes > TOOLCHAIN_MAX_BYTES) {
+      refuse("TOOLCHAIN_LIBRARY_BOUND");
+    }
+    libraries[name] = boundedUtf8(bytes, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_LIBRARY_UTF8");
+  }
+  if (libraries["lib.es2022.full.d.ts"] === undefined || libraryFiles < 2) {
+    refuse("TOOLCHAIN_LIBRARY_MANIFEST");
+  }
+  requireBuildToolchainClosure(nodeExecutablePath, typeScriptRoot, closureDigest);
+  return Object.freeze({
+    schema: "rd0858.admitted-typescript.v1",
+    closureDigest,
+    nodeDigest: sha256(nodeBytes),
+    compilerDigest: sha256(compilerBytes),
+    compilerSource: boundedUtf8(compilerBytes, TOOLCHAIN_MAX_FILE_BYTES, "TOOLCHAIN_COMPILER_UTF8"),
+    libraries: Object.freeze(libraries),
   });
-  requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
-  if (result.status !== 0 || result.error !== undefined) refuse("COMPILER_BUILD");
+}
+
+function loadAdmittedTypeScript(admitted) {
+  const cached = admittedCompilerCache.get(admitted);
+  if (cached !== undefined) return cached;
+  if (admitted?.schema !== "rd0858.admitted-typescript.v1"
+    || !/^sha256:[0-9a-f]{64}$/u.test(admitted.nodeDigest)
+    || !/^sha256:[0-9a-f]{64}$/u.test(admitted.compilerDigest)
+    || typeof admitted.compilerSource !== "string"
+    || sha256(Buffer.from(admitted.compilerSource, "utf8")) !== admitted.compilerDigest) {
+    refuse("TOOLCHAIN_ADMISSION");
+  }
+  const module = { exports: {} };
+  const restrictedRequire = (specifier) => {
+    if (specifier === "source-map-support") return Object.freeze({ install() {} });
+    if (!["crypto", "fs", "inspector", "os", "path", "perf_hooks"].includes(specifier)) {
+      refuse("TOOLCHAIN_COMPILER_IMPORT");
+    }
+    return nativeRequire(`node:${specifier}`);
+  };
+  let factory;
+  try {
+    factory = compileFunction(
+      admitted.compilerSource,
+      ["require", "module", "exports", "__filename", "__dirname"],
+      { filename: "rd0858-admitted-typescript.js" },
+    );
+    factory(restrictedRequire, module, module.exports, "rd0858-admitted-typescript.js", "/rd0858");
+  } catch (error) {
+    if (error instanceof ScalarArtifactRefusal) throw error;
+    refuse("TOOLCHAIN_COMPILER_EVAL");
+  }
+  const compiler = module.exports;
+  if (compiler === null || typeof compiler !== "object"
+    || typeof compiler.createProgram !== "function"
+    || typeof compiler.convertCompilerOptionsFromJson !== "function"
+    || typeof compiler.createSourceFile !== "function"
+    || typeof compiler.resolveModuleName !== "function") {
+    refuse("TOOLCHAIN_COMPILER_API");
+  }
+  admittedCompilerCache.set(admitted, compiler);
+  return compiler;
+}
+
+function canonicalVirtualPath(path) {
+  const absolute = resolve(path);
+  return process.platform === "win32" ? absolute.toLowerCase() : absolute;
+}
+
+function normalizedIdentityValue(value, identityRoot, libraryRoot) {
+  if (Array.isArray(value)) return value.map((entry) => normalizedIdentityValue(entry, identityRoot, libraryRoot));
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [
+      key,
+      normalizedIdentityValue(value[key], identityRoot, libraryRoot),
+    ]));
+  }
+  if (typeof value !== "string") return value;
+  const absolute = resolve(value);
+  const rootRelative = relative(identityRoot, absolute).replaceAll("\\", "/");
+  if (rootRelative !== "" && !rootRelative.startsWith("../") && !rootRelative.includes(":/")) {
+    return `$ROOT/${rootRelative}`;
+  }
+  const libraryRelative = relative(libraryRoot, absolute).replaceAll("\\", "/");
+  if (libraryRelative !== "" && !libraryRelative.startsWith("../") && !libraryRelative.includes(":/")) {
+    return `$TYPESCRIPT/${libraryRelative}`;
+  }
+  return value;
+}
+
+export function compileAdmittedTypeScriptProject(admitted, project) {
+  if (project === null || typeof project !== "object" || Array.isArray(project)
+    || typeof project.currentDirectory !== "string" || typeof project.identityRoot !== "string"
+    || !Array.isArray(project.rootNames) || project.rootNames.length < 1
+    || project.rootNames.length > TOOLCHAIN_MAX_FILES
+    || project.files === null || typeof project.files !== "object" || Array.isArray(project.files)
+    || project.options === null || typeof project.options !== "object" || Array.isArray(project.options)) {
+    refuse("COMPILER_PROJECT");
+  }
+  const compiler = loadAdmittedTypeScript(admitted);
+  const identityRoot = resolve(project.identityRoot);
+  const currentDirectory = resolve(project.currentDirectory);
+  const libraryRoot = join(identityRoot, ".rd0858-typescript-lib");
+  const files = new Map();
+  const labels = new Map();
+  let totalBytes = 0;
+  const admitFile = (path, bytes, label) => {
+    const absolute = resolve(path);
+    const key = canonicalVirtualPath(absolute);
+    if (files.has(key) || typeof label !== "string" || label.length < 1 || label.length > 2_048) {
+      refuse("COMPILER_PROJECT_ALIAS");
+    }
+    const buffer = Buffer.isBuffer(bytes) ? Buffer.from(bytes) : Buffer.from(String(bytes), "utf8");
+    totalBytes += buffer.byteLength;
+    if (buffer.byteLength < 1 || buffer.byteLength > TOOLCHAIN_MAX_FILE_BYTES
+      || files.size >= TOOLCHAIN_MAX_FILES || totalBytes > TOOLCHAIN_MAX_BYTES) {
+      refuse("COMPILER_PROJECT_BOUND");
+    }
+    files.set(key, Object.freeze({ absolute, text: boundedUtf8(buffer, TOOLCHAIN_MAX_FILE_BYTES, "COMPILER_PROJECT_UTF8") }));
+    labels.set(key, label);
+  };
+  for (const [path, bytes] of Object.entries(project.files)) {
+    const locator = relative(identityRoot, resolve(path)).replaceAll("\\", "/");
+    if (locator === "" || locator.startsWith("../") || locator.includes(":/") || locator.includes("\0")) {
+      refuse("COMPILER_PROJECT_CONTAINMENT");
+    }
+    admitFile(path, bytes, `project/${locator}`);
+  }
+  for (const [name, text] of Object.entries(admitted.libraries ?? {})) {
+    if (!/^lib(?:\.[a-z0-9-]+)*\.d\.ts$/u.test(name) || typeof text !== "string") {
+      refuse("TOOLCHAIN_LIBRARY_MANIFEST");
+    }
+    admitFile(join(libraryRoot, name), text, `typescript/lib/${name}`);
+  }
+  const rootNames = project.rootNames.map((path) => resolve(path));
+  if (rootNames.some((path) => !files.has(canonicalVirtualPath(path)))) refuse("COMPILER_PROJECT_ROOT");
+  const converted = compiler.convertCompilerOptionsFromJson(project.options, currentDirectory);
+  if (!converted || !converted.options || (converted.errors?.length ?? 0) !== 0) refuse("COMPILER_OPTIONS");
+  const options = converted.options;
+  const consumed = new Set();
+  const outputs = {};
+  const outputFiles = {};
+  const readVirtual = (path) => {
+    const key = canonicalVirtualPath(path);
+    const entry = files.get(key);
+    if (entry === undefined) return undefined;
+    consumed.add(key);
+    return entry.text;
+  };
+  const directoryExists = (directory) => {
+    const prefix = `${canonicalVirtualPath(directory)}${sep}`;
+    return [...files.keys()].some((key) => key.startsWith(prefix));
+  };
+  const host = {
+    createSourceFile: (fileName, sourceText, languageVersion) => compiler.createSourceFile(
+      fileName,
+      sourceText,
+      languageVersion,
+      true,
+    ),
+    directoryExists,
+    fileExists: (path) => files.has(canonicalVirtualPath(path)),
+    getCanonicalFileName: (path) => process.platform === "win32" ? path.toLowerCase() : path,
+    getCurrentDirectory: () => currentDirectory,
+    getDefaultLibFileName: (compilerOptions) => join(libraryRoot, compiler.getDefaultLibFileName(compilerOptions)),
+    getDirectories: (directory) => {
+      const prefix = `${canonicalVirtualPath(directory)}${sep}`;
+      return [...new Set([...files.values()].flatMap((entry) => {
+        const candidate = canonicalVirtualPath(entry.absolute);
+        if (!candidate.startsWith(prefix)) return [];
+        const remainder = candidate.slice(prefix.length);
+        const boundary = remainder.indexOf(sep);
+        return boundary < 0 ? [] : [remainder.slice(0, boundary)];
+      }))].sort();
+    },
+    getNewLine: () => "\n",
+    getSourceFile: (fileName, languageVersion) => {
+      const text = readVirtual(fileName);
+      return text === undefined ? undefined : compiler.createSourceFile(fileName, text, languageVersion, true);
+    },
+    readFile: readVirtual,
+    realpath: (path) => resolve(path),
+    resolveModuleNames: (moduleNames, containingFile) => moduleNames.map((moduleName) => compiler.resolveModuleName(
+      moduleName,
+      containingFile,
+      options,
+      host,
+    ).resolvedModule),
+    useCaseSensitiveFileNames: () => process.platform !== "win32",
+    writeFile: (path, text) => {
+      const absolute = resolve(path);
+      const locator = relative(identityRoot, absolute).replaceAll("\\", "/");
+      if (locator === "" || locator.startsWith("../") || locator.includes(":/") || outputs[locator] !== undefined) {
+        refuse("COMPILER_OUTPUT_CONTAINMENT");
+      }
+      const bytes = Buffer.from(text, "utf8");
+      totalBytes += bytes.byteLength;
+      if (bytes.byteLength < 1 || bytes.byteLength > TOOLCHAIN_MAX_FILE_BYTES
+        || Object.keys(outputs).length >= TOOLCHAIN_MAX_FILES || totalBytes > TOOLCHAIN_MAX_BYTES) {
+        refuse("COMPILER_OUTPUT_BOUND");
+      }
+      outputs[locator] = text;
+      outputFiles[absolute] = text;
+    },
+  };
+  let program;
+  let emitResult;
+  try {
+    program = compiler.createProgram({ rootNames, options, host });
+    const diagnostics = compiler.getPreEmitDiagnostics(program);
+    if (diagnostics.some((diagnostic) => diagnostic.category === compiler.DiagnosticCategory.Error)) {
+      refuse("COMPILER_BUILD_DIAGNOSTIC");
+    }
+    emitResult = program.emit();
+  } catch (error) {
+    if (error instanceof ScalarArtifactRefusal) throw error;
+    refuse("COMPILER_BUILD");
+  }
+  if (emitResult.emitSkipped
+    || emitResult.diagnostics.some((diagnostic) => diagnostic.category === compiler.DiagnosticCategory.Error)
+    || Object.keys(outputs).length < 1) {
+    refuse("COMPILER_BUILD_EMIT");
+  }
+  const hash = createHash("sha256");
+  hash.update("galerina.typescript-compilation-input.v1\0", "utf8");
+  hash.update(`${admitted.nodeDigest}\n${admitted.compilerDigest}\n`, "utf8");
+  for (const key of [...consumed].sort()) {
+    const entry = files.get(key);
+    hash.update(`${labels.get(key)}\0${Buffer.byteLength(entry.text, "utf8")}\0`, "utf8");
+    hash.update(entry.text, "utf8");
+  }
+  const normalizedOptions = normalizedIdentityValue(project.options, identityRoot, libraryRoot);
+  hash.update(`${JSON.stringify(normalizedOptions)}\n`, "utf8");
+  if (project.writeOutputs === true) {
+    for (const path of Object.keys(outputFiles).sort()) writeExclusive(path, Buffer.from(outputFiles[path], "utf8"));
+  }
+  return Object.freeze({
+    inputDigest: `sha256:${hash.digest("hex")}`,
+    outputs: Object.freeze(outputs),
+    outputFiles: Object.freeze(outputFiles),
+  });
+}
+
+function runTypeScriptBuild(project, toolchain) {
+  return compileAdmittedTypeScriptProject(toolchain.compiler, Object.freeze({
+    ...project,
+    writeOutputs: true,
+  }));
 }
 
 function runtimeExecutableLocators(runtimeRoot) {
@@ -746,15 +1024,16 @@ export function validateConsumedModuleTrace(entries, expectedHashes) {
   return Object.freeze(actual.map(([url, digest]) => Object.freeze({ url, digest })));
 }
 
-function digestCompilerExecutionIdentity(runtimeDigest, toolchainDigest, loaderDigest) {
+function digestCompilerExecutionIdentity(runtimeDigest, toolchainDigest, buildInputsDigest, loaderDigest) {
   if (!/^sha256:[0-9a-f]{64}$/u.test(runtimeDigest)
     || !/^sha256:[0-9a-f]{64}$/u.test(toolchainDigest)
+    || !/^sha256:[0-9a-f]{64}$/u.test(buildInputsDigest)
     || !/^sha256:[0-9a-f]{64}$/u.test(loaderDigest)) {
     refuse("COMPILER_EXECUTION_IDENTITY");
   }
   const hash = createHash("sha256");
-  hash.update("galerina.compiler-execution-identity.v3\0", "utf8");
-  hash.update(`${runtimeDigest}\n${toolchainDigest}\n${loaderDigest}\n`, "utf8");
+  hash.update("galerina.compiler-execution-identity.v4\0", "utf8");
+  hash.update(`${runtimeDigest}\n${toolchainDigest}\n${buildInputsDigest}\n${loaderDigest}\n`, "utf8");
   return `sha256:${hash.digest("hex")}`;
 }
 
@@ -776,10 +1055,10 @@ export async function buildFreshHeadCompiler() {
     "node_modules",
     "typescript",
   );
+  const admittedCompiler = admitTypeScriptCompiler(process.execPath, typeScriptRoot);
   const toolchain = Object.freeze({
-    typeScriptRoot,
-    tscPath: join(typeScriptRoot, "bin", "tsc"),
-    digest: digestBuildToolchainClosure(process.execPath, typeScriptRoot),
+    compiler: admittedCompiler,
+    digest: admittedCompiler.closureDigest,
   });
   const token = randomBytes(16).toString("hex");
   const temporaryRoot = mkdtempSync(join(tmpdir(), "rd0858-scalar-build-"));
@@ -794,17 +1073,38 @@ export async function buildFreshHeadCompiler() {
       schema: "rd0858.scalar-temp-owner.v1",
       token,
     }), "utf8"));
-    materializeHeadFiles(compilerStage, COMPILER_PACKAGE_RELATIVE, SCALAR_COMPILER_SOURCE_LOCATORS);
-    materializeHeadFiles(graphStage, GRAPH_PACKAGE_RELATIVE, allHeadTypeScriptLocators(GRAPH_PACKAGE_RELATIVE));
-    materializeHeadFiles(substrateStage, SUBSTRATE_PACKAGE_RELATIVE, allHeadTypeScriptLocators(SUBSTRATE_PACKAGE_RELATIVE));
+    const compilerFiles = { ...materializeHeadFiles(
+      compilerStage,
+      COMPILER_PACKAGE_RELATIVE,
+      SCALAR_COMPILER_SOURCE_LOCATORS,
+    ) };
+    const graphFiles = { ...materializeHeadFiles(
+      graphStage,
+      GRAPH_PACKAGE_RELATIVE,
+      allHeadTypeScriptLocators(GRAPH_PACKAGE_RELATIVE),
+    ) };
+    const substrateFiles = { ...materializeHeadFiles(
+      substrateStage,
+      SUBSTRATE_PACKAGE_RELATIVE,
+      allHeadTypeScriptLocators(SUBSTRATE_PACKAGE_RELATIVE),
+    ) };
 
-    writeExclusive(join(graphStage, "package.json"), Buffer.from('{"type":"module"}\n', "utf8"));
-    writeExclusive(join(substrateStage, "package.json"), Buffer.from('{"type":"module"}\n', "utf8"));
-    writeExclusive(join(compilerStage, "package.json"), Buffer.from('{"type":"module"}\n', "utf8"));
-    writeExclusive(join(compilerStage, "src", "rd0858-external-shim.d.ts"), Buffer.from(
+    const modulePackageBytes = Buffer.from('{"type":"module"}\n', "utf8");
+    for (const [files, path] of [
+      [graphFiles, join(graphStage, "package.json")],
+      [substrateFiles, join(substrateStage, "package.json")],
+      [compilerFiles, join(compilerStage, "package.json")],
+    ]) {
+      writeExclusive(path, modulePackageBytes);
+      files[path] = Buffer.from(modulePackageBytes);
+    }
+    const externalShimPath = join(compilerStage, "src", "rd0858-external-shim.d.ts");
+    const externalShimBytes = Buffer.from(
       'declare module "@noble/post-quantum/ml-dsa.js" { export const ml_dsa65: any; }\n',
       "utf8",
-    ));
+    );
+    writeExclusive(externalShimPath, externalShimBytes);
+    compilerFiles[externalShimPath] = Buffer.from(externalShimBytes);
 
     const graphOut = join(runtimeRoot, "node_modules", "@galerina", "devtools-graph-algorithms");
     const substrateOut = join(runtimeRoot, "node_modules", "@galerina", "substrate-math");
@@ -817,18 +1117,19 @@ export async function buildFreshHeadCompiler() {
       declarationMap: false,
       sourceMap: false,
     };
-    const graphConfig = join(graphStage, "tsconfig.json");
-    writeExclusive(graphConfig, Buffer.from(JSON.stringify({
-      compilerOptions: {
+    const graphBuild = runTypeScriptBuild({
+      currentDirectory: graphStage,
+      identityRoot: temporaryRoot,
+      rootNames: Object.keys(graphFiles).filter((path) => path.endsWith(".ts")),
+      files: graphFiles,
+      options: {
         ...commonOptions,
         module: "NodeNext",
         moduleResolution: "NodeNext",
         rootDir: join(graphStage, "src"),
         outDir: graphOut,
       },
-      include: [join(graphStage, "src", "**", "*.ts")],
-    }), "utf8"));
-    runTypeScriptBuild(graphConfig, toolchain);
+    }, toolchain);
     const graphTypeOnlyOutput = join(graphOut, "core", "types.js");
     if (textDecoder.decode(stableRead(graphTypeOnlyOutput, 64, "COMPILER_BUILD")) !== "export {};\n") {
       refuse("COMPILER_BUILD_TYPE_ONLY");
@@ -841,18 +1142,19 @@ export async function buildFreshHeadCompiler() {
       types: "index.d.ts",
     }), "utf8"));
 
-    const substrateConfig = join(substrateStage, "tsconfig.json");
-    writeExclusive(substrateConfig, Buffer.from(JSON.stringify({
-      compilerOptions: {
+    const substrateBuild = runTypeScriptBuild({
+      currentDirectory: substrateStage,
+      identityRoot: temporaryRoot,
+      rootNames: Object.keys(substrateFiles).filter((path) => path.endsWith(".ts")),
+      files: substrateFiles,
+      options: {
         ...commonOptions,
         module: "NodeNext",
         moduleResolution: "NodeNext",
         rootDir: join(substrateStage, "src"),
         outDir: substrateOut,
       },
-      include: [join(substrateStage, "src", "**", "*.ts")],
-    }), "utf8"));
-    runTypeScriptBuild(substrateConfig, toolchain);
+    }, toolchain);
     writeExclusive(join(substrateOut, "package.json"), Buffer.from(JSON.stringify({
       name: "@galerina/substrate-math",
       type: "module",
@@ -861,9 +1163,18 @@ export async function buildFreshHeadCompiler() {
       exports: "./index.js",
     }), "utf8"));
 
-    const compilerConfig = join(compilerStage, "tsconfig.json");
-    writeExclusive(compilerConfig, Buffer.from(JSON.stringify({
-      compilerOptions: {
+    for (const [path, text] of Object.entries({
+      ...graphBuild.outputFiles,
+      ...substrateBuild.outputFiles,
+    })) {
+      if (path.endsWith(".d.ts")) compilerFiles[path] = text;
+    }
+    const compilerBuild = runTypeScriptBuild({
+      currentDirectory: compilerStage,
+      identityRoot: temporaryRoot,
+      rootNames: Object.keys(compilerFiles).filter((path) => path.endsWith(".ts")),
+      files: compilerFiles,
+      options: {
         ...commonOptions,
         module: "NodeNext",
         moduleResolution: "NodeNext",
@@ -877,9 +1188,14 @@ export async function buildFreshHeadCompiler() {
           "@galerina/substrate-math": [join(substrateOut, "index.d.ts")],
         },
       },
-      include: [join(compilerStage, "src", "**", "*.ts")],
-    }), "utf8"));
-    runTypeScriptBuild(compilerConfig, toolchain);
+    }, toolchain);
+
+    const buildInputHash = createHash("sha256");
+    buildInputHash.update("galerina.scalar-typescript-build-inputs.v1\0", "utf8");
+    for (const build of [graphBuild, substrateBuild, compilerBuild]) {
+      buildInputHash.update(`${build.inputDigest}\n`, "utf8");
+    }
+    const buildInputsDigest = `sha256:${buildInputHash.digest("hex")}`;
 
     writeExclusive(join(runtimeRoot, "scalar-runner.mjs"), Buffer.from(SCALAR_RUNNER_SOURCE, "utf8"));
     const executableLocators = runtimeExecutableLocators(runtimeRoot);
@@ -888,6 +1204,7 @@ export async function buildFreshHeadCompiler() {
     const compilerExecutableGraphDigest = digestCompilerExecutionIdentity(
       runtimeExecutableGraphDigest,
       toolchain.digest,
+      buildInputsDigest,
       strictLoader.digest,
     );
     const executableUrls = executableLocators
@@ -927,7 +1244,7 @@ export async function buildFreshHeadCompiler() {
       let result;
       let trace = [];
       try {
-        requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
+        requireNodeExecutableIdentity(process.execPath, toolchain.compiler.nodeDigest);
         requireCompilerExecutableClosure(runtimeRoot, executableLocators, runtimeExecutableGraphDigest);
         result = spawnSync(
           process.execPath,
@@ -946,7 +1263,7 @@ export async function buildFreshHeadCompiler() {
             timeout: CHILD_TIMEOUT_MS,
           },
         );
-        requireBuildToolchainClosure(process.execPath, toolchain.typeScriptRoot, toolchain.digest);
+        requireNodeExecutableIdentity(process.execPath, toolchain.compiler.nodeDigest);
         requireCompilerExecutableClosure(runtimeRoot, executableLocators, runtimeExecutableGraphDigest);
         const traceBytes = stableRead(tracePath, CHILD_MAX_BYTES, "COMPILER_MODULE_TRACE");
         trace = textDecoder.decode(traceBytes).split("\n").filter(Boolean).map((line) => {
