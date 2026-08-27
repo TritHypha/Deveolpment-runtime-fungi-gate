@@ -114,7 +114,38 @@ counts or open items that a newer section explicitly supersedes.
   and 8/9 closed; KB remote publication remains the one chapter HOLD. Stop
   before creating, editing, building or admitting any `.fungi` or `.gate` file.
 
-### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25
+### RD-0858 Unit 4 fixed scalar profile-1 chapter - 2026-08-27
+
+- [x] Supersede the pre-Fungi stop only for one fixed, hand-authored scalar
+  artifact at
+  `packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/`. This is not
+  general authoring or TypeScript-to-Fungi conversion authority.
+- [x] Bind the canonical checked bytes, protected registry identity, single-use
+  clean worker, exact terminal receipt algebra and non-authorizing TypeScript
+  and Rust adapters. The worker decodes checked bytes only; source parsing,
+  compiler loading, fallback and profile substitution refuse.
+- [x] Prove the scalar boundary sequentially: focused LF 106/106, physical
+  CRLF 106/106, core compiler 6,753/6,753 across 1,292 suites, dependent
+  packages 299/299, product boundary 10/10, and Fungi golden examples/vectors
+  11/11 plus 11/11.
+- [x] Refresh Myco at the exact selected worktree and repair standalone Hypha's
+  retired package-layout assumption. The governed Myco and Hypha receipts are
+  `COMPLETE`; Hypha commit `9a15296b` is independently `PASS` at C0/I0/M0 and
+  retains explicit current, legacy, missing and ambiguous layout controls.
+- [!] Retain Hypha's 12 existing `governedFlowDecl` kind-set gaps as review
+  findings outside the scalar artifact's changed surface.
+- [!] Final chapter closure remains `HOLD` pending the Code Logic Workbench
+  capsule, documentation and graph fixed point, final phased gates, exact-head
+  independent review and multi-vector model challenge. Evidence is in
+  `docs/reports/rd-0858-unit4-scalar-oracle-assurance-2026-08-27.md`.
+- [!] Keep profiles `64` and `256`, compatibility profile `32`, broader
+  conversion, TypeScript retirement, detached GIR, SLIDE/VOK admission,
+  `.gate`, Trametes, production selection and runtime rescue closed.
+- [!] Keep the existing 600-second Fungi corpus watchdog and historical
+  conversion-slice receipt-scope defects non-green. Do not rewrite dated
+  evidence to manufacture a clean phase-close.
+
+### Historical pre-Fungi flow, graph and verification checkpoint - 2026-08-25
 
 - [x] Re-derive the current Galerina -> detached canonical GIR -> SLIDE -> VOK
   route from exact source and fresh structural graphs. Galerina owns semantic
@@ -218,9 +249,9 @@ counts or open items that a newer section explicitly supersedes.
   independent review, active-skill isolation and integration. The current
   external index is structurally complete but exposes no exact Git-head field,
   so this repository-specific output remains `HOLD`, not inferred evidence.
-- [ ] Keep the `.fungi` stop closed. Task 6 Step 1 still lacks an already
-  admitted fixed checked scalar-flow artifact; creating or admitting it is the
-  next productive action and requires an explicit boundary reopening.
+- [x] The owner reopened only the fixed scalar profile-1 boundary described in
+  the 2026-08-27 chapter above. The former Task 6 Step 1 absence is historical;
+  the global `.fungi` stop remains closed for every other source or conversion.
 - [!] Do not run the Fungi corpus/admission estate as part of this pre-Fungi
   close. Its last bounded attempt exceeded its 600-second envelope, and a new
   run would cross the active stop. Preserve that coverage as `UNKNOWN`, not
@@ -274,14 +305,13 @@ counts or open items that a newer section explicitly supersedes.
   old-route security assertions fail exactly as intended. Independent review
   returns `PASS` with zero findings; the receipt is in
   `docs/reports/rd-0858-unit4-task2-independent-review-pass-2026-08-23.md`.
-- [X] Task 6 Step 1 is `HOLD`: the exact graph and admitted registry contain no
-  already owner-admitted fixed checked scalar-flow artifact. The registry binds
-  launcher, runtime, worker and protocol only, while the worker admits only the
-  bootstrap probe. Evidence is in
+- [x] Preserve the historical Task 6 Step 1 `HOLD`: that exact graph and
+  registry contained no owner-admitted fixed checked scalar-flow artifact.
+  The 2026-08-27 scalar chapter above supersedes only that absence. Evidence is in
   `docs/reports/rd-0858-unit4-task6-admitted-flow-gate-hold-2026-08-23.md`.
-- [!] Tasks 6 Steps 2-5 and Tasks 7-8 remain locked. Creating or admitting the
-  missing checked flow is the next productive action and crosses the active
-  `.fungi` stop boundary, so stop here until that boundary is explicitly opened.
+- [!] Tasks 6-7 are now implemented on the scalar feature branch; Task 8 exact
+  graph/review/integration closure remains open. No other `.fungi` boundary is
+  opened by this progress.
 
 ### Chapter close and process-root gate - 2026-08-22
 
@@ -358,7 +388,7 @@ counts or open items that a newer section explicitly supersedes.
   preserved as the non-authorizing refusal RD-0859; attempt 2 is independently
   reproduced and adjudicated `PASS` in private RD-0860. Grok did not rerun the
   historical 690/690 matrix and grants no downstream authority.
-- [!] RD-0858 delivery unit 4 remains on an implementation `HOLD`. The
+- [x] Preserve the historical Unit 4 process-root `HOLD`. The
   TypeScript differential interpreter is green at source commit `fd90d7ea`
   and exact graph/index head `1f7fc227`: focused controls pass 37/37, the
   nine-file matrix passes 335/335, roadmap generation passes 4/4 and the
@@ -382,7 +412,7 @@ counts or open items that a newer section explicitly supersedes.
   recorded stop conditions. Interpreter, checked snapshot, GIR,
   SLIDE, VOK, admission, production and `.fungi` conversion authority remain
   `HOLD`; `011` and `012` remain reserved.
-- [!] The approved pre-conversion implementation plan has completed Tasks 1-5
+- [x] Preserve the earlier pre-conversion Tasks 1-5 checkpoint
   locally through repair commit `cf768e90`. Exact review found that `c667f00b`
   read `WorkerReady` but disclosed the request before validating that frame. A
   pinned hostile worker made the control RED at 23/24 with marker `received` and
