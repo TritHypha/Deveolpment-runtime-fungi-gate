@@ -286,10 +286,10 @@ export async function buildFreshHeadCompiler() {
     ];
     requireHeadMatchesWorktree(governedPaths);
     const headBefore = String(git(["rev-parse", "HEAD"])).trim();
-    const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+    const npmCli = join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js");
     const built = spawnSync(
-      npmCommand,
-      ["--prefix", COMPILER_PACKAGE_RELATIVE, "run", "build"],
+      process.execPath,
+      [npmCli, "--prefix", COMPILER_PACKAGE_RELATIVE, "run", "build"],
       {
         cwd: root,
         encoding: "utf8",
