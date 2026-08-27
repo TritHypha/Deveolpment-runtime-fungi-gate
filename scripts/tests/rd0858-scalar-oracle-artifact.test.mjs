@@ -19,6 +19,7 @@ const sourcePath = join(
   "scalar-oracle.fungi",
 );
 const artifactPath = join(dirname(sourcePath), "scalar-oracle.checked.json");
+const compilerDistPath = join(root, "packages-ts", "galerina-core-compiler", "dist");
 
 const loadGenerator = () => import(pathToFileURL(generatorPath).href);
 
@@ -81,7 +82,27 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     assert.doesNotMatch(source, /import\s+\*\s+as\s+compiler\s+from\s+["'][^"']*\/dist\/index\.js["']/u);
     assert.match(source, /requireHeadMatchesWorktree/u);
     assert.match(source, /buildFreshHeadCompiler/u);
+    assert.match(source, /compilerExecutableLocatorsFromHead/u);
     assert.match(source, /compilerExecutableGraphDigest/u);
+  });
+
+  it("keeps stale ambient dist residue outside the HEAD-derived executable closure", async () => {
+    const residueDirectory = join(compilerDistPath, ".rd0858-stale-control");
+    const residuePath = join(residueDirectory, "removed-source.js");
+    await mkdir(residueDirectory, { recursive: true });
+    try {
+      await writeFile(residuePath, "throw new Error(\"stale ambient compiler output\");\n", "utf8");
+      const result = spawnSync(process.execPath, [generatorPath, "--check"], {
+        cwd: root,
+        encoding: "utf8",
+        timeout: 130_000,
+      });
+      assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+      assert.match(result.stdout, /PASS|fixed.point|byte.identical/i);
+      assert.equal((await readFile(residuePath, "utf8")).includes("stale ambient"), true);
+    } finally {
+      await rm(residueDirectory, { recursive: true, force: true });
+    }
   });
 
   it("keeps non-executable build evidence outside executable identity", async () => {

@@ -128,6 +128,19 @@ function headEntries(pathspec) {
   return Object.freeze(entries);
 }
 
+function compilerExecutableLocatorsFromHead() {
+  const sourcePrefix = `${COMPILER_PACKAGE_RELATIVE}/src/`;
+  const locators = headEntries(`${COMPILER_PACKAGE_RELATIVE}/src`)
+    .filter((entry) => entry.path.endsWith(".ts") && !entry.path.endsWith(".d.ts"))
+    .map((entry) => `${entry.path.slice(sourcePrefix.length, -3)}.js`);
+  locators.push("hallmark-non-authorities.json");
+  locators.sort();
+  if (locators.length < 2 || new Set(locators).size !== locators.length) {
+    refuse("COMPILER_BUILD_MANIFEST");
+  }
+  return Object.freeze(locators);
+}
+
 function readHeadBlob(relativePath) {
   const bytes = git(["show", `HEAD:${relativePath}`], "buffer");
   if (!(bytes instanceof Buffer)) refuse("HEAD_BLOB");
@@ -269,25 +282,53 @@ function currentIdentity(sourceDigest, compilerExecutableGraphDigest) {
   });
 }
 
-export function digestCompilerExecutableClosure(directory) {
+export function digestCompilerExecutableClosure(directory, admittedLocators) {
   const files = [];
-  const visit = (current) => {
-    for (const name of readdirSync(current).sort()) {
-      const path = join(current, name);
-      const stat = lstatSync(path, { bigint: true });
-      if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
-      if (stat.isDirectory()) {
-        visit(path);
-      } else if (
-        stat.isFile() &&
-        name !== "build-evidence.json" &&
-        [".js", ".json", ".wasm", ".fungi"].includes(extname(name))
-      ) {
-        files.push(path);
+  if (admittedLocators === undefined) {
+    const visit = (current) => {
+      for (const name of readdirSync(current).sort()) {
+        const path = join(current, name);
+        const stat = lstatSync(path, { bigint: true });
+        if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
+        if (stat.isDirectory()) {
+          visit(path);
+        } else if (
+          stat.isFile() &&
+          name !== "build-evidence.json" &&
+          [".js", ".json", ".wasm", ".fungi"].includes(extname(name))
+        ) {
+          files.push(path);
+        }
       }
+    };
+    visit(directory);
+  } else {
+    if (!Array.isArray(admittedLocators) || admittedLocators.length < 1
+      || admittedLocators.length > 4_096 || new Set(admittedLocators).size !== admittedLocators.length) {
+      refuse("COMPILER_BUILD_MANIFEST");
     }
-  };
-  visit(directory);
+    for (const locator of [...admittedLocators].sort()) {
+      if (typeof locator !== "string" || locator.length < 1 || locator.length > 1_024
+        || locator.startsWith("/") || /^[A-Za-z]:/u.test(locator)
+        || locator.includes("\\") || locator.includes("\0")
+        || locator.split("/").some((segment) => segment === "" || segment === "." || segment === "..")
+        || ![".js", ".json", ".wasm", ".fungi"].includes(extname(locator))
+        || locator === "build-evidence.json") {
+        refuse("COMPILER_BUILD_MANIFEST");
+      }
+      let path = directory;
+      const segments = locator.split("/");
+      for (let index = 0; index < segments.length; index += 1) {
+        path = join(path, segments[index]);
+        const stat = lstatSync(path, { bigint: true });
+        if (stat.isSymbolicLink()) refuse("COMPILER_BUILD_SYMLINK");
+        if (index < segments.length - 1 ? !stat.isDirectory() : !stat.isFile()) {
+          refuse("COMPILER_BUILD_MANIFEST");
+        }
+      }
+      files.push(path);
+    }
+  }
   if (files.length < 1) refuse("COMPILER_BUILD_EMPTY");
   const hash = createHash("sha256");
   hash.update("galerina.compiler-executable-graph.v1\0", "utf8");
@@ -329,7 +370,11 @@ export async function buildFreshHeadCompiler() {
     }
     requireHeadMatchesWorktree(governedPaths);
     if (String(git(["rev-parse", "HEAD"])).trim() !== headBefore) refuse("HEAD_DRIFT");
-    const compilerExecutableGraphDigest = digestCompilerExecutableClosure(compilerDistPath);
+    const compilerExecutableLocators = compilerExecutableLocatorsFromHead();
+    const compilerExecutableGraphDigest = digestCompilerExecutableClosure(
+      compilerDistPath,
+      compilerExecutableLocators,
+    );
     const compiler = await import(
       `${pathToFileURL(compilerEntryPath).href}?${headBefore}-${compilerExecutableGraphDigest.slice(7)}`
     );
@@ -351,7 +396,10 @@ export async function buildFreshHeadCompiler() {
     ]) {
       if (typeof compiler[name] !== "function") refuse("COMPILER_EXPORT", name);
     }
-    if (digestCompilerExecutableClosure(compilerDistPath) !== compilerExecutableGraphDigest) {
+    if (digestCompilerExecutableClosure(
+      compilerDistPath,
+      compilerExecutableLocators,
+    ) !== compilerExecutableGraphDigest) {
       refuse("COMPILER_BUILD_DRIFT");
     }
     return Object.freeze({ compiler, compilerExecutableGraphDigest });
