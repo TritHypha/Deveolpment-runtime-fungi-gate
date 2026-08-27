@@ -1,6 +1,56 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
+
+import {
+  decodeCanonicalFrame,
+  encodeCanonicalFrame,
+  runRequirementProcessWorker,
+} from "../dist/index.js";
+
+const NONCE = "00112233445566778899aabbccddeeff";
+const ARTIFACT_BYTES = readFileSync(new URL(
+  "../../../packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json",
+  import.meta.url,
+));
+
+const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
+
+async function cleanScalarWorkerFrame() {
+  const argument = Buffer.from('{"subject":1}', "utf8");
+  const request = encodeCanonicalFrame("launcher-request", {
+    schemaVersion: 1,
+    nonce: NONCE,
+    runtimeProfile: "scalar-1",
+    subjectDigest: digest(argument),
+    flowLocator: "rd0858/unit4/scalar-oracle",
+    flowDigest: digest(ARTIFACT_BYTES),
+    argumentDigest: digest(argument),
+    argumentBytes: argument.toString("base64"),
+  });
+  const execution = encodeCanonicalFrame("worker-execution", {
+    schemaVersion: 1,
+    nonce: NONCE,
+    artifactDigest: digest(ARTIFACT_BYTES),
+    artifactBytes: ARTIFACT_BYTES.toString("base64"),
+    requestDigest: digest(request),
+    requestBytes: Buffer.from(request).toString("base64"),
+  });
+  const frames = [];
+  const outcome = await runRequirementProcessWorker(
+    { read: async () => execution },
+    { write: async (frame) => frames.push(Buffer.from(frame)), close() {} },
+    { nonce: NONCE, workerDigest: "a".repeat(64), runtimeDigest: "b".repeat(64), timeoutMs: 1_000 },
+  );
+  assert.equal(outcome.executionState, "COMPLETE");
+  assert.equal(frames.length, 2);
+  const result = decodeCanonicalFrame("worker-result", frames[1]);
+  assert.equal(result.boundedValue.decision, "allow");
+  assert.equal(result.boundedAudit.executionTier, "tree");
+  return frames[1];
+}
 
 const ATTACK_MODES = Object.freeze([
   "detector-direct",
@@ -167,14 +217,17 @@ describe("RD-0858 Unit 4 causal in-process process-root controls", () => {
   });
 
   for (const mode of ATTACK_MODES) {
-    it(`isolates ${mode} before first interpreter evaluation`, () => {
+    it(`contains ${mode} by preserving byte-identical clean-worker evidence`, async () => {
+      const cleanBefore = await cleanScalarWorkerFrame();
       const result = runPreBootstrapAttack(mode);
       assert.equal(result.detectorRestored, true);
       assert.equal(result.descriptorRestored, true);
       if (mode.startsWith("detector-")) assert.equal(result.descriptorReads, 2);
       if (mode.startsWith("descriptor-")) assert.equal(result.forgedReads, 2);
-      assert.notEqual(result.value, "allow");
-      assert.notEqual(result.audit, "ok");
+      assert.equal(result.value, "allow", "control must prove the in-process root attack is live");
+      assert.equal(result.audit, "ok", "control must reach the unsafe in-process allow path");
+      const cleanAfter = await cleanScalarWorkerFrame();
+      assert.deepEqual(cleanAfter, cleanBefore, "clean-worker semantic and audit bytes must be stable");
     });
   }
 });

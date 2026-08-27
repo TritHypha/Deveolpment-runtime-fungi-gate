@@ -22,7 +22,7 @@ const getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors;
 const getOwnPropertySymbols = Object.getOwnPropertySymbols;
 const getPrototypeOf = Object.getPrototypeOf;
 
-export type FrameKind = "launcher-request" | "worker-ready" | "worker-result" | "receipt";
+export type FrameKind = "launcher-request" | "worker-execution" | "worker-ready" | "worker-result" | "receipt";
 export type ExecutionState = "COMPLETE" | "REFUSED" | "ERROR" | "CANCELLED";
 
 // NULL AUDIT 2026-08-24: JSON null is one required canonical wire token, not
@@ -48,6 +48,15 @@ export interface WorkerReady {
   readonly workerDigest: string;
   readonly runtimeDigest: string;
   readonly bootstrapControlDigest: string;
+}
+
+export interface WorkerExecutionRequest {
+  readonly schemaVersion: 1;
+  readonly nonce: string;
+  readonly artifactDigest: string;
+  readonly artifactBytes: string;
+  readonly requestDigest: string;
+  readonly requestBytes: string;
 }
 
 export interface WorkerResult {
@@ -124,6 +133,14 @@ const FRAME_KEYS: Readonly<Record<FrameKind, readonly string[]>> = Object.freeze
     "flowDigest",
     "argumentDigest",
     "argumentBytes",
+  ]),
+  "worker-execution": Object.freeze([
+    "schemaVersion",
+    "nonce",
+    "artifactDigest",
+    "artifactBytes",
+    "requestDigest",
+    "requestBytes",
   ]),
   "worker-ready": Object.freeze([
     "schemaVersion",
@@ -333,6 +350,29 @@ function validateWorkerReady(record: Readonly<Record<string, CanonicalValue>>): 
   });
 }
 
+function validateWorkerExecution(
+  record: Readonly<Record<string, CanonicalValue>>,
+): WorkerExecutionRequest {
+  exactKeys(record, FRAME_KEYS["worker-execution"]);
+  if (record.schemaVersion !== PROTOCOL_SCHEMA_VERSION) refuse("SCHEMA_VERSION");
+  const artifactBytes = stringField(record, "artifactBytes");
+  const requestBytes = stringField(record, "requestBytes");
+  if (!BASE64.test(artifactBytes) || artifactBytes.length > MAX_FRAME_BYTES) {
+    refuse("ARTIFACT_BYTES");
+  }
+  if (!BASE64.test(requestBytes) || requestBytes.length > MAX_FRAME_BYTES) {
+    refuse("REQUEST_BYTES");
+  }
+  return Object.freeze({
+    schemaVersion: PROTOCOL_SCHEMA_VERSION,
+    nonce: requireNonce(stringField(record, "nonce")),
+    artifactDigest: requireDigest(stringField(record, "artifactDigest"), "artifactDigest"),
+    artifactBytes,
+    requestDigest: requireDigest(stringField(record, "requestDigest"), "requestDigest"),
+    requestBytes,
+  });
+}
+
 function validateWorkerResult(record: Readonly<Record<string, CanonicalValue>>): WorkerResult {
   exactKeys(record, FRAME_KEYS["worker-result"]);
   if (record.schemaVersion !== PROTOCOL_SCHEMA_VERSION) refuse("SCHEMA_VERSION");
@@ -409,6 +449,7 @@ function validateKind(kind: FrameKind, value: unknown): CanonicalValue {
   if (snapshot === null || typeof snapshot !== "object" || Array.isArray(snapshot)) refuse("RECORD_REQUIRED");
   const record = snapshot as Readonly<Record<string, CanonicalValue>>;
   if (kind === "launcher-request") return validateLauncherRequest(record) as unknown as CanonicalValue;
+  if (kind === "worker-execution") return validateWorkerExecution(record) as unknown as CanonicalValue;
   if (kind === "worker-ready") return validateWorkerReady(record) as unknown as CanonicalValue;
   if (kind === "worker-result") return validateWorkerResult(record) as unknown as CanonicalValue;
   return validateReceiptRecord(record) as unknown as CanonicalValue;

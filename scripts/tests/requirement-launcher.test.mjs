@@ -162,6 +162,45 @@ function rawFrame(body, declaredLength = body.length) {
   return Buffer.concat([prefix, Buffer.from(body)]);
 }
 
+function splitFrames(bytes) {
+  const frames = [];
+  let offset = 0;
+  while (offset < bytes.byteLength) {
+    assert.ok(bytes.byteLength - offset >= 8, "frame prefix must be complete");
+    const bodyLength = Number(bytes.readBigUInt64BE(offset));
+    const end = offset + 8 + bodyLength;
+    assert.ok(end <= bytes.byteLength, "frame body must be complete");
+    frames.push(bytes.subarray(offset, end));
+    offset = end;
+  }
+  return frames;
+}
+
+function scalarExecutionFrame(subject) {
+  const artifactBytes = readFileSync(CHECKED_ARTIFACT);
+  const artifactDigest = createHash("sha256").update(artifactBytes).digest("hex");
+  const argument = Buffer.from(`{"subject":${subject}}`, "utf8");
+  const argumentDigest = createHash("sha256").update(argument).digest("hex");
+  const launcherRequest = encodeCanonicalFrame("launcher-request", {
+    schemaVersion: 1,
+    nonce: "00112233445566778899aabbccddeeff",
+    runtimeProfile: "scalar-1",
+    subjectDigest: argumentDigest,
+    flowLocator: "rd0858/unit4/scalar-oracle",
+    flowDigest: artifactDigest,
+    argumentDigest,
+    argumentBytes: argument.toString("base64"),
+  });
+  return encodeCanonicalFrame("worker-execution", {
+    schemaVersion: 1,
+    nonce: "00112233445566778899aabbccddeeff",
+    artifactDigest,
+    artifactBytes: artifactBytes.toString("base64"),
+    requestDigest: createHash("sha256").update(launcherRequest).digest("hex"),
+    requestBytes: Buffer.from(launcherRequest).toString("base64"),
+  });
+}
+
 function refusalReceipt(child, expectedState = "REFUSED") {
   assert.equal(child.error, undefined);
   assert.equal(child.status, 1, child.stderr?.toString("utf8"));
@@ -211,6 +250,31 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       packageGraphDigest(registry.worker.digest, registry.protocol.digest),
     );
     assert.equal(registry.timeoutMs, 1_500);
+  });
+
+  it("executes the admitted scalar artifact in the distributed clean worker", () => {
+    const registry = JSON.parse(readFileSync(WORKER_REGISTRY, "utf8"));
+    const child = spawnSync(process.execPath, [registry.worker.path], {
+      cwd: ROOT,
+      input: scalarExecutionFrame(1),
+      encoding: null,
+      timeout: 10_000,
+      windowsHide: true,
+      maxBuffer: 1024 * 1024,
+      env: { ...process.env, GALERINA_UNIT4_NONCE: "00112233445566778899aabbccddeeff" },
+    });
+    assert.equal(child.error, undefined);
+    assert.equal(child.signal, null);
+    assert.equal(child.status, 1, child.stderr?.toString("utf8"));
+    const frames = splitFrames(child.stdout);
+    assert.equal(frames.length, 2);
+    const ready = decodeCanonicalFrame("worker-ready", frames[0]);
+    const result = decodeCanonicalFrame("worker-result", frames[1]);
+    assert.equal(ready.nonce, "00112233445566778899aabbccddeeff");
+    assert.equal(result.executionState, "COMPLETE");
+    assert.equal(result.boundedValue.decision, "allow");
+    assert.equal(result.boundedAudit.executionTier, "tree");
+    assert.equal(result.boundedAudit.authorizing, false);
   });
 
   it("binds both registries to the exact checked scalar artifact and complete identity", () => {

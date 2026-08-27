@@ -5,6 +5,12 @@ import { fileURLToPath } from "node:url";
 import { isProxy as importedIsProxy } from "node:util/types";
 
 import {
+  CheckedFlowArtifactRefusal,
+  decodeCheckedFlowArtifact,
+  type CheckedFlowArtifactNode,
+} from "./checked-flow-artifact.js";
+import { executeFlow, type GalerinaValue } from "./interpreter.js";
+import {
   decodeCanonicalFrame,
   encodeCanonicalFrame,
   hashProtocolBytes,
@@ -13,10 +19,12 @@ import {
   type CanonicalValue,
   type ExecutionState,
   type LauncherRequest,
+  type WorkerExecutionRequest,
   type WorkerResult,
 } from "./requirement-process-protocol.js";
 
 export const BOOTSTRAP_PROBE_FLOW = "rd0858/unit4/bootstrap-probe" as const;
+export const SCALAR_ORACLE_FLOW = "rd0858/unit4/scalar-oracle" as const;
 export const BOOTSTRAP_PROBE_ARGUMENT_BYTES =
   "eyJvcGVyYXRpb24iOiJib290c3RyYXAtcHJvYmUiLCJyZXF1ZXN0ZWRFZmZlY3RzIjpbXX0=" as const;
 
@@ -48,6 +56,9 @@ const maximum = Math.max.bind(Math);
 const scheduleTimeout = globalThis.setTimeout.bind(globalThis);
 const cancelTimeout = globalThis.clearTimeout.bind(globalThis);
 const readOwnedFile = readFileSync;
+const BufferRoot = Buffer;
+const bufferFrom = BufferRoot.from.bind(BufferRoot);
+const bufferToString = bufferFrom("").toString;
 const decodeFrame = decodeCanonicalFrame;
 const encodeFrame = encodeCanonicalFrame;
 const hashBytes = hashProtocolBytes;
@@ -76,7 +87,7 @@ export interface RequirementWorkerBootstrap {
 
 export interface RequirementWorkerOutcome {
   readonly phase: "CLOSED";
-  readonly executionState: "REFUSED" | "ERROR";
+  readonly executionState: "COMPLETE" | "REFUSED" | "ERROR";
   readonly refusalCode: string;
   readonly reads: number;
   readonly writes: number;
@@ -91,8 +102,75 @@ interface CapturedBootstrap {
   readonly bootstrapControlDigest: string;
 }
 
+interface ScalarExecution {
+  readonly executionState: "COMPLETE" | "REFUSED" | "ERROR";
+  readonly refusalCode: string;
+  readonly evidence?: ScalarEvidence;
+  readonly result?: WorkerResult;
+}
+
+interface ScalarEvidence {
+  readonly flowDigest: string;
+  readonly subjectDigest: string;
+}
+
 const DEFAULT_BOOL = freeze({ __tag: "bool", value: true });
 const DEFAULT_VERDICT = freeze({ __tag: "verdict", value: 0 });
+const SCALAR_ARGUMENTS = freeze({
+  deny: encodeUtf8('{"subject":-1}'),
+  ambig: encodeUtf8('{"subject":0}'),
+  allow: encodeUtf8('{"subject":1}'),
+});
+const TREE_RUNTIME_OPTIONS = freeze({
+  egraphFastPath: false,
+  maxIterations: 64,
+  maxSteps: 1_024,
+  pureFastPath: false,
+});
+
+const EXPECTED_SCALAR_AST: CheckedFlowArtifactNode = freeze({
+  kind: "pureFlowDecl",
+  value: "scalarOracle",
+  flags: 33,
+  children: freeze([
+    freeze({
+      kind: "paramDecl",
+      value: "subject: Verdict",
+      children: freeze([freeze({ kind: "typeRef", value: "Verdict", children: freeze([]) })]),
+    }),
+    freeze({ kind: "typeRef", value: "String", children: freeze([]) }),
+    freeze({
+      kind: "contractDecl",
+      children: freeze([freeze({ kind: "identifier", value: "effects:block", children: freeze([]) })]),
+    }),
+    freeze({
+      kind: "block",
+      children: freeze([
+        freeze({
+          kind: "checkExpr",
+          children: freeze([
+            freeze({ kind: "identifier", value: "subject", children: freeze([]) }),
+            ...(["deny", "ambig", "if"] as const).map((arm, index) => freeze({
+              kind: "checkArm",
+              value: arm,
+              children: freeze([freeze({
+                kind: "block",
+                children: freeze([freeze({
+                  kind: "returnStmt",
+                  children: freeze([freeze({
+                    kind: "stringLiteral",
+                    value: `"${(["deny", "ambig", "allow"] as const)[index]}"`,
+                    children: freeze([]),
+                  })]),
+                })]),
+              })]),
+            })),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+});
 
 function ownDataValue(value: unknown, key: string): unknown {
   if ((typeof value !== "object" || value === null) && typeof value !== "function") {
@@ -155,6 +233,79 @@ function canonicalInternal(value: CanonicalValue): string {
 
 function digestCanonical(value: CanonicalValue): string {
   return hashBytes(encodeUtf8(canonicalInternal(value)));
+}
+
+function digestRaw(bytes: Uint8Array): string {
+  return hashConstructor("sha256").update(bytes).digest("hex");
+}
+
+function decodeExactBase64(value: string): Uint8Array | undefined {
+  try {
+    const decoded = bufferFrom(value, "base64");
+    const encoded = Reflect.apply(bufferToString, decoded, ["base64"]);
+    if (encoded !== value) return undefined;
+    return new Uint8ArrayRoot(decoded);
+  } catch {
+    return undefined;
+  }
+}
+
+function equalBytes(left: Uint8Array, right: Uint8Array): boolean {
+  if (left.byteLength !== right.byteLength) return false;
+  for (let index = 0; index < left.byteLength; index += 1) {
+    if (left[index] !== right[index]) return false;
+  }
+  return true;
+}
+
+function exactScalarAst(ast: CheckedFlowArtifactNode): boolean {
+  return canonicalInternal(ast as unknown as CanonicalValue)
+    === canonicalInternal(EXPECTED_SCALAR_AST as unknown as CanonicalValue);
+}
+
+function classifyArtifactRefusal(error: unknown): string {
+  if (!(error instanceof CheckedFlowArtifactRefusal)) return "CHECKED_ARTIFACT_SCHEMA";
+  if (error.code.includes("IDENTITY")) return "CHECKED_ARTIFACT_IDENTITY";
+  if (
+    error.code.includes("CANONICAL") ||
+    error.code.startsWith("JSON_") ||
+    error.code === "UTF8_BOM" ||
+    error.code === "UTF8_INVALID"
+  ) {
+    return "CHECKED_ARTIFACT_CANONICAL";
+  }
+  return "CHECKED_ARTIFACT_SCHEMA";
+}
+
+function decodeScalarSubject(request: LauncherRequest): {
+  readonly decision: "deny" | "ambig" | "allow";
+  readonly value: GalerinaValue;
+} | undefined {
+  const bytes = decodeExactBase64(request.argumentBytes);
+  if (
+    bytes === undefined ||
+    digestRaw(bytes) !== request.argumentDigest ||
+    request.subjectDigest !== request.argumentDigest
+  ) {
+    return undefined;
+  }
+  if (equalBytes(bytes, SCALAR_ARGUMENTS.deny)) {
+    return freeze({ decision: "deny", value: freeze({ __tag: "verdict", value: -1 }) });
+  }
+  if (equalBytes(bytes, SCALAR_ARGUMENTS.ambig)) {
+    return freeze({ decision: "ambig", value: freeze({ __tag: "verdict", value: 0 }) });
+  }
+  if (equalBytes(bytes, SCALAR_ARGUMENTS.allow)) {
+    return freeze({ decision: "allow", value: freeze({ __tag: "verdict", value: 1 }) });
+  }
+  return undefined;
+}
+
+function scalarEvidence(request: LauncherRequest): ScalarEvidence {
+  return freeze({
+    flowDigest: request.flowDigest,
+    subjectDigest: request.subjectDigest,
+  });
 }
 
 function structuralBootstrap(
@@ -256,6 +407,133 @@ function makeResult(
   });
 }
 
+function makeScalarResult(
+  bootstrap: CapturedBootstrap,
+  evidence: ScalarEvidence | undefined,
+  executionState: "COMPLETE" | "REFUSED" | "ERROR",
+  refusalCode: string,
+  decision?: "deny" | "ambig" | "allow",
+): WorkerResult {
+  const boundedValue: CanonicalValue = freeze({
+    admitted: executionState === "COMPLETE",
+    authorizing: false,
+    ...(decision === undefined ? {} : { decision }),
+    operation: "scalar-oracle",
+    scalarProfile: "scalar-1",
+  });
+  const audit: CanonicalValue = freeze({
+    authorizing: false,
+    bootstrapControlDigest: bootstrap.bootstrapControlDigest,
+    executionState,
+    executionTier: executionState === "COMPLETE" ? "tree" : "none",
+    flowDigest: evidence?.flowDigest ?? "0".repeat(64),
+    operation: "scalar-oracle",
+    refusalCode,
+    subjectDigest: evidence?.subjectDigest ?? "0".repeat(64),
+  });
+  return freeze({
+    schemaVersion: PROTOCOL_SCHEMA_VERSION,
+    nonce: bootstrap.nonce,
+    executionState,
+    valueDigest: digestCanonical(boundedValue),
+    auditDigest: digestCanonical(audit),
+    boundedValue,
+    boundedAudit: audit,
+  });
+}
+
+async function executeScalarEnvelope(
+  envelope: WorkerExecutionRequest,
+  bootstrap: CapturedBootstrap,
+): Promise<ScalarExecution> {
+  if (envelope.nonce !== bootstrap.nonce) {
+    return freeze({ executionState: "REFUSED", refusalCode: "NONCE_MISMATCH" });
+  }
+  const artifactBytes = decodeExactBase64(envelope.artifactBytes);
+  const requestBytes = decodeExactBase64(envelope.requestBytes);
+  if (artifactBytes === undefined || requestBytes === undefined) {
+    return freeze({ executionState: "REFUSED", refusalCode: "REQUEST_PROTOCOL" });
+  }
+  if (digestRaw(artifactBytes) !== envelope.artifactDigest) {
+    return freeze({ executionState: "REFUSED", refusalCode: "CHECKED_ARTIFACT_DIGEST" });
+  }
+  if (digestRaw(requestBytes) !== envelope.requestDigest) {
+    return freeze({ executionState: "REFUSED", refusalCode: "REQUEST_PROTOCOL" });
+  }
+
+  let request: LauncherRequest;
+  try {
+    request = decodeFrame("launcher-request", requestBytes) as unknown as LauncherRequest;
+  } catch {
+    return freeze({ executionState: "REFUSED", refusalCode: "REQUEST_PROTOCOL" });
+  }
+  const evidence = scalarEvidence(request);
+  if (request.nonce !== bootstrap.nonce) {
+    return freeze({ executionState: "REFUSED", refusalCode: "NONCE_MISMATCH", evidence });
+  }
+  if (request.flowLocator !== SCALAR_ORACLE_FLOW) {
+    return freeze({ executionState: "REFUSED", refusalCode: "OPERATION_NOT_ADMITTED", evidence });
+  }
+  if (request.flowDigest !== envelope.artifactDigest) {
+    return freeze({ executionState: "REFUSED", refusalCode: "CHECKED_ARTIFACT_DIGEST", evidence });
+  }
+
+  let artifact;
+  try {
+    artifact = decodeCheckedFlowArtifact(artifactBytes);
+  } catch (error) {
+    return freeze({ executionState: "REFUSED", refusalCode: classifyArtifactRefusal(error), evidence });
+  }
+  if (
+    artifact.productId !== "galerina" ||
+    artifact.packageId !== "rd0858-unit4-scalar-oracle" ||
+    artifact.flowLocator !== SCALAR_ORACLE_FLOW ||
+    artifact.flowName !== "scalarOracle" ||
+    artifact.runtimeProfile !== "scalar-1"
+  ) {
+    return freeze({ executionState: "REFUSED", refusalCode: "CHECKED_ARTIFACT_IDENTITY", evidence });
+  }
+  if (!exactScalarAst(artifact.checkedAst)) {
+    return freeze({ executionState: "REFUSED", refusalCode: "CHECKED_AST_UNSUPPORTED", evidence });
+  }
+  const subject = decodeScalarSubject(request);
+  if (subject === undefined) {
+    return freeze({ executionState: "REFUSED", refusalCode: "ARGUMENT_CONTRACT", evidence });
+  }
+
+  try {
+    const runtimeContract = TREE_RUNTIME_OPTIONS as Readonly<Record<string, unknown>>;
+    if (runtimeContract.pureFastPath !== false || runtimeContract.egraphFastPath !== false) {
+      return freeze({ executionState: "ERROR", refusalCode: "FLOW_EXECUTION", evidence });
+    }
+    const execution = await executeFlow(
+      "scalarOracle",
+      new Map<string, GalerinaValue>([["subject", subject.value]]),
+      artifact.checkedAst as Parameters<typeof executeFlow>[2],
+      undefined,
+      undefined,
+      undefined,
+      TREE_RUNTIME_OPTIONS,
+    );
+    if (
+      execution.executionTier !== "tree" ||
+      execution.audit.result !== "ok" ||
+      execution.value.__tag !== "string" ||
+      execution.value.value !== subject.decision
+    ) {
+      return freeze({ executionState: "ERROR", refusalCode: "FLOW_EXECUTION", evidence });
+    }
+    return freeze({
+      executionState: "COMPLETE",
+      refusalCode: "NONE",
+      evidence,
+      result: makeScalarResult(bootstrap, evidence, "COMPLETE", "NONE", subject.decision),
+    });
+  } catch {
+    return freeze({ executionState: "ERROR", refusalCode: "FLOW_EXECUTION", evidence });
+  }
+}
+
 async function writeFrame(
   output: RequirementWorkerOutput,
   frame: Uint8Array,
@@ -284,7 +562,7 @@ export async function runRequirementProcessWorker(
   let outcome: RequirementWorkerOutcome | undefined;
 
   const finish = (
-    executionState: "REFUSED" | "ERROR",
+    executionState: "COMPLETE" | "REFUSED" | "ERROR",
     refusalCode: string,
   ): RequirementWorkerOutcome => freeze({
     phase: "CLOSED",
@@ -342,8 +620,10 @@ export async function runRequirementProcessWorker(
     if (timer !== undefined) cancelTimeout(timer);
 
     let requestValue: LauncherRequest | undefined;
+    let scalarEvidenceValue: ScalarEvidence | undefined;
+    let resultValue: WorkerResult | undefined;
     let refusalCode = "BOOTSTRAP_PROBE_ONLY";
-    let executionState: "REFUSED" | "ERROR" = "REFUSED";
+    let executionState: "COMPLETE" | "REFUSED" | "ERROR" = "REFUSED";
     if (event.kind === "timeout") {
       refusalCode = "WORKER_TIMEOUT";
     } else if (event.kind === "crash") {
@@ -353,25 +633,42 @@ export async function runRequirementProcessWorker(
       refusalCode = "REQUEST_BOUND";
     } else {
       try {
-        requestValue = decodeFrame("launcher-request", event.frame) as unknown as LauncherRequest;
-        if (requestValue.nonce !== captured.nonce) {
-          refusalCode = "NONCE_MISMATCH";
-        } else if (requestValue.flowLocator !== BOOTSTRAP_PROBE_FLOW) {
-          refusalCode = "OPERATION_NOT_ADMITTED";
-        } else if (
-          requestValue.argumentBytes !== BOOTSTRAP_PROBE_ARGUMENT_BYTES ||
-          requestValue.argumentDigest !== BOOTSTRAP_PROBE_ARGUMENT_DIGEST
-        ) {
-          refusalCode = "ARGUMENT_CONTRACT";
-        }
+        const envelope = decodeFrame(
+          "worker-execution",
+          event.frame,
+        ) as unknown as WorkerExecutionRequest;
+        const scalar = await executeScalarEnvelope(envelope, captured);
+        scalarEvidenceValue = scalar.evidence;
+        refusalCode = scalar.refusalCode;
+        executionState = scalar.executionState;
+        resultValue = scalar.result ?? makeScalarResult(
+          captured,
+          scalarEvidenceValue,
+          executionState,
+          refusalCode,
+        );
       } catch {
-        refusalCode = "REQUEST_PROTOCOL";
+        try {
+          requestValue = decodeFrame("launcher-request", event.frame) as unknown as LauncherRequest;
+          if (requestValue.nonce !== captured.nonce) {
+            refusalCode = "NONCE_MISMATCH";
+          } else if (requestValue.flowLocator !== BOOTSTRAP_PROBE_FLOW) {
+            refusalCode = "OPERATION_NOT_ADMITTED";
+          } else if (
+            requestValue.argumentBytes !== BOOTSTRAP_PROBE_ARGUMENT_BYTES ||
+            requestValue.argumentDigest !== BOOTSTRAP_PROBE_ARGUMENT_DIGEST
+          ) {
+            refusalCode = "ARGUMENT_CONTRACT";
+          }
+        } catch {
+          refusalCode = "REQUEST_PROTOCOL";
+        }
       }
     }
 
     const result = encodeFrame(
       "worker-result",
-      makeResult(captured, refusalCode, requestValue, executionState),
+      resultValue ?? makeResult(captured, refusalCode, requestValue, executionState === "COMPLETE" ? "ERROR" : executionState),
     );
     if (!(await writeFrame(output, result))) {
       outcome = finish("ERROR", "OUTPUT_WRITE");

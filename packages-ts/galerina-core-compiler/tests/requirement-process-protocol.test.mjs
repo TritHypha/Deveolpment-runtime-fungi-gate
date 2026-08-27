@@ -15,6 +15,15 @@ const request = () => ({
   argumentBytes: "eyJzdWJqZWN0Ijp0cnVlfQ==",
 });
 
+const execution = () => ({
+  schemaVersion: 1,
+  nonce: "00112233445566778899aabbccddeeff",
+  artifactDigest: digest("a"),
+  artifactBytes: Buffer.from("checked-artifact\n", "utf8").toString("base64"),
+  requestDigest: digest("b"),
+  requestBytes: Buffer.from("launcher-request", "utf8").toString("base64"),
+});
+
 const receipt = () => ({
   schemaVersion: 1,
   hashAlgorithm: "sha256",
@@ -71,6 +80,23 @@ describe("RD-0858 Unit 4 bounded process protocol", () => {
     const frame = call("encodeCanonicalFrame", "launcher-request", expected);
     assert.equal(frame.byteLength > 8, true);
     assert.deepEqual(call("decodeCanonicalFrame", "launcher-request", frame), expected);
+  });
+
+  it("round-trips one closed worker execution envelope", () => {
+    const expected = execution();
+    const frame = call("encodeCanonicalFrame", "worker-execution", expected);
+    assert.deepEqual(call("decodeCanonicalFrame", "worker-execution", frame), expected);
+  });
+
+  it("refuses surplus and non-canonical worker execution fields", () => {
+    assert.throws(
+      () => call("encodeCanonicalFrame", "worker-execution", { ...execution(), sourcePath: "scalar-oracle.fungi" }),
+      /UNKNOWN|field|refus/i,
+    );
+    assert.throws(
+      () => call("encodeCanonicalFrame", "worker-execution", { ...execution(), artifactBytes: "YQ" }),
+      /BASE64|bytes|refus/i,
+    );
   });
 
   it("produces deterministic canonical bytes and digest", () => {

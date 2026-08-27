@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 
 import {
   BOOTSTRAP_PROBE_ARGUMENT_BYTES,
   BOOTSTRAP_PROBE_FLOW,
   decodeCanonicalFrame,
+  encodeCheckedFlowArtifact,
   encodeCanonicalFrame,
   runRequirementProcessWorker,
 } from "../dist/index.js";
@@ -13,6 +15,15 @@ import {
 const NONCE = "00112233445566778899aabbccddeeff";
 const WORKER_DIGEST = "a".repeat(64);
 const RUNTIME_DIGEST = "b".repeat(64);
+const SCALAR_FLOW = "rd0858/unit4/scalar-oracle";
+const ARTIFACT_BYTES = readFileSync(new URL(
+  "../../../packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json",
+  import.meta.url,
+));
+const SOURCE_BYTES = readFileSync(new URL(
+  "../../../packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi",
+  import.meta.url,
+));
 
 function digest(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
@@ -31,6 +42,51 @@ function request(overrides = {}) {
     argumentBytes: BOOTSTRAP_PROBE_ARGUMENT_BYTES,
     ...overrides,
   };
+}
+
+function scalarArgument(subject, overrideBytes) {
+  const bytes = overrideBytes ?? Buffer.from(`{"subject":${subject}}`, "utf8");
+  return {
+    bytes,
+    digest: digest(bytes),
+    base64: bytes.toString("base64"),
+  };
+}
+
+function scalarRequest(subject, overrides = {}, overrideBytes) {
+  const argument = scalarArgument(subject, overrideBytes);
+  return {
+    schemaVersion: 1,
+    nonce: NONCE,
+    runtimeProfile: "scalar-1",
+    subjectDigest: argument.digest,
+    flowLocator: SCALAR_FLOW,
+    flowDigest: digest(ARTIFACT_BYTES),
+    argumentDigest: argument.digest,
+    argumentBytes: argument.base64,
+    ...overrides,
+  };
+}
+
+function executionFrame(subject, {
+  artifactBytes = ARTIFACT_BYTES,
+  executionOverrides = {},
+  requestOverrides = {},
+  argumentBytes,
+} = {}) {
+  const launcherFrame = encodeCanonicalFrame(
+    "launcher-request",
+    scalarRequest(subject, { flowDigest: digest(artifactBytes), ...requestOverrides }, argumentBytes),
+  );
+  return encodeCanonicalFrame("worker-execution", {
+    schemaVersion: 1,
+    nonce: NONCE,
+    artifactDigest: digest(artifactBytes),
+    artifactBytes: Buffer.from(artifactBytes).toString("base64"),
+    requestDigest: digest(launcherFrame),
+    requestBytes: Buffer.from(launcherFrame).toString("base64"),
+    ...executionOverrides,
+  });
 }
 
 function harness({
@@ -82,6 +138,102 @@ function resultFrame(frames) {
 }
 
 describe("RD-0858 Unit 4 single-use requirement worker", () => {
+  for (const [subject, decision] of [[-1, "deny"], [0, "ambig"], [1, "allow"]]) {
+    it(`executes canonical Verdict ${subject} only on the tree tier`, async () => {
+      const h = harness({ frame: executionFrame(subject) });
+      const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+      const result = resultFrame(h.frames);
+
+      assert.equal(outcome.executionState, "COMPLETE");
+      assert.equal(outcome.refusalCode, "NONE");
+      assert.equal(result.executionState, "COMPLETE");
+      assert.deepEqual(result.boundedValue, {
+        admitted: true,
+        authorizing: false,
+        decision,
+        operation: "scalar-oracle",
+        scalarProfile: "scalar-1",
+      });
+      assert.equal(result.boundedAudit.executionTier, "tree");
+      assert.equal(result.boundedAudit.refusalCode, "NONE");
+      assert.equal(result.boundedAudit.authorizing, false);
+      assert.deepEqual(h.counts(), { reads: 1, closes: 1 });
+    });
+  }
+
+  for (const [name, bytes] of [
+    ["wrong class", Buffer.from('{"subject":true}', "utf8")],
+    ["surplus field", Buffer.from('{"subject":1,"extra":0}', "utf8")],
+    ["aliased field", Buffer.from('{"Subject":1}', "utf8")],
+  ]) {
+    it(`refuses ${name} scalar arguments`, async () => {
+      const h = harness({ frame: executionFrame(1, { argumentBytes: bytes }) });
+      const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+      assert.equal(outcome.executionState, "REFUSED");
+      assert.equal(outcome.refusalCode, "ARGUMENT_CONTRACT");
+      assert.equal(resultFrame(h.frames).boundedAudit.refusalCode, "ARGUMENT_CONTRACT");
+    });
+  }
+
+  it("refuses an artifact digest mismatch before execution", async () => {
+    const h = harness({
+      frame: executionFrame(1, {
+        executionOverrides: { artifactDigest: "f".repeat(64) },
+      }),
+    });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+    assert.equal(outcome.executionState, "REFUSED");
+    assert.equal(outcome.refusalCode, "CHECKED_ARTIFACT_DIGEST");
+  });
+
+  it("refuses a product-identity mismatch inside otherwise digest-bound bytes", async () => {
+    const artifact = JSON.parse(ARTIFACT_BYTES.toString("utf8"));
+    artifact.productId = "trametes";
+    const bytes = Buffer.from(`${JSON.stringify(artifact)}\n`, "utf8");
+    const h = harness({ frame: executionFrame(1, { artifactBytes: bytes }) });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+    assert.equal(outcome.executionState, "REFUSED");
+    assert.equal(outcome.refusalCode, "CHECKED_ARTIFACT_IDENTITY");
+  });
+
+  it("refuses canonical source bytes instead of parsing them in the worker", async () => {
+    const h = harness({ frame: executionFrame(1, { artifactBytes: SOURCE_BYTES }) });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+    assert.equal(outcome.executionState, "REFUSED");
+    assert.match(outcome.refusalCode, /^CHECKED_ARTIFACT_(?:CANONICAL|SCHEMA)$/u);
+  });
+
+  it("independently refuses a checked AST outside the exact scalar oracle shape", async () => {
+    const artifact = JSON.parse(ARTIFACT_BYTES.toString("utf8"));
+    artifact.checkedAst.children[3].children[0].children[3].value = "surplus";
+    const bytes = encodeCheckedFlowArtifact(artifact);
+    const h = harness({ frame: executionFrame(1, { artifactBytes: bytes }) });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+    assert.equal(outcome.executionState, "REFUSED");
+    assert.equal(outcome.refusalCode, "CHECKED_AST_UNSUPPORTED");
+  });
+
+  it("refuses an outer nonce mismatch without reading a second request", async () => {
+    const h = harness({
+      frame: executionFrame(1, { executionOverrides: { nonce: "f".repeat(32) } }),
+    });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+    assert.equal(outcome.refusalCode, "NONCE_MISMATCH");
+    assert.deepEqual(h.counts(), { reads: 1, closes: 1 });
+  });
+
+  it("refuses a second concatenated scalar execution envelope", async () => {
+    const one = executionFrame(1);
+    const two = new Uint8Array(one.byteLength * 2);
+    two.set(one, 0);
+    two.set(one, one.byteLength);
+    const h = harness({ frame: two });
+    const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
+    assert.equal(outcome.executionState, "REFUSED");
+    assert.equal(outcome.refusalCode, "REQUEST_PROTOCOL");
+    assert.deepEqual(h.counts(), { reads: 1, closes: 1 });
+  });
+
   it("captures roots, proves canonical Bool/Verdict controls, then emits READY -> REFUSED -> CLOSED", async () => {
     const h = harness();
     const outcome = await runRequirementProcessWorker(h.input, h.output, h.bootstrap);
