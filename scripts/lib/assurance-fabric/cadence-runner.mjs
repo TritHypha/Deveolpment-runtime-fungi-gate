@@ -12,7 +12,8 @@ import { parseStrictJsonBytes } from "./strict-json.mjs";
 const { runOwnedProcessSync } = ownedProcessTree;
 const GRAPH_CHILDREN = Object.freeze([
   "package graph", "project graph", "graph integrity", "KB graph",
-  "dev-tool index", "Fungi source capability inventory", "semantic assurance graph",
+  "dev-tool index", "Fungi source capability inventory",
+  "executable-family retirement graph", "semantic assurance graph", "roadmap",
 ]);
 
 function childEnvironment() {

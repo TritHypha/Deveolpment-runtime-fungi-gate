@@ -412,6 +412,46 @@ test("composed phase-close invokes semantic coverage once and blocks its refusal
   assert.deepEqual(readFileSync(join(root, "semantic-calls.log"), "utf8").trim().split(/\r?\n/), ["semantic"]);
 });
 
+test("composed phase-close accepts semantic coverage from the complete graph receipt", () => {
+  const graphEntry = manifestEntry({
+    name: "graph:all",
+    command: ["node", "scripts/graph-all.mjs", "--quiet", "--check", "--json"],
+  }, ["normal"]);
+  const semanticEntry = {
+    ...manifestEntry({ name: "semantic:coverage", command: ["node", "unused.mjs"] }, ["normal"]),
+    toolClass: "verifier",
+    execution: {
+      kind: "predecessor-receipt",
+      predecessorId: "graph:all",
+      verifierId: "graph-all-semantic-v1",
+    },
+    predecessors: ["graph:all"],
+  };
+  const root = fixture({ entries: [graphEntry, semanticEntry] });
+  write(root, "scripts/graph-all.mjs", readFileSync(resolve("scripts/graph-all.mjs"), "utf8"));
+  for (const name of [
+    "package-graph-generator.mjs",
+    "project-graph-generator.mjs",
+    "audit-graph-integrity.mjs",
+    "kb-graph-generator.mjs",
+    "dev-tool-index.mjs",
+    "fungi-source-capability-inventory.mjs",
+    "ts-retirement-graph.mjs",
+    "gen-assurance-semantic-graph.mjs",
+    "gen-roadmap.mjs",
+  ]) {
+    write(root, `scripts/${name}`, "process.exit(0);\n");
+  }
+
+  const result = run(root, "--tier", "phase-close");
+
+  assert.equal(result.status, 0, result.stderr);
+  const report = JSON.parse(result.stdout);
+  const semantic = report.results.find((entry) => entry.name === "semantic:coverage");
+  assert.equal(semantic?.ok, true);
+  assert.equal(semantic?.detail, "semantic coverage validated from exact graph-all result");
+});
+
 test("a held checkout lease refuses phase-close before any child starts", () => {
   const root = fixture({
     phaseClose: [{ name: "must-not-run", command: ["node", "must-not-run.mjs"] }],
