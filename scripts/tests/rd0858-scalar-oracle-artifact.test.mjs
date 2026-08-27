@@ -125,20 +125,44 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
       blob: "3".repeat(40),
       path: "packages-ts/galerina-core-compiler/.graph/BOUNDARY.md",
     };
+    const packageGraph = {
+      mode: "100644",
+      blob: "4".repeat(40),
+      path: "packages-ts/galerina-core-compiler/.graph/package-graph.json",
+    };
+    const boundaryPolicy = {
+      mode: "100644",
+      blob: "5".repeat(40),
+      path: "packages-ts/galerina-core-compiler/.graph/boundary-policy.json",
+    };
     const baseline = generator.digestCompilerPackageIdentityEntries(
-      [packageJson, source, boundary],
+      [packageJson, source, boundary, packageGraph, boundaryPolicy],
       executableDigest,
     );
     assert.equal(
       generator.digestCompilerPackageIdentityEntries(
-        [packageJson, source, { ...boundary, blob: "4".repeat(40) }],
+        [packageJson, source, { ...boundary, blob: "6".repeat(40) }, packageGraph, boundaryPolicy],
+        executableDigest,
+      ),
+      baseline,
+    );
+    assert.equal(
+      generator.digestCompilerPackageIdentityEntries(
+        [packageJson, source, boundary, { ...packageGraph, blob: "7".repeat(40) }, boundaryPolicy],
         executableDigest,
       ),
       baseline,
     );
     assert.notEqual(
       generator.digestCompilerPackageIdentityEntries(
-        [packageJson, { ...source, blob: "5".repeat(40) }, boundary],
+        [packageJson, { ...source, blob: "8".repeat(40) }, boundary, packageGraph, boundaryPolicy],
+        executableDigest,
+      ),
+      baseline,
+    );
+    assert.notEqual(
+      generator.digestCompilerPackageIdentityEntries(
+        [packageJson, source, boundary, packageGraph, { ...boundaryPolicy, blob: "9".repeat(40) }],
         executableDigest,
       ),
       baseline,

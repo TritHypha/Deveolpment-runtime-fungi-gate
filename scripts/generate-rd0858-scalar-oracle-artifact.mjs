@@ -138,7 +138,10 @@ export function digestCompilerPackageIdentityEntries(entries, compilerExecutable
   if (!Array.isArray(entries) || !/^sha256:[0-9a-f]{64}$/u.test(compilerExecutableGraphDigest)) {
     refuse("PACKAGE_GRAPH_INPUT");
   }
-  const generatedGraphPrefix = `${COMPILER_PACKAGE_RELATIVE}/.graph/`;
+  const generatedGraphReports = new Set([
+    `${COMPILER_PACKAGE_RELATIVE}/.graph/BOUNDARY.md`,
+    `${COMPILER_PACKAGE_RELATIVE}/.graph/package-graph.json`,
+  ]);
   const admitted = entries.filter((entry) => {
     if (entry === null || typeof entry !== "object" || Array.isArray(entry)
       || !/^100\d{3}$/u.test(entry.mode) || !/^[0-9a-f]{40,64}$/u.test(entry.blob)
@@ -147,11 +150,11 @@ export function digestCompilerPackageIdentityEntries(entries, compilerExecutable
       || entry.path.includes("\\") || entry.path.includes("\0")) {
       refuse("PACKAGE_GRAPH_ENTRY");
     }
-    return !entry.path.startsWith(generatedGraphPrefix);
+    return !generatedGraphReports.has(entry.path);
   });
   if (admitted.length < 1) refuse("PACKAGE_GRAPH_HEAD");
   const hash = createHash("sha256");
-  hash.update("galerina.compiler-package-identity.v3\0", "utf8");
+  hash.update("galerina.compiler-package-identity.v4\0", "utf8");
   for (const entry of admitted) {
     hash.update(`${entry.mode} ${entry.blob}\t${entry.path}\n`, "utf8");
   }

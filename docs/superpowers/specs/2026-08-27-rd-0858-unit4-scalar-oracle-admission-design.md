@@ -209,15 +209,18 @@ set covers parser, symbol resolution, type checking, value-state checking,
 effect checking, governance verification, source-escape checking, naming
 policy and the checked-artifact codec.
 
-The compiler package identity domain is `galerina.compiler-package-identity.v3`.
-It covers every tracked compiler-package entry except generated `.graph/`
-reporting surfaces, then binds the freshly derived executable-closure digest.
+The compiler package identity domain is `galerina.compiler-package-identity.v4`.
+It covers every tracked compiler-package entry except the exact generated
+`.graph/BOUNDARY.md` and `.graph/package-graph.json` reporting surfaces, then
+binds the freshly derived executable-closure digest. Editable
+`.graph/boundary-policy.json` remains inside the compiler package identity.
 Generated boundary reports are evidence about the package, not executable or
 source inputs to the compiler. A graph refresh therefore cannot invalidate an
 otherwise unchanged checked artifact; changing compiler source, package
 metadata or executable bytes still changes the identity and refuses a stale
-artifact. The permanent discriminator changes `.graph/BOUNDARY.md` while
-holding source fixed, then changes source while holding the report fixed.
+artifact. The permanent discriminator changes each generated report while
+holding source fixed, then changes compiler source and editable boundary policy
+independently while holding generated reports fixed.
 
 The generator reads each toolchain file as a held direct regular file, hashes
 it before use, performs the generation twice in separate clean Node processes,
@@ -273,8 +276,8 @@ request admission it:
 2. verifies the artifact digest and closed identity against launcher evidence;
 3. decodes canonical arguments as exactly `{"subject": <canonical Verdict>}`;
 4. decodes and independently revalidates the checked AST;
-5. calls `executeFlow` with fast paths disabled and requires
-   `executionTier: "tree"`;
+5. traverses the admitted checked scalar AST through the worker-local
+   `executeExactScalarAst` tree interpreter with no fast path or fallback;
 6. requires exactly one value in `"deny" | "ambig" | "allow"` and a bounded
    audit result;
 7. erases the checked AST and arguments before emitting one result frame;
