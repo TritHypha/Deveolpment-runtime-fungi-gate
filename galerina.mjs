@@ -173,10 +173,10 @@ async function main() {
     productModule = await import(compilerPath);
   } catch (error) {
     const requestedCommand = process.argv[2] ?? "help";
-    const code = requestedCommand === "fuse"
-      ? "FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE"
-      : "FUNGI-COMPILER-UNAVAILABLE";
-    console.error(`${code}: ${error instanceof Error ? error.message : "compiler module unavailable"} — refusing (fail-closed)`);
+    const prefix = requestedCommand === "fuse"
+      ? "FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE: "
+      : "Compiler unavailable: ";
+    console.error(`${prefix}${error instanceof Error ? error.message : "compiler module unavailable"} — refusing (fail-closed)`);
     process.exit(1);
   }
   const productAdmission = productModule.resolveProductCliSelection(entrypointId, process.argv.slice(2));
