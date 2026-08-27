@@ -3,11 +3,11 @@
   "subject": {
     "id": "rd0858-unit4-scalar-profile-1",
     "owner": "galerina",
-    "locator": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34"
+    "locator": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e"
   },
   "approval": {
     "status": "APPROVED",
-    "planDigest": "4135dbca833469d096f8f6b39fb50cc2baa8a809634037a954a081b1a57ff3bb",
+    "planDigest": "91bb2bb113b765b081bda7d7e04e919352ddbc51d48093b16a1d74bad0866e15",
     "authority": "authority://owner/rd0858-unit4-scalar-profile-1",
     "evidence": "receipt://galerina/rd0858-unit4-scalar-oracle/approved-plan"
   },
@@ -15,7 +15,7 @@
     {
       "id": "compiler-build",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "npm",
@@ -43,7 +43,7 @@
     {
       "id": "scalar-artifact-codec",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -72,7 +72,7 @@
     {
       "id": "scalar-process-boundary",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -103,7 +103,7 @@
     {
       "id": "scalar-native-launcher",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -131,7 +131,7 @@
     {
       "id": "scalar-rust-launcher",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "cargo",
@@ -160,7 +160,7 @@
     {
       "id": "repository-graphs",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -188,7 +188,7 @@
     {
       "id": "repository-phase-close",
       "owner": "galerina",
-      "build": "git://galerina/acab217c9d73c5970466fa6132912e4c3906bf34",
+      "build": "git://galerina/1b334445b3cead221a2244053ed6443d59f3d79e",
       "cwd": "repo://galerina",
       "argv": [
         "node",
