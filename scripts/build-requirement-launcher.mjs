@@ -57,6 +57,20 @@ const REQUIREMENT_PROTOCOL = join(
   "dist",
   "requirement-process-protocol.js",
 );
+const CHECKED_ARTIFACT_GENERATOR = join(
+  ROOT,
+  "scripts",
+  "generate-rd0858-scalar-oracle-artifact.mjs",
+);
+const CHECKED_ARTIFACT = join(
+  ROOT,
+  "packages",
+  "fungi",
+  "products",
+  "galerina",
+  "rd0858-unit4-scalar-oracle",
+  "scalar-oracle.checked.json",
+);
 const WARDEN_BUILD = join(ROOT, "scripts", "build-process-warden.mjs");
 const INPUTS = [
   join(CRATE, "Cargo.toml"),
@@ -81,6 +95,8 @@ const INPUTS = [
   ),
   REQUIREMENT_WORKER,
   REQUIREMENT_PROTOCOL,
+  CHECKED_ARTIFACT_GENERATOR,
+  CHECKED_ARTIFACT,
 ];
 
 const SENTINEL_SOURCE = `import { spawn } from "node:child_process";
@@ -193,6 +209,28 @@ function firstWhereResult(executable, code) {
 if (process.platform !== "win32" || process.arch !== "x64") {
   fail("REQUIREMENT_LAUNCHER_PLATFORM_REFUSED");
 }
+if (process.argv.length !== 2) {
+  fail("REQUIREMENT_LAUNCHER_ARGUMENT_REFUSED");
+}
+
+const artifactCheck = spawnSync(
+  process.execPath,
+  [CHECKED_ARTIFACT_GENERATOR, "--check"],
+  {
+    cwd: ROOT,
+    encoding: "utf8",
+    shell: false,
+    windowsHide: true,
+    timeout: 130_000,
+    maxBuffer: 1024 * 1024,
+  },
+);
+if (artifactCheck.error || artifactCheck.status !== 0 || artifactCheck.signal !== null) {
+  fail(
+    "REQUIREMENT_CHECKED_ARTIFACT_FIXED_POINT_REFUSED",
+    `${artifactCheck.stdout || ""}${artifactCheck.stderr || ""}`,
+  );
+}
 
 let before;
 try {
@@ -216,6 +254,36 @@ const requirementProtocol = regularFile(
   REQUIREMENT_PROTOCOL,
   "REQUIREMENT_PROCESS_PROTOCOL_BUILD_REFUSED",
 );
+const checkedArtifact = regularFile(
+  CHECKED_ARTIFACT,
+  "REQUIREMENT_CHECKED_ARTIFACT_BUILD_REFUSED",
+);
+let checkedArtifactIdentity;
+try {
+  const artifact = JSON.parse(readFileSync(checkedArtifact, "utf8"));
+  checkedArtifactIdentity = Object.freeze({
+    artifactSchema: artifact.schema,
+    compilerPackageGraphDigest: artifact.compilerPackageGraphDigest,
+    flowLocator: artifact.flowLocator,
+    flowName: artifact.flowName,
+    packageId: artifact.packageId,
+    productId: artifact.productId,
+    runtimeProfile: artifact.runtimeProfile,
+  });
+} catch {
+  fail("REQUIREMENT_CHECKED_ARTIFACT_IDENTITY_REFUSED");
+}
+if (JSON.stringify(checkedArtifactIdentity) !== JSON.stringify({
+  artifactSchema: "galerina.rd0858.checked-flow.v1",
+  compilerPackageGraphDigest: checkedArtifactIdentity.compilerPackageGraphDigest,
+  flowLocator: "rd0858/unit4/scalar-oracle",
+  flowName: "scalarOracle",
+  packageId: "rd0858-unit4-scalar-oracle",
+  productId: "galerina",
+  runtimeProfile: "scalar-1",
+}) || !/^sha256:[0-9a-f]{64}$/u.test(checkedArtifactIdentity.compilerPackageGraphDigest)) {
+  fail("REQUIREMENT_CHECKED_ARTIFACT_IDENTITY_REFUSED");
+}
 
 mkdirSync(OUTPUT, { recursive: true });
 writeFileSync(WORKER, SENTINEL_SOURCE, "utf8");
@@ -226,6 +294,7 @@ const workerDigest = digest(WORKER);
 const requirementWorkerDigest = digest(requirementWorker);
 const requirementProtocolDigest = digest(requirementProtocol);
 const badReadyWorkerDigest = digest(BAD_READY_WORKER);
+const checkedArtifactDigest = digest(checkedArtifact);
 
 const warden = spawnSync(process.execPath, [WARDEN_BUILD], {
   cwd: ROOT,
@@ -289,6 +358,7 @@ async function buildPinnedLauncher(
       GALERINA_TEST_RUNTIME_DIGEST: runtimeDigest,
       GALERINA_TEST_WORKER_DIGEST: admittedWorkerDigest,
       GALERINA_TEST_PROTOCOL_DIGEST: admittedProtocolDigest,
+      GALERINA_TEST_ARTIFACT_DIGEST: checkedArtifactDigest,
     },
     timeoutMs: 120_000,
     cleanupGraceMs: 5_000,
@@ -362,6 +432,14 @@ const environment = Object.freeze({
 const packageRoot = realpathSync.native(ROOT);
 const registry = Object.freeze({
   schemaVersion: 1,
+  checkedArtifact: fileRecord(checkedArtifact, "REQUIREMENT_CHECKED_ARTIFACT", true),
+  checkedArtifactSchema: checkedArtifactIdentity.artifactSchema,
+  checkedCompilerPackageGraphDigest: checkedArtifactIdentity.compilerPackageGraphDigest,
+  checkedFlowLocator: checkedArtifactIdentity.flowLocator,
+  checkedFlowName: checkedArtifactIdentity.flowName,
+  checkedPackageId: checkedArtifactIdentity.packageId,
+  checkedProductId: checkedArtifactIdentity.productId,
+  checkedRuntimeProfile: checkedArtifactIdentity.runtimeProfile,
   launcher: fileRecord(binary, "REQUIREMENT_LAUNCHER_BINARY", true),
   runtime: fileRecord(runtime, "REQUIREMENT_LAUNCHER_RUNTIME", false),
   worker: fileRecord(WORKER, "REQUIREMENT_LAUNCHER_WORKER", true),
@@ -376,6 +454,14 @@ writeFileSync(REGISTRY, canonicalJson(registry), "utf8");
 const registrySha256 = digest(REGISTRY);
 const workerRegistry = Object.freeze({
   schemaVersion: 1,
+  checkedArtifact: fileRecord(checkedArtifact, "REQUIREMENT_CHECKED_ARTIFACT", true),
+  checkedArtifactSchema: checkedArtifactIdentity.artifactSchema,
+  checkedCompilerPackageGraphDigest: checkedArtifactIdentity.compilerPackageGraphDigest,
+  checkedFlowLocator: checkedArtifactIdentity.flowLocator,
+  checkedFlowName: checkedArtifactIdentity.flowName,
+  checkedPackageId: checkedArtifactIdentity.packageId,
+  checkedProductId: checkedArtifactIdentity.productId,
+  checkedRuntimeProfile: checkedArtifactIdentity.runtimeProfile,
   launcher: fileRecord(workerBinary, "REQUIREMENT_WORKER_LAUNCHER_BINARY", true),
   runtime: fileRecord(runtime, "REQUIREMENT_LAUNCHER_RUNTIME", false),
   worker: fileRecord(requirementWorker, "REQUIREMENT_PROCESS_WORKER", true),
@@ -413,7 +499,9 @@ const receipt = Object.freeze({
     requirementWorkerDigest,
     requirementProtocolDigest,
     badReadyWorkerDigest,
+    checkedArtifactDigest,
   },
+  checkedArtifactIdentity,
   cargoExecutable: basename(cargo),
   cargoSha256: digest(cargo),
   inputs: before,

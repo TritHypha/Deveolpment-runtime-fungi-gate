@@ -6,13 +6,22 @@ use std::os::windows::fs::{MetadataExt, OpenOptionsExt};
 use std::os::windows::io::AsRawHandle;
 use std::path::{Path, PathBuf};
 
-use crate::protocol::{parse_canonical_body, sha256_hex, Refusal, Value};
+use crate::protocol::{
+    parse_canonical_body, parse_terminal_lf_document, sha256_hex, Refusal, Value,
+};
 
 const FILE_ATTRIBUTE_DIRECTORY: u32 = 0x10;
 const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x400;
 const FILE_FLAG_OPEN_REPARSE_POINT: u32 = 0x0020_0000;
 const FILE_SHARE_READ: u32 = 0x1;
+const FILE_TYPE_DISK: u32 = 0x1;
 const MAX_IDENTITY_BYTES: u64 = 268_435_456;
+const CHECKED_ARTIFACT_SCHEMA: &str = "galerina.rd0858.checked-flow.v1";
+const CHECKED_PRODUCT_ID: &str = "galerina";
+const CHECKED_PACKAGE_ID: &str = "rd0858-unit4-scalar-oracle";
+const CHECKED_FLOW_LOCATOR: &str = "rd0858/unit4/scalar-oracle";
+const CHECKED_FLOW_NAME: &str = "scalarOracle";
+const CHECKED_RUNTIME_PROFILE: &str = "scalar-1";
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -42,6 +51,7 @@ unsafe extern "system" {
         file: *mut c_void,
         information: *mut ByHandleFileInformation,
     ) -> i32;
+    fn GetFileType(file: *mut c_void) -> u32;
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -56,11 +66,22 @@ struct FileIdentity {
 pub struct AdmittedFile {
     pub path: PathBuf,
     pub digest: String,
-    #[allow(dead_code)]
     file: File,
+    identity: FileIdentity,
+}
+
+impl AdmittedFile {
+    pub fn verify_retained(&self) -> Result<(), Refusal> {
+        if handle_identity(&self.file)? != self.identity {
+            return Err(refusal("FILE_CHANGED"));
+        }
+        Ok(())
+    }
 }
 
 pub struct AdmittedPackage {
+    pub checked_artifact: AdmittedFile,
+    pub checked_artifact_bytes: Vec<u8>,
     pub launcher: AdmittedFile,
     pub runtime: AdmittedFile,
     pub worker: AdmittedFile,
@@ -244,6 +265,9 @@ fn open_admitted(
         .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
         .open(&registered.path)
         .map_err(|_| refusal("FILE_OPEN"))?;
+    if unsafe { GetFileType(file.as_raw_handle().cast::<c_void>()) } != FILE_TYPE_DISK {
+        return Err(refusal("FILE_TYPE"));
+    }
     let metadata = file.metadata().map_err(|_| refusal("FILE_IDENTITY"))?;
     if metadata.file_attributes() & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT) != 0 {
         return Err(refusal("FILE_REPARSE"));
@@ -270,6 +294,7 @@ fn open_admitted(
             path: registered.path.clone(),
             digest,
             file,
+            identity: before,
         },
         bytes,
     ))
@@ -282,6 +307,7 @@ fn pinned_test_digest(name: &str) -> Option<&'static str> {
             "runtime" => option_env!("GALERINA_TEST_RUNTIME_DIGEST"),
             "worker" => option_env!("GALERINA_TEST_WORKER_DIGEST"),
             "protocol" => option_env!("GALERINA_TEST_PROTOCOL_DIGEST"),
+            "artifact" => option_env!("GALERINA_TEST_ARTIFACT_DIGEST"),
             _ => None,
         };
     }
@@ -290,6 +316,99 @@ fn pinned_test_digest(name: &str) -> Option<&'static str> {
         let _ = name;
         None
     }
+}
+
+fn prefixed_digest(value: &str) -> bool {
+    value.len() == 71
+        && value.starts_with("sha256:")
+        && value[7..]
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+}
+
+fn verify_checked_artifact(
+    bytes: &[u8],
+    registry_fields: &BTreeMap<String, Value>,
+) -> Result<(), Refusal> {
+    let root =
+        parse_terminal_lf_document(bytes).map_err(|_| refusal("CHECKED_ARTIFACT_CANONICAL"))?;
+    let artifact = object(&root, "CHECKED_ARTIFACT_SCHEMA")?;
+    exact_fields(
+        artifact,
+        &[
+            "schema",
+            "hashAlgorithm",
+            "productId",
+            "packageId",
+            "flowLocator",
+            "flowName",
+            "languageVersion",
+            "runtimeProfile",
+            "sourceCanonicalization",
+            "sourceDigest",
+            "compilerPackageId",
+            "compilerVersion",
+            "compilerPackageGraphDigest",
+            "checkerSetId",
+            "checkerSetDigest",
+            "generatorId",
+            "generatorSourceDigest",
+            "qualifier",
+            "parameters",
+            "returnType",
+            "declaredEffects",
+            "checkedAst",
+        ],
+        "CHECKED_ARTIFACT_SCHEMA",
+    )?;
+    let schema = string_field(artifact, "schema", "CHECKED_ARTIFACT_SCHEMA")?;
+    if schema != CHECKED_ARTIFACT_SCHEMA
+        || string_field(artifact, "hashAlgorithm", "CHECKED_ARTIFACT_SCHEMA")? != "sha256"
+        || number_field(artifact, "languageVersion", "CHECKED_ARTIFACT_SCHEMA")? != 1
+    {
+        return Err(refusal("CHECKED_ARTIFACT_SCHEMA"));
+    }
+    if string_field(
+        registry_fields,
+        "checkedArtifactSchema",
+        "CHECKED_ARTIFACT_SCHEMA",
+    )? != schema
+    {
+        return Err(refusal("CHECKED_ARTIFACT_SCHEMA"));
+    }
+    let identities = [
+        ("checkedProductId", "productId", CHECKED_PRODUCT_ID),
+        ("checkedPackageId", "packageId", CHECKED_PACKAGE_ID),
+        ("checkedFlowLocator", "flowLocator", CHECKED_FLOW_LOCATOR),
+        ("checkedFlowName", "flowName", CHECKED_FLOW_NAME),
+        (
+            "checkedRuntimeProfile",
+            "runtimeProfile",
+            CHECKED_RUNTIME_PROFILE,
+        ),
+    ];
+    for (registry_key, artifact_key, expected) in identities {
+        if string_field(registry_fields, registry_key, "CHECKED_ARTIFACT_IDENTITY")? != expected
+            || string_field(artifact, artifact_key, "CHECKED_ARTIFACT_IDENTITY")? != expected
+        {
+            return Err(refusal("CHECKED_ARTIFACT_IDENTITY"));
+        }
+    }
+    let package_graph = string_field(
+        artifact,
+        "compilerPackageGraphDigest",
+        "CHECKED_ARTIFACT_TOOLCHAIN",
+    )?;
+    if !prefixed_digest(package_graph)
+        || string_field(
+            registry_fields,
+            "checkedCompilerPackageGraphDigest",
+            "CHECKED_ARTIFACT_TOOLCHAIN",
+        )? != package_graph
+    {
+        return Err(refusal("CHECKED_ARTIFACT_TOOLCHAIN"));
+    }
+    Ok(())
 }
 
 fn package_graph_digest(worker_digest: &str, protocol_digest: &str) -> String {
@@ -333,6 +452,14 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
     exact_fields(
         fields,
         &[
+            "checkedArtifact",
+            "checkedArtifactSchema",
+            "checkedCompilerPackageGraphDigest",
+            "checkedFlowLocator",
+            "checkedFlowName",
+            "checkedPackageId",
+            "checkedProductId",
+            "checkedRuntimeProfile",
             "environment",
             "launcher",
             "packageRoot",
@@ -349,6 +476,25 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
     if number_field(fields, "schemaVersion", "REGISTRY_SCHEMA")? != 1 {
         return Err(refusal("REGISTRY_SCHEMA"));
     }
+    let checked_artifact_record = registered_file(
+        fields
+            .get("checkedArtifact")
+            .ok_or_else(|| refusal("REGISTRY_SCHEMA"))?,
+    )?;
+    if !checked_artifact_record
+        .path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .is_some_and(|name| name.eq_ignore_ascii_case("scalar-oracle.checked.json"))
+    {
+        return Err(refusal("CHECKED_ARTIFACT_PATH"));
+    }
+    if Some(checked_artifact_record.digest.as_str()) != pinned_test_digest("artifact") {
+        return Err(refusal("CHECKED_ARTIFACT_DIGEST"));
+    }
+    let (checked_artifact, checked_artifact_bytes) =
+        open_admitted(&checked_artifact_record, "CHECKED_ARTIFACT_DIGEST")?;
+    verify_checked_artifact(&checked_artifact_bytes, fields)?;
     let launcher_record = registered_file(
         fields
             .get("launcher")
@@ -439,6 +585,8 @@ pub fn verify_registry(registry_path: &Path) -> Result<AdmittedPackage, Refusal>
     }
 
     Ok(AdmittedPackage {
+        checked_artifact,
+        checked_artifact_bytes,
         launcher,
         runtime,
         worker,

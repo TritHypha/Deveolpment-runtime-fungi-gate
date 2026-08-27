@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
+  copyFileSync,
   existsSync,
   linkSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
+  statSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs";
@@ -33,6 +36,16 @@ const WORKER_REGISTRY = join(OUTPUT, "worker-registry.json");
 const BAD_READY_REGISTRY = join(OUTPUT, "bad-ready-registry.json");
 const BAD_READY_MARKER = join(OUTPUT, "bad-ready-request-received.txt");
 const PROTOCOL_TAMPER_MARKER = join(OUTPUT, "protocol-tamper-executed.txt");
+const CHECKED_ARTIFACT = join(
+  ROOT,
+  "packages",
+  "fungi",
+  "products",
+  "galerina",
+  "rd0858-unit4-scalar-oracle",
+  "scalar-oracle.checked.json",
+);
+const SCALAR_SOURCE = join(dirname(CHECKED_ARTIFACT), "scalar-oracle.fungi");
 
 const BOOTSTRAP_ARGUMENT = Buffer.from(
   '{"operation":"bootstrap-probe","requestedEffects":[]}',
@@ -131,6 +144,18 @@ function registryFixture(mutate, source = REGISTRY) {
   return { directory, path };
 }
 
+function directFileRecord(path) {
+  const resolved = realpathSync.native(path);
+  const stat = statSync(resolved, { bigint: true });
+  return {
+    path: resolved,
+    digest: createHash("sha256").update(readFileSync(resolved)).digest("hex"),
+    volumeSerial: BigInt.asUintN(32, stat.dev).toString(10),
+    fileIndex: BigInt.asUintN(64, stat.ino).toString(10),
+    byteLength: stat.size.toString(10),
+  };
+}
+
 function rawFrame(body, declaredLength = body.length) {
   const prefix = Buffer.alloc(8);
   prefix.writeBigUInt64BE(BigInt(declaredLength));
@@ -166,7 +191,7 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
     assert.deepEqual(receipt.command, ["cargo", "build", "--release", "--locked"]);
     assert.deepEqual(receipt.compileCfg, ["test_contract"]);
     assert.equal(receipt.binarySha256, evidence.binarySha256);
-    assert.equal(Object.keys(receipt.inputs).length, 10);
+    assert.equal(Object.keys(receipt.inputs).length, 12);
   });
 
   it("builds a separately pinned single-use worker launcher and registry", () => {
@@ -186,6 +211,145 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       packageGraphDigest(registry.worker.digest, registry.protocol.digest),
     );
     assert.equal(registry.timeoutMs, 1_500);
+  });
+
+  it("binds both registries to the exact checked scalar artifact and complete identity", () => {
+    const evidence = JSON.parse(readFileSync(BUILD_RECEIPT, "utf8"));
+    const artifact = JSON.parse(readFileSync(CHECKED_ARTIFACT, "utf8"));
+    for (const registryPath of [REGISTRY, WORKER_REGISTRY]) {
+      const registry = JSON.parse(readFileSync(registryPath, "utf8"));
+      assert.deepEqual(registry.checkedArtifact, directFileRecord(CHECKED_ARTIFACT));
+      assert.equal(registry.checkedArtifactSchema, artifact.schema);
+      assert.equal(registry.checkedCompilerPackageGraphDigest, artifact.compilerPackageGraphDigest);
+      assert.equal(registry.checkedFlowLocator, artifact.flowLocator);
+      assert.equal(registry.checkedFlowName, artifact.flowName);
+      assert.equal(registry.checkedPackageId, artifact.packageId);
+      assert.equal(registry.checkedProductId, artifact.productId);
+      assert.equal(registry.checkedRuntimeProfile, artifact.runtimeProfile);
+    }
+    assert.equal(evidence.compilePins.checkedArtifactDigest, directFileRecord(CHECKED_ARTIFACT).digest);
+    assert.equal(evidence.checkedArtifactIdentity.productId, "galerina");
+    assert.ok(Object.hasOwn(evidence.inputs, "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json"));
+    assert.ok(Object.hasOwn(evidence.inputs, "scripts/generate-rd0858-scalar-oracle-artifact.mjs"));
+  });
+
+  it("refuses every registry-to-artifact identity neighbour before process authority", () => {
+    for (const [field, value] of [
+      ["checkedArtifactSchema", "galerina.rd0858.checked-flow.v2"],
+      ["checkedCompilerPackageGraphDigest", `sha256:${"f".repeat(64)}`],
+      ["checkedFlowLocator", "rd0858/unit4/other"],
+      ["checkedFlowName", "otherOracle"],
+      ["checkedPackageId", "other-package"],
+      ["checkedProductId", "trametes"],
+      ["checkedRuntimeProfile", "scalar-32"],
+    ]) {
+      const fixture = registryFixture((registry) => {
+        registry[field] = value;
+      });
+      try {
+        const receipt = refusalReceipt(runLauncher(
+          encodeCanonicalFrame("launcher-request", request()),
+          ["--registry", fixture.path],
+        ));
+        assert.match(receipt.refusalCode, /^CHECKED_ARTIFACT_(?:IDENTITY|SCHEMA|TOOLCHAIN)$/u);
+      } finally {
+        rmSync(fixture.directory, { recursive: true, force: true });
+      }
+    }
+  });
+
+  it("refuses a forged artifact digest and a runtime registry row pointing at .fungi", () => {
+    const digest = registryFixture((registry) => {
+      registry.checkedArtifact.digest = "f".repeat(64);
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", digest.path],
+      ));
+      assert.equal(receipt.refusalCode, "CHECKED_ARTIFACT_DIGEST");
+    } finally {
+      rmSync(digest.directory, { recursive: true, force: true });
+    }
+
+    const source = registryFixture((registry) => {
+      registry.checkedArtifact = directFileRecord(SCALAR_SOURCE);
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", source.path],
+      ));
+      assert.equal(receipt.refusalCode, "CHECKED_ARTIFACT_PATH");
+    } finally {
+      rmSync(source.directory, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses artifact hard links, case aliases, junctions and replaced files", () => {
+    const hardLinked = registryFixture((registry, directory) => {
+      const path = join(directory, "scalar-oracle.checked.json");
+      linkSync(CHECKED_ARTIFACT, path);
+      registry.checkedArtifact = { ...directFileRecord(CHECKED_ARTIFACT), path };
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", hardLinked.path],
+      ));
+      assert.equal(receipt.refusalCode, "FILE_LINK_COUNT");
+    } finally {
+      rmSync(hardLinked.directory, { recursive: true, force: true });
+    }
+
+    const caseAliased = registryFixture((registry) => {
+      registry.checkedArtifact.path = registry.checkedArtifact.path.toUpperCase();
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", caseAliased.path],
+      ));
+      assert.equal(receipt.refusalCode, "FILE_PATH_CASE");
+    } finally {
+      rmSync(caseAliased.directory, { recursive: true, force: true });
+    }
+
+    const junction = registryFixture((registry, directory) => {
+      const junctionPath = join(directory, "artifact-junction");
+      symlinkSync(dirname(CHECKED_ARTIFACT), junctionPath, "junction");
+      registry.checkedArtifact = {
+        ...directFileRecord(CHECKED_ARTIFACT),
+        path: join(junctionPath, "scalar-oracle.checked.json"),
+      };
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", junction.path],
+      ));
+      assert.equal(receipt.refusalCode, "FILE_REPARSE");
+    } finally {
+      rmSync(junction.directory, { recursive: true, force: true });
+    }
+
+    const replaced = registryFixture((registry, directory) => {
+      const path = join(directory, "scalar-oracle.checked.json");
+      copyFileSync(CHECKED_ARTIFACT, path);
+      registry.checkedArtifact = directFileRecord(path);
+      const bytes = readFileSync(path);
+      bytes[0] ^= 1;
+      writeFileSync(path, bytes);
+    });
+    try {
+      const receipt = refusalReceipt(runLauncher(
+        encodeCanonicalFrame("launcher-request", request()),
+        ["--registry", replaced.path],
+      ));
+      assert.match(receipt.refusalCode, /^(?:FILE_IDENTITY|CHECKED_ARTIFACT_DIGEST)$/u);
+    } finally {
+      rmSync(replaced.directory, { recursive: true, force: true });
+    }
   });
 
   it("exchanges READY -> one bootstrap request -> one non-authorizing REFUSED result", () => {
@@ -453,4 +617,18 @@ describe("RD-0858 Unit 4 native launcher skeleton", () => {
       assert.equal(receipt.partial, false);
     });
   }
+
+  it("refuses caller-selected source or artifact locators before registry creation", () => {
+    for (const locator of [SCALAR_SOURCE, CHECKED_ARTIFACT]) {
+      const child = spawnSync(process.execPath, [BUILD_SCRIPT, locator], {
+        cwd: ROOT,
+        encoding: "utf8",
+        timeout: 130_000,
+        maxBuffer: 1024 * 1024,
+        windowsHide: true,
+      });
+      assert.notEqual(child.status, 0);
+      assert.match(`${child.stdout}\n${child.stderr}`, /ARGUMENT.*REFUSED/u);
+    }
+  });
 });

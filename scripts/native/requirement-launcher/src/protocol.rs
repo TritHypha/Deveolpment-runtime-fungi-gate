@@ -426,6 +426,16 @@ pub(crate) fn parse_canonical_body(body: &[u8]) -> Result<Value, Refusal> {
     Ok(parsed)
 }
 
+pub(crate) fn parse_terminal_lf_document(body: &[u8]) -> Result<Value, Refusal> {
+    let source = body
+        .strip_suffix(b"\n")
+        .ok_or_else(|| Refusal::new("JSON_TERMINAL_LF"))?;
+    if source.is_empty() || source.ends_with(b"\n") || source.contains(&b'\r') {
+        return Err(Refusal::new("JSON_TERMINAL_LF"));
+    }
+    parse_body(source).map(|(parsed, _)| parsed)
+}
+
 pub fn decode_request(frame: &[u8]) -> Result<RequestEvidence, Refusal> {
     if frame.len() < 9 {
         return Err(Refusal::new("FRAME_TRUNCATED"));

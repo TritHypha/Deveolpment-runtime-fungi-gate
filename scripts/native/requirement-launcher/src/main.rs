@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 use protocol::{
     decode_request, decode_worker_ready, decode_worker_result, refusal_frame,
-    refusal_frame_with_evidence, ReceiptEvidence, MAX_FRAME_BYTES,
+    refusal_frame_with_evidence, sha256_hex, ReceiptEvidence, MAX_FRAME_BYTES,
 };
 
 const ZERO_NONCE: &str = "00000000000000000000000000000000";
@@ -101,6 +101,15 @@ fn execute_registry(mode: Mode, request: protocol::RequestEvidence, request_fram
     }
     if let Err(code) = windows::resume_worker(&mut worker) {
         refuse(code, &request.nonce, &request.request_digest);
+    }
+    if package.checked_artifact.verify_retained().is_err()
+        || sha256_hex(&package.checked_artifact_bytes) != package.checked_artifact.digest
+    {
+        refuse(
+            "CHECKED_ARTIFACT_CHANGED",
+            &request.nonce,
+            &request.request_digest,
+        );
     }
     let mut worker_result = None;
     if worker_mode == "bootstrap-probe" {
