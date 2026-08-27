@@ -5,8 +5,9 @@ Date: 2026-08-27
 ## Identity
 
 - Branch: `codex/rd-0858-unit4-scalar-oracle`.
-- Implementation checkpoint: `5e6ba2f4784ffa8959c1d5f2dafa4b2611f5338a`.
-- Implementation tree: `3f2f3f3d5fe5c046225695cde73074dd06485665`.
+- Scalar repair and graph-receipt checkpoint:
+  `5d81863d364c0424e2e7141c9ce1002623cfe6fb`.
+- Checkpoint tree: `c9666fcb2dbf3ee8e2107362fe7325474a70882d`.
 - Start boundary: `9a64384f10b150609331935108e6ac056c82075f`.
 - Platform: Windows; Node `v24.18.0`; Rust/Cargo `1.96.1`.
 - Authority: non-authorizing. No production switch, GIR/SLIDE/VOK admission,
@@ -26,8 +27,10 @@ Date: 2026-08-27
 
 ## Sequential evidence
 
-- Current focused scalar estate: 117/117.
-- Focused physical-CRLF estate: 106/106.
+- Current focused scalar estate: 118/118.
+- Focused physical-CRLF estate: 118/118. The detached audit mirror kept the
+  governing plan and canonical audit map at their exact LF identities while
+  materializing the executable/test JavaScript with physical CRLF.
 - Core compiler: 6,755/6,755 tests across 1,292 suites.
 - Task 5 focused boundary: 86/86.
 - Repaired dependent package suites: 299/299 across nine packages.
@@ -39,20 +42,25 @@ Date: 2026-08-27
   PASS after deterministic regeneration.
 - Code inventory: 987/987 codes; zero registry phantoms.
 - Contract registry: 3,939 contracts across 2,975 `.fungi` files.
-- Documentation index: 299 indexes and 2,012 documents at deterministic
+- Documentation index: 299 indexes and 2,013 documents at deterministic
   fixed point.
 - Repository-owned graph orchestrator: 9/9 generation/check children PASS at
   deterministic fixed point.
-- Generator contract: 20/20.
+- Generator contract: retained phase-close evidence 20/20; the four directly
+  replayed generator-contract suites pass 16/16 at the repair checkpoint.
 - Benchmark integrity: 113/113.
-- Complete governed tooling estate: 668 tests; 616 pass; 52 explicit skips;
-  zero failures in 336,528 ms under concurrency `1`.
-- Complete core-package estate: PASS in 103,918 ms.
+- Complete governed tooling estate: the first exact sequential run reported
+  890 tests, 772 pass, 111 explicit skips and seven fail-closed graph-freshness
+  refusals. After the canonical exact-worktree graph refresh, the affected
+  sandbox suite passed 49/49, including all seven refused cases. Effective
+  state: 779 pass, 111 explicit skips and zero open failures.
+- Complete core-package estate: 6,755/6,755 in 89,767 ms.
 - Conversion controller estate: 49/49 after the repository-wide source-encoding
   preflight was made independent of the ten-candidate selection limit.
-- Final effective phase-close state: 94/96 current. The only two non-green
-  entries are the inherited historical conversion-receipt scope refusal and
-  the bounded Fungi corpus watchdog.
+- Last complete phase-close state: 94/96. Current direct probes reproduce the
+  same two non-green entries: 726 inherited historical conversion receipts
+  omit exact scope, and the Fungi corpus child emitted no terminal receipt
+  within 600 seconds.
 
 ## Controlled-red evidence
 
@@ -82,8 +90,9 @@ Date: 2026-08-27
 - Standalone Hypha layout repair: local commit `9a15296b`; independent review
   PASS, Critical 0 / Important 0 / Minor 0; current and legacy layouts pass,
   missing and ambiguous layouts refuse.
-- Interim complete external graph at the encoding-repair commit: 66,032/66,032
-  nodes, 171,202/171,202 edges, zero skipped files. A final exact review-target
+- Canonical exact-worktree external graph at the scalar repair checkpoint:
+  66,085/66,085 nodes, 171,112/171,112 edges, zero skipped files, indexed HEAD
+  `5d81863d364c0424e2e7141c9ce1002623cfe6fb`. A final exact review-target
   refresh remains required after the closure candidate is committed.
 - Repository project graph: 10,961 nodes and 10,858 edges.
 - Code Logic Workbench capsule: `HOLD`, non-authorizing, with only `GIR` and
@@ -107,9 +116,11 @@ Date: 2026-08-27
   and the complete tooling estate passes with zero failures.
 - `audit:conversion-slice-close` remains REFUSED because historical slice
   receipts omit exact conversion scope. Dated evidence was not rewritten.
-- `fungi:corpus-check` remains HOLD after active progress reached its governed
-  600,000 ms watchdog. It is not normalized to a correctness failure or PASS.
-- Effective current state is therefore 94/96, with no open scalar-profile
+- `fungi:corpus-check` remains HOLD after a fresh isolated child produced no
+  terminal receipt inside 600,000 ms and was stopped at the canonical wrapper
+  boundary. It is not normalized to a correctness failure or PASS.
+- The last complete phase-close state therefore remains 94/96, with fresh
+  direct reproduction of both global blockers and no open scalar-profile
   correctness root.
 
 ## Current verdict

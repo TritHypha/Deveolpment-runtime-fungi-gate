@@ -124,8 +124,8 @@ counts or open items that a newer section explicitly supersedes.
   clean worker, exact terminal receipt algebra and non-authorizing TypeScript
   and Rust adapters. The worker decodes checked bytes only; source parsing,
   compiler loading, fallback and profile substitution refuse.
-- [x] Prove the scalar boundary sequentially: current focused estate 117/117,
-  physical-CRLF estate 106/106, core compiler 6,755/6,755 across 1,292 suites, dependent
+- [x] Prove the scalar boundary sequentially: current focused estate 118/118,
+  physical-CRLF estate 118/118, core compiler 6,755/6,755 across 1,292 suites, dependent
   packages 299/299, product boundary 10/10, and Fungi golden examples/vectors
   11/11 plus 11/11.
 - [x] Refresh Myco at the exact selected worktree and repair standalone Hypha's
@@ -141,8 +141,16 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Complete and locally adjudicate the non-authorizing five-vector Grok
   chapter challenge. Its source-minimal prompt targets implementation commit
   `ec97fb0`; it does not replace final exact-revision review.
-- [!] Final chapter integration remains `HOLD` pending the exact-head external
-  graph and independent exact-revision reviews. Evidence is in
+- [x] Repair the generated-graph fixed-point root by excluding only generated
+  compiler `.graph/**` reports from compiler package identity while retaining
+  the executable-closure digest. Generator, audit-map and repository graphs
+  now remain at a deterministic fixed point after graph refresh.
+- [x] Refresh the canonical selected-worktree external graph at repair
+  checkpoint `5d81863d3`: 66,085/66,085 nodes, 171,112/171,112 edges and zero
+  skips. The seven tooling freshness refusals then pass in a 49/49 replay.
+- [!] Final chapter integration remains `HOLD` pending the replacement
+  multi-vector model challenge and independent exact-revision reviews.
+  Evidence is in
   `docs/reports/rd-0858-unit4-scalar-oracle-assurance-2026-08-27.md`.
 - [!] Keep profiles `64` and `256`, compatibility profile `32`, broader
   conversion, TypeScript retirement, detached GIR, SLIDE/VOK admission,
