@@ -9814,7 +9814,7 @@
       "doc docs/language/gate/07-cheatsheet-and-gotchas.md:186",
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
-      "doc docs/ROADMAP.md:1624",
+      "doc docs/ROADMAP.md:1626",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
       "doc docs/TODO.md:4297",
       "doc docs/TODO.md:10140",
@@ -11989,7 +11989,7 @@
       "doc docs/reference/hardening.md:59",
       "doc docs/reference/hardening.md:84",
       "doc docs/reference/trust-trit.md:93",
-      "doc docs/ROADMAP.md:740",
+      "doc docs/ROADMAP.md:742",
       "doc docs/superpowers/plans/2026-08-12-spill-retype-fungi-conversion.md:80",
       "doc docs/superpowers/specs/2026-08-12-spill-retype-fungi-conversion-design.md:30",
       "doc docs/TODO.md:2801",
@@ -16476,7 +16476,7 @@
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:268",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:397",
       "doc docs/language/fungi/04-types-and-values.md:74",
-      "doc docs/ROADMAP.md:1689",
+      "doc docs/ROADMAP.md:1691",
       "doc docs/TODO.md:4467"
     ]
   },
@@ -22587,7 +22587,7 @@
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:42",
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:51",
       "doc docs/examples/Level-9-Enterprise/AI_SUMMARY.md:63",
-      "doc docs/ROADMAP.md:3082"
+      "doc docs/ROADMAP.md:3084"
     ]
   },
   {
@@ -24764,7 +24764,7 @@
       "test packages-ts/galerina-core-compiler/tests/type-registry/type-checker-tensor.test.mjs:88",
       "doc docs/AI/DO_NOT_USE_YET.md:165",
       "doc docs/reports/tensor-dimension-count-compatibility-fungi-conversion-2026-08-12.md:37",
-      "doc docs/ROADMAP.md:1044",
+      "doc docs/ROADMAP.md:1046",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:53",
       "doc docs/superpowers/plans/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion.md:116",
       "doc docs/superpowers/specs/2026-08-12-tensor-dimension-count-compatibility-fungi-conversion-design.md:28",
@@ -25309,7 +25309,7 @@
       "test packages-ts/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:645",
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:246",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:648",
-      "doc docs/ROADMAP.md:1717",
+      "doc docs/ROADMAP.md:1719",
       "doc docs/TODO.md:4510"
     ]
   },
@@ -25381,7 +25381,7 @@
       "test packages-ts/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:295",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:3735",
       "doc docs/reports/tensor-element-type-compatibility-fungi-conversion-2026-08-12.md:26",
-      "doc docs/ROADMAP.md:987",
+      "doc docs/ROADMAP.md:989",
       "doc docs/superpowers/specs/2026-08-12-tensor-element-type-compatibility-fungi-conversion-design.md:27",
       "doc docs/TODO.md:2885"
     ]
