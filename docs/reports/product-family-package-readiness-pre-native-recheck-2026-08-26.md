@@ -1,15 +1,17 @@
 # Product-family package readiness pre-native recheck
 
-Status: `HOLD PENDING REPLACEMENT IMMUTABLE REVIEW AT NATIVE BOUNDARY`
+Status: `PRE-FUNGI READY — NATIVE AUTHORING PAUSED`
 
 This receipt supersedes the verification counts in
 `product-family-package-readiness-closure-2026-08-26.md`. It does not replace
-that historical receipt and does not authorize `.fungi`, `.gate`, signing,
-integration or publication work.
+that historical receipt and does not authorize `.fungi`, `.gate`, signing or
+publication work.
 
 ## Exact implementation identity
 
-- Branch: `codex/product-family-package-readiness`
+- Integrated branch: `codex/rd-0858-unit4-process-root`
+- Reviewed planning checkpoint: `codex/product-family-package-readiness` at
+  `f53e11db4d8e370281b59ae5633019ed8a53fe06`.
 - Parent: `6d8a91646550245cbf496cf316aad0481836efea`
 - Initial implementation commit: `00baabc7944a60cfbe2860f41fd2d37e5de1414a`
 - Initial implementation tree: `25bd2e4cdba729f19723e908aa57859872a86b63`
@@ -94,20 +96,19 @@ focused or composite package evidence above.
 
 ## Audit-map position
 
-- Prepared: 8/9 tasks, 89%.
-- Fully closed: 6/9 tasks, 67%.
-- Open gates: replacement immutable review, live Git Custody integration, KB
-  publication hygiene, the signing ceremony and the explicit owner reopening
-  of native authoring.
+- Prepared: 9/9 tasks, 100%.
+- Fully closed: 8/9 tasks, 89%.
+- Open gates: KB remote publication hygiene, the signing ceremony and the
+  explicit owner reopening of native authoring.
 
 ## Derived-evidence position
 
 - Implementation commit: `b3d4a41e38ecdbed0b4636eb92c1fc9bcc2ddcda`.
-- Repaired tracked graph/index checkpoint: `418b65be10c787538c7b101fa8f62509807afac8`.
+- Repaired tracked graph/index checkpoint: `f53e11db4d8e370281b59ae5633019ed8a53fe06`.
 - Repository graph checks: 9/9 PASS.
 - Exact external full graph:
-  `Galerina-product-family-readiness-closure-418b65be-full`.
-- External graph counts: 65,746/65,746 nodes and 167,843/167,843 edges;
+  `Galerina-product-family-readiness-final-f53e11db-full`.
+- External graph counts: 65,746/65,746 nodes and 167,667/167,667 edges;
   skipped files: 0; indexed HEAD matches the tracked fixed point exactly.
 - Exhaustive generator contracts: 19/19 PASS with explicit KB and SLIDE roots.
 - Code index and derived registry: 987 identities.
@@ -120,15 +121,19 @@ focused or composite package evidence above.
 The scoped immutable implementation review returned PASS C0/I0/M0. The first
 clean-target readback at `4f6a760c3` returned HOLD C0/I1/M0 only because the
 TODO, roadmap, plan and this receipt retained older graph and document counts.
-Those documentation claims are repaired here. A replacement immutable readback
-of the repaired clean target remains mandatory before Git integration.
+Those documentation claims were repaired. The replacement immutable readback
+of exact target `f53e11db4`, tree `209bc20d3`, returned `PASS` C0/I0/M0.
+A fresh successful fetch then preceded a Git Custody plan whose sole admitted
+action was `FAST_FORWARD` into `codex/rd-0858-unit4-process-root`. The active
+branch was fast-forwarded, the planning worktree was removed without force and
+the fully contained local planning branch was deleted. No push, remote-branch
+deletion or unrelated-worktree mutation occurred.
 
 ## Disposition
 
-`HOLD PENDING REPLACEMENT IMMUTABLE REVIEW AT NATIVE BOUNDARY`
+`PRE-FUNGI READY — NATIVE AUTHORING PAUSED`
 
-All known repairable non-native setup failures are closed. Integration remains
-closed until the replacement independent review passes. The next product
-implementation action after integration would create or admit the scalar-1
-native artifact, so execution still stops before every `.fungi` and `.gate`
-write.
+All known repairable non-native setup failures and local integration steps are
+closed. The next product implementation action would create or admit the
+scalar-1 native artifact, so execution stops before every `.fungi` and `.gate`
+write. KB remote publication and the signing ceremony remain separate HOLDs.

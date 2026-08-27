@@ -39,9 +39,9 @@ counts or open items that a newer section explicitly supersedes.
   run. The only remaining failures are the four native process-root RED
   controls, three legacy greeting-signature refusals and one existing `.fungi`
   locator assertion.
-- [x] Close the final pre-native tracked graph/index fixed points at `418b65be1`
-  without touching native source. Repository graph checks pass 9/9; the exact
-  external graph has 65,746/65,746 nodes, 167,843/167,843 edges and zero
+- [x] Close the reviewed pre-native tracked graph/index fixed point at
+  `f53e11db4` without touching native source. Repository graph checks pass 9/9;
+  the exact external graph has 65,746/65,746 nodes, 167,667/167,667 edges and zero
   skipped files; exhaustive generator contracts pass 19/19. Code
   index/registry remain at 987 identities, the contract registry at 3,938
   contracts across 2,974 existing `.fungi` files, documentation at 299 indexes
@@ -68,12 +68,12 @@ counts or open items that a newer section explicitly supersedes.
 - [!] The signed production-registry generator remains correctly refused
   because private `packages-ts/galerina-registry/registry-index-v2.json` is not
   present. Do not fabricate, copy or sign substitute registry bytes.
-- [!] The final read-only Git Custody Audit at `7df16f46` classified this clean
-  feature branch as local-only, unpublished and without an upstream. The
-  repository-wide snapshot reports 8,989 findings because registered
-  historical/dirty worktrees are included, and remote fetch freshness remains
-  unknown. Do not infer that those other worktrees are disposable or enter the
-  integration task from this snapshot.
+- [x] Rerun Git Custody Audit after a fresh successful fetch. Its exact
+  non-authorizing plan classified the active branch as an ancestor of the
+  feature branch and proposed only `FAST_FORWARD`. The active
+  `codex/rd-0858-unit4-process-root` branch was fast-forwarded to `f53e11db4`;
+  the clean contained planning worktree and local planning branch were then
+  retired. No remote branch was deleted and no unrelated worktree was touched.
 - [x] Bind the four-node audit map to owner-approved private RD-0863. Its
   workspace-root neighbour runs the canonical topology audit, whose admitted
   root is exactly `packages-ts`; unopened `packages/fungi` and `packages/gate`
@@ -102,13 +102,16 @@ counts or open items that a newer section explicitly supersedes.
   digests and local adjudication are preserved in
   `docs/independent-audits/2026-08-26-rd0863-pre-native-grok-advisory.md`;
   external advice remains non-authorizing.
-- [x] Build the exact-head external graph at `418b65be1` after repairing the
+- [x] Build the exact-head external graph at `f53e11db4` after repairing the
   stale records identified by the first immutable readback. That readback at
   the earlier fixed point returned `HOLD` C0/I1/M0 only because the closure
   records still cited older graph and document counts; no code finding
   remained.
-- [ ] Obtain the replacement immutable review and bind it to a final clean
-  exact-head graph, then rerun the live Git Custody integration plan. Stop
+- [x] Obtain the replacement immutable review: exact target `f53e11db4`, tree
+  `209bc20d3`, verdict `PASS` C0/I0/M0. Complete the fresh Git Custody
+  fast-forward and planning-branch retirement, then regenerate the integrated
+  graph layers in their required two-commit order. The chapter is 9/9 prepared
+  and 8/9 closed; KB remote publication remains the one chapter HOLD. Stop
   before creating, editing, building or admitting any `.fungi` or `.gate` file.
 
 ### Pre-Fungi flow, graph and verification checkpoint - 2026-08-25

@@ -904,12 +904,12 @@ Build one full zero-skipped code graph at the candidate HEAD. Verify node/edge
 actual equals expected, exact indexed HEAD matches Git, and new product symbols
 plus package-boundary edges are discoverable.
 
-`Galerina-product-family-readiness-closure-418b65be-full` is exact at tracked
-checkpoint `418b65be1`: 65,746/65,746 nodes, 167,843/167,843 edges and zero
+`Galerina-product-family-readiness-final-f53e11db-full` is exact at tracked
+checkpoint `f53e11db4`: 65,746/65,746 nodes, 167,667/167,667 edges and zero
 skipped files. `parseJUnitCounts`, `admitFallbackPlatform`,
 `cleanFallbackEnvironment` and `runFallbackTestPlan` are discoverable.
 
-- [!] **Step 6: Obtain multi-vector external and independent reviews**
+- [x] **Step 6: Obtain multi-vector external and independent reviews**
 
 Send one source-minimal Grok/Claude challenge with at least three independent
 vectors: authority/cache contamination, migration/rollback, and hostile future
@@ -929,9 +929,11 @@ returned `HOLD` C0/I2/M0; both implementation roots are closed. A scoped
 immutable review of implementation `b3d4a41e3` returned PASS C0/I0/M0. The
 first clean-target readback at graph/index fixed point `4f6a760c3` returned
 `HOLD` C0/I1/M0 only because the closure documents retained older graph and
-document counts. This documentation-only finding is repaired at tracked graph
-checkpoint `418b65be1`; one final exact-head immutable readback remains
-mandatory before this step can close.
+document counts. This documentation-only finding was repaired and followed
+  by the exact `f53e11db4` / tree `209bc20d3` immutable readback: `PASS`
+  C0/I0/M0. The exact external graph contains 65,746/65,746 nodes,
+  167,667/167,667 edges and zero skipped files. External advice remained
+  non-authorizing throughout.
 
 - [x] **Step 7: Write the closure receipt**
 
@@ -968,13 +970,16 @@ then passed over 100 packages and 11,087 edges.
 - Consumes: clean immutable Task 8 PASS and live Git Custody Audit.
 - Produces: fast-forward integration into the active product branch and a clean planning-branch retirement receipt.
 
-- [ ] **Step 1: Recheck live target custody**
+- [x] **Step 1: Recheck live target custody**
 
 Verify the target remains `codex/rd-0858-unit4-process-root` at the expected
 ancestor, clean and staged-empty. If it advanced, recompute intersections and
 rerun affected evidence rather than rebasing silently.
 
-- [ ] **Step 2: Require the Git Custody plan**
+The target was clean, staged-empty and an ancestor of exact reviewed source
+`f53e11db4`. No path intersection or concurrent owner blocked the fast-forward.
+
+- [x] **Step 2: Require the Git Custody plan**
 
 The only acceptable recommendation is:
 
@@ -989,20 +994,34 @@ Also require a successful exact fetch receipt or equivalent fresh remote
 evidence before integration. `FETCH_FRESHNESS_UNKNOWN` is acceptable for
 local planning but refuses Step 3.
 
-- [ ] **Step 3: Fast-forward the active product branch**
+A fresh successful fetch completed before planning. Git Custody Audit emitted
+exactly the required `TARGET_ANCESTOR_OF_SOURCE` / `FAST_FORWARD` proposal; the
+receipt and plan remained non-authorizing evidence.
+
+- [x] **Step 3: Fast-forward the active product branch**
 
 Perform the exact fast-forward, verify target HEAD/tree, rerun quick closure
 checks and refresh any branch-bound registry view. Do not merge directly to
 `main`; later product-branch consolidation owns that transition.
 
-- [ ] **Step 4: Retire the planning worktree safely**
+The active product branch fast-forwarded to `f53e11db4`. Its generated graph
+estate was then refreshed in the required committed-input order; the first
+integrated graph-output commit is `6f37c1c8d` and the subsequent orchestration
+passes 9/9 before this terminal documentation fixed point.
+
+- [x] **Step 4: Retire the planning worktree safely**
 
 Prove the source commit is an ancestor of the integrated target, the worktree
 is clean, and all receipts are reachable. Remove the worktree and delete the
 local planning branch. Delete no remote branch without separate publication
 evidence.
 
-- [ ] **Step 5: Emit the hard pause**
+Containment and clean status were proven. Git removed the worktree without
+force; its ignored build/dependency residue was moved to a recoverable temporary
+archive, and the fully contained local planning branch was deleted. No remote
+branch or unrelated worktree changed.
+
+- [x] **Step 5: Emit the hard pause**
 
 Report:
 
@@ -1014,6 +1033,10 @@ Owner decision required before .fungi authoring: YES
 ```
 
 Do not open, create or edit the first `.fungi` file in this plan.
+
+`PRE-FUNGI READY` is now the terminal chapter state. KB remote publication,
+the owner signing ceremony and native authoring remain separate fail-closed
+decisions; none is normalized into this non-native closure.
 
 ---
 

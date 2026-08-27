@@ -3,7 +3,7 @@
   "subject": {
     "id": "product-family-pre-fungi",
     "owner": "galerina",
-    "locator": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125"
+    "locator": "git://galerina/f53e11db4d8e370281b59ae5633019ed8a53fe06"
   },
   "approval": {
     "status": "APPROVED",
@@ -15,7 +15,7 @@
     {
       "id": "workspace-root-selection",
       "owner": "galerina",
-      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "build": "git://galerina/f53e11db4d8e370281b59ae5633019ed8a53fe06",
       "cwd": "repo://galerina",
       "argv": ["npm", "run", "audit:package-topology"],
       "dependsOn": [],
@@ -27,7 +27,7 @@
     {
       "id": "project-graph",
       "owner": "galerina",
-      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "build": "git://galerina/f53e11db4d8e370281b59ae5633019ed8a53fe06",
       "cwd": "repo://galerina",
       "argv": ["node", "scripts/project-graph-generator.mjs", "--check"],
       "dependsOn": ["workspace-root-selection"],
@@ -39,7 +39,7 @@
     {
       "id": "product-package-boundaries",
       "owner": "galerina",
-      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "build": "git://galerina/f53e11db4d8e370281b59ae5633019ed8a53fe06",
       "cwd": "repo://galerina",
       "argv": ["node", "scripts/audit-product-package-boundaries.mjs", "--check"],
       "dependsOn": ["project-graph"],
@@ -51,7 +51,7 @@
     {
       "id": "typescript-root-migration",
       "owner": "galerina",
-      "build": "git://galerina/1f06fc476d5646cca65e8dc30ea9bdeb406ac125",
+      "build": "git://galerina/f53e11db4d8e370281b59ae5633019ed8a53fe06",
       "cwd": "repo://galerina",
       "argv": ["node", "scripts/flat-package-root-lock.mjs", "--check"],
       "dependsOn": ["product-package-boundaries"],
