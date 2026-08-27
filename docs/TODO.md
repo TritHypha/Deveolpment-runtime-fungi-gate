@@ -139,17 +139,22 @@ counts or open items that a newer section explicitly supersedes.
   entries are the inherited 600-second corpus watchdog and historical
   conversion-slice receipt-scope refusal, not scalar-profile correctness roots.
 - [x] Complete and locally adjudicate the non-authorizing five-vector Grok
-  chapter challenge. Its source-minimal prompt targets implementation commit
-  `ec97fb0`; it does not replace final exact-revision review.
-- [x] Repair the generated-graph fixed-point root by excluding only generated
-  compiler `.graph/**` reports from compiler package identity while retaining
-  the executable-closure digest. Generator, audit-map and repository graphs
-  now remain at a deterministic fixed point after graph refresh.
-- [x] Refresh the canonical selected-worktree external graph at repair
-  checkpoint `5d81863d3`: 66,085/66,085 nodes, 171,112/171,112 edges and zero
-  skips. The seven tooling freshness refusals then pass in a 49/49 replay.
-- [!] Final chapter integration remains `HOLD` pending the replacement
-  multi-vector model challenge and independent exact-revision reviews.
+  challenge at exact implementation target `0106957`. Exact prompt/reply bytes,
+  provider/model, timestamps and digests are retained; the advisory grants no
+  PASS or authority.
+- [x] Repair the generated-graph fixed-point root by excluding exactly the
+  generated `BOUNDARY.md` and `package-graph.json` reports from compiler package
+  identity while retaining editable boundary policy, source, package metadata
+  and executable-closure identity. Generator, audit-map and repository graphs
+  pass at deterministic fixed point.
+- [x] Refresh the canonical selected-worktree external graph at exact
+  implementation target `0106957`: 66,086/66,086 nodes, 171,186/171,186 edges
+  and zero skips. Governed directory exclusions remain separately disclosed.
+- [x] Complete independent code and assurance reviews of `0106957`; both return
+  `PASS` at Critical 0 / Important 0 / Minor 0 with fresh LF and physical-CRLF
+  estates at 118/118 each.
+- [!] Final chapter integration remains `HOLD` only until the documentation-only
+  closure delta is committed, fixed-point checked and fast-forwarded locally.
   Evidence is in
   `docs/reports/rd-0858-unit4-scalar-oracle-assurance-2026-08-27.md`.
 - [!] Keep profiles `64` and `256`, compatibility profile `32`, broader

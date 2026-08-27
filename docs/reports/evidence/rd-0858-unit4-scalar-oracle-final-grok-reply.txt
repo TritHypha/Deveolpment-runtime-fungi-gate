@@ -1,0 +1,86 @@
+Worked for 1m 2s
+
+Adversarial review (claims-only). Commit 010695776292509ddb60a85870940fc15548c2de vs base 9a64384f10b150609331935108e6ac056c82075f. No owner sources in this packet. Implementation facts are NOT VERIFIABLE. Counts, graph sizes, and locator receipts are author evidence, not correctness proofs. This review cannot mint PASS.
+
+Material claim labels
+Scalar .fungi DENY→deny / AMBIG→ambig / ALLOW→allow, no declared effects, explicit return on every admitted arm: NOT VERIFIABLE.
+Bounded generator emits a detached checked-flow artifact binding source, compiler package graph, checker set, generator, product, package, flow, and runtime profile: NOT VERIFIABLE.
+TypeScript adapter, worker, and native launcher refuse malformed, stale, mismatched, over-budget, unavailable, or non-canonical inputs and never silently select another profile: NOT VERIFIABLE (strongest unshown control).
+Focused LF/CRLF 118/118, core 6755/6755, benchmark 113/113, product-boundary 10/10, generator/audit-map fixed points: NOT VERIFIABLE as scalar-oracle proof.
+Two-path exclusion of packages-ts/galerina-core-compiler/.graph/BOUNDARY.md and package-graph.json from compiler package identity, with separate executable-closure digest plus bound editable boundary-policy.json / compiler source / metadata: PLAUSIBLE as a repair sketch, NOT VERIFIABLE as drift-complete.
+Phase-close 94/96; two non-green global gates (726 conversion receipts omit exact scope; whole-corpus child no terminal receipt in 600s); neither treated as scalar PASS: PLAUSIBLE as process narrative.
+Owner addendum allows only reviewed fast-forward into RD-0858 Unit 4 process-root; both gates remain blocking for main/release/production/broader conversion/later native chapters: PLAUSIBLE as scoped governance, not an authorization.
+Orchestrator 9/9; external graph 66086/171186; Myco 11 locators; Hypha no matching diagnostic; both snapshot-only: NOT VERIFIABLE as measurement; CONFIRMED that the packet itself treats Myco/Hypha as non-authorizing.
+Code Logic Workbench HOLD for lack of an admitted graph-receipt pair: CONFIRMED as packet process state.
+Trit ∈ {-1,0,+1}; profile width 1 is the mandatory scalar oracle and does not change Trit semantics: CONFIRMED as binding constraint of this chapter, NOT VERIFIABLE in code.
+Five material hypotheses
+
+H1 — V1 semantic authority.
+
+Invariant: a Trit is one value in {-1,0,+1}; width 1 cannot authorize a different lattice or a non-trit.
+
+Smallest hostile fixture: a one-arm .fungi flow whose admitted arm returns JSON 1 / "ALLOW" / true / 2 / omitted return (TS undefined) rather than the canonical trit token; or a K3 combination that treats AMBIG as default-ALLOW.
+
+Expected safe result: non-admit or explicit deny; never a self-authorized allow; width must not rewrite the lattice.
+
+Local evidence: scalar oracle tests on those neighbours against the exact flow object in 01069577….
+
+H2 — V2 identity / canonicalization.
+
+Invariant: a validating artifact binds one byte-identity for source, checkers, compiler package graph, generator, product, package, flow, and profile.
+
+Smallest fixture: canonical-JSON object with duplicate profile / sourceDigest keys (width 1 then 64, or digest A then B); NFC vs NFD in an identity string; reordered keys that a non-JCS parser accepts; artifact validated then swapped on disk before launch (host TOCTOU).
+
+Split: repository owns git objects, package-graph policy, and generator bytes; host owns parse library, FS encoding, clock, and the file that is actually exec’d after validate.
+
+Expected safe result: refuse non-canonical JSON / duplicate fields / Unicode-inequivalent identities / digest mismatch; no validate-then-execute of different bytes.
+
+Local evidence: one-field neighbour artifacts plus a validate/execute race on the launcher path.
+
+H3 — V3 execution and exits.
+
+Invariant: every admitted run ends in an explicit exit; unavailable evidence is not a trit; no effects; no rescue; no duplicate execution.
+
+Smallest transition: worker writes a partial allow frame then SIGKILL; launcher timeout mapped to ambig; second worker spawned on “missing receipt”; unavailable native provider followed by any other profile.
+
+Expected safe result: non-zero explicit exit, no trit, no side effect, no retry-as-success; unavailable stays unavailable.
+
+Local evidence: crash/timeout/partial-stdout/unavailable-provider fixtures on adapter, worker, and native launcher.
+
+H4 — V4 assurance / red capability.
+
+Invariant: excluding the two generated-graph reports must not hide semantic compiler drift; 94/96, graph, Myco, Hypha cannot support absence claims outside their coverage.
+
+Smallest fixture: edit compiler source that changes only excluded generated-graph text (or a consumer that re-reads package-graph.json while the producer hashes the executable closure without it), leaving bound boundary-policy.json and the declared executable digest unchanged.
+
+Absence overreach: treat “Hypha no matching diagnostic” or “66086 nodes, zero skipped” as “no scalar defect.”
+
+Expected safe result: digest or permanent drift control fails; receipts stay snapshot-only.
+
+Local evidence: that one-line compiler edit plus producer vs consumer identity recomputation; CLW remains HOLD.
+
+H5 — V5 lifecycle / integration.
+
+Invariant: the addendum does not clear the two global HOLDs; width 1 remains the universal fallback; this chapter does not admit profile 64.
+
+Smallest unsound transition: fast-forward recorded as “scalar chapter PASS,” or an artifact profile field accepted as authority to run width ≠ 1 after merge.
+
+Unsafe coupling for later packed-64 planning (still inside this boundary): admission logic that treats scalar DENY/AMBIG/ALLOW tokens as a sufficient reduction for multi-trit frames, or that plans packed width from the same unchecked identity map.
+
+Expected safe result: process-root FF does not move main/release gates; non-width-1 remains refused; packed planning stays out of scope.
+
+Local evidence: post-FF gate matrix and a width-64 artefact pointed at the scalar launcher.
+
+Weakest claim, non-bypass control, reversal evidence
+
+Weakest supplied claim: adapter/worker/launcher never silently select another profile, conjoined with the assertion that the two-report exclusion plus executable-closure digest closes semantic compiler drift. Both are central and unevidenced in this packet.
+
+Control that must be impossible to bypass: non-canonical or non-width-1 profile, or unavailable provider, must not emit a Trit.
+
+Evidence that would reverse this review: owner Git objects for both commits; the scalar .fungi sources; generator schema and canonical encoder; launcher/adapter refusal matrix; and the five fixtures above failing closed with deterministic identities.
+
+Smallest design that keeps the stated invariants: one width-1 oracle, one canonical detached artifact, fail-closed explicit exits, no profile fallback. Extra graph-exclusion machinery is justified only if H4 is falsified locally; its complexity is not justified by counts alone.
+
+PROCEED_TO_LOCAL_ADJUDICATION
+
+15 sources

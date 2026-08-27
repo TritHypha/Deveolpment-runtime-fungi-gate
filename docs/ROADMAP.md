@@ -93,17 +93,20 @@ current SLIDE source. The adopted build order remains `1`, then `64`, then
 `256`; `32` is an explicit admission-time compatibility replan, never a
 preferred profile or silent runtime rescue.
 
-The scalar fixed-point repair is complete at `5d81863d3`. Its canonical
-selected-worktree graph contains 66,085/66,085 nodes and 171,112/171,112 edges
-with zero skipped files. Focused LF and physical-CRLF estates pass 118/118,
-the core compiler passes 6,755/6,755, and benchmark integrity passes 113/113.
-The remaining stop is the replacement multi-vector model challenge,
-independent exact-revision review and local fast-forward integration boundary.
+The scalar fixed-point repair is independently `PASS` at exact implementation
+target `0106957`, Critical 0 / Important 0 / Minor 0 in both code and assurance
+reviews. Its canonical selected-worktree graph contains 66,086/66,086 nodes
+and 171,186/171,186 edges with zero skipped files. Focused LF and physical-CRLF
+estates pass 118/118, the core compiler passes 6,755/6,755, and benchmark
+integrity passes 113/113. The exact-target five-vector Grok advisory is captured
+and locally adjudicated without a new material root. The remaining stop is the
+documentation-only closure check and local fast-forward integration boundary.
 The last complete phase-close remains explicitly 94/96: 726 historical
 conversion receipts omit exact scope and the corpus child has no terminal
 receipt within 600 seconds. Those global blockers continue to block `main`,
 release, production and broader conversion, but the owner-approved scalar-local
-addendum permits only the reviewed fast-forward into the active product branch.
+addendum permits only the reviewed local fast-forward into the active product
+branch after closure documentation reaches a clean fixed point.
 All later profile, conversion and execution work remains closed. See
 `docs/architecture/galerina-slide-vok-current-flow-2026-08-24.md` for the
 source-verified flow, graph-view design and phased verification map.

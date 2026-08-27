@@ -5,9 +5,9 @@ Date: 2026-08-27
 ## Identity
 
 - Branch: `codex/rd-0858-unit4-scalar-oracle`.
-- Scalar repair and graph-receipt checkpoint:
-  `5d81863d364c0424e2e7141c9ce1002623cfe6fb`.
-- Checkpoint tree: `c9666fcb2dbf3ee8e2107362fe7325474a70882d`.
+- Immutable implementation review target:
+  `010695776292509ddb60a85870940fc15548c2de`.
+- Target tree: `2ec87b031f49399a87b88dfd5bde3e49ada83a6e`.
 - Start boundary: `9a64384f10b150609331935108e6ac056c82075f`.
 - Platform: Windows; Node `v24.18.0`; Rust/Cargo `1.96.1`.
 - Authority: non-authorizing. No production switch, GIR/SLIDE/VOK admission,
@@ -90,10 +90,10 @@ Date: 2026-08-27
 - Standalone Hypha layout repair: local commit `9a15296b`; independent review
   PASS, Critical 0 / Important 0 / Minor 0; current and legacy layouts pass,
   missing and ambiguous layouts refuse.
-- Canonical exact-worktree external graph at the scalar repair checkpoint:
-  66,085/66,085 nodes, 171,112/171,112 edges, zero skipped files, indexed HEAD
-  `5d81863d364c0424e2e7141c9ce1002623cfe6fb`. A final exact review-target
-  refresh remains required after the closure candidate is committed.
+- Canonical exact-worktree external graph at the implementation review target:
+  66,086/66,086 nodes, 171,186/171,186 edges, zero skipped files, indexed HEAD
+  `010695776292509ddb60a85870940fc15548c2de`. Governed directory exclusions are
+  separately disclosed rather than normalized into the zero-skipped claim.
 - Repository project graph: 10,961 nodes and 10,858 edges.
 - Code Logic Workbench capsule: `HOLD`, non-authorizing, with only `GIR` and
   `ADMISSION` unknown because both are outside this scalar chapter. Request
@@ -125,8 +125,11 @@ Date: 2026-08-27
 
 ## Current verdict
 
-`HOLD` at the intentional GIR/admission boundary. Scalar implementation and
-repository assurance are closed apart from the two inherited global HOLDs.
-The multi-vector Grok challenge is captured and locally adjudicated as
-non-authorizing advice. The final exact-head external graph and independent
-exact-revision reviews remain required before local integration.
+`PASS` for the bounded scalar implementation at exact target `0106957`:
+independent code and assurance reviews both report Critical 0 / Important 0 /
+Minor 0. The exact-target multi-vector Grok challenge is captured and locally
+adjudicated as non-authorizing advice. The canonical global phase-close remains
+94/96, so main, release, production, broader conversion and later native work
+remain `HOLD`. Only the owner-approved local fast-forward into the active
+process-root branch may proceed after the documentation-only closure delta is
+committed and independently checked.

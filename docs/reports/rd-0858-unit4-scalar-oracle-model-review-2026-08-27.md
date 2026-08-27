@@ -48,3 +48,54 @@ Grok cannot mint PASS or integration authority. Final closure still requires
 an exact-head external graph and fresh independent review of the complete
 candidate. Profiles `32`, `64`, `256`, broader conversion, detached GIR,
 SLIDE/VOK admission, `.gate`, Trametes and production selection remain closed.
+
+## Final-candidate replacement review
+
+- Provider: Grok.
+- Model: Expert.
+- Conversation: `9557f317-c2ee-49e3-b03e-b4b7be7ef83b`.
+- Submitted: `2026-08-27T15:00:08.440Z`.
+- Captured: `2026-08-27T15:02:05.229Z`.
+- Reviewed supplied-claim target:
+  `010695776292509ddb60a85870940fc15548c2de`.
+- Prompt bytes: 7,962.
+- Prompt SHA-256:
+  `cb82c8149e893d7db0aebf09947075b4bcf631874bcb564deced386acc426c59`.
+- Reply bytes: 7,106.
+- Reply SHA-256:
+  `7fa86c0761412b758ec17dbf92605abbc53167e057031eabb48fea2aa5b77a53`.
+- Advisory recommendation: `PROCEED_TO_LOCAL_ADJUDICATION`.
+
+The byte-identical captures are
+`evidence/rd-0858-unit4-scalar-oracle-final-grok-prompt.txt` and
+`evidence/rd-0858-unit4-scalar-oracle-final-grok-reply.txt`. Prompt lint passed
+all 570 self-test fixtures and returned zero findings for the exact submitted
+bytes.
+
+### Final-candidate local adjudication
+
+- [x] Vector 1: non-Trit, missing-arm and width-neighbour inputs are already
+  permanent refusal controls. No profile field authorizes a different Trit
+  lattice.
+- [x] Vector 2: duplicate fields, non-canonical field order, Unicode
+  normalization neighbours, stale identities and held-file drift refuse before
+  execution. Host replacement is contained by held direct-file identities and
+  post-use rechecks.
+- [x] Vector 3: the launcher estate covers partial, missing, malformed,
+  oversized, crash and timeout transitions and refuses them without retry or
+  profile rescue.
+- [x] Vector 4: the compiler package identity excludes exactly the two
+  generated report paths. Permanent controls prove both reports are invariant
+  while editable boundary policy and compiler source change identity. No
+  compiler `src/` or package-local `scripts/` execution consumer reads the
+  excluded `package-graph.json` report. The assurance-only semantic-coverage
+  fabric does read that generated report, and the repository graph orchestrator
+  fixes and checks it independently at 9/9. The external graph and Myco/Hypha
+  remain snapshot-only evidence, not absence authority.
+- [x] Vector 5: the local fast-forward addendum does not change the two global
+  HOLD gates. Non-scalar profiles remain refused and scalar `1` remains the
+  universal fallback oracle.
+
+The response identified no new material root after local Git-object and test
+adjudication. It remains advisory and does not mint PASS, merge authority or a
+global phase-close result.
