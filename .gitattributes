@@ -5,6 +5,9 @@
 # identities. Checkouts must expose the same LF bytes on Windows/macOS/Linux.
 *.fungi text eol=lf
 
+# Canonical checked-flow receipts are verified as exact UTF-8/LF bytes.
+packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/*.checked.json text eol=lf
+
 # Shell hooks must stay LF — a CRLF in the #!/bin/sh shebang breaks execution under sh.
 scripts/hooks/* text eol=lf
 

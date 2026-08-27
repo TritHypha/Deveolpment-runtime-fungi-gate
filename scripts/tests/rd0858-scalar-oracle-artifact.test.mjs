@@ -29,6 +29,16 @@ describe("RD-0858 scalar-oracle artifact generator", () => {
     assert.equal(generator.SCALAR_ORACLE_ARTIFACT_RELATIVE, "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json");
   });
 
+  it("pins the canonical checked artifact to LF in every Git checkout", () => {
+    const result = spawnSync("git", ["check-attr", "eol", "--", "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.checked.json"], {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 10_000,
+    });
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+    assert.match(result.stdout, /: eol: lf\s*$/u);
+  });
+
   it("admits the exact UTF-8/LF/NFC source and refuses canonical neighbours", async () => {
     const generator = await loadGenerator();
     const canonical = await readFile(sourcePath);
