@@ -1,6 +1,6 @@
 # Product-family package readiness pre-native recheck
 
-Status: `HOLD PENDING FRESH IMMUTABLE REVIEW AT NATIVE BOUNDARY`
+Status: `HOLD PENDING REPLACEMENT IMMUTABLE REVIEW AT NATIVE BOUNDARY`
 
 This receipt supersedes the verification counts in
 `product-family-package-readiness-closure-2026-08-26.md`. It does not replace
@@ -55,18 +55,20 @@ integration or publication work.
 - Node dependency audit: PASS over 101 manifests and 10 distinct external
   dependencies; the external floor is clean.
 
-## Final sequential estate
+## Composite sequential package evidence
 
 - Package concurrency: 1.
 - Test-file concurrency: 1.
-- Executed: 100/100 packages.
-- Passed: 97 packages.
-- Failed: 3 packages.
-- Tests counted by the runner in passing packages: 3,296.
-- Observed package outputs across all packages: 10,235 tests, 10,227 passing
-  and 8 failing.
-- Timeouts: 0.
-- Wall time: 476,755 milliseconds (476.755 seconds).
+- Initial run: 100/100 packages executed; 95 packages passed; 3,152 tests were
+  counted in passing packages; wall time 476,755 milliseconds (476.755
+  seconds).
+- Targeted benchmark replay: 113/113 PASS with the explicit SLIDE root.
+- Targeted KB-graph replay: 31/31 PASS with the explicit KB root.
+- Exact composite: 97/100 packages and 3,296 tests. This is not one
+  exact-final-target full-estate run.
+- Initial-run observed package outputs: 10,235 tests, 10,227 passing and 8
+  failing.
+- Initial-run timeouts: 0.
 
 The exact fail-closed set is:
 
@@ -81,41 +83,52 @@ The exact fail-closed set is:
    `packages-galerina` locator. The test remains red because the active stop
    prohibits editing native source.
 
+## Phase-close inventory
+
+The governed phase-close inventory was also invoked sequentially. It remains
+non-dispositive: the existing `.fungi` corpus check reached its own 600-second
+watchdog and was cleanly refused, while several later package rows encountered
+dependencies that had already been returned to the preserved dependency
+archive. Those rows are not normalized into PASS and do not replace the
+focused or composite package evidence above.
+
 ## Audit-map position
 
 - Prepared: 8/9 tasks, 89%.
 - Fully closed: 6/9 tasks, 67%.
-- Open gates: fresh immutable review, live Git Custody integration, KB
+- Open gates: replacement immutable review, live Git Custody integration, KB
   publication hygiene, the signing ceremony and the explicit owner reopening
   of native authoring.
 
 ## Derived-evidence position
 
-- Historical graph/index commit: `93b3e3670e07ccebca5a3d855a6766ad9e54e709`.
-- Current code-index fixed point: `0e53a9fbbfe20ed47f3ff843717dcc3d4da88a41`.
+- Implementation commit: `b3d4a41e38ecdbed0b4636eb92c1fc9bcc2ddcda`.
+- Exact tracked graph/index fixed point: `4f6a760c3d65a46bd561a158d95e8f9fb3553de0`.
 - Repository graph checks: 9/9 PASS.
-- Historical external full graph:
-  `Galerina-product-family-readiness-pre-native-93b3e3670-full`.
-- External graph counts: 65,694/65,694 nodes and 167,582/167,582 edges;
-  skipped files: 0; indexed HEAD matches the graph/index commit exactly.
+- Exact external full graph:
+  `Galerina-product-family-readiness-closure-4f6a760c-full`.
+- External graph counts: 65,745/65,745 nodes and 167,866/167,866 edges;
+  skipped files: 0; indexed HEAD matches the tracked fixed point exactly.
 - Exhaustive generator contracts: 19/19 PASS with explicit KB and SLIDE roots.
 - Code index and derived registry: 987 identities.
 - Contract registry: 3,938 contracts across 2,974 `.fungi` files.
-- Documentation index: 299 indexes covering 2,007 documents.
+- Documentation index: 299 indexes covering 2,009 documents.
 - KB index: 1,956 documents.
 - Unit registry: 157 currencies, checked read-only so the `.fungi` twin was
   not regenerated.
 
-The historical external graph cannot close the repaired target. A final exact
-zero-skipped graph and fresh immutable review remain mandatory before Git
-integration.
+The scoped immutable implementation review returned PASS C0/I0/M0. The first
+clean-target readback at `4f6a760c3` returned HOLD C0/I1/M0 only because the
+TODO, roadmap, plan and this receipt retained older graph and document counts.
+Those documentation claims are repaired here. A replacement immutable readback
+of the repaired clean target remains mandatory before Git integration.
 
 ## Disposition
 
-`HOLD PENDING FRESH IMMUTABLE REVIEW AT NATIVE BOUNDARY`
+`HOLD PENDING REPLACEMENT IMMUTABLE REVIEW AT NATIVE BOUNDARY`
 
 All known repairable non-native setup failures are closed. Integration remains
-closed until the final graph and independent review pass. The next product
+closed until the replacement independent review passes. The next product
 implementation action after integration would create or admit the scalar-1
 native artifact, so execution still stops before every `.fungi` and `.gate`
 write.

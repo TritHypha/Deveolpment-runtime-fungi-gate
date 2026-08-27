@@ -880,10 +880,13 @@ Record exact package counts, pass/refusal counts, elapsed seconds and every
 timeout. A timeout is not a PASS; rerun only its owning phase with the admitted
 130-second ceiling when the suite contract permits it.
 
-The bounded runner executed 100/100 packages sequentially and observed 1,190
-tests: 25 packages passed and 75 failed, with zero observed timeout. The
-compiler completed in 130.9 seconds. The exact total elapsed seconds were not
-durably retained, so that field is `UNVERIFIED` and contributes to `HOLD`.
+One bounded 100-package run executed sequentially with package and test-file
+concurrency fixed at `1`, reached 95/100 and counted 3,152 tests in passing
+packages in 476.755 seconds. Separate sequential replays restored benchmark
+113/113 and KB-graph 31/31 after their explicit sibling roots were admitted.
+The exact composite is 97/100 packages and 3,296 tests; it is not one
+final-target full-estate run. The remaining three packages are the declared
+native process-root, legacy signing and existing native-locator HOLDs.
 
 - [x] **Step 4: Reach deterministic index fixed points**
 
@@ -891,7 +894,7 @@ Run documentation, registry, contract, code and diagnostic checks after their
 generators. The docs index must pass after a second no-write check; the current
 planning baseline's 287/296 drift cannot be normalized into closure.
 
-Fixed points are reached: docs 299 indexes/2,006 documents, code index and
+Fixed points are reached: docs 299 indexes/2,009 documents, code index and
 registry 987 entries, contracts 3,938 across 2,974 `.fungi` files, unit registry
 157, KB index 1,956 and graph orchestration 9/9.
 
@@ -901,9 +904,10 @@ Build one full zero-skipped code graph at the candidate HEAD. Verify node/edge
 actual equals expected, exact indexed HEAD matches Git, and new product symbols
 plus package-boundary edges are discoverable.
 
-`Galerina-product-family-readiness-0aa4bcc0-full` is exact at the candidate:
-65,603/65,603 nodes, 167,380/167,380 edges and zero skipped files. All named
-product APIs plus `evaluateProductPackageBoundaries` are discoverable.
+`Galerina-product-family-readiness-closure-4f6a760c-full` is exact at tracked
+fixed point `4f6a760c3`: 65,745/65,745 nodes, 167,866/167,866 edges and zero
+skipped files. `parseJUnitCounts`, `admitFallbackPlatform`,
+`cleanFallbackEnvironment` and `runFallbackTestPlan` are discoverable.
 
 - [!] **Step 6: Obtain multi-vector external and independent reviews**
 
@@ -921,10 +925,12 @@ no verdict. Independent-review status is therefore `EVIDENCE_INSUFFICIENT`.
 The later pre-native closure replay supplied a new four-vector Grok Expert
 challenge and exact byte/digest receipt. Local adjudication upheld its
 toolchain-authentication concern. A separate immutable review of `32055d8`
-returned `HOLD` C0/I2/M0 for the same compiler-byte gap and stale exact-target
-index locators. The byte-substitution control is now RED-first/GREEN at
-`35b9832d8`, the code index is clean at `0e53a9fb`, and a fresh exact-head graph
-plus immutable replacement review remain mandatory before this step can close.
+returned `HOLD` C0/I2/M0; both implementation roots are closed. A scoped
+immutable review of implementation `b3d4a41e3` returned PASS C0/I0/M0. The
+first clean-target readback at graph/index fixed point `4f6a760c3` returned
+`HOLD` C0/I1/M0 only because the closure documents retained older graph and
+document counts. This documentation-only finding is repaired here; one fresh
+immutable readback remains mandatory before this step can close.
 
 - [x] **Step 7: Write the closure receipt**
 
