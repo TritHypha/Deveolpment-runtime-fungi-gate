@@ -99,3 +99,61 @@ bytes.
 The response identified no new material root after local Git-object and test
 adjudication. It remains advisory and does not mint PASS, merge authority or a
 global phase-close result.
+
+## Consumed-byte replacement challenge
+
+- Provider: Grok.
+- Model: Expert.
+- Conversation: `9557f317-c2ee-49e3-b03e-b4b7be7ef83b`.
+- Submitted: `2026-08-27T20:47:53.261Z`.
+- Captured: `2026-08-27T20:49:23.060Z`.
+- Reviewed supplied-claim target:
+  `f1ac0f22c9ce5f9df1a57667f1f6aec84b993d8c`.
+- Prompt transport bytes: 6,885.
+- Prompt transport SHA-256:
+  `9ac0d34080d315aad4a93fffd2f75315b20b69b7878b3b95ffda2de5849271e8`.
+- Reply transport bytes: 7,271.
+- Reply transport SHA-256:
+  `29e0ed323391d9419b4a521df1331dc2cd9b3bc4df5f8deac0467bd1a4f1336f`.
+- Advisory recommendation: `PROCEED_TO_LOCAL_ADJUDICATION`.
+
+The exact transport bytes are retained losslessly as base64 in
+`evidence/rd-0858-unit4-scalar-consumed-byte-grok-transport.json`. Decoding
+reproduces both recorded byte counts and SHA-256 identities. The manifest is
+19,221 bytes with SHA-256
+`58f9ec55b49fafa19a9a33e5ee02af31d60ef450c6ca97638e18e898359e8045`.
+
+Human-readable captures are retained as
+`evidence/rd-0858-unit4-scalar-consumed-byte-grok-prompt.txt` and
+`evidence/rd-0858-unit4-scalar-consumed-byte-grok-reply.txt`. They are reading
+copies rather than transport-identity sources: the prompt omits one terminal
+LF; the reply strips one trailing space and adds one terminal LF. Their
+repository-byte identities are respectively 6,884 bytes / SHA-256
+`b4318d27152feca8ba59d5d700acddfcdb72a254160c844a38bdd36ee087e737`
+and 7,271 bytes / SHA-256
+`1589861861d117504b770c8bbc52f8eace101516e93d756e75f1675a45a65bd4`.
+Transport identity and repository text hygiene are therefore disclosed
+separately rather than normalized into one claim.
+
+### Local adjudication
+
+- [x] H1 `REJECTED`: the exact compiler host implements source, file,
+  directory, realpath, module-resolution and output callbacks over admitted
+  maps only. Compiler and library path substitution, stale persistent output,
+  ambient dependency and `NODE_OPTIONS`/`NODE_PATH` controls remain green.
+- [x] H2 `REJECTED`: Windows case aliases share one canonical virtual key and
+  duplicate keys refuse; consumed bytes and labels are sorted into the input
+  digest; options are recursively key-sorted and path-normalized; toolchain,
+  runtime and strict-loader identities are bound into execution identity v4.
+- [x] H3 `REJECTED`: compiler output is collected in memory, diagnostics and
+  emit status are checked before publication, writes are exclusive inside a
+  fresh ownership-marked temporary root, and every refusal path attempts only
+  ownership-checked cleanup. A fresh exact replay passes 25/25.
+- [x] H4 `UPHELD` as a governance boundary, not a code finding: the
+  process-root fast-forward must preserve ignored outputs byte-for-byte, keep
+  the global phase-close at 94/96 and stop before profiles 32/64/256 or any
+  broader native chapter.
+
+The external model remains non-authorizing. The later exact target `be7adb14a`
+received independent code and assurance `PASS` verdicts at C0/I0/M0; that
+evidence, not the model reply, supports scalar-local integration.

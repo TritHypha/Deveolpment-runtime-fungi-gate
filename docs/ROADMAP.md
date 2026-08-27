@@ -103,10 +103,14 @@ through a closed virtual host, binds the actually loaded runtime module set,
 sanitizes ambient Node resolution state, and uses a content-bound loader.
 Hostile compiler/library path substitution cannot change emitted bytes or
 identity; reparse or escaped roots refuse and unrelated owner residue remains
-preserved. Artifact commit `988cb1d2` is fixed-point exact, and the current LF
-scalar estate passes 131/131. Physical-CRLF, fresh independent
-review, exact graph refresh and documentation closure remain required before
-local fast-forward integration.
+preserved. Artifact commit `988cb1d2` is fixed-point exact. The final scalar
+closure at `be7adb14a` passes LF and physical-CRLF at 131/131, launcher controls
+at 33/33, and independent code plus assurance review at C0/I0/M0. Its exact
+external graph reports 66,199 nodes, 169,860 edges and zero skipped files. The
+consumed-byte Grok Expert challenge is captured and locally adjudicated; it
+found no new code root and sustained only the existing lifecycle boundary. The
+candidate is ready for the owner-approved scalar-local fast-forward into the
+active RD-0858 Unit 4 process-root branch.
 The last complete phase-close remains explicitly 94/96: 726 historical
 conversion receipts omit exact scope and the corpus child has no terminal
 receipt within 600 seconds. Those global blockers continue to block `main`,

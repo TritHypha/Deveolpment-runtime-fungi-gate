@@ -162,10 +162,16 @@ counts or open items that a newer section explicitly supersedes.
   `988cb1d2` refreshes the checked artifact. The current LF scalar estate passes
   131/131. Persistent `dist`, ambient resolution and owner residue stay outside
   the admitted closure and are neither executed nor deleted.
-- [!] Final chapter integration remains `HOLD` until the repaired exact target
-  passes physical-CRLF, independent code and assurance review, deterministic
-  graph refresh and documentation closure. Historical 118/118 receipts remain
-  exact evidence for `0106957` and are not rewritten.
+- [x] Close the consumed-byte replacement at exact target `be7adb14a`, tree
+  `d20e50394`: LF and physical-CRLF scalar estates pass 131/131, the launcher
+  passes 33/33, independent code and assurance reviews both return `PASS`
+  C0/I0/M0, and the exact external graph reports 66,199/66,199 nodes,
+  169,860/169,860 edges and zero skipped files. Historical 118/118 receipts
+  remain exact evidence for `0106957` and are not rewritten.
+- [x] Capture and locally adjudicate the consumed-byte Grok Expert challenge.
+  Its four independent vectors produced no new code root; the lifecycle vector
+  is retained as the explicit rule that the scalar-local fast-forward leaves
+  the global phase-close at 94/96 and cannot admit another profile.
 - [!] Keep profiles `64` and `256`, compatibility profile `32`, broader
   conversion, TypeScript retirement, detached GIR, SLIDE/VOK admission,
   `.gate`, Trametes, production selection and runtime rescue closed.

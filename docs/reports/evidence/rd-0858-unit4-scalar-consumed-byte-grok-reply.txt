@@ -1,0 +1,82 @@
+Worked for 30s
+
+Continuation delta. Prior H2 (validate-then-execute / host TOCTOU) is the claim this packet challenges. It asserts an in-memory consumed-byte repair and a green substitute-use-restore control at commit f1ac0f22c9ce5f9df1a57667f1f6aec84b993d8c / tree 40e17fc99c631521ac01f788e6bb1e8c2a352acc. Prior H1/H3/H4 remain out of scope except where they still couple to identity or the 94/96 HOLD. Labels below are for this packet only. No sources opened.
+
+Material claim labels
+Prior TOCTOU (hash-before/hash-after child does not prove consumed bytes) was a real defect: CONFIRMED as established by the prior immutable review.
+Repair admits exact TypeScript compiler source, bounded library declaration bytes, and exact HEAD project bytes, evaluates from an in-memory closure, and prevents ambient compiler/library/source filesystem reads from influencing compilation after admission: NOT VERIFIABLE.
+Compiler execution identity version 4 binds admitted compiler, library, project, options, output, runtime, and native-launcher identities; regenerated artifacts are byte-identical: NOT VERIFIABLE.
+Exact hostile substitute-use-restore control is green; scalar 131/131; compiler package 6755/6755; native format/tests pass: NOT VERIFIABLE as consumed-byte proof (author estate counts).
+External graph 66199/66199, 169678/169678, skipped 0, head = reviewed commit; four new consumed-byte symbols unique: NOT VERIFIABLE.
+Generated artifact 1943 bytes; tracked graph/index fixed points; clean worktree; feature commit pushed as recovery backup: NOT VERIFIABLE.
+Phase-close remains 94/96 HOLD; local scalar result must not be represented as global production release: CONFIRMED as packet process constraint.
+Planned sequence (independent LF and physical-CRLF PASS → adjudicate this review → bounded closure receipt → refresh graphs only if receipts change tracked bytes → FF only into owner-visible RD-0858 Unit 4 process-root → verify preserved ignored outputs → push → stop before 32/64/256 and other chapters): PLAUSIBLE as a bounded plan, not authority.
+Trit remains one widthless value in
+{
+−
+1
+,
+0
+,
++
+1
+}
+{−1,0,+1}; this review is profile 1 only: CONFIRMED as binding constraint.
+
+Repository tools can bind Git objects, admitted blobs, and receipt bytes. Host/runtime owns Node, the TS compiler-host callbacks, module resolution, locale, realpath, case aliases, and any spawn path. Those host facts are NOT VERIFIABLE here.
+
+Four material hypotheses
+
+H1 — V1 consumed-byte authority.
+
+Invariant: after admission, only admitted compiler, library, and project bytes may influence emit; version-4 identity must name those bytes.
+
+Smallest hostile transition: seal the three admitted maps, then leave one TS host hook live (readFile, fileExists, directoryExists, realpath, getDirectories, getSourceFile miss, resolveModuleNames / resolveTypeReferenceDirectives, tsconfig extends / typeRoots / paths / plugin load). One extra lib.esnext.d.ts or @types stub on disk, or NODE_PATH / require hook / locale LC_ALL, changes emit or diagnostics while the version-4 digest still names the admitted maps. Substitute-use-restore on the admitted file path can be green while the host callback still reads ambient bytes.
+
+Expected fail-closed result: missing admitted byte or any post-admission FS/env read → refuse, no output, no version-4 success identity.
+
+Local evidence: intercept every compiler-host and Node resolution call during one compile of the 1943-byte artifact; prove zero unadmitted reads; rerun with one planted neighbour .d.ts.
+
+H2 — V2 deterministic identity and replay.
+
+Invariant: materially different executions cannot share admitted-input identity or receipt identity.
+
+Concrete probe: two option bags that differ only by an omitted field vs explicit TS default (strict, target, lib, jsx, skipLibCheck, moduleResolution); or two virtual roots that alias the same admitted bytes via case (Src/a.ts vs src/a.ts) or symlink; or NFC vs NFD in a virtual path; or identical emit selected from different writeFile names. If version 4 hashes maps without canonical option filling and without unique virtual-path normalization, the receipt collides.
+
+Expected safe result: distinct filled options or distinct path aliases → distinct identities, or refuse alias/non-canonical maps.
+
+Local evidence: pair fixtures that differ by one omitted option or one case/symlink alias; compare version-4 identity and emit bytes.
+
+H3 — V3 failure and cleanup.
+
+Invariant: refusal, timeout, exception, or partial emit cannot yield a success receipt or leave a replayable stale artifact.
+
+Smallest fixture: allow writeFile of JS/DTS, then throw or exceed the resource bound before identity close; or fail the parser after a previous 1943-byte artifact remains on disk; or map “emit skipped with diagnostics” to success because regenerate-byte-identical compares against the leftover.
+
+Expected safe result: delete or never publish partial output; no version-4 success receipt; replay of the failure is identical refusal.
+
+Local evidence: inject throw/timeout after first writeFile; confirm ignored outputs and receipts do not keep the partial; confirm a second run cannot hash the leftover as success.
+
+H4 — V4 integration plan.
+
+Invariant: process-root FF does not clear 94/96, does not widen past profile 1, and does not treat ignored compiler outputs as ambient authority.
+
+Smallest unsound transition: record “closure PASS” from 131/131 + green substitute-use-restore while the two global gates stay dark; retire a branch that still holds unique non-merged notes; or “verify preserved ignored outputs” by copying them forward so a later compile can read them (H1 channel). Graph refresh after a receipt that changes tracked bytes can also rewrite the head being certified.
+
+Minimum extra check before FF (advisory only): independent exact-revision LF and physical-CRLF PASS already in the plan, plus a one-line statement that ignored outputs are non-inputs and that 94/96 remains HOLD on the process-root log. No new architecture.
+
+Expected safe result: FF is custody of this commit only; production/main/profile-32+ stay closed.
+
+Local evidence: post-FF log lines, ignored-output diff, and gate matrix still showing 94/96.
+
+Weakest claim, non-bypass control, reversal
+
+Weakest supplied claim: post-admission ambient compiler/library/source reads cannot influence compilation. Substitute-use-restore being green does not by itself seal TS host resolution, Node loaders, or locale.
+
+Control that cannot fail under the supplied facts: the two historical/corpus gates stay HOLD; this local scalar result must not be written as production release.
+
+Evidence that would reverse: exact Git objects for f1ac0f22… / 40e17fc9…; the version-4 identity schema; a host-call trace with zero unadmitted reads; the four fixtures above fail-closed; independent LF and physical-CRLF PASS at this revision.
+
+Smallest design that preserves the invariants: admit three closed byte maps, evaluate only through a virtual host with every callback accounted, hash filled options and emit, fail closed on any miss. Extra graph-index theatre and four new symbols do not justify complexity unless H1’s host trace is empty.
+
+PROCEED_TO_LOCAL_ADJUDICATION

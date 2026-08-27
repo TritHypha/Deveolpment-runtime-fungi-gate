@@ -125,11 +125,27 @@ Date: 2026-08-27
 
 ## Current verdict
 
-`PASS` for the bounded scalar implementation at exact target `0106957`:
+### Consumed-byte replacement closure
+
+- Final exact target: `be7adb14a2226d84f72d0ee3bdbb08e96d3653a9`.
+- Final tree: `d20e50394d998ea9895d8c7d0fa4c62a6f19713f`.
+- LF scalar estate: 131/131.
+- Physical-CRLF scalar estate: 131/131.
+- Native launcher: 33/33.
+- Fresh focused consumed-byte adjudication replay: 25/25.
+- Independent exact-code review: `PASS`, C0/I0/M0.
+- Independent assurance review: `PASS`, C0/I0/M0.
+- Exact external graph: 66,199/66,199 nodes, 169,860/169,860 edges, zero
+  skipped files, exact indexed target; all four consumed-byte symbols resolve
+  uniquely.
+- The multi-vector consumed-byte Grok Expert challenge is captured and locally
+  adjudicated. Its host, replay and partial-output hypotheses are rejected by
+  the closed virtual host, identity and owned-temporary controls. Its lifecycle
+  hypothesis is upheld only as the already binding 94/96 HOLD boundary.
+
+`PASS` for the bounded scalar implementation at exact target `be7adb14a`:
 independent code and assurance reviews both report Critical 0 / Important 0 /
-Minor 0. The exact-target multi-vector Grok challenge is captured and locally
-adjudicated as non-authorizing advice. The canonical global phase-close remains
-94/96, so main, release, production, broader conversion and later native work
-remain `HOLD`. Only the owner-approved local fast-forward into the active
-process-root branch may proceed after the documentation-only closure delta is
-committed and independently checked.
+Minor 0. The canonical global phase-close remains 94/96, so main, release,
+production, broader conversion and later native work remain `HOLD`. Only the
+owner-approved local fast-forward into the active process-root branch may
+proceed after this documentation-only closure delta is committed and checked.

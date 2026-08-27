@@ -67,3 +67,23 @@ The implementation target was immutable during both reviews. The later model
 receipt, evidence captures, TODO, roadmap and assurance updates are a separate
 documentation-only closure delta and require their own exact-byte, fixed-point
 and clean-status verification before integration.
+
+## Consumed-byte replacement review
+
+- Exact target: `be7adb14a2226d84f72d0ee3bdbb08e96d3653a9`.
+- Tree: `d20e50394d998ea9895d8c7d0fa4c62a6f19713f`.
+- Delta from reviewed implementation target `f1ac0f22c` is only generated
+  roadmap provenance; implementation, tests, scalar source, artifact and
+  policy bytes are identical.
+- Exact-code verdict: `PASS`, Critical 0 / Important 0 / Minor 0.
+- Assurance verdict: `PASS`, Critical 0 / Important 0 / Minor 0.
+- Corrected LF and physical-CRLF estates both pass 131/131; launcher passes
+  33/33. The earlier intermittent CRLF sentinel did not reproduce in either
+  exact replay and is not sustained as a finding.
+- Roadmap check passes 3/3; repository graph check passes 9/9.
+- Exact external graph `Galerina-rd0858-scalar-consumed-byte-be7adb14-full`
+  reports 66,199/66,199 nodes, 169,860/169,860 edges, zero skipped files and the
+  exact target HEAD.
+
+The reviewers release custody only for the approved scalar-local integration
+route. This does not alter the global 94/96 state or admit any later profile.
