@@ -1,7 +1,7 @@
 {
   "name": "@galerina/tools-myco",
-  "version": "0.2.1",
-  "description": "grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-precise, and instant on repeat searches.",
+  "version": "0.2.2",
+  "description": "grep, but it grows a graph — a graph-indexed search tool for file contents and filenames. Smart-case, token-precise, and instant on repeat searches.",
   "private": true,
   "type": "module",
   "bin": {
@@ -63,24 +63,27 @@
   "license": "Apache-2.0",
   "galerinaVendor": {
     "publicSourceOwner": "https://github.com/TritHypha/myco",
-    "upstreamSnapshotCommit": "a48d2c3b5c508ce35346a4dd7aac0278606d10f6",
-    "syncedAt": "2026-08-02",
+    "upstreamSnapshotCommit": "c4ff2ca3c53e8c8cb8b5f6a7a589a096d85a1fd6",
+    "syncedAt": "2026-08-28",
     "snapshotStatus": {
       "kind": "PARTIAL_FORK",
       "upstreamFileCount": 16,
-      "exactFileCount": 12,
+      "exactFileCount": 14,
       "divergentPaths": [
         "src/cli.ts",
-        "src/graph/model.ts",
-        "src/graph/store.ts",
-        "src/ingest/indexer.ts"
+        "src/query/path-filter.ts"
       ],
       "missingPaths": [],
       "localOnlyPaths": [
         "src/query/links.ts"
       ]
     },
-    "rule": "The public Myco repository owns shared code. Existing Galerina-local divergence is explicit debt: upstream or classify it before the next vendor refresh; never overwrite either owner while claiming byte identity."
+    "divergenceReasons": {
+      "src/cli.ts": "Galerina retains the local Markdown-link command and imports the local-only links module.",
+      "src/query/path-filter.ts": "Comments use the active Galerina packages-ts root; executable behavior remains source-owner compatible.",
+      "src/query/links.ts": "Galerina-only Markdown-link classification and repair extension."
+    },
+    "rule": "The public Myco repository owns shared code. Galerina divergence must remain explicit, tested and reproduced by audit; never overwrite either owner while claiming byte identity."
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

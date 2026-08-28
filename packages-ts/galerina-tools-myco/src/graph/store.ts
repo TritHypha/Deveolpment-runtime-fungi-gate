@@ -1,4 +1,13 @@
-// store.ts - persist and reload the search graph.
+// store.ts — persist and reload the search graph.
+//
+// Only the FORWARD index is written to disk (each file with its term counts);
+// the inverted and name indexes are rebuilt in memory by SearchGraph.setFile()
+// on load. That keeps the on-disk format small and makes it the single source
+// of truth for incremental re-indexing.
+//
+// The index lives at <root>/.myco/index.json. We deliberately do NOT store the
+// absolute root path — it is derived from where the index file sits — so the
+// artifact never embeds a machine-specific path.
 
 import { promises as fs } from "node:fs";
 import * as path from "node:path";
@@ -32,6 +41,12 @@ export interface SaveGraphOptions {
   maxTermEdges?: number;
 }
 
+// Resolve a caller-supplied term-edge ceiling against the fixed contract
+// maximum. A request to RAISE the ceiling is not honoured and not an error —
+// it silently clamps — because the persisted format's limit is the reader's
+// guarantee, and a writer that could lift it would put files on disk that no
+// reader will accept. Tightening is allowed so tests can exercise the refusal
+// without building a multi-million-edge fixture.
 export function clampTermEdgeCeiling(requested: number | undefined): number {
   if (
     requested === undefined
@@ -51,12 +66,21 @@ function compareCodeUnits(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+// Why a save can decline to write. `ok` is the normal path; `term-edge-ceiling`
+// means the graph is larger than the reader will ever accept back.
 export type SaveOutcome =
   | { written: true }
   | { written: false; reason: "term-edge-ceiling"; edges: number; limit: number };
 
-// The writer enforces the same ceiling the reader enforces. Declining to write
-// prevents a permanent reject-rebuild-reject cache loop.
+// Write the graph to <root>/.myco/index.json (creating the dir if needed).
+//
+// The writer enforces the SAME ceiling the reader enforces. Without this the
+// two halves of the contract disagree: `saveGraph` would happily persist an
+// index that `validateStoredIndex` rejects on sight, so every later run would
+// discard the cache, rebuild it, and write the identical rejected file again —
+// a cache that can never hit, costing a full re-index forever with nothing said
+// out loud. Declining to write is the honest outcome: the caller is told, and
+// no poisoned artifact is left on disk pretending to be a usable cache.
 export async function saveGraph(
   root: string,
   graph: SearchGraph,
@@ -67,17 +91,20 @@ export async function saveGraph(
   if (edges > limit) {
     return { written: false, reason: "term-edge-ceiling", edges, limit };
   }
-
   const files: StoredFile[] = [];
   for (const rec of graph.files()) {
     const counts = graph.forwardOf(rec.id);
     if (!counts) continue;
-    files.push({
+    const stored: StoredFile = {
       p: rec.path,
       m: rec.mtimeMs,
       s: rec.size,
       t: [...counts].sort(([left], [right]) => compareCodeUnits(left, right)),
-    });
+    };
+    // Persist name-only reason so a reload does not re-open content search.
+    if (rec.contentSkip === "binary") stored.k = "b";
+    else if (rec.contentSkip === "large") stored.k = "l";
+    files.push(stored);
   }
   files.sort((left, right) => compareCodeUnits(left.p, right.p));
   const payload: StoredIndex = { format: FORMAT, createdAt: Date.now(), files };
@@ -87,9 +114,18 @@ export async function saveGraph(
   return { written: true };
 }
 
+// Why a load produced no graph. `absent` = nothing to read (a genuine first
+// run); `rejected` = an index EXISTS on disk but failed the contract.
+//
+// These are different facts and must not share a signal. Collapsing them to
+// `null` is what let an over-ceiling index report itself as "first run" on
+// every invocation: a refusal rendering as an absence, so the user sees a slow
+// tool rather than a stated reason and has nothing to act on.
 export type LoadStatus = "ok" | "absent" | "rejected";
 
-// Compatibility wrapper for callers that need only the admitted graph.
+// Load the graph from disk, or null if there is no (compatible) index yet.
+// Kept for callers that only need the graph; `loadGraphOutcome` is the form
+// that can tell "no index" apart from "index refused".
 export async function loadGraph(
   root: string,
   options: LoadGraphOptions = {},
@@ -100,8 +136,7 @@ export async function loadGraph(
     : null;
 }
 
-// A genuine absence and a rejected artifact are distinct states with distinct
-// remedies. Never collapse them into one reassuring "first run" signal.
+// Load the graph and SAY WHY when there is none.
 export async function loadGraphOutcome(
   root: string,
   options: LoadGraphOptions = {},
@@ -117,7 +152,6 @@ export async function loadGraphOutcome(
   ) {
     return { status: "rejected" };
   }
-
   let text: string;
   try {
     const requestedIndex = indexPath(root);
@@ -147,26 +181,25 @@ export async function loadGraphOutcome(
     }
     return { status: "rejected" };
   }
-
   let decoded: unknown;
   try {
     decoded = JSON.parse(text) as unknown;
   } catch {
-    return { status: "rejected" };
+    return { status: "rejected" }; // a file IS there; it is corrupt, not missing
   }
   const data = validateStoredIndex(decoded);
   if (data === null) return { status: "rejected" };
 
   const graph = new SearchGraph();
   try {
-    for (const file of data.files) {
-      const counts: TermCounts = new Map(file.t);
-      graph.setFile(file.p, file.m, file.s, counts);
+    for (const f of data.files) {
+      const counts: TermCounts = new Map(f.t);
+      const skip = f.k === "b" ? "binary" as const : f.k === "l" ? "large" as const : undefined;
+      graph.setFile(f.p, f.m, f.s, counts, skip);
     }
   } catch {
     return { status: "rejected" };
   }
-
   return {
     status: "ok",
     graph,

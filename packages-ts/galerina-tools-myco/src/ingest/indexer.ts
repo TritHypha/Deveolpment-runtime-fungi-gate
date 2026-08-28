@@ -44,7 +44,7 @@ export async function buildIndex(
 ): Promise<{
   graph: SearchGraph;
   stats: IndexStats;
-  saved: SaveOutcome;
+  saved: SaveOutcome; // whether the cache actually persisted, and why not
   skippedLargePaths: string[];
   skippedVendoredDirs: string[];
 }> {
@@ -71,12 +71,37 @@ export async function buildIndex(
   for (const meta of metas) {
     seen.add(meta.relPath);
     const existing = graph.fileByPath(meta.relPath);
+    const wantLarge = meta.contentSkip === "large";
+
+    // Incremental reuse when size+mtime match AND the content-skip role is stable.
+    // Role changes (cap raised/lowered, binary↔text) fall through and re-classify.
     if (
       existing &&
       existing.mtimeMs === meta.mtimeMs &&
       existing.size === meta.size
     ) {
-      stats.unchanged++;
+      if (wantLarge && existing.contentSkip === "large") {
+        stats.unchanged++;
+        continue;
+      }
+      if (!wantLarge && existing.contentSkip === "binary") {
+        stats.unchanged++;
+        stats.skippedBinary++; // still binary this run; no re-sniff needed
+        continue;
+      }
+      if (!wantLarge && existing.contentSkip === undefined) {
+        stats.unchanged++;
+        continue;
+      }
+      // otherwise: large↔content or content↔large transition under same size —
+      // only happens when maxFileSize policy moved; re-apply classification.
+    }
+
+    // Over-size: name-index only, never open the file (DESIGN §10).
+    if (wantLarge) {
+      graph.setFile(meta.relPath, meta.mtimeMs, meta.size, new Map(), "large");
+      if (existing) stats.updated++;
+      else stats.added++;
       continue;
     }
 
@@ -87,8 +112,11 @@ export async function buildIndex(
       continue; // races with deletion, permission errors — skip, don't crash
     }
     if (looksBinary(buf)) {
-      if (existing) graph.removeFile(meta.relPath); // e.g. a file turned binary
+      // Name-index only — still findable by `-f`, never opened for content.
+      graph.setFile(meta.relPath, meta.mtimeMs, meta.size, new Map(), "binary");
       stats.skippedBinary++;
+      if (existing) stats.updated++;
+      else stats.added++;
       continue;
     }
 
@@ -96,6 +124,13 @@ export async function buildIndex(
     if (existing) stats.updated++;
     else stats.added++;
 
+    // Stop the moment the graph passes the ceiling the persisted format allows.
+    // Carrying on would build a structure that cannot be saved and, at the sizes
+    // this triggers on, exhausts the heap while serialising — the process dies
+    // with an abort and no diagnosis. Refusing here costs the user a message
+    // instead of a crash, and the message names the remedy: index a narrower
+    // root. A tree too big for the contract is a scope mistake, not a bug to
+    // absorb silently.
     if (graph.termEdgeCount() > termEdgeCeiling) {
       throw new Error(
         `MYCO-INDEX-TOO-LARGE: ${root} exceeds the index ceiling of `
@@ -118,6 +153,9 @@ export async function buildIndex(
   stats.skippedLarge = skippedLargePaths.length;
   stats.skippedVendored = skippedVendoredDirs.length;
   stats.files = graph.fileCount();
+  // The save may decline (see saveGraph). Hand the outcome back rather than
+  // discarding it: a cache that did not persist is a fact the caller must be
+  // able to report, otherwise the next run repeats the work with no explanation.
   const saved = await saveGraph(root, graph, { maxTermEdges: termEdgeCeiling });
   return { graph, stats, saved, skippedLargePaths, skippedVendoredDirs };
 }
