@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { types as utilTypes } from "node:util";
+import { deriveCorpusShards } from "./fungi-corpus-shards.mjs";
 
 const REQUEST_KEYS = Object.freeze([
   "schema", "profile", "productId", "repositoryHead", "repositoryTree",
@@ -222,7 +223,13 @@ function normalizeShard(value) {
   ) return null;
   const limits = normalizeLimits(shard.limits);
   const candidates = exactArray(shard.files);
-  if (limits === null || candidates === null || candidates.length < 1 || shard.endIndexExclusive - shard.startIndex !== candidates.length) return null;
+  if (
+    limits === null
+    || candidates === null
+    || candidates.length < 1
+    || candidates.length > limits.maxFiles
+    || shard.endIndexExclusive - shard.startIndex !== candidates.length
+  ) return null;
   const files = [];
   let previousPath = "";
   for (const candidate of candidates) {
@@ -242,32 +249,6 @@ function normalizeShard(value) {
     limits,
     files,
   };
-}
-
-function deriveExpectedShards(request, limits) {
-  const shardCount = Math.min(request.shardCount, request.files.length);
-  const baseSize = Math.floor(request.files.length / shardCount);
-  const remainder = request.files.length % shardCount;
-  const requestDigest = canonicalDigest(request);
-  const shards = [];
-  let startIndex = 0;
-  for (let shardIndex = 0; shardIndex < shardCount; shardIndex += 1) {
-    const size = baseSize + (shardIndex < remainder ? 1 : 0);
-    const endIndexExclusive = startIndex + size;
-    shards.push({
-      schema: "galerina.fungi-corpus-shard.v2",
-      shardId: `shard-${shardIndex + 1}-of-${shardCount}`,
-      shardIndex,
-      shardCount,
-      startIndex,
-      endIndexExclusive,
-      requestDigest,
-      limits: { ...limits },
-      files: request.files.slice(startIndex, endIndexExclusive).map((file) => ({ ...file })),
-    });
-    startIndex = endIndexExclusive;
-  }
-  return shards;
 }
 
 function sameShard(left, right) {
@@ -332,7 +313,8 @@ function normalizeReceipt(value, shard) {
   }
   const covered = [...completed.map(({ resultDigest, ...file }) => file), ...unprocessed];
   if (!sameFiles(covered, shard.files)) return null;
-  if ((receipt.status === "PASS" || receipt.status === "FINDING") && (receipt.termination !== "COMPLETE" || unprocessed.length !== 0)) return null;
+  if (receipt.termination === "COMPLETE" && unprocessed.length !== 0) return null;
+  if ((receipt.status === "PASS" || receipt.status === "FINDING") && receipt.termination !== "COMPLETE") return null;
   if (receipt.termination !== "COMPLETE" && receipt.status !== "REFUSED") return null;
   const base = {
     schema: receipt.schema,
@@ -392,12 +374,14 @@ export function aggregateCorpusReceipts(value, shardValues, receiptValues) {
     if (shards.some((shard) => shard === null)) return refused("CORPUS_AGGREGATE_SHARDS");
     const firstShard = shards[0];
     if (firstShard === undefined || shards.some((shard) => !sameLimits(shard.limits, firstShard.limits))) return refused("CORPUS_AGGREGATE_SHARDS");
-    const expectedShards = deriveExpectedShards(request, firstShard.limits);
+    const derivation = deriveCorpusShards(request, firstShard.limits);
+    if (derivation.kind !== "accepted") return refused("CORPUS_AGGREGATE_SHARDS");
+    const expectedShards = derivation.value;
     if (shards.length !== expectedShards.length || shards.some((shard, index) => !sameShard(shard, expectedShards[index]))) return refused("CORPUS_AGGREGATE_SHARDS");
 
     const byId = new Map(expectedShards.map((shard) => [shard.shardId, shard]));
     const validated = new Map();
-    const seen = new Set();
+    const grouped = new Map();
     const reasons = new Set();
     for (const candidate of suppliedReceipts) {
       const record = receiptIdentity(candidate);
@@ -410,16 +394,37 @@ export function aggregateCorpusReceipts(value, shardValues, receiptValues) {
         reasons.add("FOREIGN_SHARD");
         continue;
       }
-      const duplicate = seen.has(expected.shardId);
-      seen.add(expected.shardId);
-      if (duplicate) reasons.add("DUPLICATE_SHARD");
-      const receipt = normalizeReceipt(candidate, expected);
-      if (receipt === null) {
-        reasons.add(staleReceipt(record, expected) ? "STALE_RECEIPT" : "INVALID_RECEIPT");
-        continue;
+      const group = grouped.get(expected.shardId) ?? [];
+      group.push(candidate);
+      grouped.set(expected.shardId, group);
+    }
+    for (const shard of expectedShards) {
+      const group = grouped.get(shard.shardId) ?? [];
+      if (group.length > 1) reasons.add("DUPLICATE_SHARD");
+      const receipts = [];
+      for (const candidate of group) {
+        const record = receiptIdentity(candidate);
+        if (record === null) {
+          reasons.add("INVALID_RECEIPT");
+          continue;
+        }
+        const receipt = normalizeReceipt(candidate, shard);
+        if (receipt === null) {
+          reasons.add(staleReceipt(record, shard) ? "STALE_RECEIPT" : "INVALID_RECEIPT");
+          continue;
+        }
+        receipts.push(receipt);
       }
-      if (!duplicate) validated.set(expected.shardId, receipt);
-      if (receipt.termination !== "COMPLETE") reasons.add("UNFINISHED_SHARD");
+      receipts.sort((left, right) => {
+        const leftDigest = canonicalDigest(left);
+        const rightDigest = canonicalDigest(right);
+        return leftDigest < rightDigest ? -1 : leftDigest > rightDigest ? 1 : 0;
+      });
+      const selected = receipts[0];
+      if (selected !== undefined) {
+        validated.set(shard.shardId, selected);
+        if (selected.termination !== "COMPLETE") reasons.add("UNFINISHED_SHARD");
+      }
     }
     for (const shard of expectedShards) if (!validated.has(shard.shardId)) reasons.add("MISSING_SHARD");
     const holdReasons = [...reasons].filter((reason) => HOLD_REASONS.has(reason)).sort();

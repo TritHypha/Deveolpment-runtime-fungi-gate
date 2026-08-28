@@ -54,6 +54,12 @@ function receiptFor(shard, status = "PASS", termination = "COMPLETE") {
   return { ...base, resultDigest: sha256(base) };
 }
 
+function bindReceipt(receipt, changes) {
+  const { resultDigest: ignored, ...base } = receipt;
+  const bound = { ...base, ...changes };
+  return { ...bound, resultDigest: sha256(bound) };
+}
+
 test("validateCorpusRequest accepts the exact request identity as a frozen canonical clone", () => {
   const candidate = request();
   const result = validateCorpusRequest(candidate, identity);
@@ -122,7 +128,7 @@ test("aggregateCorpusReceipts normalizes valid arrival order and maps incomplete
     receipts[0],
     receipts[1],
   ]);
-  assert.deepEqual(duplicate.value.holdReasons, ["DUPLICATE_SHARD", "INVALID_RECEIPT", "MISSING_SHARD"]);
+  assert.deepEqual(duplicate.value.holdReasons, ["DUPLICATE_SHARD", "INVALID_RECEIPT"]);
 });
 
 test("aggregateCorpusReceipts preserves exact terminal shard algebra", () => {
@@ -135,4 +141,49 @@ test("aggregateCorpusReceipts preserves exact terminal shard algebra", () => {
   assert.equal(refused.value.status, "REFUSED");
   assert.deepEqual(unfinished.value.status, "HOLD");
   assert.deepEqual(unfinished.value.holdReasons, ["UNFINISHED_SHARD"]);
+});
+
+test("aggregateCorpusReceipts groups invalid and valid duplicates independently of arrival order", () => {
+  const candidate = request();
+  const shards = deriveCorpusShards(candidate, limits).value;
+  const valid = receiptFor(shards[0]);
+  const invalid = { ...valid, resultDigest: digest("9") };
+  const tail = receiptFor(shards[1]);
+  const forward = aggregateCorpusReceipts(candidate, shards, [invalid, valid, tail]);
+  const reverse = aggregateCorpusReceipts(candidate, shards, [valid, invalid, tail]);
+  assert.deepEqual(forward, reverse);
+  assert.deepEqual(forward.value.holdReasons, ["DUPLICATE_SHARD", "INVALID_RECEIPT"]);
+  assert.equal(forward.value.receiptDigests.length, 2);
+});
+
+test("aggregateCorpusReceipts selects distinct valid duplicates deterministically", () => {
+  const candidate = request();
+  const shards = deriveCorpusShards(candidate, limits).value;
+  const first = receiptFor(shards[0]);
+  const second = bindReceipt(first, {
+    completed: first.completed.map((entry) => ({ ...entry, resultDigest: digest("8") })),
+  });
+  const tail = receiptFor(shards[1]);
+  const forward = aggregateCorpusReceipts(candidate, shards, [first, second, tail]);
+  const reverse = aggregateCorpusReceipts(candidate, shards, [second, first, tail]);
+  assert.deepEqual(forward, reverse);
+  assert.deepEqual(forward.value.holdReasons, ["DUPLICATE_SHARD"]);
+});
+
+test("receipt and aggregate validation reject a shard that exceeds its own maxFiles limit", () => {
+  const candidate = request();
+  const shards = deriveCorpusShards(candidate, limits).value;
+  const overflow = shards.map((shard) => ({ ...shard, limits: { ...shard.limits, maxFiles: 1 } }));
+  assert.equal(validateShardReceipt(receiptFor(overflow[0]), overflow[0]).kind, "refused");
+  assert.equal(aggregateCorpusReceipts(candidate, overflow, overflow.map((shard) => receiptFor(shard))).kind, "refused");
+});
+
+test("validateShardReceipt refuses REFUSED COMPLETE receipts with unprocessed files", () => {
+  const shard = deriveCorpusShards(request(), limits).value[0];
+  const complete = receiptFor(shard, "REFUSED");
+  const partial = bindReceipt(complete, {
+    completed: complete.completed.slice(0, 1),
+    unprocessed: shard.files.slice(1).map((file) => ({ ...file })),
+  });
+  assert.equal(validateShardReceipt(partial, shard).kind, "refused");
 });
