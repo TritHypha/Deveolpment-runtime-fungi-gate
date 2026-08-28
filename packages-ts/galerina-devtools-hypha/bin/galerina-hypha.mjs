@@ -51,6 +51,7 @@ import {
 import { findAllCallSites } from "../src/callsites.mjs";
 import { QUERIES, duplicateSets, kindCoverage, deadExports, surface, nameSetDrift } from "../src/queries.mjs";
 import { extractNameSets, extractNameComparisons, extractKindCollections } from "../src/namesets.mjs";
+import { readUpstreamSource } from "../scripts/vendor-extractor.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 
@@ -430,10 +431,10 @@ if (SELF_TEST) {
     // Provenance: the vendored extractor must still match its source when the
     // source is reachable. SKIPPED is reported honestly — never counted as pass.
     const prov = JSON.parse(fs.readFileSync(path.join(HERE, "../src/provenance.json"), "utf8"));
-    const upstream = path.join(ROOT, "..", "subprojects/hypha/src/extract.js");
-    if (fs.existsSync(upstream)) {
+    const upstreamRoot = path.join(ROOT, "..", "subprojects", "hypha");
+    if (fs.existsSync(upstreamRoot)) {
       const { createHash } = await import("node:crypto");
-      const actual = createHash("sha256").update(fs.readFileSync(upstream, "utf8")).digest("hex");
+      const actual = createHash("sha256").update(readUpstreamSource(upstreamRoot)).digest("hex");
       check("vendored extractor matches its source", actual === prov.sha256,
         actual === prov.sha256 ? prov.sha256.slice(0, 12) : `recorded ${prov.sha256.slice(0, 12)} vs actual ${actual.slice(0, 12)} — re-vendor`);
     } else {
