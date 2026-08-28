@@ -187,3 +187,12 @@ test("validateShardReceipt refuses REFUSED COMPLETE receipts with unprocessed fi
   });
   assert.equal(validateShardReceipt(partial, shard).kind, "refused");
 });
+
+test("validateShardReceipt admits only REFUSED byte-overflow receipts with partial coverage", () => {
+  const shard = deriveCorpusShards(request(), limits).value[0];
+  const overflow = receiptFor(shard, "REFUSED", "BYTE_OVERFLOW");
+  assert.deepEqual(validateShardReceipt(overflow, shard), { kind: "accepted", value: overflow });
+  for (const status of ["PASS", "FINDING"]) {
+    assert.equal(validateShardReceipt(receiptFor(shard, status, "BYTE_OVERFLOW"), shard).kind, "refused");
+  }
+});
