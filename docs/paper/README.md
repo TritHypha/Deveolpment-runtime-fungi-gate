@@ -49,7 +49,55 @@ Any document in this folder follows the conventions below. These are good-practi
 
 ---
 
-## 3. Index of the corpus
+## 3. Mandatory two-pass paper admission gate
+
+Every new paper, defensive publication and material revision must run the canonical AGENTS
+`paper-admission-filter` twice. The filter is an evidence gate, not publication, legal, patent,
+ethics, export-control or scientific authority. Its receipts are always non-authorizing.
+
+1. **Pre-draft:** before writing the full paper, assemble a closed manifest from the canonical
+   example, declare every claim-bearing section, score every applicable dimension, record the
+   proposed mathematics and reader-reproduction route, attempt the required attacks, and locally
+   adjudicate applicability and salvageability.
+2. **Post-draft:** evaluate the exact final bytes of the paper and every declared appendix, figure,
+   review prompt and complete reply. A changed target or artifact invalidates the earlier result
+   and requires a fresh post-draft pass.
+
+Run the canonical tool from the AGENTS repository, or address it through an equivalent configured
+repository root:
+
+```text
+node <AGENTS_ROOT>/tools/paper-admission-filter.mjs evaluate <manifest.json>
+```
+
+The following rules are binding:
+
+- Score **each section**, not only the document. A high mean never overrides a mandatory floor,
+  unresolved finding, missing applicability decision or stale evidence.
+- Preserve good sections. A good paper with one salvageable weak section becomes targeted
+  `REWORK`; it is not passed by averaging and is not discarded wholesale.
+- Every mathematical result shows the formula, variable domains and units, literal inputs and
+  sources, assumptions, stepwise derivation, uncertainty or error boundary, interpretation and a
+  route by which a reader can reproduce the result. Explain the mathematics proportionately so a
+  competent reader can follow the premises to the bounded conclusion.
+- Every claim-bearing section records attempted falsifiers and attack vectors. A complete external
+  review is required, but Grok or any other provider is advisory evidence only; local adjudication
+  and fresh immutable repository review remain separate gates.
+- Apply the UK, EU, US and Australian source/applicability profile. Missing, stale, unknown,
+  grace-reliant, patent-sensitive or professional-review evidence remains `HOLD`; do not convert it
+  into a score or a claimed clearance.
+- Galerina K3 is **software three-state logic**. It is not quantum, analogue, generic ternary
+  arithmetic, confidence or probability. A cross-domain paper labels each domain and supplies an
+  explicit typed bridge, assumptions, non-transfers, conversions and removal-sensitive controls.
+- After a rewrite, retain the original claim and correction objectives, run the AGENTS Anti-Drift
+  check, and rerun the exact-byte post-draft gate. Static Anti-Drift output is additional evidence;
+  it does not replace behavioral re-evaluation.
+- A candidate result advances only to owner decision and any necessary professional review. It is
+  never an automatic instruction to publish, file or claim novelty.
+
+---
+
+## 4. Index of the corpus
 
 ### Defensive publications (`defensive-papers/`) — formerly `docs/scientific-papers/`
 
