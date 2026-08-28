@@ -124,8 +124,8 @@
 - [x] **Step 2: Run AGENTS Hypha worktree-controller current-only and registered-worktree probes against the public Hypha engine.**
 - [x] **Step 3: Run Galerina package-root lock, tooling policy, product-boundary and affected package-graph checks sequentially.**
 - [x] **Step 4: Run the bounded affected phase-close route; do not run all audits concurrently.**
-- [ ] **Step 5: Refresh the exact candidate graph with zero undisclosed exclusions and verify required symbols.**
-- [ ] **Step 6: Commit only required generated artifacts and plan status changes.**
+- [x] **Step 5: Refresh the exact candidate graph with zero undisclosed exclusions and verify required symbols.**
+- [x] **Step 6: Commit only required generated artifacts and plan status changes.**
 
 ### Task 6: Independent review and integration
 
