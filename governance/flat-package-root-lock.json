@@ -1153,7 +1153,7 @@
       "identity": "@galerina/devtools-hypha",
       "version": "1.0.0-beta.1",
       "directory": "galerina-devtools-hypha",
-      "contentDigest": "0e9c0012ed17338711f7be40a17e6edc360b6b78fbf2fdc3263acc2872a09e92",
+      "contentDigest": "d23cd0e3a5072928f34ff88eeaa56426ded9eb8390359a3479781889c496c3c8",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2081,7 +2081,7 @@
       "identity": "@galerina/tools-myco",
       "version": "0.2.2",
       "directory": "galerina-tools-myco",
-      "contentDigest": "85e1fb6788f610abb58ba0be08b6403026039f7e45f36ed787a64516aa3e59d9",
+      "contentDigest": "1bdb5c2ec4e9a448eaf4a002cf6e9cbd13812d408e4c2541cac51efb76abf15a",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3273,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "e12bbc9838e91c870e80a49196883621c1b2b85a5a5b4ca2016ae13ab27469f5"
+  "rootDigest": "5d6edd670cb225eeab5b9e5e59e26a20182fa647b6eb3666cbeb82451447474f"
 }
