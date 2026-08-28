@@ -308,3 +308,54 @@ test("MD_LINK does not match a bare code span or a reference definition", () => 
   MD_LINK.lastIndex = 0;
   assert.equal([..."`a.md` and [ref]: b.md".matchAll(MD_LINK)].length, 0);
 });
+
+test("scanText ignores links inside Markdown code spans and fences", () => {
+  const text = [
+    "`[inline](inline.md)`",
+    "````text",
+    "[transcript](./00001/0001.jpg)",
+    "```",
+    "````",
+    "~~~md",
+    "[tilde](tilde.md)",
+    "~~~",
+    "[outside](outside.md)",
+    "```text\r\n[unclosed](unclosed.md)",
+  ].join("\r\n");
+
+  const out = scanText("research/rd/RD-1.md", text, () => false, new Map(), REPO);
+  assert.deepEqual(out.map((finding) => finding.href), ["outside.md"]);
+});
+
+test("scanPrivateRefs ignores private links inside Markdown code", () => {
+  const privateTarget = `private/reference/${privateDocName("secret")}`;
+  const text = [
+    "````text",
+    `[inert](../../${privateTarget})`,
+    "````",
+    `[live](../../${privateTarget})`,
+  ].join("\n");
+
+  const out = scanPrivateRefs("research/rd/RD-1.md", text, (path) => path === privateTarget);
+  assert.deepEqual(out.map((finding) => finding.href), [`../../${privateTarget}`]);
+});
+
+test("repairText rewrites only live Markdown links, never code examples", () => {
+  const href = "RD-0842-x.md";
+  const text = [
+    `\`[inline](${href})\``,
+    "````text",
+    `[transcript](${href})`,
+    "````",
+    `[live](${href})`,
+  ].join("\n");
+  const findings: BrokenLink[] = [
+    { file: "papers/p.md", href, cls: "MOVED", target: "research/rd/RD-0842-x.md" },
+  ];
+
+  const out = repairText("papers/p.md", text, findings);
+  assert.equal(out.repaired, 1);
+  assert.match(out.text, /`\[inline\]\(RD-0842-x\.md\)`/);
+  assert.match(out.text, /\[transcript\]\(RD-0842-x\.md\)/);
+  assert.match(out.text, /\[live\]\(\.\.\/research\/rd\/RD-0842-x\.md\)/);
+});
