@@ -29,6 +29,112 @@ export interface BrokenLink {
 /** Markdown inline links. Capture groups keep the surrounding syntax for in-place rewriting. */
 export const MD_LINK = /(\[[^\]]*\]\()([^)\s]+)((?:\s+"[^"]*")?\))/g;
 
+interface TextRange {
+  start: number;
+  end: number;
+}
+
+/**
+ * Return the byte-index ranges occupied by Markdown code fences and inline code spans.
+ *
+ * Link-shaped text inside these ranges is evidence or an example, not a live Markdown
+ * link. The implementation is deliberately bounded: fence discovery is one line pass,
+ * and inline backtick runs are paired through a precomputed next-equal-run table.
+ */
+function markdownCodeRanges(text: string): TextRange[] {
+  const fences: TextRange[] = [];
+  let openFence:
+    | { start: number; marker: "`" | "~"; length: number }
+    | undefined;
+
+  for (let lineStart = 0; lineStart < text.length;) {
+    const newline = text.indexOf("\n", lineStart);
+    const lineEndWithNewline = newline < 0 ? text.length : newline + 1;
+    let contentEnd = newline < 0 ? text.length : newline;
+    if (contentEnd > lineStart && text[contentEnd - 1] === "\r") contentEnd--;
+    const line = text.slice(lineStart, contentEnd);
+
+    if (openFence) {
+      const close = /^( {0,3})(`+|~+)[\t ]*$/.exec(line);
+      if (
+        close &&
+        close[2]?.[0] === openFence.marker &&
+        close[2].length >= openFence.length
+      ) {
+        fences.push({ start: openFence.start, end: lineEndWithNewline });
+        openFence = undefined;
+      }
+    } else {
+      const open = /^( {0,3})(`{3,}|~{3,})(.*)$/.exec(line);
+      const markerRun = open?.[2];
+      const info = open?.[3] ?? "";
+      if (markerRun && (markerRun[0] === "~" || !info.includes("`"))) {
+        openFence = {
+          start: lineStart,
+          marker: markerRun[0] as "`" | "~",
+          length: markerRun.length,
+        };
+      }
+    }
+
+    lineStart = lineEndWithNewline;
+  }
+  if (openFence) fences.push({ start: openFence.start, end: text.length });
+
+  const ranges = [...fences];
+  let gapStart = 0;
+  for (const fence of [...fences, { start: text.length, end: text.length }]) {
+    const runs: Array<{ start: number; end: number; length: number }> = [];
+    for (let i = gapStart; i < fence.start;) {
+      if (text[i] !== "`") {
+        i++;
+        continue;
+      }
+      const start = i;
+      while (i < fence.start && text[i] === "`") i++;
+      runs.push({ start, end: i, length: i - start });
+    }
+
+    const nextEqual = new Array<number>(runs.length).fill(-1);
+    const nextByLength = new Map<number, number>();
+    for (let i = runs.length - 1; i >= 0; i--) {
+      const run = runs[i];
+      if (!run) continue;
+      nextEqual[i] = nextByLength.get(run.length) ?? -1;
+      nextByLength.set(run.length, i);
+    }
+    for (let i = 0; i < runs.length;) {
+      const closeIndex = nextEqual[i] ?? -1;
+      if (closeIndex < 0) {
+        i++;
+        continue;
+      }
+      const open = runs[i];
+      const close = runs[closeIndex];
+      if (open && close) ranges.push({ start: open.start, end: close.end });
+      i = closeIndex + 1;
+    }
+    gapStart = fence.end;
+  }
+
+  return ranges.sort((a, b) => a.start - b.start);
+}
+
+function markdownLinksOutsideCode(text: string): RegExpMatchArray[] {
+  const ranges = markdownCodeRanges(text);
+  const matches: RegExpMatchArray[] = [];
+  let rangeIndex = 0;
+  for (const match of text.matchAll(MD_LINK)) {
+    const start = match.index ?? 0;
+    const end = start + match[0].length;
+    while (ranges[rangeIndex] && ranges[rangeIndex]!.end <= start) rangeIndex++;
+    const range = ranges[rangeIndex];
+    if (range && range.start < end) continue;
+    matches.push(match);
+  }
+  return matches;
+}
+
 /**
  * Hrefs that are documentation ABOUT links rather than links. `[see](file.md)` in a template
  * is prose; treating it as breakage buries the real findings under boilerplate.
@@ -150,7 +256,7 @@ export function scanPrivateRefs(
   if (isPrivatePath(relFile)) return []; // private-to-private is in scope by definition
   const dir = posix.dirname(relFile) === "." ? "" : posix.dirname(relFile);
   const out: PrivateRef[] = [];
-  for (const m of text.matchAll(MD_LINK)) {
+  for (const m of markdownLinksOutsideCode(text)) {
     const href = m[2] ?? "";
     if (isExternalHref(href)) continue;
     const rawPath = href.split("#")[0] ?? "";
@@ -177,7 +283,7 @@ export function scanText(
 ): BrokenLink[] {
   const dir = posix.dirname(relFile) === "." ? "" : posix.dirname(relFile);
   const out: BrokenLink[] = [];
-  for (const m of text.matchAll(MD_LINK)) {
+  for (const m of markdownLinksOutsideCode(text)) {
     const href = m[2] ?? "";
     if (isExternalHref(href)) continue;
     const rawPath = href.split("#")[0] ?? "";
@@ -202,27 +308,42 @@ export function repairText(
   const dir = posix.dirname(relFile) === "." ? "" : posix.dirname(relFile);
   let repaired = 0;
   let delinked = 0;
-  const next = text.replace(MD_LINK, (whole, open: string, href: string, close: string) => {
+  const parts: string[] = [];
+  let cursor = 0;
+  for (const match of markdownLinksOutsideCode(text)) {
+    const whole = match[0];
+    const open = match[1] ?? "";
+    const href = match[2] ?? "";
+    const close = match[3] ?? "";
+    const start = match.index ?? 0;
+    parts.push(text.slice(cursor, start));
     const f = findings.find((x) => x.href === href);
-    if (!f) return whole;
+    let replacement = whole;
     // De-linking preserves the path as text while removing the false promise that it is
     // navigable. Applied to PLACEHOLDER always, and to MISSING only when explicitly asked:
     // for an absorbed document whose links point into a repository that is not checked out
     // here, the path IS the provenance and must survive.
-    if (f.cls === "PLACEHOLDER" || (delinkMissing && f.cls === "MISSING")) {
+    if (f && (f.cls === "PLACEHOLDER" || (delinkMissing && f.cls === "MISSING"))) {
       const label = open.slice(1, -2);
       delinked++;
-      return label && label !== href ? `${label} (\`${href}\`)` : `\`${href}\``;
+      replacement = label && label !== href ? `${label} (\`${href}\`)` : `\`${href}\``;
+    } else if (
+      f &&
+      (f.cls === "SELF_PREFIX" || f.cls === "MOVED") &&
+      f.target !== undefined
+    ) {
+      let rel = posix.relative(dir === "" ? "." : dir, f.target);
+      if (rel !== "") {
+        if (!rel.startsWith(".")) rel = "./" + rel;
+        const hashAt = href.indexOf("#");
+        const anchor = hashAt >= 0 ? href.slice(hashAt) : "";
+        repaired++;
+        replacement = open + rel + anchor + close;
+      }
     }
-    if (f.cls !== "SELF_PREFIX" && f.cls !== "MOVED") return whole;
-    if (f.target === undefined) return whole; // AMBIGUOUS never carries a target
-    let rel = posix.relative(dir === "" ? "." : dir, f.target);
-    if (rel === "") return whole;
-    if (!rel.startsWith(".")) rel = "./" + rel;
-    const hashAt = href.indexOf("#");
-    const anchor = hashAt >= 0 ? href.slice(hashAt) : "";
-    repaired++;
-    return open + rel + anchor + close;
-  });
-  return { text: next, repaired, delinked };
+    parts.push(replacement);
+    cursor = start + whole.length;
+  }
+  parts.push(text.slice(cursor));
+  return { text: parts.join(""), repaired, delinked };
 }
