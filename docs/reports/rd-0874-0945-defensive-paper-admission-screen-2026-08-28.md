@@ -47,21 +47,21 @@ Grok returned A `HOLD`, B `REJECT`, and C `HOLD`; it admitted no candidate. Its 
 
 | Candidate | Grok | Local post-filter | Controlling evidence | Publication action |
 |---|---|---|---|---|
-| A | `HOLD` | `REJECT` | the actual disclosures already cover unverified model output, tool results as non-authorizing data, bounded manifests/provenance, and non-authorizing review; the proposed envelope does not clear the distinct-composition threshold | none |
+| A | `HOLD` | `HOLD` | the actual disclosures cover unverified model output, tool results as non-authorizing data, and bounded manifests/provenance, but the remaining combination of frozen exact-revision identity, separate reviewer custody, and a non-authorizing verdict is not shown to be fully disclosed | none pending a fresh overlap review and complete evidence package |
 | B | `REJECT` | `REJECT` | `dp-rd-0417-topology-is-not-authority-reach-is-not-reasoning.md` already controls the retrieval/authority boundary; freshness binding and source reopening are implementation hygiene, not a separate publishable composition here | none |
 | C | `HOLD` | `HOLD` | the worker-lifecycle classifier and provider adapter remain deferred; an effectful manager is rejected; no executable hostile lifecycle KAT or immutable implementation review exists | none |
 
 For A, the overlapping disclosures include:
 
-- `docs/paper/dp-rd-0285b-signed-capability-bounded-mcp-tool-manifests.md`;
-- `docs/paper/dp-rd-0364-governed-ai-inference-output-unverified-by-construction.md`; and
-- `docs/paper/dp-rd-0524-governing-the-ai-control-plane-tool-results-are-data-value-state-not-wrappers.md`.
+- `docs/paper/defensive-papers/dp-rd-0285b-signed-capability-bounded-mcp-tool-manifests.md`;
+- `docs/paper/defensive-papers/dp-rd-0364-governed-ai-inference-output-unverified-by-construction.md`; and
+- `docs/paper/defensive-papers/dp-rd-0524-governing-the-ai-control-plane-tool-results-are-data-value-state-not-wrappers.md`.
 
 For B, the controlling overlap is:
 
-- `docs/paper/dp-rd-0417-topology-is-not-authority-reach-is-not-reasoning.md`.
+- `docs/paper/defensive-papers/dp-rd-0417-topology-is-not-authority-reach-is-not-reasoning.md`.
 
-C may be reopened only if a future, separately authorized implementation provides exact hostile lifecycle traces, a closed provider contract, paired controls, independent review, an honest stage label, and a fresh overlap check. A timer, thread identifier, source-kind token, or silence cannot prove worker health or task success.
+A may be reopened only after a fresh side-by-side overlap review establishes whether its exact-revision and custody split is a distinct defender-positive composition, with an honest stage label and complete reproducible evidence. C may be reopened only if a future, separately authorized implementation provides exact hostile lifecycle traces, a closed provider contract, paired controls, independent review, an honest stage label, and a fresh overlap check. A timer, thread identifier, source-kind token, or silence cannot prove worker health or task success.
 
 ## Final decision
 
