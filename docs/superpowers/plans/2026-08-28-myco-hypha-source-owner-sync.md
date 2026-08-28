@@ -135,11 +135,19 @@
 - Consumes: clean exact candidate commit, plan and graph receipt.
 - Produces: PASS/HOLD with Critical/Important/Minor inventory and integration evidence.
 
-- [ ] **Step 1: Freeze the exact candidate commit and obtain independent source/diff review with LF and physical-CRLF controls.**
-- [ ] **Step 2: Repair every sustained Critical or Important finding RED-first and repeat exact review until C0/I0 or HOLD.**
-- [ ] **Step 3: Fetch again and confirm public Myco/Hypha and Galerina base branches have not drifted.**
-- [ ] **Step 4: Merge the verified public Myco hardening branch into public `main`, rerun build/tests, and push non-force.**
-- [ ] **Step 5: Verify public Hypha `master` remains exact and push only if a committed change exists.**
-- [ ] **Step 6: Merge the verified Galerina synchronization branch into `codex/rd-0858-unit4-process-root`, rerun affected merged-state gates and refresh its exact graph.**
-- [ ] **Step 7: Push approved merged branches non-force, then remove only proven integrated topic branches/worktrees.**
+- [x] **Step 1: Freeze the exact candidate commit and obtain independent source/diff review with LF and physical-CRLF controls.**
+- [x] **Step 2: Repair every sustained Critical or Important finding RED-first and repeat exact review until C0/I0 or HOLD.**
+- [x] **Step 3: Fetch again and confirm public Myco/Hypha and Galerina base branches have not drifted.**
+- [x] **Step 4: Merge the verified public Myco hardening branch into public `main`, rerun build/tests, and push non-force.**
+- [x] **Step 5: Verify public Hypha `master` remains exact and push only if a committed change exists.**
+- [x] **Step 6: Merge the verified Galerina synchronization branch into `codex/rd-0858-unit4-process-root`, rerun affected merged-state gates and refresh its exact graph.**
+- [x] **Step 7: Push approved merged branches non-force, then remove only proven integrated topic branches/worktrees.**
+
+Closure note: public Myco `main` and `origin/main` are exact at the verified
+hardening commit and the local remote now targets the canonical moved
+repository. Public Hypha was unchanged and remains exact on `master`.
+Galerina process-root contains the independently passed synchronization plus
+the separately reviewed physical-CRLF CLI self-test repair. The only topic
+branch not retired is public Myco's already-contained hardening ref: remote
+deletion was safety-refused, so it is preserved rather than removed indirectly.
 - [ ] **Step 8: Report exact heads, tests, graphs, residual branches, protected files and any HOLD.**

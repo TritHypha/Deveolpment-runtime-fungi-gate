@@ -38,6 +38,13 @@ Resolve RD-0858 and RD-0873 through codex-querying-galerina-rd. Private RD
 metadata is locator-only unless the task has explicit private-KB custody. Treat
 STALE, PRIVATE, AMBIGUOUS, MISSING and HOLD exactly as returned.
 
+Before any implementation, verify the completed Myco/Hypha source-owner closure
+recorded in docs/independent-audits/2026-08-28-myco-hypha-source-owner-sync-pass.md.
+Public Myco main must contain the pinned source-owner commit, public Hypha must
+remain exact, and the Galerina package audits must reproduce the declared
+partial fork and vendored extractor. Myco and Hypha are single-root evidence
+engines; AGENTS remains the sole Git/multi-worktree controller.
+
 Verify Git branch, HEAD, tree, staged state, tracked/untracked dirt, remotes and
 all registered worktrees before creating an implementation worktree. The
 published planning owner is codex/rd-0858-unit4-process-root. Derive the exact
@@ -197,10 +204,20 @@ new identity and receipt. Runtime rescue and silent substitution are forbidden.
 
 ## 6. Current checkpoint and blockers
 
-Planning is complete. No RD-0873 implementation file and no new `.fungi` source
-has been authored.
+Planning is complete. The prerequisite Myco/Hypha source-owner synchronization
+is integrated and published on the RD-0858 process-root branch. Public Myco
+`main` is exact at
+`c4ff2ca3c53e8c8cb8b5f6a7a589a096d85a1fd6`; public Hypha `master`
+remains exact at
+`9a15296b2589794cb92fed423953a711db7b36c7`. The Galerina
+synchronization passed independent whole-change review at Critical 0 /
+Important 0 / Minor 0, and its physical-CRLF Hypha self-test repair separately
+passed Critical 0 / Important 0 review. No RD-0873 implementation file and no
+new `.fungi` source has been authored.
 
-The complete phase-close remains `93/96`. Preserve all three open roots:
+The latest fully provisioned phase-close is `71/96`. Preserve its 25
+inherited, ordering and freshness reds. The three pre-Fungi foundation roots
+remain:
 
 1. the generated conversion queue is stale at the current build point;
 2. inherited conversion-slice receipts omit exact product/package/file/symbol,
@@ -208,10 +225,31 @@ The complete phase-close remains `93/96`. Preserve all three open roots:
 3. the monolithic corpus audit does not emit a terminal receipt inside its
    600-second wrapper deadline.
 
-Older `94/96` receipts are historical evidence. They cannot be relabelled as
-current closure. The completed scalar oracle is exact bounded evidence for its
-own flow; it is not a general conversion template, an unopened locator,
-production authority or permission to retire TypeScript.
+Older `93/96` and `94/96` receipts are historical evidence. They cannot be
+relabelled as current closure. The completed scalar oracle is exact bounded
+evidence for its own flow; it is not a general conversion template, an
+unopened locator, production authority or permission to retire TypeScript.
+
+The verified Myco/Hypha baseline for the next task is:
+
+- public Myco build PASS and tests 80/80;
+- Galerina Myco source-owner audit CLEAN, typecheck/build PASS and tests
+  124/124;
+- public Hypha self-test PASS;
+- Galerina Hypha explicit vendor check current, package tests 51/51 and CLI
+  self-test 58/58 under both true-LF and physical-CRLF review;
+- package-root lock 100 packages / 46 internal edges / 138 external bootstrap
+  edges;
+- tooling contract 100 packages / 198 tools / zero violations;
+- product boundary 100 packages / 10,876 edges / zero findings;
+- package graph 100 packages / 201 outputs;
+- repository graph/index fixed point 9/9;
+- external implementation graph 66,322 nodes / 170,156 edges / zero skipped
+  files at `a2c416ec65f7dc07d9cc0fca3c289b5a6dd7721e`.
+
+The handover documentation commit is later than that implementation graph.
+Refresh the external graph after reopening this file; never report the
+`a2c416ec` graph as exact for a later documentation commit.
 
 ## 7. Required work order
 
@@ -477,4 +515,3 @@ exact handover paths, and report publication state explicitly.
   not authorize deleting live or archived task sources while Codex is open.
 - The external Galerina graph must be refreshed again after this handover commit;
   the prior RD-0873 graph receipt is not exact for later commits.
-

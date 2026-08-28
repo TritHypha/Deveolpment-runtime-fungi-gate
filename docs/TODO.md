@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Myco and Hypha source-owner synchronization closure - 2026-08-28
+
+- [x] Fast-forward public Myco hardening into public `main`, rerun its build
+  and 80/80 tests, push non-force and update the local remote locator to the
+  canonical moved repository. Local and remote `main` are exact at
+  `c4ff2ca3c53e8c8cb8b5f6a7a589a096d85a1fd6`.
+- [x] Verify public Hypha without inventing a change. Local and remote
+  `master` remain exact at
+  `9a15296b2589794cb92fed423953a711db7b36c7`; its self-test passes.
+- [x] Synchronize the retained Galerina Myco and Hypha packages, preserve all
+  declared Galerina-only behavior, and independently close the exact candidate
+  at Critical 0 / Important 0 / Minor 0.
+- [x] Repair the merged checkout's physical-CRLF Hypha self-test RED by routing
+  it through the same committed-source boundary as the vendor checker.
+  Independent focused review passed Critical 0 / Important 0; after LF
+  normalization, package tests pass 51/51 and the CLI self-test passes 58/58.
+- [x] Rebuild and verify the package-root lock, tooling contract, product
+  boundary, package graph and all nine graph/index layers. The last
+  implementation graph closure is `a2c416ec6`; the external exact-head graph
+  has 66,322 nodes, 170,156 edges and zero skipped files.
+- [x] Publish the Galerina process-root non-force. No `.fungi`, `.gate` or
+  `.myco/**` path changed.
+- [!] Public Myco's already-contained hardening topic ref remains. Remote
+  deletion was safety-refused, so no indirect deletion or force action is
+  permitted.
+- [!] Preserve AGENTS as the only Git/multi-worktree controller. Public and
+  Galerina Myco/Hypha packages are single-root evidence engines; they do not
+  merge, switch, delete, publish or authorize branches.
+
 ### RD-0873 native Fungi bootstrap and conversion admission - 2026-08-28
 
 - [x] Reconcile the product-family architecture with the completed scalar
@@ -25,10 +54,12 @@ counts or open items that a newer section explicitly supersedes.
   concurrency is two and the hard ceiling is four. Git, graph/index/registry
   writers, Myco refresh, shared build outputs, complete estates and final
   aggregation remain sequential barriers.
-- [!] Preserve the current complete phase-close as `93/96`. The conversion
-  queue is stale, inherited conversion receipts omit exact scope, and the
-  monolithic corpus child has no terminal receipt inside 600 seconds. Older
-  `94/96` scalar receipts remain historical evidence, not current closure.
+- [!] Preserve the latest fully provisioned synchronization phase-close as
+  `71/96`. Its 25 reds are inherited, ordering or freshness blockers,
+  including the stale conversion queue, incomplete inherited conversion
+  receipt scope and the monolithic corpus child without a terminal receipt
+  inside 600 seconds. Older `93/96` and `94/96` receipts remain historical
+  evidence, not current closure.
 - [ ] Implement Corpus Audit v2 with exact content/toolchain identities,
   deterministic shards, WORKSET and PROJECT profiles, bounded per-shard
   terminal receipts, resumable exact-build aggregation and sequential/parallel
