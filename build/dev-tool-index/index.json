@@ -203,7 +203,7 @@
     {
       "name": "galerina-tools-myco",
       "kind": "tools",
-      "description": "grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-",
+      "description": "grep, but it grows a graph — a graph-indexed search tool for file contents and filenames. Smart-case, token-pr",
       "tests": 80,
       "hasTestScript": true,
       "border": "PASS",
@@ -1908,7 +1908,6 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
-        "sinks/taint",
         "signing/fusion",
         "naming",
         "source-hygiene",
@@ -4240,7 +4239,6 @@
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
       "audit-papers-index.mjs",
-      "audit-private-doc-leak.mjs",
       "audit-registry-fixtures.mjs",
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
