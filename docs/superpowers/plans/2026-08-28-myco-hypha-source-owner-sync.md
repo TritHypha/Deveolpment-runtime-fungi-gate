@@ -33,12 +33,12 @@
 - Consumes: exact Git refs and clean working sets.
 - Produces: immutable base identities and baseline test evidence.
 
-- [ ] **Step 1: Fetch public remotes with finite Git deadlines and compare remote tips without modifying source files.**
-- [ ] **Step 2: Verify public Myco's hardening branch contains `main` and record its unique commit range.**
-- [ ] **Step 3: Run public Myco build and complete test suite.**
-- [ ] **Step 4: Run public Hypha complete self-test/package test suite.**
-- [ ] **Step 5: Run Galerina Myco and Hypha package baselines from the isolated worktree, supplying explicit upstream locators where the current scripts permit it.**
-- [ ] **Step 6: Record every expected stale/provenance failure as RED evidence; refuse unexpected baseline failures.**
+- [x] **Step 1: Fetch public remotes with finite Git deadlines and compare remote tips without modifying source files.**
+- [x] **Step 2: Verify public Myco's hardening branch contains `main` and record its unique commit range.**
+- [x] **Step 3: Run public Myco build and complete test suite.**
+- [x] **Step 4: Run public Hypha complete self-test/package test suite.**
+- [x] **Step 5: Run Galerina Myco and Hypha package baselines from the isolated worktree, supplying explicit upstream locators where the current scripts permit it.**
+- [x] **Step 6: Record every expected stale/provenance failure as RED evidence; refuse unexpected baseline failures.**
 
 ### Task 2: Make source-owner lookup worktree-safe
 
@@ -53,15 +53,15 @@
 - Consumes: optional `--upstream <repo>` and Git common-directory identity.
 - Produces: `resolveUpstreamRepository(argv)` for each synchronization tool; bounded refusal on absent or malformed identity.
 
-- [ ] **Step 1: Add a Myco test that runs the audit from a synthetic linked worktree and proves the default resolves the sibling beside the primary repository, not beside `.worktrees`.**
-- [ ] **Step 2: Run the focused Myco test and verify RED from the old checkout-depth default.**
-- [ ] **Step 3: Implement bounded Git-common-directory resolution plus explicit-upstream precedence.**
-- [ ] **Step 4: Run the focused Myco test and existing audit self-test to verify GREEN.**
-- [ ] **Step 5: Add Hypha tests for linked-worktree default resolution, explicit-upstream precedence, missing-source refusal and deterministic check/write output.**
-- [ ] **Step 6: Run the focused Hypha tests and verify RED from the old checkout-depth default.**
-- [ ] **Step 7: Implement the same resolution contract in the Hypha vendor generator without adding a shared runtime dependency.**
-- [ ] **Step 8: Run focused Myco and Hypha tests to verify GREEN, then inspect the exact diff.**
-- [ ] **Step 9: Commit only Task 2 paths.**
+- [x] **Step 1: Add a Myco test that runs the audit from a synthetic linked worktree and proves the default resolves the sibling beside the primary repository, not beside `.worktrees`.**
+- [x] **Step 2: Run the focused Myco test and verify RED from the old checkout-depth default.**
+- [x] **Step 3: Implement bounded Git-common-directory resolution plus explicit-upstream precedence.**
+- [x] **Step 4: Run the focused Myco test and existing audit self-test to verify GREEN.**
+- [x] **Step 5: Add Hypha tests for linked-worktree default resolution, explicit-upstream precedence, missing-source refusal and deterministic check/write output.**
+- [x] **Step 6: Run the focused Hypha tests and verify RED from the old checkout-depth default.**
+- [x] **Step 7: Implement the same resolution contract in the Hypha vendor generator without adding a shared runtime dependency.**
+- [x] **Step 8: Run focused Myco and Hypha tests to verify GREEN, then inspect the exact diff.**
+- [x] **Step 9: Commit only Task 2 paths.**
 
 ### Task 3: Reconcile Galerina Myco with public Myco 0.2.2
 
@@ -82,14 +82,14 @@
 - Consumes: public commit `c4ff2ca3c53e8c8cb8b5f6a7a589a096d85a1fd6` and Galerina's local link extension.
 - Produces: a reproducible `PARTIAL_FORK` declaration and compatible Myco 0.2.2 package.
 
-- [ ] **Step 1: Run the source-owner audit against the new upstream commit while metadata still names the old snapshot; verify the expected RED classification.**
-- [ ] **Step 2: Refresh upstream-only shared files from the exact public commit.**
-- [ ] **Step 3: Three-way reconcile model, store and indexer against the declared old snapshot, preserving link nodes and Galerina-only behavior.**
-- [ ] **Step 4: Update version, lock data, README differences and the exact `galerinaVendor` classification.**
-- [ ] **Step 5: Run the source-owner audit and verify GREEN reproduction of the declared partial fork.**
-- [ ] **Step 6: Run Myco typecheck, build and complete tests sequentially.**
-- [ ] **Step 7: Re-run the fenced Markdown link regression family to prove the local extension survived.**
-- [ ] **Step 8: Inspect the exact diff and commit only Task 3 paths.**
+- [x] **Step 1: Run the source-owner audit against the new upstream commit while metadata still names the old snapshot; verify the expected RED classification.**
+- [x] **Step 2: Refresh upstream-only shared files from the exact public commit.**
+- [x] **Step 3: Three-way reconcile model, store and indexer against the declared old snapshot, preserving link nodes and Galerina-only behavior.**
+- [x] **Step 4: Update version, lock data, README differences and the exact `galerinaVendor` classification.**
+- [x] **Step 5: Run the source-owner audit and verify GREEN reproduction of the declared partial fork.**
+- [x] **Step 6: Run Myco typecheck, build and complete tests sequentially.**
+- [x] **Step 7: Re-run the fenced Markdown link regression family to prove the local extension survived.**
+- [x] **Step 8: Inspect the exact diff and commit only Task 3 paths.**
 
 ### Task 4: Regenerate Galerina Hypha from public Hypha
 
@@ -103,12 +103,12 @@
 - Consumes: exact public Hypha `src/extract.js` bytes at commit `9a15296b2589794cb92fed423953a711db7b36c7`.
 - Produces: deterministic ESM extractor bytes and matching SHA-256 provenance.
 
-- [ ] **Step 1: Run `vendor:check` against the explicit current public source and verify the expected stale RED.**
-- [ ] **Step 2: Run the vendor generator in write mode against that exact source owner.**
-- [ ] **Step 3: Run `vendor:check` and verify GREEN byte/provenance identity.**
-- [ ] **Step 4: Run Hypha self-test and complete package tests sequentially.**
-- [ ] **Step 5: Verify the passive scan leaves the worktree unchanged.**
-- [ ] **Step 6: Inspect generated-only changes and commit only Task 4 paths.**
+- [x] **Step 1: Run `vendor:check` against the explicit current public source and verify the expected stale RED.**
+- [x] **Step 2: Run the vendor generator in write mode against that exact source owner.**
+- [x] **Step 3: Run `vendor:check` and verify GREEN byte/provenance identity.**
+- [x] **Step 4: Run Hypha self-test and complete package tests sequentially.**
+- [x] **Step 5: Verify the passive scan leaves the worktree unchanged.**
+- [x] **Step 6: Inspect generated-only changes and commit only Task 4 paths.**
 
 ### Task 5: Cross-repository compatibility and governance
 
@@ -120,9 +120,9 @@
 - Consumes: synchronized Galerina packages and verified public engines.
 - Produces: exact compatibility, governance and graph receipts.
 
-- [ ] **Step 1: Run AGENTS Myco worktree-controller current-only and registered-worktree probes against the public Myco engine.**
-- [ ] **Step 2: Run AGENTS Hypha worktree-controller current-only and registered-worktree probes against the public Hypha engine.**
-- [ ] **Step 3: Run Galerina package-root lock, tooling policy, product-boundary and affected package-graph checks sequentially.**
+- [x] **Step 1: Run AGENTS Myco worktree-controller current-only and registered-worktree probes against the public Myco engine.**
+- [x] **Step 2: Run AGENTS Hypha worktree-controller current-only and registered-worktree probes against the public Hypha engine.**
+- [x] **Step 3: Run Galerina package-root lock, tooling policy, product-boundary and affected package-graph checks sequentially.**
 - [ ] **Step 4: Run the bounded affected phase-close route; do not run all audits concurrently.**
 - [ ] **Step 5: Refresh the exact candidate graph with zero undisclosed exclusions and verify required symbols.**
 - [ ] **Step 6: Commit only required generated artifacts and plan status changes.**

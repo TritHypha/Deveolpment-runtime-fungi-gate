@@ -971,7 +971,7 @@ Provides:
 
 ## galerina-tools-myco
 
-grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-precise, and instant on repeat searches.
+grep, but it grows a graph — a graph-indexed search tool for file contents and filenames. Smart-case, token-precise, and instant on repeat searches.
 
 Provides:
 - MAX_INDEX_PATH_LENGTH
@@ -982,10 +982,10 @@ Provides:
 - MAX_INDEX_BYTES
 - IndexLimits
 - DEFAULT_INDEX_LIMITS
+- StoredContentSkip
 - StoredFile
 - StoredIndex
 - isCanonicalIndexPath
-- validateStoredIndex
 
 ## galerina-devtools-benchmarks
 
