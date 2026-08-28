@@ -38,23 +38,23 @@
 - Consumes: exact process-root HEAD, RD-0863, the completed scalar-oracle receipts and current `93/96` phase-close evidence.
 - Produces: one current plan locator and one private RD authority record; no native-source authority.
 
-- [ ] **Step 1: Verify exact custody**
+- [x] **Step 1: Verify exact custody**
 
 Record Galerina branch, HEAD, tree, staged/tracked/untracked state and every registered worktree. Record KB `main`, HEAD and dirt. Refuse an overlapping owner or non-main KB checkout.
 
-- [ ] **Step 2: Validate the documentation pair**
+- [x] **Step 2: Validate the documentation pair**
 
 Require the spec and plan to agree on the three blockers, package roots, profile order, parallel lanes, exclusive barriers and completion-state names.
 
-- [ ] **Step 3: Write the private RD on KB main**
+- [x] **Step 3: Write the private RD on KB main**
 
 Use RD-0873 because exact retained Git refs reserve RD-0864 through RD-0872. End the record with the required house-verdict table. The record grants planning authority only.
 
-- [ ] **Step 4: Refresh KB metadata and navigation**
+- [x] **Step 4: Refresh KB metadata and navigation**
 
 Run the KB session-close generation sequence in `tools/README.md` sequentially. Preserve any path, encoding, link or memory refusal; do not push through red.
 
-- [ ] **Step 5: Commit exact documentation paths**
+- [x] **Step 5: Commit exact documentation paths**
 
 Commit the KB RD and generated KB indexes with explicit pathspecs on KB `main`. Commit the Galerina spec, plan, TODO, roadmap and required generated documentation outputs separately on the planning branch.
 

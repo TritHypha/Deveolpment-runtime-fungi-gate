@@ -13,6 +13,13 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Approve one new governing design and implementation plan. The next
   chapter repairs corpus and conversion evidence first, then admits one small
   Galerina-specific native slice under scalar profile `1`.
+- [x] Publish the Galerina planning branch and add the restart-grade handover at
+  `docs/handover/HANDOVER-rd-0873-native-fungi-bootstrap-2026-08-28.md`.
+  The handover defines the authority chain, vocabulary, directory map, branch
+  procedure, phased implementation, explicit-exit rules and closure gates.
+- [!] The KB RD and indexes are committed on KB `main`, but remote publication
+  remains held by the KB memory-preflight gate. Do not infer that a committed
+  private RD is available to another machine until the KB remote is verified.
 - [x] Reuse the canonical AGENTS `audit-map.mjs` and
   `bounded-tool-batch.mjs` for approved independent read-only tasks. Default
   concurrency is two and the hard ceiling is four. Git, graph/index/registry
