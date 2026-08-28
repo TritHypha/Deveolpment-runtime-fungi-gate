@@ -1,15 +1,16 @@
 #!/usr/bin/env node
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "..");
-const WORKSPACE_ROOT = resolve(PACKAGE_ROOT, "..", "..", "..");
-const UPSTREAM = join(WORKSPACE_ROOT, "subprojects", "hypha", "src", "extract.js");
 const TARGET = join(PACKAGE_ROOT, "src", "extract.mjs");
 const PROVENANCE = join(PACKAGE_ROOT, "src", "provenance.json");
+const CHILD_TIMEOUT_MS = 30_000;
+const CHILD_MAX_BUFFER = 1024 * 1024;
 
 const EXPORTED = Object.freeze([
   "distDir",
@@ -28,6 +29,53 @@ const EXPORTED = Object.freeze([
 
 function refuse(message) {
   throw new Error(`hypha vendor refused: ${message}`);
+}
+
+function git(repo, args) {
+  const safeRepo = resolve(repo).split(sep).join("/");
+  return execFileSync("git", ["-c", `safe.directory=${safeRepo}`, ...args], {
+    cwd: repo,
+    encoding: "utf8",
+    timeout: CHILD_TIMEOUT_MS,
+    maxBuffer: CHILD_MAX_BUFFER,
+    windowsHide: true,
+  });
+}
+
+export function sourceOwnerRootFromCommonDir(commonDir, ownerName) {
+  const normalized = resolve(commonDir);
+  if (basename(normalized).toLowerCase() !== ".git") {
+    refuse("Git common directory must end in .git");
+  }
+  if (!/^[a-z0-9][a-z0-9-]*$/u.test(ownerName)) {
+    refuse("source owner name is invalid");
+  }
+  return resolve(normalized, "..", "..", "subprojects", ownerName);
+}
+
+function defaultUpstreamRoot() {
+  const commonDir = git(PACKAGE_ROOT, [
+    "rev-parse",
+    "--path-format=absolute",
+    "--git-common-dir",
+  ]).trim();
+  return sourceOwnerRootFromCommonDir(commonDir, "hypha");
+}
+
+function parseArgs(argv) {
+  let mode = "--write";
+  let upstreamRoot;
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === "--write" || arg === "--check") mode = arg;
+    else if (arg === "--upstream") {
+      const value = argv[index + 1];
+      if (!value) refuse("--upstream requires a repository root");
+      upstreamRoot = resolve(value);
+      index += 1;
+    } else refuse(`unknown argument ${arg}`);
+  }
+  return { mode, upstreamRoot };
 }
 
 function replaceExactly(source, before, after, label) {
@@ -106,12 +154,12 @@ function render(upstreamBytes) {
   return { target: header + body, provenance };
 }
 
-function main() {
-  const mode = process.argv[2] ?? "--write";
-  if (mode !== "--write" && mode !== "--check") refuse(`unknown mode ${mode}`);
-  if (!existsSync(UPSTREAM)) refuse("upstream source is unavailable");
+function main(argv = process.argv.slice(2)) {
+  const { mode, upstreamRoot } = parseArgs(argv);
+  const upstream = join(upstreamRoot ?? defaultUpstreamRoot(), "src", "extract.js");
+  if (!existsSync(upstream)) refuse("upstream source is unavailable");
 
-  const rendered = render(readFileSync(UPSTREAM));
+  const rendered = render(readFileSync(upstream));
   if (mode === "--check") {
     if (!existsSync(TARGET) || !existsSync(PROVENANCE)) refuse("vendored outputs are absent");
     if (readFileSync(TARGET, "utf8") !== rendered.target) refuse("src/extract.mjs is stale");
@@ -125,4 +173,6 @@ function main() {
   process.stdout.write("hypha vendor: updated src/extract.mjs and src/provenance.json\n");
 }
 
-main();
+if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
+  main();
+}

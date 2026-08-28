@@ -10,12 +10,11 @@
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, relative, resolve, sep } from "node:path";
+import { basename, dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(SCRIPT_DIR, "..");
-const DEFAULT_UPSTREAM = resolve(PACKAGE_ROOT, "..", "..", "..", "subprojects", "myco");
 const CHILD_TIMEOUT_MS = 30_000;
 const CHILD_MAX_BUFFER = 4 * 1024 * 1024;
 const MAX_SOURCE_FILES = 128;
@@ -50,13 +49,39 @@ export function compareSnapshot(actual, expected) {
 }
 
 function git(repo, args, encoding = "utf8") {
-  return execFileSync("git", args, {
+  const safeRepo = resolve(repo).split(sep).join("/");
+  return execFileSync("git", ["-c", `safe.directory=${safeRepo}`, ...args], {
     cwd: repo,
     encoding,
     timeout: CHILD_TIMEOUT_MS,
     maxBuffer: CHILD_MAX_BUFFER,
     windowsHide: true,
   });
+}
+
+export function sourceOwnerRootFromCommonDir(commonDir, ownerName) {
+  const normalized = resolve(commonDir);
+  if (basename(normalized).toLowerCase() !== ".git") {
+    throw new Error("Git common directory must end in .git");
+  }
+  if (!/^[a-z0-9][a-z0-9-]*$/u.test(ownerName)) {
+    throw new Error("source owner name is invalid");
+  }
+  return resolve(normalized, "..", "..", "subprojects", ownerName);
+}
+
+export function equalSourceBytes(left, right) {
+  const canonical = (bytes) => bytes.toString("utf8").replaceAll("\r\n", "\n");
+  return canonical(left) === canonical(right);
+}
+
+function defaultUpstream() {
+  const commonDir = git(PACKAGE_ROOT, [
+    "rev-parse",
+    "--path-format=absolute",
+    "--git-common-dir",
+  ]).trim();
+  return sourceOwnerRootFromCommonDir(commonDir, "myco");
 }
 
 function localSourcePaths(root) {
@@ -97,7 +122,7 @@ function reproduce(upstream, commit) {
     }
     const upstreamBytes = git(upstream, ["show", commit + ":" + path], null);
     const localBytes = readFileSync(local);
-    (Buffer.compare(upstreamBytes, localBytes) === 0 ? exactPaths : divergentPaths).push(path);
+    (equalSourceBytes(upstreamBytes, localBytes) ? exactPaths : divergentPaths).push(path);
   }
 
   return {
@@ -133,12 +158,12 @@ function main(argv) {
   const json = argv.includes("--json");
   if (!selfTest(json ? console.error : console.log)) return 2;
   const upstreamIndex = argv.indexOf("--upstream");
-  const upstream = upstreamIndex >= 0 ? resolve(argv[upstreamIndex + 1] ?? "") : DEFAULT_UPSTREAM;
-  if (!existsSync(upstream)) {
-    console.error("REFUSED: public Myco source owner not found: " + upstream);
-    return 2;
-  }
   try {
+    const upstream = upstreamIndex >= 0 ? resolve(argv[upstreamIndex + 1] ?? "") : defaultUpstream();
+    if (!existsSync(upstream)) {
+      console.error("REFUSED: public Myco source owner not found");
+      return 2;
+    }
     const pkg = JSON.parse(readFileSync(resolve(PACKAGE_ROOT, "package.json"), "utf8"));
     const vendor = pkg.galerinaVendor;
     if (!vendor || vendor.snapshotStatus?.kind !== "PARTIAL_FORK") {
@@ -150,7 +175,7 @@ function main(argv) {
     const payload = {
       publicSourceOwner: vendor.publicSourceOwner,
       upstreamSnapshotCommit: vendor.upstreamSnapshotCommit,
-      upstream,
+      sourceOwnerLookup: upstreamIndex >= 0 ? "explicit" : "primary-sibling",
       ...result,
     };
     if (json) console.log(JSON.stringify(payload, null, 2));
