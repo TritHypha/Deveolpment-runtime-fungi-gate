@@ -4,6 +4,45 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 native Fungi bootstrap and conversion admission - 2026-08-28
+
+- [x] Reconcile the product-family architecture with the completed scalar
+  chapter. The scalar oracle under
+  `packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/` is implemented
+  bounded evidence, not an unopened locator or general conversion template.
+- [x] Approve one new governing design and implementation plan. The next
+  chapter repairs corpus and conversion evidence first, then admits one small
+  Galerina-specific native slice under scalar profile `1`.
+- [x] Reuse the canonical AGENTS `audit-map.mjs` and
+  `bounded-tool-batch.mjs` for approved independent read-only tasks. Default
+  concurrency is two and the hard ceiling is four. Git, graph/index/registry
+  writers, Myco refresh, shared build outputs, complete estates and final
+  aggregation remain sequential barriers.
+- [!] Preserve the current complete phase-close as `93/96`. The conversion
+  queue is stale, inherited conversion receipts omit exact scope, and the
+  monolithic corpus child has no terminal receipt inside 600 seconds. Older
+  `94/96` scalar receipts remain historical evidence, not current closure.
+- [ ] Implement Corpus Audit v2 with exact content/toolchain identities,
+  deterministic shards, WORKSET and PROJECT profiles, bounded per-shard
+  terminal receipts, resumable exact-build aggregation and sequential/parallel
+  semantic parity.
+- [ ] Implement conversion-slice receipt v2 and queue v3. Bind exact product,
+  package, file, symbol, source, candidate, RD, plan, gate and exclusion scope;
+  do not upgrade historical scope-less receipts.
+- [ ] Select one post-oracle native slice through codebase-memory, Myco, Hypha,
+  Code Logic Workbench and independent review. Keep source bodies out of graph,
+  memory and selection reports.
+- [ ] Author one scalar Galerina-native slice only after the complete corpus,
+  queue and receipt foundation is green. Require explicit exits, checked
+  semantic/GIR parity and exact product/artifact identity.
+- [!] Keep profile `64`, profile `256`, compatibility `32`, TypeScript
+  retirement, Trametes, quantum products, `.gate`, VOK authority, production
+  selection and release outside RD-0873.
+- [ ] Merge the later implementation branch into the RD-0858 process-root only
+  after exact Git Custody, Critical 0 / Important 0 independent review,
+  exact-head zero-unexpected-exclusion graph and clean integrated verification.
+  `main` remains a separate terminal integration decision.
+
 ### Product-family package readiness checkpoint - 2026-08-26
 
 - [x] Move the TypeScript host estate from `packages-galerina/` to

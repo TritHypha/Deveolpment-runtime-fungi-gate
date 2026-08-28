@@ -1,7 +1,58 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-27
-Branch: `codex/rd-0858-unit4-scalar-oracle`
+Date: 2026-08-28
+Branch: `codex/rd-0873-native-fungi-bootstrap-plan`
+
+## RD-0873 native Fungi bootstrap and conversion admission - 2026-08-28
+
+The completed scalar-oracle package is now the fixed semantic control for the
+next native chapter. It is no longer an unopened locator, but it grants no
+general conversion, packed-profile, production or TypeScript-retirement
+authority.
+
+The next chapter starts by closing three current repository exits. The latest
+complete phase-close is **93/96**: the conversion queue is stale, inherited
+conversion receipts omit exact scope, and the monolithic Fungi corpus audit
+does not produce a terminal receipt within its 600-second wrapper deadline.
+The older **94/96** scalar records remain exact historical evidence and are not
+rewritten.
+
+Corpus Audit v2 will have two scopes: a fast exact-file `WORKSET` and a complete
+`PROJECT` corpus. Exact content and toolchain digests replace file time/size as
+cache authority. A deterministic file-set is split into disjoint bounded
+shards, each returning a terminal non-authorizing receipt. The aggregate may
+resume only from receipts bound to the same HEAD, tree, compiler and file-set;
+missing or foreign shards remain `HOLD`.
+
+Galerina will reuse the canonical AGENTS audit-map and bounded-tool-batch
+owners. Approved independent read-only shards may run with default concurrency
+two and a hard ceiling of four. Git effects, graph/index/registry/roadmap
+writers, Myco refresh, shared build outputs, complete estates and final
+phase-close remain sequential exclusive barriers. A finding or refusal stops
+new launches and cannot be normalized to PASS.
+
+After the audit foundation is green, graph and queue evidence will select one
+small Galerina-specific native slice under `packages/fungi/products/galerina/`.
+It must have closed inputs, outputs, effects and exits; scalar profile `1`;
+mechanical checked-semantic and GIR comparison; and exact product, policy,
+source, artifact and build identities. Product-neutral promotion into
+`packages/fungi/shared` or `core` requires measured multi-product reuse and a
+later owner decision.
+
+The authoritative route remains checked Galerina source -> immutable checked
+snapshot -> width-independent GIR -> detached artifact -> SLIDE physical
+binding and independent re-admission -> VOK affine lease -> terminal receipt
+or refusal. Lyth remains non-authorizing and `.gate` remains a laboratory lane.
+
+Implementation beyond scalar stays ordered `64`, then `256`; `32` remains an
+admission-time compatibility replan. Trametes, quantum products, TypeScript
+retirement, VOK authority, production admission and release remain closed.
+
+Governing documents:
+
+- `docs/superpowers/specs/2026-08-28-rd-0873-native-fungi-bootstrap-design.md`
+- `docs/superpowers/plans/2026-08-28-rd-0873-native-fungi-bootstrap.md`
+- private KB RD-0873 on KB `main`
 
 ## Product-family package readiness - 2026-08-26
 
