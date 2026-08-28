@@ -1,6 +1,6 @@
 {
   "vendoredFrom": "subprojects/hypha/src/extract.js",
-  "sha256": "21899aeb3954156f4a0c9b36d2ca19e36174c528518e5e1d9f3a829509a2f298",
+  "sha256": "10d1bbc3d88fee590978244b1482a89f50b34d67cf0578a1e0c15d06d0d60a6a",
   "exports": [
     "distDir",
     "distFiles",

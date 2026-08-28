@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, dirname, join, resolve, sep } from "node:path";
+import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
+import { basename, dirname, isAbsolute, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -11,6 +11,7 @@ const TARGET = join(PACKAGE_ROOT, "src", "extract.mjs");
 const PROVENANCE = join(PACKAGE_ROOT, "src", "provenance.json");
 const CHILD_TIMEOUT_MS = 30_000;
 const CHILD_MAX_BUFFER = 1024 * 1024;
+const MAX_SOURCE_BYTES = 1024 * 1024;
 
 const EXPORTED = Object.freeze([
   "distDir",
@@ -31,11 +32,11 @@ function refuse(message) {
   throw new Error(`hypha vendor refused: ${message}`);
 }
 
-function git(repo, args) {
+function git(repo, args, encoding = "utf8") {
   const safeRepo = resolve(repo).split(sep).join("/");
-  return execFileSync("git", ["-c", `safe.directory=${safeRepo}`, ...args], {
+  return execFileSync("git", ["--no-replace-objects", "-c", `safe.directory=${safeRepo}`, ...args], {
     cwd: repo,
-    encoding: "utf8",
+    encoding,
     timeout: CHILD_TIMEOUT_MS,
     maxBuffer: CHILD_MAX_BUFFER,
     windowsHide: true,
@@ -43,6 +44,9 @@ function git(repo, args) {
 }
 
 export function sourceOwnerRootFromCommonDir(commonDir, ownerName) {
+  if (typeof commonDir !== "string" || !isAbsolute(commonDir)) {
+    refuse("Git common directory must be absolute");
+  }
   const normalized = resolve(commonDir);
   if (basename(normalized).toLowerCase() !== ".git") {
     refuse("Git common directory must end in .git");
@@ -62,20 +66,74 @@ function defaultUpstreamRoot() {
   return sourceOwnerRootFromCommonDir(commonDir, "hypha");
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   let mode = "--write";
+  let modeSeen = false;
   let upstreamRoot;
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === "--write" || arg === "--check") mode = arg;
+    if (arg === "--write" || arg === "--check") {
+      if (modeSeen) refuse(arg === mode ? `duplicate ${arg}` : "conflicting mode arguments");
+      mode = arg;
+      modeSeen = true;
+    }
     else if (arg === "--upstream") {
+      if (upstreamRoot !== undefined) refuse("duplicate --upstream");
       const value = argv[index + 1];
-      if (!value) refuse("--upstream requires a repository root");
+      if (!value || value.startsWith("--")) refuse("--upstream requires a repository root");
+      if (!isAbsolute(value)) refuse("--upstream must be absolute");
       upstreamRoot = resolve(value);
       index += 1;
     } else refuse(`unknown argument ${arg}`);
   }
   return { mode, upstreamRoot };
+}
+
+export function equalSourceBytes(left, right) {
+  const canonical = (bytes) => {
+    if (!Buffer.isBuffer(bytes)) refuse("source bytes must be buffers");
+    const output = Buffer.allocUnsafe(bytes.length);
+    let write = 0;
+    for (let read = 0; read < bytes.length; read += 1) {
+      if (bytes[read] === 0x0d && bytes[read + 1] === 0x0a) continue;
+      output[write] = bytes[read];
+      write += 1;
+    }
+    return output.subarray(0, write);
+  };
+  return canonical(left).equals(canonical(right));
+}
+
+export function readUpstreamSource(upstreamRoot) {
+  const upstream = resolve(upstreamRoot);
+  const upstreamEntry = lstatSync(upstream);
+  if (!upstreamEntry.isDirectory() || upstreamEntry.isSymbolicLink()) {
+    refuse("upstream root must be a regular directory");
+  }
+  const sourceDirectory = join(upstream, "src");
+  const sourceDirectoryEntry = lstatSync(sourceDirectory);
+  if (!sourceDirectoryEntry.isDirectory() || sourceDirectoryEntry.isSymbolicLink()) {
+    refuse("upstream source directory must be a regular directory");
+  }
+  const source = join(sourceDirectory, "extract.js");
+  const entry = lstatSync(source);
+  if (!entry.isFile() || entry.isSymbolicLink()) {
+    refuse("upstream source must be a regular non-symbolic-link file");
+  }
+  if (entry.size > MAX_SOURCE_BYTES) refuse("upstream source exceeds the byte limit");
+  const topLevel = git(upstream, ["rev-parse", "--show-toplevel"]).trim();
+  if (resolve(topLevel).toLowerCase() !== upstream.toLowerCase()) {
+    refuse("upstream root is not the repository top level");
+  }
+  git(upstream, ["ls-files", "--error-unmatch", "--", "src/extract.js"]);
+  if (git(upstream, ["status", "--porcelain=v1", "--untracked-files=no", "--", "src/extract.js"]).trim()) {
+    refuse("upstream source is not clean");
+  }
+  const bytes = git(upstream, ["show", "HEAD:src/extract.js"], null);
+  if (!Buffer.isBuffer(bytes) || bytes.length > MAX_SOURCE_BYTES) {
+    refuse("committed upstream source exceeds the byte limit");
+  }
+  return bytes;
 }
 
 function replaceExactly(source, before, after, label) {
@@ -100,7 +158,12 @@ function removeFreshnessOnly(source) {
 
 function render(upstreamBytes) {
   const digest = createHash("sha256").update(upstreamBytes).digest("hex");
-  let body = upstreamBytes.toString("utf8").replaceAll("\r\n", "\n");
+  let body;
+  try {
+    body = new TextDecoder("utf-8", { fatal: true }).decode(upstreamBytes).replaceAll("\r\n", "\n");
+  } catch {
+    refuse("upstream source is not valid UTF-8");
+  }
 
   body = replaceExactly(body, '"use strict";\n\n', "", "CJS strict directive");
   body = replaceExactly(body, 'const fs = require("fs");\n', 'import fs from "node:fs";\n', "fs import");
@@ -154,16 +217,15 @@ function render(upstreamBytes) {
   return { target: header + body, provenance };
 }
 
-function main(argv = process.argv.slice(2)) {
+export function main(argv = process.argv.slice(2)) {
   const { mode, upstreamRoot } = parseArgs(argv);
-  const upstream = join(upstreamRoot ?? defaultUpstreamRoot(), "src", "extract.js");
-  if (!existsSync(upstream)) refuse("upstream source is unavailable");
+  const upstream = upstreamRoot ?? defaultUpstreamRoot();
 
-  const rendered = render(readFileSync(upstream));
+  const rendered = render(readUpstreamSource(upstream));
   if (mode === "--check") {
     if (!existsSync(TARGET) || !existsSync(PROVENANCE)) refuse("vendored outputs are absent");
-    if (readFileSync(TARGET, "utf8") !== rendered.target) refuse("src/extract.mjs is stale");
-    if (readFileSync(PROVENANCE, "utf8") !== rendered.provenance) refuse("src/provenance.json is stale");
+    if (!equalSourceBytes(readFileSync(TARGET), Buffer.from(rendered.target, "utf8"))) refuse("src/extract.mjs is stale");
+    if (!equalSourceBytes(readFileSync(PROVENANCE), Buffer.from(rendered.provenance, "utf8"))) refuse("src/provenance.json is stale");
     process.stdout.write("hypha vendor check: current\n");
     return;
   }
@@ -174,5 +236,10 @@ function main(argv = process.argv.slice(2)) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
-  main();
+  try {
+    main();
+  } catch {
+    process.stderr.write("REFUSED: Hypha source-owner input or evidence is invalid\n");
+    process.exitCode = 2;
+  }
 }

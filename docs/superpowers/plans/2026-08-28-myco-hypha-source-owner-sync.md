@@ -44,20 +44,19 @@
 
 **Files:**
 - Modify: `packages-ts/galerina-tools-myco/scripts/audit-public-source-owner.mjs`
-- Create: `packages-ts/galerina-tools-myco/tests/public-source-owner-worktree.test.mjs`
-- Modify: `packages-ts/galerina-tools-myco/scripts/run-tests.mjs`
+- Modify: `packages-ts/galerina-tools-myco/tests/public-source-owner-audit.test.ts`
 - Modify: `packages-ts/galerina-devtools-hypha/scripts/vendor-extractor.mjs`
-- Modify: `packages-ts/galerina-devtools-hypha/tests/hypha-devtool.test.mjs`
+- Create: `packages-ts/galerina-devtools-hypha/tests/vendor-extractor.test.mjs`
 
 **Interfaces:**
-- Consumes: optional `--upstream <repo>` and Git common-directory identity.
-- Produces: `resolveUpstreamRepository(argv)` for each synchronization tool; bounded refusal on absent or malformed identity.
+- Consumes: one optional absolute `--upstream <repo>`, one unambiguous mode, and an absolute Git common-directory identity.
+- Produces: strict argument parsing, `sourceOwnerRootFromCommonDir(commonDir, ownerName)`, byte-exact CRLF-only transport comparison, and bounded path-free refusal on absent or malformed identity.
 
-- [x] **Step 1: Add a Myco test that runs the audit from a synthetic linked worktree and proves the default resolves the sibling beside the primary repository, not beside `.worktrees`.**
+- [x] **Step 1: Add focused Myco controls proving that an absolute linked-worktree-shaped Git common directory resolves the sibling beside the primary repository and that relative or malformed identities refuse.**
 - [x] **Step 2: Run the focused Myco test and verify RED from the old checkout-depth default.**
 - [x] **Step 3: Implement bounded Git-common-directory resolution plus explicit-upstream precedence.**
 - [x] **Step 4: Run the focused Myco test and existing audit self-test to verify GREEN.**
-- [x] **Step 5: Add Hypha tests for linked-worktree default resolution, explicit-upstream precedence, missing-source refusal and deterministic check/write output.**
+- [x] **Step 5: Add Hypha controls for absolute common-directory resolution, strict argument admission, missing-source path-safe refusal, source-symlink refusal and CRLF-only transport equivalence.**
 - [x] **Step 6: Run the focused Hypha tests and verify RED from the old checkout-depth default.**
 - [x] **Step 7: Implement the same resolution contract in the Hypha vendor generator without adding a shared runtime dependency.**
 - [x] **Step 8: Run focused Myco and Hypha tests to verify GREEN, then inspect the exact diff.**

@@ -9,8 +9,8 @@
 // Exit 2: refused because the owner repository/build point could not be verified.
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { basename, dirname, relative, resolve, sep } from "node:path";
+import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
+import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
@@ -48,9 +48,9 @@ export function compareSnapshot(actual, expected) {
   return { actual: normalized, findings };
 }
 
-function git(repo, args, encoding = "utf8") {
+export function git(repo, args, encoding = "utf8") {
   const safeRepo = resolve(repo).split(sep).join("/");
-  return execFileSync("git", ["-c", `safe.directory=${safeRepo}`, ...args], {
+  return execFileSync("git", ["--no-replace-objects", "-c", `safe.directory=${safeRepo}`, ...args], {
     cwd: repo,
     encoding,
     timeout: CHILD_TIMEOUT_MS,
@@ -60,6 +60,9 @@ function git(repo, args, encoding = "utf8") {
 }
 
 export function sourceOwnerRootFromCommonDir(commonDir, ownerName) {
+  if (typeof commonDir !== "string" || !isAbsolute(commonDir)) {
+    throw new Error("Git common directory must be absolute");
+  }
   const normalized = resolve(commonDir);
   if (basename(normalized).toLowerCase() !== ".git") {
     throw new Error("Git common directory must end in .git");
@@ -71,8 +74,18 @@ export function sourceOwnerRootFromCommonDir(commonDir, ownerName) {
 }
 
 export function equalSourceBytes(left, right) {
-  const canonical = (bytes) => bytes.toString("utf8").replaceAll("\r\n", "\n");
-  return canonical(left) === canonical(right);
+  const canonical = (bytes) => {
+    if (!Buffer.isBuffer(bytes)) throw new TypeError("source bytes must be buffers");
+    const output = Buffer.allocUnsafe(bytes.length);
+    let write = 0;
+    for (let read = 0; read < bytes.length; read += 1) {
+      if (bytes[read] === 0x0d && bytes[read + 1] === 0x0a) continue;
+      output[write] = bytes[read];
+      write += 1;
+    }
+    return output.subarray(0, write);
+  };
+  return canonical(left).equals(canonical(right));
 }
 
 function defaultUpstream() {
@@ -84,20 +97,27 @@ function defaultUpstream() {
   return sourceOwnerRootFromCommonDir(commonDir, "myco");
 }
 
-function localSourcePaths(root) {
+export function localSourcePaths(root) {
   const paths = [];
+  const sourceRoot = resolve(root, "src");
+  const sourceRootEntry = lstatSync(sourceRoot);
+  if (!sourceRootEntry.isDirectory() || sourceRootEntry.isSymbolicLink()) {
+    throw new Error("source root must be a regular directory");
+  }
   const visit = (dir, depth) => {
     if (depth > MAX_SOURCE_DEPTH) throw new Error("source depth exceeds " + MAX_SOURCE_DEPTH);
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const absolute = resolve(dir, entry.name);
-      if (entry.isDirectory() && entry.name !== ".myco") visit(absolute, depth + 1);
-      else if (entry.isFile()) {
+      const state = lstatSync(absolute);
+      if (state.isSymbolicLink()) throw new Error("source tree contains a symbolic link");
+      if (state.isDirectory() && entry.name !== ".myco") visit(absolute, depth + 1);
+      else if (state.isFile()) {
         paths.push(relative(root, absolute).split(sep).join("/"));
         if (paths.length > MAX_SOURCE_FILES) throw new Error("source file count exceeds " + MAX_SOURCE_FILES);
-      }
+      } else if (!state.isDirectory()) throw new Error("source tree contains an unsupported entry");
     }
   };
-  visit(resolve(root, "src"), 0);
+  visit(sourceRoot, 0);
   return normalize(paths);
 }
 
@@ -153,16 +173,47 @@ function selfTest(log = console.log) {
   return pass;
 }
 
+export function parseArgs(argv) {
+  let json = false;
+  let selfTestMode = false;
+  let upstreamRoot;
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === "--json") {
+      if (json) throw new Error("duplicate --json");
+      json = true;
+      continue;
+    }
+    if (arg === "--self-test") {
+      if (selfTestMode) throw new Error("duplicate --self-test");
+      selfTestMode = true;
+      continue;
+    }
+    if (arg === "--upstream") {
+      if (upstreamRoot !== undefined) throw new Error("duplicate --upstream");
+      const value = argv[index + 1];
+      if (!value || value.startsWith("--")) throw new Error("--upstream requires a repository root");
+      if (!isAbsolute(value)) throw new Error("--upstream must be absolute");
+      upstreamRoot = resolve(value);
+      index += 1;
+      continue;
+    }
+    throw new Error(`unknown argument ${arg}`);
+  }
+  if (selfTestMode && (json || upstreamRoot !== undefined)) {
+    throw new Error("--self-test cannot be combined with other arguments");
+  }
+  return { json, selfTest: selfTestMode, upstreamRoot };
+}
+
 function main(argv) {
-  if (argv.includes("--self-test")) return selfTest() ? 0 : 1;
-  const json = argv.includes("--json");
-  if (!selfTest(json ? console.error : console.log)) return 2;
-  const upstreamIndex = argv.indexOf("--upstream");
   try {
-    const upstream = upstreamIndex >= 0 ? resolve(argv[upstreamIndex + 1] ?? "") : defaultUpstream();
+    const { json, selfTest: selfTestMode, upstreamRoot } = parseArgs(argv);
+    if (selfTestMode) return selfTest() ? 0 : 1;
+    if (!selfTest(json ? console.error : console.log)) return 2;
+    const upstream = upstreamRoot ?? defaultUpstream();
     if (!existsSync(upstream)) {
-      console.error("REFUSED: public Myco source owner not found");
-      return 2;
+      throw new Error("source owner is unavailable");
     }
     const pkg = JSON.parse(readFileSync(resolve(PACKAGE_ROOT, "package.json"), "utf8"));
     const vendor = pkg.galerinaVendor;
@@ -175,7 +226,7 @@ function main(argv) {
     const payload = {
       publicSourceOwner: vendor.publicSourceOwner,
       upstreamSnapshotCommit: vendor.upstreamSnapshotCommit,
-      sourceOwnerLookup: upstreamIndex >= 0 ? "explicit" : "primary-sibling",
+      sourceOwnerLookup: upstreamRoot !== undefined ? "explicit" : "primary-sibling",
       ...result,
     };
     if (json) console.log(JSON.stringify(payload, null, 2));
@@ -185,7 +236,7 @@ function main(argv) {
     }
     return result.findings.length ? 1 : 0;
   } catch (error) {
-    console.error("REFUSED: " + error.message);
+    console.error("REFUSED: public Myco source-owner input or evidence is invalid");
     return 2;
   }
 }
