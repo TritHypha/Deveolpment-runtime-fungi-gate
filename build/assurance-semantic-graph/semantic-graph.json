@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "4b52de1b2f719a20ba7a6c856e1477289bf77da0dd636c3f21a1f668c234459b",
+  "authoritativeInputsDigest": "082dccafc5a3378ad9be9f73e3b4afecd13518187a08d74e930db3325a08061f",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -5414,6 +5414,13 @@
       "id": "test:auto-e4b0587fd9cec10172363cc8",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-devtools-hypha/tests/hypha-devtool.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-3d9da18373b654765ec7946c",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-devtools-hypha/tests/vendor-extractor.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -11978,6 +11985,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-3d9da18373b654765ec7946c",
+      "to": "package:galerina-devtools-hypha",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-e3caba8352b036a57fe77e46",
       "to": "package:galerina-devtools-impact",
       "type": "CLASSIFIES"
@@ -14378,9 +14390,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1113,
+    "tests": 1114,
     "detectors": 6,
-    "executableFamily": 1580,
+    "executableFamily": 1581,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
