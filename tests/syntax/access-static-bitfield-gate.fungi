@@ -1,6 +1,8 @@
 @version 1
 // v2.1 syntax test: access {}, static, bitfield, gate
 
+type RawInput = String
+
 static FLOOR_PROOF = 3
 static MAX_RETRY = 3
 
@@ -10,11 +12,15 @@ bitfield V_DPM_Test {
   secret_access: 2
 }
 
+guard admin_only {
+  permitted_effects {}
+}
+
 gate(admin_only) {
   flow adminAction(userId: String) -> Bool
   contract {
     intent "Admin-only action gated by admission guard"
-    effects { audit.write }
+    effects {}
   }
   {
     trap userId == "" : ERR_EMPTY_USER
@@ -25,7 +31,7 @@ gate(admin_only) {
 flow dataProcess(payload: String) -> Result<Bool, Error>
 contract {
   intent "Process data with explicit access negotiation"
-  effects { database.write }
+  effects {}
 }
 access {
   purpose "data-processing"
