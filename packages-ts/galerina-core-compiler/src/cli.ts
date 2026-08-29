@@ -51,7 +51,7 @@ import { assembleWAT } from "./wat-assembler.js";
 import { STDLIB_CAPABILITY_MAP } from "./stdlib-registry.js";
 import { EFFECT_REGISTRY } from "./effect-checker.js";
 import { canonicalHash, hashSource, hashGIR } from "./runtime/canonicalHash.js";
-import { gatherFileImports } from "./module-registry.js";
+import { buildImportedTypeContext, gatherFileImports } from "./module-registry.js";
 import { loadPackageManifest } from "./package-resolver.js";
 import { generateCycloneDxSbom } from "./sbom.js";
 import { dispatchGateSource, findGateRegistry } from "./gate-dispatch.js";
@@ -480,6 +480,7 @@ export function compileFile(
   // This is additive — no existing behaviour is changed.
   const absoluteFilePath = resolvePath(filePath);
   const importResult = gatherFileImports(parseResult.ast, absoluteFilePath);
+  const importedTypeContext = buildImportedTypeContext(importResult);
   for (const diag of importResult.diagnostics) {
     pushDiag(
       diagnostics,
@@ -520,7 +521,7 @@ export function compileFile(
     );
   }
 
-  const typeResult = checkTypes(parseResult.ast);
+  const typeResult = checkTypes(parseResult.ast, importedTypeContext);
   for (const d of typeResult.diagnostics) {
     pushDiag(
       diagnostics,
@@ -1097,16 +1098,20 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
 
   // Collect WAT from all files by compiling them
   const watParts: string[] = [];
+  let inputWasBlocked = false;
 
   for (const filePath of files) {
     let source: string;
     try {
       source = readFileSync(filePath, "utf8"); // perf-allow: loop-sync-io — one read/write per file in a per-file CLI build/scan loop (or one-shot startup config resolution) — distinct path per iteration, not hoistable, not O(n²)
     } catch {
+      inputWasBlocked = true;
       continue;
     }
 
     const parseResult = parseProgram(source, filePath, { requireVersionHeader: true });
+    const importResult = gatherFileImports(parseResult.ast, resolvePath(filePath));
+    const importedTypeContext = buildImportedTypeContext(importResult);
     const effectResults = checkEffects(parseResult.flows, parseResult.ast);
 
     // BK-5 / H1 / M1 (fail-closed): the WASM target MUST NOT skip the front-end. Run the full gate —
@@ -1114,9 +1119,9 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
     // (runProductionSecurityGate, the same gate the signing path uses) — and REFUSE to lower/emit an
     // ungoverned or type-unsafe binary. A whole build target silently skipping the governance verifier
     // was the H1 total-bypass; emitting a .wasm after a gate failure was M1; reaching codegen without
-    // checkTypes was BK-5. Any error, or a gate block, drops the file — no artifact is written.
-    const gateErrors: string[] = [];
-    for (const d of checkTypes(parseResult.ast).diagnostics) {
+    // checkTypes was BK-5. Any error, or a gate block, refuses the aggregate build — no artifact is written.
+    const gateErrors = importResult.diagnostics.map((d) => `${d.code}: ${d.message}`);
+    for (const d of checkTypes(parseResult.ast, importedTypeContext).diagnostics) {
       if (d.severity === "error") gateErrors.push(`${d.code}: ${d.message}`);
     }
     const policyResult = evaluateGalerinaGovernance(
@@ -1136,6 +1141,7 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
       runProductionSecurityGate(parseResult.ast, parseResult.flows, source, filePath),
     );
     if (gateErrors.length > 0 || gateBlocks) {
+      inputWasBlocked = true;
       process.stderr.write(
         `[error] ${filePath}: refusing to emit WASM — the production gate blocked it (BK-5/H1/M1 fail-closed).\n` +
         (gateBlocks ? "  - production security gate: BLOCKED\n" : "") +
@@ -1148,6 +1154,7 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
     // enforced by the interpreter and NOT lowered to WAT — a raw WASM run would BYPASS it. Refuse per-file,
     // fail-closed (the emitter also throws as a backstop; this gives a clean message + per-file granularity).
     if (astHasParamAdmission(parseResult.ast)) {
+      inputWasBlocked = true;
       process.stderr.write(
         `[error] ${filePath}: refusing to emit WASM — a flow carries a parameter admission (\`where <predicate>\`) ` +
         `that is not lowered to WAT; a raw WASM run would BYPASS the admission entry gate (fail-closed, bridge 0155). ` +
@@ -1175,6 +1182,7 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
       const watModule = buildWATModuleFromGIR(girResult.gir, STDLIB_CAPABILITY_MAP, "wasm-standalone", parseResult.ast);
       watText = renderWAT(watModule);
     } catch (error) {
+      inputWasBlocked = true;
       const message = error instanceof Error ? error.message : String(error);
       const code = /\b(FUNGI-[A-Z0-9-]+-\d+)\b/.exec(message)?.[1] ?? "FUNGI-BACKEND-001";
       process.stderr.write(
@@ -1186,10 +1194,10 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
     watParts.push(`\n;; === ${filePath} ===\n${watText}`);
   }
 
-  // M1: if every input was blocked (or none were readable), write NOTHING — a gate failure must not
-  // leave a runnable .wasm behind.
-  if (watParts.length === 0) {
-    process.stderr.write(`[error] no WASM emitted — all inputs were blocked by the production gate or unreadable (fail-closed).\n`);
+  // M1: if any input was blocked (or none were readable), write NOTHING — a gate failure must not
+  // leave a runnable partial .wasm behind.
+  if (inputWasBlocked || watParts.length === 0) {
+    process.stderr.write(`[error] no WASM emitted — one or more inputs were blocked by the production gate or unreadable (fail-closed).\n`);
     // 🔴 EXIT CODE, added 2026-08-07. This wrote the error and returned 0, so a
     // build that refused EVERY input and produced NO artifact reported success —
     // and `main` went on to print `PASS`. A CI pipeline gating on the exit
