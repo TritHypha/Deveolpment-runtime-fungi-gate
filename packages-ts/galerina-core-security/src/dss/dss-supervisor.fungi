@@ -40,7 +40,7 @@ record DSSState {
 governed floor_2 flow bootstrapDSS() -> DSSState
 contract {
   intent "Bootstrap the DSS supervisor with initial V_DPM state"
-  effects { allow audit.write }
+  effects {}
 }
 {
   ;; All 8 capability bits set (0xFF = 255)
@@ -60,10 +60,10 @@ contract {
 ;; 2. Applies emergency SM transition if matching guard exists
 ;; 3. Updates V_DPM state monotonically
 ;; 4. Returns updated DSSState
-governed floor_2 flow routeTrapSignal(signal: TrapSignal, state: DSSState) -> DSSState
+governed floor_2 secure flow routeTrapSignal(signal: TrapSignal, state: DSSState) -> DSSState
 contract {
   intent "Route trap signal: AuditEvent + emergency SM + V_DPM update"
-  effects { allow audit.write }
+  effects { audit.write }
   invariant {
     ensure state.vdpm >= 0
   }

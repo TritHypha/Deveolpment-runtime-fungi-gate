@@ -44,7 +44,7 @@ governed floor_3 flow generateReceipt(
 ) -> EpilogueReceipt
 contract {
   intent "Generate an epilogue receipt proving governed execution"
-  effects { allow audit.write }
+  effects {}
   invariant {
     ensure flowId != ""
     ensure sourceHash != ""
@@ -59,6 +59,7 @@ contract {
   ;; inputSeal = "sha256_seal" strategy: combine source + contract
   ;; In Stage A this is computed by the TypeScript mirror
   let inputSeal = "sha256:" + sourceHash + ":" + contractHash
+  let generatedAt = "now"
 
   return EpilogueReceipt {
     strategy:    strategy
@@ -66,7 +67,7 @@ contract {
     outputSeal:  "sha256:" + resultHash
     receiptId:   flowId + ":" + generatedAt
     flowId:      flowId
-    generatedAt: "now"
+    generatedAt: generatedAt
     onFailure:   "log_and_continue"
     verified:    false
   }

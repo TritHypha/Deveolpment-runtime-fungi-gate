@@ -2,7 +2,7 @@
 ;; DWI Allocator — DRCM Phase 5 (#40)
 ;; Deterministic WASM Isolate allocation, fuel injection, and lifecycle management.
 ;;
-;; Stage A: Simulated by the TypeScript interpreter (dwi_allocated AuditEvent emitted)
+;; Stage A: Simulated by the TypeScript interpreter; allocation does not emit an AuditEvent
 ;; Stage B: Real Wasmtime component::instantiate() with isolated linear memory
 ;;
 ;; Build order position: 3 of 7 (after trap-handler.fungi)
@@ -36,7 +36,7 @@ record DWIHandle {
 governed floor_2 flow allocateDWI(callerFlow: String, fuelBudget: Int) -> DWIHandle
 contract {
   intent "Allocate a new DWI isolate for a cross-boundary step call"
-  effects { allow audit.write }
+  effects {}
   invariant {
     ensure callerFlow != ""
     ensure fuelBudget > 0
