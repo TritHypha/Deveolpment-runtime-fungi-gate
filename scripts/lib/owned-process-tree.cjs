@@ -10,7 +10,28 @@ const { types: utilTypes } = require("node:util");
 const DEFAULT_MAX_OUTPUT_BYTES = 64 * 1024 * 1024;
 const DEFAULT_CLEANUP_GRACE_MS = 1_000;
 const WRAPPER_ALLOWANCE_BYTES = 1024 * 1024;
-const JSON_ESCAPE_MAX_BYTES = 6;
+const OWNED_FRAME_MAGIC = Buffer.from("GLRNOWND", "ascii");
+const OWNED_FRAME_VERSION = 1;
+const OWNED_FRAME_HEADER_BYTES = 32;
+const OWNED_FRAME_METADATA_MAX_BYTES = WRAPPER_ALLOWANCE_BYTES - OWNED_FRAME_HEADER_BYTES;
+const OWNED_FRAME_METADATA_KEYS = new Set([
+  "status",
+  "signal",
+  "stdoutBytes",
+  "stderrBytes",
+  "timedOut",
+  "outputLimitExceeded",
+  "cleanupAttempted",
+  "cleanupAcknowledged",
+  "cleanupDetail",
+  "spawnError",
+]);
+const OWNED_FRAME_SPAWN_ERROR_KEYS = new Set(["code", "message"]);
+const OWNED_RAW_RESULT_KEYS = new Set([
+  ...OWNED_FRAME_METADATA_KEYS,
+  "stdoutBuffer",
+  "stderrBuffer",
+]);
 const ASYNC_INPUT_KEYS = new Set([
   "command",
   "args",
@@ -233,7 +254,7 @@ function signalPosixGroup(pid, signal) {
   }
 }
 
-async function runOwnedProcess(value) {
+async function runOwnedProcessRaw(value) {
   const {
     command,
     args,
@@ -299,8 +320,8 @@ async function runOwnedProcess(value) {
       resolve({
         status: typeof status === "number" ? status : null,
         signal: signal || null,
-        stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-        stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        stdoutBuffer: Buffer.concat(stdoutChunks),
+        stderrBuffer: Buffer.concat(stderrChunks),
         stdoutBytes: stdoutState.bytes,
         stderrBytes: stderrState.bytes,
         timedOut,
@@ -418,10 +439,156 @@ async function runOwnedProcess(value) {
   });
 }
 
+async function runOwnedProcess(value) {
+  const { stdoutBuffer, stderrBuffer, ...result } = await runOwnedProcessRaw(value);
+  return {
+    ...result,
+    stdout: stdoutBuffer.toString("utf8"),
+    stderr: stderrBuffer.toString("utf8"),
+  };
+}
+
 function ownedError(code, message) {
   const error = new Error(message);
   error.code = code;
   return error;
+}
+
+function ownedFrameError(message) {
+  return ownedError("OWNED-PROCESS-WRAPPER-MALFORMED", message);
+}
+
+function exactOwnedFrameMetadata(value) {
+  const metadata = exactInputRecord(value, OWNED_FRAME_METADATA_KEYS);
+  if (metadata === null) return null;
+  let spawnError = null;
+  if (metadata.spawnError !== null) {
+    spawnError = exactInputRecord(metadata.spawnError, OWNED_FRAME_SPAWN_ERROR_KEYS);
+    if (
+      spawnError === null
+      || typeof spawnError.code !== "string"
+      || spawnError.code.length === 0
+      || typeof spawnError.message !== "string"
+    ) return null;
+  }
+  if (
+    (metadata.status !== null
+      && (!Number.isSafeInteger(metadata.status) || metadata.status < 0))
+    || (metadata.signal !== null
+      && (typeof metadata.signal !== "string" || metadata.signal.length === 0))
+    || !Number.isSafeInteger(metadata.stdoutBytes) || metadata.stdoutBytes < 0
+    || !Number.isSafeInteger(metadata.stderrBytes) || metadata.stderrBytes < 0
+    || typeof metadata.timedOut !== "boolean"
+    || typeof metadata.outputLimitExceeded !== "boolean"
+    || typeof metadata.cleanupAttempted !== "boolean"
+    || typeof metadata.cleanupAcknowledged !== "boolean"
+    || typeof metadata.cleanupDetail !== "string"
+  ) return null;
+  return { ...metadata, spawnError };
+}
+
+function encodeOwnedProcessFrame(value) {
+  const raw = exactInputRecord(value, OWNED_RAW_RESULT_KEYS);
+  if (
+    raw === null
+    || !Buffer.isBuffer(raw.stdoutBuffer)
+    || utilTypes.isProxy(raw.stdoutBuffer)
+    || Object.getPrototypeOf(raw.stdoutBuffer) !== Buffer.prototype
+    || !Buffer.isBuffer(raw.stderrBuffer)
+    || utilTypes.isProxy(raw.stderrBuffer)
+    || Object.getPrototypeOf(raw.stderrBuffer) !== Buffer.prototype
+  ) throw ownedFrameError("Owned process wrapper raw evidence is invalid.");
+  const { stdoutBuffer, stderrBuffer, ...metadataInput } = raw;
+  const metadata = exactOwnedFrameMetadata(metadataInput);
+  if (metadata === null) throw ownedFrameError("Owned process wrapper metadata is invalid.");
+  const metadataBuffer = Buffer.from(JSON.stringify(metadata), "utf8");
+  if (metadataBuffer.length > OWNED_FRAME_METADATA_MAX_BYTES) {
+    throw ownedFrameError("Owned process wrapper metadata exceeds its fixed allowance.");
+  }
+  const totalLength = OWNED_FRAME_HEADER_BYTES
+    + metadataBuffer.length
+    + stdoutBuffer.length
+    + stderrBuffer.length;
+  if (!Number.isSafeInteger(totalLength) || totalLength > bufferConstants.MAX_LENGTH) {
+    throw ownedFrameError("Owned process wrapper frame exceeds the runtime buffer range.");
+  }
+  const header = Buffer.alloc(OWNED_FRAME_HEADER_BYTES);
+  OWNED_FRAME_MAGIC.copy(header, 0);
+  header.writeUInt8(OWNED_FRAME_VERSION, 8);
+  header.writeUInt32BE(metadataBuffer.length, 12);
+  header.writeBigUInt64BE(BigInt(stdoutBuffer.length), 16);
+  header.writeBigUInt64BE(BigInt(stderrBuffer.length), 24);
+  return Buffer.concat([header, metadataBuffer, stdoutBuffer, stderrBuffer], totalLength);
+}
+
+function parseOwnedProcessFrame(value, options) {
+  const limits = exactInputRecord(options, new Set(["maxStdoutBytes", "maxStderrBytes"]));
+  if (
+    !Buffer.isBuffer(value)
+    || utilTypes.isProxy(value)
+    || Object.getPrototypeOf(value) !== Buffer.prototype
+    || limits === null
+    || !Number.isSafeInteger(limits.maxStdoutBytes) || limits.maxStdoutBytes < 1
+    || !Number.isSafeInteger(limits.maxStderrBytes) || limits.maxStderrBytes < 1
+    || value.length < OWNED_FRAME_HEADER_BYTES
+    || !value.subarray(0, OWNED_FRAME_MAGIC.length).equals(OWNED_FRAME_MAGIC)
+    || value.readUInt8(8) !== OWNED_FRAME_VERSION
+    || value.readUInt8(9) !== 0
+    || value.readUInt8(10) !== 0
+    || value.readUInt8(11) !== 0
+  ) throw ownedFrameError("Owned process wrapper frame header is invalid.");
+
+  const metadataLength = value.readUInt32BE(12);
+  const stdoutLengthBig = value.readBigUInt64BE(16);
+  const stderrLengthBig = value.readBigUInt64BE(24);
+  if (
+    metadataLength > OWNED_FRAME_METADATA_MAX_BYTES
+    || stdoutLengthBig > BigInt(Number.MAX_SAFE_INTEGER)
+    || stderrLengthBig > BigInt(Number.MAX_SAFE_INTEGER)
+  ) throw ownedFrameError("Owned process wrapper frame lengths are invalid.");
+  const stdoutLength = Number(stdoutLengthBig);
+  const stderrLength = Number(stderrLengthBig);
+  const expectedLength = OWNED_FRAME_HEADER_BYTES
+    + metadataLength
+    + stdoutLength
+    + stderrLength;
+  if (
+    !Number.isSafeInteger(expectedLength)
+    || expectedLength !== value.length
+    || stdoutLength > limits.maxStdoutBytes
+    || stderrLength > limits.maxStderrBytes
+    || stdoutLength > bufferConstants.MAX_STRING_LENGTH
+    || stderrLength > bufferConstants.MAX_STRING_LENGTH
+  ) throw ownedFrameError("Owned process wrapper frame payload lengths are invalid.");
+
+  const metadataStart = OWNED_FRAME_HEADER_BYTES;
+  const stdoutStart = metadataStart + metadataLength;
+  const stderrStart = stdoutStart + stdoutLength;
+  const metadataBuffer = value.subarray(metadataStart, stdoutStart);
+  const metadataText = metadataBuffer.toString("utf8");
+  if (!Buffer.from(metadataText, "utf8").equals(metadataBuffer)) {
+    throw ownedFrameError("Owned process wrapper metadata is not valid UTF-8.");
+  }
+  let metadataValue;
+  try {
+    metadataValue = JSON.parse(metadataText);
+  } catch {
+    throw ownedFrameError("Owned process wrapper metadata is not valid JSON.");
+  }
+  const metadata = exactOwnedFrameMetadata(metadataValue);
+  if (
+    metadata === null
+    || metadata.stdoutBytes < stdoutLength
+    || metadata.stderrBytes < stderrLength
+    || (!metadata.outputLimitExceeded
+      && (metadata.stdoutBytes !== stdoutLength || metadata.stderrBytes !== stderrLength))
+  ) throw ownedFrameError("Owned process wrapper metadata does not match its payload.");
+
+  return {
+    ...metadata,
+    stdout: value.subarray(stdoutStart, stderrStart).toString("utf8"),
+    stderr: value.subarray(stderrStart, expectedLength).toString("utf8"),
+  };
 }
 
 function runOwnedProcessSync(value) {
@@ -437,11 +604,7 @@ function runOwnedProcessSync(value) {
     maxStderrBytes,
     windowsHide,
   } = normalizeInput(value, true);
-  const wrapperRawBytes = maxStdoutBytes + maxStderrBytes;
-  if (!Number.isSafeInteger(wrapperRawBytes)) {
-    throw inputError("Owned process wrapper output limits exceed the safe buffer range.");
-  }
-  const wrapperMaxBuffer = (wrapperRawBytes * JSON_ESCAPE_MAX_BYTES) + WRAPPER_ALLOWANCE_BYTES;
+  const wrapperMaxBuffer = maxStdoutBytes + maxStderrBytes + WRAPPER_ALLOWANCE_BYTES;
   if (
     !Number.isSafeInteger(wrapperMaxBuffer)
     || wrapperMaxBuffer > bufferConstants.MAX_LENGTH
@@ -463,18 +626,21 @@ function runOwnedProcessSync(value) {
     cwd: ROOT,
     env,
     input: JSON.stringify(request),
-    encoding: "utf8",
+    encoding: null,
     shell: false,
     windowsHide: true,
     timeout: timeoutMs + (cleanupGraceMs * 2) + 10_000,
     maxBuffer: wrapperMaxBuffer,
   });
+  const wrapperStderr = Buffer.isBuffer(wrapper.stderr)
+    ? wrapper.stderr.toString("utf8")
+    : "";
   if (wrapper.error) {
     return {
       status: wrapper.status,
       signal: wrapper.signal,
       stdout: "",
-      stderr: wrapper.stderr || "",
+      stderr: wrapperStderr,
       error: wrapper.error,
       owned: null,
     };
@@ -484,7 +650,7 @@ function runOwnedProcessSync(value) {
       status: wrapper.status,
       signal: wrapper.signal,
       stdout: "",
-      stderr: wrapper.stderr || "",
+      stderr: wrapperStderr,
       error: ownedError(
         "OWNED-PROCESS-WRAPPER-REFUSED",
         `Owned process wrapper exited ${wrapper.status ?? "unknown"}.`,
@@ -494,13 +660,13 @@ function runOwnedProcessSync(value) {
   }
   let owned;
   try {
-    owned = JSON.parse(wrapper.stdout);
+    owned = parseOwnedProcessFrame(wrapper.stdout, { maxStdoutBytes, maxStderrBytes });
   } catch {
     return {
       status: null,
       signal: null,
       stdout: "",
-      stderr: wrapper.stderr || "",
+      stderr: wrapperStderr,
       error: ownedError(
         "OWNED-PROCESS-WRAPPER-MALFORMED",
         "Owned process wrapper returned malformed evidence.",
@@ -537,6 +703,9 @@ function runOwnedProcessSync(value) {
 }
 
 module.exports = Object.freeze({
+  _encodeOwnedProcessFrame: encodeOwnedProcessFrame,
+  _parseOwnedProcessFrame: parseOwnedProcessFrame,
+  _runOwnedProcessRaw: runOwnedProcessRaw,
   runOwnedProcess,
   runOwnedProcessSync,
 });

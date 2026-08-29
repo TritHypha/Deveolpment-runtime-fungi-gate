@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const {
+  _parseOwnedProcessFrame,
   runOwnedProcess,
   runOwnedProcessSync,
 } = require("../lib/owned-process-tree.cjs");
@@ -23,6 +24,36 @@ const suiteLeasePath = require.resolve("../lib/suite-run-lease.cjs");
 const { acquireSuiteLease } = require(suiteLeasePath);
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = join(TEST_DIR, "..", "fixtures");
+const OWNED_FRAME_MAGIC = Buffer.from("GLRNOWND", "ascii");
+const OWNED_FRAME_VERSION = 1;
+const OWNED_FRAME_HEADER_BYTES = 32;
+
+function ownedFrameMetadata(overrides = {}) {
+  return {
+    status: 0,
+    signal: null,
+    stdoutBytes: 0,
+    stderrBytes: 0,
+    timedOut: false,
+    outputLimitExceeded: false,
+    cleanupAttempted: false,
+    cleanupAcknowledged: false,
+    cleanupDetail: "not required",
+    spawnError: null,
+    ...overrides,
+  };
+}
+
+function ownedFrame({ metadata = ownedFrameMetadata(), stdout = Buffer.alloc(0), stderr = Buffer.alloc(0) } = {}) {
+  const metadataBytes = Buffer.from(JSON.stringify(metadata), "utf8");
+  const header = Buffer.alloc(OWNED_FRAME_HEADER_BYTES);
+  OWNED_FRAME_MAGIC.copy(header, 0);
+  header.writeUInt8(OWNED_FRAME_VERSION, 8);
+  header.writeUInt32BE(metadataBytes.length, 12);
+  header.writeBigUInt64BE(BigInt(stdout.length), 16);
+  header.writeBigUInt64BE(BigInt(stderr.length), 24);
+  return Buffer.concat([header, metadataBytes, stdout, stderr]);
+}
 
 function isAlive(pid) {
   try {
@@ -360,8 +391,25 @@ test("the synchronous wrapper admits worst-case JSON escapes at the exact byte c
   assert.equal(result.stdout.charCodeAt(exactBytes - 1), 0);
 });
 
-test("the synchronous wrapper refuses projected evidence beyond the runtime buffer range", () => {
-  const nearProjectedLimit = Math.floor(bufferConstants.MAX_LENGTH / 6);
+test("the synchronous wrapper admits limits above the obsolete JSON string projection", () => {
+  const aboveJsonProjection = Math.floor((bufferConstants.MAX_STRING_LENGTH - (1024 * 1024)) / 6) + 1;
+  const result = runOwnedProcessSync({
+    command: process.execPath,
+    args: ["-e", "process.stdout.write('framed', () => process.exit(99))"],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxStdoutBytes: aboveJsonProjection,
+    maxStderrBytes: 1,
+  });
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 99);
+  assert.equal(result.stdout, "framed");
+  assert.notEqual(result.owned, null);
+});
+
+test("the synchronous wrapper refuses raw evidence beyond the runtime buffer range", () => {
   assert.throws(
     () => runOwnedProcessSync({
       command: process.execPath,
@@ -369,10 +417,60 @@ test("the synchronous wrapper refuses projected evidence beyond the runtime buff
       cwd: FIXTURES,
       env: process.env,
       timeoutMs: 2_000,
-      maxStdoutBytes: nearProjectedLimit,
+      maxStdoutBytes: bufferConstants.MAX_LENGTH,
       maxStderrBytes: 1,
     }),
     (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+  );
+});
+
+test("the owned-process frame parser refuses malformed framing and open metadata", () => {
+  const badMagic = ownedFrame();
+  badMagic[0] ^= 0xff;
+  const badVersion = ownedFrame();
+  badVersion.writeUInt8(2, 8);
+  const openMetadata = ownedFrame({
+    metadata: ownedFrameMetadata({ stdout: "body-must-not-be-metadata" }),
+  });
+
+  for (const frame of [badMagic, badVersion, openMetadata]) {
+    assert.throws(
+      () => _parseOwnedProcessFrame(frame, { maxStdoutBytes: 16, maxStderrBytes: 16 }),
+      (error) => error.code === "OWNED-PROCESS-WRAPPER-MALFORMED",
+    );
+  }
+});
+
+test("the owned-process frame parser refuses truncated payloads", () => {
+  const frame = ownedFrame({
+    metadata: ownedFrameMetadata({ stdoutBytes: 4 }),
+    stdout: Buffer.from("data"),
+  });
+  assert.throws(
+    () => _parseOwnedProcessFrame(frame.subarray(0, frame.length - 1), {
+      maxStdoutBytes: 4,
+      maxStderrBytes: 1,
+    }),
+    (error) => error.code === "OWNED-PROCESS-WRAPPER-MALFORMED",
+  );
+});
+
+test("the owned-process frame parser refuses trailing bytes", () => {
+  const frame = Buffer.concat([ownedFrame(), Buffer.from([0])]);
+  assert.throws(
+    () => _parseOwnedProcessFrame(frame, { maxStdoutBytes: 1, maxStderrBytes: 1 }),
+    (error) => error.code === "OWNED-PROCESS-WRAPPER-MALFORMED",
+  );
+});
+
+test("the owned-process frame parser refuses payloads above their admitted stream limit", () => {
+  const frame = ownedFrame({
+    metadata: ownedFrameMetadata({ stdoutBytes: 2 }),
+    stdout: Buffer.from("AB"),
+  });
+  assert.throws(
+    () => _parseOwnedProcessFrame(frame, { maxStdoutBytes: 1, maxStderrBytes: 1 }),
+    (error) => error.code === "OWNED-PROCESS-WRAPPER-MALFORMED",
   );
 });
 

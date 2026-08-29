@@ -1,6 +1,9 @@
 "use strict";
 
-const { runOwnedProcess } = require("./owned-process-tree.cjs");
+const {
+  _encodeOwnedProcessFrame,
+  _runOwnedProcessRaw,
+} = require("./owned-process-tree.cjs");
 
 const chunks = [];
 let bytes = 0;
@@ -27,9 +30,15 @@ process.stdin.on("end", async () => {
       ...process.env,
       GALERINA_SUITE_LEASE_MEDIATOR_PID: String(process.pid),
     };
-    const result = await runOwnedProcess({ ...request, env: childEnvironment });
-    process.stdout.write(`${JSON.stringify(result)}\n`);
-    process.exit(0);
+    const result = await _runOwnedProcessRaw({ ...request, env: childEnvironment });
+    const frame = _encodeOwnedProcessFrame(result);
+    process.stdout.write(frame, (error) => {
+      if (error) {
+        process.stderr.write("OWNED_PROCESS_WRAPPER_OUTPUT_REFUSED\n");
+        process.exit(126);
+      }
+      process.exit(0);
+    });
   } catch (error) {
     process.stderr.write(`OWNED_PROCESS_WRAPPER_REFUSED ${error.code || "UNKNOWN"}\n`);
     process.exit(126);
