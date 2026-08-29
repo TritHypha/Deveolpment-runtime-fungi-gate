@@ -168,18 +168,6 @@ function exactArray(value, maxLength) {
   }
 }
 
-function ordinalNonExpandingUppercase(value) {
-  let folded = "";
-  for (const scalar of value) {
-    const uppercase = scalar.toUpperCase();
-    const iterator = uppercase[Symbol.iterator]();
-    const first = iterator.next();
-    const second = iterator.next();
-    folded += !first.done && second.done ? uppercase : scalar;
-  }
-  return folded;
-}
-
 function protectedPathIsValid(value) {
   if (
     typeof value !== "string"
@@ -210,7 +198,6 @@ function normalizeProtectedFileSet(value) {
   ) throw inputError("Protected file set schema, root, or file count is invalid.");
 
   const normalizedFiles = [];
-  const caseAliases = new Set();
   let previousPath = null;
   for (const valueEntry of files) {
     const entry = exactInputRecord(valueEntry, PROTECTED_FILE_KEYS);
@@ -221,11 +208,6 @@ function normalizeProtectedFileSet(value) {
       || !/^[0-9a-f]{64}$/.test(entry.sha256)
       || (previousPath !== null && previousPath >= entry.path)
     ) throw inputError("Protected file set entry is invalid or not sorted.");
-    const caseAlias = ordinalNonExpandingUppercase(entry.path);
-    if (caseAliases.has(caseAlias)) {
-      throw inputError("Protected file set contains a Windows case alias.");
-    }
-    caseAliases.add(caseAlias);
     previousPath = entry.path;
     normalizedFiles.push({ path: entry.path, sha256: entry.sha256 });
   }

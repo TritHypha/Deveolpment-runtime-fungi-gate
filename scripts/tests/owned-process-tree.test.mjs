@@ -384,7 +384,6 @@ test("protected-file-set validation is closed, canonical and trap-free before sp
     { ...manifest, files: [{ path: `${"a".repeat(4_093)}.txt`, sha256: digest }] },
     { ...manifest, files: [{ path: "z.txt", sha256: digest }, { path: "a.txt", sha256: digest }] },
     { ...manifest, files: [{ path: "a.txt", sha256: digest }, { path: "a.txt", sha256: digest }] },
-    { ...manifest, files: [{ path: "A.txt", sha256: digest }, { path: "a.txt", sha256: digest }] },
     { ...manifest, files: [{ path: "input.txt", sha256: digest.toUpperCase() }] },
     { ...manifest, files: [{ path: "input.txt", sha256: digest, unknown: true }] },
     foreignManifest,
@@ -472,12 +471,14 @@ test("protected-file-set file-count bounds refuse before copying array entries",
   }
 });
 
-test("controller alias vectors match non-expanding Windows ordinal folding", {
+test("distinct Unicode paths reach native Windows alias authority", {
   skip: process.platform !== "win32",
 }, async () => {
   const root = mkdtempSync(join(tmpdir(), "galerina-owned-alias-vectors-"));
   const sentinel = join(root, "spawned.txt");
   const acceptedPairs = [
+    ["ς.txt", "σ.txt"],
+    ["𐐀.txt", "𐐨.txt"],
     ["ss.txt", "ß.txt"],
     ["ffi.txt", "ﬃ.txt"],
   ];
@@ -501,29 +502,39 @@ test("controller alias vectors match non-expanding Windows ordinal folding", {
       assert.equal(result.status, 0);
       assert.equal(existsSync(sentinel), true);
     }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
-    rmSync(sentinel, { force: true });
-    const asciiFile = join(root, "A.txt");
-    writeFileSync(asciiFile, "ascii", "utf8");
-    const digest = sha256File(asciiFile);
-    await assert.rejects(
-      runOwnedProcess({
-        command: process.execPath,
-        args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
-        cwd: root,
-        env: process.env,
-        timeoutMs: 2_000,
-        protectedFileSet: {
-          schema: "galerina.protected-file-set.v1",
-          root: realpathSync.native(root),
-          files: [
-            { path: "A.txt", sha256: digest },
-            { path: "a.txt", sha256: digest },
-          ],
-        },
-      }),
-      (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
-    );
+test("native Windows alias authority refuses A/a before child authority", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-ascii-alias-"));
+  const sentinel = join(root, "spawned.txt");
+  const asciiFile = join(root, "A.txt");
+  writeFileSync(asciiFile, "ascii", "utf8");
+  const digest = sha256File(asciiFile);
+
+  try {
+    const result = await runOwnedProcess({
+      command: process.execPath,
+      args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+      cwd: root,
+      env: process.env,
+      timeoutMs: 2_000,
+      protectedFileSet: {
+        schema: "galerina.protected-file-set.v1",
+        root: realpathSync.native(root),
+        files: [
+          { path: "A.txt", sha256: digest },
+          { path: "a.txt", sha256: digest },
+        ],
+      },
+    });
+    assert.equal(result.status, 126);
+    assert.equal(result.spawnError?.code, "PROCESS-WARDEN-SETUP-REFUSED");
+    assert.match(result.stderr, /WARDEN_SETUP_REFUSED manifest-alias/);
     assert.equal(existsSync(sentinel), false);
   } finally {
     rmSync(root, { recursive: true, force: true });

@@ -978,8 +978,10 @@ mod windows {
         }
 
         #[test]
-        fn ordinal_alias_vectors_match_windows_nonexpanding_case_rules() {
+        fn ordinal_alias_vectors_match_windows_authority() {
             let vectors = [
+                ("ς.txt", "σ.txt", false),
+                ("𐐀.txt", "𐐨.txt", false),
                 ("ss.txt", "ß.txt", false),
                 ("ffi.txt", "ﬃ.txt", false),
                 ("A.txt", "a.txt", true),
