@@ -38,14 +38,13 @@
  */
 
 ;; This flow handles payment validation for the Tower's Floor 3 (Proof Zone)
-;; V_DPM capability required: audit.write (bit 3)
 ;; Proof obligation: amount > 0 must be statically verified
 // @cause  [Checkout pipeline] -> invoked before any charge is attempted.
 // @effect [Verdict only] -> returns Bool; no state is mutated on any path.
 governed floor_3 flow validatePaymentAmount(amount: Int, currency: String) -> Bool
 contract {
   intent "Validate payment amount in the Proof Zone"
-  effects { allow audit.write }
+  effects {}
   invariant {
     ensure amount > 0
     ensure amount < 10000000
