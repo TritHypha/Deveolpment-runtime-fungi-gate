@@ -47,7 +47,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import { types as utilTypes } from "node:util";
 import { compilerContentFingerprint } from "./lib/compiler-content-fingerprint.mjs";
@@ -589,43 +589,221 @@ function lexicalCompare(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+const CORPUS_LOCAL_PACKAGE_NAME = /^@galerina\/([a-z0-9]+(?:-[a-z0-9]+)*)$/u;
+const CORPUS_RUNTIME_PATH = /^[A-Za-z0-9._/-]+$/u;
+const CORPUS_MAX_RUNTIME_PACKAGES = 128;
+const CORPUS_MAX_COMPILER_FILES = 8191;
+const CORPUS_MAX_PACKAGE_MANIFEST_BYTES = 1024 * 1024;
+
+function directCanonicalDirectory(absolute) {
+  try {
+    const state = lstatSync(absolute);
+    return !state.isSymbolicLink()
+      && state.isDirectory()
+      && realpathSync(absolute) === absolute;
+  } catch {
+    return false;
+  }
+}
+
+function runtimeRelativePath(value) {
+  if (
+    typeof value !== "string"
+    || value.length === 0
+    || value !== value.normalize("NFC")
+    || value.includes("\\")
+    || value.includes("\0")
+  ) return null;
+  const normalized = value.startsWith("./") ? value.slice(2) : value;
+  const segments = normalized.split("/");
+  if (
+    !CORPUS_RUNTIME_PATH.test(normalized)
+    || segments.some((segment) => segment === "" || segment === "." || segment === "..")
+  ) return null;
+  return normalized;
+}
+
+function manifestValue(manifest, key) {
+  const descriptor = Object.getOwnPropertyDescriptor(manifest, key);
+  return descriptor === undefined ? undefined : descriptor.value;
+}
+
+function runtimePackageEntry(manifest) {
+  const candidates = [];
+  const main = manifestValue(manifest, "main");
+  if (main !== undefined) candidates.push(main);
+  const exportsValue = manifestValue(manifest, "exports");
+  if (typeof exportsValue === "string") {
+    candidates.push(exportsValue);
+  } else if (exportsValue !== undefined) {
+    if (
+      exportsValue === null
+      || Array.isArray(exportsValue)
+      || Object.getPrototypeOf(exportsValue) !== Object.prototype
+    ) return null;
+    const dot = manifestValue(exportsValue, ".");
+    if (typeof dot === "string") {
+      candidates.push(dot);
+    } else if (dot !== undefined) {
+      if (dot === null || Array.isArray(dot) || Object.getPrototypeOf(dot) !== Object.prototype) return null;
+      const imported = manifestValue(dot, "import");
+      const fallback = manifestValue(dot, "default");
+      if (imported !== undefined) candidates.push(imported);
+      if (fallback !== undefined) candidates.push(fallback);
+    } else {
+      return null;
+    }
+  }
+  const normalized = candidates.map(runtimeRelativePath);
+  if (
+    normalized.length === 0
+    || normalized.some((entry) => entry === null || !entry.startsWith("dist/") || !/\.(?:c?js)$/u.test(entry))
+    || new Set(normalized).size !== 1
+  ) return null;
+  return normalized[0];
+}
+
+function localRuntimeDependencies(manifest) {
+  const found = new Map();
+  for (const sectionName of ["dependencies", "optionalDependencies", "peerDependencies"]) {
+    const section = manifestValue(manifest, sectionName);
+    if (section === undefined) continue;
+    if (section === null || Array.isArray(section) || Object.getPrototypeOf(section) !== Object.prototype) return null;
+    for (const name of Object.keys(section).sort(lexicalCompare)) {
+      const folded = name.toLowerCase();
+      const match = CORPUS_LOCAL_PACKAGE_NAME.exec(name);
+      if (folded.startsWith("@galerina/") && match === null) return null;
+      if (match === null) continue;
+      const specifier = manifestValue(section, name);
+      const directory = `galerina-${match[1]}`;
+      if (specifier !== `file:../${directory}` || found.has(name)) return null;
+      found.set(name, directory);
+    }
+  }
+  return [...found.entries()].map(([name, directory]) => ({ name, directory }));
+}
+
+function corpusRuntimeLoader(entries) {
+  const mapping = Object.fromEntries(entries.map(({ name, absolute }) => [name, pathToFileURL(absolute).href]));
+  // npm installs local packages through mutable junctions on Windows. Resolve
+  // admitted package names straight to their protected canonical entry files.
+  const source = [
+    `const entries=Object.freeze(${JSON.stringify(mapping)});`,
+    "export async function resolve(specifier,context,nextResolve){",
+    "if(Object.hasOwn(entries,specifier))return{url:entries[specifier],shortCircuit:true};",
+    "if(specifier.startsWith('@galerina/'))throw new Error('CORPUS_RUNTIME_DEPENDENCY_REFUSED');",
+    "return nextResolve(specifier,context);}",
+  ].join("");
+  return `data:text/javascript;base64,${Buffer.from(source, "utf8").toString("base64")}`;
+}
+
 function corpusCompilerIdentity(root) {
+  const heldFiles = new Map();
   try {
     const paths = ["galerina.mjs"];
-    const dist = join(root, "packages-ts", "galerina-core-compiler", "dist");
+    const pathKeys = new Set(["galerina.mjs"]);
+    const pathAliases = new Set(["galerina.mjs"]);
+    const packageNames = new Map();
+    const packageDirectories = new Map();
+    const runtimeEntries = [];
+    const pending = [{ name: "@galerina/core-compiler", directory: "galerina-core-compiler" }];
+    const addPath = (path) => {
+      if (
+        runtimeRelativePath(path) !== path
+        || pathKeys.has(path)
+        || pathAliases.has(path.toLowerCase())
+      ) throw new Error("compiler path refused");
+      pathKeys.add(path);
+      pathAliases.add(path.toLowerCase());
+      paths.push(path);
+      if (paths.length > CORPUS_MAX_COMPILER_FILES) throw new Error("compiler file limit refused");
+    };
     const visit = (directory) => {
+      if (!directCanonicalDirectory(directory)) throw new Error("compiler directory refused");
       const entries = readdirSync(directory, { withFileTypes: true }).sort((left, right) => lexicalCompare(left.name, right.name));
       for (const entry of entries) {
         const absolute = join(directory, entry.name);
-        if (entry.isSymbolicLink()) throw new Error("compiler symlink refused");
+        if (entry.isSymbolicLink() || (!entry.isDirectory() && !entry.isFile())) throw new Error("compiler entry refused");
         if (entry.isDirectory()) visit(absolute);
         else if (entry.isFile() && /\.(?:c?js)$/u.test(entry.name)) {
-          paths.push(relative(root, absolute).split(sep).join("/"));
+          addPath(relative(root, absolute).split(sep).join("/"));
         }
       }
     };
-    visit(dist);
+
+    while (pending.length > 0) {
+      pending.sort((left, right) => lexicalCompare(left.name, right.name));
+      const next = pending.shift();
+      const nameKey = next.name.toLowerCase();
+      const directoryKey = next.directory.toLowerCase();
+      const priorDirectory = packageNames.get(nameKey);
+      const priorName = packageDirectories.get(directoryKey);
+      if (priorDirectory !== undefined || priorName !== undefined) {
+        if (priorDirectory !== next.directory || priorName !== next.name) throw new Error("compiler package alias refused");
+        continue;
+      }
+      if (packageNames.size >= CORPUS_MAX_RUNTIME_PACKAGES) throw new Error("compiler package limit refused");
+      packageNames.set(nameKey, next.directory);
+      packageDirectories.set(directoryKey, next.name);
+
+      const packageRoot = join(root, "packages-ts", next.directory);
+      if (!directCanonicalDirectory(packageRoot)) throw new Error("compiler package root refused");
+      const manifestPath = `packages-ts/${next.directory}/package.json`;
+      const manifestAbsolute = confinedCorpusPath(root, manifestPath);
+      if (manifestAbsolute === null || realpathSync(manifestAbsolute) !== manifestAbsolute) throw new Error("compiler manifest path refused");
+      const heldManifest = readHeldFile(manifestAbsolute, CORPUS_MAX_PACKAGE_MANIFEST_BYTES);
+      if (!heldManifest.ok || heldManifest.overflow) {
+        closeHeldFile(heldManifest);
+        throw new Error("compiler manifest refused");
+      }
+      heldFiles.set(manifestPath, heldManifest);
+      addPath(manifestPath);
+      const decoded = decodeUtf8(heldManifest.bytes);
+      if (!decoded.ok) throw new Error("compiler manifest encoding refused");
+      const manifest = JSON.parse(decoded.value);
+      if (manifest === null || Array.isArray(manifest) || Object.getPrototypeOf(manifest) !== Object.prototype) {
+        throw new Error("compiler manifest shape refused");
+      }
+      if (manifestValue(manifest, "name") !== next.name) throw new Error("compiler package name refused");
+      const entry = runtimePackageEntry(manifest);
+      if (entry === null) throw new Error("compiler package entry refused");
+      const entryPath = `packages-ts/${next.directory}/${entry}`;
+      const entryAbsolute = confinedCorpusPath(root, entryPath);
+      if (entryAbsolute === null || realpathSync(entryAbsolute) !== entryAbsolute) throw new Error("compiler package entry path refused");
+      runtimeEntries.push({ name: next.name, absolute: entryAbsolute });
+      visit(join(packageRoot, "dist"));
+      if (!pathKeys.has(entryPath)) throw new Error("compiler package entry missing");
+      const dependencies = localRuntimeDependencies(manifest);
+      if (dependencies === null) throw new Error("compiler dependencies refused");
+      pending.push(...dependencies);
+    }
+
     paths.sort(lexicalCompare);
     const files = [];
     for (const path of paths) {
       const absolute = confinedCorpusPath(root, path);
-      if (absolute === null) return { ok: false };
-      const held = readHeldFile(absolute);
+      if (absolute === null || realpathSync(absolute) !== absolute) return { ok: false };
+      const held = heldFiles.get(path) ?? readHeldFile(absolute);
       if (!held.ok) return { ok: false };
       const digest = rawDigest(held.bytes);
       const stable = verifyHeldFile(held, digest);
       closeHeldFile(held);
+      heldFiles.delete(path);
       if (!stable) return { ok: false };
       files.push({ path, digest });
     }
     const input = { schema: "galerina.fungi-corpus-compiler-input.v2", files };
+    runtimeEntries.sort((left, right) => lexicalCompare(left.name, right.name));
     return {
       ok: true,
       digest: corpusDigest(input),
       files: Object.freeze(files.map((file) => Object.freeze({ ...file }))),
+      loader: corpusRuntimeLoader(runtimeEntries),
     };
   } catch {
     return { ok: false };
+  } finally {
+    for (const held of heldFiles.values()) closeHeldFile(held);
   }
 }
 
@@ -918,7 +1096,15 @@ export async function runCorpusShard(value, shardValue, executionValue, signal) 
       }
       const child = await runOwnedProcess({
         command: process.execPath,
-        args: [join(root, "galerina.mjs"), "check", file.path, ...(file.mode === "strict" ? ["--strict-types"] : [])],
+        args: [
+          "--no-warnings",
+          "--experimental-loader",
+          initialCompiler.loader,
+          join(root, "galerina.mjs"),
+          "check",
+          file.path,
+          ...(file.mode === "strict" ? ["--strict-types"] : []),
+        ],
         cwd: root,
         env: {},
         timeoutMs: remainingMs,

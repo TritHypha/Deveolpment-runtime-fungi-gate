@@ -8,6 +8,7 @@ import {
   realpathSync,
   rmSync,
   statSync,
+  symlinkSync,
   utimesSync,
   writeFileSync,
 } from "node:fs";
@@ -21,6 +22,7 @@ import { runCorpusAggregate, runCorpusShard } from "../audit-fungi-corpus-check.
 import { deriveCorpusShards } from "../lib/fungi-corpus-shards.mjs";
 
 const roots = [];
+const fixtureCompilerPackages = new Map();
 const DIGEST_RE = /^sha256:[0-9a-f]{64}$/u;
 const CODE_RE = /^FUNGI-[A-Z][A-Z0-9]*-\d+[A-Za-z]?$/u;
 const DEFAULT_LIMITS = Object.freeze({
@@ -167,12 +169,23 @@ if (name.includes("finding")) {
 console.log("✅ " + rel + ": 0 errors, 0 governance warnings (1 flow(s), 1 top-level declaration(s))");
 `;
 
-function fixture(fileMap, sidecars = {}) {
+function fixture(fileMap, sidecars = {}, setup = {}) {
   const root = realpathSync(mkdtempSync(join(tmpdir(), "galerina-corpus-v2-")));
   roots.push(root);
-  write(root, "galerina.mjs", CHECKER);
-  write(root, "packages-ts/galerina-core-compiler/dist/compiler.cjs", "module.exports = 'fixture';\n");
-  write(root, "packages-ts/galerina-core-compiler/dist/rules.js", "export const rules = 2;\n");
+  fixtureCompilerPackages.set(root, ["galerina-core-compiler", ...(setup.runtimePackages ?? [])]);
+  write(root, "galerina.mjs", setup.checker ?? CHECKER);
+  write(root, "packages-ts/galerina-core-compiler/package.json", setup.compilerManifest ?? `${JSON.stringify({
+    name: "@galerina/core-compiler",
+    type: "module",
+    main: "./dist/index.js",
+    dependencies: {},
+  }, null, 2)}\n`);
+  for (const [path, source] of Object.entries(setup.compilerDist ?? {
+    "compiler.cjs": "module.exports = 'fixture';\n",
+    "index.js": "export const fixture = true;\n",
+    "rules.js": "export const rules = 2;\n",
+  })) write(root, `packages-ts/galerina-core-compiler/dist/${path}`, source);
+  for (const [path, source] of Object.entries(setup.extraFiles ?? {})) write(root, path, source);
   for (const [path, source] of Object.entries(fileMap)) write(root, path, source);
   for (const [path, source] of Object.entries(sidecars)) write(root, path, source);
   git(root, ["init", "--quiet"]);
@@ -186,12 +199,17 @@ function fixture(fileMap, sidecars = {}) {
   const nextHead = git(root, ["rev-parse", "HEAD"]);
   git(root, ["reset", "--quiet", "--hard", firstHead]);
   write(root, ".fixture-next-head", `${nextHead}\n`);
+  for (const link of setup.junctions ?? []) {
+    const target = join(root, ...link.target.split("/"));
+    const path = join(root, ...link.path.split("/"));
+    mkdirSync(dirname(path), { recursive: true });
+    symlinkSync(target, path, "junction");
+  }
   return root;
 }
 
 function compilerFiles(root) {
   const result = ["galerina.mjs"];
-  const dist = join(root, "packages-ts", "galerina-core-compiler", "dist");
   const visit = (directory) => {
     for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
       const absolute = join(directory, entry.name);
@@ -201,7 +219,10 @@ function compilerFiles(root) {
       }
     }
   };
-  visit(dist);
+  for (const packageDirectory of fixtureCompilerPackages.get(root) ?? ["galerina-core-compiler"]) {
+    result.push(`packages-ts/${packageDirectory}/package.json`);
+    visit(join(root, "packages-ts", packageDirectory, "dist"));
+  }
   return result.sort();
 }
 
@@ -325,6 +346,214 @@ test("protected execution retains source and compiler parents against substituti
       assert.equal(result.value.termination, "COMPLETE");
       assert.equal(readFileSync(join(root, ...path.split("/")), "utf8"), source);
       assert.equal(readFileSync(join(root, "packages-ts", "galerina-core-compiler", "dist", "compiler.cjs"), "utf8"), "module.exports = 'fixture';\n");
+    });
+  }
+});
+
+test("compiler runtime dependency bytes cannot mint PASS under unchanged corpus identities", { skip: process.platform !== "win32" || process.arch !== "x64" }, async () => {
+  const path = "corpus/runtime-closure.fungi";
+  const dependencyPath = "packages-ts/galerina-devtools-graph-algorithms/dist/index.js";
+  const dependencyManifest = `${JSON.stringify({
+    name: "@galerina/devtools-graph-algorithms",
+    type: "module",
+    main: "./dist/index.js",
+  }, null, 2)}\n`;
+  const root = fixture(
+    { [path]: "@version 1\npure flow runtimeClosure() -> Int { return 1 }\n" },
+    {},
+    {
+      checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "module",
+        main: "./dist/index.js",
+        dependencies: {
+          "@galerina/devtools-graph-algorithms": "file:../galerina-devtools-graph-algorithms",
+        },
+      }, null, 2)}\n`,
+      compilerDist: {
+        "index.js": "import '@galerina/devtools-graph-algorithms';\n",
+      },
+      extraFiles: {
+        "packages-ts/galerina-devtools-graph-algorithms/package.json": dependencyManifest,
+        [dependencyPath]: "console.log('FUNGI-TEST-999: bounded fixture diagnostic');\nprocess.exit(1);\n",
+      },
+      runtimePackages: ["galerina-devtools-graph-algorithms"],
+      junctions: [{
+        path: "packages-ts/galerina-core-compiler/node_modules/@galerina/devtools-graph-algorithms",
+        target: "packages-ts/galerina-devtools-graph-algorithms",
+      }],
+    },
+  );
+  const request = requestFor(root, [path]);
+  const shard = shardFor(request);
+  const requestDigest = canonicalDigest(request);
+  const sourceDigest = request.files[0].digest;
+  const shardDigest = shard.shardDigest;
+
+  const finding = await runCorpusShard(request, shard, { repositoryRoot: root });
+  assert.equal(finding.kind, "accepted");
+  assert.equal(finding.value.status, "FINDING", JSON.stringify(finding));
+  assert.equal(finding.value.termination, "COMPLETE", JSON.stringify(finding));
+
+  write(root, dependencyPath, "console.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n");
+  const changed = await runCorpusShard(request, shard, { repositoryRoot: root });
+  assert.equal(canonicalDigest(request), requestDigest);
+  assert.equal(request.files[0].digest, sourceDigest);
+  assert.equal(shard.shardDigest, shardDigest);
+  assert.equal(changed.kind, "accepted");
+  assert.equal(changed.value.status, "REFUSED");
+  assert.equal(changed.value.termination, "COMPILER_CHANGED");
+});
+
+test("compiler runtime resolver ignores a substituted npm junction and executes admitted package bytes", { skip: process.platform !== "win32" || process.arch !== "x64" }, async () => {
+  const path = "corpus/runtime-junction.fungi";
+  const packageName = "galerina-devtools-graph-algorithms";
+  const dependencyPath = `packages-ts/${packageName}/dist/index.js`;
+  const packageManifest = `${JSON.stringify({
+    name: "@galerina/devtools-graph-algorithms",
+    type: "module",
+    main: "./dist/index.js",
+  }, null, 2)}\n`;
+  const junction = `packages-ts/galerina-core-compiler/node_modules/@galerina/devtools-graph-algorithms`;
+  const root = fixture(
+    { [path]: "@version 1\npure flow runtimeJunction() -> Int { return 1 }\n" },
+    {},
+    {
+      checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "module",
+        main: "./dist/index.js",
+        dependencies: {
+          "@galerina/devtools-graph-algorithms": "file:../galerina-devtools-graph-algorithms",
+        },
+      }, null, 2)}\n`,
+      compilerDist: { "index.js": "import '@galerina/devtools-graph-algorithms';\n" },
+      extraFiles: {
+        [`packages-ts/${packageName}/package.json`]: packageManifest,
+        [dependencyPath]: "console.log('FUNGI-TEST-999: admitted dependency diagnostic');\nprocess.exit(1);\n",
+        "decoy-package/package.json": packageManifest,
+        "decoy-package/dist/index.js": "console.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n",
+      },
+      runtimePackages: [packageName],
+      junctions: [{ path: junction, target: `packages-ts/${packageName}` }],
+    },
+  );
+  const request = requestFor(root, [path]);
+  const junctionAbsolute = join(root, ...junction.split("/"));
+  rmSync(junctionAbsolute, { recursive: true, force: true });
+  symlinkSync(join(root, "decoy-package"), junctionAbsolute, "junction");
+
+  const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "FINDING");
+  assert.equal(result.value.termination, "COMPLETE");
+  assert.match(readFileSync(join(root, ...dependencyPath.split("/")), "utf8"), /admitted dependency/u);
+});
+
+test("compiler runtime closure includes transitive local package bytes", { skip: process.platform !== "win32" || process.arch !== "x64" }, async () => {
+  const path = "corpus/runtime-transitive.fungi";
+  const network = "galerina-core-network";
+  const graph = "galerina-devtools-graph-algorithms";
+  const graphPath = `packages-ts/${graph}/dist/index.js`;
+  const root = fixture(
+    { [path]: "@version 1\npure flow runtimeTransitive() -> Int { return 1 }\n" },
+    {},
+    {
+      checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "module",
+        main: "./dist/index.js",
+        dependencies: { "@galerina/core-network": "file:../galerina-core-network" },
+      }, null, 2)}\n`,
+      compilerDist: { "index.js": "import '@galerina/core-network';\n" },
+      extraFiles: {
+        [`packages-ts/${network}/package.json`]: `${JSON.stringify({
+          name: "@galerina/core-network",
+          type: "module",
+          main: "./dist/index.js",
+          dependencies: {
+            "@galerina/devtools-graph-algorithms": "file:../galerina-devtools-graph-algorithms",
+          },
+        }, null, 2)}\n`,
+        [`packages-ts/${network}/dist/index.js`]: "import '@galerina/devtools-graph-algorithms';\n",
+        [`packages-ts/${graph}/package.json`]: `${JSON.stringify({
+          name: "@galerina/devtools-graph-algorithms",
+          type: "module",
+          main: "./dist/index.js",
+        }, null, 2)}\n`,
+        [graphPath]: "console.log('FUNGI-TEST-999: transitive dependency diagnostic');\nprocess.exit(1);\n",
+      },
+      runtimePackages: [network, graph],
+      junctions: [
+        {
+          path: "packages-ts/galerina-core-compiler/node_modules/@galerina/core-network",
+          target: `packages-ts/${network}`,
+        },
+        {
+          path: `packages-ts/${network}/node_modules/@galerina/devtools-graph-algorithms`,
+          target: `packages-ts/${graph}`,
+        },
+      ],
+    },
+  );
+  const request = requestFor(root, [path]);
+  const shard = shardFor(request);
+  const finding = await runCorpusShard(request, shard, { repositoryRoot: root });
+  assert.equal(finding.value.status, "FINDING");
+  write(root, graphPath, "console.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n");
+  const changed = await runCorpusShard(request, shard, { repositoryRoot: root });
+  assert.equal(changed.value.status, "REFUSED");
+  assert.equal(changed.value.termination, "COMPILER_CHANGED");
+});
+
+test("compiler runtime closure refuses ambiguous, missing, non-file, escaping, duplicate and case-alias authority", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  const invalidManifest = (overrides) => `${JSON.stringify({
+    name: "@galerina/core-compiler",
+    type: "module",
+    main: "./dist/index.js",
+    dependencies: {},
+    ...overrides,
+  }, null, 2)}\n`;
+  const cases = [
+    ["ambiguous entry", (root) => {
+      write(root, "packages-ts/galerina-core-compiler/dist/other.js", "export const other = true;\n");
+      write(root, "packages-ts/galerina-core-compiler/package.json", invalidManifest({ exports: "./dist/other.js" }));
+    }],
+    ["missing package", (root) => write(root, "packages-ts/galerina-core-compiler/package.json", invalidManifest({
+      dependencies: { "@galerina/missing": "file:../galerina-missing" },
+    }))],
+    ["non-file entry", (root) => {
+      const entry = join(root, "packages-ts", "galerina-core-compiler", "dist", "index.js");
+      rmSync(entry, { force: true });
+      mkdirSync(entry);
+    }],
+    ["escaping entry", (root) => write(root, "packages-ts/galerina-core-compiler/package.json", invalidManifest({
+      main: "../../outside.js",
+    }))],
+    ["duplicate dependency", (root) => write(root, "packages-ts/galerina-core-compiler/package.json", invalidManifest({
+      dependencies: { "@galerina/core-network": "file:../galerina-core-network" },
+      optionalDependencies: { "@galerina/core-network": "file:../galerina-core-network" },
+    }))],
+    ["case alias", (root) => write(root, "packages-ts/galerina-core-compiler/package.json", invalidManifest({
+      dependencies: { "@galerina/Core-Network": "file:../galerina-Core-Network" },
+    }))],
+  ];
+
+  for (const [name, mutate] of cases) {
+    await t.test(name, async () => {
+      const path = "corpus/platform-sentinel.fungi";
+      const setup = name === "ambiguous entry"
+        ? { compilerDist: { "index.js": "export const fixture = true;\n", "other.js": "export const other = true;\n" } }
+        : {};
+      const root = fixture({ [path]: "@version 1\npure flow invalidClosure() -> Int { return 1 }\n" }, {}, setup);
+      const request = requestFor(root, [path]);
+      mutate(root);
+      const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+      assert.deepEqual(result, { kind: "refused", code: "CORPUS_COMPILER_IDENTITY_REFUSED" });
+      assert.equal(existsSync(join(root, ".platform-child-sentinel")), false);
     });
   }
 });
