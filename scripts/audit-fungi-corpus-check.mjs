@@ -113,8 +113,19 @@ function findFungi() {
 const ownedElsewhere = (rel) =>
   rel.startsWith("docs/examples/") // audit-example-diagnostics.mjs owns that corpus
   || rel.startsWith("build/");     // generated tree — no authored .fungi belongs there (incl. the self-test plants)
-const DIAGNOSTIC_CODE = /^FUNGI-[A-Z][A-Z0-9]*-\d+[A-Za-z]?$/;
+const DIAGNOSTIC_CODE_BODY = String.raw`FUNGI-(?:[A-Z][A-Z0-9]*-)+\d+[A-Za-z]?`;
+const DIAGNOSTIC_CODE = new RegExp(`^${DIAGNOSTIC_CODE_BODY}$`, "u");
+const DIAGNOSTIC_CODE_IN_OUTPUT = new RegExp(
+  `(?:^|[^A-Za-z0-9_-])(${DIAGNOSTIC_CODE_BODY})(?![A-Za-z0-9_-])`,
+  "gu",
+);
 const EXACT_SIDECAR_SUFFIX = ".fungi.expected.diagnostics.txt";
+
+// Extract only standalone canonical codes; identifier-embedded lookalikes cannot own diagnostics.
+function extractDiagnosticCodes(output) {
+  return [...new Set([...output.matchAll(DIAGNOSTIC_CODE_IN_OUTPUT)].map((match) => match[1]))]
+    .sort(lexicalCompare);
+}
 
 function parseExpectedCodes(text, label) {
   const values = String(text)
@@ -216,7 +227,7 @@ function orphanSidecars(sidecars, fungiFiles) {
 }
 
 // ── ADJUDICATE (real CLI) + cache by (size, mtime) ───────────────────────────────────────────
-function checkFile(rel, strictTypes = false) {
+export function checkFile(rel, strictTypes = false) {
   const args = [join(ROOT, "galerina.mjs"), "check", rel];
   if (strictTypes) args.push("--strict-types");
   const r = spawnSync("node", args,
@@ -224,7 +235,7 @@ function checkFile(rel, strictTypes = false) {
   const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
   // A real code ends in a numeric segment (FUNGI-SYNTAX-011); the CLI's "+N FUNGI-TYPE-* advisory"
   // footer must not pollute the baseline's code lists.
-  return { ok: r.status === 0, codes: [...new Set([...out.matchAll(/(FUNGI-[A-Z][A-Z0-9]*-\d+[A-Za-z]?)/g)].map((m) => m[1]))].sort() };
+  return { ok: r.status === 0, codes: extractDiagnosticCodes(out) };
 }
 const loadJson = (p, fallback) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return fallback; } };
 
@@ -1252,8 +1263,7 @@ export async function runCorpusShard(value, shardValue, executionValue, signal) 
       ) return terminalCorpusReceipt(root, request, shard, completed, "CRASH");
 
       const output = `${child.stdout}${child.stderr}`;
-      const codes = [...new Set([...output.matchAll(/(FUNGI-[A-Z][A-Z0-9]*-\d+[A-Za-z]?)/gu)].map((match) => match[1]))]
-        .sort(lexicalCompare);
+      const codes = extractDiagnosticCodes(output);
       const classifiable = child.status === 0
         ? codes.length > 0 || CORPUS_CLEAN_MARKER.test(output)
         : codes.length > 0;

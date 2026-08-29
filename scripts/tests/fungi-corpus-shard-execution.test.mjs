@@ -27,7 +27,7 @@ import { deriveCorpusShards } from "../lib/fungi-corpus-shards.mjs";
 const roots = [];
 const fixtureCompilerPackages = new Map();
 const DIGEST_RE = /^sha256:[0-9a-f]{64}$/u;
-const CODE_RE = /^FUNGI-[A-Z][A-Z0-9]*-\d+[A-Za-z]?$/u;
+const CODE_RE = /^FUNGI-(?:[A-Z][A-Z0-9]*-)+\d+[A-Za-z]?$/u;
 const DEFAULT_LIMITS = Object.freeze({
   maxFiles: 16,
   maxBytes: 1024 * 1024,
@@ -242,6 +242,26 @@ if (name.includes("plain-high-exit")) process.exit(128);
 if (name.includes("high-exit")) {
   console.log("FUNGI-TEST-128: bounded diagnostic");
   process.exit(128);
+}
+if (name.includes("namespaced-valid")) {
+  console.log("FUNGI-HINT-COMPUTE-001: bounded namespaced diagnostic");
+  process.exit(0);
+}
+if (name.includes("namespaced-malformed")) {
+  console.log("FUNGI-HINT-COMPUTE-001-EXTRA: malformed namespaced diagnostic");
+  process.exit(0);
+}
+if (name.includes("namespaced-leading-underscore")) {
+  console.log("X_FUNGI-A-001: leading identifier embedding");
+  process.exit(0);
+}
+if (name.includes("namespaced-trailing-underscore")) {
+  console.log("FUNGI-A-001_EXTRA: trailing identifier embedding");
+  process.exit(0);
+}
+if (name.includes("namespaced-adversarial-long")) {
+  console.log("X_".repeat(4_000) + "FUNGI-A-001_EXTRA");
+  process.exit(0);
 }
 if (name.includes("missing-result")) process.exit(0);
 if (name.includes("change-compiler")) {
@@ -667,6 +687,77 @@ test("runCorpusShard binds source and semantic expectation bytes without cache o
   assert.equal(Object.isFrozen(result.value.completed[0]), true);
   assert.doesNotMatch(JSON.stringify(result.value), /SECRET_DIAGNOSTIC_BODY|pure flow/u);
   assert.equal(existsSync(join(root, "build", "fungi-corpus-check", "cache.json")), false);
+});
+
+test("legacy checkFile extracts namespaced exit-zero diagnostics", () => {
+  const result = corpusAuditOwner.checkFile("examples/foundations/ai-inference-governed.fungi");
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.codes, ["FUNGI-HINT-COMPUTE-001"]);
+});
+
+test("namespaced diagnostics preserve exact ownership and refuse malformed suffixes", async (t) => {
+  const code = "FUNGI-HINT-COMPUTE-001";
+  for (const fixtureCase of [
+    {
+      name: "unowned",
+      path: "corpus/namespaced-valid-unowned.fungi",
+      source: "@version 1\npure flow unowned() -> Int { return 1 }\n",
+      status: "FINDING",
+      mode: "plain",
+      ownershipVerdict: "FINDING",
+      ownershipCode: "UNEXPECTED_DIAGNOSTICS",
+    },
+    {
+      name: "exact ownership",
+      path: "corpus/namespaced-valid-owned.fungi",
+      source: `@version 1\n/// expected_diagnostics: ${code}\npure flow owned() -> Int { return 1 }\n`,
+      status: "PASS",
+      mode: "strict",
+      ownershipVerdict: "PASS",
+      ownershipCode: "EXPECTED_DIAGNOSTICS_EXACT",
+    },
+  ]) {
+    await t.test(fixtureCase.name, async () => {
+      const root = fixture({ [fixtureCase.path]: fixtureCase.source });
+      const request = requestFor(root, [fixtureCase.path]);
+      const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+      assert.equal(result.kind, "accepted");
+      assert.equal(result.value.status, fixtureCase.status, JSON.stringify(result));
+      assert.equal(result.value.termination, "COMPLETE", JSON.stringify(result));
+      assert.equal(result.value.completed.length, 1);
+      assert.equal(result.value.unprocessed.length, 0);
+      assert.equal(result.value.completed[0].resultDigest, canonicalDigest({
+        schema: "galerina.fungi-corpus-file-result.v2",
+        path: fixtureCase.path,
+        digest: request.files[0].digest,
+        expectationDigest: request.files[0].expectationDigest,
+        mode: fixtureCase.mode,
+        checkerStatus: "DIAGNOSTIC",
+        exitCode: 0,
+        codes: [code],
+        ownershipVerdict: fixtureCase.ownershipVerdict,
+        ownershipCode: fixtureCase.ownershipCode,
+      }));
+    });
+  }
+
+  for (const [name, path] of [
+    ["malformed trailing namespace", "corpus/namespaced-malformed.fungi"],
+    ["leading underscore embedding", "corpus/namespaced-leading-underscore.fungi"],
+    ["trailing underscore embedding", "corpus/namespaced-trailing-underscore.fungi"],
+    ["adversarial long embedding", "corpus/namespaced-adversarial-long.fungi"],
+  ]) {
+    await t.test(name, async () => {
+      const root = fixture({ [path]: "@version 1\npure flow malformed() -> Int { return 1 }\n" });
+      const request = requestFor(root, [path]);
+      const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+      assert.equal(result.kind, "accepted");
+      assert.equal(result.value.status, "REFUSED");
+      assert.equal(result.value.termination, "MISSING_RESULT");
+      assert.deepEqual(result.value.completed, []);
+      assert.deepEqual(result.value.unprocessed.map(({ path: rel }) => rel), [path]);
+    });
+  }
 });
 
 test("protected execution retains source and compiler parents against substitution", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
