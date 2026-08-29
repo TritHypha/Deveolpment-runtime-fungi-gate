@@ -1,14 +1,15 @@
 @version 1
-/// runMedicalRiskInference — Google Axion + TPU + Titanium Audit example
+/// runMedicalRiskInference — Google Axion + TPU with Titanium platform context
 ///
 /// Demonstrates: Google silicon targets in contract.hardware,
 /// medical data governance, privacy boundaries before AI inference,
-/// Titanium audit offload, and no_ambient_cloud_authority.
+/// planned Titanium audit evidence, and no_ambient_cloud_authority.
 ///
 /// Hardware targets:
 ///   Control plane: Google Axion (ARM cloud CPU)
 ///   AI inference:  Google Cloud TPU (governed)
-///   Audit transport: Google Titanium (offloaded)
+///   Audit transport: Google Titanium is planned platform context, not an
+///                    authorised compiler target in this example.
 ///
 /// This flow shows Galerina governing AI inference on cloud silicon
 /// while maintaining full privacy, capability, and audit requirements.
@@ -48,7 +49,6 @@ contract {
   hardware {
     target google.axion
     allow google.tpu.inference
-    allow google.titanium.audit
     require host_control_plane wasm
     require signed_execution_token
     require deterministic_fallback cpu
@@ -82,6 +82,9 @@ contract {
     require actor
     require trace_id
   }
+}
+compute target npu {
+  fallback cpu
 }
 {
   let validated      = validate.patientBatch(patientBatch)?

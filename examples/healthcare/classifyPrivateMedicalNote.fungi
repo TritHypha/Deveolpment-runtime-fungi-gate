@@ -2,11 +2,12 @@
 /// classifyPrivateMedicalNote — Apple Silicon sovereign compute example
 ///
 /// Demonstrates: Apple Neural Engine for private on-device AI inference,
-/// Secure Enclave-backed ProofGraph signing, no cloud dependency,
-/// unified memory zero-copy dispatch, medical data governance.
+/// no cloud dependency, unified memory zero-copy dispatch, and medical data
+/// governance. Apple CPU and Secure Enclave remain platform context and
+/// planned evidence, not authorised compiler targets in this example.
 ///
-/// Hardware governance class: ExecutionPlane (1) for Neural Engine
-/// Secure Enclave: GovernancePlane backing for GovernanceSignature
+/// Hardware governance class: ExecutionPlane (1) for the registered Neural Engine.
+/// Proof signing remains planned platform evidence outside this compiler target set.
 ///
 /// Key principle: patient data never leaves the device.
 /// Apple Silicon provides the performance of cloud AI with device-local sovereignty.
@@ -45,9 +46,7 @@ contract {
 
   hardware {
     target apple.silicon
-    allow apple.cpu.arm64
     allow apple.neural_engine
-    allow apple.secure_enclave
     require no_cloud_fallback_without_policy
     require deterministic_fallback wasm
     require no_ambient_device_authority
@@ -77,6 +76,9 @@ contract {
     require actor
     require trace_id
   }
+}
+compute target npu {
+  fallback wasm
 }
 {
   let validated    = validate.medicalNote(note)?

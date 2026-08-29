@@ -49,6 +49,9 @@ contract {
     require runtime_attestation
   }
 }
+compute target cpu {
+  fallback wasm
+}
 {
   trap documentText == "" : ERR_EMPTY_DOCUMENT      ;; toxic input blocked at the border
   trap maxLength <= 0 : ERR_INVALID_MAX_LENGTH      ;; resource bound enforced
