@@ -16,6 +16,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
+import { deflateRawSync } from "node:zlib";
 import test, { after } from "node:test";
 import assert from "node:assert/strict";
 
@@ -36,6 +37,7 @@ const RUNTIME_BOOTSTRAPS = Object.freeze([
   "scripts/lib/fungi-corpus-runtime-authority.cjs",
   "scripts/lib/fungi-corpus-cjs-preload.cjs",
   "scripts/lib/fungi-corpus-esm-loader.mjs",
+  "scripts/lib/fungi-corpus-runtime-entry.mjs",
 ]);
 
 after(() => {
@@ -378,6 +380,81 @@ test("Corpus runtime protection remains importable across the admitted Node engi
     windowsHide: true,
   });
   assert.equal(imported.status, 0, imported.stderr || imported.stdout);
+  const malformedAuthority = "not-canonical-base64";
+  const bootstrapExecutions = [
+    {
+      name: "authority decoder",
+      args: [
+        "--eval",
+        `require(${JSON.stringify(resolve(RUNTIME_BOOTSTRAPS[0]))}).loadAuthority()`,
+      ],
+    },
+    {
+      name: "CommonJS preload",
+      args: ["--require", resolve(RUNTIME_BOOTSTRAPS[1]), "--eval", "void 0"],
+    },
+    {
+      name: "ESM loader",
+      args: [
+        "--no-warnings",
+        "--experimental-loader",
+        pathToFileURL(resolve(RUNTIME_BOOTSTRAPS[2])).href,
+        "--eval",
+        "void 0",
+      ],
+    },
+    {
+      name: "runtime entry",
+      args: [resolve(RUNTIME_BOOTSTRAPS[3]), resolve("galerina.mjs")],
+    },
+  ];
+  for (const execution of bootstrapExecutions) {
+    const result = spawnSync(process.execPath, execution.args, {
+      cwd: resolve("."),
+      encoding: "utf8",
+      env: { GALERINA_CORPUS_RUNTIME_AUTHORITY: malformedAuthority },
+      windowsHide: true,
+    });
+    const evidence = `${result.stdout}\n${result.stderr}`;
+    assert.notEqual(result.status, 0, `${execution.name} unexpectedly accepted malformed authority`);
+    assert.match(evidence, /CORPUS_RUNTIME_AUTHORITY_REFUSED/u, `${execution.name} did not execute its authority guard`);
+  }
+  const authorityName = "GALERINA_CORPUS_RUNTIME_AUTHORITY";
+  const compatibilityRoot = fixture({}, {}, {
+    checker: [
+      "import { spawnSync } from 'node:child_process';",
+      `const present = () => Object.keys(process.env).some((key) => key.toUpperCase() === ${JSON.stringify(authorityName)});`,
+      `const descendant = spawnSync(process.execPath, ['--eval', ${JSON.stringify(`process.stdout.write(Object.keys(process.env).some((key) => key.toUpperCase() === ${JSON.stringify(authorityName)}) ? 'PRESENT' : 'ABSENT')`)}], { encoding: 'utf8', windowsHide: true });`,
+      "if (present() || descendant.status !== 0 || descendant.stdout !== 'ABSENT') process.exit(91);",
+      "console.log('AUTH_SCRUBBED');",
+    ].join("\n"),
+  });
+  const authorityInput = {
+    schema: "galerina.fungi-corpus-runtime-authority.v1",
+    root: compatibilityRoot,
+    files: compilerFiles(compatibilityRoot),
+    entries: [],
+  };
+  const authority = deflateRawSync(Buffer.from(JSON.stringify({
+    ...authorityInput,
+    digest: canonicalDigest(authorityInput),
+  }), "utf8")).toString("base64");
+  const combined = spawnSync(process.execPath, [
+    "--no-warnings",
+    "--require",
+    join(compatibilityRoot, ...RUNTIME_BOOTSTRAPS[1].split("/")),
+    "--experimental-loader",
+    pathToFileURL(join(compatibilityRoot, ...RUNTIME_BOOTSTRAPS[2].split("/"))).href,
+    join(compatibilityRoot, ...RUNTIME_BOOTSTRAPS[3].split("/")),
+    join(compatibilityRoot, "galerina.mjs"),
+  ], {
+    cwd: compatibilityRoot,
+    encoding: "utf8",
+    env: { [authorityName]: authority },
+    windowsHide: true,
+  });
+  assert.equal(combined.status, 0, combined.stderr || combined.stdout);
+  assert.equal(combined.stdout.trim(), "AUTH_SCRUBBED");
   const platformWorkflow = readFileSync(resolve(".github/workflows/platform-smoke.yml"), "utf8");
   assert.match(platformWorkflow, /node-version:\s*"20"/u);
   assert.match(platformWorkflow, /node-version:\s*"18"/u);
@@ -425,6 +502,62 @@ test("runtime bootstraps refuse malformed authority before target execution", as
       assert.equal(existsSync(sentinel), false);
     });
   }
+});
+
+test("runtime authority is unavailable to the target and its descendants after both guards initialize", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  const path = "corpus/runtime-authority-scrub.fungi";
+  const targetSentinel = join(tmpdir(), `galerina-corpus-authority-target-${process.pid}-${Date.now()}`);
+  const descendantSentinel = join(tmpdir(), `galerina-corpus-authority-descendant-${process.pid}-${Date.now()}`);
+  t.after(() => {
+    rmSync(targetSentinel, { force: true });
+    rmSync(descendantSentinel, { force: true });
+  });
+  const authorityName = "GALERINA_CORPUS_RUNTIME_AUTHORITY";
+  const checker = [
+    "import { writeFileSync } from 'node:fs';",
+    "import { spawnSync } from 'node:child_process';",
+    "import { fileURLToPath } from 'node:url';",
+    `if (process.argv[1] !== fileURLToPath(import.meta.url) || process.argv[2] !== 'check' || process.argv[3] !== ${JSON.stringify(path)}) process.exit(96);`,
+    "await import('@galerina/core-compiler');",
+    `const authorityPresent = () => Object.keys(process.env).some((key) => key.toUpperCase() === ${JSON.stringify(authorityName)});`,
+    `if (authorityPresent()) writeFileSync(${JSON.stringify(targetSentinel)}, 'AUTH_PRESENT\\n');`,
+    `const descendant = spawnSync(process.execPath, ['--eval', ${JSON.stringify(`if (Object.keys(process.env).some((key) => key.toUpperCase() === ${JSON.stringify(authorityName)})) require('node:fs').writeFileSync(${JSON.stringify(descendantSentinel)}, 'AUTH_PRESENT\\n')`)}], { windowsHide: true });`,
+    "if (descendant.status !== 0) process.exit(97);",
+    "console.log('0 errors, 0 governance warnings');",
+  ].join("\n");
+  const root = fixture(
+    { [path]: "@version 1\npure flow runtimeAuthorityScrub() -> Int { return 1 }\n" },
+    {},
+    {
+      checker,
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "commonjs",
+        main: "./dist/index.cjs",
+        dependencies: { "third-party-cjs": "1.0.0" },
+      }, null, 2)}\n`,
+      compilerDist: { "index.cjs": "module.exports = require('third-party-cjs');\n" },
+      extraFiles: {
+        "packages-ts/galerina-core-compiler/node_modules/third-party-cjs/package.json": `${JSON.stringify({
+          name: "third-party-cjs",
+          type: "commonjs",
+          main: "./index.cjs",
+        }, null, 2)}\n`,
+        "packages-ts/galerina-core-compiler/node_modules/third-party-cjs/index.cjs": "module.exports = 1;\n",
+      },
+    },
+  );
+
+  const request = requestFor(root, [path]);
+  const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "PASS", JSON.stringify(result));
+  assert.equal(result.value.termination, "COMPLETE", JSON.stringify(result));
+  assert.deepEqual(
+    { target: existsSync(targetSentinel), descendant: existsSync(descendantSentinel) },
+    { target: false, descendant: false },
+    "runtime authority was visible after guard initialization",
+  );
 });
 
 test("runCorpusShard binds source and semantic expectation bytes without cache or body disclosure", async () => {

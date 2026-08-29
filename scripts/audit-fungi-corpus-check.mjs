@@ -604,6 +604,7 @@ const CORPUS_RUNTIME_BOOTSTRAPS = Object.freeze([
   "scripts/lib/fungi-corpus-runtime-authority.cjs",
   "scripts/lib/fungi-corpus-cjs-preload.cjs",
   "scripts/lib/fungi-corpus-esm-loader.mjs",
+  "scripts/lib/fungi-corpus-runtime-entry.mjs",
 ]);
 
 function directCanonicalDirectory(absolute) {
@@ -1205,6 +1206,7 @@ export async function runCorpusShard(value, shardValue, executionValue, signal) 
           join(root, ...CORPUS_RUNTIME_BOOTSTRAPS[1].split("/")),
           "--experimental-loader",
           pathToFileURL(join(root, ...CORPUS_RUNTIME_BOOTSTRAPS[2].split("/"))).href,
+          join(root, ...CORPUS_RUNTIME_BOOTSTRAPS[3].split("/")),
           join(root, "galerina.mjs"),
           "check",
           file.path,
