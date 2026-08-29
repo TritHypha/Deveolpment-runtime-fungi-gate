@@ -12,9 +12,37 @@
 // Overlays escalate (Tier 1 → Tier 2 → Tier 3) but never de-escalate.
 // The operator must restart the DSS/Wasmtime session to restore capabilities.
 
-type MonitoredPayload  = record { order_id: String, amount: Int }
-type ProcessingResult  = record { status: String, message: String }
-type ProcessingError   = enum { PolicyViolation InvariantFailure MemoryPressure ServiceError }
+record MonitoredPayload {
+  order_id: String
+  amount: Int
+}
+
+record ProcessingResult {
+  status: String
+  message: String
+}
+
+enum ProcessingError {
+  PolicyViolation
+  InvariantFailure
+  MemoryPressure
+  ServiceError
+}
+
+pure flow validateMonitoredPayload(readonly payload: MonitoredPayload) -> Result<MonitoredPayload, ProcessingError>
+contract { effects {} }
+{
+  if payload.order_id == "" {
+    return Err(ProcessingError.InvariantFailure)
+  }
+  if payload.amount <= 0 {
+    return Err(ProcessingError.InvariantFailure)
+  }
+  return Ok(MonitoredPayload {
+    order_id: payload.order_id
+    amount: payload.amount
+  })
+}
 
 secure flow monitoredPaymentProcessor(readonly payload: MonitoredPayload)
   -> Result<ProcessingResult, ProcessingError>
@@ -44,26 +72,24 @@ policy {
   }
 }
 {
-  if payload.amount <= 0 {
-    return Err(ProcessingError.InvariantFailure)
-  }
+  safe mut validatedPayload = validateMonitoredPayload(payload)?
 
   // Pre-flight check before cross-boundary call
   let receipt = security::interim::pre_flight_check(
     "monitoredPaymentProcessor",
     "payment_service::process",
-    String.length(payload.order_id)
+    String.length(validatedPayload.order_id)
   )
 
   if !receipt.is_approved {
     return Err(ProcessingError.PolicyViolation)
   }
 
-  let result = payment_service::process(payload.order_id, payload.amount)
+  let result = payment_service::process(validatedPayload.order_id, validatedPayload.amount)
 
   security::interim::post_flight_cleanup(receipt)
 
-  AuditLog.write("PaymentProcessed: " + payload.order_id)
+  AuditLog.write("PaymentProcessed: " + validatedPayload.order_id)
 
   return Ok(ProcessingResult { status: "ok", message: "payment processed" })
 }

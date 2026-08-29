@@ -14,9 +14,41 @@
 //
 // Current (stable) version: uses interim BoundaryProxy for cross-boundary calls.
 
-type InvoicePayload  = record { merchant_id: String, amount_cents: Int, currency: String }
-type InvoiceReceipt  = record { invoice_id: String, status: String }
-type InvoiceError    = enum { InvalidPayload InsufficientCredit GatewayError }
+record InvoicePayload {
+  merchant_id: String
+  amount_cents: Int
+  currency: String
+}
+
+record InvoiceReceipt {
+  invoice_id: String
+  status: String
+}
+
+enum InvoiceError {
+  InvalidPayload
+  InsufficientCredit
+  GatewayError
+}
+
+pure flow validateInvoicePayload(readonly payload: InvoicePayload) -> Result<InvoicePayload, InvoiceError>
+contract { effects {} }
+{
+  if payload.merchant_id == "" {
+    return Err(InvoiceError.InvalidPayload)
+  }
+  if payload.amount_cents <= 0 {
+    return Err(InvoiceError.InvalidPayload)
+  }
+  if payload.currency == "" {
+    return Err(InvoiceError.InvalidPayload)
+  }
+  return Ok(InvoicePayload {
+    merchant_id: payload.merchant_id
+    amount_cents: payload.amount_cents
+    currency: payload.currency
+  })
+}
 
 secure flow processCorporateInvoicing(readonly payload: InvoicePayload) -> Result<InvoiceReceipt, InvoiceError>
 contract {
@@ -50,16 +82,14 @@ contract {
   // }
 }
 {
-  if payload.amount_cents <= 0 {
-    return Err(InvoiceError.InvalidPayload)
-  }
+  safe mut validatedPayload = validateInvoicePayload(payload)?
 
   // Cross-boundary call via interim BoundaryProxy (pre-DRCM Phase 5)
   // Position 0: caller, Position 1: target, Position 2: payload_size_bytes
   let receipt = security::interim::pre_flight_check(
     "processCorporateInvoicing",
     "payment_gateway::chargeInvoice",
-    String.length(payload.merchant_id)
+    String.length(validatedPayload.merchant_id)
   )
 
   if !receipt.is_approved {
@@ -68,13 +98,13 @@ contract {
 
   // DRCM Phase 5 replacement (step):
   // @experimental_profile(name: "drcm_core_v1", status: "planned_phase_5") {
-  //   let chargeResult = step payment_gateway::chargeInvoice(payload)
+  //   let chargeResult = step payment_gateway::chargeInvoice(validatedPayload)
   // }
-  let chargeResult = payment_gateway::chargeInvoice(payload)
+  let chargeResult = payment_gateway::chargeInvoice(validatedPayload)
 
   security::interim::post_flight_cleanup(receipt)
 
-  AuditLog.write("InvoiceProcessed: " + payload.merchant_id)
+  AuditLog.write("InvoiceProcessed: " + validatedPayload.merchant_id)
 
   return Ok(InvoiceReceipt { invoice_id: chargeResult.id, status: "charged" })
 }
