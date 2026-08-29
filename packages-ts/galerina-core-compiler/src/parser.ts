@@ -1065,29 +1065,64 @@ class Parser {
     this.advance(); // consume "governed"
     this.skipNewlines();
 
-    // Parse floor name (optional — defaults to "floor_3" if omitted and "flow" follows)
+    // Parse floor name (optional — defaults to "floor_3" if omitted and "flow" follows).
+    // The secure posture is deliberately a CLOSED extension: only the four
+    // canonical floors admit `secure`; historical aliases and non-secure forms
+    // retain their existing byte encoding and guarded posture.
     let floorName = "floor_3";
+    let hasExplicitFloor = false;
+    if (
+      this.currentIs("keyword", "secure") || this.currentIs("identifier", "secure")
+      || this.currentIs("keyword", "guarded") || this.currentIs("identifier", "guarded")
+      || this.currentIs("keyword", "pure") || this.currentIs("identifier", "pure")
+    ) {
+      return this.rejectMalformedGovernedFlow(
+        loc,
+        `A governed posture qualifier cannot appear before its floor.`,
+      );
+    }
     if ((this.current().kind === "identifier" || this.current().kind === "keyword")
         && this.current().value !== "flow") {
       floorName = this.current().value;
+      hasExplicitFloor = true;
       this.advance();
       this.skipNewlines();
     }
 
-    // Expect "flow" keyword
-    if (!this.currentIs("keyword", "flow") && !this.currentIs("identifier", "flow")) {
-      this.emit(
-        "FUNGI-PARSE-002",
-        "EXPECTED_FLOW_KEYWORD",
-        `Expected "flow" after "governed ${floorName}".`,
+    if (/^floor_[1-4]secure$/.test(floorName)) {
+      return this.rejectMalformedGovernedFlow(
         loc,
-        `Write: governed floor_3 flow name(params) -> ReturnType { ... }`,
+        `The governed floor and secure posture must be separate tokens.`,
       );
-      return { kind: "identifier", value: "governed:error", location: loc };
     }
 
-    // Parse the actual flow as a guarded flow, then attach floor metadata
-    const flowNode = this.parseFlowDecl("guarded");
+    let qualifier: "guarded" | "secure" = "guarded";
+    if (this.currentIs("keyword", "secure") || this.currentIs("identifier", "secure")) {
+      const canonicalSecureFloors = new Set(["floor_1", "floor_2", "floor_3", "floor_4"]);
+      if (!hasExplicitFloor || !canonicalSecureFloors.has(floorName)) {
+        return this.rejectMalformedGovernedFlow(
+          loc,
+          `Secure governed flows require an explicit canonical floor_1, floor_2, floor_3, or floor_4.`,
+        );
+      }
+      qualifier = "secure";
+      this.advance();
+      this.skipNewlines();
+    }
+
+    // Expect exactly one "flow" keyword after the admitted prefix. This also
+    // rejects repeated posture/floor tokens and concatenated secure forms
+    // before parseFlowDecl can mint FlowMeta or an executable AST node.
+    if (!this.currentIs("keyword", "flow") && !this.currentIs("identifier", "flow")) {
+      return this.rejectMalformedGovernedFlow(
+        loc,
+        `Expected exactly "flow" after the governed floor and optional secure posture.`,
+      );
+    }
+
+    // Parse the actual flow only after the prefix is wholly admitted, then
+    // attach floor metadata without changing the historical value encoding.
+    const flowNode = this.parseFlowDecl(qualifier);
 
     // Re-tag as governedFlowDecl and encode floor in value:
     // value = "governed:<floorName>:<originalFlowName>"
@@ -1096,6 +1131,50 @@ class Parser {
       kind: "governedFlowDecl" as AstNodeKind,
       value: `governed:${floorName}:${flowNode.value ?? ""}`,
     };
+  }
+
+  /**
+   * Refuse a malformed governed prefix and drain its declaration as recovery.
+   * This helper never invokes parseFlowDecl, so malformed posture text cannot
+   * create FlowMeta or a phantom executable flow. Balanced blocks are skipped
+   * as opaque recovery units; once a full declaration block has been drained,
+   * the next top-level declaration remains available to the outer parser.
+   */
+  private rejectMalformedGovernedFlow(loc: SourceLocation, detail: string): AstNode {
+    this.emit(
+      "FUNGI-PARSE-002",
+      "INVALID_GOVERNED_FLOW_POSTURE",
+      `${detail} Governed secure syntax is: governed floor_1|floor_2|floor_3|floor_4 secure flow name(...).`,
+      loc,
+      `Write: governed floor_3 secure flow name(params) -> ReturnType { ... }`,
+    );
+
+    let drainedBlock = false;
+    const topLevelBoundaries = new Set([
+      "flow", "secure", "pure", "guarded", "governed",
+      "type", "record", "enum", "import", "route", "contract", "event",
+      "authority", "policy", "intent", "governance", "api", "compute", "resource",
+    ]);
+
+    while (!this.isEof()) {
+      const tok = this.current();
+      if (
+        drainedBlock
+        && tok.kind === "keyword"
+        && topLevelBoundaries.has(tok.value)
+        && tok.column <= 1
+      ) {
+        break;
+      }
+      if (tok.kind === "symbol" && tok.value === "{") {
+        this.skipBalancedBraces();
+        drainedBlock = true;
+        continue;
+      }
+      this.advance();
+    }
+
+    return { kind: "identifier", value: "governed:error", location: loc };
   }
 
   // ── Parameters ────────────────────────────────────────────────────────────

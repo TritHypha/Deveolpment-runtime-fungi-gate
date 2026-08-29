@@ -11,10 +11,10 @@
 // wat-emitter); this module makes it ONE exported function so the remaining
 // checker-lane lookups adopt the same truth rather than a fourth copy.
 //
-// Depends only on the `AstNode` shape from the parser — no checker imports — so
-// it introduces no dependency cycle (owner Q1 condition 2).
+// Depends only on the parser's AST contract and NodeFlags — no checker imports
+// — so it introduces no dependency cycle (owner Q1 condition 2).
 // =============================================================================
-import { type AstNode, type AstNodeKind } from "./parser.js";
+import { NodeFlags, type AstNode, type AstNodeKind } from "./parser.js";
 
 /** The four qualifiers whose declaration node carries the bare flow name in `value`. */
 export const FLOW_DECL_KINDS: ReadonlySet<AstNodeKind> = new Set<AstNodeKind>([
@@ -29,6 +29,9 @@ export interface DecodedFlow {
   readonly name: string;
   readonly floor?: string;
 }
+
+/** Canonical execution posture shared by flow-declaration consumers. */
+export type FlowPosture = "flow" | "secure" | "pure" | "guarded";
 
 /**
  * Decode a flow declaration node to its declared name (and governed floor).
@@ -59,6 +62,37 @@ export function decodeFlowDecl(node: AstNode): DecodedFlow | { error: string } |
     return { name: node.value ?? "" };
   }
   return undefined;
+}
+
+/**
+ * Decode a flow declaration's execution posture without duplicating governed
+ * value validation. Legacy governed declarations remain guarded; the new
+ * parser form is distinguished solely by its structural IsSecure flag.
+ */
+export function decodeFlowPosture(node: AstNode): FlowPosture | { error: string } | undefined {
+  const decoded = decodeFlowDecl(node);
+  if (decoded === undefined || "error" in decoded) return decoded;
+
+  const flags = node.flags ?? NodeFlags.None;
+  const isPure = (flags & NodeFlags.IsPure) !== 0;
+  const isSecure = (flags & NodeFlags.IsSecure) !== 0;
+  const contradiction = (): { error: string } => ({
+    error: `contradictory flow posture flags for ${node.kind} ${JSON.stringify(decoded.name)}`,
+  });
+
+  switch (node.kind) {
+    case "flowDecl":
+      return isPure || isSecure ? contradiction() : "flow";
+    case "secureFlowDecl":
+      return isPure ? contradiction() : "secure";
+    case "pureFlowDecl":
+      return isSecure ? contradiction() : "pure";
+    case "guardedFlowDecl":
+      return isPure || isSecure ? contradiction() : "guarded";
+    case "governedFlowDecl":
+      if (isPure) return contradiction();
+      return isSecure ? "secure" : "guarded";
+  }
 }
 
 /**

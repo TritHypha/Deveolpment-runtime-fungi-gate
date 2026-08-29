@@ -312,6 +312,34 @@ describe("NodeFlags: IsPure and IsSecure", () => {
     assert.ok(!hasFlag(node, NodeFlags.IsPure), "IsPure must NOT be set for secure flow");
   });
 
+  it("governed floor_3 secure flow sets IsSecure and secure FlowMeta posture", () => {
+    const source = `governed floor_3 secure flow handleWebhook(readonly request: Request) -> Response {
+  return request
+}
+`;
+    const result = parseProgram(source, "test.fungi");
+    const node = (result.ast.children ?? []).find((child) => child.kind === "governedFlowDecl");
+    assert.ok(node !== undefined, "Governed secure flow must produce governedFlowDecl");
+    assert.equal(node.value, "governed:floor_3:handleWebhook");
+    assert.ok(hasFlag(node, NodeFlags.IsSecure), "IsSecure must be set for governed secure flow");
+    assert.ok(!hasFlag(node, NodeFlags.IsPure), "IsPure must NOT be set for governed secure flow");
+    assert.deepEqual(result.flows.map((flow) => flow.qualifier), ["secure"]);
+  });
+
+  it("legacy governed flow remains guarded and does not gain IsSecure", () => {
+    const source = `governed flow legacy(readonly request: Request) -> Response {
+  return request
+}
+`;
+    const result = parseProgram(source, "test.fungi");
+    const node = (result.ast.children ?? []).find((child) => child.kind === "governedFlowDecl");
+    assert.ok(node !== undefined, "Legacy governed flow must remain governedFlowDecl");
+    assert.equal(node.value, "governed:floor_3:legacy");
+    assert.ok(!hasFlag(node, NodeFlags.IsSecure), "Legacy governed flow must NOT gain IsSecure");
+    assert.ok(!hasFlag(node, NodeFlags.IsPure), "Legacy governed flow must NOT gain IsPure");
+    assert.deepEqual(result.flows.map((flow) => flow.qualifier), ["guarded"]);
+  });
+
   it("plain flow sets neither IsPure nor IsSecure", () => {
     const source = `flow plain(x: Int) -> Int { return x }`;
     const { ast } = parseProgram(source, "test.fungi");

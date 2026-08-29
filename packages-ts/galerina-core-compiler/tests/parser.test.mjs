@@ -1251,3 +1251,78 @@ contract { intent { "not a ctor" } }
     assert.ok(result.ast !== undefined, "Should parse without error");
   });
 });
+
+describe("Parser — governed secure flow posture", () => {
+  for (const floor of ["floor_1", "floor_2", "floor_3", "floor_4"]) {
+    it(`parses governed ${floor} secure flow as one secure governed declaration`, () => {
+      const result = parseOk(
+        `governed ${floor} secure flow execute(value: Int) -> Int { return value }`,
+      );
+      const node = findNode(result.ast, "governedFlowDecl");
+      assert.ok(node !== undefined, "canonical governed secure syntax must produce governedFlowDecl");
+      assert.equal(node.value, `governed:${floor}:execute`);
+      assert.deepEqual(result.flows.map((flow) => [flow.name, flow.qualifier]), [["execute", "secure"]]);
+    });
+  }
+
+  it("preserves legacy governed flow and nonsecure floors and aliases", () => {
+    const cases = [
+      ["governed flow legacy(value: Int) -> Int { return value }", "governed:floor_3:legacy"],
+      ["governed floor_1 flow canonical(value: Int) -> Int { return value }", "governed:floor_1:canonical"],
+      ["governed execution flow alias(value: Int) -> Int { return value }", "governed:execution:alias"],
+      ["governed containment flow alias(value: Int) -> Int { return value }", "governed:containment:alias"],
+      ["governed proof flow alias(value: Int) -> Int { return value }", "governed:proof:alias"],
+      ["governed attestation flow alias(value: Int) -> Int { return value }", "governed:attestation:alias"],
+    ];
+
+    for (const [source, expectedValue] of cases) {
+      const result = parseOk(source);
+      const node = findNode(result.ast, "governedFlowDecl");
+      assert.ok(node !== undefined, source);
+      assert.equal(node.value, expectedValue, source);
+      assert.equal(result.flows.length, 1, source);
+      assert.equal(result.flows[0].qualifier, "guarded", source);
+    }
+  });
+
+  it("rejects malformed governed secure prefixes without creating a phantom executable flow", () => {
+    const malformed = [
+      "governed secure flow bad(value: Int) -> Int { return value }",
+      "governed secure floor_2 flow bad(value: Int) -> Int { return value }",
+      "governed floor_2 guarded flow bad(value: Int) -> Int { return value }",
+      "governed floor_2 pure flow bad(value: Int) -> Int { return value }",
+      "governed floor_2 secure secure flow bad(value: Int) -> Int { return value }",
+      "governed floor_2 floor_3 secure flow bad(value: Int) -> Int { return value }",
+      "governed floor_2secure flow bad(value: Int) -> Int { return value }",
+      "governed floor_2secure secure flow bad(value: Int) -> Int { return value }",
+      "governed floor_2 secureflow bad(value: Int) -> Int { return value }",
+      "governed floor_unknown secure flow bad(value: Int) -> Int { return value }",
+      "governed floor_5 secure flow bad(value: Int) -> Int { return value }",
+      "governed execution secure flow bad(value: Int) -> Int { return value }",
+      "governed containment secure flow bad(value: Int) -> Int { return value }",
+      "governed proof secure flow bad(value: Int) -> Int { return value }",
+      "governed attestation secure flow bad(value: Int) -> Int { return value }",
+    ];
+
+    for (const source of malformed) {
+      const result = parseProgram(
+        `${source}\nflow survivor(value: Int) -> Int { return value }`,
+        "malformed-governed.fungi",
+      );
+      assert.equal(hasErrors(result), true, `must reject: ${source}`);
+      assert.deepEqual(
+        result.flows.map((flow) => flow.name),
+        ["survivor"],
+        `malformed governed prefix must not mint FlowMeta: ${source}`,
+      );
+      const executableNodes = (result.ast.children ?? []).filter((node) =>
+        ["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl", "governedFlowDecl"].includes(node.kind),
+      );
+      assert.deepEqual(
+        executableNodes.map((node) => node.value),
+        ["survivor"],
+        `malformed governed prefix must not mint an executable AST node: ${source}`,
+      );
+    }
+  });
+});

@@ -14,8 +14,10 @@
 // =============================================================================
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { parseProgram } from "../dist/index.js";
-import { decodeFlowDecl, isFlowDeclNamed, FLOW_DECL_KINDS } from "../dist/flow-name.js";
+import { NodeFlags, parseProgram } from "../dist/index.js";
+import * as flowNameModule from "../dist/flow-name.js";
+
+const { decodeFlowDecl, isFlowDeclNamed, FLOW_DECL_KINDS } = flowNameModule;
 
 /** Depth-first find of the first node of a given kind. */
 function findByKind(node, kind) {
@@ -28,6 +30,20 @@ function findByKind(node, kind) {
 }
 /** The OLD, buggy lookup shape — kept here as the discriminating control. */
 const OLD_SHAPE = (node, name) => FLOW_DECL_KINDS.has(node.kind) && node.value === name;
+
+function decodePosture(node) {
+  assert.equal(
+    typeof flowNameModule.decodeFlowPosture,
+    "function",
+    "flow-name.js must export the shared decodeFlowPosture function",
+  );
+  return flowNameModule.decodeFlowPosture(node);
+}
+
+function assertPostureError(result, message) {
+  assert.equal(typeof result, "object", message);
+  assert.ok(result !== null && "error" in result, message);
+}
 
 describe("Q1 — governed flow is found by its declared name", () => {
   it("the parser encodes a governed flow as governedFlowDecl with governed:<floor>:<name>", () => {
@@ -89,5 +105,92 @@ describe("Q1 — governed flow is found by its declared name", () => {
 
   it("a non-flow node decodes to undefined (not a name, not an error)", () => {
     assert.equal(decodeFlowDecl({ kind: "callExpr", value: "transfer" }), undefined);
+  });
+});
+
+describe("shared flow posture decoder", () => {
+  it("maps every normal flow declaration kind to its canonical posture", () => {
+    const cases = [
+      [{ kind: "flowDecl", value: "plain" }, "flow"],
+      [{ kind: "secureFlowDecl", value: "secure", flags: NodeFlags.IsSecure }, "secure"],
+      [{ kind: "pureFlowDecl", value: "pure", flags: NodeFlags.IsPure }, "pure"],
+      [{ kind: "guardedFlowDecl", value: "guarded" }, "guarded"],
+    ];
+    for (const [node, posture] of cases) assert.equal(decodePosture(node), posture);
+  });
+
+  it("maps legacy governed to guarded and flagged governed to secure", () => {
+    assert.equal(
+      decodePosture({ kind: "governedFlowDecl", value: "governed:floor_3:legacy" }),
+      "guarded",
+    );
+    assert.equal(
+      decodePosture({
+        kind: "governedFlowDecl",
+        value: "governed:floor_3:secure",
+        flags: NodeFlags.IsSecure,
+      }),
+      "secure",
+    );
+  });
+
+  it("refuses contradictory IsPure and IsSecure posture flags", () => {
+    const result = decodePosture({
+      kind: "governedFlowDecl",
+      value: "governed:floor_3:contradictory",
+      flags: NodeFlags.IsPure | NodeFlags.IsSecure,
+    });
+    assertPostureError(result, "contradictory posture flags must return an error");
+  });
+
+  it("refuses secureFlowDecl carrying the contradictory IsPure flag", () => {
+    const result = decodePosture({
+      kind: "secureFlowDecl",
+      value: "secure-with-pure-flag",
+      flags: NodeFlags.IsPure,
+    });
+    assertPostureError(result, "secureFlowDecl + IsPure must return an error");
+  });
+
+  it("refuses pureFlowDecl carrying the contradictory IsSecure flag", () => {
+    const result = decodePosture({
+      kind: "pureFlowDecl",
+      value: "pure-with-secure-flag",
+      flags: NodeFlags.IsSecure,
+    });
+    assertPostureError(result, "pureFlowDecl + IsSecure must return an error");
+  });
+
+  it("refuses flowDecl carrying an IsSecure posture flag", () => {
+    const result = decodePosture({
+      kind: "flowDecl",
+      value: "plain-with-secure-flag",
+      flags: NodeFlags.IsSecure,
+    });
+    assertPostureError(result, "flowDecl + IsSecure must return an error");
+  });
+
+  it("refuses guardedFlowDecl carrying an IsSecure posture flag", () => {
+    const result = decodePosture({
+      kind: "guardedFlowDecl",
+      value: "guarded-with-secure-flag",
+      flags: NodeFlags.IsSecure,
+    });
+    assertPostureError(result, "guardedFlowDecl + IsSecure must return an error");
+  });
+
+  it("refuses governedFlowDecl carrying the unsupported IsPure flag", () => {
+    const result = decodePosture({
+      kind: "governedFlowDecl",
+      value: "governed:floor_3:governed-with-pure-flag",
+      flags: NodeFlags.IsPure,
+    });
+    assertPostureError(result, "governedFlowDecl + IsPure must return an error");
+  });
+
+  it("preserves malformed-governed and non-flow refusal shapes", () => {
+    const malformed = decodePosture({ kind: "governedFlowDecl", value: "governed:floor_3:" });
+    assert.ok(malformed && "error" in malformed);
+    assert.equal(decodePosture({ kind: "callExpr", value: "run" }), undefined);
   });
 });
