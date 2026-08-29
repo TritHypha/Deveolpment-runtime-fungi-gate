@@ -58,14 +58,74 @@ function git(root, args) {
 }
 
 const CHECKER = String.raw`#!/usr/bin/env node
-import { readFileSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { basename, dirname, join } from "node:path";
 
 const rel = process.argv[3] ?? "";
 const name = basename(rel);
+const clean = "0 errors, 0 governance warnings";
 if (process.env.FUNGI_CORPUS_POISON === "present") {
   console.log("FUNGI-POISON-001: caller environment leaked");
   process.exit(1);
+}
+if (name.includes("swap-source-parent")) {
+  const source = join(process.cwd(), ...rel.split("/"));
+  const parent = dirname(source);
+  try {
+    renameSync(parent, parent + "-admitted");
+    mkdirSync(parent);
+    writeFileSync(source, "@version 1\npure flow substituted() -> Int { return 0 }\n");
+    process.stdout.write(clean);
+    process.exit(0);
+  } catch {
+    console.log("FUNGI-TEST-777: source parent retained");
+    process.exit(1);
+  }
+}
+if (name.includes("swap-compiler-parent")) {
+  const parent = join(process.cwd(), "packages-ts", "galerina-core-compiler", "dist");
+  try {
+    renameSync(parent, parent + "-admitted");
+    mkdirSync(parent);
+    writeFileSync(join(parent, "compiler.cjs"), "module.exports = 'substituted';\n");
+    process.stdout.write(clean);
+    process.exit(0);
+  } catch {
+    console.log("FUNGI-TEST-777: compiler parent retained");
+    process.exit(1);
+  }
+}
+if (name.includes("consume-stdout")) {
+  process.stdout.write("S".repeat(400) + clean);
+  process.exit(0);
+}
+if (name.includes("consume-stderr")) {
+  process.stderr.write("E".repeat(400));
+  process.stdout.write(clean);
+  process.exit(0);
+}
+if (name.includes("late-stdout-limit")) {
+  process.stdout.write("S".repeat(128));
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
+  writeFileSync(join(process.cwd(), ".late-stream-sentinel"), "started\n");
+  process.stdout.write(clean);
+  process.exit(0);
+}
+if (name.includes("late-stderr-limit")) {
+  process.stderr.write("E".repeat(128));
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
+  writeFileSync(join(process.cwd(), ".late-stream-sentinel"), "started\n");
+  process.stdout.write(clean);
+  process.exit(0);
+}
+if (name.includes("raw-byte-budget")) {
+  process.stdout.write(Buffer.concat([Buffer.from([0x80]), Buffer.from(clean)]));
+  process.exit(0);
+}
+if (name.includes("platform-sentinel")) {
+  writeFileSync(join(process.cwd(), ".platform-child-sentinel"), "started\n");
+  process.stdout.write(clean);
+  process.exit(0);
 }
 if (name.includes("abort-wait")) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
 if (name.includes("timeout")) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1_000);
@@ -77,7 +137,8 @@ if (name.includes("stderr-overflow")) {
   process.stderr.write("E".repeat(4_096));
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 500);
 }
-if (name.includes("crash")) process.abort();
+if (name.includes("numeric-abort")) process.abort();
+if (name.includes("plain-high-exit")) process.exit(128);
 if (name.includes("high-exit")) {
   console.log("FUNGI-TEST-128: bounded diagnostic");
   process.exit(128);
@@ -213,6 +274,19 @@ function requestFor(root, paths, shardCount = 1) {
   };
 }
 
+async function withEnvironment(values, action) {
+  const previous = new Map(Object.keys(values).map((key) => [key, process.env[key]]));
+  try {
+    for (const [key, value] of Object.entries(values)) process.env[key] = value;
+    return await action();
+  } finally {
+    for (const [key, value] of previous) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+}
+
 function shardFor(request, limits = DEFAULT_LIMITS, index = 0) {
   const result = deriveCorpusShards(request, limits);
   assert.equal(result.kind, "accepted");
@@ -236,6 +310,54 @@ test("runCorpusShard binds source and semantic expectation bytes without cache o
   assert.equal(Object.isFrozen(result.value.completed[0]), true);
   assert.doesNotMatch(JSON.stringify(result.value), /SECRET_DIAGNOSTIC_BODY|pure flow/u);
   assert.equal(existsSync(join(root, "build", "fungi-corpus-check", "cache.json")), false);
+});
+
+test("protected execution retains source and compiler parents against substitution", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  for (const name of ["swap-source-parent", "swap-compiler-parent"]) {
+    await t.test(name, async () => {
+      const path = `corpus/${name}.fungi`;
+      const source = "@version 1\n/// expected_diagnostics: FUNGI-TEST-777\npure flow protected() -> Int { return 1 }\n";
+      const root = fixture({ [path]: source });
+      const request = requestFor(root, [path]);
+      const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+      assert.equal(result.kind, "accepted");
+      assert.equal(result.value.status, "PASS");
+      assert.equal(result.value.termination, "COMPLETE");
+      assert.equal(readFileSync(join(root, ...path.split("/")), "utf8"), source);
+      assert.equal(readFileSync(join(root, "packages-ts", "galerina-core-compiler", "dist", "compiler.cjs"), "utf8"), "module.exports = 'fixture';\n");
+    });
+  }
+});
+
+test("cumulative stdout and stderr limits terminate before a later child can use the other stream budget", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  for (const stream of ["stdout", "stderr"]) {
+    await t.test(stream, async () => {
+      const files = {
+        [`corpus/a-consume-${stream}.fungi`]: "@version 1\npure flow first() -> Int { return 1 }\n",
+        [`corpus/b-late-${stream}-limit.fungi`]: "@version 1\npure flow second() -> Int { return 1 }\n",
+      };
+      const root = fixture(files);
+      const request = requestFor(root, Object.keys(files));
+      const limits = { ...DEFAULT_LIMITS, maxOutputBytes: 512 };
+      const result = await runCorpusShard(request, shardFor(request, limits), { repositoryRoot: root });
+      assert.equal(result.kind, "accepted");
+      assert.equal(result.value.status, "REFUSED");
+      assert.equal(result.value.termination, "OUTPUT_OVERFLOW");
+      assert.equal(existsSync(join(root, ".late-stream-sentinel")), false);
+    });
+  }
+});
+
+test("aggregate output accounting uses owner-reported raw bytes before UTF-8 decoding", { skip: process.platform !== "win32" || process.arch !== "x64" }, async () => {
+  const path = "corpus/raw-byte-budget.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow raw() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const maxOutputBytes = Buffer.byteLength("0 errors, 0 governance warnings", "utf8") + 1;
+  const limits = { ...DEFAULT_LIMITS, maxOutputBytes };
+  const result = await runCorpusShard(request, shardFor(request, limits), { repositoryRoot: root });
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "PASS");
+  assert.equal(result.value.termination, "COMPLETE");
 });
 
 test("runCorpusAggregate produces disjoint deterministic receipts for concurrency one and two", async () => {
@@ -332,9 +454,19 @@ test("a non-negative high exit remains classifiable when an exact diagnostic is 
   assert.equal(result.value.completed.length, 1);
 });
 
-test("crash, missing-result and independent stdout/stderr overflow paths stay distinct", async (t) => {
+test("plain numeric exit 128 without a diagnostic is missing result, not crash", async () => {
+  const path = "corpus/plain-high-exit.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow high() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "REFUSED");
+  assert.equal(result.value.termination, "MISSING_RESULT");
+});
+
+test("numeric abnormal exits, missing results and stream overflows follow the closed algebra", async (t) => {
   for (const [name, termination, maxOutputBytes] of [
-    ["crash", "CRASH", 16 * 1024],
+    ["numeric-abort", "MISSING_RESULT", 16 * 1024],
     ["missing-result", "MISSING_RESULT", 16 * 1024],
     ["stdout-overflow", "OUTPUT_OVERFLOW", 128],
     ["stderr-overflow", "OUTPUT_OVERFLOW", 128],
@@ -368,9 +500,17 @@ test("byte overflow, changed compiler and changed HEAD emit their exact terminal
     ["change-head", "REPOSITORY_CHANGED"],
   ]) {
     await t.test(name, async () => {
-      const path = `corpus/a-${name}.fungi`;
+      const path = name === "change-compiler"
+        ? "corpus/a-compiler-identity.fungi"
+        : `corpus/a-${name}.fungi`;
       const root = fixture({ [path]: "@version 1\npure flow a() -> Int { return 1 }\n" });
       const request = requestFor(root, [path]);
+      if (name === "change-compiler") {
+        writeFileSync(
+          join(root, "packages-ts", "galerina-core-compiler", "dist", "compiler.cjs"),
+          "module.exports = 'changed-before-authority';\n",
+        );
+      }
       const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
       assert.equal(result.value.status, "REFUSED");
       assert.equal(result.value.termination, termination);
@@ -432,5 +572,97 @@ test("execution refuses hostile arguments and does not inherit caller environmen
   } finally {
     if (previous === undefined) delete process.env.FUNGI_CORPUS_POISON;
     else process.env.FUNGI_CORPUS_POISON = previous;
+  }
+});
+
+test("hostile AbortSignal shapes refuse before Git authority without invoking caller traps", async () => {
+  const path = "corpus/a.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow a() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const shard = shardFor(request);
+  let trapCalls = 0;
+
+  const proxy = new Proxy(new AbortController().signal, {
+    getPrototypeOf() {
+      trapCalls += 1;
+      throw new Error("must not run");
+    },
+  });
+  const forged = Object.create(AbortSignal.prototype);
+  const inheritedPrototype = Object.create(AbortSignal.prototype);
+  Object.defineProperty(inheritedPrototype, "aborted", {
+    get() {
+      trapCalls += 1;
+      throw new Error("must not run");
+    },
+  });
+  const inherited = Object.create(inheritedPrototype);
+  const ownAccessor = new AbortController().signal;
+  Object.defineProperty(ownAccessor, "aborted", {
+    get() {
+      trapCalls += 1;
+      throw new Error("must not run");
+    },
+  });
+
+  await withEnvironment({ GIT_DIR: join(root, "must-not-be-observed.git") }, async () => {
+    for (const signal of [proxy, forged, inherited, ownAccessor]) {
+      const result = await runCorpusShard(request, shard, { repositoryRoot: root }, signal);
+      assert.deepEqual(result, { kind: "refused", code: "CORPUS_SHARD_SIGNAL_INVALID" });
+    }
+  });
+  assert.equal(trapCalls, 0);
+});
+
+test("Corpus Audit v2 scrubs ambient Git repository, object, config and interaction redirects", async () => {
+  const path = "corpus/a.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow a() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const shard = shardFor(request);
+  const sentinel = join(root, ".git-interaction-sentinel");
+  const missing = join(root, "hostile-git-input");
+  const result = await withEnvironment({
+    gIt_DiR: join(root, "foreign.git"),
+    GIT_WORK_TREE: join(root, "foreign-worktree"),
+    GIT_INDEX_FILE: join(root, "foreign.index"),
+    GIT_OBJECT_DIRECTORY: join(root, "foreign-objects"),
+    GIT_ALTERNATE_OBJECT_DIRECTORIES: join(root, "foreign-alternates"),
+    GIT_COMMON_DIR: join(root, "foreign-common"),
+    GIT_ASKPASS: sentinel,
+    GIT_CONFIG: missing,
+    GIT_CONFIG_COUNT: "1",
+    GIT_CONFIG_KEY_0: "core.hooksPath",
+    GIT_CONFIG_VALUE_0: sentinel,
+    GIT_CONFIG_GLOBAL: missing,
+    GIT_CONFIG_NOSYSTEM: "0",
+    GIT_CONFIG_SYSTEM: missing,
+    GIT_SSH: sentinel,
+    GIT_SSH_COMMAND: sentinel,
+  }, () => runCorpusShard(request, shard, { repositoryRoot: root }));
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "PASS");
+  assert.equal(result.value.termination, "COMPLETE");
+  assert.equal(existsSync(sentinel), false);
+});
+
+test("Corpus Audit v2 refuses an unsupported platform before checker authority", async () => {
+  const path = "corpus/platform-sentinel.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow platform() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const descriptor = Object.getOwnPropertyDescriptor(process, "platform");
+  assert.ok(descriptor?.configurable);
+  Object.defineProperty(process, "platform", { ...descriptor, value: "linux" });
+  try {
+    const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+    assert.deepEqual(result, { kind: "refused", code: "CORPUS_SHARD_PLATFORM_REFUSED" });
+    const aggregate = await runCorpusAggregate(request, DEFAULT_LIMITS, {
+      repositoryRoot: root,
+      concurrency: 1,
+      priorReceipts: [],
+    });
+    assert.deepEqual(aggregate, { kind: "refused", code: "CORPUS_RUN_PLATFORM_REFUSED" });
+    assert.equal(existsSync(join(root, ".platform-child-sentinel")), false);
+  } finally {
+    Object.defineProperty(process, "platform", descriptor);
   }
 });
