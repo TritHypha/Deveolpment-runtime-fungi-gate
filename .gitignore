@@ -155,3 +155,4 @@ build/package-usage/
 **/.codebase-memory/
 # Name-based backstop for the heavy sqlite index dump, in case the directory rule above is ever narrowed.
 **/graph.db.zst
+**/node_modules
