@@ -23,11 +23,32 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import * as L from "../dist/index.js";
 
 const check = (src) => {
   const prog = L.parseProgram(`@version 1\n${src}`, "record-adoption.fungi");
   return L.checkTypes(prog.ast).diagnostics.filter((d) => d.severity === "error");
+};
+
+const checkWithImportedRecord = (recordSource, src) => {
+  const dir = join(tmpdir(), `galerina-record-import-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  mkdirSync(dir, { recursive: true });
+  try {
+    const recordPath = join(dir, "records.fungi");
+    const mainPath = join(dir, "main.fungi");
+    writeFileSync(recordPath, `@version 1\n${recordSource}`, "utf8");
+    const prog = L.parseProgram(`@version 1\nimport "./records.fungi"\n${src}`, mainPath);
+    assert.deepEqual(prog.diagnostics, [], JSON.stringify(prog.diagnostics));
+    const imports = L.gatherFileImports(prog.ast, mainPath);
+    assert.deepEqual(imports.diagnostics, [], JSON.stringify(imports.diagnostics));
+    const context = L.buildImportedTypeContext(imports);
+    return L.checkTypes(prog.ast, context).diagnostics.filter((d) => d.severity === "error");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 };
 
 describe("parser: record-decl field names that lex as keywords", () => {
@@ -123,6 +144,39 @@ pure flow mk() -> Int {
 record Entry { effect: String actor: String }
 pure flow mk() -> Int {
   let e: Entry = { effect: "audit.write" }
+  return 1
+}`);
+    assert.equal(errs.length, 1, JSON.stringify(errs));
+    assert.equal(errs[0].code, "FUNGI-TYPE-002");
+    assert.match(errs[0].message, /missing field\(s\): actor/);
+  });
+});
+
+describe("imported record schemas", () => {
+  const importedEntry = "record ImportedEntry { effect: String actor: String }\n";
+
+  it("adopts an exact imported record schema", () => {
+    const errs = checkWithImportedRecord(importedEntry, `
+pure flow make() -> ImportedEntry {
+  return ImportedEntry { effect: "audit.write", actor: "runtime" }
+}`);
+    assert.deepEqual(errs.map((e) => e.code), [], JSON.stringify(errs));
+  });
+
+  it("uses FUNGI-TYPE-008 for an imported return-record field mismatch", () => {
+    const errs = checkWithImportedRecord(importedEntry, `
+pure flow make() -> ImportedEntry {
+  return ImportedEntry { effect: true, actor: "runtime" }
+}`);
+    assert.equal(errs.length, 1, JSON.stringify(errs));
+    assert.equal(errs[0].code, "FUNGI-TYPE-008");
+    assert.match(errs[0].message, /effect: declared 'String', got 'Bool'/);
+  });
+
+  it("uses FUNGI-TYPE-002 for an imported let-record field mismatch", () => {
+    const errs = checkWithImportedRecord(importedEntry, `
+pure flow make() -> Int {
+  let entry: ImportedEntry = { effect: "audit.write" }
   return 1
 }`);
     assert.equal(errs.length, 1, JSON.stringify(errs));

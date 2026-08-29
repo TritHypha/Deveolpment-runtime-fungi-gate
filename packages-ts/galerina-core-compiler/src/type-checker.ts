@@ -54,6 +54,11 @@ import {
 import { KNOWN_DOMAIN_TYPES } from "./package-type-registry.js";
 import { MONEY_UNIT_TAGS } from "./unit-registry.generated.js";
 import {
+  IMPORTED_TYPE_CONTEXT_KIND,
+  type ImportedRecordSchema,
+  type ImportedTypeContext,
+} from "./module-registry.js";
+import {
   FUNGI_REQUIREMENT_002,
   FUNGI_REQUIREMENT_007,
   FUNGI_REQUIREMENT_009,
@@ -125,6 +130,9 @@ export interface TypeDiagnostic {
 export interface TypeCheckResult {
   readonly diagnostics: readonly TypeDiagnostic[];
 }
+
+/** Existing name-only callers remain supported; file imports use the closed context. */
+export type ImportedTypeInput = readonly string[] | ImportedTypeContext;
 
 // ---------------------------------------------------------------------------
 // Diagnostic factory
@@ -522,8 +530,46 @@ class TypeChecker {
   private readonly enumVariants = new Map<string, Set<string>>();
   private readonly bindingScopes: Array<Set<string>> = [];
 
-  constructor(importedTypes: readonly string[] = []) {
-    this.userDefinedTypes = new Set(importedTypes);
+  constructor(importedTypes: ImportedTypeInput = []) {
+    this.userDefinedTypes = new Set<string>();
+
+    // Phase 11E compatibility: package/manifest callers still supply the
+    // historical flat string list. Its behavior is intentionally unchanged.
+    if (Array.isArray(importedTypes)) {
+      for (const name of importedTypes) this.userDefinedTypes.add(name);
+      return;
+    }
+
+    const context = importedTypes as ImportedTypeContext;
+    if (context.kind !== IMPORTED_TYPE_CONTEXT_KIND ||
+        !Array.isArray(context.typeNames) ||
+        !Array.isArray(context.recordSchemas)) return;
+
+    // Validate the complete structured context before granting any name. A
+    // malformed or duplicate field/schema shape yields no partial authority.
+    const names = new Set<string>();
+    for (const name of context.typeNames) {
+      if (typeof name !== "string" || name === "" || name.trim() !== name || names.has(name)) return;
+      names.add(name);
+    }
+
+    const recordSchemas = new Map<string, Map<string, string>>();
+    for (const schema of context.recordSchemas as readonly ImportedRecordSchema[]) {
+      if (typeof schema !== "object" || schema === null ||
+          typeof schema.name !== "string" || !names.has(schema.name) ||
+          recordSchemas.has(schema.name) || !Array.isArray(schema.fields)) return;
+      const fields = new Map<string, string>();
+      for (const field of schema.fields) {
+        if (typeof field !== "object" || field === null ||
+            typeof field.name !== "string" || field.name === "" || field.name.trim() !== field.name ||
+            typeof field.type !== "string" || fields.has(field.name)) return;
+        fields.set(field.name, field.type);
+      }
+      recordSchemas.set(schema.name, fields);
+    }
+
+    for (const name of names) this.userDefinedTypes.add(name);
+    for (const [name, fields] of recordSchemas) this.recordFieldTypes.set(name, fields);
   }
   /**
    * Phase 9A-2: user-defined types declared as `type X = Brand<T, "Name">`.
@@ -743,6 +789,13 @@ class TypeChecker {
   private collectDeclarations(node: AstNode): void {
     if ((node.kind === "typeDecl" || node.kind === "recordDecl" || node.kind === "enumDecl") && node.value) {
       this.userDefinedTypes.add(node.value.trim());
+    }
+
+    // Local type-level declarations retain the existing local-wins policy. A
+    // local record replaces an imported schema below; local non-record types
+    // remove it so member/record adoption cannot retain remote field authority.
+    if ((node.kind === "typeDecl" || node.kind === "enumDecl" || node.kind === "hallmarkDecl") && node.value) {
+      this.recordFieldTypes.delete(node.value.trim());
     }
 
     // Harvest record FIELDS (not just the name) so record literals can be structurally
@@ -3095,12 +3148,11 @@ function levenshtein(a: string, b: string): number {
  *   - All generic type instantiations use the correct number of type arguments
  *
  * @param ast            The root `program` node from `parseProgram()`.
- * @param importedTypes  Optional list of type names resolved from import declarations
- *                       (Phase 11E). These are added to the user-defined type set so
- *                       FUNGI-TYPE-001 is not emitted for them.
+ * @param importedTypes  Optional historical type-name list (Phase 11E), or a closed
+ *                       file-import context built by `buildImportedTypeContext`.
  * @returns    A result object containing all type diagnostics.
  */
-export function checkTypes(ast: AstNode, importedTypes?: readonly string[]): TypeCheckResult {
+export function checkTypes(ast: AstNode, importedTypes?: ImportedTypeInput): TypeCheckResult {
   const checker = new TypeChecker(importedTypes ?? []);
   checker.check(ast);
   return checker.getResult();

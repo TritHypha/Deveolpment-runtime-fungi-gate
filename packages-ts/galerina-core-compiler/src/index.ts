@@ -643,6 +643,7 @@ export {
   checkTypes,
   type TypeDiagnostic,
   type TypeCheckResult,
+  type ImportedTypeInput,
 } from "./type-checker.js";
 
 /** FUNGI-TYPE-003: raw String assigned to a branded type (Brand<T,"Name"> alias) without a validation gate. */
@@ -805,6 +806,17 @@ export {
   type ImportedSymbol,
   type ImportResolveResult,
 } from "./import-resolver.js";
+
+// Phase 11E — File Import Type Context (runtime/front-end wiring is a later slice)
+export {
+  buildImportedTypeContext,
+  gatherFileImports,
+  IMPORTED_TYPE_CONTEXT_KIND,
+  type GatheredFileImports,
+  type ImportedRecordFieldSchema,
+  type ImportedRecordSchema,
+  type ImportedTypeContext,
+} from "./module-registry.js";
 
 // Phase R3 — Package Type Registry
 export {

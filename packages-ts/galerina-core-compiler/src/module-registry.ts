@@ -65,6 +65,35 @@ export interface ResolvedFileModule {
   readonly diagnostics: readonly FileModuleDiagnostic[];
 }
 
+export interface GatheredFileImports {
+  readonly symbols: readonly FileImportedSymbol[];
+  readonly diagnostics: readonly FileModuleDiagnostic[];
+  readonly resolvedPaths: readonly string[];
+}
+
+export const IMPORTED_TYPE_CONTEXT_KIND = "galerina.imported-type-context.v1" as const;
+
+export interface ImportedRecordFieldSchema {
+  readonly name: string;
+  readonly type: string;
+}
+
+export interface ImportedRecordSchema {
+  readonly name: string;
+  readonly fields: readonly ImportedRecordFieldSchema[];
+}
+
+/**
+ * The only structured file-import authority accepted by the type checker.
+ * Build this from the complete `gatherFileImports` result so any import
+ * diagnostic can fail the whole context closed before names enter scope.
+ */
+export interface ImportedTypeContext {
+  readonly kind: typeof IMPORTED_TYPE_CONTEXT_KIND;
+  readonly typeNames: readonly string[];
+  readonly recordSchemas: readonly ImportedRecordSchema[];
+}
+
 // ---------------------------------------------------------------------------
 // Path extraction helpers
 // ---------------------------------------------------------------------------
@@ -483,11 +512,7 @@ export function checkFileSymbolCollisions(
 export function gatherFileImports(
   ast: AstNode,
   sourceFile: string,
-): {
-  readonly symbols: readonly FileImportedSymbol[];
-  readonly diagnostics: readonly FileModuleDiagnostic[];
-  readonly resolvedPaths: readonly string[];
-} {
+): GatheredFileImports {
   const importDecls = (ast.children ?? []).filter(c => c.kind === "importDecl");
   if (importDecls.length === 0) {
     return { symbols: [], diagnostics: [], resolvedPaths: [] };
@@ -509,4 +534,120 @@ export function gatherFileImports(
   }
 
   return { symbols: allSymbols, diagnostics: allDiagnostics, resolvedPaths };
+}
+
+const EMPTY_IMPORTED_TYPE_CONTEXT: ImportedTypeContext = Object.freeze({
+  kind: IMPORTED_TYPE_CONTEXT_KIND,
+  typeNames: Object.freeze([] as string[]),
+  recordSchemas: Object.freeze([] as ImportedRecordSchema[]),
+});
+
+function importedTypeSymbolIdentity(symbol: FileImportedSymbol): string | undefined {
+  const location = symbol.node.location;
+  if (location === undefined) return undefined;
+
+  let canonicalSource: string;
+  try {
+    canonicalSource = realpathSync(symbol.sourceFile);
+  } catch {
+    return undefined;
+  }
+
+  return JSON.stringify([
+    canonicalSource,
+    symbol.kind,
+    symbol.name.trim(),
+    location.line,
+    location.column,
+    location.offset ?? null,
+    symbol.node,
+  ]);
+}
+
+function isAuthoritativeImportedTypeSymbol(symbol: FileImportedSymbol, name: string): boolean {
+  if ((symbol.node.value ?? "").trim() !== name) return false;
+  if (symbol.kind === "record") return symbol.node.kind === "recordDecl";
+  return symbol.kind === "type" &&
+    (symbol.node.kind === "typeDecl" || symbol.node.kind === "enumDecl");
+}
+
+function extractImportedRecordSchema(
+  name: string,
+  node: AstNode,
+): ImportedRecordSchema | undefined {
+  const fields: ImportedRecordFieldSchema[] = [];
+  const seen = new Set<string>();
+
+  for (const child of node.children ?? []) {
+    if (child.kind !== "paramDecl" || !child.value) continue;
+    const colon = child.value.indexOf(":");
+    const fieldName = (colon >= 0 ? child.value.slice(0, colon) : child.value).trim();
+    if (fieldName === "") continue;
+    if (seen.has(fieldName)) return undefined;
+    seen.add(fieldName);
+    fields.push(Object.freeze({
+      name: fieldName,
+      type: colon >= 0 ? child.value.slice(colon + 1).trim() : "",
+    }));
+  }
+
+  return Object.freeze({ name, fields: Object.freeze(fields) });
+}
+
+/**
+ * Derive the type-checker's complete file-import authority from one gathered
+ * import result. Any import diagnostic denies the whole context. Repeated
+ * observations of the exact same declaration are deduplicated; distinct
+ * declarations that claim the same type name are ambiguous and excluded.
+ */
+export function buildImportedTypeContext(imports: GatheredFileImports): ImportedTypeContext {
+  if (imports.diagnostics.length > 0) return EMPTY_IMPORTED_TYPE_CONTEXT;
+
+  const candidates = new Map<string, Map<string, FileImportedSymbol>>();
+  const invalidNames = new Set<string>();
+
+  for (const symbol of imports.symbols) {
+    if (symbol.kind !== "type" && symbol.kind !== "record") continue;
+    const name = symbol.name.trim();
+    if (name === "") continue;
+    if (!isAuthoritativeImportedTypeSymbol(symbol, name)) {
+      invalidNames.add(name);
+      continue;
+    }
+
+    const identity = importedTypeSymbolIdentity(symbol);
+    if (identity === undefined) {
+      invalidNames.add(name);
+      continue;
+    }
+
+    let byIdentity = candidates.get(name);
+    if (byIdentity === undefined) {
+      byIdentity = new Map<string, FileImportedSymbol>();
+      candidates.set(name, byIdentity);
+    }
+    if (!byIdentity.has(identity)) byIdentity.set(identity, symbol);
+  }
+
+  const typeNames: string[] = [];
+  const recordSchemas: ImportedRecordSchema[] = [];
+
+  for (const [name, byIdentity] of candidates) {
+    if (invalidNames.has(name) || byIdentity.size !== 1) continue;
+    const symbol = byIdentity.values().next().value as FileImportedSymbol | undefined;
+    if (symbol === undefined) continue;
+
+    if (symbol.kind === "record") {
+      const schema = extractImportedRecordSchema(name, symbol.node);
+      if (schema === undefined) continue;
+      recordSchemas.push(schema);
+    }
+    typeNames.push(name);
+  }
+
+  return Object.freeze({
+    kind: IMPORTED_TYPE_CONTEXT_KIND,
+    typeNames: Object.freeze(typeNames),
+    recordSchemas: Object.freeze(recordSchemas),
+  });
 }

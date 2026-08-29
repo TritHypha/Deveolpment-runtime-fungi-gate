@@ -17,8 +17,13 @@ import { writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-import { parseProgram } from "../../dist/index.js";
 import {
+  buildImportedTypeContext,
+  checkTypes,
+  parseProgram,
+} from "../../dist/index.js";
+import {
+  MAX_IMPORT_BYTES,
   gatherFileImports,
   resolveFileImports,
   checkFileSymbolCollisions,
@@ -44,11 +49,57 @@ function cleanDir(dir) {
   try { rmSync(dir, { recursive: true, force: true }); } catch { /* ok */ }
 }
 
+function checkImportedTypes(mainSrc, mainPath) {
+  const parsed = parseProgram(mainSrc, mainPath);
+  assert.deepEqual(parsed.diagnostics, [], JSON.stringify(parsed.diagnostics));
+  const imports = gatherFileImports(parsed.ast, mainPath);
+  const context = buildImportedTypeContext(imports);
+  const errors = checkTypes(parsed.ast, context).diagnostics.filter((d) => d.severity === "error");
+  return { imports, errors };
+}
+
+function assertImportedTypeRefused(mainSrc, mainPath, expectedImportCode) {
+  const { imports, errors } = checkImportedTypes(mainSrc, mainPath);
+  assert.ok(
+    imports.diagnostics.some((d) => d.code === expectedImportCode),
+    `Expected ${expectedImportCode}, got ${imports.diagnostics.map((d) => d.code).join(", ")}`,
+  );
+  assert.ok(
+    errors.some((d) => d.code === "FUNGI-TYPE-001" && d.message.includes("HealthyAlias")),
+    `Any import diagnostic must deny HealthyAlias authority, got: ${JSON.stringify(errors)}`,
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Valid import resolves symbols
 // ---------------------------------------------------------------------------
 
 describe("import './path.fungi': valid import resolves symbols", () => {
+  it("admits a type alias from the closed file-import context", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "types.fungi", "type ExternalId = String\n");
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = `
+import "./types.fungi"
+pure flow echo(value: ExternalId) -> ExternalId
+contract { effects {} }
+{ return value }
+`;
+      const parsed = parseProgram(mainSrc, mainPath);
+      assert.deepEqual(parsed.diagnostics, []);
+
+      const imports = gatherFileImports(parsed.ast, mainPath);
+      assert.deepEqual(imports.diagnostics, []);
+      const context = buildImportedTypeContext(imports);
+      const errors = checkTypes(parsed.ast, context).diagnostics.filter((d) => d.severity === "error");
+
+      assert.deepEqual(errors.map((d) => d.code), [], JSON.stringify(errors));
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
   it("importing a file with a pure flow exposes it as a 'flow' symbol", () => {
     const dir = createTempDir();
     try {
@@ -124,6 +175,262 @@ contract { effects {} }
       assert.ok(
         result.resolvedPaths.some((p) => p.endsWith("utils.fungi")),
         `Expected utils.fungi in resolvedPaths, got: ${result.resolvedPaths.join(", ")}`,
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+});
+
+describe("closed imported type context", () => {
+  const healthyAlias = "type HealthyAlias = String\n";
+  const mainUsingHealthyAlias = (failingImport) => `
+import "./healthy.fungi"
+${failingImport}
+pure flow echo(value: HealthyAlias) -> HealthyAlias
+contract { effects {} }
+{ return value }
+`;
+
+  it("exactly deduplicates the same imported declaration", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = `
+import "./healthy.fungi"
+import "./healthy.fungi"
+pure flow echo(value: HealthyAlias) -> HealthyAlias
+contract { effects {} }
+{ return value }
+`;
+
+      const { imports, errors } = checkImportedTypes(mainSrc, mainPath);
+      assert.equal(imports.diagnostics.length, 0, JSON.stringify(imports.diagnostics));
+      assert.deepEqual(errors.map((d) => d.code), [], JSON.stringify(errors));
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("does not deduplicate two different declarations that claim the same source locator", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = mainUsingHealthyAlias("");
+      const parsed = parseProgram(mainSrc, mainPath);
+      const imports = gatherFileImports(parsed.ast, mainPath);
+      const original = imports.symbols.find((symbol) => symbol.name === "HealthyAlias");
+      assert.ok(original !== undefined);
+      const conflictingObservation = {
+        ...original,
+        node: {
+          ...original.node,
+          children: [{
+            ...(original.node.children?.[0] ?? { kind: "typeRef" }),
+            value: "Int",
+          }],
+        },
+      };
+      const context = buildImportedTypeContext({
+        ...imports,
+        symbols: [original, conflictingObservation],
+      });
+      const errors = checkTypes(parsed.ast, context).diagnostics.filter((d) => d.severity === "error");
+
+      assert.ok(
+        errors.some((d) => d.code === "FUNGI-TYPE-001" && d.message.includes("HealthyAlias")),
+        `Different AST declarations at one locator are ambiguous, not exact duplicates: ${JSON.stringify(errors)}`,
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("excludes an ambiguous duplicate imported type name", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "one.fungi", "type Shared = String\n");
+      writeTempFile(dir, "two.fungi", "record Shared { value: Int }\n");
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = `
+import "./one.fungi"
+import "./two.fungi"
+pure flow echo(value: Shared) -> Shared
+contract { effects {} }
+{ return value }
+`;
+
+      const { imports, errors } = checkImportedTypes(mainSrc, mainPath);
+      assert.equal(imports.diagnostics.length, 0, JSON.stringify(imports.diagnostics));
+      assert.ok(
+        errors.some((d) => d.code === "FUNGI-TYPE-001" && d.message.includes("Shared")),
+        `Ambiguous Shared must not enter type authority: ${JSON.stringify(errors)}`,
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("keeps a local record authoritative over an imported record of the same name", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "remote.fungi", "record Entry { remote: String }\n");
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = `
+import "./remote.fungi"
+record Entry { local: Int }
+pure flow make() -> Entry
+contract { effects {} }
+{ return Entry { local: 1 } }
+`;
+
+      const { imports, errors } = checkImportedTypes(mainSrc, mainPath);
+      assert.equal(imports.diagnostics.length, 0, JSON.stringify(imports.diagnostics));
+      assert.deepEqual(errors.map((d) => d.code), [], JSON.stringify(errors));
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("removes an imported record schema when a local alias takes the same name", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "remote.fungi", "record Entry { remote: String }\n");
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = `
+import "./remote.fungi"
+type Entry = String
+pure flow wantBool(value: Bool) -> Bool
+contract { effects {} }
+{ return value }
+pure flow inspect(entry: Entry) -> Bool
+contract { effects {} }
+{ return wantBool(entry.remote) }
+`;
+
+      const { imports, errors } = checkImportedTypes(mainSrc, mainPath);
+      assert.equal(imports.diagnostics.length, 0, JSON.stringify(imports.diagnostics));
+      assert.deepEqual(errors.map((d) => d.code), [], JSON.stringify(errors));
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("denies the whole context for a diagnostic of any severity", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      const mainPath = join(dir, "main.fungi");
+      const mainSrc = mainUsingHealthyAlias("");
+      const parsed = parseProgram(mainSrc, mainPath);
+      const imports = gatherFileImports(parsed.ast, mainPath);
+      assert.deepEqual(imports.diagnostics, []);
+      const context = buildImportedTypeContext({
+        ...imports,
+        diagnostics: [{
+          code: "FUNGI-IMPORT-TEST",
+          severity: "warning",
+          message: "test-only diagnostic",
+          file: mainPath,
+          importedFrom: "./healthy.fungi",
+        }],
+      });
+      const errors = checkTypes(parsed.ast, context).diagnostics.filter((d) => d.severity === "error");
+      assert.ok(
+        errors.some((d) => d.code === "FUNGI-TYPE-001" && d.message.includes("HealthyAlias")),
+        `Even a warning must deny imported authority: ${JSON.stringify(errors)}`,
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("keeps the historical checkTypes string-array API compatible", () => {
+    const parsed = parseProgram(`
+pure flow echo(value: LegacyExternal) -> LegacyExternal
+contract { effects {} }
+{ return value }
+`, "legacy-imported-types.fungi");
+    assert.deepEqual(parsed.diagnostics, []);
+    const errors = checkTypes(parsed.ast, ["LegacyExternal"]).diagnostics.filter((d) => d.severity === "error");
+    assert.deepEqual(errors.map((d) => d.code), [], JSON.stringify(errors));
+  });
+
+  it("grants no imported type authority when another import is missing", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      const mainPath = join(dir, "main.fungi");
+      assertImportedTypeRefused(
+        mainUsingHealthyAlias('import "./missing.fungi"'),
+        mainPath,
+        "FUNGI-IMPORT-001",
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("grants no imported type authority when another import is malformed", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      writeTempFile(dir, "malformed.fungi", "record Broken { value:\n");
+      const mainPath = join(dir, "main.fungi");
+      assertImportedTypeRefused(
+        mainUsingHealthyAlias('import "./malformed.fungi"'),
+        mainPath,
+        "FUNGI-IMPORT-002",
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("grants no imported type authority when another import is oversized", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      writeTempFile(dir, "oversized.fungi", " ".repeat(MAX_IMPORT_BYTES + 1));
+      const mainPath = join(dir, "main.fungi");
+      assertImportedTypeRefused(
+        mainUsingHealthyAlias('import "./oversized.fungi"'),
+        mainPath,
+        "FUNGI-IMPORT-006",
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("grants no imported type authority when another import escapes the source root", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      const mainPath = join(dir, "main.fungi");
+      assertImportedTypeRefused(
+        mainUsingHealthyAlias('import "../escaped.fungi"'),
+        mainPath,
+        "FUNGI-IMPORT-005",
+      );
+    } finally {
+      cleanDir(dir);
+    }
+  });
+
+  it("grants no imported type authority when another import is cyclic", () => {
+    const dir = createTempDir();
+    try {
+      writeTempFile(dir, "healthy.fungi", healthyAlias);
+      writeTempFile(dir, "a.fungi", 'import "./b.fungi"\ntype A = String\n');
+      writeTempFile(dir, "b.fungi", 'import "./a.fungi"\ntype B = String\n');
+      const mainPath = join(dir, "main.fungi");
+      assertImportedTypeRefused(
+        mainUsingHealthyAlias('import "./a.fungi"'),
+        mainPath,
+        "FUNGI-IMPORT-003",
       );
     } finally {
       cleanDir(dir);
