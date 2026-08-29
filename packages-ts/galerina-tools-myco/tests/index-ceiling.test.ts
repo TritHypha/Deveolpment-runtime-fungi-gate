@@ -13,7 +13,10 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { test } from "node:test";
 
-import { MAX_INDEX_TERM_EDGES } from "../src/graph/index-contract.ts";
+import {
+  MAX_INDEX_TERM_EDGES,
+  MAX_INDEX_TERM_LENGTH,
+} from "../src/graph/index-contract.ts";
 import { SearchGraph } from "../src/graph/model.ts";
 import {
   clampTermEdgeCeiling,
@@ -98,6 +101,26 @@ test("CONTROL: the same save succeeds when the graph is within the ceiling", asy
   assert.ok(onDisk.isFile(), "a permitted save must write the index");
 });
 
+test("saveGraph refuses an over-limit direct graph term before writing", async () => {
+  const root = await tempRoot();
+  const graph = new SearchGraph();
+  graph.setFile(
+    "a.txt",
+    1,
+    1,
+    new Map([["x".repeat(MAX_INDEX_TERM_LENGTH + 1), 1]]),
+  );
+
+  await assert.rejects(
+    () => saveGraph(root, graph),
+    /MYCO-INDEX-INVALID/,
+  );
+  const onDisk = await fs
+    .stat(path.join(root, INDEX_DIR, INDEX_FILE))
+    .catch(() => undefined);
+  assert.equal(onDisk, undefined, "an invalid graph must not create an index file");
+});
+
 test("loadGraphOutcome tells ABSENT apart from REJECTED", async () => {
   const root = await tempRoot();
 
@@ -172,4 +195,37 @@ test("CONTROL: the same tree indexes cleanly under a ceiling that fits", async (
   const built = await buildIndex(root, { ...DEFAULT_INDEX_OPTIONS, maxTermEdges: 100 });
   assert.equal(built.stats.files, 2);
   assert.equal(built.saved.written, true);
+});
+
+test("buildIndex writes a reloadable index while preserving boundary terms", async () => {
+  const root = await tempRoot();
+  const exactLimit = "b".repeat(MAX_INDEX_TERM_LENGTH);
+  const overLimit = `${exactLimit}b`;
+  await fs.writeFile(
+    path.join(root, "a.txt"),
+    `alpha ${exactLimit} ${overLimit} omega`,
+    "utf8",
+  );
+
+  const built = await buildIndex(root, DEFAULT_INDEX_OPTIONS);
+  assert.equal(built.saved.written, true);
+
+  const loaded = await loadGraphOutcome(root);
+  assert.equal(loaded.status, "ok", "a freshly written index must load immediately");
+  if (loaded.status !== "ok") return;
+
+  const file = loaded.graph.fileByPath("a.txt");
+  assert.ok(file, "the indexed file must survive the round trip");
+  const stored = loaded.graph.forwardOf(file.id);
+  assert.equal(stored?.get("alpha"), 1);
+  assert.equal(stored?.get(exactLimit), 1);
+  assert.equal(stored?.has(overLimit), false);
+  assert.equal(stored?.get("omega"), 1);
+  assert.equal(loaded.graph.filesWithTerm(exactLimit)?.has(file.id), true);
+  assert.equal(loaded.graph.filesWithTerm("alpha")?.has(file.id), true);
+
+  const rebuilt = await buildIndex(root, DEFAULT_INDEX_OPTIONS);
+  assert.equal(rebuilt.stats.unchanged, 1);
+  assert.equal(rebuilt.saved.written, true);
+  assert.equal((await loadGraphOutcome(root)).status, "ok");
 });

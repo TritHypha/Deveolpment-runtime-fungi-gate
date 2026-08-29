@@ -108,6 +108,11 @@ export async function saveGraph(
   }
   files.sort((left, right) => compareCodeUnits(left.p, right.p));
   const payload: StoredIndex = { format: FORMAT, createdAt: Date.now(), files };
+  if (validateStoredIndex(payload) === null) {
+    throw new Error(
+      "MYCO-INDEX-INVALID: graph violates the persisted index contract",
+    );
+  }
   const dir = path.join(root, INDEX_DIR);
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(indexPath(root), JSON.stringify(payload), "utf8");

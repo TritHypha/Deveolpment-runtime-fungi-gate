@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
+import { MAX_INDEX_TERM_LENGTH } from "../src/graph/index-contract.ts";
 import { countTerms } from "../src/ingest/tokenize.ts";
 import { foldCase } from "../src/util/normalize.ts";
 
@@ -28,4 +29,15 @@ test("countTerms handles Unicode letters", () => {
   assert.equal(counts.get("naïve"), 1);
   assert.equal(counts.get("café"), 1);
   assert.equal(counts.get("ω_omega"), 1);
+});
+
+test("countTerms omits over-limit terms without dropping admitted neighbors", () => {
+  const exactLimit = "b".repeat(MAX_INDEX_TERM_LENGTH);
+  const overLimit = `${exactLimit}b`;
+  const counts = countTerms(`alpha ${exactLimit} ${overLimit} omega`);
+
+  assert.equal(counts.get("alpha"), 1);
+  assert.equal(counts.get(exactLimit), 1);
+  assert.equal(counts.has(overLimit), false);
+  assert.equal(counts.get("omega"), 1);
 });

@@ -6,6 +6,7 @@
 // word" is defined exactly once (see util/normalize.ts).
 
 import type { TermCounts } from "../graph/model.ts";
+import { MAX_INDEX_TERM_LENGTH } from "../graph/index-contract.ts";
 import { foldCase, wordScanner } from "../util/normalize.ts";
 
 // Count every word-term in `text`. Case-folded so the index is case-insensitive
@@ -17,6 +18,7 @@ export function countTerms(text: string): TermCounts {
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     const term = foldCase(m[0]);
+    if (term.length > MAX_INDEX_TERM_LENGTH) continue;
     counts.set(term, (counts.get(term) ?? 0) + 1);
   }
   return counts;
