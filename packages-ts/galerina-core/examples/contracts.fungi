@@ -14,14 +14,14 @@ record ContractOrderRequest {
 
 record ContractOrderResponse {
   id: ContractOrderId
-  decision: Decision
+  decision: ContractOrderDecision
   status: String
 }
 
 type ContractOrderResult =
 Result<ContractOrderResponse, ContractOrderError>
 
-enum Decision {
+enum ContractOrderDecision {
   Allow
   Deny
   Review
@@ -49,10 +49,13 @@ secure flow createContractOrder(input: ContractOrderRequest) -> ContractOrderRes
     }
   }
 
+  let validatedCustomerId: ContractCustomerId = validate.string(input.customerId)?
+  let validatedSku: String = validate.string(input.sku)?
+
   AuditLog.write({
     event: "ContractOrderCreated",
-    customerId: input.customerId,
-    sku: input.sku,
+    customerId: validatedCustomerId,
+    sku: validatedSku,
     decision: Review
   })
 

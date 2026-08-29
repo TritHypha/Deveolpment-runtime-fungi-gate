@@ -15,7 +15,12 @@
 
 type AuthResult = Result<AuthToken, AuthError>
 type AuthToken = Brand<String, "AuthToken">
-type AuthError = enum { InvalidCredentials InvalidInput AccountLocked RateExceeded }
+enum AuthError {
+  InvalidCredentials
+  InvalidInput
+  AccountLocked
+  RateExceeded
+}
 type Email = Brand<String, "Email">
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -200,8 +205,9 @@ contract {
 }
 {
   trap userId == "" : ERR_EMPTY_USER_ID
+  let validatedUserId: String = validate.string(userId)?
   let signingKey: SecureString = Secrets.get("SESSION_SIGNING_KEY")
-  let token: AuthToken = Auth.sign(userId, signingKey)
-  AuditLog.write("TokenIssued: " + userId)
+  let token: AuthToken = Auth.sign(validatedUserId, signingKey)
+  AuditLog.write("TokenIssued: " + validatedUserId)
   return Ok(token)
 }
