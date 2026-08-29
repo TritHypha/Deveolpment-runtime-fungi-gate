@@ -1,13 +1,17 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { constants as bufferConstants } from "node:buffer";
+import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import {
   existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
+  renameSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -71,6 +75,30 @@ async function waitForDead(pid, timeoutMs = 3_000) {
     await new Promise((resolve) => setTimeout(resolve, 25));
   }
   return !isAlive(pid);
+}
+
+async function waitForPath(file, timeoutMs = 3_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (existsSync(file)) return true;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  return existsSync(file);
+}
+
+function sha256File(file) {
+  return createHash("sha256").update(readFileSync(file)).digest("hex");
+}
+
+function protectedFileManifest(root, rows) {
+  return {
+    schema: "galerina.protected-file-set.v1",
+    root: realpathSync.native(root),
+    files: rows.map(([relativePath, file]) => ({
+      path: relativePath,
+      sha256: sha256File(file),
+    })),
+  };
 }
 
 test("a normal owned command returns its exact output and exit", async () => {
@@ -294,6 +322,291 @@ test("invalid or hostile per-stream inputs refuse before spawn without invoking 
     );
     assert.equal(proxyTrapCalls, 0);
     assert.equal(existsSync(sentinel), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("protected-file-set validation is closed, canonical and trap-free before spawn", async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-manifest-input-"));
+  const protectedFile = join(root, "input.txt");
+  const sentinel = join(root, "spawned.txt");
+  writeFileSync(protectedFile, "authenticated", "utf8");
+  const manifest = protectedFileManifest(root, [["input.txt", protectedFile]]);
+  const command = {
+    command: process.execPath,
+    args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+    cwd: root,
+    env: process.env,
+    timeoutMs: 2_000,
+  };
+  const digest = manifest.files[0].sha256;
+  const tooManyFiles = Array.from({ length: 8_193 }, (_, index) => ({
+    path: `${String(index).padStart(4, "0")}.txt`,
+    sha256: digest,
+  }));
+  const oversizedFiles = Array.from({ length: 8_192 }, (_, index) => ({
+    path: `${String(index).padStart(4, "0")}/${"a".repeat(500)}.txt`,
+    sha256: digest,
+  }));
+  const foreignManifest = Object.assign(Object.create(null), manifest);
+  const foreignFiles = Object.assign(Object.create(null), manifest.files);
+  const accessorEntry = { sha256: digest };
+  let accessorCalls = 0;
+  Object.defineProperty(accessorEntry, "path", {
+    enumerable: true,
+    get() {
+      accessorCalls += 1;
+      return "input.txt";
+    },
+  });
+  let proxyTrapCalls = 0;
+  const proxyManifest = new Proxy(manifest, {
+    getPrototypeOf() {
+      proxyTrapCalls += 1;
+      throw new Error("must not run");
+    },
+  });
+
+  const invalidManifests = [
+    { ...manifest, unknown: true },
+    { ...manifest, schema: "galerina.protected-file-set.v0" },
+    { ...manifest, root: `${manifest.root}\\.` },
+    { ...manifest, files: [] },
+    { ...manifest, files: tooManyFiles },
+    { ...manifest, files: oversizedFiles },
+    { ...manifest, files: [{ path: "/absolute.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "../escape.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "dir/./input.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "dir\\input.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "e\u0301.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: `${"a".repeat(4_093)}.txt`, sha256: digest }] },
+    { ...manifest, files: [{ path: "z.txt", sha256: digest }, { path: "a.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "a.txt", sha256: digest }, { path: "a.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "A.txt", sha256: digest }, { path: "a.txt", sha256: digest }] },
+    { ...manifest, files: [{ path: "input.txt", sha256: digest.toUpperCase() }] },
+    { ...manifest, files: [{ path: "input.txt", sha256: digest, unknown: true }] },
+    foreignManifest,
+    { ...manifest, files: foreignFiles },
+    { ...manifest, files: [accessorEntry] },
+    proxyManifest,
+  ];
+
+  try {
+    for (const protectedFileSet of invalidManifests) {
+      rmSync(sentinel, { force: true });
+      await assert.rejects(
+        runOwnedProcess({ ...command, protectedFileSet }),
+        (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+      );
+      assert.equal(existsSync(sentinel), false);
+    }
+    await assert.rejects(
+      runOwnedProcess({
+        ...command,
+        protectedReadTree: root,
+        protectedFileSet: manifest,
+      }),
+      (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+    );
+    assert.throws(
+      () => runOwnedProcessSync({ ...command, protectedFileSet: manifest }),
+      (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+    );
+    assert.equal(accessorCalls, 0);
+    assert.equal(proxyTrapCalls, 0);
+    assert.equal(existsSync(sentinel), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("the Windows warden authenticates exact protected bytes before child authority", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-file-set-"));
+  const protectedFile = join(root, "input.txt");
+  writeFileSync(protectedFile, "authenticated", "utf8");
+  const child = [
+    "const fs = require('node:fs');",
+    "let stdinBytes = 0;",
+    "process.stdin.on('data', (chunk) => { stdinBytes += chunk.length; });",
+    "process.stdin.on('end', () => {",
+    "  if (stdinBytes !== 0) process.exit(41);",
+    `  process.stdout.write(fs.readFileSync(${JSON.stringify(protectedFile)}, 'utf8'));`,
+    "});",
+  ].join("\n");
+  try {
+    const result = await runOwnedProcess({
+      command: process.execPath,
+      args: ["-e", child],
+      cwd: root,
+      env: process.env,
+      timeoutMs: 2_000,
+      protectedFileSet: protectedFileManifest(root, [["input.txt", protectedFile]]),
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.spawnError, null);
+    assert.equal(result.stdout, "authenticated");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a wrong protected digest refuses before the sentinel and discloses no source body", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-digest-refusal-"));
+  const protectedFile = join(root, "input.txt");
+  const sentinel = join(root, "spawned.txt");
+  const sourceBody = "DO_NOT_DISCLOSE_PROTECTED_SOURCE_BODY_0873";
+  writeFileSync(protectedFile, sourceBody, "utf8");
+  const manifest = protectedFileManifest(root, [["input.txt", protectedFile]]);
+  manifest.files[0].sha256 = "0".repeat(64);
+  try {
+    const result = await runOwnedProcess({
+      command: process.execPath,
+      args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+      cwd: root,
+      env: process.env,
+      timeoutMs: 2_000,
+      protectedFileSet: manifest,
+    });
+
+    assert.equal(result.status, 126);
+    assert.equal(result.spawnError?.code, "PROCESS-WARDEN-SETUP-REFUSED");
+    assert.equal(existsSync(sentinel), false);
+    assert.equal(result.stderr.includes("WARDEN_SETUP_REFUSED"), true);
+    assert.equal(result.stderr.includes(sourceBody), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("retained protected handles block child write, delete and rename", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-retained-file-"));
+  const protectedFile = join(root, "input.txt");
+  const renamedFile = join(root, "renamed.txt");
+  writeFileSync(protectedFile, "authenticated", "utf8");
+  const child = [
+    "const fs = require('node:fs');",
+    `const file = ${JSON.stringify(protectedFile)};`,
+    `const renamed = ${JSON.stringify(renamedFile)};`,
+    "const blocked = {};",
+    "for (const [name, operation] of Object.entries({",
+    "  write: () => fs.writeFileSync(file, 'substituted'),",
+    "  delete: () => fs.unlinkSync(file),",
+    "  rename: () => fs.renameSync(file, renamed),",
+    "})) { try { operation(); blocked[name] = false; } catch { blocked[name] = true; } }",
+    "blocked.body = fs.readFileSync(file, 'utf8');",
+    "process.stdout.write(JSON.stringify(blocked));",
+  ].join("\n");
+  try {
+    const result = await runOwnedProcess({
+      command: process.execPath,
+      args: ["-e", child],
+      cwd: root,
+      env: process.env,
+      timeoutMs: 2_000,
+      protectedFileSet: protectedFileManifest(root, [["input.txt", protectedFile]]),
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), {
+      write: true,
+      delete: true,
+      rename: true,
+      body: "authenticated",
+    });
+    assert.equal(readFileSync(protectedFile, "utf8"), "authenticated");
+    assert.equal(existsSync(renamedFile), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("direct symlinks and junction ancestors refuse before child authority", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), "galerina-owned-reparse-"));
+  const root = join(fixtureRoot, "root");
+  const outside = join(fixtureRoot, "outside");
+  const outsideFile = join(outside, "input.txt");
+  const directLink = join(root, "direct-link.txt");
+  const junction = join(root, "junction");
+  mkdirSync(root);
+  mkdirSync(outside);
+  writeFileSync(outsideFile, "authenticated", "utf8");
+  symlinkSync(outsideFile, directLink, "file");
+  symlinkSync(outside, junction, "junction");
+  try {
+    for (const [relativePath, protectedPath] of [
+      ["direct-link.txt", directLink],
+      ["junction/input.txt", join(junction, "input.txt")],
+    ]) {
+      const sentinel = join(root, `${relativePath.replaceAll("/", "-")}.spawned`);
+      const result = await runOwnedProcess({
+        command: process.execPath,
+        args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+        cwd: root,
+        env: process.env,
+        timeoutMs: 2_000,
+        protectedFileSet: protectedFileManifest(root, [[relativePath, protectedPath]]),
+      });
+      assert.equal(result.status, 126, result.stderr);
+      assert.equal(result.spawnError?.code, "PROCESS-WARDEN-SETUP-REFUSED");
+      assert.equal(existsSync(sentinel), false);
+    }
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test("a concurrent replacement attempt cannot substitute retained protected bytes", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-concurrent-"));
+  const protectedFile = join(root, "input.txt");
+  const renamedFile = join(root, "renamed.txt");
+  const ready = join(root, "ready.txt");
+  const proceed = join(root, "proceed.txt");
+  writeFileSync(protectedFile, "authenticated", "utf8");
+  const child = [
+    "const fs = require('node:fs');",
+    `const input = ${JSON.stringify(protectedFile)};`,
+    `const ready = ${JSON.stringify(ready)};`,
+    `const proceed = ${JSON.stringify(proceed)};`,
+    "fs.writeFileSync(ready, 'ready');",
+    "const deadline = Date.now() + 3000;",
+    "const timer = setInterval(() => {",
+    "  if (!fs.existsSync(proceed) && Date.now() < deadline) return;",
+    "  clearInterval(timer);",
+    "  if (!fs.existsSync(proceed)) process.exit(31);",
+    "  process.stdout.write(fs.readFileSync(input, 'utf8'));",
+    "}, 10);",
+  ].join("\n");
+  try {
+    const owned = runOwnedProcess({
+      command: process.execPath,
+      args: ["-e", child],
+      cwd: root,
+      env: process.env,
+      timeoutMs: 4_000,
+      protectedFileSet: protectedFileManifest(root, [["input.txt", protectedFile]]),
+    });
+    assert.equal(await waitForPath(ready), true, "protected child never became ready");
+    assert.throws(() => writeFileSync(protectedFile, "substituted", "utf8"));
+    assert.throws(() => renameSync(protectedFile, renamedFile));
+    writeFileSync(proceed, "proceed", "utf8");
+    const result = await owned;
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stdout, "authenticated");
+    assert.equal(readFileSync(protectedFile, "utf8"), "authenticated");
+    assert.equal(existsSync(renamedFile), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

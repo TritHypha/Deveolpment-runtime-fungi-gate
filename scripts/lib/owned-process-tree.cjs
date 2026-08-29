@@ -9,6 +9,9 @@ const { types: utilTypes } = require("node:util");
 
 const DEFAULT_MAX_OUTPUT_BYTES = 64 * 1024 * 1024;
 const DEFAULT_CLEANUP_GRACE_MS = 1_000;
+const PROTECTED_FILE_SET_MAX_BYTES = 4 * 1024 * 1024;
+const PROTECTED_FILE_SET_MAX_FILES = 8_192;
+const PROTECTED_FILE_PATH_MAX_BYTES = 4_096;
 const WRAPPER_ALLOWANCE_BYTES = 1024 * 1024;
 const OWNED_FRAME_MAGIC = Buffer.from("GLRNOWND", "ascii");
 const OWNED_FRAME_VERSION = 1;
@@ -32,6 +35,8 @@ const OWNED_RAW_RESULT_KEYS = new Set([
   "stdoutBuffer",
   "stderrBuffer",
 ]);
+const PROTECTED_FILE_SET_KEYS = new Set(["schema", "root", "files"]);
+const PROTECTED_FILE_KEYS = new Set(["path", "sha256"]);
 const ASYNC_INPUT_KEYS = new Set([
   "command",
   "args",
@@ -44,6 +49,7 @@ const ASYNC_INPUT_KEYS = new Set([
   "maxStderrBytes",
   "windowsHide",
   "protectedReadTree",
+  "protectedFileSet",
 ]);
 const SYNC_INPUT_KEYS = new Set([
   "command",
@@ -56,6 +62,7 @@ const SYNC_INPUT_KEYS = new Set([
   "maxStdoutBytes",
   "maxStderrBytes",
   "windowsHide",
+  "protectedFileSet",
 ]);
 const ROOT = path.join(__dirname, "..", "..");
 const WARDEN_CRATE = path.join(ROOT, "scripts", "native", "process-warden");
@@ -129,6 +136,105 @@ function exactStringArray(value) {
   }
 }
 
+function exactArray(value) {
+  try {
+    if (!Array.isArray(value) || utilTypes.isProxy(value) || Object.getPrototypeOf(value) !== Array.prototype) return null;
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    const length = descriptors.length?.value;
+    if (!Number.isSafeInteger(length) || length < 0 || Reflect.ownKeys(descriptors).length !== length + 1) return null;
+    const result = [];
+    for (let index = 0; index < length; index += 1) {
+      const descriptor = descriptors[String(index)];
+      if (
+        descriptor === undefined
+        || descriptor.enumerable !== true
+        || !Object.hasOwn(descriptor, "value")
+        || descriptor.get !== undefined
+        || descriptor.set !== undefined
+      ) return null;
+      result.push(descriptor.value);
+    }
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+function protectedPathIsValid(value) {
+  if (
+    typeof value !== "string"
+    || value.length === 0
+    || value.includes("\0")
+    || value.includes("\\")
+    || value.includes(":")
+    || value.startsWith("/")
+    || value.normalize("NFC") !== value
+    || Buffer.byteLength(value, "utf8") > PROTECTED_FILE_PATH_MAX_BYTES
+  ) return false;
+  const segments = value.split("/");
+  return segments.every((segment) => segment.length > 0 && segment !== "." && segment !== "..");
+}
+
+function normalizeProtectedFileSet(value) {
+  const manifest = exactInputRecord(value, PROTECTED_FILE_SET_KEYS);
+  if (manifest === null) throw inputError("Protected file set must be a closed ordinary record.");
+  const files = exactArray(manifest.files);
+  if (
+    manifest.schema !== "galerina.protected-file-set.v1"
+    || typeof manifest.root !== "string"
+    || manifest.root.includes("\0")
+    || !path.isAbsolute(manifest.root)
+    || files === null
+    || files.length < 1
+    || files.length > PROTECTED_FILE_SET_MAX_FILES
+  ) throw inputError("Protected file set schema, root, or file count is invalid.");
+
+  const normalizedFiles = [];
+  const caseAliases = new Set();
+  let previousPath = null;
+  for (const valueEntry of files) {
+    const entry = exactInputRecord(valueEntry, PROTECTED_FILE_KEYS);
+    if (
+      entry === null
+      || !protectedPathIsValid(entry.path)
+      || typeof entry.sha256 !== "string"
+      || !/^[0-9a-f]{64}$/.test(entry.sha256)
+      || (previousPath !== null && previousPath >= entry.path)
+    ) throw inputError("Protected file set entry is invalid or not sorted.");
+    const caseAlias = entry.path.toUpperCase();
+    if (caseAliases.has(caseAlias)) {
+      throw inputError("Protected file set contains a Windows case alias.");
+    }
+    caseAliases.add(caseAlias);
+    previousPath = entry.path;
+    normalizedFiles.push({ path: entry.path, sha256: entry.sha256 });
+  }
+
+  let canonicalRoot;
+  try {
+    const rootStats = fs.lstatSync(manifest.root);
+    canonicalRoot = fs.realpathSync.native(manifest.root);
+    if (
+      !rootStats.isDirectory()
+      || rootStats.isSymbolicLink()
+      || canonicalRoot !== manifest.root
+    ) throw new Error("not canonical");
+  } catch {
+    throw inputError("Protected file set root is not a canonical direct directory.");
+  }
+
+  const normalized = {
+    schema: "galerina.protected-file-set.v1",
+    root: canonicalRoot,
+    files: normalizedFiles,
+  };
+  const buffer = Buffer.from(JSON.stringify(normalized), "utf8");
+  if (buffer.length > PROTECTED_FILE_SET_MAX_BYTES) {
+    throw inputError("Protected file set exceeds its canonical JSON byte limit.");
+  }
+  return { value: normalized, buffer };
+}
+
 function normalizeInput(value, sync) {
   const input = exactInputRecord(value, sync ? SYNC_INPUT_KEYS : ASYNC_INPUT_KEYS);
   if (input === null) throw inputError("Owned process input must be a closed ordinary record.");
@@ -144,6 +250,10 @@ function normalizeInput(value, sync) {
   const maxStderrBytes = input.maxStderrBytes === undefined ? maxOutputBytes : input.maxStderrBytes;
   const windowsHide = input.windowsHide === undefined ? true : input.windowsHide;
   const protectedReadTree = input.protectedReadTree === undefined ? null : input.protectedReadTree;
+  const protectedFileSetInput = input.protectedFileSet === undefined ? null : input.protectedFileSet;
+  if (sync && protectedFileSetInput !== null) {
+    throw inputError("Protected file sets are asynchronous-only.");
+  }
   if (typeof input.command !== "string" || input.command.length === 0
       || args === null
       || typeof input.cwd !== "string" || input.cwd.length === 0
@@ -157,9 +267,13 @@ function normalizeInput(value, sync) {
       || (protectedReadTree !== null
         && (typeof protectedReadTree !== "string"
           || !path.isAbsolute(protectedReadTree)
-          || protectedReadTree.includes("\0")))) {
+          || protectedReadTree.includes("\0")))
+      || (protectedReadTree !== null && protectedFileSetInput !== null)) {
     throw inputError("Owned process command, arguments, paths, limits, or environment are invalid.");
   }
+  const protectedFileSet = protectedFileSetInput === null
+    ? null
+    : normalizeProtectedFileSet(protectedFileSetInput);
   return {
     command: input.command,
     args,
@@ -172,6 +286,7 @@ function normalizeInput(value, sync) {
     maxStderrBytes,
     windowsHide,
     protectedReadTree,
+    protectedFileSet,
   };
 }
 
@@ -267,6 +382,7 @@ async function runOwnedProcessRaw(value) {
     maxStderrBytes,
     windowsHide,
     protectedReadTree,
+    protectedFileSet,
   } = normalizeInput(value, false);
 
   return new Promise((resolve) => {
@@ -336,10 +452,10 @@ async function runOwnedProcessRaw(value) {
     let spawnCommand = command;
     let spawnArgs = args;
     const wardenManaged = process.platform === "win32";
-    if (protectedReadTree !== null && !wardenManaged) {
+    if ((protectedReadTree !== null || protectedFileSet !== null) && !wardenManaged) {
       spawnError = {
         code: "PROCESS-WARDEN-IMMUTABILITY-UNAVAILABLE",
-        message: "A protected read tree requires the verified Windows process warden.",
+        message: "Protected input requires the verified Windows process warden.",
       };
       finish(null, null);
       return;
@@ -355,6 +471,9 @@ async function runOwnedProcessRaw(value) {
           ...(protectedReadTree === null
             ? []
             : ["--protect-read-tree", protectedReadTree]),
+          ...(protectedFileSet === null
+            ? []
+            : ["--protect-file-set-stdin"]),
           "--",
           command,
           ...args,
@@ -373,7 +492,7 @@ async function runOwnedProcessRaw(value) {
         shell: false,
         windowsHide,
         detached: !wardenManaged,
-        stdio: ["ignore", "pipe", "pipe"],
+        stdio: [protectedFileSet === null ? "ignore" : "pipe", "pipe", "pipe"],
       });
     } catch (error) {
       spawnError = { code: error.code || "SPAWN-THREW", message: error.message };
@@ -396,6 +515,16 @@ async function runOwnedProcessRaw(value) {
     child.once("error", (error) => {
       spawnError = { code: error.code || "SPAWN-ERROR", message: error.message };
     });
+    if (protectedFileSet !== null) {
+      child.stdin.once("error", (error) => {
+        spawnError = {
+          code: error.code || "PROCESS-WARDEN-MANIFEST-STDIN",
+          message: "Protected file manifest delivery was refused.",
+        };
+        terminateOwnedTree("protected manifest delivery refused");
+      });
+      child.stdin.end(protectedFileSet.buffer);
+    }
     child.once("close", (status, signal) => {
       if (wardenManaged && status === 124) {
         timedOut = true;
