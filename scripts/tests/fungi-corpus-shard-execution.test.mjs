@@ -21,6 +21,7 @@ import test, { after } from "node:test";
 import assert from "node:assert/strict";
 
 import { runCorpusAggregate, runCorpusShard } from "../audit-fungi-corpus-check.mjs";
+import * as corpusAuditOwner from "../audit-fungi-corpus-check.mjs";
 import { deriveCorpusShards } from "../lib/fungi-corpus-shards.mjs";
 
 const roots = [];
@@ -39,6 +40,95 @@ const RUNTIME_BOOTSTRAPS = Object.freeze([
   "scripts/lib/fungi-corpus-esm-loader.mjs",
   "scripts/lib/fungi-corpus-runtime-entry.mjs",
 ]);
+
+test("the corpus owner writes one closed bounded evidence envelope only to its ignored subtree", async () => {
+  const path = "corpus/evidence.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow evidence() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const result = await runCorpusAggregate(request, DEFAULT_LIMITS, {
+    repositoryRoot: root,
+    concurrency: 1,
+    priorReceipts: [],
+  });
+  assert.equal(result.kind, "accepted");
+  const relativePath = "build/fungi-corpus-check/evidence/project.json";
+  const written = corpusAuditOwner.writeCorpusEvidenceEnvelope(
+    root,
+    relativePath,
+    request,
+    DEFAULT_LIMITS,
+    result.value,
+  );
+  assert.equal(written.kind, "accepted");
+  const envelope = JSON.parse(readFileSync(join(root, ...relativePath.split("/")), "utf8"));
+  assert.equal(envelope.schema, "galerina.fungi-corpus-evidence.v1");
+  assert.deepEqual(envelope.request, request);
+  assert.deepEqual(envelope.limits, DEFAULT_LIMITS);
+  assert.deepEqual(envelope.run, result.value);
+  assert.equal(envelope.digest, canonicalDigest({
+    schema: envelope.schema,
+    request: envelope.request,
+    limits: envelope.limits,
+    run: envelope.run,
+  }));
+  assert.equal(JSON.stringify(envelope).includes("@version"), false);
+  assert.equal(JSON.stringify(envelope).includes("SECRET_DIAGNOSTIC_BODY"), false);
+  assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+    root, relativePath, request, DEFAULT_LIMITS, result.value,
+  ).kind, "refused");
+});
+
+test("evidence output refuses absolute, traversal, case-alias, junction and non-regular targets", async () => {
+  const path = "corpus/evidence-boundary.fungi";
+  const makeEvidence = async (root) => {
+    const request = requestFor(root, [path]);
+    const result = await runCorpusAggregate(request, DEFAULT_LIMITS, {
+      repositoryRoot: root,
+      concurrency: 1,
+      priorReceipts: [],
+    });
+    assert.equal(result.kind, "accepted");
+    return { request, run: result.value };
+  };
+
+  const ordinary = fixture({ [path]: "@version 1\npure flow evidenceBoundary() -> Int { return 1 }\n" });
+  const evidence = await makeEvidence(ordinary);
+  for (const output of [
+    resolve(ordinary, "build/fungi-corpus-check/evidence/absolute.json"),
+    "build/fungi-corpus-check/evidence/../escape.json",
+    "build/FUNGI-corpus-check/evidence/case.json",
+    "build/other/evidence/wrong-owner.json",
+  ]) {
+    assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+      ordinary, output, evidence.request, DEFAULT_LIMITS, evidence.run,
+    ).kind, "refused");
+  }
+
+  const nonRegular = fixture({ [path]: "@version 1\npure flow nonRegular() -> Int { return 1 }\n" });
+  const nonRegularEvidence = await makeEvidence(nonRegular);
+  mkdirSync(join(nonRegular, "build", "fungi-corpus-check", "evidence", "directory.json"), { recursive: true });
+  assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+    nonRegular,
+    "build/fungi-corpus-check/evidence/directory.json",
+    nonRegularEvidence.request,
+    DEFAULT_LIMITS,
+    nonRegularEvidence.run,
+  ).kind, "refused");
+
+  const linked = fixture({ [path]: "@version 1\npure flow linked() -> Int { return 1 }\n" });
+  const linkedEvidence = await makeEvidence(linked);
+  const outside = realpathSync(mkdtempSync(join(tmpdir(), "galerina-corpus-evidence-outside-")));
+  roots.push(outside);
+  mkdirSync(join(linked, "build"), { recursive: true });
+  symlinkSync(outside, join(linked, "build", "fungi-corpus-check"), "junction");
+  assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+    linked,
+    "build/fungi-corpus-check/evidence/linked.json",
+    linkedEvidence.request,
+    DEFAULT_LIMITS,
+    linkedEvidence.run,
+  ).kind, "refused");
+});
 
 after(() => {
   for (const root of roots) rmSync(root, { recursive: true, force: true });

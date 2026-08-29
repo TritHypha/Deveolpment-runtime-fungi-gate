@@ -36,6 +36,7 @@ import {
   constants as fsConstants,
   existsSync,
   fstatSync,
+  fsyncSync,
   lstatSync,
   mkdirSync,
   openSync,
@@ -43,7 +44,9 @@ import {
   readdirSync,
   readSync,
   realpathSync,
+  renameSync,
   statSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
@@ -1464,10 +1467,114 @@ function asciiCaseKey(value) {
   return value.replace(/[A-Z]/gu, (character) => character.toLowerCase());
 }
 
+const CORPUS_EVIDENCE_PREFIX = "build/fungi-corpus-check/evidence/";
+const CORPUS_EVIDENCE_KEYS = Object.freeze(["digest", "limits", "request", "run", "schema"]);
+const CORPUS_EVIDENCE_LIMIT_KEYS = Object.freeze(["maxBytes", "maxFiles", "maxOutputBytes", "timeoutMs"]);
+const CORPUS_EVIDENCE_RUN_KEYS = Object.freeze(["aggregate", "receipts", "schema"]);
+const CORPUS_EVIDENCE_MAX_BYTES = 8 * 1024 * 1024;
+
+function evidenceOutputPath(value) {
+  return typeof value === "string"
+    && value === value.normalize("NFC")
+    && value.startsWith(CORPUS_EVIDENCE_PREFIX)
+    && /^[a-z0-9][a-z0-9.-]*\.json$/u.test(value.slice(CORPUS_EVIDENCE_PREFIX.length))
+    && !isAbsolute(value)
+    && !value.includes("\\")
+    && !value.includes("\0")
+    && value.split("/").every((segment) => segment.length > 0 && segment !== "." && segment !== "..");
+}
+
+function exactEvidenceDirectory(root) {
+  try {
+    const canonicalRoot = realpathSync(root);
+    if (canonicalRoot !== resolve(root)) return null;
+    let current = canonicalRoot;
+    for (const segment of ["build", "fungi-corpus-check", "evidence"]) {
+      const entries = readdirSync(current, { withFileTypes: true });
+      const matches = entries.filter((entry) => entry.name.toLowerCase() === segment.toLowerCase());
+      if (matches.length > 1 || (matches.length === 1 && matches[0].name !== segment)) return null;
+      const next = join(current, segment);
+      if (matches.length === 0) mkdirSync(next);
+      const state = lstatSync(next);
+      if (state.isSymbolicLink() || !state.isDirectory() || realpathSync(next) !== next) return null;
+      current = next;
+    }
+    return current;
+  } catch {
+    return null;
+  }
+}
+
+export function writeCorpusEvidenceEnvelope(root, outputPath, requestValue, limitValue, runValue) {
+  let temporary = null;
+  try {
+    if (!evidenceOutputPath(outputPath)) return corpusRefused("CORPUS_EVIDENCE_PATH_REFUSED");
+    const requestResult = validateCorpusRequest(requestValue);
+    const limits = exactCorpusRecord(limitValue, CORPUS_EVIDENCE_LIMIT_KEYS);
+    const run = exactCorpusRecord(runValue, CORPUS_EVIDENCE_RUN_KEYS);
+    if (requestResult.kind !== "accepted"
+        || limits === null
+        || Object.values(limits).some((entry) => !Number.isSafeInteger(entry) || entry < 1)
+        || run === null
+        || run.schema !== "galerina.fungi-corpus-run.v2") {
+      return corpusRefused("CORPUS_EVIDENCE_VALUE_REFUSED");
+    }
+    const shards = deriveCorpusShards(requestResult.value, limits);
+    const receipts = exactCorpusArray(run.receipts);
+    if (shards.kind !== "accepted" || receipts === null || receipts.length !== shards.value.length) {
+      return corpusRefused("CORPUS_EVIDENCE_COVERAGE_REFUSED");
+    }
+    for (let index = 0; index < receipts.length; index += 1) {
+      if (validateShardReceipt(receipts[index], shards.value[index]).kind !== "accepted") {
+        return corpusRefused("CORPUS_EVIDENCE_RECEIPT_REFUSED");
+      }
+    }
+    const aggregate = aggregateCorpusReceipts(requestResult.value, shards.value, receipts);
+    if (aggregate.kind !== "accepted" || JSON.stringify(aggregate.value) !== JSON.stringify(run.aggregate)) {
+      return corpusRefused("CORPUS_EVIDENCE_AGGREGATE_REFUSED");
+    }
+    const base = {
+      schema: "galerina.fungi-corpus-evidence.v1",
+      request: requestResult.value,
+      limits,
+      run,
+    };
+    const envelope = { ...base, digest: corpusDigest(base) };
+    if (!exactCorpusRecord(envelope, CORPUS_EVIDENCE_KEYS)) return corpusRefused("CORPUS_EVIDENCE_SHAPE_REFUSED");
+    const bytes = Buffer.from(`${JSON.stringify(envelope)}\n`, "utf8");
+    if (bytes.length > CORPUS_EVIDENCE_MAX_BYTES) return corpusRefused("CORPUS_EVIDENCE_SIZE_REFUSED");
+    const directory = exactEvidenceDirectory(root);
+    if (directory === null) return corpusRefused("CORPUS_EVIDENCE_DIRECTORY_REFUSED");
+    const name = outputPath.slice(CORPUS_EVIDENCE_PREFIX.length);
+    const target = join(directory, name);
+    try { lstatSync(target); return corpusRefused("CORPUS_EVIDENCE_TARGET_EXISTS"); }
+    catch (error) { if (error?.code !== "ENOENT") return corpusRefused("CORPUS_EVIDENCE_TARGET_REFUSED"); }
+    temporary = join(directory, `.${name}.${process.pid}.tmp`);
+    const fd = openSync(temporary, fsConstants.O_WRONLY | fsConstants.O_CREAT | fsConstants.O_EXCL, 0o600);
+    try {
+      writeFileSync(fd, bytes);
+      fsyncSync(fd);
+    } finally {
+      closeSync(fd);
+    }
+    renameSync(temporary, target);
+    temporary = null;
+    const state = lstatSync(target);
+    if (state.isSymbolicLink() || !state.isFile() || realpathSync(target) !== target) {
+      return corpusRefused("CORPUS_EVIDENCE_PUBLICATION_REFUSED");
+    }
+    return corpusAccepted({ path: outputPath, digest: envelope.digest });
+  } catch {
+    return corpusRefused("CORPUS_EVIDENCE_WRITE_REFUSED");
+  } finally {
+    if (temporary !== null) { try { unlinkSync(temporary); } catch { /* owned unpublished temp only */ } }
+  }
+}
+
 function parseCorpusV2Cli(args) {
   if (args[0] !== "--corpus-v2" || args.length < 15 || args.length % 2 === 0) return null;
   const allowed = new Set([
-    "--profile", "--file", "--shard-count", "--concurrency", "--max-files", "--max-bytes", "--timeout-ms", "--max-output-bytes",
+    "--profile", "--file", "--shard-count", "--concurrency", "--max-files", "--max-bytes", "--timeout-ms", "--max-output-bytes", "--evidence-output",
   ]);
   const values = new Map();
   const files = [];
@@ -1513,7 +1620,9 @@ function parseCorpusV2Cli(args) {
     || !Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 4
     || Object.values(limits).some((value) => !Number.isSafeInteger(value) || value < 1)
   ) return null;
-  return { profile, files: files.length === 0 ? null : files, shardCount, concurrency, limits };
+  const evidenceOutput = values.get("--evidence-output") ?? null;
+  if (evidenceOutput !== null && !evidenceOutputPath(evidenceOutput)) return null;
+  return { profile, files: files.length === 0 ? null : files, shardCount, concurrency, limits, evidenceOutput };
 }
 
 async function runCorpusV2Cli(args) {
@@ -1537,6 +1646,13 @@ async function runCorpusV2Cli(args) {
   if (result.kind !== "accepted") {
     console.error(result.code);
     return 2;
+  }
+  if (parsed.evidenceOutput !== null) {
+    const written = writeCorpusEvidenceEnvelope(root, parsed.evidenceOutput, request, parsed.limits, result.value);
+    if (written.kind !== "accepted") {
+      console.error(written.code);
+      return 2;
+    }
   }
   console.log(`FUNGI_CORPUS_V2 ${JSON.stringify(result.value)}`);
   return result.value.aggregate.status === "PASS" ? 0 : 1;
