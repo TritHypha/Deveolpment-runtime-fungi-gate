@@ -255,6 +255,20 @@ mod windows {
         }
     }
 
+    fn close_all(handles: &[Handle]) {
+        for &handle in handles {
+            close(handle);
+        }
+    }
+
+    fn owner_has_exited(owner: Handle) -> Result<bool, String> {
+        match unsafe { WaitForSingleObject(owner, 0) } {
+            WAIT_OBJECT_0 => Ok(true),
+            WAIT_TIMEOUT => Ok(false),
+            _ => Err(last_error("WaitForSingleObject(owner)")),
+        }
+    }
+
     fn quote_windows_argument(argument: &OsStr, output: &mut Vec<u16>) {
         let units: Vec<u16> = argument.encode_wide().collect();
         let needs_quotes =
@@ -716,14 +730,28 @@ mod windows {
 
     pub fn main() {
         let (timeout, owner_pid, protection, command) = parse();
+        let owner = unsafe { OpenProcess(SYNCHRONIZE, FALSE, owner_pid) };
+        if owner.is_null() {
+            fail(&last_error("OpenProcess(owner)"));
+        }
         let protected_handles = match protection {
             ProtectionMode::None => Vec::new(),
             ProtectionMode::ReadTree(root) => protect_read_tree(root.as_os_str()),
             ProtectionMode::FileSetStdin => protect_file_set(),
         };
-        let owner = unsafe { OpenProcess(SYNCHRONIZE, FALSE, owner_pid) };
-        if owner.is_null() {
-            fail(&last_error("OpenProcess(owner)"));
+        match owner_has_exited(owner) {
+            Ok(false) => {}
+            Ok(true) => {
+                close_all(&protected_handles);
+                close(owner);
+                eprintln!("WARDEN_OWNER_EXIT_TREE_CLOSED");
+                process::exit(WARDEN_OWNER_EXIT as i32);
+            }
+            Err(error) => {
+                close_all(&protected_handles);
+                close(owner);
+                fail(&error);
+            }
         }
 
         let job = unsafe { CreateJobObjectW(null(), null()) };
@@ -789,6 +817,30 @@ mod windows {
             close(owner);
             fail(&last_error("AssignProcessToJobObject"));
         }
+        match owner_has_exited(owner) {
+            Ok(false) => {}
+            Ok(true) => {
+                unsafe { TerminateJobObject(job, WARDEN_OWNER_EXIT) };
+                unsafe { WaitForSingleObject(process_info.h_process, INFINITE) };
+                close(process_info.h_thread);
+                close(process_info.h_process);
+                close(job);
+                close(owner);
+                close_all(&protected_handles);
+                eprintln!("WARDEN_OWNER_EXIT_TREE_CLOSED");
+                process::exit(WARDEN_OWNER_EXIT as i32);
+            }
+            Err(error) => {
+                unsafe { TerminateJobObject(job, WARDEN_SETUP_EXIT) };
+                unsafe { WaitForSingleObject(process_info.h_process, INFINITE) };
+                close(process_info.h_thread);
+                close(process_info.h_process);
+                close(job);
+                close(owner);
+                close_all(&protected_handles);
+                fail(&error);
+            }
+        }
         if unsafe { ResumeThread(process_info.h_thread) } == Dword::MAX {
             unsafe { TerminateJobObject(job, WARDEN_SETUP_EXIT) };
             close(process_info.h_thread);
@@ -831,15 +883,30 @@ mod windows {
         close(process_info.h_process);
         close(job);
         close(owner);
-        for handle in protected_handles {
-            close(handle);
-        }
+        close_all(&protected_handles);
         process::exit(exit as i32);
     }
 
     #[cfg(test)]
     mod tests {
-        use super::parse_protected_manifest;
+        use super::{
+            close, ordinal_compare, owner_has_exited, parse_protected_manifest, Bool, Handle,
+            FALSE, TRUE,
+        };
+        use std::cmp::Ordering;
+        use std::ffi::c_void;
+        use std::ptr::null;
+
+        #[link(name = "kernel32")]
+        unsafe extern "system" {
+            fn CreateEventW(
+                event_attributes: *const c_void,
+                manual_reset: Bool,
+                initial_state: Bool,
+                name: *const u16,
+            ) -> Handle;
+            fn SetEvent(event: Handle) -> Bool;
+        }
 
         const DIGEST: &str = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
@@ -908,6 +975,36 @@ mod windows {
                 parse_protected_manifest(&alias).unwrap_err(),
                 "manifest-alias"
             );
+        }
+
+        #[test]
+        fn ordinal_alias_vectors_match_windows_nonexpanding_case_rules() {
+            let vectors = [
+                ("ss.txt", "ß.txt", false),
+                ("ffi.txt", "ﬃ.txt", false),
+                ("A.txt", "a.txt", true),
+            ];
+            for (left, right, equal_ignoring_case) in vectors {
+                assert_eq!(
+                    ordinal_compare(left, right, true).unwrap() == Ordering::Equal,
+                    equal_ignoring_case,
+                    "vector {left:?} / {right:?}"
+                );
+            }
+            assert_eq!(
+                ordinal_compare("a.txt", "a.txt", true).unwrap(),
+                Ordering::Equal
+            );
+        }
+
+        #[test]
+        fn owner_wait_state_is_checked_on_the_retained_handle() {
+            let event = unsafe { CreateEventW(null(), TRUE, FALSE, null()) };
+            assert!(!event.is_null());
+            assert_eq!(owner_has_exited(event).unwrap(), false);
+            assert_ne!(unsafe { SetEvent(event) }, FALSE);
+            assert_eq!(owner_has_exited(event).unwrap(), true);
+            close(event);
         }
 
         #[test]

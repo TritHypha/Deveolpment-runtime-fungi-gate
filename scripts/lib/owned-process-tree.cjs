@@ -136,12 +136,20 @@ function exactStringArray(value) {
   }
 }
 
-function exactArray(value) {
+function exactArray(value, maxLength) {
   try {
-    if (!Array.isArray(value) || utilTypes.isProxy(value) || Object.getPrototypeOf(value) !== Array.prototype) return null;
+    if (
+      !Number.isSafeInteger(maxLength)
+      || maxLength < 0
+      || !Array.isArray(value)
+      || utilTypes.isProxy(value)
+      || Object.getPrototypeOf(value) !== Array.prototype
+    ) return null;
+    const lengthDescriptor = Object.getOwnPropertyDescriptor(value, "length");
+    const length = lengthDescriptor?.value;
+    if (!Number.isSafeInteger(length) || length < 0 || length > maxLength) return null;
     const descriptors = Object.getOwnPropertyDescriptors(value);
-    const length = descriptors.length?.value;
-    if (!Number.isSafeInteger(length) || length < 0 || Reflect.ownKeys(descriptors).length !== length + 1) return null;
+    if (Reflect.ownKeys(descriptors).length !== length + 1) return null;
     const result = [];
     for (let index = 0; index < length; index += 1) {
       const descriptor = descriptors[String(index)];
@@ -158,6 +166,18 @@ function exactArray(value) {
   } catch {
     return null;
   }
+}
+
+function ordinalNonExpandingUppercase(value) {
+  let folded = "";
+  for (const scalar of value) {
+    const uppercase = scalar.toUpperCase();
+    const iterator = uppercase[Symbol.iterator]();
+    const first = iterator.next();
+    const second = iterator.next();
+    folded += !first.done && second.done ? uppercase : scalar;
+  }
+  return folded;
 }
 
 function protectedPathIsValid(value) {
@@ -178,7 +198,7 @@ function protectedPathIsValid(value) {
 function normalizeProtectedFileSet(value) {
   const manifest = exactInputRecord(value, PROTECTED_FILE_SET_KEYS);
   if (manifest === null) throw inputError("Protected file set must be a closed ordinary record.");
-  const files = exactArray(manifest.files);
+  const files = exactArray(manifest.files, PROTECTED_FILE_SET_MAX_FILES);
   if (
     manifest.schema !== "galerina.protected-file-set.v1"
     || typeof manifest.root !== "string"
@@ -201,7 +221,7 @@ function normalizeProtectedFileSet(value) {
       || !/^[0-9a-f]{64}$/.test(entry.sha256)
       || (previousPath !== null && previousPath >= entry.path)
     ) throw inputError("Protected file set entry is invalid or not sorted.");
-    const caseAlias = entry.path.toUpperCase();
+    const caseAlias = ordinalNonExpandingUppercase(entry.path);
     if (caseAliases.has(caseAlias)) {
       throw inputError("Protected file set contains a Windows case alias.");
     }

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { constants as bufferConstants } from "node:buffer";
+import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import {
@@ -417,6 +418,205 @@ test("protected-file-set validation is closed, canonical and trap-free before sp
     assert.equal(proxyTrapCalls, 0);
     assert.equal(existsSync(sentinel), false);
   } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("protected-file-set file-count bounds refuse before copying array entries", async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-manifest-count-"));
+  const protectedFile = join(root, "input.txt");
+  const sentinel = join(root, "spawned.txt");
+  writeFileSync(protectedFile, "authenticated", "utf8");
+  const manifest = protectedFileManifest(root, [["input.txt", protectedFile]]);
+  const command = {
+    command: process.execPath,
+    args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+    cwd: root,
+    env: process.env,
+    timeoutMs: 2_000,
+  };
+  const dense = Array.from({ length: 8_193 }, () => manifest.files[0]);
+  const sparse = new Array(1_000_000);
+  let elementAccessorCalls = 0;
+  Object.defineProperty(sparse, "0", {
+    configurable: true,
+    enumerable: true,
+    get() {
+      elementAccessorCalls += 1;
+      return manifest.files[0];
+    },
+  });
+  const originalGetOwnPropertyDescriptors = Object.getOwnPropertyDescriptors;
+  let observedArray = null;
+  let bulkDescriptorCalls = 0;
+  Object.getOwnPropertyDescriptors = (value) => {
+    if (value === observedArray) bulkDescriptorCalls += 1;
+    return originalGetOwnPropertyDescriptors(value);
+  };
+
+  try {
+    for (const files of [dense, sparse]) {
+      observedArray = files;
+      bulkDescriptorCalls = 0;
+      await assert.rejects(
+        runOwnedProcess({ ...command, protectedFileSet: { ...manifest, files } }),
+        (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+      );
+      assert.equal(bulkDescriptorCalls, 0);
+      assert.equal(elementAccessorCalls, 0);
+      assert.equal(existsSync(sentinel), false);
+    }
+  } finally {
+    Object.getOwnPropertyDescriptors = originalGetOwnPropertyDescriptors;
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("controller alias vectors match non-expanding Windows ordinal folding", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-alias-vectors-"));
+  const sentinel = join(root, "spawned.txt");
+  const acceptedPairs = [
+    ["ss.txt", "ß.txt"],
+    ["ffi.txt", "ﬃ.txt"],
+  ];
+
+  try {
+    for (const pair of acceptedPairs) {
+      const rows = pair.map((relativePath) => {
+        const file = join(root, relativePath);
+        writeFileSync(file, relativePath, "utf8");
+        return [relativePath, file];
+      });
+      rmSync(sentinel, { force: true });
+      const result = await runOwnedProcess({
+        command: process.execPath,
+        args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+        cwd: root,
+        env: process.env,
+        timeoutMs: 2_000,
+        protectedFileSet: protectedFileManifest(root, rows),
+      });
+      assert.equal(result.status, 0);
+      assert.equal(existsSync(sentinel), true);
+    }
+
+    rmSync(sentinel, { force: true });
+    const asciiFile = join(root, "A.txt");
+    writeFileSync(asciiFile, "ascii", "utf8");
+    const digest = sha256File(asciiFile);
+    await assert.rejects(
+      runOwnedProcess({
+        command: process.execPath,
+        args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+        cwd: root,
+        env: process.env,
+        timeoutMs: 2_000,
+        protectedFileSet: {
+          schema: "galerina.protected-file-set.v1",
+          root: realpathSync.native(root),
+          files: [
+            { path: "A.txt", sha256: digest },
+            { path: "a.txt", sha256: digest },
+          ],
+        },
+      }),
+      (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+    );
+    assert.equal(existsSync(sentinel), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("the native warden binds owner identity before authentication and before resume", () => {
+  const source = readFileSync(join(TEST_DIR, "..", "native", "process-warden", "src", "main.rs"), "utf8");
+  const mainSource = source.slice(source.indexOf("pub fn main() {"));
+  const openOwner = mainSource.indexOf("OpenProcess(SYNCHRONIZE");
+  const authenticate = mainSource.indexOf("let protected_handles = match protection");
+  const firstOwnerCheck = mainSource.indexOf("owner_has_exited(owner)");
+  const createChild = mainSource.indexOf("CreateProcessW(");
+  const assignChild = mainSource.indexOf("AssignProcessToJobObject(job, process_info.h_process)");
+  const secondOwnerCheck = mainSource.indexOf("owner_has_exited(owner)", firstOwnerCheck + 1);
+  const resumeChild = mainSource.indexOf("ResumeThread(process_info.h_thread)");
+
+  assert.ok(openOwner >= 0);
+  assert.ok(openOwner < authenticate);
+  assert.ok(authenticate < firstOwnerCheck);
+  assert.ok(firstOwnerCheck < createChild);
+  assert.ok(createChild < assignChild);
+  assert.ok(assignChild < secondOwnerCheck);
+  assert.ok(secondOwnerCheck < resumeChild);
+});
+
+test("the native warden closes its assigned child when the retained owner exits", {
+  skip: process.platform !== "win32",
+}, async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-owner-exit-"));
+  const identityFile = join(root, "child.pid");
+  const temporaryIdentityFile = `${identityFile}.tmp`;
+  const wardenBinary = join(
+    TEST_DIR,
+    "..",
+    "..",
+    "build",
+    "target-cache",
+    "process-warden",
+    "release",
+    "galerina-process-warden.exe",
+  );
+  const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1_000)"], {
+    cwd: root,
+    windowsHide: true,
+    stdio: "ignore",
+  });
+  const childScript = [
+    "const fs = require('node:fs');",
+    `fs.writeFileSync(${JSON.stringify(temporaryIdentityFile)}, String(process.pid));`,
+    `fs.renameSync(${JSON.stringify(temporaryIdentityFile)}, ${JSON.stringify(identityFile)});`,
+    "setInterval(() => {}, 1_000);",
+  ].join("");
+  const warden = spawn(wardenBinary, [
+    "--timeout-ms",
+    "10000",
+    "--owner-pid",
+    String(owner.pid),
+    "--",
+    process.execPath,
+    "-e",
+    childScript,
+  ], {
+    cwd: root,
+    windowsHide: true,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  const stderr = [];
+  warden.stderr.on("data", (chunk) => stderr.push(chunk));
+  let childPid = null;
+
+  try {
+    assert.equal(await waitForPath(identityFile), true, "warden child never reached authority");
+    childPid = Number(readFileSync(identityFile, "utf8"));
+    assert.ok(Number.isSafeInteger(childPid) && childPid > 0);
+    assert.equal(owner.kill(), true);
+    const result = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("warden did not observe owner exit")), 3_000);
+      warden.once("error", (error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+      warden.once("close", (status, signal) => {
+        clearTimeout(timer);
+        resolve({ status, signal });
+      });
+    });
+    assert.deepEqual(result, { status: 125, signal: null });
+    assert.match(Buffer.concat(stderr).toString("utf8"), /WARDEN_OWNER_EXIT_TREE_CLOSED/);
+    assert.equal(await waitForDead(childPid), true, "warden child remained alive after owner exit");
+  } finally {
+    owner.kill();
+    warden.kill();
     rmSync(root, { recursive: true, force: true });
   }
 });
