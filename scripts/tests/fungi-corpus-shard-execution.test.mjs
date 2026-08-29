@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { findPackageJSON } from "node:module";
 import {
   existsSync,
   mkdirSync,
@@ -15,6 +16,7 @@ import {
 import { execFileSync } from "node:child_process";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
+import { pathToFileURL } from "node:url";
 import test, { after } from "node:test";
 import assert from "node:assert/strict";
 
@@ -209,21 +211,44 @@ function fixture(fileMap, sidecars = {}, setup = {}) {
 }
 
 function compilerFiles(root) {
-  const result = ["galerina.mjs"];
-  const visit = (directory) => {
+  const result = new Set(["galerina.mjs"]);
+  const pending = [];
+  const visitedManifests = new Set();
+  const dependencies = (manifestPath) => {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    for (const sectionName of ["dependencies", "optionalDependencies", "peerDependencies"]) {
+      for (const name of Object.keys(manifest[sectionName] ?? {}).sort()) {
+        if (!name.startsWith("@galerina/")) {
+          pending.push(findPackageJSON(name, pathToFileURL(manifestPath)));
+        }
+      }
+    }
+  };
+  const visit = (directory, skipNodeModules = false) => {
     for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      if (skipNodeModules && entry.name === "node_modules" && entry.isDirectory()) continue;
       const absolute = join(directory, entry.name);
-      if (entry.isDirectory()) visit(absolute);
-      else if (entry.isFile() && !entry.isSymbolicLink() && /\.(?:c?js)$/u.test(entry.name)) {
-        result.push(relative(root, absolute).split(sep).join("/"));
+      if (entry.isDirectory()) visit(absolute, skipNodeModules);
+      else if (entry.isFile() && !entry.isSymbolicLink() && /\.(?:cjs|js|json|mjs|node|wasm)$/u.test(entry.name)) {
+        result.add(relative(root, absolute).split(sep).join("/"));
       }
     }
   };
   for (const packageDirectory of fixtureCompilerPackages.get(root) ?? ["galerina-core-compiler"]) {
-    result.push(`packages-ts/${packageDirectory}/package.json`);
+    const manifestPath = join(root, "packages-ts", packageDirectory, "package.json");
+    result.add(`packages-ts/${packageDirectory}/package.json`);
     visit(join(root, "packages-ts", packageDirectory, "dist"));
+    dependencies(manifestPath);
   }
-  return result.sort();
+  while (pending.length > 0) {
+    const manifestPath = resolve(pending.shift());
+    if (visitedManifests.has(manifestPath)) continue;
+    visitedManifests.add(manifestPath);
+    result.add(relative(root, manifestPath).split(sep).join("/"));
+    visit(dirname(manifestPath), true);
+    dependencies(manifestPath);
+  }
+  return [...result].sort();
 }
 
 function compilerDigest(root) {
@@ -404,6 +429,199 @@ test("compiler runtime dependency bytes cannot mint PASS under unchanged corpus 
   assert.equal(changed.kind, "accepted");
   assert.equal(changed.value.status, "REFUSED");
   assert.equal(changed.value.termination, "COMPILER_CHANGED");
+});
+
+test("third-party ESM dependency bytes cannot mint PASS under unchanged corpus identities", { skip: process.platform !== "win32" || process.arch !== "x64" }, async () => {
+  const path = "corpus/third-party-runtime-closure.fungi";
+  const dependencyPath = "packages-ts/galerina-tower-citizen/node_modules/@noble/post-quantum/ml-dsa.js";
+  const root = fixture(
+    { [path]: "@version 1\npure flow thirdPartyRuntimeClosure() -> Int { return 1 }\n" },
+    {},
+    {
+      checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "module",
+        main: "./dist/index.js",
+        dependencies: {
+          "@galerina/tower-citizen": "file:../galerina-tower-citizen",
+        },
+      }, null, 2)}\n`,
+      compilerDist: {
+        "index.js": "import '@galerina/tower-citizen';\n",
+      },
+      extraFiles: {
+        "packages-ts/galerina-tower-citizen/package.json": `${JSON.stringify({
+          name: "@galerina/tower-citizen",
+          type: "module",
+          main: "./dist/index.js",
+          dependencies: {
+            "@noble/post-quantum": "0.5.4",
+          },
+        }, null, 2)}\n`,
+        "packages-ts/galerina-tower-citizen/dist/index.js": "import '@noble/post-quantum/ml-dsa.js';\n",
+        "packages-ts/galerina-tower-citizen/node_modules/@noble/post-quantum/package.json": `${JSON.stringify({
+          name: "@noble/post-quantum",
+          type: "module",
+          exports: {
+            "./ml-dsa.js": "./ml-dsa.js",
+          },
+        }, null, 2)}\n`,
+        [dependencyPath]: "console.log('FUNGI-TEST-999: bounded third-party diagnostic');\nprocess.exit(1);\n",
+      },
+      runtimePackages: ["galerina-tower-citizen"],
+      junctions: [{
+        path: "packages-ts/galerina-core-compiler/node_modules/@galerina/tower-citizen",
+        target: "packages-ts/galerina-tower-citizen",
+      }],
+    },
+  );
+  const request = requestFor(root, [path]);
+  const shard = shardFor(request);
+  const requestDigest = canonicalDigest(request);
+  const sourceDigest = request.files[0].digest;
+  const shardDigest = shard.shardDigest;
+
+  const finding = await runCorpusShard(request, shard, { repositoryRoot: root });
+  assert.equal(finding.kind, "accepted");
+  assert.equal(finding.value.status, "FINDING", JSON.stringify(finding));
+  assert.equal(finding.value.termination, "COMPLETE", JSON.stringify(finding));
+
+  write(root, dependencyPath, "console.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n");
+  const changed = await runCorpusShard(request, shard, { repositoryRoot: root });
+  assert.equal(canonicalDigest(request), requestDigest);
+  assert.equal(request.files[0].digest, sourceDigest);
+  assert.equal(shard.shardDigest, shardDigest);
+  assert.equal(changed.kind, "accepted");
+  assert.equal(changed.value.status, "REFUSED");
+  assert.equal(changed.value.termination, "COMPILER_CHANGED");
+});
+
+test("CommonJS resolution cannot execute an undeclared file outside the authenticated allow-set", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  const path = "corpus/commonjs-runtime-escape.fungi";
+  const packageRoot = "packages-ts/galerina-tower-citizen/node_modules/third-party-cjs";
+  const sentinel = join(tmpdir(), `galerina-corpus-cjs-escape-${process.pid}-${Date.now()}`);
+  t.after(() => rmSync(sentinel, { force: true }));
+  const root = fixture(
+    { [path]: "@version 1\npure flow commonJsRuntimeEscape() -> Int { return 1 }\n" },
+    {},
+    {
+      checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "module",
+        main: "./dist/index.js",
+        dependencies: {
+          "@galerina/tower-citizen": "file:../galerina-tower-citizen",
+        },
+      }, null, 2)}\n`,
+      compilerDist: { "index.js": "import '@galerina/tower-citizen';\n" },
+      extraFiles: {
+        "packages-ts/galerina-tower-citizen/package.json": `${JSON.stringify({
+          name: "@galerina/tower-citizen",
+          type: "commonjs",
+          main: "./dist/index.cjs",
+          dependencies: { "third-party-cjs": "1.0.0" },
+        }, null, 2)}\n`,
+        "packages-ts/galerina-tower-citizen/dist/index.cjs": "require('third-party-cjs');\n",
+        [`${packageRoot}/package.json`]: `${JSON.stringify({
+          name: "third-party-cjs",
+          type: "commonjs",
+          main: "./index.cjs",
+        }, null, 2)}\n`,
+        [`${packageRoot}/index.cjs`]: "require('escape-cjs');\n",
+      },
+      runtimePackages: ["galerina-tower-citizen"],
+      junctions: [{
+        path: "packages-ts/galerina-core-compiler/node_modules/@galerina/tower-citizen",
+        target: "packages-ts/galerina-tower-citizen",
+      }],
+    },
+  );
+  const request = requestFor(root, [path]);
+  write(root, `${packageRoot}/node_modules/escape-cjs/package.json`, `${JSON.stringify({
+    name: "escape-cjs",
+    type: "commonjs",
+    main: "./index.cjs",
+  }, null, 2)}\n`);
+  write(
+    root,
+    `${packageRoot}/node_modules/escape-cjs/index.cjs`,
+    `require('node:fs').writeFileSync(${JSON.stringify(sentinel)},'executed\\n');\nconsole.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n`,
+  );
+
+  const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "REFUSED", JSON.stringify(result));
+  assert.equal(result.value.termination, "MISSING_RESULT", JSON.stringify(result));
+  assert.equal(existsSync(sentinel), false);
+});
+
+test("transitive third-party manifests and executable resolution bytes are authenticated", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  for (const mutation of ["manifest", "module", "native"]) {
+    await t.test(mutation, async () => {
+      const path = `corpus/third-party-transitive-${mutation}.fungi`;
+      const dependencyRoot = "packages-ts/galerina-tower-citizen/node_modules";
+      const leafRoot = `${dependencyRoot}/third-party-leaf`;
+      const leafManifest = `${JSON.stringify({
+        name: "third-party-leaf",
+        type: "module",
+        main: "./index.js",
+      }, null, 2)}\n`;
+      const root = fixture(
+        { [path]: "@version 1\npure flow transitiveThirdParty() -> Int { return 1 }\n" },
+        {},
+        {
+          checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+          compilerManifest: `${JSON.stringify({
+            name: "@galerina/core-compiler",
+            type: "module",
+            main: "./dist/index.js",
+            dependencies: { "@galerina/tower-citizen": "file:../galerina-tower-citizen" },
+          }, null, 2)}\n`,
+          compilerDist: { "index.js": "import '@galerina/tower-citizen';\n" },
+          extraFiles: {
+            "packages-ts/galerina-tower-citizen/package.json": `${JSON.stringify({
+              name: "@galerina/tower-citizen",
+              type: "module",
+              main: "./dist/index.js",
+              dependencies: { "third-party-parent": "1.0.0" },
+            }, null, 2)}\n`,
+            "packages-ts/galerina-tower-citizen/dist/index.js": "import 'third-party-parent';\n",
+            [`${dependencyRoot}/third-party-parent/package.json`]: `${JSON.stringify({
+              name: "third-party-parent",
+              type: "module",
+              main: "./index.js",
+              dependencies: { "third-party-leaf": "1.0.0" },
+            }, null, 2)}\n`,
+            [`${dependencyRoot}/third-party-parent/index.js`]: "import 'third-party-leaf';\n",
+            [`${leafRoot}/package.json`]: leafManifest,
+            [`${leafRoot}/index.js`]: "console.log('FUNGI-TEST-999: bounded transitive diagnostic');\nprocess.exit(1);\n",
+            [`${leafRoot}/binding.node`]: Buffer.from([0x01, 0x02, 0x03]),
+          },
+          runtimePackages: ["galerina-tower-citizen"],
+          junctions: [{
+            path: "packages-ts/galerina-core-compiler/node_modules/@galerina/tower-citizen",
+            target: "packages-ts/galerina-tower-citizen",
+          }],
+        },
+      );
+      const request = requestFor(root, [path]);
+      const shard = shardFor(request);
+      const finding = await runCorpusShard(request, shard, { repositoryRoot: root });
+      assert.equal(finding.kind, "accepted");
+      assert.equal(finding.value.status, "FINDING", JSON.stringify(finding));
+      assert.equal(finding.value.termination, "COMPLETE", JSON.stringify(finding));
+
+      if (mutation === "manifest") write(root, `${leafRoot}/package.json`, `${leafManifest}\n`);
+      if (mutation === "module") write(root, `${leafRoot}/index.js`, "console.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n");
+      if (mutation === "native") write(root, `${leafRoot}/binding.node`, Buffer.from([0x01, 0x02, 0x04]));
+      const changed = await runCorpusShard(request, shard, { repositoryRoot: root });
+      assert.equal(changed.kind, "accepted");
+      assert.equal(changed.value.status, "REFUSED", JSON.stringify(changed));
+      assert.equal(changed.value.termination, "COMPILER_CHANGED", JSON.stringify(changed));
+    });
+  }
 });
 
 test("compiler runtime resolver ignores a substituted npm junction and executes admitted package bytes", { skip: process.platform !== "win32" || process.arch !== "x64" }, async () => {
