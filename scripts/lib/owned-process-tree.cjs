@@ -1,6 +1,7 @@
 "use strict";
 
 const { spawn, spawnSync } = require("node:child_process");
+const { constants: bufferConstants } = require("node:buffer");
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -9,6 +10,7 @@ const { types: utilTypes } = require("node:util");
 const DEFAULT_MAX_OUTPUT_BYTES = 64 * 1024 * 1024;
 const DEFAULT_CLEANUP_GRACE_MS = 1_000;
 const WRAPPER_ALLOWANCE_BYTES = 1024 * 1024;
+const JSON_ESCAPE_MAX_BYTES = 6;
 const ASYNC_INPUT_KEYS = new Set([
   "command",
   "args",
@@ -435,8 +437,15 @@ function runOwnedProcessSync(value) {
     maxStderrBytes,
     windowsHide,
   } = normalizeInput(value, true);
-  const wrapperMaxBuffer = maxStdoutBytes + maxStderrBytes + WRAPPER_ALLOWANCE_BYTES;
-  if (!Number.isSafeInteger(wrapperMaxBuffer)) {
+  const wrapperRawBytes = maxStdoutBytes + maxStderrBytes;
+  if (!Number.isSafeInteger(wrapperRawBytes)) {
+    throw inputError("Owned process wrapper output limits exceed the safe buffer range.");
+  }
+  const wrapperMaxBuffer = (wrapperRawBytes * JSON_ESCAPE_MAX_BYTES) + WRAPPER_ALLOWANCE_BYTES;
+  if (
+    !Number.isSafeInteger(wrapperMaxBuffer)
+    || wrapperMaxBuffer > bufferConstants.MAX_LENGTH
+  ) {
     throw inputError("Owned process wrapper output limits exceed the safe buffer range.");
   }
   const request = {

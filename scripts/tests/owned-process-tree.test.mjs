@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { constants as bufferConstants } from "node:buffer";
 import { createRequire } from "node:module";
 import {
   existsSync,
@@ -159,6 +160,21 @@ test("the scalar output limit remains the compatibility default for both streams
   assert.equal(result.outputLimitExceeded, true);
   assert.equal(result.stdoutBytes, 129);
   assert.equal(result.stderrBytes, 0);
+});
+
+test("the scalar output limit also remains the compatibility default for stderr", async () => {
+  const result = await runOwnedProcess({
+    command: process.execPath,
+    args: ["-e", "process.stderr.write('E'.repeat(129));"],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxOutputBytes: 128,
+  });
+
+  assert.equal(result.outputLimitExceeded, true);
+  assert.equal(result.stdoutBytes, 0);
+  assert.equal(result.stderrBytes, 129);
 });
 
 test("timeout terminates the owned parent and grandchild", async () => {
@@ -322,6 +338,42 @@ test("the synchronous wrapper propagates unequal stream ceilings and raw counts"
   assert.equal(result.stderrBytes, 4);
   assert.equal(result.owned.stdoutBytes, 128);
   assert.equal(result.owned.stderrBytes, 4);
+});
+
+test("the synchronous wrapper admits worst-case JSON escapes at the exact byte ceiling", () => {
+  const exactBytes = 300_000;
+  const result = runOwnedProcessSync({
+    command: process.execPath,
+    args: ["-e", `process.stdout.write(Buffer.alloc(${exactBytes}))`],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 5_000,
+    maxOutputBytes: exactBytes,
+  });
+
+  assert.equal(result.error, undefined);
+  assert.notEqual(result.owned, null);
+  assert.equal(result.stdoutBytes, exactBytes);
+  assert.equal(result.stderrBytes, 0);
+  assert.equal(result.stdout.length, exactBytes);
+  assert.equal(result.stdout.charCodeAt(0), 0);
+  assert.equal(result.stdout.charCodeAt(exactBytes - 1), 0);
+});
+
+test("the synchronous wrapper refuses projected evidence beyond the runtime buffer range", () => {
+  const nearProjectedLimit = Math.floor(bufferConstants.MAX_LENGTH / 6);
+  assert.throws(
+    () => runOwnedProcessSync({
+      command: process.execPath,
+      args: ["-e", "process.exit(99)"],
+      cwd: FIXTURES,
+      env: process.env,
+      timeoutMs: 2_000,
+      maxStdoutBytes: nearProjectedLimit,
+      maxStderrBytes: 1,
+    }),
+    (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+  );
 });
 
 test("the owned supervisor preserves an authenticated nested suite lease", () => {
