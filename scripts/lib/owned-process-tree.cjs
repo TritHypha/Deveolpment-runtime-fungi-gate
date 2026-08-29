@@ -4,9 +4,36 @@ const { spawn, spawnSync } = require("node:child_process");
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
+const { types: utilTypes } = require("node:util");
 
 const DEFAULT_MAX_OUTPUT_BYTES = 64 * 1024 * 1024;
 const DEFAULT_CLEANUP_GRACE_MS = 1_000;
+const WRAPPER_ALLOWANCE_BYTES = 1024 * 1024;
+const ASYNC_INPUT_KEYS = new Set([
+  "command",
+  "args",
+  "cwd",
+  "env",
+  "timeoutMs",
+  "cleanupGraceMs",
+  "maxOutputBytes",
+  "maxStdoutBytes",
+  "maxStderrBytes",
+  "windowsHide",
+  "protectedReadTree",
+]);
+const SYNC_INPUT_KEYS = new Set([
+  "command",
+  "args",
+  "cwd",
+  "env",
+  "timeoutMs",
+  "cleanupGraceMs",
+  "maxOutputBytes",
+  "maxStdoutBytes",
+  "maxStderrBytes",
+  "windowsHide",
+]);
 const ROOT = path.join(__dirname, "..", "..");
 const WARDEN_CRATE = path.join(ROOT, "scripts", "native", "process-warden");
 const WARDEN_BINARY = path.join(
@@ -26,30 +53,103 @@ function inputError(message) {
   return error;
 }
 
-function validateInput({
-  command,
-  args,
-  cwd,
-  env,
-  timeoutMs,
-  cleanupGraceMs,
-  maxOutputBytes,
-  protectedReadTree = null,
-}) {
-  if (typeof command !== "string" || command.length === 0
-      || !Array.isArray(args)
-      || args.some((argument) => typeof argument !== "string")
-      || typeof cwd !== "string" || cwd.length === 0
+function exactInputRecord(value, allowedKeys) {
+  try {
+    if (
+      value === null
+      || typeof value !== "object"
+      || Array.isArray(value)
+      || utilTypes.isProxy(value)
+      || Object.getPrototypeOf(value) !== Object.prototype
+    ) return null;
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    const keys = Reflect.ownKeys(descriptors);
+    if (keys.some((key) => typeof key !== "string" || !allowedKeys.has(key))) return null;
+    const result = {};
+    for (const key of keys) {
+      const descriptor = descriptors[key];
+      if (
+        descriptor === undefined
+        || descriptor.enumerable !== true
+        || !Object.hasOwn(descriptor, "value")
+        || descriptor.get !== undefined
+        || descriptor.set !== undefined
+      ) return null;
+      result[key] = descriptor.value;
+    }
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+function exactStringArray(value) {
+  try {
+    if (!Array.isArray(value) || utilTypes.isProxy(value) || Object.getPrototypeOf(value) !== Array.prototype) return null;
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    const length = descriptors.length?.value;
+    if (!Number.isSafeInteger(length) || length < 0 || Reflect.ownKeys(descriptors).length !== length + 1) return null;
+    const result = [];
+    for (let index = 0; index < length; index += 1) {
+      const descriptor = descriptors[String(index)];
+      if (
+        descriptor === undefined
+        || descriptor.enumerable !== true
+        || !Object.hasOwn(descriptor, "value")
+        || typeof descriptor.value !== "string"
+      ) return null;
+      result.push(descriptor.value);
+    }
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+function normalizeInput(value, sync) {
+  const input = exactInputRecord(value, sync ? SYNC_INPUT_KEYS : ASYNC_INPUT_KEYS);
+  if (input === null) throw inputError("Owned process input must be a closed ordinary record.");
+  const args = input.args === undefined ? [] : exactStringArray(input.args);
+  const env = input.env === undefined ? process.env : input.env;
+  const cleanupGraceMs = input.cleanupGraceMs === undefined
+    ? DEFAULT_CLEANUP_GRACE_MS
+    : input.cleanupGraceMs;
+  const maxOutputBytes = input.maxOutputBytes === undefined
+    ? DEFAULT_MAX_OUTPUT_BYTES
+    : input.maxOutputBytes;
+  const maxStdoutBytes = input.maxStdoutBytes === undefined ? maxOutputBytes : input.maxStdoutBytes;
+  const maxStderrBytes = input.maxStderrBytes === undefined ? maxOutputBytes : input.maxStderrBytes;
+  const windowsHide = input.windowsHide === undefined ? true : input.windowsHide;
+  const protectedReadTree = input.protectedReadTree === undefined ? null : input.protectedReadTree;
+  if (typeof input.command !== "string" || input.command.length === 0
+      || args === null
+      || typeof input.cwd !== "string" || input.cwd.length === 0
       || (env !== undefined && (env === null || typeof env !== "object" || Array.isArray(env)))
-      || !Number.isSafeInteger(timeoutMs) || timeoutMs < 1
+      || !Number.isSafeInteger(input.timeoutMs) || input.timeoutMs < 1
       || !Number.isSafeInteger(cleanupGraceMs) || cleanupGraceMs < 1
       || !Number.isSafeInteger(maxOutputBytes) || maxOutputBytes < 1
+      || !Number.isSafeInteger(maxStdoutBytes) || maxStdoutBytes < 1
+      || !Number.isSafeInteger(maxStderrBytes) || maxStderrBytes < 1
+      || typeof windowsHide !== "boolean"
       || (protectedReadTree !== null
         && (typeof protectedReadTree !== "string"
           || !path.isAbsolute(protectedReadTree)
           || protectedReadTree.includes("\0")))) {
     throw inputError("Owned process command, arguments, paths, limits, or environment are invalid.");
   }
+  return {
+    command: input.command,
+    args,
+    cwd: input.cwd,
+    env,
+    timeoutMs: input.timeoutMs,
+    cleanupGraceMs,
+    maxOutputBytes,
+    maxStdoutBytes,
+    maxStderrBytes,
+    windowsHide,
+    protectedReadTree,
+  };
 }
 
 function appendBounded(chunks, chunk, state) {
@@ -131,18 +231,8 @@ function signalPosixGroup(pid, signal) {
   }
 }
 
-async function runOwnedProcess({
-  command,
-  args = [],
-  cwd,
-  env = process.env,
-  timeoutMs,
-  cleanupGraceMs = DEFAULT_CLEANUP_GRACE_MS,
-  maxOutputBytes = DEFAULT_MAX_OUTPUT_BYTES,
-  windowsHide = true,
-  protectedReadTree = null,
-}) {
-  validateInput({
+async function runOwnedProcess(value) {
+  const {
     command,
     args,
     cwd,
@@ -150,14 +240,17 @@ async function runOwnedProcess({
     timeoutMs,
     cleanupGraceMs,
     maxOutputBytes,
+    maxStdoutBytes,
+    maxStderrBytes,
+    windowsHide,
     protectedReadTree,
-  });
+  } = normalizeInput(value, false);
 
   return new Promise((resolve) => {
     const stdoutChunks = [];
     const stderrChunks = [];
-    const stdoutState = { bytes: 0, limit: maxOutputBytes };
-    const stderrState = { bytes: 0, limit: maxOutputBytes };
+    const stdoutState = { bytes: 0, limit: maxStdoutBytes };
+    const stderrState = { bytes: 0, limit: maxStderrBytes };
     let child;
     let timedOut = false;
     let outputLimitExceeded = false;
@@ -206,6 +299,8 @@ async function runOwnedProcess({
         signal: signal || null,
         stdout: Buffer.concat(stdoutChunks).toString("utf8"),
         stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        stdoutBytes: stdoutState.bytes,
+        stderrBytes: stderrState.bytes,
         timedOut,
         outputLimitExceeded,
         cleanupAttempted,
@@ -327,17 +422,8 @@ function ownedError(code, message) {
   return error;
 }
 
-function runOwnedProcessSync({
-  command,
-  args = [],
-  cwd,
-  env = process.env,
-  timeoutMs,
-  cleanupGraceMs = DEFAULT_CLEANUP_GRACE_MS,
-  maxOutputBytes = DEFAULT_MAX_OUTPUT_BYTES,
-  windowsHide = true,
-}) {
-  validateInput({
+function runOwnedProcessSync(value) {
+  const {
     command,
     args,
     cwd,
@@ -345,7 +431,14 @@ function runOwnedProcessSync({
     timeoutMs,
     cleanupGraceMs,
     maxOutputBytes,
-  });
+    maxStdoutBytes,
+    maxStderrBytes,
+    windowsHide,
+  } = normalizeInput(value, true);
+  const wrapperMaxBuffer = maxStdoutBytes + maxStderrBytes + WRAPPER_ALLOWANCE_BYTES;
+  if (!Number.isSafeInteger(wrapperMaxBuffer)) {
+    throw inputError("Owned process wrapper output limits exceed the safe buffer range.");
+  }
   const request = {
     command,
     args,
@@ -353,6 +446,8 @@ function runOwnedProcessSync({
     timeoutMs,
     cleanupGraceMs,
     maxOutputBytes,
+    maxStdoutBytes,
+    maxStderrBytes,
     windowsHide,
   };
   const wrapper = spawnSync(process.execPath, [SYNC_WRAPPER], {
@@ -363,7 +458,7 @@ function runOwnedProcessSync({
     shell: false,
     windowsHide: true,
     timeout: timeoutMs + (cleanupGraceMs * 2) + 10_000,
-    maxBuffer: (maxOutputBytes * 2) + (1024 * 1024),
+    maxBuffer: wrapperMaxBuffer,
   });
   if (wrapper.error) {
     return {
@@ -425,6 +520,8 @@ function runOwnedProcessSync({
     signal: owned.signal,
     stdout: owned.stdout,
     stderr: owned.stderr,
+    stdoutBytes: owned.stdoutBytes,
+    stderrBytes: owned.stderrBytes,
     ...(error ? { error } : {}),
     owned,
   };

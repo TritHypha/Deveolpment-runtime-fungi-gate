@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -57,6 +58,109 @@ test("a normal owned command returns its exact output and exit", async () => {
   assert.equal(result.cleanupAttempted, false);
 });
 
+test("stdout and stderr consume independent exact byte ceilings", async () => {
+  const result = await runOwnedProcess({
+    command: process.execPath,
+    args: [
+      "-e",
+      "process.stdout.write('S'.repeat(128)); process.stderr.write('E'.repeat(128));",
+    ],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxOutputBytes: 16,
+    maxStdoutBytes: 128,
+    maxStderrBytes: 128,
+  });
+
+  assert.equal(result.outputLimitExceeded, false);
+  assert.equal(result.stdout, "S".repeat(128));
+  assert.equal(result.stderr, "E".repeat(128));
+  assert.equal(result.stdoutBytes, 128);
+  assert.equal(result.stderrBytes, 128);
+});
+
+test("one-byte stdout overflow cannot borrow unused stderr capacity", async () => {
+  const result = await runOwnedProcess({
+    command: process.execPath,
+    args: [
+      "-e",
+      [
+        "process.stderr.write('E'.repeat(128), () => {",
+        "  process.stdout.write('S'.repeat(129));",
+        "  setTimeout(() => {}, 1_000);",
+        "});",
+      ].join("\n"),
+    ],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxStdoutBytes: 128,
+    maxStderrBytes: 128,
+  });
+
+  assert.equal(result.outputLimitExceeded, true);
+  assert.equal(result.stdoutBytes, 129);
+  assert.equal(result.stderrBytes, 128);
+});
+
+test("one-byte stderr overflow cannot borrow unused stdout capacity", async () => {
+  const result = await runOwnedProcess({
+    command: process.execPath,
+    args: [
+      "-e",
+      [
+        "process.stdout.write('S'.repeat(128), () => {",
+        "  process.stderr.write('E'.repeat(129));",
+        "  setTimeout(() => {}, 1_000);",
+        "});",
+      ].join("\n"),
+    ],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxStdoutBytes: 128,
+    maxStderrBytes: 128,
+  });
+
+  assert.equal(result.outputLimitExceeded, true);
+  assert.equal(result.stdoutBytes, 128);
+  assert.equal(result.stderrBytes, 129);
+});
+
+test("raw byte evidence is counted before UTF-8 decoding", async () => {
+  const result = await runOwnedProcess({
+    command: process.execPath,
+    args: ["-e", "process.stdout.write('€'); process.stderr.write('🙂');"],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxStdoutBytes: 3,
+    maxStderrBytes: 4,
+  });
+
+  assert.equal(result.outputLimitExceeded, false);
+  assert.equal(result.stdout, "€");
+  assert.equal(result.stderr, "🙂");
+  assert.equal(result.stdoutBytes, 3);
+  assert.equal(result.stderrBytes, 4);
+});
+
+test("the scalar output limit remains the compatibility default for both streams", async () => {
+  const result = await runOwnedProcess({
+    command: process.execPath,
+    args: ["-e", "process.stdout.write('S'.repeat(129));"],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxOutputBytes: 128,
+  });
+
+  assert.equal(result.outputLimitExceeded, true);
+  assert.equal(result.stdoutBytes, 129);
+  assert.equal(result.stderrBytes, 0);
+});
+
 test("timeout terminates the owned parent and grandchild", async () => {
   const result = await runOwnedProcess({
     command: process.execPath,
@@ -89,6 +193,63 @@ test("invalid command and timeout inputs refuse before spawning", async () => {
     }),
     (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
   );
+});
+
+test("invalid or hostile per-stream inputs refuse before spawn without invoking accessors", async () => {
+  const root = mkdtempSync(join(tmpdir(), "galerina-owned-input-"));
+  const sentinel = join(root, "spawned.txt");
+  const base = {
+    command: process.execPath,
+    args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(sentinel)}, 'spawned')`],
+    cwd: root,
+    env: process.env,
+    timeoutMs: 2_000,
+  };
+  try {
+    for (const options of [
+      { ...base, maxStdoutBytes: 0 },
+      { ...base, maxStderrBytes: -1 },
+      { ...base, maxStdoutBytes: Number.MAX_SAFE_INTEGER + 1 },
+      { ...base, maxStdoutByte: 128 },
+      Object.assign(Object.create(null), base, { maxStdoutBytes: 128 }),
+    ]) {
+      await assert.rejects(
+        runOwnedProcess(options),
+        (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+      );
+    }
+
+    let accessorCalls = 0;
+    const accessor = { ...base };
+    Object.defineProperty(accessor, "maxStdoutBytes", {
+      enumerable: true,
+      get() {
+        accessorCalls += 1;
+        return 128;
+      },
+    });
+    await assert.rejects(
+      runOwnedProcess(accessor),
+      (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+    );
+    assert.equal(accessorCalls, 0);
+
+    let proxyTrapCalls = 0;
+    const proxy = new Proxy({ ...base, maxStdoutBytes: 128 }, {
+      getPrototypeOf() {
+        proxyTrapCalls += 1;
+        throw new Error("must not run");
+      },
+    });
+    await assert.rejects(
+      runOwnedProcess(proxy),
+      (error) => error.code === "OWNED-PROCESS-INPUT-INVALID",
+    );
+    assert.equal(proxyTrapCalls, 0);
+    assert.equal(existsSync(sentinel), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("the Windows warden prevents writes inside a protected read tree", {
@@ -140,6 +301,27 @@ test("the synchronous adapter preserves owned output and exit semantics", () => 
   assert.equal(result.stdout, "sync-owned");
   assert.equal(result.stderr, "");
   assert.equal(result.owned.cleanupAttempted, false);
+});
+
+test("the synchronous wrapper propagates unequal stream ceilings and raw counts", () => {
+  const result = runOwnedProcessSync({
+    command: process.execPath,
+    args: ["-e", "process.stdout.write('S'.repeat(128)); process.stderr.write('EEEE');"],
+    cwd: FIXTURES,
+    env: process.env,
+    timeoutMs: 2_000,
+    maxOutputBytes: 8,
+    maxStdoutBytes: 128,
+    maxStderrBytes: 4,
+  });
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.stdout, "S".repeat(128));
+  assert.equal(result.stderr, "EEEE");
+  assert.equal(result.stdoutBytes, 128);
+  assert.equal(result.stderrBytes, 4);
+  assert.equal(result.owned.stdoutBytes, 128);
+  assert.equal(result.owned.stderrBytes, 4);
 });
 
 test("the owned supervisor preserves an authenticated nested suite lease", () => {
