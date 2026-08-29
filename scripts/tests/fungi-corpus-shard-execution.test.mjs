@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import {
   existsSync,
+  linkSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -158,12 +159,15 @@ function git(root, args) {
 }
 
 const CHECKER = String.raw`#!/usr/bin/env node
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 
 const rel = process.argv[3] ?? "";
 const name = basename(rel);
 const clean = "0 errors, 0 governance warnings";
+if (name.includes("resume-launch") || name.includes("resume-timeout-launch")) {
+  appendFileSync(join(process.cwd(), ".resume-launches"), rel + "\n");
+}
 if (process.env.FUNGI_CORPUS_POISON === "present") {
   console.log("FUNGI-POISON-001: caller environment leaked");
   process.exit(1);
@@ -228,7 +232,8 @@ if (name.includes("platform-sentinel")) {
   process.exit(0);
 }
 if (name.includes("abort-wait")) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
-if (name.includes("timeout")) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1_000);
+if (name.includes("resume-timeout")) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5_000);
+else if (name.includes("timeout")) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1_000);
 if (name.includes("stdout-overflow")) {
   process.stdout.write("S".repeat(4_096));
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 500);
@@ -690,9 +695,38 @@ test("runCorpusShard binds source and semantic expectation bytes without cache o
 });
 
 test("legacy checkFile extracts namespaced exit-zero diagnostics", () => {
-  const result = corpusAuditOwner.checkFile("examples/foundations/ai-inference-governed.fungi");
-  assert.equal(result.ok, true);
-  assert.deepEqual(result.codes, ["FUNGI-HINT-COMPUTE-001"]);
+  const relativePath = `build/fungi-corpus-check/test-namespaced-${process.pid}.fungi`;
+  const target = resolve(relativePath);
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, `@version 1
+secure flow namespacedDiagnostic(documentText: String, maxLength: Int) -> Result<String, Error>
+contract {
+  intent "Prove namespaced exit-zero diagnostic extraction"
+  effects { ai.inference, audit.write }
+  invariant {
+    ensure maxLength > 0
+    ensure maxLength <= 4096
+  }
+  ai {
+    approved_models { bitnet_b1_58_2b }
+    governance_tier tier_1
+    max_model_calls 1
+    max_token_cost GBP0.05
+    require runtime_attestation
+  }
+}
+{
+  trap documentText == "" : ERR_EMPTY_DOCUMENT
+  return Ok("bounded-placeholder")
+}
+`);
+  try {
+    const result = corpusAuditOwner.checkFile(relativePath);
+    assert.equal(result.ok, true);
+    assert.deepEqual(result.codes, ["FUNGI-HINT-COMPUTE-001"]);
+  } finally {
+    rmSync(target, { force: true });
+  }
 });
 
 test("namespaced diagnostics preserve exact ownership and refuse malformed suffixes", async (t) => {
@@ -1290,6 +1324,264 @@ test("runCorpusAggregate produces disjoint deterministic receipts for concurrenc
   const completed = sequential.value.receipts.flatMap((receipt) => receipt.completed.map(({ path }) => path));
   assert.deepEqual(completed, Object.keys(files));
   assert.equal(new Set(completed).size, completed.length);
+});
+
+test("resume evidence is closed, bounded, identity-exact and requires a fresh distinct output", async () => {
+  const path = "corpus/a-resume-launch.fungi";
+  const root = fixture({ [path]: "@version 1\npure flow resume() -> Int { return 1 }\n" });
+  const request = requestFor(root, [path]);
+  const run = await runCorpusAggregate(request, DEFAULT_LIMITS, {
+    repositoryRoot: root,
+    concurrency: 1,
+    priorReceipts: [],
+  });
+  assert.equal(run.kind, "accepted");
+  const resumePath = "build/fungi-corpus-check/evidence/resume.json";
+  const outputPath = "build/fungi-corpus-check/evidence/resumed.json";
+  assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+    root, resumePath, request, DEFAULT_LIMITS, run.value,
+  ).kind, "accepted");
+  const envelopePath = join(root, ...resumePath.split("/"));
+  const envelope = JSON.parse(readFileSync(envelopePath, "utf8"));
+  const loaded = corpusAuditOwner.readCorpusResumeEvidence(
+    root, resumePath, outputPath, request, DEFAULT_LIMITS,
+  );
+  assert.deepEqual(loaded, { kind: "accepted", value: { receipts: run.value.receipts } });
+  assert.equal(existsSync(join(root, ...outputPath.split("/"))), false);
+
+  const rebound = (candidate) => {
+    const { digest: ignored, ...base } = candidate;
+    return { ...base, digest: canonicalDigest(base) };
+  };
+  const reboundReceipt = (candidate, changes) => {
+    const { resultDigest: ignored, ...base } = candidate;
+    const changed = { ...base, ...changes };
+    return { ...changed, resultDigest: canonicalDigest(changed) };
+  };
+  const mutations = [
+    ["wrong-schema.json", rebound({ ...envelope, schema: "galerina.fungi-corpus-evidence.v0" })],
+    ["wrong-request.json", rebound({ ...envelope, request: { ...envelope.request, profile: "PROJECT" } })],
+    ["wrong-head.json", rebound({ ...envelope, request: { ...envelope.request, repositoryHead: "f".repeat(40) } })],
+    ["wrong-tree.json", rebound({ ...envelope, request: { ...envelope.request, repositoryTree: "e".repeat(40) } })],
+    ["wrong-compiler.json", rebound({ ...envelope, request: { ...envelope.request, compilerDigest: `sha256:${"d".repeat(64)}` } })],
+    ["wrong-file-set.json", rebound({ ...envelope, request: { ...envelope.request, fileSetDigest: `sha256:${"c".repeat(64)}` } })],
+    ["wrong-limits.json", rebound({ ...envelope, limits: { ...envelope.limits, timeoutMs: envelope.limits.timeoutMs + 1 } })],
+    ["wrong-shard.json", rebound({
+      ...envelope,
+      run: {
+        ...envelope.run,
+        receipts: [reboundReceipt(envelope.run.receipts[0], { shardId: "shard-99-of-99" })],
+      },
+    })],
+    ["stale-receipt.json", rebound({
+      ...envelope,
+      run: {
+        ...envelope.run,
+        receipts: [reboundReceipt(envelope.run.receipts[0], { requestDigest: `sha256:${"a".repeat(64)}` })],
+      },
+    })],
+    ["missing-receipt.json", rebound({ ...envelope, run: { ...envelope.run, receipts: [] } })],
+    ["duplicate-receipt.json", rebound({
+      ...envelope,
+      run: { ...envelope.run, receipts: [envelope.run.receipts[0], envelope.run.receipts[0]] },
+    })],
+    ["wrong-aggregate.json", rebound({
+      ...envelope,
+      run: { ...envelope.run, aggregate: { ...envelope.run.aggregate, status: "FINDING" } },
+    })],
+    ["wrong-digest.json", { ...envelope, digest: `sha256:${"b".repeat(64)}` }],
+  ];
+  for (const [name, candidate] of mutations) {
+    const relativePath = `build/fungi-corpus-check/evidence/${name}`;
+    write(root, relativePath, `${JSON.stringify(candidate)}\n`);
+    assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+      root, relativePath, outputPath, request, DEFAULT_LIMITS,
+    ).kind, "refused", name);
+  }
+
+  write(root, "build/fungi-corpus-check/evidence/malformed.json", "{\n");
+  write(root, "build/fungi-corpus-check/evidence/invalid-utf8.json", Buffer.from([0xff]));
+  write(root, "build/fungi-corpus-check/evidence/oversize.json", Buffer.alloc((8 * 1024 * 1024) + 1, 0x20));
+  for (const relativePath of [
+    "build/fungi-corpus-check/evidence/malformed.json",
+    "build/fungi-corpus-check/evidence/invalid-utf8.json",
+    "build/fungi-corpus-check/evidence/oversize.json",
+  ]) {
+    assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+      root, relativePath, outputPath, request, DEFAULT_LIMITS,
+    ).kind, "refused", relativePath);
+  }
+
+  const linkedPath = "build/fungi-corpus-check/evidence/linked.json";
+  symlinkSync(envelopePath, join(root, ...linkedPath.split("/")), "file");
+  const hardlinkedPath = "build/fungi-corpus-check/evidence/hardlinked.json";
+  linkSync(envelopePath, join(root, ...hardlinkedPath.split("/")));
+  for (const hostilePath of [
+    resolve(root, ...resumePath.split("/")),
+    "build/fungi-corpus-check/evidence/../resume.json",
+    String.raw`build\fungi-corpus-check\evidence\resume.json`,
+    "build/FUNGI-corpus-check/evidence/resume.json",
+    "build/fungi-corpus-check/evidence/absent.json",
+    linkedPath,
+    hardlinkedPath,
+  ]) {
+    assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+      root, hostilePath, outputPath, request, DEFAULT_LIMITS,
+    ).kind, "refused", hostilePath);
+  }
+  assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+    root, resumePath, resumePath, request, DEFAULT_LIMITS,
+  ).kind, "refused");
+  assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+    root, resumePath, null, request, DEFAULT_LIMITS,
+  ).kind, "refused");
+  write(root, outputPath, "{}\n");
+  assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+    root, resumePath, outputPath, request, DEFAULT_LIMITS,
+  ).kind, "refused");
+
+  const junctionRoot = fixture({ [path]: "@version 1\npure flow junctionResume() -> Int { return 1 }\n" });
+  const junctionRequest = requestFor(junctionRoot, [path]);
+  const outside = realpathSync(mkdtempSync(join(tmpdir(), "galerina-corpus-resume-outside-")));
+  roots.push(outside);
+  mkdirSync(join(outside, "evidence"), { recursive: true });
+  mkdirSync(join(junctionRoot, "build"), { recursive: true });
+  symlinkSync(outside, join(junctionRoot, "build", "fungi-corpus-check"), "junction");
+  assert.equal(corpusAuditOwner.readCorpusResumeEvidence(
+    junctionRoot,
+    resumePath,
+    outputPath,
+    junctionRequest,
+    DEFAULT_LIMITS,
+  ).kind, "refused");
+  assert.deepEqual(
+    readFileSync(join(root, ".resume-launches"), "utf8").trim().split(/\r?\n/u),
+    [path],
+  );
+});
+
+test("resume reuses an exact COMPLETE shard and restarts only an unfinished shard from its first file", async (t) => {
+  const files = Object.fromEntries(["a-finding", "b", "c", "z-resume-timeout"].map((name) => [
+    `corpus/${name}${name.includes("resume") ? "-launch" : "-resume-launch"}.fungi`,
+    `@version 1\npure flow ${name.replace(/-/gu, "_")}() -> Int { return 1 }\n`,
+  ]));
+  const root = fixture(files);
+  const request = requestFor(root, Object.keys(files), 2);
+  const limits = { ...DEFAULT_LIMITS, timeoutMs: 2_000 };
+  const first = await runCorpusAggregate(request, limits, {
+    repositoryRoot: root,
+    concurrency: 1,
+    priorReceipts: [],
+  });
+  assert.equal(first.kind, "accepted");
+  assert.equal(first.value.receipts[0].termination, "COMPLETE");
+  assert.equal(first.value.receipts[0].status, "FINDING");
+  assert.equal(first.value.receipts[1].termination, "TIMEOUT");
+  const completedDigest = first.value.receipts[0].resultDigest;
+  const resumePath = "build/fungi-corpus-check/evidence/partial.json";
+  const outputPath = "build/fungi-corpus-check/evidence/continued.json";
+  assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+    root, resumePath, request, limits, first.value,
+  ).kind, "accepted");
+  const envelopePath = join(root, ...resumePath.split("/"));
+  const envelopeBytes = readFileSync(envelopePath);
+  const envelope = JSON.parse(envelopeBytes.toString("utf8"));
+  const reverseKeys = (record) => Object.fromEntries(Object.entries(record).reverse());
+  const rebindEnvelope = (candidate) => {
+    const { digest: ignored, ...base } = candidate;
+    return { ...base, digest: canonicalDigest(base) };
+  };
+  const receiptWith = (index, receipt) => envelope.run.receipts.map((candidate, candidateIndex) => (
+    candidateIndex === index ? receipt : candidate
+  ));
+  const completeReceipt = envelope.run.receipts[0];
+  const timeoutReceipt = envelope.run.receipts[1];
+  const reordered = [
+    ["aggregate", rebindEnvelope({
+      ...envelope,
+      run: { ...envelope.run, aggregate: reverseKeys(envelope.run.aggregate) },
+    })],
+    ["receipt", rebindEnvelope({
+      ...envelope,
+      run: { ...envelope.run, receipts: receiptWith(0, reverseKeys(completeReceipt)) },
+    })],
+    ["completed", rebindEnvelope({
+      ...envelope,
+      run: {
+        ...envelope.run,
+        receipts: receiptWith(0, {
+          ...completeReceipt,
+          completed: [reverseKeys(completeReceipt.completed[0]), ...completeReceipt.completed.slice(1)],
+        }),
+      },
+    })],
+    ["unprocessed", rebindEnvelope({
+      ...envelope,
+      run: {
+        ...envelope.run,
+        receipts: receiptWith(1, {
+          ...timeoutReceipt,
+          unprocessed: [reverseKeys(timeoutReceipt.unprocessed[0]), ...timeoutReceipt.unprocessed.slice(1)],
+        }),
+      },
+    })],
+  ];
+  const launchesBeforeReordered = readFileSync(join(root, ".resume-launches"), "utf8");
+  for (const [name, candidate] of reordered) {
+    await t.test(`reordered nested ${name} refuses`, () => {
+      const reorderedPath = `build/fungi-corpus-check/evidence/reordered-${name}.json`;
+      write(root, reorderedPath, `${JSON.stringify(candidate)}\n`);
+      const result = corpusAuditOwner.readCorpusResumeEvidence(
+        root, reorderedPath, outputPath, request, limits,
+      );
+      assert.equal(readFileSync(join(root, ".resume-launches"), "utf8"), launchesBeforeReordered);
+      assert.equal(existsSync(join(root, ...outputPath.split("/"))), false);
+      assert.equal(result.kind, "refused");
+    });
+  }
+  await t.test("writer canonicalizes nested receipt records", () => {
+    const writerPath = "build/fungi-corpus-check/evidence/writer-canonical.json";
+    const writerRun = {
+      ...first.value,
+      aggregate: reverseKeys(first.value.aggregate),
+      receipts: [
+        reverseKeys(first.value.receipts[0]),
+        {
+          ...first.value.receipts[1],
+          completed: first.value.receipts[1].completed.map(reverseKeys),
+          unprocessed: first.value.receipts[1].unprocessed.map(reverseKeys),
+        },
+      ],
+    };
+    assert.equal(corpusAuditOwner.writeCorpusEvidenceEnvelope(
+      root, writerPath, request, limits, writerRun,
+    ).kind, "accepted");
+    assert.deepEqual(readFileSync(join(root, ...writerPath.split("/"))), envelopeBytes);
+  });
+  const loaded = corpusAuditOwner.readCorpusResumeEvidence(
+    root, resumePath, outputPath, request, limits,
+  );
+  assert.equal(loaded.kind, "accepted");
+
+  const resumed = await runCorpusAggregate(request, limits, {
+    repositoryRoot: root,
+    concurrency: 1,
+    priorReceipts: loaded.value.receipts,
+  });
+  assert.equal(resumed.kind, "accepted");
+  assert.equal(resumed.value.receipts[0].resultDigest, completedDigest);
+  assert.equal(resumed.value.receipts[1].termination, "TIMEOUT");
+  const launches = readFileSync(join(root, ".resume-launches"), "utf8").trim().split(/\r?\n/u);
+  const counts = Object.fromEntries(Object.keys(files).map((file) => [
+    file,
+    launches.filter((entry) => entry === file).length,
+  ]));
+  assert.deepEqual(counts, {
+    "corpus/a-finding-resume-launch.fungi": 1,
+    "corpus/b-resume-launch.fungi": 1,
+    "corpus/c-resume-launch.fungi": 2,
+    "corpus/z-resume-timeout-launch.fungi": 2,
+  });
 });
 
 test("resume rejects a same-size same-mtime source mutation instead of trusting prior content evidence", async () => {

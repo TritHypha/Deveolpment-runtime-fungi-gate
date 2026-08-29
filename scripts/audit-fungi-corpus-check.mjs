@@ -1494,7 +1494,7 @@ function evidenceOutputPath(value) {
     && value.split("/").every((segment) => segment.length > 0 && segment !== "." && segment !== "..");
 }
 
-function exactEvidenceDirectory(root) {
+function exactEvidenceDirectory(root, create = true) {
   try {
     const canonicalRoot = realpathSync(root);
     if (canonicalRoot !== resolve(root)) return null;
@@ -1504,7 +1504,10 @@ function exactEvidenceDirectory(root) {
       const matches = entries.filter((entry) => entry.name.toLowerCase() === segment.toLowerCase());
       if (matches.length > 1 || (matches.length === 1 && matches[0].name !== segment)) return null;
       const next = join(current, segment);
-      if (matches.length === 0) mkdirSync(next);
+      if (matches.length === 0) {
+        if (!create) return null;
+        mkdirSync(next);
+      }
       const state = lstatSync(next);
       if (state.isSymbolicLink() || !state.isDirectory() || realpathSync(next) !== next) return null;
       current = next;
@@ -1515,39 +1518,160 @@ function exactEvidenceDirectory(root) {
   }
 }
 
+function exactEvidenceEntry(directory, name, mustExist) {
+  try {
+    const entries = readdirSync(directory, { withFileTypes: true });
+    const matches = entries.filter((entry) => asciiCaseKey(entry.name) === asciiCaseKey(name));
+    if (mustExist) {
+      if (matches.length !== 1 || matches[0].name !== name) return null;
+      const target = join(directory, name);
+      const state = lstatSync(target, { bigint: true });
+      if (state.isSymbolicLink() || !state.isFile() || state.nlink !== 1n || realpathSync(target) !== target) return null;
+      return target;
+    }
+    return matches.length === 0 ? join(directory, name) : null;
+  } catch {
+    return null;
+  }
+}
+
+function canonicalCorpusEvidenceRun(request, limits, runValue) {
+  const run = exactCorpusRecord(runValue, CORPUS_EVIDENCE_RUN_KEYS);
+  if (run === null || run.schema !== "galerina.fungi-corpus-run.v2") return null;
+  const shards = deriveCorpusShards(request, limits);
+  const candidates = exactCorpusArray(run.receipts);
+  if (shards.kind !== "accepted" || candidates === null || candidates.length !== shards.value.length) return null;
+  const receipts = [];
+  for (let index = 0; index < candidates.length; index += 1) {
+    const receipt = validateShardReceipt(candidates[index], shards.value[index]);
+    if (receipt.kind !== "accepted") return null;
+    receipts.push(receipt.value);
+  }
+  const aggregate = aggregateCorpusReceipts(request, shards.value, receipts);
+  if (aggregate.kind !== "accepted" || !closedCorpusEquivalent(run.aggregate, aggregate.value)) return null;
+  return {
+    shards: shards.value,
+    run: {
+      aggregate: aggregate.value,
+      receipts,
+      schema: run.schema,
+    },
+  };
+}
+
+export function readCorpusResumeEvidence(rootValue, resumePath, outputPath, requestValue, limitValue) {
+  let held = null;
+  try {
+    if (
+      !evidenceOutputPath(resumePath)
+      || !evidenceOutputPath(outputPath)
+      || asciiCaseKey(resumePath) === asciiCaseKey(outputPath)
+    ) return corpusRefused("CORPUS_RESUME_PATH_REFUSED");
+    const root = canonicalRepositoryRoot(rootValue);
+    const requestResult = validateCorpusRequest(requestValue);
+    const limits = exactCorpusRecord(limitValue, CORPUS_EVIDENCE_LIMIT_KEYS);
+    if (
+      root === null
+      || requestResult.kind !== "accepted"
+      || limits === null
+      || Object.values(limits).some((entry) => !Number.isSafeInteger(entry) || entry < 1)
+      || !requestFileSetMatches(requestResult.value)
+    ) return corpusRefused("CORPUS_RESUME_VALUE_REFUSED");
+    const request = requestResult.value;
+    const initialRepository = repositoryIdentity(root);
+    const initialCompiler = corpusCompilerIdentity(root);
+    if (
+      !sameRepositoryIdentity(initialRepository, request)
+      || !initialCompiler.ok
+      || initialCompiler.digest !== request.compilerDigest
+    ) return corpusRefused("CORPUS_RESUME_IDENTITY_REFUSED");
+
+    const directory = exactEvidenceDirectory(root, false);
+    if (directory === null) return corpusRefused("CORPUS_RESUME_DIRECTORY_REFUSED");
+    const resumeName = resumePath.slice(CORPUS_EVIDENCE_PREFIX.length);
+    const outputName = outputPath.slice(CORPUS_EVIDENCE_PREFIX.length);
+    const target = exactEvidenceEntry(directory, resumeName, true);
+    if (target === null || exactEvidenceEntry(directory, outputName, false) === null) {
+      return corpusRefused("CORPUS_RESUME_TARGET_REFUSED");
+    }
+    held = readHeldFile(target, CORPUS_EVIDENCE_MAX_BYTES);
+    if (!held.ok || held.overflow || held.stat.nlink !== 1n) {
+      return corpusRefused(held?.overflow ? "CORPUS_RESUME_SIZE_REFUSED" : "CORPUS_RESUME_READ_REFUSED");
+    }
+    if (held.bytes.length >= 3 && held.bytes[0] === 0xef && held.bytes[1] === 0xbb && held.bytes[2] === 0xbf) {
+      return corpusRefused("CORPUS_RESUME_ENCODING_REFUSED");
+    }
+    let envelope;
+    try {
+      const text = new TextDecoder("utf-8", { fatal: true }).decode(held.bytes);
+      envelope = JSON.parse(text);
+    } catch {
+      return corpusRefused("CORPUS_RESUME_PARSE_REFUSED");
+    }
+    const record = exactCorpusRecord(envelope, CORPUS_EVIDENCE_KEYS);
+    if (record === null || record.schema !== "galerina.fungi-corpus-evidence.v1" || !CORPUS_DIGEST.test(record.digest)) {
+      return corpusRefused("CORPUS_RESUME_ENVELOPE_REFUSED");
+    }
+    const embeddedRequest = validateCorpusRequest(record.request);
+    const embeddedLimits = exactCorpusRecord(record.limits, CORPUS_EVIDENCE_LIMIT_KEYS);
+    if (
+      embeddedRequest.kind !== "accepted"
+      || embeddedLimits === null
+      || !closedCorpusEquivalent(embeddedRequest.value, request)
+      || !closedCorpusEquivalent(embeddedLimits, limits)
+    ) return corpusRefused("CORPUS_RESUME_BINDING_REFUSED");
+    const canonical = canonicalCorpusEvidenceRun(request, limits, record.run);
+    if (canonical === null) return corpusRefused("CORPUS_RESUME_RUN_REFUSED");
+    const base = {
+      schema: record.schema,
+      request: embeddedRequest.value,
+      limits: embeddedLimits,
+      run: canonical.run,
+    };
+    if (
+      record.digest !== corpusDigest(base)
+      || !held.bytes.equals(Buffer.from(`${JSON.stringify({ ...base, digest: record.digest })}\n`, "utf8"))
+    ) return corpusRefused("CORPUS_RESUME_DIGEST_REFUSED");
+    if (
+      canonical.shards.some((shard) => !localShardMatches(root, request, shard))
+    ) return corpusRefused("CORPUS_RESUME_AGGREGATE_REFUSED");
+    const finalRepository = repositoryIdentity(root);
+    const finalCompiler = corpusCompilerIdentity(root);
+    if (
+      !sameRepositoryIdentity(finalRepository, request)
+      || !finalCompiler.ok
+      || finalCompiler.digest !== request.compilerDigest
+      || exactEvidenceEntry(directory, outputName, false) === null
+      || !verifyHeldFile(held, rawDigest(held.bytes))
+    ) return corpusRefused("CORPUS_RESUME_NOT_CURRENT");
+    return corpusAccepted({ receipts: canonical.run.receipts });
+  } catch {
+    return corpusRefused("CORPUS_RESUME_EVIDENCE_REFUSED");
+  } finally {
+    if (held !== null) closeHeldFile(held);
+  }
+}
+
 export function writeCorpusEvidenceEnvelope(root, outputPath, requestValue, limitValue, runValue) {
   let temporary = null;
   try {
     if (!evidenceOutputPath(outputPath)) return corpusRefused("CORPUS_EVIDENCE_PATH_REFUSED");
     const requestResult = validateCorpusRequest(requestValue);
     const limits = exactCorpusRecord(limitValue, CORPUS_EVIDENCE_LIMIT_KEYS);
-    const run = exactCorpusRecord(runValue, CORPUS_EVIDENCE_RUN_KEYS);
     if (requestResult.kind !== "accepted"
         || limits === null
-        || Object.values(limits).some((entry) => !Number.isSafeInteger(entry) || entry < 1)
-        || run === null
-        || run.schema !== "galerina.fungi-corpus-run.v2") {
+        || Object.values(limits).some((entry) => !Number.isSafeInteger(entry) || entry < 1)) {
       return corpusRefused("CORPUS_EVIDENCE_VALUE_REFUSED");
     }
-    const shards = deriveCorpusShards(requestResult.value, limits);
-    const receipts = exactCorpusArray(run.receipts);
-    if (shards.kind !== "accepted" || receipts === null || receipts.length !== shards.value.length) {
+    const canonical = canonicalCorpusEvidenceRun(requestResult.value, limits, runValue);
+    if (canonical === null) {
       return corpusRefused("CORPUS_EVIDENCE_COVERAGE_REFUSED");
-    }
-    for (let index = 0; index < receipts.length; index += 1) {
-      if (validateShardReceipt(receipts[index], shards.value[index]).kind !== "accepted") {
-        return corpusRefused("CORPUS_EVIDENCE_RECEIPT_REFUSED");
-      }
-    }
-    const aggregate = aggregateCorpusReceipts(requestResult.value, shards.value, receipts);
-    if (aggregate.kind !== "accepted" || JSON.stringify(aggregate.value) !== JSON.stringify(run.aggregate)) {
-      return corpusRefused("CORPUS_EVIDENCE_AGGREGATE_REFUSED");
     }
     const base = {
       schema: "galerina.fungi-corpus-evidence.v1",
       request: requestResult.value,
       limits,
-      run,
+      run: canonical.run,
     };
     const envelope = { ...base, digest: corpusDigest(base) };
     if (!exactCorpusRecord(envelope, CORPUS_EVIDENCE_KEYS)) return corpusRefused("CORPUS_EVIDENCE_SHAPE_REFUSED");
@@ -1584,7 +1708,7 @@ export function writeCorpusEvidenceEnvelope(root, outputPath, requestValue, limi
 function parseCorpusV2Cli(args) {
   if (args[0] !== "--corpus-v2" || args.length < 15 || args.length % 2 === 0) return null;
   const allowed = new Set([
-    "--profile", "--file", "--shard-count", "--concurrency", "--max-files", "--max-bytes", "--timeout-ms", "--max-output-bytes", "--evidence-output",
+    "--profile", "--file", "--shard-count", "--concurrency", "--max-files", "--max-bytes", "--timeout-ms", "--max-output-bytes", "--evidence-output", "--resume-evidence",
   ]);
   const values = new Map();
   const files = [];
@@ -1632,7 +1756,16 @@ function parseCorpusV2Cli(args) {
   ) return null;
   const evidenceOutput = values.get("--evidence-output") ?? null;
   if (evidenceOutput !== null && !evidenceOutputPath(evidenceOutput)) return null;
-  return { profile, files: files.length === 0 ? null : files, shardCount, concurrency, limits, evidenceOutput };
+  const resumeEvidence = values.get("--resume-evidence") ?? null;
+  if (
+    resumeEvidence !== null
+    && (
+      !evidenceOutputPath(resumeEvidence)
+      || evidenceOutput === null
+      || asciiCaseKey(resumeEvidence) === asciiCaseKey(evidenceOutput)
+    )
+  ) return null;
+  return { profile, files: files.length === 0 ? null : files, shardCount, concurrency, limits, evidenceOutput, resumeEvidence };
 }
 
 async function runCorpusV2Cli(args) {
@@ -1648,10 +1781,25 @@ async function runCorpusV2Cli(args) {
     console.error("CORPUS_V2_LOCAL_IDENTITY_REFUSED");
     return 2;
   }
+  let priorReceipts = [];
+  if (parsed.resumeEvidence !== null) {
+    const loaded = readCorpusResumeEvidence(
+      root,
+      parsed.resumeEvidence,
+      parsed.evidenceOutput,
+      request,
+      parsed.limits,
+    );
+    if (loaded.kind !== "accepted") {
+      console.error(loaded.code);
+      return 2;
+    }
+    priorReceipts = loaded.value.receipts;
+  }
   const result = await runCorpusAggregate(request, parsed.limits, {
     repositoryRoot: root,
     concurrency: parsed.concurrency,
-    priorReceipts: [],
+    priorReceipts,
   });
   if (result.kind !== "accepted") {
     console.error(result.code);

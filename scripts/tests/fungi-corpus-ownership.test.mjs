@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
 
 const AUDIT = resolve("scripts/audit-fungi-corpus-check.mjs");
@@ -133,4 +133,67 @@ test("the WORKSET file selector is closed, ordered, unique, tracked and profile-
     assert.match(result.stderr, /CORPUS_V2_ARGUMENTS_REFUSED/u);
     assert.doesNotMatch(result.stdout, /^FUNGI_CORPUS_V2 /mu);
   });
+});
+
+test("the resume selector is unique, exact-case, confined and paired with a fresh distinct output", { timeout: 120_000 }, async (t) => {
+  const resumePath = "build/fungi-corpus-check/evidence/prior.json";
+  const outputPath = "build/fungi-corpus-check/evidence/next.json";
+  const base = corpusV2Args("WORKSET", WORKSET_FILES);
+  const cases = [
+    ["missing output", [...base, "--resume-evidence", resumePath]],
+    ["same output", [...base, "--resume-evidence", resumePath, "--evidence-output", resumePath]],
+    ["duplicate", [...base, "--resume-evidence", resumePath, "--resume-evidence", resumePath, "--evidence-output", outputPath]],
+    ["case-shadowed flag", [...base, "--Resume-Evidence", resumePath, "--evidence-output", outputPath]],
+    ["absolute", [...base, "--resume-evidence", resolve(resumePath), "--evidence-output", outputPath]],
+    ["traversal", [...base, "--resume-evidence", "build/fungi-corpus-check/evidence/../prior.json", "--evidence-output", outputPath]],
+    ["backslash", [...base, "--resume-evidence", String.raw`build\fungi-corpus-check\evidence\prior.json`, "--evidence-output", outputPath]],
+    ["case alias", [...base, "--resume-evidence", "build/FUNGI-corpus-check/evidence/prior.json", "--evidence-output", outputPath]],
+  ];
+  for (const [name, args] of cases) {
+    await t.test(name, () => {
+      const result = runCorpusV2(args);
+      assert.equal(result.status, 2, result.stderr || result.stdout);
+      assert.match(result.stderr, /CORPUS_V2_ARGUMENTS_REFUSED/u);
+      assert.doesNotMatch(result.stdout, /^FUNGI_CORPUS_V2 /mu);
+    });
+  }
+  await t.test("absent exact evidence", () => {
+    const result = runCorpusV2([
+      ...base,
+      "--resume-evidence",
+      resumePath,
+      "--evidence-output",
+      outputPath,
+    ]);
+    assert.equal(result.status, 2, result.stderr || result.stdout);
+    assert.match(result.stderr, /CORPUS_RESUME_TARGET_REFUSED/u);
+    assert.doesNotMatch(result.stdout, /^FUNGI_CORPUS_V2 /mu);
+    assert.equal(existsSync(resolve(outputPath)), false);
+  });
+});
+
+test("the production CLI resumes one exact evidence envelope into a fresh receipt", { timeout: 180_000 }, () => {
+  const token = String(process.pid);
+  const firstPath = `build/fungi-corpus-check/evidence/resume-cli-${token}-first.json`;
+  const secondPath = `build/fungi-corpus-check/evidence/resume-cli-${token}-second.json`;
+  const absolutePaths = [resolve(firstPath), resolve(secondPath)];
+  for (const path of absolutePaths) if (existsSync(path)) unlinkSync(path);
+  try {
+    const first = runCorpusV2([...corpusV2Args("WORKSET", WORKSET_FILES), "--evidence-output", firstPath]);
+    assert.equal(first.status, 0, first.stderr || first.stdout);
+    const resumed = runCorpusV2([
+      ...corpusV2Args("WORKSET", WORKSET_FILES),
+      "--resume-evidence",
+      firstPath,
+      "--evidence-output",
+      secondPath,
+    ]);
+    assert.equal(resumed.status, 0, resumed.stderr || resumed.stdout);
+    const firstRun = JSON.parse(first.stdout.trim().slice("FUNGI_CORPUS_V2 ".length));
+    const resumedRun = JSON.parse(resumed.stdout.trim().slice("FUNGI_CORPUS_V2 ".length));
+    assert.deepEqual(resumedRun.receipts, firstRun.receipts);
+    assert.equal(existsSync(resolve(secondPath)), true);
+  } finally {
+    for (const path of absolutePaths) if (existsSync(path)) unlinkSync(path);
+  }
 });
