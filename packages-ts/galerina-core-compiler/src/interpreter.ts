@@ -27,6 +27,7 @@ import { foldRequirementValues } from "./requirement-semantics.js";
 import { compareUtf16CodeUnits } from "@galerina/core-runtime-wasm";
 import { isProxy as isNodeProxy } from "node:util/types";
 import { runInNewContext } from "node:vm";
+import { decodeFlowDecl, decodeFlowPosture } from "./flow-name.js";
 
 export type GalerinaValue =
   | { readonly __tag: "int";       readonly value: number }
@@ -1349,7 +1350,7 @@ class Interpreter {
     // R4C: track current flow name for governed-value access checks
     this.currentFlowName = flowName;
     const flowNode = this.flowIndex.get(flowName);
-    const qualifier = flowNode === undefined ? "flow" : qualifierFromFlowKind(flowNode.kind);
+    const qualifier = flowNode === undefined ? "flow" : qualifierFromFlowNode(flowNode);
     // Step 3g: the flow's declared return base (the typeRef after the params), so a bare
     // `return <Int64 literal>` evaluates via the i64 type-directed path instead of the lossy parseInt path.
     {
@@ -1466,7 +1467,12 @@ class Interpreter {
       const plan = this.executionPlans.get(flowName);
       // The execution-plan fast path returns before governed-only control is
       // enforced. Skip it for invariants, admissions, and named traps.
-      if (plan !== undefined && plan.qualifier === "pure" && !flowRequiresGovernedPath(this.ast, flowName)) {
+      if (
+        plan !== undefined
+        && qualifier === "pure"
+        && plan.qualifier === "pure"
+        && !flowRequiresGovernedPath(this.ast, flowName)
+      ) {
         const ctx = this.getContext(flowName);
         try {
           const planResult = await executePlan(plan, this.capabilityHost, ctx);
@@ -3309,17 +3315,62 @@ class Interpreter {
   }
 }
 
+/**
+ * Runtime-only flow resolution. Ordinary declarations retain precedence; the
+ * governed fallback admits only a structurally valid, flagged secure posture.
+ * Legacy governed declarations and malformed/unsupported posture never become
+ * executable authority.
+ */
+export function resolveRuntimeFlowNode(ast: AstNode, name: string): AstNode | undefined {
+  function findOrdinary(node: AstNode): AstNode | undefined {
+    if (FLOW_KINDS.has(node.kind) && node.value === name) return node;
+    for (const child of node.children ?? []) {
+      const found = findOrdinary(child);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  }
+
+  const ordinary = findOrdinary(ast);
+  if (ordinary !== undefined) return ordinary;
+
+  function findGovernedSecure(node: AstNode): AstNode | undefined {
+    if (node.kind === "governedFlowDecl" && decodeFlowPosture(node) === "secure") {
+      const decoded = decodeFlowDecl(node);
+      if (decoded !== undefined && !("error" in decoded) && decoded.name === name) return node;
+    }
+    for (const child of node.children ?? []) {
+      const found = findGovernedSecure(child);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  }
+
+  return findGovernedSecure(ast);
+}
+
 function buildFlowIndex(ast: AstNode): ReadonlyMap<string, AstNode> {
   const index = new Map<string, AstNode>();
 
-  function walk(node: AstNode): void {
+  function indexOrdinary(node: AstNode): void {
     if (FLOW_KINDS.has(node.kind) && node.value !== undefined) {
       index.set(node.value, node);
     }
-    for (const child of node.children ?? []) walk(child);
+    for (const child of node.children ?? []) indexOrdinary(child);
   }
 
-  walk(ast);
+  function indexGovernedSecure(node: AstNode): void {
+    if (node.kind === "governedFlowDecl" && decodeFlowPosture(node) === "secure") {
+      const decoded = decodeFlowDecl(node);
+      if (decoded !== undefined && !("error" in decoded) && !index.has(decoded.name)) {
+        index.set(decoded.name, node);
+      }
+    }
+    for (const child of node.children ?? []) indexGovernedSecure(child);
+  }
+
+  indexOrdinary(ast);
+  indexGovernedSecure(ast);
   return index;
 }
 
@@ -3500,10 +3551,11 @@ function secureComparable(value: GalerinaValue): string {
   return "";
 }
 
-function qualifierFromFlowKind(kind: AstNode["kind"]): "flow" | "pure" | "guarded" | "secure" {
-  if (kind === "pureFlowDecl") return "pure";
-  if (kind === "guardedFlowDecl") return "guarded";
-  if (kind === "secureFlowDecl") return "secure";
+function qualifierFromFlowNode(node: AstNode): "flow" | "pure" | "guarded" | "secure" {
+  const posture = decodeFlowPosture(node);
+  if (posture === "flow" || posture === "pure" || posture === "guarded" || posture === "secure") {
+    return posture;
+  }
   return "flow";
 }
 
@@ -4169,7 +4221,7 @@ export async function executeFlow(
       const egKey = executionGraphCacheKey(productContext, flowName, sourceHash);
       let egraph  = getOrLoadGraph(egKey);
       if (egraph === null) {
-        const qualifier      = qualifierFromFlowKind(flowNode.kind);
+        const qualifier      = qualifierFromFlowNode(flowNode);
         const isPure         = flowNode.kind === "pureFlowDecl";
         const declaredEffects: readonly string[] = [];
         egraph = buildExecutionGraph(flowNode, flowName, qualifier, declaredEffects, isPure);

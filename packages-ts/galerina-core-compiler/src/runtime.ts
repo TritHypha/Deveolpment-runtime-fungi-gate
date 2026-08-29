@@ -19,7 +19,12 @@ import {
 } from "./product-policy.js";
 import { emitGIR, buildSemanticGraph, buildAiGraph, buildExecutionPlan } from "./gir-emitter.js";
 import type { SemanticGraph, GalerinaAiGraph, PassiveExecutionPlan } from "./gir-emitter.js";
-import { executeFlow, type FlowExecutionResult, type GalerinaValue } from "./interpreter.js";
+import {
+  executeFlow,
+  resolveRuntimeFlowNode,
+  type FlowExecutionResult,
+  type GalerinaValue,
+} from "./interpreter.js";
 import { buildFlowAuditEvent, createAuditWriter } from "./audit-writer.js";
 import { buildProofChain, type ExecutionProofChain } from "./proof-chain.js";
 import { startServer, type RunningServer, type ServerConfig } from "./route-dispatcher.js";
@@ -248,20 +253,10 @@ export async function run(
   // Pass 10: Set up contract enforcement, then execute
   //
   // Find the contractDecl node attached to the target flow (if any).
-  // The flow node lives inside the AST; contractDecl is a direct child of the
-  // flowDecl / secureFlowDecl / pureFlowDecl / guardedFlowDecl node.
-  const FLOW_KINDS_RT = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
-  let targetFlowNode: import("./parser.js").AstNode | undefined;
-  function findFlowNode(node: import("./parser.js").AstNode): void {
-    if (FLOW_KINDS_RT.has(node.kind) && node.value === flowName) {
-      targetFlowNode = node;
-      return;
-    }
-    for (const child of node.children ?? []) {
-      if (targetFlowNode === undefined) findFlowNode(child);
-    }
-  }
-  findFlowNode(parseResult.ast);
+  // The flow node lives inside the AST; contractDecl is a direct child of its
+  // admitted declaration. The shared runtime resolver includes only valid
+  // flagged governed-secure declarations beyond the ordinary flow kinds.
+  const targetFlowNode = resolveRuntimeFlowNode(parseResult.ast, flowName);
 
   const contractNode = (targetFlowNode?.children ?? []).find((c) => c.kind === "contractDecl");
 
