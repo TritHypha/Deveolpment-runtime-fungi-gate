@@ -119,6 +119,10 @@ describe("manifest-generator: compiler-version provenance", () => {
       const dist = join(root, "dist");
       mkdirSync(dist, { recursive: true });
       cpSync(join(import.meta.dirname, "..", "dist", "manifest-generator.js"), join(dist, "manifest-generator.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "flow-name.js"), join(dist, "flow-name.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "parser.js"), join(dist, "parser.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "lexer.js"), join(dist, "lexer.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "requirement-diagnostics.js"), join(dist, "requirement-diagnostics.js"));
       cpSync(join(import.meta.dirname, "..", "dist", "capability-types.js"), join(dist, "capability-types.js"));
       cpSync(join(import.meta.dirname, "..", "dist", "product-artifact-identity.js"), join(dist, "product-artifact-identity.js"));
       cpSync(join(import.meta.dirname, "..", "dist", "product-cli.js"), join(dist, "product-cli.js"));

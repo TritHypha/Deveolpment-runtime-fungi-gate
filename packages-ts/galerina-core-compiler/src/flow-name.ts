@@ -33,6 +33,13 @@ export interface DecodedFlow {
 /** Canonical execution posture shared by flow-declaration consumers. */
 export type FlowPosture = "flow" | "secure" | "pure" | "guarded";
 
+const GOVERNED_SECURE_FLOORS: ReadonlySet<string> = new Set([
+  "floor_1",
+  "floor_2",
+  "floor_3",
+  "floor_4",
+]);
+
 /**
  * Decode a flow declaration node to its declared name (and governed floor).
  *
@@ -91,7 +98,13 @@ export function decodeFlowPosture(node: AstNode): FlowPosture | { error: string 
       return isPure || isSecure ? contradiction() : "guarded";
     case "governedFlowDecl":
       if (isPure) return contradiction();
-      return isSecure ? "secure" : "guarded";
+      if (!isSecure) return "guarded";
+      if (decoded.floor === undefined || !GOVERNED_SECURE_FLOORS.has(decoded.floor)) {
+        return {
+          error: `unsupported governed-secure floor ${JSON.stringify(decoded.floor)} for ${JSON.stringify(decoded.name)}`,
+        };
+      }
+      return "secure";
   }
 }
 

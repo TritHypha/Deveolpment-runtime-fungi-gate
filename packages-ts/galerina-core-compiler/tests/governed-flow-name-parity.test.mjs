@@ -134,6 +134,49 @@ describe("shared flow posture decoder", () => {
     );
   });
 
+  it("admits only canonical governed floors as secure posture", () => {
+    for (const floor of ["floor_1", "floor_2", "floor_3", "floor_4"]) {
+      assert.equal(
+        decodePosture({
+          kind: "governedFlowDecl",
+          value: `governed:${floor}:secure`,
+          flags: NodeFlags.IsSecure,
+        }),
+        "secure",
+        `${floor} must remain an admitted governed-secure floor`,
+      );
+    }
+  });
+
+  it("refuses secure posture for governed aliases and unsupported floors without changing name decoding", () => {
+    for (const floor of ["floor_5", "execution", "floor_unknown"]) {
+      const node = {
+        kind: "governedFlowDecl",
+        value: `governed:${floor}:candidate`,
+        flags: NodeFlags.IsSecure,
+      };
+      assert.deepEqual(
+        decodeFlowDecl(node),
+        { name: "candidate", floor },
+        "decodeFlowDecl remains a shape decoder for compatibility",
+      );
+      assertPostureError(
+        decodePosture(node),
+        `${floor} must not acquire secure posture authority`,
+      );
+    }
+  });
+
+  it("preserves unflagged governed aliases as legacy guarded posture", () => {
+    for (const floor of ["floor_5", "execution", "floor_unknown"]) {
+      assert.equal(
+        decodePosture({ kind: "governedFlowDecl", value: `governed:${floor}:legacy` }),
+        "guarded",
+        `${floor} remains byte-compatible for unflagged legacy governed declarations`,
+      );
+    }
+  });
+
   it("refuses contradictory IsPure and IsSecure posture flags", () => {
     const result = decodePosture({
       kind: "governedFlowDecl",

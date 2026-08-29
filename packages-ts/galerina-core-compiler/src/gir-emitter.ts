@@ -4,7 +4,7 @@
 
 import { createHash } from "node:crypto";
 import { type AstNode, type AstNodeKind, type FlowMeta, type SourceLocation } from "./parser.js";
-import { isFlowDeclNamed } from "./flow-name.js";
+import { decodeFlowPosture, isFlowDeclNamed } from "./flow-name.js";
 import { inferFlowResilience, type FaultHandler } from "./resilience-inference.js";
 import { type EffectCheckResult } from "./effect-checker.js";
 import { SemanticGraphBuilder, type SemanticGraph } from "@galerina/devtools-graph-algorithms";
@@ -309,7 +309,7 @@ export function emitGIR(
   }
 
   const girFlows = flows.map((flow) => {
-    const flowNode = findFlowNode(ast, flow.name);
+    const flowNode = findArtifactFlowNode(ast, flow.name);
     const effectResult = resultByFlow.get(flow.name);
     const observed = [...(effectResult?.observedEffects ?? [])];
     const declaredSet = new Set(flow.declaredEffects);
@@ -427,6 +427,34 @@ function findFlowNode(ast: AstNode, name: string): AstNode | undefined {
 }
 
 /**
+ * Artifact-only lookup for GIR and AI metadata. Preserve ordinary bare-name
+ * resolution first, then admit only a structurally valid governed declaration
+ * whose shared decoded posture is secure and whose decoded name matches.
+ * Execution-plan lookup deliberately does not use this resolver.
+ */
+function findArtifactFlowNode(ast: AstNode, name: string): AstNode | undefined {
+  const ordinary = findFlowNode(ast, name);
+  if (ordinary !== undefined) return ordinary;
+
+  function walk(node: AstNode): AstNode | undefined {
+    if (
+      node.kind === "governedFlowDecl" &&
+      decodeFlowPosture(node) === "secure" &&
+      isFlowDeclNamed(node, name)
+    ) {
+      return node;
+    }
+    for (const child of node.children ?? []) {
+      const found = walk(child);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  }
+
+  return walk(ast);
+}
+
+/**
  * R2 (RD-0412): resolve a `governed floor_N flow` by its declared name. Its node kind is
  * `governedFlowDecl` and its value is the qualified `governed:floor_N:name`, so the generic
  * findFlowNode (FLOW_KINDS + value===name) does not match it. A declared flow name may
@@ -436,7 +464,14 @@ function findFlowNode(ast: AstNode, name: string): AstNode | undefined {
  */
 function findGovernedFlowNode(ast: AstNode, name: string): AstNode | undefined {
   function walk(node: AstNode): AstNode | undefined {
-    if (node.kind === "governedFlowDecl" && isFlowDeclNamed(node, name)) return node;
+    const posture = node.kind === "governedFlowDecl" ? decodeFlowPosture(node) : undefined;
+    if (
+      node.kind === "governedFlowDecl" &&
+      (posture === "guarded" || posture === "secure") &&
+      isFlowDeclNamed(node, name)
+    ) {
+      return node;
+    }
     for (const child of node.children ?? []) {
       const found = walk(child);
       if (found !== undefined) return found;
@@ -1037,7 +1072,7 @@ export function buildAiGraph(
   const allFlowNames: ReadonlySet<string> = new Set(flows.map((f) => f.name));
 
   const aiFlows: AiGraphFlow[] = flows.map((flow) => {
-    const flowNode = findFlowNodeForAi(ast, flow.name);
+    const flowNode = findArtifactFlowNode(ast, flow.name);
     const loc = flow.location;
     const sourceSpan: AiGraphSourceSpan = { line: loc.line, column: loc.column };
 

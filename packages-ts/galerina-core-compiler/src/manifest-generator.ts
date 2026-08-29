@@ -41,7 +41,8 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import type { GovernanceVerifyResult } from "./governance-verifier.js";
-import type { FlowMeta } from "./parser.js";
+import type { AstNode, FlowMeta } from "./parser.js";
+import { decodeFlowDecl, decodeFlowPosture } from "./flow-name.js";
 import { resolveCompositeBitmask } from "./capability-types.js";
 import { requireFixedGalerinaProductContext } from "./product-cli.js";
 import {
@@ -667,11 +668,18 @@ export function generateManifest(
   // `verified: "runtime-precheck"` because the ext engine enforces rotation at runtime; core cannot
   // statically prove a live rotation occurred. The `ast` grandchildren are typed `unknown` at this
   // boundary, so we narrow through a local structural type. No-`ast` callers are a safe no-op.
-  type RotAstNode = { readonly kind: string; readonly value?: string; readonly children?: readonly RotAstNode[] };
   const SECRET_FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
-  for (const node of (ast?.children ?? []) as unknown as readonly RotAstNode[]) {
-    if (!SECRET_FLOW_KINDS.has(node.kind)) continue;
-    const flowName = node.value ?? "";
+  for (const node of (ast?.children ?? []) as unknown as readonly AstNode[]) {
+    let flowName: string;
+    if (SECRET_FLOW_KINDS.has(node.kind)) {
+      flowName = node.value ?? "";
+    } else if (node.kind === "governedFlowDecl" && decodeFlowPosture(node) === "secure") {
+      const decoded = decodeFlowDecl(node);
+      if (decoded === undefined || "error" in decoded) continue;
+      flowName = decoded.name;
+    } else {
+      continue;
+    }
     const contractNode = (node.children ?? []).find((c) => c.kind === "contractDecl"); // perf-allow: loop-array-find — bounded N over a single AST node's children (assimilated-plugin / secrets+rotation block) — distinct small array per iteration, not a hot path
     if (contractNode === undefined) continue;
     const secretsNode = (contractNode.children ?? []).find((c) => c.kind === "secretsBlock"); // perf-allow: loop-array-find — bounded N over a single AST node's children (assimilated-plugin / secrets+rotation block) — distinct small array per iteration, not a hot path
