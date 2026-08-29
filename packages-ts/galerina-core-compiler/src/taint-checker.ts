@@ -14,7 +14,7 @@
 // =============================================================================
 
 import { type AstNode, type FlowMeta, type SourceLocation } from "./parser.js";
-import { decodeFlowDecl } from "./flow-name.js";
+import { decodeFlowDecl, decodeFlowPosture } from "./flow-name.js";
 import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
 import { hashSource } from "./runtime/canonicalHash.js";
 import {
@@ -551,15 +551,9 @@ interface CheckedFlowAstContract {
 }
 
 function deriveCheckedFlowAstContract(flowNode: AstNode): CheckedFlowAstContract | undefined {
-  let qualifier: FlowMeta["qualifier"];
-  switch (flowNode.kind) {
-    case "flowDecl": qualifier = "flow"; break;
-    case "secureFlowDecl": qualifier = "secure"; break;
-    case "pureFlowDecl": qualifier = "pure"; break;
-    case "guardedFlowDecl":
-    case "governedFlowDecl": qualifier = "guarded"; break;
-    default: return undefined;
-  }
+  const posture = decodeFlowPosture(flowNode);
+  if (typeof posture !== "string") return undefined;
+  const qualifier: FlowMeta["qualifier"] = posture;
 
   const children = flowNode.children ?? [];
   const params: string[] = [];
