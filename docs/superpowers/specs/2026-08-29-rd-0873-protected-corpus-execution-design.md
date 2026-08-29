@@ -100,9 +100,15 @@ cannot satisfy Corpus Audit v2 because it binds a mutable traversal rather than
 an exact file/digest set. Supplying both protection modes is invalid.
 
 `runOwnedProcessSync` carries the independent stream limits through its JSON
-wrapper and sizes the wrapper buffer from both explicit ceilings plus the fixed
-wrapper allowance. The protected-file manifest remains asynchronous-only in
-this chapter; a synchronous caller that supplies it is refused before spawn.
+request and sizes the wrapper buffer from both explicit ceilings plus the fixed
+wrapper allowance. Child evidence returns through an internal binary frame:
+fixed magic/version, bounded closed JSON metadata, explicit raw payload lengths,
+then the already-bounded stdout and stderr buffers. The parent uses
+`encoding:null`, validates the exact frame and only then decodes the two
+public strings. This avoids JSON body escaping and a false
+`MAX_STRING_LENGTH` ceiling while preserving the existing synchronous API.
+The protected-file manifest remains asynchronous-only in this chapter; a
+synchronous caller that supplies it is refused before spawn.
 
 ## 4. Protected-file manifest
 

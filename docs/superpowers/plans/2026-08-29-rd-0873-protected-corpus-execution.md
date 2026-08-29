@@ -87,8 +87,11 @@ Normalize absent `maxStdoutBytes` and `maxStderrBytes` to
 `maxOutputBytes`. Give each `appendBounded` state its own limit, retain its
 pre-decode raw count, and include both counts in every result. Size the sync
 wrapper buffer from the sum of the two explicit ceilings plus the existing
-fixed allowance. Reject accessors/proxies/unknown protection combinations
-before spawn.
+fixed allowance. Carry sync evidence through a fixed-magic/version binary frame
+with bounded closed metadata and exact raw stdout/stderr lengths; parse the
+whole frame before decoding the public strings. Reject malformed, truncated,
+trailing, oversized or open frames, and reject
+accessors/proxies/unknown protection combinations before spawn.
 
 - [ ] **Step 4: Verify GREEN and mutation capability**
 
