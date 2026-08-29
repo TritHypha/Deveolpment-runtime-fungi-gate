@@ -37,8 +37,15 @@ jobs:
         run: npm ci --prefix packages-ts/galerina-core-compiler
       - name: Prove platform-smoke refusal contracts
         run: node --test scripts/tests/platform-smoke.test.mjs
+      - name: Prove Corpus runtime Node 20 compatibility
+        run: node --test --test-name-pattern="Corpus runtime protection remains importable" scripts/tests/fungi-corpus-shard-execution.test.mjs
       - name: Run hermetic platform smoke
         run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }} > functional-${{ matrix.expected_os }}.json
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "18"
+      - name: Prove Corpus runtime Node 18 compatibility
+        run: node --test --test-name-pattern="Corpus runtime protection remains importable" scripts/tests/fungi-corpus-shard-execution.test.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: functional-${{ matrix.expected_os }}

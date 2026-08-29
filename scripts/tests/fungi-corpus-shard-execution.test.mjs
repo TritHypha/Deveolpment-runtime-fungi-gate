@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto";
-import { findPackageJSON } from "node:module";
 import {
   existsSync,
   mkdirSync,
@@ -13,7 +12,7 @@ import {
   utimesSync,
   writeFileSync,
 } from "node:fs";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
@@ -33,6 +32,11 @@ const DEFAULT_LIMITS = Object.freeze({
   timeoutMs: 2_000,
   maxOutputBytes: 16 * 1024,
 });
+const RUNTIME_BOOTSTRAPS = Object.freeze([
+  "scripts/lib/fungi-corpus-runtime-authority.cjs",
+  "scripts/lib/fungi-corpus-cjs-preload.cjs",
+  "scripts/lib/fungi-corpus-esm-loader.mjs",
+]);
 
 after(() => {
   for (const root of roots) rmSync(root, { recursive: true, force: true });
@@ -176,6 +180,7 @@ function fixture(fileMap, sidecars = {}, setup = {}) {
   roots.push(root);
   fixtureCompilerPackages.set(root, ["galerina-core-compiler", ...(setup.runtimePackages ?? [])]);
   write(root, "galerina.mjs", setup.checker ?? CHECKER);
+  for (const bootstrap of RUNTIME_BOOTSTRAPS) write(root, bootstrap, readFileSync(resolve(bootstrap)));
   write(root, "packages-ts/galerina-core-compiler/package.json", setup.compilerManifest ?? `${JSON.stringify({
     name: "@galerina/core-compiler",
     type: "module",
@@ -194,7 +199,7 @@ function fixture(fileMap, sidecars = {}, setup = {}) {
   git(root, ["config", "user.name", "Corpus Fixture"]);
   git(root, ["config", "user.email", "corpus@example.invalid"]);
   git(root, ["config", "core.autocrlf", "false"]);
-  git(root, ["add", "--", "galerina.mjs", "packages-ts", ...Object.keys(fileMap), ...Object.keys(sidecars)]);
+  git(root, ["add", "--", "galerina.mjs", ...RUNTIME_BOOTSTRAPS, "packages-ts", ...Object.keys(fileMap), ...Object.keys(sidecars)]);
   git(root, ["commit", "--quiet", "-m", "fixture"]);
   const firstHead = git(root, ["rev-parse", "HEAD"]);
   git(root, ["commit", "--quiet", "--allow-empty", "-m", "future head"]);
@@ -211,15 +216,29 @@ function fixture(fileMap, sidecars = {}, setup = {}) {
 }
 
 function compilerFiles(root) {
-  const result = new Set(["galerina.mjs"]);
+  const result = new Set(["galerina.mjs", ...RUNTIME_BOOTSTRAPS]);
   const pending = [];
   const visitedManifests = new Set();
+  const installedManifest = (fromManifest, name) => {
+    let directory = dirname(fromManifest);
+    while (true) {
+      if (basename(directory).toLowerCase() !== "node_modules") {
+        const candidate = join(directory, "node_modules", ...name.split("/"), "package.json");
+        if (existsSync(candidate)) return candidate;
+      }
+      if (directory === root) break;
+      const parent = dirname(directory);
+      if (parent === directory || relative(root, parent).startsWith("..")) break;
+      directory = parent;
+    }
+    throw new Error(`missing fixture dependency ${name}`);
+  };
   const dependencies = (manifestPath) => {
     const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
     for (const sectionName of ["dependencies", "optionalDependencies", "peerDependencies"]) {
       for (const name of Object.keys(manifest[sectionName] ?? {}).sort()) {
         if (!name.startsWith("@galerina/")) {
-          pending.push(findPackageJSON(name, pathToFileURL(manifestPath)));
+          pending.push(installedManifest(manifestPath, name));
         }
       }
     }
@@ -338,6 +357,75 @@ function shardFor(request, limits = DEFAULT_LIMITS, index = 0) {
   assert.equal(result.kind, "accepted");
   return result.value[index];
 }
+
+test("Corpus runtime protection remains importable across the admitted Node engine floor", () => {
+  const auditPath = resolve("scripts/audit-fungi-corpus-check.mjs");
+  const source = [auditPath, ...RUNTIME_BOOTSTRAPS.map((path) => resolve(path))]
+    .map((path) => readFileSync(path, "utf8"))
+    .join("\n");
+  assert.equal(
+    /\b(?:findPackageJSON|registerHooks)\b/u.test(source),
+    false,
+    "Corpus runtime protection must not statically require post-Node-20 module APIs",
+  );
+  const imported = spawnSync(process.execPath, [
+    "--input-type=module",
+    "--eval",
+    `await import(${JSON.stringify(pathToFileURL(auditPath).href)});`,
+  ], {
+    cwd: resolve("."),
+    encoding: "utf8",
+    windowsHide: true,
+  });
+  assert.equal(imported.status, 0, imported.stderr || imported.stdout);
+  const platformWorkflow = readFileSync(resolve(".github/workflows/platform-smoke.yml"), "utf8");
+  assert.match(platformWorkflow, /node-version:\s*"20"/u);
+  assert.match(platformWorkflow, /node-version:\s*"18"/u);
+  assert.match(
+    platformWorkflow,
+    /node --test --test-name-pattern="Corpus runtime protection remains importable" scripts\/tests\/fungi-corpus-shard-execution\.test\.mjs/u,
+  );
+});
+
+test("runtime protection bootstrap bytes are part of the compiler identity", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  for (const bootstrap of RUNTIME_BOOTSTRAPS) {
+    await t.test(basename(bootstrap), async () => {
+      const path = `corpus/bootstrap-${basename(bootstrap)}.fungi`;
+      const root = fixture({ [path]: "@version 1\npure flow protectedBootstrap() -> Int { return 1 }\n" });
+      const request = requestFor(root, [path]);
+      write(root, bootstrap, `${readFileSync(join(root, ...bootstrap.split("/")), "utf8")}\n`);
+      const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+      assert.equal(result.kind, "accepted");
+      assert.equal(result.value.status, "REFUSED", JSON.stringify(result));
+      assert.equal(result.value.termination, "COMPILER_CHANGED", JSON.stringify(result));
+    });
+  }
+});
+
+test("runtime bootstraps refuse malformed authority before target execution", async (t) => {
+  for (const mode of ["cjs", "esm"]) {
+    await t.test(mode, () => {
+      const sentinel = join(tmpdir(), `galerina-corpus-${mode}-authority-${process.pid}-${Date.now()}`);
+      t.after(() => rmSync(sentinel, { force: true }));
+      const bootstrap = resolve(RUNTIME_BOOTSTRAPS[mode === "cjs" ? 1 : 2]);
+      const args = mode === "cjs"
+        ? ["--require", bootstrap]
+        : ["--no-warnings", "--experimental-loader", pathToFileURL(bootstrap).href];
+      const result = spawnSync(process.execPath, [
+        ...args,
+        "--eval",
+        `require('node:fs').writeFileSync(${JSON.stringify(sentinel)},'executed\\n')`,
+      ], {
+        cwd: resolve("."),
+        encoding: "utf8",
+        env: { GALERINA_CORPUS_RUNTIME_AUTHORITY: "not-canonical-base64" },
+        windowsHide: true,
+      });
+      assert.notEqual(result.status, 0, `${result.stdout}\n${result.stderr}`);
+      assert.equal(existsSync(sentinel), false);
+    });
+  }
+});
 
 test("runCorpusShard binds source and semantic expectation bytes without cache or body disclosure", async () => {
   const files = {
@@ -548,6 +636,64 @@ test("CommonJS resolution cannot execute an undeclared file outside the authenti
     root,
     `${packageRoot}/node_modules/escape-cjs/index.cjs`,
     `require('node:fs').writeFileSync(${JSON.stringify(sentinel)},'executed\\n');\nconsole.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n`,
+  );
+
+  const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });
+  assert.equal(result.kind, "accepted");
+  assert.equal(result.value.status, "REFUSED", JSON.stringify(result));
+  assert.equal(result.value.termination, "MISSING_RESULT", JSON.stringify(result));
+  assert.equal(existsSync(sentinel), false);
+});
+
+test("ESM resolution cannot execute an undeclared file outside the authenticated allow-set", { skip: process.platform !== "win32" || process.arch !== "x64" }, async (t) => {
+  const path = "corpus/esm-runtime-escape.fungi";
+  const packageRoot = "packages-ts/galerina-tower-citizen/node_modules/third-party-esm";
+  const sentinel = join(tmpdir(), `galerina-corpus-esm-escape-${process.pid}-${Date.now()}`);
+  t.after(() => rmSync(sentinel, { force: true }));
+  const root = fixture(
+    { [path]: "@version 1\npure flow esmRuntimeEscape() -> Int { return 1 }\n" },
+    {},
+    {
+      checker: "#!/usr/bin/env node\nawait import('./packages-ts/galerina-core-compiler/dist/index.js');\n",
+      compilerManifest: `${JSON.stringify({
+        name: "@galerina/core-compiler",
+        type: "module",
+        main: "./dist/index.js",
+        dependencies: { "@galerina/tower-citizen": "file:../galerina-tower-citizen" },
+      }, null, 2)}\n`,
+      compilerDist: { "index.js": "import '@galerina/tower-citizen';\n" },
+      extraFiles: {
+        "packages-ts/galerina-tower-citizen/package.json": `${JSON.stringify({
+          name: "@galerina/tower-citizen",
+          type: "module",
+          main: "./dist/index.js",
+          dependencies: { "third-party-esm": "1.0.0" },
+        }, null, 2)}\n`,
+        "packages-ts/galerina-tower-citizen/dist/index.js": "import 'third-party-esm';\n",
+        [`${packageRoot}/package.json`]: `${JSON.stringify({
+          name: "third-party-esm",
+          type: "module",
+          main: "./index.js",
+        }, null, 2)}\n`,
+        [`${packageRoot}/index.js`]: "import 'escape-esm';\n",
+      },
+      runtimePackages: ["galerina-tower-citizen"],
+      junctions: [{
+        path: "packages-ts/galerina-core-compiler/node_modules/@galerina/tower-citizen",
+        target: "packages-ts/galerina-tower-citizen",
+      }],
+    },
+  );
+  const request = requestFor(root, [path]);
+  write(root, `${packageRoot}/node_modules/escape-esm/package.json`, `${JSON.stringify({
+    name: "escape-esm",
+    type: "module",
+    main: "./index.js",
+  }, null, 2)}\n`);
+  write(
+    root,
+    `${packageRoot}/node_modules/escape-esm/index.js`,
+    `import { writeFileSync } from 'node:fs';\nwriteFileSync(${JSON.stringify(sentinel)},'executed\\n');\nconsole.log('0 errors, 0 governance warnings');\nprocess.exit(0);\n`,
   );
 
   const result = await runCorpusShard(request, shardFor(request), { repositoryRoot: root });

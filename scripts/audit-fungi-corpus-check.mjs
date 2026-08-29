@@ -31,7 +31,6 @@
 //   node scripts/audit-fungi-corpus-check.mjs                      # enforce: exit 1 on NEW breakage
 //   node scripts/audit-fungi-corpus-check.mjs --update-baseline    # re-record (deliberate; diff-reviewed)
 import { createHash } from "node:crypto";
-import { findPackageJSON } from "node:module";
 import {
   closeSync,
   constants as fsConstants,
@@ -47,7 +46,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import { types as utilTypes } from "node:util";
@@ -598,7 +597,14 @@ const CORPUS_RUNTIME_FILE = /\.(?:cjs|js|json|mjs|node|wasm)$/u;
 const CORPUS_MAX_RUNTIME_PACKAGES = 128;
 const CORPUS_MAX_COMPILER_FILES = 8191;
 const CORPUS_MAX_PACKAGE_MANIFEST_BYTES = 1024 * 1024;
-const CORPUS_MAX_RUNTIME_LOADER_CHARS = 24 * 1024;
+const CORPUS_MAX_RUNTIME_AUTHORITY_CHARS = 24 * 1024;
+const CORPUS_RUNTIME_AUTHORITY_SCHEMA = "galerina.fungi-corpus-runtime-authority.v1";
+const CORPUS_RUNTIME_AUTHORITY_ENV = "GALERINA_CORPUS_RUNTIME_AUTHORITY";
+const CORPUS_RUNTIME_BOOTSTRAPS = Object.freeze([
+  "scripts/lib/fungi-corpus-runtime-authority.cjs",
+  "scripts/lib/fungi-corpus-cjs-preload.cjs",
+  "scripts/lib/fungi-corpus-esm-loader.mjs",
+]);
 
 function directCanonicalDirectory(absolute) {
   try {
@@ -700,37 +706,66 @@ function runtimeDependencies(manifest) {
   return [...found.values()];
 }
 
-function corpusRuntimeLoader(root, entries, files) {
-  const mapping = Object.fromEntries(entries.map(({ name, absolute }) => [name, pathToFileURL(absolute).href]));
-  const encodedPaths = deflateRawSync(Buffer.from(JSON.stringify(files.map(({ path }) => path)), "utf8")).toString("base64");
-  // npm installs local packages through mutable junctions on Windows. Resolve
-  // admitted local names straight to their protected canonical entries, and
-  // require every other ESM or CommonJS load to resolve to one exact held file.
-  const source = [
-    "import{registerHooks as h}from'node:module';",
-    "import{resolve as r}from'node:path';",
-    "import{pathToFileURL as u}from'node:url';",
-    "import{inflateRawSync as z}from'node:zlib';",
-    `const root=${JSON.stringify(root)},entries=Object.freeze(${JSON.stringify(mapping)});`,
-    `const paths=JSON.parse(z(Buffer.from(${JSON.stringify(encodedPaths)},'base64')).toString('utf8'));`,
-    "const allowed=new Set(paths.map(p=>u(r(root,...p.split('/'))).href));",
-    "const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);",
-    "const admit=u=>typeof u==='string'&&(u.startsWith('node:')||allowed.has(u));",
-    "h({resolve(s,c,n){let v;if(own(entries,s))v={url:entries[s],shortCircuit:true};",
-    "else{if(s.startsWith('@galerina/'))throw new Error('CORPUS_RUNTIME_DEPENDENCY_REFUSED');v=n(s,c);}",
-    "if(v===null||typeof v!=='object'||!admit(v.url))throw new Error('CORPUS_RUNTIME_FILE_REFUSED');return v;},",
-    "load(u,c,n){if(!admit(u))throw new Error('CORPUS_RUNTIME_FILE_REFUSED');return n(u,c);}});",
-  ].join("");
-  const loader = `data:text/javascript;base64,${Buffer.from(source, "utf8").toString("base64")}`;
-  return loader.length <= CORPUS_MAX_RUNTIME_LOADER_CHARS ? loader : null;
+function installedRuntimeManifest(root, fromManifest, name) {
+  try {
+    let directory = dirname(fromManifest);
+    while (true) {
+      if (basename(directory).toLowerCase() !== "node_modules") {
+        const candidate = join(directory, "node_modules", ...name.split("/"), "package.json");
+        const candidatePath = relative(root, candidate).split(sep).join("/");
+        if (runtimeRelativePath(candidatePath) !== candidatePath) return null;
+        let state;
+        try {
+          state = lstatSync(candidate);
+        } catch (error) {
+          if (error?.code !== "ENOENT") return null;
+        }
+        if (state !== undefined) {
+          try {
+            if (
+              state.isSymbolicLink()
+              || !state.isFile()
+              || realpathSync(candidate) !== candidate
+              || !directCanonicalDirectory(dirname(candidate))
+            ) return null;
+            return candidate;
+          } catch {
+            return null;
+          }
+        }
+      }
+      if (directory === root) break;
+      const parent = dirname(directory);
+      if (parent === directory || relative(root, parent).startsWith("..")) break;
+      directory = parent;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function corpusRuntimeAuthority(root, entries, files) {
+  const input = {
+    schema: CORPUS_RUNTIME_AUTHORITY_SCHEMA,
+    root,
+    files: files.map(({ path }) => path),
+    entries: entries.map(({ name, absolute }) => ({
+      name,
+      path: relative(root, absolute).split(sep).join("/"),
+    })),
+  };
+  const payload = { ...input, digest: corpusDigest(input) };
+  const encoded = deflateRawSync(Buffer.from(JSON.stringify(payload), "utf8")).toString("base64");
+  return encoded.length <= CORPUS_MAX_RUNTIME_AUTHORITY_CHARS ? encoded : null;
 }
 
 function corpusCompilerIdentity(root) {
   const heldFiles = new Map();
   try {
-    const paths = ["galerina.mjs"];
-    const pathKeys = new Set(["galerina.mjs"]);
-    const pathAliases = new Set(["galerina.mjs"]);
+    const paths = ["galerina.mjs", ...CORPUS_RUNTIME_BOOTSTRAPS];
+    const pathKeys = new Set(paths);
+    const pathAliases = new Set(paths.map((path) => path.toLowerCase()));
     const localPackageNames = new Map();
     const localPackageDirectories = new Map();
     const packageManifests = new Map();
@@ -833,12 +868,8 @@ function corpusCompilerIdentity(root) {
           });
           continue;
         }
-        const found = findPackageJSON(dependency.name, pathToFileURL(manifestAbsolute));
-        if (typeof found !== "string" || !isAbsolute(found)) throw new Error("compiler dependency missing");
-        const foundAbsolute = resolve(found);
-        if (foundAbsolute !== found || realpathSync(foundAbsolute) !== foundAbsolute) {
-          throw new Error("compiler dependency path refused");
-        }
+        const foundAbsolute = installedRuntimeManifest(root, manifestAbsolute, dependency.name);
+        if (foundAbsolute === null) throw new Error("compiler dependency missing");
         const foundPath = relative(root, foundAbsolute).split(sep).join("/");
         if (
           runtimeRelativePath(foundPath) !== foundPath
@@ -864,13 +895,13 @@ function corpusCompilerIdentity(root) {
     }
     const input = { schema: "galerina.fungi-corpus-compiler-input.v2", files };
     runtimeEntries.sort((left, right) => lexicalCompare(left.name, right.name));
-    const loader = corpusRuntimeLoader(root, runtimeEntries, files);
-    if (loader === null) return { ok: false };
+    const authority = corpusRuntimeAuthority(root, runtimeEntries, files);
+    if (authority === null) return { ok: false };
     return {
       ok: true,
       digest: corpusDigest(input),
       files: Object.freeze(files.map((file) => Object.freeze({ ...file }))),
-      loader,
+      authority,
     };
   } catch {
     return { ok: false };
@@ -1170,15 +1201,17 @@ export async function runCorpusShard(value, shardValue, executionValue, signal) 
         command: process.execPath,
         args: [
           "--no-warnings",
-          "--import",
-          initialCompiler.loader,
+          "--require",
+          join(root, ...CORPUS_RUNTIME_BOOTSTRAPS[1].split("/")),
+          "--experimental-loader",
+          pathToFileURL(join(root, ...CORPUS_RUNTIME_BOOTSTRAPS[2].split("/"))).href,
           join(root, "galerina.mjs"),
           "check",
           file.path,
           ...(file.mode === "strict" ? ["--strict-types"] : []),
         ],
         cwd: root,
-        env: {},
+        env: { [CORPUS_RUNTIME_AUTHORITY_ENV]: initialCompiler.authority },
         timeoutMs: remainingMs,
         maxOutputBytes: shard.limits.maxOutputBytes,
         maxStdoutBytes: remainingStdout,
