@@ -1,57 +1,79 @@
 {
-  "schemaVersion": 2,
-  "sourceDigest": "3398d91fbf1ba815532cafa918815a5a6caa8cec7929e956195b7562a5da5022",
+  "schemaVersion": 3,
+  "sourceDigest": "51cab91f19a89728d6ed3f20a33abc0830f66500f9287023bdf2950e507ea217",
   "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+  "projectCorpusReceiptDigest": "sha256:2bbe972bda204410deda8d51103445b65bf2fd3c2379598897794ab0cb9f5769",
   "counts": {
-    "total": 1578,
+    "total": 1581,
     "CANDIDATE": 0,
-    "BLOCKED": 920,
+    "BLOCKED": 921,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 658
+    "BOOTSTRAP_FLOOR": 660
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
   "scopedCandidates": [
     {
-      "path": "packages-ts/galerina-core-config/src/index.ts",
+      "product": "galerina",
+      "package": "galerina-core-config",
+      "file": "packages-ts/galerina-core-config/src/index.ts",
       "symbol": "isEnvironmentMode",
+      "sourceContentDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+      "product": "galerina",
+      "package": "galerina-core-logic",
+      "file": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
       "symbol": "isOmniUncertain",
+      "sourceContentDigest": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
       "reason": "COMPLETE_SLICES_44_46_DOSSIER",
       "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     },
     {
-      "path": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+      "product": "galerina",
+      "package": "galerina-core-runtime",
+      "file": "packages-ts/galerina-core-runtime/src/structured-await.ts",
       "symbol": "isTerminalScope",
+      "sourceContentDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+      "product": "galerina",
+      "package": "galerina-core-tasks",
+      "file": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
       "symbol": "isTaskEffect",
+      "sourceContentDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-ts/galerina-data-model/src/index.ts",
+      "product": "galerina",
+      "package": "galerina-data-model",
+      "file": "packages-ts/galerina-data-model/src/index.ts",
       "symbol": "isResponseSafeClassification",
+      "sourceContentDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+      "product": "galerina",
+      "package": "galerina-devtools-context",
+      "file": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
       "symbol": "isBuiltin",
+      "sourceContentDigest": "sha256:e217c176f42f216ceb00c1d253329650b4585d241cfbc2596ac64418372d8f1c",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
-      "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+      "product": "galerina",
+      "package": "galerina-devtools-project-graph",
+      "file": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
       "symbol": "validateTransition",
+      "sourceContentDigest": "sha256:6da04dd24a2ba4c7334c998d30bf96a75d10ba46cc5bb414791a29342f44bfd2",
       "reason": "COMPLETE_SLICES_44_46_DOSSIER",
       "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     }
@@ -611,6 +633,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/cli.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/core-syntax-safety.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -1227,6 +1257,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/pure-flow-cache.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/rd0858-scalar-compiler-entry.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -8603,6 +8641,14 @@
     },
     {
       "path": "packages-ts/galerina-devtools-hypha/tests/hypha-devtool.test.mjs",
+      "package": "galerina-devtools-hypha",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-devtools-hypha/tests/vendor-extractor.test.mjs",
       "package": "galerina-devtools-hypha",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
