@@ -1,8 +1,9 @@
 # RD-0873 native Fungi bootstrap handover
 
-**Status:** pre-selection foundation complete through Task 5; the repaired
-source-origin design/plan candidate is recorded but still requires exact owner
-approval; Task 6 remains `HOLD` and Task 7 has not started.
+**Status:** pre-selection foundation complete through Task 5; exact owner
+approval of the repaired source-origin design candidate is recorded; Tasks 2-8
+of its plan remain to be committed, independently reviewed and reproduced at
+one exact HEAD, so Task 6 is `HOLD` and Task 7 has not started.
 
 **Purpose:** restart-grade instructions for the source-origin implementation
 boundary that must close before Task 6 may select, and before Task 7 may author,
@@ -63,9 +64,12 @@ main only.
 Do not author a new .fungi candidate at task start. Tasks 2-5 are committed on
 the implementation branch but must be reverified at the live exact HEAD. The old
 baseline approval did not approve the repaired source-origin candidate, its
-eleven-input atomic gateway boundary or implementation. Task 6 remains `HOLD`
-until the exact repaired candidate is owner-approved and Tasks 2-8 of its plan
-are committed, independently reviewed and reproduced at one exact HEAD.
+eleven-input atomic gateway boundary or implementation. Exact owner approval of
+the repaired candidate is now recorded, but it admits the design candidate only
+and does not authorize Task 6 selection, .fungi authoring, pushing, merging,
+publishing or use of private/offline keys. Task 6 remains `HOLD` until that
+approval and Tasks 2-8 of its plan are committed, independently reviewed and
+reproduced at one exact HEAD.
 
 The atomic gateway must then accept one immutable complete PROJECT receipt and
 emit the exact gateway-result digest plus a `ZERO_APPLICABLE` obligation digest.
@@ -99,8 +103,10 @@ older statement:
    - dependency-ordered implementation steps, exact files and focused checks.
 5. `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
    and `<AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md`
-   - repaired source-origin candidate; not implementation authority until exact
-   owner approval, and never Task 6 selection or `.fungi` authority.
+   - exact owner-approved design candidate and its byte-bound plan locator; the
+   approval is non-authorizing for Task 6 selection, `.fungi`, publication and
+   private-key actions, and Tasks 2-8 still require exact
+   implementation/review evidence.
 6. `RD-0873` in the KB - private planning decision. Query metadata first; do
    not copy its body into Galerina, prompts, indexes or memory.
 7. RD-0858 - pre-conversion admission. It must be resolved live; an old receipt
@@ -249,10 +255,28 @@ and plan raw SHA-256 is
 `4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
 
 The old baseline approval did not approve this repaired candidate, its
-eleven-input gateway boundary or implementation. Task 6 remains `HOLD` until
-the exact repaired candidate is owner-approved and Tasks 2-8 are committed,
-independently reviewed and reproduced at one exact HEAD. Workbench remains
-`REFUSE` until that implementation and one immutable exact-head receipt exist.
+eleven-input gateway boundary or implementation. Exact owner approval of the
+candidate commit/tree and raw design/plan bytes above is now recorded by the
+non-authorizing AGENTS receipt at commit
+`add1bb404af5b6d79e02570f5f977981cdf68663`, path
+`docs/approvals/2026-08-30-galerina-source-origin-logic-aig.json`, raw SHA-256
+`647b0476bd0a79ea0de04c2c4b5546b706c43b879a805b290cf96d14e4a5a00c`.
+The current AGENTS implementation head after the separate baseline test repair
+is `56aa6e3328b2b417883236132fd33ddf5211da13`; the gateway boundary has exactly
+11 inputs.
+
+That approval admits the exact design candidate only. It does not authorize
+Task 6 selection, `.fungi` authoring, pushing, merging, publishing or use of
+private/offline keys. Task 6 remains `HOLD` until that approval and Tasks 2-8
+are committed, independently reviewed and reproduced at one exact HEAD.
+Workbench remains `REFUSE` until that implementation and one immutable
+exact-head receipt exist.
+
+Fresh documentation-navigation verification remains `HOLD` and made no write:
+`node scripts/docs-index.mjs --dry-run` exits 0 and would write 299 indexes
+linking 2023 documents; `node scripts/docs-index.mjs --check` exits 1 because
+290 of 299 indexes are missing or drifted and writes 0. Do not run `--apply`;
+the bounded write set is not proved.
 
 Older `71/96`, `93/96` and `94/96` receipts remain historical evidence. They
 cannot be relabelled as current repository closure. The completed scalar oracle
@@ -284,11 +308,11 @@ Refresh the external graph after reopening this file; never report the
 
 **2026-08-30 supersession note:** Phases B-E below describe the implemented
 foundation and remain as the execution record. The active next phase is not
-direct slice selection. Obtain exact owner approval of the repaired AGENTS
-source-origin design/plan candidate, then complete Tasks 2-8 of that plan under
-independent review at one reproducible exact HEAD. Only after its atomic gateway
-mints one exact PROJECT receipt and `ZERO_APPLICABLE` obligation may Phase F
-resume. Phase G remains closed.
+direct slice selection. Exact owner approval of the repaired AGENTS design
+candidate is recorded; now complete Tasks 2-8 of that plan under independent
+review at one reproducible exact HEAD. Only after its atomic gateway mints one
+exact PROJECT receipt and `ZERO_APPLICABLE` obligation may Phase F resume.
+Phase G remains closed.
 
 ### Phase A - reopen and pin owners
 

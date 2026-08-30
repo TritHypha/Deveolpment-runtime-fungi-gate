@@ -25,15 +25,26 @@ counts or open items that a newer section explicitly supersedes.
   `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
   and
   `<AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md`.
-  Candidate commit `ab57f8919a66651be809f65a2683d602d5b8ce0e` has tree
-  `eacbfe22dd54ac859f2d481a42bf4f680d6b1998`. Direct native-graph translation
-  remains rejected; discovery/index hits remain non-authorizing, including the
-  observed confidence-0.21 false `has` edge.
+  Approved candidate commit `ab57f8919a66651be809f65a2683d602d5b8ce0e`
+  has tree `eacbfe22dd54ac859f2d481a42bf4f680d6b1998`; its design and plan raw SHA-256
+  values are `0abdef45717f0c20d6e697f6f63db17bad7f25aa1e64ecc3019a1b974f89a058`
+  and `4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
+  Direct native-graph translation remains rejected; discovery/index hits remain
+  non-authorizing, including the observed confidence-0.21 false `has` edge.
+- [x] Record the non-authorizing AGENTS approval receipt at commit
+  `add1bb404af5b6d79e02570f5f977981cdf68663`, path
+  `docs/approvals/2026-08-30-galerina-source-origin-logic-aig.json`, raw SHA-256
+  `647b0476bd0a79ea0de04c2c4b5546b706c43b879a805b290cf96d14e4a5a00c`.
+  The current AGENTS implementation head after its separate baseline test repair
+  is `56aa6e3328b2b417883236132fd33ddf5211da13`; the gateway boundary has exactly
+  11 inputs.
 - [!] The old baseline approval did not approve the repaired candidate, its
-  eleven-input atomic gateway boundary or implementation. Task 6 remains
-  `HOLD` until the exact repaired candidate is owner-approved and Tasks 2-8 of
-  its plan are committed, independently reviewed and reproduced at one exact
-  HEAD. PROJECT admission must precede WORKSET; graph-only access and non-zero
+  eleven-input atomic gateway boundary or implementation. The exact owner
+  approval above admits the design candidate only; it does not authorize Task 6
+  selection, `.fungi` authoring, pushing, merging, publishing or use of
+  private/offline keys. Task 6 remains `HOLD` until that approval and Tasks 2-8
+  are committed, independently reviewed and reproduced at one exact HEAD.
+  PROJECT admission must precede WORKSET; graph-only access and non-zero
   applicable unresolved rows must refuse.
 - [ ] Resume Task 6 only from the exact reviewed Task 2-8 implementation at one
   HEAD and one immutable PROJECT receipt accepted by the atomic gateway. The
@@ -42,6 +53,10 @@ counts or open items that a newer section explicitly supersedes.
   with no future review, continuity, approval or other receipt digest embedded.
 - [ ] Start Task 7 only after separate selection-review, continuity,
   continuity-review and owner-approval receipts bind those exact report bytes.
+- [!] Preserve documentation navigation as `HOLD`: a fresh docs-index dry-run
+  exits 0 and would write 299 indexes linking 2023 documents; check exits 1
+  because 290 of 299 are missing or drifted and writes 0. Do not run `--apply`;
+  the bounded write set is not proved.
 - [!] The 2026-08-30 Galerina housekeeping run returned
   `HOUSEKEEPING REFUSED` at a hard-linked executable under
   `build/target-cache`. No cache content was deleted, moved, truncated or used

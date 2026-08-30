@@ -37,12 +37,22 @@ the plan raw SHA-256 is
 `4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
 
 The old baseline approval did not approve this repaired candidate, its
-eleven-input atomic gateway boundary or implementation. Task 6 remains `HOLD`
-until the exact candidate is owner-approved and Tasks 2-8 of the candidate plan
-are committed, independently reviewed and reproduced at one exact HEAD.
-Workbench remains `REFUSE` until that exact implementation produces one
-immutable admitted PROJECT receipt and a digest-bound `ZERO_APPLICABLE`
-obligation.
+eleven-input atomic gateway boundary or implementation. Exact owner approval of
+the candidate above is now recorded by the non-authorizing AGENTS receipt at
+commit `add1bb404af5b6d79e02570f5f977981cdf68663`, path
+`docs/approvals/2026-08-30-galerina-source-origin-logic-aig.json`, raw SHA-256
+`647b0476bd0a79ea0de04c2c4b5546b706c43b879a805b290cf96d14e4a5a00c`.
+The current AGENTS implementation head after its separate baseline test repair
+is `56aa6e3328b2b417883236132fd33ddf5211da13`; the repaired gateway boundary has
+exactly 11 inputs.
+
+The owner approval admits the exact design candidate only. It does not
+authorize Task 6 selection, `.fungi` authoring, pushing, merging, publishing or
+use of private/offline keys. Task 6 remains `HOLD` until that exact approval and
+Tasks 2-8 of the candidate plan are committed, independently reviewed and
+reproduced at one exact HEAD. Workbench remains `REFUSE` until that exact
+implementation produces one immutable admitted PROJECT receipt and a
+digest-bound `ZERO_APPLICABLE` obligation.
 
 The later byte-final Task 6 selection report must record
 `candidateState: NOT_AUTHORED`, the exact gateway-result digest and the exact
@@ -50,6 +60,11 @@ The later byte-final Task 6 selection report must record
 approval or other receipt digest. Task 7 may start only after separate
 selection-review, continuity, continuity-review and owner-approval receipts
 bind those exact report bytes. No direct `.fungi` conversion is admitted here.
+
+Documentation navigation also remains `HOLD`: dry-run exits 0 and would write
+299 indexes linking 2023 documents, while check exits 1 because 290 of 299 are
+missing or drifted and writes 0. `--apply` is forbidden until a bounded write
+set is proved.
 
 ## RD-0873 native Fungi bootstrap and conversion admission - 2026-08-28
 

@@ -40,12 +40,25 @@ and plan raw SHA-256 is
 `4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
 
 The old baseline approval did not approve this repaired candidate, its
-eleven-input atomic gateway boundary or implementation. Task 6 remains `HOLD`
-until the exact repaired candidate is owner-approved and Tasks 2-8 of that plan
-are committed, independently reviewed and reproduced at one exact HEAD. The
-gateway must admit one complete exact-head PROJECT parent before WORKSET,
-intersect unresolved rows exactly by `sourceNodeId`, emit a digest-bound
-`ZERO_APPLICABLE` obligation and treat `REFUSE` as a hard stop.
+eleven-input atomic gateway boundary or implementation. The owner has now
+approved exactly the candidate commit/tree and raw design/plan bytes above. The
+non-authorizing approval receipt is committed in AGENTS at
+`add1bb404af5b6d79e02570f5f977981cdf68663`, path
+`docs/approvals/2026-08-30-galerina-source-origin-logic-aig.json`, with raw
+SHA-256
+`647b0476bd0a79ea0de04c2c4b5546b706c43b879a805b290cf96d14e4a5a00c`.
+The current AGENTS implementation head after the separate baseline test repair
+is `56aa6e3328b2b417883236132fd33ddf5211da13`; the repaired gateway boundary has
+exactly 11 inputs.
+
+That owner approval admits the exact design candidate only. It does not
+authorize Task 6 selection, `.fungi` authoring, pushing, merging, publishing or
+use of private/offline keys. Task 6 remains `HOLD` until the exact repaired
+candidate approval and Tasks 2-8 of that plan are committed, independently
+reviewed and reproduced at one exact HEAD. The gateway must admit one complete
+exact-head PROJECT parent before WORKSET, intersect unresolved rows exactly by
+`sourceNodeId`, emit a digest-bound `ZERO_APPLICABLE` obligation and treat
+`REFUSE` as a hard stop.
 
 The byte-final Task 6 selection report must record
 `candidateState: NOT_AUTHORED`, the exact gateway-result digest and the exact
@@ -53,6 +66,12 @@ The byte-final Task 6 selection report must record
 continuity, approval or other receipt digest. Task 7 may start only after
 separate selection-review, continuity, continuity-review and owner-approval
 receipts bind those exact report bytes.
+
+Documentation navigation remains a separate `HOLD`. A fresh
+`node scripts/docs-index.mjs --dry-run` exits 0 and would write 299 indexes
+linking 2023 documents. A fresh `node scripts/docs-index.mjs --check` exits 1:
+290 of 299 indexes are missing or drifted and the check writes 0 files. Do not
+run `--apply`; the bounded write set is not proved.
 
 ## Global Constraints
 
