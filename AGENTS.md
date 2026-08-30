@@ -278,7 +278,8 @@ one-code-one-fault, one owner per code, emit via an exported constant. Enforced 
 Primary graph outputs:
 
 ```text
-build/graph/galerina-devtools-graph-project.json
+build/graph/galerina-devtools-project-graph.json
+build/graph/galerina-devtools-project-graph.html
 build/graph/Galerina_GRAPH_REPORT.md
 build/graph/galerina-ai-map.md
 ```

@@ -1,11 +1,12 @@
 # RD-0873 native Fungi bootstrap handover
 
-**Status:** pre-selection foundation complete through Task 5; Task 6 is held for
-owner review and source-origin admission; Task 7 has not started.
+**Status:** pre-selection foundation complete through Task 5; the repaired
+source-origin design/plan candidate is recorded but still requires exact owner
+approval; Task 6 remains `HOLD` and Task 7 has not started.
 
-**Purpose:** restart-grade instructions for the next task that will implement the
-RD-0873 pre-Fungi foundation and then author one bounded Galerina-specific
-`.fungi` slice.
+**Purpose:** restart-grade instructions for the source-origin implementation
+boundary that must close before Task 6 may select, and before Task 7 may author,
+one bounded Galerina-specific `.fungi` slice.
 
 This document is a locator and operating contract. The governing design, plan,
 RD, source, tests and receipts remain in their owning files. Do not turn this
@@ -35,6 +36,7 @@ Read these tracked owners before editing:
 - docs/superpowers/plans/2026-08-28-rd-0873-native-fungi-bootstrap.md;
 - docs/handover/HANDOVER-rd-0873-native-fungi-bootstrap-2026-08-28.md.
 - <AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md.
+- <AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md.
 
 Resolve RD-0858 and RD-0873 through codex-querying-galerina-rd. Private RD
 metadata is locator-only unless the task has explicit private-KB custody. Treat
@@ -59,11 +61,19 @@ process-root commit. Do not write implementation on main or on KB. Keep KB on
 main only.
 
 Do not author a new .fungi candidate at task start. Tasks 2-5 are committed on
-the implementation branch but must be reverified at the live exact HEAD. Task 6
-remains closed until the AGENTS source-origin design is owner-approved, one
-cross-repository implementation plan repairs this plan, and the atomic gateway
-accepts one immutable PROJECT receipt. Only begin Task 7 after a separate Task
-6 selection artifact is independently reviewed and exact-head bound.
+the implementation branch but must be reverified at the live exact HEAD. The old
+baseline approval did not approve the repaired source-origin candidate, its
+eleven-input atomic gateway boundary or implementation. Task 6 remains `HOLD`
+until the exact repaired candidate is owner-approved and Tasks 2-8 of its plan
+are committed, independently reviewed and reproduced at one exact HEAD.
+
+The atomic gateway must then accept one immutable complete PROJECT receipt and
+emit the exact gateway-result digest plus a `ZERO_APPLICABLE` obligation digest.
+Freeze the Task 6 selection report with those two digests and exactly
+`candidateState: NOT_AUTHORED`; do not embed a future review, continuity,
+approval or other receipt digest. Begin Task 7 only after later separate
+selection-review, continuity, continuity-review and owner-approval receipts bind
+those exact report bytes.
 
 Implement RED first, then the smallest GREEN change. Every branch, refusal,
 timeout, cancellation, crash, overflow and impossible state must reach one
@@ -87,13 +97,17 @@ older statement:
    - adopted architecture and invariants.
 4. `docs/superpowers/plans/2026-08-28-rd-0873-native-fungi-bootstrap.md`
    - dependency-ordered implementation steps, exact files and focused checks.
-5. `RD-0873` in the KB - private planning decision. Query metadata first; do
+5. `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
+   and `<AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md`
+   - repaired source-origin candidate; not implementation authority until exact
+   owner approval, and never Task 6 selection or `.fungi` authority.
+6. `RD-0873` in the KB - private planning decision. Query metadata first; do
    not copy its body into Galerina, prompts, indexes or memory.
-6. RD-0858 - pre-conversion admission. It must be resolved live; an old receipt
+7. RD-0858 - pre-conversion admission. It must be resolved live; an old receipt
    or design-only statement does not reopen conversion.
-7. RD-0855, RD-0792 and RD-0753 - retained checked-source, detached GIR,
+8. RD-0855, RD-0792 and RD-0753 - retained checked-source, detached GIR,
    SLIDE/VOK and later non-authorizing synthesis architecture.
-8. The exact source, tests and generated receipts at the verified implementation
+9. The exact source, tests and generated receipts at the verified implementation
    HEAD - final implementation evidence.
 
 The handover commit is the commit containing this file. Never hard-code a later
@@ -224,12 +238,21 @@ It is not an approved selection and no Task 7 `.fungi` source exists.
 
 Task 6 is now held at a different boundary. The native graph has a documentary
 ontology rather than Workbench logic semantics, and local codebase-memory
-produced a known confidence-0.21 false `has` edge. The independently reviewed
-AGENTS design at commit `0fcbcb8b5` therefore requires a source-origin PROJECT
+produced a known confidence-0.21 false `has` edge. The repaired AGENTS design
+and candidate implementation plan therefore require a source-origin PROJECT
 graph, sidecar/manifest/envelope custody, a non-bypassable atomic gateway and a
-digest-bound zero-applicable-unresolved obligation. That design remains
-`Proposed for owner review`; Workbench remains `REFUSE` until implementation
-and one immutable exact-head receipt exist.
+digest-bound zero-applicable-unresolved obligation. Their candidate commit is
+`ab57f8919a66651be809f65a2683d602d5b8ce0e`, tree is
+`eacbfe22dd54ac859f2d481a42bf4f680d6b1998`, design raw SHA-256 is
+`0abdef45717f0c20d6e697f6f63db17bad7f25aa1e64ecc3019a1b974f89a058`
+and plan raw SHA-256 is
+`4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
+
+The old baseline approval did not approve this repaired candidate, its
+eleven-input gateway boundary or implementation. Task 6 remains `HOLD` until
+the exact repaired candidate is owner-approved and Tasks 2-8 are committed,
+independently reviewed and reproduced at one exact HEAD. Workbench remains
+`REFUSE` until that implementation and one immutable exact-head receipt exist.
 
 Older `71/96`, `93/96` and `94/96` receipts remain historical evidence. They
 cannot be relabelled as current repository closure. The completed scalar oracle
@@ -261,10 +284,11 @@ Refresh the external graph after reopening this file; never report the
 
 **2026-08-30 supersession note:** Phases B-E below describe the implemented
 foundation and remain as the execution record. The active next phase is not
-direct slice selection. First obtain owner approval of the AGENTS source-origin
-design, write and review its cross-repository implementation plan, and repair
-the Galerina Task 6 plan. Then implement the exporter/gateway and mint one exact
-PROJECT receipt before resuming Phase F. Phase G remains closed.
+direct slice selection. Obtain exact owner approval of the repaired AGENTS
+source-origin design/plan candidate, then complete Tasks 2-8 of that plan under
+independent review at one reproducible exact HEAD. Only after its atomic gateway
+mints one exact PROJECT receipt and `ZERO_APPLICABLE` obligation may Phase F
+resume. Phase G remains closed.
 
 ### Phase A - reopen and pin owners
 
@@ -343,6 +367,12 @@ The gateway must derive the WORKSET from the admitted PROJECT parent, intersect
 every unresolved row by exact `sourceNodeId`, and emit a digest-bound
 `ZERO_APPLICABLE` Task 6 obligation. Graph-only, stale, substituted or non-zero
 applicable-unresolved evidence refuses rather than producing `PROPOSED`.
+
+The byte-final selection report records `candidateState: NOT_AUTHORED`, the
+exact gateway-result digest and the exact `ZERO_APPLICABLE` obligation digest.
+It embeds no future review, continuity, approval or other receipt digest. Task 7
+starts only after separate selection-review, continuity, continuity-review and
+owner-approval receipts bind those exact report bytes.
 
 The selected scope must be Galerina-specific, scalar, deterministic and small
 enough for one reviewer. It needs closed inputs/outputs, explicit effects, an

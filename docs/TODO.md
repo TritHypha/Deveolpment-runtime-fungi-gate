@@ -20,22 +20,28 @@ counts or open items that a newer section explicitly supersedes.
   `packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi#isEnvironmentMode`.
   This is a locator and contract candidate only; no Task 7 `.fungi` source has
   been authored.
-- [x] Record the independently reviewed AGENTS source-origin Logic-AIG design at
+- [x] Record the repaired AGENTS source-origin Logic-AIG design and candidate
+  implementation plan at
   `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
-  on AGENTS commit `0fcbcb8b5cf0df05b415c2b3b6fdfa3e88bd8790`.
-  Direct native-graph translation is rejected; discovery/index hits remain
-  non-authorizing, including the observed confidence-0.21 false `has` edge.
-- [!] The AGENTS design remains `Proposed for owner review`. Current Code Logic
-  Workbench outcome is `REFUSE`: the source-origin exporter, sidecar, atomic
-  admission gateway, exact PROJECT graph and digest-bound Task 6 obligation do
-  not yet exist. Task 6 selection approval and Task 7 authoring remain closed.
-- [ ] After owner approval of the AGENTS design, write and review one
-  cross-repository implementation plan, then repair Task 6 in the governing
-  Galerina plan before implementation. PROJECT admission must precede WORKSET;
-  graph-only access and non-zero applicable unresolved rows must refuse.
-- [ ] Resume Task 6 only from one immutable exact-head PROJECT receipt accepted
-  by the atomic gateway. Produce a separate selection artifact with
-  `candidateState: NOT_AUTHORED` before any native source change.
+  and
+  `<AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md`.
+  Candidate commit `ab57f8919a66651be809f65a2683d602d5b8ce0e` has tree
+  `eacbfe22dd54ac859f2d481a42bf4f680d6b1998`. Direct native-graph translation
+  remains rejected; discovery/index hits remain non-authorizing, including the
+  observed confidence-0.21 false `has` edge.
+- [!] The old baseline approval did not approve the repaired candidate, its
+  eleven-input atomic gateway boundary or implementation. Task 6 remains
+  `HOLD` until the exact repaired candidate is owner-approved and Tasks 2-8 of
+  its plan are committed, independently reviewed and reproduced at one exact
+  HEAD. PROJECT admission must precede WORKSET; graph-only access and non-zero
+  applicable unresolved rows must refuse.
+- [ ] Resume Task 6 only from the exact reviewed Task 2-8 implementation at one
+  HEAD and one immutable PROJECT receipt accepted by the atomic gateway. The
+  byte-final selection report must record `candidateState: NOT_AUTHORED`, the
+  exact gateway-result digest and the exact `ZERO_APPLICABLE` obligation digest,
+  with no future review, continuity, approval or other receipt digest embedded.
+- [ ] Start Task 7 only after separate selection-review, continuity,
+  continuity-review and owner-approval receipts bind those exact report bytes.
 - [!] The 2026-08-30 Galerina housekeeping run returned
   `HOUSEKEEPING REFUSED` at a hard-linked executable under
   `build/target-cache`. No cache content was deleted, moved, truncated or used

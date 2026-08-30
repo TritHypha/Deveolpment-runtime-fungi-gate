@@ -27,18 +27,32 @@ Important 0 review.
 Task 6 is **HOLD**, not started or approved. The provisional candidate is
 `packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode`; no target
 `.fungi` source exists. The native graph cannot be translated into Workbench v1
-without inventing semantics. The independently reviewed source-origin design is
-owned by AGENTS at
+without inventing semantics. The repaired source-origin design and candidate
+implementation plan are owned by AGENTS at
 `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
-on commit `0fcbcb8b5` and remains `Proposed for owner review`.
+and
+`<AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md`.
+Their candidate commit is `ab57f8919a66651be809f65a2683d602d5b8ce0e`,
+candidate tree is `eacbfe22dd54ac859f2d481a42bf4f680d6b1998`, design
+raw SHA-256 is
+`0abdef45717f0c20d6e697f6f63db17bad7f25aa1e64ecc3019a1b974f89a058`,
+and plan raw SHA-256 is
+`4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
 
-Before modifying Task 6 below, obtain owner approval of that design and write a
-separate cross-repository implementation plan. The repaired Task 6 must require
-the atomic `galerina-source-origin` gateway, one complete exact-head PROJECT
-parent before WORKSET, exact unresolved-row intersection by `sourceNodeId`, a
-digest-bound `ZERO_APPLICABLE` obligation and `REFUSE` as a hard stop. Task 7
-remains closed until a separate selection artifact records
-`candidateState: NOT_AUTHORED` and passes independent review.
+The old baseline approval did not approve this repaired candidate, its
+eleven-input atomic gateway boundary or implementation. Task 6 remains `HOLD`
+until the exact repaired candidate is owner-approved and Tasks 2-8 of that plan
+are committed, independently reviewed and reproduced at one exact HEAD. The
+gateway must admit one complete exact-head PROJECT parent before WORKSET,
+intersect unresolved rows exactly by `sourceNodeId`, emit a digest-bound
+`ZERO_APPLICABLE` obligation and treat `REFUSE` as a hard stop.
+
+The byte-final Task 6 selection report must record
+`candidateState: NOT_AUTHORED`, the exact gateway-result digest and the exact
+`ZERO_APPLICABLE` obligation digest. It must not embed a future review,
+continuity, approval or other receipt digest. Task 7 may start only after
+separate selection-review, continuity, continuity-review and owner-approval
+receipts bind those exact report bytes.
 
 ## Global Constraints
 
@@ -255,12 +269,12 @@ Commit code/tests first. Regenerate queue artifacts deterministically and commit
 - Modify: `governance/conversion-decisions.json` through its owning generator or exact schema route.
 
 **Interfaces:**
-- Consumes: fresh code graph, queue v3, corpus PROJECT PASS, Myco, Hypha and Code Logic Workbench receipts.
-- Produces: one product-specific exact file/symbol scope; no source change.
+- Consumes: the repaired source-origin plan after its exact candidate approval and Tasks 2-8 are committed, independently reviewed and reproduced at one exact HEAD; fresh queue v3, corpus PROJECT PASS and one atomic-gateway `ZERO_APPLICABLE` obligation.
+- Produces: one byte-final, product-specific exact file/symbol selection report with `candidateState: NOT_AUTHORED`; no source change.
 
 - [ ] **Step 1: Query structural owners**
 
-Use codebase-memory first for call/data-flow and package boundaries. Use Myco for exact locators, Hypha for passive gaps and Code Logic Workbench for the scoped logic view. Require worktree/branch/HEAD in every receipt.
+Use codebase-memory first for call/data-flow and package boundaries. Use Myco for exact locators and Hypha for passive gaps. Admit the complete exact-head PROJECT parent only through the atomic `galerina-source-origin` gateway, derive WORKSET from it and require the exact unresolved-row intersection by `sourceNodeId` to produce one digest-bound `ZERO_APPLICABLE` obligation. Graph-only, stale, substituted or non-zero applicable-unresolved evidence refuses. Require worktree/branch/HEAD in every receipt.
 
 - [ ] **Step 2: Apply the closed selection filters**
 
@@ -268,15 +282,15 @@ Reject platform/host effects, bootstrap-floor ownership, unbounded loops/recursi
 
 - [ ] **Step 3: Record one selected scope and controls**
 
-The report names exact locators, symbols, input/output/effect/exit contracts, reference evidence, risk controls and rejection reasons for near neighbours. It stores no source body.
+Freeze the report bytes after recording exact locators, symbols, input/output/effect/exit contracts, reference evidence, risk controls, rejection reasons for near neighbours, `candidateState: NOT_AUTHORED`, the exact gateway-result digest and the exact `ZERO_APPLICABLE` obligation digest. It stores no source body and embeds no future review, continuity, approval or other receipt digest.
 
 - [ ] **Step 4: Obtain independent plan review**
 
-Require independent Critical 0 / Important 0 review plus a model-diverse multi-vector challenge covering authority, semantics, exits, lifecycle and assurance. External advice remains non-authorizing.
+After the byte-final report is committed, require separate selection-review, continuity, continuity-review and owner-approval receipts that each bind those exact report bytes. Also require a model-diverse multi-vector challenge covering authority, semantics, exits, lifecycle and assurance. External advice and every receipt remain non-authorizing.
 
 - [ ] **Step 5: Commit the selection evidence**
 
-Commit only the report and exact decision artifact with `docs: select RD-0873 native slice`.
+Commit only the byte-final report and the exact living-document paths admitted by the repaired source-origin plan. Task 7 remains `HOLD` until all four later receipts bind the exact committed report bytes.
 
 ### Task 7: Author one scalar Galerina-native slice
 

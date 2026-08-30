@@ -25,15 +25,31 @@ different ontology, and a local index produced a known confidence-0.21 false
 `has` edge. The independently reviewed AGENTS design therefore requires a
 source-origin PROJECT graph, exact sidecar/manifest/envelope custody, a
 non-bypassable atomic gateway and a digest-bound zero-applicable-unresolved Task
-6 obligation. The design is located at
+6 obligation. The repaired design and candidate implementation plan are located
+at
 `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
-on AGENTS commit `0fcbcb8b5`.
+and
+`<AGENTS_ROOT>/docs/superpowers/plans/2026-08-30-galerina-source-origin-logic-aig.md`
+at candidate commit `ab57f8919a66651be809f65a2683d602d5b8ce0e`, tree
+`eacbfe22dd54ac859f2d481a42bf4f680d6b1998`. The design raw SHA-256 is
+`0abdef45717f0c20d6e697f6f63db17bad7f25aa1e64ecc3019a1b974f89a058`;
+the plan raw SHA-256 is
+`4f5feb8451af8931ed3de79cc27358721443a5e874de9b6a729e7c94edb21477`.
 
-That design remains proposed for owner review. Until it is approved, planned,
-implemented and proven at an immutable exact head, Workbench status remains
-`REFUSE`; Task 6 selection approval and Task 7 authoring remain closed. The
-next governed chapter is cross-repository plan repair and implementation, not
-direct `.fungi` conversion.
+The old baseline approval did not approve this repaired candidate, its
+eleven-input atomic gateway boundary or implementation. Task 6 remains `HOLD`
+until the exact candidate is owner-approved and Tasks 2-8 of the candidate plan
+are committed, independently reviewed and reproduced at one exact HEAD.
+Workbench remains `REFUSE` until that exact implementation produces one
+immutable admitted PROJECT receipt and a digest-bound `ZERO_APPLICABLE`
+obligation.
+
+The later byte-final Task 6 selection report must record
+`candidateState: NOT_AUTHORED`, the exact gateway-result digest and the exact
+`ZERO_APPLICABLE` obligation digest. It embeds no future review, continuity,
+approval or other receipt digest. Task 7 may start only after separate
+selection-review, continuity, continuity-review and owner-approval receipts
+bind those exact report bytes. No direct `.fungi` conversion is admitted here.
 
 ## RD-0873 native Fungi bootstrap and conversion admission - 2026-08-28
 
