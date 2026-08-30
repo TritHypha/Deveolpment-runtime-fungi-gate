@@ -50,20 +50,30 @@ remain exact, and the Galerina package audits must reproduce the declared
 partial fork and vendored extractor. Myco and Hypha are single-root evidence
 engines; AGENTS remains the sole Git/multi-worktree controller.
 
-Verify Git branch, HEAD, tree, staged state, tracked/untracked dirt, remotes and
-all registered worktrees before creating an implementation worktree. The
-published planning owner is codex/rd-0858-unit4-process-root. Derive the exact
-handover commit with:
-git log -1 --format=%H -- docs/handover/HANDOVER-rd-0873-native-fungi-bootstrap-2026-08-28.md
+Use only the dedicated clean restart route: branch
+`codex/rd0873-source-origin-galerina` in worktree
+`.worktrees/rd0873-source-origin-galerina`. Verify that exact worktree root,
+branch, HEAD, tree, staged state and tracked/untracked dirt before implementation.
+Require both ancestry checks to exit 0 at its live HEAD:
 
-Create a separate isolated implementation branch named
-codex/rd-0873-native-fungi-bootstrap-implementation from that exact verified
-process-root commit. Do not write implementation on main or on KB. Keep KB on
-main only.
+```powershell
+git merge-base --is-ancestor d4ea815324b108c65e80aeae98db08677a9766af HEAD
+git merge-base --is-ancestor 91c422cd2694f3a77236b784ccd243463db6330e HEAD
+```
 
-Do not author a new .fungi candidate at task start. Tasks 2-5 are committed on
-the implementation branch but must be reverified at the live exact HEAD. The old
-baseline approval did not approve the repaired source-origin candidate, its
+Do not create, enter or reuse branch
+`codex/rd-0873-native-fungi-bootstrap-implementation` or worktree
+`.worktrees/rd-0873-native-fungi-bootstrap-finalize`; that pair is the
+historical dirty custody surface. Do not read, copy, restore or stage from it.
+Derive the live handover commit when needed with
+`git log -1 --format=%H -- docs/handover/HANDOVER-rd-0873-native-fungi-bootstrap-2026-08-28.md`;
+do not self-embed a future fix commit SHA. Do not write implementation on main
+or on KB. Keep KB on main only.
+
+Do not author a new .fungi candidate at task start. The Tasks 2-5 foundation
+evidence is inherited in the clean route's ancestry but must be reverified at
+the live exact HEAD. The old baseline approval did not approve the repaired
+source-origin candidate, its
 eleven-input atomic gateway boundary or implementation. Exact owner approval of
 the repaired candidate is now recorded, but it admits the design candidate only
 and does not authorize Task 6 selection, .fungi authoring, pushing, merging,
@@ -506,9 +516,10 @@ retirement.
 1. Fetch the remote without changing branches.
 2. Verify the published process-root remote and local branch identities.
 3. Refuse divergence until it is adjudicated; never force-push as recovery.
-4. Create one isolated implementation worktree from the exact process-root
-   commit. Suggested branch:
-   `codex/rd-0873-native-fungi-bootstrap-implementation`.
+4. Continue only on branch `codex/rd0873-source-origin-galerina` in worktree
+   `.worktrees/rd0873-source-origin-galerina`, after the two ancestor checks in
+   the opening prompt exit 0. Do not create or switch to another implementation
+   branch or worktree.
 5. Record the base commit, common Git directory, worktree path and intended path
    manifest.
 6. Keep the owner-visible process-root checkout clean and visible.
