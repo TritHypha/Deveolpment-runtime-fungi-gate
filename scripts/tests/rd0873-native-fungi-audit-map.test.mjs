@@ -10,24 +10,29 @@ import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const BASE_HEAD = "926eb0237aaac904cbe48e8f69702e95d2d30676";
-const AGENTS_HEAD = "6cad3837711112899c4b91645a1ff98815da7d36";
+const BASE_HEAD = "f6261ef362f0583896e24039547da33c5f0d052d";
+const BASE_TREE = "d2b100ae35abf8dbcdf18f408afc525dafc570d0";
+const AGENTS_HEAD = "e654756036d756e72b3de20b395278fcd0eecc1c";
+const AGENTS_TREE = "d7d774b1a0630929ad3fd66a99a35d7a31b5a7e2";
 const AGENTS_CONTROLLERS = Object.freeze({
   "tools/audit-map.mjs": Object.freeze({
     blob: "9afd01b0e61879862d1fe84d781051662ae6e245",
     bytes: "9ba23d9f963dd96398ac291b192f99ff46a8819b750c81ef171a282308b29db0",
   }),
   "tools/bounded-tool-batch.mjs": Object.freeze({
-    blob: "300ad5ab757cbafb897f1c10e1764ed56d850464",
-    bytes: "d93bb37c4ff6f93626824a1c6e380e02956d11fd0e39a027e4fb2fd2da3dca2c",
+    blob: "7a48da4b11471474716bff450e1c81a6de3defb4",
+    bytes: "3413baeaa1a6bb2c7c6d62713e65aede0902374d73f233fa44caa20bd2de4ba4",
   }),
 });
 const EMPTY_DIGEST = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 const testFilePath = fileURLToPath(import.meta.url);
 const repositoryRoot = resolve(dirname(testFilePath), "..", "..");
 const manifestPath = join(repositoryRoot, "governance", "rd0873-native-fungi-audit-map.json");
+const approvalPath = join(repositoryRoot, "governance", "rd0873-native-fungi-audit-approval.json");
 const policyPath = join(repositoryRoot, "tools", "bounded-tool-batch-policy.json");
+const operatorPath = join(repositoryRoot, "scripts", "run-rd0873-native-fungi-audit.mjs");
 const agentsRoot = process.env.AGENTS_ROOT;
+const gitPath = process.env.RD0873_GIT_PATH;
 
 function refuse(code, message) {
   const error = new Error(`REFUSED: ${code}: ${message}`);
@@ -35,14 +40,20 @@ function refuse(code, message) {
   throw error;
 }
 
-function pathKey(value) {
-  const normalized = resolve(value);
-  return process.platform === "win32" ? normalized.toLocaleLowerCase("en-US") : normalized;
-}
-
 function runGit(root, args, accepted = [0]) {
-  const result = spawnSync("git", ["-c", `safe.directory=${root}`, "-C", root, ...args], {
+  assert.equal(typeof gitPath, "string", "RD0873_GIT_PATH is required");
+  const nullDevice = process.platform === "win32" ? "NUL" : "/dev/null";
+  const result = spawnSync(gitPath, ["-c", `safe.directory=${root}`, "-c", "core.hooksPath=__disabled__", "-c", "core.fsmonitor=false", "-C", root, ...args], {
     encoding: "utf8",
+    env: {
+      PATH: process.env.PATH,
+      SYSTEMROOT: process.env.SYSTEMROOT,
+      WINDIR: process.env.WINDIR,
+      GIT_CONFIG_GLOBAL: nullDevice,
+      GIT_CONFIG_NOSYSTEM: "1",
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_OPTIONAL_LOCKS: "0",
+    },
     maxBuffer: 1_048_576,
     timeout: 30_000,
     windowsHide: true,
@@ -57,74 +68,11 @@ function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-function collectOwnerEvidence(rootValue) {
-  if (typeof rootValue !== "string" || rootValue.length === 0) {
-    refuse("OWNER_ROOT_REQUIRED", "AGENTS_ROOT is required");
-  }
-  const resolvedRoot = resolve(rootValue);
-  let canonicalRoot;
-  try { canonicalRoot = realpathSync.native(resolvedRoot); }
-  catch { refuse("OWNER_ROOT_REFUSED", "AGENTS_ROOT is unavailable"); }
-  if (pathKey(canonicalRoot) !== pathKey(resolvedRoot) || basename(canonicalRoot) !== "AGENTS") {
-    refuse("OWNER_PATH_REFUSED", "AGENTS_ROOT must be the exact canonical AGENTS path");
-  }
-  if (!statSync(canonicalRoot, { bigint: true }).isDirectory()) {
-    refuse("OWNER_PATH_REFUSED", "AGENTS_ROOT must be a directory");
-  }
-
-  const topLevel = runGit(canonicalRoot, ["rev-parse", "--show-toplevel"]).stdout;
-  const head = runGit(canonicalRoot, ["rev-parse", "HEAD"]).stdout;
-  const controllers = {};
-  for (const [controllerPath, expected] of Object.entries(AGENTS_CONTROLLERS)) {
-    const filePath = resolve(canonicalRoot, ...controllerPath.split("/"));
-    let canonicalFile;
-    try { canonicalFile = realpathSync.native(filePath); }
-    catch { refuse("OWNER_CONTROLLER_REFUSED", `controller unavailable: ${controllerPath}`); }
-    if (pathKey(canonicalFile) !== pathKey(filePath) || !statSync(canonicalFile, { bigint: true }).isFile()) {
-      refuse("OWNER_CONTROLLER_REFUSED", `controller path is aliased or non-regular: ${controllerPath}`);
-    }
-    const bytes = readFileSync(canonicalFile);
-    controllers[controllerPath] = {
-      expected,
-      committedBlob: runGit(canonicalRoot, ["rev-parse", `HEAD:${controllerPath}`]).stdout,
-      workingBytes: sha256(bytes),
-      filePath: canonicalFile,
-    };
-  }
-  const controllerPaths = Object.keys(AGENTS_CONTROLLERS);
-  const clean = runGit(canonicalRoot, ["diff", "--quiet", "HEAD", "--", ...controllerPaths], [0, 1]).status === 0;
-  return { basename: basename(canonicalRoot), canonicalRoot, resolvedRoot, topLevel, head, clean, controllers };
-}
-
-function verifyOwnerEvidence(evidence) {
-  if (evidence.basename !== "AGENTS" || pathKey(evidence.canonicalRoot) !== pathKey(evidence.resolvedRoot)
-      || pathKey(evidence.topLevel) !== pathKey(evidence.canonicalRoot)) {
-    refuse("OWNER_PATH_REFUSED", "owner path identity does not match canonical AGENTS root");
-  }
-  if (evidence.head !== AGENTS_HEAD) refuse("OWNER_HEAD_REFUSED", "canonical AGENTS HEAD is stale or wrong");
-  for (const [controllerPath, expected] of Object.entries(AGENTS_CONTROLLERS)) {
-    const controller = evidence.controllers[controllerPath];
-    if (!controller || controller.expected.blob !== expected.blob || controller.expected.bytes !== expected.bytes
-        || controller.committedBlob !== expected.blob) {
-      refuse("OWNER_BLOB_REFUSED", `committed controller blob is wrong: ${controllerPath}`);
-    }
-    if (controller.workingBytes !== expected.bytes || evidence.clean !== true) {
-      refuse("OWNER_CONTROLLER_DIRTY", `controller working bytes are dirty: ${controllerPath}`);
-    }
-  }
-  return evidence;
-}
-
-async function loadVerifiedOwner(rootValue, options = {}) {
-  const collect = options.collect ?? collectOwnerEvidence;
-  const importer = options.importer ?? ((filePath) => import(pathToFileURL(filePath).href));
-  const evidence = verifyOwnerEvidence(collect(rootValue));
-  const auditMapModule = await importer(evidence.controllers["tools/audit-map.mjs"].filePath);
-  const batchModule = await importer(evidence.controllers["tools/bounded-tool-batch.mjs"].filePath);
-  return { auditMapModule, batchModule, evidence };
-}
-
-const { auditMapModule: auditMap, batchModule: batch, evidence: ownerEvidence } = await loadVerifiedOwner(agentsRoot);
+const operator = await import(pathToFileURL(operatorPath).href);
+const { auditMapModule: auditMap, batchModule: batch, evidence: ownerEvidence } = await operator.loadCanonicalControllers({
+  agentsRepositoryRoot: agentsRoot,
+  gitExecutablePath: gitPath,
+});
 const manifest = auditMap.parseManifestText(readFileSync(manifestPath, "utf8"));
 const policy = batch.validatePolicy(batch.parsePolicyText(readFileSync(policyPath, "utf8")));
 
@@ -170,6 +118,53 @@ function semanticRows(receipt) {
     stdoutDigest: task.stdoutDigest,
     stderrDigest: task.stderrDigest,
   }));
+}
+
+function stableSubjectSnapshot() {
+  return Object.freeze({
+    schema: "bounded-tool-git-snapshot.v1",
+    head: BASE_HEAD,
+    tree: BASE_TREE,
+    gitExecutableDigest: operator.RUNTIME_GIT_SHA256,
+    gitAuthorityPinned: true,
+    clean: true,
+    statusBytes: 0,
+    statusDigest: EMPTY_DIGEST,
+  });
+}
+
+async function passingTask(task) {
+  return {
+    kind: "EXITED",
+    exitCode: 0,
+    durationMs: 0,
+    stdoutBytes: task.id.length,
+    stderrBytes: 0,
+    stdoutDigest: sha256(Buffer.from(task.id, "utf8")),
+    stderrDigest: EMPTY_DIGEST,
+  };
+}
+
+function runRawGit(argv, cwd) {
+  const nullDevice = process.platform === "win32" ? "NUL" : "/dev/null";
+  const result = spawnSync(gitPath, argv, {
+    cwd,
+    encoding: "utf8",
+    env: {
+      PATH: process.env.PATH,
+      SYSTEMROOT: process.env.SYSTEMROOT,
+      WINDIR: process.env.WINDIR,
+      GIT_CONFIG_GLOBAL: nullDevice,
+      GIT_CONFIG_NOSYSTEM: "1",
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_OPTIONAL_LOCKS: "0",
+    },
+    maxBuffer: 16_777_216,
+    timeout: 120_000,
+    windowsHide: true,
+  });
+  assert.equal(result.status, 0, `${argv[0]}: ${result.stderr}`);
+  return result.stdout.trim();
 }
 
 function makeFixture(t, toolNames) {
@@ -218,31 +213,26 @@ test("test harness remains statically compatible with Node 18", () => {
   assert.equal(dirname(fileURLToPath(import.meta.url)), dirname(testFilePath));
 });
 
-test("stale wrong and dirty AGENTS controller evidence refuses before import", async () => {
+test("stale wrong and reordered AGENTS controller evidence refuses before import", async () => {
   const cases = [
     ["OWNER_HEAD_REFUSED", (value) => { value.head = "f".repeat(40); }],
-    ["OWNER_BLOB_REFUSED", (value) => { value.controllers["tools/audit-map.mjs"].committedBlob = "e".repeat(40); }],
-    ["OWNER_CONTROLLER_DIRTY", (value) => {
-      value.controllers["tools/bounded-tool-batch.mjs"].workingBytes = "d".repeat(64);
-      value.clean = false;
-    }],
+    ["OWNER_TREE_REFUSED", (value) => { value.tree = "e".repeat(40); }],
+    ["OWNER_BLOB_REFUSED", (value) => { value.controllers[0].blob = "d".repeat(40); }],
+    ["OWNER_BYTES_REFUSED", (value) => { value.controllers[1].bytesDigest = "c".repeat(64); }],
+    ["OWNER_ORDER_REFUSED", (value) => { value.controllers.reverse(); }],
   ];
   for (const [expected, mutate] of cases) {
     const evidence = structuredClone(ownerEvidence);
     mutate(evidence);
     let imports = 0;
-    await assert.rejects(
-      loadVerifiedOwner(agentsRoot, {
-        collect: () => evidence,
-        importer: async () => { imports += 1; return {}; },
-      }),
-      (error) => error?.code === expected,
-    );
+    assert.throws(() => operator.verifyControllerEvidence(evidence, {
+      beforeImport: () => { imports += 1; },
+    }), (error) => error?.code === expected);
     assert.equal(imports, 0, expected);
   }
 });
 
-test("a hostile wrong-owner module cannot execute top-level sentinel code", (t) => {
+test("a hostile wrong-owner repository cannot execute top-level sentinel code", async (t) => {
   const fixtureRoot = mkdtempSync(join(tmpdir(), "rd0873-hostile-owner-"));
   const hostileRoot = join(fixtureRoot, "AGENTS");
   const sentinel = join(fixtureRoot, "sentinel.txt");
@@ -261,31 +251,38 @@ test("a hostile wrong-owner module cannot execute top-level sentinel code", (t) 
   runGit(hostileRoot, ["commit", "-m", "hostile fixture"]);
   t.after(() => rmSync(fixtureRoot, { recursive: true, force: true }));
 
-  const child = spawnSync(process.execPath, [testFilePath], {
-    cwd: repositoryRoot,
-    encoding: "utf8",
-    env: { ...process.env, AGENTS_ROOT: hostileRoot, RD0873_SENTINEL: sentinel },
-    maxBuffer: 1_048_576,
-    timeout: 30_000,
-    windowsHide: true,
-  });
-  assert.notEqual(child.status, 0, `${child.stdout}\n${child.stderr}`);
-  assert.match(child.stderr, /OWNER_HEAD_REFUSED/u);
+  await assert.rejects(operator.loadCanonicalControllers({
+    agentsRepositoryRoot: hostileRoot,
+    gitExecutablePath: gitPath,
+  }), (error) => error?.code === "OWNER_HEAD_REFUSED");
   assert.equal(existsSync(sentinel), false);
 });
 
 test("canonical AGENTS owner is exact committed and exports both controllers", () => {
   assert.equal(ownerEvidence.head, AGENTS_HEAD);
-  assert.equal(ownerEvidence.clean, true);
-  assert.equal(ownerEvidence.basename, "AGENTS");
-  assert.equal(pathKey(ownerEvidence.topLevel), pathKey(ownerEvidence.canonicalRoot));
+  assert.equal(ownerEvidence.tree, AGENTS_TREE);
+  assert.deepEqual(ownerEvidence.controllers, Object.entries(AGENTS_CONTROLLERS).map(([path, identity]) => ({
+    path,
+    blob: identity.blob,
+    bytesDigest: identity.bytes,
+  })));
   assert.equal(typeof auditMap.auditManifest, "function");
   assert.equal(typeof batch.runCli, "function");
+});
+
+test("bounded operator pins the frozen subject and exact controller tuple", () => {
+  assert.equal(operator.FROZEN_SUBJECT_HEAD, BASE_HEAD);
+  assert.equal(operator.FROZEN_SUBJECT_TREE, BASE_TREE);
+  assert.equal(operator.CANONICAL_AGENTS_HEAD, AGENTS_HEAD);
+  assert.equal(operator.CANONICAL_AGENTS_TREE, AGENTS_TREE);
+  assert.deepEqual(operator.CANONICAL_CONTROLLERS, AGENTS_CONTROLLERS);
+  assert.equal(operator.PRODUCER_PATH, "scripts/run-rd0873-native-fungi-audit.mjs");
 });
 
 test("approved exact-base DAG is closed bounded and ordered", () => {
   assert.deepEqual(auditMap.auditManifest(manifest, { requireApproved: true }), []);
   assert.equal(manifest.subject.locator, `git://galerina/${BASE_HEAD}`);
+  assert.equal(manifest.approval.evidence, "receipt://galerina/governance/rd0873-native-fungi-audit-approval.json");
   assert.equal(policy.defaultConcurrency, 2);
   assert.equal(policy.maximumConcurrency, 4);
   assert.deepEqual(manifest.audits.map(({ id, dependsOn }) => ({ id, dependsOn })), [
@@ -300,6 +297,194 @@ test("approved exact-base DAG is closed bounded and ordered", () => {
   assert.deepEqual(manifest.audits.map((audit) => audit.exit), Array.from({ length: 5 }, () => ({
     pass: [0], finding: [1], refused: [2],
   })));
+});
+
+test("tracked approval receipt closes the subject controller manifest policy runtime and producer convention", () => {
+  const approvalBytes = readFileSync(approvalPath);
+  const approval = operator.parseApprovalText(approvalBytes.toString("utf8"));
+  assert.equal(operator.validateApprovalReceipt(approval, {
+    manifestBytes: readFileSync(manifestPath),
+    policyBytes: readFileSync(policyPath),
+    auditMapModule: auditMap,
+    batchModule: batch,
+  }), approval);
+  assert.deepEqual(Object.keys(approval).sort(), [
+    "authority", "authorizing", "controller", "manifest", "policy", "producer", "receiptDigest",
+    "runtime", "schema", "status", "subject",
+  ]);
+  assert.equal(approval.schema, "rd0873-native-fungi-audit-approval.v1");
+  assert.equal(approval.status, "APPROVED");
+  assert.equal(approval.authorizing, false);
+  assert.deepEqual(approval.subject, { owner: "galerina", head: BASE_HEAD, tree: BASE_TREE });
+  assert.deepEqual(approval.controller, {
+    owner: "agents",
+    head: AGENTS_HEAD,
+    tree: AGENTS_TREE,
+    controllers: Object.entries(AGENTS_CONTROLLERS).map(([path, identity]) => ({
+      path,
+      blob: identity.blob,
+      bytesDigest: identity.bytes,
+    })),
+  });
+  assert.equal(approval.manifest.path, "governance/rd0873-native-fungi-audit-map.json");
+  assert.equal(approval.manifest.planDigest, auditMap.planDigest(manifest));
+  assert.equal(approval.manifest.rawDigest, operator.repositoryTextDigest(readFileSync(manifestPath)));
+  assert.equal(approval.policy.path, "tools/bounded-tool-batch-policy.json");
+  assert.equal(approval.policy.rawDigest, operator.repositoryTextDigest(readFileSync(policyPath)));
+  assert.equal(approval.policy.canonicalDigest, batch.canonicalDigest(policy));
+  assert.equal(approval.runtime.gitExecutableDigest, operator.RUNTIME_GIT_SHA256);
+  assert.deepEqual(approval.producer, {
+    path: "scripts/run-rd0873-native-fungi-audit.mjs",
+    binding: "CONTROLLER_COMMIT_REQUIRED",
+    controllerReceiptSchema: "rd0873-native-fungi-audit-controller.v1",
+  });
+  assert.equal(operator.repositoryTextDigest(approvalBytes), operator.APPROVAL_RAW_SHA256);
+});
+
+test("repository text digest accepts Git-declared CRLF checkout bytes and refuses ambiguous carriage returns", () => {
+  const manifestBytes = readFileSync(manifestPath);
+  const crlfBytes = Buffer.from(manifestBytes.toString("utf8").replace(/\n/gu, "\r\n"), "utf8");
+  assert.equal(operator.repositoryTextDigest(manifestBytes), operator.MANIFEST_RAW_SHA256);
+  assert.equal(operator.repositoryTextDigest(crlfBytes), operator.MANIFEST_RAW_SHA256);
+  assert.throws(
+    () => operator.repositoryTextDigest(Buffer.from("{\r}\n", "utf8")),
+    (error) => error?.code === "CONTROL_TEXT_REFUSED",
+  );
+});
+
+test("approval receipt refuses missing reordered unknown and one-field mutations", () => {
+  const base = operator.parseApprovalText(readFileSync(approvalPath, "utf8"));
+  const cases = [
+    ["APPROVAL_FIELD_UNKNOWN", (value) => { value.unknown = true; }],
+    ["APPROVAL_CONTROLLER_ORDER_REFUSED", (value) => { value.controller.controllers.reverse(); }],
+    ["APPROVAL_SUBJECT_REFUSED", (value) => { value.subject.tree = "f".repeat(40); }],
+    ["APPROVAL_MANIFEST_REFUSED", (value) => { value.manifest.rawDigest = "e".repeat(64); }],
+    ["APPROVAL_POLICY_REFUSED", (value) => { value.policy.canonicalDigest = "d".repeat(64); }],
+    ["APPROVAL_RUNTIME_REFUSED", (value) => { value.runtime.gitExecutableDigest = "c".repeat(64); }],
+    ["APPROVAL_PRODUCER_REFUSED", (value) => { delete value.producer.binding; }],
+    ["APPROVAL_DIGEST_REFUSED", (value) => { value.receiptDigest = "b".repeat(64); }],
+  ];
+  for (const [expected, mutate] of cases) {
+    const value = structuredClone(base);
+    mutate(value);
+    assert.throws(() => operator.validateApprovalReceipt(value, {
+      manifestBytes: readFileSync(manifestPath),
+      policyBytes: readFileSync(policyPath),
+      auditMapModule: auditMap,
+      batchModule: batch,
+    }), (error) => error?.code === expected, expected);
+  }
+});
+
+test("operator outer receipts bind full snapshots and preserve parallel sequential semantics", async () => {
+  const run = (sequential) => operator.runAudit({
+    targetRepositoryRoot: repositoryRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    sequential,
+    captureSnapshot: async () => stableSubjectSnapshot(),
+    runTask: passingTask,
+  });
+  const parallel = await run(false);
+  const sequential = await run(true);
+  assert.equal(operator.validateOuterReceipt(parallel, { batchModule: batch }), parallel);
+  assert.equal(operator.validateOuterReceipt(sequential, { batchModule: batch }), sequential);
+  assert.equal(parallel.authorizing, false);
+  assert.equal(parallel.controlPlaneStatus, "PENDING_CONTROLLER_COMMIT");
+  assert.equal(parallel.execution.mode, "parallel");
+  assert.equal(parallel.execution.concurrency, 2);
+  assert.equal(sequential.execution.mode, "sequential");
+  assert.equal(sequential.execution.concurrency, 1);
+  assert.deepEqual(parallel.execution.preSnapshot, stableSubjectSnapshot());
+  assert.deepEqual(parallel.execution.postSnapshot, stableSubjectSnapshot());
+  assert.deepEqual(semanticRows(parallel.innerReceipt), semanticRows(sequential.innerReceipt));
+  assert.equal(parallel.execution.semanticTaskDigest, sequential.execution.semanticTaskDigest);
+});
+
+test("outer receipt refuses unknown subject controller and digest mutations", async () => {
+  const receipt = await operator.runAudit({
+    targetRepositoryRoot: repositoryRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    captureSnapshot: async () => stableSubjectSnapshot(),
+    runTask: passingTask,
+  });
+  const cases = [
+    ["OUTER_FIELD_UNKNOWN", (value) => { value.unknown = true; }],
+    ["OUTER_SUBJECT_REFUSED", (value) => { value.subject.tree = "f".repeat(40); }],
+    ["OUTER_CONTROLLER_REFUSED", (value) => { value.controller.controllers.reverse(); }],
+    ["OUTER_DIGEST_REFUSED", (value) => { value.receiptDigest = "e".repeat(64); }],
+  ];
+  for (const [expected, mutate] of cases) {
+    const value = structuredClone(receipt);
+    mutate(value);
+    assert.throws(() => operator.validateOuterReceipt(value, { batchModule: batch }), (error) => error?.code === expected, expected);
+  }
+});
+
+test("outer receipt refuses recomputed reviewer mutants", async (t) => {
+  const receipt = await operator.runAudit({
+    targetRepositoryRoot: repositoryRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    captureSnapshot: async () => stableSubjectSnapshot(),
+    runTask: passingTask,
+  });
+  const resign = (value) => {
+    const { receiptDigest: _receiptDigest, ...body } = value;
+    value.receiptDigest = operator.canonicalDigest(body);
+  };
+  const cases = [
+    ["OUTER_EXECUTION_REFUSED", (value) => {
+      value.execution.preSnapshot.head = "f".repeat(40);
+      value.execution.postSnapshot.head = "f".repeat(40);
+    }],
+    ["OUTER_APPROVAL_REFUSED", (value) => { value.approval.receiptDigest = "e".repeat(64); }],
+    ["OUTER_INNER_REFUSED", (value) => { value.innerReceipt.subject.head = "d".repeat(40); }],
+  ];
+  for (const [expected, mutate] of cases) {
+    await t.test(expected, () => {
+      const value = structuredClone(receipt);
+      mutate(value);
+      resign(value);
+      assert.throws(() => operator.validateOuterReceipt(value, { batchModule: batch }), (error) => error?.code === expected, expected);
+    });
+  }
+});
+
+test("wrong subject snapshot and path-hostile manifest refuse with zero task launches", async (t) => {
+  let launches = 0;
+  await assert.rejects(operator.runAudit({
+    targetRepositoryRoot: repositoryRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    captureSnapshot: async () => ({ ...stableSubjectSnapshot(), head: "f".repeat(40) }),
+    runTask: async (task) => { launches += 1; return passingTask(task); },
+  }), (error) => error?.code === "SUBJECT_SNAPSHOT_REFUSED");
+  assert.equal(launches, 0);
+
+  const hostileRoot = mkdtempSync(join(tmpdir(), "rd0873-hostile-manifest-"));
+  const hostileManifest = join(hostileRoot, "manifest.json");
+  writeFileSync(hostileManifest, readFileSync(manifestPath));
+  t.after(() => rmSync(hostileRoot, { recursive: true, force: true }));
+  await assert.rejects(operator.runAudit({
+    targetRepositoryRoot: repositoryRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath: hostileManifest,
+    approvalPath,
+    captureSnapshot: async () => stableSubjectSnapshot(),
+    runTask: async (task) => { launches += 1; return passingTask(task); },
+  }), (error) => error?.code === "MANIFEST_FILE_REFUSED");
+  assert.equal(launches, 0);
 });
 
 test("policy admits only the five real read-only entry points in prescribed lanes", () => {
@@ -486,9 +671,21 @@ test("canonical normal and sequential CLI runs preserve ordered outcomes and out
   const stableSnapshot = Object.freeze({
     schema: "bounded-tool-git-snapshot.v1",
     head: BASE_HEAD,
+    tree: BASE_TREE,
+    gitExecutableDigest: operator.RUNTIME_GIT_SHA256,
+    gitAuthorityPinned: true,
     clean: true,
     statusBytes: 0,
     statusDigest: EMPTY_DIGEST,
+  });
+  const runTask = async (task) => ({
+    kind: "EXITED",
+    exitCode: 0,
+    durationMs: 0,
+    stdoutBytes: task.id.length,
+    stderrBytes: 0,
+    stdoutDigest: sha256(Buffer.from(task.id, "utf8")),
+    stderrDigest: EMPTY_DIGEST,
   });
   const run = async (sequential) => {
     const stdout = [];
@@ -497,6 +694,9 @@ test("canonical normal and sequential CLI runs preserve ordered outcomes and out
     const exit = await batch.runCli(argv, {
       repoRoot: repositoryRoot,
       captureSnapshot: async () => stableSnapshot,
+      runTask,
+      gitAuthority: { path: gitPath, digest: operator.RUNTIME_GIT_SHA256 },
+      skipSelfTest: true,
       writeStdout: (text) => stdout.push(text),
       writeStderr: (text) => stderr.push(text),
     });
@@ -515,4 +715,107 @@ test("canonical normal and sequential CLI runs preserve ordered outcomes and out
   assert.deepEqual(normal.taskCounts, { total: 5, pass: 5, finding: 0, refused: 0, skipped: 0 });
   assert.deepEqual(sequential.taskCounts, normal.taskCounts);
   assert.deepEqual(semanticRows(normal), semanticRows(sequential));
+});
+
+test("real clean detached frozen subject launches approved tools with parallel sequential parity", { timeout: 300_000 }, async (t) => {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), "rd0873-detached-subject-"));
+  const targetRoot = join(fixtureRoot, "subject");
+  const commonGitDirectory = runGit(repositoryRoot, ["rev-parse", "--path-format=absolute", "--git-common-dir"]).stdout;
+  const sourceRoot = dirname(commonGitDirectory);
+  t.after(() => {
+    const rel = relative(tmpdir(), fixtureRoot);
+    if (rel === "" || rel === ".." || rel.startsWith(`..${sep}`)) throw new Error("detached subject escaped temp root");
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  });
+  runRawGit([
+    "-c", `safe.directory=${sourceRoot}`,
+    "-c", `safe.directory=${commonGitDirectory}`,
+    "clone", "--local", "--no-hardlinks", "--no-checkout", sourceRoot, targetRoot,
+  ], tmpdir());
+  runRawGit(["-C", targetRoot, "checkout", "--detach", BASE_HEAD], fixtureRoot);
+  assert.equal(runRawGit(["-C", targetRoot, "rev-parse", "HEAD"], fixtureRoot), BASE_HEAD);
+  assert.equal(runRawGit(["-C", targetRoot, "rev-parse", "HEAD^{tree}"], fixtureRoot), BASE_TREE);
+  assert.equal(runRawGit(["-C", targetRoot, "status", "--porcelain=v1", "--untracked-files=all"], fixtureRoot), "");
+
+  const run = (sequential) => operator.runAudit({
+    targetRepositoryRoot: targetRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    sequential,
+  });
+  const stdout = [];
+  const stderr = [];
+  const parallelExit = await operator.runCli([
+    "run",
+    "--target-root", targetRoot,
+    "--agents-repo", agentsRoot,
+    "--git", gitPath,
+    "--manifest", manifestPath,
+    "--approval", approvalPath,
+  ], {
+    writeStdout: (text) => stdout.push(text),
+    writeStderr: (text) => stderr.push(text),
+  });
+  assert.equal(parallelExit, 0);
+  assert.deepEqual(stderr, []);
+  assert.equal(stdout.length, 1);
+  const parallel = JSON.parse(stdout[0]);
+  const sequential = await run(true);
+  assert.equal(operator.validateOuterReceipt(parallel, { batchModule: batch }), parallel);
+  assert.equal(parallel.verdict, "PASS");
+  assert.equal(sequential.verdict, "PASS");
+  assert.equal(parallel.innerReceipt.snapshotStable, true);
+  assert.equal(sequential.innerReceipt.snapshotStable, true);
+  assert.deepEqual(parallel.innerReceipt.taskCounts, { total: 5, pass: 5, finding: 0, refused: 0, skipped: 0 });
+  assert.deepEqual(sequential.innerReceipt.taskCounts, parallel.innerReceipt.taskCounts);
+  assert.deepEqual(semanticRows(parallel.innerReceipt), semanticRows(sequential.innerReceipt));
+  assert.equal(parallel.execution.semanticTaskDigest, sequential.execution.semanticTaskDigest);
+  assert.equal(runRawGit(["-C", targetRoot, "status", "--porcelain=v1", "--untracked-files=all"], fixtureRoot), "");
+
+  let launches = 0;
+  const dirtyPath = join(targetRoot, "unexpected-dirty-state.txt");
+  writeFileSync(dirtyPath, "dirty\n");
+  const dirty = await operator.runAudit({
+    targetRepositoryRoot: targetRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    runTask: async (task) => { launches += 1; return passingTask(task); },
+  });
+  assert.equal(dirty.verdict, "REFUSED");
+  assert.equal(dirty.innerReceipt.integrityReason, "DIRTY_ENTRY");
+  assert.equal(launches, 0);
+  rmSync(dirtyPath, { force: true });
+
+  const toolPath = join(targetRoot, "tools", "rd0873-corpus-packages-fungi.mjs");
+  const exactToolBytes = readFileSync(toolPath);
+  writeFileSync(toolPath, Buffer.concat([exactToolBytes, Buffer.from("// drift\r\n", "utf8")]));
+  const toolDrift = await operator.runAudit({
+    targetRepositoryRoot: targetRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    runTask: async (task) => { launches += 1; return passingTask(task); },
+  });
+  assert.equal(toolDrift.verdict, "REFUSED");
+  assert.equal(toolDrift.innerReceipt.integrityReason, "DIRTY_ENTRY");
+  assert.equal(launches, 0);
+  writeFileSync(toolPath, exactToolBytes);
+  assert.equal(runRawGit(["-C", targetRoot, "status", "--porcelain=v1", "--untracked-files=all"], fixtureRoot), "");
+
+  const wrongHead = runRawGit(["-C", targetRoot, "rev-parse", `${BASE_HEAD}^`], fixtureRoot);
+  runRawGit(["-C", targetRoot, "checkout", "--detach", wrongHead], fixtureRoot);
+  await assert.rejects(operator.runAudit({
+    targetRepositoryRoot: targetRoot,
+    agentsRepositoryRoot: agentsRoot,
+    gitExecutablePath: gitPath,
+    manifestPath,
+    approvalPath,
+    runTask: async (task) => { launches += 1; return passingTask(task); },
+  }), (error) => error?.code === "SUBJECT_SNAPSHOT_REFUSED");
+  assert.equal(launches, 0);
 });

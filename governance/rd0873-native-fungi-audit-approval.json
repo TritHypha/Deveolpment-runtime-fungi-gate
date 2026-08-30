@@ -1,0 +1,48 @@
+{
+  "schema": "rd0873-native-fungi-audit-approval.v1",
+  "authorizing": false,
+  "status": "APPROVED",
+  "authority": "authority://galerina/rd-0873-native-fungi-audit",
+  "subject": {
+    "owner": "galerina",
+    "head": "f6261ef362f0583896e24039547da33c5f0d052d",
+    "tree": "d2b100ae35abf8dbcdf18f408afc525dafc570d0"
+  },
+  "manifest": {
+    "path": "governance/rd0873-native-fungi-audit-map.json",
+    "rawDigest": "afcf7efa93b3b52d8a62795d83b18a9432f3638c7d133a122afd8e1dc35d543a",
+    "planDigest": "8cacc113e8e77de44b03e95564a868c07e0910f937d34942155156d27845a09d"
+  },
+  "policy": {
+    "path": "tools/bounded-tool-batch-policy.json",
+    "rawDigest": "94c9dd1d74334dc6d6d5043f5c60c86379ca41e25ac91ecac2c495114d0620e2",
+    "canonicalDigest": "73c98083a242f4996fa7b9e53b120742e4307b4649637b3fe56ce6e12fecebf7"
+  },
+  "controller": {
+    "owner": "agents",
+    "head": "e654756036d756e72b3de20b395278fcd0eecc1c",
+    "tree": "d7d774b1a0630929ad3fd66a99a35d7a31b5a7e2",
+    "controllers": [
+      {
+        "path": "tools/audit-map.mjs",
+        "blob": "9afd01b0e61879862d1fe84d781051662ae6e245",
+        "bytesDigest": "9ba23d9f963dd96398ac291b192f99ff46a8819b750c81ef171a282308b29db0"
+      },
+      {
+        "path": "tools/bounded-tool-batch.mjs",
+        "blob": "7a48da4b11471474716bff450e1c81a6de3defb4",
+        "bytesDigest": "3413baeaa1a6bb2c7c6d62713e65aede0902374d73f233fa44caa20bd2de4ba4"
+      }
+    ]
+  },
+  "runtime": {
+    "minimumNode": "18.19.0",
+    "gitExecutableDigest": "22fead8244ef3a7225fb800099a4e43eca8bcec0466774917669599c2f19a05a"
+  },
+  "producer": {
+    "path": "scripts/run-rd0873-native-fungi-audit.mjs",
+    "binding": "CONTROLLER_COMMIT_REQUIRED",
+    "controllerReceiptSchema": "rd0873-native-fungi-audit-controller.v1"
+  },
+  "receiptDigest": "ba4633423e8ee1f56a88a3a5bf33f889c719733c3c6c31109c909cc635da677d"
+}
