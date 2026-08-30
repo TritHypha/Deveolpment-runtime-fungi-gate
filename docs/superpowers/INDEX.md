@@ -12,8 +12,8 @@
 |---|---|
 | [`audits/`](audits/) | — (no documents; browse the directory) |
 | [`consultations/`](consultations/INDEX.md) | 25 |
-| [`plans/`](plans/INDEX.md) | 167 |
-| [`specs/`](specs/INDEX.md) | 130 |
+| [`plans/`](plans/INDEX.md) | 168 |
+| [`specs/`](specs/INDEX.md) | 131 |
 
 ---
 

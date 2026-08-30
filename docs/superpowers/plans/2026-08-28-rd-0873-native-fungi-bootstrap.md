@@ -10,6 +10,36 @@
 
 **Spec:** `docs/superpowers/specs/2026-08-28-rd-0873-native-fungi-bootstrap-design.md`
 
+## Execution checkpoint - 2026-08-30
+
+The task checkboxes below remain the plan's historical authoring record; current
+state is governed by the first RD-0873 section in `docs/TODO.md` and the
+restart-grade handover. The implementation branch is published through
+`e77598e4f03b4181d3a26fd258bf682c2becddce`.
+
+Tasks 2-5 have committed implementation evidence: the protected corpus completed
+16/16 terminal shards over 2,719 files with zero unprocessed files; queue v3
+classified 1,581/1,581 executable paths and retained seven scoped candidates;
+conversion closure and queue phase-close authority were hardened; and focused
+phase-close wiring verification passed 119/119 with independent Critical 0 /
+Important 0 review.
+
+Task 6 is **HOLD**, not started or approved. The provisional candidate is
+`packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode`; no target
+`.fungi` source exists. The native graph cannot be translated into Workbench v1
+without inventing semantics. The independently reviewed source-origin design is
+owned by AGENTS at
+`<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
+on commit `0fcbcb8b5` and remains `Proposed for owner review`.
+
+Before modifying Task 6 below, obtain owner approval of that design and write a
+separate cross-repository implementation plan. The repaired Task 6 must require
+the atomic `galerina-source-origin` gateway, one complete exact-head PROJECT
+parent before WORKSET, exact unresolved-row intersection by `sourceNodeId`, a
+digest-bound `ZERO_APPLICABLE` obligation and `REFUSE` as a hard stop. Task 7
+remains closed until a separate selection artifact records
+`candidateState: NOT_AUTHORED` and passes independent review.
+
 ## Global Constraints
 
 - Work in isolated branches/worktrees; preserve the owner-visible process-root checkout.

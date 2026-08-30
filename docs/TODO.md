@@ -4,6 +4,43 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 pre-selection foundation and source-origin HOLD - 2026-08-30
+
+- [x] Commit and publish the bounded RD-0873 implementation foundation through
+  `e77598e4f03b4181d3a26fd258bf682c2becddce`. The protected corpus covered
+  2,719 files in 16/16 terminal shards with zero unprocessed files; queue v3
+  classified 1,581/1,581 executable paths and retained seven scoped candidates.
+- [x] Harden conversion closure evidence, regenerate the governed queue and bind
+  queue authority into phase-close through commits `0f8d3dfde`, `22b22db4b`
+  and `e77598e4f`. Focused phase-close wiring verification passed 119/119 and
+  independent review closed Critical 0 / Important 0.
+- [x] Converge the provisional Task 6 candidate on
+  `packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode`, with future
+  target
+  `packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi#isEnvironmentMode`.
+  This is a locator and contract candidate only; no Task 7 `.fungi` source has
+  been authored.
+- [x] Record the independently reviewed AGENTS source-origin Logic-AIG design at
+  `<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
+  on AGENTS commit `0fcbcb8b5cf0df05b415c2b3b6fdfa3e88bd8790`.
+  Direct native-graph translation is rejected; discovery/index hits remain
+  non-authorizing, including the observed confidence-0.21 false `has` edge.
+- [!] The AGENTS design remains `Proposed for owner review`. Current Code Logic
+  Workbench outcome is `REFUSE`: the source-origin exporter, sidecar, atomic
+  admission gateway, exact PROJECT graph and digest-bound Task 6 obligation do
+  not yet exist. Task 6 selection approval and Task 7 authoring remain closed.
+- [ ] After owner approval of the AGENTS design, write and review one
+  cross-repository implementation plan, then repair Task 6 in the governing
+  Galerina plan before implementation. PROJECT admission must precede WORKSET;
+  graph-only access and non-zero applicable unresolved rows must refuse.
+- [ ] Resume Task 6 only from one immutable exact-head PROJECT receipt accepted
+  by the atomic gateway. Produce a separate selection artifact with
+  `candidateState: NOT_AUTHORED` before any native source change.
+- [!] The 2026-08-30 Galerina housekeeping run returned
+  `HOUSEKEEPING REFUSED` at a hard-linked executable under
+  `build/target-cache`. No cache content was deleted, moved, truncated or used
+  as cleanup authority.
+
 ### Myco and Hypha source-owner synchronization closure - 2026-08-28
 
 - [x] Fast-forward public Myco hardening into public `main`, rerun its build

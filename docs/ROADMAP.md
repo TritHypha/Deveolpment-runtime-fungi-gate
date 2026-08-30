@@ -1,7 +1,39 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-28
-Branch: `codex/rd-0873-native-fungi-bootstrap-plan`
+Date: 2026-08-30
+Branch: `codex/rd-0873-native-fungi-bootstrap-implementation`
+
+## RD-0873 source-origin admission checkpoint - 2026-08-30
+
+The pre-selection corpus, bounded execution, audit-control and conversion-queue
+foundation is committed and published through `e77598e4f`. The protected corpus
+completed 16/16 terminal shards over 2,719 files with zero unprocessed files;
+queue v3 classified 1,581/1,581 executable paths and retained seven scoped
+candidates. Phase-close authority wiring passed its 119/119 focused estate and
+independent review at Critical 0 / Important 0.
+
+The provisional first candidate is
+`packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode`, a pure
+`String -> Bool` classifier with no effects, errors or loops. Its future native
+target is
+`packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi#isEnvironmentMode`.
+This is not an approved Task 6 selection and no Task 7 `.fungi` source exists.
+
+The native Galerina project graph and codebase-memory remain documentary and
+discovery evidence. They cannot mint Workbench closure: the native graph has a
+different ontology, and a local index produced a known confidence-0.21 false
+`has` edge. The independently reviewed AGENTS design therefore requires a
+source-origin PROJECT graph, exact sidecar/manifest/envelope custody, a
+non-bypassable atomic gateway and a digest-bound zero-applicable-unresolved Task
+6 obligation. The design is located at
+`<AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md`
+on AGENTS commit `0fcbcb8b5`.
+
+That design remains proposed for owner review. Until it is approved, planned,
+implemented and proven at an immutable exact head, Workbench status remains
+`REFUSE`; Task 6 selection approval and Task 7 authoring remain closed. The
+next governed chapter is cross-repository plan repair and implementation, not
+direct `.fungi` conversion.
 
 ## RD-0873 native Fungi bootstrap and conversion admission - 2026-08-28
 

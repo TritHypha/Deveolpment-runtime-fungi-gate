@@ -1,6 +1,7 @@
 # RD-0873 native Fungi bootstrap handover
 
-**Status:** planning complete; implementation has not started.
+**Status:** pre-selection foundation complete through Task 5; Task 6 is held for
+owner review and source-origin admission; Task 7 has not started.
 
 **Purpose:** restart-grade instructions for the next task that will implement the
 RD-0873 pre-Fungi foundation and then author one bounded Galerina-specific
@@ -33,6 +34,7 @@ Read these tracked owners before editing:
 - docs/superpowers/specs/2026-08-28-rd-0873-native-fungi-bootstrap-design.md;
 - docs/superpowers/plans/2026-08-28-rd-0873-native-fungi-bootstrap.md;
 - docs/handover/HANDOVER-rd-0873-native-fungi-bootstrap-2026-08-28.md.
+- <AGENTS_ROOT>/docs/superpowers/specs/2026-08-30-galerina-source-origin-logic-aig-design.md.
 
 Resolve RD-0858 and RD-0873 through codex-querying-galerina-rd. Private RD
 metadata is locator-only unless the task has explicit private-KB custody. Treat
@@ -56,11 +58,12 @@ codex/rd-0873-native-fungi-bootstrap-implementation from that exact verified
 process-root commit. Do not write implementation on main or on KB. Keep KB on
 main only.
 
-Do not author a new .fungi candidate at task start. Execute RD-0873 Tasks 2-6
-first: Corpus Audit v2 receipts/shards, isolated execution, bounded audit
-manifest, conversion receipt v2/queue v3 and exact first-slice selection. Only
-begin Task 7 after the complete corpus/queue/receipt foundation is green,
-independently reviewed and exact-head bound.
+Do not author a new .fungi candidate at task start. Tasks 2-5 are committed on
+the implementation branch but must be reverified at the live exact HEAD. Task 6
+remains closed until the AGENTS source-origin design is owner-approved, one
+cross-repository implementation plan repairs this plan, and the atomic gateway
+accepts one immutable PROJECT receipt. Only begin Task 7 after a separate Task
+6 selection artifact is independently reviewed and exact-head bound.
 
 Implement RED first, then the smallest GREEN change. Every branch, refusal,
 timeout, cancellation, crash, overflow and impossible state must reach one
@@ -204,31 +207,34 @@ new identity and receipt. Runtime rescue and silent substitution are forbidden.
 
 ## 6. Current checkpoint and blockers
 
-Planning is complete. The prerequisite Myco/Hypha source-owner synchronization
-is integrated and published on the RD-0858 process-root branch. Public Myco
-`main` is exact at
-`c4ff2ca3c53e8c8cb8b5f6a7a589a096d85a1fd6`; public Hypha `master`
-remains exact at
-`9a15296b2589794cb92fed423953a711db7b36c7`. The Galerina
-synchronization passed independent whole-change review at Critical 0 /
-Important 0 / Minor 0, and its physical-CRLF Hypha self-test repair separately
-passed Critical 0 / Important 0 review. No RD-0873 implementation file and no
-new `.fungi` source has been authored.
+The implementation branch is published through
+`e77598e4f03b4181d3a26fd258bf682c2becddce`. Tasks 2-5 closed the three
+pre-Fungi foundation roots without rewriting historical receipts: the protected
+corpus completed 16/16 terminal shards over 2,719 files with zero unprocessed
+files; queue v3 classified 1,581/1,581 executable paths and retained seven
+scoped candidates; conversion closure and phase-close authority were hardened;
+and focused phase-close wiring verification passed 119/119 with independent
+Critical 0 / Important 0 review.
 
-The latest fully provisioned phase-close is `71/96`. Preserve its 25
-inherited, ordering and freshness reds. The three pre-Fungi foundation roots
-remain:
+The provisional Task 6 candidate is
+`packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode`, with future
+native target
+`packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi#isEnvironmentMode`.
+It is not an approved selection and no Task 7 `.fungi` source exists.
 
-1. the generated conversion queue is stale at the current build point;
-2. inherited conversion-slice receipts omit exact product/package/file/symbol,
-   source and candidate scope;
-3. the monolithic corpus audit does not emit a terminal receipt inside its
-   600-second wrapper deadline.
+Task 6 is now held at a different boundary. The native graph has a documentary
+ontology rather than Workbench logic semantics, and local codebase-memory
+produced a known confidence-0.21 false `has` edge. The independently reviewed
+AGENTS design at commit `0fcbcb8b5` therefore requires a source-origin PROJECT
+graph, sidecar/manifest/envelope custody, a non-bypassable atomic gateway and a
+digest-bound zero-applicable-unresolved obligation. That design remains
+`Proposed for owner review`; Workbench remains `REFUSE` until implementation
+and one immutable exact-head receipt exist.
 
-Older `93/96` and `94/96` receipts are historical evidence. They cannot be
-relabelled as current closure. The completed scalar oracle is exact bounded
-evidence for its own flow; it is not a general conversion template, an
-unopened locator, production authority or permission to retire TypeScript.
+Older `71/96`, `93/96` and `94/96` receipts remain historical evidence. They
+cannot be relabelled as current repository closure. The completed scalar oracle
+is bounded evidence for its own flow, not general conversion or production
+authority.
 
 The verified Myco/Hypha baseline for the next task is:
 
@@ -252,6 +258,13 @@ Refresh the external graph after reopening this file; never report the
 `a2c416ec` graph as exact for a later documentation commit.
 
 ## 7. Required work order
+
+**2026-08-30 supersession note:** Phases B-E below describe the implemented
+foundation and remain as the execution record. The active next phase is not
+direct slice selection. First obtain owner approval of the AGENTS source-origin
+design, write and review its cross-repository implementation plan, and repair
+the Galerina Task 6 plan. Then implement the exporter/gateway and mint one exact
+PROJECT receipt before resuming Phase F. Phase G remains closed.
 
 ### Phase A - reopen and pin owners
 
@@ -319,9 +332,17 @@ without exact re-observation.
 
 ### Phase F - select one slice
 
-Implement plan Task 6. Use codebase-memory, then worktree-aware Myco/Hypha and
-Code Logic Workbench as bounded aids. The selection report contains locators,
+Implement the repaired plan Task 6 only after the mandatory atomic
+`galerina-source-origin` gateway has accepted one complete exact-head PROJECT
+graph, sidecar, manifest and admission envelope. Use codebase-memory and
+worktree-aware Myco/Hypha as bounded discovery aids; they cannot substitute for
+the source-origin Workbench receipt. The selection report contains locators,
 digests, relationships and reasons, not source bodies.
+
+The gateway must derive the WORKSET from the admitted PROJECT parent, intersect
+every unresolved row by exact `sourceNodeId`, and emit a digest-bound
+`ZERO_APPLICABLE` Task 6 obligation. Graph-only, stale, substituted or non-zero
+applicable-unresolved evidence refuses rather than producing `PROPOSED`.
 
 The selected scope must be Galerina-specific, scalar, deterministic and small
 enough for one reviewer. It needs closed inputs/outputs, explicit effects, an
