@@ -101,6 +101,9 @@ test('canonical JSON emits exact scalar bytes and unsigned UTF-8 key order', () 
     expectRefusal(() => canonicalArtifactAdmissionJson(invalid), 'REFUSED_CANONICAL');
   }
   expectRefusal(() => canonicalArtifactAdmissionJson(Object.defineProperty({}, 'a', { get: () => 1 })), 'REFUSED_CANONICAL');
+  const symbolArray = [1];
+  Object.defineProperty(symbolArray, Symbol('hostile'), { value: true });
+  expectRefusal(() => canonicalArtifactAdmissionJson(symbolArray), 'REFUSED_CANONICAL');
 });
 
 test('KAT-A profile, manifest and complete frame match the literal design bytes', () => {
@@ -412,4 +415,132 @@ test('aggregate frame limit refuses from manifest arithmetic before artifact acc
     'REFUSED_FRAME_LIMIT',
   );
   assert.equal(calls, 0);
+});
+
+test('owner policy and caller arrays refuse hostile descriptor shapes without executing caller code', () => {
+  let calls = 0;
+  const ownerPolicy = {};
+  Object.defineProperty(ownerPolicy, 'mode', {
+    enumerable: true,
+    get() {
+      calls += 1;
+      throw new Error('owner policy getter ran');
+    },
+  });
+  const policyInput = katAInputs();
+  policyInput.profile.ownerPolicy = ownerPolicy;
+  expectRefusal(() => buildAdmissionManifest(policyInput), 'REFUSED_PROFILE');
+
+  const customIterator = [{ id: 'root', maxBytes: 2, required: true, role: 'root' }];
+  Object.defineProperty(customIterator, Symbol.iterator, {
+    get() {
+      calls += 1;
+      throw new Error('array iterator getter ran');
+    },
+  });
+  const iteratorInput = katAInputs();
+  iteratorInput.profile.artifactRules = customIterator;
+  expectRefusal(() => buildAdmissionManifest(iteratorInput), 'REFUSED_PROFILE');
+
+  const customMethod = ['captured-bytes-only'];
+  Object.defineProperty(customMethod, 'some', {
+    enumerable: true,
+    get() {
+      calls += 1;
+      throw new Error('array method getter ran');
+    },
+  });
+  expectRefusal(
+    () => buildAdmissionManifest(katAInputs({ claims: customMethod })),
+    'REFUSED_CLAIM',
+  );
+
+  const sparseNodes = new Array(1);
+  const sparseInput = katAInputs();
+  sparseInput.graph.nodes = sparseNodes;
+  expectRefusal(() => buildAdmissionManifest(sparseInput), 'REFUSED_GRAPH_CLOSURE');
+
+  const accessorEdges = [];
+  Object.defineProperty(accessorEdges, '0', {
+    enumerable: true,
+    configurable: true,
+    get() {
+      calls += 1;
+      throw new Error('array element getter ran');
+    },
+  });
+  accessorEdges.length = 1;
+  const accessorInput = katAInputs();
+  accessorInput.graph.edges = accessorEdges;
+  expectRefusal(() => buildAdmissionManifest(accessorInput), 'REFUSED_GRAPH_CLOSURE');
+
+  const symbolArtifacts = [{ id: 'root', bytes: Buffer.from(KAT_A_BODY) }];
+  Object.defineProperty(symbolArtifacts, Symbol('hostile'), { value: true });
+  expectRefusal(
+    () => buildAdmissionManifest(katAInputs({ artifacts: symbolArtifacts })),
+    'REFUSED_ARTIFACT',
+  );
+  assert.equal(calls, 0);
+});
+
+test('intrinsic Buffer extents and complete preflight refuse without executing caller coercion', () => {
+  let calls = 0;
+  const smallerLength = Buffer.from(KAT_A_BODY);
+    Object.defineProperty(smallerLength, 'length', { value: 1 });
+    expectRefusal(
+      () => buildAdmissionManifest(katAInputs({ artifacts: [{ id: 'root', bytes: smallerLength }] })),
+      'REFUSED_ARTIFACT',
+    );
+
+    const largerByteLength = Buffer.from(KAT_A_BODY);
+    Object.defineProperty(largerByteLength, 'byteLength', { value: 3 });
+    const manifest = buildAdmissionManifest(katAInputs());
+    expectRefusal(
+      () => encodeAdmissionFrame({ manifest, artifacts: [{ id: 'root', bytes: largerByteLength }] }),
+      'REFUSED_ARTIFACT',
+    );
+
+    const twoRuleProfile = JSON.parse(KAT_A_PROFILE_JSON);
+    twoRuleProfile.artifactRules.push({ id: 'z-leaf', maxBytes: 1, required: true, role: 'leaf' });
+    const rootBody = Buffer.from(KAT_A_BODY);
+    const leafBody = Buffer.from([1]);
+    const twoArtifactInput = katAInputs({
+      profile: twoRuleProfile,
+      artifacts: [
+        { id: 'root', bytes: rootBody },
+        { id: 'z-leaf', bytes: leafBody },
+      ],
+      graph: {
+        schema: 'artifact-admission-graph.v1',
+        root: 'root',
+        nodes: ['root', 'z-leaf'],
+        edges: [{ from: 'root', kind: 'requires', to: 'z-leaf' }],
+      },
+    });
+    const twoArtifactManifest = buildAdmissionManifest(twoArtifactInput);
+    const mismatchedLeaf = Buffer.from([1]);
+    Object.defineProperty(mismatchedLeaf, 'byteLength', { value: 2 });
+    expectRefusal(
+      () => encodeAdmissionFrame({
+        manifest: twoArtifactManifest,
+        artifacts: [
+          { id: 'root', bytes: rootBody },
+          { id: 'z-leaf', bytes: mismatchedLeaf },
+        ],
+      }),
+      'REFUSED_ARTIFACT',
+    );
+
+    const hostileValueOf = Buffer.from(KAT_A_BODY);
+    hostileValueOf.valueOf = function callerValueOf() {
+      calls += 1;
+      throw new Error('caller valueOf ran');
+    };
+    const hostileManifest = buildAdmissionManifest(katAInputs({ artifacts: [{ id: 'root', bytes: hostileValueOf }] }));
+    const hostileFrame = encodeAdmissionFrame({
+      manifest: hostileManifest,
+      artifacts: [{ id: 'root', bytes: hostileValueOf }],
+    });
+    assert.equal(hostileFrame.length, 813);
+    assert.equal(calls, 0);
 });

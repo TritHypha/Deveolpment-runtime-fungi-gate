@@ -36,6 +36,12 @@ const IDENTIFIER = /^[a-z0-9][a-z0-9._:-]{0,127}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 const HEX128 = /^[0-9a-f]{128}$/;
 const SPKI_PREFIX = '302a300506032b6570032100';
+const TYPED_ARRAY_LENGTH_GETTER = Object.getOwnPropertyDescriptor(
+  Object.getPrototypeOf(Uint8Array.prototype),
+  'length',
+).get;
+const TYPED_ARRAY_SET = Uint8Array.prototype.set;
+const BUFFER_ALLOC_UNSAFE = Buffer.allocUnsafe.bind(Buffer);
 
 class ArtifactFrameRefusal extends Error {
   constructor(code) {
@@ -67,6 +73,71 @@ function hasOnlyDataProperties(value, expectedKeys, code) {
     const descriptor = Object.getOwnPropertyDescriptor(value, name);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
+}
+
+function captureDataObject(value, expectedKeys, code) {
+  hasOnlyDataProperties(value, expectedKeys, code);
+  const captured = {};
+  for (const name of expectedKeys) {
+    captured[name] = Object.getOwnPropertyDescriptor(value, name).value;
+  }
+  return captured;
+}
+
+function captureDataArray(value, code, maxLength) {
+  if (isProxy(value) || !Array.isArray(value)) refuse(code);
+  if (Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
+  const lengthDescriptor = Object.getOwnPropertyDescriptor(value, 'length');
+  if (!lengthDescriptor || !('value' in lengthDescriptor) || lengthDescriptor.enumerable) refuse(code);
+  const length = lengthDescriptor.value;
+  if (!Number.isSafeInteger(length) || length < 0) refuse(code);
+  if (maxLength !== undefined && length > maxLength) refuse(code);
+  const names = Object.getOwnPropertyNames(value);
+  if (names.length !== length + 1) refuse(code);
+  const captured = new Array(length);
+  for (let index = 0; index < length; index += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    captured[index] = descriptor.value;
+  }
+  return captured;
+}
+
+function captureOwnerPolicy(value) {
+  if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) refuse('REFUSED_PROFILE');
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) refuse('REFUSED_PROFILE');
+  if (Object.getOwnPropertySymbols(value).length !== 0) refuse('REFUSED_PROFILE');
+  const modeDescriptor = Object.getOwnPropertyDescriptor(value, 'mode');
+  if (!modeDescriptor || !('value' in modeDescriptor) || !modeDescriptor.enumerable) refuse('REFUSED_PROFILE');
+  if (modeDescriptor.value === 'none') return captureDataObject(value, OWNER_NONE_KEYS, 'REFUSED_PROFILE');
+  if (modeDescriptor.value === 'ed25519') return captureDataObject(value, OWNER_POLICY_KEYS, 'REFUSED_PROFILE');
+  refuse('REFUSED_PROFILE');
+}
+
+function intrinsicBufferLength(value, code) {
+  if (!Buffer.isBuffer(value)) refuse(code);
+  if (Object.getOwnPropertyDescriptor(value, 'length') || Object.getOwnPropertyDescriptor(value, 'byteLength')) refuse(code);
+  let length;
+  try {
+    length = Reflect.apply(TYPED_ARRAY_LENGTH_GETTER, value, []);
+  } catch {
+    refuse(code);
+  }
+  if (!Number.isSafeInteger(length) || length < 0) refuse(code);
+  return length;
+}
+
+function copyBuffer(value, expectedLength, code) {
+  let copy;
+  try {
+    copy = BUFFER_ALLOC_UNSAFE(expectedLength);
+    Reflect.apply(TYPED_ARRAY_SET, copy, [value, 0]);
+  } catch {
+    refuse(code);
+  }
+  if (intrinsicBufferLength(copy, code) !== expectedLength) refuse(code);
+  return copy;
 }
 
 function compareText(left, right) {
@@ -128,6 +199,7 @@ function canonicalText(value, state, depth = 0) {
   state.active.add(value);
   try {
     if (Array.isArray(value)) {
+      if (Object.getOwnPropertySymbols(value).length !== 0) refuse('REFUSED_CANONICAL');
       const names = Object.getOwnPropertyNames(value);
       if (names.length !== value.length + 1 || names.at(-1) !== 'length') refuse('REFUSED_CANONICAL');
       const parts = [];
@@ -168,70 +240,75 @@ function digest(value, code) {
 }
 
 function validateProfile(profile) {
-  hasOnlyDataProperties(profile, PROFILE_KEYS, 'REFUSED_PROFILE');
-  if (profile.schema !== 'artifact-admission-profile.v1' || profile.authorizing !== false || profile.runBinding !== 'manifest-artifact-row-equality.v1') refuse('REFUSED_PROFILE');
-  identifier(profile.profileId, 'REFUSED_PROFILE');
-  identifier(profile.rootArtifactId, 'REFUSED_PROFILE');
-  hasOnlyDataProperties(profile.subjectRules, SUBJECT_RULE_KEYS, 'REFUSED_PROFILE');
-  identifier(profile.subjectRules.repositoryId, 'REFUSED_PROFILE');
-  if (profile.subjectRules.gitObjectFormat !== 'sha1' && profile.subjectRules.gitObjectFormat !== 'sha256') refuse('REFUSED_PROFILE');
-  if (isProxy(profile.artifactRules) || !Array.isArray(profile.artifactRules) || profile.artifactRules.length === 0 || profile.artifactRules.length > LIMITS.artifacts) refuse('REFUSED_PROFILE');
-  for (const rule of profile.artifactRules) {
-    hasOnlyDataProperties(rule, RULE_KEYS, 'REFUSED_PROFILE');
+  const raw = captureDataObject(profile, PROFILE_KEYS, 'REFUSED_PROFILE');
+  if (raw.schema !== 'artifact-admission-profile.v1' || raw.authorizing !== false || raw.runBinding !== 'manifest-artifact-row-equality.v1') refuse('REFUSED_PROFILE');
+  identifier(raw.profileId, 'REFUSED_PROFILE');
+  identifier(raw.rootArtifactId, 'REFUSED_PROFILE');
+  const subjectRules = captureDataObject(raw.subjectRules, SUBJECT_RULE_KEYS, 'REFUSED_PROFILE');
+  identifier(subjectRules.repositoryId, 'REFUSED_PROFILE');
+  if (subjectRules.gitObjectFormat !== 'sha1' && subjectRules.gitObjectFormat !== 'sha256') refuse('REFUSED_PROFILE');
+  const artifactRuleInputs = captureDataArray(raw.artifactRules, 'REFUSED_PROFILE', LIMITS.artifacts);
+  if (artifactRuleInputs.length === 0) refuse('REFUSED_PROFILE');
+  const artifactRules = artifactRuleInputs.map((rule) => captureDataObject(rule, RULE_KEYS, 'REFUSED_PROFILE'));
+  for (const rule of artifactRules) {
     identifier(rule.id, 'REFUSED_PROFILE');
     identifier(rule.role, 'REFUSED_PROFILE');
     if (typeof rule.required !== 'boolean' || !Number.isSafeInteger(rule.maxBytes) || rule.maxBytes < 0 || rule.maxBytes > LIMITS.artifactBytes) refuse('REFUSED_PROFILE');
   }
-  assertSortedUnique(profile.artifactRules, (a, b) => compareText(a.id, b.id), 'REFUSED_PROFILE');
-  const rootRule = profile.artifactRules.find((rule) => rule.id === profile.rootArtifactId);
+  assertSortedUnique(artifactRules, (a, b) => compareText(a.id, b.id), 'REFUSED_PROFILE');
+  const rootRule = artifactRules.find((rule) => rule.id === raw.rootArtifactId);
   if (!rootRule || !rootRule.required) refuse('REFUSED_PROFILE');
-  for (const [claims, code] of [[profile.supportedClaims, 'REFUSED_PROFILE'], [profile.unsupportedClaims, 'REFUSED_PROFILE']]) {
-    if (isProxy(claims) || !Array.isArray(claims)) refuse(code);
-    for (const claim of claims) identifier(claim, code);
-    assertSortedUnique(claims, compareText, code);
+  const supportedClaims = captureDataArray(raw.supportedClaims, 'REFUSED_PROFILE', UNSUPPORTED_CLAIMS.length);
+  const unsupportedClaims = captureDataArray(raw.unsupportedClaims, 'REFUSED_PROFILE', UNSUPPORTED_CLAIMS.length);
+  for (const claims of [supportedClaims, unsupportedClaims]) {
+    for (const claim of claims) identifier(claim, 'REFUSED_PROFILE');
+    assertSortedUnique(claims, compareText, 'REFUSED_PROFILE');
   }
-  if (profile.supportedClaims.length !== 1 || profile.supportedClaims[0] !== 'captured-bytes-only') refuse('REFUSED_PROFILE');
-  if (profile.unsupportedClaims.length !== UNSUPPORTED_CLAIMS.length || profile.unsupportedClaims.some((claim, index) => claim !== UNSUPPORTED_CLAIMS[index])) refuse('REFUSED_PROFILE');
-  if (profile.supportedClaims.some((claim) => profile.unsupportedClaims.includes(claim))) refuse('REFUSED_PROFILE');
-  const ownerPolicy = profile.ownerPolicy;
-  if (isProxy(ownerPolicy)) refuse('REFUSED_PROFILE');
-  if (ownerPolicy?.mode === 'none') {
-    hasOnlyDataProperties(ownerPolicy, OWNER_NONE_KEYS, 'REFUSED_PROFILE');
-  } else if (ownerPolicy?.mode === 'ed25519') {
-    hasOnlyDataProperties(ownerPolicy, OWNER_POLICY_KEYS, 'REFUSED_PROFILE');
+  if (supportedClaims.length !== 1 || supportedClaims[0] !== 'captured-bytes-only') refuse('REFUSED_PROFILE');
+  if (unsupportedClaims.length !== UNSUPPORTED_CLAIMS.length || unsupportedClaims.some((claim, index) => claim !== UNSUPPORTED_CLAIMS[index])) refuse('REFUSED_PROFILE');
+  if (supportedClaims.some((claim) => unsupportedClaims.includes(claim))) refuse('REFUSED_PROFILE');
+  const ownerPolicy = captureOwnerPolicy(raw.ownerPolicy);
+  if (ownerPolicy.mode === 'ed25519') {
     if (ownerPolicy.algorithm !== 'Ed25519') refuse('REFUSED_PROFILE');
     identifier(ownerPolicy.keyId, 'REFUSED_PROFILE');
     if (typeof ownerPolicy.publicKeySpkiDerHex !== 'string' || !/^[0-9a-f]{88}$/.test(ownerPolicy.publicKeySpkiDerHex) || !ownerPolicy.publicKeySpkiDerHex.startsWith(SPKI_PREFIX)) refuse('REFUSED_PROFILE');
     digest(ownerPolicy.publicKeySha256, 'REFUSED_PROFILE');
     if (sha256(Buffer.from(ownerPolicy.publicKeySpkiDerHex, 'hex')) !== ownerPolicy.publicKeySha256) refuse('REFUSED_PROFILE');
-  } else {
-    refuse('REFUSED_PROFILE');
   }
-  const bytes = canonicalArtifactAdmissionJson(profile);
+  const capturedProfile = {
+    ...raw,
+    artifactRules,
+    ownerPolicy,
+    subjectRules,
+    supportedClaims,
+    unsupportedClaims,
+  };
+  const bytes = canonicalArtifactAdmissionJson(capturedProfile);
   if (bytes.length > LIMITS.profileBytes) refuse('REFUSED_PROFILE');
-  return bytes;
+  return { bytes, profile: capturedProfile };
 }
 
 function validateSubject(subject, profile) {
-  hasOnlyDataProperties(subject, SUBJECT_KEYS, 'REFUSED_PROFILE');
-  if (subject.repositoryId !== profile.subjectRules.repositoryId || subject.gitObjectFormat !== profile.subjectRules.gitObjectFormat) refuse('REFUSED_PROFILE');
-  const length = subject.gitObjectFormat === 'sha1' ? 40 : 64;
+  const captured = captureDataObject(subject, SUBJECT_KEYS, 'REFUSED_PROFILE');
+  if (captured.repositoryId !== profile.subjectRules.repositoryId || captured.gitObjectFormat !== profile.subjectRules.gitObjectFormat) refuse('REFUSED_PROFILE');
+  const length = captured.gitObjectFormat === 'sha1' ? 40 : 64;
   const pattern = new RegExp(`^[0-9a-f]{${length}}$`);
-  if (!pattern.test(subject.commitOid) || !pattern.test(subject.treeOid)) refuse('REFUSED_PROFILE');
+  if (!pattern.test(captured.commitOid) || !pattern.test(captured.treeOid)) refuse('REFUSED_PROFILE');
+  return captured;
 }
 
 function captureArtifacts(artifacts, profile, code = 'REFUSED_ARTIFACT') {
-  if (isProxy(artifacts) || !Array.isArray(artifacts) || artifacts.length > LIMITS.artifacts) refuse(code);
+  const artifactInputs = captureDataArray(artifacts, code, LIMITS.artifacts);
   const rules = new Map(profile.artifactRules.map((rule) => [rule.id, rule]));
   const captured = [];
-  for (const artifact of artifacts) {
-    hasOnlyDataProperties(artifact, ARTIFACT_INPUT_KEYS, code);
+  for (const input of artifactInputs) {
+    const artifact = captureDataObject(input, ARTIFACT_INPUT_KEYS, code);
     identifier(artifact.id, code);
     const rule = rules.get(artifact.id);
-    if (!rule || !Buffer.isBuffer(artifact.bytes)) refuse(code);
-    const length = artifact.bytes.length;
+    if (!rule) refuse(code);
+    const length = intrinsicBufferLength(artifact.bytes, code);
     if (length > rule.maxBytes || length > LIMITS.artifactBytes) refuse(code);
-    captured.push({ id: artifact.id, bytes: artifact.bytes, rule });
+    captured.push({ id: artifact.id, bytes: artifact.bytes, length, rule });
   }
   captured.sort((a, b) => compareText(a.id, b.id));
   assertSortedUnique(captured, (a, b) => compareText(a.id, b.id), code);
@@ -240,51 +317,57 @@ function captureArtifacts(artifacts, profile, code = 'REFUSED_ARTIFACT') {
   }
   let minimumFrameLength = 4 + 1 + 4 + 2;
   for (const artifact of captured) {
-    const increment = 2 + Buffer.byteLength(artifact.id, 'utf8') + 8 + artifact.bytes.length;
+    const increment = 2 + Buffer.byteLength(artifact.id, 'utf8') + 8 + artifact.length;
     if (!Number.isSafeInteger(increment) || minimumFrameLength > LIMITS.frameBytes - increment) refuse('REFUSED_FRAME_LIMIT');
     minimumFrameLength += increment;
   }
-  return captured.map((artifact) => ({ ...artifact, bytes: Buffer.from(artifact.bytes) }));
+  return captured.map((artifact) => ({
+    ...artifact,
+    bytes: copyBuffer(artifact.bytes, artifact.length, code),
+  }));
 }
 
 function validateClaims(claims, profile) {
-  if (isProxy(claims) || !Array.isArray(claims)) refuse('REFUSED_CLAIM');
-  for (const claim of claims) identifier(claim, 'REFUSED_CLAIM');
-  assertSortedUnique(claims, compareText, 'REFUSED_CLAIM');
-  for (const claim of claims) {
+  const captured = captureDataArray(claims, 'REFUSED_CLAIM', UNSUPPORTED_CLAIMS.length + 1);
+  for (const claim of captured) identifier(claim, 'REFUSED_CLAIM');
+  assertSortedUnique(captured, compareText, 'REFUSED_CLAIM');
+  for (const claim of captured) {
     if (profile.unsupportedClaims.includes(claim)) refuse('REFUSED_UNSUPPORTED_CLAIM');
     if (!profile.supportedClaims.includes(claim)) refuse('REFUSED_CLAIM');
   }
+  return captured;
 }
 
 function validateGraph(graph, rootId, artifactIds) {
-  hasOnlyDataProperties(graph, GRAPH_KEYS, 'REFUSED_GRAPH_CLOSURE');
-  const expectedRoot = rootId === undefined ? graph.root : rootId;
-  if (graph.schema !== 'artifact-admission-graph.v1' || graph.root !== expectedRoot) refuse('REFUSED_GRAPH_CLOSURE');
-  if (isProxy(graph.nodes) || !Array.isArray(graph.nodes) || graph.nodes.length > LIMITS.graphNodes || isProxy(graph.edges) || !Array.isArray(graph.edges) || graph.edges.length > LIMITS.graphEdges) refuse('REFUSED_GRAPH_CLOSURE');
-  for (const node of graph.nodes) identifier(node, 'REFUSED_GRAPH_CLOSURE');
-  assertSortedUnique(graph.nodes, compareText, 'REFUSED_GRAPH_CLOSURE');
-  if (graph.nodes.length !== artifactIds.length || graph.nodes.some((node, index) => node !== artifactIds[index])) refuse('REFUSED_GRAPH_CLOSURE');
-  for (const edge of graph.edges) {
-    hasOnlyDataProperties(edge, EDGE_KEYS, 'REFUSED_GRAPH_CLOSURE');
+  const raw = captureDataObject(graph, GRAPH_KEYS, 'REFUSED_GRAPH_CLOSURE');
+  const nodes = captureDataArray(raw.nodes, 'REFUSED_GRAPH_CLOSURE', LIMITS.graphNodes);
+  const edgeInputs = captureDataArray(raw.edges, 'REFUSED_GRAPH_CLOSURE', LIMITS.graphEdges);
+  const edges = edgeInputs.map((edge) => captureDataObject(edge, EDGE_KEYS, 'REFUSED_GRAPH_CLOSURE'));
+  const expectedRoot = rootId === undefined ? raw.root : rootId;
+  if (raw.schema !== 'artifact-admission-graph.v1' || raw.root !== expectedRoot) refuse('REFUSED_GRAPH_CLOSURE');
+  for (const node of nodes) identifier(node, 'REFUSED_GRAPH_CLOSURE');
+  assertSortedUnique(nodes, compareText, 'REFUSED_GRAPH_CLOSURE');
+  if (nodes.length !== artifactIds.length || nodes.some((node, index) => node !== artifactIds[index])) refuse('REFUSED_GRAPH_CLOSURE');
+  for (const edge of edges) {
     identifier(edge.from, 'REFUSED_GRAPH_CLOSURE');
     identifier(edge.kind, 'REFUSED_GRAPH_CLOSURE');
     identifier(edge.to, 'REFUSED_GRAPH_CLOSURE');
     if (edge.kind !== 'requires' || edge.from === edge.to || !artifactIds.includes(edge.from) || !artifactIds.includes(edge.to)) refuse('REFUSED_GRAPH_CLOSURE');
   }
-  assertSortedUnique(graph.edges, compareEdge, 'REFUSED_GRAPH_CLOSURE');
+  assertSortedUnique(edges, compareEdge, 'REFUSED_GRAPH_CLOSURE');
   const visiting = new Set();
   const visited = new Set();
   const visit = (node) => {
     if (visiting.has(node)) refuse('REFUSED_GRAPH_CLOSURE');
     if (visited.has(node)) return;
     visiting.add(node);
-    for (const edge of graph.edges) if (edge.from === node) visit(edge.to);
+    for (const edge of edges) if (edge.from === node) visit(edge.to);
     visiting.delete(node);
     visited.add(node);
   };
   visit(expectedRoot);
   if (visited.size !== artifactIds.length) refuse('REFUSED_GRAPH_CLOSURE');
+  return { schema: raw.schema, root: raw.root, nodes, edges };
 }
 
 function u16(value) {
@@ -337,15 +420,17 @@ function validateOwnerRecord(ownerRecord, ownerPolicy, unsignedManifest, rows) {
 }
 
 export function buildAdmissionManifest(options) {
-  hasOnlyDataProperties(options, BUILD_KEYS, 'REFUSED_PROFILE');
-  const { profile, subject, runId, artifacts, graph, claims, ownerRecord } = options;
-  const profileBytes = validateProfile(profile);
-  validateSubject(subject, profile);
+  const capturedOptions = captureDataObject(options, BUILD_KEYS, 'REFUSED_PROFILE');
+  const validatedProfile = validateProfile(capturedOptions.profile);
+  const profile = validatedProfile.profile;
+  const profileBytes = validatedProfile.bytes;
+  const subject = validateSubject(capturedOptions.subject, profile);
+  const { runId, artifacts, ownerRecord } = capturedOptions;
   digest(runId, 'REFUSED_RUN_BINDING');
-  validateClaims(claims, profile);
+  const claims = validateClaims(capturedOptions.claims, profile);
   const captured = captureArtifacts(artifacts, profile);
   const artifactIds = captured.map((artifact) => artifact.id);
-  validateGraph(graph, profile.rootArtifactId, artifactIds);
+  const graph = validateGraph(capturedOptions.graph, profile.rootArtifactId, artifactIds);
   const rows = captured.map(({ id, bytes, rule }) => ({
     id,
     role: rule.role,
@@ -360,10 +445,10 @@ export function buildAdmissionManifest(options) {
     profileId: profile.profileId,
     profileDigest: sha256(profileBytes),
     runId,
-    subject: { ...subject },
+    subject,
     artifacts: rows,
-    graph: { schema: graph.schema, root: graph.root, nodes: [...graph.nodes], edges: graph.edges.map((edge) => ({ ...edge })) },
-    claims: [...claims],
+    graph,
+    claims,
     ownerRecord: null,
   };
   const validatedOwner = validateOwnerRecord(ownerRecord, profile.ownerPolicy, unsignedManifest, rows);
@@ -373,43 +458,45 @@ export function buildAdmissionManifest(options) {
 }
 
 function validateManifestForFrame(manifest) {
-  hasOnlyDataProperties(manifest, MANIFEST_KEYS, 'REFUSED_MANIFEST');
-  if (manifest.schema !== 'artifact-admission-manifest.v1' || manifest.authorizing !== false) refuse('REFUSED_MANIFEST');
-  identifier(manifest.profileId, 'REFUSED_MANIFEST');
-  digest(manifest.profileDigest, 'REFUSED_MANIFEST');
-  digest(manifest.runId, 'REFUSED_RUN_BINDING');
-  hasOnlyDataProperties(manifest.subject, SUBJECT_KEYS, 'REFUSED_MANIFEST');
-  identifier(manifest.subject.repositoryId, 'REFUSED_MANIFEST');
-  const oidLength = manifest.subject.gitObjectFormat === 'sha1' ? 40 : manifest.subject.gitObjectFormat === 'sha256' ? 64 : 0;
-  if (!oidLength || !new RegExp(`^[0-9a-f]{${oidLength}}$`).test(manifest.subject.commitOid) || !new RegExp(`^[0-9a-f]{${oidLength}}$`).test(manifest.subject.treeOid)) refuse('REFUSED_MANIFEST');
-  if (isProxy(manifest.artifacts) || !Array.isArray(manifest.artifacts) || manifest.artifacts.length > LIMITS.artifacts) refuse('REFUSED_ARTIFACT');
-  for (const row of manifest.artifacts) {
-    hasOnlyDataProperties(row, ARTIFACT_ROW_KEYS, 'REFUSED_ARTIFACT');
+  const raw = captureDataObject(manifest, MANIFEST_KEYS, 'REFUSED_MANIFEST');
+  if (raw.schema !== 'artifact-admission-manifest.v1' || raw.authorizing !== false) refuse('REFUSED_MANIFEST');
+  identifier(raw.profileId, 'REFUSED_MANIFEST');
+  digest(raw.profileDigest, 'REFUSED_MANIFEST');
+  digest(raw.runId, 'REFUSED_RUN_BINDING');
+  const subject = captureDataObject(raw.subject, SUBJECT_KEYS, 'REFUSED_MANIFEST');
+  identifier(subject.repositoryId, 'REFUSED_MANIFEST');
+  const oidLength = subject.gitObjectFormat === 'sha1' ? 40 : subject.gitObjectFormat === 'sha256' ? 64 : 0;
+  if (!oidLength || !new RegExp(`^[0-9a-f]{${oidLength}}$`).test(subject.commitOid) || !new RegExp(`^[0-9a-f]{${oidLength}}$`).test(subject.treeOid)) refuse('REFUSED_MANIFEST');
+  const artifactInputs = captureDataArray(raw.artifacts, 'REFUSED_ARTIFACT', LIMITS.artifacts);
+  const artifacts = artifactInputs.map((row) => captureDataObject(row, ARTIFACT_ROW_KEYS, 'REFUSED_ARTIFACT'));
+  for (const row of artifacts) {
     identifier(row.id, 'REFUSED_ARTIFACT');
     identifier(row.role, 'REFUSED_ARTIFACT');
     digest(row.sha256, 'REFUSED_ARTIFACT');
     digest(row.runId, 'REFUSED_RUN_BINDING');
-    if (row.runId !== manifest.runId) refuse('REFUSED_RUN_BINDING');
+    if (row.runId !== raw.runId) refuse('REFUSED_RUN_BINDING');
     if (typeof row.required !== 'boolean' || !Number.isSafeInteger(row.byteLength) || row.byteLength < 0 || row.byteLength > LIMITS.artifactBytes) refuse('REFUSED_ARTIFACT');
   }
-  assertSortedUnique(manifest.artifacts, (a, b) => compareText(a.id, b.id), 'REFUSED_ARTIFACT');
-  validateGraph(manifest.graph, undefined, manifest.artifacts.map((row) => row.id));
-  if (isProxy(manifest.claims) || !Array.isArray(manifest.claims)) refuse('REFUSED_CLAIM');
-  for (const claim of manifest.claims) identifier(claim, 'REFUSED_CLAIM');
-  assertSortedUnique(manifest.claims, compareText, 'REFUSED_CLAIM');
-  if (manifest.ownerRecord !== null) {
-    hasOnlyDataProperties(manifest.ownerRecord, OWNER_RECORD_KEYS, 'REFUSED_OWNER_RECORD');
-    digest(manifest.ownerRecord.publicKeySha256, 'REFUSED_OWNER_RECORD');
-    digest(manifest.ownerRecord.signedPayloadSha256, 'REFUSED_OWNER_RECORD');
-    if (manifest.ownerRecord.algorithm !== 'Ed25519' || typeof manifest.ownerRecord.signature !== 'string' || !HEX128.test(manifest.ownerRecord.signature)) refuse('REFUSED_OWNER_RECORD');
-    identifier(manifest.ownerRecord.keyId, 'REFUSED_OWNER_RECORD');
+  assertSortedUnique(artifacts, (a, b) => compareText(a.id, b.id), 'REFUSED_ARTIFACT');
+  const graph = validateGraph(raw.graph, undefined, artifacts.map((row) => row.id));
+  const claims = captureDataArray(raw.claims, 'REFUSED_CLAIM', UNSUPPORTED_CLAIMS.length + 1);
+  for (const claim of claims) identifier(claim, 'REFUSED_CLAIM');
+  assertSortedUnique(claims, compareText, 'REFUSED_CLAIM');
+  let ownerRecord = null;
+  if (raw.ownerRecord !== null) {
+    ownerRecord = captureDataObject(raw.ownerRecord, OWNER_RECORD_KEYS, 'REFUSED_OWNER_RECORD');
+    digest(ownerRecord.publicKeySha256, 'REFUSED_OWNER_RECORD');
+    digest(ownerRecord.signedPayloadSha256, 'REFUSED_OWNER_RECORD');
+    if (ownerRecord.algorithm !== 'Ed25519' || typeof ownerRecord.signature !== 'string' || !HEX128.test(ownerRecord.signature)) refuse('REFUSED_OWNER_RECORD');
+    identifier(ownerRecord.keyId, 'REFUSED_OWNER_RECORD');
   }
+  return { ...raw, artifacts, claims, graph, ownerRecord, subject };
 }
 
 export function encodeAdmissionFrame(options) {
-  hasOnlyDataProperties(options, ENCODE_KEYS, 'REFUSED_MANIFEST');
-  const { manifest, artifacts } = options;
-  validateManifestForFrame(manifest);
+  const capturedOptions = captureDataObject(options, ENCODE_KEYS, 'REFUSED_MANIFEST');
+  const manifest = validateManifestForFrame(capturedOptions.manifest);
+  const { artifacts } = capturedOptions;
   const manifestBytes = canonicalArtifactAdmissionJson(manifest);
   if (manifestBytes.length > LIMITS.manifestBytes) refuse('REFUSED_MANIFEST');
   let frameLength = 4 + 1 + 4 + manifestBytes.length + 2;
@@ -418,25 +505,34 @@ export function encodeAdmissionFrame(options) {
     if (!Number.isSafeInteger(increment) || frameLength > LIMITS.frameBytes - increment) refuse('REFUSED_FRAME_LIMIT');
     frameLength += increment;
   }
-  if (isProxy(artifacts) || !Array.isArray(artifacts) || artifacts.length !== manifest.artifacts.length) refuse('REFUSED_ARTIFACT');
-  const captured = [];
-  for (const artifact of artifacts) {
-    hasOnlyDataProperties(artifact, ARTIFACT_INPUT_KEYS, 'REFUSED_ARTIFACT');
+  const artifactInputs = captureDataArray(artifacts, 'REFUSED_ARTIFACT', LIMITS.artifacts);
+  if (artifactInputs.length !== manifest.artifacts.length) refuse('REFUSED_ARTIFACT');
+  const preflight = [];
+  for (const input of artifactInputs) {
+    const artifact = captureDataObject(input, ARTIFACT_INPUT_KEYS, 'REFUSED_ARTIFACT');
     identifier(artifact.id, 'REFUSED_ARTIFACT');
-    if (!Buffer.isBuffer(artifact.bytes)) refuse('REFUSED_ARTIFACT');
-    captured.push({ id: artifact.id, bytes: Buffer.from(artifact.bytes) });
+    const length = intrinsicBufferLength(artifact.bytes, 'REFUSED_ARTIFACT');
+    preflight.push({ id: artifact.id, bytes: artifact.bytes, length });
   }
-  captured.sort((a, b) => compareText(a.id, b.id));
-  assertSortedUnique(captured, (a, b) => compareText(a.id, b.id), 'REFUSED_ARTIFACT');
-  for (let index = 0; index < captured.length; index += 1) {
-    const body = captured[index];
+  preflight.sort((a, b) => compareText(a.id, b.id));
+  assertSortedUnique(preflight, (a, b) => compareText(a.id, b.id), 'REFUSED_ARTIFACT');
+  for (let index = 0; index < preflight.length; index += 1) {
+    const body = preflight[index];
     const row = manifest.artifacts[index];
-    if (body.id !== row.id || body.bytes.length !== row.byteLength || sha256(body.bytes) !== row.sha256) refuse('REFUSED_ARTIFACT_DIGEST');
+    if (body.id !== row.id || body.length !== row.byteLength) refuse('REFUSED_ARTIFACT');
+  }
+  const captured = preflight.map((artifact) => ({
+    id: artifact.id,
+    bytes: copyBuffer(artifact.bytes, artifact.length, 'REFUSED_ARTIFACT'),
+  }));
+  for (let index = 0; index < captured.length; index += 1) {
+    if (sha256(captured[index].bytes) !== manifest.artifacts[index].sha256) refuse('REFUSED_ARTIFACT_DIGEST');
   }
   const parts = [Buffer.from('GAAF', 'ascii'), Buffer.from([1]), u32(manifestBytes.length), manifestBytes, u16(captured.length)];
   for (const artifact of captured) {
     const id = Buffer.from(artifact.id, 'utf8');
-    parts.push(u16(id.length), id, u64(artifact.bytes.length), artifact.bytes);
+    const length = intrinsicBufferLength(artifact.bytes, 'REFUSED_ARTIFACT');
+    parts.push(u16(id.length), id, u64(length), artifact.bytes);
   }
   const frame = Buffer.concat(parts);
   if (frame.length !== frameLength) refuse('REFUSED_FRAME_LIMIT');
