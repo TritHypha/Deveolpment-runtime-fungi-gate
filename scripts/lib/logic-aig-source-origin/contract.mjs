@@ -395,7 +395,10 @@ function validateExpectedOutcomeRow(row, parserPolicy) {
   if (row.ownerKind === 'INLINE_EXPECTATION' && (row.ownerLocator !== row.path || row.ownerKey !== 'expected_diagnostics')) refuse('SOURCE_ORIGIN_POLICY');
   if (row.ownerKind === 'SIDECAR_EXPECTATION' && (row.ownerLocator !== `${row.path}.expected.diagnostics.txt` || row.ownerKey !== 'complete-file')) refuse('SOURCE_ORIGIN_POLICY');
   if (row.ownerKind === 'GATE_V3_VERDICT' && (row.ownerLocator !== 'packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json' || row.ownerKey !== row.path.slice(row.path.lastIndexOf('/') + 1))) refuse('SOURCE_ORIGIN_POLICY');
-  if (row.ownerKind === 'PROPOSED_BASELINE' && row.ownerLocator !== 'governance/example-proposed-baseline.json') refuse('SOURCE_ORIGIN_POLICY');
+  if (row.ownerKind === 'PROPOSED_BASELINE') {
+    const ownerComponentCount = row.path.split('/').filter((component) => component === row.ownerKey).length;
+    if (row.ownerLocator !== 'governance/example-proposed-baseline.json' || ownerComponentCount !== 1) refuse('SOURCE_ORIGIN_POLICY');
+  }
 }
 
 export function validateExpectedParseOutcomes(value, { parserPolicy } = {}) {
