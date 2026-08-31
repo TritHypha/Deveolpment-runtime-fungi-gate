@@ -361,6 +361,14 @@ function nonEmptyString(value) {
   return value;
 }
 
+function canonicalLocator(value) {
+  nonEmptyString(value);
+  if (value.includes('\0') || value.includes('\\') || value.startsWith('/') || /^[A-Za-z]:/.test(value)) refuse('SOURCE_ORIGIN_POLICY');
+  const components = value.split('/');
+  if (components.some((component) => component === '' || component === '.' || component === '..')) refuse('SOURCE_ORIGIN_POLICY');
+  return value;
+}
+
 function nonNegativeInteger(value) {
   if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
@@ -375,6 +383,7 @@ function validateExpectedOutcomeRow(row, parserPolicy) {
   dataObject(row, ['path','domain','parserId','disposition','diagnosticCodes','ownerKind','ownerLocator','ownerKey']);
   for (const field of ['path','domain','parserId','disposition','ownerKind','ownerLocator','ownerKey']) nonEmptyString(row[field]);
   const parserByDomain = new Map(parserPolicy.domainParserBindings.map((binding) => [binding.domain, binding.parserId]));
+  canonicalLocator(row.path); canonicalLocator(row.ownerLocator);
   if (parserByDomain.get(row.domain) !== row.parserId || !parserPolicy.dispositions.includes(row.disposition) || !parserPolicy.ownerKinds.includes(row.ownerKind)) refuse('SOURCE_ORIGIN_POLICY');
   if (row.disposition === 'EXPECTED_REFUSAL') {
     if (row.ownerKind === 'PROPOSED_BASELINE') refuse('SOURCE_ORIGIN_POLICY');
@@ -385,6 +394,8 @@ function validateExpectedOutcomeRow(row, parserPolicy) {
   }
   if (row.ownerKind === 'INLINE_EXPECTATION' && (row.ownerLocator !== row.path || row.ownerKey !== 'expected_diagnostics')) refuse('SOURCE_ORIGIN_POLICY');
   if (row.ownerKind === 'SIDECAR_EXPECTATION' && (row.ownerLocator !== `${row.path}.expected.diagnostics.txt` || row.ownerKey !== 'complete-file')) refuse('SOURCE_ORIGIN_POLICY');
+  if (row.ownerKind === 'GATE_V3_VERDICT' && (row.ownerLocator !== 'packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json' || row.ownerKey !== row.path.slice(row.path.lastIndexOf('/') + 1))) refuse('SOURCE_ORIGIN_POLICY');
+  if (row.ownerKind === 'PROPOSED_BASELINE' && row.ownerLocator !== 'governance/example-proposed-baseline.json') refuse('SOURCE_ORIGIN_POLICY');
 }
 
 export function validateExpectedParseOutcomes(value, { parserPolicy } = {}) {
@@ -406,6 +417,7 @@ function validateExecutableIdentity(value) {
 function validatePackageIdentity(value) {
   dataObject(value, ['name','version','packageLocator','packageRawSha256','packageByteLength','entryLocator','entryRawSha256','entryByteLength']);
   for (const field of ['name','version','packageLocator','entryLocator']) nonEmptyString(value[field]);
+  canonicalLocator(value.packageLocator); canonicalLocator(value.entryLocator);
   digest(value.packageRawSha256); digest(value.entryRawSha256);
   nonNegativeInteger(value.packageByteLength); nonNegativeInteger(value.entryByteLength);
 }
@@ -414,7 +426,7 @@ function validateClosureRows(rows) {
   array(rows);
   for (const row of rows) {
     dataObject(row, ['locator','rawSha256','byteLength']);
-    nonEmptyString(row.locator); digest(row.rawSha256); nonNegativeInteger(row.byteLength);
+    canonicalLocator(row.locator); digest(row.rawSha256); nonNegativeInteger(row.byteLength);
   }
   validateSortedEntries(rows, 'locator');
 }
@@ -425,7 +437,11 @@ function validateToolchainRecord(record) {
   validateExecutableIdentity(record.nodeIdentity); validateExecutableIdentity(record.gitIdentity);
   validatePackageIdentity(record.typescript); validatePackageIdentity(record.galerinaParser);
   assertSortedUniqueStrings(record.builtinModules);
-  if (record.builtinModules.some((specifier) => !/^node:[a-z0-9][a-z0-9_./-]*$/.test(specifier))) refuse('SOURCE_ORIGIN_POLICY');
+  if (record.builtinModules.some((specifier) => {
+    if (!/^node:[a-z0-9][a-z0-9_./-]*$/.test(specifier)) return true;
+    const components = specifier.slice(5).split('/');
+    return components.some((component) => component === '' || component === '.' || component === '..');
+  })) refuse('SOURCE_ORIGIN_POLICY');
   validateClosureRows(record.executableModuleRows); validateClosureRows(record.dataRows);
   const allLocators = [...record.executableModuleRows, ...record.dataRows].map((row) => row.locator);
   if (new Set(allLocators).size !== allLocators.length) refuse('SOURCE_ORIGIN_ORDER');

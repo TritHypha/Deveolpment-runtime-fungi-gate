@@ -287,6 +287,43 @@ test("inline expected-outcome fixtures enforce exact closed nested rows, compara
   const aliasRow = structuredClone(value);
   aliasRow.rows[0].codes = aliasRow.rows[0].diagnosticCodes;
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateExpectedParseOutcomes(aliasRow, { parserPolicy: parser }));
+  for (const hostilePath of ["../negative.ts", "/absolute/negative.ts", "C:/absolute/negative.ts", "C:\\absolute\\negative.ts"]) {
+    const hostile = structuredClone(value);
+    hostile.rows[0].path = hostilePath;
+    hostile.rows[0].ownerLocator = hostilePath;
+    const hostileBody = { ...hostile };
+    delete hostileBody.expectedOutcomesDigest;
+    hostile.expectedOutcomesDigest = sha256Canonical(hostile.schema, hostileBody);
+    expectCode("SOURCE_ORIGIN_POLICY", () => validateExpectedParseOutcomes(hostile, { parserPolicy: parser }));
+  }
+  const arbitraryGateOwner = structuredClone(value);
+  Object.assign(arbitraryGateOwner.rows[0], {
+    path: "fixtures/negative.gate",
+    domain: "GATE",
+    parserId: "galerina-gate-v3-parser",
+    ownerKind: "GATE_V3_VERDICT",
+    ownerLocator: "governance/arbitrary.json",
+    ownerKey: "arbitrary",
+  });
+  const gateBody = { ...arbitraryGateOwner };
+  delete gateBody.expectedOutcomesDigest;
+  arbitraryGateOwner.expectedOutcomesDigest = sha256Canonical(arbitraryGateOwner.schema, gateBody);
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateExpectedParseOutcomes(arbitraryGateOwner, { parserPolicy: parser }));
+  const arbitraryProposedOwner = structuredClone(value);
+  Object.assign(arbitraryProposedOwner.rows[0], {
+    path: "fixtures/opaque.fungi",
+    domain: "FUNGI",
+    parserId: "galerina-fungi-parser",
+    disposition: "OPAQUE_PROPOSED",
+    diagnosticCodes: null,
+    ownerKind: "PROPOSED_BASELINE",
+    ownerLocator: "governance/arbitrary.json",
+    ownerKey: "Proposed-A",
+  });
+  const proposedBody = { ...arbitraryProposedOwner };
+  delete proposedBody.expectedOutcomesDigest;
+  arbitraryProposedOwner.expectedOutcomesDigest = sha256Canonical(arbitraryProposedOwner.schema, proposedBody);
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateExpectedParseOutcomes(arbitraryProposedOwner, { parserPolicy: parser }));
   const sparseRows = structuredClone(value);
   sparseRows.rows = Array(1);
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateExpectedParseOutcomes(sparseRows, { parserPolicy: parser }));
@@ -334,6 +371,29 @@ test("inline toolchain-pin fixtures enforce closed nested records and sorted uni
   };
   const value = { ...body, pinsDigest: sha256Canonical(body.schema, body) };
   assertDeepFrozen(validateToolchainPins(value));
+  const redigest = (candidate) => {
+    const candidateRecord = candidate.records[0];
+    const closureBody = {
+      schema: "galerina.logic-aig-module-closure.v1",
+      executableModuleRows: candidateRecord.executableModuleRows,
+      dataRows: candidateRecord.dataRows,
+      builtinModules: candidateRecord.builtinModules,
+      counts: {
+        executableModules: candidateRecord.executableModuleRows.length,
+        dataRows: candidateRecord.dataRows.length,
+        builtinModules: candidateRecord.builtinModules.length,
+      },
+      authorizing: false,
+    };
+    candidateRecord.moduleClosureDigest = sha256Canonical(closureBody.schema, closureBody);
+    const candidateRecordBody = { ...candidateRecord };
+    delete candidateRecordBody.recordDigest;
+    candidateRecord.recordDigest = sha256Canonical("galerina.logic-aig-toolchain-pin-record.v1", candidateRecordBody);
+    const candidateBody = { ...candidate };
+    delete candidateBody.pinsDigest;
+    candidate.pinsDigest = sha256Canonical(candidate.schema, candidateBody);
+    return candidate;
+  };
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins({ ...value, pins: [] }));
   const aliasRecord = structuredClone(value);
   aliasRecord.records[0].proposalDigest = "4".repeat(64);
@@ -341,5 +401,17 @@ test("inline toolchain-pin fixtures enforce closed nested records and sorted uni
   const sparseRecords = structuredClone(value);
   sparseRecords.records = Array(1);
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(sparseRecords));
+  const traversalPackage = structuredClone(value);
+  traversalPackage.records[0].typescript.packageLocator = "../typescript/package.json";
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(traversalPackage)));
+  const absoluteEntry = structuredClone(value);
+  absoluteEntry.records[0].galerinaParser.entryLocator = "C:/parser/index.mjs";
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(absoluteEntry)));
+  const hostileBuiltin = structuredClone(value);
+  hostileBuiltin.records[0].builtinModules = ["node:fs/../evil"];
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(hostileBuiltin)));
+  const traversalClosure = structuredClone(value);
+  traversalClosure.records[0].executableModuleRows = [{ locator: "../escape.js", rawSha256: "5".repeat(64), byteLength: 1 }];
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(traversalClosure)));
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainPins({ ...value, pinsDigest: "0".repeat(64) }));
 });
