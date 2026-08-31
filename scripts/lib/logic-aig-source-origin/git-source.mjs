@@ -1,5 +1,5 @@
-import { readFileSync, statSync } from 'node:fs';
-import { isAbsolute } from 'node:path';
+import { existsSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { isAbsolute, join } from 'node:path';
 import { arch, platform } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { isProxy } from 'node:util/types';
@@ -12,6 +12,8 @@ import {
   sha256Canonical,
   sha256Raw,
   validateRepositoryIdentity,
+  validateExpectedParseOutcomes,
+  validateParserPolicy,
   validateResolutionPolicy,
   validateSourcePolicy,
   validateToolchainPins,
@@ -19,6 +21,8 @@ import {
 
 const POLICY_PATHS = Object.freeze({
   repositoryIdentity: 'governance/logic-aig-source-origin-repository-identity.json',
+  expectedOutcomes: 'governance/logic-aig-source-origin-expected-parse-outcomes.json',
+  parser: 'governance/logic-aig-source-origin-parser-policy.json',
   resolution: 'governance/logic-aig-source-origin-resolution-policy.json',
   source: 'governance/logic-aig-source-origin-source-policy.json',
   toolchainPins: 'governance/logic-aig-source-origin-toolchain-pins.json',
@@ -79,6 +83,7 @@ function validatePath(path) {
     || path.includes('\0')
     || path.includes('\\')
     || path.startsWith('/')
+    || /^[A-Za-z]:\//.test(path)
     || path.endsWith('/')
     || hasUnpairedSurrogate(path)
     || path !== path.normalize('NFC')
@@ -177,11 +182,12 @@ function executableIdentity(gitExecutable) {
   let bytes;
   try {
     details = statSync(gitExecutable, { bigint: false });
+    if (!details.isFile() || !Number.isSafeInteger(details.size) || details.size <= 0 || details.size > SOURCE_ORIGIN_LIMITS.heldFileBytes) refuse('SOURCE_ORIGIN_GIT_EXECUTABLE');
     bytes = readFileSync(gitExecutable);
   } catch {
     refuse('SOURCE_ORIGIN_GIT_EXECUTABLE');
   }
-  if (!details.isFile() || bytes.length <= 0 || bytes.length > SOURCE_ORIGIN_LIMITS.heldFileBytes) refuse('SOURCE_ORIGIN_GIT_EXECUTABLE');
+  if (bytes.length !== details.size) refuse('SOURCE_ORIGIN_GIT_DRIFT');
   return Object.freeze({
     executableRawSha256: sha256Raw(bytes),
     executableByteLength: bytes.length,
@@ -306,6 +312,39 @@ function frozenHead(context) {
   return Object.freeze({ objectFormat, head, tree });
 }
 
+function repositoryLayout(context) {
+  let root;
+  let workTree;
+  let gitDirectory;
+  let index;
+  try {
+    root = realpathSync(context.repositoryRoot);
+    const workTreeLocator = decodeLine(runGit({ ...context, args: ['rev-parse', '--show-toplevel'] }));
+    const gitDirectoryLocator = decodeLine(runGit({ ...context, args: ['rev-parse', '--absolute-git-dir'] }));
+    const indexLocator = decodeLine(runGit({ ...context, args: ['rev-parse', '--path-format=absolute', '--git-path', 'index'] }));
+    if (!isAbsolute(workTreeLocator) || !isAbsolute(gitDirectoryLocator) || !isAbsolute(indexLocator)) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
+    workTree = realpathSync(workTreeLocator);
+    gitDirectory = realpathSync(gitDirectoryLocator);
+    index = realpathSync(indexLocator);
+    if (workTree !== root || index !== realpathSync(join(gitDirectory, 'index'))) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
+    for (const name of ['alternates', 'http-alternates']) {
+      const locator = join(gitDirectory, 'objects', 'info', name);
+      if (existsSync(locator)) {
+        const details = statSync(locator);
+        if (!details.isFile() || details.size !== 0) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
+      }
+    }
+  } catch (error) {
+    if (typeof error?.code === 'string' && error.code.startsWith('SOURCE_ORIGIN_')) throw error;
+    refuse('SOURCE_ORIGIN_GIT_LAYOUT');
+  }
+  return Object.freeze({ root, workTree, gitDirectory, index });
+}
+
+function equalLayout(left, right) {
+  return left.root === right.root && left.workTree === right.workTree && left.gitDirectory === right.gitDirectory && left.index === right.index;
+}
+
 function readBlob(context, oid, maximum) {
   const bytes = runGit({ ...context, args: ['cat-file', 'blob', oid], outputLimit: maximum });
   if (bytes.length > maximum) refuse('SOURCE_ORIGIN_LIMIT');
@@ -352,9 +391,11 @@ function deepFreeze(value, seen = new Set()) {
 }
 
 class DefensiveBlobMap extends Map {
+  #held;
+
   constructor(entries) {
     super();
-    for (const [key, bytes] of entries) Map.prototype.set.call(this, key, Buffer.from(bytes));
+    this.#held = new Map(entries.map(([key, bytes]) => [key, Buffer.from(bytes)]));
     Object.freeze(this);
   }
 
@@ -362,13 +403,21 @@ class DefensiveBlobMap extends Map {
   delete() { throw new TypeError('immutable blob map'); }
   clear() { throw new TypeError('immutable blob map'); }
 
+  get size() { return this.#held.size; }
+
+  has(key) { return this.#held.has(key); }
+
   get(key) {
-    const bytes = Map.prototype.get.call(this, key);
+    const bytes = this.#held.get(key);
     return bytes === undefined ? undefined : Buffer.from(bytes);
   }
 
   *entries() {
-    for (const [key, bytes] of Map.prototype.entries.call(this)) yield [key, Buffer.from(bytes)];
+    for (const [key, bytes] of this.#held) yield [key, Buffer.from(bytes)];
+  }
+
+  *keys() {
+    for (const key of this.#held.keys()) yield key;
   }
 
   *values() {
@@ -382,7 +431,7 @@ class DefensiveBlobMap extends Map {
   }
 }
 
-function buildManifests({ context, frozen, treeRows, treeByPath, repositoryIdentity, sourcePolicy, resolutionPolicy, limits }) {
+function buildManifests({ context, frozen, treeRows, treeByPath, repositoryIdentity, sourcePolicy, resolutionPolicy, resolutionOwnerPaths, limits }) {
   const sourceRows = [];
   const resolutionRows = [];
   const sourceEntries = [];
@@ -392,7 +441,7 @@ function buildManifests({ context, frozen, treeRows, treeByPath, repositoryIdent
 
   for (const treeRow of treeRows) {
     const sourceDomain = classifySourcePath(treeRow.path, sourcePolicy);
-    const isResolution = classifyResolutionPath(treeRow.path, resolutionPolicy);
+    const isResolution = classifyResolutionPath(treeRow.path, resolutionPolicy) || resolutionOwnerPaths.has(treeRow.path);
     if (!sourceDomain && !isResolution) continue;
     const maximum = sourceDomain ? Math.min(limits.heldFileBytes, limits.sourceBytes) : Math.min(limits.heldFileBytes, limits.resolutionBytes);
     const bytes = readBlob(context, treeRow.blobOid, maximum);
@@ -422,6 +471,7 @@ function buildManifests({ context, frozen, treeRows, treeByPath, repositoryIdent
   resolutionRows.sort((left, right) => codeUnitCompare(left.path, right.path));
   sourceEntries.sort((left, right) => codeUnitCompare(left[0], right[0]));
   resolutionEntries.sort((left, right) => codeUnitCompare(left[0], right[0]));
+  for (const ownerPath of resolutionOwnerPaths) if (!treeByPath.has(ownerPath) || !resolutionRows.some((row) => row.path === ownerPath)) refuse('SOURCE_ORIGIN_GIT_EXPECTED_OUTCOMES');
 
   const repositoryId = `repository:${repositoryIdentity.identityDigest}`;
   const exclusionDigest = sha256Canonical('galerina.logic-aig-exclusions.v1', sourcePolicy.exclusions);
@@ -488,6 +538,7 @@ export async function captureFrozenSource(options) {
   const context = { gitExecutable: gitExecutableLocator, repositoryRoot, limits };
 
   const executableBefore = observeExecutable(context);
+  const layoutBefore = repositoryLayout(context);
   const frozenBefore = frozenHead(context);
   if (!oidPattern(frozenBefore.objectFormat).test(expectedHead) || expectedHead !== frozenBefore.head) refuse('SOURCE_ORIGIN_GIT_HEAD');
   const treeRows = parseTree(
@@ -498,18 +549,27 @@ export async function captureFrozenSource(options) {
   const indexBefore = observeIndex(context, frozenBefore.objectFormat, treeRows);
 
   const repositoryIdentityValue = readPolicy({ context, treeByPath, path: POLICY_PATHS.repositoryIdentity, label: 'repository identity', maximum: limits.jsonBytes });
+  const expectedOutcomesValue = readPolicy({ context, treeByPath, path: POLICY_PATHS.expectedOutcomes, label: 'expected parse outcomes', maximum: limits.jsonBytes });
+  const parserPolicyValue = readPolicy({ context, treeByPath, path: POLICY_PATHS.parser, label: 'parser policy', maximum: limits.jsonBytes });
   const sourcePolicyValue = readPolicy({ context, treeByPath, path: POLICY_PATHS.source, label: 'source policy', maximum: limits.jsonBytes });
   const resolutionPolicyValue = readPolicy({ context, treeByPath, path: POLICY_PATHS.resolution, label: 'resolution policy', maximum: limits.jsonBytes });
   const pinsValue = readPolicy({ context, treeByPath, path: POLICY_PATHS.toolchainPins, label: 'toolchain pins', maximum: limits.jsonBytes });
   if (!pinsValue) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
+  if (!expectedOutcomesValue || !parserPolicyValue) refuse('SOURCE_ORIGIN_HOLD_EXPECTED_OUTCOMES');
   if (!repositoryIdentityValue || !sourcePolicyValue || !resolutionPolicyValue) refuse('SOURCE_ORIGIN_GIT_POLICY');
 
   const repositoryIdentity = validateRepositoryIdentity(repositoryIdentityValue);
+  const parserPolicy = validateParserPolicy(parserPolicyValue);
+  const expectedOutcomes = validateExpectedParseOutcomes(expectedOutcomesValue, { parserPolicy });
   const sourcePolicy = validateSourcePolicy(sourcePolicyValue);
   const resolutionPolicy = validateResolutionPolicy(resolutionPolicyValue);
   const pins = validateToolchainPins(pinsValue);
   if (sourcePolicy.exclusions.length !== 0) refuse('SOURCE_ORIGIN_GIT_POLICY');
   selectToolchainRecord(pins, executableBefore, executableBefore.version);
+  const ownerManifestKindByKind = new Map(parserPolicy.ownerManifestBindings.map((binding) => [binding.ownerKind, binding.manifestKind]));
+  const resolutionOwnerPaths = new Set(expectedOutcomes.rows
+    .filter((row) => ownerManifestKindByKind.get(row.ownerKind) === 'RESOLUTION_INPUTS')
+    .map((row) => row.ownerLocator));
 
   const manifests = buildManifests({
     context,
@@ -519,14 +579,17 @@ export async function captureFrozenSource(options) {
     repositoryIdentity,
     sourcePolicy,
     resolutionPolicy,
+    resolutionOwnerPaths,
     limits,
   });
 
   const executableAfter = observeExecutable(context);
+  const layoutAfter = repositoryLayout(context);
   const frozenAfter = frozenHead(context);
   const indexAfter = observeIndex(context, frozenAfter.objectFormat, treeRows);
   if (
     canonicalJsonText(executableAfter) !== canonicalJsonText(executableBefore)
+    || !equalLayout(layoutAfter, layoutBefore)
     || frozenAfter.objectFormat !== frozenBefore.objectFormat
     || frozenAfter.head !== frozenBefore.head
     || frozenAfter.tree !== frozenBefore.tree

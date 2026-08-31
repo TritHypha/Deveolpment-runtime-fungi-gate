@@ -5,6 +5,7 @@ import {
   chmod,
   mkdir,
   mkdtemp,
+  open,
   readFile,
   realpath,
   rm,
@@ -58,6 +59,10 @@ const RESOLUTION_BODIES = Object.freeze({
   "yarn.lock": "# fixture\n",
   "config/jsconfig.fixture.json": "{}\n",
   "config/tsconfig.build.json": "{}\n",
+});
+
+const EXPECTED_OWNER_BODIES = Object.freeze({
+  "src/j.ts.expected.diagnostics.txt": "TS-123\n",
 });
 
 function sha256(bytes) {
@@ -173,12 +178,33 @@ async function createFixture(t, { objectFormat = "sha1", withPin = true } = {}) 
 
   for (const [path, body] of Object.entries(SOURCE_BODIES)) await writeTracked(root, path, body);
   for (const [path, body] of Object.entries(RESOLUTION_BODIES)) await writeTracked(root, path, body);
+  for (const [path, body] of Object.entries(EXPECTED_OWNER_BODIES)) await writeTracked(root, path, body);
   await writeTracked(root, "README.md", "not source\n");
   await writeTracked(root, "src/not-source.txt", "not source\n");
 
   for (const name of POLICY_NAMES) {
     await writeTracked(root, `governance/${name}`, await readFile(new URL(name, GOVERNANCE)));
   }
+  const parserPolicy = JSON.parse(await readFile(new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE), "utf8"));
+  const expectedOutcomesBody = {
+    schema: "galerina.logic-aig-expected-parse-outcomes.v1",
+    parserPolicyDigest: parserPolicy.policyDigest,
+    rows: [{
+      path: "src/j.ts",
+      domain: "HOST",
+      parserId: "typescript-compiler-api",
+      disposition: "EXPECTED_REFUSAL",
+      diagnosticCodes: ["TS-123"],
+      ownerKind: "SIDECAR_EXPECTATION",
+      ownerLocator: "src/j.ts.expected.diagnostics.txt",
+      ownerKey: "complete-file",
+    }],
+    authorizing: false,
+  };
+  await writeTracked(root, "governance/logic-aig-source-origin-expected-parse-outcomes.json", canonicalJsonText({
+    ...expectedOutcomesBody,
+    expectedOutcomesDigest: sha256Canonical(expectedOutcomesBody.schema, expectedOutcomesBody),
+  }));
   const pinBody = withPin
     ? await fixturePin(gitExecutable)
     : {
@@ -206,6 +232,22 @@ async function createFixture(t, { objectFormat = "sha1", withPin = true } = {}) 
     tree: git(gitExecutable, root, ["rev-parse", "HEAD^{tree}"]),
     objectFormat,
   };
+}
+
+async function installSelfMutatingGitForwarder(fixture) {
+  const wrapper = join(fixture.root, "git-forwarder");
+  const trigger = join(fixture.root, "mutate-git-forwarder");
+  const quote = (value) => `'${value.replaceAll("'", `'"'"'`)}'`;
+  await writeFile(wrapper, `#!/bin/sh\n${quote(fixture.gitExecutable)} "$@"\nstatus=$?\nif [ -f ${quote(trigger)} ]; then\n  printf '\\n# executable drift\\n' >> "$0"\n  rm -f ${quote(trigger)}\nfi\nexit $status\n`);
+  await chmod(wrapper, 0o755);
+  const pin = await fixturePin(wrapper);
+  await writeTracked(fixture.root, "governance/logic-aig-source-origin-toolchain-pins.json", canonicalJsonText(pin));
+  git(fixture.gitExecutable, fixture.root, ["add", "governance/logic-aig-source-origin-toolchain-pins.json"]);
+  git(fixture.gitExecutable, fixture.root, ["commit", "-m", "pin fixture Git forwarder"]);
+  fixture.head = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD"]);
+  fixture.tree = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD^{tree}"]);
+  fixture.gitExecutable = wrapper;
+  await writeFile(trigger, "mutate on next invocation\n");
 }
 
 function captureOptions(fixture, limits = SOURCE_ORIGIN_LIMITS) {
@@ -325,7 +367,7 @@ test("captures a SHA-256 repository when the installed Git supports that object 
 test("selects only exact resolution basenames and jsconfig or tsconfig patterns", async (t) => {
   const fixture = await createFixture(t);
   const { resolutionInputs, resolutionBlobs } = await captureFrozenSource(captureOptions(fixture));
-  assert.deepEqual(resolutionInputs.rows.map((row) => row.path), Object.keys(RESOLUTION_BODIES).sort());
+  assert.deepEqual(resolutionInputs.rows.map((row) => row.path), [...Object.keys(RESOLUTION_BODIES), ...Object.keys(EXPECTED_OWNER_BODIES)].sort());
   assert.equal(resolutionInputs.authorizing, false);
   for (const row of resolutionInputs.rows) mapBytesForRow(resolutionBlobs, row);
   assertManifestDigest(resolutionInputs, "resolutionInputsDigest");
@@ -359,6 +401,18 @@ test("ignores mutable working-tree substitution and returns only frozen Git-obje
   assert(row);
   assert.equal(mapBytesForRow(result.sourceBlobs, row).toString("utf8"), SOURCE_BODIES["src/j.ts"]);
   assert.equal(result.sourceManifest.rows.some((entry) => entry.path === "src/untracked.ts"), false);
+});
+
+test("refuses frozen source-object corruption without returning a partial manifest", async (t) => {
+  const fixture = await createFixture(t);
+  const oid = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD:src/j.ts"]);
+  const gitDir = git(fixture.gitExecutable, fixture.root, ["rev-parse", "--absolute-git-dir"]);
+  const objectPath = join(gitDir, "objects", oid.slice(0, 2), oid.slice(2));
+  const bytes = await readFile(objectPath);
+  bytes[bytes.length - 1] ^= 1;
+  await chmod(objectPath, 0o600);
+  await writeFile(objectPath, bytes);
+  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
 });
 
 test("refuses an expected commit that is not the observed HEAD or whose tree drifts", async (t) => {
@@ -439,8 +493,8 @@ test("refuses case-shadowed and non-NFC Git paths independent of checkout filesy
   }
 });
 
-test("refuses duplicate and non-canonical backslash paths emitted by a hostile raw Git tree", async (t) => {
-  for (const names of [["duplicate.ts", "duplicate.ts"], ["evil\\path.ts"]]) {
+test("refuses duplicate, drive-absolute and non-canonical backslash paths emitted by a hostile raw Git tree", async (t) => {
+  for (const names of [["duplicate.ts", "duplicate.ts"], ["evil\\path.ts"], ["C:/escape.ts"]]) {
     const fixture = await createFixture(t);
     const oid = git(fixture.gitExecutable, fixture.root, ["hash-object", "-w", "--stdin"], { input: Buffer.from("export {};\n") }).toString("utf8").trim();
     setRawRootTree(fixture, names.map((name) => ({ mode: "100644", name, oid })));
@@ -455,9 +509,85 @@ test("refuses caller limit substitution and aggregate source or resolution overf
     { ...SOURCE_ORIGIN_LIMITS, sourceBytes: 1 },
     { ...SOURCE_ORIGIN_LIMITS, resolutionFiles: Object.keys(RESOLUTION_BODIES).length - 1 },
     { ...SOURCE_ORIGIN_LIMITS, resolutionBytes: 1 },
+    { ...SOURCE_ORIGIN_LIMITS, processMillis: 1 },
+    { ...SOURCE_ORIGIN_LIMITS, processOutputBytes: 1 },
   ]) {
     await expectSourceOriginError(captureFrozenSource(captureOptions(fixture, limits)), "REFUSED");
   }
+});
+
+test("ignores hostile ambient Git variables and repository pager, editor, hook and filter configuration", async (t) => {
+  const fixture = await createFixture(t);
+  git(fixture.gitExecutable, fixture.root, ["config", "core.pager", "hostile-pager"]);
+  git(fixture.gitExecutable, fixture.root, ["config", "core.editor", "hostile-editor"]);
+  git(fixture.gitExecutable, fixture.root, ["config", "core.hooksPath", "hostile-hooks"]);
+  git(fixture.gitExecutable, fixture.root, ["config", "filter.hostile.process", "hostile-filter"]);
+  await writeTracked(fixture.root, ".gitattributes", "*.ts filter=hostile\n");
+  const keys = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0", "GIT_PAGER", "GIT_EDITOR"];
+  const saved = new Map(keys.map((key) => [key, process.env[key]]));
+  try {
+    for (const key of keys) process.env[key] = "hostile-sentinel";
+    const result = await captureFrozenSource(captureOptions(fixture));
+    assert.equal(result.sourceManifest.expectedHead, fixture.head);
+  } finally {
+    for (const [key, value] of saved) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+});
+
+test("refuses repository-local object alternates", async (t) => {
+  const fixture = await createFixture(t);
+  const gitDir = git(fixture.gitExecutable, fixture.root, ["rev-parse", "--absolute-git-dir"]);
+  const alternates = join(gitDir, "objects", "info", "alternates");
+  await mkdir(dirname(alternates), { recursive: true });
+  await writeFile(alternates, `${join(fixture.root, "alternate-objects")}\n`);
+  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
+});
+
+test("refuses repository worktree relocation away from the supplied root", async (t) => {
+  const fixture = await createFixture(t);
+  const relocated = join(fixture.root, "relocated-worktree");
+  await mkdir(relocated);
+  git(fixture.gitExecutable, fixture.root, ["config", "core.worktree", relocated]);
+  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
+});
+
+test("refuses a missing frozen expected-outcome owner instead of omitting it", async (t) => {
+  const fixture = await createFixture(t);
+  git(fixture.gitExecutable, fixture.root, ["rm", "src/j.ts.expected.diagnostics.txt"]);
+  git(fixture.gitExecutable, fixture.root, ["commit", "-m", "remove expected owner"]);
+  fixture.head = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD"]);
+  fixture.tree = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD^{tree}"]);
+  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
+});
+
+test("refuses an executable locator that cannot run Git", async (t) => {
+  const fixture = await createFixture(t);
+  const inert = join(fixture.root, platform() === "win32" ? "not-git.exe" : "not-git");
+  await writeFile(inert, "not a Git executable\n");
+  try { await chmod(inert, 0o755); } catch { /* Windows execution metadata is not authoritative. */ }
+  await expectSourceOriginError(captureFrozenSource({ ...captureOptions(fixture), gitExecutableLocator: inert }), "REFUSED");
+});
+
+test("size-gates an oversized executable locator before attempting to run it", async (t) => {
+  const fixture = await createFixture(t);
+  const oversized = join(fixture.root, platform() === "win32" ? "oversized-git.exe" : "oversized-git");
+  const handle = await open(oversized, "w");
+  try { await handle.truncate(SOURCE_ORIGIN_LIMITS.heldFileBytes + 1); } finally { await handle.close(); }
+  try { await chmod(oversized, 0o755); } catch { /* Windows execution metadata is not authoritative. */ }
+  await expectSourceOriginError(captureFrozenSource({ ...captureOptions(fixture), gitExecutableLocator: oversized }), "REFUSED");
+});
+
+test("refuses Git executable byte drift between the before and after observations", async (t) => {
+  if (platform() === "win32") {
+    t.skip("self-mutating executable replay requires the Unix shell lane; Windows retains pre/post identity checks");
+    return;
+  }
+  const fixture = await createFixture(t);
+  await installSelfMutatingGitForwarder(fixture);
+  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
 });
 
 test("repeating capture of one commit produces deterministic manifests and exact held bytes", async (t) => {
@@ -469,6 +599,23 @@ test("repeating capture of one commit produces deterministic manifests and exact
   assert.deepEqual(second.resolutionInputs, first.resolutionInputs);
   assert.deepEqual([...second.sourceBlobs], [...first.sourceBlobs]);
   assert.deepEqual([...second.resolutionBlobs], [...first.resolutionBlobs]);
+});
+
+test("held byte maps resist generic Map prototype mutation and buffer alias bypasses", async (t) => {
+  const fixture = await createFixture(t);
+  const { sourceBlobs } = await captureFrozenSource(captureOptions(fixture));
+  const path = "src/j.ts";
+  const expected = Buffer.from(SOURCE_BODIES[path]);
+  assert.equal(sourceBlobs.size, Object.keys(SOURCE_BODIES).length);
+  assert.equal(Map.prototype.get.call(sourceBlobs, path), undefined);
+  Map.prototype.set.call(sourceBlobs, path, Buffer.from("mutated"));
+  Map.prototype.set.call(sourceBlobs, "attacker.ts", Buffer.from("attacker"));
+  assert.deepEqual(sourceBlobs.get(path), expected);
+  assert.equal(sourceBlobs.has("attacker.ts"), false);
+  assert.equal(sourceBlobs.size, Object.keys(SOURCE_BODIES).length);
+  Map.prototype.clear.call(sourceBlobs);
+  assert.deepEqual(sourceBlobs.get(path), expected);
+  assert.equal(sourceBlobs.size, Object.keys(SOURCE_BODIES).length);
 });
 
 test("production capture remains HOLD when the frozen commit has no approved nonempty toolchain pin", async (t) => {
