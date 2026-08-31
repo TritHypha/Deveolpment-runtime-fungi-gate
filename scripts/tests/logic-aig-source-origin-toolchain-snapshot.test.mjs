@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   SOURCE_ORIGIN_LIMITS,
+  canonicalJsonText,
   sha256Canonical,
   sha256Raw,
 } from '../lib/logic-aig-source-origin/contract.mjs';
@@ -109,30 +110,6 @@ function fixturePins(records = [fixtureRecord()]) {
   return { ...body, pinsDigest: sha256Canonical(body.schema, body) };
 }
 
-function fixtureNodeStartup() {
-  return {
-    executableRawSha256: sha256Raw(Buffer.from('node-executable', 'utf8')),
-    executableByteLength: Buffer.byteLength('node-executable'),
-    environmentMode: 'WINDOWS_SYSTEMROOT_ONLY',
-    systemRootIdentity: {
-      systemRootRegistryOwner: 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRoot',
-      systemRootCanonicalRawSha256: '1'.repeat(64),
-      systemRootCanonicalUtf8ByteLength: 18,
-      systemRootIdentityDigest: '2'.repeat(64),
-    },
-    childEnvironmentEntries: [{
-      key: 'SystemRoot',
-      source: 'HELD_SYSTEM_ROOT_REGISTRY_OWNER',
-      valueRule: 'CANONICAL_VALUE_MATCHES_SYSTEM_ROOT_IDENTITY',
-    }],
-    nodeOptionsAbsent: true,
-    nodePathAbsent: true,
-    execArgv: [],
-    environmentPolicyDigest: '3'.repeat(64),
-    boundary: 'COOPERATIVE_LOCAL_SAME_USER',
-  };
-}
-
 function fixtureOptions(overrides = {}) {
   const record = fixtureRecord();
   return {
@@ -143,7 +120,6 @@ function fixtureOptions(overrides = {}) {
     gitIdentity: structuredClone(record.gitIdentity),
     actualLoadedModuleRows: [structuredClone(record.executableModuleRows[0])],
     actualLoadedBuiltinModules: ['node:path'],
-    nodeStartup: fixtureNodeStartup(),
     ...overrides,
   };
 }
@@ -169,7 +145,7 @@ test('buildToolchainSnapshot creates the exact closed non-authorizing fixture ma
     'platform', 'arch', 'nodeIdentity', 'gitIdentity', 'typescript',
     'galerinaParser', 'builtinModules', 'executableModuleRows', 'dataRows',
     'moduleClosureDigest', 'actualLoadedModuleRows', 'actualLoadedSetDigest',
-    'nodeStartup', 'executionBoundary', 'authorizing', 'toolchainManifestDigest',
+    'authorizing', 'toolchainManifestDigest',
   ]);
   assert.equal(manifest.schema, 'galerina.logic-aig-toolchain-manifest.v1');
   assert.equal(manifest.selectedPinRecordId, record.recordId);
@@ -181,11 +157,37 @@ test('buildToolchainSnapshot creates the exact closed non-authorizing fixture ma
   assert.deepEqual(manifest.galerinaParser, record.galerinaParser);
   assert.deepEqual(manifest.executableModuleRows, record.executableModuleRows);
   assert.deepEqual(manifest.dataRows, record.dataRows);
-  assert.equal(manifest.executionBoundary, 'COOPERATIVE_LOCAL_SAME_USER');
   assert.equal(manifest.authorizing, false);
   assert.equal(
     manifest.toolchainManifestDigest,
     sha256Canonical(manifest.schema, without(manifest, 'toolchainManifestDigest')),
+  );
+});
+
+test('portable toolchain input produces a closed manifest without startup or execution authority', () => {
+  const manifest = buildToolchainSnapshot(fixtureOptions());
+  assertClosedObject(manifest, [
+    'schema', 'selectedPinRecordId', 'selectedPinRecordDigest', 'pinsDigest',
+    'platform', 'arch', 'nodeIdentity', 'gitIdentity', 'typescript',
+    'galerinaParser', 'builtinModules', 'executableModuleRows', 'dataRows',
+    'moduleClosureDigest', 'actualLoadedModuleRows', 'actualLoadedSetDigest',
+    'authorizing', 'toolchainManifestDigest',
+  ]);
+  assert.equal(manifest.authorizing, false);
+});
+
+test('legacy nodeStartup input is a closed-schema refusal', () => {
+  expectRefusal(
+    () => buildToolchainSnapshot({ ...fixtureOptions(), nodeStartup: { legacy: true } }),
+    /^SOURCE_ORIGIN_SCHEMA$/,
+  );
+});
+
+test('toolchain manifest contains no Windows SystemRoot held-startup or execution-boundary literals', () => {
+  const manifestText = canonicalJsonText(buildToolchainSnapshot(fixtureOptions()));
+  assert.doesNotMatch(
+    manifestText,
+    /WINDOWS_SYSTEMROOT_ONLY|SystemRoot|HELD_SYSTEM_ROOT_REGISTRY_OWNER|COOPERATIVE_LOCAL_SAME_USER|nodeStartup|executionBoundary/,
   );
 });
 
@@ -319,13 +321,15 @@ test('sparse, cyclic, deeply nested, unsafe-length and executable-injection inpu
   const sparseRows = new Array(1);
   expectRefusal(() => buildToolchainSnapshot({ ...fixtureOptions(), actualLoadedModuleRows: sparseRows }));
 
-  const cyclicStartup = fixtureNodeStartup();
-  cyclicStartup.systemRootIdentity = cyclicStartup;
-  expectRefusal(() => buildToolchainSnapshot({ ...fixtureOptions(), nodeStartup: cyclicStartup }));
+  const cyclicOptions = fixtureOptions();
+  cyclicOptions.pins.records[0].typescript = cyclicOptions;
+  expectRefusal(() => buildToolchainSnapshot(cyclicOptions));
 
   let deeplyNested = null;
   for (let index = 0; index <= 129; index += 1) deeplyNested = [deeplyNested];
-  expectRefusal(() => buildToolchainSnapshot({ ...fixtureOptions(), nodeStartup: deeplyNested }));
+  const deeplyNestedOptions = fixtureOptions();
+  deeplyNestedOptions.pins.records[0].dataRows[0].locator = deeplyNested;
+  expectRefusal(() => buildToolchainSnapshot(deeplyNestedOptions));
 
   const record = fixtureRecord();
   record.executableModuleRows[0].byteLength = Number.MAX_SAFE_INTEGER + 1;

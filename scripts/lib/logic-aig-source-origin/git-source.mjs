@@ -182,7 +182,7 @@ function executableIdentity(gitExecutable) {
   let bytes;
   try {
     details = statSync(gitExecutable, { bigint: false });
-    if (!details.isFile() || !Number.isSafeInteger(details.size) || details.size <= 0 || details.size > SOURCE_ORIGIN_LIMITS.heldFileBytes) refuse('SOURCE_ORIGIN_GIT_EXECUTABLE');
+    if (!details.isFile() || !Number.isSafeInteger(details.size) || details.size <= 0 || details.size > SOURCE_ORIGIN_LIMITS.capturedFileBytes) refuse('SOURCE_ORIGIN_GIT_EXECUTABLE');
     bytes = readFileSync(gitExecutable);
   } catch {
     refuse('SOURCE_ORIGIN_GIT_EXECUTABLE');
@@ -451,7 +451,7 @@ function buildManifests({ context, frozen, treeRows, treeByPath, repositoryIdent
     const sourceDomain = classifySourcePath(treeRow.path, sourcePolicy);
     const isResolution = classifyResolutionPath(treeRow.path, resolutionPolicy) || resolutionOwnerPaths.has(treeRow.path);
     if (!sourceDomain && !isResolution) continue;
-    const maximum = sourceDomain ? Math.min(limits.heldFileBytes, limits.sourceBytes) : Math.min(limits.heldFileBytes, limits.resolutionBytes);
+    const maximum = sourceDomain ? Math.min(limits.capturedFileBytes, limits.sourceBytes) : Math.min(limits.capturedFileBytes, limits.resolutionBytes);
     const bytes = readBlob(context, treeRow.blobOid, maximum);
     const row = Object.freeze({
       path: treeRow.path,

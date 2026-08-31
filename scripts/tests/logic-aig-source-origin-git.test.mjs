@@ -282,7 +282,7 @@ function assertManifestDigest(manifest, field) {
 function mapBytesForRow(blobMap, row) {
   assert(blobMap instanceof Map);
   const bytes = blobMap.get(row.path) ?? blobMap.get(row.blobOid);
-  assert(Buffer.isBuffer(bytes), `missing held bytes for ${row.path}`);
+  assert(Buffer.isBuffer(bytes), `missing captured bytes for ${row.path}`);
   assert.equal(bytes.length, row.byteLength);
   assert.equal(sha256(bytes), row.rawSha256);
   return bytes;
@@ -593,7 +593,7 @@ test("size-gates an oversized executable locator before attempting to run it", a
   const fixture = await createFixture(t);
   const oversized = join(fixture.root, platform() === "win32" ? "oversized-git.exe" : "oversized-git");
   const handle = await open(oversized, "w");
-  try { await handle.truncate(SOURCE_ORIGIN_LIMITS.heldFileBytes + 1); } finally { await handle.close(); }
+  try { await handle.truncate(SOURCE_ORIGIN_LIMITS.capturedFileBytes + 1); } finally { await handle.close(); }
   try { await chmod(oversized, 0o755); } catch { /* Windows execution metadata is not authoritative. */ }
   await expectSourceOriginError(captureFrozenSource({ ...captureOptions(fixture), gitExecutableLocator: oversized }), "REFUSED");
 });
@@ -608,7 +608,7 @@ test("refuses Git executable byte drift between the before and after observation
   await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
 });
 
-test("repeating capture of one commit produces deterministic manifests and exact held bytes", async (t) => {
+test("repeating capture of one commit produces deterministic manifests and exact captured bytes", async (t) => {
   const fixture = await createFixture(t);
   const first = await captureFrozenSource(captureOptions(fixture));
   const second = await captureFrozenSource(captureOptions(fixture));
@@ -619,7 +619,7 @@ test("repeating capture of one commit produces deterministic manifests and exact
   assert.deepEqual([...second.resolutionBlobs], [...first.resolutionBlobs]);
 });
 
-test("held byte maps resist generic Map prototype mutation and buffer alias bypasses", async (t) => {
+test("captured byte maps resist generic Map prototype mutation and buffer alias bypasses", async (t) => {
   const fixture = await createFixture(t);
   const { sourceBlobs } = await captureFrozenSource(captureOptions(fixture));
   const path = "src/j.ts";

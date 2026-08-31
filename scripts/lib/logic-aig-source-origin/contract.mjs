@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { isProxy } from 'node:util/types';
 
 export const SOURCE_ORIGIN_LIMITS = deepFreeze({
-  heldFileBytes: 67_108_864,
+  capturedFileBytes: 67_108_864,
   jsonBytes: 67_108_864,
   sourceFiles: 16_384,
   sourceBytes: 67_108_864,

@@ -130,44 +130,6 @@ function sameData(left, right) {
   return canonicalJsonText(left) === canonicalJsonText(right);
 }
 
-function validateNodeStartup(value, nodeIdentity) {
-  exactObject(value, [
-    'executableRawSha256', 'executableByteLength', 'environmentMode',
-    'systemRootIdentity', 'childEnvironmentEntries', 'nodeOptionsAbsent',
-    'nodePathAbsent', 'execArgv', 'environmentPolicyDigest', 'boundary',
-  ]);
-  digest(value.executableRawSha256);
-  nonNegativeInteger(value.executableByteLength);
-  if (
-    value.executableRawSha256 !== nodeIdentity.executableRawSha256
-    || value.executableByteLength !== nodeIdentity.executableByteLength
-  ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  if (value.environmentMode !== 'WINDOWS_SYSTEMROOT_ONLY') refuse('SOURCE_ORIGIN_TOOLCHAIN');
-
-  exactObject(value.systemRootIdentity, [
-    'systemRootRegistryOwner', 'systemRootCanonicalRawSha256',
-    'systemRootCanonicalUtf8ByteLength', 'systemRootIdentityDigest',
-  ]);
-  nonEmptyText(value.systemRootIdentity.systemRootRegistryOwner);
-  digest(value.systemRootIdentity.systemRootCanonicalRawSha256);
-  nonNegativeInteger(value.systemRootIdentity.systemRootCanonicalUtf8ByteLength);
-  digest(value.systemRootIdentity.systemRootIdentityDigest);
-
-  array(value.childEnvironmentEntries);
-  if (value.childEnvironmentEntries.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  exactObject(value.childEnvironmentEntries[0], ['key', 'source', 'valueRule']);
-  if (
-    value.childEnvironmentEntries[0].key !== 'SystemRoot'
-    || value.childEnvironmentEntries[0].source !== 'HELD_SYSTEM_ROOT_REGISTRY_OWNER'
-    || value.childEnvironmentEntries[0].valueRule !== 'CANONICAL_VALUE_MATCHES_SYSTEM_ROOT_IDENTITY'
-  ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  if (value.nodeOptionsAbsent !== true || value.nodePathAbsent !== true) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  array(value.execArgv);
-  if (value.execArgv.length !== 0) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  digest(value.environmentPolicyDigest);
-  if (value.boundary !== 'COOPERATIVE_LOCAL_SAME_USER') refuse('SOURCE_ORIGIN_TOOLCHAIN');
-}
-
 function validateLoadedRows(rows, admittedRows) {
   array(rows);
   for (const row of rows) validateClosureRow(row);
@@ -203,7 +165,7 @@ export function buildToolchainSnapshot(options) {
   canonicalJsonText(input);
   exactObject(input, [
     'pins', 'platform', 'arch', 'nodeIdentity', 'gitIdentity',
-    'actualLoadedModuleRows', 'actualLoadedBuiltinModules', 'nodeStartup',
+    'actualLoadedModuleRows', 'actualLoadedBuiltinModules',
   ]);
   nonEmptyText(input.platform);
   nonEmptyText(input.arch);
@@ -221,7 +183,6 @@ export function buildToolchainSnapshot(options) {
 
   validateLoadedRows(input.actualLoadedModuleRows, record.executableModuleRows);
   validateLoadedBuiltins(input.actualLoadedBuiltinModules, record.builtinModules);
-  validateNodeStartup(input.nodeStartup, record.nodeIdentity);
 
   const closureBody = {
     schema: 'galerina.logic-aig-module-closure.v1',
@@ -261,8 +222,6 @@ export function buildToolchainSnapshot(options) {
     moduleClosureDigest,
     actualLoadedModuleRows: input.actualLoadedModuleRows,
     actualLoadedSetDigest: sha256Canonical(loadedBody.schema, loadedBody),
-    nodeStartup: input.nodeStartup,
-    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
     authorizing: false,
   };
   return deepFreeze({

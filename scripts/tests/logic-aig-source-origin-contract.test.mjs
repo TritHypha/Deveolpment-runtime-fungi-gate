@@ -80,7 +80,7 @@ function assertDeepFrozen(value, seen = new Set()) {
 
 test("exports the sole exact immutable eleven-field limit owner", () => {
   assert.deepEqual(SOURCE_ORIGIN_LIMITS, {
-    heldFileBytes: 67_108_864,
+    capturedFileBytes: 67_108_864,
     jsonBytes: 67_108_864,
     sourceFiles: 16_384,
     sourceBytes: 67_108_864,
