@@ -317,18 +317,21 @@ function repositoryLayout(context) {
   let workTree;
   let gitDirectory;
   let index;
+  let alternates;
+  let httpAlternates;
   try {
     root = realpathSync(context.repositoryRoot);
     const workTreeLocator = decodeLine(runGit({ ...context, args: ['rev-parse', '--show-toplevel'] }));
     const gitDirectoryLocator = decodeLine(runGit({ ...context, args: ['rev-parse', '--absolute-git-dir'] }));
     const indexLocator = decodeLine(runGit({ ...context, args: ['rev-parse', '--path-format=absolute', '--git-path', 'index'] }));
-    if (!isAbsolute(workTreeLocator) || !isAbsolute(gitDirectoryLocator) || !isAbsolute(indexLocator)) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
+    alternates = decodeLine(runGit({ ...context, args: ['rev-parse', '--path-format=absolute', '--git-path', 'objects/info/alternates'] }));
+    httpAlternates = decodeLine(runGit({ ...context, args: ['rev-parse', '--path-format=absolute', '--git-path', 'objects/info/http-alternates'] }));
+    if ([workTreeLocator, gitDirectoryLocator, indexLocator, alternates, httpAlternates].some((locator) => !isAbsolute(locator))) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
     workTree = realpathSync(workTreeLocator);
     gitDirectory = realpathSync(gitDirectoryLocator);
     index = realpathSync(indexLocator);
     if (workTree !== root || index !== realpathSync(join(gitDirectory, 'index'))) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
-    for (const name of ['alternates', 'http-alternates']) {
-      const locator = join(gitDirectory, 'objects', 'info', name);
+    for (const locator of [alternates, httpAlternates]) {
       if (existsSync(locator)) {
         const details = statSync(locator);
         if (!details.isFile() || details.size !== 0) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
@@ -338,11 +341,16 @@ function repositoryLayout(context) {
     if (typeof error?.code === 'string' && error.code.startsWith('SOURCE_ORIGIN_')) throw error;
     refuse('SOURCE_ORIGIN_GIT_LAYOUT');
   }
-  return Object.freeze({ root, workTree, gitDirectory, index });
+  return Object.freeze({ root, workTree, gitDirectory, index, alternates, httpAlternates });
 }
 
 function equalLayout(left, right) {
-  return left.root === right.root && left.workTree === right.workTree && left.gitDirectory === right.gitDirectory && left.index === right.index;
+  return left.root === right.root
+    && left.workTree === right.workTree
+    && left.gitDirectory === right.gitDirectory
+    && left.index === right.index
+    && left.alternates === right.alternates
+    && left.httpAlternates === right.httpAlternates;
 }
 
 function readBlob(context, oid, maximum) {

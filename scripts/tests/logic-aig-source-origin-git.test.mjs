@@ -546,6 +546,24 @@ test("refuses repository-local object alternates", async (t) => {
   await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
 });
 
+test("refuses common-object alternates from a linked worktree", async (t) => {
+  const fixture = await createFixture(t);
+  const linkedParent = await mkdtemp(join(tmpdir(), "galerina-source-origin-linked-"));
+  const linkedRoot = join(linkedParent, "worktree");
+  git(fixture.gitExecutable, fixture.root, ["worktree", "add", "--detach", linkedRoot, fixture.head]);
+  try {
+    const alternateObjects = join(linkedParent, "alternate-objects");
+    const alternates = git(fixture.gitExecutable, linkedRoot, ["rev-parse", "--path-format=absolute", "--git-path", "objects/info/alternates"]);
+    await mkdir(alternateObjects, { recursive: true });
+    await mkdir(dirname(alternates), { recursive: true });
+    await writeFile(alternates, `${alternateObjects}\n`);
+    await expectSourceOriginError(captureFrozenSource(captureOptions({ ...fixture, root: linkedRoot })), "REFUSED");
+  } finally {
+    spawnSync(fixture.gitExecutable, ["-C", fixture.root, "worktree", "remove", "--force", linkedRoot], { encoding: "utf8", windowsHide: true });
+    await rm(linkedParent, { recursive: true, force: true });
+  }
+});
+
 test("refuses repository worktree relocation away from the supplied root", async (t) => {
   const fixture = await createFixture(t);
   const relocated = join(fixture.root, "relocated-worktree");
