@@ -259,7 +259,8 @@ function validateClaims(claims, profile) {
 
 function validateGraph(graph, rootId, artifactIds) {
   hasOnlyDataProperties(graph, GRAPH_KEYS, 'REFUSED_GRAPH_CLOSURE');
-  if (graph.schema !== 'artifact-admission-graph.v1' || graph.root !== rootId) refuse('REFUSED_GRAPH_CLOSURE');
+  const expectedRoot = rootId === undefined ? graph.root : rootId;
+  if (graph.schema !== 'artifact-admission-graph.v1' || graph.root !== expectedRoot) refuse('REFUSED_GRAPH_CLOSURE');
   if (isProxy(graph.nodes) || !Array.isArray(graph.nodes) || graph.nodes.length > LIMITS.graphNodes || isProxy(graph.edges) || !Array.isArray(graph.edges) || graph.edges.length > LIMITS.graphEdges) refuse('REFUSED_GRAPH_CLOSURE');
   for (const node of graph.nodes) identifier(node, 'REFUSED_GRAPH_CLOSURE');
   assertSortedUnique(graph.nodes, compareText, 'REFUSED_GRAPH_CLOSURE');
@@ -282,7 +283,7 @@ function validateGraph(graph, rootId, artifactIds) {
     visiting.delete(node);
     visited.add(node);
   };
-  visit(rootId);
+  visit(expectedRoot);
   if (visited.size !== artifactIds.length) refuse('REFUSED_GRAPH_CLOSURE');
 }
 
@@ -392,7 +393,7 @@ function validateManifestForFrame(manifest) {
     if (typeof row.required !== 'boolean' || !Number.isSafeInteger(row.byteLength) || row.byteLength < 0 || row.byteLength > LIMITS.artifactBytes) refuse('REFUSED_ARTIFACT');
   }
   assertSortedUnique(manifest.artifacts, (a, b) => compareText(a.id, b.id), 'REFUSED_ARTIFACT');
-  validateGraph(manifest.graph, manifest.graph?.root, manifest.artifacts.map((row) => row.id));
+  validateGraph(manifest.graph, undefined, manifest.artifacts.map((row) => row.id));
   if (isProxy(manifest.claims) || !Array.isArray(manifest.claims)) refuse('REFUSED_CLAIM');
   for (const claim of manifest.claims) identifier(claim, 'REFUSED_CLAIM');
   assertSortedUnique(manifest.claims, compareText, 'REFUSED_CLAIM');

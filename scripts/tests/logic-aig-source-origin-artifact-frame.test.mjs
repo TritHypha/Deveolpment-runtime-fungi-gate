@@ -353,6 +353,13 @@ test('hostile proxies refuse before caller code can run and deep canonical input
   const claimsProxy = katAInputs();
   claimsProxy.claims = new Proxy(claimsProxy.claims, nestedHandler);
   expectRefusal(() => buildAdmissionManifest(claimsProxy), 'REFUSED_CLAIM');
+
+  const proxiedManifestGraph = buildAdmissionManifest(katAInputs());
+  proxiedManifestGraph.graph = new Proxy(proxiedManifestGraph.graph, nestedHandler);
+  expectRefusal(
+    () => encodeAdmissionFrame({ manifest: proxiedManifestGraph, artifacts: katAInputs().artifacts }),
+    'REFUSED_GRAPH_CLOSURE',
+  );
   assert.equal(nestedCalls, 0);
 
   let nested = null;
