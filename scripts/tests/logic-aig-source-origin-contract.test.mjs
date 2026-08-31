@@ -3,7 +3,11 @@ import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 
 import {
+  PARSER_POLICY_BODY,
+  RESOLUTION_POLICY_BODY,
   SOURCE_ORIGIN_LIMITS,
+  SOURCE_POLICY_BODY,
+  UNRESOLVED_REASON_ROWS,
   canonicalJsonText,
   classifySourcePath,
   decodeDiagnosticSet,
@@ -67,6 +71,13 @@ function expectCode(code, operation) {
   assert.throws(operation, (error) => error?.code === code);
 }
 
+function assertDeepFrozen(value, seen = new Set()) {
+  if (value === null || typeof value !== "object" || seen.has(value)) return;
+  seen.add(value);
+  assert(Object.isFrozen(value));
+  for (const child of Object.values(value)) assertDeepFrozen(child, seen);
+}
+
 test("exports the sole exact immutable eleven-field limit owner", () => {
   assert.deepEqual(SOURCE_ORIGIN_LIMITS, {
     heldFileBytes: 67_108_864,
@@ -82,6 +93,9 @@ test("exports the sole exact immutable eleven-field limit owner", () => {
     processOutputBytes: 1_048_576,
   });
   assert(Object.isFrozen(SOURCE_ORIGIN_LIMITS));
+  for (const policy of [SOURCE_POLICY_BODY, RESOLUTION_POLICY_BODY, PARSER_POLICY_BODY, UNRESOLVED_REASON_ROWS]) {
+    assertDeepFrozen(policy);
+  }
 });
 
 test("raw and domain-separated canonical SHA-256 helpers match independent literals", () => {
@@ -91,6 +105,8 @@ test("raw and domain-separated canonical SHA-256 helpers match independent liter
     "24f3b0b2d25f2e6f4b20e2f73f9f92cec10e38aa5ecdbe3cd2d2d99d6efc2d26",
   );
   assert.equal(canonicalJsonText({ z: 1, a: false }), '{"a":false,"z":1}');
+  expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText(-1));
+  expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText({ value: "\ud800" }));
 });
 
 test("canonical byte parsing rejects duplicate members and semantically equal noncanonical bytes", () => {
@@ -106,6 +122,25 @@ test("canonical byte parsing rejects duplicate members and semantically equal no
     parseCanonicalJsonBytes(Buffer.from('{"a":1}', "utf8"), { label: "canonical" }),
     { a: 1 },
   );
+  expectCode(
+    "SOURCE_ORIGIN_JSON_CANONICAL",
+    () => parseCanonicalJsonBytes(Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from('{"a":1}')]), { label: "bom" }),
+  );
+
+  const sparse = [];
+  sparse.length = 1;
+  expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText(sparse));
+
+  let getterCalls = 0;
+  const accessor = [];
+  Object.defineProperty(accessor, "0", { enumerable: true, get() { getterCalls += 1; return 1; } });
+  accessor.length = 1;
+  expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText(accessor));
+  assert.equal(getterCalls, 0);
+
+  const decorated = [1];
+  decorated.alias = true;
+  expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText(decorated));
 });
 
 test("the five tracked static owners are canonical, closed, self-digested and non-authorizing", async () => {
@@ -120,11 +155,17 @@ test("the five tracked static owners are canonical, closed, self-digested and no
     assert.equal(value.authorizing, false);
   }
 
-  assert.deepEqual(validateRepositoryIdentity(repository.value), repository.value);
-  assert.deepEqual(validateSourcePolicy(source.value), source.value);
-  assert.deepEqual(validateResolutionPolicy(resolution.value), resolution.value);
-  assert.deepEqual(validateParserPolicy(parser.value), parser.value);
-  assert.deepEqual(validateGeneratedConsumerPolicy(generated.value), generated.value);
+  const validated = [
+    validateRepositoryIdentity(repository.value),
+    validateSourcePolicy(source.value),
+    validateResolutionPolicy(resolution.value),
+    validateParserPolicy(parser.value),
+    validateGeneratedConsumerPolicy(generated.value),
+  ];
+  for (const result of validated) assertDeepFrozen(result);
+  assert.notStrictEqual(validated[0], repository.value);
+  repository.value.ownerNamespace = "mutated-after-validation";
+  assert.equal(validated[0].ownerNamespace, "TritHypha");
   assert.equal(generated.value.policyDigest, "60c7c6d588d3c888206093c43da6b433bc6d904cb3059376b87c54b83750a5e9");
 });
 
@@ -223,28 +264,82 @@ test("inline Proposed-baseline fixtures enforce closed rows, ordering, uniquenes
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateProposedBaseline({ ...value, entries: [{ ...value.entries[0], alias: "x" }] }));
 });
 
-test("inline expected-outcome fixtures enforce exact closed row comparator and digest", async () => {
+test("inline expected-outcome fixtures enforce exact closed nested rows, comparator and digest", async () => {
   const parser = (await readPolicy("parser")).value;
   const body = {
     schema: "galerina.logic-aig-expected-parse-outcomes.v1",
     parserPolicyDigest: parser.policyDigest,
-    rows: [],
+    rows: [{
+      path: "fixtures/negative.ts",
+      domain: "HOST",
+      parserId: "typescript-compiler-api",
+      disposition: "EXPECTED_REFUSAL",
+      diagnosticCodes: ["TS-123"],
+      ownerKind: "INLINE_EXPECTATION",
+      ownerLocator: "fixtures/negative.ts",
+      ownerKey: "expected_diagnostics",
+    }],
     authorizing: false,
   };
   const value = { ...body, expectedOutcomesDigest: sha256Canonical(body.schema, body) };
-  assert.deepEqual(validateExpectedParseOutcomes(value, { parserPolicy: parser }), value);
+  assertDeepFrozen(validateExpectedParseOutcomes(value, { parserPolicy: parser }));
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateExpectedParseOutcomes({ ...value, outcomes: [] }, { parserPolicy: parser }));
+  const aliasRow = structuredClone(value);
+  aliasRow.rows[0].codes = aliasRow.rows[0].diagnosticCodes;
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateExpectedParseOutcomes(aliasRow, { parserPolicy: parser }));
+  const sparseRows = structuredClone(value);
+  sparseRows.rows = Array(1);
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateExpectedParseOutcomes(sparseRows, { parserPolicy: parser }));
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateExpectedParseOutcomes({ ...value, expectedOutcomesDigest: "0".repeat(64) }, { parserPolicy: parser }));
 });
 
-test("inline toolchain-pin fixtures enforce empty authority and sorted unique record IDs", () => {
+test("inline toolchain-pin fixtures enforce closed nested records and sorted unique record IDs", () => {
+  const executableIdentity = { version: "fixture-1", executableRawSha256: "1".repeat(64), executableByteLength: 1 };
+  const packageIdentity = {
+    name: "fixture-package",
+    version: "1.0.0",
+    packageLocator: "node_modules/fixture-package/package.json",
+    packageRawSha256: "2".repeat(64),
+    packageByteLength: 2,
+    entryLocator: "node_modules/fixture-package/index.js",
+    entryRawSha256: "3".repeat(64),
+    entryByteLength: 3,
+  };
+  const moduleClosureBody = {
+    schema: "galerina.logic-aig-module-closure.v1",
+    executableModuleRows: [],
+    dataRows: [],
+    builtinModules: [],
+    counts: { executableModules: 0, dataRows: 0, builtinModules: 0 },
+    authorizing: false,
+  };
+  const recordBody = {
+    recordId: "fixture-record",
+    platform: "fixture-platform",
+    arch: "fixture-arch",
+    nodeIdentity: executableIdentity,
+    gitIdentity: executableIdentity,
+    typescript: packageIdentity,
+    galerinaParser: { ...packageIdentity, name: "fixture-parser" },
+    builtinModules: [],
+    executableModuleRows: [],
+    dataRows: [],
+    moduleClosureDigest: sha256Canonical(moduleClosureBody.schema, moduleClosureBody),
+  };
+  const record = { ...recordBody, recordDigest: sha256Canonical("galerina.logic-aig-toolchain-pin-record.v1", recordBody) };
   const body = {
     schema: "galerina.logic-aig-toolchain-pins.v1",
-    records: [],
+    records: [record],
     authorizing: false,
   };
   const value = { ...body, pinsDigest: sha256Canonical(body.schema, body) };
-  assert.deepEqual(validateToolchainPins(value), value);
+  assertDeepFrozen(validateToolchainPins(value));
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins({ ...value, pins: [] }));
+  const aliasRecord = structuredClone(value);
+  aliasRecord.records[0].proposalDigest = "4".repeat(64);
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(aliasRecord));
+  const sparseRecords = structuredClone(value);
+  sparseRecords.records = Array(1);
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(sparseRecords));
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainPins({ ...value, pinsDigest: "0".repeat(64) }));
 });

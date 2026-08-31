@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { isProxy } from 'node:util/types';
 
-export const SOURCE_ORIGIN_LIMITS = Object.freeze({
+export const SOURCE_ORIGIN_LIMITS = deepFreeze({
   heldFileBytes: 67_108_864,
   jsonBytes: 67_108_864,
   sourceFiles: 16_384,
@@ -34,6 +34,16 @@ function codeUnitCompare(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+function deepFreeze(value, seen = new Set()) {
+  if (value === null || typeof value !== 'object' || seen.has(value)) return value;
+  seen.add(value);
+  for (const name of Object.getOwnPropertyNames(value)) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+    if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
+  }
+  return Object.freeze(value);
+}
+
 function dataObject(value, keys) {
   if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
   const prototype = Object.getPrototypeOf(value);
@@ -47,13 +57,37 @@ function dataObject(value, keys) {
   }
 }
 
-function array(value) {
-  if (isProxy(value) || !Array.isArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+function checkedArray(value, code) {
+  if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
+  const length = value.length;
+  if (!Number.isSafeInteger(length) || length < 0 || length > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse(code);
+  const names = Object.getOwnPropertyNames(value);
+  if (names.length !== length + 1 || !names.includes('length')) refuse(code);
+  for (let index = 0; index < length; index += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+  }
   return value;
 }
 
+function array(value) {
+  return checkedArray(value, 'SOURCE_ORIGIN_SCHEMA');
+}
+
+function hasUnpairedSurrogate(value) {
+  for (let index = 0; index < value.length; index += 1) {
+    const unit = value.charCodeAt(index);
+    if (unit >= 0xd800 && unit <= 0xdbff) {
+      const next = value.charCodeAt(index + 1);
+      if (!(next >= 0xdc00 && next <= 0xdfff)) return true;
+      index += 1;
+    } else if (unit >= 0xdc00 && unit <= 0xdfff) return true;
+  }
+  return false;
+}
+
 function nfcString(value) {
-  if (typeof value !== 'string' || value !== value.normalize('NFC')) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (typeof value !== 'string' || hasUnpairedSurrogate(value) || value !== value.normalize('NFC')) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
 
@@ -61,14 +95,22 @@ function canonicalValue(value, active, depth = 0) {
   if (depth > 128) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
-    if (!Number.isSafeInteger(value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+    if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
     return value;
   }
-  if (typeof value === 'string') return nfcString(value);
+  if (typeof value === 'string') {
+    if (hasUnpairedSurrogate(value) || value !== value.normalize('NFC')) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+    return value;
+  }
   if (typeof value !== 'object' || isProxy(value) || active.has(value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   active.add(value);
   try {
-    if (Array.isArray(value)) return value.map((entry) => canonicalValue(entry, active, depth + 1));
+    if (Array.isArray(value)) {
+      checkedArray(value, 'SOURCE_ORIGIN_JSON_CANONICAL');
+      const output = [];
+      for (let index = 0; index < value.length; index += 1) output.push(canonicalValue(Object.getOwnPropertyDescriptor(value, String(index)).value, active, depth + 1));
+      return output;
+    }
     const prototype = Object.getPrototypeOf(value);
     if (prototype !== Object.prototype && prototype !== null || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
     const output = {};
@@ -130,6 +172,7 @@ function assertNoDuplicateMembers(text) {
 
 export function parseCanonicalJsonBytes(bytes, { label } = {}) {
   if (!Buffer.isBuffer(bytes) || bytes.length > SOURCE_ORIGIN_LIMITS.jsonBytes || typeof label !== 'string') refuse('SOURCE_ORIGIN_SCHEMA');
+  if (bytes.length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   let text;
   try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { refuse('SOURCE_ORIGIN_JSON_CANONICAL'); }
   if (text.charCodeAt(0) === 0xfeff) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
@@ -137,7 +180,11 @@ export function parseCanonicalJsonBytes(bytes, { label } = {}) {
   let value;
   try { value = JSON.parse(text); } catch { refuse('SOURCE_ORIGIN_JSON_CANONICAL'); }
   if (canonicalJsonText(value) !== text) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
-  return value;
+  return deepFreeze(canonicalValue(value, new Set()));
+}
+
+function immutableCopy(value) {
+  return deepFreeze(canonicalValue(value, new Set()));
 }
 
 function without(value, key) {
@@ -168,10 +215,10 @@ export function validateRepositoryIdentity(value) {
   for (const field of ['ownerNamespace', 'repositoryName', 'canonicalIdentity']) nfcString(value[field]);
   if (!value.ownerNamespace || !value.repositoryName || value.ownerNamespace.includes('/') || value.repositoryName.includes('/') || value.ownerNamespace !== 'TritHypha' || value.repositoryName !== 'Galerina' || value.canonicalIdentity !== 'TritHypha/Galerina') refuse('SOURCE_ORIGIN_POLICY');
   checkDigest(value, 'identityDigest');
-  return value;
+  return immutableCopy(value);
 }
 
-export const SOURCE_POLICY_BODY = Object.freeze({
+export const SOURCE_POLICY_BODY = deepFreeze({
   schema: 'galerina.logic-aig-source-policy.v1',
   domains: ['FUNGI', 'GATE', 'HOST'],
   suffixes: [
@@ -197,18 +244,18 @@ export function validateSourcePolicy(value) {
   if (actualSuffixKeys.length === expectedSuffixKeys.size && actualSuffixKeys.every((key) => expectedSuffixKeys.has(key)) && canonicalJsonText(value.suffixes) !== canonicalJsonText(expected.suffixes)) refuse('SOURCE_ORIGIN_ORDER');
   equalExact(body, expected);
   checkDigest(value, 'policyDigest');
-  return value;
+  return immutableCopy(value);
 }
 
 export function classifySourcePath(path, policy) {
-  validateSourcePolicy(policy);
+  policy = validateSourcePolicy(policy);
   nfcString(path);
   let selected = null;
   for (const row of policy.suffixes) if (path.endsWith(row.suffix) && (!selected || row.suffix.length > selected.suffix.length)) selected = row;
   return selected?.domain ?? null;
 }
 
-export const RESOLUTION_POLICY_BODY = Object.freeze({
+export const RESOLUTION_POLICY_BODY = deepFreeze({
   schema: 'galerina.logic-aig-resolution-policy.v1',
   sourceSuffixes: ['.cjs', '.cts', '.d.ts', '.fungi', '.gate', '.js', '.jsx', '.mjs', '.mts', '.ts', '.tsx'],
   resolutionBasenames: ['galerina.workspace.json', 'npm-shrinkwrap.json', 'package-lock.json', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'yarn.lock'],
@@ -225,10 +272,10 @@ export function validateResolutionPolicy(value) {
   if (value.includeExpectedOutcomeOwners !== true) refuse('SOURCE_ORIGIN_POLICY');
   equalExact(without(value, 'policyDigest'), RESOLUTION_POLICY_BODY);
   checkDigest(value, 'policyDigest');
-  return value;
+  return immutableCopy(value);
 }
 
-export const UNRESOLVED_REASON_ROWS = Object.freeze([
+export const UNRESOLVED_REASON_ROWS = deepFreeze([
   ['CALLER','AMBIGUOUS_TARGET',['EXACT_SET']],['CALLER','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['CALLER','MISSING_TARGET',['UNKNOWN']],['CALLER','OWNER_DISPOSITION_CALLER_UNRESOLVED',['NOT_APPLICABLE']],['CALLER','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
   ['CONTRACT','AMBIGUOUS_TARGET',['EXACT_SET']],['CONTRACT','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['CONTRACT','MISSING_TARGET',['UNKNOWN']],['CONTRACT','OWNER_DISPOSITION_CONTRACT_UNRESOLVED',['NOT_APPLICABLE']],['CONTRACT','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
   ['GENERATED_CONSUMER','OWNER_DISPOSITION_GENERATED_CONSUMER_UNRESOLVED',['NOT_APPLICABLE']],
@@ -236,7 +283,7 @@ export const UNRESOLVED_REASON_ROWS = Object.freeze([
   ['TEST','AMBIGUOUS_TARGET',['EXACT_SET']],['TEST','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['TEST','MISSING_TARGET',['UNKNOWN']],['TEST','OWNER_DISPOSITION_TEST_UNRESOLVED',['NOT_APPLICABLE']],['TEST','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
 ].map(([relationshipClass, reasonCode, permittedCandidateStates]) => ({ relationshipClass, reasonCode, permittedCandidateStates })));
 
-export const PARSER_POLICY_BODY = Object.freeze({
+export const PARSER_POLICY_BODY = deepFreeze({
   schema: 'galerina.logic-aig-parser-policy.v1',
   parserIds: ['galerina-fungi-parser', 'galerina-gate-v3-parser', 'typescript-compiler-api'],
   domainParserBindings: [{ domain: 'FUNGI', parserId: 'galerina-fungi-parser' }, { domain: 'GATE', parserId: 'galerina-gate-v3-parser' }, { domain: 'HOST', parserId: 'typescript-compiler-api' }],
@@ -271,11 +318,11 @@ export function validateParserPolicy(value) {
   if (value.diagnosticSetEncoding !== 'ASCII_COMMA_OR_WHITESPACE_V1') refuse('SOURCE_ORIGIN_POLICY');
   equalExact(without(value, 'policyDigest'), PARSER_POLICY_BODY);
   checkDigest(value, 'policyDigest');
-  return value;
+  return immutableCopy(value);
 }
 
 export function decodeDiagnosticSet(text, policy) {
-  validateParserPolicy(policy);
+  policy = validateParserPolicy(policy);
   if (typeof text !== 'string' || /[^\x00-\x7f]/.test(text) || text !== text.normalize('NFC')) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
   const trimmed = text.replace(/^[\x09-\x0d\x20]+|[\x09-\x0d\x20]+$/g, '');
   if (!trimmed || /^,|,$|,,/.test(trimmed)) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
@@ -290,7 +337,7 @@ export function validateGeneratedConsumerPolicy(value) {
   array(value.relations);
   if (value.relations.length !== 0) refuse('SOURCE_ORIGIN_POLICY');
   checkDigest(value, 'policyDigest');
-  return value;
+  return immutableCopy(value);
 }
 
 function validateSortedEntries(entries, key) {
@@ -301,26 +348,106 @@ function validateSortedEntries(entries, key) {
 export function validateProposedBaseline(value) {
   dataObject(value, ['schema','entries','authorizing','policyDigest']);
   if (value.schema !== 'galerina.example-proposed-baseline.v1' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
-  validateSortedEntries(value.entries, 'directoryName');
+  array(value.entries);
   for (const entry of value.entries) { dataObject(entry, ['directoryName','reason']); nfcString(entry.directoryName); nfcString(entry.reason); if (!entry.directoryName || !entry.reason) refuse('SOURCE_ORIGIN_POLICY'); }
+  validateSortedEntries(value.entries, 'directoryName');
   checkDigest(value, 'policyDigest');
+  return immutableCopy(value);
+}
+
+function nonEmptyString(value) {
+  nfcString(value);
+  if (!value) refuse('SOURCE_ORIGIN_POLICY');
   return value;
+}
+
+function nonNegativeInteger(value) {
+  if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  return value;
+}
+
+function digest(value) {
+  if (typeof value !== 'string' || !HEX64.test(value)) refuse('SOURCE_ORIGIN_DIGEST');
+  return value;
+}
+
+function validateExpectedOutcomeRow(row, parserPolicy) {
+  dataObject(row, ['path','domain','parserId','disposition','diagnosticCodes','ownerKind','ownerLocator','ownerKey']);
+  for (const field of ['path','domain','parserId','disposition','ownerKind','ownerLocator','ownerKey']) nonEmptyString(row[field]);
+  const parserByDomain = new Map(parserPolicy.domainParserBindings.map((binding) => [binding.domain, binding.parserId]));
+  if (parserByDomain.get(row.domain) !== row.parserId || !parserPolicy.dispositions.includes(row.disposition) || !parserPolicy.ownerKinds.includes(row.ownerKind)) refuse('SOURCE_ORIGIN_POLICY');
+  if (row.disposition === 'EXPECTED_REFUSAL') {
+    if (row.ownerKind === 'PROPOSED_BASELINE') refuse('SOURCE_ORIGIN_POLICY');
+    assertSortedUniqueStrings(row.diagnosticCodes);
+    if (row.diagnosticCodes.length === 0 || row.diagnosticCodes.some((code) => !DIAGNOSTIC.test(code))) refuse('SOURCE_ORIGIN_POLICY');
+  } else {
+    if (row.ownerKind !== 'PROPOSED_BASELINE' || row.diagnosticCodes !== null) refuse('SOURCE_ORIGIN_POLICY');
+  }
+  if (row.ownerKind === 'INLINE_EXPECTATION' && (row.ownerLocator !== row.path || row.ownerKey !== 'expected_diagnostics')) refuse('SOURCE_ORIGIN_POLICY');
+  if (row.ownerKind === 'SIDECAR_EXPECTATION' && (row.ownerLocator !== `${row.path}.expected.diagnostics.txt` || row.ownerKey !== 'complete-file')) refuse('SOURCE_ORIGIN_POLICY');
 }
 
 export function validateExpectedParseOutcomes(value, { parserPolicy } = {}) {
   dataObject(value, ['schema','parserPolicyDigest','rows','authorizing','expectedOutcomesDigest']);
-  validateParserPolicy(parserPolicy);
+  parserPolicy = validateParserPolicy(parserPolicy);
   if (value.schema !== 'galerina.logic-aig-expected-parse-outcomes.v1' || value.authorizing !== false || value.parserPolicyDigest !== parserPolicy.policyDigest) refuse('SOURCE_ORIGIN_POLICY');
+  array(value.rows);
+  for (const row of value.rows) validateExpectedOutcomeRow(row, parserPolicy);
   validateSortedEntries(value.rows, 'path');
   checkDigest(value, 'expectedOutcomesDigest');
-  return value;
+  return immutableCopy(value);
+}
+
+function validateExecutableIdentity(value) {
+  dataObject(value, ['version','executableRawSha256','executableByteLength']);
+  nonEmptyString(value.version); digest(value.executableRawSha256); nonNegativeInteger(value.executableByteLength);
+}
+
+function validatePackageIdentity(value) {
+  dataObject(value, ['name','version','packageLocator','packageRawSha256','packageByteLength','entryLocator','entryRawSha256','entryByteLength']);
+  for (const field of ['name','version','packageLocator','entryLocator']) nonEmptyString(value[field]);
+  digest(value.packageRawSha256); digest(value.entryRawSha256);
+  nonNegativeInteger(value.packageByteLength); nonNegativeInteger(value.entryByteLength);
+}
+
+function validateClosureRows(rows) {
+  array(rows);
+  for (const row of rows) {
+    dataObject(row, ['locator','rawSha256','byteLength']);
+    nonEmptyString(row.locator); digest(row.rawSha256); nonNegativeInteger(row.byteLength);
+  }
+  validateSortedEntries(rows, 'locator');
+}
+
+function validateToolchainRecord(record) {
+  dataObject(record, ['recordId','platform','arch','nodeIdentity','gitIdentity','typescript','galerinaParser','builtinModules','executableModuleRows','dataRows','moduleClosureDigest','recordDigest']);
+  for (const field of ['recordId','platform','arch']) nonEmptyString(record[field]);
+  validateExecutableIdentity(record.nodeIdentity); validateExecutableIdentity(record.gitIdentity);
+  validatePackageIdentity(record.typescript); validatePackageIdentity(record.galerinaParser);
+  assertSortedUniqueStrings(record.builtinModules);
+  if (record.builtinModules.some((specifier) => !/^node:[a-z0-9][a-z0-9_./-]*$/.test(specifier))) refuse('SOURCE_ORIGIN_POLICY');
+  validateClosureRows(record.executableModuleRows); validateClosureRows(record.dataRows);
+  const allLocators = [...record.executableModuleRows, ...record.dataRows].map((row) => row.locator);
+  if (new Set(allLocators).size !== allLocators.length) refuse('SOURCE_ORIGIN_ORDER');
+  const moduleClosureBody = {
+    schema: 'galerina.logic-aig-module-closure.v1',
+    executableModuleRows: record.executableModuleRows,
+    dataRows: record.dataRows,
+    builtinModules: record.builtinModules,
+    counts: { executableModules: record.executableModuleRows.length, dataRows: record.dataRows.length, builtinModules: record.builtinModules.length },
+    authorizing: false,
+  };
+  digest(record.moduleClosureDigest); digest(record.recordDigest);
+  if (record.moduleClosureDigest !== sha256Canonical(moduleClosureBody.schema, moduleClosureBody)) refuse('SOURCE_ORIGIN_DIGEST');
+  if (record.recordDigest !== sha256Canonical('galerina.logic-aig-toolchain-pin-record.v1', without(record, 'recordDigest'))) refuse('SOURCE_ORIGIN_DIGEST');
 }
 
 export function validateToolchainPins(value) {
   dataObject(value, ['schema','records','authorizing','pinsDigest']);
   if (value.schema !== 'galerina.logic-aig-toolchain-pins.v1' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
   array(value.records);
+  for (const record of value.records) validateToolchainRecord(record);
   for (let index = 1; index < value.records.length; index += 1) if (codeUnitCompare(value.records[index - 1].recordId, value.records[index].recordId) >= 0) refuse('SOURCE_ORIGIN_ORDER');
   checkDigest(value, 'pinsDigest');
-  return value;
+  return immutableCopy(value);
 }
