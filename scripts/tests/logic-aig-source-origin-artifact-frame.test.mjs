@@ -315,6 +315,46 @@ test('hostile proxies refuse before caller code can run and deep canonical input
   expectRefusal(() => encodeAdmissionFrame(hostile), 'REFUSED_MANIFEST');
   assert.equal(calls, 0);
 
+  let nestedCalls = 0;
+  const nestedHandler = {
+    get() {
+      nestedCalls += 1;
+      throw new Error('nested get ran');
+    },
+    getOwnPropertyDescriptor() {
+      nestedCalls += 1;
+      throw new Error('nested descriptor ran');
+    },
+    getPrototypeOf() {
+      nestedCalls += 1;
+      throw new Error('nested prototype ran');
+    },
+    ownKeys() {
+      nestedCalls += 1;
+      throw new Error('nested keys ran');
+    },
+  };
+  const rulesProxy = katAInputs();
+  rulesProxy.profile.artifactRules = new Proxy(rulesProxy.profile.artifactRules, nestedHandler);
+  expectRefusal(() => buildAdmissionManifest(rulesProxy), 'REFUSED_PROFILE');
+
+  const policyProxy = katAInputs();
+  policyProxy.profile.ownerPolicy = new Proxy(policyProxy.profile.ownerPolicy, nestedHandler);
+  expectRefusal(() => buildAdmissionManifest(policyProxy), 'REFUSED_PROFILE');
+
+  const graphProxy = katAInputs();
+  graphProxy.graph.nodes = new Proxy(graphProxy.graph.nodes, nestedHandler);
+  expectRefusal(() => buildAdmissionManifest(graphProxy), 'REFUSED_GRAPH_CLOSURE');
+
+  const artifactsProxy = katAInputs();
+  artifactsProxy.artifacts = new Proxy(artifactsProxy.artifacts, nestedHandler);
+  expectRefusal(() => buildAdmissionManifest(artifactsProxy), 'REFUSED_ARTIFACT');
+
+  const claimsProxy = katAInputs();
+  claimsProxy.claims = new Proxy(claimsProxy.claims, nestedHandler);
+  expectRefusal(() => buildAdmissionManifest(claimsProxy), 'REFUSED_CLAIM');
+  assert.equal(nestedCalls, 0);
+
   let nested = null;
   for (let index = 0; index < 256; index += 1) nested = [nested];
   expectRefusal(() => canonicalArtifactAdmissionJson(nested), 'REFUSED_CANONICAL');

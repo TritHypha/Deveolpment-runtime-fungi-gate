@@ -175,7 +175,7 @@ function validateProfile(profile) {
   hasOnlyDataProperties(profile.subjectRules, SUBJECT_RULE_KEYS, 'REFUSED_PROFILE');
   identifier(profile.subjectRules.repositoryId, 'REFUSED_PROFILE');
   if (profile.subjectRules.gitObjectFormat !== 'sha1' && profile.subjectRules.gitObjectFormat !== 'sha256') refuse('REFUSED_PROFILE');
-  if (!Array.isArray(profile.artifactRules) || profile.artifactRules.length === 0 || profile.artifactRules.length > LIMITS.artifacts) refuse('REFUSED_PROFILE');
+  if (isProxy(profile.artifactRules) || !Array.isArray(profile.artifactRules) || profile.artifactRules.length === 0 || profile.artifactRules.length > LIMITS.artifacts) refuse('REFUSED_PROFILE');
   for (const rule of profile.artifactRules) {
     hasOnlyDataProperties(rule, RULE_KEYS, 'REFUSED_PROFILE');
     identifier(rule.id, 'REFUSED_PROFILE');
@@ -186,22 +186,24 @@ function validateProfile(profile) {
   const rootRule = profile.artifactRules.find((rule) => rule.id === profile.rootArtifactId);
   if (!rootRule || !rootRule.required) refuse('REFUSED_PROFILE');
   for (const [claims, code] of [[profile.supportedClaims, 'REFUSED_PROFILE'], [profile.unsupportedClaims, 'REFUSED_PROFILE']]) {
-    if (!Array.isArray(claims)) refuse(code);
+    if (isProxy(claims) || !Array.isArray(claims)) refuse(code);
     for (const claim of claims) identifier(claim, code);
     assertSortedUnique(claims, compareText, code);
   }
   if (profile.supportedClaims.length !== 1 || profile.supportedClaims[0] !== 'captured-bytes-only') refuse('REFUSED_PROFILE');
   if (profile.unsupportedClaims.length !== UNSUPPORTED_CLAIMS.length || profile.unsupportedClaims.some((claim, index) => claim !== UNSUPPORTED_CLAIMS[index])) refuse('REFUSED_PROFILE');
   if (profile.supportedClaims.some((claim) => profile.unsupportedClaims.includes(claim))) refuse('REFUSED_PROFILE');
-  if (profile.ownerPolicy?.mode === 'none') {
-    hasOnlyDataProperties(profile.ownerPolicy, OWNER_NONE_KEYS, 'REFUSED_PROFILE');
-  } else if (profile.ownerPolicy?.mode === 'ed25519') {
-    hasOnlyDataProperties(profile.ownerPolicy, OWNER_POLICY_KEYS, 'REFUSED_PROFILE');
-    if (profile.ownerPolicy.algorithm !== 'Ed25519') refuse('REFUSED_PROFILE');
-    identifier(profile.ownerPolicy.keyId, 'REFUSED_PROFILE');
-    if (typeof profile.ownerPolicy.publicKeySpkiDerHex !== 'string' || !/^[0-9a-f]{88}$/.test(profile.ownerPolicy.publicKeySpkiDerHex) || !profile.ownerPolicy.publicKeySpkiDerHex.startsWith(SPKI_PREFIX)) refuse('REFUSED_PROFILE');
-    digest(profile.ownerPolicy.publicKeySha256, 'REFUSED_PROFILE');
-    if (sha256(Buffer.from(profile.ownerPolicy.publicKeySpkiDerHex, 'hex')) !== profile.ownerPolicy.publicKeySha256) refuse('REFUSED_PROFILE');
+  const ownerPolicy = profile.ownerPolicy;
+  if (isProxy(ownerPolicy)) refuse('REFUSED_PROFILE');
+  if (ownerPolicy?.mode === 'none') {
+    hasOnlyDataProperties(ownerPolicy, OWNER_NONE_KEYS, 'REFUSED_PROFILE');
+  } else if (ownerPolicy?.mode === 'ed25519') {
+    hasOnlyDataProperties(ownerPolicy, OWNER_POLICY_KEYS, 'REFUSED_PROFILE');
+    if (ownerPolicy.algorithm !== 'Ed25519') refuse('REFUSED_PROFILE');
+    identifier(ownerPolicy.keyId, 'REFUSED_PROFILE');
+    if (typeof ownerPolicy.publicKeySpkiDerHex !== 'string' || !/^[0-9a-f]{88}$/.test(ownerPolicy.publicKeySpkiDerHex) || !ownerPolicy.publicKeySpkiDerHex.startsWith(SPKI_PREFIX)) refuse('REFUSED_PROFILE');
+    digest(ownerPolicy.publicKeySha256, 'REFUSED_PROFILE');
+    if (sha256(Buffer.from(ownerPolicy.publicKeySpkiDerHex, 'hex')) !== ownerPolicy.publicKeySha256) refuse('REFUSED_PROFILE');
   } else {
     refuse('REFUSED_PROFILE');
   }
@@ -219,7 +221,7 @@ function validateSubject(subject, profile) {
 }
 
 function captureArtifacts(artifacts, profile, code = 'REFUSED_ARTIFACT') {
-  if (!Array.isArray(artifacts) || artifacts.length > LIMITS.artifacts) refuse(code);
+  if (isProxy(artifacts) || !Array.isArray(artifacts) || artifacts.length > LIMITS.artifacts) refuse(code);
   const rules = new Map(profile.artifactRules.map((rule) => [rule.id, rule]));
   const captured = [];
   for (const artifact of artifacts) {
@@ -246,7 +248,7 @@ function captureArtifacts(artifacts, profile, code = 'REFUSED_ARTIFACT') {
 }
 
 function validateClaims(claims, profile) {
-  if (!Array.isArray(claims)) refuse('REFUSED_CLAIM');
+  if (isProxy(claims) || !Array.isArray(claims)) refuse('REFUSED_CLAIM');
   for (const claim of claims) identifier(claim, 'REFUSED_CLAIM');
   assertSortedUnique(claims, compareText, 'REFUSED_CLAIM');
   for (const claim of claims) {
@@ -258,7 +260,7 @@ function validateClaims(claims, profile) {
 function validateGraph(graph, rootId, artifactIds) {
   hasOnlyDataProperties(graph, GRAPH_KEYS, 'REFUSED_GRAPH_CLOSURE');
   if (graph.schema !== 'artifact-admission-graph.v1' || graph.root !== rootId) refuse('REFUSED_GRAPH_CLOSURE');
-  if (!Array.isArray(graph.nodes) || graph.nodes.length > LIMITS.graphNodes || !Array.isArray(graph.edges) || graph.edges.length > LIMITS.graphEdges) refuse('REFUSED_GRAPH_CLOSURE');
+  if (isProxy(graph.nodes) || !Array.isArray(graph.nodes) || graph.nodes.length > LIMITS.graphNodes || isProxy(graph.edges) || !Array.isArray(graph.edges) || graph.edges.length > LIMITS.graphEdges) refuse('REFUSED_GRAPH_CLOSURE');
   for (const node of graph.nodes) identifier(node, 'REFUSED_GRAPH_CLOSURE');
   assertSortedUnique(graph.nodes, compareText, 'REFUSED_GRAPH_CLOSURE');
   if (graph.nodes.length !== artifactIds.length || graph.nodes.some((node, index) => node !== artifactIds[index])) refuse('REFUSED_GRAPH_CLOSURE');
@@ -379,7 +381,7 @@ function validateManifestForFrame(manifest) {
   identifier(manifest.subject.repositoryId, 'REFUSED_MANIFEST');
   const oidLength = manifest.subject.gitObjectFormat === 'sha1' ? 40 : manifest.subject.gitObjectFormat === 'sha256' ? 64 : 0;
   if (!oidLength || !new RegExp(`^[0-9a-f]{${oidLength}}$`).test(manifest.subject.commitOid) || !new RegExp(`^[0-9a-f]{${oidLength}}$`).test(manifest.subject.treeOid)) refuse('REFUSED_MANIFEST');
-  if (!Array.isArray(manifest.artifacts) || manifest.artifacts.length > LIMITS.artifacts) refuse('REFUSED_ARTIFACT');
+  if (isProxy(manifest.artifacts) || !Array.isArray(manifest.artifacts) || manifest.artifacts.length > LIMITS.artifacts) refuse('REFUSED_ARTIFACT');
   for (const row of manifest.artifacts) {
     hasOnlyDataProperties(row, ARTIFACT_ROW_KEYS, 'REFUSED_ARTIFACT');
     identifier(row.id, 'REFUSED_ARTIFACT');
@@ -391,7 +393,7 @@ function validateManifestForFrame(manifest) {
   }
   assertSortedUnique(manifest.artifacts, (a, b) => compareText(a.id, b.id), 'REFUSED_ARTIFACT');
   validateGraph(manifest.graph, manifest.graph?.root, manifest.artifacts.map((row) => row.id));
-  if (!Array.isArray(manifest.claims)) refuse('REFUSED_CLAIM');
+  if (isProxy(manifest.claims) || !Array.isArray(manifest.claims)) refuse('REFUSED_CLAIM');
   for (const claim of manifest.claims) identifier(claim, 'REFUSED_CLAIM');
   assertSortedUnique(manifest.claims, compareText, 'REFUSED_CLAIM');
   if (manifest.ownerRecord !== null) {
@@ -415,7 +417,7 @@ export function encodeAdmissionFrame(options) {
     if (!Number.isSafeInteger(increment) || frameLength > LIMITS.frameBytes - increment) refuse('REFUSED_FRAME_LIMIT');
     frameLength += increment;
   }
-  if (!Array.isArray(artifacts) || artifacts.length !== manifest.artifacts.length) refuse('REFUSED_ARTIFACT');
+  if (isProxy(artifacts) || !Array.isArray(artifacts) || artifacts.length !== manifest.artifacts.length) refuse('REFUSED_ARTIFACT');
   const captured = [];
   for (const artifact of artifacts) {
     hasOnlyDataProperties(artifact, ARTIFACT_INPUT_KEYS, 'REFUSED_ARTIFACT');
