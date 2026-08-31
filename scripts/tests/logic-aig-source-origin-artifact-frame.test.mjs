@@ -288,3 +288,81 @@ test('encoder emits fixed syntax and canonical manifest bytes with no trailing d
   assert.equal(frame.length, 813);
   assert.equal(frame.at(-1), 0xff);
 });
+
+test('hostile proxies refuse before caller code can run and deep canonical input is typed', () => {
+  let calls = 0;
+  const hostile = new Proxy({}, {
+    get() {
+      calls += 1;
+      throw new Error('caller get ran');
+    },
+    getOwnPropertyDescriptor() {
+      calls += 1;
+      throw new Error('caller descriptor ran');
+    },
+    getPrototypeOf() {
+      calls += 1;
+      throw new Error('caller prototype ran');
+    },
+    ownKeys() {
+      calls += 1;
+      throw new Error('caller ownKeys ran');
+    },
+  });
+
+  expectRefusal(() => buildAdmissionManifest(hostile), 'REFUSED_PROFILE');
+  expectRefusal(() => buildAdmissionManifest(katAInputs({ profile: hostile })), 'REFUSED_PROFILE');
+  expectRefusal(() => encodeAdmissionFrame(hostile), 'REFUSED_MANIFEST');
+  assert.equal(calls, 0);
+
+  let nested = null;
+  for (let index = 0; index < 256; index += 1) nested = [nested];
+  expectRefusal(() => canonicalArtifactAdmissionJson(nested), 'REFUSED_CANONICAL');
+});
+
+test('aggregate frame limit refuses from manifest arithmetic before artifact access or copying', () => {
+  const manifest = buildAdmissionManifest(katAInputs());
+  const oversized = structuredClone(manifest);
+  oversized.artifacts = ['a', 'b', 'root'].map((id) => ({
+    byteLength: 50_000_000,
+    id,
+    required: true,
+    role: id,
+    runId: RUN_ID,
+    sha256: '0'.repeat(64),
+  }));
+  oversized.graph = {
+    schema: 'artifact-admission-graph.v1',
+    root: 'root',
+    nodes: ['a', 'b', 'root'],
+    edges: [
+      { from: 'root', kind: 'requires', to: 'a' },
+      { from: 'root', kind: 'requires', to: 'b' },
+    ],
+  };
+
+  let calls = 0;
+  const body = new Proxy({}, {
+    get() {
+      calls += 1;
+      throw new Error('body accessed');
+    },
+    getOwnPropertyDescriptor() {
+      calls += 1;
+      throw new Error('body descriptor accessed');
+    },
+    getPrototypeOf() {
+      calls += 1;
+      throw new Error('body prototype accessed');
+    },
+    ownKeys() {
+      calls += 1;
+      throw new Error('body keys accessed');
+    },
+  });
+  expectRefusal(
+    () => encodeAdmissionFrame({ manifest: oversized, artifacts: [body, body, body] }),
+    'REFUSED_FRAME_LIMIT',
+  );
+  assert.equal(calls, 0);
+});

@@ -1,4 +1,5 @@
 import { createHash, createPublicKey, verify as verifySignature } from 'node:crypto';
+import { isProxy } from 'node:util/types';
 
 const LIMITS = Object.freeze({
   frameBytes: 134217728,
@@ -23,6 +24,8 @@ const MANIFEST_KEYS = ['artifacts', 'authorizing', 'claims', 'graph', 'ownerReco
 const OWNER_NONE_KEYS = ['mode'];
 const OWNER_POLICY_KEYS = ['algorithm', 'keyId', 'mode', 'publicKeySha256', 'publicKeySpkiDerHex'];
 const OWNER_RECORD_KEYS = ['algorithm', 'keyId', 'publicKeySha256', 'signature', 'signedPayloadSha256'];
+const BUILD_KEYS = ['artifacts', 'claims', 'graph', 'ownerRecord', 'profile', 'runId', 'subject'];
+const ENCODE_KEYS = ['artifacts', 'manifest'];
 const UNSUPPORTED_CLAIMS = Object.freeze([
   'path-identity.no-reparse',
   'path-identity.posix-device-inode',
@@ -51,7 +54,7 @@ function sha256(bytes) {
 }
 
 function hasOnlyDataProperties(value, expectedKeys, code) {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) refuse(code);
+  if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) refuse(code);
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) refuse(code);
   const names = Object.getOwnPropertyNames(value);
@@ -107,7 +110,10 @@ function encodeString(text) {
   return `${encoded}"`;
 }
 
-function canonicalText(value, active) {
+function canonicalText(value, state, depth = 0) {
+  if (depth > 128) refuse('REFUSED_CANONICAL');
+  state.nodes += 1;
+  if (state.nodes > 100000) refuse('REFUSED_CANONICAL');
   if (value === null) return 'null';
   if (value === true) return 'true';
   if (value === false) return 'false';
@@ -117,8 +123,9 @@ function canonicalText(value, active) {
   }
   if (typeof value === 'string') return encodeString(value);
   if (typeof value !== 'object') refuse('REFUSED_CANONICAL');
-  if (active.has(value)) refuse('REFUSED_CANONICAL');
-  active.add(value);
+  if (isProxy(value)) refuse('REFUSED_CANONICAL');
+  if (state.active.has(value)) refuse('REFUSED_CANONICAL');
+  state.active.add(value);
   try {
     if (Array.isArray(value)) {
       const names = Object.getOwnPropertyNames(value);
@@ -127,7 +134,7 @@ function canonicalText(value, active) {
       for (let index = 0; index < value.length; index += 1) {
         const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
         if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('REFUSED_CANONICAL');
-        parts.push(canonicalText(descriptor.value, active));
+        parts.push(canonicalText(descriptor.value, state, depth + 1));
       }
       return `[${parts.join(',')}]`;
     }
@@ -138,16 +145,18 @@ function canonicalText(value, active) {
     const parts = names.map((name) => {
       const descriptor = Object.getOwnPropertyDescriptor(value, name);
       if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('REFUSED_CANONICAL');
-      return `${encodeString(name)}:${canonicalText(descriptor.value, active)}`;
+      return `${encodeString(name)}:${canonicalText(descriptor.value, state, depth + 1)}`;
     });
     return `{${parts.join(',')}}`;
   } finally {
-    active.delete(value);
+    state.active.delete(value);
   }
 }
 
 export function canonicalArtifactAdmissionJson(value) {
-  return Buffer.from(canonicalText(value, new Set()), 'utf8');
+  const bytes = Buffer.from(canonicalText(value, { active: new Set(), nodes: 0 }), 'utf8');
+  if (bytes.length > LIMITS.manifestBytes) refuse('REFUSED_CANONICAL');
+  return bytes;
 }
 
 function identifier(value, code) {
@@ -220,14 +229,20 @@ function captureArtifacts(artifacts, profile, code = 'REFUSED_ARTIFACT') {
     if (!rule || !Buffer.isBuffer(artifact.bytes)) refuse(code);
     const length = artifact.bytes.length;
     if (length > rule.maxBytes || length > LIMITS.artifactBytes) refuse(code);
-    captured.push({ id: artifact.id, bytes: Buffer.from(artifact.bytes), rule });
+    captured.push({ id: artifact.id, bytes: artifact.bytes, rule });
   }
   captured.sort((a, b) => compareText(a.id, b.id));
   assertSortedUnique(captured, (a, b) => compareText(a.id, b.id), code);
   for (const rule of profile.artifactRules) {
     if (rule.required && !captured.some((artifact) => artifact.id === rule.id)) refuse(code);
   }
-  return captured;
+  let minimumFrameLength = 4 + 1 + 4 + 2;
+  for (const artifact of captured) {
+    const increment = 2 + Buffer.byteLength(artifact.id, 'utf8') + 8 + artifact.bytes.length;
+    if (!Number.isSafeInteger(increment) || minimumFrameLength > LIMITS.frameBytes - increment) refuse('REFUSED_FRAME_LIMIT');
+    minimumFrameLength += increment;
+  }
+  return captured.map((artifact) => ({ ...artifact, bytes: Buffer.from(artifact.bytes) }));
 }
 
 function validateClaims(claims, profile) {
@@ -318,7 +333,9 @@ function validateOwnerRecord(ownerRecord, ownerPolicy, unsignedManifest, rows) {
   return { ...ownerRecord };
 }
 
-export function buildAdmissionManifest({ profile, subject, runId, artifacts, graph, claims, ownerRecord }) {
+export function buildAdmissionManifest(options) {
+  hasOnlyDataProperties(options, BUILD_KEYS, 'REFUSED_PROFILE');
+  const { profile, subject, runId, artifacts, graph, claims, ownerRecord } = options;
   const profileBytes = validateProfile(profile);
   validateSubject(subject, profile);
   digest(runId, 'REFUSED_RUN_BINDING');
@@ -386,8 +403,18 @@ function validateManifestForFrame(manifest) {
   }
 }
 
-export function encodeAdmissionFrame({ manifest, artifacts }) {
+export function encodeAdmissionFrame(options) {
+  hasOnlyDataProperties(options, ENCODE_KEYS, 'REFUSED_MANIFEST');
+  const { manifest, artifacts } = options;
   validateManifestForFrame(manifest);
+  const manifestBytes = canonicalArtifactAdmissionJson(manifest);
+  if (manifestBytes.length > LIMITS.manifestBytes) refuse('REFUSED_MANIFEST');
+  let frameLength = 4 + 1 + 4 + manifestBytes.length + 2;
+  for (const row of manifest.artifacts) {
+    const increment = 2 + Buffer.byteLength(row.id, 'utf8') + 8 + row.byteLength;
+    if (!Number.isSafeInteger(increment) || frameLength > LIMITS.frameBytes - increment) refuse('REFUSED_FRAME_LIMIT');
+    frameLength += increment;
+  }
   if (!Array.isArray(artifacts) || artifacts.length !== manifest.artifacts.length) refuse('REFUSED_ARTIFACT');
   const captured = [];
   for (const artifact of artifacts) {
@@ -403,14 +430,12 @@ export function encodeAdmissionFrame({ manifest, artifacts }) {
     const row = manifest.artifacts[index];
     if (body.id !== row.id || body.bytes.length !== row.byteLength || sha256(body.bytes) !== row.sha256) refuse('REFUSED_ARTIFACT_DIGEST');
   }
-  const manifestBytes = canonicalArtifactAdmissionJson(manifest);
-  if (manifestBytes.length > LIMITS.manifestBytes) refuse('REFUSED_MANIFEST');
   const parts = [Buffer.from('GAAF', 'ascii'), Buffer.from([1]), u32(manifestBytes.length), manifestBytes, u16(captured.length)];
   for (const artifact of captured) {
     const id = Buffer.from(artifact.id, 'utf8');
     parts.push(u16(id.length), id, u64(artifact.bytes.length), artifact.bytes);
   }
   const frame = Buffer.concat(parts);
-  if (frame.length > LIMITS.frameBytes) refuse('REFUSED_FRAME_LIMIT');
+  if (frame.length !== frameLength) refuse('REFUSED_FRAME_LIMIT');
   return frame;
 }
