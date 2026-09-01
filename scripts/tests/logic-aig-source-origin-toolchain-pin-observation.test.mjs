@@ -60,8 +60,12 @@ function writeFixtureFile(root, locator, body) {
   writeFileSync(target, body);
 }
 
+function createCanonicalTemporaryDirectory(prefix) {
+  return realpathSync.native(mkdtempSync(path.join(tmpdir(), prefix)));
+}
+
 function createRepositoryFixture() {
-  const root = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-observation-'));
+  const root = createCanonicalTemporaryDirectory('rd0873-pin-observation-');
   const gitExecutable = resolveGitExecutable();
 
   writeFixtureFile(root, '.gitignore', 'packages-ts/galerina-core-compiler/node_modules/\n');
@@ -107,6 +111,7 @@ function createRepositoryFixture() {
   writeFixtureFile(root, 'packages-ts/galerina-core-compiler/node_modules/typescript/lib/lib.d.ts', 'declare const fixture: true;\n');
 
   execFileSync(gitExecutable, ['init', root], { stdio: ['ignore', 'pipe', 'pipe'], timeout: 10_000 });
+  git(gitExecutable, root, 'config', 'core.autocrlf', 'false');
   git(gitExecutable, root, 'add', '--', '.gitignore', '.github', 'scripts', 'packages-ts/galerina-core-compiler/package.json', 'packages-ts/galerina-core-compiler/package-lock.json', 'packages-ts/galerina-core-compiler/tsconfig.json', 'packages-ts/galerina-core-compiler/src');
   execFileSync(gitExecutable, [
     '-C', root,
@@ -262,6 +267,58 @@ async function holdFileUnreadable(target) {
     rmSync(scriptFile, { force: true });
   };
 }
+
+test('repository fixtures canonicalize aliased temporary roots', { concurrency: false }, (t) => {
+  const canonicalBase = realpathSync.native(
+    mkdtempSync(path.join(tmpdir(), 'rd0873-pin-alias-base-')),
+  );
+  const aliasBase = `${canonicalBase}-alias`;
+  symlinkSync(canonicalBase, aliasBase, process.platform === 'win32' ? 'junction' : 'dir');
+  let fixtureRoot;
+  t.after(() => {
+    if (fixtureRoot) rmSync(realpathSync.native(fixtureRoot), { recursive: true, force: true });
+    rmSync(aliasBase, { recursive: true, force: true });
+    rmSync(canonicalBase, { recursive: true, force: true });
+  });
+
+  const savedTemporaryEnvironment = new Map(
+    ['TMPDIR', 'TMP', 'TEMP'].map((name) => [name, process.env[name]]),
+  );
+  let fixture;
+  try {
+    process.env.TMPDIR = aliasBase;
+    process.env.TMP = aliasBase;
+    process.env.TEMP = aliasBase;
+    fixture = createRepositoryFixture();
+    fixtureRoot = fixture.root;
+  } finally {
+    for (const [name, value] of savedTemporaryEnvironment) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  }
+
+  assert.equal(fixture.root, realpathSync.native(fixture.root));
+});
+
+test('repository fixtures disable Git line-ending conversion before the first add', (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+
+  const result = spawnSync(gitExecutable, [
+    '-C', root, 'config', '--local', '--get', 'core.autocrlf',
+  ], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 10_000,
+    windowsHide: true,
+  });
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0);
+  assert.equal(result.signal, null);
+  assert.equal(result.stdout.trim(), 'false');
+  assert.equal(result.stderr, '');
+});
 
 test('collector emits deterministic canonical observation bytes that remain outside the pin schema', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
@@ -630,7 +687,7 @@ test('collector refuses a dependency closure that changes during repeated observ
 
 test('sealed CLI writes one canonical no-LF observation outside the checkout without process output', (t) => {
   const { root, gitExecutable } = createExecutableRepositoryFixture();
-  const outputRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-output-'));
+  const outputRoot = createCanonicalTemporaryDirectory('rd0873-pin-output-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(outputRoot, { recursive: true, force: true });
@@ -656,7 +713,7 @@ test('sealed CLI writes one canonical no-LF observation outside the checkout wit
 
 test('sealed CLI emits only a stable code and no file for dirty required Git state', (t) => {
   const { root, gitExecutable } = createExecutableRepositoryFixture();
-  const outputRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-output-'));
+  const outputRoot = createCanonicalTemporaryDirectory('rd0873-pin-output-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(outputRoot, { recursive: true, force: true });
@@ -689,7 +746,7 @@ test('sealed CLI refuses an output path inside the checkout before collection', 
 
 test('sealed CLI never unlinks a foreign pathname replacement after output creation', (t) => {
   const { root, gitExecutable } = createExecutableRepositoryFixture();
-  const outputRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-output-replacement-'));
+  const outputRoot = createCanonicalTemporaryDirectory('rd0873-pin-output-replacement-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(outputRoot, { recursive: true, force: true });
@@ -737,7 +794,7 @@ test('sealed CLI refuses when its output parent is replaced after file creation'
   skip: process.platform === 'win32' ? 'Windows prevents replacing the parent while the output handle is open' : false,
 }, (t) => {
   const { root, gitExecutable } = createExecutableRepositoryFixture();
-  const outputRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-output-parent-replacement-'));
+  const outputRoot = createCanonicalTemporaryDirectory('rd0873-pin-output-parent-replacement-');
   const displacedOutputRoot = `${outputRoot}-displaced`;
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
@@ -794,7 +851,7 @@ test('sealed CLI refuses when its output parent is replaced after file creation'
 
 test('collector refuses a symbolic-link or junction member in a declared closure', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
-  const externalRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-external-'));
+  const externalRoot = createCanonicalTemporaryDirectory('rd0873-pin-external-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(externalRoot, { recursive: true, force: true });
@@ -815,7 +872,7 @@ test('collector refuses a symbolic-link or junction member in a declared closure
 
 test('collector refuses an external hard-linked file inside a declared closure', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
-  const externalRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-hardlink-'));
+  const externalRoot = createCanonicalTemporaryDirectory('rd0873-pin-hardlink-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(externalRoot, { recursive: true, force: true });
@@ -911,20 +968,29 @@ test('collector enforces the declared closure byte and depth limits', async (t) 
       root,
       'packages-ts', 'galerina-core-compiler', 'src', '000-first.bin',
     );
-    const later = path.join(
-      root,
-      'packages-ts', 'galerina-core-compiler', 'src', '001-unreadable.bin',
-    );
+    const laterLocator = 'packages-ts/galerina-core-compiler/src/001-unreadable.bin';
+    const later = path.join(root, ...laterLocator.split('/'));
     writeFileSync(first, '');
     writeFileSync(later, '');
     truncateSync(first, 40 * 1024 * 1024);
     truncateSync(later, 30 * 1024 * 1024);
     commitFixture(gitExecutable, root, 'add tracked aggregate sentinel');
+    assert.equal(
+      git(gitExecutable, root, 'status', '--porcelain=v1', '-z', '--untracked-files=all'),
+      '',
+    );
+    if (process.platform !== 'win32') {
+      git(gitExecutable, root, 'update-index', '--assume-unchanged', '--', laterLocator);
+    }
     const release = await holdFileUnreadable(later);
     subtest.after(async () => {
       await release();
       rmSync(root, { recursive: true, force: true });
     });
+    assert.equal(
+      git(gitExecutable, root, 'status', '--porcelain=v1', '-z', '--untracked-files=all'),
+      '',
+    );
     await assert.rejects(
       () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
       (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_LIMIT',
@@ -933,7 +999,7 @@ test('collector enforces the declared closure byte and depth limits', async (t) 
 
   await t.test('closure file count', async (subtest) => {
     const { root, gitExecutable } = createRepositoryFixture();
-    const externalRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-count-sentinel-'));
+    const externalRoot = createCanonicalTemporaryDirectory('rd0873-pin-count-sentinel-');
     subtest.after(() => {
       rmSync(root, { recursive: true, force: true });
       rmSync(externalRoot, { recursive: true, force: true });
@@ -958,7 +1024,7 @@ test('collector enforces the declared closure byte and depth limits', async (t) 
 
 test('collector refuses excessive tracked rows before closure materialization', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
-  const externalRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-tracked-count-sentinel-'));
+  const externalRoot = createCanonicalTemporaryDirectory('rd0873-pin-tracked-count-sentinel-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(externalRoot, { recursive: true, force: true });
@@ -992,7 +1058,7 @@ test('collector refuses excessive tracked rows before closure materialization', 
 
 test('collector refuses a Git executable above the declared byte limit before hashing it', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
-  const executableRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-git-'));
+  const executableRoot = createCanonicalTemporaryDirectory('rd0873-pin-git-');
   t.after(() => {
     rmSync(root, { recursive: true, force: true });
     rmSync(executableRoot, { recursive: true, force: true });
