@@ -19,7 +19,6 @@ import {
   ToolchainLoadObservationRefusal,
   canonicalToolchainLoadObservationText,
   collectToolchainLoadObservation,
-  validateToolchainLoadObservation,
 } from './lib/logic-aig-source-origin/toolchain-load-observation.mjs';
 
 const REFUSAL_CODE = /^TOOLCHAIN_LOAD_OBSERVATION_REFUSED_[A-Z0-9_]+$/u;
@@ -177,12 +176,12 @@ async function run(args) {
   const parsed = parseArguments(args);
   const repositoryRoot = realpathSync.native(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
   const sourceObservationBytes = readStableSource(repositoryRoot, parsed.sourcePath);
-  const observation = validateToolchainLoadObservation(await collectToolchainLoadObservation({
+  const observation = await collectToolchainLoadObservation({
     repositoryRoot,
     gitExecutable: parsed.gitExecutable,
     sourceObservationBytes,
     sourceObservationDigest: parsed.sourceObservationDigest,
-  }));
+  });
   const bytes = Buffer.from(canonicalToolchainLoadObservationText(observation), 'utf8');
   writeExternalObservation(repositoryRoot, parsed.outputPath, bytes);
 }

@@ -311,15 +311,28 @@ async function withTscMutation(fixture, bytes, operation) {
   }
 }
 
+function tscGeneratedAppend(locator, generatedSource) {
+  return [
+    'module.exports = require("./_tsc.js");',
+    'const fs = require("node:fs");',
+    'const path = require("node:path");',
+    'const index = process.argv.indexOf("--outDir");',
+    `fs.appendFileSync(path.join(process.argv[index + 1], ${JSON.stringify(locator)}), ${JSON.stringify(generatedSource)});`,
+    '',
+  ].join('\n');
+}
+
 test('load-observation-v1 collector emits the exact source-bound build, closure, edge, and phase contracts', async (t) => {
   const module = await import(LOAD_MODULE_URL);
   const fixture = createRepositoryFixture(t);
   const source = await sourceFixture(fixture);
   const first = module.validateToolchainLoadObservation(
     await module.collectToolchainLoadObservation(collectorOptions(fixture, source)),
+    source.value,
   );
   const second = module.validateToolchainLoadObservation(
     await module.collectToolchainLoadObservation(collectorOptions(fixture, source)),
+    source.value,
   );
 
   exactKeys(first, EXPECTED_TOP_LEVEL_KEYS);
@@ -466,10 +479,92 @@ test('validator refuses closed-schema, source-binding, build-profile, edge, phas
     mutate(mutant);
     resignLoadObservation(mutant);
     assert.throws(
-      () => module.validateToolchainLoadObservation(mutant),
+      () => module.validateToolchainLoadObservation(mutant, source.value),
       (error) => assertLoadRefusal(error, 'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA'), name,
     );
   }
+});
+
+test('validator requires the exact paired source-v2 projection and refuses foreign TypeScript executable rows', async (t) => {
+  const module = await import(LOAD_MODULE_URL);
+  const fixture = createRepositoryFixture(t);
+  const source = await sourceFixture(fixture);
+  const observation = await module.collectToolchainLoadObservation(collectorOptions(fixture, source));
+  const accepted = [];
+  const expectSchemaRefusal = (name, value, pairedSource = source.value) => {
+    try {
+      module.validateToolchainLoadObservation(value, pairedSource);
+      accepted.push(name);
+    } catch (error) {
+      assert.equal(
+        assertLoadRefusal(error, 'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA'),
+        true,
+        `${name} must be a closed-schema refusal`,
+      );
+    }
+  };
+  try {
+    module.validateToolchainLoadObservation(observation);
+    accepted.push('missing paired source-v2');
+  } catch (error) {
+    assert.equal(
+      assertLoadRefusal(error, 'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA'),
+      true,
+      'missing paired source-v2 must be a closed-schema refusal',
+    );
+  }
+
+  const mutations = [
+    ['repository projection', (value) => {
+      value.sourceBinding.repository.pre.commitOid = '0'.repeat(40);
+      value.sourceBinding.repository.post.commitOid = '0'.repeat(40);
+    }],
+    ['platform projection', (value) => {
+      value.sourceBinding.platform = value.sourceBinding.platform === 'win32' ? 'linux' : 'win32';
+    }],
+    ['Node identity projection', (value) => { value.sourceBinding.nodeIdentity.version = 'v0.0.0'; }],
+    ['Git identity projection', (value) => { value.sourceBinding.gitIdentity.version = '0.0.0'; }],
+    ['compiler lock projection', (value) => { value.sourceBinding.compilerLock = null; }],
+    ['TypeScript package projection', (value) => { value.sourceBinding.typescript.version = '0.0.0'; }],
+    ['TypeScript CLI projection', (value) => {
+      const digest = '1'.repeat(64);
+      value.sourceBinding.typescriptCompilerCli.rawSha256 = digest;
+      value.phaseLoadSets[0].moduleRows.find((row) => row.locator === 'lib/tsc.js').rawSha256 = digest;
+    }],
+    ['source entry projection', (value) => { value.sourceBinding.sourceOriginParserEntry = null; }],
+    ['source project projection', (value) => { value.sourceBinding.sourceOriginParserProject = null; }],
+    ['declared closure digest projection', (value) => {
+      value.sourceBinding.declaredClosureDigests[1].closureDigest = '2'.repeat(64);
+    }],
+    ['source edge row projection', (value) => { value.sourceBinding.sourceEdgeRows[0] = null; }],
+    ['foreign BUILD executable row', (value) => {
+      const phase = value.phaseLoadSets[0];
+      phase.moduleRows.push({ locator: 'lib/zzzz-foreign.js', rawSha256: '3'.repeat(64), byteLength: 1 });
+      phase.moduleRows.sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+      phase.counts.modules += 1;
+    }],
+    ['foreign HOST executable row', (value) => {
+      const phase = value.phaseLoadSets[1];
+      phase.moduleRows.push({ locator: 'lib/zzzz-foreign.js', rawSha256: '4'.repeat(64), byteLength: 1 });
+      phase.moduleRows.sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+      phase.counts.modules += 1;
+    }],
+  ];
+  for (const [name, mutate] of mutations) {
+    const mutant = copyObservation(observation);
+    mutate(mutant);
+    resignLoadObservation(mutant);
+    expectSchemaRefusal(name, mutant);
+  }
+
+  const differentSource = copyObservation(source.value);
+  differentSource.repository.pre.commitOid = 'f'.repeat(40);
+  differentSource.repository.post.commitOid = 'f'.repeat(40);
+  resignSourceObservation(differentSource);
+  validateToolchainPinObservation(differentSource);
+  expectSchemaRefusal('different valid paired source-v2', observation, differentSource);
+
+  assert.deepEqual(accepted, []);
 });
 
 test('collector seals options and canonical source-v2 bytes before filesystem or phase work', async (t) => {
@@ -553,6 +648,33 @@ test('guarded BUILD and PARSER phases refuse nonzero, crash, ambient resolution,
   });
 });
 
+test('generated edge recognition refuses unsupported ESM edge syntax before parser replay', { concurrency: false }, async (t) => {
+  const module = await import(LOAD_MODULE_URL);
+  const fixture = createRepositoryFixture(t);
+  const accepted = [];
+  const wrongRefusals = [];
+  const cases = [
+    ['export-star', 'source-origin-parser-entry.js', '\nexport * from "./lexer.js";\n'],
+    ['export-star-as', 'parser.js', '\nexport * as lexerNamespace from "./lexer.js";\n'],
+    ['import-attribute', 'parser.js', '\nimport {} from "./lexer.js" with { type: "json" };\n'],
+    ['import-assertion', 'parser.js', '\nimport {} from "./lexer.js" assert { type: "json" };\n'],
+    ['multiline-no-semicolon', 'parser.js', '\nexport {\n  lex as lexAgain\n} from "./lexer.js"\n'],
+  ];
+  for (const [name, locator, generatedSource] of cases) {
+    await withTscMutation(fixture, tscGeneratedAppend(locator, generatedSource), async (source) => {
+      try {
+        await module.collectToolchainLoadObservation(collectorOptions(fixture, source));
+        accepted.push(name);
+      } catch (error) {
+        if (!assertLoadRefusal(error, 'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED')) {
+          wrongRefusals.push(`${name}:${error?.code ?? error?.name ?? 'unknown'}`);
+        }
+      }
+    });
+  }
+  assert.deepEqual({ accepted, wrongRefusals }, { accepted: [], wrongRefusals: [] });
+});
+
 test('sealed CLI writes one no-LF external observation and rejects extra argv without a partial artifact', async (t) => {
   await import(LOAD_MODULE_URL);
   const fixture = createRepositoryFixture(t);
@@ -577,7 +699,7 @@ test('sealed CLI writes one no-LF external observation and rejects extra argv wi
   assert.equal(outputBytes.at(-1), 0x7d);
   const module = await import(LOAD_MODULE_URL);
   const value = JSON.parse(outputBytes.toString('utf8'));
-  module.validateToolchainLoadObservation(value);
+  module.validateToolchainLoadObservation(value, source.value);
   assert.equal(module.canonicalToolchainLoadObservationText(value), outputBytes.toString('utf8'));
 
   const refusedPath = path.join(fixture.fixtureParent, 'refused-load-observation.json');

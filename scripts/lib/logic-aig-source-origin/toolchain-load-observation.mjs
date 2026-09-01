@@ -228,7 +228,7 @@ function validateClosure(closure) {
   if (closureDigest !== sha256Canonical(CLOSURE_SCHEMA, body)) refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
 }
 
-function validateSourceBinding(binding, topDigest) {
+function validateSourceBinding(binding, topDigest, source) {
   assertPlainRecord(binding, [
     'sourceObservationSchema', 'sourceObservationDigest', 'repository', 'platform', 'arch',
     'nodeIdentity', 'gitIdentity', 'compilerLock', 'typescript', 'typescriptCompilerCli',
@@ -270,6 +270,9 @@ function validateSourceBinding(binding, topDigest) {
   if (!Array.isArray(binding.sourceEdgeRows) || binding.sourceEdgeRows.length !== 6) {
     refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
   }
+  if (source.observationDigest !== topDigest || !equalCanonical(binding, sourceBinding(source))) {
+    refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
+  }
 }
 
 function validateBuildProfile(profile) {
@@ -290,7 +293,7 @@ function validateEdgeRows(rows) {
   }
 }
 
-function validatePhaseSets(phases, binding, generatedClosure) {
+function validatePhaseSets(phases, binding, generatedClosure, typescriptClosure) {
   if (!Array.isArray(phases) || phases.length !== 3
     || !equalCanonical(phases.map((phase) => phase.phaseId), ['BUILD', 'HOST', 'PARSER'])) {
     refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
@@ -347,13 +350,21 @@ function validatePhaseSets(phases, binding, generatedClosure) {
     || typescript.byteLength !== binding.typescript.entryByteLength) {
     refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
   }
+  const declaredTypescriptRows = new Map(typescriptClosure.rows.map((row) => [row.locator, row]));
+  for (const phase of [build, host]) {
+    for (const row of phase.moduleRows) {
+      if (!equalCanonical(row, declaredTypescriptRows.get(row.locator))) {
+        refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
+      }
+    }
+  }
   for (const row of parser.moduleRows) {
     const generated = generatedClosure.rows.find((candidate) => candidate.locator === row.locator);
     if (!generated || !equalCanonical(row, generated)) refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
   }
 }
 
-function validateLoadObservationInternal(value) {
+function validateLoadObservationInternal(value, source) {
   assertPlainRecord(value, [
     'schema', 'sourceObservationDigest', 'sourceBinding', 'buildProfile',
     'generatedEntry', 'generatedPackageManifest', 'generatedClosure',
@@ -364,7 +375,7 @@ function validateLoadObservationInternal(value) {
     refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
   }
   assertHex(value.sourceObservationDigest, SHA256);
-  validateSourceBinding(value.sourceBinding, value.sourceObservationDigest);
+  validateSourceBinding(value.sourceBinding, value.sourceObservationDigest, source);
   validateBuildProfile(value.buildProfile);
   validateClosure(value.generatedClosure);
   if (value.repeatedGeneratedClosureDigest !== value.generatedClosure.closureDigest) {
@@ -387,7 +398,8 @@ function validateLoadObservationInternal(value) {
       byteLength: MANIFEST_BYTES.length,
     })) refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
   validateEdgeRows(value.emittedEdgeRows);
-  validatePhaseSets(value.phaseLoadSets, value.sourceBinding, value.generatedClosure);
+  const typescriptClosure = source.declaredClosures.find((closure) => closure.id === 'typescript');
+  validatePhaseSets(value.phaseLoadSets, value.sourceBinding, value.generatedClosure, typescriptClosure);
   if (!Array.isArray(value.provenanceBlobs) || value.provenanceBlobs.length !== PROVENANCE.length) {
     refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
   }
@@ -410,9 +422,15 @@ function validateLoadObservationInternal(value) {
   return value;
 }
 
-export function validateToolchainLoadObservation(value) {
+export function validateToolchainLoadObservation(value, sourceObservation) {
   try {
-    return validateLoadObservationInternal(value);
+    let source;
+    try {
+      source = validateToolchainPinObservation(sourceObservation);
+    } catch {
+      refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_SCHEMA');
+    }
+    return validateLoadObservationInternal(value, source);
   } catch (error) {
     if (error instanceof ToolchainLoadObservationRefusal) throw error;
     refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_INTERNAL');
@@ -1014,14 +1032,16 @@ function emittedEdges(root) {
     const bytes = readRegularFile(path.join(root, fromLocator), TOOLCHAIN_LOAD_OBSERVATION_LIMITS.closureBytes,
       'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED');
     const source = withoutComments(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
-    if (/\bimport\s*\(|\brequire\s*\(/u.test(source)) refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED');
-    const importExpression = /\bimport\s+(?:[^;"']*?\s+from\s+)?(["'])([^"']+)\1\s*;/gu;
+    if (/\bimport\s*\(|\bimport\s*\.\s*meta\b|\brequire\s*\(|\bexport\s*\*|\b(?:with|assert)\s*\{/u.test(source)) {
+      refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED');
+    }
+    const importExpression = /\bimport(?!\s*[.(])\s*(?:[^;"']*?\bfrom\s*)?(["'])([^"']+)\1(?=\s*(?:;|\r?\n|$))/gu;
     for (const match of source.matchAll(importExpression)) {
       const specifier = match[2];
       const toLocator = resolveGeneratedSpecifier(fromLocator, specifier, executable);
       rows.push({ fromLocator, kind: 'IMPORT', exportName: null, specifier, toLocator });
     }
-    const exportExpression = /\bexport\s*\{([^}]*)\}\s*from\s*(["'])([^"']+)\2\s*;/gu;
+    const exportExpression = /\bexport\s*\{([^}]*)\}\s*from\s*(["'])([^"']+)\2(?=\s*(?:;|\r?\n|$))/gu;
     for (const match of source.matchAll(exportExpression)) {
       const specifier = match[3];
       const toLocator = resolveGeneratedSpecifier(fromLocator, specifier, executable);
@@ -1188,7 +1208,7 @@ async function collectInternal(options) {
     observation = validateToolchainLoadObservation({
       ...body,
       observationDigest: sha256Canonical(OBSERVATION_SCHEMA, body),
-    });
+    }, source);
   } catch (error) {
     pendingError = error;
   }
