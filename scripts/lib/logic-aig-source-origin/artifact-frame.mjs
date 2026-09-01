@@ -42,6 +42,8 @@ const TYPED_ARRAY_LENGTH_GETTER = Object.getOwnPropertyDescriptor(
 ).get;
 const TYPED_ARRAY_SET = Uint8Array.prototype.set;
 const BUFFER_ALLOC_UNSAFE = Buffer.allocUnsafe.bind(Buffer);
+const UTIL_TYPES_IS_PROXY = isProxy;
+const BUFFER_IS_BUFFER = Buffer.isBuffer;
 
 class ArtifactFrameRefusal extends Error {
   constructor(code) {
@@ -60,7 +62,7 @@ function sha256(bytes) {
 }
 
 function hasOnlyDataProperties(value, expectedKeys, code) {
-  if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) refuse(code);
+  if (value === null || typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) || Array.isArray(value)) refuse(code);
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) refuse(code);
   const names = Object.getOwnPropertyNames(value);
@@ -85,7 +87,7 @@ function captureDataObject(value, expectedKeys, code) {
 }
 
 function captureDataArray(value, code, maxLength) {
-  if (isProxy(value) || !Array.isArray(value)) refuse(code);
+  if (UTIL_TYPES_IS_PROXY(value) || !Array.isArray(value)) refuse(code);
   if (Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
   const lengthDescriptor = Object.getOwnPropertyDescriptor(value, 'length');
   if (!lengthDescriptor || !('value' in lengthDescriptor) || lengthDescriptor.enumerable) refuse(code);
@@ -104,7 +106,7 @@ function captureDataArray(value, code, maxLength) {
 }
 
 function captureOwnerPolicy(value) {
-  if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) refuse('REFUSED_PROFILE');
+  if (value === null || typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) || Array.isArray(value)) refuse('REFUSED_PROFILE');
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) refuse('REFUSED_PROFILE');
   if (Object.getOwnPropertySymbols(value).length !== 0) refuse('REFUSED_PROFILE');
@@ -116,7 +118,8 @@ function captureOwnerPolicy(value) {
 }
 
 function intrinsicBufferLength(value, code) {
-  if (!Buffer.isBuffer(value)) refuse(code);
+  if (UTIL_TYPES_IS_PROXY(value)) refuse(code);
+  if (!BUFFER_IS_BUFFER(value)) refuse(code);
   if (Object.getOwnPropertyDescriptor(value, 'length') || Object.getOwnPropertyDescriptor(value, 'byteLength')) refuse(code);
   let length;
   try {
@@ -194,7 +197,7 @@ function canonicalText(value, state, depth = 0) {
   }
   if (typeof value === 'string') return encodeString(value);
   if (typeof value !== 'object') refuse('REFUSED_CANONICAL');
-  if (isProxy(value)) refuse('REFUSED_CANONICAL');
+  if (UTIL_TYPES_IS_PROXY(value)) refuse('REFUSED_CANONICAL');
   if (state.active.has(value)) refuse('REFUSED_CANONICAL');
   state.active.add(value);
   try {

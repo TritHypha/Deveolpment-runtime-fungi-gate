@@ -205,6 +205,50 @@ test('captured artifact bytes bind length, digest and later caller mutation', ()
   assert.equal(frame.subarray(-2).toString('hex'), '00ff');
 });
 
+test('proxied Buffers refuse before intrinsic artifact capture can trigger caller traps', () => {
+  let traps = 0;
+  const proxiedBody = new Proxy(Buffer.from(KAT_A_BODY), {
+    get() {
+      traps += 1;
+      throw new Error('proxied Buffer get trap ran');
+    },
+    getOwnPropertyDescriptor() {
+      traps += 1;
+      throw new Error('proxied Buffer descriptor trap ran');
+    },
+    getPrototypeOf() {
+      traps += 1;
+      throw new Error('proxied Buffer prototype trap ran');
+    },
+    ownKeys() {
+      traps += 1;
+      throw new Error('proxied Buffer keys trap ran');
+    },
+  });
+
+  expectRefusal(
+    () => buildAdmissionManifest(katAInputs({ artifacts: [{ id: 'root', bytes: proxiedBody }] })),
+    'REFUSED_ARTIFACT',
+  );
+  assert.equal(traps, 0);
+
+  const manifest = buildAdmissionManifest(katAInputs());
+  expectRefusal(
+    () => encodeAdmissionFrame({ manifest, artifacts: [{ id: 'root', bytes: proxiedBody }] }),
+    'REFUSED_ARTIFACT',
+  );
+  assert.equal(traps, 0);
+});
+
+test('exact Buffer.prototype artifacts remain admitted after proxy rejection', () => {
+  const body = Buffer.from(KAT_A_BODY);
+  assert.equal(Object.getPrototypeOf(body), Buffer.prototype);
+
+  const manifest = buildAdmissionManifest(katAInputs({ artifacts: [{ id: 'root', bytes: body }] }));
+  const frame = encodeAdmissionFrame({ manifest, artifacts: [{ id: 'root', bytes: body }] });
+  assert.deepEqual(frame, Buffer.from(KAT_A_FRAME_HEX, 'hex'));
+});
+
 test('run binding, graph closure and byte-order sorting fail closed', () => {
   const manifest = buildAdmissionManifest(katAInputs());
   const wrongRun = structuredClone(manifest);
