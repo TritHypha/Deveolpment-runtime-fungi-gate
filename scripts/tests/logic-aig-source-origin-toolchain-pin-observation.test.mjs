@@ -724,19 +724,155 @@ function collectStrings(value, output = []) {
   return output;
 }
 
+test('exclusive-lock readiness tolerates a cold Windows host beyond five seconds', {
+  skip: process.platform !== 'win32' ? 'Windows lock fixture only' : false,
+}, async () => {
+  const locker = spawn(process.execPath, [
+    '--eval',
+    'setTimeout(() => { process.stdout.write("ready\\r\\n"); process.stdin.resume(); }, 5_250);',
+  ], {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    windowsHide: true,
+  });
+  try {
+    await waitForExclusiveLockReady(locker);
+  } finally {
+    if (locker.exitCode === null && locker.signalCode === null) {
+      const exited = new Promise((resolve) => locker.once('close', resolve));
+      locker.kill();
+      await exited;
+    }
+  }
+  assert.equal(childHasExited(locker), true);
+});
+
+test('exclusive-lock readiness timeout stops its owned child before refusing', {
+  skip: process.platform !== 'win32' ? 'Windows lock fixture only' : false,
+}, async () => {
+  const locker = spawn(process.execPath, [
+    '--eval',
+    'process.stdin.resume(); setInterval(() => {}, 1_000);',
+  ], {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    windowsHide: true,
+  });
+  try {
+    await assert.rejects(
+      () => waitForExclusiveLockReady(locker, { timeoutMs: 25 }),
+      /exclusive-lock fixture did not become ready/u,
+    );
+    assert.equal(locker.exitCode !== null || locker.signalCode !== null, true);
+  } finally {
+    if (locker.exitCode === null && locker.signalCode === null) {
+      const exited = new Promise((resolve) => locker.once('close', resolve));
+      locker.kill();
+      await exited;
+    }
+  }
+});
+
+function childHasExited(child) {
+  return child.exitCode !== null || child.signalCode !== null;
+}
+
+function waitForChildClose(child, timeoutMs) {
+  if (childHasExited(child)) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    const onClose = () => {
+      clearTimeout(timer);
+      resolve(true);
+    };
+    const timer = setTimeout(() => {
+      child.off('close', onClose);
+      resolve(false);
+    }, timeoutMs);
+    child.once('close', onClose);
+  });
+}
+
+async function stopExclusiveLockFixture(locker) {
+  if (childHasExited(locker)) return;
+  const gracefulExit = waitForChildClose(locker, 5_000);
+  locker.stdin.end('\n');
+  if (await gracefulExit) return;
+
+  const forcedExit = waitForChildClose(locker, 5_000);
+  const killAccepted = locker.kill();
+  if (!killAccepted || !await forcedExit) {
+    throw new Error('exclusive-lock fixture could not stop its owned child');
+  }
+}
+
+async function waitForExclusiveLockReady(locker, { timeoutMs = 30_000 } = {}) {
+  let stdout = '';
+  let stderr = '';
+  locker.stdout.setEncoding('utf8');
+  locker.stderr.setEncoding('utf8');
+
+  const outcome = await new Promise((resolve) => {
+    let settled = false;
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      locker.stdout.off('data', onStdout);
+      locker.stderr.off('data', onStderr);
+      locker.off('error', onError);
+      locker.off('close', onClose);
+      resolve(value);
+    };
+    const onStdout = (chunk) => {
+      if (stdout.length < 4_096) stdout += chunk.slice(0, 4_096 - stdout.length);
+      if (stdout === 'ready\r\n' || stdout === 'ready\n') finish({ kind: 'ready' });
+      else if (stdout.includes('\n') || stdout.length >= 4_096) finish({ kind: 'unexpected-output' });
+    };
+    const onStderr = (chunk) => {
+      if (stderr.length < 4_096) stderr += chunk.slice(0, 4_096 - stderr.length);
+    };
+    const onError = (error) => finish({ kind: 'spawn-error', error });
+    const onClose = (status, signal) => finish({ kind: 'closed', status, signal });
+    const timer = setTimeout(() => finish({ kind: 'timeout' }), timeoutMs);
+
+    locker.stdout.on('data', onStdout);
+    locker.stderr.on('data', onStderr);
+    locker.once('error', onError);
+    locker.once('close', onClose);
+  });
+
+  if (outcome.kind === 'ready') return;
+  await stopExclusiveLockFixture(locker);
+  const detail = stderr ? `: ${stderr}` : '';
+  if (outcome.kind === 'timeout') {
+    throw new Error(`exclusive-lock fixture did not become ready${detail}`);
+  }
+  if (outcome.kind === 'spawn-error') {
+    throw new Error(`exclusive-lock fixture failed to start: ${outcome.error.message}${detail}`);
+  }
+  if (outcome.kind === 'unexpected-output') {
+    throw new Error(`exclusive-lock fixture emitted unexpected readiness output: ${stdout}${detail}`);
+  }
+  throw new Error(
+    `exclusive-lock fixture exited before ready (status ${outcome.status}, signal ${outcome.signal})${detail}`,
+  );
+}
+
 async function holdFileUnreadable(target) {
   if (process.platform !== 'win32') {
     chmodSync(target, 0o000);
     return async () => chmodSync(target, 0o600);
   }
-  const readyFile = path.join(tmpdir(), `rd0873-exclusive-ready-${process.pid}-${Date.now()}`);
   const scriptFile = path.join(tmpdir(), `rd0873-exclusive-lock-${process.pid}-${Date.now()}.ps1`);
   writeFileSync(scriptFile, [
-    'param([string]$Target, [string]$Ready)',
+    'param([string]$Target)',
+    '$ErrorActionPreference = "Stop"',
     '$stream = [IO.File]::Open($Target, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::None)',
-    '[IO.File]::WriteAllText($Ready, "ready")',
-    '[Console]::In.ReadLine() | Out-Null',
-    '$stream.Dispose()',
+    'try {',
+    '  [Console]::Out.WriteLine("ready")',
+    '  [Console]::Out.Flush()',
+    '  [Console]::In.ReadLine() | Out-Null',
+    '} finally {',
+    '  $stream.Dispose()',
+    '}',
   ].join('\r\n'));
   const locker = spawn('powershell.exe', [
     '-NoProfile',
@@ -746,33 +882,22 @@ async function holdFileUnreadable(target) {
     '-File',
     scriptFile,
     target,
-    readyFile,
   ], {
-    stdio: ['pipe', 'ignore', 'pipe'],
+    stdio: ['pipe', 'pipe', 'pipe'],
     windowsHide: true,
   });
-  let stderr = '';
-  locker.stderr.setEncoding('utf8');
-  locker.stderr.on('data', (chunk) => {
-    if (stderr.length < 4_096) stderr += chunk.slice(0, 4_096 - stderr.length);
-  });
-  const deadline = Date.now() + 5_000;
-  while (!existsSync(readyFile)) {
-    if (locker.exitCode !== null || locker.signalCode !== null) {
-      rmSync(scriptFile, { force: true });
-      throw new Error(`exclusive-lock fixture exited before ready: ${stderr}`);
-    }
-    if (Date.now() >= deadline) throw new Error('exclusive-lock fixture did not become ready');
-    await new Promise((resolve) => setTimeout(resolve, 10));
+  try {
+    await waitForExclusiveLockReady(locker);
+  } catch (error) {
+    rmSync(scriptFile, { force: true });
+    throw error;
   }
   return async () => {
-    const exited = locker.exitCode !== null || locker.signalCode !== null
-      ? Promise.resolve()
-      : new Promise((resolve) => locker.once('exit', resolve));
-    locker.stdin.end('\n');
-    await exited;
-    rmSync(readyFile, { force: true });
-    rmSync(scriptFile, { force: true });
+    try {
+      await stopExclusiveLockFixture(locker);
+    } finally {
+      rmSync(scriptFile, { force: true });
+    }
   };
 }
 
