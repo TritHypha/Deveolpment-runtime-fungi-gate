@@ -435,6 +435,33 @@ test('pinned TypeScript scanner refuses the remaining closed static syntax and r
   }
 });
 
+test('pinned TypeScript scanner refuses an omitted canonical edge and both import-attribute syntaxes', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const parser = path.join(root, 'packages-ts', 'galerina-core-compiler', 'src', 'parser.ts');
+  const baseParser = readFileSync(parser, 'utf8');
+  const canonicalEdge = 'import { lex, type Token, type LexerDiagnostic } from "./lexer.js";\n';
+  assert(baseParser.includes(canonicalEdge), 'fixture must include the canonical parser-to-lexer edge');
+
+  const cases = [
+    ['omitted canonical parser-to-lexer edge', baseParser.replace(canonicalEdge, '')],
+    ['modern import attributes', `${baseParser}\nimport "./lexer.js" with { type: "json" };\n`],
+    ['legacy import assertions', `${baseParser}\nimport "./lexer.js" assert { type: "json" };\n`],
+  ];
+  for (const [label, source] of cases) {
+    writeFileSync(parser, source);
+    commitFixture(gitExecutable, root, `add ${label}`);
+    await assert.rejects(
+      () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SOURCE',
+      label,
+    );
+    writeFileSync(parser, baseParser);
+    commitFixture(gitExecutable, root, `restore ${label}`);
+  }
+});
+
 test('pinned TypeScript scanner refuses an extra narrow-entry export without output', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
   t.after(() => rmSync(root, { recursive: true, force: true }));
