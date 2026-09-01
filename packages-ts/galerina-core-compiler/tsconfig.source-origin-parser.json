@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "files": ["src/source-origin-parser-entry.ts"],
+  "include": [],
+  "compilerOptions": {
+    "types": [],
+    "noEmitOnError": true,
+    "incremental": false,
+    "composite": false,
+    "sourceMap": false,
+    "declarationMap": false
+  }
+}

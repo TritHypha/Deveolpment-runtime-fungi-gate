@@ -192,6 +192,237 @@ function assertExactKeys(value, keys) {
   assert.deepEqual(Object.keys(value).sort(), [...keys].sort());
 }
 
+function collectParserFreeStaticModuleSpecifiers(sourceMembers) {
+  const rows = [];
+  for (const [fromLocator, source] of sourceMembers) {
+    for (const line of source.split('\n')) {
+      const trimmed = line.trim();
+      if (
+        !trimmed.startsWith('import ')
+        && !trimmed.startsWith('export ')
+        && !trimmed.startsWith('} from ')
+      ) {
+        continue;
+      }
+      let quote = null;
+      let specifierStart = -1;
+      if (trimmed.startsWith('import "') || trimmed.startsWith("import '")) {
+        quote = trimmed[7];
+        specifierStart = 8;
+      } else {
+        for (const marker of [' from "', " from '"]) {
+          const markerIndex = trimmed.indexOf(marker);
+          if (markerIndex !== -1) {
+            quote = marker.at(-1);
+            specifierStart = markerIndex + marker.length;
+            break;
+          }
+        }
+      }
+      if (specifierStart === -1) continue;
+      const specifierEnd = trimmed.indexOf(quote, specifierStart);
+      assert.notEqual(
+        specifierEnd,
+        -1,
+        `unterminated parser-free module specifier in ${fromLocator}`,
+      );
+      rows.push({
+        fromLocator,
+        specifier: trimmed.slice(specifierStart, specifierEnd),
+      });
+    }
+  }
+  return rows;
+}
+
+function assertParserFreeStaticModuleClosure(sourceMembers, frozenRows) {
+  assert.deepEqual(
+    collectParserFreeStaticModuleSpecifiers(sourceMembers),
+    frozenRows.map(({ fromLocator, specifier }) => ({ fromLocator, specifier })),
+  );
+}
+
+test('dedicated source-origin parser project freezes the exact narrow source closure', () => {
+  const compilerRoot = new URL(
+    '../../packages-ts/galerina-core-compiler/',
+    import.meta.url,
+  );
+  const entryLocator = 'src/source-origin-parser-entry.ts';
+  const entryBytes = readFileSync(new URL(entryLocator, compilerRoot));
+  assert.deepEqual(entryBytes, Buffer.from([
+    'export { lex } from "./lexer.js";',
+    'export { parseGateV3 } from "./gate-v3-parser.js";',
+    'export { parseProgram } from "./parser.js";',
+    '',
+  ].join('\n'), 'utf8'));
+  assert.doesNotMatch(
+    entryBytes.toString('utf8'),
+    /\b(?:lex|parseGateV3|parseProgram)\s*\(/u,
+  );
+
+  const projectText = readFileSync(
+    new URL('tsconfig.source-origin-parser.json', compilerRoot),
+    'utf8',
+  ).replaceAll('\r\n', '\n');
+  assert.equal(projectText, [
+    '{',
+    '  "extends": "./tsconfig.json",',
+    '  "files": ["src/source-origin-parser-entry.ts"],',
+    '  "include": [],',
+    '  "compilerOptions": {',
+    '    "types": [],',
+    '    "noEmitOnError": true,',
+    '    "incremental": false,',
+    '    "composite": false,',
+    '    "sourceMap": false,',
+    '    "declarationMap": false',
+    '  }',
+    '}',
+    '',
+  ].join('\n'));
+  const project = JSON.parse(projectText);
+  assert.deepEqual(Object.keys(project), [
+    'extends', 'files', 'include', 'compilerOptions',
+  ]);
+  assert.deepEqual(Object.keys(project.compilerOptions), [
+    'types', 'noEmitOnError', 'incremental', 'composite', 'sourceMap', 'declarationMap',
+  ]);
+  assert.deepEqual(project, {
+    extends: './tsconfig.json',
+    files: ['src/source-origin-parser-entry.ts'],
+    include: [],
+    compilerOptions: {
+      types: [],
+      noEmitOnError: true,
+      incremental: false,
+      composite: false,
+      sourceMap: false,
+      declarationMap: false,
+    },
+  });
+
+  const sourceMemberLocators = [
+    'src/gate-v3-parser.ts',
+    'src/lexer.ts',
+    'src/parser.ts',
+    'src/requirement-diagnostics.ts',
+    entryLocator,
+  ];
+  const sourceMembers = new Map(sourceMemberLocators.map((locator) => [
+    locator,
+    readFileSync(new URL(locator, compilerRoot), 'utf8').replaceAll('\r\n', '\n'),
+  ]));
+  assert.deepEqual([...sourceMembers.keys()], sourceMemberLocators);
+
+  const sourceEdgeDeclarations = [
+    {
+      fromLocator: 'src/gate-v3-parser.ts',
+      kind: 'IMPORT_TYPE',
+      exportName: null,
+      specifier: './parser.js',
+      toLocator: 'src/parser.ts',
+      declaration: 'import type { ParseDiagnostic, SourceLocation } from "./parser.js";',
+    },
+    {
+      fromLocator: 'src/parser.ts',
+      kind: 'IMPORT',
+      exportName: null,
+      specifier: './lexer.js',
+      toLocator: 'src/lexer.ts',
+      declaration: 'import { lex, type Token, type LexerDiagnostic } from "./lexer.js";',
+    },
+    {
+      fromLocator: 'src/parser.ts',
+      kind: 'IMPORT',
+      exportName: null,
+      specifier: './requirement-diagnostics.js',
+      toLocator: 'src/requirement-diagnostics.ts',
+      declaration: [
+        'import {',
+        '  FUNGI_REQUIREMENT_001,',
+        '  FUNGI_REQUIREMENT_005,',
+        '  FUNGI_REQUIREMENT_006,',
+        '  FUNGI_REQUIREMENT_008,',
+        '} from "./requirement-diagnostics.js";',
+      ].join('\n'),
+    },
+    {
+      fromLocator: entryLocator,
+      kind: 'EXPORT_FROM',
+      exportName: 'lex',
+      specifier: './lexer.js',
+      toLocator: 'src/lexer.ts',
+      declaration: 'export { lex } from "./lexer.js";',
+    },
+    {
+      fromLocator: entryLocator,
+      kind: 'EXPORT_FROM',
+      exportName: 'parseGateV3',
+      specifier: './gate-v3-parser.js',
+      toLocator: 'src/gate-v3-parser.ts',
+      declaration: 'export { parseGateV3 } from "./gate-v3-parser.js";',
+    },
+    {
+      fromLocator: entryLocator,
+      kind: 'EXPORT_FROM',
+      exportName: 'parseProgram',
+      specifier: './parser.js',
+      toLocator: 'src/parser.ts',
+      declaration: 'export { parseProgram } from "./parser.js";',
+    },
+  ];
+  assert.equal(sourceEdgeDeclarations.length, 6);
+  for (const { fromLocator, declaration } of sourceEdgeDeclarations) {
+    const source = sourceMembers.get(fromLocator);
+    assert(source, `missing frozen source member ${fromLocator}`);
+    assert.equal(
+      source.split(declaration).length - 1,
+      1,
+      `expected one exact frozen declaration in ${fromLocator}`,
+    );
+  }
+
+  const frozenRows = sourceEdgeDeclarations.map(({ declaration: _declaration, ...row }) => row);
+  const compareRow = (left, right) => {
+    const leftTuple = [
+      left.fromLocator, left.kind, left.exportName ?? '', left.specifier, left.toLocator,
+    ];
+    const rightTuple = [
+      right.fromLocator, right.kind, right.exportName ?? '', right.specifier, right.toLocator,
+    ];
+    for (let index = 0; index < leftTuple.length; index += 1) {
+      if (leftTuple[index] < rightTuple[index]) return -1;
+      if (leftTuple[index] > rightTuple[index]) return 1;
+    }
+    return 0;
+  };
+  assert.deepEqual([...frozenRows].sort(compareRow), frozenRows);
+  assertParserFreeStaticModuleClosure(sourceMembers, frozenRows);
+  const surplusEdgeMembers = new Map(sourceMembers);
+  surplusEdgeMembers.set(
+    'src/lexer.ts',
+    `${sourceMembers.get('src/lexer.ts')}import "./surplus.js";\n`,
+  );
+  assert.throws(
+    () => assertParserFreeStaticModuleClosure(surplusEdgeMembers, frozenRows),
+    { code: 'ERR_ASSERTION' },
+  );
+  const derivedMembers = [...new Set([
+    entryLocator,
+    ...frozenRows.flatMap(({ fromLocator, toLocator }) => [fromLocator, toLocator]),
+  ])].sort((left, right) => (left < right ? -1 : left > right ? 1 : 0));
+  assert.deepEqual(derivedMembers, sourceMemberLocators);
+  assert.deepEqual({
+    rule: 'exact-source-edge-row-closure.v1',
+    rootLocator: 'packages-ts/galerina-core-compiler',
+    entryLocator,
+  }, {
+    rule: 'exact-source-edge-row-closure.v1',
+    rootLocator: 'packages-ts/galerina-core-compiler',
+    entryLocator: 'src/source-origin-parser-entry.ts',
+  });
+});
+
 function canonicalDomainDigest(domain, value) {
   return createHash('sha256')
     .update(Buffer.from(domain, 'utf8'))
