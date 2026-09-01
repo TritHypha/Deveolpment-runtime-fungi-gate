@@ -41,6 +41,13 @@ packages-galerina/galerina-devtools-benchmarks/nbody-out.json
 test-output.txt
 **/*.pdb
 build/*.out
+# Package-local compiler/native outputs are reproducible build products, never source.
+packages-ts/**/dist/
+packages-ts/**/target/
+# The Wasmtime oracle corpus is emitted by its build/test harness; do not sweep it into Git.
+packages-ts/galerina-devtools-wasmtime-oracle/fixtures/
+# Package-local audit ledgers are runtime/test evidence, not repository inputs.
+packages-ts/**/build/audit-log/
 # Ad-hoc audit scratch (tN.fungi fixtures at repo root) — no tracked tool generates it; local-only.
 /_audit_tmp/
 # Ad-hoc probe scratch — throwaway .mjs repros a session writes to exercise the compiler/runtime, then
