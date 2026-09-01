@@ -591,7 +591,17 @@ function sourceEdgeTuple(edge) {
 }
 
 function assertExactSourceEdgeRows(rows) {
-  assertCanonicalSortedRows(rows, sourceEdgeTuple);
+  if (!Array.isArray(rows)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+  for (let index = 1; index < rows.length; index += 1) {
+    const previous = sourceEdgeTuple(rows[index - 1]);
+    const current = sourceEdgeTuple(rows[index]);
+    for (let item = 0; item < previous.length; item += 1) {
+      if (previous[item] < current[item]) break;
+      if (previous[item] > current[item] || item === previous.length - 1) {
+        refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+      }
+    }
+  }
   if (!equalCanonical(rows, SOURCE_EDGE_ROWS)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
 }
 
@@ -721,7 +731,8 @@ function scanSourceEdges(typescript, sources) {
       }
     }
     const inspect = (node) => {
-      if (typescript.isImportTypeNode(node)
+      if (typescript.isImportEqualsDeclaration(node) || typescript.isExternalModuleReference(node)
+        || typescript.isImportTypeNode(node)
         || (typescript.isCallExpression(node) && (node.expression.kind === typescript.SyntaxKind.ImportKeyword
           || (typescript.isIdentifier(node.expression) && node.expression.text === 'require')))
         || (typescript.isPropertyAccessExpression(node) && node.name.text === 'resolve'
@@ -931,6 +942,33 @@ function assertHex(value, expression) {
   if (typeof value !== 'string' || !expression.test(value)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
 }
 
+function assertSafeByteLength(value) {
+  if (!Number.isSafeInteger(value) || value < 0) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+}
+
+function assertRawIdentity(value, rawSha256Key, byteLengthKey) {
+  assertHex(value[rawSha256Key], SHA256);
+  assertSafeByteLength(value[byteLengthKey]);
+}
+
+function assertGitBlobIdentity(value) {
+  assertHex(value.gitBlobOid, SHA1);
+  assertRawIdentity(value, 'rawSha256', 'byteLength');
+}
+
+function closureRowByLocator(closure, locator) {
+  const matched = closure.rows.filter((rowValue) => rowValue.locator === locator);
+  if (matched.length !== 1) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  return matched[0];
+}
+
+function assertClosureBinding(identity, closure, locator, rawSha256Key = 'rawSha256', byteLengthKey = 'byteLength') {
+  const matched = closureRowByLocator(closure, locator);
+  if (identity[rawSha256Key] !== matched.rawSha256 || identity[byteLengthKey] !== matched.byteLength) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+}
+
 function validateClosure(closure) {
   assertExactKeys(closure, ['schema', 'id', 'declaration', 'rows', 'counts', 'authorizing', 'closureDigest']);
   if (closure.schema !== CLOSURE_SCHEMA || closure.authorizing !== false) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
@@ -993,12 +1031,16 @@ function validateToolchainPinObservationInternal(value) {
   if (value.compilerLock.locator !== COMPILER_LOCK_LOCATOR || value.compilerLock.lockfileVersion !== 3) {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   }
-  assertHex(value.compilerLock.gitBlobOid, SHA1);
-  assertHex(value.compilerLock.rawSha256, SHA256);
+  assertGitBlobIdentity(value.compilerLock);
   assertExactKeys(value.compilerLock.compilerPackage, ['name', 'version', 'typescriptDependencyRange']);
   assertExactKeys(value.compilerLock.typescriptDependency, ['packageKey', 'version', 'resolved', 'integrity']);
   if (value.compilerLock.compilerPackage.name !== '@galerina/core-compiler'
-    || value.compilerLock.typescriptDependency.packageKey !== 'node_modules/typescript') {
+    || typeof value.compilerLock.compilerPackage.version !== 'string'
+    || typeof value.compilerLock.compilerPackage.typescriptDependencyRange !== 'string'
+    || value.compilerLock.typescriptDependency.packageKey !== 'node_modules/typescript'
+    || typeof value.compilerLock.typescriptDependency.version !== 'string'
+    || typeof value.compilerLock.typescriptDependency.resolved !== 'string'
+    || typeof value.compilerLock.typescriptDependency.integrity !== 'string') {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   }
   assertExactKeys(value.typescript, [
@@ -1006,19 +1048,24 @@ function validateToolchainPinObservationInternal(value) {
     'entryLocator', 'entryRawSha256', 'entryByteLength',
   ]);
   if (value.typescript.name !== 'typescript' || value.typescript.version !== value.compilerLock.typescriptDependency.version
+    || typeof value.typescript.version !== 'string'
     || value.typescript.packageLocator !== TYPESCRIPT_PACKAGE_LOCATOR || value.typescript.entryLocator !== TYPESCRIPT_ENTRY_LOCATOR) {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   }
+  assertRawIdentity(value.typescript, 'packageRawSha256', 'packageByteLength');
+  assertRawIdentity(value.typescript, 'entryRawSha256', 'entryByteLength');
   assertExactKeys(value.typescriptCompilerCli, ['rootLocator', 'locator', 'rawSha256', 'byteLength']);
   if (value.typescriptCompilerCli.rootLocator !== TYPESCRIPT_ROOT_LOCATOR || value.typescriptCompilerCli.locator !== 'lib/tsc.js') {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   }
+  assertRawIdentity(value.typescriptCompilerCli, 'rawSha256', 'byteLength');
   assertExactKeys(value.sourceOriginParserEntry, ['rootLocator', 'locator', 'gitBlobOid', 'rawSha256', 'byteLength', 'exportNames']);
   if (value.sourceOriginParserEntry.rootLocator !== COMPILER_ROOT_LOCATOR
     || value.sourceOriginParserEntry.locator !== SOURCE_ENTRY_LOCAL_LOCATOR
     || !equalCanonical(value.sourceOriginParserEntry.exportNames, ['lex', 'parseGateV3', 'parseProgram'])) {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   }
+  assertGitBlobIdentity(value.sourceOriginParserEntry);
   assertExactKeys(value.sourceOriginParserProject, [
     'rootLocator', 'locator', 'gitBlobOid', 'rawSha256', 'byteLength', 'extendsLocator', 'files', 'include', 'compilerOptions',
   ]);
@@ -1027,9 +1074,13 @@ function validateToolchainPinObservationInternal(value) {
     || value.sourceOriginParserProject.extendsLocator !== './tsconfig.json'
     || !equalCanonical(value.sourceOriginParserProject.files, [SOURCE_ENTRY_LOCAL_LOCATOR])
     || !equalCanonical(value.sourceOriginParserProject.include, [])) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertGitBlobIdentity(value.sourceOriginParserProject);
   assertExactKeys(value.sourceOriginParserProject.compilerOptions, [
     'types', 'noEmitOnError', 'incremental', 'composite', 'sourceMap', 'declarationMap',
   ]);
+  if (!equalCanonical(value.sourceOriginParserProject.compilerOptions, {
+    types: [], noEmitOnError: true, incremental: false, composite: false, sourceMap: false, declarationMap: false,
+  })) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   assertExactSourceEdgeRows(value.sourceEdgeRows);
   if (!Array.isArray(value.declaredClosures) || value.declaredClosures.length !== 2) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   assertCanonicalSortedRows(value.declaredClosures, (current) => [current.id]);
@@ -1046,6 +1097,10 @@ function validateToolchainPinObservationInternal(value) {
     || typescriptClosure.declaration.rule !== 'all-regular-files-under-package-root.v1'
     || typescriptClosure.declaration.rootLocator !== TYPESCRIPT_ROOT_LOCATOR
     || typescriptClosure.declaration.entryLocator !== 'lib/typescript.js') refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertClosureBinding(value.sourceOriginParserEntry, sourceClosure, SOURCE_ENTRY_LOCAL_LOCATOR);
+  assertClosureBinding(value.typescript, typescriptClosure, 'package.json', 'packageRawSha256', 'packageByteLength');
+  assertClosureBinding(value.typescript, typescriptClosure, 'lib/typescript.js', 'entryRawSha256', 'entryByteLength');
+  assertClosureBinding(value.typescriptCompilerCli, typescriptClosure, 'lib/tsc.js');
   if (!Array.isArray(value.provenanceBlobs) || value.provenanceBlobs.length !== PROVENANCE.length) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   assertCanonicalSortedRows(value.provenanceBlobs, (current) => [current.role]);
   for (let index = 0; index < PROVENANCE.length; index += 1) {
@@ -1053,6 +1108,7 @@ function validateToolchainPinObservationInternal(value) {
     const expected = PROVENANCE[index];
     assertExactKeys(observed, ['role', 'locator', 'gitBlobOid', 'rawSha256', 'byteLength']);
     if (observed.role !== expected.role || observed.locator !== expected.locator) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+    assertGitBlobIdentity(observed);
   }
   if (!equalCanonical(value.limits, TOOLCHAIN_PIN_OBSERVATION_LIMITS)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   const { observationDigest, ...body } = value;

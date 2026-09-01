@@ -285,6 +285,82 @@ test('v2 validator structurally refuses historical top-level and narrow-closure 
   );
 });
 
+test('v2 validator rejects recomputed identity, project-option, and provenance mutants', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { collectToolchainPinObservation, validateToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const observation = await collectToolchainPinObservation({ repositoryRoot: root, gitExecutable });
+  const mutated = (change) => {
+    const candidate = structuredClone(observation);
+    change(candidate);
+    const { observationDigest: ignoredDigest, ...body } = candidate;
+    candidate.observationDigest = canonicalDomainDigest(candidate.schema, body);
+    return candidate;
+  };
+
+  const cases = [
+    ['project noEmitOnError', (candidate) => { candidate.sourceOriginParserProject.compilerOptions.noEmitOnError = false; }],
+    ['TypeScript entry hash', (candidate) => { candidate.typescript.entryRawSha256 = '0'.repeat(64); }],
+    ['TypeScript package byte length', (candidate) => { candidate.typescript.packageByteLength += 1; }],
+    ['TypeScript compiler CLI byte length', (candidate) => { candidate.typescriptCompilerCli.byteLength = 0; }],
+    ['source-entry hash', (candidate) => { candidate.sourceOriginParserEntry.rawSha256 = '1'.repeat(64); }],
+    ['source-project hash', (candidate) => { candidate.sourceOriginParserProject.rawSha256 = 'A'.repeat(64); }],
+    ['provenance hash', (candidate) => { candidate.provenanceBlobs[0].rawSha256 = 'B'.repeat(64); }],
+  ];
+  for (const [label, change] of cases) {
+    assert.throws(
+      () => validateToolchainPinObservation(mutated(change)),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA',
+      label,
+    );
+  }
+});
+
+test('v2 validator refuses both historical narrow-closure rules and all v1 top-level substitutes', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { collectToolchainPinObservation, validateToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const observation = await collectToolchainPinObservation({ repositoryRoot: root, gitExecutable });
+  const rehashed = (candidate) => {
+    const { observationDigest: ignoredDigest, ...body } = candidate;
+    candidate.observationDigest = canonicalDomainDigest(candidate.schema, body);
+    return candidate;
+  };
+  const historicalSourceRule = (rule) => {
+    const candidate = structuredClone(observation);
+    const closure = candidate.declaredClosures.find(({ id }) => id === 'source-origin-parser-source');
+    closure.declaration.rule = rule;
+    const { closureDigest: ignoredDigest, ...closureBody } = closure;
+    closure.closureDigest = canonicalDomainDigest(closure.schema, closureBody);
+    return rehashed(candidate);
+  };
+
+  for (const rule of [
+    'all-git-tracked-regular-files-under-package-root.v1',
+    'all-regular-files-under-package-root.v1',
+  ]) {
+    assert.throws(
+      () => validateToolchainPinObservation(historicalSourceRule(rule)),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA',
+      rule,
+    );
+  }
+  for (const schema of [
+    'galerina.logic-aig-toolchain-pin-observation.v1',
+    'galerina.logic-aig-toolchain-pins.v1',
+    'galerina.logic-aig-toolchain-pin-record.v1',
+    'galerina.logic-aig-toolchain-manifest.v1',
+  ]) {
+    const candidate = structuredClone(observation);
+    candidate.schema = schema;
+    assert.throws(
+      () => validateToolchainPinObservation(rehashed(candidate)),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA',
+      schema,
+    );
+  }
+});
+
 test('pinned TypeScript scanner refuses dynamic and non-relative source edges without output', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
   t.after(() => rmSync(root, { recursive: true, force: true }));
@@ -299,6 +375,55 @@ test('pinned TypeScript scanner refuses dynamic and non-relative source edges wi
     ['source import attribute', 'import "./lexer.js" with { type: "json" };'],
   ]) {
     writeFileSync(parser, `${baseParser}\n${injected}\n`);
+    commitFixture(gitExecutable, root, `add ${label}`);
+    await assert.rejects(
+      () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SOURCE',
+      label,
+    );
+    writeFileSync(parser, baseParser);
+    commitFixture(gitExecutable, root, `restore ${label}`);
+  }
+});
+
+test('pinned TypeScript scanner refuses import-equals external-module references without output', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const parser = path.join(root, 'packages-ts', 'galerina-core-compiler', 'src', 'parser.ts');
+  writeFileSync(parser, `${readFileSync(parser, 'utf8')}\nimport lexer = require("./lexer.js");\n`);
+  commitFixture(gitExecutable, root, 'add import equals external module reference');
+
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  await assert.rejects(
+    () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SOURCE',
+  );
+});
+
+test('pinned TypeScript scanner refuses the remaining closed static syntax and resolution matrix', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const parser = path.join(root, 'packages-ts', 'galerina-core-compiler', 'src', 'parser.ts');
+  const baseParser = readFileSync(parser, 'utf8');
+
+  const cases = [
+    ['side-effect import', 'import "./lexer.js";'],
+    ['value import', 'import { lex as anotherLex } from "./lexer.js";'],
+    ['type-only import', 'import type { ParseDiagnostic } from "./parser.js";'],
+    ['named re-export', 'export { lex as anotherLex } from "./lexer.js";'],
+    ['export type from', 'export type { ParseDiagnostic } from "./parser.js";'],
+    ['export star from', 'export * from "./lexer.js";'],
+    ['export namespace from', 'export * as lexerNamespace from "./lexer.js";'],
+    ['import type query', 'type Parsed = import("./parser.js").ParseDiagnostic;'],
+    ['import meta resolve', 'const resolved = import.meta.resolve("./lexer.js");'],
+    ['source extension fallback', 'import "./lexer.ts";'],
+    ['unresolved relative target', 'import "./missing.js";'],
+    ['outside member target', 'import "../outside.js";'],
+    ['triple slash reference', '/// <reference path="./lexer.ts" />', 'prefix'],
+  ];
+  for (const [label, injected, placement] of cases) {
+    writeFileSync(parser, placement === 'prefix' ? `${injected}\n${baseParser}` : `${baseParser}\n${injected}\n`);
     commitFixture(gitExecutable, root, `add ${label}`);
     await assert.rejects(
       () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
