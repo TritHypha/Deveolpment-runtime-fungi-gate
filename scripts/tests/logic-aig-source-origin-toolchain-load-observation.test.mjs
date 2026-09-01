@@ -675,6 +675,42 @@ test('generated edge recognition refuses unsupported ESM edge syntax before pars
   assert.deepEqual({ accepted, wrongRefusals }, { accepted: [], wrongRefusals: [] });
 });
 
+test('generated static edges close every ECMAScript line terminator and statement-ending layout', { concurrency: false }, async (t) => {
+  const module = await import(LOAD_MODULE_URL);
+  const fixture = createRepositoryFixture(t);
+  const accepted = [];
+  const wrongRefusals = [];
+  const cases = [
+    ['LF', '\nconst marker = 1;\n'],
+    ['CRLF', '\r\nconst marker = 1;\n'],
+    ['CR', '\rconst marker = 1;\n'],
+    ['U+2028', '\u2028const marker = 1;\n'],
+    ['U+2029', '\u2029const marker = 1;\n'],
+    ['EOF', ''],
+    ['semicolon', '; const marker = 1;\n'],
+  ];
+  const forms = [
+    ['named re-export', 'parser.js', (ending) => `\nexport {\n  lex as lexAgain\n} from "./lexer.js"${ending}`],
+    ['static import', 'gate-v3-parser.js', (ending) => `\nimport\n"./lexer.js"${ending}`],
+  ];
+  for (const [form, locator, statement] of forms) {
+    for (const [name, ending] of cases) {
+      const mutation = tscGeneratedAppend(locator, statement(ending));
+      await withTscMutation(fixture, mutation, async (source) => {
+        try {
+          await module.collectToolchainLoadObservation(collectorOptions(fixture, source));
+          accepted.push(`${form}:${name}`);
+        } catch (error) {
+          if (!assertLoadRefusal(error, 'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED')) {
+            wrongRefusals.push(`${form}:${name}:${error?.code ?? error?.name ?? 'unknown'}`);
+          }
+        }
+      });
+    }
+  }
+  assert.deepEqual({ accepted, wrongRefusals }, { accepted: [], wrongRefusals: [] });
+});
+
 test('sealed CLI writes one no-LF external observation and rejects extra argv without a partial artifact', async (t) => {
   await import(LOAD_MODULE_URL);
   const fixture = createRepositoryFixture(t);

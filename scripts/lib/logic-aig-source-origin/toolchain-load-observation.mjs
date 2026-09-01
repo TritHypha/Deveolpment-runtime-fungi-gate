@@ -1035,13 +1035,13 @@ function emittedEdges(root) {
     if (/\bimport\s*\(|\bimport\s*\.\s*meta\b|\brequire\s*\(|\bexport\s*\*|\b(?:with|assert)\s*\{/u.test(source)) {
       refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED');
     }
-    const importExpression = /\bimport(?!\s*[.(])\s*(?:[^;"']*?\bfrom\s*)?(["'])([^"']+)\1(?=\s*(?:;|\r?\n|$))/gu;
+    const importExpression = /\bimport(?!\s*[.(])\s*(?:[^;"']*?\bfrom\s*)?(["'])([^"']+)\1(?=[^\S\r\n\u2028\u2029]*(?:;|\r\n|[\n\r\u2028\u2029]|$))/gu;
     for (const match of source.matchAll(importExpression)) {
       const specifier = match[2];
       const toLocator = resolveGeneratedSpecifier(fromLocator, specifier, executable);
       rows.push({ fromLocator, kind: 'IMPORT', exportName: null, specifier, toLocator });
     }
-    const exportExpression = /\bexport\s*\{([^}]*)\}\s*from\s*(["'])([^"']+)\2(?=\s*(?:;|\r?\n|$))/gu;
+    const exportExpression = /\bexport\s*\{([^}]*)\}\s*from\s*(["'])([^"']+)\2(?=[^\S\r\n\u2028\u2029]*(?:;|\r\n|[\n\r\u2028\u2029]|$))/gu;
     for (const match of source.matchAll(exportExpression)) {
       const specifier = match[3];
       const toLocator = resolveGeneratedSpecifier(fromLocator, specifier, executable);
