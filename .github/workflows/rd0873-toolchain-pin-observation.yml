@@ -19,6 +19,10 @@ jobs:
           - id: linux-x64
             runner: ubuntu-24.04
     runs-on: ${{ matrix.runner }}
+    env:
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: input
     steps:
       - name: Checkout exact revision without retained credentials
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4

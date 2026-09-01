@@ -1076,6 +1076,84 @@ test('collector refuses a Git executable above the declared byte limit before ha
   );
 });
 
+test('private workflow establishes LF-preserving Git configuration before checkout', (t) => {
+  const workflow = readFileSync(new URL(COLLECTOR_WORKFLOW, import.meta.url), 'utf8');
+  const jobMatch = /^ {2}observe:\r?\n(?<beforeSteps>[\s\S]*?)^ {4}steps:[ \t]*\r?$/mu.exec(workflow);
+  assert(jobMatch?.groups?.beforeSteps, 'workflow must expose the observe job before its steps');
+  const environmentMatch = /(?:^|\r?\n)(?<block> {4}env:\r?\n {6}GIT_CONFIG_COUNT: "(?<count>[^"\r\n]+)"\r?\n {6}GIT_CONFIG_KEY_0: (?<key>[^\r\n]+)\r?\n {6}GIT_CONFIG_VALUE_0: (?<value>[^\r\n]+)\r?\n?)$/u.exec(
+    jobMatch.groups.beforeSteps,
+  );
+  assert(
+    environmentMatch?.groups?.block,
+    'observe job must configure checkout byte determinism before steps',
+  );
+
+  const checkoutMarker = '      - name: Checkout exact revision without retained credentials';
+  const checkoutIndex = workflow.indexOf(checkoutMarker);
+  const environmentIndex = workflow.indexOf(environmentMatch.groups.block);
+  assert.notEqual(checkoutIndex, -1);
+  assert(environmentIndex >= 0 && environmentIndex < checkoutIndex);
+
+  const checkoutGitEnvironment = {
+    GIT_CONFIG_COUNT: environmentMatch.groups.count,
+    GIT_CONFIG_KEY_0: environmentMatch.groups.key,
+    GIT_CONFIG_VALUE_0: environmentMatch.groups.value,
+  };
+  assert.deepEqual(checkoutGitEnvironment, {
+    GIT_CONFIG_COUNT: '1',
+    GIT_CONFIG_KEY_0: 'core.autocrlf',
+    GIT_CONFIG_VALUE_0: 'input',
+  });
+  assert.notEqual(checkoutGitEnvironment.GIT_CONFIG_VALUE_0, 'false');
+
+  const gitExecutable = resolveGitExecutable();
+  const sourceRoot = createCanonicalTemporaryDirectory('rd0873-checkout-source-');
+  const targetRoot = createCanonicalTemporaryDirectory('rd0873-checkout-target-');
+  t.after(() => {
+    rmSync(sourceRoot, { recursive: true, force: true });
+    rmSync(targetRoot, { recursive: true, force: true });
+  });
+
+  writeFixtureFile(sourceRoot, '.gitattributes', '* text=auto\n');
+  writeFixtureFile(sourceRoot, 'probe', 'alpha\nbeta\n');
+  execFileSync(gitExecutable, ['init', sourceRoot], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 10_000,
+  });
+  git(gitExecutable, sourceRoot, 'config', 'core.autocrlf', 'false');
+  git(gitExecutable, sourceRoot, 'add', '--', '.gitattributes', 'probe');
+  execFileSync(gitExecutable, [
+    '-C', sourceRoot,
+    '-c', 'user.name=RD0873 Checkout Fixture',
+    '-c', 'user.email=rd0873-checkout-fixture@example.invalid',
+    'commit', '-m', 'checkout fixture',
+  ], { stdio: ['ignore', 'pipe', 'pipe'], timeout: 10_000 });
+
+  execFileSync(gitExecutable, ['init', targetRoot], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 10_000,
+  });
+  git(gitExecutable, targetRoot, 'config', 'core.autocrlf', 'false');
+  git(gitExecutable, targetRoot, 'config', 'core.eol', 'crlf');
+  git(gitExecutable, targetRoot, 'remote', 'add', 'origin', sourceRoot);
+  git(gitExecutable, targetRoot, 'fetch', '--no-tags', 'origin', 'HEAD');
+  execFileSync(gitExecutable, ['-C', targetRoot, 'checkout', '--detach', 'FETCH_HEAD'], {
+    env: { ...process.env, ...checkoutGitEnvironment },
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 10_000,
+  });
+
+  assert.equal(
+    git(gitExecutable, targetRoot, 'status', '--porcelain=v1', '-z', '--untracked-files=all'),
+    '',
+  );
+  assert.equal(
+    git(gitExecutable, targetRoot, 'hash-object', '--no-filters', '--', 'probe'),
+    git(gitExecutable, targetRoot, 'rev-parse', 'HEAD:probe'),
+  );
+  assert.equal(readFileSync(path.join(targetRoot, 'probe')).includes(Buffer.from('\r\n')), false);
+});
+
 test('private workflow is a two-lane dispatch-only bounded observation run', () => {
   const workflow = readFileSync(new URL(COLLECTOR_WORKFLOW, import.meta.url), 'utf8');
   assert.match(workflow, /^on:\r?\n {2}workflow_dispatch:\s*\{\}\s*$/mu);
