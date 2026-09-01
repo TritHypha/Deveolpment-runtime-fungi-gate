@@ -711,6 +711,45 @@ test('generated static edges close every ECMAScript line terminator and statemen
   assert.deepEqual({ accepted, wrongRefusals }, { accepted: [], wrongRefusals: [] });
 });
 
+test('generated static edges refuse comment-contained ECMAScript terminators before parser replay', { concurrency: false }, async (t) => {
+  const module = await import(LOAD_MODULE_URL);
+  const fixture = createRepositoryFixture(t);
+  const accepted = [];
+  const wrongRefusals = [];
+  const terminators = [
+    ['LF', '\n'],
+    ['CRLF', '\r\n'],
+    ['CR', '\r'],
+    ['U+2028', '\u2028'],
+    ['U+2029', '\u2029'],
+  ];
+  const forms = [
+    ['named re-export', 'parser.js', 'export {\n  lex as lexAgain\n} from "./lexer.js"'],
+    ['static import', 'gate-v3-parser.js', 'import\n"./lexer.js"'],
+  ];
+  const layouts = [
+    ['line-comment', (terminator, statement) => `\nconst marker = 1; // generated edge${terminator}${statement}\n`],
+    ['multiline-comment', (terminator, statement) => `\n${statement} /* generated edge${terminator} */ const marker = 1;\n`],
+  ];
+  for (const [form, locator, statement] of forms) {
+    for (const [layout, sourceFor] of layouts) {
+      for (const [name, terminator] of terminators) {
+        await withTscMutation(fixture, tscGeneratedAppend(locator, sourceFor(terminator, statement)), async (source) => {
+          try {
+            await module.collectToolchainLoadObservation(collectorOptions(fixture, source));
+            accepted.push(`${form}:${layout}:${name}`);
+          } catch (error) {
+            if (!assertLoadRefusal(error, 'TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED')) {
+              wrongRefusals.push(`${form}:${layout}:${name}:${error?.code ?? error?.name ?? 'unknown'}`);
+            }
+          }
+        });
+      }
+    }
+  }
+  assert.deepEqual({ accepted, wrongRefusals }, { accepted: [], wrongRefusals: [] });
+});
+
 test('sealed CLI writes one no-LF external observation and rejects extra argv without a partial artifact', async (t) => {
   await import(LOAD_MODULE_URL);
   const fixture = createRepositoryFixture(t);

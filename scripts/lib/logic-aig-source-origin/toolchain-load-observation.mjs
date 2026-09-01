@@ -1006,14 +1006,14 @@ function withoutComments(text) {
     if (current === '/' && next === '/') {
       output += '  ';
       index += 2;
-      while (index < text.length && text[index] !== '\n') { output += ' '; index += 1; }
+      while (index < text.length && !/[\n\r\u2028\u2029]/u.test(text[index])) { output += ' '; index += 1; }
       continue;
     }
     if (current === '/' && next === '*') {
       output += '  ';
       index += 2;
       while (index < text.length && !(text[index] === '*' && text[index + 1] === '/')) {
-        output += text[index] === '\n' ? '\n' : ' ';
+        output += /[\n\r\u2028\u2029]/u.test(text[index]) ? text[index] : ' ';
         index += 1;
       }
       if (index < text.length) { output += '  '; index += 2; }
