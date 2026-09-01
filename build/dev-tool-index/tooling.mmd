@@ -111,9 +111,9 @@ flowchart LR
   T_audit_conversion_report_commit_mjs --> C_doc_drift
   T_audit_conversion_report_commit_mjs --> C_graph_index
   T_audit_conversion_slice_close_mjs["audit-conversion-slice-close.mjs"]
+  T_audit_conversion_slice_close_mjs --> C_signing_fusion
   T_audit_conversion_slice_close_mjs --> C_governance
   T_audit_conversion_slice_close_mjs --> C_teaching_corpus
-  T_audit_conversion_slice_close_mjs --> C_source_hygiene
   T_audit_conversion_slice_close_mjs --> C_doc_drift
   T_audit_conversion_slice_close_mjs --> C_graph_index
   T_audit_corpus_effect_names_mjs["audit-corpus-effect-names.mjs"]
@@ -708,12 +708,17 @@ flowchart LR
   T_run_phase_close_mjs --> C_signing_fusion
   T_run_phase_close_mjs --> C_diagnostics
   T_run_phase_close_mjs --> C_tier_floor
+  T_run_phase_close_mjs --> C_teaching_corpus
   T_run_phase_close_mjs --> C_source_hygiene
   T_run_phase_close_mjs --> C_graph_index
   T_run_proofs_mjs["run-proofs.mjs"]
   T_run_proofs_mjs --> C_diagnostics
   T_run_proofs_mjs --> C_doc_drift
   T_run_proofs_mjs --> C_proofs
+  T_run_rd0873_native_fungi_audit_mjs["run-rd0873-native-fungi-audit.mjs"]
+  T_run_rd0873_native_fungi_audit_mjs --> C_signing_fusion
+  T_run_rd0873_native_fungi_audit_mjs --> C_governance
+  T_run_rd0873_native_fungi_audit_mjs --> C_diagnostics
   T_status_mjs["status.mjs"]
   T_status_mjs --> C_signing_fusion
   T_status_mjs --> C_governance
@@ -860,6 +865,9 @@ flowchart LR
   T_license_rollout_mjs --> C_coverage
   T_license_rollout_mjs --> C_tier_floor
   T_license_rollout_mjs --> C_proofs
+  T_logic_aig_source_origin_toolchain_pin_observation_mjs["logic-aig-source-origin-toolchain-pin-observation.mjs"]
+  T_logic_aig_source_origin_toolchain_pin_observation_mjs --> C_signing_fusion
+  T_logic_aig_source_origin_toolchain_pin_observation_mjs --> C_diagnostics
   T_mark_core_change_cjs["mark-core-change.cjs"]
   T_mark_core_change_cjs --> C_graph_index
   T_migrate_fungi_mjs["migrate-fungi.mjs"]

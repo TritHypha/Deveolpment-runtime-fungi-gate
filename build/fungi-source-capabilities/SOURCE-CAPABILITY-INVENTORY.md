@@ -5,22 +5,22 @@ admission, execution parity, retirement credit or production authority.
 
 - Files: 2551
 - Flows: 3287
-- Bytes: 8338592
+- Bytes: 8338623
 - Retirement graph: `sha256:51cab91f19a89728d6ed3f20a33abc0830f66500f9287023bdf2950e507ea217`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 169103 |
-| `letDecl` | 139796 |
-| `block` | 19413 |
+| `identifier` | 169099 |
+| `letDecl` | 139797 |
+| `block` | 19415 |
 | `stringLiteral` | 18464 |
 | `returnStmt` | 17451 |
 | `typeRef` | 15775 |
 | `ifStmt` | 14168 |
 | `paramDecl` | 13668 |
-| `callExpr` | 7270 |
+| `callExpr` | 7272 |
 | `binaryExpr` | 6875 |
 | `numberLiteral` | 6279 |
 | `memberExpr` | 4731 |
@@ -332,6 +332,7 @@ admission, execution parity, retirement credit or production authority.
 | `last` | 6 |
 | `trim` | 5 |
 | `slice` | 4 |
+| `write` | 3 |
 | `charCount` | 2 |
 | `decode` | 2 |
 | `endsWith` | 2 |
@@ -343,7 +344,6 @@ admission, execution parity, retirement credit or production authority.
 | `generate_monotonic_id` | 1 |
 | `toHex` | 1 |
 | `toLower` | 1 |
-| `write` | 1 |
 
 ## Operators
 

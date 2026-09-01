@@ -4,9 +4,9 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 180,
+    "devTools": 182,
     "auditTools": 92,
-    "toolsInCadence": 121,
+    "toolsInCadence": 122,
     "proofs": 40
   },
   "packages": [
@@ -1317,9 +1317,9 @@
       "inCadence": true,
       "cadenceDisposition": "scheduled",
       "concerns": [
+        "signing/fusion",
         "governance",
         "teaching-corpus",
-        "source-hygiene",
         "doc-drift",
         "graph/index"
       ]
@@ -2931,6 +2931,7 @@
         "signing/fusion",
         "diagnostics",
         "tier-floor",
+        "teaching-corpus",
         "source-hygiene",
         "graph/index"
       ]
@@ -2946,6 +2947,19 @@
         "diagnostics",
         "doc-drift",
         "proofs"
+      ]
+    },
+    {
+      "name": "run-rd0873-native-fungi-audit.mjs",
+      "category": "runner",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "diagnostics"
       ]
     },
     {
@@ -3356,6 +3370,18 @@
       ]
     },
     {
+      "name": "logic-aig-source-origin-toolchain-pin-observation.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics"
+      ]
+    },
+    {
       "name": "mark-core-change.cjs",
       "category": "util",
       "purpose": "mark-core-change.js",
@@ -3731,6 +3757,7 @@
       "run-phase-close-legacy.mjs",
       "run-phase-close.mjs",
       "run-proofs.mjs",
+      "run-rd0873-native-fungi-audit.mjs",
       "status.mjs",
       "brand-audit.mjs",
       "build-core-chain.mjs",
@@ -3747,6 +3774,7 @@
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-executeflow-cache-growth.mjs",
+      "logic-aig-source-origin-toolchain-pin-observation.mjs",
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
       "package-usage.mjs",
@@ -3947,6 +3975,7 @@
       "audit-code-catalog-coverage.mjs",
       "audit-compiler-stage-hashes.mjs",
       "audit-conversion-report-commit.mjs",
+      "audit-conversion-slice-close.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-dss-wasm-build.mjs",
       "audit-effect-canonicality.mjs",
@@ -4010,6 +4039,7 @@
       "run-assurance-shadow.mjs",
       "run-impact-check.mjs",
       "run-phase-close.mjs",
+      "run-rd0873-native-fungi-audit.mjs",
       "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
@@ -4029,6 +4059,7 @@
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-primitives-are-collected.mjs",
+      "logic-aig-source-origin-toolchain-pin-observation.mjs",
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
       "phase-close-hook.mjs",
@@ -4159,6 +4190,7 @@
       "lint-fungi.mjs",
       "run-phase-close-legacy.mjs",
       "run-phase-close-special.mjs",
+      "run-rd0873-native-fungi-audit.mjs",
       "status.mjs",
       "beta-v1-release-admission.mjs",
       "debug-compiler-globs.mjs",
@@ -4180,7 +4212,6 @@
       "audit-cast-hygiene.mjs",
       "audit-claim-hygiene.mjs",
       "audit-codes-full.mjs",
-      "audit-conversion-slice-close.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-generator-contract.mjs",
@@ -4346,6 +4377,7 @@
       "ts-retirement-graph.mjs",
       "lint-conventions.mjs",
       "run-phase-close-legacy.mjs",
+      "run-phase-close.mjs",
       "conversion-queue.mjs",
       "migrate-fungi.mjs",
       "wat-invalid-triage.mjs"
@@ -6331,6 +6363,15 @@
       "disposition": "self-test-transitive"
     },
     {
+      "tool": "logic-aig-source-origin-toolchain-pin-observation.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
       "tool": "mark-core-change.cjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
@@ -6823,6 +6864,15 @@
       ],
       "lifecycle": "active",
       "disposition": "scheduled"
+    },
+    {
+      "tool": "run-rd0873-native-fungi-audit.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
     },
     {
       "tool": "status.mjs",

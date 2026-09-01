@@ -6513,7 +6513,7 @@
         "contractDecl": 3,
         "ensureDecl": 1,
         "governedFlowDecl": 3,
-        "identifier": 37,
+        "identifier": 34,
         "importDecl": 7,
         "intentDecl": 3,
         "letDecl": 4,
@@ -6527,7 +6527,7 @@
         "trapDecl": 1,
         "typeRef": 7
       },
-      "byteLength": 4311,
+      "byteLength": 4293,
       "diagnosticCodes": [],
       "flowCount": 3,
       "memberCalls": {
@@ -6539,7 +6539,7 @@
         ">=": 1
       },
       "path": "packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi",
-      "sourceSha256": "sha256:6db71fd64255fb10e2e482512331406fd0dff68877a71da3650be23235088e56",
+      "sourceSha256": "sha256:5bb13e96f49c5349472d18253ff552637a196d757601c58094794510aaa53661",
       "typeRefs": {
         "Bool": 1,
         "DSSState": 4,
@@ -6555,7 +6555,7 @@
         "contractDecl": 1,
         "ensureDecl": 3,
         "governedFlowDecl": 1,
-        "identifier": 18,
+        "identifier": 16,
         "importDecl": 3,
         "intentDecl": 1,
         "numberLiteral": 6,
@@ -6568,7 +6568,7 @@
         "trapDecl": 2,
         "typeRef": 3
       },
-      "byteLength": 1940,
+      "byteLength": 1926,
       "diagnosticCodes": [],
       "flowCount": 1,
       "memberCalls": {},
@@ -6579,7 +6579,7 @@
         ">": 1
       },
       "path": "packages-ts/galerina-core-security/src/dss/dwi-allocator.fungi",
-      "sourceSha256": "sha256:fc4d1183e0ac66a8f2f06b972bf18dd15326414177b0ec978d12fffaf2df0188",
+      "sourceSha256": "sha256:83347a0a1e3cbf8abd9fbd031b32db336f282d9a9e849981dfd77667094c4a2c",
       "typeRefs": {
         "DWIHandle": 1,
         "Int": 1,
@@ -6629,10 +6629,10 @@
         "contractDecl": 2,
         "ensureDecl": 5,
         "governedFlowDecl": 2,
-        "identifier": 32,
+        "identifier": 31,
         "importDecl": 2,
         "intentDecl": 2,
-        "letDecl": 1,
+        "letDecl": 2,
         "memberExpr": 4,
         "paramDecl": 14,
         "program": 1,
@@ -6642,7 +6642,7 @@
         "trapDecl": 5,
         "typeRef": 8
       },
-      "byteLength": 3292,
+      "byteLength": 3305,
       "diagnosticCodes": [],
       "flowCount": 2,
       "memberCalls": {},
@@ -6652,7 +6652,7 @@
         "==": 5
       },
       "path": "packages-ts/galerina-core-security/src/dss/epilogue-receipt.fungi",
-      "sourceSha256": "sha256:fc59ae75e7cc2e43132620c8600f865ac0aac39fcc25b086deadf116f1f9f543",
+      "sourceSha256": "sha256:6d12d51d4e8ce998712a063bc40d9be60b1faf0e59a8144e222e546fbe472c78",
       "typeRefs": {
         "Bool": 1,
         "EpilogueReceipt": 2,
@@ -6717,12 +6717,12 @@
     {
       "astKinds": {
         "binaryExpr": 5,
-        "block": 2,
-        "callExpr": 2,
+        "block": 4,
+        "callExpr": 4,
         "contractDecl": 2,
         "ensureDecl": 2,
         "governedFlowDecl": 2,
-        "identifier": 41,
+        "identifier": 43,
         "importDecl": 3,
         "intentDecl": 2,
         "letDecl": 2,
@@ -6735,16 +6735,18 @@
         "trapDecl": 3,
         "typeRef": 4
       },
-      "byteLength": 2584,
+      "byteLength": 2634,
       "diagnosticCodes": [],
       "flowCount": 2,
-      "memberCalls": {},
+      "memberCalls": {
+        "write": 2
+      },
       "operators": {
         "!=": 2,
         "==": 3
       },
       "path": "packages-ts/galerina-core-security/src/dss/trap-handler.fungi",
-      "sourceSha256": "sha256:5e9c50db53398d765464a132895ae75ac71b1a181e5d6297cd2870d1bb47d506",
+      "sourceSha256": "sha256:5c0e6a9bbcd02b6bb96e0da2a4a93d8d3bea3b0b14999b0dacc1d8cb5deaaca5",
       "typeRefs": {
         "AuditEvent": 2,
         "PluginEvictionSignal": 1,
@@ -66856,9 +66858,9 @@
       "assignStmt": 2120,
       "binaryExpr": 6875,
       "bitfieldDecl": 1,
-      "block": 19413,
+      "block": 19415,
       "boolLiteral": 2418,
-      "callExpr": 7270,
+      "callExpr": 7272,
       "charLiteral": 15,
       "checkArm": 351,
       "checkExpr": 117,
@@ -66870,11 +66872,11 @@
       "forEachStmt": 8,
       "governedFlowDecl": 8,
       "guardedFlowDecl": 3,
-      "identifier": 169103,
+      "identifier": 169099,
       "ifStmt": 14168,
       "importDecl": 22,
       "intentDecl": 1310,
-      "letDecl": 139796,
+      "letDecl": 139797,
       "listLiteral": 115,
       "matchArm": 1414,
       "matchExpr": 415,
@@ -66895,7 +66897,7 @@
       "unaryExpr": 300,
       "whileStmt": 340
     },
-    "bytes": 8338592,
+    "bytes": 8338623,
     "files": 2551,
     "flows": 3287,
     "memberCalls": {
@@ -66935,7 +66937,7 @@
       "toString": 77,
       "trim": 5,
       "unwrapOr": 35,
-      "write": 1
+      "write": 3
     },
     "operators": {
       "!": 2,
