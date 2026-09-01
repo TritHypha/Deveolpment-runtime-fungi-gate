@@ -40,9 +40,15 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $gitCommand = (Get-Command git -CommandType Application).Source
           $gitInstallRoot = Split-Path -Parent (Split-Path -Parent $gitCommand)
-          $gitCandidates = @($gitCommand, (Join-Path $gitInstallRoot 'bin\git.exe')) | Select-Object -Unique
+          $gitCandidates = @(
+            $gitCommand
+            Join-Path $gitInstallRoot 'bin\git.exe'
+          ) | Select-Object -Unique
           $gitExe = $null
           foreach ($candidate in $gitCandidates) {
+            if ($candidate -isnot [string] -or [string]::IsNullOrWhiteSpace($candidate)) {
+              throw 'Git candidate enumeration produced a non-scalar or empty locator.'
+            }
             if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) { continue }
             $resolvedCandidate = node -e "const fs=require('node:fs');const resolved=fs.realpathSync.native(process.argv[1]);const stats=fs.lstatSync(resolved,{bigint:true});if(!stats.isFile()||stats.isSymbolicLink()||stats.nlink !== 1n)process.exit(2);process.stdout.write(resolved)" "$candidate"
             if ($LASTEXITCODE -eq 0 -and $resolvedCandidate) { $gitExe = $resolvedCandidate; break }

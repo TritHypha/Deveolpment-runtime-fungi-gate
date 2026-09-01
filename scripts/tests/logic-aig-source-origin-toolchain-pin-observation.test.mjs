@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { execFileSync, spawn, spawnSync } from 'node:child_process';
+import childProcess, { execFileSync, spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   chmodSync,
@@ -16,6 +16,7 @@ import {
   truncateSync,
   writeFileSync,
 } from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -206,14 +207,6 @@ function collectStrings(value, output = []) {
     Object.values(value).forEach((entry) => collectStrings(entry, output));
   }
   return output;
-}
-
-async function waitForFile(target) {
-  const deadline = Date.now() + 5_000;
-  while (!existsSync(target)) {
-    if (Date.now() >= deadline) throw new Error('fixture mutator did not start');
-    await new Promise((resolve) => setTimeout(resolve, 10));
-  }
 }
 
 async function holdFileUnreadable(target) {
@@ -643,46 +636,54 @@ test('collector refuses case-shadowed directory members inside the TypeScript cl
   );
 });
 
-test('collector refuses a dependency closure that changes during repeated observation', async (t) => {
+test('collector refuses a dependency closure that changes during repeated observation', {
+  concurrency: false,
+}, async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
   const movingFile = path.join(
     root,
     'packages-ts', 'galerina-core-compiler', 'node_modules', 'typescript', 'lib', 'moving.js',
   );
-  const readyFile = path.join(tmpdir(), `rd0873-mutator-ready-${process.pid}-${Date.now()}`);
-  const mutator = spawn(process.execPath, ['-e', [
-    'const fs=require("node:fs");',
-    'const target=process.argv[1];',
-    'const ready=process.argv[2];',
-    'fs.writeFileSync(ready, "ready");',
-    'let n=0;',
-    'const end=Date.now()+10000;',
-    'function tick(){',
-    'fs.writeFileSync(target, Buffer.alloc(8192+(n%2), n%251));',
-    'n+=1;',
-    'if(Date.now()<end)setImmediate(tick);',
-    '}',
-    'tick();',
-  ].join(''), movingFile, readyFile], {
-    stdio: 'ignore',
-    windowsHide: true,
-  });
-  t.after(async () => {
-    const exited = mutator.exitCode !== null || mutator.signalCode !== null
-      ? Promise.resolve()
-      : new Promise((resolve) => mutator.once('exit', resolve));
-    if (mutator.exitCode === null && mutator.signalCode === null) mutator.kill();
-    await exited;
-    rmSync(readyFile, { force: true });
-    rmSync(root, { recursive: true, force: true });
-  });
-  await waitForFile(readyFile);
+  writeFileSync(movingFile, 'export const moving = "initial";\n');
+  const targetArguments = [
+    '-C',
+    root,
+    'ls-tree',
+    '--full-tree',
+    'HEAD',
+    '--',
+    'scripts/logic-aig-source-origin-toolchain-pin-observation.mjs',
+  ];
+  const originalExecFileSync = childProcess.execFileSync;
+  let mutationHookCount = 0;
+  childProcess.execFileSync = (...args) => {
+    const [file, commandArguments] = args;
+    if (
+      mutationHookCount === 0
+      && file === gitExecutable
+      && Array.isArray(commandArguments)
+      && commandArguments.length === targetArguments.length
+      && commandArguments.every((value, index) => value === targetArguments[index])
+    ) {
+      mutationHookCount += 1;
+      writeFileSync(movingFile, 'export const moving = "mutated";\n');
+    }
+    return originalExecFileSync(...args);
+  };
 
-  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
-  await assert.rejects(
-    () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
-    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_DRIFT',
-  );
+  try {
+    syncBuiltinESMExports();
+    const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+    await assert.rejects(
+      () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_DRIFT',
+    );
+    assert.equal(mutationHookCount, 1);
+  } finally {
+    childProcess.execFileSync = originalExecFileSync;
+    syncBuiltinESMExports();
+  }
 });
 
 test('sealed CLI writes one canonical no-LF observation outside the checkout without process output', (t) => {
@@ -1105,4 +1106,61 @@ test('private workflow is a two-lane dispatch-only bounded observation run', () 
   assert.match(workflow, /actions\/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02/u);
   assert.match(workflow, /retention-days: 1/u);
   assert.doesNotMatch(workflow, /platform-smoke|galerina-source-origin-frame|parseProgram|parseGateV3|secrets\./u);
+});
+
+test('private workflow flattens Windows Git candidates into non-empty scalar strings', {
+  skip: process.platform === 'win32' ? false : 'Windows PowerShell candidate semantics are platform-specific',
+}, () => {
+  const workflow = readFileSync(new URL(COLLECTOR_WORKFLOW, import.meta.url), 'utf8');
+  const match = /^ {10}(\$gitInstallRoot = [^\r\n]+\r?\n {10}\$gitCandidates = @\([\s\S]*?\)\s*\|\s*Select-Object -Unique)\r?$/mu.exec(workflow);
+  assert(match?.[1], 'workflow must contain the Windows Git candidate-enumeration block');
+  const candidateEnumeration = match[1].replace(/^ {10}/gmu, '');
+  const expectedCandidates = [
+    'C:\\rd0873\\one\\cmd\\git.exe',
+    'C:\\rd0873\\two\\cmd\\git.exe',
+    'C:\\rd0873\\three\\cmd\\git.exe',
+    'C:\\rd0873\\one\\bin\\git.exe',
+    'C:\\rd0873\\two\\bin\\git.exe',
+    'C:\\rd0873\\three\\bin\\git.exe',
+  ];
+  const script = [
+    "$ErrorActionPreference = 'Stop'",
+    '$gitCommand = @(',
+    "  'C:\\rd0873\\one\\cmd\\git.exe'",
+    "  'C:\\rd0873\\two\\cmd\\git.exe'",
+    "  'C:\\rd0873\\three\\cmd\\git.exe'",
+    ')',
+    candidateEnumeration,
+    '$rows = foreach ($candidate in $gitCandidates) {',
+    '  [PSCustomObject]@{',
+    '    type = $candidate.GetType().FullName',
+    '    scalarCount = @($candidate).Count',
+    '    isNonEmptyString = (($candidate -is [string]) -and -not [string]::IsNullOrWhiteSpace($candidate))',
+    '    value = [string]$candidate',
+    '  }',
+    '}',
+    '$rows | ConvertTo-Json -Compress',
+  ].join('\n');
+  const result = spawnSync('pwsh', [
+    '-NoLogo',
+    '-NoProfile',
+    '-NonInteractive',
+    '-Command',
+    script,
+  ], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 10_000,
+    windowsHide: true,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.signal, null);
+  const rows = JSON.parse(result.stdout);
+  assert.deepEqual(rows, expectedCandidates.map((value) => ({
+    type: 'System.String',
+    scalarCount: 1,
+    isNonEmptyString: true,
+    value,
+  })));
 });
