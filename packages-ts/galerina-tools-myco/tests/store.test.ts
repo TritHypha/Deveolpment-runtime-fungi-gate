@@ -4,7 +4,10 @@ import { promises as fs } from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 
-import { validateStoredIndex } from "../src/graph/index-contract.ts";
+import {
+  MAX_INDEX_TERMS_PER_FILE,
+  validateStoredIndex,
+} from "../src/graph/index-contract.ts";
 import { SearchGraph } from "../src/graph/model.ts";
 import { loadGraph, saveGraph } from "../src/graph/store.ts";
 
@@ -79,6 +82,24 @@ test("persisted index has a closed bounded record shape", async (t) => {
       })],
       ["unexpected file field", validIndex({
         files: [{ p: "src/a.ts", m: 1, s: 3, t: [["alpha", 1]], allow: true }],
+      })],
+      ["zero omitted-term count", validIndex({
+        files: [{ p: "src/a.ts", m: 1, s: 3, t: [["alpha", 1]], o: 0 }],
+      })],
+      ["fractional omitted-term count", validIndex({
+        files: [{ p: "src/a.ts", m: 1, s: 3, t: [["alpha", 1]], o: 1.5 }],
+      })],
+      ["excessive omitted-term count", validIndex({
+        files: [{
+          p: "src/a.ts",
+          m: 1,
+          s: 3,
+          t: [["alpha", 1]],
+          o: MAX_INDEX_TERMS_PER_FILE + 1,
+        }],
+      })],
+      ["content-skip and omission marker combined", validIndex({
+        files: [{ p: "src/a.ts", m: 1, s: 3, t: [], k: "b", o: 1 }],
       })],
       ["Windows absolute path", validIndex({
         files: [{ p: "C:/secret.txt", m: 1, s: 3, t: [["alpha", 1]] }],

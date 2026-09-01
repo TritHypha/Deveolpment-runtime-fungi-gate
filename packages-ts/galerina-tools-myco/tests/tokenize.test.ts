@@ -32,12 +32,15 @@ test("countTerms handles Unicode letters", () => {
 });
 
 test("countTerms omits over-limit terms without dropping admitted neighbors", () => {
-  const exactLimit = "b".repeat(MAX_INDEX_TERM_LENGTH);
-  const overLimit = `${exactLimit}b`;
-  const counts = countTerms(`alpha ${exactLimit} ${overLimit} omega`);
+  const exactLimit = "a".repeat(MAX_INDEX_TERM_LENGTH);
+  const overLimit = "b".repeat(MAX_INDEX_TERM_LENGTH + 1);
+  const report = { omittedOverlongTerms: 0 };
+  const counts = countTerms(`alpha ${exactLimit} ${overLimit} omega`, report);
 
   assert.equal(counts.get("alpha"), 1);
   assert.equal(counts.get(exactLimit), 1);
   assert.equal(counts.has(overLimit), false);
+  assert.equal(counts.get(overLimit.slice(0, MAX_INDEX_TERM_LENGTH)), undefined);
   assert.equal(counts.get("omega"), 1);
+  assert.equal(report.omittedOverlongTerms, 1);
 });

@@ -134,7 +134,13 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
     return 2;
   }
   const started = process.hrtime.bigint();
-  const { stats, saved, skippedLargePaths, skippedVendoredDirs } = await buildIndex(root, index);
+  const {
+    stats,
+    saved,
+    skippedLargePaths,
+    skippedVendoredDirs,
+    omittedOverlongTermPaths,
+  } = await buildIndex(root, index);
   const ms = Number(process.hrtime.bigint() - started) / 1e6;
   // Informational output → stdout. stderr is reserved for real errors (which all
   // exit non-zero), so a consumer can treat any stderr output — or a non-zero exit —
@@ -147,6 +153,14 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
       `in ${ms.toFixed(0)}ms\n`,
   );
   noteSaveOutcome(saved);
+  if (stats.omittedOverlongTerms > 0) {
+    process.stdout.write(
+      `  ${stats.omittedOverlongTerms} overlong term(s) omitted from the term graph `
+        + `in ${stats.filesWithOmittedOverlongTerms} file(s); `
+        + `those files are directly verified during content search:\n`,
+    );
+    for (const p of omittedOverlongTermPaths) process.stdout.write(`    ${p}\n`);
+  }
   // No silent caps: name the files that fell outside the index, so a search that
   // returns nothing is never mistaken for "not present" (DESIGN §8/§10).
   if (skippedLargePaths.length > 0) {
@@ -169,6 +183,13 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
 
 function noteSaveOutcome(saved: SaveOutcome): void {
   if (saved.written) return;
+  if (saved.reason === "invalid-payload") {
+    process.stdout.write(
+      "myco: note — index NOT cached: generated graph violates the stored-index contract. "
+        + "Results are correct, but the cache was refused before writing.\n",
+    );
+    return;
+  }
   process.stdout.write(
     `myco: note — index NOT cached: ${saved.edges.toLocaleString()} term edges `
       + `exceeds the ${saved.limit.toLocaleString()} ceiling. Results are correct, `
@@ -201,6 +222,8 @@ async function cmdStatus(root: string): Promise<number> {
   process.stdout.write(
     `files:  ${loaded.meta.fileCount}\n` +
       `terms:  ${loaded.meta.termCount}\n` +
+      `omitted overlong terms:  ${loaded.meta.omittedOverlongTerms}\n` +
+      `files requiring direct verification:  ${loaded.meta.filesWithOmittedOverlongTerms}\n` +
       `index:  ${(bytes / 1024).toFixed(1)} KiB\n` +
       `built:  ${when}\n`,
   );

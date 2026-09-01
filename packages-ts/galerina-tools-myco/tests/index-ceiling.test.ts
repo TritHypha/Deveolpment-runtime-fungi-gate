@@ -111,10 +111,8 @@ test("saveGraph refuses an over-limit direct graph term before writing", async (
     new Map([["x".repeat(MAX_INDEX_TERM_LENGTH + 1), 1]]),
   );
 
-  await assert.rejects(
-    () => saveGraph(root, graph),
-    /MYCO-INDEX-INVALID/,
-  );
+  const outcome = await saveGraph(root, graph);
+  assert.deepEqual(outcome, { written: false, reason: "invalid-payload" });
   const onDisk = await fs
     .stat(path.join(root, INDEX_DIR, INDEX_FILE))
     .catch(() => undefined);
@@ -209,6 +207,9 @@ test("buildIndex writes a reloadable index while preserving boundary terms", asy
 
   const built = await buildIndex(root, DEFAULT_INDEX_OPTIONS);
   assert.equal(built.saved.written, true);
+  assert.equal(built.stats.omittedOverlongTerms, 1);
+  assert.equal(built.stats.filesWithOmittedOverlongTerms, 1);
+  assert.deepEqual(built.omittedOverlongTermPaths, ["a.txt"]);
 
   const loaded = await loadGraphOutcome(root);
   assert.equal(loaded.status, "ok", "a freshly written index must load immediately");
@@ -216,6 +217,7 @@ test("buildIndex writes a reloadable index while preserving boundary terms", asy
 
   const file = loaded.graph.fileByPath("a.txt");
   assert.ok(file, "the indexed file must survive the round trip");
+  assert.equal(file.omittedOverlongTerms, 1);
   const stored = loaded.graph.forwardOf(file.id);
   assert.equal(stored?.get("alpha"), 1);
   assert.equal(stored?.get(exactLimit), 1);
@@ -223,6 +225,8 @@ test("buildIndex writes a reloadable index while preserving boundary terms", asy
   assert.equal(stored?.get("omega"), 1);
   assert.equal(loaded.graph.filesWithTerm(exactLimit)?.has(file.id), true);
   assert.equal(loaded.graph.filesWithTerm("alpha")?.has(file.id), true);
+  assert.equal(loaded.meta.omittedOverlongTerms, 1);
+  assert.equal(loaded.meta.filesWithOmittedOverlongTerms, 1);
 
   const rebuilt = await buildIndex(root, DEFAULT_INDEX_OPTIONS);
   assert.equal(rebuilt.stats.unchanged, 1);

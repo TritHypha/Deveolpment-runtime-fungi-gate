@@ -63,8 +63,8 @@
   "license": "Apache-2.0",
   "galerinaVendor": {
     "publicSourceOwner": "https://github.com/TritHypha/myco",
-    "upstreamSnapshotCommit": "c4ff2ca3c53e8c8cb8b5f6a7a589a096d85a1fd6",
-    "syncedAt": "2026-08-28",
+    "upstreamSnapshotCommit": "d53980040c286c4328b61d3355ddb84647231fc5",
+    "syncedAt": "2026-09-01",
     "snapshotStatus": {
       "kind": "PARTIAL_FORK",
       "upstreamFileCount": 16,
