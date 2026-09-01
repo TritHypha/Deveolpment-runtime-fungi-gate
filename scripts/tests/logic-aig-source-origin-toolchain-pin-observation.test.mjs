@@ -563,6 +563,29 @@ test('collector refuses a case-shadowed dependency package root', {
   );
 });
 
+test('collector refuses case-shadowed directory members inside the TypeScript closure', {
+  skip: process.platform === 'win32' ? 'case-insensitive filesystems cannot create this fixture' : false,
+}, async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  writeFixtureFile(
+    root,
+    'packages-ts/galerina-core-compiler/node_modules/typescript/lib/CaseShadow/first.js',
+    'export const first = true;\n',
+  );
+  writeFixtureFile(
+    root,
+    'packages-ts/galerina-core-compiler/node_modules/typescript/lib/caseshadow/second.js',
+    'export const second = true;\n',
+  );
+
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  await assert.rejects(
+    () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_PATH',
+  );
+});
+
 test('collector refuses a dependency closure that changes during repeated observation', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
   const movingFile = path.join(
@@ -708,6 +731,65 @@ test('sealed CLI never unlinks a foreign pathname replacement after output creat
   assert.equal(result.stdout, '');
   assert.equal(result.stderr, 'TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT\n');
   assert.equal(readFileSync(outputPath, 'utf8'), foreignBytes);
+});
+
+test('sealed CLI refuses when its output parent is replaced after file creation', {
+  skip: process.platform === 'win32' ? 'Windows prevents replacing the parent while the output handle is open' : false,
+}, (t) => {
+  const { root, gitExecutable } = createExecutableRepositoryFixture();
+  const outputRoot = mkdtempSync(path.join(tmpdir(), 'rd0873-pin-output-parent-replacement-'));
+  const displacedOutputRoot = `${outputRoot}-displaced`;
+  t.after(() => {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(outputRoot, { recursive: true, force: true });
+    rmSync(displacedOutputRoot, { recursive: true, force: true });
+  });
+  const outputPath = path.join(outputRoot, 'observation.json');
+  const preloadPath = path.join(outputRoot, 'replace-parent-on-write.mjs');
+  const foreignPath = path.join(outputRoot, 'foreign-parent-sentinel.txt');
+  const foreignBytes = 'foreign parent must survive\n';
+  writeFileSync(preloadPath, [
+    "import fs from 'node:fs';",
+    "import { syncBuiltinESMExports } from 'node:module';",
+    'const originalWriteFileSync = fs.writeFileSync;',
+    'let replaced = false;',
+    'fs.writeFileSync = (...args) => {',
+    '  if (!replaced) {',
+    '    replaced = true;',
+    '    fs.renameSync(process.env.RD0873_OUTPUT_PARENT, process.env.RD0873_DISPLACED_OUTPUT_PARENT);',
+    '    fs.mkdirSync(process.env.RD0873_OUTPUT_PARENT);',
+    '    originalWriteFileSync(process.env.RD0873_FOREIGN_PARENT_PATH, process.env.RD0873_FOREIGN_PARENT_BYTES);',
+    '  }',
+    '  return originalWriteFileSync(...args);',
+    '};',
+    'syncBuiltinESMExports();',
+  ].join('\n'));
+  const cliPath = path.join(root, 'scripts', 'logic-aig-source-origin-toolchain-pin-observation.mjs');
+
+  const result = spawnSync(process.execPath, [
+    '--import', pathToFileURL(preloadPath).href,
+    cliPath, '--git', gitExecutable, '--out', outputPath,
+  ], {
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      RD0873_OUTPUT_PARENT: outputRoot,
+      RD0873_DISPLACED_OUTPUT_PARENT: displacedOutputRoot,
+      RD0873_FOREIGN_PARENT_PATH: foreignPath,
+      RD0873_FOREIGN_PARENT_BYTES: foreignBytes,
+    },
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 30_000,
+    windowsHide: true,
+  });
+
+  assert.equal(result.status, 2);
+  assert.equal(result.signal, null);
+  assert.equal(result.stdout, '');
+  assert.equal(result.stderr, 'TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT\n');
+  assert.equal(existsSync(outputPath), false);
+  assert.equal(readFileSync(foreignPath, 'utf8'), foreignBytes);
+  assert(existsSync(path.join(displacedOutputRoot, 'observation.json')));
 });
 
 test('collector refuses a symbolic-link or junction member in a declared closure', async (t) => {

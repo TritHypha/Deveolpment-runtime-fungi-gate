@@ -46,16 +46,46 @@ function prepareOutput(repositoryRoot, outputPath) {
     || path.isAbsolute(relative)
   ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
   const parent = path.dirname(outputPath);
-  const parentStats = lstatSync(parent, { throwIfNoEntry: false });
+  const parentStats = lstatSync(parent, { bigint: true, throwIfNoEntry: false });
   if (!parentStats || !parentStats.isDirectory() || parentStats.isSymbolicLink()) {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
   }
-  if (realpathSync.native(parent) !== path.resolve(parent)) {
+  const parentRealpath = realpathSync.native(parent);
+  if (!samePlatformPath(parentRealpath, path.resolve(parent))) {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
   }
   if (lstatSync(outputPath, { throwIfNoEntry: false })) {
     refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
   }
+  return Object.freeze({
+    parent,
+    parentIdentity: Object.freeze({ dev: parentStats.dev, ino: parentStats.ino }),
+    parentRealpath,
+  });
+}
+
+function samePlatformPath(left, right) {
+  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right;
+}
+
+function assertRetainedOutputParent(parentProof) {
+  const parentStats = lstatSync(parentProof.parent, { bigint: true, throwIfNoEntry: false });
+  if (
+    !parentStats
+    || !parentStats.isDirectory()
+    || parentStats.isSymbolicLink()
+    || !sameFileIdentity(parentStats, parentProof.parentIdentity)
+  ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
+  let parentRealpath;
+  try {
+    parentRealpath = realpathSync.native(parentProof.parent);
+  } catch {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
+  }
+  if (
+    !samePlatformPath(parentRealpath, parentProof.parentRealpath)
+    || !samePlatformPath(parentRealpath, path.resolve(parentProof.parent))
+  ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
 }
 
 function sameFileIdentity(left, right) {
@@ -91,24 +121,28 @@ function readBackExact(descriptor, byteLength) {
 async function run(args) {
   const { gitExecutable, outputPath } = parseArguments(args);
   const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-  prepareOutput(repositoryRoot, outputPath);
+  const outputParent = prepareOutput(repositoryRoot, outputPath);
   const observation = await collectToolchainPinObservation({ repositoryRoot, gitExecutable });
   const bytes = Buffer.from(canonicalToolchainObservationText(observation), 'utf8');
 
   let descriptor;
   try {
+    assertRetainedOutputParent(outputParent);
     descriptor = openSync(outputPath, 'wx+', 0o600);
     const retainedIdentity = fstatSync(descriptor, { bigint: true });
     assertRetainedOutputIdentity(retainedIdentity, retainedIdentity, 0);
+    assertRetainedOutputParent(outputParent);
     writeFileSync(descriptor, bytes);
     const afterWrite = fstatSync(descriptor, { bigint: true });
     assertRetainedOutputIdentity(afterWrite, retainedIdentity, bytes.length);
+    assertRetainedOutputParent(outputParent);
     if (!readBackExact(descriptor, bytes.length).equals(bytes)) {
       refuse('TOOLCHAIN_OBSERVATION_REFUSED_OUTPUT');
     }
     fsyncSync(descriptor);
     const beforeClose = fstatSync(descriptor, { bigint: true });
     assertRetainedOutputIdentity(beforeClose, retainedIdentity, bytes.length);
+    assertRetainedOutputParent(outputParent);
     assertRetainedOutputIdentity(
       lstatSync(outputPath, { bigint: true, throwIfNoEntry: false }),
       retainedIdentity,
@@ -117,6 +151,7 @@ async function run(args) {
     const closingDescriptor = descriptor;
     descriptor = undefined;
     closeSync(closingDescriptor);
+    assertRetainedOutputParent(outputParent);
     assertRetainedOutputIdentity(
       lstatSync(outputPath, { bigint: true, throwIfNoEntry: false }),
       retainedIdentity,

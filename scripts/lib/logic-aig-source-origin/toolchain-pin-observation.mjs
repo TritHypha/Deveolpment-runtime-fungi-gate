@@ -453,6 +453,12 @@ function observeFilesystemClosure(repositoryRoot, rootLocator, entryLocator) {
       TOOLCHAIN_PIN_OBSERVATION_LIMITS.traversalEntries - traversalEntries,
     );
     traversalEntries += entries.length;
+    const caseSeen = new Set();
+    for (const entry of entries) {
+      const foldedName = entry.name.toLowerCase();
+      if (caseSeen.has(foldedName)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_PATH');
+      caseSeen.add(foldedName);
+    }
     entries.sort((left, right) => compareCodeUnits(left.name, right.name));
     for (const entry of entries) {
       const locator = locatorPrefix === '' ? entry.name : `${locatorPrefix}/${entry.name}`;
