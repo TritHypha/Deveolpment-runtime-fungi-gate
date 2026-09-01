@@ -101,19 +101,66 @@ function createRepositoryFixture() {
     },
   }, null, 2));
   writeFixtureFile(root, 'packages-ts/galerina-core-compiler/tsconfig.json', '{"include":["src/**/*.ts"]}\n');
-  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/index.ts', 'export { parseProgram } from "./parser.js";\n');
-  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/parser.ts', 'export function parseProgram() { throw new Error("must not run"); }\n');
+  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json', JSON.stringify({
+    extends: './tsconfig.json',
+    files: ['src/source-origin-parser-entry.ts'],
+    include: [],
+    compilerOptions: {
+      types: [], noEmitOnError: true, incremental: false, composite: false, sourceMap: false, declarationMap: false,
+    },
+  }, null, 2));
+  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/lexer.ts', 'export function lex() { return []; }\n');
+  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts', [
+    'export const FUNGI_REQUIREMENT_001 = "001";',
+    'export const FUNGI_REQUIREMENT_005 = "005";',
+    'export const FUNGI_REQUIREMENT_006 = "006";',
+    'export const FUNGI_REQUIREMENT_008 = "008";',
+    '',
+  ].join('\n'));
+  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/parser.ts', [
+    'import { lex, type Token, type LexerDiagnostic } from "./lexer.js";',
+    'import {',
+    '  FUNGI_REQUIREMENT_001,',
+    '  FUNGI_REQUIREMENT_005,',
+    '  FUNGI_REQUIREMENT_006,',
+    '  FUNGI_REQUIREMENT_008,',
+    '} from "./requirement-diagnostics.js";',
+    'export interface ParseDiagnostic {}',
+    'export interface SourceLocation {}',
+    'export function parseProgram() { return [lex, FUNGI_REQUIREMENT_001, FUNGI_REQUIREMENT_005, FUNGI_REQUIREMENT_006, FUNGI_REQUIREMENT_008] as const; }',
+    '',
+  ].join('\n'));
+  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/gate-v3-parser.ts', [
+    'import type { ParseDiagnostic, SourceLocation } from "./parser.js";',
+    'export function parseGateV3(_diagnostic?: ParseDiagnostic, _location?: SourceLocation) { return null; }',
+    '',
+  ].join('\n'));
+  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts', [
+    'export { lex } from "./lexer.js";',
+    'export { parseGateV3 } from "./gate-v3-parser.js";',
+    'export { parseProgram } from "./parser.js";',
+    '',
+  ].join('\n'));
   writeFixtureFile(root, 'packages-ts/galerina-core-compiler/node_modules/typescript/package.json', JSON.stringify({
     name: 'typescript',
     version: '5.9.3',
     main: './lib/typescript.js',
   }, null, 2));
-  writeFixtureFile(root, 'packages-ts/galerina-core-compiler/node_modules/typescript/lib/typescript.js', 'throw new Error("must not execute");\n');
+  writeFixtureFile(
+    root,
+    'packages-ts/galerina-core-compiler/node_modules/typescript/lib/typescript.js',
+    readFileSync(new URL('../../packages-ts/galerina-core-compiler/node_modules/typescript/lib/typescript.js', import.meta.url)),
+  );
+  writeFixtureFile(
+    root,
+    'packages-ts/galerina-core-compiler/node_modules/typescript/lib/tsc.js',
+    readFileSync(new URL('../../packages-ts/galerina-core-compiler/node_modules/typescript/lib/tsc.js', import.meta.url)),
+  );
   writeFixtureFile(root, 'packages-ts/galerina-core-compiler/node_modules/typescript/lib/lib.d.ts', 'declare const fixture: true;\n');
 
   execFileSync(gitExecutable, ['init', root], { stdio: ['ignore', 'pipe', 'pipe'], timeout: 10_000 });
   git(gitExecutable, root, 'config', 'core.autocrlf', 'false');
-  git(gitExecutable, root, 'add', '--', '.gitignore', '.github', 'scripts', 'packages-ts/galerina-core-compiler/package.json', 'packages-ts/galerina-core-compiler/package-lock.json', 'packages-ts/galerina-core-compiler/tsconfig.json', 'packages-ts/galerina-core-compiler/src');
+  git(gitExecutable, root, 'add', '--', '.gitignore', '.github', 'scripts', 'packages-ts/galerina-core-compiler/package.json', 'packages-ts/galerina-core-compiler/package-lock.json', 'packages-ts/galerina-core-compiler/tsconfig.json', 'packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json', 'packages-ts/galerina-core-compiler/src');
   execFileSync(gitExecutable, [
     '-C', root,
     '-c', 'user.name=RD0873 Fixture',
@@ -191,6 +238,91 @@ function assertNoForbiddenPinAuthority(value) {
 function assertExactKeys(value, keys) {
   assert.deepEqual(Object.keys(value).sort(), [...keys].sort());
 }
+
+test('collector emits the closed v2 source-observation shape rather than the historical v1 schema', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const observation = await collectToolchainPinObservation({
+    repositoryRoot: root,
+    gitExecutable,
+  });
+
+  assert.equal(observation.schema, 'galerina.logic-aig-toolchain-pin-observation.v2');
+  assertExactKeys(observation, [
+    'schema', 'repository', 'platform', 'arch', 'gitExecutionBinding',
+    'nodeIdentityBefore', 'nodeIdentityAfter', 'gitIdentityBefore', 'gitIdentityAfter',
+    'compilerLock', 'typescript', 'typescriptCompilerCli', 'sourceOriginParserEntry',
+    'sourceOriginParserProject', 'sourceEdgeRows', 'declaredClosures', 'provenanceBlobs',
+    'limits', 'authorizing', 'observationDigest',
+  ]);
+  assert.equal(observation.authorizing, false);
+});
+
+test('v2 validator structurally refuses historical top-level and narrow-closure substitutes', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { collectToolchainPinObservation, validateToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const observation = await collectToolchainPinObservation({ repositoryRoot: root, gitExecutable });
+
+  assert.throws(
+    () => validateToolchainPinObservation({ ...observation, schema: 'galerina.logic-aig-toolchain-pin-observation.v1' }),
+    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA',
+  );
+  assert.throws(
+    () => validateToolchainPinObservation({ ...observation, schema: 'galerina.logic-aig-toolchain-pins.v1' }),
+    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA',
+  );
+  const closures = observation.declaredClosures.map((closure) => (
+    closure.id === 'source-origin-parser-source'
+      ? { ...closure, declaration: { ...closure.declaration, rule: 'all-git-tracked-regular-files-under-package-root.v1' } }
+      : closure
+  ));
+  assert.throws(
+    () => validateToolchainPinObservation({ ...observation, declaredClosures: closures }),
+    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA',
+  );
+});
+
+test('pinned TypeScript scanner refuses dynamic and non-relative source edges without output', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  const parser = path.join(root, 'packages-ts', 'galerina-core-compiler', 'src', 'parser.ts');
+  const baseParser = readFileSync(parser, 'utf8');
+
+  for (const [label, injected] of [
+    ['dynamic import', 'void import("./surplus.js");'],
+    ['require call', 'void require("./surplus.js");'],
+    ['bare specifier', 'import "typescript";'],
+    ['source import attribute', 'import "./lexer.js" with { type: "json" };'],
+  ]) {
+    writeFileSync(parser, `${baseParser}\n${injected}\n`);
+    commitFixture(gitExecutable, root, `add ${label}`);
+    await assert.rejects(
+      () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SOURCE',
+      label,
+    );
+    writeFileSync(parser, baseParser);
+    commitFixture(gitExecutable, root, `restore ${label}`);
+  }
+});
+
+test('pinned TypeScript scanner refuses an extra narrow-entry export without output', async (t) => {
+  const { root, gitExecutable } = createRepositoryFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const entry = path.join(root, 'packages-ts', 'galerina-core-compiler', 'src', 'source-origin-parser-entry.ts');
+  writeFileSync(entry, `${readFileSync(entry, 'utf8')}export const unexpected = true;\n`);
+  commitFixture(gitExecutable, root, 'add unexpected entry export');
+
+  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
+  await assert.rejects(
+    () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
+    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_SOURCE',
+  );
+});
 
 function collectParserFreeStaticModuleSpecifiers(sourceMembers) {
   const rows = [];
@@ -553,7 +685,7 @@ test('collector emits deterministic canonical observation bytes that remain outs
   const second = await collectToolchainPinObservation({ repositoryRoot: root, gitExecutable });
 
   assert.deepEqual(second, first);
-  assert.equal(first.schema, 'galerina.logic-aig-toolchain-pin-observation.v1');
+  assert.equal(first.schema, 'galerina.logic-aig-toolchain-pin-observation.v2');
   assert.equal(first.authorizing, false);
   assert.deepEqual(first.repository.pre, first.repository.post);
   assert.equal(first.platform, process.platform);
@@ -565,9 +697,16 @@ test('collector emits deterministic canonical observation bytes that remain outs
   assert.match(first.nodeIdentityBefore.version, /^v\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/u);
   assert.equal(first.typescript.name, 'typescript');
   assert.equal(first.typescript.version, '5.9.3');
-  assert.equal(first.galerinaParser.name, '@galerina/core-compiler');
+  assert.deepEqual(first.typescriptCompilerCli, {
+    rootLocator: 'packages-ts/galerina-core-compiler/node_modules/typescript',
+    locator: 'lib/tsc.js',
+    rawSha256: first.typescriptCompilerCli.rawSha256,
+    byteLength: first.typescriptCompilerCli.byteLength,
+  });
+  assert.deepEqual(first.sourceOriginParserEntry.exportNames, ['lex', 'parseGateV3', 'parseProgram']);
+  assert.equal(first.sourceOriginParserProject.extendsLocator, './tsconfig.json');
   assert.match(first.compilerLock.gitBlobOid, /^[0-9a-f]{40}$/u);
-  assert.deepEqual(first.declaredClosures.map(({ id }) => id), ['galerina-parser', 'typescript']);
+  assert.deepEqual(first.declaredClosures.map(({ id }) => id), ['source-origin-parser-source', 'typescript']);
   assert(first.declaredClosures.every(({ rows, counts }) => rows.length === counts.files));
   assert.deepEqual(
     first.provenanceBlobs.map(({ role }) => role),
@@ -575,9 +714,10 @@ test('collector emits deterministic canonical observation bytes that remain outs
   );
   assertExactKeys(first, [
     'schema', 'repository', 'platform', 'arch', 'gitExecutionBinding',
-    'nodeIdentityBefore', 'nodeIdentityAfter',
-    'gitIdentityBefore', 'gitIdentityAfter', 'compilerLock', 'typescript', 'galerinaParser',
-    'declaredClosures', 'provenanceBlobs', 'limits', 'authorizing', 'observationDigest',
+    'nodeIdentityBefore', 'nodeIdentityAfter', 'gitIdentityBefore', 'gitIdentityAfter',
+    'compilerLock', 'typescript', 'typescriptCompilerCli', 'sourceOriginParserEntry',
+    'sourceOriginParserProject', 'sourceEdgeRows', 'declaredClosures', 'provenanceBlobs',
+    'limits', 'authorizing', 'observationDigest',
   ]);
   assertExactKeys(first.repository, ['repositoryId', 'objectFormat', 'pre', 'post']);
   assertExactKeys(first.repository.pre, ['commitOid', 'treeOid']);
@@ -597,7 +737,7 @@ test('collector emits deterministic canonical observation bytes that remain outs
     first.compilerLock.typescriptDependency,
     ['packageKey', 'version', 'resolved', 'integrity'],
   );
-  for (const packageValue of [first.typescript, first.galerinaParser]) {
+  for (const packageValue of [first.typescript]) {
     assertExactKeys(packageValue, [
       'name', 'version', 'packageLocator', 'packageRawSha256', 'packageByteLength',
       'entryLocator', 'entryRawSha256', 'entryByteLength',
@@ -768,7 +908,7 @@ test('collector refuses duplicate package metadata members as schema drift', asy
   );
 });
 
-test('collector refuses a TypeScript manifest whose declared entry drifts', async (t) => {
+test('collector never follows a TypeScript package main field', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
   t.after(() => rmSync(root, { recursive: true, force: true }));
   writeFixtureFile(
@@ -782,10 +922,8 @@ test('collector refuses a TypeScript manifest whose declared entry drifts', asyn
   );
 
   const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
-  await assert.rejects(
-    () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
-    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_PACKAGE',
-  );
+  const observation = await collectToolchainPinObservation({ repositoryRoot: root, gitExecutable });
+  assert.equal(observation.typescript.entryLocator, 'packages-ts/galerina-core-compiler/node_modules/typescript/lib/typescript.js');
 });
 
 test('collector refuses compiler manifest and committed lock identity disagreement', async (t) => {
@@ -806,15 +944,15 @@ test('collector refuses compiler manifest and committed lock identity disagreeme
   );
 });
 
-test('collector refuses an ignored untracked parser entry in place of a frozen Git blob', async (t) => {
+test('collector refuses an ignored untracked narrow entry in place of a frozen Git blob', async (t) => {
   const { root, gitExecutable } = createRepositoryFixture();
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  const entryLocator = 'packages-ts/galerina-core-compiler/src/index.ts';
+  const entryLocator = 'packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts';
   rmSync(path.join(root, ...entryLocator.split('/')));
   writeFixtureFile(
     root,
     '.gitignore',
-    'packages-ts/galerina-core-compiler/node_modules/\npackages-ts/galerina-core-compiler/src/index.ts\n',
+    'packages-ts/galerina-core-compiler/node_modules/\npackages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts\n',
   );
   commitFixture(gitExecutable, root, 'remove and ignore parser entry');
   writeFixtureFile(root, entryLocator, 'export const untrackedParserEntry = true;\n');
@@ -938,7 +1076,7 @@ test('sealed CLI writes one canonical no-LF observation outside the checkout wit
   const bytes = readFileSync(outputPath);
   assert.equal(bytes.at(-1), 0x7d);
   const value = JSON.parse(bytes.toString('utf8'));
-  assert.equal(value.schema, 'galerina.logic-aig-toolchain-pin-observation.v1');
+  assert.equal(value.schema, 'galerina.logic-aig-toolchain-pin-observation.v2');
   assert.equal(value.authorizing, false);
   assert.equal(canonicalJsonText(value), bytes.toString('utf8'));
 });
@@ -1190,45 +1328,6 @@ test('collector enforces the declared closure byte and depth limits', async (t) 
     );
   });
 
-  await t.test('tracked aggregate bytes refuse before opening a later file', {
-    skip: process.platform !== 'win32' && process.getuid?.() === 0
-      ? 'root can read a mode-000 sentinel'
-      : false,
-  }, async (subtest) => {
-    const { root, gitExecutable } = createRepositoryFixture();
-    const first = path.join(
-      root,
-      'packages-ts', 'galerina-core-compiler', 'src', '000-first.bin',
-    );
-    const laterLocator = 'packages-ts/galerina-core-compiler/src/001-unreadable.bin';
-    const later = path.join(root, ...laterLocator.split('/'));
-    writeFileSync(first, '');
-    writeFileSync(later, '');
-    truncateSync(first, 40 * 1024 * 1024);
-    truncateSync(later, 30 * 1024 * 1024);
-    commitFixture(gitExecutable, root, 'add tracked aggregate sentinel');
-    assert.equal(
-      git(gitExecutable, root, 'status', '--porcelain=v1', '-z', '--untracked-files=all'),
-      '',
-    );
-    if (process.platform !== 'win32') {
-      git(gitExecutable, root, 'update-index', '--assume-unchanged', '--', laterLocator);
-    }
-    const release = await holdFileUnreadable(later);
-    subtest.after(async () => {
-      await release();
-      rmSync(root, { recursive: true, force: true });
-    });
-    assert.equal(
-      git(gitExecutable, root, 'status', '--porcelain=v1', '-z', '--untracked-files=all'),
-      '',
-    );
-    await assert.rejects(
-      () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
-      (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_LIMIT',
-    );
-  });
-
   await t.test('closure file count', async (subtest) => {
     const { root, gitExecutable } = createRepositoryFixture();
     const externalRoot = createCanonicalTemporaryDirectory('rd0873-pin-count-sentinel-');
@@ -1252,40 +1351,6 @@ test('collector enforces the declared closure byte and depth limits', async (t) 
       (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_LIMIT',
     );
   });
-});
-
-test('collector refuses excessive tracked rows before closure materialization', async (t) => {
-  const { root, gitExecutable } = createRepositoryFixture();
-  const externalRoot = createCanonicalTemporaryDirectory('rd0873-pin-tracked-count-sentinel-');
-  t.after(() => {
-    rmSync(root, { recursive: true, force: true });
-    rmSync(externalRoot, { recursive: true, force: true });
-  });
-  const closureDirectory = path.join(
-    root,
-    'packages-ts', 'galerina-core-compiler', '000-many',
-  );
-  mkdirSync(closureDirectory, { recursive: true });
-  const externalFile = path.join(externalRoot, 'external.js');
-  writeFileSync(externalFile, 'export const trackedTraversalSentinel = true;\n');
-  const sentinelDirectory = path.join(closureDirectory, 'd000');
-  mkdirSync(sentinelDirectory);
-  linkSync(externalFile, path.join(sentinelDirectory, '00000-hardlink-sentinel.js'));
-  for (let index = 0; index < 16_385; index += 1) {
-    const directory = path.join(
-      closureDirectory,
-      `d${String(Math.floor(index / 128)).padStart(3, '0')}`,
-    );
-    mkdirSync(directory, { recursive: true });
-    writeFileSync(path.join(directory, `f${String(index).padStart(5, '0')}`), '');
-  }
-  commitFixture(gitExecutable, root, 'add excessive tracked closure rows');
-
-  const { collectToolchainPinObservation } = await import(COLLECTOR_MODULE);
-  await assert.rejects(
-    () => collectToolchainPinObservation({ repositoryRoot: root, gitExecutable }),
-    (error) => error?.code === 'TOOLCHAIN_OBSERVATION_REFUSED_LIMIT',
-  );
 });
 
 test('collector refuses a Git executable above the declared byte limit before hashing it', async (t) => {

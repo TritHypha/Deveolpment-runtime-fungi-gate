@@ -1,4 +1,4 @@
-name: rd0873-toolchain-pin-observation
+name: rd0873-source-observation-v2
 
 on:
   workflow_dispatch: {}
@@ -58,18 +58,18 @@ jobs:
             if ($LASTEXITCODE -eq 0 -and $resolvedCandidate) { $gitExe = $resolvedCandidate; break }
           }
           if (-not $gitExe) { throw 'No resolved single-link Git endpoint is available.' }
-          node scripts/logic-aig-source-origin-toolchain-pin-observation.mjs --git "$gitExe" --out "${{ runner.temp }}/rd0873-toolchain-pin-observation-${{ matrix.id }}.json"
+          node scripts/logic-aig-source-origin-toolchain-pin-observation.mjs --git "$gitExe" --out "${{ runner.temp }}/rd0873-source-observation-v2-${{ matrix.id }}.json"
       - name: Capture Linux x64 observation outside checkout
         if: runner.os == 'Linux'
         shell: bash
         run: |
           set -euo pipefail
           git_exe="$(node -e 'const fs=require("node:fs");const resolved=fs.realpathSync.native(process.argv[1]);const stats=fs.lstatSync(resolved,{bigint:true});if(!stats.isFile()||stats.isSymbolicLink()||stats.nlink !== 1n)process.exit(2);process.stdout.write(resolved)' "$(command -v git)")"
-          node scripts/logic-aig-source-origin-toolchain-pin-observation.mjs --git "$git_exe" --out "${{ runner.temp }}/rd0873-toolchain-pin-observation-${{ matrix.id }}.json"
+          node scripts/logic-aig-source-origin-toolchain-pin-observation.mjs --git "$git_exe" --out "${{ runner.temp }}/rd0873-source-observation-v2-${{ matrix.id }}.json"
       - name: Retain inert observation for private review
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: rd0873-toolchain-pin-observation-${{ matrix.id }}
-          path: ${{ runner.temp }}/rd0873-toolchain-pin-observation-${{ matrix.id }}.json
+          name: rd0873-source-observation-v2-${{ matrix.id }}
+          path: ${{ runner.temp }}/rd0873-source-observation-v2-${{ matrix.id }}.json
           if-no-files-found: error
           retention-days: 1

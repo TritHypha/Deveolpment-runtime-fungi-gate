@@ -17,6 +17,7 @@ import {
   ToolchainPinObservationRefusal,
   canonicalToolchainObservationText,
   collectToolchainPinObservation,
+  validateToolchainPinObservation,
 } from './lib/logic-aig-source-origin/toolchain-pin-observation.mjs';
 
 const REFUSAL_CODE = /^TOOLCHAIN_OBSERVATION_REFUSED_[A-Z0-9_]+$/u;
@@ -122,7 +123,9 @@ async function run(args) {
   const { gitExecutable, outputPath } = parseArguments(args);
   const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   const outputParent = prepareOutput(repositoryRoot, outputPath);
-  const observation = await collectToolchainPinObservation({ repositoryRoot, gitExecutable });
+  const observation = validateToolchainPinObservation(
+    await collectToolchainPinObservation({ repositoryRoot, gitExecutable }),
+  );
   const bytes = Buffer.from(canonicalToolchainObservationText(observation), 'utf8');
 
   let descriptor;

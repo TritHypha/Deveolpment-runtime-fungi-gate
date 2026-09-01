@@ -9,6 +9,7 @@ import {
   readFileSync,
   realpathSync,
 } from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 export const TOOLCHAIN_PIN_OBSERVATION_LIMITS = Object.freeze({
@@ -20,7 +21,7 @@ export const TOOLCHAIN_PIN_OBSERVATION_LIMITS = Object.freeze({
   locatorBytes: 4_096,
 });
 
-const OBSERVATION_SCHEMA = 'galerina.logic-aig-toolchain-pin-observation.v1';
+const OBSERVATION_SCHEMA = 'galerina.logic-aig-toolchain-pin-observation.v2';
 const CLOSURE_SCHEMA = 'galerina.logic-aig-declared-closure-observation.v1';
 const GIT_EXECUTION_BINDING = 'cooperative-path-endpoint-sampling.v1';
 const REPOSITORY_ID = 'galerina';
@@ -30,7 +31,25 @@ const TYPESCRIPT_PACKAGE_LOCATOR = `${TYPESCRIPT_ROOT_LOCATOR}/package.json`;
 const COMPILER_PACKAGE_LOCATOR = `${COMPILER_ROOT_LOCATOR}/package.json`;
 const COMPILER_LOCK_LOCATOR = `${COMPILER_ROOT_LOCATOR}/package-lock.json`;
 const TYPESCRIPT_ENTRY_LOCATOR = `${TYPESCRIPT_ROOT_LOCATOR}/lib/typescript.js`;
-const PARSER_ENTRY_LOCATOR = `${COMPILER_ROOT_LOCATOR}/src/index.ts`;
+const TYPESCRIPT_COMPILER_CLI_LOCATOR = `${TYPESCRIPT_ROOT_LOCATOR}/lib/tsc.js`;
+const SOURCE_ENTRY_LOCATOR = `${COMPILER_ROOT_LOCATOR}/src/source-origin-parser-entry.ts`;
+const SOURCE_PROJECT_LOCATOR = `${COMPILER_ROOT_LOCATOR}/tsconfig.source-origin-parser.json`;
+const SOURCE_ENTRY_LOCAL_LOCATOR = 'src/source-origin-parser-entry.ts';
+const SOURCE_EDGE_ROWS = Object.freeze([
+  Object.freeze({ fromLocator: 'src/gate-v3-parser.ts', kind: 'IMPORT_TYPE', exportName: null, specifier: './parser.js', toLocator: 'src/parser.ts' }),
+  Object.freeze({ fromLocator: 'src/parser.ts', kind: 'IMPORT', exportName: null, specifier: './lexer.js', toLocator: 'src/lexer.ts' }),
+  Object.freeze({ fromLocator: 'src/parser.ts', kind: 'IMPORT', exportName: null, specifier: './requirement-diagnostics.js', toLocator: 'src/requirement-diagnostics.ts' }),
+  Object.freeze({ fromLocator: 'src/source-origin-parser-entry.ts', kind: 'EXPORT_FROM', exportName: 'lex', specifier: './lexer.js', toLocator: 'src/lexer.ts' }),
+  Object.freeze({ fromLocator: 'src/source-origin-parser-entry.ts', kind: 'EXPORT_FROM', exportName: 'parseGateV3', specifier: './gate-v3-parser.js', toLocator: 'src/gate-v3-parser.ts' }),
+  Object.freeze({ fromLocator: 'src/source-origin-parser-entry.ts', kind: 'EXPORT_FROM', exportName: 'parseProgram', specifier: './parser.js', toLocator: 'src/parser.ts' }),
+]);
+const SOURCE_MEMBER_LOCATORS = Object.freeze([
+  'src/gate-v3-parser.ts',
+  'src/lexer.ts',
+  'src/parser.ts',
+  'src/requirement-diagnostics.ts',
+  'src/source-origin-parser-entry.ts',
+]);
 const PROVENANCE = Object.freeze([
   Object.freeze({
     role: 'collector-cli',
@@ -375,7 +394,6 @@ function packageIdentity({
   entryLocator,
   expectedName,
   expectedVersion,
-  expectedMain,
 }) {
   const packagePath = resolveContained(repositoryRoot, packageLocator);
   const entryPath = resolveContained(repositoryRoot, entryLocator);
@@ -383,7 +401,6 @@ function packageIdentity({
   if (
     packageValue.name !== expectedName
     || packageValue.version !== expectedVersion
-    || (expectedMain !== undefined && packageValue.main !== expectedMain)
     || typeof packageValue.name !== 'string'
     || typeof packageValue.version !== 'string'
   ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_PACKAGE');
@@ -527,43 +544,228 @@ function gitBlobOid(bytes, objectFormat) {
     .digest('hex');
 }
 
-function observeTrackedClosure(
-  gitExecutable,
-  repositoryRoot,
-  expectedExecutableIdentity,
-  rootLocator,
-  entryLocator,
-  requiredLocators,
-  objectFormat,
-) {
-  assertPlainDirectory(resolveContained(repositoryRoot, rootLocator));
-  const treeRows = parseLsTreeRows(runGit(gitExecutable, repositoryRoot, [
-    'ls-tree', '-rz', '--full-tree', 'HEAD', '--', rootLocator,
-  ], expectedExecutableIdentity, { binary: true }));
-  const trackedLocators = new Set(treeRows.map(({ locator }) => locator));
-  if (requiredLocators.some((locator) => !trackedLocators.has(locator))) {
-    refuse('TOOLCHAIN_OBSERVATION_REFUSED_STATE');
+function trackedBlobRow(gitExecutable, repositoryRoot, expectedExecutableIdentity, locator, objectFormat) {
+  assertCanonicalLocator(locator);
+  const output = runGit(gitExecutable, repositoryRoot, [
+    'ls-tree', '--full-tree', 'HEAD', '--', locator,
+  ], expectedExecutableIdentity).trim();
+  const match = /^(100644|100755) blob ([0-9a-f]{40})\t(.+)$/u.exec(output);
+  if (!match || match[3] !== locator) refuse('TOOLCHAIN_OBSERVATION_REFUSED_STATE');
+  const bytes = readRegularFile(
+    resolveContained(repositoryRoot, locator),
+    TOOLCHAIN_PIN_OBSERVATION_LIMITS.closureBytes,
+  );
+  if (gitBlobOid(bytes, objectFormat) !== match[2]) refuse('TOOLCHAIN_OBSERVATION_REFUSED_STATE');
+  return { gitBlobOid: match[2], bytes };
+}
+
+function assertExactKeys(value, keys) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)
+    || Object.getPrototypeOf(value) !== Object.prototype) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  const actual = Object.keys(value).sort(compareCodeUnits);
+  const expected = [...keys].sort(compareCodeUnits);
+  if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
   }
-  const rows = [];
-  let observedBytes = 0;
-  for (const treeRow of treeRows) {
-    if (!treeRow.locator.startsWith(`${rootLocator}/`)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_PATH');
-    const locator = treeRow.locator.slice(rootLocator.length + 1);
-    const bytes = readRegularFile(
-      resolveContained(repositoryRoot, treeRow.locator),
-      TOOLCHAIN_PIN_OBSERVATION_LIMITS.closureBytes - observedBytes,
-    );
-    observedBytes += bytes.length;
-    if (gitBlobOid(bytes, objectFormat) !== treeRow.gitBlobOid) {
-      refuse('TOOLCHAIN_OBSERVATION_REFUSED_STATE');
+}
+
+function equalCanonical(left, right) {
+  return canonicalToolchainObservationText(left) === canonicalToolchainObservationText(right);
+}
+
+function assertCanonicalSortedRows(rows, tuple) {
+  if (!Array.isArray(rows)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  for (let index = 1; index < rows.length; index += 1) {
+    const previous = tuple(rows[index - 1]);
+    const current = tuple(rows[index]);
+    for (let item = 0; item < previous.length; item += 1) {
+      if (previous[item] < current[item]) break;
+      if (previous[item] > current[item]) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+      if (item === previous.length - 1) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
     }
-    rows.push(row(locator, bytes));
   }
+}
+
+function sourceEdgeTuple(edge) {
+  return [edge.fromLocator, edge.kind, edge.exportName ?? '', edge.specifier, edge.toLocator];
+}
+
+function assertExactSourceEdgeRows(rows) {
+  assertCanonicalSortedRows(rows, sourceEdgeTuple);
+  if (!equalCanonical(rows, SOURCE_EDGE_ROWS)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+}
+
+function readSourceProject(gitExecutable, repositoryRoot, expectedExecutableIdentity, objectFormat) {
+  const tracked = trackedBlobRow(
+    gitExecutable, repositoryRoot, expectedExecutableIdentity, SOURCE_PROJECT_LOCATOR, objectFormat,
+  );
+  const { value } = readJson(resolveContained(repositoryRoot, SOURCE_PROJECT_LOCATOR));
+  assertExactKeys(value, ['extends', 'files', 'include', 'compilerOptions']);
+  if (value.extends !== './tsconfig.json' || !equalCanonical(value.files, [SOURCE_ENTRY_LOCAL_LOCATOR])
+    || !equalCanonical(value.include, [])) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertExactKeys(value.compilerOptions, [
+    'types', 'noEmitOnError', 'incremental', 'composite', 'sourceMap', 'declarationMap',
+  ]);
+  if (!equalCanonical(value.compilerOptions, {
+    types: [], noEmitOnError: true, incremental: false, composite: false, sourceMap: false, declarationMap: false,
+  })) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  return {
+    rootLocator: COMPILER_ROOT_LOCATOR,
+    locator: 'tsconfig.source-origin-parser.json',
+    gitBlobOid: tracked.gitBlobOid,
+    rawSha256: sha256Raw(tracked.bytes),
+    byteLength: tracked.bytes.length,
+    extendsLocator: value.extends,
+    files: value.files,
+    include: value.include,
+    compilerOptions: value.compilerOptions,
+  };
+}
+
+function readSourceEntry(gitExecutable, repositoryRoot, expectedExecutableIdentity, objectFormat) {
+  const tracked = trackedBlobRow(
+    gitExecutable, repositoryRoot, expectedExecutableIdentity, SOURCE_ENTRY_LOCATOR, objectFormat,
+  );
+  return {
+    rootLocator: COMPILER_ROOT_LOCATOR,
+    locator: SOURCE_ENTRY_LOCAL_LOCATOR,
+    gitBlobOid: tracked.gitBlobOid,
+    rawSha256: sha256Raw(tracked.bytes),
+    byteLength: tracked.bytes.length,
+    exportNames: ['lex', 'parseGateV3', 'parseProgram'],
+  };
+}
+
+function loadPinnedTypeScript(repositoryRoot, expectedRawSha256) {
+  const target = resolveContained(repositoryRoot, TYPESCRIPT_ENTRY_LOCATOR);
+  const before = readRegularFile(target, TOOLCHAIN_PIN_OBSERVATION_LIMITS.closureBytes);
+  if (sha256Raw(before) !== expectedRawSha256) refuse('TOOLCHAIN_OBSERVATION_REFUSED_DRIFT');
+  const requireExact = createRequire(import.meta.url);
+  let typescript;
+  try {
+    delete requireExact.cache[target];
+    typescript = requireExact(target);
+  } catch {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_TYPESCRIPT');
+  }
+  const after = readRegularFile(target, TOOLCHAIN_PIN_OBSERVATION_LIMITS.closureBytes);
+  if (sha256Raw(after) !== expectedRawSha256 || before.equals(after) === false) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_DRIFT');
+  }
+  if (typescript === null || typeof typescript !== 'object'
+    || typeof typescript.createSourceFile !== 'function' || typeof typescript.forEachChild !== 'function') {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_TYPESCRIPT');
+  }
+  return typescript;
+}
+
+function resolveSourceSpecifier(fromLocator, specifier, members) {
+  if (typeof specifier !== 'string' || !specifier.startsWith('.') || !specifier.endsWith('.js')) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+  }
+  const target = path.posix.normalize(path.posix.join(path.posix.dirname(fromLocator), `${specifier.slice(0, -3)}.ts`));
+  if (target.startsWith('../') || target === '..' || !members.has(target)) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+  }
+  return target;
+}
+
+function scanSourceEdges(typescript, sources) {
+  const members = new Set(sources.keys());
+  const rows = [];
+  for (const [fromLocator, bytes] of sources) {
+    const entryExportNames = [];
+    let text;
+    try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE'); }
+    const sourceFile = typescript.createSourceFile(
+      fromLocator, text, typescript.ScriptTarget.Latest, false, typescript.ScriptKind.TS,
+    );
+    if (!sourceFile || sourceFile.parseDiagnostics?.length > 0 || sourceFile.referencedFiles?.length > 0
+      || sourceFile.typeReferenceDirectives?.length > 0 || sourceFile.libReferenceDirectives?.length > 0) {
+      refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+    }
+    const add = (kind, exportName, moduleSpecifier) => {
+      if (!moduleSpecifier || !typescript.isStringLiteral(moduleSpecifier)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+      const specifier = moduleSpecifier.text;
+      rows.push({
+        fromLocator,
+        kind,
+        exportName,
+        specifier,
+        toLocator: resolveSourceSpecifier(fromLocator, specifier, members),
+      });
+    };
+    for (const statement of sourceFile.statements) {
+      if (typescript.isImportDeclaration(statement)) {
+        if (statement.attributes || statement.assertClause) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+        add(statement.importClause?.isTypeOnly ? 'IMPORT_TYPE' : 'IMPORT', null, statement.moduleSpecifier);
+      } else if (typescript.isExportDeclaration(statement) && statement.moduleSpecifier) {
+        if (statement.attributes || statement.assertClause) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+        if (statement.exportClause && typescript.isNamedExports(statement.exportClause)) {
+          for (const element of statement.exportClause.elements) {
+            if (fromLocator === SOURCE_ENTRY_LOCAL_LOCATOR
+              && (statement.isTypeOnly || element.isTypeOnly || element.propertyName)) {
+              refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+            }
+            entryExportNames.push(element.name.text);
+            add('EXPORT_FROM', element.name.text, statement.moduleSpecifier);
+          }
+        } else if (statement.exportClause && typescript.isNamespaceExport(statement.exportClause)) {
+          if (fromLocator === SOURCE_ENTRY_LOCAL_LOCATOR) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+          add('EXPORT_FROM', statement.exportClause.name.text, statement.moduleSpecifier);
+        } else add('EXPORT_FROM', null, statement.moduleSpecifier);
+      } else if (fromLocator === SOURCE_ENTRY_LOCAL_LOCATOR
+        && (typescript.isExportDeclaration(statement) || typescript.isExportAssignment(statement)
+          || statement.modifiers?.some((modifier) => modifier.kind === typescript.SyntaxKind.ExportKeyword))) {
+        refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+      }
+    }
+    const inspect = (node) => {
+      if (typescript.isImportTypeNode(node)
+        || (typescript.isCallExpression(node) && (node.expression.kind === typescript.SyntaxKind.ImportKeyword
+          || (typescript.isIdentifier(node.expression) && node.expression.text === 'require')))
+        || (typescript.isPropertyAccessExpression(node) && node.name.text === 'resolve'
+          && node.expression?.kind === typescript.SyntaxKind.MetaProperty
+          && node.expression.keywordToken === typescript.SyntaxKind.ImportKeyword)) {
+        refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+      }
+      typescript.forEachChild(node, inspect);
+    };
+    inspect(sourceFile);
+    if (fromLocator === SOURCE_ENTRY_LOCAL_LOCATOR
+      && !equalCanonical(entryExportNames.sort(compareCodeUnits), ['lex', 'parseGateV3', 'parseProgram'])) {
+      refuse('TOOLCHAIN_OBSERVATION_REFUSED_SOURCE');
+    }
+  }
+  rows.sort((left, right) => {
+    const leftTuple = sourceEdgeTuple(left);
+    const rightTuple = sourceEdgeTuple(right);
+    for (let index = 0; index < leftTuple.length; index += 1) {
+      const compared = compareCodeUnits(leftTuple[index], rightTuple[index]);
+      if (compared !== 0) return compared;
+    }
+    return 0;
+  });
+  assertExactSourceEdgeRows(rows);
+  return rows;
+}
+
+function observeExactSourceClosure(gitExecutable, repositoryRoot, expectedExecutableIdentity, objectFormat, typescriptHash) {
+  const sources = new Map();
+  const rows = [];
+  for (const localLocator of SOURCE_MEMBER_LOCATORS) {
+    const fullLocator = `${COMPILER_ROOT_LOCATOR}/${localLocator}`;
+    const tracked = trackedBlobRow(gitExecutable, repositoryRoot, expectedExecutableIdentity, fullLocator, objectFormat);
+    sources.set(localLocator, tracked.bytes);
+    rows.push(row(localLocator, tracked.bytes));
+  }
+  const typescript = loadPinnedTypeScript(repositoryRoot, typescriptHash);
+  scanSourceEdges(typescript, sources);
   return closureBody({
-    id: 'galerina-parser',
-    rule: 'all-git-tracked-regular-files-under-package-root.v1',
-    rootLocator,
-    entryLocator: path.posix.relative(`${rootLocator}/`, entryLocator),
+    id: 'source-origin-parser-source',
+    rule: 'exact-source-edge-row-closure.v1',
+    rootLocator: COMPILER_ROOT_LOCATOR,
+    entryLocator: SOURCE_ENTRY_LOCAL_LOCATOR,
     rows,
   });
 }
@@ -701,6 +903,174 @@ function readCollectorOptions(options) {
   };
 }
 
+function typescriptCompilerCli(repositoryRoot) {
+  const bytes = readRegularFile(
+    resolveContained(repositoryRoot, TYPESCRIPT_COMPILER_CLI_LOCATOR),
+    TOOLCHAIN_PIN_OBSERVATION_LIMITS.closureBytes,
+  );
+  return {
+    rootLocator: TYPESCRIPT_ROOT_LOCATOR,
+    locator: 'lib/tsc.js',
+    rawSha256: sha256Raw(bytes),
+    byteLength: bytes.length,
+  };
+}
+
+function assertCompilerPackage(repositoryRoot, compilerLock) {
+  const compilerPackage = readJson(resolveContained(repositoryRoot, COMPILER_PACKAGE_LOCATOR)).value;
+  if (
+    compilerPackage.name !== '@galerina/core-compiler'
+    || typeof compilerPackage.version !== 'string'
+    || compilerPackage.name !== compilerLock.compilerPackage.name
+    || compilerPackage.version !== compilerLock.compilerPackage.version
+    || compilerPackage.devDependencies?.typescript !== compilerLock.compilerPackage.typescriptDependencyRange
+  ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_PACKAGE');
+}
+
+function assertHex(value, expression) {
+  if (typeof value !== 'string' || !expression.test(value)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+}
+
+function validateClosure(closure) {
+  assertExactKeys(closure, ['schema', 'id', 'declaration', 'rows', 'counts', 'authorizing', 'closureDigest']);
+  if (closure.schema !== CLOSURE_SCHEMA || closure.authorizing !== false) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertExactKeys(closure.declaration, ['rule', 'rootLocator', 'entryLocator']);
+  assertExactKeys(closure.counts, ['files', 'bytes']);
+  if (!Array.isArray(closure.rows) || closure.rows.length === 0 || closure.counts.files !== closure.rows.length
+    || !Number.isSafeInteger(closure.counts.bytes) || closure.counts.bytes < 0) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertCanonicalSortedRows(closure.rows, (current) => [current.locator]);
+  let bytes = 0;
+  for (const current of closure.rows) {
+    assertExactKeys(current, ['locator', 'rawSha256', 'byteLength']);
+    assertCanonicalLocator(current.locator);
+    assertHex(current.rawSha256, SHA256);
+    if (!Number.isSafeInteger(current.byteLength) || current.byteLength < 0) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+    bytes += current.byteLength;
+  }
+  if (!Number.isSafeInteger(bytes) || bytes !== closure.counts.bytes
+    || closure.closureDigest !== sha256Canonical(CLOSURE_SCHEMA, {
+      schema: closure.schema,
+      id: closure.id,
+      declaration: closure.declaration,
+      rows: closure.rows,
+      counts: closure.counts,
+      authorizing: closure.authorizing,
+    })) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+}
+
+function validateToolchainPinObservationInternal(value) {
+  assertExactKeys(value, [
+    'schema', 'repository', 'platform', 'arch', 'gitExecutionBinding',
+    'nodeIdentityBefore', 'nodeIdentityAfter', 'gitIdentityBefore', 'gitIdentityAfter',
+    'compilerLock', 'typescript', 'typescriptCompilerCli', 'sourceOriginParserEntry',
+    'sourceOriginParserProject', 'sourceEdgeRows', 'declaredClosures', 'provenanceBlobs',
+    'limits', 'authorizing', 'observationDigest',
+  ]);
+  if (value.schema !== OBSERVATION_SCHEMA || value.authorizing !== false
+    || !['win32', 'linux'].includes(value.platform) || value.arch !== 'x64'
+    || value.gitExecutionBinding !== GIT_EXECUTION_BINDING) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertExactKeys(value.repository, ['repositoryId', 'objectFormat', 'pre', 'post']);
+  if (value.repository.repositoryId !== REPOSITORY_ID || value.repository.objectFormat !== 'sha1'
+    || !equalCanonical(value.repository.pre, value.repository.post)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  for (const endpoint of [value.repository.pre, value.repository.post]) {
+    assertExactKeys(endpoint, ['commitOid', 'treeOid']);
+    assertHex(endpoint.commitOid, SHA1);
+    assertHex(endpoint.treeOid, SHA1);
+  }
+  for (const identity of [
+    value.nodeIdentityBefore, value.nodeIdentityAfter, value.gitIdentityBefore, value.gitIdentityAfter,
+  ]) {
+    assertExactKeys(identity, ['version', 'executableRawSha256', 'executableByteLength']);
+    if (typeof identity.version !== 'string' || !Number.isSafeInteger(identity.executableByteLength)
+      || identity.executableByteLength < 0) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+    assertHex(identity.executableRawSha256, SHA256);
+  }
+  if (!equalCanonical(value.nodeIdentityBefore, value.nodeIdentityAfter)
+    || !equalCanonical(value.gitIdentityBefore, value.gitIdentityAfter)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertExactKeys(value.compilerLock, [
+    'locator', 'gitBlobOid', 'rawSha256', 'byteLength', 'lockfileVersion', 'compilerPackage', 'typescriptDependency',
+  ]);
+  if (value.compilerLock.locator !== COMPILER_LOCK_LOCATOR || value.compilerLock.lockfileVersion !== 3) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  assertHex(value.compilerLock.gitBlobOid, SHA1);
+  assertHex(value.compilerLock.rawSha256, SHA256);
+  assertExactKeys(value.compilerLock.compilerPackage, ['name', 'version', 'typescriptDependencyRange']);
+  assertExactKeys(value.compilerLock.typescriptDependency, ['packageKey', 'version', 'resolved', 'integrity']);
+  if (value.compilerLock.compilerPackage.name !== '@galerina/core-compiler'
+    || value.compilerLock.typescriptDependency.packageKey !== 'node_modules/typescript') {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  assertExactKeys(value.typescript, [
+    'name', 'version', 'packageLocator', 'packageRawSha256', 'packageByteLength',
+    'entryLocator', 'entryRawSha256', 'entryByteLength',
+  ]);
+  if (value.typescript.name !== 'typescript' || value.typescript.version !== value.compilerLock.typescriptDependency.version
+    || value.typescript.packageLocator !== TYPESCRIPT_PACKAGE_LOCATOR || value.typescript.entryLocator !== TYPESCRIPT_ENTRY_LOCATOR) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  assertExactKeys(value.typescriptCompilerCli, ['rootLocator', 'locator', 'rawSha256', 'byteLength']);
+  if (value.typescriptCompilerCli.rootLocator !== TYPESCRIPT_ROOT_LOCATOR || value.typescriptCompilerCli.locator !== 'lib/tsc.js') {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  assertExactKeys(value.sourceOriginParserEntry, ['rootLocator', 'locator', 'gitBlobOid', 'rawSha256', 'byteLength', 'exportNames']);
+  if (value.sourceOriginParserEntry.rootLocator !== COMPILER_ROOT_LOCATOR
+    || value.sourceOriginParserEntry.locator !== SOURCE_ENTRY_LOCAL_LOCATOR
+    || !equalCanonical(value.sourceOriginParserEntry.exportNames, ['lex', 'parseGateV3', 'parseProgram'])) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  assertExactKeys(value.sourceOriginParserProject, [
+    'rootLocator', 'locator', 'gitBlobOid', 'rawSha256', 'byteLength', 'extendsLocator', 'files', 'include', 'compilerOptions',
+  ]);
+  if (value.sourceOriginParserProject.rootLocator !== COMPILER_ROOT_LOCATOR
+    || value.sourceOriginParserProject.locator !== 'tsconfig.source-origin-parser.json'
+    || value.sourceOriginParserProject.extendsLocator !== './tsconfig.json'
+    || !equalCanonical(value.sourceOriginParserProject.files, [SOURCE_ENTRY_LOCAL_LOCATOR])
+    || !equalCanonical(value.sourceOriginParserProject.include, [])) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertExactKeys(value.sourceOriginParserProject.compilerOptions, [
+    'types', 'noEmitOnError', 'incremental', 'composite', 'sourceMap', 'declarationMap',
+  ]);
+  assertExactSourceEdgeRows(value.sourceEdgeRows);
+  if (!Array.isArray(value.declaredClosures) || value.declaredClosures.length !== 2) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertCanonicalSortedRows(value.declaredClosures, (current) => [current.id]);
+  for (const closure of value.declaredClosures) validateClosure(closure);
+  const sourceClosure = value.declaredClosures[0];
+  const typescriptClosure = value.declaredClosures[1];
+  if (sourceClosure.id !== 'source-origin-parser-source'
+    || sourceClosure.declaration.rule !== 'exact-source-edge-row-closure.v1'
+    || sourceClosure.declaration.rootLocator !== COMPILER_ROOT_LOCATOR
+    || sourceClosure.declaration.entryLocator !== SOURCE_ENTRY_LOCAL_LOCATOR
+    || sourceClosure.counts.files !== 5
+    || !equalCanonical(sourceClosure.rows.map((rowValue) => rowValue.locator), SOURCE_MEMBER_LOCATORS)
+    || typescriptClosure.id !== 'typescript'
+    || typescriptClosure.declaration.rule !== 'all-regular-files-under-package-root.v1'
+    || typescriptClosure.declaration.rootLocator !== TYPESCRIPT_ROOT_LOCATOR
+    || typescriptClosure.declaration.entryLocator !== 'lib/typescript.js') refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  if (!Array.isArray(value.provenanceBlobs) || value.provenanceBlobs.length !== PROVENANCE.length) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  assertCanonicalSortedRows(value.provenanceBlobs, (current) => [current.role]);
+  for (let index = 0; index < PROVENANCE.length; index += 1) {
+    const observed = value.provenanceBlobs[index];
+    const expected = PROVENANCE[index];
+    assertExactKeys(observed, ['role', 'locator', 'gitBlobOid', 'rawSha256', 'byteLength']);
+    if (observed.role !== expected.role || observed.locator !== expected.locator) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  if (!equalCanonical(value.limits, TOOLCHAIN_PIN_OBSERVATION_LIMITS)) refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  const { observationDigest, ...body } = value;
+  if (typeof observationDigest !== 'string' || observationDigest !== sha256Canonical(OBSERVATION_SCHEMA, body)) {
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_SCHEMA');
+  }
+  return value;
+}
+
+export function validateToolchainPinObservation(value) {
+  try {
+    return validateToolchainPinObservationInternal(value);
+  } catch (error) {
+    if (error instanceof ToolchainPinObservationRefusal) throw error;
+    refuse('TOOLCHAIN_OBSERVATION_REFUSED_INTERNAL');
+  }
+}
+
 async function collectToolchainPinObservationInternal(options) {
   const { repositoryRoot, gitExecutable } = readCollectorOptions(options);
   const root = validateRoot(repositoryRoot, gitExecutable);
@@ -739,34 +1109,13 @@ async function collectToolchainPinObservationInternal(options) {
     entryLocator: TYPESCRIPT_ENTRY_LOCATOR,
     expectedName: 'typescript',
     expectedVersion: compilerLock.typescriptDependency.version,
-    expectedMain: './lib/typescript.js',
   });
-  const compilerPackage = readJson(resolveContained(root, COMPILER_PACKAGE_LOCATOR)).value;
-  if (
-    compilerPackage.name !== '@galerina/core-compiler'
-    || typeof compilerPackage.version !== 'string'
-    || compilerPackage.main !== './dist/index.js'
-    || compilerPackage.name !== compilerLock.compilerPackage.name
-    || compilerPackage.version !== compilerLock.compilerPackage.version
-    || compilerPackage.devDependencies?.typescript !== compilerLock.compilerPackage.typescriptDependencyRange
-  ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_PACKAGE');
-  const galerinaParser = packageIdentity({
-    repositoryRoot: root,
-    packageLocator: COMPILER_PACKAGE_LOCATOR,
-    entryLocator: PARSER_ENTRY_LOCATOR,
-    expectedName: compilerPackage.name,
-    expectedVersion: compilerPackage.version,
-  });
+  assertCompilerPackage(root, compilerLock);
+  const typescriptCompilerCliBefore = typescriptCompilerCli(root);
+  const sourceOriginParserEntry = readSourceEntry(gitExecutable, root, gitExecutableBytesBefore, objectFormat);
+  const sourceOriginParserProject = readSourceProject(gitExecutable, root, gitExecutableBytesBefore, objectFormat);
   const declaredClosures = [
-    observeTrackedClosure(
-      gitExecutable,
-      root,
-      gitExecutableBytesBefore,
-      COMPILER_ROOT_LOCATOR,
-      PARSER_ENTRY_LOCATOR,
-      [COMPILER_PACKAGE_LOCATOR, COMPILER_LOCK_LOCATOR, PARSER_ENTRY_LOCATOR],
-      objectFormat,
-    ),
+    observeExactSourceClosure(gitExecutable, root, gitExecutableBytesBefore, objectFormat, typescript.entryRawSha256),
     observeFilesystemClosure(root, TYPESCRIPT_ROOT_LOCATOR, TYPESCRIPT_ENTRY_LOCATOR),
   ].sort((left, right) => compareCodeUnits(left.id, right.id));
   const provenanceBlobs = PROVENANCE.map((descriptor) => provenanceBlob(
@@ -786,35 +1135,13 @@ async function collectToolchainPinObservationInternal(options) {
     entryLocator: TYPESCRIPT_ENTRY_LOCATOR,
     expectedName: 'typescript',
     expectedVersion: repeatedCompilerLock.typescriptDependency.version,
-    expectedMain: './lib/typescript.js',
   });
-  const repeatedCompilerPackage = readJson(resolveContained(root, COMPILER_PACKAGE_LOCATOR)).value;
-  if (
-    repeatedCompilerPackage.name !== '@galerina/core-compiler'
-    || typeof repeatedCompilerPackage.version !== 'string'
-    || repeatedCompilerPackage.main !== './dist/index.js'
-    || repeatedCompilerPackage.name !== repeatedCompilerLock.compilerPackage.name
-    || repeatedCompilerPackage.version !== repeatedCompilerLock.compilerPackage.version
-    || repeatedCompilerPackage.devDependencies?.typescript
-      !== repeatedCompilerLock.compilerPackage.typescriptDependencyRange
-  ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_PACKAGE');
-  const repeatedGalerinaParser = packageIdentity({
-    repositoryRoot: root,
-    packageLocator: COMPILER_PACKAGE_LOCATOR,
-    entryLocator: PARSER_ENTRY_LOCATOR,
-    expectedName: repeatedCompilerPackage.name,
-    expectedVersion: repeatedCompilerPackage.version,
-  });
+  assertCompilerPackage(root, repeatedCompilerLock);
+  const typescriptCompilerCliAfter = typescriptCompilerCli(root);
+  const repeatedSourceOriginParserEntry = readSourceEntry(gitExecutable, root, gitExecutableBytesBefore, objectFormat);
+  const repeatedSourceOriginParserProject = readSourceProject(gitExecutable, root, gitExecutableBytesBefore, objectFormat);
   const repeatedDeclaredClosures = [
-    observeTrackedClosure(
-      gitExecutable,
-      root,
-      gitExecutableBytesBefore,
-      COMPILER_ROOT_LOCATOR,
-      PARSER_ENTRY_LOCATOR,
-      [COMPILER_PACKAGE_LOCATOR, COMPILER_LOCK_LOCATOR, PARSER_ENTRY_LOCATOR],
-      objectFormat,
-    ),
+    observeExactSourceClosure(gitExecutable, root, gitExecutableBytesBefore, objectFormat, repeatedTypescript.entryRawSha256),
     observeFilesystemClosure(root, TYPESCRIPT_ROOT_LOCATOR, TYPESCRIPT_ENTRY_LOCATOR),
   ].sort((left, right) => compareCodeUnits(left.id, right.id));
   const repeatedProvenanceBlobs = PROVENANCE.map((descriptor) => provenanceBlob(
@@ -848,7 +1175,9 @@ async function collectToolchainPinObservationInternal(options) {
     || canonicalToolchainObservationText(gitIdentityBefore) !== canonicalToolchainObservationText(gitIdentityAfter)
     || canonicalToolchainObservationText(compilerLock) !== canonicalToolchainObservationText(repeatedCompilerLock)
     || canonicalToolchainObservationText(typescript) !== canonicalToolchainObservationText(repeatedTypescript)
-    || canonicalToolchainObservationText(galerinaParser) !== canonicalToolchainObservationText(repeatedGalerinaParser)
+    || canonicalToolchainObservationText(typescriptCompilerCliBefore) !== canonicalToolchainObservationText(typescriptCompilerCliAfter)
+    || canonicalToolchainObservationText(sourceOriginParserEntry) !== canonicalToolchainObservationText(repeatedSourceOriginParserEntry)
+    || canonicalToolchainObservationText(sourceOriginParserProject) !== canonicalToolchainObservationText(repeatedSourceOriginParserProject)
     || canonicalToolchainObservationText(declaredClosures) !== canonicalToolchainObservationText(repeatedDeclaredClosures)
     || canonicalToolchainObservationText(provenanceBlobs) !== canonicalToolchainObservationText(repeatedProvenanceBlobs)
   ) refuse('TOOLCHAIN_OBSERVATION_REFUSED_DRIFT');
@@ -865,16 +1194,20 @@ async function collectToolchainPinObservationInternal(options) {
     gitIdentityAfter,
     compilerLock,
     typescript,
-    galerinaParser,
+    typescriptCompilerCli: typescriptCompilerCliBefore,
+    sourceOriginParserEntry,
+    sourceOriginParserProject,
+    sourceEdgeRows: SOURCE_EDGE_ROWS,
     declaredClosures,
     provenanceBlobs,
     limits: TOOLCHAIN_PIN_OBSERVATION_LIMITS,
     authorizing: false,
   };
-  return Object.freeze({
+  const observation = Object.freeze({
     ...body,
     observationDigest: sha256Canonical(body.schema, body),
   });
+  return Object.freeze(validateToolchainPinObservation(observation));
 }
 
 export async function collectToolchainPinObservation(options) {
