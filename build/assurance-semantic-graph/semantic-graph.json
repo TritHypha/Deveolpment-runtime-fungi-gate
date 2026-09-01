@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "a76124c0df41233ca226a75a032cf9bd5bf145adf98dc3873b85919e1b63a0e7",
+  "authoritativeInputsDigest": "9bf8cf666a1c53af796dfa736d98cdd684729c7621c2a98768c3a0f6831ebbef",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -1365,6 +1365,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-04f37795ff35ad4dcd2d9421",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/cli-file-import-type-context.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-9447e5dc076ce844e63163a0",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/cli-gate-from-pattern.test.mjs",
@@ -2264,6 +2271,27 @@
       "id": "test:auto-09c8838ce95bb68454bef844",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/governed-memory.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-109f54c3cc9fbb3775beb19d",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/governed-secure-artifacts.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1a92831e5fa046d1c9159cd5",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/governed-secure-runtime.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-dcd685efeecd4040118a8405",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/governed-secure-semantic-parity.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -4700,6 +4728,13 @@
       "id": "test:auto-0a1f38f0d8db6521be7d09b4",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-runtime/tests/vok-native-authority-boundary.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-a9bbc900669ced19f1c63e5a",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-security/tests/dss-audit-effects.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -8078,6 +8113,27 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-0f0cb7a8c6f28b1bbc308e71",
+      "kind": "test",
+      "evidencePath": "scripts/tests/fungi-corpus-receipt.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f4a1a4edf5b68732cba44ffc",
+      "kind": "test",
+      "evidencePath": "scripts/tests/fungi-corpus-shard-execution.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-e3dffa6f3b98a97bcb27bc75",
+      "kind": "test",
+      "evidencePath": "scripts/tests/fungi-corpus-shards.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-344a687f5c1bb3b0e85dd5b7",
       "kind": "test",
       "evidencePath": "scripts/tests/fungi-golden-probe.test.mjs",
@@ -8232,6 +8288,41 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-35b7ad61a411641a501f0214",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-artifact-frame.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f9a48775a339c7aff07ae958",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-contract.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-216cb2943a1de0e7aae84fc1",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-git.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0ac4cfef6ad34a10c723554d",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-toolchain-pin-observation.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-f2d519a3bb4b9258f19ae215",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-toolchain-snapshot.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-8431d77b8faaad976fe1d13f",
       "kind": "test",
       "evidencePath": "scripts/tests/memory-graph-generator.test.mjs",
@@ -8347,6 +8438,13 @@
       "id": "test:auto-87456e2fd5736661d3cf5f00",
       "kind": "test",
       "evidencePath": "scripts/tests/rd0858-scalar-oracle-artifact.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-e344bd086dc541f568a84bee",
+      "kind": "test",
+      "evidencePath": "scripts/tests/rd0873-native-fungi-audit-map.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -9090,6 +9188,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-04f37795ff35ad4dcd2d9421",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-9447e5dc076ce844e63163a0",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -9731,6 +9834,21 @@
     },
     {
       "from": "test:auto-09c8838ce95bb68454bef844",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-109f54c3cc9fbb3775beb19d",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1a92831e5fa046d1c9159cd5",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-dcd685efeecd4040118a8405",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11472,6 +11590,11 @@
     {
       "from": "test:auto-0a1f38f0d8db6521be7d09b4",
       "to": "package:galerina-core-runtime",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-a9bbc900669ced19f1c63e5a",
+      "to": "package:galerina-core-security",
       "type": "CLASSIFIES"
     },
     {
@@ -13885,6 +14008,21 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-0f0cb7a8c6f28b1bbc308e71",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f4a1a4edf5b68732cba44ffc",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-e3dffa6f3b98a97bcb27bc75",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-344a687f5c1bb3b0e85dd5b7",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -13995,6 +14133,31 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-35b7ad61a411641a501f0214",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f9a48775a339c7aff07ae958",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-216cb2943a1de0e7aae84fc1",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0ac4cfef6ad34a10c723554d",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-f2d519a3bb4b9258f19ae215",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-8431d77b8faaad976fe1d13f",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -14076,6 +14239,11 @@
     },
     {
       "from": "test:auto-87456e2fd5736661d3cf5f00",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-e344bd086dc541f568a84bee",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -14390,9 +14558,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1114,
+    "tests": 1128,
     "detectors": 6,
-    "executableFamily": 1581,
+    "executableFamily": 1586,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
