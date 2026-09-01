@@ -1,0 +1,65 @@
+name: rd0873-toolchain-pin-observation
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    name: ${{ matrix.id }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: windows-x64
+            runner: windows-2022
+          - id: linux-x64
+            runner: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout exact revision without retained credentials
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Install exact Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24.18.0"
+      - name: Install locked compiler dependencies without lifecycle effects
+        run: npm ci --ignore-scripts --no-audit --no-fund --prefix packages-ts/galerina-core-compiler
+      - name: Prove bounded observation contracts
+        run: node --test scripts/tests/logic-aig-source-origin-toolchain-pin-observation.test.mjs
+      - name: Capture Windows x64 observation outside checkout
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $gitCommand = (Get-Command git -CommandType Application).Source
+          $gitInstallRoot = Split-Path -Parent (Split-Path -Parent $gitCommand)
+          $gitCandidates = @($gitCommand, (Join-Path $gitInstallRoot 'bin\git.exe')) | Select-Object -Unique
+          $gitExe = $null
+          foreach ($candidate in $gitCandidates) {
+            if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) { continue }
+            $resolvedCandidate = node -e "const fs=require('node:fs');const resolved=fs.realpathSync.native(process.argv[1]);const stats=fs.lstatSync(resolved,{bigint:true});if(!stats.isFile()||stats.isSymbolicLink()||stats.nlink !== 1n)process.exit(2);process.stdout.write(resolved)" "$candidate"
+            if ($LASTEXITCODE -eq 0 -and $resolvedCandidate) { $gitExe = $resolvedCandidate; break }
+          }
+          if (-not $gitExe) { throw 'No resolved single-link Git endpoint is available.' }
+          node scripts/logic-aig-source-origin-toolchain-pin-observation.mjs --git "$gitExe" --out "${{ runner.temp }}/rd0873-toolchain-pin-observation-${{ matrix.id }}.json"
+      - name: Capture Linux x64 observation outside checkout
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git_exe="$(node -e 'const fs=require("node:fs");const resolved=fs.realpathSync.native(process.argv[1]);const stats=fs.lstatSync(resolved,{bigint:true});if(!stats.isFile()||stats.isSymbolicLink()||stats.nlink !== 1n)process.exit(2);process.stdout.write(resolved)' "$(command -v git)")"
+          node scripts/logic-aig-source-origin-toolchain-pin-observation.mjs --git "$git_exe" --out "${{ runner.temp }}/rd0873-toolchain-pin-observation-${{ matrix.id }}.json"
+      - name: Retain inert observation for private review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rd0873-toolchain-pin-observation-${{ matrix.id }}
+          path: ${{ runner.temp }}/rd0873-toolchain-pin-observation-${{ matrix.id }}.json
+          if-no-files-found: error
+          retention-days: 1
