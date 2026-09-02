@@ -297,6 +297,7 @@ test("project decoder conserves every source and emits a closed owner-backed out
     resolutionPolicy: options.owners.values.resolution,
     parserPolicy: options.owners.values.parser,
     pins: options.owners.values.pins,
+    proposedBaseline: options.owners.values.proposedBaseline,
     expectedOutcomes: options.owners.values.expectedOutcomes,
     sourceManifest: options.sourceManifest,
     resolutionInputs: options.resolutionInputs,

@@ -100,6 +100,34 @@ function expectRefusal(operation, pattern = /^SOURCE_ORIGIN_HOST_[A-Z0-9_]+$/) {
   });
 }
 
+async function semanticRowOptions() {
+  const [parserPolicy, resolutionPolicy] = await Promise.all([
+    policy("logic-aig-source-origin-parser-policy.json"),
+    policy("logic-aig-source-origin-resolution-policy.json"),
+  ]);
+  const bytes = Buffer.from("x", "utf8");
+  const sourceRow = row("src/nested.ts", bytes);
+  return {
+    repositoryId: `repository:${"a".repeat(64)}`,
+    parserId: "typescript-compiler-api",
+    sourceRows: [sourceRow],
+    parseResults: [{ path: sourceRow.path, status: "PARSED", diagnosticCodes: [] }],
+    declarations: [],
+    relations: [],
+    parserPolicy,
+    resolutionPolicy,
+  };
+}
+
+function capturedFailure(operation) {
+  try {
+    operation();
+  } catch (error) {
+    return error;
+  }
+  return undefined;
+}
+
 test("semantic-row boundary refuses proxy and accessor options before caller effects", async (t) => {
   await t.test("proxy", () => {
     let effects = 0;
@@ -130,6 +158,97 @@ test("semantic-row boundary refuses proxy and accessor options before caller eff
     assert.throws(() => buildSemanticRows(hostile));
     assert.equal(effects, 0);
   });
+});
+
+test("semantic-row boundary captures every nested public input before iteration", async (t) => {
+  const valid = await semanticRowOptions();
+  await t.test("proxied source array", () => {
+    let effects = 0;
+    const sourceRows = new Proxy(valid.sourceRows, {
+      get(target, key, receiver) {
+        effects += 1;
+        return Reflect.get(target, key, receiver);
+      },
+    });
+    const failure = capturedFailure(() => buildSemanticRows({ ...valid, sourceRows }));
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+  });
+  await t.test("accessor source row", () => {
+    let effects = 0;
+    const sourceRow = { ...valid.sourceRows[0] };
+    Object.defineProperty(sourceRow, "path", {
+      enumerable: true,
+      get() {
+        effects += 1;
+        return "src/nested.ts";
+      },
+    });
+    const failure = capturedFailure(() => buildSemanticRows({ ...valid, sourceRows: [sourceRow] }));
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+  });
+  await t.test("sparse source array", () => {
+    const sourceRows = new Array(1);
+    assert.throws(
+      () => buildSemanticRows({ ...valid, sourceRows }),
+      (error) => error?.code === "SOURCE_ORIGIN_HOST_SCHEMA",
+    );
+  });
+  await t.test("proxied relation target array", () => {
+    let effects = 0;
+    const targetNativeKeys = new Proxy([], {
+      get(target, key, receiver) {
+        effects += 1;
+        return Reflect.get(target, key, receiver);
+      },
+    });
+    const relations = [{
+      path: valid.sourceRows[0].path,
+      ownerNativeKey: null,
+      relationshipClass: "CALLER",
+      startByte: 0,
+      endByte: 1,
+      targetNativeKeys,
+      targetPaths: [],
+      targetState: "DYNAMIC",
+    }];
+    const failure = capturedFailure(() => buildSemanticRows({ ...valid, relations }));
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+  });
+  await t.test("cyclic relation target array", () => {
+    const targetPaths = [];
+    targetPaths.push(targetPaths);
+    const relations = [{
+      path: valid.sourceRows[0].path,
+      ownerNativeKey: null,
+      relationshipClass: "CALLER",
+      startByte: 0,
+      endByte: 1,
+      targetNativeKeys: [],
+      targetPaths,
+      targetState: "DYNAMIC",
+    }];
+    assert.throws(
+      () => buildSemanticRows({ ...valid, relations }),
+      (error) => error?.code === "SOURCE_ORIGIN_HOST_SCHEMA",
+    );
+  });
+  for (const name of ["parserPolicy", "resolutionPolicy"]) {
+    await t.test(`proxied ${name}`, () => {
+      let effects = 0;
+      const hostile = new Proxy({}, {
+        get() {
+          effects += 1;
+          return undefined;
+        },
+      });
+      const failure = capturedFailure(() => buildSemanticRows({ ...valid, [name]: hostile }));
+      assert.equal(effects, 0);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+    });
+  }
 });
 
 test("HOST decoder loads only pinned lib/typescript.js and emits stable file/declaration semantics", async () => {

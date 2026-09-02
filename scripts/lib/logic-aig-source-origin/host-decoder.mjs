@@ -642,8 +642,80 @@ function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow
   unresolved.push({ ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
 }
 
-export function buildSemanticRows(options) {
+function semanticText(value) {
+  if (typeof value !== 'string' || value.length === 0) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  return value;
+}
+
+function semanticNullableText(value) {
+  if (value === null) return value;
+  return semanticText(value);
+}
+
+function semanticInteger(value) {
+  if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  return value;
+}
+
+function semanticTextArray(value) {
+  exactArray(value, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  for (const item of value) semanticText(item);
+  return value;
+}
+
+function captureSemanticRowsOptions(options) {
   exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  let captured;
+  try {
+    captured = JSON.parse(canonicalJsonText(options));
+  } catch {
+    refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  }
+  exactObject(captured, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  semanticText(captured.repositoryId);
+  semanticText(captured.parserId);
+  exactArray(captured.sourceRows, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  exactArray(captured.parseResults, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  exactArray(captured.declarations, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  exactArray(captured.relations, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  for (const row of captured.sourceRows) {
+    exactObject(row, ['path','mode','blobOid','objectFormat','byteLength','rawSha256'], 'SOURCE_ORIGIN_HOST_SCHEMA');
+    semanticText(row.path);
+    if (row.mode !== '100644' && row.mode !== '100755') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    if (row.objectFormat !== 'sha1' && row.objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    if (!(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/).test(row.blobOid)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    semanticInteger(row.byteLength);
+    if (!/^[0-9a-f]{64}$/.test(row.rawSha256)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  }
+  for (const row of captured.parseResults) {
+    exactObject(row, ['path','status','diagnosticCodes'], 'SOURCE_ORIGIN_HOST_SCHEMA');
+    semanticText(row.path);
+    if (row.status !== 'PARSED' && row.status !== 'REFUSED') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    semanticTextArray(row.diagnosticCodes);
+  }
+  for (const row of captured.declarations) {
+    exactObject(row, ['key','path','parentKey','kind','name','parserNodeKind','startByte','endByte','preorderOrdinal'], 'SOURCE_ORIGIN_HOST_SCHEMA');
+    semanticText(row.key); semanticText(row.path); semanticNullableText(row.parentKey);
+    semanticText(row.kind); semanticNullableText(row.name); semanticText(row.parserNodeKind);
+    semanticInteger(row.startByte); semanticInteger(row.endByte); semanticInteger(row.preorderOrdinal);
+  }
+  for (const row of captured.relations) {
+    exactObject(row, ['path','ownerNativeKey','relationshipClass','startByte','endByte','targetNativeKeys','targetPaths','targetState'], 'SOURCE_ORIGIN_HOST_SCHEMA');
+    semanticText(row.path); semanticNullableText(row.ownerNativeKey); semanticText(row.relationshipClass);
+    semanticInteger(row.startByte); semanticInteger(row.endByte);
+    semanticTextArray(row.targetNativeKeys); semanticTextArray(row.targetPaths); semanticText(row.targetState);
+  }
+  try {
+    captured.parserPolicy = validateParserPolicy(captured.parserPolicy);
+    captured.resolutionPolicy = validateResolutionPolicy(captured.resolutionPolicy);
+  } catch {
+    refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  }
+  return captured;
+}
+
+export function buildSemanticRows(options) {
+  options = captureSemanticRowsOptions(options);
   const {
     repositoryId, parserId, sourceRows, parseResults, declarations, relations,
     parserPolicy, resolutionPolicy,

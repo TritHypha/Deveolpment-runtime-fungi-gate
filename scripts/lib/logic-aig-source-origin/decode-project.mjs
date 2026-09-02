@@ -658,6 +658,7 @@ function makeOutcomeReceipt(captured, rows, toolchainManifest) {
       resolutionPolicy: captured.values.resolution,
       parserPolicy: captured.values.parser,
       pins: captured.values.pins,
+      proposedBaseline: captured.values.proposedBaseline,
       expectedOutcomes: captured.values.expectedOutcomes,
       sourceManifest: captured.sourceManifest,
       resolutionInputs: captured.resolutionInputs,

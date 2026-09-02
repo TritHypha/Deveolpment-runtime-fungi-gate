@@ -36,6 +36,7 @@ const POLICY_FILES = Object.freeze({
   generated: "logic-aig-source-origin-generated-consumers.json",
   parser: "logic-aig-source-origin-parser-policy.json",
   pins: "logic-aig-source-origin-toolchain-pins.json",
+  proposed: "example-proposed-baseline.json",
   repository: "logic-aig-source-origin-repository-identity.json",
   resolution: "logic-aig-source-origin-resolution-policy.json",
   source: "logic-aig-source-origin-source-policy.json",
@@ -187,6 +188,7 @@ async function nonEmptyReceiptFixture() {
   const resolutionPolicy = (await readPolicy("resolution")).value;
   const parserPolicy = (await readPolicy("parser")).value;
   const pins = (await readPolicy("pins")).value;
+  const proposedBaseline = (await readPolicy("proposed")).value;
   const record = pins.records.find((row) => row.platform === process.platform && row.arch === process.arch);
   assert(record);
   const sourceRow = manifestRow("src/negative.ts", "/// expected_diagnostics: TS-1109\nconst = ;\n");
@@ -285,8 +287,105 @@ async function nonEmptyReceiptFixture() {
     sourcePolicy,
     resolutionPolicy,
     pins,
+    proposedBaseline,
     sourceRow,
     sidecarRow,
+  };
+}
+
+async function proposedReasonReceiptFixture() {
+  const fixture = await nonEmptyReceiptFixture();
+  const proposedBaseline = (await readPolicy("proposed")).value;
+  const proposedEntry = proposedBaseline.entries[0];
+  assert(proposedEntry);
+  const sourceRow = manifestRow(
+    `docs/examples/Level-1-Basics/${proposedEntry.directoryName}/example.fungi`,
+    "opaque proposed input\n",
+  );
+  const proposedOwnerRow = manifestRow(
+    "governance/example-proposed-baseline.json",
+    canonicalJsonText(proposedBaseline),
+  );
+  const sourceManifest = sourceManifestFixture({
+    repository: fixture.repositoryIdentity,
+    source: fixture.sourcePolicy,
+    rows: [sourceRow],
+  });
+  const resolutionInputs = resolutionInputsFixture({
+    repository: fixture.repositoryIdentity,
+    resolution: fixture.resolutionPolicy,
+    rows: [proposedOwnerRow],
+  });
+  const expectedRow = {
+    path: sourceRow.path,
+    domain: "FUNGI",
+    parserId: "galerina-fungi-parser",
+    disposition: "OPAQUE_PROPOSED",
+    diagnosticCodes: null,
+    ownerKind: "PROPOSED_BASELINE",
+    ownerLocator: proposedOwnerRow.path,
+    ownerKey: proposedEntry.directoryName,
+  };
+  const expectedBody = {
+    schema: "galerina.logic-aig-expected-parse-outcomes.v1",
+    parserPolicyDigest: fixture.parserPolicy.policyDigest,
+    rows: [expectedRow],
+    authorizing: false,
+  };
+  const expectedOutcomes = {
+    ...expectedBody,
+    expectedOutcomesDigest: sha256Canonical(expectedBody.schema, expectedBody),
+  };
+  const sourceBinding = receiptManifestBinding("SOURCE_MANIFEST", sourceRow);
+  const ownerManifestBinding = receiptManifestBinding("RESOLUTION_INPUTS", proposedOwnerRow);
+  const receiptBody = {
+    ...fixture.receipt,
+    repositoryId: sourceManifest.repositoryId,
+    expectedHead: sourceManifest.expectedHead,
+    expectedTree: sourceManifest.expectedTree,
+    expectedOutcomesDigest: expectedOutcomes.expectedOutcomesDigest,
+    sourceManifestDigest: sourceManifest.manifestDigest,
+    resolutionInputsDigest: resolutionInputs.resolutionInputsDigest,
+    rows: [{
+      path: expectedRow.path,
+      disposition: expectedRow.disposition,
+      parserId: expectedRow.parserId,
+      actualStatus: "OPAQUE_AS_PROPOSED",
+      actualDiagnosticCodes: null,
+      sourceBinding,
+      ownerBindings: [{
+        ownerKind: expectedRow.ownerKind,
+        manifestKind: ownerManifestBinding.manifestKind,
+        manifestRowDigest: ownerManifestBinding.manifestRowDigest,
+        locator: ownerManifestBinding.path,
+        blobOid: ownerManifestBinding.blobOid,
+        rawSha256: ownerManifestBinding.rawSha256,
+        byteLength: ownerManifestBinding.byteLength,
+        ownerKey: expectedRow.ownerKey,
+        ownerReason: proposedEntry.reason,
+      }],
+      membershipProofDigest: "0".repeat(64),
+      representedFileNodeId: `ga1:${"d".repeat(64)}`,
+      unresolvedRowsDigest: "e".repeat(64),
+      rowDigest: "0".repeat(64),
+    }],
+    counts: {
+      outcomeRows: 1,
+      expectedRefusalRows: 0,
+      opaqueProposedRows: 1,
+      representedFileNodes: 1,
+      unresolvedRows: 5,
+      ownerBindings: 1,
+    },
+    receiptDigest: "0".repeat(64),
+  };
+  return {
+    ...fixture,
+    proposedBaseline,
+    expectedOutcomes,
+    sourceManifest,
+    resolutionInputs,
+    receipt: resealOutcomeReceipt(receiptBody, expectedOutcomes),
   };
 }
 
@@ -297,6 +396,7 @@ function receiptAuthorityOptions(fixture) {
     resolutionPolicy: fixture.resolutionPolicy,
     parserPolicy: fixture.parserPolicy,
     pins: fixture.pins,
+    proposedBaseline: fixture.proposedBaseline,
     expectedOutcomes: fixture.expectedOutcomes,
     sourceManifest: fixture.sourceManifest,
     resolutionInputs: fixture.resolutionInputs,
@@ -962,6 +1062,17 @@ test("parse-outcomes receipt binds the exact expected owner kind, locator and ke
   expectCode("SOURCE_ORIGIN_OUTCOMES", () => validateParseOutcomesReceipt(resealed, options));
 });
 
+test("parse-outcomes receipt binds the exact Proposed-baseline owner reason", async () => {
+  const fixture = await proposedReasonReceiptFixture();
+  const options = receiptAuthorityOptions(fixture);
+  assertDeepFrozen(validateParseOutcomesReceipt(fixture.receipt, options));
+
+  const forged = clone(fixture.receipt);
+  forged.rows[0].ownerBindings[0].ownerReason += " [substituted]";
+  const resealed = resealOutcomeReceipt(forged, fixture.expectedOutcomes);
+  expectCode("SOURCE_ORIGIN_OUTCOMES", () => validateParseOutcomesReceipt(resealed, options));
+});
+
 test("parse-outcomes receipt requires the complete explicit owner and pin authority bundle", async () => {
   const fixture = await nonEmptyReceiptFixture();
   const legacyOptions = {
@@ -1041,6 +1152,7 @@ test("the empty parse-outcomes receipt is a closed cross-bound non-authorizing a
   const resolution = (await readPolicy("resolution")).value;
   const parser = (await readPolicy("parser")).value;
   const pins = (await readPolicy("pins")).value;
+  const proposedBaseline = (await readPolicy("proposed")).value;
   const record = pins.records.find((row) => row.platform === process.platform && row.arch === process.arch);
   assert(record);
   const sourceManifest = sourceManifestFixture({ repository, source, rows: [] });
@@ -1088,6 +1200,7 @@ test("the empty parse-outcomes receipt is a closed cross-bound non-authorizing a
     resolutionPolicy: resolution,
     parserPolicy: parser,
     pins,
+    proposedBaseline,
     expectedOutcomes,
     sourceManifest,
     resolutionInputs,

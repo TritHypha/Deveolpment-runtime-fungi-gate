@@ -176,6 +176,74 @@ test("FUNGI/GATE decoder compiles and evaluates only the pinned parser closure",
   assert(Object.isFrozen(result.nodes));
 });
 
+test("FUNGI converts parser code-unit locations to UTF-8 byte spans", async () => {
+  const validPath = "src/unicode.fungi";
+  const validSource = [
+    "// café 😀",
+    "flow helper(a: Int) -> Int {",
+    "  return a",
+    "}",
+    "// piñata",
+    "flow add(a: Int) -> Int {",
+    "  return helper(a)",
+    "}",
+    "",
+  ].join("\n");
+  const brokenPath = "src/unicode-broken.fungi";
+  const brokenSource = "// café 😀\nflow broken( {\n";
+  const options = await fixtureOptions({
+    [validPath]: validSource,
+    [brokenPath]: brokenSource,
+  });
+  const result = await decodeFungiGateProject(options);
+  const sourceBytes = Buffer.from(validSource, "utf8");
+  const helperStart = sourceBytes.indexOf(Buffer.from("flow helper", "utf8"));
+  const helperEnd = helperStart + Buffer.byteLength("flow", "utf8");
+  const addStart = sourceBytes.indexOf(Buffer.from("flow add", "utf8"));
+  const addEnd = addStart + Buffer.byteLength("flow", "utf8");
+  const callStart = sourceBytes.indexOf(Buffer.from("helper(a)", "utf8"), addStart);
+  const callEnd = callStart + Buffer.byteLength("helper", "utf8");
+  assert(helperStart >= 0 && helperEnd > helperStart && addStart > helperEnd && addEnd > addStart && callStart > addStart);
+
+  const helper = result.nodes.find((node) => node.kind === "FLOW" && node.locator.includes("!helper"));
+  const add = result.nodes.find((node) => node.kind === "FLOW" && node.locator.includes("!add"));
+  assert(helper);
+  assert(add);
+  const helperIdentity = result.idMapRows.find((row) => row.nodeId === helper.id)?.nativeIdentity;
+  const addIdentity = result.idMapRows.find((row) => row.nodeId === add.id)?.nativeIdentity;
+  assert.deepEqual(
+    [helperIdentity?.startByte, helperIdentity?.endByte, addIdentity?.startByte, addIdentity?.endByte],
+    [helperStart, helperEnd, addStart, addEnd],
+  );
+
+  const caller = result.edges.find((edge) => edge.kind === "CALLER" && edge.from === add.id && edge.to === helper.id);
+  assert(caller);
+  const sourceRow = options.sourceManifest.rows.find((row) => row.path === validPath);
+  assert(sourceRow);
+  const evidenceBody = {
+    schema: "galerina.logic-aig-edge-evidence.v1",
+    relationshipKind: "CALLER",
+    sourceNodeId: add.id,
+    targetNodeId: helper.id,
+    evidenceLocation: {
+      kind: "SOURCE_SYNTAX",
+      sourceBlobOid: sourceRow.blobOid,
+      sourceRawSha256: sourceRow.rawSha256,
+      startByte: callStart,
+      endByte: callEnd,
+    },
+    authorizing: false,
+  };
+  assert.equal(caller.digest, sha256Canonical(evidenceBody.schema, evidenceBody));
+
+  const brokenResult = result.parseResults.find((row) => row.path === brokenPath);
+  const brokenFile = result.nodes.find((node) => node.kind === "FILE" && node.locator === brokenPath);
+  assert.equal(brokenResult?.status, "REFUSED");
+  assert(brokenFile);
+  const brokenIdentity = result.idMapRows.find((row) => row.nodeId === brokenFile.id)?.nativeIdentity;
+  assert.equal(brokenIdentity?.endByte, Buffer.byteLength(brokenSource, "utf8"));
+});
+
 test("FUNGI/GATE parser diagnostics are canonical refusals with file nodes only", async () => {
   const options = await fixtureOptions({
     "src/broken.fungi": "flow broken( {\n",

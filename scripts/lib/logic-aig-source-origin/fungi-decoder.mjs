@@ -220,12 +220,39 @@ function parserChildMain() {
   };
   process.chdir = () => fail('LOAD');
 
-  const byteSpan = (text, location) => {
+  const utf8ByteOffsets = (text) => {
+    const offsets = new Array(text.length + 1);
+    let byteOffset = 0;
+    offsets[0] = byteOffset;
+    for (let index = 0; index < text.length; index += 1) {
+      const unit = text.charCodeAt(index);
+      if (unit >= 0xd800 && unit <= 0xdbff) {
+        const next = text.charCodeAt(index + 1);
+        if (!(next >= 0xdc00 && next <= 0xdfff)) fail('SEMANTIC');
+        offsets[index + 1] = null;
+        byteOffset += 4;
+        index += 1;
+      } else {
+        if (unit >= 0xdc00 && unit <= 0xdfff) fail('SEMANTIC');
+        byteOffset += unit <= 0x7f ? 1 : unit <= 0x7ff ? 2 : 3;
+      }
+      offsets[index + 1] = byteOffset;
+    }
+    return offsets;
+  };
+  const byteSpan = (byteOffsets, location) => {
     if (!location || typeof location !== 'object') fail('SEMANTIC');
     const start = location.offset;
     const end = location.endOffset;
-    if (!Number.isSafeInteger(start) || start < 0 || !Number.isSafeInteger(end) || end <= start || end > Buffer.byteLength(text, 'utf8')) fail('SEMANTIC');
-    return { startByte: start, endByte: end };
+    if (
+      !Number.isSafeInteger(start) || start < 0
+      || !Number.isSafeInteger(end) || end <= start || end >= byteOffsets.length
+      || byteOffsets[start] === null || byteOffsets[end] === null
+    ) fail('SEMANTIC');
+    const startByte = byteOffsets[start];
+    const endByte = byteOffsets[end];
+    if (endByte <= startByte || endByte > byteOffsets.at(-1)) fail('SEMANTIC');
+    return { startByte, endByte };
   };
   const lineStarts = (text) => {
     const rows = [0];
@@ -270,6 +297,7 @@ function parserChildMain() {
     const relations = [];
     if (parseResult.status === 'REFUSED') return { declarations, relations, parseResult };
     if (!parsed.ast || parsed.ast.kind !== 'program') fail('PARSER');
+    const byteOffsets = utf8ByteOffsets(source.text);
     const declarationStack = [];
     const declarationByName = new Map();
     const pendingRelations = [];
@@ -280,7 +308,7 @@ function parserChildMain() {
       const semanticKind = fungiDeclarationKinds.get(node.kind) ?? null;
       let key = null;
       if (semanticKind !== null) {
-        const span = byteSpan(source.text, node.location);
+        const span = byteSpan(byteOffsets, node.location);
         const name = typeof node.value === 'string' && node.value.length > 0 ? node.value : null;
         key = `${source.path}\u0000${currentOrdinal}`;
         declarations.push({
@@ -301,13 +329,13 @@ function parserChildMain() {
       }
       const ownerNativeKey = declarationStack.at(-1) ?? null;
       if (node.kind === 'callExpr') {
-        const span = byteSpan(source.text, node.location);
+        const span = byteSpan(byteOffsets, node.location);
         pendingRelations.push({ relationshipClass: 'CALLER', ownerNativeKey, name: typeof node.value === 'string' ? node.value : null, dynamic: node.callStyle === 'method', ...span });
       } else if (node.kind === 'typeRef') {
-        const span = byteSpan(source.text, node.location);
+        const span = byteSpan(byteOffsets, node.location);
         pendingRelations.push({ relationshipClass: 'CONTRACT', ownerNativeKey, name: typeof node.value === 'string' ? node.value : null, dynamic: false, ...span });
       } else if (node.kind === 'importDecl') {
-        const span = byteSpan(source.text, node.location);
+        const span = byteSpan(byteOffsets, node.location);
         pendingRelations.push({ relationshipClass: 'IMPORT', ownerNativeKey, name: typeof node.value === 'string' ? node.value : null, dynamic: false, ...span });
       }
       if (node.children !== undefined) {

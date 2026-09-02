@@ -645,7 +645,7 @@ function ownerBindingCompare(left, right) {
   return 0;
 }
 
-function validateOwnerBindings(values, manifests, parserPolicy, expectedOutcome) {
+function validateOwnerBindings(values, manifests, parserPolicy, expectedOutcome, proposedBaseline) {
   array(values);
   if (values.length !== 1) refuse('SOURCE_ORIGIN_OUTCOMES');
   const policy = new Map(parserPolicy.ownerManifestBindings.map((row) => [row.ownerKind, row]));
@@ -669,12 +669,15 @@ function validateOwnerBindings(values, manifests, parserPolicy, expectedOutcome)
       binding.ownerKind !== expectedOutcome.ownerKind
       || binding.locator !== expectedOutcome.ownerLocator
       || binding.ownerKey !== expectedOutcome.ownerKey
+      || binding.ownerReason !== (expectedOutcome.ownerKind === 'PROPOSED_BASELINE'
+        ? proposedBaseline.entries.find((row) => row.directoryName === expectedOutcome.ownerKey)?.reason ?? refuse('SOURCE_ORIGIN_OUTCOMES')
+        : null)
     ) refuse('SOURCE_ORIGIN_OUTCOMES');
   }
   for (let index = 1; index < values.length; index += 1) if (ownerBindingCompare(values[index - 1], values[index]) >= 0) refuse('SOURCE_ORIGIN_ORDER');
 }
 
-function validateParseOutcomeReceiptRow(row, expected, manifests, parserPolicy, expectedOutcomesDigest) {
+function validateParseOutcomeReceiptRow(row, expected, manifests, parserPolicy, proposedBaseline, expectedOutcomesDigest) {
   dataObject(row, [
     'path','disposition','parserId','actualStatus','actualDiagnosticCodes',
     'sourceBinding','ownerBindings','membershipProofDigest',
@@ -687,7 +690,7 @@ function validateParseOutcomeReceiptRow(row, expected, manifests, parserPolicy, 
   if (row.path !== expected.path || row.disposition !== expected.disposition || row.parserId !== expected.parserId) refuse('SOURCE_ORIGIN_OUTCOMES');
   validateReceiptBinding(row.sourceBinding, manifests, 'SOURCE_MANIFEST');
   if (row.sourceBinding.path !== row.path) refuse('SOURCE_ORIGIN_OUTCOMES');
-  validateOwnerBindings(row.ownerBindings, manifests, parserPolicy, expected);
+  validateOwnerBindings(row.ownerBindings, manifests, parserPolicy, expected, proposedBaseline);
   if (expected.disposition === 'EXPECTED_REFUSAL') {
     if (row.actualStatus !== 'REFUSED_AS_EXPECTED' || canonicalJsonText(row.actualDiagnosticCodes) !== canonicalJsonText(expected.diagnosticCodes)) refuse('SOURCE_ORIGIN_OUTCOMES');
   } else if (expected.disposition === 'OPAQUE_PROPOSED') {
@@ -716,13 +719,14 @@ export function validateParseOutcomesReceipt(value, options) {
   ]);
   options = manifestOptions(options, [
     'repositoryIdentity','sourcePolicy','resolutionPolicy','parserPolicy','pins',
-    'expectedOutcomes','sourceManifest','resolutionInputs','toolchainManifest',
+    'proposedBaseline','expectedOutcomes','sourceManifest','resolutionInputs','toolchainManifest',
   ]);
   const repositoryIdentity = validateRepositoryIdentity(options.repositoryIdentity);
   const sourcePolicy = validateSourcePolicy(options.sourcePolicy);
   const resolutionPolicy = validateResolutionPolicy(options.resolutionPolicy);
   const parserPolicy = validateParserPolicy(options.parserPolicy);
   const pins = validateToolchainPins(options.pins);
+  const proposedBaseline = validateProposedBaseline(options.proposedBaseline);
   const expectedOutcomes = validateExpectedParseOutcomes(options.expectedOutcomes, { parserPolicy });
   const sourceManifest = validateSourceManifest(options.sourceManifest, { repositoryIdentity, sourcePolicy });
   const resolutionInputs = validateResolutionInputs(options.resolutionInputs, { repositoryIdentity, resolutionPolicy });
@@ -745,7 +749,7 @@ export function validateParseOutcomesReceipt(value, options) {
   array(value.rows);
   if (value.rows.length !== expectedOutcomes.rows.length) refuse('SOURCE_ORIGIN_OUTCOMES');
   for (let index = 0; index < value.rows.length; index += 1) validateParseOutcomeReceiptRow(
-    value.rows[index], expectedOutcomes.rows[index], { sourceManifest, resolutionInputs }, parserPolicy, expectedOutcomes.expectedOutcomesDigest,
+    value.rows[index], expectedOutcomes.rows[index], { sourceManifest, resolutionInputs }, parserPolicy, proposedBaseline, expectedOutcomes.expectedOutcomesDigest,
   );
   validateSortedEntries(value.rows, 'path');
   dataObject(value.counts, ['outcomeRows','expectedRefusalRows','opaqueProposedRows','representedFileNodes','unresolvedRows','ownerBindings']);
