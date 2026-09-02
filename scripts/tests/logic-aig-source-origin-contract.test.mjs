@@ -92,7 +92,7 @@ test("exports the sole exact immutable eleven-field limit owner", () => {
     edges: 200_000,
     unresolvedRows: 262_144,
     processMillis: 900_000,
-    processOutputBytes: 1_048_576,
+    processOutputBytes: 67_108_864,
   });
   assert(Object.isFrozen(SOURCE_ORIGIN_LIMITS));
   for (const policy of [SOURCE_POLICY_BODY, RESOLUTION_POLICY_BODY, PARSER_POLICY_BODY, UNRESOLVED_REASON_ROWS]) {

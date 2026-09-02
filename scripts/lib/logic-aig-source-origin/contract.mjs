@@ -12,7 +12,7 @@ export const SOURCE_ORIGIN_LIMITS = deepFreeze({
   edges: 200_000,
   unresolvedRows: 262_144,
   processMillis: 900_000,
-  processOutputBytes: 1_048_576,
+  processOutputBytes: 67_108_864,
 });
 
 const HEX64 = /^[0-9a-f]{64}$/;
