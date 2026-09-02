@@ -30,6 +30,7 @@ const GOVERNANCE = new URL("../../governance/", import.meta.url);
 const POLICY_FILES = Object.freeze({
   generated: "logic-aig-source-origin-generated-consumers.json",
   parser: "logic-aig-source-origin-parser-policy.json",
+  pins: "logic-aig-source-origin-toolchain-pins.json",
   repository: "logic-aig-source-origin-repository-identity.json",
   resolution: "logic-aig-source-origin-resolution-policy.json",
   source: "logic-aig-source-origin-source-policy.json",
@@ -168,6 +169,56 @@ test("the five tracked static owners are canonical, closed, self-digested and no
   repository.value.ownerNamespace = "mutated-after-validation";
   assert.equal(validated[0].ownerNamespace, "TritHypha");
   assert.equal(generated.value.policyDigest, "60c7c6d588d3c888206093c43da6b433bc6d904cb3059376b87c54b83750a5e9");
+});
+
+test("the approved Step 11 toolchain-pins owner is installed as exact canonical non-authorizing bytes", async () => {
+  const { bytes, value } = await readPolicy("pins");
+  assert.equal(bytes.toString("utf8"), canonicalJsonText(value));
+  assert.equal(bytes.length, 69_452);
+  assert.equal(sha256Raw(bytes), "0c5bb3b5e77e36741c479f65442dec01c76c57aa67b57fdcdba975e9a6f036cf");
+  assert.equal(bytes.includes(0x0a), false);
+  assert.equal(bytes.at(-1), 0x7d);
+  assert.deepEqual(Object.keys(value).sort(), ["authorizing", "pinsDigest", "records", "schema"]);
+  assert.equal(value.schema, "galerina.logic-aig-toolchain-pins.v2");
+  assert.equal(value.authorizing, false);
+  assert.equal(value.pinsDigest, "a287faaf55f698b7e78d085a24a34bae4998e78e55706731fe9779a0fe4834f8");
+  assert.deepEqual(value.records.map(({ recordId, sourceObservationDigest, loadObservationDigest }) => ({ recordId, sourceObservationDigest, loadObservationDigest })), [
+    {
+      recordId: "linux-x64",
+      sourceObservationDigest: "8a593d26046bcdfa46f97fdbfaaf9cc5406c030088e8144ca0d65e8ac0d7df14",
+      loadObservationDigest: "8b73bdda0e355b8bde2bfd95428d61d626f16a2db9128e6c54810aef0cf322a4",
+    },
+    {
+      recordId: "win32-x64",
+      sourceObservationDigest: "ff189afc0ac006b1df52ac3af9676756d80d0bf9cc722965dd21e3d70f057867",
+      loadObservationDigest: "ee650b421a3eff52705f4224112fd792a168542a3c3b26d7c7a153a90247d443",
+    },
+  ]);
+  assert.deepEqual(value.records.map(({ recordId, recordDigest, moduleClosureDigest }) => ({ recordId, recordDigest, moduleClosureDigest })), [
+    {
+      recordId: "linux-x64",
+      recordDigest: "843b57e373de4ffaadf542b307a7444e6506862796e2fc4cfdc4df5d418d6fee",
+      moduleClosureDigest: "56f754bd9c775fcd862bc3d63ef593e31ad0b6ff9b8380fccd1087d70dc04f66",
+    },
+    {
+      recordId: "win32-x64",
+      recordDigest: "df13804732d63de39ba3a94ae516902fca747a538cc1c67e897cb6a9000a2fbe",
+      moduleClosureDigest: "56f754bd9c775fcd862bc3d63ef593e31ad0b6ff9b8380fccd1087d70dc04f66",
+    },
+  ]);
+  for (const record of value.records) {
+    assert.equal(record.nodeIdentity.version, "v24.18.0");
+    assert.deepEqual(record.runtimeLoadSets.map(({ id }) => id), ["HOST", "PARSER"]);
+    assert.deepEqual(record.domainSelections.map(({ domain }) => domain), ["FUNGI", "GATE", "HOST"]);
+  }
+  assertDeepFrozen(validateToolchainPins(value));
+  const missing = clone(value);
+  delete missing.records;
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(missing));
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins({ ...value, pinRecords: value.records }));
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins({ ...value, digest: value.pinsDigest }));
+  expectCode("SOURCE_ORIGIN_ORDER", () => validateToolchainPins({ ...value, records: [...value.records].reverse() }));
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins({ ...value, authorizing: true }));
 });
 
 test("repository identity rejects missing, surplus, alias, literal-join and digest drift", async () => {
