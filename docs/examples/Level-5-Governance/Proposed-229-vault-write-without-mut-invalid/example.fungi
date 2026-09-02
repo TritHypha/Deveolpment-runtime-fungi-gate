@@ -2,7 +2,6 @@
 /// example: 229-vault-write-without-mut-invalid
 /// level: 5
 /// concept: FUNGI-VAULT-004 — vault write effect missing when flow mutates vault without declaring it
-/// expected_diagnostics: FUNGI-VAULT-004
 /// ai_rule: Every vault secure write must declare vault.write in the contract effects block. Missing the vault.write effect declaration emits FUNGI-VAULT-004.
 
 vault secure {

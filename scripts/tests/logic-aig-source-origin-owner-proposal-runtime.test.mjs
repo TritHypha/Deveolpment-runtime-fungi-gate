@@ -274,6 +274,62 @@ test("Gate-v3 verdicts match one source basename and create rows only for refusa
   );
 });
 
+test("the three coded Proposed sources derive once as opaque and inline overlap still refuses", async () => {
+  const { deriveExpectedOutcomeRows, extractHistoricalBaselineEntries } = await import(RUNTIME);
+  const parserPolicy = {
+    ...PARSER_POLICY_BODY,
+    policyDigest: sha256Canonical(PARSER_POLICY_BODY.schema, PARSER_POLICY_BODY),
+  };
+  const sourcePolicy = {
+    ...SOURCE_POLICY_BODY,
+    policyDigest: sha256Canonical(SOURCE_POLICY_BODY.schema, SOURCE_POLICY_BODY),
+  };
+  const baselineEntries = extractHistoricalBaselineEntries(readFileSync(new URL("../audit-example-diagnostics.mjs", import.meta.url)));
+  const targets = [
+    { directoryName: "Proposed-025-vault-global-secret-invalid", path: "docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi" },
+    { directoryName: "Proposed-229-vault-write-without-mut-invalid", path: "docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi" },
+    { directoryName: "Proposed-464-enterprise-supply-chain", path: "docs/examples/Level-9-Enterprise/Proposed-464-enterprise-supply-chain/example.fungi" },
+  ];
+  const targetByDirectory = new Map(targets.map((target) => [target.directoryName, target]));
+  const selectedSources = baselineEntries.map((entry) => {
+    const target = targetByDirectory.get(entry.directoryName);
+    return target ? {
+      path: target.path,
+      bytes: readFileSync(new URL(`../../${target.path}`, import.meta.url)),
+      sidecarBytes: null,
+    } : {
+      path: `docs/examples/${entry.directoryName}/example.fungi`,
+      bytes: Buffer.from("/// expected_diagnostics: none\n"),
+      sidecarBytes: null,
+    };
+  });
+  const input = { baselineEntries, gateVerdicts: {}, parserPolicy, selectedSources, sourcePolicy };
+
+  const rows = deriveExpectedOutcomeRows(input);
+  assert.equal(rows.length, 7);
+  for (const target of targets) {
+    assert.deepEqual(rows.filter((row) => row.path === target.path), [{
+      path: target.path,
+      domain: "FUNGI",
+      parserId: "galerina-fungi-parser",
+      disposition: "OPAQUE_PROPOSED",
+      diagnosticCodes: null,
+      ownerKind: "PROPOSED_BASELINE",
+      ownerLocator: "governance/example-proposed-baseline.json",
+      ownerKey: target.directoryName,
+    }]);
+  }
+
+  const overlapped = selectedSources.map((source) => source.path === targets[0].path ? {
+    ...source,
+    bytes: Buffer.concat([Buffer.from("/// expected_diagnostics: FUNGI-VAULT-001\n"), source.bytes]),
+  } : source);
+  assert.throws(
+    () => deriveExpectedOutcomeRows({ ...input, selectedSources: overlapped }),
+    { code: "SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES" },
+  );
+});
+
 test("transaction command trace fixes first, closing, complete, and no-post-close child order", async () => {
   const { assertCommandTrace } = await import(RUNTIME);
   const commandIds = OWNER_PROPOSAL_POLICY.gitProcessPolicy.commandRows.map((row) => row.commandId);
