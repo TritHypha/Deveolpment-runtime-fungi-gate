@@ -16,6 +16,7 @@ export const SOURCE_ORIGIN_LIMITS = deepFreeze({
 });
 
 const HEX64 = /^[0-9a-f]{64}$/;
+const HEX40 = /^[0-9a-f]{40}$/;
 const DIAGNOSTIC = /^(?:[A-Z][A-Z0-9]*-)+[0-9]{3,5}[A-Z]?$/;
 
 class SourceOriginRefusal extends Error {
@@ -434,20 +435,226 @@ function validateClosureRows(rows) {
   validateSortedEntries(rows, 'locator');
 }
 
-function validateToolchainRecord(record) {
-  dataObject(record, ['recordId','platform','arch','nodeIdentity','gitIdentity','typescript','galerinaParser','builtinModules','executableModuleRows','dataRows','moduleClosureDigest','recordDigest']);
-  for (const field of ['recordId','platform','arch']) nonEmptyString(record[field]);
-  validateExecutableIdentity(record.nodeIdentity); validateExecutableIdentity(record.gitIdentity);
-  validatePackageIdentity(record.typescript); validatePackageIdentity(record.galerinaParser);
-  assertSortedUniqueStrings(record.builtinModules);
-  if (record.builtinModules.some((specifier) => {
+const TOOLCHAIN_HOST_ROOT = 'packages-ts/galerina-core-compiler/node_modules/typescript';
+const TOOLCHAIN_PARSER_ROOT = 'generated-source-origin-parser';
+const TOOLCHAIN_PARSER_EXPORTS = deepFreeze(['lex', 'parseGateV3', 'parseProgram']);
+const TOOLCHAIN_DOMAIN_SELECTIONS = deepFreeze([
+  { domain: 'FUNGI', parserId: 'galerina-fungi-parser', runtimeLoadSetId: 'PARSER', operation: 'parseProgram' },
+  { domain: 'GATE', parserId: 'galerina-gate-v3-parser', runtimeLoadSetId: 'PARSER', operation: 'parseGateV3' },
+  { domain: 'HOST', parserId: 'typescript-compiler-api', runtimeLoadSetId: 'HOST', operation: 'typescript-compiler-api' },
+]);
+const TOOLCHAIN_SOURCE_EDGES = deepFreeze([
+  { fromLocator: 'src/gate-v3-parser.ts', kind: 'IMPORT_TYPE', exportName: null, specifier: './parser.js', toLocator: 'src/parser.ts' },
+  { fromLocator: 'src/parser.ts', kind: 'IMPORT', exportName: null, specifier: './lexer.js', toLocator: 'src/lexer.ts' },
+  { fromLocator: 'src/parser.ts', kind: 'IMPORT', exportName: null, specifier: './requirement-diagnostics.js', toLocator: 'src/requirement-diagnostics.ts' },
+  { fromLocator: 'src/source-origin-parser-entry.ts', kind: 'EXPORT_FROM', exportName: 'lex', specifier: './lexer.js', toLocator: 'src/lexer.ts' },
+  { fromLocator: 'src/source-origin-parser-entry.ts', kind: 'EXPORT_FROM', exportName: 'parseGateV3', specifier: './gate-v3-parser.js', toLocator: 'src/gate-v3-parser.ts' },
+  { fromLocator: 'src/source-origin-parser-entry.ts', kind: 'EXPORT_FROM', exportName: 'parseProgram', specifier: './parser.js', toLocator: 'src/parser.ts' },
+]);
+const TOOLCHAIN_EMITTED_EDGES = deepFreeze([
+  { fromLocator: 'parser.js', kind: 'IMPORT', exportName: null, specifier: './lexer.js', toLocator: 'lexer.js' },
+  { fromLocator: 'parser.js', kind: 'IMPORT', exportName: null, specifier: './requirement-diagnostics.js', toLocator: 'requirement-diagnostics.js' },
+  { fromLocator: 'source-origin-parser-entry.js', kind: 'EXPORT_FROM', exportName: 'lex', specifier: './lexer.js', toLocator: 'lexer.js' },
+  { fromLocator: 'source-origin-parser-entry.js', kind: 'EXPORT_FROM', exportName: 'parseGateV3', specifier: './gate-v3-parser.js', toLocator: 'gate-v3-parser.js' },
+  { fromLocator: 'source-origin-parser-entry.js', kind: 'EXPORT_FROM', exportName: 'parseProgram', specifier: './parser.js', toLocator: 'parser.js' },
+]);
+const TOOLCHAIN_PARSER_MODULES = deepFreeze([
+  'gate-v3-parser.js',
+  'lexer.js',
+  'parser.js',
+  'requirement-diagnostics.js',
+  'source-origin-parser-entry.js',
+]);
+
+function validateBuiltinModules(values) {
+  assertSortedUniqueStrings(values);
+  if (values.some((specifier) => {
     if (!/^node:[a-z0-9][a-z0-9_./-]*$/.test(specifier)) return true;
     const components = specifier.slice(5).split('/');
     return components.some((component) => component === '' || component === '.' || component === '..');
   })) refuse('SOURCE_ORIGIN_POLICY');
+}
+
+function validateRootedIdentity(value) {
+  dataObject(value, ['rootLocator','locator','rawSha256','byteLength']);
+  canonicalLocator(value.rootLocator); canonicalLocator(value.locator);
+  digest(value.rawSha256); nonNegativeInteger(value.byteLength);
+}
+
+function validateSourceEntry(value) {
+  dataObject(value, ['rootLocator','locator','gitBlobOid','rawSha256','byteLength','exportNames']);
+  canonicalLocator(value.rootLocator); canonicalLocator(value.locator);
+  if (!HEX40.test(value.gitBlobOid)) refuse('SOURCE_ORIGIN_POLICY');
+  digest(value.rawSha256); nonNegativeInteger(value.byteLength);
+  equalExact(value.exportNames, TOOLCHAIN_PARSER_EXPORTS);
+  if (value.rootLocator !== 'packages-ts/galerina-core-compiler' || value.locator !== 'src/source-origin-parser-entry.ts') refuse('SOURCE_ORIGIN_POLICY');
+}
+
+function validateSourceProject(value) {
+  dataObject(value, ['rootLocator','locator','gitBlobOid','rawSha256','byteLength','extendsLocator','files','include','compilerOptions']);
+  canonicalLocator(value.rootLocator); canonicalLocator(value.locator);
+  if (!HEX40.test(value.gitBlobOid)) refuse('SOURCE_ORIGIN_POLICY');
+  digest(value.rawSha256); nonNegativeInteger(value.byteLength);
+  const expectedOptions = {
+    types: [], noEmitOnError: true, incremental: false, composite: false,
+    sourceMap: false, declarationMap: false,
+  };
+  if (
+    value.rootLocator !== 'packages-ts/galerina-core-compiler'
+    || value.locator !== 'tsconfig.source-origin-parser.json'
+    || value.extendsLocator !== './tsconfig.json'
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  equalExact(value.files, ['src/source-origin-parser-entry.ts']);
+  equalExact(value.include, []);
+  equalExact(value.compilerOptions, expectedOptions);
+}
+
+function validateEdgeRows(value, expected) {
+  array(value);
+  for (const row of value) {
+    dataObject(row, ['fromLocator','kind','exportName','specifier','toLocator']);
+    canonicalLocator(row.fromLocator); canonicalLocator(row.toLocator);
+    nonEmptyString(row.kind); nonEmptyString(row.specifier);
+    if (row.exportName !== null) nonEmptyString(row.exportName);
+  }
+  equalExact(value, expected);
+}
+
+function validateSourceOriginParser(value) {
+  dataObject(value, ['sourceEntry','project','generatedEntry','generatedPackageManifest','exportNames','sourceEdgeRows','emittedEdgeRows','generatedClosureDigest']);
+  validateSourceEntry(value.sourceEntry);
+  validateSourceProject(value.project);
+  validateRootedIdentity(value.generatedEntry);
+  validateRootedIdentity(value.generatedPackageManifest);
+  if (
+    value.generatedEntry.rootLocator !== TOOLCHAIN_PARSER_ROOT
+    || value.generatedEntry.locator !== 'source-origin-parser-entry.js'
+    || value.generatedPackageManifest.rootLocator !== TOOLCHAIN_PARSER_ROOT
+    || value.generatedPackageManifest.locator !== 'package.json'
+    || value.generatedPackageManifest.byteLength !== 17
+    || value.generatedPackageManifest.rawSha256 !== sha256Raw(Buffer.from('{"type":"module"}', 'utf8'))
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  equalExact(value.exportNames, TOOLCHAIN_PARSER_EXPORTS);
+  validateEdgeRows(value.sourceEdgeRows, TOOLCHAIN_SOURCE_EDGES);
+  validateEdgeRows(value.emittedEdgeRows, TOOLCHAIN_EMITTED_EDGES);
+  digest(value.generatedClosureDigest);
+}
+
+function validateRuntimeLoadSet(value) {
+  dataObject(value, ['id','entry','moduleRows','builtinModules']);
+  nonEmptyString(value.id);
+  dataObject(value.entry, ['rootLocator','locator']);
+  canonicalLocator(value.entry.rootLocator); canonicalLocator(value.entry.locator);
+  validateClosureRows(value.moduleRows);
+  validateBuiltinModules(value.builtinModules);
+  const entryRows = value.moduleRows.filter((row) => row.locator === value.entry.locator);
+  if (entryRows.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  if (value.id === 'HOST') {
+    if (value.entry.rootLocator !== TOOLCHAIN_HOST_ROOT || value.entry.locator !== 'lib/typescript.js') refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  } else if (value.id === 'PARSER') {
+    if (value.entry.rootLocator !== TOOLCHAIN_PARSER_ROOT || value.entry.locator !== 'source-origin-parser-entry.js') refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    if (value.builtinModules.length !== 0) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    equalExact(value.moduleRows.map((row) => row.locator), TOOLCHAIN_PARSER_MODULES);
+  } else refuse('SOURCE_ORIGIN_TOOLCHAIN');
+}
+
+function joinedRuntimeProjection(runtimeLoadSets) {
+  const pairs = new Map();
+  for (const loadSet of runtimeLoadSets) {
+    for (const row of loadSet.moduleRows) {
+      const pairKey = `${loadSet.entry.rootLocator}\0${row.locator}`;
+      const retained = pairs.get(pairKey);
+      if (retained) {
+        if (retained.rawSha256 !== row.rawSha256 || retained.byteLength !== row.byteLength) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+        continue;
+      }
+      pairs.set(pairKey, { rootLocator: loadSet.entry.rootLocator, ...row });
+    }
+  }
+  const exact = new Set();
+  const folded = new Set();
+  const rows = [];
+  for (const row of pairs.values()) {
+    const locator = `${row.rootLocator}/${row.locator}`;
+    const lower = locator.toLowerCase();
+    if (exact.has(locator) || folded.has(lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    exact.add(locator); folded.add(lower);
+    rows.push({ locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
+  }
+  rows.sort((left, right) => codeUnitCompare(left.locator, right.locator));
+  return rows;
+}
+
+function assertGlobalLocatorClosure(executableRows, dataRows) {
+  const exact = new Set();
+  const folded = new Set();
+  for (const row of [...executableRows, ...dataRows]) {
+    const lower = row.locator.toLowerCase();
+    if (exact.has(row.locator) || folded.has(lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    exact.add(row.locator); folded.add(lower);
+  }
+}
+
+function requireRepresented(rows, rootedIdentity) {
+  const locator = `${rootedIdentity.rootLocator}/${rootedIdentity.locator}`;
+  const row = rows.find((candidate) => candidate.locator === locator);
+  if (!row || row.rawSha256 !== rootedIdentity.rawSha256 || row.byteLength !== rootedIdentity.byteLength) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+}
+
+function validateToolchainRecord(record) {
+  dataObject(record, [
+    'recordId','platform','arch','sourceObservationDigest','loadObservationDigest',
+    'nodeIdentity','gitIdentity','typescript','sourceOriginParser','runtimeLoadSets',
+    'domainSelections','builtinModules','executableModuleRows','dataRows',
+    'moduleClosureDigest','recordDigest',
+  ]);
+  for (const field of ['recordId','platform','arch']) nonEmptyString(record[field]);
+  digest(record.sourceObservationDigest); digest(record.loadObservationDigest);
+  if (
+    record.recordId === 'win32-x64'
+      ? record.platform !== 'win32' || record.arch !== 'x64'
+      : record.recordId === 'linux-x64'
+        ? record.platform !== 'linux' || record.arch !== 'x64'
+        : true
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  validateExecutableIdentity(record.nodeIdentity); validateExecutableIdentity(record.gitIdentity);
+  validatePackageIdentity(record.typescript);
+  if (
+    record.typescript.name !== 'typescript'
+    || record.typescript.packageLocator !== `${TOOLCHAIN_HOST_ROOT}/package.json`
+    || record.typescript.entryLocator !== `${TOOLCHAIN_HOST_ROOT}/lib/typescript.js`
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  validateSourceOriginParser(record.sourceOriginParser);
+  array(record.runtimeLoadSets);
+  for (const loadSet of record.runtimeLoadSets) validateRuntimeLoadSet(loadSet);
+  equalExact(record.runtimeLoadSets.map((row) => row.id), ['HOST', 'PARSER']);
+  equalExact(record.domainSelections, TOOLCHAIN_DOMAIN_SELECTIONS);
+  validateBuiltinModules(record.builtinModules);
   validateClosureRows(record.executableModuleRows); validateClosureRows(record.dataRows);
-  const allLocators = [...record.executableModuleRows, ...record.dataRows].map((row) => row.locator);
-  if (new Set(allLocators).size !== allLocators.length) refuse('SOURCE_ORIGIN_ORDER');
+  if (record.executableModuleRows.length === 0 || record.dataRows.length === 0) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  assertGlobalLocatorClosure(record.executableModuleRows, record.dataRows);
+  const projection = joinedRuntimeProjection(record.runtimeLoadSets);
+  equalExact(record.executableModuleRows, projection);
+  const builtinUnion = [...new Set(record.runtimeLoadSets.flatMap((row) => row.builtinModules))].sort(codeUnitCompare);
+  equalExact(record.builtinModules, builtinUnion);
+
+  const hostSet = record.runtimeLoadSets[0];
+  const parserSet = record.runtimeLoadSets[1];
+  const hostEntry = hostSet.moduleRows.find((row) => row.locator === hostSet.entry.locator);
+  const parserEntry = parserSet.moduleRows.find((row) => row.locator === parserSet.entry.locator);
+  if (
+    !hostEntry
+    || record.typescript.entryRawSha256 !== hostEntry.rawSha256
+    || record.typescript.entryByteLength !== hostEntry.byteLength
+    || !parserEntry
+    || record.sourceOriginParser.generatedEntry.rawSha256 !== parserEntry.rawSha256
+    || record.sourceOriginParser.generatedEntry.byteLength !== parserEntry.byteLength
+  ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  requireRepresented(record.executableModuleRows, record.sourceOriginParser.generatedEntry);
+  requireRepresented(record.dataRows, record.sourceOriginParser.sourceEntry);
+  requireRepresented(record.dataRows, record.sourceOriginParser.project);
+  requireRepresented(record.dataRows, record.sourceOriginParser.generatedPackageManifest);
+
   const moduleClosureBody = {
     schema: 'galerina.logic-aig-module-closure.v1',
     executableModuleRows: record.executableModuleRows,
@@ -458,12 +665,12 @@ function validateToolchainRecord(record) {
   };
   digest(record.moduleClosureDigest); digest(record.recordDigest);
   if (record.moduleClosureDigest !== sha256Canonical(moduleClosureBody.schema, moduleClosureBody)) refuse('SOURCE_ORIGIN_DIGEST');
-  if (record.recordDigest !== sha256Canonical('galerina.logic-aig-toolchain-pin-record.v1', without(record, 'recordDigest'))) refuse('SOURCE_ORIGIN_DIGEST');
+  if (record.recordDigest !== sha256Canonical('galerina.logic-aig-toolchain-pin-record.v2', without(record, 'recordDigest'))) refuse('SOURCE_ORIGIN_DIGEST');
 }
 
 export function validateToolchainPins(value) {
   dataObject(value, ['schema','records','authorizing','pinsDigest']);
-  if (value.schema !== 'galerina.logic-aig-toolchain-pins.v1' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
+  if (value.schema !== 'galerina.logic-aig-toolchain-pins.v2' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
   array(value.records);
   for (const record of value.records) validateToolchainRecord(record);
   for (let index = 1; index < value.records.length; index += 1) if (codeUnitCompare(value.records[index - 1].recordId, value.records[index].recordId) >= 0) refuse('SOURCE_ORIGIN_ORDER');

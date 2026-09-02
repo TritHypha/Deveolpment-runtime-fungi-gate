@@ -344,88 +344,195 @@ test("inline expected-outcome fixtures enforce exact closed nested rows, compara
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateExpectedParseOutcomes({ ...value, expectedOutcomesDigest: "0".repeat(64) }, { parserPolicy: parser }));
 });
 
-test("inline toolchain-pin fixtures enforce closed nested records and sorted unique record IDs", () => {
-  const executableIdentity = { version: "fixture-1", executableRawSha256: "1".repeat(64), executableByteLength: 1 };
-  const packageIdentity = {
-    name: "fixture-package",
-    version: "1.0.0",
-    packageLocator: "node_modules/fixture-package/package.json",
-    packageRawSha256: "2".repeat(64),
-    packageByteLength: 2,
-    entryLocator: "node_modules/fixture-package/index.js",
-    entryRawSha256: "3".repeat(64),
-    entryByteLength: 3,
+test("inline toolchain-pin-v2 fixtures enforce the closed records and refuse every v1 substitute", () => {
+  const without = (value, key) => Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
+  const row = (locator, body = locator) => {
+    const bytes = Buffer.from(body, "utf8");
+    return { locator, rawSha256: sha256Raw(bytes), byteLength: bytes.length };
   };
-  const moduleClosureBody = {
-    schema: "galerina.logic-aig-module-closure.v1",
-    executableModuleRows: [],
-    dataRows: [],
-    builtinModules: [],
-    counts: { executableModules: 0, dataRows: 0, builtinModules: 0 },
-    authorizing: false,
-  };
-  const recordBody = {
-    recordId: "fixture-record",
-    platform: "fixture-platform",
-    arch: "fixture-arch",
-    nodeIdentity: executableIdentity,
-    gitIdentity: executableIdentity,
-    typescript: packageIdentity,
-    galerinaParser: { ...packageIdentity, name: "fixture-parser" },
-    builtinModules: [],
-    executableModuleRows: [],
-    dataRows: [],
-    moduleClosureDigest: sha256Canonical(moduleClosureBody.schema, moduleClosureBody),
-  };
-  const record = { ...recordBody, recordDigest: sha256Canonical("galerina.logic-aig-toolchain-pin-record.v1", recordBody) };
-  const body = {
-    schema: "galerina.logic-aig-toolchain-pins.v1",
-    records: [record],
-    authorizing: false,
-  };
-  const value = { ...body, pinsDigest: sha256Canonical(body.schema, body) };
-  assertDeepFrozen(validateToolchainPins(value));
-  const redigest = (candidate) => {
-    const candidateRecord = candidate.records[0];
-    const closureBody = {
+  const hostRoot = "packages-ts/galerina-core-compiler/node_modules/typescript";
+  const parserRoot = "generated-source-origin-parser";
+  const parserExports = ["lex", "parseGateV3", "parseProgram"];
+  const hostRows = [row("lib/typescript.js", "typescript-entry")];
+  const parserRows = [
+    row("gate-v3-parser.js"),
+    row("lexer.js"),
+    row("parser.js"),
+    row("requirement-diagnostics.js"),
+    row("source-origin-parser-entry.js"),
+  ];
+  const executableModuleRows = [
+    ...hostRows.map((entry) => ({ ...entry, locator: `${hostRoot}/${entry.locator}` })),
+    ...parserRows.map((entry) => ({ ...entry, locator: `${parserRoot}/${entry.locator}` })),
+  ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  const dataRows = [
+    row("generated-source-origin-parser/package.json", '{"type":"module"}'),
+    row("packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts", "source-entry"),
+    row("packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json", "source-project"),
+  ];
+  const moduleDigest = (record) => {
+    const body = {
       schema: "galerina.logic-aig-module-closure.v1",
-      executableModuleRows: candidateRecord.executableModuleRows,
-      dataRows: candidateRecord.dataRows,
-      builtinModules: candidateRecord.builtinModules,
+      executableModuleRows: record.executableModuleRows,
+      dataRows: record.dataRows,
+      builtinModules: record.builtinModules,
       counts: {
-        executableModules: candidateRecord.executableModuleRows.length,
-        dataRows: candidateRecord.dataRows.length,
-        builtinModules: candidateRecord.builtinModules.length,
+        executableModules: record.executableModuleRows.length,
+        dataRows: record.dataRows.length,
+        builtinModules: record.builtinModules.length,
       },
       authorizing: false,
     };
-    candidateRecord.moduleClosureDigest = sha256Canonical(closureBody.schema, closureBody);
-    const candidateRecordBody = { ...candidateRecord };
-    delete candidateRecordBody.recordDigest;
-    candidateRecord.recordDigest = sha256Canonical("galerina.logic-aig-toolchain-pin-record.v1", candidateRecordBody);
-    const candidateBody = { ...candidate };
-    delete candidateBody.pinsDigest;
-    candidate.pinsDigest = sha256Canonical(candidate.schema, candidateBody);
-    return candidate;
+    return sha256Canonical(body.schema, body);
   };
-  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins({ ...value, pins: [] }));
-  const aliasRecord = structuredClone(value);
-  aliasRecord.records[0].proposalDigest = "4".repeat(64);
-  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(aliasRecord));
+  const sourceOriginParser = {
+    sourceEntry: {
+      rootLocator: "packages-ts/galerina-core-compiler",
+      ...row("src/source-origin-parser-entry.ts", "source-entry"),
+      gitBlobOid: "a".repeat(40),
+      exportNames: parserExports,
+    },
+    project: {
+      rootLocator: "packages-ts/galerina-core-compiler",
+      ...row("tsconfig.source-origin-parser.json", "source-project"),
+      gitBlobOid: "b".repeat(40),
+      extendsLocator: "./tsconfig.json",
+      files: ["src/source-origin-parser-entry.ts"],
+      include: [],
+      compilerOptions: {
+        types: [],
+        noEmitOnError: true,
+        incremental: false,
+        composite: false,
+        sourceMap: false,
+        declarationMap: false,
+      },
+    },
+    generatedEntry: { rootLocator: parserRoot, ...parserRows.at(-1) },
+    generatedPackageManifest: { rootLocator: parserRoot, ...row("package.json", '{"type":"module"}') },
+    exportNames: parserExports,
+    sourceEdgeRows: [
+      { fromLocator: "src/gate-v3-parser.ts", kind: "IMPORT_TYPE", exportName: null, specifier: "./parser.js", toLocator: "src/parser.ts" },
+      { fromLocator: "src/parser.ts", kind: "IMPORT", exportName: null, specifier: "./lexer.js", toLocator: "src/lexer.ts" },
+      { fromLocator: "src/parser.ts", kind: "IMPORT", exportName: null, specifier: "./requirement-diagnostics.js", toLocator: "src/requirement-diagnostics.ts" },
+      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "lex", specifier: "./lexer.js", toLocator: "src/lexer.ts" },
+      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "parseGateV3", specifier: "./gate-v3-parser.js", toLocator: "src/gate-v3-parser.ts" },
+      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "parseProgram", specifier: "./parser.js", toLocator: "src/parser.ts" },
+    ],
+    emittedEdgeRows: [
+      { fromLocator: "parser.js", kind: "IMPORT", exportName: null, specifier: "./lexer.js", toLocator: "lexer.js" },
+      { fromLocator: "parser.js", kind: "IMPORT", exportName: null, specifier: "./requirement-diagnostics.js", toLocator: "requirement-diagnostics.js" },
+      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "lex", specifier: "./lexer.js", toLocator: "lexer.js" },
+      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "parseGateV3", specifier: "./gate-v3-parser.js", toLocator: "gate-v3-parser.js" },
+      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "parseProgram", specifier: "./parser.js", toLocator: "parser.js" },
+    ],
+    generatedClosureDigest: "c".repeat(64),
+  };
+  const identity = {
+    version: "fixture-1",
+    executableRawSha256: "d".repeat(64),
+    executableByteLength: 1,
+  };
+  const recordBody = {
+    recordId: "win32-x64",
+    platform: "win32",
+    arch: "x64",
+    sourceObservationDigest: "1".repeat(64),
+    loadObservationDigest: "2".repeat(64),
+    nodeIdentity: identity,
+    gitIdentity: identity,
+    typescript: {
+      name: "typescript",
+      version: "fixture-1.0.0",
+      packageLocator: `${hostRoot}/package.json`,
+      packageRawSha256: "3".repeat(64),
+      packageByteLength: 3,
+      entryLocator: `${hostRoot}/lib/typescript.js`,
+      entryRawSha256: hostRows[0].rawSha256,
+      entryByteLength: hostRows[0].byteLength,
+    },
+    sourceOriginParser,
+    runtimeLoadSets: [
+      { id: "HOST", entry: { rootLocator: hostRoot, locator: "lib/typescript.js" }, moduleRows: hostRows, builtinModules: [] },
+      { id: "PARSER", entry: { rootLocator: parserRoot, locator: "source-origin-parser-entry.js" }, moduleRows: parserRows, builtinModules: [] },
+    ],
+    domainSelections: [
+      { domain: "FUNGI", parserId: "galerina-fungi-parser", runtimeLoadSetId: "PARSER", operation: "parseProgram" },
+      { domain: "GATE", parserId: "galerina-gate-v3-parser", runtimeLoadSetId: "PARSER", operation: "parseGateV3" },
+      { domain: "HOST", parserId: "typescript-compiler-api", runtimeLoadSetId: "HOST", operation: "typescript-compiler-api" },
+    ],
+    builtinModules: [],
+    executableModuleRows,
+    dataRows,
+    moduleClosureDigest: "",
+  };
+  recordBody.moduleClosureDigest = moduleDigest(recordBody);
+  const sealRecord = (candidate) => {
+    const body = structuredClone(candidate);
+    delete body.recordDigest;
+    body.moduleClosureDigest = moduleDigest(body);
+    return { ...body, recordDigest: sha256Canonical("galerina.logic-aig-toolchain-pin-record.v2", body) };
+  };
+  const sealPins = (records) => {
+    const body = { schema: "galerina.logic-aig-toolchain-pins.v2", records, authorizing: false };
+    return { ...body, pinsDigest: sha256Canonical(body.schema, body) };
+  };
+  const record = sealRecord(recordBody);
+  const value = sealPins([record]);
+
+  assertDeepFrozen(validateToolchainPins(value));
+  const v1Pins = structuredClone(value);
+  v1Pins.schema = "galerina.logic-aig-toolchain-pins.v1";
+  v1Pins.pinsDigest = sha256Canonical(v1Pins.schema, without(v1Pins, "pinsDigest"));
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(v1Pins));
+
+  const v1Record = structuredClone(record);
+  v1Record.recordDigest = sha256Canonical(
+    "galerina.logic-aig-toolchain-pin-record.v1",
+    without(v1Record, "recordDigest"),
+  );
+  expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainPins(sealPins([v1Record])));
+
+  const aliasRecord = structuredClone(record);
+  aliasRecord.galerinaParser = {};
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(sealPins([aliasRecord])));
+
+  const buildRecord = structuredClone(record);
+  buildRecord.runtimeLoadSets.push({
+    id: "BUILD",
+    entry: { rootLocator: hostRoot, locator: "lib/tsc.js" },
+    moduleRows: [row("lib/tsc.js")],
+    builtinModules: [],
+  });
+  expectCode("SOURCE_ORIGIN_TOOLCHAIN", () => validateToolchainPins(sealPins([sealRecord(buildRecord)])));
+
+  const traversal = structuredClone(record);
+  traversal.runtimeLoadSets[0].entry.rootLocator = "../typescript";
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(sealPins([sealRecord(traversal)])));
+
   const sparseRecords = structuredClone(value);
   sparseRecords.records = Array(1);
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins(sparseRecords));
-  const traversalPackage = structuredClone(value);
-  traversalPackage.records[0].typescript.packageLocator = "../typescript/package.json";
-  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(traversalPackage)));
-  const absoluteEntry = structuredClone(value);
-  absoluteEntry.records[0].galerinaParser.entryLocator = "C:/parser/index.mjs";
-  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(absoluteEntry)));
-  const hostileBuiltin = structuredClone(value);
-  hostileBuiltin.records[0].builtinModules = ["node:fs/../evil"];
-  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(hostileBuiltin)));
-  const traversalClosure = structuredClone(value);
-  traversalClosure.records[0].executableModuleRows = [{ locator: "../escape.js", rawSha256: "5".repeat(64), byteLength: 1 }];
-  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(redigest(traversalClosure)));
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainPins({ ...value, pins: [] }));
+
+  const traversalPackage = structuredClone(record);
+  traversalPackage.typescript.packageLocator = "../typescript/package.json";
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(sealPins([sealRecord(traversalPackage)])));
+
+  const absoluteGeneratedEntry = structuredClone(record);
+  absoluteGeneratedEntry.sourceOriginParser.generatedEntry.locator = "C:/parser/index.mjs";
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(sealPins([sealRecord(absoluteGeneratedEntry)])));
+
+  const hostileBuiltin = structuredClone(record);
+  hostileBuiltin.runtimeLoadSets[0].builtinModules = ["node:fs/../evil"];
+  hostileBuiltin.builtinModules = ["node:fs/../evil"];
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(sealPins([sealRecord(hostileBuiltin)])));
+
+  const traversalClosure = structuredClone(record);
+  traversalClosure.dataRows[0].locator = "../escape.js";
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainPins(sealPins([sealRecord(traversalClosure)])));
+
+  const duplicateRecords = sealPins([record, record]);
+  expectCode("SOURCE_ORIGIN_ORDER", () => validateToolchainPins(duplicateRecords));
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainPins({ ...value, pinsDigest: "0".repeat(64) }));
 });

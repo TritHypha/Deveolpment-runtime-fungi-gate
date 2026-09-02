@@ -150,6 +150,44 @@ function validateLoadedBuiltins(values, admittedValues) {
   for (const value of values) if (!admittedValues.includes(value)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 }
 
+function validateActualRuntimeLoadSets(values, record) {
+  array(values);
+  if (values.length !== 2 || values[0]?.id !== 'HOST' || values[1]?.id !== 'PARSER') refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  for (let index = 0; index < values.length; index += 1) {
+    const actual = values[index];
+    const admitted = record.runtimeLoadSets[index];
+    exactObject(actual, ['id', 'moduleRows', 'builtinModules']);
+    if (actual.id !== admitted.id) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    validateLoadedRows(actual.moduleRows, admitted.moduleRows);
+    validateLoadedBuiltins(actual.builtinModules, admitted.builtinModules);
+    if (!actual.moduleRows.some((row) => row.locator === admitted.entry.locator)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  }
+}
+
+function joinActualModuleRows(actualRuntimeLoadSets, admittedRuntimeLoadSets) {
+  const exactLocators = new Set();
+  const foldedLocators = new Set();
+  const output = [];
+  for (let index = 0; index < actualRuntimeLoadSets.length; index += 1) {
+    const actual = actualRuntimeLoadSets[index];
+    const rootLocator = admittedRuntimeLoadSets[index].entry.rootLocator;
+    for (const row of actual.moduleRows) {
+      const locator = `${rootLocator}/${row.locator}`;
+      const folded = locator.toLowerCase();
+      if (exactLocators.has(locator) || foldedLocators.has(folded)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+      exactLocators.add(locator);
+      foldedLocators.add(folded);
+      output.push({ locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
+    }
+  }
+  output.sort((left, right) => compareCodeUnits(left.locator, right.locator));
+  return output;
+}
+
+function builtinUnion(actualRuntimeLoadSets) {
+  return [...new Set(actualRuntimeLoadSets.flatMap((row) => row.builtinModules))].sort(compareCodeUnits);
+}
+
 function deepFreeze(value, seen = new Set()) {
   if (value === null || typeof value !== 'object' || seen.has(value)) return value;
   seen.add(value);
@@ -160,12 +198,12 @@ function deepFreeze(value, seen = new Set()) {
   return Object.freeze(value);
 }
 
-export function buildToolchainSnapshot(options) {
+export function prepareToolchainSelection(options) {
   const input = copyClosedData(options);
   canonicalJsonText(input);
   exactObject(input, [
     'pins', 'platform', 'arch', 'nodeIdentity', 'gitIdentity',
-    'actualLoadedModuleRows', 'actualLoadedBuiltinModules',
+    'selector', 'guardRuntimeLoadSet', 'parserExportNames',
   ]);
   nonEmptyText(input.platform);
   nonEmptyText(input.arch);
@@ -181,8 +219,96 @@ export function buildToolchainSnapshot(options) {
   const record = matchingRecords[0];
   if (!sameData(input.nodeIdentity, record.nodeIdentity) || !sameData(input.gitIdentity, record.gitIdentity)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 
-  validateLoadedRows(input.actualLoadedModuleRows, record.executableModuleRows);
-  validateLoadedBuiltins(input.actualLoadedBuiltinModules, record.builtinModules);
+  exactObject(input.selector, [
+    'domain', 'parserId', 'runtimeLoadSetId', 'operation', 'recordId',
+    'recordDigest', 'resolutionMode', 'entry',
+  ]);
+  for (const field of ['domain', 'parserId', 'runtimeLoadSetId', 'operation', 'recordId', 'resolutionMode']) nonEmptyText(input.selector[field]);
+  digest(input.selector.recordDigest);
+  exactObject(input.selector.entry, ['rootLocator', 'locator']);
+  canonicalLocator(input.selector.entry.rootLocator);
+  canonicalLocator(input.selector.entry.locator);
+  if (
+    input.selector.recordId !== record.recordId
+    || input.selector.recordDigest !== record.recordDigest
+    || input.selector.resolutionMode !== 'EXACT_ROOT_LOCAL_V1'
+  ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+
+  const domainSelection = record.domainSelections.find((row) => row.domain === input.selector.domain);
+  if (!domainSelection || !sameData(domainSelection, {
+    domain: input.selector.domain,
+    parserId: input.selector.parserId,
+    runtimeLoadSetId: input.selector.runtimeLoadSetId,
+    operation: input.selector.operation,
+  })) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  const runtimeLoadSet = record.runtimeLoadSets.find((row) => row.id === domainSelection.runtimeLoadSetId);
+  if (!runtimeLoadSet || !sameData(input.selector.entry, runtimeLoadSet.entry)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+
+  exactObject(input.guardRuntimeLoadSet, ['id', 'entry', 'moduleRows', 'builtinModules']);
+  nonEmptyText(input.guardRuntimeLoadSet.id);
+  exactObject(input.guardRuntimeLoadSet.entry, ['rootLocator', 'locator']);
+  canonicalLocator(input.guardRuntimeLoadSet.entry.rootLocator);
+  canonicalLocator(input.guardRuntimeLoadSet.entry.locator);
+  validateLoadedRows(input.guardRuntimeLoadSet.moduleRows, runtimeLoadSet.moduleRows);
+  validateLoadedBuiltins(input.guardRuntimeLoadSet.builtinModules, runtimeLoadSet.builtinModules);
+  if (!sameData(input.guardRuntimeLoadSet, runtimeLoadSet)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+
+  if (input.selector.domain === 'HOST') {
+    if (input.parserExportNames !== null) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  } else {
+    array(input.parserExportNames);
+    assertSortedUnique(input.parserExportNames);
+    if (!sameData(input.parserExportNames, ['lex', 'parseGateV3', 'parseProgram'])) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  }
+
+  return deepFreeze({
+    domain: domainSelection.domain,
+    parserId: domainSelection.parserId,
+    runtimeLoadSetId: domainSelection.runtimeLoadSetId,
+    operation: domainSelection.operation,
+    recordId: record.recordId,
+    recordDigest: record.recordDigest,
+    entry: runtimeLoadSet.entry,
+    moduleRows: runtimeLoadSet.moduleRows,
+    builtinModules: runtimeLoadSet.builtinModules,
+    parserExportNames: input.parserExportNames,
+    authorizing: false,
+  });
+}
+
+export function buildToolchainSnapshot(options) {
+  const input = copyClosedData(options);
+  canonicalJsonText(input);
+  exactObject(input, [
+    'pins', 'platform', 'arch', 'nodeIdentity', 'gitIdentity',
+    'actualRuntimeLoadSets', 'actualParserExportNames',
+  ]);
+  nonEmptyText(input.platform);
+  nonEmptyText(input.arch);
+  validateExecutableIdentity(input.nodeIdentity);
+  validateExecutableIdentity(input.gitIdentity);
+
+  const pins = validateToolchainPins(input.pins);
+  if (pins.records.length === 0) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
+  const matchingRecords = pins.records.filter(
+    (record) => record.platform === input.platform && record.arch === input.arch,
+  );
+  if (matchingRecords.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  const record = matchingRecords[0];
+  if (!sameData(input.nodeIdentity, record.nodeIdentity) || !sameData(input.gitIdentity, record.gitIdentity)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+
+  validateActualRuntimeLoadSets(input.actualRuntimeLoadSets, record);
+  array(input.actualParserExportNames);
+  assertSortedUnique(input.actualParserExportNames);
+  if (
+    !sameData(input.actualParserExportNames, ['lex', 'parseGateV3', 'parseProgram'])
+    || !sameData(input.actualParserExportNames, record.sourceOriginParser.exportNames)
+  ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+
+  const actualLoadedModuleRows = joinActualModuleRows(input.actualRuntimeLoadSets, record.runtimeLoadSets);
+  validateLoadedRows(actualLoadedModuleRows, record.executableModuleRows);
+  const actualLoadedBuiltinModules = builtinUnion(input.actualRuntimeLoadSets);
+  validateLoadedBuiltins(actualLoadedBuiltinModules, record.builtinModules);
 
   const closureBody = {
     schema: 'galerina.logic-aig-module-closure.v1',
@@ -200,27 +326,42 @@ export function buildToolchainSnapshot(options) {
   if (moduleClosureDigest !== record.moduleClosureDigest) refuse('SOURCE_ORIGIN_DIGEST');
 
   const loadedBody = {
-    schema: 'galerina.logic-aig-actual-loaded-set.v1',
-    actualLoadedModuleRows: input.actualLoadedModuleRows,
-    count: input.actualLoadedModuleRows.length,
+    schema: 'galerina.logic-aig-actual-loaded-set.v2',
+    actualRuntimeLoadSets: input.actualRuntimeLoadSets,
+    actualLoadedModuleRows,
+    actualLoadedBuiltinModules,
+    actualParserExportNames: input.actualParserExportNames,
+    counts: {
+      runtimeLoadSets: input.actualRuntimeLoadSets.length,
+      modules: actualLoadedModuleRows.length,
+      builtinModules: actualLoadedBuiltinModules.length,
+      parserExports: input.actualParserExportNames.length,
+    },
     authorizing: false,
   };
   const body = {
-    schema: 'galerina.logic-aig-toolchain-manifest.v1',
+    schema: 'galerina.logic-aig-toolchain-manifest.v2',
     selectedPinRecordId: record.recordId,
     selectedPinRecordDigest: record.recordDigest,
     pinsDigest: pins.pinsDigest,
+    sourceObservationDigest: record.sourceObservationDigest,
+    loadObservationDigest: record.loadObservationDigest,
     platform: input.platform,
     arch: input.arch,
     nodeIdentity: record.nodeIdentity,
     gitIdentity: record.gitIdentity,
     typescript: record.typescript,
-    galerinaParser: record.galerinaParser,
+    sourceOriginParser: record.sourceOriginParser,
+    runtimeLoadSets: record.runtimeLoadSets,
+    domainSelections: record.domainSelections,
     builtinModules: record.builtinModules,
     executableModuleRows: record.executableModuleRows,
     dataRows: record.dataRows,
     moduleClosureDigest,
-    actualLoadedModuleRows: input.actualLoadedModuleRows,
+    actualRuntimeLoadSets: input.actualRuntimeLoadSets,
+    actualLoadedModuleRows,
+    actualLoadedBuiltinModules,
+    actualParserExportNames: input.actualParserExportNames,
     actualLoadedSetDigest: sha256Canonical(loadedBody.schema, loadedBody),
     authorizing: false,
   };

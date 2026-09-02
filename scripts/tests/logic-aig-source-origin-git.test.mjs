@@ -117,28 +117,98 @@ async function fixturePin(gitExecutable) {
   const gitBytes = await readFile(gitExecutable);
   const nodeBytes = await readFile(process.execPath);
   const gitVersion = git(gitExecutable, null, ["--version"]);
-  const emptyClosureBody = {
+  const row = (locator, body = locator) => {
+    const bytes = Buffer.from(body, "utf8");
+    return { locator, rawSha256: sha256(bytes), byteLength: bytes.length };
+  };
+  const hostRoot = "packages-ts/galerina-core-compiler/node_modules/typescript";
+  const parserRoot = "generated-source-origin-parser";
+  const parserExports = ["lex", "parseGateV3", "parseProgram"];
+  const hostRows = [row("lib/typescript.js", "typescript-entry")];
+  const parserRows = [
+    row("gate-v3-parser.js"),
+    row("lexer.js"),
+    row("parser.js"),
+    row("requirement-diagnostics.js"),
+    row("source-origin-parser-entry.js"),
+  ];
+  const executableModuleRows = [
+    ...hostRows.map((entry) => ({ ...entry, locator: `${hostRoot}/${entry.locator}` })),
+    ...parserRows.map((entry) => ({ ...entry, locator: `${parserRoot}/${entry.locator}` })),
+  ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  const dataRows = [
+    row("generated-source-origin-parser/package.json", '{"type":"module"}'),
+    row("packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts", "source-entry"),
+    row("packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json", "source-project"),
+  ];
+  const sourceOriginParser = {
+    sourceEntry: {
+      rootLocator: "packages-ts/galerina-core-compiler",
+      ...row("src/source-origin-parser-entry.ts", "source-entry"),
+      gitBlobOid: "a".repeat(40),
+      exportNames: parserExports,
+    },
+    project: {
+      rootLocator: "packages-ts/galerina-core-compiler",
+      ...row("tsconfig.source-origin-parser.json", "source-project"),
+      gitBlobOid: "b".repeat(40),
+      extendsLocator: "./tsconfig.json",
+      files: ["src/source-origin-parser-entry.ts"],
+      include: [],
+      compilerOptions: {
+        types: [],
+        noEmitOnError: true,
+        incremental: false,
+        composite: false,
+        sourceMap: false,
+        declarationMap: false,
+      },
+    },
+    generatedEntry: { rootLocator: parserRoot, ...parserRows.at(-1) },
+    generatedPackageManifest: { rootLocator: parserRoot, ...row("package.json", '{"type":"module"}') },
+    exportNames: parserExports,
+    sourceEdgeRows: [
+      { fromLocator: "src/gate-v3-parser.ts", kind: "IMPORT_TYPE", exportName: null, specifier: "./parser.js", toLocator: "src/parser.ts" },
+      { fromLocator: "src/parser.ts", kind: "IMPORT", exportName: null, specifier: "./lexer.js", toLocator: "src/lexer.ts" },
+      { fromLocator: "src/parser.ts", kind: "IMPORT", exportName: null, specifier: "./requirement-diagnostics.js", toLocator: "src/requirement-diagnostics.ts" },
+      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "lex", specifier: "./lexer.js", toLocator: "src/lexer.ts" },
+      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "parseGateV3", specifier: "./gate-v3-parser.js", toLocator: "src/gate-v3-parser.ts" },
+      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "parseProgram", specifier: "./parser.js", toLocator: "src/parser.ts" },
+    ],
+    emittedEdgeRows: [
+      { fromLocator: "parser.js", kind: "IMPORT", exportName: null, specifier: "./lexer.js", toLocator: "lexer.js" },
+      { fromLocator: "parser.js", kind: "IMPORT", exportName: null, specifier: "./requirement-diagnostics.js", toLocator: "requirement-diagnostics.js" },
+      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "lex", specifier: "./lexer.js", toLocator: "lexer.js" },
+      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "parseGateV3", specifier: "./gate-v3-parser.js", toLocator: "gate-v3-parser.js" },
+      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "parseProgram", specifier: "./parser.js", toLocator: "parser.js" },
+    ],
+    generatedClosureDigest: "c".repeat(64),
+  };
+  const builtinModules = [];
+  const closureBody = {
     schema: "galerina.logic-aig-module-closure.v1",
-    executableModuleRows: [],
-    dataRows: [],
-    builtinModules: [],
-    counts: { executableModules: 0, dataRows: 0, builtinModules: 0 },
+    executableModuleRows,
+    dataRows,
+    builtinModules,
+    counts: {
+      executableModules: executableModuleRows.length,
+      dataRows: dataRows.length,
+      builtinModules: builtinModules.length,
+    },
     authorizing: false,
   };
-  const fixtureIdentity = (name) => ({
-    name,
-    version: "fixture-only",
-    packageLocator: `fixture/${name}/package.json`,
-    packageRawSha256: sha256(Buffer.from(`${name}-package`, "utf8")),
-    packageByteLength: Buffer.byteLength(`${name}-package`),
-    entryLocator: `fixture/${name}/index.mjs`,
-    entryRawSha256: sha256(Buffer.from(`${name}-entry`, "utf8")),
-    entryByteLength: Buffer.byteLength(`${name}-entry`),
-  });
+  const recordId = platform() === "win32" && arch() === "x64"
+    ? "win32-x64"
+    : platform() === "linux" && arch() === "x64"
+      ? "linux-x64"
+      : null;
+  if (recordId === null) throw new Error("fixture supports only the approved win32-x64 and linux-x64 records");
   const recordBody = {
-    recordId: `fixture-only-${platform()}-${arch()}`,
+    recordId,
     platform: platform(),
     arch: arch(),
+    sourceObservationDigest: "1".repeat(64),
+    loadObservationDigest: "2".repeat(64),
     nodeIdentity: {
       version: process.version,
       executableRawSha256: sha256(nodeBytes),
@@ -149,25 +219,42 @@ async function fixturePin(gitExecutable) {
       executableRawSha256: sha256(gitBytes),
       executableByteLength: gitBytes.length,
     },
-    typescript: fixtureIdentity("typescript"),
-    galerinaParser: fixtureIdentity("galerina-parser"),
-    builtinModules: [],
-    executableModuleRows: [],
-    dataRows: [],
-    moduleClosureDigest: sha256Canonical(emptyClosureBody.schema, emptyClosureBody),
+    typescript: {
+      name: "typescript",
+      version: "fixture-only",
+      packageLocator: `${hostRoot}/package.json`,
+      packageRawSha256: sha256(Buffer.from("typescript-package", "utf8")),
+      packageByteLength: Buffer.byteLength("typescript-package"),
+      entryLocator: `${hostRoot}/lib/typescript.js`,
+      entryRawSha256: hostRows[0].rawSha256,
+      entryByteLength: hostRows[0].byteLength,
+    },
+    sourceOriginParser,
+    runtimeLoadSets: [
+      { id: "HOST", entry: { rootLocator: hostRoot, locator: "lib/typescript.js" }, moduleRows: hostRows, builtinModules: [] },
+      { id: "PARSER", entry: { rootLocator: parserRoot, locator: "source-origin-parser-entry.js" }, moduleRows: parserRows, builtinModules: [] },
+    ],
+    domainSelections: [
+      { domain: "FUNGI", parserId: "galerina-fungi-parser", runtimeLoadSetId: "PARSER", operation: "parseProgram" },
+      { domain: "GATE", parserId: "galerina-gate-v3-parser", runtimeLoadSetId: "PARSER", operation: "parseGateV3" },
+      { domain: "HOST", parserId: "typescript-compiler-api", runtimeLoadSetId: "HOST", operation: "typescript-compiler-api" },
+    ],
+    builtinModules,
+    executableModuleRows,
+    dataRows,
+    moduleClosureDigest: sha256Canonical(closureBody.schema, closureBody),
   };
   const record = {
     ...recordBody,
-    recordDigest: sha256Canonical("galerina.logic-aig-toolchain-pin-record.v1", recordBody),
+    recordDigest: sha256Canonical("galerina.logic-aig-toolchain-pin-record.v2", recordBody),
   };
   const body = {
-    schema: "galerina.logic-aig-toolchain-pins.v1",
+    schema: "galerina.logic-aig-toolchain-pins.v2",
     records: [record],
     authorizing: false,
   };
   return { ...body, pinsDigest: sha256Canonical(body.schema, body) };
 }
-
 async function createFixture(t, { objectFormat = "sha1", withPin = true } = {}) {
   const root = await mkdtemp(join(tmpdir(), "galerina-source-origin-git-"));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -208,7 +295,7 @@ async function createFixture(t, { objectFormat = "sha1", withPin = true } = {}) 
   const pinBody = withPin
     ? await fixturePin(gitExecutable)
     : {
-        schema: "galerina.logic-aig-toolchain-pins.v1",
+        schema: "galerina.logic-aig-toolchain-pins.v2",
         records: [],
         authorizing: false,
       };
