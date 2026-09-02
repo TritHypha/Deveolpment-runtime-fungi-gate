@@ -322,6 +322,28 @@ function tscGeneratedAppend(locator, generatedSource) {
   ].join('\n');
 }
 
+test('load-observation temp containment accepts local drive scratch and denies alternate namespaces', {
+  skip: process.platform !== 'win32',
+}, async () => {
+  const module = await import(LOAD_MODULE_URL);
+  assert.equal(typeof module.isOutsideRoot, 'function');
+  const repositoryRoot = realpathSync.native(REPOSITORY_ROOT);
+  const outsideRoot = realpathSync.native(tmpdir());
+  const descendant = realpathSync.native(path.join(REPOSITORY_ROOT, 'scripts'));
+  const extendedOutside = `\\\\?\\${outsideRoot}`;
+  const extendedDescendant = `\\\\?\\${descendant}`;
+  assert.equal(path.isAbsolute(path.relative(repositoryRoot, extendedOutside)), true);
+  assert.equal(module.isOutsideRoot(repositoryRoot, outsideRoot), true);
+  if (existsSync('D:\\')) {
+    assert.equal(module.isOutsideRoot(repositoryRoot, realpathSync.native('D:\\')), true);
+  }
+  assert.equal(module.isOutsideRoot(repositoryRoot, extendedOutside), false);
+  assert.equal(module.isOutsideRoot(repositoryRoot, extendedDescendant), false);
+  assert.equal(module.isOutsideRoot(repositoryRoot, '\\\\localhost\\share\\rd0873-generated-load-test'), false);
+  assert.equal(module.isOutsideRoot(repositoryRoot, path.join(repositoryRoot, 'generated')), false);
+  assert.equal(module.isOutsideRoot(repositoryRoot, repositoryRoot), false);
+});
+
 test('load-observation-v1 collector emits the exact source-bound build, closure, edge, and phase contracts', async (t) => {
   const module = await import(LOAD_MODULE_URL);
   const fixture = createRepositoryFixture(t);

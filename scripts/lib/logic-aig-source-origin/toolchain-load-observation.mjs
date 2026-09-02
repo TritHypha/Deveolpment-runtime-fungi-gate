@@ -10,6 +10,7 @@ import {
   readFileSync,
   realpathSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from 'node:fs';
 import { builtinModules } from 'node:module';
@@ -119,6 +120,29 @@ function refuse(code) {
 
 function compareCodeUnits(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
+}
+
+export function isOutsideRoot(root, target) {
+  const relative = path.relative(root, target);
+  const syntacticallyOutside = relative !== ''
+    && (path.isAbsolute(relative) || relative === '..' || relative.startsWith(`..${path.sep}`));
+  if (!syntacticallyOutside) return false;
+  if (process.platform === 'win32'
+    && (!/^[A-Za-z]:[\\/]/u.test(root) || !/^[A-Za-z]:[\\/]/u.test(target))) return false;
+
+  try {
+    const rootStats = statSync(root, { bigint: true });
+    let ancestor = target;
+    while (true) {
+      const ancestorStats = statSync(ancestor, { bigint: true });
+      if (ancestorStats.dev === rootStats.dev && ancestorStats.ino === rootStats.ino) return false;
+      const parent = path.dirname(ancestor);
+      if (parent === ancestor) return true;
+      ancestor = parent;
+    }
+  } catch {
+    return false;
+  }
 }
 
 export function canonicalToolchainLoadObservationText(value) {
@@ -1125,9 +1149,9 @@ async function collectInternal(options) {
   let pendingError;
   try {
     temporaryParent = realpathSync.native(mkdtempSync(path.join(tmpdir(), 'rd0873-generated-load-')));
-    const relativeTemp = path.relative(repositoryRoot, temporaryParent);
-    if (relativeTemp === '' || (relativeTemp !== '..' && !relativeTemp.startsWith(`..${path.sep}`))
-      || path.isAbsolute(relativeTemp)) refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED');
+    if (!isOutsideRoot(repositoryRoot, temporaryParent)) {
+      refuse('TOOLCHAIN_LOAD_OBSERVATION_REFUSED_GENERATED');
+    }
     const discoveryRoot = path.join(temporaryParent, 'discovery', GENERATED_ROOT_LOCATOR);
     const replayRoot = path.join(temporaryParent, 'replay', GENERATED_ROOT_LOCATOR);
     mkdirSync(path.dirname(discoveryRoot), { recursive: true });
