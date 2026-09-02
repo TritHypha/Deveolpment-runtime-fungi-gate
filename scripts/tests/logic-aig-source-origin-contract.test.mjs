@@ -17,13 +17,18 @@ import {
   sha256Raw,
   validateExpectedParseOutcomes,
   validateGeneratedConsumerPolicy,
+  validateParseOutcomesReceipt,
   validateParserPolicy,
   validateProposedBaseline,
   validateRepositoryIdentity,
+  validateResolutionInputs,
   validateResolutionPolicy,
+  validateSourceManifest,
   validateSourcePolicy,
+  validateToolchainManifest,
   validateToolchainPins,
 } from "../lib/logic-aig-source-origin/contract.mjs";
+import { buildToolchainSnapshot } from "../lib/logic-aig-source-origin/toolchain-snapshot.mjs";
 
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
 
@@ -69,6 +74,10 @@ function clone(value) {
   return structuredClone(value);
 }
 
+function without(value, key) {
+  return Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
+}
+
 function expectCode(code, operation) {
   assert.throws(operation, (error) => error?.code === code);
 }
@@ -78,6 +87,54 @@ function assertDeepFrozen(value, seen = new Set()) {
   seen.add(value);
   assert(Object.isFrozen(value));
   for (const child of Object.values(value)) assertDeepFrozen(child, seen);
+}
+
+function manifestRow(path, body = path) {
+  const bytes = Buffer.from(body, "utf8");
+  return {
+    path,
+    mode: "100644",
+    blobOid: "a".repeat(40),
+    objectFormat: "sha1",
+    byteLength: bytes.length,
+    rawSha256: sha256Raw(bytes),
+  };
+}
+
+function sourceManifestFixture({ repository, source, rows = [manifestRow("src/example.ts")] }) {
+  const body = {
+    schema: "galerina.logic-aig-source-manifest.v1",
+    repositoryId: `repository:${repository.identityDigest}`,
+    expectedHead: "b".repeat(40),
+    expectedTree: "c".repeat(40),
+    objectFormat: "sha1",
+    policyDigest: source.policyDigest,
+    exclusionDigest: sha256Canonical("galerina.logic-aig-exclusions.v1", source.exclusions),
+    rows,
+    counts: {
+      paths: rows.length,
+      blobs: new Set(rows.map((row) => row.blobOid)).size,
+      bytes: rows.reduce((sum, row) => sum + row.byteLength, 0),
+      mode100644: rows.filter((row) => row.mode === "100644").length,
+      mode100755: rows.filter((row) => row.mode === "100755").length,
+      exclusions: 0,
+    },
+    authorizing: false,
+  };
+  return { ...body, manifestDigest: sha256Canonical(body.schema, body) };
+}
+
+function resolutionInputsFixture({ repository, resolution, rows = [manifestRow("package.json", "{}")], head = "b".repeat(40), tree = "c".repeat(40) }) {
+  const body = {
+    schema: "galerina.logic-aig-resolution-inputs.v1",
+    repositoryId: `repository:${repository.identityDigest}`,
+    expectedHead: head,
+    expectedTree: tree,
+    policyDigest: resolution.policyDigest,
+    rows,
+    authorizing: false,
+  };
+  return { ...body, resolutionInputsDigest: sha256Canonical(body.schema, body) };
 }
 
 test("exports the sole exact immutable eleven-field limit owner", () => {
@@ -615,4 +672,115 @@ test("inline toolchain-pin-v2 fixtures enforce the closed records and refuse eve
   const duplicateRecords = sealPins([record, record]);
   expectCode("SOURCE_ORIGIN_ORDER", () => validateToolchainPins(duplicateRecords));
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainPins({ ...value, pinsDigest: "0".repeat(64) }));
+});
+
+test("source and resolution manifests are closed, owner-bound, counted and self-digested", async () => {
+  const repository = (await readPolicy("repository")).value;
+  const source = (await readPolicy("source")).value;
+  const resolution = (await readPolicy("resolution")).value;
+  const sourceManifest = sourceManifestFixture({ repository, source });
+  const resolutionInputs = resolutionInputsFixture({ repository, resolution });
+
+  const admittedSource = validateSourceManifest(sourceManifest, { repositoryIdentity: repository, sourcePolicy: source });
+  const admittedResolution = validateResolutionInputs(resolutionInputs, { repositoryIdentity: repository, resolutionPolicy: resolution });
+  assertDeepFrozen(admittedSource);
+  assertDeepFrozen(admittedResolution);
+  assert.notStrictEqual(admittedSource, sourceManifest);
+
+  const badCount = clone(sourceManifest);
+  badCount.counts.paths += 1;
+  badCount.manifestDigest = sha256Canonical(badCount.schema, without(badCount, "manifestDigest"));
+  expectCode("SOURCE_ORIGIN_MANIFEST", () => validateSourceManifest(badCount, { repositoryIdentity: repository, sourcePolicy: source }));
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateSourceManifest({ ...sourceManifest, sourceBodies: [] }, { repositoryIdentity: repository, sourcePolicy: source }));
+
+  const reversed = resolutionInputsFixture({
+    repository,
+    resolution,
+    rows: [manifestRow("z.json"), manifestRow("a.json")],
+  });
+  expectCode("SOURCE_ORIGIN_ORDER", () => validateResolutionInputs(reversed, { repositoryIdentity: repository, resolutionPolicy: resolution }));
+  expectCode("SOURCE_ORIGIN_DIGEST", () => validateResolutionInputs({ ...resolutionInputs, resolutionInputsDigest: "0".repeat(64) }, { repositoryIdentity: repository, resolutionPolicy: resolution }));
+});
+
+test("toolchain manifest v2 round-trips through the closed contract and refuses aliases", async () => {
+  const pins = (await readPolicy("pins")).value;
+  const record = pins.records.find((row) => row.platform === process.platform && row.arch === process.arch);
+  assert(record);
+  const manifest = buildToolchainSnapshot({
+    pins,
+    platform: record.platform,
+    arch: record.arch,
+    nodeIdentity: clone(record.nodeIdentity),
+    gitIdentity: clone(record.gitIdentity),
+    actualRuntimeLoadSets: record.runtimeLoadSets.map((row) => ({
+      id: row.id,
+      moduleRows: clone(row.moduleRows),
+      builtinModules: clone(row.builtinModules),
+    })),
+    actualParserExportNames: clone(record.sourceOriginParser.exportNames),
+  });
+  assertDeepFrozen(validateToolchainManifest(manifest, { pins }));
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainManifest({ ...manifest, manifestDigest: manifest.toolchainManifestDigest }, { pins }));
+  const v1 = clone(manifest);
+  v1.schema = "galerina.logic-aig-toolchain-manifest.v1";
+  v1.toolchainManifestDigest = sha256Canonical(v1.schema, without(v1, "toolchainManifestDigest"));
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateToolchainManifest(v1, { pins }));
+  expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainManifest({ ...manifest, actualLoadedSetDigest: "0".repeat(64) }, { pins }));
+});
+
+test("the empty parse-outcomes receipt is a closed cross-bound non-authorizing artifact", async () => {
+  const repository = (await readPolicy("repository")).value;
+  const source = (await readPolicy("source")).value;
+  const resolution = (await readPolicy("resolution")).value;
+  const parser = (await readPolicy("parser")).value;
+  const pins = (await readPolicy("pins")).value;
+  const record = pins.records.find((row) => row.platform === process.platform && row.arch === process.arch);
+  assert(record);
+  const sourceManifest = sourceManifestFixture({ repository, source, rows: [] });
+  const resolutionInputs = resolutionInputsFixture({ repository, resolution, rows: [] });
+  const expectedBody = {
+    schema: "galerina.logic-aig-expected-parse-outcomes.v1",
+    parserPolicyDigest: parser.policyDigest,
+    rows: [],
+    authorizing: false,
+  };
+  const expectedOutcomes = { ...expectedBody, expectedOutcomesDigest: sha256Canonical(expectedBody.schema, expectedBody) };
+  const toolchainManifest = buildToolchainSnapshot({
+    pins,
+    platform: record.platform,
+    arch: record.arch,
+    nodeIdentity: clone(record.nodeIdentity),
+    gitIdentity: clone(record.gitIdentity),
+    actualRuntimeLoadSets: record.runtimeLoadSets.map((row) => ({ id: row.id, moduleRows: clone(row.moduleRows), builtinModules: clone(row.builtinModules) })),
+    actualParserExportNames: clone(record.sourceOriginParser.exportNames),
+  });
+  const body = {
+    schema: "galerina.logic-aig-parse-outcomes-receipt.v1",
+    repositoryId: sourceManifest.repositoryId,
+    expectedHead: sourceManifest.expectedHead,
+    expectedTree: sourceManifest.expectedTree,
+    expectedOutcomesDigest: expectedOutcomes.expectedOutcomesDigest,
+    sourceManifestDigest: sourceManifest.manifestDigest,
+    resolutionInputsDigest: resolutionInputs.resolutionInputsDigest,
+    toolchainManifestDigest: toolchainManifest.toolchainManifestDigest,
+    rows: [],
+    counts: {
+      outcomeRows: 0,
+      expectedRefusalRows: 0,
+      opaqueProposedRows: 0,
+      representedFileNodes: 0,
+      unresolvedRows: 0,
+      ownerBindings: 0,
+    },
+    authorizing: false,
+  };
+  const receipt = { ...body, receiptDigest: sha256Canonical(body.schema, body) };
+  const options = { parserPolicy: parser, expectedOutcomes, sourceManifest, resolutionInputs, toolchainManifest };
+  assertDeepFrozen(validateParseOutcomesReceipt(receipt, options));
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateParseOutcomesReceipt({ ...receipt, parserResults: [] }, options));
+  const badCounts = clone(receipt);
+  badCounts.counts.outcomeRows = 1;
+  badCounts.receiptDigest = sha256Canonical(badCounts.schema, without(badCounts, "receiptDigest"));
+  expectCode("SOURCE_ORIGIN_OUTCOMES", () => validateParseOutcomesReceipt(badCounts, options));
+  expectCode("SOURCE_ORIGIN_POLICY", () => validateParseOutcomesReceipt({ ...receipt, authorizing: true }, options));
 });

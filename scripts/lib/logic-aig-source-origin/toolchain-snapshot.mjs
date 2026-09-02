@@ -276,6 +276,55 @@ export function prepareToolchainSelection(options) {
   });
 }
 
+export function prepareSemanticToolchain(options) {
+  const input = copyClosedData(options);
+  canonicalJsonText(input);
+  exactObject(input, ['pins', 'platform', 'arch', 'nodeIdentity', 'gitIdentity']);
+  nonEmptyText(input.platform);
+  nonEmptyText(input.arch);
+  validateExecutableIdentity(input.nodeIdentity);
+  validateExecutableIdentity(input.gitIdentity);
+  const pins = validateToolchainPins(input.pins);
+  if (pins.records.length === 0) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
+  const matches = pins.records.filter((record) => record.platform === input.platform && record.arch === input.arch);
+  if (matches.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  const record = matches[0];
+  if (!sameData(input.nodeIdentity, record.nodeIdentity) || !sameData(input.gitIdentity, record.gitIdentity)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+
+  const selections = record.domainSelections.map((domainSelection) => {
+    const runtimeLoadSet = record.runtimeLoadSets.find((row) => row.id === domainSelection.runtimeLoadSetId);
+    if (!runtimeLoadSet) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    const parserExportNames = domainSelection.domain === 'HOST'
+      ? null
+      : record.sourceOriginParser.exportNames;
+    return {
+      domain: domainSelection.domain,
+      parserId: domainSelection.parserId,
+      runtimeLoadSetId: domainSelection.runtimeLoadSetId,
+      operation: domainSelection.operation,
+      recordId: record.recordId,
+      recordDigest: record.recordDigest,
+      entry: runtimeLoadSet.entry,
+      moduleRows: runtimeLoadSet.moduleRows,
+      builtinModules: runtimeLoadSet.builtinModules,
+      parserExportNames,
+      authorizing: false,
+    };
+  });
+  if (!sameData(selections.map(({ domain, parserId, runtimeLoadSetId, operation }) => ({ domain, parserId, runtimeLoadSetId, operation })), record.domainSelections)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  return deepFreeze({
+    pinsDigest: pins.pinsDigest,
+    recordId: record.recordId,
+    recordDigest: record.recordDigest,
+    platform: record.platform,
+    arch: record.arch,
+    nodeIdentity: record.nodeIdentity,
+    gitIdentity: record.gitIdentity,
+    selections,
+    authorizing: false,
+  });
+}
+
 export function buildToolchainSnapshot(options) {
   const input = copyClosedData(options);
   canonicalJsonText(input);

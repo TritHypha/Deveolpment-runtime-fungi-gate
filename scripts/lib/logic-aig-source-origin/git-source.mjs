@@ -1,4 +1,5 @@
 import { closeSync, lstatSync, openSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { arch, platform } from 'node:os';
 import { spawn } from 'node:child_process';
@@ -703,6 +704,84 @@ class DefensiveBlobMap extends Map {
   }
 }
 
+function closedArrayValues(value, code) {
+  if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
+  const names = Object.getOwnPropertyNames(value);
+  if (names.length !== value.length + 1 || !names.includes('length')) refuse(code);
+  const output = [];
+  for (let index = 0; index < value.length; index += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    output.push(descriptor.value);
+  }
+  return output;
+}
+
+function exactBuffer(value, code) {
+  if (
+    isProxy(value)
+    || !Buffer.isBuffer(value)
+    || Object.getPrototypeOf(value) !== Buffer.prototype
+    || value.buffer instanceof SharedArrayBuffer
+  ) refuse(code);
+  return Buffer.from(value);
+}
+
+export function admitFrozenBlobSet(rowsValue, blobs, options) {
+  const code = 'SOURCE_ORIGIN_GIT_BLOB_SET';
+  exactObject(options, ['label'], code);
+  if (options.label !== 'SOURCE_MANIFEST' && options.label !== 'RESOLUTION_INPUTS' && options.label !== 'OWNER_SET') refuse(code);
+  const rows = closedArrayValues(rowsValue, code);
+  const byPath = new Map();
+  for (const row of rows) {
+    if (isProxy(row) || row === null || typeof row !== 'object') refuse(code);
+    const keys = Object.getOwnPropertyNames(row ?? {}).sort(codeUnitCompare);
+    const short = ['byteLength','path','rawSha256'];
+    const full = ['blobOid','byteLength','mode','objectFormat','path','rawSha256'];
+    const expected = keys.length === short.length ? short : full;
+    exactObject(row, expected, code);
+    validatePath(row.path);
+    if (!Number.isSafeInteger(row.byteLength) || row.byteLength < 0 || row.byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes || typeof row.rawSha256 !== 'string' || !/^[0-9a-f]{64}$/.test(row.rawSha256) || byPath.has(row.path)) refuse(code);
+    if (expected === full && (
+      row.mode !== '100644' && row.mode !== '100755'
+      || row.objectFormat !== 'sha1' && row.objectFormat !== 'sha256'
+      || typeof row.blobOid !== 'string'
+      || !(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/).test(row.blobOid)
+    )) refuse(code);
+    byPath.set(row.path, row);
+  }
+  if (isProxy(blobs) || blobs === null || typeof blobs !== 'object') refuse(code);
+  const prototype = Object.getPrototypeOf(blobs);
+  let entries;
+  if (prototype === Map.prototype) entries = [...Map.prototype.entries.call(blobs)];
+  else if (prototype === DefensiveBlobMap.prototype) entries = [...blobs.entries()];
+  else refuse(code);
+  if (entries.length !== rows.length) refuse(code);
+  const captured = new Map();
+  for (const entry of entries) {
+    if (!Array.isArray(entry) || entry.length !== 2) refuse(code);
+    const [locator, value] = entry;
+    const row = byPath.get(locator);
+    if (!row || captured.has(locator)) refuse(code);
+    const bytes = exactBuffer(value, code);
+    if (bytes.length !== row.byteLength || sha256Raw(bytes) !== row.rawSha256) refuse(code);
+    if (Object.hasOwn(row, 'blobOid')) {
+      const blobOid = createHash(row.objectFormat)
+        .update(Buffer.from(`blob ${bytes.length}\0`, 'utf8'))
+        .update(bytes)
+        .digest('hex');
+      if (blobOid !== row.blobOid) refuse(code);
+    }
+    captured.set(locator, bytes);
+  }
+  const ordered = rows.map((row) => {
+    const bytes = captured.get(row.path);
+    if (bytes === undefined) refuse(code);
+    return [row.path, bytes];
+  });
+  return new DefensiveBlobMap(ordered);
+}
+
 async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIdentity, sourcePolicy, resolutionPolicy, resolutionOwnerPaths, limits }) {
   const sourceRows = [];
   const resolutionRows = [];
@@ -890,6 +969,35 @@ async function readHeldOwners(run, state) {
   return Object.freeze({ ...owners, identities: deepFreeze(identities), ownerSetDigest: sha256Canonical('galerina.logic-aig-frozen-owner-set.v1', identities) });
 }
 
+function capturedOwnerSnapshot(held) {
+  const ownerNames = [
+    'expectedOutcomes', 'exporter', 'gate', 'generated', 'parser', 'pins',
+    'proposedBaseline', 'repositoryIdentity', 'resolution', 'source',
+  ];
+  const values = {};
+  const entries = [];
+  for (const name of ownerNames) {
+    const owner = held[name];
+    if (!owner || !Buffer.isBuffer(owner.bytes)) refuse('SOURCE_ORIGIN_GIT_POLICY');
+    values[name] = owner.value;
+    entries.push([owner.locator, owner.bytes]);
+  }
+  entries.sort((left, right) => codeUnitCompare(left[0], right[0]));
+  const owners = deepFreeze({
+    values,
+    identities: held.identities,
+    ownerSetDigest: held.ownerSetDigest,
+    authorizing: false,
+  });
+  const rows = held.identities.map((row) => ({
+    path: row.locator,
+    byteLength: row.byteLength,
+    rawSha256: row.rawSha256,
+  }));
+  const ownerBlobs = admitFrozenBlobSet(rows, new Map(entries), { label: 'OWNER_SET' });
+  return Object.freeze({ owners, ownerBlobs });
+}
+
 function readInstalledWorkingOwners(parserPolicy) {
   const pins = readBoundWorkingOwner(POLICY_PATHS.toolchainPins, OWNER_IDENTITIES.pins, validateToolchainPins, 'pinsDigest');
   const proposedBaseline = readBoundWorkingOwner(POLICY_PATHS.proposedBaseline, OWNER_IDENTITIES.proposedBaseline, validateProposedBaseline, 'policyDigest');
@@ -1031,5 +1139,15 @@ export async function captureFrozenSource(options) {
     indexDigest: frozenBefore.index.indexDigest,
     executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
   });
-  return Object.freeze({ observation, ...manifests });
+  const semanticOwners = capturedOwnerSnapshot(heldClosing);
+  const sourceBlobs = admitFrozenBlobSet(manifests.sourceManifest.rows, manifests.sourceBlobs, { label: 'SOURCE_MANIFEST' });
+  const resolutionBlobs = admitFrozenBlobSet(manifests.resolutionInputs.rows, manifests.resolutionBlobs, { label: 'RESOLUTION_INPUTS' });
+  return Object.freeze({
+    observation,
+    sourceManifest: manifests.sourceManifest,
+    sourceBlobs,
+    resolutionInputs: manifests.resolutionInputs,
+    resolutionBlobs,
+    ...semanticOwners,
+  });
 }

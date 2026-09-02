@@ -854,3 +854,54 @@ test("v2 defensive capture preserves determinism and refuses accessors, sparse a
   unsafe.pins.records[0].runtimeLoadSets[0].moduleRows[0].byteLength = Number.MAX_SAFE_INTEGER + 1;
   expectRefusal(() => buildToolchainSnapshot(unsafe));
 });
+
+test("semantic preparation derives the closed HOST, FUNGI and GATE selections without caller selectors", () => {
+  const record = fixtureRecord();
+  const options = {
+    pins: fixturePins([record]),
+    platform: record.platform,
+    arch: record.arch,
+    nodeIdentity: structuredClone(record.nodeIdentity),
+    gitIdentity: structuredClone(record.gitIdentity),
+  };
+  const prepared = toolchainSnapshot.prepareSemanticToolchain(options);
+  assertClosedObject(prepared, [
+    "pinsDigest", "recordId", "recordDigest", "platform", "arch",
+    "nodeIdentity", "gitIdentity", "selections", "authorizing",
+  ]);
+  assert.equal(prepared.authorizing, false);
+  assert.deepEqual(prepared.selections.map(({ domain, runtimeLoadSetId, operation, entry }) => ({ domain, runtimeLoadSetId, operation, entry })), [
+    { domain: "FUNGI", runtimeLoadSetId: "PARSER", operation: "parseProgram", entry: { rootLocator: PARSER_ROOT, locator: "source-origin-parser-entry.js" } },
+    { domain: "GATE", runtimeLoadSetId: "PARSER", operation: "parseGateV3", entry: { rootLocator: PARSER_ROOT, locator: "source-origin-parser-entry.js" } },
+    { domain: "HOST", runtimeLoadSetId: "HOST", operation: "typescript-compiler-api", entry: { rootLocator: HOST_ROOT, locator: "lib/typescript.js" } },
+  ]);
+  assert.deepEqual(prepared.selections.map(({ parserExportNames }) => parserExportNames), [PARSER_EXPORTS, PARSER_EXPORTS, null]);
+  assert(Object.isFrozen(prepared));
+  assert(Object.isFrozen(prepared.selections));
+  assert(Object.isFrozen(prepared.selections[0].moduleRows));
+  options.pins.records[0].runtimeLoadSets[0].moduleRows[0].locator = "dist/index.js";
+  assert.equal(prepared.selections[2].entry.locator, "lib/typescript.js");
+});
+
+test("semantic preparation refuses caller selection, guard and evaluator authority before evaluation", () => {
+  const record = fixtureRecord();
+  const base = {
+    pins: fixturePins([record]),
+    platform: record.platform,
+    arch: record.arch,
+    nodeIdentity: structuredClone(record.nodeIdentity),
+    gitIdentity: structuredClone(record.gitIdentity),
+  };
+  let evaluations = 0;
+  for (const extra of [
+    { selector: selectionOptions("HOST").selector },
+    { guardRuntimeLoadSet: selectionOptions("HOST").guardRuntimeLoadSet },
+    { parserExportNames: [...PARSER_EXPORTS] },
+    { evaluate() { evaluations += 1; } },
+  ]) expectRefusal(() => toolchainSnapshot.prepareSemanticToolchain({ ...base, ...extra }), /^SOURCE_ORIGIN_SCHEMA$/);
+  assert.equal(evaluations, 0);
+
+  const wrongIdentity = structuredClone(base);
+  wrongIdentity.nodeIdentity.executableRawSha256 = "0".repeat(64);
+  expectRefusal(() => toolchainSnapshot.prepareSemanticToolchain(wrongIdentity));
+});

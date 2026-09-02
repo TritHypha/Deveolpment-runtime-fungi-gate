@@ -413,6 +413,348 @@ export function validateExpectedParseOutcomes(value, { parserPolicy } = {}) {
   return immutableCopy(value);
 }
 
+function validateManifestRow(row, objectFormat) {
+  dataObject(row, ['path','mode','blobOid','objectFormat','byteLength','rawSha256']);
+  canonicalLocator(row.path);
+  if (row.mode !== '100644' && row.mode !== '100755') refuse('SOURCE_ORIGIN_MANIFEST');
+  if (row.objectFormat !== objectFormat || objectFormat !== 'sha1' && objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_MANIFEST');
+  const oidPattern = objectFormat === 'sha1' ? HEX40 : HEX64;
+  if (typeof row.blobOid !== 'string' || !oidPattern.test(row.blobOid)) refuse('SOURCE_ORIGIN_MANIFEST');
+  digest(row.rawSha256);
+  nonNegativeInteger(row.byteLength);
+  if (row.byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes) refuse('SOURCE_ORIGIN_LIMIT');
+}
+
+function validateManifestRows(rows, objectFormat, maximumRows, maximumBytes) {
+  array(rows);
+  if (rows.length > maximumRows) refuse('SOURCE_ORIGIN_LIMIT');
+  let totalBytes = 0;
+  const folded = new Set();
+  for (const row of rows) {
+    validateManifestRow(row, objectFormat);
+    if (totalBytes > maximumBytes - row.byteLength) refuse('SOURCE_ORIGIN_LIMIT');
+    totalBytes += row.byteLength;
+    const lower = row.path.toLowerCase();
+    if (folded.has(lower)) refuse('SOURCE_ORIGIN_MANIFEST');
+    folded.add(lower);
+  }
+  validateSortedEntries(rows, 'path');
+  return totalBytes;
+}
+
+function manifestOptions(options, keys) {
+  if (options === undefined) refuse('SOURCE_ORIGIN_SCHEMA');
+  dataObject(options, keys);
+  return options;
+}
+
+export function validateSourceManifest(value, options) {
+  dataObject(value, [
+    'schema','repositoryId','expectedHead','expectedTree','objectFormat',
+    'policyDigest','exclusionDigest','rows','counts','authorizing','manifestDigest',
+  ]);
+  options = manifestOptions(options, ['repositoryIdentity','sourcePolicy']);
+  const repositoryIdentity = validateRepositoryIdentity(options.repositoryIdentity);
+  const sourcePolicy = validateSourcePolicy(options.sourcePolicy);
+  if (
+    value.schema !== 'galerina.logic-aig-source-manifest.v1'
+    || value.authorizing !== false
+    || value.repositoryId !== `repository:${repositoryIdentity.identityDigest}`
+    || value.policyDigest !== sourcePolicy.policyDigest
+    || value.exclusionDigest !== sha256Canonical('galerina.logic-aig-exclusions.v1', sourcePolicy.exclusions)
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  if (value.objectFormat !== 'sha1' && value.objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_MANIFEST');
+  const oidPattern = value.objectFormat === 'sha1' ? HEX40 : HEX64;
+  if (!oidPattern.test(value.expectedHead) || !oidPattern.test(value.expectedTree)) refuse('SOURCE_ORIGIN_MANIFEST');
+  const totalBytes = validateManifestRows(value.rows, value.objectFormat, SOURCE_ORIGIN_LIMITS.sourceFiles, SOURCE_ORIGIN_LIMITS.sourceBytes);
+  dataObject(value.counts, ['paths','blobs','bytes','mode100644','mode100755','exclusions']);
+  for (const count of Object.values(value.counts)) nonNegativeInteger(count);
+  const expectedCounts = {
+    paths: value.rows.length,
+    blobs: new Set(value.rows.map((row) => row.blobOid)).size,
+    bytes: totalBytes,
+    mode100644: value.rows.filter((row) => row.mode === '100644').length,
+    mode100755: value.rows.filter((row) => row.mode === '100755').length,
+    exclusions: sourcePolicy.exclusions.length,
+  };
+  if (canonicalJsonText(value.counts) !== canonicalJsonText(expectedCounts)) refuse('SOURCE_ORIGIN_MANIFEST');
+  checkDigest(value, 'manifestDigest');
+  return immutableCopy(value);
+}
+
+export function validateResolutionInputs(value, options) {
+  dataObject(value, [
+    'schema','repositoryId','expectedHead','expectedTree','policyDigest','rows',
+    'authorizing','resolutionInputsDigest',
+  ]);
+  options = manifestOptions(options, ['repositoryIdentity','resolutionPolicy']);
+  const repositoryIdentity = validateRepositoryIdentity(options.repositoryIdentity);
+  const resolutionPolicy = validateResolutionPolicy(options.resolutionPolicy);
+  if (
+    value.schema !== 'galerina.logic-aig-resolution-inputs.v1'
+    || value.authorizing !== false
+    || value.repositoryId !== `repository:${repositoryIdentity.identityDigest}`
+    || value.policyDigest !== resolutionPolicy.policyDigest
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  const objectFormat = value.expectedHead.length === 40 && value.expectedTree.length === 40
+    ? 'sha1'
+    : value.expectedHead.length === 64 && value.expectedTree.length === 64
+      ? 'sha256'
+      : null;
+  if (objectFormat === null) refuse('SOURCE_ORIGIN_MANIFEST');
+  validateManifestRows(value.rows, objectFormat, SOURCE_ORIGIN_LIMITS.resolutionFiles, SOURCE_ORIGIN_LIMITS.resolutionBytes);
+  checkDigest(value, 'resolutionInputsDigest');
+  return immutableCopy(value);
+}
+
+function validateActualRuntimeLoadSetsForManifest(values, record) {
+  array(values);
+  if (values.length !== 2 || values[0]?.id !== 'HOST' || values[1]?.id !== 'PARSER') refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  for (let index = 0; index < values.length; index += 1) {
+    const actual = values[index];
+    const admitted = record.runtimeLoadSets[index];
+    dataObject(actual, ['id','moduleRows','builtinModules']);
+    if (actual.id !== admitted.id) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    validateClosureRows(actual.moduleRows);
+    validateBuiltinModules(actual.builtinModules);
+    const admittedRows = new Map(admitted.moduleRows.map((row) => [row.locator, row]));
+    for (const row of actual.moduleRows) {
+      const expected = admittedRows.get(row.locator);
+      if (!expected || canonicalJsonText(row) !== canonicalJsonText(expected)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    }
+    if (!actual.moduleRows.some((row) => row.locator === admitted.entry.locator)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    if (actual.builtinModules.some((specifier) => !admitted.builtinModules.includes(specifier))) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  }
+}
+
+function actualJoinedProjection(values, record) {
+  const rows = [];
+  const exact = new Set();
+  const folded = new Set();
+  for (let index = 0; index < values.length; index += 1) {
+    const rootLocator = record.runtimeLoadSets[index].entry.rootLocator;
+    for (const row of values[index].moduleRows) {
+      const locator = `${rootLocator}/${row.locator}`;
+      const lower = locator.toLowerCase();
+      if (exact.has(locator) || folded.has(lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+      exact.add(locator); folded.add(lower);
+      rows.push({ locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
+    }
+  }
+  return rows.sort((left, right) => codeUnitCompare(left.locator, right.locator));
+}
+
+function validateToolchainManifestCore(value) {
+  dataObject(value, [
+    'schema','selectedPinRecordId','selectedPinRecordDigest','pinsDigest',
+    'sourceObservationDigest','loadObservationDigest','platform','arch',
+    'nodeIdentity','gitIdentity','typescript','sourceOriginParser',
+    'runtimeLoadSets','domainSelections','builtinModules','executableModuleRows',
+    'dataRows','moduleClosureDigest','actualRuntimeLoadSets',
+    'actualLoadedModuleRows','actualLoadedBuiltinModules',
+    'actualParserExportNames','actualLoadedSetDigest','authorizing',
+    'toolchainManifestDigest',
+  ]);
+  if (value.schema !== 'galerina.logic-aig-toolchain-manifest.v2' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
+  for (const field of ['selectedPinRecordId','platform','arch']) nonEmptyString(value[field]);
+  for (const field of [
+    'selectedPinRecordDigest','pinsDigest','sourceObservationDigest','loadObservationDigest',
+    'moduleClosureDigest','actualLoadedSetDigest','toolchainManifestDigest',
+  ]) digest(value[field]);
+  array(value.actualParserExportNames);
+  assertSortedUniqueStrings(value.actualParserExportNames);
+  if (canonicalJsonText(value.actualParserExportNames) !== canonicalJsonText(TOOLCHAIN_PARSER_EXPORTS)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  checkDigest(value, 'toolchainManifestDigest');
+}
+
+export function validateToolchainManifest(value, options = {}) {
+  validateToolchainManifestCore(value);
+  dataObject(options, Object.hasOwn(options, 'pins') ? ['pins'] : []);
+  if (!Object.hasOwn(options, 'pins')) return immutableCopy(value);
+  const pins = validateToolchainPins(options.pins);
+  const records = pins.records.filter((record) =>
+    record.recordId === value.selectedPinRecordId
+    && record.recordDigest === value.selectedPinRecordDigest
+    && record.platform === value.platform
+    && record.arch === value.arch);
+  if (records.length !== 1 || value.pinsDigest !== pins.pinsDigest) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  const record = records[0];
+  const repeated = [
+    'sourceObservationDigest','loadObservationDigest','nodeIdentity','gitIdentity',
+    'typescript','sourceOriginParser','runtimeLoadSets','domainSelections',
+    'builtinModules','executableModuleRows','dataRows','moduleClosureDigest',
+  ];
+  for (const field of repeated) if (canonicalJsonText(value[field]) !== canonicalJsonText(record[field])) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  validateActualRuntimeLoadSetsForManifest(value.actualRuntimeLoadSets, record);
+  const actualLoadedModuleRows = actualJoinedProjection(value.actualRuntimeLoadSets, record);
+  if (canonicalJsonText(value.actualLoadedModuleRows) !== canonicalJsonText(actualLoadedModuleRows)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  const executable = new Map(record.executableModuleRows.map((row) => [row.locator, row]));
+  for (const row of actualLoadedModuleRows) {
+    const expected = executable.get(row.locator);
+    if (!expected || canonicalJsonText(row) !== canonicalJsonText(expected)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  }
+  const actualLoadedBuiltinModules = [...new Set(value.actualRuntimeLoadSets.flatMap((row) => row.builtinModules))].sort(codeUnitCompare);
+  if (canonicalJsonText(value.actualLoadedBuiltinModules) !== canonicalJsonText(actualLoadedBuiltinModules)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  const loadedBody = {
+    schema: 'galerina.logic-aig-actual-loaded-set.v2',
+    actualRuntimeLoadSets: value.actualRuntimeLoadSets,
+    actualLoadedModuleRows,
+    actualLoadedBuiltinModules,
+    actualParserExportNames: value.actualParserExportNames,
+    counts: {
+      runtimeLoadSets: value.actualRuntimeLoadSets.length,
+      modules: actualLoadedModuleRows.length,
+      builtinModules: actualLoadedBuiltinModules.length,
+      parserExports: value.actualParserExportNames.length,
+    },
+    authorizing: false,
+  };
+  if (value.actualLoadedSetDigest !== sha256Canonical(loadedBody.schema, loadedBody)) refuse('SOURCE_ORIGIN_DIGEST');
+  return immutableCopy(value);
+}
+
+function manifestRowDigest(kind, row) {
+  const domain = kind === 'SOURCE_MANIFEST'
+    ? 'galerina.logic-aig-source-manifest-row.v1'
+    : kind === 'RESOLUTION_INPUTS'
+      ? 'galerina.logic-aig-resolution-input-row.v1'
+      : refuse('SOURCE_ORIGIN_OUTCOMES');
+  return sha256Canonical(domain, row);
+}
+
+function validateReceiptBinding(binding, manifests, expectedKind) {
+  dataObject(binding, ['manifestKind','manifestRowDigest','path','blobOid','rawSha256','byteLength']);
+  if (binding.manifestKind !== expectedKind) refuse('SOURCE_ORIGIN_OUTCOMES');
+  canonicalLocator(binding.path); digest(binding.manifestRowDigest); digest(binding.rawSha256); nonNegativeInteger(binding.byteLength);
+  const manifest = expectedKind === 'SOURCE_MANIFEST' ? manifests.sourceManifest : manifests.resolutionInputs;
+  const row = manifest.rows.find((candidate) => candidate.path === binding.path);
+  if (!row || binding.blobOid !== row.blobOid || binding.rawSha256 !== row.rawSha256 || binding.byteLength !== row.byteLength || binding.manifestRowDigest !== manifestRowDigest(expectedKind, row)) refuse('SOURCE_ORIGIN_OUTCOMES');
+}
+
+function nullableCompare(left, right) {
+  if (left === right) return 0;
+  if (left === null) return -1;
+  if (right === null) return 1;
+  return codeUnitCompare(left, right);
+}
+
+function ownerBindingCompare(left, right) {
+  for (const field of ['ownerKind','locator','ownerKey','ownerReason']) {
+    const comparison = nullableCompare(left[field], right[field]);
+    if (comparison !== 0) return comparison;
+  }
+  return 0;
+}
+
+function validateOwnerBindings(values, manifests, parserPolicy) {
+  array(values);
+  if (values.length === 0) refuse('SOURCE_ORIGIN_OUTCOMES');
+  const policy = new Map(parserPolicy.ownerManifestBindings.map((row) => [row.ownerKind, row]));
+  for (const binding of values) {
+    dataObject(binding, ['ownerKind','manifestKind','manifestRowDigest','locator','blobOid','rawSha256','byteLength','ownerKey','ownerReason']);
+    const rule = policy.get(binding.ownerKind);
+    if (!rule || binding.manifestKind !== rule.manifestKind) refuse('SOURCE_ORIGIN_OUTCOMES');
+    if (rule.ownerKeyRequired ? typeof binding.ownerKey !== 'string' || !binding.ownerKey : binding.ownerKey !== null) refuse('SOURCE_ORIGIN_OUTCOMES');
+    if (rule.ownerReasonRequired ? typeof binding.ownerReason !== 'string' || !binding.ownerReason : binding.ownerReason !== null) refuse('SOURCE_ORIGIN_OUTCOMES');
+    const reduced = {
+      manifestKind: binding.manifestKind,
+      manifestRowDigest: binding.manifestRowDigest,
+      path: binding.locator,
+      blobOid: binding.blobOid,
+      rawSha256: binding.rawSha256,
+      byteLength: binding.byteLength,
+    };
+    validateReceiptBinding(reduced, manifests, binding.manifestKind);
+    canonicalLocator(binding.locator);
+  }
+  for (let index = 1; index < values.length; index += 1) if (ownerBindingCompare(values[index - 1], values[index]) >= 0) refuse('SOURCE_ORIGIN_ORDER');
+}
+
+function validateParseOutcomeReceiptRow(row, expected, manifests, parserPolicy, expectedOutcomesDigest) {
+  dataObject(row, [
+    'path','disposition','parserId','actualStatus','actualDiagnosticCodes',
+    'sourceBinding','ownerBindings','membershipProofDigest',
+    'representedFileNodeId','unresolvedRowsDigest','rowDigest',
+  ]);
+  canonicalLocator(row.path);
+  for (const field of ['disposition','parserId','actualStatus']) nonEmptyString(row[field]);
+  for (const field of ['membershipProofDigest','unresolvedRowsDigest','rowDigest']) digest(row[field]);
+  if (!/^ga1:[0-9a-f]{64}$/.test(row.representedFileNodeId)) refuse('SOURCE_ORIGIN_OUTCOMES');
+  if (row.path !== expected.path || row.disposition !== expected.disposition || row.parserId !== expected.parserId) refuse('SOURCE_ORIGIN_OUTCOMES');
+  validateReceiptBinding(row.sourceBinding, manifests, 'SOURCE_MANIFEST');
+  if (row.sourceBinding.path !== row.path) refuse('SOURCE_ORIGIN_OUTCOMES');
+  validateOwnerBindings(row.ownerBindings, manifests, parserPolicy);
+  if (expected.disposition === 'EXPECTED_REFUSAL') {
+    if (row.actualStatus !== 'REFUSED_AS_EXPECTED' || canonicalJsonText(row.actualDiagnosticCodes) !== canonicalJsonText(expected.diagnosticCodes)) refuse('SOURCE_ORIGIN_OUTCOMES');
+  } else if (expected.disposition === 'OPAQUE_PROPOSED') {
+    if (row.actualStatus !== 'OPAQUE_AS_PROPOSED' || row.actualDiagnosticCodes !== null) refuse('SOURCE_ORIGIN_OUTCOMES');
+  } else refuse('SOURCE_ORIGIN_OUTCOMES');
+  const membershipBody = {
+    schema: 'galerina.logic-aig-outcome-membership-proof.v1',
+    expectedOutcomesDigest,
+    path: row.path,
+    disposition: row.disposition,
+    parserId: row.parserId,
+    expectedDiagnosticCodes: expected.diagnosticCodes,
+    sourceBinding: row.sourceBinding,
+    ownerBindings: row.ownerBindings,
+    authorizing: false,
+  };
+  if (row.membershipProofDigest !== sha256Canonical(membershipBody.schema, membershipBody)) refuse('SOURCE_ORIGIN_DIGEST');
+  if (row.rowDigest !== sha256Canonical('galerina.logic-aig-parse-outcome-row.v1', without(row, 'rowDigest'))) refuse('SOURCE_ORIGIN_DIGEST');
+}
+
+export function validateParseOutcomesReceipt(value, options) {
+  dataObject(value, [
+    'schema','repositoryId','expectedHead','expectedTree','expectedOutcomesDigest',
+    'sourceManifestDigest','resolutionInputsDigest','toolchainManifestDigest',
+    'rows','counts','authorizing','receiptDigest',
+  ]);
+  options = manifestOptions(options, ['parserPolicy','expectedOutcomes','sourceManifest','resolutionInputs','toolchainManifest']);
+  const parserPolicy = validateParserPolicy(options.parserPolicy);
+  const expectedOutcomes = validateExpectedParseOutcomes(options.expectedOutcomes, { parserPolicy });
+  validateToolchainManifestCore(options.toolchainManifest);
+  const sourceManifest = options.sourceManifest;
+  const resolutionInputs = options.resolutionInputs;
+  if (
+    value.schema !== 'galerina.logic-aig-parse-outcomes-receipt.v1'
+    || value.authorizing !== false
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  for (const manifest of [sourceManifest, resolutionInputs]) {
+    if (manifest === null || typeof manifest !== 'object' || isProxy(manifest)) refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  const repeated = {
+    repositoryId: sourceManifest.repositoryId,
+    expectedHead: sourceManifest.expectedHead,
+    expectedTree: sourceManifest.expectedTree,
+    expectedOutcomesDigest: expectedOutcomes.expectedOutcomesDigest,
+    sourceManifestDigest: sourceManifest.manifestDigest,
+    resolutionInputsDigest: resolutionInputs.resolutionInputsDigest,
+    toolchainManifestDigest: options.toolchainManifest.toolchainManifestDigest,
+  };
+  for (const [field, expected] of Object.entries(repeated)) if (value[field] !== expected) refuse('SOURCE_ORIGIN_OUTCOMES');
+  if (resolutionInputs.repositoryId !== value.repositoryId || resolutionInputs.expectedHead !== value.expectedHead || resolutionInputs.expectedTree !== value.expectedTree) refuse('SOURCE_ORIGIN_OUTCOMES');
+  array(value.rows);
+  if (value.rows.length !== expectedOutcomes.rows.length) refuse('SOURCE_ORIGIN_OUTCOMES');
+  for (let index = 0; index < value.rows.length; index += 1) validateParseOutcomeReceiptRow(
+    value.rows[index], expectedOutcomes.rows[index], { sourceManifest, resolutionInputs }, parserPolicy, expectedOutcomes.expectedOutcomesDigest,
+  );
+  validateSortedEntries(value.rows, 'path');
+  dataObject(value.counts, ['outcomeRows','expectedRefusalRows','opaqueProposedRows','representedFileNodes','unresolvedRows','ownerBindings']);
+  for (const count of Object.values(value.counts)) nonNegativeInteger(count);
+  const expectedCounts = {
+    outcomeRows: value.rows.length,
+    expectedRefusalRows: value.rows.filter((row) => row.disposition === 'EXPECTED_REFUSAL').length,
+    opaqueProposedRows: value.rows.filter((row) => row.disposition === 'OPAQUE_PROPOSED').length,
+    representedFileNodes: new Set(value.rows.map((row) => row.representedFileNodeId)).size,
+    unresolvedRows: value.rows.length * 5,
+    ownerBindings: value.rows.reduce((sum, row) => sum + row.ownerBindings.length, 0),
+  };
+  if (canonicalJsonText(value.counts) !== canonicalJsonText(expectedCounts)) refuse('SOURCE_ORIGIN_OUTCOMES');
+  checkDigest(value, 'receiptDigest');
+  return immutableCopy(value);
+}
+
 function validateExecutableIdentity(value) {
   dataObject(value, ['version','executableRawSha256','executableByteLength']);
   nonEmptyString(value.version); digest(value.executableRawSha256); nonNegativeInteger(value.executableByteLength);

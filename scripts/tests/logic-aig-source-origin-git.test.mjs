@@ -12,6 +12,7 @@ import {
 import { platform, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   SOURCE_ORIGIN_LIMITS,
@@ -262,4 +263,85 @@ test("child output accounting accepts exact per-stream/global limits and refuses
   assert.equal(gitSource.exceedsChildOutputLimit(65, 0, 64, 128), true);
   assert.equal(gitSource.exceedsChildOutputLimit(32, 33, 64, 64), true);
   assert.equal(gitSource.exceedsChildOutputLimit(0, 65, 64, 128), true);
+});
+
+test("frozen blob admission requires exact complete row-to-byte identity and returns defensive bytes", () => {
+  const firstBytes = Buffer.from("first", "utf8");
+  const secondBytes = Buffer.from("second", "utf8");
+  const rows = [
+    { path: "a.ts", byteLength: firstBytes.length, rawSha256: sha256(firstBytes) },
+    { path: "b.fungi", byteLength: secondBytes.length, rawSha256: sha256(secondBytes) },
+  ];
+  const source = new Map([["a.ts", firstBytes], ["b.fungi", secondBytes]]);
+  const admitted = gitSource.admitFrozenBlobSet(rows, source, { label: "SOURCE_MANIFEST" });
+  assert.deepEqual([...admitted.keys()], ["a.ts", "b.fungi"]);
+  firstBytes.fill(0);
+  assert.equal(admitted.get("a.ts").toString("utf8"), "first");
+  const returned = admitted.get("a.ts");
+  returned.fill(0);
+  assert.equal(admitted.get("a.ts").toString("utf8"), "first");
+  assert.throws(() => admitted.set("c.ts", Buffer.from("c")), TypeError);
+
+  assert.throws(() => gitSource.admitFrozenBlobSet(rows, new Map([["a.ts", Buffer.from("first")]]), { label: "SOURCE_MANIFEST" }), /SOURCE_ORIGIN_GIT_BLOB_SET/);
+  assert.throws(() => gitSource.admitFrozenBlobSet(rows, new Map([...source, ["extra.ts", Buffer.from("extra")]]), { label: "SOURCE_MANIFEST" }), /SOURCE_ORIGIN_GIT_BLOB_SET/);
+  assert.throws(() => gitSource.admitFrozenBlobSet(rows, new Map([["a.ts", Buffer.from("drift")], ["b.fungi", secondBytes]]), { label: "SOURCE_MANIFEST" }), /SOURCE_ORIGIN_GIT_BLOB_SET/);
+
+  let traps = 0;
+  const proxy = new Proxy(new Map(), {
+    getPrototypeOf() { traps += 1; throw new Error("trap"); },
+    get() { traps += 1; throw new Error("trap"); },
+  });
+  assert.throws(() => gitSource.admitFrozenBlobSet(rows, proxy, { label: "SOURCE_MANIFEST" }), /SOURCE_ORIGIN_GIT_BLOB_SET/);
+  assert.equal(traps, 0);
+
+  const gitOid = createHash("sha1")
+    .update(Buffer.from(`blob ${secondBytes.length}\0`, "utf8"))
+    .update(secondBytes)
+    .digest("hex");
+  const fullRow = [{
+    path: "b.fungi",
+    mode: "100644",
+    blobOid: gitOid,
+    objectFormat: "sha1",
+    byteLength: secondBytes.length,
+    rawSha256: sha256(secondBytes),
+  }];
+  assert.doesNotThrow(() => gitSource.admitFrozenBlobSet(fullRow, new Map([["b.fungi", secondBytes]]), { label: "SOURCE_MANIFEST" }));
+  const oidDrift = structuredClone(fullRow);
+  oidDrift[0].blobOid = "f".repeat(40);
+  assert.throws(() => gitSource.admitFrozenBlobSet(oidDrift, new Map([["b.fungi", secondBytes]]), { label: "SOURCE_MANIFEST" }), /SOURCE_ORIGIN_GIT_BLOB_SET/);
+});
+
+test("genuine pinned-Git capture returns every frozen owner value and defensive owner blob", { timeout: 900_000, skip: platform() !== "win32" }, async () => {
+  const gitExecutableLocator = fileURLToPath(new URL(
+    "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+    import.meta.url,
+  ));
+  const captured = await gitSource.captureFrozenSource({
+    commitOid: "e071034ca02b2303aeec1f7583bdc2e3ff86e908",
+    gitExecutableLocator,
+  });
+  assert.deepEqual(Object.keys(captured).sort(), [
+    "observation", "ownerBlobs", "owners", "resolutionBlobs",
+    "resolutionInputs", "sourceBlobs", "sourceManifest",
+  ].sort());
+  assert.deepEqual(Object.keys(captured.owners).sort(), ["authorizing", "identities", "ownerSetDigest", "values"].sort());
+  assert.equal(captured.owners.authorizing, false);
+  assert.equal(captured.owners.identities.length, 10);
+  assert.deepEqual(Object.keys(captured.owners.values).sort(), [
+    "expectedOutcomes", "exporter", "gate", "generated", "parser", "pins",
+    "proposedBaseline", "repositoryIdentity", "resolution", "source",
+  ].sort());
+  const ownerRows = captured.owners.identities.map((row) => ({
+    path: row.locator,
+    byteLength: row.byteLength,
+    rawSha256: row.rawSha256,
+  }));
+  const admittedOwners = gitSource.admitFrozenBlobSet(ownerRows, captured.ownerBlobs, { label: "OWNER_SET" });
+  assert.equal(admittedOwners.size, 10);
+  assert.equal(captured.owners.values.pins.pinsDigest, "a287faaf55f698b7e78d085a24a34bae4998e78e55706731fe9779a0fe4834f8");
+  assert.equal(captured.owners.values.expectedOutcomes.expectedOutcomesDigest, "9a22abb0889101c39e30a07a546a00829320c5fa679a31e97e70312d93ae14a5");
+  assert(Object.isFrozen(captured.owners));
+  assert(Object.isFrozen(captured.owners.values));
+  assert.throws(() => captured.ownerBlobs.clear(), TypeError);
 });
