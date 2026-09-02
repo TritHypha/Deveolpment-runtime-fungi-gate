@@ -292,7 +292,11 @@ test("project decoder conserves every source and emits a closed owner-backed out
   }
   validateToolchainManifest(result.toolchainManifest, { pins: options.owners.values.pins });
   validateParseOutcomesReceipt(result.parseOutcomesReceipt, {
+    repositoryIdentity: options.owners.values.repositoryIdentity,
+    sourcePolicy: options.owners.values.source,
+    resolutionPolicy: options.owners.values.resolution,
     parserPolicy: options.owners.values.parser,
+    pins: options.owners.values.pins,
     expectedOutcomes: options.owners.values.expectedOutcomes,
     sourceManifest: options.sourceManifest,
     resolutionInputs: options.resolutionInputs,
@@ -364,6 +368,23 @@ test("project decoder refuses owner-byte drift and unexplained authority before 
   let evaluations = 0;
   await expectRefusal(decodeSourceProject({ ...options, evaluate() { evaluations += 1; } }));
   assert.equal(evaluations, 0);
+});
+
+test("project owner boundary rejects a proxied Gate map before caller traps", async () => {
+  const options = await fixtureOptions();
+  const owners = structuredClone(options.owners);
+  let effects = 0;
+  owners.values.gate = new Proxy({}, {
+    ownKeys() {
+      effects += 1;
+      return [];
+    },
+  });
+  await expectRefusal(
+    decodeSourceProject({ ...options, owners }),
+    /^SOURCE_ORIGIN_PROJECT_OWNER$/,
+  );
+  assert.equal(effects, 0);
 });
 
 test("project decoder refuses source drift without emitting receipt, manifest, or parser artifacts", async () => {

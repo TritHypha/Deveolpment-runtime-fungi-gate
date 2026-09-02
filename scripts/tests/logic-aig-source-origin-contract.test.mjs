@@ -137,6 +137,200 @@ function resolutionInputsFixture({ repository, resolution, rows = [manifestRow("
   return { ...body, resolutionInputsDigest: sha256Canonical(body.schema, body) };
 }
 
+function receiptManifestBinding(manifestKind, row) {
+  const domain = manifestKind === "SOURCE_MANIFEST"
+    ? "galerina.logic-aig-source-manifest-row.v1"
+    : "galerina.logic-aig-resolution-input-row.v1";
+  return {
+    manifestKind,
+    manifestRowDigest: sha256Canonical(domain, row),
+    path: row.path,
+    blobOid: row.blobOid,
+    rawSha256: row.rawSha256,
+    byteLength: row.byteLength,
+  };
+}
+
+function resealOutcomeReceipt(receipt, expectedOutcomes) {
+  const rows = receipt.rows.map((row) => {
+    const expected = expectedOutcomes.rows.find((candidate) => candidate.path === row.path);
+    assert(expected);
+    const membershipBody = {
+      schema: "galerina.logic-aig-outcome-membership-proof.v1",
+      expectedOutcomesDigest: expectedOutcomes.expectedOutcomesDigest,
+      path: row.path,
+      disposition: row.disposition,
+      parserId: row.parserId,
+      expectedDiagnosticCodes: expected.diagnosticCodes,
+      sourceBinding: row.sourceBinding,
+      ownerBindings: row.ownerBindings,
+      authorizing: false,
+    };
+    const rowBody = {
+      ...row,
+      membershipProofDigest: sha256Canonical(membershipBody.schema, membershipBody),
+    };
+    delete rowBody.rowDigest;
+    return {
+      ...rowBody,
+      rowDigest: sha256Canonical("galerina.logic-aig-parse-outcome-row.v1", rowBody),
+    };
+  });
+  const body = { ...receipt, rows };
+  delete body.receiptDigest;
+  return { ...body, receiptDigest: sha256Canonical(body.schema, body) };
+}
+
+async function nonEmptyReceiptFixture() {
+  const repositoryIdentity = (await readPolicy("repository")).value;
+  const sourcePolicy = (await readPolicy("source")).value;
+  const resolutionPolicy = (await readPolicy("resolution")).value;
+  const parserPolicy = (await readPolicy("parser")).value;
+  const pins = (await readPolicy("pins")).value;
+  const record = pins.records.find((row) => row.platform === process.platform && row.arch === process.arch);
+  assert(record);
+  const sourceRow = manifestRow("src/negative.ts", "/// expected_diagnostics: TS-1109\nconst = ;\n");
+  const sidecarRow = manifestRow("src/negative.ts.expected.diagnostics.txt", "TS-1109\n");
+  const sourceManifest = sourceManifestFixture({ repository: repositoryIdentity, source: sourcePolicy, rows: [sourceRow] });
+  const resolutionInputs = resolutionInputsFixture({ repository: repositoryIdentity, resolution: resolutionPolicy, rows: [sidecarRow] });
+  const expectedRow = {
+    path: sourceRow.path,
+    domain: "HOST",
+    parserId: "typescript-compiler-api",
+    disposition: "EXPECTED_REFUSAL",
+    diagnosticCodes: ["TS-1109"],
+    ownerKind: "INLINE_EXPECTATION",
+    ownerLocator: sourceRow.path,
+    ownerKey: "expected_diagnostics",
+  };
+  const expectedBody = {
+    schema: "galerina.logic-aig-expected-parse-outcomes.v1",
+    parserPolicyDigest: parserPolicy.policyDigest,
+    rows: [expectedRow],
+    authorizing: false,
+  };
+  const expectedOutcomes = {
+    ...expectedBody,
+    expectedOutcomesDigest: sha256Canonical(expectedBody.schema, expectedBody),
+  };
+  const toolchainManifest = buildToolchainSnapshot({
+    pins,
+    platform: record.platform,
+    arch: record.arch,
+    nodeIdentity: clone(record.nodeIdentity),
+    gitIdentity: clone(record.gitIdentity),
+    actualRuntimeLoadSets: record.runtimeLoadSets.map((row) => ({
+      id: row.id,
+      moduleRows: clone(row.moduleRows),
+      builtinModules: clone(row.builtinModules),
+    })),
+    actualParserExportNames: clone(record.sourceOriginParser.exportNames),
+  });
+  const sourceBinding = receiptManifestBinding("SOURCE_MANIFEST", sourceRow);
+  const ownerSourceBinding = receiptManifestBinding("SOURCE_MANIFEST", sourceRow);
+  const ownerBinding = {
+    ownerKind: expectedRow.ownerKind,
+    manifestKind: ownerSourceBinding.manifestKind,
+    manifestRowDigest: ownerSourceBinding.manifestRowDigest,
+    locator: ownerSourceBinding.path,
+    blobOid: ownerSourceBinding.blobOid,
+    rawSha256: ownerSourceBinding.rawSha256,
+    byteLength: ownerSourceBinding.byteLength,
+    ownerKey: expectedRow.ownerKey,
+    ownerReason: null,
+  };
+  const row = {
+    path: expectedRow.path,
+    disposition: expectedRow.disposition,
+    parserId: expectedRow.parserId,
+    actualStatus: "REFUSED_AS_EXPECTED",
+    actualDiagnosticCodes: clone(expectedRow.diagnosticCodes),
+    sourceBinding,
+    ownerBindings: [ownerBinding],
+    membershipProofDigest: "0".repeat(64),
+    representedFileNodeId: `ga1:${"d".repeat(64)}`,
+    unresolvedRowsDigest: "e".repeat(64),
+    rowDigest: "0".repeat(64),
+  };
+  const receiptBody = {
+    schema: "galerina.logic-aig-parse-outcomes-receipt.v1",
+    repositoryId: sourceManifest.repositoryId,
+    expectedHead: sourceManifest.expectedHead,
+    expectedTree: sourceManifest.expectedTree,
+    expectedOutcomesDigest: expectedOutcomes.expectedOutcomesDigest,
+    sourceManifestDigest: sourceManifest.manifestDigest,
+    resolutionInputsDigest: resolutionInputs.resolutionInputsDigest,
+    toolchainManifestDigest: toolchainManifest.toolchainManifestDigest,
+    rows: [row],
+    counts: {
+      outcomeRows: 1,
+      expectedRefusalRows: 1,
+      opaqueProposedRows: 0,
+      representedFileNodes: 1,
+      unresolvedRows: 5,
+      ownerBindings: 1,
+    },
+    authorizing: false,
+    receiptDigest: "0".repeat(64),
+  };
+  const receipt = resealOutcomeReceipt(receiptBody, expectedOutcomes);
+  return {
+    receipt,
+    expectedOutcomes,
+    sourceManifest,
+    resolutionInputs,
+    toolchainManifest,
+    parserPolicy,
+    repositoryIdentity,
+    sourcePolicy,
+    resolutionPolicy,
+    pins,
+    sourceRow,
+    sidecarRow,
+  };
+}
+
+function receiptAuthorityOptions(fixture) {
+  return {
+    repositoryIdentity: fixture.repositoryIdentity,
+    sourcePolicy: fixture.sourcePolicy,
+    resolutionPolicy: fixture.resolutionPolicy,
+    parserPolicy: fixture.parserPolicy,
+    pins: fixture.pins,
+    expectedOutcomes: fixture.expectedOutcomes,
+    sourceManifest: fixture.sourceManifest,
+    resolutionInputs: fixture.resolutionInputs,
+    toolchainManifest: fixture.toolchainManifest,
+  };
+}
+
+function receiptForManifests(fixture, sourceManifest, resolutionInputs) {
+  const receipt = clone(fixture.receipt);
+  receipt.sourceManifestDigest = sourceManifest.manifestDigest;
+  receipt.resolutionInputsDigest = resolutionInputs.resolutionInputsDigest;
+  const sourceRow = sourceManifest.rows.find((row) => row.path === fixture.sourceRow.path);
+  assert(sourceRow);
+  receipt.rows[0].sourceBinding = receiptManifestBinding("SOURCE_MANIFEST", sourceRow);
+  const ownerSource = receiptManifestBinding("SOURCE_MANIFEST", sourceRow);
+  receipt.rows[0].ownerBindings = [{
+    ownerKind: fixture.expectedOutcomes.rows[0].ownerKind,
+    manifestKind: ownerSource.manifestKind,
+    manifestRowDigest: ownerSource.manifestRowDigest,
+    locator: ownerSource.path,
+    blobOid: ownerSource.blobOid,
+    rawSha256: ownerSource.rawSha256,
+    byteLength: ownerSource.byteLength,
+    ownerKey: fixture.expectedOutcomes.rows[0].ownerKey,
+    ownerReason: null,
+  }];
+  return resealOutcomeReceipt(receipt, fixture.expectedOutcomes);
+}
+
+function resealManifest(manifest, digestField) {
+  const body = without(manifest, digestField);
+  return { ...body, [digestField]: sha256Canonical(body.schema, body) };
+}
+
 test("exports the sole exact immutable eleven-field limit owner", () => {
   assert.deepEqual(SOURCE_ORIGIN_LIMITS, {
     capturedFileBytes: 67_108_864,
@@ -728,6 +922,119 @@ test("toolchain manifest v2 round-trips through the closed contract and refuses 
   expectCode("SOURCE_ORIGIN_DIGEST", () => validateToolchainManifest({ ...manifest, actualLoadedSetDigest: "0".repeat(64) }, { pins }));
 });
 
+test("toolchain manifest authority options refuse proxies and omission without caller effects", async (t) => {
+  const fixture = await nonEmptyReceiptFixture();
+  await t.test("proxy", () => {
+    let effects = 0;
+    const hostile = new Proxy({}, {
+      getOwnPropertyDescriptor() {
+        effects += 1;
+        return undefined;
+      },
+    });
+    expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainManifest(fixture.toolchainManifest, hostile));
+    assert.equal(effects, 0);
+  });
+  await t.test("omitted pins", () => {
+    expectCode("SOURCE_ORIGIN_SCHEMA", () => validateToolchainManifest(fixture.toolchainManifest, {}));
+  });
+});
+
+test("parse-outcomes receipt binds the exact expected owner kind, locator and key", async () => {
+  const fixture = await nonEmptyReceiptFixture();
+  const options = receiptAuthorityOptions(fixture);
+  assertDeepFrozen(validateParseOutcomesReceipt(fixture.receipt, options));
+
+  const forged = clone(fixture.receipt);
+  const sidecar = receiptManifestBinding("RESOLUTION_INPUTS", fixture.sidecarRow);
+  forged.rows[0].ownerBindings = [{
+    ownerKind: "SIDECAR_EXPECTATION",
+    manifestKind: sidecar.manifestKind,
+    manifestRowDigest: sidecar.manifestRowDigest,
+    locator: sidecar.path,
+    blobOid: sidecar.blobOid,
+    rawSha256: sidecar.rawSha256,
+    byteLength: sidecar.byteLength,
+    ownerKey: "complete-file",
+    ownerReason: null,
+  }];
+  const resealed = resealOutcomeReceipt(forged, fixture.expectedOutcomes);
+  expectCode("SOURCE_ORIGIN_OUTCOMES", () => validateParseOutcomesReceipt(resealed, options));
+});
+
+test("parse-outcomes receipt requires the complete explicit owner and pin authority bundle", async () => {
+  const fixture = await nonEmptyReceiptFixture();
+  const legacyOptions = {
+    parserPolicy: fixture.parserPolicy,
+    expectedOutcomes: fixture.expectedOutcomes,
+    sourceManifest: fixture.sourceManifest,
+    resolutionInputs: fixture.resolutionInputs,
+    toolchainManifest: fixture.toolchainManifest,
+  };
+  expectCode("SOURCE_ORIGIN_SCHEMA", () => validateParseOutcomesReceipt(fixture.receipt, legacyOptions));
+  assertDeepFrozen(validateParseOutcomesReceipt(fixture.receipt, receiptAuthorityOptions(fixture)));
+});
+
+test("parse-outcomes receipt rejects a coherently resealed toolchain absent from approved pins", async () => {
+  const fixture = await nonEmptyReceiptFixture();
+  const forgedToolchain = clone(fixture.toolchainManifest);
+  forgedToolchain.selectedPinRecordId = "unapproved-record";
+  forgedToolchain.selectedPinRecordDigest = "f".repeat(64);
+  forgedToolchain.toolchainManifestDigest = sha256Canonical(
+    forgedToolchain.schema,
+    without(forgedToolchain, "toolchainManifestDigest"),
+  );
+  const forgedReceipt = clone(fixture.receipt);
+  forgedReceipt.toolchainManifestDigest = forgedToolchain.toolchainManifestDigest;
+  const options = {
+    ...receiptAuthorityOptions(fixture),
+    toolchainManifest: forgedToolchain,
+  };
+  expectCode(
+    "SOURCE_ORIGIN_TOOLCHAIN",
+    () => validateParseOutcomesReceipt(
+      resealOutcomeReceipt(forgedReceipt, fixture.expectedOutcomes),
+      options,
+    ),
+  );
+});
+
+test("parse-outcomes receipt fully validates source-manifest schema, mode, OID and digest", async (t) => {
+  const fixture = await nonEmptyReceiptFixture();
+  const cases = [
+    ["schema", (manifest) => { manifest.schema = "attacker.source-manifest.v1"; return resealManifest(manifest, "manifestDigest"); }],
+    ["mode", (manifest) => { manifest.rows[0].mode = "120000"; return resealManifest(manifest, "manifestDigest"); }],
+    ["OID", (manifest) => { manifest.rows[0].blobOid = "not-a-git-oid"; return resealManifest(manifest, "manifestDigest"); }],
+    ["digest", (manifest) => ({ ...manifest, manifestDigest: "0".repeat(64) })],
+  ];
+  for (const [label, mutate] of cases) {
+    await t.test(label, () => {
+      const sourceManifest = mutate(clone(fixture.sourceManifest));
+      const receipt = receiptForManifests(fixture, sourceManifest, fixture.resolutionInputs);
+      const options = { ...receiptAuthorityOptions(fixture), sourceManifest };
+      assert.throws(() => validateParseOutcomesReceipt(receipt, options));
+    });
+  }
+});
+
+test("parse-outcomes receipt fully validates resolution-input schema, mode, OID and digest", async (t) => {
+  const fixture = await nonEmptyReceiptFixture();
+  const cases = [
+    ["schema", (manifest) => { manifest.schema = "attacker.resolution-inputs.v1"; return resealManifest(manifest, "resolutionInputsDigest"); }],
+    ["mode", (manifest) => { manifest.rows[0].mode = "120000"; return resealManifest(manifest, "resolutionInputsDigest"); }],
+    ["OID", (manifest) => { manifest.rows[0].blobOid = "not-a-git-oid"; return resealManifest(manifest, "resolutionInputsDigest"); }],
+    ["digest", (manifest) => ({ ...manifest, resolutionInputsDigest: "0".repeat(64) })],
+  ];
+  for (const [label, mutate] of cases) {
+    await t.test(label, () => {
+      const resolutionInputs = mutate(clone(fixture.resolutionInputs));
+      const receipt = receiptForManifests(fixture, fixture.sourceManifest, resolutionInputs);
+      const options = { ...receiptAuthorityOptions(fixture), resolutionInputs };
+      assert.throws(() => validateParseOutcomesReceipt(receipt, options));
+    });
+  }
+});
+
 test("the empty parse-outcomes receipt is a closed cross-bound non-authorizing artifact", async () => {
   const repository = (await readPolicy("repository")).value;
   const source = (await readPolicy("source")).value;
@@ -775,7 +1082,17 @@ test("the empty parse-outcomes receipt is a closed cross-bound non-authorizing a
     authorizing: false,
   };
   const receipt = { ...body, receiptDigest: sha256Canonical(body.schema, body) };
-  const options = { parserPolicy: parser, expectedOutcomes, sourceManifest, resolutionInputs, toolchainManifest };
+  const options = {
+    repositoryIdentity: repository,
+    sourcePolicy: source,
+    resolutionPolicy: resolution,
+    parserPolicy: parser,
+    pins,
+    expectedOutcomes,
+    sourceManifest,
+    resolutionInputs,
+    toolchainManifest,
+  };
   assertDeepFrozen(validateParseOutcomesReceipt(receipt, options));
   expectCode("SOURCE_ORIGIN_SCHEMA", () => validateParseOutcomesReceipt({ ...receipt, parserResults: [] }, options));
   const badCounts = clone(receipt);

@@ -567,10 +567,9 @@ function validateToolchainManifestCore(value) {
   checkDigest(value, 'toolchainManifestDigest');
 }
 
-export function validateToolchainManifest(value, options = {}) {
+export function validateToolchainManifest(value, options) {
   validateToolchainManifestCore(value);
-  dataObject(options, Object.hasOwn(options, 'pins') ? ['pins'] : []);
-  if (!Object.hasOwn(options, 'pins')) return immutableCopy(value);
+  dataObject(options, ['pins']);
   const pins = validateToolchainPins(options.pins);
   const records = pins.records.filter((record) =>
     record.recordId === value.selectedPinRecordId
@@ -646,9 +645,9 @@ function ownerBindingCompare(left, right) {
   return 0;
 }
 
-function validateOwnerBindings(values, manifests, parserPolicy) {
+function validateOwnerBindings(values, manifests, parserPolicy, expectedOutcome) {
   array(values);
-  if (values.length === 0) refuse('SOURCE_ORIGIN_OUTCOMES');
+  if (values.length !== 1) refuse('SOURCE_ORIGIN_OUTCOMES');
   const policy = new Map(parserPolicy.ownerManifestBindings.map((row) => [row.ownerKind, row]));
   for (const binding of values) {
     dataObject(binding, ['ownerKind','manifestKind','manifestRowDigest','locator','blobOid','rawSha256','byteLength','ownerKey','ownerReason']);
@@ -666,6 +665,11 @@ function validateOwnerBindings(values, manifests, parserPolicy) {
     };
     validateReceiptBinding(reduced, manifests, binding.manifestKind);
     canonicalLocator(binding.locator);
+    if (
+      binding.ownerKind !== expectedOutcome.ownerKind
+      || binding.locator !== expectedOutcome.ownerLocator
+      || binding.ownerKey !== expectedOutcome.ownerKey
+    ) refuse('SOURCE_ORIGIN_OUTCOMES');
   }
   for (let index = 1; index < values.length; index += 1) if (ownerBindingCompare(values[index - 1], values[index]) >= 0) refuse('SOURCE_ORIGIN_ORDER');
 }
@@ -683,7 +687,7 @@ function validateParseOutcomeReceiptRow(row, expected, manifests, parserPolicy, 
   if (row.path !== expected.path || row.disposition !== expected.disposition || row.parserId !== expected.parserId) refuse('SOURCE_ORIGIN_OUTCOMES');
   validateReceiptBinding(row.sourceBinding, manifests, 'SOURCE_MANIFEST');
   if (row.sourceBinding.path !== row.path) refuse('SOURCE_ORIGIN_OUTCOMES');
-  validateOwnerBindings(row.ownerBindings, manifests, parserPolicy);
+  validateOwnerBindings(row.ownerBindings, manifests, parserPolicy, expected);
   if (expected.disposition === 'EXPECTED_REFUSAL') {
     if (row.actualStatus !== 'REFUSED_AS_EXPECTED' || canonicalJsonText(row.actualDiagnosticCodes) !== canonicalJsonText(expected.diagnosticCodes)) refuse('SOURCE_ORIGIN_OUTCOMES');
   } else if (expected.disposition === 'OPAQUE_PROPOSED') {
@@ -710,19 +714,23 @@ export function validateParseOutcomesReceipt(value, options) {
     'sourceManifestDigest','resolutionInputsDigest','toolchainManifestDigest',
     'rows','counts','authorizing','receiptDigest',
   ]);
-  options = manifestOptions(options, ['parserPolicy','expectedOutcomes','sourceManifest','resolutionInputs','toolchainManifest']);
+  options = manifestOptions(options, [
+    'repositoryIdentity','sourcePolicy','resolutionPolicy','parserPolicy','pins',
+    'expectedOutcomes','sourceManifest','resolutionInputs','toolchainManifest',
+  ]);
+  const repositoryIdentity = validateRepositoryIdentity(options.repositoryIdentity);
+  const sourcePolicy = validateSourcePolicy(options.sourcePolicy);
+  const resolutionPolicy = validateResolutionPolicy(options.resolutionPolicy);
   const parserPolicy = validateParserPolicy(options.parserPolicy);
+  const pins = validateToolchainPins(options.pins);
   const expectedOutcomes = validateExpectedParseOutcomes(options.expectedOutcomes, { parserPolicy });
-  validateToolchainManifestCore(options.toolchainManifest);
-  const sourceManifest = options.sourceManifest;
-  const resolutionInputs = options.resolutionInputs;
+  const sourceManifest = validateSourceManifest(options.sourceManifest, { repositoryIdentity, sourcePolicy });
+  const resolutionInputs = validateResolutionInputs(options.resolutionInputs, { repositoryIdentity, resolutionPolicy });
+  const toolchainManifest = validateToolchainManifest(options.toolchainManifest, { pins });
   if (
     value.schema !== 'galerina.logic-aig-parse-outcomes-receipt.v1'
     || value.authorizing !== false
   ) refuse('SOURCE_ORIGIN_POLICY');
-  for (const manifest of [sourceManifest, resolutionInputs]) {
-    if (manifest === null || typeof manifest !== 'object' || isProxy(manifest)) refuse('SOURCE_ORIGIN_SCHEMA');
-  }
   const repeated = {
     repositoryId: sourceManifest.repositoryId,
     expectedHead: sourceManifest.expectedHead,
@@ -730,7 +738,7 @@ export function validateParseOutcomesReceipt(value, options) {
     expectedOutcomesDigest: expectedOutcomes.expectedOutcomesDigest,
     sourceManifestDigest: sourceManifest.manifestDigest,
     resolutionInputsDigest: resolutionInputs.resolutionInputsDigest,
-    toolchainManifestDigest: options.toolchainManifest.toolchainManifestDigest,
+    toolchainManifestDigest: toolchainManifest.toolchainManifestDigest,
   };
   for (const [field, expected] of Object.entries(repeated)) if (value[field] !== expected) refuse('SOURCE_ORIGIN_OUTCOMES');
   if (resolutionInputs.repositoryId !== value.repositoryId || resolutionInputs.expectedHead !== value.expectedHead || resolutionInputs.expectedTree !== value.expectedTree) refuse('SOURCE_ORIGIN_OUTCOMES');

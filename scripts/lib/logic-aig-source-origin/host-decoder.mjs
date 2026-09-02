@@ -36,6 +36,10 @@ const HOST_OPTION_KEYS = Object.freeze([
   'resolutionBlobs', 'toolchainBlobs', 'platform', 'arch', 'nodeIdentity',
   'gitIdentity',
 ]);
+const SEMANTIC_ROW_OPTION_KEYS = Object.freeze([
+  'repositoryId', 'parserId', 'sourceRows', 'parseResults',
+  'declarations', 'relations', 'parserPolicy', 'resolutionPolicy',
+]);
 const NODE_KINDS = new Set([
   'CLASS', 'FILE', 'FLOW', 'FUNCTION', 'GATE', 'INTERFACE', 'METHOD',
   'MODULE', 'ROUTE', 'SYMBOL', 'TYPE',
@@ -397,12 +401,12 @@ function hostChildMain() {
         if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
           const resolution = resolveSpecifier(sourcePaths, locator, node.moduleSpecifier.text);
           relations.push({ path: locator, ownerNativeKey, relationshipClass: 'IMPORT', ...span, targetNativeKeys: [], targetPaths: resolution.paths, targetState: resolution.state });
-        } else if (ts.isCallExpression(node)) {
-          if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+        } else if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
+          if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) {
             relations.push({ path: locator, ownerNativeKey, relationshipClass: 'IMPORT', ...span, targetNativeKeys: [], targetPaths: [], targetState: 'DYNAMIC' });
           } else {
             const target = targetKeys(ts.isPropertyAccessExpression(node.expression) ? node.expression.name : node.expression);
-            let targetState = target.keys.length === 1 ? 'RESOLVED' : target.keys.length > 1 ? 'AMBIGUOUS' : target.outside ? 'OUTSIDE' : ts.isIdentifier(node.expression) ? 'MISSING' : 'DYNAMIC';
+            const targetState = target.keys.length === 1 ? 'RESOLVED' : target.keys.length > 1 ? 'AMBIGUOUS' : target.outside ? 'OUTSIDE' : ts.isIdentifier(node.expression) ? 'MISSING' : 'DYNAMIC';
             relations.push({ path: locator, ownerNativeKey, relationshipClass: 'CALLER', ...span, targetNativeKeys: target.keys, targetPaths: [], targetState });
           }
         } else if (ts.isTypeReferenceNode(node) || ts.isExpressionWithTypeArguments(node)) {
@@ -638,7 +642,12 @@ function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow
   unresolved.push({ ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
 }
 
-export function buildSemanticRows({ repositoryId, parserId, sourceRows, parseResults, declarations, relations, parserPolicy, resolutionPolicy }) {
+export function buildSemanticRows(options) {
+  exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  const {
+    repositoryId, parserId, sourceRows, parseResults, declarations, relations,
+    parserPolicy, resolutionPolicy,
+  } = options;
   const sourceByPath = new Map(sourceRows.map((row) => [row.path, row]));
   const parseByPath = new Map(parseResults.map((row) => [row.path, row]));
   const nodes = [];

@@ -183,8 +183,14 @@ function parseGateOwnerBytes(bytes, parserPolicy) {
 }
 
 function validateGateOwner(value, parserPolicy) {
-  exactObject(value, Object.getOwnPropertyNames(value), 'SOURCE_ORIGIN_PROJECT_OWNER');
+  if (isProxy(value) || value === null || typeof value !== 'object' || Array.isArray(value)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  const prototype = Object.getPrototypeOf(value);
+  if ((prototype !== Object.prototype && prototype !== null) || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   const keys = Object.getOwnPropertyNames(value);
+  for (const key of keys) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  }
   const sorted = [...keys].sort(compareCodeUnits);
   if (keys.some((key, index) => key !== sorted[index])) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   const pattern = new RegExp(parserPolicy.diagnosticCodePattern, 'u');
@@ -647,7 +653,11 @@ function makeOutcomeReceipt(captured, rows, toolchainManifest) {
   const receipt = { ...body, receiptDigest: sha256Canonical(body.schema, body) };
   try {
     return validateParseOutcomesReceipt(receipt, {
+      repositoryIdentity: captured.values.repositoryIdentity,
+      sourcePolicy: captured.values.source,
+      resolutionPolicy: captured.values.resolution,
       parserPolicy: captured.values.parser,
+      pins: captured.values.pins,
       expectedOutcomes: captured.values.expectedOutcomes,
       sourceManifest: captured.sourceManifest,
       resolutionInputs: captured.resolutionInputs,

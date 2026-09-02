@@ -7,7 +7,10 @@ import {
   sha256Canonical,
   sha256Raw,
 } from "../lib/logic-aig-source-origin/contract.mjs";
-import { decodeHostProject } from "../lib/logic-aig-source-origin/host-decoder.mjs";
+import {
+  buildSemanticRows,
+  decodeHostProject,
+} from "../lib/logic-aig-source-origin/host-decoder.mjs";
 
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
 const TYPESCRIPT_ENTRY = new URL("../../packages-ts/galerina-core-compiler/node_modules/typescript/lib/typescript.js", import.meta.url);
@@ -97,6 +100,38 @@ function expectRefusal(operation, pattern = /^SOURCE_ORIGIN_HOST_[A-Z0-9_]+$/) {
   });
 }
 
+test("semantic-row boundary refuses proxy and accessor options before caller effects", async (t) => {
+  await t.test("proxy", () => {
+    let effects = 0;
+    const hostile = new Proxy({}, {
+      get(_target, _key) {
+        effects += 1;
+        return undefined;
+      },
+    });
+    assert.throws(() => buildSemanticRows(hostile));
+    assert.equal(effects, 0);
+  });
+  await t.test("accessor", () => {
+    let effects = 0;
+    const hostile = {};
+    for (const key of [
+      "repositoryId", "parserId", "sourceRows", "parseResults",
+      "declarations", "relations", "parserPolicy", "resolutionPolicy",
+    ]) {
+      Object.defineProperty(hostile, key, {
+        enumerable: true,
+        get() {
+          effects += 1;
+          return undefined;
+        },
+      });
+    }
+    assert.throws(() => buildSemanticRows(hostile));
+    assert.equal(effects, 0);
+  });
+});
+
 test("HOST decoder loads only pinned lib/typescript.js and emits stable file/declaration semantics", async () => {
   const options = await fixtureOptions({
     "src/contracts.ts": [
@@ -142,6 +177,30 @@ test("HOST checker does not join unrelated property-name has calls", async () =>
   const callerEdges = result.edges.filter((edge) => edge.kind === "CALLER" && edge.to === method.id);
   assert.equal(callerEdges.length, 1);
   assert(result.unresolved.some((item) => item.relationshipClass === "CALLER"));
+});
+
+test("HOST conserves NewExpression constructor calls as checker-backed relations", async () => {
+  const options = await fixtureOptions({
+    "src/constructor.ts": [
+      "export class Widget {}",
+      "export function makeWidget(): Widget {",
+      "  return new Widget();",
+      "}",
+      "",
+    ].join("\n"),
+  });
+  const result = await decodeHostProject(options);
+  const widget = result.nodes.find((node) => node.kind === "CLASS" && node.locator.includes("!Widget"));
+  const maker = result.nodes.find((node) => node.kind === "FUNCTION" && node.locator.includes("!makeWidget"));
+  assert(widget);
+  assert(maker);
+  const constructorEdges = result.edges.filter((edge) => edge.kind === "CALLER" && edge.from === maker.id && edge.to === widget.id);
+  assert.equal(constructorEdges.length, 1);
+  assert.equal(
+    result.edges.filter((edge) => edge.kind === "CALLER").length
+      + result.unresolved.filter((row) => row.relationshipClass === "CALLER").length,
+    1,
+  );
 });
 
 test("HOST locator framing conserves case-distinct declarations under the global fold rule", async () => {

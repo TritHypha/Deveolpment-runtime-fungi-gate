@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
+  lstat,
   mkdir,
   mkdtemp,
   readFile,
@@ -9,7 +11,7 @@ import {
   symlink,
   writeFile,
 } from "node:fs/promises";
-import { platform, tmpdir } from "node:os";
+import { arch, platform, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -21,10 +23,12 @@ import {
   validateExpectedParseOutcomes,
   validateParserPolicy,
   validateProposedBaseline,
+  validateToolchainPins,
 } from "../lib/logic-aig-source-origin/contract.mjs";
 import * as gitSource from "../lib/logic-aig-source-origin/git-source.mjs";
 import {
   OWNER_PROPOSAL_POLICY,
+  buildGitEnvironment,
   validateExporterPolicy,
 } from "../lib/logic-aig-source-origin/owner-proposal-policy.mjs";
 
@@ -34,6 +38,10 @@ const FINAL_OWNER_ROWS = Object.freeze([
   Object.freeze({ name: "logic-aig-source-origin-expected-parse-outcomes.json", byteLength: 35998, rawSha256: "e86aa47550164ee30fac455c73f3e32f0e0cb1a047175924805087d2301afbe9", semanticDigest: "9a22abb0889101c39e30a07a546a00829320c5fa679a31e97e70312d93ae14a5" }),
   Object.freeze({ name: "logic-aig-source-origin-exporter-policy.json", byteLength: 9451, rawSha256: "97770da53732b1b09cddef4dbe550beca1b5c80cd203a30d29630f305612225a", semanticDigest: "d45f8e0c7404d608fc735ee406b1abc6348c4466988e6a150d7aa08a8707b96a" }),
 ]);
+const TOOLCHAIN_PINS_IDENTITY = Object.freeze({
+  byteLength: 69_452,
+  rawSha256: "0c5bb3b5e77e36741c479f65442dec01c76c57aa67b57fdcdba975e9a6f036cf",
+});
 const TEMPORARY_CAPABILITY_PATHS = Object.freeze([
   new URL("../../governance/logic-aig-source-origin-owner-proposal-policy.json", import.meta.url),
   new URL("../propose-logic-aig-source-origin-owners.mjs", import.meta.url),
@@ -43,6 +51,49 @@ const TEMPORARY_CAPABILITY_PATHS = Object.freeze([
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+async function readPinnedHeadCommit(gitExecutableLocator) {
+  const repositoryRoot = await realpath(new URL("../../", import.meta.url));
+  const canonicalExecutable = await realpath(gitExecutableLocator);
+  const executableStat = await lstat(gitExecutableLocator);
+  assert.equal(canonicalExecutable, gitExecutableLocator);
+  assert.equal(executableStat.isFile(), true);
+  assert.equal(executableStat.isSymbolicLink(), false);
+  const pinsBytes = await readFile(new URL("logic-aig-source-origin-toolchain-pins.json", GOVERNANCE));
+  assert.equal(pinsBytes.length, TOOLCHAIN_PINS_IDENTITY.byteLength);
+  assert.equal(sha256(pinsBytes), TOOLCHAIN_PINS_IDENTITY.rawSha256);
+  const pins = validateToolchainPins(parseCanonicalJsonBytes(pinsBytes, { label: "TOOLCHAIN_PINS" }));
+  const hostPin = pins.records.find((row) => row.platform === platform() && row.arch === arch());
+  assert(hostPin);
+  const executableBytes = await readFile(gitExecutableLocator);
+  assert.equal(executableBytes.length, hostPin.gitIdentity.executableByteLength);
+  assert.equal(sha256(executableBytes), hostPin.gitIdentity.executableRawSha256);
+  const selected = gitSource.materializeGitCommand(
+    OWNER_PROPOSAL_POLICY.gitProcessPolicy,
+    "HEAD",
+    repositoryRoot,
+  );
+  const systemRoot = process.env.SystemRoot;
+  assert.equal(typeof systemRoot, "string");
+  const environment = buildGitEnvironment(OWNER_PROPOSAL_POLICY.environmentPolicy, {
+    architecture: arch(),
+    parentEnvironment: { SystemRoot: systemRoot },
+    platform: platform(),
+    systemRootDirectoryObservation: { exists: true, kind: "DIRECTORY", locator: systemRoot },
+  });
+  const commitOid = execFileSync(gitExecutableLocator, selected.arguments, {
+    cwd: repositoryRoot,
+    encoding: "utf8",
+    env: environment,
+    maxBuffer: selected.maximumBytes,
+    windowsHide: true,
+  }).trim();
+  assert.match(commitOid, /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u);
+  const closingBytes = await readFile(gitExecutableLocator);
+  assert.equal(closingBytes.length, hostPin.gitIdentity.executableByteLength);
+  assert.equal(sha256(closingBytes), hostPin.gitIdentity.executableRawSha256);
+  return commitOid;
 }
 
 function exporterBindings(value) {
@@ -317,8 +368,9 @@ test("genuine pinned-Git capture returns every frozen owner value and defensive 
     "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
     import.meta.url,
   ));
+  const commitOid = await readPinnedHeadCommit(gitExecutableLocator);
   const captured = await gitSource.captureFrozenSource({
-    commitOid: "e071034ca02b2303aeec1f7583bdc2e3ff86e908",
+    commitOid,
     gitExecutableLocator,
   });
   assert.deepEqual(Object.keys(captured).sort(), [
