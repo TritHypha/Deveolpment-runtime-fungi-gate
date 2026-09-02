@@ -11,9 +11,173 @@ import * as toolchainSnapshot from "../lib/logic-aig-source-origin/toolchain-sna
 
 const FIXTURE_PLATFORM = "win32";
 const FIXTURE_ARCH = "x64";
+const COMPILER_ROOT = "packages-ts/galerina-core-compiler";
 const HOST_ROOT = "packages-ts/galerina-core-compiler/node_modules/typescript";
 const PARSER_ROOT = "generated-source-origin-parser";
 const PARSER_EXPORTS = Object.freeze(["lex", "parseGateV3", "parseProgram"]);
+const APPROVED_TYPESCRIPT_DATA_LOCAL_LOCATORS = Object.freeze([
+  "LICENSE.txt",
+  "README.md",
+  "SECURITY.md",
+  "ThirdPartyNoticeText.txt",
+  "bin/tsc",
+  "bin/tsserver",
+  "lib/_tsc.js",
+  "lib/_tsserver.js",
+  "lib/_typingsInstaller.js",
+  "lib/cs/diagnosticMessages.generated.json",
+  "lib/de/diagnosticMessages.generated.json",
+  "lib/es/diagnosticMessages.generated.json",
+  "lib/fr/diagnosticMessages.generated.json",
+  "lib/it/diagnosticMessages.generated.json",
+  "lib/ja/diagnosticMessages.generated.json",
+  "lib/ko/diagnosticMessages.generated.json",
+  "lib/lib.d.ts",
+  "lib/lib.decorators.d.ts",
+  "lib/lib.decorators.legacy.d.ts",
+  "lib/lib.dom.asynciterable.d.ts",
+  "lib/lib.dom.d.ts",
+  "lib/lib.dom.iterable.d.ts",
+  "lib/lib.es2015.collection.d.ts",
+  "lib/lib.es2015.core.d.ts",
+  "lib/lib.es2015.d.ts",
+  "lib/lib.es2015.generator.d.ts",
+  "lib/lib.es2015.iterable.d.ts",
+  "lib/lib.es2015.promise.d.ts",
+  "lib/lib.es2015.proxy.d.ts",
+  "lib/lib.es2015.reflect.d.ts",
+  "lib/lib.es2015.symbol.d.ts",
+  "lib/lib.es2015.symbol.wellknown.d.ts",
+  "lib/lib.es2016.array.include.d.ts",
+  "lib/lib.es2016.d.ts",
+  "lib/lib.es2016.full.d.ts",
+  "lib/lib.es2016.intl.d.ts",
+  "lib/lib.es2017.arraybuffer.d.ts",
+  "lib/lib.es2017.d.ts",
+  "lib/lib.es2017.date.d.ts",
+  "lib/lib.es2017.full.d.ts",
+  "lib/lib.es2017.intl.d.ts",
+  "lib/lib.es2017.object.d.ts",
+  "lib/lib.es2017.sharedmemory.d.ts",
+  "lib/lib.es2017.string.d.ts",
+  "lib/lib.es2017.typedarrays.d.ts",
+  "lib/lib.es2018.asyncgenerator.d.ts",
+  "lib/lib.es2018.asynciterable.d.ts",
+  "lib/lib.es2018.d.ts",
+  "lib/lib.es2018.full.d.ts",
+  "lib/lib.es2018.intl.d.ts",
+  "lib/lib.es2018.promise.d.ts",
+  "lib/lib.es2018.regexp.d.ts",
+  "lib/lib.es2019.array.d.ts",
+  "lib/lib.es2019.d.ts",
+  "lib/lib.es2019.full.d.ts",
+  "lib/lib.es2019.intl.d.ts",
+  "lib/lib.es2019.object.d.ts",
+  "lib/lib.es2019.string.d.ts",
+  "lib/lib.es2019.symbol.d.ts",
+  "lib/lib.es2020.bigint.d.ts",
+  "lib/lib.es2020.d.ts",
+  "lib/lib.es2020.date.d.ts",
+  "lib/lib.es2020.full.d.ts",
+  "lib/lib.es2020.intl.d.ts",
+  "lib/lib.es2020.number.d.ts",
+  "lib/lib.es2020.promise.d.ts",
+  "lib/lib.es2020.sharedmemory.d.ts",
+  "lib/lib.es2020.string.d.ts",
+  "lib/lib.es2020.symbol.wellknown.d.ts",
+  "lib/lib.es2021.d.ts",
+  "lib/lib.es2021.full.d.ts",
+  "lib/lib.es2021.intl.d.ts",
+  "lib/lib.es2021.promise.d.ts",
+  "lib/lib.es2021.string.d.ts",
+  "lib/lib.es2021.weakref.d.ts",
+  "lib/lib.es2022.array.d.ts",
+  "lib/lib.es2022.d.ts",
+  "lib/lib.es2022.error.d.ts",
+  "lib/lib.es2022.full.d.ts",
+  "lib/lib.es2022.intl.d.ts",
+  "lib/lib.es2022.object.d.ts",
+  "lib/lib.es2022.regexp.d.ts",
+  "lib/lib.es2022.string.d.ts",
+  "lib/lib.es2023.array.d.ts",
+  "lib/lib.es2023.collection.d.ts",
+  "lib/lib.es2023.d.ts",
+  "lib/lib.es2023.full.d.ts",
+  "lib/lib.es2023.intl.d.ts",
+  "lib/lib.es2024.arraybuffer.d.ts",
+  "lib/lib.es2024.collection.d.ts",
+  "lib/lib.es2024.d.ts",
+  "lib/lib.es2024.full.d.ts",
+  "lib/lib.es2024.object.d.ts",
+  "lib/lib.es2024.promise.d.ts",
+  "lib/lib.es2024.regexp.d.ts",
+  "lib/lib.es2024.sharedmemory.d.ts",
+  "lib/lib.es2024.string.d.ts",
+  "lib/lib.es5.d.ts",
+  "lib/lib.es6.d.ts",
+  "lib/lib.esnext.array.d.ts",
+  "lib/lib.esnext.collection.d.ts",
+  "lib/lib.esnext.d.ts",
+  "lib/lib.esnext.decorators.d.ts",
+  "lib/lib.esnext.disposable.d.ts",
+  "lib/lib.esnext.error.d.ts",
+  "lib/lib.esnext.float16.d.ts",
+  "lib/lib.esnext.full.d.ts",
+  "lib/lib.esnext.intl.d.ts",
+  "lib/lib.esnext.iterator.d.ts",
+  "lib/lib.esnext.promise.d.ts",
+  "lib/lib.esnext.sharedmemory.d.ts",
+  "lib/lib.scripthost.d.ts",
+  "lib/lib.webworker.asynciterable.d.ts",
+  "lib/lib.webworker.d.ts",
+  "lib/lib.webworker.importscripts.d.ts",
+  "lib/lib.webworker.iterable.d.ts",
+  "lib/pl/diagnosticMessages.generated.json",
+  "lib/pt-br/diagnosticMessages.generated.json",
+  "lib/ru/diagnosticMessages.generated.json",
+  "lib/tr/diagnosticMessages.generated.json",
+  "lib/tsc.js",
+  "lib/tsserver.js",
+  "lib/tsserverlibrary.d.ts",
+  "lib/tsserverlibrary.js",
+  "lib/typesMap.json",
+  "lib/typescript.d.ts",
+  "lib/typingsInstaller.js",
+  "lib/watchGuard.js",
+  "lib/zh-cn/diagnosticMessages.generated.json",
+  "lib/zh-tw/diagnosticMessages.generated.json",
+  "package.json",
+]);
+const REQUIRED_GENERATED_DATA_LOCATORS = Object.freeze([
+  "generated-source-origin-parser/gate-v3-parser.d.ts",
+  "generated-source-origin-parser/lexer.d.ts",
+  "generated-source-origin-parser/package.json",
+  "generated-source-origin-parser/parser.d.ts",
+  "generated-source-origin-parser/requirement-diagnostics.d.ts",
+  "generated-source-origin-parser/source-origin-parser-entry.d.ts",
+]);
+const REQUIRED_SOURCE_DATA_LOCATORS = Object.freeze([
+  "packages-ts/galerina-core-compiler/src/gate-v3-parser.ts",
+  "packages-ts/galerina-core-compiler/src/lexer.ts",
+  "packages-ts/galerina-core-compiler/src/parser.ts",
+  "packages-ts/galerina-core-compiler/src/requirement-diagnostics.ts",
+  "packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts",
+  "packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json",
+]);
+const REQUIRED_TYPESCRIPT_DATA_LOCATORS = Object.freeze([
+  ...APPROVED_TYPESCRIPT_DATA_LOCAL_LOCATORS.map((locator) => HOST_ROOT + "/" + locator),
+]);
+const REQUIRED_DATA_LOCATORS = Object.freeze([
+  ...REQUIRED_GENERATED_DATA_LOCATORS,
+  ...REQUIRED_TYPESCRIPT_DATA_LOCATORS,
+  ...REQUIRED_SOURCE_DATA_LOCATORS,
+].sort((left, right) => left < right ? -1 : left > right ? 1 : 0));
+const OMISSION_CONTROL_LOCATORS = Object.freeze([
+  ...REQUIRED_GENERATED_DATA_LOCATORS,
+  HOST_ROOT + "/lib/tsc.js",
+  HOST_ROOT + "/package.json",
+  ...REQUIRED_SOURCE_DATA_LOCATORS,
+].sort((left, right) => left < right ? -1 : left > right ? 1 : 0));
 
 function without(value, key) {
   return Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
@@ -61,13 +225,13 @@ function sourceOriginParser(hostRows, parserRows) {
   assert(parserEntry);
   return {
     sourceEntry: {
-      rootLocator: "packages-ts/galerina-core-compiler",
+      rootLocator: COMPILER_ROOT,
       ...sourceEntryIdentity,
       gitBlobOid: "a".repeat(40),
       exportNames: [...PARSER_EXPORTS],
     },
     project: {
-      rootLocator: "packages-ts/galerina-core-compiler",
+      rootLocator: COMPILER_ROOT,
       ...projectIdentity,
       gitBlobOid: "b".repeat(40),
       extendsLocator: "./tsconfig.json",
@@ -106,7 +270,6 @@ function sourceOriginParser(hostRows, parserRows) {
 
 function fixtureRecord(overrides = {}) {
   const hostRows = overrides.hostRows ?? [
-    fixtureRow("lib/helper.js", "host-helper"),
     fixtureRow("lib/typescript.js", "typescript-entry"),
   ];
   const parserRows = overrides.parserRows ?? [
@@ -139,11 +302,18 @@ function fixtureRecord(overrides = {}) {
   const parser = overrides.sourceOriginParser ?? sourceOriginParser(hostRows, parserRows);
   const typescriptEntry = hostRows.find((row) => row.locator === "lib/typescript.js");
   assert(typescriptEntry);
-  const dataRows = overrides.dataRows ?? [
-    fixtureRow("generated-source-origin-parser/package.json", '{"type":"module"}'),
-    fixtureRow("packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts", "source-entry"),
-    fixtureRow("packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json", "source-project"),
-  ];
+  const dataRows = overrides.dataRows ?? REQUIRED_DATA_LOCATORS.map((locator) => fixtureRow(
+    locator,
+    locator === "generated-source-origin-parser/package.json"
+      ? '{"type":"module"}'
+      : locator === "packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts"
+        ? "source-entry"
+        : locator === "packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json"
+          ? "source-project"
+          : locator === "packages-ts/galerina-core-compiler/node_modules/typescript/package.json"
+            ? "typescript-package"
+            : locator,
+  ));
   const body = {
     recordId: overrides.recordId ?? "win32-x64",
     platform: overrides.platform ?? FIXTURE_PLATFORM,
@@ -402,6 +572,63 @@ test("pin records refuse BUILD admission, selector drift and global locator coll
   expectRefusal(() => buildToolchainSnapshot({ ...options, pins: fixturePins([resealRecord(collisionRecord)]) }));
 });
 
+for (const locator of OMISSION_CONTROL_LOCATORS) {
+  test("pin records refuse omission of required declared data member " + locator, () => {
+    const options = fixtureOptions();
+    const record = structuredClone(options.pins.records[0]);
+    record.dataRows = record.dataRows.filter((row) => row.locator !== locator);
+    assert.equal(record.dataRows.length, REQUIRED_DATA_LOCATORS.length - 1);
+    expectRefusal(() => buildToolchainSnapshot({
+      ...options,
+      pins: fixturePins([resealRecord(record)]),
+    }));
+  });
+}
+
+test("pin records refuse a portable sorted surplus generated data row after resealing", () => {
+  const options = fixtureOptions();
+  const record = structuredClone(options.pins.records[0]);
+  record.dataRows.push(fixtureRow("generated-source-origin-parser/surplus.json", "surplus"));
+  record.dataRows.sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  expectRefusal(() => buildToolchainSnapshot({
+    ...options,
+    pins: fixturePins([resealRecord(record)]),
+  }));
+});
+
+test("pin records refuse a portable sorted surplus source data row after resealing", () => {
+  const options = fixtureOptions();
+  const record = structuredClone(options.pins.records[0]);
+  record.dataRows.push(fixtureRow("packages-ts/galerina-core-compiler/src/surplus.ts", "surplus"));
+  record.dataRows.sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  expectRefusal(() => buildToolchainSnapshot({
+    ...options,
+    pins: fixturePins([resealRecord(record)]),
+  }));
+});
+
+test("pin records refuse a portable sorted surplus TypeScript data row after resealing", () => {
+  const options = fixtureOptions();
+  const record = structuredClone(options.pins.records[0]);
+  record.dataRows.push(fixtureRow("packages-ts/galerina-core-compiler/node_modules/typescript/surplus.json", "surplus"));
+  record.dataRows.sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  expectRefusal(() => buildToolchainSnapshot({
+    ...options,
+    pins: fixturePins([resealRecord(record)]),
+  }));
+});
+
+test("pin-record data locators use the same portable root-relative colon rule as derivation", () => {
+  const options = fixtureOptions();
+  const record = structuredClone(options.pins.records[0]);
+  record.dataRows.push(fixtureRow("generated-source-origin-parser/x:extra.json", "surplus"));
+  record.dataRows.sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  expectRefusal(
+    () => buildToolchainSnapshot({ ...options, pins: fixturePins([resealRecord(record)]) }),
+    /^SOURCE_ORIGIN_POLICY$/,
+  );
+});
+
 test("empty production pins remain an explicit HOLD with no manifest", () => {
   const options = fixtureOptions({ pins: fixturePins([]) });
   expectRefusal(() => buildToolchainSnapshot(options), /^SOURCE_ORIGIN_HOLD_TOOLCHAIN$/);
@@ -587,7 +814,7 @@ test("v2 actual rows refuse altered identities, duplicates and noncanonical orde
   const duplicated = structuredClone(options.actualRuntimeLoadSets);
   duplicated[0].moduleRows.splice(1, 0, structuredClone(duplicated[0].moduleRows[0]));
   const reordered = structuredClone(options.actualRuntimeLoadSets);
-  reordered[0].moduleRows.reverse();
+  reordered[1].moduleRows.reverse();
   const reorderedBuiltins = structuredClone(options.actualRuntimeLoadSets);
   reorderedBuiltins[0].builtinModules.reverse();
   for (const actualRuntimeLoadSets of [altered, duplicated, reordered, reorderedBuiltins]) {

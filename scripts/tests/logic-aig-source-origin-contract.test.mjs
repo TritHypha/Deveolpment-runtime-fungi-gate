@@ -7,6 +7,7 @@ import {
   RESOLUTION_POLICY_BODY,
   SOURCE_ORIGIN_LIMITS,
   SOURCE_POLICY_BODY,
+  TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS,
   UNRESOLVED_REASON_ROWS,
   canonicalJsonText,
   classifySourcePath,
@@ -366,10 +367,38 @@ test("inline toolchain-pin-v2 fixtures enforce the closed records and refuse eve
     ...parserRows.map((entry) => ({ ...entry, locator: `${parserRoot}/${entry.locator}` })),
   ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
   const dataRows = [
-    row("generated-source-origin-parser/package.json", '{"type":"module"}'),
-    row("packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts", "source-entry"),
-    row("packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json", "source-project"),
-  ];
+    ...[
+      "gate-v3-parser.d.ts",
+      "lexer.d.ts",
+      "package.json",
+      "parser.d.ts",
+      "requirement-diagnostics.d.ts",
+      "source-origin-parser-entry.d.ts",
+    ].map((locator) => row(
+      parserRoot + "/" + locator,
+      locator === "package.json" ? '{"type":"module"}' : locator,
+    )),
+    ...TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS.map((locator) => (
+      locator === "package.json"
+        ? { locator: hostRoot + "/" + locator, rawSha256: "3".repeat(64), byteLength: 3 }
+        : row(hostRoot + "/" + locator)
+    )),
+    ...[
+      "src/gate-v3-parser.ts",
+      "src/lexer.ts",
+      "src/parser.ts",
+      "src/requirement-diagnostics.ts",
+      "src/source-origin-parser-entry.ts",
+      "tsconfig.source-origin-parser.json",
+    ].map((locator) => row(
+      "packages-ts/galerina-core-compiler/" + locator,
+      locator === "src/source-origin-parser-entry.ts"
+        ? "source-entry"
+        : locator === "tsconfig.source-origin-parser.json"
+          ? "source-project"
+          : locator,
+    )),
+  ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
   const moduleDigest = (record) => {
     const body = {
       schema: "galerina.logic-aig-module-closure.v1",

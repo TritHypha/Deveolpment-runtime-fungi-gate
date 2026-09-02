@@ -364,7 +364,7 @@ function nonEmptyString(value) {
 
 function canonicalLocator(value) {
   nonEmptyString(value);
-  if (value.includes('\0') || value.includes('\\') || value.startsWith('/') || /^[A-Za-z]:/.test(value)) refuse('SOURCE_ORIGIN_POLICY');
+  if (value.includes('\0') || value.includes('\\') || value.includes(':') || value.startsWith('/')) refuse('SOURCE_ORIGIN_POLICY');
   const components = value.split('/');
   if (components.some((component) => component === '' || component === '.' || component === '..')) refuse('SOURCE_ORIGIN_POLICY');
   return value;
@@ -435,7 +435,8 @@ function validateClosureRows(rows) {
   validateSortedEntries(rows, 'locator');
 }
 
-const TOOLCHAIN_HOST_ROOT = 'packages-ts/galerina-core-compiler/node_modules/typescript';
+const TOOLCHAIN_COMPILER_ROOT = 'packages-ts/galerina-core-compiler';
+const TOOLCHAIN_HOST_ROOT = TOOLCHAIN_COMPILER_ROOT + '/node_modules/typescript';
 const TOOLCHAIN_PARSER_ROOT = 'generated-source-origin-parser';
 const TOOLCHAIN_PARSER_EXPORTS = deepFreeze(['lex', 'parseGateV3', 'parseProgram']);
 const TOOLCHAIN_DOMAIN_SELECTIONS = deepFreeze([
@@ -464,6 +465,147 @@ const TOOLCHAIN_PARSER_MODULES = deepFreeze([
   'parser.js',
   'requirement-diagnostics.js',
   'source-origin-parser-entry.js',
+]);
+const TOOLCHAIN_SOURCE_DATA_LOCATORS = deepFreeze([
+  ...new Set(TOOLCHAIN_SOURCE_EDGES.flatMap((row) => [row.fromLocator, row.toLocator])),
+  'tsconfig.source-origin-parser.json',
+].sort(codeUnitCompare));
+const TOOLCHAIN_GENERATED_DATA_LOCATORS = deepFreeze([
+  ...TOOLCHAIN_PARSER_MODULES.map((locator) => locator.replace(/\.js$/, '.d.ts')),
+  'package.json',
+].sort(codeUnitCompare));
+export const TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS = deepFreeze([
+  "LICENSE.txt",
+  "README.md",
+  "SECURITY.md",
+  "ThirdPartyNoticeText.txt",
+  "bin/tsc",
+  "bin/tsserver",
+  "lib/_tsc.js",
+  "lib/_tsserver.js",
+  "lib/_typingsInstaller.js",
+  "lib/cs/diagnosticMessages.generated.json",
+  "lib/de/diagnosticMessages.generated.json",
+  "lib/es/diagnosticMessages.generated.json",
+  "lib/fr/diagnosticMessages.generated.json",
+  "lib/it/diagnosticMessages.generated.json",
+  "lib/ja/diagnosticMessages.generated.json",
+  "lib/ko/diagnosticMessages.generated.json",
+  "lib/lib.d.ts",
+  "lib/lib.decorators.d.ts",
+  "lib/lib.decorators.legacy.d.ts",
+  "lib/lib.dom.asynciterable.d.ts",
+  "lib/lib.dom.d.ts",
+  "lib/lib.dom.iterable.d.ts",
+  "lib/lib.es2015.collection.d.ts",
+  "lib/lib.es2015.core.d.ts",
+  "lib/lib.es2015.d.ts",
+  "lib/lib.es2015.generator.d.ts",
+  "lib/lib.es2015.iterable.d.ts",
+  "lib/lib.es2015.promise.d.ts",
+  "lib/lib.es2015.proxy.d.ts",
+  "lib/lib.es2015.reflect.d.ts",
+  "lib/lib.es2015.symbol.d.ts",
+  "lib/lib.es2015.symbol.wellknown.d.ts",
+  "lib/lib.es2016.array.include.d.ts",
+  "lib/lib.es2016.d.ts",
+  "lib/lib.es2016.full.d.ts",
+  "lib/lib.es2016.intl.d.ts",
+  "lib/lib.es2017.arraybuffer.d.ts",
+  "lib/lib.es2017.d.ts",
+  "lib/lib.es2017.date.d.ts",
+  "lib/lib.es2017.full.d.ts",
+  "lib/lib.es2017.intl.d.ts",
+  "lib/lib.es2017.object.d.ts",
+  "lib/lib.es2017.sharedmemory.d.ts",
+  "lib/lib.es2017.string.d.ts",
+  "lib/lib.es2017.typedarrays.d.ts",
+  "lib/lib.es2018.asyncgenerator.d.ts",
+  "lib/lib.es2018.asynciterable.d.ts",
+  "lib/lib.es2018.d.ts",
+  "lib/lib.es2018.full.d.ts",
+  "lib/lib.es2018.intl.d.ts",
+  "lib/lib.es2018.promise.d.ts",
+  "lib/lib.es2018.regexp.d.ts",
+  "lib/lib.es2019.array.d.ts",
+  "lib/lib.es2019.d.ts",
+  "lib/lib.es2019.full.d.ts",
+  "lib/lib.es2019.intl.d.ts",
+  "lib/lib.es2019.object.d.ts",
+  "lib/lib.es2019.string.d.ts",
+  "lib/lib.es2019.symbol.d.ts",
+  "lib/lib.es2020.bigint.d.ts",
+  "lib/lib.es2020.d.ts",
+  "lib/lib.es2020.date.d.ts",
+  "lib/lib.es2020.full.d.ts",
+  "lib/lib.es2020.intl.d.ts",
+  "lib/lib.es2020.number.d.ts",
+  "lib/lib.es2020.promise.d.ts",
+  "lib/lib.es2020.sharedmemory.d.ts",
+  "lib/lib.es2020.string.d.ts",
+  "lib/lib.es2020.symbol.wellknown.d.ts",
+  "lib/lib.es2021.d.ts",
+  "lib/lib.es2021.full.d.ts",
+  "lib/lib.es2021.intl.d.ts",
+  "lib/lib.es2021.promise.d.ts",
+  "lib/lib.es2021.string.d.ts",
+  "lib/lib.es2021.weakref.d.ts",
+  "lib/lib.es2022.array.d.ts",
+  "lib/lib.es2022.d.ts",
+  "lib/lib.es2022.error.d.ts",
+  "lib/lib.es2022.full.d.ts",
+  "lib/lib.es2022.intl.d.ts",
+  "lib/lib.es2022.object.d.ts",
+  "lib/lib.es2022.regexp.d.ts",
+  "lib/lib.es2022.string.d.ts",
+  "lib/lib.es2023.array.d.ts",
+  "lib/lib.es2023.collection.d.ts",
+  "lib/lib.es2023.d.ts",
+  "lib/lib.es2023.full.d.ts",
+  "lib/lib.es2023.intl.d.ts",
+  "lib/lib.es2024.arraybuffer.d.ts",
+  "lib/lib.es2024.collection.d.ts",
+  "lib/lib.es2024.d.ts",
+  "lib/lib.es2024.full.d.ts",
+  "lib/lib.es2024.object.d.ts",
+  "lib/lib.es2024.promise.d.ts",
+  "lib/lib.es2024.regexp.d.ts",
+  "lib/lib.es2024.sharedmemory.d.ts",
+  "lib/lib.es2024.string.d.ts",
+  "lib/lib.es5.d.ts",
+  "lib/lib.es6.d.ts",
+  "lib/lib.esnext.array.d.ts",
+  "lib/lib.esnext.collection.d.ts",
+  "lib/lib.esnext.d.ts",
+  "lib/lib.esnext.decorators.d.ts",
+  "lib/lib.esnext.disposable.d.ts",
+  "lib/lib.esnext.error.d.ts",
+  "lib/lib.esnext.float16.d.ts",
+  "lib/lib.esnext.full.d.ts",
+  "lib/lib.esnext.intl.d.ts",
+  "lib/lib.esnext.iterator.d.ts",
+  "lib/lib.esnext.promise.d.ts",
+  "lib/lib.esnext.sharedmemory.d.ts",
+  "lib/lib.scripthost.d.ts",
+  "lib/lib.webworker.asynciterable.d.ts",
+  "lib/lib.webworker.d.ts",
+  "lib/lib.webworker.importscripts.d.ts",
+  "lib/lib.webworker.iterable.d.ts",
+  "lib/pl/diagnosticMessages.generated.json",
+  "lib/pt-br/diagnosticMessages.generated.json",
+  "lib/ru/diagnosticMessages.generated.json",
+  "lib/tr/diagnosticMessages.generated.json",
+  "lib/tsc.js",
+  "lib/tsserver.js",
+  "lib/tsserverlibrary.d.ts",
+  "lib/tsserverlibrary.js",
+  "lib/typesMap.json",
+  "lib/typescript.d.ts",
+  "lib/typingsInstaller.js",
+  "lib/watchGuard.js",
+  "lib/zh-cn/diagnosticMessages.generated.json",
+  "lib/zh-tw/diagnosticMessages.generated.json",
+  "package.json",
 ]);
 
 function validateBuiltinModules(values) {
@@ -601,6 +743,44 @@ function requireRepresented(rows, rootedIdentity) {
   if (!row || row.rawSha256 !== rootedIdentity.rawSha256 || row.byteLength !== rootedIdentity.byteLength) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 }
 
+function requireDataRow(rows, locator, expectedIdentity = undefined) {
+  const row = rows.find((candidate) => candidate.locator === locator);
+  if (
+    !row
+    || expectedIdentity !== undefined
+      && (row.rawSha256 !== expectedIdentity.rawSha256 || row.byteLength !== expectedIdentity.byteLength)
+  ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+}
+
+function validateDeclaredDataPartition(record) {
+  const exactSourceData = new Set(
+    TOOLCHAIN_SOURCE_DATA_LOCATORS.map((locator) => TOOLCHAIN_COMPILER_ROOT + '/' + locator),
+  );
+  const exactGeneratedData = new Set(
+    TOOLCHAIN_GENERATED_DATA_LOCATORS.map((locator) => TOOLCHAIN_PARSER_ROOT + '/' + locator),
+  );
+  const exactTypescriptData = new Set(
+    TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS.map((locator) => TOOLCHAIN_HOST_ROOT + '/' + locator),
+  );
+
+  for (const locator of exactSourceData) requireDataRow(record.dataRows, locator);
+  for (const locator of exactGeneratedData) requireDataRow(record.dataRows, locator);
+  for (const locator of exactTypescriptData) requireDataRow(record.dataRows, locator);
+  requireDataRow(record.dataRows, record.typescript.packageLocator, {
+    rawSha256: record.typescript.packageRawSha256,
+    byteLength: record.typescript.packageByteLength,
+  });
+  requireDataRow(record.dataRows, TOOLCHAIN_HOST_ROOT + '/lib/tsc.js');
+
+  for (const row of record.dataRows) {
+    if (
+      !exactSourceData.has(row.locator)
+      && !exactGeneratedData.has(row.locator)
+      && !exactTypescriptData.has(row.locator)
+    ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  }
+}
+
 function validateToolchainRecord(record) {
   dataObject(record, [
     'recordId','platform','arch','sourceObservationDigest','loadObservationDigest',
@@ -654,6 +834,7 @@ function validateToolchainRecord(record) {
   requireRepresented(record.dataRows, record.sourceOriginParser.sourceEntry);
   requireRepresented(record.dataRows, record.sourceOriginParser.project);
   requireRepresented(record.dataRows, record.sourceOriginParser.generatedPackageManifest);
+  validateDeclaredDataPartition(record);
 
   const moduleClosureBody = {
     schema: 'galerina.logic-aig-module-closure.v1',

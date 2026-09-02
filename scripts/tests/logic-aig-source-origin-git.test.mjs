@@ -19,6 +19,7 @@ import test from "node:test";
 
 import {
   SOURCE_ORIGIN_LIMITS,
+  TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS,
   canonicalJsonText,
   sha256Canonical,
 } from "../lib/logic-aig-source-origin/contract.mjs";
@@ -137,10 +138,37 @@ async function fixturePin(gitExecutable) {
     ...parserRows.map((entry) => ({ ...entry, locator: `${parserRoot}/${entry.locator}` })),
   ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
   const dataRows = [
-    row("generated-source-origin-parser/package.json", '{"type":"module"}'),
-    row("packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts", "source-entry"),
-    row("packages-ts/galerina-core-compiler/tsconfig.source-origin-parser.json", "source-project"),
-  ];
+    ...[
+      "gate-v3-parser.d.ts",
+      "lexer.d.ts",
+      "package.json",
+      "parser.d.ts",
+      "requirement-diagnostics.d.ts",
+      "source-origin-parser-entry.d.ts",
+    ].map((locator) => row(
+      parserRoot + "/" + locator,
+      locator === "package.json" ? '{"type":"module"}' : locator,
+    )),
+    ...TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS.map((locator) => row(
+      hostRoot + "/" + locator,
+      locator === "package.json" ? "typescript-package" : locator,
+    )),
+    ...[
+      "src/gate-v3-parser.ts",
+      "src/lexer.ts",
+      "src/parser.ts",
+      "src/requirement-diagnostics.ts",
+      "src/source-origin-parser-entry.ts",
+      "tsconfig.source-origin-parser.json",
+    ].map((locator) => row(
+      "packages-ts/galerina-core-compiler/" + locator,
+      locator === "src/source-origin-parser-entry.ts"
+        ? "source-entry"
+        : locator === "tsconfig.source-origin-parser.json"
+          ? "source-project"
+          : locator,
+    )),
+  ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
   const sourceOriginParser = {
     sourceEntry: {
       rootLocator: "packages-ts/galerina-core-compiler",
