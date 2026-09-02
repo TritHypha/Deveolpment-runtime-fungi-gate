@@ -207,11 +207,11 @@ test("four-set derivation is exact and refuses inline-sidecar overlap", async ()
   selectedSources.push(
     { path: "docs/examples/inline.fungi", bytes: Buffer.from("/// expected_diagnostics: FUNGI-TYPE-001\n"), sidecarBytes: null },
     { path: "docs/examples/sidecar.ts", bytes: Buffer.from("export {};\n"), sidecarBytes: Buffer.from("TS-123\n") },
-    { path: "docs/examples/gate.gate", bytes: Buffer.from("gate G {}\n"), sidecarBytes: null },
+    { path: "packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/test__fixtures__negative__wrong-version.gate", bytes: Buffer.from("gate G {}\n"), sidecarBytes: null },
   );
   const rows = deriveExpectedOutcomeRows({
     baselineEntries,
-    gateVerdicts: { "docs__examples__gate.gate": { ok: false, codes: ["GATE-PARSE-002"] } },
+    gateVerdicts: { "test__fixtures__negative__wrong-version.gate": { ok: false, codes: ["GATE-PARSE-002"] } },
     parserPolicy,
     selectedSources,
     sourcePolicy,
@@ -224,6 +224,52 @@ test("four-set derivation is exact and refuses inline-sidecar overlap", async ()
   const overlapped = selectedSources.map((source) => source.path === "docs/examples/inline.fungi" ? { ...source, sidecarBytes: Buffer.from("FUNGI-TYPE-001\n") } : source);
   assert.throws(
     () => deriveExpectedOutcomeRows({ baselineEntries, gateVerdicts: {}, parserPolicy, selectedSources: overlapped, sourcePolicy }),
+    { code: "SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES" },
+  );
+});
+
+test("Gate-v3 verdicts match one source basename and create rows only for refusal", async () => {
+  const { deriveExpectedOutcomeRows, extractHistoricalBaselineEntries } = await import(RUNTIME);
+  const parserPolicy = {
+    ...PARSER_POLICY_BODY,
+    policyDigest: sha256Canonical(PARSER_POLICY_BODY.schema, PARSER_POLICY_BODY),
+  };
+  const sourcePolicy = {
+    ...SOURCE_POLICY_BODY,
+    policyDigest: sha256Canonical(SOURCE_POLICY_BODY.schema, SOURCE_POLICY_BODY),
+  };
+  const baselineEntries = extractHistoricalBaselineEntries(readFileSync(new URL("../audit-example-diagnostics.mjs", import.meta.url)));
+  const selectedSources = baselineEntries.map((entry) => ({
+    path: `docs/examples/${entry.directoryName}/example.fungi`,
+    bytes: Buffer.from("/// expected_diagnostics: none\n"),
+    sidecarBytes: null,
+  }));
+  const warningKey = "test__fixtures__negative__duplicate-consumer.gate";
+  const refusalKey = "test__fixtures__negative__wrong-version.gate";
+  const refusalPath = `packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/${refusalKey}`;
+  selectedSources.push(
+    { path: `packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/${warningKey}`, bytes: Buffer.from("gate Warning {}\n"), sidecarBytes: null },
+    { path: refusalPath, bytes: Buffer.from("gate Refusal {}\n"), sidecarBytes: null },
+  );
+  const gateVerdicts = {
+    [warningKey]: { ok: true, codes: ["GATE-WIRE-002"] },
+    [refusalKey]: { ok: false, codes: ["GATE-PARSE-002"] },
+  };
+  const input = { baselineEntries, gateVerdicts, parserPolicy, selectedSources, sourcePolicy };
+
+  const rows = deriveExpectedOutcomeRows(input);
+  assert.deepEqual(rows.filter((row) => row.ownerKind === "GATE_V3_VERDICT"), [{
+    path: refusalPath,
+    domain: "GATE",
+    parserId: "galerina-gate-v3-parser",
+    disposition: "EXPECTED_REFUSAL",
+    diagnosticCodes: ["GATE-PARSE-002"],
+    ownerKind: "GATE_V3_VERDICT",
+    ownerLocator: "packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json",
+    ownerKey: refusalKey,
+  }]);
+  assert.throws(
+    () => deriveExpectedOutcomeRows({ ...input, gateVerdicts: { ...gateVerdicts, "missing.gate": { ok: false, codes: ["GATE-PARSE-002"] } } }),
     { code: "SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES" },
   );
 });

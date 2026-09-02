@@ -523,7 +523,6 @@ export function deriveExpectedOutcomeRows({ baselineEntries, gateVerdicts, parse
     return { ...captured, domain, parserId: parserByDomain.get(domain), proposedDirectoryName: proposedMembership[0] ?? null };
   }).sort((left, right) => codeUnitCompare(left.path, right.path));
   for (let index = 1; index < sources.length; index += 1) if (sources[index - 1].path === sources[index].path) refuse("SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES");
-  const byPath = new Map(sources.map((source) => [source.path, source]));
   const rows = new Map();
 
   for (const source of sources) {
@@ -543,18 +542,12 @@ export function deriveExpectedOutcomeRows({ baselineEntries, gateVerdicts, parse
     }
   }
 
-  const encodedPaths = new Map();
-  for (const source of sources) {
-    const encoded = source.path.replaceAll("/", "__");
-    if (encodedPaths.has(encoded)) refuse("SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES");
-    encodedPaths.set(encoded, source.path);
-  }
   for (const verdict of validateGateVerdicts(gateVerdicts, parserPolicy)) {
-    const locator = encodedPaths.get(verdict.key);
-    const source = locator && byPath.get(locator);
-    if (!source) refuse("SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES");
-    if (verdict.codes.length === 0) continue;
-    addExpectedRow(rows, expectedRow({ path: source.path, domain: source.domain, parserId: source.parserId, disposition: "EXPECTED_REFUSAL", diagnosticCodes: verdict.codes, ownerKind: "GATE_V3_VERDICT", ownerLocator: "packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json", ownerKey: source.path.slice(source.path.lastIndexOf("/") + 1) }));
+    const matches = sources.filter((source) => source.path.slice(source.path.lastIndexOf("/") + 1) === verdict.key);
+    if (matches.length !== 1) refuse("SOURCE_ORIGIN_OWNER_PROPOSAL_OUTCOMES");
+    if (verdict.ok) continue;
+    const source = matches[0];
+    addExpectedRow(rows, expectedRow({ path: source.path, domain: source.domain, parserId: source.parserId, disposition: "EXPECTED_REFUSAL", diagnosticCodes: verdict.codes, ownerKind: "GATE_V3_VERDICT", ownerLocator: "packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json", ownerKey: verdict.key }));
   }
 
   for (const entry of baselineEntries) {
