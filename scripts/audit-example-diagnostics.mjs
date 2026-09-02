@@ -33,9 +33,14 @@
 // Zero-dep, mirrors scripts/audit-syntax-reference-links.mjs house style.
 
 import { spawnSync } from 'node:child_process';
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import {
+  parseCanonicalJsonBytes,
+  validateProposedBaseline,
+} from './lib/logic-aig-source-origin/contract.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..'); // Galerina/
@@ -108,26 +113,25 @@ const EXCLUDE_RE = /(^|\/)Proposed-/i;
 // expected_diagnostics contract. It is also, unratcheted, a perfect escape hatch: rename any
 // failing example to `Proposed-…` and the gate goes quiet. Nothing here distinguishes the two.
 //
-// So the exclusion carries a NAMED SET, the same shape as the phantom and advisory ratchets
-// (R&D 0182: a bare count is maskable by a leave+enter swap; membership is not). Every excluded
-// example must be named here WITH the reason it cannot be gated, and every name must still be
-// excluded — a stale entry fails too, so a draft that quietly re-entered the curriculum is loud.
-const PROPOSED_BASELINE = Object.freeze({
-  // Pre-dates the ratchet — it was silently excluded and never justified anywhere. Found by this
-  // check on its FIRST run, which is the argument for the check: the exclusion was already load-
-  // bearing and nobody had written down why. Verified honest at source: every draft under it
-  // declares `status: proposed - not yet in grammar` and `expected_diagnostics: none (when adopted)`.
-  'Proposed-Readable-Logic-Forms':
-    'readable-alias syntax (`status is Active` for `==`) is a LANGUAGE PROPOSAL with no grammar; its examples self-declare "not yet in grammar" and an expected_diagnostics contract that applies only "when adopted"',
-  'Proposed-024-vault-global-basic':          '`vault global` has no grammar — parser.ts:5764 implements only `vault secure` (RD-0531 step 1)',
-  'Proposed-025-vault-global-secret-invalid':  '`vault global` has no grammar — same RD-0531 refusal',
-  'Proposed-229-vault-write-without-mut-invalid':
-    'cannot demonstrate FUNGI-VAULT-004: the vault-write syntax `mut secure.x = v` that governance-verifier.ts:302 documents does NOT parse (parser.ts:1601 parseMutDecl takes ONE identifier then expects `=`; no member-path production). Board #174',
-  'Proposed-464-enterprise-supply-chain':
-    'cannot demonstrate FUNGI-MODULE-005: package-policy grammar and a signed/canonical policy input are absent from the root check/build path; current package enforcement uses FUNGI-PKG-* and MODULE-005 remains design-only',
-  'Proposed-473-scoped-vault-request':         '`vault request` is not one of the three declared scopes (secure|global|session)',
-  'Proposed-474-vault-session-session-pattern': '`vault session` has no grammar — same RD-0531 refusal',
-});
+// So the exclusion carries one tracked, canonical NAMED SET owner. Every excluded example must be
+// named there WITH the reason it cannot be gated, and every name must still be excluded — a stale
+// entry fails too, so a draft that quietly re-entered the curriculum is loud. The owner read is
+// module-relative, bounded, non-link and closed-schema; there is no executable fallback copy.
+const PROPOSED_BASELINE_PATH = join(root, 'governance', 'example-proposed-baseline.json');
+const PROPOSED_BASELINE_MAX_BYTES = 65_536;
+
+function loadProposedBaseline() {
+  const details = lstatSync(PROPOSED_BASELINE_PATH);
+  if (details.isSymbolicLink() || !details.isFile() || details.size <= 0 || details.size > PROPOSED_BASELINE_MAX_BYTES) {
+    throw new Error('invalid Proposed-baseline owner');
+  }
+  const bytes = readFileSync(PROPOSED_BASELINE_PATH);
+  if (bytes.length !== details.size) throw new Error('Proposed-baseline owner drift');
+  const value = validateProposedBaseline(parseCanonicalJsonBytes(bytes, { label: 'Proposed baseline' }));
+  return Object.freeze(Object.fromEntries(value.entries.map((entry) => [entry.directoryName, entry.reason])));
+}
+
+const PROPOSED_BASELINE = loadProposedBaseline();
 
 /** Membership drift on the excluded set. Both directions, because they need opposite fixes. */
 export function proposedSetDrift(excludedDirNames, baseline) {
@@ -233,6 +237,8 @@ if (selfTest) {
     ['categorize audit-log split', categorize('declares `none` but emitted FUNGI-VALUESTATE-009') === 'audit-log-009'],
     ['categorize not-fired', categorize('expected X but did NOT emit X (got clean)') === 'diagnostic-not-fired'],
     ['categorize hidden-type', categorize('declares `none` but emitted FUNGI-TYPE-001') === 'hidden-type-governed'],
+    ['Proposed exact membership passes', proposedSetDrift(['Proposed-A'], { 'Proposed-A': 'reason' }).unlisted.length === 0 && proposedSetDrift(['Proposed-A'], { 'Proposed-A': 'reason' }).stale.length === 0],
+    ['Proposed bidirectional drift CAUGHT', proposedSetDrift(['Proposed-B'], { 'Proposed-A': 'reason' }).unlisted[0] === 'Proposed-B' && proposedSetDrift(['Proposed-B'], { 'Proposed-A': 'reason' }).stale[0] === 'Proposed-A'],
   ];
   let bad = 0;
   for (const [name, pass] of cases) {

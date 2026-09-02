@@ -1,757 +1,265 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import {
-  access,
-  chmod,
   mkdir,
   mkdtemp,
-  open,
   readFile,
   realpath,
   rm,
+  symlink,
   writeFile,
 } from "node:fs/promises";
-import { constants as fsConstants } from "node:fs";
-import { arch, platform, tmpdir } from "node:os";
-import { delimiter, dirname, isAbsolute, join } from "node:path";
-import { spawnSync } from "node:child_process";
+import { platform, tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import test from "node:test";
 
 import {
   SOURCE_ORIGIN_LIMITS,
-  TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS,
   canonicalJsonText,
-  sha256Canonical,
+  parseCanonicalJsonBytes,
+  validateExpectedParseOutcomes,
+  validateParserPolicy,
+  validateProposedBaseline,
 } from "../lib/logic-aig-source-origin/contract.mjs";
-import { captureFrozenSource } from "../lib/logic-aig-source-origin/git-source.mjs";
+import * as gitSource from "../lib/logic-aig-source-origin/git-source.mjs";
+import {
+  OWNER_PROPOSAL_POLICY,
+  validateExporterPolicy,
+} from "../lib/logic-aig-source-origin/owner-proposal-policy.mjs";
 
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
-const POLICY_NAMES = Object.freeze([
-  "logic-aig-source-origin-generated-consumers.json",
-  "logic-aig-source-origin-parser-policy.json",
-  "logic-aig-source-origin-repository-identity.json",
-  "logic-aig-source-origin-resolution-policy.json",
-  "logic-aig-source-origin-source-policy.json",
+const FINAL_OWNER_ROWS = Object.freeze([
+  Object.freeze({ name: "example-proposed-baseline.json", byteLength: 1605, rawSha256: "eb1620e43d72f2d1afc3fc7c467c06856d99d936d45c905ef4f1b77abdff8817", semanticDigest: "7e244a1486778fc21fefbb9412ac1057172f716124ec0266f0ccedbae6dca6f8" }),
+  Object.freeze({ name: "logic-aig-source-origin-expected-parse-outcomes.json", byteLength: 35998, rawSha256: "e86aa47550164ee30fac455c73f3e32f0e0cb1a047175924805087d2301afbe9", semanticDigest: "9a22abb0889101c39e30a07a546a00829320c5fa679a31e97e70312d93ae14a5" }),
+  Object.freeze({ name: "logic-aig-source-origin-exporter-policy.json", byteLength: 9451, rawSha256: "97770da53732b1b09cddef4dbe550beca1b5c80cd203a30d29630f305612225a", semanticDigest: "d45f8e0c7404d608fc735ee406b1abc6348c4466988e6a150d7aa08a8707b96a" }),
 ]);
-
-const SOURCE_BODIES = Object.freeze({
-  "src/a.cjs": "module.exports = 1;\n",
-  "src/b.cts": "export const b = 2;\n",
-  "src/c.d.ts": "export declare const c: number;\n",
-  "src/d.fungi": "flow d() -> Int { return 4 }\n",
-  "src/e.gate": "gate e {}\n",
-  "src/f.js": "export const f = 6;\n",
-  "src/g.jsx": "export const g = <g />;\n",
-  "src/h.mjs": "export const h = 8;\n",
-  "src/i.mts": "export const i = 9;\n",
-  "src/j.ts": "export const j = 10;\n",
-  "src/k.tsx": "export const k = <K />;\n",
-  "src/space and [brackets].ts": "export const spaced = true;\n",
-  "src/é.ts": "export const nfc = true;\n",
-});
-
-const RESOLUTION_BODIES = Object.freeze({
-  "galerina.workspace.json": "{}\n",
-  "npm-shrinkwrap.json": "{}\n",
-  "package-lock.json": "{}\n",
-  "package.json": "{}\n",
-  "pnpm-lock.yaml": "lockfileVersion: 9\n",
-  "pnpm-workspace.yaml": "packages: []\n",
-  "yarn.lock": "# fixture\n",
-  "config/jsconfig.fixture.json": "{}\n",
-  "config/tsconfig.build.json": "{}\n",
-});
-
-const EXPECTED_OWNER_BODIES = Object.freeze({
-  "src/j.ts.expected.diagnostics.txt": "TS-123\n",
-});
+const TEMPORARY_CAPABILITY_PATHS = Object.freeze([
+  new URL("../../governance/logic-aig-source-origin-owner-proposal-policy.json", import.meta.url),
+  new URL("../propose-logic-aig-source-origin-owners.mjs", import.meta.url),
+  new URL("../lib/logic-aig-source-origin/owner-proposal-runtime.mjs", import.meta.url),
+  new URL("logic-aig-source-origin-owner-proposal-runtime.test.mjs", import.meta.url),
+]);
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-function without(value, key) {
-  return Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
+function exporterBindings(value) {
+  return Object.fromEntries([
+    "sourcePolicyDigest",
+    "exclusionDigest",
+    "resolutionPolicyDigest",
+    "parserPolicyDigest",
+    "generatedConsumerPolicyDigest",
+    "repositoryIdentityDigest",
+    "toolchainPinsDigest",
+    "expectedOutcomesDigest",
+    "proposedBaselineDigest",
+  ].map((field) => [field, value[field]]));
 }
 
-async function resolveGitExecutable() {
-  const names = platform() === "win32" ? ["git.exe", "git.cmd", "git"] : ["git"];
-  for (const directory of (process.env.PATH ?? "").split(delimiter).filter(Boolean)) {
-    for (const name of names) {
-      const candidate = join(directory.replace(/^"|"$/g, ""), name);
-      try {
-        await access(candidate, fsConstants.X_OK);
-        const resolved = await realpath(candidate);
-        if (isAbsolute(resolved)) return resolved;
-      } catch {
-        // Continue bounded PATH discovery for the test fixture only.
-      }
-    }
+function configBytes(policy, root, localRows = []) {
+  const commandRows = [];
+  for (let index = 0; index < policy.fixedPrefix.length; index += 1) {
+    if (policy.fixedPrefix[index] !== "-c") continue;
+    const assignment = policy.fixedPrefix[index + 1].replace("<REPOSITORY_ROOT>", root);
+    const split = assignment.indexOf("=");
+    commandRows.push({ scope: "command", origin: "command line:", key: assignment.slice(0, split), value: assignment.slice(split + 1) });
   }
-  throw new Error("fixture Git executable not found");
+  const fields = [...commandRows, ...localRows].flatMap((row) => [row.scope, row.origin, `${row.key}\n${row.value}`]);
+  return Buffer.from(`${fields.join("\0")}\0`, "utf8");
 }
 
-function git(gitExecutable, repositoryRoot, args, { input, env = {} } = {}) {
-  const completeArgs = repositoryRoot === null ? args : ["-C", repositoryRoot, ...args];
-  const result = spawnSync(gitExecutable, completeArgs, {
-    encoding: input === undefined ? "utf8" : undefined,
-    input,
-    env: { ...process.env, ...env },
-    maxBuffer: 8 * 1024 * 1024,
-    windowsHide: true,
+test("installs the complete approved final-owner set with exact canonical identities and retained transition equality", async () => {
+  const values = new Map();
+  for (const row of FINAL_OWNER_ROWS) {
+    const bytes = await readFile(new URL(row.name, GOVERNANCE));
+    assert.equal(bytes.length, row.byteLength, row.name);
+    assert.equal(sha256(bytes), row.rawSha256, row.name);
+    assert.equal(bytes.includes(10), false, row.name);
+    assert.equal(bytes.includes(13), false, row.name);
+    values.set(row.name, parseCanonicalJsonBytes(bytes, { label: row.name }));
+  }
+  const parser = validateParserPolicy(JSON.parse(await readFile(new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE), "utf8")));
+  const baseline = validateProposedBaseline(values.get("example-proposed-baseline.json"));
+  const expected = validateExpectedParseOutcomes(values.get("logic-aig-source-origin-expected-parse-outcomes.json"), { parserPolicy: parser });
+  const exporterValue = values.get("logic-aig-source-origin-exporter-policy.json");
+  const exporter = validateExporterPolicy(exporterValue, exporterBindings(exporterValue));
+  assert.equal(baseline.policyDigest, FINAL_OWNER_ROWS[0].semanticDigest);
+  assert.equal(expected.expectedOutcomesDigest, FINAL_OWNER_ROWS[1].semanticDigest);
+  assert.equal(exporter.policyDigest, FINAL_OWNER_ROWS[2].semanticDigest);
+  assert.equal(exporter.proposedBaselineDigest, baseline.policyDigest);
+  assert.equal(exporter.expectedOutcomesDigest, expected.expectedOutcomesDigest);
+  assert.deepEqual(exporter.gitProcessPolicy, OWNER_PROPOSAL_POLICY.gitProcessPolicy);
+  assert.deepEqual(exporter.environmentPolicy, OWNER_PROPOSAL_POLICY.environmentPolicy);
+  assert.deepEqual(exporter.limits, OWNER_PROPOSAL_POLICY.limits);
+
+  const temporaryBytes = Buffer.from(canonicalJsonText(OWNER_PROPOSAL_POLICY), "utf8");
+  assert.equal(temporaryBytes.length, 8371);
+  assert.equal(sha256(temporaryBytes), "097abc918cd054c82fd10b339053d1400c1aaf6c8f9a41bc47d065e0aca80407");
+  assert.equal(OWNER_PROPOSAL_POLICY.policyDigest, "73ebb11db247b6b94f8099d9e16d6adefc3e03e1c292d6f562a9b00743b01d9b");
+});
+
+test("retires every temporary proposal capability while preserving the pure policy module", async () => {
+  for (const locator of TEMPORARY_CAPABILITY_PATHS) await assert.rejects(readFile(locator), (error) => error?.code === "ENOENT");
+  const pure = await import("../lib/logic-aig-source-origin/owner-proposal-policy.mjs");
+  assert.equal(typeof pure.validateExporterPolicy, "function");
+  assert.equal(typeof pure.createOwnerProposalPolicyCandidate, "function");
+});
+
+test("captureFrozenSource rejects caller root, expectedHead, and limit authority before touching Git", async () => {
+  await assert.rejects(gitSource.captureFrozenSource({
+    repositoryRoot: dirname(process.execPath),
+    expectedHead: "a".repeat(40),
+    gitExecutableLocator: process.execPath,
+    limits: SOURCE_ORIGIN_LIMITS,
+  }), (error) => error?.code === "SOURCE_ORIGIN_GIT_SCHEMA");
+});
+
+test("captureFrozenSource accepts only caller commit identity and pinned executable location", async () => {
+  await assert.rejects(gitSource.captureFrozenSource({
+    commitOid: "a".repeat(40),
+    gitExecutableLocator: process.execPath,
+  }), (error) => error?.code === "SOURCE_ORIGIN_GIT_EXECUTABLE");
+});
+
+test("capture option capture refuses accessors, proxies, symbols, missing and surplus fields without invoking them", async () => {
+  let getterCalls = 0;
+  const accessor = {};
+  Object.defineProperties(accessor, {
+    commitOid: { enumerable: true, get() { getterCalls += 1; return "a".repeat(40); } },
+    gitExecutableLocator: { enumerable: true, value: process.execPath },
   });
-  if (result.status !== 0) {
-    const stderr = Buffer.isBuffer(result.stderr) ? result.stderr.toString("utf8") : result.stderr;
-    throw new Error(`fixture Git failed (${completeArgs.join(" ")}): ${stderr}`);
+  await assert.rejects(gitSource.captureFrozenSource(accessor), (error) => error?.code === "SOURCE_ORIGIN_GIT_SCHEMA");
+  assert.equal(getterCalls, 0);
+
+  let proxyTraps = 0;
+  const proxy = new Proxy({}, { getPrototypeOf() { proxyTraps += 1; return Object.prototype; } });
+  await assert.rejects(gitSource.captureFrozenSource(proxy), (error) => error?.code === "SOURCE_ORIGIN_GIT_SCHEMA");
+  assert.equal(proxyTraps, 0);
+
+  for (const value of [
+    { commitOid: "a".repeat(40) },
+    { commitOid: "a".repeat(40), gitExecutableLocator: process.execPath, surplus: true },
+    Object.assign({ commitOid: "a".repeat(40), gitExecutableLocator: process.execPath }, { [Symbol("authority")]: true }),
+  ]) await assert.rejects(gitSource.captureFrozenSource(value), (error) => error?.code === "SOURCE_ORIGIN_GIT_SCHEMA");
+});
+
+test("sealed command selection atomically binds arguments and exact output ceiling for all fourteen classes", () => {
+  const root = platform() === "win32" ? "C:\\repository" : "/repository";
+  const trace = new Set();
+  for (const row of OWNER_PROPOSAL_POLICY.gitProcessPolicy.commandRows) {
+    const selected = gitSource.materializeGitCommand(
+      OWNER_PROPOSAL_POLICY.gitProcessPolicy,
+      row.commandId,
+      root,
+      { blobOid: "a".repeat(40), treeOid: "b".repeat(40) },
+      row.commandId === "BLOB" ? "CAPTURED_FILE" : undefined,
+    );
+    assert.equal(selected.arguments.includes("<REPOSITORY_ROOT>"), false);
+    assert.equal(selected.arguments.some((value) => value.includes("<")), false);
+    assert(Number.isSafeInteger(selected.maximumBytes) && selected.maximumBytes > 0);
+    trace.add(row.commandId);
   }
-  if (Buffer.isBuffer(result.stdout)) return result.stdout;
-  return result.stdout.trim();
-}
+  assert.equal(trace.size, 14);
+  const captured = gitSource.materializeGitCommand(OWNER_PROPOSAL_POLICY.gitProcessPolicy, "BLOB", root, { blobOid: "a".repeat(40) }, "CAPTURED_FILE");
+  const json = gitSource.materializeGitCommand(OWNER_PROPOSAL_POLICY.gitProcessPolicy, "BLOB", root, { blobOid: "a".repeat(40) }, "JSON");
+  assert.equal(captured.maximumBytes, SOURCE_ORIGIN_LIMITS.capturedFileBytes);
+  assert.equal(json.maximumBytes, SOURCE_ORIGIN_LIMITS.jsonBytes);
+  assert.throws(() => gitSource.materializeGitCommand(OWNER_PROPOSAL_POLICY.gitProcessPolicy, "BLOB", root, { blobOid: "a".repeat(40) }, "SCALAR"), /SOURCE_ORIGIN_/);
+});
 
-async function writeTracked(root, relativePath, body) {
-  const target = join(root, ...relativePath.split("/"));
-  await mkdir(dirname(target), { recursive: true });
-  await writeFile(target, body);
-}
+test("config parser requires the complete command prefix and the closed local allowance", () => {
+  const root = platform() === "win32" ? "C:\\repository" : "/repository";
+  const policy = OWNER_PROPOSAL_POLICY.gitProcessPolicy;
+  const accepted = gitSource.parseGitConfigRows(configBytes(policy, root, [{ scope: "local", origin: "file:.git/config", key: "core.bare", value: "false" }]), policy, root);
+  assert.equal(accepted.commandRowCount, 12);
+  assert.equal(accepted.localRowCount, 1);
+  assert.match(accepted.semanticDigest, /^[0-9a-f]{64}$/);
+  assert.throws(() => gitSource.parseGitConfigRows(configBytes(policy, root, [{ scope: "local", origin: "file:.git/config", key: "filter.hostile.process", value: "run-me" }]), policy, root), /SOURCE_ORIGIN_GIT_CONFIG/);
+  const incomplete = configBytes({ ...policy, fixedPrefix: policy.fixedPrefix.slice(0, -4) }, root);
+  assert.throws(() => gitSource.parseGitConfigRows(incomplete, policy, root), /SOURCE_ORIGIN_GIT_CONFIG/);
+});
 
-async function fixturePin(gitExecutable) {
-  const gitBytes = await readFile(gitExecutable);
-  const nodeBytes = await readFile(process.execPath);
-  const gitVersion = git(gitExecutable, null, ["--version"]);
-  const row = (locator, body = locator) => {
-    const bytes = Buffer.from(body, "utf8");
-    return { locator, rawSha256: sha256(bytes), byteLength: bytes.length };
-  };
-  const hostRoot = "packages-ts/galerina-core-compiler/node_modules/typescript";
-  const parserRoot = "generated-source-origin-parser";
-  const parserExports = ["lex", "parseGateV3", "parseProgram"];
-  const hostRows = [row("lib/typescript.js", "typescript-entry")];
-  const parserRows = [
-    row("gate-v3-parser.js"),
-    row("lexer.js"),
-    row("parser.js"),
-    row("requirement-diagnostics.js"),
-    row("source-origin-parser-entry.js"),
-  ];
-  const executableModuleRows = [
-    ...hostRows.map((entry) => ({ ...entry, locator: `${hostRoot}/${entry.locator}` })),
-    ...parserRows.map((entry) => ({ ...entry, locator: `${parserRoot}/${entry.locator}` })),
-  ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
-  const dataRows = [
-    ...[
-      "gate-v3-parser.d.ts",
-      "lexer.d.ts",
-      "package.json",
-      "parser.d.ts",
-      "requirement-diagnostics.d.ts",
-      "source-origin-parser-entry.d.ts",
-    ].map((locator) => row(
-      parserRoot + "/" + locator,
-      locator === "package.json" ? '{"type":"module"}' : locator,
-    )),
-    ...TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS.map((locator) => row(
-      hostRoot + "/" + locator,
-      locator === "package.json" ? "typescript-package" : locator,
-    )),
-    ...[
-      "src/gate-v3-parser.ts",
-      "src/lexer.ts",
-      "src/parser.ts",
-      "src/requirement-diagnostics.ts",
-      "src/source-origin-parser-entry.ts",
-      "tsconfig.source-origin-parser.json",
-    ].map((locator) => row(
-      "packages-ts/galerina-core-compiler/" + locator,
-      locator === "src/source-origin-parser-entry.ts"
-        ? "source-entry"
-        : locator === "tsconfig.source-origin-parser.json"
-          ? "source-project"
-          : locator,
-    )),
-  ].sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
-  const sourceOriginParser = {
-    sourceEntry: {
-      rootLocator: "packages-ts/galerina-core-compiler",
-      ...row("src/source-origin-parser-entry.ts", "source-entry"),
-      gitBlobOid: "a".repeat(40),
-      exportNames: parserExports,
-    },
-    project: {
-      rootLocator: "packages-ts/galerina-core-compiler",
-      ...row("tsconfig.source-origin-parser.json", "source-project"),
-      gitBlobOid: "b".repeat(40),
-      extendsLocator: "./tsconfig.json",
-      files: ["src/source-origin-parser-entry.ts"],
-      include: [],
-      compilerOptions: {
-        types: [],
-        noEmitOnError: true,
-        incremental: false,
-        composite: false,
-        sourceMap: false,
-        declarationMap: false,
-      },
-    },
-    generatedEntry: { rootLocator: parserRoot, ...parserRows.at(-1) },
-    generatedPackageManifest: { rootLocator: parserRoot, ...row("package.json", '{"type":"module"}') },
-    exportNames: parserExports,
-    sourceEdgeRows: [
-      { fromLocator: "src/gate-v3-parser.ts", kind: "IMPORT_TYPE", exportName: null, specifier: "./parser.js", toLocator: "src/parser.ts" },
-      { fromLocator: "src/parser.ts", kind: "IMPORT", exportName: null, specifier: "./lexer.js", toLocator: "src/lexer.ts" },
-      { fromLocator: "src/parser.ts", kind: "IMPORT", exportName: null, specifier: "./requirement-diagnostics.js", toLocator: "src/requirement-diagnostics.ts" },
-      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "lex", specifier: "./lexer.js", toLocator: "src/lexer.ts" },
-      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "parseGateV3", specifier: "./gate-v3-parser.js", toLocator: "src/gate-v3-parser.ts" },
-      { fromLocator: "src/source-origin-parser-entry.ts", kind: "EXPORT_FROM", exportName: "parseProgram", specifier: "./parser.js", toLocator: "src/parser.ts" },
-    ],
-    emittedEdgeRows: [
-      { fromLocator: "parser.js", kind: "IMPORT", exportName: null, specifier: "./lexer.js", toLocator: "lexer.js" },
-      { fromLocator: "parser.js", kind: "IMPORT", exportName: null, specifier: "./requirement-diagnostics.js", toLocator: "requirement-diagnostics.js" },
-      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "lex", specifier: "./lexer.js", toLocator: "lexer.js" },
-      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "parseGateV3", specifier: "./gate-v3-parser.js", toLocator: "gate-v3-parser.js" },
-      { fromLocator: "source-origin-parser-entry.js", kind: "EXPORT_FROM", exportName: "parseProgram", specifier: "./parser.js", toLocator: "parser.js" },
-    ],
-    generatedClosureDigest: "c".repeat(64),
-  };
-  const builtinModules = [];
-  const closureBody = {
-    schema: "galerina.logic-aig-module-closure.v1",
-    executableModuleRows,
-    dataRows,
-    builtinModules,
-    counts: {
-      executableModules: executableModuleRows.length,
-      dataRows: dataRows.length,
-      builtinModules: builtinModules.length,
-    },
-    authorizing: false,
-  };
-  const recordId = platform() === "win32" && arch() === "x64"
-    ? "win32-x64"
-    : platform() === "linux" && arch() === "x64"
-      ? "linux-x64"
-      : null;
-  if (recordId === null) throw new Error("fixture supports only the approved win32-x64 and linux-x64 records");
-  const recordBody = {
-    recordId,
-    platform: platform(),
-    arch: arch(),
-    sourceObservationDigest: "1".repeat(64),
-    loadObservationDigest: "2".repeat(64),
-    nodeIdentity: {
-      version: process.version,
-      executableRawSha256: sha256(nodeBytes),
-      executableByteLength: nodeBytes.length,
-    },
-    gitIdentity: {
-      version: gitVersion,
-      executableRawSha256: sha256(gitBytes),
-      executableByteLength: gitBytes.length,
-    },
-    typescript: {
-      name: "typescript",
-      version: "fixture-only",
-      packageLocator: `${hostRoot}/package.json`,
-      packageRawSha256: sha256(Buffer.from("typescript-package", "utf8")),
-      packageByteLength: Buffer.byteLength("typescript-package"),
-      entryLocator: `${hostRoot}/lib/typescript.js`,
-      entryRawSha256: hostRows[0].rawSha256,
-      entryByteLength: hostRows[0].byteLength,
-    },
-    sourceOriginParser,
-    runtimeLoadSets: [
-      { id: "HOST", entry: { rootLocator: hostRoot, locator: "lib/typescript.js" }, moduleRows: hostRows, builtinModules: [] },
-      { id: "PARSER", entry: { rootLocator: parserRoot, locator: "source-origin-parser-entry.js" }, moduleRows: parserRows, builtinModules: [] },
-    ],
-    domainSelections: [
-      { domain: "FUNGI", parserId: "galerina-fungi-parser", runtimeLoadSetId: "PARSER", operation: "parseProgram" },
-      { domain: "GATE", parserId: "galerina-gate-v3-parser", runtimeLoadSetId: "PARSER", operation: "parseGateV3" },
-      { domain: "HOST", parserId: "typescript-compiler-api", runtimeLoadSetId: "HOST", operation: "typescript-compiler-api" },
-    ],
-    builtinModules,
-    executableModuleRows,
-    dataRows,
-    moduleClosureDigest: sha256Canonical(closureBody.schema, closureBody),
-  };
-  const record = {
-    ...recordBody,
-    recordDigest: sha256Canonical("galerina.logic-aig-toolchain-pin-record.v2", recordBody),
-  };
-  const body = {
-    schema: "galerina.logic-aig-toolchain-pins.v2",
-    records: [record],
-    authorizing: false,
-  };
-  return { ...body, pinsDigest: sha256Canonical(body.schema, body) };
-}
-async function createFixture(t, { objectFormat = "sha1", withPin = true } = {}) {
-  const root = await mkdtemp(join(tmpdir(), "galerina-source-origin-git-"));
+test("every Git text boundary refuses a raw UTF-8 BOM before decoding", async () => {
+  const bom = Buffer.from([0xef, 0xbb, 0xbf]);
+  const root = platform() === "win32" ? "C:\\repository" : "/repository";
+  const policy = OWNER_PROPOSAL_POLICY.gitProcessPolicy;
+  assert.throws(() => gitSource.parseGitConfigRows(Buffer.concat([bom, configBytes(policy, root)]), policy, root), /SOURCE_ORIGIN_GIT_CONFIG/);
+  assert.throws(() => gitSource.decodeGitLine(Buffer.concat([bom, Buffer.from("git version 2.55.0\n")])), /SOURCE_ORIGIN_GIT_PROCESS/);
+  assert.throws(() => gitSource.decodeGitLine(Buffer.from("git\0 version 2.55.0\n")), /SOURCE_ORIGIN_GIT_PROCESS/);
+
+  const parser = validateParserPolicy(JSON.parse(await readFile(new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE), "utf8")));
+  const gateBytes = await readFile(new URL("../../packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json", import.meta.url));
+  assert.throws(() => gitSource.authenticateGateOwnerBytes(Buffer.concat([bom, gateBytes]), parser), /SOURCE_ORIGIN_GIT_POLICY/);
+});
+
+test("the legacy Gate predecessor is bound to the approved raw and external semantic identity", async () => {
+  const parser = validateParserPolicy(JSON.parse(await readFile(new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE), "utf8")));
+  const locator = new URL("../../packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json", import.meta.url);
+  const workingBytes = await readFile(locator);
+  const bytes = Buffer.from(workingBytes.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
+  const accepted = gitSource.authenticateGateOwnerBytes(bytes, parser);
+  assert.equal(accepted.rawSha256, "d83ce2590520b152e1c838322e1762e4840c274e812bf6006e275118ada59467");
+  assert.equal(accepted.semanticDigest, "4dfceb7f2bf2b6642c3b0cc2838735d41b8aad9e3c08e45f394637eb43bf8a58");
+
+  const drifted = JSON.parse(bytes.toString("utf8"));
+  drifted[Object.keys(drifted)[0]].codes = ["GATE-PARSE-002"];
+  const driftedBytes = Buffer.from(`${JSON.stringify(drifted, null, 2)}\n`, "utf8");
+  assert.throws(() => gitSource.authenticateGateOwnerBytes(driftedBytes, parser), /SOURCE_ORIGIN_GIT_POLICY/);
+});
+
+test("tree and index parsing requires one case-unique regular stage-zero census", () => {
+  const a = "a".repeat(40);
+  const b = "b".repeat(40);
+  const treeBytes = Buffer.from(`100644 blob ${a}\tA.ts\0` + `100755 blob ${b}\tb.mjs\0`, "utf8");
+  const treeRows = gitSource.parseGitTreeRows(treeBytes, "sha1");
+  const stageBytes = Buffer.from(`100644 ${a} 0\tA.ts\0` + `100755 ${b} 0\tb.mjs\0`, "utf8");
+  const flagBytes = Buffer.from("H A.ts\0H b.mjs\0", "utf8");
+  const index = gitSource.observeGitIndex(stageBytes, flagBytes, "sha1", treeRows);
+  assert.equal(index.rows.length, 2);
+  assert.match(index.indexDigest, /^[0-9a-f]{64}$/);
+  assert.throws(() => gitSource.parseGitTreeRows(Buffer.from(`100644 blob ${a}\tCase.ts\0` + `100644 blob ${b}\tcase.ts\0`, "utf8"), "sha1"), /SOURCE_ORIGIN_GIT_CASE_SHADOW/);
+  assert.throws(() => gitSource.parseGitTreeRows(Buffer.from(`120000 blob ${a}\tlink.ts\0`, "utf8"), "sha1"), /SOURCE_ORIGIN_GIT_MODE/);
+  assert.throws(() => gitSource.observeGitIndex(stageBytes.subarray(0, -1), flagBytes, "sha1", treeRows), /SOURCE_ORIGIN_GIT_INDEX/);
+});
+
+test("repository layout validation refuses wrong parent, non-canonical path text, case aliases, and links", async (t) => {
+  const root = await mkdtemp(join(tmpdir(), "galerina-source-origin-layout-"));
   t.after(() => rm(root, { recursive: true, force: true }));
-  const gitExecutable = await resolveGitExecutable();
-  git(gitExecutable, null, ["init", `--object-format=${objectFormat}`, root]);
-  git(gitExecutable, root, ["config", "user.email", "fixture@example.invalid"]);
-  git(gitExecutable, root, ["config", "user.name", "Source Origin Fixture"]);
-
-  for (const [path, body] of Object.entries(SOURCE_BODIES)) await writeTracked(root, path, body);
-  for (const [path, body] of Object.entries(RESOLUTION_BODIES)) await writeTracked(root, path, body);
-  for (const [path, body] of Object.entries(EXPECTED_OWNER_BODIES)) await writeTracked(root, path, body);
-  await writeTracked(root, "README.md", "not source\n");
-  await writeTracked(root, "src/not-source.txt", "not source\n");
-
-  for (const name of POLICY_NAMES) {
-    await writeTracked(root, `governance/${name}`, await readFile(new URL(name, GOVERNANCE)));
-  }
-  const parserPolicy = JSON.parse(await readFile(new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE), "utf8"));
-  const expectedOutcomesBody = {
-    schema: "galerina.logic-aig-expected-parse-outcomes.v1",
-    parserPolicyDigest: parserPolicy.policyDigest,
-    rows: [{
-      path: "src/j.ts",
-      domain: "HOST",
-      parserId: "typescript-compiler-api",
-      disposition: "EXPECTED_REFUSAL",
-      diagnosticCodes: ["TS-123"],
-      ownerKind: "SIDECAR_EXPECTATION",
-      ownerLocator: "src/j.ts.expected.diagnostics.txt",
-      ownerKey: "complete-file",
-    }],
-    authorizing: false,
-  };
-  await writeTracked(root, "governance/logic-aig-source-origin-expected-parse-outcomes.json", canonicalJsonText({
-    ...expectedOutcomesBody,
-    expectedOutcomesDigest: sha256Canonical(expectedOutcomesBody.schema, expectedOutcomesBody),
-  }));
-  const pinBody = withPin
-    ? await fixturePin(gitExecutable)
-    : {
-        schema: "galerina.logic-aig-toolchain-pins.v2",
-        records: [],
-        authorizing: false,
-      };
-  if (!withPin) pinBody.pinsDigest = sha256Canonical(pinBody.schema, pinBody);
-  await writeTracked(
-    root,
-    "governance/logic-aig-source-origin-toolchain-pins.json",
-    canonicalJsonText(pinBody),
-  );
-
-  const executablePath = join(root, "src", "h.mjs");
-  try { await chmod(executablePath, 0o755); } catch { /* index mode below is authoritative */ }
-  git(gitExecutable, root, ["add", "-A"]);
-  git(gitExecutable, root, ["update-index", "--chmod=+x", "src/h.mjs"]);
-  git(gitExecutable, root, ["commit", "-m", "fixture"]);
-
-  return {
-    root,
-    gitExecutable,
-    head: git(gitExecutable, root, ["rev-parse", "HEAD"]),
-    tree: git(gitExecutable, root, ["rev-parse", "HEAD^{tree}"]),
-    objectFormat,
-  };
-}
-
-async function installSelfMutatingGitForwarder(fixture) {
-  const wrapper = join(fixture.root, "git-forwarder");
-  const trigger = join(fixture.root, "mutate-git-forwarder");
-  const quote = (value) => `'${value.replaceAll("'", `'"'"'`)}'`;
-  await writeFile(wrapper, `#!/bin/sh\n${quote(fixture.gitExecutable)} "$@"\nstatus=$?\nif [ -f ${quote(trigger)} ]; then\n  printf '\\n# executable drift\\n' >> "$0"\n  rm -f ${quote(trigger)}\nfi\nexit $status\n`);
-  await chmod(wrapper, 0o755);
-  const pin = await fixturePin(wrapper);
-  await writeTracked(fixture.root, "governance/logic-aig-source-origin-toolchain-pins.json", canonicalJsonText(pin));
-  git(fixture.gitExecutable, fixture.root, ["add", "governance/logic-aig-source-origin-toolchain-pins.json"]);
-  git(fixture.gitExecutable, fixture.root, ["commit", "-m", "pin fixture Git forwarder"]);
-  fixture.head = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD"]);
-  fixture.tree = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD^{tree}"]);
-  fixture.gitExecutable = wrapper;
-  await writeFile(trigger, "mutate on next invocation\n");
-}
-
-function captureOptions(fixture, limits = SOURCE_ORIGIN_LIMITS) {
-  return {
-    repositoryRoot: fixture.root,
-    expectedHead: fixture.head,
-    gitExecutableLocator: fixture.gitExecutable,
-    limits,
-  };
-}
-
-function expectSourceOriginError(operation, kind) {
-  return assert.rejects(operation, (error) => {
-    assert.match(error?.code ?? "", /^SOURCE_ORIGIN_[A-Z0-9_]+$/);
-    if (kind === "HOLD") assert.match(error.code, /HOLD.*TOOLCHAIN|TOOLCHAIN.*HOLD/);
-    else assert.doesNotMatch(error.code, /HOLD/);
-    return true;
-  });
-}
-
-function assertClosedObject(value, keys) {
-  assert.deepEqual(Object.keys(value).sort(), [...keys].sort());
-}
-
-function assertManifestDigest(manifest, field) {
-  assert.equal(
-    manifest[field],
-    sha256Canonical(manifest.schema, without(manifest, field)),
-  );
-}
-
-function mapBytesForRow(blobMap, row) {
-  assert(blobMap instanceof Map);
-  const bytes = blobMap.get(row.path) ?? blobMap.get(row.blobOid);
-  assert(Buffer.isBuffer(bytes), `missing captured bytes for ${row.path}`);
-  assert.equal(bytes.length, row.byteLength);
-  assert.equal(sha256(bytes), row.rawSha256);
-  return bytes;
-}
-
-function setRawRootTree(fixture, entries) {
-  const treeBytes = Buffer.concat(entries.map(({ mode, name, oid }) => Buffer.concat([
-    Buffer.from(`${mode} ${name}\0`, "utf8"),
-    Buffer.from(oid, "hex"),
-  ])));
-  const tree = git(fixture.gitExecutable, fixture.root, ["hash-object", "--stdin", "-t", "tree", "--literally", "-w"], { input: treeBytes }).toString("utf8").trim();
-  const commitBytes = Buffer.from(
-    `tree ${tree}\nauthor Source Origin Fixture <fixture@example.invalid> 1 +0000\ncommitter Source Origin Fixture <fixture@example.invalid> 1 +0000\n\nraw hostile tree\n`,
-    "utf8",
-  );
-  const commit = git(fixture.gitExecutable, fixture.root, ["hash-object", "--stdin", "-t", "commit", "--literally", "-w"], { input: commitBytes }).toString("utf8").trim();
-  git(fixture.gitExecutable, fixture.root, ["update-ref", "HEAD", commit]);
-  fixture.head = commit;
-  fixture.tree = tree;
-}
-
-test("captures every admitted suffix from one SHA-1 commit with zero exclusions", async (t) => {
-  const fixture = await createFixture(t);
-  const result = await captureFrozenSource(captureOptions(fixture));
-
-  assertClosedObject(result, ["observation", "sourceManifest", "sourceBlobs", "resolutionInputs", "resolutionBlobs"]);
-  assert.equal(result.sourceManifest.objectFormat, "sha1");
-  assert.equal(result.sourceManifest.expectedHead, fixture.head);
-  assert.equal(result.sourceManifest.expectedTree, fixture.tree);
-  assert.deepEqual(result.sourceManifest.rows.map((row) => row.path), Object.keys(SOURCE_BODIES).sort());
-  assert.equal(result.sourceManifest.counts.exclusions, 0);
-  assert.equal(result.sourceManifest.counts.paths, Object.keys(SOURCE_BODIES).length);
-  assert.equal(result.sourceManifest.authorizing, false);
-  for (const row of result.sourceManifest.rows) mapBytesForRow(result.sourceBlobs, row);
-});
-
-test("records only regular 100644 and 100755 tree modes and preserves NUL-safe path text", async (t) => {
-  const fixture = await createFixture(t);
-  const newlinePath = "newline\npath.ts";
-  const newlineOid = git(fixture.gitExecutable, fixture.root, ["hash-object", "-w", "--stdin"], { input: Buffer.from("export const newline = true;\n") }).toString("utf8").trim();
-  git(fixture.gitExecutable, fixture.root, ["update-index", "-z", "--index-info"], {
-    input: Buffer.concat([Buffer.from(`100644 ${newlineOid}\t`, "ascii"), Buffer.from(newlinePath, "utf8"), Buffer.from([0])]),
-  });
-  fixture.tree = git(fixture.gitExecutable, fixture.root, ["write-tree"]);
-  fixture.head = git(fixture.gitExecutable, fixture.root, ["commit-tree", fixture.tree, "-m", "nul-safe-path"]);
-  git(fixture.gitExecutable, fixture.root, ["update-ref", "HEAD", fixture.head]);
-  const rawTree = git(fixture.gitExecutable, fixture.root, ["ls-tree", "-r", "--full-tree", "-z", fixture.tree], { input: Buffer.alloc(0) });
-  const newlineStoredByGit = rawTree.includes(Buffer.from(`\t${newlinePath}\0`, "utf8"));
-  const { sourceManifest } = await captureFrozenSource(captureOptions(fixture));
-  const modes = new Map(sourceManifest.rows.map((row) => [row.path, row.mode]));
-  assert.equal(modes.get("src/h.mjs"), "100755");
-  assert.equal(modes.get("src/a.cjs"), "100644");
-  assert.equal(modes.get("src/space and [brackets].ts"), "100644");
-  assert.equal(modes.get("src/é.ts"), "100644");
-  if (newlineStoredByGit) assert.equal(modes.get(newlinePath), "100644");
-  else {
-    assert.equal(platform(), "win32", "non-Windows Git unexpectedly omitted a newline path from the raw tree");
-    t.diagnostic("Git for Windows refused to store the newline path; raw-tree capture remains required where supported");
-  }
-  assert.equal(sourceManifest.counts.mode100755, 1);
-  assert.equal(sourceManifest.counts.mode100644, Object.keys(SOURCE_BODIES).length - 1 + Number(newlineStoredByGit));
-});
-
-test("captures a SHA-256 repository when the installed Git supports that object format", async (t) => {
-  let fixture;
-  try {
-    fixture = await createFixture(t, { objectFormat: "sha256" });
-  } catch (error) {
-    t.skip(`installed Git does not support SHA-256 fixture repositories: ${error.message}`);
-    return;
-  }
-  const result = await captureFrozenSource(captureOptions(fixture));
-  assert.equal(result.observation.objectFormat, "sha256");
-  assert.match(result.observation.before.head, /^[0-9a-f]{64}$/);
-  assert.match(result.observation.before.tree, /^[0-9a-f]{64}$/);
-  for (const row of [...result.sourceManifest.rows, ...result.resolutionInputs.rows]) {
-    assert.match(row.blobOid, /^[0-9a-f]{64}$/);
-    assert.equal(row.objectFormat, "sha256");
-  }
-});
-
-test("selects only exact resolution basenames and jsconfig or tsconfig patterns", async (t) => {
-  const fixture = await createFixture(t);
-  const { resolutionInputs, resolutionBlobs } = await captureFrozenSource(captureOptions(fixture));
-  assert.deepEqual(resolutionInputs.rows.map((row) => row.path), [...Object.keys(RESOLUTION_BODIES), ...Object.keys(EXPECTED_OWNER_BODIES)].sort());
-  assert.equal(resolutionInputs.authorizing, false);
-  for (const row of resolutionInputs.rows) mapBytesForRow(resolutionBlobs, row);
-  assertManifestDigest(resolutionInputs, "resolutionInputsDigest");
-});
-
-test("binds closed observation and manifest schemas to canonical semantic digests", async (t) => {
-  const fixture = await createFixture(t);
-  const { observation, sourceManifest, resolutionInputs } = await captureFrozenSource(captureOptions(fixture));
-  assertClosedObject(observation, ["before", "after", "objectFormat", "indexDigest", "executionBoundary"]);
-  for (const edge of [observation.before, observation.after]) {
-    assertClosedObject(edge, ["head", "tree", "indexDigest", "gitVersion", "gitExecutableRawSha256", "gitExecutableByteLength"]);
-    assert.equal(edge.head, fixture.head);
-    assert.equal(edge.tree, fixture.tree);
-  }
-  assert.equal(observation.before.indexDigest, observation.after.indexDigest);
-  assert.equal(observation.indexDigest, observation.before.indexDigest);
-  assert.equal(observation.executionBoundary, "COOPERATIVE_LOCAL_SAME_USER");
-  assertClosedObject(sourceManifest, ["schema", "repositoryId", "expectedHead", "expectedTree", "objectFormat", "policyDigest", "exclusionDigest", "rows", "counts", "authorizing", "manifestDigest"]);
-  assertClosedObject(resolutionInputs, ["schema", "repositoryId", "expectedHead", "expectedTree", "policyDigest", "rows", "authorizing", "resolutionInputsDigest"]);
-  assertManifestDigest(sourceManifest, "manifestDigest");
-  assertManifestDigest(resolutionInputs, "resolutionInputsDigest");
-});
-
-test("ignores mutable working-tree substitution and returns only frozen Git-object bytes", async (t) => {
-  const fixture = await createFixture(t);
-  await writeTracked(fixture.root, "src/j.ts", "export const substituted = false;\n");
-  await writeTracked(fixture.root, "src/untracked.ts", "export const untracked = true;\n");
-
-  const result = await captureFrozenSource(captureOptions(fixture));
-  const row = result.sourceManifest.rows.find((entry) => entry.path === "src/j.ts");
-  assert(row);
-  assert.equal(mapBytesForRow(result.sourceBlobs, row).toString("utf8"), SOURCE_BODIES["src/j.ts"]);
-  assert.equal(result.sourceManifest.rows.some((entry) => entry.path === "src/untracked.ts"), false);
-});
-
-test("refuses frozen source-object corruption without returning a partial manifest", async (t) => {
-  const fixture = await createFixture(t);
-  const oid = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD:src/j.ts"]);
-  const gitDir = git(fixture.gitExecutable, fixture.root, ["rev-parse", "--absolute-git-dir"]);
-  const objectPath = join(gitDir, "objects", oid.slice(0, 2), oid.slice(2));
-  const bytes = await readFile(objectPath);
-  bytes[bytes.length - 1] ^= 1;
-  await chmod(objectPath, 0o600);
-  await writeFile(objectPath, bytes);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-test("refuses an expected commit that is not the observed HEAD or whose tree drifts", async (t) => {
-  const fixture = await createFixture(t);
-  await writeTracked(fixture.root, "README.md", "second commit\n");
-  git(fixture.gitExecutable, fixture.root, ["add", "README.md"]);
-  git(fixture.gitExecutable, fixture.root, ["commit", "-m", "second"]);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-
-  const treeAsHead = { ...captureOptions(fixture), expectedHead: fixture.tree };
-  await expectSourceOriginError(captureFrozenSource(treeAsHead), "REFUSED");
-});
-
-test("refuses a staged index whose complete path, mode or blob set differs from the frozen tree", async (t) => {
-  const fixture = await createFixture(t);
-  await writeTracked(fixture.root, "src/j.ts", "export const staged = false;\n");
-  git(fixture.gitExecutable, fixture.root, ["add", "src/j.ts"]);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-test("refuses unmerged index stages instead of selecting one conflict side", async (t) => {
-  const fixture = await createFixture(t);
-  const oids = [];
-  for (const body of ["base\n", "ours\n", "theirs\n"]) {
-    oids.push(git(fixture.gitExecutable, fixture.root, ["hash-object", "-w", "--stdin"], { input: Buffer.from(body) }).toString("utf8").trim());
-  }
-  git(fixture.gitExecutable, fixture.root, ["update-index", "--force-remove", "src/j.ts"]);
-  const indexInfo = oids.map((oid, index) => `100644 ${oid} ${index + 1}\tsrc/j.ts\n`).join("");
-  git(fixture.gitExecutable, fixture.root, ["update-index", "--index-info"], { input: Buffer.from(indexInfo) });
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-for (const [name, flag] of [["assume-unchanged", "--assume-unchanged"], ["skip-worktree", "--skip-worktree"]]) {
-  test(`refuses the ${name} index flag even when stage zero still matches the frozen tree`, async (t) => {
-    const fixture = await createFixture(t);
-    git(fixture.gitExecutable, fixture.root, ["update-index", flag, "src/j.ts"]);
-    await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-  });
-}
-
-test("refuses portable sparse-index state when supported by the installed Git", async (t) => {
-  const fixture = await createFixture(t);
-  const attempt = spawnSync(fixture.gitExecutable, ["-C", fixture.root, "sparse-checkout", "init", "--cone", "--sparse-index"], { encoding: "utf8", windowsHide: true });
-  if (attempt.status !== 0) {
-    t.skip("installed Git cannot construct the sparse-index fixture");
-    return;
-  }
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-for (const mode of ["120000", "160000"]) {
-  test(`refuses tree mode ${mode} instead of treating it as a source blob`, async (t) => {
-    const fixture = await createFixture(t);
-    const oid = mode === "160000"
-      ? fixture.head
-      : git(fixture.gitExecutable, fixture.root, ["hash-object", "-w", "--stdin"], { input: Buffer.from("src/j.ts") }).toString("utf8").trim();
-    git(fixture.gitExecutable, fixture.root, ["update-index", "--add", "--cacheinfo", `${mode},${oid},src/indirect.ts`]);
-    const tree = git(fixture.gitExecutable, fixture.root, ["write-tree"]);
-    const commit = git(fixture.gitExecutable, fixture.root, ["commit-tree", tree, "-m", `mode-${mode}`]);
-    git(fixture.gitExecutable, fixture.root, ["update-ref", "HEAD", commit]);
-    fixture.head = commit;
-    fixture.tree = tree;
-    await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-  });
-}
-
-test("refuses case-shadowed and non-NFC Git paths independent of checkout filesystem behavior", async (t) => {
-  for (const paths of [["Case.ts", "case.ts"], ["é.ts", "e\u0301.ts"]]) {
-    const fixture = await createFixture(t);
-    const oid = git(fixture.gitExecutable, fixture.root, ["hash-object", "-w", "--stdin"], { input: Buffer.from("export {};\n") }).toString("utf8").trim();
-    for (const path of paths) git(fixture.gitExecutable, fixture.root, ["update-index", "--add", "--cacheinfo", `100644,${oid},${path}`]);
-    const tree = git(fixture.gitExecutable, fixture.root, ["write-tree"]);
-    const commit = git(fixture.gitExecutable, fixture.root, ["commit-tree", tree, "-m", "hostile-paths"]);
-    git(fixture.gitExecutable, fixture.root, ["update-ref", "HEAD", commit]);
-    fixture.head = commit;
-    fixture.tree = tree;
-    await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-  }
-});
-
-test("refuses duplicate, drive-absolute and non-canonical backslash paths emitted by a hostile raw Git tree", async (t) => {
-  for (const names of [["duplicate.ts", "duplicate.ts"], ["evil\\path.ts"], ["C:/escape.ts"]]) {
-    const fixture = await createFixture(t);
-    const oid = git(fixture.gitExecutable, fixture.root, ["hash-object", "-w", "--stdin"], { input: Buffer.from("export {};\n") }).toString("utf8").trim();
-    setRawRootTree(fixture, names.map((name) => ({ mode: "100644", name, oid })));
-    await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-  }
-});
-
-test("refuses caller limit substitution and aggregate source or resolution overflow without partial evidence", async (t) => {
-  const fixture = await createFixture(t);
-  for (const limits of [
-    { ...SOURCE_ORIGIN_LIMITS, sourceFiles: Object.keys(SOURCE_BODIES).length - 1 },
-    { ...SOURCE_ORIGIN_LIMITS, sourceBytes: 1 },
-    { ...SOURCE_ORIGIN_LIMITS, resolutionFiles: Object.keys(RESOLUTION_BODIES).length - 1 },
-    { ...SOURCE_ORIGIN_LIMITS, resolutionBytes: 1 },
-    { ...SOURCE_ORIGIN_LIMITS, processMillis: 1 },
-    { ...SOURCE_ORIGIN_LIMITS, processOutputBytes: 1 },
-  ]) {
-    await expectSourceOriginError(captureFrozenSource(captureOptions(fixture, limits)), "REFUSED");
-  }
-});
-
-test("ignores hostile ambient Git variables and repository pager, editor, hook and filter configuration", async (t) => {
-  const fixture = await createFixture(t);
-  git(fixture.gitExecutable, fixture.root, ["config", "core.pager", "hostile-pager"]);
-  git(fixture.gitExecutable, fixture.root, ["config", "core.editor", "hostile-editor"]);
-  git(fixture.gitExecutable, fixture.root, ["config", "core.hooksPath", "hostile-hooks"]);
-  git(fixture.gitExecutable, fixture.root, ["config", "filter.hostile.process", "hostile-filter"]);
-  await writeTracked(fixture.root, ".gitattributes", "*.ts filter=hostile\n");
-  const keys = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0", "GIT_PAGER", "GIT_EDITOR"];
-  const saved = new Map(keys.map((key) => [key, process.env[key]]));
-  try {
-    for (const key of keys) process.env[key] = "hostile-sentinel";
-    const result = await captureFrozenSource(captureOptions(fixture));
-    assert.equal(result.sourceManifest.expectedHead, fixture.head);
-  } finally {
-    for (const [key, value] of saved) {
-      if (value === undefined) delete process.env[key];
-      else process.env[key] = value;
-    }
-  }
-});
-
-test("refuses repository-local object alternates", async (t) => {
-  const fixture = await createFixture(t);
-  const gitDir = git(fixture.gitExecutable, fixture.root, ["rev-parse", "--absolute-git-dir"]);
-  const alternates = join(gitDir, "objects", "info", "alternates");
-  await mkdir(dirname(alternates), { recursive: true });
-  await writeFile(alternates, `${join(fixture.root, "alternate-objects")}\n`);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-test("refuses common-object alternates from a linked worktree", async (t) => {
-  const fixture = await createFixture(t);
-  const linkedParent = await mkdtemp(join(tmpdir(), "galerina-source-origin-linked-"));
-  const linkedRoot = join(linkedParent, "worktree");
-  git(fixture.gitExecutable, fixture.root, ["worktree", "add", "--detach", linkedRoot, fixture.head]);
-  try {
-    const alternateObjects = join(linkedParent, "alternate-objects");
-    const alternates = git(fixture.gitExecutable, linkedRoot, ["rev-parse", "--path-format=absolute", "--git-path", "objects/info/alternates"]);
-    await mkdir(alternateObjects, { recursive: true });
-    await mkdir(dirname(alternates), { recursive: true });
-    await writeFile(alternates, `${alternateObjects}\n`);
-    await expectSourceOriginError(captureFrozenSource(captureOptions({ ...fixture, root: linkedRoot })), "REFUSED");
-  } finally {
-    spawnSync(fixture.gitExecutable, ["-C", fixture.root, "worktree", "remove", "--force", linkedRoot], { encoding: "utf8", windowsHide: true });
-    await rm(linkedParent, { recursive: true, force: true });
-  }
-});
-
-test("refuses repository worktree relocation away from the supplied root", async (t) => {
-  const fixture = await createFixture(t);
-  const relocated = join(fixture.root, "relocated-worktree");
-  await mkdir(relocated);
-  git(fixture.gitExecutable, fixture.root, ["config", "core.worktree", relocated]);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-test("refuses a missing frozen expected-outcome owner instead of omitting it", async (t) => {
-  const fixture = await createFixture(t);
-  git(fixture.gitExecutable, fixture.root, ["rm", "src/j.ts.expected.diagnostics.txt"]);
-  git(fixture.gitExecutable, fixture.root, ["commit", "-m", "remove expected owner"]);
-  fixture.head = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD"]);
-  fixture.tree = git(fixture.gitExecutable, fixture.root, ["rev-parse", "HEAD^{tree}"]);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
-});
-
-test("refuses an executable locator that cannot run Git", async (t) => {
-  const fixture = await createFixture(t);
-  const inert = join(fixture.root, platform() === "win32" ? "not-git.exe" : "not-git");
-  await writeFile(inert, "not a Git executable\n");
-  try { await chmod(inert, 0o755); } catch { /* Windows execution metadata is not authoritative. */ }
-  await expectSourceOriginError(captureFrozenSource({ ...captureOptions(fixture), gitExecutableLocator: inert }), "REFUSED");
-});
-
-test("size-gates an oversized executable locator before attempting to run it", async (t) => {
-  const fixture = await createFixture(t);
-  const oversized = join(fixture.root, platform() === "win32" ? "oversized-git.exe" : "oversized-git");
-  const handle = await open(oversized, "w");
-  try { await handle.truncate(SOURCE_ORIGIN_LIMITS.capturedFileBytes + 1); } finally { await handle.close(); }
-  try { await chmod(oversized, 0o755); } catch { /* Windows execution metadata is not authoritative. */ }
-  await expectSourceOriginError(captureFrozenSource({ ...captureOptions(fixture), gitExecutableLocator: oversized }), "REFUSED");
-});
-
-test("refuses Git executable byte drift between the before and after observations", async (t) => {
+  const gitDirectory = join(root, ".git");
+  const indexPath = join(gitDirectory, "index");
+  await mkdir(gitDirectory);
+  await writeFile(indexPath, "index");
+  const canonicalRoot = await realpath(root);
+  const canonicalGit = await realpath(gitDirectory);
+  const canonicalIndex = await realpath(indexPath);
+  const gitText = (value) => platform() === "win32" ? value.replaceAll("\\", "/") : value;
+  assert.deepEqual(gitSource.assertCanonicalRepositoryLayout({ repositoryRoot: canonicalRoot, toplevel: gitText(canonicalRoot), gitDirectory: gitText(canonicalGit), indexPath: gitText(canonicalIndex) }), { repositoryRoot: canonicalRoot, gitDirectory: canonicalGit, indexPath: canonicalIndex });
+  assert.throws(() => gitSource.assertCanonicalRepositoryLayout({ repositoryRoot: canonicalRoot, toplevel: gitText(dirname(canonicalRoot)), gitDirectory: gitText(canonicalGit), indexPath: gitText(canonicalIndex) }), /SOURCE_ORIGIN_/);
   if (platform() === "win32") {
-    t.skip("self-mutating executable replay requires the Unix shell lane; Windows retains pre/post identity checks");
-    return;
+    const caseAlias = gitText(canonicalRoot).replace(/^([A-Za-z]):/, (_, drive) => `${drive === drive.toUpperCase() ? drive.toLowerCase() : drive.toUpperCase()}:`);
+    assert.throws(() => gitSource.assertCanonicalRepositoryLayout({ repositoryRoot: canonicalRoot, toplevel: caseAlias, gitDirectory: gitText(canonicalGit), indexPath: gitText(canonicalIndex) }), /SOURCE_ORIGIN_/);
   }
-  const fixture = await createFixture(t);
-  await installSelfMutatingGitForwarder(fixture);
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "REFUSED");
+  const link = `${root}-link`;
+  t.after(() => rm(link, { recursive: true, force: true }));
+  await symlink(root, link, platform() === "win32" ? "junction" : "dir");
+  assert.throws(() => gitSource.assertCanonicalRepositoryLayout({ repositoryRoot: canonicalRoot, toplevel: gitText(link), gitDirectory: gitText(canonicalGit), indexPath: gitText(canonicalIndex) }), /SOURCE_ORIGIN_/);
 });
 
-test("repeating capture of one commit produces deterministic manifests and exact captured bytes", async (t) => {
-  const fixture = await createFixture(t);
-  const first = await captureFrozenSource(captureOptions(fixture));
-  const second = await captureFrozenSource(captureOptions(fixture));
-  assert.deepEqual(second.observation, first.observation);
-  assert.deepEqual(second.sourceManifest, first.sourceManifest);
-  assert.deepEqual(second.resolutionInputs, first.resolutionInputs);
-  assert.deepEqual([...second.sourceBlobs], [...first.sourceBlobs]);
-  assert.deepEqual([...second.resolutionBlobs], [...first.resolutionBlobs]);
+test("closing-state validation refuses cached-tree, index, config, and post-input owner drift", () => {
+  const opening = Object.freeze({ repositoryRoot: "root", gitDirectory: "git", indexPath: "index", objectFormat: "sha1", commitOid: "a".repeat(40), treeOid: "b".repeat(40), treeDigest: "c".repeat(64), indexDigest: "d".repeat(64), configDigest: "e".repeat(64), ownerSetDigest: "f".repeat(64) });
+  assert.doesNotThrow(() => gitSource.assertFrozenSourceClosure(opening, structuredClone(opening)));
+  for (const [field, value] of [["treeDigest", "0".repeat(64)], ["indexDigest", "1".repeat(64)], ["configDigest", "2".repeat(64)], ["ownerSetDigest", "3".repeat(64)]]) {
+    const drifted = structuredClone(opening);
+    drifted[field] = value;
+    assert.throws(() => gitSource.assertFrozenSourceClosure(opening, drifted), /SOURCE_ORIGIN_GIT_DRIFT/);
+  }
 });
 
-test("captured byte maps resist generic Map prototype mutation and buffer alias bypasses", async (t) => {
-  const fixture = await createFixture(t);
-  const { sourceBlobs } = await captureFrozenSource(captureOptions(fixture));
-  const path = "src/j.ts";
-  const expected = Buffer.from(SOURCE_BODIES[path]);
-  assert.equal(sourceBlobs.size, Object.keys(SOURCE_BODIES).length);
-  assert.equal(Map.prototype.get.call(sourceBlobs, path), undefined);
-  Map.prototype.set.call(sourceBlobs, path, Buffer.from("mutated"));
-  Map.prototype.set.call(sourceBlobs, "attacker.ts", Buffer.from("attacker"));
-  assert.deepEqual(sourceBlobs.get(path), expected);
-  assert.equal(sourceBlobs.has("attacker.ts"), false);
-  assert.equal(sourceBlobs.size, Object.keys(SOURCE_BODIES).length);
-  Map.prototype.clear.call(sourceBlobs);
-  assert.deepEqual(sourceBlobs.get(path), expected);
-  assert.equal(sourceBlobs.size, Object.keys(SOURCE_BODIES).length);
-});
-
-test("production capture remains HOLD when the frozen commit has no approved nonempty toolchain pin", async (t) => {
-  const fixture = await createFixture(t, { withPin: false });
-  await expectSourceOriginError(captureFrozenSource(captureOptions(fixture)), "HOLD");
+test("child output accounting accepts exact per-stream/global limits and refuses every plus one", () => {
+  assert.equal(gitSource.exceedsChildOutputLimit(64, 0, 64, 64), false);
+  assert.equal(gitSource.exceedsChildOutputLimit(65, 0, 64, 128), true);
+  assert.equal(gitSource.exceedsChildOutputLimit(32, 33, 64, 64), true);
+  assert.equal(gitSource.exceedsChildOutputLimit(0, 65, 64, 128), true);
 });
