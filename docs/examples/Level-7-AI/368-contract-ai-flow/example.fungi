@@ -2,7 +2,7 @@
 /// example: 368-contract-ai-flow
 /// level: 7
 /// concept: flow contract with AI intent for IGO optimisation
-/// expected_diagnostics: FUNGI-HINT-COMPUTE-001 (suppressed when contract specifies intent)
+/// expected_diagnostics: none
 /// test_status: stable
 /// ai_rule: AI flows should use contract.intent to enable IGO — "locally without remote execution" blocks remote targets.
 
