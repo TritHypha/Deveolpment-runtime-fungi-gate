@@ -525,6 +525,65 @@ test("ninth-review PROJECT parsing avoids ambient numeric prototype lookup", { t
   });
 });
 
+test("eleventh-review missing Gate verdict ignores inherited properties", { timeout: 30_000 }, async (t) => {
+  const options = { ...await fixtureOptions(), toolchainBlobs: new Map() };
+  const property = "identity.gate";
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const prior = safeGetDescriptor(Object.prototype, property);
+  if (prior) safeDeleteProperty(Object.prototype, property);
+  assert.deepEqual(options.owners.values.gate["src/identity.gate"], { ok: true, codes: [] });
+  assert.equal(Object.hasOwn(options.owners.values.gate, property), false);
+
+  const captureFailure = async () => {
+    let result;
+    let failure;
+    try { result = await decodeSourceProject(options); } catch (error) { failure = error; }
+    return { failure, result };
+  };
+
+  try {
+    await t.test("unpoisoned control reaches the next closed boundary", async () => {
+      const { failure, result } = await captureFailure();
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_TOOLCHAIN");
+    });
+
+    await t.test("throwing getter has zero effects", async () => {
+      let effects = 0;
+      safeDefineProperty(Object.prototype, property, {
+        configurable: true,
+        get() {
+          effects += 1;
+          throw new Error("ATTACKER_GATE_VERDICT_GETTER");
+        },
+      });
+      const { failure, result } = await captureFailure();
+      safeDeleteProperty(Object.prototype, property);
+      assert.equal(effects, 0);
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_TOOLCHAIN");
+    });
+
+    await t.test("data value cannot inject a verdict", async () => {
+      safeDefineProperty(Object.prototype, property, {
+        configurable: true,
+        enumerable: true,
+        value: Object.freeze({ ok: false, codes: Object.freeze(["FUNGI-PARSE-001"]) }),
+        writable: true,
+      });
+      const { failure, result } = await captureFailure();
+      safeDeleteProperty(Object.prototype, property);
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_TOOLCHAIN");
+    });
+  } finally {
+    safeDeleteProperty(Object.prototype, property);
+    if (prior) safeDefineProperty(Object.prototype, property, prior);
+  }
+});
+
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {
   const options = await fixtureOptions();
   const result = await decodeSourceProject(options);

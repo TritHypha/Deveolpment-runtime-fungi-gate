@@ -82,6 +82,11 @@ function optionalOwnArrayValue(values, index) {
   return descriptor && OBJECT_HAS_OWN(descriptor, 'value') ? descriptor.value : undefined;
 }
 
+function optionalOwnDataValue(value, name) {
+  const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
+  return descriptor && OBJECT_HAS_OWN(descriptor, 'value') ? descriptor.value : undefined;
+}
+
 function append(values, value) { defineData(values, `${values.length}`, value); }
 function arrayCopy(values) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, values[index]); return output; }
 function arrayMap(values, operation) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index)); return output; }
@@ -481,7 +486,7 @@ function deriveExpectedOutcomes(captured) {
       }
       if (domain === 'GATE') {
         const key = sourceBasename(sourceRow.path);
-        const verdict = captured.values.gate[key];
+        const verdict = optionalOwnDataValue(captured.values.gate, key);
         if (verdict !== undefined && verdict.ok === false) append(candidates, {
           path: sourceRow.path, domain, parserId, disposition: 'EXPECTED_REFUSAL',
           diagnosticCodes: verdict.codes, ownerKind: 'GATE_V3_VERDICT',
