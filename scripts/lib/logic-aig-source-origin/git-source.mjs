@@ -85,6 +85,9 @@ const PRODUCER_ARGV_POLICY_FIELDS = Object.freeze([
   'targetArgumentSlots',
 ]);
 const APPROVED_PRODUCER_ARGV_POLICY_DIGEST = '3a636a21a4beddcab4ed87389c7fe19b686742afffdcdc911490b9ad0992a5da';
+// Depth starts at zero; every root, container, and leaf occurrence consumes one node.
+const SEALED_POLICY_COPY_MAX_DEPTH = 64;
+const SEALED_POLICY_COPY_MAX_NODES = 4_096;
 const EXPECTED_NODE_KINDS = Object.freeze([
   'CLASS', 'FILE', 'FLOW', 'FUNCTION', 'GATE', 'INTERFACE', 'METHOD',
   'MODULE', 'ROUTE', 'SYMBOL', 'TYPE',
@@ -195,6 +198,7 @@ const WEAK_MAP_HAS = WeakMap.prototype.has;
 const WEAK_MAP_SET = WeakMap.prototype.set;
 const WEAK_SET_CONSTRUCTOR = WeakSet;
 const WEAK_SET_ADD = WeakSet.prototype.add;
+const WEAK_SET_DELETE = WeakSet.prototype.delete;
 const WEAK_SET_HAS = WeakSet.prototype.has;
 const BLOB_CAPABILITY_STATES = new WEAK_MAP_CONSTRUCTOR();
 const BLOB_ITERATOR_STATES = new WEAK_MAP_CONSTRUCTOR();
@@ -622,9 +626,9 @@ function readBootstrapOwners() {
     'policyDigest',
   );
   if (exporter.value.toolchainPinsDigest !== pins.value.pinsDigest ||
-      canonicalJsonText(exporter.value.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
-      canonicalJsonText(exporter.value.environmentPolicy) !== SEALED_GIT_ENVIRONMENT_POLICY.canonical ||
-      canonicalJsonText(exporter.value.limits) !== SEALED_EXPORTER_LIMITS_CANONICAL) refuse('SOURCE_ORIGIN_GIT_POLICY');
+      canonicalLocalExporterPolicyData(exporter.value.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
+      canonicalLocalExporterPolicyData(exporter.value.environmentPolicy) !== SEALED_GIT_ENVIRONMENT_POLICY.canonical ||
+      canonicalLocalExporterPolicyData(exporter.value.limits) !== SEALED_EXPORTER_LIMITS_CANONICAL) refuse('SOURCE_ORIGIN_GIT_POLICY');
   return frozenNullRecord({ pins, exporter }, 'SOURCE_ORIGIN_GIT_POLICY');
 }
 
@@ -680,27 +684,71 @@ function substituteArguments(values, substitutions, repositoryRoot = REPOSITORY_
   });
 }
 
-function copySealedPolicyData(value, code = 'SOURCE_ORIGIN_GIT_PROCESS') {
-  if (value === null || typeof value !== 'object') return value;
+function copySealedPolicyValue(value, code, state, depth) {
+  if (depth > SEALED_POLICY_COPY_MAX_DEPTH || state.remainingNodes === 0) refuse(code);
+  state.remainingNodes -= 1;
+  if (value === null || typeof value === 'boolean') return value;
+  if (typeof value === 'number') {
+    if (!NUMBER_IS_SAFE_INTEGER(value) || value < 0) refuse(code);
+    return value;
+  }
+  if (typeof value === 'string') {
+    if (hasUnpairedSurrogate(value) || value !== stringNormalize(value)) refuse(code);
+    return value;
+  }
+  if (typeof value !== 'object') refuse(code);
   if (UTIL_TYPES_IS_PROXY(value) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
-  if (ARRAY_IS_ARRAY(value)) {
-    if (OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE) refuse(code);
-    const values = closedArrayValues(value, code);
-    const output = new ARRAY_CONSTRUCTOR();
-    for (let index = 0; index < values.length; index += 1) safeArrayAppend(output, copySealedPolicyData(values[index], code));
+  if (REFLECT_APPLY(WEAK_SET_HAS, state.active, [value])) refuse(code);
+  REFLECT_APPLY(WEAK_SET_ADD, state.active, [value]);
+  try {
+    if (ARRAY_IS_ARRAY(value)) {
+      if (OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE) refuse(code);
+      const lengthDescriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, 'length');
+      if (!lengthDescriptor || !OBJECT_HAS_OWN(lengthDescriptor, 'value') ||
+          !NUMBER_IS_SAFE_INTEGER(lengthDescriptor.value) || lengthDescriptor.value < 0 ||
+          lengthDescriptor.value > state.remainingNodes) refuse(code);
+      const values = closedArrayValues(value, code);
+      const output = new ARRAY_CONSTRUCTOR();
+      for (let index = 0; index < values.length; index += 1) {
+        safeArrayAppend(output, copySealedPolicyValue(values[index], code, state, depth + 1));
+      }
+      return OBJECT_FREEZE(output);
+    }
+    const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+    if (prototype !== OBJECT_PROTOTYPE && prototype !== null) refuse(code);
+    const output = OBJECT_CREATE(null);
+    const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+    if (names.length > state.remainingNodes) refuse(code);
+    for (let index = 0; index < names.length; index += 1) {
+      const name = names[index];
+      if (hasUnpairedSurrogate(name) || name !== stringNormalize(name)) refuse(code);
+      const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
+      if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+      setDynamicData(output, name, copySealedPolicyValue(descriptor.value, code, state, depth + 1));
+    }
     return OBJECT_FREEZE(output);
+  } finally {
+    REFLECT_APPLY(WEAK_SET_DELETE, state.active, [value]);
   }
-  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
-  if (prototype !== OBJECT_PROTOTYPE && prototype !== null) refuse(code);
-  const output = OBJECT_CREATE(null);
-  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
-  for (let index = 0; index < names.length; index += 1) {
-    const name = names[index];
-    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
-    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
-    setDynamicData(output, name, copySealedPolicyData(descriptor.value, code));
-  }
-  return OBJECT_FREEZE(output);
+}
+
+function copySealedPolicyData(value, code = 'SOURCE_ORIGIN_GIT_PROCESS') {
+  const state = OBJECT_CREATE(null);
+  setDynamicData(state, 'active', new WEAK_SET_CONSTRUCTOR());
+  setDynamicData(state, 'remainingNodes', SEALED_POLICY_COPY_MAX_NODES);
+  return copySealedPolicyValue(value, code, state, 0);
+}
+
+function copyLocalExporterPolicyData(value) {
+  try { return copySealedPolicyData(value, 'SOURCE_ORIGIN_GIT_POLICY'); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
+}
+
+function canonicalLocalExporterPolicyData(value) {
+  try { return canonicalJsonText(value); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
+}
+
+function hashLocalExporterPolicyData(domain, value) {
+  try { return sha256CanonicalCaptured(domain, value); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
 }
 
 function exactSealedObject(value, keys, code) {
@@ -854,13 +902,13 @@ function requireSealedGitEnvironment(value) {
 
 function materializeSealedProducerArgvPolicy(policyValue, expectedCanonical) {
   const code = 'SOURCE_ORIGIN_GIT_POLICY';
-  const policy = copySealedPolicyData(policyValue, code);
+  const policy = copyLocalExporterPolicyData(policyValue);
   exactSealedObject(policy, PRODUCER_ARGV_POLICY_FIELDS, code);
   if (policy.schema !== 'galerina.logic-aig-producer-argv-policy.v2' ||
       policy.authorizing !== false ||
       policy.policyDigest !== APPROVED_PRODUCER_ARGV_POLICY_DIGEST ||
-      sha256CanonicalCaptured(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
-  const canonical = canonicalJsonText(policy);
+      hashLocalExporterPolicyData(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
+  const canonical = canonicalLocalExporterPolicyData(policy);
   if (expectedCanonical !== undefined &&
       (typeof expectedCanonical !== 'string' || canonical !== expectedCanonical)) refuse(code);
   return OBJECT_FREEZE({ policy, canonical });
@@ -873,13 +921,13 @@ export function validateLocalExporterPolicy(
 ) {
   const code = 'SOURCE_ORIGIN_GIT_POLICY';
   if (typeof expectedPolicyDigest !== 'string' || !regexpTest(HEX64, expectedPolicyDigest)) refuse(code);
-  const policy = copySealedPolicyData(value, code);
+  const policy = copyLocalExporterPolicyData(value);
   exactSealedObject(policy, EXPORTER_POLICY_FIELDS, code);
   if (policy.schema !== 'galerina.logic-aig-exporter-policy.v2' ||
       policy.decoderId !== 'galerina-source-origin' ||
       policy.canonicalizationId !== 'utf8-nfc-code-unit-canonical-json-v1' ||
       policy.authorizing !== false || policy.policyDigest !== expectedPolicyDigest ||
-      sha256CanonicalCaptured(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
+      hashLocalExporterPolicyData(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
 
   const argvPolicy = materializeSealedProducerArgvPolicy(
     sealedRecordValue(policy, 'argvPolicy'),
@@ -895,11 +943,11 @@ export function validateLocalExporterPolicy(
       policy.argvPolicyDigest !== argvPolicy.policy.policyDigest ||
       policy.gitProcessPolicyDigest !== SEALED_GIT_PROCESS_POLICY.policy.policyDigest ||
       policy.environmentPolicyDigest !== SEALED_GIT_ENVIRONMENT_POLICY.policy.policyDigest ||
-      canonicalJsonText(policy.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
-      canonicalJsonText(policy.environmentPolicy) !== SEALED_GIT_ENVIRONMENT_POLICY.canonical ||
-      canonicalJsonText(policy.limits) !== SEALED_EXPORTER_LIMITS_CANONICAL ||
-      canonicalJsonText(policy.nodeKinds) !== canonicalJsonText(EXPECTED_NODE_KINDS) ||
-      canonicalJsonText(policy.relationshipKinds) !== canonicalJsonText(EXPECTED_RELATIONSHIP_KINDS)) refuse(code);
+      canonicalLocalExporterPolicyData(policy.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
+      canonicalLocalExporterPolicyData(policy.environmentPolicy) !== SEALED_GIT_ENVIRONMENT_POLICY.canonical ||
+      canonicalLocalExporterPolicyData(policy.limits) !== SEALED_EXPORTER_LIMITS_CANONICAL ||
+      canonicalLocalExporterPolicyData(policy.nodeKinds) !== canonicalLocalExporterPolicyData(EXPECTED_NODE_KINDS) ||
+      canonicalLocalExporterPolicyData(policy.relationshipKinds) !== canonicalLocalExporterPolicyData(EXPECTED_RELATIONSHIP_KINDS)) refuse(code);
   return policy;
 }
 
@@ -967,8 +1015,8 @@ function materializeSealedGitProcessPolicy(policyValue) {
 const SEALED_PRODUCER_ARGV_POLICY = materializeSealedProducerArgvPolicy(PRODUCER_ARGV_POLICY);
 const SEALED_GIT_PROCESS_POLICY = materializeSealedGitProcessPolicy(OWNER_PROPOSAL_POLICY.gitProcessPolicy);
 const SEALED_GIT_ENVIRONMENT_POLICY = materializeSealedGitEnvironmentPolicy(OWNER_PROPOSAL_POLICY.environmentPolicy);
-const SEALED_EXPORTER_LIMITS = copySealedPolicyData(OWNER_PROPOSAL_POLICY.limits, 'SOURCE_ORIGIN_GIT_POLICY');
-const SEALED_EXPORTER_LIMITS_CANONICAL = canonicalJsonText(SEALED_EXPORTER_LIMITS);
+const SEALED_EXPORTER_LIMITS = copyLocalExporterPolicyData(OWNER_PROPOSAL_POLICY.limits);
+const SEALED_EXPORTER_LIMITS_CANONICAL = canonicalLocalExporterPolicyData(SEALED_EXPORTER_LIMITS);
 const SEALED_GIT_ENVIRONMENT = materializeHostGitEnvironment();
 const BOOTSTRAP_OWNERS = readBootstrapOwners();
 

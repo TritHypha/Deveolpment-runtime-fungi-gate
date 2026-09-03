@@ -13,6 +13,7 @@ import {
   validateToolchainManifest,
 } from "../lib/logic-aig-source-origin/contract.mjs";
 import { decodeSourceProject } from "../lib/logic-aig-source-origin/decode-project.mjs";
+import { validateLocalExporterPolicy } from "../lib/logic-aig-source-origin/git-source.mjs";
 
 const ROOT = new URL("../../", import.meta.url);
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
@@ -750,6 +751,82 @@ test("thirteenth-review PROJECT rejects coherently resealed nested argvPolicy dr
     assert.equal(result, undefined);
     assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
   });
+});
+
+test("fourteenth-review exporter policy traversal is bounded and reports one stable refusal", { timeout: 180_000 }, async (t) => {
+  const options = await fixtureOptions();
+  const variants = [
+    ["ordinary object cycle", () => {
+      const value = {};
+      value.self = value;
+      return value;
+    }],
+    ["array cycle", () => {
+      const value = [];
+      value.push(value);
+      return value;
+    }],
+    ["over-depth acyclic object", () => {
+      let value = null;
+      for (let depth = 0; depth < 65; depth += 1) value = { child: value };
+      return value;
+    }],
+    ["over-node acyclic array", () => Array.from({ length: 4_097 }, () => null)],
+    ["undefined leaf", () => ({ leaf: undefined })],
+    ["symbol leaf", () => ({ leaf: Symbol("malformed") })],
+    ["unsafe-integer leaf", () => ({ leaf: 9_007_199_254_740_992 })],
+    ["lone-surrogate leaf", () => ({ leaf: "\ud800" })],
+  ];
+
+  for (const [name, makeArgvPolicy] of variants) {
+    await t.test(`${name} through the direct validator`, () => {
+      const exporter = structuredClone(options.owners.values.exporter);
+      exporter.argvPolicy = makeArgvPolicy();
+      let downstreamEffects = 0;
+      const expectedBindings = new Proxy(options.owners.values.exporter, {
+        getOwnPropertyDescriptor() {
+          downstreamEffects += 1;
+          throw new Error("UNEXPECTED_EXPORTER_BINDING_READ");
+        },
+      });
+      let result;
+      let failure;
+      try {
+        result = validateLocalExporterPolicy(exporter, expectedBindings, options.owners.values.exporter.policyDigest);
+      } catch (error) {
+        failure = error;
+      }
+      assert.equal(downstreamEffects, 0);
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
+    });
+
+    await t.test(`${name} through PROJECT`, async () => {
+      const owners = structuredClone(options.owners);
+      owners.values.exporter.argvPolicy = makeArgvPolicy();
+      let downstreamEffects = 0;
+      const toolchainBlobs = new Proxy(options.toolchainBlobs, {
+        get() {
+          downstreamEffects += 1;
+          throw new Error("UNEXPECTED_PROJECT_TOOLCHAIN_READ");
+        },
+        getPrototypeOf() {
+          downstreamEffects += 1;
+          throw new Error("UNEXPECTED_PROJECT_TOOLCHAIN_PROTOTYPE");
+        },
+      });
+      let result;
+      let failure;
+      try {
+        result = await decodeSourceProject({ ...options, owners, toolchainBlobs });
+      } catch (error) {
+        failure = error;
+      }
+      assert.equal(downstreamEffects, 0);
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
+    });
+  }
 });
 
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {
