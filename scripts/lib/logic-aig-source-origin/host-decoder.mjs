@@ -47,6 +47,7 @@ const NODE_KINDS = new Set([
 const RELATIONSHIP_KINDS = new Set([
   'CALLER', 'CONTRACT', 'GENERATED_CONSUMER', 'IMPORT', 'TEST',
 ]);
+const TARGET_STATES = new Set(['AMBIGUOUS', 'DYNAMIC', 'MISSING', 'OUTSIDE', 'RESOLVED']);
 
 class HostDecoderRefusal extends Error {
   constructor(code) {
@@ -663,6 +664,90 @@ function semanticTextArray(value) {
   return value;
 }
 
+function validateSemanticRowClosure(value) {
+  if (!value.parserPolicy.parserIds.includes(value.parserId)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  const sourceByPath = new Map();
+  for (const row of value.sourceRows) {
+    if (sourceByPath.has(row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    sourceByPath.set(row.path, row);
+  }
+  const parseByPath = new Map();
+  const diagnosticPattern = new RegExp(value.parserPolicy.diagnosticCodePattern, 'u');
+  for (const row of value.parseResults) {
+    if (!sourceByPath.has(row.path) || parseByPath.has(row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    let previous;
+    for (const code of row.diagnosticCodes) {
+      if (!diagnosticPattern.test(code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+      previous = code;
+    }
+    if (row.status === 'PARSED' && row.diagnosticCodes.length !== 0) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    parseByPath.set(row.path, row);
+  }
+  if (parseByPath.size !== sourceByPath.size) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+
+  const declarationByKey = new Map();
+  const ordinals = new Set();
+  for (const row of value.declarations) {
+    const sourceRow = sourceByPath.get(row.path);
+    if (
+      !sourceRow
+      || parseByPath.get(row.path)?.status !== 'PARSED'
+      || declarationByKey.has(row.key)
+      || !NODE_KINDS.has(row.kind)
+      || row.endByte <= row.startByte
+      || row.endByte > sourceRow.byteLength
+    ) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    const ordinalKey = `${row.path}\u0000${row.preorderOrdinal}`;
+    if (ordinals.has(ordinalKey)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    ordinals.add(ordinalKey);
+    declarationByKey.set(row.key, row);
+  }
+  for (const row of value.declarations) {
+    if (row.parentKey === null) continue;
+    const parent = declarationByKey.get(row.parentKey);
+    if (!parent || parent.path !== row.path || parent.preorderOrdinal >= row.preorderOrdinal) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  }
+  const parentStates = new Map();
+  for (const row of value.declarations) {
+    if (parentStates.get(row.key) === 'DONE') continue;
+    const chain = [];
+    let current = row;
+    while (current !== null && parentStates.get(current.key) === undefined) {
+      parentStates.set(current.key, 'VISITING');
+      chain.push(current);
+      current = current.parentKey === null ? null : declarationByKey.get(current.parentKey);
+    }
+    if (current !== null && parentStates.get(current.key) === 'VISITING') refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    for (const member of chain) parentStates.set(member.key, 'DONE');
+  }
+
+  for (const row of value.relations) {
+    const sourceRow = sourceByPath.get(row.path);
+    const owner = row.ownerNativeKey === null ? null : declarationByKey.get(row.ownerNativeKey);
+    if (
+      !sourceRow
+      || parseByPath.get(row.path)?.status !== 'PARSED'
+      || (row.ownerNativeKey !== null && (!owner || owner.path !== row.path))
+      || !RELATIONSHIP_KINDS.has(row.relationshipClass)
+      || row.relationshipClass === 'TEST'
+      || row.relationshipClass === 'GENERATED_CONSUMER'
+      || row.endByte <= row.startByte
+      || row.endByte > sourceRow.byteLength
+      || !TARGET_STATES.has(row.targetState)
+      || new Set(row.targetNativeKeys).size !== row.targetNativeKeys.length
+      || new Set(row.targetPaths).size !== row.targetPaths.length
+      || row.targetNativeKeys.some((key) => !declarationByKey.has(key))
+      || row.targetPaths.some((path) => !sourceByPath.has(path))
+    ) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    const targetCount = row.targetNativeKeys.length + row.targetPaths.length;
+    if (
+      (row.targetState === 'RESOLVED' && targetCount !== 1)
+      || (row.targetState === 'AMBIGUOUS' && targetCount < 2)
+      || ((row.targetState === 'MISSING' || row.targetState === 'OUTSIDE') && targetCount !== 0)
+    ) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  }
+}
+
 function captureSemanticRowsOptions(options) {
   exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
   let captured;
@@ -711,6 +796,7 @@ function captureSemanticRowsOptions(options) {
   } catch {
     refuse('SOURCE_ORIGIN_HOST_SCHEMA');
   }
+  validateSemanticRowClosure(captured);
   return captured;
 }
 
@@ -746,7 +832,7 @@ export function buildSemanticRows(options) {
     ));
   }
 
-  const admittedDeclarations = declarations.filter((row) => parseByPath.get(row.path)?.status === 'PARSED');
+  const admittedDeclarations = declarations;
   const byKey = new Map(admittedDeclarations.map((row) => [row.key, row]));
   if (byKey.size !== admittedDeclarations.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   const frameByKey = new Map();
@@ -776,13 +862,24 @@ export function buildSemanticRows(options) {
   const buildFrame = (row) => {
     const retained = frameByKey.get(row.key);
     if (retained) return retained;
-    const baseFrame = baseFrameByKey.get(row.key);
-    const foldedKey = `${row.path}\u0000${row.parentKey ?? ''}\u0000${baseFrame.toLowerCase()}`;
-    const foldedGroup = foldedFrameGroups.get(foldedKey);
-    const frame = foldedGroup.length === 1 ? baseFrame : `${baseFrame}!C!${foldedGroup.indexOf(row)}`;
-    const qualified = row.parentKey === null ? frame : `${buildFrame(byKey.get(row.parentKey))}/${frame}`;
-    frameByKey.set(row.key, qualified);
-    return qualified;
+    const chain = [];
+    let current = row;
+    while (current !== null && !frameByKey.has(current.key)) {
+      chain.push(current);
+      current = current.parentKey === null ? null : byKey.get(current.parentKey);
+      if (current === undefined) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    }
+    let qualified = current === null ? null : frameByKey.get(current.key);
+    while (chain.length > 0) {
+      const member = chain.pop();
+      const baseFrame = baseFrameByKey.get(member.key);
+      const foldedKey = `${member.path}\u0000${member.parentKey ?? ''}\u0000${baseFrame.toLowerCase()}`;
+      const foldedGroup = foldedFrameGroups.get(foldedKey);
+      const frame = foldedGroup.length === 1 ? baseFrame : `${baseFrame}!C!${foldedGroup.indexOf(member)}`;
+      qualified = qualified === null ? frame : `${qualified}/${frame}`;
+      frameByKey.set(member.key, qualified);
+    }
+    return frameByKey.get(row.key);
   };
   const nodeByNativeKey = new Map();
   for (const row of admittedDeclarations) {
@@ -809,7 +906,6 @@ export function buildSemanticRows(options) {
   const edges = [];
   const unresolved = [];
   for (const relation of relations) {
-    if (parseByPath.get(relation.path)?.status !== 'PARSED') continue;
     const sourceRow = sourceByPath.get(relation.path);
     const sourceNode = relation.ownerNativeKey === null ? fileNodeByPath.get(relation.path) : nodeByNativeKey.get(relation.ownerNativeKey);
     if (!sourceRow || !sourceNode || !RELATIONSHIP_KINDS.has(relation.relationshipClass) || relation.relationshipClass === 'TEST' || relation.relationshipClass === 'GENERATED_CONSUMER') refuse('SOURCE_ORIGIN_HOST_SEMANTIC');

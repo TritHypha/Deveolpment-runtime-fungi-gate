@@ -68,6 +68,13 @@ const OID_PATTERNS = Object.freeze({
 });
 const HEX_OID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
 const CONTROL = /[\u0000-\u001f\u007f]/u;
+const TYPED_ARRAY_PROTOTYPE = Object.getPrototypeOf(Uint8Array.prototype);
+const TYPED_ARRAY_LENGTH_GETTER = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, 'length').get;
+const TYPED_ARRAY_BUFFER_GETTER = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, 'buffer').get;
+const TYPED_ARRAY_SET = Uint8Array.prototype.set;
+const BUFFER_ALLOC_UNSAFE = Buffer.allocUnsafe.bind(Buffer);
+const BUFFER_IS_BUFFER = Buffer.isBuffer;
+const UTIL_TYPES_IS_PROXY = isProxy;
 
 class SourceOriginCaptureRefusal extends Error {
   constructor(code) {
@@ -717,14 +724,34 @@ function closedArrayValues(value, code) {
   return output;
 }
 
-function exactBuffer(value, code) {
+function exactBuffer(value, expectedLength, code) {
   if (
-    isProxy(value)
-    || !Buffer.isBuffer(value)
+    UTIL_TYPES_IS_PROXY(value)
+    || !BUFFER_IS_BUFFER(value)
     || Object.getPrototypeOf(value) !== Buffer.prototype
-    || value.buffer instanceof SharedArrayBuffer
+    || Object.getOwnPropertySymbols(value).length !== 0
   ) refuse(code);
-  return Buffer.from(value);
+  for (const field of ['buffer','byteLength','byteOffset','length']) {
+    if (Object.getOwnPropertyDescriptor(value, field) !== undefined) refuse(code);
+  }
+  let length;
+  let backing;
+  try {
+    length = Reflect.apply(TYPED_ARRAY_LENGTH_GETTER, value, []);
+    backing = Reflect.apply(TYPED_ARRAY_BUFFER_GETTER, value, []);
+  } catch {
+    refuse(code);
+  }
+  if (length !== expectedLength || backing instanceof SharedArrayBuffer) refuse(code);
+  let copy;
+  try {
+    copy = BUFFER_ALLOC_UNSAFE(length);
+    Reflect.apply(TYPED_ARRAY_SET, copy, [value, 0]);
+  } catch {
+    refuse(code);
+  }
+  if (Reflect.apply(TYPED_ARRAY_LENGTH_GETTER, copy, []) !== length) refuse(code);
+  return copy;
 }
 
 export function admitFrozenBlobSet(rowsValue, blobs, options) {
@@ -763,8 +790,8 @@ export function admitFrozenBlobSet(rowsValue, blobs, options) {
     const [locator, value] = entry;
     const row = byPath.get(locator);
     if (!row || captured.has(locator)) refuse(code);
-    const bytes = exactBuffer(value, code);
-    if (bytes.length !== row.byteLength || sha256Raw(bytes) !== row.rawSha256) refuse(code);
+    const bytes = exactBuffer(value, row.byteLength, code);
+    if (sha256Raw(bytes) !== row.rawSha256) refuse(code);
     if (Object.hasOwn(row, 'blobOid')) {
       const blobOid = createHash(row.objectFormat)
         .update(Buffer.from(`blob ${bytes.length}\0`, 'utf8'))

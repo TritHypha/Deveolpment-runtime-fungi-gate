@@ -128,6 +128,44 @@ function capturedFailure(operation) {
   return undefined;
 }
 
+function semanticDeclaration(overrides = {}) {
+  return {
+    key: "declaration-a",
+    path: "src/nested.ts",
+    parentKey: null,
+    kind: "FUNCTION",
+    name: "a",
+    parserNodeKind: "FunctionDeclaration",
+    startByte: 0,
+    endByte: 1,
+    preorderOrdinal: 0,
+    ...overrides,
+  };
+}
+
+function semanticRelation(overrides = {}) {
+  return {
+    path: "src/nested.ts",
+    ownerNativeKey: null,
+    relationshipClass: "CALLER",
+    startByte: 0,
+    endByte: 1,
+    targetNativeKeys: [],
+    targetPaths: [],
+    targetState: "DYNAMIC",
+    ...overrides,
+  };
+}
+
+function expectSemanticRefusal(options) {
+  let result;
+  assert.throws(
+    () => { result = buildSemanticRows(options); },
+    (error) => error?.code === "SOURCE_ORIGIN_HOST_SEMANTIC",
+  );
+  assert.equal(result, undefined);
+}
+
 test("semantic-row boundary refuses proxy and accessor options before caller effects", async (t) => {
   await t.test("proxy", () => {
     let effects = 0;
@@ -247,6 +285,134 @@ test("semantic-row boundary captures every nested public input before iteration"
       const failure = capturedFailure(() => buildSemanticRows({ ...valid, [name]: hostile }));
       assert.equal(effects, 0);
       assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+    });
+  }
+});
+
+test("semantic-row boundary closes cross-row conservation invariants before rendering", async (t) => {
+  const valid = await semanticRowOptions();
+  const sourcePath = valid.sourceRows[0].path;
+  const secondBytes = Buffer.from("y", "utf8");
+  const secondSource = row("src/second.ts", secondBytes);
+  const twoSources = {
+    ...valid,
+    sourceRows: [...valid.sourceRows, secondSource],
+    parseResults: [
+      ...valid.parseResults,
+      { path: secondSource.path, status: "PARSED", diagnosticCodes: [] },
+    ],
+  };
+
+  await t.test("source and parse-result sets differ", () => {
+    expectSemanticRefusal({
+      ...valid,
+      parseResults: [
+        ...valid.parseResults,
+        { path: "src/surplus.ts", status: "PARSED", diagnosticCodes: [] },
+      ],
+    });
+  });
+
+  await t.test("parse status contradicts diagnostics", () => {
+    expectSemanticRefusal({
+      ...valid,
+      parseResults: [{ path: sourcePath, status: "PARSED", diagnosticCodes: ["TS-100"] }],
+    });
+  });
+
+  await t.test("parser id is outside the owner policy", () => {
+    expectSemanticRefusal({ ...valid, parserId: "unowned-parser" });
+  });
+
+  await t.test("refused source retains a declaration", () => {
+    expectSemanticRefusal({
+      ...valid,
+      parseResults: [{ path: sourcePath, status: "REFUSED", diagnosticCodes: ["TS-100"] }],
+      declarations: [semanticDeclaration()],
+    });
+  });
+
+  await t.test("declaration parent is missing", () => {
+    expectSemanticRefusal({
+      ...valid,
+      declarations: [semanticDeclaration({ parentKey: "missing-parent" })],
+    });
+  });
+
+  await t.test("declaration parent belongs to another source", () => {
+    expectSemanticRefusal({
+      ...twoSources,
+      declarations: [
+        semanticDeclaration({ key: "child", parentKey: "foreign-parent", preorderOrdinal: 1 }),
+        semanticDeclaration({ key: "foreign-parent", path: secondSource.path, name: "foreign" }),
+      ],
+    });
+  });
+
+  await t.test("declaration parents form a cycle", () => {
+    expectSemanticRefusal({
+      ...valid,
+      declarations: [
+        semanticDeclaration({ key: "cycle-a", parentKey: "cycle-b", name: "a", preorderOrdinal: 0 }),
+        semanticDeclaration({ key: "cycle-b", parentKey: "cycle-a", name: "b", preorderOrdinal: 1 }),
+      ],
+    });
+  });
+
+  await t.test("declaration parent follows its child in preorder", () => {
+    expectSemanticRefusal({
+      ...valid,
+      declarations: [
+        semanticDeclaration({ key: "preorder-child", parentKey: "preorder-parent", name: "child", preorderOrdinal: 0 }),
+        semanticDeclaration({ key: "preorder-parent", name: "parent", preorderOrdinal: 1 }),
+      ],
+    });
+  });
+
+  await t.test("declarations reuse a source preorder ordinal", () => {
+    expectSemanticRefusal({
+      ...valid,
+      declarations: [
+        semanticDeclaration({ key: "ordinal-a", name: "a" }),
+        semanticDeclaration({ key: "ordinal-b", name: "b" }),
+      ],
+    });
+  });
+
+  await t.test("relation source is not a parsed source", () => {
+    expectSemanticRefusal({
+      ...valid,
+      relations: [semanticRelation({ path: "src/surplus.ts" })],
+    });
+  });
+
+  await t.test("relation owner belongs to another source", () => {
+    expectSemanticRefusal({
+      ...twoSources,
+      declarations: [semanticDeclaration({ key: "foreign-owner", path: secondSource.path })],
+      relations: [semanticRelation({ ownerNativeKey: "foreign-owner" })],
+    });
+  });
+
+  await t.test("relation target key is missing", () => {
+    expectSemanticRefusal({
+      ...valid,
+      relations: [semanticRelation({ targetNativeKeys: ["missing-target"] })],
+    });
+  });
+
+  const targetCases = [
+    ["unknown target state", valid, { targetState: "UNKNOWN" }],
+    ["RESOLVED has no target", valid, { targetState: "RESOLVED" }],
+    ["RESOLVED has two targets", twoSources, { targetState: "RESOLVED", targetPaths: [sourcePath, secondSource.path] }],
+    ["AMBIGUOUS has one target", valid, { targetState: "AMBIGUOUS", targetPaths: [sourcePath] }],
+    ["MISSING retains a target", valid, { targetState: "MISSING", targetPaths: [sourcePath] }],
+    ["OUTSIDE retains a target", valid, { targetState: "OUTSIDE", targetPaths: [sourcePath] }],
+    ["RESOLVED repeats one target", valid, { targetState: "RESOLVED", targetPaths: [sourcePath, sourcePath] }],
+  ];
+  for (const [label, fixture, relation] of targetCases) {
+    await t.test(label, () => {
+      expectSemanticRefusal({ ...fixture, relations: [semanticRelation(relation)] });
     });
   }
 });

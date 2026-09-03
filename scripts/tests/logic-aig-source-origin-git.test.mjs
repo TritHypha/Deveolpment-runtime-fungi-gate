@@ -363,6 +363,65 @@ test("frozen blob admission requires exact complete row-to-byte identity and ret
   assert.throws(() => gitSource.admitFrozenBlobSet(oidDrift, new Map([["b.fungi", secondBytes]]), { label: "SOURCE_MANIFEST" }), /SOURCE_ORIGIN_GIT_BLOB_SET/);
 });
 
+test("frozen blob admission closes Buffer extent properties before caller effects", async (t) => {
+  const expected = Buffer.from("sealed", "utf8");
+  const rows = [{ path: "sealed.ts", byteLength: expected.length, rawSha256: sha256(expected) }];
+  const admit = (bytes) => gitSource.admitFrozenBlobSet(
+    rows,
+    new Map([["sealed.ts", bytes]]),
+    { label: "SOURCE_MANIFEST" },
+  );
+  const expectClosedRefusal = (bytes) => assert.throws(
+    () => admit(bytes),
+    (error) => error?.code === "SOURCE_ORIGIN_GIT_BLOB_SET",
+  );
+
+  await t.test("own buffer accessor", () => {
+    let effects = 0;
+    let failure;
+    const hostile = Buffer.from(expected);
+    Object.defineProperty(hostile, "buffer", {
+      configurable: true,
+      enumerable: true,
+      get() {
+        effects += 1;
+        return new ArrayBuffer(expected.length);
+      },
+    });
+    try { admit(hostile); } catch (error) { failure = error; }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
+  });
+
+  for (const property of ["length", "byteLength", "byteOffset"]) {
+    await t.test(`own ${property} property`, () => {
+      const hostile = Buffer.from(expected);
+      Object.defineProperty(hostile, property, {
+        configurable: true,
+        enumerable: true,
+        value: expected.length,
+      });
+      expectClosedRefusal(hostile);
+    });
+  }
+
+  await t.test("proxied Buffer", () => {
+    let effects = 0;
+    const hostile = new Proxy(Buffer.from(expected), {
+      get() { effects += 1; throw new Error("get trap ran"); },
+      getOwnPropertyDescriptor() { effects += 1; throw new Error("descriptor trap ran"); },
+      getPrototypeOf() { effects += 1; throw new Error("prototype trap ran"); },
+      ownKeys() { effects += 1; throw new Error("keys trap ran"); },
+    });
+    expectClosedRefusal(hostile);
+    assert.equal(effects, 0);
+  });
+
+  await t.test("exact Buffer", () => {
+    assert.equal(admit(Buffer.from(expected)).get("sealed.ts").toString("utf8"), "sealed");
+  });
+});
+
 test("genuine pinned-Git capture returns every frozen owner value and defensive owner blob", { timeout: 900_000, skip: platform() !== "win32" }, async () => {
   const gitExecutableLocator = fileURLToPath(new URL(
     "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
