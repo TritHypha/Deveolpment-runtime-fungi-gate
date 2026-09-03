@@ -304,6 +304,163 @@ test("eighth-review HOST public boundaries close Object and pooled Buffer dispat
   });
 });
 
+test("ninth-review descriptor gates require own data values in HOST inputs", { timeout: 30_000 }, async () => {
+  const options = await fixtureOptions({
+    "src/descriptor.ts": "export const descriptor = 1;\n",
+  });
+  let inputEffects = 0;
+  Object.defineProperty(options, "repositoryIdentity", {
+    configurable: true,
+    enumerable: true,
+    get() {
+      inputEffects += 1;
+      throw new Error("ATTACKER_INPUT_VALUE");
+    },
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const inherited = safeGetDescriptor(Object.prototype, "value");
+  let descriptorEffects = 0;
+  let failure;
+  safeDefineProperty(Object.prototype, "value", {
+    configurable: true,
+    get() {
+      descriptorEffects += 1;
+      throw new Error("ATTACKER_DESCRIPTOR_VALUE");
+    },
+  });
+  try { await decodeHostProject(options); } catch (error) { failure = error; }
+  finally {
+    if (inherited) safeDefineProperty(Object.prototype, "value", inherited);
+    else delete Object.prototype.value;
+  }
+  assert.equal(inputEffects, 0);
+  assert.equal(descriptorEffects, 0);
+  assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+});
+
+test("ninth-review HOST native file boundary rejects typed-array prototype drift without effects", { timeout: 120_000 }, async () => {
+  const options = await fixtureOptions({
+    "src/native-boundary.ts": "export const nativeBoundary = 1;\n",
+  });
+  const typedArrayPrototype = Object.getPrototypeOf(Uint8Array.prototype);
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const descriptor = safeGetDescriptor(typedArrayPrototype, "buffer");
+  assert.equal(typeof descriptor?.get, "function");
+  let effects = 0;
+  let failure;
+  let result;
+  safeDefineProperty(typedArrayPrototype, "buffer", {
+    ...descriptor,
+    get() {
+      effects += 1;
+      return Reflect.apply(descriptor.get, this, []);
+    },
+  });
+  try { result = await decodeHostProject(options); } catch (error) { failure = error; }
+  finally { safeDefineProperty(typedArrayPrototype, "buffer", descriptor); }
+  assert.equal(effects, 0);
+  assert.equal(result, undefined);
+  assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_TOOLCHAIN");
+});
+
+test("ninth-review HOST child setup and result handling avoid inherited properties", { timeout: 120_000 }, async (t) => {
+  const options = await fixtureOptions({
+    "src/child-boundary.ts": "export const childBoundary = 1;\n",
+  });
+  const { createRequire, syncBuiltinESMExports } = await import("node:module");
+  const require = createRequire(import.meta.url);
+  const childProcess = require("node:child_process");
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const spawnDescriptor = safeGetDescriptor(childProcess, "spawnSync");
+  let observed;
+  safeDefineProperty(childProcess, "spawnSync", {
+    ...spawnDescriptor,
+    value(file, argv, childOptions) {
+      observed = {
+        argvPrototype: Object.getPrototypeOf(argv),
+        optionsPrototype: Object.getPrototypeOf(childOptions),
+        environmentPrototype: Object.getPrototypeOf(childOptions.env),
+        stdioPrototype: Object.getPrototypeOf(childOptions.stdio),
+      };
+      return Reflect.apply(spawnDescriptor.value, this, [file, argv, childOptions]);
+    },
+  });
+  syncBuiltinESMExports();
+  let freshDecoder;
+  try { freshDecoder = await import("../lib/logic-aig-source-origin/host-decoder.mjs?ninth-review-child-boundary"); }
+  finally {
+    safeDefineProperty(childProcess, "spawnSync", spawnDescriptor);
+    syncBuiltinESMExports();
+  }
+  await t.test("spawn receives closed option records", async () => {
+    const result = await freshDecoder.decodeHostProject(options);
+    assert.deepEqual({
+      argvExact: observed?.argvPrototype === Array.prototype,
+      stdioExact: observed?.stdioPrototype === Array.prototype,
+      optionsNull: observed?.optionsPrototype === null,
+      environmentNull: observed?.environmentPrototype === null,
+    }, {
+      argvExact: true,
+      stdioExact: true,
+      optionsNull: true,
+      environmentNull: true,
+    });
+    assert.equal(result.authorizing, false);
+  });
+
+  await t.test("inherited result getter is rejected before spawn", async () => {
+    const priorError = safeGetDescriptor(Object.prototype, "error");
+    let errorEffects = 0;
+    let failure;
+    let result;
+    observed = undefined;
+    safeDefineProperty(Object.prototype, "error", {
+      configurable: true,
+      get() {
+        errorEffects += 1;
+        return undefined;
+      },
+      set(value) {
+        safeDefineProperty(this, "error", { configurable: true, enumerable: true, writable: true, value });
+      },
+    });
+    try { result = await freshDecoder.decodeHostProject(options); } catch (error) { failure = error; }
+    finally {
+      if (priorError) safeDefineProperty(Object.prototype, "error", priorError);
+      else safeDeleteProperty(Object.prototype, "error");
+    }
+    assert.equal(errorEffects, 0);
+    assert.equal(observed, undefined);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_TOOLCHAIN");
+  });
+});
+
+test("ninth-review HOST accepts a case-only spelling of the same Windows executable", {
+  timeout: 120_000,
+  skip: process.platform !== "win32",
+}, async () => {
+  const options = await fixtureOptions({
+    "src/windows-case.ts": "export const windowsCase = 1;\n",
+  });
+  const descriptor = Object.getOwnPropertyDescriptor(process, "execPath");
+  assert(descriptor);
+  const actual = process.execPath;
+  const alternate = actual.replace(/([A-Za-z])(?=[^\\/]*$)/u, (letter) => letter === letter.toLowerCase() ? letter.toUpperCase() : letter.toLowerCase());
+  assert.notEqual(alternate, actual);
+  assert.equal(alternate.toLowerCase(), actual.toLowerCase());
+  Object.defineProperty(process, "execPath", { ...descriptor, value: alternate });
+  let freshDecoder;
+  try { freshDecoder = await import("../lib/logic-aig-source-origin/host-decoder.mjs?ninth-review-windows-case"); }
+  finally { Object.defineProperty(process, "execPath", descriptor); }
+  const result = await freshDecoder.decodeHostProject(options);
+  assert.equal(result.authorizing, false);
+});
+
 test("semantic-row boundary captures every nested public input before iteration", async (t) => {
   const valid = await semanticRowOptions();
   await t.test("proxied source array", () => {

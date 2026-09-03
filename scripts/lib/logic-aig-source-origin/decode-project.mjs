@@ -35,6 +35,7 @@ const OBJECT_FREEZE = Object.freeze;
 const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
 const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
 const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_HAS_OWN = Object.hasOwn;
 const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
 const OBJECT_PROTOTYPE = Object.prototype;
 const ARRAY_IS_ARRAY = Array.isArray;
@@ -68,6 +69,17 @@ const MAP_ITERATOR_NEXT = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(
 
 function defineData(target, key, value) {
   OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true });
+}
+
+function ownArrayValue(values, index, code = 'SOURCE_ORIGIN_PROJECT_SCHEMA') {
+  const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(values, `${index}`);
+  if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value')) refuse(code);
+  return descriptor.value;
+}
+
+function optionalOwnArrayValue(values, index) {
+  const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(values, `${index}`);
+  return descriptor && OBJECT_HAS_OWN(descriptor, 'value') ? descriptor.value : undefined;
 }
 
 function append(values, value) { defineData(values, `${values.length}`, value); }
@@ -150,7 +162,7 @@ function exactObject(value, keys, code = 'SOURCE_ORIGIN_PROJECT_SCHEMA') {
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < names.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
   }
   const sorted = REFLECT_APPLY(ARRAY_SORT, names, [compareCodeUnits]);
   const expected = sortArray(arrayCopy(keys));
@@ -163,7 +175,7 @@ function exactArray(value, code = 'SOURCE_ORIGIN_PROJECT_SCHEMA') {
   if (names.length !== value.length + 1 || !arraySome(names, (name) => name === 'length')) refuse(code);
   for (let index = 0; index < value.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
   }
   return value;
 }
@@ -174,7 +186,7 @@ function deepFreeze(value, seen = new SAFE_SET()) {
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < names.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
-    if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
+    if (descriptor && OBJECT_HAS_OWN(descriptor, 'value')) deepFreeze(descriptor.value, seen);
   }
   return OBJECT_FREEZE(value);
 }
@@ -215,12 +227,16 @@ function exporterBindings(values) {
 function assertNoDuplicateJsonMembers(text) {
   const scopes = [];
   for (let index = 0; index < text.length;) {
-    const character = text[index];
+    const character = stringSlice(text, index, index + 1);
     if (character === '"') {
       const start = index++;
       while (index < text.length) {
-        if (text[index] === '\\') index += 2;
-        else if (text[index++] === '"') break;
+        if (stringSlice(text, index, index + 1) === '\\') index += 2;
+        else {
+          const next = stringSlice(text, index, index + 1);
+          index += 1;
+          if (next === '"') break;
+        }
       }
       let cursor = index;
       while (cursor < text.length) {
@@ -228,10 +244,10 @@ function assertNoDuplicateJsonMembers(text) {
         if (unit !== 0x20 && unit !== 0x09 && unit !== 0x0a && unit !== 0x0d) break;
         cursor += 1;
       }
-      if (text[cursor] === ':' && scopes.length > 0) {
+      if (stringSlice(text, cursor, cursor + 1) === ':' && scopes.length > 0) {
         let key;
         try { key = REFLECT_APPLY(JSON_PARSE, null, [stringSlice(text, start, index)]); } catch { refuse('SOURCE_ORIGIN_PROJECT_OWNER'); }
-        const scope = scopes[scopes.length - 1];
+        const scope = ownArrayValue(scopes, scopes.length - 1, 'SOURCE_ORIGIN_PROJECT_OWNER');
         if (setHas(scope, key)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
         setAdd(scope, key);
       }
@@ -263,7 +279,7 @@ function validateGateOwner(value, parserPolicy) {
   const keys = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < keys.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, keys[index]);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   }
   const sorted = sortArray(arrayCopy(keys));
   if (arraySome(keys, (key, index) => key !== sorted[index])) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
@@ -417,12 +433,12 @@ function deriveExpectedOutcomes(captured) {
   const proposedByName = mapFromArray(captured.values.proposedBaseline.entries, (row) => row.directoryName);
   const derived = [];
   for (let rowIndex = 0; rowIndex < captured.sourceManifest.rows.length; rowIndex += 1) {
-    const sourceRow = captured.sourceManifest.rows[rowIndex];
+    const sourceRow = ownArrayValue(captured.sourceManifest.rows, rowIndex, 'SOURCE_ORIGIN_PROJECT_OUTCOMES');
     const bytes = captured.sourceBlobs.get(sourceRow.path);
     if (!bytes) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
     const proposedMatches = arrayFilter(stringSplit(sourceRow.path, '/'), (component) => mapHas(proposedByName, component));
     if (proposedMatches.length > 1) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
-    const proposedName = proposedMatches[0] ?? null;
+    const proposedName = optionalOwnArrayValue(proposedMatches, 0) ?? null;
     const sidecarLocator = `${sourceRow.path}.expected.diagnostics.txt`;
     const sidecarRow = mapGet(resolutionByPath, sidecarLocator);
     const domain = classifySourcePath(sourceRow.path, captured.values.source);
@@ -439,7 +455,8 @@ function deriveExpectedOutcomes(captured) {
       const text = decodeSourceText(bytes);
       const matches = regexpMatches(DIAGNOSTIC_HEADER, text);
       if (matches.length > 1) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
-      const inlineHeader = matches[0]?.[1] ?? null;
+      const firstMatch = optionalOwnArrayValue(matches, 0);
+      const inlineHeader = firstMatch === undefined ? null : ownArrayValue(firstMatch, 1, 'SOURCE_ORIGIN_PROJECT_OUTCOMES');
       const hasInlineExpectation = inlineHeader !== null && inlineHeader !== 'none';
       if (hasInlineExpectation && sidecarRow) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
       if (hasInlineExpectation) {
@@ -473,7 +490,7 @@ function deriveExpectedOutcomes(captured) {
       }
     }
     if (candidates.length > 1) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
-    if (candidates.length === 1) append(derived, candidates[0]);
+    if (candidates.length === 1) append(derived, ownArrayValue(candidates, 0, 'SOURCE_ORIGIN_PROJECT_OUTCOMES'));
   }
   sortArray(derived, (left, right) => compareCodeUnits(left.path, right.path));
   if (!sameData(derived, captured.values.expectedOutcomes.rows)) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');

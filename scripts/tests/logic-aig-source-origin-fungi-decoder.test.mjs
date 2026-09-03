@@ -281,6 +281,142 @@ test("eighth-review FUNGI public boundary closes Object, imported child and pool
   });
 });
 
+test("ninth-review descriptor gates require own data values in FUNGI inputs", { timeout: 30_000 }, async () => {
+  const options = await fixtureOptions({
+    "src/descriptor.fungi": "flow descriptor(a: Int) -> Int { return a }\n",
+  });
+  let inputEffects = 0;
+  Object.defineProperty(options, "repositoryIdentity", {
+    configurable: true,
+    enumerable: true,
+    get() {
+      inputEffects += 1;
+      throw new Error("ATTACKER_INPUT_VALUE");
+    },
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const inherited = safeGetDescriptor(Object.prototype, "value");
+  let descriptorEffects = 0;
+  let failure;
+  safeDefineProperty(Object.prototype, "value", {
+    configurable: true,
+    get() {
+      descriptorEffects += 1;
+      throw new Error("ATTACKER_DESCRIPTOR_VALUE");
+    },
+  });
+  try { await decodeFungiGateProject(options); } catch (error) { failure = error; }
+  finally {
+    if (inherited) safeDefineProperty(Object.prototype, "value", inherited);
+    else delete Object.prototype.value;
+  }
+  assert.equal(inputEffects, 0);
+  assert.equal(descriptorEffects, 0);
+  assert.equal(failure?.code, "SOURCE_ORIGIN_FUNGI_SCHEMA");
+});
+
+test("ninth-review FUNGI native file boundary rejects typed-array prototype drift without effects", { timeout: 120_000 }, async () => {
+  const options = await fixtureOptions({
+    "src/native-boundary.fungi": "flow native_boundary(a: Int) -> Int { return a }\n",
+  });
+  const typedArrayPrototype = Object.getPrototypeOf(Uint8Array.prototype);
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const descriptor = safeGetDescriptor(typedArrayPrototype, "buffer");
+  assert.equal(typeof descriptor?.get, "function");
+  let effects = 0;
+  let failure;
+  let result;
+  safeDefineProperty(typedArrayPrototype, "buffer", {
+    ...descriptor,
+    get() {
+      effects += 1;
+      return Reflect.apply(descriptor.get, this, []);
+    },
+  });
+  try { result = await decodeFungiGateProject(options); } catch (error) { failure = error; }
+  finally { safeDefineProperty(typedArrayPrototype, "buffer", descriptor); }
+  assert.equal(effects, 0);
+  assert.equal(result, undefined);
+  assert.equal(failure?.code, "SOURCE_ORIGIN_FUNGI_TOOLCHAIN");
+});
+
+test("ninth-review FUNGI child setup and result handling avoid inherited properties", { timeout: 120_000 }, async (t) => {
+  const options = await fixtureOptions({
+    "src/child-boundary.fungi": "flow child_boundary(a: Int) -> Int { return a }\n",
+  });
+  const { createRequire, syncBuiltinESMExports } = await import("node:module");
+  const require = createRequire(import.meta.url);
+  const childProcess = require("node:child_process");
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const spawnDescriptor = safeGetDescriptor(childProcess, "spawnSync");
+  let observed;
+  safeDefineProperty(childProcess, "spawnSync", {
+    ...spawnDescriptor,
+    value(file, argv, childOptions) {
+      observed = {
+        argvPrototype: Object.getPrototypeOf(argv),
+        optionsPrototype: Object.getPrototypeOf(childOptions),
+        environmentPrototype: Object.getPrototypeOf(childOptions.env),
+        stdioPrototype: Object.getPrototypeOf(childOptions.stdio),
+      };
+      return Reflect.apply(spawnDescriptor.value, this, [file, argv, childOptions]);
+    },
+  });
+  syncBuiltinESMExports();
+  let freshDecoder;
+  try { freshDecoder = await import("../lib/logic-aig-source-origin/fungi-decoder.mjs?ninth-review-child-boundary"); }
+  finally {
+    safeDefineProperty(childProcess, "spawnSync", spawnDescriptor);
+    syncBuiltinESMExports();
+  }
+  await t.test("spawn receives closed option records", async () => {
+    const result = await freshDecoder.decodeFungiGateProject(options);
+    assert.deepEqual({
+      argvExact: observed?.argvPrototype === Array.prototype,
+      stdioExact: observed?.stdioPrototype === Array.prototype,
+      optionsNull: observed?.optionsPrototype === null,
+      environmentNull: observed?.environmentPrototype === null,
+    }, {
+      argvExact: true,
+      stdioExact: true,
+      optionsNull: true,
+      environmentNull: true,
+    });
+    assert.equal(result.authorizing, false);
+  });
+
+  await t.test("inherited result getter is rejected before spawn", async () => {
+    const priorError = safeGetDescriptor(Object.prototype, "error");
+    let errorEffects = 0;
+    let failure;
+    let result;
+    observed = undefined;
+    safeDefineProperty(Object.prototype, "error", {
+      configurable: true,
+      get() {
+        errorEffects += 1;
+        return undefined;
+      },
+      set(value) {
+        safeDefineProperty(this, "error", { configurable: true, enumerable: true, writable: true, value });
+      },
+    });
+    try { result = await freshDecoder.decodeFungiGateProject(options); } catch (error) { failure = error; }
+    finally {
+      if (priorError) safeDefineProperty(Object.prototype, "error", priorError);
+      else safeDeleteProperty(Object.prototype, "error");
+    }
+    assert.equal(errorEffects, 0);
+    assert.equal(observed, undefined);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_FUNGI_TOOLCHAIN");
+  });
+});
+
 test("FUNGI converts parser code-unit locations to UTF-8 byte spans", async () => {
   const validPath = "src/unicode.fungi";
   const validSource = [
@@ -347,6 +483,22 @@ test("FUNGI converts parser code-unit locations to UTF-8 byte spans", async () =
   assert(brokenFile);
   const brokenIdentity = result.idMapRows.find((row) => row.nodeId === brokenFile.id)?.nativeIdentity;
   assert.equal(brokenIdentity?.endByte, Buffer.byteLength(brokenSource, "utf8"));
+});
+
+test("ninth-review GATE line starts preserve LF, CRLF, and bare-CR byte offsets", { timeout: 120_000 }, async () => {
+  const sources = new Map([
+    ["src/line-lf.gate", VALID_GATE],
+    ["src/line-crlf.gate", VALID_GATE.replace(/\n/gu, "\r\n")],
+    ["src/line-cr.gate", VALID_GATE.replace(/\n/gu, "\r")],
+  ]);
+  const options = await fixtureOptions(Object.fromEntries(sources));
+  const result = await decodeFungiGateProject(options);
+  for (const [path, source] of sources) {
+    const node = result.nodes.find((candidate) => candidate.kind === "GATE" && candidate.locator.startsWith(`${path}#`));
+    assert(node);
+    const identity = result.idMapRows.find((row) => row.nodeId === node.id)?.nativeIdentity;
+    assert.equal(identity?.startByte, Buffer.from(source, "utf8").indexOf(Buffer.from("CIRCUIT", "utf8")));
+  }
 });
 
 test("FUNGI/GATE parser diagnostics are canonical refusals with file nodes only", async () => {

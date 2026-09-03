@@ -420,6 +420,111 @@ test("eighth-review project boundary preserves owner OID authority under post-im
   });
 });
 
+test("ninth-review descriptor gates require own data values in PROJECT inputs", { timeout: 30_000 }, async () => {
+  const options = await fixtureOptions();
+  let inputEffects = 0;
+  Object.defineProperty(options, "owners", {
+    configurable: true,
+    enumerable: true,
+    get() {
+      inputEffects += 1;
+      throw new Error("ATTACKER_INPUT_VALUE");
+    },
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const inherited = safeGetDescriptor(Object.prototype, "value");
+  let descriptorEffects = 0;
+  let failure;
+  safeDefineProperty(Object.prototype, "value", {
+    configurable: true,
+    get() {
+      descriptorEffects += 1;
+      throw new Error("ATTACKER_DESCRIPTOR_VALUE");
+    },
+  });
+  try { await decodeSourceProject(options); } catch (error) { failure = error; }
+  finally {
+    if (inherited) safeDefineProperty(Object.prototype, "value", inherited);
+    else delete Object.prototype.value;
+  }
+  assert.equal(inputEffects, 0);
+  assert.equal(descriptorEffects, 0);
+  assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_SCHEMA");
+});
+
+test("ninth-review PROJECT parsing avoids ambient numeric prototype lookup", { timeout: 120_000 }, async (t) => {
+  await t.test("raw owner string parsing does not consult String.prototype", async () => {
+    const options = await fixtureOptions();
+    const hostileText = '{"src/identity.gate"\n';
+    const hostileBytes = Buffer.from(hostileText, "utf8");
+    const owners = structuredClone(options.owners);
+    const identity = owners.identities.find((row) => row.locator === OWNER_LOCATORS.gate);
+    identity.blobOid = gitBlobOid(hostileBytes);
+    identity.byteLength = hostileBytes.length;
+    identity.rawSha256 = sha256Raw(hostileBytes);
+    owners.ownerSetDigest = sha256Canonical("galerina.logic-aig-frozen-owner-set.v1", owners.identities);
+    const ownerBlobs = mutableBlobSnapshot(options.ownerBlobs);
+    ownerBlobs.set(OWNER_LOCATORS.gate, hostileBytes);
+    const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+    const safeDefineProperty = Object.defineProperty;
+    const safeDeleteProperty = Reflect.deleteProperty;
+    const indexKey = String(hostileText.length);
+    const inherited = safeGetDescriptor(String.prototype, indexKey);
+    let effects = 0;
+    let failure;
+    safeDefineProperty(String.prototype, indexKey, {
+      configurable: true,
+      get() {
+        effects += 1;
+        throw new Error("ATTACKER_STRING_INDEX");
+      },
+    });
+    try { await decodeSourceProject({ ...options, owners, ownerBlobs }); } catch (error) { failure = error; }
+    finally {
+      if (inherited) safeDefineProperty(String.prototype, indexKey, inherited);
+      else safeDeleteProperty(String.prototype, indexKey);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_OWNER");
+  });
+
+  await t.test("empty diagnostic matches do not consult Array.prototype", async () => {
+    const options = await fixtureOptions();
+    const injectedMatch = Object.freeze([undefined, "FUNGI-PARSE-001"]);
+    const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+    const safeDefineProperty = Object.defineProperty;
+    const safeDeleteProperty = Reflect.deleteProperty;
+    const inherited = safeGetDescriptor(Array.prototype, "0");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(Array.prototype, "0", {
+      configurable: true,
+      get() {
+        effects += 1;
+        return injectedMatch;
+      },
+      set(value) {
+        safeDefineProperty(this, "0", {
+          configurable: true,
+          enumerable: true,
+          writable: true,
+          value,
+        });
+      },
+    });
+    try { result = await decodeSourceProject(options); } catch (error) { failure = error; }
+    finally {
+      if (inherited) safeDefineProperty(Array.prototype, "0", inherited);
+      else safeDeleteProperty(Array.prototype, "0");
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(result?.authorizing, false);
+  });
+});
+
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {
   const options = await fixtureOptions();
   const result = await decodeSourceProject(options);

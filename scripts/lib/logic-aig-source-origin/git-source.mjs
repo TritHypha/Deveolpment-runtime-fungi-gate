@@ -25,7 +25,6 @@ import {
 import {
   OWNER_PROPOSAL_POLICY,
   buildGitEnvironment,
-  selectGitCommandClass,
   validateExporterPolicy,
   validateGitProcessPolicy,
 } from './owner-proposal-policy.mjs';
@@ -673,17 +672,129 @@ function substituteArguments(values, substitutions, repositoryRoot = REPOSITORY_
   });
 }
 
+function copySealedPolicyData(value) {
+  if (value === null || typeof value !== 'object') return value;
+  if (UTIL_TYPES_IS_PROXY(value) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  if (ARRAY_IS_ARRAY(value)) {
+    if (OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    const values = closedArrayValues(value, 'SOURCE_ORIGIN_GIT_PROCESS');
+    const output = new ARRAY_CONSTRUCTOR();
+    for (let index = 0; index < values.length; index += 1) safeArrayAppend(output, copySealedPolicyData(values[index]));
+    return OBJECT_FREEZE(output);
+  }
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if (prototype !== OBJECT_PROTOTYPE && prototype !== null) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  const output = OBJECT_CREATE(null);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    setDynamicData(output, name, copySealedPolicyData(descriptor.value));
+  }
+  return OBJECT_FREEZE(output);
+}
+
+function sealedRecordValue(record, key) {
+  const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(record, key);
+  return descriptor && OBJECT_HAS_OWN(descriptor, 'value') ? descriptor.value : undefined;
+}
+
+function materializeSealedGitProcessPolicy(policyValue) {
+  let validated;
+  try { validated = validateGitProcessPolicy(policyValue); } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
+  exactObject(validated, [
+    'schema', 'fixedPrefix', 'commandRows', 'configAllowanceRows', 'outputLimitRows',
+    'stderrRule', 'shell', 'windowsHide', 'authorizing', 'policyDigest',
+  ], 'SOURCE_ORIGIN_GIT_PROCESS');
+  const fixedPrefix = closedArrayValues(validated.fixedPrefix, 'SOURCE_ORIGIN_GIT_PROCESS');
+  const commandRows = closedArrayValues(validated.commandRows, 'SOURCE_ORIGIN_GIT_PROCESS');
+  const outputLimitRows = closedArrayValues(validated.outputLimitRows, 'SOURCE_ORIGIN_GIT_PROCESS');
+  for (let index = 0; index < fixedPrefix.length; index += 1) {
+    if (typeof fixedPrefix[index] !== 'string') refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  }
+  for (let index = 0; index < commandRows.length; index += 1) {
+    const row = commandRows[index];
+    exactObject(row, ['commandId', 'arguments', 'outputLimitId', 'stdoutRule'], 'SOURCE_ORIGIN_GIT_PROCESS');
+    const argumentsList = closedArrayValues(row.arguments, 'SOURCE_ORIGIN_GIT_PROCESS');
+    if (typeof row.commandId !== 'string' || typeof row.outputLimitId !== 'string' || typeof row.stdoutRule !== 'string' ||
+        safeArraySome(argumentsList, (argument) => typeof argument !== 'string')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  }
+  for (let index = 0; index < outputLimitRows.length; index += 1) {
+    const row = outputLimitRows[index];
+    exactObject(row, ['outputLimitId', 'maximumBytes', 'maximumSource'], 'SOURCE_ORIGIN_GIT_PROCESS');
+    if (typeof row.outputLimitId !== 'string' || typeof row.maximumSource !== 'string' ||
+        (row.maximumBytes !== null && (!NUMBER_IS_SAFE_INTEGER(row.maximumBytes) || row.maximumBytes <= 0))) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  }
+  const policy = copySealedPolicyData(validated);
+  const commandById = OBJECT_CREATE(null);
+  const limitById = OBJECT_CREATE(null);
+  const blobLimitByClass = OBJECT_CREATE(null);
+  for (let index = 0; index < policy.outputLimitRows.length; index += 1) {
+    const row = policy.outputLimitRows[index];
+    if (sealedRecordValue(limitById, row.outputLimitId) !== undefined) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    setDynamicData(limitById, row.outputLimitId, row);
+  }
+  for (let index = 0; index < policy.commandRows.length; index += 1) {
+    const row = policy.commandRows[index];
+    if (sealedRecordValue(commandById, row.commandId) !== undefined || sealedRecordValue(limitById, row.outputLimitId) === undefined) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    setDynamicData(commandById, row.commandId, row);
+  }
+  const capturedFileMaximum = SOURCE_ORIGIN_LIMITS.capturedFileBytes < SOURCE_ORIGIN_LIMITS.processOutputBytes
+    ? SOURCE_ORIGIN_LIMITS.capturedFileBytes
+    : SOURCE_ORIGIN_LIMITS.processOutputBytes;
+  const jsonMaximum = SOURCE_ORIGIN_LIMITS.jsonBytes < SOURCE_ORIGIN_LIMITS.processOutputBytes
+    ? SOURCE_ORIGIN_LIMITS.jsonBytes
+    : SOURCE_ORIGIN_LIMITS.processOutputBytes;
+  if (!NUMBER_IS_SAFE_INTEGER(capturedFileMaximum) || capturedFileMaximum <= 0 ||
+      !NUMBER_IS_SAFE_INTEGER(jsonMaximum) || jsonMaximum <= 0) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  setDynamicData(blobLimitByClass, 'CAPTURED_FILE', capturedFileMaximum);
+  setDynamicData(blobLimitByClass, 'JSON', jsonMaximum);
+  const canonical = canonicalJsonText(policy);
+  if (canonical !== canonicalJsonText(validated)) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  return OBJECT_FREEZE({
+    policy,
+    canonical,
+    commandById: OBJECT_FREEZE(commandById),
+    limitById: OBJECT_FREEZE(limitById),
+    blobLimitByClass: OBJECT_FREEZE(blobLimitByClass),
+  });
+}
+
+const SEALED_GIT_PROCESS_POLICY = materializeSealedGitProcessPolicy(OWNER_PROPOSAL_POLICY.gitProcessPolicy);
+
+function requireSealedGitProcessPolicy(policyValue) {
+  let canonical;
+  try { canonical = canonicalJsonText(policyValue); } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
+  if (canonical !== SEALED_GIT_PROCESS_POLICY.canonical) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  return SEALED_GIT_PROCESS_POLICY;
+}
+
 export function materializeGitCommand(processPolicy, commandId, repositoryRoot, substitutions = {}, blobClass) {
   if (typeof repositoryRoot !== 'string' || !PATH_IS_ABSOLUTE(repositoryRoot) || PATH_NORMALIZE(repositoryRoot) !== repositoryRoot || stringIncludes(repositoryRoot, '\0')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
-  let selected;
-  try { selected = selectGitCommandClass(processPolicy, commandId, commandId === 'BLOB' ? { operationClass: blobClass } : undefined); } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
-  const argumentsList = substituteArguments(processPolicy.fixedPrefix, substitutions, repositoryRoot);
+  if (typeof commandId !== 'string') refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  const sealed = requireSealedGitProcessPolicy(processPolicy);
+  const selected = sealedRecordValue(sealed.commandById, commandId);
+  if (!selected) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  const limit = sealedRecordValue(sealed.limitById, selected.outputLimitId);
+  if (!limit) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  let maximumBytes;
+  if (selected.outputLimitId === 'BLOB') {
+    maximumBytes = sealedRecordValue(sealed.blobLimitByClass, blobClass);
+    if (maximumBytes === undefined) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  } else {
+    maximumBytes = limit.maximumBytes;
+  }
+  if (!NUMBER_IS_SAFE_INTEGER(maximumBytes) || maximumBytes <= 0 || maximumBytes > SOURCE_ORIGIN_LIMITS.processOutputBytes) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  const argumentsList = substituteArguments(sealed.policy.fixedPrefix, substitutions, repositoryRoot);
   const selectedArguments = substituteArguments(selected.arguments, substitutions, repositoryRoot);
   for (let index = 0; index < selectedArguments.length; index += 1) safeArrayAppend(argumentsList, selectedArguments[index]);
+  const argvDigest = sha256CanonicalCaptured('galerina.logic-aig-git-command-argv.v1', { commandId, arguments: argumentsList });
   return OBJECT_FREEZE({
     arguments: OBJECT_FREEZE(argumentsList),
-    maximumBytes: selected.maximumBytes,
+    maximumBytes,
     stdoutRule: selected.stdoutRule,
+    argvDigest,
   });
 }
 
@@ -807,7 +918,7 @@ function allowanceValueMatches(value, rule) {
 
 export function parseGitConfigRows(bytes, processPolicyValue, repositoryRoot) {
   let processPolicy;
-  try { processPolicy = validateGitProcessPolicy(processPolicyValue); } catch { refuse('SOURCE_ORIGIN_GIT_CONFIG'); }
+  try { processPolicy = requireSealedGitProcessPolicy(processPolicyValue).policy; } catch { refuse('SOURCE_ORIGIN_GIT_CONFIG'); }
   if (typeof repositoryRoot !== 'string' || !PATH_IS_ABSOLUTE(repositoryRoot) || stringIncludes(repositoryRoot, '\0')) refuse('SOURCE_ORIGIN_GIT_CONFIG');
   const text = decodeUtf8(bytes, 'SOURCE_ORIGIN_GIT_CONFIG');
   if (!stringEndsWith(text, '\0')) refuse('SOURCE_ORIGIN_GIT_CONFIG');
@@ -1789,21 +1900,63 @@ function makeRunner({ executable, environment, policy, deadline }) {
       });
     } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
     const bytes = await collectChild(child, selected.maximumBytes, policy.limits.processOutputBytes, deadline);
-    safeArrayAppend(trace, commandId);
+    safeArrayAppend(trace, deepFreeze({
+      commandId,
+      arguments: safeArrayCopy(selected.arguments),
+      argvDigest: selected.argvDigest,
+    }));
     return selected.stdoutRule === 'ONE_UTF8_LINE' ? decodeGitLine(bytes) : bytes;
   };
   OBJECT_DEFINE_PROPERTY(runCommand, 'trace', { value: trace });
   return runCommand;
 }
 
-function assertCommandTrace(trace, processPolicy) {
-  const expected = safeArrayMap(processPolicy.commandRows, (row) => row.commandId);
+function traceArgumentsMatch(argumentsList, commandRow, repositoryRoot) {
+  const template = new ARRAY_CONSTRUCTOR();
+  for (let index = 0; index < SEALED_GIT_PROCESS_POLICY.policy.fixedPrefix.length; index += 1) {
+    safeArrayAppend(template, SEALED_GIT_PROCESS_POLICY.policy.fixedPrefix[index]);
+  }
+  for (let index = 0; index < commandRow.arguments.length; index += 1) safeArrayAppend(template, commandRow.arguments[index]);
+  if (argumentsList.length !== template.length) return false;
+  for (let index = 0; index < template.length; index += 1) {
+    const expected = template[index];
+    const observed = argumentsList[index];
+    if (typeof observed !== 'string') return false;
+    if (expected === '<REPOSITORY_ROOT>') {
+      if (observed !== repositoryRoot) return false;
+    } else if (expected === 'core.worktree=<REPOSITORY_ROOT>') {
+      if (observed !== `core.worktree=${repositoryRoot}`) return false;
+    } else if (expected === '<BLOB_OID>' || expected === '<TREE_OID>') {
+      if (!regexpTest(HEX_OID, observed)) return false;
+    } else if (observed !== expected || stringIncludes(expected, '<')) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function validateGitCommandTrace(traceValue, processPolicy, repositoryRoot) {
+  if (typeof repositoryRoot !== 'string' || !PATH_IS_ABSOLUTE(repositoryRoot) || PATH_NORMALIZE(repositoryRoot) !== repositoryRoot || stringIncludes(repositoryRoot, '\0')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  const sealed = requireSealedGitProcessPolicy(processPolicy);
+  const trace = closedArrayValues(traceValue, 'SOURCE_ORIGIN_GIT_PROCESS');
+  const expected = safeArrayMap(sealed.policy.commandRows, (row) => row.commandId);
   safeArraySort(expected, codeUnitCompare);
-  if (!ARRAY_IS_ARRAY(trace) || trace.length < expected.length + 2 || trace[0] !== 'GIT_VERSION' || trace[1] !== 'CONFIG_ROWS' ||
-      trace[trace.length - 2] !== 'CONFIG_ROWS' || trace[trace.length - 1] !== 'GIT_VERSION' ||
-      safeArrayCount(trace, (id) => id === 'GIT_VERSION') !== 2 || safeArrayCount(trace, (id) => id === 'CONFIG_ROWS') !== 2 ||
-      !safeArrayEvery(expected, (commandId) => safeArrayIncludes(trace, commandId)) ||
-      safeArraySome(trace, (commandId) => !safeArrayIncludes(expected, commandId))) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  for (let index = 0; index < trace.length; index += 1) {
+    const entry = trace[index];
+    exactObject(entry, ['commandId', 'arguments', 'argvDigest'], 'SOURCE_ORIGIN_GIT_PROCESS');
+    if (typeof entry.commandId !== 'string' || typeof entry.argvDigest !== 'string') refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    const commandRow = sealedRecordValue(sealed.commandById, entry.commandId);
+    if (!commandRow) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    const argumentsList = closedArrayValues(entry.arguments, 'SOURCE_ORIGIN_GIT_PROCESS');
+    if (!traceArgumentsMatch(argumentsList, commandRow, repositoryRoot) ||
+        entry.argvDigest !== sha256CanonicalCaptured('galerina.logic-aig-git-command-argv.v1', { commandId: entry.commandId, arguments: argumentsList })) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  }
+  if (trace.length < expected.length + 2 || trace[0].commandId !== 'GIT_VERSION' || trace[1].commandId !== 'CONFIG_ROWS' ||
+      trace[trace.length - 2].commandId !== 'CONFIG_ROWS' || trace[trace.length - 1].commandId !== 'GIT_VERSION' ||
+      safeArrayCount(trace, (entry) => entry.commandId === 'GIT_VERSION') !== 2 || safeArrayCount(trace, (entry) => entry.commandId === 'CONFIG_ROWS') !== 2 ||
+      !safeArrayEvery(expected, (commandId) => safeArraySome(trace, (entry) => entry.commandId === commandId)) ||
+      safeArraySome(trace, (entry) => !safeArrayIncludes(expected, entry.commandId))) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  return true;
 }
 
 function observationEdge(frozen, executable, version) {
@@ -1885,7 +2038,7 @@ export async function captureFrozenSource(options) {
   assertHeldWorkingOwners(heldClosing, workingAfterVersion);
   const executableAfterVersion = authenticateGitExecutable(captured.gitExecutableLocator, hostPin);
   if (!sameWorkingOwners(workingOpening, workingAfterVersion) || !sameExecutable(executableOpening, executableAfterVersion)) refuse('SOURCE_ORIGIN_GIT_DRIFT');
-  assertCommandTrace(run.trace, bootstrap.exporter.value.gitProcessPolicy);
+  validateGitCommandTrace(run.trace, bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT);
 
   const before = observationEdge(frozenBefore, executableOpening, version);
   const after = observationEdge(frozenAfter, executableAfterVersion, closingVersion);

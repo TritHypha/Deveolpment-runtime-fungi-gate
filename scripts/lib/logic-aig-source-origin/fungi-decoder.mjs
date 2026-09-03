@@ -1,15 +1,15 @@
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { Stats } from 'node:fs';
 import {
-  lstat,
-  mkdir,
-  mkdtemp,
-  readFile,
-  realpath,
-  rm,
-  writeFile,
-} from 'node:fs/promises';
+  Stats,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { isProxy } from 'node:util/types';
@@ -34,13 +34,13 @@ import { prepareSemanticToolchain } from './toolchain-snapshot.mjs';
 
 const SPAWN_SYNC = spawnSync;
 const CREATE_HASH = createHash;
-const FS_LSTAT = lstat;
-const FS_MKDIR = mkdir;
-const FS_MKDTEMP = mkdtemp;
-const FS_READ_FILE = readFile;
-const FS_REALPATH = realpath;
-const FS_RM = rm;
-const FS_WRITE_FILE = writeFile;
+const FS_LSTAT_SYNC = lstatSync;
+const FS_MKDIR_SYNC = mkdirSync;
+const FS_MKDTEMP_SYNC = mkdtempSync;
+const FS_READ_FILE_SYNC = readFileSync;
+const FS_REALPATH_SYNC_NATIVE = realpathSync.native;
+const FS_RM_SYNC = rmSync;
+const FS_WRITE_FILE_SYNC = writeFileSync;
 const OS_TMPDIR = tmpdir;
 const PROCESS_VERSION = process.version;
 const PROCESS_EXEC_PATH = process.execPath;
@@ -50,11 +50,13 @@ const UTIL_TYPES_IS_PROXY = isProxy;
 const PATH_DIRNAME = path.dirname;
 const PATH_JOIN = path.join;
 const REFLECT_APPLY = Reflect.apply;
+const OBJECT_CREATE = Object.create;
 const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
 const OBJECT_FREEZE = Object.freeze;
 const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
 const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
 const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_HAS_OWN = Object.hasOwn;
 const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
 const OBJECT_PROTOTYPE = Object.prototype;
 const ARRAY_IS_ARRAY = Array.isArray;
@@ -74,8 +76,17 @@ const SAFE_REGEXP = RegExp;
 const REGEXP_EXEC = RegExp.prototype.exec;
 const TEXT_ENCODER = new TextEncoder();
 const TEXT_ENCODER_ENCODE = TextEncoder.prototype.encode;
-const TYPED_ARRAY_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(Uint8Array.prototype);
-const TYPED_ARRAY_LENGTH = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'length').get;
+const UINT8_ARRAY_PROTOTYPE = Uint8Array.prototype;
+const BUFFER_PROTOTYPE = Buffer.prototype;
+const ARRAY_BUFFER_PROTOTYPE = ArrayBuffer.prototype;
+const TYPED_ARRAY_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(UINT8_ARRAY_PROTOTYPE);
+const TYPED_ARRAY_PARENT = OBJECT_GET_PROTOTYPE_OF(TYPED_ARRAY_PROTOTYPE);
+const TYPED_ARRAY_BUFFER_DESCRIPTOR = OBJECT_FREEZE(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'buffer'));
+const TYPED_ARRAY_BYTE_LENGTH_DESCRIPTOR = OBJECT_FREEZE(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'byteLength'));
+const TYPED_ARRAY_BYTE_OFFSET_DESCRIPTOR = OBJECT_FREEZE(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'byteOffset'));
+const TYPED_ARRAY_LENGTH_DESCRIPTOR = OBJECT_FREEZE(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'length'));
+const ARRAY_BUFFER_BYTE_LENGTH_DESCRIPTOR = OBJECT_FREEZE(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(ARRAY_BUFFER_PROTOTYPE, 'byteLength'));
+const TYPED_ARRAY_LENGTH = TYPED_ARRAY_LENGTH_DESCRIPTOR.get;
 const JSON_PARSE = JSON.parse;
 const STRING_TO_LOWER_CASE = String.prototype.toLowerCase;
 const STRING_SPLIT = String.prototype.split;
@@ -98,6 +109,82 @@ function trustedNodeByteHash(bytes) {
 }
 
 function defineData(target, key, value) { OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true }); }
+
+function frozenNullRecord(values) {
+  const record = OBJECT_CREATE(null);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(values);
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(values, name);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value')) refuse('SOURCE_ORIGIN_FUNGI_SCHEMA');
+    defineData(record, name, descriptor.value);
+  }
+  return OBJECT_FREEZE(record);
+}
+
+const FS_LSTAT_OPTIONS = frozenNullRecord({ bigint: true });
+const FS_MKDIR_OPTIONS = frozenNullRecord({ recursive: true });
+const FS_WRITE_OPTIONS = frozenNullRecord({ flag: 'wx', mode: 0o600 });
+const FS_RM_OPTIONS = frozenNullRecord({ recursive: true, force: true });
+
+function accessorDescriptorMatches(current, expected) {
+  return current !== undefined
+    && OBJECT_HAS_OWN(current, 'get')
+    && OBJECT_HAS_OWN(current, 'set')
+    && OBJECT_HAS_OWN(current, 'configurable')
+    && OBJECT_HAS_OWN(current, 'enumerable')
+    && current.get === expected.get
+    && current.set === expected.set
+    && current.configurable === expected.configurable
+    && current.enumerable === expected.enumerable;
+}
+
+const NATIVE_RESULT_FIELDS = OBJECT_FREEZE(['errno', 'error', 'status', 'signal', 'output', 'pid', 'stdout', 'stderr']);
+
+function assertNativeEffectClosure(code) {
+  const names = ['buffer', 'byteLength', 'byteOffset', 'length'];
+  if (
+    OBJECT_GET_PROTOTYPE_OF(BUFFER_PROTOTYPE) !== UINT8_ARRAY_PROTOTYPE
+    || OBJECT_GET_PROTOTYPE_OF(UINT8_ARRAY_PROTOTYPE) !== TYPED_ARRAY_PROTOTYPE
+    || OBJECT_GET_PROTOTYPE_OF(TYPED_ARRAY_PROTOTYPE) !== TYPED_ARRAY_PARENT
+    || OBJECT_GET_PROTOTYPE_OF(ARRAY_BUFFER_PROTOTYPE) !== OBJECT_PROTOTYPE
+    || !accessorDescriptorMatches(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'buffer'), TYPED_ARRAY_BUFFER_DESCRIPTOR)
+    || !accessorDescriptorMatches(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'byteLength'), TYPED_ARRAY_BYTE_LENGTH_DESCRIPTOR)
+    || !accessorDescriptorMatches(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'byteOffset'), TYPED_ARRAY_BYTE_OFFSET_DESCRIPTOR)
+    || !accessorDescriptorMatches(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'length'), TYPED_ARRAY_LENGTH_DESCRIPTOR)
+    || !accessorDescriptorMatches(OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(ARRAY_BUFFER_PROTOTYPE, 'byteLength'), ARRAY_BUFFER_BYTE_LENGTH_DESCRIPTOR)
+    || arraySome(names, (name) => OBJECT_HAS_OWN(BUFFER_PROTOTYPE, name) || OBJECT_HAS_OWN(UINT8_ARRAY_PROTOTYPE, name))
+    || arraySome(NATIVE_RESULT_FIELDS, (name) => OBJECT_HAS_OWN(OBJECT_PROTOTYPE, name))
+  ) refuse(code);
+}
+
+function assertChildProcessClosure(code) {
+  assertNativeEffectClosure(code);
+}
+
+function ownDataValue(value, name, required, code) {
+  const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
+  if (!descriptor) {
+    if (required) refuse(code);
+    return undefined;
+  }
+  if (!OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+  return descriptor.value;
+}
+
+function captureSpawnResult(value) {
+  const code = 'SOURCE_ORIGIN_FUNGI_CHILD';
+  if (value === null || typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) ||
+      OBJECT_GET_PROTOTYPE_OF(value) !== OBJECT_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  return frozenNullRecord({
+    error: ownDataValue(value, 'error', false, code),
+    signal: ownDataValue(value, 'signal', true, code),
+    status: ownDataValue(value, 'status', true, code),
+    stderr: ownDataValue(value, 'stderr', true, code),
+    stdout: ownDataValue(value, 'stdout', true, code),
+  });
+}
+
 function append(values, value) { defineData(values, `${values.length}`, value); }
 function arrayCopy(values) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, values[index]); return output; }
 function arrayMap(values, operation) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index)); return output; }
@@ -171,7 +258,7 @@ function exactObject(value, keys, code = 'SOURCE_ORIGIN_FUNGI_SCHEMA') {
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < names.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
   }
   const sorted = REFLECT_APPLY(ARRAY_SORT, names, [compareCodeUnits]);
   const expected = sortArray(arrayCopy(keys));
@@ -184,7 +271,7 @@ function exactArray(value, code = 'SOURCE_ORIGIN_FUNGI_SCHEMA') {
   if (names.length !== value.length + 1 || !arraySome(names, (name) => name === 'length')) refuse(code);
   for (let index = 0; index < value.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
   }
   return value;
 }
@@ -195,7 +282,7 @@ function deepFreeze(value, seen = new SAFE_SET()) {
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < names.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
-    if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
+    if (descriptor && OBJECT_HAS_OWN(descriptor, 'value')) deepFreeze(descriptor.value, seen);
   }
   return OBJECT_FREEZE(value);
 }
@@ -208,15 +295,18 @@ function decodeUtf8(bytes, code = 'SOURCE_ORIGIN_FUNGI_SOURCE') {
   }
 }
 
-async function authenticateNodeExecutable(nodeIdentity) {
+function authenticateNodeExecutable(nodeIdentity) {
   if (PROCESS_VERSION !== nodeIdentity.version) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   let details;
   let canonical;
   let bytes;
   try {
-    details = await FS_LSTAT(PROCESS_EXEC_PATH, { bigint: true });
-    canonical = await FS_REALPATH(PROCESS_EXEC_PATH);
-    bytes = await FS_READ_FILE(PROCESS_EXEC_PATH);
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+    details = FS_LSTAT_SYNC(PROCESS_EXEC_PATH, FS_LSTAT_OPTIONS);
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+    canonical = FS_REALPATH_SYNC_NATIVE(PROCESS_EXEC_PATH);
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+    bytes = FS_READ_FILE_SYNC(PROCESS_EXEC_PATH);
   } catch {
     refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   }
@@ -352,7 +442,13 @@ function parserChildMain() {
   };
   const lineStarts = (text) => {
     const rows = [0];
-    for (let index = 0; index < text.length; index += 1) if (text[index] === '\n') rows.push(index + 1);
+    for (let index = 0; index < text.length; index += 1) {
+      const unit = text.charCodeAt(index);
+      if (unit === 0x0d) {
+        if (text.charCodeAt(index + 1) === 0x0a) index += 1;
+        rows.push(index + 1);
+      } else if (unit === 0x0a) rows.push(index + 1);
+    }
     return rows;
   };
   const gateSpan = (text, starts, location) => {
@@ -656,26 +752,31 @@ function parserChildMain() {
 const PARSER_CHILD_SOURCE = `(${parserChildMain.toString()})()`;
 
 function childEnvironment() {
-  const environment = { NODE_DISABLE_COMPILE_CACHE: '1' };
+  const environment = OBJECT_CREATE(null);
+  defineData(environment, 'NODE_DISABLE_COMPILE_CACHE', '1');
   if (PROCESS_PLATFORM === 'win32' && typeof PROCESS_SYSTEM_ROOT === 'string') defineData(environment, 'SystemRoot', PROCESS_SYSTEM_ROOT);
-  return environment;
+  return OBJECT_FREEZE(environment);
 }
 
-async function runParserChild(captured, sourceRows) {
+function runParserChild(captured, sourceRows) {
   let root;
   let result;
   let failure;
   try {
-    root = await FS_MKDTEMP(PATH_JOIN(OS_TMPDIR(), 'galerina-source-origin-parser-'));
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_CHILD');
+    root = FS_MKDTEMP_SYNC(PATH_JOIN(OS_TMPDIR(), 'galerina-source-origin-parser-'));
     const hostRoot = PATH_JOIN(root, 'host');
     const parserRoot = PATH_JOIN(root, 'parser');
     const hostEntryPath = pathJoinLocator(hostRoot, captured.hostSelection.entry.locator);
-    await FS_MKDIR(PATH_DIRNAME(hostEntryPath), { recursive: true });
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_CHILD');
+    FS_MKDIR_SYNC(PATH_DIRNAME(hostEntryPath), FS_MKDIR_OPTIONS);
     const hostEntryJoined = `${captured.hostSelection.entry.rootLocator}/${captured.hostSelection.entry.locator}`;
     const hostEntryBytes = captured.toolchainBlobs.get(hostEntryJoined);
     if (!hostEntryBytes) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-    await FS_WRITE_FILE(hostEntryPath, hostEntryBytes, { flag: 'wx', mode: 0o600 });
-    const readback = await FS_READ_FILE(hostEntryPath);
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_CHILD');
+    FS_WRITE_FILE_SYNC(hostEntryPath, hostEntryBytes, FS_WRITE_OPTIONS);
+    assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_CHILD');
+    const readback = FS_READ_FILE_SYNC(hostEntryPath);
     const hostEntryRow = arrayFind(captured.hostSelection.moduleRows, (row) => row.locator === captured.hostSelection.entry.locator);
     if (!hostEntryRow || readback.length !== hostEntryRow.byteLength || trustedNodeByteHash(readback) !== hostEntryRow.rawSha256) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
     const parserSources = arrayMap(PARSER_SOURCE_LOCATORS, (locator) => {
@@ -709,35 +810,47 @@ async function runParserChild(captured, sourceRows) {
     };
     const input = canonicalJsonText(config);
     if (REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [input]), []) > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_LIMIT');
-    result = SPAWN_SYNC(PROCESS_EXEC_PATH, ['--no-warnings', '--input-type=commonjs', '--eval', PARSER_CHILD_SOURCE], {
-      cwd: root,
-      env: childEnvironment(),
-      input,
-      encoding: 'utf8',
-      stdio: ['pipe', 'pipe', 'pipe'],
-      timeout: SOURCE_ORIGIN_LIMITS.processMillis,
-      maxBuffer: SOURCE_ORIGIN_LIMITS.processOutputBytes,
-      windowsHide: true,
-    });
+    const argv = OBJECT_FREEZE(['--no-warnings', '--input-type=commonjs', '--eval', PARSER_CHILD_SOURCE]);
+    const stdio = OBJECT_FREEZE(['pipe', 'pipe', 'pipe']);
+    const childOptions = OBJECT_CREATE(null);
+    defineData(childOptions, 'cwd', root);
+    defineData(childOptions, 'env', childEnvironment());
+    defineData(childOptions, 'input', input);
+    defineData(childOptions, 'encoding', 'utf8');
+    defineData(childOptions, 'stdio', stdio);
+    defineData(childOptions, 'timeout', SOURCE_ORIGIN_LIMITS.processMillis);
+    defineData(childOptions, 'maxBuffer', SOURCE_ORIGIN_LIMITS.processOutputBytes);
+    defineData(childOptions, 'windowsHide', true);
+    OBJECT_FREEZE(childOptions);
+    assertChildProcessClosure('SOURCE_ORIGIN_FUNGI_CHILD');
+    result = SPAWN_SYNC(PROCESS_EXEC_PATH, argv, childOptions);
   } catch (error) {
     failure = error;
   }
   if (root !== undefined) {
-    try { await FS_RM(root, { recursive: true, force: true }); } catch { refuse('SOURCE_ORIGIN_FUNGI_CLEANUP'); }
+    try {
+      assertNativeEffectClosure('SOURCE_ORIGIN_FUNGI_CLEANUP');
+      FS_RM_SYNC(root, FS_RM_OPTIONS);
+    } catch { refuse('SOURCE_ORIGIN_FUNGI_CLEANUP'); }
   }
   if (failure) {
     if (refusalHas(failure)) throw failure;
     refuse('SOURCE_ORIGIN_FUNGI_CHILD');
   }
-  if (result.error || result.signal !== null || result.stderr !== '' || result.status !== 0 || REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [result.stdout]), []) > SOURCE_ORIGIN_LIMITS.processOutputBytes) {
+  const childResult = captureSpawnResult(result);
+  if (childResult.error || childResult.signal !== null || childResult.stderr !== '' || childResult.status !== 0 || typeof childResult.stdout !== 'string' ||
+      REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [childResult.stdout]), []) > SOURCE_ORIGIN_LIMITS.processOutputBytes) {
     let parsedRefusal;
-    try { parsedRefusal = REFLECT_APPLY(JSON_PARSE, null, [result.stdout]); } catch { /* no child artifact */ }
-    if (parsedRefusal?.refusal === 'COMPILE' || parsedRefusal?.refusal === 'LOAD' || parsedRefusal?.refusal === 'EXPORT') refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-    if (typeof parsedRefusal?.refusal === 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+    try { parsedRefusal = REFLECT_APPLY(JSON_PARSE, null, [childResult.stdout]); } catch { /* no child artifact */ }
+    const refusal = parsedRefusal !== null && typeof parsedRefusal === 'object' && !UTIL_TYPES_IS_PROXY(parsedRefusal)
+      ? ownDataValue(parsedRefusal, 'refusal', false, 'SOURCE_ORIGIN_FUNGI_CHILD')
+      : undefined;
+    if (refusal === 'COMPILE' || refusal === 'LOAD' || refusal === 'EXPORT') refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+    if (typeof refusal === 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
     refuse('SOURCE_ORIGIN_FUNGI_CHILD');
   }
   let parsed;
-  try { parsed = REFLECT_APPLY(JSON_PARSE, null, [result.stdout]); } catch { refuse('SOURCE_ORIGIN_FUNGI_CHILD'); }
+  try { parsed = REFLECT_APPLY(JSON_PARSE, null, [childResult.stdout]); } catch { refuse('SOURCE_ORIGIN_FUNGI_CHILD'); }
   exactObject(parsed, ['hostModuleLocators','hostBuiltinModules','parserModuleLocators','parserBuiltinModules','parserExportNames','semantic'], 'SOURCE_ORIGIN_FUNGI_CHILD');
   return parsed;
 }
@@ -916,12 +1029,12 @@ function compareIdMapRows(left, right) {
 
 export async function decodeFungiGateProject(options) {
   const captured = captureOptions(options);
-  await authenticateNodeExecutable(captured.prepared.nodeIdentity);
+  authenticateNodeExecutable(captured.prepared.nodeIdentity);
   const sourceRows = arrayFilter(captured.sourceManifest.rows, (row) => {
     const domain = classifySourcePath(row.path, captured.sourcePolicy);
     return domain === 'FUNGI' || domain === 'GATE';
   });
-  const replay = await runParserChild(captured, sourceRows);
+  const replay = runParserChild(captured, sourceRows);
   validateTextArray(replay.hostModuleLocators, arrayMap(captured.hostSelection.moduleRows, (row) => row.locator), 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   validateTextArray(replay.hostBuiltinModules, captured.hostSelection.builtinModules, 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   validateTextArray(replay.parserModuleLocators, arrayMap(captured.parserRuntime.moduleRows, (row) => row.locator), 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');

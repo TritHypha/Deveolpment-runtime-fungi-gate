@@ -910,6 +910,39 @@ test("eighth-review toolchain public entries snapshot Object.getPrototypeOf", as
   });
 });
 
+test("ninth-review descriptor gates require own data values in toolchain inputs", { timeout: 30_000 }, () => {
+  const options = fixtureOptions();
+  let inputEffects = 0;
+  Object.defineProperty(options, "platform", {
+    configurable: true,
+    enumerable: true,
+    get() {
+      inputEffects += 1;
+      throw new Error("ATTACKER_INPUT_VALUE");
+    },
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const inherited = safeGetDescriptor(Object.prototype, "value");
+  let descriptorEffects = 0;
+  let failure;
+  safeDefineProperty(Object.prototype, "value", {
+    configurable: true,
+    get() {
+      descriptorEffects += 1;
+      throw new Error("ATTACKER_DESCRIPTOR_VALUE");
+    },
+  });
+  try { buildToolchainSnapshot(options); } catch (error) { failure = error; }
+  finally {
+    if (inherited) safeDefineProperty(Object.prototype, "value", inherited);
+    else delete Object.prototype.value;
+  }
+  assert.equal(inputEffects, 0);
+  assert.equal(descriptorEffects, 0);
+  assert.equal(failure?.code, "SOURCE_ORIGIN_SCHEMA");
+});
+
 test("semantic preparation derives the closed HOST, FUNGI and GATE selections without caller selectors", () => {
   const record = fixtureRecord();
   const options = {

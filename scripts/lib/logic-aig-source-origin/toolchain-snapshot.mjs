@@ -14,6 +14,7 @@ const OBJECT_FREEZE = Object.freeze;
 const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
 const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
 const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_HAS_OWN = Object.hasOwn;
 const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
 const OBJECT_KEYS = Object.keys;
 const OBJECT_PROTOTYPE = Object.prototype;
@@ -138,7 +139,7 @@ function copyClosedData(value, seen = new SAFE_SET(), depth = 0) {
     const output = [];
     for (let index = 0; index < length; index += 1) {
       const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
-      if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
+      if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
       append(output, copyClosedData(descriptor.value, seen, depth + 1));
     }
     return output;
@@ -151,7 +152,7 @@ function copyClosedData(value, seen = new SAFE_SET(), depth = 0) {
   for (let index = 0; index < names.length; index += 1) {
     const name = names[index];
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
     if (name !== stringNormalize(name)) refuse('SOURCE_ORIGIN_SCHEMA');
     defineData(output, name, copyClosedData(descriptor.value, seen, depth + 1));
   }
@@ -298,7 +299,7 @@ function deepFreeze(value, seen = new SAFE_SET()) {
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < names.length; index += 1) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
-    if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
+    if (descriptor && OBJECT_HAS_OWN(descriptor, 'value')) deepFreeze(descriptor.value, seen);
   }
   return OBJECT_FREEZE(value);
 }

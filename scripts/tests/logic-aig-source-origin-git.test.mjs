@@ -20,6 +20,7 @@ import {
   SOURCE_ORIGIN_LIMITS,
   canonicalJsonText,
   parseCanonicalJsonBytes,
+  sha256Canonical,
   validateExpectedParseOutcomes,
   validateParserPolicy,
   validateProposedBaseline,
@@ -219,6 +220,124 @@ test("sealed command selection atomically binds arguments and exact output ceili
   assert.equal(captured.maximumBytes, SOURCE_ORIGIN_LIMITS.capturedFileBytes);
   assert.equal(json.maximumBytes, SOURCE_ORIGIN_LIMITS.jsonBytes);
   assert.throws(() => gitSource.materializeGitCommand(OWNER_PROPOSAL_POLICY.gitProcessPolicy, "BLOB", root, { blobOid: "a".repeat(40) }, "SCALAR"), /SOURCE_ORIGIN_/);
+});
+
+test("ninth-review Git commands ignore post-import Array.find poison and trace exact argv", { timeout: 30_000 }, async (t) => {
+  const policy = OWNER_PROPOSAL_POLICY.gitProcessPolicy;
+  const repositoryRoot = await realpath(new URL("../../", import.meta.url));
+  const expectedHeadArguments = [
+    ...policy.fixedPrefix.map((value) => value
+      .replace("<REPOSITORY_ROOT>", repositoryRoot)),
+    "rev-parse",
+    "--verify",
+    "HEAD^{commit}",
+  ];
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+
+  await t.test("post-import Array.prototype.find cannot replace pinned argv", () => {
+    const descriptor = safeGetDescriptor(Array.prototype, "find");
+    let effects = 0;
+    let selected;
+    let failure;
+    safeDefineProperty(Array.prototype, "find", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        return {
+          commandId: "HEAD",
+          arguments: ["--help"],
+          outputLimitId: "SCALAR",
+          stdoutRule: "ONE_UTF8_LINE",
+        };
+      },
+    });
+    try {
+      selected = gitSource.materializeGitCommand(policy, "HEAD", repositoryRoot);
+    } catch (error) {
+      failure = error;
+    } finally {
+      safeDefineProperty(Array.prototype, "find", descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.deepEqual(selected?.arguments, expectedHeadArguments);
+    assert.match(selected?.argvDigest ?? "", /^[0-9a-f]{64}$/u);
+  });
+
+  await t.test("post-import Math.min cannot widen the sealed BLOB limit", () => {
+    const descriptor = safeGetDescriptor(Math, "min");
+    const expectedMaximum = Math.min(
+      SOURCE_ORIGIN_LIMITS.capturedFileBytes,
+      SOURCE_ORIGIN_LIMITS.processOutputBytes,
+    );
+    let effects = 0;
+    let selected;
+    let failure;
+    safeDefineProperty(Math, "min", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        return SOURCE_ORIGIN_LIMITS.processOutputBytes;
+      },
+    });
+    try {
+      selected = gitSource.materializeGitCommand(
+        policy,
+        "BLOB",
+        repositoryRoot,
+        { blobOid: "a".repeat(40) },
+        "CAPTURED_FILE",
+      );
+    } catch (error) {
+      failure = error;
+    } finally {
+      safeDefineProperty(Math, "min", descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(selected?.maximumBytes, expectedMaximum);
+  });
+
+  await t.test("trace validation detects a coherently re-digested argv substitution", () => {
+    const selectedById = new Map();
+    for (const row of policy.commandRows) {
+      selectedById.set(row.commandId, gitSource.materializeGitCommand(
+        policy,
+        row.commandId,
+        repositoryRoot,
+        { blobOid: "a".repeat(40), treeOid: "b".repeat(40) },
+        row.commandId === "BLOB" ? "CAPTURED_FILE" : undefined,
+      ));
+    }
+    const middle = policy.commandRows
+      .map((row) => row.commandId)
+      .filter((commandId) => commandId !== "GIT_VERSION" && commandId !== "CONFIG_ROWS");
+    const commandIds = ["GIT_VERSION", "CONFIG_ROWS", ...middle, "CONFIG_ROWS", "GIT_VERSION"];
+    const trace = commandIds.map((commandId) => {
+      const selected = selectedById.get(commandId);
+      assert(selected);
+      return {
+        commandId,
+        arguments: [...selected.arguments],
+        argvDigest: selected.argvDigest,
+      };
+    });
+    assert.doesNotThrow(() => gitSource.validateGitCommandTrace(trace, policy, repositoryRoot));
+
+    const forged = structuredClone(trace);
+    const head = forged.find((row) => row.commandId === "HEAD");
+    assert(head);
+    head.arguments = [...head.arguments.slice(0, -3), "status", "--short"];
+    head.argvDigest = sha256Canonical("galerina.logic-aig-git-command-argv.v1", {
+      commandId: head.commandId,
+      arguments: head.arguments,
+    });
+    assert.throws(
+      () => gitSource.validateGitCommandTrace(forged, policy, repositoryRoot),
+      (error) => error?.code === "SOURCE_ORIGIN_GIT_PROCESS",
+    );
+  });
 });
 
 test("config parser requires the complete command prefix and the closed local allowance", () => {
