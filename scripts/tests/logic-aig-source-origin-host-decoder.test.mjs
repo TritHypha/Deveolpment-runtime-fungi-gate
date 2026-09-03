@@ -339,6 +339,68 @@ test("ninth-review descriptor gates require own data values in HOST inputs", { t
   assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
 });
 
+test("twelfth-review HOST async result boundary ignores inherited then capabilities", { timeout: 120_000 }, async (t) => {
+  const options = await fixtureOptions({
+    "src/async-boundary.ts": "export const asyncBoundary = 1;\n",
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeHasOwn = Object.hasOwn;
+  const prior = safeGetDescriptor(Object.prototype, "then");
+
+  try {
+    await t.test("inherited getter has zero effects", async () => {
+      let effects = 0;
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        get() {
+          if (safeHasOwn(this, "actualRuntimeLoadSet") && safeHasOwn(this, "nodes")) effects += 1;
+          return undefined;
+        },
+      });
+      try { result = await decodeHostProject(options); } catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.equal(effects, 0);
+      assert.equal(failure, undefined);
+      assert.equal(result?.authorizing, false);
+    });
+
+    await t.test("inherited data function cannot substitute the result", async () => {
+      const injected = Object.create(null);
+      Object.defineProperty(injected, "authorizing", { enumerable: true, value: true });
+      let effects = 0;
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        value(resolve) {
+          if (safeHasOwn(this, "actualRuntimeLoadSet") && safeHasOwn(this, "nodes")) {
+            effects += 1;
+            resolve(injected);
+            return;
+          }
+          safeDefineProperty(this, "then", { configurable: true, value: undefined });
+          resolve(this);
+          safeDeleteProperty(this, "then");
+        },
+        writable: true,
+      });
+      try { result = await decodeHostProject(options); } catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.equal(effects, 0);
+      assert.equal(failure, undefined);
+      assert.notEqual(result, injected);
+      assert.equal(result?.authorizing, false);
+    });
+  } finally {
+    safeDeleteProperty(Object.prototype, "then");
+    if (prior) safeDefineProperty(Object.prototype, "then", prior);
+  }
+});
+
 test("ninth-review HOST native file boundary rejects typed-array prototype drift without effects", { timeout: 120_000 }, async () => {
   const options = await fixtureOptions({
     "src/native-boundary.ts": "export const nativeBoundary = 1;\n",

@@ -316,6 +316,68 @@ test("ninth-review descriptor gates require own data values in FUNGI inputs", { 
   assert.equal(failure?.code, "SOURCE_ORIGIN_FUNGI_SCHEMA");
 });
 
+test("twelfth-review FUNGI async result boundary ignores inherited then capabilities", { timeout: 120_000 }, async (t) => {
+  const options = await fixtureOptions({
+    "src/async-boundary.fungi": "flow async_boundary(a: Int) -> Int { return a }\n",
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeHasOwn = Object.hasOwn;
+  const prior = safeGetDescriptor(Object.prototype, "then");
+
+  try {
+    await t.test("inherited getter has zero effects", async () => {
+      let effects = 0;
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        get() {
+          if (safeHasOwn(this, "actualRuntimeLoadSets") && safeHasOwn(this, "nodes")) effects += 1;
+          return undefined;
+        },
+      });
+      try { result = await decodeFungiGateProject(options); } catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.equal(effects, 0);
+      assert.equal(failure, undefined);
+      assert.equal(result?.authorizing, false);
+    });
+
+    await t.test("inherited data function cannot substitute the result", async () => {
+      const injected = Object.create(null);
+      Object.defineProperty(injected, "authorizing", { enumerable: true, value: true });
+      let effects = 0;
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        value(resolve) {
+          if (safeHasOwn(this, "actualRuntimeLoadSets") && safeHasOwn(this, "nodes")) {
+            effects += 1;
+            resolve(injected);
+            return;
+          }
+          safeDefineProperty(this, "then", { configurable: true, value: undefined });
+          resolve(this);
+          safeDeleteProperty(this, "then");
+        },
+        writable: true,
+      });
+      try { result = await decodeFungiGateProject(options); } catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.equal(effects, 0);
+      assert.equal(failure, undefined);
+      assert.notEqual(result, injected);
+      assert.equal(result?.authorizing, false);
+    });
+  } finally {
+    safeDeleteProperty(Object.prototype, "then");
+    if (prior) safeDefineProperty(Object.prototype, "then", prior);
+  }
+});
+
 test("ninth-review FUNGI native file boundary rejects typed-array prototype drift without effects", { timeout: 120_000 }, async () => {
   const options = await fixtureOptions({
     "src/native-boundary.fungi": "flow native_boundary(a: Int) -> Int { return a }\n",

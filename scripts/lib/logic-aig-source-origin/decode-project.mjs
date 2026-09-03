@@ -23,13 +23,13 @@ import {
   validateToolchainPins,
 } from './contract.mjs';
 import { decodeFungiGateProject } from './fungi-decoder.mjs';
-import { admitFrozenBlobSet } from './git-source.mjs';
+import { admitFrozenBlobSet, validateLocalExporterPolicy } from './git-source.mjs';
 import { buildSemanticRows, decodeHostProject } from './host-decoder.mjs';
-import { validateExporterPolicy } from './owner-proposal-policy.mjs';
 import { buildToolchainSnapshot } from './toolchain-snapshot.mjs';
 
 const UTIL_TYPES_IS_PROXY = isProxy;
 const REFLECT_APPLY = Reflect.apply;
+const OBJECT_CREATE = Object.create;
 const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
 const OBJECT_FREEZE = Object.freeze;
 const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
@@ -69,6 +69,18 @@ const MAP_ITERATOR_NEXT = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(
 
 function defineData(target, key, value) {
   OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true });
+}
+
+function frozenNullRecord(values) {
+  const record = OBJECT_CREATE(null);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(values);
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(values, name);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value')) refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
+    defineData(record, name, descriptor.value);
+  }
+  return OBJECT_FREEZE(record);
 }
 
 function ownArrayValue(values, index, code = 'SOURCE_ORIGIN_PROJECT_SCHEMA') {
@@ -349,6 +361,8 @@ function validateOwners(owners, ownerBlobsInput) {
   }
 
   const parser = validateParserPolicy(owners.values.parser);
+  const exporterIdentity = mapGet(identityByLocator, OWNER_LOCATORS.exporter);
+  if (!exporterIdentity) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   const validatedValues = {
     repositoryIdentity: validateRepositoryIdentity(owners.values.repositoryIdentity),
     source: validateSourcePolicy(owners.values.source),
@@ -360,7 +374,11 @@ function validateOwners(owners, ownerBlobsInput) {
     expectedOutcomes: validateExpectedParseOutcomes(owners.values.expectedOutcomes, { parserPolicy: parser }),
     gate: validateGateOwner(owners.values.gate, parser),
   };
-  defineData(validatedValues, 'exporter', validateExporterPolicy(owners.values.exporter, exporterBindings({ ...validatedValues, exporter: owners.values.exporter })));
+  defineData(validatedValues, 'exporter', validateLocalExporterPolicy(
+    owners.values.exporter,
+    exporterBindings({ ...validatedValues, exporter: owners.values.exporter }),
+    exporterIdentity.semanticDigest,
+  ));
   for (let index = 0; index < OWNER_NAMES.length; index += 1) {
     const name = OWNER_NAMES[index];
     const locator = OWNER_LOCATORS[name];
@@ -853,7 +871,7 @@ export async function decodeSourceProject(options) {
   for (let index = 0; index < fungiGate.parseResults.length; index += 1) append(parseResults, fungiGate.parseResults[index]);
   sortArray(parseResults, (left, right) => compareCodeUnits(left.path, right.path));
   if (parseResults.length + outcomeRows.length !== captured.sourceManifest.rows.length || arraySome(parseResults, (row) => row.status !== 'PARSED')) refuse('SOURCE_ORIGIN_PROJECT_PARSE');
-  return deepFreeze({
+  return deepFreeze(frozenNullRecord({
     nodes,
     edges,
     unresolved,
@@ -863,5 +881,5 @@ export async function decodeSourceProject(options) {
     toolchainManifest,
     parseOutcomesReceipt,
     authorizing: false,
-  });
+  }));
 }

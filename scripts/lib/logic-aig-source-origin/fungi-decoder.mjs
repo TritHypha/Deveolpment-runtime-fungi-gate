@@ -1104,7 +1104,7 @@ export async function decodeFungiGateProject(options) {
     { id: 'HOST', moduleRows: captured.hostSelection.moduleRows, builtinModules: captured.hostSelection.builtinModules },
     { id: 'PARSER', moduleRows: captured.parserRuntime.moduleRows, builtinModules: captured.parserRuntime.builtinModules },
   ];
-  return deepFreeze({
+  return deepFreeze(frozenNullRecord({
     nodes,
     edges,
     unresolved,
@@ -1116,5 +1116,5 @@ export async function decodeFungiGateProject(options) {
     actualRuntimeLoadSets,
     actualParserExportNames: replay.parserExportNames,
     authorizing: false,
-  });
+  }));
 }

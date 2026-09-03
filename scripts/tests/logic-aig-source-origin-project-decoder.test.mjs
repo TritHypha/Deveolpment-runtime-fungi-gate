@@ -584,6 +584,109 @@ test("eleventh-review missing Gate verdict ignores inherited properties", { time
   }
 });
 
+test("twelfth-review PROJECT async boundaries ignore inherited then capabilities", { timeout: 180_000 }, async (t) => {
+  const options = await fixtureOptions();
+  const safeCreate = Object.create;
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeGetNames = Object.getOwnPropertyNames;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeHasOwn = Object.hasOwn;
+  const prior = safeGetDescriptor(Object.prototype, "then");
+
+  try {
+    await t.test("inherited getter has zero effects", async () => {
+      const effects = { host: 0, fungiGate: 0, project: 0 };
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        get() {
+          if (safeHasOwn(this, "actualRuntimeLoadSet") && safeHasOwn(this, "nodes")) effects.host += 1;
+          if (safeHasOwn(this, "actualRuntimeLoadSets") && safeHasOwn(this, "nodes")) effects.fungiGate += 1;
+          if (safeHasOwn(this, "parseOutcomesReceipt") && safeHasOwn(this, "toolchainManifest")) effects.project += 1;
+          return undefined;
+        },
+      });
+      try { result = await decodeSourceProject(options); } catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.deepEqual(effects, { host: 0, fungiGate: 0, project: 0 });
+      assert.equal(failure, undefined);
+      assert.equal(result?.authorizing, false);
+    });
+
+    await t.test("inherited data function cannot substitute child or final results", async () => {
+      const injected = safeCreate(null);
+      safeDefineProperty(injected, "authorizing", { enumerable: true, value: true });
+      let effects = 0;
+      let substitutions = 0;
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        value(resolve) {
+          if (safeHasOwn(this, "parseOutcomesReceipt")) {
+            effects += 1;
+            substitutions += 1;
+            resolve(injected);
+            return;
+          }
+          if ((safeHasOwn(this, "actualRuntimeLoadSet") || safeHasOwn(this, "actualRuntimeLoadSets")) && safeHasOwn(this, "nodes")) {
+            effects += 1;
+            const copy = safeCreate(null);
+            const names = safeGetNames(this);
+            for (let index = 0; index < names.length; index += 1) {
+              const descriptor = safeGetDescriptor(this, names[index]);
+              if (!descriptor || !safeHasOwn(descriptor, "value")) throw new Error("ATTACKER_PROJECT_COPY");
+              safeDefineProperty(copy, names[index], descriptor);
+            }
+            resolve(copy);
+            return;
+          }
+          safeDefineProperty(this, "then", { configurable: true, value: undefined });
+          resolve(this);
+          safeDeleteProperty(this, "then");
+        },
+        writable: true,
+      });
+      try { result = await decodeSourceProject(options); } catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.equal(effects, 0);
+      assert.equal(substitutions, 0);
+      assert.equal(failure, undefined);
+      assert.notEqual(result, injected);
+      assert.equal(result?.authorizing, false);
+    });
+  } finally {
+    safeDeleteProperty(Object.prototype, "then");
+    if (prior) safeDefineProperty(Object.prototype, "then", prior);
+  }
+});
+
+test("twelfth-review PROJECT has no runtime owner-policy helper authority", { timeout: 180_000 }, async () => {
+  const options = await fixtureOptions();
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const descriptor = safeGetDescriptor(Object, "fromEntries");
+  let effects = 0;
+  let failure;
+  let result;
+  safeDefineProperty(Object, "fromEntries", {
+    ...descriptor,
+    value() {
+      effects += 1;
+      throw new Error("PROJECT_EXPORTER_VALIDATOR_EFFECT");
+    },
+  });
+  try { result = await decodeSourceProject(options); } catch (error) { failure = error; }
+  finally { safeDefineProperty(Object, "fromEntries", descriptor); }
+  assert.equal(effects, 0);
+  assert.equal(failure, undefined);
+  assert.equal(result?.authorizing, false);
+  const source = await readFile(new URL("../lib/logic-aig-source-origin/decode-project.mjs", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /\bvalidateExporterPolicy\b|owner-proposal-policy\.mjs/u);
+});
+
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {
   const options = await fixtureOptions();
   const result = await decodeSourceProject(options);

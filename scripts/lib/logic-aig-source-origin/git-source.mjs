@@ -24,8 +24,6 @@ import {
 } from './contract.mjs';
 import {
   OWNER_PROPOSAL_POLICY,
-  buildGitEnvironment,
-  validateExporterPolicy,
   validateGitProcessPolicy,
 } from './owner-proposal-policy.mjs';
 
@@ -72,11 +70,35 @@ const EXPORTER_BINDING_FIELDS = Object.freeze([
   'expectedOutcomesDigest',
   'proposedBaselineDigest',
 ]);
+const EXPORTER_POLICY_FIELDS = Object.freeze([
+  'argvPolicy', 'argvPolicyDigest', 'authorizing', 'canonicalizationId',
+  'decoderId', 'environmentPolicy', 'environmentPolicyDigest',
+  'exclusionDigest', 'expectedOutcomesDigest', 'generatedConsumerPolicyDigest',
+  'gitProcessPolicy', 'gitProcessPolicyDigest', 'limits', 'nodeKinds',
+  'parserPolicyDigest', 'policyDigest', 'proposedBaselineDigest',
+  'relationshipKinds', 'repositoryIdentityDigest', 'resolutionPolicyDigest',
+  'schema', 'sourcePolicyDigest', 'toolchainPinsDigest',
+]);
+const EXPECTED_NODE_KINDS = Object.freeze([
+  'CLASS', 'FILE', 'FLOW', 'FUNCTION', 'GATE', 'INTERFACE', 'METHOD',
+  'MODULE', 'ROUTE', 'SYMBOL', 'TYPE',
+]);
+const EXPECTED_RELATIONSHIP_KINDS = Object.freeze([
+  'CALLER', 'CONTRACT', 'GENERATED_CONSUMER', 'IMPORT', 'TEST',
+]);
+const EXPECTED_FORBIDDEN_GIT_ENVIRONMENT_KEYS = Object.freeze([
+  'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_ATTR_SOURCE', 'GIT_COMMON_DIR',
+  'GIT_CONFIG_COUNT', 'GIT_DIR', 'GIT_EXTERNAL_DIFF', 'GIT_INDEX_FILE',
+  'GIT_OBJECT_DIRECTORY', 'GIT_TRACE', 'GIT_TRACE2', 'GIT_TRACE2_EVENT',
+  'GIT_TRACE2_PERF', 'GIT_WORK_TREE', 'HOME', 'NODE_OPTIONS', 'NODE_PATH',
+  'PATH', 'TEMP', 'TMP', 'WINDIR', 'XDG_CONFIG_HOME',
+]);
 const OID_PATTERNS = Object.freeze({
   sha1: /^[0-9a-f]{40}$/,
   sha256: /^[0-9a-f]{64}$/,
 });
 const HEX_OID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
+const HEX64 = /^[0-9a-f]{64}$/u;
 const CONTROL = /[\u0000-\u001f\u007f]/u;
 const REFLECT_APPLY = Reflect.apply;
 const OBJECT_CREATE = Object.create;
@@ -551,12 +573,15 @@ function validatePath(path) {
 }
 
 function exporterBindings(value) {
-  const bindings = {};
+  const bindings = OBJECT_CREATE(null);
   for (let index = 0; index < EXPORTER_BINDING_FIELDS.length; index += 1) {
     const field = EXPORTER_BINDING_FIELDS[index];
-    setDynamicData(bindings, field, value[field]);
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, field);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable ||
+        typeof descriptor.value !== 'string' || !regexpTest(HEX64, descriptor.value)) refuse('SOURCE_ORIGIN_GIT_POLICY');
+    setDynamicData(bindings, field, descriptor.value);
   }
-  return bindings;
+  return OBJECT_FREEZE(bindings);
 }
 
 function readBoundWorkingOwner(locator, identity, validate, semanticDigestField) {
@@ -587,14 +612,14 @@ function readBootstrapOwners() {
   const exporter = readBoundWorkingOwner(
     POLICY_PATHS.exporter,
     OWNER_IDENTITIES.exporter,
-    (value) => validateExporterPolicy(value, exporterBindings(value)),
+    (value) => validateLocalExporterPolicy(value, exporterBindings(value)),
     'policyDigest',
   );
   if (exporter.value.toolchainPinsDigest !== pins.value.pinsDigest ||
-      canonicalJsonText(exporter.value.gitProcessPolicy) !== canonicalJsonText(OWNER_PROPOSAL_POLICY.gitProcessPolicy) ||
-      canonicalJsonText(exporter.value.environmentPolicy) !== canonicalJsonText(OWNER_PROPOSAL_POLICY.environmentPolicy) ||
-      canonicalJsonText(exporter.value.limits) !== canonicalJsonText(OWNER_PROPOSAL_POLICY.limits)) refuse('SOURCE_ORIGIN_GIT_POLICY');
-  return OBJECT_FREEZE({ pins, exporter });
+      canonicalJsonText(exporter.value.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
+      canonicalJsonText(exporter.value.environmentPolicy) !== SEALED_GIT_ENVIRONMENT_POLICY.canonical ||
+      canonicalJsonText(exporter.value.limits) !== SEALED_EXPORTER_LIMITS_CANONICAL) refuse('SOURCE_ORIGIN_GIT_POLICY');
+  return frozenNullRecord({ pins, exporter }, 'SOURCE_ORIGIN_GIT_POLICY');
 }
 
 function selectHostPin(pins) {
@@ -628,31 +653,8 @@ function authenticateGitExecutable(locator, hostPin) {
   return observed;
 }
 
-function buildEnvironment(policy) {
-  if (OS_PLATFORM() === 'win32') {
-    const systemRoot = SYSTEM_ROOT;
-    if (typeof systemRoot !== 'string' || systemRoot.length === 0 || stringIncludes(systemRoot, '\0') || !PATH_IS_ABSOLUTE(systemRoot)) refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT');
-    let details;
-    try { details = STAT_SYNC(systemRoot); } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
-    const parentEnvironment = OBJECT_CREATE(null);
-    parentEnvironment.SystemRoot = systemRoot;
-    try {
-      return buildGitEnvironment(policy, {
-        architecture: OS_ARCH(),
-        parentEnvironment,
-        platform: OS_PLATFORM(),
-        systemRootDirectoryObservation: { exists: true, kind: statIsKind(details, 'DIRECTORY') ? 'DIRECTORY' : 'OTHER', locator: systemRoot },
-      });
-    } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
-  }
-  try {
-    return buildGitEnvironment(policy, {
-      architecture: OS_ARCH(),
-      parentEnvironment: OBJECT_CREATE(null),
-      platform: OS_PLATFORM(),
-      systemRootDirectoryObservation: null,
-    });
-  } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
+function buildEnvironment() {
+  return SEALED_GIT_ENVIRONMENT;
 }
 
 function substituteArguments(values, substitutions, repositoryRoot = REPOSITORY_ROOT) {
@@ -672,32 +674,208 @@ function substituteArguments(values, substitutions, repositoryRoot = REPOSITORY_
   });
 }
 
-function copySealedPolicyData(value) {
+function copySealedPolicyData(value, code = 'SOURCE_ORIGIN_GIT_PROCESS') {
   if (value === null || typeof value !== 'object') return value;
-  if (UTIL_TYPES_IS_PROXY(value) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  if (UTIL_TYPES_IS_PROXY(value) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
   if (ARRAY_IS_ARRAY(value)) {
-    if (OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE) refuse('SOURCE_ORIGIN_GIT_PROCESS');
-    const values = closedArrayValues(value, 'SOURCE_ORIGIN_GIT_PROCESS');
+    if (OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE) refuse(code);
+    const values = closedArrayValues(value, code);
     const output = new ARRAY_CONSTRUCTOR();
-    for (let index = 0; index < values.length; index += 1) safeArrayAppend(output, copySealedPolicyData(values[index]));
+    for (let index = 0; index < values.length; index += 1) safeArrayAppend(output, copySealedPolicyData(values[index], code));
     return OBJECT_FREEZE(output);
   }
   const prototype = OBJECT_GET_PROTOTYPE_OF(value);
-  if (prototype !== OBJECT_PROTOTYPE && prototype !== null) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  if (prototype !== OBJECT_PROTOTYPE && prototype !== null) refuse(code);
   const output = OBJECT_CREATE(null);
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   for (let index = 0; index < names.length; index += 1) {
     const name = names[index];
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
-    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_GIT_PROCESS');
-    setDynamicData(output, name, copySealedPolicyData(descriptor.value));
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+    setDynamicData(output, name, copySealedPolicyData(descriptor.value, code));
   }
   return OBJECT_FREEZE(output);
+}
+
+function exactSealedObject(value, keys, code) {
+  if (value === null || typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) || ARRAY_IS_ARRAY(value) ||
+      OBJECT_GET_PROTOTYPE_OF(value) !== null || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  if (names.length !== keys.length) refuse(code);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+  }
+  for (let keyIndex = 0; keyIndex < keys.length; keyIndex += 1) {
+    if (!OBJECT_HAS_OWN(value, keys[keyIndex])) refuse(code);
+  }
+  return value;
+}
+
+function sealedWithoutField(value, excluded, code) {
+  const output = OBJECT_CREATE(null);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    if (name === excluded) continue;
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+    setDynamicData(output, name, descriptor.value);
+  }
+  return OBJECT_FREEZE(output);
+}
+
+function frozenNullRecord(values, code = 'SOURCE_ORIGIN_GIT_PROCESS') {
+  const output = OBJECT_CREATE(null);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(values);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(values, names[index]);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+    setDynamicData(output, names[index], descriptor.value);
+  }
+  return OBJECT_FREEZE(output);
+}
+
+function asyncEnvelope(value) {
+  const output = OBJECT_CREATE(null);
+  setDynamicData(output, 'value', value);
+  return OBJECT_FREEZE(output);
+}
+
+function unwrapAsyncEnvelope(value, code = 'SOURCE_ORIGIN_GIT_PROCESS') {
+  exactSealedObject(value, ['value'], code);
+  return sealedRecordValue(value, 'value');
 }
 
 function sealedRecordValue(record, key) {
   const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(record, key);
   return descriptor && OBJECT_HAS_OWN(descriptor, 'value') ? descriptor.value : undefined;
+}
+
+function materializeSealedGitEnvironmentPolicy(policyValue) {
+  const code = 'SOURCE_ORIGIN_GIT_ENVIRONMENT';
+  const policy = copySealedPolicyData(policyValue, code);
+  exactSealedObject(policy, ['authorizing', 'commonEntries', 'forbiddenKeys', 'platformRows', 'policyDigest', 'schema'], code);
+  if (policy.schema !== 'galerina.logic-aig-git-environment-policy.v2' || policy.authorizing !== false ||
+      policy.policyDigest !== '2f82f6e34936fb0039bd505c489aad1224742dde6bca42a1739378560376022d' ||
+      sha256CanonicalCaptured(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
+
+  const commonEntries = closedArrayValues(policy.commonEntries, code);
+  if (commonEntries.length !== 10) refuse(code);
+  const commonKeys = OBJECT_CREATE(null);
+  for (let index = 0; index < commonEntries.length; index += 1) {
+    const row = commonEntries[index];
+    const hasValue = OBJECT_HAS_OWN(row, 'value');
+    exactSealedObject(row, hasValue ? ['key', 'value'] : ['key', 'valueByPlatform'], code);
+    if (typeof row.key !== 'string' || row.key.length === 0 || sealedRecordValue(commonKeys, row.key) !== undefined) refuse(code);
+    if (hasValue) {
+      if (typeof row.value !== 'string') refuse(code);
+    } else {
+      exactSealedObject(row.valueByPlatform, ['linux', 'win32'], code);
+      if (typeof row.valueByPlatform.linux !== 'string' || typeof row.valueByPlatform.win32 !== 'string') refuse(code);
+    }
+    setDynamicData(commonKeys, row.key, true);
+  }
+
+  const platformRows = closedArrayValues(policy.platformRows, code);
+  if (platformRows.length !== 2) refuse(code);
+  const platformByName = OBJECT_CREATE(null);
+  for (let index = 0; index < platformRows.length; index += 1) {
+    const row = platformRows[index];
+    exactSealedObject(row, ['copiedParentKeys', 'platform'], code);
+    if ((row.platform !== 'linux' && row.platform !== 'win32') || sealedRecordValue(platformByName, row.platform) !== undefined) refuse(code);
+    const copied = closedArrayValues(row.copiedParentKeys, code);
+    if ((row.platform === 'linux' && copied.length !== 0) ||
+        (row.platform === 'win32' && (copied.length !== 1 || copied[0] !== 'SystemRoot'))) refuse(code);
+    setDynamicData(platformByName, row.platform, row);
+  }
+  if (!sealedRecordValue(platformByName, 'linux') || !sealedRecordValue(platformByName, 'win32')) refuse(code);
+
+  const forbiddenKeys = closedArrayValues(policy.forbiddenKeys, code);
+  if (forbiddenKeys.length !== EXPECTED_FORBIDDEN_GIT_ENVIRONMENT_KEYS.length) refuse(code);
+  for (let index = 0; index < forbiddenKeys.length; index += 1) {
+    if (forbiddenKeys[index] !== EXPECTED_FORBIDDEN_GIT_ENVIRONMENT_KEYS[index] || sealedRecordValue(commonKeys, forbiddenKeys[index]) !== undefined) refuse(code);
+  }
+  return OBJECT_FREEZE({
+    policy,
+    canonical: canonicalJsonText(policy),
+    platformByName: OBJECT_FREEZE(platformByName),
+  });
+}
+
+function materializeHostGitEnvironment() {
+  const code = 'SOURCE_ORIGIN_GIT_ENVIRONMENT';
+  const currentPlatform = OS_PLATFORM();
+  const currentArchitecture = OS_ARCH();
+  if ((currentPlatform !== 'linux' && currentPlatform !== 'win32') || currentArchitecture !== 'x64') refuse(code);
+  const platformRow = sealedRecordValue(SEALED_GIT_ENVIRONMENT_POLICY.platformByName, currentPlatform);
+  if (!platformRow) refuse(code);
+  const output = OBJECT_CREATE(null);
+  for (let index = 0; index < SEALED_GIT_ENVIRONMENT_POLICY.policy.commonEntries.length; index += 1) {
+    const row = SEALED_GIT_ENVIRONMENT_POLICY.policy.commonEntries[index];
+    const value = OBJECT_HAS_OWN(row, 'value') ? row.value : sealedRecordValue(row.valueByPlatform, currentPlatform);
+    if (typeof value !== 'string' || OBJECT_HAS_OWN(output, row.key)) refuse(code);
+    setDynamicData(output, row.key, value);
+  }
+  if (currentPlatform === 'win32') {
+    const systemRoot = SYSTEM_ROOT;
+    if (typeof systemRoot !== 'string' || systemRoot.length === 0 || stringIncludes(systemRoot, '\0') || !PATH_IS_ABSOLUTE(systemRoot)) refuse(code);
+    let details;
+    try { details = STAT_SYNC(systemRoot); } catch { refuse(code); }
+    if (!statIsKind(details, 'DIRECTORY')) refuse(code);
+    setDynamicData(output, 'SystemRoot', systemRoot);
+  }
+  const expectedKeys = SEALED_GIT_ENVIRONMENT_POLICY.policy.commonEntries.length + (currentPlatform === 'win32' ? 1 : 0);
+  if (OBJECT_GET_OWN_PROPERTY_NAMES(output).length !== expectedKeys) refuse(code);
+  return OBJECT_FREEZE(output);
+}
+
+function requireSealedGitEnvironment(value) {
+  const code = 'SOURCE_ORIGIN_GIT_ENVIRONMENT';
+  if (value === null || typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) || ARRAY_IS_ARRAY(value) ||
+      OBJECT_GET_PROTOTYPE_OF(value) !== null || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const expectedNames = OBJECT_GET_OWN_PROPERTY_NAMES(SEALED_GIT_ENVIRONMENT);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  if (names.length !== expectedNames.length) refuse(code);
+  for (let index = 0; index < expectedNames.length; index += 1) {
+    const name = expectedNames[index];
+    const expected = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(SEALED_GIT_ENVIRONMENT, name);
+    const observed = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
+    if (!expected || !observed || !OBJECT_HAS_OWN(observed, 'value') || !observed.enumerable || observed.value !== expected.value) refuse(code);
+  }
+  return SEALED_GIT_ENVIRONMENT;
+}
+
+export function validateLocalExporterPolicy(
+  value,
+  expectedBindings,
+  expectedPolicyDigest = OWNER_IDENTITIES.exporter.semanticDigest,
+) {
+  const code = 'SOURCE_ORIGIN_GIT_POLICY';
+  if (typeof expectedPolicyDigest !== 'string' || !regexpTest(HEX64, expectedPolicyDigest)) refuse(code);
+  const policy = copySealedPolicyData(value, code);
+  exactSealedObject(policy, EXPORTER_POLICY_FIELDS, code);
+  if (policy.schema !== 'galerina.logic-aig-exporter-policy.v2' ||
+      policy.decoderId !== 'galerina-source-origin' ||
+      policy.canonicalizationId !== 'utf8-nfc-code-unit-canonical-json-v1' ||
+      policy.authorizing !== false || policy.policyDigest !== expectedPolicyDigest ||
+      sha256CanonicalCaptured(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
+
+  const bindings = exporterBindings(expectedBindings);
+  for (let index = 0; index < EXPORTER_BINDING_FIELDS.length; index += 1) {
+    const field = EXPORTER_BINDING_FIELDS[index];
+    if (policy[field] !== sealedRecordValue(bindings, field)) refuse(code);
+  }
+  if (policy.argvPolicyDigest !== '3a636a21a4beddcab4ed87389c7fe19b686742afffdcdc911490b9ad0992a5da' ||
+      policy.argvPolicyDigest !== sealedRecordValue(policy.argvPolicy, 'policyDigest') ||
+      policy.gitProcessPolicyDigest !== SEALED_GIT_PROCESS_POLICY.policy.policyDigest ||
+      policy.environmentPolicyDigest !== SEALED_GIT_ENVIRONMENT_POLICY.policy.policyDigest ||
+      canonicalJsonText(policy.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
+      canonicalJsonText(policy.environmentPolicy) !== SEALED_GIT_ENVIRONMENT_POLICY.canonical ||
+      canonicalJsonText(policy.limits) !== SEALED_EXPORTER_LIMITS_CANONICAL ||
+      canonicalJsonText(policy.nodeKinds) !== canonicalJsonText(EXPECTED_NODE_KINDS) ||
+      canonicalJsonText(policy.relationshipKinds) !== canonicalJsonText(EXPECTED_RELATIONSHIP_KINDS)) refuse(code);
+  return policy;
 }
 
 function materializeSealedGitProcessPolicy(policyValue) {
@@ -762,6 +940,11 @@ function materializeSealedGitProcessPolicy(policyValue) {
 }
 
 const SEALED_GIT_PROCESS_POLICY = materializeSealedGitProcessPolicy(OWNER_PROPOSAL_POLICY.gitProcessPolicy);
+const SEALED_GIT_ENVIRONMENT_POLICY = materializeSealedGitEnvironmentPolicy(OWNER_PROPOSAL_POLICY.environmentPolicy);
+const SEALED_EXPORTER_LIMITS = copySealedPolicyData(OWNER_PROPOSAL_POLICY.limits, 'SOURCE_ORIGIN_GIT_POLICY');
+const SEALED_EXPORTER_LIMITS_CANONICAL = canonicalJsonText(SEALED_EXPORTER_LIMITS);
+const SEALED_GIT_ENVIRONMENT = materializeHostGitEnvironment();
+const BOOTSTRAP_OWNERS = readBootstrapOwners();
 
 function requireSealedGitProcessPolicy(policyValue) {
   let canonical;
@@ -839,7 +1022,7 @@ async function collectChild(child, maximumBytes, processOutputBytes, deadline) {
       settled = true;
       CLEAR_TIMEOUT(timer);
       if (status !== 0 || signal !== null || stderrBytes !== 0) reject(new SourceOriginCaptureRefusal('SOURCE_ORIGIN_GIT_PROCESS'));
-      else resolve(concatExactBuffers(stdout, processOutputBytes, 'SOURCE_ORIGIN_GIT_PROCESS'));
+      else resolve(asyncEnvelope(concatExactBuffers(stdout, processOutputBytes, 'SOURCE_ORIGIN_GIT_PROCESS')));
     }]);
     try {
       REFLECT_APPLY(READABLE_RESUME, child.stdout, []);
@@ -1139,20 +1322,25 @@ function observeAlternateFile(locator, expected) {
 async function repositoryState(run) {
   const layout = assertCanonicalRepositoryLayout({
     repositoryRoot: REPOSITORY_ROOT,
-    toplevel: await run('TOPLEVEL'),
-    gitDirectory: await run('GIT_DIR'),
-    indexPath: await run('INDEX_PATH'),
+    toplevel: unwrapAsyncEnvelope(await run('TOPLEVEL')),
+    gitDirectory: unwrapAsyncEnvelope(await run('GIT_DIR')),
+    indexPath: unwrapAsyncEnvelope(await run('INDEX_PATH')),
   });
-  const alternates = observeAlternateFile(await run('ALTERNATES'), alternateExpectation(layout.gitDirectory, 'alternates'));
-  const httpAlternates = observeAlternateFile(await run('HTTP_ALTERNATES'), alternateExpectation(layout.gitDirectory, 'http-alternates'));
-  const objectFormat = await run('OBJECT_FORMAT');
+  const alternates = observeAlternateFile(unwrapAsyncEnvelope(await run('ALTERNATES')), alternateExpectation(layout.gitDirectory, 'alternates'));
+  const httpAlternates = observeAlternateFile(unwrapAsyncEnvelope(await run('HTTP_ALTERNATES')), alternateExpectation(layout.gitDirectory, 'http-alternates'));
+  const objectFormat = unwrapAsyncEnvelope(await run('OBJECT_FORMAT'));
   const pattern = oidPattern(objectFormat);
-  const head = await run('HEAD');
-  const tree = await run('TREE');
+  const head = unwrapAsyncEnvelope(await run('HEAD'));
+  const tree = unwrapAsyncEnvelope(await run('TREE'));
   if (!regexpTest(pattern, head) || !regexpTest(pattern, tree)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
-  const treeRows = parseGitTreeRows(await run('TREE_ROWS', { treeOid: tree }), objectFormat);
-  const index = observeGitIndex(await run('INDEX_STAGE'), await run('INDEX_FLAGS'), objectFormat, treeRows);
-  return OBJECT_FREEZE({ ...layout, alternates, httpAlternates, objectFormat, head, tree, treeRows, index });
+  const treeRows = parseGitTreeRows(unwrapAsyncEnvelope(await run('TREE_ROWS', { treeOid: tree })), objectFormat);
+  const index = observeGitIndex(
+    unwrapAsyncEnvelope(await run('INDEX_STAGE')),
+    unwrapAsyncEnvelope(await run('INDEX_FLAGS')),
+    objectFormat,
+    treeRows,
+  );
+  return frozenNullRecord({ ...layout, alternates, httpAlternates, objectFormat, head, tree, treeRows, index });
 }
 
 function closureView(state, configDigest, ownerSetDigest) {
@@ -1178,8 +1366,8 @@ export function assertFrozenSourceClosure(opening, closing) {
 }
 
 async function readBlob(run, oid, operationClass = 'CAPTURED_FILE') {
-  const bytes = await run('BLOB', { blobOid: oid }, operationClass);
-  return exactBuffer(bytes, undefined, 'SOURCE_ORIGIN_GIT_PROCESS');
+  const bytes = unwrapAsyncEnvelope(await run('BLOB', { blobOid: oid }, operationClass));
+  return asyncEnvelope(exactBuffer(bytes, undefined, 'SOURCE_ORIGIN_GIT_PROCESS'));
 }
 
 function regularTreeRow(treeByPath, locator, code = 'SOURCE_ORIGIN_GIT_POLICY') {
@@ -1190,8 +1378,8 @@ function regularTreeRow(treeByPath, locator, code = 'SOURCE_ORIGIN_GIT_POLICY') 
 
 async function heldBlob(run, treeByPath, locator, operationClass = 'JSON', code = 'SOURCE_ORIGIN_GIT_POLICY') {
   const row = regularTreeRow(treeByPath, locator, code);
-  const bytes = await readBlob(run, row.blobOid, operationClass);
-  return OBJECT_FREEZE({ locator, blobOid: row.blobOid, bytes, byteLength: typedArrayLength(bytes), rawSha256: sha256CapturedBytes(bytes) });
+  const bytes = unwrapAsyncEnvelope(await readBlob(run, row.blobOid, operationClass), code);
+  return frozenNullRecord({ locator, blobOid: row.blobOid, bytes, byteLength: typedArrayLength(bytes), rawSha256: sha256CapturedBytes(bytes) }, code);
 }
 
 function classifyResolutionPath(path, policy) {
@@ -1613,7 +1801,7 @@ async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIde
     const sourceDomain = classifySourcePath(treeRow.path, sourcePolicy);
     const isResolution = classifyResolutionPath(treeRow.path, resolutionPolicy) || setHas(resolutionOwnerPaths, treeRow.path);
     if (!sourceDomain && !isResolution) continue;
-    const bytes = await readBlob(run, treeRow.blobOid, 'CAPTURED_FILE');
+    const bytes = unwrapAsyncEnvelope(await readBlob(run, treeRow.blobOid, 'CAPTURED_FILE'));
     const byteLength = typedArrayLength(bytes);
     const row = OBJECT_FREEZE({
       path: treeRow.path,
@@ -1685,12 +1873,12 @@ async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIde
     ...resolutionBody,
     resolutionInputsDigest: sha256CanonicalCaptured(resolutionBody.schema, resolutionBody),
   };
-  return {
+  return frozenNullRecord({
     sourceManifest: deepFreeze(sourceManifest),
     sourceBlobs: createBlobCapability(sourceEntries),
     resolutionInputs: deepFreeze(resolutionInputs),
     resolutionBlobs: createBlobCapability(resolutionEntries),
-  };
+  });
 }
 
 function assertNoDuplicateJsonMembers(text, code) {
@@ -1788,7 +1976,7 @@ async function readHeldOwners(run, state) {
   const source = semanticOwner(blobs.source, validateSourcePolicy, 'policyDigest');
   const gateParsed = authenticateGateOwnerBytes(blobs.gate.bytes, parser.value);
   const gate = OBJECT_FREEZE({ ...blobs.gate, value: gateParsed.value, semanticDigest: gateParsed.semanticDigest });
-  const bindings = {
+  const bindings = frozenNullRecord({
     sourcePolicyDigest: source.value.policyDigest,
     exclusionDigest: sha256CanonicalCaptured('galerina.logic-aig-exclusions.v1', source.value.exclusions),
     resolutionPolicyDigest: resolution.value.policyDigest,
@@ -1798,8 +1986,8 @@ async function readHeldOwners(run, state) {
     toolchainPinsDigest: pins.value.pinsDigest,
     expectedOutcomesDigest: expectedOutcomes.value.expectedOutcomesDigest,
     proposedBaselineDigest: proposedBaseline.value.policyDigest,
-  };
-  const exporter = semanticOwner(blobs.exporter, (value) => validateExporterPolicy(value, bindings), 'policyDigest');
+  }, 'SOURCE_ORIGIN_GIT_POLICY');
+  const exporter = semanticOwner(blobs.exporter, (value) => validateLocalExporterPolicy(value, bindings), 'policyDigest');
   const owners = { pins, proposedBaseline, expectedOutcomes, exporter, generated, parser, repositoryIdentity, resolution, source, gate };
   const identities = safeArrayMap(REFLECT_APPLY(OBJECT_VALUES, undefined, [owners]), (owner) => ({
     locator: owner.locator,
@@ -1809,7 +1997,7 @@ async function readHeldOwners(run, state) {
     semanticDigest: owner.semanticDigest,
   }));
   safeArraySort(identities, (left, right) => codeUnitCompare(left.locator, right.locator));
-  return OBJECT_FREEZE({ ...owners, identities: deepFreeze(identities), ownerSetDigest: sha256CanonicalCaptured('galerina.logic-aig-frozen-owner-set.v1', identities) });
+  return frozenNullRecord({ ...owners, identities: deepFreeze(identities), ownerSetDigest: sha256CanonicalCaptured('galerina.logic-aig-frozen-owner-set.v1', identities) }, 'SOURCE_ORIGIN_GIT_POLICY');
 }
 
 function capturedOwnerSnapshot(held) {
@@ -1860,7 +2048,7 @@ function readInstalledWorkingOwners(parserPolicy) {
   const exporter = readBoundWorkingOwner(
     POLICY_PATHS.exporter,
     OWNER_IDENTITIES.exporter,
-    (value) => validateExporterPolicy(value, exporterBindings(value)),
+    (value) => validateLocalExporterPolicy(value, exporterBindings(value)),
     'policyDigest',
   );
   return OBJECT_FREEZE({ pins, proposedBaseline, expectedOutcomes, exporter });
@@ -1887,25 +2075,28 @@ function sameWorkingOwners(left, right) {
 
 function makeRunner({ executable, environment, policy, deadline }) {
   const trace = [];
+  const sealedEnvironment = requireSealedGitEnvironment(environment);
+  const environmentDigest = sha256CanonicalCaptured('galerina.logic-aig-git-environment.v1', sealedEnvironment);
   const runCommand = async (commandId, substitutions = {}, blobClass) => {
     const selected = materializeGitCommand(policy.gitProcessPolicy, commandId, REPOSITORY_ROOT, substitutions, blobClass);
     let child;
     try {
       child = SPAWN(executable, selected.arguments, {
         cwd: REPOSITORY_ROOT,
-        env: environment,
+        env: sealedEnvironment,
         shell: false,
         windowsHide: true,
         stdio: ['ignore', 'pipe', 'pipe'],
       });
     } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
-    const bytes = await collectChild(child, selected.maximumBytes, policy.limits.processOutputBytes, deadline);
+    const bytes = unwrapAsyncEnvelope(await collectChild(child, selected.maximumBytes, policy.limits.processOutputBytes, deadline));
     safeArrayAppend(trace, deepFreeze({
       commandId,
       arguments: safeArrayCopy(selected.arguments),
       argvDigest: selected.argvDigest,
+      environmentDigest,
     }));
-    return selected.stdoutRule === 'ONE_UTF8_LINE' ? decodeGitLine(bytes) : bytes;
+    return asyncEnvelope(selected.stdoutRule === 'ONE_UTF8_LINE' ? decodeGitLine(bytes) : bytes);
   };
   OBJECT_DEFINE_PROPERTY(runCommand, 'trace', { value: trace });
   return runCommand;
@@ -1935,16 +2126,18 @@ function traceArgumentsMatch(argumentsList, commandRow, repositoryRoot) {
   return true;
 }
 
-export function validateGitCommandTrace(traceValue, processPolicy, repositoryRoot) {
+export function validateGitCommandTrace(traceValue, processPolicy, repositoryRoot, environmentValue) {
   if (typeof repositoryRoot !== 'string' || !PATH_IS_ABSOLUTE(repositoryRoot) || PATH_NORMALIZE(repositoryRoot) !== repositoryRoot || stringIncludes(repositoryRoot, '\0')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
   const sealed = requireSealedGitProcessPolicy(processPolicy);
+  const environment = requireSealedGitEnvironment(environmentValue);
+  const environmentDigest = sha256CanonicalCaptured('galerina.logic-aig-git-environment.v1', environment);
   const trace = closedArrayValues(traceValue, 'SOURCE_ORIGIN_GIT_PROCESS');
   const expected = safeArrayMap(sealed.policy.commandRows, (row) => row.commandId);
   safeArraySort(expected, codeUnitCompare);
   for (let index = 0; index < trace.length; index += 1) {
     const entry = trace[index];
-    exactObject(entry, ['commandId', 'arguments', 'argvDigest'], 'SOURCE_ORIGIN_GIT_PROCESS');
-    if (typeof entry.commandId !== 'string' || typeof entry.argvDigest !== 'string') refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    exactObject(entry, ['commandId', 'arguments', 'argvDigest', 'environmentDigest'], 'SOURCE_ORIGIN_GIT_PROCESS');
+    if (typeof entry.commandId !== 'string' || typeof entry.argvDigest !== 'string' || entry.environmentDigest !== environmentDigest) refuse('SOURCE_ORIGIN_GIT_PROCESS');
     const commandRow = sealedRecordValue(sealed.commandById, entry.commandId);
     if (!commandRow) refuse('SOURCE_ORIGIN_GIT_PROCESS');
     const argumentsList = closedArrayValues(entry.arguments, 'SOURCE_ORIGIN_GIT_PROCESS');
@@ -1973,16 +2166,16 @@ function observationEdge(frozen, executable, version) {
 export async function captureFrozenSource(options) {
   const captured = captureOptions(options);
   assertCaptureRuntimeClosure();
-  const bootstrap = readBootstrapOwners();
+  const bootstrap = BOOTSTRAP_OWNERS;
   const hostPin = selectHostPin(bootstrap.pins.value);
   const executableOpening = authenticateGitExecutable(captured.gitExecutableLocator, hostPin);
-  const environment = buildEnvironment(bootstrap.exporter.value.environmentPolicy);
+  const environment = buildEnvironment();
   const deadline = REFLECT_APPLY(DATE_NOW, undefined, []) + bootstrap.exporter.value.limits.processMillis;
   const run = makeRunner({ executable: captured.gitExecutableLocator, environment, policy: bootstrap.exporter.value, deadline });
 
-  const version = await run('GIT_VERSION');
+  const version = unwrapAsyncEnvelope(await run('GIT_VERSION'));
   if (version !== `git version ${hostPin.gitIdentity.version}`) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  const openingConfig = parseGitConfigRows(await run('CONFIG_ROWS'), bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT);
+  const openingConfig = parseGitConfigRows(unwrapAsyncEnvelope(await run('CONFIG_ROWS')), bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT);
   const frozenBefore = await repositoryState(run);
   if (frozenBefore.head !== captured.commitOid) refuse('SOURCE_ORIGIN_GIT_HEAD');
   const heldOpening = await readHeldOwners(run, frozenBefore);
@@ -2022,7 +2215,7 @@ export async function captureFrozenSource(options) {
 
   const frozenAfter = await repositoryState(run);
   const heldClosing = await readHeldOwners(run, frozenAfter);
-  const closingConfig = parseGitConfigRows(await run('CONFIG_ROWS'), bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT);
+  const closingConfig = parseGitConfigRows(unwrapAsyncEnvelope(await run('CONFIG_ROWS')), bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT);
   const workingBeforeVersion = readInstalledWorkingOwners(heldClosing.parser.value);
   assertHeldWorkingOwners(heldClosing, workingBeforeVersion);
   assertFrozenSourceClosure(
@@ -2032,13 +2225,13 @@ export async function captureFrozenSource(options) {
   if (!sameWorkingOwners(workingOpening, workingBeforeVersion)) refuse('SOURCE_ORIGIN_GIT_DRIFT');
   const executableBeforeVersion = authenticateGitExecutable(captured.gitExecutableLocator, hostPin);
   if (!sameExecutable(executableOpening, executableBeforeVersion)) refuse('SOURCE_ORIGIN_GIT_DRIFT');
-  const closingVersion = await run('GIT_VERSION');
+  const closingVersion = unwrapAsyncEnvelope(await run('GIT_VERSION'));
   if (closingVersion !== version) refuse('SOURCE_ORIGIN_GIT_DRIFT');
   const workingAfterVersion = readInstalledWorkingOwners(heldClosing.parser.value);
   assertHeldWorkingOwners(heldClosing, workingAfterVersion);
   const executableAfterVersion = authenticateGitExecutable(captured.gitExecutableLocator, hostPin);
   if (!sameWorkingOwners(workingOpening, workingAfterVersion) || !sameExecutable(executableOpening, executableAfterVersion)) refuse('SOURCE_ORIGIN_GIT_DRIFT');
-  validateGitCommandTrace(run.trace, bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT);
+  validateGitCommandTrace(run.trace, bootstrap.exporter.value.gitProcessPolicy, REPOSITORY_ROOT, environment);
 
   const before = observationEdge(frozenBefore, executableOpening, version);
   const after = observationEdge(frozenAfter, executableAfterVersion, closingVersion);
@@ -2052,7 +2245,7 @@ export async function captureFrozenSource(options) {
   const semanticOwners = capturedOwnerSnapshot(heldClosing);
   const sourceBlobs = admitFrozenBlobSet(manifests.sourceManifest.rows, manifests.sourceBlobs, { label: 'SOURCE_MANIFEST' });
   const resolutionBlobs = admitFrozenBlobSet(manifests.resolutionInputs.rows, manifests.resolutionBlobs, { label: 'RESOLUTION_INPUTS' });
-  return OBJECT_FREEZE({
+  return frozenNullRecord({
     observation,
     sourceManifest: manifests.sourceManifest,
     sourceBlobs,

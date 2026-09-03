@@ -97,6 +97,28 @@ async function readPinnedHeadCommit(gitExecutableLocator) {
   return commitOid;
 }
 
+function approvedGitEnvironment() {
+  const parentEnvironment = Object.create(null);
+  let systemRootDirectoryObservation = null;
+  if (platform() === "win32") {
+    const systemRoot = process.env.SystemRoot;
+    assert.equal(typeof systemRoot, "string");
+    Object.defineProperty(parentEnvironment, "SystemRoot", {
+      configurable: true,
+      enumerable: true,
+      value: systemRoot,
+      writable: true,
+    });
+    systemRootDirectoryObservation = { exists: true, kind: "DIRECTORY", locator: systemRoot };
+  }
+  return buildGitEnvironment(OWNER_PROPOSAL_POLICY.environmentPolicy, {
+    architecture: arch(),
+    parentEnvironment,
+    platform: platform(),
+    systemRootDirectoryObservation,
+  });
+}
+
 function exporterBindings(value) {
   return Object.fromEntries([
     "sourcePolicyDigest",
@@ -196,6 +218,73 @@ test("capture option capture refuses accessors, proxies, symbols, missing and su
     { commitOid: "a".repeat(40), gitExecutableLocator: process.execPath, surplus: true },
     Object.assign({ commitOid: "a".repeat(40), gitExecutableLocator: process.execPath }, { [Symbol("authority")]: true }),
   ]) await assert.rejects(gitSource.captureFrozenSource(value), (error) => error?.code === "SOURCE_ORIGIN_GIT_SCHEMA");
+});
+
+test("twelfth-review frozen capture has no runtime owner-policy helper authority", { timeout: 180_000, skip: platform() !== "win32" }, async (t) => {
+  const gitExecutableLocator = fileURLToPath(new URL(
+    "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+    import.meta.url,
+  ));
+  const capture = () => gitSource.captureFrozenSource({
+    commitOid: "a".repeat(40),
+    gitExecutableLocator,
+  });
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+
+  await t.test("post-import exporter-validator globals have zero effects", async () => {
+    const descriptor = safeGetDescriptor(Object, "fromEntries");
+    let effects = 0;
+    let failure;
+    safeDefineProperty(Object, "fromEntries", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_EXPORTER_VALIDATOR");
+      },
+    });
+    try { await capture(); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Object, "fromEntries", descriptor); }
+    assert.deepEqual(
+      { effects, failureCode: failure?.code },
+      { effects: 0, failureCode: "SOURCE_ORIGIN_GIT_HEAD" },
+    );
+  });
+
+  await t.test("post-import environment globals cannot send a forbidden key to Git", async () => {
+    const descriptor = safeGetDescriptor(Object, "create");
+    let effects = 0;
+    let forbiddenEnvironments = 0;
+    let failure;
+    safeDefineProperty(Object, "create", {
+      ...descriptor,
+      value(prototype, properties) {
+        effects += 1;
+        const output = Reflect.apply(descriptor.value, Object, [prototype, properties]);
+        if (prototype === null) {
+          forbiddenEnvironments += 1;
+          safeDefineProperty(output, "GIT_DIR", {
+            configurable: true,
+            enumerable: true,
+            value: dirname(process.execPath),
+            writable: true,
+          });
+        }
+        return output;
+      },
+    });
+    try { await capture(); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Object, "create", descriptor); }
+    assert.deepEqual(
+      { effects, failureCode: failure?.code, forbiddenEnvironments },
+      { effects: 0, failureCode: "SOURCE_ORIGIN_GIT_HEAD", forbiddenEnvironments: 0 },
+    );
+  });
+
+  await t.test("git-source contains no imported runtime helper call sites", async () => {
+    const source = await readFile(new URL("../lib/logic-aig-source-origin/git-source.mjs", import.meta.url), "utf8");
+    assert.doesNotMatch(source, /\b(?:buildGitEnvironment|validateExporterPolicy)\b/u);
+  });
 });
 
 test("sealed command selection atomically binds arguments and exact output ceiling for all fourteen classes", () => {
@@ -300,6 +389,8 @@ test("ninth-review Git commands ignore post-import Array.find poison and trace e
   });
 
   await t.test("trace validation detects a coherently re-digested argv substitution", () => {
+    const environment = approvedGitEnvironment();
+    const environmentDigest = sha256Canonical("galerina.logic-aig-git-environment.v1", environment);
     const selectedById = new Map();
     for (const row of policy.commandRows) {
       selectedById.set(row.commandId, gitSource.materializeGitCommand(
@@ -321,9 +412,10 @@ test("ninth-review Git commands ignore post-import Array.find poison and trace e
         commandId,
         arguments: [...selected.arguments],
         argvDigest: selected.argvDigest,
+        environmentDigest,
       };
     });
-    assert.doesNotThrow(() => gitSource.validateGitCommandTrace(trace, policy, repositoryRoot));
+    assert.doesNotThrow(() => gitSource.validateGitCommandTrace(trace, policy, repositoryRoot, environment));
 
     const forged = structuredClone(trace);
     const head = forged.find((row) => row.commandId === "HEAD");
@@ -334,8 +426,23 @@ test("ninth-review Git commands ignore post-import Array.find poison and trace e
       arguments: head.arguments,
     });
     assert.throws(
-      () => gitSource.validateGitCommandTrace(forged, policy, repositoryRoot),
+      () => gitSource.validateGitCommandTrace(forged, policy, repositoryRoot, environment),
       (error) => error?.code === "SOURCE_ORIGIN_GIT_PROCESS",
+    );
+
+    const forgedEnvironmentDigest = structuredClone(trace);
+    forgedEnvironmentDigest[0].environmentDigest = "0".repeat(64);
+    assert.throws(
+      () => gitSource.validateGitCommandTrace(forgedEnvironmentDigest, policy, repositoryRoot, environment),
+      (error) => error?.code === "SOURCE_ORIGIN_GIT_PROCESS",
+    );
+
+    const forbiddenEnvironment = Object.assign(Object.create(null), environment, {
+      GIT_DIR: dirname(process.execPath),
+    });
+    assert.throws(
+      () => gitSource.validateGitCommandTrace(trace, policy, repositoryRoot, forbiddenEnvironment),
+      (error) => error?.code === "SOURCE_ORIGIN_GIT_ENVIRONMENT",
     );
   });
 });
@@ -1516,6 +1623,127 @@ test("eighth-review Git boundary closes regex, synced hash and decorated Buffer 
     assert.equal(result, undefined);
     assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
   });
+});
+
+test("twelfth-review frozen capture async boundaries ignore inherited then capabilities", { timeout: 900_000, skip: platform() !== "win32" }, async (t) => {
+  const gitExecutableLocator = fileURLToPath(new URL(
+    "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+    import.meta.url,
+  ));
+  const commitOid = await readPinnedHeadCommit(gitExecutableLocator);
+  const safeBufferFrom = Buffer.from;
+  const safeBufferIsBuffer = Buffer.isBuffer;
+  const safeCreate = Object.create;
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeGetNames = Object.getOwnPropertyNames;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeReflectApply = Reflect.apply;
+  const safeHasOwn = Object.hasOwn;
+  const prior = safeGetDescriptor(Object.prototype, "then");
+
+  const freshCounters = () => ({
+    total: 0,
+    buffers: 0,
+    repositoryState: 0,
+    heldBlob: 0,
+    manifests: 0,
+    heldOwners: 0,
+    capture: 0,
+  });
+  const classify = (receiver, counters) => {
+    let matched = false;
+    if (safeBufferIsBuffer(receiver)) { counters.buffers += 1; matched = true; }
+    if (safeHasOwn(receiver, "repositoryRoot") && safeHasOwn(receiver, "treeRows") && safeHasOwn(receiver, "index")) { counters.repositoryState += 1; matched = true; }
+    if (safeHasOwn(receiver, "locator") && safeHasOwn(receiver, "blobOid") && safeHasOwn(receiver, "bytes")) { counters.heldBlob += 1; matched = true; }
+    if (safeHasOwn(receiver, "sourceManifest") && safeHasOwn(receiver, "sourceBlobs") && safeHasOwn(receiver, "resolutionInputs")) { counters.manifests += 1; matched = true; }
+    if (safeHasOwn(receiver, "pins") && safeHasOwn(receiver, "exporter") && safeHasOwn(receiver, "ownerSetDigest")) { counters.heldOwners += 1; matched = true; }
+    if (safeHasOwn(receiver, "observation") && safeHasOwn(receiver, "owners") && safeHasOwn(receiver, "sourceManifest")) { counters.capture += 1; matched = true; }
+    if (matched) counters.total += 1;
+    return matched;
+  };
+
+  try {
+    await t.test("inherited getter has zero effects across internal and public results", { timeout: 900_000 }, async () => {
+      const effects = freshCounters();
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        get() {
+          classify(this, effects);
+          return undefined;
+        },
+      });
+      try { result = await gitSource.captureFrozenSource({ commitOid, gitExecutableLocator }); }
+      catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.deepEqual(effects, freshCounters());
+      assert.equal(failure, undefined);
+      assert.equal(result?.owners.authorizing, false);
+    });
+
+    await t.test("inherited data function cannot transform internals or substitute the public result", { timeout: 900_000 }, async () => {
+      const effects = freshCounters();
+      const injected = safeCreate(null);
+      safeDefineProperty(injected, "owners", {
+        enumerable: true,
+        value: safeCreate(null),
+      });
+      safeDefineProperty(injected.owners, "authorizing", { enumerable: true, value: true });
+      let substitutions = 0;
+      let failure;
+      let result;
+      safeDefineProperty(Object.prototype, "then", {
+        configurable: true,
+        value(resolve, reject) {
+          try {
+            const targeted = classify(this, effects);
+            if (safeHasOwn(this, "observation") && safeHasOwn(this, "owners") && safeHasOwn(this, "sourceManifest")) {
+              substitutions += 1;
+              resolve(injected);
+              return;
+            }
+            if (safeBufferIsBuffer(this)) {
+              const copy = safeReflectApply(safeBufferFrom, Buffer, [this]);
+              safeDefineProperty(copy, "then", { configurable: true, value: undefined });
+              resolve(copy);
+              safeDeleteProperty(copy, "then");
+              return;
+            }
+            if (!targeted) {
+              safeDefineProperty(this, "then", { configurable: true, value: undefined });
+              resolve(this);
+              safeDeleteProperty(this, "then");
+              return;
+            }
+            const copy = safeCreate(null);
+            const names = safeGetNames(this);
+            for (let index = 0; index < names.length; index += 1) {
+              const descriptor = safeGetDescriptor(this, names[index]);
+              if (!descriptor || !safeHasOwn(descriptor, "value")) throw new Error("ATTACKER_GIT_COPY");
+              safeDefineProperty(copy, names[index], descriptor);
+            }
+            resolve(copy);
+          } catch (error) {
+            reject(error);
+          }
+        },
+        writable: true,
+      });
+      try { result = await gitSource.captureFrozenSource({ commitOid, gitExecutableLocator }); }
+      catch (error) { failure = error; }
+      finally { safeDeleteProperty(Object.prototype, "then"); }
+      assert.deepEqual(effects, freshCounters());
+      assert.equal(substitutions, 0);
+      assert.equal(failure, undefined);
+      assert.notEqual(result, injected);
+      assert.equal(result?.owners.authorizing, false);
+    });
+  } finally {
+    safeDeleteProperty(Object.prototype, "then");
+    if (prior) safeDefineProperty(Object.prototype, "then", prior);
+  }
 });
 
 test("genuine pinned-Git capture returns every frozen owner value and defensive owner blob", { timeout: 900_000, skip: platform() !== "win32" }, async () => {

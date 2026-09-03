@@ -1284,7 +1284,7 @@ export async function decodeHostProject(options) {
     canonicalJsonText(replay.moduleLocators) !== canonicalJsonText(arrayMap(actualRuntimeLoadSet.moduleRows, (row) => row.locator))
     || canonicalJsonText(replay.builtinModules) !== canonicalJsonText(actualRuntimeLoadSet.builtinModules)
   ) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
-  return deepFreeze({
+  return deepFreeze(frozenNullRecord({
     nodes: rows.nodes,
     edges: rows.edges,
     unresolved: rows.unresolved,
@@ -1295,5 +1295,5 @@ export async function decodeHostProject(options) {
     toolchain: captured.selection,
     actualRuntimeLoadSet,
     authorizing: false,
-  });
+  }));
 }
