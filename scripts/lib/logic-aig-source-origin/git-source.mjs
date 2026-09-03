@@ -73,8 +73,21 @@ const TYPED_ARRAY_LENGTH_GETTER = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PR
 const TYPED_ARRAY_BUFFER_GETTER = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, 'buffer').get;
 const TYPED_ARRAY_SET = Uint8Array.prototype.set;
 const BUFFER_ALLOC_UNSAFE = Buffer.allocUnsafe.bind(Buffer);
+const BUFFER_FROM = Buffer.from.bind(Buffer);
 const BUFFER_IS_BUFFER = Buffer.isBuffer;
 const UTIL_TYPES_IS_PROXY = isProxy;
+const REFLECT_APPLY = Reflect.apply;
+const MAP_CONSTRUCTOR = Map;
+const MAP_PROTOTYPE = Map.prototype;
+const MAP_ENTRIES = MAP_PROTOTYPE.entries;
+const MAP_GET = MAP_PROTOTYPE.get;
+const MAP_HAS = MAP_PROTOTYPE.has;
+const MAP_SET = MAP_PROTOTYPE.set;
+const MAP_SIZE_GETTER = Object.getOwnPropertyDescriptor(MAP_PROTOTYPE, 'size').get;
+const MAP_ITERATOR_NEXT = Object.getOwnPropertyDescriptor(
+  Object.getPrototypeOf(REFLECT_APPLY(MAP_ENTRIES, new MAP_CONSTRUCTOR(), [])),
+  'next',
+).value;
 
 class SourceOriginCaptureRefusal extends Error {
   constructor(code) {
@@ -670,46 +683,81 @@ function deepFreeze(value, seen = new Set()) {
   return Object.freeze(value);
 }
 
+function capturedMapEntries(value, copyBytes) {
+  const iterator = REFLECT_APPLY(MAP_ENTRIES, value, []);
+  const entries = [];
+  while (true) {
+    const step = REFLECT_APPLY(MAP_ITERATOR_NEXT, iterator, []);
+    if (step.done) return entries;
+    const pair = step.value;
+    entries[entries.length] = [pair[0], copyBytes ? BUFFER_FROM(pair[1]) : pair[1]];
+  }
+}
+
+let captureDefensiveBlobMapEntries;
+
 class DefensiveBlobMap extends Map {
   #held;
 
   constructor(entries) {
     super();
-    this.#held = new Map(entries.map(([key, bytes]) => [key, Buffer.from(bytes)]));
+    const held = new MAP_CONSTRUCTOR();
+    for (let index = 0; index < entries.length; index += 1) {
+      const entry = entries[index];
+      REFLECT_APPLY(MAP_SET, held, [entry[0], BUFFER_FROM(entry[1])]);
+    }
+    this.#held = held;
     Object.freeze(this);
+  }
+
+  static {
+    captureDefensiveBlobMapEntries = (value) => capturedMapEntries(value.#held, true);
   }
 
   set() { throw new TypeError('immutable blob map'); }
   delete() { throw new TypeError('immutable blob map'); }
   clear() { throw new TypeError('immutable blob map'); }
 
-  get size() { return this.#held.size; }
+  get size() { return REFLECT_APPLY(MAP_SIZE_GETTER, this.#held, []); }
 
-  has(key) { return this.#held.has(key); }
+  has(key) { return REFLECT_APPLY(MAP_HAS, this.#held, [key]); }
 
   get(key) {
-    const bytes = this.#held.get(key);
-    return bytes === undefined ? undefined : Buffer.from(bytes);
+    const bytes = REFLECT_APPLY(MAP_GET, this.#held, [key]);
+    return bytes === undefined ? undefined : BUFFER_FROM(bytes);
   }
 
   *entries() {
-    for (const [key, bytes] of this.#held) yield [key, Buffer.from(bytes)];
+    const entries = captureDefensiveBlobMapEntries(this);
+    for (let index = 0; index < entries.length; index += 1) yield entries[index];
   }
 
   *keys() {
-    for (const key of this.#held.keys()) yield key;
+    const entries = captureDefensiveBlobMapEntries(this);
+    for (let index = 0; index < entries.length; index += 1) yield entries[index][0];
   }
 
   *values() {
-    for (const [, bytes] of this.entries()) yield bytes;
+    const entries = captureDefensiveBlobMapEntries(this);
+    for (let index = 0; index < entries.length; index += 1) yield entries[index][1];
   }
 
-  [Symbol.iterator]() { return this.entries(); }
+  [Symbol.iterator]() { return REFLECT_APPLY(DEFENSIVE_BLOB_MAP_ENTRIES, this, []); }
+
+  get [Symbol.toStringTag]() { return 'Map'; }
 
   forEach(callback, thisArg) {
-    for (const [key, bytes] of this.entries()) callback.call(thisArg, bytes, key, this);
+    const entries = captureDefensiveBlobMapEntries(this);
+    for (let index = 0; index < entries.length; index += 1) {
+      REFLECT_APPLY(callback, thisArg, [entries[index][1], entries[index][0], this]);
+    }
   }
 }
+
+const DEFENSIVE_BLOB_MAP_ENTRIES = DefensiveBlobMap.prototype.entries;
+Object.freeze(captureDefensiveBlobMapEntries);
+Object.freeze(DefensiveBlobMap.prototype);
+Object.freeze(DefensiveBlobMap);
 
 function closedArrayValues(value, code) {
   if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
@@ -778,11 +826,16 @@ export function admitFrozenBlobSet(rowsValue, blobs, options) {
     byPath.set(row.path, row);
   }
   if (isProxy(blobs) || blobs === null || typeof blobs !== 'object') refuse(code);
+  if (Object.getOwnPropertyNames(blobs).length !== 0 || Object.getOwnPropertySymbols(blobs).length !== 0) refuse(code);
   const prototype = Object.getPrototypeOf(blobs);
   let entries;
-  if (prototype === Map.prototype) entries = [...Map.prototype.entries.call(blobs)];
-  else if (prototype === DefensiveBlobMap.prototype) entries = [...blobs.entries()];
-  else refuse(code);
+  try {
+    if (prototype === MAP_PROTOTYPE) entries = capturedMapEntries(blobs, false);
+    else if (prototype === DefensiveBlobMap.prototype) entries = captureDefensiveBlobMapEntries(blobs);
+    else refuse(code);
+  } catch {
+    refuse(code);
+  }
   if (entries.length !== rows.length) refuse(code);
   const captured = new Map();
   for (const entry of entries) {
