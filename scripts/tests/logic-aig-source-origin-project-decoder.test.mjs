@@ -168,6 +168,17 @@ function buildOwnerSnapshot(values) {
   };
 }
 
+function withResealedExporterArgvPolicy(options, argvPolicy) {
+  const values = structuredClone(options.owners.values);
+  const exporterBody = { ...values.exporter, argvPolicy };
+  delete exporterBody.policyDigest;
+  values.exporter = {
+    ...exporterBody,
+    policyDigest: sha256Canonical(exporterBody.schema, exporterBody),
+  };
+  return { ...options, ...buildOwnerSnapshot(values) };
+}
+
 async function fixtureOptions() {
   const [repositoryIdentity, sourcePolicy, resolutionPolicy, parserPolicy, pins, generated, exporterTemplate] = await Promise.all([
     policy("logic-aig-source-origin-repository-identity.json"),
@@ -685,6 +696,60 @@ test("twelfth-review PROJECT has no runtime owner-policy helper authority", { ti
   assert.equal(result?.authorizing, false);
   const source = await readFile(new URL("../lib/logic-aig-source-origin/decode-project.mjs", import.meta.url), "utf8");
   assert.doesNotMatch(source, /\bvalidateExporterPolicy\b|owner-proposal-policy\.mjs/u);
+});
+
+test("thirteenth-review PROJECT rejects coherently resealed nested argvPolicy drift", { timeout: 180_000 }, async (t) => {
+  const options = await fixtureOptions();
+  const alteredRulePolicy = structuredClone(options.owners.values.exporter.argvPolicy);
+  alteredRulePolicy.targetArgumentSlots[1].rule = "LOWER_HEX_SHA256";
+
+  const variants = [
+    ["altered target argument rule retaining the approved nested digest", alteredRulePolicy],
+    ["null nested policy", null],
+    ["primitive nested policy", "malformed"],
+  ];
+
+  for (const [name, argvPolicy] of variants) {
+    await t.test(name, async () => {
+      const candidate = withResealedExporterArgvPolicy(options, argvPolicy);
+      let result;
+      let failure;
+      try { result = await decodeSourceProject(candidate); } catch (error) { failure = error; }
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
+    });
+  }
+
+  await t.test("proxied nested policy refuses before caller traps", async () => {
+    const candidate = withResealedExporterArgvPolicy(
+      options,
+      structuredClone(options.owners.values.exporter.argvPolicy),
+    );
+    let effects = 0;
+    candidate.owners.values.exporter.argvPolicy = new Proxy(
+      candidate.owners.values.exporter.argvPolicy,
+      {
+        get() {
+          effects += 1;
+          throw new Error("ATTACKER_ARGV_POLICY_GET");
+        },
+        getPrototypeOf() {
+          effects += 1;
+          throw new Error("ATTACKER_ARGV_POLICY_GET_PROTOTYPE");
+        },
+        ownKeys() {
+          effects += 1;
+          throw new Error("ATTACKER_ARGV_POLICY_OWN_KEYS");
+        },
+      },
+    );
+    let result;
+    let failure;
+    try { result = await decodeSourceProject(candidate); } catch (error) { failure = error; }
+    assert.equal(effects, 0);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
+  });
 });
 
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {

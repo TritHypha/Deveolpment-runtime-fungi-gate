@@ -24,6 +24,7 @@ import {
 } from './contract.mjs';
 import {
   OWNER_PROPOSAL_POLICY,
+  PRODUCER_ARGV_POLICY,
   validateGitProcessPolicy,
 } from './owner-proposal-policy.mjs';
 
@@ -79,6 +80,11 @@ const EXPORTER_POLICY_FIELDS = Object.freeze([
   'relationshipKinds', 'repositoryIdentityDigest', 'resolutionPolicyDigest',
   'schema', 'sourcePolicyDigest', 'toolchainPinsDigest',
 ]);
+const PRODUCER_ARGV_POLICY_FIELDS = Object.freeze([
+  'authorizing', 'nodeExecArgv', 'policyDigest', 'schema', 'selfTestSlots',
+  'targetArgumentSlots',
+]);
+const APPROVED_PRODUCER_ARGV_POLICY_DIGEST = '3a636a21a4beddcab4ed87389c7fe19b686742afffdcdc911490b9ad0992a5da';
 const EXPECTED_NODE_KINDS = Object.freeze([
   'CLASS', 'FILE', 'FLOW', 'FUNCTION', 'GATE', 'INTERFACE', 'METHOD',
   'MODULE', 'ROUTE', 'SYMBOL', 'TYPE',
@@ -846,6 +852,20 @@ function requireSealedGitEnvironment(value) {
   return SEALED_GIT_ENVIRONMENT;
 }
 
+function materializeSealedProducerArgvPolicy(policyValue, expectedCanonical) {
+  const code = 'SOURCE_ORIGIN_GIT_POLICY';
+  const policy = copySealedPolicyData(policyValue, code);
+  exactSealedObject(policy, PRODUCER_ARGV_POLICY_FIELDS, code);
+  if (policy.schema !== 'galerina.logic-aig-producer-argv-policy.v2' ||
+      policy.authorizing !== false ||
+      policy.policyDigest !== APPROVED_PRODUCER_ARGV_POLICY_DIGEST ||
+      sha256CanonicalCaptured(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
+  const canonical = canonicalJsonText(policy);
+  if (expectedCanonical !== undefined &&
+      (typeof expectedCanonical !== 'string' || canonical !== expectedCanonical)) refuse(code);
+  return OBJECT_FREEZE({ policy, canonical });
+}
+
 export function validateLocalExporterPolicy(
   value,
   expectedBindings,
@@ -861,13 +881,18 @@ export function validateLocalExporterPolicy(
       policy.authorizing !== false || policy.policyDigest !== expectedPolicyDigest ||
       sha256CanonicalCaptured(policy.schema, sealedWithoutField(policy, 'policyDigest', code)) !== policy.policyDigest) refuse(code);
 
+  const argvPolicy = materializeSealedProducerArgvPolicy(
+    sealedRecordValue(policy, 'argvPolicy'),
+    SEALED_PRODUCER_ARGV_POLICY.canonical,
+  );
+
   const bindings = exporterBindings(expectedBindings);
   for (let index = 0; index < EXPORTER_BINDING_FIELDS.length; index += 1) {
     const field = EXPORTER_BINDING_FIELDS[index];
     if (policy[field] !== sealedRecordValue(bindings, field)) refuse(code);
   }
-  if (policy.argvPolicyDigest !== '3a636a21a4beddcab4ed87389c7fe19b686742afffdcdc911490b9ad0992a5da' ||
-      policy.argvPolicyDigest !== sealedRecordValue(policy.argvPolicy, 'policyDigest') ||
+  if (policy.argvPolicyDigest !== APPROVED_PRODUCER_ARGV_POLICY_DIGEST ||
+      policy.argvPolicyDigest !== argvPolicy.policy.policyDigest ||
       policy.gitProcessPolicyDigest !== SEALED_GIT_PROCESS_POLICY.policy.policyDigest ||
       policy.environmentPolicyDigest !== SEALED_GIT_ENVIRONMENT_POLICY.policy.policyDigest ||
       canonicalJsonText(policy.gitProcessPolicy) !== SEALED_GIT_PROCESS_POLICY.canonical ||
@@ -939,6 +964,7 @@ function materializeSealedGitProcessPolicy(policyValue) {
   });
 }
 
+const SEALED_PRODUCER_ARGV_POLICY = materializeSealedProducerArgvPolicy(PRODUCER_ARGV_POLICY);
 const SEALED_GIT_PROCESS_POLICY = materializeSealedGitProcessPolicy(OWNER_PROPOSAL_POLICY.gitProcessPolicy);
 const SEALED_GIT_ENVIRONMENT_POLICY = materializeSealedGitEnvironmentPolicy(OWNER_PROPOSAL_POLICY.environmentPolicy);
 const SEALED_EXPORTER_LIMITS = copySealedPolicyData(OWNER_PROPOSAL_POLICY.limits, 'SOURCE_ORIGIN_GIT_POLICY');
