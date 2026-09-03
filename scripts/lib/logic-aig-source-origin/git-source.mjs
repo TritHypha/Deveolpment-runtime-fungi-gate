@@ -594,6 +594,24 @@ function exporterBindings(value) {
   return OBJECT_FREEZE(bindings);
 }
 
+function captureExpectedExporterBindings(value) {
+  const code = 'SOURCE_ORIGIN_GIT_POLICY';
+  if (value === null || typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) || ARRAY_IS_ARRAY(value)) refuse(code);
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if ((prototype !== OBJECT_PROTOTYPE && prototype !== null) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  if (names.length !== EXPORTER_BINDING_FIELDS.length) refuse(code);
+  const bindings = OBJECT_CREATE(null);
+  for (let index = 0; index < EXPORTER_BINDING_FIELDS.length; index += 1) {
+    const field = EXPORTER_BINDING_FIELDS[index];
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, field);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable ||
+        typeof descriptor.value !== 'string' || !regexpTest(HEX64, descriptor.value)) refuse(code);
+    setDynamicData(bindings, field, descriptor.value);
+  }
+  return OBJECT_FREEZE(bindings);
+}
+
 function readBoundWorkingOwner(locator, identity, validate, semanticDigestField) {
   const absolute = joinRepositoryLocator(locator);
   let before;
@@ -934,7 +952,7 @@ export function validateLocalExporterPolicy(
     SEALED_PRODUCER_ARGV_POLICY.canonical,
   );
 
-  const bindings = exporterBindings(expectedBindings);
+  const bindings = captureExpectedExporterBindings(expectedBindings);
   for (let index = 0; index < EXPORTER_BINDING_FIELDS.length; index += 1) {
     const field = EXPORTER_BINDING_FIELDS[index];
     if (policy[field] !== sealedRecordValue(bindings, field)) refuse(code);

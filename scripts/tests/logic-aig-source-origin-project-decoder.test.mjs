@@ -829,6 +829,76 @@ test("fourteenth-review exporter policy traversal is bounded and reports one sta
   }
 });
 
+test("fifteenth-review local exporter validator closes expected bindings before reflection", async (t) => {
+  const options = await fixtureOptions();
+  const policy = options.owners.values.exporter;
+  const exactBindings = {
+    sourcePolicyDigest: policy.sourcePolicyDigest,
+    exclusionDigest: policy.exclusionDigest,
+    resolutionPolicyDigest: policy.resolutionPolicyDigest,
+    parserPolicyDigest: policy.parserPolicyDigest,
+    generatedConsumerPolicyDigest: policy.generatedConsumerPolicyDigest,
+    repositoryIdentityDigest: policy.repositoryIdentityDigest,
+    toolchainPinsDigest: policy.toolchainPinsDigest,
+    expectedOutcomesDigest: policy.expectedOutcomesDigest,
+    proposedBaselineDigest: policy.proposedBaselineDigest,
+  };
+
+  await t.test("accepts one exact ordinary bindings record", () => {
+    const result = validateLocalExporterPolicy(policy, exactBindings, policy.policyDigest);
+    assert.equal(result.policyDigest, policy.policyDigest);
+  });
+
+  const malformed = [
+    ["null", () => null],
+    ["undefined", () => undefined],
+    ["surplus string field", () => ({ ...exactBindings, surplus: true })],
+    ["surplus symbol field", () => ({ ...exactBindings, [Symbol("surplus")]: true })],
+    ["custom prototype", () => Object.assign(Object.create({ inherited: true }), exactBindings)],
+  ];
+
+  for (const [name, makeBindings] of malformed) {
+    await t.test(`refuses ${name} with one stable local policy code`, () => {
+      let result;
+      let failure;
+      try { result = validateLocalExporterPolicy(policy, makeBindings(), policy.policyDigest); }
+      catch (error) { failure = error; }
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
+    });
+  }
+
+  for (const forwarding of [false, true]) {
+    await t.test(`refuses ${forwarding ? "forwarding" : "throwing"} proxy with zero traps`, () => {
+      let effects = 0;
+      const bindings = new Proxy(exactBindings, {
+        getOwnPropertyDescriptor(target, key) {
+          effects += 1;
+          if (!forwarding) throw new Error("ATTACKER_EXPECTED_BINDINGS_DESCRIPTOR");
+          return Reflect.getOwnPropertyDescriptor(target, key);
+        },
+        getPrototypeOf() {
+          effects += 1;
+          if (!forwarding) throw new Error("ATTACKER_EXPECTED_BINDINGS_PROTOTYPE");
+          return Object.prototype;
+        },
+        ownKeys(target) {
+          effects += 1;
+          if (!forwarding) throw new Error("ATTACKER_EXPECTED_BINDINGS_KEYS");
+          return Reflect.ownKeys(target);
+        },
+      });
+      let result;
+      let failure;
+      try { result = validateLocalExporterPolicy(policy, bindings, policy.policyDigest); }
+      catch (error) { failure = error; }
+      assert.equal(effects, 0);
+      assert.equal(result, undefined);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_POLICY");
+    });
+  }
+});
+
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {
   const options = await fixtureOptions();
   const result = await decodeSourceProject(options);
