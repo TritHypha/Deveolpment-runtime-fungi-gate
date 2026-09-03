@@ -16,6 +16,9 @@ import { decodeSourceProject } from "../lib/logic-aig-source-origin/decode-proje
 
 const ROOT = new URL("../../", import.meta.url);
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
+const SNAPSHOT_MAP = Map;
+const SNAPSHOT_MAP_SET = Map.prototype.set;
+const SNAPSHOT_REFLECT_APPLY = Reflect.apply;
 const OWNER_LOCATORS = Object.freeze({
   expectedOutcomes: "governance/logic-aig-source-origin-expected-parse-outcomes.json",
   exporter: "governance/logic-aig-source-origin-exporter-policy.json",
@@ -42,6 +45,17 @@ const VALID_GATE = [
   "END",
   "",
 ].join("\n");
+
+function mutableBlobSnapshot(capability) {
+  const snapshot = new SNAPSHOT_MAP();
+  const iterator = capability.entries();
+  while (true) {
+    const step = iterator.next();
+    if (step.done) return snapshot;
+    const pair = step.value;
+    SNAPSHOT_REFLECT_APPLY(SNAPSHOT_MAP_SET, snapshot, [pair[0], pair[1]]);
+  }
+}
 
 async function policy(name) {
   return JSON.parse(await readFile(new URL(name, GOVERNANCE), "utf8"));
@@ -309,7 +323,7 @@ test("project decoder conserves every source and emits a closed owner-backed out
 
 test("project decoder refuses owner-byte drift and unexplained authority before semantic evaluation", async () => {
   const options = await fixtureOptions();
-  const ownerDrift = { ...options, ownerBlobs: new Map(options.ownerBlobs) };
+  const ownerDrift = { ...options, ownerBlobs: mutableBlobSnapshot(options.ownerBlobs) };
   ownerDrift.ownerBlobs.set(OWNER_LOCATORS.expectedOutcomes, Buffer.from("{}", "utf8"));
   let result;
   await expectRefusal(decodeSourceProject(ownerDrift));
@@ -348,7 +362,7 @@ test("project decoder refuses owner-byte drift and unexplained authority before 
   duplicateGateIdentity.byteLength = duplicateGateBytes.length;
   duplicateGateIdentity.rawSha256 = sha256Raw(duplicateGateBytes);
   duplicateGateOwners.ownerSetDigest = sha256Canonical("galerina.logic-aig-frozen-owner-set.v1", duplicateGateOwners.identities);
-  const duplicateGateBlobs = new Map(options.ownerBlobs);
+  const duplicateGateBlobs = mutableBlobSnapshot(options.ownerBlobs);
   duplicateGateBlobs.set(OWNER_LOCATORS.gate, duplicateGateBytes);
   await expectRefusal(decodeSourceProject({ ...options, owners: duplicateGateOwners, ownerBlobs: duplicateGateBlobs }));
 
@@ -397,7 +411,7 @@ test("project decoder refuses source drift without emitting receipt, manifest, o
   oidDriftManifest.manifestDigest = sha256Canonical(oidBody.schema, oidBody);
   await expectRefusal(decodeSourceProject({ ...options, sourceManifest: oidDriftManifest }), /^SOURCE_ORIGIN_(?:GIT_BLOB_SET|PROJECT_[A-Z0-9_]+)$/);
 
-  const drift = { ...options, sourceBlobs: new Map(options.sourceBlobs) };
+  const drift = { ...options, sourceBlobs: mutableBlobSnapshot(options.sourceBlobs) };
   drift.sourceBlobs.set("src/clean.ts", Buffer.from("drift", "utf8"));
   let result;
   await expectRefusal(decodeSourceProject(drift), /^SOURCE_ORIGIN_(?:GIT_BLOB_SET|PROJECT_[A-Z0-9_]+)$/);
@@ -425,7 +439,7 @@ test("project decoder refuses a source/toolchain case-fold collision before sema
   const collisionBody = { ...collisionManifest };
   delete collisionBody.manifestDigest;
   collisionManifest.manifestDigest = sha256Canonical(collisionBody.schema, collisionBody);
-  const collisionBlobs = new Map(options.sourceBlobs);
+  const collisionBlobs = mutableBlobSnapshot(options.sourceBlobs);
   collisionBlobs.set(collisionPath, collisionBytes);
 
   await expectRefusal(

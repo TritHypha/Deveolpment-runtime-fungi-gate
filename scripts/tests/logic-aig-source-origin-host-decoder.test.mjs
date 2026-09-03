@@ -14,6 +14,20 @@ import {
 
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
 const TYPESCRIPT_ENTRY = new URL("../../packages-ts/galerina-core-compiler/node_modules/typescript/lib/typescript.js", import.meta.url);
+const SNAPSHOT_MAP = Map;
+const SNAPSHOT_MAP_SET = Map.prototype.set;
+const SNAPSHOT_REFLECT_APPLY = Reflect.apply;
+
+function mutableBlobSnapshot(capability) {
+  const snapshot = new SNAPSHOT_MAP();
+  const iterator = capability.entries();
+  while (true) {
+    const step = iterator.next();
+    if (step.done) return snapshot;
+    const pair = step.value;
+    SNAPSHOT_REFLECT_APPLY(SNAPSHOT_MAP_SET, snapshot, [pair[0], pair[1]]);
+  }
+}
 
 async function policy(name) {
   return JSON.parse(await readFile(new URL(name, GOVERNANCE), "utf8"));
@@ -534,11 +548,11 @@ test("HOST diagnostics use the policy-owned canonical TypeScript mapping", async
 
 test("HOST refuses source or runtime byte drift before returning semantic or toolchain artifacts", async () => {
   const options = await fixtureOptions({ "src/clean.ts": "export const clean = true;\n" });
-  const sourceDrift = { ...options, sourceBlobs: new Map(options.sourceBlobs) };
+  const sourceDrift = { ...options, sourceBlobs: mutableBlobSnapshot(options.sourceBlobs) };
   sourceDrift.sourceBlobs.set("src/clean.ts", Buffer.from("drift", "utf8"));
   await expectRefusal(decodeHostProject(sourceDrift), /^SOURCE_ORIGIN_GIT_BLOB_SET$/);
 
-  const runtimeDrift = { ...options, toolchainBlobs: new Map(options.toolchainBlobs) };
+  const runtimeDrift = { ...options, toolchainBlobs: mutableBlobSnapshot(options.toolchainBlobs) };
   runtimeDrift.toolchainBlobs.set(options.pins.records.find((row) => row.platform === process.platform).typescript.entryLocator, Buffer.from("module.exports = {};", "utf8"));
   let result;
   await expectRefusal(decodeHostProject(runtimeDrift), /^SOURCE_ORIGIN_HOST_TOOLCHAIN$/);

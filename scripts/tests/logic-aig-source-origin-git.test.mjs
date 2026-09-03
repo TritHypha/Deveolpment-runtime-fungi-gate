@@ -417,88 +417,12 @@ test("frozen blob admission closes Buffer extent properties before caller effect
     assert.equal(effects, 0);
   });
 
-  await t.test("exact Buffer", () => {
-    assert.equal(admit(Buffer.from(expected)).get("sealed.ts").toString("utf8"), "sealed");
-  });
-});
-
-test("defensive blob maps close prototype and retained method dispatch", async (t) => {
-  const expected = Buffer.from("sealed", "utf8");
-  const rows = [{ path: "sealed.ts", byteLength: expected.length, rawSha256: sha256(expected) }];
-  const admit = (blobs) => gitSource.admitFrozenBlobSet(rows, blobs, { label: "SOURCE_MANIFEST" });
-  const fresh = () => admit(new Map([["sealed.ts", Buffer.from(expected)]]));
-
-  await t.test("inherited entries accessor cannot run during re-admission", () => {
-    const admitted = fresh();
-    const prototype = Object.getPrototypeOf(admitted);
-    const original = Object.getOwnPropertyDescriptor(prototype, "entries");
+  await t.test("proxy in a forged Buffer prototype chain", () => {
     let effects = 0;
-    let mutationFailure;
-    let readmissionFailure;
-    let readmitted;
-    try {
-      try {
-        Object.defineProperty(prototype, "entries", {
-          configurable: true,
-          enumerable: false,
-          get() {
-            effects += 1;
-            return original.value;
-          },
-        });
-      } catch (error) {
-        mutationFailure = error;
-      }
-      try {
-        readmitted = admit(admitted);
-      } catch (error) {
-        readmissionFailure = error;
-      }
-    } finally {
-      if (!Object.isFrozen(prototype)) Object.defineProperty(prototype, "entries", original);
-    }
-    assert.equal(Object.isFrozen(admitted), true);
-    assert.equal(Object.isFrozen(prototype), true);
-    assert(mutationFailure instanceof TypeError);
-    assert.equal(effects, 0);
-    assert.equal(readmissionFailure, undefined);
-    assert.equal(readmitted.get("sealed.ts").toString("utf8"), "sealed");
-  });
-
-  await t.test("forged prototype instance refuses before own accessors", () => {
-    const admitted = fresh();
-    const forged = Object.create(Object.getPrototypeOf(admitted));
-    let effects = 0;
-    for (const property of ["entries", "get", "has", "size"]) {
-      Object.defineProperty(forged, property, {
-        configurable: true,
-        enumerable: true,
-        get() {
-          effects += 1;
-          return property === "entries" ? () => admitted.entries() : undefined;
-        },
-      });
-    }
-    Object.freeze(forged);
-    let failure;
-    let result;
-    try { result = admit(forged); } catch (error) { failure = error; }
-    assert.equal(effects, 0);
-    assert.equal(result, undefined);
-    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
-  });
-
-  await t.test("ordinary Map surplus accessor refuses before effects", () => {
-    const hostile = new Map([["sealed.ts", Buffer.from(expected)]]);
-    let effects = 0;
-    Object.defineProperty(hostile, "entries", {
-      configurable: true,
-      enumerable: true,
-      get() {
-        effects += 1;
-        return Map.prototype.entries;
-      },
+    const hostilePrototype = new Proxy(Buffer.prototype, {
+      getPrototypeOf() { effects += 1; throw new Error("nested prototype trap ran"); },
     });
+    const hostile = Object.create(hostilePrototype);
     let failure;
     let result;
     try { result = admit(hostile); } catch (error) { failure = error; }
@@ -507,58 +431,442 @@ test("defensive blob maps close prototype and retained method dispatch", async (
     assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
   });
 
-  await t.test("retained methods use captured Map and Buffer intrinsics", () => {
+  await t.test("post-import Buffer hasInstance accessor refuses before effects", () => {
+    const descriptor = Object.getOwnPropertyDescriptor(Buffer, Symbol.hasInstance);
+    let effects = 0;
+    let failure;
+    let result;
+    try {
+      Object.defineProperty(Buffer, Symbol.hasInstance, {
+        configurable: true,
+        get() { effects += 1; throw new Error("Buffer hasInstance accessor ran"); },
+      });
+      try { result = admit(Buffer.from(expected)); } catch (error) { failure = error; }
+    } finally {
+      if (descriptor === undefined) Reflect.deleteProperty(Buffer, Symbol.hasInstance);
+      else Object.defineProperty(Buffer, Symbol.hasInstance, descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
+  });
+
+  await t.test("exact Buffer", () => {
+    assert.equal(admit(Buffer.from(expected)).get("sealed.ts").toString("utf8"), "sealed");
+  });
+});
+
+test("defensive blob capabilities close construction, iteration, bytes, and re-admission", async (t) => {
+  const expected = Buffer.from("sealed", "utf8");
+  const rows = [{ path: "sealed.ts", byteLength: expected.length, rawSha256: sha256(expected) }];
+  const admit = (blobs, selectedRows = rows) => gitSource.admitFrozenBlobSet(
+    selectedRows,
+    blobs,
+    { label: "SOURCE_MANIFEST" },
+  );
+  const fresh = () => admit(new Map([["sealed.ts", Buffer.from(expected)]]));
+  const text = (bytes) => Buffer.from(bytes).toString("utf8");
+  const assertClosedRefusal = (operation, expectedEffects = 0, observeEffects = () => 0) => {
+    let failure;
+    let result;
+    try { result = operation(); } catch (error) { failure = error; }
+    assert.equal(observeEffects(), expectedEffects);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
+  };
+
+  await t.test("capability has no constructor or prototype and exposes only the required frozen surface", () => {
+    const admitted = fresh();
+    assert.equal(Object.getPrototypeOf(admitted), null);
+    assert.equal(Object.isFrozen(admitted), true);
+    assert.equal("constructor" in admitted, false);
+    assert.equal("prototype" in admitted, false);
+    assert.deepEqual(Object.getOwnPropertyNames(admitted).sort(), [
+      "entries", "get", "has", "keys", "size", "values",
+    ]);
+    assert.deepEqual(Object.getOwnPropertySymbols(admitted), [Symbol.iterator]);
+    assert.equal(admitted.forEach, undefined);
+    for (const property of ["get", "has", "entries", "keys", "values", Symbol.iterator]) {
+      const descriptor = Object.getOwnPropertyDescriptor(admitted, property);
+      assert.equal(typeof descriptor?.value, "function");
+      assert.equal(descriptor?.configurable, false);
+      assert.equal(descriptor?.writable, false);
+      assert.equal(Object.isFrozen(descriptor.value), true);
+      assert.equal(Object.getPrototypeOf(descriptor.value), null);
+      assert.equal("constructor" in descriptor.value, false);
+      assert.equal("prototype" in descriptor.value, false);
+    }
+    const sizeDescriptor = Object.getOwnPropertyDescriptor(admitted, "size");
+    assert.equal(typeof sizeDescriptor?.get, "function");
+    assert.equal(sizeDescriptor?.configurable, false);
+    assert.equal(Object.isFrozen(sizeDescriptor.get), true);
+    assert.equal(Object.getPrototypeOf(sizeDescriptor.get), null);
+    assert.equal("constructor" in sizeDescriptor.get, false);
+    assert.equal("prototype" in sizeDescriptor.get, false);
+  });
+
+  await t.test("iterators and entry pairs are frozen null-prototype branded capabilities", () => {
+    const admitted = fresh();
+    const iterator = admitted.entries();
+    assert.equal(Object.getPrototypeOf(iterator), null);
+    assert.equal(Object.isFrozen(iterator), true);
+    assert.equal("constructor" in iterator, false);
+    assert.deepEqual(Object.getOwnPropertyNames(iterator), ["next"]);
+    assert.deepEqual(Object.getOwnPropertySymbols(iterator), [Symbol.iterator]);
+    assert.equal(Object.getPrototypeOf(iterator.next), null);
+    assert.equal(Object.getPrototypeOf(iterator[Symbol.iterator]), null);
+    assert.equal(iterator[Symbol.iterator](), iterator);
+    const first = iterator.next();
+    assert.equal(Object.getPrototypeOf(first), null);
+    assert.equal(Object.isFrozen(first), true);
+    assert.equal(first.done, false);
+    const pair = first.value;
+    assert.equal(Array.isArray(pair), false);
+    assert.equal(Object.getPrototypeOf(pair), null);
+    assert.equal(Object.isFrozen(pair), true);
+    assert.deepEqual(Object.getOwnPropertyNames(pair), ["0", "1", "length"]);
+    assert.equal(pair.length, 2);
+    assert.equal(pair[0], "sealed.ts");
+    assert.equal(text(pair[1]), "sealed");
+    const finished = iterator.next();
+    assert.equal(Object.getPrototypeOf(finished), null);
+    assert.equal(Object.isFrozen(finished), true);
+    assert.equal(finished.done, true);
+    assert.equal(finished.value, undefined);
+  });
+
+  await t.test("branded re-admission succeeds without public dispatch", () => {
+    const admitted = fresh();
+    const readmitted = admit(admitted);
+    assert.equal(text(readmitted.get("sealed.ts")), "sealed");
+    assert.deepEqual([...readmitted.keys()], ["sealed.ts"]);
+  });
+
+  await t.test("lookalikes, accessors, and a proxy of the capability refuse before effects", () => {
+    const admitted = fresh();
+    let effects = 0;
+    const traps = {
+      get() { effects += 1; throw new Error("get trap ran"); },
+      getOwnPropertyDescriptor() { effects += 1; throw new Error("descriptor trap ran"); },
+      getPrototypeOf() { effects += 1; throw new Error("prototype trap ran"); },
+      ownKeys() { effects += 1; throw new Error("keys trap ran"); },
+    };
+    assertClosedRefusal(() => admit(new Proxy(admitted, traps)), 0, () => effects);
+
+    const lookalike = Object.create(null);
+    Object.defineProperties(lookalike, Object.getOwnPropertyDescriptors(admitted));
+    Object.freeze(lookalike);
+    assertClosedRefusal(() => admit(lookalike));
+
+    const ownAccessor = Object.create(null);
+    Object.defineProperty(ownAccessor, "entries", {
+      configurable: true,
+      enumerable: true,
+      get() { effects += 1; throw new Error("own accessor ran"); },
+    });
+    assertClosedRefusal(() => admit(ownAccessor), 0, () => effects);
+
+    const inherited = Object.create(Object.defineProperty(Object.create(null), "entries", {
+      configurable: true,
+      enumerable: true,
+      get() { effects += 1; throw new Error("inherited accessor ran"); },
+    }));
+    assertClosedRefusal(() => admit(inherited), 0, () => effects);
+  });
+
+  await t.test("ordinary Map own accessors refuse and inherited poisons are bypassed", () => {
+    const hostile = new Map([["sealed.ts", Buffer.from(expected)]]);
+    let effects = 0;
+    Object.defineProperty(hostile, "entries", {
+      configurable: true,
+      enumerable: true,
+      get() { effects += 1; throw new Error("own accessor ran"); },
+    });
+    assertClosedRefusal(() => admit(hostile), 0, () => effects);
+
+    const descriptor = Object.getOwnPropertyDescriptor(Map.prototype, "entries");
+    let result;
+    let failure;
+    try {
+      Object.defineProperty(Map.prototype, "entries", {
+        ...descriptor,
+        value() { effects += 1; throw new Error("inherited method ran"); },
+      });
+      try { result = fresh(); } catch (error) { failure = error; }
+    } finally {
+      Object.defineProperty(Map.prototype, "entries", descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(text(result.get("sealed.ts")), "sealed");
+  });
+
+  await t.test("native Map internal-slot mutation cannot alter the capability", () => {
+    const admitted = fresh();
+    assert.throws(() => Reflect.apply(Map.prototype.set, admitted, ["evil.ts", Buffer.from("evil")]), TypeError);
+    assert.equal(admitted.size, 1);
+    assert.equal(admitted.has("evil.ts"), false);
+    assert.equal(text(admitted.get("sealed.ts")), "sealed");
+  });
+
+  await t.test("extracted methods and iterator methods brand this with a stable refusal", () => {
+    const admitted = fresh();
+    let effects = 0;
+    const forged = new Proxy(Object.create(null), {
+      get() { effects += 1; throw new Error("get trap ran"); },
+      getOwnPropertyDescriptor() { effects += 1; throw new Error("descriptor trap ran"); },
+      getPrototypeOf() { effects += 1; throw new Error("prototype trap ran"); },
+      ownKeys() { effects += 1; throw new Error("keys trap ran"); },
+    });
+    for (const property of ["get", "has", "entries", "keys", "values", Symbol.iterator]) {
+      assertClosedRefusal(
+        () => Reflect.apply(admitted[property], forged, property === "get" || property === "has" ? ["sealed.ts"] : []),
+        0,
+        () => effects,
+      );
+    }
+    const sizeGetter = Object.getOwnPropertyDescriptor(admitted, "size").get;
+    assertClosedRefusal(() => Reflect.apply(sizeGetter, forged, []), 0, () => effects);
+    const iterator = admitted.entries();
+    assertClosedRefusal(() => Reflect.apply(iterator.next, forged, []), 0, () => effects);
+    assertClosedRefusal(() => Reflect.apply(iterator[Symbol.iterator], forged, []), 0, () => effects);
+  });
+
+  await t.test("keys are primitive strings and no caller coercion can run", () => {
+    const admitted = fresh();
+    let effects = 0;
+    const hostileKey = Object.create(null);
+    for (const property of ["toString", "valueOf", Symbol.toPrimitive]) {
+      Object.defineProperty(hostileKey, property, {
+        configurable: true,
+        get() { effects += 1; throw new Error("key coercion ran"); },
+      });
+    }
+    for (const key of [hostileKey, 1, null, undefined, Symbol("sealed.ts")]) {
+      assertClosedRefusal(() => admitted.get(key), 0, () => effects);
+      assertClosedRefusal(() => admitted.has(key), 0, () => effects);
+    }
+    const hostileInput = new Map([[hostileKey, Buffer.from(expected)]]);
+    assertClosedRefusal(() => admit(hostileInput), 0, () => effects);
+  });
+
+  await t.test("unordered input canonicalizes while duplicate rows refuse without an artifact", () => {
+    const first = Buffer.from("first", "utf8");
+    const second = Buffer.from("second", "utf8");
+    const orderedRows = [
+      { path: "a.ts", byteLength: first.length, rawSha256: sha256(first) },
+      { path: "b.ts", byteLength: second.length, rawSha256: sha256(second) },
+    ];
+    const admitted = admit(new Map([["b.ts", second], ["a.ts", first]]), orderedRows);
+    assert.deepEqual([...admitted.keys()], ["a.ts", "b.ts"]);
+    assert.equal(text(admitted.get("a.ts")), "first");
+    assert.equal(text(admitted.get("b.ts")), "second");
+    assertClosedRefusal(() => admit(
+      new Map([["a.ts", first]]),
+      [orderedRows[0], { ...orderedRows[0] }],
+    ));
+  });
+
+  await t.test("original and returned bytes cannot mutate private state", () => {
+    const original = Buffer.from(expected);
+    const admitted = admit(new Map([["sealed.ts", original]]));
+    original.fill(0);
+    assert.equal(text(admitted.get("sealed.ts")), "sealed");
+    const returned = admitted.get("sealed.ts");
+    returned.fill(0);
+    assert.equal(text(admitted.get("sealed.ts")), "sealed");
+    const iteratorSnapshot = admitted.entries().next().value;
+    iteratorSnapshot[1].fill(0);
+    assert.equal(text(admitted.get("sealed.ts")), "sealed");
+  });
+
+  await t.test("pinned Node byte copy bypasses poisoned Buffer and TypedArray extent dispatch", {
+    skip: process.version !== "v24.18.0",
+  }, () => {
+    const SafeObject = Object;
+    const SafeBuffer = Buffer;
+    const SafeUint8Array = Uint8Array;
+    const typedArrayPrototype = SafeObject.getPrototypeOf(SafeUint8Array.prototype);
+    const original = SafeBuffer.from([7, 8, 9]);
+    const selectedRows = [{ path: "bytes.ts", byteLength: 3, rawSha256: sha256(original) }];
+    const source = new Map([["bytes.ts", original]]);
+    const restorations = [];
+    let effects = 0;
+    let failure;
+    let copied;
+    const replace = (target, property, replacement) => {
+      const descriptor = SafeObject.getOwnPropertyDescriptor(target, property);
+      restorations.push(() => {
+        if (descriptor === undefined) Reflect.deleteProperty(target, property);
+        else SafeObject.defineProperty(target, property, descriptor);
+      });
+      SafeObject.defineProperty(target, property, replacement);
+    };
+    const poisonGetter = (target, property) => replace(target, property, {
+      configurable: true,
+      enumerable: false,
+      get() { effects += 1; throw new Error(`poisoned ${String(property)}`); },
+    });
+    const poisonFunction = (target, property) => {
+      const descriptor = SafeObject.getOwnPropertyDescriptor(target, property);
+      replace(target, property, {
+        ...descriptor,
+        configurable: true,
+        value() { effects += 1; throw new Error(`poisoned ${String(property)}`); },
+      });
+    };
+    try {
+      for (const property of ["length", "buffer", "byteLength", "byteOffset", "constructor"]) {
+        poisonGetter(SafeBuffer.prototype, property);
+      }
+      for (const property of ["length", "buffer", "byteLength", "byteOffset"]) {
+        poisonGetter(typedArrayPrototype, property);
+      }
+      for (const property of ["set", "slice", "subarray"]) poisonFunction(SafeUint8Array.prototype, property);
+      for (const property of ["from", "isBuffer", "allocUnsafe"]) poisonFunction(SafeBuffer, property);
+      poisonGetter(SafeUint8Array, Symbol.species);
+      replace(globalThis, "Buffer", {
+        configurable: true,
+        enumerable: false,
+        writable: true,
+        value() { effects += 1; throw new Error("rebound Buffer ran"); },
+      });
+      replace(globalThis, "Uint8Array", {
+        configurable: true,
+        enumerable: false,
+        writable: true,
+        value() { effects += 1; throw new Error("rebound Uint8Array ran"); },
+      });
+      try { copied = admit(source, selectedRows).get("bytes.ts"); } catch (error) { failure = error; }
+    } finally {
+      for (let index = restorations.length - 1; index >= 0; index -= 1) restorations[index]();
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.deepEqual([...copied], [7, 8, 9]);
+  });
+
+  await t.test("post-import global and prototype poison cannot steer retained capability operations", () => {
+    const SafeObject = Object;
+    const SafeProxy = Proxy;
+    const SafeFunction = Function;
+    const SafeMap = Map;
+    const SafeArray = Array;
+    const SafeWeakMap = WeakMap;
+    const SafeMapGet = SafeMap.prototype.get;
+    const SafeMapSet = SafeMap.prototype.set;
+    const SafeReflectApply = Reflect.apply;
     const admitted = fresh();
     const restorations = [];
     let effects = 0;
     let failure;
+    let observed;
+    const replace = (target, property, replacement) => {
+      const descriptor = SafeObject.getOwnPropertyDescriptor(target, property);
+      restorations.push(() => {
+        if (descriptor === undefined) Reflect.deleteProperty(target, property);
+        else SafeObject.defineProperty(target, property, descriptor);
+      });
+      SafeObject.defineProperty(target, property, replacement);
+    };
     const poisonData = (target, property) => {
-      const descriptor = Object.getOwnPropertyDescriptor(target, property);
-      restorations.push(() => Object.defineProperty(target, property, descriptor));
-      Object.defineProperty(target, property, {
+      const descriptor = SafeObject.getOwnPropertyDescriptor(target, property);
+      replace(target, property, {
         ...descriptor,
-        value() {
-          effects += 1;
-          throw new Error(`poisoned ${String(property)}`);
-        },
+        configurable: true,
+        value() { effects += 1; throw new Error(`poisoned ${String(property)}`); },
       });
     };
-    const sizeDescriptor = Object.getOwnPropertyDescriptor(Map.prototype, "size");
-    restorations.push(() => Object.defineProperty(Map.prototype, "size", sizeDescriptor));
+    const poisonGlobal = (property) => replace(globalThis, property, {
+      configurable: true,
+      enumerable: false,
+      writable: true,
+      value: new SafeProxy(function poisonedGlobal() {}, {
+        apply() { effects += 1; throw new Error(`called rebound ${property}`); },
+        construct() { effects += 1; throw new Error(`constructed rebound ${property}`); },
+        get() { effects += 1; throw new Error(`read rebound ${property}`); },
+      }),
+    });
+    const generator = (function* generatorProbe() {})();
+    let generatorPrototype = SafeObject.getPrototypeOf(generator);
+    while (generatorPrototype !== null && !SafeObject.hasOwn(generatorPrototype, "next")) {
+      generatorPrototype = SafeObject.getPrototypeOf(generatorPrototype);
+    }
+    const mapIteratorPrototype = SafeObject.getPrototypeOf(new SafeMap().entries());
+    const arrayIteratorPrototype = SafeObject.getPrototypeOf([][Symbol.iterator]());
     try {
-      Object.defineProperty(Map.prototype, "size", {
-        ...sizeDescriptor,
-        get() {
-          effects += 1;
-          throw new Error("poisoned size");
-        },
-      });
-      for (const property of [
-        "get", "set", "has", "delete", "clear", "entries", "forEach", "keys", "values", Symbol.iterator,
-      ]) poisonData(Map.prototype, property);
-      poisonData(Buffer, "from");
+      for (const property of ["call", "apply", "bind"]) poisonData(SafeFunction.prototype, property);
+      for (const property of ["get", "set", "has", "delete", "clear", "entries", "keys", "values", Symbol.iterator]) {
+        poisonData(SafeMap.prototype, property);
+      }
+      for (const property of ["get", "set", "has", "delete"]) poisonData(SafeWeakMap.prototype, property);
+      const globalNames = [
+        "Function", "Object", "Map", "Array", "WeakMap", "Buffer", "Uint8Array",
+        "ArrayBuffer", "SharedArrayBuffer", "Proxy",
+      ];
+      for (let index = 0; index < globalNames.length; index += 1) poisonGlobal(globalNames[index]);
+      poisonData(SafeArray.prototype, Symbol.iterator);
+      if (generatorPrototype !== null) poisonData(generatorPrototype, "next");
+      poisonData(mapIteratorPrototype, "next");
+      poisonData(arrayIteratorPrototype, "next");
       try {
-        assert.equal(admitted.size, 1);
-        assert.equal(admitted.has("sealed.ts"), true);
-        assert.equal(admitted.get("sealed.ts").toString("utf8"), "sealed");
-        assert.deepEqual([...admitted.entries()].map(([key, bytes]) => [key, bytes.toString("utf8")]), [["sealed.ts", "sealed"]]);
-        assert.deepEqual([...admitted.keys()], ["sealed.ts"]);
-        assert.deepEqual([...admitted.values()].map((bytes) => bytes.toString("utf8")), ["sealed"]);
-        assert.deepEqual([...admitted].map(([key, bytes]) => [key, bytes.toString("utf8")]), [["sealed.ts", "sealed"]]);
-        const visited = [];
-        admitted.forEach((bytes, key, map) => visited.push([key, bytes.toString("utf8"), map === admitted]));
-        assert.deepEqual(visited, [["sealed.ts", "sealed", true]]);
-        assert.throws(() => admitted.set("x", expected), TypeError);
-        assert.throws(() => admitted.delete("sealed.ts"), TypeError);
-        assert.throws(() => admitted.clear(), TypeError);
+        const readmitted = admit(admitted);
+        const snapshot = new SafeMap();
+        const snapshotIterator = readmitted.entries();
+        while (true) {
+          const step = snapshotIterator.next();
+          if (step.done) break;
+          const pair = step.value;
+          SafeReflectApply(SafeMapSet, snapshot, [pair[0], pair[1]]);
+        }
+        const entryIterator = readmitted.entries();
+        const entry = entryIterator.next();
+        const end = entryIterator.next();
+        const keyIterator = readmitted.keys();
+        const key = keyIterator.next();
+        const valueIterator = readmitted.values();
+        const value = valueIterator.next();
+        const defaultIterator = readmitted[Symbol.iterator]();
+        const defaultEntry = defaultIterator.next();
+        observed = {
+          defaultEntry,
+          end,
+          entry,
+          has: readmitted.has("sealed.ts"),
+          key,
+          size: readmitted.size,
+          snapshot: SafeReflectApply(SafeMapGet, snapshot, ["sealed.ts"]),
+          direct: readmitted.get("sealed.ts"),
+          value,
+        };
       } catch (error) {
         failure = error;
       }
     } finally {
-      for (const restore of restorations.reverse()) restore();
+      for (let index = restorations.length - 1; index >= 0; index -= 1) restorations[index]();
     }
     assert.equal(effects, 0);
     assert.equal(failure, undefined);
+    assert.equal(observed.size, 1);
+    assert.equal(observed.has, true);
+    assert.equal(text(observed.direct), "sealed");
+    assert.equal(text(observed.snapshot), "sealed");
+    assert.equal(observed.entry.done, false);
+    assert.equal(observed.entry.value[0], "sealed.ts");
+    assert.equal(text(observed.entry.value[1]), "sealed");
+    assert.equal(observed.end.done, true);
+    assert.equal(observed.key.value, "sealed.ts");
+    assert.equal(text(observed.value.value), "sealed");
+    assert.equal(observed.defaultEntry.value[0], "sealed.ts");
+  });
+
+  await t.test("SharedArrayBuffer-backed Buffer refuses with the stable code", {
+    skip: typeof SharedArrayBuffer !== "function",
+  }, () => {
+    const backing = new SharedArrayBuffer(expected.length);
+    const hostile = Buffer.from(backing);
+    hostile.set(expected);
+    assertClosedRefusal(() => admit(new Map([["sealed.ts", hostile]])));
   });
 });
 

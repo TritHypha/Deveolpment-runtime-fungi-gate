@@ -13,6 +13,9 @@ import { decodeFungiGateProject } from "../lib/logic-aig-source-origin/fungi-dec
 
 const ROOT = new URL("../../", import.meta.url);
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
+const SNAPSHOT_MAP = Map;
+const SNAPSHOT_MAP_SET = Map.prototype.set;
+const SNAPSHOT_REFLECT_APPLY = Reflect.apply;
 
 const VALID_GATE = [
   "@gate 3.0.0",
@@ -35,6 +38,17 @@ const VALID_GATE = [
   "END",
   "",
 ].join("\n");
+
+function mutableBlobSnapshot(capability) {
+  const snapshot = new SNAPSHOT_MAP();
+  const iterator = capability.entries();
+  while (true) {
+    const step = iterator.next();
+    if (step.done) return snapshot;
+    const pair = step.value;
+    SNAPSHOT_REFLECT_APPLY(SNAPSHOT_MAP_SET, snapshot, [pair[0], pair[1]]);
+  }
+}
 
 async function policy(name) {
   return JSON.parse(await readFile(new URL(name, GOVERNANCE), "utf8"));
@@ -262,7 +276,7 @@ test("FUNGI/GATE refuses parser source drift before evaluation or parser artifac
   const record = options.pins.records.find((candidate) => candidate.platform === process.platform && candidate.arch === process.arch);
   assert(record);
   const parserLocator = `${record.sourceOriginParser.sourceEntry.rootLocator}/src/parser.ts`;
-  const drift = { ...options, toolchainBlobs: new Map(options.toolchainBlobs) };
+  const drift = { ...options, toolchainBlobs: mutableBlobSnapshot(options.toolchainBlobs) };
   drift.toolchainBlobs.set(parserLocator, Buffer.from("export const parseProgram = () => ({ injected: true });\n", "utf8"));
   let result;
   await expectRefusal(decodeFungiGateProject(drift), /^SOURCE_ORIGIN_(?:FUNGI|GATE)_TOOLCHAIN$/);
