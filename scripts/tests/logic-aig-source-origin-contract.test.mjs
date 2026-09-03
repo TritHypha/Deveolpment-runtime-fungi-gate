@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 
@@ -494,6 +495,332 @@ test("canonical byte parsing rejects duplicate members and semantically equal no
   const decorated = [1];
   decorated.alias = true;
   expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText(decorated));
+});
+
+test("contract helpers bypass post-import mutable global and prototype dispatch", async (t) => {
+  const SafeObject = Object;
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeGetPrototypeOf = Object.getPrototypeOf;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeSymbolIterator = Symbol.iterator;
+  const safeGlobalBuffer = globalThis.Buffer;
+  const canonicalInput = { z: 2, a: [1, "é", true] };
+  const canonicalExpected = "{\"a\":[1,\"é\",true],\"z\":2}";
+  const canonicalBytes = Buffer.from(canonicalExpected, "utf8");
+  const topLevelStringBytes = Buffer.from('"x"', "utf8");
+  const rawBytes = Buffer.from("abc", "utf8");
+  const rawView = new Uint8Array([0x61, 0x62, 0x63]);
+  const repository = (await readPolicy("repository")).value;
+  const source = (await readPolicy("source")).value;
+  const parser = (await readPolicy("parser")).value;
+  const pins = (await readPolicy("pins")).value;
+  const expectedOutcomes = JSON.parse(await readFile(
+    new URL("logic-aig-source-origin-expected-parse-outcomes.json", GOVERNANCE),
+    "utf8",
+  ));
+  const receiptFixture = await nonEmptyReceiptFixture();
+  const receiptOptions = receiptAuthorityOptions(receiptFixture);
+  const hashProbe = createHash("sha256");
+  let hashPrototype = safeGetPrototypeOf(hashProbe);
+  while (hashPrototype !== null && !SafeObject.hasOwn(hashPrototype, "update")) {
+    hashPrototype = safeGetPrototypeOf(hashPrototype);
+  }
+  assert(hashPrototype);
+  const arrayIteratorPrototype = safeGetPrototypeOf([][safeSymbolIterator]());
+  const mapIteratorPrototype = safeGetPrototypeOf(new Map().values());
+  const setIteratorPrototype = safeGetPrototypeOf(new Set().values());
+  const typedArrayPrototype = safeGetPrototypeOf(Uint8Array.prototype);
+
+  const canonicalOperation = () => canonicalJsonText(canonicalInput);
+  const parseOperation = () => canonicalJsonText(parseCanonicalJsonBytes(canonicalBytes, { label: "CONTRACT_TCB" }));
+  const parseTopLevelStringOperation = () => canonicalJsonText(parseCanonicalJsonBytes(topLevelStringBytes, { label: "CONTRACT_TCB_STRING" }));
+  const rawOperation = () => sha256Raw(rawBytes);
+  const rawViewOperation = () => sha256Raw(rawView);
+  const digestOperation = () => sha256Canonical("rd0873.contract.tcb.v1", canonicalInput);
+  const repositoryOperation = () => validateRepositoryIdentity(repository).canonicalIdentity;
+  const sourceOperation = () => validateSourcePolicy(source).schema;
+  const expectedOperation = () => validateExpectedParseOutcomes(expectedOutcomes, { parserPolicy: parser }).schema;
+  const pinsOperation = () => validateToolchainPins(pins).schema;
+  const receiptOperation = () => validateParseOutcomesReceipt(receiptFixture.receipt, receiptOptions).schema;
+  const diagnosticOperation = () => canonicalJsonText(decodeDiagnosticSet("TS-1109, TS-2304", parser));
+
+  const expectedByOperation = new Map([
+    [canonicalOperation, canonicalExpected],
+    [parseOperation, canonicalExpected],
+    [parseTopLevelStringOperation, '"x"'],
+    [rawOperation, "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"],
+    [rawViewOperation, "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"],
+    [digestOperation, "d2c57eb58741228d6d68b7645a4d30215a34ea278b02daf2f9f55f9a0ec17730"],
+    [repositoryOperation, "TritHypha/Galerina"],
+    [sourceOperation, "galerina.logic-aig-source-policy.v1"],
+    [expectedOperation, "galerina.logic-aig-expected-parse-outcomes.v1"],
+    [pinsOperation, "galerina.logic-aig-toolchain-pins.v2"],
+    [receiptOperation, "galerina.logic-aig-parse-outcomes-receipt.v1"],
+    [diagnosticOperation, "[\"TS-1109\",\"TS-2304\"]"],
+  ]);
+
+  const exercise = (target, property, replacement, operation) => {
+    const descriptor = safeGetDescriptor(target, property);
+    let effects = 0;
+    let failure;
+    let result;
+    const attack = () => {
+      effects += 1;
+      throw new Error(`ATTACKER_${String(property).toUpperCase()}`);
+    };
+    safeDefineProperty(target, property, replacement(descriptor, attack));
+    try { result = operation(); } catch (error) { failure = error; }
+    finally {
+      if (descriptor === undefined) safeDeleteProperty(target, property);
+      else safeDefineProperty(target, property, descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(result, expectedByOperation.get(operation));
+  };
+  const replaceFunction = (descriptor, attack) => ({
+    ...descriptor,
+    configurable: true,
+    value() { attack(); },
+  });
+  const replaceGetter = (descriptor, attack) => ({
+    configurable: true,
+    enumerable: descriptor.enumerable,
+    get() { attack(); },
+  });
+  const replaceGlobal = (descriptor, attack) => ({
+    configurable: true,
+    enumerable: descriptor.enumerable,
+    writable: true,
+    value: new Proxy(descriptor.value ?? safeGlobalBuffer, {
+      apply() { attack(); },
+      construct() { attack(); },
+      get() { attack(); },
+    }),
+  });
+
+  const globalCases = [
+    ["Object", canonicalOperation],
+    ["Array", canonicalOperation],
+    ["Number", canonicalOperation],
+    ["Set", canonicalOperation],
+    ["Map", pinsOperation],
+    ["JSON", canonicalOperation],
+    ["Buffer", digestOperation],
+    ["Uint8Array", rawViewOperation],
+    ["ArrayBuffer", rawViewOperation],
+    ["TextEncoder", digestOperation],
+    ["TextDecoder", parseOperation],
+    ["Reflect", canonicalOperation],
+  ];
+  for (let index = 0; index < globalCases.length; index += 1) {
+    const [property, operation] = globalCases[index];
+    await t.test(`global ${property} cannot steer contract helpers`, () => {
+      exercise(globalThis, property, replaceGlobal, operation);
+    });
+  }
+
+  const objectCases = [
+    ["getOwnPropertyDescriptor", canonicalOperation],
+    ["getOwnPropertyNames", canonicalOperation],
+    ["getOwnPropertySymbols", canonicalOperation],
+    ["getPrototypeOf", canonicalOperation],
+    ["create", canonicalOperation],
+    ["defineProperty", canonicalOperation],
+    ["hasOwn", canonicalOperation],
+    ["freeze", repositoryOperation],
+    ["keys", repositoryOperation],
+    ["values", receiptOperation],
+    ["entries", receiptOperation],
+  ];
+  for (let index = 0; index < objectCases.length; index += 1) {
+    const [property, operation] = objectCases[index];
+    await t.test(`Object.${property} cannot steer contract helpers`, () => {
+      exercise(SafeObject, property, replaceFunction, operation);
+    });
+  }
+
+  const arrayCases = [
+    ["push", canonicalOperation],
+    ["sort", canonicalOperation],
+    ["some", repositoryOperation],
+    ["includes", canonicalOperation],
+    ["map", pinsOperation],
+    ["filter", pinsOperation],
+    ["every", sourceOperation],
+    ["flatMap", pinsOperation],
+    ["reduce", receiptOperation],
+    ["find", pinsOperation],
+    ["at", parseOperation],
+    ["pop", parseOperation],
+  ];
+  for (let index = 0; index < arrayCases.length; index += 1) {
+    const [property, operation] = arrayCases[index];
+    await t.test(`Array.prototype.${property} cannot steer contract helpers`, () => {
+      exercise(Array.prototype, property, replaceFunction, operation);
+    });
+  }
+  await t.test("Array prototype index setters cannot observe canonicalization", () => {
+    exercise(
+      Array.prototype,
+      "0",
+      (_descriptor, attack) => ({ configurable: true, set() { attack(); } }),
+      canonicalOperation,
+    );
+  });
+  await t.test("Array iterator lookup cannot steer contract helpers", () => {
+    exercise(Array.prototype, safeSymbolIterator, replaceFunction, pinsOperation);
+  });
+  await t.test("Array iterator next cannot steer contract helpers", () => {
+    exercise(arrayIteratorPrototype, "next", replaceFunction, pinsOperation);
+  });
+
+  for (const property of ["has", "add", "delete"]) {
+    await t.test(`Set prototype ${String(property)} cannot steer contract helpers`, () => {
+      exercise(Set.prototype, property, replaceFunction, canonicalOperation);
+    });
+  }
+  await t.test("Set iterator lookup cannot steer contract helpers", () => {
+    exercise(Set.prototype, safeSymbolIterator, replaceFunction, pinsOperation);
+  });
+  await t.test("Set prototype size cannot steer contract helpers", () => {
+    exercise(Set.prototype, "size", replaceGetter, sourceOperation);
+  });
+  await t.test("Set iterator next cannot steer contract helpers", () => {
+    exercise(setIteratorPrototype, "next", replaceFunction, pinsOperation);
+  });
+
+  for (const property of ["get", "set", "values"]) {
+    await t.test(`Map.prototype.${property} cannot steer contract helpers`, () => {
+      exercise(Map.prototype, property, replaceFunction, pinsOperation);
+    });
+  }
+  await t.test("Map iterator next cannot steer contract helpers", () => {
+    exercise(mapIteratorPrototype, "next", replaceFunction, pinsOperation);
+  });
+
+  const stringCases = [
+    ["charCodeAt", canonicalOperation],
+    ["normalize", canonicalOperation],
+    ["includes", repositoryOperation],
+    ["startsWith", pinsOperation],
+    ["endsWith", () => classifySourcePath("src/example.ts", source)],
+    ["split", expectedOperation],
+    ["slice", parseOperation],
+    ["replace", diagnosticOperation],
+    ["lastIndexOf", expectedOperation],
+    ["toLowerCase", pinsOperation],
+  ];
+  expectedByOperation.set(stringCases[4][1], "HOST");
+  for (let index = 0; index < stringCases.length; index += 1) {
+    const [property, operation] = stringCases[index];
+    await t.test(`String.prototype.${property} cannot steer contract helpers`, () => {
+      exercise(String.prototype, property, replaceFunction, operation);
+    });
+  }
+  await t.test("String prototype indexed accessors cannot observe canonical parsing", () => {
+    exercise(
+      String.prototype,
+      "3",
+      (_descriptor, attack) => ({ configurable: true, get() { attack(); } }),
+      parseTopLevelStringOperation,
+    );
+  });
+
+  await t.test("RegExp.prototype.test cannot steer contract helpers", () => {
+    exercise(RegExp.prototype, "test", replaceFunction, repositoryOperation);
+  });
+  for (const [property, operation] of [["stringify", canonicalOperation], ["parse", parseOperation]]) {
+    await t.test(`JSON.${property} cannot steer contract helpers`, () => {
+      exercise(JSON, property, replaceFunction, operation);
+    });
+  }
+  await t.test("Number.isSafeInteger cannot steer canonicalization", () => {
+    exercise(Number, "isSafeInteger", replaceFunction, canonicalOperation);
+  });
+  for (const property of ["byteLength", "from", "concat"]) {
+    await t.test(`Buffer.${property} cannot steer contract helpers`, () => {
+      exercise(Buffer, property, replaceFunction, property === "byteLength" ? canonicalOperation : digestOperation);
+    });
+  }
+  await t.test("Buffer.isBuffer cannot steer raw hashing", () => {
+    exercise(Buffer, "isBuffer", replaceFunction, rawOperation);
+  });
+  await t.test("Buffer.poolSize cannot be observed by canonical hashing", {
+    skip: process.version !== "v24.18.0",
+  }, () => {
+    exercise(
+      Buffer,
+      "poolSize",
+      (descriptor, attack) => ({ configurable: true, enumerable: descriptor.enumerable, get() { attack(); } }),
+      digestOperation,
+    );
+  });
+  await t.test("Uint8Array Symbol.hasInstance cannot steer raw hashing", () => {
+    exercise(Uint8Array, Symbol.hasInstance, replaceFunction, rawViewOperation);
+  });
+  await t.test("TextDecoder.prototype.decode cannot steer canonical parsing", () => {
+    exercise(TextDecoder.prototype, "decode", replaceFunction, parseOperation);
+  });
+  await t.test("TextEncoder.prototype.encode cannot steer canonical hashing", () => {
+    exercise(TextEncoder.prototype, "encode", replaceFunction, digestOperation);
+  });
+  for (const property of ["buffer", "byteLength", "byteOffset", "length"]) {
+    await t.test(`TypedArray prototype ${property} cannot steer raw hashing`, () => {
+      exercise(typedArrayPrototype, property, replaceGetter, rawViewOperation);
+    });
+  }
+  await t.test("ArrayBuffer prototype byteLength cannot steer raw hashing", () => {
+    exercise(ArrayBuffer.prototype, "byteLength", replaceGetter, rawViewOperation);
+  });
+  for (const property of ["update", "digest"]) {
+    await t.test(`hash prototype ${property} cannot steer contract helpers`, () => {
+      exercise(hashPrototype, property, replaceFunction, rawOperation);
+    });
+  }
+
+  await t.test("Object prototype descriptor lookalikes cannot reopen accessor input", () => {
+    const descriptor = safeGetDescriptor(Object.prototype, "value");
+    const hostile = {};
+    let effects = 0;
+    let failure;
+    safeDefineProperty(hostile, "value", {
+      configurable: true,
+      enumerable: true,
+      get() { effects += 1; throw new Error("ATTACKER_INPUT_GET"); },
+    });
+    safeDefineProperty(Object.prototype, "value", {
+      configurable: true,
+      get() { effects += 1; throw new Error("ATTACKER_DESCRIPTOR_GET"); },
+    });
+    try { canonicalJsonText(hostile); } catch (error) { failure = error; }
+    finally {
+      if (descriptor === undefined) safeDeleteProperty(Object.prototype, "value");
+      else safeDefineProperty(Object.prototype, "value", descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_JSON_CANONICAL");
+  });
+
+  for (const property of ["name", "code"]) {
+    await t.test(`Error.prototype.${property} setters cannot observe contract refusal`, () => {
+      const descriptor = safeGetDescriptor(Error.prototype, property);
+      let effects = 0;
+      let failure;
+      safeDefineProperty(Error.prototype, property, {
+        configurable: true,
+        set() { effects += 1; throw new Error("ATTACKER_ERROR_SET"); },
+      });
+      try { canonicalJsonText(new Proxy({}, {})); } catch (error) { failure = error; }
+      finally {
+        if (descriptor === undefined) safeDeleteProperty(Error.prototype, property);
+        else safeDefineProperty(Error.prototype, property, descriptor);
+      }
+      assert.equal(effects, 0);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_JSON_CANONICAL");
+    });
+  }
 });
 
 test("the five tracked static owners are canonical, closed, self-digested and non-authorizing", async () => {

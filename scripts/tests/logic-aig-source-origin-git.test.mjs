@@ -1258,6 +1258,51 @@ test("post-import blob operations bypass mutable global and prototype dispatch",
       );
     });
   }
+
+  await t.test("Array.prototype.push cannot steer Gate-owner authentication", () => {
+    exercise(
+      Array.prototype,
+      "push",
+      replaceFunction,
+      () => gitSource.authenticateGateOwnerBytes(gateBytes, parserPolicy),
+      (accepted) => {
+        assert.equal(accepted.rawSha256, "d83ce2590520b152e1c838322e1762e4840c274e812bf6006e275118ada59467");
+        assert.equal(accepted.semanticDigest, "4dfceb7f2bf2b6642c3b0cc2838735d41b8aad9e3c08e45f394637eb43bf8a58");
+      },
+    );
+  });
+
+  const gitExecutableLocator = fileURLToPath(new URL(
+    "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+    import.meta.url,
+  ));
+  for (const property of ["from", "concat"]) {
+    await t.test(`Buffer.${property} cannot steer frozen-source capture through contract helpers`, async () => {
+      const descriptor = safeGetDescriptor(Buffer, property);
+      let effects = 0;
+      let failure;
+      safeDefineProperty(Buffer, property, {
+        ...descriptor,
+        configurable: true,
+        value() {
+          effects += 1;
+          throw new Error(`ATTACKER_BUFFER_${property.toUpperCase()}`);
+        },
+      });
+      try {
+        await gitSource.captureFrozenSource({
+          commitOid: "a".repeat(40),
+          gitExecutableLocator,
+        });
+      } catch (error) {
+        failure = error;
+      } finally {
+        safeDefineProperty(Buffer, property, descriptor);
+      }
+      assert.equal(effects, 0);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_HEAD");
+    });
+  }
 });
 
 test("genuine pinned-Git capture returns every frozen owner value and defensive owner blob", { timeout: 900_000, skip: platform() !== "win32" }, async () => {

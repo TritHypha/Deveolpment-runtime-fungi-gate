@@ -1,5 +1,264 @@
+import { Buffer as NodeBuffer } from 'node:buffer';
 import { createHash } from 'node:crypto';
+import { TextDecoder as NodeTextDecoder, TextEncoder as NodeTextEncoder } from 'node:util';
 import { isProxy } from 'node:util/types';
+
+// Task 6A evaluates untrusted source only after this module has loaded.  Every
+// mutable global/prototype operation reachable below is captured here, before
+// that evaluation boundary, and invoked without caller-provided iteration.
+const safeReflectApply = Reflect.apply;
+const safeObjectCreate = Object.create;
+const safeObjectDefineProperty = Object.defineProperty;
+const safeObjectFreeze = Object.freeze;
+const safeObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+const safeObjectGetOwnPropertyNames = Object.getOwnPropertyNames;
+const safeObjectGetOwnPropertySymbols = Object.getOwnPropertySymbols;
+const safeObjectGetPrototypeOf = Object.getPrototypeOf;
+const safeObjectHasOwn = Object.hasOwn;
+const safeObjectKeys = Object.keys;
+const safeObjectValues = Object.values;
+const safeObjectEntries = Object.entries;
+const safeObjectPrototype = Object.prototype;
+const safeArrayIsArray = Array.isArray;
+const safeArrayPrototype = Array.prototype;
+const safeArraySort = Array.prototype.sort;
+const safeNumberIsSafeInteger = Number.isSafeInteger;
+const safeStringCharCodeAt = String.prototype.charCodeAt;
+const safeStringNormalize = String.prototype.normalize;
+const safeStringIncludes = String.prototype.includes;
+const safeStringStartsWith = String.prototype.startsWith;
+const safeStringEndsWith = String.prototype.endsWith;
+const safeStringSplit = String.prototype.split;
+const safeStringSlice = String.prototype.slice;
+const safeStringReplace = String.prototype.replace;
+const safeStringLastIndexOf = String.prototype.lastIndexOf;
+const safeStringToLowerCase = String.prototype.toLowerCase;
+const safeRegExpTest = RegExp.prototype.test;
+const safeJsonParse = JSON.parse;
+const safeJsonStringify = JSON.stringify;
+const SafeSet = Set;
+const safeSetHas = Set.prototype.has;
+const safeSetAdd = Set.prototype.add;
+const safeSetDelete = Set.prototype.delete;
+const safeSetValues = Set.prototype.values;
+const safeSetSize = safeObjectGetOwnPropertyDescriptor(Set.prototype, 'size').get;
+const SafeMap = Map;
+const safeMapGet = Map.prototype.get;
+const safeMapSet = Map.prototype.set;
+const safeMapValues = Map.prototype.values;
+const safeSymbolIterator = Symbol.iterator;
+const safeSetIteratorNext = safeObjectGetPrototypeOf(new SafeSet()[safeSymbolIterator]()).next;
+const safeMapIteratorNext = safeObjectGetPrototypeOf(new SafeMap()[safeSymbolIterator]()).next;
+const safeBufferPrototype = NodeBuffer.prototype;
+const SafeUint8Array = Uint8Array;
+const safeUint8ArrayPrototype = SafeUint8Array.prototype;
+const safeTypedArrayPrototype = safeObjectGetPrototypeOf(safeUint8ArrayPrototype);
+const safeTypedArrayBuffer = safeObjectGetOwnPropertyDescriptor(safeTypedArrayPrototype, 'buffer').get;
+const safeTypedArrayByteLength = safeObjectGetOwnPropertyDescriptor(safeTypedArrayPrototype, 'byteLength').get;
+const safeTypedArrayByteOffset = safeObjectGetOwnPropertyDescriptor(safeTypedArrayPrototype, 'byteOffset').get;
+const safeTypedArrayLength = safeObjectGetOwnPropertyDescriptor(safeTypedArrayPrototype, 'length').get;
+const safeArrayBufferByteLength = safeObjectGetOwnPropertyDescriptor(ArrayBuffer.prototype, 'byteLength').get;
+const safeTextEncode = NodeTextEncoder.prototype.encode;
+const safeTextDecode = NodeTextDecoder.prototype.decode;
+const safeTextEncoder = new NodeTextEncoder();
+const safeTextDecoder = new NodeTextDecoder('utf-8', { fatal: true });
+const hashProbe = createHash('sha256');
+let safeHashPrototype = safeObjectGetPrototypeOf(hashProbe);
+while (safeHashPrototype !== null && !safeObjectHasOwn(safeHashPrototype, 'update')) {
+  safeHashPrototype = safeObjectGetPrototypeOf(safeHashPrototype);
+}
+const safeHashUpdate = safeObjectGetOwnPropertyDescriptor(safeHashPrototype, 'update').value;
+const safeHashDigest = safeObjectGetOwnPropertyDescriptor(safeHashPrototype, 'digest').value;
+
+function callIntrinsic(operation, receiver, args) {
+  return safeReflectApply(operation, receiver, args);
+}
+
+function nullRecord() {
+  return safeObjectCreate(null);
+}
+
+function plainRecord() {
+  return safeObjectCreate(safeObjectPrototype);
+}
+
+function defineData(target, key, value, enumerable = true) {
+  const descriptor = nullRecord();
+  descriptor.value = value;
+  descriptor.writable = true;
+  descriptor.enumerable = enumerable;
+  descriptor.configurable = true;
+  safeObjectDefineProperty(target, key, descriptor);
+}
+
+function append(values, value) {
+  defineData(values, `${values.length}`, value);
+  return values.length;
+}
+
+function copyArray(values) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) append(output, values[index]);
+  return output;
+}
+
+function mapArray(values, operation) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index));
+  return output;
+}
+
+function forEachArray(values, operation) {
+  for (let index = 0; index < values.length; index += 1) operation(values[index], index);
+}
+
+function reduceArray(values, operation, initial) {
+  let result = initial;
+  for (let index = 0; index < values.length; index += 1) result = operation(result, values[index], index);
+  return result;
+}
+
+function setFromArray(values, project = (value) => value) {
+  const output = new SafeSet();
+  for (let index = 0; index < values.length; index += 1) setAdd(output, project(values[index], index));
+  return output;
+}
+
+function mapFromArray(values, key, project = (value) => value) {
+  const output = new SafeMap();
+  for (let index = 0; index < values.length; index += 1) mapSet(output, key(values[index], index), project(values[index], index));
+  return output;
+}
+
+function filterArray(values, predicate) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) append(output, values[index]);
+  return output;
+}
+
+function someArray(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return true;
+  return false;
+}
+
+function everyArray(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) if (!predicate(values[index], index)) return false;
+  return true;
+}
+
+function includesArray(values, sought) {
+  for (let index = 0; index < values.length; index += 1) {
+    const value = values[index];
+    if (value === sought || value !== value && sought !== sought) return true;
+  }
+  return false;
+}
+
+function findArray(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return values[index];
+  return undefined;
+}
+
+function flatMapArray(values, operation) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) {
+    const part = operation(values[index], index);
+    for (let inner = 0; inner < part.length; inner += 1) append(output, part[inner]);
+  }
+  return output;
+}
+
+function sortArray(values, compare) {
+  return callIntrinsic(safeArraySort, values, [compare]);
+}
+
+function setHas(values, value) {
+  return callIntrinsic(safeSetHas, values, [value]);
+}
+
+function setAdd(values, value) {
+  callIntrinsic(safeSetAdd, values, [value]);
+}
+
+function setDelete(values, value) {
+  callIntrinsic(safeSetDelete, values, [value]);
+}
+
+function mapGet(values, key) {
+  return callIntrinsic(safeMapGet, values, [key]);
+}
+
+function mapSet(values, key, value) {
+  callIntrinsic(safeMapSet, values, [key, value]);
+}
+
+function mapValuesArray(values) {
+  const output = [];
+  const iterator = callIntrinsic(safeMapValues, values, []);
+  while (true) {
+    const step = callIntrinsic(safeMapIteratorNext, iterator, []);
+    if (step.done) return output;
+    append(output, step.value);
+  }
+}
+
+function setValuesArray(values) {
+  const output = [];
+  const iterator = callIntrinsic(safeSetValues, values, []);
+  while (true) {
+    const step = callIntrinsic(safeSetIteratorNext, iterator, []);
+    if (step.done) return output;
+    append(output, step.value);
+  }
+}
+
+function setSize(values) { return callIntrinsic(safeSetSize, values, []); }
+
+function stringCharCodeAt(value, index) { return callIntrinsic(safeStringCharCodeAt, value, [index]); }
+function stringNormalize(value) { return callIntrinsic(safeStringNormalize, value, ['NFC']); }
+function stringIncludes(value, part) { return callIntrinsic(safeStringIncludes, value, [part]); }
+function stringStartsWith(value, part) { return callIntrinsic(safeStringStartsWith, value, [part]); }
+function stringEndsWith(value, part) { return callIntrinsic(safeStringEndsWith, value, [part]); }
+function stringSplit(value, separator) { return callIntrinsic(safeStringSplit, value, [separator]); }
+function stringSlice(value, start, end) { return callIntrinsic(safeStringSlice, value, end === undefined ? [start] : [start, end]); }
+function stringReplace(value, pattern, replacement) { return callIntrinsic(safeStringReplace, value, [pattern, replacement]); }
+function stringLastIndexOf(value, part) { return callIntrinsic(safeStringLastIndexOf, value, [part]); }
+function stringToLowerCase(value) { return callIntrinsic(safeStringToLowerCase, value, []); }
+function regexTest(pattern, value) { return callIntrinsic(safeRegExpTest, pattern, [value]); }
+
+function byteView(value, requireBuffer = false) {
+  if (value === null || typeof value !== 'object' || isProxy(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  const prototype = safeObjectGetPrototypeOf(value);
+  const buffer = prototype === safeBufferPrototype;
+  if (requireBuffer ? !buffer : !buffer && prototype !== safeUint8ArrayPrototype) refuse('SOURCE_ORIGIN_SCHEMA');
+  let backing;
+  let byteLength;
+  let byteOffset;
+  let length;
+  try {
+    backing = callIntrinsic(safeTypedArrayBuffer, value, []);
+    byteLength = callIntrinsic(safeTypedArrayByteLength, value, []);
+    byteOffset = callIntrinsic(safeTypedArrayByteOffset, value, []);
+    length = callIntrinsic(safeTypedArrayLength, value, []);
+    callIntrinsic(safeArrayBufferByteLength, backing, []);
+  } catch {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  if (!safeNumberIsSafeInteger(byteLength) || !safeNumberIsSafeInteger(byteOffset) || length !== byteLength) refuse('SOURCE_ORIGIN_SCHEMA');
+  return { value, byteLength, byteOffset, backing };
+}
+
+function encodeUtf8(value) {
+  const bytes = callIntrinsic(safeTextEncode, safeTextEncoder, [value]);
+  byteView(bytes);
+  return bytes;
+}
+
+function hashParts(parts) {
+  const hash = createHash('sha256');
+  for (let index = 0; index < parts.length; index += 1) callIntrinsic(safeHashUpdate, hash, [parts[index]]);
+  return callIntrinsic(safeHashDigest, hash, ['hex']);
+}
 
 export const SOURCE_ORIGIN_LIMITS = deepFreeze({
   capturedFileBytes: 67_108_864,
@@ -22,10 +281,12 @@ const DIAGNOSTIC = /^(?:[A-Z][A-Z0-9]*-)+[0-9]{3,5}[A-Z]?$/;
 class SourceOriginRefusal extends Error {
   constructor(code) {
     super(code);
-    this.name = 'SourceOriginRefusal';
-    this.code = code;
+    defineData(this, 'name', 'SourceOriginRefusal');
+    defineData(this, 'code', code);
   }
 }
+safeObjectFreeze(SourceOriginRefusal.prototype);
+safeObjectFreeze(SourceOriginRefusal);
 
 function refuse(code) {
   throw new SourceOriginRefusal(code);
@@ -35,38 +296,42 @@ function codeUnitCompare(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-function deepFreeze(value, seen = new Set()) {
-  if (value === null || typeof value !== 'object' || seen.has(value)) return value;
-  seen.add(value);
-  for (const name of Object.getOwnPropertyNames(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
-    if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
+function deepFreeze(value, seen = undefined) {
+  if (seen === undefined) seen = new SafeSet();
+  if (value === null || typeof value !== 'object' || setHas(seen, value)) return value;
+  setAdd(seen, value);
+  const names = safeObjectGetOwnPropertyNames(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = safeObjectGetOwnPropertyDescriptor(value, names[index]);
+    if (descriptor && safeObjectHasOwn(descriptor, 'value')) deepFreeze(descriptor.value, seen);
   }
-  return Object.freeze(value);
+  return safeObjectFreeze(value);
 }
 
 function dataObject(value, keys) {
-  if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
-  const prototype = Object.getPrototypeOf(value);
-  if (prototype !== Object.prototype && prototype !== null) refuse('SOURCE_ORIGIN_SCHEMA');
-  if (Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
-  const names = Object.getOwnPropertyNames(value);
-  if (names.length !== keys.length || [...names].sort(codeUnitCompare).some((name, index) => name !== [...keys].sort(codeUnitCompare)[index])) refuse('SOURCE_ORIGIN_SCHEMA');
-  for (const name of names) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (value === null || typeof value !== 'object' || isProxy(value) || safeArrayIsArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  const prototype = safeObjectGetPrototypeOf(value);
+  if (prototype !== safeObjectPrototype && prototype !== null) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (safeObjectGetOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  const names = safeObjectGetOwnPropertyNames(value);
+  const sortedNames = sortArray(copyArray(names), codeUnitCompare);
+  const sortedKeys = sortArray(copyArray(keys), codeUnitCompare);
+  if (names.length !== keys.length || someArray(sortedNames, (name, index) => name !== sortedKeys[index])) refuse('SOURCE_ORIGIN_SCHEMA');
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = safeObjectGetOwnPropertyDescriptor(value, names[index]);
+    if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
   }
 }
 
 function checkedArray(value, code) {
-  if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
+  if (isProxy(value) || !safeArrayIsArray(value) || safeObjectGetPrototypeOf(value) !== safeArrayPrototype || safeObjectGetOwnPropertySymbols(value).length !== 0) refuse(code);
   const length = value.length;
-  if (!Number.isSafeInteger(length) || length < 0 || length > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  if (names.length !== length + 1 || !names.includes('length')) refuse(code);
+  if (!safeNumberIsSafeInteger(length) || length < 0 || length > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse(code);
+  const names = safeObjectGetOwnPropertyNames(value);
+  if (names.length !== length + 1 || !includesArray(names, 'length')) refuse(code);
   for (let index = 0; index < length; index += 1) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    const descriptor = safeObjectGetOwnPropertyDescriptor(value, `${index}`);
+    if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse(code);
   }
   return value;
 }
@@ -77,9 +342,9 @@ function array(value) {
 
 function hasUnpairedSurrogate(value) {
   for (let index = 0; index < value.length; index += 1) {
-    const unit = value.charCodeAt(index);
+    const unit = stringCharCodeAt(value, index);
     if (unit >= 0xd800 && unit <= 0xdbff) {
-      const next = value.charCodeAt(index + 1);
+      const next = stringCharCodeAt(value, index + 1);
       if (!(next >= 0xdc00 && next <= 0xdfff)) return true;
       index += 1;
     } else if (unit >= 0xdc00 && unit <= 0xdfff) return true;
@@ -88,7 +353,7 @@ function hasUnpairedSurrogate(value) {
 }
 
 function nfcString(value) {
-  if (typeof value !== 'string' || hasUnpairedSurrogate(value) || value !== value.normalize('NFC')) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (typeof value !== 'string' || hasUnpairedSurrogate(value) || value !== stringNormalize(value)) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
 
@@ -96,106 +361,138 @@ function canonicalValue(value, active, depth = 0) {
   if (depth > 128) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
-    if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+    if (!safeNumberIsSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
     return value;
   }
   if (typeof value === 'string') {
-    if (hasUnpairedSurrogate(value) || value !== value.normalize('NFC')) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+    if (hasUnpairedSurrogate(value) || value !== stringNormalize(value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
     return value;
   }
-  if (typeof value !== 'object' || isProxy(value) || active.has(value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
-  active.add(value);
+  if (typeof value !== 'object' || isProxy(value) || setHas(active, value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  setAdd(active, value);
   try {
-    if (Array.isArray(value)) {
+    if (safeArrayIsArray(value)) {
       checkedArray(value, 'SOURCE_ORIGIN_JSON_CANONICAL');
       const output = [];
-      for (let index = 0; index < value.length; index += 1) output.push(canonicalValue(Object.getOwnPropertyDescriptor(value, String(index)).value, active, depth + 1));
+      for (let index = 0; index < value.length; index += 1) append(output, canonicalValue(safeObjectGetOwnPropertyDescriptor(value, `${index}`).value, active, depth + 1));
       return output;
     }
-    const prototype = Object.getPrototypeOf(value);
-    if (prototype !== Object.prototype && prototype !== null || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
-    const output = {};
-    for (const key of Object.getOwnPropertyNames(value).sort(codeUnitCompare)) {
-      const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
-      output[nfcString(key)] = canonicalValue(descriptor.value, active, depth + 1);
+    const prototype = safeObjectGetPrototypeOf(value);
+    if (prototype !== safeObjectPrototype && prototype !== null || safeObjectGetOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+    const output = plainRecord();
+    const names = sortArray(safeObjectGetOwnPropertyNames(value), codeUnitCompare);
+    for (let index = 0; index < names.length; index += 1) {
+      const key = names[index];
+      const descriptor = safeObjectGetOwnPropertyDescriptor(value, key);
+      if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+      defineData(output, nfcString(key), canonicalValue(descriptor.value, active, depth + 1));
     }
     return output;
   } finally {
-    active.delete(value);
+    setDelete(active, value);
   }
 }
 
+function serializeCanonical(value) {
+  if (value === null || typeof value === 'boolean' || typeof value === 'number' || typeof value === 'string') {
+    return callIntrinsic(safeJsonStringify, null, [value]);
+  }
+  if (safeArrayIsArray(value)) {
+    let text = '[';
+    for (let index = 0; index < value.length; index += 1) {
+      if (index !== 0) text += ',';
+      text += serializeCanonical(value[index]);
+    }
+    return text + ']';
+  }
+  const names = safeObjectGetOwnPropertyNames(value);
+  let text = '{';
+  for (let index = 0; index < names.length; index += 1) {
+    if (index !== 0) text += ',';
+    const name = names[index];
+    text += callIntrinsic(safeJsonStringify, null, [name]) + ':' + serializeCanonical(safeObjectGetOwnPropertyDescriptor(value, name).value);
+  }
+  return text + '}';
+}
+
 export function canonicalJsonText(value) {
-  const text = JSON.stringify(canonicalValue(value, new Set()));
-  if (text === undefined || Buffer.byteLength(text, 'utf8') > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  const text = serializeCanonical(canonicalValue(value, new SafeSet()));
+  if (text === undefined || byteView(encodeUtf8(text)).byteLength > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   return text;
 }
 
 export function sha256Raw(bytes) {
-  if (!Buffer.isBuffer(bytes) && !(bytes instanceof Uint8Array)) refuse('SOURCE_ORIGIN_SCHEMA');
-  return createHash('sha256').update(bytes).digest('hex');
+  byteView(bytes);
+  return hashParts([bytes]);
 }
 
 export function sha256Canonical(domain, value) {
   nfcString(domain);
-  return sha256Raw(Buffer.concat([Buffer.from(domain, 'utf8'), Buffer.from([0]), Buffer.from(canonicalJsonText(value), 'utf8')]));
+  return hashParts([encodeUtf8(domain), new SafeUint8Array(1), encodeUtf8(canonicalJsonText(value))]);
 }
 
 function assertNoDuplicateMembers(text) {
   const objectScopes = [];
   for (let index = 0; index < text.length;) {
-    const char = text[index];
+    const char = stringSlice(text, index, index + 1);
     if (char === '"') {
       const start = index;
       index += 1;
       while (index < text.length) {
-        if (text[index] === '\\') index += 2;
-        else if (text[index] === '"') { index += 1; break; }
+        const inner = stringSlice(text, index, index + 1);
+        if (inner === '\\') index += 2;
+        else if (inner === '"') { index += 1; break; }
         else index += 1;
       }
       let cursor = index;
-      while (/\s/.test(text[cursor] ?? '')) cursor += 1;
-      if (text[cursor] === ':' && objectScopes.length > 0) {
+      while (regexTest(/\s/, stringSlice(text, cursor, cursor + 1))) cursor += 1;
+      if (stringSlice(text, cursor, cursor + 1) === ':' && objectScopes.length > 0) {
         let key;
-        try { key = JSON.parse(text.slice(start, index)); } catch { return; }
-        const scope = objectScopes.at(-1);
-        if (scope.has(key)) refuse('SOURCE_ORIGIN_JSON_DUPLICATE');
-        scope.add(key);
+        try { key = callIntrinsic(safeJsonParse, null, [stringSlice(text, start, index)]); } catch { return; }
+        const scope = objectScopes[objectScopes.length - 1];
+        if (setHas(scope, key)) refuse('SOURCE_ORIGIN_JSON_DUPLICATE');
+        setAdd(scope, key);
       }
       continue;
     }
-    if (char === '{') objectScopes.push(new Set());
-    else if (char === '}') objectScopes.pop();
+    if (char === '{') append(objectScopes, new SafeSet());
+    else if (char === '}') objectScopes.length -= 1;
     index += 1;
   }
 }
 
-export function parseCanonicalJsonBytes(bytes, { label } = {}) {
-  if (!Buffer.isBuffer(bytes) || bytes.length > SOURCE_ORIGIN_LIMITS.jsonBytes || typeof label !== 'string') refuse('SOURCE_ORIGIN_SCHEMA');
-  if (bytes.length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+export function parseCanonicalJsonBytes(bytes, options) {
+  const view = byteView(bytes, true);
+  dataObject(options, ['label']);
+  const label = options.label;
+  if (view.byteLength > SOURCE_ORIGIN_LIMITS.jsonBytes || typeof label !== 'string') refuse('SOURCE_ORIGIN_SCHEMA');
+  if (view.byteLength >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   let text;
-  try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { refuse('SOURCE_ORIGIN_JSON_CANONICAL'); }
-  if (text.charCodeAt(0) === 0xfeff) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  try { text = callIntrinsic(safeTextDecode, safeTextDecoder, [bytes]); } catch { refuse('SOURCE_ORIGIN_JSON_CANONICAL'); }
+  if (stringCharCodeAt(text, 0) === 0xfeff) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   assertNoDuplicateMembers(text);
   let value;
-  try { value = JSON.parse(text); } catch { refuse('SOURCE_ORIGIN_JSON_CANONICAL'); }
+  try { value = callIntrinsic(safeJsonParse, null, [text]); } catch { refuse('SOURCE_ORIGIN_JSON_CANONICAL'); }
   if (canonicalJsonText(value) !== text) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
-  return deepFreeze(canonicalValue(value, new Set()));
+  return deepFreeze(canonicalValue(value, new SafeSet()));
 }
 
 function immutableCopy(value) {
-  return deepFreeze(canonicalValue(value, new Set()));
+  return deepFreeze(canonicalValue(value, new SafeSet()));
 }
 
 function without(value, key) {
-  const copy = {};
-  for (const name of Object.keys(value)) if (name !== key) copy[name] = value[name];
+  const copy = nullRecord();
+  const names = safeObjectKeys(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    if (name !== key) defineData(copy, name, safeObjectGetOwnPropertyDescriptor(value, name).value);
+  }
   return copy;
 }
 
 function checkDigest(value, field) {
-  if (typeof value[field] !== 'string' || !HEX64.test(value[field])) refuse('SOURCE_ORIGIN_DIGEST');
+  if (typeof value[field] !== 'string' || !regexTest(HEX64, value[field])) refuse('SOURCE_ORIGIN_DIGEST');
   const expected = sha256Canonical(value.schema, without(value, field));
   if (value[field] !== expected) refuse('SOURCE_ORIGIN_DIGEST');
 }
@@ -206,15 +503,15 @@ function equalExact(actual, expected) {
 
 function assertSortedUniqueStrings(values) {
   array(values);
-  for (const value of values) nfcString(value);
+  forEachArray(values, nfcString);
   for (let index = 1; index < values.length; index += 1) if (codeUnitCompare(values[index - 1], values[index]) >= 0) refuse('SOURCE_ORIGIN_ORDER');
 }
 
 export function validateRepositoryIdentity(value) {
   dataObject(value, ['schema', 'ownerNamespace', 'repositoryName', 'canonicalIdentity', 'authorizing', 'identityDigest']);
   if (value.schema !== 'galerina.logic-aig-repository-identity.v1' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
-  for (const field of ['ownerNamespace', 'repositoryName', 'canonicalIdentity']) nfcString(value[field]);
-  if (!value.ownerNamespace || !value.repositoryName || value.ownerNamespace.includes('/') || value.repositoryName.includes('/') || value.ownerNamespace !== 'TritHypha' || value.repositoryName !== 'Galerina' || value.canonicalIdentity !== 'TritHypha/Galerina') refuse('SOURCE_ORIGIN_POLICY');
+  forEachArray(['ownerNamespace', 'repositoryName', 'canonicalIdentity'], (field) => nfcString(value[field]));
+  if (!value.ownerNamespace || !value.repositoryName || stringIncludes(value.ownerNamespace, '/') || stringIncludes(value.repositoryName, '/') || value.ownerNamespace !== 'TritHypha' || value.repositoryName !== 'Galerina' || value.canonicalIdentity !== 'TritHypha/Galerina') refuse('SOURCE_ORIGIN_POLICY');
   checkDigest(value, 'identityDigest');
   return immutableCopy(value);
 }
@@ -235,14 +532,14 @@ export const SOURCE_POLICY_BODY = deepFreeze({
 export function validateSourcePolicy(value) {
   dataObject(value, ['schema', 'domains', 'suffixes', 'exclusions', 'authorizing', 'policyDigest']);
   array(value.domains); array(value.suffixes); array(value.exclusions);
-  for (const row of value.suffixes) dataObject(row, ['domain', 'suffix']);
+  forEachArray(value.suffixes, (row) => dataObject(row, ['domain', 'suffix']));
   const body = without(value, 'policyDigest');
   const expected = SOURCE_POLICY_BODY;
-  if (value.domains.length === expected.domains.length && [...value.domains].sort(codeUnitCompare).every((entry, index) => entry === expected.domains[index]) && canonicalJsonText(value.domains) !== canonicalJsonText(expected.domains)) refuse('SOURCE_ORIGIN_ORDER');
-  const expectedSuffixKeys = new Set(expected.suffixes.map((row) => `${row.suffix}\0${row.domain}`));
-  const actualSuffixKeys = value.suffixes.map((row) => `${row.suffix}\0${row.domain}`);
-  if (new Set(actualSuffixKeys).size !== actualSuffixKeys.length) refuse('SOURCE_ORIGIN_ORDER');
-  if (actualSuffixKeys.length === expectedSuffixKeys.size && actualSuffixKeys.every((key) => expectedSuffixKeys.has(key)) && canonicalJsonText(value.suffixes) !== canonicalJsonText(expected.suffixes)) refuse('SOURCE_ORIGIN_ORDER');
+  if (value.domains.length === expected.domains.length && everyArray(sortArray(copyArray(value.domains), codeUnitCompare), (entry, index) => entry === expected.domains[index]) && canonicalJsonText(value.domains) !== canonicalJsonText(expected.domains)) refuse('SOURCE_ORIGIN_ORDER');
+  const expectedSuffixKeys = setFromArray(expected.suffixes, (row) => `${row.suffix}\0${row.domain}`);
+  const actualSuffixKeys = mapArray(value.suffixes, (row) => `${row.suffix}\0${row.domain}`);
+  if (setSize(setFromArray(actualSuffixKeys)) !== actualSuffixKeys.length) refuse('SOURCE_ORIGIN_ORDER');
+  if (actualSuffixKeys.length === setSize(expectedSuffixKeys) && everyArray(actualSuffixKeys, (key) => setHas(expectedSuffixKeys, key)) && canonicalJsonText(value.suffixes) !== canonicalJsonText(expected.suffixes)) refuse('SOURCE_ORIGIN_ORDER');
   equalExact(body, expected);
   checkDigest(value, 'policyDigest');
   return immutableCopy(value);
@@ -252,7 +549,7 @@ export function classifySourcePath(path, policy) {
   policy = validateSourcePolicy(policy);
   nfcString(path);
   let selected = null;
-  for (const row of policy.suffixes) if (path.endsWith(row.suffix) && (!selected || row.suffix.length > selected.suffix.length)) selected = row;
+  forEachArray(policy.suffixes, (row) => { if (stringEndsWith(path, row.suffix) && (!selected || row.suffix.length > selected.suffix.length)) selected = row; });
   return selected?.domain ?? null;
 }
 
@@ -269,20 +566,20 @@ export const RESOLUTION_POLICY_BODY = deepFreeze({
 
 export function validateResolutionPolicy(value) {
   dataObject(value, ['schema', 'sourceSuffixes', 'resolutionBasenames', 'resolutionNamePatterns', 'includeExpectedOutcomeOwners', 'testPathComponents', 'testBasenamePattern', 'authorizing', 'policyDigest']);
-  for (const field of ['sourceSuffixes', 'resolutionBasenames', 'resolutionNamePatterns', 'testPathComponents']) assertSortedUniqueStrings(value[field]);
+  forEachArray(['sourceSuffixes', 'resolutionBasenames', 'resolutionNamePatterns', 'testPathComponents'], (field) => assertSortedUniqueStrings(value[field]));
   if (value.includeExpectedOutcomeOwners !== true) refuse('SOURCE_ORIGIN_POLICY');
   equalExact(without(value, 'policyDigest'), RESOLUTION_POLICY_BODY);
   checkDigest(value, 'policyDigest');
   return immutableCopy(value);
 }
 
-export const UNRESOLVED_REASON_ROWS = deepFreeze([
+export const UNRESOLVED_REASON_ROWS = deepFreeze(mapArray([
   ['CALLER','AMBIGUOUS_TARGET',['EXACT_SET']],['CALLER','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['CALLER','MISSING_TARGET',['UNKNOWN']],['CALLER','OWNER_DISPOSITION_CALLER_UNRESOLVED',['NOT_APPLICABLE']],['CALLER','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
   ['CONTRACT','AMBIGUOUS_TARGET',['EXACT_SET']],['CONTRACT','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['CONTRACT','MISSING_TARGET',['UNKNOWN']],['CONTRACT','OWNER_DISPOSITION_CONTRACT_UNRESOLVED',['NOT_APPLICABLE']],['CONTRACT','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
   ['GENERATED_CONSUMER','OWNER_DISPOSITION_GENERATED_CONSUMER_UNRESOLVED',['NOT_APPLICABLE']],
   ['IMPORT','AMBIGUOUS_TARGET',['EXACT_SET']],['IMPORT','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['IMPORT','MISSING_TARGET',['UNKNOWN']],['IMPORT','OWNER_DISPOSITION_IMPORT_UNRESOLVED',['NOT_APPLICABLE']],['IMPORT','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
   ['TEST','AMBIGUOUS_TARGET',['EXACT_SET']],['TEST','DYNAMIC_TARGET',['EXACT_SET','UNKNOWN']],['TEST','MISSING_TARGET',['UNKNOWN']],['TEST','OWNER_DISPOSITION_TEST_UNRESOLVED',['NOT_APPLICABLE']],['TEST','TARGET_OUTSIDE_SOURCE_DOMAIN',['UNKNOWN']],
-].map(([relationshipClass, reasonCode, permittedCandidateStates]) => ({ relationshipClass, reasonCode, permittedCandidateStates })));
+], (row) => ({ relationshipClass: row[0], reasonCode: row[1], permittedCandidateStates: row[2] })));
 
 export const PARSER_POLICY_BODY = deepFreeze({
   schema: 'galerina.logic-aig-parser-policy.v1',
@@ -310,11 +607,11 @@ export const PARSER_POLICY_BODY = deepFreeze({
 
 export function validateParserPolicy(value) {
   dataObject(value, ['schema','parserIds','domainParserBindings','dispositions','diagnosticCodePattern','diagnosticSetEncoding','diagnosticCanonicalization','typescriptDiagnosticMapping','ownerKinds','ownerManifestBindings','actualOutcomeBindings','unresolvedReasonRows','authorizing','policyDigest']);
-  for (const field of ['parserIds','dispositions','ownerKinds']) array(value[field]);
-  for (const field of ['domainParserBindings','ownerManifestBindings','actualOutcomeBindings','unresolvedReasonRows']) array(value[field]);
+  forEachArray(['parserIds','dispositions','ownerKinds'], (field) => array(value[field]));
+  forEachArray(['domainParserBindings','ownerManifestBindings','actualOutcomeBindings','unresolvedReasonRows'], (field) => array(value[field]));
   const expectedReasonRows = canonicalJsonText(PARSER_POLICY_BODY.unresolvedReasonRows);
   const actualReasonRows = canonicalJsonText(value.unresolvedReasonRows);
-  const sortedReasonRows = canonicalJsonText([...value.unresolvedReasonRows].sort((a,b) => codeUnitCompare(`${a.relationshipClass}\0${a.reasonCode}`, `${b.relationshipClass}\0${b.reasonCode}`)));
+  const sortedReasonRows = canonicalJsonText(sortArray(copyArray(value.unresolvedReasonRows), (a,b) => codeUnitCompare(`${a.relationshipClass}\0${a.reasonCode}`, `${b.relationshipClass}\0${b.reasonCode}`)));
   if (actualReasonRows !== expectedReasonRows && sortedReasonRows === expectedReasonRows) refuse('SOURCE_ORIGIN_ORDER');
   if (value.diagnosticSetEncoding !== 'ASCII_COMMA_OR_WHITESPACE_V1') refuse('SOURCE_ORIGIN_POLICY');
   equalExact(without(value, 'policyDigest'), PARSER_POLICY_BODY);
@@ -324,12 +621,12 @@ export function validateParserPolicy(value) {
 
 export function decodeDiagnosticSet(text, policy) {
   policy = validateParserPolicy(policy);
-  if (typeof text !== 'string' || /[^\x00-\x7f]/.test(text) || text !== text.normalize('NFC')) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
-  const trimmed = text.replace(/^[\x09-\x0d\x20]+|[\x09-\x0d\x20]+$/g, '');
-  if (!trimmed || /^,|,$|,,/.test(trimmed)) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
-  const tokens = trimmed.split(/(?:[\x09-\x0d\x20]*,[\x09-\x0d\x20]*|[\x09-\x0d\x20]+)/);
-  if (tokens.some((token) => !token || !DIAGNOSTIC.test(token)) || new Set(tokens).size !== tokens.length) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
-  return tokens.sort(codeUnitCompare);
+  if (typeof text !== 'string' || regexTest(/[^\x00-\x7f]/, text) || text !== stringNormalize(text)) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
+  const trimmed = stringReplace(text, /^[\x09-\x0d\x20]+|[\x09-\x0d\x20]+$/g, '');
+  if (!trimmed || regexTest(/^,|,$|,,/, trimmed)) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
+  const tokens = stringSplit(trimmed, /(?:[\x09-\x0d\x20]*,[\x09-\x0d\x20]*|[\x09-\x0d\x20]+)/);
+  if (someArray(tokens, (token) => !token || !regexTest(DIAGNOSTIC, token)) || setSize(setFromArray(tokens)) !== tokens.length) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
+  return sortArray(tokens, codeUnitCompare);
 }
 
 export function validateGeneratedConsumerPolicy(value) {
@@ -350,7 +647,7 @@ export function validateProposedBaseline(value) {
   dataObject(value, ['schema','entries','authorizing','policyDigest']);
   if (value.schema !== 'galerina.example-proposed-baseline.v1' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
   array(value.entries);
-  for (const entry of value.entries) { dataObject(entry, ['directoryName','reason']); nfcString(entry.directoryName); nfcString(entry.reason); if (!entry.directoryName || !entry.reason) refuse('SOURCE_ORIGIN_POLICY'); }
+  forEachArray(value.entries, (entry) => { dataObject(entry, ['directoryName','reason']); nfcString(entry.directoryName); nfcString(entry.reason); if (!entry.directoryName || !entry.reason) refuse('SOURCE_ORIGIN_POLICY'); });
   validateSortedEntries(value.entries, 'directoryName');
   checkDigest(value, 'policyDigest');
   return immutableCopy(value);
@@ -364,50 +661,52 @@ function nonEmptyString(value) {
 
 function canonicalLocator(value) {
   nonEmptyString(value);
-  if (value.includes('\0') || value.includes('\\') || value.includes(':') || value.startsWith('/')) refuse('SOURCE_ORIGIN_POLICY');
-  const components = value.split('/');
-  if (components.some((component) => component === '' || component === '.' || component === '..')) refuse('SOURCE_ORIGIN_POLICY');
+  if (stringIncludes(value, '\0') || stringIncludes(value, '\\') || stringIncludes(value, ':') || stringStartsWith(value, '/')) refuse('SOURCE_ORIGIN_POLICY');
+  const components = stringSplit(value, '/');
+  if (someArray(components, (component) => component === '' || component === '.' || component === '..')) refuse('SOURCE_ORIGIN_POLICY');
   return value;
 }
 
 function nonNegativeInteger(value) {
-  if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (!safeNumberIsSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
 
 function digest(value) {
-  if (typeof value !== 'string' || !HEX64.test(value)) refuse('SOURCE_ORIGIN_DIGEST');
+  if (typeof value !== 'string' || !regexTest(HEX64, value)) refuse('SOURCE_ORIGIN_DIGEST');
   return value;
 }
 
 function validateExpectedOutcomeRow(row, parserPolicy) {
   dataObject(row, ['path','domain','parserId','disposition','diagnosticCodes','ownerKind','ownerLocator','ownerKey']);
-  for (const field of ['path','domain','parserId','disposition','ownerKind','ownerLocator','ownerKey']) nonEmptyString(row[field]);
-  const parserByDomain = new Map(parserPolicy.domainParserBindings.map((binding) => [binding.domain, binding.parserId]));
+  forEachArray(['path','domain','parserId','disposition','ownerKind','ownerLocator','ownerKey'], (field) => nonEmptyString(row[field]));
+  const parserByDomain = mapFromArray(parserPolicy.domainParserBindings, (binding) => binding.domain, (binding) => binding.parserId);
   canonicalLocator(row.path); canonicalLocator(row.ownerLocator);
-  if (parserByDomain.get(row.domain) !== row.parserId || !parserPolicy.dispositions.includes(row.disposition) || !parserPolicy.ownerKinds.includes(row.ownerKind)) refuse('SOURCE_ORIGIN_POLICY');
+  if (mapGet(parserByDomain, row.domain) !== row.parserId || !includesArray(parserPolicy.dispositions, row.disposition) || !includesArray(parserPolicy.ownerKinds, row.ownerKind)) refuse('SOURCE_ORIGIN_POLICY');
   if (row.disposition === 'EXPECTED_REFUSAL') {
     if (row.ownerKind === 'PROPOSED_BASELINE') refuse('SOURCE_ORIGIN_POLICY');
     assertSortedUniqueStrings(row.diagnosticCodes);
-    if (row.diagnosticCodes.length === 0 || row.diagnosticCodes.some((code) => !DIAGNOSTIC.test(code))) refuse('SOURCE_ORIGIN_POLICY');
+    if (row.diagnosticCodes.length === 0 || someArray(row.diagnosticCodes, (code) => !regexTest(DIAGNOSTIC, code))) refuse('SOURCE_ORIGIN_POLICY');
   } else {
     if (row.ownerKind !== 'PROPOSED_BASELINE' || row.diagnosticCodes !== null) refuse('SOURCE_ORIGIN_POLICY');
   }
   if (row.ownerKind === 'INLINE_EXPECTATION' && (row.ownerLocator !== row.path || row.ownerKey !== 'expected_diagnostics')) refuse('SOURCE_ORIGIN_POLICY');
   if (row.ownerKind === 'SIDECAR_EXPECTATION' && (row.ownerLocator !== `${row.path}.expected.diagnostics.txt` || row.ownerKey !== 'complete-file')) refuse('SOURCE_ORIGIN_POLICY');
-  if (row.ownerKind === 'GATE_V3_VERDICT' && (row.ownerLocator !== 'packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json' || row.ownerKey !== row.path.slice(row.path.lastIndexOf('/') + 1))) refuse('SOURCE_ORIGIN_POLICY');
+  if (row.ownerKind === 'GATE_V3_VERDICT' && (row.ownerLocator !== 'packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json' || row.ownerKey !== stringSlice(row.path, stringLastIndexOf(row.path, '/') + 1))) refuse('SOURCE_ORIGIN_POLICY');
   if (row.ownerKind === 'PROPOSED_BASELINE') {
-    const ownerComponentCount = row.path.split('/').filter((component) => component === row.ownerKey).length;
+    const ownerComponentCount = filterArray(stringSplit(row.path, '/'), (component) => component === row.ownerKey).length;
     if (row.ownerLocator !== 'governance/example-proposed-baseline.json' || ownerComponentCount !== 1) refuse('SOURCE_ORIGIN_POLICY');
   }
 }
 
-export function validateExpectedParseOutcomes(value, { parserPolicy } = {}) {
+export function validateExpectedParseOutcomes(value, options) {
   dataObject(value, ['schema','parserPolicyDigest','rows','authorizing','expectedOutcomesDigest']);
+  dataObject(options, ['parserPolicy']);
+  let parserPolicy = options.parserPolicy;
   parserPolicy = validateParserPolicy(parserPolicy);
   if (value.schema !== 'galerina.logic-aig-expected-parse-outcomes.v1' || value.authorizing !== false || value.parserPolicyDigest !== parserPolicy.policyDigest) refuse('SOURCE_ORIGIN_POLICY');
   array(value.rows);
-  for (const row of value.rows) validateExpectedOutcomeRow(row, parserPolicy);
+  forEachArray(value.rows, (row) => validateExpectedOutcomeRow(row, parserPolicy));
   validateSortedEntries(value.rows, 'path');
   checkDigest(value, 'expectedOutcomesDigest');
   return immutableCopy(value);
@@ -419,7 +718,7 @@ function validateManifestRow(row, objectFormat) {
   if (row.mode !== '100644' && row.mode !== '100755') refuse('SOURCE_ORIGIN_MANIFEST');
   if (row.objectFormat !== objectFormat || objectFormat !== 'sha1' && objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_MANIFEST');
   const oidPattern = objectFormat === 'sha1' ? HEX40 : HEX64;
-  if (typeof row.blobOid !== 'string' || !oidPattern.test(row.blobOid)) refuse('SOURCE_ORIGIN_MANIFEST');
+  if (typeof row.blobOid !== 'string' || !regexTest(oidPattern, row.blobOid)) refuse('SOURCE_ORIGIN_MANIFEST');
   digest(row.rawSha256);
   nonNegativeInteger(row.byteLength);
   if (row.byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes) refuse('SOURCE_ORIGIN_LIMIT');
@@ -429,14 +728,15 @@ function validateManifestRows(rows, objectFormat, maximumRows, maximumBytes) {
   array(rows);
   if (rows.length > maximumRows) refuse('SOURCE_ORIGIN_LIMIT');
   let totalBytes = 0;
-  const folded = new Set();
-  for (const row of rows) {
+  const folded = new SafeSet();
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
     validateManifestRow(row, objectFormat);
     if (totalBytes > maximumBytes - row.byteLength) refuse('SOURCE_ORIGIN_LIMIT');
     totalBytes += row.byteLength;
-    const lower = row.path.toLowerCase();
-    if (folded.has(lower)) refuse('SOURCE_ORIGIN_MANIFEST');
-    folded.add(lower);
+    const lower = stringToLowerCase(row.path);
+    if (setHas(folded, lower)) refuse('SOURCE_ORIGIN_MANIFEST');
+    setAdd(folded, lower);
   }
   validateSortedEntries(rows, 'path');
   return totalBytes;
@@ -465,16 +765,17 @@ export function validateSourceManifest(value, options) {
   ) refuse('SOURCE_ORIGIN_POLICY');
   if (value.objectFormat !== 'sha1' && value.objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_MANIFEST');
   const oidPattern = value.objectFormat === 'sha1' ? HEX40 : HEX64;
-  if (!oidPattern.test(value.expectedHead) || !oidPattern.test(value.expectedTree)) refuse('SOURCE_ORIGIN_MANIFEST');
+  if (!regexTest(oidPattern, value.expectedHead) || !regexTest(oidPattern, value.expectedTree)) refuse('SOURCE_ORIGIN_MANIFEST');
   const totalBytes = validateManifestRows(value.rows, value.objectFormat, SOURCE_ORIGIN_LIMITS.sourceFiles, SOURCE_ORIGIN_LIMITS.sourceBytes);
   dataObject(value.counts, ['paths','blobs','bytes','mode100644','mode100755','exclusions']);
-  for (const count of Object.values(value.counts)) nonNegativeInteger(count);
+  forEachArray(safeObjectValues(value.counts), nonNegativeInteger);
+  const uniqueBlobs = setFromArray(value.rows, (row) => row.blobOid);
   const expectedCounts = {
     paths: value.rows.length,
-    blobs: new Set(value.rows.map((row) => row.blobOid)).size,
+    blobs: setSize(uniqueBlobs),
     bytes: totalBytes,
-    mode100644: value.rows.filter((row) => row.mode === '100644').length,
-    mode100755: value.rows.filter((row) => row.mode === '100755').length,
+    mode100644: filterArray(value.rows, (row) => row.mode === '100644').length,
+    mode100755: filterArray(value.rows, (row) => row.mode === '100755').length,
     exclusions: sourcePolicy.exclusions.length,
   };
   if (canonicalJsonText(value.counts) !== canonicalJsonText(expectedCounts)) refuse('SOURCE_ORIGIN_MANIFEST');
@@ -517,31 +818,33 @@ function validateActualRuntimeLoadSetsForManifest(values, record) {
     if (actual.id !== admitted.id) refuse('SOURCE_ORIGIN_TOOLCHAIN');
     validateClosureRows(actual.moduleRows);
     validateBuiltinModules(actual.builtinModules);
-    const admittedRows = new Map(admitted.moduleRows.map((row) => [row.locator, row]));
-    for (const row of actual.moduleRows) {
-      const expected = admittedRows.get(row.locator);
+    const admittedRows = mapFromArray(admitted.moduleRows, (row) => row.locator);
+    for (let rowIndex = 0; rowIndex < actual.moduleRows.length; rowIndex += 1) {
+      const row = actual.moduleRows[rowIndex];
+      const expected = mapGet(admittedRows, row.locator);
       if (!expected || canonicalJsonText(row) !== canonicalJsonText(expected)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
     }
-    if (!actual.moduleRows.some((row) => row.locator === admitted.entry.locator)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-    if (actual.builtinModules.some((specifier) => !admitted.builtinModules.includes(specifier))) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    if (!someArray(actual.moduleRows, (row) => row.locator === admitted.entry.locator)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    if (someArray(actual.builtinModules, (specifier) => !includesArray(admitted.builtinModules, specifier))) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   }
 }
 
 function actualJoinedProjection(values, record) {
   const rows = [];
-  const exact = new Set();
-  const folded = new Set();
+  const exact = new SafeSet();
+  const folded = new SafeSet();
   for (let index = 0; index < values.length; index += 1) {
     const rootLocator = record.runtimeLoadSets[index].entry.rootLocator;
-    for (const row of values[index].moduleRows) {
+    for (let rowIndex = 0; rowIndex < values[index].moduleRows.length; rowIndex += 1) {
+      const row = values[index].moduleRows[rowIndex];
       const locator = `${rootLocator}/${row.locator}`;
-      const lower = locator.toLowerCase();
-      if (exact.has(locator) || folded.has(lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-      exact.add(locator); folded.add(lower);
-      rows.push({ locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
+      const lower = stringToLowerCase(locator);
+      if (setHas(exact, locator) || setHas(folded, lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+      setAdd(exact, locator); setAdd(folded, lower);
+      append(rows, { locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
     }
   }
-  return rows.sort((left, right) => codeUnitCompare(left.locator, right.locator));
+  return sortArray(rows, (left, right) => codeUnitCompare(left.locator, right.locator));
 }
 
 function validateToolchainManifestCore(value) {
@@ -556,11 +859,11 @@ function validateToolchainManifestCore(value) {
     'toolchainManifestDigest',
   ]);
   if (value.schema !== 'galerina.logic-aig-toolchain-manifest.v2' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
-  for (const field of ['selectedPinRecordId','platform','arch']) nonEmptyString(value[field]);
-  for (const field of [
+  forEachArray(['selectedPinRecordId','platform','arch'], (field) => nonEmptyString(value[field]));
+  forEachArray([
     'selectedPinRecordDigest','pinsDigest','sourceObservationDigest','loadObservationDigest',
     'moduleClosureDigest','actualLoadedSetDigest','toolchainManifestDigest',
-  ]) digest(value[field]);
+  ], (field) => digest(value[field]));
   array(value.actualParserExportNames);
   assertSortedUniqueStrings(value.actualParserExportNames);
   if (canonicalJsonText(value.actualParserExportNames) !== canonicalJsonText(TOOLCHAIN_PARSER_EXPORTS)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
@@ -571,7 +874,7 @@ export function validateToolchainManifest(value, options) {
   validateToolchainManifestCore(value);
   dataObject(options, ['pins']);
   const pins = validateToolchainPins(options.pins);
-  const records = pins.records.filter((record) =>
+  const records = filterArray(pins.records, (record) =>
     record.recordId === value.selectedPinRecordId
     && record.recordDigest === value.selectedPinRecordDigest
     && record.platform === value.platform
@@ -583,16 +886,17 @@ export function validateToolchainManifest(value, options) {
     'typescript','sourceOriginParser','runtimeLoadSets','domainSelections',
     'builtinModules','executableModuleRows','dataRows','moduleClosureDigest',
   ];
-  for (const field of repeated) if (canonicalJsonText(value[field]) !== canonicalJsonText(record[field])) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  forEachArray(repeated, (field) => { if (canonicalJsonText(value[field]) !== canonicalJsonText(record[field])) refuse('SOURCE_ORIGIN_TOOLCHAIN'); });
   validateActualRuntimeLoadSetsForManifest(value.actualRuntimeLoadSets, record);
   const actualLoadedModuleRows = actualJoinedProjection(value.actualRuntimeLoadSets, record);
   if (canonicalJsonText(value.actualLoadedModuleRows) !== canonicalJsonText(actualLoadedModuleRows)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  const executable = new Map(record.executableModuleRows.map((row) => [row.locator, row]));
-  for (const row of actualLoadedModuleRows) {
-    const expected = executable.get(row.locator);
+  const executable = mapFromArray(record.executableModuleRows, (row) => row.locator);
+  for (let index = 0; index < actualLoadedModuleRows.length; index += 1) {
+    const row = actualLoadedModuleRows[index];
+    const expected = mapGet(executable, row.locator);
     if (!expected || canonicalJsonText(row) !== canonicalJsonText(expected)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   }
-  const actualLoadedBuiltinModules = [...new Set(value.actualRuntimeLoadSets.flatMap((row) => row.builtinModules))].sort(codeUnitCompare);
+  const actualLoadedBuiltinModules = sortArray(setValuesArray(setFromArray(flatMapArray(value.actualRuntimeLoadSets, (row) => row.builtinModules))), codeUnitCompare);
   if (canonicalJsonText(value.actualLoadedBuiltinModules) !== canonicalJsonText(actualLoadedBuiltinModules)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   const loadedBody = {
     schema: 'galerina.logic-aig-actual-loaded-set.v2',
@@ -626,7 +930,7 @@ function validateReceiptBinding(binding, manifests, expectedKind) {
   if (binding.manifestKind !== expectedKind) refuse('SOURCE_ORIGIN_OUTCOMES');
   canonicalLocator(binding.path); digest(binding.manifestRowDigest); digest(binding.rawSha256); nonNegativeInteger(binding.byteLength);
   const manifest = expectedKind === 'SOURCE_MANIFEST' ? manifests.sourceManifest : manifests.resolutionInputs;
-  const row = manifest.rows.find((candidate) => candidate.path === binding.path);
+  const row = findArray(manifest.rows, (candidate) => candidate.path === binding.path);
   if (!row || binding.blobOid !== row.blobOid || binding.rawSha256 !== row.rawSha256 || binding.byteLength !== row.byteLength || binding.manifestRowDigest !== manifestRowDigest(expectedKind, row)) refuse('SOURCE_ORIGIN_OUTCOMES');
 }
 
@@ -638,7 +942,9 @@ function nullableCompare(left, right) {
 }
 
 function ownerBindingCompare(left, right) {
-  for (const field of ['ownerKind','locator','ownerKey','ownerReason']) {
+  const fields = ['ownerKind','locator','ownerKey','ownerReason'];
+  for (let index = 0; index < fields.length; index += 1) {
+    const field = fields[index];
     const comparison = nullableCompare(left[field], right[field]);
     if (comparison !== 0) return comparison;
   }
@@ -648,10 +954,11 @@ function ownerBindingCompare(left, right) {
 function validateOwnerBindings(values, manifests, parserPolicy, expectedOutcome, proposedBaseline) {
   array(values);
   if (values.length !== 1) refuse('SOURCE_ORIGIN_OUTCOMES');
-  const policy = new Map(parserPolicy.ownerManifestBindings.map((row) => [row.ownerKind, row]));
-  for (const binding of values) {
+  const policy = mapFromArray(parserPolicy.ownerManifestBindings, (row) => row.ownerKind);
+  for (let index = 0; index < values.length; index += 1) {
+    const binding = values[index];
     dataObject(binding, ['ownerKind','manifestKind','manifestRowDigest','locator','blobOid','rawSha256','byteLength','ownerKey','ownerReason']);
-    const rule = policy.get(binding.ownerKind);
+    const rule = mapGet(policy, binding.ownerKind);
     if (!rule || binding.manifestKind !== rule.manifestKind) refuse('SOURCE_ORIGIN_OUTCOMES');
     if (rule.ownerKeyRequired ? typeof binding.ownerKey !== 'string' || !binding.ownerKey : binding.ownerKey !== null) refuse('SOURCE_ORIGIN_OUTCOMES');
     if (rule.ownerReasonRequired ? typeof binding.ownerReason !== 'string' || !binding.ownerReason : binding.ownerReason !== null) refuse('SOURCE_ORIGIN_OUTCOMES');
@@ -670,7 +977,7 @@ function validateOwnerBindings(values, manifests, parserPolicy, expectedOutcome,
       || binding.locator !== expectedOutcome.ownerLocator
       || binding.ownerKey !== expectedOutcome.ownerKey
       || binding.ownerReason !== (expectedOutcome.ownerKind === 'PROPOSED_BASELINE'
-        ? proposedBaseline.entries.find((row) => row.directoryName === expectedOutcome.ownerKey)?.reason ?? refuse('SOURCE_ORIGIN_OUTCOMES')
+        ? findArray(proposedBaseline.entries, (row) => row.directoryName === expectedOutcome.ownerKey)?.reason ?? refuse('SOURCE_ORIGIN_OUTCOMES')
         : null)
     ) refuse('SOURCE_ORIGIN_OUTCOMES');
   }
@@ -684,9 +991,9 @@ function validateParseOutcomeReceiptRow(row, expected, manifests, parserPolicy, 
     'representedFileNodeId','unresolvedRowsDigest','rowDigest',
   ]);
   canonicalLocator(row.path);
-  for (const field of ['disposition','parserId','actualStatus']) nonEmptyString(row[field]);
-  for (const field of ['membershipProofDigest','unresolvedRowsDigest','rowDigest']) digest(row[field]);
-  if (!/^ga1:[0-9a-f]{64}$/.test(row.representedFileNodeId)) refuse('SOURCE_ORIGIN_OUTCOMES');
+  forEachArray(['disposition','parserId','actualStatus'], (field) => nonEmptyString(row[field]));
+  forEachArray(['membershipProofDigest','unresolvedRowsDigest','rowDigest'], (field) => digest(row[field]));
+  if (!regexTest(/^ga1:[0-9a-f]{64}$/, row.representedFileNodeId)) refuse('SOURCE_ORIGIN_OUTCOMES');
   if (row.path !== expected.path || row.disposition !== expected.disposition || row.parserId !== expected.parserId) refuse('SOURCE_ORIGIN_OUTCOMES');
   validateReceiptBinding(row.sourceBinding, manifests, 'SOURCE_MANIFEST');
   if (row.sourceBinding.path !== row.path) refuse('SOURCE_ORIGIN_OUTCOMES');
@@ -744,7 +1051,12 @@ export function validateParseOutcomesReceipt(value, options) {
     resolutionInputsDigest: resolutionInputs.resolutionInputsDigest,
     toolchainManifestDigest: toolchainManifest.toolchainManifestDigest,
   };
-  for (const [field, expected] of Object.entries(repeated)) if (value[field] !== expected) refuse('SOURCE_ORIGIN_OUTCOMES');
+  const repeatedEntries = safeObjectEntries(repeated);
+  for (let index = 0; index < repeatedEntries.length; index += 1) {
+    const field = repeatedEntries[index][0];
+    const expected = repeatedEntries[index][1];
+    if (value[field] !== expected) refuse('SOURCE_ORIGIN_OUTCOMES');
+  }
   if (resolutionInputs.repositoryId !== value.repositoryId || resolutionInputs.expectedHead !== value.expectedHead || resolutionInputs.expectedTree !== value.expectedTree) refuse('SOURCE_ORIGIN_OUTCOMES');
   array(value.rows);
   if (value.rows.length !== expectedOutcomes.rows.length) refuse('SOURCE_ORIGIN_OUTCOMES');
@@ -753,14 +1065,15 @@ export function validateParseOutcomesReceipt(value, options) {
   );
   validateSortedEntries(value.rows, 'path');
   dataObject(value.counts, ['outcomeRows','expectedRefusalRows','opaqueProposedRows','representedFileNodes','unresolvedRows','ownerBindings']);
-  for (const count of Object.values(value.counts)) nonNegativeInteger(count);
+  forEachArray(safeObjectValues(value.counts), nonNegativeInteger);
+  const representedFileNodeIds = setFromArray(value.rows, (row) => row.representedFileNodeId);
   const expectedCounts = {
     outcomeRows: value.rows.length,
-    expectedRefusalRows: value.rows.filter((row) => row.disposition === 'EXPECTED_REFUSAL').length,
-    opaqueProposedRows: value.rows.filter((row) => row.disposition === 'OPAQUE_PROPOSED').length,
-    representedFileNodes: new Set(value.rows.map((row) => row.representedFileNodeId)).size,
+    expectedRefusalRows: filterArray(value.rows, (row) => row.disposition === 'EXPECTED_REFUSAL').length,
+    opaqueProposedRows: filterArray(value.rows, (row) => row.disposition === 'OPAQUE_PROPOSED').length,
+    representedFileNodes: setSize(representedFileNodeIds),
     unresolvedRows: value.rows.length * 5,
-    ownerBindings: value.rows.reduce((sum, row) => sum + row.ownerBindings.length, 0),
+    ownerBindings: reduceArray(value.rows, (sum, row) => sum + row.ownerBindings.length, 0),
   };
   if (canonicalJsonText(value.counts) !== canonicalJsonText(expectedCounts)) refuse('SOURCE_ORIGIN_OUTCOMES');
   checkDigest(value, 'receiptDigest');
@@ -774,7 +1087,7 @@ function validateExecutableIdentity(value) {
 
 function validatePackageIdentity(value) {
   dataObject(value, ['name','version','packageLocator','packageRawSha256','packageByteLength','entryLocator','entryRawSha256','entryByteLength']);
-  for (const field of ['name','version','packageLocator','entryLocator']) nonEmptyString(value[field]);
+  forEachArray(['name','version','packageLocator','entryLocator'], (field) => nonEmptyString(value[field]));
   canonicalLocator(value.packageLocator); canonicalLocator(value.entryLocator);
   digest(value.packageRawSha256); digest(value.entryRawSha256);
   nonNegativeInteger(value.packageByteLength); nonNegativeInteger(value.entryByteLength);
@@ -782,7 +1095,8 @@ function validatePackageIdentity(value) {
 
 function validateClosureRows(rows) {
   array(rows);
-  for (const row of rows) {
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
     dataObject(row, ['locator','rawSha256','byteLength']);
     canonicalLocator(row.locator); digest(row.rawSha256); nonNegativeInteger(row.byteLength);
   }
@@ -820,14 +1134,18 @@ const TOOLCHAIN_PARSER_MODULES = deepFreeze([
   'requirement-diagnostics.js',
   'source-origin-parser-entry.js',
 ]);
-const TOOLCHAIN_SOURCE_DATA_LOCATORS = deepFreeze([
-  ...new Set(TOOLCHAIN_SOURCE_EDGES.flatMap((row) => [row.fromLocator, row.toLocator])),
-  'tsconfig.source-origin-parser.json',
-].sort(codeUnitCompare));
-const TOOLCHAIN_GENERATED_DATA_LOCATORS = deepFreeze([
-  ...TOOLCHAIN_PARSER_MODULES.map((locator) => locator.replace(/\.js$/, '.d.ts')),
-  'package.json',
-].sort(codeUnitCompare));
+const TOOLCHAIN_SOURCE_DATA_LOCATORS = deepFreeze((() => {
+  const locators = [];
+  forEachArray(TOOLCHAIN_SOURCE_EDGES, (row) => { append(locators, row.fromLocator); append(locators, row.toLocator); });
+  const unique = setValuesArray(setFromArray(locators));
+  append(unique, 'tsconfig.source-origin-parser.json');
+  return sortArray(unique, codeUnitCompare);
+})());
+const TOOLCHAIN_GENERATED_DATA_LOCATORS = deepFreeze((() => {
+  const locators = mapArray(TOOLCHAIN_PARSER_MODULES, (locator) => stringReplace(locator, /\.js$/, '.d.ts'));
+  append(locators, 'package.json');
+  return sortArray(locators, codeUnitCompare);
+})());
 export const TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS = deepFreeze([
   "LICENSE.txt",
   "README.md",
@@ -964,10 +1282,10 @@ export const TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS = deepFreeze([
 
 function validateBuiltinModules(values) {
   assertSortedUniqueStrings(values);
-  if (values.some((specifier) => {
-    if (!/^node:[a-z0-9][a-z0-9_./-]*$/.test(specifier)) return true;
-    const components = specifier.slice(5).split('/');
-    return components.some((component) => component === '' || component === '.' || component === '..');
+  if (someArray(values, (specifier) => {
+    if (!regexTest(/^node:[a-z0-9][a-z0-9_./-]*$/, specifier)) return true;
+    const components = stringSplit(stringSlice(specifier, 5), '/');
+    return someArray(components, (component) => component === '' || component === '.' || component === '..');
   })) refuse('SOURCE_ORIGIN_POLICY');
 }
 
@@ -980,7 +1298,7 @@ function validateRootedIdentity(value) {
 function validateSourceEntry(value) {
   dataObject(value, ['rootLocator','locator','gitBlobOid','rawSha256','byteLength','exportNames']);
   canonicalLocator(value.rootLocator); canonicalLocator(value.locator);
-  if (!HEX40.test(value.gitBlobOid)) refuse('SOURCE_ORIGIN_POLICY');
+  if (!regexTest(HEX40, value.gitBlobOid)) refuse('SOURCE_ORIGIN_POLICY');
   digest(value.rawSha256); nonNegativeInteger(value.byteLength);
   equalExact(value.exportNames, TOOLCHAIN_PARSER_EXPORTS);
   if (value.rootLocator !== 'packages-ts/galerina-core-compiler' || value.locator !== 'src/source-origin-parser-entry.ts') refuse('SOURCE_ORIGIN_POLICY');
@@ -989,7 +1307,7 @@ function validateSourceEntry(value) {
 function validateSourceProject(value) {
   dataObject(value, ['rootLocator','locator','gitBlobOid','rawSha256','byteLength','extendsLocator','files','include','compilerOptions']);
   canonicalLocator(value.rootLocator); canonicalLocator(value.locator);
-  if (!HEX40.test(value.gitBlobOid)) refuse('SOURCE_ORIGIN_POLICY');
+  if (!regexTest(HEX40, value.gitBlobOid)) refuse('SOURCE_ORIGIN_POLICY');
   digest(value.rawSha256); nonNegativeInteger(value.byteLength);
   const expectedOptions = {
     types: [], noEmitOnError: true, incremental: false, composite: false,
@@ -1007,7 +1325,8 @@ function validateSourceProject(value) {
 
 function validateEdgeRows(value, expected) {
   array(value);
-  for (const row of value) {
+  for (let index = 0; index < value.length; index += 1) {
+    const row = value[index];
     dataObject(row, ['fromLocator','kind','exportName','specifier','toLocator']);
     canonicalLocator(row.fromLocator); canonicalLocator(row.toLocator);
     nonEmptyString(row.kind); nonEmptyString(row.specifier);
@@ -1028,7 +1347,7 @@ function validateSourceOriginParser(value) {
     || value.generatedPackageManifest.rootLocator !== TOOLCHAIN_PARSER_ROOT
     || value.generatedPackageManifest.locator !== 'package.json'
     || value.generatedPackageManifest.byteLength !== 17
-    || value.generatedPackageManifest.rawSha256 !== sha256Raw(Buffer.from('{"type":"module"}', 'utf8'))
+    || value.generatedPackageManifest.rawSha256 !== sha256Raw(encodeUtf8('{"type":"module"}'))
   ) refuse('SOURCE_ORIGIN_POLICY');
   equalExact(value.exportNames, TOOLCHAIN_PARSER_EXPORTS);
   validateEdgeRows(value.sourceEdgeRows, TOOLCHAIN_SOURCE_EDGES);
@@ -1043,62 +1362,69 @@ function validateRuntimeLoadSet(value) {
   canonicalLocator(value.entry.rootLocator); canonicalLocator(value.entry.locator);
   validateClosureRows(value.moduleRows);
   validateBuiltinModules(value.builtinModules);
-  const entryRows = value.moduleRows.filter((row) => row.locator === value.entry.locator);
+  const entryRows = filterArray(value.moduleRows, (row) => row.locator === value.entry.locator);
   if (entryRows.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   if (value.id === 'HOST') {
     if (value.entry.rootLocator !== TOOLCHAIN_HOST_ROOT || value.entry.locator !== 'lib/typescript.js') refuse('SOURCE_ORIGIN_TOOLCHAIN');
   } else if (value.id === 'PARSER') {
     if (value.entry.rootLocator !== TOOLCHAIN_PARSER_ROOT || value.entry.locator !== 'source-origin-parser-entry.js') refuse('SOURCE_ORIGIN_TOOLCHAIN');
     if (value.builtinModules.length !== 0) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-    equalExact(value.moduleRows.map((row) => row.locator), TOOLCHAIN_PARSER_MODULES);
+    equalExact(mapArray(value.moduleRows, (row) => row.locator), TOOLCHAIN_PARSER_MODULES);
   } else refuse('SOURCE_ORIGIN_TOOLCHAIN');
 }
 
 function joinedRuntimeProjection(runtimeLoadSets) {
-  const pairs = new Map();
-  for (const loadSet of runtimeLoadSets) {
-    for (const row of loadSet.moduleRows) {
+  const pairs = new SafeMap();
+  for (let setIndex = 0; setIndex < runtimeLoadSets.length; setIndex += 1) {
+    const loadSet = runtimeLoadSets[setIndex];
+    for (let rowIndex = 0; rowIndex < loadSet.moduleRows.length; rowIndex += 1) {
+      const row = loadSet.moduleRows[rowIndex];
       const pairKey = `${loadSet.entry.rootLocator}\0${row.locator}`;
-      const retained = pairs.get(pairKey);
+      const retained = mapGet(pairs, pairKey);
       if (retained) {
         if (retained.rawSha256 !== row.rawSha256 || retained.byteLength !== row.byteLength) refuse('SOURCE_ORIGIN_TOOLCHAIN');
         continue;
       }
-      pairs.set(pairKey, { rootLocator: loadSet.entry.rootLocator, ...row });
+      mapSet(pairs, pairKey, { rootLocator: loadSet.entry.rootLocator, locator: row.locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
     }
   }
-  const exact = new Set();
-  const folded = new Set();
+  const exact = new SafeSet();
+  const folded = new SafeSet();
   const rows = [];
-  for (const row of pairs.values()) {
+  const pairValues = mapValuesArray(pairs);
+  for (let index = 0; index < pairValues.length; index += 1) {
+    const row = pairValues[index];
     const locator = `${row.rootLocator}/${row.locator}`;
-    const lower = locator.toLowerCase();
-    if (exact.has(locator) || folded.has(lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-    exact.add(locator); folded.add(lower);
-    rows.push({ locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
+    const lower = stringToLowerCase(locator);
+    if (setHas(exact, locator) || setHas(folded, lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    setAdd(exact, locator); setAdd(folded, lower);
+    append(rows, { locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
   }
-  rows.sort((left, right) => codeUnitCompare(left.locator, right.locator));
+  sortArray(rows, (left, right) => codeUnitCompare(left.locator, right.locator));
   return rows;
 }
 
 function assertGlobalLocatorClosure(executableRows, dataRows) {
-  const exact = new Set();
-  const folded = new Set();
-  for (const row of [...executableRows, ...dataRows]) {
-    const lower = row.locator.toLowerCase();
-    if (exact.has(row.locator) || folded.has(lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-    exact.add(row.locator); folded.add(lower);
+  const exact = new SafeSet();
+  const folded = new SafeSet();
+  const combined = copyArray(executableRows);
+  forEachArray(dataRows, (row) => append(combined, row));
+  for (let index = 0; index < combined.length; index += 1) {
+    const row = combined[index];
+    const lower = stringToLowerCase(row.locator);
+    if (setHas(exact, row.locator) || setHas(folded, lower)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    setAdd(exact, row.locator); setAdd(folded, lower);
   }
 }
 
 function requireRepresented(rows, rootedIdentity) {
   const locator = `${rootedIdentity.rootLocator}/${rootedIdentity.locator}`;
-  const row = rows.find((candidate) => candidate.locator === locator);
+  const row = findArray(rows, (candidate) => candidate.locator === locator);
   if (!row || row.rawSha256 !== rootedIdentity.rawSha256 || row.byteLength !== rootedIdentity.byteLength) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 }
 
 function requireDataRow(rows, locator, expectedIdentity = undefined) {
-  const row = rows.find((candidate) => candidate.locator === locator);
+  const row = findArray(rows, (candidate) => candidate.locator === locator);
   if (
     !row
     || expectedIdentity !== undefined
@@ -1107,30 +1433,28 @@ function requireDataRow(rows, locator, expectedIdentity = undefined) {
 }
 
 function validateDeclaredDataPartition(record) {
-  const exactSourceData = new Set(
-    TOOLCHAIN_SOURCE_DATA_LOCATORS.map((locator) => TOOLCHAIN_COMPILER_ROOT + '/' + locator),
-  );
-  const exactGeneratedData = new Set(
-    TOOLCHAIN_GENERATED_DATA_LOCATORS.map((locator) => TOOLCHAIN_PARSER_ROOT + '/' + locator),
-  );
-  const exactTypescriptData = new Set(
-    TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS.map((locator) => TOOLCHAIN_HOST_ROOT + '/' + locator),
-  );
+  const sourceDataValues = mapArray(TOOLCHAIN_SOURCE_DATA_LOCATORS, (locator) => TOOLCHAIN_COMPILER_ROOT + '/' + locator);
+  const generatedDataValues = mapArray(TOOLCHAIN_GENERATED_DATA_LOCATORS, (locator) => TOOLCHAIN_PARSER_ROOT + '/' + locator);
+  const typescriptDataValues = mapArray(TOOLCHAIN_TYPESCRIPT_DATA_LOCATORS, (locator) => TOOLCHAIN_HOST_ROOT + '/' + locator);
+  const exactSourceData = setFromArray(sourceDataValues);
+  const exactGeneratedData = setFromArray(generatedDataValues);
+  const exactTypescriptData = setFromArray(typescriptDataValues);
 
-  for (const locator of exactSourceData) requireDataRow(record.dataRows, locator);
-  for (const locator of exactGeneratedData) requireDataRow(record.dataRows, locator);
-  for (const locator of exactTypescriptData) requireDataRow(record.dataRows, locator);
+  forEachArray(sourceDataValues, (locator) => requireDataRow(record.dataRows, locator));
+  forEachArray(generatedDataValues, (locator) => requireDataRow(record.dataRows, locator));
+  forEachArray(typescriptDataValues, (locator) => requireDataRow(record.dataRows, locator));
   requireDataRow(record.dataRows, record.typescript.packageLocator, {
     rawSha256: record.typescript.packageRawSha256,
     byteLength: record.typescript.packageByteLength,
   });
   requireDataRow(record.dataRows, TOOLCHAIN_HOST_ROOT + '/lib/tsc.js');
 
-  for (const row of record.dataRows) {
+  for (let index = 0; index < record.dataRows.length; index += 1) {
+    const row = record.dataRows[index];
     if (
-      !exactSourceData.has(row.locator)
-      && !exactGeneratedData.has(row.locator)
-      && !exactTypescriptData.has(row.locator)
+      !setHas(exactSourceData, row.locator)
+      && !setHas(exactGeneratedData, row.locator)
+      && !setHas(exactTypescriptData, row.locator)
     ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   }
 }
@@ -1142,7 +1466,7 @@ function validateToolchainRecord(record) {
     'domainSelections','builtinModules','executableModuleRows','dataRows',
     'moduleClosureDigest','recordDigest',
   ]);
-  for (const field of ['recordId','platform','arch']) nonEmptyString(record[field]);
+  forEachArray(['recordId','platform','arch'], (field) => nonEmptyString(record[field]));
   digest(record.sourceObservationDigest); digest(record.loadObservationDigest);
   if (
     record.recordId === 'win32-x64'
@@ -1160,8 +1484,8 @@ function validateToolchainRecord(record) {
   ) refuse('SOURCE_ORIGIN_POLICY');
   validateSourceOriginParser(record.sourceOriginParser);
   array(record.runtimeLoadSets);
-  for (const loadSet of record.runtimeLoadSets) validateRuntimeLoadSet(loadSet);
-  equalExact(record.runtimeLoadSets.map((row) => row.id), ['HOST', 'PARSER']);
+  forEachArray(record.runtimeLoadSets, validateRuntimeLoadSet);
+  equalExact(mapArray(record.runtimeLoadSets, (row) => row.id), ['HOST', 'PARSER']);
   equalExact(record.domainSelections, TOOLCHAIN_DOMAIN_SELECTIONS);
   validateBuiltinModules(record.builtinModules);
   validateClosureRows(record.executableModuleRows); validateClosureRows(record.dataRows);
@@ -1169,13 +1493,13 @@ function validateToolchainRecord(record) {
   assertGlobalLocatorClosure(record.executableModuleRows, record.dataRows);
   const projection = joinedRuntimeProjection(record.runtimeLoadSets);
   equalExact(record.executableModuleRows, projection);
-  const builtinUnion = [...new Set(record.runtimeLoadSets.flatMap((row) => row.builtinModules))].sort(codeUnitCompare);
+  const builtinUnion = sortArray(setValuesArray(setFromArray(flatMapArray(record.runtimeLoadSets, (row) => row.builtinModules))), codeUnitCompare);
   equalExact(record.builtinModules, builtinUnion);
 
   const hostSet = record.runtimeLoadSets[0];
   const parserSet = record.runtimeLoadSets[1];
-  const hostEntry = hostSet.moduleRows.find((row) => row.locator === hostSet.entry.locator);
-  const parserEntry = parserSet.moduleRows.find((row) => row.locator === parserSet.entry.locator);
+  const hostEntry = findArray(hostSet.moduleRows, (row) => row.locator === hostSet.entry.locator);
+  const parserEntry = findArray(parserSet.moduleRows, (row) => row.locator === parserSet.entry.locator);
   if (
     !hostEntry
     || record.typescript.entryRawSha256 !== hostEntry.rawSha256
@@ -1207,7 +1531,7 @@ export function validateToolchainPins(value) {
   dataObject(value, ['schema','records','authorizing','pinsDigest']);
   if (value.schema !== 'galerina.logic-aig-toolchain-pins.v2' || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
   array(value.records);
-  for (const record of value.records) validateToolchainRecord(record);
+  forEachArray(value.records, validateToolchainRecord);
   for (let index = 1; index < value.records.length; index += 1) if (codeUnitCompare(value.records[index - 1].recordId, value.records[index].recordId) >= 0) refuse('SOURCE_ORIGIN_ORDER');
   checkDigest(value, 'pinsDigest');
   return immutableCopy(value);
