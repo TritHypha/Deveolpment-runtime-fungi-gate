@@ -1,8 +1,10 @@
-import { closeSync, lstatSync, openSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { closeSync, lstatSync, openSync, readSync, realpathSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { arch, platform } from 'node:os';
-import { spawn } from 'node:child_process';
+import { ChildProcess, spawn } from 'node:child_process';
+import { EventEmitter } from 'node:events';
+import { Readable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
 import { isProxy } from 'node:util/types';
 
@@ -11,8 +13,6 @@ import {
   canonicalJsonText,
   classifySourcePath,
   parseCanonicalJsonBytes,
-  sha256Canonical,
-  sha256Raw,
   validateGeneratedConsumerPolicy,
   validateProposedBaseline,
   validateRepositoryIdentity,
@@ -30,7 +30,18 @@ import {
   validateGitProcessPolicy,
 } from './owner-proposal-policy.mjs';
 
-const REPOSITORY_ROOT = realpathSync.native(fileURLToPath(new URL('../../../', import.meta.url)));
+const CLOSE_SYNC = closeSync;
+const CREATE_HASH = createHash;
+const FILE_URL_TO_PATH = fileURLToPath;
+const LSTAT_SYNC = lstatSync;
+const OPEN_SYNC = openSync;
+const OS_ARCH = arch;
+const OS_PLATFORM = platform;
+const READ_SYNC = readSync;
+const REALPATH_SYNC_NATIVE = realpathSync.native;
+const SPAWN = spawn;
+const STAT_SYNC = statSync;
+const REPOSITORY_ROOT = REALPATH_SYNC_NATIVE(FILE_URL_TO_PATH(new URL('../../../', import.meta.url)));
 
 const POLICY_PATHS = Object.freeze({
   proposedBaseline: 'governance/example-proposed-baseline.json',
@@ -71,6 +82,7 @@ const CONTROL = /[\u0000-\u001f\u007f]/u;
 const REFLECT_APPLY = Reflect.apply;
 const OBJECT_CREATE = Object.create;
 const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
+const OBJECT_ENTRIES = Object.entries;
 const OBJECT_FREEZE = Object.freeze;
 const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
 const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
@@ -79,10 +91,38 @@ const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
 const OBJECT_HAS_OWN = Object.hasOwn;
 const OBJECT_PROTOTYPE = Object.prototype;
 const OBJECT_SET_PROTOTYPE_OF = Object.setPrototypeOf;
+const OBJECT_VALUES = Object.values;
 const FUNCTION_PROTOTYPE = Function.prototype;
+const BIGINT_CONSTRUCTOR = BigInt;
+const DATE_NOW = Date.now;
+const JSON_PARSE = JSON.parse;
+const NUMBER_CONSTRUCTOR = Number;
+const NUMBER_IS_SAFE_INTEGER = Number.isSafeInteger;
+const PROMISE_CONSTRUCTOR = Promise;
+const REGEXP_CONSTRUCTOR = RegExp;
+const REGEXP_EXEC = RegExp.prototype.exec;
+const REGEXP_TEST = RegExp.prototype.test;
+const SET_TIMEOUT = setTimeout;
+const CLEAR_TIMEOUT = clearTimeout;
 const SYMBOL_HAS_INSTANCE = Symbol.hasInstance;
+const SYMBOL_ITERATOR = Symbol.iterator;
+const STRING_CHAR_CODE_AT = String.prototype.charCodeAt;
+const STRING_ENDS_WITH = String.prototype.endsWith;
+const STRING_INCLUDES = String.prototype.includes;
+const STRING_INDEX_OF = String.prototype.indexOf;
+const STRING_LAST_INDEX_OF = String.prototype.lastIndexOf;
+const STRING_NORMALIZE = String.prototype.normalize;
+const STRING_REPLACE = String.prototype.replace;
+const STRING_REPLACE_ALL = String.prototype.replaceAll;
+const STRING_SLICE = String.prototype.slice;
+const STRING_SPLIT = String.prototype.split;
+const STRING_STARTS_WITH = String.prototype.startsWith;
+const STRING_TO_LOWER_CASE = String.prototype.toLowerCase;
+const STRING_TO_UPPER_CASE = String.prototype.toUpperCase;
+const ARRAY_CONSTRUCTOR = Array;
 const ARRAY_IS_ARRAY = Array.isArray;
 const ARRAY_PROTOTYPE = Array.prototype;
+const ARRAY_SORT = Array.prototype.sort;
 const ARRAY_BUFFER_IS_VIEW = ArrayBuffer.isView;
 const ARRAY_BUFFER_BYTE_LENGTH_GETTER = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(ArrayBuffer.prototype, 'byteLength').get;
 const TYPED_ARRAY_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(Uint8Array.prototype);
@@ -96,8 +136,11 @@ const TYPED_ARRAY_SET = Uint8Array.prototype.set;
 const BUFFER_CONSTRUCTOR = Buffer;
 const BUFFER_CONSTRUCTOR_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(BUFFER_CONSTRUCTOR);
 const BUFFER_PROTOTYPE = Buffer.prototype;
-const BUFFER_ALLOC_UNSAFE = Buffer.allocUnsafe;
+const BUFFER_ALLOC_UNSAFE_SLOW = Buffer.allocUnsafeSlow;
+const BUFFER_EQUALS = Buffer.prototype.equals;
 const BUFFER_IS_BUFFER = Buffer.isBuffer;
+const BUFFER_POOL_SIZE_DESCRIPTOR = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(BUFFER_CONSTRUCTOR, 'poolSize');
+const BUFFER_SUBARRAY = Buffer.prototype.subarray;
 const UTIL_TYPES_IS_PROXY = isProxy;
 const MAP_CONSTRUCTOR = Map;
 const MAP_PROTOTYPE = Map.prototype;
@@ -110,27 +153,334 @@ const MAP_ITERATOR_NEXT = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(
   OBJECT_GET_PROTOTYPE_OF(REFLECT_APPLY(MAP_ENTRIES, new MAP_CONSTRUCTOR(), [])),
   'next',
 ).value;
+const SET_CONSTRUCTOR = Set;
+const SET_PROTOTYPE = Set.prototype;
+const SET_ADD = SET_PROTOTYPE.add;
+const SET_HAS = SET_PROTOTYPE.has;
+const SET_SIZE_GETTER = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(SET_PROTOTYPE, 'size').get;
+const SET_VALUES = SET_PROTOTYPE.values;
+const SET_ITERATOR_NEXT = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(
+  OBJECT_GET_PROTOTYPE_OF(REFLECT_APPLY(SET_VALUES, new SET_CONSTRUCTOR(), [])),
+  'next',
+).value;
 const WEAK_MAP_CONSTRUCTOR = WeakMap;
 const WEAK_MAP_GET = WeakMap.prototype.get;
 const WEAK_MAP_HAS = WeakMap.prototype.has;
 const WEAK_MAP_SET = WeakMap.prototype.set;
+const WEAK_SET_CONSTRUCTOR = WeakSet;
+const WEAK_SET_ADD = WeakSet.prototype.add;
+const WEAK_SET_HAS = WeakSet.prototype.has;
 const BLOB_CAPABILITY_STATES = new WEAK_MAP_CONSTRUCTOR();
 const BLOB_ITERATOR_STATES = new WEAK_MAP_CONSTRUCTOR();
+const CAPTURE_REFUSALS = new WEAK_SET_CONSTRUCTOR();
+const HASH_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(CREATE_HASH('sha256'));
+const HASH_UPDATE = HASH_PROTOTYPE.update;
+const HASH_DIGEST = HASH_PROTOTYPE.digest;
+const TEXT_ENCODER_CONSTRUCTOR = TextEncoder;
+const TEXT_ENCODER_ENCODE = TextEncoder.prototype.encode;
+const UTF8_ENCODER = new TEXT_ENCODER_CONSTRUCTOR();
+const TEXT_DECODER_CONSTRUCTOR = TextDecoder;
+const TEXT_DECODER_DECODE = TextDecoder.prototype.decode;
+const UTF8_DECODER = new TEXT_DECODER_CONSTRUCTOR('utf-8', { fatal: true });
+const HASH_DOMAIN_SEPARATOR = new UINT8_ARRAY_CONSTRUCTOR(1);
+const PATH_BASENAME = path.basename;
+const PATH_DIRNAME = path.dirname;
+const PATH_IS_ABSOLUTE = path.isAbsolute;
+const PATH_JOIN = path.join;
+const PATH_NORMALIZE = path.normalize;
+const CHILD_PROCESS_KILL = ChildProcess.prototype.kill;
+const EVENT_EMITTER_ON = EventEmitter.prototype.on;
+const READABLE_RESUME = Readable.prototype.resume;
+const SYSTEM_ROOT = process.env.SystemRoot;
 
 class SourceOriginCaptureRefusal extends Error {
   constructor(code) {
     super(code);
-    this.name = 'SourceOriginCaptureRefusal';
-    this.code = code;
+    OBJECT_DEFINE_PROPERTY(this, 'name', {
+      configurable: true,
+      enumerable: true,
+      value: 'SourceOriginCaptureRefusal',
+      writable: true,
+    });
+    OBJECT_DEFINE_PROPERTY(this, 'code', {
+      configurable: true,
+      enumerable: true,
+      value: code,
+      writable: true,
+    });
+    REFLECT_APPLY(WEAK_SET_ADD, CAPTURE_REFUSALS, [this]);
   }
 }
+OBJECT_FREEZE(SourceOriginCaptureRefusal.prototype);
+OBJECT_FREEZE(SourceOriginCaptureRefusal);
 
 function refuse(code) {
   throw new SourceOriginCaptureRefusal(code);
 }
 
+function isCaptureRefusal(value) {
+  return value !== null && (typeof value === 'object' || typeof value === 'function')
+    && REFLECT_APPLY(WEAK_SET_HAS, CAPTURE_REFUSALS, [value]);
+}
+
 function codeUnitCompare(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
+}
+
+function stringCharCodeAt(value, index) {
+  return REFLECT_APPLY(STRING_CHAR_CODE_AT, value, [index]);
+}
+
+function stringEndsWith(value, suffix) {
+  return REFLECT_APPLY(STRING_ENDS_WITH, value, [suffix]);
+}
+
+function stringIncludes(value, search) {
+  return REFLECT_APPLY(STRING_INCLUDES, value, [search]);
+}
+
+function stringIndexOf(value, search, fromIndex) {
+  return fromIndex === undefined
+    ? REFLECT_APPLY(STRING_INDEX_OF, value, [search])
+    : REFLECT_APPLY(STRING_INDEX_OF, value, [search, fromIndex]);
+}
+
+function stringLastIndexOf(value, search) {
+  return REFLECT_APPLY(STRING_LAST_INDEX_OF, value, [search]);
+}
+
+function stringNormalize(value) {
+  return REFLECT_APPLY(STRING_NORMALIZE, value, ['NFC']);
+}
+
+function stringReplace(value, search, replacement) {
+  return REFLECT_APPLY(STRING_REPLACE, value, [search, replacement]);
+}
+
+function stringReplaceAll(value, search, replacement) {
+  return REFLECT_APPLY(STRING_REPLACE_ALL, value, [search, replacement]);
+}
+
+function stringSlice(value, start, end) {
+  return end === undefined
+    ? REFLECT_APPLY(STRING_SLICE, value, [start])
+    : REFLECT_APPLY(STRING_SLICE, value, [start, end]);
+}
+
+function stringSplit(value, separator) {
+  return REFLECT_APPLY(STRING_SPLIT, value, [separator]);
+}
+
+function stringStartsWith(value, prefix) {
+  return REFLECT_APPLY(STRING_STARTS_WITH, value, [prefix]);
+}
+
+function stringToLowerCase(value) {
+  return REFLECT_APPLY(STRING_TO_LOWER_CASE, value, []);
+}
+
+function stringToUpperCase(value) {
+  return REFLECT_APPLY(STRING_TO_UPPER_CASE, value, []);
+}
+
+function regexpExec(pattern, value) {
+  return REFLECT_APPLY(REGEXP_EXEC, pattern, [value]);
+}
+
+function regexpTest(pattern, value) {
+  return REFLECT_APPLY(REGEXP_TEST, pattern, [value]);
+}
+
+function safeArrayAppend(values, value) {
+  OBJECT_DEFINE_PROPERTY(values, values.length, {
+    configurable: true,
+    enumerable: true,
+    value,
+    writable: true,
+  });
+}
+
+function safeArrayMap(values, transform) {
+  const output = new ARRAY_CONSTRUCTOR();
+  for (let index = 0; index < values.length; index += 1) {
+    safeArrayAppend(output, transform(values[index], index));
+  }
+  return output;
+}
+
+function safeArrayFilter(values, predicate) {
+  const output = new ARRAY_CONSTRUCTOR();
+  for (let index = 0; index < values.length; index += 1) {
+    if (predicate(values[index], index)) safeArrayAppend(output, values[index]);
+  }
+  return output;
+}
+
+function safeArraySome(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) {
+    if (predicate(values[index], index)) return true;
+  }
+  return false;
+}
+
+function safeArrayEvery(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) {
+    if (!predicate(values[index], index)) return false;
+  }
+  return true;
+}
+
+function safeArrayIncludes(values, sought) {
+  for (let index = 0; index < values.length; index += 1) {
+    if (values[index] === sought) return true;
+  }
+  return false;
+}
+
+function safeArrayCount(values, predicate) {
+  let count = 0;
+  for (let index = 0; index < values.length; index += 1) {
+    if (predicate(values[index], index)) count += 1;
+  }
+  return count;
+}
+
+function safeArrayCopy(values) {
+  return safeArrayMap(values, (value) => value);
+}
+
+function safeArraySort(values, compare) {
+  REFLECT_APPLY(ARRAY_SORT, values, [compare]);
+  return values;
+}
+
+function setAdd(set, value) {
+  REFLECT_APPLY(SET_ADD, set, [value]);
+}
+
+function setHas(set, value) {
+  return REFLECT_APPLY(SET_HAS, set, [value]);
+}
+
+function setSize(set) {
+  return REFLECT_APPLY(SET_SIZE_GETTER, set, []);
+}
+
+function capturedSetValues(set) {
+  const iterator = REFLECT_APPLY(SET_VALUES, set, []);
+  const values = new ARRAY_CONSTRUCTOR();
+  while (true) {
+    const step = REFLECT_APPLY(SET_ITERATOR_NEXT, iterator, []);
+    if (step.done) return values;
+    safeArrayAppend(values, step.value);
+  }
+}
+
+function safeUniqueCount(values, select) {
+  const unique = new SET_CONSTRUCTOR();
+  for (let index = 0; index < values.length; index += 1) setAdd(unique, select(values[index], index));
+  return setSize(unique);
+}
+
+function mapSize(map) {
+  return REFLECT_APPLY(MAP_SIZE_GETTER, map, []);
+}
+
+function typedArrayLength(value) {
+  return REFLECT_APPLY(TYPED_ARRAY_LENGTH_GETTER, value, []);
+}
+
+function bufferEquals(left, right) {
+  return REFLECT_APPLY(BUFFER_EQUALS, left, [right]);
+}
+
+function bufferSubarray(value, start, end) {
+  return end === undefined
+    ? REFLECT_APPLY(BUFFER_SUBARRAY, value, [start])
+    : REFLECT_APPLY(BUFFER_SUBARRAY, value, [start, end]);
+}
+
+function readDescriptorExact(descriptor, byteLength, code) {
+  if (!NUMBER_IS_SAFE_INTEGER(byteLength) || byteLength < 0 || byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes) refuse(code);
+  const bytes = allocateExactBuffer(byteLength, code);
+  const sentinel = allocateExactBuffer(1, code);
+  let offset = 0;
+  try {
+    while (offset < byteLength) {
+      const count = READ_SYNC(descriptor, bytes, offset, byteLength - offset, null);
+      if (!NUMBER_IS_SAFE_INTEGER(count) || count <= 0 || count > byteLength - offset) refuse(code);
+      offset += count;
+    }
+    if (READ_SYNC(descriptor, sentinel, 0, 1, null) !== 0) refuse(code);
+  } catch (error) {
+    if (isCaptureRefusal(error)) throw error;
+    refuse(code);
+  }
+  return bytes;
+}
+
+function assertCaptureRuntimeClosure() {
+  const current = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(BUFFER_CONSTRUCTOR, 'poolSize');
+  if (
+    !current
+    || !OBJECT_HAS_OWN(current, 'value')
+    || current.value !== BUFFER_POOL_SIZE_DESCRIPTOR.value
+    || current.configurable !== BUFFER_POOL_SIZE_DESCRIPTOR.configurable
+    || current.enumerable !== BUFFER_POOL_SIZE_DESCRIPTOR.enumerable
+    || current.writable !== BUFFER_POOL_SIZE_DESCRIPTOR.writable
+  ) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+}
+
+function hashHex(algorithm, chunks) {
+  const hash = CREATE_HASH(algorithm);
+  for (let index = 0; index < chunks.length; index += 1) {
+    REFLECT_APPLY(HASH_UPDATE, hash, [chunks[index]]);
+  }
+  return REFLECT_APPLY(HASH_DIGEST, hash, ['hex']);
+}
+
+function encodeUtf8(value) {
+  return REFLECT_APPLY(TEXT_ENCODER_ENCODE, UTF8_ENCODER, [value]);
+}
+
+function sha256CanonicalCaptured(domain, value) {
+  const canonical = canonicalJsonText(value);
+  return hashHex('sha256', [encodeUtf8(domain), HASH_DOMAIN_SEPARATOR, encodeUtf8(canonical)]);
+}
+
+function statIsKind(value, expected) {
+  const mode = value.mode;
+  if (typeof mode === 'bigint') {
+    const kind = mode & 0o170000n;
+    if (expected === 'FILE') return kind === 0o100000n;
+    if (expected === 'DIRECTORY') return kind === 0o040000n;
+    return kind === 0o120000n;
+  }
+  const kind = mode & 0o170000;
+  if (expected === 'FILE') return kind === 0o100000;
+  if (expected === 'DIRECTORY') return kind === 0o040000;
+  return kind === 0o120000;
+}
+
+function setDynamicData(target, property, value) {
+  OBJECT_DEFINE_PROPERTY(target, property, {
+    configurable: true,
+    enumerable: true,
+    value,
+    writable: true,
+  });
+}
+
+function joinPathArguments(values) {
+  return REFLECT_APPLY(PATH_JOIN, undefined, values);
+}
+
+function joinRepositoryLocator(locator) {
+  const values = new ARRAY_CONSTRUCTOR();
+  safeArrayAppend(values, REPOSITORY_ROOT);
+  const components = stringSplit(locator, '/');
+  for (let index = 0; index < components.length; index += 1) safeArrayAppend(values, components[index]);
+  return joinPathArguments(values);
 }
 
 function exactObject(value, keys, code = 'SOURCE_ORIGIN_GIT_SCHEMA') {
@@ -142,7 +492,7 @@ function exactObject(value, keys, code = 'SOURCE_ORIGIN_GIT_SCHEMA') {
   for (let index = 0; index < ownNames.length; index += 1) {
     const name = ownNames[index];
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
   }
   for (let keyIndex = 0; keyIndex < keys.length; keyIndex += 1) {
     let found = false;
@@ -158,21 +508,21 @@ function exactObject(value, keys, code = 'SOURCE_ORIGIN_GIT_SCHEMA') {
 
 function captureOptions(value) {
   exactObject(value, ['commitOid', 'gitExecutableLocator']);
-  if (typeof value.commitOid !== 'string' || !HEX_OID.test(value.commitOid) ||
+  if (typeof value.commitOid !== 'string' || !regexpTest(HEX_OID, value.commitOid) ||
       typeof value.gitExecutableLocator !== 'string' || value.gitExecutableLocator.length === 0 ||
-      value.gitExecutableLocator.includes('\0') || !path.isAbsolute(value.gitExecutableLocator) ||
-      path.normalize(value.gitExecutableLocator) !== value.gitExecutableLocator) refuse('SOURCE_ORIGIN_GIT_SCHEMA');
-  const captured = Object.create(null);
+      stringIncludes(value.gitExecutableLocator, '\0') || !PATH_IS_ABSOLUTE(value.gitExecutableLocator) ||
+      PATH_NORMALIZE(value.gitExecutableLocator) !== value.gitExecutableLocator) refuse('SOURCE_ORIGIN_GIT_SCHEMA');
+  const captured = OBJECT_CREATE(null);
   captured.commitOid = value.commitOid;
   captured.gitExecutableLocator = value.gitExecutableLocator;
-  return Object.freeze(captured);
+  return OBJECT_FREEZE(captured);
 }
 
 function hasUnpairedSurrogate(value) {
   for (let index = 0; index < value.length; index += 1) {
-    const unit = value.charCodeAt(index);
+    const unit = stringCharCodeAt(value, index);
     if (unit >= 0xd800 && unit <= 0xdbff) {
-      const next = value.charCodeAt(index + 1);
+      const next = stringCharCodeAt(value, index + 1);
       if (!(next >= 0xdc00 && next <= 0xdfff)) return true;
       index += 1;
     } else if (unit >= 0xdc00 && unit <= 0xdfff) return true;
@@ -184,46 +534,49 @@ function validatePath(path) {
   if (
     typeof path !== 'string'
     || path.length === 0
-    || path.includes('\0')
-    || path.includes('\\')
-    || path.startsWith('/')
-    || /^[A-Za-z]:\//.test(path)
-    || path.endsWith('/')
+    || stringIncludes(path, '\0')
+    || stringIncludes(path, '\\')
+    || stringStartsWith(path, '/')
+    || regexpTest(/^[A-Za-z]:\//, path)
+    || stringEndsWith(path, '/')
     || hasUnpairedSurrogate(path)
-    || path !== path.normalize('NFC')
+    || path !== stringNormalize(path)
   ) refuse('SOURCE_ORIGIN_GIT_PATH');
-  const components = path.split('/');
-  if (components.some((component) => component.length === 0 || component === '.' || component === '..')) refuse('SOURCE_ORIGIN_GIT_PATH');
+  const components = stringSplit(path, '/');
+  if (safeArraySome(components, (component) => component.length === 0 || component === '.' || component === '..')) refuse('SOURCE_ORIGIN_GIT_PATH');
   return path;
 }
 
 function exporterBindings(value) {
   const bindings = {};
-  for (const field of EXPORTER_BINDING_FIELDS) bindings[field] = value[field];
+  for (let index = 0; index < EXPORTER_BINDING_FIELDS.length; index += 1) {
+    const field = EXPORTER_BINDING_FIELDS[index];
+    setDynamicData(bindings, field, value[field]);
+  }
   return bindings;
 }
 
 function readBoundWorkingOwner(locator, identity, validate, semanticDigestField) {
-  const absolute = path.join(REPOSITORY_ROOT, ...locator.split('/'));
+  const absolute = joinRepositoryLocator(locator);
   let before;
   let bytes;
   let after;
   try {
-    before = lstatSync(absolute, { bigint: true });
-    if (before.isSymbolicLink() || !before.isFile() || before.size !== BigInt(identity.byteLength) || realpathSync.native(absolute) !== absolute) refuse('SOURCE_ORIGIN_GIT_POLICY');
-    const descriptor = openSync(absolute, 'r');
-    try { bytes = readFileSync(descriptor); } finally { closeSync(descriptor); }
-    after = lstatSync(absolute, { bigint: true });
+    before = LSTAT_SYNC(absolute, { bigint: true });
+    if (statIsKind(before, 'LINK') || !statIsKind(before, 'FILE') || before.size !== BIGINT_CONSTRUCTOR(identity.byteLength) || REALPATH_SYNC_NATIVE(absolute) !== absolute) refuse('SOURCE_ORIGIN_GIT_POLICY');
+    const descriptor = OPEN_SYNC(absolute, 'r');
+    try { bytes = readDescriptorExact(descriptor, identity.byteLength, 'SOURCE_ORIGIN_GIT_POLICY'); } finally { CLOSE_SYNC(descriptor); }
+    after = LSTAT_SYNC(absolute, { bigint: true });
   } catch (error) {
-    if (error instanceof SourceOriginCaptureRefusal) throw error;
+    if (isCaptureRefusal(error)) throw error;
     refuse('SOURCE_ORIGIN_GIT_POLICY');
   }
   if (before.dev !== after.dev || before.ino !== after.ino || before.size !== after.size || before.mtimeNs !== after.mtimeNs ||
-      bytes.length !== identity.byteLength || sha256Raw(bytes) !== identity.rawSha256) refuse('SOURCE_ORIGIN_GIT_POLICY');
+      typedArrayLength(bytes) !== identity.byteLength || sha256CapturedBytes(bytes) !== identity.rawSha256) refuse('SOURCE_ORIGIN_GIT_POLICY');
   let value;
   try { value = validate(parseCanonicalJsonBytes(bytes, { label: locator })); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
   if (value[semanticDigestField] !== identity.semanticDigest) refuse('SOURCE_ORIGIN_GIT_POLICY');
-  return Object.freeze({ bytes: Buffer.from(bytes), value, ...identity });
+  return OBJECT_FREEZE({ bytes: copyHeldBuffer(bytes, 'SOURCE_ORIGIN_GIT_POLICY'), value, ...identity });
 }
 
 function readBootstrapOwners() {
@@ -238,32 +591,32 @@ function readBootstrapOwners() {
       canonicalJsonText(exporter.value.gitProcessPolicy) !== canonicalJsonText(OWNER_PROPOSAL_POLICY.gitProcessPolicy) ||
       canonicalJsonText(exporter.value.environmentPolicy) !== canonicalJsonText(OWNER_PROPOSAL_POLICY.environmentPolicy) ||
       canonicalJsonText(exporter.value.limits) !== canonicalJsonText(OWNER_PROPOSAL_POLICY.limits)) refuse('SOURCE_ORIGIN_GIT_POLICY');
-  return Object.freeze({ pins, exporter });
+  return OBJECT_FREEZE({ pins, exporter });
 }
 
 function selectHostPin(pins) {
-  const rows = pins.records.filter((row) => row.platform === platform() && row.arch === arch());
-  if ((platform() !== 'win32' && platform() !== 'linux') || arch() !== 'x64' || rows.length !== 1) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
+  const rows = safeArrayFilter(pins.records, (row) => row.platform === OS_PLATFORM() && row.arch === OS_ARCH());
+  if ((OS_PLATFORM() !== 'win32' && OS_PLATFORM() !== 'linux') || OS_ARCH() !== 'x64' || rows.length !== 1) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
   return rows[0];
 }
 
 function observeRegularFile(locator, expectedByteLength, code = 'SOURCE_ORIGIN_GIT_EXECUTABLE') {
-  if (typeof locator !== 'string' || !path.isAbsolute(locator) || path.normalize(locator) !== locator || locator.includes('\0')) refuse(code);
+  if (typeof locator !== 'string' || !PATH_IS_ABSOLUTE(locator) || PATH_NORMALIZE(locator) !== locator || stringIncludes(locator, '\0')) refuse(code);
   let before;
   let bytes;
   let after;
   try {
-    before = lstatSync(locator, { bigint: true });
-    if (before.isSymbolicLink() || !before.isFile() || before.size !== BigInt(expectedByteLength) || realpathSync.native(locator) !== locator) refuse(code);
-    const descriptor = openSync(locator, 'r');
-    try { bytes = readFileSync(descriptor); } finally { closeSync(descriptor); }
-    after = lstatSync(locator, { bigint: true });
+    before = LSTAT_SYNC(locator, { bigint: true });
+    if (statIsKind(before, 'LINK') || !statIsKind(before, 'FILE') || before.size !== BIGINT_CONSTRUCTOR(expectedByteLength) || REALPATH_SYNC_NATIVE(locator) !== locator) refuse(code);
+    const descriptor = OPEN_SYNC(locator, 'r');
+    try { bytes = readDescriptorExact(descriptor, expectedByteLength, code); } finally { CLOSE_SYNC(descriptor); }
+    after = LSTAT_SYNC(locator, { bigint: true });
   } catch (error) {
-    if (error instanceof SourceOriginCaptureRefusal) throw error;
+    if (isCaptureRefusal(error)) throw error;
     refuse(code);
   }
-  if (before.dev !== after.dev || before.ino !== after.ino || before.size !== after.size || before.mtimeNs !== after.mtimeNs || bytes.length !== expectedByteLength) refuse(code);
-  return Object.freeze({ locator, byteLength: bytes.length, rawSha256: sha256Raw(bytes), stat: after });
+  if (before.dev !== after.dev || before.ino !== after.ino || before.size !== after.size || before.mtimeNs !== after.mtimeNs || typedArrayLength(bytes) !== expectedByteLength) refuse(code);
+  return OBJECT_FREEZE({ locator, byteLength: typedArrayLength(bytes), rawSha256: sha256CapturedBytes(bytes), stat: after });
 }
 
 function authenticateGitExecutable(locator, hostPin) {
@@ -273,76 +626,75 @@ function authenticateGitExecutable(locator, hostPin) {
 }
 
 function buildEnvironment(policy) {
-  if (platform() === 'win32') {
-    const systemRoot = process.env.SystemRoot;
-    if (typeof systemRoot !== 'string' || systemRoot.length === 0 || systemRoot.includes('\0') || !path.isAbsolute(systemRoot)) refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT');
+  if (OS_PLATFORM() === 'win32') {
+    const systemRoot = SYSTEM_ROOT;
+    if (typeof systemRoot !== 'string' || systemRoot.length === 0 || stringIncludes(systemRoot, '\0') || !PATH_IS_ABSOLUTE(systemRoot)) refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT');
     let details;
-    try { details = statSync(systemRoot); } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
-    const parentEnvironment = Object.create(null);
+    try { details = STAT_SYNC(systemRoot); } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
+    const parentEnvironment = OBJECT_CREATE(null);
     parentEnvironment.SystemRoot = systemRoot;
     try {
       return buildGitEnvironment(policy, {
-        architecture: arch(),
+        architecture: OS_ARCH(),
         parentEnvironment,
-        platform: platform(),
-        systemRootDirectoryObservation: { exists: true, kind: details.isDirectory() ? 'DIRECTORY' : 'OTHER', locator: systemRoot },
+        platform: OS_PLATFORM(),
+        systemRootDirectoryObservation: { exists: true, kind: statIsKind(details, 'DIRECTORY') ? 'DIRECTORY' : 'OTHER', locator: systemRoot },
       });
     } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
   }
   try {
     return buildGitEnvironment(policy, {
-      architecture: arch(),
-      parentEnvironment: Object.create(null),
-      platform: platform(),
+      architecture: OS_ARCH(),
+      parentEnvironment: OBJECT_CREATE(null),
+      platform: OS_PLATFORM(),
       systemRootDirectoryObservation: null,
     });
   } catch { refuse('SOURCE_ORIGIN_GIT_ENVIRONMENT'); }
 }
 
 function substituteArguments(values, substitutions, repositoryRoot = REPOSITORY_ROOT) {
-  return values.map((value) => {
+  return safeArrayMap(values, (value) => {
     if (value === '<REPOSITORY_ROOT>') return repositoryRoot;
     if (value === 'core.worktree=<REPOSITORY_ROOT>') return `core.worktree=${repositoryRoot}`;
     if (value === '<BLOB_OID>') {
-      if (!HEX_OID.test(substitutions.blobOid ?? '')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+      if (!regexpTest(HEX_OID, substitutions.blobOid ?? '')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
       return substitutions.blobOid;
     }
     if (value === '<TREE_OID>') {
-      if (!HEX_OID.test(substitutions.treeOid ?? '')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+      if (!regexpTest(HEX_OID, substitutions.treeOid ?? '')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
       return substitutions.treeOid;
     }
-    if (value.includes('<')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+    if (stringIncludes(value, '<')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
     return value;
   });
 }
 
 export function materializeGitCommand(processPolicy, commandId, repositoryRoot, substitutions = {}, blobClass) {
-  if (typeof repositoryRoot !== 'string' || !path.isAbsolute(repositoryRoot) || path.normalize(repositoryRoot) !== repositoryRoot || repositoryRoot.includes('\0')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  if (typeof repositoryRoot !== 'string' || !PATH_IS_ABSOLUTE(repositoryRoot) || PATH_NORMALIZE(repositoryRoot) !== repositoryRoot || stringIncludes(repositoryRoot, '\0')) refuse('SOURCE_ORIGIN_GIT_PROCESS');
   let selected;
   try { selected = selectGitCommandClass(processPolicy, commandId, commandId === 'BLOB' ? { operationClass: blobClass } : undefined); } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
-  return Object.freeze({
-    arguments: Object.freeze([
-      ...substituteArguments(processPolicy.fixedPrefix, substitutions, repositoryRoot),
-      ...substituteArguments(selected.arguments, substitutions, repositoryRoot),
-    ]),
+  const argumentsList = substituteArguments(processPolicy.fixedPrefix, substitutions, repositoryRoot);
+  const selectedArguments = substituteArguments(selected.arguments, substitutions, repositoryRoot);
+  for (let index = 0; index < selectedArguments.length; index += 1) safeArrayAppend(argumentsList, selectedArguments[index]);
+  return OBJECT_FREEZE({
+    arguments: OBJECT_FREEZE(argumentsList),
     maximumBytes: selected.maximumBytes,
     stdoutRule: selected.stdoutRule,
   });
 }
 
 function killChild(child) {
-  try { child.kill('SIGKILL'); } catch { /* fail path */ }
+  try { REFLECT_APPLY(CHILD_PROCESS_KILL, child, ['SIGKILL']); } catch { /* fail path */ }
 }
 
 export function exceedsChildOutputLimit(stdoutBytes, stderrBytes, commandMaximumBytes, processOutputBytes) {
-  if (![stdoutBytes, stderrBytes, commandMaximumBytes, processOutputBytes].every((value) => Number.isSafeInteger(value) && value >= 0)) refuse('SOURCE_ORIGIN_LIMIT');
+  if (!safeArrayEvery([stdoutBytes, stderrBytes, commandMaximumBytes, processOutputBytes], (value) => NUMBER_IS_SAFE_INTEGER(value) && value >= 0)) refuse('SOURCE_ORIGIN_LIMIT');
   return stdoutBytes > commandMaximumBytes || stderrBytes > commandMaximumBytes || stdoutBytes + stderrBytes > processOutputBytes;
 }
 
 async function collectChild(child, maximumBytes, processOutputBytes, deadline) {
-  return await new Promise((resolve, reject) => {
-    const stdout = [];
-    const stderr = [];
+  return await new PROMISE_CONSTRUCTOR((resolve, reject) => {
+    const stdout = new ARRAY_CONSTRUCTOR();
     let stdoutBytes = 0;
     let stderrBytes = 0;
     let settled = false;
@@ -350,59 +702,66 @@ async function collectChild(child, maximumBytes, processOutputBytes, deadline) {
     const fail = (code) => {
       if (settled) return;
       settled = true;
-      if (timer) clearTimeout(timer);
+      if (timer) CLEAR_TIMEOUT(timer);
       killChild(child);
       reject(new SourceOriginCaptureRefusal(code));
     };
-    const remaining = deadline - Date.now();
+    const remaining = deadline - REFLECT_APPLY(DATE_NOW, undefined, []);
     if (remaining <= 0) return fail('SOURCE_ORIGIN_GIT_PROCESS');
-    timer = setTimeout(() => fail('SOURCE_ORIGIN_GIT_PROCESS'), remaining);
-    child.stdout.on('data', (chunk) => {
-      stdoutBytes += chunk.length;
+    timer = SET_TIMEOUT(() => fail('SOURCE_ORIGIN_GIT_PROCESS'), remaining);
+    REFLECT_APPLY(EVENT_EMITTER_ON, child.stdout, ['data', (chunk) => {
+      stdoutBytes += typedArrayLength(chunk);
       if (exceedsChildOutputLimit(stdoutBytes, stderrBytes, maximumBytes, processOutputBytes)) fail('SOURCE_ORIGIN_LIMIT');
-      else stdout.push(Buffer.from(chunk));
-    });
-    child.stderr.on('data', (chunk) => {
-      stderrBytes += chunk.length;
+      else safeArrayAppend(stdout, exactBuffer(chunk, undefined, 'SOURCE_ORIGIN_GIT_PROCESS'));
+    }]);
+    REFLECT_APPLY(EVENT_EMITTER_ON, child.stderr, ['data', (chunk) => {
+      stderrBytes += typedArrayLength(chunk);
       if (exceedsChildOutputLimit(stdoutBytes, stderrBytes, maximumBytes, processOutputBytes)) fail('SOURCE_ORIGIN_LIMIT');
-      else stderr.push(Buffer.from(chunk));
-    });
-    child.on('error', () => fail('SOURCE_ORIGIN_GIT_PROCESS'));
-    child.on('close', (status, signal) => {
+    }]);
+    REFLECT_APPLY(EVENT_EMITTER_ON, child, ['error', () => fail('SOURCE_ORIGIN_GIT_PROCESS')]);
+    REFLECT_APPLY(EVENT_EMITTER_ON, child, ['close', (status, signal) => {
       if (settled) return;
       settled = true;
-      clearTimeout(timer);
-      const stderrBuffer = Buffer.concat(stderr);
-      if (status !== 0 || signal !== null || stderrBuffer.length !== 0) reject(new SourceOriginCaptureRefusal('SOURCE_ORIGIN_GIT_PROCESS'));
-      else resolve(Buffer.concat(stdout));
-    });
+      CLEAR_TIMEOUT(timer);
+      if (status !== 0 || signal !== null || stderrBytes !== 0) reject(new SourceOriginCaptureRefusal('SOURCE_ORIGIN_GIT_PROCESS'));
+      else resolve(concatExactBuffers(stdout, processOutputBytes, 'SOURCE_ORIGIN_GIT_PROCESS'));
+    }]);
+    try {
+      REFLECT_APPLY(READABLE_RESUME, child.stdout, []);
+      REFLECT_APPLY(READABLE_RESUME, child.stderr, []);
+    } catch {
+      fail('SOURCE_ORIGIN_GIT_PROCESS');
+    }
   });
 }
 
 function hasUtf8Bom(bytes) {
-  return bytes.length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf;
+  const length = typedArrayLength(bytes);
+  return length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf;
 }
 
 export function decodeGitLine(bytes, code = 'SOURCE_ORIGIN_GIT_PROCESS') {
-  if (!Buffer.isBuffer(bytes) || isProxy(bytes) || hasUtf8Bom(bytes)) refuse(code);
+  captureExactBufferState(bytes, code);
+  if (hasUtf8Bom(bytes)) refuse(code);
   let value;
   try {
-    value = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    value = REFLECT_APPLY(TEXT_DECODER_DECODE, UTF8_DECODER, [bytes]);
   } catch {
     refuse(code);
   }
-  if (!value.endsWith('\n')) refuse(code);
-  value = value.slice(0, -1);
-  if (value.endsWith('\r')) value = value.slice(0, -1);
-  if (value.length === 0 || value.includes('\0') || value.includes('\n') || value.includes('\r')) refuse(code);
+  if (!stringEndsWith(value, '\n')) refuse(code);
+  value = stringSlice(value, 0, -1);
+  if (stringEndsWith(value, '\r')) value = stringSlice(value, 0, -1);
+  if (value.length === 0 || stringIncludes(value, '\0') || stringIncludes(value, '\n') || stringIncludes(value, '\r')) refuse(code);
   return value;
 }
 
 function decodeUtf8(bytes, code) {
-  if (!Buffer.isBuffer(bytes) || isProxy(bytes) || hasUtf8Bom(bytes)) refuse(code);
+  captureExactBufferState(bytes, code);
+  if (hasUtf8Bom(bytes)) refuse(code);
   try {
-    const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-    if (text !== text.normalize('NFC')) refuse(code);
+    const text = REFLECT_APPLY(TEXT_DECODER_DECODE, UTF8_DECODER, [bytes]);
+    if (text !== stringNormalize(text)) refuse(code);
     return text;
   } catch {
     refuse(code);
@@ -410,23 +769,25 @@ function decodeUtf8(bytes, code) {
 }
 
 function configAssignmentRows(processPolicy, repositoryRoot) {
-  const rows = [];
+  const rows = new ARRAY_CONSTRUCTOR();
   for (let index = 0; index < processPolicy.fixedPrefix.length; index += 1) {
     if (processPolicy.fixedPrefix[index] !== '-c') continue;
-    const assignment = processPolicy.fixedPrefix[index + 1].replace('<REPOSITORY_ROOT>', repositoryRoot);
-    const split = assignment.indexOf('=');
+    const assignment = stringReplace(processPolicy.fixedPrefix[index + 1], '<REPOSITORY_ROOT>', repositoryRoot);
+    const split = stringIndexOf(assignment, '=');
     if (split <= 0) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-    rows.push({ key: assignment.slice(0, split), value: assignment.slice(split + 1) });
+    safeArrayAppend(rows, { key: stringSlice(assignment, 0, split), value: stringSlice(assignment, split + 1) });
   }
-  return rows.sort((left, right) => codeUnitCompare(`${left.key}\0${left.value}`, `${right.key}\0${right.value}`));
+  return safeArraySort(rows, (left, right) => codeUnitCompare(`${left.key}\0${left.value}`, `${right.key}\0${right.value}`));
 }
 
 function allowanceMatches(key, row) {
-  if (!row.keyRule.includes('<SUBSECTION>')) return key === row.keyRule;
-  const [prefix, suffix] = row.keyRule.split('<SUBSECTION>');
-  if (!key.startsWith(prefix) || !key.endsWith(suffix)) return false;
-  const subsection = key.slice(prefix.length, key.length - suffix.length);
-  return subsection.length > 0 && subsection === subsection.normalize('NFC') && !CONTROL.test(subsection);
+  if (!stringIncludes(row.keyRule, '<SUBSECTION>')) return key === row.keyRule;
+  const components = stringSplit(row.keyRule, '<SUBSECTION>');
+  const prefix = components[0];
+  const suffix = components[1];
+  if (!stringStartsWith(key, prefix) || !stringEndsWith(key, suffix)) return false;
+  const subsection = stringSlice(key, prefix.length, key.length - suffix.length);
+  return subsection.length > 0 && subsection === stringNormalize(subsection) && !regexpTest(CONTROL, subsection);
 }
 
 function allowanceValueMatches(value, rule) {
@@ -436,115 +797,130 @@ function allowanceValueMatches(value, rule) {
   if (rule === 'TRUE') return value === 'true';
   if (rule === 'ZERO') return value === '0';
   if (rule === 'DOT') return value === '.';
-  if (rule === 'NONEMPTY_TEXT') return value.length > 0 && value === value.normalize('NFC') && !CONTROL.test(value);
+  if (rule === 'NONEMPTY_TEXT') return value.length > 0 && value === stringNormalize(value) && !regexpTest(CONTROL, value);
   return false;
 }
 
 export function parseGitConfigRows(bytes, processPolicyValue, repositoryRoot) {
   let processPolicy;
   try { processPolicy = validateGitProcessPolicy(processPolicyValue); } catch { refuse('SOURCE_ORIGIN_GIT_CONFIG'); }
-  if (typeof repositoryRoot !== 'string' || !path.isAbsolute(repositoryRoot) || repositoryRoot.includes('\0')) refuse('SOURCE_ORIGIN_GIT_CONFIG');
+  if (typeof repositoryRoot !== 'string' || !PATH_IS_ABSOLUTE(repositoryRoot) || stringIncludes(repositoryRoot, '\0')) refuse('SOURCE_ORIGIN_GIT_CONFIG');
   const text = decodeUtf8(bytes, 'SOURCE_ORIGIN_GIT_CONFIG');
-  if (!text.endsWith('\0')) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-  const fields = text.slice(0, -1).split('\0');
+  if (!stringEndsWith(text, '\0')) refuse('SOURCE_ORIGIN_GIT_CONFIG');
+  const fields = stringSplit(stringSlice(text, 0, -1), '\0');
   if (fields.length === 0 || fields.length % 3 !== 0) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-  const commandRows = [];
-  const localRows = [];
+  const commandRows = new ARRAY_CONSTRUCTOR();
+  const localRows = new ARRAY_CONSTRUCTOR();
   for (let index = 0; index < fields.length; index += 3) {
-    const [scope, origin, assignment] = fields.slice(index, index + 3);
-    const newline = assignment.indexOf('\n');
-    if ((scope !== 'command' && scope !== 'local') || !origin || CONTROL.test(origin) || origin !== origin.normalize('NFC') ||
-        newline <= 0 || assignment.indexOf('\n', newline + 1) !== -1) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-    const key = assignment.slice(0, newline);
-    const value = assignment.slice(newline + 1);
-    if (!key || key !== key.normalize('NFC') || CONTROL.test(key)) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-    (scope === 'command' ? commandRows : localRows).push({ key, value });
+    const scope = fields[index];
+    const origin = fields[index + 1];
+    const assignment = fields[index + 2];
+    const newline = stringIndexOf(assignment, '\n');
+    if ((scope !== 'command' && scope !== 'local') || !origin || regexpTest(CONTROL, origin) || origin !== stringNormalize(origin) ||
+        newline <= 0 || stringIndexOf(assignment, '\n', newline + 1) !== -1) refuse('SOURCE_ORIGIN_GIT_CONFIG');
+    const key = stringSlice(assignment, 0, newline);
+    const value = stringSlice(assignment, newline + 1);
+    if (!key || key !== stringNormalize(key) || regexpTest(CONTROL, key)) refuse('SOURCE_ORIGIN_GIT_CONFIG');
+    safeArrayAppend(scope === 'command' ? commandRows : localRows, { key, value });
   }
-  commandRows.sort((left, right) => codeUnitCompare(`${left.key}\0${left.value}`, `${right.key}\0${right.value}`));
+  safeArraySort(commandRows, (left, right) => codeUnitCompare(`${left.key}\0${left.value}`, `${right.key}\0${right.value}`));
   if (canonicalJsonText(commandRows) !== canonicalJsonText(configAssignmentRows(processPolicy, repositoryRoot))) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-  const normalized = [];
-  const seen = new Map();
-  for (const row of localRows) {
-    const matches = processPolicy.configAllowanceRows.filter((allowance) => allowanceMatches(row.key, allowance));
+  const normalized = new ARRAY_CONSTRUCTOR();
+  const seen = new MAP_CONSTRUCTOR();
+  for (let index = 0; index < localRows.length; index += 1) {
+    const row = localRows[index];
+    const matches = safeArrayFilter(processPolicy.configAllowanceRows, (allowance) => allowanceMatches(row.key, allowance));
     if (matches.length !== 1 || !allowanceValueMatches(row.value, matches[0].valueRule)) refuse('SOURCE_ORIGIN_GIT_CONFIG');
     const allowance = matches[0];
-    const prior = seen.get(row.key) ?? [];
-    if (allowance.cardinality === 'SINGLETON' ? prior.length !== 0 : prior.includes(row.value)) refuse('SOURCE_ORIGIN_GIT_CONFIG');
-    prior.push(row.value);
-    seen.set(row.key, prior);
-    normalized.push({ scope: 'local', key: row.key, value: row.value });
+    const prior = mapGet(seen, row.key) ?? new ARRAY_CONSTRUCTOR();
+    if (allowance.cardinality === 'SINGLETON' ? prior.length !== 0 : safeArrayIncludes(prior, row.value)) refuse('SOURCE_ORIGIN_GIT_CONFIG');
+    safeArrayAppend(prior, row.value);
+    mapSet(seen, row.key, prior);
+    safeArrayAppend(normalized, { scope: 'local', key: row.key, value: row.value });
   }
-  normalized.sort((left, right) => codeUnitCompare(`${left.key}\0${left.value}`, `${right.key}\0${right.value}`));
-  return Object.freeze({
+  safeArraySort(normalized, (left, right) => codeUnitCompare(`${left.key}\0${left.value}`, `${right.key}\0${right.value}`));
+  return OBJECT_FREEZE({
     commandRowCount: commandRows.length,
     localRowCount: normalized.length,
-    semanticDigest: sha256Canonical('galerina.logic-aig-local-git-config.v1', normalized),
+    semanticDigest: sha256CanonicalCaptured('galerina.logic-aig-local-git-config.v1', normalized),
   });
 }
 
 function oidPattern(objectFormat) {
-  const pattern = OID_PATTERNS[objectFormat];
-  if (!pattern) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
-  return pattern;
+  if (objectFormat === 'sha1') return OID_PATTERNS.sha1;
+  if (objectFormat === 'sha256') return OID_PATTERNS.sha256;
+  refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
 }
 
 export function parseGitTreeRows(bytes, objectFormat) {
-  if (bytes.length === 0 || bytes.at(-1) !== 0) refuse('SOURCE_ORIGIN_GIT_TREE');
+  const byteLength = captureExactBufferState(bytes, 'SOURCE_ORIGIN_GIT_TREE').length;
+  if (byteLength === 0 || bytes[byteLength - 1] !== 0) refuse('SOURCE_ORIGIN_GIT_TREE');
   const pattern = oidPattern(objectFormat);
-  const rows = [];
-  const paths = new Set();
-  const foldedPaths = new Set();
-  for (const record of decodeUtf8(bytes.subarray(0, -1), 'SOURCE_ORIGIN_GIT_TREE').split('\0')) {
-    const match = /^(\d{6}) (blob|tree|commit) ([0-9a-f]+)\t([\s\S]+)$/.exec(record);
+  const rows = new ARRAY_CONSTRUCTOR();
+  const paths = new SET_CONSTRUCTOR();
+  const foldedPaths = new SET_CONSTRUCTOR();
+  const records = stringSplit(decodeUtf8(bufferSubarray(bytes, 0, -1), 'SOURCE_ORIGIN_GIT_TREE'), '\0');
+  for (let index = 0; index < records.length; index += 1) {
+    const record = records[index];
+    const match = regexpExec(/^(\d{6}) (blob|tree|commit) ([0-9a-f]+)\t([\s\S]+)$/, record);
     if (!match) refuse('SOURCE_ORIGIN_GIT_TREE');
-    const [, mode, type, blobOid, path] = match;
-    validatePath(path);
-    if (!pattern.test(blobOid)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
+    const mode = match[1];
+    const type = match[2];
+    const blobOid = match[3];
+    const locator = match[4];
+    validatePath(locator);
+    if (!regexpTest(pattern, blobOid)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
     if (mode !== '100644' && mode !== '100755' || type !== 'blob') refuse('SOURCE_ORIGIN_GIT_MODE');
-    const folded = path.toLowerCase();
-    if (paths.has(path)) refuse('SOURCE_ORIGIN_GIT_DUPLICATE');
-    if (foldedPaths.has(folded)) refuse('SOURCE_ORIGIN_GIT_CASE_SHADOW');
-    paths.add(path);
-    foldedPaths.add(folded);
-    rows.push(Object.freeze({ path, mode, blobOid }));
+    const folded = stringToLowerCase(locator);
+    if (setHas(paths, locator)) refuse('SOURCE_ORIGIN_GIT_DUPLICATE');
+    if (setHas(foldedPaths, folded)) refuse('SOURCE_ORIGIN_GIT_CASE_SHADOW');
+    setAdd(paths, locator);
+    setAdd(foldedPaths, folded);
+    safeArrayAppend(rows, OBJECT_FREEZE({ path: locator, mode, blobOid }));
   }
-  return Object.freeze(rows);
+  return OBJECT_FREEZE(rows);
 }
 
 function parseStageRows(bytes, objectFormat) {
-  if (bytes.length !== 0 && bytes.at(-1) !== 0) refuse('SOURCE_ORIGIN_GIT_INDEX');
+  const byteLength = captureExactBufferState(bytes, 'SOURCE_ORIGIN_GIT_INDEX').length;
+  if (byteLength !== 0 && bytes[byteLength - 1] !== 0) refuse('SOURCE_ORIGIN_GIT_INDEX');
   const pattern = oidPattern(objectFormat);
-  const rows = [];
-  const stageKeys = new Set();
-  const records = bytes.length === 0 ? [] : decodeUtf8(bytes.subarray(0, -1), 'SOURCE_ORIGIN_GIT_INDEX').split('\0');
-  for (const record of records) {
-    const match = /^(\d{6}) ([0-9a-f]+) ([0-3])\t([\s\S]+)$/.exec(record);
+  const rows = new ARRAY_CONSTRUCTOR();
+  const stageKeys = new SET_CONSTRUCTOR();
+  const records = byteLength === 0 ? new ARRAY_CONSTRUCTOR() : stringSplit(decodeUtf8(bufferSubarray(bytes, 0, -1), 'SOURCE_ORIGIN_GIT_INDEX'), '\0');
+  for (let index = 0; index < records.length; index += 1) {
+    const match = regexpExec(/^(\d{6}) ([0-9a-f]+) ([0-3])\t([\s\S]+)$/, records[index]);
     if (!match) refuse('SOURCE_ORIGIN_GIT_INDEX');
-    const [, mode, blobOid, stageText, path] = match;
-    validatePath(path);
-    if (!pattern.test(blobOid)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
-    const stage = Number(stageText);
-    const key = `${path}\0${stage}`;
-    if (stageKeys.has(key)) refuse('SOURCE_ORIGIN_GIT_INDEX');
-    stageKeys.add(key);
-    rows.push({ path, mode, blobOid, stage });
+    const mode = match[1];
+    const blobOid = match[2];
+    const stageText = match[3];
+    const locator = match[4];
+    validatePath(locator);
+    if (!regexpTest(pattern, blobOid)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
+    const stage = REFLECT_APPLY(NUMBER_CONSTRUCTOR, undefined, [stageText]);
+    const key = `${locator}\0${stage}`;
+    if (setHas(stageKeys, key)) refuse('SOURCE_ORIGIN_GIT_INDEX');
+    setAdd(stageKeys, key);
+    safeArrayAppend(rows, { path: locator, mode, blobOid, stage });
   }
   return rows;
 }
 
 function parseFlagRows(bytes) {
-  if (bytes.length !== 0 && bytes.at(-1) !== 0) refuse('SOURCE_ORIGIN_GIT_INDEX');
-  const flags = new Map();
-  const records = bytes.length === 0 ? [] : decodeUtf8(bytes.subarray(0, -1), 'SOURCE_ORIGIN_GIT_INDEX').split('\0');
-  for (const record of records) {
-    const match = /^([A-Za-z?]) ([\s\S]+)$/.exec(record);
+  const byteLength = captureExactBufferState(bytes, 'SOURCE_ORIGIN_GIT_INDEX').length;
+  if (byteLength !== 0 && bytes[byteLength - 1] !== 0) refuse('SOURCE_ORIGIN_GIT_INDEX');
+  const flags = new MAP_CONSTRUCTOR();
+  const records = byteLength === 0 ? new ARRAY_CONSTRUCTOR() : stringSplit(decodeUtf8(bufferSubarray(bytes, 0, -1), 'SOURCE_ORIGIN_GIT_INDEX'), '\0');
+  for (let index = 0; index < records.length; index += 1) {
+    const match = regexpExec(/^([A-Za-z?]) ([\s\S]+)$/, records[index]);
     if (!match) refuse('SOURCE_ORIGIN_GIT_INDEX');
-    const [, tag, path] = match;
-    validatePath(path);
-    if (flags.has(path)) refuse('SOURCE_ORIGIN_GIT_INDEX');
-    flags.set(path, Object.freeze({
-      assumeUnchanged: tag === tag.toLowerCase(),
-      skipWorktree: tag.toUpperCase() === 'S',
+    const tag = match[1];
+    const locator = match[2];
+    validatePath(locator);
+    if (mapHas(flags, locator)) refuse('SOURCE_ORIGIN_GIT_INDEX');
+    mapSet(flags, locator, OBJECT_FREEZE({
+      assumeUnchanged: tag === stringToLowerCase(tag),
+      skipWorktree: stringToUpperCase(tag) === 'S',
     }));
   }
   return flags;
@@ -553,22 +929,23 @@ function parseFlagRows(bytes) {
 export function observeGitIndex(stageBytes, flagBytes, objectFormat, treeRows) {
   const stages = parseStageRows(stageBytes, objectFormat);
   const flags = parseFlagRows(flagBytes);
-  if (stages.some((row) => row.stage !== 0 || row.mode !== '100644' && row.mode !== '100755')) refuse('SOURCE_ORIGIN_GIT_INDEX');
-  const rows = stages
-    .map((row) => {
-      const observedFlags = flags.get(row.path);
+  if (safeArraySome(stages, (row) => row.stage !== 0 || row.mode !== '100644' && row.mode !== '100755')) refuse('SOURCE_ORIGIN_GIT_INDEX');
+  const rows = safeArraySort(
+    safeArrayMap(stages, (row) => {
+      const observedFlags = mapGet(flags, row.path);
       if (!observedFlags || observedFlags.assumeUnchanged || observedFlags.skipWorktree) refuse('SOURCE_ORIGIN_GIT_INDEX');
-      return Object.freeze({ ...row, ...observedFlags });
-    })
-    .sort((left, right) => codeUnitCompare(left.path, right.path));
-  if (flags.size !== rows.length || rows.length !== treeRows.length) refuse('SOURCE_ORIGIN_GIT_INDEX');
-  const sortedTree = [...treeRows].sort((left, right) => codeUnitCompare(left.path, right.path));
+      return OBJECT_FREEZE({ ...row, ...observedFlags });
+    }),
+    (left, right) => codeUnitCompare(left.path, right.path),
+  );
+  if (mapSize(flags) !== rows.length || rows.length !== treeRows.length) refuse('SOURCE_ORIGIN_GIT_INDEX');
+  const sortedTree = safeArraySort(safeArrayCopy(treeRows), (left, right) => codeUnitCompare(left.path, right.path));
   for (let index = 0; index < rows.length; index += 1) {
     const actual = rows[index];
     const expected = sortedTree[index];
     if (actual.path !== expected.path || actual.mode !== expected.mode || actual.blobOid !== expected.blobOid) refuse('SOURCE_ORIGIN_GIT_INDEX');
   }
-  const digestRows = rows.map((row) => ({
+  const digestRows = safeArrayMap(rows, (row) => ({
     path: row.path,
     mode: row.mode,
     blobOid: row.blobOid,
@@ -576,22 +953,22 @@ export function observeGitIndex(stageBytes, flagBytes, objectFormat, treeRows) {
     assumeUnchanged: row.assumeUnchanged,
     skipWorktree: row.skipWorktree,
   }));
-  return Object.freeze({
-    rows: Object.freeze(digestRows.map(Object.freeze)),
-    indexDigest: sha256Canonical('galerina.logic-aig-git-index.v1', { objectFormat, rows: digestRows }),
+  return OBJECT_FREEZE({
+    rows: OBJECT_FREEZE(safeArrayMap(digestRows, (row) => OBJECT_FREEZE(row))),
+    indexDigest: sha256CanonicalCaptured('galerina.logic-aig-git-index.v1', { objectFormat, rows: digestRows }),
   });
 }
 
 export function canonicalExistingPath(locator, kind, code = 'SOURCE_ORIGIN_GIT_LAYOUT') {
-  if (typeof locator !== 'string' || !path.isAbsolute(locator) || locator.includes('\0')) refuse(code);
+  if (typeof locator !== 'string' || !PATH_IS_ABSOLUTE(locator) || stringIncludes(locator, '\0')) refuse(code);
   let observed;
   let real;
   try {
-    observed = lstatSync(locator);
-    real = realpathSync.native(locator);
+    observed = LSTAT_SYNC(locator);
+    real = REALPATH_SYNC_NATIVE(locator);
   } catch { refuse(code); }
-  if (observed.isSymbolicLink() || (kind === 'DIRECTORY' ? !observed.isDirectory() : !observed.isFile())) refuse(code);
-  const canonicalText = platform() === 'win32' ? real.replaceAll('\\', '/') : real;
+  if (statIsKind(observed, 'LINK') || (kind === 'DIRECTORY' ? !statIsKind(observed, 'DIRECTORY') : !statIsKind(observed, 'FILE'))) refuse(code);
+  const canonicalText = OS_PLATFORM() === 'win32' ? stringReplaceAll(real, '\\', '/') : real;
   if (locator !== canonicalText) refuse(code);
   return real;
 }
@@ -600,45 +977,45 @@ export function assertCanonicalRepositoryLayout(value) {
   exactObject(value, ['repositoryRoot', 'toplevel', 'gitDirectory', 'indexPath'], 'SOURCE_ORIGIN_GIT_LAYOUT');
   let repositoryRoot;
   try {
-    const details = lstatSync(value.repositoryRoot);
-    repositoryRoot = realpathSync.native(value.repositoryRoot);
-    if (details.isSymbolicLink() || !details.isDirectory() || repositoryRoot !== value.repositoryRoot) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
+    const details = LSTAT_SYNC(value.repositoryRoot);
+    repositoryRoot = REALPATH_SYNC_NATIVE(value.repositoryRoot);
+    if (statIsKind(details, 'LINK') || !statIsKind(details, 'DIRECTORY') || repositoryRoot !== value.repositoryRoot) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
   } catch (error) {
-    if (error instanceof SourceOriginCaptureRefusal) throw error;
+    if (isCaptureRefusal(error)) throw error;
     refuse('SOURCE_ORIGIN_GIT_LAYOUT');
   }
   const toplevel = canonicalExistingPath(value.toplevel, 'DIRECTORY');
   const gitDirectory = canonicalExistingPath(value.gitDirectory, 'DIRECTORY');
   const indexPath = canonicalExistingPath(value.indexPath, 'FILE');
-  if (toplevel !== repositoryRoot || indexPath !== path.join(gitDirectory, 'index')) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
-  return Object.freeze({ repositoryRoot, gitDirectory, indexPath });
+  if (toplevel !== repositoryRoot || indexPath !== PATH_JOIN(gitDirectory, 'index')) refuse('SOURCE_ORIGIN_GIT_LAYOUT');
+  return OBJECT_FREEZE({ repositoryRoot, gitDirectory, indexPath });
 }
 
 function commonGitDirectory(gitDirectory) {
-  return path.basename(path.dirname(gitDirectory)).toLowerCase() === 'worktrees'
-    ? path.dirname(path.dirname(gitDirectory))
+  return stringToLowerCase(PATH_BASENAME(PATH_DIRNAME(gitDirectory))) === 'worktrees'
+    ? PATH_DIRNAME(PATH_DIRNAME(gitDirectory))
     : gitDirectory;
 }
 
 function alternateExpectation(gitDirectory, kind) {
-  return path.join(commonGitDirectory(gitDirectory), 'objects', 'info', kind);
+  return PATH_JOIN(commonGitDirectory(gitDirectory), 'objects', 'info', kind);
 }
 
 function observeAlternateFile(locator, expected) {
-  if (typeof locator !== 'string' || locator.includes('\0') || !path.isAbsolute(locator)) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
+  if (typeof locator !== 'string' || stringIncludes(locator, '\0') || !PATH_IS_ABSOLUTE(locator)) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
   let canonicalExpected;
   try {
-    const parent = realpathSync.native(path.dirname(expected));
-    canonicalExpected = path.join(parent, path.basename(expected));
+    const parent = REALPATH_SYNC_NATIVE(PATH_DIRNAME(expected));
+    canonicalExpected = PATH_JOIN(parent, PATH_BASENAME(expected));
   } catch { refuse('SOURCE_ORIGIN_GIT_ALTERNATES'); }
-  const canonicalText = platform() === 'win32' ? canonicalExpected.replaceAll('\\', '/') : canonicalExpected;
+  const canonicalText = OS_PLATFORM() === 'win32' ? stringReplaceAll(canonicalExpected, '\\', '/') : canonicalExpected;
   if (locator !== canonicalText) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
   try {
-    const observed = lstatSync(canonicalExpected);
-    if (observed.isSymbolicLink() || !observed.isFile() || observed.size !== 0 || realpathSync.native(canonicalExpected) !== canonicalExpected) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
+    const observed = LSTAT_SYNC(canonicalExpected);
+    if (statIsKind(observed, 'LINK') || !statIsKind(observed, 'FILE') || observed.size !== 0 || REALPATH_SYNC_NATIVE(canonicalExpected) !== canonicalExpected) refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
     return 'ZERO_REGULAR_FILE';
   } catch (error) {
-    if (error instanceof SourceOriginCaptureRefusal) throw error;
+    if (isCaptureRefusal(error)) throw error;
     if (error?.code !== 'ENOENT') refuse('SOURCE_ORIGIN_GIT_ALTERNATES');
     return 'ABSENT';
   }
@@ -657,14 +1034,14 @@ async function repositoryState(run) {
   const pattern = oidPattern(objectFormat);
   const head = await run('HEAD');
   const tree = await run('TREE');
-  if (!pattern.test(head) || !pattern.test(tree)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
+  if (!regexpTest(pattern, head) || !regexpTest(pattern, tree)) refuse('SOURCE_ORIGIN_GIT_OBJECT_FORMAT');
   const treeRows = parseGitTreeRows(await run('TREE_ROWS', { treeOid: tree }), objectFormat);
   const index = observeGitIndex(await run('INDEX_STAGE'), await run('INDEX_FLAGS'), objectFormat, treeRows);
-  return Object.freeze({ ...layout, alternates, httpAlternates, objectFormat, head, tree, treeRows, index });
+  return OBJECT_FREEZE({ ...layout, alternates, httpAlternates, objectFormat, head, tree, treeRows, index });
 }
 
 function closureView(state, configDigest, ownerSetDigest) {
-  return Object.freeze({
+  return OBJECT_FREEZE({
     repositoryRoot: state.repositoryRoot,
     gitDirectory: state.gitDirectory,
     indexPath: state.indexPath,
@@ -673,7 +1050,7 @@ function closureView(state, configDigest, ownerSetDigest) {
     objectFormat: state.objectFormat,
     commitOid: state.head,
     treeOid: state.tree,
-    treeDigest: sha256Canonical('galerina.logic-aig-git-tree.v1', state.treeRows),
+    treeDigest: sha256CanonicalCaptured('galerina.logic-aig-git-tree.v1', state.treeRows),
     indexDigest: state.index.indexDigest,
     configDigest,
     ownerSetDigest,
@@ -681,17 +1058,17 @@ function closureView(state, configDigest, ownerSetDigest) {
 }
 
 export function assertFrozenSourceClosure(opening, closing) {
-  if (opening === null || typeof opening !== 'object' || isProxy(opening) || closing === null || typeof closing !== 'object' || isProxy(closing) ||
+  if (opening === null || typeof opening !== 'object' || UTIL_TYPES_IS_PROXY(opening) || closing === null || typeof closing !== 'object' || UTIL_TYPES_IS_PROXY(closing) ||
       canonicalJsonText(opening) !== canonicalJsonText(closing)) refuse('SOURCE_ORIGIN_GIT_DRIFT');
 }
 
 async function readBlob(run, oid, operationClass = 'CAPTURED_FILE') {
   const bytes = await run('BLOB', { blobOid: oid }, operationClass);
-  return Buffer.from(bytes);
+  return exactBuffer(bytes, undefined, 'SOURCE_ORIGIN_GIT_PROCESS');
 }
 
 function regularTreeRow(treeByPath, locator, code = 'SOURCE_ORIGIN_GIT_POLICY') {
-  const row = treeByPath.get(locator);
+  const row = mapGet(treeByPath, locator);
   if (!row || (row.mode !== '100644' && row.mode !== '100755')) refuse(code);
   return row;
 }
@@ -699,25 +1076,27 @@ function regularTreeRow(treeByPath, locator, code = 'SOURCE_ORIGIN_GIT_POLICY') 
 async function heldBlob(run, treeByPath, locator, operationClass = 'JSON', code = 'SOURCE_ORIGIN_GIT_POLICY') {
   const row = regularTreeRow(treeByPath, locator, code);
   const bytes = await readBlob(run, row.blobOid, operationClass);
-  return Object.freeze({ locator, blobOid: row.blobOid, bytes, byteLength: bytes.length, rawSha256: sha256Raw(bytes) });
+  return OBJECT_FREEZE({ locator, blobOid: row.blobOid, bytes, byteLength: typedArrayLength(bytes), rawSha256: sha256CapturedBytes(bytes) });
 }
 
 function classifyResolutionPath(path, policy) {
-  const name = path.slice(path.lastIndexOf('/') + 1);
-  if (policy.resolutionBasenames.includes(name)) return true;
-  return policy.resolutionNamePatterns.some((source) => new RegExp(source).test(name));
+  const name = stringSlice(path, stringLastIndexOf(path, '/') + 1);
+  if (safeArrayIncludes(policy.resolutionBasenames, name)) return true;
+  return safeArraySome(policy.resolutionNamePatterns, (source) => regexpTest(new REGEXP_CONSTRUCTOR(source), name));
 }
 
 function addAggregate(total, increment, maximum) {
-  if (!Number.isSafeInteger(increment) || increment < 0 || total > maximum - increment) refuse('SOURCE_ORIGIN_LIMIT');
+  if (!NUMBER_IS_SAFE_INTEGER(increment) || increment < 0 || total > maximum - increment) refuse('SOURCE_ORIGIN_LIMIT');
   return total + increment;
 }
 
-function deepFreeze(value, seen = new Set()) {
-  if (value === null || typeof value !== 'object' || ArrayBuffer.isView(value) || seen.has(value)) return value;
-  seen.add(value);
-  for (const child of Object.values(value)) deepFreeze(child, seen);
-  return Object.freeze(value);
+function deepFreeze(value, seen) {
+  const retainedSeen = seen ?? new SET_CONSTRUCTOR();
+  if (value === null || typeof value !== 'object' || REFLECT_APPLY(ARRAY_BUFFER_IS_VIEW, undefined, [value]) || setHas(retainedSeen, value)) return value;
+  setAdd(retainedSeen, value);
+  const children = REFLECT_APPLY(OBJECT_VALUES, undefined, [value]);
+  for (let index = 0; index < children.length; index += 1) deepFreeze(children[index], retainedSeen);
+  return OBJECT_FREEZE(value);
 }
 
 function weakMapHas(map, key) {
@@ -746,11 +1125,11 @@ function mapSet(map, key, value) {
 
 function capturedMapEntries(value) {
   const iterator = REFLECT_APPLY(MAP_ENTRIES, value, []);
-  const entries = [];
+  const entries = new ARRAY_CONSTRUCTOR();
   while (true) {
     const step = REFLECT_APPLY(MAP_ITERATOR_NEXT, iterator, []);
     if (step.done) return entries;
-    entries[entries.length] = step.value;
+    safeArrayAppend(entries, step.value);
   }
 }
 
@@ -817,7 +1196,7 @@ const BLOB_ITERATOR_SELF = closeCallable({
 function createBlobIterator(capability, kind) {
   const iterator = OBJECT_CREATE(null);
   defineFrozenData(iterator, 'next', BLOB_ITERATOR_NEXT);
-  defineFrozenData(iterator, Symbol.iterator, BLOB_ITERATOR_SELF);
+  defineFrozenData(iterator, SYMBOL_ITERATOR, BLOB_ITERATOR_SELF);
   const state = OBJECT_CREATE(null);
   state.capability = capability;
   state.index = 0;
@@ -877,7 +1256,7 @@ function createBlobCapability(entries, code = 'SOURCE_ORIGIN_GIT_BLOB_SET') {
     if (typeof key !== 'string' || mapHas(byKey, key)) refuse(code);
     const bytes = copyHeldBuffer(entry[1], code);
     const heldEntry = frozenEntryPair(key, bytes);
-    defineFrozenData(heldEntries, String(index), heldEntry, true);
+    defineFrozenData(heldEntries, index, heldEntry, true);
     mapSet(byKey, key, bytes);
   }
   defineFrozenData(heldEntries, 'length', entries.length);
@@ -899,7 +1278,7 @@ function createBlobCapability(entries, code = 'SOURCE_ORIGIN_GIT_BLOB_SET') {
     get: BLOB_CAPABILITY_SIZE,
     set: undefined,
   });
-  defineFrozenData(capability, Symbol.iterator, BLOB_CAPABILITY_ENTRIES);
+  defineFrozenData(capability, SYMBOL_ITERATOR, BLOB_CAPABILITY_ENTRIES);
   return OBJECT_FREEZE(capability);
 }
 
@@ -907,17 +1286,17 @@ function closedArrayValues(value, code) {
   if (UTIL_TYPES_IS_PROXY(value) || !ARRAY_IS_ARRAY(value) || OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
   const lengthDescriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, 'length');
-  if (!lengthDescriptor || !('value' in lengthDescriptor) || lengthDescriptor.enumerable || !Number.isSafeInteger(lengthDescriptor.value) || lengthDescriptor.value < 0 || names.length !== lengthDescriptor.value + 1) refuse(code);
-  const output = [];
+  if (!lengthDescriptor || !OBJECT_HAS_OWN(lengthDescriptor, 'value') || lengthDescriptor.enumerable || !NUMBER_IS_SAFE_INTEGER(lengthDescriptor.value) || lengthDescriptor.value < 0 || names.length !== lengthDescriptor.value + 1) refuse(code);
+  const output = new ARRAY_CONSTRUCTOR();
   for (let index = 0; index < lengthDescriptor.value; index += 1) {
-    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, String(index));
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
-    output[index] = descriptor.value;
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, index);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable) refuse(code);
+    safeArrayAppend(output, descriptor.value);
   }
   return output;
 }
 
-function exactBuffer(value, expectedLength, code) {
+function captureExactBufferState(value, code) {
   if (
     UTIL_TYPES_IS_PROXY(value)
     || value === null
@@ -952,34 +1331,77 @@ function exactBuffer(value, expectedLength, code) {
     refuse(code);
   }
   if (
-    !Number.isSafeInteger(length)
-    || !Number.isSafeInteger(byteLength)
-    || !Number.isSafeInteger(byteOffset)
-    || !Number.isSafeInteger(backingByteLength)
+    !NUMBER_IS_SAFE_INTEGER(length)
+    || !NUMBER_IS_SAFE_INTEGER(byteLength)
+    || !NUMBER_IS_SAFE_INTEGER(byteOffset)
+    || !NUMBER_IS_SAFE_INTEGER(backingByteLength)
     || length !== byteLength
-    || (expectedLength !== undefined && length !== expectedLength)
     || length < 0
-    || length > SOURCE_ORIGIN_LIMITS.capturedFileBytes
     || byteOffset < 0
     || byteOffset > backingByteLength
     || byteLength > backingByteLength - byteOffset
   ) refuse(code);
+  return { backing, backingByteLength, byteLength, byteOffset, length };
+}
+
+function exactBuffer(value, expectedLength, code) {
+  const captured = captureExactBufferState(value, code);
+  const { backing, byteLength, byteOffset, length } = captured;
+  if ((expectedLength !== undefined && length !== expectedLength) || length > SOURCE_ORIGIN_LIMITS.capturedFileBytes) refuse(code);
   let view;
-  let copy;
-  let output;
+  const output = allocateExactBuffer(byteLength, code);
   try {
     view = new UINT8_ARRAY_CONSTRUCTOR(backing, byteOffset, byteLength);
-    copy = new UINT8_ARRAY_CONSTRUCTOR(byteLength);
-    REFLECT_APPLY(TYPED_ARRAY_SET, copy, [view, 0]);
-    output = REFLECT_APPLY(BUFFER_ALLOC_UNSAFE, BUFFER_CONSTRUCTOR, [byteLength]);
-    REFLECT_APPLY(TYPED_ARRAY_SET, output, [copy, 0]);
+    REFLECT_APPLY(TYPED_ARRAY_SET, output, [view, 0]);
   } catch {
     refuse(code);
   }
+  const outputState = captureExactBufferState(output, code);
   if (
-    REFLECT_APPLY(TYPED_ARRAY_LENGTH_GETTER, copy, []) !== length
-    || REFLECT_APPLY(TYPED_ARRAY_LENGTH_GETTER, output, []) !== length
+    outputState.length !== length
+    || outputState.byteLength !== length
+    || outputState.byteOffset !== 0
+    || outputState.backingByteLength !== length
+    || (length > 0 && outputState.backing === backing)
   ) refuse(code);
+  return output;
+}
+
+function allocateExactBuffer(byteLength, code) {
+  if (!NUMBER_IS_SAFE_INTEGER(byteLength) || byteLength < 0 || byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes) refuse(code);
+  let output;
+  try {
+    output = REFLECT_APPLY(BUFFER_ALLOC_UNSAFE_SLOW, BUFFER_CONSTRUCTOR, [byteLength]);
+  } catch {
+    refuse(code);
+  }
+  const state = captureExactBufferState(output, code);
+  if (state.length !== byteLength || state.byteOffset !== 0 || state.backingByteLength !== byteLength) refuse(code);
+  return output;
+}
+
+function concatExactBuffers(values, maximumBytes, code) {
+  const states = new ARRAY_CONSTRUCTOR();
+  let total = 0;
+  for (let index = 0; index < values.length; index += 1) {
+    const state = captureExactBufferState(values[index], code);
+    total = addAggregate(total, state.length, maximumBytes);
+    safeArrayAppend(states, state);
+  }
+  const output = allocateExactBuffer(total, code);
+  try {
+    let offset = 0;
+    for (let index = 0; index < states.length; index += 1) {
+      const state = states[index];
+      const view = new UINT8_ARRAY_CONSTRUCTOR(state.backing, state.byteOffset, state.byteLength);
+      REFLECT_APPLY(TYPED_ARRAY_SET, output, [view, offset]);
+      offset += state.length;
+    }
+  } catch {
+    refuse(code);
+  }
+  const outputState = captureExactBufferState(output, code);
+  if (outputState.length !== total || outputState.byteOffset !== 0 || outputState.backingByteLength !== total) refuse(code);
   return output;
 }
 
@@ -988,12 +1410,12 @@ function copyHeldBuffer(value, code) {
 }
 
 function sha256CapturedBytes(bytes) {
-  return createHash('sha256').update(bytes).digest('hex');
+  return hashHex('sha256', [bytes]);
 }
 
 function asciiBytes(value) {
   const bytes = new UINT8_ARRAY_CONSTRUCTOR(value.length);
-  for (let index = 0; index < value.length; index += 1) bytes[index] = value.charCodeAt(index);
+  for (let index = 0; index < value.length; index += 1) bytes[index] = stringCharCodeAt(value, index);
   return bytes;
 }
 
@@ -1013,12 +1435,12 @@ export function admitFrozenBlobSet(rowsValue, blobs, options) {
     const expected = keys.length === short.length ? short : full;
     exactObject(row, expected, code);
     validatePath(row.path);
-    if (!Number.isSafeInteger(row.byteLength) || row.byteLength < 0 || row.byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes || typeof row.rawSha256 !== 'string' || !/^[0-9a-f]{64}$/.test(row.rawSha256) || mapHas(byPath, row.path)) refuse(code);
+    if (!NUMBER_IS_SAFE_INTEGER(row.byteLength) || row.byteLength < 0 || row.byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes || typeof row.rawSha256 !== 'string' || !regexpTest(/^[0-9a-f]{64}$/, row.rawSha256) || mapHas(byPath, row.path)) refuse(code);
     if (expected === full && (
       row.mode !== '100644' && row.mode !== '100755'
       || row.objectFormat !== 'sha1' && row.objectFormat !== 'sha256'
       || typeof row.blobOid !== 'string'
-      || !(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/).test(row.blobOid)
+      || !regexpTest(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/, row.blobOid)
     )) refuse(code);
     mapSet(byPath, row.path, row);
   }
@@ -1047,67 +1469,70 @@ export function admitFrozenBlobSet(rowsValue, blobs, options) {
     const bytes = exactBuffer(value, row.byteLength, code);
     if (sha256CapturedBytes(bytes) !== row.rawSha256) refuse(code);
     if (OBJECT_HAS_OWN(row, 'blobOid')) {
-      const blobOid = createHash(row.objectFormat)
-        .update(asciiBytes(`blob ${row.byteLength}\0`))
-        .update(bytes)
-        .digest('hex');
+      const blobOid = hashHex(row.objectFormat, [asciiBytes(`blob ${row.byteLength}\0`), bytes]);
       if (blobOid !== row.blobOid) refuse(code);
     }
     mapSet(captured, locator, bytes);
   }
-  const ordered = [];
+  const ordered = new ARRAY_CONSTRUCTOR();
   for (let index = 0; index < rows.length; index += 1) {
     const row = rows[index];
     const bytes = mapGet(captured, row.path);
     if (bytes === undefined) refuse(code);
-    ordered[index] = [row.path, bytes];
+    safeArrayAppend(ordered, [row.path, bytes]);
   }
   return createBlobCapability(ordered, code);
 }
 
 async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIdentity, sourcePolicy, resolutionPolicy, resolutionOwnerPaths, limits }) {
-  const sourceRows = [];
-  const resolutionRows = [];
-  const sourceEntries = [];
-  const resolutionEntries = [];
+  const sourceRows = new ARRAY_CONSTRUCTOR();
+  const resolutionRows = new ARRAY_CONSTRUCTOR();
+  const sourceEntries = new ARRAY_CONSTRUCTOR();
+  const resolutionEntries = new ARRAY_CONSTRUCTOR();
   let sourceBytes = 0;
   let resolutionBytes = 0;
 
-  for (const treeRow of treeRows) {
+  for (let index = 0; index < treeRows.length; index += 1) {
+    const treeRow = treeRows[index];
     const sourceDomain = classifySourcePath(treeRow.path, sourcePolicy);
-    const isResolution = classifyResolutionPath(treeRow.path, resolutionPolicy) || resolutionOwnerPaths.has(treeRow.path);
+    const isResolution = classifyResolutionPath(treeRow.path, resolutionPolicy) || setHas(resolutionOwnerPaths, treeRow.path);
     if (!sourceDomain && !isResolution) continue;
     const bytes = await readBlob(run, treeRow.blobOid, 'CAPTURED_FILE');
-    const row = Object.freeze({
+    const byteLength = typedArrayLength(bytes);
+    const row = OBJECT_FREEZE({
       path: treeRow.path,
       mode: treeRow.mode,
       blobOid: treeRow.blobOid,
       objectFormat: frozen.objectFormat,
-      byteLength: bytes.length,
-      rawSha256: sha256Raw(bytes),
+      byteLength,
+      rawSha256: sha256CapturedBytes(bytes),
     });
     if (sourceDomain) {
       if (sourceRows.length >= limits.sourceFiles) refuse('SOURCE_ORIGIN_LIMIT');
-      sourceBytes = addAggregate(sourceBytes, bytes.length, limits.sourceBytes);
-      sourceRows.push(row);
-      sourceEntries.push([row.path, bytes]);
+      sourceBytes = addAggregate(sourceBytes, byteLength, limits.sourceBytes);
+      safeArrayAppend(sourceRows, row);
+      safeArrayAppend(sourceEntries, [row.path, bytes]);
     }
     if (isResolution) {
       if (resolutionRows.length >= limits.resolutionFiles) refuse('SOURCE_ORIGIN_LIMIT');
-      resolutionBytes = addAggregate(resolutionBytes, bytes.length, limits.resolutionBytes);
-      resolutionRows.push(row);
-      resolutionEntries.push([row.path, bytes]);
+      resolutionBytes = addAggregate(resolutionBytes, byteLength, limits.resolutionBytes);
+      safeArrayAppend(resolutionRows, row);
+      safeArrayAppend(resolutionEntries, [row.path, bytes]);
     }
   }
 
-  sourceRows.sort((left, right) => codeUnitCompare(left.path, right.path));
-  resolutionRows.sort((left, right) => codeUnitCompare(left.path, right.path));
-  sourceEntries.sort((left, right) => codeUnitCompare(left[0], right[0]));
-  resolutionEntries.sort((left, right) => codeUnitCompare(left[0], right[0]));
-  for (const ownerPath of resolutionOwnerPaths) if (!treeByPath.has(ownerPath) || !resolutionRows.some((row) => row.path === ownerPath)) refuse('SOURCE_ORIGIN_GIT_EXPECTED_OUTCOMES');
+  safeArraySort(sourceRows, (left, right) => codeUnitCompare(left.path, right.path));
+  safeArraySort(resolutionRows, (left, right) => codeUnitCompare(left.path, right.path));
+  safeArraySort(sourceEntries, (left, right) => codeUnitCompare(left[0], right[0]));
+  safeArraySort(resolutionEntries, (left, right) => codeUnitCompare(left[0], right[0]));
+  const resolutionOwnerValues = capturedSetValues(resolutionOwnerPaths);
+  for (let index = 0; index < resolutionOwnerValues.length; index += 1) {
+    const ownerPath = resolutionOwnerValues[index];
+    if (!mapHas(treeByPath, ownerPath) || !safeArraySome(resolutionRows, (row) => row.path === ownerPath)) refuse('SOURCE_ORIGIN_GIT_EXPECTED_OUTCOMES');
+  }
 
   const repositoryId = `repository:${repositoryIdentity.identityDigest}`;
-  const exclusionDigest = sha256Canonical('galerina.logic-aig-exclusions.v1', sourcePolicy.exclusions);
+  const exclusionDigest = sha256CanonicalCaptured('galerina.logic-aig-exclusions.v1', sourcePolicy.exclusions);
   const sourceBody = {
     schema: 'galerina.logic-aig-source-manifest.v1',
     repositoryId,
@@ -1119,17 +1544,17 @@ async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIde
     rows: sourceRows,
     counts: {
       paths: sourceRows.length,
-      blobs: new Set(sourceRows.map((row) => row.blobOid)).size,
+      blobs: safeUniqueCount(sourceRows, (row) => row.blobOid),
       bytes: sourceBytes,
-      mode100644: sourceRows.filter((row) => row.mode === '100644').length,
-      mode100755: sourceRows.filter((row) => row.mode === '100755').length,
+      mode100644: safeArrayCount(sourceRows, (row) => row.mode === '100644'),
+      mode100755: safeArrayCount(sourceRows, (row) => row.mode === '100755'),
       exclusions: 0,
     },
     authorizing: false,
   };
   const sourceManifest = {
     ...sourceBody,
-    manifestDigest: sha256Canonical(sourceBody.schema, sourceBody),
+    manifestDigest: sha256CanonicalCaptured(sourceBody.schema, sourceBody),
   };
   const resolutionBody = {
     schema: 'galerina.logic-aig-resolution-inputs.v1',
@@ -1142,7 +1567,7 @@ async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIde
   };
   const resolutionInputs = {
     ...resolutionBody,
-    resolutionInputsDigest: sha256Canonical(resolutionBody.schema, resolutionBody),
+    resolutionInputsDigest: sha256CanonicalCaptured(resolutionBody.schema, resolutionBody),
   };
   return {
     sourceManifest: deepFreeze(sourceManifest),
@@ -1153,30 +1578,34 @@ async function buildManifests({ run, frozen, treeRows, treeByPath, repositoryIde
 }
 
 function assertNoDuplicateJsonMembers(text, code) {
-  const scopes = [];
+  const scopes = new ARRAY_CONSTRUCTOR();
   for (let index = 0; index < text.length;) {
-    const character = text[index];
+    const character = stringSlice(text, index, index + 1);
     if (character === '"') {
       const start = index++;
       while (index < text.length) {
-        if (text[index] === '\\') index += 2;
-        else if (text[index++] === '"') break;
+        if (stringSlice(text, index, index + 1) === '\\') index += 2;
+        else {
+          const next = stringSlice(text, index, index + 1);
+          index += 1;
+          if (next === '"') break;
+        }
       }
       let cursor = index;
-      while (/\s/u.test(text[cursor] ?? '')) cursor += 1;
-      if (text[cursor] === ':' && scopes.length > 0) {
+      while (regexpTest(/\s/u, stringSlice(text, cursor, cursor + 1))) cursor += 1;
+      if (stringSlice(text, cursor, cursor + 1) === ':' && scopes.length > 0) {
         let key;
-        try { key = JSON.parse(text.slice(start, index)); } catch { refuse(code); }
-        const scope = scopes.at(-1);
-        if (scope.has(key)) refuse(code);
-        scope.add(key);
+        try { key = REFLECT_APPLY(JSON_PARSE, undefined, [stringSlice(text, start, index)]); } catch { refuse(code); }
+        const scope = scopes[scopes.length - 1];
+        if (setHas(scope, key)) refuse(code);
+        setAdd(scope, key);
       }
       continue;
     }
-    if (character === '{') scopes.push(new Set());
+    if (character === '{') safeArrayAppend(scopes, new SET_CONSTRUCTOR());
     else if (character === '}') {
       if (scopes.length === 0) refuse(code);
-      scopes.pop();
+      scopes.length -= 1;
     }
     index += 1;
   }
@@ -1185,40 +1614,54 @@ function assertNoDuplicateJsonMembers(text, code) {
 
 export function authenticateGateOwnerBytes(bytes, parserPolicy) {
   const text = decodeUtf8(bytes, 'SOURCE_ORIGIN_GIT_POLICY');
-  if (!text.endsWith('\n') || text.endsWith('\n\n') || text.endsWith('\r\n')) refuse('SOURCE_ORIGIN_GIT_POLICY');
+  if (!stringEndsWith(text, '\n') || stringEndsWith(text, '\n\n') || stringEndsWith(text, '\r\n')) refuse('SOURCE_ORIGIN_GIT_POLICY');
   assertNoDuplicateJsonMembers(text, 'SOURCE_ORIGIN_GIT_POLICY');
   let value;
-  try { value = JSON.parse(text); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
-  if (value === null || typeof value !== 'object' || Array.isArray(value) || isProxy(value) || Object.getPrototypeOf(value) !== Object.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_GIT_POLICY');
-  const pattern = new RegExp(parserPolicy.diagnosticCodePattern, 'u');
-  for (const key of Object.getOwnPropertyNames(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, key);
-    if (!descriptor || !('value' in descriptor) || !descriptor.enumerable || !key || key !== key.normalize('NFC') || CONTROL.test(key)) refuse('SOURCE_ORIGIN_GIT_POLICY');
+  try { value = REFLECT_APPLY(JSON_PARSE, undefined, [text]); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
+  if (value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value) || UTIL_TYPES_IS_PROXY(value) || OBJECT_GET_PROTOTYPE_OF(value) !== OBJECT_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_GIT_POLICY');
+  const pattern = new REGEXP_CONSTRUCTOR(parserPolicy.diagnosticCodePattern, 'u');
+  const keys = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < keys.length; index += 1) {
+    const key = keys[index];
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, key);
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || !descriptor.enumerable || !key || key !== stringNormalize(key) || regexpTest(CONTROL, key)) refuse('SOURCE_ORIGIN_GIT_POLICY');
     const row = descriptor.value;
     exactObject(row, ['ok', 'codes'], 'SOURCE_ORIGIN_GIT_POLICY');
-    if (typeof row.ok !== 'boolean' || !Array.isArray(row.codes) || isProxy(row.codes) || Object.getPrototypeOf(row.codes) !== Array.prototype) refuse('SOURCE_ORIGIN_GIT_POLICY');
-    const codes = [...row.codes];
-    if (codes.some((code) => typeof code !== 'string' || !pattern.test(code)) ||
-        canonicalJsonText(codes) !== canonicalJsonText([...new Set(codes)].sort(codeUnitCompare)) ||
+    if (typeof row.ok !== 'boolean' || !ARRAY_IS_ARRAY(row.codes) || UTIL_TYPES_IS_PROXY(row.codes) || OBJECT_GET_PROTOTYPE_OF(row.codes) !== ARRAY_PROTOTYPE) refuse('SOURCE_ORIGIN_GIT_POLICY');
+    const codes = closedArrayValues(row.codes, 'SOURCE_ORIGIN_GIT_POLICY');
+    const uniqueCodes = new SET_CONSTRUCTOR();
+    for (let codeIndex = 0; codeIndex < codes.length; codeIndex += 1) setAdd(uniqueCodes, codes[codeIndex]);
+    const sortedUniqueCodes = safeArraySort(capturedSetValues(uniqueCodes), codeUnitCompare);
+    if (safeArraySome(codes, (diagnosticCode) => typeof diagnosticCode !== 'string' || !regexpTest(pattern, diagnosticCode)) ||
+        canonicalJsonText(codes) !== canonicalJsonText(sortedUniqueCodes) ||
         (!row.ok && codes.length === 0)) refuse('SOURCE_ORIGIN_GIT_POLICY');
   }
-  const rawSha256 = sha256Raw(bytes);
-  const semanticDigest = sha256Canonical('galerina.logic-aig-gate-v3-reference-verdicts.v1', value);
-  if (bytes.length !== OWNER_IDENTITIES.gate.byteLength || rawSha256 !== OWNER_IDENTITIES.gate.rawSha256 ||
+  const byteLength = captureExactBufferState(bytes, 'SOURCE_ORIGIN_GIT_POLICY').length;
+  const rawSha256 = sha256CapturedBytes(bytes);
+  const semanticDigest = sha256CanonicalCaptured('galerina.logic-aig-gate-v3-reference-verdicts.v1', value);
+  if (byteLength !== OWNER_IDENTITIES.gate.byteLength || rawSha256 !== OWNER_IDENTITIES.gate.rawSha256 ||
       semanticDigest !== OWNER_IDENTITIES.gate.semanticDigest) refuse('SOURCE_ORIGIN_GIT_POLICY');
-  return Object.freeze({ value: deepFreeze(value), byteLength: bytes.length, rawSha256, semanticDigest });
+  return OBJECT_FREEZE({ value: deepFreeze(value), byteLength, rawSha256, semanticDigest });
 }
 
 function semanticOwner(blob, validate, digestField, options) {
   let value;
   try { value = validate(parseCanonicalJsonBytes(blob.bytes, { label: blob.locator }), options); } catch { refuse('SOURCE_ORIGIN_GIT_POLICY'); }
-  return Object.freeze({ ...blob, value, semanticDigest: value[digestField] });
+  return OBJECT_FREEZE({ ...blob, value, semanticDigest: value[digestField] });
 }
 
 async function readHeldOwners(run, state) {
-  const treeByPath = new Map(state.treeRows.map((row) => [row.path, row]));
-  const blobs = {};
-  for (const [name, locator] of Object.entries(POLICY_PATHS)) blobs[name] = await heldBlob(run, treeByPath, locator);
+  const treeByPath = new MAP_CONSTRUCTOR();
+  for (let index = 0; index < state.treeRows.length; index += 1) {
+    const row = state.treeRows[index];
+    mapSet(treeByPath, row.path, row);
+  }
+  const blobs = OBJECT_CREATE(null);
+  const policyEntries = REFLECT_APPLY(OBJECT_ENTRIES, undefined, [POLICY_PATHS]);
+  for (let index = 0; index < policyEntries.length; index += 1) {
+    const entry = policyEntries[index];
+    setDynamicData(blobs, entry[0], await heldBlob(run, treeByPath, entry[1]));
+  }
   const pins = semanticOwner(blobs.toolchainPins, validateToolchainPins, 'pinsDigest');
   const parser = semanticOwner(blobs.parser, validateParserPolicy, 'policyDigest');
   const proposedBaseline = semanticOwner(blobs.proposedBaseline, validateProposedBaseline, 'policyDigest');
@@ -1228,10 +1671,10 @@ async function readHeldOwners(run, state) {
   const resolution = semanticOwner(blobs.resolution, validateResolutionPolicy, 'policyDigest');
   const source = semanticOwner(blobs.source, validateSourcePolicy, 'policyDigest');
   const gateParsed = authenticateGateOwnerBytes(blobs.gate.bytes, parser.value);
-  const gate = Object.freeze({ ...blobs.gate, value: gateParsed.value, semanticDigest: gateParsed.semanticDigest });
+  const gate = OBJECT_FREEZE({ ...blobs.gate, value: gateParsed.value, semanticDigest: gateParsed.semanticDigest });
   const bindings = {
     sourcePolicyDigest: source.value.policyDigest,
-    exclusionDigest: sha256Canonical('galerina.logic-aig-exclusions.v1', source.value.exclusions),
+    exclusionDigest: sha256CanonicalCaptured('galerina.logic-aig-exclusions.v1', source.value.exclusions),
     resolutionPolicyDigest: resolution.value.policyDigest,
     parserPolicyDigest: parser.value.policyDigest,
     generatedConsumerPolicyDigest: generated.value.policyDigest,
@@ -1242,14 +1685,15 @@ async function readHeldOwners(run, state) {
   };
   const exporter = semanticOwner(blobs.exporter, (value) => validateExporterPolicy(value, bindings), 'policyDigest');
   const owners = { pins, proposedBaseline, expectedOutcomes, exporter, generated, parser, repositoryIdentity, resolution, source, gate };
-  const identities = Object.values(owners).map((owner) => ({
+  const identities = safeArrayMap(REFLECT_APPLY(OBJECT_VALUES, undefined, [owners]), (owner) => ({
     locator: owner.locator,
     blobOid: owner.blobOid,
     byteLength: owner.byteLength,
     rawSha256: owner.rawSha256,
     semanticDigest: owner.semanticDigest,
-  })).sort((left, right) => codeUnitCompare(left.locator, right.locator));
-  return Object.freeze({ ...owners, identities: deepFreeze(identities), ownerSetDigest: sha256Canonical('galerina.logic-aig-frozen-owner-set.v1', identities) });
+  }));
+  safeArraySort(identities, (left, right) => codeUnitCompare(left.locator, right.locator));
+  return OBJECT_FREEZE({ ...owners, identities: deepFreeze(identities), ownerSetDigest: sha256CanonicalCaptured('galerina.logic-aig-frozen-owner-set.v1', identities) });
 }
 
 function capturedOwnerSnapshot(held) {
@@ -1258,27 +1702,34 @@ function capturedOwnerSnapshot(held) {
     'proposedBaseline', 'repositoryIdentity', 'resolution', 'source',
   ];
   const values = {};
-  const entries = [];
-  for (const name of ownerNames) {
+  const entries = new ARRAY_CONSTRUCTOR();
+  for (let index = 0; index < ownerNames.length; index += 1) {
+    const name = ownerNames[index];
     const owner = held[name];
-    if (!owner || !Buffer.isBuffer(owner.bytes)) refuse('SOURCE_ORIGIN_GIT_POLICY');
-    values[name] = owner.value;
-    entries.push([owner.locator, owner.bytes]);
+    if (!owner) refuse('SOURCE_ORIGIN_GIT_POLICY');
+    captureExactBufferState(owner.bytes, 'SOURCE_ORIGIN_GIT_POLICY');
+    setDynamicData(values, name, owner.value);
+    safeArrayAppend(entries, [owner.locator, owner.bytes]);
   }
-  entries.sort((left, right) => codeUnitCompare(left[0], right[0]));
+  safeArraySort(entries, (left, right) => codeUnitCompare(left[0], right[0]));
   const owners = deepFreeze({
     values,
     identities: held.identities,
     ownerSetDigest: held.ownerSetDigest,
     authorizing: false,
   });
-  const rows = held.identities.map((row) => ({
+  const rows = safeArrayMap(held.identities, (row) => ({
     path: row.locator,
     byteLength: row.byteLength,
     rawSha256: row.rawSha256,
   }));
-  const ownerBlobs = admitFrozenBlobSet(rows, new Map(entries), { label: 'OWNER_SET' });
-  return Object.freeze({ owners, ownerBlobs });
+  const ownerInput = new MAP_CONSTRUCTOR();
+  for (let index = 0; index < entries.length; index += 1) {
+    const entry = entries[index];
+    mapSet(ownerInput, entry[0], entry[1]);
+  }
+  const ownerBlobs = admitFrozenBlobSet(rows, ownerInput, { label: 'OWNER_SET' });
+  return OBJECT_FREEZE({ owners, ownerBlobs });
 }
 
 function readInstalledWorkingOwners(parserPolicy) {
@@ -1296,12 +1747,14 @@ function readInstalledWorkingOwners(parserPolicy) {
     (value) => validateExporterPolicy(value, exporterBindings(value)),
     'policyDigest',
   );
-  return Object.freeze({ pins, proposedBaseline, expectedOutcomes, exporter });
+  return OBJECT_FREEZE({ pins, proposedBaseline, expectedOutcomes, exporter });
 }
 
 function assertHeldWorkingOwners(held, working) {
-  for (const name of ['pins', 'proposedBaseline', 'expectedOutcomes', 'exporter']) {
-    if (!held[name].bytes.equals(working[name].bytes) || held[name].semanticDigest !== working[name].semanticDigest) refuse('SOURCE_ORIGIN_GIT_POLICY');
+  const names = ['pins', 'proposedBaseline', 'expectedOutcomes', 'exporter'];
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    if (!bufferEquals(held[name].bytes, working[name].bytes) || held[name].semanticDigest !== working[name].semanticDigest) refuse('SOURCE_ORIGIN_GIT_POLICY');
   }
 }
 
@@ -1311,8 +1764,9 @@ function sameExecutable(left, right) {
 }
 
 function sameWorkingOwners(left, right) {
-  return ['pins', 'proposedBaseline', 'expectedOutcomes', 'exporter'].every((name) =>
-    left[name].rawSha256 === right[name].rawSha256 && left[name].semanticDigest === right[name].semanticDigest && left[name].bytes.equals(right[name].bytes));
+  const names = ['pins', 'proposedBaseline', 'expectedOutcomes', 'exporter'];
+  return safeArrayEvery(names, (name) =>
+    left[name].rawSha256 === right[name].rawSha256 && left[name].semanticDigest === right[name].semanticDigest && bufferEquals(left[name].bytes, right[name].bytes));
 }
 
 function makeRunner({ executable, environment, policy, deadline }) {
@@ -1321,7 +1775,7 @@ function makeRunner({ executable, environment, policy, deadline }) {
     const selected = materializeGitCommand(policy.gitProcessPolicy, commandId, REPOSITORY_ROOT, substitutions, blobClass);
     let child;
     try {
-      child = spawn(executable, selected.arguments, {
+      child = SPAWN(executable, selected.arguments, {
         cwd: REPOSITORY_ROOT,
         env: environment,
         shell: false,
@@ -1330,23 +1784,25 @@ function makeRunner({ executable, environment, policy, deadline }) {
       });
     } catch { refuse('SOURCE_ORIGIN_GIT_PROCESS'); }
     const bytes = await collectChild(child, selected.maximumBytes, policy.limits.processOutputBytes, deadline);
-    trace.push(commandId);
+    safeArrayAppend(trace, commandId);
     return selected.stdoutRule === 'ONE_UTF8_LINE' ? decodeGitLine(bytes) : bytes;
   };
-  Object.defineProperty(runCommand, 'trace', { value: trace });
+  OBJECT_DEFINE_PROPERTY(runCommand, 'trace', { value: trace });
   return runCommand;
 }
 
 function assertCommandTrace(trace, processPolicy) {
-  const expected = processPolicy.commandRows.map((row) => row.commandId).sort(codeUnitCompare);
-  if (!Array.isArray(trace) || trace.length < expected.length + 2 || trace[0] !== 'GIT_VERSION' || trace[1] !== 'CONFIG_ROWS' ||
-      trace.at(-2) !== 'CONFIG_ROWS' || trace.at(-1) !== 'GIT_VERSION' ||
-      trace.filter((id) => id === 'GIT_VERSION').length !== 2 || trace.filter((id) => id === 'CONFIG_ROWS').length !== 2 ||
-      !expected.every((commandId) => trace.includes(commandId)) || trace.some((commandId) => !expected.includes(commandId))) refuse('SOURCE_ORIGIN_GIT_PROCESS');
+  const expected = safeArrayMap(processPolicy.commandRows, (row) => row.commandId);
+  safeArraySort(expected, codeUnitCompare);
+  if (!ARRAY_IS_ARRAY(trace) || trace.length < expected.length + 2 || trace[0] !== 'GIT_VERSION' || trace[1] !== 'CONFIG_ROWS' ||
+      trace[trace.length - 2] !== 'CONFIG_ROWS' || trace[trace.length - 1] !== 'GIT_VERSION' ||
+      safeArrayCount(trace, (id) => id === 'GIT_VERSION') !== 2 || safeArrayCount(trace, (id) => id === 'CONFIG_ROWS') !== 2 ||
+      !safeArrayEvery(expected, (commandId) => safeArrayIncludes(trace, commandId)) ||
+      safeArraySome(trace, (commandId) => !safeArrayIncludes(expected, commandId))) refuse('SOURCE_ORIGIN_GIT_PROCESS');
 }
 
 function observationEdge(frozen, executable, version) {
-  return Object.freeze({
+  return OBJECT_FREEZE({
     head: frozen.head,
     tree: frozen.tree,
     indexDigest: frozen.index.indexDigest,
@@ -1358,11 +1814,12 @@ function observationEdge(frozen, executable, version) {
 
 export async function captureFrozenSource(options) {
   const captured = captureOptions(options);
+  assertCaptureRuntimeClosure();
   const bootstrap = readBootstrapOwners();
   const hostPin = selectHostPin(bootstrap.pins.value);
   const executableOpening = authenticateGitExecutable(captured.gitExecutableLocator, hostPin);
   const environment = buildEnvironment(bootstrap.exporter.value.environmentPolicy);
-  const deadline = Date.now() + bootstrap.exporter.value.limits.processMillis;
+  const deadline = REFLECT_APPLY(DATE_NOW, undefined, []) + bootstrap.exporter.value.limits.processMillis;
   const run = makeRunner({ executable: captured.gitExecutableLocator, environment, policy: bootstrap.exporter.value, deadline });
 
   const version = await run('GIT_VERSION');
@@ -1373,13 +1830,25 @@ export async function captureFrozenSource(options) {
   const heldOpening = await readHeldOwners(run, frozenBefore);
   const workingOpening = readInstalledWorkingOwners(heldOpening.parser.value);
   assertHeldWorkingOwners(heldOpening, workingOpening);
-  if (!workingOpening.pins.bytes.equals(bootstrap.pins.bytes) || !workingOpening.exporter.bytes.equals(bootstrap.exporter.bytes)) refuse('SOURCE_ORIGIN_GIT_POLICY');
+  if (!bufferEquals(workingOpening.pins.bytes, bootstrap.pins.bytes) || !bufferEquals(workingOpening.exporter.bytes, bootstrap.exporter.bytes)) refuse('SOURCE_ORIGIN_GIT_POLICY');
 
-  const treeByPath = new Map(frozenBefore.treeRows.map((row) => [row.path, row]));
-  const ownerManifestKindByKind = new Map(heldOpening.parser.value.ownerManifestBindings.map((binding) => [binding.ownerKind, binding.manifestKind]));
-  const resolutionOwnerPaths = new Set(heldOpening.expectedOutcomes.value.rows
-    .filter((row) => ownerManifestKindByKind.get(row.ownerKind) === 'RESOLUTION_INPUTS')
-    .map((row) => row.ownerLocator));
+  const treeByPath = new MAP_CONSTRUCTOR();
+  for (let index = 0; index < frozenBefore.treeRows.length; index += 1) {
+    const row = frozenBefore.treeRows[index];
+    mapSet(treeByPath, row.path, row);
+  }
+  const ownerManifestKindByKind = new MAP_CONSTRUCTOR();
+  const ownerManifestBindings = heldOpening.parser.value.ownerManifestBindings;
+  for (let index = 0; index < ownerManifestBindings.length; index += 1) {
+    const binding = ownerManifestBindings[index];
+    mapSet(ownerManifestKindByKind, binding.ownerKind, binding.manifestKind);
+  }
+  const resolutionOwnerPaths = new SET_CONSTRUCTOR();
+  const expectedRows = heldOpening.expectedOutcomes.value.rows;
+  for (let index = 0; index < expectedRows.length; index += 1) {
+    const row = expectedRows[index];
+    if (mapGet(ownerManifestKindByKind, row.ownerKind) === 'RESOLUTION_INPUTS') setAdd(resolutionOwnerPaths, row.ownerLocator);
+  }
 
   const manifests = await buildManifests({
     run,
@@ -1415,7 +1884,7 @@ export async function captureFrozenSource(options) {
 
   const before = observationEdge(frozenBefore, executableOpening, version);
   const after = observationEdge(frozenAfter, executableAfterVersion, closingVersion);
-  const observation = Object.freeze({
+  const observation = OBJECT_FREEZE({
     before,
     after,
     objectFormat: frozenBefore.objectFormat,
@@ -1425,7 +1894,7 @@ export async function captureFrozenSource(options) {
   const semanticOwners = capturedOwnerSnapshot(heldClosing);
   const sourceBlobs = admitFrozenBlobSet(manifests.sourceManifest.rows, manifests.sourceBlobs, { label: 'SOURCE_MANIFEST' });
   const resolutionBlobs = admitFrozenBlobSet(manifests.resolutionInputs.rows, manifests.resolutionBlobs, { label: 'RESOLUTION_INPUTS' });
-  return Object.freeze({
+  return OBJECT_FREEZE({
     observation,
     sourceManifest: manifests.sourceManifest,
     sourceBlobs,

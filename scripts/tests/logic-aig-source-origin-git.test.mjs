@@ -870,6 +870,396 @@ test("defensive blob capabilities close construction, iteration, bytes, and re-a
   });
 });
 
+test("blob capability copies use isolated exact ArrayBuffer backing", {
+  skip: process.version !== "v24.18.0",
+}, async (t) => {
+  const marker = "RD0873_ALIAS_MARKER_6A_3f6c9b21";
+  const markerBytes = [];
+  for (let index = 0; index < marker.length; index += 1) markerBytes.push(marker.charCodeAt(index));
+
+  const assertMarker = (bytes) => {
+    assert.equal(bytes.length, markerBytes.length);
+    for (let index = 0; index < markerBytes.length; index += 1) {
+      assert.equal(bytes[index], markerBytes[index], `marker byte ${index}`);
+    }
+  };
+  const fresh = () => {
+    const original = Buffer.from(marker, "utf8");
+    const rows = [{ path: "alias.ts", byteLength: original.length, rawSha256: sha256(original) }];
+    const capability = gitSource.admitFrozenBlobSet(
+      rows,
+      new Map([["alias.ts", original]]),
+      { label: "SOURCE_MANIFEST" },
+    );
+    return { capability, original, rows };
+  };
+  const corruptExpandedMatchesOutsideView = (bytes) => {
+    const expanded = new Uint8Array(bytes.buffer);
+    const mutations = [];
+    const visibleStart = bytes.byteOffset;
+    for (let start = 0; start <= expanded.length - markerBytes.length; start += 1) {
+      let matches = true;
+      for (let offset = 0; offset < markerBytes.length; offset += 1) {
+        if (expanded[start + offset] !== markerBytes[offset]) {
+          matches = false;
+          break;
+        }
+      }
+      if (!matches || start === visibleStart) continue;
+      mutations.push([start, expanded[start]]);
+      expanded[start] ^= 0xff;
+    }
+    return { expanded, mutations };
+  };
+  const restoreMutations = ({ expanded, mutations }) => {
+    for (let index = 0; index < mutations.length; index += 1) {
+      expanded[mutations[index][0]] = mutations[index][1];
+    }
+  };
+
+  await t.test("expanding the caller Buffer cannot reach private held bytes", () => {
+    const { capability, original } = fresh();
+    const attack = corruptExpandedMatchesOutsideView(original);
+    try {
+      assertMarker(original);
+      assertMarker(capability.get("alias.ts"));
+    } finally {
+      restoreMutations(attack);
+    }
+  });
+
+  await t.test("expanding a returned Buffer cannot reach private held bytes", () => {
+    const { capability } = fresh();
+    const returned = capability.get("alias.ts");
+    const attack = corruptExpandedMatchesOutsideView(returned);
+    try {
+      assertMarker(returned);
+      assertMarker(capability.get("alias.ts"));
+    } finally {
+      restoreMutations(attack);
+    }
+  });
+
+  await t.test("every returned and re-admitted copy has one exact unshared backing", () => {
+    const { capability, original, rows } = fresh();
+    const returned = capability.get("alias.ts");
+    const readmitted = gitSource.admitFrozenBlobSet(rows, capability, { label: "SOURCE_MANIFEST" });
+    const readmittedBytes = readmitted.get("alias.ts");
+    for (const bytes of [returned, readmittedBytes]) {
+      assert.equal(bytes.byteOffset, 0);
+      assert.equal(bytes.buffer.byteLength, bytes.byteLength);
+      assertMarker(bytes);
+    }
+    assert.notEqual(returned.buffer, original.buffer);
+    assert.notEqual(readmittedBytes.buffer, original.buffer);
+    assert.notEqual(readmittedBytes.buffer, returned.buffer);
+    returned.fill(0);
+    assertMarker(capability.get("alias.ts"));
+    assertMarker(readmitted.get("alias.ts"));
+  });
+});
+
+test("post-import blob operations bypass mutable global and prototype dispatch", async (t) => {
+  const SafeObject = Object;
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const marker = Buffer.from("closed-dispatch", "utf8");
+  const rows = [{ path: "closed.ts", byteLength: marker.length, rawSha256: sha256(marker) }];
+  const input = new Map([["closed.ts", marker]]);
+  const parserPolicy = validateParserPolicy(JSON.parse(await readFile(
+    new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE),
+    "utf8",
+  )));
+  const gateWorkingBytes = await readFile(new URL(
+    "../../packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json",
+    import.meta.url,
+  ));
+  const gateBytes = Buffer.from(gateWorkingBytes.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
+  const fresh = () => gitSource.admitFrozenBlobSet(rows, input, { label: "SOURCE_MANIFEST" });
+  const assertMarker = (bytes) => assert.equal(Buffer.from(bytes).toString("utf8"), "closed-dispatch");
+
+  const exercise = (target, property, replacement, operation, verify) => {
+    const descriptor = safeGetDescriptor(target, property);
+    let effects = 0;
+    let failure;
+    let result;
+    const attack = () => {
+      effects += 1;
+      throw new Error(`ATTACKER_${String(property).toUpperCase()}`);
+    };
+    safeDefineProperty(target, property, replacement(descriptor, attack));
+    try { result = operation(); } catch (error) { failure = error; }
+    finally {
+      if (descriptor === undefined) safeDeleteProperty(target, property);
+      else safeDefineProperty(target, property, descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    verify(result);
+  };
+  const replaceFunction = (descriptor, attack) => ({
+    ...descriptor,
+    configurable: true,
+    value() { attack(); },
+  });
+
+  await t.test("global Symbol cannot steer capability iterator construction", () => {
+    const capability = fresh();
+    exercise(
+      globalThis,
+      "Symbol",
+      (descriptor, attack) => ({
+        ...descriptor,
+        configurable: true,
+        value: new Proxy(descriptor.value, { get() { attack(); } }),
+      }),
+      () => capability.entries(),
+      (iterator) => {
+        const first = iterator.next();
+        assert.equal(first.done, false);
+        assert.equal(first.value[0], "closed.ts");
+        assertMarker(first.value[1]);
+      },
+    );
+  });
+
+  await t.test("global Number cannot steer returned-byte validation", () => {
+    const capability = fresh();
+    exercise(
+      globalThis,
+      "Number",
+      (descriptor, attack) => ({
+        ...descriptor,
+        configurable: true,
+        value: new Proxy(descriptor.value, { get() { attack(); } }),
+      }),
+      () => capability.get("closed.ts"),
+      assertMarker,
+    );
+  });
+
+  await t.test("Buffer.poolSize cannot steer allocation", {
+    skip: process.version !== "v24.18.0",
+  }, () => {
+    const capability = fresh();
+    exercise(
+      Buffer,
+      "poolSize",
+      (descriptor, attack) => ({ configurable: true, enumerable: descriptor.enumerable, get() { attack(); } }),
+      () => capability.get("closed.ts"),
+      assertMarker,
+    );
+  });
+
+  await t.test("Buffer.poolSize mutation is refused before child-output aggregation", {
+    skip: process.version !== "v24.18.0" || platform() !== "win32",
+    timeout: 900_000,
+  }, async () => {
+    const descriptor = safeGetDescriptor(Buffer, "poolSize");
+    const gitExecutableLocator = fileURLToPath(new URL(
+      "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+      import.meta.url,
+    ));
+    let effects = 0;
+    let failure;
+    safeDefineProperty(Buffer, "poolSize", {
+      configurable: true,
+      enumerable: descriptor.enumerable,
+      get() {
+        effects += 1;
+        return descriptor.value;
+      },
+    });
+    try {
+      await gitSource.captureFrozenSource({
+        commitOid: "a".repeat(40),
+        gitExecutableLocator,
+      });
+    } catch (error) {
+      failure = error;
+    } finally {
+      safeDefineProperty(Buffer, "poolSize", descriptor);
+    }
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_PROCESS");
+    assert.equal(effects, 0);
+  });
+
+  await t.test("Array prototype index setters cannot observe admission", () => {
+    const descriptor = safeGetDescriptor(Array.prototype, "0");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(Array.prototype, "0", {
+      configurable: true,
+      set() { effects += 1; },
+    });
+    try { result = fresh(); } catch (error) { failure = error; }
+    finally {
+      if (descriptor === undefined) safeDeleteProperty(Array.prototype, "0");
+      else safeDefineProperty(Array.prototype, "0", descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assertMarker(result.get("closed.ts"));
+  });
+
+  await t.test("Object prototype descriptor lookalikes cannot reopen an accessor candidate", () => {
+    const descriptor = safeGetDescriptor(Object.prototype, "value");
+    let effects = 0;
+    let failure;
+    let result;
+    const options = {};
+    safeDefineProperty(options, "label", {
+      configurable: true,
+      enumerable: true,
+      get() { effects += 1; throw new Error("ATTACKER_OPTION_GET"); },
+    });
+    safeDefineProperty(Object.prototype, "value", {
+      configurable: true,
+      get() { effects += 1; throw new Error("ATTACKER_DESCRIPTOR_GET"); },
+    });
+    try { result = gitSource.admitFrozenBlobSet(rows, input, options); } catch (error) { failure = error; }
+    finally {
+      if (descriptor === undefined) safeDeleteProperty(Object.prototype, "value");
+      else safeDefineProperty(Object.prototype, "value", descriptor);
+    }
+    assert.equal(effects, 0);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
+  });
+
+  for (const property of ["name", "code"]) {
+    await t.test(`Error.prototype.${property} setters cannot observe stable refusal construction`, () => {
+      const descriptor = safeGetDescriptor(Error.prototype, property);
+      let effects = 0;
+      let failure;
+      safeDefineProperty(Error.prototype, property, {
+        configurable: true,
+        set() { effects += 1; throw "ATTACKER_ERROR_SET"; },
+      });
+      try {
+        gitSource.admitFrozenBlobSet(rows, input, { label: "INVALID" });
+      } catch (error) {
+        failure = error;
+      } finally {
+        if (descriptor === undefined) safeDeleteProperty(Error.prototype, property);
+        else safeDefineProperty(Error.prototype, property, descriptor);
+      }
+      assert.equal(effects, 0);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
+    });
+  }
+
+  await t.test("a prior refusal cannot redirect later internal refusal recognition", () => {
+    let prior;
+    try {
+      gitSource.admitFrozenBlobSet(rows, input, { label: "INVALID" });
+    } catch (error) {
+      prior = error;
+    }
+    assert(prior);
+    const refusalConstructor = prior.constructor;
+    const descriptor = safeGetDescriptor(refusalConstructor, Symbol.hasInstance);
+    let effects = 0;
+    let installed = false;
+    let failure;
+    try {
+      safeDefineProperty(refusalConstructor, Symbol.hasInstance, {
+        configurable: true,
+        value() { effects += 1; throw "ATTACKER_HAS_INSTANCE"; },
+      });
+      installed = true;
+    } catch {
+      // A closed refusal constructor is also acceptable.
+    }
+    try {
+      const file = fileURLToPath(import.meta.url);
+      gitSource.assertCanonicalRepositoryLayout({
+        repositoryRoot: file,
+        toplevel: file,
+        gitDirectory: file,
+        indexPath: file,
+      });
+    } catch (error) {
+      failure = error;
+    } finally {
+      if (installed) {
+        if (descriptor === undefined) safeDeleteProperty(refusalConstructor, Symbol.hasInstance);
+        else safeDefineProperty(refusalConstructor, Symbol.hasInstance, descriptor);
+      }
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_LAYOUT");
+  });
+
+  for (const property of ["includes", "startsWith", "endsWith", "normalize", "split", "charCodeAt"]) {
+    await t.test(`String.prototype.${property} cannot steer re-admission`, () => {
+      const capability = fresh();
+      exercise(
+        String.prototype,
+        property,
+        replaceFunction,
+        () => gitSource.admitFrozenBlobSet(rows, capability, { label: "SOURCE_MANIFEST" }),
+        (readmitted) => assertMarker(readmitted.get("closed.ts")),
+      );
+    });
+  }
+
+  await t.test("Array.prototype.some cannot steer re-admission", () => {
+    const capability = fresh();
+    exercise(
+      Array.prototype,
+      "some",
+      replaceFunction,
+      () => gitSource.admitFrozenBlobSet(rows, capability, { label: "SOURCE_MANIFEST" }),
+      (readmitted) => assertMarker(readmitted.get("closed.ts")),
+    );
+  });
+
+  await t.test("RegExp.prototype.test cannot steer re-admission", () => {
+    const capability = fresh();
+    exercise(
+      RegExp.prototype,
+      "test",
+      replaceFunction,
+      () => gitSource.admitFrozenBlobSet(rows, capability, { label: "SOURCE_MANIFEST" }),
+      (readmitted) => assertMarker(readmitted.get("closed.ts")),
+    );
+  });
+
+  const hashProbe = createHash("sha256");
+  let hashPrototype = SafeObject.getPrototypeOf(hashProbe);
+  while (hashPrototype !== null && !SafeObject.hasOwn(hashPrototype, "update")) {
+    hashPrototype = SafeObject.getPrototypeOf(hashPrototype);
+  }
+  assert(hashPrototype);
+  for (const property of ["update", "digest"]) {
+    await t.test(`hash prototype ${property} cannot steer re-admission`, () => {
+      const capability = fresh();
+      exercise(
+        hashPrototype,
+        property,
+        replaceFunction,
+        () => gitSource.admitFrozenBlobSet(rows, capability, { label: "SOURCE_MANIFEST" }),
+        (readmitted) => assertMarker(readmitted.get("closed.ts")),
+      );
+    });
+    await t.test(`hash prototype ${property} cannot steer Gate-owner authentication`, () => {
+      exercise(
+        hashPrototype,
+        property,
+        replaceFunction,
+        () => gitSource.authenticateGateOwnerBytes(gateBytes, parserPolicy),
+        (accepted) => {
+          assert.equal(accepted.rawSha256, "d83ce2590520b152e1c838322e1762e4840c274e812bf6006e275118ada59467");
+          assert.equal(accepted.semanticDigest, "4dfceb7f2bf2b6642c3b0cc2838735d41b8aad9e3c08e45f394637eb43bf8a58");
+        },
+      );
+    });
+  }
+});
+
 test("genuine pinned-Git capture returns every frozen owner value and defensive owner blob", { timeout: 900_000, skip: platform() !== "win32" }, async () => {
   const gitExecutableLocator = fileURLToPath(new URL(
     "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
