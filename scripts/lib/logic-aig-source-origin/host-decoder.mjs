@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { Stats } from 'node:fs';
 import {
   lstat,
   mkdir,
@@ -16,8 +18,8 @@ import {
   SOURCE_ORIGIN_LIMITS,
   canonicalJsonText,
   classifySourcePath,
+  decodeUtf8Bytes,
   sha256Canonical,
-  sha256Raw,
   validateParserPolicy,
   validateRepositoryIdentity,
   validateResolutionInputs,
@@ -29,14 +31,116 @@ import {
 import { admitFrozenBlobSet } from './git-source.mjs';
 import { prepareSemanticToolchain } from './toolchain-snapshot.mjs';
 
+const SPAWN_SYNC = spawnSync;
+const CREATE_HASH = createHash;
+const FS_LSTAT = lstat;
+const FS_MKDIR = mkdir;
+const FS_MKDTEMP = mkdtemp;
+const FS_READ_FILE = readFile;
+const FS_REALPATH = realpath;
+const FS_RM = rm;
+const FS_WRITE_FILE = writeFile;
+const OS_TMPDIR = tmpdir;
+const PROCESS_VERSION = process.version;
+const PROCESS_EXEC_PATH = process.execPath;
+const PROCESS_PLATFORM = process.platform;
+const PROCESS_SYSTEM_ROOT = process.env.SystemRoot;
+const UTIL_TYPES_IS_PROXY = isProxy;
+const PATH_DIRNAME = path.dirname;
+const PATH_JOIN = path.join;
+const REFLECT_APPLY = Reflect.apply;
+const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
+const OBJECT_FREEZE = Object.freeze;
+const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
+const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
+const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
+const OBJECT_PROTOTYPE = Object.prototype;
+const ARRAY_IS_ARRAY = Array.isArray;
+const ARRAY_PROTOTYPE = Array.prototype;
+const ARRAY_SORT = Array.prototype.sort;
+const NUMBER_IS_SAFE_INTEGER = Number.isSafeInteger;
+const JSON_PARSE = JSON.parse;
+const SAFE_SET = Set;
+const SET_ADD = Set.prototype.add;
+const SET_HAS = Set.prototype.has;
+const SET_SIZE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(Set.prototype, 'size').get;
+const SAFE_MAP = Map;
+const MAP_GET = Map.prototype.get;
+const MAP_HAS = Map.prototype.has;
+const MAP_SET = Map.prototype.set;
+const MAP_VALUES = Map.prototype.values;
+const MAP_SIZE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(Map.prototype, 'size').get;
+const MAP_ITERATOR_NEXT = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(OBJECT_GET_PROTOTYPE_OF(REFLECT_APPLY(MAP_VALUES, new SAFE_MAP(), [])), 'next').value;
+const SAFE_REGEXP = RegExp;
+const REGEXP_EXEC = RegExp.prototype.exec;
+const TEXT_ENCODER = new TextEncoder();
+const TEXT_ENCODER_ENCODE = TextEncoder.prototype.encode;
+const TYPED_ARRAY_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(Uint8Array.prototype);
+const TYPED_ARRAY_LENGTH = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'length').get;
+const STRING_FROM_CHAR_CODE = String.fromCharCode;
+const NUMBER_TO_STRING = Number.prototype.toString;
+const STRING_PAD_START = String.prototype.padStart;
+const STRING_NORMALIZE = String.prototype.normalize;
+const STRING_TO_UPPER_CASE = String.prototype.toUpperCase;
+const STRING_LAST_INDEX_OF = String.prototype.lastIndexOf;
+const STRING_SLICE = String.prototype.slice;
+const STRING_SPLIT = String.prototype.split;
+const STRING_TO_LOWER_CASE = String.prototype.toLowerCase;
+const STATS_IS_FILE = Stats.prototype.isFile;
+const STATS_IS_SYMBOLIC_LINK = Stats.prototype.isSymbolicLink;
+const SAFE_WEAK_SET = WeakSet;
+const WEAK_SET_ADD = WeakSet.prototype.add;
+const WEAK_SET_HAS = WeakSet.prototype.has;
+const HOST_REFUSALS = new SAFE_WEAK_SET();
+const HASH_PROBE = CREATE_HASH('sha256');
+let HASH_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(HASH_PROBE);
+while (HASH_PROTOTYPE !== null && !OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(HASH_PROTOTYPE, 'update')) HASH_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(HASH_PROTOTYPE);
+const HASH_UPDATE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(HASH_PROTOTYPE, 'update').value;
+const HASH_DIGEST = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(HASH_PROTOTYPE, 'digest').value;
+
+function trustedNodeByteHash(bytes) {
+  const hash = CREATE_HASH('sha256');
+  REFLECT_APPLY(HASH_UPDATE, hash, [bytes]);
+  return REFLECT_APPLY(HASH_DIGEST, hash, ['hex']);
+}
+
+function defineData(target, key, value) { OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true }); }
+function append(values, value) { defineData(values, `${values.length}`, value); }
+function arrayCopy(values) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, values[index]); return output; }
+function arrayMap(values, operation) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index)); return output; }
+function arrayFilter(values, predicate) { const output = []; for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) append(output, values[index]); return output; }
+function arrayFind(values, predicate) { for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return values[index]; return undefined; }
+function arraySome(values, predicate) { for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return true; return false; }
+function arrayIndexOf(values, sought) { for (let index = 0; index < values.length; index += 1) if (values[index] === sought) return index; return -1; }
+function sortArray(values, compare = compareCodeUnits) { return REFLECT_APPLY(ARRAY_SORT, values, [compare]); }
+function stringLastIndexOf(value, part) { return REFLECT_APPLY(STRING_LAST_INDEX_OF, value, [part]); }
+function stringSlice(value, start, end) { return REFLECT_APPLY(STRING_SLICE, value, end === undefined ? [start] : [start, end]); }
+function stringSplit(value, separator) { return REFLECT_APPLY(STRING_SPLIT, value, [separator]); }
+function stringToLowerCase(value) { return REFLECT_APPLY(STRING_TO_LOWER_CASE, value, []); }
+function regexpTest(pattern, value) { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); try { return REFLECT_APPLY(REGEXP_EXEC, pattern, [value]) !== null; } finally { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); } }
+function setAdd(values, value) { REFLECT_APPLY(SET_ADD, values, [value]); }
+function setHas(values, value) { return REFLECT_APPLY(SET_HAS, values, [value]); }
+function setSize(values) { return REFLECT_APPLY(SET_SIZE, values, []); }
+function setFromArray(values, project = (value) => value) { const output = new SAFE_SET(); for (let index = 0; index < values.length; index += 1) setAdd(output, project(values[index], index)); return output; }
+function uniqueArray(values) { const seen = new SAFE_SET(); const output = []; for (let index = 0; index < values.length; index += 1) if (!setHas(seen, values[index])) { setAdd(seen, values[index]); append(output, values[index]); } return output; }
+function mapGet(values, key) { return REFLECT_APPLY(MAP_GET, values, [key]); }
+function mapHas(values, key) { return REFLECT_APPLY(MAP_HAS, values, [key]); }
+function mapSet(values, key, value) { REFLECT_APPLY(MAP_SET, values, [key, value]); }
+function mapValuesArray(values) { const output = []; const iterator = REFLECT_APPLY(MAP_VALUES, values, []); while (true) { const step = REFLECT_APPLY(MAP_ITERATOR_NEXT, iterator, []); if (step.done) return output; append(output, step.value); } }
+function mapFromArray(values, key, project = (value) => value) { const output = new SAFE_MAP(); for (let index = 0; index < values.length; index += 1) mapSet(output, key(values[index], index), project(values[index], index)); return output; }
+function pathJoinLocator(root, locator) { const components = stringSplit(locator, '/'); const args = [root]; for (let index = 0; index < components.length; index += 1) append(args, components[index]); return REFLECT_APPLY(PATH_JOIN, null, args); }
+function refusalAdd(value) { REFLECT_APPLY(WEAK_SET_ADD, HOST_REFUSALS, [value]); }
+function refusalHas(value) { return value !== null && typeof value === 'object' && REFLECT_APPLY(WEAK_SET_HAS, HOST_REFUSALS, [value]); }
+
 const NODE_ID = /^ga1:[0-9a-f]{64}$/;
-const HOST_OPTION_KEYS = Object.freeze([
+const HOST_OPTION_KEYS = OBJECT_FREEZE([
   'repositoryIdentity', 'sourcePolicy', 'resolutionPolicy', 'parserPolicy',
   'pins', 'sourceManifest', 'sourceBlobs', 'resolutionInputs',
   'resolutionBlobs', 'toolchainBlobs', 'platform', 'arch', 'nodeIdentity',
   'gitIdentity',
 ]);
-const SEMANTIC_ROW_OPTION_KEYS = Object.freeze([
+const SEMANTIC_ROW_OPTION_KEYS = OBJECT_FREEZE([
   'repositoryId', 'parserId', 'sourceRows', 'parseResults',
   'declarations', 'relations', 'parserPolicy', 'resolutionPolicy',
 ]);
@@ -52,8 +156,9 @@ const TARGET_STATES = new Set(['AMBIGUOUS', 'DYNAMIC', 'MISSING', 'OUTSIDE', 'RE
 class HostDecoderRefusal extends Error {
   constructor(code) {
     super(code);
-    this.name = 'HostDecoderRefusal';
-    this.code = code;
+    defineData(this, 'name', 'HostDecoderRefusal');
+    defineData(this, 'code', code);
+    refusalAdd(this);
   }
 }
 
@@ -66,59 +171,59 @@ function compareCodeUnits(left, right) {
 }
 
 function exactObject(value, keys, code = 'SOURCE_ORIGIN_HOST_SCHEMA') {
-  if (isProxy(value) || value === null || typeof value !== 'object' || Array.isArray(value)) refuse(code);
-  const prototype = Object.getPrototypeOf(value);
-  if (prototype !== Object.prototype && prototype !== null || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  for (const name of names) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+  if (UTIL_TYPES_IS_PROXY(value) || value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value)) refuse(code);
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if (prototype !== OBJECT_PROTOTYPE && prototype !== null || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
-  const sorted = names.sort(compareCodeUnits);
-  const expected = [...keys].sort(compareCodeUnits);
-  if (sorted.length !== expected.length || sorted.some((name, index) => name !== expected[index])) refuse(code);
+  const sorted = REFLECT_APPLY(ARRAY_SORT, names, [compareCodeUnits]);
+  const expected = sortArray(arrayCopy(keys));
+  if (sorted.length !== expected.length || arraySome(sorted, (name, index) => name !== expected[index])) refuse(code);
 }
 
 function exactArray(value, code = 'SOURCE_ORIGIN_HOST_SCHEMA') {
-  if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  if (names.length !== value.length + 1 || !names.includes('length')) refuse(code);
+  if (UTIL_TYPES_IS_PROXY(value) || !ARRAY_IS_ARRAY(value) || OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  if (names.length !== value.length + 1 || !arraySome(names, (name) => name === 'length')) refuse(code);
   for (let index = 0; index < value.length; index += 1) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
   return value;
 }
 
-function deepFreeze(value, seen = new Set()) {
-  if (value === null || typeof value !== 'object' || seen.has(value)) return value;
-  seen.add(value);
-  for (const name of Object.getOwnPropertyNames(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+function deepFreeze(value, seen = new SAFE_SET()) {
+  if (value === null || typeof value !== 'object' || REFLECT_APPLY(SET_HAS, seen, [value])) return value;
+  REFLECT_APPLY(SET_ADD, seen, [value]);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
   }
-  return Object.freeze(value);
+  return OBJECT_FREEZE(value);
 }
 
 function decodeUtf8(bytes, code = 'SOURCE_ORIGIN_HOST_SOURCE') {
-  if (isProxy(bytes) || !Buffer.isBuffer(bytes) || Object.getPrototypeOf(bytes) !== Buffer.prototype || bytes.buffer instanceof SharedArrayBuffer) refuse(code);
   try {
-    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    return decodeUtf8Bytes(bytes);
   } catch {
     refuse(code);
   }
 }
 
 function sourcePathFromLocator(locator) {
-  const split = locator.lastIndexOf('#');
-  return split === -1 ? locator : locator.slice(0, split);
+  const split = stringLastIndexOf(locator, '#');
+  return split === -1 ? locator : stringSlice(locator, 0, split);
 }
 
 function isTestPath(locator, resolutionPolicy) {
-  const components = locator.split('/');
-  if (components.some((component) => resolutionPolicy.testPathComponents.includes(component))) return true;
-  const basename = components.at(-1);
-  return new RegExp(resolutionPolicy.testBasenamePattern).test(basename);
+  const components = stringSplit(locator, '/');
+  if (arraySome(components, (component) => arraySome(resolutionPolicy.testPathComponents, (candidate) => candidate === component))) return true;
+  const basename = components[components.length - 1];
+  return regexpTest(new SAFE_REGEXP(resolutionPolicy.testBasenamePattern), basename);
 }
 
 function byteCompareIdentity(left, right) {
@@ -126,23 +231,23 @@ function byteCompareIdentity(left, right) {
 }
 
 async function authenticateNodeExecutable(nodeIdentity) {
-  if (process.version !== nodeIdentity.version) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
+  if (PROCESS_VERSION !== nodeIdentity.version) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   let details;
   let canonical;
   let bytes;
   try {
-    details = await lstat(process.execPath, { bigint: true });
-    canonical = await realpath(process.execPath);
-    bytes = await readFile(process.execPath);
+    details = await FS_LSTAT(PROCESS_EXEC_PATH, { bigint: true });
+    canonical = await FS_REALPATH(PROCESS_EXEC_PATH);
+    bytes = await FS_READ_FILE(PROCESS_EXEC_PATH);
   } catch {
     refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   }
   if (
-    details.isSymbolicLink()
-    || !details.isFile()
-    || canonical !== process.execPath
+    REFLECT_APPLY(STATS_IS_SYMBOLIC_LINK, details, [])
+    || !REFLECT_APPLY(STATS_IS_FILE, details, [])
+    || canonical !== PROCESS_EXEC_PATH
     || bytes.length !== nodeIdentity.executableByteLength
-    || sha256Raw(bytes) !== nodeIdentity.executableRawSha256
+    || trustedNodeByteHash(bytes) !== nodeIdentity.executableRawSha256
   ) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
 }
 
@@ -458,7 +563,7 @@ const HOST_CHILD_SOURCE = `(${hostChildMain.toString()})()`;
 
 function childEnvironment() {
   const environment = { NODE_DISABLE_COMPILE_CACHE: '1' };
-  if (process.platform === 'win32' && typeof process.env.SystemRoot === 'string') environment.SystemRoot = process.env.SystemRoot;
+  if (PROCESS_PLATFORM === 'win32' && typeof PROCESS_SYSTEM_ROOT === 'string') defineData(environment, 'SystemRoot', PROCESS_SYSTEM_ROOT);
   return environment;
 }
 
@@ -467,13 +572,13 @@ async function runHostChild(selection, entryBytes, sources) {
   let result;
   let failure;
   try {
-    root = await mkdtemp(path.join(tmpdir(), 'galerina-source-origin-host-'));
-    const entryPath = path.join(root, ...selection.entry.locator.split('/'));
-    await mkdir(path.dirname(entryPath), { recursive: true });
-    await writeFile(entryPath, entryBytes, { flag: 'wx', mode: 0o600 });
-    const readback = await readFile(entryPath);
-    const entryIdentity = selection.moduleRows.find((row) => row.locator === selection.entry.locator);
-    if (!entryIdentity || !byteCompareIdentity(entryIdentity, { byteLength: readback.length, rawSha256: sha256Raw(readback) })) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
+    root = await FS_MKDTEMP(PATH_JOIN(OS_TMPDIR(), 'galerina-source-origin-host-'));
+    const entryPath = pathJoinLocator(root, selection.entry.locator);
+    await FS_MKDIR(PATH_DIRNAME(entryPath), { recursive: true });
+    await FS_WRITE_FILE(entryPath, entryBytes, { flag: 'wx', mode: 0o600 });
+    const readback = await FS_READ_FILE(entryPath);
+    const entryIdentity = arrayFind(selection.moduleRows, (row) => row.locator === selection.entry.locator);
+    if (!entryIdentity || !byteCompareIdentity(entryIdentity, { byteLength: readback.length, rawSha256: trustedNodeByteHash(readback) })) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
     const config = {
       root,
       entryLocator: selection.entry.locator,
@@ -482,8 +587,8 @@ async function runHostChild(selection, entryBytes, sources) {
       sources,
     };
     const input = canonicalJsonText(config);
-    if (Buffer.byteLength(input, 'utf8') > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_LIMIT');
-    result = spawnSync(process.execPath, ['--no-warnings', '--input-type=commonjs', '--eval', HOST_CHILD_SOURCE], {
+    if (REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [input]), []) > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_LIMIT');
+    result = SPAWN_SYNC(PROCESS_EXEC_PATH, ['--no-warnings', '--input-type=commonjs', '--eval', HOST_CHILD_SOURCE], {
       cwd: root,
       env: childEnvironment(),
       input,
@@ -497,15 +602,15 @@ async function runHostChild(selection, entryBytes, sources) {
     failure = error;
   }
   if (root !== undefined) {
-    try { await rm(root, { recursive: true, force: true }); } catch { refuse('SOURCE_ORIGIN_HOST_CLEANUP'); }
+    try { await FS_RM(root, { recursive: true, force: true }); } catch { refuse('SOURCE_ORIGIN_HOST_CLEANUP'); }
   }
   if (failure) {
-    if (failure instanceof HostDecoderRefusal) throw failure;
+    if (refusalHas(failure)) throw failure;
     refuse('SOURCE_ORIGIN_HOST_CHILD');
   }
-  if (result.error || result.signal !== null || result.stderr !== '' || result.status !== 0 || Buffer.byteLength(result.stdout, 'utf8') > SOURCE_ORIGIN_LIMITS.processOutputBytes) refuse('SOURCE_ORIGIN_HOST_CHILD');
+  if (result.error || result.signal !== null || result.stderr !== '' || result.status !== 0 || REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [result.stdout]), []) > SOURCE_ORIGIN_LIMITS.processOutputBytes) refuse('SOURCE_ORIGIN_HOST_CHILD');
   let parsed;
-  try { parsed = JSON.parse(result.stdout); } catch { refuse('SOURCE_ORIGIN_HOST_CHILD'); }
+  try { parsed = REFLECT_APPLY(JSON_PARSE, null, [result.stdout]); } catch { refuse('SOURCE_ORIGIN_HOST_CHILD'); }
   if (parsed?.refusal) refuse(parsed.refusal === 'LOAD' ? 'SOURCE_ORIGIN_HOST_TOOLCHAIN' : 'SOURCE_ORIGIN_HOST_CHILD');
   exactObject(parsed, ['moduleLocators','builtinModules','semantic'], 'SOURCE_ORIGIN_HOST_CHILD');
   return parsed;
@@ -513,42 +618,46 @@ async function runHostChild(selection, entryBytes, sources) {
 
 function canonicalTypeScriptDiagnostic(row, mapping, related = false) {
   exactObject(row, ['code','category','relatedInformation'], 'SOURCE_ORIGIN_HOST_DIAGNOSTIC');
-  if (!Number.isSafeInteger(row.code) || row.code < mapping.minimumCode || row.code > mapping.maximumCode) refuse('SOURCE_ORIGIN_HOST_DIAGNOSTIC');
-  if (!Number.isSafeInteger(row.category)) refuse('SOURCE_ORIGIN_HOST_DIAGNOSTIC');
-  const category = mapping.categoryRows.find((candidate) => candidate.typescriptCategory === row.category);
+  if (!NUMBER_IS_SAFE_INTEGER(row.code) || row.code < mapping.minimumCode || row.code > mapping.maximumCode) refuse('SOURCE_ORIGIN_HOST_DIAGNOSTIC');
+  if (!NUMBER_IS_SAFE_INTEGER(row.category)) refuse('SOURCE_ORIGIN_HOST_DIAGNOSTIC');
+  const category = arrayFind(mapping.categoryRows, (candidate) => candidate.typescriptCategory === row.category);
   if (!category) refuse('SOURCE_ORIGIN_HOST_DIAGNOSTIC');
   exactArray(row.relatedInformation, 'SOURCE_ORIGIN_HOST_DIAGNOSTIC');
-  for (const child of row.relatedInformation) canonicalTypeScriptDiagnostic(child, mapping, true);
+  for (let index = 0; index < row.relatedInformation.length; index += 1) canonicalTypeScriptDiagnostic(row.relatedInformation[index], mapping, true);
   if (related || category.codeSetAction === 'EXCLUDE') return null;
   if (category.codeSetAction !== 'INCLUDE') refuse('SOURCE_ORIGIN_HOST_DIAGNOSTIC');
-  const digits = String(row.code).padStart(mapping.minimumDigits, '0');
+  const digits = REFLECT_APPLY(STRING_PAD_START, `${row.code}`, [mapping.minimumDigits, '0']);
   return `${mapping.prefix}${digits}`;
 }
 
 function mappedDiagnostics(rows, parserPolicy) {
   exactArray(rows, 'SOURCE_ORIGIN_HOST_DIAGNOSTIC');
   const codes = [];
-  for (const row of rows) {
-    const code = canonicalTypeScriptDiagnostic(row, parserPolicy.typescriptDiagnosticMapping);
-    if (code !== null) codes.push(code);
+  for (let index = 0; index < rows.length; index += 1) {
+    const code = canonicalTypeScriptDiagnostic(rows[index], parserPolicy.typescriptDiagnosticMapping);
+    if (code !== null) append(codes, code);
   }
-  return [...new Set(codes)].sort(compareCodeUnits);
+  return sortArray(uniqueArray(codes));
 }
 
 function escapeName(name) {
-  if (typeof name !== 'string' || !name || name !== name.normalize('NFC')) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  if (typeof name !== 'string' || !name || name !== REFLECT_APPLY(STRING_NORMALIZE, name, ['NFC'])) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   let output = '';
-  for (const byte of Buffer.from(name, 'utf8')) {
-    const character = String.fromCharCode(byte);
-    output += /[A-Za-z0-9_.$-]/.test(character)
+  const bytes = REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [name]);
+  const length = REFLECT_APPLY(TYPED_ARRAY_LENGTH, bytes, []);
+  for (let index = 0; index < length; index += 1) {
+    const byte = bytes[index];
+    const character = STRING_FROM_CHAR_CODE(byte);
+    const allowed = byte >= 0x41 && byte <= 0x5a || byte >= 0x61 && byte <= 0x7a || byte >= 0x30 && byte <= 0x39 || byte === 0x5f || byte === 0x2e || byte === 0x24 || byte === 0x2d;
+    output += allowed
       ? character
-      : `%${byte.toString(16).toUpperCase().padStart(2, '0')}`;
+      : `%${REFLECT_APPLY(STRING_PAD_START, REFLECT_APPLY(STRING_TO_UPPER_CASE, REFLECT_APPLY(NUMBER_TO_STRING, byte, [16]), []), [2, '0'])}`;
   }
   return output;
 }
 
 function nodeId(repositoryId, kind, locator) {
-  if (!NODE_KINDS.has(kind)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  if (!setHas(NODE_KINDS, kind)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   return `ga1:${sha256Canonical('galerina.logic-aig-node-id.v1', { repositoryId, kind, locator })}`;
 }
 
@@ -565,22 +674,28 @@ function idMapRow(parserId, parserNodeKind, startByte, endByte, preorderOrdinal,
 }
 
 function compareIdMapRows(left, right) {
-  for (const field of ['nodeId']) {
+  const topFields = ['nodeId'];
+  for (let index = 0; index < topFields.length; index += 1) {
+    const field = topFields[index];
     const compared = compareCodeUnits(left[field], right[field]);
     if (compared !== 0) return compared;
   }
-  for (const field of ['parserId','parserNodeKind']) {
+  const parserFields = ['parserId','parserNodeKind'];
+  for (let index = 0; index < parserFields.length; index += 1) {
+    const field = parserFields[index];
     const compared = compareCodeUnits(left.nativeIdentity[field], right.nativeIdentity[field]);
     if (compared !== 0) return compared;
   }
-  for (const field of ['startByte','endByte','preorderOrdinal']) {
+  const positionFields = ['startByte','endByte','preorderOrdinal'];
+  for (let index = 0; index < positionFields.length; index += 1) {
+    const field = positionFields[index];
     if (left.nativeIdentity[field] !== right.nativeIdentity[field]) return left.nativeIdentity[field] - right.nativeIdentity[field];
   }
   return 0;
 }
 
 function addEdge(edges, evidence, relationshipKind, sourceNodeId, targetNodeId) {
-  if (!RELATIONSHIP_KINDS.has(relationshipKind) || !NODE_ID.test(sourceNodeId) || !NODE_ID.test(targetNodeId)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  if (!setHas(RELATIONSHIP_KINDS, relationshipKind) || !regexpTest(NODE_ID, sourceNodeId) || !regexpTest(NODE_ID, targetNodeId)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   const evidenceBody = {
     schema: 'galerina.logic-aig-edge-evidence.v1',
     relationshipKind,
@@ -591,7 +706,7 @@ function addEdge(edges, evidence, relationshipKind, sourceNodeId, targetNodeId) 
   };
   const evidenceDigest = sha256Canonical(evidenceBody.schema, evidenceBody);
   const identity = { relationshipKind, sourceNodeId, targetNodeId, evidenceDigest };
-  edges.push({
+  append(edges, {
     id: `ga1:${sha256Canonical('galerina.logic-aig-edge-id.v1', identity)}`,
     kind: relationshipKind,
     from: sourceNodeId,
@@ -613,9 +728,9 @@ function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow
   } else {
     reasonCode = 'MISSING_TARGET'; candidateState = 'UNKNOWN'; candidateNodeIds = [];
   }
-  candidateNodeIds = [...new Set(candidateNodeIds)].sort(compareCodeUnits);
-  const policyRow = parserPolicy.unresolvedReasonRows.find((row) => row.relationshipClass === relation.relationshipClass && row.reasonCode === reasonCode);
-  if (!policyRow || !policyRow.permittedCandidateStates.includes(candidateState)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  candidateNodeIds = sortArray(uniqueArray(candidateNodeIds));
+  const policyRow = arrayFind(parserPolicy.unresolvedReasonRows, (row) => row.relationshipClass === relation.relationshipClass && row.reasonCode === reasonCode);
+  if (!policyRow || !arraySome(policyRow.permittedCandidateStates, (state) => state === candidateState)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   const ownerBody = {
     schema: 'galerina.logic-aig-unresolved-relation-owner.v1',
     sourceNodeId: sourceNode.id,
@@ -640,7 +755,7 @@ function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow
     reasonCode,
     evidenceOwnerDigest,
   };
-  unresolved.push({ ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
+  append(unresolved, { ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
 }
 
 function semanticText(value) {
@@ -654,90 +769,97 @@ function semanticNullableText(value) {
 }
 
 function semanticInteger(value) {
-  if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  if (!NUMBER_IS_SAFE_INTEGER(value) || value < 0) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
   return value;
 }
 
 function semanticTextArray(value) {
   exactArray(value, 'SOURCE_ORIGIN_HOST_SCHEMA');
-  for (const item of value) semanticText(item);
+  for (let index = 0; index < value.length; index += 1) semanticText(value[index]);
   return value;
 }
 
 function validateSemanticRowClosure(value) {
-  if (!value.parserPolicy.parserIds.includes(value.parserId)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-  const sourceByPath = new Map();
-  for (const row of value.sourceRows) {
-    if (sourceByPath.has(row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    sourceByPath.set(row.path, row);
+  if (!arraySome(value.parserPolicy.parserIds, (parserId) => parserId === value.parserId)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  const sourceByPath = new SAFE_MAP();
+  for (let index = 0; index < value.sourceRows.length; index += 1) {
+    const row = value.sourceRows[index];
+    if (mapHas(sourceByPath, row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    mapSet(sourceByPath, row.path, row);
   }
-  const parseByPath = new Map();
-  const diagnosticPattern = new RegExp(value.parserPolicy.diagnosticCodePattern, 'u');
-  for (const row of value.parseResults) {
-    if (!sourceByPath.has(row.path) || parseByPath.has(row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  const parseByPath = new SAFE_MAP();
+  const diagnosticPattern = new SAFE_REGEXP(value.parserPolicy.diagnosticCodePattern, 'u');
+  for (let rowIndex = 0; rowIndex < value.parseResults.length; rowIndex += 1) {
+    const row = value.parseResults[rowIndex];
+    if (!mapHas(sourceByPath, row.path) || mapHas(parseByPath, row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     let previous;
-    for (const code of row.diagnosticCodes) {
-      if (!diagnosticPattern.test(code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    for (let codeIndex = 0; codeIndex < row.diagnosticCodes.length; codeIndex += 1) {
+      const code = row.diagnosticCodes[codeIndex];
+      if (!regexpTest(diagnosticPattern, code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
       previous = code;
     }
     if (row.status === 'PARSED' && row.diagnosticCodes.length !== 0) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    parseByPath.set(row.path, row);
+    mapSet(parseByPath, row.path, row);
   }
-  if (parseByPath.size !== sourceByPath.size) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  if (REFLECT_APPLY(MAP_SIZE, parseByPath, []) !== REFLECT_APPLY(MAP_SIZE, sourceByPath, [])) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
 
-  const declarationByKey = new Map();
-  const ordinals = new Set();
-  for (const row of value.declarations) {
-    const sourceRow = sourceByPath.get(row.path);
+  const declarationByKey = new SAFE_MAP();
+  const ordinals = new SAFE_SET();
+  for (let rowIndex = 0; rowIndex < value.declarations.length; rowIndex += 1) {
+    const row = value.declarations[rowIndex];
+    const sourceRow = mapGet(sourceByPath, row.path);
     if (
       !sourceRow
-      || parseByPath.get(row.path)?.status !== 'PARSED'
-      || declarationByKey.has(row.key)
-      || !NODE_KINDS.has(row.kind)
+      || mapGet(parseByPath, row.path)?.status !== 'PARSED'
+      || mapHas(declarationByKey, row.key)
+      || !setHas(NODE_KINDS, row.kind)
       || row.endByte <= row.startByte
       || row.endByte > sourceRow.byteLength
     ) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     const ordinalKey = `${row.path}\u0000${row.preorderOrdinal}`;
-    if (ordinals.has(ordinalKey)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    ordinals.add(ordinalKey);
-    declarationByKey.set(row.key, row);
+    if (setHas(ordinals, ordinalKey)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    setAdd(ordinals, ordinalKey);
+    mapSet(declarationByKey, row.key, row);
   }
-  for (const row of value.declarations) {
+  for (let rowIndex = 0; rowIndex < value.declarations.length; rowIndex += 1) {
+    const row = value.declarations[rowIndex];
     if (row.parentKey === null) continue;
-    const parent = declarationByKey.get(row.parentKey);
+    const parent = mapGet(declarationByKey, row.parentKey);
     if (!parent || parent.path !== row.path || parent.preorderOrdinal >= row.preorderOrdinal) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   }
-  const parentStates = new Map();
-  for (const row of value.declarations) {
-    if (parentStates.get(row.key) === 'DONE') continue;
+  const parentStates = new SAFE_MAP();
+  for (let rowIndex = 0; rowIndex < value.declarations.length; rowIndex += 1) {
+    const row = value.declarations[rowIndex];
+    if (mapGet(parentStates, row.key) === 'DONE') continue;
     const chain = [];
     let current = row;
-    while (current !== null && parentStates.get(current.key) === undefined) {
-      parentStates.set(current.key, 'VISITING');
-      chain.push(current);
-      current = current.parentKey === null ? null : declarationByKey.get(current.parentKey);
+    while (current !== null && mapGet(parentStates, current.key) === undefined) {
+      mapSet(parentStates, current.key, 'VISITING');
+      append(chain, current);
+      current = current.parentKey === null ? null : mapGet(declarationByKey, current.parentKey);
     }
-    if (current !== null && parentStates.get(current.key) === 'VISITING') refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    for (const member of chain) parentStates.set(member.key, 'DONE');
+    if (current !== null && mapGet(parentStates, current.key) === 'VISITING') refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    for (let chainIndex = 0; chainIndex < chain.length; chainIndex += 1) mapSet(parentStates, chain[chainIndex].key, 'DONE');
   }
 
-  for (const row of value.relations) {
-    const sourceRow = sourceByPath.get(row.path);
-    const owner = row.ownerNativeKey === null ? null : declarationByKey.get(row.ownerNativeKey);
+  for (let rowIndex = 0; rowIndex < value.relations.length; rowIndex += 1) {
+    const row = value.relations[rowIndex];
+    const sourceRow = mapGet(sourceByPath, row.path);
+    const owner = row.ownerNativeKey === null ? null : mapGet(declarationByKey, row.ownerNativeKey);
     if (
       !sourceRow
-      || parseByPath.get(row.path)?.status !== 'PARSED'
+      || mapGet(parseByPath, row.path)?.status !== 'PARSED'
       || (row.ownerNativeKey !== null && (!owner || owner.path !== row.path))
-      || !RELATIONSHIP_KINDS.has(row.relationshipClass)
+      || !setHas(RELATIONSHIP_KINDS, row.relationshipClass)
       || row.relationshipClass === 'TEST'
       || row.relationshipClass === 'GENERATED_CONSUMER'
       || row.endByte <= row.startByte
       || row.endByte > sourceRow.byteLength
-      || !TARGET_STATES.has(row.targetState)
-      || new Set(row.targetNativeKeys).size !== row.targetNativeKeys.length
-      || new Set(row.targetPaths).size !== row.targetPaths.length
-      || row.targetNativeKeys.some((key) => !declarationByKey.has(key))
-      || row.targetPaths.some((path) => !sourceByPath.has(path))
+      || !setHas(TARGET_STATES, row.targetState)
+      || setSize(setFromArray(row.targetNativeKeys)) !== row.targetNativeKeys.length
+      || setSize(setFromArray(row.targetPaths)) !== row.targetPaths.length
+      || arraySome(row.targetNativeKeys, (key) => !mapHas(declarationByKey, key))
+      || arraySome(row.targetPaths, (path) => !mapHas(sourceByPath, path))
     ) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     const targetCount = row.targetNativeKeys.length + row.targetPaths.length;
     if (
@@ -752,7 +874,7 @@ function captureSemanticRowsOptions(options) {
   exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
   let captured;
   try {
-    captured = JSON.parse(canonicalJsonText(options));
+    captured = REFLECT_APPLY(JSON_PARSE, null, [canonicalJsonText(options)]);
   } catch {
     refuse('SOURCE_ORIGIN_HOST_SCHEMA');
   }
@@ -763,28 +885,32 @@ function captureSemanticRowsOptions(options) {
   exactArray(captured.parseResults, 'SOURCE_ORIGIN_HOST_SCHEMA');
   exactArray(captured.declarations, 'SOURCE_ORIGIN_HOST_SCHEMA');
   exactArray(captured.relations, 'SOURCE_ORIGIN_HOST_SCHEMA');
-  for (const row of captured.sourceRows) {
+  for (let index = 0; index < captured.sourceRows.length; index += 1) {
+    const row = captured.sourceRows[index];
     exactObject(row, ['path','mode','blobOid','objectFormat','byteLength','rawSha256'], 'SOURCE_ORIGIN_HOST_SCHEMA');
     semanticText(row.path);
     if (row.mode !== '100644' && row.mode !== '100755') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
     if (row.objectFormat !== 'sha1' && row.objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
-    if (!(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/).test(row.blobOid)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    if (!regexpTest(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/, row.blobOid)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
     semanticInteger(row.byteLength);
-    if (!/^[0-9a-f]{64}$/.test(row.rawSha256)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    if (!regexpTest(/^[0-9a-f]{64}$/, row.rawSha256)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
   }
-  for (const row of captured.parseResults) {
+  for (let index = 0; index < captured.parseResults.length; index += 1) {
+    const row = captured.parseResults[index];
     exactObject(row, ['path','status','diagnosticCodes'], 'SOURCE_ORIGIN_HOST_SCHEMA');
     semanticText(row.path);
     if (row.status !== 'PARSED' && row.status !== 'REFUSED') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
     semanticTextArray(row.diagnosticCodes);
   }
-  for (const row of captured.declarations) {
+  for (let index = 0; index < captured.declarations.length; index += 1) {
+    const row = captured.declarations[index];
     exactObject(row, ['key','path','parentKey','kind','name','parserNodeKind','startByte','endByte','preorderOrdinal'], 'SOURCE_ORIGIN_HOST_SCHEMA');
     semanticText(row.key); semanticText(row.path); semanticNullableText(row.parentKey);
     semanticText(row.kind); semanticNullableText(row.name); semanticText(row.parserNodeKind);
     semanticInteger(row.startByte); semanticInteger(row.endByte); semanticInteger(row.preorderOrdinal);
   }
-  for (const row of captured.relations) {
+  for (let index = 0; index < captured.relations.length; index += 1) {
+    const row = captured.relations[index];
     exactObject(row, ['path','ownerNativeKey','relationshipClass','startByte','endByte','targetNativeKeys','targetPaths','targetState'], 'SOURCE_ORIGIN_HOST_SCHEMA');
     semanticText(row.path); semanticNullableText(row.ownerNativeKey); semanticText(row.relationshipClass);
     semanticInteger(row.startByte); semanticInteger(row.endByte);
@@ -806,13 +932,14 @@ export function buildSemanticRows(options) {
     repositoryId, parserId, sourceRows, parseResults, declarations, relations,
     parserPolicy, resolutionPolicy,
   } = options;
-  const sourceByPath = new Map(sourceRows.map((row) => [row.path, row]));
-  const parseByPath = new Map(parseResults.map((row) => [row.path, row]));
+  const sourceByPath = mapFromArray(sourceRows, (row) => row.path);
+  const parseByPath = mapFromArray(parseResults, (row) => row.path);
   const nodes = [];
   const idMapRows = [];
-  const fileNodeByPath = new Map();
-  for (const sourceRow of sourceRows) {
-    const result = parseByPath.get(sourceRow.path);
+  const fileNodeByPath = new SAFE_MAP();
+  for (let sourceIndex = 0; sourceIndex < sourceRows.length; sourceIndex += 1) {
+    const sourceRow = sourceRows[sourceIndex];
+    const result = mapGet(parseByPath, sourceRow.path);
     if (!result) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     const node = {
       id: nodeId(repositoryId, 'FILE', sourceRow.path),
@@ -820,8 +947,8 @@ export function buildSemanticRows(options) {
       locator: sourceRow.path,
       digest: sourceRow.rawSha256,
     };
-    nodes.push(node); fileNodeByPath.set(sourceRow.path, node);
-    idMapRows.push(idMapRow(
+    append(nodes, node); mapSet(fileNodeByPath, sourceRow.path, node);
+    append(idMapRows, idMapRow(
       parserId,
       result.status === 'PARSED' ? 'SourceFile' : 'OWNER_DISPOSITION_FILE',
       0,
@@ -833,86 +960,98 @@ export function buildSemanticRows(options) {
   }
 
   const admittedDeclarations = declarations;
-  const byKey = new Map(admittedDeclarations.map((row) => [row.key, row]));
-  if (byKey.size !== admittedDeclarations.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-  const frameByKey = new Map();
-  const baseFrameByKey = new Map();
-  const siblingGroups = new Map();
-  for (const row of admittedDeclarations) {
+  const byKey = mapFromArray(admittedDeclarations, (row) => row.key);
+  if (REFLECT_APPLY(MAP_SIZE, byKey, []) !== admittedDeclarations.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  const frameByKey = new SAFE_MAP();
+  const baseFrameByKey = new SAFE_MAP();
+  const siblingGroups = new SAFE_MAP();
+  for (let index = 0; index < admittedDeclarations.length; index += 1) {
+    const row = admittedDeclarations[index];
     const groupKey = `${row.path}\u0000${row.parentKey ?? ''}\u0000${row.kind}\u0000${row.name ?? ''}`;
-    const group = siblingGroups.get(groupKey) ?? [];
-    group.push(row); siblingGroups.set(groupKey, group);
+    const group = mapGet(siblingGroups, groupKey) ?? [];
+    append(group, row); mapSet(siblingGroups, groupKey, group);
   }
-  for (const group of siblingGroups.values()) group.sort((left, right) => left.startByte - right.startByte || left.endByte - right.endByte || left.preorderOrdinal - right.preorderOrdinal);
-  const foldedFrameGroups = new Map();
-  for (const row of admittedDeclarations) {
+  const siblingValues = mapValuesArray(siblingGroups);
+  for (let index = 0; index < siblingValues.length; index += 1) sortArray(siblingValues[index], (left, right) => left.startByte - right.startByte || left.endByte - right.endByte || left.preorderOrdinal - right.preorderOrdinal);
+  const foldedFrameGroups = new SAFE_MAP();
+  for (let index = 0; index < admittedDeclarations.length; index += 1) {
+    const row = admittedDeclarations[index];
     const groupKey = `${row.path}\u0000${row.parentKey ?? ''}\u0000${row.kind}\u0000${row.name ?? ''}`;
-    const siblings = siblingGroups.get(groupKey);
+    const siblings = mapGet(siblingGroups, groupKey);
     let baseFrame;
-    if (row.name === null) baseFrame = `${row.kind}!A!${siblings.indexOf(row)}`;
+    if (row.name === null) baseFrame = `${row.kind}!A!${arrayIndexOf(siblings, row)}`;
     else if (siblings.length === 1) baseFrame = `${row.kind}!N!${escapeName(row.name)}`;
-    else baseFrame = `${row.kind}!O!${escapeName(row.name)}!${siblings.indexOf(row)}`;
-    baseFrameByKey.set(row.key, baseFrame);
-    const foldedKey = `${row.path}\u0000${row.parentKey ?? ''}\u0000${baseFrame.toLowerCase()}`;
-    const foldedGroup = foldedFrameGroups.get(foldedKey) ?? [];
-    foldedGroup.push(row);
-    foldedFrameGroups.set(foldedKey, foldedGroup);
+    else baseFrame = `${row.kind}!O!${escapeName(row.name)}!${arrayIndexOf(siblings, row)}`;
+    mapSet(baseFrameByKey, row.key, baseFrame);
+    const foldedKey = `${row.path}\u0000${row.parentKey ?? ''}\u0000${stringToLowerCase(baseFrame)}`;
+    const foldedGroup = mapGet(foldedFrameGroups, foldedKey) ?? [];
+    append(foldedGroup, row);
+    mapSet(foldedFrameGroups, foldedKey, foldedGroup);
   }
-  for (const group of foldedFrameGroups.values()) group.sort((left, right) => left.startByte - right.startByte || left.endByte - right.endByte || left.preorderOrdinal - right.preorderOrdinal);
+  const foldedValues = mapValuesArray(foldedFrameGroups);
+  for (let index = 0; index < foldedValues.length; index += 1) sortArray(foldedValues[index], (left, right) => left.startByte - right.startByte || left.endByte - right.endByte || left.preorderOrdinal - right.preorderOrdinal);
   const buildFrame = (row) => {
-    const retained = frameByKey.get(row.key);
+    const retained = mapGet(frameByKey, row.key);
     if (retained) return retained;
     const chain = [];
     let current = row;
-    while (current !== null && !frameByKey.has(current.key)) {
-      chain.push(current);
-      current = current.parentKey === null ? null : byKey.get(current.parentKey);
+    while (current !== null && !mapHas(frameByKey, current.key)) {
+      append(chain, current);
+      current = current.parentKey === null ? null : mapGet(byKey, current.parentKey);
       if (current === undefined) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     }
-    let qualified = current === null ? null : frameByKey.get(current.key);
+    let qualified = current === null ? null : mapGet(frameByKey, current.key);
     while (chain.length > 0) {
-      const member = chain.pop();
-      const baseFrame = baseFrameByKey.get(member.key);
-      const foldedKey = `${member.path}\u0000${member.parentKey ?? ''}\u0000${baseFrame.toLowerCase()}`;
-      const foldedGroup = foldedFrameGroups.get(foldedKey);
-      const frame = foldedGroup.length === 1 ? baseFrame : `${baseFrame}!C!${foldedGroup.indexOf(member)}`;
+      const member = chain[chain.length - 1];
+      chain.length -= 1;
+      const baseFrame = mapGet(baseFrameByKey, member.key);
+      const foldedKey = `${member.path}\u0000${member.parentKey ?? ''}\u0000${stringToLowerCase(baseFrame)}`;
+      const foldedGroup = mapGet(foldedFrameGroups, foldedKey);
+      const frame = foldedGroup.length === 1 ? baseFrame : `${baseFrame}!C!${arrayIndexOf(foldedGroup, member)}`;
       qualified = qualified === null ? frame : `${qualified}/${frame}`;
-      frameByKey.set(member.key, qualified);
+      mapSet(frameByKey, member.key, qualified);
     }
-    return frameByKey.get(row.key);
+    return mapGet(frameByKey, row.key);
   };
-  const nodeByNativeKey = new Map();
-  for (const row of admittedDeclarations) {
-    if (!NODE_KINDS.has(row.kind) || !sourceByPath.has(row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  const nodeByNativeKey = new SAFE_MAP();
+  for (let index = 0; index < admittedDeclarations.length; index += 1) {
+    const row = admittedDeclarations[index];
+    if (!setHas(NODE_KINDS, row.kind) || !mapHas(sourceByPath, row.path)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     const locator = `${row.path}#${buildFrame(row)}`;
-    const sourceRow = sourceByPath.get(row.path);
+    const sourceRow = mapGet(sourceByPath, row.path);
     if (row.startByte < 0 || row.endByte <= row.startByte || row.endByte > sourceRow.byteLength) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     const node = { id: nodeId(repositoryId, row.kind, locator), kind: row.kind, locator, digest: sourceRow.rawSha256 };
-    nodes.push(node); nodeByNativeKey.set(row.key, node);
-    idMapRows.push(idMapRow(parserId, row.parserNodeKind, row.startByte, row.endByte, row.preorderOrdinal, node, sourceRow));
+    append(nodes, node); mapSet(nodeByNativeKey, row.key, node);
+    append(idMapRows, idMapRow(parserId, row.parserNodeKind, row.startByte, row.endByte, row.preorderOrdinal, node, sourceRow));
   }
   if (nodes.length > SOURCE_ORIGIN_LIMITS.nodes) refuse('SOURCE_ORIGIN_LIMIT');
-  nodes.sort((left, right) => compareCodeUnits(left.id, right.id));
-  const nodeIds = new Set();
-  const foldedLocators = new Set();
-  for (const node of nodes) {
-    if (nodeIds.has(node.id) || foldedLocators.has(node.locator.toLowerCase())) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    nodeIds.add(node.id); foldedLocators.add(node.locator.toLowerCase());
+  sortArray(nodes, (left, right) => compareCodeUnits(left.id, right.id));
+  const nodeIds = new SAFE_SET();
+  const foldedLocators = new SAFE_SET();
+  for (let index = 0; index < nodes.length; index += 1) {
+    const node = nodes[index];
+    const folded = stringToLowerCase(node.locator);
+    if (setHas(nodeIds, node.id) || setHas(foldedLocators, folded)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    setAdd(nodeIds, node.id); setAdd(foldedLocators, folded);
   }
-  idMapRows.sort(compareIdMapRows);
-  if (new Set(idMapRows.map((row) => row.rowDigest)).size !== idMapRows.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  sortArray(idMapRows, compareIdMapRows);
+  if (setSize(setFromArray(idMapRows, (row) => row.rowDigest)) !== idMapRows.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   const idMapDigest = sha256Canonical('galerina.logic-aig-id-map.v1', idMapRows);
 
   const edges = [];
   const unresolved = [];
-  for (const relation of relations) {
-    const sourceRow = sourceByPath.get(relation.path);
-    const sourceNode = relation.ownerNativeKey === null ? fileNodeByPath.get(relation.path) : nodeByNativeKey.get(relation.ownerNativeKey);
-    if (!sourceRow || !sourceNode || !RELATIONSHIP_KINDS.has(relation.relationshipClass) || relation.relationshipClass === 'TEST' || relation.relationshipClass === 'GENERATED_CONSUMER') refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    if (!Number.isSafeInteger(relation.startByte) || !Number.isSafeInteger(relation.endByte) || relation.startByte < 0 || relation.endByte <= relation.startByte || relation.endByte > sourceRow.byteLength) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
-    let candidateNodes = relation.targetNativeKeys.map((key) => nodeByNativeKey.get(key)).filter(Boolean);
-    candidateNodes.push(...relation.targetPaths.map((locator) => fileNodeByPath.get(locator)).filter(Boolean));
-    candidateNodes = [...new Map(candidateNodes.map((node) => [node.id, node])).values()].sort((left, right) => compareCodeUnits(left.id, right.id));
+  for (let relationIndex = 0; relationIndex < relations.length; relationIndex += 1) {
+    const relation = relations[relationIndex];
+    const sourceRow = mapGet(sourceByPath, relation.path);
+    const sourceNode = relation.ownerNativeKey === null ? mapGet(fileNodeByPath, relation.path) : mapGet(nodeByNativeKey, relation.ownerNativeKey);
+    if (!sourceRow || !sourceNode || !setHas(RELATIONSHIP_KINDS, relation.relationshipClass) || relation.relationshipClass === 'TEST' || relation.relationshipClass === 'GENERATED_CONSUMER') refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    if (!NUMBER_IS_SAFE_INTEGER(relation.startByte) || !NUMBER_IS_SAFE_INTEGER(relation.endByte) || relation.startByte < 0 || relation.endByte <= relation.startByte || relation.endByte > sourceRow.byteLength) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+    let candidateNodes = arrayFilter(arrayMap(relation.targetNativeKeys, (key) => mapGet(nodeByNativeKey, key)), (value) => value !== undefined && value !== null);
+    const pathCandidates = arrayFilter(arrayMap(relation.targetPaths, (locator) => mapGet(fileNodeByPath, locator)), (value) => value !== undefined && value !== null);
+    for (let index = 0; index < pathCandidates.length; index += 1) append(candidateNodes, pathCandidates[index]);
+    const uniqueCandidates = new SAFE_MAP();
+    for (let index = 0; index < candidateNodes.length; index += 1) mapSet(uniqueCandidates, candidateNodes[index].id, candidateNodes[index]);
+    candidateNodes = sortArray(mapValuesArray(uniqueCandidates), (left, right) => compareCodeUnits(left.id, right.id));
     if (relation.targetState === 'RESOLVED' && candidateNodes.length === 1) {
       const targetNode = candidateNodes[0];
       const evidence = {
@@ -925,19 +1064,21 @@ export function buildSemanticRows(options) {
       addEdge(edges, evidence, relation.relationshipClass, sourceNode.id, targetNode.id);
       if (isTestPath(relation.path, resolutionPolicy) && !isTestPath(sourcePathFromLocator(targetNode.locator), resolutionPolicy)) addEdge(edges, evidence, 'TEST', sourceNode.id, targetNode.id);
     } else {
-      addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, candidateNodes.map((node) => node.id));
+      addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, arrayMap(candidateNodes, (node) => node.id));
     }
   }
   if (edges.length > SOURCE_ORIGIN_LIMITS.edges || unresolved.length > SOURCE_ORIGIN_LIMITS.unresolvedRows) refuse('SOURCE_ORIGIN_LIMIT');
-  edges.sort((left, right) => compareCodeUnits(left.id, right.id));
-  unresolved.sort((left, right) => {
-    for (const field of ['sourceNodeId','relationshipClass','reasonCode','sourceLocator','evidenceDigest']) {
+  sortArray(edges, (left, right) => compareCodeUnits(left.id, right.id));
+  sortArray(unresolved, (left, right) => {
+    const fields = ['sourceNodeId','relationshipClass','reasonCode','sourceLocator','evidenceDigest'];
+    for (let index = 0; index < fields.length; index += 1) {
+      const field = fields[index];
       const compared = compareCodeUnits(left[field], right[field]);
       if (compared !== 0) return compared;
     }
     return 0;
   });
-  if (new Set(edges.map((row) => row.id)).size !== edges.length || new Set(unresolved.map((row) => row.evidenceDigest)).size !== unresolved.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
+  if (setSize(setFromArray(edges, (row) => row.id)) !== edges.length || setSize(setFromArray(unresolved, (row) => row.evidenceDigest)) !== unresolved.length) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   return { nodes, edges, unresolved, idMapRows, idMapDigest };
 }
 
@@ -946,14 +1087,15 @@ function validateChildSemantic(value, sourceRows, parserPolicy) {
   exactArray(value.declarations, 'SOURCE_ORIGIN_HOST_CHILD');
   exactArray(value.relations, 'SOURCE_ORIGIN_HOST_CHILD');
   exactArray(value.diagnostics, 'SOURCE_ORIGIN_HOST_CHILD');
-  const diagnostics = new Map();
-  for (const row of value.diagnostics) {
+  const diagnostics = new SAFE_MAP();
+  for (let index = 0; index < value.diagnostics.length; index += 1) {
+    const row = value.diagnostics[index];
     exactObject(row, ['path','diagnostics'], 'SOURCE_ORIGIN_HOST_CHILD');
-    if (diagnostics.has(row.path)) refuse('SOURCE_ORIGIN_HOST_CHILD');
-    diagnostics.set(row.path, mappedDiagnostics(row.diagnostics, parserPolicy));
+    if (mapHas(diagnostics, row.path)) refuse('SOURCE_ORIGIN_HOST_CHILD');
+    mapSet(diagnostics, row.path, mappedDiagnostics(row.diagnostics, parserPolicy));
   }
-  const parseResults = sourceRows.map((row) => {
-    const codes = diagnostics.get(row.path);
+  const parseResults = arrayMap(sourceRows, (row) => {
+    const codes = mapGet(diagnostics, row.path);
     if (!codes) refuse('SOURCE_ORIGIN_HOST_CHILD');
     return { path: row.path, status: codes.length === 0 ? 'PARSED' : 'REFUSED', diagnosticCodes: codes };
   });
@@ -983,10 +1125,10 @@ function captureOptions(options) {
     nodeIdentity: options.nodeIdentity,
     gitIdentity: options.gitIdentity,
   });
-  const selection = prepared.selections.find((row) => row.domain === 'HOST');
+  const selection = arrayFind(prepared.selections, (row) => row.domain === 'HOST');
   if (!selection || selection.entry.locator !== 'lib/typescript.js') refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   const entryJoined = `${selection.entry.rootLocator}/${selection.entry.locator}`;
-  const entryRow = selection.moduleRows.find((row) => row.locator === selection.entry.locator);
+  const entryRow = arrayFind(selection.moduleRows, (row) => row.locator === selection.entry.locator);
   if (!entryRow) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   let toolchainBlobs;
   try {
@@ -1002,13 +1144,13 @@ function captureOptions(options) {
 export async function decodeHostProject(options) {
   const captured = captureOptions(options);
   await authenticateNodeExecutable(captured.prepared.nodeIdentity);
-  const sourceRows = captured.sourceManifest.rows.filter((row) => classifySourcePath(row.path, captured.sourcePolicy) === 'HOST');
-  const sourceEntries = sourceRows.map((row) => {
+  const sourceRows = arrayFilter(captured.sourceManifest.rows, (row) => classifySourcePath(row.path, captured.sourcePolicy) === 'HOST');
+  const sourceEntries = arrayMap(sourceRows, (row) => {
     const bytes = captured.sourceBlobs.get(row.path);
     if (!bytes) refuse('SOURCE_ORIGIN_HOST_SOURCE');
     return [row.path, bytes];
   });
-  const sources = sourceEntries.map(([locator, bytes]) => ({ path: locator, text: decodeUtf8(bytes) }));
+  const sources = arrayMap(sourceEntries, (entry) => ({ path: entry[0], text: decodeUtf8(entry[1]) }));
   const entryBytes = captured.toolchainBlobs.get(captured.entryJoined);
   if (!entryBytes) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   const replay = await runHostChild(captured.selection, entryBytes, sources);
@@ -1029,7 +1171,7 @@ export async function decodeHostProject(options) {
     builtinModules: captured.selection.builtinModules,
   };
   if (
-    canonicalJsonText(replay.moduleLocators) !== canonicalJsonText(actualRuntimeLoadSet.moduleRows.map((row) => row.locator))
+    canonicalJsonText(replay.moduleLocators) !== canonicalJsonText(arrayMap(actualRuntimeLoadSet.moduleRows, (row) => row.locator))
     || canonicalJsonText(replay.builtinModules) !== canonicalJsonText(actualRuntimeLoadSet.builtinModules)
   ) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   return deepFreeze({

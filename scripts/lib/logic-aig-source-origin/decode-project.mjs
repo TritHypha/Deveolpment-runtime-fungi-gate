@@ -1,14 +1,14 @@
-import { createHash } from 'node:crypto';
 import { isProxy } from 'node:util/types';
 
 import {
   SOURCE_ORIGIN_LIMITS,
   canonicalJsonText,
   classifySourcePath,
+  decodeUtf8Bytes,
   decodeDiagnosticSet,
+  gitBlobOid,
   parseCanonicalJsonBytes,
   sha256Canonical,
-  sha256Raw,
   validateExpectedParseOutcomes,
   validateGeneratedConsumerPolicy,
   validateParseOutcomesReceipt,
@@ -28,16 +28,88 @@ import { buildSemanticRows, decodeHostProject } from './host-decoder.mjs';
 import { validateExporterPolicy } from './owner-proposal-policy.mjs';
 import { buildToolchainSnapshot } from './toolchain-snapshot.mjs';
 
-const OPTION_KEYS = Object.freeze([
+const UTIL_TYPES_IS_PROXY = isProxy;
+const REFLECT_APPLY = Reflect.apply;
+const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
+const OBJECT_FREEZE = Object.freeze;
+const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
+const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
+const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
+const OBJECT_PROTOTYPE = Object.prototype;
+const ARRAY_IS_ARRAY = Array.isArray;
+const ARRAY_PROTOTYPE = Array.prototype;
+const ARRAY_SORT = Array.prototype.sort;
+const NUMBER_IS_SAFE_INTEGER = Number.isSafeInteger;
+const JSON_PARSE = JSON.parse;
+const SAFE_REGEXP = RegExp;
+const REGEXP_EXEC = RegExp.prototype.exec;
+const STRING_CHAR_CODE_AT = String.prototype.charCodeAt;
+const STRING_ENDS_WITH = String.prototype.endsWith;
+const STRING_LAST_INDEX_OF = String.prototype.lastIndexOf;
+const STRING_NORMALIZE = String.prototype.normalize;
+const STRING_SLICE = String.prototype.slice;
+const STRING_SPLIT = String.prototype.split;
+const STRING_TO_LOWER_CASE = String.prototype.toLowerCase;
+const SAFE_SET = Set;
+const SET_ADD = Set.prototype.add;
+const SET_HAS = Set.prototype.has;
+const SET_SIZE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(Set.prototype, 'size').get;
+const SAFE_MAP = Map;
+const MAP_GET = Map.prototype.get;
+const MAP_HAS = Map.prototype.has;
+const MAP_SET = Map.prototype.set;
+const MAP_ENTRIES = Map.prototype.entries;
+const MAP_SIZE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(Map.prototype, 'size').get;
+const MAP_ITERATOR_NEXT = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(
+  OBJECT_GET_PROTOTYPE_OF(REFLECT_APPLY(MAP_ENTRIES, new SAFE_MAP(), [])),
+  'next',
+).value;
+
+function defineData(target, key, value) {
+  OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true });
+}
+
+function append(values, value) { defineData(values, `${values.length}`, value); }
+function arrayCopy(values) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, values[index]); return output; }
+function arrayMap(values, operation) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index)); return output; }
+function arrayFilter(values, predicate) { const output = []; for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) append(output, values[index]); return output; }
+function arrayFind(values, predicate) { for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return values[index]; return undefined; }
+function arraySome(values, predicate) { for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return true; return false; }
+function arrayReduce(values, operation, initial) { let output = initial; for (let index = 0; index < values.length; index += 1) output = operation(output, values[index], index); return output; }
+function flattenArrays(values) { const output = []; for (let outer = 0; outer < values.length; outer += 1) for (let inner = 0; inner < values[outer].length; inner += 1) append(output, values[outer][inner]); return output; }
+function sortArray(values, compare = compareCodeUnits) { return REFLECT_APPLY(ARRAY_SORT, values, [compare]); }
+function stringEndsWith(value, part) { return REFLECT_APPLY(STRING_ENDS_WITH, value, [part]); }
+function stringCharCodeAt(value, index) { return REFLECT_APPLY(STRING_CHAR_CODE_AT, value, [index]); }
+function stringLastIndexOf(value, part) { return REFLECT_APPLY(STRING_LAST_INDEX_OF, value, [part]); }
+function stringNormalize(value) { return REFLECT_APPLY(STRING_NORMALIZE, value, ['NFC']); }
+function stringSlice(value, start, end) { return REFLECT_APPLY(STRING_SLICE, value, end === undefined ? [start] : [start, end]); }
+function stringSplit(value, separator) { return REFLECT_APPLY(STRING_SPLIT, value, [separator]); }
+function stringToLowerCase(value) { return REFLECT_APPLY(STRING_TO_LOWER_CASE, value, []); }
+function regexpTest(pattern, value) { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); try { return REFLECT_APPLY(REGEXP_EXEC, pattern, [value]) !== null; } finally { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); } }
+function setAdd(values, value) { REFLECT_APPLY(SET_ADD, values, [value]); }
+function setHas(values, value) { return REFLECT_APPLY(SET_HAS, values, [value]); }
+function setSize(values) { return REFLECT_APPLY(SET_SIZE, values, []); }
+function mapGet(values, key) { return REFLECT_APPLY(MAP_GET, values, [key]); }
+function mapHas(values, key) { return REFLECT_APPLY(MAP_HAS, values, [key]); }
+function mapSet(values, key, value) { REFLECT_APPLY(MAP_SET, values, [key, value]); }
+function mapSize(values) { return REFLECT_APPLY(MAP_SIZE, values, []); }
+function mapEntriesArray(values) { const output = []; const iterator = REFLECT_APPLY(MAP_ENTRIES, values, []); while (true) { const step = REFLECT_APPLY(MAP_ITERATOR_NEXT, iterator, []); if (step.done) return output; append(output, step.value); } }
+function mapFromArray(values, key, project = (value) => value) { const output = new SAFE_MAP(); for (let index = 0; index < values.length; index += 1) mapSet(output, key(values[index], index), project(values[index], index)); return output; }
+function uniqueArray(values) { const seen = new SAFE_SET(); const output = []; for (let index = 0; index < values.length; index += 1) if (!setHas(seen, values[index])) { setAdd(seen, values[index]); append(output, values[index]); } return output; }
+function setFromArray(values, project = (value) => value) { const output = new SAFE_SET(); for (let index = 0; index < values.length; index += 1) setAdd(output, project(values[index], index)); return output; }
+function regexpMatches(pattern, value) { const output = []; OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); try { while (true) { const match = REFLECT_APPLY(REGEXP_EXEC, pattern, [value]); if (match === null) return output; append(output, match); if (match[0] === '') OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: pattern.lastIndex + 1 }); } } finally { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); } }
+
+const OPTION_KEYS = OBJECT_FREEZE([
   'owners', 'ownerBlobs', 'sourceManifest', 'sourceBlobs', 'resolutionInputs',
   'resolutionBlobs', 'toolchainBlobs', 'platform', 'arch', 'nodeIdentity',
   'gitIdentity',
 ]);
-const OWNER_NAMES = Object.freeze([
+const OWNER_NAMES = OBJECT_FREEZE([
   'expectedOutcomes', 'exporter', 'gate', 'generated', 'parser', 'pins',
   'proposedBaseline', 'repositoryIdentity', 'resolution', 'source',
 ]);
-const OWNER_LOCATORS = Object.freeze({
+const OWNER_LOCATORS = OBJECT_FREEZE({
   expectedOutcomes: 'governance/logic-aig-source-origin-expected-parse-outcomes.json',
   exporter: 'governance/logic-aig-source-origin-exporter-policy.json',
   gate: 'packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json',
@@ -49,7 +121,7 @@ const OWNER_LOCATORS = Object.freeze({
   resolution: 'governance/logic-aig-source-origin-resolution-policy.json',
   source: 'governance/logic-aig-source-origin-source-policy.json',
 });
-const RELATIONSHIP_CLASSES = Object.freeze(['CALLER', 'CONTRACT', 'GENERATED_CONSUMER', 'IMPORT', 'TEST']);
+const RELATIONSHIP_CLASSES = OBJECT_FREEZE(['CALLER', 'CONTRACT', 'GENERATED_CONSUMER', 'IMPORT', 'TEST']);
 const DIAGNOSTIC_HEADER = /^\/\/\/\s*expected_diagnostics:\s*(.+)$/gim;
 const HEX40_OR_64 = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
 const HEX64 = /^[0-9a-f]{64}$/u;
@@ -58,8 +130,8 @@ const CONTROL = /[\u0000-\u001f\u007f]/u;
 class ProjectDecoderRefusal extends Error {
   constructor(code) {
     super(code);
-    this.name = 'ProjectDecoderRefusal';
-    this.code = code;
+    defineData(this, 'name', 'ProjectDecoderRefusal');
+    defineData(this, 'code', code);
   }
 }
 
@@ -72,44 +144,44 @@ function compareCodeUnits(left, right) {
 }
 
 function exactObject(value, keys, code = 'SOURCE_ORIGIN_PROJECT_SCHEMA') {
-  if (isProxy(value) || value === null || typeof value !== 'object' || Array.isArray(value)) refuse(code);
-  const prototype = Object.getPrototypeOf(value);
-  if ((prototype !== Object.prototype && prototype !== null) || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  for (const name of names) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+  if (UTIL_TYPES_IS_PROXY(value) || value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value)) refuse(code);
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if ((prototype !== OBJECT_PROTOTYPE && prototype !== null) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
-  const sorted = names.sort(compareCodeUnits);
-  const expected = [...keys].sort(compareCodeUnits);
-  if (sorted.length !== expected.length || sorted.some((name, index) => name !== expected[index])) refuse(code);
+  const sorted = REFLECT_APPLY(ARRAY_SORT, names, [compareCodeUnits]);
+  const expected = sortArray(arrayCopy(keys));
+  if (sorted.length !== expected.length || arraySome(sorted, (name, index) => name !== expected[index])) refuse(code);
 }
 
 function exactArray(value, code = 'SOURCE_ORIGIN_PROJECT_SCHEMA') {
-  if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  if (names.length !== value.length + 1 || !names.includes('length')) refuse(code);
+  if (UTIL_TYPES_IS_PROXY(value) || !ARRAY_IS_ARRAY(value) || OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  if (names.length !== value.length + 1 || !arraySome(names, (name) => name === 'length')) refuse(code);
   for (let index = 0; index < value.length; index += 1) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
   return value;
 }
 
-function deepFreeze(value, seen = new Set()) {
-  if (value === null || typeof value !== 'object' || seen.has(value)) return value;
-  seen.add(value);
-  for (const name of Object.getOwnPropertyNames(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+function deepFreeze(value, seen = new SAFE_SET()) {
+  if (value === null || typeof value !== 'object' || REFLECT_APPLY(SET_HAS, seen, [value])) return value;
+  REFLECT_APPLY(SET_ADD, seen, [value]);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
   }
-  return Object.freeze(value);
+  return OBJECT_FREEZE(value);
 }
 
 function decodeUtf8(bytes, code = 'SOURCE_ORIGIN_PROJECT_OWNER') {
-  if (isProxy(bytes) || !Buffer.isBuffer(bytes) || Object.getPrototypeOf(bytes) !== Buffer.prototype || bytes.buffer instanceof SharedArrayBuffer) refuse(code);
   try {
-    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    return decodeUtf8Bytes(bytes);
   } catch {
     refuse(code);
   }
@@ -121,10 +193,8 @@ function sameData(left, right) {
 
 function verifyGitBlobOid(blobOid, bytes, code) {
   const algorithm = blobOid.length === 40 ? 'sha1' : blobOid.length === 64 ? 'sha256' : refuse(code);
-  const observed = createHash(algorithm)
-    .update(Buffer.from(`blob ${bytes.length}\0`, 'utf8'))
-    .update(bytes)
-    .digest('hex');
+  let observed;
+  try { observed = gitBlobOid(bytes, algorithm); } catch { refuse(code); }
   if (observed !== blobOid) refuse(code);
 }
 
@@ -153,20 +223,24 @@ function assertNoDuplicateJsonMembers(text) {
         else if (text[index++] === '"') break;
       }
       let cursor = index;
-      while (/\s/u.test(text[cursor] ?? '')) cursor += 1;
+      while (cursor < text.length) {
+        const unit = stringCharCodeAt(text, cursor);
+        if (unit !== 0x20 && unit !== 0x09 && unit !== 0x0a && unit !== 0x0d) break;
+        cursor += 1;
+      }
       if (text[cursor] === ':' && scopes.length > 0) {
         let key;
-        try { key = JSON.parse(text.slice(start, index)); } catch { refuse('SOURCE_ORIGIN_PROJECT_OWNER'); }
-        const scope = scopes.at(-1);
-        if (scope.has(key)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
-        scope.add(key);
+        try { key = REFLECT_APPLY(JSON_PARSE, null, [stringSlice(text, start, index)]); } catch { refuse('SOURCE_ORIGIN_PROJECT_OWNER'); }
+        const scope = scopes[scopes.length - 1];
+        if (setHas(scope, key)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+        setAdd(scope, key);
       }
       continue;
     }
-    if (character === '{') scopes.push(new Set());
+    if (character === '{') append(scopes, new SAFE_SET());
     else if (character === '}') {
       if (scopes.length === 0) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
-      scopes.pop();
+      scopes.length -= 1;
     }
     index += 1;
   }
@@ -175,34 +249,36 @@ function assertNoDuplicateJsonMembers(text) {
 
 function parseGateOwnerBytes(bytes, parserPolicy) {
   const text = decodeUtf8(bytes);
-  if (!text.endsWith('\n') || text.endsWith('\n\n') || text.endsWith('\r\n')) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  if (!stringEndsWith(text, '\n') || stringEndsWith(text, '\n\n') || stringEndsWith(text, '\r\n')) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   assertNoDuplicateJsonMembers(text);
   let value;
-  try { value = JSON.parse(text); } catch { refuse('SOURCE_ORIGIN_PROJECT_OWNER'); }
+  try { value = REFLECT_APPLY(JSON_PARSE, null, [text]); } catch { refuse('SOURCE_ORIGIN_PROJECT_OWNER'); }
   return validateGateOwner(value, parserPolicy);
 }
 
 function validateGateOwner(value, parserPolicy) {
-  if (isProxy(value) || value === null || typeof value !== 'object' || Array.isArray(value)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
-  const prototype = Object.getPrototypeOf(value);
-  if ((prototype !== Object.prototype && prototype !== null) || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
-  const keys = Object.getOwnPropertyNames(value);
-  for (const key of keys) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+  if (UTIL_TYPES_IS_PROXY(value) || value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if ((prototype !== OBJECT_PROTOTYPE && prototype !== null) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  const keys = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < keys.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, keys[index]);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   }
-  const sorted = [...keys].sort(compareCodeUnits);
-  if (keys.some((key, index) => key !== sorted[index])) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
-  const pattern = new RegExp(parserPolicy.diagnosticCodePattern, 'u');
-  for (const key of keys) {
-    if (!key || key !== key.normalize('NFC') || CONTROL.test(key)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  const sorted = sortArray(arrayCopy(keys));
+  if (arraySome(keys, (key, index) => key !== sorted[index])) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  const pattern = new SAFE_REGEXP(parserPolicy.diagnosticCodePattern, 'u');
+  for (let keyIndex = 0; keyIndex < keys.length; keyIndex += 1) {
+    const key = keys[keyIndex];
+    if (!key || key !== stringNormalize(key) || regexpTest(CONTROL, key)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
     const row = value[key];
     exactObject(row, ['ok','codes'], 'SOURCE_ORIGIN_PROJECT_OWNER');
     if (typeof row.ok !== 'boolean') refuse('SOURCE_ORIGIN_PROJECT_OWNER');
     exactArray(row.codes, 'SOURCE_ORIGIN_PROJECT_OWNER');
     let previous;
-    for (const code of row.codes) {
-      if (typeof code !== 'string' || !pattern.test(code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+    for (let codeIndex = 0; codeIndex < row.codes.length; codeIndex += 1) {
+      const code = row.codes[codeIndex];
+      if (typeof code !== 'string' || !regexpTest(pattern, code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
       previous = code;
     }
     if (!row.ok && row.codes.length === 0) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
@@ -220,32 +296,33 @@ function ownerSemanticDigest(name, value) {
 
 function validateOwners(owners, ownerBlobsInput) {
   exactObject(owners, ['values','identities','ownerSetDigest','authorizing'], 'SOURCE_ORIGIN_PROJECT_OWNER');
-  if (owners.authorizing !== false || typeof owners.ownerSetDigest !== 'string' || !HEX64.test(owners.ownerSetDigest)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
+  if (owners.authorizing !== false || typeof owners.ownerSetDigest !== 'string' || !regexpTest(HEX64, owners.ownerSetDigest)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   exactObject(owners.values, OWNER_NAMES, 'SOURCE_ORIGIN_PROJECT_OWNER');
   exactArray(owners.identities, 'SOURCE_ORIGIN_PROJECT_OWNER');
   if (owners.identities.length !== OWNER_NAMES.length) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
-  const identityByLocator = new Map();
+  const identityByLocator = new SAFE_MAP();
   let previous;
-  for (const row of owners.identities) {
+  for (let index = 0; index < owners.identities.length; index += 1) {
+    const row = owners.identities[index];
     exactObject(row, ['locator','blobOid','byteLength','rawSha256','semanticDigest'], 'SOURCE_ORIGIN_PROJECT_OWNER');
     if (
       typeof row.locator !== 'string'
       || row.locator.length === 0
-      || !HEX40_OR_64.test(row.blobOid)
-      || !Number.isSafeInteger(row.byteLength)
+      || !regexpTest(HEX40_OR_64, row.blobOid)
+      || !NUMBER_IS_SAFE_INTEGER(row.byteLength)
       || row.byteLength < 0
-      || !HEX64.test(row.rawSha256)
-      || !HEX64.test(row.semanticDigest)
+      || !regexpTest(HEX64, row.rawSha256)
+      || !regexpTest(HEX64, row.semanticDigest)
       || (previous !== undefined && compareCodeUnits(previous, row.locator) >= 0)
-      || identityByLocator.has(row.locator)
+      || mapHas(identityByLocator, row.locator)
     ) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
     previous = row.locator;
-    identityByLocator.set(row.locator, row);
+    mapSet(identityByLocator, row.locator, row);
   }
   if (owners.ownerSetDigest !== sha256Canonical('galerina.logic-aig-frozen-owner-set.v1', owners.identities)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   let ownerBlobs;
   try {
-    ownerBlobs = admitFrozenBlobSet(owners.identities.map((row) => ({ path: row.locator, byteLength: row.byteLength, rawSha256: row.rawSha256 })), ownerBlobsInput, { label: 'OWNER_SET' });
+    ownerBlobs = admitFrozenBlobSet(arrayMap(owners.identities, (row) => ({ path: row.locator, byteLength: row.byteLength, rawSha256: row.rawSha256 })), ownerBlobsInput, { label: 'OWNER_SET' });
   } catch {
     refuse('SOURCE_ORIGIN_PROJECT_OWNER');
   }
@@ -262,10 +339,11 @@ function validateOwners(owners, ownerBlobsInput) {
     expectedOutcomes: validateExpectedParseOutcomes(owners.values.expectedOutcomes, { parserPolicy: parser }),
     gate: validateGateOwner(owners.values.gate, parser),
   };
-  validatedValues.exporter = validateExporterPolicy(owners.values.exporter, exporterBindings({ ...validatedValues, exporter: owners.values.exporter }));
-  for (const name of OWNER_NAMES) {
+  defineData(validatedValues, 'exporter', validateExporterPolicy(owners.values.exporter, exporterBindings({ ...validatedValues, exporter: owners.values.exporter })));
+  for (let index = 0; index < OWNER_NAMES.length; index += 1) {
+    const name = OWNER_NAMES[index];
     const locator = OWNER_LOCATORS[name];
-    const identity = identityByLocator.get(locator);
+    const identity = mapGet(identityByLocator, locator);
     const bytes = ownerBlobs.get(locator);
     const value = validatedValues[name];
     if (!identity || !bytes || !sameData(value, owners.values[name]) || identity.semanticDigest !== ownerSemanticDigest(name, value)) refuse('SOURCE_ORIGIN_PROJECT_OWNER');
@@ -282,7 +360,7 @@ function validateOwners(owners, ownerBlobsInput) {
     values: validatedValues,
     ownerBlobs,
     ownerSetDigest: owners.ownerSetDigest,
-    ownerObjectFormats: [...new Set(owners.identities.map((row) => row.blobOid.length === 40 ? 'sha1' : 'sha256'))],
+    ownerObjectFormats: uniqueArray(arrayMap(owners.identities, (row) => row.blobOid.length === 40 ? 'sha1' : 'sha256')),
   };
 }
 
@@ -304,7 +382,7 @@ function manifestBinding(manifestKind, row) {
 
 function ownerBinding(expected, sourceByPath, resolutionByPath, proposedByName) {
   const manifestKind = expected.ownerKind === 'INLINE_EXPECTATION' ? 'SOURCE_MANIFEST' : 'RESOLUTION_INPUTS';
-  const row = manifestKind === 'SOURCE_MANIFEST' ? sourceByPath.get(expected.ownerLocator) : resolutionByPath.get(expected.ownerLocator);
+  const row = manifestKind === 'SOURCE_MANIFEST' ? mapGet(sourceByPath, expected.ownerLocator) : mapGet(resolutionByPath, expected.ownerLocator);
   if (!row) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
   const binding = manifestBinding(manifestKind, row);
   return {
@@ -316,17 +394,17 @@ function ownerBinding(expected, sourceByPath, resolutionByPath, proposedByName) 
     rawSha256: binding.rawSha256,
     byteLength: binding.byteLength,
     ownerKey: expected.ownerKey,
-    ownerReason: expected.ownerKind === 'PROPOSED_BASELINE' ? proposedByName.get(expected.ownerKey)?.reason ?? refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES') : null,
+    ownerReason: expected.ownerKind === 'PROPOSED_BASELINE' ? mapGet(proposedByName, expected.ownerKey)?.reason ?? refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES') : null,
   };
 }
 
 function parserIdForDomain(parserPolicy, domain) {
-  return parserPolicy.domainParserBindings.find((row) => row.domain === domain)?.parserId ?? refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
+  return arrayFind(parserPolicy.domainParserBindings, (row) => row.domain === domain)?.parserId ?? refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
 }
 
 function sourceBasename(locator) {
-  const index = locator.lastIndexOf('/');
-  return index === -1 ? locator : locator.slice(index + 1);
+  const index = stringLastIndexOf(locator, '/');
+  return index === -1 ? locator : stringSlice(locator, index + 1);
 }
 
 function decodeSourceText(bytes) {
@@ -334,31 +412,32 @@ function decodeSourceText(bytes) {
 }
 
 function deriveExpectedOutcomes(captured) {
-  const sourceByPath = new Map(captured.sourceManifest.rows.map((row) => [row.path, row]));
-  const resolutionByPath = new Map(captured.resolutionInputs.rows.map((row) => [row.path, row]));
-  const proposedByName = new Map(captured.values.proposedBaseline.entries.map((row) => [row.directoryName, row]));
+  const sourceByPath = mapFromArray(captured.sourceManifest.rows, (row) => row.path);
+  const resolutionByPath = mapFromArray(captured.resolutionInputs.rows, (row) => row.path);
+  const proposedByName = mapFromArray(captured.values.proposedBaseline.entries, (row) => row.directoryName);
   const derived = [];
-  for (const sourceRow of captured.sourceManifest.rows) {
+  for (let rowIndex = 0; rowIndex < captured.sourceManifest.rows.length; rowIndex += 1) {
+    const sourceRow = captured.sourceManifest.rows[rowIndex];
     const bytes = captured.sourceBlobs.get(sourceRow.path);
     if (!bytes) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
-    const proposedMatches = sourceRow.path.split('/').filter((component) => proposedByName.has(component));
+    const proposedMatches = arrayFilter(stringSplit(sourceRow.path, '/'), (component) => mapHas(proposedByName, component));
     if (proposedMatches.length > 1) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
     const proposedName = proposedMatches[0] ?? null;
     const sidecarLocator = `${sourceRow.path}.expected.diagnostics.txt`;
-    const sidecarRow = resolutionByPath.get(sidecarLocator);
+    const sidecarRow = mapGet(resolutionByPath, sidecarLocator);
     const domain = classifySourcePath(sourceRow.path, captured.values.source);
     const parserId = parserIdForDomain(captured.values.parser, domain);
     const candidates = [];
     if (proposedName !== null) {
       if (sidecarRow) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
-      candidates.push({
+      append(candidates, {
         path: sourceRow.path, domain, parserId, disposition: 'OPAQUE_PROPOSED',
         diagnosticCodes: null, ownerKind: 'PROPOSED_BASELINE',
         ownerLocator: OWNER_LOCATORS.proposedBaseline, ownerKey: proposedName,
       });
     } else {
       const text = decodeSourceText(bytes);
-      const matches = [...text.matchAll(DIAGNOSTIC_HEADER)];
+      const matches = regexpMatches(DIAGNOSTIC_HEADER, text);
       if (matches.length > 1) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
       const inlineHeader = matches[0]?.[1] ?? null;
       const hasInlineExpectation = inlineHeader !== null && inlineHeader !== 'none';
@@ -366,7 +445,7 @@ function deriveExpectedOutcomes(captured) {
       if (hasInlineExpectation) {
         let diagnosticCodes;
         try { diagnosticCodes = decodeDiagnosticSet(inlineHeader, captured.values.parser); } catch { refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES'); }
-        candidates.push({
+        append(candidates, {
           path: sourceRow.path, domain, parserId, disposition: 'EXPECTED_REFUSAL',
           diagnosticCodes, ownerKind: 'INLINE_EXPECTATION', ownerLocator: sourceRow.path,
           ownerKey: 'expected_diagnostics',
@@ -377,7 +456,7 @@ function deriveExpectedOutcomes(captured) {
         if (!sidecarBytes) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
         let diagnosticCodes;
         try { diagnosticCodes = decodeDiagnosticSet(decodeSourceText(sidecarBytes), captured.values.parser); } catch { refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES'); }
-        candidates.push({
+        append(candidates, {
           path: sourceRow.path, domain, parserId, disposition: 'EXPECTED_REFUSAL',
           diagnosticCodes, ownerKind: 'SIDECAR_EXPECTATION', ownerLocator: sidecarLocator,
           ownerKey: 'complete-file',
@@ -386,7 +465,7 @@ function deriveExpectedOutcomes(captured) {
       if (domain === 'GATE') {
         const key = sourceBasename(sourceRow.path);
         const verdict = captured.values.gate[key];
-        if (verdict !== undefined && verdict.ok === false) candidates.push({
+        if (verdict !== undefined && verdict.ok === false) append(candidates, {
           path: sourceRow.path, domain, parserId, disposition: 'EXPECTED_REFUSAL',
           diagnosticCodes: verdict.codes, ownerKind: 'GATE_V3_VERDICT',
           ownerLocator: OWNER_LOCATORS.gate, ownerKey: key,
@@ -394,15 +473,15 @@ function deriveExpectedOutcomes(captured) {
       }
     }
     if (candidates.length > 1) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
-    if (candidates.length === 1) derived.push(candidates[0]);
+    if (candidates.length === 1) append(derived, candidates[0]);
   }
-  derived.sort((left, right) => compareCodeUnits(left.path, right.path));
+  sortArray(derived, (left, right) => compareCodeUnits(left.path, right.path));
   if (!sameData(derived, captured.values.expectedOutcomes.rows)) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
   return { rows: derived, sourceByPath, resolutionByPath, proposedByName };
 }
 
 function filteredSource(captured, outcomePaths) {
-  const rows = captured.sourceManifest.rows.filter((row) => !outcomePaths.has(row.path));
+  const rows = arrayFilter(captured.sourceManifest.rows, (row) => !setHas(outcomePaths, row.path));
   const body = {
     schema: captured.sourceManifest.schema,
     repositoryId: captured.sourceManifest.repositoryId,
@@ -414,17 +493,17 @@ function filteredSource(captured, outcomePaths) {
     rows,
     counts: {
       paths: rows.length,
-      blobs: new Set(rows.map((row) => row.blobOid)).size,
-      bytes: rows.reduce((sum, row) => sum + row.byteLength, 0),
-      mode100644: rows.filter((row) => row.mode === '100644').length,
-      mode100755: rows.filter((row) => row.mode === '100755').length,
+      blobs: setSize(setFromArray(rows, (row) => row.blobOid)),
+      bytes: arrayReduce(rows, (sum, row) => sum + row.byteLength, 0),
+      mode100644: arrayFilter(rows, (row) => row.mode === '100644').length,
+      mode100755: arrayFilter(rows, (row) => row.mode === '100755').length,
       exclusions: captured.values.source.exclusions.length,
     },
     authorizing: false,
   };
   return {
     manifest: { ...body, manifestDigest: sha256Canonical(body.schema, body) },
-    blobs: new Map(rows.map((row) => [row.path, captured.sourceBlobs.get(row.path)])),
+    blobs: mapFromArray(rows, (row) => row.path, (row) => captured.sourceBlobs.get(row.path)),
   };
 }
 
@@ -448,51 +527,56 @@ function decoderOptions(captured, filtered, toolchainBlobs) {
 }
 
 function toolchainSubsets(captured) {
-  const record = captured.values.pins.records.find((row) => row.platform === captured.platform && row.arch === captured.arch);
+  const record = arrayFind(captured.values.pins.records, (row) => row.platform === captured.platform && row.arch === captured.arch);
   if (!record) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
-  const host = record.runtimeLoadSets.find((row) => row.id === 'HOST');
+  const host = arrayFind(record.runtimeLoadSets, (row) => row.id === 'HOST');
   if (!host) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
   const hostLocator = `${host.entry.rootLocator}/${host.entry.locator}`;
-  const parserSourceLocators = [...new Set([
-    record.sourceOriginParser.sourceEntry.locator,
-    ...record.sourceOriginParser.sourceEdgeRows.flatMap((edge) => [edge.fromLocator, edge.toLocator]),
-  ])].sort(compareCodeUnits).map((locator) => `${record.sourceOriginParser.sourceEntry.rootLocator}/${locator}`);
-  const required = [hostLocator, ...parserSourceLocators].sort(compareCodeUnits);
-  const rows = required.map((locator) => {
-    const executable = record.executableModuleRows.find((row) => row.locator === locator);
-    const data = record.dataRows.find((row) => row.locator === locator);
+  const parserSourceParts = [record.sourceOriginParser.sourceEntry.locator];
+  for (let index = 0; index < record.sourceOriginParser.sourceEdgeRows.length; index += 1) {
+    append(parserSourceParts, record.sourceOriginParser.sourceEdgeRows[index].fromLocator);
+    append(parserSourceParts, record.sourceOriginParser.sourceEdgeRows[index].toLocator);
+  }
+  const parserSourceLocators = arrayMap(sortArray(uniqueArray(parserSourceParts)), (locator) => `${record.sourceOriginParser.sourceEntry.rootLocator}/${locator}`);
+  const required = [hostLocator];
+  for (let index = 0; index < parserSourceLocators.length; index += 1) append(required, parserSourceLocators[index]);
+  sortArray(required);
+  const rows = arrayMap(required, (locator) => {
+    const executable = arrayFind(record.executableModuleRows, (row) => row.locator === locator);
+    const data = arrayFind(record.dataRows, (row) => row.locator === locator);
     const identity = executable ?? data;
     if (!identity) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
     return { path: locator, byteLength: identity.byteLength, rawSha256: identity.rawSha256 };
   });
   let all;
   try { all = admitFrozenBlobSet(rows, captured.toolchainBlobsInput, { label: 'SOURCE_MANIFEST' }); } catch { refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN'); }
+  const hostMap = new SAFE_MAP();
+  mapSet(hostMap, hostLocator, all.get(hostLocator));
   return {
-    host: new Map([[hostLocator, all.get(hostLocator)]]),
-    parser: new Map(required.map((locator) => [locator, all.get(locator)])),
+    host: hostMap,
+    parser: mapFromArray(required, (locator) => locator, (locator) => all.get(locator)),
   };
 }
 
 function validateGlobalLocatorClosure(sourceManifest, pins, platform, arch) {
-  const record = pins.records.find((row) => row.platform === platform && row.arch === arch);
+  const record = arrayFind(pins.records, (row) => row.platform === platform && row.arch === arch);
   if (!record) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
-  const rows = [
-    ...sourceManifest.rows.map((row) => ({ locator: row.path, byteLength: row.byteLength, rawSha256: row.rawSha256 })),
-    ...record.executableModuleRows,
-    ...record.dataRows,
-  ];
-  const exact = new Map();
-  const folded = new Map();
-  for (const row of rows) {
-    const retained = exact.get(row.locator);
+  const rows = arrayMap(sourceManifest.rows, (row) => ({ locator: row.path, byteLength: row.byteLength, rawSha256: row.rawSha256 }));
+  for (let index = 0; index < record.executableModuleRows.length; index += 1) append(rows, record.executableModuleRows[index]);
+  for (let index = 0; index < record.dataRows.length; index += 1) append(rows, record.dataRows[index]);
+  const exact = new SAFE_MAP();
+  const folded = new SAFE_MAP();
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
+    const retained = mapGet(exact, row.locator);
     if (retained) {
       if (retained.byteLength !== row.byteLength || retained.rawSha256 !== row.rawSha256) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
       continue;
     }
-    const lower = row.locator.toLowerCase();
-    if (folded.has(lower)) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
-    exact.set(row.locator, row);
-    folded.set(lower, row.locator);
+    const lower = stringToLowerCase(row.locator);
+    if (mapHas(folded, lower)) refuse('SOURCE_ORIGIN_PROJECT_TOOLCHAIN');
+    mapSet(exact, row.locator, row);
+    mapSet(folded, lower, row.locator);
   }
 }
 
@@ -510,8 +594,14 @@ function captureOptions(options) {
   ) refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
   const sourceBlobs = admitFrozenBlobSet(sourceManifest.rows, options.sourceBlobs, { label: 'SOURCE_MANIFEST' });
   const resolutionBlobs = admitFrozenBlobSet(resolutionInputs.rows, options.resolutionBlobs, { label: 'RESOLUTION_INPUTS' });
-  for (const row of sourceManifest.rows) verifyGitBlobOid(row.blobOid, sourceBlobs.get(row.path), 'SOURCE_ORIGIN_PROJECT_SOURCE');
-  for (const row of resolutionInputs.rows) verifyGitBlobOid(row.blobOid, resolutionBlobs.get(row.path), 'SOURCE_ORIGIN_PROJECT_RESOLUTION');
+  for (let index = 0; index < sourceManifest.rows.length; index += 1) {
+    const row = sourceManifest.rows[index];
+    verifyGitBlobOid(row.blobOid, sourceBlobs.get(row.path), 'SOURCE_ORIGIN_PROJECT_SOURCE');
+  }
+  for (let index = 0; index < resolutionInputs.rows.length; index += 1) {
+    const row = resolutionInputs.rows[index];
+    verifyGitBlobOid(row.blobOid, resolutionBlobs.get(row.path), 'SOURCE_ORIGIN_PROJECT_RESOLUTION');
+  }
   if (typeof options.platform !== 'string' || typeof options.arch !== 'string') refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
   validateGlobalLocatorClosure(sourceManifest, values.pins, options.platform, options.arch);
   return {
@@ -529,7 +619,9 @@ function captureOptions(options) {
 }
 
 function compareUnresolved(left, right) {
-  for (const field of ['sourceNodeId','relationshipClass','reasonCode','sourceLocator','evidenceDigest']) {
+  const fields = ['sourceNodeId','relationshipClass','reasonCode','sourceLocator','evidenceDigest'];
+  for (let index = 0; index < fields.length; index += 1) {
+    const field = fields[index];
     const compared = compareCodeUnits(left[field], right[field]);
     if (compared !== 0) return compared;
   }
@@ -543,27 +635,33 @@ function compareIdMapRows(left, right) {
   if (compared !== 0) return compared;
   compared = compareCodeUnits(left.nativeIdentity.parserNodeKind, right.nativeIdentity.parserNodeKind);
   if (compared !== 0) return compared;
-  for (const field of ['startByte','endByte','preorderOrdinal']) {
+  const fields = ['startByte','endByte','preorderOrdinal'];
+  for (let index = 0; index < fields.length; index += 1) {
+    const field = fields[index];
     if (left.nativeIdentity[field] !== right.nativeIdentity[field]) return left.nativeIdentity[field] - right.nativeIdentity[field];
   }
   return 0;
 }
 
 function outcomeSemanticRows(captured, outcomes) {
-  const grouped = new Map();
-  for (const expected of outcomes.rows) {
-    const rows = grouped.get(expected.parserId) ?? [];
-    rows.push(outcomes.sourceByPath.get(expected.path));
-    grouped.set(expected.parserId, rows);
+  const grouped = new SAFE_MAP();
+  for (let index = 0; index < outcomes.rows.length; index += 1) {
+    const expected = outcomes.rows[index];
+    const rows = mapGet(grouped, expected.parserId) ?? [];
+    append(rows, mapGet(outcomes.sourceByPath, expected.path));
+    mapSet(grouped, expected.parserId, rows);
   }
   const outputs = [];
-  for (const [parserId, sourceRows] of grouped) {
+  const groups = mapEntriesArray(grouped);
+  for (let index = 0; index < groups.length; index += 1) {
+    const parserId = groups[index][0];
+    const sourceRows = groups[index][1];
     try {
-      outputs.push(buildSemanticRows({
+      append(outputs, buildSemanticRows({
         repositoryId: captured.sourceManifest.repositoryId,
         parserId,
         sourceRows,
-        parseResults: sourceRows.map((row) => ({ path: row.path, status: 'REFUSED', diagnosticCodes: [] })),
+        parseResults: arrayMap(sourceRows, (row) => ({ path: row.path, status: 'REFUSED', diagnosticCodes: [] })),
         declarations: [],
         relations: [],
         parserPolicy: captured.values.parser,
@@ -578,9 +676,10 @@ function outcomeSemanticRows(captured, outcomes) {
 
 function makeOutcomeRows(captured, outcomes, fileNodes, unresolved) {
   const rows = [];
-  for (const expected of outcomes.rows) {
-    const sourceRow = outcomes.sourceByPath.get(expected.path);
-    const fileNode = fileNodes.get(expected.path);
+  for (let expectedIndex = 0; expectedIndex < outcomes.rows.length; expectedIndex += 1) {
+    const expected = outcomes.rows[expectedIndex];
+    const sourceRow = mapGet(outcomes.sourceByPath, expected.path);
+    const fileNode = mapGet(fileNodes, expected.path);
     if (!sourceRow || !fileNode) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
     const sourceBinding = manifestBinding('SOURCE_MANIFEST', sourceRow);
     const ownerBindings = [ownerBinding(expected, outcomes.sourceByPath, outcomes.resolutionByPath, outcomes.proposedByName)];
@@ -597,9 +696,10 @@ function makeOutcomeRows(captured, outcomes, fileNodes, unresolved) {
     };
     const membershipProofDigest = sha256Canonical(membershipBody.schema, membershipBody);
     const outcomeUnresolved = [];
-    for (const relationshipClass of RELATIONSHIP_CLASSES) {
+    for (let relationshipIndex = 0; relationshipIndex < RELATIONSHIP_CLASSES.length; relationshipIndex += 1) {
+      const relationshipClass = RELATIONSHIP_CLASSES[relationshipIndex];
       const reasonCode = `OWNER_DISPOSITION_${relationshipClass}_UNRESOLVED`;
-      const policyRow = captured.values.parser.unresolvedReasonRows.find((row) => row.relationshipClass === relationshipClass && row.reasonCode === reasonCode);
+      const policyRow = arrayFind(captured.values.parser.unresolvedReasonRows, (row) => row.relationshipClass === relationshipClass && row.reasonCode === reasonCode);
       if (!policyRow || !sameData(policyRow.permittedCandidateStates, ['NOT_APPLICABLE'])) refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
       const evidenceBody = {
         sourceNodeId: fileNode.id,
@@ -608,10 +708,10 @@ function makeOutcomeRows(captured, outcomes, fileNodes, unresolved) {
         reasonCode,
         evidenceOwnerDigest: membershipProofDigest,
       };
-      outcomeUnresolved.push({ ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
+      append(outcomeUnresolved, { ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
     }
-    outcomeUnresolved.sort(compareUnresolved);
-    unresolved.push(...outcomeUnresolved);
+    sortArray(outcomeUnresolved, compareUnresolved);
+    for (let index = 0; index < outcomeUnresolved.length; index += 1) append(unresolved, outcomeUnresolved[index]);
     const body = {
       path: expected.path,
       disposition: expected.disposition,
@@ -624,7 +724,7 @@ function makeOutcomeRows(captured, outcomes, fileNodes, unresolved) {
       representedFileNodeId: fileNode.id,
       unresolvedRowsDigest: sha256Canonical('galerina.logic-aig-outcome-unresolved-rows.v1', outcomeUnresolved),
     };
-    rows.push({ ...body, rowDigest: sha256Canonical('galerina.logic-aig-parse-outcome-row.v1', body) });
+    append(rows, { ...body, rowDigest: sha256Canonical('galerina.logic-aig-parse-outcome-row.v1', body) });
   }
   return rows;
 }
@@ -642,11 +742,11 @@ function makeOutcomeReceipt(captured, rows, toolchainManifest) {
     rows,
     counts: {
       outcomeRows: rows.length,
-      expectedRefusalRows: rows.filter((row) => row.disposition === 'EXPECTED_REFUSAL').length,
-      opaqueProposedRows: rows.filter((row) => row.disposition === 'OPAQUE_PROPOSED').length,
-      representedFileNodes: new Set(rows.map((row) => row.representedFileNodeId)).size,
+      expectedRefusalRows: arrayFilter(rows, (row) => row.disposition === 'EXPECTED_REFUSAL').length,
+      opaqueProposedRows: arrayFilter(rows, (row) => row.disposition === 'OPAQUE_PROPOSED').length,
+      representedFileNodes: setSize(setFromArray(rows, (row) => row.representedFileNodeId)),
       unresolvedRows: rows.length * RELATIONSHIP_CLASSES.length,
-      ownerBindings: rows.reduce((sum, row) => sum + row.ownerBindings.length, 0),
+      ownerBindings: arrayReduce(rows, (sum, row) => sum + row.ownerBindings.length, 0),
     },
     authorizing: false,
   };
@@ -672,7 +772,7 @@ function makeOutcomeReceipt(captured, rows, toolchainManifest) {
 export async function decodeSourceProject(options) {
   const captured = captureOptions(options);
   const outcomes = deriveExpectedOutcomes(captured);
-  const outcomePaths = new Set(outcomes.rows.map((row) => row.path));
+  const outcomePaths = setFromArray(outcomes.rows, (row) => row.path);
   const filtered = filteredSource(captured, outcomePaths);
   const toolchains = toolchainSubsets(captured);
   let host;
@@ -701,25 +801,36 @@ export async function decodeSourceProject(options) {
   }
 
   const ownerSemantic = outcomeSemanticRows(captured, outcomes);
-  const nodes = [host.nodes, fungiGate.nodes, ...ownerSemantic.map((row) => row.nodes)].flat().sort((left, right) => compareCodeUnits(left.id, right.id));
-  const edges = [...host.edges, ...fungiGate.edges].sort((left, right) => compareCodeUnits(left.id, right.id));
-  const unresolved = [...host.unresolved, ...fungiGate.unresolved];
-  const idMapRows = [host.idMapRows, fungiGate.idMapRows, ...ownerSemantic.map((row) => row.idMapRows)].flat().sort(compareIdMapRows);
+  const nodeGroups = [host.nodes, fungiGate.nodes];
+  const idMapGroups = [host.idMapRows, fungiGate.idMapRows];
+  for (let index = 0; index < ownerSemantic.length; index += 1) {
+    append(nodeGroups, ownerSemantic[index].nodes);
+    append(idMapGroups, ownerSemantic[index].idMapRows);
+  }
+  const nodes = sortArray(flattenArrays(nodeGroups), (left, right) => compareCodeUnits(left.id, right.id));
+  const edges = arrayCopy(host.edges);
+  for (let index = 0; index < fungiGate.edges.length; index += 1) append(edges, fungiGate.edges[index]);
+  sortArray(edges, (left, right) => compareCodeUnits(left.id, right.id));
+  const unresolved = arrayCopy(host.unresolved);
+  for (let index = 0; index < fungiGate.unresolved.length; index += 1) append(unresolved, fungiGate.unresolved[index]);
+  const idMapRows = sortArray(flattenArrays(idMapGroups), compareIdMapRows);
   if (
     nodes.length > SOURCE_ORIGIN_LIMITS.nodes
     || edges.length > SOURCE_ORIGIN_LIMITS.edges
-    || new Set(nodes.map((row) => row.id)).size !== nodes.length
-    || new Set(edges.map((row) => row.id)).size !== edges.length
-    || new Set(idMapRows.map((row) => row.rowDigest)).size !== idMapRows.length
+    || setSize(setFromArray(nodes, (row) => row.id)) !== nodes.length
+    || setSize(setFromArray(edges, (row) => row.id)) !== edges.length
+    || setSize(setFromArray(idMapRows, (row) => row.rowDigest)) !== idMapRows.length
   ) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
-  const fileNodes = new Map(nodes.filter((row) => row.kind === 'FILE').map((row) => [row.locator, row]));
-  if (fileNodes.size !== captured.sourceManifest.rows.length || captured.sourceManifest.rows.some((row) => !fileNodes.has(row.path))) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  const fileNodes = mapFromArray(arrayFilter(nodes, (row) => row.kind === 'FILE'), (row) => row.locator);
+  if (mapSize(fileNodes) !== captured.sourceManifest.rows.length || arraySome(captured.sourceManifest.rows, (row) => !mapHas(fileNodes, row.path))) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
   const outcomeRows = makeOutcomeRows(captured, outcomes, fileNodes, unresolved);
-  unresolved.sort(compareUnresolved);
-  if (unresolved.length > SOURCE_ORIGIN_LIMITS.unresolvedRows || new Set(unresolved.map((row) => row.evidenceDigest)).size !== unresolved.length) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  sortArray(unresolved, compareUnresolved);
+  if (unresolved.length > SOURCE_ORIGIN_LIMITS.unresolvedRows || setSize(setFromArray(unresolved, (row) => row.evidenceDigest)) !== unresolved.length) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
   const parseOutcomesReceipt = makeOutcomeReceipt(captured, outcomeRows, toolchainManifest);
-  const parseResults = [...host.parseResults, ...fungiGate.parseResults].sort((left, right) => compareCodeUnits(left.path, right.path));
-  if (parseResults.length + outcomeRows.length !== captured.sourceManifest.rows.length || parseResults.some((row) => row.status !== 'PARSED')) refuse('SOURCE_ORIGIN_PROJECT_PARSE');
+  const parseResults = arrayCopy(host.parseResults);
+  for (let index = 0; index < fungiGate.parseResults.length; index += 1) append(parseResults, fungiGate.parseResults[index]);
+  sortArray(parseResults, (left, right) => compareCodeUnits(left.path, right.path));
+  if (parseResults.length + outcomeRows.length !== captured.sourceManifest.rows.length || arraySome(parseResults, (row) => row.status !== 'PARSED')) refuse('SOURCE_ORIGIN_PROJECT_PARSE');
   return deepFreeze({
     nodes,
     edges,

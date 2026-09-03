@@ -855,6 +855,61 @@ test("v2 defensive capture preserves determinism and refuses accessors, sparse a
   expectRefusal(() => buildToolchainSnapshot(unsafe));
 });
 
+test("eighth-review toolchain public entries snapshot Object.getPrototypeOf", async (t) => {
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  for (const name of ["prepareToolchainSelection", "prepareSemanticToolchain", "buildToolchainSnapshot"]) {
+    await t.test(name, () => {
+      const descriptor = safeGetDescriptor(Object, "getPrototypeOf");
+      let effects = 0;
+      let failure;
+      safeDefineProperty(Object, "getPrototypeOf", {
+        ...descriptor,
+        value() {
+          effects += 1;
+          throw new Error("ATTACKER_OBJECT_GETPROTO");
+        },
+      });
+      try { toolchainSnapshot[name]({}); } catch (error) { failure = error; }
+      finally { safeDefineProperty(Object, "getPrototypeOf", descriptor); }
+      assert.equal(effects, 0);
+      assert.equal(failure?.code, "SOURCE_ORIGIN_SCHEMA");
+    });
+  }
+
+  await t.test("a synced isProxy replacement cannot expose a toolchain option Proxy", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const types = require("node:util/types");
+    const descriptor = safeGetDescriptor(types, "isProxy");
+    let effects = 0;
+    let proxyTraps = 0;
+    let failure;
+    const hostile = new Proxy({}, {
+      getPrototypeOf() {
+        proxyTraps += 1;
+        throw new Error("ATTACKER_PROXY_GETPROTO");
+      },
+    });
+    safeDefineProperty(types, "isProxy", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        return false;
+      },
+    });
+    syncBuiltinESMExports();
+    try { toolchainSnapshot.buildToolchainSnapshot(hostile); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(types, "isProxy", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(proxyTraps, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_SCHEMA");
+  });
+});
+
 test("semantic preparation derives the closed HOST, FUNGI and GATE selections without caller selectors", () => {
   const record = fixtureRecord();
   const options = {

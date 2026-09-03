@@ -1305,6 +1305,100 @@ test("post-import blob operations bypass mutable global and prototype dispatch",
   }
 });
 
+test("eighth-review Git boundary closes regex, synced hash and decorated Buffer attacks", async (t) => {
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const gateWorkingBytes = await readFile(new URL(
+    "../../packages-ts/galerina-core-compiler/tests/fixtures/gate-v3/REFERENCE-VERDICTS.json",
+    import.meta.url,
+  ));
+  const gateBytes = Buffer.from(gateWorkingBytes.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
+  const parserPolicy = validateParserPolicy(JSON.parse(await readFile(
+    new URL("logic-aig-source-origin-parser-policy.json", GOVERNANCE),
+    "utf8",
+  )));
+
+  await t.test("captured RegExp exec preserves Gate-owner authentication", () => {
+    const descriptor = safeGetDescriptor(RegExp.prototype, "exec");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(RegExp.prototype, "exec", {
+      ...descriptor,
+      configurable: true,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_REGEXP_EXEC");
+      },
+    });
+    try { result = gitSource.authenticateGateOwnerBytes(gateBytes, parserPolicy); } catch (error) { failure = error; }
+    finally { safeDefineProperty(RegExp.prototype, "exec", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(result?.rawSha256, "d83ce2590520b152e1c838322e1762e4840c274e812bf6006e275118ada59467");
+    assert.equal(result?.semanticDigest, "4dfceb7f2bf2b6642c3b0cc2838735d41b8aad9e3c08e45f394637eb43bf8a58");
+  });
+
+  await t.test("syncBuiltinESMExports cannot replace hashing beneath frozen capture", { timeout: 900_000 }, async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const crypto = require("node:crypto");
+    const descriptor = safeGetDescriptor(crypto, "createHash");
+    const gitExecutableLocator = fileURLToPath(new URL(
+      "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+      import.meta.url,
+    ));
+    let effects = 0;
+    let failure;
+    safeDefineProperty(crypto, "createHash", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_CREATE_HASH");
+      },
+    });
+    syncBuiltinESMExports();
+    try {
+      await gitSource.captureFrozenSource({ commitOid: "a".repeat(40), gitExecutableLocator });
+    } catch (error) {
+      failure = error;
+    } finally {
+      safeDefineProperty(crypto, "createHash", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_HEAD");
+  });
+
+  await t.test("a surplus own Buffer accessor refuses before admission without effects", () => {
+    const bytes = Buffer.from("decorated", "utf8");
+    const rows = [{ path: "decorated.ts", byteLength: bytes.length, rawSha256: sha256(bytes) }];
+    let effects = 0;
+    safeDefineProperty(bytes, "surplus", {
+      configurable: true,
+      enumerable: true,
+      get() {
+        effects += 1;
+        throw new Error("ATTACKER_BUFFER_GET");
+      },
+    });
+    let result;
+    let failure;
+    try {
+      result = gitSource.admitFrozenBlobSet(
+        rows,
+        new Map([["decorated.ts", bytes]]),
+        { label: "SOURCE_MANIFEST" },
+      );
+    } catch (error) {
+      failure = error;
+    }
+    assert.equal(effects, 0);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
+  });
+});
+
 test("genuine pinned-Git capture returns every frozen owner value and defensive owner blob", { timeout: 900_000, skip: platform() !== "win32" }, async () => {
   const gitExecutableLocator = fileURLToPath(new URL(
     "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",

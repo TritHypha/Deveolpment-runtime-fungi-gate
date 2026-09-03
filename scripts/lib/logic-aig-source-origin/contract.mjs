@@ -7,6 +7,8 @@ import { isProxy } from 'node:util/types';
 // mutable global/prototype operation reachable below is captured here, before
 // that evaluation boundary, and invoked without caller-provided iteration.
 const safeReflectApply = Reflect.apply;
+const safeCreateHash = createHash;
+const safeIsProxy = isProxy;
 const safeObjectCreate = Object.create;
 const safeObjectDefineProperty = Object.defineProperty;
 const safeObjectFreeze = Object.freeze;
@@ -30,10 +32,9 @@ const safeStringStartsWith = String.prototype.startsWith;
 const safeStringEndsWith = String.prototype.endsWith;
 const safeStringSplit = String.prototype.split;
 const safeStringSlice = String.prototype.slice;
-const safeStringReplace = String.prototype.replace;
 const safeStringLastIndexOf = String.prototype.lastIndexOf;
 const safeStringToLowerCase = String.prototype.toLowerCase;
-const safeRegExpTest = RegExp.prototype.test;
+const safeRegExpExec = RegExp.prototype.exec;
 const safeJsonParse = JSON.parse;
 const safeJsonStringify = JSON.stringify;
 const SafeSet = Set;
@@ -62,7 +63,7 @@ const safeTextEncode = NodeTextEncoder.prototype.encode;
 const safeTextDecode = NodeTextDecoder.prototype.decode;
 const safeTextEncoder = new NodeTextEncoder();
 const safeTextDecoder = new NodeTextDecoder('utf-8', { fatal: true });
-const hashProbe = createHash('sha256');
+const hashProbe = safeCreateHash('sha256');
 let safeHashPrototype = safeObjectGetPrototypeOf(hashProbe);
 while (safeHashPrototype !== null && !safeObjectHasOwn(safeHashPrototype, 'update')) {
   safeHashPrototype = safeObjectGetPrototypeOf(safeHashPrototype);
@@ -219,15 +220,24 @@ function stringNormalize(value) { return callIntrinsic(safeStringNormalize, valu
 function stringIncludes(value, part) { return callIntrinsic(safeStringIncludes, value, [part]); }
 function stringStartsWith(value, part) { return callIntrinsic(safeStringStartsWith, value, [part]); }
 function stringEndsWith(value, part) { return callIntrinsic(safeStringEndsWith, value, [part]); }
-function stringSplit(value, separator) { return callIntrinsic(safeStringSplit, value, [separator]); }
+function stringSplit(value, separator) {
+  if (typeof separator !== 'string') refuse('SOURCE_ORIGIN_SCHEMA');
+  return callIntrinsic(safeStringSplit, value, [separator]);
+}
 function stringSlice(value, start, end) { return callIntrinsic(safeStringSlice, value, end === undefined ? [start] : [start, end]); }
-function stringReplace(value, pattern, replacement) { return callIntrinsic(safeStringReplace, value, [pattern, replacement]); }
 function stringLastIndexOf(value, part) { return callIntrinsic(safeStringLastIndexOf, value, [part]); }
 function stringToLowerCase(value) { return callIntrinsic(safeStringToLowerCase, value, []); }
-function regexTest(pattern, value) { return callIntrinsic(safeRegExpTest, pattern, [value]); }
+function regexTest(pattern, value) {
+  safeObjectDefineProperty(pattern, 'lastIndex', { value: 0 });
+  try {
+    return callIntrinsic(safeRegExpExec, pattern, [value]) !== null;
+  } finally {
+    safeObjectDefineProperty(pattern, 'lastIndex', { value: 0 });
+  }
+}
 
 function byteView(value, requireBuffer = false) {
-  if (value === null || typeof value !== 'object' || isProxy(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (value === null || typeof value !== 'object' || safeIsProxy(value)) refuse('SOURCE_ORIGIN_SCHEMA');
   const prototype = safeObjectGetPrototypeOf(value);
   const buffer = prototype === safeBufferPrototype;
   if (requireBuffer ? !buffer : !buffer && prototype !== safeUint8ArrayPrototype) refuse('SOURCE_ORIGIN_SCHEMA');
@@ -235,16 +245,21 @@ function byteView(value, requireBuffer = false) {
   let byteLength;
   let byteOffset;
   let length;
+  let ownNameCount;
+  let ownSymbolCount;
   try {
     backing = callIntrinsic(safeTypedArrayBuffer, value, []);
     byteLength = callIntrinsic(safeTypedArrayByteLength, value, []);
     byteOffset = callIntrinsic(safeTypedArrayByteOffset, value, []);
     length = callIntrinsic(safeTypedArrayLength, value, []);
     callIntrinsic(safeArrayBufferByteLength, backing, []);
+    ownNameCount = safeObjectGetOwnPropertyNames(value).length;
+    ownSymbolCount = safeObjectGetOwnPropertySymbols(value).length;
   } catch {
     refuse('SOURCE_ORIGIN_SCHEMA');
   }
   if (!safeNumberIsSafeInteger(byteLength) || !safeNumberIsSafeInteger(byteOffset) || length !== byteLength) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (ownSymbolCount !== 0 || ownNameCount !== byteLength) refuse('SOURCE_ORIGIN_SCHEMA');
   return { value, byteLength, byteOffset, backing };
 }
 
@@ -254,8 +269,8 @@ function encodeUtf8(value) {
   return bytes;
 }
 
-function hashParts(parts) {
-  const hash = createHash('sha256');
+function hashParts(parts, algorithm = 'sha256') {
+  const hash = safeCreateHash(algorithm);
   for (let index = 0; index < parts.length; index += 1) callIntrinsic(safeHashUpdate, hash, [parts[index]]);
   return callIntrinsic(safeHashDigest, hash, ['hex']);
 }
@@ -309,7 +324,7 @@ function deepFreeze(value, seen = undefined) {
 }
 
 function dataObject(value, keys) {
-  if (value === null || typeof value !== 'object' || isProxy(value) || safeArrayIsArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (value === null || typeof value !== 'object' || safeIsProxy(value) || safeArrayIsArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
   const prototype = safeObjectGetPrototypeOf(value);
   if (prototype !== safeObjectPrototype && prototype !== null) refuse('SOURCE_ORIGIN_SCHEMA');
   if (safeObjectGetOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
@@ -324,7 +339,7 @@ function dataObject(value, keys) {
 }
 
 function checkedArray(value, code) {
-  if (isProxy(value) || !safeArrayIsArray(value) || safeObjectGetPrototypeOf(value) !== safeArrayPrototype || safeObjectGetOwnPropertySymbols(value).length !== 0) refuse(code);
+  if (safeIsProxy(value) || !safeArrayIsArray(value) || safeObjectGetPrototypeOf(value) !== safeArrayPrototype || safeObjectGetOwnPropertySymbols(value).length !== 0) refuse(code);
   const length = value.length;
   if (!safeNumberIsSafeInteger(length) || length < 0 || length > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse(code);
   const names = safeObjectGetOwnPropertyNames(value);
@@ -368,7 +383,7 @@ function canonicalValue(value, active, depth = 0) {
     if (hasUnpairedSurrogate(value) || value !== stringNormalize(value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
     return value;
   }
-  if (typeof value !== 'object' || isProxy(value) || setHas(active, value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  if (typeof value !== 'object' || safeIsProxy(value) || setHas(active, value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   setAdd(active, value);
   try {
     if (safeArrayIsArray(value)) {
@@ -426,6 +441,21 @@ export function sha256Raw(bytes) {
   return hashParts([bytes]);
 }
 
+export function decodeUtf8Bytes(bytes) {
+  byteView(bytes, true);
+  try {
+    return callIntrinsic(safeTextDecode, safeTextDecoder, [bytes]);
+  } catch {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+}
+
+export function gitBlobOid(bytes, objectFormat) {
+  const view = byteView(bytes, true);
+  if (objectFormat !== 'sha1' && objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_SCHEMA');
+  return hashParts([encodeUtf8(`blob ${view.byteLength}\0`), bytes], objectFormat);
+}
+
 export function sha256Canonical(domain, value) {
   nfcString(domain);
   return hashParts([encodeUtf8(domain), new SafeUint8Array(1), encodeUtf8(canonicalJsonText(value))]);
@@ -456,7 +486,10 @@ function assertNoDuplicateMembers(text) {
       continue;
     }
     if (char === '{') append(objectScopes, new SafeSet());
-    else if (char === '}') objectScopes.length -= 1;
+    else if (char === '}') {
+      if (objectScopes.length === 0) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+      objectScopes.length -= 1;
+    }
     index += 1;
   }
 }
@@ -622,9 +655,30 @@ export function validateParserPolicy(value) {
 export function decodeDiagnosticSet(text, policy) {
   policy = validateParserPolicy(policy);
   if (typeof text !== 'string' || regexTest(/[^\x00-\x7f]/, text) || text !== stringNormalize(text)) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
-  const trimmed = stringReplace(text, /^[\x09-\x0d\x20]+|[\x09-\x0d\x20]+$/g, '');
-  if (!trimmed || regexTest(/^,|,$|,,/, trimmed)) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
-  const tokens = stringSplit(trimmed, /(?:[\x09-\x0d\x20]*,[\x09-\x0d\x20]*|[\x09-\x0d\x20]+)/);
+  const whitespace = (index) => {
+    const unit = stringCharCodeAt(text, index);
+    return unit === 0x20 || (unit >= 0x09 && unit <= 0x0d);
+  };
+  let start = 0;
+  let end = text.length;
+  while (start < end && whitespace(start)) start += 1;
+  while (end > start && whitespace(end - 1)) end -= 1;
+  if (start === end) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
+  const tokens = [];
+  let cursor = start;
+  while (cursor < end) {
+    const tokenStart = cursor;
+    while (cursor < end && stringCharCodeAt(text, cursor) !== 0x2c && !whitespace(cursor)) cursor += 1;
+    if (cursor === tokenStart) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
+    append(tokens, stringSlice(text, tokenStart, cursor));
+    while (cursor < end && whitespace(cursor)) cursor += 1;
+    if (cursor === end) break;
+    if (stringCharCodeAt(text, cursor) === 0x2c) {
+      cursor += 1;
+      while (cursor < end && whitespace(cursor)) cursor += 1;
+      if (cursor === end) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
+    }
+  }
   if (someArray(tokens, (token) => !token || !regexTest(DIAGNOSTIC, token)) || setSize(setFromArray(tokens)) !== tokens.length) refuse('SOURCE_ORIGIN_DIAGNOSTIC_SET');
   return sortArray(tokens, codeUnitCompare);
 }
@@ -1142,7 +1196,7 @@ const TOOLCHAIN_SOURCE_DATA_LOCATORS = deepFreeze((() => {
   return sortArray(unique, codeUnitCompare);
 })());
 const TOOLCHAIN_GENERATED_DATA_LOCATORS = deepFreeze((() => {
-  const locators = mapArray(TOOLCHAIN_PARSER_MODULES, (locator) => stringReplace(locator, /\.js$/, '.d.ts'));
+  const locators = mapArray(TOOLCHAIN_PARSER_MODULES, (locator) => `${stringSlice(locator, 0, -3)}.d.ts`);
   append(locators, 'package.json');
   return sortArray(locators, codeUnitCompare);
 })());

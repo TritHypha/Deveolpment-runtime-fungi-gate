@@ -284,6 +284,142 @@ function expectRefusal(operation, pattern = /^SOURCE_ORIGIN_PROJECT_[A-Z0-9_]+$/
   });
 }
 
+test("eighth-review project boundary preserves owner OID authority under post-import poisoning", async (t) => {
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeReflectApply = Reflect.apply;
+  const options = await fixtureOptions();
+  const forgedOwners = structuredClone(options.owners);
+  const forgedIdentity = forgedOwners.identities.find(
+    (row) => row.locator === OWNER_LOCATORS.expectedOutcomes,
+  );
+  assert(forgedIdentity);
+  const honestOid = forgedIdentity.blobOid;
+  const forgedOid = "0".repeat(honestOid.length);
+  forgedIdentity.blobOid = forgedOid;
+  forgedOwners.ownerSetDigest = sha256Canonical(
+    "galerina.logic-aig-frozen-owner-set.v1",
+    forgedOwners.identities,
+  );
+  const candidate = { ...options, owners: forgedOwners };
+
+  await t.test("the unpoisoned control refuses the forged owner at the owner boundary", async () => {
+    let result;
+    let failure;
+    try { result = await decodeSourceProject(candidate); } catch (error) { failure = error; }
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_OWNER");
+  });
+
+  await t.test("a synced createHash replacement cannot advance the forged owner", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const crypto = require("node:crypto");
+    const descriptor = safeGetDescriptor(crypto, "createHash");
+    const safeCreateHash = descriptor.value;
+    let effects = 0;
+    let firstSha1 = true;
+    let result;
+    let failure;
+    safeDefineProperty(crypto, "createHash", {
+      ...descriptor,
+      value(algorithm, createOptions) {
+        effects += 1;
+        const hash = createOptions === undefined
+          ? safeReflectApply(safeCreateHash, crypto, [algorithm])
+          : safeReflectApply(safeCreateHash, crypto, [algorithm, createOptions]);
+        if (algorithm === "sha1" && firstSha1) {
+          firstSha1 = false;
+          safeDefineProperty(hash, "digest", {
+            configurable: true,
+            enumerable: false,
+            value() { return forgedOid; },
+            writable: true,
+          });
+        }
+        return hash;
+      },
+    });
+    syncBuiltinESMExports();
+    try { result = await decodeSourceProject(candidate); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(crypto, "createHash", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_OWNER");
+    assert.equal(effects, 0);
+  });
+
+  await t.test("Buffer.from cannot execute beneath the forged owner check", async () => {
+    const descriptor = safeGetDescriptor(Buffer, "from");
+    let effects = 0;
+    let result;
+    let failure;
+    safeDefineProperty(Buffer, "from", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_BUFFER_FROM");
+      },
+    });
+    try { result = await decodeSourceProject(candidate); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Buffer, "from", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_OWNER");
+  });
+
+  await t.test("decodeSourceProject snapshots Object.getPrototypeOf", async () => {
+    const descriptor = safeGetDescriptor(Object, "getPrototypeOf");
+    let effects = 0;
+    let failure;
+    safeDefineProperty(Object, "getPrototypeOf", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_OBJECT_GETPROTO");
+      },
+    });
+    try { await decodeSourceProject({}); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Object, "getPrototypeOf", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_SCHEMA");
+  });
+
+  await t.test("a synced isProxy replacement cannot expose a project option Proxy", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const types = require("node:util/types");
+    const descriptor = safeGetDescriptor(types, "isProxy");
+    let effects = 0;
+    let proxyTraps = 0;
+    let failure;
+    const hostile = new Proxy({}, {
+      getPrototypeOf() {
+        proxyTraps += 1;
+        throw new Error("ATTACKER_PROXY_GETPROTO");
+      },
+    });
+    safeDefineProperty(types, "isProxy", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        return false;
+      },
+    });
+    syncBuiltinESMExports();
+    try { await decodeSourceProject(hostile); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(types, "isProxy", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(proxyTraps, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_PROJECT_SCHEMA");
+  });
+});
+
 test("project decoder conserves every source and emits a closed owner-backed outcome receipt", async () => {
   const options = await fixtureOptions();
   const result = await decodeSourceProject(options);

@@ -823,6 +823,184 @@ test("contract helpers bypass post-import mutable global and prototype dispatch"
   }
 });
 
+test("eighth-review contract TCB closes regex, synced builtin, malformed scope and decorated byte attacks", async (t) => {
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeReflectApply = Reflect.apply;
+  const parser = (await readPolicy("parser")).value;
+  const repository = (await readPolicy("repository")).value;
+  const canonicalBytes = Buffer.from('{"a":1}', "utf8");
+
+  const withPoison = (target, property, replacement, operation) => {
+    const descriptor = safeGetDescriptor(target, property);
+    let effects = 0;
+    let result;
+    let failure;
+    const attack = () => {
+      effects += 1;
+      throw new Error(`ATTACKER_${String(property).toUpperCase()}`);
+    };
+    safeDefineProperty(target, property, replacement(descriptor, attack));
+    try { result = operation(); } catch (error) { failure = error; }
+    finally {
+      if (descriptor === undefined) safeDeleteProperty(target, property);
+      else safeDefineProperty(target, property, descriptor);
+    }
+    return { effects, result, failure };
+  };
+  const poisonFunction = (descriptor, attack) => ({
+    ...descriptor,
+    configurable: true,
+    value() { attack(); },
+  });
+
+  await t.test("captured RegExp exec preserves valid contract semantics", () => {
+    const observed = withPoison(
+      RegExp.prototype,
+      "exec",
+      poisonFunction,
+      () => validateRepositoryIdentity(repository).canonicalIdentity,
+    );
+    assert.equal(observed.effects, 0);
+    assert.equal(observed.failure, undefined);
+    assert.equal(observed.result, "TritHypha/Galerina");
+  });
+
+  await t.test("captured RegExp replace symbol preserves diagnostic decoding", () => {
+    const observed = withPoison(
+      RegExp.prototype,
+      Symbol.replace,
+      poisonFunction,
+      () => canonicalJsonText(decodeDiagnosticSet(" TS-1109, TS-2304 ", parser)),
+    );
+    assert.equal(observed.effects, 0);
+    assert.equal(observed.failure, undefined);
+    assert.equal(observed.result, '["TS-1109","TS-2304"]');
+  });
+
+  await t.test("captured RegExp split symbol preserves diagnostic decoding", () => {
+    const observed = withPoison(
+      RegExp.prototype,
+      Symbol.split,
+      poisonFunction,
+      () => canonicalJsonText(decodeDiagnosticSet("TS-1109, TS-2304", parser)),
+    );
+    assert.equal(observed.effects, 0);
+    assert.equal(observed.failure, undefined);
+    assert.equal(observed.result, '["TS-1109","TS-2304"]');
+  });
+
+  await t.test("tailored RegExp exec cannot turn an invalid diagnostic into authority", () => {
+    const descriptor = safeGetDescriptor(RegExp.prototype, "exec");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(RegExp.prototype, "exec", {
+      ...descriptor,
+      configurable: true,
+      value() {
+        effects += 1;
+        return ["BAD!"];
+      },
+    });
+    try { result = decodeDiagnosticSet("BAD!", parser); } catch (error) { failure = error; }
+    finally { safeDefineProperty(RegExp.prototype, "exec", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(result, undefined);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_DIAGNOSTIC_SET");
+  });
+
+  await t.test("syncBuiltinESMExports cannot replace the captured hash constructor", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const crypto = require("node:crypto");
+    const descriptor = safeGetDescriptor(crypto, "createHash");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(crypto, "createHash", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_CREATE_HASH");
+      },
+    });
+    syncBuiltinESMExports();
+    try { result = sha256Raw(Buffer.from("abc", "utf8")); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(crypto, "createHash", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(result, "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+  });
+
+  await t.test("syncBuiltinESMExports cannot bypass the captured proxy gate", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const types = require("node:util/types");
+    const descriptor = safeGetDescriptor(types, "isProxy");
+    let effects = 0;
+    let proxyTraps = 0;
+    let failure;
+    const hostile = new Proxy({}, {
+      ownKeys() {
+        proxyTraps += 1;
+        throw new Error("ATTACKER_OWN_KEYS");
+      },
+    });
+    safeDefineProperty(types, "isProxy", {
+      ...descriptor,
+      value(value) {
+        effects += 1;
+        return false;
+      },
+    });
+    syncBuiltinESMExports();
+    try { canonicalJsonText(hostile); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(types, "isProxy", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(proxyTraps, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_JSON_CANONICAL");
+  });
+
+  await t.test("malformed closing scope receives a stable canonical refusal", () => {
+    let failure;
+    try { parseCanonicalJsonBytes(Buffer.from("}", "utf8"), { label: "UNDERFLOW" }); } catch (error) { failure = error; }
+    assert.equal(failure?.code, "SOURCE_ORIGIN_JSON_CANONICAL");
+  });
+
+  await t.test("an exact Buffer with a surplus own accessor refuses without effects", () => {
+    const bytes = Buffer.from(canonicalBytes);
+    let effects = 0;
+    safeDefineProperty(bytes, "surplus", {
+      configurable: true,
+      enumerable: true,
+      get() {
+        effects += 1;
+        throw new Error("ATTACKER_BUFFER_GET");
+      },
+    });
+    let failure;
+    try { parseCanonicalJsonBytes(bytes, { label: "DECORATED" }); } catch (error) { failure = error; }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_SCHEMA");
+  });
+
+  await t.test("an exact Buffer with an own symbol refuses before hashing", () => {
+    const bytes = Buffer.from("abc", "utf8");
+    safeDefineProperty(bytes, Symbol("surplus"), { configurable: true, enumerable: true, value: true });
+    let failure;
+    try { sha256Raw(bytes); } catch (error) { failure = error; }
+    assert.equal(failure?.code, "SOURCE_ORIGIN_SCHEMA");
+  });
+});
+
 test("the five tracked static owners are canonical, closed, self-digested and non-authorizing", async () => {
   const repository = await readPolicy("repository");
   const source = await readPolicy("source");

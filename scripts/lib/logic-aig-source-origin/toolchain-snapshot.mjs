@@ -6,14 +6,104 @@ import {
   validateToolchainPins,
 } from './contract.mjs';
 
+const UTIL_TYPES_IS_PROXY = isProxy;
+const REFLECT_APPLY = Reflect.apply;
+const OBJECT_CREATE = Object.create;
+const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
+const OBJECT_FREEZE = Object.freeze;
+const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
+const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
+const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
+const OBJECT_KEYS = Object.keys;
+const OBJECT_PROTOTYPE = Object.prototype;
+const ARRAY_IS_ARRAY = Array.isArray;
+const ARRAY_PROTOTYPE = Array.prototype;
+const ARRAY_SORT = Array.prototype.sort;
+const NUMBER_IS_SAFE_INTEGER = Number.isSafeInteger;
+const STRING_INCLUDES = String.prototype.includes;
+const STRING_STARTS_WITH = String.prototype.startsWith;
+const STRING_ENDS_WITH = String.prototype.endsWith;
+const STRING_SPLIT = String.prototype.split;
+const STRING_NORMALIZE = String.prototype.normalize;
+const STRING_TO_LOWER_CASE = String.prototype.toLowerCase;
+const REGEXP_EXEC = RegExp.prototype.exec;
+const SAFE_SET = Set;
+const SET_ADD = Set.prototype.add;
+const SET_HAS = Set.prototype.has;
+const SAFE_MAP = Map;
+const MAP_GET = Map.prototype.get;
+const MAP_SET = Map.prototype.set;
+
+function defineData(target, key, value) {
+  OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true });
+}
+
+function append(values, value) {
+  defineData(values, `${values.length}`, value);
+}
+
+function arrayCopy(values) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) append(output, values[index]);
+  return output;
+}
+
+function arrayMap(values, operation) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index));
+  return output;
+}
+
+function arrayFilter(values, predicate) {
+  const output = [];
+  for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) append(output, values[index]);
+  return output;
+}
+
+function arrayFind(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return values[index];
+  return undefined;
+}
+
+function arraySome(values, predicate) {
+  for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return true;
+  return false;
+}
+
+function arrayIncludes(values, sought) {
+  for (let index = 0; index < values.length; index += 1) if (values[index] === sought) return true;
+  return false;
+}
+
+function sortArray(values, compare = compareCodeUnits) {
+  return REFLECT_APPLY(ARRAY_SORT, values, [compare]);
+}
+
+function stringNormalize(value) { return REFLECT_APPLY(STRING_NORMALIZE, value, ['NFC']); }
+function stringIncludes(value, part) { return REFLECT_APPLY(STRING_INCLUDES, value, [part]); }
+function stringStartsWith(value, part) { return REFLECT_APPLY(STRING_STARTS_WITH, value, [part]); }
+function stringEndsWith(value, part) { return REFLECT_APPLY(STRING_ENDS_WITH, value, [part]); }
+function stringSplit(value, separator) { return REFLECT_APPLY(STRING_SPLIT, value, [separator]); }
+function stringToLowerCase(value) { return REFLECT_APPLY(STRING_TO_LOWER_CASE, value, []); }
+function regexpTest(pattern, value) {
+  OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 });
+  try { return REFLECT_APPLY(REGEXP_EXEC, pattern, [value]) !== null; }
+  finally { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); }
+}
+function setHas(values, value) { return REFLECT_APPLY(SET_HAS, values, [value]); }
+function setAdd(values, value) { REFLECT_APPLY(SET_ADD, values, [value]); }
+function mapGet(values, key) { return REFLECT_APPLY(MAP_GET, values, [key]); }
+function mapSet(values, key, value) { REFLECT_APPLY(MAP_SET, values, [key, value]); }
+
 const HEX64 = /^[0-9a-f]{64}$/;
 const BUILTIN = /^node:[a-z0-9][a-z0-9_./-]*$/;
 
 class ToolchainSnapshotRefusal extends Error {
   constructor(code) {
     super(code);
-    this.name = 'ToolchainSnapshotRefusal';
-    this.code = code;
+    defineData(this, 'name', 'ToolchainSnapshotRefusal');
+    defineData(this, 'code', code);
   }
 }
 
@@ -25,56 +115,58 @@ function compareCodeUnits(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-function copyClosedData(value, seen = new Set(), depth = 0) {
+function copyClosedData(value, seen = new SAFE_SET(), depth = 0) {
   if (depth > 128) refuse('SOURCE_ORIGIN_SCHEMA');
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'string') {
-    if (value !== value.normalize('NFC')) refuse('SOURCE_ORIGIN_SCHEMA');
+    if (value !== stringNormalize(value)) refuse('SOURCE_ORIGIN_SCHEMA');
     return value;
   }
   if (typeof value === 'number') {
-    if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
+    if (!NUMBER_IS_SAFE_INTEGER(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
     return value;
   }
-  if (typeof value !== 'object' || isProxy(value) || seen.has(value)) refuse('SOURCE_ORIGIN_SCHEMA');
-  seen.add(value);
+  if (typeof value !== 'object' || UTIL_TYPES_IS_PROXY(value) || setHas(seen, value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  setAdd(seen, value);
 
-  if (Array.isArray(value)) {
-    if (Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (ARRAY_IS_ARRAY(value)) {
+    if (OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
     const length = value.length;
-    if (!Number.isSafeInteger(length) || length < 0) refuse('SOURCE_ORIGIN_SCHEMA');
-    const names = Object.getOwnPropertyNames(value);
-    if (names.length !== length + 1 || !names.includes('length')) refuse('SOURCE_ORIGIN_SCHEMA');
+    if (!NUMBER_IS_SAFE_INTEGER(length) || length < 0) refuse('SOURCE_ORIGIN_SCHEMA');
+    const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+    if (names.length !== length + 1 || !arrayIncludes(names, 'length')) refuse('SOURCE_ORIGIN_SCHEMA');
     const output = [];
     for (let index = 0; index < length; index += 1) {
-      const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+      const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
       if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
-      output.push(copyClosedData(descriptor.value, seen, depth + 1));
+      append(output, copyClosedData(descriptor.value, seen, depth + 1));
     }
     return output;
   }
 
-  const prototype = Object.getPrototypeOf(value);
-  if (prototype !== Object.prototype && prototype !== null || Object.getOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
-  const output = {};
-  for (const name of Object.getOwnPropertyNames(value).sort(compareCodeUnits)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if (prototype !== OBJECT_PROTOTYPE && prototype !== null || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  const output = OBJECT_CREATE(OBJECT_PROTOTYPE);
+  const names = sortArray(OBJECT_GET_OWN_PROPERTY_NAMES(value));
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, name);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
-    if (name !== name.normalize('NFC')) refuse('SOURCE_ORIGIN_SCHEMA');
-    output[name] = copyClosedData(descriptor.value, seen, depth + 1);
+    if (name !== stringNormalize(name)) refuse('SOURCE_ORIGIN_SCHEMA');
+    defineData(output, name, copyClosedData(descriptor.value, seen, depth + 1));
   }
   return output;
 }
 
 function exactObject(value, keys) {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
-  const names = Object.keys(value).sort(compareCodeUnits);
-  const expected = [...keys].sort(compareCodeUnits);
-  if (names.length !== expected.length || names.some((name, index) => name !== expected[index])) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  const names = sortArray(OBJECT_KEYS(value));
+  const expected = sortArray(arrayCopy(keys));
+  if (names.length !== expected.length || arraySome(names, (name, index) => name !== expected[index])) refuse('SOURCE_ORIGIN_SCHEMA');
 }
 
 function array(value) {
-  if (!Array.isArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (!ARRAY_IS_ARRAY(value)) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
 
@@ -84,24 +176,24 @@ function nonEmptyText(value) {
 }
 
 function digest(value) {
-  if (typeof value !== 'string' || !HEX64.test(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (typeof value !== 'string' || !regexpTest(HEX64, value)) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
 
 function nonNegativeInteger(value) {
-  if (!Number.isSafeInteger(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (!NUMBER_IS_SAFE_INTEGER(value) || value < 0) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
 
 function canonicalLocator(value) {
   nonEmptyText(value);
   if (
-    value.includes('\\')
-    || value.includes('\0')
-    || value.startsWith('/')
-    || value.endsWith('/')
-    || value.includes(':')
-    || value.split('/').some((component) => component === '' || component === '.' || component === '..')
+    stringIncludes(value, '\\')
+    || stringIncludes(value, '\0')
+    || stringStartsWith(value, '/')
+    || stringEndsWith(value, '/')
+    || stringIncludes(value, ':')
+    || arraySome(stringSplit(value, '/'), (component) => component === '' || component === '.' || component === '..')
   ) refuse('SOURCE_ORIGIN_SCHEMA');
   return value;
 }
@@ -132,22 +224,24 @@ function sameData(left, right) {
 
 function validateLoadedRows(rows, admittedRows) {
   array(rows);
-  for (const row of rows) validateClosureRow(row);
+  for (let index = 0; index < rows.length; index += 1) validateClosureRow(rows[index]);
   assertSortedUnique(rows, (row) => row.locator);
-  const admittedByLocator = new Map(admittedRows.map((row) => [row.locator, row]));
-  for (const row of rows) {
-    const admitted = admittedByLocator.get(row.locator);
+  const admittedByLocator = new SAFE_MAP();
+  for (let index = 0; index < admittedRows.length; index += 1) mapSet(admittedByLocator, admittedRows[index].locator, admittedRows[index]);
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
+    const admitted = mapGet(admittedByLocator, row.locator);
     if (!admitted || !sameData(row, admitted)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   }
 }
 
 function validateLoadedBuiltins(values, admittedValues) {
   array(values);
-  for (const value of values) {
-    if (typeof value !== 'string' || !BUILTIN.test(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  for (let index = 0; index < values.length; index += 1) {
+    if (typeof values[index] !== 'string' || !regexpTest(BUILTIN, values[index])) refuse('SOURCE_ORIGIN_SCHEMA');
   }
   assertSortedUnique(values);
-  for (const value of values) if (!admittedValues.includes(value)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  for (let index = 0; index < values.length; index += 1) if (!arrayIncludes(admittedValues, values[index])) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 }
 
 function validateActualRuntimeLoadSets(values, record) {
@@ -160,42 +254,53 @@ function validateActualRuntimeLoadSets(values, record) {
     if (actual.id !== admitted.id) refuse('SOURCE_ORIGIN_TOOLCHAIN');
     validateLoadedRows(actual.moduleRows, admitted.moduleRows);
     validateLoadedBuiltins(actual.builtinModules, admitted.builtinModules);
-    if (!actual.moduleRows.some((row) => row.locator === admitted.entry.locator)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+    if (!arraySome(actual.moduleRows, (row) => row.locator === admitted.entry.locator)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   }
 }
 
 function joinActualModuleRows(actualRuntimeLoadSets, admittedRuntimeLoadSets) {
-  const exactLocators = new Set();
-  const foldedLocators = new Set();
+  const exactLocators = new SAFE_SET();
+  const foldedLocators = new SAFE_SET();
   const output = [];
   for (let index = 0; index < actualRuntimeLoadSets.length; index += 1) {
     const actual = actualRuntimeLoadSets[index];
     const rootLocator = admittedRuntimeLoadSets[index].entry.rootLocator;
-    for (const row of actual.moduleRows) {
+    for (let rowIndex = 0; rowIndex < actual.moduleRows.length; rowIndex += 1) {
+      const row = actual.moduleRows[rowIndex];
       const locator = `${rootLocator}/${row.locator}`;
-      const folded = locator.toLowerCase();
-      if (exactLocators.has(locator) || foldedLocators.has(folded)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-      exactLocators.add(locator);
-      foldedLocators.add(folded);
-      output.push({ locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
+      const folded = stringToLowerCase(locator);
+      if (setHas(exactLocators, locator) || setHas(foldedLocators, folded)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+      setAdd(exactLocators, locator);
+      setAdd(foldedLocators, folded);
+      append(output, { locator, rawSha256: row.rawSha256, byteLength: row.byteLength });
     }
   }
-  output.sort((left, right) => compareCodeUnits(left.locator, right.locator));
+  sortArray(output, (left, right) => compareCodeUnits(left.locator, right.locator));
   return output;
 }
 
 function builtinUnion(actualRuntimeLoadSets) {
-  return [...new Set(actualRuntimeLoadSets.flatMap((row) => row.builtinModules))].sort(compareCodeUnits);
+  const seen = new SAFE_SET();
+  const output = [];
+  for (let outer = 0; outer < actualRuntimeLoadSets.length; outer += 1) {
+    const values = actualRuntimeLoadSets[outer].builtinModules;
+    for (let inner = 0; inner < values.length; inner += 1) if (!setHas(seen, values[inner])) {
+      setAdd(seen, values[inner]);
+      append(output, values[inner]);
+    }
+  }
+  return sortArray(output);
 }
 
-function deepFreeze(value, seen = new Set()) {
-  if (value === null || typeof value !== 'object' || seen.has(value)) return value;
-  seen.add(value);
-  for (const name of Object.getOwnPropertyNames(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+function deepFreeze(value, seen = new SAFE_SET()) {
+  if (value === null || typeof value !== 'object' || setHas(seen, value)) return value;
+  setAdd(seen, value);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
   }
-  return Object.freeze(value);
+  return OBJECT_FREEZE(value);
 }
 
 export function prepareToolchainSelection(options) {
@@ -212,7 +317,7 @@ export function prepareToolchainSelection(options) {
 
   const pins = validateToolchainPins(input.pins);
   if (pins.records.length === 0) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
-  const matchingRecords = pins.records.filter(
+  const matchingRecords = arrayFilter(pins.records,
     (record) => record.platform === input.platform && record.arch === input.arch,
   );
   if (matchingRecords.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
@@ -223,7 +328,8 @@ export function prepareToolchainSelection(options) {
     'domain', 'parserId', 'runtimeLoadSetId', 'operation', 'recordId',
     'recordDigest', 'resolutionMode', 'entry',
   ]);
-  for (const field of ['domain', 'parserId', 'runtimeLoadSetId', 'operation', 'recordId', 'resolutionMode']) nonEmptyText(input.selector[field]);
+  const selectorTextFields = ['domain', 'parserId', 'runtimeLoadSetId', 'operation', 'recordId', 'resolutionMode'];
+  for (let index = 0; index < selectorTextFields.length; index += 1) nonEmptyText(input.selector[selectorTextFields[index]]);
   digest(input.selector.recordDigest);
   exactObject(input.selector.entry, ['rootLocator', 'locator']);
   canonicalLocator(input.selector.entry.rootLocator);
@@ -234,14 +340,14 @@ export function prepareToolchainSelection(options) {
     || input.selector.resolutionMode !== 'EXACT_ROOT_LOCAL_V1'
   ) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 
-  const domainSelection = record.domainSelections.find((row) => row.domain === input.selector.domain);
+  const domainSelection = arrayFind(record.domainSelections, (row) => row.domain === input.selector.domain);
   if (!domainSelection || !sameData(domainSelection, {
     domain: input.selector.domain,
     parserId: input.selector.parserId,
     runtimeLoadSetId: input.selector.runtimeLoadSetId,
     operation: input.selector.operation,
   })) refuse('SOURCE_ORIGIN_TOOLCHAIN');
-  const runtimeLoadSet = record.runtimeLoadSets.find((row) => row.id === domainSelection.runtimeLoadSetId);
+  const runtimeLoadSet = arrayFind(record.runtimeLoadSets, (row) => row.id === domainSelection.runtimeLoadSetId);
   if (!runtimeLoadSet || !sameData(input.selector.entry, runtimeLoadSet.entry)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 
   exactObject(input.guardRuntimeLoadSet, ['id', 'entry', 'moduleRows', 'builtinModules']);
@@ -286,13 +392,13 @@ export function prepareSemanticToolchain(options) {
   validateExecutableIdentity(input.gitIdentity);
   const pins = validateToolchainPins(input.pins);
   if (pins.records.length === 0) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
-  const matches = pins.records.filter((record) => record.platform === input.platform && record.arch === input.arch);
+  const matches = arrayFilter(pins.records, (record) => record.platform === input.platform && record.arch === input.arch);
   if (matches.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   const record = matches[0];
   if (!sameData(input.nodeIdentity, record.nodeIdentity) || !sameData(input.gitIdentity, record.gitIdentity)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
 
-  const selections = record.domainSelections.map((domainSelection) => {
-    const runtimeLoadSet = record.runtimeLoadSets.find((row) => row.id === domainSelection.runtimeLoadSetId);
+  const selections = arrayMap(record.domainSelections, (domainSelection) => {
+    const runtimeLoadSet = arrayFind(record.runtimeLoadSets, (row) => row.id === domainSelection.runtimeLoadSetId);
     if (!runtimeLoadSet) refuse('SOURCE_ORIGIN_TOOLCHAIN');
     const parserExportNames = domainSelection.domain === 'HOST'
       ? null
@@ -311,7 +417,7 @@ export function prepareSemanticToolchain(options) {
       authorizing: false,
     };
   });
-  if (!sameData(selections.map(({ domain, parserId, runtimeLoadSetId, operation }) => ({ domain, parserId, runtimeLoadSetId, operation })), record.domainSelections)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
+  if (!sameData(arrayMap(selections, ({ domain, parserId, runtimeLoadSetId, operation }) => ({ domain, parserId, runtimeLoadSetId, operation })), record.domainSelections)) refuse('SOURCE_ORIGIN_TOOLCHAIN');
   return deepFreeze({
     pinsDigest: pins.pinsDigest,
     recordId: record.recordId,
@@ -339,7 +445,7 @@ export function buildToolchainSnapshot(options) {
 
   const pins = validateToolchainPins(input.pins);
   if (pins.records.length === 0) refuse('SOURCE_ORIGIN_HOLD_TOOLCHAIN');
-  const matchingRecords = pins.records.filter(
+  const matchingRecords = arrayFilter(pins.records,
     (record) => record.platform === input.platform && record.arch === input.arch,
   );
   if (matchingRecords.length !== 1) refuse('SOURCE_ORIGIN_TOOLCHAIN');

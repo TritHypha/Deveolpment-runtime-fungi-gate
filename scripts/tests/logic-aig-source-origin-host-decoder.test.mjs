@@ -212,6 +212,98 @@ test("semantic-row boundary refuses proxy and accessor options before caller eff
   });
 });
 
+test("eighth-review HOST public boundaries close Object and pooled Buffer dispatch", async (t) => {
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+
+  await t.test("buildSemanticRows snapshots Object.getPrototypeOf", () => {
+    const descriptor = safeGetDescriptor(Object, "getPrototypeOf");
+    let effects = 0;
+    let failure;
+    safeDefineProperty(Object, "getPrototypeOf", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_OBJECT_GETPROTO");
+      },
+    });
+    try { buildSemanticRows({}); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Object, "getPrototypeOf", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+  });
+
+  await t.test("decodeHostProject snapshots Object.getPrototypeOf", async () => {
+    const descriptor = safeGetDescriptor(Object, "getPrototypeOf");
+    let effects = 0;
+    let failure;
+    safeDefineProperty(Object, "getPrototypeOf", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_OBJECT_GETPROTO");
+      },
+    });
+    try { await decodeHostProject({}); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Object, "getPrototypeOf", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+  });
+
+  await t.test("a synced isProxy replacement cannot expose a HOST option Proxy", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const types = require("node:util/types");
+    const descriptor = safeGetDescriptor(types, "isProxy");
+    let effects = 0;
+    let proxyTraps = 0;
+    let failure;
+    const hostile = new Proxy({}, {
+      getPrototypeOf() {
+        proxyTraps += 1;
+        throw new Error("ATTACKER_PROXY_GETPROTO");
+      },
+    });
+    safeDefineProperty(types, "isProxy", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        return false;
+      },
+    });
+    syncBuiltinESMExports();
+    try { buildSemanticRows(hostile); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(types, "isProxy", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(proxyTraps, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_HOST_SCHEMA");
+  });
+
+  await t.test("semantic name encoding does not call pooled Buffer.from", async () => {
+    const options = await semanticRowOptions();
+    options.declarations = [semanticDeclaration({ name: "é" })];
+    const descriptor = safeGetDescriptor(Buffer, "from");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(Buffer, "from", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_BUFFER_FROM");
+      },
+    });
+    try { result = buildSemanticRows(options); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Buffer, "from", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(result?.nodes.length, 2);
+  });
+});
+
 test("semantic-row boundary captures every nested public input before iteration", async (t) => {
   const valid = await semanticRowOptions();
   await t.test("proxied source array", () => {

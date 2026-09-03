@@ -101,7 +101,6 @@ const NUMBER_IS_SAFE_INTEGER = Number.isSafeInteger;
 const PROMISE_CONSTRUCTOR = Promise;
 const REGEXP_CONSTRUCTOR = RegExp;
 const REGEXP_EXEC = RegExp.prototype.exec;
-const REGEXP_TEST = RegExp.prototype.test;
 const SET_TIMEOUT = setTimeout;
 const CLEAR_TIMEOUT = clearTimeout;
 const SYMBOL_HAS_INSTANCE = Symbol.hasInstance;
@@ -288,7 +287,12 @@ function regexpExec(pattern, value) {
 }
 
 function regexpTest(pattern, value) {
-  return REFLECT_APPLY(REGEXP_TEST, pattern, [value]);
+  OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 });
+  try {
+    return REFLECT_APPLY(REGEXP_EXEC, pattern, [value]) !== null;
+  } finally {
+    OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 });
+  }
 }
 
 function safeArrayAppend(values, value) {
@@ -1340,6 +1344,7 @@ function captureExactBufferState(value, code) {
     || byteOffset < 0
     || byteOffset > backingByteLength
     || byteLength > backingByteLength - byteOffset
+    || OBJECT_GET_OWN_PROPERTY_NAMES(value).length !== length
   ) refuse(code);
   return { backing, backingByteLength, byteLength, byteOffset, length };
 }

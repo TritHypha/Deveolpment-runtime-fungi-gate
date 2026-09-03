@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { Stats } from 'node:fs';
 import {
   lstat,
   mkdir,
@@ -16,8 +18,8 @@ import {
   SOURCE_ORIGIN_LIMITS,
   canonicalJsonText,
   classifySourcePath,
+  decodeUtf8Bytes,
   sha256Canonical,
-  sha256Raw,
   validateParserPolicy,
   validateRepositoryIdentity,
   validateResolutionInputs,
@@ -30,20 +32,109 @@ import { admitFrozenBlobSet } from './git-source.mjs';
 import { buildSemanticRows } from './host-decoder.mjs';
 import { prepareSemanticToolchain } from './toolchain-snapshot.mjs';
 
-const OPTION_KEYS = Object.freeze([
+const SPAWN_SYNC = spawnSync;
+const CREATE_HASH = createHash;
+const FS_LSTAT = lstat;
+const FS_MKDIR = mkdir;
+const FS_MKDTEMP = mkdtemp;
+const FS_READ_FILE = readFile;
+const FS_REALPATH = realpath;
+const FS_RM = rm;
+const FS_WRITE_FILE = writeFile;
+const OS_TMPDIR = tmpdir;
+const PROCESS_VERSION = process.version;
+const PROCESS_EXEC_PATH = process.execPath;
+const PROCESS_PLATFORM = process.platform;
+const PROCESS_SYSTEM_ROOT = process.env.SystemRoot;
+const UTIL_TYPES_IS_PROXY = isProxy;
+const PATH_DIRNAME = path.dirname;
+const PATH_JOIN = path.join;
+const REFLECT_APPLY = Reflect.apply;
+const OBJECT_DEFINE_PROPERTY = Object.defineProperty;
+const OBJECT_FREEZE = Object.freeze;
+const OBJECT_GET_OWN_PROPERTY_DESCRIPTOR = Object.getOwnPropertyDescriptor;
+const OBJECT_GET_OWN_PROPERTY_NAMES = Object.getOwnPropertyNames;
+const OBJECT_GET_OWN_PROPERTY_SYMBOLS = Object.getOwnPropertySymbols;
+const OBJECT_GET_PROTOTYPE_OF = Object.getPrototypeOf;
+const OBJECT_PROTOTYPE = Object.prototype;
+const ARRAY_IS_ARRAY = Array.isArray;
+const ARRAY_PROTOTYPE = Array.prototype;
+const ARRAY_SORT = Array.prototype.sort;
+const NUMBER_IS_SAFE_INTEGER = Number.isSafeInteger;
+const SAFE_SET = Set;
+const SET_ADD = Set.prototype.add;
+const SET_HAS = Set.prototype.has;
+const SET_SIZE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(Set.prototype, 'size').get;
+const SAFE_MAP = Map;
+const MAP_GET = Map.prototype.get;
+const MAP_HAS = Map.prototype.has;
+const MAP_SET = Map.prototype.set;
+const MAP_SIZE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(Map.prototype, 'size').get;
+const SAFE_REGEXP = RegExp;
+const REGEXP_EXEC = RegExp.prototype.exec;
+const TEXT_ENCODER = new TextEncoder();
+const TEXT_ENCODER_ENCODE = TextEncoder.prototype.encode;
+const TYPED_ARRAY_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(Uint8Array.prototype);
+const TYPED_ARRAY_LENGTH = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(TYPED_ARRAY_PROTOTYPE, 'length').get;
+const JSON_PARSE = JSON.parse;
+const STRING_TO_LOWER_CASE = String.prototype.toLowerCase;
+const STRING_SPLIT = String.prototype.split;
+const STATS_IS_FILE = Stats.prototype.isFile;
+const STATS_IS_SYMBOLIC_LINK = Stats.prototype.isSymbolicLink;
+const SAFE_WEAK_SET = WeakSet;
+const WEAK_SET_ADD = WeakSet.prototype.add;
+const WEAK_SET_HAS = WeakSet.prototype.has;
+const FUNGI_REFUSALS = new SAFE_WEAK_SET();
+const HASH_PROBE = CREATE_HASH('sha256');
+let HASH_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(HASH_PROBE);
+while (HASH_PROTOTYPE !== null && !OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(HASH_PROTOTYPE, 'update')) HASH_PROTOTYPE = OBJECT_GET_PROTOTYPE_OF(HASH_PROTOTYPE);
+const HASH_UPDATE = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(HASH_PROTOTYPE, 'update').value;
+const HASH_DIGEST = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(HASH_PROTOTYPE, 'digest').value;
+
+function trustedNodeByteHash(bytes) {
+  const hash = CREATE_HASH('sha256');
+  REFLECT_APPLY(HASH_UPDATE, hash, [bytes]);
+  return REFLECT_APPLY(HASH_DIGEST, hash, ['hex']);
+}
+
+function defineData(target, key, value) { OBJECT_DEFINE_PROPERTY(target, key, { configurable: true, enumerable: true, value, writable: true }); }
+function append(values, value) { defineData(values, `${values.length}`, value); }
+function arrayCopy(values) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, values[index]); return output; }
+function arrayMap(values, operation) { const output = []; for (let index = 0; index < values.length; index += 1) append(output, operation(values[index], index)); return output; }
+function arrayFilter(values, predicate) { const output = []; for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) append(output, values[index]); return output; }
+function arrayFind(values, predicate) { for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return values[index]; return undefined; }
+function arraySome(values, predicate) { for (let index = 0; index < values.length; index += 1) if (predicate(values[index], index)) return true; return false; }
+function sortArray(values, compare = compareCodeUnits) { return REFLECT_APPLY(ARRAY_SORT, values, [compare]); }
+function stringToLowerCase(value) { return REFLECT_APPLY(STRING_TO_LOWER_CASE, value, []); }
+function stringSplit(value, separator) { return REFLECT_APPLY(STRING_SPLIT, value, [separator]); }
+function regexpTest(pattern, value) { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); try { return REFLECT_APPLY(REGEXP_EXEC, pattern, [value]) !== null; } finally { OBJECT_DEFINE_PROPERTY(pattern, 'lastIndex', { value: 0 }); } }
+function setAdd(values, value) { REFLECT_APPLY(SET_ADD, values, [value]); }
+function setHas(values, value) { return REFLECT_APPLY(SET_HAS, values, [value]); }
+function setSize(values) { return REFLECT_APPLY(SET_SIZE, values, []); }
+function setFromArray(values, project = (value) => value) { const output = new SAFE_SET(); for (let index = 0; index < values.length; index += 1) setAdd(output, project(values[index], index)); return output; }
+function uniqueArray(values) { const seen = new SAFE_SET(); const output = []; for (let index = 0; index < values.length; index += 1) if (!setHas(seen, values[index])) { setAdd(seen, values[index]); append(output, values[index]); } return output; }
+function mapGet(values, key) { return REFLECT_APPLY(MAP_GET, values, [key]); }
+function mapHas(values, key) { return REFLECT_APPLY(MAP_HAS, values, [key]); }
+function mapSet(values, key, value) { REFLECT_APPLY(MAP_SET, values, [key, value]); }
+function mapSize(values) { return REFLECT_APPLY(MAP_SIZE, values, []); }
+function refusalAdd(value) { REFLECT_APPLY(WEAK_SET_ADD, FUNGI_REFUSALS, [value]); }
+function refusalHas(value) { return value !== null && typeof value === 'object' && REFLECT_APPLY(WEAK_SET_HAS, FUNGI_REFUSALS, [value]); }
+function pathJoinLocator(root, locator) { const components = stringSplit(locator, '/'); const args = [root]; for (let index = 0; index < components.length; index += 1) append(args, components[index]); return REFLECT_APPLY(PATH_JOIN, null, args); }
+
+const OPTION_KEYS = OBJECT_FREEZE([
   'repositoryIdentity', 'sourcePolicy', 'resolutionPolicy', 'parserPolicy',
   'pins', 'sourceManifest', 'sourceBlobs', 'resolutionInputs',
   'resolutionBlobs', 'toolchainBlobs', 'platform', 'arch', 'nodeIdentity',
   'gitIdentity',
 ]);
-const PARSER_SOURCE_LOCATORS = Object.freeze([
+const PARSER_SOURCE_LOCATORS = OBJECT_FREEZE([
   'src/gate-v3-parser.ts',
   'src/lexer.ts',
   'src/parser.ts',
   'src/requirement-diagnostics.ts',
   'src/source-origin-parser-entry.ts',
 ]);
-const PARSER_OUTPUT_LOCATORS = Object.freeze([
+const PARSER_OUTPUT_LOCATORS = OBJECT_FREEZE([
   'gate-v3-parser.js',
   'lexer.js',
   'parser.js',
@@ -59,8 +150,9 @@ const RELATIONSHIP_KINDS = new Set(['CALLER', 'CONTRACT', 'IMPORT']);
 class FungiDecoderRefusal extends Error {
   constructor(code) {
     super(code);
-    this.name = 'FungiDecoderRefusal';
-    this.code = code;
+    defineData(this, 'name', 'FungiDecoderRefusal');
+    defineData(this, 'code', code);
+    refusalAdd(this);
   }
 }
 
@@ -73,70 +165,70 @@ function compareCodeUnits(left, right) {
 }
 
 function exactObject(value, keys, code = 'SOURCE_ORIGIN_FUNGI_SCHEMA') {
-  if (isProxy(value) || value === null || typeof value !== 'object' || Array.isArray(value)) refuse(code);
-  const prototype = Object.getPrototypeOf(value);
-  if ((prototype !== Object.prototype && prototype !== null) || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  for (const name of names) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+  if (UTIL_TYPES_IS_PROXY(value) || value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value)) refuse(code);
+  const prototype = OBJECT_GET_PROTOTYPE_OF(value);
+  if ((prototype !== OBJECT_PROTOTYPE && prototype !== null) || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
-  const sorted = names.sort(compareCodeUnits);
-  const expected = [...keys].sort(compareCodeUnits);
-  if (sorted.length !== expected.length || sorted.some((name, index) => name !== expected[index])) refuse(code);
+  const sorted = REFLECT_APPLY(ARRAY_SORT, names, [compareCodeUnits]);
+  const expected = sortArray(arrayCopy(keys));
+  if (sorted.length !== expected.length || arraySome(sorted, (name, index) => name !== expected[index])) refuse(code);
 }
 
 function exactArray(value, code = 'SOURCE_ORIGIN_FUNGI_SCHEMA') {
-  if (isProxy(value) || !Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length !== 0) refuse(code);
-  const names = Object.getOwnPropertyNames(value);
-  if (names.length !== value.length + 1 || !names.includes('length')) refuse(code);
+  if (UTIL_TYPES_IS_PROXY(value) || !ARRAY_IS_ARRAY(value) || OBJECT_GET_PROTOTYPE_OF(value) !== ARRAY_PROTOTYPE || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  if (names.length !== value.length + 1 || !arraySome(names, (name) => name === 'length')) refuse(code);
   for (let index = 0; index < value.length; index += 1) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, `${index}`);
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) refuse(code);
   }
   return value;
 }
 
-function deepFreeze(value, seen = new Set()) {
-  if (value === null || typeof value !== 'object' || seen.has(value)) return value;
-  seen.add(value);
-  for (const name of Object.getOwnPropertyNames(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, name);
+function deepFreeze(value, seen = new SAFE_SET()) {
+  if (value === null || typeof value !== 'object' || REFLECT_APPLY(SET_HAS, seen, [value])) return value;
+  REFLECT_APPLY(SET_ADD, seen, [value]);
+  const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
+  for (let index = 0; index < names.length; index += 1) {
+    const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, names[index]);
     if (descriptor && 'value' in descriptor) deepFreeze(descriptor.value, seen);
   }
-  return Object.freeze(value);
+  return OBJECT_FREEZE(value);
 }
 
 function decodeUtf8(bytes, code = 'SOURCE_ORIGIN_FUNGI_SOURCE') {
-  if (isProxy(bytes) || !Buffer.isBuffer(bytes) || Object.getPrototypeOf(bytes) !== Buffer.prototype || bytes.buffer instanceof SharedArrayBuffer) refuse(code);
   try {
-    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    return decodeUtf8Bytes(bytes);
   } catch {
     refuse(code);
   }
 }
 
 async function authenticateNodeExecutable(nodeIdentity) {
-  if (process.version !== nodeIdentity.version) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+  if (PROCESS_VERSION !== nodeIdentity.version) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   let details;
   let canonical;
   let bytes;
   try {
-    details = await lstat(process.execPath, { bigint: true });
-    canonical = await realpath(process.execPath);
-    bytes = await readFile(process.execPath);
+    details = await FS_LSTAT(PROCESS_EXEC_PATH, { bigint: true });
+    canonical = await FS_REALPATH(PROCESS_EXEC_PATH);
+    bytes = await FS_READ_FILE(PROCESS_EXEC_PATH);
   } catch {
     refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   }
-  const samePath = process.platform === 'win32'
-    ? canonical.toLowerCase() === process.execPath.toLowerCase()
-    : canonical === process.execPath;
+  const samePath = PROCESS_PLATFORM === 'win32'
+    ? stringToLowerCase(canonical) === stringToLowerCase(PROCESS_EXEC_PATH)
+    : canonical === PROCESS_EXEC_PATH;
   if (
-    details.isSymbolicLink()
-    || !details.isFile()
+    REFLECT_APPLY(STATS_IS_SYMBOLIC_LINK, details, [])
+    || !REFLECT_APPLY(STATS_IS_FILE, details, [])
     || !samePath
     || bytes.length !== nodeIdentity.executableByteLength
-    || sha256Raw(bytes) !== nodeIdentity.executableRawSha256
+    || trustedNodeByteHash(bytes) !== nodeIdentity.executableRawSha256
   ) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
 }
 
@@ -146,6 +238,10 @@ function parserChildMain() {
   const path = require('node:path');
   const Module = require('node:module');
   const { fileURLToPath, pathToFileURL } = require('node:url');
+  const { TextEncoder: SafeTextEncoder } = require('node:util');
+  const reflectApply = Reflect.apply;
+  const textEncoder = new SafeTextEncoder();
+  const textEncode = SafeTextEncoder.prototype.encode;
 
   class GuardRefusal extends Error {
     constructor(code) { super(code); this.code = code; }
@@ -456,7 +552,7 @@ function parserChildMain() {
           },
         });
         if (!transpiled || typeof transpiled.outputText !== 'string') fail('COMPILE');
-        const bytes = Buffer.from(transpiled.outputText, 'utf8');
+        const bytes = reflectApply(textEncode, textEncoder, [transpiled.outputText]);
         const expected = parserRows.get(outputLocator);
         if (!expected || bytes.length !== expected.byteLength || hash(bytes) !== expected.rawSha256) fail('COMPILE');
         outputs.set(outputLocator, bytes);
@@ -561,7 +657,7 @@ const PARSER_CHILD_SOURCE = `(${parserChildMain.toString()})()`;
 
 function childEnvironment() {
   const environment = { NODE_DISABLE_COMPILE_CACHE: '1' };
-  if (process.platform === 'win32' && typeof process.env.SystemRoot === 'string') environment.SystemRoot = process.env.SystemRoot;
+  if (PROCESS_PLATFORM === 'win32' && typeof PROCESS_SYSTEM_ROOT === 'string') defineData(environment, 'SystemRoot', PROCESS_SYSTEM_ROOT);
   return environment;
 }
 
@@ -570,30 +666,30 @@ async function runParserChild(captured, sourceRows) {
   let result;
   let failure;
   try {
-    root = await mkdtemp(path.join(tmpdir(), 'galerina-source-origin-parser-'));
-    const hostRoot = path.join(root, 'host');
-    const parserRoot = path.join(root, 'parser');
-    const hostEntryPath = path.join(hostRoot, ...captured.hostSelection.entry.locator.split('/'));
-    await mkdir(path.dirname(hostEntryPath), { recursive: true });
+    root = await FS_MKDTEMP(PATH_JOIN(OS_TMPDIR(), 'galerina-source-origin-parser-'));
+    const hostRoot = PATH_JOIN(root, 'host');
+    const parserRoot = PATH_JOIN(root, 'parser');
+    const hostEntryPath = pathJoinLocator(hostRoot, captured.hostSelection.entry.locator);
+    await FS_MKDIR(PATH_DIRNAME(hostEntryPath), { recursive: true });
     const hostEntryJoined = `${captured.hostSelection.entry.rootLocator}/${captured.hostSelection.entry.locator}`;
     const hostEntryBytes = captured.toolchainBlobs.get(hostEntryJoined);
     if (!hostEntryBytes) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-    await writeFile(hostEntryPath, hostEntryBytes, { flag: 'wx', mode: 0o600 });
-    const readback = await readFile(hostEntryPath);
-    const hostEntryRow = captured.hostSelection.moduleRows.find((row) => row.locator === captured.hostSelection.entry.locator);
-    if (!hostEntryRow || readback.length !== hostEntryRow.byteLength || sha256Raw(readback) !== hostEntryRow.rawSha256) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-    const parserSources = PARSER_SOURCE_LOCATORS.map((locator) => {
+    await FS_WRITE_FILE(hostEntryPath, hostEntryBytes, { flag: 'wx', mode: 0o600 });
+    const readback = await FS_READ_FILE(hostEntryPath);
+    const hostEntryRow = arrayFind(captured.hostSelection.moduleRows, (row) => row.locator === captured.hostSelection.entry.locator);
+    if (!hostEntryRow || readback.length !== hostEntryRow.byteLength || trustedNodeByteHash(readback) !== hostEntryRow.rawSha256) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+    const parserSources = arrayMap(PARSER_SOURCE_LOCATORS, (locator) => {
       const joined = `${captured.parserSourceRoot}/${locator}`;
       const bytes = captured.toolchainBlobs.get(joined);
       if (!bytes) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
       return { locator, text: decodeUtf8(bytes, 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN') };
     });
-    const sources = sourceRows.map((row) => {
+    const sources = arrayMap(sourceRows, (row) => {
       const bytes = captured.sourceBlobs.get(row.path);
       if (!bytes) refuse('SOURCE_ORIGIN_FUNGI_SOURCE');
       return { path: row.path, domain: classifySourcePath(row.path, captured.sourcePolicy), text: decodeUtf8(bytes) };
     });
-    const record = captured.pins.records.find((row) => row.recordId === captured.prepared.recordId);
+    const record = arrayFind(captured.pins.records, (row) => row.recordId === captured.prepared.recordId);
     if (!record) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
     const config = {
       root,
@@ -606,14 +702,14 @@ async function runParserChild(captured, sourceRows) {
       parserEntryLocator: captured.parserRuntime.entry.locator,
       parserExportNames: captured.fungiSelection.parserExportNames,
       parserSources,
-      outputBySource: PARSER_SOURCE_LOCATORS.map((sourceLocator, index) => ({ sourceLocator, outputLocator: PARSER_OUTPUT_LOCATORS[index] })),
+      outputBySource: arrayMap(PARSER_SOURCE_LOCATORS, (sourceLocator, index) => ({ sourceLocator, outputLocator: PARSER_OUTPUT_LOCATORS[index] })),
       emittedEdges: record.sourceOriginParser.emittedEdgeRows,
       diagnosticCodePattern: captured.parserPolicy.diagnosticCodePattern,
       sources,
     };
     const input = canonicalJsonText(config);
-    if (Buffer.byteLength(input, 'utf8') > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_LIMIT');
-    result = spawnSync(process.execPath, ['--no-warnings', '--input-type=commonjs', '--eval', PARSER_CHILD_SOURCE], {
+    if (REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [input]), []) > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_LIMIT');
+    result = SPAWN_SYNC(PROCESS_EXEC_PATH, ['--no-warnings', '--input-type=commonjs', '--eval', PARSER_CHILD_SOURCE], {
       cwd: root,
       env: childEnvironment(),
       input,
@@ -627,21 +723,21 @@ async function runParserChild(captured, sourceRows) {
     failure = error;
   }
   if (root !== undefined) {
-    try { await rm(root, { recursive: true, force: true }); } catch { refuse('SOURCE_ORIGIN_FUNGI_CLEANUP'); }
+    try { await FS_RM(root, { recursive: true, force: true }); } catch { refuse('SOURCE_ORIGIN_FUNGI_CLEANUP'); }
   }
   if (failure) {
-    if (failure instanceof FungiDecoderRefusal) throw failure;
+    if (refusalHas(failure)) throw failure;
     refuse('SOURCE_ORIGIN_FUNGI_CHILD');
   }
-  if (result.error || result.signal !== null || result.stderr !== '' || result.status !== 0 || Buffer.byteLength(result.stdout, 'utf8') > SOURCE_ORIGIN_LIMITS.processOutputBytes) {
+  if (result.error || result.signal !== null || result.stderr !== '' || result.status !== 0 || REFLECT_APPLY(TYPED_ARRAY_LENGTH, REFLECT_APPLY(TEXT_ENCODER_ENCODE, TEXT_ENCODER, [result.stdout]), []) > SOURCE_ORIGIN_LIMITS.processOutputBytes) {
     let parsedRefusal;
-    try { parsedRefusal = JSON.parse(result.stdout); } catch { /* no child artifact */ }
+    try { parsedRefusal = REFLECT_APPLY(JSON_PARSE, null, [result.stdout]); } catch { /* no child artifact */ }
     if (parsedRefusal?.refusal === 'COMPILE' || parsedRefusal?.refusal === 'LOAD' || parsedRefusal?.refusal === 'EXPORT') refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
     if (typeof parsedRefusal?.refusal === 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
     refuse('SOURCE_ORIGIN_FUNGI_CHILD');
   }
   let parsed;
-  try { parsed = JSON.parse(result.stdout); } catch { refuse('SOURCE_ORIGIN_FUNGI_CHILD'); }
+  try { parsed = REFLECT_APPLY(JSON_PARSE, null, [result.stdout]); } catch { refuse('SOURCE_ORIGIN_FUNGI_CHILD'); }
   exactObject(parsed, ['hostModuleLocators','hostBuiltinModules','parserModuleLocators','parserBuiltinModules','parserExportNames','semantic'], 'SOURCE_ORIGIN_FUNGI_CHILD');
   return parsed;
 }
@@ -652,18 +748,19 @@ function equalData(left, right) {
 
 function validateTextArray(value, expected, code) {
   exactArray(value, code);
-  for (const item of value) if (typeof item !== 'string') refuse(code);
+  for (let index = 0; index < value.length; index += 1) if (typeof value[index] !== 'string') refuse(code);
   if (!equalData(value, expected)) refuse(code);
 }
 
 function validateParseResult(row, sourcePathSet, parserPolicy) {
   exactObject(row, ['path','status','diagnosticCodes'], 'SOURCE_ORIGIN_FUNGI_CHILD');
-  if (!sourcePathSet.has(row.path) || (row.status !== 'PARSED' && row.status !== 'REFUSED')) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+  if (!setHas(sourcePathSet, row.path) || (row.status !== 'PARSED' && row.status !== 'REFUSED')) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
   exactArray(row.diagnosticCodes, 'SOURCE_ORIGIN_FUNGI_CHILD');
-  const pattern = new RegExp(parserPolicy.diagnosticCodePattern, 'u');
+  const pattern = new SAFE_REGEXP(parserPolicy.diagnosticCodePattern, 'u');
   let previous;
-  for (const code of row.diagnosticCodes) {
-    if (typeof code !== 'string' || !pattern.test(code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+  for (let index = 0; index < row.diagnosticCodes.length; index += 1) {
+    const code = row.diagnosticCodes[index];
+    if (typeof code !== 'string' || !regexpTest(pattern, code) || (previous !== undefined && compareCodeUnits(previous, code) >= 0)) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
     previous = code;
   }
   if ((row.status === 'PARSED') !== (row.diagnosticCodes.length === 0)) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
@@ -673,16 +770,16 @@ function validateDeclaration(row, sourcePathSet) {
   exactObject(row, ['key','path','parentKey','kind','name','parserNodeKind','startByte','endByte','preorderOrdinal'], 'SOURCE_ORIGIN_FUNGI_CHILD');
   if (
     typeof row.key !== 'string'
-    || !sourcePathSet.has(row.path)
+    || !setHas(sourcePathSet, row.path)
     || (row.parentKey !== null && typeof row.parentKey !== 'string')
-    || !NODE_KINDS.has(row.kind)
+    || !setHas(NODE_KINDS, row.kind)
     || (row.name !== null && typeof row.name !== 'string')
     || typeof row.parserNodeKind !== 'string'
-    || !Number.isSafeInteger(row.startByte)
-    || !Number.isSafeInteger(row.endByte)
+    || !NUMBER_IS_SAFE_INTEGER(row.startByte)
+    || !NUMBER_IS_SAFE_INTEGER(row.endByte)
     || row.startByte < 0
     || row.endByte <= row.startByte
-    || !Number.isSafeInteger(row.preorderOrdinal)
+    || !NUMBER_IS_SAFE_INTEGER(row.preorderOrdinal)
     || row.preorderOrdinal < 0
   ) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
 }
@@ -690,19 +787,19 @@ function validateDeclaration(row, sourcePathSet) {
 function validateRelation(row, sourcePathSet) {
   exactObject(row, ['path','ownerNativeKey','relationshipClass','startByte','endByte','targetNativeKeys','targetPaths','targetState'], 'SOURCE_ORIGIN_FUNGI_CHILD');
   if (
-    !sourcePathSet.has(row.path)
+    !setHas(sourcePathSet, row.path)
     || (row.ownerNativeKey !== null && typeof row.ownerNativeKey !== 'string')
-    || !RELATIONSHIP_KINDS.has(row.relationshipClass)
-    || !Number.isSafeInteger(row.startByte)
-    || !Number.isSafeInteger(row.endByte)
+    || !setHas(RELATIONSHIP_KINDS, row.relationshipClass)
+    || !NUMBER_IS_SAFE_INTEGER(row.startByte)
+    || !NUMBER_IS_SAFE_INTEGER(row.endByte)
     || row.startByte < 0
     || row.endByte <= row.startByte
-    || !['AMBIGUOUS','DYNAMIC','MISSING','OUTSIDE','RESOLVED'].includes(row.targetState)
+    || !arraySome(['AMBIGUOUS','DYNAMIC','MISSING','OUTSIDE','RESOLVED'], (state) => state === row.targetState)
   ) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
   exactArray(row.targetNativeKeys, 'SOURCE_ORIGIN_FUNGI_CHILD');
   exactArray(row.targetPaths, 'SOURCE_ORIGIN_FUNGI_CHILD');
-  for (const key of row.targetNativeKeys) if (typeof key !== 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
-  for (const locator of row.targetPaths) if (typeof locator !== 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+  for (let index = 0; index < row.targetNativeKeys.length; index += 1) if (typeof row.targetNativeKeys[index] !== 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+  for (let index = 0; index < row.targetPaths.length; index += 1) if (typeof row.targetPaths[index] !== 'string') refuse('SOURCE_ORIGIN_FUNGI_CHILD');
 }
 
 function validateDomainSemantic(value, sourceRows, parserPolicy) {
@@ -710,16 +807,17 @@ function validateDomainSemantic(value, sourceRows, parserPolicy) {
   exactArray(value.declarations, 'SOURCE_ORIGIN_FUNGI_CHILD');
   exactArray(value.relations, 'SOURCE_ORIGIN_FUNGI_CHILD');
   exactArray(value.parseResults, 'SOURCE_ORIGIN_FUNGI_CHILD');
-  const paths = new Set(sourceRows.map((row) => row.path));
-  if (value.parseResults.length !== paths.size) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
-  const seen = new Set();
-  for (const row of value.parseResults) {
+  const paths = setFromArray(sourceRows, (row) => row.path);
+  if (value.parseResults.length !== setSize(paths)) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+  const seen = new SAFE_SET();
+  for (let index = 0; index < value.parseResults.length; index += 1) {
+    const row = value.parseResults[index];
     validateParseResult(row, paths, parserPolicy);
-    if (seen.has(row.path)) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
-    seen.add(row.path);
+    if (setHas(seen, row.path)) refuse('SOURCE_ORIGIN_FUNGI_CHILD');
+    setAdd(seen, row.path);
   }
-  for (const row of value.declarations) validateDeclaration(row, paths);
-  for (const row of value.relations) validateRelation(row, paths);
+  for (let index = 0; index < value.declarations.length; index += 1) validateDeclaration(value.declarations[index], paths);
+  for (let index = 0; index < value.relations.length; index += 1) validateRelation(value.relations[index], paths);
   return value;
 }
 
@@ -746,9 +844,9 @@ function captureOptions(options) {
     nodeIdentity: options.nodeIdentity,
     gitIdentity: options.gitIdentity,
   });
-  const hostSelection = prepared.selections.find((row) => row.domain === 'HOST');
-  const fungiSelection = prepared.selections.find((row) => row.domain === 'FUNGI');
-  const gateSelection = prepared.selections.find((row) => row.domain === 'GATE');
+  const hostSelection = arrayFind(prepared.selections, (row) => row.domain === 'HOST');
+  const fungiSelection = arrayFind(prepared.selections, (row) => row.domain === 'FUNGI');
+  const gateSelection = arrayFind(prepared.selections, (row) => row.domain === 'GATE');
   if (
     !hostSelection
     || !fungiSelection
@@ -763,27 +861,30 @@ function captureOptions(options) {
     || !equalData(fungiSelection.parserExportNames, ['lex','parseGateV3','parseProgram'])
     || !equalData(gateSelection.parserExportNames, fungiSelection.parserExportNames)
   ) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-  const record = pins.records.find((row) => row.recordId === prepared.recordId);
-  const parserRuntime = record?.runtimeLoadSets.find((row) => row.id === 'PARSER');
-  if (!record || !parserRuntime || !equalData(parserRuntime.moduleRows.map((row) => row.locator), PARSER_OUTPUT_LOCATORS)) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-  const parserSourceLocators = [...new Set([
-    record.sourceOriginParser.sourceEntry.locator,
-    ...record.sourceOriginParser.sourceEdgeRows.flatMap((edge) => [edge.fromLocator, edge.toLocator]),
-  ])].sort(compareCodeUnits);
+  const record = arrayFind(pins.records, (row) => row.recordId === prepared.recordId);
+  const parserRuntime = record === undefined ? undefined : arrayFind(record.runtimeLoadSets, (row) => row.id === 'PARSER');
+  if (!record || !parserRuntime || !equalData(arrayMap(parserRuntime.moduleRows, (row) => row.locator), PARSER_OUTPUT_LOCATORS)) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+  const parserSourceParts = [record.sourceOriginParser.sourceEntry.locator];
+  for (let index = 0; index < record.sourceOriginParser.sourceEdgeRows.length; index += 1) {
+    append(parserSourceParts, record.sourceOriginParser.sourceEdgeRows[index].fromLocator);
+    append(parserSourceParts, record.sourceOriginParser.sourceEdgeRows[index].toLocator);
+  }
+  const parserSourceLocators = sortArray(uniqueArray(parserSourceParts));
   if (!equalData(parserSourceLocators, PARSER_SOURCE_LOCATORS)) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   const parserSourceRoot = record.sourceOriginParser.sourceEntry.rootLocator;
   const expectedToolchainRows = [];
   const hostEntryJoined = `${hostSelection.entry.rootLocator}/${hostSelection.entry.locator}`;
-  const hostEntryRow = hostSelection.moduleRows.find((row) => row.locator === hostSelection.entry.locator);
+  const hostEntryRow = arrayFind(hostSelection.moduleRows, (row) => row.locator === hostSelection.entry.locator);
   if (!hostEntryRow) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-  expectedToolchainRows.push({ path: hostEntryJoined, byteLength: hostEntryRow.byteLength, rawSha256: hostEntryRow.rawSha256 });
-  for (const locator of PARSER_SOURCE_LOCATORS) {
+  append(expectedToolchainRows, { path: hostEntryJoined, byteLength: hostEntryRow.byteLength, rawSha256: hostEntryRow.rawSha256 });
+  for (let index = 0; index < PARSER_SOURCE_LOCATORS.length; index += 1) {
+    const locator = PARSER_SOURCE_LOCATORS[index];
     const joined = `${parserSourceRoot}/${locator}`;
-    const dataRow = record.dataRows.find((row) => row.locator === joined);
+    const dataRow = arrayFind(record.dataRows, (row) => row.locator === joined);
     if (!dataRow) refuse('SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-    expectedToolchainRows.push({ path: joined, byteLength: dataRow.byteLength, rawSha256: dataRow.rawSha256 });
+    append(expectedToolchainRows, { path: joined, byteLength: dataRow.byteLength, rawSha256: dataRow.rawSha256 });
   }
-  expectedToolchainRows.sort((left, right) => compareCodeUnits(left.path, right.path));
+  sortArray(expectedToolchainRows, (left, right) => compareCodeUnits(left.path, right.path));
   let toolchainBlobs;
   try {
     toolchainBlobs = admitFrozenBlobSet(expectedToolchainRows, options.toolchainBlobs, { label: 'SOURCE_MANIFEST' });
@@ -805,7 +906,9 @@ function compareIdMapRows(left, right) {
   if (compared !== 0) return compared;
   compared = compareCodeUnits(left.nativeIdentity.parserNodeKind, right.nativeIdentity.parserNodeKind);
   if (compared !== 0) return compared;
-  for (const field of ['startByte','endByte','preorderOrdinal']) {
+  const fields = ['startByte','endByte','preorderOrdinal'];
+  for (let index = 0; index < fields.length; index += 1) {
+    const field = fields[index];
     if (left.nativeIdentity[field] !== right.nativeIdentity[field]) return left.nativeIdentity[field] - right.nativeIdentity[field];
   }
   return 0;
@@ -814,19 +917,19 @@ function compareIdMapRows(left, right) {
 export async function decodeFungiGateProject(options) {
   const captured = captureOptions(options);
   await authenticateNodeExecutable(captured.prepared.nodeIdentity);
-  const sourceRows = captured.sourceManifest.rows.filter((row) => {
+  const sourceRows = arrayFilter(captured.sourceManifest.rows, (row) => {
     const domain = classifySourcePath(row.path, captured.sourcePolicy);
     return domain === 'FUNGI' || domain === 'GATE';
   });
   const replay = await runParserChild(captured, sourceRows);
-  validateTextArray(replay.hostModuleLocators, captured.hostSelection.moduleRows.map((row) => row.locator), 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+  validateTextArray(replay.hostModuleLocators, arrayMap(captured.hostSelection.moduleRows, (row) => row.locator), 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   validateTextArray(replay.hostBuiltinModules, captured.hostSelection.builtinModules, 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
-  validateTextArray(replay.parserModuleLocators, captured.parserRuntime.moduleRows.map((row) => row.locator), 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
+  validateTextArray(replay.parserModuleLocators, arrayMap(captured.parserRuntime.moduleRows, (row) => row.locator), 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   validateTextArray(replay.parserBuiltinModules, captured.parserRuntime.builtinModules, 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   validateTextArray(replay.parserExportNames, captured.fungiSelection.parserExportNames, 'SOURCE_ORIGIN_FUNGI_TOOLCHAIN');
   exactObject(replay.semantic, ['fungi','gate'], 'SOURCE_ORIGIN_FUNGI_CHILD');
-  const fungiRows = sourceRows.filter((row) => classifySourcePath(row.path, captured.sourcePolicy) === 'FUNGI');
-  const gateRows = sourceRows.filter((row) => classifySourcePath(row.path, captured.sourcePolicy) === 'GATE');
+  const fungiRows = arrayFilter(sourceRows, (row) => classifySourcePath(row.path, captured.sourcePolicy) === 'FUNGI');
+  const gateRows = arrayFilter(sourceRows, (row) => classifySourcePath(row.path, captured.sourcePolicy) === 'GATE');
   const fungiSemantic = validateDomainSemantic(replay.semantic.fungi, fungiRows, captured.parserPolicy);
   const gateSemantic = validateDomainSemantic(replay.semantic.gate, gateRows, captured.parserPolicy);
   let fungiOutput;
@@ -855,23 +958,35 @@ export async function decodeFungiGateProject(options) {
   } catch {
     refuse('SOURCE_ORIGIN_FUNGI_SEMANTIC');
   }
-  const nodes = [...fungiOutput.nodes, ...gateOutput.nodes].sort((left, right) => compareCodeUnits(left.id, right.id));
-  const edges = [...fungiOutput.edges, ...gateOutput.edges].sort((left, right) => compareCodeUnits(left.id, right.id));
-  const unresolved = [...fungiOutput.unresolved, ...gateOutput.unresolved].sort((left, right) => {
-    for (const field of ['sourceNodeId','relationshipClass','reasonCode','sourceLocator','evidenceDigest']) {
+  const nodes = arrayCopy(fungiOutput.nodes);
+  for (let index = 0; index < gateOutput.nodes.length; index += 1) append(nodes, gateOutput.nodes[index]);
+  sortArray(nodes, (left, right) => compareCodeUnits(left.id, right.id));
+  const edges = arrayCopy(fungiOutput.edges);
+  for (let index = 0; index < gateOutput.edges.length; index += 1) append(edges, gateOutput.edges[index]);
+  sortArray(edges, (left, right) => compareCodeUnits(left.id, right.id));
+  const unresolved = arrayCopy(fungiOutput.unresolved);
+  for (let index = 0; index < gateOutput.unresolved.length; index += 1) append(unresolved, gateOutput.unresolved[index]);
+  sortArray(unresolved, (left, right) => {
+    const fields = ['sourceNodeId','relationshipClass','reasonCode','sourceLocator','evidenceDigest'];
+    for (let index = 0; index < fields.length; index += 1) {
+      const field = fields[index];
       const compared = compareCodeUnits(left[field], right[field]);
       if (compared !== 0) return compared;
     }
     return 0;
   });
-  const idMapRows = [...fungiOutput.idMapRows, ...gateOutput.idMapRows].sort(compareIdMapRows);
+  const idMapRows = arrayCopy(fungiOutput.idMapRows);
+  for (let index = 0; index < gateOutput.idMapRows.length; index += 1) append(idMapRows, gateOutput.idMapRows[index]);
+  sortArray(idMapRows, compareIdMapRows);
   if (
-    new Set(nodes.map((row) => row.id)).size !== nodes.length
-    || new Set(edges.map((row) => row.id)).size !== edges.length
-    || new Set(unresolved.map((row) => row.evidenceDigest)).size !== unresolved.length
-    || new Set(idMapRows.map((row) => row.rowDigest)).size !== idMapRows.length
+    setSize(setFromArray(nodes, (row) => row.id)) !== nodes.length
+    || setSize(setFromArray(edges, (row) => row.id)) !== edges.length
+    || setSize(setFromArray(unresolved, (row) => row.evidenceDigest)) !== unresolved.length
+    || setSize(setFromArray(idMapRows, (row) => row.rowDigest)) !== idMapRows.length
   ) refuse('SOURCE_ORIGIN_FUNGI_SEMANTIC');
-  const parseResults = [...fungiSemantic.parseResults, ...gateSemantic.parseResults].sort((left, right) => compareCodeUnits(left.path, right.path));
+  const parseResults = arrayCopy(fungiSemantic.parseResults);
+  for (let index = 0; index < gateSemantic.parseResults.length; index += 1) append(parseResults, gateSemantic.parseResults[index]);
+  sortArray(parseResults, (left, right) => compareCodeUnits(left.path, right.path));
   const actualRuntimeLoadSets = [
     { id: 'HOST', moduleRows: captured.hostSelection.moduleRows, builtinModules: captured.hostSelection.builtinModules },
     { id: 'PARSER', moduleRows: captured.parserRuntime.moduleRows, builtinModules: captured.parserRuntime.builtinModules },

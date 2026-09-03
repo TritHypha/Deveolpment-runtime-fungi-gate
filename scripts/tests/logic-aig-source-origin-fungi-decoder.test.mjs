@@ -190,6 +190,97 @@ test("FUNGI/GATE decoder compiles and evaluates only the pinned parser closure",
   assert(Object.isFrozen(result.nodes));
 });
 
+test("eighth-review FUNGI public boundary closes Object, imported child and pooled output dispatch", async (t) => {
+  const safeGetDescriptor = Object.getOwnPropertyDescriptor;
+  const safeDefineProperty = Object.defineProperty;
+
+  await t.test("decodeFungiGateProject snapshots Object.getPrototypeOf", async () => {
+    const descriptor = safeGetDescriptor(Object, "getPrototypeOf");
+    let effects = 0;
+    let failure;
+    safeDefineProperty(Object, "getPrototypeOf", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_OBJECT_GETPROTO");
+      },
+    });
+    try { await decodeFungiGateProject({}); } catch (error) { failure = error; }
+    finally { safeDefineProperty(Object, "getPrototypeOf", descriptor); }
+    assert.equal(effects, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_FUNGI_SCHEMA");
+  });
+
+  await t.test("a synced isProxy replacement cannot expose a FUNGI option Proxy", async () => {
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const types = require("node:util/types");
+    const descriptor = safeGetDescriptor(types, "isProxy");
+    let effects = 0;
+    let proxyTraps = 0;
+    let failure;
+    const hostile = new Proxy({}, {
+      getPrototypeOf() {
+        proxyTraps += 1;
+        throw new Error("ATTACKER_PROXY_GETPROTO");
+      },
+    });
+    safeDefineProperty(types, "isProxy", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        return false;
+      },
+    });
+    syncBuiltinESMExports();
+    try { await decodeFungiGateProject(hostile); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(types, "isProxy", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(proxyTraps, 0);
+    assert.equal(failure?.code, "SOURCE_ORIGIN_FUNGI_SCHEMA");
+  });
+
+  await t.test("syncBuiltinESMExports cannot replace the imported child runner", { timeout: 900_000 }, async () => {
+    const options = await fixtureOptions({
+      "src/add.fungi": "flow add(a: Int) -> Int { return a }\n",
+    });
+    const { createRequire, syncBuiltinESMExports } = await import("node:module");
+    const require = createRequire(import.meta.url);
+    const childProcess = require("node:child_process");
+    const descriptor = safeGetDescriptor(childProcess, "spawnSync");
+    let effects = 0;
+    let failure;
+    let result;
+    safeDefineProperty(childProcess, "spawnSync", {
+      ...descriptor,
+      value() {
+        effects += 1;
+        throw new Error("ATTACKER_SPAWN_SYNC");
+      },
+    });
+    syncBuiltinESMExports();
+    try { result = await decodeFungiGateProject(options); } catch (error) { failure = error; }
+    finally {
+      safeDefineProperty(childProcess, "spawnSync", descriptor);
+      syncBuiltinESMExports();
+    }
+    assert.equal(effects, 0);
+    assert.equal(failure, undefined);
+    assert.equal(result?.authorizing, false);
+  });
+
+  await t.test("the child transpile hash route contains no pooled Buffer construction", async () => {
+    const source = await readFile(
+      new URL("../lib/logic-aig-source-origin/fungi-decoder.mjs", import.meta.url),
+      "utf8",
+    );
+    assert.doesNotMatch(source, /Buffer\.from\(transpiled\.outputText/u);
+  });
+});
+
 test("FUNGI converts parser code-unit locations to UTF-8 byte spans", async () => {
   const validPath = "src/unicode.fungi";
   const validSource = [
