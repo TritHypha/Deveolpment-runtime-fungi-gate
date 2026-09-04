@@ -263,9 +263,38 @@ function byteView(value, requireBuffer = false) {
   return { value, byteLength, byteOffset, backing };
 }
 
+function freshEncodedByteView(value) {
+  if (value === null || typeof value !== 'object' || safeIsProxy(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (safeObjectGetPrototypeOf(value) !== safeUint8ArrayPrototype) refuse('SOURCE_ORIGIN_SCHEMA');
+  let backing;
+  let backingByteLength;
+  let byteLength;
+  let byteOffset;
+  let length;
+  let ownSymbolCount;
+  try {
+    backing = callIntrinsic(safeTypedArrayBuffer, value, []);
+    backingByteLength = callIntrinsic(safeArrayBufferByteLength, backing, []);
+    byteLength = callIntrinsic(safeTypedArrayByteLength, value, []);
+    byteOffset = callIntrinsic(safeTypedArrayByteOffset, value, []);
+    length = callIntrinsic(safeTypedArrayLength, value, []);
+    ownSymbolCount = safeObjectGetOwnPropertySymbols(value).length;
+  } catch {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  if (!safeNumberIsSafeInteger(backingByteLength)
+    || !safeNumberIsSafeInteger(byteLength)
+    || !safeNumberIsSafeInteger(byteOffset)
+    || byteOffset !== 0
+    || length !== byteLength
+    || backingByteLength !== byteLength
+    || ownSymbolCount !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  return { value, byteLength, byteOffset, backing };
+}
+
 function encodeUtf8(value) {
   const bytes = callIntrinsic(safeTextEncode, safeTextEncoder, [value]);
-  byteView(bytes);
+  freshEncodedByteView(bytes);
   return bytes;
 }
 
@@ -432,7 +461,9 @@ function serializeCanonical(value) {
 
 export function canonicalJsonText(value) {
   const text = serializeCanonical(canonicalValue(value, new SafeSet()));
-  if (text === undefined || byteView(encodeUtf8(text)).byteLength > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  if (text === undefined) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  const bytes = encodeUtf8(text);
+  if (callIntrinsic(safeTypedArrayByteLength, bytes, []) > SOURCE_ORIGIN_LIMITS.jsonBytes) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   return text;
 }
 

@@ -463,6 +463,13 @@ test("raw and domain-separated canonical SHA-256 helpers match independent liter
   expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText({ value: "\ud800" }));
 });
 
+test("canonical JSON encoding enforces the inclusive UTF-8 ceiling beyond typed-array enumeration", () => {
+  const exactLimitValue = `${"€".repeat(22_369_620)}xx`;
+  assert.equal(Buffer.byteLength(exactLimitValue, "utf8") + 2, 67_108_864);
+  assert.equal(Buffer.byteLength(canonicalJsonText(exactLimitValue), "utf8"), 67_108_864);
+  expectCode("SOURCE_ORIGIN_JSON_CANONICAL", () => canonicalJsonText(`${exactLimitValue}x`));
+});
+
 test("canonical byte parsing rejects duplicate members and semantically equal noncanonical bytes", () => {
   expectCode(
     "SOURCE_ORIGIN_JSON_DUPLICATE",
