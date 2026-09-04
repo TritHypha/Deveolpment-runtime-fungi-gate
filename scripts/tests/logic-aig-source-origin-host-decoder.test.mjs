@@ -772,6 +772,29 @@ test("HOST decoder loads only pinned lib/typescript.js and emits stable file/dec
   assert(Object.isFrozen(result.nodes));
 });
 
+test("HOST child preserves governed semantic evidence when repeated locators exceed the process-output ceiling", { timeout: 900_000 }, async () => {
+  const callCount = 7_000;
+  const sourcePath = `src/${"a".repeat(3_500)}.ts`;
+  const options = await fixtureOptions({
+    [sourcePath]: [
+      "export function target(): number { return 1; }",
+      "export function caller(): number {",
+      "  let value = 0;",
+      "  value += target();\n".repeat(callCount),
+      "  return value;",
+      "}",
+      "",
+    ].join("\n"),
+  });
+
+  const result = await decodeHostProject(options);
+
+  assert.equal(result.parseResults.length, 1);
+  assert.equal(result.parseResults[0].status, "PARSED");
+  assert.equal(result.edges.filter((edge) => edge.kind === "CALLER").length, callCount);
+  assert.equal(result.unresolved.filter((row) => row.relationshipClass === "CALLER").length, 0);
+});
+
 test("HOST checker does not join unrelated property-name has calls", async () => {
   const options = await fixtureOptions({
     "src/has.ts": [

@@ -635,6 +635,42 @@ function hostChildMain() {
     return { declarations, relations, diagnostics };
   };
 
+  const compactSemantic = (semantic) => {
+    const sourceIndexByPath = new Map(config.sources.map((row, index) => [row.path, index]));
+    const declarationIndexByKey = new Map(semantic.declarations.map((row, index) => [row.key, index]));
+    const requiredIndex = (values, key) => {
+      const index = values.get(key);
+      if (!Number.isSafeInteger(index)) fail('HOST');
+      return index;
+    };
+    return {
+      declarations: semantic.declarations.map((row) => [
+        requiredIndex(sourceIndexByPath, row.path),
+        row.parentKey === null ? null : requiredIndex(declarationIndexByKey, row.parentKey),
+        row.kind,
+        row.name,
+        row.parserNodeKind,
+        row.startByte,
+        row.endByte,
+        row.preorderOrdinal,
+      ]),
+      relations: semantic.relations.map((row) => [
+        requiredIndex(sourceIndexByPath, row.path),
+        row.ownerNativeKey === null ? null : requiredIndex(declarationIndexByKey, row.ownerNativeKey),
+        row.relationshipClass,
+        row.startByte,
+        row.endByte,
+        row.targetNativeKeys.map((key) => requiredIndex(declarationIndexByKey, key)),
+        row.targetPaths.map((sourcePath) => requiredIndex(sourceIndexByPath, sourcePath)),
+        row.targetState,
+      ]),
+      diagnostics: semantic.diagnostics.map((row) => [
+        requiredIndex(sourceIndexByPath, row.path),
+        row.diagnostics,
+      ]),
+    };
+  };
+
   try {
     if (!samePath(process.cwd(), root)) fail('LOAD');
     const ts = Module._load(entry, null, true);
@@ -645,7 +681,7 @@ function hostChildMain() {
     const expectedModules = config.allowedRows.map((row) => row.locator).sort(compare);
     const expectedBuiltins = [...config.allowedBuiltins].sort(compare);
     if (JSON.stringify(moduleLocators) !== JSON.stringify(expectedModules) || JSON.stringify(builtinModules) !== JSON.stringify(expectedBuiltins)) fail('LOAD');
-    process.stdout.write(JSON.stringify({ moduleLocators, builtinModules, semantic }));
+    process.stdout.write(JSON.stringify({ moduleLocators, builtinModules, semantic: compactSemantic(semantic) }));
   } catch (error) {
     process.stdout.write(JSON.stringify({ refusal: error instanceof GuardRefusal ? error.code : 'CHILD' }));
     process.exitCode = 2;
@@ -980,14 +1016,7 @@ function validateSemanticRowClosure(value) {
   }
 }
 
-function captureSemanticRowsOptions(options) {
-  exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
-  let captured;
-  try {
-    captured = REFLECT_APPLY(JSON_PARSE, null, [canonicalJsonText(options)]);
-  } catch {
-    refuse('SOURCE_ORIGIN_HOST_SCHEMA');
-  }
+function validateCapturedSemanticRows(captured) {
   exactObject(captured, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
   semanticText(captured.repositoryId);
   semanticText(captured.parserId);
@@ -1036,8 +1065,18 @@ function captureSemanticRowsOptions(options) {
   return captured;
 }
 
-export function buildSemanticRows(options) {
-  options = captureSemanticRowsOptions(options);
+function captureSemanticRowsOptions(options) {
+  exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
+  let captured;
+  try {
+    captured = REFLECT_APPLY(JSON_PARSE, null, [canonicalJsonText(options)]);
+  } catch {
+    refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  }
+  return validateCapturedSemanticRows(captured);
+}
+
+function buildCapturedSemanticRows(options) {
   const {
     repositoryId, parserId, sourceRows, parseResults, declarations, relations,
     parserPolicy, resolutionPolicy,
@@ -1192,24 +1231,90 @@ export function buildSemanticRows(options) {
   return { nodes, edges, unresolved, idMapRows, idMapDigest };
 }
 
+export function buildSemanticRows(options) {
+  return buildCapturedSemanticRows(captureSemanticRowsOptions(options));
+}
+
+function childTuple(value, length) {
+  exactArray(value, 'SOURCE_ORIGIN_HOST_CHILD');
+  if (value.length !== length) refuse('SOURCE_ORIGIN_HOST_CHILD');
+  return value;
+}
+
+function childIndex(value, length) {
+  if (!NUMBER_IS_SAFE_INTEGER(value) || value < 0 || value >= length) refuse('SOURCE_ORIGIN_HOST_CHILD');
+  return value;
+}
+
+function childNullableIndex(value, length) {
+  return value === null ? null : childIndex(value, length);
+}
+
+function childInteger(value) {
+  if (!NUMBER_IS_SAFE_INTEGER(value) || value < 0) refuse('SOURCE_ORIGIN_HOST_CHILD');
+  return value;
+}
+
 function validateChildSemantic(value, sourceRows, parserPolicy) {
   exactObject(value, ['declarations','relations','diagnostics'], 'SOURCE_ORIGIN_HOST_CHILD');
   exactArray(value.declarations, 'SOURCE_ORIGIN_HOST_CHILD');
   exactArray(value.relations, 'SOURCE_ORIGIN_HOST_CHILD');
   exactArray(value.diagnostics, 'SOURCE_ORIGIN_HOST_CHILD');
+  const declarationKeys = [];
+  for (let index = 0; index < value.declarations.length; index += 1) {
+    const row = childTuple(value.declarations[index], 8);
+    const sourceIndex = childIndex(row[0], sourceRows.length);
+    const preorderOrdinal = childInteger(row[7]);
+    append(declarationKeys, `${sourceRows[sourceIndex].path}\u0000${preorderOrdinal}`);
+  }
+  const declarations = [];
+  for (let index = 0; index < value.declarations.length; index += 1) {
+    const row = value.declarations[index];
+    const sourceIndex = childIndex(row[0], sourceRows.length);
+    const parentIndex = childNullableIndex(row[1], declarationKeys.length);
+    append(declarations, {
+      key: declarationKeys[index],
+      path: sourceRows[sourceIndex].path,
+      parentKey: parentIndex === null ? null : declarationKeys[parentIndex],
+      kind: row[2],
+      name: row[3],
+      parserNodeKind: row[4],
+      startByte: row[5],
+      endByte: row[6],
+      preorderOrdinal: row[7],
+    });
+  }
+  const relations = [];
+  for (let index = 0; index < value.relations.length; index += 1) {
+    const row = childTuple(value.relations[index], 8);
+    const sourceIndex = childIndex(row[0], sourceRows.length);
+    const ownerIndex = childNullableIndex(row[1], declarationKeys.length);
+    const targetNativeIndexes = exactArray(row[5], 'SOURCE_ORIGIN_HOST_CHILD');
+    const targetPathIndexes = exactArray(row[6], 'SOURCE_ORIGIN_HOST_CHILD');
+    append(relations, {
+      path: sourceRows[sourceIndex].path,
+      ownerNativeKey: ownerIndex === null ? null : declarationKeys[ownerIndex],
+      relationshipClass: row[2],
+      startByte: row[3],
+      endByte: row[4],
+      targetNativeKeys: arrayMap(targetNativeIndexes, (targetIndex) => declarationKeys[childIndex(targetIndex, declarationKeys.length)]),
+      targetPaths: arrayMap(targetPathIndexes, (targetIndex) => sourceRows[childIndex(targetIndex, sourceRows.length)].path),
+      targetState: row[7],
+    });
+  }
   const diagnostics = new SAFE_MAP();
   for (let index = 0; index < value.diagnostics.length; index += 1) {
-    const row = value.diagnostics[index];
-    exactObject(row, ['path','diagnostics'], 'SOURCE_ORIGIN_HOST_CHILD');
-    if (mapHas(diagnostics, row.path)) refuse('SOURCE_ORIGIN_HOST_CHILD');
-    mapSet(diagnostics, row.path, mappedDiagnostics(row.diagnostics, parserPolicy));
+    const row = childTuple(value.diagnostics[index], 2);
+    const sourcePath = sourceRows[childIndex(row[0], sourceRows.length)].path;
+    if (mapHas(diagnostics, sourcePath)) refuse('SOURCE_ORIGIN_HOST_CHILD');
+    mapSet(diagnostics, sourcePath, mappedDiagnostics(row[1], parserPolicy));
   }
   const parseResults = arrayMap(sourceRows, (row) => {
     const codes = mapGet(diagnostics, row.path);
     if (!codes) refuse('SOURCE_ORIGIN_HOST_CHILD');
     return { path: row.path, status: codes.length === 0 ? 'PARSED' : 'REFUSED', diagnosticCodes: codes };
   });
-  return { declarations: value.declarations, relations: value.relations, parseResults };
+  return { declarations, relations, parseResults };
 }
 
 function captureOptions(options) {
@@ -1265,7 +1370,7 @@ export async function decodeHostProject(options) {
   if (!entryBytes) refuse('SOURCE_ORIGIN_HOST_TOOLCHAIN');
   const replay = runHostChild(captured.selection, entryBytes, sources);
   const semantic = validateChildSemantic(replay.semantic, sourceRows, captured.parserPolicy);
-  const rows = buildSemanticRows({
+  const semanticRows = validateCapturedSemanticRows({
     repositoryId: captured.sourceManifest.repositoryId,
     parserId: captured.selection.parserId,
     sourceRows,
@@ -1275,6 +1380,7 @@ export async function decodeHostProject(options) {
     parserPolicy: captured.parserPolicy,
     resolutionPolicy: captured.resolutionPolicy,
   });
+  const rows = buildCapturedSemanticRows(semanticRows);
   const actualRuntimeLoadSet = {
     id: 'HOST',
     moduleRows: captured.selection.moduleRows,
