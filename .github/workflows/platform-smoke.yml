@@ -4,12 +4,84 @@ on:
   push:
     branches: [main]
   pull_request:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Protected observation mode"
+        required: true
+        type: choice
+        options: [observe, verify]
+      producerCommit:
+        description: "Exact Galerina producer commit"
+        required: true
+        type: string
+      agentsCommit:
+        description: "Exact AGENTS verifier commit"
+        required: true
+        type: string
+      evidenceCommit:
+        description: "Exact evidence commit (required for verify)"
+        required: false
+        type: string
 
 permissions:
   contents: read
 
+  # The resource lanes below are mandatory prerequisites for RD-0873. They
+  # remain separate from hosted platform-smoke so a generic smoke pass cannot
+  # be mistaken for native lifecycle coverage.
+
 jobs:
+  resource-harness-windows-x64:
+    name: RD-0873 resource harness (Windows x64)
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+      - name: Validate pinned native observer and resource tests
+        shell: pwsh
+        run: |
+          node scripts/build-process-tree-observer.mjs --check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node --test --test-name-pattern="Task 6C-R" scripts/tests/logic-aig-source-origin-process-tree-resource.test.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+  resource-harness-linux-x64:
+    name: RD-0873 resource harness (Linux x64)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+      - name: Validate pinned native observer and resource tests
+        run: |
+          node scripts/build-process-tree-observer.mjs --check
+          if [ $? -ne 0 ]; then exit 2; fi
+          node --test --test-name-pattern="Task 6C-R" scripts/tests/logic-aig-source-origin-process-tree-resource.test.mjs
+          if [ $? -ne 0 ]; then exit 2; fi
+
+  protected-dispatch-inputs:
+    name: Validate protected RD-0873 dispatch inputs
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    environment: rd0873-task6-evidence
+    steps:
+      - name: Validate exact commit inputs and mode relationship
+        env:
+          MODE: ${{ inputs.mode }}
+          PRODUCER: ${{ inputs.producerCommit }}
+          AGENTS: ${{ inputs.agentsCommit }}
+          EVIDENCE: ${{ inputs.evidenceCommit }}
+        run: |
+          node -e "const m=process.env.MODE,p=process.env.PRODUCER,a=process.env.AGENTS,e=process.env.EVIDENCE;if(!['observe','verify'].includes(m)||!/^[0-9a-f]{40}$/.test(p)||!/^[0-9a-f]{40}$/.test(a)||(m==='observe'&&e!=='')||(m==='verify'&&!/^[0-9a-f]{40}$/.test(e)))process.exit(2)"
+
   hosted-platforms:
     name: ${{ matrix.name }}
     strategy:

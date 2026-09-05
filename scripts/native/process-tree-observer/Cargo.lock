@@ -1,0 +1,6 @@
+# This file is intentionally dependency-free. The observer must build offline.
+version = 4
+
+[[package]]
+name = "process-tree-observer"
+version = "0.1.0"

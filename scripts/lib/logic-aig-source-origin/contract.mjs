@@ -50,6 +50,7 @@ const safeMapValues = Map.prototype.values;
 const safeSymbolIterator = Symbol.iterator;
 const safeSetIteratorNext = safeObjectGetPrototypeOf(new SafeSet()[safeSymbolIterator]()).next;
 const safeMapIteratorNext = safeObjectGetPrototypeOf(new SafeMap()[safeSymbolIterator]()).next;
+const safeBufferFrom = NodeBuffer.from;
 const safeBufferPrototype = NodeBuffer.prototype;
 const SafeUint8Array = Uint8Array;
 const safeUint8ArrayPrototype = SafeUint8Array.prototype;
@@ -228,11 +229,15 @@ function stringSlice(value, start, end) { return callIntrinsic(safeStringSlice, 
 function stringLastIndexOf(value, part) { return callIntrinsic(safeStringLastIndexOf, value, [part]); }
 function stringToLowerCase(value) { return callIntrinsic(safeStringToLowerCase, value, []); }
 function regexTest(pattern, value) {
-  safeObjectDefineProperty(pattern, 'lastIndex', { value: 0 });
+  const firstDescriptor = nullRecord();
+  firstDescriptor.value = 0;
+  safeObjectDefineProperty(pattern, 'lastIndex', firstDescriptor);
   try {
     return callIntrinsic(safeRegExpExec, pattern, [value]) !== null;
   } finally {
-    safeObjectDefineProperty(pattern, 'lastIndex', { value: 0 });
+    const finalDescriptor = nullRecord();
+    finalDescriptor.value = 0;
+    safeObjectDefineProperty(pattern, 'lastIndex', finalDescriptor);
   }
 }
 
@@ -358,9 +363,10 @@ function dataObject(value, keys) {
   if (prototype !== safeObjectPrototype && prototype !== null) refuse('SOURCE_ORIGIN_SCHEMA');
   if (safeObjectGetOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
   const names = safeObjectGetOwnPropertyNames(value);
+  if (names.length !== keys.length) refuse('SOURCE_ORIGIN_SCHEMA');
   const sortedNames = sortArray(copyArray(names), codeUnitCompare);
   const sortedKeys = sortArray(copyArray(keys), codeUnitCompare);
-  if (names.length !== keys.length || someArray(sortedNames, (name, index) => name !== sortedKeys[index])) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (someArray(sortedNames, (name, index) => name !== sortedKeys[index])) refuse('SOURCE_ORIGIN_SCHEMA');
   for (let index = 0; index < names.length; index += 1) {
     const descriptor = safeObjectGetOwnPropertyDescriptor(value, names[index]);
     if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
@@ -401,7 +407,7 @@ function nfcString(value) {
   return value;
 }
 
-function canonicalValue(value, active, depth = 0) {
+function canonicalValue(value, active, depth = 0, retainIdentities = false) {
   if (depth > 128) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
@@ -418,7 +424,15 @@ function canonicalValue(value, active, depth = 0) {
     if (safeArrayIsArray(value)) {
       checkedArray(value, 'SOURCE_ORIGIN_JSON_CANONICAL');
       const output = [];
-      for (let index = 0; index < value.length; index += 1) append(output, canonicalValue(safeObjectGetOwnPropertyDescriptor(value, `${index}`).value, active, depth + 1));
+      for (let index = 0; index < value.length; index += 1) append(
+        output,
+        canonicalValue(
+          safeObjectGetOwnPropertyDescriptor(value, `${index}`).value,
+          active,
+          depth + 1,
+          retainIdentities,
+        ),
+      );
       return output;
     }
     const prototype = safeObjectGetPrototypeOf(value);
@@ -429,11 +443,15 @@ function canonicalValue(value, active, depth = 0) {
       const key = names[index];
       const descriptor = safeObjectGetOwnPropertyDescriptor(value, key);
       if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
-      defineData(output, nfcString(key), canonicalValue(descriptor.value, active, depth + 1));
+      defineData(
+        output,
+        nfcString(key),
+        canonicalValue(descriptor.value, active, depth + 1, retainIdentities),
+      );
     }
     return output;
   } finally {
-    setDelete(active, value);
+    if (!retainIdentities) setDelete(active, value);
   }
 }
 
@@ -1620,4 +1638,873 @@ export function validateToolchainPins(value) {
   for (let index = 1; index < value.records.length; index += 1) if (codeUnitCompare(value.records[index - 1].recordId, value.records[index].recordId) >= 0) refuse('SOURCE_ORIGIN_ORDER');
   checkDigest(value, 'pinsDigest');
   return immutableCopy(value);
+}
+
+const TASK_6B_UNRESOLVED_ROW_KEYS = deepFreeze([
+  'sourceNodeId',
+  'sourceLocator',
+  'relationshipClass',
+  'reasonCode',
+  'evidenceOwnerDigest',
+  'evidenceDigest',
+]);
+const TASK_6B_UNRESOLVED_ORDER_KEYS = deepFreeze([
+  'sourceNodeId',
+  'relationshipClass',
+  'reasonCode',
+  'sourceLocator',
+  'evidenceDigest',
+]);
+const TASK_6B_SIDECAR_BODY_KEYS = deepFreeze([
+  'schema',
+  'repositoryId',
+  'expectedHead',
+  'expectedTree',
+  'gitObservation',
+  'sourcePolicy',
+  'sourceManifestDigest',
+  'resolutionInputsDigest',
+  'toolchainManifestDigest',
+  'expectedParseOutcomesDigest',
+  'parseOutcomesReceiptDigest',
+  'generatedConsumerPolicyDigest',
+  'parserPolicyDigest',
+  'repositoryIdentityDigest',
+  'graphDigest',
+  'graphRawSha256',
+  'graphByteLength',
+  'embeddedReceiptDigest',
+  'counts',
+  'unresolved',
+  'idMapDigest',
+  'toolchain',
+  'executionPolicy',
+  'nativeGraphCrossCheck',
+  'discoveryCrossChecks',
+  'limits',
+  'status',
+  'authorizing',
+]);
+const TASK_6B_NODE_KINDS = deepFreeze([
+  'CLASS', 'FILE', 'FLOW', 'FUNCTION', 'GATE', 'INTERFACE', 'METHOD', 'MODULE',
+  'ROUTE', 'SYMBOL', 'TYPE',
+]);
+const TASK_6B_RELATIONSHIP_CLASSES = deepFreeze([
+  'CALLER', 'CONTRACT', 'GENERATED_CONSUMER', 'IMPORT', 'TEST',
+]);
+const TASK_6B_REASON_CODES = deepFreeze(sortArray(
+  setValuesArray(setFromArray(UNRESOLVED_REASON_ROWS, (row) => row.reasonCode)),
+  codeUnitCompare,
+));
+const TASK_6B_REPOSITORY_ID = /^repository:[0-9a-f]{64}$/;
+const TASK_6B_NODE_ID = /^ga1:[0-9a-f]{64}$/;
+
+function task6BShallowText(value) {
+  if (typeof value !== 'string') refuse('SOURCE_ORIGIN_SCHEMA');
+}
+
+function task6BAssertDataObjectHeader(value) {
+  if (
+    value === null
+    || typeof value !== 'object'
+    || safeIsProxy(value)
+    || safeArrayIsArray(value)
+  ) refuse('SOURCE_ORIGIN_SCHEMA');
+  const prototype = safeObjectGetPrototypeOf(value);
+  if (prototype !== safeObjectPrototype && prototype !== null) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (safeObjectGetOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+}
+
+function task6BExactDataDescriptors(value, keys, names) {
+  if (names.length !== keys.length) refuse('SOURCE_ORIGIN_SCHEMA');
+  const descriptors = [];
+  for (let index = 0; index < keys.length; index += 1) {
+    const descriptor = safeObjectGetOwnPropertyDescriptor(value, keys[index]);
+    if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) {
+      refuse('SOURCE_ORIGIN_SCHEMA');
+    }
+    append(descriptors, descriptor);
+  }
+  return descriptors;
+}
+
+function task6BShallowDataObject(value, keys) {
+  task6BAssertDataObjectHeader(value);
+  task6BExactDataDescriptors(value, keys, safeObjectGetOwnPropertyNames(value));
+}
+
+function task6BShallowArrayHeader(value, maximum, code = 'SOURCE_ORIGIN_SCHEMA') {
+  if (
+    value === null
+    || typeof value !== 'object'
+    || safeIsProxy(value)
+    || !safeArrayIsArray(value)
+    || safeObjectGetPrototypeOf(value) !== safeArrayPrototype
+    || safeObjectGetOwnPropertySymbols(value).length !== 0
+  ) refuse('SOURCE_ORIGIN_SCHEMA');
+  const descriptor = safeObjectGetOwnPropertyDescriptor(value, 'length');
+  if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || descriptor.enumerable) {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  if (!safeNumberIsSafeInteger(descriptor.value) || descriptor.value < 0) {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  if (descriptor.value > maximum) refuse(code);
+  return descriptor.value;
+}
+
+function task6BShallowExecutableIdentity(value) {
+  task6BShallowDataObject(value, ['version','executableRawSha256','executableByteLength']);
+  task6BShallowText(value.version);
+  task6BShallowText(value.executableRawSha256);
+  nonNegativeInteger(value.executableByteLength);
+}
+
+function task6BShallowPackageIdentity(value) {
+  task6BShallowDataObject(value, [
+    'name','version','packageLocator','packageRawSha256','packageByteLength',
+    'entryLocator','entryRawSha256','entryByteLength',
+  ]);
+  forEachArray([
+    'name','version','packageLocator','packageRawSha256','entryLocator','entryRawSha256',
+  ], (field) => task6BShallowText(value[field]));
+  nonNegativeInteger(value.packageByteLength);
+  nonNegativeInteger(value.entryByteLength);
+}
+
+function task6BShallowRootedIdentity(value) {
+  task6BShallowDataObject(value, ['rootLocator','locator','rawSha256','byteLength']);
+  task6BShallowText(value.rootLocator);
+  task6BShallowText(value.locator);
+  task6BShallowText(value.rawSha256);
+  nonNegativeInteger(value.byteLength);
+}
+
+function task6BValidateSidecarShallow(value) {
+  forEachArray([
+    'schema','repositoryId','expectedHead','expectedTree','sourceManifestDigest',
+    'resolutionInputsDigest','toolchainManifestDigest','expectedParseOutcomesDigest',
+    'parseOutcomesReceiptDigest','generatedConsumerPolicyDigest','parserPolicyDigest',
+    'repositoryIdentityDigest','graphDigest','graphRawSha256','embeddedReceiptDigest',
+    'idMapDigest','status',
+  ], (field) => task6BShallowText(value[field]));
+  nonNegativeInteger(value.graphByteLength);
+  if (typeof value.authorizing !== 'boolean') refuse('SOURCE_ORIGIN_SCHEMA');
+
+  task6BShallowDataObject(value.gitObservation, [
+    'before','after','objectFormat','indexDigest','executionBoundary',
+  ]);
+  task6BShallowText(value.gitObservation.objectFormat);
+  task6BShallowText(value.gitObservation.indexDigest);
+  task6BShallowText(value.gitObservation.executionBoundary);
+  const observationEdges = [value.gitObservation.before, value.gitObservation.after];
+  for (let index = 0; index < observationEdges.length; index += 1) {
+    const edge = observationEdges[index];
+    task6BShallowDataObject(edge, [
+      'head','tree','indexDigest','gitVersion','gitExecutableRawSha256',
+      'gitExecutableByteLength',
+    ]);
+    forEachArray([
+      'head','tree','indexDigest','gitVersion','gitExecutableRawSha256',
+    ], (field) => task6BShallowText(edge[field]));
+    nonNegativeInteger(edge.gitExecutableByteLength);
+  }
+
+  task6BShallowDataObject(value.sourcePolicy, [
+    'policyDigest','exclusionDigest','excludedPaths','excludedBytes',
+  ]);
+  task6BShallowText(value.sourcePolicy.policyDigest);
+  task6BShallowText(value.sourcePolicy.exclusionDigest);
+  nonNegativeInteger(value.sourcePolicy.excludedPaths);
+  nonNegativeInteger(value.sourcePolicy.excludedBytes);
+
+  task6BShallowDataObject(value.counts, [
+    'sourcePaths','sourceBlobs','sourceBytes','resolutionRows','resolutionBytes',
+    'parseOutcomeRows','ownerBindings','representedFileNodes','nodesByKind',
+    'edgesByKind','unresolvedByClass','unresolvedByReason','duplicateIds',
+    'caseShadows','idMapRows',
+  ]);
+  forEachArray([
+    'sourcePaths','sourceBlobs','sourceBytes','resolutionRows','resolutionBytes',
+    'parseOutcomeRows','ownerBindings','representedFileNodes','duplicateIds',
+    'caseShadows','idMapRows',
+  ], (field) => nonNegativeInteger(value.counts[field]));
+  task6BValidateCountMap(value.counts.nodesByKind, TASK_6B_NODE_KINDS);
+  task6BValidateCountMap(value.counts.edgesByKind, TASK_6B_RELATIONSHIP_CLASSES);
+  task6BValidateCountMap(value.counts.unresolvedByClass, TASK_6B_RELATIONSHIP_CLASSES);
+  task6BValidateCountMap(value.counts.unresolvedByReason, TASK_6B_REASON_CODES);
+
+  task6BShallowDataObject(value.unresolved, ['rows','rowCount','rowsDigest']);
+  task6BShallowArrayHeader(
+    value.unresolved.rows,
+    SOURCE_ORIGIN_LIMITS.unresolvedRows,
+    'SOURCE_ORIGIN_LIMIT',
+  );
+  nonNegativeInteger(value.unresolved.rowCount);
+  task6BShallowText(value.unresolved.rowsDigest);
+
+  task6BShallowDataObject(value.toolchain, [
+    'selectedPinRecordId','selectedPinRecordDigest','pinsDigest','toolchainManifestDigest',
+    'nodeIdentity','gitIdentity','typescript','sourceOriginParser','moduleClosureDigest',
+    'actualLoadedSetDigest',
+  ]);
+  forEachArray([
+    'selectedPinRecordId','selectedPinRecordDigest','pinsDigest','toolchainManifestDigest',
+    'moduleClosureDigest','actualLoadedSetDigest',
+  ], (field) => task6BShallowText(value.toolchain[field]));
+  task6BShallowExecutableIdentity(value.toolchain.nodeIdentity);
+  task6BShallowExecutableIdentity(value.toolchain.gitIdentity);
+  task6BShallowPackageIdentity(value.toolchain.typescript);
+
+  const parser = value.toolchain.sourceOriginParser;
+  task6BShallowDataObject(parser, [
+    'sourceEntry','project','generatedEntry','generatedPackageManifest','exportNames',
+    'sourceEdgeRows','emittedEdgeRows','generatedClosureDigest',
+  ]);
+  task6BShallowDataObject(parser.sourceEntry, [
+    'rootLocator','locator','gitBlobOid','rawSha256','byteLength','exportNames',
+  ]);
+  forEachArray([
+    'rootLocator','locator','gitBlobOid','rawSha256',
+  ], (field) => task6BShallowText(parser.sourceEntry[field]));
+  nonNegativeInteger(parser.sourceEntry.byteLength);
+  if (task6BShallowArrayHeader(parser.sourceEntry.exportNames, 3) !== 3) {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  task6BShallowDataObject(parser.project, [
+    'rootLocator','locator','gitBlobOid','rawSha256','byteLength','extendsLocator',
+    'files','include','compilerOptions',
+  ]);
+  forEachArray([
+    'rootLocator','locator','gitBlobOid','rawSha256','extendsLocator',
+  ], (field) => task6BShallowText(parser.project[field]));
+  nonNegativeInteger(parser.project.byteLength);
+  if (task6BShallowArrayHeader(parser.project.files, 1) !== 1) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (task6BShallowArrayHeader(parser.project.include, 0) !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  task6BShallowDataObject(parser.project.compilerOptions, [
+    'types','noEmitOnError','incremental','composite','sourceMap','declarationMap',
+  ]);
+  if (task6BShallowArrayHeader(parser.project.compilerOptions.types, 0) !== 0) {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  forEachArray([
+    'noEmitOnError','incremental','composite','sourceMap','declarationMap',
+  ], (field) => {
+    if (typeof parser.project.compilerOptions[field] !== 'boolean') refuse('SOURCE_ORIGIN_SCHEMA');
+  });
+  task6BShallowRootedIdentity(parser.generatedEntry);
+  task6BShallowRootedIdentity(parser.generatedPackageManifest);
+  if (task6BShallowArrayHeader(parser.exportNames, 3) !== 3) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (task6BShallowArrayHeader(parser.sourceEdgeRows, TOOLCHAIN_SOURCE_EDGES.length)
+    !== TOOLCHAIN_SOURCE_EDGES.length) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (task6BShallowArrayHeader(parser.emittedEdgeRows, TOOLCHAIN_EMITTED_EDGES.length)
+    !== TOOLCHAIN_EMITTED_EDGES.length) refuse('SOURCE_ORIGIN_SCHEMA');
+  task6BShallowText(parser.generatedClosureDigest);
+
+  task6BShallowDataObject(value.executionPolicy, [
+    'argvPolicyDigest','environmentPolicyDigest','timeoutMillis','outputByteLimit',
+    'concurrencyLimit',
+  ]);
+  task6BShallowText(value.executionPolicy.argvPolicyDigest);
+  task6BShallowText(value.executionPolicy.environmentPolicyDigest);
+  nonNegativeInteger(value.executionPolicy.timeoutMillis);
+  nonNegativeInteger(value.executionPolicy.outputByteLimit);
+  nonNegativeInteger(value.executionPolicy.concurrencyLimit);
+  task6BShallowDataObject(value.nativeGraphCrossCheck, ['status','receiptDigest','authorizing']);
+  task6BShallowText(value.nativeGraphCrossCheck.status);
+  if (value.nativeGraphCrossCheck.receiptDigest !== null
+    && typeof value.nativeGraphCrossCheck.receiptDigest !== 'string') refuse('SOURCE_ORIGIN_SCHEMA');
+  if (typeof value.nativeGraphCrossCheck.authorizing !== 'boolean') refuse('SOURCE_ORIGIN_SCHEMA');
+  if (task6BShallowArrayHeader(value.discoveryCrossChecks, 0) !== 0) {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  const limitKeys = safeObjectKeys(SOURCE_ORIGIN_LIMITS);
+  task6BShallowDataObject(value.limits, limitKeys);
+  forEachArray(limitKeys, (field) => nonNegativeInteger(value.limits[field]));
+}
+
+function task6BNewCaptureWorkState() {
+  const state = nullRecord();
+  defineData(state, 'remaining', 2101248);
+  defineData(state, 'used', 0);
+  defineData(state, 'primitiveStringCodeUnitsRemaining', 83886080);
+  return state;
+}
+
+function task6BConsumeCaptureWork(state, units) {
+  if (state.remaining < units) refuse('SOURCE_ORIGIN_LIMIT');
+  state.remaining -= units;
+  state.used += units;
+}
+
+function task6BAssertCaptureWork(state, expected) {
+  if (state.used !== expected) refuse('SOURCE_ORIGIN_LIMIT');
+}
+
+function task6BConsumePrimitiveStringWork(state, value) {
+  const units = value.length;
+  if (state.primitiveStringCodeUnitsRemaining < units) {
+    refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  }
+  state.primitiveStringCodeUnitsRemaining -= units;
+}
+
+function task6BClaimIdentity(value, identities) {
+  if (setHas(identities, value)) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  setAdd(identities, value);
+}
+
+function task6BCaptureDataObject(value, keys, state, identities) {
+  task6BAssertDataObjectHeader(value);
+  task6BClaimIdentity(value, identities);
+  task6BConsumeCaptureWork(state, 1);
+  const names = safeObjectGetOwnPropertyNames(value);
+  task6BConsumeCaptureWork(state, names.length);
+  const descriptors = task6BExactDataDescriptors(value, keys, names);
+  const output = plainRecord();
+  for (let index = 0; index < keys.length; index += 1) {
+    const key = keys[index];
+    const descriptor = descriptors[index];
+    task6BConsumePrimitiveStringWork(state, key);
+    if (typeof descriptor.value === 'string') {
+      task6BConsumePrimitiveStringWork(state, descriptor.value);
+    }
+    defineData(output, key, descriptor.value);
+  }
+  return output;
+}
+
+function task6BCaptureArray(value, maximum, exactLength, limitCode, state, identities, captureElement) {
+  if (value === null || typeof value !== 'object' || safeIsProxy(value) || !safeArrayIsArray(value)) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (safeObjectGetPrototypeOf(value) !== safeArrayPrototype || safeObjectGetOwnPropertySymbols(value).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  const lengthDescriptor = safeObjectGetOwnPropertyDescriptor(value, 'length');
+  if (!lengthDescriptor || !safeObjectHasOwn(lengthDescriptor, 'value') || lengthDescriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
+  const length = lengthDescriptor.value;
+  if (!safeNumberIsSafeInteger(length) || length < 0 || length > maximum) refuse(limitCode);
+  if (exactLength !== undefined && length !== exactLength) refuse('SOURCE_ORIGIN_SCHEMA');
+  task6BClaimIdentity(value, identities);
+  task6BConsumeCaptureWork(state, 1);
+  const names = safeObjectGetOwnPropertyNames(value);
+  task6BConsumeCaptureWork(state, names.length - 1);
+  if (names.length !== length + 1 || !includesArray(names, 'length')) refuse('SOURCE_ORIGIN_SCHEMA');
+  const output = [];
+  for (let index = 0; index < length; index += 1) {
+    const descriptor = safeObjectGetOwnPropertyDescriptor(value, `${index}`);
+    if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
+    if (typeof descriptor.value === 'string') {
+      task6BConsumePrimitiveStringWork(state, descriptor.value);
+    }
+    append(output, captureElement(descriptor.value, index));
+  }
+  return output;
+}
+
+function task6BCaptureExactValues(value, expected, state, identities) {
+  return task6BCaptureArray(
+    value,
+    expected.length,
+    expected.length,
+    'SOURCE_ORIGIN_SCHEMA',
+    state,
+    identities,
+    (entry, index) => {
+      if (entry !== expected[index]) refuse('SOURCE_ORIGIN_SCHEMA');
+      return entry;
+    },
+  );
+}
+
+function task6BCaptureExactRows(value, expected, state, identities) {
+  const rowKeys = ['fromLocator','kind','exportName','specifier','toLocator'];
+  return task6BCaptureArray(
+    value,
+    expected.length,
+    expected.length,
+    'SOURCE_ORIGIN_SCHEMA',
+    state,
+    identities,
+    (entry, index) => {
+      const row = task6BCaptureDataObject(entry, rowKeys, state, identities);
+      for (let fieldIndex = 0; fieldIndex < rowKeys.length; fieldIndex += 1) {
+        const key = rowKeys[fieldIndex];
+        if (row[key] !== expected[index][key]) refuse('SOURCE_ORIGIN_SCHEMA');
+      }
+      return row;
+    },
+  );
+}
+
+function task6BCaptureUnresolvedRows(value, state, identities) {
+  const evidenceDigests = new SafeSet();
+  let previous;
+  return task6BCaptureArray(
+    value,
+    SOURCE_ORIGIN_LIMITS.unresolvedRows,
+    undefined,
+    'SOURCE_ORIGIN_LIMIT',
+    state,
+    identities,
+    (entry) => {
+      const row = task6BCaptureDataObject(entry, TASK_6B_UNRESOLVED_ROW_KEYS, state, identities);
+      forEachArray(TASK_6B_UNRESOLVED_ROW_KEYS, (field) => nonEmptyString(row[field]));
+      if (!regexTest(TASK_6B_NODE_ID, row.sourceNodeId)) refuse('SOURCE_ORIGIN_SCHEMA');
+      canonicalLocator(row.sourceLocator);
+      digest(row.evidenceOwnerDigest);
+      digest(row.evidenceDigest);
+      const reason = findArray(
+        UNRESOLVED_REASON_ROWS,
+        (candidate) => candidate.relationshipClass === row.relationshipClass && candidate.reasonCode === row.reasonCode,
+      );
+      if (!reason) refuse('SOURCE_ORIGIN_POLICY');
+      if (previous !== undefined) {
+        let compared = 0;
+        for (let fieldIndex = 0; fieldIndex < TASK_6B_UNRESOLVED_ORDER_KEYS.length; fieldIndex += 1) {
+          const field = TASK_6B_UNRESOLVED_ORDER_KEYS[fieldIndex];
+          compared = codeUnitCompare(previous[field], row[field]);
+          if (compared !== 0) break;
+        }
+        if (compared >= 0) refuse('SOURCE_ORIGIN_ORDER');
+      }
+      if (setHas(evidenceDigests, row.evidenceDigest)) refuse('SOURCE_ORIGIN_ORDER');
+      setAdd(evidenceDigests, row.evidenceDigest);
+      previous = row;
+      return row;
+    },
+  );
+}
+
+function task6BCaptureChildObject(parent, key, keys, state, identities) {
+  const child = task6BCaptureDataObject(parent[key], keys, state, identities);
+  defineData(parent, key, child);
+  return child;
+}
+
+function task6BCaptureChildExactValues(parent, key, expected, state, identities) {
+  defineData(parent, key, task6BCaptureExactValues(parent[key], expected, state, identities));
+}
+
+function task6BCaptureSidecarBody(value, state) {
+  const identities = new SafeSet();
+  const source = task6BCaptureDataObject(value, TASK_6B_SIDECAR_BODY_KEYS, state, identities);
+  task6BValidateSidecarShallow(source);
+
+  const observation = task6BCaptureChildObject(
+    source,
+    'gitObservation',
+    ['before','after','objectFormat','indexDigest','executionBoundary'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    observation,
+    'before',
+    ['head','tree','indexDigest','gitVersion','gitExecutableRawSha256','gitExecutableByteLength'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    observation,
+    'after',
+    ['head','tree','indexDigest','gitVersion','gitExecutableRawSha256','gitExecutableByteLength'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    source,
+    'sourcePolicy',
+    ['policyDigest','exclusionDigest','excludedPaths','excludedBytes'],
+    state,
+    identities,
+  );
+
+  const counts = task6BCaptureChildObject(
+    source,
+    'counts',
+    [
+      'sourcePaths','sourceBlobs','sourceBytes','resolutionRows','resolutionBytes',
+      'parseOutcomeRows','ownerBindings','representedFileNodes','nodesByKind',
+      'edgesByKind','unresolvedByClass','unresolvedByReason','duplicateIds',
+      'caseShadows','idMapRows',
+    ],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(counts, 'nodesByKind', TASK_6B_NODE_KINDS, state, identities);
+  task6BCaptureChildObject(counts, 'edgesByKind', TASK_6B_RELATIONSHIP_CLASSES, state, identities);
+  task6BCaptureChildObject(counts, 'unresolvedByClass', TASK_6B_RELATIONSHIP_CLASSES, state, identities);
+  task6BCaptureChildObject(counts, 'unresolvedByReason', TASK_6B_REASON_CODES, state, identities);
+
+  const toolchain = task6BCaptureChildObject(
+    source,
+    'toolchain',
+    [
+      'selectedPinRecordId','selectedPinRecordDigest','pinsDigest','toolchainManifestDigest',
+      'nodeIdentity','gitIdentity','typescript','sourceOriginParser','moduleClosureDigest',
+      'actualLoadedSetDigest',
+    ],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    toolchain,
+    'nodeIdentity',
+    ['version','executableRawSha256','executableByteLength'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    toolchain,
+    'gitIdentity',
+    ['version','executableRawSha256','executableByteLength'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    toolchain,
+    'typescript',
+    [
+      'name','version','packageLocator','packageRawSha256','packageByteLength',
+      'entryLocator','entryRawSha256','entryByteLength',
+    ],
+    state,
+    identities,
+  );
+  const parser = task6BCaptureChildObject(
+    toolchain,
+    'sourceOriginParser',
+    [
+      'sourceEntry','project','generatedEntry','generatedPackageManifest','exportNames',
+      'sourceEdgeRows','emittedEdgeRows','generatedClosureDigest',
+    ],
+    state,
+    identities,
+  );
+  const sourceEntry = task6BCaptureChildObject(
+    parser,
+    'sourceEntry',
+    ['rootLocator','locator','gitBlobOid','rawSha256','byteLength','exportNames'],
+    state,
+    identities,
+  );
+  task6BCaptureChildExactValues(
+    sourceEntry,
+    'exportNames',
+    TOOLCHAIN_PARSER_EXPORTS,
+    state,
+    identities,
+  );
+  const project = task6BCaptureChildObject(
+    parser,
+    'project',
+    [
+      'rootLocator','locator','gitBlobOid','rawSha256','byteLength','extendsLocator',
+      'files','include','compilerOptions',
+    ],
+    state,
+    identities,
+  );
+  task6BCaptureChildExactValues(
+    project,
+    'files',
+    ['src/source-origin-parser-entry.ts'],
+    state,
+    identities,
+  );
+  task6BCaptureChildExactValues(project, 'include', [], state, identities);
+  const compilerOptions = task6BCaptureChildObject(
+    project,
+    'compilerOptions',
+    ['types','noEmitOnError','incremental','composite','sourceMap','declarationMap'],
+    state,
+    identities,
+  );
+  task6BCaptureChildExactValues(compilerOptions, 'types', [], state, identities);
+  task6BCaptureChildObject(
+    parser,
+    'generatedEntry',
+    ['rootLocator','locator','rawSha256','byteLength'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    parser,
+    'generatedPackageManifest',
+    ['rootLocator','locator','rawSha256','byteLength'],
+    state,
+    identities,
+  );
+  task6BCaptureChildExactValues(parser, 'exportNames', TOOLCHAIN_PARSER_EXPORTS, state, identities);
+  defineData(
+    parser,
+    'sourceEdgeRows',
+    task6BCaptureExactRows(parser.sourceEdgeRows, TOOLCHAIN_SOURCE_EDGES, state, identities),
+  );
+  defineData(
+    parser,
+    'emittedEdgeRows',
+    task6BCaptureExactRows(parser.emittedEdgeRows, TOOLCHAIN_EMITTED_EDGES, state, identities),
+  );
+
+  task6BCaptureChildObject(
+    source,
+    'executionPolicy',
+    ['argvPolicyDigest','environmentPolicyDigest','timeoutMillis','outputByteLimit','concurrencyLimit'],
+    state,
+    identities,
+  );
+  task6BCaptureChildObject(
+    source,
+    'nativeGraphCrossCheck',
+    ['status','receiptDigest','authorizing'],
+    state,
+    identities,
+  );
+  task6BCaptureChildExactValues(source, 'discoveryCrossChecks', [], state, identities);
+  task6BCaptureChildObject(source, 'limits', safeObjectKeys(SOURCE_ORIGIN_LIMITS), state, identities);
+
+  const unresolved = task6BCaptureChildObject(
+    source,
+    'unresolved',
+    ['rows','rowCount','rowsDigest'],
+    state,
+    identities,
+  );
+  defineData(unresolved, 'rows', task6BCaptureUnresolvedRows(unresolved.rows, state, identities));
+  task6BAssertCaptureWork(state, 8 * unresolved.rows.length + 294);
+  return source;
+}
+
+function task6BDomainTextDigest(domain, text) {
+  return hashParts([encodeUtf8(domain), new SafeUint8Array(1), encodeUtf8(text)]);
+}
+
+function task6BEvidenceBody(row) {
+  const body = plainRecord();
+  for (let index = 0; index < TASK_6B_UNRESOLVED_ROW_KEYS.length; index += 1) {
+    const key = TASK_6B_UNRESOLVED_ROW_KEYS[index];
+    if (key !== 'evidenceDigest') defineData(body, key, row[key]);
+  }
+  return body;
+}
+
+function task6BValidateOid(value, objectFormat) {
+  if (typeof value !== 'string' || !regexTest(objectFormat === 'sha1' ? HEX40 : HEX64, value)) refuse('SOURCE_ORIGIN_SCHEMA');
+}
+
+function task6BValidateObservationEdge(value, objectFormat, expectedHead, expectedTree, expectedIndexDigest) {
+  dataObject(value, [
+    'head','tree','indexDigest','gitVersion','gitExecutableRawSha256','gitExecutableByteLength',
+  ]);
+  task6BValidateOid(value.head, objectFormat);
+  task6BValidateOid(value.tree, objectFormat);
+  digest(value.indexDigest);
+  nonEmptyString(value.gitVersion);
+  digest(value.gitExecutableRawSha256);
+  nonNegativeInteger(value.gitExecutableByteLength);
+  if (
+    value.head !== expectedHead
+    || value.tree !== expectedTree
+    || value.indexDigest !== expectedIndexDigest
+    || value.gitExecutableByteLength === 0
+  ) refuse('SOURCE_ORIGIN_POLICY');
+}
+
+function task6BValidateCountMap(value, keys) {
+  task6BShallowDataObject(value, keys);
+  for (let index = 0; index < keys.length; index += 1) nonNegativeInteger(value[keys[index]]);
+}
+
+function task6BValidateToolchainBinding(value, manifestDigest) {
+  dataObject(value, [
+    'selectedPinRecordId','selectedPinRecordDigest','pinsDigest','toolchainManifestDigest',
+    'nodeIdentity','gitIdentity','typescript','sourceOriginParser','moduleClosureDigest',
+    'actualLoadedSetDigest',
+  ]);
+  nonEmptyString(value.selectedPinRecordId);
+  forEachArray([
+    'selectedPinRecordDigest','pinsDigest','toolchainManifestDigest','moduleClosureDigest',
+    'actualLoadedSetDigest',
+  ], (field) => digest(value[field]));
+  validateExecutableIdentity(value.nodeIdentity);
+  validateExecutableIdentity(value.gitIdentity);
+  validatePackageIdentity(value.typescript);
+  validateSourceOriginParser(value.sourceOriginParser);
+  if (value.toolchainManifestDigest !== manifestDigest) refuse('SOURCE_ORIGIN_DIGEST');
+}
+
+function task6BValidateGitObservationBridge(value) {
+  const before = value.gitObservation.before;
+  const after = value.gitObservation.after;
+  const gitIdentity = value.toolchain.gitIdentity;
+  const expectedVersion = `git version ${gitIdentity.version}`;
+  if (
+    before.gitVersion !== after.gitVersion
+    || before.gitExecutableRawSha256 !== after.gitExecutableRawSha256
+    || before.gitExecutableByteLength !== after.gitExecutableByteLength
+    || before.gitVersion !== expectedVersion
+    || before.gitExecutableRawSha256 !== gitIdentity.executableRawSha256
+    || before.gitExecutableByteLength !== gitIdentity.executableByteLength
+  ) refuse('SOURCE_ORIGIN_POLICY');
+}
+
+function task6BValidateSidecarBody(value) {
+  if (
+    value.schema !== 'galerina.logic-aig-export-receipt.v1'
+    || value.status !== 'COMPLETE'
+    || value.authorizing !== false
+    || !regexTest(TASK_6B_REPOSITORY_ID, value.repositoryId)
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  const objectFormat = value.gitObservation.objectFormat;
+  if (objectFormat !== 'sha1' && objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_SCHEMA');
+  task6BValidateOid(value.expectedHead, objectFormat);
+  task6BValidateOid(value.expectedTree, objectFormat);
+  dataObject(value.gitObservation, ['before','after','objectFormat','indexDigest','executionBoundary']);
+  digest(value.gitObservation.indexDigest);
+  if (value.gitObservation.executionBoundary !== 'COOPERATIVE_LOCAL_SAME_USER') refuse('SOURCE_ORIGIN_POLICY');
+  task6BValidateObservationEdge(
+    value.gitObservation.before,
+    objectFormat,
+    value.expectedHead,
+    value.expectedTree,
+    value.gitObservation.indexDigest,
+  );
+  task6BValidateObservationEdge(
+    value.gitObservation.after,
+    objectFormat,
+    value.expectedHead,
+    value.expectedTree,
+    value.gitObservation.indexDigest,
+  );
+  dataObject(value.sourcePolicy, ['policyDigest','exclusionDigest','excludedPaths','excludedBytes']);
+  digest(value.sourcePolicy.policyDigest);
+  digest(value.sourcePolicy.exclusionDigest);
+  nonNegativeInteger(value.sourcePolicy.excludedPaths);
+  nonNegativeInteger(value.sourcePolicy.excludedBytes);
+  if (value.sourcePolicy.excludedBytes !== 0) refuse('SOURCE_ORIGIN_POLICY');
+  forEachArray([
+    'sourceManifestDigest','resolutionInputsDigest','toolchainManifestDigest',
+    'expectedParseOutcomesDigest','parseOutcomesReceiptDigest',
+    'generatedConsumerPolicyDigest','parserPolicyDigest','repositoryIdentityDigest',
+    'graphDigest','graphRawSha256','embeddedReceiptDigest','idMapDigest',
+  ], (field) => digest(value[field]));
+  if (value.repositoryId !== `repository:${value.repositoryIdentityDigest}`) refuse('SOURCE_ORIGIN_POLICY');
+  nonNegativeInteger(value.graphByteLength);
+
+  dataObject(value.counts, [
+    'sourcePaths','sourceBlobs','sourceBytes','resolutionRows','resolutionBytes',
+    'parseOutcomeRows','ownerBindings','representedFileNodes','nodesByKind',
+    'edgesByKind','unresolvedByClass','unresolvedByReason','duplicateIds',
+    'caseShadows','idMapRows',
+  ]);
+  forEachArray([
+    'sourcePaths','sourceBlobs','sourceBytes','resolutionRows','resolutionBytes',
+    'parseOutcomeRows','ownerBindings','representedFileNodes','duplicateIds',
+    'caseShadows','idMapRows',
+  ], (field) => nonNegativeInteger(value.counts[field]));
+  task6BValidateCountMap(value.counts.nodesByKind, TASK_6B_NODE_KINDS);
+  task6BValidateCountMap(value.counts.edgesByKind, TASK_6B_RELATIONSHIP_CLASSES);
+  task6BValidateCountMap(value.counts.unresolvedByClass, TASK_6B_RELATIONSHIP_CLASSES);
+  task6BValidateCountMap(value.counts.unresolvedByReason, TASK_6B_REASON_CODES);
+  if (
+    value.counts.duplicateIds !== 0
+    || value.counts.caseShadows !== 0
+    || value.counts.idMapRows !== reduceArray(TASK_6B_NODE_KINDS, (sum, key) => sum + value.counts.nodesByKind[key], 0)
+    || value.counts.representedFileNodes > value.counts.nodesByKind.FILE
+  ) refuse('SOURCE_ORIGIN_POLICY');
+
+  nonNegativeInteger(value.unresolved.rowCount);
+  digest(value.unresolved.rowsDigest);
+  if (value.unresolved.rowCount !== value.unresolved.rows.length) refuse('SOURCE_ORIGIN_POLICY');
+  const byClass = nullRecord();
+  const byReason = nullRecord();
+  forEachArray(TASK_6B_RELATIONSHIP_CLASSES, (key) => defineData(byClass, key, 0));
+  forEachArray(TASK_6B_REASON_CODES, (key) => defineData(byReason, key, 0));
+  for (let index = 0; index < value.unresolved.rows.length; index += 1) {
+    const row = value.unresolved.rows[index];
+    byClass[row.relationshipClass] += 1;
+    byReason[row.reasonCode] += 1;
+  }
+  for (let index = 0; index < TASK_6B_RELATIONSHIP_CLASSES.length; index += 1) {
+    const key = TASK_6B_RELATIONSHIP_CLASSES[index];
+    if (value.counts.unresolvedByClass[key] !== byClass[key]) refuse('SOURCE_ORIGIN_POLICY');
+  }
+  for (let index = 0; index < TASK_6B_REASON_CODES.length; index += 1) {
+    const key = TASK_6B_REASON_CODES[index];
+    if (value.counts.unresolvedByReason[key] !== byReason[key]) refuse('SOURCE_ORIGIN_POLICY');
+  }
+
+  task6BValidateToolchainBinding(value.toolchain, value.toolchainManifestDigest);
+  task6BValidateGitObservationBridge(value);
+  dataObject(value.executionPolicy, [
+    'argvPolicyDigest','environmentPolicyDigest','timeoutMillis','outputByteLimit',
+    'concurrencyLimit',
+  ]);
+  digest(value.executionPolicy.argvPolicyDigest);
+  digest(value.executionPolicy.environmentPolicyDigest);
+  nonNegativeInteger(value.executionPolicy.timeoutMillis);
+  nonNegativeInteger(value.executionPolicy.outputByteLimit);
+  nonNegativeInteger(value.executionPolicy.concurrencyLimit);
+  if (
+    value.executionPolicy.timeoutMillis !== SOURCE_ORIGIN_LIMITS.processMillis
+    || value.executionPolicy.outputByteLimit !== SOURCE_ORIGIN_LIMITS.processOutputBytes
+    || value.executionPolicy.concurrencyLimit !== 1
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  dataObject(value.nativeGraphCrossCheck, ['status','receiptDigest','authorizing']);
+  if (
+    value.nativeGraphCrossCheck.status !== 'UNAVAILABLE'
+    || value.nativeGraphCrossCheck.receiptDigest !== null
+    || value.nativeGraphCrossCheck.authorizing !== false
+  ) refuse('SOURCE_ORIGIN_POLICY');
+  array(value.discoveryCrossChecks);
+  if (value.discoveryCrossChecks.length !== 0) refuse('SOURCE_ORIGIN_POLICY');
+  equalExact(value.limits, SOURCE_ORIGIN_LIMITS);
+}
+
+function canonicalTask6BJsonText(value) {
+  const text = serializeCanonical(canonicalValue(value, new SafeSet()));
+  if (text === undefined) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  const bytes = encodeUtf8(text);
+  if (callIntrinsic(safeTypedArrayByteLength, bytes, []) > 83886080) refuse('SOURCE_ORIGIN_JSON_CANONICAL');
+  return text;
+}
+
+export function sha256CompleteUnresolvedRowsV1(unresolvedRows) {
+  if (arguments.length !== 1) refuse('SOURCE_ORIGIN_SCHEMA');
+  const work = task6BNewCaptureWorkState();
+  const rows = task6BCaptureUnresolvedRows(unresolvedRows, work, new SafeSet());
+  task6BAssertCaptureWork(work, 1 + 8 * rows.length);
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
+    const evidenceText = canonicalTask6BJsonText(task6BEvidenceBody(row));
+    const expected = task6BDomainTextDigest('galerina.logic-aig-unresolved-evidence.v1', evidenceText);
+    if (row.evidenceDigest !== expected) refuse('SOURCE_ORIGIN_DIGEST');
+  }
+  const rowsText = canonicalTask6BJsonText(rows);
+  return task6BDomainTextDigest('galerina.logic-aig-unresolved-rows.v1', rowsText);
+}
+
+export function serializeCompleteExportSidecarV1(sidecarBody) {
+  if (arguments.length !== 1) refuse('SOURCE_ORIGIN_SCHEMA');
+  const work = task6BNewCaptureWorkState();
+  const body = task6BCaptureSidecarBody(sidecarBody, work);
+  for (let index = 0; index < body.unresolved.rows.length; index += 1) {
+    const row = body.unresolved.rows[index];
+    const evidenceText = canonicalTask6BJsonText(task6BEvidenceBody(row));
+    const expected = task6BDomainTextDigest('galerina.logic-aig-unresolved-evidence.v1', evidenceText);
+    if (row.evidenceDigest !== expected) refuse('SOURCE_ORIGIN_DIGEST');
+  }
+  const rowsText = canonicalTask6BJsonText(body.unresolved.rows);
+  const rowsDigest = task6BDomainTextDigest('galerina.logic-aig-unresolved-rows.v1', rowsText);
+  if (body.unresolved.rowsDigest !== rowsDigest) refuse('SOURCE_ORIGIN_DIGEST');
+  task6BValidateSidecarBody(body);
+  const bodyText = canonicalTask6BJsonText(body);
+  const sidecarDigest = task6BDomainTextDigest('galerina.logic-aig-export-receipt.v1', bodyText);
+  const complete = plainRecord();
+  for (let index = 0; index < TASK_6B_SIDECAR_BODY_KEYS.length; index += 1) {
+    const key = TASK_6B_SIDECAR_BODY_KEYS[index];
+    defineData(complete, key, body[key]);
+  }
+  defineData(complete, 'sidecarDigest', sidecarDigest);
+  const completeText = canonicalTask6BJsonText(complete);
+  return callIntrinsic(safeBufferFrom, NodeBuffer, [completeText, 'utf8']);
 }

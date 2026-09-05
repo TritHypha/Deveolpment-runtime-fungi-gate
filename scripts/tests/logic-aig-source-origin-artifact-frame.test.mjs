@@ -588,3 +588,26 @@ test('intrinsic Buffer extents and complete preflight refuse without executing c
     assert.equal(hostileFrame.length, 813);
     assert.equal(calls, 0);
 });
+
+test('Task 6C shared core preserves exact generic bytes', () => {
+  const manifest = buildAdmissionManifest(katAInputs());
+  assert.equal(canonicalArtifactAdmissionJson(manifest).toString('utf8'), KAT_A_MANIFEST_JSON);
+  assert.deepEqual(
+    encodeAdmissionFrame({ manifest, artifacts: katAInputs().artifacts }),
+    Buffer.from(KAT_A_FRAME_HEX, 'hex'),
+  );
+});
+
+test('Task 6C shared core preserves mutation refusals', () => {
+  const enlarged = katAInputs();
+  enlarged.profile.artifactRules[0].maxBytes = 67_108_865;
+  expectRefusal(() => buildAdmissionManifest(enlarged), 'REFUSED_PROFILE');
+
+  const manifest = buildAdmissionManifest(katAInputs());
+  const mismatched = structuredClone(manifest);
+  mismatched.artifacts[0].sha256 = '0'.repeat(64);
+  expectRefusal(
+    () => encodeAdmissionFrame({ manifest: mismatched, artifacts: katAInputs().artifacts }),
+    'REFUSED_ARTIFACT_DIGEST',
+  );
+});

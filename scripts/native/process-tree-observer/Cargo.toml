@@ -1,0 +1,13 @@
+[package]
+name = "process-tree-observer"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[profile.release]
+codegen-units = 1
+debug = false
+incremental = false
+lto = true
+panic = "abort"
+strip = true

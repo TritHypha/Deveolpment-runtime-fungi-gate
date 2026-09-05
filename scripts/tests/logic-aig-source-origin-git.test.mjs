@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   lstat,
@@ -49,9 +49,203 @@ const TEMPORARY_CAPABILITY_PATHS = Object.freeze([
   new URL("../lib/logic-aig-source-origin/owner-proposal-runtime.mjs", import.meta.url),
   new URL("logic-aig-source-origin-owner-proposal-runtime.test.mjs", import.meta.url),
 ]);
+const TASK6B_GIT_POISON_CHILD_SCHEMA = "galerina.task6b-git-buffer-poison-child.v1";
+const TASK6B_GIT_POISON_CHILD_MAX_OUTPUT_BYTES = 4096;
+const TASK6B_GIT_POISON_CHILD_TIMEOUT_MS = 180_000;
+const TASK6B_GIT_POISON_CHILD_SOURCE = String.raw`
+const schema = "galerina.task6b-git-buffer-poison-child.v1";
+const safeGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+const safeDefineProperty = Object.defineProperty;
+const safeReflectApply = Reflect.apply;
+const safeJsonStringify = JSON.stringify;
+const safeStdoutWrite = process.stdout.write;
+const [property, moduleUrl, gitExecutableLocator] = process.argv.slice(1);
+let originalDescriptor;
+let poisonInstalled = false;
+let effects = 0;
+let returned = false;
+let failureCode = null;
+let status = "REFUSED";
+try {
+  if (property !== "from" && property !== "concat") throw new Error("PROPERTY");
+  if (typeof moduleUrl !== "string" || typeof gitExecutableLocator !== "string") {
+    throw new Error("ARGUMENT");
+  }
+  const moduleNamespace = await import(moduleUrl);
+  const captureDescriptor = safeGetOwnPropertyDescriptor(moduleNamespace, "captureFrozenSource");
+  if (captureDescriptor === undefined || typeof captureDescriptor.value !== "function") {
+    throw new Error("EXPORT");
+  }
+  originalDescriptor = safeGetOwnPropertyDescriptor(Buffer, property);
+  if (originalDescriptor === undefined || typeof originalDescriptor.value !== "function") {
+    throw new Error("DESCRIPTOR");
+  }
+  const poisonDescriptor = {
+    configurable: originalDescriptor.configurable,
+    enumerable: originalDescriptor.enumerable,
+    value() {
+      effects += 1;
+      throw new Error("ATTACKER_BUFFER");
+    },
+    writable: originalDescriptor.writable,
+  };
+  safeDefineProperty(Buffer, property, poisonDescriptor);
+  poisonInstalled = true;
+  try {
+    await safeReflectApply(captureDescriptor.value, undefined, [{
+      commitOid: "a".repeat(40),
+      gitExecutableLocator,
+    }]);
+    returned = true;
+  } catch (error) {
+    if (error !== null && typeof error === "object") {
+      const codeDescriptor = safeGetOwnPropertyDescriptor(error, "code");
+      if (codeDescriptor !== undefined && typeof codeDescriptor.value === "string") {
+        failureCode = codeDescriptor.value;
+      }
+    }
+  } finally {
+    safeDefineProperty(Buffer, property, originalDescriptor);
+    poisonInstalled = false;
+  }
+  if (effects === 0 && returned === false && failureCode === "SOURCE_ORIGIN_GIT_HEAD") {
+    status = "PASS";
+  }
+} catch {
+  status = "REFUSED";
+} finally {
+  if (poisonInstalled && originalDescriptor !== undefined) {
+    try {
+      safeDefineProperty(Buffer, property, originalDescriptor);
+    } catch {
+      status = "REFUSED";
+    }
+  }
+  const receipt = { schema, status, property, effects, returned, failureCode };
+  safeReflectApply(safeStdoutWrite, process.stdout, [safeJsonStringify(receipt) + "\n"]);
+  if (status !== "PASS") process.exitCode = 1;
+}
+`;
+
+function task6BExpectedGitPoisonChildStdout(property) {
+  return `${JSON.stringify({
+    schema: TASK6B_GIT_POISON_CHILD_SCHEMA,
+    status: "PASS",
+    property,
+    effects: 0,
+    returned: false,
+    failureCode: "SOURCE_ORIGIN_GIT_HEAD",
+  })}\n`;
+}
+
+function refuseTask6BGitPoisonChild(code) {
+  throw new Error(code);
+}
+
+function verifyTask6BGitPoisonChildResult(result, property) {
+  if (property !== "from" && property !== "concat") {
+    refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_PROPERTY");
+  }
+  if (result === null || typeof result !== "object" || result.error !== undefined) {
+    refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_PROCESS");
+  }
+  if (result.signal !== null) refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_SIGNAL");
+  if (result.status !== 0) refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_EXIT");
+  if (result.stderr !== "") refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_STDERR");
+  if (result.stdout !== task6BExpectedGitPoisonChildStdout(property)) {
+    refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_STDOUT");
+  }
+}
+
+function task6BGitPoisonChildEnvironment() {
+  const environment = Object.create(null);
+  if (platform() === "win32") {
+    const systemRoot = process.env.SystemRoot;
+    if (typeof systemRoot !== "string" || systemRoot.length === 0) {
+      refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_SYSTEM_ROOT");
+    }
+    environment.SystemRoot = systemRoot;
+  }
+  return environment;
+}
+
+function runTask6BGitPoisonChild(property, gitExecutableLocator) {
+  if (property !== "from" && property !== "concat") {
+    refuseTask6BGitPoisonChild("TASK6B_GIT_POISON_CHILD_PROPERTY");
+  }
+  const argumentsList = Object.freeze([
+    "--input-type=module",
+    "--eval",
+    TASK6B_GIT_POISON_CHILD_SOURCE,
+    property,
+    new URL("../lib/logic-aig-source-origin/git-source.mjs", import.meta.url).href,
+    gitExecutableLocator,
+  ]);
+  const result = spawnSync(process.execPath, argumentsList, {
+    cwd: fileURLToPath(new URL("../../", import.meta.url)),
+    encoding: "utf8",
+    env: task6BGitPoisonChildEnvironment(),
+    maxBuffer: TASK6B_GIT_POISON_CHILD_MAX_OUTPUT_BYTES,
+    shell: false,
+    stdio: ["ignore", "pipe", "pipe"],
+    timeout: TASK6B_GIT_POISON_CHILD_TIMEOUT_MS,
+    windowsHide: true,
+  });
+  verifyTask6BGitPoisonChildResult(result, property);
+}
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function task6BCopyPropertyDescriptor(descriptor) {
+  if (descriptor === undefined) return undefined;
+  const copy = Object.create(null);
+  for (const field of ["configurable", "enumerable", "value", "writable", "get", "set"]) {
+    if (Object.hasOwn(descriptor, field)) copy[field] = descriptor[field];
+  }
+  return copy;
+}
+
+function installTask6BDescriptorFieldPoison() {
+  const safeCreate = Object.create;
+  const safeDefineProperty = Object.defineProperty;
+  const safeDeleteProperty = Reflect.deleteProperty;
+  const safeGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+  const originals = safeCreate(null);
+  originals.get = task6BCopyPropertyDescriptor(
+    safeGetOwnPropertyDescriptor(Object.prototype, "get"),
+  );
+  originals.set = task6BCopyPropertyDescriptor(
+    safeGetOwnPropertyDescriptor(Object.prototype, "set"),
+  );
+  let getTraps = 0;
+  let setTraps = 0;
+  const getDescriptor = safeCreate(null);
+  getDescriptor.configurable = true;
+  getDescriptor.enumerable = false;
+  getDescriptor.get = function task6BInheritedGet() {
+    getTraps += 1;
+    return undefined;
+  };
+  safeDefineProperty(Object.prototype, "get", getDescriptor);
+  const setDescriptor = safeCreate(null);
+  setDescriptor.configurable = true;
+  setDescriptor.enumerable = false;
+  setDescriptor.get = function task6BInheritedSet() {
+    setTraps += 1;
+    return undefined;
+  };
+  safeDefineProperty(Object.prototype, "set", setDescriptor);
+  const controller = safeCreate(null);
+  controller.counts = () => ({ get: getTraps, set: setTraps });
+  controller.restore = () => {
+    for (const field of ["get", "set"]) {
+      if (originals[field] === undefined) safeDeleteProperty(Object.prototype, field);
+      else safeDefineProperty(Object.prototype, field, originals[field]);
+    }
+  };
+  return controller;
 }
 
 async function readPinnedHeadCommit(gitExecutableLocator) {
@@ -75,14 +269,7 @@ async function readPinnedHeadCommit(gitExecutableLocator) {
     "HEAD",
     repositoryRoot,
   );
-  const systemRoot = process.env.SystemRoot;
-  assert.equal(typeof systemRoot, "string");
-  const environment = buildGitEnvironment(OWNER_PROPOSAL_POLICY.environmentPolicy, {
-    architecture: arch(),
-    parentEnvironment: { SystemRoot: systemRoot },
-    platform: platform(),
-    systemRootDirectoryObservation: { exists: true, kind: "DIRECTORY", locator: systemRoot },
-  });
+  const environment = approvedGitEnvironment();
   const commitOid = execFileSync(gitExecutableLocator, selected.arguments, {
     cwd: repositoryRoot,
     encoding: "utf8",
@@ -97,12 +284,16 @@ async function readPinnedHeadCommit(gitExecutableLocator) {
   return commitOid;
 }
 
-function approvedGitEnvironment() {
+function approvedGitEnvironment(host = {}) {
+  const currentArchitecture = host.architecture ?? arch();
+  const currentPlatform = host.platform ?? platform();
+  const hostEnvironment = host.environment ?? process.env;
   const parentEnvironment = Object.create(null);
   let systemRootDirectoryObservation = null;
-  if (platform() === "win32") {
-    const systemRoot = process.env.SystemRoot;
+  if (currentPlatform === "win32") {
+    const systemRoot = hostEnvironment.SystemRoot;
     assert.equal(typeof systemRoot, "string");
+    assert.notEqual(systemRoot, "");
     Object.defineProperty(parentEnvironment, "SystemRoot", {
       configurable: true,
       enumerable: true,
@@ -112,12 +303,71 @@ function approvedGitEnvironment() {
     systemRootDirectoryObservation = { exists: true, kind: "DIRECTORY", locator: systemRoot };
   }
   return buildGitEnvironment(OWNER_PROPOSAL_POLICY.environmentPolicy, {
-    architecture: arch(),
+    architecture: currentArchitecture,
     parentEnvironment,
-    platform: platform(),
+    platform: currentPlatform,
     systemRootDirectoryObservation,
   });
 }
+
+test("Task 6B pinned-head Git environment has a Linux-shaped no-SystemRoot regression", () => {
+  const environment = approvedGitEnvironment({
+    architecture: 'x64',
+    environment: { ARBITRARY_INHERITED_VALUE: "attacker", SystemRoot: "attacker-root" },
+    platform: "linux",
+  });
+  assert.deepEqual(Object.keys(environment).sort(), [
+    'GIT_CONFIG_GLOBAL',
+    'GIT_CONFIG_NOSYSTEM',
+    'GIT_CONFIG_SYSTEM',
+    'GIT_NO_LAZY_FETCH',
+    'GIT_NO_REPLACE_OBJECTS',
+    'GIT_OPTIONAL_LOCKS',
+    'GIT_TERMINAL_PROMPT',
+    'LANG',
+    'LC_ALL',
+    'TZ',
+  ]);
+  assert.equal(environment.GIT_CONFIG_GLOBAL, "/dev/null");
+  assert.equal(environment.GIT_CONFIG_SYSTEM, "/dev/null");
+  assert.equal(environment.GIT_OPTIONAL_LOCKS, "0");
+  assert.equal(Object.hasOwn(environment, "SystemRoot"), false);
+  assert.equal(Object.hasOwn(environment, "PATH"), false);
+});
+
+test("Task 6B Git poison child result gate is exact and fail-closed", async (t) => {
+  const stdout = task6BExpectedGitPoisonChildStdout("from");
+  const control = Object.freeze({
+    error: undefined,
+    status: 0,
+    signal: null,
+    stdout,
+    stderr: "",
+  });
+  await t.test("accepts only the exact body-free PASS line", () => {
+    assert.doesNotThrow(() => verifyTask6BGitPoisonChildResult(control, "from"));
+  });
+  for (const [name, replacement, expectedCode] of [
+    ["spawn error or timeout", { error: new Error("timeout") }, "TASK6B_GIT_POISON_CHILD_PROCESS"],
+    ["nonzero crash", { status: 1 }, "TASK6B_GIT_POISON_CHILD_EXIT"],
+    ["signal", { signal: "SIGTERM" }, "TASK6B_GIT_POISON_CHILD_SIGNAL"],
+    ["stderr", { stderr: "forbidden" }, "TASK6B_GIT_POISON_CHILD_STDERR"],
+    ["malformed or surplus stdout", { stdout: `${stdout.trimEnd()} {}` }, "TASK6B_GIT_POISON_CHILD_STDOUT"],
+  ]) {
+    await t.test(`refuses ${name}`, () => {
+      assert.throws(
+        () => verifyTask6BGitPoisonChildResult({ ...control, ...replacement }, "from"),
+        (error) => error?.message === expectedCode,
+      );
+    });
+  }
+  await t.test("refuses a property outside the fixed probe set", () => {
+    assert.throws(
+      () => verifyTask6BGitPoisonChildResult(control, "alloc"),
+      (error) => error?.message === "TASK6B_GIT_POISON_CHILD_PROPERTY",
+    );
+  });
+});
 
 function exporterBindings(value) {
   return Object.fromEntries([
@@ -1503,30 +1753,10 @@ test("post-import blob operations bypass mutable global and prototype dispatch",
     import.meta.url,
   ));
   for (const property of ["from", "concat"]) {
-    await t.test(`Buffer.${property} cannot steer frozen-source capture through contract helpers`, async () => {
-      const descriptor = safeGetDescriptor(Buffer, property);
-      let effects = 0;
-      let failure;
-      safeDefineProperty(Buffer, property, {
-        ...descriptor,
-        configurable: true,
-        value() {
-          effects += 1;
-          throw new Error(`ATTACKER_BUFFER_${property.toUpperCase()}`);
-        },
-      });
-      try {
-        await gitSource.captureFrozenSource({
-          commitOid: "a".repeat(40),
-          gitExecutableLocator,
-        });
-      } catch (error) {
-        failure = error;
-      } finally {
-        safeDefineProperty(Buffer, property, descriptor);
-      }
-      assert.equal(effects, 0);
-      assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_HEAD");
+    await t.test(`Buffer.${property} cannot steer frozen-source capture through contract helpers`, {
+      timeout: TASK6B_GIT_POISON_CHILD_TIMEOUT_MS + 10_000,
+    }, () => {
+      runTask6BGitPoisonChild(property, gitExecutableLocator);
     });
   }
 });
@@ -1623,6 +1853,41 @@ test("eighth-review Git boundary closes regex, synced hash and decorated Buffer 
     assert.equal(result, undefined);
     assert.equal(failure?.code, "SOURCE_ORIGIN_GIT_BLOB_SET");
   });
+});
+
+test("Task 6B git-source descriptors ignore inherited fields", { timeout: 900_000 }, async () => {
+  const gitExecutableLocator = platform() === "win32"
+    ? fileURLToPath(new URL(
+      "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
+      import.meta.url,
+    ))
+    : "/usr/bin/git";
+  const commitOid = await readPinnedHeadCommit(gitExecutableLocator);
+  const invalidLine = Buffer.from([0xff]);
+  const poison = installTask6BDescriptorFieldPoison();
+  let refusal;
+  let captured;
+  let failure;
+  try {
+    try {
+      gitSource.decodeGitLine(invalidLine);
+    } catch (error) {
+      refusal = error;
+    }
+    try {
+      captured = await gitSource.captureFrozenSource({ commitOid, gitExecutableLocator });
+    } catch (error) {
+      failure = error;
+    }
+  } finally {
+    poison.restore();
+  }
+  assert.deepEqual(poison.counts(), { get: 0, set: 0 });
+  assert.equal(refusal?.name, "SourceOriginCaptureRefusal");
+  assert.equal(refusal?.code, "SOURCE_ORIGIN_GIT_PROCESS");
+  assert.equal(failure, undefined);
+  assert.equal(captured?.owners.authorizing, false);
+  assert.equal(captured?.sourceManifest.expectedHead, commitOid);
 });
 
 test("twelfth-review frozen capture async boundaries ignore inherited then capabilities", { timeout: 900_000, skip: platform() !== "win32" }, async (t) => {
