@@ -5,8 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'native', 'process-tree-observer');
-const RUSTC_ID = 'rustc 1.96.1 (31fca3adb 2026-06-26)';
-const CARGO_ID = 'cargo 1.96.1 (356927216 2026-06-26)';
+const RUSTC_ID = 'rustc 1.98.1 (48a229cea 2026-09-01)';
+const CARGO_ID = 'cargo 1.98.1 (797e8a9bc 2026-08-05)';
 const TARGETS = Object.freeze({ win32: 'x86_64-pc-windows-msvc', linux: 'x86_64-unknown-linux-gnu' });
 
 function fail(code) {
@@ -21,7 +21,7 @@ function run(file, args, options = {}) {
 function ensurePinnedToolchain() {
   if (run('rustc', ['--version']) !== RUSTC_ID || run('cargo', ['--version']) !== CARGO_ID) throw new Error('HOLD_NATIVE_TOOLCHAIN_IDENTITY');
   const toolchain = readFileSync(path.join(ROOT, 'rust-toolchain.toml'), 'utf8').replace(/\r\n/gu, '\n');
-  if (toolchain !== '[toolchain]\nchannel = "1.96.1"\nprofile = "minimal"\ntargets = ["x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu"]\n') throw new Error('HOLD_NATIVE_TOOLCHAIN_PIN');
+  if (toolchain !== '[toolchain]\nchannel = "1.98.1"\nprofile = "minimal"\ntargets = ["x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu"]\n') throw new Error('HOLD_NATIVE_TOOLCHAIN_PIN');
   const target = TARGETS[process.platform];
   if (!target || process.arch !== 'x64') throw new Error('HOLD_NATIVE_PLATFORM_UNAVAILABLE');
   const installed = run('rustup', ['target', 'list', '--installed']).split(/\r?\n/gu).filter(Boolean);
