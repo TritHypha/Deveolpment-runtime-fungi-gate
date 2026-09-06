@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { access, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { constants } from 'node:fs';
+import { access, lstat, mkdtemp, open, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,6 +69,245 @@ const PLATFORM_ARTIFACT_IDS = Object.freeze([
   'expected-parse-outcomes', 'export-sidecar', 'parse-outcomes-receipt',
   'project', 'resolution-inputs', 'source-manifest', 'toolchain-manifest',
 ]);
+const PLATFORM_ARTIFACT_ROLES = Object.freeze([
+  'expected-parse-outcomes', 'export-sidecar', 'parse-outcomes-receipt',
+  'project-graph', 'resolution-inputs', 'source-manifest', 'toolchain-manifest',
+]);
+const PLATFORM_GRAPH = Object.freeze({
+  schema: 'artifact-admission-graph.v1',
+  root: 'export-sidecar',
+  nodes: PLATFORM_ARTIFACT_IDS,
+  edges: Object.freeze(PLATFORM_ARTIFACT_IDS.filter((id) => id !== 'export-sidecar').map((id) => Object.freeze({
+    from: 'export-sidecar', kind: 'requires', to: id,
+  }))),
+});
+const CONTROLLED_PLATFORM_RUNNER_ENV = Object.freeze([
+  'GALERINA_TASK6C_PLATFORM_FRAME_PATH',
+  'GALERINA_TASK6C_PLATFORM_PROFILE_PATH',
+  'GALERINA_TASK6C_PLATFORM_RECEIPT_PATH',
+]);
+const CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV = 'GALERINA_TASK6C_PLATFORM_RECEIPT_RUN';
+const GAAF_MAGIC = Buffer.from('GAAF', 'ascii');
+
+function u16(value) {
+  const bytes = Buffer.alloc(2);
+  bytes.writeUInt16BE(value);
+  return bytes;
+}
+
+function u32(value) {
+  const bytes = Buffer.alloc(4);
+  bytes.writeUInt32BE(value);
+  return bytes;
+}
+
+function u64(value) {
+  const bytes = Buffer.alloc(8);
+  bytes.writeBigUInt64BE(BigInt(value));
+  return bytes;
+}
+
+function syntheticGAAFFrame({
+  artifactBytes,
+  runId = '6'.repeat(64),
+  commitOid = '2'.repeat(40),
+  treeOid = '4'.repeat(40),
+  artifactDigestOverride = null,
+  artifactRoleOverride = null,
+  graphOverride = null,
+}) {
+  const artifacts = artifactBytes.map((bytes, index) => ({
+    id: PLATFORM_ARTIFACT_IDS[index],
+    role: artifactRoleOverride?.[index] ?? PLATFORM_ARTIFACT_ROLES[index],
+    runId,
+    sha256: artifactDigestOverride?.[index] ?? sha256(bytes),
+    byteLength: bytes.length,
+    required: true,
+  }));
+  const manifest = {
+    schema: 'artifact-admission-manifest.v1',
+    authorizing: false,
+    profileId: 'galerina.source-origin.unsigned.v1',
+    profileDigest: PINNED_PROFILE_SHA256,
+    runId,
+    subject: {
+      repositoryId: 'galerina',
+      gitObjectFormat: 'sha1',
+      commitOid,
+      treeOid,
+    },
+    artifacts,
+    graph: graphOverride ?? PLATFORM_GRAPH,
+    claims: ['captured-bytes-only'],
+    ownerRecord: null,
+  };
+  const manifestBytes = Buffer.from(canonicalJsonText(manifest), 'utf8');
+  const parts = [Buffer.from('GAAF', 'ascii'), Buffer.from([1]), u32(manifestBytes.length), manifestBytes, u16(artifactBytes.length)];
+  for (let index = 0; index < artifactBytes.length; index += 1) {
+    const id = Buffer.from(PLATFORM_ARTIFACT_IDS[index], 'utf8');
+    parts.push(u16(id.length), id, u64(artifactBytes[index].length), artifactBytes[index]);
+  }
+  return Buffer.concat(parts);
+}
+
+function platformRunnerRefusal(code) {
+  const error = new Error(code);
+  error.code = code;
+  throw error;
+}
+
+function boundedFrameInteger(bytes, offset, width, code) {
+  if (!Number.isSafeInteger(offset) || offset < 0 || offset > bytes.length - width) platformRunnerRefusal(code);
+  if (width === 2) return bytes.readUInt16BE(offset);
+  if (width === 4) return bytes.readUInt32BE(offset);
+  const value = bytes.readBigUInt64BE(offset);
+  if (value > BigInt(Number.MAX_SAFE_INTEGER)) platformRunnerRefusal(code);
+  return Number(value);
+}
+
+function canonicalJsonFromBytes(bytes, code) {
+  if (!Buffer.isBuffer(bytes) || bytes.length === 0 || bytes.includes(0x0a) || bytes.includes(0x0d)) platformRunnerRefusal(code);
+  const text = bytes.toString('utf8');
+  if (!Buffer.from(text, 'utf8').equals(bytes)) platformRunnerRefusal(code);
+  let value;
+  try { value = JSON.parse(text); } catch { platformRunnerRefusal(code); }
+  if (canonicalJsonText(value) !== text) platformRunnerRefusal(code);
+  return value;
+}
+
+function decodeBoundedPlatformGAAF(frameBytes) {
+  if (!Buffer.isBuffer(frameBytes) || frameBytes.length < 11 || frameBytes.length > 134_217_728) platformRunnerRefusal('HOLD_PLATFORM_FRAME_SIZE');
+  if (!frameBytes.subarray(0, 4).equals(GAAF_MAGIC) || frameBytes[4] !== 1) platformRunnerRefusal('HOLD_PLATFORM_FRAME_SCHEMA');
+  const manifestLength = boundedFrameInteger(frameBytes, 5, 4, 'HOLD_PLATFORM_FRAME_SCHEMA');
+  if (manifestLength === 0 || manifestLength > 1_048_576 || 9 + manifestLength > frameBytes.length - 2) platformRunnerRefusal('HOLD_PLATFORM_FRAME_SCHEMA');
+  const manifest = canonicalJsonFromBytes(frameBytes.subarray(9, 9 + manifestLength), 'HOLD_PLATFORM_MANIFEST');
+  if (!exactKeys(manifest, ['schema', 'authorizing', 'profileId', 'profileDigest', 'runId', 'subject', 'artifacts', 'graph', 'claims', 'ownerRecord'])) platformRunnerRefusal('HOLD_PLATFORM_MANIFEST');
+  if (manifest.schema !== 'artifact-admission-manifest.v1' || manifest.authorizing !== false || manifest.profileId !== 'galerina.source-origin.unsigned.v1' || manifest.profileDigest !== PINNED_PROFILE_SHA256 || !/^[0-9a-f]{64}$/u.test(manifest.runId)) platformRunnerRefusal('HOLD_PLATFORM_MANIFEST');
+  if (!exactKeys(manifest.subject, ['repositoryId', 'gitObjectFormat', 'commitOid', 'treeOid']) || manifest.subject.repositoryId !== 'galerina' || manifest.subject.gitObjectFormat !== 'sha1' || !/^[0-9a-f]{40}$/u.test(manifest.subject.commitOid) || !/^[0-9a-f]{40}$/u.test(manifest.subject.treeOid)) platformRunnerRefusal('HOLD_PLATFORM_MANIFEST');
+  if (!exactKeys(manifest.graph, ['schema', 'root', 'nodes', 'edges']) || canonicalJsonText(manifest.graph) !== canonicalJsonText(PLATFORM_GRAPH) || canonicalJsonText(manifest.claims) !== '["captured-bytes-only"]' || manifest.ownerRecord !== null) platformRunnerRefusal('HOLD_PLATFORM_MANIFEST');
+  if (!Array.isArray(manifest.artifacts) || manifest.artifacts.length !== PLATFORM_ARTIFACT_IDS.length) platformRunnerRefusal('HOLD_PLATFORM_MANIFEST');
+  let offset = 9 + manifestLength;
+  const artifactCount = boundedFrameInteger(frameBytes, offset, 2, 'HOLD_PLATFORM_FRAME_SCHEMA');
+  offset += 2;
+  if (artifactCount !== PLATFORM_ARTIFACT_IDS.length) platformRunnerRefusal('HOLD_PLATFORM_FRAME_SCHEMA');
+  const artifactBytes = [];
+  for (let index = 0; index < artifactCount; index += 1) {
+    const row = manifest.artifacts[index];
+    if (!exactKeys(row, ['id', 'role', 'runId', 'sha256', 'byteLength', 'required']) || row.id !== PLATFORM_ARTIFACT_IDS[index] || row.role !== PLATFORM_ARTIFACT_ROLES[index] || row.runId !== manifest.runId || row.required !== true || !/^[0-9a-f]{64}$/u.test(row.sha256) || !Number.isSafeInteger(row.byteLength) || row.byteLength < 0) platformRunnerRefusal('HOLD_PLATFORM_MANIFEST');
+    const idLength = boundedFrameInteger(frameBytes, offset, 2, 'HOLD_PLATFORM_FRAME_SCHEMA');
+    offset += 2;
+    if (idLength === 0 || idLength > 128 || offset > frameBytes.length - idLength - 8) platformRunnerRefusal('HOLD_PLATFORM_FRAME_SCHEMA');
+    const idBytes = frameBytes.subarray(offset, offset + idLength);
+    offset += idLength;
+    const id = idBytes.toString('utf8');
+    if (!Buffer.from(id, 'utf8').equals(idBytes) || id !== row.id) platformRunnerRefusal('HOLD_PLATFORM_ARTIFACT_BINDING');
+    const length = boundedFrameInteger(frameBytes, offset, 8, 'HOLD_PLATFORM_FRAME_SCHEMA');
+    offset += 8;
+    const maximum = id === 'export-sidecar' ? 83_886_080 : 67_108_864;
+    if (length > maximum || length !== row.byteLength || offset > frameBytes.length - length) platformRunnerRefusal('HOLD_PLATFORM_ARTIFACT_BINDING');
+    const body = Buffer.from(frameBytes.subarray(offset, offset + length));
+    offset += length;
+    if (sha256(body) !== row.sha256) platformRunnerRefusal('HOLD_PLATFORM_ARTIFACT_BINDING');
+    artifactBytes.push(body);
+  }
+  if (offset !== frameBytes.length) platformRunnerRefusal('HOLD_PLATFORM_FRAME_SCHEMA');
+  return { manifest, artifactBytes };
+}
+
+async function readBoundedRegularFile(pathValue, maximum, code) {
+  if (typeof pathValue !== 'string' || pathValue.length === 0) platformRunnerRefusal(code);
+  let opening;
+  try { opening = await lstat(pathValue, { bigint: true }); } catch { platformRunnerRefusal(code); }
+  const maximumBytes = BigInt(maximum);
+  if (!opening.isFile() || opening.isSymbolicLink() || opening.size < 0n || opening.size > maximumBytes) platformRunnerRefusal(code);
+  const sameFile = (left, right) => left.isFile() && !left.isSymbolicLink()
+    && left.dev === right.dev && left.ino === right.ino && left.mode === right.mode && left.size === right.size;
+  let handle;
+  let bytes;
+  let failed = false;
+  try {
+    const flags = constants.O_RDONLY | (Number.isSafeInteger(constants.O_NOFOLLOW) ? constants.O_NOFOLLOW : 0);
+    try {
+      handle = await open(pathValue, flags);
+    } catch (error) {
+      if (error?.code !== 'EINVAL' && error?.code !== 'ENOTSUP' && error?.code !== 'EOPNOTSUPP') throw error;
+      handle = await open(pathValue, constants.O_RDONLY);
+    }
+    const held = await handle.stat({ bigint: true });
+    if (!sameFile(opening, held) || held.size > maximumBytes) throw new Error();
+    bytes = Buffer.allocUnsafeSlow(Number(held.size));
+    let offset = 0;
+    while (offset < bytes.length) {
+      const result = await handle.read(bytes, offset, bytes.length - offset, offset);
+      if (!Number.isSafeInteger(result.bytesRead) || result.bytesRead <= 0) throw new Error();
+      offset += result.bytesRead;
+    }
+    const closing = await lstat(pathValue, { bigint: true });
+    if (!sameFile(opening, closing) || !sameFile(held, closing)) throw new Error();
+  } catch {
+    failed = true;
+  } finally {
+    if (handle !== undefined) {
+      try { await handle.close(); } catch { failed = true; }
+    }
+  }
+  if (failed || bytes === undefined) platformRunnerRefusal(code);
+  return bytes;
+}
+
+async function requireAbsentPlatformReceipt(pathValue) {
+  if (typeof pathValue !== 'string' || pathValue.length === 0) platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_OUTPUT');
+  try {
+    await lstat(pathValue);
+  } catch (error) {
+    if (error?.code === 'ENOENT') return;
+    platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_OUTPUT');
+  }
+  platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_OUTPUT');
+}
+
+async function emitControlledPlatformObservation({ profilePath, framePath, receiptPath }) {
+  const platform = process.platform;
+  if ((platform !== 'win32' && platform !== 'linux') || process.arch !== 'x64') platformRunnerRefusal('HOLD_PLATFORM_UNAVAILABLE');
+  await requireAbsentPlatformReceipt(receiptPath);
+  const profileBytes = await readBoundedRegularFile(profilePath, 1_048_576, 'HOLD_PLATFORM_PROFILE');
+  if (profileBytes.length !== PINNED_PROFILE.length || sha256(profileBytes) !== PINNED_PROFILE_SHA256 || profileBytes.includes(0x0a) || profileBytes.includes(0x0d)) platformRunnerRefusal('HOLD_PLATFORM_PROFILE');
+  const frameBytes = await readBoundedRegularFile(framePath, 134_217_728, 'HOLD_PLATFORM_FRAME_SIZE');
+  const { manifest, artifactBytes } = decodeBoundedPlatformGAAF(frameBytes);
+  const { receipt, receiptBytes } = buildPendingPlatformObservation({
+    platform,
+    profileBytes,
+    frameBytes,
+    artifactBytes,
+    producerTree: manifest.subject.treeOid,
+    runId: manifest.runId,
+    producerCommit: manifest.subject.commitOid,
+  });
+  try {
+    await writeFile(receiptPath, receiptBytes, { flag: 'wx', mode: 0o600 });
+  } catch {
+    platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_OUTPUT');
+  }
+  return receipt;
+}
+
+async function runControlledPlatformObservationFromEnvironment() {
+  const known = new Set([...CONTROLLED_PLATFORM_RUNNER_ENV, CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV]);
+  for (const name of Object.keys(process.env)) {
+    if (name.toUpperCase().startsWith('GALERINA_TASK6C_PLATFORM_') && !known.has(name)) platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
+  }
+  const locators = CONTROLLED_PLATFORM_RUNNER_ENV.map((name) => process.env[name]);
+  const supplied = locators.map((value) => value !== undefined);
+  const present = locators.map((value) => typeof value === 'string' && value.length > 0);
+  const activation = process.env[CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV];
+  if (activation === undefined && supplied.every((value) => !value)) return null;
+  if (activation !== '1' || !present.every(Boolean) || new Set(locators).size !== locators.length) platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
+  return emitControlledPlatformObservation({
+    framePath: locators[0],
+    profilePath: locators[1],
+    receiptPath: locators[2],
+  });
+}
 
 function exactKeys(value, keys) {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
@@ -126,7 +366,9 @@ function buildPendingPlatformObservation({
   profileBytes,
   frameBytes,
   artifactBytes,
+  producerCommit = GENUINE_COMMIT,
   producerTree = '1'.repeat(40),
+  runId = RUN_ID,
   metadata = null,
 }) {
   assert.equal(platform === 'win32' || platform === 'linux', true);
@@ -135,7 +377,10 @@ function buildPendingPlatformObservation({
   assert.equal(Array.isArray(artifactBytes), true);
   assert.equal(artifactBytes.length, PLATFORM_ARTIFACT_IDS.length);
   const receipt = pendingPlatformReceipt(platform);
+  receipt.producerCommit = producerCommit;
   receipt.producerTree = producerTree;
+  receipt.runId = runId;
+  receipt.git.commitOid = producerCommit;
   receipt.git.treeOid = producerTree;
   if (metadata !== null) {
     assert.deepEqual(Object.keys(metadata).sort(), [
@@ -580,6 +825,318 @@ test('Task 6C defines the pending actual-platform observation runner', () => {
       },
     },
   }));
+});
+
+test('Task 6C binds a controlled GAAF observation to the manifest run and seven bodies', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-runner-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes }), { flag: 'wx', mode: 0o600 });
+
+    const receipt = await emitControlledPlatformObservation({ profilePath, framePath, receiptPath });
+
+    const platform = process.platform === 'win32' ? 'win32' : 'linux';
+    assert.equal(receipt.platform, platform);
+    assert.equal(receipt.runId, '6'.repeat(64));
+    assert.equal(receipt.producerCommit, '2'.repeat(40));
+    assert.equal(receipt.producerTree, '4'.repeat(40));
+    assert.deepEqual(
+      receipt.artifacts,
+      artifactBytes.map((bytes, index) => ({
+        id: PLATFORM_ARTIFACT_IDS[index],
+        byteLength: bytes.length,
+        sha256: sha256(bytes),
+      })),
+    );
+    const receiptBytes = await readFile(receiptPath);
+    assert.equal(receiptBytes.includes(0x0a), false);
+    assert.equal(receiptBytes.includes(0x0d), false);
+    assert.deepEqual(validatePendingPlatformReceipt(receiptBytes, platform, null, true, await readFile(framePath), PINNED_PROFILE, artifactBytes), receipt);
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C refuses a resource-receipt output collision and unbound raw artifact body', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-refusal-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'resource-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes }), { flag: 'wx', mode: 0o600 });
+    const resourceReceiptBytes = Buffer.from('{"schema":"galerina.logic-aig-task6-resource-receipt.v1"}', 'utf8');
+    await writeFile(receiptPath, resourceReceiptBytes, { flag: 'wx', mode: 0o600 });
+    await assert.rejects(
+      () => emitControlledPlatformObservation({ profilePath, framePath, receiptPath }),
+      /HOLD_PLATFORM_RECEIPT_OUTPUT/u,
+    );
+    assert.deepEqual(await readFile(receiptPath), resourceReceiptBytes);
+    await rm(receiptPath, { force: false });
+
+    const mismatchedDigests = artifactBytes.map((body) => sha256(body));
+    mismatchedDigests[0] = '0'.repeat(64);
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes, artifactDigestOverride: mismatchedDigests }), { flag: 'w', mode: 0o600 });
+    await assert.rejects(
+      () => emitControlledPlatformObservation({ profilePath, framePath, receiptPath }),
+      /HOLD_PLATFORM_ARTIFACT_BINDING/u,
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C rejects a GAAF artifact role that diverges from the pinned profile', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-role-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    const roles = [...PLATFORM_ARTIFACT_ROLES];
+    roles[3] = 'project';
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes, artifactRoleOverride: roles }), { flag: 'wx', mode: 0o600 });
+    await assert.rejects(
+      () => emitControlledPlatformObservation({ profilePath, framePath, receiptPath }),
+      /HOLD_PLATFORM_MANIFEST/u,
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C rejects a GAAF graph that does not match the frozen producer closure', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-graph-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    const graph = { ...PLATFORM_GRAPH, nodes: [...PLATFORM_GRAPH.nodes], edges: [] };
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes, graphOverride: graph }), { flag: 'wx', mode: 0o600 });
+    await assert.rejects(
+      () => emitControlledPlatformObservation({ profilePath, framePath, receiptPath }),
+      /HOLD_PLATFORM_MANIFEST/u,
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C rejects a high-bit GAAF magic spoof before manifest decoding', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-magic-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    const frame = syntheticGAAFFrame({ artifactBytes });
+    frame[0] = 0xc7;
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, frame, { flag: 'wx', mode: 0o600 });
+    await assert.rejects(
+      () => emitControlledPlatformObservation({ profilePath, framePath, receiptPath }),
+      /HOLD_PLATFORM_FRAME_SCHEMA/u,
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C refuses a partial controlled actual-platform runner environment', async () => {
+  const name = 'GALERINA_TASK6C_PLATFORM_FRAME_PATH';
+  const prior = process.env[name];
+  try {
+    process.env[name] = 'controlled-frame.gaaf';
+    await assert.rejects(
+      () => runControlledPlatformObservationFromEnvironment(),
+      /HOLD_PLATFORM_CONTROLLED_INPUT/u,
+    );
+  } finally {
+    if (prior === undefined) delete process.env[name];
+    else process.env[name] = prior;
+  }
+});
+
+test('Task 6C refuses supplied platform runner locators without exact activation', async () => {
+  const names = [...CONTROLLED_PLATFORM_RUNNER_ENV, CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV];
+  const prior = new Map(names.map((name) => [name, process.env[name]]));
+  try {
+    process.env.GALERINA_TASK6C_PLATFORM_FRAME_PATH = 'controlled-frame.gaaf';
+    process.env.GALERINA_TASK6C_PLATFORM_PROFILE_PATH = 'controlled-profile.json';
+    process.env.GALERINA_TASK6C_PLATFORM_RECEIPT_PATH = 'controlled-receipt.json';
+    delete process.env[CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV];
+    await assert.rejects(
+      () => runControlledPlatformObservationFromEnvironment(),
+      /HOLD_PLATFORM_CONTROLLED_INPUT/u,
+    );
+    process.env[CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV] = '0';
+    await assert.rejects(
+      () => runControlledPlatformObservationFromEnvironment(),
+      /HOLD_PLATFORM_CONTROLLED_INPUT/u,
+    );
+  } finally {
+    for (const [name, value] of prior) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  }
+});
+
+test('Task 6C refuses a case-aliased platform runner environment key', async () => {
+  const alias = 'galerina_task6c_platform_frame_path';
+  const names = [...CONTROLLED_PLATFORM_RUNNER_ENV, CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV, alias];
+  const prior = new Map(names.map((name) => [name, process.env[name]]));
+  try {
+    for (const name of names) delete process.env[name];
+    process.env[alias] = 'case-aliased-frame.gaaf';
+    await assert.rejects(
+      () => runControlledPlatformObservationFromEnvironment(),
+      /HOLD_PLATFORM_CONTROLLED_INPUT/u,
+    );
+  } finally {
+    for (const [name, value] of prior) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  }
+});
+
+test('Task 6C exercises a synthetic controlled actual-platform receipt runner', async () => {
+  const names = [...CONTROLLED_PLATFORM_RUNNER_ENV, CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV];
+  const prior = new Map(names.map((name) => [name, process.env[name]]));
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-environment-'));
+  try {
+    for (const name of CONTROLLED_PLATFORM_RUNNER_ENV) delete process.env[name];
+    assert.equal(await runControlledPlatformObservationFromEnvironment(), null);
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes }), { flag: 'wx', mode: 0o600 });
+    process.env.GALERINA_TASK6C_PLATFORM_FRAME_PATH = framePath;
+    process.env.GALERINA_TASK6C_PLATFORM_PROFILE_PATH = profilePath;
+    process.env.GALERINA_TASK6C_PLATFORM_RECEIPT_PATH = receiptPath;
+    process.env[CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV] = '1';
+    const receipt = await runControlledPlatformObservationFromEnvironment();
+    const platform = process.platform === 'win32' ? 'win32' : process.platform === 'linux' ? 'linux' : null;
+    assert.notEqual(platform, null);
+    assert.equal(receipt.platform, platform);
+    assert.equal(receipt.arch, 'x64');
+    assert.equal(receipt.authorizing, false);
+    assert.equal(receipt.status, 'PENDING_EXACT_BYTES');
+  } finally {
+    for (const [name, value] of prior) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C captures a controlled actual-platform receipt from supplied environment', async () => {
+  const receipt = await runControlledPlatformObservationFromEnvironment();
+  if (receipt === null) return;
+  assert.notEqual(receipt, null);
+  const platform = process.platform === 'win32' ? 'win32' : process.platform === 'linux' ? 'linux' : null;
+  assert.notEqual(platform, null);
+  assert.equal(receipt.platform, platform);
+  assert.equal(receipt.arch, 'x64');
+  assert.equal(receipt.authorizing, false);
+  assert.equal(receipt.status, 'PENDING_EXACT_BYTES');
+});
+
+test('Task 6C proves the platform receipt entry point consumes supplied locators', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-entrypoint-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes }), { flag: 'wx', mode: 0o600 });
+    const environment = {
+      ...process.env,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_RUN: '1',
+      GALERINA_TASK6C_PLATFORM_FRAME_PATH: framePath,
+      GALERINA_TASK6C_PLATFORM_PROFILE_PATH: profilePath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_PATH: receiptPath,
+    };
+    delete environment.NODE_TEST_CONTEXT;
+    const child = spawnSync(process.execPath, [
+      '--test', '--test-reporter=tap', '--test-name-pattern',
+      '^Task 6C captures a controlled actual-platform receipt from supplied environment$',
+      fileURLToPath(import.meta.url),
+    ], {
+      encoding: 'utf8',
+      windowsHide: true,
+      timeout: 30_000,
+      maxBuffer: 1_048_576,
+      env: environment,
+    });
+    assert.equal(child.error, undefined);
+    assert.equal(child.status, 0, child.stderr);
+    const receiptBytes = await readFile(receiptPath);
+    const platform = process.platform === 'win32' ? 'win32' : 'linux';
+    assert.deepEqual(validatePendingPlatformReceipt(receiptBytes, platform, null, true, await readFile(framePath), PINNED_PROFILE, artifactBytes).runId, '6'.repeat(64));
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C platform receipt entry point refuses supplied locators lacking activation', () => {
+  const environment = {
+    ...process.env,
+    GALERINA_TASK6C_PLATFORM_FRAME_PATH: 'controlled-frame.gaaf',
+    GALERINA_TASK6C_PLATFORM_PROFILE_PATH: 'controlled-profile.json',
+    GALERINA_TASK6C_PLATFORM_RECEIPT_PATH: 'controlled-receipt.json',
+  };
+  delete environment.NODE_TEST_CONTEXT;
+  delete environment.GALERINA_TASK6C_PLATFORM_RECEIPT_RUN;
+  const child = spawnSync(process.execPath, [
+    '--test', '--test-reporter=tap', '--test-name-pattern',
+    '^Task 6C captures a controlled actual-platform receipt from supplied environment$',
+    fileURLToPath(import.meta.url),
+  ], {
+    encoding: 'utf8',
+    windowsHide: true,
+    timeout: 30_000,
+    maxBuffer: 1_048_576,
+    env: environment,
+  });
+  assert.equal(child.error, undefined);
+  assert.notEqual(child.status, 0);
+  assert.match(child.stdout, /HOLD_PLATFORM_CONTROLLED_INPUT/u);
+});
+
+test('Task 6C platform receipt entry point refuses an explicitly empty locator', () => {
+  const environment = { ...process.env, GALERINA_TASK6C_PLATFORM_FRAME_PATH: '' };
+  delete environment.NODE_TEST_CONTEXT;
+  delete environment.GALERINA_TASK6C_PLATFORM_RECEIPT_RUN;
+  delete environment.GALERINA_TASK6C_PLATFORM_PROFILE_PATH;
+  delete environment.GALERINA_TASK6C_PLATFORM_RECEIPT_PATH;
+  const child = spawnSync(process.execPath, [
+    '--test', '--test-reporter=tap', '--test-name-pattern',
+    '^Task 6C captures a controlled actual-platform receipt from supplied environment$',
+    fileURLToPath(import.meta.url),
+  ], {
+    encoding: 'utf8',
+    windowsHide: true,
+    timeout: 30_000,
+    maxBuffer: 1_048_576,
+    env: environment,
+  });
+  assert.equal(child.error, undefined);
+  assert.notEqual(child.status, 0);
+  assert.match(child.stdout, /HOLD_PLATFORM_CONTROLLED_INPUT/u);
 });
 
 test('Task 6C grants 80 MiB only to the pinned root rule', async () => {
