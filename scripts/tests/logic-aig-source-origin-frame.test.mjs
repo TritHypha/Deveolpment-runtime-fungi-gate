@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
-import { access, lstat, mkdtemp, open, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, lstat, mkdtemp, open, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -87,6 +87,11 @@ const CONTROLLED_PLATFORM_RUNNER_ENV = Object.freeze([
   'GALERINA_TASK6C_PLATFORM_RECEIPT_PATH',
 ]);
 const CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV = 'GALERINA_TASK6C_PLATFORM_RECEIPT_RUN';
+const CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ENV = Object.freeze([
+  'GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH',
+  'GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT',
+]);
+const CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ACTIVATION_ENV = 'GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN';
 const GAAF_MAGIC = Buffer.from('GAAF', 'ascii');
 
 function u16(value) {
@@ -292,7 +297,12 @@ async function emitControlledPlatformObservation({ profilePath, framePath, recei
 }
 
 async function runControlledPlatformObservationFromEnvironment() {
-  const known = new Set([...CONTROLLED_PLATFORM_RUNNER_ENV, CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV]);
+  const known = new Set([
+    ...CONTROLLED_PLATFORM_RUNNER_ENV,
+    CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV,
+    ...CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ENV,
+    CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ACTIVATION_ENV,
+  ]);
   for (const name of Object.keys(process.env)) {
     if (name.toUpperCase().startsWith('GALERINA_TASK6C_PLATFORM_') && !known.has(name)) platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
   }
@@ -301,12 +311,47 @@ async function runControlledPlatformObservationFromEnvironment() {
   const present = locators.map((value) => typeof value === 'string' && value.length > 0);
   const activation = process.env[CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV];
   if (activation === undefined && supplied.every((value) => !value)) return null;
-  if (activation !== '1' || !present.every(Boolean) || new Set(locators).size !== locators.length) platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
+  const conflicting = [...CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ENV, CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ACTIVATION_ENV]
+    .some((name) => process.env[name] !== undefined);
+  if (activation !== '1' || !present.every(Boolean) || conflicting || new Set(locators).size !== locators.length) platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
   return emitControlledPlatformObservation({
     framePath: locators[0],
     profilePath: locators[1],
     receiptPath: locators[2],
   });
+}
+
+async function runControlledPlatformReceiptValidationFromEnvironment() {
+  const known = new Set([
+    ...CONTROLLED_PLATFORM_RUNNER_ENV,
+    CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV,
+    ...CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ENV,
+    CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ACTIVATION_ENV,
+  ]);
+  for (const name of Object.keys(process.env)) {
+    if (name.toUpperCase().startsWith('GALERINA_TASK6C_PLATFORM_') && !known.has(name)) platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
+  }
+  const [receiptPath, expectedCommit] = CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ENV.map((name) => process.env[name]);
+  const supplied = [receiptPath, expectedCommit].map((value) => value !== undefined);
+  const present = [receiptPath, expectedCommit].map((value) => typeof value === 'string' && value.length > 0);
+  const activation = process.env[CONTROLLED_PLATFORM_RECEIPT_VALIDATOR_ACTIVATION_ENV];
+  const conflicting = [...CONTROLLED_PLATFORM_RUNNER_ENV, CONTROLLED_PLATFORM_RUNNER_ACTIVATION_ENV]
+    .some((name) => process.env[name] !== undefined);
+  if (activation === undefined && supplied.every((value) => !value) && !conflicting) return null;
+  if (activation !== '1' || !present.every(Boolean) || conflicting || !/^[0-9a-f]{40}$/u.test(expectedCommit)) {
+    platformRunnerRefusal('HOLD_PLATFORM_CONTROLLED_INPUT');
+  }
+  const platform = process.platform;
+  if ((platform !== 'win32' && platform !== 'linux') || process.arch !== 'x64') platformRunnerRefusal('HOLD_PLATFORM_UNAVAILABLE');
+  const receiptBytes = await readBoundedRegularFile(receiptPath, 1_048_576, 'HOLD_PLATFORM_RECEIPT_SCHEMA');
+  let receipt;
+  try {
+    receipt = validatePendingPlatformReceipt(receiptBytes, platform, null, true);
+  } catch {
+    platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_SCHEMA');
+  }
+  if (receipt.producerCommit !== expectedCommit) platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_IDENTITY');
+  return receipt;
 }
 
 function exactKeys(value, keys) {
@@ -441,6 +486,7 @@ function validatePendingPlatformReceipt(
   assert.equal(receiptBytes.includes(0x0a), false);
   assert.equal(receiptBytes.includes(0x0d), false);
   const text = receiptBytes.toString('utf8');
+  assert.equal(Buffer.from(text, 'utf8').equals(receiptBytes), true);
   const receipt = JSON.parse(text);
   assert.equal(canonicalJsonText(receipt), text);
   assert.equal(exactKeys(receipt, PLATFORM_RECEIPT_KEYS), true);
@@ -1052,6 +1098,235 @@ test('Task 6C captures a controlled actual-platform receipt from supplied enviro
   assert.equal(receipt.arch, 'x64');
   assert.equal(receipt.authorizing, false);
   assert.equal(receipt.status, 'PENDING_EXACT_BYTES');
+});
+
+test('Task 6C validates a controlled supplied actual-platform receipt', async () => {
+  const receipt = await runControlledPlatformReceiptValidationFromEnvironment();
+  if (receipt === null) return;
+  assert.equal(receipt.producerCommit, process.env.GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT);
+});
+
+test('Task 6C platform receipt validation entry point binds a supplied canonical receipt to the expected producer commit', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-validator-'));
+  try {
+    const platform = process.platform === 'win32' ? 'win32' : process.platform === 'linux' ? 'linux' : null;
+    assert.notEqual(platform, null);
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    const { receiptBytes } = buildPendingPlatformObservation({
+      platform,
+      profileBytes: PINNED_PROFILE,
+      frameBytes: syntheticGAAFFrame({ artifactBytes, commitOid: GENUINE_COMMIT }),
+      artifactBytes,
+      producerTree: '4'.repeat(40),
+      runId: '6'.repeat(64),
+    });
+    await writeFile(receiptPath, receiptBytes, { flag: 'wx', mode: 0o600 });
+    const environment = {
+      ...process.env,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH: receiptPath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT: GENUINE_COMMIT,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN: '1',
+    };
+    delete environment.NODE_TEST_CONTEXT;
+    const child = spawnSync(process.execPath, [
+      '--test', '--test-reporter=tap', '--test-name-pattern',
+      '^Task 6C validates a controlled supplied actual-platform receipt$',
+      fileURLToPath(import.meta.url),
+    ], {
+      encoding: 'utf8',
+      cwd: directory,
+      windowsHide: true,
+      timeout: 30_000,
+      maxBuffer: 1_048_576,
+      env: environment,
+    });
+    assert.equal(child.error, undefined);
+    assert.equal(child.status, 0, child.stdout + child.stderr);
+    assert.deepEqual(await readdir(directory), ['platform-receipt.json']);
+    assert.deepEqual(await readFile(receiptPath), receiptBytes);
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C platform receipt validation entry point refuses a canonical receipt bound to a different producer commit', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-validator-refusal-'));
+  try {
+    const platform = process.platform === 'win32' ? 'win32' : process.platform === 'linux' ? 'linux' : null;
+    assert.notEqual(platform, null);
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    const { receiptBytes } = buildPendingPlatformObservation({
+      platform,
+      profileBytes: PINNED_PROFILE,
+      frameBytes: syntheticGAAFFrame({ artifactBytes, commitOid: 'f'.repeat(40) }),
+      artifactBytes,
+      producerCommit: 'f'.repeat(40),
+      producerTree: '4'.repeat(40),
+      runId: '6'.repeat(64),
+    });
+    await writeFile(receiptPath, receiptBytes, { flag: 'wx', mode: 0o600 });
+    const environment = {
+      ...process.env,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH: receiptPath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT: GENUINE_COMMIT,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN: '1',
+    };
+    delete environment.NODE_TEST_CONTEXT;
+    const child = spawnSync(process.execPath, [
+      '--test', '--test-reporter=tap', '--test-name-pattern',
+      '^Task 6C validates a controlled supplied actual-platform receipt$',
+      fileURLToPath(import.meta.url),
+    ], {
+      encoding: 'utf8',
+      windowsHide: true,
+      timeout: 30_000,
+      maxBuffer: 1_048_576,
+      env: environment,
+    });
+    assert.equal(child.error, undefined);
+    assert.notEqual(child.status, 0);
+    assert.match(child.stdout, /HOLD_PLATFORM_RECEIPT_IDENTITY/u);
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C platform receipt validation entry point refuses malformed UTF-8 in a concrete receipt', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-validator-utf8-'));
+  try {
+    const platform = process.platform === 'win32' ? 'win32' : process.platform === 'linux' ? 'linux' : null;
+    assert.notEqual(platform, null);
+    const selectedIdentities = {
+      git: { version: 'git-\ufffd', executableByteLength: 1, executableRawSha256: 'c'.repeat(64) },
+      node: { version: 'node-test', executableByteLength: 1, executableRawSha256: 'd'.repeat(64) },
+    };
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => id === 'toolchain-manifest'
+      ? Buffer.from(canonicalJsonText({ gitIdentity: selectedIdentities.git, nodeIdentity: selectedIdentities.node }), 'utf8')
+      : Buffer.from(`body:${id}`, 'utf8'));
+    const { receiptBytes } = buildPendingPlatformObservation({
+      platform,
+      profileBytes: PINNED_PROFILE,
+      frameBytes: syntheticGAAFFrame({ artifactBytes, commitOid: GENUINE_COMMIT }),
+      artifactBytes,
+      producerTree: '4'.repeat(40),
+      runId: '6'.repeat(64),
+      metadata: {
+        git: { commitOid: GENUINE_COMMIT, treeOid: '4'.repeat(40), blobModes: '100644' },
+        platformPinRecords: [
+          { platform: 'win32', arch: 'x64', recordId: 'win32-x64', recordDigest: 'a'.repeat(64) },
+          { platform: 'linux', arch: 'x64', recordId: 'linux-x64', recordDigest: 'b'.repeat(64) },
+        ],
+        selectedIdentities,
+        selectedPinIdentities: selectedIdentities,
+      },
+    });
+    const replacement = Buffer.from('\ufffd', 'utf8');
+    const replacementIndex = receiptBytes.indexOf(replacement);
+    assert.notEqual(replacementIndex, -1);
+    const malformedBytes = Buffer.concat([
+      receiptBytes.subarray(0, replacementIndex),
+      Buffer.from([0xff]),
+      receiptBytes.subarray(replacementIndex + replacement.length),
+    ]);
+    assert.equal(malformedBytes.toString('utf8'), receiptBytes.toString('utf8'));
+    assert.throws(() => new TextDecoder('utf-8', { fatal: true }).decode(malformedBytes), TypeError);
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const environment = {
+      ...process.env,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH: receiptPath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT: GENUINE_COMMIT,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN: '1',
+    };
+    delete environment.NODE_TEST_CONTEXT;
+    for (const bytes of [receiptBytes, malformedBytes]) {
+      await writeFile(receiptPath, bytes, { flag: bytes === receiptBytes ? 'wx' : 'w', mode: 0o600 });
+      const child = spawnSync(process.execPath, [
+        '--test', '--test-reporter=tap', '--test-name-pattern',
+        '^Task 6C validates a controlled supplied actual-platform receipt$',
+        fileURLToPath(import.meta.url),
+      ], {
+        encoding: 'utf8',
+        cwd: directory,
+        windowsHide: true,
+        timeout: 30_000,
+        maxBuffer: 1_048_576,
+        env: environment,
+      });
+      assert.equal(child.error, undefined);
+      if (bytes === receiptBytes) assert.equal(child.status, 0, child.stdout + child.stderr);
+      else {
+        assert.notEqual(child.status, 0, 'malformed UTF-8 must not be accepted after replacement decoding');
+        assert.match(child.stdout, /HOLD_PLATFORM_RECEIPT_SCHEMA/u);
+      }
+      assert.deepEqual(await readdir(directory), ['platform-receipt.json']);
+      assert.deepEqual(await readFile(receiptPath), bytes);
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C platform receipt entry points refuse every mixed control direction before output', async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-mixed-'));
+  try {
+    const profilePath = join(directory, 'profile.json');
+    const framePath = join(directory, 'frame.gaaf');
+    const validationPath = join(directory, 'validation.json');
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    await writeFile(profilePath, PINNED_PROFILE, { flag: 'wx', mode: 0o600 });
+    await writeFile(framePath, syntheticGAAFFrame({ artifactBytes }), { flag: 'wx', mode: 0o600 });
+    const captureControls = {
+      GALERINA_TASK6C_PLATFORM_FRAME_PATH: framePath,
+      GALERINA_TASK6C_PLATFORM_PROFILE_PATH: profilePath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_PATH: join(directory, 'unused-receipt.json'),
+      GALERINA_TASK6C_PLATFORM_RECEIPT_RUN: '1',
+    };
+    const validationControls = {
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH: validationPath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT: GENUINE_COMMIT,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN: '1',
+    };
+    const entryPoints = [
+      ['capture', captureControls, validationControls, '^Task 6C captures a controlled actual-platform receipt from supplied environment$'],
+      ['validation', validationControls, captureControls, '^Task 6C validates a controlled supplied actual-platform receipt$'],
+    ];
+    let index = 0;
+    for (const [mode, controls, conflicts, pattern] of entryPoints) {
+      for (const [name, value] of Object.entries(conflicts)) {
+        for (const conflictingValue of [value, '']) {
+          await t.test(`${mode} refuses ${name}${conflictingValue === '' ? ' empty' : ''}`, async () => {
+            const receiptPath = join(directory, `refused-${index++}.json`);
+            const environment = { ...process.env };
+            for (const control of [...Object.keys(captureControls), ...Object.keys(validationControls)]) delete environment[control];
+            Object.assign(environment, controls, { [name]: conflictingValue });
+            if (mode === 'capture' || name === 'GALERINA_TASK6C_PLATFORM_RECEIPT_PATH') {
+              environment.GALERINA_TASK6C_PLATFORM_RECEIPT_PATH = conflictingValue === '' && mode === 'validation' ? '' : receiptPath;
+            }
+            delete environment.NODE_TEST_CONTEXT;
+            const child = spawnSync(process.execPath, [
+              '--test', '--test-reporter=tap', '--test-name-pattern', pattern, fileURLToPath(import.meta.url),
+            ], {
+              encoding: 'utf8',
+              cwd: directory,
+              windowsHide: true,
+              timeout: 30_000,
+              maxBuffer: 1_048_576,
+              env: environment,
+            });
+            assert.equal(child.error, undefined);
+            await assert.rejects(lstat(receiptPath), { code: 'ENOENT' });
+            assert.notEqual(child.status, 0);
+            assert.match(child.stdout, /HOLD_PLATFORM_CONTROLLED_INPUT/u);
+          });
+        }
+      }
+    }
+    await assert.rejects(lstat(validationPath), { code: 'ENOENT' });
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
 });
 
 test('Task 6C proves the platform receipt entry point consumes supplied locators', async () => {
