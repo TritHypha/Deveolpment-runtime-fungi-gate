@@ -46,3 +46,29 @@ Do not extract the literal by parsing source text or create a second workflow
 copy merely to bypass that boundary. Any safe profile-provisioning mechanism
 must be explicitly scoped, tested and independently reviewed before hosted
 evidence is dispatched.
+
+## Independent profile-provisioning review
+
+An independent read-only review resolved the interface question without
+expanding Task 6C-R. The protected workflow may read the one fixed producer
+source file from the authenticated exact producer checkout, non-evaluatively
+capture exactly one supported `PINNED_PROFILE_JSON` literal, and require all of
+the following before creating its private no-LF `profile.json` file:
+
+- exactly one match with no escape, alternate form or ambiguity;
+- exactly 1,131 UTF-8 bytes and SHA-256
+  `8b89fa23a5e84d2c16f885ce8946bf1b7e4547a8f06bf63c66b9e3db60479f0e`;
+- no profile bytes, paths, frame bytes, receipts or credentials written to logs
+  or a step summary.
+
+This narrow, fixed-source extraction is not a mutable runtime authority: the
+workflow has already authenticated and checked out the exact producer commit,
+and the producer independently rejects any profile that is not byte-for-byte
+equal to its own pinned literal. It must not import or evaluate the producer
+module, because that module executes its command entry point at load time.
+
+The preceding blanket prohibition on source parsing is superseded only for
+this constrained, independently reviewed extraction. A workflow copy of the
+JSON remains prohibited, and no new producer API or CLI option is permitted by
+the current Task 6C-R scope. The workflow implementation and its full evidence
+contract remain `HOLD` until implemented and independently reviewed.
