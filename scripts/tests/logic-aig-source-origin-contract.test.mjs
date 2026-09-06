@@ -39,7 +39,7 @@ import { captureFrozenSource } from "../lib/logic-aig-source-origin/git-source.m
 
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
 const TASK_6B_REPOSITORY_ROOT = fileURLToPath(new URL("../../", import.meta.url));
-const TASK_6B_GENUINE_COMMIT = "f0de2475a7ff6f67849a25855d3c1fb45d535048";
+const TASK_6B_GENUINE_COMMIT = "20f303edc13c3c43194dff9567b06e88cf2c4acd";
 const TASK_6B_PINNED_GIT = process.platform === "win32"
   ? fileURLToPath(new URL(
     "../../.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe",
@@ -2866,12 +2866,12 @@ test("Task 6B sidecar capture bounds repeated-identity work before recursive cop
   assert.equal(traps, 0);
 });
 
-test("Task 6B replays the genuine 177699-row export", { timeout: 900_000 }, async () => {
+test("Task 6B replays the genuine 179667-row export", { timeout: 900_000 }, async () => {
   requireTask6BContractApi();
   const { decoded, sidecarBody } = await task6BGenuineFixture();
-  assert.equal(decoded.unresolved.length, 177_699);
+  assert.equal(decoded.unresolved.length, 179_667);
   const rowsText = task6BCanonicalText(decoded.unresolved);
-  assert.equal(Buffer.byteLength(rowsText, "utf8"), 74_270_556);
+  assert.equal(Buffer.byteLength(rowsText, "utf8"), 75_091_268);
   const expectedRowsDigest = task6BDomainTextDigest("galerina.logic-aig-unresolved-rows.v1", rowsText);
   assert.equal(contractApi.sha256CompleteUnresolvedRowsV1(decoded.unresolved), expectedRowsDigest);
   assert.equal(sidecarBody.unresolved.rowsDigest, expectedRowsDigest);
@@ -2882,10 +2882,10 @@ test("Task 6B replays the genuine 177699-row export", { timeout: 900_000 }, asyn
     sidecarBodyText,
   );
   const sidecarBytes = contractApi.serializeCompleteExportSidecarV1(sidecarBody);
-  assert.equal(sidecarBytes.byteLength, 74_279_137);
+  assert.equal(sidecarBytes.byteLength, 75_099_849);
   const sidecar = JSON.parse(sidecarBytes.toString("utf8"));
   assert.equal(sidecar.sidecarDigest, expectedSidecarDigest);
-  assert.equal(sidecar.unresolved.rows.length, 177_699);
+  assert.equal(sidecar.unresolved.rows.length, 179_667);
 
   const omission = {
     ...sidecarBody,

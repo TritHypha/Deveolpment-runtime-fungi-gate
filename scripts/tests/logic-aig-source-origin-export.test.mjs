@@ -11,7 +11,7 @@ import {
 } from '../lib/logic-aig-source-origin/contract.mjs';
 import * as productionExport from '../galerina-source-origin-export.mjs';
 
-const GENUINE_COMMIT = 'f0de2475a7ff6f67849a25855d3c1fb45d535048';
+const GENUINE_COMMIT = '20f303edc13c3c43194dff9567b06e88cf2c4acd';
 const TASK6B_PLAIN_SENTINEL_ARGUMENT = '--task6b-plain-exporter-sentinel';
 const TASK6B_PLAIN_SENTINEL_MODE = process.argv.length === 3
   && process.argv[2] === TASK6B_PLAIN_SENTINEL_ARGUMENT;
@@ -37,7 +37,7 @@ const TASK6B_PLAIN_SENTINEL_SUMMARY = Object.freeze({
   exactCanonicalBodyCount: 7,
   positiveBodyCount: 7,
   resultOwnNameCount: 9,
-  totalBytes: 110_300_409,
+  totalBytes: 111_870_916,
   promiseResolveSameResult: true,
   directAwaitSameResult: true,
   ids: IDS,
@@ -307,7 +307,7 @@ test('Task 6B body-free evidence diagnostic excludes artifact bodies', () => {
   ], 0);
   assert.equal(
     diagnostic,
-    '{"schema":"galerina.task6b-export-evidence.v1","status":"PASS","expectedHead":"f0de2475a7ff6f67849a25855d3c1fb45d535048","postImportRegExpTestTraps":0,"recordCount":1,"totalBytes":32,"records":[{"id":"synthetic","byteLength":32,"rawSha256":"b8a085c05e551b691dcd2ecd8626336dd2bf80f877962c88b7b640dc71ac50fa"}]}',
+    '{"schema":"galerina.task6b-export-evidence.v1","status":"PASS","expectedHead":"20f303edc13c3c43194dff9567b06e88cf2c4acd","postImportRegExpTestTraps":0,"recordCount":1,"totalBytes":32,"records":[{"id":"synthetic","byteLength":32,"rawSha256":"b8a085c05e551b691dcd2ecd8626336dd2bf80f877962c88b7b640dc71ac50fa"}]}',
   );
   assert.equal(diagnostic.includes('MUST_NOT_APPEAR'), false);
   assert.equal(diagnostic.includes('"bytes"'), false);
@@ -434,7 +434,7 @@ function assertTask6BExporterPoisonSentinel(evidence) {
     writable: false,
   });
   assert.deepEqual(evidence.resultInspection.ids, IDS);
-  assert.equal(evidence.resultInspection.totalBytes, 110_300_409);
+  assert.equal(evidence.resultInspection.totalBytes, 111_870_916);
   assert.equal(evidence.bodyInspection.length, IDS.length);
   let exactCanonicalBodyCount = 0;
   let positiveBodyCount = 0;
@@ -605,11 +605,11 @@ test('Task 6B exporter returns the genuine complete seven-body set', { timeout: 
   assert.equal(sidecar.graphRawSha256, rawSha256(projectBytes));
   assert.equal(sidecar.graphByteLength, projectBytes.byteLength);
   assert.equal(sidecar.embeddedReceiptDigest, rawSha256(receiptBytes));
-  assert.equal(sidecar.unresolved.rowCount, 177_699);
+  assert.equal(sidecar.unresolved.rowCount, 179_667);
   assert.equal(sidecar.unresolved.rowCount, sidecar.unresolved.rows.length);
-  assert.equal(Buffer.byteLength(JSON.stringify(sidecar.unresolved.rows), 'utf8'), 74_270_556);
-  assert.equal(sidecarBytes.byteLength, 74_279_137);
-  assert.equal(records.reduce((sum, record) => sum + record.bytes.byteLength, 0), 110_300_409);
+  assert.equal(Buffer.byteLength(JSON.stringify(sidecar.unresolved.rows), 'utf8'), 75_091_268);
+  assert.equal(sidecarBytes.byteLength, 75_099_849);
+  assert.equal(records.reduce((sum, record) => sum + record.bytes.byteLength, 0), 111_870_916);
   assert.equal(
     sidecar.unresolved.rowsDigest,
     sha256CompleteUnresolvedRowsV1(sidecar.unresolved.rows),

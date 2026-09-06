@@ -14,7 +14,7 @@ const RUN_ID = '3'.repeat(64);
 const PINNED_PROFILE_JSON = '{"artifactRules":[{"id":"expected-parse-outcomes","maxBytes":67108864,"required":true,"role":"expected-parse-outcomes"},{"id":"export-sidecar","maxBytes":83886080,"required":true,"role":"export-sidecar"},{"id":"parse-outcomes-receipt","maxBytes":67108864,"required":true,"role":"parse-outcomes-receipt"},{"id":"project","maxBytes":67108864,"required":true,"role":"project-graph"},{"id":"resolution-inputs","maxBytes":67108864,"required":true,"role":"resolution-inputs"},{"id":"source-manifest","maxBytes":67108864,"required":true,"role":"source-manifest"},{"id":"toolchain-manifest","maxBytes":67108864,"required":true,"role":"toolchain-manifest"}],"authorizing":false,"ownerPolicy":{"mode":"none"},"profileId":"galerina.source-origin.unsigned.v1","rootArtifactId":"export-sidecar","runBinding":"manifest-artifact-row-equality.v1","schema":"artifact-admission-profile.v1","subjectRules":{"gitObjectFormat":"sha1","repositoryId":"galerina"},"supportedClaims":["captured-bytes-only"],"unsupportedClaims":["path-identity.no-reparse","path-identity.posix-device-inode","path-identity.single-hard-link","path-identity.windows-file-id"]}';
 const PINNED_PROFILE = Buffer.from(PINNED_PROFILE_JSON, 'utf8');
 const PINNED_PROFILE_SHA256 = '8b89fa23a5e84d2c16f885ce8946bf1b7e4547a8f06bf63c66b9e3db60479f0e';
-const GENUINE_COMMIT = 'f0de2475a7ff6f67849a25855d3c1fb45d535048';
+const GENUINE_COMMIT = '20f303edc13c3c43194dff9567b06e88cf2c4acd';
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
@@ -780,14 +780,14 @@ test('Task 6C wrapper settlement shadows inherited then without changing frame b
     id,
     byteLength,
     sha256,
-    unresolvedRowByteLength: id === 'export-sidecar' ? 74270556 : null,
+    unresolvedRowByteLength: id === 'export-sidecar' ? 75091268 : null,
   })));
   assert.equal(observed.bodyRows.reduce((sum, row) => sum + row.byteLength, 0), observed.payloadByteLength);
-  assert.equal(observed.bodyRows.find((row) => row.id === 'export-sidecar').unresolvedRowByteLength, 74270556);
-  assert.equal(observed.payloadByteLength, 110300409);
-  assert.equal(observed.bodyRows.find((row) => row.id === 'export-sidecar').byteLength, 74279137);
-  assert.equal(observed.frameWithoutManifest, 110300606);
-  assert.equal(observed.headroomBeforeManifest, 23917122);
+  assert.equal(observed.bodyRows.find((row) => row.id === 'export-sidecar').unresolvedRowByteLength, 75091268);
+  assert.equal(observed.payloadByteLength, 111870916);
+  assert.equal(observed.bodyRows.find((row) => row.id === 'export-sidecar').byteLength, 75099849);
+  assert.equal(observed.frameWithoutManifest, 111871113);
+  assert.equal(observed.headroomBeforeManifest, 22346615);
   for (const row of observed.manifestRows) {
     assert.equal(row.byteLength <= (row.id === 'export-sidecar' ? 83886080 : 67108864), true);
   }

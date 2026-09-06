@@ -1929,7 +1929,7 @@ test("twelfth-review frozen capture async boundaries ignore inherited then capab
   };
 
   try {
-    await t.test("inherited getter has zero effects across internal and public results", { timeout: 900_000 }, async () => {
+    {
       const effects = freshCounters();
       let failure;
       let result;
@@ -1946,9 +1946,9 @@ test("twelfth-review frozen capture async boundaries ignore inherited then capab
       assert.deepEqual(effects, freshCounters());
       assert.equal(failure, undefined);
       assert.equal(result?.owners.authorizing, false);
-    });
+    }
 
-    await t.test("inherited data function cannot transform internals or substitute the public result", { timeout: 900_000 }, async () => {
+    {
       const effects = freshCounters();
       const injected = safeCreate(null);
       safeDefineProperty(injected, "owners", {
@@ -2004,7 +2004,7 @@ test("twelfth-review frozen capture async boundaries ignore inherited then capab
       assert.equal(failure, undefined);
       assert.notEqual(result, injected);
       assert.equal(result?.owners.authorizing, false);
-    });
+    }
   } finally {
     safeDeleteProperty(Object.prototype, "then");
     if (prior) safeDefineProperty(Object.prototype, "then", prior);
