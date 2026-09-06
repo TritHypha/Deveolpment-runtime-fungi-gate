@@ -346,7 +346,9 @@ async function runControlledPlatformReceiptValidationFromEnvironment() {
   const receiptBytes = await readBoundedRegularFile(receiptPath, 1_048_576, 'HOLD_PLATFORM_RECEIPT_SCHEMA');
   let receipt;
   try {
-    receipt = validatePendingPlatformReceipt(receiptBytes, platform, null, true);
+    const receiptPlatform = canonicalJsonFromBytes(receiptBytes, 'HOLD_PLATFORM_RECEIPT_SCHEMA')?.platform;
+    if (receiptPlatform !== 'win32' && receiptPlatform !== 'linux') platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_SCHEMA');
+    receipt = validatePendingPlatformReceipt(receiptBytes, receiptPlatform, null, true);
   } catch {
     platformRunnerRefusal('HOLD_PLATFORM_RECEIPT_SCHEMA');
   }
@@ -1145,6 +1147,66 @@ test('Task 6C platform receipt validation entry point binds a supplied canonical
     assert.equal(child.status, 0, child.stdout + child.stderr);
     assert.deepEqual(await readdir(directory), ['platform-receipt.json']);
     assert.deepEqual(await readFile(receiptPath), receiptBytes);
+  } finally {
+    await rm(directory, { recursive: true, force: false });
+  }
+});
+
+test('Task 6C platform receipt validation entry point accepts the opposite platform and refuses unsupported declarations', async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), 'galerina-task6c-platform-validator-reciprocal-'));
+  try {
+    const oppositePlatform = process.platform === 'win32' ? 'linux' : process.platform === 'linux' ? 'win32' : null;
+    assert.notEqual(oppositePlatform, null);
+    const artifactBytes = PLATFORM_ARTIFACT_IDS.map((id) => Buffer.from(`body:${id}`, 'utf8'));
+    const { receipt, receiptBytes } = buildPendingPlatformObservation({
+      platform: oppositePlatform,
+      profileBytes: PINNED_PROFILE,
+      frameBytes: syntheticGAAFFrame({ artifactBytes, commitOid: GENUINE_COMMIT }),
+      artifactBytes,
+      producerTree: '4'.repeat(40),
+      runId: '6'.repeat(64),
+    });
+    const receiptPath = join(directory, 'platform-receipt.json');
+    const environment = {
+      ...process.env,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH: receiptPath,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT: GENUINE_COMMIT,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN: '1',
+    };
+    delete environment.NODE_TEST_CONTEXT;
+    const cases = [
+      ['opposite platform', oppositePlatform, true],
+      ['unsupported platform', 'darwin', false],
+      ['case-aliased platform', 'Linux', false],
+      ['null platform', null, false],
+      ['non-string platform', ['linux'], false],
+    ];
+    for (const [label, declaredPlatform, accepted] of cases) {
+      await t.test(label, async () => {
+        const bytes = accepted ? receiptBytes : Buffer.from(canonicalJsonText({ ...receipt, platform: declaredPlatform }), 'utf8');
+        await writeFile(receiptPath, bytes, { flag: accepted ? 'wx' : 'w', mode: 0o600 });
+        const child = spawnSync(process.execPath, [
+          '--test', '--test-reporter=tap', '--test-name-pattern',
+          '^Task 6C validates a controlled supplied actual-platform receipt$',
+          fileURLToPath(import.meta.url),
+        ], {
+          encoding: 'utf8',
+          cwd: directory,
+          windowsHide: true,
+          timeout: 30_000,
+          maxBuffer: 1_048_576,
+          env: environment,
+        });
+        assert.equal(child.error, undefined);
+        if (accepted) assert.equal(child.status, 0, child.stdout + child.stderr);
+        else {
+          assert.notEqual(child.status, 0);
+          assert.match(child.stdout, /HOLD_PLATFORM_RECEIPT_SCHEMA/u);
+        }
+        assert.deepEqual(await readdir(directory), ['platform-receipt.json']);
+        assert.deepEqual(await readFile(receiptPath), bytes);
+      });
+    }
   } finally {
     await rm(directory, { recursive: true, force: false });
   }
