@@ -72,3 +72,29 @@ this constrained, independently reviewed extraction. A workflow copy of the
 JSON remains prohibited, and no new producer API or CLI option is permitted by
 the current Task 6C-R scope. The workflow implementation and its full evidence
 contract remain `HOLD` until implemented and independently reviewed.
+
+## Task 6C platform-receipt boundary
+
+Independent review of an uncommitted workflow draft found a second, separate
+contract boundary. `runFrozenGitResourceHarness` emits a native resource
+receipt with process, tick, RSS and elapsed-time evidence. It is needed to
+grade the native collection run, but it is not the canonical Task 6C
+platform-observation receipt that Task 6F reserves as its two fixture files.
+
+The existing Task 6C test contract defines that latter receipt separately. It
+binds the exact frame and profile bytes, all seven artifact rows, producer Git
+identity, both platform pin records, selected tool identities, and the frozen
+closed toolchain-difference allowlist. Its per-run resource fields cannot be
+compared byte-for-byte to a later observation fixture: doing so would reject a
+valid fresh run and would still fail to prove the Task 6C cross-platform
+allowlist relation.
+
+The uncommitted workflow draft was therefore isolated and is not a candidate
+commit. It must not be reviewed as passing, dispatched, merged or pushed.
+
+The next bounded design step is to identify the approved, workflow-callable
+Task 6C receipt construction and strict validation route, or make that route
+available under an explicitly reviewed scope. It must create each canonical
+platform receipt from the captured frame/profile and decoded artifact evidence,
+validate its closed schema, and compare the two platform receipts only through
+the frozen allowlist before any Task 6F fixture candidate can exist.
