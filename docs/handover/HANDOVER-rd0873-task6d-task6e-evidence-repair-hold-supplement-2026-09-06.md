@@ -27,3 +27,22 @@ authenticated AGENTS checkout. Do not author a second profile copy in Galerina
 or a workflow heredoc.
 
 This does not alter the prior `HOLD`; it narrows the required repair sequence.
+
+## Correction — producer-side canonical literal
+
+Direct source inspection after this supplement was committed found that
+`scripts/galerina-source-origin-frame.mjs` also contains the exact canonical
+1,131-byte JSON literal and independently pins the same SHA-256 before a frame
+is assembled. The earlier statement that the text was present *only* in the
+AGENTS test source is therefore superseded.
+
+This does not create a safe workflow input by itself: the Galerina literal is
+private to the producer module, is not a tracked profile file or exported
+profile-writing interface, and the production command deliberately requires a
+supplied `--profile` file before it will create a frame. The remaining hold is
+therefore interface and provenance design, not absence of canonical bytes.
+
+Do not extract the literal by parsing source text or create a second workflow
+copy merely to bypass that boundary. Any safe profile-provisioning mechanism
+must be explicitly scoped, tested and independently reviewed before hosted
+evidence is dispatched.
