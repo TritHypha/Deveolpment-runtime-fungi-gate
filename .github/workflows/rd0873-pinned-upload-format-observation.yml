@@ -55,9 +55,9 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           repository: TritHypha/AGENTS-SKILLS-AND-TOOLS
-          ref: b5c46bee785320ed61683001934dd7b259af4117
+          ref: 75691501c98f4fc5affd1d22aa17aa06e0c11cca
           path: rd0873-agents-source
-          fetch-depth: 7
+          fetch-depth: 8
           persist-credentials: false
           submodules: false
           lfs: false
@@ -76,7 +76,7 @@ jobs:
               GIT_CONFIG_*|GIT_ASKPASS|SSH_ASKPASS|GIT_TERMINAL_PROMPT|GITHUB_TOKEN|GH_TOKEN|GH_ENTERPRISE_TOKEN|RD0873_*|*TOKEN*|*PRIVATE_KEY*|*PASSWORD*|*SECRET*|*CREDENTIAL*|*AUTH*) exit 1 ;;
             esac
           done <<< "$environment_names"
-          [[ "$(git -C "$agents_dir" rev-parse HEAD)" == "b5c46bee785320ed61683001934dd7b259af4117" ]]
+          [[ "$(git -C "$agents_dir" rev-parse HEAD)" == "75691501c98f4fc5affd1d22aa17aa06e0c11cca" ]]
           [[ "$(git -C "$agents_dir" remote get-url origin)" == "$expected_origin" ]]
           agents_status="$(git -C "$agents_dir" status --porcelain)"
           [[ "$agents_status" == "" ]]
