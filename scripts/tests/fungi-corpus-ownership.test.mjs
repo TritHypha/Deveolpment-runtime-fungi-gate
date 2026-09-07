@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, unlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { deriveCorpusShards } from "../lib/fungi-corpus-shards.mjs";
+import { validateAssuranceManifest } from "../lib/assurance-fabric/manifest.mjs";
 
 const AUDIT = resolve("scripts/audit-fungi-corpus-check.mjs");
 const WORKSET_FILES = Object.freeze([
@@ -76,11 +77,11 @@ test("phase-close consumes the exact Corpus Audit v2 command and focused executi
     "--max-bytes",
     "67108864",
     "--timeout-ms",
-    "540000",
+    "3400000",
     "--max-output-bytes",
     "67108864",
   ]);
-  assert.equal(corpus.timeoutMs, 600000);
+  assert.equal(corpus.timeoutMs, 3460000);
   const tooling = manifest.entries.find(({ id }) => id === "tests:tooling");
   const focused = "scripts/tests/fungi-corpus-shard-execution.test.mjs";
   assert.ok(tooling.execution.command.includes(focused));
@@ -147,6 +148,37 @@ test("phase-close PROJECT shard capacity covers the exact tracked ownership boun
     "registered outer timeout must allow every shard wave to reach its own deadline");
   t.diagnostic(`${paths.length} admitted PROJECT files; shard sizes ${result.value.map((shard) => shard.files.length).join(", ")}; `
     + `bounded capacity ${request.shardCount * limits.maxFiles}`);
+});
+
+test("phase-close PROJECT runtime budget covers measured throughput for every admitted file and shard wave", (t) => {
+  const manifest = JSON.parse(readFileSync(resolve("governance/phase-close-commands.json"), "utf8"));
+  const corpus = manifest.entries.find(({ id }) => id === "fungi:corpus-check");
+  const admitted = validateAssuranceManifest({ schemaVersion: manifest.schemaVersion, entries: [corpus] }, resolve("."));
+  assert.equal(admitted.kind, "accepted", admitted.detail ?? admitted.code);
+  const command = corpus.execution.command;
+  const option = (name) => Number(command[command.indexOf(name) + 1]);
+  // At HEAD 764f60c72920d06b2f3d37deb1fff75e0f601ae0 the two 540-second
+  // shards completed 261 and 263 files. Round the slower observed per-file
+  // cost up to a half second: 2,500 ms, within the manifest's one-hour ceiling.
+  // This is a total-runtime allocation,
+  // not a new per-file deadline or a claim that future files finish on time.
+  const observedMsPerFile = Math.max(540_000 / 261, 540_000 / 263);
+  const allocatedMsPerFile = Math.ceil(observedMsPerFile / 500) * 500;
+  const maxFiles = option("--max-files");
+  const shardCount = option("--shard-count");
+  const concurrency = option("--concurrency");
+  const shardTimeoutMs = option("--timeout-ms");
+  for (const value of [maxFiles, shardCount, concurrency, shardTimeoutMs, corpus.timeoutMs]) {
+    assert.ok(Number.isSafeInteger(value) && value > 0, "runtime inputs must remain finite positive integers");
+  }
+  assert.ok(concurrency <= 4, "runtime repair must retain the existing process ceiling");
+  assert.equal(shardTimeoutMs, maxFiles * allocatedMsPerFile,
+    `each admitted file requires ${allocatedMsPerFile} ms of the shard's total runtime allocation`);
+  const shardWaves = Math.ceil(shardCount / concurrency);
+  assert.equal(corpus.timeoutMs, shardWaves * shardTimeoutMs + 60_000,
+    "outer deadline must cover every shard wave plus the existing 60-second finalization allowance");
+  t.diagnostic(`${maxFiles} files x ${allocatedMsPerFile} ms = ${shardTimeoutMs} ms per shard; `
+    + `${shardWaves} wave(s) + 60000 ms finalization = ${corpus.timeoutMs} ms outer`);
 });
 
 test("the production CLI executes an exact two-file protected WORKSET", { timeout: 120_000 }, () => {

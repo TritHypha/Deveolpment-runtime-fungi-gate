@@ -363,7 +363,7 @@
           "--max-bytes",
           "67108864",
           "--timeout-ms",
-          "540000",
+          "3400000",
           "--max-output-bytes",
           "67108864"
         ]
@@ -391,7 +391,7 @@
         ],
         "expectedCount": 1
       },
-      "timeoutMs": 600000,
+      "timeoutMs": 3460000,
       "maxOutputBytes": 67108864,
       "generatedOutputs": [],
       "nestedTools": [],
