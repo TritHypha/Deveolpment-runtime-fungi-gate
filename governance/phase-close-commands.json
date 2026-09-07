@@ -359,7 +359,7 @@
           "--concurrency",
           "2",
           "--max-files",
-          "512",
+          "1360",
           "--max-bytes",
           "67108864",
           "--timeout-ms",
