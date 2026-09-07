@@ -1,0 +1,40 @@
+name: platform-smoke
+
+# Registration-only default-branch entry point.
+# GitHub requires a workflow_dispatch file on the default branch before it can
+# dispatch the complete workflow from an explicitly selected ref. The reviewed
+# RD-0873 evidence workflow and all executable jobs remain on that selected ref.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Protected observation mode"
+        required: true
+        type: choice
+        options: [observe, verify]
+      producerCommit:
+        description: "Exact Galerina producer commit"
+        required: true
+        type: string
+      agentsCommit:
+        description: "Exact AGENTS verifier commit"
+        required: true
+        type: string
+      evidenceCommit:
+        description: "Exact evidence commit (required for verify)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  refuse-default-branch-execution:
+    name: Refuse registration-only default-branch execution
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require an explicitly selected reviewed workflow ref
+        run: |
+          echo "This default-branch file only registers workflow_dispatch."
+          echo "Dispatch the reviewed RD-0873 workflow from its exact evidence-source ref."
+          exit 1
