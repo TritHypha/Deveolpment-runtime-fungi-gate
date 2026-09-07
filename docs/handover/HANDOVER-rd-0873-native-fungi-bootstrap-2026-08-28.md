@@ -14,6 +14,48 @@ RD, source, tests and receipts remain in their owning files. Do not turn this
 handover, memory, a graph, or an external-model answer into implementation or
 admission authority.
 
+## Current integration supplement — 2026-09-07
+
+The active branch is now `codex/rd0873-local-integration` in the same worktree.
+Use [the integration checkpoint](RD-0873-INTEGRATION.md) for branch roles and
+exclusions. Following independent findings, local input-validation ordering and
+the length comparison were repaired. Windows and WSL each pass 30 local
+byte-custody tests and six unchanged resource controls. The four uncommitted
+hosted-workflow probes are preserved locally and excluded as superseded work.
+This does not close actual host evidence, frame semantics, selection or Task 7.
+Earlier results below remain dated observations, not current closure claims.
+
+## 0. Local-first host-assurance supplement — 2026-09-07
+
+The Task 6C-R direct-byte candidate is verified locally before any Git backup;
+Git is optional post-verification custody transport, not a local execution
+dependency. Hosted artifacts, runners and GitHub observations are advisory only
+and must neither replace nor block local evidence. Run the focused local custody,
+verification and reciprocal controls on actual Windows x64 and Ubuntu WSL x64
+with Git/GitHub environment variables absent; run the bounded-execution and
+path-leak controls where the host supplies Node.js. Record only OS/architecture,
+tool identities, candidate/source-set digests, commands, counts and terminal
+states in the ignored SDD ledger—never bodies, frames, profiles, logs,
+credentials, keys or machine paths.
+
+Task 4 observed matching candidate source bytes on both hosts. Windows ran the
+focused local suite `28/28` and path-leak control; its bounded-execution audit
+reported `713` findings. Ubuntu WSL x64 now has Node v24.18.0 and Rust 1.98.1
+and passed its local suite `28/28` plus the Task 6C capture/validation scope
+`31/31`. Its path-leak self-test passed, but its enforcement scan cannot read
+this Windows worktree's `.git` pointer under Linux; its bounded audit also
+returned findings. This is a current `HOLD`; do not install or copy a toolchain
+as a workaround. Task 7 and `.fungi` authoring remain closed.
+
+The required pre-existing Task 6C capture/validation scope is not the 28-test
+local-only filter: `Task 6C (captures|validates|platform receipt|proves the
+platform receipt|rejects receipt)` in
+`scripts/tests/logic-aig-source-origin-frame.test.mjs` passed `31/31` on
+Windows, with zero failures/skips/cancellations and exit `0`. A broader Task
+6C-R custody-suite invocation still produced neither TAP/spec output nor a
+terminal exit status; it remains `UNVERIFIED`, provides no extra coverage, and
+does not redefine the completed 31-test capture/validation scope.
+
 ## 1. Opening prompt for the new task
 
 ```text

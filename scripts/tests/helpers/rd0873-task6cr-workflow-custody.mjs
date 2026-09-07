@@ -48,6 +48,197 @@ const OUTPUT_KEYS = Object.freeze(['id', 'digest', 'name', 'producerCommit', 'ag
 const ARTIFACT_NAMES = Object.freeze(['rd0873-task6-full-frame-windows-x64', 'rd0873-task6-receipt-windows-x64',
   'rd0873-task6-full-frame-linux-x64', 'rd0873-task6-receipt-linux-x64']);
 
+// Closed local byte-custody contract for synthetic test infrastructure.
+// Platform authentication and complete frame admission are separate obligations.
+export const LOCAL_EVIDENCE_CONTRACT = Object.freeze({
+  schema: 'rd0873-local-evidence-bundle.v1',
+  platforms: Object.freeze(['windows-x64', 'linux-x64']),
+  members: Object.freeze([
+    Object.freeze({ path: 'frame.gaaf', role: 'frame' }),
+    Object.freeze({ path: 'profile.json', role: 'profile' }),
+    Object.freeze({ path: 'native-build.log', role: 'build-log' }),
+    Object.freeze({ path: 'platform-receipt.json', role: 'platform-receipt' }),
+  ]),
+});
+
+const LOCAL_CONTEXT_KEYS = Object.freeze(['platform', 'nonce', 'sourceSetDigest']);
+const LOCAL_MANIFEST_KEYS = Object.freeze(['path', 'role', 'sha256', 'maxBytes']);
+const LOCAL_BUNDLE_KEYS = Object.freeze(['schema', 'platform', 'nonce', 'sourceSetDigest', 'members']);
+const LOCAL_BUNDLE_MEMBER_KEYS = Object.freeze(['path', 'role', 'bytes', 'bytesSha256', 'byteLength']);
+const LOCAL_MAXIMUM = 1048576;
+const OWNED_LOCAL_BUNDLES = new WeakSet();
+const LOCAL_BUNDLE_SOURCE_SETS = new WeakMap();
+const LOCAL_MEMBER_BUNDLES = new WeakMap();
+const VERIFIED_LOCAL_BUNDLES = new WeakSet();
+
+function localFailure(code) {
+  const error = new Error(code);
+  error.code = code;
+  delete error.stack;
+  throw error;
+}
+function localRefuse() { localFailure('REFUSED_LOCAL_CONTEXT'); }
+function localHold() { localFailure('HOLD_LOCAL_EVIDENCE'); }
+function localClosedObject(value, keys, failure, allowedNonEnumerable = []) {
+  if (value === null || typeof value !== 'object' || isProxy(value) || Array.isArray(value)) failure();
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== null && prototype !== Object.prototype) failure();
+  const actual = Reflect.ownKeys(value);
+  if (actual.length !== keys.length + allowedNonEnumerable.length
+    || actual.some((key) => typeof key !== 'string' || (!keys.includes(key) && !allowedNonEnumerable.includes(key)))) failure();
+  for (const key of keys) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor || !descriptor.enumerable || !Object.hasOwn(descriptor, 'value')) failure();
+  }
+  for (const key of allowedNonEnumerable) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor || descriptor.enumerable || !Object.hasOwn(descriptor, 'value')) failure();
+  }
+}
+function localContext(context) {
+  localClosedObject(context, LOCAL_CONTEXT_KEYS, localRefuse);
+  if (!LOCAL_EVIDENCE_CONTRACT.platforms.includes(context.platform)
+    || typeof context.nonce !== 'string' || !/^[0-9a-f]{64}$/u.test(context.nonce)
+    || typeof context.sourceSetDigest !== 'string' || !/^[0-9a-f]{64}$/u.test(context.sourceSetDigest)) localHold();
+  return Object.freeze({ platform: context.platform, nonce: context.nonce, sourceSetDigest: context.sourceSetDigest });
+}
+function localManifest(manifest) {
+  if (isProxy(manifest) || !Array.isArray(manifest)) localRefuse();
+  const expected = new Map(LOCAL_EVIDENCE_CONTRACT.members.map((member) => [member.path, member.role]));
+  if (manifest.length !== LOCAL_EVIDENCE_CONTRACT.members.length) localHold();
+  const members = [];
+  for (let index = 0; index < manifest.length; index++) {
+    const descriptor = Object.getOwnPropertyDescriptor(manifest, String(index));
+    if (!descriptor || !Object.hasOwn(descriptor, 'value')) localHold();
+    const member = descriptor.value;
+    localClosedObject(member, LOCAL_MANIFEST_KEYS, localHold);
+    if (!expected.has(member.path)) localRefuse();
+    if (typeof member.path !== 'string' || member.path.length === 0 || member.path !== path.basename(member.path)
+      || member.path.includes('..') || /[\\/\x00-\x1f\x7f]/u.test(member.path)
+      || typeof member.role !== 'string' || typeof member.sha256 !== 'string' || !/^[0-9a-f]{64}$/u.test(member.sha256)
+      || !Number.isSafeInteger(member.maxBytes) || member.maxBytes <= 0 || member.maxBytes > LOCAL_MAXIMUM) localHold();
+    if (expected.get(member.path) !== member.role || members.some((entry) => entry.path === member.path)) localHold();
+    members.push(Object.freeze({ path: member.path, role: member.role, sha256: member.sha256, maxBytes: member.maxBytes }));
+  }
+  if (members.some((member) => !expected.has(member.path))) localHold();
+  return Object.freeze(members.sort((left, right) => left.path.localeCompare(right.path)));
+}
+function nonSerializableLocalBundle(bundle, sourceSet) {
+  Object.defineProperty(bundle, 'toJSON', { enumerable: false, configurable: false, writable: false,
+    value: () => localHold() });
+  const frozen = Object.freeze(bundle);
+  OWNED_LOCAL_BUNDLES.add(frozen);
+  LOCAL_BUNDLE_SOURCE_SETS.set(frozen, sourceSet);
+  LOCAL_MEMBER_BUNDLES.set(frozen.members, frozen);
+  return frozen;
+}
+
+// A local source set is deliberately a closed, direct-byte interface. It neither
+// selects nor consults Git, a hosted service, URLs, environment configuration, or
+// a caller supplied module/callback/command.
+export async function captureLocalEvidenceBundle(context, sourceRoot, manifest) {
+  try {
+    if (arguments.length !== 3) localRefuse();
+    const admittedContext = localContext(context);
+    const admittedManifest = localManifest(manifest);
+    const serialized = canonicalJsonText(admittedManifest.map(({ path: memberPath, role, sha256, maxBytes }) =>
+      ({ path: memberPath, role, sha256, maxBytes })));
+    if (digest(Buffer.from(serialized, 'utf8')) !== admittedContext.sourceSetDigest) localHold();
+    const root = absolute(sourceRoot);
+    const rootAncestry = ancestry(root);
+    const names = fs.readdirSync(root);
+    if (names.length !== admittedManifest.length || names.some((name) => !admittedManifest.some((member) => member.path === name))) localHold();
+    const captured = [];
+    for (const member of admittedManifest) {
+      const locator = path.join(root, member.path);
+      const bytes = capturePath(locator, member.maxBytes);
+      if (digest(bytes) !== member.sha256) localHold();
+      captured.push(Object.freeze({ path: member.path, role: member.role, bytes: Buffer.from(bytes),
+        bytesSha256: member.sha256, byteLength: bytes.length }));
+    }
+    recheckAncestry(rootAncestry);
+    return nonSerializableLocalBundle({ schema: LOCAL_EVIDENCE_CONTRACT.schema, platform: admittedContext.platform,
+      nonce: admittedContext.nonce, sourceSetDigest: admittedContext.sourceSetDigest, members: Object.freeze(captured) }, admittedManifest);
+  } catch (error) {
+    if (error?.code === 'REFUSED_LOCAL_CONTEXT' || error?.code === 'HOLD_LOCAL_EVIDENCE') throw error;
+    localHold();
+  }
+}
+
+// Verification remains a local, direct-buffer boundary.  It accepts only the
+// non-serializable bundle captured above and returns no member body or locator.
+export async function verifyLocalEvidenceBundle(context, bundle) {
+  try {
+    if (arguments.length !== 2) localRefuse();
+    const admittedContext = localContext(context);
+    localClosedObject(bundle, LOCAL_BUNDLE_KEYS, localHold, ['toJSON']);
+    if (bundle.schema !== LOCAL_EVIDENCE_CONTRACT.schema || bundle.platform !== admittedContext.platform
+      || bundle.nonce !== admittedContext.nonce || bundle.sourceSetDigest !== admittedContext.sourceSetDigest
+      || isProxy(bundle.members) || !Array.isArray(bundle.members)
+      || bundle.members.length !== LOCAL_EVIDENCE_CONTRACT.members.length) localHold();
+    const sourceSet = [];
+    const expected = new Map(LOCAL_EVIDENCE_CONTRACT.members.map((member) => [member.path, member.role]));
+    for (let index = 0; index < bundle.members.length; index++) {
+      const descriptor = Object.getOwnPropertyDescriptor(bundle.members, String(index));
+      if (!descriptor || !Object.hasOwn(descriptor, 'value')) localHold();
+      const member = descriptor.value;
+      localClosedObject(member, LOCAL_BUNDLE_MEMBER_KEYS, localHold);
+      if (typeof member.path !== 'string' || expected.get(member.path) !== member.role
+        || sourceSet.some((entry) => entry.path === member.path) || !Buffer.isBuffer(member.bytes)
+        || !Number.isSafeInteger(member.byteLength) || member.byteLength !== member.bytes.length
+        || member.byteLength <= 0 || member.byteLength > LOCAL_MAXIMUM
+        || typeof member.bytesSha256 !== 'string' || !/^[0-9a-f]{64}$/u.test(member.bytesSha256)
+        || digest(member.bytes) !== member.bytesSha256) localHold();
+      sourceSet.push(Object.freeze({ path: member.path, role: member.role, sha256: member.bytesSha256,
+        maxBytes: member.byteLength }));
+    }
+    if (sourceSet.length !== expected.size || sourceSet.some((entry) => !expected.has(entry.path))) localHold();
+    if (!OWNED_LOCAL_BUNDLES.has(bundle)) localHold();
+    const capturedSourceSet = LOCAL_BUNDLE_SOURCE_SETS.get(bundle);
+    if (!capturedSourceSet || capturedSourceSet.length !== sourceSet.length) localHold();
+    for (const member of sourceSet) {
+      const captured = capturedSourceSet.find((entry) => entry.path === member.path);
+      if (!captured || captured.role !== member.role || captured.sha256 !== member.sha256
+        || member.maxBytes > captured.maxBytes) localHold();
+    }
+    const sourceSetDigest = digest(Buffer.from(canonicalJsonText([...capturedSourceSet].sort((left, right) =>
+      left.path.localeCompare(right.path))), 'utf8'));
+    if (sourceSetDigest !== admittedContext.sourceSetDigest) localHold();
+    VERIFIED_LOCAL_BUNDLES.add(bundle);
+    return 'TASK6CR_LOCAL_BUNDLE_OK';
+  } catch (error) {
+    if (error?.code === 'REFUSED_LOCAL_CONTEXT' || error?.code === 'HOLD_LOCAL_EVIDENCE') throw error;
+    localHold();
+  }
+}
+
+// A reciprocal consumer receives only the already verified, direct member
+// buffers.  The member-array identity is the non-forgeable local hand-off;
+// neither a path nor a hosted-artifact-shaped record is an accepted input.
+export async function consumeVerifiedLocalReciprocalEvidence(context, members) {
+  try {
+    if (arguments.length !== 2) localRefuse();
+    const consumerContext = localContext(context);
+    if (isProxy(members) || !Array.isArray(members)) localHold();
+    const bundle = LOCAL_MEMBER_BUNDLES.get(members);
+    if (!bundle || !VERIFIED_LOCAL_BUNDLES.has(bundle) || bundle.platform === consumerContext.platform) localHold();
+    const sourceSet = LOCAL_BUNDLE_SOURCE_SETS.get(bundle);
+    if (!sourceSet || members.length !== sourceSet.length) localHold();
+    for (const member of members) {
+      if (member === null || typeof member !== 'object' || !Buffer.isBuffer(member.bytes)
+        || !Number.isSafeInteger(member.byteLength) || member.byteLength !== member.bytes.length
+        || typeof member.bytesSha256 !== 'string' || digest(member.bytes) !== member.bytesSha256) localHold();
+      const source = sourceSet.find((entry) => entry.path === member.path);
+      if (!source || source.role !== member.role || source.sha256 !== member.bytesSha256
+        || member.byteLength > source.maxBytes) localHold();
+    }
+    return 'TASK6CR_LOCAL_RECIPROCAL_OK';
+  } catch (error) {
+    if (error?.code === 'REFUSED_LOCAL_CONTEXT' || error?.code === 'HOLD_LOCAL_EVIDENCE') throw error;
+    localHold();
+  }
+}
+
 // Source/evidence authentication is the next task's prerequisite. These closed
 // records are local test infrastructure, never self-authenticating provenance.
 function receiptContext(context) {
@@ -191,7 +382,7 @@ export async function verifyDownloadedBundle(context, payloadRoot, receiptRoot) 
     const capturedContext = receiptContext(context);
     if (!capturedContext.job.startsWith('reciprocal-')) refuse();
     // Task 0 assigns archive verification/extraction exclusively to the fixed
-    // verifyActionsArtifactArchive route. Task 3 joins that acquisition here.
+    // Hosted-download advisory route only; local Task 6C-R evidence does not call it.
     // No owned digest result is available yet: never inspect caller paths or
     // accept supplied result records, callbacks, URLs, modules or buffer claims.
     // In particular, no payload or receipt is forwarded to an external child.

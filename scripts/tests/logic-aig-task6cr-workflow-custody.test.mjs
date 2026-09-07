@@ -672,7 +672,7 @@ test('Task 6C-R raw validates receipts before payload opens and refuses a same-s
   }
 }));
 
-test('Task 6C-R verifier holds without the fixed owned digest result and never invokes a child', async () => {
+test('Task 6C-R hosted advisory verifier holds without the fixed owned digest result and never invokes a child', async () => {
   assert.equal(typeof custodyHelper.verifyDownloadedBundle, 'function');
   const reciprocal = { ...RECEIPT_CONTEXT, job: process.platform === 'win32' ? 'reciprocal-windows' : 'reciprocal-linux',
     platform: process.platform === 'win32' ? 'linux' : 'win32' };
@@ -1146,3 +1146,204 @@ test('Task 6C-R custody unchanged clock permits every fixed Git observation thro
   assert.equal(observed.returnedOriginal, true);
   assert.deepEqual(observed.calls, ['--version', 'cat-file', 'ls-tree', 'cat-file', 'cat-file', 'cat-file', 'hash-object']);
 });
+
+// RD-0873 local-first byte-custody controls. These synthetic fixtures do not
+// authenticate a platform, decode a frame, or prove a cross-host exchange.
+const LOCAL_REFUSED = (error) => error?.code === 'REFUSED_LOCAL_CONTEXT';
+const LOCAL_HOLD = (error) => error?.code === 'HOLD_LOCAL_EVIDENCE';
+const LOCAL_MEMBERS = custodyHelper.LOCAL_EVIDENCE_CONTRACT.members;
+const localDigest = (value) => HASH(Buffer.from(canonicalJsonText(value), 'utf8'));
+const localAbsent = (name) => {
+  const error = new Error(`${name} is not implemented`);
+  error.code = 'LOCAL_ROUTE_NOT_IMPLEMENTED';
+  return error;
+};
+const captureLocalEvidenceBundle = (...args) => typeof custodyHelper.captureLocalEvidenceBundle === 'function'
+  ? custodyHelper.captureLocalEvidenceBundle(...args) : Promise.reject(localAbsent('captureLocalEvidenceBundle'));
+const verifyLocalEvidenceBundle = (...args) => typeof custodyHelper.verifyLocalEvidenceBundle === 'function'
+  ? custodyHelper.verifyLocalEvidenceBundle(...args) : Promise.reject(localAbsent('verifyLocalEvidenceBundle'));
+const consumeVerifiedLocalReciprocalEvidence = (...args) => typeof custodyHelper.consumeVerifiedLocalReciprocalEvidence === 'function'
+  ? custodyHelper.consumeVerifiedLocalReciprocalEvidence(...args) : Promise.reject(localAbsent('consumeVerifiedLocalReciprocalEvidence'));
+
+async function localFixture(body) {
+  await temporary(async (root) => {
+    const source = Object.fromEntries(LOCAL_MEMBERS.map(({ path: name }) => [name,
+      Buffer.from(`RD0873:${name}\n`, 'utf8')]));
+    for (const [name, bytes] of Object.entries(source)) fs.writeFileSync(path.join(root, name), bytes);
+    const manifest = LOCAL_MEMBERS.map(({ path: name, role }) => Object.freeze({ path: name, role,
+      sha256: HASH(source[name]), maxBytes: source[name].length }));
+    const context = Object.freeze({ platform: 'windows-x64', nonce: '1'.repeat(64),
+      sourceSetDigest: localDigest([...manifest].sort((left, right) => left.path.localeCompare(right.path))
+        .map(({ path: name, role, sha256, maxBytes }) => ({ path: name, role, sha256, maxBytes }))) });
+    await body({ root, source, manifest, context });
+  });
+}
+
+function localBundle(fixture) {
+  const members = fixture.manifest.map(({ path: name, role, sha256 }) => Object.freeze({ path: name, role,
+    bytes: Buffer.from(fixture.source[name]), bytesSha256: sha256, byteLength: fixture.source[name].length }));
+  return Object.freeze({ schema: custodyHelper.LOCAL_EVIDENCE_CONTRACT.schema, platform: fixture.context.platform,
+    nonce: fixture.context.nonce, sourceSetDigest: fixture.context.sourceSetDigest, members: Object.freeze(members) });
+}
+
+test('local capture refuses a GitHub transport selector', async () => localFixture(async ({ root, manifest }) => {
+  await assert.rejects(captureLocalEvidenceBundle({ platform: 'windows-x64', transport: 'github' }, root, manifest), LOCAL_REFUSED);
+}));
+
+test('local capture refuses every non-local selector before filesystem access', async () => localFixture(async ({ root, manifest, context }) => {
+  for (const value of [
+    { ...context, extra: true }, { nonce: context.nonce, sourceSetDigest: context.sourceSetDigest },
+    { ...context, url: 'https://example.invalid' }, { ...context, command: 'git status' },
+    { ...context, repository: 'owner/private' }, { ...context, token: 'not-a-token' },
+  ]) await assert.rejects(captureLocalEvidenceBundle(value, root, manifest), LOCAL_REFUSED);
+  await assert.rejects(captureLocalEvidenceBundle(context, root, [{ path: 'other', role: 'other', sha256: 'a'.repeat(64), maxBytes: 1 }, ...manifest.slice(1)]), LOCAL_REFUSED);
+}));
+
+test('local capture returns the exact owned non-serializable source set', async () => localFixture(async ({ root, manifest, context, source }) => {
+  const bundle = await captureLocalEvidenceBundle(context, root, manifest);
+  assert.deepEqual(Object.keys(bundle), ['schema', 'platform', 'nonce', 'sourceSetDigest', 'members']);
+  assert.equal(bundle.schema, custodyHelper.LOCAL_EVIDENCE_CONTRACT.schema);
+  assert.equal(bundle.platform, context.platform);
+  assert.equal(bundle.nonce, context.nonce);
+  assert.equal(bundle.sourceSetDigest, context.sourceSetDigest);
+  assert.deepEqual(bundle.members.map(({ path: name, role, bytesSha256, byteLength }) => ({ path: name, role, bytesSha256, byteLength })),
+    [...manifest].sort((left, right) => left.path.localeCompare(right.path)).map(({ path: name, role, sha256 }) =>
+      ({ path: name, role, bytesSha256: sha256, byteLength: source[name].length })));
+  assert.throws(() => JSON.stringify(bundle), LOCAL_HOLD);
+}));
+
+test('local capture rejects accessor metadata without evaluating it', async () => localFixture(async ({ root, manifest, context }) => {
+  let reads = 0;
+  const accessor = { ...manifest[0] };
+  Object.defineProperty(accessor, 'path', { enumerable: true, get() { reads++; return manifest[0].path; } });
+  await assert.rejects(captureLocalEvidenceBundle(context, root, [accessor, ...manifest.slice(1)]), LOCAL_HOLD);
+  assert.equal(reads, 0);
+}));
+
+test('local capture rejects accessor array entries without evaluating them', async () => localFixture(async ({ root, manifest, context }) => {
+  let reads = 0;
+  const entries = [...manifest];
+  Object.defineProperty(entries, '0', { enumerable: true, get() { reads++; return manifest[0]; } });
+  await assert.rejects(captureLocalEvidenceBundle(context, root, entries), LOCAL_HOLD);
+  assert.equal(reads, 0);
+}));
+
+test('local verification returns only the body-free result for an owned captured bundle', async () => localFixture(async ({ root, manifest, context, source }) => {
+  const bundle = await captureLocalEvidenceBundle(context, root, manifest);
+  const result = await verifyLocalEvidenceBundle(context, bundle);
+  assert.equal(result, 'TASK6CR_LOCAL_BUNDLE_OK');
+  assert.equal(JSON.stringify(result).includes(source['frame.gaaf'].toString('utf8')), false);
+  assert.deepEqual(bundle.members.map((member) => Buffer.from(member.bytes)),
+    [...LOCAL_MEMBERS].sort((left, right) => left.path.localeCompare(right.path)).map(({ path: name }) => source[name]));
+}));
+
+test('local verification holds if an owned member buffer changes after capture', async () => localFixture(async ({ root, manifest, context }) => {
+  const bundle = await captureLocalEvidenceBundle(context, root, manifest);
+  bundle.members[0].bytes[0] ^= 1;
+  await assert.rejects(verifyLocalEvidenceBundle(context, bundle), LOCAL_HOLD);
+}));
+
+test('local reciprocal consumer accepts only verified opposite-platform direct buffers', async () => temporary(async (windowsRoot) => temporary(async (linuxRoot) => {
+  const capture = async (root, platform, nonce) => {
+    const source = Object.fromEntries(LOCAL_MEMBERS.map(({ path: name }) => [name, Buffer.from(`RD0873:${platform}:${name}\n`, 'utf8')]));
+    for (const [name, bytes] of Object.entries(source)) fs.writeFileSync(path.join(root, name), bytes);
+    const manifest = LOCAL_MEMBERS.map(({ path: name, role }) => ({ path: name, role, sha256: HASH(source[name]), maxBytes: source[name].length }));
+    const context = { platform, nonce, sourceSetDigest: localDigest([...manifest].sort((left, right) => left.path.localeCompare(right.path))) };
+    const bundle = await captureLocalEvidenceBundle(context, root, manifest);
+    assert.equal(await verifyLocalEvidenceBundle(context, bundle), 'TASK6CR_LOCAL_BUNDLE_OK');
+    return { context, bundle, source };
+  };
+  const windows = await capture(windowsRoot, 'windows-x64', '3'.repeat(64));
+  const linux = await capture(linuxRoot, 'linux-x64', '4'.repeat(64));
+  assert.equal(await consumeVerifiedLocalReciprocalEvidence(windows.context, linux.bundle.members), 'TASK6CR_LOCAL_RECIPROCAL_OK');
+  assert.equal(await consumeVerifiedLocalReciprocalEvidence(linux.context, windows.bundle.members), 'TASK6CR_LOCAL_RECIPROCAL_OK');
+  await assert.rejects(consumeVerifiedLocalReciprocalEvidence(windows.context, { path: linuxRoot, members: linux.bundle.members }), LOCAL_HOLD);
+  await assert.rejects(consumeVerifiedLocalReciprocalEvidence(windows.context, { id: '71', digest: 'a'.repeat(64), name: 'artifact', members: linux.bundle.members }), LOCAL_HOLD);
+  await assert.rejects(consumeVerifiedLocalReciprocalEvidence(windows.context, windows.bundle.members), LOCAL_HOLD);
+  assert.equal(JSON.stringify('TASK6CR_LOCAL_RECIPROCAL_OK').includes(linux.source['frame.gaaf'].toString('utf8')), false);
+})));
+
+test('local capture and verification stay local when process Git and GitHub access are unavailable', () => {
+  const result = child(`
+    import assert from 'node:assert/strict';
+    import cp from 'node:child_process';
+    import { createHash } from 'node:crypto';
+    import fs from 'node:fs';
+    import os from 'node:os';
+    import path from 'node:path';
+    import { canonicalJsonText } from ${JSON.stringify(new URL('../lib/logic-aig-source-origin/contract.mjs', import.meta.url).href)};
+    const helper = await import(${JSON.stringify(HELPER.href)});
+    cp.spawnSync = () => { throw new Error('process access forbidden'); };
+    const actualEnvironment = process.env;
+    process.env = new Proxy(actualEnvironment, { get(target, key, receiver) {
+      if (String(key).toLowerCase().includes('github')) throw new Error('environment access forbidden');
+      return Reflect.get(target, key, receiver);
+    }});
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'rd0873-local-child-'));
+    try {
+      const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
+      const source = Object.fromEntries(helper.LOCAL_EVIDENCE_CONTRACT.members.map(({ path: name }) => [name, Buffer.from('RD0873:' + name + String.fromCharCode(10))]));
+      for (const [name, bytes] of Object.entries(source)) fs.writeFileSync(path.join(root, name), bytes);
+      const manifest = helper.LOCAL_EVIDENCE_CONTRACT.members.map(({ path: name, role }) => ({ path: name, role, sha256: hash(source[name]), maxBytes: source[name].length }));
+      const context = { platform: 'linux-x64', nonce: '2'.repeat(64), sourceSetDigest: hash(Buffer.from(canonicalJsonText([...manifest].sort((a, b) => a.path.localeCompare(b.path))), 'utf8')) };
+      const bundle = await helper.captureLocalEvidenceBundle(context, root, manifest);
+      const value = await helper.verifyLocalEvidenceBundle(context, bundle);
+      assert.equal(value, 'TASK6CR_LOCAL_BUNDLE_OK');
+      assert.equal(/https|github|repository|artifact|runId/i.test(value), false);
+      process.stdout.write(value);
+    } finally { fs.rmSync(root, { recursive: true, force: true }); }
+  `);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.equal(result.stderr, '');
+  assert.equal(result.stdout, 'TASK6CR_LOCAL_BUNDLE_OK');
+});
+
+for (const [fault, mutate] of [
+  ['changed bytes after manifest capture', ({ root }) => fs.appendFileSync(path.join(root, 'frame.gaaf'), 'x')],
+  ['missing member', ({ root }) => fs.unlinkSync(path.join(root, 'profile.json'))],
+  ['extra member', ({ root }) => fs.writeFileSync(path.join(root, 'extra-member'), 'x')],
+  ['symlink or reparse member', ({ root }) => { fs.unlinkSync(path.join(root, 'frame.gaaf')); fs.symlinkSync(path.join(root, 'profile.json'), path.join(root, 'frame.gaaf'), 'file'); }],
+  ['wrong role', ({ manifest }) => { manifest[0] = { ...manifest[0], role: 'profile' }; }],
+  ['wrong platform', (fixture) => { fixture.context = { ...fixture.context, platform: 'macos-x64' }; }],
+  ['wrong digest', ({ manifest }) => { manifest[0] = { ...manifest[0], sha256: '0'.repeat(64) }; }],
+  ['over-ceiling member', ({ manifest }) => { manifest[0] = { ...manifest[0], maxBytes: 1 }; }],
+  ['duplicate member', ({ manifest }) => manifest.push({ ...manifest[0] })],
+  ['fifth member', ({ root, manifest }) => { fs.writeFileSync(path.join(root, 'fifth-member'), 'x'); manifest.push({ path: 'fifth-member', role: 'other', sha256: HASH(Buffer.from('x')), maxBytes: 1 }); }],
+  ['trailing bytes', ({ root }) => fs.appendFileSync(path.join(root, 'platform-receipt.json'), 'trailing')],
+]) test(`local capture holds on ${fault}`, async () => localFixture(async (fixture) => {
+  // Each row changes one cause after this closed manifest/context is prepared.
+  mutate(fixture);
+  await assert.rejects(captureLocalEvidenceBundle(fixture.context, fixture.root, fixture.manifest), LOCAL_HOLD);
+}));
+
+for (const [fault, mutate] of [
+  ['missing bundle member', (bundle) => ({ ...bundle, members: bundle.members.slice(1) })],
+  ['extra bundle member', (bundle) => ({ ...bundle, members: [...bundle.members, { ...bundle.members[0], path: 'other-extra' }] })],
+  ['wrong bundle role', (bundle) => ({ ...bundle, members: [{ ...bundle.members[0], role: 'profile' }, ...bundle.members.slice(1)] })],
+  ['wrong bundle platform', (bundle) => ({ ...bundle, platform: 'linux-x64' })],
+  ['wrong bundle digest', (bundle) => ({ ...bundle, members: [{ ...bundle.members[0], bytesSha256: '0'.repeat(64) }, ...bundle.members.slice(1)] })],
+  ['over-ceiling bundle member', (bundle) => ({ ...bundle, members: [{ ...bundle.members[0], maxBytes: 1 }, ...bundle.members.slice(1)] })],
+  ['duplicate bundle member', (bundle) => ({ ...bundle, members: [bundle.members[0], bundle.members[0], ...bundle.members.slice(1)] })],
+  ['fifth bundle member', (bundle) => ({ ...bundle, members: [...bundle.members, { ...bundle.members[0], path: 'fifth' }] })],
+  ['trailing bundle bytes', (bundle) => ({ ...bundle, members: [{ ...bundle.members[0], bytes: Buffer.concat([bundle.members[0].bytes, Buffer.from('x')]) }, ...bundle.members.slice(1)] })],
+]) test(`local verification rejects an unowned object with ${fault}`, async () => localFixture(async (fixture) => {
+  await assert.rejects(verifyLocalEvidenceBundle(fixture.context, mutate(localBundle(fixture))), LOCAL_HOLD);
+}));
+
+test('local verification rejects unowned cleanup-shaped inputs and leaves an outside sentinel intact', async () => localFixture(async (fixture) => {
+  const { root, context } = fixture;
+  const outside = fs.mkdtempSync(path.join(tmpdir(), 'rd0873-local-sentinel-'));
+  const sentinel = path.join(outside, 'sentinel');
+  fs.writeFileSync(sentinel, 'retain');
+  try {
+    for (const bundle of [
+      { ...localBundle(fixture), evidenceRoot: outside },
+      { ...localBundle(fixture), nonce: '0'.repeat(64) },
+      { ...localBundle(fixture), reservation: { root, nonEmpty: true } },
+      { ...localBundle(fixture), cleanup: { close: 'failed' } },
+      { ...localBundle(fixture), cleanup: { unlink: 'failed' } },
+      { ...localBundle(fixture), reciprocalVerified: false },
+    ]) await assert.rejects(verifyLocalEvidenceBundle(context, bundle), LOCAL_HOLD);
+    assert.equal(fs.readFileSync(sentinel, 'utf8'), 'retain');
+  } finally { fs.unlinkSync(sentinel); fs.rmdirSync(outside); }
+}));

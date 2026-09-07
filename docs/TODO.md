@@ -4,6 +4,55 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 integration checkpoint - 2026-09-07
+
+- [x] Preserve the original five-path working diff locally and reuse the existing
+  worktree on `codex/rd0873-local-integration`; the old branch remains at
+  `43dad8f00858de66053569cdbf6c20555298bbe2`.
+- [x] Correct local manifest validation ordering and byte-length comparison.
+  Fresh Windows/WSL runs each pass 30 local byte-custody tests and six original
+  resource controls. Test labels explicitly distinguish unowned-object refusal
+  from owned-buffer verification. These synthetic controls do not establish
+  frame semantics or a cross-host evidence exchange.
+- [x] Preserve and exclude four uncommitted tests for the superseded hosted
+  workflow. Preserve the existing narrow toolchain ignore rule.
+- [ ] Complete the independent checkpoint review, reconcile main's existing
+  work, then verify the integrated product before promotion to main.
+- [ ] Keep Task 7 prerequisites open: actual local evidence integration,
+  host-assurance findings and selection/admission remain separate obligations.
+- Branch roles, exact starting commits, exclusions and next actions:
+  [RD-0873 integration checkpoint](handover/RD-0873-INTEGRATION.md).
+
+### RD-0873 local-first execution route - 2026-09-07
+
+- [!] `SUPERSEDED_FOR_EXECUTION`: the proposed private-runner and hosted-artifact
+  route is no longer an RD-0873 execution prerequisite. Its historical `HOLD`
+  receipts remain negative evidence and are not rewritten. The only route being
+  implemented is the closed local Windows/WSL direct-byte route; Git remains a
+  separately authorised post-verification backup and hosted observations remain
+  advisory only. Task 7 and `.fungi` authoring remain closed.
+- [!] **Task 4 host assurance (2026-09-07):** Windows x64 ran the focused local
+  custody/verification/reciprocal controls `28/28` and the path-leak self-test
+  and scan; Ubuntu WSL x64 now independently ran the local controls `28/28`
+  and Task 6C capture/validation scope `31/31`, at Node `v24.18.0` and Rust
+  `1.98.1`. The same candidate source-set digest was observed on both hosts.
+  WSL path-leak self-test passed, but its enforcement scan cannot resolve this
+  Windows worktree's `.git` pointer under Linux; its bounded audit also returned
+  findings. The Windows bounded-execution control reported `713` findings.
+  These negative controls are `HOLD`, not permission to install or copy a
+  toolchain. Git is
+  optional post-verification backup only; hosted artifacts/runners are advisory;
+  Task 7 and `.fungi` remain closed. Body-free local records are retained in the
+  ignored Task 4 SDD ledger.
+- [x] The distinct pre-existing Task 6C capture/validation suite ran on Windows
+  with Git/GitHub variables absent: `Task 6C
+  (captures|validates|platform receipt|proves the platform receipt|rejects
+  receipt)` in `scripts/tests/logic-aig-source-origin-frame.test.mjs` passed
+  `31/31`, with `0` fail/skip/cancelled and exit `0`. This approved scope is
+  separate from the 28-test local-only filter. A broader Task 6C-R custody-suite
+  invocation yielded no test stream or exit status and remains `UNVERIFIED`; it
+  is not substituted for, nor needed to redefine, the completed 31-test scope.
+
 ### RD-0873 pre-selection foundation and source-origin HOLD - 2026-08-30
 
 - [x] Commit and publish the bounded RD-0873 implementation foundation through
