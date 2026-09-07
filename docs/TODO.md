@@ -16,8 +16,24 @@ counts or open items that a newer section explicitly supersedes.
   frame semantics or a cross-host evidence exchange.
 - [x] Preserve and exclude four uncommitted tests for the superseded hosted
   workflow. Preserve the existing narrow toolchain ignore rule.
-- [ ] Complete the independent checkpoint review, reconcile main's existing
-  work, then verify the integrated product before promotion to main.
+- [x] Independently review and commit the local checkpoint as `7c0443502`.
+  Reconcile main's existing work in local integration merge `a75ce5dea`; its
+  seven-path resolution passed independent review, and 14 focused integration
+  checks pass on each of Windows and WSL. No new executable, DLL or toolchain
+  content is introduced by these two commits relative to the preserved source.
+- [!] Broader package verification is `HOLD`: the missing Windows process
+  warden was built into ignored output, and web-events passes 25/25. The full
+  suite then stopped at compiler typecheck because built sibling dependencies
+  are absent. Prepare the dependency closure and rerun the suite; do not count
+  unexecuted packages or dependency-bootstrap failures as a PASS.
+- [x] Inventory the 48 existing benchmark EXEs without executing them. No DLLs
+  or paths with a `toolchains` directory component are tracked. All have first-party source counterparts;
+  exact build provenance is incomplete, and four compute-mix binaries predate
+  their current sources. Preserve the existing exception and its narrow ignore
+  rules; require fresh provenance review for any newly staged executable/DLL.
+- [ ] Resolve benchmark source/build provenance gaps and complete full
+  integration validation before promotion to main. Main is unchanged; nothing
+  was pushed.
 - [ ] Keep Task 7 prerequisites open: actual local evidence integration,
   host-assurance findings and selection/admission remain separate obligations.
 - Branch roles, exact starting commits, exclusions and next actions:

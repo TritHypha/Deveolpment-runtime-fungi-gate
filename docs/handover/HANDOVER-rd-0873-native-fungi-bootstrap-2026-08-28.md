@@ -1,9 +1,10 @@
 # RD-0873 native Fungi bootstrap handover
 
-**Status:** pre-selection foundation complete through Task 5; exact owner
-approval of the repaired source-origin design candidate is recorded; Tasks 2-8
-of its plan remain to be committed, independently reviewed and reproduced at
-one exact HEAD, so Task 6 is `HOLD` and Task 7 has not started.
+**Status (2026-09-07):** the local byte-custody checkpoint is committed at
+`7c0443502` and independently reviewed. Main's changes are reconciled in local
+integration merge `a75ce5dea`; broader package validation remains `HOLD` on
+dependency/bootstrap preparation. Main has not been promoted. Task 7 has not
+started. Dated sections below preserve earlier evidence and gates.
 
 **Purpose:** restart-grade instructions for the source-origin implementation
 boundary that must close before Task 6 may select, and before Task 7 may author,
@@ -24,6 +25,15 @@ byte-custody tests and six unchanged resource controls. The four uncommitted
 hosted-workflow probes are preserved locally and excluded as superseded work.
 This does not close actual host evidence, frame semantics, selection or Task 7.
 Earlier results below remain dated observations, not current closure claims.
+
+The checkpoint and merge-resolution reviews passed. Fourteen focused integration
+checks pass on each host. The missing Windows process warden was built locally
+and remains ignored; web-events then passed 25/25. The full package run stopped
+at the compiler's missing built sibling dependencies. Build the dependency
+closure and rerun the governed suite before promotion to main. Existing tracked
+benchmark executables are a separate provenance review; no new `.exe`, `.dll`
+or downloaded toolchain content was introduced by these checkpoint commits.
+No push, hosted dispatch, signing or `.fungi` authoring occurred.
 
 ## 0. Local-first host-assurance supplement — 2026-09-07
 

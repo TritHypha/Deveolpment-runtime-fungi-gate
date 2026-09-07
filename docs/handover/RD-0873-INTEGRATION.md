@@ -37,8 +37,9 @@ for every historical branch or worktree. AGENTS remains a separate repository.
 
 ## Local checkpoint verification
 
-The local capture/verification/reciprocal helper and its tests are ready for a
-bounded checkpoint review. Two accessor controls failed before the validation
+The local capture/verification/reciprocal helper and its tests passed independent
+bounded checkpoint review and were committed at
+`7c04435021294ca6a573970702383079b7c8d336`. Two accessor controls failed before the validation
 ordering correction and passed after it. The temporary byte-length comparison
 was corrected; test names now distinguish unowned-object rejection from
 revalidation of an owned buffer. Stale comments claiming implementation absence
@@ -57,20 +58,103 @@ initial dirty paths, is retained locally at
 Those four tests are excluded from this checkpoint; the six original resource
 tests are unchanged. No valid existing test was weakened or skipped.
 
+## Reviewed integration save point
+
+Merge commit `a75ce5dea0b867adb97a3f041cb0adc48e8065fa`, tree
+`1f2cce19b11a6635d5cc803a4771bd0b8a874bca`, combines the local checkpoint with
+remote-main commit `730d95d77dfe3cd142b05998403570c9aab8d53d`. This is a local
+integration save point, not a promotion to main or a whole-product PASS.
+
+The seven-path merge resolution passed independent review. It preserves main's
+paper work, output ignores, index line-ending rule and advisory pinned-upload
+workflow/test, while retaining the source branch's executable platform workflow
+and newer source-observation schema. All workflow YAML now checks out as LF,
+required by the imported exact-source test and embedded shell scripts. The
+committed graph report in this worktree was retained without a content change;
+the protected dirty report in the original worktree was not read or altered.
+
+Fresh Windows and Ubuntu WSL checks each passed 14/14: the imported workflow
+source-lock test, seven platform-smoke unit tests and six resource controls.
+Independent review also parsed the four imported Bash blocks under WSL. No
+hosted workflow was dispatched. The final seven-path staged-growth gate was
+`CLEAN`, with zero findings and no binary or toolchain delta against the local
+checkpoint.
+
+Broader Windows package verification remains `HOLD`:
+
+- The initial runner could not start its children because the local process
+  warden was absent. The repository's existing builder then completed. Its
+  executable and receipt are ignored build output, not commit content.
+- A governed retry of `galerina-web-events` passed 25/25 tests.
+- The full-suite bail-on-first-failure attempt selected 100 packages and ran
+  only the compiler before exit 2. A direct typecheck identified missing built
+  sibling-package modules/declarations. The other 99 packages were not executed
+  in that attempt and must not be counted as passing.
+- A six-dependency-package diagnostic passed substrate-math (6/6), but five
+  package commands failed. Security and graph-algorithm tests ran 111 passing
+  and three failing tests in total; their three failures require the absent
+  compiler build. Network, runtime-wasm and TriRegex stopped during compilation.
+  These are dependency/bootstrap diagnostics, not a cleared full-suite result.
+
+The next validation step is the compiler's transitive local dependency build in
+dependency order, then a fresh governed full-suite run. Prefer lockfile-preserving
+installs with dependency lifecycle scripts disabled; do not weaken tests or
+commit generated dependency/build output to make a fresh checkout look ready.
+Main is unchanged and nothing has been pushed from this integration work.
+
+## Existing benchmark executable review
+
+Independent read-only inventory found 48 tracked benchmark EXEs totalling
+7,898,023 bytes, no tracked DLLs and no tracked `toolchains` directory components.
+Neither checkpoint commit changes these binaries relative to the preserved
+source branch. Compared with main's old package locations, three are identical,
+41 differ and four are additional: they are not all mere unchanged renames.
+
+All 48 have first-party benchmark source counterparts and a documented retention
+exception, but exact build provenance remains incomplete:
+
+| Group | Count | Last binary-content commit |
+| --- | ---: | --- |
+| Generic/AVX2 Rust variants | 42 | `eaf816dd14066ee24e8b5bda9d477685e167ceaa` |
+| C++ executables | 3 | `c5edc638d4cce95d2621cc7a2c041d8b3f35b65b` |
+| Legacy Rust aliases | 3 | `d3f83a58fb79ddd97138287097d1daa87fedf9fc`, followed by renames |
+
+Package relocation was `1cdeb8a0ab91a34af9e9c52141c426472b989828`. The build
+recipes and fallback selection live in
+`packages-ts/galerina-devtools-benchmarks/src/build-native.mjs` and `src/runner.mjs`;
+the package README documents prebuilt-fixture retention. The recipes do not
+provide exact compiler/linker pins or a per-output source/build receipt. Package
+licensing does not by itself establish every linked runtime's terms.
+
+In particular, source commit `57c59da08574cefa84c2cb970e647431e425571b` added
+`--operations` support after the last content update of these four files under
+`packages-ts/galerina-devtools-benchmarks/benchmarks/compute-mix/`:
+
+- `bench-native-rust.exe`
+- `bench-native-avx2.exe`
+- `bench-compute-mix.exe`
+- `bench-compute-mix-rust.exe`
+
+Their current source correspondence is not established. Resolve this provenance
+gap before main promotion; do not execute unidentified binaries to infer their
+origin. No benchmark executable was executed, rebuilt or modified for this
+review. The `.gitignore` retention comment now removes its stale fixed count and
+explicitly requires origin, build/source, licence and retention review for new
+or rebuilt executables/DLLs. Its existing exclusion patterns are unchanged.
+
 ## Artifact custody and remaining work
 
 - Preserve the existing narrow toolchain ignore rule. Stage explicit source and
   documentation paths only; local toolchain unpackings and scratch are excluded.
 - Existing native benchmark executables have a documented tracking exception in
-  `.gitignore`; none is changed by the local checkpoint. Review their provenance
-  before the broader history reaches main. Do not execute binaries to identify them.
+  `.gitignore`; none is changed by the local checkpoint. The review above is
+  partial, not an admission of all 48 artifacts. Resolve its gaps before the
+  broader history reaches main. Do not execute binaries to identify them.
 - Preserve the dirty graph report in the original toolchain worktree. Committed
   counterparts elsewhere are separate from that residue; no regenerated graph or
   fresh graph claim is part of this checkpoint.
-- Reconcile main's nine other changed paths, keeping the current local route,
-  exact-byte attributes and ignore rules. Preserve useful main-side document and
-  advisory workflow changes.
-- Complete fresh independent review, broader integration verification and final
-  staged-artifact checks before promoting the combined result to main.
+- Main's useful source/document changes are reconciled and the merge resolution
+  is independently reviewed. Complete broader integration verification and
+  final staged-artifact checks before promoting the combined result to main.
 - Earlier host-audit findings, documentation-index drift and the separate index
   branch remain open; the focused results above do not clear those conditions.
