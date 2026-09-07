@@ -343,7 +343,7 @@ test("tracked approval receipt closes the subject controller manifest policy run
 
 test("repository text digest accepts Git-declared CRLF checkout bytes and refuses ambiguous carriage returns", () => {
   const manifestBytes = readFileSync(manifestPath);
-  const crlfBytes = Buffer.from(manifestBytes.toString("utf8").replace(/\n/gu, "\r\n"), "utf8");
+  const crlfBytes = Buffer.from(manifestBytes.toString("utf8").replace(/\r\n/gu, "\n").replace(/\n/gu, "\r\n"), "utf8");
   assert.equal(operator.repositoryTextDigest(manifestBytes), operator.MANIFEST_RAW_SHA256);
   assert.equal(operator.repositoryTextDigest(crlfBytes), operator.MANIFEST_RAW_SHA256);
   assert.throws(
@@ -574,12 +574,14 @@ test("corpus wrapper refuses a controlled post-read identity mutation", (t) => {
   const { fixtureRepository } = makeFixture(t, ["rd0873-corpus-packages-fungi.mjs"]);
   const libraryPath = join(fixtureRepository, "tools", "rd0873-read-only-audit-lib.mjs");
   const original = readFileSync(libraryPath, "utf8");
+  const newline = original.includes("\r\n") ? "\r\n" : "\n";
   const withWriter = original.replace("closeSync, constants, fstatSync", "closeSync, constants, fstatSync, writeFileSync");
   const mutated = withWriter.replace(
-    "    bytes = readFileSync(descriptor);\n    const descriptorAfter = fstatSync(descriptor, { bigint: true });",
-    "    bytes = readFileSync(descriptor);\n    writeFileSync(path, Buffer.concat([bytes, Buffer.from(\"mutation\")]));\n    const descriptorAfter = fstatSync(descriptor, { bigint: true });",
+    `    bytes = readFileSync(descriptor);${newline}    const descriptorAfter = fstatSync(descriptor, { bigint: true });`,
+    `    bytes = readFileSync(descriptor);${newline}    writeFileSync(path, Buffer.concat([bytes, Buffer.from("mutation")]));${newline}    const descriptorAfter = fstatSync(descriptor, { bigint: true });`,
   );
-  assert.notEqual(mutated, original);
+  assert.notEqual(withWriter, original);
+  assert.notEqual(mutated, withWriter);
   writeFileSync(libraryPath, mutated);
   writeFixture(fixtureRepository, "packages/fungi/input.fungi", "flow input() {}\n");
   const result = runFixtureTool(fixtureRepository, "rd0873-corpus-packages-fungi.mjs");
