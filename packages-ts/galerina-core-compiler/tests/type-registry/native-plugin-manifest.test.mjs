@@ -48,22 +48,28 @@ describe("Phase 27: classifyMessage parses correctly", () => {
     );
   });
 
-  it("classifyMessage.fungi contains guarded flow declaration with ai.inference and audit.write effects", () => {
+  it("classifyMessage.fungi parses as a secure flow with ai.inference and audit.write effects", () => {
     const source = readFileSync(join(examplesDir, "classifyMessage.fungi"), "utf-8");
-
-    // Verify the source contains the key governance elements as documented
-    assert.ok(
-      source.includes("guarded flow classifyMessage"),
-      "Must declare 'guarded flow classifyMessage'",
+    const result = parseProgram(source);
+    const errors = result.diagnostics.filter((d) => d.severity === "error");
+    assert.equal(
+      errors.length,
+      0,
+      `classifyMessage.fungi must parse without errors, got: ${errors.map((e) => e.message).join(", ")}`,
     );
+    const flow = result.flows.find((f) => f.name === "classifyMessage");
+    assert.ok(flow, "Must parse the classifyMessage flow");
+    assert.equal(flow.qualifier, "secure", "Must declare a secure classifyMessage flow");
+
     assert.ok(
-      source.includes("ai.inference"),
+      flow.declaredEffects.includes("ai.inference"),
       "Must declare ai.inference effect",
     );
     assert.ok(
-      source.includes("audit.write"),
+      flow.declaredEffects.includes("audit.write"),
       "Must declare audit.write effect",
     );
+    // Keep the remaining documented governance source checks.
     assert.ok(
       source.includes("deny [remote.execution]"),
       "Must deny remote.execution",

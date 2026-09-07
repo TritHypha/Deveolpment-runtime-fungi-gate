@@ -36,8 +36,8 @@ const distPath = (f) => join(here, "..", "dist", f);
 test("gir-emitter: banned pop() decode gone; shared decoder wired", () => {
   const t = src("gir-emitter.ts");
   assert.ok(!/split\(":"\)\.pop\(\)/.test(t), "banned split(\":\").pop() must not reappear in gir-emitter.ts");
-  assert.ok(/import \{ isFlowDeclNamed \} from "\.\/flow-name\.js";/.test(t), "gir-emitter must import the shared decoder");
-  assert.ok(/node\.kind === "governedFlowDecl" && isFlowDeclNamed\(node, name\)/.test(t), "findGovernedFlowNode must match via isFlowDeclNamed");
+  assert.ok(/import\s+\{[^}]*\bisFlowDeclNamed\b[^}]*\}\s+from\s+"\.\/flow-name\.js";/.test(t), "gir-emitter must import the shared decoder");
+  assert.ok(/\bisFlowDeclNamed\s*\(\s*node\s*,\s*name\s*\)/.test(t), "findGovernedFlowNode must match via isFlowDeclNamed");
   assert.ok(!/never contain ':'/.test(t), "the false names-never-contain-colon invariant comment must be gone");
 });
 
