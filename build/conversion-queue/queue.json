@@ -1,15 +1,15 @@
 {
   "schemaVersion": 3,
-  "sourceDigest": "51cab91f19a89728d6ed3f20a33abc0830f66500f9287023bdf2950e507ea217",
+  "sourceDigest": "8784ebe4c19b57a1fafbd2abf02606ee1573839057278a5bd496a93200b6fe2a",
   "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
-  "projectCorpusReceiptDigest": "sha256:2bbe972bda204410deda8d51103445b65bf2fd3c2379598897794ab0cb9f5769",
+  "projectCorpusReceiptDigest": "sha256:4cc99cded640d4330707eb3eeb3ad345644093c271a3083358be98060c167454",
   "counts": {
-    "total": 1581,
+    "total": 1586,
     "CANDIDATE": 0,
     "BLOCKED": 921,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 660
+    "BOOTSTRAP_FLOOR": 665
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -1960,6 +1960,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/tests/cli-file-import-type-context.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/tests/cli-gate-from-pattern.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -2985,6 +2993,30 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/governed-memory.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/governed-secure-artifacts.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/governed-secure-runtime.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/governed-secure-semantic-parity.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -6161,6 +6193,14 @@
     },
     {
       "path": "packages-ts/galerina-core-security/src/index.ts",
+      "package": "galerina-core-security",
+      "tranche": "T1-trust-root",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-security/tests/dss-audit-effects.test.mjs",
       "package": "galerina-core-security",
       "tranche": "T1-trust-root",
       "classification": "BOOTSTRAP_FLOOR",
