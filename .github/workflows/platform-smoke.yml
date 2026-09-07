@@ -27,9 +27,9 @@ on:
 permissions:
   contents: read
 
-  # The resource lanes below are mandatory prerequisites for RD-0873. They
-  # remain separate from hosted platform-smoke so a generic smoke pass cannot
-  # be mistaken for native lifecycle coverage.
+  # Hosted resource observations are advisory. RD-0873 verification runs
+  # locally on Windows/WSL; a hosted smoke result does not establish native
+  # lifecycle coverage or gate the local implementation.
 
 jobs:
   resource-harness-windows-x64:

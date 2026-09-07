@@ -1,6 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Workflow source locks and embedded shell scripts require identical LF bytes.
+.github/workflows/*.yml text eol=lf
+
 # Galerina source participates in cross-platform compiler and SLIDE receipt
 # identities. Checkouts must expose the same LF bytes on Windows/macOS/Linux.
 *.fungi text eol=lf
@@ -60,6 +63,7 @@ docs/platform-handover/ubuntu-desktop/reports/*.slide-platform.json text eol=lf
 
 # Checked-decision frontend receipts are exact-byte evidence artifacts.
 docs/security/slide-frontend-receipts/*.frontend.json text eol=lf
+docs/**/INDEX.md        text eol=lf
 
 # ── Benchmark result artifacts (written LF by the runner/snapshot scripts). Pin eol=lf so the committed
 #    baseline (results/latest.json) + saved snapshots (results/archive/**) don't phantom-churn under Windows
