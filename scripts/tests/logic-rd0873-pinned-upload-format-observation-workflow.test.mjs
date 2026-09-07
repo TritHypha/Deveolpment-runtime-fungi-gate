@@ -29,6 +29,19 @@ jobs:
           submodules: false
           lfs: false
 
+      - name: Prove exact dispatched branch and revision
+        shell: bash
+        env:
+          RD0873_FORMAT_WORKFLOW_SHA: \${{ vars.RD0873_FORMAT_WORKFLOW_SHA }}
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF" == "refs/heads/codex/rd0873-pinned-upload-format-observation-source" ]]
+          [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$RD0873_FORMAT_WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$GITHUB_SHA" == "$RD0873_FORMAT_WORKFLOW_SHA" ]]
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]]
+          [[ "$(git status --porcelain)" == "" ]]
+
       - name: Install exact Node without cache
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -64,7 +77,7 @@ jobs:
         run: |
           set -euo pipefail
           agents_dir="$GITHUB_WORKSPACE/rd0873-agents-source"
-          expected_origin="https://github.com/TritHypha/AGENTS-SKILLS-AND-TOOLS.git"
+          expected_origin="https://github.com/TritHypha/AGENTS-SKILLS-AND-TOOLS"
           environment_names="$(compgen -e)"
           while IFS= read -r name; do
             case "$name" in
@@ -103,8 +116,20 @@ jobs:
           payload_dir="$payload_parent/payload"
           receipt_dir="$receipt_parent/receipt"
           agents_dir="$GITHUB_WORKSPACE/rd0873-agents-source"
-          rm -rf "$payload_parent" "$receipt_parent"
-          mkdir -p "$payload_dir" "$receipt_dir"
+          test ! -e "$payload_parent"
+          test ! -L "$payload_parent"
+          test ! -e "$receipt_parent"
+          test ! -L "$receipt_parent"
+          mkdir -- "$payload_parent" "$receipt_parent"
+          mkdir -- "$payload_dir" "$receipt_dir"
+          test -d "$payload_parent"
+          test ! -L "$payload_parent"
+          test -d "$receipt_parent"
+          test ! -L "$receipt_parent"
+          test -d "$payload_dir"
+          test ! -L "$payload_dir"
+          test -d "$receipt_dir"
+          test ! -L "$receipt_dir"
           producer_tree="$(git rev-parse "$GITHUB_SHA^{tree}")"
           agents_tree="$(git -C "$agents_dir" rev-parse "bc22960337f20fb3e0c17863432f6ba823af1608^{tree}")"
           printf '%s\\n' 'RD0873-FORMAT-OBSERVATION-FRAME-V1' > "$payload_dir/frame.gaaf"
@@ -186,6 +211,9 @@ test("rd0873 pinned upload format observation workflow accepts only its fixed so
     ["broader job permission", "contents: read", "contents: write"],
     ["retained checkout credential", "persist-credentials: false", "persist-credentials: true"],
     ["non-event application ref", "ref: ${{ github.sha }}", "ref: refs/heads/main"],
+    ["wrong dispatched branch", "refs/heads/codex/rd0873-pinned-upload-format-observation-source", "refs/heads/main"],
+    ["missing protected workflow commit binding", "          [[ \"$GITHUB_SHA\" == \"$RD0873_FORMAT_WORKFLOW_SHA\" ]]", "          true"],
+    ["missing application checkout proof", "          [[ \"$(git rev-parse HEAD)\" == \"$GITHUB_SHA\" ]]", "          true"],
     ["third App repository", "            AGENTS-SKILLS-AND-TOOLS\n          permission-actions", "            AGENTS-SKILLS-AND-TOOLS\n            untrusted-third-repository\n          permission-actions"],
     ["extra application Node command before scrub", "          expected_origin=", "          node --version\n          expected_origin="],
     ["missing payload cleanup assertion", "          test ! -e \"$payload_dir\"", "          true"],
@@ -197,6 +225,9 @@ test("rd0873 pinned upload format observation workflow accepts only its fixed so
     ["retained Git config override", "              GIT_CONFIG_*|GIT_ASKPASS", "              GIT_ASKPASS"],
     ["non-fail-closed environment listing", "          environment_names=\"$(compgen -e)\"", "          environment_names=\"\""],
     ["unbound private-key environment", "RD0873_*|*TOKEN*", "RD0873_*|"],
+    ["destructive pre-existing artifact cleanup", "          test ! -e \"$payload_parent\"", "          rm -rf \"$payload_parent\""],
+    ["payload parent symlink accepted", "          test ! -L \"$payload_parent\"", "          true"],
+    ["receipt parent symlink accepted", "          test ! -L \"$receipt_parent\"", "          true"],
     ["wrong fixed frame bytes", "RD0873-FORMAT-OBSERVATION-FRAME-V1", "RD0873-FORMAT-OBSERVATION-FRAME-V2"],
   ];
   for (const [label, from, to] of mutations) {
