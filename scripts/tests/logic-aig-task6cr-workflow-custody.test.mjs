@@ -26,6 +26,309 @@ const RECEIPT_CONTEXT = Object.freeze({ mode: 'observe', producerCommit: PRODUCE
   producerTree: '4'.repeat(40), agentsCommit: '3'.repeat(40), agentsTree: '5'.repeat(40),
   evidenceCommit: null, ...CONTEXT, platform: process.platform, producerRoot: REPOSITORY, agentsRoot: REPOSITORY });
 
+const ARTIFACT_NAMES = Object.freeze(['rd0873-task6-full-frame-windows-x64', 'rd0873-task6-receipt-windows-x64',
+  'rd0873-task6-full-frame-linux-x64', 'rd0873-task6-receipt-linux-x64']);
+const ARTIFACT_OUTPUT = Object.freeze({ id: '71', digest: 'a'.repeat(64), name: ARTIFACT_NAMES[0],
+  producerCommit: '1'.repeat(40), agentsCommit: '2'.repeat(40), runId: '81', runAttempt: '1' });
+
+test('Task 6C-R artifact binding captures a closed immutable output without granting provenance', () => {
+  assert.equal(typeof custodyHelper.validateArtifactBinding, 'function');
+  const output = { ...ARTIFACT_OUTPUT };
+  const captured = custodyHelper.validateArtifactBinding(output, ARTIFACT_OUTPUT);
+  assert.deepEqual(captured, ARTIFACT_OUTPUT);
+  assert.notEqual(captured, output);
+  assert.equal(Object.isFrozen(captured), true);
+  output.id = '99';
+  assert.equal(captured.id, '71');
+});
+
+test('Task 6C-R artifact binding refuses one changed field and malformed expectations', () => {
+  assert.equal(typeof custodyHelper.validateArtifactBinding, 'function');
+  for (const [key, values] of Object.entries({ id: ['0', '-1', '01', '71\n', 71, '72'],
+    digest: ['', 'A'.repeat(64), 'a'.repeat(63), 'b'.repeat(64), 'a'.repeat(64) + '\n'],
+    name: ['other', ARTIFACT_NAMES[1], ARTIFACT_NAMES[2]], producerCommit: ['3'.repeat(40), 'main'],
+    agentsCommit: ['3'.repeat(40), '2'.repeat(40) + '\n'], runId: ['82', '0', '81\n'], runAttempt: ['2', '01', '1\n'] })) {
+    for (const value of values) assert.throws(() => custodyHelper.validateArtifactBinding(
+      { ...ARTIFACT_OUTPUT, [key]: value }, ARTIFACT_OUTPUT), HOLD, `${key}:${value}`);
+  }
+  for (const key of Object.keys(ARTIFACT_OUTPUT)) {
+    const missing = { ...ARTIFACT_OUTPUT }; delete missing[key];
+    assert.throws(() => custodyHelper.validateArtifactBinding(missing, ARTIFACT_OUTPUT), HOLD);
+  }
+  for (const invalid of [{ ...ARTIFACT_OUTPUT, extra: true }, { ...ARTIFACT_OUTPUT, id: '0' },
+    { ...ARTIFACT_OUTPUT, name: 'not-an-artifact' }, { ...ARTIFACT_OUTPUT, digest: '' }]) {
+    assert.throws(() => custodyHelper.validateArtifactBinding(invalid, invalid), HOLD);
+  }
+  let observed = false;
+  const accessor = { ...ARTIFACT_OUTPUT };
+  Object.defineProperty(accessor, 'id', { enumerable: true, get() { observed = true; return '71'; } });
+  assert.throws(() => custodyHelper.validateArtifactBinding(accessor, ARTIFACT_OUTPUT), HOLD);
+  assert.equal(observed, false);
+  assert.throws(() => custodyHelper.validateArtifactBinding(ARTIFACT_OUTPUT, ARTIFACT_OUTPUT, {}), HOLD);
+});
+
+async function evidenceExample(body, fault = '') {
+  return temporary(async (root) => {
+    const git = process.platform === 'win32'
+      ? path.join(REPOSITORY, '.superpowers/sdd/2026-08-31-rd0873-portable-artifact-admission/toolchains/mingit-2.55.0.5/expanded/cmd/git.exe')
+      : '/usr/bin/git';
+    const run = (...args) => {
+      const result = spawnSync(git, ['-c', `safe.directory=${root}`, '-c', 'user.name=Task6CR',
+        '-c', 'user.email=task6cr@example.invalid', '-c', 'commit.gpgsign=false', '-C', root, ...args], {
+        encoding: 'utf8', timeout: 30000, maxBuffer: 1048576, windowsHide: true,
+      });
+      assert.equal(result.error, undefined);
+      assert.equal(result.status, 0, result.stderr);
+      return result.stdout.trim();
+    };
+    run('init', '--quiet');
+    fs.mkdirSync(path.join(root, '.github/workflows'), { recursive: true });
+    fs.mkdirSync(path.join(root, 'scripts/tests/fixtures'), { recursive: true });
+    fs.writeFileSync(path.join(root, '.gitattributes'), '*.yml text eol=crlf\n');
+    const workflow = path.join(root, '.github/workflows/platform-smoke.yml');
+    fs.writeFileSync(workflow, 'name: temporary fixture\r\n');
+    const fixturePath = (lane) => path.join(root, `scripts/tests/fixtures/rd0873-task6-producer-${lane}-x64.v1.json`);
+    if (['present-parent', 'deletion'].includes(fault)) fs.writeFileSync(fixturePath('windows'), '{}');
+    if (fault === 'rename') fs.writeFileSync(path.join(root, 'old-fixture.json'), '{}');
+    run('add', '--all'); run('commit', '--quiet', '-m', 'Temporary producer');
+    const producerCommit = run('rev-parse', 'HEAD');
+    const producerTree = run('rev-parse', 'HEAD^{tree}');
+    let captured;
+    await temporary(async (captureRoot) => { captured = captureExample(captureRoot); });
+    const base = JSON.parse(captured.receiptBytes);
+    const receipts = {};
+    for (const lane of ['windows', 'linux']) {
+      const platform = lane === 'windows' ? 'win32' : 'linux';
+      const receipt = { ...base, producerCommit, producerTree, platform,
+        schema: `rd0873-task6-producer-${lane}-x64.v1`, git: { ...base.git, commitOid: producerCommit, treeOid: producerTree } };
+      receipts[lane] = Buffer.from(canonicalJsonText(receipt));
+      fs.writeFileSync(fixturePath(lane), receipts[lane]);
+    }
+    if (fault === 'wrong-parent') run('commit', '--allow-empty', '--quiet', '-m', 'Temporary intervening parent');
+    if (fault === 'third-path') fs.writeFileSync(path.join(root, 'extra.txt'), 'extra');
+    if (fault === 'workflow') fs.writeFileSync(workflow, 'name: changed workflow\r\n');
+    if (fault === 'deletion') fs.unlinkSync(fixturePath('windows'));
+    if (fault === 'rename') fs.unlinkSync(path.join(root, 'old-fixture.json'));
+    if (fault === 'schema') fs.writeFileSync(fixturePath('linux'), canonicalJsonText({ ...JSON.parse(receipts.linux), schema: 'wrong' }));
+    if (fault === 'platform') fs.writeFileSync(fixturePath('linux'), receipts.windows);
+    run('add', '--all');
+    if (fault === 'link-mode') {
+      const oid = run('hash-object', '-w', fixturePath('linux'));
+      run('update-index', '--cacheinfo', `120000,${oid},scripts/tests/fixtures/rd0873-task6-producer-linux-x64.v1.json`);
+    }
+    if (fault === 'hidden-submodule') {
+      run('update-index', '--add', '--cacheinfo', `160000,${producerCommit},hidden-submodule`);
+      run('config', 'diff.ignoreSubmodules', 'all');
+    }
+    run('commit', '--quiet', '-m', 'Temporary evidence additions');
+    let evidenceCommit = run('rev-parse', 'HEAD');
+    if (fault === 'multiple-parents') {
+      const other = run('commit-tree', producerTree, '-m', 'Temporary unrelated root');
+      evidenceCommit = run('commit-tree', run('rev-parse', 'HEAD^{tree}'), '-p', producerCommit, '-p', other, '-m', 'Temporary merge evidence');
+    }
+    await temporary(async (receiptRoot) => {
+      const receiptPath = path.join(receiptRoot, 'platform-receipt.json');
+      const selected = receipts[process.platform === 'win32' ? 'windows' : 'linux'];
+      fs.writeFileSync(receiptPath, fault === 'unequal' ? Buffer.from(canonicalJsonText({ ...JSON.parse(selected), runId: '7'.repeat(64) })) : selected);
+      // Working-tree bytes are explicitly not evidence; the committed LF blob is.
+      if (fault === '') fs.writeFileSync(workflow, 'uncommitted CRLF checkout change\r\n');
+      await body({ root, receiptPath, context: { ...RECEIPT_CONTEXT, mode: 'verify', producerCommit, producerTree, evidenceCommit } });
+    });
+  });
+}
+
+test('Task 6C-R evidence validates exact committed fixture additions despite changed CRLF checkout', async () => {
+  assert.equal(typeof custodyHelper.validateEvidenceFixtures, 'function');
+  await evidenceExample(async ({ root, receiptPath, context }) => {
+    assert.equal(await custodyHelper.validateEvidenceFixtures(context, root, receiptPath), 'TASK6CR_EVIDENCE_FIXTURES_OK');
+    await assert.rejects(custodyHelper.validateEvidenceFixtures({ ...context, mode: 'observe', evidenceCommit: null }, root, receiptPath), HOLD);
+  });
+});
+
+for (const fault of ['wrong-parent', 'multiple-parents', 'third-path', 'rename', 'deletion', 'present-parent',
+  'link-mode', 'schema', 'platform', 'unequal', 'workflow', 'hidden-submodule']) {
+  test(`Task 6C-R evidence refuses ${fault}`, async () => {
+    assert.equal(typeof custodyHelper.validateEvidenceFixtures, 'function');
+    await evidenceExample(async ({ root, receiptPath, context }) => {
+      await assert.rejects(custodyHelper.validateEvidenceFixtures(context, root, receiptPath), HOLD);
+    }, fault);
+  });
+}
+
+test('Task 6C-R evidence compares the fixed opposite fixture for a reciprocal lane', async () => {
+  await evidenceExample(async ({ root, receiptPath, context }) => {
+    const opposite = process.platform === 'win32' ? 'linux' : 'windows';
+    fs.writeFileSync(receiptPath, fs.readFileSync(path.join(root, `scripts/tests/fixtures/rd0873-task6-producer-${opposite}-x64.v1.json`)));
+    const reciprocal = { ...context, platform: process.platform === 'win32' ? 'linux' : 'win32',
+      job: process.platform === 'win32' ? 'reciprocal-windows' : 'reciprocal-linux' };
+    assert.equal(await custodyHelper.validateEvidenceFixtures(reciprocal, root, receiptPath), 'TASK6CR_EVIDENCE_FIXTURES_OK');
+    await assert.rejects(custodyHelper.validateEvidenceFixtures({ ...reciprocal, producerTree: '9'.repeat(40) }, root, receiptPath), HOLD);
+  });
+});
+
+test('Task 6C-R evidence accepts only the exact fixed Git interpreted-parent response', async () => {
+  await evidenceExample(async ({ root, receiptPath, context }) => {
+    for (const fault of ['none', 'empty', 'root', 'wrong-parent', 'multiple', 'extra-line', 'trailing-space', 'crlf']) {
+      const result = child(`
+        import assert from 'node:assert/strict';
+        import cp from 'node:child_process';
+        import { mock } from 'node:test';
+        const helper = await import(${JSON.stringify(HELPER.href)});
+        const original = cp.spawnSync;
+        const context = ${JSON.stringify(context)};
+        const fault = ${JSON.stringify(fault)};
+        let observed = 0;
+        let laterCalls = 0;
+        mock.method(cp, 'spawnSync', (exe, args, options) => {
+          const operation = args.slice(args.indexOf('-C') + 2);
+          if (operation[0] === 'rev-list') {
+            observed++;
+            assert.deepEqual(operation, ['rev-list', '--parents', '--no-walk', '--no-abbrev-commit', context.evidenceCommit]);
+            assert.equal(options.env.GIT_NO_REPLACE_OBJECTS, '1');
+            assert.equal(options.env.GIT_NO_LAZY_FETCH, '1');
+            assert.equal(options.shell, false);
+            assert.ok(options.timeout > 0 && options.timeout <= 30000);
+            const exact = context.evidenceCommit + ' ' + context.producerCommit;
+            const outputs = { none: exact + '\\n', empty: '', root: context.evidenceCommit + '\\n',
+              'wrong-parent': context.evidenceCommit + ' ' + '9'.repeat(40) + '\\n',
+              multiple: exact + ' ' + '9'.repeat(40) + '\\n', 'extra-line': exact + '\\n' + exact + '\\n',
+              'trailing-space': exact + ' \\n', crlf: exact + '\\r\\n' };
+            return { status: 0, signal: null, stdout: Buffer.from(outputs[fault]), stderr: Buffer.alloc(0) };
+          }
+          if (observed) laterCalls++;
+          return original(exe, args, options);
+        });
+        let code = null;
+        let value;
+        try { value = await helper.validateEvidenceFixtures(context, ${JSON.stringify(root)}, ${JSON.stringify(receiptPath)}); }
+        catch (error) { code = error.code; }
+        assert.equal(observed, 1, 'parent authority must come from the fixed Git interpreter');
+        if (fault === 'none') { assert.equal(code, null); assert.equal(value, 'TASK6CR_EVIDENCE_FIXTURES_OK'); }
+        else { assert.equal(code, 'HOLD_TASK6CR_CUSTODY'); assert.equal(laterCalls, 0); }
+      `);
+      assert.equal(result.status, 0, fault + ': ' + result.stdout + result.stderr);
+    }
+  });
+});
+
+test('Task 6C-R evidence scratch unlink failure retains HOLD and leaves outside roots untouched', async () => {
+  await evidenceExample(async ({ root, receiptPath, context }) => {
+    const sentinel = path.join(root, 'native-root-sentinel');
+    fs.writeFileSync(sentinel, 'untouched');
+    const result = child(`
+      import fs from 'node:fs';
+      import path from 'node:path';
+      import assert from 'node:assert/strict';
+      import { mock } from 'node:test';
+      const helper = await import(${JSON.stringify(HELPER.href)});
+      const unlink = fs.unlinkSync;
+      let refusedRoot;
+      mock.method(fs, 'unlinkSync', (locator) => {
+        if (path.basename(locator) === 'platform-receipt.json' && path.basename(path.dirname(locator)).startsWith('task6cr-custody-')) {
+          refusedRoot = path.dirname(locator);
+          throw new Error('PRIVATE_CLEANUP_SENTINEL');
+        }
+        return unlink(locator);
+      });
+      let code;
+      try { await helper.validateEvidenceFixtures(${JSON.stringify(context)}, ${JSON.stringify(root)}, ${JSON.stringify(receiptPath)}); }
+      catch (error) { code = error.code; }
+      assert.equal(code, 'HOLD_TASK6CR_CUSTODY');
+      assert.ok(refusedRoot);
+      assert.equal(fs.readFileSync(${JSON.stringify(sentinel)}, 'utf8'), 'untouched');
+      assert.deepEqual(fs.readdirSync(refusedRoot).sort(), ['custody.json', 'platform-receipt.json']);
+      mock.restoreAll();
+      fs.unlinkSync(path.join(refusedRoot, 'platform-receipt.json'));
+      fs.unlinkSync(path.join(refusedRoot, 'custody.json'));
+      fs.rmdirSync(refusedRoot);
+    `);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.equal(result.stdout, '');
+    assert.equal(result.stderr, '');
+  });
+});
+
+test('Task 6C-R evidence late scratch cleanup HOLD does not promise record retention', async () => {
+  await evidenceExample(async ({ root, receiptPath, context }) => {
+    const sentinel = path.join(root, 'native-root-sentinel');
+    fs.writeFileSync(sentinel, 'untouched');
+    for (const fault of ['record-unlink', 'ancestry', 'inventory', 'rmdir', 'rmdir-after-effect']) {
+      const result = child(`
+        import fs from 'node:fs';
+        import path from 'node:path';
+        import assert from 'node:assert/strict';
+        import { mock } from 'node:test';
+        const helper = await import(${JSON.stringify(HELPER.href)});
+        const fault = ${JSON.stringify(fault)};
+        const unlink = fs.unlinkSync;
+        const lstat = fs.lstatSync;
+        const readdir = fs.readdirSync;
+        const rmdir = fs.rmdirSync;
+        let scratch;
+        let deleted = false;
+        let injected = 0;
+        const fail = () => { injected++; throw new Error('PRIVATE_CLEANUP_SENTINEL'); };
+        mock.method(fs, 'unlinkSync', (locator) => {
+          if (path.basename(locator) === 'custody.json' && path.basename(path.dirname(locator)).startsWith('task6cr-custody-')) {
+            scratch = path.dirname(locator);
+            if (fault === 'record-unlink') fail();
+            unlink(locator); deleted = true; return;
+          }
+          return unlink(locator);
+        });
+        mock.method(fs, 'lstatSync', (locator, ...args) => {
+          if (deleted && locator === scratch && fault === 'ancestry') fail();
+          return lstat(locator, ...args);
+        });
+        mock.method(fs, 'readdirSync', (locator, ...args) => {
+          if (deleted && locator === scratch && fault === 'inventory') fail();
+          return readdir(locator, ...args);
+        });
+        mock.method(fs, 'rmdirSync', (locator) => {
+          if (deleted && locator === scratch && fault === 'rmdir') fail();
+          const result = rmdir(locator);
+          if (deleted && locator === scratch && fault === 'rmdir-after-effect') fail();
+          return result;
+        });
+        let code;
+        try { await helper.validateEvidenceFixtures(${JSON.stringify(context)}, ${JSON.stringify(root)}, ${JSON.stringify(receiptPath)}); }
+        catch (error) { code = error.code; assert.equal(String(error).includes('PRIVATE'), false); }
+        mock.restoreAll();
+        assert.equal(code, 'HOLD_TASK6CR_CUSTODY');
+        assert.equal(injected, 1);
+        assert.ok(scratch);
+        assert.equal(fs.readFileSync(${JSON.stringify(sentinel)}, 'utf8'), 'untouched');
+        assert.equal(fs.existsSync(scratch), fault !== 'rmdir-after-effect');
+        assert.equal(fs.existsSync(path.join(scratch, 'custody.json')), fault === 'record-unlink');
+        if (fs.existsSync(scratch)) {
+          assert.deepEqual(fs.readdirSync(scratch), fault === 'record-unlink' ? ['custody.json'] : []);
+          if (fault === 'record-unlink') fs.unlinkSync(path.join(scratch, 'custody.json'));
+          fs.rmdirSync(scratch);
+        }
+      `);
+      assert.equal(result.status, 0, fault + ': ' + result.stdout + result.stderr);
+      assert.equal(result.stdout, '');
+      assert.equal(result.stderr, '');
+    }
+  });
+});
+
+test('Task 6C-R completion CLI remains HOLD for plausible caller completion and artifact records', async () => temporary(async (root) => {
+  const sentinel = path.join(root, 'native-root-sentinel');
+  fs.writeFileSync(sentinel, 'untouched');
+  for (const operation of ['bind-upload', 'bind-download', 'verify-download', 'cleanup', 'aggregate']) {
+    const result = spawnSync(process.execPath, [fileURLToPath(HELPER), operation], {
+      encoding: 'utf8', timeout: 10000, maxBuffer: 1048576, windowsHide: true,
+      env: receiptEnvironment({ RD0873_TASK6CR_COMPLETION: JSON.stringify({ result: 'success', cleanup: 'TASK6CR_CLEANUP_OK', root }),
+        RD0873_TASK6CR_ARTIFACTS: JSON.stringify(ARTIFACT_NAMES.map((name, index) => ({ ...ARTIFACT_OUTPUT, id: String(71 + index), name }))) }),
+    });
+    assert.equal(result.status, 2);
+    assert.equal(result.stdout, 'HOLD_TASK6CR_CUSTODY\n');
+    assert.equal(result.stderr, '');
+    assert.equal(fs.readFileSync(sentinel, 'utf8'), 'untouched');
+  }
+}));
+
 function receiptEnvironment(controls) {
   const env = Object.create(null);
   for (const key of ['SystemRoot', 'SYSTEMROOT', 'WINDIR', 'TEMP', 'TMP', 'TMPDIR']) {

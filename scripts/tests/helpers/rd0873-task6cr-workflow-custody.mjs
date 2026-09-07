@@ -44,6 +44,9 @@ const RECEIPT_NAMES = Object.freeze(['native-build.log', 'platform-receipt.json'
 const BUILD_MARKER = Buffer.from('PROCESS_TREE_OBSERVER_OK\n');
 const BINDING_KEYS = Object.freeze(['schema', 'runId', 'runAttempt', 'producerCommit', 'producerTree',
   'agentsCommit', 'agentsTree', 'artifactName', 'artifactKind']);
+const OUTPUT_KEYS = Object.freeze(['id', 'digest', 'name', 'producerCommit', 'agentsCommit', 'runId', 'runAttempt']);
+const ARTIFACT_NAMES = Object.freeze(['rd0873-task6-full-frame-windows-x64', 'rd0873-task6-receipt-windows-x64',
+  'rd0873-task6-full-frame-linux-x64', 'rd0873-task6-receipt-linux-x64']);
 
 // Source/evidence authentication is the next task's prerequisite. These closed
 // records are local test infrastructure, never self-authenticating provenance.
@@ -196,6 +199,119 @@ export async function verifyDownloadedBundle(context, payloadRoot, receiptRoot) 
     void receiptRoot;
     refuse();
   } catch { refuse(); }
+}
+
+// Structural comparison only: a matching service digest string is never proof
+// of archive verification, extraction custody, or phase completion.
+export function validateArtifactBinding(binding, expected) {
+  try {
+    if (arguments.length !== 2) refuse();
+    for (const record of [binding, expected]) {
+      closedObject(record, OUTPUT_KEYS);
+      for (const key of ['id', 'runId', 'runAttempt']) {
+        if (typeof record[key] !== 'string' || record[key].length > (key === 'runAttempt' ? 10 : 30)
+          || !/^[1-9][0-9]*$/u.test(record[key]) || record[key].includes('\n')) refuse();
+      }
+      for (const [key, length] of [['digest', 64], ['producerCommit', 40], ['agentsCommit', 40]]) {
+        if (typeof record[key] !== 'string' || record[key].length !== length || !/^[0-9a-f]+$/u.test(record[key])) refuse();
+      }
+      if (!ARTIFACT_NAMES.includes(record.name)) refuse();
+    }
+    if (OUTPUT_KEYS.some((key) => binding[key] !== expected[key])) refuse();
+    return Object.freeze({ ...binding });
+  } catch { refuse(); }
+}
+
+export async function validateEvidenceFixtures(context, evidenceRoot, receiptPath) {
+  try {
+    if (arguments.length !== 3) refuse();
+    const capturedContext = receiptContext(context);
+    if (capturedContext.mode !== 'verify') refuse();
+    const root = absolute(evidenceRoot);
+    const observed = ancestry(root);
+    checkEvidenceGitBoundary(capturedContext, root);
+    const producerWorkflow = await readFixedGitBlob(root, capturedContext.producerCommit, 'workflow');
+    const evidenceWorkflow = await readFixedGitBlob(root, capturedContext.evidenceCommit, 'workflow');
+    if (!producerWorkflow.equals(evidenceWorkflow)) refuse();
+    const fixtures = {};
+    for (const [lane, platform] of [['windows', 'win32'], ['linux', 'linux']]) {
+      const bytes = await readFixedGitBlob(root, capturedContext.evidenceCommit, `${lane}-fixture`);
+      await validateCapturedFixture(capturedContext, bytes, platform);
+      fixtures[platform] = bytes;
+    }
+    const receipt = await validatePlatformReceiptFile(capturedContext, receiptPath);
+    if (!fixtures[capturedContext.platform].equals(receipt.bytes)) refuse();
+    recheckAncestry(observed);
+    // Local Git/receipt consistency only, never archive or hosted provenance.
+    return 'TASK6CR_EVIDENCE_FIXTURES_OK';
+  } catch { refuse(); }
+}
+
+function checkEvidenceGitBoundary(context, root) {
+  const deadline = Date.now() + CHILD_TIMEOUT;
+  const observed = ancestry(root);
+  const pin = authenticateGit();
+  const common = ['--no-pager', '-c', `safe.directory=${root}`, '-c', 'core.hooksPath=', '-c', 'protocol.allow=never',
+    '-c', 'core.fsmonitor=false', '-c', 'core.attributesFile=', '-c', 'core.autocrlf=false', '-C', root];
+  const run = (...args) => fixedChild(GIT, [...common, ...args], root, undefined, deadline);
+  if (!run('--version').equals(Buffer.from(`git version ${pin.version}\n`))) refuse();
+  for (const commit of [context.producerCommit, context.evidenceCommit]) {
+    if (!run('cat-file', '-t', commit).equals(Buffer.from('commit\n'))) refuse();
+  }
+  // Let pinned Git interpret commit headers; raw line counting need not agree
+  // with its parent semantics. Require one complete, unabbreviated result.
+  const parents = run('rev-list', '--parents', '--no-walk', '--no-abbrev-commit', context.evidenceCommit);
+  if (!parents.equals(Buffer.from(`${context.evidenceCommit} ${context.producerCommit}\n`))) refuse();
+  if (!run('rev-parse', `${context.producerCommit}^{tree}`).equals(Buffer.from(`${context.producerTree}\n`))) refuse();
+  const paths = [KINDS['linux-fixture'], KINDS['windows-fixture']];
+  for (const locator of paths) {
+    if (run('ls-tree', '-z', context.producerCommit, '--', locator).length !== 0) refuse();
+  }
+  const changed = run('diff-tree', '--no-commit-id', '--name-status', '-r', '--no-renames', '-z',
+    context.producerCommit, context.evidenceCommit, '--');
+  if (!changed.equals(Buffer.from(paths.map((locator) => `A\0${locator}\0`).join('')))) refuse();
+  authenticateGit();
+  recheckAncestry(observed);
+  if (Date.now() >= deadline) refuse();
+}
+
+async function validateCapturedFixture(context, bytes, platform) {
+  // The fixed Task 6C runner consumes a locator. Materialize only the Git-owned
+  // capture in a private verifier scratch reservation, never a transport root
+  // handed in by a caller. This does not release producer transport custody.
+  const host = process.platform === 'win32' ? 'windows' : 'linux';
+  const job = `${platform === process.platform ? 'producer' : 'reciprocal'}-${host}`;
+  const run = { runId: context.runId, runAttempt: context.runAttempt, job };
+  const custody = await reserveOwnedRoot(run);
+  const locator = path.join(custody.root, 'platform-receipt.json');
+  let written = false;
+  let identity;
+  try {
+    fs.writeFileSync(locator, bytes, { flag: 'wx', mode: 0o600 });
+    written = true;
+    identity = fs.lstatSync(locator, { bigint: true });
+    const receipt = await validatePlatformReceiptFile({ ...context, job, platform }, locator);
+    if (!receipt.bytes.equals(bytes)) refuse();
+  } finally {
+    await validateOwnedRoot(custody, run);
+    await assertExactInventory(custody.root, Object.freeze(written ? ['custody.json', 'platform-receipt.json'] : ['custody.json']));
+    const ancestors = ancestry(custody.root);
+    if (written) {
+      if (!sameFile(identity, fs.lstatSync(locator, { bigint: true })) || !capturePath(locator, CHILD_MAXIMUM).equals(bytes)) refuse();
+      recheckAncestry(ancestors);
+      fs.unlinkSync(locator);
+    }
+    await validateOwnedRoot(custody, run);
+    await assertExactInventory(custody.root, Object.freeze(['custody.json']));
+    recheckAncestry(ancestors);
+    // Verifier scratch only, not transport phase cleanup. Once this unlink
+    // succeeds a later HOLD may leave an empty root without its record. Do not
+    // recreate custody in an uncertain namespace or infer retention from HOLD.
+    fs.unlinkSync(path.join(custody.root, 'custody.json'));
+    recheckAncestry(ancestors);
+    if (fs.readdirSync(custody.root).length !== 0) refuse();
+    fs.rmdirSync(custody.root);
+  }
 }
 
 function refuse() {
