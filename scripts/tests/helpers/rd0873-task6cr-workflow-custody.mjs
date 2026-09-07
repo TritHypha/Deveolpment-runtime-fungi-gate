@@ -6,6 +6,7 @@ import childProcess from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { isProxy } from 'node:util/types';
 import { canonicalJsonText } from '../../lib/logic-aig-source-origin/contract.mjs';
+import { gradeCompleteProcessTreeResourceReceipt } from '../../lib/logic-aig-source-origin/process-tree-resource.mjs';
 
 // Test infrastructure only. No caller chooses an executable, command, verifier,
 // environment, artifact basename, or profile. Later workflow phases remain closed.
@@ -35,6 +36,167 @@ const GIT = process.platform === 'win32'
   : '/usr/bin/git';
 const CONTEXT_KEYS = Object.freeze(['runId', 'runAttempt', 'job']);
 const CUSTODY_KEYS = Object.freeze(['schema', ...CONTEXT_KEYS, 'root', 'rootDevice', 'rootInode', 'rootMode', 'nonce']);
+const RECEIPT_CONTEXT_KEYS = Object.freeze(['mode', 'producerCommit', 'producerTree', 'agentsCommit', 'agentsTree',
+  'evidenceCommit', 'runId', 'runAttempt', 'job', 'platform', 'producerRoot', 'agentsRoot']);
+const VALIDATE_TEST = 'Task 6C validates a controlled supplied actual-platform receipt';
+const PAYLOAD_NAMES = Object.freeze(['frame.gaaf', 'profile.json', 'rd0873-artifact-binding.json']);
+const RECEIPT_NAMES = Object.freeze(['native-build.log', 'platform-receipt.json', 'resource-receipt.json', 'rd0873-artifact-binding.json']);
+const BUILD_MARKER = Buffer.from('PROCESS_TREE_OBSERVER_OK\n');
+const BINDING_KEYS = Object.freeze(['schema', 'runId', 'runAttempt', 'producerCommit', 'producerTree',
+  'agentsCommit', 'agentsTree', 'artifactName', 'artifactKind']);
+
+// Source/evidence authentication is the next task's prerequisite. These closed
+// records are local test infrastructure, never self-authenticating provenance.
+function receiptContext(context) {
+  closedObject(context, RECEIPT_CONTEXT_KEYS);
+  validateContext({ runId: context.runId, runAttempt: context.runAttempt, job: context.job });
+  if (!['observe', 'verify'].includes(context.mode)) refuse();
+  for (const key of ['producerCommit', 'producerTree', 'agentsCommit', 'agentsTree']) {
+    if (typeof context[key] !== 'string' || context[key].length !== 40 || !/^[0-9a-f]{40}$/u.test(context[key])) refuse();
+  }
+  if (context.mode === 'observe' ? context.evidenceCommit !== null
+    : typeof context.evidenceCommit !== 'string' || !/^[0-9a-f]{40}$/u.test(context.evidenceCommit)
+      || context.evidenceCommit.length !== 40) refuse();
+  if (!['win32', 'linux'].includes(process.platform) || process.arch !== 'x64') refuse();
+  const lane = process.platform === 'win32' ? 'windows' : 'linux';
+  if (!context.job.endsWith(`-${lane}`)) refuse();
+  const expected = context.job.startsWith('producer-') ? process.platform : process.platform === 'win32' ? 'linux' : 'win32';
+  if (context.platform !== expected || !equalPath(absolute(context.producerRoot), absolute(ROOT))) refuse();
+  ancestry(context.producerRoot);
+  ancestry(context.agentsRoot);
+  return Object.freeze({ ...context });
+}
+
+function receiptChild(context, controls) {
+  const expected = ['GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN', 'GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH',
+      'GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT'];
+  closedObject(controls, expected);
+  for (const key of expected) if (typeof controls[key] !== 'string' || controls[key].length === 0) refuse();
+  if (controls.GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN !== '1') refuse();
+  for (const key of Object.keys(process.env)) if (/^(GALERINA_TASK6C_PLATFORM_|RD0873_TASK6E_)/iu.test(key)) refuse();
+  const env = childEnvironment();
+  const name = VALIDATE_TEST;
+  Object.assign(env, controls);
+  // All locators are owned inputs; this child needs no PATH or toolchain search.
+  const result = childProcess.spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-name-pattern',
+    `^${name}$`, path.join(context.producerRoot, 'scripts/tests/logic-aig-source-origin-frame.test.mjs')], {
+    cwd: context.producerRoot, env, shell: false, windowsHide: true,
+    timeout: CHILD_TIMEOUT, maxBuffer: CHILD_MAXIMUM, encoding: 'buffer',
+  });
+  if (result.error || result.signal !== null || result.status !== 0 || !Buffer.isBuffer(result.stdout)
+    || !Buffer.isBuffer(result.stderr) || result.stderr.length !== 0 || result.stdout.length > CHILD_MAXIMUM) refuse();
+  const output = new TextDecoder('utf-8', { fatal: true }).decode(result.stdout);
+  if (!output.includes(`ok 1 - ${name}\n`) || !/^# tests 1$/mu.test(output)
+    || !/^# pass 1$/mu.test(output) || !/^# fail 0$/mu.test(output) || !/^# skipped 0$/mu.test(output)) refuse();
+}
+
+function canonicalCaptured(bytes) {
+  const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+  const value = JSON.parse(text);
+  if (!Buffer.from(canonicalJsonText(value), 'utf8').equals(bytes)) refuse();
+  return value;
+}
+
+export async function validatePlatformReceiptFile(context, receiptPath) {
+  try {
+    if (arguments.length !== 2) refuse();
+    const capturedContext = receiptContext(context);
+    const locator = absolute(receiptPath);
+    if (path.basename(locator) !== 'platform-receipt.json') refuse();
+    const opening = fs.lstatSync(locator, { bigint: true });
+    const bytes = capturePath(locator, CHILD_MAXIMUM);
+    if (!sameFile(opening, fs.lstatSync(locator, { bigint: true }))) refuse();
+    receiptChild(capturedContext, {
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN: '1',
+      GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH: locator,
+      GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT: capturedContext.producerCommit,
+    });
+    const closing = capturePath(locator, CHILD_MAXIMUM);
+    if (!sameFile(opening, fs.lstatSync(locator, { bigint: true })) || closing.length !== bytes.length
+      || digest(closing) !== digest(bytes) || !closing.equals(bytes)) refuse();
+    const receipt = canonicalCaptured(bytes);
+    if (receipt.platform !== capturedContext.platform || receipt.producerTree !== capturedContext.producerTree) refuse();
+    return Object.freeze({ bytes, receipt });
+  } catch { refuse(); }
+}
+
+export async function validateUploadBundle(context, payloadRoot, receiptRoot) {
+  try {
+    if (arguments.length !== 3) refuse();
+    const capturedContext = receiptContext(context);
+    if (!capturedContext.job.startsWith('producer-')) refuse();
+    const payload = absolute(payloadRoot);
+    const receipts = absolute(receiptRoot);
+    const parent = path.dirname(payload);
+    if (!equalPath(path.dirname(receipts), parent) || path.basename(payload) !== 'payload'
+      || path.basename(receipts) !== 'receipt') refuse();
+    const custody = canonicalCaptured(capturePath(path.join(parent, 'custody.json'), 4096));
+    const runContext = { runId: capturedContext.runId, runAttempt: capturedContext.runAttempt, job: capturedContext.job };
+    const payloadAncestry = ancestry(payload);
+    const receiptAncestry = ancestry(receipts);
+    const checkRoots = async () => {
+      await validateOwnedRoot(custody, runContext);
+      if (!equalPath(custody.root, parent)) refuse();
+      const members = fs.readdirSync(parent);
+      if (members.length !== 3 || members.some((name) => !['custody.json', 'payload', 'receipt'].includes(name))) refuse();
+      recheckAncestry(payloadAncestry);
+      recheckAncestry(receiptAncestry);
+      await assertExactInventory(payload, PAYLOAD_NAMES);
+      await assertExactInventory(receipts, RECEIPT_NAMES);
+    };
+    await checkRoots();
+    const platform = await validatePlatformReceiptFile(capturedContext, path.join(receipts, 'platform-receipt.json'));
+    await checkRoots();
+    const resource = canonicalCaptured(capturePath(path.join(receiptRoot, 'resource-receipt.json'), CHILD_MAXIMUM));
+    if (gradeCompleteProcessTreeResourceReceipt(resource).status !== 'PASS') refuse();
+    for (const key of ['producerCommit', 'producerTree', 'platform', 'arch', 'profileByteLength', 'profileSha256', 'frameByteLength', 'frameSha256']) {
+      if (resource[key] !== platform.receipt[key]) refuse();
+    }
+    if (resource.agentsCommit !== capturedContext.agentsCommit || resource.agentsTree !== capturedContext.agentsTree) refuse();
+    const bindings = [];
+    for (const [kind, root] of [['payload', payload], ['receipt', receipts]]) {
+      const binding = canonicalCaptured(capturePath(path.join(root, 'rd0873-artifact-binding.json'), 4096));
+      closedObject(binding, BINDING_KEYS);
+      for (const key of ['runId', 'runAttempt', 'producerCommit', 'producerTree', 'agentsCommit', 'agentsTree']) {
+        if (binding[key] !== capturedContext[key]) refuse();
+      }
+      const lane = capturedContext.platform === 'win32' ? 'windows' : 'linux';
+      if (binding.schema !== 'rd0873-artifact-binding-v1' || binding.artifactKind !== kind
+        || binding.artifactName !== `rd0873-task6-${kind === 'payload' ? 'full-frame' : 'receipt'}-${lane}-x64`) refuse();
+      bindings.push(Object.freeze(binding));
+    }
+    if (!capturePath(path.join(receipts, 'native-build.log'), BUILD_MARKER.length).equals(BUILD_MARKER)) refuse();
+    // Receipt validation and grading complete before either payload is opened.
+    // Stat both payloads before allocating either owned capture.
+    for (const [name, cap] of [['frame.gaaf', MAXIMUM], ['profile.json', CHILD_MAXIMUM]]) {
+      const stat = fs.lstatSync(path.join(payload, name), { bigint: true });
+      if (!regular(stat) || stat.size > BigInt(cap)) refuse();
+    }
+    const frameBytes = capturePath(path.join(payload, 'frame.gaaf'), MAXIMUM);
+    const profileBytes = capturePath(path.join(payload, 'profile.json'), CHILD_MAXIMUM);
+    for (const [prefix, bytes] of [['frame', frameBytes], ['profile', profileBytes]]) {
+      if (bytes.length !== resource[`${prefix}ByteLength`] || digest(bytes) !== resource[`${prefix}Sha256`]) refuse();
+    }
+    await checkRoots();
+    return Object.freeze({ frameBytes, profileBytes, bindings: Object.freeze(bindings) });
+  } catch { refuse(); }
+}
+
+export async function verifyDownloadedBundle(context, payloadRoot, receiptRoot) {
+  try {
+    if (arguments.length !== 3) refuse();
+    const capturedContext = receiptContext(context);
+    if (!capturedContext.job.startsWith('reciprocal-')) refuse();
+    // Task 0 assigns archive verification/extraction exclusively to the fixed
+    // verifyActionsArtifactArchive route. Task 3 joins that acquisition here.
+    // No owned digest result is available yet: never inspect caller paths or
+    // accept supplied result records, callbacks, URLs, modules or buffer claims.
+    // In particular, no payload or receipt is forwarded to an external child.
+    void payloadRoot;
+    void receiptRoot;
+    refuse();
+  } catch { refuse(); }
+}
 
 function refuse() {
   const error = new Error(CODE);
@@ -334,7 +496,18 @@ async function selfTest() {
 }
 
 async function main() {
-  if (process.argv.length !== 3 || process.argv[2] !== '--self-test') refuse();
+  if (process.argv.length !== 3) refuse();
+  if (process.argv[2] === 'prepare-upload') {
+    const expected = ['RD0873_TASK6CR_CONTEXT', 'RD0873_TASK6CR_PAYLOAD_ROOT', 'RD0873_TASK6CR_RECEIPT_ROOT'];
+    const found = Object.keys(process.env).filter((key) => /^RD0873_TASK6CR_/iu.test(key));
+    if (found.length !== expected.length || found.some((key) => !expected.includes(key))
+      || expected.some((key) => !process.env[key] || process.env[key].length > 8192)) refuse();
+    await validateUploadBundle(JSON.parse(process.env.RD0873_TASK6CR_CONTEXT),
+      process.env.RD0873_TASK6CR_PAYLOAD_ROOT, process.env.RD0873_TASK6CR_RECEIPT_ROOT);
+    process.stdout.write('TASK6CR_UPLOAD_BUNDLE_OK\n');
+    return;
+  }
+  if (process.argv[2] !== '--self-test') refuse();
   for (const key of Object.keys(process.env)) if (/^RD0873_TASK6CR_/iu.test(key)) refuse();
   await selfTest();
   process.stdout.write('TASK6CR_CUSTODY_SELF_TEST_OK\n');

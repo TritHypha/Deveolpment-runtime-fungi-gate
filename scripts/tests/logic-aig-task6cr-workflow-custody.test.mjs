@@ -6,6 +6,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import * as custodyHelper from './helpers/rd0873-task6cr-workflow-custody.mjs';
+import { canonicalJsonText } from '../lib/logic-aig-source-origin/contract.mjs';
 
 import {
   captureRegularFile, assertExactInventory, extractPinnedProfile,
@@ -18,6 +20,426 @@ const HOLD = (error) => error?.code === 'HOLD_TASK6CR_CUSTODY';
 const HASH = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const CONTEXT = Object.freeze({ runId: '123', runAttempt: '1', job: process.platform === 'win32' ? 'producer-windows' : 'producer-linux' });
 const PAYLOAD = Object.freeze(['frame.gaaf', 'profile.json']);
+const REPOSITORY = fileURLToPath(new URL('../../', import.meta.url));
+const PRODUCER_COMMIT = '20f303edc13c3c43194dff9567b06e88cf2c4acd';
+const RECEIPT_CONTEXT = Object.freeze({ mode: 'observe', producerCommit: PRODUCER_COMMIT,
+  producerTree: '4'.repeat(40), agentsCommit: '3'.repeat(40), agentsTree: '5'.repeat(40),
+  evidenceCommit: null, ...CONTEXT, platform: process.platform, producerRoot: REPOSITORY, agentsRoot: REPOSITORY });
+
+function receiptEnvironment(controls) {
+  const env = Object.create(null);
+  for (const key of ['SystemRoot', 'SYSTEMROOT', 'WINDIR', 'TEMP', 'TMP', 'TMPDIR']) {
+    if (Object.hasOwn(process.env, key)) env[key] = process.env[key];
+  }
+  return Object.assign(env, controls);
+}
+
+// Temporary protocol example, accepted by the real capture runner. The opaque
+// bodies deliberately are not Task 6E admission evidence or a native observation.
+function exampleFrame(profileBytes) {
+  const ids = ['expected-parse-outcomes', 'export-sidecar', 'parse-outcomes-receipt',
+    'project', 'resolution-inputs', 'source-manifest', 'toolchain-manifest'];
+  const roles = ['expected-parse-outcomes', 'export-sidecar', 'parse-outcomes-receipt',
+    'project-graph', 'resolution-inputs', 'source-manifest', 'toolchain-manifest'];
+  const runId = '6'.repeat(64);
+  const bodies = ids.map((id) => Buffer.from(`body:${id}`));
+  const integer = (value, width) => {
+    const bytes = Buffer.alloc(width);
+    if (width === 8) bytes.writeBigUInt64BE(BigInt(value));
+    else bytes.writeUIntBE(value, 0, width);
+    return bytes;
+  };
+  const manifest = Buffer.from(canonicalJsonText({ schema: 'artifact-admission-manifest.v1', authorizing: false,
+    profileId: 'galerina.source-origin.unsigned.v1', profileDigest: HASH(profileBytes), runId,
+    subject: { repositoryId: 'galerina', gitObjectFormat: 'sha1', commitOid: PRODUCER_COMMIT, treeOid: '4'.repeat(40) },
+    artifacts: ids.map((id, index) => ({ id, role: roles[index], runId, sha256: HASH(bodies[index]), byteLength: bodies[index].length, required: true })),
+    graph: { schema: 'artifact-admission-graph.v1', root: 'export-sidecar', nodes: ids,
+      edges: ids.filter((id) => id !== 'export-sidecar').map((id) => ({ from: 'export-sidecar', kind: 'requires', to: id })) },
+    claims: ['captured-bytes-only'], ownerRecord: null,
+  }));
+  return Buffer.concat([Buffer.from('GAAF'), Buffer.from([1]), integer(manifest.length, 4), manifest,
+    integer(ids.length, 2), ...ids.flatMap((id, index) => [integer(Buffer.byteLength(id), 2), Buffer.from(id), integer(bodies[index].length, 8), bodies[index]])]);
+}
+
+function captureExample(root) {
+  const profileBytes = extractPinnedProfile(fs.readFileSync(SOURCE));
+  const frameBytes = exampleFrame(profileBytes);
+  fs.writeFileSync(path.join(root, 'profile.json'), profileBytes);
+  fs.writeFileSync(path.join(root, 'frame.gaaf'), frameBytes);
+  const result = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-name-pattern',
+    '^Task 6C captures a controlled actual-platform receipt from supplied environment$',
+    path.join(REPOSITORY, 'scripts/tests/logic-aig-source-origin-frame.test.mjs')], {
+    env: receiptEnvironment({ GALERINA_TASK6C_PLATFORM_RECEIPT_RUN: '1',
+      GALERINA_TASK6C_PLATFORM_FRAME_PATH: path.join(root, 'frame.gaaf'),
+      GALERINA_TASK6C_PLATFORM_PROFILE_PATH: path.join(root, 'profile.json'),
+      GALERINA_TASK6C_PLATFORM_RECEIPT_PATH: path.join(root, 'platform-receipt.json') }),
+    encoding: 'utf8', timeout: 30000, maxBuffer: 1048576, windowsHide: true,
+  });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  return { profileBytes, frameBytes, receiptBytes: fs.readFileSync(path.join(root, 'platform-receipt.json')) };
+}
+
+function resourceExample(platformReceipt, overrides = {}) {
+  const platform = platformReceipt.platform;
+  const processes = [
+    { stage: 'producer', processKey: 'producer:1', parentProcessKey: null, pid: 101, parentPid: 0,
+      startTick: '0', endTick: '1000', peakRssKiB: 100, terminationKind: 'exit', terminationCode: 0 },
+    { stage: 'verifier', processKey: 'verifier:1', parentProcessKey: 'producer:1', pid: 102, parentPid: 101,
+      startTick: '500', endTick: '1000', peakRssKiB: 100, terminationKind: 'exit', terminationCode: 0 },
+  ];
+  const mechanismEvidence = { nativeCreateEvents: 2, nativeExitEvents: 2, secondaryCreateEvents: 2,
+    secondaryExitEvents: 2, retainedHandleRows: 2, accountedProcessRows: 2, terminalState: 'reconciled' };
+  const body = { schema: 'galerina.logic-aig-task6-resource-receipt.v1', platform, arch: 'x64',
+    producerCommit: PRODUCER_COMMIT, producerTree: RECEIPT_CONTEXT.producerTree,
+    agentsCommit: RECEIPT_CONTEXT.agentsCommit, agentsTree: RECEIPT_CONTEXT.agentsTree,
+    profileByteLength: platformReceipt.profileByteLength, profileSha256: platformReceipt.profileSha256,
+    frameByteLength: platformReceipt.frameByteLength, frameSha256: platformReceipt.frameSha256,
+    targetTriple: platform === 'win32' ? 'x86_64-pc-windows-msvc' : 'x86_64-unknown-linux-gnu',
+    observerSourceSha256: 'c'.repeat(64), observerBinarySha256: 'd'.repeat(64), toolchainSha256: 'e'.repeat(64),
+    measurementMechanism: platform === 'win32' ? 'windows-debug-job-v1' : 'linux-ptrace-wait4-v1',
+    mechanismEvidence, mechanismSha256: HASH(Buffer.from(canonicalJsonText(mechanismEvidence))),
+    clock: { kind: platform === 'win32' ? 'qpc' : 'monotonic-raw', frequency: '1000000' }, processes,
+    maxProcessPeakRssKiB: 100, maxConcurrentTreePeakRssKiB: 200,
+    maximizingProcessKeys: ['producer:1', 'verifier:1'], measurementInterval: 'native-root-lifetime-conservative-superset.v1',
+    elapsedMillis: 1, limits: { processPeakRssKiB: 4194304, concurrentTreePeakRssKiB: 6291456, elapsedMillis: 900000 },
+    status: 'PASS', authorizing: false, ...overrides };
+  return Buffer.from(canonicalJsonText({ ...body, receiptDigest: HASH(Buffer.from(
+    `galerina.logic-aig-task6-resource-receipt.v1\0${canonicalJsonText(body)}`)) }));
+}
+
+async function exampleBundle(body) {
+  const custody = await reserveOwnedRoot(CONTEXT);
+  try {
+    const payloadRoot = path.join(custody.root, 'payload');
+    const receiptRoot = path.join(custody.root, 'receipt');
+    fs.mkdirSync(payloadRoot);
+    fs.mkdirSync(receiptRoot);
+    const captured = captureExample(payloadRoot);
+    fs.renameSync(path.join(payloadRoot, 'platform-receipt.json'), path.join(receiptRoot, 'platform-receipt.json'));
+    const platformReceipt = JSON.parse(captured.receiptBytes);
+    fs.writeFileSync(path.join(receiptRoot, 'resource-receipt.json'), resourceExample(platformReceipt));
+    fs.writeFileSync(path.join(receiptRoot, 'native-build.log'), 'PROCESS_TREE_OBSERVER_OK\n');
+    for (const [kind, root] of [['payload', payloadRoot], ['receipt', receiptRoot]]) {
+      fs.writeFileSync(path.join(root, 'rd0873-artifact-binding.json'), canonicalJsonText({ schema: 'rd0873-artifact-binding-v1',
+        runId: CONTEXT.runId, runAttempt: CONTEXT.runAttempt, producerCommit: PRODUCER_COMMIT,
+        producerTree: RECEIPT_CONTEXT.producerTree, agentsCommit: RECEIPT_CONTEXT.agentsCommit, agentsTree: RECEIPT_CONTEXT.agentsTree,
+        artifactName: `rd0873-task6-${kind === 'payload' ? 'full-frame' : 'receipt'}-${process.platform === 'win32' ? 'windows' : 'linux'}-x64`, artifactKind: kind }));
+    }
+    await body({ custody, payloadRoot, receiptRoot, platformReceipt, ...captured });
+  } finally { fs.rmSync(custody.root, { recursive: true, force: false }); }
+}
+
+function bundleCli(payloadRoot, receiptRoot) {
+  return spawnSync(process.execPath, [fileURLToPath(HELPER), 'prepare-upload'], {
+    encoding: 'utf8', timeout: 30000, maxBuffer: 1048576, windowsHide: true,
+    env: receiptEnvironment({ RD0873_TASK6CR_CONTEXT: JSON.stringify(RECEIPT_CONTEXT),
+      RD0873_TASK6CR_PAYLOAD_ROOT: payloadRoot, RD0873_TASK6CR_RECEIPT_ROOT: receiptRoot }),
+  });
+}
+
+test('Task 6C-R bundle accepts separated graded records and retains owned raw bytes', async () => exampleBundle(async (bundle) => {
+  assert.equal(typeof custodyHelper.validateUploadBundle, 'function');
+  const result = await custodyHelper.validateUploadBundle(RECEIPT_CONTEXT, bundle.payloadRoot, bundle.receiptRoot);
+  assert.deepEqual(result.frameBytes, bundle.frameBytes);
+  assert.deepEqual(result.profileBytes, bundle.profileBytes);
+  fs.writeFileSync(path.join(bundle.payloadRoot, 'frame.gaaf'), 'changed');
+  assert.deepEqual(result.frameBytes, bundle.frameBytes);
+}));
+
+test('Task 6C-R bundle actual CLI accepts exactly the complete upload inventory', async () => exampleBundle(async (bundle) => {
+  const result = bundleCli(bundle.payloadRoot, bundle.receiptRoot);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.equal(result.stdout, 'TASK6CR_UPLOAD_BUNDLE_OK\n');
+  assert.equal(result.stderr, '');
+}));
+
+test('Task 6C-R bundle actual CLI refuses each missing nonregular and surplus member', async () => exampleBundle(async (bundle) => {
+  for (const root of [bundle.payloadRoot, bundle.receiptRoot]) {
+    for (const name of fs.readdirSync(root)) {
+      const locator = path.join(root, name);
+      const bytes = fs.readFileSync(locator);
+      for (const fault of ['missing', 'directory', 'hardlink', 'symlink']) {
+        fs.unlinkSync(locator);
+        if (fault === 'directory') fs.mkdirSync(locator);
+        if (fault === 'hardlink') fs.linkSync(path.join(bundle.custody.root, 'custody.json'), locator);
+        if (fault === 'symlink') fs.symlinkSync(path.join(bundle.custody.root, 'custody.json'), locator, 'file');
+        const result = bundleCli(bundle.payloadRoot, bundle.receiptRoot);
+        assert.equal(result.status, 2, `${name} ${fault}`);
+        assert.equal(result.stdout, 'HOLD_TASK6CR_CUSTODY\n');
+        assert.equal(result.stderr, '');
+        if (fault === 'directory') fs.rmdirSync(locator);
+        else if (fault !== 'missing') fs.unlinkSync(locator);
+        fs.writeFileSync(locator, bytes);
+      }
+    }
+    for (const directory of [false, true]) {
+      const extra = path.join(root, 'extra');
+      if (directory) fs.mkdirSync(extra); else fs.writeFileSync(extra, 'private sentinel');
+      const result = bundleCli(bundle.payloadRoot, bundle.receiptRoot);
+      assert.equal(result.status, 2);
+      assert.equal(result.stdout, 'HOLD_TASK6CR_CUSTODY\n');
+      assert.equal(result.stderr, '');
+      if (directory) fs.rmdirSync(extra); else fs.unlinkSync(extra);
+    }
+  }
+}));
+
+test('Task 6C-R raw refuses each independently mismatched common identity and resource grade', async () => exampleBundle(async (bundle) => {
+  assert.equal(typeof custodyHelper.validateUploadBundle, 'function');
+  for (const [key, value] of [['producerCommit', 'a'.repeat(40)], ['producerTree', 'b'.repeat(40)],
+    ['agentsCommit', 'c'.repeat(40)], ['agentsTree', 'd'.repeat(40)], ['arch', 'arm64'],
+    ['platform', process.platform === 'win32' ? 'linux' : 'win32'], ['profileByteLength', 1130],
+    ['profileSha256', 'a'.repeat(64)], ['frameByteLength', bundle.frameBytes.length + 1],
+    ['frameSha256', 'b'.repeat(64)], ['status', 'HOLD']]) {
+    fs.writeFileSync(path.join(bundle.receiptRoot, 'resource-receipt.json'), resourceExample(bundle.platformReceipt, { [key]: value }));
+    await assert.rejects(custodyHelper.validateUploadBundle(RECEIPT_CONTEXT, bundle.payloadRoot, bundle.receiptRoot), HOLD, key);
+  }
+}));
+
+test('Task 6C-R raw refuses raw size and digest mismatches and build marker changes', async () => exampleBundle(async (bundle) => {
+  assert.equal(typeof custodyHelper.validateUploadBundle, 'function');
+  for (const [root, name] of [[bundle.payloadRoot, 'frame.gaaf'], [bundle.payloadRoot, 'profile.json'], [bundle.receiptRoot, 'native-build.log']]) {
+    const locator = path.join(root, name);
+    const original = fs.readFileSync(locator);
+    for (const bytes of [Buffer.concat([original, Buffer.from('x')]), Buffer.alloc(original.length, 120)]) {
+      fs.writeFileSync(locator, bytes);
+      await assert.rejects(custodyHelper.validateUploadBundle(RECEIPT_CONTEXT, bundle.payloadRoot, bundle.receiptRoot), HOLD);
+    }
+    fs.writeFileSync(locator, original);
+  }
+}));
+
+test('Task 6C-R receipt executes the accepted validator and retains pending pin status', async () => temporary(async (root) => {
+  const { receiptBytes } = captureExample(root);
+  assert.equal(typeof custodyHelper.validatePlatformReceiptFile, 'function');
+  const validated = await custodyHelper.validatePlatformReceiptFile(RECEIPT_CONTEXT, path.join(root, 'platform-receipt.json'));
+  assert.deepEqual(validated.bytes, receiptBytes);
+  assert.equal(validated.receipt.status, 'PENDING_EXACT_BYTES');
+  assert.equal(validated.receipt.platformPinRecordId, 'PENDING_EXACT_BYTES');
+  assert.equal(validated.receipt.authorizing, false);
+}));
+
+test('Task 6C-R receipt refuses resource substitution malformed bytes and wrong identity', async () => temporary(async (root) => {
+  const { receiptBytes } = captureExample(root);
+  const receipt = JSON.parse(receiptBytes);
+  assert.equal(typeof custodyHelper.validatePlatformReceiptFile, 'function');
+  for (const bytes of [Buffer.from('{"schema":"galerina.logic-aig-task6-resource-receipt.v1"}'),
+    Buffer.concat([receiptBytes, Buffer.from('\n')]), Buffer.from([0xff]),
+    Buffer.from(canonicalJsonText({ ...receipt, producerCommit: 'a'.repeat(40) })),
+    Buffer.from(canonicalJsonText({ ...receipt, platform: 'darwin' })),
+    Buffer.from(canonicalJsonText({ ...receipt, platform: 'Linux' }))]) {
+    fs.writeFileSync(path.join(root, 'platform-receipt.json'), bytes);
+    await assert.rejects(custodyHelper.validatePlatformReceiptFile(RECEIPT_CONTEXT, path.join(root, 'platform-receipt.json')), HOLD);
+  }
+}));
+
+test('Task 6C-R receipt pins length hash and identity across the actual child', async () => temporary(async (root) => {
+  const { receiptBytes } = captureExample(root);
+  for (const fault of ['changed-bytes', 'replaced-file', 'rewrite-same-bytes']) {
+    fs.writeFileSync(path.join(root, 'platform-receipt.json'), receiptBytes);
+    const result = child(`
+      import fs from 'node:fs';
+      import cp from 'node:child_process';
+      import { mock } from 'node:test';
+      const helper = await import(${JSON.stringify(HELPER.href)});
+      const original = cp.spawnSync;
+      const locator = process.argv[1];
+      let calls = 0;
+      mock.method(cp, 'spawnSync', (...args) => {
+        calls++;
+        const result = original(...args);
+        if (result.status !== 0) throw new Error('control child failed');
+        const bytes = fs.readFileSync(locator);
+        const fault = ${JSON.stringify(fault)};
+        if (fault === 'replaced-file') { fs.renameSync(locator, locator + '.old'); fs.writeFileSync(locator, bytes); }
+        else if (fault === 'changed-bytes') { bytes[bytes.length - 1] = 32; fs.writeFileSync(locator, bytes); }
+        else fs.writeFileSync(locator, bytes);
+        return result;
+      });
+      let code;
+      try { await helper.validatePlatformReceiptFile(${JSON.stringify(RECEIPT_CONTEXT)}, locator); }
+      catch (error) { code = error.code; }
+      if (calls !== 1 || code !== 'HOLD_TASK6CR_CUSTODY') process.exitCode = 4;
+    `, [path.join(root, 'platform-receipt.json')]);
+    assert.equal(result.status, 0, `${fault}: ${result.stdout}${result.stderr}`);
+  }
+}));
+
+test('Task 6C-R receipt fixed child excludes ambient credentials and Node execution controls', async () => temporary(async (root) => {
+  captureExample(root);
+  const result = child(`
+    import assert from 'node:assert/strict';
+    import cp from 'node:child_process';
+    import { mock } from 'node:test';
+    const helper = await import(${JSON.stringify(HELPER.href)});
+    const original = cp.spawnSync;
+    let calls = 0;
+    for (const key of ['GITHUB_TOKEN', 'ACTIONS_RUNTIME_TOKEN', 'NODE_OPTIONS', 'NODE_PATH', 'NODE_TEST_CONTEXT', 'PATH']) process.env[key] = 'PRIVATE_SENTINEL';
+    mock.method(cp, 'spawnSync', (exe, args, options) => {
+      calls++;
+      assert.equal(exe, process.execPath);
+      assert.deepEqual(args, ['--test', '--test-reporter=tap', '--test-name-pattern',
+        '^Task 6C validates a controlled supplied actual-platform receipt$',
+        ${JSON.stringify(path.join(REPOSITORY, 'scripts/tests/logic-aig-source-origin-frame.test.mjs'))}]);
+      assert.equal(options.timeout, 30000);
+      assert.equal(options.maxBuffer, 1048576);
+      assert.equal(options.shell, false);
+      assert.equal(options.windowsHide, true);
+      for (const key of Object.keys(options.env)) assert.ok(!/TOKEN|SECRET|NODE_|PATH$/i.test(key)
+        || key === 'GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_PATH');
+      assert.equal(options.env.GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN, '1');
+      assert.equal(options.env.GALERINA_TASK6C_PLATFORM_RECEIPT_EXPECTED_COMMIT, ${JSON.stringify(PRODUCER_COMMIT)});
+      return original(exe, args, options);
+    });
+    await helper.validatePlatformReceiptFile(${JSON.stringify(RECEIPT_CONTEXT)}, process.argv[1]);
+    if (calls !== 1) process.exitCode = 4;
+  `, [path.join(root, 'platform-receipt.json')]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+}));
+
+test('Task 6C-R receipt refuses surplus aliased empty and mixed ambient directions before spawning', async () => temporary(async (root) => {
+  captureExample(root);
+  for (const control of ['GALERINA_TASK6C_PLATFORM_RECEIPT_RUN', 'GALERINA_TASK6C_PLATFORM_RECEIPT_VALIDATE_RUN',
+    'GALERINA_TASK6C_PLATFORM_FRAME_PATH', 'GALERINA_TASK6C_PLATFORM_EXTRA', 'galerina_task6c_platform_extra', 'RD0873_TASK6E_INPUT_MODE']) {
+    for (const value of ['', '1']) {
+      const result = child(`
+        import cp from 'node:child_process';
+        import { mock } from 'node:test';
+        const helper = await import(${JSON.stringify(HELPER.href)});
+        let calls = 0;
+        mock.method(cp, 'spawnSync', () => { calls++; throw new Error('unexpected child'); });
+        process.env[${JSON.stringify(control)}] = ${JSON.stringify(value)};
+        let code;
+        try { await helper.validatePlatformReceiptFile(${JSON.stringify(RECEIPT_CONTEXT)}, process.argv[1]); }
+        catch (error) { code = error.code; }
+        if (calls !== 0 || code !== 'HOLD_TASK6CR_CUSTODY') process.exitCode = 4;
+      `, [path.join(root, 'platform-receipt.json')]);
+      assert.equal(result.status, 0, `${control}: ${result.stdout}${result.stderr}`);
+    }
+  }
+}));
+
+test('Task 6C-R raw validates receipts before payload opens and refuses a same-sized intervening mutation', async () => exampleBundle(async (bundle) => {
+  for (const fault of ['resource-substitution', 'after-validator-mutation', 'sparse-frame', 'oversized-receipt']) {
+    fs.writeFileSync(path.join(bundle.receiptRoot, 'platform-receipt.json'), bundle.receiptBytes);
+    fs.writeFileSync(path.join(bundle.payloadRoot, 'frame.gaaf'), bundle.frameBytes);
+    if (fault === 'resource-substitution') fs.copyFileSync(path.join(bundle.receiptRoot, 'resource-receipt.json'), path.join(bundle.receiptRoot, 'platform-receipt.json'));
+    if (fault === 'sparse-frame' || fault === 'oversized-receipt') {
+      const locator = fault === 'sparse-frame' ? path.join(bundle.payloadRoot, 'frame.gaaf') : path.join(bundle.receiptRoot, 'platform-receipt.json');
+      const fd = fs.openSync(locator, 'r+');
+      fs.ftruncateSync(fd, fault === 'sparse-frame' ? 134217729 : 1048577);
+      fs.closeSync(fd);
+    }
+    const result = child(`
+      import fs from 'node:fs';
+      import cp from 'node:child_process';
+      import { mock } from 'node:test';
+      const helper = await import(${JSON.stringify(HELPER.href)});
+      const originalSpawn = cp.spawnSync;
+      const originalOpen = fs.openSync;
+      let receiptChildren = 0, verifierChildren = 0, payloadOpens = 0;
+      const fault = ${JSON.stringify(fault)};
+      mock.method(cp, 'spawnSync', (exe, args, options) => {
+        if (args.some((arg) => arg.includes('external-input'))) verifierChildren++;
+        else receiptChildren++;
+        const result = originalSpawn(exe, args, options);
+        if (fault === 'after-validator-mutation' && result.status === 0) {
+          const bytes = fs.readFileSync(process.argv[1] + '/frame.gaaf');
+          bytes[bytes.length - 1] ^= 1;
+          fs.writeFileSync(process.argv[1] + '/frame.gaaf', bytes);
+        }
+        return result;
+      });
+      mock.method(fs, 'openSync', (locator, ...args) => {
+        if (/frame\.gaaf$|profile\.json$/.test(String(locator)) && typeof args[0] === 'number') {
+          payloadOpens++;
+          if (receiptChildren !== 1) throw new Error('early payload access');
+        }
+        return originalOpen(locator, ...args);
+      });
+      let code;
+      try { await helper.validateUploadBundle(${JSON.stringify(RECEIPT_CONTEXT)}, process.argv[1], process.argv[2]); }
+      catch (error) { code = error.code; }
+      if (code !== 'HOLD_TASK6CR_CUSTODY' || verifierChildren !== 0
+        || (fault !== 'after-validator-mutation' && payloadOpens !== 0)
+        || (fault === 'after-validator-mutation' && payloadOpens !== 2)
+        || receiptChildren !== (fault === 'oversized-receipt' ? 0 : 1)) process.exitCode = 4;
+    `, [bundle.payloadRoot, bundle.receiptRoot]);
+    assert.equal(result.status, 0, `${fault}: ${result.stdout}${result.stderr}`);
+  }
+}));
+
+test('Task 6C-R verifier holds without the fixed owned digest result and never invokes a child', async () => {
+  assert.equal(typeof custodyHelper.verifyDownloadedBundle, 'function');
+  const reciprocal = { ...RECEIPT_CONTEXT, job: process.platform === 'win32' ? 'reciprocal-windows' : 'reciprocal-linux',
+    platform: process.platform === 'win32' ? 'linux' : 'win32' };
+  const result = child(`
+    import cp from 'node:child_process';
+    import { mock } from 'node:test';
+    const helper = await import(${JSON.stringify(HELPER.href)});
+    let calls = 0;
+    mock.method(cp, 'spawnSync', () => { calls++; throw new Error('unexpected child'); });
+    for (const input of [undefined, {}, Buffer.from('{}'), 'PRIVATE_PATH_SENTINEL']) {
+      let code;
+      try { await helper.verifyDownloadedBundle(${JSON.stringify(reciprocal)}, input, input); }
+      catch (error) { code = error.code; }
+      if (code !== 'HOLD_TASK6CR_CUSTODY') process.exitCode = 4;
+    }
+    if (calls !== 0) process.exitCode = 4;
+  `);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+test('Task 6C-R bundle rejects a replaced payload directory across receipt validation', async () => exampleBundle(async (bundle) => temporary(async (backup) => {
+  const result = child(`
+    import fs from 'node:fs';
+    import path from 'node:path';
+    import cp from 'node:child_process';
+    import { mock } from 'node:test';
+    const helper = await import(${JSON.stringify(HELPER.href)});
+    const originalSpawn = cp.spawnSync;
+    let calls = 0;
+    mock.method(cp, 'spawnSync', (...args) => {
+      const result = originalSpawn(...args);
+      if (result.status !== 0) throw new Error('control child failed');
+      calls++;
+      const saved = path.join(process.argv[3], 'payload');
+      fs.renameSync(process.argv[1], saved);
+      fs.mkdirSync(process.argv[1]);
+      for (const name of fs.readdirSync(saved)) fs.copyFileSync(path.join(saved, name), path.join(process.argv[1], name));
+      return result;
+    });
+    let code;
+    try { await helper.validateUploadBundle(${JSON.stringify(RECEIPT_CONTEXT)}, process.argv[1], process.argv[2]); }
+    catch (error) { code = error.code; }
+    if (calls !== 1 || code !== 'HOLD_TASK6CR_CUSTODY') process.exitCode = 4;
+  `, [bundle.payloadRoot, bundle.receiptRoot, backup]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+})));
+
+test('Task 6C-R bundle rejects swapped receipts and independently altered artifact bindings', async () => exampleBundle(async (bundle) => {
+  const platformPath = path.join(bundle.receiptRoot, 'platform-receipt.json');
+  const resourcePath = path.join(bundle.receiptRoot, 'resource-receipt.json');
+  const resource = fs.readFileSync(resourcePath);
+  fs.writeFileSync(platformPath, resource);
+  fs.writeFileSync(resourcePath, bundle.receiptBytes);
+  let result = bundleCli(bundle.payloadRoot, bundle.receiptRoot);
+  assert.equal(result.status, 2);
+  assert.equal(result.stdout, 'HOLD_TASK6CR_CUSTODY\n');
+  assert.equal(result.stderr, '');
+  fs.writeFileSync(platformPath, bundle.receiptBytes);
+  fs.writeFileSync(resourcePath, resource);
+  for (const root of [bundle.payloadRoot, bundle.receiptRoot]) {
+    const locator = path.join(root, 'rd0873-artifact-binding.json');
+    const bytes = fs.readFileSync(locator);
+    const record = JSON.parse(bytes);
+    for (const key of Object.keys(record)) {
+      fs.writeFileSync(locator, canonicalJsonText({ ...record, [key]: key.endsWith('Commit') || key.endsWith('Tree') ? 'f'.repeat(40) : 'changed' }));
+      await assert.rejects(custodyHelper.validateUploadBundle(RECEIPT_CONTEXT, bundle.payloadRoot, bundle.receiptRoot), HOLD, key);
+    }
+    fs.writeFileSync(locator, bytes);
+  }
+}));
 
 async function temporary(body) {
   const root = fs.mkdtempSync(path.join(tmpdir(), 'task6cr-custody-test-'));
