@@ -79,11 +79,12 @@ function inventoryPolicyBytes({
   entries = DEFAULT_ENTRIES,
   exclusions = ['.git', 'tmp'],
   limits = DEFAULT_LIMITS,
+  profile = 'FIXTURE_ONLY',
   extraBody = {},
 } = {}) {
   const body = {
     schema: POLICY_SCHEMA,
-    profile: 'FIXTURE_ONLY',
+    profile,
     entries,
     exclusions,
     limits,
@@ -131,6 +132,15 @@ async function captureFixture(rootPath, overrides = {}) {
     rootPath,
     repositoryIdentityBytes: repositoryIdentityBytes(),
     inventoryPolicyBytes: inventoryPolicyBytes(overrides),
+  });
+}
+
+async function captureProductionFixture(rootPath, overrides = {}) {
+  const capture = api('captureLocalSourceSnapshot');
+  return capture({
+    rootPath,
+    repositoryIdentityBytes: repositoryIdentityBytes(),
+    inventoryPolicyBytes: inventoryPolicyBytes({ profile: 'LOCAL_PRODUCTION_V1', ...overrides }),
   });
 }
 
@@ -263,6 +273,50 @@ test('captured capability binds the local subject to retained snapshot state', a
       }),
       (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_DIGEST',
     );
+  });
+});
+
+test('production profile capture emits a non-fixture snapshot and binds the subject', async () => {
+  await withOwnedFixture(async ({ rootPath }) => {
+    await populateFixture(rootPath);
+    const capability = await captureProductionFixture(rootPath);
+    const repository = JSON.parse(repositoryIdentityBytes().toString('utf8'));
+    const policy = JSON.parse(inventoryPolicyBytes({ profile: 'LOCAL_PRODUCTION_V1' }).toString('utf8'));
+    const snapshot = api('getLocalSourceSnapshot')(capability);
+    assert.equal(snapshot.fixtureOnly, false);
+    const host = buildLocalHostObservation({
+      allowFixtureOnly: false,
+      platform: 'win32',
+      arch: 'x64',
+      runtime: 'node-v24.18.0',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: false,
+    });
+    const myco = buildVerifiedLocalDiscoveryReceipt({
+      allowFixtureOnly: false,
+      kind: 'MYCO',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: false,
+    });
+    const hypha = buildVerifiedLocalDiscoveryReceipt({
+      allowFixtureOnly: false,
+      kind: 'HYPHA',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: false,
+    });
+    const subject = api('buildLocalSourceOriginSubjectFromCapture')({
+      allowFixtureOnly: false,
+      capability,
+      repository,
+      policy,
+      host,
+      myco,
+      hypha,
+    });
+    assert.equal(subject.fixtureOnly, false);
   });
 });
 

@@ -17,6 +17,12 @@ then stop. See `docs/reports/rd-0873-local-contract-review.md` and
 `docs/reports/rd-0873-local-subject-review.md` for the exact working-tree hashes
 and focused receipts.
 
+The local collector now accepts the explicit `LOCAL_PRODUCTION_V1` profile in
+addition to `FIXTURE_ONLY`; its policy digest and snapshot classification stay
+bound to the retained capture capability. This is cooperative synthetic
+profile plumbing. A real dirty-checkout capture still needs an explicit bounded
+policy, an external hard deadline, and fresh producer/gateway/PROJECT evidence.
+
 The owner authorized product decisions, WSL and commit/push/merge operations.
 Creation of a branch or worktree requires explicit permission. Existing excess
 branches/worktrees remain intact for later cleanup; do not consolidate them as

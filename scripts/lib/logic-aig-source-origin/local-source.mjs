@@ -40,6 +40,7 @@ const CAPTURE_SUBJECT_OPTION_KEYS = [
 ];
 const ROLES = new Set(['DEPENDENCY', 'GENERATED_INPUT', 'POLICY_OWNER', 'RESOLUTION', 'SOURCE']);
 const SOURCE_ROLES = new Set(['DEPENDENCY', 'GENERATED_INPUT', 'SOURCE']);
+const LOCAL_PROFILES = new Set(['FIXTURE_ONLY', 'LOCAL_PRODUCTION_V1']);
 const CAPTURE_STATES = new WeakMap();
 const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
 const ARRAY_PROTOTYPE = Array.prototype;
@@ -75,8 +76,10 @@ function objectGetPrototypeOfSafe(value) {
   return Object.getPrototypeOf(value);
 }
 
-// This fixture-only collector is confined to execution before untrusted module evaluation.
-// A later production integration must establish its own reviewed primordial boundary.
+// This cooperative local collector supports explicitly named fixture and production
+// profiles, and remains confined to execution before untrusted module evaluation.
+// Production use still requires an external hard deadline and its own reviewed
+// primordial/runtime boundary.
 
 class LocalSourceRefusal extends Error {
   constructor(code) {
@@ -212,8 +215,9 @@ function isStructuralDirectory(path, policy) {
 
 function validatePolicy(value) {
   exactRecord(value, POLICY_KEYS, 'LOCAL_SOURCE_POLICY');
+  const profile = recordValue(value, 'profile');
   if (recordValue(value, 'schema') !== LOCAL_INVENTORY_POLICY_SCHEMA
-    || recordValue(value, 'profile') !== 'FIXTURE_ONLY'
+    || !LOCAL_PROFILES.has(profile)
     || recordValue(value, 'authorizing') !== false) refuse('LOCAL_SOURCE_POLICY');
 
   const entriesValue = exactArray(recordValue(value, 'entries'), 'LOCAL_SOURCE_POLICY');
@@ -271,7 +275,7 @@ function validatePolicy(value) {
 
   const normalized = objectFreeze({
     schema: LOCAL_INVENTORY_POLICY_SCHEMA,
-    profile: 'FIXTURE_ONLY',
+    profile,
     entries: objectFreeze(entries),
     exclusions: objectFreeze(exclusions),
     limits: objectFreeze(limits),
@@ -544,7 +548,7 @@ function buildSnapshot(repositoryIdentity, policy, capture) {
     executionBoundary: EXECUTION_BOUNDARY,
     atomicSnapshot: false,
     hostileWriterResistance: false,
-    fixtureOnly: true,
+    fixtureOnly: policy.profile === 'FIXTURE_ONLY',
   });
   const snapshot = objectFreeze({ ...body, snapshotDigest: sha256Canonical(LOCAL_SOURCE_SNAPSHOT_SCHEMA, body) });
   try {

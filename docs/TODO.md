@@ -28,15 +28,21 @@ counts or open items that a newer section explicitly supersedes.
   policy, snapshot, host, Myco and Hypha receipts, with explicit sealed
   host/discovery builders and a capture-to-subject entry point that takes the
   snapshot only from retained capture state. The independently reviewed
-  subject unit passes 5/5, the capture unit passes 19/19, and the combined
-  local subject/contract/source suite passes 30/30 on Windows and Ubuntu WSL.
+  subject unit passes 5/5, the capture unit passes 20/20, and the combined
+  local subject/contract/source suite passes 31/31 on Windows and Ubuntu WSL.
   See
   [the bounded subject review](reports/rd-0873-local-subject-review.md).
+- [x] Add the explicit `LOCAL_PRODUCTION_V1` profile path. Its policy digest
+  and snapshot classification remain bound to retained capture state, and the
+  focused source unit plus the combined subject/contract/source suite pass
+  20/20 and 31/31 on Windows and Ubuntu WSL. This is cooperative synthetic
+  profile plumbing only; it does not admit a dirty checkout or create a
+  PROJECT.
 - [ ] Continue the amendment's production policy, contracts and consumers.
   Fixture receipts cannot admit a PROJECT or selection. A real capture in this
-  dirty checkout remains closed because the protected compiler manifest is a
-  required input; the helper's timer also requires an external process limit
-  before production use.
+  dirty checkout still requires an explicit bounded policy that includes the
+  protected compiler manifest; the helper's cooperative timer also requires
+  an external process limit before production use.
 - [ ] Complete fresh PROJECT, computed gateway/zero-applicable evidence and
   the separate selection/review/continuity/approval chain before Task 7.
   Task 6 remains `HOLD`; no native source is admitted by the design review.
