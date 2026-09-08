@@ -40,6 +40,11 @@ checkout. Older dated sections remain the evidence ledger.
 - [!] Task 8 is still **HOLD** because later package-estate, Myco/Hypha,
   graph/index/registry, exact-revision review, chapter-close, scalar-oracle,
   source-origin and custody gates are not all green at one exact build point.
+- [!] The current read-only graph check is also non-green: package graph
+  refuses on orphan `src/source-origin-parser-entry.ts`; project and KB graph
+  outputs are missing or stale; dev-tool and executable-family indexes drift;
+  and semantic assurance reports a stale retirement family. Graph-integrity and
+  Fungi capability inventory passed. No generated writer was run.
 - [ ] Keep Task 9 custody/integration review and the RD-0873 completion merge
   closed until those gates are independently verified. Do not create a branch
   or worktree, retire existing topology, widen native scope, or begin bulk

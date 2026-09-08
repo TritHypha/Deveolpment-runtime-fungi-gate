@@ -28,6 +28,12 @@ four complete shards, with no unprocessed files. The earlier two-file
 now pass plain checking. This clears the corpus receipt itself, but it does not
 close the later package-estate, Myco/Hypha, graph/index/registry, independent
 exact-revision, chapter-close, or custody gates.
+A subsequent read-only graph check is also non-green: package graph refuses on
+an orphan `src/source-origin-parser-entry.ts`; project and KB graph outputs are
+missing or stale; dev-tool and executable-family indexes drift; and semantic
+assurance reports a stale retirement family. Graph-integrity and Fungi capability
+inventory passed. No generated writer was run.
+
 
 Task 9 custody/integration review and the RD-0873 completion merge therefore
 remain closed. Existing branches and worktrees remain untouched; no cleanup or
