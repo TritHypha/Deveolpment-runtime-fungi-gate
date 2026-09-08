@@ -205,6 +205,46 @@ test('local producer derives subject-bound source and resolution manifests from 
   });
 });
 
+test('local producer exposes a separate defensive held-byte handoff for downstream decoders', async () => {
+  await withOwnedFixture(async (rootPath) => {
+    const evidence = await makeEvidence(rootPath);
+    const input = api('buildLocalProducerInput')({
+      allowFixtureOnly: true,
+      capability: evidence.capability,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      subject: evidence.subject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+    assert.deepEqual(Object.keys(input).sort(), [
+      'resolutionBlobEntries', 'resolutionInputs', 'sourceBlobEntries', 'sourceManifest', 'subject',
+    ]);
+    assert.deepEqual(input.sourceBlobEntries.map(({ path }) => path), input.sourceManifest.rows.map(({ path }) => path));
+    assert.deepEqual(input.resolutionBlobEntries.map(({ path }) => path), input.resolutionInputs.rows.map(({ path }) => path));
+    for (const entry of [...input.sourceBlobEntries, ...input.resolutionBlobEntries]) {
+      assert.ok(entry.bytes instanceof Uint8Array);
+      assert.equal(sha256Raw(entry.bytes),
+        [...input.sourceManifest.rows, ...input.resolutionInputs.rows].find((row) => row.path === entry.path).rawSha256);
+    }
+    const original = input.sourceBlobEntries[0].bytes[0];
+    input.sourceBlobEntries[0].bytes[0] ^= 0xff;
+    const second = api('buildLocalProducerInput')({
+      allowFixtureOnly: true,
+      capability: evidence.capability,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      subject: evidence.subject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+    assert.notEqual(input.sourceBlobEntries[0].bytes[0], original);
+    assert.equal(sha256Raw(second.sourceBlobEntries[0].bytes), evidence.snapshot.entries.find(({ path }) => path === second.sourceBlobEntries[0].path).rawSha256);
+  });
+});
+
 test('local producer refuses an unbound capability or fixture without explicit fixture admission', async () => {
   await withOwnedFixture(async (rootPath) => {
     const evidence = await makeEvidence(rootPath);

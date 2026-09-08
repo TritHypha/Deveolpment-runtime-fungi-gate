@@ -267,6 +267,13 @@ function buildManifest({ schema, digestKey, roles, context }) {
   return Object.freeze({ ...body, [digestKey]: sha256Canonical(schema, body) });
 }
 
+function buildBlobEntries(capability, manifest) {
+  return Object.freeze(manifest.rows.map((row) => Object.freeze({
+    path: row.path,
+    bytes: getCapturedLocalSourceBytes(capability, row.path),
+  })));
+}
+
 export function buildLocalProducerManifests(options) {
   const context = validateProducerInputs(options);
   const sourceManifest = buildManifest({
@@ -284,5 +291,30 @@ export function buildLocalProducerManifests(options) {
   return Object.freeze({
     sourceManifest: validateLocalSourceManifest(sourceManifest, context),
     resolutionInputs: validateLocalResolutionInputs(resolutionInputs, context),
+  });
+}
+
+export function buildLocalProducerInput(options) {
+  const context = validateProducerInputs(options);
+  const sourceManifest = buildManifest({
+    schema: LOCAL_SOURCE_MANIFEST_SCHEMA,
+    digestKey: 'manifestDigest',
+    roles: SOURCE_ROLES,
+    context: { ...context, capability: options.capability },
+  });
+  const resolutionInputs = buildManifest({
+    schema: LOCAL_RESOLUTION_INPUTS_SCHEMA,
+    digestKey: 'resolutionInputsDigest',
+    roles: RESOLUTION_ROLES,
+    context: { ...context, capability: options.capability },
+  });
+  const validatedSource = validateLocalSourceManifest(sourceManifest, context);
+  const validatedResolution = validateLocalResolutionInputs(resolutionInputs, context);
+  return Object.freeze({
+    sourceManifest: validatedSource,
+    resolutionInputs: validatedResolution,
+    subject: context.subject,
+    sourceBlobEntries: buildBlobEntries(options.capability, validatedSource),
+    resolutionBlobEntries: buildBlobEntries(options.capability, validatedResolution),
   });
 }
