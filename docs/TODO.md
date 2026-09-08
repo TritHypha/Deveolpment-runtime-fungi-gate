@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 local verification update - 2026-09-08
+
+- [x] Complete the local TypeScript dependency closure without lifecycle
+  scripts. The eight transitive compiler packages built, and 33 previously
+  missing package dependency trees installed from their existing lockfiles.
+  No package-lock, source, DLL, EXE or toolchain path changed.
+- [x] Rerun the governed full local suite: **97/100 packages passed and
+  10,167 tests were counted**. The process warden and package bootstrap now
+  operate locally without hosted GitHub evidence.
+- [!] Keep broader integration `HOLD` for three independent repository issues:
+  `galerina-core` has invalid example fixtures, the framework example fixture
+  lacks its declared public signing key and correctly refuses unsigned fusion,
+  and `galerina-test` has three source-binding/path-drift failures. Do not
+  bypass fail-closed signing or rewrite these fixtures under RD-0873 without
+  a scoped admission decision.
+- [!] Fresh Windows read-only host assurance remains `HOLD`: the AGENTS-owned
+  bounded-execution auditor self-test passed, but its scan over this Galerina
+  worktree reports **711 findings** (372 missing output bounds, 299 missing
+  timeouts, 23 missing abort signals, 7 invalid output bounds, 4 invalid
+  timeouts, and 6 unparseable boundaries). This is negative evidence, not a
+  reason to install/copy toolchains or to claim the host gate is green.
+- [!] WSL recheck: the path-leak self-test passed, but the enforcement scan
+  remains `HOLD` because the Windows worktree `.git` pointer is not a valid
+  Linux path; the scanner cannot resolve the repository index from WSL.
+- [ ] Resolve those three local issues or record an explicit scope decision,
+  then repeat the governed full suite before promotion. Task 7 and `.fungi`
+  authoring remain closed until the separate admission gates pass.
+
 ### RD-0873 integration checkpoint - 2026-09-07
 
 - [x] Preserve the original five-path working diff locally and reuse the existing
