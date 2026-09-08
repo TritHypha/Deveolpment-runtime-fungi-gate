@@ -53,7 +53,10 @@ counts or open items that a newer section explicitly supersedes.
   cooperative timer remains paired with an external process limit.
 - [ ] Complete fresh PROJECT, computed gateway/zero-applicable evidence and
   the separate selection/review/continuity/approval chain before Task 7.
-  Task 6 remains `HOLD`; no native source is admitted by the design review.
+  The existing AGENTS parser/result/refusal suite is 214/214, but the exact
+  source-origin admission profile, gateway wrapper and producer-generated
+  KAT-C seven-artifact frame are absent. Task 6 remains `HOLD`; no native
+  source is admitted by the design review.
 - [ ] Complete the single admitted Task 7 scalar slice, verify and merge the
   integration, then stop. Reuse existing authorized slots; no new branch or
   worktree without explicit permission. Leave existing topology intact for

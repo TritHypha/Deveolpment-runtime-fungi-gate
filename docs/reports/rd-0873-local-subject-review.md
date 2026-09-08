@@ -64,6 +64,18 @@ This capture is source-origin evidence only. The producer discovery receipts,
 computed gateway, PROJECT, selection, continuity, and owner-approval chain are
 still absent, so Task 6 remains `HOLD` and Task 7 remains closed.
 
+Current AGENTS gate:
+
+- The existing Workbench parser/result/refusal suite passes **214/214** on
+  Windows, including the source-origin query, claim and result validators and
+  the generic decoder-denial controls.
+- The exact source-origin admission profile and gateway wrapper named by the
+  governing plan are not present in AGENTS, and no producer-generated KAT-C
+  seven-artifact frame exists. The Workbench therefore has no admitted
+  `admitSourceOriginFrame` route to run against this local snapshot.
+- No substitute profile, sidecar, PROJECT or gateway result was created. The
+  missing KAT-C/producer gate is preserved as `HOLD`.
+
 Reviewed bytes at Galerina HEAD
 `ce1aeeeacbb5b98167c17f82209ec4044e0f6154` plus the two reviewed working-tree
 files:

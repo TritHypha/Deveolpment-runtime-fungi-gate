@@ -32,6 +32,11 @@ no raw bytes were staged or written to the repository. Producer discovery,
 gateway, PROJECT, selection, continuity and owner approval remain open, so Task
 6 is still `HOLD` and Task 7 remains closed.
 
+The AGENTS Workbench's existing source-origin parser/result/refusal controls
+pass 214/214, but its exact admission profile and gateway wrapper are absent,
+and no producer-generated KAT-C seven-artifact frame is available. Do not
+invent a profile, sidecar, PROJECT or gateway result to bridge that gate.
+
 The owner authorized product decisions, WSL and commit/push/merge operations.
 Creation of a branch or worktree requires explicit permission. Existing excess
 branches/worktrees remain intact for later cleanup; do not consolidate them as
