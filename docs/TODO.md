@@ -39,10 +39,11 @@ counts or open items that a newer section explicitly supersedes.
   profile plumbing only; it does not admit a dirty checkout or create a
   PROJECT.
 - [x] Run the approved bounded live local capture against the protected dirty
-  checkout. The selected 14-file snapshot validated with `fixtureOnly: false`
-  under an external 60-second parent deadline; the protected compiler manifest
-  and generated hallmark were read by pathname and no raw bytes were staged or
-  written to the repository. See
+  checkout on Windows and Ubuntu WSL. The selected 14-file snapshot validated
+  with `fixtureOnly: false` under independent external 60-second parent
+  deadlines and produced identical digests and byte counts; the protected
+  compiler manifest and generated hallmark were read by pathname and no raw
+  bytes were staged or written to the repository. See
   [the bounded subject review](reports/rd-0873-local-subject-review.md) for
   the snapshot, policy and identity digests.
 - [ ] Continue the amendment's production policy, contracts and consumers.

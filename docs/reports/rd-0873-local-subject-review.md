@@ -46,6 +46,9 @@ Approved bounded production capture:
   generated hallmark by pathname. It completed with exit 0 under an external
   60-second parent-process deadline; no raw bytes were written to the
   repository.
+- The same bounded capture completed independently under Ubuntu WSL with its
+  own 60-second `timeout` and produced the identical policy, identity,
+  snapshot, entry and byte-count values.
 - The retained snapshot validated against its repository identity and policy
   bindings with `fixtureOnly: false`.
 - Snapshot digest: `d2a7056a71788e8d1c3873ccc421d429d281cb0cb56b13ef73c0155f10b45ce3`.
