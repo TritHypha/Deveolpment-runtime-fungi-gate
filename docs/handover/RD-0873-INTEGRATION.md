@@ -8,11 +8,14 @@ at `36c904e14ab6b74e4ad2402e22eda3d0359c4afe`. Its separate delegated-decision
 record is `docs/approvals/2026-09-08-rd0873-local-source-origin-delegation.json`
 at AGENTS `a11ff599e5026901de6add9391805e7b61d6fa86`. Architecture review passed;
 local capture and the shared local policy/snapshot contract are now independently
-reviewed bounded fixtures; gateway computation, PROJECT and selection evidence
+reviewed bounded fixtures, and the local source-origin subject now binds the
+repository, policy, snapshot, host, Myco and Hypha receipts under the same
+fail-closed boundary. Gateway computation, PROJECT and selection evidence
 remain implementation work. Task 6 is still `HOLD`; Task 7 requires its full
 separate selection chain. The requested endpoint is Task 7 verified and merged,
-then stop. See `docs/reports/rd-0873-local-contract-review.md` for the exact
-working-tree hashes and focused receipts.
+then stop. See `docs/reports/rd-0873-local-contract-review.md` and
+`docs/reports/rd-0873-local-subject-review.md` for the exact working-tree hashes
+and focused receipts.
 
 The owner authorized product decisions, WSL and commit/push/merge operations.
 Creation of a branch or worktree requires explicit permission. Existing excess

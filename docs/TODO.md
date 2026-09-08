@@ -24,6 +24,11 @@ counts or open items that a newer section explicitly supersedes.
   including fixture/production binding, exclusion collisions, and all bound
   policy byte/file ceilings. See
   [the independent contract review](reports/rd-0873-local-contract-review.md).
+- [x] Add the local source-origin subject binding for repository identity,
+  policy, snapshot, host, Myco and Hypha receipts. The independently reviewed
+  subject unit passes 4/4 on Windows and Ubuntu WSL; the combined local
+  subject/contract/source suite passes 28/28 on both. See
+  [the bounded subject review](reports/rd-0873-local-subject-review.md).
 - [ ] Continue the amendment's production policy, contracts and consumers.
   Fixture receipts cannot admit a PROJECT or selection. A real capture in this
   dirty checkout remains closed because the protected compiler manifest is a
