@@ -323,6 +323,216 @@ export const SOURCE_ORIGIN_LIMITS = deepFreeze({
   processOutputBytes: 67_108_864,
 });
 
+export const LOCAL_INVENTORY_POLICY_SCHEMA = 'galerina.logic-aig-local-inventory-policy.v1';
+export const LOCAL_SOURCE_SNAPSHOT_SCHEMA = 'galerina.logic-aig-local-source-snapshot.v1';
+
+const LOCAL_POLICY_KEYS = Object.freeze(['schema', 'profile', 'entries', 'exclusions', 'limits', 'authorizing', 'policyDigest']);
+const LOCAL_POLICY_ENTRY_KEYS = Object.freeze(['path', 'role']);
+const LOCAL_POLICY_LIMIT_KEYS = Object.freeze([
+  'maxDepth', 'maxEntries', 'maxFileBytes', 'maxMillis', 'maxResolutionBytes',
+  'maxResolutionFiles', 'maxSourceBytes', 'maxSourceFiles', 'maxTotalBytes',
+]);
+const LOCAL_SNAPSHOT_KEYS = Object.freeze([
+  'schema', 'repositoryIdentityDigest', 'inventoryPolicyDigest', 'entries', 'counts',
+  'authorizing', 'authentication', 'executionBoundary', 'atomicSnapshot',
+  'hostileWriterResistance', 'fixtureOnly', 'snapshotDigest',
+]);
+const LOCAL_SNAPSHOT_ENTRY_KEYS = Object.freeze(['path', 'role', 'byteLength', 'rawSha256']);
+const LOCAL_SNAPSHOT_COUNT_KEYS = Object.freeze([
+  'entries', 'sourceFiles', 'sourceBytes', 'resolutionFiles', 'resolutionBytes', 'totalBytes',
+]);
+const LOCAL_ROLES = new SafeSet(['DEPENDENCY', 'GENERATED_INPUT', 'POLICY_OWNER', 'RESOLUTION', 'SOURCE']);
+const LOCAL_SOURCE_ROLES = new SafeSet(['DEPENDENCY', 'GENERATED_INPUT', 'SOURCE']);
+const LOCAL_PROFILE_FIXTURE = 'FIXTURE_ONLY';
+const LOCAL_PROFILE_PRODUCTION = 'LOCAL_PRODUCTION_V1';
+
+function localPath(value, code = 'SOURCE_ORIGIN_POLICY') {
+  nfcString(value);
+  if (!value || callIntrinsic(safeTypedArrayByteLength, encodeUtf8(value), []) > 4_096
+    || stringStartsWith(value, '/') || stringEndsWith(value, '/') || stringIncludes(value, '\\')
+    || stringIncludes(value, '//') || stringIncludes(value, '/./') || stringIncludes(value, '/../')
+    || value === '.' || value === '..') refuse(code);
+  const parts = stringSplit(value, '/');
+  forEachArray(parts, (part) => {
+    if (!part || part === '.' || part === '..' || callIntrinsic(safeTypedArrayByteLength, encodeUtf8(part), []) > 255
+      || regexTest(/[<>:"|?*\u0000-\u001f]/u, part) || stringEndsWith(part, '.') || stringEndsWith(part, ' ')
+      || regexTest(/^(?:aux|con|nul|prn|com[1-9]|lpt[1-9])(?:\.|$)/iu, part)) refuse(code);
+  });
+  return value;
+}
+
+function localOption(value, keys) {
+  if (value === undefined) return null;
+  dataObject(value, keys);
+  return value;
+}
+
+function localLimit(value, maximum) {
+  if (!safeNumberIsSafeInteger(value) || value < 0 || value > maximum) refuse('SOURCE_ORIGIN_LIMIT');
+  return value;
+}
+
+function validateLocalPolicyOptions(options) {
+  const value = localOption(options, ['allowFixtureOnly']);
+  if (value === null) return false;
+  if (value.allowFixtureOnly !== true) refuse('SOURCE_ORIGIN_FIXTURE');
+  return true;
+}
+
+export function validateLocalInventoryPolicy(value, options) {
+  const allowFixtureOnly = validateLocalPolicyOptions(options);
+  dataObject(value, LOCAL_POLICY_KEYS);
+  if (value.schema !== LOCAL_INVENTORY_POLICY_SCHEMA || value.authorizing !== false) refuse('SOURCE_ORIGIN_POLICY');
+  if (value.profile !== LOCAL_PROFILE_FIXTURE && value.profile !== LOCAL_PROFILE_PRODUCTION) refuse('SOURCE_ORIGIN_POLICY');
+  if (value.profile === LOCAL_PROFILE_FIXTURE && !allowFixtureOnly) refuse('SOURCE_ORIGIN_FIXTURE');
+
+  checkedArray(value.entries, 'SOURCE_ORIGIN_POLICY');
+  checkedArray(value.exclusions, 'SOURCE_ORIGIN_POLICY');
+  dataObject(value.limits, LOCAL_POLICY_LIMIT_KEYS);
+  const limits = value.limits;
+  localLimit(limits.maxDepth, 64);
+  localLimit(limits.maxEntries, SOURCE_ORIGIN_LIMITS.nodes);
+  localLimit(limits.maxFileBytes, SOURCE_ORIGIN_LIMITS.capturedFileBytes);
+  localLimit(limits.maxMillis, SOURCE_ORIGIN_LIMITS.processMillis);
+  localLimit(limits.maxResolutionBytes, SOURCE_ORIGIN_LIMITS.resolutionBytes);
+  localLimit(limits.maxResolutionFiles, SOURCE_ORIGIN_LIMITS.resolutionFiles);
+  localLimit(limits.maxSourceBytes, SOURCE_ORIGIN_LIMITS.sourceBytes);
+  localLimit(limits.maxSourceFiles, SOURCE_ORIGIN_LIMITS.sourceFiles);
+  localLimit(limits.maxTotalBytes, SOURCE_ORIGIN_LIMITS.sourceBytes + SOURCE_ORIGIN_LIMITS.resolutionBytes);
+  if (limits.maxFileBytes > limits.maxTotalBytes || value.entries.length > limits.maxEntries) refuse('SOURCE_ORIGIN_LIMIT');
+
+  let previousPath = null;
+  const folded = new SafeSet();
+  forEachArray(value.entries, (entry) => {
+    dataObject(entry, LOCAL_POLICY_ENTRY_KEYS);
+    const path = localPath(entry.path);
+    if (!LOCAL_ROLES.has(entry.role)) refuse('SOURCE_ORIGIN_POLICY');
+    if (path.split('/').length > limits.maxDepth) refuse('SOURCE_ORIGIN_LIMIT');
+    if (previousPath !== null && codeUnitCompare(previousPath, path) >= 0) refuse('SOURCE_ORIGIN_ORDER');
+    const key = stringToLowerCase(path);
+    if (setHas(folded, key)) refuse('SOURCE_ORIGIN_ALIAS');
+    setAdd(folded, key);
+    previousPath = path;
+  });
+  assertSortedUniqueStrings(value.exclusions);
+  const exclusionFolded = new SafeSet();
+  forEachArray(value.exclusions, (exclusion) => {
+    const path = localPath(exclusion);
+    if (path.split('/').length > limits.maxDepth) refuse('SOURCE_ORIGIN_LIMIT');
+    const key = stringToLowerCase(path);
+    if (setHas(exclusionFolded, key) || setHas(folded, key)) refuse('SOURCE_ORIGIN_ALIAS');
+    setAdd(exclusionFolded, key);
+    forEachArray(value.entries, (entry) => {
+      const entryKey = stringToLowerCase(entry.path);
+      if (entryKey === key || stringStartsWith(entryKey, `${key}/`)) refuse('SOURCE_ORIGIN_POLICY');
+    });
+  });
+  checkDigest(value, 'policyDigest');
+  return immutableCopy(value);
+}
+
+function validateLocalSnapshotOptions(options) {
+  if (options === undefined) return { allowFixtureOnly: false, repositoryIdentity: null, inventoryPolicy: null };
+  if (options === null || typeof options !== 'object' || safeIsProxy(options)
+    || safeArrayIsArray(options) || safeObjectGetPrototypeOf(options) !== safeObjectPrototype
+    || safeObjectGetOwnPropertySymbols(options).length !== 0) refuse('SOURCE_ORIGIN_SCHEMA');
+  const names = safeObjectGetOwnPropertyNames(options);
+  if (names.length !== 1 && names.length !== 3) refuse('SOURCE_ORIGIN_SCHEMA');
+  const allowed = new SafeSet(['allowFixtureOnly', 'repositoryIdentity', 'inventoryPolicy']);
+  forEachArray(names, (name) => {
+    if (!setHas(allowed, name)) refuse('SOURCE_ORIGIN_SCHEMA');
+    const descriptor = safeObjectGetOwnPropertyDescriptor(options, name);
+    if (!descriptor || !safeObjectHasOwn(descriptor, 'value') || !descriptor.enumerable) refuse('SOURCE_ORIGIN_SCHEMA');
+  });
+  if (!safeObjectHasOwn(options, 'allowFixtureOnly') || options.allowFixtureOnly !== true) refuse('SOURCE_ORIGIN_FIXTURE');
+  const hasRepository = safeObjectHasOwn(options, 'repositoryIdentity');
+  const hasPolicy = safeObjectHasOwn(options, 'inventoryPolicy');
+  if (hasRepository !== hasPolicy) refuse('SOURCE_ORIGIN_SCHEMA');
+  if (hasRepository && (options.repositoryIdentity === null || options.inventoryPolicy === null
+    || options.repositoryIdentity === undefined || options.inventoryPolicy === undefined)) {
+    refuse('SOURCE_ORIGIN_SCHEMA');
+  }
+  return {
+    allowFixtureOnly: true,
+    repositoryIdentity: hasRepository ? options.repositoryIdentity : null,
+    inventoryPolicy: hasPolicy ? options.inventoryPolicy : null,
+  };
+}
+
+export function validateLocalSourceSnapshot(value, options) {
+  const configured = validateLocalSnapshotOptions(options);
+  dataObject(value, LOCAL_SNAPSHOT_KEYS);
+  if (value.schema !== LOCAL_SOURCE_SNAPSHOT_SCHEMA || value.authorizing !== false
+    || value.authentication !== 'NONE' || value.executionBoundary !== 'COOPERATIVE_LOCAL_SAME_USER'
+    || value.atomicSnapshot !== false || value.hostileWriterResistance !== false
+    || typeof value.fixtureOnly !== 'boolean') refuse('SOURCE_ORIGIN_POLICY');
+  if (value.fixtureOnly && !configured.allowFixtureOnly) refuse('SOURCE_ORIGIN_FIXTURE');
+  if (!HEX64.test(value.repositoryIdentityDigest) || !HEX64.test(value.inventoryPolicyDigest)) refuse('SOURCE_ORIGIN_DIGEST');
+  checkedArray(value.entries, 'SOURCE_ORIGIN_SCHEMA');
+  dataObject(value.counts, LOCAL_SNAPSHOT_COUNT_KEYS);
+  forEachArray(LOCAL_SNAPSHOT_COUNT_KEYS, (key) => localLimit(value.counts[key], SOURCE_ORIGIN_LIMITS.sourceBytes + SOURCE_ORIGIN_LIMITS.resolutionBytes));
+  if (value.counts.entries > SOURCE_ORIGIN_LIMITS.nodes
+    || value.counts.sourceFiles > SOURCE_ORIGIN_LIMITS.sourceFiles
+    || value.counts.sourceBytes > SOURCE_ORIGIN_LIMITS.sourceBytes
+    || value.counts.resolutionFiles > SOURCE_ORIGIN_LIMITS.resolutionFiles
+    || value.counts.resolutionBytes > SOURCE_ORIGIN_LIMITS.resolutionBytes) {
+    refuse('SOURCE_ORIGIN_LIMIT');
+  }
+
+  let previousPath = null;
+  let sourceFiles = 0;
+  let sourceBytes = 0;
+  let resolutionFiles = 0;
+  let resolutionBytes = 0;
+  const folded = new SafeSet();
+  forEachArray(value.entries, (entry) => {
+    dataObject(entry, LOCAL_SNAPSHOT_ENTRY_KEYS);
+    const path = localPath(entry.path, 'SOURCE_ORIGIN_SCHEMA');
+    if (!LOCAL_ROLES.has(entry.role) || !safeNumberIsSafeInteger(entry.byteLength)
+      || entry.byteLength < 0 || entry.byteLength > SOURCE_ORIGIN_LIMITS.capturedFileBytes
+      || !HEX64.test(entry.rawSha256)) refuse('SOURCE_ORIGIN_SCHEMA');
+    if (previousPath !== null && codeUnitCompare(previousPath, path) >= 0) refuse('SOURCE_ORIGIN_ORDER');
+    const key = stringToLowerCase(path);
+    if (setHas(folded, key)) refuse('SOURCE_ORIGIN_ALIAS');
+    setAdd(folded, key);
+    previousPath = path;
+    if (setHas(LOCAL_SOURCE_ROLES, entry.role)) {
+      sourceFiles += 1;
+      sourceBytes += entry.byteLength;
+    } else {
+      resolutionFiles += 1;
+      resolutionBytes += entry.byteLength;
+    }
+  });
+  if (value.counts.entries !== value.entries.length
+    || value.counts.sourceFiles !== sourceFiles || value.counts.sourceBytes !== sourceBytes
+    || value.counts.resolutionFiles !== resolutionFiles || value.counts.resolutionBytes !== resolutionBytes
+    || value.counts.totalBytes !== sourceBytes + resolutionBytes) refuse('SOURCE_ORIGIN_COUNTS');
+  if (configured.repositoryIdentity !== null) {
+    const repository = validateRepositoryIdentity(configured.repositoryIdentity);
+    if (repository.identityDigest !== value.repositoryIdentityDigest) refuse('SOURCE_ORIGIN_DIGEST');
+  }
+  if (configured.inventoryPolicy !== null) {
+    const policy = validateLocalInventoryPolicy(configured.inventoryPolicy, { allowFixtureOnly: configured.allowFixtureOnly });
+    if (value.fixtureOnly !== (policy.profile === LOCAL_PROFILE_FIXTURE)) refuse('SOURCE_ORIGIN_FIXTURE');
+    if (value.entries.length > policy.limits.maxEntries
+      || sourceFiles > policy.limits.maxSourceFiles || sourceBytes > policy.limits.maxSourceBytes
+      || resolutionFiles > policy.limits.maxResolutionFiles || resolutionBytes > policy.limits.maxResolutionBytes
+      || value.counts.totalBytes > policy.limits.maxTotalBytes) {
+      refuse('SOURCE_ORIGIN_LIMIT');
+    }
+    forEachArray(value.entries, (entry) => {
+      if (entry.byteLength > policy.limits.maxFileBytes) refuse('SOURCE_ORIGIN_LIMIT');
+    });
+    const snapshotPolicyEntries = mapArray(value.entries, (entry) => ({ path: entry.path, role: entry.role }));
+    if (policy.policyDigest !== value.inventoryPolicyDigest || canonicalJsonText(policy.entries) !== canonicalJsonText(snapshotPolicyEntries)) refuse('SOURCE_ORIGIN_DIGEST');
+  } else if (!value.fixtureOnly) {
+    refuse('SOURCE_ORIGIN_FIXTURE');
+  }
+  checkDigest(value, 'snapshotDigest');
+  return immutableCopy(value);
+}
+
 const HEX64 = /^[0-9a-f]{64}$/;
 const HEX40 = /^[0-9a-f]{40}$/;
 const DIAGNOSTIC = /^(?:[A-Z][A-Z0-9]*-)+[0-9]{3,5}[A-Z]?$/;

@@ -5,16 +5,19 @@ import { performance } from 'node:perf_hooks';
 import { types as UTIL_TYPES } from 'node:util';
 
 import {
+  LOCAL_INVENTORY_POLICY_SCHEMA,
+  LOCAL_SOURCE_SNAPSHOT_SCHEMA,
   SOURCE_ORIGIN_LIMITS,
   canonicalJsonText,
   parseCanonicalJsonBytes,
   sha256Canonical,
   sha256Raw,
+  validateLocalInventoryPolicy,
+  validateLocalSourceSnapshot,
   validateRepositoryIdentity,
 } from './contract.mjs';
 
-export const LOCAL_INVENTORY_POLICY_SCHEMA = 'galerina.logic-aig-local-inventory-policy.v1';
-export const LOCAL_SOURCE_SNAPSHOT_SCHEMA = 'galerina.logic-aig-local-source-snapshot.v1';
+export { LOCAL_INVENTORY_POLICY_SCHEMA, LOCAL_SOURCE_SNAPSHOT_SCHEMA };
 
 const EXECUTION_BOUNDARY = 'COOPERATIVE_LOCAL_SAME_USER';
 const POLICY_KEYS = ['schema', 'profile', 'entries', 'exclusions', 'limits', 'authorizing', 'policyDigest'];
@@ -262,7 +265,7 @@ function validatePolicy(value) {
   const policyDigest = digest(recordValue(value, 'policyDigest'));
   if (policyDigest !== sha256Canonical(LOCAL_INVENTORY_POLICY_SCHEMA, withoutKey(value, 'policyDigest'))) refuse('LOCAL_SOURCE_POLICY');
 
-  return objectFreeze({
+  const normalized = objectFreeze({
     schema: LOCAL_INVENTORY_POLICY_SCHEMA,
     profile: 'FIXTURE_ONLY',
     entries: objectFreeze(entries),
@@ -271,6 +274,12 @@ function validatePolicy(value) {
     authorizing: false,
     policyDigest,
   });
+  try {
+    validateLocalInventoryPolicy(normalized, { allowFixtureOnly: true });
+  } catch {
+    refuse('LOCAL_SOURCE_POLICY');
+  }
+  return normalized;
 }
 
 function captureInputs(options) {
@@ -533,7 +542,17 @@ function buildSnapshot(repositoryIdentity, policy, capture) {
     hostileWriterResistance: false,
     fixtureOnly: true,
   });
-  return objectFreeze({ ...body, snapshotDigest: sha256Canonical(LOCAL_SOURCE_SNAPSHOT_SCHEMA, body) });
+  const snapshot = objectFreeze({ ...body, snapshotDigest: sha256Canonical(LOCAL_SOURCE_SNAPSHOT_SCHEMA, body) });
+  try {
+    validateLocalSourceSnapshot(snapshot, {
+      allowFixtureOnly: true,
+      repositoryIdentity,
+      inventoryPolicy: policy,
+    });
+  } catch {
+    refuse('LOCAL_SOURCE_SCHEMA');
+  }
+  return snapshot;
 }
 
 function stateFor(capability) {

@@ -19,6 +19,11 @@ counts or open items that a newer section explicitly supersedes.
   and Ubuntu Node 24.18.0 each pass 18 tests without skips; independent review
   passed for the fixture-only cooperative contract. See
   [the exact review](reports/rd-0873-local-capture-fixture-review.md).
+- [x] Add the shared local policy and snapshot validators and bind them to the
+  fixture producer. Windows and Ubuntu WSL each pass 24/24 focused tests,
+  including fixture/production binding, exclusion collisions, and all bound
+  policy byte/file ceilings. See
+  [the independent contract review](reports/rd-0873-local-contract-review.md).
 - [ ] Continue the amendment's production policy, contracts and consumers.
   Fixture receipts cannot admit a PROJECT or selection. A real capture in this
   dirty checkout remains closed because the protected compiler manifest is a
