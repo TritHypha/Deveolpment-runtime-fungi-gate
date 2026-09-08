@@ -184,6 +184,44 @@ test('local semantic rows bind graph evidence to raw bytes without Git fields', 
     authorizing: false,
   };
   assert.equal(local.edges[0].digest, sha256Canonical(localEvidenceBody.schema, localEvidenceBody));
+  const unresolved = buildLocalSemanticRows({
+    ...localOptions,
+    relations: [{
+      path: 'src/nested.ts',
+      ownerNativeKey: null,
+      relationshipClass: 'IMPORT',
+      startByte: 0,
+      endByte: 1,
+      targetNativeKeys: [],
+      targetPaths: [],
+      targetState: 'DYNAMIC',
+    }],
+  });
+  assert.equal(unresolved.unresolved.length, 1);
+  const unresolvedOwnerBody = {
+    schema: 'galerina.logic-aig-unresolved-relation-owner.v1',
+    sourceNodeId: fileNode.id,
+    sourceLocator: fileNode.locator,
+    relationshipClass: 'IMPORT',
+    reasonCode: 'DYNAMIC_TARGET',
+    sourceBinding: {
+      sourceRawSha256: sha256Raw(bytes),
+      startByte: 0,
+      endByte: 1,
+    },
+    candidateState: 'UNKNOWN',
+    candidateNodeIds: [],
+    authorizing: false,
+  };
+  const unresolvedEvidenceBody = {
+    sourceNodeId: fileNode.id,
+    sourceLocator: fileNode.locator,
+    relationshipClass: 'IMPORT',
+    reasonCode: 'DYNAMIC_TARGET',
+    evidenceOwnerDigest: sha256Canonical(unresolvedOwnerBody.schema, unresolvedOwnerBody),
+  };
+  assert.equal(unresolved.unresolved[0].evidenceDigest,
+    sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', unresolvedEvidenceBody));
   assert.throws(
     () => buildLocalSemanticRows({
       ...localOptions,
