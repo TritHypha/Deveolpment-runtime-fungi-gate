@@ -581,3 +581,18 @@ export function verifyLocalAdmissionFrame(frame, profile = PROFILE) {
     artifactIds: [...ARTIFACT_IDS],
   };
 }
+
+export function inspectLocalAdmissionFrame(frame, profile = PROFILE) {
+  const receipt = verifyLocalAdmissionFrame(frame, profile);
+  const parsed = parseFrame(frame);
+  const artifacts = parsed.artifacts.map((artifact) => Object.freeze({
+    id: artifact.id,
+    bytes: Buffer.from(artifact.bytes),
+    value: bodyFromBytes(artifact.bytes),
+  }));
+  return Object.freeze({
+    receipt,
+    manifest: parsed.manifest,
+    artifacts: Object.freeze(artifacts),
+  });
+}
