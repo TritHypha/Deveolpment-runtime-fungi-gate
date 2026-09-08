@@ -533,12 +533,19 @@ test('dedicated source-origin parser project freezes the exact narrow source clo
   );
   const entryLocator = 'src/source-origin-parser-entry.ts';
   const entryBytes = readFileSync(new URL(entryLocator, compilerRoot));
-  assert.deepEqual(entryBytes, Buffer.from([
+  const expectedEntryBytes = Buffer.from([
     'export { lex } from "./lexer.js";',
     'export { parseGateV3 } from "./gate-v3-parser.js";',
     'export { parseProgram } from "./parser.js";',
     '',
-  ].join('\n'), 'utf8'));
+  ].join('\n'), 'utf8');
+  const checkoutEntryBytes = entryBytes.toString('utf8');
+  // Git blobs are canonical LF, but a Windows checkout may expose CRLF under
+  // the repository's text=auto policy. Accept only those two exact encodings.
+  assert(
+    entryBytes.equals(expectedEntryBytes)
+      || checkoutEntryBytes === expectedEntryBytes.toString('utf8').replaceAll('\n', '\r\n'),
+  );
   assert.doesNotMatch(
     entryBytes.toString('utf8'),
     /\b(?:lex|parseGateV3|parseProgram)\s*\(/u,
