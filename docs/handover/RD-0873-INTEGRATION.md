@@ -122,6 +122,13 @@ Windows worktree's `.git` pointer and is therefore also `HOLD`. No source,
 lockfile, DLL, EXE or toolchain path changed. Task 7 and `.fungi` authoring
 remain closed until the independent admission gates pass.
 
+The focused Task 2-5 contract recheck passed the corpus/shard/ownership suite
+`115/115` and the conversion-queue/slice-close suite `40/40`. The remaining
+audit-map refusal is an authority-environment hold: its exact pinned Git digest
+is available only in the ignored local worktree toolchain, while the owner
+requires the executable to be outside the controlled repository. No copy,
+install or authority relaxation was used.
+
 ## Existing benchmark executable review
 
 Independent read-only inventory found 48 tracked benchmark EXEs totalling

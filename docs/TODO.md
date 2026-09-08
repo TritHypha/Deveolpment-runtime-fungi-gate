@@ -13,6 +13,12 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Rerun the governed full local suite: **97/100 packages passed and
   10,167 tests were counted**. The process warden and package bootstrap now
   operate locally without hosted GitHub evidence.
+- [x] Recheck the bounded Task 2-5 contracts: corpus/shard/ownership tests
+  passed **115/115**, and conversion-queue/slice-close tests passed **40/40**
+  when the existing pinned Git executable was selected without moving it.
+  The audit-map test remains `HOLD` because its safety rule requires that
+  executable outside the controlled repository and no such external copy is
+  available.
 - [!] Keep broader integration `HOLD` for three independent repository issues:
   `galerina-core` has invalid example fixtures, the framework example fixture
   lacks its declared public signing key and correctly refuses unsigned fusion,
