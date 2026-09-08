@@ -1,4 +1,5 @@
 import {
+  canonicalJsonText,
   sha256Canonical,
   sha256Raw,
   SOURCE_ORIGIN_LIMITS,
@@ -333,6 +334,19 @@ function cloneDecoderBlobs(entries, rows) {
   }));
 }
 
+function validateDecoderBlobs(entries, rows) {
+  if (!Array.isArray(entries) || entries.length !== rows.length) refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+  return Object.freeze(entries.map((entry, index) => {
+    exactRecord(entry, ['path', 'bytes'], 'SOURCE_ORIGIN_LOCAL_SCHEMA');
+    const row = rows[index];
+    if (entry.path !== row.path || Object.getPrototypeOf(entry.bytes) !== Uint8Array.prototype
+      || entry.bytes.byteLength !== row.byteLength || sha256Raw(entry.bytes) !== row.rawSha256) {
+      refuse('LOCAL_SOURCE_CHANGED');
+    }
+    return Object.freeze({ path: entry.path, bytes: Uint8Array.from(entry.bytes) });
+  }));
+}
+
 export function buildLocalDecoderInput(options) {
   const producerInput = buildLocalProducerInput(options);
   return Object.freeze({
@@ -342,5 +356,30 @@ export function buildLocalDecoderInput(options) {
     subject: producerInput.subject,
     sourceBlobs: cloneDecoderBlobs(producerInput.sourceBlobEntries, producerInput.sourceManifest.rows),
     resolutionBlobs: cloneDecoderBlobs(producerInput.resolutionBlobEntries, producerInput.resolutionInputs.rows),
+  });
+}
+
+export function validateLocalDecoderInput(value, options) {
+  exactRecord(value, [
+    'schema', 'sourceManifest', 'resolutionInputs', 'subject', 'sourceBlobs', 'resolutionBlobs',
+  ], 'SOURCE_ORIGIN_LOCAL_SCHEMA');
+  if (value.schema !== 'galerina.logic-aig-local-decoder-input.v1') refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+  const context = validateManifestContext(options);
+  const subject = context.subject;
+  const sourceManifest = validateLocalSourceManifest(value.sourceManifest, context);
+  const resolutionInputs = validateLocalResolutionInputs(value.resolutionInputs, context);
+  if (value.subject?.subjectDigest !== subject.subjectDigest
+    || sourceManifest.subjectDigest !== subject.subjectDigest
+    || resolutionInputs.subjectDigest !== subject.subjectDigest
+    || canonicalJsonText(value.subject) !== canonicalJsonText(subject)) {
+    refuse('SOURCE_ORIGIN_LOCAL_DIGEST');
+  }
+  return Object.freeze({
+    schema: value.schema,
+    sourceManifest,
+    resolutionInputs,
+    subject,
+    sourceBlobs: validateDecoderBlobs(value.sourceBlobs, sourceManifest.rows),
+    resolutionBlobs: validateDecoderBlobs(value.resolutionBlobs, resolutionInputs.rows),
   });
 }

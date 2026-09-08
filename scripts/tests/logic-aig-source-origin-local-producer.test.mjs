@@ -298,6 +298,56 @@ test('local decoder handoff preserves local identity and excludes Git-only field
   });
 });
 
+test('local decoder input validator rechecks context and held bytes at the composition boundary', async () => {
+  await withOwnedFixture(async (rootPath) => {
+    const evidence = await makeEvidence(rootPath);
+    const input = api('buildLocalDecoderInput')({
+      allowFixtureOnly: true,
+      capability: evidence.capability,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      subject: evidence.subject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+    const validate = api('validateLocalDecoderInput');
+    const validated = validate(input, {
+      allowFixtureOnly: true,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      snapshot: evidence.snapshot,
+      subject: evidence.subject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+    assert.equal(validated.subject.subjectDigest, evidence.subject.subjectDigest);
+    assert.equal(Object.isFrozen(validated), true);
+    assert.equal(sha256Raw(validated.sourceBlobs[0].bytes), validated.sourceManifest.rows[0].rawSha256);
+
+    const tampered = {
+      ...input,
+      sourceBlobs: input.sourceBlobs.map((entry, index) => index === 0
+        ? { ...entry, bytes: Uint8Array.from(entry.bytes.map((byte) => byte ^ 0xff)) }
+        : entry),
+    };
+    assert.throws(
+      () => validate(tampered, {
+        allowFixtureOnly: true,
+        repository: evidence.repository,
+        policy: evidence.policy,
+        snapshot: evidence.snapshot,
+        subject: evidence.subject,
+        host: evidence.host,
+        myco: evidence.myco,
+        hypha: evidence.hypha,
+      }),
+      (error) => error?.code === 'LOCAL_SOURCE_CHANGED',
+    );
+  });
+});
+
 test('local producer freezes the validated subject copy before returning the byte handoff', async () => {
   await withOwnedFixture(async (rootPath) => {
     const evidence = await makeEvidence(rootPath);
