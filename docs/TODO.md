@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 reviewed local source-origin route - 2026-09-08
+
+- [x] Independently review the local source-origin amendment in AGENTS at
+  `docs/superpowers/plans/2026-09-08-rd0873-local-source-origin-amendment.md`,
+  commit `36c904e14ab6b74e4ad2402e22eda3d0359c4afe`. The final review is
+  Critical 0 / Important 0 for architecture only; no implementation PASS.
+- [x] Record the product decision under the owner's existing delegation in
+  AGENTS `docs/approvals/2026-09-08-rd0873-local-source-origin-delegation.json`,
+  commit `a11ff599e5026901de6add9391805e7b61d6fa86`. This is not a signature
+  or personal owner approval of future bytes. The amendment governs the
+  current local route; historical Git/hosted receipts retain their old scope.
+- [x] Implement the first bounded Git-free capture fixture component. Windows
+  and Ubuntu Node 24.18.0 each pass 18 tests without skips; independent review
+  passed for the fixture-only cooperative contract. See
+  [the exact review](reports/rd-0873-local-capture-fixture-review.md).
+- [ ] Continue the amendment's production policy, contracts and consumers.
+  Fixture receipts cannot admit a PROJECT or selection. A real capture in this
+  dirty checkout remains closed because the protected compiler manifest is a
+  required input; the helper's timer also requires an external process limit
+  before production use.
+- [ ] Complete fresh PROJECT, computed gateway/zero-applicable evidence and
+  the separate selection/review/continuity/approval chain before Task 7.
+  Task 6 remains `HOLD`; no native source is admitted by the design review.
+- [ ] Complete the single admitted Task 7 scalar slice, verify and merge the
+  integration, then stop. Reuse existing authorized slots; no new branch or
+  worktree without explicit permission. Leave existing topology intact for
+  later owner-directed cleanup.
+
 ### RD-0873 local verification update - 2026-09-08
 
 - [x] Complete the local TypeScript dependency closure without lifecycle

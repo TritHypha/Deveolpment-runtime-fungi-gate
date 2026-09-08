@@ -1,5 +1,24 @@
 # RD-0873 integration checkpoint
 
+## Active continuation - 2026-09-08
+
+The current source-origin route is the independently reviewed AGENTS amendment
+`docs/superpowers/plans/2026-09-08-rd0873-local-source-origin-amendment.md`
+at `36c904e14ab6b74e4ad2402e22eda3d0359c4afe`. Its separate delegated-decision
+record is `docs/approvals/2026-09-08-rd0873-local-source-origin-delegation.json`
+at AGENTS `a11ff599e5026901de6add9391805e7b61d6fa86`. Architecture review passed;
+local capture, gateway computation, PROJECT and selection evidence remain
+implementation work. Task 6 is still `HOLD`; Task 7 requires its full separate
+selection chain. The requested endpoint is Task 7 verified and merged, then stop.
+
+The owner authorized product decisions, WSL and commit/push/merge operations.
+Creation of a branch or worktree requires explicit permission. Existing excess
+branches/worktrees remain intact for later cleanup; do not consolidate them as
+part of this continuation. Preserve the two protected dirty paths by pathname
+only. No real source capture may silently omit the protected compiler manifest
+or replace its live bytes with Git bytes. Use only small owned fixtures until a
+clean existing testing slot has passed custody review for the final candidate.
+
 ## Current working location
 
 Work on `codex/rd0873-local-integration` in the existing
