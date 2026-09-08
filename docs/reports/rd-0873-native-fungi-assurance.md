@@ -52,12 +52,10 @@ Evidence is retained under the ignored
 `build/fungi-corpus-check/evidence/` directory and is not treated as a source
 artifact.
 
-A subsequent read-only `node scripts/graph-all.mjs --check --json --quiet` at
-this checkout also remains non-green and wrote no files. Package graph refused
-on orphan `src/source-origin-parser-entry.ts`; project graph reported three
-missing or stale outputs; KB graph reported four missing or stale outputs;
-dev-tool index reported drift in three generated files; executable-family
-retirement graph reported drift in two generated files; and semantic assurance
-reported a stale `executableFamily.ts` retirement record. Graph-integrity and
-Fungi source-capability inventory passed. These are generated-state and owner
-fixed-point holds, so no writer was run or normalized into PASS.
+The earlier read-only graph refusal was resolved through the declared ownership
+and fixed-point route. The source-origin parser entry now has an exact
+reason-bearing `allowOrphans` declaration for its dedicated observation
+toolchain, all declared graph/index/roadmap writers were refreshed, and the
+aggregate `node scripts/graph-all.mjs --check --json --quiet` passes all ten
+children when the real sibling KB owner is explicitly bound. No generated
+writer reported drift, and no external KB bytes were modified.

@@ -26,13 +26,10 @@ receipts are green: WORKSET is PASS 1/1 and PROJECT is PASS 2,720/2,720 across
 four complete shards, with no unprocessed files. The earlier two-file
 `FUNGI-PARSE-002` finding came from stale generated compiler output; both files
 now pass plain checking. This clears the corpus receipt itself, but it does not
-close the later package-estate, Myco/Hypha, graph/index/registry, independent
-exact-revision, chapter-close, or custody gates.
-A subsequent read-only graph check is also non-green: package graph refuses on
-an orphan `src/source-origin-parser-entry.ts`; project and KB graph outputs are
-missing or stale; dev-tool and executable-family indexes drift; and semantic
-assurance reports a stale retirement family. Graph-integrity and Fungi capability
-inventory passed. No generated writer was run.
+close the later package-estate, Myco/Hypha, independent exact-revision,
+chapter-close, or custody gates. The declared graph/index/roadmap fixed-point
+route is now green: the aggregate graph check passes all ten children with the
+real sibling KB owner explicitly bound, and no external KB bytes were modified.
 
 
 Task 9 custody/integration review and the RD-0873 completion merge therefore

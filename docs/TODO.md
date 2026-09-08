@@ -37,14 +37,13 @@ checkout. Older dated sections remain the evidence ledger.
   PROJECT **PASS 2,720/2,720** across four complete shards. The earlier two-file
   `FUNGI-PARSE-002` finding was stale generated-output evidence, not a source
   change; both files now pass plain checking after the rebuild.
-- [!] Task 8 is still **HOLD** because later package-estate, Myco/Hypha,
-  graph/index/registry, exact-revision review, chapter-close, scalar-oracle,
-  source-origin and custody gates are not all green at one exact build point.
-- [!] The current read-only graph check is also non-green: package graph
-  refuses on orphan `src/source-origin-parser-entry.ts`; project and KB graph
-  outputs are missing or stale; dev-tool and executable-family indexes drift;
-  and semantic assurance reports a stale retirement family. Graph-integrity and
-  Fungi capability inventory passed. No generated writer was run.
+- [!] Task 8 is still **HOLD** because complete package-estate, Myco/Hypha,
+  phase-close, exact-revision review, scalar-oracle, source-origin and custody
+  gates are not all green at one exact build point.
+- [x] The declared graph/index/roadmap fixed-point route is green: package,
+  project, graph-integrity, KB, dev-tool, Fungi capability, retirement,
+  semantic-assurance and roadmap checks all pass (10/10) with the real sibling
+  KB owner explicitly bound. No external KB bytes were modified.
 - [ ] Keep Task 9 custody/integration review and the RD-0873 completion merge
   closed until those gates are independently verified. Do not create a branch
   or worktree, retire existing topology, widen native scope, or begin bulk
