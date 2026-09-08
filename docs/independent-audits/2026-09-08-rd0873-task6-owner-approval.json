@@ -1,0 +1,23 @@
+{
+  "schema": "rd0873.task6-owner-approval.v1",
+  "authorizing": false,
+  "status": "APPROVED_FOR_TASK7_GATE",
+  "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION",
+  "ownerRequest": "Finish RD-0873 Task 6, then do Task 7, and stop after Task 7 is completed and merged.",
+  "reportPath": "docs/reports/rd-0873-first-native-slice-selection.md",
+  "reportSha256": "41f53e0fd258abf9ee2896d4c99d1dd22409f5f96bfb2b5d0add2ec2c33d6cc1",
+  "reportCommit": "12a28a691597659520a6cebc3c8ac6d773e5be47",
+  "approvedScope": {
+    "product": "galerina",
+    "candidate": "packages-ts/galerina-core-config/src/index.ts#FUNCTION!N!isEnvironmentMode",
+    "futureTarget": "packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi#isEnvironmentMode",
+    "candidateState": "NOT_AUTHORED",
+    "status": "ZERO_APPLICABLE"
+  },
+  "exclusions": [
+    "no additional candidate",
+    "no consumer switch",
+    "no Task 8 expansion",
+    "no unrelated cleanup"
+  ]
+}

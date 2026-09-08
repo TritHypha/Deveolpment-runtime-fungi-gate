@@ -1,0 +1,17 @@
+{
+  "schema": "rd0873.task6-continuity-review.v1",
+  "authorizing": false,
+  "status": "PASS",
+  "reportPath": "docs/reports/rd-0873-first-native-slice-selection.md",
+  "reportSha256": "41f53e0fd258abf9ee2896d4c99d1dd22409f5f96bfb2b5d0add2ec2c33d6cc1",
+  "reportCommit": "12a28a691597659520a6cebc3c8ac6d773e5be47",
+  "reviewScope": [
+    "report-to-source continuity",
+    "report-to-frame continuity",
+    "report-to-gateway continuity",
+    "clean production custody"
+  ],
+  "findings": { "critical": 0, "important": 0, "minor": 0 },
+  "reviewVector": "FRESH_INDEPENDENT_METADATA_AND_CUSTODY_REVIEW",
+  "sourceRawSha256": "80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b"
+}

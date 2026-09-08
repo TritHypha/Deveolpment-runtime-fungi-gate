@@ -1,0 +1,21 @@
+{
+  "schema": "rd0873.task6-selection-review.v1",
+  "authorizing": false,
+  "status": "PASS",
+  "reportPath": "docs/reports/rd-0873-first-native-slice-selection.md",
+  "reportSha256": "41f53e0fd258abf9ee2896d4c99d1dd22409f5f96bfb2b5d0add2ec2c33d6cc1",
+  "reportCommit": "12a28a691597659520a6cebc3c8ac6d773e5be47",
+  "reviewScope": [
+    "candidate locator and product identity",
+    "local gateway result and obligation bindings",
+    "NOT_AUTHORED selection state",
+    "absence of source bodies and future receipt digests"
+  ],
+  "findings": { "critical": 0, "important": 0, "minor": 0 },
+  "evidence": {
+    "gatewayResultDigest": "6f430a9bd4621c5da91a29db9de29d59a7525cc5797f7b5e6929f152aad114ef",
+    "task6ObligationDigest": "a73cabbd9f80e187168557dfbca949889ad27ced0b31932b47fd487ba9fbc378",
+    "selectionDigest": "c5eea959c70997063f62588f700c556e22048e4813800e48943b5307ae545149"
+  },
+  "reviewVector": "FRESH_INDEPENDENT_LOCAL_GATEWAY_CONTRACT_REVIEW"
+}
