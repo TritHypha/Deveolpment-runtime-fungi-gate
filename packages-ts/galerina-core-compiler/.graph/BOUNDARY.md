@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 278 |
-| Internal edges | 425 |
+| Files | 279 |
+| Internal edges | 428 |
 | External dependencies | 19 |
 | ├─ Node core | 10 |
 | ├─ Workspace (@galerina/*) | 6 |
@@ -212,4 +212,4 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/wgsl-skeleton-template.fungi`
 
 ## Allowed Orphans
-_none declared_
+- `src/source-origin-parser-entry.ts` -- Task 6 source-origin observation entry is owned by the dedicated tsconfig.source-origin-parser.json toolchain and is not a package runtime entrypoint.
