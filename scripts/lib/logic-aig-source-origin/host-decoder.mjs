@@ -825,14 +825,19 @@ function nodeId(repositoryId, kind, locator) {
   return `ga1:${sha256Canonical('galerina.logic-aig-node-id.v1', { repositoryId, kind, locator })}`;
 }
 
-function idMapRow(parserId, parserNodeKind, startByte, endByte, preorderOrdinal, node, sourceRow) {
+function sourceBinding(sourceRow, local) {
+  return local
+    ? { sourceRawSha256: sourceRow.rawSha256 }
+    : { sourceBlobOid: sourceRow.blobOid, sourceRawSha256: sourceRow.rawSha256 };
+}
+
+function idMapRow(parserId, parserNodeKind, startByte, endByte, preorderOrdinal, node, sourceRow, local = false) {
   const body = {
     nativeIdentity: { parserId, parserNodeKind, startByte, endByte, preorderOrdinal },
     nodeId: node.id,
     kind: node.kind,
     locator: node.locator,
-    sourceBlobOid: sourceRow.blobOid,
-    sourceRawSha256: sourceRow.rawSha256,
+    ...sourceBinding(sourceRow, local),
   };
   return { ...body, rowDigest: sha256Canonical('galerina.logic-aig-id-map-row.v1', body) };
 }
@@ -879,7 +884,7 @@ function addEdge(edges, evidence, relationshipKind, sourceNodeId, targetNodeId) 
   });
 }
 
-function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, candidateNodeIds) {
+function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, candidateNodeIds, local = false) {
   let reasonCode;
   let candidateState;
   if (relation.targetState === 'AMBIGUOUS') {
@@ -902,8 +907,7 @@ function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow
     relationshipClass: relation.relationshipClass,
     reasonCode,
     sourceBinding: {
-      sourceBlobOid: sourceRow.blobOid,
-      sourceRawSha256: sourceRow.rawSha256,
+      ...sourceBinding(sourceRow, local),
       startByte: relation.startByte,
       endByte: relation.endByte,
     },
@@ -1034,7 +1038,7 @@ function validateSemanticRowClosure(value) {
   }
 }
 
-function validateCapturedSemanticRows(captured) {
+function validateCapturedSemanticRows(captured, local = false) {
   exactObject(captured, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
   semanticText(captured.repositoryId);
   semanticText(captured.parserId);
@@ -1044,11 +1048,15 @@ function validateCapturedSemanticRows(captured) {
   exactArray(captured.relations, 'SOURCE_ORIGIN_HOST_SCHEMA');
   for (let index = 0; index < captured.sourceRows.length; index += 1) {
     const row = captured.sourceRows[index];
-    exactObject(row, ['path','mode','blobOid','objectFormat','byteLength','rawSha256'], 'SOURCE_ORIGIN_HOST_SCHEMA');
+    exactObject(row, local ? ['path','role','byteLength','rawSha256'] : ['path','mode','blobOid','objectFormat','byteLength','rawSha256'], 'SOURCE_ORIGIN_HOST_SCHEMA');
     semanticText(row.path);
-    if (row.mode !== '100644' && row.mode !== '100755') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
-    if (row.objectFormat !== 'sha1' && row.objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
-    if (!regexpTest(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/, row.blobOid)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    if (local) {
+      if (row.role !== 'SOURCE' && row.role !== 'GENERATED_INPUT' && row.role !== 'DEPENDENCY') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    } else {
+      if (row.mode !== '100644' && row.mode !== '100755') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+      if (row.objectFormat !== 'sha1' && row.objectFormat !== 'sha256') refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+      if (!regexpTest(row.objectFormat === 'sha1' ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/, row.blobOid)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+    }
     semanticInteger(row.byteLength);
     if (!regexpTest(/^[0-9a-f]{64}$/, row.rawSha256)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
   }
@@ -1083,7 +1091,7 @@ function validateCapturedSemanticRows(captured) {
   return captured;
 }
 
-function captureSemanticRowsOptions(options) {
+function captureSemanticRowsOptions(options, local = false) {
   exactObject(options, SEMANTIC_ROW_OPTION_KEYS, 'SOURCE_ORIGIN_HOST_SCHEMA');
   let captured;
   try {
@@ -1091,10 +1099,10 @@ function captureSemanticRowsOptions(options) {
   } catch {
     refuse('SOURCE_ORIGIN_HOST_SCHEMA');
   }
-  return validateCapturedSemanticRows(captured);
+  return validateCapturedSemanticRows(captured, local);
 }
 
-function buildCapturedSemanticRows(options) {
+function buildCapturedSemanticRows(options, local = false) {
   const {
     repositoryId, parserId, sourceRows, parseResults, declarations, relations,
     parserPolicy, resolutionPolicy,
@@ -1123,6 +1131,7 @@ function buildCapturedSemanticRows(options) {
       0,
       node,
       sourceRow,
+      local,
     ));
   }
 
@@ -1189,7 +1198,7 @@ function buildCapturedSemanticRows(options) {
     if (row.startByte < 0 || row.endByte <= row.startByte || row.endByte > sourceRow.byteLength) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
     const node = { id: nodeId(repositoryId, row.kind, locator), kind: row.kind, locator, digest: sourceRow.rawSha256 };
     append(nodes, node); mapSet(nodeByNativeKey, row.key, node);
-    append(idMapRows, idMapRow(parserId, row.parserNodeKind, row.startByte, row.endByte, row.preorderOrdinal, node, sourceRow));
+    append(idMapRows, idMapRow(parserId, row.parserNodeKind, row.startByte, row.endByte, row.preorderOrdinal, node, sourceRow, local));
   }
   if (nodes.length > SOURCE_ORIGIN_LIMITS.nodes) refuse('SOURCE_ORIGIN_LIMIT');
   sortArray(nodes, (left, right) => compareCodeUnits(left.id, right.id));
@@ -1223,15 +1232,14 @@ function buildCapturedSemanticRows(options) {
       const targetNode = candidateNodes[0];
       const evidence = {
         kind: 'SOURCE_SYNTAX',
-        sourceBlobOid: sourceRow.blobOid,
-        sourceRawSha256: sourceRow.rawSha256,
+        ...sourceBinding(sourceRow, local),
         startByte: relation.startByte,
         endByte: relation.endByte,
       };
       addEdge(edges, evidence, relation.relationshipClass, sourceNode.id, targetNode.id);
       if (isTestPath(relation.path, resolutionPolicy) && !isTestPath(sourcePathFromLocator(targetNode.locator), resolutionPolicy)) addEdge(edges, evidence, 'TEST', sourceNode.id, targetNode.id);
     } else {
-      addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, arrayMap(candidateNodes, (node) => node.id));
+      addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, arrayMap(candidateNodes, (node) => node.id), local);
     }
   }
   if (edges.length > SOURCE_ORIGIN_LIMITS.edges || unresolved.length > SOURCE_ORIGIN_LIMITS.unresolvedRows) refuse('SOURCE_ORIGIN_LIMIT');
@@ -1251,6 +1259,25 @@ function buildCapturedSemanticRows(options) {
 
 export function buildSemanticRows(options) {
   return buildCapturedSemanticRows(captureSemanticRowsOptions(options));
+}
+
+export function buildLocalSemanticRows(options) {
+  exactObject(options, [
+    'subjectDigest', 'parserId', 'sourceRows', 'parseResults',
+    'declarations', 'relations', 'parserPolicy', 'resolutionPolicy',
+  ], 'SOURCE_ORIGIN_HOST_SCHEMA');
+  if (!regexpTest(/^[0-9a-f]{64}$/u, options.subjectDigest)) refuse('SOURCE_ORIGIN_HOST_SCHEMA');
+  const captured = captureSemanticRowsOptions({
+    repositoryId: options.subjectDigest,
+    parserId: options.parserId,
+    sourceRows: options.sourceRows,
+    parseResults: options.parseResults,
+    declarations: options.declarations,
+    relations: options.relations,
+    parserPolicy: options.parserPolicy,
+    resolutionPolicy: options.resolutionPolicy,
+  }, true);
+  return buildCapturedSemanticRows(captured, true);
 }
 
 function childTuple(value, length) {

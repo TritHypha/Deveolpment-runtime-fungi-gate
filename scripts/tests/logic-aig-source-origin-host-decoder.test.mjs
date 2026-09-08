@@ -9,6 +9,7 @@ import {
 } from "../lib/logic-aig-source-origin/contract.mjs";
 import {
   buildSemanticRows,
+  buildLocalSemanticRows,
   decodeHostProject,
 } from "../lib/logic-aig-source-origin/host-decoder.mjs";
 
@@ -132,6 +133,72 @@ async function semanticRowOptions() {
     resolutionPolicy,
   };
 }
+
+test('local semantic rows bind graph evidence to raw bytes without Git fields', async () => {
+  const valid = await semanticRowOptions();
+  const bytes = Buffer.from('x', 'utf8');
+  const localOptions = {
+    subjectDigest: 'a'.repeat(64),
+    parserId: valid.parserId,
+    sourceRows: [{
+      path: 'src/nested.ts',
+      role: 'SOURCE',
+      byteLength: bytes.length,
+      rawSha256: sha256Raw(bytes),
+    }],
+    parseResults: valid.parseResults,
+    declarations: valid.declarations,
+    relations: [{
+      path: 'src/nested.ts',
+      ownerNativeKey: null,
+      relationshipClass: 'IMPORT',
+      startByte: 0,
+      endByte: 1,
+      targetNativeKeys: [],
+      targetPaths: ['src/nested.ts'],
+      targetState: 'RESOLVED',
+    }],
+    parserPolicy: valid.parserPolicy,
+    resolutionPolicy: valid.resolutionPolicy,
+  };
+  const local = buildLocalSemanticRows(localOptions);
+
+  assert.equal(local.nodes.length, 1);
+  assert.equal(local.idMapRows.length, 1);
+  assert.equal(Object.hasOwn(local.idMapRows[0], 'sourceBlobOid'), false);
+  assert.equal(local.idMapRows[0].sourceRawSha256, sha256Raw(bytes));
+  assert.equal(local.edges.length, 1);
+  assert.equal(local.unresolved.length, 0);
+  const fileNode = local.nodes.find((node) => node.kind === 'FILE');
+  const localEvidenceBody = {
+    schema: 'galerina.logic-aig-edge-evidence.v1',
+    relationshipKind: 'IMPORT',
+    sourceNodeId: fileNode.id,
+    targetNodeId: fileNode.id,
+    evidenceLocation: {
+      kind: 'SOURCE_SYNTAX',
+      sourceRawSha256: sha256Raw(bytes),
+      startByte: 0,
+      endByte: 1,
+    },
+    authorizing: false,
+  };
+  assert.equal(local.edges[0].digest, sha256Canonical(localEvidenceBody.schema, localEvidenceBody));
+  assert.throws(
+    () => buildLocalSemanticRows({
+      ...localOptions,
+      subjectDigest: 'not-a-digest',
+    }),
+    (error) => error?.code === 'SOURCE_ORIGIN_HOST_SCHEMA',
+  );
+  assert.throws(
+    () => buildLocalSemanticRows({
+      ...localOptions,
+      sourceRows: [{ ...localOptions.sourceRows[0], blobOid: '0'.repeat(40) }],
+    }),
+    (error) => error?.code === 'SOURCE_ORIGIN_HOST_SCHEMA',
+  );
+});
 
 function capturedFailure(operation) {
   try {
