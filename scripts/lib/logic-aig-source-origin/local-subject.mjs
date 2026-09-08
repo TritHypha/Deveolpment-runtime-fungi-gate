@@ -28,6 +28,12 @@ const DISCOVERY_KEYS = Object.freeze([
 const SUBJECT_OPTION_KEYS = Object.freeze([
   'allowFixtureOnly', 'repository', 'policy', 'snapshot', 'host', 'myco', 'hypha',
 ]);
+const HOST_BUILDER_KEYS = Object.freeze([
+  'allowFixtureOnly', 'platform', 'arch', 'runtime', 'snapshotDigest', 'inventoryPolicyDigest', 'fixtureOnly',
+]);
+const DISCOVERY_BUILDER_KEYS = Object.freeze([
+  'allowFixtureOnly', 'kind', 'snapshotDigest', 'inventoryPolicyDigest', 'fixtureOnly',
+]);
 const HEX64 = /^[0-9a-f]{64}$/u;
 
 const OBJECT_PROTOTYPE = Object.prototype;
@@ -66,21 +72,30 @@ function exactObject(value, keys, code) {
   return value;
 }
 
-function exactOptions(value) {
+function exactOptionsFor(value, expected, code = 'SOURCE_ORIGIN_LOCAL_SCHEMA') {
   if (value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value)
     || UTIL_TYPES.isProxy(value) || OBJECT_GET_PROTOTYPE_OF(value) !== OBJECT_PROTOTYPE
-    || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+    || OBJECT_GET_OWN_PROPERTY_SYMBOLS(value).length !== 0) refuse(code);
   const names = OBJECT_GET_OWN_PROPERTY_NAMES(value);
-  const required = SUBJECT_OPTION_KEYS.slice(1);
-  const expected = OBJECT_HAS_OWN(value, 'allowFixtureOnly') ? SUBJECT_OPTION_KEYS : required;
   const actual = names.slice().sort();
   const sortedExpected = expected.slice().sort();
-  if (actual.length !== sortedExpected.length || actual.some((key, index) => key !== sortedExpected[index])) refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+  if (actual.length !== sortedExpected.length || actual.some((key, index) => key !== sortedExpected[index])) refuse(code);
   for (const key of names) {
     const descriptor = OBJECT_GET_OWN_PROPERTY_DESCRIPTOR(value, key);
-    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || descriptor.enumerable !== true) refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+    if (!descriptor || !OBJECT_HAS_OWN(descriptor, 'value') || descriptor.enumerable !== true) refuse(code);
   }
   return value;
+}
+
+function expectedOptions(value, keys) {
+  if (value === null || typeof value !== 'object' || ARRAY_IS_ARRAY(value) || UTIL_TYPES.isProxy(value)) {
+    refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+  }
+  return OBJECT_HAS_OWN(value, 'allowFixtureOnly') ? keys : keys.slice(1);
+}
+
+function exactOptions(value) {
+  return exactOptionsFor(value, expectedOptions(value, SUBJECT_OPTION_KEYS));
 }
 
 function plainDataObject(value, code) {
@@ -120,6 +135,11 @@ function verifyDigest(value, schema, key, code) {
   return digest;
 }
 
+function fixtureAdmission(value) {
+  if (typeof value.fixtureOnly !== 'boolean') refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+  if (value.fixtureOnly && value.allowFixtureOnly !== true) refuse('SOURCE_ORIGIN_LOCAL_FIXTURE');
+}
+
 function validateCommonEvidence(value, schema, keys, digestKey, options) {
   exactObject(value, keys, 'SOURCE_ORIGIN_LOCAL_EVIDENCE');
   if (value.schema !== schema || value.authorizing !== false
@@ -157,6 +177,57 @@ function validateHostObservation(value, options) {
 
 function validateDiscoveryReceipt(value, schema, options) {
   return validateCommonEvidence(value, schema, DISCOVERY_KEYS, 'receiptDigest', options);
+}
+
+export function buildLocalHostObservation(options) {
+  exactOptionsFor(options, expectedOptions(options, HOST_BUILDER_KEYS));
+  fixtureAdmission(options);
+  stringValue(options.platform, 'SOURCE_ORIGIN_LOCAL_EVIDENCE');
+  stringValue(options.arch, 'SOURCE_ORIGIN_LOCAL_EVIDENCE');
+  stringValue(options.runtime, 'SOURCE_ORIGIN_LOCAL_EVIDENCE');
+  digestValue(options.snapshotDigest, 'SOURCE_ORIGIN_LOCAL_DIGEST');
+  digestValue(options.inventoryPolicyDigest, 'SOURCE_ORIGIN_LOCAL_DIGEST');
+  const body = {
+    schema: LOCAL_HOST_OBSERVATION_SCHEMA,
+    platform: options.platform,
+    arch: options.arch,
+    runtime: options.runtime,
+    snapshotDigest: options.snapshotDigest,
+    inventoryPolicyDigest: options.inventoryPolicyDigest,
+    authorizing: false,
+    authentication: 'NONE',
+    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
+    fixtureOnly: options.fixtureOnly,
+  };
+  const observation = Object.freeze({
+    ...body,
+    observationDigest: sha256Canonical(LOCAL_HOST_OBSERVATION_SCHEMA, body),
+  });
+  return Object.freeze(observation);
+}
+
+export function buildVerifiedLocalDiscoveryReceipt(options) {
+  exactOptionsFor(options, expectedOptions(options, DISCOVERY_BUILDER_KEYS));
+  fixtureAdmission(options);
+  if (options.kind !== 'MYCO' && options.kind !== 'HYPHA') refuse('SOURCE_ORIGIN_LOCAL_SCHEMA');
+  digestValue(options.snapshotDigest, 'SOURCE_ORIGIN_LOCAL_DIGEST');
+  digestValue(options.inventoryPolicyDigest, 'SOURCE_ORIGIN_LOCAL_DIGEST');
+  const schema = options.kind === 'MYCO' ? LOCAL_MYCO_RECEIPT_SCHEMA : LOCAL_HYPHA_RECEIPT_SCHEMA;
+  const body = {
+    schema,
+    status: 'VERIFIED',
+    snapshotDigest: options.snapshotDigest,
+    inventoryPolicyDigest: options.inventoryPolicyDigest,
+    authorizing: false,
+    authentication: 'NONE',
+    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
+    fixtureOnly: options.fixtureOnly,
+  };
+  const receipt = Object.freeze({
+    ...body,
+    receiptDigest: sha256Canonical(schema, body),
+  });
+  return Object.freeze(receipt);
 }
 
 function validateInputs(options, allowFixtureOnly) {

@@ -11,6 +11,8 @@ import {
   LOCAL_MYCO_RECEIPT_SCHEMA,
   LOCAL_HYPHA_RECEIPT_SCHEMA,
   buildLocalSourceOriginSubject,
+  buildLocalHostObservation,
+  buildVerifiedLocalDiscoveryReceipt,
   validateLocalSourceOriginSubject,
 } from '../lib/logic-aig-source-origin/local-subject.mjs';
 
@@ -72,48 +74,31 @@ const snapshotBody = {
 };
 const snapshot = { ...snapshotBody, snapshotDigest: sha256Canonical(LOCAL_SOURCE_SNAPSHOT_SCHEMA, snapshotBody) };
 
-function sealed(schema, body, digestKey) {
-  return { ...body, [digestKey]: sha256Canonical(schema, body) };
-}
-
 function makeEvidence() {
-  const hostBody = {
-    schema: LOCAL_HOST_OBSERVATION_SCHEMA,
+  const host = buildLocalHostObservation({
+    allowFixtureOnly: true,
     platform: 'win32',
     arch: 'x64',
     runtime: 'node-v24.18.0',
     snapshotDigest: snapshot.snapshotDigest,
     inventoryPolicyDigest: policy.policyDigest,
-    authorizing: false,
-    authentication: 'NONE',
-    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
     fixtureOnly: true,
-  };
-  const mycoBody = {
-    schema: LOCAL_MYCO_RECEIPT_SCHEMA,
-    status: 'VERIFIED',
+  });
+  const myco = buildVerifiedLocalDiscoveryReceipt({
+    allowFixtureOnly: true,
+    kind: 'MYCO',
     snapshotDigest: snapshot.snapshotDigest,
     inventoryPolicyDigest: policy.policyDigest,
-    authorizing: false,
-    authentication: 'NONE',
-    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
     fixtureOnly: true,
-  };
-  const hyphaBody = {
-    schema: LOCAL_HYPHA_RECEIPT_SCHEMA,
-    status: 'VERIFIED',
+  });
+  const hypha = buildVerifiedLocalDiscoveryReceipt({
+    allowFixtureOnly: true,
+    kind: 'HYPHA',
     snapshotDigest: snapshot.snapshotDigest,
     inventoryPolicyDigest: policy.policyDigest,
-    authorizing: false,
-    authentication: 'NONE',
-    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
     fixtureOnly: true,
-  };
-  return {
-    host: sealed(LOCAL_HOST_OBSERVATION_SCHEMA, hostBody, 'observationDigest'),
-    myco: sealed(LOCAL_MYCO_RECEIPT_SCHEMA, mycoBody, 'receiptDigest'),
-    hypha: sealed(LOCAL_HYPHA_RECEIPT_SCHEMA, hyphaBody, 'receiptDigest'),
-  };
+  });
+  return { host, myco, hypha };
 }
 
 test('local subject binds repository, policy, snapshot, host and discovery receipts', () => {
@@ -202,4 +187,59 @@ test('local subject refuses proxy and accessor-shaped inputs before evidence eff
     () => validateLocalSourceOriginSubject(subject, { allowFixtureOnly: true, repository, policy, snapshot, host: evidence.host, myco: mismatchedMyco, hypha: evidence.hypha }),
     (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_FIXTURE',
   );
+});
+
+test('local evidence builders are explicit and self-sealing', () => {
+  assert.throws(
+    () => buildLocalHostObservation({
+      platform: 'win32',
+      arch: 'x64',
+      runtime: 'node-v24.18.0',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: true,
+    }),
+    (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_FIXTURE',
+  );
+  const host = buildLocalHostObservation({
+    allowFixtureOnly: true,
+    platform: 'win32',
+    arch: 'x64',
+    runtime: 'node-v24.18.0',
+    snapshotDigest: snapshot.snapshotDigest,
+    inventoryPolicyDigest: policy.policyDigest,
+    fixtureOnly: true,
+  });
+  assert.equal(host.schema, LOCAL_HOST_OBSERVATION_SCHEMA);
+  assert.equal(host.observationDigest, sha256Canonical(host.schema, Object.fromEntries(
+    Object.entries(host).filter(([key]) => key !== 'observationDigest'),
+  )));
+  assert.throws(
+    () => buildVerifiedLocalDiscoveryReceipt({
+      allowFixtureOnly: true,
+      kind: 'OTHER',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: true,
+    }),
+    (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_SCHEMA',
+  );
+  let proxyEffects = 0;
+  const trappingOptions = new Proxy({
+    platform: 'win32',
+    arch: 'x64',
+    runtime: 'node-v24.18.0',
+    snapshotDigest: snapshot.snapshotDigest,
+    inventoryPolicyDigest: policy.policyDigest,
+    fixtureOnly: true,
+  }, {
+    getOwnPropertyDescriptor() { proxyEffects += 1; throw new Error('unexpected option descriptor'); },
+    get() { proxyEffects += 1; throw new Error('unexpected option read'); },
+    ownKeys() { proxyEffects += 1; throw new Error('unexpected option keys'); },
+  });
+  assert.throws(
+    () => buildLocalHostObservation(trappingOptions),
+    (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_SCHEMA',
+  );
+  assert.equal(proxyEffects, 0);
 });
