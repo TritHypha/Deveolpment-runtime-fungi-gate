@@ -59,6 +59,17 @@ test("fungi corpus audit proves all fail-closed ownership branches", () => {
   }
 });
 
+test("fungi corpus audit accepts the complete bounded Myco JSON response", () => {
+  const result = spawnSync(process.execPath, [AUDIT, "--self-test"], {
+    encoding: "utf8",
+    timeout: 120_000,
+    windowsHide: true,
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const output = `${result.stdout}\n${result.stderr}`;
+  assert.doesNotMatch(output, /myco degraded:/u);
+});
+
 test("phase-close consumes the exact Corpus Audit v2 command and focused execution suite", () => {
   const manifest = JSON.parse(readFileSync(resolve("governance/phase-close-commands.json"), "utf8"));
   const corpus = manifest.entries.find(({ id }) => id === "fungi:corpus-check");

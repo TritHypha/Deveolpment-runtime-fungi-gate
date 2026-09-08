@@ -15,6 +15,7 @@ import { spawnSync } from "node:child_process";
 
 const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const SPAWN = { encoding: "utf8", shell: false }; // node/git are real exes — no shell, no DEP0190
+const MYCO_MAX_BUFFER = 16 * 1024 * 1024;
 
 /** Tracked files for a base glob — queries BOTH `<base>/*.ext` and `<base>/**\/*.ext` forms (quirk #1). */
 export function findTracked(...globs) {
@@ -35,7 +36,7 @@ export function graphFindByExt(ext, { limit = 40000, root = DEFAULT_ROOT } = {})
   if (!existsSync(myco)) return null;
   // myco 0.1.1: a leading-dot filename query IS an extension match (the 0.1.0 word-mode under-match
   // was fixed at the root). If an older dist under-matches, the git-union + drift report catch it.
-  const r = spawnSync("node", [myco, "-f", ext, root, "--json", "--no-color", "-n", String(limit)], { ...SPAWN, timeout: 180000 });
+  const r = spawnSync("node", [myco, "-f", ext, root, "--json", "--no-color", "-n", String(limit)], { ...SPAWN, timeout: 180000, maxBuffer: MYCO_MAX_BUFFER });
   const stdout = r.stdout ?? ""; const j = stdout.indexOf("{"); // an index-refresh banner may precede the JSON
   if (j < 0) return null;
   try {

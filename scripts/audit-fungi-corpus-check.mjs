@@ -70,6 +70,7 @@ const BASELINE = join(ROOT, "scripts", "baselines", "fungi-corpus-check.json");
 const CACHE_DIR = join(ROOT, "build", "fungi-corpus-check");
 const CACHE = join(CACHE_DIR, "cache.json");
 const MYCO = resolve(ROOT, "packages-ts", "galerina-tools-myco", "dist", "cli.js");
+const MYCO_MAX_BUFFER = 16 * 1024 * 1024;
 // node/git are real executables — spawn them directly. `shell:true` would be needed only for .cmd
 // shims (npm) and triggers Node's DEP0190 arg-concatenation warning; no shell = no concat hazard.
 const SPAWN = { encoding: "utf8", shell: false };
@@ -80,7 +81,7 @@ const IS_MAIN = process.argv[1] !== undefined && resolve(process.argv[1]) === MO
 function mycoFungi() {
   if (!existsSync(MYCO)) return { list: null, note: "myco dist not built (packages-ts/galerina-tools-myco — run `npm run build` there)" };
   const r = spawnSync("node", [MYCO, "-f", "fungi", ROOT, "--json", "--no-color", "-n", "9000"],
-    { ...SPAWN, timeout: 180000 });
+    { ...SPAWN, timeout: 180000, maxBuffer: MYCO_MAX_BUFFER });
   const stdout = r.stdout ?? "";
   const jsonStart = stdout.indexOf("{"); // an index-refresh banner may precede the JSON — skip to it
   if (jsonStart < 0) return { list: null, note: `myco returned no JSON (exit ${r.status})` };
