@@ -18,10 +18,16 @@ one wrapper-settlement test returns `REFUSED_GIT_EXPORT`, the bounded-execution
 audit reports 714 findings, and the memory preflight lacks a Galerina working-set
 owner while two top-level memory files remain unindexed.
 
-Task 8 and Task 9 have not been rerun after the Task 7 merge. The next safe
-sequence is exact-head sequential assurance, followed by custody and integration
-review. Existing branches and worktrees remain untouched; no cleanup or
-retirement is implied.
+Task 8 was rerun at the exact head above. The one-file WORKSET receipt is
+`PASS`, but the complete 2,720-file PROJECT receipt is `FINDING`: shard 1 is
+`FINDING`, shard 2 is `PASS`, and both are complete with no unprocessed files.
+The v2 receipt carries per-file result digests only, so the repository-wide
+finding was followed by a read-only diagnostic that isolated two plain-mode
+`FUNGI-PARSE-002` results in the DSS supervisor and trap-handler Fungi files.
+Task 9 custody and integration review, and the RD-0873 completion merge, remain
+closed until those findings are adjudicated at the exact build point.
+Existing branches and worktrees remain untouched; no cleanup or retirement is
+implied.
 
 This checkpoint does not open profile `64` or `256`, compatibility `32`,
 TypeScript retirement, Trametes, `.gate`, VOK authority, production admission,

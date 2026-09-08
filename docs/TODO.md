@@ -30,9 +30,20 @@ checkout. Older dated sections remain the evidence ledger.
   30 days. No memory repair was performed.
 - [!] Existing broader package, WSL `.git`-pointer, and KB publication holds
   remain separate from the merged scalar slice.
-- [ ] When resumed, run Task 8 sequential assurance at this exact HEAD, then
-  Task 9 custody/integration review. Do not create a branch or worktree, retire
-  existing topology, or widen native scope without a new owner decision.
+- [!] Task 8 sequential assurance is now recorded in
+  `docs/reports/rd-0873-native-fungi-assurance.md`: the one-file WORKSET
+  receipt is PASS, but the complete 2,720-file PROJECT receipt is FINDING
+  (shard 1 FINDING, shard 2 PASS; no files unprocessed). The v2 receipt carries
+  per-file digests only. A read-only diagnostic identifies two plain-mode
+  `FUNGI-PARSE-002` findings in
+  `packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi` and
+  `packages-ts/galerina-core-security/src/dss/trap-handler.fungi`; both were
+  reproduced sequentially with exit code 1. The strict negative fixtures are
+  expected and are not the cause.
+- [ ] Keep Task 9 custody/integration review and the RD-0873 completion merge
+  closed until the PROJECT finding is explained or cleared at this exact HEAD.
+  Do not create a branch or worktree, retire existing topology, or widen native
+  scope without a new owner decision.
 
 ### RD-0873 reviewed local source-origin route - 2026-09-08
 
