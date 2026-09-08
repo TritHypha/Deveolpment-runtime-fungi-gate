@@ -31,6 +31,10 @@ const ARTIFACT_ROLES = Object.freeze({
   'source-manifest': 'source-manifest',
   'toolchain-manifest': 'toolchain-manifest',
 });
+const NODE_KINDS = new Set([
+  'CLASS', 'FILE', 'FLOW', 'FUNCTION', 'GATE', 'INTERFACE', 'METHOD', 'MODULE', 'ROUTE', 'SYMBOL', 'TYPE',
+]);
+const RELATIONSHIP_KINDS = new Set(['CALLER', 'CONTRACT', 'GENERATED_CONSUMER', 'IMPORT', 'TEST']);
 const PROFILE = Object.freeze({
   schema: 'galerina.logic-aig-local-admission-profile.v1',
   profileId: 'galerina.source-origin.local.v1',
@@ -71,6 +75,28 @@ function exactObject(value, keys, code = 'SCHEMA') {
 function exactDigest(value, code = 'DIGEST') {
   if (typeof value !== 'string' || !HEX64.test(value)) refuse(code);
   return value;
+}
+
+function portablePath(value) {
+  if (typeof value !== 'string' || value.normalize('NFC') !== value || value.length === 0
+    || Buffer.byteLength(value, 'utf8') > 4096 || value.startsWith('/') || value.endsWith('/')
+    || value.includes('\\') || value.includes('//')) return false;
+  for (const component of value.split('/')) {
+    if (component.length === 0 || component === '.' || component === '..'
+      || Buffer.byteLength(component, 'utf8') > 255
+      || /[<>:"|?*\u0000-\u001f]/u.test(component) || component.endsWith('.') || component.endsWith(' ')
+      || /^(?:aux|con|nul|prn|com[1-9]|lpt[1-9])(?:\.|$)/iu.test(component)) return false;
+  }
+  return true;
+}
+
+function semanticPath(locator) {
+  const split = locator.indexOf('#');
+  return split === -1 ? locator : locator.slice(0, split);
+}
+
+function caseKey(value) {
+  return value.normalize('NFC').toLowerCase();
 }
 
 function bodyBytes(value, code = 'SCHEMA') {
@@ -313,13 +339,15 @@ function validateLocalManifestArtifact(value, schema, digestKey, subjectDigest, 
   let previousPath = null;
   let totalBytes = 0;
   const paths = new Set();
+  const casePaths = new Set();
   for (const row of value.rows) {
     exactObject(row, ['byteLength', 'path', 'rawSha256', 'role'], 'MANIFEST');
-    if (!roles.includes(row.role) || typeof row.path !== 'string' || row.path.length === 0
+    if (!roles.includes(row.role) || !portablePath(row.path) || casePaths.has(caseKey(row.path))
       || (previousPath !== null && previousPath >= row.path) || paths.has(row.path)
       || !Number.isSafeInteger(row.byteLength) || row.byteLength < 0 || !exactDigest(row.rawSha256)) refuse('MANIFEST');
     previousPath = row.path;
     paths.add(row.path);
+    casePaths.add(caseKey(row.path));
     totalBytes += row.byteLength;
   }
   if (totalBytes !== value.counts.bytes) refuse('MANIFEST');
@@ -350,23 +378,24 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
   const filePaths = new Set();
   for (const node of project.nodes) {
     exactObject(node, ['digest', 'id', 'kind', 'locator'], 'PROJECT');
-    if (typeof node.kind !== 'string' || typeof node.locator !== 'string' || !exactDigest(node.digest)
+    if (!NODE_KINDS.has(node.kind) || typeof node.locator !== 'string' || !portablePath(semanticPath(node.locator)) || !exactDigest(node.digest)
       || !/^ga1:[0-9a-f]{64}$/u.test(node.id)) refuse('PROJECT');
-    const path = node.locator.split('#', 1)[0];
+    const path = semanticPath(node.locator);
     const row = sourceByPath.get(path);
     if (!row || row.rawSha256 !== node.digest || node.id !== `ga1:${sha256Canonical('galerina.logic-aig-node-id.v1', {
       repositoryId: subjectDigest, kind: node.kind, locator: node.locator,
     })}` || nodeById.has(node.id)) refuse('PROJECT');
     nodeById.set(node.id, node);
-    if (node.kind === 'FILE') filePaths.add(node.locator);
+    if (node.kind === 'FILE') filePaths.add(path);
   }
   if (filePaths.size !== source.rows.length || source.rows.some((row) => !filePaths.has(row.path))) refuse('PROJECT');
   for (const edge of project.edges) {
     exactObject(edge, ['digest', 'evidenceLocation', 'from', 'id', 'kind', 'to'], 'PROJECT');
-    if (!nodeById.has(edge.from) || !nodeById.has(edge.to) || !/^ga1:[0-9a-f]{64}$/u.test(edge.id)
+    if (!nodeById.has(edge.from) || !nodeById.has(edge.to) || !RELATIONSHIP_KINDS.has(edge.kind)
+      || !/^ga1:[0-9a-f]{64}$/u.test(edge.id)
       || !exactDigest(edge.digest)) refuse('PROJECT');
     exactObject(edge.evidenceLocation, ['endByte', 'kind', 'sourceRawSha256', 'startByte'], 'PROJECT');
-    const sourceRow = sourceByPath.get(nodeById.get(edge.from).locator.split('#', 1)[0]);
+    const sourceRow = sourceByPath.get(semanticPath(nodeById.get(edge.from).locator));
     if (!sourceRow || edge.evidenceLocation.kind !== 'SOURCE_SYNTAX'
       || edge.evidenceLocation.sourceRawSha256 !== sourceRow.rawSha256
       || !Number.isSafeInteger(edge.evidenceLocation.startByte)
@@ -385,16 +414,34 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
   for (const row of project.unresolved) {
     exactObject(row, ['evidenceDigest', 'evidenceOwner', 'evidenceOwnerDigest', 'reasonCode', 'relationshipClass', 'sourceLocator', 'sourceNodeId'], 'PROJECT');
     const sourceNode = nodeById.get(row.sourceNodeId);
-    if (!sourceNode || sourceNode.locator !== row.sourceLocator || unresolvedDigests.has(row.evidenceDigest)
+    if (!sourceNode || sourceNode.locator !== row.sourceLocator || !portablePath(semanticPath(row.sourceLocator))
+      || !RELATIONSHIP_KINDS.has(row.relationshipClass) || typeof row.reasonCode !== 'string'
+      || unresolvedDigests.has(row.evidenceDigest)
       || !exactDigest(row.evidenceDigest) || !exactDigest(row.evidenceOwnerDigest)) refuse('PROJECT');
     exactObject(row.evidenceOwner, ['authorizing', 'candidateNodeIds', 'candidateState', 'reasonCode', 'relationshipClass', 'schema', 'sourceBinding', 'sourceLocator', 'sourceNodeId'], 'PROJECT');
     exactObject(row.evidenceOwner.sourceBinding, ['endByte', 'sourceRawSha256', 'startByte'], 'PROJECT');
-    if (row.evidenceOwner.schema !== 'galerina.logic-aig-unresolved-relation-owner.v1'
+    if (!['AMBIGUOUS_TARGET', 'DYNAMIC_TARGET', 'TARGET_OUTSIDE_SOURCE_DOMAIN', 'MISSING_TARGET'].includes(row.reasonCode)
+      || row.evidenceOwner.schema !== 'galerina.logic-aig-unresolved-relation-owner.v1'
       || row.evidenceOwner.authorizing !== false || row.evidenceOwner.sourceNodeId !== row.sourceNodeId
       || row.evidenceOwner.sourceLocator !== row.sourceLocator || row.evidenceOwner.relationshipClass !== row.relationshipClass
       || row.evidenceOwner.reasonCode !== row.reasonCode || !Array.isArray(row.evidenceOwner.candidateNodeIds)
       || row.evidenceOwner.candidateNodeIds.some((id) => !nodeById.has(id))) refuse('PROJECT');
-    const sourceRow = sourceByPath.get(row.sourceLocator.split('#', 1)[0]);
+    if ((row.reasonCode === 'AMBIGUOUS_TARGET' && row.evidenceOwner.candidateState !== 'EXACT_SET')
+      || (row.reasonCode === 'DYNAMIC_TARGET'
+        && row.evidenceOwner.candidateState !== 'EXACT_SET' && row.evidenceOwner.candidateState !== 'UNKNOWN')
+      || ((row.reasonCode === 'TARGET_OUTSIDE_SOURCE_DOMAIN' || row.reasonCode === 'MISSING_TARGET')
+        && (row.evidenceOwner.candidateState !== 'UNKNOWN' || row.evidenceOwner.candidateNodeIds.length !== 0))
+      || (row.reasonCode === 'AMBIGUOUS_TARGET' && row.evidenceOwner.candidateNodeIds.length < 2)
+      || (row.reasonCode === 'DYNAMIC_TARGET' && row.evidenceOwner.candidateState === 'EXACT_SET'
+        && row.evidenceOwner.candidateNodeIds.length === 0)
+      || (row.reasonCode === 'DYNAMIC_TARGET' && row.evidenceOwner.candidateState === 'UNKNOWN'
+        && row.evidenceOwner.candidateNodeIds.length !== 0)) refuse('PROJECT');
+    let previousCandidate = null;
+    for (const candidateNodeId of row.evidenceOwner.candidateNodeIds) {
+      if (previousCandidate !== null && previousCandidate >= candidateNodeId) refuse('PROJECT');
+      previousCandidate = candidateNodeId;
+    }
+    const sourceRow = sourceByPath.get(semanticPath(row.sourceLocator));
     if (!sourceRow || row.evidenceOwner.sourceBinding.sourceRawSha256 !== sourceRow.rawSha256
       || !Number.isSafeInteger(row.evidenceOwner.sourceBinding.startByte)
       || !Number.isSafeInteger(row.evidenceOwner.sourceBinding.endByte)
@@ -412,8 +459,9 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
   const parsePaths = new Set();
   for (const row of project.parseResults) {
     exactObject(row, ['diagnosticCodes', 'path', 'status'], 'PROJECT');
-    if (!sourceByPath.has(row.path) || parsePaths.has(row.path) || !Array.isArray(row.diagnosticCodes)
-      || (row.status !== 'PARSED' && row.status !== 'REFUSED') || row.diagnosticCodes.some((code) => typeof code !== 'string')) refuse('PROJECT');
+    if (!portablePath(row.path) || !sourceByPath.has(row.path) || parsePaths.has(row.path) || !Array.isArray(row.diagnosticCodes)
+      || (row.status !== 'PARSED' && row.status !== 'REFUSED') || row.diagnosticCodes.some((code) => typeof code !== 'string')
+      || (row.status === 'PARSED') !== (row.diagnosticCodes.length === 0)) refuse('PROJECT');
     parsePaths.add(row.path);
   }
   if (parsePaths.size !== source.rows.length || source.rows.some((row) => !parsePaths.has(row.path))) refuse('PROJECT');
@@ -422,14 +470,24 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
     exactObject(row, ['kind', 'locator', 'nativeIdentity', 'nodeId', 'rowDigest', 'sourceRawSha256'], 'PROJECT');
     exactObject(row.nativeIdentity, ['endByte', 'parserId', 'parserNodeKind', 'preorderOrdinal', 'startByte'], 'PROJECT');
     const node = nodeById.get(row.nodeId);
-    const sourceRow = sourceByPath.get(row.locator.split('#', 1)[0]);
+    const sourceRow = sourceByPath.get(semanticPath(row.locator));
+    const native = row.nativeIdentity;
     if (!node || node.kind !== row.kind || node.locator !== row.locator || !sourceRow
-      || row.sourceRawSha256 !== sourceRow.rawSha256 || !exactDigest(row.rowDigest) || idMapDigests.has(row.rowDigest)) refuse('PROJECT');
+      || !portablePath(semanticPath(row.locator)) || row.sourceRawSha256 !== sourceRow.rawSha256
+      || typeof native.parserId !== 'string' || native.parserId.length === 0
+      || typeof native.parserNodeKind !== 'string' || native.parserNodeKind.length === 0
+      || !Number.isSafeInteger(native.startByte) || !Number.isSafeInteger(native.endByte)
+      || native.startByte < 0 || native.endByte <= native.startByte || native.endByte > sourceRow.byteLength
+      || !Number.isSafeInteger(native.preorderOrdinal) || native.preorderOrdinal < 0
+      || !exactDigest(row.rowDigest) || idMapDigests.has(row.rowDigest)) refuse('PROJECT');
     const { rowDigest, ...rowBody } = row;
     if (rowDigest !== sha256Canonical('galerina.logic-aig-id-map-row.v1', rowBody)) refuse('PROJECT');
     idMapDigests.add(rowDigest);
   }
   if (project.idMapDigest !== sha256Canonical('galerina.logic-aig-id-map.v1', project.idMapRows)) refuse('PROJECT');
+  for (const node of project.nodes) {
+    if (node.kind !== 'FILE' && !project.idMapRows.some((row) => row.nodeId === node.id)) refuse('PROJECT');
+  }
 }
 
 export function verifyLocalAdmissionFrame(frame, profile = PROFILE) {
@@ -462,7 +520,12 @@ export function verifyLocalAdmissionFrame(frame, profile = PROFILE) {
   if (toolchain.schema !== 'galerina.logic-aig-local-toolchain-manifest.v2'
     || toolchain.subjectDigest !== parsed.manifest.subjectDigest
     || toolchain.authorizing !== false || toolchain.authentication !== 'NONE'
-    || toolchain.executionBoundary !== 'COOPERATIVE_LOCAL_SAME_USER') refuse('TOOLCHAIN');
+    || toolchain.executionBoundary !== 'COOPERATIVE_LOCAL_SAME_USER'
+    || typeof toolchain.hostParserId !== 'string' || toolchain.hostParserId.length === 0
+    || typeof toolchain.fungiParserId !== 'string' || toolchain.fungiParserId.length === 0
+    || typeof toolchain.gateParserId !== 'string' || toolchain.gateParserId.length === 0
+    || typeof toolchain.runtime !== 'string' || toolchain.runtime.length === 0
+    || (toolchain.platform !== 'win32' && toolchain.platform !== 'linux') || toolchain.arch !== 'x64') refuse('TOOLCHAIN');
   exactObject(expected, ['schema', 'subjectDigest', 'rows', 'authorizing', 'expectedOutcomesDigest'], 'EXPECTED');
   if (expected.schema !== 'galerina.logic-aig-local-expected-parse-outcomes.v1') refuse('EXPECTED');
   exactObject(parse, [
