@@ -1,0 +1,13 @@
+@version 1
+
+pure flow isEnvironmentMode(value: String) -> Bool
+contract { intent { "Recognize exactly the canonical Galerina environment modes." } effects {} }
+{
+  match value {
+    "development" => return true
+    "test" => return true
+    "staging" => return true
+    "production" => return true
+    _ => return false
+  }
+}
