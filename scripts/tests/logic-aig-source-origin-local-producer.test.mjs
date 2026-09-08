@@ -245,6 +245,28 @@ test('local producer exposes a separate defensive held-byte handoff for downstre
   });
 });
 
+test('local producer freezes the validated subject copy before returning the byte handoff', async () => {
+  await withOwnedFixture(async (rootPath) => {
+    const evidence = await makeEvidence(rootPath);
+    const mutableSubject = { ...evidence.subject };
+    const input = api('buildLocalProducerInput')({
+      allowFixtureOnly: true,
+      capability: evidence.capability,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      subject: mutableSubject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+    const subjectDigest = input.subject.subjectDigest;
+    mutableSubject.subjectDigest = '0'.repeat(64);
+    assert.equal(input.subject.subjectDigest, subjectDigest);
+    assert.equal(input.sourceManifest.subjectDigest, subjectDigest);
+    assert.equal(Object.isFrozen(input.subject), true);
+  });
+});
+
 test('local producer refuses an unbound capability or fixture without explicit fixture admission', async () => {
   await withOwnedFixture(async (rootPath) => {
     const evidence = await makeEvidence(rootPath);

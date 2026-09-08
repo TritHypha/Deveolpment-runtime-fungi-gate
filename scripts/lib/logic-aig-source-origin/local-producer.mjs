@@ -129,7 +129,7 @@ function validateManifestContext(options) {
     repositoryIdentity: repository,
     inventoryPolicy: policy,
   });
-  validateLocalSourceOriginSubject(options.subject, {
+  const subject = validateLocalSourceOriginSubject(options.subject, {
     allowFixtureOnly: options.allowFixtureOnly,
     repository,
     policy,
@@ -142,7 +142,7 @@ function validateManifestContext(options) {
     repository,
     policy,
     snapshot,
-    subject: options.subject,
+    subject,
     host: options.host,
     myco: options.myco,
     hypha: options.hypha,
@@ -215,7 +215,7 @@ function validateProducerInputs(options) {
     repositoryIdentity: repository,
     inventoryPolicy: policy,
   });
-  validateLocalSourceOriginSubject(options.subject, {
+  const subject = validateLocalSourceOriginSubject(options.subject, {
     allowFixtureOnly: options.allowFixtureOnly,
     repository,
     policy,
@@ -230,7 +230,7 @@ function validateProducerInputs(options) {
     repository,
     policy,
     snapshot,
-    subject: options.subject,
+    subject,
     host: options.host,
     myco: options.myco,
     hypha: options.hypha,
