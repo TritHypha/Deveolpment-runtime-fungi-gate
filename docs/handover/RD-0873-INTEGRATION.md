@@ -129,6 +129,16 @@ is available only in the ignored local worktree toolchain, while the owner
 requires the executable to be outside the controlled repository. No copy,
 install or authority relaxation was used.
 
+The local Myco caller was corrected at commit
+`7b9751107247a534b1bbb764e04f90d7a92cce93` after a bounded probe showed the
+1 MiB synchronous child-output default truncating Myco's 1.21 MiB JSON response.
+Both Galerina callers now use a 16 MiB bound. Fresh ownership verification is
+`29/29`; the corpus audit reports Myco graph coverage `2975` plus the Git index
+`2975`, with zero finder drift. A wider local search found 14 `git.exe`
+candidates, but only the ignored in-worktree executable matches the approved
+digest; all external candidates are different builds. This improves discovery
+evidence only and does not clear the Task 4 authority hold or open Task 7.
+
 ## Existing benchmark executable review
 
 Independent read-only inventory found 48 tracked benchmark EXEs totalling

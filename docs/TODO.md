@@ -19,6 +19,12 @@ counts or open items that a newer section explicitly supersedes.
   The audit-map test remains `HOLD` because its safety rule requires that
   executable outside the controlled repository and no such external copy is
   available.
+- [x] Repair the bounded Myco caller output limit locally at commit
+  `7b9751107247a534b1bbb764e04f90d7a92cce93`: the corpus audit now receives
+  the complete 1.21 MiB JSON response, reports **2,975/2,975** Myco/Git
+  coverage with zero drift, and its ownership suite is **29/29**. The shared
+  finder received the same 16 MiB bound. This does not alter Myco source or
+  regenerate a tracked index.
 - [!] Keep broader integration `HOLD` for three independent repository issues:
   `galerina-core` has invalid example fixtures, the framework example fixture
   lacks its declared public signing key and correctly refuses unsigned fusion,
