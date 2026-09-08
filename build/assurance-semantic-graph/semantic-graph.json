@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "34d1959f223b1aae21c81fccb2e8c946b7fd62b83bdbc63d7481c0923122dbb5",
+  "authoritativeInputsDigest": "8a4f6330c52442c99c12f802869901fa5d94ed693ffc0192a99b62df2dc66965",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -2929,6 +2929,13 @@
       "id": "test:auto-050bc76b87b0fbcd36254ef8",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/rd0528-unicode-decode-tokenize.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c3a3c6fc714e529b56b38f2e",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/rd0873-first-native-slice.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7399,6 +7406,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-d82f577d8ca9adb3789f8711",
+      "kind": "test",
+      "evidencePath": "scripts/tests/audit-example-diagnostics-proposed-baseline.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-f95ca5ef956f48668ac62f73",
       "kind": "test",
       "evidencePath": "scripts/tests/audit-flat-package-topology.test.mjs",
@@ -8302,9 +8316,121 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-3eb1cdc33a5db283a37c9562",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-export.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ae5f7dad107768489667a90b",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-frame.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1823adb856525507caa4a9f3",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-fungi-decoder.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-216cb2943a1de0e7aae84fc1",
       "kind": "test",
       "evidencePath": "scripts/tests/logic-aig-source-origin-git.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2ea37413d9bacf7a2d0dc6e4",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-host-decoder.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ea15436a1b70f7da7fcf07d5",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-contract.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-96fc1a23f885fa69e5fc1873",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-frame.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-dcbe4935dbb44529a9312956",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-gateway.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ac1f124ee333c161f19fedb0",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-producer.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-11c7b65a5aa9ec60d056efd1",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-project.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-360e125f44ec51a5d38d7f90",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-source.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-07df86763a45f991c951677f",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-local-subject.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-3d8f27a38156d3c1f5e82056",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-owner-proposal-policy.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-3522e80f97f7a93ec8feaf88",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-process-tree-resource.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-4e0e060bd6ae3dd494a38b67",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-project-decoder.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1f7a04bb4f3bc94d085c56b8",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-toolchain-load-observation.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-d905b12c7042539593a68a5c",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-source-origin-toolchain-pin-derivation.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -8323,9 +8449,30 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-5e4dd8a26f65a264b239ef76",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-aig-task6cr-workflow-custody.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2730feb25d7c524761157b6f",
+      "kind": "test",
+      "evidencePath": "scripts/tests/logic-rd0873-pinned-upload-format-observation-workflow.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-8431d77b8faaad976fe1d13f",
       "kind": "test",
       "evidencePath": "scripts/tests/memory-graph-generator.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b9617fbf0875a919aab9ee6e",
+      "kind": "test",
+      "evidencePath": "scripts/tests/native-process-tree-observer.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10304,6 +10451,11 @@
     },
     {
       "from": "test:auto-050bc76b87b0fbcd36254ef8",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c3a3c6fc714e529b56b38f2e",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -13498,6 +13650,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-d82f577d8ca9adb3789f8711",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-f95ca5ef956f48668ac62f73",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -14143,7 +14300,87 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-3eb1cdc33a5db283a37c9562",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ae5f7dad107768489667a90b",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1823adb856525507caa4a9f3",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-216cb2943a1de0e7aae84fc1",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2ea37413d9bacf7a2d0dc6e4",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ea15436a1b70f7da7fcf07d5",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-96fc1a23f885fa69e5fc1873",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-dcbe4935dbb44529a9312956",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ac1f124ee333c161f19fedb0",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-11c7b65a5aa9ec60d056efd1",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-360e125f44ec51a5d38d7f90",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-07df86763a45f991c951677f",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-3d8f27a38156d3c1f5e82056",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-3522e80f97f7a93ec8feaf88",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-4e0e060bd6ae3dd494a38b67",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-1f7a04bb4f3bc94d085c56b8",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-d905b12c7042539593a68a5c",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -14158,7 +14395,22 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-5e4dd8a26f65a264b239ef76",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2730feb25d7c524761157b6f",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-8431d77b8faaad976fe1d13f",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b9617fbf0875a919aab9ee6e",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -14558,9 +14810,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1128,
+    "tests": 1149,
     "detectors": 6,
-    "executableFamily": 1586,
+    "executableFamily": 1588,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
