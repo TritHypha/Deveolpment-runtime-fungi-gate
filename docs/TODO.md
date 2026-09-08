@@ -26,9 +26,11 @@ counts or open items that a newer section explicitly supersedes.
   [the independent contract review](reports/rd-0873-local-contract-review.md).
 - [x] Add the local source-origin subject binding for repository identity,
   policy, snapshot, host, Myco and Hypha receipts, with explicit sealed
-  host/discovery builders. The independently reviewed subject unit passes
-  5/5 on Windows and Ubuntu WSL; the combined local subject/contract/source
-  suite passes 29/29 on both. See
+  host/discovery builders and a capture-to-subject entry point that takes the
+  snapshot only from retained capture state. The independently reviewed
+  subject unit passes 5/5, the capture unit passes 19/19, and the combined
+  local subject/contract/source suite passes 30/30 on Windows and Ubuntu WSL.
+  See
   [the bounded subject review](reports/rd-0873-local-subject-review.md).
 - [ ] Continue the amendment's production policy, contracts and consumers.
   Fixture receipts cannot admit a PROJECT or selection. A real capture in this

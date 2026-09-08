@@ -18,6 +18,10 @@ import {
   canonicalJsonText,
   sha256Canonical,
 } from '../lib/logic-aig-source-origin/contract.mjs';
+import {
+  buildLocalHostObservation,
+  buildVerifiedLocalDiscoveryReceipt,
+} from '../lib/logic-aig-source-origin/local-subject.mjs';
 
 const MODULE_URL = new URL('../lib/logic-aig-source-origin/local-source.mjs', import.meta.url);
 let LOCAL_SOURCE;
@@ -156,6 +160,109 @@ test('fixture capture emits the closed local schema and independent digest KAT',
     assert.equal(snapshot.hostileWriterResistance, false);
     assert.equal(snapshot.fixtureOnly, true);
     assert.equal(Object.hasOwn(snapshot, 'gitOid'), false);
+  });
+});
+
+test('captured capability binds the local subject to retained snapshot state', async () => {
+  await withOwnedFixture(async ({ rootPath }) => {
+    await populateFixture(rootPath);
+    const capability = await captureFixture(rootPath);
+    const repository = JSON.parse(repositoryIdentityBytes().toString('utf8'));
+    const policy = JSON.parse(inventoryPolicyBytes().toString('utf8'));
+    const snapshot = api('getLocalSourceSnapshot')(capability);
+    const host = buildLocalHostObservation({
+      allowFixtureOnly: true,
+      platform: 'win32',
+      arch: 'x64',
+      runtime: 'node-v24.18.0',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: true,
+    });
+    const myco = buildVerifiedLocalDiscoveryReceipt({
+      allowFixtureOnly: true,
+      kind: 'MYCO',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: true,
+    });
+    const hypha = buildVerifiedLocalDiscoveryReceipt({
+      allowFixtureOnly: true,
+      kind: 'HYPHA',
+      snapshotDigest: snapshot.snapshotDigest,
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: true,
+    });
+    const subject = api('buildLocalSourceOriginSubjectFromCapture')({
+      allowFixtureOnly: true,
+      capability,
+      repository,
+      policy,
+      host,
+      myco,
+      hypha,
+    });
+    assert.equal(subject.snapshotDigest, snapshot.snapshotDigest);
+    assert.equal(subject.fixtureOnly, true);
+    const buildFromCapture = api('buildLocalSourceOriginSubjectFromCapture');
+    assert.throws(
+      () => buildFromCapture({
+        allowFixtureOnly: true,
+        capability: {},
+        repository,
+        policy,
+        host,
+        myco,
+        hypha,
+      }),
+      (error) => error?.code === 'LOCAL_SOURCE_CAPABILITY',
+    );
+    assert.throws(
+      () => buildFromCapture({
+        allowFixtureOnly: false,
+        capability,
+        repository,
+        policy,
+        host,
+        myco,
+        hypha,
+      }),
+      (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_FIXTURE',
+    );
+    assert.throws(
+      () => buildFromCapture({
+        allowFixtureOnly: true,
+        capability,
+        snapshot,
+        repository,
+        policy,
+        host,
+        myco,
+        hypha,
+      }),
+      (error) => error?.code === 'LOCAL_SOURCE_SCHEMA',
+    );
+    const mismatchedHost = buildLocalHostObservation({
+      allowFixtureOnly: true,
+      platform: 'win32',
+      arch: 'x64',
+      runtime: 'node-v24.18.0',
+      snapshotDigest: '0'.repeat(64),
+      inventoryPolicyDigest: policy.policyDigest,
+      fixtureOnly: true,
+    });
+    assert.throws(
+      () => buildFromCapture({
+        allowFixtureOnly: true,
+        capability,
+        repository,
+        policy,
+        host: mismatchedHost,
+        myco,
+        hypha,
+      }),
+      (error) => error?.code === 'SOURCE_ORIGIN_LOCAL_DIGEST',
+    );
   });
 });
 

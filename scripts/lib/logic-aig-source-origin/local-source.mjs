@@ -16,6 +16,7 @@ import {
   validateLocalSourceSnapshot,
   validateRepositoryIdentity,
 } from './contract.mjs';
+import { buildLocalSourceOriginSubject } from './local-subject.mjs';
 
 export { LOCAL_INVENTORY_POLICY_SCHEMA, LOCAL_SOURCE_SNAPSHOT_SCHEMA };
 
@@ -34,6 +35,9 @@ const LIMIT_KEYS = [
   'maxTotalBytes',
 ];
 const OPTION_KEYS = ['rootPath', 'repositoryIdentityBytes', 'inventoryPolicyBytes'];
+const CAPTURE_SUBJECT_OPTION_KEYS = [
+  'allowFixtureOnly', 'capability', 'repository', 'policy', 'host', 'myco', 'hypha',
+];
 const ROLES = new Set(['DEPENDENCY', 'GENERATED_INPUT', 'POLICY_OWNER', 'RESOLUTION', 'SOURCE']);
 const SOURCE_ROLES = new Set(['DEPENDENCY', 'GENERATED_INPUT', 'SOURCE']);
 const CAPTURE_STATES = new WeakMap();
@@ -611,4 +615,19 @@ export async function revalidateLocalSourceSnapshot(capability) {
   const currentCapture = await readInventoryBytes(state.rootPath, currentInventory, state.policy, deadline);
   compareHeld(state.held, currentCapture.held);
   return true;
+}
+
+export function buildLocalSourceOriginSubjectFromCapture(options) {
+  exactRecord(options, CAPTURE_SUBJECT_OPTION_KEYS, 'LOCAL_SOURCE_SCHEMA');
+  const capability = recordValue(options, 'capability');
+  const snapshot = stateFor(capability).snapshot;
+  return buildLocalSourceOriginSubject({
+    allowFixtureOnly: recordValue(options, 'allowFixtureOnly'),
+    repository: recordValue(options, 'repository'),
+    policy: recordValue(options, 'policy'),
+    snapshot,
+    host: recordValue(options, 'host'),
+    myco: recordValue(options, 'myco'),
+    hypha: recordValue(options, 'hypha'),
+  });
 }

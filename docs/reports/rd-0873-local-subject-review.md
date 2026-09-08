@@ -13,6 +13,11 @@ keys including Git authority fields, schema drift, digest drift, and fixture
 relabelling. Fixture creation and validation require explicit admission, and
 all receipt fixture classifications must match the snapshot.
 
+`local-source.mjs` now exposes a capture-to-subject entry point that obtains
+the snapshot only from the private retained capability state. It cannot accept
+a caller-supplied snapshot and refuses invalid capabilities, disabled fixture
+admission, or receipt digest drift before returning a subject.
+
 An independent read-only review by `/root/review_local_subject` (gpt-6-astra,
 high) returned PASS with no Critical or Important findings. The reviewer
 confirmed that both public entry points validate option shapes before reading
@@ -21,9 +26,11 @@ their properties and that nested evidence records reject proxies and accessors.
 Fresh verification:
 
 - Windows x64, Node v24.18.0: focused subject unit **5/5**; combined local
-  subject/contract/source suite **29/29**.
+  subject/contract/source suite **30/30**; capture/subject integration
+  **24/24**.
 - Ubuntu WSL2 x86_64, Node v24.18.0: focused subject unit **5/5**; combined
-  local subject/contract/source suite **29/29**.
+  local subject/contract/source suite **30/30**; capture/subject integration
+  **24/24**.
 - No tests were skipped, cancelled or failed.
 
 Reviewed bytes at Galerina HEAD
@@ -33,6 +40,8 @@ Reviewed bytes at Galerina HEAD
 | --- | --- |
 | `scripts/lib/logic-aig-source-origin/local-subject.mjs` | `691dc4fb3b23953b2421900abcd50457b7e7aaadd62bd3dc12dff8e2efd9b658` |
 | `scripts/tests/logic-aig-source-origin-local-subject.test.mjs` | `784955c3ad57db00c7ca9ae4e0d12c1883528dd36841d5fba967703421571da5` |
+| `scripts/lib/logic-aig-source-origin/local-source.mjs` | `29f1c2f54aaf0a221329eaea6fd6ef99ed2364839bcf49b87dc89ad5536e2f52` |
+| `scripts/tests/logic-aig-source-origin-local-source.test.mjs` | `c010593f62ca6c1f6d0eb33b62184c64d415222f4d5e44e91e77aac0fa8cd858` |
 | `scripts/lib/logic-aig-source-origin/contract.mjs` | `a199733a5c0ad2339fc2139159e61a2eddac60f3bc41eb252e8726bb7ad4e59c` |
 
 This is fixture and contract evidence only. It does not establish a real
