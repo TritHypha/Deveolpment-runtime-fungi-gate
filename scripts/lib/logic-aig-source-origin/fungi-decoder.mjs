@@ -29,7 +29,7 @@ import {
   validateToolchainPins,
 } from './contract.mjs';
 import { admitFrozenBlobSet } from './git-source.mjs';
-import { buildSemanticRows } from './host-decoder.mjs';
+import { buildLocalSemanticRows, buildSemanticRows } from './host-decoder.mjs';
 import { prepareSemanticToolchain } from './toolchain-snapshot.mjs';
 
 const SPAWN_SYNC = spawnSync;
@@ -1133,6 +1133,70 @@ export async function decodeFungiGateProject(options) {
     toolchains: [captured.fungiSelection, captured.gateSelection],
     actualRuntimeLoadSets,
     actualParserExportNames: replay.parserExportNames,
+    authorizing: false,
+  }));
+}
+
+export function buildLocalFungiGateSemanticRows(options) {
+  exactObject(options, ['subjectDigest', 'parserPolicy', 'resolutionPolicy', 'fungi', 'gate'], 'SOURCE_ORIGIN_FUNGI_SCHEMA');
+  exactObject(options.fungi, ['parserId', 'sourceRows', 'parseResults', 'declarations', 'relations'], 'SOURCE_ORIGIN_FUNGI_SCHEMA');
+  exactObject(options.gate, ['parserId', 'sourceRows', 'parseResults', 'declarations', 'relations'], 'SOURCE_ORIGIN_FUNGI_SCHEMA');
+  const fungiOutput = buildLocalSemanticRows({
+    subjectDigest: options.subjectDigest,
+    parserId: options.fungi.parserId,
+    sourceRows: options.fungi.sourceRows,
+    parseResults: options.fungi.parseResults,
+    declarations: options.fungi.declarations,
+    relations: options.fungi.relations,
+    parserPolicy: options.parserPolicy,
+    resolutionPolicy: options.resolutionPolicy,
+  });
+  const gateOutput = buildLocalSemanticRows({
+    subjectDigest: options.subjectDigest,
+    parserId: options.gate.parserId,
+    sourceRows: options.gate.sourceRows,
+    parseResults: options.gate.parseResults,
+    declarations: options.gate.declarations,
+    relations: options.gate.relations,
+    parserPolicy: options.parserPolicy,
+    resolutionPolicy: options.resolutionPolicy,
+  });
+  const nodes = arrayCopy(fungiOutput.nodes);
+  for (let index = 0; index < gateOutput.nodes.length; index += 1) append(nodes, gateOutput.nodes[index]);
+  sortArray(nodes, (left, right) => compareCodeUnits(left.id, right.id));
+  const edges = arrayCopy(fungiOutput.edges);
+  for (let index = 0; index < gateOutput.edges.length; index += 1) append(edges, gateOutput.edges[index]);
+  sortArray(edges, (left, right) => compareCodeUnits(left.id, right.id));
+  const unresolved = arrayCopy(fungiOutput.unresolved);
+  for (let index = 0; index < gateOutput.unresolved.length; index += 1) append(unresolved, gateOutput.unresolved[index]);
+  sortArray(unresolved, (left, right) => {
+    const fields = ['sourceNodeId', 'relationshipClass', 'reasonCode', 'sourceLocator', 'evidenceDigest'];
+    for (let index = 0; index < fields.length; index += 1) {
+      const field = fields[index];
+      const compared = compareCodeUnits(left[field], right[field]);
+      if (compared !== 0) return compared;
+    }
+    return 0;
+  });
+  const idMapRows = arrayCopy(fungiOutput.idMapRows);
+  for (let index = 0; index < gateOutput.idMapRows.length; index += 1) append(idMapRows, gateOutput.idMapRows[index]);
+  sortArray(idMapRows, compareIdMapRows);
+  const parseResults = arrayCopy(options.fungi.parseResults);
+  for (let index = 0; index < options.gate.parseResults.length; index += 1) append(parseResults, options.gate.parseResults[index]);
+  sortArray(parseResults, (left, right) => compareCodeUnits(left.path, right.path));
+  if (
+    setSize(setFromArray(nodes, (row) => row.id)) !== nodes.length
+    || setSize(setFromArray(edges, (row) => row.id)) !== edges.length
+    || setSize(setFromArray(unresolved, (row) => row.evidenceDigest)) !== unresolved.length
+    || setSize(setFromArray(idMapRows, (row) => row.rowDigest)) !== idMapRows.length
+  ) refuse('SOURCE_ORIGIN_FUNGI_SEMANTIC');
+  return deepFreeze(frozenNullRecord({
+    nodes,
+    edges,
+    unresolved,
+    parseResults,
+    idMapRows,
+    idMapDigest: sha256Canonical('galerina.logic-aig-id-map.v1', idMapRows),
     authorizing: false,
   }));
 }

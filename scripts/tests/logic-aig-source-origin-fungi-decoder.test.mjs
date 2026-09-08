@@ -9,7 +9,10 @@ import {
   sha256Canonical,
   sha256Raw,
 } from "../lib/logic-aig-source-origin/contract.mjs";
-import { decodeFungiGateProject } from "../lib/logic-aig-source-origin/fungi-decoder.mjs";
+import {
+  buildLocalFungiGateSemanticRows,
+  decodeFungiGateProject,
+} from "../lib/logic-aig-source-origin/fungi-decoder.mjs";
 
 const ROOT = new URL("../../", import.meta.url);
 const GOVERNANCE = new URL("../../governance/", import.meta.url);
@@ -155,6 +158,38 @@ function expectRefusal(operation, pattern = /^SOURCE_ORIGIN_(?:FUNGI|GATE)_[A-Z0
     return true;
   });
 }
+
+test('local Fungi and Gate semantic rows share subject-bound raw-byte evidence', async () => {
+  const parserPolicy = await policy("logic-aig-source-origin-parser-policy.json");
+  const resolutionPolicy = await policy("logic-aig-source-origin-resolution-policy.json");
+  const fungiBytes = Buffer.from('fungi', 'utf8');
+  const gateBytes = Buffer.from('gate', 'utf8');
+  const result = buildLocalFungiGateSemanticRows({
+    subjectDigest: 'b'.repeat(64),
+    parserPolicy,
+    resolutionPolicy,
+    fungi: {
+      parserId: 'galerina-fungi-parser',
+      sourceRows: [{ path: 'src/a.fungi', role: 'SOURCE', byteLength: fungiBytes.length, rawSha256: sha256Raw(fungiBytes) }],
+      parseResults: [{ path: 'src/a.fungi', status: 'PARSED', diagnosticCodes: [] }],
+      declarations: [],
+      relations: [],
+    },
+    gate: {
+      parserId: 'galerina-gate-v3-parser',
+      sourceRows: [{ path: 'src/b.gate', role: 'SOURCE', byteLength: gateBytes.length, rawSha256: sha256Raw(gateBytes) }],
+      parseResults: [{ path: 'src/b.gate', status: 'PARSED', diagnosticCodes: [] }],
+      declarations: [],
+      relations: [],
+    },
+  });
+
+  assert.equal(result.nodes.length, 2);
+  assert.equal(result.idMapRows.length, 2);
+  assert.equal(result.parseResults.length, 2);
+  assert.equal(result.authorizing, false);
+  assert.equal(result.idMapRows.every((row) => !Object.hasOwn(row, 'sourceBlobOid')), true);
+});
 
 function task6BCopyPropertyDescriptor(descriptor) {
   if (descriptor === undefined) return undefined;
