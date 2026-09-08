@@ -318,3 +318,29 @@ export function buildLocalProducerInput(options) {
     resolutionBlobEntries: buildBlobEntries(options.capability, validatedResolution),
   });
 }
+
+function cloneDecoderBlobs(entries, rows) {
+  const byPath = new Map(rows.map((row) => [row.path, row]));
+  return Object.freeze(entries.map((entry) => {
+    const row = byPath.get(entry.path);
+    if (!row || entry.bytes.byteLength !== row.byteLength || sha256Raw(entry.bytes) !== row.rawSha256) {
+      refuse('LOCAL_SOURCE_CHANGED');
+    }
+    return Object.freeze({
+      path: entry.path,
+      bytes: Uint8Array.from(entry.bytes),
+    });
+  }));
+}
+
+export function buildLocalDecoderInput(options) {
+  const producerInput = buildLocalProducerInput(options);
+  return Object.freeze({
+    schema: 'galerina.logic-aig-local-decoder-input.v1',
+    sourceManifest: producerInput.sourceManifest,
+    resolutionInputs: producerInput.resolutionInputs,
+    subject: producerInput.subject,
+    sourceBlobs: cloneDecoderBlobs(producerInput.sourceBlobEntries, producerInput.sourceManifest.rows),
+    resolutionBlobs: cloneDecoderBlobs(producerInput.resolutionBlobEntries, producerInput.resolutionInputs.rows),
+  });
+}

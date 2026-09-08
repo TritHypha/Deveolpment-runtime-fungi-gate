@@ -245,6 +245,59 @@ test('local producer exposes a separate defensive held-byte handoff for downstre
   });
 });
 
+test('local decoder handoff preserves local identity and excludes Git-only fields', async () => {
+  await withOwnedFixture(async (rootPath) => {
+    const evidence = await makeEvidence(rootPath);
+    const handoff = api('buildLocalDecoderInput')({
+      allowFixtureOnly: true,
+      capability: evidence.capability,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      subject: evidence.subject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+
+    assert.deepEqual(Object.keys(handoff).sort(), [
+      'resolutionBlobs', 'resolutionInputs', 'schema', 'sourceBlobs',
+      'sourceManifest', 'subject',
+    ]);
+    assert.equal(handoff.schema, 'galerina.logic-aig-local-decoder-input.v1');
+    assert.equal(handoff.subject.subjectDigest, evidence.subject.subjectDigest);
+    assert.equal(handoff.sourceManifest.subjectDigest, evidence.subject.subjectDigest);
+    assert.equal(handoff.resolutionInputs.subjectDigest, evidence.subject.subjectDigest);
+    assert.deepEqual(handoff.sourceBlobs.map(({ path }) => path), handoff.sourceManifest.rows.map(({ path }) => path));
+    assert.deepEqual(handoff.resolutionBlobs.map(({ path }) => path), handoff.resolutionInputs.rows.map(({ path }) => path));
+    for (const row of [...handoff.sourceManifest.rows, ...handoff.resolutionInputs.rows]) {
+      assert.equal(Object.hasOwn(row, 'blobOid'), false);
+      assert.equal(Object.hasOwn(row, 'objectFormat'), false);
+      assert.equal(Object.hasOwn(row, 'expectedHead'), false);
+      assert.equal(Object.hasOwn(row, 'expectedTree'), false);
+    }
+    for (const blob of [...handoff.sourceBlobs, ...handoff.resolutionBlobs]) {
+      const row = [...handoff.sourceManifest.rows, ...handoff.resolutionInputs.rows]
+        .find((candidate) => candidate.path === blob.path);
+      assert.equal(sha256Raw(blob.bytes), row.rawSha256);
+      assert.equal(blob.bytes instanceof Uint8Array, true);
+    }
+
+    handoff.sourceBlobs[0].bytes[0] ^= 0xff;
+    const second = api('buildLocalDecoderInput')({
+      allowFixtureOnly: true,
+      capability: evidence.capability,
+      repository: evidence.repository,
+      policy: evidence.policy,
+      subject: evidence.subject,
+      host: evidence.host,
+      myco: evidence.myco,
+      hypha: evidence.hypha,
+    });
+    const secondRow = second.sourceManifest.rows[0];
+    assert.equal(sha256Raw(second.sourceBlobs[0].bytes), secondRow.rawSha256);
+  });
+});
+
 test('local producer freezes the validated subject copy before returning the byte handoff', async () => {
   await withOwnedFixture(async (rootPath) => {
     const evidence = await makeEvidence(rootPath);
