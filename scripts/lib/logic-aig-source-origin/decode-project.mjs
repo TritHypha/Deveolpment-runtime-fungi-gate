@@ -25,6 +25,7 @@ import {
 import { decodeFungiGateProject } from './fungi-decoder.mjs';
 import { admitFrozenBlobSet, validateLocalExporterPolicy } from './git-source.mjs';
 import { buildSemanticRows, decodeHostProject } from './host-decoder.mjs';
+import { validateLocalDecoderInput } from './local-producer.mjs';
 import { buildToolchainSnapshot } from './toolchain-snapshot.mjs';
 
 const UTIL_TYPES_IS_PROXY = isProxy;
@@ -844,6 +845,249 @@ function makeOutcomeReceipt(captured, rows, toolchainManifest) {
   } catch {
     refuse('SOURCE_ORIGIN_PROJECT_OUTCOMES');
   }
+}
+
+function localSemanticPath(locator) {
+  const split = stringLastIndexOf(locator, '#');
+  return split === -1 ? locator : stringSlice(locator, 0, split);
+}
+
+function validateLocalSourcePartition(rows, allRows) {
+  exactArray(rows, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  const allByPath = mapFromArray(allRows, (row) => row.path);
+  const seen = new SAFE_SET();
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
+    exactObject(row, ['path', 'role', 'byteLength', 'rawSha256'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    const expected = mapGet(allByPath, row.path);
+    if (!expected || canonicalJsonText(row) !== canonicalJsonText(expected) || setHas(seen, row.path)) {
+      refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    }
+    setAdd(seen, row.path);
+  }
+  return rows;
+}
+
+function validateLocalSemanticOutput(value, subjectDigest, sourceRows, parseResults) {
+  const semanticKeys = ['nodes', 'edges', 'unresolved', 'idMapRows', 'idMapDigest', 'authorizing'];
+  if (OBJECT_HAS_OWN(value, 'parseResults')) semanticKeys.push('parseResults');
+  exactObject(value, semanticKeys, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  if (value.authorizing !== false || !regexpTest(HEX64, value.idMapDigest)) refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
+  exactArray(value.nodes, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  exactArray(value.edges, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  exactArray(value.unresolved, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  exactArray(value.idMapRows, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  if (OBJECT_HAS_OWN(value, 'parseResults') && canonicalJsonText(value.parseResults) !== canonicalJsonText(parseResults)) {
+    refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  }
+  const sourceByPath = mapFromArray(sourceRows, (row) => row.path);
+  const nodeById = new SAFE_MAP();
+  const fileByPath = new SAFE_MAP();
+  for (let index = 0; index < value.nodes.length; index += 1) {
+    const node = value.nodes[index];
+    exactObject(node, ['id', 'kind', 'locator', 'digest'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    if (!regexpTest(/^ga1:[0-9a-f]{64}$/u, node.id)
+      || typeof node.kind !== 'string' || node.kind.length === 0
+      || typeof node.locator !== 'string' || node.locator.length === 0
+      || !regexpTest(HEX64, node.digest)
+      || node.id !== `ga1:${sha256Canonical('galerina.logic-aig-node-id.v1', {
+        repositoryId: subjectDigest,
+        kind: node.kind,
+        locator: node.locator,
+      })}`) {
+      refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
+    }
+    const sourceRow = mapGet(sourceByPath, localSemanticPath(node.locator));
+    if (!sourceRow || sourceRow.rawSha256 !== node.digest || mapHas(nodeById, node.id)) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    mapSet(nodeById, node.id, node);
+    if (node.kind === 'FILE') {
+      if (mapHas(fileByPath, node.locator)) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+      mapSet(fileByPath, node.locator, node);
+    }
+  }
+  for (let index = 0; index < value.edges.length; index += 1) {
+    const edge = value.edges[index];
+    exactObject(edge, ['id', 'kind', 'from', 'to', 'digest', 'evidenceLocation'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    if (!regexpTest(/^ga1:[0-9a-f]{64}$/u, edge.id)
+      || typeof edge.kind !== 'string' || !mapHas(nodeById, edge.from) || !mapHas(nodeById, edge.to)
+      || !regexpTest(HEX64, edge.digest)) refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
+    exactObject(edge.evidenceLocation, ['kind', 'sourceRawSha256', 'startByte', 'endByte'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    const edgeSource = mapGet(sourceByPath, localSemanticPath(mapGet(nodeById, edge.from).locator));
+    if (!edgeSource || edge.evidenceLocation.kind !== 'SOURCE_SYNTAX'
+      || edge.evidenceLocation.sourceRawSha256 !== edgeSource.rawSha256
+      || !NUMBER_IS_SAFE_INTEGER(edge.evidenceLocation.startByte)
+      || !NUMBER_IS_SAFE_INTEGER(edge.evidenceLocation.endByte)
+      || edge.evidenceLocation.startByte < 0
+      || edge.evidenceLocation.endByte <= edge.evidenceLocation.startByte
+      || edge.evidenceLocation.endByte > edgeSource.byteLength) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    const edgeEvidenceBody = {
+      schema: 'galerina.logic-aig-edge-evidence.v1',
+      relationshipKind: edge.kind,
+      sourceNodeId: edge.from,
+      targetNodeId: edge.to,
+      evidenceLocation: edge.evidenceLocation,
+      authorizing: false,
+    };
+    if (edge.digest !== sha256Canonical(edgeEvidenceBody.schema, edgeEvidenceBody)
+      || edge.id !== `ga1:${sha256Canonical('galerina.logic-aig-edge-id.v1', {
+        relationshipKind: edge.kind,
+        sourceNodeId: edge.from,
+        targetNodeId: edge.to,
+        evidenceDigest: edge.digest,
+      })}`) refuse('SOURCE_ORIGIN_PROJECT_DIGEST');
+  }
+  const unresolvedDigests = new SAFE_SET();
+  for (let index = 0; index < value.unresolved.length; index += 1) {
+    const row = value.unresolved[index];
+    exactObject(row, [
+      'sourceNodeId', 'sourceLocator', 'relationshipClass', 'reasonCode',
+      'evidenceOwnerDigest', 'evidenceDigest', 'evidenceOwner',
+    ], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    const unresolvedNode = mapGet(nodeById, row.sourceNodeId);
+    if (!unresolvedNode || unresolvedNode.locator !== row.sourceLocator || typeof row.sourceLocator !== 'string'
+      || !mapHas(sourceByPath, localSemanticPath(row.sourceLocator))
+      || typeof row.relationshipClass !== 'string' || typeof row.reasonCode !== 'string'
+      || !regexpTest(HEX64, row.evidenceOwnerDigest) || !regexpTest(HEX64, row.evidenceDigest)
+      || setHas(unresolvedDigests, row.evidenceDigest)) {
+      refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    }
+    exactObject(row.evidenceOwner, [
+      'schema', 'sourceNodeId', 'sourceLocator', 'relationshipClass', 'reasonCode',
+      'sourceBinding', 'candidateState', 'candidateNodeIds', 'authorizing',
+    ], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    exactObject(row.evidenceOwner.sourceBinding, ['sourceRawSha256', 'startByte', 'endByte'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    exactArray(row.evidenceOwner.candidateNodeIds, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    const unresolvedSource = mapGet(sourceByPath, localSemanticPath(row.sourceLocator));
+    if (row.evidenceOwner.schema !== 'galerina.logic-aig-unresolved-relation-owner.v1'
+      || row.evidenceOwner.sourceNodeId !== row.sourceNodeId
+      || row.evidenceOwner.sourceLocator !== row.sourceLocator
+      || row.evidenceOwner.relationshipClass !== row.relationshipClass
+      || row.evidenceOwner.reasonCode !== row.reasonCode
+      || row.evidenceOwner.authorizing !== false
+      || !unresolvedSource
+      || row.evidenceOwner.sourceBinding.sourceRawSha256 !== unresolvedSource.rawSha256
+      || !NUMBER_IS_SAFE_INTEGER(row.evidenceOwner.sourceBinding.startByte)
+      || !NUMBER_IS_SAFE_INTEGER(row.evidenceOwner.sourceBinding.endByte)
+      || row.evidenceOwner.sourceBinding.startByte < 0
+      || row.evidenceOwner.sourceBinding.endByte <= row.evidenceOwner.sourceBinding.startByte
+      || row.evidenceOwner.sourceBinding.endByte > unresolvedSource.byteLength
+      || arraySome(row.evidenceOwner.candidateNodeIds, (id) => !mapHas(nodeById, id))) {
+      refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    }
+    if (row.evidenceOwnerDigest !== sha256Canonical(row.evidenceOwner.schema, row.evidenceOwner)) refuse('SOURCE_ORIGIN_PROJECT_DIGEST');
+    const unresolvedEvidenceBody = {
+      sourceNodeId: row.sourceNodeId,
+      sourceLocator: row.sourceLocator,
+      relationshipClass: row.relationshipClass,
+      reasonCode: row.reasonCode,
+      evidenceOwnerDigest: row.evidenceOwnerDigest,
+    };
+    if (row.evidenceDigest !== sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', unresolvedEvidenceBody)) refuse('SOURCE_ORIGIN_PROJECT_DIGEST');
+    setAdd(unresolvedDigests, row.evidenceDigest);
+  }
+  const idMapDigests = new SAFE_SET();
+  for (let index = 0; index < value.idMapRows.length; index += 1) {
+    const row = value.idMapRows[index];
+    exactObject(row, ['nativeIdentity', 'nodeId', 'kind', 'locator', 'sourceRawSha256', 'rowDigest'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    exactObject(row.nativeIdentity, ['parserId', 'parserNodeKind', 'startByte', 'endByte', 'preorderOrdinal'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    if (!mapHas(nodeById, row.nodeId) || row.kind !== mapGet(nodeById, row.nodeId).kind
+      || row.locator !== mapGet(nodeById, row.nodeId).locator || !regexpTest(HEX64, row.sourceRawSha256)
+      || row.sourceRawSha256 !== mapGet(sourceByPath, localSemanticPath(row.locator)).rawSha256
+      || !regexpTest(HEX64, row.rowDigest) || setHas(idMapDigests, row.rowDigest)) {
+      refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    }
+    const { rowDigest, ...body } = row;
+    if (rowDigest !== sha256Canonical('galerina.logic-aig-id-map-row.v1', body)) refuse('SOURCE_ORIGIN_PROJECT_DIGEST');
+    setAdd(idMapDigests, rowDigest);
+  }
+  if (value.idMapDigest !== sha256Canonical('galerina.logic-aig-id-map.v1', value.idMapRows)) refuse('SOURCE_ORIGIN_PROJECT_DIGEST');
+  exactArray(parseResults, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  const parsePaths = new SAFE_SET();
+  for (let index = 0; index < parseResults.length; index += 1) {
+    const row = parseResults[index];
+    exactObject(row, ['path', 'status', 'diagnosticCodes'], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    exactArray(row.diagnosticCodes, 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+    if (!mapHas(sourceByPath, row.path) || setHas(parsePaths, row.path)
+      || (row.status !== 'PARSED' && row.status !== 'REFUSED')) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    for (let codeIndex = 0; codeIndex < row.diagnosticCodes.length; codeIndex += 1) {
+      if (typeof row.diagnosticCodes[codeIndex] !== 'string') refuse('SOURCE_ORIGIN_PROJECT_SCHEMA');
+    }
+    setAdd(parsePaths, row.path);
+  }
+  if (setSize(parsePaths) !== sourceRows.length || arraySome(sourceRows, (row) => !setHas(parsePaths, row.path))) {
+    refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  }
+  if (mapSize(fileByPath) !== sourceRows.length || arraySome(sourceRows, (row) => !mapHas(fileByPath, row.path))) {
+    refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  }
+  return { nodes: value.nodes, edges: value.edges, unresolved: value.unresolved, idMapRows: value.idMapRows, idMapDigest: value.idMapDigest };
+}
+
+export function buildLocalSourceOriginProject(options) {
+  exactObject(options, [
+    'decoderInput', 'context', 'hostSourceRows', 'hostSemantic', 'hostParseResults',
+    'fungiSourceRows', 'fungiSemantic',
+  ], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  exactObject(options.context, [
+    'allowFixtureOnly', 'repository', 'policy', 'snapshot', 'subject', 'host', 'myco', 'hypha',
+  ], 'SOURCE_ORIGIN_PROJECT_SCHEMA');
+  const input = validateLocalDecoderInput(options.decoderInput, options.context);
+  const hostSourceRows = validateLocalSourcePartition(options.hostSourceRows, input.sourceManifest.rows);
+  const fungiSourceRows = validateLocalSourcePartition(options.fungiSourceRows, input.sourceManifest.rows);
+  const partitionPaths = new SAFE_SET();
+  for (let index = 0; index < hostSourceRows.length; index += 1) setAdd(partitionPaths, hostSourceRows[index].path);
+  for (let index = 0; index < fungiSourceRows.length; index += 1) {
+    if (setHas(partitionPaths, fungiSourceRows[index].path)) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+    setAdd(partitionPaths, fungiSourceRows[index].path);
+  }
+  if (setSize(partitionPaths) !== input.sourceManifest.rows.length) refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  const host = validateLocalSemanticOutput(options.hostSemantic, input.subject.subjectDigest, hostSourceRows, options.hostParseResults);
+  const fungi = validateLocalSemanticOutput(options.fungiSemantic, input.subject.subjectDigest, fungiSourceRows, options.fungiSemantic.parseResults);
+  const nodes = arrayCopy(host.nodes);
+  for (let index = 0; index < fungi.nodes.length; index += 1) append(nodes, fungi.nodes[index]);
+  const edges = arrayCopy(host.edges);
+  for (let index = 0; index < fungi.edges.length; index += 1) append(edges, fungi.edges[index]);
+  const unresolved = arrayCopy(host.unresolved);
+  for (let index = 0; index < fungi.unresolved.length; index += 1) append(unresolved, fungi.unresolved[index]);
+  const parseResults = arrayCopy(options.hostParseResults);
+  for (let index = 0; index < options.fungiSemantic.parseResults.length; index += 1) append(parseResults, options.fungiSemantic.parseResults[index]);
+  const idMapRows = arrayCopy(host.idMapRows);
+  for (let index = 0; index < fungi.idMapRows.length; index += 1) append(idMapRows, fungi.idMapRows[index]);
+  sortArray(nodes, (left, right) => compareCodeUnits(left.id, right.id));
+  sortArray(edges, (left, right) => compareCodeUnits(left.id, right.id));
+  sortArray(unresolved, compareUnresolved);
+  sortArray(parseResults, (left, right) => compareCodeUnits(left.path, right.path));
+  sortArray(idMapRows, compareIdMapRows);
+  const projectParsePaths = setFromArray(parseResults, (row) => row.path);
+  if (setSize(projectParsePaths) !== input.sourceManifest.rows.length
+    || arraySome(input.sourceManifest.rows, (row) => !setHas(projectParsePaths, row.path))) {
+    refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  }
+  if (setSize(setFromArray(nodes, (row) => row.id)) !== nodes.length
+    || setSize(setFromArray(edges, (row) => row.id)) !== edges.length
+    || setSize(setFromArray(unresolved, (row) => row.evidenceDigest)) !== unresolved.length
+    || setSize(setFromArray(idMapRows, (row) => row.rowDigest)) !== idMapRows.length) {
+    refuse('SOURCE_ORIGIN_PROJECT_CONSERVATION');
+  }
+  const body = {
+    schema: 'galerina.logic-aig-local-project.v1',
+    subjectDigest: input.subject.subjectDigest,
+    sourceManifestDigest: input.sourceManifest.manifestDigest,
+    resolutionInputsDigest: input.resolutionInputs.resolutionInputsDigest,
+    sourceManifest: input.sourceManifest,
+    resolutionInputs: input.resolutionInputs,
+    nodes,
+    edges,
+    unresolved,
+    parseResults,
+    idMapRows,
+    idMapDigest: sha256Canonical('galerina.logic-aig-id-map.v1', idMapRows),
+    authorizing: false,
+    authentication: 'NONE',
+    executionBoundary: 'COOPERATIVE_LOCAL_SAME_USER',
+    fixtureOnly: input.subject.fixtureOnly,
+  };
+  return deepFreeze(frozenNullRecord(body));
 }
 
 export async function decodeSourceProject(options) {

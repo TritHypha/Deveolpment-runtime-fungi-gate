@@ -863,7 +863,7 @@ function compareIdMapRows(left, right) {
   return 0;
 }
 
-function addEdge(edges, evidence, relationshipKind, sourceNodeId, targetNodeId) {
+function addEdge(edges, evidence, relationshipKind, sourceNodeId, targetNodeId, local = false) {
   if (!setHas(RELATIONSHIP_KINDS, relationshipKind) || !regexpTest(NODE_ID, sourceNodeId) || !regexpTest(NODE_ID, targetNodeId)) refuse('SOURCE_ORIGIN_HOST_SEMANTIC');
   const evidenceBody = {
     schema: 'galerina.logic-aig-edge-evidence.v1',
@@ -875,13 +875,15 @@ function addEdge(edges, evidence, relationshipKind, sourceNodeId, targetNodeId) 
   };
   const evidenceDigest = sha256Canonical(evidenceBody.schema, evidenceBody);
   const identity = { relationshipKind, sourceNodeId, targetNodeId, evidenceDigest };
-  append(edges, {
+  const edge = {
     id: `ga1:${sha256Canonical('galerina.logic-aig-edge-id.v1', identity)}`,
     kind: relationshipKind,
     from: sourceNodeId,
     to: targetNodeId,
     digest: evidenceDigest,
-  });
+  };
+  if (local) edge.evidenceLocation = evidence;
+  append(edges, edge);
 }
 
 function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, candidateNodeIds, local = false) {
@@ -923,7 +925,9 @@ function addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow
     reasonCode,
     evidenceOwnerDigest,
   };
-  append(unresolved, { ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) });
+  const unresolvedRow = { ...evidenceBody, evidenceDigest: sha256Canonical('galerina.logic-aig-unresolved-evidence.v1', evidenceBody) };
+  if (local) unresolvedRow.evidenceOwner = ownerBody;
+  append(unresolved, unresolvedRow);
 }
 
 function semanticText(value) {
@@ -1236,8 +1240,8 @@ function buildCapturedSemanticRows(options, local = false) {
         startByte: relation.startByte,
         endByte: relation.endByte,
       };
-      addEdge(edges, evidence, relation.relationshipClass, sourceNode.id, targetNode.id);
-      if (isTestPath(relation.path, resolutionPolicy) && !isTestPath(sourcePathFromLocator(targetNode.locator), resolutionPolicy)) addEdge(edges, evidence, 'TEST', sourceNode.id, targetNode.id);
+      addEdge(edges, evidence, relation.relationshipClass, sourceNode.id, targetNode.id, local);
+      if (isTestPath(relation.path, resolutionPolicy) && !isTestPath(sourcePathFromLocator(targetNode.locator), resolutionPolicy)) addEdge(edges, evidence, 'TEST', sourceNode.id, targetNode.id, local);
     } else {
       addUnresolved(unresolved, parserPolicy, relation, sourceNode, sourceRow, arrayMap(candidateNodes, (node) => node.id), local);
     }
@@ -1277,7 +1281,7 @@ export function buildLocalSemanticRows(options) {
     parserPolicy: options.parserPolicy,
     resolutionPolicy: options.resolutionPolicy,
   }, true);
-  return buildCapturedSemanticRows(captured, true);
+  return deepFreeze(frozenNullRecord({ ...buildCapturedSemanticRows(captured, true), authorizing: false }));
 }
 
 function childTuple(value, length) {
