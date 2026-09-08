@@ -23,6 +23,15 @@ bound to the retained capture capability. This is cooperative synthetic
 profile plumbing. A real dirty-checkout capture still needs an explicit bounded
 policy, an external hard deadline, and fresh producer/gateway/PROJECT evidence.
 
+The approved live capture has now run against the protected dirty checkout under
+`LOCAL_PRODUCTION_V1`. Its 14-file snapshot validated with `fixtureOnly: false`
+under an external 60-second parent deadline, including the protected compiler
+manifest and generated hallmark by live bytes. The snapshot, policy and
+identity digests are recorded in `docs/reports/rd-0873-local-subject-review.md`;
+no raw bytes were staged or written to the repository. Producer discovery,
+gateway, PROJECT, selection, continuity and owner approval remain open, so Task
+6 is still `HOLD` and Task 7 remains closed.
+
 The owner authorized product decisions, WSL and commit/push/merge operations.
 Creation of a branch or worktree requires explicit permission. Existing excess
 branches/worktrees remain intact for later cleanup; do not consolidate them as

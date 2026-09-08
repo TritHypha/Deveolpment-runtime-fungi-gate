@@ -38,11 +38,18 @@ counts or open items that a newer section explicitly supersedes.
   20/20 and 31/31 on Windows and Ubuntu WSL. This is cooperative synthetic
   profile plumbing only; it does not admit a dirty checkout or create a
   PROJECT.
+- [x] Run the approved bounded live local capture against the protected dirty
+  checkout. The selected 14-file snapshot validated with `fixtureOnly: false`
+  under an external 60-second parent deadline; the protected compiler manifest
+  and generated hallmark were read by pathname and no raw bytes were staged or
+  written to the repository. See
+  [the bounded subject review](reports/rd-0873-local-subject-review.md) for
+  the snapshot, policy and identity digests.
 - [ ] Continue the amendment's production policy, contracts and consumers.
-  Fixture receipts cannot admit a PROJECT or selection. A real capture in this
-  dirty checkout still requires an explicit bounded policy that includes the
-  protected compiler manifest; the helper's cooperative timer also requires
-  an external process limit before production use.
+  Fixture receipts cannot admit a PROJECT or selection. The approved real
+  capture is source-origin evidence only; producer discovery receipts,
+  computed gateway and PROJECT consumers remain required, and the helper's
+  cooperative timer remains paired with an external process limit.
 - [ ] Complete fresh PROJECT, computed gateway/zero-applicable evidence and
   the separate selection/review/continuity/approval chain before Task 7.
   Task 6 remains `HOLD`; no native source is admitted by the design review.
