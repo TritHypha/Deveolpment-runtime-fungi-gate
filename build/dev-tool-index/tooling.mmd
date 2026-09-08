@@ -742,6 +742,8 @@ flowchart LR
   T_build_core_chain_mjs --> C_diagnostics
   T_build_core_chain_mjs --> C_package_border
   T_build_core_chain_mjs --> C_graph_index
+  T_build_process_tree_observer_mjs["build-process-tree-observer.mjs"]
+  T_build_process_tree_observer_mjs --> C_diagnostics
   T_build_process_warden_mjs["build-process-warden.mjs"]
   T_build_process_warden_mjs --> C_signing_fusion
   T_build_process_warden_mjs --> C_source_hygiene
@@ -798,6 +800,10 @@ flowchart LR
   T_fungi_source_capability_inventory_mjs --> C_governance
   T_fungi_source_capability_inventory_mjs --> C_secrets_privacy
   T_fungi_source_capability_inventory_mjs --> C_graph_index
+  T_galerina_source_origin_frame_mjs["galerina-source-origin-frame.mjs"]
+  T_galerina_source_origin_frame_mjs --> C_signing_fusion
+  T_galerina_source_origin_frame_mjs --> C_diagnostics
+  T_galerina_source_origin_frame_mjs --> C_graph_index
   T_gather_compiler_stage_hashes_mjs["gather-compiler-stage-hashes.mjs"]
   T_gather_compiler_stage_hashes_mjs --> C_effects
   T_gather_compiler_stage_hashes_mjs --> C_signing_fusion
@@ -865,9 +871,13 @@ flowchart LR
   T_license_rollout_mjs --> C_coverage
   T_license_rollout_mjs --> C_tier_floor
   T_license_rollout_mjs --> C_proofs
+  T_logic_aig_source_origin_toolchain_load_observation_mjs["logic-aig-source-origin-toolchain-load-observation.mjs"]
+  T_logic_aig_source_origin_toolchain_load_observation_mjs --> C_signing_fusion
+  T_logic_aig_source_origin_toolchain_load_observation_mjs --> C_diagnostics
   T_logic_aig_source_origin_toolchain_pin_observation_mjs["logic-aig-source-origin-toolchain-pin-observation.mjs"]
   T_logic_aig_source_origin_toolchain_pin_observation_mjs --> C_signing_fusion
   T_logic_aig_source_origin_toolchain_pin_observation_mjs --> C_diagnostics
+  T_logic_aig_source_origin_toolchain_pin_observation_mjs --> C_proofs
   T_mark_core_change_cjs["mark-core-change.cjs"]
   T_mark_core_change_cjs --> C_graph_index
   T_migrate_fungi_mjs["migrate-fungi.mjs"]

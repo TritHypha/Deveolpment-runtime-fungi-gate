@@ -4,9 +4,9 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9612,
-    "devTools": 182,
+    "devTools": 186,
     "auditTools": 92,
-    "toolsInCadence": 122,
+    "toolsInCadence": 124,
     "proofs": 40
   },
   "packages": [
@@ -300,7 +300,7 @@
       "tests": 6382,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 278,
+      "files": 279,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -3031,6 +3031,17 @@
       ]
     },
     {
+      "name": "build-process-tree-observer.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "diagnostics"
+      ]
+    },
+    {
       "name": "build-process-warden.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -3191,6 +3202,28 @@
         "signing/fusion",
         "governance",
         "secrets/privacy",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "galerina-source-origin-export.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": []
+    },
+    {
+      "name": "galerina-source-origin-frame.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": false,
+      "cadenceDisposition": "on-demand",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
         "graph/index"
       ]
     },
@@ -3370,7 +3403,7 @@
       ]
     },
     {
-      "name": "logic-aig-source-origin-toolchain-pin-observation.mjs",
+      "name": "logic-aig-source-origin-toolchain-load-observation.mjs",
       "category": "util",
       "purpose": "(no header description)",
       "selfTest": false,
@@ -3379,6 +3412,19 @@
       "concerns": [
         "signing/fusion",
         "diagnostics"
+      ]
+    },
+    {
+      "name": "logic-aig-source-origin-toolchain-pin-observation.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "proofs"
       ]
     },
     {
@@ -3761,10 +3807,12 @@
       "status.mjs",
       "brand-audit.mjs",
       "build-core-chain.mjs",
+      "build-process-tree-observer.mjs",
       "build-receipt-bound-slide-package.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
       "fungi-golden-probe.mjs",
+      "galerina-source-origin-frame.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
@@ -3774,6 +3822,7 @@
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-executeflow-cache-growth.mjs",
+      "logic-aig-source-origin-toolchain-load-observation.mjs",
       "logic-aig-source-origin-toolchain-pin-observation.mjs",
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
@@ -3890,6 +3939,7 @@
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
       "fungi-source-capability-inventory.mjs",
+      "galerina-source-origin-frame.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -4050,6 +4100,7 @@
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
       "fungi-source-capability-inventory.mjs",
+      "galerina-source-origin-frame.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -4059,6 +4110,7 @@
       "generate-sbom.mjs",
       "hardening-show-derived.mjs",
       "kat-primitives-are-collected.mjs",
+      "logic-aig-source-origin-toolchain-load-observation.mjs",
       "logic-aig-source-origin-toolchain-pin-observation.mjs",
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
@@ -4260,7 +4312,8 @@
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
       "run-proofs.mjs",
-      "license-rollout.mjs"
+      "license-rollout.mjs",
+      "logic-aig-source-origin-toolchain-pin-observation.mjs"
     ],
     "sinks/taint": [
       "audit-checker-wiring.mjs",
@@ -5816,6 +5869,15 @@
       "disposition": "scheduled"
     },
     {
+      "tool": "build-process-tree-observer.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
       "tool": "build-process-warden.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
@@ -6046,6 +6108,24 @@
     },
     {
       "tool": "galerina-new.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "galerina-source-origin-export.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "galerina-source-origin-frame.mjs",
       "directEntryIds": [],
       "transitiveEntryIds": [],
       "via": [],
@@ -6361,6 +6441,15 @@
       "cadences": [],
       "lifecycle": "not-applicable",
       "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "logic-aig-source-origin-toolchain-load-observation.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
     },
     {
       "tool": "logic-aig-source-origin-toolchain-pin-observation.mjs",
