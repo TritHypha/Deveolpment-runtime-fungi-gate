@@ -102,6 +102,26 @@ installs with dependency lifecycle scripts disabled; do not weaken tests or
 commit generated dependency/build output to make a fresh checkout look ready.
 Main is unchanged and nothing has been pushed from this integration work.
 
+## Current local verification checkpoint — 2026-09-08
+
+The dependency-closure step and fresh governed rerun are now complete locally:
+eight transitive compiler packages built with their existing TypeScript build
+scripts, 33 missing dependency trees were restored with lifecycle scripts
+disabled, and the governed suite completed with **97/100 packages passing and
+10,167 tests counted**. The three remaining package gates are `galerina-core`
+(invalid example fixtures), `galerina-framework-example-app` (fail-closed
+missing declared public signing key), and `galerina-test` (three
+source-binding/path-drift assertions). These remain `HOLD`; no fixture rewrite,
+unsigned bypass or signing-key use was made.
+
+Windows path-leak self-test and tracked-file scan pass. The AGENTS-owned
+bounded-execution self-test passes, but its read-only scan over this worktree
+reports 711 findings, so host assurance remains `HOLD`. Ubuntu WSL repeats the
+path-leak self-test successfully, while its enforcement scan cannot resolve the
+Windows worktree's `.git` pointer and is therefore also `HOLD`. No source,
+lockfile, DLL, EXE or toolchain path changed. Task 7 and `.fungi` authoring
+remain closed until the independent admission gates pass.
+
 ## Existing benchmark executable review
 
 Independent read-only inventory found 48 tracked benchmark EXEs totalling
