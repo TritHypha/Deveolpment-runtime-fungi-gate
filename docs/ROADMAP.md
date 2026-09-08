@@ -3,6 +3,30 @@
 Date: 2026-08-30
 Branch: `codex/rd-0873-native-fungi-bootstrap-implementation`
 
+## RD-0873 post-Task-7 merged checkpoint - 2026-09-08
+
+The bounded first native scalar slice is now present on `main` at exact HEAD
+`5faf6e2653199ae2174ddec30994e757be79c685`, which matches `origin/main` in the
+implementation worktree. Task 7 introduced the checked Galerina source and
+artifact; the final line-ending pin is recorded in `.gitattributes`.
+
+Task 6's local source-origin selection and admission evidence was the admitted
+input to that slice. Its report and independent selection, continuity and
+owner-approval receipts remain non-authorizing evidence. The broader repository
+assurance state is still held: the source-origin frame suite is 71/72 because
+one wrapper-settlement test returns `REFUSED_GIT_EXPORT`, the bounded-execution
+audit reports 714 findings, and the memory preflight lacks a Galerina working-set
+owner while two top-level memory files remain unindexed.
+
+Task 8 and Task 9 have not been rerun after the Task 7 merge. The next safe
+sequence is exact-head sequential assurance, followed by custody and integration
+review. Existing branches and worktrees remain untouched; no cleanup or
+retirement is implied.
+
+This checkpoint does not open profile `64` or `256`, compatibility `32`,
+TypeScript retirement, Trametes, `.gate`, VOK authority, production admission,
+release, or remote KB publication.
+
 ## RD-0873 source-origin admission checkpoint - 2026-08-30
 
 The pre-selection corpus, bounded execution, audit-control and conversion-queue

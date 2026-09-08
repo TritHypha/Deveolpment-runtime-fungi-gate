@@ -4,6 +4,36 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 post-Task-7 housekeeping checkpoint - 2026-09-08
+
+This section supersedes older RD-0873 queue text below for the current `main`
+checkout. Older dated sections remain the evidence ledger.
+
+- [x] Task 7's first native scalar slice is merged at exact `main` HEAD
+  `5faf6e2653199ae2174ddec30994e757be79c685`. The source, checked artifact and
+  focused test were introduced by `6b9026442` and the checked-artifact line
+  ending is pinned by `5faf6e265`.
+- [x] The local source-origin selection/admission evidence consumed by Task 7
+  is committed. The selection report and its independent selection,
+  continuity and owner-approval receipts remain non-authorizing evidence.
+- [x] Fresh bounded checks at this HEAD: strict Fungi check **0 errors / 0
+  governance warnings**, Task 7 focused tests **3/3**, and local source-origin
+  tests **46/46**.
+- [!] The broader source-origin frame suite is **71/72**: one wrapper-settlement
+  test remains a `REFUSED_GIT_EXPORT` hold. This is not repaired or normalized
+  into a pass.
+- [!] The AGENTS bounded-execution audit reports **714 findings** over this
+  checkout. This remains negative evidence and does not grant a host gate.
+- [!] Memory preflight is **HOLD** (exit 1): `memory_summary.md` and
+  `raw_memories.md` are unindexed top-level files, the Galerina working-set
+  owner is missing, and the stale-fact axis reports **0** memories older than
+  30 days. No memory repair was performed.
+- [!] Existing broader package, WSL `.git`-pointer, and KB publication holds
+  remain separate from the merged scalar slice.
+- [ ] When resumed, run Task 8 sequential assurance at this exact HEAD, then
+  Task 9 custody/integration review. Do not create a branch or worktree, retire
+  existing topology, or widen native scope without a new owner decision.
+
 ### RD-0873 reviewed local source-origin route - 2026-09-08
 
 - [x] Independently review the local source-origin amendment in AGENTS at
