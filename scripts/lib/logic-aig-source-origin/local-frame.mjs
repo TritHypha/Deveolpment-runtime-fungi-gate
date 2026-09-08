@@ -389,11 +389,12 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
     if (node.kind === 'FILE') filePaths.add(path);
   }
   if (filePaths.size !== source.rows.length || source.rows.some((row) => !filePaths.has(row.path))) refuse('PROJECT');
+  const edgeIds = new Set();
   for (const edge of project.edges) {
     exactObject(edge, ['digest', 'evidenceLocation', 'from', 'id', 'kind', 'to'], 'PROJECT');
     if (!nodeById.has(edge.from) || !nodeById.has(edge.to) || !RELATIONSHIP_KINDS.has(edge.kind)
       || !/^ga1:[0-9a-f]{64}$/u.test(edge.id)
-      || !exactDigest(edge.digest)) refuse('PROJECT');
+      || !exactDigest(edge.digest) || edgeIds.has(edge.id)) refuse('PROJECT');
     exactObject(edge.evidenceLocation, ['endByte', 'kind', 'sourceRawSha256', 'startByte'], 'PROJECT');
     const sourceRow = sourceByPath.get(semanticPath(nodeById.get(edge.from).locator));
     if (!sourceRow || edge.evidenceLocation.kind !== 'SOURCE_SYNTAX'
@@ -409,6 +410,7 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
       || edge.id !== `ga1:${sha256Canonical('galerina.logic-aig-edge-id.v1', {
         relationshipKind: edge.kind, sourceNodeId: edge.from, targetNodeId: edge.to, evidenceDigest: edge.digest,
       })}`) refuse('PROJECT');
+    edgeIds.add(edge.id);
   }
   const unresolvedDigests = new Set();
   for (const row of project.unresolved) {
@@ -466,6 +468,7 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
   }
   if (parsePaths.size !== source.rows.length || source.rows.some((row) => !parsePaths.has(row.path))) refuse('PROJECT');
   const idMapDigests = new Set();
+  const idMapNodeIds = new Set();
   for (const row of project.idMapRows) {
     exactObject(row, ['kind', 'locator', 'nativeIdentity', 'nodeId', 'rowDigest', 'sourceRawSha256'], 'PROJECT');
     exactObject(row.nativeIdentity, ['endByte', 'parserId', 'parserNodeKind', 'preorderOrdinal', 'startByte'], 'PROJECT');
@@ -479,10 +482,11 @@ function validateLocalProjectArtifact(project, source, resolution, subjectDigest
       || !Number.isSafeInteger(native.startByte) || !Number.isSafeInteger(native.endByte)
       || native.startByte < 0 || native.endByte <= native.startByte || native.endByte > sourceRow.byteLength
       || !Number.isSafeInteger(native.preorderOrdinal) || native.preorderOrdinal < 0
-      || !exactDigest(row.rowDigest) || idMapDigests.has(row.rowDigest)) refuse('PROJECT');
+      || !exactDigest(row.rowDigest) || idMapDigests.has(row.rowDigest) || idMapNodeIds.has(row.nodeId)) refuse('PROJECT');
     const { rowDigest, ...rowBody } = row;
     if (rowDigest !== sha256Canonical('galerina.logic-aig-id-map-row.v1', rowBody)) refuse('PROJECT');
     idMapDigests.add(rowDigest);
+    idMapNodeIds.add(row.nodeId);
   }
   if (project.idMapDigest !== sha256Canonical('galerina.logic-aig-id-map.v1', project.idMapRows)) refuse('PROJECT');
   for (const node of project.nodes) {
@@ -512,6 +516,10 @@ export function verifyLocalAdmissionFrame(frame, profile = PROFILE) {
   const sidecar = bodyFromBytes(byId.get('export-sidecar').bytes);
   validateLocalManifestArtifact(source, 'galerina.logic-aig-local-source-manifest.v1', 'manifestDigest', parsed.manifest.subjectDigest, ['DEPENDENCY', 'GENERATED_INPUT', 'SOURCE']);
   validateLocalManifestArtifact(resolution, 'galerina.logic-aig-local-resolution-inputs.v1', 'resolutionInputsDigest', parsed.manifest.subjectDigest, ['POLICY_OWNER', 'RESOLUTION']);
+  const sourcePathKeys = new Set(source.rows.map((row) => caseKey(row.path)));
+  for (const row of resolution.rows) {
+    if (sourcePathKeys.has(caseKey(row.path))) refuse('SEMANTIC');
+  }
   validateLocalProjectArtifact(project, source, resolution, parsed.manifest.subjectDigest);
   exactObject(toolchain, [
     'schema', 'subjectDigest', 'hostParserId', 'fungiParserId', 'gateParserId', 'runtime', 'platform', 'arch',
