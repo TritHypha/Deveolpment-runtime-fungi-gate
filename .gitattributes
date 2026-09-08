@@ -10,6 +10,7 @@
 
 # Canonical checked-flow receipts are verified as exact UTF-8/LF bytes.
 packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/*.checked.json text eol=lf
+packages/fungi/products/galerina/rd0873-first-native-slice/*.checked.json text eol=lf
 
 # Scalar closure governance and generated views are exact-byte inputs. Do not
 # let ambient Windows autocrlf change their checkout representation.
