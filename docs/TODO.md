@@ -16,34 +16,34 @@ checkout. Older dated sections remain the evidence ledger.
 - [x] The local source-origin selection/admission evidence consumed by Task 7
   is committed. The selection report and its independent selection,
   continuity and owner-approval receipts remain non-authorizing evidence.
-- [x] Fresh bounded checks at this HEAD: strict Fungi check **0 errors / 0
-  governance warnings**, Task 7 focused tests **3/3**, and local source-origin
-  tests **46/46**.
-- [!] The broader source-origin frame suite is **71/72**: one wrapper-settlement
-  test remains a `REFUSED_GIT_EXPORT` hold. This is not repaired or normalized
-  into a pass.
+- [x] Fresh bounded checks at the Task 7 source state: strict Fungi check **0
+  errors / 0 governance warnings**, Task 7 focused tests **3/3**, and local
+  source-origin tests **46/46**.
+- [!] The broader source-origin frame suite remains non-green: the latest run
+  still encounters Git-executable/pinned-toolchain failures, including the
+  missing pinned `git.exe` lane. It is not repaired or normalized into a pass.
 - [!] The AGENTS bounded-execution audit reports **714 findings** over this
   checkout. This remains negative evidence and does not grant a host gate.
 - [!] Memory preflight is **HOLD** (exit 1): `memory_summary.md` and
   `raw_memories.md` are unindexed top-level files, the Galerina working-set
   owner is missing, and the stale-fact axis reports **0** memories older than
   30 days. No memory repair was performed.
-- [!] Existing broader package, WSL `.git`-pointer, and KB publication holds
-  remain separate from the merged scalar slice.
-- [!] Task 8 sequential assurance is now recorded in
-  `docs/reports/rd-0873-native-fungi-assurance.md`: the one-file WORKSET
-  receipt is PASS, but the complete 2,720-file PROJECT receipt is FINDING
-  (shard 1 FINDING, shard 2 PASS; no files unprocessed). The v2 receipt carries
-  per-file digests only. A read-only diagnostic identifies two plain-mode
-  `FUNGI-PARSE-002` findings in
-  `packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi` and
-  `packages-ts/galerina-core-security/src/dss/trap-handler.fungi`; both were
-  reproduced sequentially with exit code 1. The strict negative fixtures are
-  expected and are not the cause.
+- [!] Existing broader package, WSL `.git`-pointer, scalar-oracle, and KB
+  publication holds remain separate from the merged scalar slice.
+- [x] After rebuilding the ignored local compiler output, the fresh Task 8
+  corpus receipts are green at the evidence build point
+  `0fdc57d70ea551d03c6e8eb0833dd0de3fc8a3cf` / tree
+  `5f6cce9fafb67c948c4c956e72af6a899ac68749`: WORKSET **PASS 1/1** and
+  PROJECT **PASS 2,720/2,720** across four complete shards. The earlier two-file
+  `FUNGI-PARSE-002` finding was stale generated-output evidence, not a source
+  change; both files now pass plain checking after the rebuild.
+- [!] Task 8 is still **HOLD** because later package-estate, Myco/Hypha,
+  graph/index/registry, exact-revision review, chapter-close, scalar-oracle,
+  source-origin and custody gates are not all green at one exact build point.
 - [ ] Keep Task 9 custody/integration review and the RD-0873 completion merge
-  closed until the PROJECT finding is explained or cleared at this exact HEAD.
-  Do not create a branch or worktree, retire existing topology, or widen native
-  scope without a new owner decision.
+  closed until those gates are independently verified. Do not create a branch
+  or worktree, retire existing topology, widen native scope, or begin bulk
+  `.fungi` authoring without a new owner decision and a green readiness gate.
 
 ### RD-0873 reviewed local source-origin route - 2026-09-08
 

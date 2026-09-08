@@ -1,33 +1,40 @@
 # Galerina beta v1 to SLIDE roadmap
 
 Date: 2026-08-30
-Branch: `codex/rd-0873-native-fungi-bootstrap-implementation`
+Branch: `main`
 
-## RD-0873 post-Task-7 merged checkpoint - 2026-09-08
+## RD-0873 post-Task-7 assurance checkpoint - 2026-09-08
 
-The bounded first native scalar slice is now present on `main` at exact HEAD
-`5faf6e2653199ae2174ddec30994e757be79c685`, which matches `origin/main` in the
-implementation worktree. Task 7 introduced the checked Galerina source and
-artifact; the final line-ending pin is recorded in `.gitattributes`.
+The bounded first native scalar slice remains present on `main`; the evidence
+was captured at `0fdc57d70ea551d03c6e8eb0833dd0de3fc8a3cf` with tree
+`5f6cce9fafb67c948c4c956e72af6a899ac68749`. Task 7 introduced the checked
+Galerina source and artifact, and the final line-ending pin is recorded in
+`.gitattributes`. The local branch is one documentation commit ahead of
+`origin/main`; no push was made.
 
 Task 6's local source-origin selection and admission evidence was the admitted
 input to that slice. Its report and independent selection, continuity and
-owner-approval receipts remain non-authorizing evidence. The broader repository
-assurance state is still held: the source-origin frame suite is 71/72 because
-one wrapper-settlement test returns `REFUSED_GIT_EXPORT`, the bounded-execution
-audit reports 714 findings, and the memory preflight lacks a Galerina working-set
-owner while two top-level memory files remain unindexed.
+owner-approval receipts remain non-authorizing evidence. Broader repository
+assurance remains held: the source-origin frame is non-green with
+Git-executable/pinned-toolchain failures, the bounded-execution audit reports
+714 findings, memory preflight lacks a Galerina working-set owner while two
+top-level memory files remain unindexed, and the scalar-oracle suite is 17/25
+with eight compiler-build diagnostic failures.
 
-Task 8 was rerun at the exact head above. The one-file WORKSET receipt is
-`PASS`, but the complete 2,720-file PROJECT receipt is `FINDING`: shard 1 is
-`FINDING`, shard 2 is `PASS`, and both are complete with no unprocessed files.
-The v2 receipt carries per-file result digests only, so the repository-wide
-finding was followed by a read-only diagnostic that isolated two plain-mode
-`FUNGI-PARSE-002` results in the DSS supervisor and trap-handler Fungi files.
-Task 9 custody and integration review, and the RD-0873 completion merge, remain
-closed until those findings are adjudicated at the exact build point.
-Existing branches and worktrees remain untouched; no cleanup or retirement is
-implied.
+After rebuilding the ignored local compiler output, Task 8's fresh exact-head
+receipts are green: WORKSET is PASS 1/1 and PROJECT is PASS 2,720/2,720 across
+four complete shards, with no unprocessed files. The earlier two-file
+`FUNGI-PARSE-002` finding came from stale generated compiler output; both files
+now pass plain checking. This clears the corpus receipt itself, but it does not
+close the later package-estate, Myco/Hypha, graph/index/registry, independent
+exact-revision, chapter-close, or custody gates.
+
+Task 9 custody/integration review and the RD-0873 completion merge therefore
+remain closed. Existing branches and worktrees remain untouched; no cleanup or
+retirement is implied. Bulk TypeScript-to-Fungi translation stays unopened until
+RD-0873 is independently closed and a local-first readiness phase has a verified
+inventory, semantic/effect ledger, admission route, rollback plan, bounded first
+wave, and independent review.
 
 This checkpoint does not open profile `64` or `256`, compatibility `32`,
 TypeScript retirement, Trametes, `.gate`, VOK authority, production admission,

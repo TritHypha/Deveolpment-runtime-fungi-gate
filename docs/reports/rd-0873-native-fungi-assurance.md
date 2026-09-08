@@ -1,52 +1,53 @@
-# RD-0873 Task 8 assurance — 2026-09-08
+# RD-0873 Task 8 assurance — 2026-09-08 (evidence build point)
 
-Task 8 was rerun sequentially at the exact `main` build point:
+Task 8 was rerun after rebuilding the ignored local compiler output. The source
+parser already contained the governed-secure change, but the prior scan used a
+stale `packages-ts/galerina-core-compiler/dist/` tree. The current evidence is
+bound to the exact `main` build point:
 
-- repository HEAD: `055396f41aa912d8b6b76eeb305749a1f3026c86`
-- repository tree: `5853bd0927599c090081f21cdfdc21bb3f7bf629`
-- at scan start, index: empty and working tree: clean
-- local `main` is one documentation commit ahead of `origin/main`
+- repository HEAD: `0fdc57d70ea551d03c6e8eb0833dd0de3fc8a3cf`
+- repository tree: `5f6cce9fafb67c948c4c956e72af6a899ac68749`
+- compiler digest: `sha256:fbefa5b23c2b11d359f7a07c461a102fc47d70283b406b3a005d9cf575d300bf`
+- index: empty and working tree: clean at scan start
+- local `main` is one documentation commit ahead of `origin/main`; no push was made
 
-The native first-slice check remains green: strict Fungi checking reports zero
-errors and zero governance warnings, and the focused Task 7 test remains 3/3.
+The compiler was rebuilt locally with its typecheck and build scripts. The
+ignored `dist/` output is not a source or release artifact. Both files isolated
+by the earlier stale-output diagnostic now pass plain checking with zero errors
+and zero governance warnings (advisories remain non-blocking in plain mode).
 
-The bounded corpus receipts are mixed:
+The fresh bounded corpus receipts are green:
 
-| profile | request digest | result | receipt |
-| --- | --- | --- | --- |
-| WORKSET (1 file) | `sha256:e53baad8bf6e8f5496e0f2a085dbde234743610f8f197cf49687623415cdca85` | `PASS`, complete, 1/1 | `sha256:fb0f2641b7c5e55fd6ed2de0610f1b725ccc7a380bbd2ac7259614709322fe08` |
-| PROJECT (2,720 files, two shards) | `sha256:03369af56c9c6a54fc8f2b7db1102884f74537ac20d5c330c91362bf6a6977bd` | `FINDING`, complete, 2,720/2,720 | `sha256:376bc70e4fa7e8aa5c2ae345316f567f1b5147a178eff348a7af2909fb2e9d91` |
+| profile | request digest | result | aggregate receipt | envelope |
+| --- | --- | --- | --- | --- |
+| WORKSET (1 file) | `sha256:0c6339952c048d103eb09847fc8d9222bbd6fd023b041b0e53e45870387a5667` | `PASS`, complete, 1/1 | `sha256:80bc379e50b13685543ed9a4ae62c86e5e76c95345ff0668dfe3fd0966a0d074` | `sha256:104248e5922f645c71be1f096318f19932980ba8d1cc01e181dda9c9c547acb8` |
+| PROJECT (2,720 files, four shards) | `sha256:076e599eddbc371d90d5af009b112775e84373266344072a2ac01a7df2f6e679` | `PASS`, complete, 2,720/2,720 | aggregate result `sha256:14c287db00f4d9672893f5c4140d3c3de52b9d16749e0bf7100c546d8ebbdb53` | `sha256:3c680b5a72e71a6c8edd3cf071d6781aa68784d59e2afd51e4eae2b3fb489daf` |
 
-The PROJECT aggregate result digest is
-`sha256:355e3b6c4255e7b091dfd225f8ae24e7fd2506341412f9b9985d0ff26cec2510`.
-Shard 1 is `FINDING` with result digest
-`sha256:dfcc9a91682b6aa5c001badc4357f95ac8990b951a416b98b44fd7b5fb73b9a4`;
-shard 2 is `PASS` with result digest
-`sha256:de154040af8e8ea78c11cc8ae545abf440ed31623120a628570177acc6ade79b`.
-Both shards terminated `COMPLETE` with no unprocessed files. The v2 receipt
-stores per-file result digests rather than the diagnostic code list, so this
-run proves a completed repository-wide finding but does not identify the
-individual mismatching files. A separate read-only diagnostic over shard 1
-identified the two mismatches, both plain-mode files returning
-`FUNGI-PARSE-002` (`Expected "flow" after "governed floor_2"`):
+The four PROJECT shard receipts are, in order:
 
-- `packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi`
-- `packages-ts/galerina-core-security/src/dss/trap-handler.fungi`
+- `sha256:16b1bec74ee8da5ff3a9468b2c22c94dbf70758358bf570d005af824ab14f49e`
+- `sha256:4dc59c3fb41eb75e70bd8480c2f1a3920c5d5878698a3e8f6dec2b8278a426cd`
+- `sha256:f74d3eda225942cc6118aacf53b672cef1792278f390a2af7131e839fb618fcf`
+- `sha256:253ed062e6d3472d942792628d9dd33010b735fa631f443e0c0633bf09ace2a9`
 
-The two strict negative fixtures in that shard returned their expected owned
-diagnostics (`FUNGI-GOV-024` and `FUNGI-SUBSTRATE-001`); they are not the cause
-of the aggregate finding. The two plain files were reproduced sequentially at
-the current documentation-only `main` head with exit code 1 for each.
+Focused verification at this same source state is green: the native slice tests
+are 3/3, local source-origin tests are 46/46, core-security tests are 28/28,
+checked-flow and line-ending controls are 13/13, and the CRLF audit fixture is
+3/3. These results do not erase the broader holds. The scalar-oracle suite is
+17/25 with eight compiler-build diagnostic failures; the broader source-origin
+frame remains non-green with Git-executable and missing pinned-toolchain
+failures; the canonical AGENTS bounded-execution audit reports 714 findings;
+and memory preflight remains HOLD because two top-level memory files are
+unindexed and the Galerina working-set owner is missing.
 
-Task 8 therefore remains **HOLD**. Task 9 custody/integration review and any
-RD-0873 completion merge are blocked until the PROJECT finding is independently
-explained or cleared at the same exact build point. No branch or worktree was
-created, retired, or rewritten, and no `.fungi` authoring was opened.
+Task 8 therefore remains **HOLD**. The complete package-estate, Myco/Hypha,
+graph/index/registry fixed-point, independent exact-revision, and chapter-close
+gates are not all represented by fresh green evidence. Task 9 custody/integration
+review and the RD-0873 completion merge remain closed until those gates are
+independently rerun and pass at one exact integrated build point. No branch or
+worktree was created, retired, or rewritten, and no `.fungi` authoring was
+opened.
 
-Because the PROJECT receipt is non-green, the later Task 8 closure gates
-(complete package estate, Myco/Hypha, graph/index/registry fixed points,
-independent exact-revision review and chapter-close review) are not represented
-as green evidence and were not used to manufacture closure.
-
-Evidence was retained under the ignored `build/fungi-corpus-check/evidence/`
-directory and is not treated as a source artifact.
+Evidence is retained under the ignored
+`build/fungi-corpus-check/evidence/` directory and is not treated as a source
+artifact.
