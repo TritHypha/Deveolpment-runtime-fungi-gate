@@ -1,10 +1,10 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 993,
+  "total": 995,
   "counts": {
-    "ref": 202,
+    "ref": 205,
     "inline": 383,
-    "phantom": 113,
+    "phantom": 112,
     "live": 183,
     "referenced": 99,
     "dead": 13
@@ -152,6 +152,18 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_ASSERTION",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
       "docs": 0
     },
     {
@@ -830,12 +842,12 @@
       "code": "ERR_MODULE_NOT_FOUND",
       "family": "ERR_*",
       "namespace": "ERR",
-      "status": "phantom",
+      "status": "ref",
       "names": [],
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 0,
+      "tests": 2,
       "docs": 7
     },
     {
@@ -7168,7 +7180,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 0,
+      "tests": 1,
       "docs": 4
     },
     {
@@ -7670,7 +7682,7 @@
       "severities": [],
       "defs": 0,
       "emits": 5,
-      "tests": 28,
+      "tests": 32,
       "docs": 13
     },
     {
@@ -7686,7 +7698,7 @@
       "defs": 0,
       "emits": 4,
       "tests": 8,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "FUNGI-PARSE-003",
@@ -11665,7 +11677,7 @@
       ],
       "defs": 2,
       "emits": 2,
-      "tests": 1,
+      "tests": 2,
       "docs": 5
     },
     {
@@ -12345,6 +12357,18 @@
       "docs": 1
     },
     {
+      "code": "GATE-PARSE-001",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
+    },
+    {
       "code": "GATE-PARSE-002",
       "family": "PARSE",
       "namespace": "GATE",
@@ -12355,7 +12379,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
+      "tests": 3,
       "docs": 4
     },
     {

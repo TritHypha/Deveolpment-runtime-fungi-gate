@@ -1,15 +1,18 @@
-# RD-0873 Task 8 assurance — 2026-09-08 (evidence build point)
+# RD-0873 Task 8 assurance — 2026-09-09 (evidence build point)
 
-Task 8 was rerun after rebuilding the ignored local compiler output. The source
-parser already contained the governed-secure change, but the prior scan used a
-stale `packages-ts/galerina-core-compiler/dist/` tree. The current evidence is
-bound to the exact `main` build point:
+Task 8 was rerun after rebuilding the ignored local compiler output and
+refreshing the declared graph, registry, roadmap and conversion-queue outputs.
+The current PROJECT evidence is bound to this exact committed `main` build
+point:
 
-- repository HEAD: `0fdc57d70ea551d03c6e8eb0833dd0de3fc8a3cf`
-- repository tree: `5f6cce9fafb67c948c4c956e72af6a899ac68749`
-- compiler digest: `sha256:fbefa5b23c2b11d359f7a07c461a102fc47d70283b406b3a005d9cf575d300bf`
-- index: empty and working tree: clean at scan start
-- local `main` is one documentation commit ahead of `origin/main`; no push was made
+- repository HEAD: `2bccf496460dc7757f2828c2bafda07eea7e4ebd`
+- repository tree: `62f6cf01e2014a03c231197e9121aa15d1e1912d`
+- compiler digest: `sha256:3c7325f3d5a4f88405a181cb5e2031b61d41d2bee8dd144784846404e26b591b`
+- PROJECT evidence request digest: `sha256:13593cdc1226a43238a553e4349719929927bd14d401954375f47ebc8b23d5bf`
+- PROJECT evidence envelope: `sha256:12637c61de97ac28f12f24ccb125ce997fbb10ac027f92dcb4d5049bcecd8642`
+- PROJECT aggregate result: `sha256:fa9cb60e8914aef6614823df38dc1eeb7e1ae2a6c5b5dabff03b7b5d48b6f2d7`
+- the evidence is retained under the ignored `build/fungi-corpus-check/evidence/`
+  directory; no push was made
 
 The compiler was rebuilt locally with its typecheck and build scripts. The
 ignored `dist/` output is not a source or release artifact. Both files isolated
@@ -20,37 +23,49 @@ The fresh bounded corpus receipts are green:
 
 | profile | request digest | result | aggregate receipt | envelope |
 | --- | --- | --- | --- | --- |
-| WORKSET (1 file) | `sha256:0c6339952c048d103eb09847fc8d9222bbd6fd023b041b0e53e45870387a5667` | `PASS`, complete, 1/1 | `sha256:80bc379e50b13685543ed9a4ae62c86e5e76c95345ff0668dfe3fd0966a0d074` | `sha256:104248e5922f645c71be1f096318f19932980ba8d1cc01e181dda9c9c547acb8` |
-| PROJECT (2,720 files, four shards) | `sha256:076e599eddbc371d90d5af009b112775e84373266344072a2ac01a7df2f6e679` | `PASS`, complete, 2,720/2,720 | aggregate result `sha256:14c287db00f4d9672893f5c4140d3c3de52b9d16749e0bf7100c546d8ebbdb53` | `sha256:3c680b5a72e71a6c8edd3cf071d6781aa68784d59e2afd51e4eae2b3fb489daf` |
+| WORKSET (1 file) | `sha256:11ca02e162cd2e6e666950f84d41aa7980ac556aec2969515ae9e5782d17413d` | `PASS`, complete, 1/1 | `sha256:ab9b24bb0a39a46b92b399d979874036d65a7eef333c3150ecae89002b635686` | `sha256:5e8c78813c7b1f2d372d3e8f04f49edcffb90f2b2b62f970c7127e8d41bad47d` |
+| PROJECT (2,720 files, four shards) | `sha256:13593cdc1226a43238a553e4349719929927bd14d401954375f47ebc8b23d5bf` | `PASS`, complete, 2,720/2,720 | aggregate result `sha256:fa9cb60e8914aef6614823df38dc1eeb7e1ae2a6c5b5dabff03b7b5d48b6f2d7` | `sha256:12637c61de97ac28f12f24ccb125ce997fbb10ac027f92dcb4d5049bcecd8642` |
 
 The four PROJECT shard receipts are, in order:
 
-- `sha256:16b1bec74ee8da5ff3a9468b2c22c94dbf70758358bf570d005af824ab14f49e`
-- `sha256:4dc59c3fb41eb75e70bd8480c2f1a3920c5d5878698a3e8f6dec2b8278a426cd`
-- `sha256:f74d3eda225942cc6118aacf53b672cef1792278f390a2af7131e839fb618fcf`
-- `sha256:253ed062e6d3472d942792628d9dd33010b735fa631f443e0c0633bf09ace2a9`
+- `sha256:d737391f3fcf72cc81c0b40476d596f65b420dbf27461dceafbe7ccdacfa88fb`
+- `sha256:18a04e2e13fb3cc3c6473cd30c59d71725caf6e55d57ee64d2bddd5693a26c8a`
+- `sha256:40c909148af2687704aea69df9654666096165043318bd564c174ffa8bb09f87`
+- `sha256:16a59868cf56bcabaeade416eefcb6dba78c5c5f402f8dada9af7434558eadc8`
 
 Focused verification at this same source state is green: the native slice tests
 are 3/3, local source-origin tests are 46/46, core-security tests are 28/28,
 checked-flow and line-ending controls are 13/13, and the CRLF audit fixture is
-3/3. These results do not erase the broader holds. The scalar-oracle suite is
-17/25 with eight compiler-build diagnostic failures; the broader source-origin
-frame remains non-green with Git-executable and missing pinned-toolchain
-failures; the canonical AGENTS bounded-execution audit reports 714 findings;
-and memory preflight remains HOLD because two top-level memory files are
-unindexed and the Galerina working-set owner is missing.
+3/3. The graph fixed-point route is green at 10/10, the generator-contract
+cadence is 20/20, and the current-head conversion queue check passes when bound
+to the approved pinned `mingit-2.55.0.2` executable. These results do not erase
+the broader holds. The diagnostic collision gate reports a C1 reuse of
+`FUNGI-PARSE-002`; example diagnostics has one new regression in
+`368-contract-ai-flow` (it declares `none` but emits
+`FUNGI-HINT-COMPUTE-001`, `FUNGI-VALUESTATE-008` and `FUNGI-TIER-001`); the
+scalar-oracle suite is 17/25 with eight compiler-build diagnostic failures; the
+broader source-origin frame remains non-green with Git-executable and missing
+pinned-toolchain failures; the canonical AGENTS bounded-execution audit reports
+714 findings; and memory preflight remains HOLD because two top-level memory
+files are unindexed and the Galerina working-set owner is missing.
 
-Task 8 therefore remains **HOLD**. The complete package-estate, Myco/Hypha,
-graph/index/registry fixed-point, independent exact-revision, and chapter-close
-gates are not all represented by fresh green evidence. Task 9 custody/integration
-review and the RD-0873 completion merge remain closed until those gates are
-independently rerun and pass at one exact integrated build point. No branch or
-worktree was created, retired, or rewritten, and no `.fungi` authoring was
-opened.
+The final governed phase-close attempt passed the graph, queue, generator,
+provenance and roadmap controls before reaching the corpus child, but it was
+stopped after a bounded observation because the Windows corpus workers did not
+produce a terminal result. The phase-close attempt also recorded the
+diagnostic-collision and example-diagnostics failures above. Task 8 therefore
+remains **HOLD**. The complete package-estate, Myco/Hypha, independent
+exact-revision, scalar-oracle, source-origin and custody gates are not all
+represented by fresh green evidence. Task 9 custody/integration review and the
+RD-0873 completion merge remain closed until those gates are independently
+rerun and pass at one exact integrated build point. No branch or worktree was
+created, retired, or rewritten, and no `.fungi` authoring was opened.
 
 Evidence is retained under the ignored
 `build/fungi-corpus-check/evidence/` directory and is not treated as a source
-artifact.
+artifact. This documentation and generated-output commit is later than the
+recorded evidence build point, so any integration decision requires a fresh
+exact-head rerun; the receipts do not authorize a merge.
 
 The earlier read-only graph refusal was resolved through the declared ownership
 and fixed-point route. The source-origin parser entry now has an exact

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "tool": "gen-roadmap",
   "authority": "NONE",
-  "gitCommit": "fab8e77fa19667c3ce2f987ee76377808d2a0c47",
-  "builtAt": "2026-09-08T22:52:16.000Z",
+  "gitCommit": "2bccf496460dc7757f2828c2bafda07eea7e4ebd",
+  "builtAt": "2026-09-09T00:26:01.000Z",
   "node": "v24.18.0",
-  "authoritativeInputsDigest": "99f23a833a1f096b91131fd2c07a1a529b7b868804218c55304f2f201438706c"
+  "authoritativeInputsDigest": "aab8897cae075b102b509930274c634aae97cec87b922cc822b5bfa5aa29d2e6"
 }

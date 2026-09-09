@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### RD-0873 post-Task-7 housekeeping checkpoint - 2026-09-08
+### RD-0873 Task-8 assurance checkpoint - 2026-09-09
 
 This section supersedes older RD-0873 queue text below for the current `main`
 checkout. Older dated sections remain the evidence ledger.
@@ -30,16 +30,22 @@ checkout. Older dated sections remain the evidence ledger.
   30 days. No memory repair was performed.
 - [!] Existing broader package, WSL `.git`-pointer, scalar-oracle, and KB
   publication holds remain separate from the merged scalar slice.
-- [x] After rebuilding the ignored local compiler output, the fresh Task 8
-  corpus receipts are green at the evidence build point
-  `0fdc57d70ea551d03c6e8eb0833dd0de3fc8a3cf` / tree
-  `5f6cce9fafb67c948c4c956e72af6a899ac68749`: WORKSET **PASS 1/1** and
-  PROJECT **PASS 2,720/2,720** across four complete shards. The earlier two-file
-  `FUNGI-PARSE-002` finding was stale generated-output evidence, not a source
-  change; both files now pass plain checking after the rebuild.
-- [!] Task 8 is still **HOLD** because complete package-estate, Myco/Hypha,
-  phase-close, exact-revision review, scalar-oracle, source-origin and custody
-  gates are not all green at one exact build point.
+- [x] The current-head PROJECT receipt is green at committed HEAD
+  `2bccf496460dc7757f2828c2bafda07eea7e4ebd` / tree
+  `62f6cf01e2014a03c231197e9121aa15d1e1912d`: WORKSET **PASS 1/1** and
+  PROJECT **PASS 2,720/2,720** across four complete shards. The PROJECT
+  envelope is `sha256:12637c61de97ac28f12f24ccb125ce997fbb10ac027f92dcb4d5049bcecd8642`.
+- [x] The graph fixed-point route is green **10/10**, the generator-contract
+  cadence is **20/20**, the current-head conversion queue check is green with
+  pinned `mingit-2.55.0.2`, and code-index/registry/coverage outputs were
+  refreshed locally.
+- [!] Task 8 is still **HOLD**: the diagnostic collision gate reports a C1
+  `FUNGI-PARSE-002` reuse; example diagnostics reports one new regression in
+  `368-contract-ai-flow` (declared `none`, emitted
+  `FUNGI-HINT-COMPUTE-001`, `FUNGI-VALUESTATE-008`, `FUNGI-TIER-001`); and
+  the governed phase-close corpus child was stopped after a bounded Windows
+  worker observation without a terminal result. Package-estate, Myco/Hypha,
+  exact-revision, scalar-oracle, source-origin and custody gates remain open.
 - [x] The declared graph/index/roadmap fixed-point route is green: package,
   project, graph-integrity, KB, dev-tool, Fungi capability, retirement,
   semantic-assurance and roadmap checks all pass (10/10) with the real sibling

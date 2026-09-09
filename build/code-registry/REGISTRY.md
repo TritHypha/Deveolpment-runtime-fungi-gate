@@ -17,8 +17,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | inline | 383 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 202 | referenced only (no def/emit) |
+| phantom | 112 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 205 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -466,7 +466,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-EMIT-STUB | inline | — | — |
 
-### ERR_* (144)
+### ERR_* (145)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -482,6 +482,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_ANONYMOUS_DENIED | ref | — | — |
 | ERR_ARGUMENT_COUNT | ref | — | — |
 | ERR_ARTIFACT_HASH_MISMATCH | ref | — | — |
+| ERR_ASSERTION | ref | — | — |
 | ERR_BRIDGE_DISPATCH_FAULT | inline | — | — |
 | ERR_BRIDGE_NO_MANIFEST | inline | — | — |
 | ERR_BRIDGE_UNATTESTED | inline | — | — |
@@ -538,7 +539,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_LATENCY_INVARIANT | ref | — | — |
 | ERR_MISSING_CORRELATION_ID | ref | — | — |
 | ERR_MISSING_FLOW | ref | — | — |
-| ERR_MODULE_NOT_FOUND | phantom | — | — |
+| ERR_MODULE_NOT_FOUND | ref | — | — |
 | ERR_NEGATIVE | ref | — | — |
 | ERR_NEGATIVE_AGE | phantom | — | — |
 | ERR_NEGATIVE_AMOUNT | ref | — | — |
@@ -1111,7 +1112,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-OTHER-1 | ref | — | — |
 
-### PARSE (38)
+### PARSE (39)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1125,6 +1126,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PARSE-007 | inline | BLOCK_TYPE_REQUIRES_RECORD | — |
 | FUNGI-PARSE-008 | inline | RECORD_FIELD_CEILING | — |
 | FUNGI-PARSE-DEPTH-001 | inline | EXCESSIVE_NESTING | — |
+| GATE-PARSE-001 | ref | — | — |
 | GATE-PARSE-002 | inline | GATE_V3_BAD_VERSION_HEADER | — |
 | GATE-PARSE-003 | inline | GATE_V3_NON_ASCII | — |
 | GATE-PARSE-004 | inline | GATE_V3_MISSING_CIRCUIT | — |
