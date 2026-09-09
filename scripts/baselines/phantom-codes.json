@@ -3,7 +3,7 @@
  "rule": "ENTERED = a new doc-only code (fix the doc or implement the code). LEFT = a stale entry that must be REMOVED from this file. Neither is fixed by editing the number.",
  "seededFrom": "28e13062",
  "adjudicationNote": "Board item 172 independently verified MUTATION-001 and STEP-001 as governance-intent identities blocked by absent self-hosted grammar productions. They are named membership-ratcheted exceptions; the unadjudicated count baseline remains 111.",
- "count": 113,
+ "count": 112,
  "historicalUnadjudicatedCountBaseline": 111,
  "adjudicatedGrammarBlocked": [
   "FUNGI-MUTATION-001",

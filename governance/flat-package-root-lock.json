@@ -153,7 +153,7 @@
       "identity": "@galerina/core",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core",
-      "contentDigest": "ab4326611e0840e07a5f7453d66dd434a8fbaadea00ec95126cbbdf8071b0057",
+      "contentDigest": "080140f9a06e42e42aea8394b5b267d03536e4bb6a8e5ff5a7348d0e635e9085",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -191,11 +191,11 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "7b5f65311ea60efd5d8e270469e0f0f6bb3e85c2aade2279ff59d84796c83da0",
+      "contentDigest": "2898501cafd57aa5140b6dae1d437ddfef388dbed6cb30ecdcff0af71658936b",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "282abceec437c718180ab5da7f9b109af67a6118dc5c66942535da4f28effa8f"
+          "digest": "afb67a22a7eedd2db3ecb8b5365210910724d10474c28950fa978482cf3b2046"
         }
       ],
       "dependencies": [
@@ -451,7 +451,7 @@
       "identity": "@galerina/core-security",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-security",
-      "contentDigest": "981d08e06453aee9f3a8734b310ae406a2f937186f8e3977748b98cfe99bd401",
+      "contentDigest": "4e465cac3767af3a2d8827c0d1b36d298591860ace39e293f7b1b5f822c37cba",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1153,7 +1153,7 @@
       "identity": "@galerina/devtools-hypha",
       "version": "1.0.0-beta.1",
       "directory": "galerina-devtools-hypha",
-      "contentDigest": "e1060d266192ee3d8802ae0a59419f43bc3ef477829444c29bdf67c0f81d2323",
+      "contentDigest": "a30e12bd5b406b7356c1485a41b2ecede00103b00c077d90b1b0d2b988ae7998",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2081,11 +2081,11 @@
       "identity": "@galerina/tools-myco",
       "version": "0.2.2",
       "directory": "galerina-tools-myco",
-      "contentDigest": "da84e3b65aa3afcd886c01fe4b7996296dfdbeabd5296657259efd24e34a0c2b",
+      "contentDigest": "132cedb51d1fb17f17386ef74ffbdfbcad7ef8702063cf4b5a1f867d65a302cf",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "3872d6b4cd189cc4c3e0fc91552f8e133a61babbd7b19e15e3018c2a598f99a4"
+          "digest": "430692f8e6f8a08649232addb8f6f29288453224969648a1aac5b34bf64e1aa2"
         }
       ],
       "dependencies": [
@@ -3273,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "fd8fe1f909987c64770a2f272d0f078ed304d7fb8e7ed33617654140f5e53d2a"
+  "rootDigest": "3c595b2e224d5ce5243df6ca1d631297080f0de43cabbb45c4271d50bafa865f"
 }
