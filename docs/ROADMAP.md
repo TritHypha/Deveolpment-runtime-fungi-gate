@@ -6,8 +6,8 @@ Branch: `main`
 ## Current assurance checkpoint - 2026-09-09
 
 The existing `main` checkout is clean at committed HEAD
-`fd0d75cd9c44109f7771c2189c05f21ff732651b` with tree
-`5d753d2c4d4f7e9c527743cdb5d7f61e1cb42177`. No branch or worktree was created,
+`ff952f4773e0978b6d066f5763fdce696329fee9` with tree
+`7afeadccf18bdcfc3a9482548d49244f2215f7dc`. No branch or worktree was created,
 retired, or rewritten, and no push was made.
 
 Bounded checks are green for developer tools (46/46), package-lock integrity
