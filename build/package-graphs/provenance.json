@@ -1,7 +1,7 @@
 {
   "tool": "package-graph-generator",
   "authority": "NONE",
-  "gitCommit": "eac19490ea8fc209161caddd105c91b4e46d71a2",
-  "builtAt": "2026-09-08T22:43:40.000Z",
+  "gitCommit": "4816b1d5225ff00662266367779c7d303d901602",
+  "builtAt": "2026-09-09T01:28:40.000Z",
   "node": "v24.18.0"
 }
