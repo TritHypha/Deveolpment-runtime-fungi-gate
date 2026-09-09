@@ -1,15 +1,15 @@
 {
   "schemaVersion": 3,
-  "sourceDigest": "8784ebe4c19b57a1fafbd2abf02606ee1573839057278a5bd496a93200b6fe2a",
+  "sourceDigest": "f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc",
   "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
-  "projectCorpusReceiptDigest": "sha256:77e75e273341d44109587bc0d85b43eb15d581443e449a05f85b9f3c1766bb07",
+  "projectCorpusReceiptDigest": "sha256:c3fbf744b0bef0a537409d2c9a1db21bfaae2babe184d12c47d31a22f26545b3",
   "counts": {
-    "total": 1586,
+    "total": 1588,
     "CANDIDATE": 0,
     "BLOCKED": 921,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 665
+    "BOOTSTRAP_FLOOR": 667
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -1529,6 +1529,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/source-escape-checker.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/source-origin-parser-entry.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -3769,6 +3777,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/rd0528-unicode-decode-tokenize.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/rd0873-first-native-slice.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",

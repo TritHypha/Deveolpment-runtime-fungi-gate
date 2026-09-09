@@ -1,8 +1,8 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 987,
+  "total": 993,
   "counts": {
-    "ref": 196,
+    "ref": 202,
     "inline": 383,
     "phantom": 113,
     "live": 183,
@@ -464,6 +464,18 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_EMPTY_DOCUMENT",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
       "docs": 0
     },
     {
@@ -1727,6 +1739,18 @@
       "docs": 0
     },
     {
+      "code": "FUNGI-A-001",
+      "family": "A",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 3,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-A-1",
       "family": "A",
       "namespace": "FUNGI",
@@ -2217,7 +2241,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
+      "tests": 3,
       "docs": 9
     },
     {
@@ -4001,7 +4025,7 @@
       ],
       "defs": 0,
       "emits": 2,
-      "tests": 31,
+      "tests": 33,
       "docs": 17
     },
     {
@@ -5724,7 +5748,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 29,
+      "tests": 33,
       "docs": 12
     },
     {
@@ -5816,7 +5840,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 0,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -5830,7 +5854,7 @@
       ],
       "defs": 0,
       "emits": 2,
-      "tests": 14,
+      "tests": 17,
       "docs": 0
     },
     {
@@ -5844,7 +5868,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -5858,7 +5882,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 7,
+      "tests": 9,
       "docs": 0
     },
     {
@@ -5886,7 +5910,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 9,
+      "tests": 11,
       "docs": 0
     },
     {
@@ -5900,7 +5924,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 4,
+      "tests": 6,
       "docs": 0
     },
     {
@@ -6054,7 +6078,7 @@
       "severities": [],
       "defs": 0,
       "emits": 3,
-      "tests": 12,
+      "tests": 13,
       "docs": 8
     },
     {
@@ -7646,7 +7670,7 @@
       "severities": [],
       "defs": 0,
       "emits": 5,
-      "tests": 26,
+      "tests": 28,
       "docs": 13
     },
     {
@@ -7655,7 +7679,8 @@
       "namespace": "FUNGI",
       "status": "inline",
       "names": [
-        "EXPECTED_FLOW_KEYWORD"
+        "EXPECTED_FLOW_KEYWORD",
+        "INVALID_GOVERNED_FLOW_POSTURE"
       ],
       "severities": [],
       "defs": 0,
@@ -8482,8 +8507,20 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 0,
+      "tests": 1,
       "docs": 3
+    },
+    {
+      "code": "FUNGI-POISON-001",
+      "family": "POISON",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
     },
     {
       "code": "FUNGI-POLICY-001",
@@ -9264,7 +9301,7 @@
       "severities": [],
       "defs": 0,
       "emits": 2,
-      "tests": 4,
+      "tests": 5,
       "docs": 0
     },
     {
@@ -9321,7 +9358,7 @@
       ],
       "defs": 1,
       "emits": 3,
-      "tests": 21,
+      "tests": 22,
       "docs": 1
     },
     {
@@ -10535,7 +10572,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 9,
+      "tests": 11,
       "docs": 0
     },
     {
@@ -10563,6 +10600,42 @@
       "docs": 0
     },
     {
+      "code": "FUNGI-TEST-128",
+      "family": "TEST",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-TEST-777",
+      "family": "TEST",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 3,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-TEST-999",
+      "family": "TEST",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 6,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-TIER-001",
       "family": "TIER",
       "namespace": "FUNGI",
@@ -10573,7 +10646,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 26,
+      "tests": 30,
       "docs": 10
     },
     {
@@ -10724,7 +10797,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 236,
+      "tests": 250,
       "docs": 24
     },
     {
@@ -10745,7 +10818,7 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 96,
+      "tests": 100,
       "docs": 9
     },
     {
@@ -10837,7 +10910,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 34,
+      "tests": 38,
       "docs": 1
     },
     {

@@ -18,7 +18,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 196 | referenced only (no def/emit) |
+| ref | 202 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -38,10 +38,11 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 ## Catalog (by family)
 
-### A (1)
+### A (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
+| FUNGI-A-001 | ref | — | — |
 | FUNGI-A-1 | ref | — | — |
 
 ### ACCESS (2)
@@ -465,7 +466,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-EMIT-STUB | inline | — | — |
 
-### ERR_* (143)
+### ERR_* (144)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -507,6 +508,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_EMPTY_CURRENCY | ref | — | — |
 | ERR_EMPTY_CUSTOMER_ID | ref | — | — |
 | ERR_EMPTY_DATA | ref | — | — |
+| ERR_EMPTY_DOCUMENT | ref | — | — |
 | ERR_EMPTY_FLOW_ID | ref | — | — |
 | ERR_EMPTY_OPERATION | ref | — | — |
 | ERR_EMPTY_PAYLOAD | ref | — | — |
@@ -1115,7 +1117,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-PARSE-00 | ref | — | — |
 | FUNGI-PARSE-001 | inline | UNEXPECTED_TOKEN | — |
-| FUNGI-PARSE-002 | inline | EXPECTED_FLOW_KEYWORD | — |
+| FUNGI-PARSE-002 | inline | EXPECTED_FLOW_KEYWORD / INVALID_GOVERNED_FLOW_POSTURE | — |
 | FUNGI-PARSE-003 | ref | — | — |
 | FUNGI-PARSE-004 | ref | — | — |
 | FUNGI-PARSE-005 | ref | — | — |
@@ -1253,6 +1255,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-PLUGIN-001 | ref | — | — |
+
+### POISON (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-POISON-001 | ref | — | — |
 
 ### POLICY (1)
 
@@ -1657,13 +1665,16 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-TERM-003 | inline | GATE_V3_UNBOUNDED_CYCLE | — |
 | GATE-TERM-004 | inline | GATE_V3_UNPROVED_CYCLE | — |
 
-### TEST (3)
+### TEST (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-TEST-001 | ref | — | — |
 | FUNGI-TEST-002 | ref | — | — |
 | FUNGI-TEST-003 | ref | — | — |
+| FUNGI-TEST-128 | ref | — | — |
+| FUNGI-TEST-777 | ref | — | — |
+| FUNGI-TEST-999 | ref | — | — |
 
 ### TIER (1)
 
