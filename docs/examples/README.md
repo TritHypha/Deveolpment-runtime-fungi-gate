@@ -203,6 +203,7 @@ All forms set `readableForm` on the AST node for IDE/formatter preservation.
 | `FUNGI-SYNTAX-007` | Top-level `mut` binding (mutable state must be flow-local) | ✅ Implemented |
 | `FUNGI-SYNTAX-008` | Top-level `unsafe let` (boundary data must be owned by a secure flow) | ✅ Implemented |
 | `FUNGI-SYNTAX-009` | Top-level `emit` (events may only be emitted inside flows) | ✅ Implemented |
+| `FUNGI-SYNTAX-012` | Malformed governed flow posture (use a canonical floor and optional `secure` before `flow`) | ✅ Implemented |
 | `FUNGI-SEC-014` | fn declares effects or authority (forbidden) | ✅ Implemented |
 
 ---

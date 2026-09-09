@@ -1310,6 +1310,14 @@ describe("Parser — governed secure flow posture", () => {
         "malformed-governed.fungi",
       );
       assert.equal(hasErrors(result), true, `must reject: ${source}`);
+      const postureDiagnostic = result.diagnostics.find(
+        (diagnostic) => diagnostic.name === "INVALID_GOVERNED_FLOW_POSTURE",
+      );
+      assert.equal(
+        postureDiagnostic?.code,
+        "FUNGI-SYNTAX-012",
+        `malformed governed posture must use its own diagnostic code: ${source}`,
+      );
       assert.deepEqual(
         result.flows.map((flow) => flow.name),
         ["survivor"],

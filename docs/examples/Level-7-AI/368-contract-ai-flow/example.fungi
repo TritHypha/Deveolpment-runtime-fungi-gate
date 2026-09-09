@@ -9,10 +9,10 @@
 event ClassificationStarted
 event ClassificationCompleted
 
-guarded flow classifyMessage(message: String) -> ClassificationResult
+secure flow classifyMessage(message: String) -> ClassificationResult
 
 contract {
-  // Result alias — contract.intent enables IGO to suppress FUNGI-HINT-COMPUTE-001
+  // Result alias — local inference is pinned to an approved compute target.
   types {
     type ClassificationResult = Result<Label, AiError>
   }
@@ -32,9 +32,13 @@ contract {
 
 }
 {
+  compute target best { prefer [npu, gpu, cpu] fallback cpu deny [remote.execution] }
+
+  let validatedMessage = validate.text(message)?
+
   emit ClassificationStarted
 
-  let label = ClassifierModel.classify(message)?
+  let label = ClassifierModel.classify(validatedMessage)?
 
   emit ClassificationCompleted
 

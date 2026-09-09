@@ -1,9 +1,9 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 995,
+  "total": 996,
   "counts": {
     "ref": 205,
-    "inline": 383,
+    "inline": 384,
     "phantom": 112,
     "live": 183,
     "referenced": 99,
@@ -5761,7 +5761,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 33,
-      "docs": 12
+      "docs": 14
     },
     {
       "code": "FUNGI-HW-001",
@@ -7691,14 +7691,13 @@
       "namespace": "FUNGI",
       "status": "inline",
       "names": [
-        "EXPECTED_FLOW_KEYWORD",
-        "INVALID_GOVERNED_FLOW_POSTURE"
+        "EXPECTED_FLOW_KEYWORD"
       ],
       "severities": [],
       "defs": 0,
-      "emits": 4,
+      "emits": 3,
       "tests": 8,
-      "docs": 2
+      "docs": 3
     },
     {
       "code": "FUNGI-PARSE-003",
@@ -10260,6 +10259,20 @@
       "docs": 4
     },
     {
+      "code": "FUNGI-SYNTAX-012",
+      "family": "SYNTAX",
+      "namespace": "FUNGI",
+      "status": "inline",
+      "names": [
+        "INVALID_GOVERNED_FLOW_POSTURE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
       "code": "FUNGI-SYNTAX-013",
       "family": "SYNTAX",
       "namespace": "FUNGI",
@@ -10659,7 +10672,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 30,
-      "docs": 10
+      "docs": 12
     },
     {
       "code": "FUNGI-TRACE-001",
@@ -11582,7 +11595,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 31,
-      "docs": 10
+      "docs": 12
     },
     {
       "code": "FUNGI-VALUESTATE-009",

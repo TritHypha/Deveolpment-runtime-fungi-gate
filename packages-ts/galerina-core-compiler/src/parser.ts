@@ -1142,7 +1142,7 @@ class Parser {
    */
   private rejectMalformedGovernedFlow(loc: SourceLocation, detail: string): AstNode {
     this.emit(
-      "FUNGI-PARSE-002",
+      "FUNGI-SYNTAX-012",
       "INVALID_GOVERNED_FLOW_POSTURE",
       `${detail} Governed secure syntax is: governed floor_1|floor_2|floor_3|floor_4 secure flow name(...).`,
       loc,

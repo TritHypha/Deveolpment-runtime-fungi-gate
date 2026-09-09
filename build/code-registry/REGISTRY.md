@@ -14,7 +14,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 183 | emitted with an exported constant |
-| inline | 383 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 384 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 112 | doc-only mention, not in source (drift — DOC-004) |
@@ -1118,7 +1118,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-PARSE-00 | ref | — | — |
 | FUNGI-PARSE-001 | inline | UNEXPECTED_TOKEN | — |
-| FUNGI-PARSE-002 | inline | EXPECTED_FLOW_KEYWORD / INVALID_GOVERNED_FLOW_POSTURE | — |
+| FUNGI-PARSE-002 | inline | EXPECTED_FLOW_KEYWORD | — |
 | FUNGI-PARSE-003 | ref | — | — |
 | FUNGI-PARSE-004 | ref | — | — |
 | FUNGI-PARSE-005 | ref | — | — |
@@ -1606,7 +1606,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SUBSTRATE-005 | live | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error |
 | FUNGI-SUBSTRATE-DEADZONE | inline | — | — |
 
-### SYNTAX (21)
+### SYNTAX (22)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1620,6 +1620,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SYNTAX-009 | live | EMIT_AT_TOP_LEVEL | error |
 | FUNGI-SYNTAX-010 | inline | ElseIfNotAllowed | — |
 | FUNGI-SYNTAX-011 | inline | UNKNOWN_GOVERNANCE_BLOCK | — |
+| FUNGI-SYNTAX-012 | inline | INVALID_GOVERNED_FLOW_POSTURE | — |
 | FUNGI-SYNTAX-013 | inline | INERT_GOVERNANCE_BLOCK | — |
 | FUNGI-SYNTAX-014 | inline | VERSION_HEADER_INVALID | error |
 | FUNGI-SYNTAX-015 | inline | VERSION_HEADER_MISSING | error |
