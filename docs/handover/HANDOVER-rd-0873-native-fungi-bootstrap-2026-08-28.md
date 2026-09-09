@@ -246,7 +246,7 @@ never commit machine-local paths.
 <KB_ROOT>/
   AGENTS.md
   research/
-  private/research/rd/RD-0873-native-fungi-bootstrap-and-bounded-parallel-assurance-PRIVATE.md
+private/research/rd/<private RD-0873 authority record>
 
 <AGENTS_ROOT>/
   skills/

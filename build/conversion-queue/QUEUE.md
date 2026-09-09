@@ -1,7 +1,7 @@
 # Conserved TypeScript/MJS Conversion Queue
 
 Source digest: `f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc`
-PROJECT corpus receipt: `sha256:7683c5ea888d508c4ef5b47728c0270615c5ec813729b07fcaa2936add40ecb2`
+PROJECT corpus receipt: `sha256:36fcc10fa4ab1949382ce2f27462f196dbfa4bc113ac2a7cd50139223088ecbf`
 
 | Classification | Count |
 |---|---:|

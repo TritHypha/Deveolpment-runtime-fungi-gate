@@ -95,7 +95,7 @@ run `--apply`; the bounded write set is not proved.
 - Create: `docs/superpowers/plans/2026-08-28-rd-0873-native-fungi-bootstrap.md`
 - Modify: `docs/TODO.md`
 - Modify: `docs/ROADMAP.md`
-- Create in KB main: `private/research/rd/RD-0873-native-fungi-bootstrap-and-bounded-parallel-assurance-PRIVATE.md`
+- Create in KB main: `<private RD-0873 authority record>`
 
 **Interfaces:**
 - Consumes: exact process-root HEAD, RD-0863, the completed scalar-oracle receipts and current `93/96` phase-close evidence.
