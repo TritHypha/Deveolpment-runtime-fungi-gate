@@ -3,7 +3,7 @@
   "subject": {
     "id": "rd0858-unit4-scalar-profile-1",
     "owner": "galerina",
-    "locator": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f"
+    "locator": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70"
   },
   "approval": {
     "status": "APPROVED",
@@ -15,7 +15,7 @@
     {
       "id": "compiler-build",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "npm",
@@ -43,7 +43,7 @@
     {
       "id": "scalar-artifact-codec",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -72,7 +72,7 @@
     {
       "id": "scalar-process-boundary",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -103,7 +103,7 @@
     {
       "id": "scalar-native-launcher",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -131,7 +131,7 @@
     {
       "id": "scalar-rust-launcher",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "cargo",
@@ -160,7 +160,7 @@
     {
       "id": "repository-graphs",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "node",
@@ -188,7 +188,7 @@
     {
       "id": "repository-phase-close",
       "owner": "galerina",
-      "build": "git://galerina/4ea6f2ac6ec60afec193d9877785df481cfd0b3f",
+      "build": "git://galerina/83c56f713ced077c294b70d8e51be1a69528ba70",
       "cwd": "repo://galerina",
       "argv": [
         "node",
