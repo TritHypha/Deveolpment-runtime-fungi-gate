@@ -1,4 +1,25 @@
-# RD-0873 Task 8 assurance — 2026-09-09 (evidence build point)
+# RD-0873 Task 8 assurance — current checkpoint 2026-09-09
+
+The assurance work is on committed `main` at the following storage point:
+
+- repository HEAD: `fd0d75cd9c44109f7771c2189c05f21ff732651b`
+- repository tree: `5d753d2c4d4f7e9c527743cdb5d7f61e1cb42177`
+- working tree: clean; no push was made
+
+The bounded checks completed at this point are green: developer-tool tests
+46/46, package-lock integration 1/1, gate self-tests 6/6, artifact-drift
+self-tests 38/38, Golden Pack 11/11 checked plus 11/11 execution vectors, and
+private-document leak 0. The silent-overwrite audit completed with exit 0 and
+reported three heuristic review candidates; it is advisory evidence, not a
+proof of a defect. The final exact-head PROJECT receipt and the governed
+phase-close rerun are still pending, so Task 8 remains **HOLD**. Task 9
+custody/integration and bulk `.fungi` authoring remain closed until those gates
+pass at one exact build point. No branch or worktree was created or changed.
+
+The remainder of this file is the retained evidence ledger from earlier
+build points. Its historical digests are not current-head evidence.
+
+# RD-0873 Task 8 assurance — 2026-09-09 (historical evidence build point)
 
 Task 8 was rerun after rebuilding the ignored local compiler output and
 refreshing the declared graph, registry, roadmap and conversion-queue outputs.

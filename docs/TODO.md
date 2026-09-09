@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Current post-checkpoint queue - 2026-09-09
+
+- [x] Keep the assurance work on the existing `main` checkout at committed
+  HEAD `fd0d75cd9c44109f7771c2189c05f21ff732651b`; the tree is
+  `5d753d2c4d4f7e9c527743cdb5d7f61e1cb42177`, and no push was made.
+- [x] Refresh the bounded governance and derived-output checks: developer-tool
+  tests **46/46**, package-lock integration **1/1**, gate self-tests **6/6**,
+  artifact-drift self-tests **38/38**, Golden Pack **11/11** plus **11/11**
+  execution vectors, and private-document leak **0**.
+- [!] The silent-overwrite audit exits **0** but reports three heuristic review
+  candidates; this remains advisory review evidence and is not a proof of a
+  defect.
+- [ ] Generate a fresh exact-head PROJECT corpus receipt, then rerun governed
+  phase-close against that same committed head. The earlier receipt is stale
+  after the assurance refresh and does not authorize integration.
+- [ ] Keep Task 8 **HOLD**, Task 9 custody/integration closed, and bulk
+  `.fungi` authoring closed until the exact-head and phase-close gates pass.
+  Do not create a branch or worktree, retire existing topology, or push.
+
 ### RD-0873 Task-8 assurance checkpoint - 2026-09-09
 
 This section supersedes older RD-0873 queue text below for the current `main`

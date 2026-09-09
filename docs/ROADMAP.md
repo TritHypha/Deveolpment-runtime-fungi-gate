@@ -3,6 +3,24 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Current assurance checkpoint - 2026-09-09
+
+The existing `main` checkout is clean at committed HEAD
+`fd0d75cd9c44109f7771c2189c05f21ff732651b` with tree
+`5d753d2c4d4f7e9c527743cdb5d7f61e1cb42177`. No branch or worktree was created,
+retired, or rewritten, and no push was made.
+
+Bounded checks are green for developer tools (46/46), package-lock integrity
+(1/1), gate self-tests (6/6), artifact-drift self-tests (38/38), Golden Pack
+(11/11 checked and 11/11 execution vectors), and private-document leak (0).
+The silent-overwrite audit exits 0 and reports three heuristic review
+candidates for later inspection; that output is advisory evidence.
+
+Task 8 remains **HOLD** pending a fresh exact-head PROJECT receipt and a
+governed phase-close rerun at that same head. Task 9 custody/integration and
+bulk TypeScript-to-Fungi authoring remain closed until those gates pass. Git is
+being used only to retain and audit the work; it is not a runtime dependency.
+
 ## RD-0873 Task-8 assurance checkpoint - 2026-09-09
 
 The bounded first native scalar slice remains present on `main`; the current
