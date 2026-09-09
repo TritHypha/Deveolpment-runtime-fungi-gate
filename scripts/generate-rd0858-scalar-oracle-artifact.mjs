@@ -1227,6 +1227,13 @@ export async function buildFreshHeadCompiler() {
       "core/requirement-validator-authority.js",
       "core/runtime/canonicalHash.js",
     ].map((locator) => pathToFileURL(join(runtimeRoot, ...locator.split("/"))).href).sort();
+    const fsParents = [
+      "scalar-runner.mjs",
+      "core/module-registry.js",
+    ].map((locator) => pathToFileURL(join(runtimeRoot, ...locator.split("/"))).href).sort();
+    const pathParents = [
+      "core/module-registry.js",
+    ].map((locator) => pathToFileURL(join(runtimeRoot, ...locator.split("/"))).href).sort();
     requireHeadMatchesWorktree(governedPaths);
     if (String(git(["rev-parse", "HEAD"])).trim() !== headBefore) refuse("HEAD_DRIFT");
 
@@ -1239,7 +1246,8 @@ export async function buildFreshHeadCompiler() {
         files: executableHashes,
         builtinParents: {
           "node:crypto": cryptoParents,
-          "node:fs": [runnerUrl],
+          "node:fs": fsParents,
+          "node:path": pathParents,
         },
         trace: tracePath,
       }), "utf8");
