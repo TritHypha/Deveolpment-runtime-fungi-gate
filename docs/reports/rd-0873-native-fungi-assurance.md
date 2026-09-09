@@ -2,8 +2,8 @@
 
 The assurance work is on committed `main` at the following storage point:
 
-- repository HEAD: `ff952f4773e0978b6d066f5763fdce696329fee9`
-- repository tree: `7afeadccf18bdcfc3a9482548d49244f2215f7dc`
+- repository HEAD: `159d40a7be3eb9048643be717b48f84540c4c709`
+- repository tree: `9ca0bf51effa78838a5bdb67066a0c7995d4a401`
 - working tree: clean; no push was made
 
 The bounded checks completed at this point are green: developer-tool tests

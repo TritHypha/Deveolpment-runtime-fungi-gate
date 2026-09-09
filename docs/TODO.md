@@ -7,8 +7,8 @@ counts or open items that a newer section explicitly supersedes.
 ### Current post-checkpoint queue - 2026-09-09
 
 - [x] Keep the assurance work on the existing `main` checkout at committed
-  HEAD `ff952f4773e0978b6d066f5763fdce696329fee9`; the tree is
-  `7afeadccf18bdcfc3a9482548d49244f2215f7dc`, and no push was made.
+  HEAD `159d40a7be3eb9048643be717b48f84540c4c709`; the tree is
+  `9ca0bf51effa78838a5bdb67066a0c7995d4a401`, and no push was made.
 - [x] Refresh the bounded governance and derived-output checks: developer-tool
   tests **46/46**, package-lock integration **1/1**, gate self-tests **6/6**,
   artifact-drift self-tests **38/38**, Golden Pack **11/11** plus **11/11**
