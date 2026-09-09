@@ -4,24 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Current post-checkpoint queue - 2026-09-09
+### Current post-RD-0873 bridge checkpoint - 2026-09-09
 
-- [x] Keep the assurance work on the existing `main` checkout at committed
-  HEAD `159d40a7be3eb9048643be717b48f84540c4c709`; the tree is
-  `9ca0bf51effa78838a5bdb67066a0c7995d4a401`, and no push was made.
-- [x] Refresh the bounded governance and derived-output checks: developer-tool
-  tests **46/46**, package-lock integration **1/1**, gate self-tests **6/6**,
-  artifact-drift self-tests **38/38**, Golden Pack **11/11** plus **11/11**
-  execution vectors, and private-document leak **0**.
-- [!] The silent-overwrite audit exits **0** but reports three heuristic review
-  candidates; this remains advisory review evidence and is not a proof of a
-  defect.
-- [ ] Generate a fresh exact-head PROJECT corpus receipt, then rerun governed
-  phase-close against that same committed head. The earlier receipt is stale
-  after the assurance refresh and does not authorize integration.
-- [ ] Keep Task 8 **HOLD**, Task 9 custody/integration closed, and bulk
-  `.fungi` authoring closed until the exact-head and phase-close gates pass.
-  Do not create a branch or worktree, retire existing topology, or push.
+- [x] Task 8 exact-head assurance passed: the PROJECT receipt covered **2,720 / 2,720**
+  files across four shards, and the governed phase-close returned **96/96** with
+  zero failures. The receipt, phase-close log and final custody review are local
+  non-authorizing evidence under `build/`.
+- [x] Task 9 custody/integration review passed on the existing `main` checkout.
+  Task 7 is an ancestor of `main`; no source changes were found after the
+  assurance run; the two protected dirty paths remain exactly preserved; and no
+  push, branch creation, worktree creation or cleanup was performed.
+- [x] Local-first translation readiness was executed without authoring `.fungi`:
+  the exact queue binds **1,588** paths (`921 BLOCKED`, `667 BOOTSTRAP_FLOOR`) and
+  seven scoped symbol rows. A separate readiness review verified the seven-row
+  semantic/effect ledger, rollback controls and proposed bounded first wave.
+- [!] Bulk authoring remains **HOLD**. The live RD-0858 implementation receipt,
+  independent SLIDE re-import/re-derivation and VOK admission receipt are not
+  present at the current build point. The seven-row wave is proposed only; no
+  consumer switch or TypeScript retirement is authorized.
+- [ ] Obtain the missing owner-bound RD-0858 -> SLIDE -> VOK admission chain, then
+  rerun the readiness capsule and its independent review before any `.fungi`
+  authoring. Preserve all existing branches, worktrees and holds; Git remains
+  storage/audit transport only.
 
 ### RD-0873 Task-8 assurance checkpoint - 2026-09-09
 

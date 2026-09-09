@@ -3,23 +3,23 @@
 Date: 2026-08-30
 Branch: `main`
 
-## Current assurance checkpoint - 2026-09-09
+## Current post-RD-0873 bridge checkpoint - 2026-09-09
 
-The existing `main` checkout is clean at committed HEAD
-`159d40a7be3eb9048643be717b48f84540c4c709` with tree
-`9ca0bf51effa78838a5bdb67066a0c7995d4a401`. No branch or worktree was created,
-retired, or rewritten, and no push was made.
+Task 8 exact-head assurance is closed by a fresh non-authorizing PROJECT receipt
+covering **2,720/2,720** files and a governed phase-close of **96/96** with zero
+failures. Task 9 custody/integration is independently rechecked on the existing
+`main` checkout: the Task 7 commit is contained, the protected dirty paths are
+unchanged, no source changed during assurance, and no push or topology change was
+performed. Git remains storage/audit transport only.
 
-Bounded checks are green for developer tools (46/46), package-lock integrity
-(1/1), gate self-tests (6/6), artifact-drift self-tests (38/38), Golden Pack
-(11/11 checked and 11/11 execution vectors), and private-document leak (0).
-The silent-overwrite audit exits 0 and reports three heuristic review
-candidates for later inspection; that output is advisory evidence.
-
-Task 8 remains **HOLD** pending a fresh exact-head PROJECT receipt and a
-governed phase-close rerun at that same head. Task 9 custody/integration and
-bulk TypeScript-to-Fungi authoring remain closed until those gates pass. Git is
-being used only to retain and audit the work; it is not a runtime dependency.
+The local-first translation readiness phase is also executed and separately
+reviewed without authoring `.fungi`. The exact queue contains **1,588** paths:
+`921 BLOCKED`, `667 BOOTSTRAP_FLOOR`, and seven scoped symbol rows. Its
+semantic/effect ledger, rollback controls and proposed seven-symbol bounded wave
+are non-authorizing. Bulk authoring remains **HOLD** until a current RD-0858
+implementation receipt, independent SLIDE re-import/re-derivation and VOK
+admission receipt are present at the same build point. No consumer switch or
+TypeScript retirement follows from the readiness review.
 
 ## RD-0873 Task-8 assurance checkpoint - 2026-09-09
 

@@ -1,5 +1,24 @@
 # RD-0873 integration checkpoint
 
+## Current closure and bridge status - 2026-09-09
+
+The existing `main` checkout now contains the independently rechecked RD-0873
+result. Task 8 exact-head assurance passed the complete PROJECT corpus (**2,720 /
+2,720**) and governed phase-close (**96/96**, zero failures). Task 9 custody review
+confirmed Task 7 ancestry, preserved the two protected dirty paths, found no source
+changes during assurance, and performed no push, branch/worktree creation or
+cleanup. The current receipts are local, non-authorizing evidence; Git is only
+storage/audit transport.
+
+The next local-first translation phase has been executed as a planning/readiness
+capsule, still without new `.fungi`. It binds the exact queue (**1,588** paths;
+`921 BLOCKED`, `667 BOOTSTRAP_FLOOR`) and a seven-symbol semantic/effect ledger,
+rollback plan and proposed bounded first wave. A separate read-only review passed
+the capsule's exact-head, queue-binding and authoring-closed checks. Bulk authoring
+is still **HOLD** because the current RD-0858 implementation receipt, independent
+SLIDE re-import/re-derivation and VOK admission receipt are missing. No consumer
+switch, TypeScript retirement, profile widening or cleanup is implied.
+
 ## Active continuation - 2026-09-08
 
 The current source-origin route is the independently reviewed AGENTS amendment
