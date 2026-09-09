@@ -87,6 +87,8 @@ const SCALAR_COMPILER_SOURCE_LOCATORS = Object.freeze([
   "value-state-checker.ts",
   "globals.d.ts",
   "node-crypto-shim.d.ts",
+  "node-fs-shim.d.ts",
+  "node-path-shim.d.ts",
 ]);
 
 const SCALAR_ENTRY_LOCATOR = "core/rd0858-scalar-compiler-entry.js";
