@@ -3325,7 +3325,6 @@
       "concerns": [
         "effects",
         "governance",
-        "naming",
         "gate-wiring",
         "diagnostics",
         "graph/index"
@@ -4345,8 +4344,7 @@
       "run-phase-close-legacy.mjs",
       "run-phase-close-special.mjs",
       "emit-doc-wat.mjs",
-      "export-slide-checked-decision-receipt.mjs",
-      "generate-rd0858-scalar-oracle-artifact.mjs"
+      "export-slide-checked-decision-receipt.mjs"
     ],
     "tier-floor": [
       "audit-claim-hygiene.mjs",
