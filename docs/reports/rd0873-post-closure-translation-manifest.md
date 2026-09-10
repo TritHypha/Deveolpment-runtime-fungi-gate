@@ -42,6 +42,10 @@ accepts non-String values and the current Fungi boundary cannot silently narrow
 that domain. A candidate remains blocked until the owner-bound ingress contract
 proves the exact admitted value domain and its hostile wrong-class vectors.
 
+A bounded exact probe of the protected conversion queue found zero occurrences
+of `isGovernanceMode`; there is no queue entry that reopens this symbol for
+authoring at the recorded build point.
+
 ## Exclusions
 
 - `packages-ts/galerina-core-compiler/src/self-hosted/retry-strategy.fungi` is
