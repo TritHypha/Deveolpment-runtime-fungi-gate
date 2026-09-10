@@ -1,0 +1,181 @@
+{
+  "schema": "galerina.rd0873-project-reopened-independent-adjudication.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "PASS_AT_AUDIT_HEAD_DOCS_ONLY_DELTA_NON_AUTHORIZING",
+  "verdict": "PASS",
+  "closureVerdict": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_READ_ONLY_RECEIPT_REVALIDATION",
+  "scope": {
+    "profile": "PROJECT",
+    "productId": "galerina",
+    "admittedPathRule": "tracked .fungi excluding docs/examples/** and build/**",
+    "fileCount": 2722,
+    "shardCount": 4,
+    "concurrency": 2,
+    "limits": {
+      "maxFiles": 1360,
+      "maxBytes": 67108864,
+      "maxOutputBytes": 67108864,
+      "timeoutMs": 3400000
+    }
+  },
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "184a8b025596c2c9d0a6e6428dda7f302425cdff",
+    "tree": "c9ffa045491949a20cec7aa6a4a461d89d4f45c9",
+    "workingTree": "DIRTY_PROTECTED_PATHS_PRESERVED",
+    "dirtyPaths": [
+      "build/conversion-queue/QUEUE.md",
+      "build/conversion-queue/queue.json",
+      "packages-ts/galerina-devtools-benchmarks/results/compute-mix-latest.json",
+      "packages-ts/galerina-devtools-wasmtime-oracle/package-lock.json"
+    ],
+    "routeAndCorpusFungiDiff": "NONE"
+  },
+  "postAuditDelta": {
+    "kind": "DOCS_ONLY_COMMIT",
+    "path": "docs/independent-audits/2026-09-11-rd0873-project-reopened-independent-adjudication.json",
+    "effect": "The audit receipt remains exact for its recorded audit HEAD; current-head consumers must treat it as stale until a separately authorized fresh receipt is produced.",
+    "corpusSourceChanged": false,
+    "queueMutation": false
+  },
+  "ownerDecision": {
+    "path": "docs/independent-audits/2026-09-10-rd0873-project-reopen-owner-decision.json",
+    "status": "OWNER_APPROVED_PROJECT_REOPEN",
+    "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION",
+    "authorizing": false,
+    "queueMutation": false,
+    "newFungiAuthoring": false
+  },
+  "evidence": {
+    "receiptPath": "build/fungi-corpus-check/evidence/rd0873-task8-project-reopened-184a8b02.json",
+    "receiptFileDigest": "sha256:9d4016b18480e09559cf7bddc54e033efce899f04558361a053cf94b20fb64b6",
+    "envelopeDigest": "sha256:84bd736fc34f968750ebd8be61386fd61d8f8d13baa74433329b0687465eaddf",
+    "requestDigest": "sha256:03f6a81934945feda53346b5a6346f90aa9d884f41c4716553ae8f44164a4ea2",
+    "compilerDigest": "sha256:1861fb7fc690983b7454ceac549fa5b06c8c9446cfd86148f5e9f37e88fdabca",
+    "fileSetDigest": "sha256:e5abf916ffb55172683045e0d856d04d27e080586a8cb5b89f544c6c4fa60405",
+    "aggregate": {
+      "schema": "galerina.fungi-corpus-aggregate.v2",
+      "status": "PASS",
+      "shardCount": 4,
+      "resultDigest": "sha256:9dd4de776d4b035d4b95a915f90262cbb4480eb3111ec20766c3df43aa61fbbb",
+      "holdReasons": [],
+      "receiptDigests": [
+        {
+          "shardId": "shard-1-of-4",
+          "digest": "sha256:4046329460e6ca6c1e963199358e9a9f411f5123f115ec99c790a3f6291c8ac5"
+        },
+        {
+          "shardId": "shard-2-of-4",
+          "digest": "sha256:e128f5bd91970b225ff2cbac17697c90f3f228f3b78a9a008cc9f99fe313f038"
+        },
+        {
+          "shardId": "shard-3-of-4",
+          "digest": "sha256:9b0327eb0c198400308e7a86ce5ece00828bca113d3e8015d12590bebb8356da"
+        },
+        {
+          "shardId": "shard-4-of-4",
+          "digest": "sha256:e50c5e458ecb3ccf3b18bf7005c361c4ef81afbed8c3a07fbb4b257cf8a95a8d"
+        }
+      ]
+    },
+    "shards": [
+      {
+        "shardId": "shard-1-of-4",
+        "startIndex": 0,
+        "endIndexExclusive": 681,
+        "completed": 681,
+        "unprocessed": 0,
+        "status": "PASS",
+        "termination": "COMPLETE"
+      },
+      {
+        "shardId": "shard-2-of-4",
+        "startIndex": 681,
+        "endIndexExclusive": 1362,
+        "completed": 681,
+        "unprocessed": 0,
+        "status": "PASS",
+        "termination": "COMPLETE"
+      },
+      {
+        "shardId": "shard-3-of-4",
+        "startIndex": 1362,
+        "endIndexExclusive": 2042,
+        "completed": 680,
+        "unprocessed": 0,
+        "status": "PASS",
+        "termination": "COMPLETE"
+      },
+      {
+        "shardId": "shard-4-of-4",
+        "startIndex": 2042,
+        "endIndexExclusive": 2722,
+        "completed": 680,
+        "unprocessed": 0,
+        "status": "PASS",
+        "termination": "COMPLETE"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "exact-head-tree-readback",
+      "result": "PASS",
+      "detail": "Receipt request identity matched main HEAD and committed tree at audit execution time."
+    },
+    {
+      "id": "request-validation",
+      "result": "PASS",
+      "detail": "Closed request schema, canonical ordering and identity validation accepted the receipt request."
+    },
+    {
+      "id": "shard-validation",
+      "result": "PASS",
+      "detail": "All four shard receipts validate against derived shards and canonical digests."
+    },
+    {
+      "id": "complete-coverage",
+      "result": "PASS",
+      "detail": "Ranges are contiguous and non-overlapping from index 0 through 2722 with no unprocessed files."
+    },
+    {
+      "id": "focused-receipt-tests",
+      "result": "PASS",
+      "tests": 87,
+      "passed": 87,
+      "failed": 0
+    },
+    {
+      "id": "conversion-queue-readonly-check",
+      "result": "HOLD_STALE_GENERATED_OUTPUT",
+      "detail": "The read-only queue check refused because queue.json is generated against older PROJECT evidence; --write was not run because queueMutation is false."
+    },
+    {
+      "id": "protected-dirty-paths",
+      "result": "PASS",
+      "detail": "Only the four recorded protected queue/benchmark/lock paths are dirty."
+    }
+  ],
+  "queueState": {
+    "decisionPath": "governance/conversion-queue-decisions.json",
+    "topLevelCandidateCount": 0,
+    "admission": "HOLD",
+    "reason": "PROJECT assurance does not itself admit symbol dossiers or authorize .fungi authoring."
+  },
+  "authorityAndCustodyGates": {
+    "queueMutation": false,
+    "newFungiAuthoring": false,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "remotePublication": "NOT_REQUESTED"
+  },
+  "decisionRationale": "The reopened PROJECT assurance is a complete four-shard PASS bound to its recorded audit HEAD. A later docs-only adjudication commit advanced HEAD without changing corpus source bytes; because exact-head consumers must fail closed, current-head queue admission, authoring and production closure remain HOLD pending a separately authorized fresh receipt."
+}
