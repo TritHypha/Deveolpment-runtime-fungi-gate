@@ -7,8 +7,9 @@
   `64c0792003840b9ea4380f3c6a2936c7d0beba3a`
 - Source snapshot used for the initial local regeneration:
   `6325a782c4ac396c5fcfb0e986d0811ed7205c25`
-- Current `main` head after the final graph-count documentation checkpoint:
-  `007cf269777d481673381de015a7a70252c65a2a`
+- The final graph-count documentation checkpoint was recorded at
+  `007cf269777d481673381de015a7a70252c65a2a`; this handover was finalized
+  afterward. Reopen the checkout and verify the current head before acting.
 - Protected pre-existing dirty paths: `build/conversion-queue/QUEUE.md` and
   `build/conversion-queue/queue.json`
 - No push, branch/worktree creation, cleanup, or bulk `.fungi` authoring was
