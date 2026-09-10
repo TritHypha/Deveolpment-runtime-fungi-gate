@@ -1,0 +1,51 @@
+{
+  "schema": "galerina.rd0873-string-route-grok-review.v1",
+  "status": "HOLD",
+  "authorizing": false,
+  "reviewKind": "MODEL_DIVERSE_ADVISORY_GROK",
+  "provider": "Grok",
+  "model": null,
+  "modelIdentity": "NOT_EXPOSED_BY_BROWSER",
+  "modelUiLabel": "Expert",
+  "reviewSessionId": "98345764-ae09-4dce-ae36-08c8f25487ea",
+  "responseId": "3e5362f1-5379-4047-b4c9-de2fd90e6051",
+  "targetAtPrompt": {
+    "galerinaEvidenceHead": "4af44925c",
+    "slideHead": "2e8e41b",
+    "lythHead": "a68eeb5",
+    "compilerCodeTip": "75f502f0494778c3b1cb932671b907ec16052235"
+  },
+  "currentGalerinaHeadAfterPrompt": "eb18c85df30012a72a8d8c8428b41ddb01127681",
+  "promptBytes": 4399,
+  "promptDigest": "sha256:f93a8674becdd107a9c1984cc54b56ebca512d69ecb087713a3bf8f74890f17a",
+  "replyBytes": 7245,
+  "replyDigest": "sha256:b86b16bbbc7648eccb368936d072e0063018d784455f7f8cdccbb97eb41a093a",
+  "headBinding": "STALE_AFTER_GALERINA_DOC_FOLLOWUP",
+  "adjudication": {
+    "outcome": "PARTIAL",
+    "upheld": [
+      "Local pass counts do not prove coercion, malformed-input, bound or VOK safety.",
+      "The owner-bound exact-head admission receipt is the first missing receipt.",
+      "Opening a consumer or bulk .fungi wave while authorityReleased is false is unsafe.",
+      "TypeScript shadows should remain retained and the completed 2,720-file assurance should remain closed."
+    ],
+    "notVerifiable": [
+      "Literal vectors, refusal vectors and VOK identities were not supplied to the reviewer.",
+      "Continuity between the compiler code tip and the Galerina evidence head was not proven.",
+      "This reply is advisory and cannot satisfy the independent completion audit."
+    ]
+  },
+  "recommendation": "HOLD",
+  "nextEvidence": [
+    "One exact-head-bound owner queue/admission receipt covering compiler, Galerina, SLIDE and Lyth identities.",
+    "Independent completion audit with discriminating negative vectors and VOK non-consumption evidence.",
+    "A continuity receipt produced after the final Galerina documentation head is fixed."
+  ],
+  "controls": {
+    "authoringAllowed": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED"
+  }
+}
