@@ -1,0 +1,48 @@
+{
+  "schema": "galerina.rd0873-string-route-continuity-observation.v1",
+  "status": "HOLD_PENDING_INDEPENDENT_REVIEW",
+  "authorizing": false,
+  "independent": false,
+  "observation": "fresh exact build-point readback after source-byte binding repair and valid-route substitution coverage",
+  "buildPoints": {
+    "galerina": {
+      "branch": "main",
+      "head": "a2259f36720412dca8310ec75bcd76cb4ce59d73",
+      "tree": "b8fb28813360d22442a1a18de12d3b958a72a7c4",
+      "routeImplementationCommit": "90990301c8a6d2b5c24980bb3fd16a0d3985fa13",
+      "routeCoverageCommit": "f4f7b06d853a10c9b4b5857f8be4b28312c1becc"
+    },
+    "slide": {
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db"
+    },
+    "lythWeaver": {
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd"
+    }
+  },
+  "freshChecks": {
+    "compilerTypecheck": "PASS",
+    "stringSnapshotAndGIRRoute": "9/9 PASS",
+    "fourTwinDifferential": "8/8 PASS",
+    "physicalSlideVokLane": "10/10 PASS",
+    "lythWeaverTestSuites": "14 suites / 633 checks PASS",
+    "lythWeaverTypecheck": "PASS",
+    "corpusAssuranceRerun": "NOT_RUN_BY_OWNER_DIRECTION"
+  },
+  "continuity": {
+    "galerinaToSlide": "OBSERVED_SAME_ROUTE_IDENTITIES",
+    "slideToLythWeaver": "OBSERVED_SAME_ROUTE_IDENTITIES",
+    "mutuallyBoundReceipt": "MISSING",
+    "ownerBoundQueueDecision": "MISSING",
+    "independentCompletionAudit": "MISSING"
+  },
+  "controls": {
+    "authorityReleased": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED"
+  }
+}
