@@ -1,0 +1,62 @@
+{
+  "schema": "galerina.rd0873-task9-custody-review.v2",
+  "status": "HOLD",
+  "authorizing": false,
+  "reviewScope": "post-merge custody and local-first translation readiness",
+  "target": {
+    "head": "de573580a0ba1ce4a6f85ed24f92b71060f233d8",
+    "tree": "4beb958330324a508ec4ed75ce23397ad459455e",
+    "codeMergeTip": "d3d866f4feda4ec013b6124dd777fc815bc249f2",
+    "originMain": "4828087b2cc8613efdda53c8e08857cd94f38175",
+    "localMainAhead": 9
+  },
+  "integration": {
+    "status": "LOCAL_MAIN_MERGED",
+    "mergedAdmissionCommits": [
+      "3b4dd667",
+      "52fc7bd8",
+      "17fed8b8",
+      "5491eda5",
+      "0fb759ba",
+      "d3d866f4"
+    ],
+    "remotePublication": "NOT_REQUESTED",
+    "cleanup": "NOT_PERFORMED"
+  },
+  "custody": {
+    "expectedDirtyPaths": [
+      "build/conversion-queue/QUEUE.md",
+      "build/conversion-queue/queue.json"
+    ],
+    "protectedWorktree": "rd0873-task6cr-hosted-evidence",
+    "protectedDirtyPaths": [
+      "docs/generated/HALLMARK-NON-AUTHORITIES.md",
+      "packages-ts/galerina-core-compiler/package.json"
+    ],
+    "newBranchesOrWorktrees": false
+  },
+  "task8": {
+    "historicalProjectReceipt": "NOT_CURRENT_HEAD",
+    "historicalFileCount": 2720,
+    "currentIdentityDiff": "PASS_DELTA_ONLY",
+    "currentFileCount": 2722,
+    "currentDeltaFiles": 2,
+    "fullCurrentHeadResult": "NOT_VERIFIABLE",
+    "fullScanRestarted": false
+  },
+  "readiness": {
+    "authoringAllowed": false,
+    "firstWave": "PROPOSED_NOT_AUTHORIZED",
+    "semanticEffectLedger": "PROPOSED_NON_AUTHORIZING",
+    "admissionRoute": "HOLD",
+    "rollback": "NO_CONSUMER_SWITCH_OR_SOURCE_RETIREMENT",
+    "independentReview": "ADVISORY_GROK_HOLD_RECORDED"
+  },
+  "blockers": [
+    "Current-head PROJECT compiler results for all 2722 files are not proven.",
+    "Owner-bound RD-0858 -> SLIDE -> VOK admission receipts are absent for the proposed wave.",
+    "An independent Task 9 completion PASS is absent; the Grok review is advisory and non-authorizing.",
+    "The approved pinned Git executable is unavailable locally; installed Git is not substituted."
+  ],
+  "decision": "PRESERVE_HOLD"
+}
