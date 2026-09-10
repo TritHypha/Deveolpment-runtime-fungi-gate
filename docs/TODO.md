@@ -25,6 +25,10 @@ counts or open items that a newer section explicitly supersedes.
   twin. Exact-head pilot evidence is in
   `docs/reports/rd0873-string-gir-route-pilot-2026-09-10.md`; the route remains
   non-authorizing and retains the TypeScript shadow.
+- [x] Smoke the same route over the other three direct literal-match twins in
+  the already recorded bounded wave. Keep composite `isTaskEffect` held for a
+  separate call-capable edition; do not treat this smoke as a new authoring
+  batch or a consumer switch.
 - [ ] Close the remaining authority boundary: obtain a fresh owner-bound queue
   decision, exact-subject SLIDE re-derivation and VOK admission, plus an
   independent review at one current build point. Keep this item on HOLD when

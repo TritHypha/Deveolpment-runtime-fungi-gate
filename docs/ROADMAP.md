@@ -21,7 +21,8 @@ The versioned String literal-match checked snapshot and canonical GIR route is
 implemented and exercised over the existing `isEnvironmentMode` Fungi twin at
 the current local `main` head. The exact pilot is recorded in
 `docs/reports/rd0873-string-gir-route-pilot-2026-09-10.md` and remains
-non-authorizing. The next gate is a fresh owner queue decision, exact-subject
+non-authorizing; the other three direct literal-match twins in the existing
+bounded wave also pass the same local smoke. The next gate is a fresh owner queue decision, exact-subject
 SLIDE re-derivation, VOK admission and independent review at one build point.
 Until that chain and an explicit owner release are green, consumer switching,
 TypeScript retirement, production admission and bulk `.fungi` authoring remain
