@@ -1,0 +1,71 @@
+{
+  "schema": "galerina.rd0873-string-route-owner-queue-decision.v1",
+  "status": "OWNER_APPROVED_REVIEW_PENDING",
+  "authorizing": false,
+  "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION",
+  "ownerInstruction": "approved, continue full auto",
+  "decision": "PROCEED_ONLY_THROUGH_INDEPENDENT_REVIEW_AND_ADMISSION_EVIDENCE",
+  "buildPoint": {
+    "galerinaBranch": "main",
+    "galerinaHead": "14e85307d75aa96ea8d46fd49497ac9b37b42256",
+    "galerinaTree": "2451ad058242530f79efd2cd332313d163ce3f4c",
+    "receiptCommit": "d76e339c1c3d01d5f4c717514f59800f0808395f"
+  },
+  "subject": {
+    "product": "galerina",
+    "package": "packages-ts/galerina-core-config",
+    "typescriptShadow": "packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode",
+    "typescriptSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+    "existingFungiTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+    "fungiSourceDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+    "shape": "String -> Bool; four sealed literals followed by a final wildcard",
+    "candidateState": "EXISTING_REVIEW_FIXTURE_ONLY"
+  },
+  "compiler": {
+    "packageId": "@galerina/core-compiler",
+    "version": "1.0.0-beta.2",
+    "routeImplementationCommit": "90990301c8a6d2b5c24980bb3fd16a0d3985fa13",
+    "routeCoverageCommit": "f4f7b06d853a10c9b4b5857f8be4b28312c1becc",
+    "routeSourceDigest": "sha256:a7cf10a6694058cc839df6b43f16b00c9a498beac88ff091afd1b1f1ea190d00",
+    "routeTestDigest": "sha256:7f122eaae2723d130fa264e9a1adb783a25d5f1765f4361292f51ba3fd078349",
+    "semanticProfile": "slide.semantic.executable-gir.string-match.v1",
+    "registrySet": "slide.registry.executable-gir.string-match.v1",
+    "registrySetDigest": "8a5d4b8f0f58c6c8ca1e9df6c0c0e2c1c8b7a77a1d9a41b0dd9b8b2b6a5c4d3e",
+    "memoryProfile": "slide.memory.safe-value.v1",
+    "workBound": 12
+  },
+  "queue": {
+    "sourceDigest": "f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc",
+    "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "projectCorpusReceiptDigest": "sha256:0da715212709364b67519f65eb76bce709de53a4039c6cf65b45337b6d625e95",
+    "scopedCandidateCount": 7,
+    "selectedOrdinal": 1,
+    "classification": "SCOPED_REVIEW_SUBJECT; queue remains non-authorizing"
+  },
+  "externalBuildPoints": {
+    "slide": { "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944", "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db" },
+    "lythWeaver": { "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa", "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd" }
+  },
+  "exclusions": [
+    "no new branch or worktree",
+    "no bulk .fungi authoring",
+    "no consumer switch",
+    "no TypeScript retirement",
+    "no production authority",
+    "no corpus assurance rerun",
+    "no mutation of protected queue outputs"
+  ],
+  "remainingGates": [
+    "independent completion audit by a reviewer who did not author the route",
+    "mutually bound exact-head continuity across Galerina, SLIDE and Lyth/VOK",
+    "explicit authority release before any consumer or authoring action"
+  ],
+  "controls": {
+    "authoringAllowed": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "authorityReleased": false,
+    "remotePublication": "NOT_REQUESTED"
+  }
+}
