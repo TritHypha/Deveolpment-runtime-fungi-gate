@@ -15,10 +15,10 @@ signed off. The interrupted benchmark worker was a crash during execution, not
 a failed assurance result. The accepted benchmark and corpus assurance remain
 closed, including the prior 2,720-file corpus result.
 
-The current Galerina checkout for this record is local `main` at
+The manifest capture point was local `main` at
 `1b3ba263975f0d8bffe3484fd7c79127cc7ba8c4` with tree
-`50642d358e1958abd6837afe97e01dd01c99f365`. The source file below is unchanged
-by this documentation work and has SHA-256
+`50642d358e1958abd6837afe97e01dd01c99f365`. Subsequent documentation-only
+commits do not alter the source file below, which has SHA-256
 `2d780121a92cfe02f84778447a14951820232fe5c569c1ca9b8ebae6b806a3b7`.
 
 ## Advisory candidate
