@@ -10,7 +10,10 @@ but noncanonical snapshot bytes and maps hostile parse-result accessors to the
 typed refusal algebra. The repaired route passes compiler 11/11, the four
 retained Fungi/TypeScript differentials 8/8, physical SLIDE/VOK 10/10, and
 Lyth's 14 suites / 633 checks with typecheck. The fresh independent audit is
-`docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`.
+`docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`;
+the current-head recheck at `f07803f706934897fe218ff7363e7a266df3be15` is
+recorded in
+`docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v3.json`.
 
 The owner's current `approved, continue full auto` direction and the exact
 Galerina/SLIDE/Lyth continuity readback are recorded as non-authorizing

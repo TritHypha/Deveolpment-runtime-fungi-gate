@@ -12,7 +12,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Rebuilt and reran the bounded route: compiler 11/11, four retained twin
   differentials 8/8, physical SLIDE/VOK 10/10, and Lyth 14 suites / 633 checks
   with typecheck pass. The fresh independent audit is
-  `docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`.
+  `docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`;
+  a current-head recheck at `f07803f706934897fe218ff7363e7a266df3be15`
+  is recorded in
+  `docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v3.json`.
 - [x] Recorded the owner's current `approved, continue full auto` direction
   and a current-head continuity readback. Both remain non-authorizing for
   production and retain all TypeScript shadows.
