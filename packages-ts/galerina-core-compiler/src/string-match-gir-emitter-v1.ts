@@ -42,7 +42,7 @@ function block(id: number, instructions: readonly Uint8Array[], end: Uint8Array)
 function constantRow(arm: StringMatchArmV2): Uint8Array { if (arm.literal === null) refuse("WILDCARD_CONSTANT"); const payload = new TextEncoder().encode(arm.literal); return array([uint(arm.id), uint(TYPE_IDS.String), uint(1), bytes(payload)]); }
 function functionValue(snapshot: StringMatchCheckedModuleSnapshotV2): Uint8Array {
   const literalArms = snapshot.arms.filter((arm) => arm.literal !== null);
-  const edges: Array<readonly [number, readonly number[]]> = literalArms.map((arm) => [arm.id, [arm.id]] as const);
+  const edges: Array<readonly [number, readonly number[]]> = literalArms.map((arm) => [arm.id, []] as const);
   const wildcard = snapshot.arms.at(-1);
   if (wildcard === undefined || wildcard.literal !== null) refuse("WILDCARD");
   edges.push([wildcard.id, []]);
