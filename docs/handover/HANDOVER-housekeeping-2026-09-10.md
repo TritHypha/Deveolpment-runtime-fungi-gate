@@ -3,9 +3,12 @@
 ## Stop state
 
 - Checkout: `main`
-- Housekeeping commit: `9125b2f60a0bd411ad7256f767416ad1268b8e07`
+- Housekeeping commits: `9125b2f60a0bd411ad7256f767416ad1268b8e07` and
+  `64c0792003840b9ea4380f3c6a2936c7d0beba3a`
 - Source snapshot used for the initial local regeneration:
   `6325a782c4ac396c5fcfb0e986d0811ed7205c25`
+- Current `main` head after the final generated-provenance stamp:
+  `64c0792003840b9ea4380f3c6a2936c7d0beba3a`
 - Protected pre-existing dirty paths: `build/conversion-queue/QUEUE.md` and
   `build/conversion-queue/queue.json`
 - No push, branch/worktree creation, cleanup, or bulk `.fungi` authoring was
