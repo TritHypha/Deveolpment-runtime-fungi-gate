@@ -4,28 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Current post-RD-0873 bridge checkpoint - 2026-09-09
+### Current post-RD-0873 bridge checkpoint - 2026-09-10
 
-- [x] Task 8 exact-head assurance passed: the PROJECT receipt covered **2,720 / 2,720**
-  files across four shards, and the governed phase-close returned **96/96** with
-  zero failures. The receipt, phase-close log and final custody review are local
-  non-authorizing evidence under `build/`.
-- [x] Task 9 custody/integration review passed on the existing `main` checkout.
-  Task 7 is an ancestor of `main`; no source changes were found after the
-  assurance run; the two protected dirty paths remain exactly preserved; and no
-  push, branch creation, worktree creation or cleanup was performed.
-- [x] Local-first translation readiness was executed without authoring `.fungi`:
-  the exact queue binds **1,588** paths (`921 BLOCKED`, `667 BOOTSTRAP_FLOOR`) and
-  seven scoped symbol rows. A separate readiness review verified the seven-row
-  semantic/effect ledger, rollback controls and proposed bounded first wave.
-- [!] Bulk authoring remains **HOLD**. The live RD-0858 implementation receipt,
-  independent SLIDE re-import/re-derivation and VOK admission receipt are not
-  present at the current build point. The seven-row wave is proposed only; no
-  consumer switch or TypeScript retirement is authorized.
-- [ ] Obtain the missing owner-bound RD-0858 -> SLIDE -> VOK admission chain, then
-  rerun the readiness capsule and its independent review before any `.fungi`
-  authoring. Preserve all existing branches, worktrees and holds; Git remains
-  storage/audit transport only.
+- [x] The approved six-commit detached-scalar admission branch was fast-forwarded
+  into local `main` at exact HEAD `d3d866f4feda4ec013b6124dd777fc815bc249f2`.
+  The source branch remains available; no push, cleanup, or worktree retirement
+  was performed. `origin/main` remains at the prior head because Git is storage
+  and audit transport only.
+- [x] The merged change is bounded to compiler artifact-reference/snapshot/GIR
+  contracts, the detached-scalar CLI, and focused tests. It adds only two
+  detached-scalar `.fungi` fixtures; no bulk `.fungi` authoring occurred.
+  Focused mutation and retained-boundary tests pass 4/4, compiler typecheck and
+  build pass, the full suite passes **6,864/6,864**, and the staged-growth gate
+  is clean for the committed paths.
+- [!] The earlier PROJECT **2,720/2,720** receipt and governed **96/96**
+  phase-close remain historical non-authorizing evidence bound to the previous
+  `main` head. They were not relabeled after this merge, and the redundant
+  replacement sweep was stopped at the owner's direction.
+- [!] Local-first translation readiness remains **HOLD**. The last capsule is
+  still non-authorizing and the owner-bound RD-0858 -> SLIDE -> VOK admission
+  chain plus an independent review at this build point are still absent. No
+  consumer switch, TypeScript retirement, or bulk `.fungi` authoring is open.
+- [ ] Obtain the missing owner-bound admission chain and refresh the bounded
+  readiness review when a new exact-head assurance is intentionally requested.
+  Preserve all existing branches, worktrees, protected dirty paths and holds.
 
 ### RD-0873 Task-8 assurance checkpoint - 2026-09-09
 
