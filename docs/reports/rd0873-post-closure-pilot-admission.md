@@ -102,3 +102,29 @@ branch/worktree. Once the three missing gates are green, open only one
 reversible pilot consumer path, re-run its differential vectors, and schedule
 small independently receipted batches. If any receipt is stale or divergent,
 return to this hold.
+
+## Repair and current-head continuation - 2026-09-10
+
+The two findings from the independent review were repaired in the String route:
+the decoder now requires byte-for-byte equality with canonical re-encoding, and
+parse-result root and nested data are captured through typed own-data checks so
+throwing accessors become `StringMatchSnapshotRefusal` codes. The implementation
+is at Galerina `main` commit `1e1022dc54f1e0e843f3012993e12753ae535448`, tree
+`964ab32b1e910a2f2b51e9e8ac719c20b518233c`.
+
+Fresh checks at that repaired route are compiler 11/11, four retained twin
+differentials 8/8, physical SLIDE/VOK 10/10, and Lyth 14 suites / 633 checks
+with typecheck. The independent receipt is
+`docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`.
+The current-head continuity and owner-direction receipts are
+`docs/independent-audits/2026-09-10-rd0873-string-route-continuity-observation-v3.json`
+and
+`docs/independent-audits/2026-09-10-rd0873-string-route-owner-queue-decision-v2.json`.
+
+The route remains non-authorizing. The conserved queue still reports 1,588
+entries with `CANDIDATE: 0`, `BLOCKED: 921` and `BOOTSTRAP_FLOOR: 667`; its
+protected files were not changed. No new `.fungi` file is therefore authored,
+and consumer switching, TypeScript retirement, production authority, corpus
+reruns and topology changes remain closed. See
+`docs/independent-audits/2026-09-10-rd0873-bulk-translation-disposition.json`
+for the machine-readable disposition.
