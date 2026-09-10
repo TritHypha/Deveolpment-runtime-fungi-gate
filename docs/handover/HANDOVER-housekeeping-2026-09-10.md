@@ -3,7 +3,8 @@
 ## Stop state
 
 - Checkout: `main`
-- Recorded head before the housekeeping commit:
+- Housekeeping commit: `9125b2f60a0bd411ad7256f767416ad1268b8e07`
+- Source snapshot used for the initial local regeneration:
   `6325a782c4ac396c5fcfb0e986d0811ed7205c25`
 - Protected pre-existing dirty paths: `build/conversion-queue/QUEUE.md` and
   `build/conversion-queue/queue.json`
@@ -19,7 +20,8 @@
 - Documentation indexes: 299 indexes covering 2,034 documents.
 - KB index: 2,226 documents.
 - Dev-tool index: 100 packages, 186 tools, 40 proofs, zero gaps.
-- External code graph: 71,071 nodes and 188,293 edges at the recorded head;
+- Final graph fixed point: 10/10 child generators passed. External code graph:
+  71,071 nodes and 188,293 edges at the committed head;
   the `emitRd0858SlideGIR` symbol probe resolves to one exported compiler
   entry point.
 

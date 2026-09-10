@@ -90,8 +90,10 @@ avoiding a silent downgrade or a flag-day loss of historical auditability.
 
 This checkpoint records repository assurance only; it grants no production
 authority. Local graph and index regeneration completed at committed `main`
-HEAD `6325a782c4ac396c5fcfb0e986d0811ed7205c25`, with the external graph exact
-at 71,071 nodes and 188,293 edges. Structural audits are green, while the
+source snapshot `6325a782c4ac396c5fcfb0e986d0811ed7205c25`, then committed at
+exact `main` head `9125b2f60a0bd411ad7256f767416ad1268b8e07`, with the external
+graph exact at 71,071 nodes and 188,293 edges. The final graph fixed point is
+10/10. Structural audits are green, while the
 report-only Fungi-quality lint has 2,086 findings and one gate self-test remains
 open for `audit-conversion-slice-close`.
 
