@@ -134,6 +134,42 @@ export {
   RD0858_SLIDE_RESULT_TYPE_ID,
   type Rd0858SlideGIREmissionResult,
 } from "./rd0858-slide-gir-adapter.js";
+export {
+  STRING_MATCH_ARM_MAX_COUNT,
+  STRING_MATCH_LITERAL_MAX_BYTES,
+  STRING_MATCH_SNAPSHOT_EDITION,
+  STRING_MATCH_SNAPSHOT_MAX_BYTES,
+  STRING_MATCH_SNAPSHOT_MAX_ITEMS,
+  STRING_MATCH_SNAPSHOT_SCHEMA,
+  StringMatchSnapshotRefusal,
+  computeStringMatchSnapshotRunIdentity,
+  decodeStringMatchCheckedModuleSnapshot,
+  digestStringMatchCheckedModuleSnapshot,
+  encodeStringMatchCheckedModuleSnapshot,
+  sealStringMatchCheckedModuleSnapshot,
+  validateStringMatchCheckedModuleSnapshot,
+  type StringMatchArmSpanV2,
+  type StringMatchArmV2,
+  type StringMatchCheckedModuleSnapshotV2,
+  type StringMatchCheckerIdentityV2,
+  type StringMatchCompilerIdentityV2,
+  type StringMatchLimitsV2,
+  type StringMatchSnapshotRunIdentityV2,
+  type StringMatchSnapshotSealInputV2,
+  type StringMatchSnapshotSealResultV2,
+} from "./string-match-checked-module-snapshot-v2.js";
+export {
+  STRING_MATCH_GIR_EDITION,
+  STRING_MATCH_GIR_SCHEMA,
+  STRING_MATCH_GIR_MATCH_TERMINATOR_ID,
+  STRING_MATCH_REGISTRY_SET_DIGEST,
+  STRING_MATCH_REGISTRY_SET_ID,
+  STRING_MATCH_SEMANTIC_PROFILE_ID,
+  STRING_MATCH_GIR_STRING_TYPE_ID,
+  StringMatchGIREmissionRefusal,
+  emitCanonicalStringMatchGIRFromSnapshot,
+  type StringMatchGIREmissionResultV1,
+} from "./string-match-gir-emitter-v1.js";
 
 export {
   loadProductRegistry,
