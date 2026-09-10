@@ -118,4 +118,25 @@ describe("versioned String-match checked snapshot and GIR", () => {
       },
     }), /PARSE_SOURCE_MISMATCH/u);
   });
+
+  it("refuses source substitution across distinct valid String routes", () => {
+    const parsed = L.parseProgram(source, "environment-mode.fungi", { requireVersionHeader: true });
+    const replacedSources = [
+      source.replace("isEnvironmentMode", "isOtherEnvironmentMode"),
+      source.replace("return true", "return false"),
+    ];
+    for (const replacedSource of replacedSources) {
+      assert.throws(() => L.sealStringMatchCheckedModuleSnapshot({
+        sourceBytes: new TextEncoder().encode(replacedSource),
+        sourceFile: "environment-mode.fungi",
+        parseResult: parsed,
+        checkerEvidence: evidence,
+        compilerIdentity: {
+          packageId: "@galerina/core-compiler",
+          version: "1.0.0-beta.2",
+          commitDigest: digest("f"),
+        },
+      }), /PARSE_SOURCE_MISMATCH/u);
+    }
+  });
 });
