@@ -59,6 +59,27 @@ same eight local checks and retained `authorityReleased: false`.
 The composite `isTaskEffect` flow remains outside this String literal-match
 edition and stays held under the original bounded-wave decision.
 
+## External integration seam
+
+The current SLIDE V2-C validator and detached scalar adapter cannot consume
+this pilot honestly. The pilot root is a 23-entry String-match edition with a
+dedicated semantic profile, registry identity, metadata fields, type id 5 for
+String, and terminator id 5. SLIDE currently admits a 21-entry V2-C root,
+requires its registered profile and registry set, uses type id 6 for String,
+accepts only terminators 1 through 4, and permits constant encodings 1 or 2.
+The pilot's byte-length constant encoding is therefore also outside that
+contract. Lyth's adapter and VOK KAT route additionally require the scalar
+manifest and `trit.scalar.v1` profile. Reusing that route would mislabel the
+String program, so no SLIDE/VOK receipt is claimed.
+
+There are two bounded implementation seams for a future owner-approved
+integration: retarget the emitter to the registered V2-C immutable-value
+operations (String type 6, UTF-8 encoding 1, opcode 23 equality and ordinary
+Boolean branches) and add a dedicated String adapter/profile; or register a
+new String-match V2-C edition end to end in SLIDE, Lyth and VOK. Until one
+seam is implemented and independently reviewed, the owner queue decision,
+consumer switch and bulk `.fungi` authoring remain closed.
+
 ## Fresh differential check
 
 On 2026-09-10 the four package-owned conversion tests for the same bounded
