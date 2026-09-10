@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "authorityReleased": false,
+  "startedAt": "2026-09-10T14:38:18.750Z",
+  "completedAt": "2026-09-10T14:42:31.185Z",
+  "stages": [
+    {
+      "id": "measure",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "--expose-gc",
+        "src/runner.mjs"
+      ],
+      "outputs": [
+        "results/latest.json",
+        "results/benchmark-measurement-latest.json"
+      ]
+    },
+    {
+      "id": "noise",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "src/noise-gate.mjs"
+      ],
+      "outputs": [
+        "results/noise-gate-latest.json"
+      ]
+    },
+    {
+      "id": "audit-vade",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "src/audit-slide-vade.mjs"
+      ],
+      "outputs": []
+    },
+    {
+      "id": "audit-truth",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "--expose-gc",
+        "src/audit.mjs"
+      ],
+      "outputs": []
+    },
+    {
+      "id": "render",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "src/build-chart.mjs"
+      ],
+      "outputs": [
+        "report.md",
+        "results/benchmark-report-latest.md",
+        "results/benchmark-report-latest.json",
+        "results/benchmark-chart-latest.html",
+        "results/benchmark-chart-standalone.html",
+        "results/benchmark-slide-zero-latest.html",
+        "results/benchmark-slide-zero-table-latest.html",
+        "results/benchmark-run-metadata-latest.json"
+      ]
+    },
+    {
+      "id": "wasm-history",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "src/build-slide-wasm-history.mjs"
+      ],
+      "outputs": [
+        "results/benchmark-slide-vs-wasm-history-latest.html"
+      ]
+    },
+    {
+      "id": "history",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "src/history.mjs"
+      ],
+      "outputs": [
+        "results/history/diff-latest.json"
+      ]
+    },
+    {
+      "id": "guard",
+      "status": "PASS",
+      "command": "node",
+      "args": [
+        "src/bench-guard.mjs"
+      ],
+      "outputs": []
+    }
+  ]
+}
