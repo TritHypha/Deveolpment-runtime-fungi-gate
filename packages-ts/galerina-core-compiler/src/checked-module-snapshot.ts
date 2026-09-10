@@ -82,13 +82,17 @@ export interface SnapshotSourceSpanV1 {
   readonly column: number;
 }
 
-export interface SnapshotDiagnosticV1 {
+interface SnapshotDiagnosticBaseV1 {
   readonly id: number;
   readonly code: string;
   readonly severity: DiagnosticSeverity;
   readonly message: string;
-  readonly spanId: number | null;
 }
+
+export type SnapshotDiagnosticV1 = SnapshotDiagnosticBaseV1 & (
+  | { readonly spanId: number }
+  | { readonly spanId: null }
+);
 
 export interface SnapshotLimitsV1 {
   readonly maxFunctions: 3;
@@ -98,7 +102,7 @@ export interface SnapshotLimitsV1 {
   readonly maxWork: 96;
 }
 
-export interface SnapshotTraceFactV1 {
+interface SnapshotTraceFactBaseV1 {
   readonly id: number;
   readonly ordinal: number;
   readonly operation: FactOperation;
@@ -106,9 +110,13 @@ export interface SnapshotTraceFactV1 {
   readonly checkerId: number;
   readonly spanId: number;
   readonly operandDeclarationIds: readonly number[];
-  readonly constantId: number | null;
   readonly targetFactIds: readonly number[];
 }
+
+export type SnapshotTraceFactV1 = SnapshotTraceFactBaseV1 & (
+  | { readonly constantId: number }
+  | { readonly constantId: null }
+);
 
 export interface CheckedModuleSnapshotV1 {
   readonly schema: typeof CHECKED_MODULE_SNAPSHOT_SCHEMA;

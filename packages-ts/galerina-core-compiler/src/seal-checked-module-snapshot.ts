@@ -11,6 +11,7 @@ import {
   type CheckedModuleSnapshotV1,
   type SnapshotCheckerIdentityV1,
   type SnapshotCompilerIdentityV1,
+  type SnapshotTraceFactV1,
 } from "./checked-module-snapshot.js";
 import type { AstNode, FlowMeta, ParseResult } from "./parser.js";
 
@@ -194,10 +195,10 @@ export function sealCheckedModuleSnapshot(input: CheckedModuleSnapshotSealInput)
   };
   const constants: Array<{ id: number; typeId: number; value: number | boolean }> = [];
   const constantIds = new Map<string, number>();
-  const facts: Array<{ id: number; ordinal: number; operation: "parameter" | "constant" | "binary" | "branch" | "call" | "return"; declarationId: number; checkerId: number; spanId: number; operandDeclarationIds: number[]; constantId: number | null; targetFactIds: number[] }> = [];
+  const facts: Array<{ id: number; ordinal: number; operation: "parameter" | "constant" | "binary" | "branch" | "call" | "return"; declarationId: number; checkerId: number; spanId: number; operandDeclarationIds: number[]; constantId: SnapshotTraceFactV1["constantId"]; targetFactIds: number[] }> = [];
   const pendingBranches: Array<{ readonly factId: number; readonly thenStart: number; readonly thenEnd: number }> = [];
   const checkerId = stages.find((stage) => stage.name === "types")?.id ?? 3;
-  const addFact = (operation: typeof facts[number]["operation"], node: AstNode, operands: number[] = [], constantId: number | null = null, declarationId = 1): number => {
+  const addFact = (operation: typeof facts[number]["operation"], node: AstNode, operands: number[] = [], constantId: SnapshotTraceFactV1["constantId"] = null, declarationId = 1): number => {
     const id = facts.length + 1;
     facts.push({ id, ordinal: id - 1, operation, declarationId, checkerId, spanId: spanFor(node), operandDeclarationIds: [...operands], constantId, targetFactIds: [] });
     return id;
@@ -242,7 +243,7 @@ export function sealCheckedModuleSnapshot(input: CheckedModuleSnapshotSealInput)
       const expression = nodeChildren(node)[0];
       if (expression === undefined) refuse("RETURN_SHAPE");
       let operands: number[] = [];
-      let constantId: number | null = null;
+      let constantId: SnapshotTraceFactV1["constantId"] = null;
       if (expression.kind === "numberLiteral" || expression.kind === "boolLiteral") {
         constantId = addConstant(expression);
         addFact("constant", expression, [], constantId);
