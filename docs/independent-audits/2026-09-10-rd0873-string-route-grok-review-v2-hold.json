@@ -1,0 +1,53 @@
+{
+  "schema": "galerina.rd0873-grok-review.v2",
+  "status": "HOLD",
+  "authorizing": false,
+  "reviewKind": "MODEL_DIVERSE_ADVISORY_REVIEW",
+  "provider": "Grok",
+  "model": "grok-4.6-build",
+  "reviewSessionId": "98345764-ae09-4dce-ae36-08c8f25487ea",
+  "responseId": "01f6ad48-94e4-48df-9fee-a195f03996f3",
+  "promptDigest": "sha256:f1a8b2b321d58685020a634dcfd4da207fcd331641d421dfd89ef796c4f570ad",
+  "responseDigest": "sha256:142b415a30024181980944172d82d3375f4d5348c0312ae481947e60f30e739f",
+  "conversationUrl": "https://grok.com/c/98345764-ae09-4dce-ae36-08c8f25487ea?rid=01f6ad48-94e4-48df-9fee-a195f03996f3",
+  "target": {
+    "galerinaParentHead": "14e85307d75aa96ea8d46fd49497ac9b37b42256",
+    "galerinaParentTree": "2451ad058242530f79efd2cd332313d163ce3f4c",
+    "galerinaReceiptHead": "4c828c9b2a57d220c0b1b2ff891e0bf15e7e88d3",
+    "galerinaReceiptTree": "909de715b217954546712ec74ae44d01904a2a48",
+    "slideHead": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+    "slideTree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db",
+    "lythWeaverHead": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+    "lythWeaverTree": "abd63f1f70e24a97591d084e607da17c9f0c35cd"
+  },
+  "reviewScope": [
+    "source-byte substitution and PARSE_SOURCE_MISMATCH coverage",
+    "malformed and wrong-class refusal",
+    "literal arm order and conservative work bound",
+    "authorityReleased and cross-boundary non-consumption",
+    "independent completion and owner admission sufficiency"
+  ],
+  "findings": {
+    "localChecks": "CONFIRMED as supplied at the parent evidence point; not independently rerun by Grok",
+    "substitutionAndRefusalClosure": "NOT_VERIFIABLE from the packet as an exact-head audited bind",
+    "semanticNegativeMatrix": "NOT_VERIFIABLE; one controlled-red vector remains required",
+    "authorityBleed": "NOT_VERIFIABLE beyond the supplied false flags",
+    "ownerQueueDecision": "CONFIRMED as review-pending and non-authorizing",
+    "independentCompletionAudit": "CONFIRMED MISSING",
+    "singleHeadAdmission": "NOT_VERIFIABLE; parent and receipt heads are distinct"
+  },
+  "controlledRedVector": "At one exact head, mismatch the checked-snapshot route preimage against the TS subject and label the Fungi twin as that subject; require PARSE_SOURCE_MISMATCH, authorityReleased=false, one arm-order mismatch and one non-String/empty input refusal.",
+  "recommendation": "HOLD",
+  "nextEvidence": [
+    "Independent completion audit by a reviewer who did not author the route, bound to one Galerina commit and tree.",
+    "Single-head admission receipt binding the TypeScript subject digest, Fungi twin digest, compiler route, SLIDE, Lyth/VOK, refusal vectors and authority flags.",
+    "Keep the closed 2,720-file corpus assurance closed and retain TypeScript shadows."
+  ],
+  "controls": {
+    "authorityReleased": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "remotePublication": "NOT_REQUESTED"
+  }
+}
