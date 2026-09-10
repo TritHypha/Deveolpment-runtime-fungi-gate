@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Owner-signed RD-0873/RD-0858 transition checkpoint - 2026-09-10
+
+- [x] Owner confirms that RD-0873 Tasks 7, 8 and 9 are complete and signed off.
+  The benchmark worker interruption was a crash during execution, not a failed
+  task result. The accepted benchmark and corpus assurance remain closed; do
+  not rerun the 2,720-file corpus or reopen those tasks because of that crash.
+- [x] Owner confirms RD-0858 is complete and has been pushed to `main`. The
+  older readiness-HOLD wording below is retained as history and is superseded
+  for navigation by this checkpoint.
+- [ ] Reconcile the remaining TODO and roadmap navigation with this signed-off
+  state, keeping historical receipts and protected queue paths unchanged.
+- [ ] Prepare the bounded TypeScript-to-Fungi rollout packet: source-owner
+  manifest, first-pilot scope, semantic/effect ledger, differential route and
+  the exact SLIDE/VOK/Lyth evidence boundary. Keep the TypeScript shadow and
+  exclude consumer switching, retirement, production admission and bulk
+  authoring until the pilot gate is green.
+- [ ] Admit one pilot only after a fresh owner-bound queue decision and exact
+  current-head receipts cover source, checked snapshot, canonical GIR, SLIDE
+  re-derivation, VOK admission and independent review. A missing or divergent
+  receipt remains a stop.
+
 ### Graph and index housekeeping checkpoint - 2026-09-10
 
 - [x] Refreshed the local graph/index outputs, then committed the bounded

@@ -3,6 +3,23 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Owner-signed RD-0873/RD-0858 transition checkpoint - 2026-09-10
+
+The owner has confirmed that RD-0873 Tasks 7, 8 and 9 are complete and signed
+off, and that RD-0858 is complete and pushed to `main`. The benchmark worker
+interruption was a crash during execution, not a failed task result. The
+accepted benchmark and corpus assurance are therefore closed; the 2,720-file
+corpus is not reopened solely because of that interruption.
+
+The next work is the post-closure TypeScript-to-Fungi rollout. First reconcile
+the navigation records, then prepare one bounded pilot packet with an exact
+source-owner manifest, semantic/effect ledger, retained TypeScript differential
+shadow, and the SLIDE, VOK and Lyth custody boundaries. The pilot must bind a
+fresh owner decision and current-head receipts for checked snapshot, canonical
+GIR, independent SLIDE re-derivation, VOK admission and independent review.
+Until that packet is green, consumer switching, TypeScript retirement,
+production admission and bulk `.fungi` authoring remain closed.
+
 ## Graph and index housekeeping checkpoint - 2026-09-10
 
 The local graph and indexes were regenerated from the source snapshot
