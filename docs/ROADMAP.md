@@ -6,10 +6,12 @@ Branch: `main`
 ## Current post-RD-0873 bridge checkpoint - 2026-09-10
 
 The approved six-commit detached-scalar admission branch is now fast-forwarded
-into local `main` at exact HEAD
-`d3d866f4feda4ec013b6124dd777fc815bc249f2`. The source branch remains available;
-no push, cleanup, or worktree retirement was performed. `origin/main` remains at
-the prior head because Git is storage and audit transport only.
+into local `main` at code tip
+`d3d866f4feda4ec013b6124dd777fc815bc249f2`. The current `main` checkpoint is
+`037919cd0e2797e67e1aa55e58040082bfb7c353` after a docs-only follow-up. The
+source branch remains available; no push, cleanup, or worktree retirement was
+performed. `origin/main` remains at the prior head because Git is storage and
+audit transport only.
 
 The merged change is bounded to compiler artifact-reference, checked-snapshot
 and canonical-GIR contracts, the detached-scalar CLI, and focused tests. It adds
