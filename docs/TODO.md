@@ -19,8 +19,8 @@ counts or open items that a newer section explicitly supersedes.
   `9125b2f60a0bd411ad7256f767416ad1268b8e07`: 71,071
   nodes and 188,293 edges. The `emitRd0858SlideGIR` symbol probe resolves to
   one exported entry point in the compiler adapter.
-- [x] Structural and tooling audits pass: graph-all is 10/10, graph integrity (11,344 nodes,
-  11,238 edges, zero violations), tooling contract (100 packages / 204 tools,
+- [x] Structural and tooling audits pass: graph-all is 10/10, graph integrity
+  (11,597 nodes, 11,494 edges, zero violations), tooling contract (100 packages / 204 tools,
   zero violations), canonical test counts (5/5), doc drift (zero), path leak,
   flat-package topology, and 92/93 gate self-tests.
 - [!] The convention lint remains report-only with 2,086 pre-existing Fungi

@@ -32,6 +32,8 @@
 
 - Structural graph, tooling contract, canonical counts, doc drift, path leak,
   and flat-package topology audits passed.
+- Final direct graph audit: 11,597 nodes and 11,494 edges, with zero dangling
+  edge, duplicate-id, or dependency-cycle violations.
 - Gate self-tests: 92/93 proved; `audit-conversion-slice-close` remains open.
 - Convention lint remains report-only with 2,086 pre-existing Fungi-quality
   findings.
