@@ -39,7 +39,7 @@ const map = (entries: readonly (readonly [Uint8Array, Uint8Array])[]): Uint8Arra
 function instruction(resultId: number, opcodeId: number, typeId: number, operands: readonly number[], immediate: number): Uint8Array { return array([uint(resultId), uint(opcodeId), uint(typeId), array(operands.map(uint)), integer(immediate)]); }
 function terminator(id: number, operands: readonly number[], edges: readonly (readonly [number, readonly number[]])[]): Uint8Array { return array([uint(id), array(operands.map(uint)), array(edges.map(([target, args]) => array([uint(target), array(args.map(uint))]))) ]); }
 function block(id: number, instructions: readonly Uint8Array[], end: Uint8Array): Uint8Array { return array([uint(id), array([]), array(instructions), end]); }
-function constantRow(arm: StringMatchArmV2): Uint8Array { if (arm.literal === null) refuse("WILDCARD_CONSTANT"); const payload = new TextEncoder().encode(arm.literal); return array([uint(arm.id), uint(TYPE_IDS.String), uint(payload.byteLength), bytes(payload)]); }
+function constantRow(arm: StringMatchArmV2): Uint8Array { if (arm.literal === null) refuse("WILDCARD_CONSTANT"); const payload = new TextEncoder().encode(arm.literal); return array([uint(arm.id), uint(TYPE_IDS.String), uint(1), bytes(payload)]); }
 function functionValue(snapshot: StringMatchCheckedModuleSnapshotV2): Uint8Array {
   const literalArms = snapshot.arms.filter((arm) => arm.literal !== null);
   const edges: Array<readonly [number, readonly number[]]> = literalArms.map((arm) => [arm.id, [arm.id]] as const);
@@ -60,7 +60,7 @@ function emitGIR(snapshot: StringMatchCheckedModuleSnapshotV2): Uint8Array {
     uint(2), uint(1), text(STRING_MATCH_SEMANTIC_PROFILE_ID), text("slide.digest.sha256.v1"),
     array([text(STRING_MATCH_REGISTRY_SET_ID), text(STRING_MATCH_REGISTRY_SET_DIGEST)]), text("slide.memory.safe-value.v1"),
     array([1, 2, 3, 4, 5].map(uint)), array(BASE_LIMITS.map(uint)), array([uint(1)]), array(Array.from({ length: 13 }, (_, index) => uint(index + 1))),
-    array([]), array(functions), array(failures.map((failure) => array(failure.map(uint)))), array([]), array([]), array([]), array([]), array([]),
+    array(snapshot.arms.filter((arm) => arm.literal !== null).map((arm) => uint(arm.id))), array(functions), array(failures.map((failure) => array(failure.map(uint)))), array([]), array([]), array([]), array([]), array([]),
     array(snapshot.arms.filter((arm) => arm.literal !== null).map(constantRow)), array([]), array([]), text(STRING_MATCH_GIR_SCHEMA), text(STRING_MATCH_GIR_EDITION),
   ];
   return map(values.map((value, key) => [uint(key), value] as const));

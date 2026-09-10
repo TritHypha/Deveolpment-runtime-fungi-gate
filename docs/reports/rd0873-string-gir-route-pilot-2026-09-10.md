@@ -21,8 +21,8 @@ production authority.
 | Local compiler binding | `sha256:f2fc75646c27bbcb0072712111458b36799469ed2eb16a1ceb18422ea85d60a6` |
 | Snapshot bytes | 1,831 |
 | Snapshot digest | `sha256:67d6cc03d1e2357286eae33db2a90183431ab0329727f0d179e6d5c89f3e6852` |
-| GIR bytes | 542 |
-| GIR digest | `sha256:dd6fb0ac25df8f54425dcb25aef85a7b049584c13f81584d25ba14d517b4592d` |
+| GIR bytes | 546 |
+| GIR digest | `sha256:baf5af6f31e0e80e6999dc34feb5857f835abcea5edb3bedb6aac27b38f2facb` |
 | Semantic profile | `slide.semantic.executable-gir.string-match.v1` |
 | Registry set | `slide.registry.executable-gir.string-match.v1` |
 | Registry-set digest | `8a5d4b8f0f58c6c8ca1e9df6c0c0e2c1c8b7a77a1d9a41b0dd9b8b2b6a5c4d3e` |
@@ -51,10 +51,10 @@ same eight local checks and retained `authorityReleased: false`.
 
 | Fungi source | Source digest | Snapshot digest | GIR digest | Arms |
 | --- | --- | --- | --- | ---: |
-| `packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi` | `sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba` | `sha256:67d6cc03d1e2357286eae33db2a90183431ab0329727f0d179e6d5c89f3e6852` | `sha256:dd6fb0ac25df8f54425dcb25aef85a7b049584c13f81584d25ba14d517b4592d` | 5 |
-| `packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi` | `sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be` | `sha256:1127c81e6e9abc9accf343f30acb8f1ef42a17867788dc54b9c97a82d9d6283e` | `sha256:6ce6c2bf38093f122d0500a7715b5dfd4902394c557c27d875cca4c1b8999a92` | 7 |
-| `packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi` | `sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e` | `sha256:948aae96596363a80ebe23d7f71fbaaca4a8f9241fa1b697ec5e8f336ace4c08` | `sha256:2c88fc62c0e919b2138204fe672597e97d2a1d9b092ff38997bb95bb6f0f141b` | 5 |
-| `packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi` | `sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8` | `sha256:249471f6ec3ba96388d89a41673c72bc3386456d091fdd0f3bf6680c13c4254d` | `sha256:5a6c8511ec03c2d9740684db03a34ae0b6474f8af583bb75fce003153feee6e2` | 2 |
+| `packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi` | `sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba` | `sha256:67d6cc03d1e2357286eae33db2a90183431ab0329727f0d179e6d5c89f3e6852` | `sha256:baf5af6f31e0e80e6999dc34feb5857f835abcea5edb3bedb6aac27b38f2facb` | 5 |
+| `packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi` | `sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be` | `sha256:1127c81e6e9abc9accf343f30acb8f1ef42a17867788dc54b9c97a82d9d6283e` | `sha256:4fa4b90112fe3e1b0a7324224d3db6f94ac94f90730f59228d488207b8977584` | 7 |
+| `packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi` | `sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e` | `sha256:948aae96596363a80ebe23d7f71fbaaca4a8f9241fa1b697ec5e8f336ace4c08` | `sha256:2189f08c11f5114f29abf255558f91dd8b3a525eb5b0876ba20a01a21a7fd4fd` | 5 |
+| `packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi` | `sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8` | `sha256:249471f6ec3ba96388d89a41673c72bc3386456d091fdd0f3bf6680c13c4254d` | `sha256:bcc162ae403b8d3c6dfb6f844c62a6c1f69b9a89c724f01750f11f2a7f667383` | 2 |
 
 The composite `isTaskEffect` flow remains outside this String literal-match
 edition and stays held under the original bounded-wave decision.
@@ -66,11 +66,10 @@ this pilot honestly. The pilot root is a 23-entry String-match edition with a
 dedicated semantic profile, registry identity, metadata fields, type id 5 for
 String, and terminator id 5. SLIDE currently admits a 21-entry V2-C root,
 requires its registered profile and registry set, uses type id 6 for String,
-accepts only terminators 1 through 4, and permits constant encodings 1 or 2.
-The pilot's byte-length constant encoding is therefore also outside that
-contract. Lyth's adapter and VOK KAT route additionally require the scalar
-manifest and `trit.scalar.v1` profile. Reusing that route would mislabel the
-String program, so no SLIDE/VOK receipt is claimed.
+and accepts only terminators 1 through 4. Lyth's adapter and VOK KAT route
+additionally require the scalar manifest and `trit.scalar.v1` profile. Reusing
+that route would mislabel the String program, so no SLIDE/VOK receipt is
+claimed.
 
 There are two bounded implementation seams for a future owner-approved
 integration: retarget the emitter to the registered V2-C immutable-value
