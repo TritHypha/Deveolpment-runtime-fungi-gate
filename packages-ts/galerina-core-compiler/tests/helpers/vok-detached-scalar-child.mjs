@@ -61,9 +61,11 @@ function stageReceipt(stage, owner, runIdentity, authorityEpoch, subjectDigest) 
 async function main() {
   const request = ownRecord(
     JSON.parse(readFileSync(0, "utf8")),
-    ["schema", "slideRoot", "slideModuleRoot", "physicalReference", "manifest", "lythEvidence", "authorityEpoch"],
+    ["schema", "slideRoot", "slideModuleRoot", "physicalReference", "manifest", "lythEvidence", "authorityEpoch", "currentAuthorityEpoch"],
   );
-  if (request.schema !== REQUEST_SCHEMA || typeof request.slideRoot !== "string" || typeof request.slideModuleRoot !== "string" || !Number.isSafeInteger(request.authorityEpoch) || request.authorityEpoch < 1) {
+  if (request.schema !== REQUEST_SCHEMA || typeof request.slideRoot !== "string" || typeof request.slideModuleRoot !== "string"
+    || !Number.isSafeInteger(request.authorityEpoch) || request.authorityEpoch < 1
+    || !Number.isSafeInteger(request.currentAuthorityEpoch) || request.currentAuthorityEpoch < 1) {
     throw new Error("VOK request refused");
   }
   const {
@@ -111,7 +113,7 @@ async function main() {
   };
   const bound = bindDetachedScalarHostAuthority(Object.freeze({
     authorityEpoch: request.authorityEpoch,
-    currentAuthorityEpoch: request.authorityEpoch,
+    currentAuthorityEpoch: request.currentAuthorityEpoch,
     acceptedTargetDigest: context.targetDigest,
     acceptedPolicyDigest: context.policyDigest,
     acceptedVerifierDigest: context.verifierDigest,
