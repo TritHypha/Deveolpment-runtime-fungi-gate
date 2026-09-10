@@ -1,0 +1,82 @@
+{
+  "schema": "galerina.rd0873-string-route-owner-queue-decision.v2",
+  "date": "2026-09-10",
+  "status": "OWNER_APPROVED_CURRENT_HEAD_REVIEWED",
+  "authorizing": false,
+  "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION",
+  "ownerInstruction": "approved, continue full auto",
+  "decision": "REOPEN_ONLY_THE_EXACT_BOUNDED_STRING_ROUTE_FOR_REVIEW_AND_RECEIPT_BINDING",
+  "buildPoint": {
+    "galerinaBranch": "main",
+    "galerinaHead": "0b82e20d49627737506a3bd408ef117f577e5807",
+    "galerinaTree": "ecb9187788555c38836c638610c55bad894108e9",
+    "routeImplementationHead": "1e1022dc54f1e0e843f3012993e12753ae535448",
+    "routeImplementationTree": "964ab32b1e910a2f2b51e9e8ac719c20b518233c"
+  },
+  "subject": {
+    "product": "galerina",
+    "package": "packages-ts/galerina-core-config",
+    "typescriptShadow": "packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode",
+    "typescriptSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+    "existingFungiTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+    "fungiSourceDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+    "shape": "String -> Bool; four sealed literals followed by a final wildcard",
+    "candidateState": "EXISTING_REVIEW_FIXTURE_ONLY"
+  },
+  "route": {
+    "snapshotSchema": "galerina.checked-module-snapshot.v2",
+    "snapshotEdition": "string-match-v1",
+    "snapshotSourceDigest": "sha256:0ff501b540189dccef121b697e5af8826ecda58202065bc55643e5caeb0babdf",
+    "girSourceDigest": "sha256:3b8775adb99c520f8a0e36f7ccfe9ce139a7bcf5c72be9a9dfd9779dbf617da5",
+    "testSourceDigest": "sha256:4852e9add931e7b3a70c194f19ba65d374e635522ee59c5dea50cbfab9af7c34",
+    "semanticProfile": "slide.semantic.executable-gir.string-match.v1",
+    "registrySet": "slide.registry.executable-gir.string-match.v1",
+    "registrySetDigest": "8a5d4b8f0f58c6c8ca1e9df6c0c0e2c1c8b7a77a1d9a41b0dd9b8b2b6a5c4d3e",
+    "memoryProfile": "slide.memory.safe-value.v1",
+    "workBound": 12
+  },
+  "evidence": {
+    "independentAudit": "docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json",
+    "independentAuditStatus": "PASS_BOUNDED_IMPLEMENTATION_ONLY",
+    "canonicalByteBoundary": "PASS",
+    "typedHostileParseBoundary": "PASS",
+    "fourTwinDifferential": "8/8 PASS",
+    "physicalSlideVok": "10/10 PASS",
+    "lyth": "14 suites / 633 checks PASS; typecheck PASS"
+  },
+  "externalBuildPoints": {
+    "slide": { "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944", "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db" },
+    "lythWeaver": { "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa", "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd" }
+  },
+  "scope": {
+    "reviewRouteReopened": true,
+    "newFungiAuthoring": false,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "queueMutation": false,
+    "topologyChange": false
+  },
+  "queueBoundary": {
+    "sourceDigest": "f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc",
+    "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "counts": { "total": 1588, "candidate": 0, "blocked": 921, "bootstrapFloor": 667 },
+    "scopedCandidateCount": 7,
+    "interpretation": "The scoped owner-dossier list is not an authoring reopen; no bulk candidate is admitted by the conserved queue."
+  },
+  "remainingGates": [
+    "current queue owner must admit a non-empty exact candidate set before any new .fungi authoring",
+    "a mutually bound cross-repository admission packet remains non-authorizing until owner release is explicit for that exact subject",
+    "consumer switch, TypeScript retirement and production authority remain closed"
+  ],
+  "controls": {
+    "authoringAllowed": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "authorityReleased": false,
+    "remotePublication": "NOT_REQUESTED"
+  }
+}

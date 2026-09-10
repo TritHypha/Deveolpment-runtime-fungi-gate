@@ -1,0 +1,66 @@
+{
+  "schema": "galerina.rd0873-string-route-continuity-observation.v3",
+  "date": "2026-09-10",
+  "status": "PASS_CURRENT_HEAD_NON_AUTHORIZING",
+  "authorizing": false,
+  "independent": false,
+  "observation": "fresh exact-head continuity readback after canonical-byte and typed-hostile-input repairs",
+  "buildPoints": {
+    "galerina": {
+      "branch": "main",
+      "head": "0b82e20d49627737506a3bd408ef117f577e5807",
+      "tree": "ecb9187788555c38836c638610c55bad894108e9",
+      "routeImplementationHead": "1e1022dc54f1e0e843f3012993e12753ae535448",
+      "routeImplementationTree": "964ab32b1e910a2f2b51e9e8ac719c20b518233c",
+      "routeTrackedDiffSinceImplementation": [
+        "docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json"
+      ]
+    },
+    "slide": {
+      "branch": "codex/v2c-independent-frontend",
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db"
+    },
+    "lythWeaver": {
+      "branch": "main",
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd"
+    }
+  },
+  "subject": {
+    "typescriptSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+    "fungiSourceDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+    "snapshotDigest": "sha256:ecfb51c7aae2b2e1c393fc4620d3871aebfc14fdc057b3a18e6bee83d0763e78",
+    "snapshotBytes": 1831,
+    "girDigest": "sha256:4ad87835500c84d1069694744877ccc044fd6f7fbb91d832fbbe1e506c611592",
+    "girBytes": 542,
+    "semanticProfile": "slide.semantic.executable-gir.string-match.v1",
+    "registrySet": "slide.registry.executable-gir.string-match.v1"
+  },
+  "freshChecks": {
+    "compilerTypecheck": "PASS",
+    "stringSnapshotAndGIRRoute": "11/11 PASS",
+    "fourTwinDifferential": "8/8 PASS",
+    "physicalSlideVokLane": "10/10 PASS",
+    "lythWeaverTestSuites": "14 suites / 633 checks PASS",
+    "lythWeaverTypecheck": "PASS",
+    "corpusAssuranceRerun": "NOT_RUN_BY_OWNER_DIRECTION"
+  },
+  "continuity": {
+    "sourceAndOutputIdentities": "same exact subject identities observed across Galerina, SLIDE and Lyth/VOK",
+    "currentHeadsObserved": true,
+    "routeTrackedDiffAfterImplementation": "docs-only audit receipt",
+    "mutuallyBoundCurrentReceipt": "RECORDED_NON_AUTHORIZING",
+    "authorityRelease": false
+  },
+  "controls": {
+    "newFungiAuthoring": false,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "queueMutation": false,
+    "topologyChanged": false,
+    "corpusRerun": false
+  }
+}

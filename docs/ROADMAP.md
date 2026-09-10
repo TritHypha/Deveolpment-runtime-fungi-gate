@@ -3,6 +3,24 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 continuation checkpoint after route repair - 2026-09-10
+
+The versioned String checked-snapshot/GIR route now rejects semantically valid
+but noncanonical snapshot bytes and maps hostile parse-result accessors to the
+typed refusal algebra. The repaired route passes compiler 11/11, the four
+retained Fungi/TypeScript differentials 8/8, physical SLIDE/VOK 10/10, and
+Lyth's 14 suites / 633 checks with typecheck. The fresh independent audit is
+`docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`.
+
+The owner's current `approved, continue full auto` direction and the exact
+Galerina/SLIDE/Lyth continuity readback are recorded as non-authorizing
+receipts. Bulk translation remains held by the conserved source-owner queue:
+1,588 entries, `CANDIDATE: 0`, `BLOCKED: 921`, `BOOTSTRAP_FLOOR: 667`. The
+protected queue files remain untouched. The next roadmap gate is an exact,
+non-empty owner admission for a bounded reversible candidate set; consumer
+switching, TypeScript retirement, production authority, corpus reruns and
+topology changes stay closed.
+
 ## Owner-signed RD-0873/RD-0858 transition checkpoint - 2026-09-10
 
 The owner has confirmed that RD-0873 Tasks 7, 8 and 9 are complete and signed

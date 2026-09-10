@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 continuation checkpoint after route repair - 2026-09-10
+
+- [x] Closed the two independent-review findings in the versioned String
+  checked-snapshot/GIR route: decoder input must match canonical bytes, and
+  hostile parse-result accessors map to typed refusals.
+- [x] Rebuilt and reran the bounded route: compiler 11/11, four retained twin
+  differentials 8/8, physical SLIDE/VOK 10/10, and Lyth 14 suites / 633 checks
+  with typecheck pass. The fresh independent audit is
+  `docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json`.
+- [x] Recorded the owner's current `approved, continue full auto` direction
+  and a current-head continuity readback. Both remain non-authorizing for
+  production and retain all TypeScript shadows.
+- [!] Bulk translation remains **HOLD** at the conserved queue boundary:
+  1,588 tracked entries resolve to `CANDIDATE: 0`, `BLOCKED: 921` and
+  `BOOTSTRAP_FLOOR: 667`; the protected queue files were not changed.
+- [ ] Obtain a non-empty, exact source-owner candidate admission before any
+  new `.fungi` authoring. Keep consumer switching, TypeScript retirement,
+  production authority, corpus reruns and topology changes closed until that
+  admission is independently reviewed.
+
 ### Owner-signed RD-0873/RD-0858 transition checkpoint - 2026-09-10
 
 - [x] Owner confirms that RD-0873 Tasks 7, 8 and 9 are complete and signed off.
