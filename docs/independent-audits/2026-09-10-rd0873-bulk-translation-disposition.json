@@ -6,8 +6,8 @@
   "purpose": "Record the post-route-repair disposition without reopening the closed corpus assurance or inventing translation scope.",
   "exactHead": {
     "branch": "main",
-    "head": "54ceddf96de8b55a31f876fdddac1e1a46175edf",
-    "tree": "744026acf0e7e66dd0d1621174edbacc39c2db6d"
+    "head": "c79ce6bef588d824b2b17b96022ca549ec2f0d94",
+    "tree": "348b3a841c531b213c8cd61723ab68acf04a89a0"
   },
   "queue": {
     "path": "build/conversion-queue/queue.json",
@@ -23,6 +23,15 @@
     },
     "scopedOwnerDossierEntries": 7,
     "interpretation": "The seven scoped entries are review dossiers, not a non-empty authoring queue."
+  },
+  "toolchainBoundary": {
+    "conversionQueueFocusedTest": "REFUSED_PINNED_GIT_UNAVAILABLE",
+    "command": "node --test --test-timeout=120000 scripts/tests/conversion-queue.test.mjs",
+    "approvedGitExecutableDigest": "22fead8244ef3a7225fb800099a4e43eca8bcec0466774917669599c2f19a05a",
+    "observedResult": "the test could not discover an executable with the approved digest",
+    "ordinaryGitSubstitution": false,
+    "productDependency": false,
+    "effect": "queue regeneration and its custody self-test remain unavailable until the approved toolchain is restored"
   },
   "completedBoundedRoute": {
     "ownerQueueDecision": "docs/independent-audits/2026-09-10-rd0873-string-route-owner-queue-decision-v2.json",
@@ -53,5 +62,6 @@
     "production authority",
     "remote publication"
   ],
-  "nextSafeAction": "Reconcile or obtain the source-owner dossier/queue decision for a bounded candidate set; otherwise preserve this HOLD and the existing TypeScript/Fungi review fixtures."
+  "nextSafeAction": "Restore the separately governed pinned Git toolchain if the queue gate must be rerun, then obtain the source-owner dossier/queue decision for a bounded candidate set; otherwise preserve this HOLD and the existing TypeScript/Fungi review fixtures.",
+  "observedBeforeReceiptCommit": true
 }
