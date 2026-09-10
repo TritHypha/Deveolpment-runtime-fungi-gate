@@ -195,10 +195,11 @@ export function sealCheckedModuleSnapshot(input: CheckedModuleSnapshotSealInput)
   const constants: Array<{ id: number; typeId: number; value: number | boolean }> = [];
   const constantIds = new Map<string, number>();
   const facts: Array<{ id: number; ordinal: number; operation: "parameter" | "constant" | "binary" | "branch" | "call" | "return"; declarationId: number; checkerId: number; spanId: number; operandDeclarationIds: number[]; constantId: number | null; targetFactIds: number[] }> = [];
+  const pendingBranches: Array<{ readonly factId: number; readonly thenStart: number; readonly thenEnd: number }> = [];
   const checkerId = stages.find((stage) => stage.name === "types")?.id ?? 3;
-  const addFact = (operation: typeof facts[number]["operation"], node: AstNode, operands: number[] = [], constantId: number | null = null): number => {
+  const addFact = (operation: typeof facts[number]["operation"], node: AstNode, operands: number[] = [], constantId: number | null = null, declarationId = 1): number => {
     const id = facts.length + 1;
-    facts.push({ id, ordinal: id - 1, operation, declarationId: 1, checkerId, spanId: spanFor(node), operandDeclarationIds: [...operands], constantId, targetFactIds: [] });
+    facts.push({ id, ordinal: id - 1, operation, declarationId, checkerId, spanId: spanFor(node), operandDeclarationIds: [...operands], constantId, targetFactIds: [] });
     return id;
   };
   const addConstant = (node: AstNode): number => {
@@ -240,18 +241,25 @@ export function sealCheckedModuleSnapshot(input: CheckedModuleSnapshotSealInput)
     if (node.kind === "returnStmt") {
       const expression = nodeChildren(node)[0];
       if (expression === undefined) refuse("RETURN_SHAPE");
-      const operands = visitExpression(expression);
-      addFact("return", node, operands);
+      let operands: number[] = [];
+      let constantId: number | null = null;
+      if (expression.kind === "numberLiteral" || expression.kind === "boolLiteral") {
+        constantId = addConstant(expression);
+        addFact("constant", expression, [], constantId);
+      } else {
+        operands = visitExpression(expression);
+      }
+      addFact("return", node, operands, constantId);
       return;
     }
     if (node.kind === "ifStmt") {
       const children = nodeChildren(node);
       if (children.length < 2 || children[0] === undefined) refuse("BRANCH_SHAPE");
-      visitExpression(children[0]);
-      const branchFactId = addFact("branch", node);
+      const conditionOperands = visitExpression(children[0]);
+      const branchFactId = addFact("branch", node, conditionOperands);
+      const thenStart = facts.length;
       for (const child of children.slice(1)) for (const statement of nodeChildren(child as AstNode)) visitStatement(statement);
-      const branchFact = facts[branchFactId - 1];
-      if (branchFact !== undefined) branchFact.targetFactIds.push(...facts.slice(branchFactId).map((fact) => fact.id));
+      pendingBranches.push({ factId: branchFactId, thenStart, thenEnd: facts.length });
       return;
     }
     if (node.kind === "block") {
@@ -260,10 +268,17 @@ export function sealCheckedModuleSnapshot(input: CheckedModuleSnapshotSealInput)
     }
     refuse("UNSUPPORTED_SNAPSHOT_SEMANTIC");
   };
-  for (const param of flowNodeChildren.filter((node) => node.kind === "paramDecl")) {
-    addFact("parameter", param);
+  for (const [index, param] of flowNodeChildren.filter((node) => node.kind === "paramDecl").entries()) {
+    addFact("parameter", param, [], null, index + 2);
   }
   visitStatement(body);
+  for (const pending of pendingBranches) {
+    const branchFact = facts[pending.factId - 1];
+    const thenFact = facts[pending.thenStart];
+    const elseFact = facts[pending.thenEnd];
+    if (branchFact === undefined || thenFact === undefined || elseFact === undefined) refuse("BRANCH_TARGET");
+    branchFact.targetFactIds.push(thenFact.id, elseFact.id);
+  }
   spanFor(flowNode);
   const sourceSpansForFacts = sourceSpans;
   const snapshot: CheckedModuleSnapshotV1 = {

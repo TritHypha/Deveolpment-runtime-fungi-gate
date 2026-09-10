@@ -113,6 +113,17 @@ export {
   type CheckedModuleSnapshotSealInput,
   type CheckedModuleSnapshotSealResult,
 } from "./seal-checked-module-snapshot.js";
+export {
+  emitCanonicalGIRFromSnapshot,
+  CheckedSnapshotGIREmissionRefusal,
+  SLIDE_BASE_LIMITS,
+  SLIDE_DIGEST_SUITE_ID,
+  SLIDE_MEMORY_PROFILE_ID,
+  SLIDE_REGISTRY_SET_DIGEST,
+  SLIDE_REGISTRY_SET_ID,
+  SLIDE_SEMANTIC_PROFILE_ID,
+  type DetachedGIREmissionResult,
+} from "./checked-snapshot-gir-emitter.js";
 
 export {
   loadProductRegistry,
