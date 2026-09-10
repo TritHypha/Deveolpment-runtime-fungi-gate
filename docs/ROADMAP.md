@@ -3,6 +3,30 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Graph and index housekeeping checkpoint - 2026-09-10
+
+The local graph and indexes were regenerated from committed `main` HEAD
+`6325a782c4ac396c5fcfb0e986d0811ed7205c25`. The package graph is complete for
+100 packages (201 outputs), the code index contains 996 codes, the contract
+registry covers 3,944 contracts across 2,978 `.fungi` files, the KB index has
+2,226 documents, documentation indexing covers 299 indexes and 2,034
+documents, and the dev-tool index reports 100 packages, 186 tools and 40
+proofs. The external graph is exact at 71,071 nodes and 188,293 edges.
+
+Structural and tooling audits are green, including zero graph-integrity,
+tooling-contract, doc-drift and path-leak violations. The convention lint
+continues to report 2,086 pre-existing Fungi-quality findings, and one gate
+self-test remains open for `audit-conversion-slice-close`. The full suite is
+10,192 tests with 97/100 packages passing; the three held packages retain their
+existing example-signing, fixture and source/path-drift failures.
+
+Phase close is `REFUSED` because this exact head has no authoritative PROJECT
+receipt and pinned Git input. Memory preflight is `HOLD` because two memory
+files are unindexed and the Galerina working-set owner is missing. Task 6
+remains `HOLD`; Task 7 and `.fungi` authoring remain closed. No corpus sweep,
+consumer switch, TypeScript retirement or production admission is opened by
+this refresh.
+
 ## Current post-RD-0873 bridge checkpoint - 2026-09-10
 
 The approved six-commit detached-scalar admission branch is now fast-forwarded

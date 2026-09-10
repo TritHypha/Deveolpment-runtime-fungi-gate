@@ -4,6 +4,39 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Graph and index housekeeping checkpoint - 2026-09-10
+
+- [x] Refreshed the local graph/index outputs from committed `main` HEAD
+  `6325a782c4ac396c5fcfb0e986d0811ed7205c25`: package graph (201 outputs / 100
+  packages), code index (996 codes), code registry (996 codes), contract
+  registry (3,944 contracts across 2,978 `.fungi` files), KB index (2,226
+  documents), documentation indexes (299 indexes / 2,034 documents), unit
+  registry (157 currencies), dev-tool index (100 packages / 186 tools / 40
+  proofs), and Fungi source-capability and retirement inventories.
+- [x] The external codebase graph was refreshed at the same exact head: 71,071
+  nodes and 188,293 edges. The `emitRd0858SlideGIR` symbol probe resolves to
+  one exported entry point in the compiler adapter.
+- [x] Structural and tooling audits pass: graph integrity (11,344 nodes,
+  11,238 edges, zero violations), tooling contract (100 packages / 204 tools,
+  zero violations), canonical test counts (5/5), doc drift (zero), path leak,
+  flat-package topology, and 92/93 gate self-tests.
+- [!] The convention lint remains report-only with 2,086 pre-existing Fungi
+  quality findings. One gate proof remains open: `audit-conversion-slice-close`
+  has no passing anti-neutering self-test. These are recorded findings, not a
+  completion claim.
+- [!] The full suite ran 10,192 tests across 100 packages: 97 packages passed;
+  `galerina-core`, `galerina-framework-example-app`, and `galerina-test` remain
+  held by the existing example-signing, fixture, and source/path-drift failures.
+- [!] Phase close is `REFUSED`: the conversion queue lacks exact PROJECT and
+  pinned Git authority inputs at this head. Historical 2,720-file receipts are
+  not reused and no corpus sweep was started.
+- [!] Memory preflight remains `HOLD`: two top-level memory files are
+  unindexed, the Galerina working-set owner is missing, and seven case-drift
+  terms are report-only. The governed memory note records this checkpoint.
+- [ ] Preserve Task 6 `HOLD`, keep Task 7 and `.fungi` authoring closed, retain
+  the protected conversion-queue dirt, and obtain a fresh exact-head authority
+  receipt before any phase-close or production admission work.
+
 ### Current post-RD-0873 bridge checkpoint - 2026-09-10
 
 - [x] The approved six-commit detached-scalar admission branch was fast-forwarded

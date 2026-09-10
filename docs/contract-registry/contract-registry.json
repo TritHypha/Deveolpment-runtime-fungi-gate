@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-27T22:22:51.000Z",
-  "sha": "43c2b14bb",
-  "contracts": 3939,
-  "parsed": 2975,
+  "generatedAt": "2026-09-10T11:37:20.000Z",
+  "sha": "6325a782c",
+  "contracts": 3944,
+  "parsed": 2978,
   "rows": [
     {
       "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
@@ -1998,8 +1998,8 @@
     {
       "file": "docs/examples/Level-7-AI/368-contract-ai-flow/example.fungi",
       "name": "classifyMessage",
-      "qualifier": "guarded",
-      "signature": "guarded flow classifyMessage(message: String) -> ClassificationResult",
+      "qualifier": "secure",
+      "signature": "secure flow classifyMessage(message: String) -> ClassificationResult",
       "effects": [
         "ai.inference"
       ],
@@ -2736,8 +2736,8 @@
     {
       "file": "examples/ai-inference/classifyMessage.fungi",
       "name": "classifyMessage",
-      "qualifier": "guarded",
-      "signature": "guarded flow classifyMessage(readonly request: Request) -> ClassifyMessageResult",
+      "qualifier": "secure",
+      "signature": "secure flow classifyMessage(readonly request: Request) -> ClassifyMessageResult",
       "effects": [
         "ai.inference",
         "audit.write"
@@ -3237,7 +3237,7 @@
       "qualifier": "pure",
       "signature": "pure flow isValidGovernanceFlags(flags: Int) -> Bool",
       "effects": [],
-      "intent": ""
+      "intent": "Verify a runtime manifest's schema version and signature status."
     },
     {
       "file": "examples/auth-service/manifestVerificationService.fungi",
@@ -3381,8 +3381,8 @@
     {
       "file": "examples/auth-service/rateStatus.fungi",
       "name": "rateStatus",
-      "qualifier": "guarded",
-      "signature": "guarded flow rateStatus(readonly request: Request) -> RateStatusResult",
+      "qualifier": "secure",
+      "signature": "secure flow rateStatus(readonly request: Request) -> RateStatusResult",
       "effects": [
         "network.inbound",
         "audit.write"
@@ -3801,10 +3801,7 @@
       "name": "validatePaymentAmount",
       "qualifier": "guarded",
       "signature": "guarded flow validatePaymentAmount(amount: Int, currency: String) -> Bool",
-      "effects": [
-        "allow",
-        "audit.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {
@@ -10105,6 +10102,22 @@
       "intent": ""
     },
     {
+      "file": "packages-ts/galerina-core-compiler/tests/fixtures/detached-scalar/branching-i32.fungi",
+      "name": "choose",
+      "qualifier": "pure",
+      "signature": "pure flow choose(v: Bool) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-ts/galerina-core-compiler/tests/fixtures/detached-scalar/constant-i32.fungi",
+      "name": "answer",
+      "qualifier": "pure",
+      "signature": "pure flow answer() -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "packages-ts/galerina-core-compiler/tests/fixtures/slide-g4-checked-source.fungi",
       "name": "slide_g4_checked_increment",
       "qualifier": "pure",
@@ -10903,19 +10916,15 @@
       "name": "bootstrapDSS",
       "qualifier": "guarded",
       "signature": "guarded flow bootstrapDSS() -> DSSState",
-      "effects": [
-        "allow",
-        "audit.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {
       "file": "packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi",
       "name": "routeTrapSignal",
-      "qualifier": "guarded",
-      "signature": "guarded flow routeTrapSignal(signal: TrapSignal, state: DSSState) -> DSSState",
+      "qualifier": "secure",
+      "signature": "secure flow routeTrapSignal(signal: TrapSignal, state: DSSState) -> DSSState",
       "effects": [
-        "allow",
         "audit.write"
       ],
       "intent": ""
@@ -10933,10 +10942,7 @@
       "name": "allocateDWI",
       "qualifier": "guarded",
       "signature": "guarded flow allocateDWI(callerFlow: String, fuelBudget: Int) -> DWIHandle",
-      "effects": [
-        "allow",
-        "audit.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {
@@ -10968,10 +10974,7 @@
       "name": "generateReceipt",
       "qualifier": "guarded",
       "signature": "guarded flow generateReceipt(flowId: String, sourceHash: String, contractHash: String, resultHash: String, strategy: String) -> EpilogueReceipt",
-      "effects": [
-        "allow",
-        "audit.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {
@@ -11001,10 +11004,9 @@
     {
       "file": "packages-ts/galerina-core-security/src/dss/trap-handler.fungi",
       "name": "handleTrap",
-      "qualifier": "guarded",
-      "signature": "guarded flow handleTrap(signal: TrapSignal) -> AuditEvent",
+      "qualifier": "secure",
+      "signature": "secure flow handleTrap(signal: TrapSignal) -> AuditEvent",
       "effects": [
-        "allow",
         "audit.write"
       ],
       "intent": ""
@@ -11012,10 +11014,9 @@
     {
       "file": "packages-ts/galerina-core-security/src/dss/trap-handler.fungi",
       "name": "handlePluginEviction",
-      "qualifier": "guarded",
-      "signature": "guarded flow handlePluginEviction(signal: PluginEvictionSignal) -> AuditEvent",
+      "qualifier": "secure",
+      "signature": "secure flow handlePluginEviction(signal: PluginEvictionSignal) -> AuditEvent",
       "effects": [
-        "allow",
         "audit.write"
       ],
       "intent": ""
@@ -31549,6 +31550,14 @@
       "intent": ""
     },
     {
+      "file": "packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi",
+      "name": "isEnvironmentMode",
+      "qualifier": "pure",
+      "signature": "pure flow isEnvironmentMode(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize exactly the canonical Galerina environment modes."
+    },
+    {
       "file": "tests/owasp/owasp-a01-broken-access-control.fungi",
       "name": "writeWithDeclaredEffect",
       "qualifier": "secure",
@@ -31958,6 +31967,14 @@
     },
     {
       "file": "tests/patterns/pattern-07-governed-wasm-module.fungi",
+      "name": "validateInvoicePayload",
+      "qualifier": "pure",
+      "signature": "pure flow validateInvoicePayload(readonly payload: InvoicePayload) -> Result<InvoicePayload,InvoiceError>",
+      "effects": [],
+      "intent": "Process corporate invoice with multi-tenant guardrails and governed economics."
+    },
+    {
+      "file": "tests/patterns/pattern-07-governed-wasm-module.fungi",
       "name": "processCorporateInvoicing",
       "qualifier": "secure",
       "signature": "secure flow processCorporateInvoicing(readonly payload: InvoicePayload) -> Result<InvoiceReceipt,InvoiceError>",
@@ -31968,6 +31985,14 @@
         "secret.read"
       ],
       "intent": "Process corporate invoice with multi-tenant guardrails and governed economics."
+    },
+    {
+      "file": "tests/patterns/pattern-08-emergency-policy.fungi",
+      "name": "validateMonitoredPayload",
+      "qualifier": "pure",
+      "signature": "pure flow validateMonitoredPayload(readonly payload: MonitoredPayload) -> Result<MonitoredPayload,ProcessingError>",
+      "effects": [],
+      "intent": "Process payments with automatic security posture management on anomaly detection."
     },
     {
       "file": "tests/patterns/pattern-08-emergency-policy.fungi",
@@ -32059,9 +32084,7 @@
       "name": "adminAction",
       "qualifier": "flow",
       "signature": "flow adminAction(userId: String) -> Bool",
-      "effects": [
-        "audit.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {
@@ -32069,9 +32092,7 @@
       "name": "dataProcess",
       "qualifier": "flow",
       "signature": "flow dataProcess(payload: String) -> Result<Bool,Error>",
-      "effects": [
-        "database.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {

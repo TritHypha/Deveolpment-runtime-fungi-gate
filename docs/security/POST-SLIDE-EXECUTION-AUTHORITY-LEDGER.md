@@ -86,6 +86,22 @@ signature with a future suite ID does not enter the new verifier. This permits
 cryptographic replacement without changing production application logic while
 avoiding a silent downgrade or a flag-day loss of historical auditability.
 
+## 2026-09-10 housekeeping checkpoint
+
+This checkpoint records repository assurance only; it grants no production
+authority. Local graph and index regeneration completed at committed `main`
+HEAD `6325a782c4ac396c5fcfb0e986d0811ed7205c25`, with the external graph exact
+at 71,071 nodes and 188,293 edges. Structural audits are green, while the
+report-only Fungi-quality lint has 2,086 findings and one gate self-test remains
+open for `audit-conversion-slice-close`.
+
+The full suite is 10,192 tests with 97/100 packages passing. Three packages
+remain held by existing example-signing, fixture, and source/path-drift
+failures. Phase close is `REFUSED` because exact PROJECT and pinned Git
+authority inputs are absent at this head. The production arrays and
+`verificationTime` remain unchanged and empty; this entry is evidence of
+housekeeping, not an authorization decision.
+
 ## Current measured state
 
 The cryptographic verifier implementation is green. Focused evidence is 5/5

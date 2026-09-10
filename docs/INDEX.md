@@ -18,14 +18,14 @@
 | [`diagrams/`](diagrams/INDEX.md) | 1 |
 | [`examples/`](examples/INDEX.md) | 271 |
 | [`framework/`](framework/INDEX.md) | 28 |
-| [`handover/`](handover/INDEX.md) | 3 |
-| [`independent-audits/`](independent-audits/INDEX.md) | 8 |
+| [`handover/`](handover/INDEX.md) | 7 |
+| [`independent-audits/`](independent-audits/INDEX.md) | 10 |
 | [`language/`](language/INDEX.md) | 21 |
 | [`paper/`](paper/INDEX.md) | 54 |
 | [`patterns/`](patterns/INDEX.md) | 21 |
 | [`platform-handover/`](platform-handover/INDEX.md) | 13 |
 | [`reference/`](reference/INDEX.md) | 10 |
-| [`reports/`](reports/INDEX.md) | 1115 |
+| [`reports/`](reports/INDEX.md) | 1121 |
 | [`research/`](research/INDEX.md) | 1 |
 | [`research-prompts/`](research-prompts/INDEX.md) | 15 |
 | [`rules/`](rules/INDEX.md) | 11 |

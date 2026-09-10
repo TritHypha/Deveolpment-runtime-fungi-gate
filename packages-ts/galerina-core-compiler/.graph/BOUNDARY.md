@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 279 |
-| Internal edges | 428 |
+| Files | 285 |
+| Internal edges | 453 |
 | External dependencies | 19 |
 | ├─ Node core | 10 |
 | ├─ Workspace (@galerina/*) | 6 |
@@ -54,10 +54,12 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Entry Points
 - `src/cli.ts`
+- `src/detached-scalar-cli.ts`
 - `src/governance-mode.ts`
 - `src/index.ts`
 - `src/plugin-schema.ts`
 - `src/rd0858-scalar-compiler-entry.ts`
+- `src/rd0858-slide-gir-adapter.ts`
 - `src/runtime/index.ts`
 
 ## Loaded Assets
