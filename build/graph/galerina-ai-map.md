@@ -41,18 +41,18 @@ Provides:
 Galerina compiler pipeline contracts for parsing, checking, IR, diagnostics and reports.
 
 Provides:
-- GalerinaAttestation
-- AttestationInputs
-- AttestationKeyPair
-- signAttestation
-- verifyAttestation
-- generateAttestationKey
-- HybridAttestationKeyPair
-- attestationToYaml
-- attestationFromJson
-- AttributeDiagnostic
-- AttributeCheckResult
-- FUNGI_ATTR_001
+- ArtifactOwner
+- ArtifactKind
+- Sha256Digest
+- ARTIFACT_REFERENCE_SCHEMA
+- COMPUTE_TRANSFER_SCHEMA
+- MAX_ARTIFACT_BYTES
+- ArtifactReferenceV1
+- ComputeTransferV1
+- OwnedArtifactRepository
+- ArtifactReferenceRefusal
+- decodeArtifactReference
+- createArtifactReference
 
 ## galerina-core-runtime
 
