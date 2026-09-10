@@ -104,6 +104,15 @@ export {
   type SnapshotTraceFactV1,
   type SnapshotValueStateV1,
 } from "./checked-module-snapshot.js";
+export {
+  CHECKED_MODULE_EVIDENCE_SCHEMA,
+  CheckedModuleSnapshotSealRefusal,
+  sealCheckedModuleSnapshot,
+  type CheckedModuleEvidenceStageV1,
+  type CheckedModuleEvidenceV1,
+  type CheckedModuleSnapshotSealInput,
+  type CheckedModuleSnapshotSealResult,
+} from "./seal-checked-module-snapshot.js";
 
 export {
   loadProductRegistry,
