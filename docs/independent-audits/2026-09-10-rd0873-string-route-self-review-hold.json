@@ -1,0 +1,56 @@
+{
+  "schema": "galerina.rd0873-string-route-review.v1",
+  "status": "HOLD",
+  "authorizing": false,
+  "reviewKind": "SAME_SESSION_ZERO_TRUST_REVIEW",
+  "reviewScope": "versioned String checked-snapshot/GIR route and detached SLIDE/Lyth/VOK constellation",
+  "independence": {
+    "independentSessionAvailable": false,
+    "decision": "INDEPENDENT_COMPLETION_AUDIT_PENDING"
+  },
+  "targets": {
+    "galerina": {
+      "head": "f5efecfb7ffcf7abd917cdeb5ab017b85039b94a",
+      "tree": "32a108b16760b1ac2e755ebb3e2336f3835524cb"
+    },
+    "slide": {
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db"
+    },
+    "lyth": {
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd"
+    }
+  },
+  "freshChecks": {
+    "galerinaStringGir": "4/4 PASS",
+    "slideStringConstellationAndBoundaries": "21/21 PASS",
+    "slidePathLeak": "803/803 PASS",
+    "lythTypecheck": "PASS"
+  },
+  "findings": [
+    {
+      "class": "EVIDENCE_INSUFFICIENT",
+      "severity": "important",
+      "detail": "The review is same-session evidence and cannot satisfy the independent completion-audit requirement."
+    },
+    {
+      "class": "EVIDENCE_INSUFFICIENT",
+      "severity": "important",
+      "detail": "No fresh owner-bound queue decision, mutually bound exact-head continuity receipt, or consumer-retirement decision is recorded."
+    }
+  ],
+  "decision": "PRESERVE_HOLD",
+  "controls": {
+    "authoringAllowed": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED"
+  },
+  "nextEvidence": [
+    "Independent completion audit bound to all three current heads",
+    "Owner-bound RD-0858 -> SLIDE -> VOK queue/admission receipts",
+    "Exact-head continuity record covering the same build point"
+  ]
+}
