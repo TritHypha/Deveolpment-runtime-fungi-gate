@@ -1,0 +1,35 @@
+{
+  "schema": "galerina.rd0873-grok-review.v1",
+  "status": "HOLD",
+  "authorizing": false,
+  "reviewKind": "CHAPTER_CLOSE_ADVISORY_GROK",
+  "provider": "Grok",
+  "model": "grok-4.6-build",
+  "reviewSessionId": "01a08a18-e454-7c51-97f8-6557e2e1b60c",
+  "requestId": "cb4abdbf-3227-4694-9769-1858d4a10e32",
+  "target": {
+    "head": "dcc521533852a1398c0aed0c7a1cba794b97ff7e",
+    "tree": "fcea00dbfc7caf39d027e1ecdb26efa396851dce"
+  },
+  "promptDigest": "sha256:6660ff1271a5f61a98f09b9d1efa6dd7b1c1302b971e412ee6a398f9b3706df5",
+  "replyDigest": "sha256:3d1847eed713ec7cf6c0d80cb8e68d8587612fbe8622a4625057d7abbeb6c6e1",
+  "adjudication": {
+    "outcome": "PARTIAL",
+    "upheld": [
+      "Historical PROJECT receipts are not current-head evidence.",
+      "The two-file delta receipt is bounded supporting evidence only.",
+      "Task 8 full PROJECT PASS is not verifiable at the current head.",
+      "Task 9 admission and bulk authoring remain closed."
+    ],
+    "rejected": [
+      "The approved Git digest has 63 hexadecimal characters.",
+      "The seven candidates are shown to be disjoint from floored packages by the package-level readiness map."
+    ]
+  },
+  "recommendation": "HOLD",
+  "nextEvidence": [
+    "Owner-bound RD-0858 -> SLIDE -> VOK admission for each proposed symbol.",
+    "Independent Task 9 review bound to this exact head.",
+    "Keep the pinned-Git custody refusal and authoringAllowed false until a valid route exists."
+  ]
+}
