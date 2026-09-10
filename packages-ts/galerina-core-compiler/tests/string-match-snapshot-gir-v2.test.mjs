@@ -70,6 +70,15 @@ describe("versioned String-match checked snapshot and GIR", () => {
     );
   });
 
+  it("refuses snapshot bytes that are semantically valid but not canonical", () => {
+    const result = seal();
+    const nonCanonical = new Uint8Array([...result.snapshotBytes, 0x0a]);
+    assert.throws(() => L.decodeStringMatchCheckedModuleSnapshot(nonCanonical), /CANONICAL_BYTES/u);
+    assert.throws(() => L.digestStringMatchCheckedModuleSnapshot(nonCanonical), /CANONICAL_BYTES/u);
+    const reference = L.createArtifactReference("galerina", "checked-module-snapshot", nonCanonical);
+    assert.throws(() => L.emitCanonicalStringMatchGIRFromSnapshot(nonCanonical, reference), /CANONICAL_BYTES/u);
+  });
+
   it("refuses malformed String domains, arm order, and mismatched references", () => {
     const result = seal();
     const reference = L.createArtifactReference("galerina", "checked-module-snapshot", result.snapshotBytes);
@@ -117,6 +126,26 @@ describe("versioned String-match checked snapshot and GIR", () => {
         commitDigest: digest("f"),
       },
     }), /PARSE_SOURCE_MISMATCH/u);
+  });
+
+  it("maps a hostile parse-result accessor to a typed refusal", () => {
+    const parsed = L.parseProgram(source, "environment-mode.fungi", { requireVersionHeader: true });
+    Object.defineProperty(parsed, "diagnostics", {
+      configurable: true,
+      enumerable: true,
+      get() { throw new Error("diagnostics getter"); },
+    });
+    assert.throws(() => L.sealStringMatchCheckedModuleSnapshot({
+      sourceBytes: new TextEncoder().encode(source),
+      sourceFile: "environment-mode.fungi",
+      parseResult: parsed,
+      checkerEvidence: evidence,
+      compilerIdentity: {
+        packageId: "@galerina/core-compiler",
+        version: "1.0.0-beta.2",
+        commitDigest: digest("f"),
+      },
+    }), /PARSE_RESULT_ACCESSOR/u);
   });
 
   it("refuses source substitution across distinct valid String routes", () => {

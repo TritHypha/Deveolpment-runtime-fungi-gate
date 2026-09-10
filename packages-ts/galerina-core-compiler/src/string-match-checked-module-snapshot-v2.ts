@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { copyArtifactBytes, digestArtifactBytes, type Sha256Digest } from "./artifact-reference.js";
 import { parseProgram } from "./parser.js";
-import type { AstNode, FlowMeta, ParseResult } from "./parser.js";
+import type { AstNode, ParseResult } from "./parser.js";
 import type { CheckedModuleEvidenceV1 } from "./seal-checked-module-snapshot.js";
 import type { SnapshotCompilerIdentityV1 } from "./checked-module-snapshot.js";
 
@@ -82,8 +82,9 @@ function checkedString(value: unknown, code: string, maxBytes = 1024): string {
 }
 function integer(value: unknown, code: string, minimum = 0, maximum = Number.MAX_SAFE_INTEGER): number { if (typeof value !== "number" || !Number.isSafeInteger(value) || value < minimum || value > maximum) refuse(`${code}_INTEGER`); return value; }
 function array(value: unknown, code: string, maximum = STRING_MATCH_SNAPSHOT_MAX_ITEMS): readonly unknown[] {
-  if (!Array.isArray(value) || value.length > maximum) refuse(`${code}_ARRAY`);
+  if (!Array.isArray(value)) refuse(`${code}_ARRAY`);
   try {
+    if (value.length > maximum) refuse(`${code}_ARRAY`);
     if (Object.getPrototypeOf(value) !== Array.prototype) refuse(`${code}_PROTOTYPE`);
     const descriptors = Object.getOwnPropertyDescriptors(value) as Record<string, PropertyDescriptor>;
     const lengthDescriptor = descriptors.length;
@@ -162,17 +163,22 @@ export function encodeStringMatchCheckedModuleSnapshot(value: unknown): Uint8Arr
   const body = JSON.stringify({ schema: snapshot.schema, edition: snapshot.edition, sourceIdentity: snapshot.sourceIdentity, compilerIdentity: snapshot.compilerIdentity, checkerIdentities: snapshot.checkerIdentities, flowName: snapshot.flowName, parameterName: snapshot.parameterName, parameterType: snapshot.parameterType, returnType: snapshot.returnType, arms: snapshot.arms, limits: snapshot.limits, diagnostics: snapshot.diagnostics });
   const bytes = new TextEncoder().encode(`${body}\n`); if (bytes.byteLength > STRING_MATCH_SNAPSHOT_MAX_BYTES) refuse("BYTES_BOUND"); return new Uint8Array(bytes);
 }
+function sameBytes(left: Uint8Array, right: Uint8Array): boolean { if (left.byteLength !== right.byteLength) return false; for (let index = 0; index < left.byteLength; index += 1) if (left[index] !== right[index]) return false; return true; }
 export function decodeStringMatchCheckedModuleSnapshot(bytes: Uint8Array): StringMatchCheckedModuleSnapshotV2 {
   const copy = copyArtifactBytes(bytes, "BYTES"); if (copy.byteLength > STRING_MATCH_SNAPSHOT_MAX_BYTES) refuse("BYTES_BOUND");
-  try { return validateStringMatchCheckedModuleSnapshot(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(copy))); } catch (error) { if (error instanceof StringMatchSnapshotRefusal) throw error; refuse("ENCODING"); }
+  try {
+    const snapshot = validateStringMatchCheckedModuleSnapshot(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(copy)));
+    if (!sameBytes(copy, encodeStringMatchCheckedModuleSnapshot(snapshot))) refuse("CANONICAL_BYTES");
+    return snapshot;
+  } catch (error) { if (error instanceof StringMatchSnapshotRefusal) throw error; refuse("ENCODING"); }
 }
 export function digestStringMatchCheckedModuleSnapshot(value: Uint8Array | StringMatchCheckedModuleSnapshotV2): Sha256Digest { const bytes = value instanceof Uint8Array ? copyArtifactBytes(value, "BYTES") : encodeStringMatchCheckedModuleSnapshot(value); if (value instanceof Uint8Array) decodeStringMatchCheckedModuleSnapshot(bytes); return `sha256:${createHash("sha256").update(bytes).digest("hex")}` as Sha256Digest; }
 export function computeStringMatchSnapshotRunIdentity(snapshot: StringMatchCheckedModuleSnapshotV2 | Uint8Array): StringMatchSnapshotRunIdentityV2 { const decoded = snapshot instanceof Uint8Array ? decodeStringMatchCheckedModuleSnapshot(snapshot) : validateStringMatchCheckedModuleSnapshot(snapshot); const bytes = snapshot instanceof Uint8Array ? copyArtifactBytes(snapshot, "BYTES") : encodeStringMatchCheckedModuleSnapshot(decoded); return Object.freeze({ schema: "galerina.checked-module-snapshot-run.v2", sourceDigest: decoded.sourceIdentity.sourceDigest, snapshotSchema: STRING_MATCH_SNAPSHOT_SCHEMA, compilerCommitDigest: decoded.compilerIdentity.commitDigest, checkerDigests: Object.freeze(decoded.checkerIdentities.map((checker) => checker.digest)), snapshotBodyDigest: digestStringMatchCheckedModuleSnapshot(bytes) }); }
 
-function nodeChildren(node: AstNode): readonly AstNode[] { if (node.children === undefined) return []; if (!Array.isArray(node.children)) refuse("AST_CHILDREN"); return node.children; }
-function nodeSpan(node: AstNode, sourceText: string): StringMatchArmSpanV2 { const location = node.location; if (location === undefined || location.offset === undefined || location.endOffset === undefined) refuse("ARM_SPAN"); if (!Number.isSafeInteger(location.offset) || !Number.isSafeInteger(location.endOffset) || location.offset < 0 || location.endOffset < location.offset) refuse("ARM_SPAN"); const byteOffset = (offset: number): number => new TextEncoder().encode(sourceText.slice(0, offset)).byteLength; return Object.freeze({ startByte: byteOffset(location.offset), endByte: byteOffset(location.endOffset), line: location.line, column: location.column }); }
+function nodeChildren(node: AstNode): readonly AstNode[] { const record = ownDataRecord(node, "AST_NODE"); const children = record.children; if (children === undefined) return []; return array(children, "AST_CHILDREN") as readonly AstNode[]; }
+function nodeSpan(node: AstNode, sourceText: string): StringMatchArmSpanV2 { const record = ownDataRecord(node, "AST_NODE"); const locationValue = record.location; if (locationValue === undefined) refuse("ARM_SPAN"); const location = ownDataRecord(locationValue, "AST_LOCATION"); if (location.offset === undefined || location.endOffset === undefined) refuse("ARM_SPAN"); const offset = integer(location.offset, "ARM_SPAN"); const endOffset = integer(location.endOffset, "ARM_SPAN", offset); const byteOffset = (value: number): number => new TextEncoder().encode(sourceText.slice(0, value)).byteLength; return Object.freeze({ startByte: byteOffset(offset), endByte: byteOffset(endOffset), line: integer(location.line, "ARM_SPAN_LINE", 1), column: integer(location.column, "ARM_SPAN_COLUMN", 1) }); }
 function stageIdentities(value: CheckedModuleEvidenceV1): readonly StringMatchCheckerIdentityV2[] { const root = ownDataRecord(value, "EVIDENCE"); exactFields(root, ["schema", "stages"], "EVIDENCE"); if (root.schema !== "galerina.checked-module-evidence.v1") refuse("EVIDENCE_SCHEMA"); const stageValues = array(root.stages, "EVIDENCE_STAGES", REQUIRED_STAGES.length).map((item) => ownDataRecord(item, "EVIDENCE_STAGE")); if (stageValues.length !== REQUIRED_STAGES.length) refuse("EVIDENCE_COUNT"); return Object.freeze(stageValues.map((record, index) => { const name = REQUIRED_STAGES[index]; if (name === undefined) refuse("EVIDENCE_STAGE_ORDER"); exactFields(record, ["id", "name", "digest", "outcome"], "EVIDENCE_STAGE"); if (record.id !== index + 1 || record.name !== name || record.outcome !== "passed") refuse("EVIDENCE_STAGE_ORDER"); return Object.freeze({ id: index + 1, name, digest: digest(record.digest, "EVIDENCE_STAGE") }); })); }
-function returnLiteral(node: AstNode): boolean { const body = node.kind === "block" ? nodeChildren(node) : [node]; if (body.length !== 1 || body[0]?.kind !== "returnStmt") refuse("ARM_RETURN_SHAPE"); const expression = nodeChildren(body[0])[0]; if (expression?.kind !== "boolLiteral" || (expression.value !== "true" && expression.value !== "false")) refuse("ARM_RETURN_TYPE"); return expression.value === "true"; }
+function returnLiteral(node: AstNode): boolean { const nodeRecord = ownDataRecord(node, "AST_NODE"); const body = nodeRecord.kind === "block" ? nodeChildren(node) : [node]; if (body.length !== 1) refuse("ARM_RETURN_SHAPE"); const statement = body[0]; if (statement === undefined) refuse("ARM_RETURN_SHAPE"); const statementRecord = ownDataRecord(statement, "AST_NODE"); if (statementRecord.kind !== "returnStmt") refuse("ARM_RETURN_SHAPE"); const expression = nodeChildren(statement)[0]; if (expression === undefined) refuse("ARM_RETURN_TYPE"); const expressionRecord = ownDataRecord(expression, "AST_NODE"); if (expressionRecord.kind !== "boolLiteral" || (expressionRecord.value !== "true" && expressionRecord.value !== "false")) refuse("ARM_RETURN_TYPE"); return expressionRecord.value === "true"; }
 
 interface StringMatchRouteExtractionV2 {
   readonly flowName: string;
@@ -181,37 +187,49 @@ interface StringMatchRouteExtractionV2 {
 }
 
 function extractStringMatchRoute(parseResult: ParseResult, sourceText: string, sourceFile: string): StringMatchRouteExtractionV2 {
-  if (parseResult === null || typeof parseResult !== "object" || !Array.isArray(parseResult.diagnostics)) refuse("PARSE_RESULT");
-  for (const diagnostic of parseResult.diagnostics) {
+  const root = ownDataRecord(parseResult, "PARSE_RESULT");
+  const diagnostics = array(root.diagnostics, "PARSE_DIAGNOSTICS");
+  for (const diagnostic of diagnostics) {
     const record = ownDataRecord(diagnostic, "PARSE_DIAGNOSTIC");
     if (record.severity === "error" || record.severity === "warning") refuse("PARSE_DIAGNOSTICS");
   }
-  if (!Array.isArray(parseResult.flows) || parseResult.flows.length !== 1) refuse("FLOW_COUNT");
-  const flow = parseResult.flows[0] as FlowMeta | undefined;
-  if (flow === undefined || flow.qualifier !== "pure" || !Array.isArray(flow.declaredEffects)
-      || flow.declaredEffects.length !== 0 || flow.returnType !== "Bool" || !Array.isArray(flow.params)
-      || flow.params.length !== 1) refuse("FLOW_ADMISSION");
-  const parameter = /^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*String$/u.exec(flow.params[0] ?? "");
+  const flows = array(root.flows, "PARSE_FLOWS", 1);
+  if (flows.length !== 1) refuse("FLOW_COUNT");
+  const flow = flows[0];
+  if (flow === undefined) refuse("FLOW_COUNT");
+  const flowRecord = ownDataRecord(flow, "PARSE_FLOW");
+  const declaredEffects = array(flowRecord.declaredEffects, "FLOW_EFFECTS", 0);
+  const params = array(flowRecord.params, "FLOW_PARAMS", 1);
+  if (flowRecord.qualifier !== "pure" || declaredEffects.length !== 0 || flowRecord.returnType !== "Bool" || params.length !== 1) refuse("FLOW_ADMISSION");
+  const parameter = /^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*String$/u.exec(typeof params[0] === "string" ? params[0] : "");
   if (parameter === null || parameter[1] === undefined) refuse("PARAMETER");
   if (sourceFile.length === 0 || sourceFile.normalize("NFC") !== sourceFile) refuse("SOURCE_FILE");
-  if (parseResult.ast === null || typeof parseResult.ast !== "object") refuse("AST");
-  const flowNode = (parseResult.ast.children ?? []).find((node) => node.kind === "pureFlowDecl" && node.value === flow.name);
+  const ast = ownDataRecord(root.ast, "PARSE_AST");
+  const astChildren = ast.children === undefined ? [] : array(ast.children, "AST_CHILDREN");
+  const flowName = flowRecord.name;
+  const flowNode = astChildren.find((node) => { const record = ownDataRecord(node, "AST_NODE"); return record.kind === "pureFlowDecl" && record.value === flowName; }) as AstNode | undefined;
   if (flowNode === undefined) refuse("FLOW_NODE");
-  if (flowNode.location?.file !== sourceFile) refuse("SOURCE_FILE_MISMATCH");
+  const flowLocation = ownDataRecord(ownDataRecord(flowNode, "AST_FLOW_NODE").location, "AST_LOCATION");
+  if (flowLocation.file !== sourceFile) refuse("SOURCE_FILE_MISMATCH");
   const flowChildren = nodeChildren(flowNode);
-  const body = flowChildren.find((node) => node.kind === "block");
-  if (body === undefined || nodeChildren(body).length !== 1 || nodeChildren(body)[0]?.kind !== "matchExpr") refuse("MATCH_SHAPE");
-  const match = nodeChildren(body)[0] as AstNode;
+  const body = flowChildren.find((node) => ownDataRecord(node, "AST_NODE").kind === "block");
+  if (body === undefined) refuse("MATCH_SHAPE");
+  const bodyChildren = nodeChildren(body);
+  const matchNode = bodyChildren[0];
+  if (bodyChildren.length !== 1 || matchNode === undefined || ownDataRecord(matchNode, "AST_NODE").kind !== "matchExpr") refuse("MATCH_SHAPE");
+  const match = matchNode;
   const matchChildren = nodeChildren(match);
   const subject = matchChildren[0];
-  if (subject?.kind !== "identifier" || subject.value !== parameter[1]) refuse("MATCH_SUBJECT");
+  const subjectRecord = subject === undefined ? undefined : ownDataRecord(subject, "AST_NODE");
+  if (subjectRecord?.kind !== "identifier" || subjectRecord.value !== parameter[1]) refuse("MATCH_SUBJECT");
   const armNodes = matchChildren.slice(1);
   if (armNodes.length < 2 || armNodes.length > STRING_MATCH_ARM_MAX_COUNT) refuse("ARMS_COUNT");
   const arms: StringMatchArmV2[] = [];
   const seen = new Set<string>();
   for (const [index, arm] of armNodes.entries()) {
-    if (arm.kind !== "matchArm" || arm.value === undefined) refuse("ARM_SHAPE");
-    const raw = arm.value;
+    const armRecord = ownDataRecord(arm, "AST_ARM");
+    if (armRecord.kind !== "matchArm" || typeof armRecord.value !== "string") refuse("ARM_SHAPE");
+    const raw = armRecord.value;
     const literal = raw === "_" ? null : (() => {
       if (raw.length < 2 || raw[0] !== '"' || raw[raw.length - 1] !== '"') refuse("ARM_PATTERN");
       let decoded: unknown;
@@ -233,7 +251,7 @@ function extractStringMatchRoute(parseResult: ParseResult, sourceText: string, s
   }
   if (arms.filter((arm) => arm.literal === null).length !== 1) refuse("ARMS_WILDCARD");
   return Object.freeze({
-    flowName: checkedString(flow.name, "FLOW_NAME", 256),
+    flowName: checkedString(flowRecord.name, "FLOW_NAME", 256),
     parameterName: checkedString(parameter[1], "PARAMETER_NAME", 256),
     arms: Object.freeze(arms),
   });
