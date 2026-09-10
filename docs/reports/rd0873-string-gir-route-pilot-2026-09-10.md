@@ -88,6 +88,22 @@ classification. All eight focused assertions passed (8/8, zero failures,
 zero skips) in 438 ms. This is a change-focused differential check; it does
 not rescan the 2,720-file corpus and it does not create new `.fungi` source.
 
+## Direct SLIDE observation
+
+The emitted `isEnvironmentMode` GIR was passed to SLIDE's V2-C preparation and
+execution surface at the same local build point. Preparation returned the
+registered String-match identity with a conservative work bound of 12. Seven
+inputs were exercised: the four admitted literals returned `1`, while a
+near-miss, case change and empty string returned `0`. Every execution receipt
+was `slide.v2c.string-match.execution-receipt.v1` with
+`authorityReleased: false`; the observed GIR digest was
+`sha256:4ad87835500c84d1069694744877ccc044fd6f7fbb91d832fbbe1e506c611592`.
+
+SLIDE's complete test command then reported 1,033 passes, zero failures and
+nine cancellations. The cancellations were existing unrelated tests that
+look for the old sibling paths `Galerina/packages-galerina/...`; they did not
+exercise this route. This direct observation is not a Lyth or VOK admission.
+
 ## Remaining gate
 
 The current SLIDE detached scalar profile accepts only the existing scalar GIR
