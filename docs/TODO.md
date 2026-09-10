@@ -20,12 +20,15 @@ counts or open items that a newer section explicitly supersedes.
   assets and their twin tests are present, with the physical lane recorded as
   10/10 PASS. The wave is non-authorizing; TypeScript remains the shadow and
   no consumer switch or retirement occurred.
-- [ ] Close the next authority boundary: obtain a fresh owner-bound queue
-  decision, a checked snapshot and canonical GIR route for String/checkExpr
-  semantics, exact-subject VOK admission, independent SLIDE re-derivation and
-  review at one current build point. The bounded design target is recorded in
-  `docs/reports/rd0873-string-gir-route-design.md`. Keep this item on HOLD
-  when any receipt is missing or divergent.
+- [x] Implement and exercise the versioned String literal-match checked
+  snapshot and canonical GIR route over the existing `isEnvironmentMode` Fungi
+  twin. Exact-head pilot evidence is in
+  `docs/reports/rd0873-string-gir-route-pilot-2026-09-10.md`; the route remains
+  non-authorizing and retains the TypeScript shadow.
+- [ ] Close the remaining authority boundary: obtain a fresh owner-bound queue
+  decision, exact-subject SLIDE re-derivation and VOK admission, plus an
+  independent review at one current build point. Keep this item on HOLD when
+  any receipt is missing or divergent.
 - [ ] Only after that boundary is green, decide whether to open one reversible
   pilot consumer path. Bulk `.fungi` authoring, consumer switching, TypeScript
   retirement and production admission remain closed.

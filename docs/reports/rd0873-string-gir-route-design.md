@@ -1,13 +1,17 @@
 # RD-0873 String Snapshot/GIR Route Design Note
 
 Date: 2026-09-10
-Status: **PROPOSAL_NON_AUTHORIZING**
+Status: **SUPERSEDED_BY_PILOT_NON_AUTHORIZING**
 Authorizing: **false**
 
+The implementation and bounded real-asset pilot are recorded in
+`docs/reports/rd0873-string-gir-route-pilot-2026-09-10.md`. The design below
+remains the rationale and compatibility record; it is not a second approval
+or an authority release.
+
 This note records the smallest design boundary exposed by the current
-post-RD-0873 hold. It is a design proposal only. It does not change the
-compiler, create `.fungi` source, reopen the conversion queue, switch a
-consumer or release production authority.
+post-RD-0873 hold. It does not create `.fungi` source, reopen the conversion
+queue, switch a consumer or release production authority.
 
 ## Observed gap
 
@@ -32,7 +36,7 @@ This route finding explains the hold; it does not invalidate that wave.
 
 ## Proposed versioned boundary
 
-Any implementation should introduce a new snapshot/GIR edition rather than
+The implementation introduces a new snapshot/GIR edition rather than
 silently widening `v1`:
 
 - Add an explicit String primitive identity and a bounded String constant
@@ -49,7 +53,7 @@ silently widening `v1`:
   must continue to refuse String fields rather than being interpreted under
   the new rules.
 
-## Required controls before implementation
+## Required controls
 
 The design must have a negative control for every new capability:
 
@@ -67,8 +71,7 @@ is permitted.
 
 ## Admission sequence
 
-Implementation remains closed until the owner requests a fresh gate. If opened,
-the sequence is:
+The bounded implementation sequence was:
 
 1. Write and review the new snapshot/GIR schema and compatibility rules.
 2. Add focused snapshot validation, emitter and canonical-byte tests, including
@@ -76,14 +79,13 @@ the sequence is:
 3. Rebuild the selected source under the new edition and compare the retained
    TypeScript result against the Fungi result for all four environment literals,
    near misses and wrong-class inputs.
-4. Obtain exact-head checked-snapshot, canonical GIR, SLIDE, VOK and independent
-   review receipts. Keep Lyth evidence explicitly non-authorizing.
+4. Obtain exact-head checked-snapshot and canonical GIR evidence. The pilot
+   records those two outputs; SLIDE, VOK and independent review remain open.
 5. Record an owner authority release and consumer decision separately. Until
    then, keep `authorityReleased: false`, retain the TypeScript shadow and keep
    bulk translation closed.
 
 ## Current decision
 
-`HOLD_NON_AUTHORIZING`. This note supplies a bounded design target for a future
-owner-approved implementation; it is not an implementation plan approval or a
-source-publication permission.
+`HOLD_NON_AUTHORIZING`. The pilot supplies bounded implementation evidence but
+is not an implementation-plan approval or a source-publication permission.

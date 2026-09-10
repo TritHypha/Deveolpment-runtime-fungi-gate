@@ -17,14 +17,15 @@ wave already exists: five scalar Fungi assets have twin tests and a 10/10
 physical-lane PASS. That evidence is review-only and non-authorizing; the
 TypeScript shadow remains, and no consumer switch or retirement occurred.
 
-The next gate is authority and route closure, not candidate discovery. It must
-bind a fresh owner queue decision, a checked snapshot and canonical GIR route
-for String/checkExpr semantics, exact-subject VOK admission, independent SLIDE
-re-derivation and review at one current build point. The bounded design target
-for the missing String-capable route is recorded in
-`docs/reports/rd0873-string-gir-route-design.md`. Until that chain and an
-explicit owner release are green, consumer switching, TypeScript retirement,
-production admission and bulk `.fungi` authoring remain closed.
+The versioned String literal-match checked snapshot and canonical GIR route is
+implemented and exercised over the existing `isEnvironmentMode` Fungi twin at
+the current local `main` head. The exact pilot is recorded in
+`docs/reports/rd0873-string-gir-route-pilot-2026-09-10.md` and remains
+non-authorizing. The next gate is a fresh owner queue decision, exact-subject
+SLIDE re-derivation, VOK admission and independent review at one build point.
+Until that chain and an explicit owner release are green, consumer switching,
+TypeScript retirement, production admission and bulk `.fungi` authoring remain
+closed.
 
 ## Graph and index housekeeping checkpoint - 2026-09-10
 
