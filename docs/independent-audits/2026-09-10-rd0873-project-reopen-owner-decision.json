@@ -1,0 +1,46 @@
+{
+  "schema": "galerina.rd0873-project-reopen-owner-decision.v1",
+  "date": "2026-09-10",
+  "status": "OWNER_APPROVED_PROJECT_REOPEN",
+  "authorizing": false,
+  "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION",
+  "ownerInstruction": "ok you can reopen the PROJECT",
+  "decision": "REOPEN_PROJECT_ASSURANCE_USING_FOUR_BOUNDED_SHARDS",
+  "purpose": "Produce one fresh exact-head PROJECT receipt; do not admit candidates or author Fungi.",
+  "scope": {
+    "profile": "PROJECT",
+    "admittedPathRule": "tracked .fungi excluding docs/examples/** and build/**",
+    "expectedAdmittedFileCount": 2722,
+    "shardCount": 4,
+    "concurrency": 2
+  },
+  "limits": {
+    "maxFilesPerShard": 1360,
+    "maxBytesPerShard": 67108864,
+    "maxOutputBytesPerShard": 67108864,
+    "timeoutMsPerShard": 3400000
+  },
+  "custody": {
+    "preserveProtectedDirtyPaths": true,
+    "queueMutation": false,
+    "newFungiAuthoring": false,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChange": false,
+    "remotePublication": "NOT_REQUESTED"
+  },
+  "acceptance": {
+    "requireExactHeadTree": true,
+    "requireCompleteNonOverlappingShards": true,
+    "requireCanonicalDigest": true,
+    "requireIndependentAdjudication": true,
+    "staleOrPartial": "HOLD"
+  },
+  "notes": [
+    "The previously accepted 2,720-file receipt remains immutable at its own identity.",
+    "This decision authorizes a current PROJECT observation only; it does not authorize queue admission, .fungi authoring or consumer changes.",
+    "The final receipt must record the post-decision committed HEAD/tree and any dirty overlays separately."
+  ]
+}
