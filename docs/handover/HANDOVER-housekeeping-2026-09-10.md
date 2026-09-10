@@ -21,7 +21,7 @@
 - Local package graph: 100 packages, 201 outputs.
 - Local code index and registry: 996 codes.
 - Contract registry: 3,944 contracts across 2,978 `.fungi` files.
-- Documentation indexes: 299 indexes covering 2,034 documents.
+- Documentation indexes: 299 indexes covering 2,035 documents.
 - KB index: 2,226 documents.
 - Dev-tool index: 100 packages, 186 tools, 40 proofs, zero gaps.
 - Final graph fixed point: 10/10 child generators passed. External code graph:

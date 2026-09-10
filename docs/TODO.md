@@ -12,7 +12,7 @@ counts or open items that a newer section explicitly supersedes.
   the final graph fixed point is exact at the new head. Package graph (201 outputs / 100
   packages), code index (996 codes), code registry (996 codes), contract
   registry (3,944 contracts across 2,978 `.fungi` files), KB index (2,226
-  documents), documentation indexes (299 indexes / 2,034 documents), unit
+  documents), documentation indexes (299 indexes / 2,035 documents), unit
   registry (157 currencies), dev-tool index (100 packages / 186 tools / 40
   proofs), and Fungi source-capability and retirement inventories.
 - [x] The external codebase graph was refreshed at exact committed head
