@@ -44,35 +44,47 @@ Name the rollout packet, first pilot, retained TypeScript differential and exact
 
 Search only the dated top sections and confirm that the new checkpoint is first, that older sections remain unchanged, and that no protected conversion-queue path was edited. The roadmap generator correctly refuses while its provenance input is dirty; the docs-index dry run self-test passes without writing generated indexes.
 
-### Task 2: Build the first-pilot source-owner manifest
+### Task 2: Bind the existing bounded wave
 
 **Files:**
-- Create: `docs/reports/rd0873-post-closure-translation-manifest.md`
+- Modify: `docs/reports/rd0873-post-closure-translation-manifest.md`
 
 **Interfaces:**
 - Consumes: current Galerina package graph, code index, conversion register, RD-0858 owner record, and the source-owner locators for SLIDE, VOK and Lyth-Weaver.
-- Produces: one exact, bounded pilot candidate with source path, symbol, callers, package identity, owner, source digest and explicit exclusions.
+- Produces: one locator-only manifest that names the existing five-subject
+  review wave, its source/asset/test identities, exact evidence head and
+  non-authorizing boundary.
 
-- [ ] **Step 1: Resolve the candidate through owner tools**
+- [x] **Step 1: Resolve the selected subject through owner tools**
 
-Use codebase-memory and the Galerina RD query route first. Record only locators, identities, build points and asserted relationships; keep source bodies in their owning repositories.
+Use codebase-memory and the Galerina queue/readiness records first. Record only
+locators, identities, build points and asserted relationships; keep source
+bodies in their owning repositories.
 
-- [ ] **Step 2: Refuse ambiguous candidates**
+- [x] **Step 2: Preserve the queue distinction**
 
-Reject a candidate when the graph, package registry, conversion queue or source-owner record disagrees, is stale, incomplete or lacks an exact current-head binding.
+Keep the top-level `CANDIDATE: 0` inventory distinct from the seven scoped
+owner-dossier entries. Do not describe the scoped list as a new authoring
+reopen, and keep stale or divergent receipts non-authorizing.
 
-- [ ] **Step 3: Freeze one deterministic pilot**
+- [x] **Step 3: Freeze the review-only wave**
 
-Choose a small pure or deterministic subject with bounded inputs, outputs and effects. Record why mutable state, callbacks, filesystem, network, cryptography and unbounded work are excluded from this pilot.
+Bind the five pure scalar subjects and the two held subjects to the existing
+verification receipt. Keep mutable state, callbacks, filesystem, network,
+cryptography and unbounded work outside the wave.
 
-### Task 3: Prepare the semantic and admission packet
+### Task 3: Close the generic route and authority packet
 
 **Files:**
-- Create: `docs/reports/rd0873-post-closure-pilot-admission.md`
+- Reference: `docs/reports/rd0873-string-gir-route-design.md`
+- Create: `docs/reports/rd0873-post-closure-pilot-admission.md` only after a
+  fresh owner release requests this gate
 
 **Interfaces:**
-- Consumes: the frozen pilot manifest and the live translation and authoring skill references.
-- Produces: a source dossier, semantic/effect ledger, differential test matrix, exact receipt checklist and a green/red admission decision.
+- Consumes: the frozen wave manifest, the bounded String/GIR design note and
+  live translation and authoring skill references.
+- Produces: a source dossier, semantic/effect ledger, differential test
+  matrix, exact receipt checklist and a green/red admission decision.
 
 - [ ] **Step 1: Write one ledger row per observable operation**
 
@@ -86,11 +98,13 @@ Include normal, missing, malformed, ambiguous, overflow, timeout, cancellation, 
 
 Require checked snapshot, canonical GIR, SLIDE re-derivation, VOK exact-subject admission and independent review at one current build point. Keep Lyth evidence labelled non-authorizing.
 
-### Task 4: Open the pilot authoring gate
+### Task 4: Open the pilot authoring gate (future, owner-gated)
 
 **Files:**
 - Modify: `docs/reports/rd0873-post-closure-pilot-admission.md`
-- Create: one selected Galerina-native `.fungi` file under `packages/fungi/products/galerina/` only after this task is green
+- Create: one selected Galerina-native `.fungi` file under
+  `packages/fungi/products/galerina/` only after this task is green and the
+  owner explicitly releases authoring
 
 **Interfaces:**
 - Consumes: the manifest, admission packet, owner-bound queue decision and current compiler/toolchain identity.
@@ -108,7 +122,7 @@ Use `translating-typescript-to-fungi` for the source dossier and `writing-fungi`
 
 Run strict checking, differential vectors, canonical GIR comparison, independent SLIDE re-derivation, VOK admission and the independent review. Any missing or divergent receipt keeps the rollout closed.
 
-### Task 5: Decide whether to schedule bulk translation
+### Task 5: Decide whether to schedule bulk translation (future)
 
 **Files:**
 - Modify: `docs/TODO.md`

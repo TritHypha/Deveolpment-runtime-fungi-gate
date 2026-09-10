@@ -11,13 +11,19 @@ interruption was a crash during execution, not a failed task result. The
 accepted benchmark and corpus assurance are therefore closed; the 2,720-file
 corpus is not reopened solely because of that interruption.
 
-The next work is the post-closure TypeScript-to-Fungi rollout. First reconcile
-the navigation records, then prepare one bounded pilot packet with an exact
-source-owner manifest, semantic/effect ledger, retained TypeScript differential
-shadow, and the SLIDE, VOK and Lyth custody boundaries. The pilot must bind a
-fresh owner decision and current-head receipts for checked snapshot, canonical
-GIR, independent SLIDE re-derivation, VOK admission and independent review.
-Until that packet is green, consumer switching, TypeScript retirement,
+The post-closure TypeScript-to-Fungi rollout is now recorded in
+`docs/reports/rd0873-post-closure-translation-manifest.md`. A first bounded
+wave already exists: five scalar Fungi assets have twin tests and a 10/10
+physical-lane PASS. That evidence is review-only and non-authorizing; the
+TypeScript shadow remains, and no consumer switch or retirement occurred.
+
+The next gate is authority and route closure, not candidate discovery. It must
+bind a fresh owner queue decision, a checked snapshot and canonical GIR route
+for String/checkExpr semantics, exact-subject VOK admission, independent SLIDE
+re-derivation and review at one current build point. The bounded design target
+for the missing String-capable route is recorded in
+`docs/reports/rd0873-string-gir-route-design.md`. Until that chain and an
+explicit owner release are green, consumer switching, TypeScript retirement,
 production admission and bulk `.fungi` authoring remain closed.
 
 ## Graph and index housekeeping checkpoint - 2026-09-10

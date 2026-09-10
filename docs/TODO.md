@@ -13,17 +13,22 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Owner confirms RD-0858 is complete and has been pushed to `main`. The
   older readiness-HOLD wording below is retained as history and is superseded
   for navigation by this checkpoint.
-- [ ] Reconcile the remaining TODO and roadmap navigation with this signed-off
-  state, keeping historical receipts and protected queue paths unchanged.
-- [ ] Prepare the bounded TypeScript-to-Fungi rollout packet: source-owner
-  manifest, first-pilot scope, semantic/effect ledger, differential route and
-  the exact SLIDE/VOK/Lyth evidence boundary. Keep the TypeScript shadow and
-  exclude consumer switching, retirement, production admission and bulk
-  authoring until the pilot gate is green.
-- [ ] Admit one pilot only after a fresh owner-bound queue decision and exact
-  current-head receipts cover source, checked snapshot, canonical GIR, SLIDE
-  re-derivation, VOK admission and independent review. A missing or divergent
-  receipt remains a stop.
+- [x] Reconcile the navigation records with the signed-off state while keeping
+  the historical ledger and protected queue paths unchanged. The bounded
+  rollout record is `docs/reports/rd0873-post-closure-translation-manifest.md`.
+- [x] Record the existing first bounded scalar wave: five review-only Fungi
+  assets and their twin tests are present, with the physical lane recorded as
+  10/10 PASS. The wave is non-authorizing; TypeScript remains the shadow and
+  no consumer switch or retirement occurred.
+- [ ] Close the next authority boundary: obtain a fresh owner-bound queue
+  decision, a checked snapshot and canonical GIR route for String/checkExpr
+  semantics, exact-subject VOK admission, independent SLIDE re-derivation and
+  review at one current build point. The bounded design target is recorded in
+  `docs/reports/rd0873-string-gir-route-design.md`. Keep this item on HOLD
+  when any receipt is missing or divergent.
+- [ ] Only after that boundary is green, decide whether to open one reversible
+  pilot consumer path. Bulk `.fungi` authoring, consumer switching, TypeScript
+  retirement and production admission remain closed.
 
 ### Graph and index housekeeping checkpoint - 2026-09-10
 
