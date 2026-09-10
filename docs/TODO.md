@@ -29,6 +29,14 @@ counts or open items that a newer section explicitly supersedes.
   the already recorded bounded wave. Keep composite `isTaskEffect` held for a
   separate call-capable edition; do not treat this smoke as a new authoring
   batch or a consumer switch.
+- [x] Add the dedicated String-match admission lanes at SLIDE `962f880` and
+  Lyth `a68eeb5`. The local constellation passes compiler materialization,
+  independent root-23 structure/work re-derivation, VOK lease execution and
+  receipt inspection; numeric String arguments refuse and every result remains
+  non-authorizing.
+- [!] The existing graph/index receipts predate these cross-repository commits;
+  no broad regeneration is being treated as implicit. Graph-dependent closure
+  remains held until the owning index refresh is explicitly run and bound.
 - [ ] Close the remaining authority boundary: obtain a fresh owner-bound queue
   decision, exact-subject SLIDE re-derivation and VOK admission, plus an
   independent review at one current build point. Keep this item on HOLD when
