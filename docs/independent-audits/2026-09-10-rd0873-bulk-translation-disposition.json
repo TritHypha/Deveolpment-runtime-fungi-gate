@@ -1,0 +1,57 @@
+{
+  "schema": "galerina.rd0873-bulk-translation-disposition.v1",
+  "date": "2026-09-10",
+  "status": "HOLD_NO_ADMITTED_CANDIDATES",
+  "authorizing": false,
+  "purpose": "Record the post-route-repair disposition without reopening the closed corpus assurance or inventing translation scope.",
+  "exactHead": {
+    "branch": "main",
+    "head": "54ceddf96de8b55a31f876fdddac1e1a46175edf",
+    "tree": "744026acf0e7e66dd0d1621174edbacc39c2db6d"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "sourceDigest": "f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc",
+    "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "counts": {
+      "total": 1588,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 667,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    },
+    "scopedOwnerDossierEntries": 7,
+    "interpretation": "The seven scoped entries are review dossiers, not a non-empty authoring queue."
+  },
+  "completedBoundedRoute": {
+    "ownerQueueDecision": "docs/independent-audits/2026-09-10-rd0873-string-route-owner-queue-decision-v2.json",
+    "continuityObservation": "docs/independent-audits/2026-09-10-rd0873-string-route-continuity-observation-v3.json",
+    "independentAudit": "docs/independent-audits/2026-09-10-rd0873-string-route-independent-completion-audit-v2.json",
+    "routeStatus": "PASS_BOUNDED_IMPLEMENTATION_ONLY",
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false
+  },
+  "existingReviewWave": {
+    "assets": 5,
+    "physicalLane": "10/10 PASS",
+    "authoring": false,
+    "typescriptShadowsRetained": true,
+    "heldShapes": [
+      { "symbol": "isBuiltin", "reason": "current physical flat-match profile refuses the shape" },
+      { "symbol": "validateTransition", "reason": "current profile admits one scalar while the source requires two" }
+    ]
+  },
+  "decision": "Do not author new .fungi files while the conserved queue has zero CANDIDATE entries. Continue only when a source-owner receipt admits an exact non-empty candidate set and the bounded route is independently rechecked at that build point.",
+  "excluded": [
+    "2,720-file corpus assurance rerun",
+    "protected queue mutation",
+    "branch or worktree creation",
+    "consumer switching",
+    "TypeScript retirement",
+    "production authority",
+    "remote publication"
+  ],
+  "nextSafeAction": "Reconcile or obtain the source-owner dossier/queue decision for a bounded candidate set; otherwise preserve this HOLD and the existing TypeScript/Fungi review fixtures."
+}
