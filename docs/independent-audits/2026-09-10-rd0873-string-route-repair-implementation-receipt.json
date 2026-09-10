@@ -1,0 +1,54 @@
+{
+  "schema": "galerina.rd0873-string-route-implementation-receipt.v1",
+  "status": "IMPLEMENTED_PENDING_INDEPENDENT_REVIEW",
+  "authorizing": false,
+  "independent": false,
+  "scope": "source-byte binding for the versioned String checked-snapshot/GIR route",
+  "galerina": {
+    "branch": "main",
+    "head": "90990301c8a6d2b5c24980bb3fd16a0d3985fa13",
+    "tree": "b3d7466c4dfe1bbed15dccfab3006f6666a941d6",
+    "implementationCommit": "90990301c8a6d2b5c24980bb3fd16a0d3985fa13",
+    "implementationPaths": [
+      "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts",
+      "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs"
+    ],
+    "implementationDigests": {
+      "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts": "sha256:a7cf10a6694058cc839df6b43f16b00c9a498beac88ff091afd1b1f1ea190d00",
+      "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs": "sha256:7b8b3aee52954a3d2f067fb47f3c74a39ae96d4889a2691e8a584ca8c5bea4ed"
+    }
+  },
+  "externalBuildPoints": {
+    "slide": {
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db"
+    },
+    "lythWeaver": {
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd"
+    }
+  },
+  "checks": {
+    "compilerTypecheck": "PASS",
+    "stringRouteAndScalarGIRTests": "8/8 PASS",
+    "physicalSlideVokLane": "10/10 PASS",
+    "corpusAssuranceRerun": "NOT_RUN_BY_OWNER_DIRECTION"
+  },
+  "repair": {
+    "behavior": "reparse exact canonical source bytes and refuse PARSE_SOURCE_MISMATCH when supplied parse facts differ",
+    "regressionTest": "refuses a parse result whose source bytes are replaced"
+  },
+  "remainingGates": [
+    "owner-bound queue/admission decision",
+    "mutually bound exact-head continuity receipt",
+    "independent completion audit",
+    "explicit authority release before consumer switch or bulk .fungi authoring"
+  ],
+  "controls": {
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED"
+  }
+}
