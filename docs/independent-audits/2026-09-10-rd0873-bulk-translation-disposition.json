@@ -1,13 +1,13 @@
 {
   "schema": "galerina.rd0873-bulk-translation-disposition.v1",
   "date": "2026-09-10",
-  "status": "HOLD_NO_ADMITTED_CANDIDATES",
+  "status": "HOLD_NO_ADMITTED_CANDIDATES_STALE_PROJECT_RECEIPT",
   "authorizing": false,
   "purpose": "Record the post-route-repair disposition without reopening the closed corpus assurance or inventing translation scope.",
   "exactHead": {
     "branch": "main",
-    "head": "c79ce6bef588d824b2b17b96022ca549ec2f0d94",
-    "tree": "348b3a841c531b213c8cd61723ab68acf04a89a0"
+    "head": "93b4815f76c7c14f02402987c11ff1474236bf50",
+    "tree": "51cc922db58e0023903a18a1bd5496a59c2692ab"
   },
   "queue": {
     "path": "build/conversion-queue/queue.json",
@@ -25,13 +25,19 @@
     "interpretation": "The seven scoped entries are review dossiers, not a non-empty authoring queue."
   },
   "toolchainBoundary": {
-    "conversionQueueFocusedTest": "REFUSED_PINNED_GIT_UNAVAILABLE",
+    "conversionQueueFocusedTest": "PASS_14_OF_14",
     "command": "node --test --test-timeout=120000 scripts/tests/conversion-queue.test.mjs",
     "approvedGitExecutableDigest": "22fead8244ef3a7225fb800099a4e43eca8bcec0466774917669599c2f19a05a",
-    "observedResult": "the test could not discover an executable with the approved digest",
+    "observedResult": "the self-test passes when the approved pinned executable is supplied",
     "ordinaryGitSubstitution": false,
     "productDependency": false,
-    "effect": "queue regeneration and its custody self-test remain unavailable until the approved toolchain is restored"
+    "queueCheck": "REFUSED_STALE_PROJECT_RECEIPT",
+    "queueCheckCommand": "node scripts/conversion-queue.mjs --check --root . --project-corpus-receipt build/fungi-corpus-check/evidence/rd0873-task8-project-current-head.json --git-executable <approved-pinned-git> --git-digest 22fead8244ef3a7225fb800099a4e43eca8bcec0466774917669599c2f19a05a",
+    "projectReceiptHead": "4828087b2cc8613efdda53c8e08857cd94f38175",
+    "projectReceiptTree": "3a9861e4e4272a9d90598828a23ed73f61348d4f",
+    "currentHead": "93b4815f76c7c14f02402987c11ff1474236bf50",
+    "corpusRerun": false,
+    "effect": "the queue remains non-admitting because its PROJECT receipt is stale at the current head; refreshing it would reopen the closed corpus assurance"
   },
   "completedBoundedRoute": {
     "ownerQueueDecision": "docs/independent-audits/2026-09-10-rd0873-string-route-owner-queue-decision-v2.json",
@@ -62,6 +68,6 @@
     "production authority",
     "remote publication"
   ],
-  "nextSafeAction": "Restore the separately governed pinned Git toolchain if the queue gate must be rerun, then obtain the source-owner dossier/queue decision for a bounded candidate set; otherwise preserve this HOLD and the existing TypeScript/Fungi review fixtures.",
+  "nextSafeAction": "Preserve this HOLD and the existing TypeScript/Fungi review fixtures. Do not rerun the closed corpus assurance or promote the stale PROJECT receipt; a future owner decision must explicitly provide a current PROJECT receipt or keep bulk translation closed.",
   "observedBeforeReceiptCommit": true
 }
