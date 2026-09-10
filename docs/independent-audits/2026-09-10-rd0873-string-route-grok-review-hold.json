@@ -33,6 +33,11 @@
       "Literal vectors, refusal vectors and VOK identities were not supplied to the reviewer.",
       "Continuity between the compiler code tip and the Galerina evidence head was not proven.",
       "This reply is advisory and cannot satisfy the independent completion audit."
+    ],
+    "rechecked": [
+      "The compiler tip to Galerina evidence-head difference is upheld: the intervening committed paths are documentation and audit records, so they still require a fresh exact-head continuity receipt.",
+      "The claim that VOK identities were absent is upheld as a packet-scope omission, not as repository absence: SLIDE `2e8e41b` contains the dedicated VOK receipt module and constellation test.",
+      "The local 4/4 and 21/21 checks remain implementation evidence only; they do not supply the missing owner-bound admission or independent completion audit."
     ]
   },
   "recommendation": "HOLD",
