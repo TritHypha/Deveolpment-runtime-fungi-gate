@@ -1,0 +1,238 @@
+{
+  "schema": "galerina.rd0873-string-route-independent-completion-audit.v2",
+  "version": 2,
+  "date": "2026-09-10",
+  "status": "PASS_BOUNDED_IMPLEMENTATION_ONLY",
+  "verdict": "PASS",
+  "verdictScope": "bounded implementation checks and the exercised local String route only",
+  "closureVerdict": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_READ_ONLY_INDEPENDENT_COMPLETION_AUDIT",
+  "scope": {
+    "route": "versioned String checked-snapshot/GIR route",
+    "typescriptShadow": "packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode",
+    "existingFungiTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+    "routeImplementation": [
+      "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts",
+      "packages-ts/galerina-core-compiler/src/string-match-gir-emitter-v1.ts"
+    ],
+    "routeTest": "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs",
+    "excluded": [
+      "closed 2,720-file corpus assurance rerun",
+      "source, test, configuration and queue edits",
+      "branch or worktree creation",
+      "commit, push, merge and publication",
+      "bulk .fungi authoring",
+      "consumer switch and TypeScript retirement"
+    ]
+  },
+  "exactBuildIdentities": {
+    "galerina": {
+      "repository": "Galerina",
+      "branch": "main",
+      "head": "1e1022dc54f1e0e843f3012993e12753ae535448",
+      "tree": "964ab32b1e910a2f2b51e9e8ac719c20b518233c",
+      "workingTree": "DIRTY_UNRELATED_PATHS_PRESERVED",
+      "dirtyPaths": [
+        "build/conversion-queue/QUEUE.md",
+        "build/conversion-queue/queue.json",
+        "packages-ts/galerina-devtools-benchmarks/results/compute-mix-latest.json",
+        "packages-ts/galerina-devtools-wasmtime-oracle/package-lock.json"
+      ],
+      "routeTrackedDiff": []
+    },
+    "slide": {
+      "repository": "SLIDE",
+      "branch": "codex/v2c-independent-frontend",
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db",
+      "workingTree": "CLEAN"
+    },
+    "lythWeaver": {
+      "repository": "lyth-weaver",
+      "branch": "main",
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd",
+      "workingTree": "CLEAN"
+    }
+  },
+  "subjectIdentity": {
+    "typescriptSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+    "fungiSourceDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+    "sourceBytes": 385,
+    "snapshotDigest": "sha256:ecfb51c7aae2b2e1c393fc4620d3871aebfc14fdc057b3a18e6bee83d0763e78",
+    "snapshotBytes": 1831,
+    "girDigest": "sha256:4ad87835500c84d1069694744877ccc044fd6f7fbb91d832fbbe1e506c611592",
+    "girBytes": 542,
+    "physicalSlideDigest": "sha256:d6b0f35c2e83f75f6a43e3637c783d0b9a1c1f4d307a31e22b1b7b9ee6a9a658",
+    "semanticProfile": "slide.semantic.executable-gir.string-match.v1",
+    "registrySet": "slide.registry.executable-gir.string-match.v1",
+    "registrySetDigest": "8a5d4b8f0f58c6c8ca1e9df6c0c0e2c1c8b7a77a1d9a41b0dd9b8b2b6a5c4d3e",
+    "memoryProfile": "slide.memory.safe-value.v1",
+    "workBound": 12,
+    "routeSourceDigests": {
+      "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts": "sha256:0ff501b540189dccef121b697e5af8826ecda58202065bc55643e5caeb0babdf",
+      "packages-ts/galerina-core-compiler/src/string-match-gir-emitter-v1.ts": "sha256:3b8775adb99c520f8a0e36f7ccfe9ce139a7bcf5c72be9a9dfd9779dbf617da5",
+      "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs": "sha256:4852e9add931e7b3a70c194f19ba65d374e635522ee59c5dea50cbfab9af7c34"
+    },
+    "externalRouteDigests": {
+      "SLIDE/src/checked-module-snapshot-string-match-compiler.mjs": "sha256:429fb9fd08971a18975d255c5a4c59d438888d4045493da42d06e5739708a1cc",
+      "SLIDE/src/typed-string-match-package-execution-receipt-v3.mjs": "sha256:08dadf61e5e99199d81b2f227a37f3c7f24ddd39bc36a990757194bec03c5509",
+      "lyth-weaver/tools/adapter/string-match-adapter.ts": "sha256:ec43ad377d1af19bb40bbdb0a6bdb1bcef577305fe6ff9853b9d235acb5bb658"
+    }
+  },
+  "checks": [
+    {
+      "id": "compiler-typecheck",
+      "command": "npm run typecheck",
+      "cwd": "packages-ts/galerina-core-compiler",
+      "result": "PASS",
+      "counts": { "failed": 0 }
+    },
+    {
+      "id": "bounded-route-tests",
+      "command": "node --test tests/string-match-snapshot-gir-v2.test.mjs tests/checked-snapshot-gir-emitter.test.mjs",
+      "cwd": "packages-ts/galerina-core-compiler",
+      "result": "PASS",
+      "counts": { "suites": 2, "tests": 11, "passed": 11, "failed": 0, "skipped": 0, "cancelled": 0 }
+    },
+    {
+      "id": "prior-red-vectors",
+      "command": "fresh inline boundary probe over the real environment-mode.fungi source",
+      "cwd": "packages-ts/galerina-core-compiler",
+      "result": "PASS",
+      "counts": { "vectors": 2, "passed": 2, "failed": 0 },
+      "observations": [
+        { "vector": "valid snapshot bytes with one trailing LF", "class": "StringMatchSnapshotRefusal", "code": "CANONICAL_BYTES" },
+        { "vector": "parse-result diagnostics accessor throws", "class": "StringMatchSnapshotRefusal", "code": "PARSE_RESULT_ACCESSOR" }
+      ]
+    },
+    {
+      "id": "four-twin-differential",
+      "command": "node --test packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+      "cwd": ".",
+      "result": "PASS",
+      "counts": { "suites": 4, "tests": 8, "passed": 8, "failed": 0, "skipped": 0, "cancelled": 0 }
+    },
+    {
+      "id": "physical-slide-vok-targeted",
+      "command": "node --test tests/v2c-string-match.test.mjs tests/detached-string-match-constellation.test.mjs",
+      "cwd": "SLIDE",
+      "result": "PASS",
+      "counts": { "suites": 2, "tests": 3, "passed": 3, "failed": 0, "skipped": 0, "cancelled": 0 }
+    },
+    {
+      "id": "physical-slide-vok-real-source",
+      "command": "fresh inline probe: current Galerina source -> String snapshot/GIR -> physical SLIDE -> Lyth -> VOK",
+      "cwd": "SLIDE",
+      "result": "PASS",
+      "counts": { "stages": 5, "passed": 5, "failed": 0 },
+      "observations": {
+        "slideKind": "PHYSICAL_SLIDE",
+        "slideWorkMaximum": 12,
+        "lythVerdict": "evidence",
+        "lythSchema": "lyth.detached-string-match-evidence.v1",
+        "lythWorkMaximum": 12,
+        "vokPreparedVerdict": 1,
+        "wrongNumericInputVerdict": -1,
+        "exactProductionVerdict": 1,
+        "exactProductionValue": 1,
+        "executionReceipt": "slide.string-match-package-execution.receipt.v3",
+        "authorityReleased": false
+      }
+    },
+    {
+      "id": "slide-full-suite",
+      "command": "npm test",
+      "cwd": "SLIDE",
+      "result": "PARTIAL_UNRELATED_CANCELLATIONS",
+      "counts": { "suites": 108, "tests": 1043, "passed": 1034, "failed": 0, "cancelled": 9 },
+      "cancellationCause": "Nine unrelated tests resolve legacy Galerina/packages-galerina paths that are absent in the current repository layout; the targeted String route and physical probe pass independently."
+    },
+    {
+      "id": "lyth-typecheck",
+      "command": "npm run typecheck",
+      "cwd": "lyth-weaver",
+      "result": "PASS",
+      "counts": { "failed": 0 }
+    },
+    {
+      "id": "lyth-full-suites",
+      "command": "npm test",
+      "cwd": "lyth-weaver",
+      "result": "PASS",
+      "counts": { "suites": 14, "checks": 633, "passed": 633, "failed": 0 }
+    },
+    {
+      "id": "final-custody-read",
+      "command": "fresh git head, tree, status and route-path diff reads",
+      "cwd": ".",
+      "result": "PASS",
+      "observations": {
+        "galerinaHead": "1e1022dc54f1e0e843f3012993e12753ae535448",
+        "slideHead": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+        "lythHead": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+        "routeTrackedDiff": [],
+        "protectedQueuePreserved": true,
+        "topologyChanged": false
+      }
+    }
+  ],
+  "findings": [],
+  "coverageLimitations": [
+    {
+      "class": "ENVIRONMENT_LIMITATION",
+      "severity": "low",
+      "status": "NONBLOCKING_FOR_BOUNDED_ROUTE",
+      "detail": "The broader SLIDE suite has nine cancellations from unrelated legacy path assumptions; no targeted String/VOK check failed."
+    },
+    {
+      "class": "SCOPE_LIMIT",
+      "severity": "important",
+      "status": "EXPLICITLY_EXCLUDED",
+      "detail": "The closed 2,720-file corpus assurance was not rerun under owner direction."
+    }
+  ],
+  "authorityAndCustodyGates": {
+    "ownerQueueDecision": "RECORDED_BUT_NOT_REBOUND_TO_CURRENT_REPAIRED_HEAD",
+    "exactHeadContinuity": "CURRENT_HEADS_OBSERVED; MUTUALLY_BOUND_ADMISSION_NOT_CLAIMED",
+    "independentCompletionAudit": "PASS_FOR_BOUNDED_IMPLEMENTATION_ONLY",
+    "authorityRelease": "MISSING",
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED",
+    "corpusAssuranceRerun": "NOT_RUN_BY_OWNER_DIRECTION",
+    "graphOrIndexAdmission": "NOT_PERFORMED",
+    "protectedQueueMutation": false,
+    "topologyChanged": false
+  },
+  "completionCriteria": {
+    "freshExactHeadRouteEvidence": "PASS",
+    "sourceAndTwinDifferential": "PASS",
+    "controlledRedVectors": "PASS",
+    "physicalSlideVokExecution": "PASS",
+    "lythIndependentEvidence": "PASS",
+    "canonicalByteBoundary": "PASS",
+    "typedHostileParseBoundary": "PASS",
+    "ownerBoundAdmission": "NOT_CLAIMED",
+    "mutuallyBoundCrossRepositoryContinuity": "NOT_CLAIMED",
+    "productionAuthority": "CLOSED",
+    "independentCompletionVerdict": "PASS_BOUNDED_ONLY"
+  },
+  "decisionRationale": "PASS is limited to fresh bounded implementation checks and the exercised local physical route. Closure remains HOLD because owner admission, a mutually bound cross-repository continuity receipt, authority release, consumer switching, TypeScript retirement and bulk .fungi authoring are outside this audit and remain closed.",
+  "controls": {
+    "authoringAllowed": false,
+    "authorityReleased": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "corpusRerun": false,
+    "push": false,
+    "commit": false,
+    "merge": false
+  }
+}
