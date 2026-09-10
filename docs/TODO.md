@@ -16,6 +16,12 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Recorded the owner's current `approved, continue full auto` direction
   and a current-head continuity readback. Both remain non-authorizing for
   production and retain all TypeScript shadows.
+- [x] Restored the separately governed pinned Git executable from the existing
+  restart-toolchain custody; its conversion-queue self-test passes 14/14.
+- [!] The live queue check still refuses the available PROJECT receipt because
+  it is bound to head `4828087b2cc8613efdda53c8e08857cd94f38175`, not the
+  current head. The closed 2,720-file corpus assurance is not reopened to
+  manufacture a replacement receipt.
 - [!] Bulk translation remains **HOLD** at the conserved queue boundary:
   1,588 tracked entries resolve to `CANDIDATE: 0`, `BLOCKED: 921` and
   `BOOTSTRAP_FLOOR: 667`; the protected queue files were not changed.

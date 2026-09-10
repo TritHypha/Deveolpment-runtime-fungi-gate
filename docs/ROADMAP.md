@@ -21,6 +21,13 @@ non-empty owner admission for a bounded reversible candidate set; consumer
 switching, TypeScript retirement, production authority, corpus reruns and
 topology changes stay closed.
 
+The approved pinned Git executable is available from the existing restart
+toolchain and its queue self-test passes 14/14. A live queue check still refuses
+the available PROJECT receipt because it is bound to the older head
+`4828087b2cc8613efdda53c8e08857cd94f38175`; refreshing that receipt would
+reopen the closed corpus assurance. This is a governance-evidence hold, not a
+Galerina product dependency.
+
 ## Owner-signed RD-0873/RD-0858 transition checkpoint - 2026-09-10
 
 The owner has confirmed that RD-0873 Tasks 7, 8 and 9 are complete and signed
