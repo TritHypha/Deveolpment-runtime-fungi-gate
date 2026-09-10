@@ -59,6 +59,15 @@ same eight local checks and retained `authorityReleased: false`.
 The composite `isTaskEffect` flow remains outside this String literal-match
 edition and stays held under the original bounded-wave decision.
 
+## Fresh differential check
+
+On 2026-09-10 the four package-owned conversion tests for the same bounded
+twins were run again against their retained TypeScript shadows. The command
+covered environment mode, Omni uncertainty, terminal scope and response-safe
+classification. All eight focused assertions passed (8/8, zero failures,
+zero skips) in 438 ms. This is a change-focused differential check; it does
+not rescan the 2,720-file corpus and it does not create new `.fungi` source.
+
 ## Remaining gate
 
 The current SLIDE detached scalar profile accepts only the existing scalar GIR
