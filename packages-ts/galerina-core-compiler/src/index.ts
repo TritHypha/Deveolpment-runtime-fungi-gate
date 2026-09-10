@@ -124,6 +124,16 @@ export {
   SLIDE_SEMANTIC_PROFILE_ID,
   type DetachedGIREmissionResult,
 } from "./checked-snapshot-gir-emitter.js";
+export {
+  emitRd0858SlideGIR,
+  Rd0858SlideGIREmissionRefusal,
+  RD0858_SLIDE_ENTRY_FUNCTION_ID,
+  RD0858_SLIDE_GIR_SCHEMA,
+  RD0858_SLIDE_REGISTRY_SET_DIGEST,
+  RD0858_SLIDE_REGISTRY_SET_ID,
+  RD0858_SLIDE_RESULT_TYPE_ID,
+  type Rd0858SlideGIREmissionResult,
+} from "./rd0858-slide-gir-adapter.js";
 
 export {
   loadProductRegistry,
