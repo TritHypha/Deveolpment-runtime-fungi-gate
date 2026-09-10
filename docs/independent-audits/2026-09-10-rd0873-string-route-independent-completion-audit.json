@@ -1,0 +1,241 @@
+{
+  "schema": "galerina.rd0873-string-route-independent-completion-audit.v1",
+  "date": "2026-09-10",
+  "status": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_READ_ONLY_COMPLETION_AUDIT",
+  "scope": {
+    "route": "versioned String checked-snapshot/GIR route",
+    "typescriptShadow": "packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode",
+    "existingFungiTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+    "routeImplementation": [
+      "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts",
+      "packages-ts/galerina-core-compiler/src/string-match-gir-emitter-v1.ts"
+    ],
+    "routeTest": "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs",
+    "excluded": [
+      "closed 2,720-file corpus rerun",
+      "source/test/configuration edits",
+      "branch/worktree creation",
+      "commit/push/merge/publication",
+      "bulk .fungi authoring"
+    ]
+  },
+  "exactBuildIdentities": {
+    "galerina": {
+      "branch": "main",
+      "head": "98531055040180fc26ab5b3dc737357404c85d78",
+      "tree": "9b80eed968b295f3292da79bd87d76e2ce63620f",
+      "worktreeState": "pre-existing unrelated dirty paths preserved",
+      "dirtyPaths": [
+        "build/conversion-queue/QUEUE.md",
+        "build/conversion-queue/queue.json",
+        "packages-ts/galerina-devtools-benchmarks/results/compute-mix-latest.json",
+        "packages-ts/galerina-devtools-wasmtime-oracle/package-lock.json"
+      ]
+    },
+    "slide": {
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db",
+      "worktreeState": "clean"
+    },
+    "lythWeaver": {
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd",
+      "worktreeState": "clean"
+    }
+  },
+  "subjectIdentity": {
+    "typescriptSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+    "fungiSourceDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+    "snapshotDigest": "sha256:ecfb51c7aae2b2e1c393fc4620d3871aebfc14fdc057b3a18e6bee83d0763e78",
+    "snapshotBytes": 1831,
+    "girDigest": "sha256:4ad87835500c84d1069694744877ccc044fd6f7fbb91d832fbbe1e506c611592",
+    "girBytes": 542,
+    "semanticProfile": "slide.semantic.executable-gir.string-match.v1",
+    "registrySet": "slide.registry.executable-gir.string-match.v1",
+    "registrySetDigest": "8a5d4b8f0f58c6c8ca1e9df6c0c0e2c1c8b7a77a1d9a41b0dd9b8b2b6a5c4d3e",
+    "memoryProfile": "slide.memory.safe-value.v1",
+    "sourceBytes": 385,
+    "routeSourceDigests": {
+      "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts": "sha256:a7cf10a6694058cc839df6b43f16b00c9a498beac88ff091afd1b1f1ea190d00",
+      "packages-ts/galerina-core-compiler/src/string-match-gir-emitter-v1.ts": "sha256:3b8775adb99c520f8a0e36f7ccfe9ce139a7bcf5c72be9a9dfd9779dbf617da5",
+      "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs": "sha256:7f122eaae2723d130fa264e9a1adb783a25d5f1765f4361292f51ba3fd078349"
+    }
+  },
+  "claims": [
+    {
+      "id": "exact-heads",
+      "claim": "The three participating repositories were observed at the exact heads and trees recorded above.",
+      "label": "CONFIRMED",
+      "evidence": "fresh git identity and status reads"
+    },
+    {
+      "id": "bounded-route",
+      "claim": "The String route seals the exact four literals plus final wildcard and emits deterministic canonical GIR bytes with the dedicated String profile.",
+      "label": "CONFIRMED",
+      "evidence": "9 compiler route tests and fresh real-source emission"
+    },
+    {
+      "id": "real-physical-chain",
+      "claim": "The current Galerina route output was independently prepared by SLIDE, materialized as a physical reference bundle, checked by Lyth, and admitted to one VOK lease for exact String execution.",
+      "label": "CONFIRMED",
+      "evidence": "fresh-process route-to-SLIDE-to-Lyth-to-VOK probe; SLIDE work 12 and Lyth work 12"
+    },
+    {
+      "id": "owner-and-continuity",
+      "claim": "Owner admission and a mutually bound current exact-head Galerina/SLIDE/Lyth continuity receipt are complete.",
+      "label": "NOT_VERIFIABLE",
+      "evidence": "existing owner and continuity receipts are review-pending and bind older Galerina heads"
+    },
+    {
+      "id": "canonical-input-boundary",
+      "claim": "The decoder/emitter currently accept a valid snapshot followed by trailing LF bytes.",
+      "label": "CONFIRMED",
+      "evidence": "a valid snapshot followed by two LF bytes was accepted by decodeStringMatchCheckedModuleSnapshot and emitCanonicalStringMatchGIRFromSnapshot"
+    },
+    {
+      "id": "typed-hostile-input-boundary",
+      "claim": "A hostile parse-result diagnostics accessor currently escapes as a raw Error from the String route.",
+      "label": "CONFIRMED",
+      "evidence": "a diagnostics getter threw raw Error: diagnostics getter from sealStringMatchCheckedModuleSnapshot"
+    }
+  ],
+  "checks": [
+    {
+      "id": "compiler-typecheck",
+      "command": "npm run typecheck",
+      "cwd": "packages-ts/galerina-core-compiler",
+      "result": "PASS",
+      "counts": { "failed": 0 }
+    },
+    {
+      "id": "compiler-string-route",
+      "command": "node --test tests/string-match-snapshot-gir-v2.test.mjs tests/checked-snapshot-gir-emitter.test.mjs",
+      "cwd": "packages-ts/galerina-core-compiler",
+      "result": "PASS",
+      "counts": { "tests": 9, "passed": 9, "failed": 0, "skipped": 0, "cancelled": 0 }
+    },
+    {
+      "id": "four-twin-differential",
+      "command": "node --test packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+      "cwd": ".",
+      "result": "PASS",
+      "counts": { "tests": 8, "passed": 8, "failed": 0, "skipped": 0, "cancelled": 0 }
+    },
+    {
+      "id": "slide-targeted",
+      "command": "node --test tests/v2c-string-match.test.mjs tests/detached-string-match-constellation.test.mjs",
+      "cwd": "SLIDE",
+      "result": "PASS",
+      "counts": { "tests": 3, "passed": 3, "failed": 0, "skipped": 0, "cancelled": 0 }
+    },
+    {
+      "id": "actual-route-physical-slide-vok",
+      "command": "fresh-process inline probe: current Galerina source -> String snapshot/GIR -> SLIDE physical bundle -> Lyth adapter -> VOK",
+      "cwd": "SLIDE",
+      "result": "PASS",
+      "evidence": {
+        "sourceDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+        "snapshotDigest": "sha256:ecfb51c7aae2b2e1c393fc4620d3871aebfc14fdc057b3a18e6bee83d0763e78",
+        "girDigest": "sha256:4ad87835500c84d1069694744877ccc044fd6f7fbb91d832fbbe1e506c611592",
+        "slidePrepareVerdict": 1,
+        "slideWork": 12,
+        "physicalKind": "PHYSICAL_SLIDE",
+        "lythVerdict": "evidence",
+        "lythWork": 12,
+        "vokPrepareVerdict": 1,
+        "wrongClassVerdict": -1,
+        "exactProductionVerdict": 1,
+        "executionReceipt": "slide.string-match-package-execution.receipt.v3",
+        "executionReceiptInspection": 1,
+        "authorityReleased": false
+      }
+    },
+    {
+      "id": "lyth-typecheck",
+      "command": "npm run typecheck",
+      "cwd": "lyth-weaver",
+      "result": "PASS",
+      "counts": { "failed": 0 }
+    },
+    {
+      "id": "lyth-full-suites",
+      "command": "npm test",
+      "cwd": "lyth-weaver",
+      "result": "PASS",
+      "counts": { "suites": 14, "checks": 633, "failed": 0 }
+    },
+    {
+      "id": "controlled-red",
+      "command": "fresh-process bounded mutation probe",
+      "cwd": "packages-ts/galerina-core-compiler",
+      "result": "PASS",
+      "vectors": [
+        { "mutation": "replace development literal in source bytes while retaining original parse result", "observed": "StringMatchSnapshotRefusal:PARSE_SOURCE_MISMATCH" },
+        { "mutation": "toggle one stored snapshot byte", "observed": "StringMatchSnapshotRefusal:ENCODING" },
+        { "mutation": "pass numeric input to physical String VOK", "observed": "verdict -1" },
+        { "control": "exact production String input to physical String VOK", "observed": "verdict 1" }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "STRING-ROUTE-CANONICAL-BYTES-001",
+      "severity": "important",
+      "label": "CONFIRMED",
+      "requirementAssessment": "PLAUSIBLE",
+      "location": "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts:165-170",
+      "observation": "decodeStringMatchCheckedModuleSnapshot validates JSON but does not require the input bytes to equal encodeStringMatchCheckedModuleSnapshot(decoded). Appending two LF bytes to a valid 1,826-byte snapshot was accepted by both the decoder and String GIR emitter.",
+      "impact": "Equivalent snapshot semantics can have distinct content digests and references while producing the same GIR digest, weakening the stated canonical byte and content-addressed identity boundary.",
+      "direction": "At the decoder boundary, require canonical re-encoding byte equality (or an equivalent exact framing rule) before accepting a snapshot reference."
+    },
+    {
+      "id": "STRING-ROUTE-PARSE-INPUT-002",
+      "severity": "moderate",
+      "label": "CONFIRMED",
+      "requirementAssessment": "PLAUSIBLE",
+      "location": "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts:183-190",
+      "observation": "A caller-supplied parse-result object with a throwing diagnostics accessor escapes sealStringMatchCheckedModuleSnapshot as raw Error: diagnostics getter rather than StringMatchSnapshotRefusal with a stable code.",
+      "impact": "The boundary still fails closed, but callers cannot rely on the typed deterministic refusal algebra for hostile parse-result shapes and a backend accessor can escape the route contract.",
+      "direction": "Capture and validate the parse-result root and nested arrays through the same exact-data/proxy/accessor checks used for checker evidence, mapping access failures to a closed StringMatchSnapshotRefusal code."
+    }
+  ],
+  "authorityAndCustodyGates": {
+    "ownerQueueDecision": "RECORDED_FOR_REVIEW_ONLY",
+    "exactHeadContinuity": "NOT_VERIFIABLE_AS_MUTUALLY_BOUND_CURRENT_RECEIPT",
+    "independentCompletionAudit": "THIS_RECEIPT_COMPLETES_THE_FRESH_REVIEW_LANE",
+    "authorityRelease": "MISSING",
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED",
+    "corpusAssuranceRerun": "NOT_RUN_BY_OWNER_DIRECTION",
+    "graphOrIndexAdmission": "NOT_PERFORMED"
+  },
+  "completionCriteria": {
+    "freshExactHeadRouteEvidence": "PASS",
+    "sourceAndTwinDifferential": "PASS",
+    "controlledRedOrDiscriminatingNegative": "PASS",
+    "physicalSlideVokExecution": "PASS",
+    "lythIndependentEvidence": "PASS",
+    "canonicalByteBoundary": "HOLD_OPEN_FINDING",
+    "typedHostileParseBoundary": "HOLD_OPEN_FINDING",
+    "ownerBoundAdmission": "NOT_VERIFIABLE",
+    "mutuallyBoundCrossRepositoryContinuity": "NOT_VERIFIABLE",
+    "independentCompletionCriteriaMet": false
+  },
+  "decisionRationale": "HOLD. The bounded implementation and real-source physical chain reproduce successfully at the recorded exact heads, but two boundary observations remain open and the owner-bound admission, mutually bound current continuity receipt, authority release, consumer switch and bulk .fungi authoring gates remain closed."
+  ,
+  "controls": {
+    "authoringAllowed": false,
+    "authorityReleased": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "corpusRerun": false
+  }
+}
