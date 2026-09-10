@@ -1,0 +1,55 @@
+{
+  "schema": "galerina.rd0873-string-route-continuity-observation.v2",
+  "status": "HOLD_PENDING_INDEPENDENT_REVIEW",
+  "authorizing": false,
+  "independent": false,
+  "observation": "fresh exact build-point readback after source-byte binding repair and valid-route substitution coverage",
+  "buildPoints": {
+    "galerina": {
+      "branch": "main",
+      "head": "14e85307d75aa96ea8d46fd49497ac9b37b42256",
+      "tree": "2451ad058242530f79efd2cd332313d163ce3f4c",
+      "routeImplementationCommit": "90990301c8a6d2b5c24980bb3fd16a0d3985fa13",
+      "routeCoverageCommit": "f4f7b06d853a10c9b4b5857f8be4b28312c1becc",
+      "observedBeforeReceiptCommit": true
+    },
+    "slide": {
+      "head": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "tree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db"
+    },
+    "lythWeaver": {
+      "head": "a68eeb5ced8a522b3ab140422c1e7ce84ec887fa",
+      "tree": "abd63f1f70e24a97591d084e607da17c9f0c35cd"
+    }
+  },
+  "implementationDigests": {
+    "packages-ts/galerina-core-compiler/src/string-match-checked-module-snapshot-v2.ts": "sha256:a7cf10a6694058cc839df6b43f16b00c9a498beac88ff091afd1b1f1ea190d00",
+    "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs": "sha256:7f122eaae2723d130fa264e9a1adb783a25d5f1765f4361292f51ba3fd078349"
+  },
+  "freshChecks": {
+    "compilerTypecheck": "PASS",
+    "stringSnapshotAndGIRRoute": "9/9 PASS",
+    "fourTwinDifferential": "8/8 PASS",
+    "physicalSlideVokLane": "10/10 PASS",
+    "lythWeaverTestSuites": "14 suites / 633 checks PASS",
+    "lythWeaverTypecheck": "PASS",
+    "corpusAssuranceRerun": "NOT_RUN_BY_OWNER_DIRECTION"
+  },
+  "continuity": {
+    "galerinaToSlide": "OBSERVED_SAME_ROUTE_IDENTITIES",
+    "slideToLythWeaver": "OBSERVED_SAME_ROUTE_IDENTITIES",
+    "mutuallyBoundReceipt": "PENDING_INDEPENDENT_REVIEW_AND_OWNER_ADMISSION",
+    "ownerBoundQueueDecision": "MISSING",
+    "independentCompletionAudit": "MISSING"
+  },
+  "controls": {
+    "authorityReleased": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "bulkFungiAuthoring": false,
+    "productionAuthority": false,
+    "remotePublication": "NOT_REQUESTED",
+    "topologyChanged": false,
+    "corpusRerun": false
+  }
+}
