@@ -1,7 +1,7 @@
 # RD-0873 post-closure pilot admission packet
 
-Date: 2026-09-10  
-Status: **HOLD_NON_AUTHORIZING**  
+Date: 2026-09-10
+Status: **HOLD_NON_AUTHORIZING**
 Authorizing: **false**
 
 This packet bounds the first String-capable pilot around the existing
