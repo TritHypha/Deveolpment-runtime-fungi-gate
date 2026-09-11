@@ -57,6 +57,13 @@ validation obligations, and preserves the architecture boundary that
 cryptographic verification remains host/compute work. This entry remains
 `BLOCKED:DOSSIER_REQUIRED`; no cryptography was moved into Fungi.
 
+The bounded `galerina-auth` chapter assessment is closed in
+`docs/independent-audits/2026-09-11-rd0873-galerina-auth-chapter-disposition.json`.
+Its five implementation surfaces now have review-only dossiers, while
+`verdict.ts` and `index.ts` are re-export-only files with no local translation
+bodies. All chapter rows remain `BLOCKED:DOSSIER_REQUIRED`; this disposition
+does not authorize Fungi authoring or a consumer change.
+
 ## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 The owner supplied a fresh exact, non-empty authorization for one bounded

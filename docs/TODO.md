@@ -54,6 +54,13 @@ counts or open items that a newer section explicitly supersedes.
   `BLOCKED:DOSSIER_REQUIRED` surface. No cryptographic implementation is to be
   moved into Fungi; only a separately authorized host-boundary contract could
   reopen it.
+- [x] Closed the bounded `galerina-auth` chapter assessment in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-auth-chapter-disposition.json`.
+  All five implementation surfaces have review-only dossiers; `verdict.ts` and
+  `index.ts` are re-export-only and contain no local translation bodies.
+- [!] The chapter remains non-authorizing: all source rows are still
+  `BLOCKED:DOSSIER_REQUIRED`, with no queue relabel, Fungi authoring or consumer
+  switch.
 
 ### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 

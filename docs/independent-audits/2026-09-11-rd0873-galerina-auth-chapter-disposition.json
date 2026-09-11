@@ -1,0 +1,134 @@
+{
+  "schema": "galerina.rd0873.galerina-auth-chapter-disposition.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "CHAPTER_ASSESSED_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Close the bounded assessment of the galerina-auth source chapter without converting re-export files or changing queue classifications.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "4e7c6dd6752d93ee73eb7698d0be5f4fb6c6900a",
+    "tree": "2f819ed46e236c07aefe2fd5d90f043ac45f1850"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    },
+    "chapterRows": {
+      "sourceFiles": 7,
+      "testFiles": 6,
+      "allSourceRows": "BLOCKED:DOSSIER_REQUIRED"
+    }
+  },
+  "package": {
+    "name": "galerina-auth",
+    "packageJsonSha256": "sha256:0a9a80c2e791c3dc4c35df7de449309f833b64e5a4dc247217cac960805b40f1",
+    "readmeSha256": "sha256:78a8c5b4ebc074fc7694762cc377b720487157aa2d1359ba1616151e1edd5fff",
+    "boundaryReport": {
+      "path": "packages-ts/galerina-auth/.graph/BOUNDARY.md",
+      "sha256": "sha256:d66e9b7b9c1107caa5844492c1770fd98721dd659fcb518eb62f8d1a6551e1f6",
+      "status": "PASS",
+      "externalDependencies": ["node:crypto", "@galerina/core-network", "@galerina/tower-citizen"]
+    },
+    "sourceFileCount": 7,
+    "testFileCount": 6,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "sourceDisposition": [
+    {
+      "path": "packages-ts/galerina-auth/src/authorization.ts",
+      "symbols": ["scopeVerdict"],
+      "disposition": "DOSSIER_RECORDED",
+      "record": "docs/independent-audits/2026-09-11-rd0873-scope-verdict-source-dossier.json",
+      "focusedEvidence": "5/5",
+      "translationAuthority": false
+    },
+    {
+      "path": "packages-ts/galerina-auth/src/compose.ts",
+      "symbols": ["composeAuthVerdict"],
+      "excludedSymbols": ["previewAdmission"],
+      "disposition": "DOSSIER_RECORDED_WITH_AUTHORITY_EXCLUSION",
+      "record": "docs/independent-audits/2026-09-11-rd0873-compose-auth-verdict-source-dossier.json",
+      "focusedEvidence": "8/8 suite; composeAuthVerdict 5/5",
+      "translationAuthority": false
+    },
+    {
+      "path": "packages-ts/galerina-auth/src/credential.ts",
+      "symbols": ["headerPresenceVerdict"],
+      "disposition": "DOSSIER_RECORDED_SECURITY_HOLD",
+      "record": "docs/independent-audits/2026-09-11-rd0873-header-presence-source-dossier.json",
+      "focusedEvidence": "7/7",
+      "translationAuthority": false
+    },
+    {
+      "path": "packages-ts/galerina-auth/src/channel.ts",
+      "symbols": ["channelIdentityVerdict"],
+      "disposition": "DOSSIER_RECORDED_AUTHORITY_ADJACENT_HOLD",
+      "record": "docs/independent-audits/2026-09-11-rd0873-channel-identity-source-dossier.json",
+      "focusedEvidence": "10/10",
+      "translationAuthority": false
+    },
+    {
+      "path": "packages-ts/galerina-auth/src/bearer.ts",
+      "symbols": ["bearerTokenVerdict"],
+      "disposition": "DOSSIER_RECORDED_HOST_CRYPTO_FLOOR_HOLD",
+      "record": "docs/independent-audits/2026-09-11-rd0873-bearer-token-source-dossier.json",
+      "focusedEvidence": "26/26",
+      "translationAuthority": false
+    },
+    {
+      "path": "packages-ts/galerina-auth/src/verdict.ts",
+      "symbols": [],
+      "disposition": "REEXPORT_ONLY",
+      "sha256": "sha256:7d9691b516c682d7f628abbe61add428a6219a23ebd978025b8417fe6ae605d2",
+      "localBodies": false,
+      "exports": ["Verdict", "vAnd", "vOr", "allOf", "anyOf", "decideAtBoundary"],
+      "translationAuthority": false
+    },
+    {
+      "path": "packages-ts/galerina-auth/src/index.ts",
+      "symbols": [],
+      "disposition": "REEXPORT_ONLY",
+      "sha256": "sha256:08768cd4c45cb272dcb45e321ff50207aca7bb6ec22e939244638e8fcfc0ccd0",
+      "localBodies": false,
+      "translationAuthority": false
+    }
+  ],
+  "graphSnapshot": {
+    "scope": "packages-ts/galerina-auth",
+    "nodes": 96,
+    "edges": 148,
+    "functions": 25,
+    "entryPoints": [
+      "scopeVerdict",
+      "bearerTokenVerdict",
+      "channelIdentityVerdict",
+      "composeAuthVerdict",
+      "previewAdmission",
+      "headerPresenceVerdict"
+    ],
+    "note": "Graph discovery identifies local bodies and callers; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "The galerina-auth chapter is assessed for future owner review. Re-export files are not translation units; implementation files remain blocked or held under their individual dossiers. Keep bulk authoring closed while CANDIDATE remains zero and require an exact non-empty owner admission for any future wave."
+}
