@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-sentinel-power - 2026-09-11
+
+- [x] Assessed the four TypeScript source files under
+  packages-ts/galerina-core-sentinel-power/src from exact main HEAD
+  73572034f4b59ef9d752c3ea0bd5c675a722a177 / tree
+  1afdc81826ea5dcf1dc7e7a57cb3486c26a1b42d through the package boundary
+  graph, three focused test files and one registered Fungi asset.
+- [x] Recorded the exported governor class/function/constant, type surface,
+  existing power-governor.fungi twin and exact source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-power-source-dossier.json.
+  The existing asset remains non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 18/18. The package boundary
+  reports PASS with five nodes, six internal edges and no external dependencies.
+- [x] Astra's same-head advisory records NaN/infinity handling, mutable
+  envelope and sensor references, callback exceptions/reentrancy, missing
+  freshness/hysteresis/latch, separate terminal enforcement, deferred hardware
+  switching, Fungi finiteness/domain differences and the limited RD-0361 scope.
+- [!] One package row remains BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY;
+  the other six remain BLOCKED:DOSSIER_REQUIRED. The conserved queue remains
+  CANDIDATE: 0. No Fungi source, queue relabel, consumer switch, TypeScript
+  retirement or corpus assurance rerun occurred.
+- [!] Keep power translation closed until sensor provenance/calibration,
+  numeric domains, mutable-reference custody, terminal enforcement and exact
+  Fungi parity are resolved under a separate exact non-empty owner admission
+  with independent differential, physical SLIDE/VOK, execution and receipt
+  gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-sentinel-memory - 2026-09-11
 
 - [x] Assessed the seven TypeScript source files under

@@ -1,0 +1,320 @@
+{
+  "schema": "galerina.rd0873.galerina-core-sentinel-power-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for deterministic thermal/power envelope decisions without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "73572034f4b59ef9d752c3ea0bd5c675a722a177",
+    "tree": "1afdc81826ea5dcf1dc7e7a57cb3486c26a1b42d"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/errors.ts",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/index.ts",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/power-governor.ts",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/tests/power-governor.test.mjs",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/tests/rd0361-power-governor-execution.test.mjs",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/tests/thermal-envelope.test.mjs",
+        "package": "galerina-core-sentinel-power",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-sentinel-power",
+    "packageJsonSha256": "sha256:40c23c359c09469d57f0a3cab6787ffb5d704f74feafbb09dc824bb2eb1eeb42",
+    "packageLockSha256": "sha256:293c3da3a3076a8cdeafeaf5ecdd267d48b6ce18fc906c1906529a2dbc102ce0",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-sentinel-power/.graph/BOUNDARY.md",
+      "sha256": "sha256:2d01191015d977152733ea799a089acfce0f4530c98cbb6a7fcecc2b2a755fa1",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 4,
+    "testFileCount": 3,
+    "loadedFungiAssetCount": 1,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi",
+        "sha256": "sha256:4dd4749857c5edff3b1948f10fefc84738cf35ba273ad41e4c24b4ebf6df7122",
+        "kind": "existing non-authorizing thermal/power decision asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-power/src/power-governor.ts#PowerGovernor",
+        "fungi": "packages-ts/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi",
+        "status": "existing bounded power-state/admission twin; sensor and TypeScript remain authority shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts#validateEnvelope",
+        "fungi": "packages-ts/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi::envelopeValid",
+        "status": "existing bounded ordering twin; host computes numeric predicates"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/errors.ts",
+        "sha256": "sha256:757de987f929398c22f13f1dc45413c8f135221a1ea5a03c1c1b7e3648eb80f7",
+        "utf8Bytes": 593
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/index.ts",
+        "sha256": "sha256:c2460f3ec014a6577e6c0b4bfb061b0fbcd558efe208ae6e1ead519f7ce987cf",
+        "utf8Bytes": 585
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/power-governor.ts",
+        "sha256": "sha256:0abc8869abcb06b062ca7d6103b36ee0aff90afe175579b8a160812c8f3ced47",
+        "utf8Bytes": 5780
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts",
+        "sha256": "sha256:613081b3821f7ca67b2a88cad0300d7ddb2cd32430fdcf95dd99cf5e98d876f8",
+        "utf8Bytes": 2290
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [
+      {
+        "symbol": "validateEnvelope",
+        "source": "packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts",
+        "span": {
+          "start": 42,
+          "end": 58
+        },
+        "sourceSha256": "sha256:613081b3821f7ca67b2a88cad0300d7ddb2cd32430fdcf95dd99cf5e98d876f8",
+        "bodySha256": "sha256:56d306789d4b85b2ddb599ad2589db5f42889a07a3039ffd09807569c4739b04",
+        "bodyUtf8Bytes": 510
+      }
+    ],
+    "exportedClasses": [
+      {
+        "symbol": "PowerFault",
+        "source": "packages-ts/galerina-core-sentinel-power/src/errors.ts",
+        "span": {
+          "start": 8,
+          "end": 18
+        },
+        "sourceSha256": "sha256:757de987f929398c22f13f1dc45413c8f135221a1ea5a03c1c1b7e3648eb80f7",
+        "bodySha256": "sha256:d874ed4f362afcfac228d533c01a63187580aa056a894a0c299a5898a3b77120",
+        "bodyUtf8Bytes": 330
+      },
+      {
+        "symbol": "PowerGovernor",
+        "source": "packages-ts/galerina-core-sentinel-power/src/power-governor.ts",
+        "span": {
+          "start": 56,
+          "end": 170
+        },
+        "sourceSha256": "sha256:0abc8869abcb06b062ca7d6103b36ee0aff90afe175579b8a160812c8f3ced47",
+        "bodySha256": "sha256:0bf579c468334daae498bd084e72e57c78bdd24ab01346f12f5cd92681d86005",
+        "bodyUtf8Bytes": 4077
+      }
+    ],
+    "exportedConstants": [
+      {
+        "symbol": "AEROSPACE_ENVELOPE",
+        "source": "packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts",
+        "span": {
+          "start": 65,
+          "end": 69
+        },
+        "sourceSha256": "sha256:613081b3821f7ca67b2a88cad0300d7ddb2cd32430fdcf95dd99cf5e98d876f8"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "KernelTier",
+        "PowerState"
+      ],
+      "interfaces": [
+        "PowerDecision",
+        "ThermalEnvelope"
+      ],
+      "disposition": "type contracts remain evidence; thermal validation, state evaluation, kernel adjustment and kill-switch are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-sentinel-power/dist/index.js",
+    "sha256": "sha256:a69d2c7089b50d1a711464bebed76bcfddc58dfad2e336f8e6fe116f4da3e5d2",
+    "declarationPath": "packages-ts/galerina-core-sentinel-power/dist/index.d.ts",
+    "declarationSha256": "sha256:14e19b9680d83a8d7e881dc22be6ab180f4e741208c69fe330a1976d7eac655b",
+    "buildCommand": "npm test (includes build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-sentinel-power",
+    "nodes": 5,
+    "edges": 6,
+    "functions": 1,
+    "exportedClassCount": 2,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 6,
+      "EXTERNAL_IMPORTS": 0
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "validateEnvelope",
+      "PowerGovernor.stateFor",
+      "PowerGovernor.evaluate",
+      "PowerGovernor.requestAdjustment",
+      "PowerGovernor.assertWithinEnvelope"
+    ],
+    "note": "Boundary graph reports five nodes and six internal edges with no external dependencies. Function/class surfaces are AST-derived and are not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-sentinel-power/tests/power-governor.test.mjs",
+      "packages-ts/galerina-core-sentinel-power/tests/rd0361-power-governor-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-power/tests/thermal-envelope.test.mjs"
+    ],
+    "testSha256": {
+      "power-governor.test.mjs": "sha256:8bb4a11f04e3b3657864e6f4a8b7426e1707754996b87057b228ca4fd6406048",
+      "rd0361-power-governor-execution.test.mjs": "sha256:58059fad4676d4d77e916b5cfcea849430a89f2215b8c1a9f81ce959230772b8",
+      "thermal-envelope.test.mjs": "sha256:19f9abb6ccd34d8ae9c6b13a8e55a9f4a421fb2e8437625b6bf92ff2488d7a70"
+    },
+    "command": "npm test",
+    "result": "PASS 18/18",
+    "coveredBehavior": [
+      "thermal threshold ordering and finite validation",
+      "NOMINAL/THROTTLED/SAFETY/TERMINAL state and kernel mapping",
+      "sensor injection and live readings",
+      "cooler-or-equal adjustment admission and terminal kill-switch",
+      "PowerFault prototype/code contract",
+      "RD-0361 bounded power-governor differential"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-sentinel-power/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "73572034f4b59ef9d752c3ea0bd5c675a722a177",
+      "tree": "1afdc81826ea5dcf1dc7e7a57cb3486c26a1b42d"
+    },
+    "findings": [
+      "PowerGovernor.stateFor maps NaN and -Infinity to NOMINAL/native while +Infinity maps to TERMINAL/shadow; assertWithinEnvelope does not reject NaN. Translation must preserve this behavior or require a separately approved correction.",
+      "Construction validates the envelope once but retains the mutable object reference; later mutation changes thresholds without revalidation and AEROSPACE_ENVELOPE is not frozen at runtime. The injected sensor is also retained by reference, runs on every evaluate, can throw or mutate state, and has no freshness, hysteresis or terminal latch.",
+      "requestAdjustment(shadow) grants at TERMINAL; only a separate assertWithinEnvelope call throws. The governor does not switch kernels or shut down hardware, and native sensor access/HybridEngine switching remain deferred seams.",
+      "The existing Fungi twin contains six decision flows but envelopeValid receives comparison booleans without an explicit finiteness check; an Infinity threshold can satisfy those predicates while TypeScript rejects it. Host admission must bind finiteness and exact numeric comparisons.",
+      "Fungi kernelForState maps every code other than 0/1 to shadow, while the TypeScript switch has no fallback outside its four string states; killSwitchVerdict rejects only code 3. Preserve canonical label/code mapping, unknown kernel rank -1, numeric comparisons, error identity/messages and evaluation order.",
+      "RD-0361 covers interpreter/Wasm String ranks and exhaustive bounded decision folds plus selected TypeScript cases; it does not establish complete governor equivalence, finite-envelope marshalling, host sensor correctness, hardware enforcement or aerospace certification."
+    ],
+    "materialObligations": [
+      "Bind sensor provenance, calibration/units, freshness, finite numeric domain, mutable-envelope custody and exception/error ordering before authority claims.",
+      "Preserve threshold inclusivity, state/kernel ordering, cooler-or-equal admission, terminal kill-switch separation and reason-string observability.",
+      "Preserve callback reference/reentrancy and mutable-threshold behavior or explicitly narrow the admitted contract; keep unknown strings/codes and invalid states fail-closed.",
+      "Keep existing power-governor.fungi non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-sentinel-power",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded envelope validation, thermal state/kernel decisions, adjustment admission and terminal kill-switch",
+    "authorityBoundary": "This package consumes sensor input and controls kernel selection under thermal conditions. Existing Fungi folds are decision evidence only; they are not a sensor, policy or authority replacement.",
+    "runtimeObligations": [
+      "Preserve numeric threshold, sensor, state/kernel and adjustment semantics with fail-closed errors.",
+      "Preserve terminal kill-switch ordering and consumer enforcement boundary.",
+      "Preserve callback exceptions, reentrancy and reason outputs or explicitly narrow the admitted contract.",
+      "Keep Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this power scope",
+      "source-to-Fungi artifacts and exact twin hashes for sensor/domain and state transitions",
+      "independent differential vectors for NaN/Infinity, unknown strings, callback failure/reentrancy, threshold boundaries and terminal enforcement",
+      "physical sensor/calibration and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep galerina-core-sentinel-power rows BLOCKED with existing reasons and CANDIDATE at zero until a separate exact non-empty owner admission and independent sensor/differential/physical gates authorize a named scope."
+}

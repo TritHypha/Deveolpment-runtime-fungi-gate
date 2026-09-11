@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-sentinel-power - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+73572034f4b59ef9d752c3ea0bd5c675a722a177 with tree
+1afdc81826ea5dcf1dc7e7a57cb3486c26a1b42d in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-power-source-dossier.json.
+The package boundary graph covers five nodes and six internal edges with no
+external dependencies. It contains four TypeScript source files, one registered
+power-governor.fungi asset, and runtime surfaces for thermal validation, state
+and kernel selection, adjustment admission and the terminal kill-switch.
+
+Typecheck, build and the three focused suites pass **18/18**, including
+threshold boundaries, sensor injection, down-tier admission, terminal refusal,
+PowerFault identity and the RD-0361 bounded differential. The existing Fungi
+twin folds six host-supplied decision predicates; it does not provide sensor
+acquisition, calibration, timing, callback behavior, hardware switching or
+consumer enforcement. Astra's same-head review keeps translation on HOLD:
+NaN/-Infinity can map to NOMINAL, envelopes and sensors remain mutable by
+reference, callbacks can throw or re-enter, no freshness/hysteresis/latch exists,
+and Fungi finiteness and invalid-state handling differ from TypeScript.
+
+One queue row remains `BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY` and six
+remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains `CANDIDATE: 0`. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires exact
+non-empty owner admission, bounded sensor/state differential and physical proof,
+SLIDE/VOK receipt, bounded execution evidence and independent review. Git remains
+provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-sentinel-memory - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD
