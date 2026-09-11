@@ -25,8 +25,11 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Translate `applyAgentMergePolicy` as a bounded Fungi policy core; six
   WASM differential vectors cover evidence precedence, confidence actions,
   warning text and result order. Add no production consumer switch yet.
-- [ ] Translate `createAgentReport` after its optional/default fields, run
-  status ordering and unsafe-tool review obligations have a bounded profile.
+- [x] Translate `createAgentReport` as a bounded Fungi report core. Four WASM
+  differential vectors cover optional defaults, run-status warning order,
+  unsafe-tool warnings, Float64 metrics and high-impact review routing. Keep
+  the TypeScript adapter and active-object/alias obligations explicit; add no
+  production consumer switch yet.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

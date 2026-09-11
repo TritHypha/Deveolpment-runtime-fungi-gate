@@ -1,0 +1,226 @@
+@version 1
+
+/// Wave 01 translation of createAgentReport from galerina-ai-agent/src/index.ts.
+///
+/// This is a bounded, pure report-construction core.  Optional JavaScript
+/// arguments are represented explicitly as Option values; the retained
+/// TypeScript adapter remains the compatibility boundary until a host ABI can
+/// carry active objects and aliases without changing their observable meaning.
+
+record AgentReportFinding {
+  title: String
+  severity: String
+  evidence: String
+  confidence: Float64
+}
+
+record AgentReportMergePolicy {
+  name: String
+  requireEvidenceFor: Array<String>
+  minimumConfidence: Float64
+  lowConfidenceAction: String
+}
+
+record AgentReportRunStat {
+  name: String
+  status: String
+  toolCalls: Float64
+  memoryBytes: Float64
+  durationMs: Float64
+}
+
+record AgentReportAgent {
+  name: String
+  status: String
+  toolCalls: Float64
+  memoryBytes: Float64
+  durationMs: Float64
+}
+
+record AgentReportOutcome {
+  included: Array<AgentReportFinding>
+  dropped: Array<AgentReportFinding>
+  warnings: Array<String>
+}
+
+record AgentReportResult {
+  flow: String
+  parallel: Bool
+  timeoutMs: Float64
+  agents: Array<AgentReportAgent>
+  unsafeToolsUsed: Array<String>
+  humanReviewRequired: Bool
+  warnings: Array<String>
+}
+
+pure flow applyReportMergePolicy(
+  findings: Array<AgentReportFinding>,
+  policy_: AgentReportMergePolicy,
+) -> AgentReportOutcome
+contract { intent { "Apply evidence and confidence policy before report aggregation while preserving source order." } }
+{
+  mut included: Array<AgentReportFinding> = Array.empty()
+  mut dropped: Array<AgentReportFinding> = Array.empty()
+  mut warnings: Array<String> = Array.empty()
+  mut index: Int = 0
+
+  while index < findings.count() {
+    let findingOpt: Option<AgentReportFinding> = findings.get(index)
+    match findingOpt {
+      Some(finding) => {
+        mut evidenceRequired: Bool = false
+        mut requiredIndex: Int = 0
+        while requiredIndex < policy_.requireEvidenceFor.count() {
+          let requiredOpt: Option<String> = policy_.requireEvidenceFor.get(requiredIndex)
+          match requiredOpt {
+            Some(required) => {
+              if required == finding.severity { evidenceRequired = true }
+            }
+            None => {}
+            _ => {}
+          }
+          requiredIndex = requiredIndex + 1
+        }
+
+        if evidenceRequired and finding.evidence.trim().length() == 0 {
+          dropped = dropped.append(finding)
+          warnings = warnings.append(
+            "Dropped " + finding.severity + " finding \"" + finding.title + "\": evidence required but missing."
+          )
+        } else {
+          if finding.confidence < policy_.minimumConfidence {
+            if policy_.lowConfidenceAction == "drop" {
+              dropped = dropped.append(finding)
+              warnings = warnings.append(
+                "Dropped low-confidence finding \"" + finding.title + "\" (" + finding.confidence.toString() + " < " + policy_.minimumConfidence.toString() + ")."
+              )
+            } else {
+              included = included.append(finding)
+              if policy_.lowConfidenceAction == "review" {
+                warnings = warnings.append(
+                  "Low-confidence finding \"" + finding.title + "\" retained for human review."
+                )
+              } else {
+                warnings = warnings.append(
+                  "Low-confidence finding \"" + finding.title + "\" included with warning."
+                )
+              }
+            }
+          } else {
+            included = included.append(finding)
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return { included: included, dropped: dropped, warnings: warnings }
+}
+
+pure flow createAgentReport(
+  flow_: String,
+  parallel: Bool,
+  timeoutMs: Float64,
+  runs: Array<AgentReportRunStat>,
+  findings: Option<Array<AgentReportFinding>>,
+  mergePolicy: Option<AgentReportMergePolicy>,
+  unsafeToolsUsed: Option<Array<String>>,
+) -> AgentReportResult
+contract { intent { "Construct a deterministic supervised-run report with fail-closed review flags and ordered warnings." } }
+{
+  mut rawFindings: Array<AgentReportFinding> = Array.empty()
+  match findings {
+    Some(rows) => { rawFindings = rows }
+    None => {}
+    _ => {}
+  }
+
+  mut included: Array<AgentReportFinding> = rawFindings
+  mut dropped: Array<AgentReportFinding> = Array.empty()
+  mut warnings: Array<String> = Array.empty()
+  match mergePolicy {
+    Some(policyValue) => {
+      let outcome: AgentReportOutcome = applyReportMergePolicy(rawFindings, policyValue)
+      included = outcome.included
+      dropped = outcome.dropped
+      warnings = outcome.warnings
+    }
+    None => {}
+    _ => {}
+  }
+
+  mut unsafeTools: Array<String> = Array.empty()
+  match unsafeToolsUsed {
+    Some(tools) => { unsafeTools = tools }
+    None => {}
+    _ => {}
+  }
+
+  mut agents: Array<AgentReportAgent> = Array.empty()
+  mut notPassedCount: Int = 0
+  mut runIndex: Int = 0
+  while runIndex < runs.count() {
+    let runOpt: Option<AgentReportRunStat> = runs.get(runIndex)
+    match runOpt {
+      Some(run) => {
+        agents = agents.append(AgentReportAgent {
+          name: run.name, status: run.status, toolCalls: run.toolCalls,
+          memoryBytes: run.memoryBytes, durationMs: run.durationMs
+        })
+        if run.status != "passed" {
+          notPassedCount = notPassedCount + 1
+          warnings = warnings.append(
+            "Agent \"" + run.name + "\" did not pass (status: " + run.status + ")."
+          )
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    runIndex = runIndex + 1
+  }
+
+  mut unsafeIndex: Int = 0
+  while unsafeIndex < unsafeTools.count() {
+    let toolOpt: Option<String> = unsafeTools.get(unsafeIndex)
+    match toolOpt {
+      Some(tool) => {
+        warnings = warnings.append(
+          "Unsafe tool \"" + tool + "\" was used and requires review."
+        )
+      }
+      None => {}
+      _ => {}
+    }
+    unsafeIndex = unsafeIndex + 1
+  }
+
+  mut hasHighImpactFinding: Bool = false
+  mut findingIndex: Int = 0
+  while findingIndex < included.count() {
+    let findingOpt: Option<AgentReportFinding> = included.get(findingIndex)
+    match findingOpt {
+      Some(finding) => {
+        if finding.severity == "High" or finding.severity == "Critical" {
+          hasHighImpactFinding = true
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    findingIndex = findingIndex + 1
+  }
+
+  return {
+    flow: flow_,
+    parallel: parallel,
+    timeoutMs: timeoutMs,
+    agents: agents,
+    unsafeToolsUsed: unsafeTools,
+    humanReviewRequired: notPassedCount > 0 or unsafeTools.count() > 0 or hasHighImpactFinding,
+    warnings: warnings
+  }
+}

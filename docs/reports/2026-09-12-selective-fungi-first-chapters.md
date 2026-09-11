@@ -7,7 +7,7 @@ for the governed conversion queue.
 | Owner and symbol scope | Role and disposition | Work remaining |
 | --- | --- | --- |
 | AI-agent: `validateAgentLimits`, `validateAgentToolPermissions`, `validateAgentDefinition`, `validateAgentTaskGroupPlan` | Runtime validation; convert and retain TS differential shadows. | Existing candidates. Limits and definition now have focused WASM checks; complete other behavior/border obligations before chapter closure. |
-| AI-agent: `applyAgentMergePolicy`, `createAgentReport` | Runtime policy/report construction; convert decision logic. | `applyAgentMergePolicy` now has a focused Fungi twin and WASM differential checks. `createAgentReport` still needs manual core implementation, exact order, defaults, malformed inputs and returned aliases. Account for any retained compatibility adapter separately. |
+| AI-agent: `applyAgentMergePolicy`, `createAgentReport` | Runtime policy/report construction; convert decision logic. | Both now have bounded Fungi cores and focused WASM differential checks. Retain the TypeScript compatibility adapter while active-object/alias behavior, malformed-object handling and host admission remain separate obligations. |
 | Core-vector: `validateVectorType`, `validateMatrixType`, `validateTensorType`, `validateVectorOperation`, `validateTensorOperation` | Runtime shape/operation validation; convert. | Manual implementation with numeric and sparse-input compatibility. Do not add checks that TS does not perform. |
 | Core-vector: `defineVectorType`, `createVectorReport` | Runtime construction/reporting; convert decision logic. | Exception messages, returned aliases and diagnostic order. |
 | Both packages: interfaces and generated `.d.ts` | Declaration surface; retain or generate from its owner. | Not executable translations. |
@@ -100,6 +100,26 @@ compiler's invalid Float64 `toString()` lowering; the typed `__float_to_str`
 bridge now preserves finite JavaScript number formatting and refuses non-finite
 values. The policy twin is candidate-stage evidence only; no consumer switch or
 production admission follows.
+
+## Report translation
+
+`createAgentReport` is represented by
+`packages-ts/galerina-ai-agent/src/self-hosted/create-agent-report.fungi`.
+Its pure core makes the three JavaScript defaults explicit with `Option`,
+preserves the source order of policy, run-status and unsafe-tool warnings, maps
+run metrics as `Float64`, and sets human review whenever a run did not pass, an
+unsafe tool was used, or an included finding is High/Critical. Its local policy
+helper mirrors the retained merge-policy oracle so the report can be checked as
+one deterministic unit without host effects.
+
+`wat-agent-report-parity.test.mjs` executes the twin in WASM against the
+TypeScript `createAgentReport` oracle across four vectors: absent defaults and
+fractional metrics, policy/run/tool warning ordering, findings without a policy,
+and low-confidence inclusion of a high-impact finding. The strict Fungi check,
+the four probes, and the AI-agent package suite (21/21) pass. The twin remains
+candidate evidence: active JavaScript object/accessor behaviour, alias
+preservation, malformed-object handling, host marshalling and production
+consumer authority remain outside this bounded proof.
 
 ## Identity and change triggers
 
