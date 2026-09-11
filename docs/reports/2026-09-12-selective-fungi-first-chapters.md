@@ -7,7 +7,7 @@ for the governed conversion queue.
 | Owner and symbol scope | Role and disposition | Work remaining |
 | --- | --- | --- |
 | AI-agent: `validateAgentLimits`, `validateAgentToolPermissions`, `validateAgentDefinition`, `validateAgentTaskGroupPlan` | Runtime validation; convert and retain TS differential shadows. | Existing candidates. Limits and definition now have focused WASM checks; complete other behavior/border obligations before chapter closure. |
-| AI-agent: `applyAgentMergePolicy`, `createAgentReport` | Runtime policy/report construction; convert decision logic. | Manual core implementation, exact order, defaults, malformed inputs and returned aliases. Account for any retained compatibility adapter separately. |
+| AI-agent: `applyAgentMergePolicy`, `createAgentReport` | Runtime policy/report construction; convert decision logic. | `applyAgentMergePolicy` now has a focused Fungi twin and WASM differential checks. `createAgentReport` still needs manual core implementation, exact order, defaults, malformed inputs and returned aliases. Account for any retained compatibility adapter separately. |
 | Core-vector: `validateVectorType`, `validateMatrixType`, `validateTensorType`, `validateVectorOperation`, `validateTensorOperation` | Runtime shape/operation validation; convert. | Manual implementation with numeric and sparse-input compatibility. Do not add checks that TS does not perform. |
 | Core-vector: `defineVectorType`, `createVectorReport` | Runtime construction/reporting; convert decision logic. | Exception messages, returned aliases and diagnostic order. |
 | Both packages: interfaces and generated `.d.ts` | Declaration surface; retain or generate from its owner. | Not executable translations. |
@@ -86,6 +86,20 @@ trapping refusal; integer overflow paths are unchanged. Before the repair the
 new cases produced three failures; afterward the focused float/record set passed
 39 tests and the signed-integer regressions passed 29. These literal-expression
 checks complement the parameter-based validator comparisons above.
+
+## Merge-policy translation
+
+`applyAgentMergePolicy` is now represented by
+`packages-ts/galerina-ai-agent/src/self-hosted/apply-agent-merge-policy.fungi`.
+The twin manually scans the required-severity list, drops findings without
+evidence, applies `drop`, `review` and `include_with_warning` confidence
+actions, and preserves included/dropped order and warning text. The retained
+TypeScript oracle is exercised by six WASM vectors covering clean findings,
+evidence precedence, each action and mixed ordering. This work exposed the
+compiler's invalid Float64 `toString()` lowering; the typed `__float_to_str`
+bridge now preserves finite JavaScript number formatting and refuses non-finite
+values. The policy twin is candidate-stage evidence only; no consumer switch or
+production admission follows.
 
 ## Identity and change triggers
 

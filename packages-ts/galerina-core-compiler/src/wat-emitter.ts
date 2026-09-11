@@ -1961,11 +1961,19 @@ export function emitWATExpr(
           return `(call $host___char_from_code ${emitWATExpr(argNodes[0]!, vars, staticConsts)})`;
         }
 
-        // #160: type-directed toString/toStr. Char → __char_to_string (String.fromCodePoint);
-        // everything else defaults to __int_to_str (matches prior behaviour for Int).
+        // #160: type-directed toString/toStr. Char → __char_to_string (String.fromCodePoint),
+        // Float/Float64/Double → __float_to_str, and Int → __int_to_str. Decimal remains an
+        // exact representation and is explicitly refused rather than being narrowed to f64.
         if ((name === "toString" || name === "toStr") && realReceiver !== undefined) {
           const recvType = isTypeRecv0 ? recvName0 : inferExprType(realReceiver);
-          const fn = recvType === "Char" ? "$host___char_to_string" : "$host___int_to_str";
+          if (recvType === "Decimal") {
+            return `(unreachable) (; Decimal toString is not implemented in the WAT host boundary ;)`;
+          }
+          const fn = recvType === "Char"
+            ? "$host___char_to_string"
+            : FLOAT_WAT_TYPES.has(recvType ?? "")
+              ? "$host___float_to_str"
+              : "$host___int_to_str";
           return `(call ${fn} ${emitWATExpr(realReceiver, vars, staticConsts)})`;
         }
 
@@ -4007,6 +4015,7 @@ export function buildWATModule(
     { module: "host", name: "__str_char_at",    effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
     { module: "host", name: "__str_to_int",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__int_to_str",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__float_to_str",   effect: "stdlib.string", type: { params: ["f64"],          results: ["i32"] } },
     { module: "host", name: "__str_eq",         effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
     { module: "host", name: "__str_compare",    effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
     // #162 — String methods

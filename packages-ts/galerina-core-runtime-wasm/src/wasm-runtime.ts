@@ -310,6 +310,11 @@ export function createHostRuntime(
       const id = strings.length; strings.push(String(n | 0));
       return tap("__int_to_str", [n], id) as number;
     },
+    __float_to_str: (n: number) => {
+      if (!Number.isFinite(n)) throw new Error("NonFiniteFloat");
+      const id = strings.length; strings.push(String(n));
+      return tap("__float_to_str", [n], id) as number;
+    },
     __result_ok: (value: number) => {
       const id = results.length; results.push({ tag: "ok", value });
       return tap("__result_ok", [value], id) as number;

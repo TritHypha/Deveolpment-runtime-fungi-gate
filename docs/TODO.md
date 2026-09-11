@@ -22,6 +22,11 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Repair negative Float64 literal and parameter lowering; executable checks
   preserve signed zero and finite-value guards, retain Decimal refusal, and
   cover the separate expression defect beyond the validator parameter probes.
+- [x] Translate `applyAgentMergePolicy` as a bounded Fungi policy core; six
+  WASM differential vectors cover evidence precedence, confidence actions,
+  warning text and result order. Add no production consumer switch yet.
+- [ ] Translate `createAgentReport` after its optional/default fields, run
+  status ordering and unsafe-tool review obligations have a bounded profile.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

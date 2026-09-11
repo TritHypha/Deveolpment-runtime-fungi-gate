@@ -1,0 +1,94 @@
+@version 1
+
+/// Wave 01 translation of applyAgentMergePolicy from galerina-ai-agent/src/index.ts.
+/// The bounded policy pass preserves source order, evidence-required drops,
+/// confidence actions, and warning text without host effects.
+
+record AgentFinding {
+  title: String
+  severity: String
+  evidence: String
+  confidence: Float64
+}
+
+record AgentMergePolicy {
+  name: String
+  requireEvidenceFor: Array<String>
+  minimumConfidence: Float64
+  lowConfidenceAction: String
+}
+
+record AgentMergeOutcome {
+  included: Array<AgentFinding>
+  dropped: Array<AgentFinding>
+  warnings: Array<String>
+}
+
+pure flow applyAgentMergePolicy(
+  findings: Array<AgentFinding>,
+  mergePolicy: AgentMergePolicy,
+) -> AgentMergeOutcome
+contract { intent { "Apply fail-closed evidence and confidence policy while retaining finding order and actionable warnings." } }
+{
+  mut included: Array<AgentFinding> = Array.empty()
+  mut dropped: Array<AgentFinding> = Array.empty()
+  mut warnings: Array<String> = Array.empty()
+  mut index: Int = 0
+
+  while index < findings.count() {
+    let findingOpt: Option<AgentFinding> = findings.get(index)
+    match findingOpt {
+      Some(finding) => {
+        mut evidenceRequired: Bool = false
+        mut requiredIndex: Int = 0
+        while requiredIndex < mergePolicy.requireEvidenceFor.count() {
+          let requiredOpt: Option<String> = mergePolicy.requireEvidenceFor.get(requiredIndex)
+          match requiredOpt {
+            Some(required) => {
+              if required == finding.severity {
+                evidenceRequired = true
+              }
+            }
+            None => {}
+            _ => {}
+          }
+          requiredIndex = requiredIndex + 1
+        }
+
+        if evidenceRequired and finding.evidence.trim().length() == 0 {
+          dropped = dropped.append(finding)
+          warnings = warnings.append(
+            "Dropped " + finding.severity + " finding \"" + finding.title + "\": evidence required but missing."
+          )
+        } else {
+          if finding.confidence < mergePolicy.minimumConfidence {
+            if mergePolicy.lowConfidenceAction == "drop" {
+              dropped = dropped.append(finding)
+              warnings = warnings.append(
+                "Dropped low-confidence finding \"" + finding.title + "\" (" + finding.confidence.toString() + " < " + mergePolicy.minimumConfidence.toString() + ")."
+              )
+            } else {
+              included = included.append(finding)
+              if mergePolicy.lowConfidenceAction == "review" {
+                warnings = warnings.append(
+                  "Low-confidence finding \"" + finding.title + "\" retained for human review."
+                )
+              } else {
+                warnings = warnings.append(
+                  "Low-confidence finding \"" + finding.title + "\" included with warning."
+                )
+              }
+            }
+          } else {
+            included = included.append(finding)
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return { included: included, dropped: dropped, warnings: warnings }
+}
