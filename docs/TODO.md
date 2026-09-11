@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-ai-agent - 2026-09-11
+
+- [x] Assessed `packages-ts/galerina-ai-agent/src/index.ts` from exact `main`
+  HEAD `893d136752647ef15d86d16674307927cb377638` / tree
+  `36489ca68cb3f649f89c1337bcc4c016535f2128` through the code graph and the
+  package's focused tests.
+- [x] Recorded the seven local runtime scopes (`agentDiagnostic`,
+  `validateAgentLimits`, `validateAgentToolPermissions`,
+  `validateAgentDefinition`, `validateAgentTaskGroupPlan`,
+  `applyAgentMergePolicy`, and `createAgentReport`) in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-ai-agent-source-dossier.json`.
+  The interfaces and type aliases are retained as type-contract evidence and
+  are not independent runtime translation units.
+- [x] Typecheck, build and the package suite pass `21/21`. The package boundary
+  report is PASS with no external dependencies, and no existing `.fungi` twin or
+  loaded Fungi asset exists.
+- [x] The dossier records the exact source, test, package, boundary, built
+  oracle and retirement hashes, graph closure, and the runtime obligations for
+  Map/array/string operations, numeric edge cases, aliasing, warning order,
+  nullish defaults and delegated validation.
+- [!] Both package rows remain `BLOCKED:DOSSIER_REQUIRED`; the conserved queue is
+  unchanged at `CANDIDATE: 0`. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep this package closed until a separate exact non-empty owner admission
+  names the symbol scope and wave limits, and independent differential,
+  physical SLIDE/VOK, bounded execution and receipt gates pass. The existing
+  PROJECT assurance remains closed and historical.
+
 ### RD-0873 next source dossier checkpoint - 2026-09-11
 
 - [x] Recorded the narrowly scoped `galerina-auth` `scopeVerdict` source dossier

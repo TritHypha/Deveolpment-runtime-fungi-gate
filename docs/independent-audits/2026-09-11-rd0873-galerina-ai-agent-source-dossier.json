@@ -1,0 +1,249 @@
+{
+  "schema": "galerina.rd0873.galerina-ai-agent-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "893d136752647ef15d86d16674307927cb377638",
+    "tree": "36489ca68cb3f649f89c1337bcc4c016535f2128"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-ai-agent/src/index.ts",
+        "package": "galerina-ai-agent",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-ai-agent/tests/agent-contracts.test.mjs",
+        "package": "galerina-ai-agent",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-ai-agent",
+    "packageJsonSha256": "sha256:92c442f928e1496ff9b68ba8aa3c76bd809342ab5e610020696727fde38124f8",
+    "readmeSha256": "sha256:14c1750870ef349c793626079191f10577be1475ae71f0e724c3d3dc5a437bde",
+    "boundaryReport": {
+      "path": "packages-ts/galerina-ai-agent/.graph/BOUNDARY.md",
+      "sha256": "sha256:5ee74f0372faa95df9fde41159b2932ed936ed1409b36b19e9da4a77bc402270",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "path": "packages-ts/galerina-ai-agent/src/index.ts",
+    "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+    "sourceUtf8Bytes": 12166,
+    "existingTwin": null,
+    "typeOnlySurface": {
+      "interfacesAndTypes": [
+        "AgentToolDecision",
+        "AgentFailureBehaviour",
+        "AgentToolPermission",
+        "AgentLimits",
+        "AgentDefinition",
+        "AgentTaskGroupPlan",
+        "AgentFinding",
+        "AgentResult",
+        "AgentMergePolicy",
+        "AgentReport",
+        "AgentDiagnosticSeverity",
+        "AgentDiagnostic",
+        "AgentRunStat",
+        "AgentMergeOutcome"
+      ],
+      "disposition": "type-contract-only; no independent runtime translation unit"
+    },
+    "runtimeSymbols": [
+      {
+        "symbol": "agentDiagnostic",
+        "span": { "start": 110, "end": 122 },
+        "signature": "function agentDiagnostic(code: string, severity: AgentDiagnosticSeverity, message: string, path?: string): AgentDiagnostic",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:ed28d3a4e5020ed1bb3c82086ffa4ebe7be58aa30b3bf0bda9979f7a9f1d92c7",
+        "bodyUtf8Bytes": 236,
+        "exported": false,
+        "disposition": "dependency obligation for diagnostic record construction"
+      },
+      {
+        "symbol": "validateAgentLimits",
+        "span": { "start": 126, "end": 178 },
+        "signature": "export function validateAgentLimits(limits: AgentLimits, path?: string): readonly AgentDiagnostic[]",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:3301d5f85f9dae06cd4bd9852a8bd8af34d3580016a91c267c04506de4dcfabe",
+        "bodyUtf8Bytes": 1426,
+        "exported": true,
+        "disposition": "bounded numeric validation factor"
+      },
+      {
+        "symbol": "validateAgentToolPermissions",
+        "span": { "start": 182, "end": 213 },
+        "signature": "export function validateAgentToolPermissions(tools: readonly AgentToolPermission[], path?: string): readonly AgentDiagnostic[]",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:9e7393cc7cbcb5f7c1dcdf6907b04054cb59674a3971580f9dcf9d60848c3074",
+        "bodyUtf8Bytes": 1023,
+        "exported": true,
+        "disposition": "Map-backed duplicate/conflict diagnostic factor"
+      },
+      {
+        "symbol": "validateAgentDefinition",
+        "span": { "start": 216, "end": 252 },
+        "signature": "export function validateAgentDefinition(definition: AgentDefinition): readonly AgentDiagnostic[]",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:21ce2ffdcb6871dab376b983ced41c219fd67d4ffbb450c193da73843e2969bd",
+        "bodyUtf8Bytes": 977,
+        "exported": true,
+        "disposition": "structural validator delegating tool and limit checks; not comprehensive policy enforcement"
+      },
+      {
+        "symbol": "validateAgentTaskGroupPlan",
+        "span": { "start": 256, "end": 289 },
+        "signature": "export function validateAgentTaskGroupPlan(plan: AgentTaskGroupPlan): readonly AgentDiagnostic[]",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:44939f1de001fd3b829a5f59674b6934c60d2759da6bd623ff1d5b1a06dd72a1",
+        "bodyUtf8Bytes": 827,
+        "exported": true,
+        "disposition": "named, positive-timeout, non-empty-group validator"
+      },
+      {
+        "symbol": "applyAgentMergePolicy",
+        "span": { "start": 295, "end": 334 },
+        "signature": "export function applyAgentMergePolicy(findings: readonly AgentFinding[], policy: AgentMergePolicy): AgentMergeOutcome",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:ad0992e2754eb073a6d532fd623d0d9ac7101e58105fc4b78432c01a47c6f939",
+        "bodyUtf8Bytes": 1293,
+        "exported": true,
+        "disposition": "evidence/confidence filtering and ordered warning builder"
+      },
+      {
+        "symbol": "createAgentReport",
+        "span": { "start": 339, "end": 386 },
+        "signature": "export function createAgentReport(input: AgentReportInput): AgentReport",
+        "sourceSha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+        "bodySha256": "sha256:751bd55a659f6b53eedf0be7a6361ca770dd049a9fb088e770326ee31cd468cc",
+        "bodyUtf8Bytes": 1618,
+        "exported": true,
+        "disposition": "supervised run report builder with forced human-review conditions"
+      }
+    ]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-ai-agent/dist/index.js",
+    "sha256": "sha256:b03a9c389f20d93e81ea537399b124c8c0a18d27795c95784d94997bcd4420e8",
+    "declarationPath": "packages-ts/galerina-ai-agent/dist/index.d.ts",
+    "declarationSha256": "sha256:7d255ba1f4fa5b685608a865e19b7bbc986e6df29cf08a4c311758e8be2dc8df",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-ai-agent",
+    "nodes": 56,
+    "edges": 88,
+    "functions": 8,
+    "edgeTypes": { "DEFINES": 50, "USAGE": 24, "CALLS": 14 },
+    "entryPoints": [
+      "validateAgentLimits",
+      "validateAgentToolPermissions",
+      "validateAgentDefinition",
+      "validateAgentTaskGroupPlan",
+      "applyAgentMergePolicy",
+      "createAgentReport"
+    ],
+    "callersAndCallees": {
+      "agentDiagnostic": { "callers": ["validateAgentLimits", "validateAgentToolPermissions", "validateAgentDefinition", "validateAgentTaskGroupPlan"], "callees": [] },
+      "validateAgentLimits": { "callers": ["validateAgentDefinition", "agent-contracts.test.mjs"], "callees": ["agentDiagnostic", "Array.push"] },
+      "validateAgentToolPermissions": { "callers": ["validateAgentDefinition", "agent-contracts.test.mjs"], "callees": ["agentDiagnostic", "Map.get", "Map.set", "Array.forEach", "Array.push"] },
+      "validateAgentDefinition": { "callers": ["agent-contracts.test.mjs"], "callees": ["agentDiagnostic", "validateAgentToolPermissions", "validateAgentLimits", "Array.push"] },
+      "validateAgentTaskGroupPlan": { "callers": ["agent-contracts.test.mjs"], "callees": ["agentDiagnostic", "Array.push", "String.trim"] },
+      "applyAgentMergePolicy": { "callers": ["createAgentReport", "agent-contracts.test.mjs"], "callees": ["Array.includes", "String.trim", "Array.push"] },
+      "createAgentReport": { "callers": ["agent-contracts.test.mjs"], "callees": ["applyAgentMergePolicy", "Array.filter", "Array.some", "Array.map", "Array.push"] }
+    },
+    "note": "Graph discovery identifies local bodies and collection-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-ai-agent/tests/agent-contracts.test.mjs",
+    "testSha256": "sha256:d88f734e12c2214a0e759deea56f175a93785f98d7697dd9ea13ffbbf4e1a812",
+    "command": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
+    "result": "PASS 21/21",
+    "coveredBehavior": [
+      "positive and non-positive required limits, NaN and optional budgets",
+      "empty tool names and allow/deny conflicts",
+      "structural definition checks and delegated diagnostics",
+      "named, bounded, non-empty task groups",
+      "evidence-required and low-confidence merge actions",
+      "human review for failed runs, unsafe tools and surviving High/Critical findings"
+    ],
+    "packageBoundary": "packages-ts/galerina-ai-agent/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-ai-agent",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous pure-data validators and report builders over typed records, arrays, strings, a Map and ordered diagnostic/report collections",
+    "authorityBoundary": "The package defines agent-contract checks and report shaping; it does not own model inference, scheduling, sandbox enforcement, tool execution, cryptography or authority issuance.",
+    "runtimeObligations": [
+      "Preserve validation and delegation order in validateAgentDefinition.",
+      "Preserve the distinction between a positive number and a finite number; the implementation accepts Infinity and fractions despite the finite-bound comment.",
+      "Preserve NaN, signed-zero, optional-property and numeric comparison behavior.",
+      "Preserve Map key identity, exact untrimmed keys, callback iteration order and last-decision storage in validateAgentToolPermissions; a conflict diagnostic does not itself enforce denial.",
+      "Preserve evidence rejection before confidence handling, original finding references, warning order and NaN confidence behavior in applyAgentMergePolicy.",
+      "Preserve nullish defaults, warning order, aliasing of unsafeToolsUsed and the fact that a retained low/medium review finding alone does not set humanReviewRequired."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming the seven runtime symbol scopes and bounded wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for plain data and hostile getters, proxies, sparse arrays, custom iterators, mutation and thrown accessors",
+      "host substitution or equivalent proof for Map, Array and String operations",
+      "bounded physical profile for record/array/string/map ABI, allocation, aliasing, work limits and typed failures",
+      "explicit treatment of non-finite numeric inputs and malformed policy/runs/finding records",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep both galerina-ai-agent queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact non-empty authorizing admission, resolves the recorded runtime semantics and bounded physical/differential gates, and obtains independent review."
+}
