@@ -3,6 +3,33 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-reports - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+87c0261898051ba10c1698ee381e072363dd3b84 with tree
+5767f11c7692bd5eb008bc9004184cfff3c44e70 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-reports-source-dossier.json.
+The package boundary graph covers one TypeScript source node and one existing
+report-status.fungi asset, with two nodes, no internal edges and no external
+dependencies. It contains 20 exported runtime functions covering report
+construction, diagnostic aggregation, validation and JSON serialization.
+
+Typecheck, build and the two focused suites pass **17/17**. The existing Fungi
+asset proves only the bounded critical/error/warning/ok status-priority cube
+under interpreter and Wasm; it does not replace the report module or grant
+consumer authority. Astra's same-head advisory keeps conversion on HOLD pending
+preservation of mutable input/reference behavior, Date and nullish defaults,
+severity/status ordering, discriminated validation, sparse/proxy/getter cases,
+and JSON.stringify/error semantics. Report recovery, cache and storage fields
+are descriptions, not executed controls.
+
+All three queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. No new Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. Any future
+translation requires exact non-empty owner admission, bounded differential and
+physical proof, SLIDE/VOK receipt, bounded execution evidence and independent
+review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-photonic - 2026-09-11
 
 The next bounded package assessment is recorded at exact main HEAD

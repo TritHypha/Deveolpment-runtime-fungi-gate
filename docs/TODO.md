@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-reports - 2026-09-11
+
+- [x] Assessed the single TypeScript source file under
+  packages-ts/galerina-core-reports/src from exact main HEAD
+  87c0261898051ba10c1698ee381e072363dd3b84 / tree
+  5767f11c7692bd5eb008bc9004184cfff3c44e70 through the package boundary graph
+  and the two focused test files.
+- [x] Recorded 20 exported runtime functions, the report type surface, one
+  existing report-status.fungi bounded twin and exact source/test/build hashes
+  in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-reports-source-dossier.json.
+  The existing Fungi asset remains non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 17/17. The package boundary
+  reports PASS with two nodes, no internal edges and no external dependencies.
+- [x] Astra's same-head advisory records the report-construction, mutable
+  reference, Date/default, severity/status, validation and JSON.stringify
+  obligations. Report constructors describe data; they do not write files,
+  execute recovery/cache actions, sign evidence or grant authority.
+- [!] The three package rows remain BLOCKED:DOSSIER_REQUIRED; the conserved
+  queue remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep reports translation closed until a separate exact non-empty owner
+  admission names a bounded scope with independent differential, physical
+  SLIDE/VOK, execution and receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-photonic - 2026-09-11
 
 - [x] Assessed the single TypeScript source file under

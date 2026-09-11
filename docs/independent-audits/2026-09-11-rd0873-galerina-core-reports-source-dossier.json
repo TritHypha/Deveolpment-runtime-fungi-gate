@@ -1,0 +1,509 @@
+{
+  "schema": "galerina.rd0873.galerina-core-reports-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "87c0261898051ba10c1698ee381e072363dd3b84",
+    "tree": "5767f11c7692bd5eb008bc9004184cfff3c44e70"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-reports/src/index.ts",
+        "package": "galerina-core-reports",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-reports/tests/report-contracts.test.mjs",
+        "package": "galerina-core-reports",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-reports/tests/report-status-fungi-conversion.test.mjs",
+        "package": "galerina-core-reports",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-reports",
+    "packageJsonSha256": "sha256:042aa7a0564cd82515801e7d41804d56f97cb2766d1059a94c9d6f9194161c56",
+    "packageLockSha256": "sha256:2480c81d0ec40707100194fb021385452ff517f76871f2cea9bcb11bb4762f46",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "example": {
+      "path": "packages-ts/galerina-core-reports/examples/build-report.json",
+      "sha256": "sha256:41a8e84ff72e1dfd37f63263d24753d0b5600aaad18dd30ae496dfeb8ef35de0"
+    },
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-reports/.graph/BOUNDARY.md",
+      "sha256": "sha256:42806a3a09d7adca4370104cd4e7560df9fec84ea3f4d5f9c9b93985075a8430",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 2,
+    "loadedFungiAssetCount": 1,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-reports/src/self-hosted/report-status.fungi",
+        "sha256": "sha256:0347d792d17c4830e65b2ca7159c111f966f745fadaec22345b17467a9a87921",
+        "kind": "report-status decision twin"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-reports/src/index.ts#selectReportStatus",
+        "fungi": "packages-ts/galerina-core-reports/src/self-hosted/report-status.fungi",
+        "status": "existing non-authorizing bounded status-priority twin; package execution test retained"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-reports/src/index.ts",
+        "sha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "utf8Bytes": 28303,
+        "exportedRuntimeSurface": [
+          "createReportMetadata",
+          "defineReportGenerator",
+          "createReportDiagnostic",
+          "summarizeDiagnostics",
+          "createBuildReport",
+          "createSecurityReport",
+          "createTargetReport",
+          "createRuntimeReport",
+          "createAsyncReport",
+          "createStorageReport",
+          "createBuildCacheReport",
+          "createTaskReport",
+          "createProcessingReport",
+          "createAiGuideReport",
+          "createIntentReport",
+          "createSafetyReport",
+          "createFlowTraceReport",
+          "createCustomReport",
+          "validateLoReport",
+          "serializeReportJson"
+        ],
+        "typeSurface": [
+          "all report aliases/interfaces in index.ts"
+        ]
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "createReportMetadata",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 436,
+          "end": 454
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:7e30c7c840c974e406bfbb44472e41e1259fe76698f48046202883ae5a9636af",
+        "bodyUtf8Bytes": 655
+      },
+      {
+        "symbol": "defineReportGenerator",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 456,
+          "end": 466
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:0978a6ec7237ab1d3dce8df5f38d423e3f2345b11a237aa570b788ae926bc527",
+        "bodyUtf8Bytes": 331
+      },
+      {
+        "symbol": "createReportDiagnostic",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 468,
+          "end": 494
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:473867a643003d72c587cd4e6531d4e469f2c7bea89e524bffaee45c9e2e2205",
+        "bodyUtf8Bytes": 826
+      },
+      {
+        "symbol": "summarizeDiagnostics",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 496,
+          "end": 512
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:f71d0e99577a8657bee671fe47b4befc7494c7c045009750f13100b51bf418c0",
+        "bodyUtf8Bytes": 506
+      },
+      {
+        "symbol": "createBuildReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 514,
+          "end": 529
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:a0e8149311bb22abef44303f29ee3c0f1042a7c2f77c8913b966f070a03f7685",
+        "bodyUtf8Bytes": 590
+      },
+      {
+        "symbol": "createSecurityReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 531,
+          "end": 546
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:2090058540ae8438288bba68e27ba0d42d3d4e770824aed16965225fcd3137f7",
+        "bodyUtf8Bytes": 615
+      },
+      {
+        "symbol": "createTargetReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 548,
+          "end": 563
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:cf97ebf588a5437c03f29f9bb08f86975658721141e36dd71806e4d91c0449e2",
+        "bodyUtf8Bytes": 600
+      },
+      {
+        "symbol": "createRuntimeReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 565,
+          "end": 584
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:51004759bfbaf0b9115926d38201ab2341ab5872053acb48200a9cb5c97bc80f",
+        "bodyUtf8Bytes": 701
+      },
+      {
+        "symbol": "createAsyncReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 586,
+          "end": 619
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:05559119dab96e0105e3edc9dadb32d50d55134e0f6d21d5d431e5eb2be99d8c",
+        "bodyUtf8Bytes": 1391
+      },
+      {
+        "symbol": "createStorageReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 621,
+          "end": 643
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:828b6609e858cda5cb27c030234d22ce3308d92ccf032eb0ccb48752ba704272",
+        "bodyUtf8Bytes": 828
+      },
+      {
+        "symbol": "createBuildCacheReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 645,
+          "end": 685
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:7b87b3358249fc2c4f8304b1af22a46353677dd9ffab1b45ae3028ad4660f599",
+        "bodyUtf8Bytes": 1391
+      },
+      {
+        "symbol": "createTaskReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 687,
+          "end": 704
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:1a62f90f5acf0ef724c3bebfabaf1a90db9b7ef9f644f81ffbf58f68d68da6de",
+        "bodyUtf8Bytes": 599
+      },
+      {
+        "symbol": "createProcessingReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 706,
+          "end": 733
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:5df75924d26a40c4c454b73c8bf64fc7f407927773ce2a5efc9ab4e60e26c2f6",
+        "bodyUtf8Bytes": 1060
+      },
+      {
+        "symbol": "createAiGuideReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 735,
+          "end": 750
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:fe19b6e2f7aa3e80e4df8568fda3da816409f28506fd6a53c6e8e3ca3a1e671b",
+        "bodyUtf8Bytes": 547
+      },
+      {
+        "symbol": "createIntentReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 752,
+          "end": 771
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:bc34d461ce0f10d6cae662cdf2d6b36fd9c10e817f43083de5ab51b51ac29827",
+        "bodyUtf8Bytes": 684
+      },
+      {
+        "symbol": "createSafetyReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 773,
+          "end": 795
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:4d631397d246b0dcd553c531132fd677c544267d9782d4945b0c85fd7cd52c80",
+        "bodyUtf8Bytes": 821
+      },
+      {
+        "symbol": "createFlowTraceReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 797,
+          "end": 810
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:a718dfc00f1dcfa06cdae89b65d4028c102407fbbb97e9db75b649062d295bbe",
+        "bodyUtf8Bytes": 499
+      },
+      {
+        "symbol": "createCustomReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 812,
+          "end": 823
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:c7e0bde948b5c5e80ffd0615850483fd26f8f1b867a05dc63fe1a40e4c7d0dae",
+        "bodyUtf8Bytes": 396
+      },
+      {
+        "symbol": "validateLoReport",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 825,
+          "end": 877
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:42e062327b7025cbaf1a32074766a0ef53e3e509020d60295d3dd6c5bb4b7832",
+        "bodyUtf8Bytes": 1433
+      },
+      {
+        "symbol": "serializeReportJson",
+        "source": "packages-ts/galerina-core-reports/src/index.ts",
+        "span": {
+          "start": 879,
+          "end": 881
+        },
+        "sourceSha256": "sha256:bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+        "bodySha256": "sha256:85e01896b041d5db0a05dbeca6cf6554d96ea7672d579ced4473388e97845758",
+        "bodyUtf8Bytes": 116
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "ReportSeverity",
+        "ReportStatus",
+        "ReportKind",
+        "AwaitKind",
+        "AwaitCancellationPolicy",
+        "StorageKind",
+        "CacheMode",
+        "RecoveryAction",
+        "IntentFlowStatus",
+        "FlowTraceStage",
+        "FlowTraceStatus",
+        "FlowTraceDecision",
+        "LoReport"
+      ],
+      "interfaces": [
+        "ReportGenerator",
+        "ReportMetadata",
+        "ReportSourceLocation",
+        "ReportDiagnostic",
+        "DiagnosticSummary",
+        "LoReportBase",
+        "BuildReport",
+        "SecurityReport",
+        "TargetReport",
+        "RuntimeReport",
+        "AwaitSiteReport",
+        "AwaitGroupReport",
+        "AsyncReport",
+        "StorageCapability",
+        "StorageReport",
+        "BuildCacheReport",
+        "TaskReport",
+        "ProcessingFailureSummary",
+        "ProcessingReport",
+        "BatchResultReport",
+        "AiGuideReport",
+        "CustomReport",
+        "IntentFlowEntry",
+        "IntentReport",
+        "SafetyFlowEntry",
+        "SafetyReport",
+        "FlowTraceEventRecord",
+        "FlowTraceReport",
+        "RuntimeFlowManifest",
+        "ReportArtifact",
+        "AiGuideSection",
+        "ReportWriteRequest",
+        "ReportWriteResult",
+        "ReportWriter",
+        "ReportMetadataOptions"
+      ],
+      "disposition": "type contracts remain evidence; report constructors, validators and serialization are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-reports/dist/index.js",
+    "sha256": "sha256:1a4a68386fa8e43c25a8f002a757cf92409ae6b60a3599a3ed2466b4833e3cc3",
+    "declarationPath": "packages-ts/galerina-core-reports/dist/index.d.ts",
+    "declarationSha256": "sha256:1f7cd657de0456ad23dfe995fc8ddb2fcc1baaf96780125cde3aa31fb9272d55",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-reports",
+    "nodes": 2,
+    "edges": 0,
+    "functions": 20,
+    "edgeTypes": {
+      "DEFINES": 1
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "summarizeDiagnostics",
+      "validateLoReport",
+      "createProcessingReport",
+      "createBuildCacheReport",
+      "serializeReportJson"
+    ],
+    "note": "Boundary graph reports one TypeScript node and one loaded Fungi asset with no dependencies; function list is AST-derived and not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-reports/tests/report-contracts.test.mjs",
+      "packages-ts/galerina-core-reports/tests/report-status-fungi-conversion.test.mjs"
+    ],
+    "testSha256": {
+      "report-contracts.test.mjs": "sha256:86f86b9af27f7c83ce81aa2946021353363e5fb6e1bb8a58f2f6c4d02e815dc8",
+      "report-status-fungi-conversion.test.mjs": "sha256:a8a085656dd4ddf6358d38c0bd2ba7badb0f11912946789366241351b1d8eba8"
+    },
+    "command": "npm test",
+    "result": "PASS 17/17",
+    "coveredBehavior": [
+      "severity counts and report status priority",
+      "metadata, diagnostic and kind validation",
+      "all canonical build/security/target/runtime/async/storage/cache/task/processing/AI/intent/safety/trace/custom report constructors",
+      "conservative cache and storage defaults",
+      "processing failure and quarantine counts",
+      "JSON serialization",
+      "existing report-status Fungi priority cube under interpreter and Wasm"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-reports/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion admission",
+    "snapshot": {
+      "head": "87c0261898051ba10c1698ee381e072363dd3b84",
+      "tree": "5767f11c7692bd5eb008bc9004184cfff3c44e70"
+    },
+    "findings": [
+      "Pure report model/validation/serialization layer; no file writing, network I/O, scheduling, cache execution or authority path is present in the package.",
+      "createReportMetadata defaults generatedAt from host Date and preserves optional-field omission; generator and metadata objects are caller-provided and reference/alias behavior is observable.",
+      "Constructors default arrays/counts with nullish semantics, normalize the metadata kind and preserve report-specific literals such as correctnessRequiredCache:false; mutable input arrays and nested reports are retained.",
+      "summarizeDiagnostics counts exact severity strings and derives critical/error/warning/ok priority; status formatting and diagnostic order are part of the contract.",
+      "validateLoReport traverses discriminated report kinds and checks names, metadata, diagnostics, counts and redaction fields; malformed unions, missing fields, sparse arrays and proxies require differential treatment.",
+      "createProcessingReport and cache/storage reports describe recovery, quarantine and conservative fallbacks but do not perform retries, quarantine, eviction or cache correctness enforcement.",
+      "serializeReportJson relies on JSON.stringify and can expose or transform caller data according to normal JSON semantics; it is not a redaction or signing boundary.",
+      "The existing report-status Fungi asset proves only the bounded selectReportStatus priority cube and does not replace the complete TypeScript module or grant consumer authority.",
+      "No new Fungi twin or queue admission is authorized; TypeScript remains the consumer shadow."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-reports",
+    "evidenceStatus": "replacement-partial-existing-asset",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous report constructors, severity aggregation, validation and JSON serialization over discriminated records, arrays, dates and optional fields",
+    "authorityBoundary": "The package describes and validates reports only. It does not write files, perform recovery/cache actions, sign evidence, enforce policy or grant production authority.",
+    "runtimeObligations": [
+      "Preserve Date-based generatedAt defaults, nullish omission, metadata-kind normalization, exact severity priority and diagnostic ordering.",
+      "Preserve array/object reference retention, mutable nested records, sparse/proxy/getter behavior and report-specific literal fields.",
+      "Preserve validation of every LoReport variant, count defaults, redaction fields, JSON.stringify semantics and serialization error behavior.",
+      "Keep report-status.fungi non-authorizing and TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits",
+      "source-to-Fungi artifact and exact twin hash for the complete report surface",
+      "independent differential vectors for Date, JSON.stringify, mutation, aliases, sparse arrays, getters, proxies, cycles and nonfinite values",
+      "host substitution proof for array methods, object spread and serialization",
+      "bounded physical report/diagnostic ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core-reports rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}
