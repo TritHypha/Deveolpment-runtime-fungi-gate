@@ -4,6 +4,58 @@ Date: 2026-09-10
 Status: **HOLD_NON_AUTHORIZING**
 Authorizing: **false**
 
+## Authorized four-symbol revalidation addendum - 2026-09-11
+
+The owner subsequently authorized one bounded exact-head revalidation wave for
+the existing twins of `isEnvironmentMode`, `isTerminalScope`, `isTaskEffect`
+and `isResponseSafeClassification`. The authorization is recorded at
+`docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-authorization-v2.json`.
+It does not authorize whole-file replacement, unrestricted bulk authoring,
+consumer switching, TypeScript retirement or production authority.
+
+The wave passed at HEAD
+`357c689a691fa7982730e486dd1035601623457e` / tree
+`fd8885f4381134db9eaf573efd83c01df0dc34c9`. The four focused package suites
+pass `8/8`, and the isolated signed-Wasm host-substitution probe passes `40/40`
+vectors. No `.fungi` source or checked/GIR artifact was created or rewritten;
+the TypeScript shadows remain retained. The complete execution receipt is
+`7,354` UTF-8 bytes, within the `262,144` aggregate cap, at
+`docs/independent-audits/2026-09-11-rd0873-four-symbol-wave-execution-receipt.json`.
+
+`isOmniUncertain` remains on semantic HOLD because its exported runtime set is
+mutable. `isBuiltin` and `validateTransition` remain held for their physical
+profiles. This packet remains non-authorizing for any later scope.
+
+## Current-head continuation addendum - 2026-09-11
+
+The current local `main` is at exact HEAD
+`357c689a691fa7982730e486dd1035601623457e` with tree
+`fd8885f4381134db9eaf573efd83c01df0dc34c9`. The current PROJECT receipt,
+queue reconciliation and independent adjudication all bind that identity.
+The queue remains `1605/1605` classified with `0` whole-file candidates,
+`7` scoped dossiers, `921` blocked and `684` bootstrap-floor entries.
+
+The owner admission remains review-only: `authorizing: false` and
+`bulkFungiAuthoring: false`. Its five eligible symbol dossiers are
+`isEnvironmentMode`, `isOmniUncertain`, `isTerminalScope`, `isTaskEffect` and
+`isResponseSafeClassification`; `isBuiltin` and `validateTransition` remain
+held. No new `.fungi` source is opened by this addendum.
+
+Ubuntu WSL2 independently passes the native VOK crate (`30` unit tests and
+`14` doctests), the live W^X probe, and the five existing twin suites (`10/10`).
+The non-authorizing record is
+`docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json`.
+That evidence confirms a Linux execution lane but does not supply native Rust
+String ingress coverage or an authorizing bulk admission.
+
+The remaining gates are an exact non-empty owner-authorizing wave release,
+per-symbol physical evidence at that build point, and independent review. Keep
+the TypeScript shadows, consumer switch, TypeScript retirement and production
+authority boundaries unchanged until those gates are green.
+The older gate table below retains its `MISSING` entries for the pilot-specific
+receipt chain; the current-head PROJECT and scoped-wave records do not satisfy
+those pilot gates or grant bulk authority.
+
 This packet bounds the first String-capable pilot around the existing
 `isEnvironmentMode` Fungi twin. It records the semantic ledger, differential
 vectors and exact receipt checklist needed for a later owner decision. It does
@@ -41,7 +93,7 @@ assurance remains closed and is not rerun here.
 | Input domain | One well-formed UTF-8/NFC String value | Wrong primitive classes refuse before accessors or coercion |
 | Positive cases | `development`, `test`, `staging`, `production` return `true` | Case-sensitive and whitespace-sensitive literal comparison |
 | Negative cases | Any other String, including empty and near-miss values, returns `false` | Final wildcard is explicit and must be last |
-| Effects | Pure deterministic classification; no mutation, I/O, time, randomness, scheduling or host lookup | Existing TypeScript shadow remains retained |
+| Effects | Intended Fungi profile is pure deterministic classification under ordinary `Set.has` behavior; no mutation, I/O, time, randomness, scheduling or external lookup | Existing TypeScript shadow remains retained |
 | Equality | Compare canonical value bytes; never interned handles or numeric coercion | String literal constants are bound in the checked snapshot and GIR |
 | Ordering | Four sealed literal arms followed by one wildcard | Duplicate, reordered or unreachable arms refuse |
 | Bounds | Dedicated root-23 String edition with conservative work bound 12 | SLIDE and Lyth re-derive the same bound independently |
@@ -62,9 +114,10 @@ The pilot must retain the TypeScript shadow and compare both routes for:
    registry-set digest.
 7. Changed root size, work bound, String type identity or literal constant edge.
 
-Every negative vector must refuse deterministically, and at least one controlled
-mutation must turn the relevant detector red. A checker-clean candidate alone
-is insufficient evidence.
+Each vector must produce its specified result: admitted nonmatching Strings
+return `false`; malformed, unsupported or changed inputs produce typed
+refusals. At least one controlled mutation must turn the relevant detector
+red. A checker-clean candidate alone is insufficient evidence.
 
 ## Fresh evidence recorded
 

@@ -45,7 +45,9 @@ const RAW=Object.freeze([
   ["interpreter-wrap-governed-value","function wrapGovernedValue("],
   ["interpreter-get-receiver","function getReceiver("],
   ["interpreter-secure-comparable","function secureComparable("],
-  ["interpreter-qualifier-from-flow-kind","function qualifierFromFlowKind("],
+  // The governed-secure refactor renamed this helper to reflect that the
+  // qualifier is derived from the complete flow node, not only its kind.
+  ["interpreter-qualifier-from-flow-kind","function qualifierFromFlowNode("],
   ["interpreter-is-runtime-error","function isRuntimeError("],
   ["interpreter-is-checked-trap","function isCheckedTrap("],
   ["interpreter-strip-string-quotes","function stripStringQuotes("],

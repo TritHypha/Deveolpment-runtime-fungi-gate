@@ -1,0 +1,91 @@
+{
+  "schema": "galerina.rd0873-current-head-admission-independent-adjudication.v5",
+  "version": 5,
+  "date": "2026-09-11",
+  "status": "PASS_NON_AUTHORIZING_PACKET_RECHECK",
+  "verdict": "PASS",
+  "closureVerdict": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_RECHECK_OF_REVISED_BULK_WAVE_PACKET",
+  "reviewer": "GPT-6 Astra",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9"
+  },
+  "reviewedArtifacts": [
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-approval.json",
+      "sha256": "5b7849b2a4c6de06d3f7c70b2fcbd6354b46e31fadd3f542066884c591e81536"
+    },
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v4.json",
+      "sha256": "9ec6c2a63a074e738ecf72f770988c8752007dcb08f8f880aab8a6cad53cd9f1"
+    },
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json",
+      "sha256": "f63a33a1551644a64be26291057c96d47a48ad33ac6dd030ccbd83947f53da7f"
+    },
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-admission-proposal.json",
+      "sha256": "6b74af48c6330d96594362c31a1c790007a6c67b9fba4edb8ccf8cb46ea815b4"
+    },
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-source-dossiers.json",
+      "sha256": "87d6ed5fae8a4e6f5faee05dbe6528aa37a61324b36993ce16c3364d38ff4380"
+    },
+    {
+      "path": "docs/reports/rd0873-post-closure-pilot-admission.md",
+      "sha256": "9a1039126bf970984ec8bb0bb1e8161832375535b04d9bfcbfbfc356a0f6548a"
+    }
+  ],
+  "findings": [
+    "The revised proposal, source dossiers and pilot packet bind the same exact HEAD/tree and queue digest.",
+    "All five source spans, signatures, source digests, body digests and existing-twin digests match the current-head dossier.",
+    "The five source files total 84870 UTF-8 bytes; each singleton source fits the 65536-byte input cap.",
+    "The proposal records aggregate caps of 84870 input bytes and 327680 output bytes, equal to five times the per-step ceiling; both remain proposal-only and unexecuted.",
+    "The packet and navigation records describe the four default-state review subjects under their host assumptions; host-call controls remain required before admission.",
+    "The exported runtime-mutable OMNI_UNCERTAIN_STATES dependency remains semantically unresolved; its existing Fungi twin does not establish mutation parity.",
+    "The held symbols isBuiltin and validateTransition and all non-authorizing custody gates remain unchanged.",
+    "The bounded path-only Git check found no tracked or non-ignored untracked .fungi source diff, and no corpus rerun was performed."
+  ],
+  "scope": {
+    "wholeFileCandidates": 0,
+    "scopedDossiers": 7,
+    "reviewSymbols": [
+      "isEnvironmentMode",
+      "isOmniUncertain",
+      "isTerminalScope",
+      "isTaskEffect",
+      "isResponseSafeClassification"
+    ],
+    "defaultStateReviewSubjects": [
+      "isEnvironmentMode",
+      "isTerminalScope",
+      "isTaskEffect",
+      "isResponseSafeClassification"
+    ],
+    "semanticHoldSymbols": ["isOmniUncertain"],
+    "physicalHoldSymbols": ["isBuiltin", "validateTransition"]
+  },
+  "limitations": [
+    "This is an independent packet recheck, not an authorizing admission.",
+    "isOmniUncertain remains on semantic HOLD until exported Set mutation behavior is either preserved or explicitly owner-restricted.",
+    "Aggregate caps and output-budget compliance were proposed but not executed.",
+    "The WSL record was persisted by the coordinator; Astra did not rerun WSL or the 2722-file PROJECT corpus.",
+    "The native Rust VOK path does not directly execute the five String classifier inputs.",
+    "No bulk Fungi authoring, consumer switching, TypeScript retirement, production authority or topology change is authorized."
+  ],
+  "authorityAndCustodyGates": {
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "fungiSourceDiff": "NONE",
+    "gitRole": "provenance-only"
+  },
+  "decisionRationale": "The revised packet is internally consistent and suitable as non-authorizing review evidence. Closure remains HOLD because Omni mutation parity, aggregate/output execution evidence and an exact-head authorizing owner release are absent."
+}

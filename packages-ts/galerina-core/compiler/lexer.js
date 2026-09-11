@@ -64,7 +64,7 @@ const KEYWORDS = new Set([
 const BOOLEAN_LITERALS = new Set(["true", "false"]);
 const HTTP_METHODS = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
 const MULTI_CHAR_OPERATORS = ["->", "=>", "==", "!=", "<=", ">=", "&&", "||", "::"];
-const SINGLE_CHAR_SYMBOLS = new Set(["{", "}", "(", ")", "[", "]", ",", ".", ":", ";", "<", ">", "=", "+", "-", "*", "/", "%"]);
+const SINGLE_CHAR_SYMBOLS = new Set(["{", "}", "(", ")", "[", "]", ",", ".", ":", ";", "<", ">", "=", "+", "-", "*", "/", "%", "?"]);
 
 function lexSource(source) {
   const content = source.content;
@@ -315,7 +315,7 @@ function isIdentifierPart(char) {
 }
 
 function isOperatorSymbol(char) {
-  return ["<", ">", "=", "+", "-", "*", "/", "%"].includes(char);
+  return ["<", ">", "=", "+", "-", "*", "/", "%", "?"].includes(char);
 }
 
 module.exports = {

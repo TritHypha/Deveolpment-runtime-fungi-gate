@@ -1,0 +1,159 @@
+{
+  "schema": "galerina.rd0873-bulk-wave-admission-proposal.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "PROPOSAL_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Provide an owner-ready bounded admission shape for the first continuous TypeScript-to-Fungi translation wave.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9"
+  },
+  "sourceEvidence": {
+    "queuePath": "build/conversion-queue/queue.json",
+    "queueSha256": "60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "ownerApprovalPath": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-approval.json",
+    "ownerApprovalSha256": "5b7849b2a4c6de06d3f7c70b2fcbd6354b46e31fadd3f542066884c591e81536",
+    "independentReviewPath": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v3.json",
+    "independentReviewSha256": "459a847f7c1647850ae7f74f5929f77a6a002243184a6c2349781bdbe543e62f"
+  },
+  "proposedWave": {
+    "scope": "SYMBOLS",
+    "classification": "CANDIDATE",
+    "packageOwnership": true,
+    "symbols": [
+      {
+        "package": "galerina-core-config",
+        "path": "packages-ts/galerina-core-config/src/index.ts",
+        "symbol": "isEnvironmentMode"
+      },
+      {
+        "package": "galerina-core-logic",
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "symbol": "isOmniUncertain"
+      },
+      {
+        "package": "galerina-core-runtime",
+        "path": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "symbol": "isTerminalScope"
+      },
+      {
+        "package": "galerina-core-tasks",
+        "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "symbol": "isTaskEffect"
+      },
+      {
+        "package": "galerina-data-model",
+        "path": "packages-ts/galerina-data-model/src/index.ts",
+        "symbol": "isResponseSafeClassification"
+      }
+    ],
+    "held": [
+      {
+        "package": "galerina-devtools-context",
+        "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+        "symbol": "isBuiltin",
+        "reason": "physical profile remains held"
+      },
+      {
+        "package": "galerina-devtools-project-graph",
+        "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+        "symbol": "validateTransition",
+        "reason": "two-input physical shape remains held"
+      }
+    ]
+  },
+  "waveLimits": {
+    "limitsScope": "PER_SINGLETON_STEP",
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "maxSymbolsPerWave": 5,
+    "maxSourceFilesPerWave": 5,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "inputByteDefinition": "UTF-8 bytes of the selected TypeScript source file only",
+    "outputByteDefinition": "UTF-8 bytes of newly written Fungi source plus its checked/GIR/receipt artifacts",
+    "aggregateByteAccounting": "The exact five-file input sum is 84870 bytes; the proposed aggregate input cap is 84870 and the proposed aggregate output cap is 327680 (five times the per-step ceiling). These caps are proposal-only and require explicit owner authorization.",
+    "proposedAggregateInputBytes": 84870,
+    "proposedAggregateOutputBytes": 327680,
+    "aggregateCapsExecuted": false,
+    "fileCounting": "One TypeScript source file is charged to each step; each step may write one Fungi candidate and its bounded evidence artifacts",
+    "chapterAggregation": "after package chapter completes"
+  },
+  "lastDryRun": {
+    "status": "DRY_RUN_IDENTITY_PASS",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9",
+    "sourceDigestsMatchQueue": true,
+    "sourceBytesTotal": 84870,
+    "perStepSourceBytesWithinLimit": true,
+    "aggregateSourceBytesWithinPerStepCap": false,
+    "budgetCompliance": "IDENTITY_ONLY; proposed aggregate caps are recorded but no aggregate byte cap or output budget was executed",
+    "proposedAggregateInputBytes": 84870,
+    "proposedAggregateOutputBytes": 327680,
+    "aggregateCapsExecuted": false,
+    "waves": [
+      {
+        "wave": 1,
+        "symbol": "isEnvironmentMode",
+        "sourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b"
+      },
+      {
+        "wave": 2,
+        "symbol": "isOmniUncertain",
+        "sourceDigest": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138"
+      },
+      {
+        "wave": 3,
+        "symbol": "isTerminalScope",
+        "sourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9"
+      },
+      {
+        "wave": 4,
+        "symbol": "isTaskEffect",
+        "sourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d"
+      },
+      {
+        "wave": 5,
+        "symbol": "isResponseSafeClassification",
+        "sourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e"
+      }
+    ],
+    "held": ["isBuiltin", "validateTransition"]
+  },
+  "requiredReceiptsPerStep": [
+    "exact source and TypeScript-shadow digest",
+    "compiler, toolchain and semantic-profile identity",
+    "canonical checked artifact and GIR digest",
+    "differential and negative-control results",
+    "independent SLIDE re-derivation and VOK admission",
+    "independent review at the same build point",
+    "reversible output with no consumer switch or TypeScript retirement"
+  ],
+  "explicitlyClosed": [
+    "whole-file bulk authoring beyond this named wave",
+    "isBuiltin and validateTransition authoring",
+    "corpus rerun per individual asset",
+    "consumer switching",
+    "TypeScript retirement",
+    "production authority",
+    "branch or worktree creation",
+    "remote publication"
+  ],
+  "authorityAndCustodyGates": {
+    "newFungiAuthoring": "REVIEW_ONLY_PENDING_AUTHORING_RELEASE",
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "ownerActionRequired": "Convert this proposal to a fresh exact-head authorizing admission with the same or narrower scope before any new .fungi source is written.",
+  "gitRole": "provenance-only"
+}

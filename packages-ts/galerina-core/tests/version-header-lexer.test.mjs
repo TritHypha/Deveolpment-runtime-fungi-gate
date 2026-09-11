@@ -36,3 +36,15 @@ test("legacy lexer refuses malformed, unsupported, and misplaced version headers
     assert.match(result.diagnostics[0]?.problem ?? "", /version directive/i);
   }
 });
+
+test("legacy lexer admits the postfix error-propagation operator", () => {
+  const result = lex(
+    "@version 1\nsecure flow create(input: Request) -> Result<String, Error> {\n  let value = validate.string(input)?\n  return Ok(value)\n}\n",
+  );
+
+  assert.deepEqual(result.diagnostics, []);
+  assert.ok(
+    result.tokens.some((token) => token.type === "operator" && token.value === "?"),
+    "postfix '?' must be tokenized as an operator",
+  );
+});

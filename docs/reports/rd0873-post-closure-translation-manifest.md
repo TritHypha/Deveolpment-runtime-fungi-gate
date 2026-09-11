@@ -4,6 +4,51 @@ Date: 2026-09-10
 Status: **HOLD_NON_AUTHORIZING**
 Authorizing: **false**
 
+## Authorized four-symbol revalidation addendum - 2026-09-11
+
+One bounded exact-head wave was authorized for the existing package-owned Fungi
+twins of `isEnvironmentMode`, `isTerminalScope`, `isTaskEffect` and
+`isResponseSafeClassification`. The owner authorization and execution plan are
+at `docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-authorization-v2.json`
+and `docs/independent-audits/2026-09-11-rd0873-four-symbol-wave-execution-manifest.json`.
+
+At HEAD `357c689a691fa7982730e486dd1035601623457e` / tree
+`fd8885f4381134db9eaf573efd83c01df0dc34c9`, all four source/twin bindings
+match. The focused suites pass `8/8`, and the signed-Wasm host-substitution
+probe passes `40/40` vectors after replacement of the relevant JavaScript
+`Set`/`Array` host methods. This operation wrote no Fungi source and rewrote no
+existing twin. Its complete serialized receipt is `7,354` UTF-8 bytes, below
+the `262,144` aggregate cap.
+
+This is a bounded revalidation result. `isOmniUncertain`, `isBuiltin` and
+`validateTransition` remain held; unrestricted bulk authoring, consumer
+switching, TypeScript retirement, production authority, topology changes,
+remote publication and the completed PROJECT corpus rerun remain closed.
+
+## Current verification addendum - 2026-09-11
+
+The current local `main` is `357c689a691fa7982730e486dd1035601623457e` with
+tree `fd8885f4381134db9eaf573efd83c01df0dc34c9`. The PROJECT receipt
+`build/fungi-corpus-check/evidence/rd0873-task8-project-reopened-357c689a9.json`
+and the generated queue are bound to that exact committed identity. The
+approved pinned-Git queue check passes with `1605/1605` entries classified,
+`0` whole-file candidates and `7` scoped dossiers.
+
+The existing five scalar Fungi twins pass the local SLIDE/VOK lane `10/10`,
+and the native `rd0873-first-native-slice/slice.fungi` identity and mutation
+tests pass `3/3`. These results remain review-only. The owner admission is
+still non-authorizing with `bulkFungiAuthoring: false`; no new bulk Fungi
+source, consumer switch, TypeScript retirement or production authority is
+opened by this addendum. The two held symbols remain excluded.
+
+An independent Ubuntu WSL2 cross-check now records `30` native VOK unit tests,
+`14` doctests, a live W^X probe with verdict `PASS`, and `10/10` checks for the
+five existing Fungi twins. See
+`docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json`.
+This is non-authorizing Linux execution evidence: the native Rust path does not
+accept the five String classifier inputs, and the bulk authoring hold is
+unchanged.
+
 This is a locator-only record for the first bounded TypeScript-to-Fungi wave.
 The wave already has review evidence, but that evidence is non-authorizing: it
 does not reopen bulk conversion, switch a consumer, retire TypeScript or admit

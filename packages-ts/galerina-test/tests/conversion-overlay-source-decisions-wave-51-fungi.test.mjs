@@ -51,7 +51,9 @@ const RAW=Object.freeze([
   [
     "runtime-run-find-flow-node",
     "galerina-core-compiler/src/runtime.ts",
-    "  function findFlowNode("
+    // Runtime flow resolution is now shared with the interpreter and exported
+    // under its fail-closed name.
+    "resolveRuntimeFlowNode(parseResult.ast, flowName)"
   ],
   [
     "runtime-serve",

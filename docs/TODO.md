@@ -4,6 +4,105 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
+
+- [x] Recorded the owner's fresh exact-head authorization for the four named
+  symbol scopes `isEnvironmentMode`, `isTerminalScope`, `isTaskEffect` and
+  `isResponseSafeClassification`. The authorization is bounded to one
+  sequential singleton wave with one source file per step, `65536` input and
+  output byte ceilings, `600000ms` per-step timeout, concurrency `1`, zero
+  automatic retries, `81694` aggregate input bytes and `262144` aggregate
+  output bytes.
+- [x] Revalidated the four existing Fungi twins at HEAD
+  `357c689a691fa7982730e486dd1035601623457e` / tree
+  `fd8885f4381134db9eaf573efd83c01df0dc34c9`. Source and twin hashes match;
+  no Fungi source was created or rewritten.
+- [x] Ran the four focused package suites: `8/8` tests pass, with interpreter,
+  signed-Wasm and hostile-vector coverage. The isolated signed-Wasm
+  host-substitution probe passes `40/40` vectors after replacing the relevant
+  JavaScript Set/Array host methods.
+- [x] Measured the complete serialized execution receipt, including embedded
+  step records, at `7354` UTF-8 bytes, within the `262144` aggregate cap.
+  The execution record is
+  `docs/independent-audits/2026-09-11-rd0873-four-symbol-wave-execution-receipt.json`.
+- [x] Retained the TypeScript shadows and all non-production boundaries. The
+  completed 2,722-file PROJECT assurance was not rerun.
+- [!] `isOmniUncertain` remains on semantic HOLD because its exported runtime
+  set is mutable. `isBuiltin` and `validateTransition` remain physical-profile
+  holds. Unrestricted bulk authoring, consumer switching, TypeScript
+  retirement, production authority, topology changes and remote publication
+  remain closed.
+
+### RD-0873 current bounded-wave verification checkpoint - 2026-09-11
+
+- [x] Rechecked the exact local `main` identity: HEAD
+  `357c689a691fa7982730e486dd1035601623457e`, tree
+  `fd8885f4381134db9eaf573efd83c01df0dc34c9`. The existing PROJECT receipt
+  remains bound to this exact committed identity.
+- [x] Re-ran the queue check with the approved pinned Git executable:
+  `1605/1605` classified, `0` whole-file candidates, `7` scoped dossiers,
+  `921` blocked and `684` bootstrap-floor entries. The scoped list remains
+  review evidence, not bulk authoring authority.
+- [x] Re-ran the admitted scalar wave through local SLIDE/VOK: `10/10` pass,
+  including the five admitted classifiers and the two deliberate physical
+  refusals (`isBuiltin` and `validateTransition`). The native
+  `rd0873-first-native-slice/slice.fungi` identity and mutation tests pass
+  `3/3`.
+- [x] Cross-checked the bounded lane in Ubuntu WSL2: the native VOK crate
+  passes `30` unit tests and `14` doctests, its live W^X evidence returns
+  `PASS`, and the five existing Fungi twin suites pass `10/10`. The durable
+  non-authorizing record is
+  `docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json`.
+  This confirms an independent Linux execution lane; it does not admit the
+  five String classifiers to the native Rust path or open bulk authoring.
+- [x] Re-ran the five package-owned Fungi twin suites at the current checkout:
+  `10/10` focused tests pass. This confirms the existing review twins only;
+  it does not clear the Omni mutable-set hold or authorize new source.
+- [x] The bounded package and harness repairs remain focused on stale test
+  expectations and the legacy `?` lexer token; no `.fungi` source diff exists.
+- [!] The current owner admission is still `authorizing: false` with
+  `bulkFungiAuthoring: false`; the five named classifiers are review-only and
+  the two held symbols stay excluded. Do not start a corpus rerun, consumer
+  switch, TypeScript retirement or bulk authoring from this checkpoint.
+- [x] Prepared a non-authorizing wave schedule from the advisory shard review:
+  process one package-owned symbol/file per singleton step, with at most five
+  sequential steps per wave. The `65536` input/output byte ceilings and
+  `600000ms` timeout apply per step: input is the selected TypeScript source
+  file's UTF-8 bytes, and output is the newly written Fungi source plus its
+  checked/GIR/receipt artifacts. The five source files total `84870` bytes;
+  that sum is recorded with proposed aggregate caps of `84870` input bytes and
+  `327680` output bytes; neither cap has been executed and both require owner
+  authorization. Concurrency is `1` and automatic
+  retries are disabled. Each step must carry exact source/compiler/profile
+  identities, retain the TypeScript shadow, and receive its own differential,
+  physical and independent-review receipt. Aggregate only after a package
+  chapter completes; do not run a corpus check for each individual asset.
+  This schedule is a proposal and grants no authoring authority.
+- [x] Persisted Astra's fresh read-only recheck as
+  `docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v3.json`.
+  It confirms the exact-head bindings and corrected packet semantics while
+  retaining `closureVerdict: HOLD` and all non-authorizing custody gates.
+- [x] Rechecked the corrected proposal, dossiers and pilot packet with Astra;
+  the non-authorizing packet receipt is
+  `docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v5.json`.
+  It supersedes v4 for the revised proposal, retains the `isOmniUncertain`
+  semantic HOLD, and records that the proposed aggregate caps and output-budget
+  compliance remain unexecuted.
+- [x] Prepared the exact owner-ready first-wave request at
+  `docs/independent-audits/2026-09-11-rd0873-bulk-wave-admission-proposal.json`.
+  It binds the current queue and review digests, names the five review
+  dossiers, retains the two physical holds, and encodes the continuous-wave
+  ceilings. `isOmniUncertain` remains a semantic HOLD because its exported
+  runtime set is mutable. Its status is `PROPOSAL_NON_AUTHORIZING`; it is not
+  a source-writing release.
+- [x] Persisted the five-symbol source dossier at
+  `docs/independent-audits/2026-09-11-rd0873-bulk-wave-source-dossiers.json`.
+  The exact source, body and existing-twin digests recheck successfully at the
+  current head, including the bounded helper shape required by `isTaskEffect`;
+  the `isOmniUncertain` dossier remains semantically held.
+- [ ] Obtain a fresh authorizing, exact non-empty bulk admission with explicit
+  source scope and wave limits before creating any new bulk `.fungi` assets.
+
 ### RD-0873 continuation checkpoint after route repair - 2026-09-10
 
 - [x] Closed the two independent-review findings in the versioned String

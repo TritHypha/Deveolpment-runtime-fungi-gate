@@ -3,6 +3,107 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
+
+The owner supplied a fresh exact, non-empty authorization for one bounded
+revalidation wave at HEAD
+`357c689a691fa7982730e486dd1035601623457e` with tree
+`fd8885f4381134db9eaf573efd83c01df0dc34c9`. The authorized symbols are
+`isEnvironmentMode`, `isTerminalScope`, `isTaskEffect` and
+`isResponseSafeClassification`, each as a named symbol scope in its existing
+package-owned TypeScript file. Whole-file replacement and new Fungi source
+creation were closed because all four twins already exist.
+
+The sequential singleton wave revalidated all four twins. Their source hashes
+and twin hashes matched the authorization, the four focused suites passed
+`8/8`, and the signed-Wasm host-substitution probe passed `40/40` vectors while
+`Set.prototype.has` and `Array.prototype.includes` were replaced after
+compilation. The complete serialized evidence receipt is `7,354` UTF-8 bytes,
+inside the `262,144` aggregate cap. No `.fungi` source or checked/GIR artifact
+was written; TypeScript shadows remain retained. The durable records are:
+
+- `docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-authorization-v2.json`
+- `docs/independent-audits/2026-09-11-rd0873-four-symbol-wave-execution-manifest.json`
+- `docs/independent-audits/2026-09-11-rd0873-four-symbol-wave-execution-receipt.json`
+
+This closes only the authorized revalidation wave. `isOmniUncertain` remains
+held for exported mutable-set semantics, and `isBuiltin` plus
+`validateTransition` remain held for their physical profiles. Unrestricted
+bulk authoring, consumer switching, TypeScript retirement, production
+authority, topology changes, remote publication and the completed 2,722-file
+PROJECT corpus rerun remain closed.
+
+## RD-0873 current bounded-wave verification checkpoint - 2026-09-11
+
+The current local `main` remains at exact HEAD
+`357c689a691fa7982730e486dd1035601623457e` and tree
+`fd8885f4381134db9eaf573efd83c01df0dc34c9`. The existing PROJECT evidence is
+bound to that committed identity. The queue check with the approved pinned Git
+executable passes: `1605/1605` entries classified, `0` whole-file candidates,
+`7` scoped dossiers, `921` blocked and `684` bootstrap-floor entries.
+
+The five admitted scalar Fungi twins pass the local SLIDE/VOK lane `10/10`,
+and the first native slice identity and mutation tests pass `3/3`. The current
+working tree has no `.fungi` source diff. These are bounded review results;
+the owner admission remains non-authorizing and keeps `bulkFungiAuthoring`
+false. The two physical holds (`isBuiltin` and `validateTransition`) remain
+excluded. A fresh exact, non-empty authorizing bulk admission with explicit
+wave scope and limits is required before new bulk Fungi authoring.
+The five focused package twin suites were also rerun at this checkout and pass
+`10/10`; this reconfirms the existing twins without clearing the Omni semantic
+hold or authorizing new source.
+
+The same bounded lane was independently exercised in Ubuntu WSL2. The native
+VOK crate passed `30` unit tests and `14` doctests, the live W^X probe returned
+`PASS`, and the five existing Fungi twin suites passed `10/10`. The durable
+cross-check is
+`docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json`.
+It supplies Linux execution evidence only; it does not provide String ingress
+coverage for the native Rust path or change the non-authorizing bulk hold.
+
+The proposed continuous-wave shape is now recorded for later owner release:
+one package-owned symbol/file per singleton step, at most five sequential steps
+per wave, and `65536` input/output byte ceilings plus a `600000ms` timeout per
+step. Input is the selected TypeScript source file's UTF-8 bytes; output is the
+newly written Fungi source plus its checked/GIR/receipt artifacts. The five
+source files total `84870` bytes. The proposal now records proposed aggregate
+caps of `84870` input bytes and `327680` output bytes (five times the per-step
+ceiling); these caps are not executed and require explicit owner authorization.
+Concurrency is `1` and automatic retries are disabled. Every step carries an
+exact source/compiler/profile identity and its own differential, physical and
+independent-review receipt; package-level aggregation occurs only after the
+chapter completes. This is a non-authorizing schedule derived from advisory
+shard guidance.
+
+Astra's fresh read-only recheck is persisted at
+`docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v3.json`.
+It confirms the current-head bindings and packet semantics; its closure verdict
+remains `HOLD` and it grants no bulk, consumer or production authority.
+The corrected packet and wave records were then rechecked by Astra at
+`docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v5.json`.
+That receipt supersedes v4 for the revised proposal, passes the packet as
+non-authorizing review evidence, keeps `isOmniUncertain` on semantic HOLD, and
+records that the proposed aggregate caps and output-budget compliance remain
+unexecuted.
+
+The exact owner-ready first-wave request is
+`docs/independent-audits/2026-09-11-rd0873-bulk-wave-admission-proposal.json`.
+It is bound to the current queue and review digests, names the five review
+dossiers, retains the two physical holds, and records the proposed
+continuous-wave limits. `isOmniUncertain` is retained in the dossier but stays
+on semantic HOLD until its exported mutable-set behavior is resolved. The
+proposal remains `PROPOSAL_NON_AUTHORIZING` until the owner issues a fresh
+exact-head authorizing admission.
+
+The companion source dossier is
+`docs/independent-audits/2026-09-11-rd0873-bulk-wave-source-dossiers.json`.
+It records exact spans and digests for the five review symbols, their current
+twins and tests, and the bounded helper requirement for `isTaskEffect`. Four
+have default-state semantic coverage for a future review wave; host-call
+controls remain required, and `isOmniUncertain` remains held because the
+exported runtime set is mutable. The dossier remains evidence for a future
+wave, not source-writing authority.
+
 ## RD-0873 continuation checkpoint after route repair - 2026-09-10
 
 The versioned String checked-snapshot/GIR route now rejects semantically valid

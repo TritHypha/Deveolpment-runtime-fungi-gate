@@ -1,15 +1,15 @@
 {
   "schemaVersion": 3,
-  "sourceDigest": "f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc",
+  "sourceDigest": "b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
   "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
-  "projectCorpusReceiptDigest": "sha256:e1cdc831efb01d64c6961df24a280d2d6ccf825faf968fb20795b4d67a8b94f6",
+  "projectCorpusReceiptDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
   "counts": {
-    "total": 1588,
+    "total": 1605,
     "CANDIDATE": 0,
     "BLOCKED": 921,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
-    "BOOTSTRAP_FLOOR": 667
+    "BOOTSTRAP_FLOOR": 684
   },
   "scopedCandidateCount": 7,
   "scopedCandidateFileCount": 7,
@@ -568,6 +568,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/src/artifact-reference.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/src/attestation.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -632,6 +640,22 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/src/checked-module-snapshot.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/checked-snapshot-gir-emitter.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/src/cli.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -649,6 +673,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/decimal-arith.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/detached-scalar-cli.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -1272,6 +1304,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/src/rd0858-slide-gir-adapter.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/src/register-vm.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -1465,6 +1505,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/src/sbom.ts",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/src/seal-checked-module-snapshot.ts",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -1752,6 +1800,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/tests/artifact-reference.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/tests/assuming-178-failclosed.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -1905,6 +1961,22 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/checked-flow-artifact.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/checked-module-snapshot-v1.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/checked-snapshot-gir-emitter.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -2105,6 +2177,30 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/decimal-round-mode-fungi-conversion.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/detached-scalar-cli.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/detached-scalar-constellation.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/detached-scalar-retained-boundaries.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -3088,7 +3184,31 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/tests/helpers/lyth-detached-scalar-child.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/helpers/slide-detached-scalar-child.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/tests/helpers/tower-log-assertions.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/helpers/vok-detached-scalar-child.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",
@@ -3784,6 +3904,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-ts/galerina-core-compiler/tests/rd0858-slide-gir-adapter.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-ts/galerina-core-compiler/tests/rd0873-first-native-slice.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
@@ -4025,6 +4153,14 @@
     },
     {
       "path": "packages-ts/galerina-core-compiler/tests/sbom.test.mjs",
+      "package": "galerina-core-compiler",
+      "tranche": "T0-compiler",
+      "classification": "BOOTSTRAP_FLOOR",
+      "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/seal-checked-module-snapshot.test.mjs",
       "package": "galerina-core-compiler",
       "tranche": "T0-compiler",
       "classification": "BOOTSTRAP_FLOOR",

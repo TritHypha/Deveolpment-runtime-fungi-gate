@@ -1,0 +1,148 @@
+{
+  "schema": "galerina.rd0873-current-head-admission-owner-authorization.v2",
+  "version": 2,
+  "date": "2026-09-11",
+  "status": "OWNER_AUTHORIZED_CURRENT_HEAD_BOUNDED_FOUR_SYMBOL_WAVE",
+  "authorizing": true,
+  "ownerInstruction": "yes authrosied",
+  "ownerInstructionNormalized": "yes authorised",
+  "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION_FOR_THE_FOUR_SYMBOL_SCOPE",
+  "authorizationContext": "The owner explicitly approved the four-symbol scope after being asked to authorize the recorded singleton limits and aggregate caps. This authorization applies to one bounded reversible revalidation wave and does not authorize unrestricted bulk authoring, whole-file replacement, consumer switching, TypeScript retirement, production authority, topology changes, or remote publication.",
+  "decision": "AUTHORIZE_ONE_BOUNDED_REVERSIBLE_SINGLETON_WAVE",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9"
+  },
+  "sourceEvidence": {
+    "queuePath": "build/conversion-queue/queue.json",
+    "queueSha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "dossierPath": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-source-dossiers.json",
+    "dossierSha256": "sha256:87d6ed5fae8a4e6f5faee05dbe6528aa37a61324b36993ce16c3364d38ff4380",
+    "proposalPath": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-admission-proposal.json",
+    "proposalSha256": "sha256:6b74af48c6330d96594362c31a1c790007a6c67b9fba4edb8ccf8cb46ea815b4",
+    "independentPacketPath": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v5.json",
+    "independentPacketSha256": "sha256:d2d23df8dc0e1d734dae507d40de3b21c07b85724b59b1fc714cb9c63745cca3",
+    "crosscheckPath": "docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json",
+    "crosscheckSha256": "sha256:f63a33a1551644a64be26291057c96d47a48ad33ac6dd030ccbd83947f53da7f"
+  },
+  "scope": {
+    "scopeType": "SYMBOLS",
+    "wholeFileReplacement": false,
+    "symbols": [
+      {
+        "wave": 1,
+        "package": "galerina-core-config",
+        "source": "packages-ts/galerina-core-config/src/index.ts",
+        "symbol": "isEnvironmentMode",
+        "span": { "start": 196, "end": 198 },
+        "signature": "export function isEnvironmentMode(value: string): value is EnvironmentMode",
+        "sourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+        "bodyDigest": "sha256:56dc0f016997e147fa2eafae921884e506c0e2ab493cdd59eb7206a29e709787",
+        "existingTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+        "twinDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+        "test": "packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+        "dependencyControl": "private Set ENVIRONMENT_MODE_SET; ordinary Set.has behavior; no exported mutator observed"
+      },
+      {
+        "wave": 2,
+        "package": "galerina-core-runtime",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "symbol": "isTerminalScope",
+        "span": { "start": 473, "end": 478 },
+        "signature": "function isTerminalScope(status: StructuredAwaitScopeStatus): boolean",
+        "sourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "bodyDigest": "sha256:faf8072dab04ae2975598d262366da1739da25e4630e3823ceb742b61602293e",
+        "existingTwin": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+        "twinDigest": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+        "test": "packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
+        "dependencyControl": "literal comparisons only; no mutable state, I/O, or scheduling observed"
+      },
+      {
+        "wave": 3,
+        "package": "galerina-core-tasks",
+        "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "symbol": "isTaskEffect",
+        "span": { "start": 187, "end": 198 },
+        "signature": "function isTaskEffect(value: string): value is TaskDefinition[\"effects\"][number]",
+        "sourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+        "bodyDigest": "sha256:77cef226f5a6ef0b8d7c9f45f25f9ba3fe3d53827eeed5cfdac3036315712a1e",
+        "existingTwin": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+        "twinDigest": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+        "test": "packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+        "dependencyControl": "Array.includes ordinary built-in behavior; existing twin uses bounded helper flows"
+      },
+      {
+        "wave": 4,
+        "package": "galerina-data-model",
+        "source": "packages-ts/galerina-data-model/src/index.ts",
+        "symbol": "isResponseSafeClassification",
+        "span": { "start": 127, "end": 131 },
+        "signature": "export function isResponseSafeClassification(classification: ModelFieldClassification): boolean",
+        "sourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+        "bodyDigest": "sha256:110da4578fbb216af83612f171492aab51e3400844fc00d24d11cc129cdd89c9",
+        "existingTwin": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+        "twinDigest": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+        "test": "packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+        "dependencyControl": "literal comparison only; no mutable state, I/O, or scheduling observed"
+      }
+    ],
+    "heldSymbols": [
+      { "symbol": "isOmniUncertain", "reason": "semantic hold: exported runtime-mutable ReadonlySet remains reachable and mutation parity is unresolved" },
+      { "symbol": "isBuiltin", "reason": "physical profile hold" },
+      { "symbol": "validateTransition", "reason": "physical two-input profile hold" }
+    ]
+  },
+  "waveLimits": {
+    "limitsScope": "PER_SINGLETON_STEP",
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "maxSymbolsPerWave": 4,
+    "maxSourceFilesPerWave": 4,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "inputByteDefinition": "UTF-8 bytes of the selected TypeScript source file only",
+    "outputByteDefinition": "UTF-8 bytes of newly written Fungi source plus its checked/GIR/receipt artifacts",
+    "aggregateInputBytes": 81694,
+    "aggregateOutputBytes": 262144,
+    "aggregateCapsExecuted": false,
+    "aggregateCapBasis": "Exact sum of the four selected TypeScript source files and four times the per-step output ceiling; no output is authorized beyond the named singleton steps",
+    "fileCounting": "One TypeScript source file is charged to each step; each step may revalidate one existing Fungi twin and its bounded evidence artifacts",
+    "chapterAggregation": "after package chapter completes"
+  },
+  "executionBoundary": {
+    "operation": "REVALIDATE_EXISTING_TWINS",
+    "newFungiSourceCreation": false,
+    "existingTwinRewrite": false,
+    "newEvidenceReceipts": true,
+    "typescriptShadowsRetained": true,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChange": false,
+    "remotePublication": false,
+    "gitRole": "provenance-only"
+  },
+  "acceptance": {
+    "exactHeadAndTreeRequired": true,
+    "sourceAndTwinHashesRequired": true,
+    "perSymbolReceiptRequired": true,
+    "differentialVectorsRequired": true,
+    "negativeVectorsRequired": true,
+    "hostAssumptionControlsRequired": true,
+    "focusedTestsRequired": true,
+    "independentReviewRequired": true,
+    "heldSymbolsExcluded": true,
+    "staleOrPartialEvidence": "HOLD",
+    "corpusRerun": "closed; the completed 2722-file PROJECT receipt is not rerun for this wave"
+  },
+  "notes": [
+    "This is a fresh exact-head owner authorization succeeding the earlier review-only approval and non-authorizing proposal.",
+    "The four selected Fungi twins already exist; the authorized operation is bounded revalidation and receipt generation rather than blind source authoring.",
+    "The authorization does not release the held Omni or physical-profile symbols and does not authorize unrestricted bulk conversion."
+  ]
+}

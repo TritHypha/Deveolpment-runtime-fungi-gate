@@ -1,0 +1,82 @@
+{
+  "schema": "galerina.rd0873-wsl-vok-translation-crosscheck.v1",
+  "date": "2026-09-11",
+  "status": "PASS_NON_AUTHORIZING_CROSSCHECK",
+  "authorizing": false,
+  "independentImplementation": true,
+  "purpose": "Record bounded Ubuntu Rust VOK and five-symbol Fungi twin checks without granting translation or production authority.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9",
+    "workingTree": "DIRTY_NON_SUBJECT_PATHS_PRESERVED",
+    "subjectPath": "packages-ts/galerina-core-runtime/native/vok-authority",
+    "subjectPathClean": true
+  },
+  "execution": {
+    "platform": "WSL2 Ubuntu",
+    "node": "v24.18.0",
+    "cargo": "1.98.1 (797e8a9bc 2026-08-05)",
+    "rustc": "1.98.1 (48a229cea 2026-09-01)",
+    "commands": [
+      "cargo test --locked --offline",
+      "cargo run --quiet --locked --offline --bin vok-live-evidence"
+    ],
+    "rustTests": {
+      "unit": 30,
+      "doctests": 14,
+      "failed": 0,
+      "status": "PASS"
+    },
+    "liveEvidence": {
+      "schema": "galerina.vok.native-wx-live.v1",
+      "verdict": "PASS",
+      "target": "x86_64",
+      "k3Vectors": 19683,
+      "result": 42,
+      "executableAtCall": true,
+      "writableAtCall": false,
+      "authorityReleased": false
+    }
+  },
+  "translationTwinChecks": {
+    "scope": "five existing review-only scalar twins",
+    "command": "node --test packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+    "tests": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "status": "PASS"
+  },
+  "interpretation": {
+    "resolves": [
+      "independent Ubuntu execution evidence for the bounded Rust VOK floor",
+      "repeatable WSL execution of the five existing twin checks"
+    ],
+    "doesNotResolve": [
+      "String-based TypeScript-to-Fungi semantic admission",
+      "whole-file or bulk authoring authority",
+      "held isBuiltin or validateTransition",
+      "consumer switching",
+      "TypeScript retirement",
+      "production authority"
+    ],
+    "rustRole": "independent bounded VOK execution cross-check; not the translation receipt issuer or production runtime",
+    "receiptProvenance": "current-turn command output persisted by the coordinating agent; no source or Fungi mutation"
+  },
+  "custody": {
+    "bulkFungiAuthoring": false,
+    "newFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "limitations": [
+    "No direct native Rust execution of the five String classifier twins was claimed.",
+    "Grok prompt-53 remains advisory and its five stderr tool errors remain service evidence only.",
+    "Astra adjudication is required before this record can support any gate decision."
+  ]
+}

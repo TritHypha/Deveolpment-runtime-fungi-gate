@@ -1,0 +1,107 @@
+{
+  "schema": "galerina.rd0873-bulk-wave-source-dossiers.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "sha256": "60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "classification": "seven scoped dossiers; five eligible and two held"
+  },
+  "dossiers": [
+    {
+      "wave": 1,
+      "package": "galerina-core-config",
+      "source": "packages-ts/galerina-core-config/src/index.ts",
+      "symbol": "isEnvironmentMode",
+      "span": { "start": 196, "end": 198 },
+      "signature": "export function isEnvironmentMode(value: string): value is EnvironmentMode",
+      "sourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "bodyDigest": "sha256:56dc0f016997e147fa2eafae921884e506c0e2ab493cdd59eb7206a29e709787",
+      "existingTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "twinDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "test": "packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "shape": "String membership classifier over four canonical literals; invokes Set.has",
+      "dependencyBoundary": "private Set ENVIRONMENT_MODE_SET and its Set.has call; no exported mutator observed"
+    },
+    {
+      "wave": 2,
+      "package": "galerina-core-logic",
+      "source": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+      "symbol": "isOmniUncertain",
+      "span": { "start": 70, "end": 72 },
+      "signature": "export function isOmniUncertain(state: OmniState): boolean",
+      "sourceDigest": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+      "bodyDigest": "sha256:73930f2ef0b4567fb911956a20651983dc2002b6d7b2cafb85784d03be719c81",
+      "existingTwin": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+      "twinDigest": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "test": "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "shape": "default membership classifier over six uncertain states; exported runtime-mutable state remains reachable",
+      "dependencyBoundary": "exported ReadonlySet object OMNI_UNCERTAIN_STATES and its Set.has call; mutation preservation is unresolved"
+    },
+    {
+      "wave": 3,
+      "package": "galerina-core-runtime",
+      "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+      "symbol": "isTerminalScope",
+      "span": { "start": 473, "end": 478 },
+      "signature": "function isTerminalScope(status: StructuredAwaitScopeStatus): boolean",
+      "sourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+      "bodyDigest": "sha256:faf8072dab04ae2975598d262366da1739da25e4630e3823ceb742b61602293e",
+      "existingTwin": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "twinDigest": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "test": "packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
+      "shape": "pure String classifier over four terminal scope literals",
+      "dependencyBoundary": "literal comparisons only; no helper calls or mutable state observed; no I/O or scheduling effect"
+    },
+    {
+      "wave": 4,
+      "package": "galerina-core-tasks",
+      "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+      "symbol": "isTaskEffect",
+      "span": { "start": 187, "end": 198 },
+      "signature": "function isTaskEffect(value: string): value is TaskDefinition[\"effects\"][number]",
+      "sourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+      "bodyDigest": "sha256:77cef226f5a6ef0b8d7c9f45f25f9ba3fe3d53827eeed5cfdac3036315712a1e",
+      "existingTwin": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "twinDigest": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "test": "packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+      "shape": "String membership classifier over eight effects; allocates an array and invokes Array.includes",
+      "dependencyBoundary": "source array membership and Array.includes host call; existing twin uses two bounded helper flows to fit its physical profile"
+    },
+    {
+      "wave": 5,
+      "package": "galerina-data-model",
+      "source": "packages-ts/galerina-data-model/src/index.ts",
+      "symbol": "isResponseSafeClassification",
+      "span": { "start": 127, "end": 131 },
+      "signature": "export function isResponseSafeClassification(classification: ModelFieldClassification): boolean",
+      "sourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+      "bodyDigest": "sha256:110da4578fbb216af83612f171492aab51e3400844fc00d24d11cc129cdd89c9",
+      "existingTwin": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "twinDigest": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "test": "packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+      "shape": "pure String classifier accepting only public",
+      "dependencyBoundary": "literal comparison only; no helper calls or mutable state observed; no I/O or scheduling effect"
+    }
+  ],
+  "commonControls": {
+    "inputDomain": "The TypeScript signatures are String-typed; wrong-class refusal is a proposed physical boundary and is not attributed to current TypeScript runtime behavior",
+    "effects": "Per-symbol dependencies above govern effects. Four symbols are observed pure under default module state; isOmniUncertain depends on reachable exported mutable state and is not semantically closed.",
+    "hostAssumptions": "Set.has and Array.includes retain ordinary built-in behavior; prototype replacement and state-mutation controls are required before admission",
+    "typescriptShadowRetained": true,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "heldSymbols": ["isBuiltin", "validateTransition"]
+  },
+  "decision": "The five dossiers are ready for a bounded reversible review wave. They do not authorize new or bulk Fungi source until the owner converts the proposal to an exact-head authorizing admission.",
+  "gitRole": "provenance-only"
+}

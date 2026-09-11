@@ -1,0 +1,186 @@
+{
+  "schema": "galerina.rd0873-current-head-admission-independent-adjudication.v2",
+  "version": 2,
+  "date": "2026-09-11",
+  "status": "PASS_CURRENT_HEAD_SCOPED_WAVE_NON_AUTHORIZING",
+  "verdict": "PASS",
+  "closureVerdict": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_CURRENT_HEAD_PROJECT_QUEUE_AND_SCOPED_WAVE_REVALIDATION",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9",
+    "workingTree": "DIRTY_PROTECTED_PATHS_PRESERVED",
+    "dirtyPaths": [
+      "build/conversion-queue/QUEUE.md",
+      "build/conversion-queue/queue.json",
+      "packages-ts/galerina-devtools-benchmarks/results/compute-mix-latest.json",
+      "packages-ts/galerina-devtools-wasmtime-oracle/package-lock.json"
+    ],
+    "routeAndCorpusFungiDiff": "NONE"
+  },
+  "projectAssurance": {
+    "profile": "PROJECT",
+    "receiptPath": "build/fungi-corpus-check/evidence/rd0873-task8-project-reopened-357c689a9.json",
+    "receiptFileDigest": "sha256:096d80355724eb68d5e3654ec419db9a2cb46eabc5ba5343c1fddd6889799acc",
+    "envelopeDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
+    "requestDigest": "sha256:87f868cd6cea0e8c09e56a11a0b61d560a2a599c3e786fba03366aea5d05429d",
+    "compilerDigest": "sha256:1861fb7fc690983b7454ceac549fa5b06c8c9446cfd86148f5e9f37e88fdabca",
+    "fileSetDigest": "sha256:e5abf916ffb55172683045e0d856d04d27e080586a8cb5b89f544c6c4fa60405",
+    "fileCount": 2722,
+    "shardCount": 4,
+    "concurrency": 2,
+    "limits": {
+      "maxFiles": 1360,
+      "maxBytes": 67108864,
+      "maxOutputBytes": 67108864,
+      "timeoutMs": 3400000
+    },
+    "aggregate": {
+      "status": "PASS",
+      "resultDigest": "sha256:78d9c4c772a356503ffcb3b24db3e50e3440fbab356930da1e77b8464a7b127e",
+      "holdReasons": [],
+      "shards": [
+        {
+          "shardId": "shard-1-of-4",
+          "startIndex": 0,
+          "endIndexExclusive": 681,
+          "completed": 681,
+          "unprocessed": 0,
+          "status": "PASS",
+          "termination": "COMPLETE",
+          "digest": "sha256:d370a44991002e4cce4dd5576a27e5154c0a69fc03c2cada736cc63afb5b783b"
+        },
+        {
+          "shardId": "shard-2-of-4",
+          "startIndex": 681,
+          "endIndexExclusive": 1362,
+          "completed": 681,
+          "unprocessed": 0,
+          "status": "PASS",
+          "termination": "COMPLETE",
+          "digest": "sha256:42c4a4f8abd3d88865604ed6449d6ac1fcfd4a22114ffa27f1d6172544a8bfb1"
+        },
+        {
+          "shardId": "shard-3-of-4",
+          "startIndex": 1362,
+          "endIndexExclusive": 2042,
+          "completed": 680,
+          "unprocessed": 0,
+          "status": "PASS",
+          "termination": "COMPLETE",
+          "digest": "sha256:4d7febc6a65e0f98e68dee05d58538dfc76e11ab166473dd49bb1d2632d36f51"
+        },
+        {
+          "shardId": "shard-4-of-4",
+          "startIndex": 2042,
+          "endIndexExclusive": 2722,
+          "completed": 680,
+          "unprocessed": 0,
+          "status": "PASS",
+          "termination": "COMPLETE",
+          "digest": "sha256:e63237b6994c6ec9986edfb8cc61f72cc410aaee61a77a7535c322a6d1e7d081"
+        }
+      ]
+    }
+  },
+  "queueReconciliation": {
+    "writeResult": "PASS",
+    "checkResult": "PASS",
+    "queuePath": "build/conversion-queue/queue.json",
+    "queueFileDigest": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "sourceDigest": "b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "decisionsDigest": "4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "projectCorpusReceiptDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
+    "counts": {
+      "total": 1605,
+      "wholeFileCandidates": 0,
+      "scopedCandidates": 7,
+      "scopedCandidateFiles": 7,
+      "blocked": 921,
+      "bootstrapFloor": 684
+    },
+    "interpretation": "The seven scoped entries remain symbol dossiers; whole-file CANDIDATE remains zero."
+  },
+  "scopedAdmission": {
+    "scope": "SYMBOLS",
+    "classification": "CANDIDATE",
+    "eligible": [
+      {
+        "symbol": "isEnvironmentMode",
+        "path": "packages-ts/galerina-core-config/src/index.ts"
+      },
+      {
+        "symbol": "isOmniUncertain",
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts"
+      },
+      {
+        "symbol": "isTerminalScope",
+        "path": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "isTaskEffect",
+        "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts"
+      },
+      {
+        "symbol": "isResponseSafeClassification",
+        "path": "packages-ts/galerina-data-model/src/index.ts"
+      }
+    ],
+    "held": [
+      {
+        "symbol": "isBuiltin",
+        "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+        "reason": "physical profile remains held"
+      },
+      {
+        "symbol": "validateTransition",
+        "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+        "reason": "two-input physical shape remains held"
+      }
+    ],
+    "typescriptShadowsRetained": true,
+    "consumerSwitch": false,
+    "productionAuthority": false
+  },
+  "tests": {
+    "focusedSuites": 7,
+    "focusedTests": 22,
+    "focusedPassed": 22,
+    "focusedFailed": 0,
+    "focusedSkipped": 0,
+    "queueRegressionTests": 14,
+    "queueRegressionPassed": 14,
+    "provenance": "Current-turn command output; no persisted test receipt was fabricated.",
+    "slideRepositoryEnvironment": "GALERINA_SLIDE_REPO supplied"
+  },
+  "externalCrossCheck": {
+    "reviewer": "GPT-6 Astra",
+    "status": "PASS_NON_AUTHORIZING_SCOPED_WAVE",
+    "findings": [
+      "HEAD/tree and four-shard coverage independently verified.",
+      "The current receipt and queue envelope bind the same exact identity.",
+      "Bulk authoring remains closed; the two held symbols remain excluded.",
+      "The prior durable v1 adjudication was stale and cannot inherit this receipt."
+    ],
+    "limitations": [
+      "Focused test counts are attested from current-turn output rather than a persisted exact-head test receipt.",
+      "This review does not authorize bulk authoring, consumer switching, TypeScript retirement or production use.",
+      "Native VOK live-evidence k3Vectors is a fixed output label; exhaustive-vector coverage is supported only by the separate Rust test suite, not by that field."
+    ]
+  },
+  "authorityAndCustodyGates": {
+    "queueMutation": true,
+    "newFungiAuthoring": true,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "remotePublication": "NOT_REQUESTED"
+  },
+  "decisionRationale": "The current committed head has a complete exact-head PROJECT PASS and current queue binding. The five named scalar dossiers support a bounded, reversible, non-authorizing review wave; isBuiltin and validateTransition remain held. Bulk translation remains closed until an explicit non-empty bulk admission and its independently receipted waves are provided."
+}

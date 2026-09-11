@@ -1,0 +1,154 @@
+{
+  "schema": "galerina.rd0873-four-symbol-wave-execution-manifest.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "AUTHORIZED_BOUNDED_REVALIDATION_PLAN",
+  "authorizing": true,
+  "authorizationPath": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-authorization-v2.json",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9"
+  },
+  "operation": "REVALIDATE_EXISTING_TWINS",
+  "sourceAuthoring": "closed: all four Fungi twins already exist and are not rewritten",
+  "stepPolicy": {
+    "order": "declared order, sequential",
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "aggregateInputBytes": 81694,
+    "aggregateOutputBytes": 262144,
+    "outputAccounting": "No Fungi source or checked/GIR artifact is written by these steps; only bounded governance receipts are emitted. Receipt files are evidence records and are measured separately from candidate source output. A step cannot be marked PASS until its serialized receipt size and the aggregate serialized receipt size are measured and both remain within the declared output cap.",
+    "staleHeadAction": "HOLD",
+    "partialEvidenceAction": "HOLD",
+    "failureOrder": [
+      "exact head/tree and source/twin hash binding",
+      "asset syntax, effect, interpreter and signed-Wasm checks",
+      "isolated host-assumption control or explicit HOLD when isolation is unavailable",
+      "per-step receipt serialization and aggregate receipt-byte accounting"
+    ]
+  },
+  "hostControlPlan": {
+    "purpose": "Keep host assumptions explicit and fail closed when a dependency cannot be isolated from the checker runtime.",
+    "controls": [
+      {
+        "control": "static dependency boundary",
+        "procedure": "Scan each selected Fungi twin and its TypeScript body for prototype replacement, ambient globals, I/O, time, randomness, scheduling, and external lookup. Any new dependency is a HOLD.",
+        "expected": "PASS for the four recorded dependency boundaries"
+      },
+      {
+        "control": "isolated built-in substitution",
+        "procedure": "Run the Fungi candidate in an isolated checker/runtime boundary while replacing the corresponding TypeScript Set.has or Array.includes host method. The probe must either demonstrate that the Fungi candidate remains independent or record an infrastructure-interference HOLD; an unchecked substitution is never PASS.",
+        "expected": "PASS only when the boundary is isolated; otherwise HOLD"
+      },
+      {
+        "control": "refusal sequencing",
+        "procedure": "Evaluate hash binding before execution, reject stale head/tree, reject a source or twin mismatch, and reject any host-control exception before receipt serialization.",
+        "expected": "Any refusal prevents a PASS receipt and prevents the next step"
+      },
+      {
+        "control": "receipt byte accounting",
+        "procedure": "Serialize each step receipt, measure UTF-8 bytes, then serialize the aggregate receipt and measure UTF-8 bytes. Refuse PASS if any step exceeds 65,536 bytes or the aggregate exceeds 262,144 bytes.",
+        "expected": "PASS only after measured sizes are recorded"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "package": "galerina-core-config",
+      "source": "packages-ts/galerina-core-config/src/index.ts",
+      "symbol": "isEnvironmentMode",
+      "span": { "start": 196, "end": 198 },
+      "sourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "existingTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "twinDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "test": "packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "expectedVectors": {
+        "true": ["development", "test", "staging", "production"],
+        "false": ["", "Development", " production ", "preview", "production\u0000"]
+      },
+      "dependencyControl": "private Set and ordinary Set.has behavior; no exported mutator observed",
+      "action": "REVALIDATE_EXISTING_TWIN",
+        "sourceWrite": false,
+        "hostControl": "STATIC_BOUNDARY_REVIEW; ISOLATED_SUBSTITUTION_PROBE_REQUIRED_OR_HOLD"
+    },
+    {
+      "step": 2,
+      "package": "galerina-core-runtime",
+      "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+      "symbol": "isTerminalScope",
+      "span": { "start": 473, "end": 478 },
+      "sourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+      "existingTwin": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "twinDigest": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "test": "packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
+      "expectedVectors": {
+        "true": ["succeeded", "failed", "timed_out", "cancelled"],
+        "false": ["running", "cancelling", "", "Succeeded", "failed ", "cancelled\u0000"]
+      },
+      "dependencyControl": "literal comparisons only; no mutable state, I/O, or scheduling observed",
+      "action": "REVALIDATE_EXISTING_TWIN",
+        "sourceWrite": false,
+        "hostControl": "STATIC_BOUNDARY_REVIEW; NO_SET_OR_ARRAY_DEPENDENCY_IN_TWIN"
+    },
+    {
+      "step": 3,
+      "package": "galerina-core-tasks",
+      "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+      "symbol": "isTaskEffect",
+      "span": { "start": 187, "end": 198 },
+      "sourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+      "existingTwin": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "twinDigest": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "test": "packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+      "expectedVectors": {
+        "true": ["filesystem", "network", "database", "environment", "shell", "compiler", "reports", "crypto"],
+        "false": ["", "Filesystem", " network", "process", "crypto\u0000"]
+      },
+      "dependencyControl": "Array.includes ordinary built-in behavior; existing twin uses bounded helper flows",
+      "action": "REVALIDATE_EXISTING_TWIN",
+        "sourceWrite": false,
+        "hostControl": "STATIC_BOUNDARY_REVIEW; ISOLATED_SUBSTITUTION_PROBE_REQUIRED_OR_HOLD"
+    },
+    {
+      "step": 4,
+      "package": "galerina-data-model",
+      "source": "packages-ts/galerina-data-model/src/index.ts",
+      "symbol": "isResponseSafeClassification",
+      "span": { "start": 127, "end": 131 },
+      "sourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+      "existingTwin": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "twinDigest": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "test": "packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+      "expectedVectors": {
+        "true": ["public"],
+        "false": ["internal", "pii", "secret", "", "Public", " public", "public\u0000"]
+      },
+      "dependencyControl": "literal comparison only; no mutable state, I/O, or scheduling observed",
+      "action": "REVALIDATE_EXISTING_TWIN",
+        "sourceWrite": false,
+        "hostControl": "STATIC_BOUNDARY_REVIEW; NO_SET_OR_ARRAY_DEPENDENCY_IN_TWIN"
+    }
+  ],
+  "closedScope": {
+    "heldSymbols": ["isOmniUncertain", "isBuiltin", "validateTransition"],
+    "wholeFileReplacement": false,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChange": false,
+    "remotePublication": false,
+    "projectCorpusRerun": false,
+    "typescriptShadowsRetained": true,
+    "gitRole": "provenance-only"
+  },
+  "receiptPath": "docs/independent-audits/2026-09-11-rd0873-four-symbol-wave-execution-receipt.json"
+}

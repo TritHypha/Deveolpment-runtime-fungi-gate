@@ -1,0 +1,70 @@
+{
+  "schema": "galerina.rd0873-current-head-admission-independent-adjudication.v3",
+  "version": 3,
+  "date": "2026-09-11",
+  "status": "PASS_CURRENT_HEAD_RECHECK_NON_AUTHORIZING",
+  "verdict": "PASS",
+  "closureVerdict": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_RECHECK_OF_CURRENT_HEAD_EVIDENCE_AND_PACKET",
+  "reviewer": "GPT-6 Astra",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "tree": "fd8885f4381134db9eaf573efd83c01df0dc34c9"
+  },
+  "reviewedArtifacts": [
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-approval.json",
+      "sha256": "5b7849b2a4c6de06d3f7c70b2fcbd6354b46e31fadd3f542066884c591e81536"
+    },
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v2.json",
+      "sha256": "869f2d2f076abe8b76072d811affc8e9c55400b0b4c9a4a3284920a6985f4775"
+    },
+    {
+      "path": "docs/independent-audits/2026-09-11-rd0873-wsl-vok-translation-crosscheck.json",
+      "sha256": "f63a33a1551644a64be26291057c96d47a48ad33ac6dd030ccbd83947f53da7f"
+    },
+    {
+      "path": "docs/reports/rd0873-post-closure-pilot-admission.md",
+      "sha256": "d96f0611950eb93167cd1e13123fd8142b193201b2202e38f3abb35c5691392c"
+    }
+  ],
+  "findings": [
+    "The PROJECT receipt, queue file, adjudication v2 and owner scope bind the same exact HEAD/tree.",
+    "The persisted WSL record accurately states 30 Rust unit tests, 14 doctests, 10 twin tests and a non-authorizing live W^X result.",
+    "The pilot packet now distinguishes valid nonmatching String false results from typed refusals for malformed, unsupported or changed inputs.",
+    "The packet's older pilot gate table is explicitly separated from the current-head review-only records.",
+    "k3Vectors remains printed metadata in the live probe; exhaustive traversal belongs to the separate Rust test suite."
+  ],
+  "scope": {
+    "wholeFileCandidates": 0,
+    "scopedDossiers": 7,
+    "eligibleSymbols": [
+      "isEnvironmentMode",
+      "isOmniUncertain",
+      "isTerminalScope",
+      "isTaskEffect",
+      "isResponseSafeClassification"
+    ],
+    "heldSymbols": ["isBuiltin", "validateTransition"]
+  },
+  "limitations": [
+    "The WSL record is persisted by the coordinating agent from current-turn command output; Astra did not rerun WSL.",
+    "The native Rust VOK path does not directly execute the five String classifier inputs.",
+    "This recheck does not authorize bulk Fungi authoring, consumer switching, TypeScript retirement or production authority."
+  ],
+  "authorityAndCustodyGates": {
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "fungiSourceDiff": "NONE",
+    "gitRole": "provenance-only"
+  },
+  "decisionRationale": "The corrected current-head evidence is internally consistent and the packet wording is repaired. The exact non-empty authorizing bulk admission and pilot-specific receipt chain remain absent, so closure stays HOLD."
+}

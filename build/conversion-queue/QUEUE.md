@@ -1,7 +1,7 @@
 # Conserved TypeScript/MJS Conversion Queue
 
-Source digest: `f31ae7cb1cbf1eefdc8c99d896b118b31368c7d69a22aaa7408d81ddc4a3dccc`
-PROJECT corpus receipt: `sha256:e1cdc831efb01d64c6961df24a280d2d6ccf825faf968fb20795b4d67a8b94f6`
+Source digest: `b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271`
+PROJECT corpus receipt: `sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150`
 
 | Classification | Count |
 |---|---:|
@@ -9,8 +9,8 @@ PROJECT corpus receipt: `sha256:e1cdc831efb01d64c6961df24a280d2d6ccf825faf968fb2
 | BLOCKED | 921 |
 | NO_RUNTIME_BEHAVIOR | 0 |
 | SUPERSEDED_BY_EXISTING_FUNGI | 0 |
-| BOOTSTRAP_FLOOR | 667 |
-| TOTAL | 1588 |
+| BOOTSTRAP_FLOOR | 684 |
+| TOTAL | 1605 |
 
 Scoped symbol candidates: **7** across **7** files.
 

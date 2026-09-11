@@ -1,0 +1,299 @@
+[
+  {
+    "benchmark": "compute-mix",
+    "metricClass": "cpu-throughput",
+    "results": {
+      "nodejs": {
+        "runtime": "nodejs",
+        "benchmark": "compute-mix-throughput-v2",
+        "executionMode": "direct-nodejs",
+        "comparisonType": "direct-runtime",
+        "version": 2,
+        "algorithm": "lcg2x-xorshift2x-sqrt-4branch",
+        "targetMs": 5000,
+        "warmupMs": 1000,
+        "batchSize": 50000,
+        "seed": 123456789,
+        "elapsedMs": 5000.044,
+        "operations": 679200000,
+        "operationsPerSecond": 135838807.34,
+        "operationsPerCpuMs": 135840,
+        "checksum": 129952916,
+        "cpu": {
+          "userMs": 5000,
+          "systemMs": 0,
+          "totalMs": 5000
+        },
+        "memory": {
+          "rssBytes": 53030912,
+          "heapTotalBytes": 6529024,
+          "heapUsedBytes": 4997824,
+          "externalBytes": 1614121,
+          "arrayBuffersBytes": 137483,
+          "maxRssBytes": 53358592,
+          "heapUsedBefore": 4047856,
+          "heapUsedDelta": 949968
+        },
+        "process": {
+          "pid": 3552,
+          "node": "v24.18.0",
+          "python": null,
+          "platform": "win32",
+          "arch": "x64"
+        },
+        "notes": [
+          "v2: 2x LCG, 2x xorshift mix, float sqrt, 4-way branch per operation",
+          "Harder than v1 — exercises float, int, and branch prediction together"
+        ],
+        "normThroughput": 135838807.34,
+        "throughputUnit": "mix-ops/s"
+      },
+      "python": {
+        "runtime": "python",
+        "benchmark": "compute-mix-throughput-v2",
+        "executionMode": "direct-python",
+        "comparisonType": "direct-runtime",
+        "version": 2,
+        "algorithm": "lcg2x-xorshift2x-sqrt-4branch",
+        "targetMs": 5000,
+        "warmupMs": 1000,
+        "batchSize": 50000,
+        "seed": 123456789,
+        "elapsedMs": 5018.398,
+        "operations": 5250000,
+        "operationsPerSecond": 1046150.48,
+        "operationsPerCpuMs": 1043.48,
+        "checksum": 2695562873,
+        "cpu": {
+          "userMs": null,
+          "systemMs": null,
+          "totalMs": 5031.25
+        },
+        "memory": {
+          "rssBytes": null,
+          "heapUsedBytes": 3436,
+          "heapTotalBytes": null,
+          "tracemallocCurrentBytes": null,
+          "tracemallocPeakBytes": null,
+          "maxRssBytes": null,
+          "heapUsedDelta": 3436,
+          "bytesPerOperation": 0.07,
+          "tracemallocPeak": 3708
+        },
+        "process": {
+          "pid": 22560,
+          "node": null,
+          "python": "3.14.6",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "arch": "AMD64"
+        },
+        "notes": [
+          "v2: 2x LCG, 2x xorshift mix, float sqrt, 4-way branch per operation",
+          "Harder than v1 — exercises float, int, and branch prediction together"
+        ],
+        "normThroughput": 1046150.48,
+        "throughputUnit": "mix-ops/s"
+      },
+      "cpp": null,
+      "rust": {
+        "runtime": "rust",
+        "benchmark": "compute-mix-throughput-v2",
+        "version": 2,
+        "algorithm": "lcg2x-xorshift2x-sqrt-4branch",
+        "targetMs": 5000,
+        "elapsedMs": 5000.3,
+        "operations": 659000000,
+        "operationsPerSecond": 131792087.2,
+        "checksum": 4211651811,
+        "normThroughput": 131792087.2,
+        "throughputUnit": "mix-ops/s"
+      },
+      "rustAvx2": {
+        "runtime": "rust",
+        "benchmark": "compute-mix-throughput-v2",
+        "version": 2,
+        "algorithm": "lcg2x-xorshift2x-sqrt-4branch",
+        "targetMs": 5000,
+        "elapsedMs": 5000.458,
+        "operations": 630750000,
+        "operationsPerSecond": 126138450.76,
+        "checksum": 3186487997,
+        "normThroughput": 126138450.76,
+        "throughputUnit": "mix-ops/s"
+      },
+      "wasm": {
+        "runtime": "wasm",
+        "benchmark": "wasm-phase27",
+        "flowName": "main",
+        "qualifier": "pure",
+        "binaryBytes": 413,
+        "compileMs": 40.223,
+        "elapsedMs": 1331.984,
+        "calls": 2000,
+        "callsPerSecond": 1501.52,
+        "iterationsPerSecond": 75075993.8,
+        "result": {
+          "__tag": "int",
+          "value": -11971
+        },
+        "error": false,
+        "cpu": {
+          "totalMs": 1313
+        },
+        "memory": {
+          "rssBytes": 84901888,
+          "heapUsedBytes": 19511560,
+          "heapUsedDelta": 22168
+        },
+        "notes": [
+          "Phase 27: Galerina → WAT → binary WASM (413 bytes) → WebAssembly.instantiate",
+          "Compile (one-time): 40.2ms. Execution: pure WASM, no JS tree-walker."
+        ],
+        "normThroughput": 75076000,
+        "throughputUnit": "mix-ops/s"
+      },
+      "slideReference": {
+        "runtime": "galerina-slide-reference",
+        "benchmark": "compute-mix-v1",
+        "benchmarkId": "compute-mix",
+        "result": -11971,
+        "workCount": 50000,
+        "throughputUnit": "mix-ops/s",
+        "elapsedMs": 276.04269999999815,
+        "normThroughput": 181131.39742510972,
+        "operations": 50000,
+        "operationsPerSecond": 181131.39742510972,
+        "iterations": 50000,
+        "iterationsPerSecond": 181131.39742510972,
+        "compileMs": 16.539999999997235,
+        "prepareMs": 3.9474999999983993,
+        "warmupRuns": 2,
+        "samples": [
+          279.4213000000018,
+          276.04269999999815,
+          268.6834999999992,
+          279.8315999999977,
+          268.6827000000012,
+          274.4465999999993,
+          283.8650999999991
+        ],
+        "statistic": "median",
+        "sourceDigest": "sha256:3efa6161a4575196d96bf8ca96b5d9ad7cf696488e97caca8b09c7102822343c",
+        "moduleDigest": "sha256:2ec49caf79a3b5947d4aee8419bdb90e40587220d13b39464609e710bce71583",
+        "girDigest": "sha256:d5b53b3756900614df404100bfa39b06b7d63867810e907bd25daa4c8082e175",
+        "bundleDigest": "sha256:aff41365c2f87fa4e981ddf7c0d22899889a58f406d0d278c9b9e22f728391ab",
+        "referenceOnly": true,
+        "authorityReleased": false,
+        "k3": 0,
+        "slideCommit": "c33894d23a7b25e02bddaa6631225e0afcf8288c",
+        "registrySetId": "slide.registry.executable-gir.v2c-benchmark-counted-control.v1",
+        "registrySetDigest": "56a815aea2264b840892acca1f1ddc5e27bac792d2feed40e4c6b99d9a16c266"
+      },
+      "galerinaGoverned": {
+        "runtime": "galerina-governed",
+        "mode": "governed",
+        "parseMs": 0.51,
+        "execMs": 32.27,
+        "totalMs": 32.79,
+        "result": {
+          "__tag": "int",
+          "value": -11971
+        },
+        "error": false,
+        "runsPerSecond": 31,
+        "cpu": {
+          "userMs": 47,
+          "systemMs": 0,
+          "totalMs": 47
+        },
+        "memory": {
+          "heapUsedBefore": 21881440,
+          "heapUsedAfter": 26432040,
+          "heapUsedDelta": 4550600,
+          "rssBefore": 98574336,
+          "rssAfter": 98328576,
+          "rssDelta": -245760,
+          "externalBefore": 21186811,
+          "externalAfter": 2683637,
+          "externalDelta": -18503174
+        },
+        "normThroughput": 1549427,
+        "throughputUnit": "mix-ops/s"
+      },
+      "galerinaManifest": {
+        "runtime": "galerina-manifest",
+        "mode": "manifest",
+        "parseMs": 0.53,
+        "execMs": 28.58,
+        "totalMs": 29.11,
+        "result": {
+          "__tag": "int",
+          "value": -11971
+        },
+        "error": false,
+        "runsPerSecond": 35,
+        "cpu": {
+          "userMs": 31,
+          "systemMs": 0,
+          "totalMs": 31
+        },
+        "memory": {
+          "heapUsedBefore": 22205096,
+          "heapUsedAfter": 26615232,
+          "heapUsedDelta": 4410136,
+          "rssBefore": 98959360,
+          "rssAfter": 98353152,
+          "rssDelta": -606208,
+          "externalBefore": 2683637,
+          "externalAfter": 2683637,
+          "externalDelta": 0
+        },
+        "normThroughput": 1749475,
+        "throughputUnit": "mix-ops/s"
+      },
+      "galerinaPassive": {
+        "runtime": "galerina-passive",
+        "mode": "passive",
+        "setupMs": 1.92,
+        "warmMs": 0.404,
+        "coldMs": 23.185,
+        "warmCalls": 3,
+        "coldCalls": 1,
+        "warmCallsPerSecond": 7423.9,
+        "coldCallsPerSecond": 43.13,
+        "iterationsPerSecond": 43.13,
+        "result": {
+          "__tag": "int",
+          "value": -11971
+        },
+        "error": false,
+        "cpu": {
+          "warmTotalMs": 0,
+          "coldTotalMs": 16
+        },
+        "memory": {
+          "heapUsedBefore": 31329712,
+          "heapUsedAfter": 31739096,
+          "heapUsedDelta": 409384,
+          "rssBytes": 98484224
+        },
+        "notes": [
+          "setupMs: one-time compile+governance cost (not charged to execution)",
+          "throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number",
+          "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
+          "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
+        ],
+        "normThroughput": 2156500,
+        "throughputUnit": "mix-ops/s"
+      }
+    },
+    "units": {
+      "benchId": "compute-mix",
+      "comparable": true,
+      "unit": "mix-ops/s",
+      "status": "PASS",
+      "normalized": 9,
+      "problems": []
+    }
+  }
+]
