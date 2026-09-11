@@ -40,6 +40,15 @@ presence-only opt-in and records the missing record/String physical ABI,
 differential, security and SLIDE/VOK proofs. It remains
 `BLOCKED:DOSSIER_REQUIRED`; no Fungi source was created.
 
+The channel factor is now recorded in
+`docs/independent-audits/2026-09-11-rd0873-channel-identity-source-dossier.json`.
+Its wrapper tests pass `10/10`. The dossier preserves the distinction between
+the existing core-network scalar cert-gate twin and the auth wrapper's raw
+`CertGateInput`, side-signal fold, optional revocation and diagnostic callbacks,
+and delegated boundary decision. Slice 94 and Slice 98 remain the relevant
+Array and option-record ABI blockers. This surface remains
+`BLOCKED:DOSSIER_REQUIRED`; no Fungi source was created.
+
 ## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 The owner supplied a fresh exact, non-empty authorization for one bounded

@@ -1,0 +1,157 @@
+{
+  "schema": "galerina.rd0873.channel-identity-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record the Galerina auth channel factor's authority-sensitive dependency boundary for future owner review without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "673535fe40b214df7dafc4a4b1552834035b86ec",
+    "tree": "82f3eee00a206b9af9a5e3aea66fb25819aca92d"
+  },
+  "queueEntry": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "sourceDigest": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "decisionsDigest": "sha256:4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "projectCorpusReceiptDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
+    "entry": {
+      "path": "packages-ts/galerina-auth/src/channel.ts",
+      "package": "galerina-auth",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    "queueCounts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "source": {
+    "path": "packages-ts/galerina-auth/src/channel.ts",
+    "symbol": "channelIdentityVerdict",
+    "span": { "start": 66, "end": 71 },
+    "signature": "export function channelIdentityVerdict(input: CertGateInput, onDiagnostic?: (d: GovernanceDiagnostic) => void): Verdict",
+    "sourceSha256": "sha256:e76420eddcd2b7307ab70631ec7ed39d3b6674aebb26032a96c8d89a82f8dec1",
+    "bodySha256": "sha256:b9fde2298f203c9dfcab10fca88117d2554c7894f54de8ff3f98831a221da522",
+    "sourceUtf8Bytes": 3456,
+    "bodyUtf8Bytes": 179,
+    "existingTwin": null,
+    "classification": "exported channel/identity factor wrapper; returns the cert-gate Verdict while the delegated gate also constructs a BoundaryDecision"
+  },
+  "dependency": {
+    "symbol": "certGate",
+    "path": "packages-ts/galerina-core-network/src/cert-gate.ts",
+    "span": { "start": 250, "end": 257 },
+    "sourceSha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+    "bodySha256": "sha256:d426c9de4acb5fc9813621f2511ae24bd1f2bbde9325ef4648e03b35f9b6f5fa",
+    "builtOracle": {
+      "path": "packages-ts/galerina-core-network/dist/cert-gate.js",
+      "sha256": "sha256:e1531e3dceebd14c803a5c2e5e1d6d569b9bdf753c65924377ab4c561463b78a"
+    },
+    "operation": [
+      "derive four sub-verdicts with toSubVerdicts",
+      "fold sideSignals with vAnd, preserving only degrade-or-equal behavior",
+      "collapse the folded verdict through decideAtBoundary",
+      "return the BoundaryDecision to the wrapper, which exposes only its Verdict field"
+    ]
+  },
+  "existingDependencyTwin": {
+    "path": "packages-ts/galerina-core-network/src/self-hosted/cert-gate.fungi",
+    "sha256": "sha256:a5a0eeaa01b5e9e89d681f4401b14ff1f7ac7cc035e03ded7773ba1819ee6e1d",
+    "role": "existing core-network governed asset; evidence of a dependency twin, not a replacement for galerina-auth/channel.ts"
+  },
+  "historicalBlockers": [
+    {
+      "record": "docs/reports/slice-98-decide-at-boundary-fungi-conversion-2026-08-13.md",
+      "status": "BLOCKED_BY_OPTION_RECORD_CALLBACK_ABI",
+      "finding": "The delegated boundary returns a complete record and conditionally invokes an optional diagnostic callback; scalar collapse flows do not prove the record, Option or callback shape."
+    },
+    {
+      "record": "docs/reports/slice-94-allof-fungi-conversion-2026-08-13.md",
+      "status": "BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI",
+      "finding": "The delegated side-signal fold requires an admitted bounded Array<Verdict> profile; scalar K3 evidence is insufficient."
+    }
+  ],
+  "graphEvidence": {
+    "qualifiedName": "Galerina.packages-ts.galerina-auth.src.channel.channelIdentityVerdict",
+    "label": "Function",
+    "startLine": 66,
+    "endLine": 71,
+    "complexity": 0,
+    "cognitive": 0,
+    "loopCount": 0,
+    "loopDepth": 0,
+    "callers": [
+      "packages-ts/galerina-auth/tests/channel.test.mjs",
+      "packages-ts/galerina-auth/tests/kernel-integration.test.mjs"
+    ],
+    "callees": ["certGate"]
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-auth/tests/channel.test.mjs",
+    "testSha256": "sha256:00cbd55ea378310e14ddb4137bb619ccaeb4b6c8053f45e216be916cac7ef9ec",
+    "command": "node --test tests/channel.test.mjs",
+    "result": "PASS 10/10",
+    "coveredBehavior": [
+      "all proven factors -> ALLOW",
+      "revocation unknown or absent -> INDETERMINATE",
+      "revoked, invalid chain, pin mismatch and expiry -> DENY",
+      "empty input -> INDETERMINATE",
+      "degrade-only side signal cannot lift a verdict",
+      "indeterminate callback emits FUNGI-GOV-3VL-001"
+    ],
+    "reusableDependencyEvidence": [
+      "packages-ts/galerina-core-network/tests/rd0361-cert-gate-execution.test.mjs records 81 certificate-subverdict combinations and boundary-collapse checks",
+      "packages-ts/galerina-core-network/src/self-hosted/cert-gate.fungi is a partial scalar dependency twin; it does not establish raw CertGateInput or callback parity"
+    ]
+  },
+  "authorityBoundary": {
+    "factorOnlyClaim": "The wrapper's public return is a Verdict factor, but its certGate dependency invokes decideAtBoundary and may emit a diagnostic callback.",
+    "consumerBoundary": "The App Kernel owns authoritative admission; channelIdentityVerdict must not become a second admission gate or precompute authorization in a host.",
+    "eligibility": "AUTHORITY_ADJACENT_DEPENDENCY_HOLD"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "dependencyTranche": "T3-package-graph",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "legacyShadowAuthority": false,
+    "declaredFloor": null,
+    "replacementOwner": "galerina-auth",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "six-line wrapper over a complex certificate gate with structured input, side-signal reduction and a callback-bearing boundary decision",
+    "inputStateContract": "CertGateInput contains certificate/channel outcomes, pins, validity and optional sideSignals; callback identity and thrown behavior are observable runtime inputs",
+    "missingProofs": [
+      "exact owner-authorized admission naming this wrapper and its delegated dependency scope",
+      "complete CertGateInput and callback source-to-Fungi ABI, including optional fields and failure order",
+      "differential vectors for missing/invalid/unknown outcomes, side-signal ordering, callback behavior and malformed objects",
+      "independent proof that the wrapper exposes a factor without moving decideAtBoundary authority",
+      "bounded physical record/array/String profile and complete SLIDE/VOK re-admission",
+      "security review of the diagnostic and authority callback boundary"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Treat this as non-authorizing boundary evidence. Keep channelIdentityVerdict BLOCKED:DOSSIER_REQUIRED and exclude it from a conversion wave until the certGate dependency and the factor-versus-decision boundary receive a separately authorized exact-head review."
+}

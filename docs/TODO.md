@@ -38,6 +38,14 @@ counts or open items that a newer section explicitly supersedes.
 - [!] `headerPresenceVerdict` remains `BLOCKED:DOSSIER_REQUIRED`; its
   presence-only opt-in requires a separate security review before any
   authorizing admission.
+- [x] Added the channel-factor dossier
+  `docs/independent-audits/2026-09-11-rd0873-channel-identity-source-dossier.json`.
+  Its wrapper tests pass `10/10`; the existing core-network cert-gate twin and
+  the Slice 94/98 Array and option-record blockers are recorded as dependency
+  evidence only.
+- [!] `channelIdentityVerdict` remains an authority-adjacent
+  `BLOCKED:DOSSIER_REQUIRED` surface. Its callbacks, structured input and
+  delegated boundary decision require a separate exact-head review.
 
 ### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
