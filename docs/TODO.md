@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-compute - 2026-09-11
+
+- [x] Assessed `packages-ts/galerina-core-compute/src/index.ts` from exact
+  `main` HEAD `a8453f5fcca6970ff28c997a7e043be24195f4de` / tree
+  `587f984b1061721b20f605d1dc3c44dba5e2f8c8` through the code graph and the
+  package's focused tests.
+- [x] Recorded the five exported runtime scopes (`validateComputePlan`,
+  `selectComputeTarget`, `selectPreferredComputeTarget`,
+  `createComputeOffloadReport`, and `createComputeReport`) plus the private
+  `validateComputeOffloadPlan` and `sumDataMovementBytes` dependencies in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-core-compute-source-dossier.json`.
+  The four type aliases and twelve interfaces remain type-contract evidence
+  only.
+- [x] Typecheck, build and the package suite pass `5/5`. The package boundary
+  report is PASS with no external dependencies. The package has one example,
+  no loaded Fungi assets and no existing `.fungi` twin.
+- [x] The dossier records exact source, test, package, example, boundary, built
+  oracle and retirement hashes, graph closure, Astra's advisory review, and the
+  runtime obligations for target selection, fallback reporting, diagnostic
+  order, numeric reductions, aliasing and non-executable metadata.
+- [!] Both package rows remain `BLOCKED:DOSSIER_REQUIRED`; the conserved queue is
+  unchanged at `CANDIDATE: 0`. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep this package closed until a separate exact non-empty owner admission
+  names the five exported symbol scopes and wave limits, and independent
+  differential, physical SLIDE/VOK, bounded execution and receipt gates pass.
+  Compute target availability and `verifyWithCpuReference` remain advisory
+  metadata; no hardware or backend authority exists.
+
 ### RD-0873 next source dossier checkpoint - galerina-ai - 2026-09-11
 
 - [x] Assessed `packages-ts/galerina-ai/src/index.ts` from exact `main` HEAD

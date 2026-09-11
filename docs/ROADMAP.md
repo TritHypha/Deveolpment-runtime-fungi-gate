@@ -3,6 +3,36 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-compute - 2026-09-11
+
+The next bounded package assessment is recorded at exact `main` HEAD
+`a8453f5fcca6970ff28c997a7e043be24195f4de` with tree
+`587f984b1061721b20f605d1dc3c44dba5e2f8c8` in
+`docs/independent-audits/2026-09-11-rd0873-galerina-core-compute-source-dossier.json`.
+The graph scopes the package to 116 nodes and 151 edges, with five exported
+runtime helpers and two private runtime dependencies. The package has one
+TypeScript source file, one test file, one JSON example, no external imports,
+no loaded Fungi assets and no existing `.fungi` twin. Its four type aliases and
+twelve interfaces remain contract evidence rather than translation units.
+
+The package's typecheck, build and focused suite pass `5/5`. The dossier records
+the exact source and oracle hashes and the semantics a future bounded
+translation would have to preserve: first-match capability selection,
+preference order, empty-preference defaults, explicit fallback warnings,
+validation-before-selection order, reference retention, diagnostic order,
+nullish array defaults, warning extraction, negative-byte-only rejection and
+ordered JavaScript numeric reduction. The package describes plans and reports
+only; it does not probe hardware, execute kernels, schedule work, transfer
+data, verify with a CPU reference or grant authority. GPT-6 Astra independently
+passes this assessment as non-authorizing and keeps conversion on HOLD.
+
+Both queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. This is review evidence only: no Fungi source, queue relabel,
+consumer switch, TypeScript retirement, topology change or corpus assurance
+rerun occurred. A future wave still needs a separate exact non-empty owner
+admission, bounded physical and differential proof, SLIDE/VOK receipt and
+independent review.
+
 ## RD-0873 next source dossier checkpoint - galerina-ai - 2026-09-11
 
 The next bounded package assessment is recorded at exact `main` HEAD

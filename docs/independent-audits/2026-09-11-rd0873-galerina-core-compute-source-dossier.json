@@ -1,0 +1,270 @@
+{
+  "schema": "galerina.rd0873.galerina-core-compute-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "a8453f5fcca6970ff28c997a7e043be24195f4de",
+    "tree": "587f984b1061721b20f605d1dc3c44dba5e2f8c8"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-compute/src/index.ts",
+        "package": "galerina-core-compute",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-compute/tests/compute-contracts.test.mjs",
+        "package": "galerina-core-compute",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-compute",
+    "packageJsonSha256": "sha256:bd23104e3dd9be9fadc909296f7fee169cfd8d2403c270eab95e0532a0a8b75e",
+    "packageLockSha256": "sha256:3040da2e4a04351632b7c930abacb9880943cf76bc147532d7493d8fccf7bbbf",
+    "readmeSha256": "sha256:f99566c35bf1d2a4c97cb1765d32af2aae1b8df4afe03c22dd9cf7b9ed399ece",
+    "packageTodoSha256": "sha256:9d79998005b865b1deee78c8d50829c05afe72a37336765dc8f9904fa4c63428",
+    "example": {
+      "path": "packages-ts/galerina-core-compute/examples/lowbit-ai-offload-report.json",
+      "sha256": "sha256:a65f64bf555551af133fd7e2ac113418397a69195b5068be85600b19ce9ad947"
+    },
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-compute/.graph/BOUNDARY.md",
+      "sha256": "sha256:3790c498325ec824034ac5d4eac388e2f825abccb24b2d752dd8e2022bafac95",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "path": "packages-ts/galerina-core-compute/src/index.ts",
+    "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+    "sourceUtf8Bytes": 10816,
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive source line span",
+    "existingTwin": null,
+    "typeOnlySurface": {
+      "types": [
+        "ComputeTarget",
+        "ComputeWorkloadKind",
+        "ComputeDiagnosticSeverity",
+        "ComputeDataLocation"
+      ],
+      "interfaces": [
+        "ComputeDiagnostic",
+        "ComputeCapability",
+        "ComputeBudget",
+        "ComputePlan",
+        "ComputeAutoPolicy",
+        "ComputeTargetSelection",
+        "ComputeTargetPreference",
+        "ComputeDataMovement",
+        "ComputeOffloadStage",
+        "ComputeOffloadPlan",
+        "ComputeOffloadReport",
+        "ComputeReport"
+      ],
+      "disposition": "type-contract-only; no independent runtime translation unit"
+    },
+    "runtimeSymbols": [
+      {
+        "symbol": "validateComputePlan",
+        "span": { "start": 134, "end": 176 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:56ed29e73586b036d335f8e1b3f3faec57c2a5e5f0b2dcea29a19816b3b42d13",
+        "bodyUtf8Bytes": 1323,
+        "disposition": "exported positive-name, duplicate-target and budget diagnostics"
+      },
+      {
+        "symbol": "selectComputeTarget",
+        "span": { "start": 178, "end": 212 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:ab2c81fa9a7c12503b95dba2de0d153e3e57dd2d89d1cba752c8d0afee3b1245",
+        "bodyUtf8Bytes": 1264,
+        "disposition": "exported caller-supplied capability and preference selector"
+      },
+      {
+        "symbol": "selectPreferredComputeTarget",
+        "span": { "start": 214, "end": 242 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:3fcb7bb03d9077fc4db0933f3d7822b0a0a4ec76d33e6afbc6eede92820ce06a",
+        "bodyUtf8Bytes": 859,
+        "disposition": "exported explicit preference wrapper with reportable fallback warning"
+      },
+      {
+        "symbol": "createComputeOffloadReport",
+        "span": { "start": 244, "end": 271 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:dd99c3b1c2d906843beedf9658f5733f623f612020db47472006ffabb3ff0e1b",
+        "bodyUtf8Bytes": 774,
+        "disposition": "exported validation, stage selection and movement-total report projection"
+      },
+      {
+        "symbol": "createComputeReport",
+        "span": { "start": 273, "end": 300 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:283bdf5015e3928a3e4ed471b483e56a4d3b4eb5e7ba41dc68103680aa408ad5",
+        "bodyUtf8Bytes": 882,
+        "disposition": "exported aggregate plan/offload diagnostics and warning projection"
+      }
+    ],
+    "privateRuntimeDependencies": [
+      {
+        "symbol": "validateComputeOffloadPlan",
+        "span": { "start": 302, "end": 357 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:661addbcbfa2c636d82379a8bfc6ae16ad2c7106d2a21adbbb9bfaa2db953a1b",
+        "bodyUtf8Bytes": 1714,
+        "disposition": "private offload flow, stage, operation and negative-byte diagnostics"
+      },
+      {
+        "symbol": "sumDataMovementBytes",
+        "span": { "start": 359, "end": 367 },
+        "sourceSha256": "sha256:91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+        "bodySha256": "sha256:5a800d1ab10279808715c7a78737584df15ef08a839cef47131062e8255defd9",
+        "bodyUtf8Bytes": 308,
+        "disposition": "private ordered nested JavaScript numeric reduction"
+      }
+    ]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-compute/dist/index.js",
+    "sha256": "sha256:fee12d5ff3b7ecce3d0704337e716fcf1f3059ad582704cc0fa5e329413dd3e3",
+    "declarationPath": "packages-ts/galerina-core-compute/dist/index.d.ts",
+    "declarationSha256": "sha256:efb91e8422d3d6a30e01c8e3a40abf27979eddff323f52557e2332b9ffa5db47",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-compute",
+    "nodes": 116,
+    "edges": 151,
+    "functions": 7,
+    "edgeTypes": { "DEFINES": 109, "USAGE": 31, "CALLS": 11 },
+    "entryPoints": [
+      "validateComputePlan",
+      "selectComputeTarget",
+      "selectPreferredComputeTarget",
+      "createComputeOffloadReport",
+      "createComputeReport"
+    ],
+    "functionMetrics": {
+      "validateComputePlan": { "complexity": 4, "cognitive": 4, "loopCount": 0, "linearScanInLoop": 0 },
+      "selectComputeTarget": { "complexity": 2, "cognitive": 3, "loopCount": 1, "linearScanInLoop": 1 },
+      "selectPreferredComputeTarget": { "complexity": 1, "cognitive": 1, "loopCount": 0, "linearScanInLoop": 0 },
+      "createComputeOffloadReport": { "complexity": 0, "cognitive": 0, "loopCount": 0, "linearScanInLoop": 0 },
+      "createComputeReport": { "complexity": 0, "cognitive": 0, "loopCount": 0, "linearScanInLoop": 0 },
+      "validateComputeOffloadPlan": { "complexity": 6, "cognitive": 7, "loopCount": 1, "linearScanInLoop": 0 },
+      "sumDataMovementBytes": { "complexity": 0, "cognitive": 0, "loopCount": 0, "linearScanInLoop": 0 }
+    },
+    "callersAndCallees": {
+      "validateComputePlan": { "callers": ["createComputeReport", "compute-contracts.test.mjs"], "callees": ["String.trim", "Array.includes", "Array.push"] },
+      "selectComputeTarget": { "callers": ["selectPreferredComputeTarget", "createComputeOffloadReport", "compute-contracts.test.mjs"], "callees": ["Array.find"] },
+      "selectPreferredComputeTarget": { "callers": ["compute-contracts.test.mjs"], "callees": ["selectComputeTarget"] },
+      "createComputeOffloadReport": { "callers": ["createComputeReport", "compute-contracts.test.mjs"], "callees": ["validateComputeOffloadPlan", "selectComputeTarget", "Array.map", "sumDataMovementBytes", "Array.some"] },
+      "createComputeReport": { "callers": ["compute-contracts.test.mjs"], "callees": ["validateComputePlan", "createComputeOffloadReport", "Array.flatMap", "Array.map", "Array.push", "Array.filter"] },
+      "validateComputeOffloadPlan": { "callers": ["createComputeOffloadReport"], "callees": ["String.trim", "Array.forEach", "Array.entries", "Array.push"] },
+      "sumDataMovementBytes": { "callers": ["createComputeOffloadReport"], "callees": ["Array.reduce"] }
+    },
+    "note": "Graph discovery identifies local bodies and collection/string-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-core-compute/tests/compute-contracts.test.mjs",
+    "testSha256": "sha256:02f7f5e31488d2385b07c3fb0656e8eac68e179ea7a30a7c069a0759cbf15380",
+    "command": "npm test",
+    "result": "PASS 5/5",
+    "coveredBehavior": [
+      "preference-order capability selection with unavailable GPU fallback",
+      "invalid compute memory budget diagnostic",
+      "offload report selection and data movement total",
+      "aggregate report construction",
+      "explicit NPU fallback warning without silent fallback"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-compute/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS for a non-authorizing dossier; HOLD conversion admission",
+    "findings": [
+      "The first matching capability wins; duplicate capability records do not allow a later available record to override an earlier unavailable record.",
+      "Empty preference lists default to cpu.generic, and fallbackRequired:false can return satisfied:true for a plan-only selection.",
+      "selectPreferredComputeTarget does not enforce requireOnDevice, allowNetwork or allowSilentFallback at runtime.",
+      "createComputeOffloadReport validates, selects and totals while retaining the original plan; verifyWithCpuReference triggers no CPU execution.",
+      "createComputeReport retains input arrays, leaves top-level selections empty and does not lift nested target-selection warnings.",
+      "NaN and positive Infinity pass the positive/negative checks; collection sizes and nested target searches are caller-supplied and unbounded by runtime code.",
+      "There are no hardware probes, kernel calls, scheduling, data transfers or backend execution paths."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-compute",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous compute-plan diagnostics, caller-supplied target selection, explicit fallback reporting, offload-stage validation and ordered numeric movement reports over typed records, arrays, strings and numbers",
+    "authorityBoundary": "The package describes compute plans and reports only. It does not probe hardware, execute kernels, schedule work, transfer data, verify with a CPU reference or grant runtime authority.",
+    "runtimeObligations": [
+      "Preserve Unicode String.trim, property-read order, strict equality and Array.includes semantics in validation and diagnostics.",
+      "Preserve first-match capability selection, preference order, duplicate-record behavior, empty-preference cpu.generic default, fallback flags, satisfied values and warning text.",
+      "Preserve that selectPreferredComputeTarget only adds a fallback warning and does not runtime-enforce requireOnDevice, allowNetwork or allowSilentFallback.",
+      "Preserve validation-before-selection order, stage order, original plan reference retention and fallbackUsed calculation in createComputeOffloadReport.",
+      "Preserve nullish-only optional array defaults, input array aliasing, empty top-level selections and warning extraction order in createComputeReport.",
+      "Preserve offload diagnostic order, path construction, negative-byte-only rejection and acceptance of zero, NaN and positive Infinity.",
+      "Preserve nested ordered JavaScript numeric reduction, floating-point rounding, overflow, NaN propagation and inclusion of values already diagnosed as negative.",
+      "Preserve the non-executable meaning of verifyWithCpuReference and caller-supplied availability metadata."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming the five exported runtime scopes and bounded wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for plain records, getters, proxies, sparse arrays, custom iterators, mutation, aliasing and thrown accessors",
+      "host substitution or equivalent proof for Array.find/includes/flatMap, String.trim, object spread and nullish semantics",
+      "bounded physical profile for record/array/string/number ABI, allocation, work limits and typed failures",
+      "explicit treatment of NaN, Infinity, fractions, negative movement, malformed records and unsupported target metadata",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep both galerina-core-compute queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact non-empty authorizing admission, resolves the recorded runtime semantics and bounded physical/differential gates, and obtains independent review."
+}
