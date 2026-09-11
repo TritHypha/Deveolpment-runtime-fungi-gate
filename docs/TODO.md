@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-runtime - 2026-09-11
+
+- [x] Assessed the two TypeScript source files under
+  packages-ts/galerina-core-runtime/src from exact main HEAD
+  94e04174e664842f52724682d20249dd151561b1 / tree
+  f93167daee309900ce4a3353961d94176d75b02e through the package boundary graph,
+  eleven focused test files and the linked private native VOK companion.
+- [x] Recorded 11 exported runtime functions, 20 exported runtime constants,
+  the type surface, five existing `.fungi` assets, ten tracked native companion
+  files and exact source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-runtime-source-dossier.json.
+  Existing assets and native receipts remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 53/53. The package boundary
+  reports PASS with seven nodes, one internal edge and no external dependencies.
+- [x] Astra's same-head advisory records deny-by-default effect decisions,
+  seam-version and hash ordering, structured-await closed-plan/reducer timing,
+  cancellation and resource semantics, and the private affine VOK authority
+  floor with nonce, context, revocation and W^X obligations.
+- [!] Eleven package rows remain BLOCKED:DOSSIER_REQUIRED and the existing one
+  remains SCOPED_CANDIDATES_ONLY; the conserved queue remains CANDIDATE: 0.
+  No Fungi source, queue relabel, consumer switch, TypeScript retirement or
+  corpus assurance rerun occurred.
+- [!] Keep runtime translation and authority expansion closed until a separate
+  exact non-empty owner admission names a bounded scope with independent
+  differential, physical SLIDE/VOK, execution and receipt gates. Git remains
+  provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-runtime-wasm - 2026-09-11
 
 - [x] Assessed the four TypeScript source files under

@@ -1,0 +1,648 @@
+{
+  "schema": "galerina.rd0873.galerina-core-runtime-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for the runtime contracts, governed seam, structured-await reducer and linked native VOK floor without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "94e04174e664842f52724682d20249dd151561b1",
+    "tree": "f93167daee309900ce4a3353961d94176d75b02e"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-runtime/src/index.ts",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "SCOPED_CANDIDATES_ONLY",
+        "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/rd0363-passive-plan-replay-execution.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/runtime-contracts.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/runtime-executor-composition.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/runtime-seam.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/vok-authority-admission-execution.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/vok-authority-native-benchmark-contract.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/vok-authority-native-parity.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/tests/vok-native-authority-boundary.test.mjs",
+        "package": "galerina-core-runtime",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-runtime",
+    "packageJsonSha256": "sha256:ad66a3137c4bc51c4f18c88704bf7380f4be6a52ecc50f5fbdbdeb65d185a869",
+    "packageLockSha256": "sha256:38287a07dae2fa8855bc8330c145caecf669b4aed096d4098c3363688797cc35",
+    "readmeSha256": "sha256:8f87fd6869a03bf0321bebf37a2bf6c2a308ebf160942f063c363b18e24c3862",
+    "packageTodoSha256": "sha256:bb6468f51f96f5840cc1876414d2000b5a2fc19bdc48d8da3b73dafadb173e12",
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-runtime/examples/checked-runtime-context.json",
+        "sha256": "sha256:937c12b3e0955a4e65f6c114a02c85565b8ae36607a53c5a6bfd393cba3e3ea7",
+        "utf8Bytes": 286
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-runtime/.graph/BOUNDARY.md",
+      "sha256": "sha256:44ae2b2b8436acb40454b888e6a8b7405c45b262a49c207779011abd4c045b3a",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 2,
+    "testFileCount": 10,
+    "loadedFungiAssetCount": 5,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-runtime/src/self-hosted/governed-runtime-seam-version.fungi",
+        "sha256": "sha256:e18f0bea0fda787e59801eebea9aa0a77894bab7599083c170588cd24e27e3e7",
+        "kind": "existing package-owned non-authorizing decision/contract asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/src/self-hosted/passive-plan-replay-admission.fungi",
+        "sha256": "sha256:7fcd30bdcdca9932024d2a124465c40f366987d16d9041b70d5b9b129a018752",
+        "kind": "existing package-owned non-authorizing decision/contract asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/src/self-hosted/structured-await-plan-version.fungi",
+        "sha256": "sha256:182924fd21b20cf648086517d02a4a5b7be4bcb7f0796e7ccab65aa1a68be6a7",
+        "kind": "existing package-owned non-authorizing decision/contract asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+        "sha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+        "kind": "existing package-owned non-authorizing decision/contract asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
+        "sha256": "sha256:133d8444e7f0e37acdc13e3b4fe056c451e663b93eac3df7f8f1371e6d3de10d",
+        "kind": "existing package-owned non-authorizing decision/contract asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-runtime/src/index.ts#GOVERNED_RUNTIME_SEAM_VERSION",
+        "fungi": "packages-ts/galerina-core-runtime/src/self-hosted/governed-runtime-seam-version.fungi",
+        "status": "existing non-authorizing constant asset; not a runtime replacement"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-runtime/src/structured-await.ts#STRUCTURED_AWAIT_PLAN_VERSION",
+        "fungi": "packages-ts/galerina-core-runtime/src/self-hosted/structured-await-plan-version.fungi",
+        "status": "existing non-authorizing constant asset; not a reducer replacement"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-runtime/src/structured-await.ts#isTerminalScope",
+        "fungi": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+        "status": "existing bounded decision asset; not a structured-await replacement"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-runtime/src/self-hosted/passive-plan-replay-admission.fungi",
+        "status": "existing non-authorizing replay-admission decision asset; source mapping remains bounded and non-authorizing"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-runtime/native/vok-authority",
+        "fungi": "packages-ts/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
+        "status": "existing bounded native/Fungi K3 comparison asset; not general runtime authority"
+      }
+    ]
+  },
+  "nativeCompanion": {
+    "path": "packages-ts/galerina-core-runtime/native/vok-authority",
+    "manifestSha256": "sha256:86d369974f5bc0bd05d593fd4f3e5d8929b998e958cecbc92aa36a371c14728a",
+    "lockSha256": "sha256:931dc437b92024c370c375fb45dac91c0a6bafedf24cc6f814922b5441df9f32",
+    "sourceFiles": [
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/Cargo.lock",
+        "sha256": "sha256:931dc437b92024c370c375fb45dac91c0a6bafedf24cc6f814922b5441df9f32",
+        "utf8Bytes": 173
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/Cargo.toml",
+        "sha256": "sha256:86d369974f5bc0bd05d593fd4f3e5d8929b998e958cecbc92aa36a371c14728a",
+        "utf8Bytes": 140
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/deny.toml",
+        "sha256": "sha256:be73d0db45ccb3a0d7b19afa75fb1fb825181311ee3da537578b240030032df2",
+        "utf8Bytes": 487
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/bin/vok-benchmark.rs",
+        "sha256": "sha256:f9bf38891bbaadda8a6de900fa6c457fbcdf2ed5da3c49963039b2fedf8af965",
+        "utf8Bytes": 5683
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/bin/vok-live-evidence.rs",
+        "sha256": "sha256:3092375637f15f478e0b736abede5f812768269bee3acee7e80603530d33a906",
+        "utf8Bytes": 1646
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/bin/vok-vector-runner.rs",
+        "sha256": "sha256:3b013e0508dd30d2cc20f874116cfaf529c520f2d1c30474d043873eaccb8981",
+        "utf8Bytes": 985
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/lib.rs",
+        "sha256": "sha256:6a2ae7cf04c9309a7f33a6a2e36116be436687d40fda856437abaa392b8b9440",
+        "utf8Bytes": 31507
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/native.rs",
+        "sha256": "sha256:a5fb9b1e7375e9268f24fc44ad13a8c0db585b3350e13fde29858094f30a4f42",
+        "utf8Bytes": 9935
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/native/platform.rs",
+        "sha256": "sha256:d3fd7490ed526b55a72ad43cde58378806b98b5c0b83ace4b9f32aa7cd9edb6f",
+        "utf8Bytes": 14086
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/native/vok-authority/src/tests.rs",
+        "sha256": "sha256:f11122bdecd807725837ddc3990a0be3228047d176087d6f2ebccc918677816d",
+        "utf8Bytes": 22956
+      }
+    ],
+    "role": "linked private affine VOK authority floor; native tests and benchmark are evidence only and do not release production authority"
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-runtime/src/index.ts",
+        "sha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "utf8Bytes": 20220
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "sha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "utf8Bytes": 21802
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "createRuntimeContext",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 82,
+          "end": 95
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:b126658f31bafe5c59831a346bbc9c317c566e9349dcfe3743a605a1c91b2a0b",
+        "bodyUtf8Bytes": 373
+      },
+      {
+        "symbol": "validateRuntimeContext",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 97,
+          "end": 130
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:48dbe8d09876e47ef6889e5121005ccea25819d059130a248328a2a554257599",
+        "bodyUtf8Bytes": 987
+      },
+      {
+        "symbol": "okRuntimeResult",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 132,
+          "end": 134
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:5d5e3735b763513ea9ec468abac7ba5336e4c63f6ebda1ff75dc983617c3bd22",
+        "bodyUtf8Bytes": 98
+      },
+      {
+        "symbol": "errorRuntimeResult",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 136,
+          "end": 140
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:a9594bd49257070e7c29e2d485d1cd45851ac59d08069e7f68bc27fe37eafb87",
+        "bodyUtf8Bytes": 128
+      },
+      {
+        "symbol": "decideRuntimeEffect",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 142,
+          "end": 175
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:3acca0bf2d5cf7c54bfd297f42d1cb2bab1e906a2fbadbd4aa2e5f35f4ad5632",
+        "bodyUtf8Bytes": 879
+      },
+      {
+        "symbol": "createRuntimeReport",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 177,
+          "end": 201
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:fd09bf96980375185f752469856913e43582c866f2a64e68b37c652f811bfd94",
+        "bodyUtf8Bytes": 782
+      },
+      {
+        "symbol": "bindGovernedRuntime",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 276,
+          "end": 282
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:894edc7d4e53aadc65ff5e5b9a46932a3fbd45a276c6bfc7d66c970a83d04a98",
+        "bodyUtf8Bytes": 290
+      },
+      {
+        "symbol": "createGovernedRuntimeExecutor",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts",
+        "span": {
+          "start": 377,
+          "end": 440
+        },
+        "sourceSha256": "sha256:66a955e5ff21d6d59cfc3dec533e70f26211007a7389302f36cdcf042d93d44c",
+        "bodySha256": "sha256:526f4ff86d19963aabbfd0c455d6876a36a5afd1a0057237f40e6b5dd8bed2f8",
+        "bodyUtf8Bytes": 3238
+      },
+      {
+        "symbol": "admitStructuredAwaitPlan",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "span": {
+          "start": 269,
+          "end": 319
+        },
+        "sourceSha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "bodySha256": "sha256:e514e53760b0574fa544212714f007d38ef843d983b846429a5b2b2323ae1565",
+        "bodyUtf8Bytes": 1800
+      },
+      {
+        "symbol": "startStructuredAwait",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "span": {
+          "start": 426,
+          "end": 440
+        },
+        "sourceSha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "bodySha256": "sha256:a2300e8b620e856b8a7326d521fe9da61ec36f9c97dc12a358d1f377609140c1",
+        "bodyUtf8Bytes": 545
+      },
+      {
+        "symbol": "advanceStructuredAwait",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "span": {
+          "start": 606,
+          "end": 657
+        },
+        "sourceSha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "bodySha256": "sha256:3ff015045b8b1db8e8a99f184736059ebc3c47c73037556a1f4bc902069816d8",
+        "bodyUtf8Bytes": 1937
+      }
+    ],
+    "exportedConstants": [
+      {
+        "symbol": "DEFAULT_RUNTIME_EFFECT_POLICY",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts"
+      },
+      {
+        "symbol": "GOVERNED_RUNTIME_SEAM_VERSION",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts"
+      },
+      {
+        "symbol": "DENY_ALL_RUNTIME_EXECUTOR",
+        "source": "packages-ts/galerina-core-runtime/src/index.ts"
+      },
+      {
+        "symbol": "STRUCTURED_AWAIT_PLAN_VERSION",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "MAX_STRUCTURED_AWAIT_TASKS",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_PLAN_SHAPE",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_PLAN_VERSION",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_SCOPE_ID",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TASKS",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TASK_ID",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TASK_DUPLICATE",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TIMEOUT",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_CONCURRENCY",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_COMPLETION",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_STATE",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_EVENT",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TIME_REGRESSION",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_UNKNOWN_TASK",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TASK_STATE",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "ERR_RUNTIME_AWAIT_TERMINAL_STATE",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "RuntimeMode",
+        "RuntimeEnvironment",
+        "RuntimeDiagnosticSeverity",
+        "RuntimeEffectKind",
+        "GovernedRuntimeVerdict",
+        "StructuredAwaitCompletion",
+        "StructuredAwaitTaskStatus",
+        "StructuredAwaitTerminalOutcome",
+        "StructuredAwaitScopeStatus",
+        "StructuredAwaitEvent",
+        "StructuredAwaitCommand",
+        "StructuredAwaitAdmission",
+        "StructuredAwaitStep"
+      ],
+      "interfaces": [
+        "RuntimeContext",
+        "RuntimeDiagnostic",
+        "RuntimeError",
+        "RuntimeResult",
+        "RuntimeEffect",
+        "RuntimeEffectPolicy",
+        "RuntimeEffectDecision",
+        "RuntimeReport",
+        "GovernedRuntimeRequest",
+        "GovernedRuntimeExecutor",
+        "GovernedRuntimeArtifactSource",
+        "GovernedAdmissionVerifier",
+        "LowLevelWasmExecutor",
+        "GovernedRuntimeExecutorDeps",
+        "StructuredAwaitErrorMetadata",
+        "StructuredAwaitPlan",
+        "StructuredAwaitTaskState",
+        "StructuredAwaitState"
+      ],
+      "disposition": "type contracts remain evidence; runtime context/effect decisions, governed seam composition, structured-await admission/reducer and constants are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-runtime/dist/index.js",
+    "sha256": "sha256:746e6b7781920a0c20e2b52e550cca1578d865fab38172df6894f8e7b6f091dc",
+    "declarationPath": "packages-ts/galerina-core-runtime/dist/index.d.ts",
+    "declarationSha256": "sha256:87f9c66197559f6cca1a057f408154f695c4720eca77560fa6a48a2bbd467c75",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-runtime",
+    "nodes": 7,
+    "edges": 1,
+    "functions": 11,
+    "exportedValueCount": 31,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 1
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "validateRuntimeContext",
+      "decideRuntimeEffect",
+      "createGovernedRuntimeExecutor",
+      "admitStructuredAwaitPlan",
+      "advanceStructuredAwait",
+      "vokAuthorityVerdict"
+    ],
+    "note": "Boundary graph reports seven source/asset nodes and one internal import edge with no external dependencies. Native companion is outside the package graph scope; function and constant surfaces are AST-derived and not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-runtime/tests/rd0363-passive-plan-replay-execution.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/runtime-contracts.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/runtime-executor-composition.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/runtime-seam.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/vok-authority-admission-execution.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/vok-authority-native-benchmark-contract.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/vok-authority-native-parity.test.mjs",
+      "packages-ts/galerina-core-runtime/tests/vok-native-authority-boundary.test.mjs"
+    ],
+    "testSha256": {
+      "rd0363-passive-plan-replay-execution.test.mjs": "sha256:6cd6b4eb47dd9a7b7237e69723934bf5edd7451d86b036f1781641de0c02a5be",
+      "runtime-contracts.test.mjs": "sha256:d5daaff7e0bc7a83abbde78cd28875baefdf0c865dcaea8d3b407e6ffda9b015",
+      "runtime-executor-composition.test.mjs": "sha256:4277172a34b0e9206e3203f8c9047ab324c9a4dff6aed6985a5fcaa12adc5651",
+      "runtime-seam.test.mjs": "sha256:e3e898c4919afa219d825076f62364dd3881f73f215ca7963189c05709312329",
+      "structured-await-reducer.test.mjs": "sha256:61ab3485212703a6dc86bab7f91bb65285f8c474930541742c17b9b4eb6cab80",
+      "terminal-scope-fungi-conversion.test.mjs": "sha256:842859c276c5153dffafc5d02d4a98ccd62ab34049fe488b6833c496b49b764b",
+      "vok-authority-admission-execution.test.mjs": "sha256:e8393ea649c0fae26c933e7e31e262dad6b94ec78c209cf42431880daf1341b2",
+      "vok-authority-native-benchmark-contract.test.mjs": "sha256:6317308a56764b1c77265fb4556a9342589c52895a3714edfc3497541026796f",
+      "vok-authority-native-parity.test.mjs": "sha256:c5a22ae917ade98ca361bec6675f0eab19bce38a4af7c779cd3679b8af693852",
+      "vok-native-authority-boundary.test.mjs": "sha256:b9687fbb8301b68b4d8cd9c07208f53711a1de2e7f638b9c2a8f0b9bd5f97cde"
+    },
+    "command": "npm test",
+    "result": "PASS 53/53",
+    "coveredBehavior": [
+      "runtime context validation and explicit result/effect/report contracts",
+      "deny-by-default governed runtime seam and dependency/version binding",
+      "integrity, attestation and anti-replay composition checks",
+      "structured-await closed-plan admission, accessor refusal and 1024 task cap",
+      "deterministic reducer ordering, cancellation, timeout, contradictory-event and terminal-state refusals",
+      "existing terminal-scope and passive-plan Fungi comparisons",
+      "native VOK K3 admission, affine handles, revocation, W^X boundary, parity vectors and bounded benchmark"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-runtime/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "94e04174e664842f52724682d20249dd151561b1",
+      "tree": "f93167daee309900ce4a3353961d94176d75b02e"
+    },
+    "findings": [
+      "Runtime context/effect/report contracts and the governed seam are deny-by-default at the composition boundary, but caller-supplied capabilities and artifact sources remain trust inputs whose integrity, seam version and exact hash must be preserved.",
+      "Structured-await admission reconstructs and freezes a closed plan, refuses accessors and caps tasks; the reducer is deterministic but its event/time boundaries, cancellation acknowledgement, copied-state checks and terminal precedence are semantic obligations.",
+      "Existing Fungi assets cover only a seam-version scalar, structured-await plan version scalar, terminal-scope decision, passive-plan replay fold and native VOK K3 admission; they do not replace the TypeScript runtime or authorize consumers.",
+      "The linked native VOK crate is a private affine authority floor with bounded opaque handles, nonce/context/revocation checks, W^X and a fixed return-value profile; its receipts, benchmark and parity vectors remain non-authorizing evidence."
+    ],
+    "materialObligations": [
+      "Preserve deny-by-default effect decisions, explicit result variants, report warnings and context validation.",
+      "Preserve seam version and capability binding, integrity/hash ordering, attestation-before-execution, provider refusal and anti-TOCTOU checks.",
+      "Preserve structured-await closed-plan reconstruction, no-getter behavior, caps, event ordering, timeouts, cancellation acknowledgements, copied-state refusal and terminal precedence.",
+      "Preserve native VOK K3 trits, affine handle transitions, exact context/generation/nonce history, eager revocation, W^X profile and terminal value-only receipts if this native floor is ever admitted.",
+      "Keep existing Fungi assets and native receipts non-authorizing and retain TypeScript as the consumer shadow."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-runtime",
+    "evidenceStatus": "replacement-partial-existing-assets-plus-native-floor",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "runtime contracts, effect policy, governed WASM seam composition, structured-await admission/reducer and linked native VOK authority floor",
+    "authorityBoundary": "This package includes active runtime composition and a native authority floor. It enforces capability and execution gates; it is not a pure scalar candidate and must not be bulk-translated without preserving custody, timing, resource and authority boundaries.",
+    "runtimeObligations": [
+      "Preserve deny-by-default policies, caller capability trust boundaries, seam-version/hash/attestation ordering and provider composition.",
+      "Preserve structured-await immutable closed plans, deterministic reducer event/time/cancellation semantics and resource caps.",
+      "Preserve native VOK affine authority, nonce/context/revocation state, W^X private adapter and bounded execution profile.",
+      "Keep Fungi assets, native receipts and benchmarks non-authorizing; retain TypeScript and current consumers until separately admitted replacements exist."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this runtime scope",
+      "source-to-Fungi artifacts and exact twin hashes for runtime contracts, structured-await and seam composition",
+      "independent differential vectors for callbacks/capabilities, time, accessors, copied state, sparse/malformed events, cancellation and resource exhaustion",
+      "host substitution proof for Node/WASM/native boundaries and deterministic resource/time limits",
+      "bounded physical runtime/VOK ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core-runtime rows BLOCKED, preserve the one existing SCOPED_CANDIDATES_ONLY row unchanged, and keep CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}

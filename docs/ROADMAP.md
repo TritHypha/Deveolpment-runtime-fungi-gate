@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-runtime - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+94e04174e664842f52724682d20249dd151561b1 with tree
+f93167daee309900ce4a3353961d94176d75b02e in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-runtime-source-dossier.json.
+The package boundary graph covers seven nodes and one internal edge with no
+external dependencies: two TypeScript source files and five existing `.fungi`
+assets. The linked private native VOK companion is recorded separately with ten
+tracked manifest/source files. The TypeScript surface has 11 exported runtime
+functions and 20 exported constants.
+
+Typecheck, build and the eleven focused suites pass **53/53**, including
+structured-await admission/reducer behavior and native VOK parity, authority
+boundary and bounded benchmark checks. Existing Fungi assets cover only seam and
+plan-version scalars, terminal scope, passive-plan replay admission and the
+bounded VOK K3 fold; they do not replace the runtime or grant consumer authority.
+Astra's same-head advisory keeps translation on HOLD pending preservation of
+deny-by-default effect/seam composition, hash and attestation ordering,
+immutable structured-await plans, event/time/cancellation/resource semantics,
+and the private affine VOK nonce/context/revocation/W^X boundary.
+
+Eleven queue rows remain `BLOCKED:DOSSIER_REQUIRED` and one remains
+`SCOPED_CANDIDATES_ONLY`; the queue remains `CANDIDATE: 0`. No new Fungi source,
+queue relabel, consumer switch, TypeScript retirement, topology change or corpus
+assurance rerun occurred. Any future translation requires exact non-empty owner
+admission, bounded differential and physical proof, SLIDE/VOK receipt, bounded
+execution evidence and independent review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-runtime-wasm - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD
