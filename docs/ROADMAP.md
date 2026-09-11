@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+c24a986f5420fa4e886c4395614227c944cc329c with tree
+8718b1d753b05a4e8c3b95139612174a23f54b9a in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-source-dossier.json.
+The queue scope is 12 files: one TypeScript contract source, five compiler
+JavaScript files, four benchmark examples and two tests. The package source
+boundary itself has one node, no internal edges and no external dependencies;
+the auxiliary CommonJS compiler/example runtime is recorded separately.
+
+Typecheck, build and the package command pass **54/54** (42 prototype
+assertions plus 12 Node tests). The TypeScript surface exports three diagnostic
+helpers and an unfrozen content-block constant; the compiler parses, checks,
+formats, plans placeholder targets, generates schemas/reports and watches files.
+There is no Fungi twin. Astra's same-head review keeps translation on HOLD
+because parser/comment/brace and checker semantics, partial secret/capability
+policies, placeholder-versus-executable outputs, schema constraints, path and
+watcher effects, dependency-hash claims and restricted evaluator behavior all
+need explicit preservation. The test set is representative, not whole-compiler
+equivalence.
+
+All 12 queue rows remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains
+`CANDIDATE: 0`. No new Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. Any future
+translation requires exact non-empty owner admission, bounded compiler and
+host-effect differential proof, SLIDE/VOK receipt, bounded execution evidence
+and independent review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-vector - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

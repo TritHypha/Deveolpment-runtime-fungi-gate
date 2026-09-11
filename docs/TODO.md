@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core - 2026-09-11
+
+- [x] Assessed the 12 queue files for galerina-core at exact main HEAD
+  c24a986f5420fa4e886c4395614227c944cc329c / tree
+  8718b1d753b05a4e8c3b95139612174a23f54b9a: one TypeScript contract source,
+  five compiler JavaScript files, four benchmark examples and two tests.
+- [x] Recorded the three exported runtime helpers, the large auxiliary
+  CommonJS compiler/example surface, type contracts, README/TODO/examples and
+  exact source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-source-dossier.json.
+  No Fungi twin or consumer authority exists.
+- [x] Typecheck, build and the package checks pass 54/54 (42 prototype
+  assertions plus 12 Node tests). The source boundary reports PASS with one
+  node, no internal edges and no external dependencies.
+- [x] Astra's same-head advisory records the queue-wide compiler scope,
+  contract/runtime asymmetry, regex parser and checker limits, partial secret
+  and capability checks, placeholder target outputs, schema gaps, host file and
+  watcher effects, and restricted evaluator behavior.
+- [!] All 12 package rows remain BLOCKED:DOSSIER_REQUIRED. The conserved queue
+  remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript/CommonJS retirement or corpus assurance rerun occurred.
+- [!] Keep compiler translation closed until every auxiliary runtime file,
+  parser/checker policy, host effect, placeholder boundary and backend claim is
+  separately admitted with independent differential, physical SLIDE/VOK,
+  execution and receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-vector - 2026-09-11
 
 - [x] Assessed the single TypeScript source file under

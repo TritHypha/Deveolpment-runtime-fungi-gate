@@ -1,0 +1,588 @@
+{
+  "schema": "galerina.rd0873.galerina-core-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for the foundational Galerina contracts, prototype compiler and example tooling without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "c24a986f5420fa4e886c4395614227c944cc329c",
+    "tree": "8718b1d753b05a4e8c3b95139612174a23f54b9a"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core/compiler/formatter.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/galerina.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/lexer.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/schema-generator.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/type-checker.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/arithmetic-threshold-benchmark.node.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/benchmark-runner.node.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/compute-mix-throughput-benchmark.node.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/four-digit-guess-benchmark.node.js",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/src/index.ts",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/tests/core-contracts.test.mjs",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core/tests/version-header-lexer.test.mjs",
+        "package": "galerina-core",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core",
+    "packageJsonSha256": "sha256:ff6ad48786afbf407e89425ce7d86c6da960f3d3d3870dd27191c69f46a8de15",
+    "packageLockSha256": "sha256:0155ef4474785310686797fa4efa9b031a0261c4d2d069f87e94b1e2167bc984",
+    "readmeSha256": "sha256:ae65ffe999f1565b7e63bb05c3a8d29c19fb48817dd8b4f10edcf9590db2f57f",
+    "packageTodoSha256": "sha256:b8c9615b394e4ae7b04bfb69e7b3e3422ac267fb3867dec0ec9cd8f2a00ebf60",
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core/examples/README.md",
+        "sha256": "sha256:4ac41009f1c8ba89dc411144f952deeb9555e86813e1c80111bb4dee3e8893db",
+        "utf8Bytes": 8332
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/ai-context.fungi",
+        "sha256": "sha256:b09504df2e053dd2b17be414371b090c1d3f7a69da7224476ff2342c979cad99",
+        "utf8Bytes": 288
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/api-orders.fungi",
+        "sha256": "sha256:68d43b68d686a363f2a19cd1f445ace2ff2e5fa3244a0cbd35887024cb080a93",
+        "utf8Bytes": 1380
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/arithmetic-threshold-benchmark.fungi",
+        "sha256": "sha256:a46383ab0fd11ae1f744d3ea9145d3a85731bea40c4dc2b8213e59a3cd14c8a7",
+        "utf8Bytes": 2142
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/arithmetic-threshold-benchmark.node.js",
+        "sha256": "sha256:81f33bc4c44fe1a4cef7e17039c9877f34c4605d81e87d2af627ea625290cd94",
+        "utf8Bytes": 3327
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/arithmetic-threshold-benchmark.py",
+        "sha256": "sha256:c564d8ff9284019f1adc7d8c16318d91625c25c3f4b17df93723f7e52778d651",
+        "utf8Bytes": 3524
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/benchmark-runner.node.js",
+        "sha256": "sha256:c403e7a99e2129b1141c18b556952544f4198d88d473311ea55ad6d8fab1d6a4",
+        "utf8Bytes": 8398
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/boot.fungi",
+        "sha256": "sha256:26ef116673f94eb0a9fa59b722d3fb5be6ebbda4f9ca04d268718e231775ed12",
+        "utf8Bytes": 1531
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/borrow-scope.fungi",
+        "sha256": "sha256:e6071ebbd554273fe877b815c4774c1352a378d75b5f798a2650964a911a6903",
+        "utf8Bytes": 1017
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/browser-form.fungi",
+        "sha256": "sha256:9e3bca4d38f68dfa54e3c88151ec1d57b3f923f611c117624ac901b45046c717",
+        "utf8Bytes": 457
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/compute-block.fungi",
+        "sha256": "sha256:36c66f2ece9de42ab96b6b172eeefaa48a559fb9dd17202317de039fc06e5572",
+        "utf8Bytes": 496
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/compute-mix-throughput-benchmark.fungi",
+        "sha256": "sha256:eeecb3abf7c3053e2c5384d9d945d7b689b81fac0204825a1f215467c67fcd79",
+        "utf8Bytes": 1191
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/compute-mix-throughput-benchmark.node.js",
+        "sha256": "sha256:c53579663f493d4518fce58a0b39b51a591c3fb990ff47bad5a3c3e267274c1a",
+        "utf8Bytes": 6243
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/compute-mix-throughput-benchmark.py",
+        "sha256": "sha256:21d98943f57501c371aec2e665e9778a601d16d4611ed052f09dc63e2b6444ec",
+        "utf8Bytes": 6140
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/contracts.fungi",
+        "sha256": "sha256:18d03e8e1d09ed601f5ddf3a400004fd06c2cbc91ff09a56d00e361f3d83ff75",
+        "utf8Bytes": 1393
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/decision.fungi",
+        "sha256": "sha256:dbd9222dd4a69abc6d0bdb642378fc8b98211fb63557380b6a1e683795786382",
+        "utf8Bytes": 572
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/examples-manifest.md",
+        "sha256": "sha256:53ab0deae2da969c41e2c65eaac21bbc050978a3018ad833aec86e15e0797d5c",
+        "utf8Bytes": 7083
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/four-digit-guess-benchmark.fungi",
+        "sha256": "sha256:517eb702b4bdf233b9fba206bb30f271a8d725f6cabbdbbf4653920f15e35457",
+        "utf8Bytes": 915
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/four-digit-guess-benchmark.node.js",
+        "sha256": "sha256:92601a47bb3e6c598ce6109a0c7aff643ceea723f0825fb9ae926e0bf84b0b27",
+        "utf8Bytes": 5249
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/four-digit-guess-benchmark.py",
+        "sha256": "sha256:86c8f64e3df5a9144031ed528a0afe3d679dd61b0b5976dd2b7f867e0d362c84",
+        "utf8Bytes": 4290
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/gpu-plan.fungi",
+        "sha256": "sha256:8cf2544e8b200ed1c7600be0f5a434fec2085388474ea178c0f117ef52f67920",
+        "utf8Bytes": 209
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/hello.fungi",
+        "sha256": "sha256:28eca2a1c7e8fce9ed770c81d432402cfd1f8e54d9e6663309b690985f884a51",
+        "utf8Bytes": 259
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/json-decode.fungi",
+        "sha256": "sha256:e595e3898631aefefb0a508b39cd133e586abec0cb3126644c27492363b27c3a",
+        "utf8Bytes": 567
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/logic-review-scale.fungi",
+        "sha256": "sha256:ee66323446442f42f07eab74f1adb2fb6956b8bb04fdafc67cbf8e6c89d90962",
+        "utf8Bytes": 351
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/move-cleanup.fungi",
+        "sha256": "sha256:435bbbcaf16fde77ed0627ca1bbee891a7e465a3d8788a982eba8bc5f2f3d3bd",
+        "utf8Bytes": 1047
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/option.fungi",
+        "sha256": "sha256:9be35b19a361f2c818c9bf61dc8a256b394bf6bb27b468ade5e9f7414f8efe68",
+        "utf8Bytes": 696
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/parallel-api-calls.fungi",
+        "sha256": "sha256:89e5a9f9c6397292c6155dbba0b0af888e29071ea4158dfda71d338eb5c27a88",
+        "utf8Bytes": 902
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/payment-webhook.fungi",
+        "sha256": "sha256:0a9d0c3f5c5eeaa7fb3a694a1170a9ac7401fddc2cfc991278adc2e7d919fe07",
+        "utf8Bytes": 839
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/photonic-plan.fungi",
+        "sha256": "sha256:86bbab46885ab18dc633d975775fac6d118ea2c74acf1b3f213bfd464c59671e",
+        "utf8Bytes": 213
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/reject-use-after-move.fungi",
+        "sha256": "sha256:c9feb41d876d822ea663060430c26be7e52b986dc69cfd8094b8c79b77990f97",
+        "utf8Bytes": 901
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/result.fungi",
+        "sha256": "sha256:0344b8171ccf76ed871e2b43e0986ea2a150a9bb4be1a1127cd88dcdab413c39",
+        "utf8Bytes": 719
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/rollback.fungi",
+        "sha256": "sha256:41b84b039f255d290298e7111743c5f8a738d057b23d47a1ca66d9f84d2d4038",
+        "utf8Bytes": 612
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/source-map-error.fungi",
+        "sha256": "sha256:71e26d282bf4abc1050046c2a9fbb9735d8f022f8df7f8c3d6c7e421228c63de",
+        "utf8Bytes": 179
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/strict-types.fungi",
+        "sha256": "sha256:6f8053b5af50f66a435b7aab446eba82e98cb58396d15e2243ce4d8ba3d9c30e",
+        "utf8Bytes": 290
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/ternary-sim.fungi",
+        "sha256": "sha256:1002c6387b5664757f95e17220191666b2ef27d6381d00065c481bb0565cacb3",
+        "utf8Bytes": 328
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/value-semantics-ownership.fungi",
+        "sha256": "sha256:d3bc6240ad92585e6225f82f70b9d50edfe25d88fce4cb69cb34cf234a7cb2c7",
+        "utf8Bytes": 1845
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/workers.fungi",
+        "sha256": "sha256:e5a05d7d09fc437a672c97127f3f1d27dbed0dd149f800631148f01f53328683",
+        "utf8Bytes": 404
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core/.graph/BOUNDARY.md",
+      "sha256": "sha256:e7c54bb742c63a62eea0bb1af87fd8258e50d1c7f1e020fde4f73d8d78779b0f",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "auxiliaryRuntimeFileCount": 9,
+    "auxiliaryRuntimeFiles": [
+      {
+        "path": "packages-ts/galerina-core/compiler/formatter.js",
+        "sha256": "sha256:b96a5ec93a7f10c4af5c7c50c689b3120cefd4dc7f86a8837047c5d920cdc00a",
+        "utf8Bytes": 2681
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/galerina.js",
+        "sha256": "sha256:c2d19d2357130d79961ca7a5892505c553761623280ae742b843d6700ecc60eb",
+        "utf8Bytes": 220122
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/lexer.js",
+        "sha256": "sha256:576ff50412aed6f7bc6fcba3ddc173c223f853413ee0ec89eded9b42fae8de2b",
+        "utf8Bytes": 8160
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/schema-generator.js",
+        "sha256": "sha256:49ebe2ad85461330f5e2ebfa4626724b002fd44d7a6eca1938b4dd38996c5bfe",
+        "utf8Bytes": 6001
+      },
+      {
+        "path": "packages-ts/galerina-core/compiler/type-checker.js",
+        "sha256": "sha256:4f15e10387196c8ae0b4e2e5630e6dd08a9e34e714c575a6f18abb17a98aedfb",
+        "utf8Bytes": 9610
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/arithmetic-threshold-benchmark.node.js",
+        "sha256": "sha256:81f33bc4c44fe1a4cef7e17039c9877f34c4605d81e87d2af627ea625290cd94",
+        "utf8Bytes": 3327
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/benchmark-runner.node.js",
+        "sha256": "sha256:c403e7a99e2129b1141c18b556952544f4198d88d473311ea55ad6d8fab1d6a4",
+        "utf8Bytes": 8398
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/compute-mix-throughput-benchmark.node.js",
+        "sha256": "sha256:c53579663f493d4518fce58a0b39b51a591c3fb990ff47bad5a3c3e267274c1a",
+        "utf8Bytes": 6243
+      },
+      {
+        "path": "packages-ts/galerina-core/examples/four-digit-guess-benchmark.node.js",
+        "sha256": "sha256:92601a47bb3e6c598ce6109a0c7aff643ceea723f0825fb9ae926e0bf84b0b27",
+        "utf8Bytes": 5249
+      }
+    ],
+    "testFileCount": 2,
+    "loadedFungiAssetCount": 0,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core/src/index.ts",
+        "sha256": "sha256:aac353602dd144baa251bbf7d1bebb25c5dcf3cb7ebc96ab66a44ed51f3ac54d",
+        "utf8Bytes": 15464
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [
+      {
+        "symbol": "createCompilerDiagnostic",
+        "source": "packages-ts/galerina-core/src/index.ts",
+        "span": {
+          "start": 440,
+          "end": 456
+        },
+        "sourceSha256": "sha256:aac353602dd144baa251bbf7d1bebb25c5dcf3cb7ebc96ab66a44ed51f3ac54d",
+        "bodySha256": "sha256:4e1b328bcef713053d5bd01484c505191f5bf6451b0f34d42c89f19f87de627d",
+        "bodyUtf8Bytes": 397
+      },
+      {
+        "symbol": "hasErrors",
+        "source": "packages-ts/galerina-core/src/index.ts",
+        "span": {
+          "start": 461,
+          "end": 465
+        },
+        "sourceSha256": "sha256:aac353602dd144baa251bbf7d1bebb25c5dcf3cb7ebc96ab66a44ed51f3ac54d",
+        "bodySha256": "sha256:2e985463311e96696fc041eebf48b4ef0da44ca59c3b05ee58fb4f0679f43db5",
+        "bodyUtf8Bytes": 149
+      },
+      {
+        "symbol": "filterBySeverity",
+        "source": "packages-ts/galerina-core/src/index.ts",
+        "span": {
+          "start": 470,
+          "end": 475
+        },
+        "sourceSha256": "sha256:aac353602dd144baa251bbf7d1bebb25c5dcf3cb7ebc96ab66a44ed51f3ac54d",
+        "bodySha256": "sha256:c7b3f2f78222879a7f9f3754689879f1a13e17d97d9decc16c00381ab71f4df3",
+        "bodyUtf8Bytes": 214
+      }
+    ],
+    "exportedClasses": [],
+    "exportedConstants": [
+      {
+        "symbol": "CONTENT_BLOCK_TYPES",
+        "source": "packages-ts/galerina-core/src/index.ts",
+        "span": {
+          "start": 106,
+          "end": 111
+        },
+        "sourceSha256": "sha256:aac353602dd144baa251bbf7d1bebb25c5dcf3cb7ebc96ab66a44ed51f3ac54d"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "AstNodeKind",
+        "BindingKind",
+        "BuildOutputKind",
+        "ContentBlockType",
+        "DiagnosticSeverity",
+        "FlowTraceDecision",
+        "FlowTraceStage",
+        "FlowTraceStatus",
+        "SafetyLevel",
+        "TokenKind"
+      ],
+      "interfaces": [
+        "AstNode",
+        "BaseDiagnostic",
+        "BindingDeclaration",
+        "BuildManifest",
+        "BuildOutput",
+        "CompilerDiagnostic",
+        "EffectReference",
+        "FlowDeclarationMetadata",
+        "FlowTraceEvent",
+        "IntentDeclaration",
+        "LexResult",
+        "MethodChainCall",
+        "MethodChainExpression",
+        "ParseResult",
+        "SourceLocation",
+        "Token",
+        "TypedContentBlockExpression"
+      ],
+      "disposition": "type contracts remain evidence; compiler diagnostic helpers are the only runtime surface in src/index.ts; prototype compiler remains auxiliary CommonJS runtime"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core/dist/index.js",
+    "sha256": "sha256:8f7e9c2caa0c29081a5e05b4755a1a359271c72c0472767ffa69fb9741423388",
+    "declarationPath": "packages-ts/galerina-core/dist/index.d.ts",
+    "declarationSha256": "sha256:3ca3d3a53de1271c5bdb2c17d59bd75140689e1a23184b4f7eb46f710b0eeb55",
+    "buildCommand": "npm test (includes prototype compiler test, type build and Node tests)",
+    "role": "locally rebuilt contract/compiler oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core",
+    "nodes": 1,
+    "edges": 0,
+    "functions": 3,
+    "exportedClassCount": 0,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 0,
+      "EXTERNAL_IMPORTS": 0
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "createCompilerDiagnostic",
+      "hasErrors",
+      "filterBySeverity",
+      "compiler/galerina.js::analyseProject",
+      "compiler/galerina.js::buildTargetReport",
+      "compiler/galerina.js::runPrototypeTests"
+    ],
+    "note": "Boundary graph reports one TypeScript source node with no internal edges or external dependencies; compiler and examples are queue-scoped auxiliary runtime files outside this boundary report. Surfaces are evidence, not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core/tests/core-contracts.test.mjs",
+      "packages-ts/galerina-core/tests/version-header-lexer.test.mjs"
+    ],
+    "testSha256": {
+      "core-contracts.test.mjs": "sha256:16e046e46be874a3e32aff13a6877d0ecda02c599c2e907d417fc6e62e3d3e2c",
+      "version-header-lexer.test.mjs": "sha256:c1f91da5084908a6d9b3bfe6c85a351c56909cbaaf057916a535131e38fa822e"
+    },
+    "command": "npm test",
+    "result": "PASS 54/54 (42 prototype assertions + 12 Node tests)",
+    "coveredBehavior": [
+      "prototype lexer/parser/type-checker/schema/OpenAPI/target planning/secret and memory policy assertions",
+      "development generation/watch and checked run behavior",
+      "canonical diagnostic helpers and severity filtering",
+      "legacy version-header and postfix error propagation lexer cases"
+    ],
+    "packageBoundary": "packages-ts/galerina-core/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion/admission expansion",
+    "snapshot": {
+      "head": "c24a986f5420fa4e886c4395614227c944cc329c",
+      "tree": "8718b1d753b05a4e8c3b95139612174a23f54b9a"
+    },
+    "findings": [
+      "The queue contains 12 files: five compiler JavaScript files, four executable benchmark examples, src/index.ts and two tests. A dossier restricted to the TypeScript entry point would omit most executable behavior.",
+      "src/index.ts exports three helpers and the unfrozen CONTENT_BLOCK_TYPES array. Diagnostic construction performs no code-format, severity, location or redaction validation; filtering preserves object references. Trace secrecy, safety-level rules and readonly guarantees are declarations/comments. Legacy lexer output uses type while Token uses kind, and source-offset units need reconciliation with JavaScript string indexing.",
+      "The CLI parses source independently of lexer tokens using regexes. Comment stripping removes // text without respecting strings, and brace matching counts braces inside literals. Type checking covers declared references and selected match cases, not general expression/return correctness; generic arity is checked only when arguments are present, so bare generic names can bypass it.",
+      "Browser import restrictions depend on target/file placement and finite import-name tables. Global-secret exposure checks are regex-based, reread files from disk and skip unavailable/in-memory source; they are not comprehensive information-flow or capability enforcement. Missing webhook HMAC/fallback declarations can produce warnings rather than refusal.",
+      "CPU/Wasm outputs are explicitly placeholders and accelerator outputs are plans. Manifest verification checks declared files, hashes, metadata and JSON parsing, not executable correctness or an independent signature. Dependency hashes hash module names rather than resolved dependency contents; preserve that distinction in reproducibility claims.",
+      "Generated integer schemas omit width/range restrictions, vector/matrix/tensor schemas omit dimension constraints, and SecureString becomes a string with annotations. These draft schemas do not enforce the full language or secrecy contracts.",
+      "Filesystem discovery, formatting writes, output cleanup, watching, timestamps, hashing and Git subprocess inspection require separate host custody. Benchmark examples involve subprocesses and timing. Run Mode is a restricted text evaluator with special benchmark dispatch, not general compiled execution; unsupported expressions can return source text.",
+      "Existing package files contain no established Fungi replacement twin for the queued compiler. The two test files cover nine shared-contract cases and three lexer cases, while the package command adds embedded prototype/example smoke checks; none establishes whole-compiler translation equivalence."
+    ],
+    "materialObligations": [
+      "Keep compiler/example auxiliary files separate from the TypeScript contract boundary and bind every queued runtime file before translation claims.",
+      "Preserve parser/formatter/type-checker diagnostics, legacy token/version behavior, strict comment/secret policy, target/capability planning, placeholder status, cleanup and file-watch behavior.",
+      "Preserve path/symlink/concurrency/error semantics for generated outputs and development operations; no placeholder artifact may be treated as executable authority.",
+      "Preserve diagnostic helper object/optional-field/severity semantics and compile-time-only type contracts; reconcile Token kind/type and offset units.",
+      "Retain TypeScript/CommonJS implementations as shadows; no Fungi twin or consumer authority exists."
+    ],
+    "reviewNotes": [
+      "The queue has no existing Fungi authority row for this package; all twelve rows remain dossier-required.",
+      "No bulk translation, source authoring or production backend claim is supported by this evidence."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "compiler diagnostic helpers, prototype parser/checker/formatter/generators and example benchmark tooling",
+    "authorityBoundary": "This package defines shared contracts and a prototype compiler with filesystem effects. There is no Fungi replacement or executable backend authority.",
+    "runtimeObligations": [
+      "Preserve parser/formatter/checker diagnostics and language edge behavior.",
+      "Preserve target/capability/secret policies, placeholder outputs and manifest-owned authority boundaries.",
+      "Preserve file generation, cleanup, watch, path and error semantics.",
+      "Retain TypeScript/CommonJS shadows until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this compiler scope",
+      "source-to-Fungi artifacts or separately authored admitted implementation",
+      "independent differential vectors for parser ambiguity, strict comments, secrets, paths/symlinks, concurrent writes, cleanup and target/resource combinations",
+      "backend/numerical correctness and physical SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript/CommonJS retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent compiler/parser/host-effect gates authorize a named scope."
+}
