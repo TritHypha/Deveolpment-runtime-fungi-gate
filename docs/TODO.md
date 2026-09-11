@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Selective runtime conversion scope - owner clarification 2026-09-11
+
+- [x] Record the [selective conversion policy](plans/2026-09-11-selective-fungi-conversion-scope.md):
+  non-fanatical translation; most product runtime logic targets Fungi;
+  development tools and build
+  orchestration default to retained JS/TS with a documented role.
+- [x] Preserve zero-trust checks on retained tools and their build outputs;
+  implementation language does not confer trust. Incorporate Astra's bounded
+  architecture review of compiler, tooling and bootstrap distinctions.
+- [ ] Reconcile the existing queue by deployment profile and consumer evidence.
+  Split mixed files, distinguish compiler product code from build wrappers, and
+  report intentionally retained tooling separately from blocked runtime work.
+- [ ] Apply this classification to Waves 01-04 before widening translation.
+  Continue independent ready work with focused checks and package-level closure.
+  Retained tools are neither failed translations nor completed Fungi conversion.
+
 ### RD-0873 housekeeping and translation continuity checkpoint - 2026-09-11
 
 - [x] Rebound the working model to local `main` HEAD

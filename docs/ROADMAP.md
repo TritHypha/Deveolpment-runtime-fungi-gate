@@ -3,6 +3,19 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Selective runtime conversion scope - owner clarification 2026-09-11
+
+The [current conversion policy](plans/2026-09-11-selective-fungi-conversion-scope.md)
+targets most product runtime logic for Fungi while retaining development tools
+and build orchestration in JS/TS unless conversion has a concrete benefit.
+The owner's principle is non-fanatical translation; retained tools and their
+outputs keep the applicable zero-trust build checks regardless of language.
+Compiler product logic, mixed files and dynamic runtime helpers require explicit
+role classification. Progress will distinguish converted runtime, retained
+tooling/host boundaries and unresolved runtime work; it will not equate completion
+with removal of every JS/TS file. Queue role reconciliation is the next planning
+step, not an already completed migration or production-authority change.
+
 ## RD-0873 current housekeeping state - 2026-09-11
 
 The current working model is local `main` HEAD
