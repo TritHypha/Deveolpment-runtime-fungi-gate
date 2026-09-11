@@ -3,6 +3,34 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-ai - 2026-09-11
+
+The next bounded package assessment is recorded at exact `main` HEAD
+`d3e096ea0e187789462d3c74d21c2c8051a6a32c` with tree
+`0948ceca92eb4434bbdd4aeff3f8b7598d9be951` in
+`docs/independent-audits/2026-09-11-rd0873-galerina-ai-source-dossier.json`.
+The graph scopes the package to 84 nodes and 110 edges, with six exported
+runtime helpers and one exported default policy value. The package has one
+TypeScript source file, one test file, no external imports, a JSON example, no
+loaded Fungi assets and no existing `.fungi` twin. Type-only interfaces and
+aliases remain contract evidence rather than translation units.
+
+The package's typecheck, build and focused suite pass `4/4`. The dossier records
+the exact source and oracle hashes and the semantics a future bounded
+translation would have to preserve: mutable default-policy reads, registry
+array/reference aliasing, exact first-match lookup, capability and preference
+order, nullish optional fields, diagnostic concatenation, prompt trimming,
+numeric edge behavior and target/network safety diagnostics. The package only
+describes AI metadata and policy; it does not execute inference, access model
+files, invoke backends or issue security authority.
+
+Both queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. This is review evidence only: no Fungi source, queue relabel,
+consumer switch, TypeScript retirement, topology change or corpus assurance
+rerun occurred. A future wave still needs a separate exact non-empty owner
+admission, bounded physical and differential proof, SLIDE/VOK receipt and
+independent review.
+
 ## RD-0873 next source dossier checkpoint - galerina-ai-neuromorphic - 2026-09-11
 
 The next bounded package assessment is recorded at exact `main` HEAD

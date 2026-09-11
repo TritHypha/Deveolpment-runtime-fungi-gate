@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-ai - 2026-09-11
+
+- [x] Assessed `packages-ts/galerina-ai/src/index.ts` from exact `main` HEAD
+  `d3e096ea0e187789462d3c74d21c2c8051a6a32c` / tree
+  `0948ceca92eb4434bbdd4aeff3f8b7598d9be951` through the code graph and the
+  package's focused tests.
+- [x] Recorded the exported `DEFAULT_AI_SAFETY_POLICY` value and six runtime
+  scopes (`defineAiModelRegistry`, `findAiModel`, `defineAiSafetyPolicy`,
+  `selectAiInferenceTarget`, `createAiInferenceReport`, and
+  `validateAiInferenceRequest`) in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-ai-source-dossier.json`.
+  The AI interfaces and aliases remain type-contract evidence only.
+- [x] Typecheck, build and the package suite pass `4/4`. The package boundary
+  report is PASS with no external dependencies, and no existing `.fungi` twin or
+  loaded Fungi asset exists.
+- [x] The dossier records exact source, test, package, example, boundary, built
+  oracle and retirement hashes, graph closure, and the runtime obligations for
+  mutable policy defaults, registry aliasing, exact lookup, capability
+  selection, nullish fields, target/network safety diagnostics and report order.
+- [!] Both package rows remain `BLOCKED:DOSSIER_REQUIRED`; the conserved queue is
+  unchanged at `CANDIDATE: 0`. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep this package closed until a separate exact non-empty owner admission
+  names the value/symbol scope and wave limits, and independent differential,
+  physical SLIDE/VOK, bounded execution and receipt gates pass. AI policy
+  diagnostics remain advisory until a separate deterministic authority consumes
+  them.
+
 ### RD-0873 next source dossier checkpoint - galerina-ai-neuromorphic - 2026-09-11
 
 - [x] Assessed `packages-ts/galerina-ai-neuromorphic/src/index.ts` from exact

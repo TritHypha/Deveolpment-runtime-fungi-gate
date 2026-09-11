@@ -1,0 +1,245 @@
+{
+  "schema": "galerina.rd0873.galerina-ai-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "d3e096ea0e187789462d3c74d21c2c8051a6a32c",
+    "tree": "0948ceca92eb4434bbdd4aeff3f8b7598d9be951"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-ai/src/index.ts",
+        "package": "galerina-ai",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-ai/tests/ai-contracts.test.mjs",
+        "package": "galerina-ai",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-ai",
+    "packageJsonSha256": "sha256:7d6933ca2b1f360a2b48607c7405f4f9686cc39f3f46c92773929d9a1e3d5045",
+    "readmeSha256": "sha256:5be7cc1d07828a1a56f3157c4dd4c4cb073a1745bcf11db9c78cf3db6edc9989",
+    "exampleSha256": "sha256:bc67f969ea94f136fd19c0197512f4eceeaba795181712f248eae2074f4dcf97",
+    "boundaryReport": {
+      "path": "packages-ts/galerina-ai/.graph/BOUNDARY.md",
+      "sha256": "sha256:97cacb27e8ff37affbb6ed0d292e70567c59bdb9bc354d36ed2610afd9b16d6e",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "path": "packages-ts/galerina-ai/src/index.ts",
+    "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+    "sourceUtf8Bytes": 10787,
+    "existingTwin": null,
+    "runtimeValues": [
+      {
+        "symbol": "DEFAULT_AI_SAFETY_POLICY",
+        "span": { "start": 130, "end": 136 },
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:d7bee4b828715dd4f1ece00eb24df1aa85b56e01d3619daa83de485022edbf4b",
+        "bodyUtf8Bytes": 218,
+        "disposition": "exported fail-safe policy default value"
+      }
+    ],
+    "typeOnlySurface": {
+      "interfacesAndTypes": [
+        "AiTaskKind",
+        "AiOutputTrust",
+        "AiModelFormat",
+        "AiInferenceTarget",
+        "AiDiagnosticSeverity",
+        "AiDiagnostic",
+        "AiMemoryEstimate",
+        "AiModelCapability",
+        "AiModelDescriptor",
+        "AiModelRegistryEntry",
+        "AiModelRegistry",
+        "AiTargetSelection",
+        "AiPrompt",
+        "AiGenerationOptions",
+        "AiSafetyPolicy",
+        "AiInferenceRequest",
+        "AiInferenceResponse",
+        "AiInferenceReport"
+      ],
+      "disposition": "type-contract-only; no independent runtime translation unit"
+    },
+    "runtimeSymbols": [
+      {
+        "symbol": "defineAiModelRegistry",
+        "span": { "start": 138, "end": 142 },
+        "signature": "export function defineAiModelRegistry(models: readonly AiModelRegistryEntry[]): AiModelRegistry",
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:00dcb91d21cc3716a3884d3861837ff573f40b3e267ec135caa0b185ee341979",
+        "bodyUtf8Bytes": 126,
+        "disposition": "registry wrapper retaining the supplied model-array reference"
+      },
+      {
+        "symbol": "findAiModel",
+        "span": { "start": 144, "end": 149 },
+        "signature": "export function findAiModel(registry: AiModelRegistry, id: string): AiModelRegistryEntry | undefined",
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:31e1267ee948c9e442a873dcd2b4ef77306aacaa13972bf9dc1742a99d443ca4",
+        "bodyUtf8Bytes": 171,
+        "disposition": "exact-id Array.find lookup"
+      },
+      {
+        "symbol": "defineAiSafetyPolicy",
+        "span": { "start": 151, "end": 167 },
+        "signature": "export function defineAiSafetyPolicy(policy?: Partial<AiSafetyPolicy>): AiSafetyPolicy",
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:1c13ba44e7f726e7d15c4e830ca4bed89cba4d99c552aee646a57ca3430f27f6",
+        "bodyUtf8Bytes": 666,
+        "disposition": "nullish property merge over fail-safe defaults"
+      },
+      {
+        "symbol": "selectAiInferenceTarget",
+        "span": { "start": 169, "end": 216 },
+        "signature": "export function selectAiInferenceTarget(request: AiInferenceRequest): AiTargetSelection",
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:b6ce6de94de3fab4a9d613be3bec29d932d2bd8862bc5245bebbd8f32b7ef45c",
+        "bodyUtf8Bytes": 1399,
+        "disposition": "declared-capability and preference-order selector; no backend execution"
+      },
+      {
+        "symbol": "createAiInferenceReport",
+        "span": { "start": 218, "end": 235 },
+        "signature": "export function createAiInferenceReport(request: AiInferenceRequest): AiInferenceReport",
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:82788c096e0d770f50c78fa94803d9cc46d15e19f22fe5d79aeb4ca2e6238999",
+        "bodyUtf8Bytes": 604,
+        "disposition": "validation/selection report projection with optional memory estimate"
+      },
+      {
+        "symbol": "validateAiInferenceRequest",
+        "span": { "start": 237, "end": 364 },
+        "signature": "export function validateAiInferenceRequest(request: AiInferenceRequest): readonly AiDiagnostic[]",
+        "sourceSha256": "sha256:d1f430768800dc706cf06d03d1b5d17ae1a71a5da9998b1ae1c550cf0124ff1d",
+        "bodySha256": "sha256:b462033f5e260d0f737debd4f58fa76a2fd1917798571af9377c028a6b4e69f4",
+        "bodyUtf8Bytes": 3822,
+        "disposition": "safety, token-limit and target/network policy diagnostics"
+      }
+    ]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-ai/dist/index.js",
+    "sha256": "sha256:0be9af0f11f8dafa5e7837f13ae0824c44ecd8f03dbcbf529e9752a8bab24da",
+    "declarationPath": "packages-ts/galerina-ai/dist/index.d.ts",
+    "declarationSha256": "sha256:5d8e7a866a0852b98f6b2e4d4b220dad761b2c5db85dbe318f9577c683df597c",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-ai",
+    "nodes": 84,
+    "edges": 110,
+    "functions": 6,
+    "edgeTypes": { "DEFINES": 77, "USAGE": 25, "CALLS": 8 },
+    "entryPoints": [
+      "defineAiModelRegistry",
+      "findAiModel",
+      "defineAiSafetyPolicy",
+      "selectAiInferenceTarget",
+      "createAiInferenceReport",
+      "validateAiInferenceRequest"
+    ],
+    "callersAndCallees": {
+      "defineAiModelRegistry": { "callers": ["ai-contracts.test.mjs"], "callees": [] },
+      "findAiModel": { "callers": ["ai-contracts.test.mjs"], "callees": ["Array.find"] },
+      "defineAiSafetyPolicy": { "callers": ["ai-contracts.test.mjs"], "callees": [] },
+      "selectAiInferenceTarget": { "callers": ["createAiInferenceReport", "ai-contracts.test.mjs"], "callees": ["Array.find", "Array.includes", "Array.push"] },
+      "createAiInferenceReport": { "callers": ["ai-contracts.test.mjs"], "callees": ["validateAiInferenceRequest", "selectAiInferenceTarget"] },
+      "validateAiInferenceRequest": { "callers": ["createAiInferenceReport", "ai-contracts.test.mjs"], "callees": ["Array.find", "Array.includes", "String.trim", "Array.push"] }
+    },
+    "note": "Graph discovery identifies local bodies and collection/string-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-ai/tests/ai-contracts.test.mjs",
+    "testSha256": "sha256:31a4be44f6ad6d73714548e0b854539873032af94fcaa2ae3ed90290cf567088",
+    "command": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
+    "result": "PASS 4/4",
+    "coveredBehavior": [
+      "registry creation and exact-id lookup",
+      "preference-order target selection with fallback",
+      "unsafe prompt-logging policy rejection",
+      "on-device/network target denial"
+    ],
+    "packageBoundary": "packages-ts/galerina-ai/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-ai",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous model-registry wrappers, safety-policy defaults, capability target selection, report projection and policy diagnostics over typed records, arrays, strings and numbers",
+    "authorityBoundary": "The package defines AI metadata and safety/target policy contracts; it does not run model inference, access model files, invoke backends, make security decisions or grant authority.",
+    "runtimeObligations": [
+      "Preserve direct model-array aliasing in defineAiModelRegistry and exact strict-id Array.find semantics in findAiModel.",
+      "Preserve nullish-only policy defaults, exported default-object values and absent-versus-present property behavior in defineAiSafetyPolicy.",
+      "Preserve capability selection, preference order, first-target fallback flag, error diagnostics and inert plan-only fallback in selectAiInferenceTarget.",
+      "Preserve validation-before-selection order, optional memory-estimate property presence and diagnostic concatenation order in createAiInferenceReport.",
+      "Preserve safety-policy checks, positive-limit comparisons, capability-bound comparisons, Unicode prompt trim, on-device/network contradictions and target membership diagnostics in validateAiInferenceRequest.",
+      "Preserve the fact that allowSilentFallback is a type-level false-only field and is not independently validated at runtime."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming the exported policy value and six runtime symbol scopes and bounded wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for plain records and hostile getters, proxies, sparse arrays, custom iterators, mutation, aliasing and thrown accessors",
+      "host substitution or equivalent proof for Array.find/includes, String.trim and object property/nullish semantics",
+      "bounded physical profile for record/array/string/number ABI, allocation, work limits and typed failures",
+      "explicit treatment of NaN, Infinity, fractions, malformed capability/policy/request records and unsupported target metadata",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep both galerina-ai queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact non-empty authorizing admission, resolves the recorded runtime semantics and bounded physical/differential gates, and obtains independent review."
+}
