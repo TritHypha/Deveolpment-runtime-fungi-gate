@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-tasks - 2026-09-11
+
+- [x] Assessed the nine queued source/declaration files under
+  packages-ts/galerina-core-tasks/src from exact main HEAD
+  314c032429dc2d42f8f1ee36c4625b6864ced6f1 / tree
+  7992b91144edb50d7cef4d82d14aa301a435df4a through the package boundary graph,
+  two focused test files, README/TODO/examples and one registered Fungi asset.
+- [x] Recorded the nine exported runtime functions, type surface, existing
+  task-effect.fungi membership twin and exact source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-tasks-source-dossier.json.
+  The existing asset remains non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 9/9. The package boundary
+  reports PASS with nine nodes, 16 internal edges and two allowed dependencies
+  (`node:fs/promises` and `@galerina/devtools-project-graph`).
+- [x] Astra's same-head advisory records the exact eight-effect Fungi
+  membership scope, regex/brace parser behavior, permission ordering and
+  lexical paths, execution placeholder/dry-run boundaries, dependency graph
+  ordering, report reference/error retention and the scoped evidence digest.
+- [!] One package row remains BLOCKED:SCOPED_CANDIDATES_ONLY with its existing
+  evidence digest; the other ten remain BLOCKED:DOSSIER_REQUIRED. The conserved
+  queue remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep task translation closed until parser, permission, dependency, report
+  and host-effect obligations are resolved under a separate exact non-empty
+  owner admission with independent differential, physical SLIDE/VOK, execution
+  and receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-sentinel-time - 2026-09-11
 
 - [x] Assessed the four TypeScript source files under

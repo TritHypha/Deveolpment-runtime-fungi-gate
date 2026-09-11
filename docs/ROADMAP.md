@@ -3,6 +3,37 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-tasks - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+314c032429dc2d42f8f1ee36c4625b6864ced6f1 with tree
+7992b91144edb50d7cef4d82d14aa301a435df4a in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-tasks-source-dossier.json.
+The package boundary graph covers nine nodes and 16 internal edges with the
+allowed `node:fs/promises` and `@galerina/devtools-project-graph` dependencies.
+It contains the task parser, permission checks, dependency planning, dry-run and
+report surfaces plus one registered task-effect.fungi asset.
+
+Typecheck, build and the two focused suites pass **9/9**, covering task-manifest
+parsing, dependency order/cycles, permission failures, dry-run/skipped behavior,
+reports and all eight canonical effect strings with hostile surplus text. The
+existing Fungi asset proves membership only; it does not replace parsing,
+permissions, dependency resolution, execution or reporting. Astra's same-head
+review keeps translation on HOLD because parser regex/brace semantics, lexical
+path checks, permission ordering, dry-run bypass shape, graph ordering, report
+references and wall-clock defaults are all observable. The `isTaskEffect` scope
+belongs here; externally owned `isResponseSafeClassification` and
+`validateTransition` do not.
+
+One queue row remains `BLOCKED:SCOPED_CANDIDATES_ONLY` with evidence digest
+`fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1` and ten
+remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains `CANDIDATE: 0`. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires exact
+non-empty owner admission, bounded parser/permission differential and physical
+proof, SLIDE/VOK receipt, bounded execution evidence and independent review. Git
+remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-sentinel-time - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

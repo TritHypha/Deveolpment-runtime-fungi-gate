@@ -1,0 +1,450 @@
+{
+  "schema": "galerina.rd0873.galerina-core-tasks-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for typed task parsing, permission decisions, dependency planning and reporting without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "314c032429dc2d42f8f1ee36c4625b6864ced6f1",
+    "tree": "7992b91144edb50d7cef4d82d14aa301a435df4a"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-tasks/src/check-permissions.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/dependency-graph.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/dry-run.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/index.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "SCOPED_CANDIDATES_ONLY",
+        "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/node-globals.d.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/run-task.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/task-report.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/types.ts",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/tests/load-tasks.test.mjs",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+        "package": "galerina-core-tasks",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-tasks",
+    "packageJsonSha256": "sha256:0574966b0e4063ced8800def3e8275db15f7f62545c2ba410fe8f06a756f8c60",
+    "packageLockSha256": "sha256:01fc2de9f16f7a057eb7f163e64e4e885203b18e1631ed913ef8c1ca1323cf8c",
+    "readmeSha256": "sha256:807e45a29866e164ca8f43ba5145e85546cde2f0cea21f27d2021cc3b9f03e8e",
+    "packageTodoSha256": "sha256:9a53dc3158e8bc0a67d093386a9803360382e8d4e31faca919d2fed6893a59cd",
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-tasks/examples/tasks.fungi",
+        "sha256": "sha256:9e3792901cda0c26d1136e17abca5b3c7ae67e82f23f871add20c11a09e0e7c1",
+        "utf8Bytes": 536
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-tasks/.graph/BOUNDARY.md",
+      "sha256": "sha256:303dcc54b5f58a4e8e1ca076f7fe8d0e6b8bd78fe209f1d3d89b95a660c5d659",
+      "status": "PASS",
+      "externalDependencies": [
+        "node:fs/promises",
+        "@galerina/devtools-project-graph"
+      ]
+    },
+    "sourceFileCount": 9,
+    "testFileCount": 2,
+    "loadedFungiAssetCount": 1,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+        "sha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+        "kind": "existing non-authorizing task-effect membership asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-tasks/src/types.ts#TaskEffect",
+        "fungi": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+        "status": "existing exact eight-string membership twin; parser/permission/execution/reporting remain TypeScript shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-tasks/src/load-tasks.ts#parseTasksSource",
+        "fungi": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+        "status": "scoped effect-membership evidence only; no parser replacement"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-tasks/src/check-permissions.ts",
+        "sha256": "sha256:080b233b77ce9c19441310dd9dda4bc0a0d75e4eac67b88ee6035423e815f841",
+        "utf8Bytes": 5528
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/dependency-graph.ts",
+        "sha256": "sha256:a0197b1f9c30bce8e5c0f649522c31b4753b66bbe17f225cb11b79a75bbddc0a",
+        "utf8Bytes": 3210
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/dry-run.ts",
+        "sha256": "sha256:d38d720ab8be1b36adf6a683e37947e2d2a6e24962d2cca6de1d9f9b036cfad2",
+        "utf8Bytes": 689
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/index.ts",
+        "sha256": "sha256:fa316bd874a3c22dd34a69c3575fc715160ee8d971694fbc6aa4f06bf9f64c4b",
+        "utf8Bytes": 848
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "sha256": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+        "utf8Bytes": 5642
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/node-globals.d.ts",
+        "sha256": "sha256:e4e97667747c1c6729fbacd39cb35e9bbb1f1e1677ceff46d24cf5c8d96ac36e",
+        "utf8Bytes": 118
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/run-task.ts",
+        "sha256": "sha256:4c972344b87023509ac7e8bb1af8a3ef2087e6ad624768ff13f709abafb19ae7",
+        "utf8Bytes": 823
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/task-report.ts",
+        "sha256": "sha256:ed5bbd77f7bbfdd9c5084a74990394ac62a8cc6bfabbbf3970adb278c2f979e3",
+        "utf8Bytes": 2956
+      },
+      {
+        "path": "packages-ts/galerina-core-tasks/src/types.ts",
+        "sha256": "sha256:ce34894b1d13cbca2a72131a7f9c560f8ff94d9558c9c6bde9d614f0ce562076",
+        "utf8Bytes": 1188
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [
+      {
+        "symbol": "checkTaskPermissions",
+        "source": "packages-ts/galerina-core-tasks/src/check-permissions.ts",
+        "span": {
+          "start": 3,
+          "end": 100
+        },
+        "sourceSha256": "sha256:080b233b77ce9c19441310dd9dda4bc0a0d75e4eac67b88ee6035423e815f841",
+        "bodySha256": "sha256:1ce5609ee8d2cc966d721ddcd96e5b9caeb8a70d34719e7cfc170a4217d7bbc4",
+        "bodyUtf8Bytes": 4156
+      },
+      {
+        "symbol": "resolveTaskDependencies",
+        "source": "packages-ts/galerina-core-tasks/src/dependency-graph.ts",
+        "span": {
+          "start": 18,
+          "end": 90
+        },
+        "sourceSha256": "sha256:a0197b1f9c30bce8e5c0f649522c31b4753b66bbe17f225cb11b79a75bbddc0a",
+        "bodySha256": "sha256:524afa3fb37af530a684dbf2d48cf23bdc99b3baa5baf8df75543b79acf3f90b",
+        "bodyUtf8Bytes": 2449
+      },
+      {
+        "symbol": "createDryRunPlan",
+        "source": "packages-ts/galerina-core-tasks/src/dry-run.ts",
+        "span": {
+          "start": 10,
+          "end": 17
+        },
+        "sourceSha256": "sha256:d38d720ab8be1b36adf6a683e37947e2d2a6e24962d2cca6de1d9f9b036cfad2",
+        "bodySha256": "sha256:4bd4e6a5476e1c70b306d9c48bd2062b65f2bcb4b1fe8aec58347646c7cf8473",
+        "bodyUtf8Bytes": 237
+      },
+      {
+        "symbol": "dryRunTask",
+        "source": "packages-ts/galerina-core-tasks/src/dry-run.ts",
+        "span": {
+          "start": 19,
+          "end": 26
+        },
+        "sourceSha256": "sha256:d38d720ab8be1b36adf6a683e37947e2d2a6e24962d2cca6de1d9f9b036cfad2",
+        "bodySha256": "sha256:d2db56a9363b56ec48fd9ac7823659b3b3d00402aea259a6dd6565b04ad28402",
+        "bodyUtf8Bytes": 167
+      },
+      {
+        "symbol": "loadTasks",
+        "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "span": {
+          "start": 9,
+          "end": 16
+        },
+        "sourceSha256": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+        "bodySha256": "sha256:3f9b4941d2db2982ea901ec2d9e97c392188618c62fa44d6b66f5f0d36464eb1",
+        "bodyUtf8Bytes": 188
+      },
+      {
+        "symbol": "parseTasksSource",
+        "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "span": {
+          "start": 18,
+          "end": 20
+        },
+        "sourceSha256": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+        "bodySha256": "sha256:90eca2d1752525bb4b6615b56bd4ab4a1346e539de5fcce27247d92684310fbb",
+        "bodyUtf8Bytes": 137
+      },
+      {
+        "symbol": "runTask",
+        "source": "packages-ts/galerina-core-tasks/src/run-task.ts",
+        "span": {
+          "start": 9,
+          "end": 32
+        },
+        "sourceSha256": "sha256:4c972344b87023509ac7e8bb1af8a3ef2087e6ad624768ff13f709abafb19ae7",
+        "bodySha256": "sha256:edc6c37a3311e34d393c4c25bef52335a02cda6a746aca3b955b8f7532721a64",
+        "bodyUtf8Bytes": 578
+      },
+      {
+        "symbol": "createTaskReport",
+        "source": "packages-ts/galerina-core-tasks/src/task-report.ts",
+        "span": {
+          "start": 25,
+          "end": 37
+        },
+        "sourceSha256": "sha256:ed5bbd77f7bbfdd9c5084a74990394ac62a8cc6bfabbbf3970adb278c2f979e3",
+        "bodySha256": "sha256:59d4670e74814c22f12e98d9fc36291594566fc4f794bf3748975192a1f8cf92",
+        "bodyUtf8Bytes": 462
+      },
+      {
+        "symbol": "createTaskRunReport",
+        "source": "packages-ts/galerina-core-tasks/src/task-report.ts",
+        "span": {
+          "start": 48,
+          "end": 78
+        },
+        "sourceSha256": "sha256:ed5bbd77f7bbfdd9c5084a74990394ac62a8cc6bfabbbf3970adb278c2f979e3",
+        "bodySha256": "sha256:10a26dce724877ad01b320e77fdcc7e3c286ed3fab8a269e303ce1909736f414",
+        "bodyUtf8Bytes": 1058
+      }
+    ],
+    "exportedClasses": [],
+    "exportedConstants": [],
+    "typeOnlySurface": {
+      "types": [
+        "TaskEffect",
+        "TaskStatus"
+      ],
+      "interfaces": [
+        "CreateTaskRunReportInput",
+        "DryRunPlan",
+        "LoadedTasks",
+        "RunTaskOptions",
+        "TaskDefinition",
+        "TaskDependencyPlan",
+        "TaskError",
+        "TaskPermission",
+        "TaskReport",
+        "TaskResult",
+        "TaskRunReport"
+      ],
+      "disposition": "type contracts remain evidence; task parsing, permission checks, dependency resolution, dry-run, execution placeholder and reports are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-tasks/dist/index.js",
+    "sha256": "sha256:97fc6e33da34d201f60a88a871b8c9916ee79500ddee45c30e77bfde981b00cf",
+    "declarationPath": "packages-ts/galerina-core-tasks/dist/index.d.ts",
+    "declarationSha256": "sha256:1da21c9156eeda6fd3c1926166a99f552ff9a4c56abafdaf4f5b2ac17738697e",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-tasks",
+    "nodes": 9,
+    "edges": 16,
+    "functions": 9,
+    "exportedClassCount": 0,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 16,
+      "EXTERNAL_IMPORTS": 2
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "parseTasksSource",
+      "checkTaskPermissions",
+      "resolveTaskDependencies",
+      "runTask",
+      "createTaskRunReport",
+      "task-effect.fungi::isTaskEffect"
+    ],
+    "note": "Boundary graph reports nine nodes, sixteen internal edges and two allowed external dependencies. Function surfaces are AST-derived and are not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-tasks/tests/load-tasks.test.mjs",
+      "packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs"
+    ],
+    "testSha256": {
+      "load-tasks.test.mjs": "sha256:4605b91a556ebcc69222e255bbf047882c2334263ce0586bb5529b8ee03fc557",
+      "task-effect-fungi-conversion.test.mjs": "sha256:59a482f8cd1cc252483880d9668f73b1adbe9af288524308e2d6a305d6db9400"
+    },
+    "command": "npm test",
+    "result": "PASS 9/9",
+    "coveredBehavior": [
+      "tasks.fungi parsing and dependency order/cycle refusal",
+      "permission checks for shell/filesystem/environment/network/database",
+      "dry-run and skipped execution placeholder behavior",
+      "task report construction and status aggregation",
+      "exact eight-effect and hostile surplus Fungi membership checks"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-tasks/.graph/BOUNDARY.md reports PASS with node:fs/promises and @galerina/devtools-project-graph allowed"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion/admission expansion",
+    "snapshot": {
+      "head": "314c032429dc2d42f8f1ee36c4625b6864ced6f1",
+      "tree": "7992b91144edb50d7cef4d82d14aa301a435df4a"
+    },
+    "findings": [
+      "isTaskEffect belongs here and task-effect.fungi recognizes exactly eight case-sensitive strings through two helper flows. The asset covers membership only, not parsing, permissions, dependencies, execution or reporting; tests cover all eight accepted and five rejected strings.",
+      "load-tasks parsing uses regex searches and brace counting without string/comment awareness. Malformed unfinished blocks stop extraction, unknown effects are silently filtered, numeric properties accept digit prefixes without safe-integer bounds, and first-match/trimming/list splitting/duplicate-task/optional-field behavior is observable.",
+      "checkTaskPermissions has first-error ordering: shell unsafe flag, unsafe reason, shell permission, filesystem checks, environment checks, network, database. Path checks are lexical and do not establish resolved-path or symlink containment; network/database/shell values are nonempty-only, while compiler/reports/crypto effects have no matching permission gate.",
+      "runTask checks permissions even for dry runs, returns failed on denial, dry-run when requested and otherwise skipped; it performs no task operations, dependency execution, timeout enforcement or shell sandboxing. dryRunTask itself bypasses permission validation.",
+      "resolveTaskDependencies uses last-wins duplicate definitions, breadth-first relevant-task discovery and external graph ordering; preserve missing-dependency precedence, cycle diagnostics, duplicate-edge behavior and task identity.",
+      "Task reports retain input references and copy errors including internalDiagnostic. safeMessage is not response redaction. Result lookup is first-wins, while aggregate status considers all results including those absent from displayed dependency order; generatedAt defaults to wall clock.",
+      "The scoped load-tasks row remains BLOCKED:SCOPED_CANDIDATES_ONLY with evidence digest fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1; this does not authorize broader package translation."
+    ],
+    "materialObligations": [
+      "Preserve parser regex/brace, malformed-input, effect filtering, numeric, duplicate and optional-field semantics or explicitly narrow the language contract.",
+      "Preserve permission ordering, lexical path behavior, effect coverage gaps, unsafe-shell requirements and dry-run versus execution placeholder behavior.",
+      "Preserve dependency graph ordering, missing/cycle diagnostics, duplicate definitions/edges and task identity.",
+      "Preserve report reference/error retention, first-wins result lookup, aggregate status and wall-clock defaults; do not infer redaction from safeMessage.",
+      "Keep task-effect.fungi non-authorizing, retain TypeScript shadow and do not admit externally owned symbols isResponseSafeClassification or validateTransition into this package."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-tasks",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded effect membership, task-manifest parsing, permission checks, dependency planning, dry-run and report decisions",
+    "authorityBoundary": "This package parses task manifests and mediates filesystem/environment/network/database/shell effects. Existing Fungi membership is decision evidence only; it is not a parser, executor or permission authority.",
+    "runtimeObligations": [
+      "Preserve parser and permission semantics with fail-closed ordering and explicit path/environment contracts.",
+      "Preserve dependency graph and report behavior, including wall-clock/default/reference effects.",
+      "Preserve dry-run/execution placeholder boundaries and external graph/Node dependencies.",
+      "Keep Fungi asset non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this task scope",
+      "source-to-Fungi artifacts and exact twin hashes beyond effect membership",
+      "independent differential vectors for malformed strings/comments, numeric prefixes, duplicate tasks, path/symlink cases, permission ordering, dependency cycles, report references and dry-run bypass",
+      "host substitution proof for node:fs/promises and project-graph dependency",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep galerina-core-tasks rows BLOCKED with existing reasons, preserve the scoped load-tasks row as SCOPED_CANDIDATES_ONLY and keep CANDIDATE at zero until a separate exact non-empty owner admission and independent parser/permission/differential gates authorize a named scope."
+}
