@@ -3,6 +3,25 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - 2026-09-11
+
+The dossier was audited against `main` HEAD
+`fa6d77334d6349d6b4edc47054fcaad54da7d471` with tree
+`080cdb5097deaf0e5f635c9ffeb1426963e280e5`. A bounded, non-authorizing dossier
+now records `galerina-auth`'s exported `scopeVerdict` function (source lines
+37-47) at
+`docs/independent-audits/2026-09-11-rd0873-scope-verdict-source-dossier.json`.
+The graph resolves two test callers and the `Set.has` dependency; package
+typecheck, build and five focused authorization tests pass. There is no Fungi
+twin, and the dossier identifies the runtime-input, differential, physical
+SLIDE/VOK and owner-admission proofs still missing.
+
+The queue is unchanged at `CANDIDATE: 0` with this entry still
+`BLOCKED:DOSSIER_REQUIRED`. No Fungi source, consumer switch, TypeScript
+retirement or corpus assurance rerun occurred. Bulk authoring remains closed
+until a separate exact-head owner admission names a non-empty scope and its
+bounded limits.
+
 ## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 The owner supplied a fresh exact, non-empty authorization for one bounded

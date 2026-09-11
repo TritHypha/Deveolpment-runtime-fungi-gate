@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - 2026-09-11
+
+- [x] Recorded the narrowly scoped `galerina-auth` `scopeVerdict` source dossier
+  at exact `main` HEAD `fa6d77334d6349d6b4edc47054fcaad54da7d471` / tree
+  `080cdb5097deaf0e5f635c9ffeb1426963e280e5`:
+  `docs/independent-audits/2026-09-11-rd0873-scope-verdict-source-dossier.json`.
+- [x] Graph evidence resolves the exported function at lines 37-47, with two
+  test callers and one `Set.has` dependency. Package typecheck, build and the
+  five focused authorization tests pass.
+- [x] The dossier records source/oracle/retirement hashes, runtime-input and
+  operation risks, and the missing differential, physical SLIDE/VOK and owner
+  admission proofs. No Fungi source, consumer switch or TypeScript retirement
+  occurred; the completed PROJECT assurance was not rerun.
+- [!] `scopeVerdict` remains `BLOCKED:DOSSIER_REQUIRED`; it has no existing
+  Fungi twin and the conserved queue remains `CANDIDATE: 0`. Keep bulk source
+  authoring closed until a separate exact-head authorizing admission names a
+  non-empty scope and bounded limits.
+
 ### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 - [x] Recorded the owner's fresh exact-head authorization for the four named
