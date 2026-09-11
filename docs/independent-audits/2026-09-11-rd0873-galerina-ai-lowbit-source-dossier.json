@@ -1,0 +1,223 @@
+{
+  "schema": "galerina.rd0873.galerina-ai-lowbit-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "be4ecf3fc8aa7cfbf630241e0f5fd4df6c0c7b71",
+    "tree": "c917d4cf310f8a5545ea76c7aa7606ec906ace56"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-ai-lowbit/src/index.ts",
+        "package": "galerina-ai-lowbit",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-ai-lowbit/tests/lowbit-ai-contracts.test.mjs",
+        "package": "galerina-ai-lowbit",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-ai-lowbit",
+    "packageJsonSha256": "sha256:6494e1cd9a4a0205d90a4d8b745241a42b6066132b2b3f294b9049c66b290cb6",
+    "readmeSha256": "sha256:39a6f03a3972a67a3d3466a173f12777e18fcfa5ed0f4415a24e7b0058f464c6",
+    "exampleSha256": "sha256:f25aaa1aa3e5605c5b9034ff0f241e2cf02fdd10d50585349b7ba167ca61f388",
+    "boundaryReport": {
+      "path": "packages-ts/galerina-ai-lowbit/.graph/BOUNDARY.md",
+      "sha256": "sha256:82dfa5b717b52859ce53c30afdb4e8ab851c9786007640dc73ab299025ef024a",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "path": "packages-ts/galerina-ai-lowbit/src/index.ts",
+    "sourceSha256": "sha256:2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+    "sourceUtf8Bytes": 11242,
+    "existingTwin": null,
+    "typeOnlySurface": {
+      "interfacesAndTypes": [
+        "LowBitAiTarget",
+        "LowBitAiBackendId",
+        "LowBitAiDevice",
+        "LowBitAiWeightFormat",
+        "LowBitAiQuantization",
+        "LowBitAiEmbeddingQuantization",
+        "LowBitAiKernelFamily",
+        "LowBitAiRuntimeKind",
+        "LowBitAiDiagnosticSeverity",
+        "LowBitAiDiagnostic",
+        "LowBitAiBackendAdapter",
+        "LowBitAiModelReference",
+        "LowBitAiModelValidationResult",
+        "LowBitAiRuntimeLimits",
+        "LowBitAiInferencePlan",
+        "LowBitAiInferenceReport",
+        "LowBitAiBenchmarkSample",
+        "LowBitAiBenchmarkReport"
+      ],
+      "disposition": "type-contract-only; no independent runtime translation unit"
+    },
+    "runtimeSymbols": [
+      {
+        "symbol": "createLowBitAiInferencePlan",
+        "span": { "start": 139, "end": 164 },
+        "signature": "export function createLowBitAiInferencePlan(model: LowBitAiModelReference, limits: LowBitAiRuntimeLimits, options?: LowBitAiInferencePlanOptions): LowBitAiInferencePlan",
+        "sourceSha256": "sha256:2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+        "bodySha256": "sha256:97328e94e7374ca034d6f0961a39406510cce6e44568b44971940f1e8851ad88",
+        "bodyUtf8Bytes": 806,
+        "disposition": "pure plan record builder with nullish defaults and optional fallback field"
+      },
+      {
+        "symbol": "createLowBitAiInferenceReport",
+        "span": { "start": 166, "end": 184 },
+        "signature": "export function createLowBitAiInferenceReport(plan: LowBitAiInferencePlan): LowBitAiInferenceReport",
+        "sourceSha256": "sha256:2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+        "bodySha256": "sha256:be62cd8cc8890a7b855cec750961c4718cf32abe6bb9a686f46da9bf5b052e4a",
+        "bodyUtf8Bytes": 568,
+        "disposition": "report projection that invokes plan validation and records fallback presence"
+      },
+      {
+        "symbol": "validateLowBitAiModel",
+        "span": { "start": 186, "end": 241 },
+        "signature": "export function validateLowBitAiModel(model: LowBitAiModelReference): LowBitAiModelValidationResult",
+        "sourceSha256": "sha256:2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+        "bodySha256": "sha256:f0558bc7ba1fbc440c1199682ec1e82c13543b98d5615eaca8512fe91a042788",
+        "bodyUtf8Bytes": 1656,
+        "disposition": "model path, extension and positive numeric limit validator"
+      },
+      {
+        "symbol": "validateLowBitAiBackendAdapter",
+        "span": { "start": 243, "end": 294 },
+        "signature": "export function validateLowBitAiBackendAdapter(adapter: LowBitAiBackendAdapter, plan: LowBitAiInferencePlan): readonly LowBitAiDiagnostic[]",
+        "sourceSha256": "sha256:2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+        "bodySha256": "sha256:f4ba150fdd39adebdb76630afafb051fd63afd3bae6b0194d1955edc7fe624ae",
+        "bodyUtf8Bytes": 1634,
+        "disposition": "backend capability membership validator; no backend execution"
+      },
+      {
+        "symbol": "validateLowBitAiInferencePlan",
+        "span": { "start": 296, "end": 372 },
+        "signature": "export function validateLowBitAiInferencePlan(plan: LowBitAiInferencePlan): readonly LowBitAiDiagnostic[]",
+        "sourceSha256": "sha256:2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+        "bodySha256": "sha256:58e85248e896f3e51cb7c15d68a4a1704094b397dec572b77582f2b28de622cc",
+        "bodyUtf8Bytes": 2344,
+        "disposition": "model/target/runtime-limit consistency validator"
+      }
+    ]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-ai-lowbit/dist/index.js",
+    "sha256": "sha256:accd3aa516d077edc32b54c52980676c0cf04ed3c7dd18924394cd4643144bf8",
+    "declarationPath": "packages-ts/galerina-ai-lowbit/dist/index.d.ts",
+    "declarationSha256": "sha256:83f8faec72e287c9860dff39c429a0f4331d00dc3d2f1711baee996347528de7",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-ai-lowbit",
+    "nodes": 81,
+    "edges": 111,
+    "functions": 5,
+    "edgeTypes": { "DEFINES": 74, "USAGE": 30, "CALLS": 7 },
+    "entryPoints": [
+      "createLowBitAiInferencePlan",
+      "createLowBitAiInferenceReport",
+      "validateLowBitAiModel",
+      "validateLowBitAiBackendAdapter",
+      "validateLowBitAiInferencePlan"
+    ],
+    "callersAndCallees": {
+      "createLowBitAiInferencePlan": { "callers": ["lowbit-ai-contracts.test.mjs"], "callees": [] },
+      "createLowBitAiInferenceReport": { "callers": ["lowbit-ai-contracts.test.mjs"], "callees": ["validateLowBitAiInferencePlan"] },
+      "validateLowBitAiModel": { "callers": ["validateLowBitAiInferencePlan", "lowbit-ai-contracts.test.mjs"], "callees": ["Array.push", "String.trim", "String.toLowerCase", "String.endsWith"] },
+      "validateLowBitAiBackendAdapter": { "callers": ["lowbit-ai-contracts.test.mjs"], "callees": ["Array.includes", "Array.push"] },
+      "validateLowBitAiInferencePlan": { "callers": ["createLowBitAiInferenceReport", "lowbit-ai-contracts.test.mjs"], "callees": ["validateLowBitAiModel", "Array.push", "Array.every"] }
+    },
+    "note": "Graph discovery identifies local bodies and collection/string-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-ai-lowbit/tests/lowbit-ai-contracts.test.mjs",
+    "testSha256": "sha256:29eb9a323ac1968606de7ba533db92cce31317dd1ac98b150c037e49ff955369",
+    "command": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
+    "result": "PASS 3/3",
+    "coveredBehavior": [
+      "plan and report creation with BitNet selected",
+      "GGUF extension rejection",
+      "backend capability compatibility checks"
+    ],
+    "packageBoundary": "packages-ts/galerina-ai-lowbit/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-ai-lowbit",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous plan/report builders and validators over typed records, arrays, strings and numeric limits",
+    "authorityBoundary": "The package describes low-bit AI inference plans and validates backend/model compatibility; it does not execute BitNet, GPU/NPU kernels, external processes, remote runtimes or model inference.",
+    "runtimeObligations": [
+      "Preserve nullish defaults and conditional fallback-property presence in createLowBitAiInferencePlan.",
+      "Preserve model object aliasing and diagnostic order in createLowBitAiInferenceReport.",
+      "Preserve Unicode trim, lower-case and suffix behavior for model paths, including malformed or accessor-backed records.",
+      "Preserve positive-number comparisons, NaN and Infinity behavior for model and runtime limits; no finite-number check is currently implemented.",
+      "Preserve Array.includes membership and diagnostic order in backend adapter validation.",
+      "Preserve validateLowBitAiInferencePlan's model-validation-first order, warning versus error severities and independent limit comparisons."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming the five runtime symbol scopes and bounded wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for plain records and hostile getters, proxies, sparse arrays, custom iterators, mutation and thrown accessors",
+      "host substitution or equivalent proof for Array.includes/every, String.trim/toLowerCase/endsWith and object property access",
+      "bounded physical profile for record/array/string ABI, allocation, aliasing, work limits and typed failures",
+      "explicit treatment of non-finite and fractional numeric inputs, malformed model/plan/adapter records and diagnostic severity ordering",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep both galerina-ai-lowbit queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact non-empty authorizing admission, resolves the recorded runtime semantics and bounded physical/differential gates, and obtains independent review."
+}

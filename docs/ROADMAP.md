@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-ai-lowbit - 2026-09-11
+
+The next bounded package assessment is recorded at exact `main` HEAD
+`be4ecf3fc8aa7cfbf630241e0f5fd4df6c0c7b71` with tree
+`c917d4cf310f8a5545ea76c7aa7606ec906ace56` in
+`docs/independent-audits/2026-09-11-rd0873-galerina-ai-lowbit-source-dossier.json`.
+The graph scopes the package to 81 nodes and 111 edges, with five local runtime
+helpers. The package has one TypeScript source file, one test file, no external
+imports, a JSON example, no loaded Fungi assets and no existing `.fungi` twin.
+Type-only interfaces and aliases remain contract evidence rather than
+translation units.
+
+The package's typecheck, build and focused suite pass `3/3`. The dossier records
+the exact source and oracle hashes and the semantics a future bounded
+translation would have to preserve: nullish defaults and optional-property
+presence, direct model/limit aliasing, Unicode trim/lowercase/suffix behavior,
+positive-number versus finite-number behavior, array membership and diagnostic
+order, model-validation-first ordering, warning/error severity and malformed
+record handling. Backend identifiers and runtime-kind strings are inert plan
+metadata; this package performs no BitNet, GPU/NPU, process, remote-runtime or
+model inference work.
+
+Both queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. This is review evidence only: no Fungi source, queue relabel,
+consumer switch, TypeScript retirement, topology change or corpus assurance
+rerun occurred. A future wave still needs a separate exact non-empty owner
+admission, bounded physical and differential proof, SLIDE/VOK receipt and
+independent review.
+
 ## RD-0873 next source dossier checkpoint - galerina-ai-agent - 2026-09-11
 
 The next bounded package assessment is recorded at exact `main` HEAD
