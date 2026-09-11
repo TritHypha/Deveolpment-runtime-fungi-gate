@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-economics - 2026-09-11
+
+- [x] Assessed packages-ts/galerina-core-economics/src/index.ts from exact
+  main HEAD aecc83565ee1dc35795af837ea2f6db78a7e3b09 / tree
+  73fd6b80293e91f45e741f2d29aa3e6dc1fc393d through the package graph and its
+  focused economics suite.
+- [x] Recorded the four exported runtime functions (estimateCost,
+  calculateRiskCost, selectRoute, selectVectorTier) plus the exported
+  calibration tables, enum and hardware profiles in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-economics-source-dossier.json.
+  No package-local .fungi twin exists.
+- [x] Typecheck, build and the package suite pass 15/15. The package boundary
+  reports PASS with no external dependencies. The graph scopes the package to
+  48 nodes and 63 edges.
+- [x] Astra's same-head advisory records the numeric-domain, mutable-table,
+  copied-sort, tie-order, budget-before-escalation, literal-governance and
+  caller-supplied vector-tier obligations for any future translation.
+- [!] Both package rows remain BLOCKED:DOSSIER_REQUIRED; the queue remains
+  CANDIDATE: 0 with 921 BLOCKED and 684 BOOTSTRAP_FLOOR entries. No Fungi
+  source, queue relabel, consumer switch, TypeScript retirement or corpus
+  assurance rerun occurred.
+- [!] Keep this package closed until a separate exact non-empty owner admission
+  names a bounded economics scope and independent differential, physical
+  SLIDE/VOK, execution and receipt gates pass. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-config - 2026-09-11
 
 - [x] Assessed the three TypeScript source files in

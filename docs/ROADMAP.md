@@ -3,6 +3,31 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-economics - 2026-09-11
+
+The next bounded package assessment is recorded at exact main HEAD
+aecc83565ee1dc35795af837ea2f6db78a7e3b09 with tree
+73fd6b80293e91f45e741f2d29aa3e6dc1fc393d in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-economics-source-dossier.json.
+The package graph scopes one TypeScript source file to 48 nodes and 63 edges,
+with four exported function nodes and no external dependencies. The package has
+one source file, one focused test file, no loaded Fungi assets and no twin.
+
+Its typecheck, build and focused suite pass 15/15. The review covers cost
+and risk arithmetic, mutable calibration tables, copied route sorting, budget
+braking, proof escalation, literal governance metadata and caller-supplied
+vector tiers. Astra's same-head advisory is PASS_NON_AUTHORIZING and keeps
+conversion on HOLD because invalid numeric domains, mutable tables, tie and
+NaN ordering, budget-before-escalation, and the non-enforcing governance fields
+must be preserved or separately resolved.
+
+Both queue rows remain BLOCKED:DOSSIER_REQUIRED and the queue remains
+CANDIDATE: 0; no Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. A future
+translation still requires exact non-empty owner admission, bounded
+differential and physical proof, SLIDE/VOK receipt, execution evidence and
+independent review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-config - 2026-09-11
 
 The next bounded package assessment is recorded at exact `main` HEAD

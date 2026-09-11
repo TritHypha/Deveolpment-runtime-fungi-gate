@@ -1,0 +1,351 @@
+{
+  "schema": "galerina.rd0873.galerina-core-economics-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "aecc83565ee1dc35795af837ea2f6db78a7e3b09",
+    "tree": "73fd6b80293e91f45e741f2d29aa3e6dc1fc393d"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-economics/src/index.ts",
+        "package": "galerina-core-economics",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-economics/tests/economics.test.mjs",
+        "package": "galerina-core-economics",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-economics",
+    "packageJsonSha256": "sha256:9fe9a1dcd098f1ff456dd1ccd7659adedb9832964e9d7ae12fc5d1ad03e23c0d",
+    "packageLockSha256": "sha256:f36dfdfcf4db4471c3a4830640cb4066b8710e13eb69c29b1d91915ac4b61d96",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "example": null,
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-economics/.graph/BOUNDARY.md",
+      "sha256": "sha256:23a883d177127fe9b36bef39d22dd55c44a3143f38f009454320fdf1094ca7d7",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssetCount": 0,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-economics/src/index.ts",
+        "sha256": "sha256:1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+        "utf8Bytes": 12060,
+        "exportedRuntimeSurface": [
+          "CLOUD_PRICING",
+          "AI_PRICING",
+          "DataClassification",
+          "PER_RECORD_LOSS_USD",
+          "RISK_MODIFIERS",
+          "estimateCost",
+          "calculateRiskCost",
+          "selectRoute",
+          "I9_DESKTOP",
+          "I5_LAPTOP",
+          "selectVectorTier"
+        ],
+        "typeSurface": [
+          "ExecutionTarget",
+          "CostBreakdown",
+          "CostEstimate",
+          "AiModel",
+          "CostInputs",
+          "RiskInputs",
+          "RouteDecision",
+          "RoutePolicy",
+          "HardwareProfile"
+        ]
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive source line span",
+    "runtimeSymbols": [
+      {
+        "symbol": "estimateCost",
+        "span": {
+          "start": 94,
+          "end": 131
+        },
+        "sourceSha256": "sha256:1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+        "bodySha256": "sha256:2fc6c76be3c56c85851393ee7022019d0cac43dd92dc679daeac1df0fc63401c",
+        "bodyUtf8Bytes": 1590,
+        "disposition": "exported cost breakdown over CPU, audit, governance, AI, storage, network and risk terms"
+      },
+      {
+        "symbol": "calculateRiskCost",
+        "span": {
+          "start": 173,
+          "end": 179
+        },
+        "sourceSha256": "sha256:1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+        "bodySha256": "sha256:58acd9862d4b7eb51abe6530f8752cc11caaf441e8c5f7116f44b077cb9a56f4",
+        "bodyUtf8Bytes": 417,
+        "disposition": "exported risk-adjusted loss calculation over classification, record count, probability and modifiers"
+      },
+      {
+        "symbol": "selectRoute",
+        "span": {
+          "start": 213,
+          "end": 261
+        },
+        "sourceSha256": "sha256:1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+        "bodySha256": "sha256:10eb15088c500663c9159b3e2e849eb8ec5efc4b886337de32630edd2bbe92ff",
+        "bodyUtf8Bytes": 2033,
+        "disposition": "exported cheapest-route selection with budget brake, risk escalation and literal governance metadata"
+      },
+      {
+        "symbol": "selectVectorTier",
+        "span": {
+          "start": 289,
+          "end": 291
+        },
+        "sourceSha256": "sha256:1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+        "bodySha256": "sha256:3e9cf087df446a48e9015de5a6361d57082f4f37f1639e37deae89e4d8dd38de",
+        "bodyUtf8Bytes": 143,
+        "disposition": "exported caller-supplied vector-tier projection; no hardware probe or ceiling enforcement"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "ExecutionTarget",
+        "AiModel"
+      ],
+      "interfaces": [
+        "CostBreakdown",
+        "CostEstimate",
+        "CostInputs",
+        "RiskInputs",
+        "RouteDecision",
+        "RoutePolicy",
+        "HardwareProfile"
+      ],
+      "enum": [
+        "DataClassification"
+      ],
+      "disposition": "type-contract-only except DataClassification's runtime numeric enum object, which remains runtime evidence"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-economics/dist/index.js",
+    "sha256": "sha256:e65883bb438ed705214b08f754dd51570aa54c7babe44f3752b5a420ac6b3afb",
+    "declarationPath": "packages-ts/galerina-core-economics/dist/index.d.ts",
+    "declarationSha256": "sha256:5e85e0ee101052ab0e99a2dbf2ed11568b0b371293b9be3a1633c1b7a4d2b971",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-economics",
+    "nodes": 48,
+    "edges": 63,
+    "functions": 4,
+    "edgeTypes": {
+      "DEFINES": 44,
+      "USAGE": 15,
+      "CALLS": 4
+    },
+    "entryPoints": [
+      "estimateCost",
+      "calculateRiskCost",
+      "selectRoute",
+      "selectVectorTier"
+    ],
+    "functionMetrics": {
+      "estimateCost": {
+        "complexity": 1,
+        "cognitive": 1,
+        "loopCount": 0,
+        "linearScanInLoop": 0,
+        "span": {
+          "start": 94,
+          "end": 131
+        }
+      },
+      "calculateRiskCost": {
+        "complexity": 2,
+        "cognitive": 2,
+        "loopCount": 0,
+        "linearScanInLoop": 0,
+        "span": {
+          "start": 173,
+          "end": 179
+        }
+      },
+      "selectRoute": {
+        "complexity": 3,
+        "cognitive": 3,
+        "loopCount": 0,
+        "linearScanInLoop": 0,
+        "span": {
+          "start": 213,
+          "end": 261
+        }
+      },
+      "selectVectorTier": {
+        "complexity": 0,
+        "cognitive": 0,
+        "loopCount": 0,
+        "linearScanInLoop": 0,
+        "span": {
+          "start": 289,
+          "end": 291
+        }
+      }
+    },
+    "callersAndCallees": {
+      "estimateCost": {
+        "callers": [
+          "economics.test.mjs"
+        ],
+        "callees": [
+          "CLOUD_PRICING",
+          "AI_PRICING"
+        ]
+      },
+      "calculateRiskCost": {
+        "callers": [
+          "economics.test.mjs"
+        ],
+        "callees": [
+          "PER_RECORD_LOSS_USD",
+          "RISK_MODIFIERS",
+          "CLOUD_PRICING"
+        ]
+      },
+      "selectRoute": {
+        "callers": [
+          "economics.test.mjs"
+        ],
+        "callees": [
+          "Array.sort",
+          "Error",
+          "Number.toFixed"
+        ]
+      },
+      "selectVectorTier": {
+        "callers": [
+          "economics.test.mjs"
+        ],
+        "callees": []
+      }
+    },
+    "note": "Graph discovery identifies local bodies and collection/string-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-economics/tests/economics.test.mjs"
+    ],
+    "testSha256": "sha256:3ef47a27beebd5a3af1dda8b9f474b27ad173dde893d17db5cd87b457c6c0aa4",
+    "command": "npm test",
+    "result": "PASS 15/15",
+    "coveredBehavior": [
+      "cost breakdown total equals the sum of all terms",
+      "proof-level governance tax increases with proof level",
+      "AI token pricing for the configured models",
+      "classification loss constants and risk-cost arithmetic",
+      "multi-cloud and shadow-NPU risk modifiers",
+      "cheapest route selection over copied candidates",
+      "literal governanceApproved metadata and empty-candidate refusal",
+      "emergency brake and risk proof escalation",
+      "i9 and i5 AVX2 profiles with no AVX-512 report"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-economics/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion admission",
+    "snapshot": {
+      "head": "aecc83565ee1dc35795af837ea2f6db78a7e3b09",
+      "tree": "73fd6b80293e91f45e741f2d29aa3e6dc1fc393d"
+    },
+    "findings": [
+      "estimateCost preserves JavaScript floating-point arithmetic and separate decimal storage versus binary network units; negative, fractional, NaN and infinite values are unchecked, proof levels are not constrained to 0–4, and unknown AI model keys can throw on property access.",
+      "calculateRiskCost does not constrain classification, record count or breach probability; missing classification entries can produce NaN, boolean-like modifiers use truthiness, and penalties are added before probability and exchange-rate multiplication.",
+      "selectRoute throws the exact empty-input Error, sorts copied candidates, relies on stable ordering for ties, and allows NaN comparator behavior; budget checking happens before escalation, so escalation can select a higher-proof candidate over budget.",
+      "selectRoute keeps the cheapest candidate's flowName even when escalation selects a different candidate, assigns governanceApproved:true unconditionally, and emits explanatory strings without enforcing a stop or seal.",
+      "selectVectorTier returns caller input unchanged, including avx512, without hardware detection or AVX2 ceiling enforcement.",
+      "All exported pricing, loss, modifier and hardware objects remain mutable at runtime; as const is compile-time only. Calibration comments and tests do not establish current prices or empirical risk accuracy.",
+      "The package contains no hardware/backend execution, scheduling, transfer, authority or consumer-enforcement path. Fifteen tests omit the listed numeric, aliasing, mutation, tie-order and governance-boundary cases."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-economics",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous economics helpers over typed records, mutable calibration tables, arrays, strings and JavaScript numbers",
+    "authorityBoundary": "The package prices, ranks and describes caller-supplied execution paths. It does not verify governance approval, probe hardware, execute kernels, schedule work, transfer data or enforce brakes/seals.",
+    "runtimeObligations": [
+      "Preserve property-read order, nullish-only defaults, truthiness checks, JavaScript floating-point arithmetic and exact accumulation order.",
+      "Preserve AI pricing lookup failures, mutable exported table/reference identity and numeric nonfinite behavior.",
+      "Preserve classification enum reverse mappings, missing-key NaN propagation, modifier truthiness and penalty ordering.",
+      "Preserve empty-candidate Error text, copied sorting, stable tie order, NaN comparator behavior and original estimate references.",
+      "Preserve budget-before-escalation ordering, highest-proof selection across all candidates, cheapest flowName retention, exact toFixed formatting and non-enforcing diagnostic strings.",
+      "Preserve the literal governanceApproved:true metadata as a non-authorizing assertion supplied by the caller.",
+      "Preserve caller-supplied vectorTier unchanged and the absence of hardware detection or an AVX2 ceiling.",
+      "Treat mutable calibration and hardware objects as runtime references; readonly/as const annotations do not freeze them."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming an economics scope and bounded translation wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for getters, proxies, mutations, aliases, sparse arrays, ties, thrown property access and nonfinite values",
+      "host substitution or equivalent proof for Array.sort, Number.toFixed, object spread and numeric coercion/formatting",
+      "bounded physical profile for records, arrays, strings, numbers and typed failures",
+      "explicit treatment of invalid classifications, negative/fractional/nonfinite costs, unknown models and unsupported vector tiers",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep both galerina-core-economics queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}
