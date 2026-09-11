@@ -3,6 +3,31 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-cli - 2026-09-11
+
+The bounded CLI assessment is recorded at exact main HEAD
+`4c36cf95d1dbdafe31e724f7835e945a64d7f79a` with tree
+`b5b9fac64029017ee946a7e7e758ee7039e8cf21` in
+`docs/independent-audits/2026-09-11-rd0873-galerina-core-cli-source-dossier.json`.
+The queue scope is 15 files: ten TypeScript/declaration sources and five tests.
+The package boundary reports 11 scanned nodes, 16 internal edges and six
+external dependencies. Two existing Fungi assets provide only a redaction
+marker and diagnostic constant.
+
+The existing package checks pass **21/21**. Astra's same-head review keeps
+translation on HOLD because environment and command routing, unbounded
+subprocess buffering, task/report completion semantics, path and graph
+freshness/partial-write hazards, and the redaction callback's numeric-prefix
+defect all require explicit preservation or correction. The scaffold tests do
+not prove Fungi compilation or execution.
+
+All 15 queue rows remain `BLOCKED:DOSSIER_REQUIRED`; the conserved queue remains
+`CANDIDATE: 0`. No Fungi source, queue relabel, consumer switch, TypeScript or
+CommonJS retirement, topology change or corpus assurance rerun occurred. The
+first actual translation wave still requires a separate exact non-empty owner
+admission, bounded differential and host-effect proof, physical SLIDE/VOK
+receipt, execution evidence and independent review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

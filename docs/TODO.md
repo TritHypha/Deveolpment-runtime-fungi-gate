@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-cli - 2026-09-11
+
+- [x] Assessed the 15 queued CLI source/declaration and test files from exact
+  main HEAD `4c36cf95d1dbdafe31e724f7835e945a64d7f79a` / tree
+  `b5b9fac64029017ee946a7e7e758ee7039e8cf21`: ten TypeScript/declaration
+  files, five tests, two existing marker/diagnostic Fungi assets and six
+  declared external dependencies.
+- [x] Recorded command parsing, compiler subprocess bridging, graph and task
+  filesystem orchestration, output formatting/redaction, type contracts and
+  exact source/test/build hashes in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-core-cli-source-dossier.json`.
+  Existing Fungi assets remain non-authorizing constants/markers.
+- [x] Existing package checks pass 21/21. The package boundary reports PASS
+  with 11 scanned nodes and 16 internal edges.
+- [x] Astra's same-head advisory records environment/default routing,
+  subprocess buffering and missing limits, task completion/reporting gaps,
+  graph path/freshness/partial-write hazards, redaction replacement defect,
+  detector ordering and marker-only Fungi scope.
+- [!] All 15 package rows remain `BLOCKED:DOSSIER_REQUIRED`; the conserved
+  queue remains `CANDIDATE: 0`. No Fungi source, queue relabel, consumer
+  switch, TypeScript/CommonJS retirement or corpus assurance rerun occurred.
+- [!] Keep CLI translation closed until a named exact non-empty owner admission
+  and bounded parser, host-effect, redaction, execution and SLIDE/VOK receipt
+  gates authorize a wave. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core - 2026-09-11
 
 - [x] Assessed the 12 queue files for galerina-core at exact main HEAD

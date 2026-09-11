@@ -1,0 +1,461 @@
+{
+  "schema": "galerina.rd0873.galerina-core-cli-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for CLI parsing, subprocess orchestration, graph generation, task reporting and output redaction without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "4c36cf95d1dbdafe31e724f7835e945a64d7f79a",
+    "tree": "b5b9fac64029017ee946a7e7e758ee7039e8cf21"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-cli/src/cli.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/commands.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/core-command.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/graph-command.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/index.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/node-globals.d.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/output.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/security.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/task-command.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/src/types.ts",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/tests/app-scaffold.test.mjs",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/tests/core-command.test.mjs",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/tests/graph-command.test.mjs",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/tests/security.test.mjs",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-cli/tests/task-command.test.mjs",
+        "package": "galerina-core-cli",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "CANDIDATE": 0,
+      "BLOCKED": 921,
+      "NO_RUNTIME_BEHAVIOR": 0,
+      "SUPERSEDED_BY_EXISTING_FUNGI": 0,
+      "BOOTSTRAP_FLOOR": 684
+    },
+    "scopedCandidateCount": 7
+  },
+  "package": {
+    "name": "galerina-core-cli",
+    "packageJsonSha256": "sha256:85a98a7c53cf3d0a8e77004e3fd0cdbcd84ad0f5b27d15af909331429652e970",
+    "packageLockSha256": "sha256:81214143e18c209ab7e971430e65071497804bb8aea6fb2edd3395773932a67b",
+    "readmeSha256": "sha256:ea92291367b165f5e0e5f3e7853bf0a4163fb755ce7e91eddb455c9dceacb402",
+    "packageTodoSha256": "sha256:7094570ec7838e71ccdff8aeae92b93a5f84aaa3cfc3b08f5ca07f10ca012e8b",
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-cli/.graph/BOUNDARY.md",
+      "sha256": "sha256:d31db8e61d86b85781e917c0c7ab4836f52ac75169b0e4e08c8be398d541f4fd",
+      "status": "PASS",
+      "nodes": 11,
+      "internalEdges": 16,
+      "externalDependencies": [
+        "node:child_process",
+        "node:fs/promises",
+        "node:path",
+        "node:url",
+        "@galerina/core-tasks",
+        "@galerina/devtools-graph-project"
+      ]
+    },
+    "sourceFileCount": 10,
+    "testFileCount": 5,
+    "loadedFungiAssetCount": 2,
+    "loadedFungiAssets": [
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\self-hosted\\fungi-cli-redact-001.fungi",
+        "sha256": "sha256:a1e02e9c950975769273cbf2e58b8c42fb947ab6184a1bdbac6fb99ee50ffe87",
+        "kind": "existing non-authorizing redaction/scaffold asset"
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\self-hosted\\redaction.fungi",
+        "sha256": "sha256:fa45e4de02ba2cca73b711b081742c8da72a0fcc8f129ae32dfcc746c1d3d247",
+        "kind": "existing non-authorizing redaction/scaffold asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-cli/src/security.ts",
+        "fungi": "packages-ts/galerina-core-cli/src/self-hosted/redaction.fungi",
+        "status": "existing marker-only asset; detector and formatter remain TypeScript shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-cli/src/security.ts#FUNGI_CLI_REDACT_001",
+        "fungi": "packages-ts/galerina-core-cli/src/self-hosted/fungi-cli-redact-001.fungi",
+        "status": "existing diagnostic-constant asset; no executable redaction authority"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\cli.ts",
+        "sha256": "sha256:e4559aa1ffbf8204994a257a092e788d76649b05b0542e6d4fa3a722e43b7a21",
+        "utf8Bytes": 1377
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\commands.ts",
+        "sha256": "sha256:6a4997d57ff760abaabec28c4bde33ad220adb6bb31bf6331d23b4d9fbcce2a8",
+        "utf8Bytes": 1632
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\core-command.ts",
+        "sha256": "sha256:08b5d9babd24de90446b74904780bad5f6639037979ea0753add45f5dfc77bc7",
+        "utf8Bytes": 3882
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\graph-command.ts",
+        "sha256": "sha256:b7e737c1d4f5a6584d4bccd19e1dddf3655d39faa41cec399e76a6d911cbb274",
+        "utf8Bytes": 13059
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\index.ts",
+        "sha256": "sha256:d6482ac55578603aabac0a3dc72f55c55cc10a79761d2f206613b74283d488f6",
+        "utf8Bytes": 755
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\node-globals.d.ts",
+        "sha256": "sha256:92e7a9330416c70947399dd39fc83547b963d6eec04406a014ac0d84fee4f73b",
+        "utf8Bytes": 1975
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\output.ts",
+        "sha256": "sha256:b49bb4bf8e6cfbaa96a631786cde2dc8468d714c43ae6ab4d9d58427041e03f9",
+        "utf8Bytes": 760
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\security.ts",
+        "sha256": "sha256:3224a07de23302b2ea01b2e5199d29c5eb33bd4387b4b8f4931a0fa01117f107",
+        "utf8Bytes": 4183
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\task-command.ts",
+        "sha256": "sha256:563a3b0d46a6d8fb6243d1e73bae57746f7b7243f2835764e070f9e82f13d100",
+        "utf8Bytes": 4714
+      },
+      {
+        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\types.ts",
+        "sha256": "sha256:446a9dc3063044c22be9fe0fe7c6ce1634cc59de35e3946dbc9c637103cde059",
+        "utf8Bytes": 512
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST runtime span when a future admitted translation is prepared",
+    "runtimeSymbols": [
+      {
+        "symbol": "parseEnvironment",
+        "source": "packages-ts/galerina-core-cli/src/cli.ts",
+        "disposition": "runtime parser; exported"
+      },
+      {
+        "symbol": "runCli",
+        "source": "packages-ts/galerina-core-cli/src/cli.ts",
+        "disposition": "runtime entrypoint; exported"
+      },
+      {
+        "symbol": "createCoreCommandRunner",
+        "source": "packages-ts/galerina-core-cli/src/core-command.ts",
+        "disposition": "subprocess command factory; exported"
+      },
+      {
+        "symbol": "relativeCoreCompilerPath",
+        "source": "packages-ts/galerina-core-cli/src/core-command.ts",
+        "disposition": "path helper; exported"
+      },
+      {
+        "symbol": "runGraphCommand",
+        "source": "packages-ts/galerina-core-cli/src/graph-command.ts",
+        "disposition": "filesystem graph producer; exported"
+      },
+      {
+        "symbol": "runTaskCommand",
+        "source": "packages-ts/galerina-core-cli/src/task-command.ts",
+        "disposition": "task/report orchestrator; exported"
+      },
+      {
+        "symbol": "formatCliResult",
+        "source": "packages-ts/galerina-core-cli/src/output.ts",
+        "disposition": "output formatter; exported"
+      },
+      {
+        "symbol": "redactCliOutputChecked",
+        "source": "packages-ts/galerina-core-cli/src/security.ts",
+        "disposition": "redaction detector; exported"
+      },
+      {
+        "symbol": "redactCliOutput",
+        "source": "packages-ts/galerina-core-cli/src/security.ts",
+        "disposition": "redaction formatter; exported"
+      },
+      {
+        "symbol": "commands",
+        "source": "packages-ts/galerina-core-cli/src/commands.ts",
+        "disposition": "mutable command table despite readonly type; exported"
+      },
+      {
+        "symbol": "findCommand",
+        "source": "packages-ts/galerina-core-cli/src/commands.ts",
+        "disposition": "command lookup; exported"
+      },
+      {
+        "symbol": "FUNGI_CLI_REDACT_001",
+        "source": "packages-ts/galerina-core-cli/src/security.ts",
+        "disposition": "diagnostic constant; exported"
+      }
+    ],
+    "exportedClasses": [],
+    "exportedConstants": [
+      "commands",
+      "FUNGI_CLI_REDACT_001"
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "CliEnvironment",
+        "CliCommand",
+        "CliContext",
+        "CliResult",
+        "RedactionResult"
+      ],
+      "interfaces": [
+        "CliContext",
+        "CliResult",
+        "CliCommand",
+        "RedactionResult"
+      ],
+      "disposition": "CLI contracts remain evidence; parsing, subprocess, filesystem, task and redaction behavior are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-cli/dist/index.js",
+    "sha256": "sha256:b27f2207f52892ef07ce8f7420c41927f1856f2ca9892702f69c12264933d26c",
+    "declarationPath": "packages-ts/galerina-core-cli/dist/index.d.ts",
+    "declarationSha256": "sha256:b6dd044fc04afab666e76d2e6bff05032dbeec62f78be304791726fc88138f3e",
+    "buildCommand": "npm test (includes dependent typecheck and build)",
+    "role": "locally rebuilt CLI oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-cli",
+    "nodes": 11,
+    "edges": 16,
+    "functions": 12,
+    "exportedClassCount": 0,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 16,
+      "EXTERNAL_IMPORTS": 6
+    },
+    "entryPoints": [
+      "src/cli.ts",
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "parseEnvironment",
+      "runCli",
+      "createCoreCommandRunner",
+      "runGraphCommand",
+      "runTaskCommand",
+      "redactCliOutputChecked"
+    ],
+    "note": "Package boundary graph reports eleven scanned files, sixteen internal edges and six external dependencies. AST surfaces are evidence, not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\app-scaffold.test.mjs",
+      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\core-command.test.mjs",
+      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\graph-command.test.mjs",
+      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\security.test.mjs",
+      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\task-command.test.mjs"
+    ],
+    "testSha256": {
+      "app-scaffold.test.mjs": "sha256:f430027646bd9480052a0624312ae526dd3a79186d6cf5f2f8b8d47f7fe522d2",
+      "core-command.test.mjs": "sha256:b338783899066030a7325adbfe2d801482ea4550ce3f8ac51f8caa172e980cb0",
+      "graph-command.test.mjs": "sha256:d8457d91ddc9ed5f357f802c9bdbd21434efc9b8b2a14e1c3b1505a1573d6e4e",
+      "security.test.mjs": "sha256:4b3eb842336bf74c786a33b20063f039767a68671fa7f879e3f6c948da73adbd",
+      "task-command.test.mjs": "sha256:1811cc1e59ab41d337486b57317ebadf7f11af7d516acc5dd3dc5dc8d9d848cc"
+    },
+    "command": "npm test",
+    "result": "PASS 21/21",
+    "coveredBehavior": [
+      "CLI environment and command routing",
+      "compiler subprocess argument and output handling",
+      "graph generation/query/explain/path output",
+      "redaction and diagnostic marker behavior",
+      "task dependency/report and scaffold integration"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-cli/.graph/BOUNDARY.md reports PASS with six external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion/admission expansion",
+    "snapshot": {
+      "head": "4c36cf95d1dbdafe31e724f7835e945a64d7f79a",
+      "tree": "b5b9fac64029017ee946a7e7e758ee7039e8cf21"
+    },
+    "findings": [
+      "Unknown or missing environment values default to development; security:check delegates to the prototype compiler check, serve emits a plan, benchmark is unimplemented, and the main guard checks only whether argv[1] ends with index.js.",
+      "Compiler commands spawn the current Node executable with inherited environment and buffer complete stdout/stderr before reducing each to 80 display lines; no timeout or output-byte cap exists.",
+      "Tasks run sequentially without stopping after a failed dependency. Because core-tasks can return skipped for ordinary execution, the CLI can report completed with exit zero when no operation executed. Dry-run reports are written unless --no-report, and report JSON bypasses CLI redaction. Read failures are all reported as file not found.",
+      "Graph and task output paths lack a containment gate. Traversal follows stat results without realpath deduplication or cycle detection; stat failures silently omit inputs. Generated graph reads use JSON parsing plus a type assertion without schema or freshness validation, and sequential writes can leave partial output sets.",
+      "The redaction replacement callback treats its second argument as an optional capture. For patterns with no capturing group JavaScript supplies the match offset, so bearer and bare-token replacements acquire a numeric prefix before SecureString(redacted). Existing tests do not assert exact replacement text for those cases.",
+      "Assignment detectors run before bare-token detectors and can remove a token before the bare detector sees it. The banner counts detector names rather than token instances and does not alter process exit status. Finite regex coverage cannot justify always-safe output; uncaught errors and written reports bypass the formatter.",
+      "The two Fungi assets provide only a marker and diagnostic-code constant and cite obsolete packages-galerina oracle paths. Scaffold tests invoke scripts/galerina-new.mjs and inspect generated structure/content, but the CLI command table has no new route; tests do not prove scaffold compilation or execution.",
+      "Sibling dist artifacts are rebuilt through explicit package paths even though package metadata does not declare those runtime dependencies; their exact artifacts and host assumptions remain part of this package scope."
+    ],
+    "materialObligations": [
+      "Preserve parser defaults, command dispatch, argument forwarding, exit status and main-module behavior.",
+      "Preserve child-process timeout/output/error semantics and inherited environment boundaries.",
+      "Preserve graph/task path, traversal, schema/freshness, partial-write and reporting behavior or explicitly narrow it before translation.",
+      "Correct and differentially prove redaction replacement and report secrecy before any safe-output authority claim.",
+      "Retain TypeScript as the implementation shadow; the marker-only Fungi assets are not replacements."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-cli",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "CLI parser, command routing, subprocess compiler bridge, graph/task filesystem orchestration and redaction output",
+    "authorityBoundary": "This package is an orchestration and host-effects boundary. The existing Fungi files are constants/markers only; there is no executable Fungi replacement or production authority.",
+    "runtimeObligations": [
+      "Preserve command/environment parsing and argument/error behavior.",
+      "Preserve subprocess custody, output limits, report writes, graph traversal and path semantics.",
+      "Preserve redaction detector ordering and exact replacement semantics, including the identified numeric-prefix defect until separately corrected.",
+      "Keep TypeScript and sibling JavaScript shadows until a separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this CLI scope",
+      "source-to-Fungi artifacts or separately authored admitted implementation",
+      "independent differential vectors for parser defaults, subprocess failures/timeouts, path traversal, graph freshness, report secrecy and redaction replacement",
+      "physical SLIDE/VOK receipt and bounded execution evidence",
+      "consumer enforcement and TypeScript/CommonJS retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core-cli rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent CLI/parser/host-effect gates authorize a named scope."
+}
