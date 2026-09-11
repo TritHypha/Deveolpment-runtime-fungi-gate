@@ -19,9 +19,9 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Retain generic scalar-Option payload support, non-finite input mapping,
   active-object/alias semantics and the custom limits path as explicit remaining
   obligations. No chapter or full conversion completion is claimed.
-- [ ] Repair negative Float64 literal lowering in record initializers; current
-  finite-value differential probes pass typed parameters and do not cover that
-  separate expression-lowering defect.
+- [x] Repair negative Float64 literal and parameter lowering; executable checks
+  preserve signed zero and finite-value guards, retain Decimal refusal, and
+  cover the separate expression defect beyond the validator parameter probes.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

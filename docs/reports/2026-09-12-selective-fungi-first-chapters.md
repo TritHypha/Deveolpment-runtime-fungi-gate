@@ -78,10 +78,14 @@ input mapping, active JS objects, full alias behavior, the limits helper's custo
 path override, physical SLIDE/VOK evidence and production cutover remain separate
 unfinished work. Candidate source creation is not full conversion completion.
 The initial probe also exposed invalid WAT for a negative Float64 literal in a
-record initializer. The differential vectors pass numeric parameters instead,
-so they do not prove that literal-expression lowering. Keep that distinct
-compiler issue on the repair list rather than treating the parameter tests as
-coverage for it.
+record initializer. That separate compiler defect now has a type-directed
+`f64.neg` repair using the existing finite-value guard. The focused regression
+executes negative record literals, fractional expressions and parameters,
+preserves signed zero, and refuses NaN/infinity. Decimal remains an explicit
+trapping refusal; integer overflow paths are unchanged. Before the repair the
+new cases produced three failures; afterward the focused float/record set passed
+39 tests and the signed-integer regressions passed 29. These literal-expression
+checks complement the parameter-based validator comparisons above.
 
 ## Identity and change triggers
 

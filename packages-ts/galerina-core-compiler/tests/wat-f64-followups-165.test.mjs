@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import * as L from "../dist/index.js";
 
-async function run(src) {
+async function runWithWAT(src) {
   const p = L.parseProgram(src, "t.fungi");
   const errs = (p.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((d) => d.message).join("; "));
@@ -19,7 +19,11 @@ async function run(src) {
   assert.equal(asm.valid, true, "module valid: " + JSON.stringify(asm.diagnostics));
   const rt = L.createHostRuntime();
   const { instance } = await WebAssembly.instantiate(asm.wasm, rt.imports);
-  return instance.exports;
+  return { wat, exports: instance.exports };
+}
+
+async function run(src) {
+  return (await runWithWAT(src)).exports;
 }
 
 describe("#165 follow-ups: f64 across flow boundaries and control flow", () => {
@@ -51,5 +55,40 @@ pure flow useit() -> Float contract { effects {} } { let x: Float = add(1.5, 2.5
     const ex = await run(`pure flow neg(a: Float) -> Float contract { effects {} } { return 0.0 - a }`);
     assert.equal(ex.neg(2.5), -2.5);
     assert.equal(ex.neg(-4.0), 4.0);
+  });
+
+  it("unary negative Float64 literals lower through f64.neg in records and direct expressions", async () => {
+    const { wat, exports } = await runWithWAT(`record Sample { value: Float64 }
+pure flow make() -> Sample { return Sample { value: -1.0 } }
+pure flow read(sample: Sample) -> Float64 { return sample.value }
+pure flow direct() -> Float64 { return -0.5 }`);
+    assert.match(wat, /f64\.neg/, "unary Float64 minus must use the f64 lane");
+    assert.doesNotMatch(wat, /fungi_checked_sub_i32 \(i32\.const 0\) \(f64\.const/,
+      "an f64 literal must never enter the checked i32 subtraction helper");
+    assert.equal(exports.read(exports.make()), -1.0);
+    assert.equal(exports.direct(), -0.5);
+  });
+
+  it("unary Float64 parameters preserve signed zero and refuse non-finite inputs", async () => {
+    const ex = await run(`pure flow negate(value: Float64) -> Float64 { return -value }
+pure flow negativeZero() -> Float64 { return -0.0 }`);
+    assert.equal(ex.negate(2.5), -2.5);
+    assert.equal(ex.negate(-4.0), 4.0);
+    assert.equal(Object.is(ex.negativeZero(), -0), true, "f64.neg must preserve IEEE-754 signed zero");
+    assert.throws(() => ex.negate(Number.POSITIVE_INFINITY), WebAssembly.RuntimeError);
+    assert.throws(() => ex.negate(Number.NaN), WebAssembly.RuntimeError);
+  });
+
+  it("unary Decimal remains explicitly refused instead of entering the f64 lane", async () => {
+    const p = L.parseProgram("pure flow negate(value: Decimal) -> Decimal { return -value }", "t.fungi");
+    const fx = L.checkEffects(p.flows, p.ast);
+    const { gir } = L.emitGIR(p.ast, p.flows, fx);
+    const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "wasm-standalone", p.ast, true));
+    assert.match(wat, /Decimal unary '-' is not f64-faithful/);
+    assert.doesNotMatch(wat, /f64\.neg/, "Decimal must not silently use binary floating-point negation");
+    const asm = await L.assembleWAT(wat);
+    assert.equal(asm.valid, true, "the refusal must be a valid trapping module");
+    const { instance } = await WebAssembly.instantiate(asm.wasm, L.createHostRuntime().imports);
+    assert.throws(() => instance.exports.negate(1.0), WebAssembly.RuntimeError);
   });
 });

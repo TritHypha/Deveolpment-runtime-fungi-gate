@@ -1705,7 +1705,8 @@ export function emitWATExpr(
       // magnitude of I64_MIN is 2^63, which is out of range as a POSITIVE const, so `sub 0 (const 2^63)`
       // can't be emitted — `(i64.const -9223372036854775808)` is the only valid form.
       const wantI64u = expectedType !== undefined && INT64_WAT_TYPES.has(numericBaseType(expectedType));
-      const childInt64 = INT64_WAT_TYPES.has(inferExprType(child) ?? "");
+      const childType = inferExprType(child);
+      const childInt64 = INT64_WAT_TYPES.has(childType ?? "");
       if (op === "-" && (wantI64u || childInt64)) {
         if (child?.kind === "numberLiteral" && typeof child.value === "string" && !/[.eE]/.test(child.value)) {
           return `(i64.const -${child.value})`;
@@ -1714,6 +1715,16 @@ export function emitWATExpr(
         const inner = child ? emitWATExpr(child, vars, staticConsts, "Int64") : "(i64.const 0)";
         const innerI64 = childInt64 ? inner : `(i64.extend_i32_s ${inner})`;
         return `(call $fungi_checked_sub_i64 (i64.const 0) ${innerI64})`;
+      }
+      if (op === "-" && FLOAT_WAT_TYPES.has(childType ?? "")) {
+        // Decimal is exact base-10 and must never enter the binary f64 lane. Float, Float64 and
+        // Double use native IEEE-754 negation, guarded to match the interpreter's mkFloat refusal
+        // for NaN and infinities. f64.neg also preserves signed-zero semantics.
+        if (childType === "Decimal") {
+          return `(unreachable) (; Decimal unary '-' is not f64-faithful — emitter declines (no silent f64 money); exact arithmetic is the walker's ;)`;
+        }
+        const inner = child ? emitWATExpr(child, vars, staticConsts, childType) : "(f64.const 0)";
+        return `(call $fungi_assert_finite_f64 (f64.neg ${inner}))`;
       }
       const operand = child ? emitWATExpr(child, vars, staticConsts) : "(i32.const 0)";
       if (op === "-") {

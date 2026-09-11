@@ -9,7 +9,9 @@ The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.
 keeps all six AI-agent and seven core-vector exports in the runtime target while
 retaining declarations and development tools separately. Nested-field lowering
 and optional numeric payload repairs have focused WASM evidence for two existing
-validator twins. Other runtime/border obligations remain open; there is no full
+validator twins. Negative Float64 expression lowering also has focused executable
+regressions, preserving signed zero and non-finite refusal. Other runtime/border
+obligations remain open; there is no full
 chapter closure, consumer switch or production-authority change.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
