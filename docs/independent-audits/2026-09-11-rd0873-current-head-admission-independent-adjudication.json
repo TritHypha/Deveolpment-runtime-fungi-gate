@@ -1,0 +1,120 @@
+{
+  "schema": "galerina.rd0873-current-head-admission-independent-adjudication.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "PASS_CURRENT_HEAD_SCOPED_WAVE_NON_AUTHORIZING",
+  "verdict": "PASS",
+  "closureVerdict": "HOLD",
+  "authorizing": false,
+  "independent": true,
+  "reviewKind": "FRESH_PROJECT_RECEIPT_QUEUE_AND_SCOPED_TWIN_REVALIDATION",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "11ef932a9eeba159adfb72a50447e00fc6ac4d3c",
+    "tree": "0533ddd769286ba2b0111a186aa332432d4b8d51",
+    "workingTree": "DIRTY_PROTECTED_PATHS_PRESERVED",
+    "dirtyPaths": [
+      "build/conversion-queue/QUEUE.md",
+      "build/conversion-queue/queue.json",
+      "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-approval.json",
+      "packages-ts/galerina-devtools-benchmarks/results/compute-mix-latest.json",
+      "packages-ts/galerina-devtools-wasmtime-oracle/package-lock.json"
+    ],
+    "routeAndCorpusFungiDiff": "NONE"
+  },
+  "projectAssurance": {
+    "profile": "PROJECT",
+    "fileCount": 2722,
+    "shardCount": 4,
+    "concurrency": 2,
+    "limits": {
+      "maxFiles": 1360,
+      "maxBytes": 67108864,
+      "maxOutputBytes": 67108864,
+      "timeoutMs": 3400000
+    },
+    "receiptPath": "build/fungi-corpus-check/evidence/rd0873-task8-project-reopened-11ef932a9.json",
+    "receiptFileDigest": "sha256:348c701047929061d12341f92829195b6a4672e2a5fecf58bf0dd9aeb70d6972",
+    "envelopeDigest": "sha256:cb02f68845bbbc79ba7d887f956b384220796812023ab27ee90668e20816c7ba",
+    "requestDigest": "sha256:ca4f1d3cc6bd039cfe06d74db503624689c6e5e93ae496c1ba0ed1e7640a4913",
+    "compilerDigest": "sha256:1861fb7fc690983b7454ceac549fa5b06c8c9446cfd86148f5e9f37e88fdabca",
+    "fileSetDigest": "sha256:e5abf916ffb55172683045e0d856d04d27e080586a8cb5b89f544c6c4fa60405",
+    "aggregate": {
+      "status": "PASS",
+      "resultDigest": "sha256:e2157b12cb19216c4a288960dc61bdda4ec8c59c64070600ad6cc87f1b51e55f",
+      "holdReasons": [],
+      "receiptDigests": [
+        {"shardId":"shard-1-of-4","digest":"sha256:f815c3c8cffb6d6f6a2cd69523ab8a5ba79c71d23f47ea4a72c79105da45fcda"},
+        {"shardId":"shard-2-of-4","digest":"sha256:227d823ac4cf163ff1ef5d7c27c39eefa5825c2c1a394cf2d179d239e962a6de"},
+        {"shardId":"shard-3-of-4","digest":"sha256:787afb9f717616160e957fdc12ee4a792c82c36295b2488995c14e5910bb7133"},
+        {"shardId":"shard-4-of-4","digest":"sha256:838158c1823e1d70f1e1419a146f8ed047de3e88a5918a1fbfdbeb361cfd1417"}
+      ]
+    },
+    "shards": [
+      {"shardId":"shard-1-of-4","startIndex":0,"endIndexExclusive":681,"completed":681,"unprocessed":0,"status":"PASS","termination":"COMPLETE"},
+      {"shardId":"shard-2-of-4","startIndex":681,"endIndexExclusive":1362,"completed":681,"unprocessed":0,"status":"PASS","termination":"COMPLETE"},
+      {"shardId":"shard-3-of-4","startIndex":1362,"endIndexExclusive":2042,"completed":680,"unprocessed":0,"status":"PASS","termination":"COMPLETE"},
+      {"shardId":"shard-4-of-4","startIndex":2042,"endIndexExclusive":2722,"completed":680,"unprocessed":0,"status":"PASS","termination":"COMPLETE"}
+    ]
+  },
+  "queueReconciliation": {
+    "writeResult": "PASS",
+    "checkResult": "PASS",
+    "queuePath": "build/conversion-queue/queue.json",
+    "queueFileDigest": "sha256:d52df9218623a356c70936a4eeba058344d6d8ffdd173f36cdea8b21929b6abf",
+    "projectCorpusReceiptDigest": "sha256:cb02f68845bbbc79ba7d887f956b384220796812023ab27ee90668e20816c7ba",
+    "counts": {
+      "total": 1605,
+      "wholeFileCandidates": 0,
+      "scopedCandidates": 7,
+      "scopedCandidateFiles": 7,
+      "blocked": 921,
+      "bootstrapFloor": 684
+    },
+    "interpretation": "Scoped symbol candidates are non-empty while whole-file CANDIDATE remains zero; no whole-file candidate was invented."
+  },
+  "scopedAdmission": {
+    "scope": "SYMBOLS",
+    "classification": "CANDIDATE",
+    "eligible": [
+      {"symbol":"isEnvironmentMode","path":"packages-ts/galerina-core-config/src/index.ts"},
+      {"symbol":"isOmniUncertain","path":"packages-ts/galerina-core-logic/src/omni/omni-state.ts"},
+      {"symbol":"isTerminalScope","path":"packages-ts/galerina-core-runtime/src/structured-await.ts"},
+      {"symbol":"isTaskEffect","path":"packages-ts/galerina-core-tasks/src/load-tasks.ts"},
+      {"symbol":"isResponseSafeClassification","path":"packages-ts/galerina-data-model/src/index.ts"}
+    ],
+    "physicalHoldExcluded": [
+      {"symbol":"isBuiltin","path":"packages-ts/galerina-devtools-context/src/receipt-generator.ts","reason":"physical profile remains held"},
+      {"symbol":"validateTransition","path":"packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts","reason":"two-input physical shape remains held"}
+    ],
+    "typescriptShadowsRetained": true,
+    "consumerSwitch": false,
+    "productionAuthority": false
+  },
+  "tests": {
+    "focusedTwinSuites": {"suites":7,"tests":14,"passed":14,"failed":0},
+    "receiptAndShardSuites": {"tests":87,"passed":87,"failed":0}
+  },
+  "checks": [
+    {"id":"exact-head-tree-readback","result":"PASS"},
+    {"id":"request-validation","result":"PASS"},
+    {"id":"shard-validation","result":"PASS"},
+    {"id":"complete-non-overlapping-coverage","result":"PASS"},
+    {"id":"conversion-queue-write-and-check","result":"PASS"},
+    {"id":"eligible-twin-tests","result":"PASS"},
+    {"id":"receipt-shard-regression-tests","result":"PASS"},
+    {"id":"protected-dirty-paths","result":"PASS"}
+  ],
+  "authorityAndCustodyGates": {
+    "queueMutation": true,
+    "newFungiAuthoring": true,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "remotePublication": "NOT_REQUESTED"
+  },
+  "decisionRationale": "The current committed head has a complete exact-head PROJECT PASS and current queue binding. Five approved scalar symbol dossiers are eligible for a reversible review-only wave; isBuiltin and validateTransition remain excluded by their physical holds. Existing twins and shadows pass focused differentials. This record is non-authorizing and does not switch consumers or release production authority."
+}
