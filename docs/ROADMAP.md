@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-sentinel-time - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+46fcc914d7ab99fa6b708186460f7acdc05ddfc6 with tree
+04e7c4a93f56af23a3546ef666c893c484b62e20 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-time-source-dossier.json.
+The package boundary graph covers five nodes and six internal edges with no
+external dependencies. It contains four TypeScript source files, one registered
+synchronization-gate.fungi asset, and runtime surfaces for logical ticks and
+physical drift enforcement.
+
+Typecheck, build and the four focused suites pass **14/14**, including clock
+tick/advance/reset, synchronization preconditions, positive/negative drift and
+RD-0361 bounded checks. The existing Fungi asset folds only host-supplied sync
+and drift facts; it does not implement clock mutation, physical-time arithmetic,
+Math.abs or exception details. Astra's same-head review keeps translation on
+HOLD because large Number.isInteger values can round or overflow, reset/re-sync
+and the envelope are mutable, timestamps/rates/drift accept invalid values, and
+integer marshalling cannot represent JavaScript non-finite behavior. RTC sourcing
+and AuditLogger integration remain external seams.
+
+One queue row remains `BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY` and seven
+remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains `CANDIDATE: 0`. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires exact
+non-empty owner admission, bounded timing differential and physical proof,
+SLIDE/VOK receipt, bounded execution evidence and independent review. Git remains
+provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-sentinel-state - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

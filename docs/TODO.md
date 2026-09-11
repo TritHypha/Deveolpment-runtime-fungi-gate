@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-sentinel-time - 2026-09-11
+
+- [x] Assessed the four TypeScript source files under
+  packages-ts/galerina-core-sentinel-time/src from exact main HEAD
+  46fcc914d7ab99fa6b708186460f7acdc05ddfc6 / tree
+  04e7c4a93f56af23a3546ef666c893c484b62e20 through the package boundary
+  graph, four focused test files and one registered Fungi asset.
+- [x] Recorded the exported logical-clock/synchronization classes, type
+  surface, existing synchronization-gate twin and exact source/test/build
+  hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-time-source-dossier.json.
+  The existing asset remains non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 14/14. The package boundary
+  reports PASS with five nodes, six internal edges and no external dependencies.
+- [x] Astra's same-head advisory records Number.isInteger precision/overflow,
+  reset and re-sync lifecycle, mutable envelope state, unchecked fractional,
+  negative and non-finite drift inputs, integer marshalling, limited RD-0361
+  coverage and external RTC/AuditLogger seams.
+- [!] One package row remains BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY;
+  the other seven remain BLOCKED:DOSSIER_REQUIRED. The conserved queue remains
+  CANDIDATE: 0. No Fungi source, queue relabel, consumer switch, TypeScript
+  retirement or corpus assurance rerun occurred.
+- [!] Keep timing translation closed until numeric precision/domain, lifecycle,
+  host clock provenance, marshalling and exact Fungi parity are resolved under a
+  separate exact non-empty owner admission with independent differential,
+  physical SLIDE/VOK, execution and receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-sentinel-state - 2026-09-11
 
 - [x] Assessed the five TypeScript source files under

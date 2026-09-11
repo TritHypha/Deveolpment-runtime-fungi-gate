@@ -1,0 +1,311 @@
+{
+  "schema": "galerina.rd0873.galerina-core-sentinel-time-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for deterministic logical time and physical synchronization decisions without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "46fcc914d7ab99fa6b708186460f7acdc05ddfc6",
+    "tree": "04e7c4a93f56af23a3546ef666c893c484b62e20"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/errors.ts",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/index.ts",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/logical-clock.ts",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/synchronization-gate.ts",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/tests/_helpers.mjs",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/tests/logical-clock.test.mjs",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/tests/rd0361-execution-cutover.test.mjs",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/tests/synchronization-gate.test.mjs",
+        "package": "galerina-core-sentinel-time",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-sentinel-time",
+    "packageJsonSha256": "sha256:4477209514a77ba6a2af32372fb7067925e8a4fe091f6b711638426777790940",
+    "packageLockSha256": "sha256:f884904ebd2e857c7888e4c1f1803ac17e9a27835ca2d056bfd0dd19da2b27c9",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-sentinel-time/.graph/BOUNDARY.md",
+      "sha256": "sha256:9e64426f831d3f3e4ac90e0b72248c4f358cca315d7ed439a9b49ed46e665425",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 4,
+    "testFileCount": 4,
+    "loadedFungiAssetCount": 1,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi",
+        "sha256": "sha256:f554b211560eafe4ff2d4931642b757cc4c891de7aea772cdb96ad8f501d4019",
+        "kind": "existing non-authorizing synchronization decision asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-time/src/synchronization-gate.ts#SynchronizationGate",
+        "fungi": "packages-ts/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi",
+        "status": "existing bounded drift decision twin; RTC sourcing, arithmetic and TypeScript remain authority shadow"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/errors.ts",
+        "sha256": "sha256:ca806a8bbc06a6ef2ea10c49b9f32be29f5538a826cbb6e8022e62dce474a06f",
+        "utf8Bytes": 721
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/index.ts",
+        "sha256": "sha256:40741e153e020ac91f683ef9ec00cdbb6ea7d9932e5bb3b6ccdd0a345afc1a3f",
+        "utf8Bytes": 589
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/logical-clock.ts",
+        "sha256": "sha256:d17fb2a3f5fb946d64897301d49c0c58274a968aab5bcea191fb675d84546747",
+        "utf8Bytes": 2030
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-time/src/synchronization-gate.ts",
+        "sha256": "sha256:96bdea1d7115e9b933719f5f1647614e635fd4da06b823e094d3e1b5e36ab947",
+        "utf8Bytes": 3014
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [],
+    "exportedClasses": [
+      {
+        "symbol": "LogicalClock",
+        "source": "packages-ts/galerina-core-sentinel-time/src/logical-clock.ts",
+        "span": {
+          "start": 22,
+          "end": 61
+        },
+        "sourceSha256": "sha256:d17fb2a3f5fb946d64897301d49c0c58274a968aab5bcea191fb675d84546747",
+        "bodySha256": "sha256:6f02d3fc762158dd8c72fd7dc8b2769f87c785d9ad782860dc84ff197af5c4a4",
+        "bodyUtf8Bytes": 1079
+      },
+      {
+        "symbol": "PrecisionFault",
+        "source": "packages-ts/galerina-core-sentinel-time/src/errors.ts",
+        "span": {
+          "start": 10,
+          "end": 17
+        },
+        "sourceSha256": "sha256:ca806a8bbc06a6ef2ea10c49b9f32be29f5538a826cbb6e8022e62dce474a06f",
+        "bodySha256": "sha256:9b35a32854867a627b4404b98ecb836dbfe53285056fd2ef77c2f55d8ea0b874",
+        "bodyUtf8Bytes": 204
+      },
+      {
+        "symbol": "SynchronizationGate",
+        "source": "packages-ts/galerina-core-sentinel-time/src/synchronization-gate.ts",
+        "span": {
+          "start": 26,
+          "end": 77
+        },
+        "sourceSha256": "sha256:96bdea1d7115e9b933719f5f1647614e635fd4da06b823e094d3e1b5e36ab947",
+        "bodySha256": "sha256:b93f7871ba10a7d9e9f6308866b606ee4fdfffa759dc7897dadf45349dda38d4",
+        "bodyUtf8Bytes": 1844
+      }
+    ],
+    "exportedConstants": [],
+    "typeOnlySurface": {
+      "types": [],
+      "interfaces": [
+        "StabilityEnvelope"
+      ],
+      "disposition": "type contracts remain evidence; logical clock and synchronization gate are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-sentinel-time/dist/index.js",
+    "sha256": "sha256:49ce4d89757c231ad6356dfa02558c4d87879abb6cee2ab60d632fc0ff5f4e11",
+    "declarationPath": "packages-ts/galerina-core-sentinel-time/dist/index.d.ts",
+    "declarationSha256": "sha256:bd49031be630b3b56bc2304714b649c6b1196295e87fbf03c75a1b519375d6a1",
+    "buildCommand": "npm test (includes build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-sentinel-time",
+    "nodes": 5,
+    "edges": 6,
+    "functions": 0,
+    "exportedClassCount": 3,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 6,
+      "EXTERNAL_IMPORTS": 0
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "LogicalClock.tick",
+      "LogicalClock.advance",
+      "LogicalClock.reset",
+      "SynchronizationGate.syncToPhysical",
+      "SynchronizationGate.expectedTicks",
+      "SynchronizationGate.driftTicks",
+      "SynchronizationGate.enforceDrift"
+    ],
+    "note": "Boundary graph reports five nodes and six internal edges with no external dependencies. Function/class surfaces are AST-derived and are not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-sentinel-time/tests/_helpers.mjs",
+      "packages-ts/galerina-core-sentinel-time/tests/logical-clock.test.mjs",
+      "packages-ts/galerina-core-sentinel-time/tests/rd0361-execution-cutover.test.mjs",
+      "packages-ts/galerina-core-sentinel-time/tests/synchronization-gate.test.mjs"
+    ],
+    "testSha256": {
+      "_helpers.mjs": "sha256:6ec4a92a2385a025ce450f088bdbfdd2f967ab837e32e252cd99e7a1241c8087",
+      "logical-clock.test.mjs": "sha256:cf93619ec606ae439a76ce3a04bf4281b878c95dbd2095cefcd55bc185e32943",
+      "rd0361-execution-cutover.test.mjs": "sha256:d6d23d199372ff96d3d2e2b1d425fadafd0daf720409418c409c6355dd484b8a",
+      "synchronization-gate.test.mjs": "sha256:ddf383216f8bb2ba6ecb5b5c91e0d47191e8d86131c0375877227aa42c5ecc7e"
+    },
+    "command": "npm test",
+    "result": "PASS 14/14",
+    "coveredBehavior": [
+      "logical clock tick/now/advance/reset and invalid-integer refusal",
+      "deterministic repeated sequences",
+      "sync preconditions and physical-to-logical expected ticks",
+      "positive/negative drift and strict envelope boundary",
+      "RD-0361 synchronization-gate bounded differential"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-sentinel-time/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "46fcc914d7ab99fa6b708186460f7acdc05ddfc6",
+      "tree": "04e7c4a93f56af23a3546ef666c893c484b62e20"
+    },
+    "findings": [
+      "LogicalClock validation uses Number.isInteger rather than Number.isSafeInteger. Large accepted values can stop increasing on tick due to floating-point rounding and unchecked addition can overflow; -0 is accepted. Preserve these semantics or separately approve a correction.",
+      "reset can move the clock backwards without updating a previously synchronized gate boot tick, and syncToPhysical can re-anchor repeatedly. The synchronization envelope is retained by reference and can change after construction.",
+      "Timestamps, rates and envelope values are unvalidated: fractions, negative values and non-finite values are accepted. NaN drift or NaN maxDriftTicks bypasses the strict greater-than refusal; equality passes, negative ceilings reject finite nonnegative magnitudes and infinite ceilings can allow infinite drift.",
+      "The existing Fungi asset provides syncGateVerdict and driftGateVerdict over host-supplied integer facts. It does not implement clock mutation, physical-time arithmetic, Math.abs or exception details; integer marshalling must not silently round fractional drift or represent JavaScript non-finite values.",
+      "RD-0361 compares Wasm and TypeScript over ten small integer boundary cases plus two synchronization cases; its oracle catches every exception as DENY and does not prove error-code/message equivalence, precision loss, non-finite values, mutable envelopes, reset/resynchronization or RTC quality.",
+      "The package reads no physical clock itself. RTC sourcing, nominal-rate/envelope selection and AuditLogger integration remain external seams; current tests do not establish operational timing guarantees."
+    ],
+    "materialObligations": [
+      "Preserve Number.isInteger versus safe-integer behavior, overflow/rounding, -0 acceptance and reset/resynchronization lifecycle semantics.",
+      "Bind timestamp/rate/envelope domains, non-finite handling, strict equality boundary and mutable-reference custody before authority claims.",
+      "Preserve host physical-time arithmetic, integer marshalling, exception/error ordering and the exact sync/drift verdict boundary.",
+      "Keep synchronization-gate.fungi non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-sentinel-time",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded logical clock tick/advance/reset and physical synchronization/drift verdict decisions",
+    "authorityBoundary": "This package binds logical time to host physical time and governs timing faults. Existing Fungi folds are decision evidence only; they are not a clock, RTC or authority replacement.",
+    "runtimeObligations": [
+      "Preserve clock precision, rounding/overflow, reset and synchronization lifecycle behavior.",
+      "Preserve physical-time arithmetic, numeric domains, drift strictness, exceptions and fail-closed errors.",
+      "Preserve host RTC and AuditLogger seams without claiming operational timing or hardware authority.",
+      "Keep Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this timing scope",
+      "source-to-Fungi artifacts and exact twin hashes for clock arithmetic and drift decisions",
+      "independent differential vectors for large integers, -0, NaN/Infinity, fractional/negative rates, mutable envelopes, re-sync/reset and error ordering",
+      "physical RTC/calibration and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep galerina-core-sentinel-time rows BLOCKED with existing reasons and CANDIDATE at zero until a separate exact non-empty owner admission and independent timing/differential and physical gates authorize a named scope."
+}
