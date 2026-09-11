@@ -1,0 +1,232 @@
+{
+  "schema": "galerina.rd0873.galerina-ai-neuromorphic-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "e9af8016fc979a630e4d3313b4ade9051700636a",
+    "tree": "6e093ae617e076d0d3264065fabc8ba2265d4f0f"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-ai-neuromorphic/src/index.ts",
+        "package": "galerina-ai-neuromorphic",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-ai-neuromorphic/tests/neuromorphic-contracts.test.mjs",
+        "package": "galerina-ai-neuromorphic",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-ai-neuromorphic/tests/pat-neu-01-boundary.test.mjs",
+        "package": "galerina-ai-neuromorphic",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-ai-neuromorphic",
+    "packageJsonSha256": "sha256:763d2b762d9dd502eeac0681770cdf46ba5fa5df28ae84ed4d37b37b635c1148",
+    "readmeSha256": "sha256:70e6bb963c77b726ed4a967b3e59b35490954ff2025c134b188ecb6f32634025",
+    "boundaryReport": {
+      "path": "packages-ts/galerina-ai-neuromorphic/.graph/BOUNDARY.md",
+      "sha256": "sha256:6a21ce3876d1128438297976152007e028120589f1aa91fc6ea44c75b56c1d0f",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 2,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "path": "packages-ts/galerina-ai-neuromorphic/src/index.ts",
+    "sourceSha256": "sha256:5f832b1cafd8240bdfbf2beefff5da6312c7d59667ecd0f4675a8208399342a0",
+    "sourceUtf8Bytes": 9841,
+    "existingTwin": null,
+    "typeOnlySurface": {
+      "interfacesAndTypes": [
+        "Spike",
+        "SpikeTrain",
+        "EventSignal<TPayload>",
+        "SpikingModel",
+        "NeuromorphicPlan",
+        "NeuromorphicReport",
+        "NeuromorphicDiagnosticSeverity",
+        "NeuromorphicDiagnostic"
+      ],
+      "disposition": "type-contract-only; no independent runtime translation unit"
+    },
+    "runtimeSymbols": [
+      {
+        "symbol": "validateSpikeTrain",
+        "span": { "start": 77, "end": 137 },
+        "signature": "export function validateSpikeTrain(train: SpikeTrain, path?: string): readonly NeuromorphicDiagnostic[]",
+        "sourceSha256": "sha256:5f832b1cafd8240bdfbf2beefff5da6312c7d59667ecd0f4675a8208399342a0",
+        "bodySha256": "sha256:36a7f8e8fe831972413a30c1c17c12b2b22ed1d88439f321f001875aaeb95609",
+        "bodyUtf8Bytes": 1914,
+        "disposition": "spike source, finite time/amplitude and ordered-train validator"
+      },
+      {
+        "symbol": "validateSpikingModel",
+        "span": { "start": 143, "end": 202 },
+        "signature": "export function validateSpikingModel(model: SpikingModel, path?: string): readonly NeuromorphicDiagnostic[]",
+        "sourceSha256": "sha256:5f832b1cafd8240bdfbf2beefff5da6312c7d59667ecd0f4675a8208399342a0",
+        "bodySha256": "sha256:8269c5a906b0028951054fae41823ffcb80cbd412fc6c1c5bc7c4a713c81f1a7",
+        "bodyUtf8Bytes": 1795,
+        "disposition": "spiking-model topology validator with zero-synapse warning"
+      },
+      {
+        "symbol": "validateNeuromorphicPlan",
+        "span": { "start": 208, "end": 278 },
+        "signature": "export function validateNeuromorphicPlan(plan: NeuromorphicPlan, path?: string): readonly NeuromorphicDiagnostic[]",
+        "sourceSha256": "sha256:5f832b1cafd8240bdfbf2beefff5da6312c7d59667ecd0f4675a8208399342a0",
+        "bodySha256": "sha256:b8d7e531bdac8ca98aa0380338c31762caa7650ff51e3d44cabc1768d20d0093",
+        "bodyUtf8Bytes": 2205,
+        "disposition": "bounded event/timeout and fallback-satisfiability validator"
+      },
+      {
+        "symbol": "createNeuromorphicReport",
+        "span": { "start": 282, "end": 297 },
+        "signature": "export function createNeuromorphicReport(input: { readonly plans: readonly NeuromorphicPlan[] }): NeuromorphicReport",
+        "sourceSha256": "sha256:5f832b1cafd8240bdfbf2beefff5da6312c7d59667ecd0f4675a8208399342a0",
+        "bodySha256": "sha256:18544d09d7900ab1918b5edb66085949f04fba1ace812b9d46189dd4e8665941",
+        "bodyUtf8Bytes": 427,
+        "disposition": "report projection that lifts warning messages from each plan"
+      },
+      {
+        "symbol": "createNeuromorphicDiagnostic",
+        "span": { "start": 59, "end": 71 },
+        "signature": "function createNeuromorphicDiagnostic(code: string, severity: NeuromorphicDiagnosticSeverity, message: string, path?: string): NeuromorphicDiagnostic",
+        "sourceSha256": "sha256:5f832b1cafd8240bdfbf2beefff5da6312c7d59667ecd0f4675a8208399342a0",
+        "bodySha256": "sha256:bce623ed1257322016fa3f17ca6531f3eaa3a526149b8710264a3e735b4e48af",
+        "bodyUtf8Bytes": 263,
+        "exported": false,
+        "disposition": "dependency obligation for diagnostic record construction"
+      }
+    ]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-ai-neuromorphic/dist/index.js",
+    "sha256": "sha256:7f0768ee984a4f2f7148b22ada601f1310a1a48e9bbc26b28db8e39e45e2df36",
+    "declarationPath": "packages-ts/galerina-ai-neuromorphic/dist/index.d.ts",
+    "declarationSha256": "sha256:01c90dcec14de9aa7162938c72412095707fb101323f900407b6c138b4400f56",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-ai-neuromorphic",
+    "nodes": 55,
+    "edges": 77,
+    "functions": 11,
+    "edgeTypes": { "DEFINES": 48, "CALLS": 15, "USAGE": 13, "SEMANTICALLY_RELATED": 1 },
+    "entryPoints": [
+      "validateSpikeTrain",
+      "validateSpikingModel",
+      "validateNeuromorphicPlan",
+      "createNeuromorphicReport"
+    ],
+    "callersAndCallees": {
+      "validateSpikeTrain": { "callers": ["neuromorphic-contracts.test.mjs"], "callees": ["createNeuromorphicDiagnostic", "Array.forEach", "Array.push", "String.trim", "Number.isFinite"] },
+      "validateSpikingModel": { "callers": ["neuromorphic-contracts.test.mjs"], "callees": ["createNeuromorphicDiagnostic", "Array.push", "String.trim", "Number.isSafeInteger"] },
+      "validateNeuromorphicPlan": { "callers": ["createNeuromorphicReport", "neuromorphic-contracts.test.mjs"], "callees": ["createNeuromorphicDiagnostic", "Array.push", "String.trim", "Number.isSafeInteger", "Array.includes", "Array.join"] },
+      "createNeuromorphicReport": { "callers": ["neuromorphic-contracts.test.mjs"], "callees": ["validateNeuromorphicPlan", "Array.forEach", "Array.push"] },
+      "createNeuromorphicDiagnostic": { "callers": ["validateSpikeTrain", "validateSpikingModel", "validateNeuromorphicPlan"], "callees": [] }
+    },
+    "note": "Graph discovery identifies local bodies and collection/string/number-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "tests": [
+      {
+        "path": "packages-ts/galerina-ai-neuromorphic/tests/neuromorphic-contracts.test.mjs",
+        "sha256": "sha256:665d799f9c7373b9847fd5a29dd24915fa7d2eb64450a3f62e5c14a4e92ff14d",
+        "coverage": "14 contract cases"
+      },
+      {
+        "path": "packages-ts/galerina-ai-neuromorphic/tests/pat-neu-01-boundary.test.mjs",
+        "sha256": "sha256:af907fd35a3076702ec9ec99c86992331dad02db7b53a123639f8350254d6840",
+        "coverage": "4 private, non-executable boundary cases"
+      }
+    ],
+    "command": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
+    "result": "PASS 18/18",
+    "coveredBehavior": [
+      "finite non-negative spike times, positive amplitudes and one ordered-train warning",
+      "spiking-model name/channel/count checks and zero-synapse warning",
+      "bounded event/timeout and fallback-satisfiability checks",
+      "report warning lifting",
+      "private post-v1 boundary with no executable circuit or actuator API"
+    ],
+    "packageBoundary": "packages-ts/galerina-ai-neuromorphic/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-ai-neuromorphic",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous spike/model/plan validators and report projection over typed records, arrays, strings and finite/safe-integer numbers",
+    "authorityBoundary": "The package is explicitly private, post-v1 and non-executable; it describes validated records and bounded plans but does not address neural circuits, actuators, inference, scheduling or hardware control.",
+    "runtimeObligations": [
+      "Preserve source and neuron trim behavior, finite non-negative times, optional finite positive amplitudes, order warning suppression and invalid-time handling in validateSpikeTrain.",
+      "Preserve input/output emptiness checks, safe-integer neuron/synapse checks, zero-synapse warning severity and diagnostic order in validateSpikingModel.",
+      "Preserve plan flow/model trim checks, safe-integer event ceiling, positive timeout comparison, fallback membership and the reject-without-target unsatisfiable branch.",
+      "Preserve createNeuromorphicReport's plan-array alias, per-plan traversal order and warning-only lifting semantics.",
+      "Preserve absent-versus-present path handling in createNeuromorphicDiagnostic."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming the four exported and one private runtime scopes and bounded wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for plain records and hostile getters, proxies, sparse arrays, custom iterators, mutation and thrown accessors",
+      "host substitution or equivalent proof for Array.forEach/includes/join, String.trim, Number.isFinite/isSafeInteger and property access",
+      "bounded physical profile for record/array/string/number ABI, allocation, aliasing, work limits and typed failures",
+      "explicit treatment of NaN, Infinity, fractions, invalid event order and malformed spike/model/plan records",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head",
+      "separate owner review if any future proposal would move this private post-v1 surface toward executable neuromorphic behavior"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep all three galerina-ai-neuromorphic queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact non-empty authorizing admission, resolves the recorded runtime semantics and bounded physical/differential gates, and obtains independent review."
+}
