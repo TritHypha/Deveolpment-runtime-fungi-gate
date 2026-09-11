@@ -1,0 +1,95 @@
+{
+  "schema": "galerina.rd0873-held-symbol-revalidation.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "PASS_NON_AUTHORIZING_HELD_SYMBOL_RECHECK",
+  "authorizing": false,
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "e0cb4c35e45a037b04888a73269baf96329721a8",
+    "parentHead": "357c689a691fa7982730e486dd1035601623457e",
+    "note": "The source and twin content hashes below remain bound to the pre-receipt source tree; the governance receipt commit changed documentation only."
+  },
+  "purpose": "Recheck the three previously held existing twins without clearing their admission holds or rerunning the completed PROJECT corpus.",
+  "results": [
+    {
+      "symbol": "isOmniUncertain",
+      "package": "galerina-core-logic",
+      "source": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+      "existingTwin": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+      "sourceDigest": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+      "twinDigest": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "sourceBytes": 3176,
+      "twinBytes": 416,
+      "focusedSuite": "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "focusedTests": "2/2 PASS",
+      "defaultVectors": 17,
+      "semanticControl": {
+        "status": "HOLD",
+        "evidence": "OMNI_UNCERTAIN_STATES is exported as ReadonlySet but remains runtime-mutable; adding and deleting a state changes isOmniUncertain behavior.",
+        "requiredResolution": "Freeze or otherwise make the source state set semantically immutable, or provide an explicitly admitted mutation-preserving Fungi shape and evidence."
+      },
+      "admission": "HELD"
+    },
+    {
+      "symbol": "isBuiltin",
+      "package": "galerina-devtools-context",
+      "source": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+      "existingTwin": "packages-ts/galerina-devtools-context/src/self-hosted/builtin-name.fungi",
+      "sourceDigest": "sha256:e217c176f42f216ceb00c1d253329650b4585d241cfbc2596ac64418372d8f1c",
+      "twinDigest": "sha256:fe6be087673df88b75c6eacb091ade8b2ed3f85718df72a4d542283422b44cc1",
+      "sourceBytes": 21113,
+      "twinBytes": 750,
+      "focusedSuite": "packages-ts/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
+      "focusedTests": "2/2 PASS",
+      "defaultVectors": 24,
+      "hostSubstitution": {
+        "status": "PASS",
+        "vectors": 24,
+        "control": "Set.prototype.has was replaced after compilation; all signed-Wasm vectors retained their expected results."
+      },
+      "admission": "HELD_FOR_PHYSICAL_PROFILE"
+    },
+    {
+      "symbol": "validateTransition",
+      "package": "galerina-devtools-project-graph",
+      "source": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+      "existingTwin": "packages-ts/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi",
+      "sourceDigest": "sha256:6da04dd24a2ba4c7334c998d30bf96a75d10ba46cc5bb414791a29342f44bfd2",
+      "twinDigest": "sha256:2dbc316a00a190598f19b1244a76c6509116ab27ba40c8e35ecc495be63f5d0b",
+      "sourceBytes": 5264,
+      "twinBytes": 1037,
+      "focusedSuite": "packages-ts/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs",
+      "focusedTests": "2/2 PASS",
+      "defaultVectors": 242,
+      "hostSubstitution": {
+        "status": "PASS",
+        "vectors": 242,
+        "control": "Set.prototype.has and Map.prototype.get were replaced after compilation; every 11 by 11 signed-Wasm vector retained its expected result."
+      },
+      "admission": "HELD_FOR_PHYSICAL_PROFILE"
+    }
+  ],
+  "aggregate": {
+    "focusedSuites": 2,
+    "focusedTests": 4,
+    "focusedPasses": 4,
+    "hostSubstitutionVectors": 266,
+    "hostSubstitutionStatus": "PASS",
+    "newFungiSourceFiles": 0,
+    "projectCorpusRerun": false,
+    "typescriptShadowsRetained": true
+  },
+  "closedScope": {
+    "clearHeldSymbols": false,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChange": false,
+    "remotePublication": false,
+    "gitRole": "provenance-only"
+  },
+  "verdict": "The held twins remain technically revalidated under their existing profiles, but their recorded semantic or physical admission holds remain unchanged."
+}

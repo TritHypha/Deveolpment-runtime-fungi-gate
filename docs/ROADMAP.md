@@ -33,6 +33,13 @@ bulk authoring, consumer switching, TypeScript retirement, production
 authority, topology changes, remote publication and the completed 2,722-file
 PROJECT corpus rerun remain closed.
 
+A read-only held-symbol recheck then passed both held physical twins (`4/4`
+focused tests; `266/266` signed-Wasm host-substitution vectors) while keeping
+their physical holds. The Omni suite passed its default vectors, but the
+exported `ReadonlySet` mutation probe remains a semantic HOLD. The record is
+`docs/independent-audits/2026-09-11-rd0873-held-symbol-revalidation.json`;
+it grants no admission authority.
+
 ## RD-0873 current bounded-wave verification checkpoint - 2026-09-11
 
 The current local `main` remains at exact HEAD

@@ -32,6 +32,11 @@ counts or open items that a newer section explicitly supersedes.
   holds. Unrestricted bulk authoring, consumer switching, TypeScript
   retirement, production authority, topology changes and remote publication
   remain closed.
+- [x] Rechecked the held twins without clearing their holds: the two physical
+  suites pass `4/4`, and signed-Wasm host-substitution checks pass `266/266`.
+  The Omni suite passes its default vectors, while the exported-set mutation
+  probe remains a semantic HOLD. Evidence is
+  `docs/independent-audits/2026-09-11-rd0873-held-symbol-revalidation.json`.
 
 ### RD-0873 current bounded-wave verification checkpoint - 2026-09-11
 
