@@ -3,6 +3,27 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 current housekeeping state - 2026-09-11
+
+The current working model is local `main` HEAD
+`560920cf4ce103722c6d8703f764c203ac8a7945` with tree
+`e29f2484685dd1f63e1da5265a3b20db6352c2a1`. Wave 01 contains four bounded
+AI-agent validator twins; Wave 02 verified seven existing twins. TypeScript is
+retained and no consumer authority has moved.
+
+Waves 03 and 04 remain held because their mutable containers, Map/Set and
+callback behavior, hostile accessors, sparse arrays, aliasing and numeric or
+malformed-object cases do not yet have an admitted profile plus physical
+SLIDE/VOK evidence. The queue is unchanged at 1,605 rows with
+`CANDIDATE: 0` (`921 BLOCKED`, `684 BOOTSTRAP_FLOOR`) under queue SHA
+`60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784`.
+
+The housekeeping run is `HOUSEKEEPING REFUSED`/HOLD: it recorded 716 existing
+bounded-execution findings and a hard-linked release executable. No cleanup was
+performed, and the historical full-corpus receipt was not rerun. Future waves
+must be manifest-driven and resumable, with a bounded receipt after each shard;
+Astra is an advisory cross-check, not an authority substitute.
+
 ## RD-0873 current-head translation gate - 2026-09-11
 
 The proposed first wave is rebound to exact `main` HEAD

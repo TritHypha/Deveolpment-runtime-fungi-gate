@@ -7,6 +7,24 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## RD-0873 housekeeping checkpoint - 2026-09-11
+
+This checkpoint is non-authorizing and binds the local working model at
+`560920cf4ce103722c6d8703f764c203ac8a7945` / tree
+`e29f2484685dd1f63e1da5265a3b20db6352c2a1`. Wave 01 has four bounded source
+twins and Wave 02 has seven verified existing twins. Waves 03 and 04 remain
+held pending explicit semantic-profile admission and physical SLIDE/VOK proof;
+TypeScript shadows, queue state and production arrays remain unchanged.
+
+The queue digest is
+`60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784` with
+1,605 rows and zero candidates. The bounded housekeeping run refused with 716
+existing audit findings and a hard-linked release executable. No cleanup,
+production receipt, consumer switch, corpus rerun or authority release follows
+from this entry. Future translation waves require a fixed manifest, bounded
+per-shard receipt, exact-head recheck and fail-closed resume point; external
+model advice, including Astra, remains advisory.
+
 ## Schema-v3 lanes
 
 `candidates` is non-authorizing research and migration evidence. Each entry

@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 housekeeping and translation continuity checkpoint - 2026-09-11
+
+- [x] Rebound the working model to local `main` HEAD
+  `560920cf4ce103722c6d8703f764c203ac8a7945` / tree
+  `e29f2484685dd1f63e1da5265a3b20db6352c2a1`.
+- [x] Wave 01 source work is limited to four bounded AI-agent validator twins
+  in `packages-ts/galerina-ai-agent/src/self-hosted/`; TypeScript remains
+  retained.
+- [x] Wave 02 verified seven existing twins without creating source or mutating
+  the queue: `isEnvironmentMode`, `isOmniUncertain`, `isTerminalScope`,
+  `isTaskEffect`, `isResponseSafeClassification`, `isBuiltin` and
+  `validateTransition`.
+- [!] Waves 03 and 04 remain `HOLD`: mutable record/array, Map/Set, callback,
+  getter/proxy, sparse-array, alias/mutation, numeric and malformed-object
+  semantics still lack an admitted bounded profile and physical SLIDE/VOK
+  evidence. No source authoring or consumer switch is authorized for these
+  waves.
+- [x] The conserved queue is unchanged at SHA
+  `60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784`:
+  1,605 rows, `CANDIDATE: 0`, `BLOCKED: 921`, `BOOTSTRAP_FLOOR: 684`.
+- [!] Bounded housekeeping returned `HOUSEKEEPING REFUSED` and remains HOLD:
+  716 pre-existing bounded-execution findings were reported, and the inventory
+  encountered a hard-linked release executable. No cleanup or quarantine was
+  performed. The historical 2,720/2,722 corpus receipt was not rerun.
+- [ ] For any future wave, use a fixed manifest, one symbol/file scope, one
+  resumable receipt, and a fail-closed checkpoint before the next shard. Astra
+  may challenge the design; it cannot replace owner admission or physical
+  evidence.
+
 ### RD-0873 current-head translation gate - 2026-09-11
 
 - [x] Rebound the proposed first wave to exact `main` HEAD

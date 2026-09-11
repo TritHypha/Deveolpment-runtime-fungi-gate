@@ -1,5 +1,31 @@
 # RD-0873 integration checkpoint
 
+## Current local model and housekeeping - 2026-09-11
+
+The active implementation worktree is on local `main` at
+`560920cf4ce103722c6d8703f764c203ac8a7945` with tree
+`e29f2484685dd1f63e1da5265a3b20db6352c2a1`. Wave 01 added four bounded
+AI-agent validator twins; Wave 02 verified seven existing twins. Wave 03 and
+Wave 04 remain `HOLD` for unsupported mutable/accessor/container/numeric
+semantics and missing physical SLIDE/VOK evidence. TypeScript remains the
+source shadow, and no consumer switch, retirement or production authority was
+released.
+
+The conserved queue is unchanged at 1,605 rows (`921 BLOCKED`,
+`684 BOOTSTRAP_FLOOR`, `CANDIDATE: 0`) under SHA
+`60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784`.
+The bounded housekeeping run returned `HOUSEKEEPING REFUSED`/HOLD after 716
+existing bounded-execution findings and a hard-linked release executable were
+reported. No cleanup was attempted, and the historical full-corpus receipt was
+not rerun. Git is being used for provenance and storage; no push or merge has
+yet been performed for this checkpoint.
+
+To resume safely, each future wave must use a fixed manifest and bounded
+per-shard receipt, then recheck exact head and resume from the last accepted
+checkpoint. Astra and other external models may provide advisory challenges;
+they do not replace owner admission, compiler/SLIDE/VOK evidence or an
+independent review.
+
 ## Current closure and bridge status - 2026-09-09
 
 The existing `main` checkout now contains the independently rechecked RD-0873
