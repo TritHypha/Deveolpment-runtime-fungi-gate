@@ -1,0 +1,171 @@
+@version 1
+
+/// Wave 01 translation of validateAgentDefinition from
+/// galerina-ai-agent/src/index.ts. Structural diagnostics precede the
+/// delegated tool and limit checks, matching the TypeScript order.
+
+record AgentLimits {
+  timeoutMs: Float64
+  memoryBytes: Float64
+  maxToolCalls: Float64
+  // Token and rate-limit counts use the admitted integral Option payload in
+  // this wave; fractional JavaScript numbers remain outside this profile.
+  maxTokens: Option<Int>
+  rateLimitPerMinute: Option<Int>
+}
+
+record AgentToolPermission {
+  tool: String
+  decision: String
+}
+
+record AgentDefinition {
+  name: String
+  inputType: String
+  outputType: String
+  tools: Array<AgentToolPermission>
+  effects: Array<String>
+  permissions: Array<String>
+  limits: AgentLimits
+  failureBehaviour: String
+}
+
+record AgentDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateAgentDefinition(definition: AgentDefinition) -> Array<AgentDiagnostic>
+contract { intent { "Require the agent's structural names and append delegated tool and resource-limit diagnostics in source order." } }
+{
+  mut diagnostics: Array<AgentDiagnostic> = Array.empty()
+
+  if definition.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_NAME_REQUIRED"
+      severity: "error"
+      message: "Agent definition requires a name."
+      path: "name"
+    })
+  }
+  if definition.inputType.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_INPUT_TYPE_REQUIRED"
+      severity: "error"
+      message: "Agent definition requires an input type."
+      path: "inputType"
+    })
+  }
+  if definition.outputType.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_OUTPUT_TYPE_REQUIRED"
+      severity: "error"
+      message: "Agent definition requires an output type."
+      path: "outputType"
+    })
+  }
+
+  mut toolIndex: Int = 0
+  while toolIndex < definition.tools.count() {
+    let permissionOpt: Option<AgentToolPermission> = definition.tools.get(toolIndex)
+    match permissionOpt {
+      Some(permission) => {
+        if permission.tool.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_AGENT_TOOL_NAME_REQUIRED"
+            severity: "error"
+            message: "Agent tool permission requires a tool name."
+            path: "tools." + toolIndex.toString() + ".tool"
+          })
+        }
+        if permission.tool.trim().length() > 0 {
+          mut previousIndex: Int = toolIndex - 1
+          mut previousDecision: String = ""
+          mut previousFound: Bool = false
+          while previousIndex >= 0 and previousFound == false {
+            let previousOpt: Option<AgentToolPermission> = definition.tools.get(previousIndex)
+            match previousOpt {
+              Some(previous) => {
+                if previous.tool == permission.tool {
+                  previousDecision = previous.decision
+                  previousFound = true
+                }
+              }
+              None => {}
+              _ => {}
+            }
+            previousIndex = previousIndex - 1
+          }
+          if previousFound and previousDecision != permission.decision {
+            diagnostics = diagnostics.append({
+              code: "Galerina_AGENT_TOOL_PERMISSION_CONFLICT"
+              severity: "error"
+              message: "Tool \"" + permission.tool + "\" is both allowed and denied; fail-closed resolves to deny."
+              path: "tools." + toolIndex.toString()
+            })
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    toolIndex = toolIndex + 1
+  }
+
+  if !(definition.limits.timeoutMs > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TIMEOUT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive timeout."
+      path: "limits.timeoutMs"
+    })
+  }
+  if !(definition.limits.memoryBytes > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_MEMORY_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive memory budget."
+      path: "limits.memoryBytes"
+    })
+  }
+  if !(definition.limits.maxToolCalls > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TOOL_CALL_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive maximum tool-call count."
+      path: "limits.maxToolCalls"
+    })
+  }
+  match definition.limits.maxTokens {
+    Some(value) => {
+      if !(value > 0.0) {
+        diagnostics = diagnostics.append({
+          code: "Galerina_AGENT_MAX_TOKENS_INVALID"
+          severity: "error"
+          message: "Agent max token budget, when set, must be positive."
+          path: "limits.maxTokens"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+  match definition.limits.rateLimitPerMinute {
+    Some(value) => {
+      if !(value > 0.0) {
+        diagnostics = diagnostics.append({
+          code: "Galerina_AGENT_RATE_LIMIT_INVALID"
+          severity: "error"
+          message: "Agent rate limit, when set, must be positive."
+          path: "limits.rateLimitPerMinute"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  return diagnostics
+}

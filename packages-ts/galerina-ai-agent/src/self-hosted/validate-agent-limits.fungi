@@ -1,0 +1,88 @@
+@version 1
+
+/// Wave 01 translation of validateAgentLimits from galerina-ai-agent/src/index.ts.
+/// The Fungi profile keeps the source's ordered checks and typed diagnostics.
+/// The optional TypeScript path override is represented by the source default
+/// path in this scalar artifact; no caller authority is introduced.
+
+record AgentLimits {
+  timeoutMs: Float64
+  memoryBytes: Float64
+  maxToolCalls: Float64
+  // Token and rate-limit counts use the admitted integral Option payload in
+  // this wave; fractional JavaScript numbers remain outside this profile.
+  maxTokens: Option<Int>
+  rateLimitPerMinute: Option<Int>
+}
+
+record AgentDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateAgentLimits(limits: AgentLimits) -> Array<AgentDiagnostic>
+contract { intent { "Require every present agent resource limit to be positive and return ordered typed diagnostics." } }
+{
+  mut diagnostics: Array<AgentDiagnostic> = Array.empty()
+
+  if !(limits.timeoutMs > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TIMEOUT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive timeout."
+      path: "limits.timeoutMs"
+    })
+  }
+
+  if !(limits.memoryBytes > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_MEMORY_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive memory budget."
+      path: "limits.memoryBytes"
+    })
+  }
+
+  if !(limits.maxToolCalls > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TOOL_CALL_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive maximum tool-call count."
+      path: "limits.maxToolCalls"
+    })
+  }
+
+  match limits.maxTokens {
+    Some(value) => {
+      if !(value > 0.0) {
+        diagnostics = diagnostics.append({
+          code: "Galerina_AGENT_MAX_TOKENS_INVALID"
+          severity: "error"
+          message: "Agent max token budget, when set, must be positive."
+          path: "limits.maxTokens"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  match limits.rateLimitPerMinute {
+    Some(value) => {
+      if !(value > 0.0) {
+        diagnostics = diagnostics.append({
+          code: "Galerina_AGENT_RATE_LIMIT_INVALID"
+          severity: "error"
+          message: "Agent rate limit, when set, must be positive."
+          path: "limits.rateLimitPerMinute"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  return diagnostics
+}

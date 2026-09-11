@@ -1,0 +1,72 @@
+@version 1
+
+/// Wave 01 translation of validateAgentToolPermissions from
+/// galerina-ai-agent/src/index.ts. The linear pass preserves source order,
+/// empty-name diagnostics, and the fail-closed allow/deny conflict rule.
+
+record AgentToolPermission {
+  tool: String
+  decision: String
+}
+
+record AgentDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateAgentToolPermissions(tools: Array<AgentToolPermission>) -> Array<AgentDiagnostic>
+contract { intent { "Reject empty tool names and report contradictory decisions while retaining input order." } }
+{
+  mut diagnostics: Array<AgentDiagnostic> = Array.empty()
+  mut index: Int = 0
+
+  while index < tools.count() {
+    let permissionOpt: Option<AgentToolPermission> = tools.get(index)
+    match permissionOpt {
+      Some(permission) => {
+        if permission.tool.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_AGENT_TOOL_NAME_REQUIRED"
+            severity: "error"
+            message: "Agent tool permission requires a tool name."
+            path: "tools." + index.toString() + ".tool"
+          })
+        }
+        if permission.tool.trim().length() > 0 {
+          mut previousIndex: Int = index - 1
+          mut previousDecision: String = ""
+          mut previousFound: Bool = false
+          while previousIndex >= 0 and previousFound == false {
+            let previousOpt: Option<AgentToolPermission> = tools.get(previousIndex)
+            match previousOpt {
+              Some(previous) => {
+                if previous.tool == permission.tool {
+                  previousDecision = previous.decision
+                  previousFound = true
+                }
+              }
+              None => {}
+              _ => {}
+            }
+            previousIndex = previousIndex - 1
+          }
+          if previousFound and previousDecision != permission.decision {
+            diagnostics = diagnostics.append({
+              code: "Galerina_AGENT_TOOL_PERMISSION_CONFLICT"
+              severity: "error"
+              message: "Tool \"" + permission.tool + "\" is both allowed and denied; fail-closed resolves to deny."
+              path: "tools." + index.toString()
+            })
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return diagnostics
+}
