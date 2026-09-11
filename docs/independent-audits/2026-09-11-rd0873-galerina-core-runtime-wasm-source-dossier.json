@@ -1,0 +1,448 @@
+{
+  "schema": "galerina.rd0873.galerina-core-runtime-wasm-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for the WASM TCB and injectable seam without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "a5e3e089ad7a7d3b883dadbfdc660f592b041e24",
+    "tree": "a2a94546a8f7556a648bcebf9417c1189f442c05"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/index.ts",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/tests/record-abi.test.mjs",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/tests/seam-adapters.test.mjs",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/tests/wasm-runtime.test.mjs",
+        "package": "galerina-core-runtime-wasm",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-runtime-wasm",
+    "packageJsonSha256": "sha256:fadae55ec8b9b04034e62064cea416c375c598c2aaa425c6164572e3fb282618",
+    "packageLockSha256": "sha256:aff7a94cf0ec457ca53bef76df04a771b9acc4fc723fc450d59fbf5d4a507f1d",
+    "readmeSha256": "sha256:2f986e867994fe4997e0c3d4a4f1c1d0aa63dc8ce65c16c1bba49d12bbf5a0f7",
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-runtime-wasm/.graph/BOUNDARY.md",
+      "sha256": "sha256:52869d7699c0cf883098840d1f8a9e41198a29f8db8bc1c1c834c5949bb003b7",
+      "status": "PASS",
+      "externalDependencies": [
+        "node:crypto",
+        "@galerina/core-runtime"
+      ]
+    },
+    "sourceFileCount": 4,
+    "testFileCount": 3,
+    "loadedFungiAssetCount": 3,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/self-hosted/wasm-admit-domain.fungi",
+        "sha256": "sha256:89707f1a5f70308e3a8093b5be33f780e483484efc6b6fff62ae062881cad44c",
+        "kind": "existing package-owned non-authorizing ABI/admission asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/self-hosted/wat-heap-base.fungi",
+        "sha256": "sha256:eda40b54fbc55022121c909cda0c7a428f38842ea40c06a8faf2530643365ff7",
+        "kind": "existing package-owned non-authorizing ABI/admission asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/self-hosted/wat-rec-field-size.fungi",
+        "sha256": "sha256:d7e1e46aa9b7839f2bc2e3247b12390054aef82121b44a7fec93470d9d171836",
+        "kind": "existing package-owned non-authorizing ABI/admission asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts#WASM_ADMIT_DOMAIN",
+        "fungi": "packages-ts/galerina-core-runtime-wasm/src/self-hosted/wasm-admit-domain.fungi",
+        "status": "existing non-authorizing constant asset; not a WASM admission replacement"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts#WAT_HEAP_BASE",
+        "fungi": "packages-ts/galerina-core-runtime-wasm/src/self-hosted/wat-heap-base.fungi",
+        "status": "existing non-authorizing ABI constant asset; not a runtime replacement"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts#WAT_REC_FIELD_SIZE",
+        "fungi": "packages-ts/galerina-core-runtime-wasm/src/self-hosted/wat-rec-field-size.fungi",
+        "status": "existing non-authorizing ABI constant asset; not a runtime replacement"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/index.ts",
+        "sha256": "sha256:cb0c81bcf44ad16204b94a8aaecf149a00f60825d2d8956a5c1c63ec7b6776a7",
+        "utf8Bytes": 1328
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts",
+        "sha256": "sha256:e9890291002a03f4e15b15757b52277c26d1e13efa781295ac77e453465534d0",
+        "utf8Bytes": 1586
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "sha256": "sha256:ff1ab1bb10cedd90a82891738204f03101239c2cee1f306b3906893c24b4b720",
+        "utf8Bytes": 10556
+      },
+      {
+        "path": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "sha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "utf8Bytes": 35429
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "serializeAttestation",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "span": {
+          "start": 43,
+          "end": 45
+        },
+        "sourceSha256": "sha256:ff1ab1bb10cedd90a82891738204f03101239c2cee1f306b3906893c24b4b720",
+        "bodySha256": "sha256:67cf574e8ff6833d849d9ebb8f05dc7a51371747d07551b8acf926d5d98a5676",
+        "bodyUtf8Bytes": 118
+      },
+      {
+        "symbol": "parseAttestation",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "span": {
+          "start": 49,
+          "end": 66
+        },
+        "sourceSha256": "sha256:ff1ab1bb10cedd90a82891738204f03101239c2cee1f306b3906893c24b4b720",
+        "bodySha256": "sha256:83108a91b1c358c6c507b6cee83ad4ceb618f6b3837325bd3ee55997079ef3bb",
+        "bodyUtf8Bytes": 761
+      },
+      {
+        "symbol": "createWasmAdmissionVerifier",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "span": {
+          "start": 94,
+          "end": 113
+        },
+        "sourceSha256": "sha256:ff1ab1bb10cedd90a82891738204f03101239c2cee1f306b3906893c24b4b720",
+        "bodySha256": "sha256:8f9b3f703063b4ae01609ea88e4bf5ffc5182f34fc6960dbd3995281654bb220",
+        "bodyUtf8Bytes": 1142
+      },
+      {
+        "symbol": "createLowLevelWasmExecutor",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "span": {
+          "start": 125,
+          "end": 162
+        },
+        "sourceSha256": "sha256:ff1ab1bb10cedd90a82891738204f03101239c2cee1f306b3906893c24b4b720",
+        "bodySha256": "sha256:acb47fbfc47fddefd50e82e400abc8b64b500ef4c9fd9411ce1e0319bc2875be",
+        "bodyUtf8Bytes": 2004
+      },
+      {
+        "symbol": "createBorderSafeRuntimeDeps",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts",
+        "span": {
+          "start": 166,
+          "end": 176
+        },
+        "sourceSha256": "sha256:ff1ab1bb10cedd90a82891738204f03101239c2cee1f306b3906893c24b4b720",
+        "bodySha256": "sha256:4e9720ae047db7b62c4f442bff954beebe1bd7af8e64a70681c77a036a82949b",
+        "bodyUtf8Bytes": 405
+      },
+      {
+        "symbol": "wasmHash",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 70,
+          "end": 72
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:888ec11faa4031652132db9fed641b5d8967ecd5f714f83ac77d3716a1f3223d",
+        "bodyUtf8Bytes": 114
+      },
+      {
+        "symbol": "generateRunnerKeypair",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 76,
+          "end": 84
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:f365c6277a59a12f20ed086eba1381e95c3c85f88dd24e649dbc9d01689328c4",
+        "bodyUtf8Bytes": 507
+      },
+      {
+        "symbol": "signWasm",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 95,
+          "end": 104
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:0ddd7dcea63c4530734a8b78280b31559adf93e441a98f21a8369d7255f297b9",
+        "bodyUtf8Bytes": 661
+      },
+      {
+        "symbol": "verifyWasm",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 111,
+          "end": 153
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:b34734a7b9c576ec240582098481dbfc535d81b4f93f30201e101486814d3256",
+        "bodyUtf8Bytes": 2624
+      },
+      {
+        "symbol": "compareUtf16CodeUnits",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 228,
+          "end": 231
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:b5ca8a5e57587e24d1b1e2585dfbc0eda59bb82332a1dfc355c794a33745b5c2",
+        "bodyUtf8Bytes": 149
+      },
+      {
+        "symbol": "createHostRuntime",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 242,
+          "end": 499
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:4fa7e26317209a22766309ca89eac28e93e1990df8a7909e4a0edfe0fa50b878",
+        "bodyUtf8Bytes": 17458
+      },
+      {
+        "symbol": "admitAndInstantiate",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+        "span": {
+          "start": 517,
+          "end": 550
+        },
+        "sourceSha256": "sha256:d478f9f25d3032b7ddc6fecd565b305c2a3819f8ae895a3ef9f0d016f1957b55",
+        "bodySha256": "sha256:23b10b7d5d284a9e8e91ec05c5a1f03f5f7694b45990dbe60730122cbd469d9e",
+        "bodyUtf8Bytes": 1906
+      }
+    ],
+    "exportedConstants": [
+      {
+        "symbol": "WAT_HEAP_BASE",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts"
+      },
+      {
+        "symbol": "WAT_REC_FIELD_SIZE",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts"
+      },
+      {
+        "symbol": "hashArtifact",
+        "source": "packages-ts/galerina-core-runtime-wasm/src/seam-adapters.ts"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "RunnerProfile"
+      ],
+      "interfaces": [
+        "AdmissionPolicy",
+        "WasmAttestation",
+        "AdmissionVerdict",
+        "Observer",
+        "HostRuntime",
+        "AdmissionResult"
+      ],
+      "disposition": "type contracts remain evidence; cryptography, WebAssembly, host runtime, ABI and seam functions are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-runtime-wasm/dist/index.js",
+    "sha256": "sha256:e942d6d3b179158320ac74e058ba04cbf2400dd4bceeaba7df1894197490f1f9",
+    "declarationPath": "packages-ts/galerina-core-runtime-wasm/dist/index.d.ts",
+    "declarationSha256": "sha256:469a71fa127fd05ba1d5b6e5c3f24ce8474ca4afa8cf5a82c3e47099de450bd3",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-runtime-wasm",
+    "nodes": 7,
+    "edges": 5,
+    "functions": 12,
+    "exportedValueCount": 15,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 5,
+      "EXTERNAL_IMPORTS": 2
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "verifyWasm",
+      "admitAndInstantiate",
+      "createHostRuntime",
+      "createWasmAdmissionVerifier",
+      "createLowLevelWasmExecutor",
+      "allocRecord",
+      "parseAttestation"
+    ],
+    "note": "Boundary graph reports seven nodes, five internal edges, and two allowed external dependencies. Function and constant surfaces are AST-derived; this graph is not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-runtime-wasm/tests/record-abi.test.mjs",
+      "packages-ts/galerina-core-runtime-wasm/tests/seam-adapters.test.mjs",
+      "packages-ts/galerina-core-runtime-wasm/tests/wasm-runtime.test.mjs"
+    ],
+    "testSha256": {
+      "record-abi.test.mjs": "sha256:d7d4637c457eca9852a5f65a18b3973a110253a9083d32a099b013b48fb7b137",
+      "seam-adapters.test.mjs": "sha256:7438e88386eeb01025fcc74dda6255151a544539ddc41384a30bb91d4c6ef9a8",
+      "wasm-runtime.test.mjs": "sha256:91bc8b7ecacf4ac7e70be5c8687c0f76bf38c7a1430c9932cddf767102918d04"
+    },
+    "command": "npm test",
+    "result": "PASS 27/27",
+    "coveredBehavior": [
+      "sha256 and Ed25519 attestation round-trips and refusals",
+      "certified-profile and signature binding",
+      "closed host imports and observer paths",
+      "record ABI constants",
+      "attestation wire parsing and malformed-input denial",
+      "named function-export admission gate",
+      "numeric-only low-level execution and trap/link denial",
+      "core-runtime seam-version and composed execution"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-runtime-wasm/.graph/BOUNDARY.md reports PASS with node:crypto and @galerina/core-runtime allowed"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "a5e3e089ad7a7d3b883dadbfdc660f592b041e24",
+      "tree": "a2a94546a8f7556a648bcebf9417c1189f442c05"
+    },
+    "findings": [
+      "wasmHash uses Node SHA-256; Ed25519 signs a domain-separated UTF-8 preimage containing hash and profile. Preserve separators, encoding, base64 and crypto error behavior; certified policy forces signature verification, while a matching-hash unsigned attestation can pass when signed/certified requirements are absent.",
+      "admitAndInstantiate verifies before linking and wraps instantiation failures, but WebAssembly start functions may execute before memory binding and observer callbacks can replace the intended error. Admission does not establish bounded execution or immutable artifact ownership.",
+      "HostRuntime contains mutable registries, WebAssembly memory and console/output effects. The closed-import claim depends on the caller supplying a trusted HostRuntime; observer callbacks are behaviorally observable.",
+      "Marshalling mixes code-point length/character indexing with UTF-16 slicing/search/comparison, uses opaque handles and sentinels, and mutates registries. Record staging uses heap base 1024, four-byte slots and a monotonic bump with scoped collision assumptions.",
+      "Seam adapters parse and bind hashes and require a named function export, but low-level execution performs no attestation check and accepts finite numeric values whose WASM ABI coercion remains observable. Generic strings/records, timeouts and per-export authorization are absent.",
+      "The three Fungi assets return only the admission-domain string and ABI constants; they provide no crypto, host runtime, marshalling or admission replacement."
+    ],
+    "materialObligations": [
+      "Preserve hash/signature domain encoding, profile binding, base64 and fail-closed crypto errors.",
+      "Preserve attestation-before-linking order, start-function behavior, observer ordering and supplied-host custody.",
+      "Preserve handle aliasing, mutable registries, UTF-16/code-point distinctions, sentinels, i32 coercion and record bump/capacity behavior.",
+      "Keep the low-level executor composition-gated; preserve named function-export checks, numeric ABI limits, trap/link classification and no timeout guarantee.",
+      "Treat existing Fungi constants as non-authorizing and retain TypeScript as the consumer shadow."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-runtime-wasm",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "WASM admission, cryptographic attestation, closed-host execution, string/array/result/money handle marshalling, record ABI staging and injected runtime seam adapters",
+    "authorityBoundary": "This package is an active host TCB and execution seam. It verifies artifacts and instantiates/calls WebAssembly; it is not a pure scalar model and cannot be translated as a broad bulk replacement without preserving custody and authority boundaries.",
+    "runtimeObligations": [
+      "Preserve crypto domain separation, exact hash/signature/profile semantics and key material custody.",
+      "Preserve verify-before-link/instantiate ordering, closed import construction, start-function and memory-bind timing, observer effects and error classification.",
+      "Preserve host registry mutation, handle aliasing, UTF-16 versus code-point behavior, sentinel values, i32 coercion and record staging bounds.",
+      "Preserve seam-version checks, composition ordering, export-presence admission, numeric-only argument refusal and trap/link handling.",
+      "Keep existing Fungi assets non-authorizing and TypeScript shadow retained until an explicitly admitted replacement is proven."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this TCB scope",
+      "source-to-Fungi artifacts and exact twin hashes for cryptographic, host-runtime and seam behavior",
+      "independent differential vectors for crypto encoding, mutable registries, callbacks, start functions, memory binding, UTF-16/code-point and i32 coercion",
+      "host substitution proof for node:crypto and WebAssembly APIs plus resource/time bounds",
+      "bounded physical WASM/record ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core-runtime-wasm rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}

@@ -3,6 +3,34 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-runtime-wasm - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+a5e3e089ad7a7d3b883dadbfdc660f592b041e24 with tree
+a2a94546a8f7556a648bcebf9417c1189f442c05 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-runtime-wasm-source-dossier.json.
+The package boundary graph covers seven nodes and five internal edges, with the
+allowed `node:crypto` and `@galerina/core-runtime` dependencies. It contains
+four TypeScript source files, three existing ABI/admission `.fungi` assets, 12
+exported runtime functions and three exported constants.
+
+Typecheck, build and the three focused suites pass **27/27**. The existing Fungi
+assets expose only the admission-domain string and two record-layout constants;
+they do not provide crypto, host-runtime, marshalling or admission authority.
+Astra's same-head advisory keeps translation on HOLD pending preservation of
+domain-separated Ed25519 encoding, attestation-before-linking, WebAssembly
+start/memory timing, mutable host registries and observers, mixed UTF-16/code
+point and handle semantics, record-bump bounds, seam composition and numeric ABI
+limits. The low-level executor is composition-gated and does not independently
+verify admission.
+
+All seven queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. No new Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. Any future
+translation requires exact non-empty owner admission, bounded differential and
+physical proof, SLIDE/VOK receipt, bounded execution evidence and independent
+review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-reports - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

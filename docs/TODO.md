@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-runtime-wasm - 2026-09-11
+
+- [x] Assessed the four TypeScript source files under
+  packages-ts/galerina-core-runtime-wasm/src from exact main HEAD
+  a5e3e089ad7a7d3b883dadbfdc660f592b041e24 / tree
+  a2a94546a8f7556a648bcebf9417c1189f442c05 through the package boundary graph
+  and three focused test files.
+- [x] Recorded 12 exported runtime functions, three exported runtime constants,
+  the type surface, three existing `.fungi` ABI/admission assets and exact
+  source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-runtime-wasm-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 27/27. The package boundary
+  reports PASS with seven nodes, five internal edges, and two allowed external
+  dependencies (`node:crypto` and `@galerina/core-runtime`).
+- [x] Astra's same-head advisory records crypto domain/profile binding,
+  verify-before-linking, start-function and memory-binding order, mutable host
+  capabilities, handle and UTF-16/code-point semantics, record staging bounds,
+  seam composition, numeric ABI limits and trap/link classification.
+- [!] The seven package rows remain BLOCKED:DOSSIER_REQUIRED; the conserved
+  queue remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep this TCB and seam translation closed until a separate exact
+  non-empty owner admission names a bounded scope with independent differential,
+  physical SLIDE/VOK, execution and receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-reports - 2026-09-11
 
 - [x] Assessed the single TypeScript source file under
