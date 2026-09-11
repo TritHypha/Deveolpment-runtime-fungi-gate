@@ -1,0 +1,1550 @@
+{
+  "schema": "galerina.rd0873.galerina-core-logic-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "4f3932b8ee9ecc9ee8f97c3b12bb9347caa0dec4",
+    "tree": "cc323f33d2193b228f645450e6669efa9ccae55d"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-logic/examples/benchmark-runner.node.js",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/examples/compute-mix-throughput-benchmark.node.js",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-boundary-context.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-boundary.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-enforce.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/index.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-combine.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-constructors.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-evaluate.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/index.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/index.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/index.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "SCOPED_CANDIDATES_ONLY",
+        "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-to-decision.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/index.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-unknown-reason.ts",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/tests/logic-contracts.test.mjs",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/tests/logic-v02-contracts.test.mjs",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
+        "package": "galerina-core-logic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    },
+    "scopedCandidateRows": [
+      "packages-ts/galerina-core-logic/src/omni/omni-state.ts"
+    ]
+  },
+  "package": {
+    "name": "galerina-core-logic",
+    "packageJsonSha256": "sha256:b98ebf4d0b74dae13af4797828a2fb28040df4b5beacd525e81bf40627aad40e",
+    "packageLockSha256": "sha256:69d3f955f179b8a0ac07d3efa15278b109ab3cf790f0689b4cdaac0f7aee5223",
+    "readmeSha256": "sha256:333bd9bfce0b8fbffb923993a9e2f175946d545f0e8f46ca1477e94345ccdfc1",
+    "packageTodoSha256": "sha256:868e73f5c45d0c4a206fead4b3e654384334651f4f78fd8355b727514f5bece0",
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-logic/examples/benchmark-runner.node.js",
+        "sha256": "sha256:377fdb4e6237b754f05ca299441107accac3059994407bfbb0a959a30a1b09cd",
+        "utf8Bytes": 10032
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/examples/BENCHMARK-V2-README.md",
+        "sha256": "sha256:a0ea9c6b4167219935ef8caa8144c851fd3b59a104b90715175daed462483ea6",
+        "utf8Bytes": 2976
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/examples/compute-mix-throughput-benchmark.fungi",
+        "sha256": "sha256:31ee369f31ccea4ef9ea299eda6f4d9606ddc61fe19846421765be9a638b3884",
+        "utf8Bytes": 1164
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/examples/compute-mix-throughput-benchmark.node.js",
+        "sha256": "sha256:dacc6d6801605bce1cc40c27190c9fe14e7cd22f09174f1093b6a4ec036194ce",
+        "utf8Bytes": 9011
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/examples/compute-mix-throughput-benchmark.py",
+        "sha256": "sha256:67d148fd89f4c13c9d68d5f3be26fccf810862e2a1e97985e6ea18699e3c7a61",
+        "utf8Bytes": 10081
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/examples/decision-truth-table.json",
+        "sha256": "sha256:817bb03931cc237937bbd42a3a42df56fc1cb458abb31fcbdef8c50c9825baa4",
+        "utf8Bytes": 452
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-logic/.graph/BOUNDARY.md",
+      "sha256": "sha256:a9dea08d575eb0716c5c2ad5afe50aa1c62269dc4bdd285da4083c7cc8dd5559",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 21,
+    "testFileCount": 4,
+    "loadedFungiAssetCount": 22,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-bool-boundary-001-failed-closed.fungi",
+        "sha256": "sha256:507e6725905c6224e73e3ba674ed098ae2650baef5d49f6e022e6e68760184ed",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-bool-boundary-002-unknown-reason.fungi",
+        "sha256": "sha256:9377e6e3476c35c957560ea1e48d6078e521056de4563bf2a087cd5903debab0",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-bool-boundary-003-invalid-input.fungi",
+        "sha256": "sha256:b77b52ad7efaff15f2bbada3375e327f66ff36dbcec9563e49a35bb552ece367",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-bool-boundary-004-missing-boundary-name.fungi",
+        "sha256": "sha256:ab38d03d2971b1738d9f77ee5248ed7332ad2ce6c437cffd3ea3134b883f66ae",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-bool-boundary-005-result-misused.fungi",
+        "sha256": "sha256:e070e250f5d4e11ab75000c031e25e30e4e87c3cf5755bee26bdb870581ebe1d",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-decision-001-invalid-decision.fungi",
+        "sha256": "sha256:1626c2e0d59cbda98600af5b012650d4dd2c0cf0336db8d36388caa4851c5445",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-decision-002-empty-reason.fungi",
+        "sha256": "sha256:9ea63fb389601ab449c2592bd953382e2bfc4ceefef98346ad3788a2f0f4fca9",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-decision-003-empty-unknown-reasons.fungi",
+        "sha256": "sha256:d5ccc224ee0501d00dc3aa886cf460f129596adf4666c31ea7bc0305e94d6be3",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-decision-004-failed-closed.fungi",
+        "sha256": "sha256:f5c1d9ae3414ce87817790dc124501940c7677d93984b8f3e1225cb223c26ecc",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-decision-005-empty-combine.fungi",
+        "sha256": "sha256:11f6144ea585e8543f4d33358d375dc1aaccc3ec59bfec0c38927dbe023da604",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-omni-001-direct-boundary-use.fungi",
+        "sha256": "sha256:ac4acbcde786df00ad522ef726362ac8bd49b54d3706b633c1bf58b79ed490ea",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-omni-002-advisory-only-violated.fungi",
+        "sha256": "sha256:0cab39e3349a7d64de2b7d86cf69d51573d7512af46d8bb8951185b030103e45",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-omni-003-confidence-out-of-range.fungi",
+        "sha256": "sha256:2e68d2128f50c2a8e5f7d8d03ada04b181e76070822c47a33fd86248e8937f6b",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-omni-004-malformed-evidence.fungi",
+        "sha256": "sha256:8d6046dce130d714c1e568a31686a8114699bf18aaf9b402f98b97946dd23a4a",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-omni-005-invalid-state.fungi",
+        "sha256": "sha256:bf12ad4e4c2b8f30a8ed2b12f532e2bfa4c12c670d69ee03c5914ebd0374362d",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-tri-001-invalid-tristate.fungi",
+        "sha256": "sha256:d93d7014b7bc084d2422f40ffe24f18b1e541d951bca87687cd12ff889bf1062",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-tri-002-empty-unknown-reasons.fungi",
+        "sha256": "sha256:3d9c44714056043cdb9596abb517c9817108395294984c3803867ac63efdf2ad",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-tri-003-invalid-operand.fungi",
+        "sha256": "sha256:1c81e94cd23152b4988ffc1659095c9ba5e40cab65f94712f6303944cd2e669b",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-tri-004-unknown-leaked.fungi",
+        "sha256": "sha256:9f8ba90bf4f9052b8bff48338c9879e689309c3ed091c5676b7be32f96fb306e",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/fungi-tri-005-malformed-unknown-reason.fungi",
+        "sha256": "sha256:c4e2de24389d563398e8d112cef9aa80d9976f27a3f35a2fb0548284f20bb8e9",
+        "kind": "diagnostic validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+        "sha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+        "kind": "scalar classifier twin"
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+        "sha256": "sha256:974b3d2aea384d0e3c5fe15fc5c4407242392a706424a7319405878d3252c5d4",
+        "kind": "Tri operation twin"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-logic/src/omni/omni-state.ts#isOmniUncertain",
+        "fungi": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+        "priorEvidence": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-source-dossiers.json",
+        "status": "existing non-authorizing scalar twin; prior evidence retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "fungi": "packages-ts/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+        "status": "existing non-authorizing operation twin; package test proves bounded K3 parity only"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-boundary-context.ts",
+        "sha256": "sha256:1ab7715b3f62ec32b9e561c9b3c860bf1ae5f4a89a8a37ddaae3becb0db71a08",
+        "utf8Bytes": 800,
+        "exportedFunctions": [],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-boundary.ts",
+        "sha256": "sha256:708c97361e2a090c4f8361a54197d856e936827ea4a047cfed4bb0d7b30ae83e",
+        "utf8Bytes": 950,
+        "exportedFunctions": [],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "sha256": "sha256:8e717094f83bc57292a23f85b2153c76b5da916dc9086c5b4709c351c78a3742",
+        "utf8Bytes": 3200,
+        "exportedFunctions": [
+          "boolDiagnosticFailedClosed",
+          "boolDiagnosticUnknownReason",
+          "boolDiagnosticInvalidInput",
+          "boolDiagnosticMissingBoundaryName",
+          "boolDiagnosticResultMisused"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/bool-enforce.ts",
+        "sha256": "sha256:134ee1432cd99083d8a6590ee28958e536abcd903acdcc7ec3ecbef1cb303129",
+        "utf8Bytes": 3531,
+        "exportedFunctions": [
+          "validateBoolBoundary"
+        ],
+        "privateFunctionCount": 1
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/bool-boundary/index.ts",
+        "sha256": "sha256:a6803913f6ab71b547a11de472ef90265dd743b849806e09f5ee5bb6364a9481",
+        "utf8Bytes": 929,
+        "exportedFunctions": [],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-combine.ts",
+        "sha256": "sha256:b27447a4444e480ceb7e1554cb2fd29b5e07e2d98fbc6146f1d1bbf3244bffcc",
+        "utf8Bytes": 2325,
+        "exportedFunctions": [
+          "combineDecisions"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-constructors.ts",
+        "sha256": "sha256:a18c0b21b972554d197e68af96819ebd376bd9ec42a1a62a20f867cda8d7ba8b",
+        "utf8Bytes": 1547,
+        "exportedFunctions": [
+          "allow",
+          "deny",
+          "review",
+          "unknownDecision"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "sha256": "sha256:868b28a8b8ff079a34d470088e50f9437cf051146728bac35fc8dd56949638cb",
+        "utf8Bytes": 3512,
+        "exportedFunctions": [
+          "decisionDiagnosticInvalid",
+          "decisionDiagnosticEmptyReason",
+          "decisionDiagnosticEmptyUnknownReasons",
+          "decisionDiagnosticFailedClosed",
+          "decisionDiagnosticEmptyCombine"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-evaluate.ts",
+        "sha256": "sha256:426f19a80d5ab4ac38ca7efc864b82c87842bd235572513ea3f7c693d994b7e0",
+        "utf8Bytes": 3556,
+        "exportedFunctions": [
+          "evaluateCapability"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "sha256": "sha256:0979ba980174c9b01f67c10c7604e0e206d8b0f824fb93a3182ffcb6a73b5f7e",
+        "utf8Bytes": 2249,
+        "exportedFunctions": [
+          "isAllow",
+          "isDeny",
+          "isReview",
+          "isUnknownDecision",
+          "decisionToRuntimeBool"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/decision/index.ts",
+        "sha256": "sha256:d06220bcb8f79fe61ff29d90d6aed517131ef1ac599e9993b8e98a9fb9a851d8",
+        "utf8Bytes": 1157,
+        "exportedFunctions": [],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/index.ts",
+        "sha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "utf8Bytes": 13409,
+        "exportedFunctions": [
+          "isTri",
+          "triNot",
+          "triAnd",
+          "triOr",
+          "triNor",
+          "triToBool",
+          "createLogicDefinition",
+          "createTriLogicDefinition",
+          "createDecisionLogicDefinition",
+          "createOmniLogicDefinition",
+          "validateOmniLogicDefinition",
+          "validateLogicDefinition",
+          "createLogicState",
+          "triToLogicState",
+          "logicStateToTri",
+          "createDecisionLogicState",
+          "isValidLogicState",
+          "createTruthTableReport",
+          "validateTruthTable"
+        ],
+        "privateFunctionCount": 5
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/index.ts",
+        "sha256": "sha256:16b5ddab6f3e72ad8435bbd8b8acf0f3048b71cedfb32eb76e5fbbdac4f9e7a2",
+        "utf8Bytes": 940,
+        "exportedFunctions": [],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "sha256": "sha256:7456d8f90ead585fc311b2e03c4be2cfa4be501a64222d9d2992c47d878177e5",
+        "utf8Bytes": 3449,
+        "exportedFunctions": [
+          "omniDiagnosticDirectBoundaryUse",
+          "omniDiagnosticAdvisoryOnlyViolated",
+          "omniDiagnosticConfidenceOutOfRange",
+          "omniDiagnosticMalformedEvidence",
+          "omniDiagnosticInvalidState"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "sha256": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+        "utf8Bytes": 3176,
+        "exportedFunctions": [
+          "isOmniState",
+          "isOmniUncertain"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-to-decision.ts",
+        "sha256": "sha256:b2f2ce91a0846566679e16cc2be7c869f81e347670c3e3aa79e172ea7d77a9ea",
+        "utf8Bytes": 2917,
+        "exportedFunctions": [
+          "omniToDecision"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/index.ts",
+        "sha256": "sha256:f94433018ccb1f9defeed3a57298540c446290006d175b566951f1798b93e21d",
+        "utf8Bytes": 1139,
+        "exportedFunctions": [],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "sha256": "sha256:d7737555adebf5ea6870bfc909d50d5352fba6413fd991343e0f702826c6b23d",
+        "utf8Bytes": 3379,
+        "exportedFunctions": [
+          "triDiagnosticInvalidTriState",
+          "triDiagnosticEmptyUnknownReasons",
+          "triDiagnosticInvalidOperand",
+          "triDiagnosticUnknownLeaked",
+          "triDiagnosticMalformedUnknownReason"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "sha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "utf8Bytes": 5337,
+        "exportedFunctions": [
+          "triStateNot",
+          "triStateAnd",
+          "triStateOr",
+          "triStateNor",
+          "triStateXnor",
+          "triStateImplies",
+          "combineUnknownReasons"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "sha256": "sha256:b2b6ae079b8fc04d7fb4213e07da30281c6280a68767f7423703ddf8918d7fbd",
+        "utf8Bytes": 2328,
+        "exportedFunctions": [
+          "triUnknown",
+          "triUnknownFromReasons",
+          "isTriTrue",
+          "isTriFalse",
+          "isTriUnknown"
+        ],
+        "privateFunctionCount": 0
+      },
+      {
+        "path": "packages-ts/galerina-core-logic/src/tri/tri-unknown-reason.ts",
+        "sha256": "sha256:fe87b94b2306bb6d25dfe07ce3891024bc3fd0e1f32755b17b097446c49ece67",
+        "utf8Bytes": 1128,
+        "exportedFunctions": [
+          "deduplicateUnknownReasons"
+        ],
+        "privateFunctionCount": 0
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "boolDiagnosticFailedClosed",
+        "source": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "span": {
+          "start": 30,
+          "end": 41
+        },
+        "sourceSha256": "sha256:8e717094f83bc57292a23f85b2153c76b5da916dc9086c5b4709c351c78a3742",
+        "bodySha256": "sha256:43990c283f9cb6b45e931556aa75a787f5be6734860677de2c52292221bf3cab",
+        "bodyUtf8Bytes": 379
+      },
+      {
+        "symbol": "boolDiagnosticUnknownReason",
+        "source": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "span": {
+          "start": 43,
+          "end": 53
+        },
+        "sourceSha256": "sha256:8e717094f83bc57292a23f85b2153c76b5da916dc9086c5b4709c351c78a3742",
+        "bodySha256": "sha256:6ad4c6231a8cdca10c902df147ead2f739b0a6f4085de64cfea7f4a07f04de8b",
+        "bodyUtf8Bytes": 265
+      },
+      {
+        "symbol": "boolDiagnosticInvalidInput",
+        "source": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "span": {
+          "start": 55,
+          "end": 63
+        },
+        "sourceSha256": "sha256:8e717094f83bc57292a23f85b2153c76b5da916dc9086c5b4709c351c78a3742",
+        "bodySha256": "sha256:a458ff4e808e4afdeeb92dd956e4844ff1e209d0e9f8dba00396e2eb09af388a",
+        "bodyUtf8Bytes": 345
+      },
+      {
+        "symbol": "boolDiagnosticMissingBoundaryName",
+        "source": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "span": {
+          "start": 65,
+          "end": 72
+        },
+        "sourceSha256": "sha256:8e717094f83bc57292a23f85b2153c76b5da916dc9086c5b4709c351c78a3742",
+        "bodySha256": "sha256:9cc6b5db4b15548c7a4bb96d90a064cbf78b414aa923ee42da73d07c74383b14",
+        "bodyUtf8Bytes": 272
+      },
+      {
+        "symbol": "boolDiagnosticResultMisused",
+        "source": "packages-ts/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts",
+        "span": {
+          "start": 74,
+          "end": 82
+        },
+        "sourceSha256": "sha256:8e717094f83bc57292a23f85b2153c76b5da916dc9086c5b4709c351c78a3742",
+        "bodySha256": "sha256:b3133c5a9a48b141ed18b42480d321b93bb91bb747f66a84446cd9077e440c15",
+        "bodyUtf8Bytes": 375
+      },
+      {
+        "symbol": "validateBoolBoundary",
+        "source": "packages-ts/galerina-core-logic/src/bool-boundary/bool-enforce.ts",
+        "span": {
+          "start": 32,
+          "end": 98
+        },
+        "sourceSha256": "sha256:134ee1432cd99083d8a6590ee28958e536abcd903acdcc7ec3ecbef1cb303129",
+        "bodySha256": "sha256:2d61b55994a023520b638f10830564c2bb03e1f3248ea041b7053d072c2b0525",
+        "bodyUtf8Bytes": 1734
+      },
+      {
+        "symbol": "combineDecisions",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-combine.ts",
+        "span": {
+          "start": 23,
+          "end": 74
+        },
+        "sourceSha256": "sha256:b27447a4444e480ceb7e1554cb2fd29b5e07e2d98fbc6146f1d1bbf3244bffcc",
+        "bodySha256": "sha256:5b466db84a16a7e66aa5cab1200e803dab8f8c71c4e56377fd313e68c63a0cb7",
+        "bodyUtf8Bytes": 1347
+      },
+      {
+        "symbol": "allow",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-constructors.ts",
+        "span": {
+          "start": 11,
+          "end": 16
+        },
+        "sourceSha256": "sha256:a18c0b21b972554d197e68af96819ebd376bd9ec42a1a62a20f867cda8d7ba8b",
+        "bodySha256": "sha256:c466f3810dfd5a6722ff12e33599ed6ef5965df8096807d4b227ef3529cb08a4",
+        "bodyUtf8Bytes": 153
+      },
+      {
+        "symbol": "deny",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-constructors.ts",
+        "span": {
+          "start": 22,
+          "end": 27
+        },
+        "sourceSha256": "sha256:a18c0b21b972554d197e68af96819ebd376bd9ec42a1a62a20f867cda8d7ba8b",
+        "bodySha256": "sha256:ce5a381ac9d3a8433c8fcb7f61eccb149e2d3df497759c8b6c577be5d92bbbf7",
+        "bodyUtf8Bytes": 151
+      },
+      {
+        "symbol": "review",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-constructors.ts",
+        "span": {
+          "start": 33,
+          "end": 38
+        },
+        "sourceSha256": "sha256:a18c0b21b972554d197e68af96819ebd376bd9ec42a1a62a20f867cda8d7ba8b",
+        "bodySha256": "sha256:796e05f901856c707ccd4961f5a5e9e498077880a0e6da4000022f329394d47f",
+        "bodyUtf8Bytes": 155
+      },
+      {
+        "symbol": "unknownDecision",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-constructors.ts",
+        "span": {
+          "start": 44,
+          "end": 50
+        },
+        "sourceSha256": "sha256:a18c0b21b972554d197e68af96819ebd376bd9ec42a1a62a20f867cda8d7ba8b",
+        "bodySha256": "sha256:b9b0be5bd76edb3d7835939160e20473f237fa2468e77b888e228335058df5f0",
+        "bodyUtf8Bytes": 226
+      },
+      {
+        "symbol": "decisionDiagnosticInvalid",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "span": {
+          "start": 32,
+          "end": 40
+        },
+        "sourceSha256": "sha256:868b28a8b8ff079a34d470088e50f9437cf051146728bac35fc8dd56949638cb",
+        "bodySha256": "sha256:bbdc29a14dfe92b26de8709265c24a88e1fb784f2648a62e966f3125c56545c8",
+        "bodyUtf8Bytes": 362
+      },
+      {
+        "symbol": "decisionDiagnosticEmptyReason",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "span": {
+          "start": 42,
+          "end": 50
+        },
+        "sourceSha256": "sha256:868b28a8b8ff079a34d470088e50f9437cf051146728bac35fc8dd56949638cb",
+        "bodySha256": "sha256:0e055baeea94b40bee3702e1fafb925b4933faf61cf7ef7e07c21d2e120c98a2",
+        "bodyUtf8Bytes": 340
+      },
+      {
+        "symbol": "decisionDiagnosticEmptyUnknownReasons",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "span": {
+          "start": 52,
+          "end": 60
+        },
+        "sourceSha256": "sha256:868b28a8b8ff079a34d470088e50f9437cf051146728bac35fc8dd56949638cb",
+        "bodySha256": "sha256:b8fa9d65e917d5e6397bad52820690f631150ab3d4c5ecc9d29bf68c0be81cfa",
+        "bodyUtf8Bytes": 350
+      },
+      {
+        "symbol": "decisionDiagnosticFailedClosed",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "span": {
+          "start": 62,
+          "end": 74
+        },
+        "sourceSha256": "sha256:868b28a8b8ff079a34d470088e50f9437cf051146728bac35fc8dd56949638cb",
+        "bodySha256": "sha256:400b6d535624115ff13994546582c74a79b55c26c4c475f895fd5e6e0e0af72d",
+        "bodyUtf8Bytes": 445
+      },
+      {
+        "symbol": "decisionDiagnosticEmptyCombine",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-diagnostics.ts",
+        "span": {
+          "start": 76,
+          "end": 84
+        },
+        "sourceSha256": "sha256:868b28a8b8ff079a34d470088e50f9437cf051146728bac35fc8dd56949638cb",
+        "bodySha256": "sha256:7eb6b772fbf46cbab7947cfd5843e1bff57ac5efc8a2a9a750451050098dfc49",
+        "bodyUtf8Bytes": 358
+      },
+      {
+        "symbol": "evaluateCapability",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-evaluate.ts",
+        "span": {
+          "start": 48,
+          "end": 95
+        },
+        "sourceSha256": "sha256:426f19a80d5ab4ac38ca7efc864b82c87842bd235572513ea3f7c693d994b7e0",
+        "bodySha256": "sha256:1207eff2551ed53c0267bc6e2657f48cb7d9152b9e0acb97f90f52944f5240da",
+        "bodyUtf8Bytes": 1473
+      },
+      {
+        "symbol": "isAllow",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "span": {
+          "start": 50,
+          "end": 52
+        },
+        "sourceSha256": "sha256:0979ba980174c9b01f67c10c7604e0e206d8b0f824fb93a3182ffcb6a73b5f7e",
+        "bodySha256": "sha256:d3ddf323a43b6bf45efe58416a5e89640bfaffb80def36c5f88b9b9a22485c1a",
+        "bodyUtf8Bytes": 106
+      },
+      {
+        "symbol": "isDeny",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "span": {
+          "start": 54,
+          "end": 56
+        },
+        "sourceSha256": "sha256:0979ba980174c9b01f67c10c7604e0e206d8b0f824fb93a3182ffcb6a73b5f7e",
+        "bodySha256": "sha256:42f7dec5e0e7240d8479bfcc40b7a987fb549909fc3e7cad43bb38c5e0864660",
+        "bodyUtf8Bytes": 103
+      },
+      {
+        "symbol": "isReview",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "span": {
+          "start": 58,
+          "end": 60
+        },
+        "sourceSha256": "sha256:0979ba980174c9b01f67c10c7604e0e206d8b0f824fb93a3182ffcb6a73b5f7e",
+        "bodySha256": "sha256:0a9f04e00e04652e34f31ab1958150e27b6a69eab696d82529306306b583d9f6",
+        "bodyUtf8Bytes": 109
+      },
+      {
+        "symbol": "isUnknownDecision",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "span": {
+          "start": 62,
+          "end": 64
+        },
+        "sourceSha256": "sha256:0979ba980174c9b01f67c10c7604e0e206d8b0f824fb93a3182ffcb6a73b5f7e",
+        "bodySha256": "sha256:8f84851fd0ef855a0039859c666143160f2904895f6cc5258ac65011bf2bd48a",
+        "bodyUtf8Bytes": 120
+      },
+      {
+        "symbol": "decisionToRuntimeBool",
+        "source": "packages-ts/galerina-core-logic/src/decision/decision-state.ts",
+        "span": {
+          "start": 70,
+          "end": 72
+        },
+        "sourceSha256": "sha256:0979ba980174c9b01f67c10c7604e0e206d8b0f824fb93a3182ffcb6a73b5f7e",
+        "bodySha256": "sha256:b0e6ccc7f97bd21e9c28adc2159615b6b68a1cba7e73b1ba481dd552206c8b6d",
+        "bodyUtf8Bytes": 94
+      },
+      {
+        "symbol": "isTri",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 79,
+          "end": 81
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:1e1b3bf857a0ff49e5ac47fd2e8a76885afef7a2178fd4b8c3321fa8fb3af30b",
+        "bodyUtf8Bytes": 134
+      },
+      {
+        "symbol": "triNot",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 83,
+          "end": 85
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:fc39f2cb13395d8e03f8ebf0453ce6799c505c387375e330679c07a35393cfae",
+        "bodyUtf8Bytes": 121
+      },
+      {
+        "symbol": "triAnd",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 87,
+          "end": 89
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:695a81d0584de307e58add20d3c0b8d27904f3085532ee196a126350104565e6",
+        "bodyUtf8Bytes": 108
+      },
+      {
+        "symbol": "triOr",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 91,
+          "end": 93
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:89f9fb990e4bcd2217451a4062d51768309337338e3e05edf80587e161ad45a8",
+        "bodyUtf8Bytes": 107
+      },
+      {
+        "symbol": "triNor",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 95,
+          "end": 97
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:301d2a6a5ae8e7c197dc8739bf1fee74b4147c835873aa02b82c123b7d32fd8e",
+        "bodyUtf8Bytes": 93
+      },
+      {
+        "symbol": "triToBool",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 99,
+          "end": 119
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:9666b42f401369570fe891ae95a8d5ab75d7b03ee0afc4501f1e5ef597d71f66",
+        "bodyUtf8Bytes": 443
+      },
+      {
+        "symbol": "createLogicDefinition",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 121,
+          "end": 136
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:a41356e7dc38a473d0b4492a9c663bd0170ccb4e175e5dd07143697f44dc2bb5",
+        "bodyUtf8Bytes": 480
+      },
+      {
+        "symbol": "createTriLogicDefinition",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 138,
+          "end": 140
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:1f9c0e62ca54128bb48f4ac7666ddbc37dfd8aa2c50443ea4963ebeb5da9e200",
+        "bodyUtf8Bytes": 128
+      },
+      {
+        "symbol": "createDecisionLogicDefinition",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 142,
+          "end": 144
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:d4e20ba1e581fed8667441c42fa425f94e00293d498dd8607de9164c7b53ccee",
+        "bodyUtf8Bytes": 143
+      },
+      {
+        "symbol": "createOmniLogicDefinition",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 146,
+          "end": 166
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:0e422bc74c479bca9d8b1d185c7b1ef37d1598c0877db582e76855a801b0b0cb",
+        "bodyUtf8Bytes": 608
+      },
+      {
+        "symbol": "validateOmniLogicDefinition",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 168,
+          "end": 194
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:935d7c82ae3a81bcc8df9665a66e89752ae774bb31ab9a3509faff7602bcc691",
+        "bodyUtf8Bytes": 809
+      },
+      {
+        "symbol": "validateLogicDefinition",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 196,
+          "end": 260
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:1c58a6b5754272d65474dd6816e012fd19226b44f2aecb23c248d0d95045937e",
+        "bodyUtf8Bytes": 1844
+      },
+      {
+        "symbol": "createLogicState",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 262,
+          "end": 277
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:96ef01ee59ab2ae33358d5c2cab1bd22c80cd82b32bc19392a0e6de3a0e7546a",
+        "bodyUtf8Bytes": 561
+      },
+      {
+        "symbol": "triToLogicState",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 279,
+          "end": 282
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:315783a1e5b81823611898bfa36d5374ac4a3078d647b2605c4065d7cb71a6a7",
+        "bodyUtf8Bytes": 175
+      },
+      {
+        "symbol": "logicStateToTri",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 284,
+          "end": 292
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:59d8816e9e093736e1387fe1d975c1f5caa0a4865ae6496e5bd9603c93398cf8",
+        "bodyUtf8Bytes": 274
+      },
+      {
+        "symbol": "createDecisionLogicState",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 294,
+          "end": 305
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:25d7238ba996fb63de64dfc2e0b6e8ce5e158948989d32836985345f77cbffd7",
+        "bodyUtf8Bytes": 338
+      },
+      {
+        "symbol": "isValidLogicState",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 307,
+          "end": 317
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:5542937c1b873638d6b3911f11181b77371efd3394b2bd3135f2fc523875cba7",
+        "bodyUtf8Bytes": 291
+      },
+      {
+        "symbol": "createTruthTableReport",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 319,
+          "end": 330
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:40eaf7cd652ce885dda15a09321f6d9c62b8cd0ae3a7315e0a83359310e6f48f",
+        "bodyUtf8Bytes": 334
+      },
+      {
+        "symbol": "validateTruthTable",
+        "source": "packages-ts/galerina-core-logic/src/index.ts",
+        "span": {
+          "start": 332,
+          "end": 432
+        },
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "bodySha256": "sha256:d68ed808e826db60a39cf0ae08a62b37e775e0ea7b47216de521218f8a03cb9e",
+        "bodyUtf8Bytes": 2926
+      },
+      {
+        "symbol": "omniDiagnosticDirectBoundaryUse",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "span": {
+          "start": 30,
+          "end": 38
+        },
+        "sourceSha256": "sha256:7456d8f90ead585fc311b2e03c4be2cfa4be501a64222d9d2992c47d878177e5",
+        "bodySha256": "sha256:fe81277f841381e0d9689f568a22bcff3a2d849847b7840160a406790bf0c524",
+        "bodyUtf8Bytes": 431
+      },
+      {
+        "symbol": "omniDiagnosticAdvisoryOnlyViolated",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "span": {
+          "start": 40,
+          "end": 48
+        },
+        "sourceSha256": "sha256:7456d8f90ead585fc311b2e03c4be2cfa4be501a64222d9d2992c47d878177e5",
+        "bodySha256": "sha256:426d69da80355d5e9d02872366e4210ed9f59aa939c27b4db658cdb637a66d28",
+        "bodyUtf8Bytes": 404
+      },
+      {
+        "symbol": "omniDiagnosticConfidenceOutOfRange",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "span": {
+          "start": 50,
+          "end": 61
+        },
+        "sourceSha256": "sha256:7456d8f90ead585fc311b2e03c4be2cfa4be501a64222d9d2992c47d878177e5",
+        "bodySha256": "sha256:fab5cf1abed25479e1eff88f628e77e553bde15516d710d2f1cc023da052265a",
+        "bodyUtf8Bytes": 389
+      },
+      {
+        "symbol": "omniDiagnosticMalformedEvidence",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "span": {
+          "start": 63,
+          "end": 71
+        },
+        "sourceSha256": "sha256:7456d8f90ead585fc311b2e03c4be2cfa4be501a64222d9d2992c47d878177e5",
+        "bodySha256": "sha256:157a8bc8d8a5b5219cc0026982779b7af236ff1029cfc91c23a334de1e37a356",
+        "bodyUtf8Bytes": 341
+      },
+      {
+        "symbol": "omniDiagnosticInvalidState",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-diagnostics.ts",
+        "span": {
+          "start": 73,
+          "end": 84
+        },
+        "sourceSha256": "sha256:7456d8f90ead585fc311b2e03c4be2cfa4be501a64222d9d2992c47d878177e5",
+        "bodySha256": "sha256:aefb7f530d7b6f804aeb0216cace615df5a55173688bd8db7e3e3dc62054c586",
+        "bodyUtf8Bytes": 428
+      },
+      {
+        "symbol": "isOmniState",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "span": {
+          "start": 63,
+          "end": 68
+        },
+        "sourceSha256": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+        "bodySha256": "sha256:585c86a86793b2cdfb7bc0335229890f1e0099b058330121ca5e26f3c81df4e8",
+        "bodyUtf8Bytes": 176
+      },
+      {
+        "symbol": "isOmniUncertain",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "span": {
+          "start": 70,
+          "end": 72
+        },
+        "sourceSha256": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+        "bodySha256": "sha256:aefaffb6bdbb36977fe33880023bea5bd57e1fd4a613dc1a36721b9885718200",
+        "bodyUtf8Bytes": 107
+      },
+      {
+        "symbol": "omniToDecision",
+        "source": "packages-ts/galerina-core-logic/src/omni/omni-to-decision.ts",
+        "span": {
+          "start": 41,
+          "end": 78
+        },
+        "sourceSha256": "sha256:b2f2ce91a0846566679e16cc2be7c869f81e347670c3e3aa79e172ea7d77a9ea",
+        "bodySha256": "sha256:5d26f5ad42747a9eef8ce5840b3d18b6777e4352a93843e0baa8ab1ac60405c5",
+        "bodyUtf8Bytes": 1188
+      },
+      {
+        "symbol": "triDiagnosticInvalidTriState",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "span": {
+          "start": 30,
+          "end": 38
+        },
+        "sourceSha256": "sha256:d7737555adebf5ea6870bfc909d50d5352fba6413fd991343e0f702826c6b23d",
+        "bodySha256": "sha256:ca202094dd32e7aa864aaea0be08835350914323443e74afe229ba1f6708831b",
+        "bodyUtf8Bytes": 366
+      },
+      {
+        "symbol": "triDiagnosticEmptyUnknownReasons",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "span": {
+          "start": 40,
+          "end": 48
+        },
+        "sourceSha256": "sha256:d7737555adebf5ea6870bfc909d50d5352fba6413fd991343e0f702826c6b23d",
+        "bodySha256": "sha256:95f2ebea9a5c81998837314e42228ccc857c61306c8fc2636c1ecb677e8cb3a3",
+        "bodyUtf8Bytes": 370
+      },
+      {
+        "symbol": "triDiagnosticInvalidOperand",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "span": {
+          "start": 52,
+          "end": 60
+        },
+        "sourceSha256": "sha256:d7737555adebf5ea6870bfc909d50d5352fba6413fd991343e0f702826c6b23d",
+        "bodySha256": "sha256:2ff7cb736b87a7922cea76280333510b0ce94692ca4bd42b5b5dd54d64decc88",
+        "bodyUtf8Bytes": 309
+      },
+      {
+        "symbol": "triDiagnosticUnknownLeaked",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "span": {
+          "start": 62,
+          "end": 70
+        },
+        "sourceSha256": "sha256:d7737555adebf5ea6870bfc909d50d5352fba6413fd991343e0f702826c6b23d",
+        "bodySha256": "sha256:614d548100791b8b6b60dfc1e72d0b418e88ca0aa69763d99c87cb19d295ae2b",
+        "bodyUtf8Bytes": 380
+      },
+      {
+        "symbol": "triDiagnosticMalformedUnknownReason",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-diagnostics.ts",
+        "span": {
+          "start": 72,
+          "end": 80
+        },
+        "sourceSha256": "sha256:d7737555adebf5ea6870bfc909d50d5352fba6413fd991343e0f702826c6b23d",
+        "bodySha256": "sha256:183501991df0b1aaaa65dca15b06e01d8bb55739525d018b6675b8cc3ba39d34",
+        "bodyUtf8Bytes": 344
+      },
+      {
+        "symbol": "triStateNot",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 25,
+          "end": 29
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:90cf61991dce71d86c3d87dca3fdd13fc8f96494d85c9c92f090371079afd1a4",
+        "bodyUtf8Bytes": 203
+      },
+      {
+        "symbol": "triStateAnd",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 41,
+          "end": 48
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:b1a490378a12845d9d28a7a06823aff40623e6a2025864795a318affd043d610",
+        "bodyUtf8Bytes": 359
+      },
+      {
+        "symbol": "triStateOr",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 60,
+          "end": 67
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:4ee5b088ef4651b1d01f7dc874cd9fec88274ee6c7c700d8067be9b60cca2661",
+        "bodyUtf8Bytes": 359
+      },
+      {
+        "symbol": "triStateNor",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 77,
+          "end": 79
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:772fe011e0af4370c80655574a79774ead0f0dc83e804585951002e77c4cafec",
+        "bodyUtf8Bytes": 109
+      },
+      {
+        "symbol": "triStateXnor",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 92,
+          "end": 100
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:024c85b2c06adc196b2d7436b56ec4cd18fbe4e89db76c5b32c2d114cbab324e",
+        "bodyUtf8Bytes": 503
+      },
+      {
+        "symbol": "triStateImplies",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 113,
+          "end": 115
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:bb8dd96f0279ff82009516cf519340cbf7e062b420fcb45341d398e25a8e7451",
+        "bodyUtf8Bytes": 149
+      },
+      {
+        "symbol": "combineUnknownReasons",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-ops.ts",
+        "span": {
+          "start": 125,
+          "end": 137
+        },
+        "sourceSha256": "sha256:3064697db05861138fed9bd13c4865237a9e9c2d3891c02337cc1de32aea72d0",
+        "bodySha256": "sha256:ca78b564d91a6460b7df2c7023bd09b50bbb1070e7d93661b84ed51833e2ff6b",
+        "bodyUtf8Bytes": 303
+      },
+      {
+        "symbol": "triUnknown",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "span": {
+          "start": 27,
+          "end": 29
+        },
+        "sourceSha256": "sha256:b2b6ae079b8fc04d7fb4213e07da30281c6280a68767f7423703ddf8918d7fbd",
+        "bodySha256": "sha256:6dca8e3d863e9fefd1bdaac45cd150d668ce6ce1515428b2439c4de23f7aec87",
+        "bodyUtf8Bytes": 114
+      },
+      {
+        "symbol": "triUnknownFromReasons",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "span": {
+          "start": 35,
+          "end": 43
+        },
+        "sourceSha256": "sha256:b2b6ae079b8fc04d7fb4213e07da30281c6280a68767f7423703ddf8918d7fbd",
+        "bodySha256": "sha256:2adc16611e2fc7825c8a8d7141bc642f31b5e257ff90ac53fcd04027ca5aa11c",
+        "bodyUtf8Bytes": 247
+      },
+      {
+        "symbol": "isTriTrue",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "span": {
+          "start": 49,
+          "end": 51
+        },
+        "sourceSha256": "sha256:b2b6ae079b8fc04d7fb4213e07da30281c6280a68767f7423703ddf8918d7fbd",
+        "bodySha256": "sha256:377a9a1bbea40aaf02b2a83d594fc81bec3cfe879d71534e2a4304ceea50d014",
+        "bodyUtf8Bytes": 120
+      },
+      {
+        "symbol": "isTriFalse",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "span": {
+          "start": 53,
+          "end": 55
+        },
+        "sourceSha256": "sha256:b2b6ae079b8fc04d7fb4213e07da30281c6280a68767f7423703ddf8918d7fbd",
+        "bodySha256": "sha256:186638c9910029086003b5c34b15411b4897b947777e1c4183643005903c0c98",
+        "bodyUtf8Bytes": 124
+      },
+      {
+        "symbol": "isTriUnknown",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-state.ts",
+        "span": {
+          "start": 57,
+          "end": 61
+        },
+        "sourceSha256": "sha256:b2b6ae079b8fc04d7fb4213e07da30281c6280a68767f7423703ddf8918d7fbd",
+        "bodySha256": "sha256:036231a28c58ab2ad0fde251292abf47497022d558bb3f1f61fa016018369140",
+        "bodyUtf8Bytes": 158
+      },
+      {
+        "symbol": "deduplicateUnknownReasons",
+        "source": "packages-ts/galerina-core-logic/src/tri/tri-unknown-reason.ts",
+        "span": {
+          "start": 23,
+          "end": 37
+        },
+        "sourceSha256": "sha256:fe87b94b2306bb6d25dfe07ce3891024bc3fd0e1f32755b17b097446c49ece67",
+        "bodySha256": "sha256:3b155e2dbee4a5777d244e9a5e813f69ea7edddfd769e8cd03c03a2233c3f753",
+        "bodyUtf8Bytes": 350
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "Tri",
+        "TriLogicStateName",
+        "DecisionLogicStateName",
+        "TriBoolPolicy",
+        "LogicDiagnosticSeverity",
+        "TriState",
+        "UnknownReason",
+        "Decision",
+        "CapabilityRequest",
+        "PolicyContext",
+        "BoolBoundaryInput",
+        "OmniState"
+      ],
+      "interfaces": [
+        "LogicDiagnostic",
+        "LogicState",
+        "LogicDefinition",
+        "TruthTableRow",
+        "LogicReport",
+        "OmniLogicDefinition",
+        "DecisionEvidence",
+        "BoolBoundaryContext",
+        "BoolBoundaryResult",
+        "OmniEvidence",
+        "OmniDecision"
+      ],
+      "disposition": "type contracts remain evidence; runtime enum/constant values and exported functions are separate runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-logic/dist/index.js",
+    "sha256": "sha256:0fcf8f69d7ad60f66a4809c23bb1b29551c8aa065cb0f59c29a07be8e5611109",
+    "declarationPath": "packages-ts/galerina-core-logic/dist/index.d.ts",
+    "declarationSha256": "sha256:7a9a50cbcc4477bdb746a8bea64be0c58d99a6cc1e5c01a75ae55b3b626b4a2e",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-logic",
+    "nodes": 43,
+    "edges": 43,
+    "functions": 67,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 43
+    },
+    "entryPoints": [
+      "src/index.ts",
+      "src/tri/index.ts",
+      "src/decision/index.ts",
+      "src/bool-boundary/index.ts",
+      "src/omni/index.ts"
+    ],
+    "hotspots": [
+      "validateTruthTable",
+      "validateLogicDefinition",
+      "validateBoolBoundary",
+      "combineDecisions",
+      "evaluateCapability",
+      "triStateAnd",
+      "triStateOr",
+      "omniToDecision"
+    ],
+    "note": "Package boundary graph reports 43 nodes and 43 internal edges with no external dependencies. Function list is AST-derived; this graph is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-logic/tests/logic-contracts.test.mjs",
+      "packages-ts/galerina-core-logic/tests/logic-v02-contracts.test.mjs",
+      "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs"
+    ],
+    "testSha256": {
+      "logic-contracts.test.mjs": "sha256:0bfd2da98d533ae82e61c4765165459587d3006db448c99c1f53283eeef9bdca",
+      "logic-v02-contracts.test.mjs": "sha256:dbd6d9c0494523797a857ff923c6eb4ac0e6941d6a51afb9e479aef84e5b097a",
+      "omni-uncertain-fungi-conversion.test.mjs": "sha256:1e34ff96dde2201e63927559b10e24eb14709c8f79b1aed36a50ed3af81eaae5",
+      "tri-ops-fungi-conversion.test.mjs": "sha256:d4a24950cf3c2a8d62e53b2e6b573e3873dc2fe82055cdfaf5c6919d14e02166"
+    },
+    "command": "npm test",
+    "result": "PASS 57/57",
+    "coveredBehavior": [
+      "v0.1 Tri and LogicDefinition operations",
+      "truth-table validation and report construction",
+      "v0.2 TriState unknown-reason preservation and K3 operations",
+      "Decision constructors, deny-first composition and capability evaluation",
+      "BoolBoundary fail-closed conversion for unknown/review",
+      "Omni state validation and advisory-to-Decision mapping",
+      "existing Omni uncertainty Fungi twin over hostile surplus text",
+      "existing Tri operation Fungi twin over the complete K3 domain"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-logic/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion admission",
+    "snapshot": {
+      "head": "4f3932b8ee9ecc9ee8f97c3b12bb9347caa0dec4",
+      "tree": "cc323f33d2193b228f645450e6669efa9ccae55d"
+    },
+    "findings": [
+      "The package combines a legacy numeric Tri/logic surface with a v0.2 discriminated-union TriState/Decision surface; exports and subpath re-exports must remain distinct.",
+      "Unknown reasons and evidence arrays are caller-provided mutable references in constructors and reports; object spread and array copy points must be preserved.",
+      "TriState operations short-circuit on discriminants and preserve or deduplicate unknown reasons; reason order and duplicate-code behavior are observable.",
+      "Decision composition is deny-first with review and unknown priority; empty combine behavior and evidence concatenation are part of the contract.",
+      "evaluateCapability checks denied capabilities before policy review and grants, while string includes and evidence concatenation rely on caller collections.",
+      "validateBoolBoundary distinguishes TriState from Decision using object shape and fails closed for unknown/review; malformed or proxy-like inputs can affect property reads.",
+      "Omni uncertainty is advisory and maps to review; only true at confidence >= 0.8 maps to allow, while isOmniUncertain reads an exported Set that remains reachable state.",
+      "Legacy validators use bounded width checks, Set membership, array lengths and generated diagnostic paths; invalid, duplicate and incomplete truth-table behavior must be preserved.",
+      "Existing Fungi assets are package-owned validation/twin artifacts; their tests do not grant consumer authority or retire TypeScript."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-logic",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "multi-module synchronous logic over discriminated unions, numeric enums, arrays, sets, strings, object spreads and typed diagnostics",
+    "authorityBoundary": "The package models uncertainty and policy outcomes and provides fail-closed boundary conversion; it does not by itself issue production authority, schedule work, access external systems or switch consumers.",
+    "runtimeObligations": [
+      "Preserve both legacy numeric Tri and v0.2 TriState surfaces, exact discriminants and subpath exports.",
+      "Preserve short-circuit order, singleton reference identity, unknown-reason collection/deduplication and evidence/reference aliasing.",
+      "Preserve deny-first Decision priority, empty-input behavior, evidence concatenation, exact diagnostic codes/messages and string includes semantics.",
+      "Preserve BoolBoundary shape discrimination and fail-closed values for unknown/review, including diagnostic order.",
+      "Preserve Omni confidence threshold, advisory-only mapping and exported-set membership behavior.",
+      "Preserve bounded width/truth-table checks, Set/Array behavior, generated paths, spread omission rules and JavaScript number/string semantics.",
+      "Keep every existing Fungi asset non-authorizing and preserve TypeScript shadows until a separately admitted replacement is proven."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming a bounded logic scope and wave limits",
+      "source-to-Fungi translation artifacts and exact twin hashes for any newly admitted symbol",
+      "independent differential vectors for mutation, aliases, proxies, getters, sparse arrays, malformed discriminants and thrown accessors",
+      "host substitution proof for Set, Array methods, object spread and string/number operations",
+      "bounded physical profile for records, arrays, strings, sets and typed failures",
+      "physical SLIDE/VOK re-admission, bounded execution manifest and complete exact-head receipt",
+      "consumer-enforcement proof and explicit retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep all galerina-core-logic rows blocked, retain the prior isOmniUncertain evidence and existing package Fungi assets as non-authorizing, and keep CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}

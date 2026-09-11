@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-logic - 2026-09-11
+
+- [x] Assessed the 21 TypeScript source files under
+  packages-ts/galerina-core-logic/src from exact main HEAD
+  4f3932b8ee9ecc9ee8f97c3b12bb9347caa0dec4 / tree
+  cc323f33d2193b228f645450e6669efa9ccae55d through the package boundary graph
+  and four focused test files.
+- [x] Recorded 67 exported runtime functions, the legacy numeric Tri surface,
+  v0.2 TriState/Decision/BoolBoundary/Omni surfaces, 22 loaded Fungi assets,
+  and the two existing Omni/Tri twins in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-logic-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suite pass 57/57. The package boundary
+  reports PASS with 43 nodes, 43 internal edges and no external dependencies.
+- [x] Astra's same-head advisory records the short-circuit, discriminant,
+  unknown-reason, evidence-aliasing, deny-first, fail-closed, confidence,
+  diagnostic and bounded-truth-table obligations for any future translation.
+- [!] The 27 package rows remain blocked (25 DOSSIER_REQUIRED, one
+  EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY and one SCOPED_CANDIDATES_ONLY); the
+  conserved queue remains CANDIDATE: 0. No Fungi source, queue relabel,
+  consumer switch, TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep broader logic translation closed until a separate exact non-empty
+  owner admission names a bounded scope and independent differential, physical
+  SLIDE/VOK, execution and receipt gates pass. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-economics - 2026-09-11
 
 - [x] Assessed packages-ts/galerina-core-economics/src/index.ts from exact

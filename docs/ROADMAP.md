@@ -3,6 +3,32 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-logic - 2026-09-11
+
+The next bounded package assessment is recorded at exact main HEAD
+4f3932b8ee9ecc9ee8f97c3b12bb9347caa0dec4 with tree
+cc323f33d2193b228f645450e6669efa9ccae55d in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-logic-source-dossier.json.
+The package boundary graph covers 43 source and Fungi nodes with 43 internal
+edges and no external dependencies. It contains the legacy numeric logic
+surface plus v0.2 TriState, Decision, BoolBoundary and advisory Omni modules,
+with 67 exported runtime functions.
+
+Typecheck, build and the four focused suites pass 57/57. Twenty-two package
+Fungi assets are hashed as existing non-authorizing evidence; the Omni
+uncertainty and Tri operation twins have bounded package tests, but they do not
+replace TypeScript or grant consumer authority. Astra's same-head advisory
+keeps conversion on HOLD pending preservation of discriminants, short-circuit
+and reason ordering, evidence/reference behavior, deny-first composition,
+fail-closed boundaries, Omni confidence, and truth-table limits.
+
+The 27 queue rows remain blocked and the queue remains CANDIDATE: 0. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires
+exact non-empty owner admission, bounded differential and physical proof,
+SLIDE/VOK receipt, bounded execution evidence and independent review. Git
+remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-economics - 2026-09-11
 
 The next bounded package assessment is recorded at exact main HEAD
