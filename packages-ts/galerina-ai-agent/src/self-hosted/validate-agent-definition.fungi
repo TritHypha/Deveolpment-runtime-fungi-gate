@@ -4,14 +4,19 @@
 /// galerina-ai-agent/src/index.ts. Structural diagnostics precede the
 /// delegated tool and limit checks, matching the TypeScript order.
 
+// A record payload keeps presence separate from the signed/fractional value.
+// The current WASM Option lane uses negative handles for absence, so a bare
+// Option<Int> cannot faithfully carry a negative optional resource limit.
+record AgentLimitValue {
+  value: Float64
+}
+
 record AgentLimits {
   timeoutMs: Float64
   memoryBytes: Float64
   maxToolCalls: Float64
-  // Token and rate-limit counts use the admitted integral Option payload in
-  // this wave; fractional JavaScript numbers remain outside this profile.
-  maxTokens: Option<Int>
-  rateLimitPerMinute: Option<Int>
+  maxTokens: Option<AgentLimitValue>
+  rateLimitPerMinute: Option<AgentLimitValue>
 }
 
 record AgentToolPermission {
@@ -140,7 +145,7 @@ contract { intent { "Require the agent's structural names and append delegated t
   }
   match definition.limits.maxTokens {
     Some(value) => {
-      if !(value > 0.0) {
+      if !(value.value > 0.0) {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_MAX_TOKENS_INVALID"
           severity: "error"
@@ -154,7 +159,7 @@ contract { intent { "Require the agent's structural names and append delegated t
   }
   match definition.limits.rateLimitPerMinute {
     Some(value) => {
-      if !(value > 0.0) {
+      if !(value.value > 0.0) {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_RATE_LIMIT_INVALID"
           severity: "error"

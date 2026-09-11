@@ -1450,6 +1450,10 @@ export function emitWATExpr(
       // the enclosing `)` — exactly the rule the enum-variant path below (1037+) states.
       // Use an inline-safe block comment to keep the diagnostic without the hazard.
       if (constVal !== undefined) return `(i32.const ${constVal}) (; static ${name} ;)`;
+      // None is a value, not a constructor call. Use the existing Option ABI's
+      // absence producer; otherwise a valid missing optional field traps as an
+      // unresolved identifier before the validator can examine the record.
+      if (name === "None") return `(call $host___option_none)`;
       // Unknown identifier — emit with comment for diagnostics.
       return `(unreachable) (; unresolved: ${name} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
@@ -1486,29 +1490,28 @@ export function emitWATExpr(
           }
         }
 
-        // P9.4b: record field access — r.field → i32.load at the field's slot offset.
-        // Resolves only when the receiver's record type and the field are known;
-        // otherwise falls through to the placeholder (preserving all other paths).
-        const recType = recordVarTypes?.get(receiverName);
-        if (recType !== undefined && recordLayouts !== null) {
-          const fields = recordLayouts.get(recType);
-          const idx = fields ? fields.indexOf(memberName) : -1;
-          if (idx >= 0) {
-            const local = vars.get(receiverName);
-            // #163: a record-typed receiver with NO WAT local cannot yield a real base
-            // pointer. Fail CLOSED (trap) — never read reserved scratch at (i32.const 0),
-            // which would silently load a wrong-but-plausible value instead of trapping.
-            if (local === undefined) {
-              return `(unreachable) (; unresolved record base: ${receiverName} — fail-closed (emitter cannot lower; #163) ;)`;
-            }
-            const slot = watRecordLayouts?.get(recType)?.fields.find((field) => field.name === memberName);
-            const off = slot?.offset ?? idx * WAT_REC_FIELD_SIZE;
-            const load = slot === undefined ? "i32.load" : `${slot.watType}.load`;
-            // NO trailing ;; comment — this expression is used INLINE (e.g. inside
-            // (i32.add <left> <right>)), and a line comment would swallow the closing
-            // paren of the enclosing S-expression.
-            return `(${load} (i32.add (local.get ${local}) (i32.const ${off})))`;
+      }
+
+      // Resolve the receiver expression's declared type, including nested records
+      // and record-returning calls. The type inference already follows a.b.c;
+      // lowering must use the same layout at each step instead of requiring a
+      // developer-created local for every intermediate record.
+      const recType = inferExprType(receiverNode);
+      if (receiverNode !== undefined && recType !== undefined && recordLayouts !== null) {
+        const fields = recordLayouts.get(recType);
+        const idx = fields ? fields.indexOf(memberName) : -1;
+        if (idx >= 0) {
+          if (receiverNode.kind === "identifier" && !vars.has(receiverNode.value ?? "")) {
+            // A missing record base must trap, never read reserved scratch memory.
+            return `(unreachable) (; unresolved record base: ${receiverNode.value ?? ""} — fail-closed (emitter cannot lower; #163) ;)`;
           }
+          const slot = watRecordLayouts?.get(recType)?.fields.find((field) => field.name === memberName);
+          const off = slot?.offset ?? idx * WAT_REC_FIELD_SIZE;
+          const load = slot === undefined ? "i32.load" : `${slot.watType}.load`;
+          // Emit the receiver exactly once. Unsupported inner expressions retain
+          // their trap; neither a missing type nor field receives a default value.
+          const base = emitWATExpr(receiverNode, vars, staticConsts);
+          return `(${load} (i32.add ${base} (i32.const ${off})))`;
         }
       }
       return `(unreachable) (; unresolved member: ${memberName} — fail-closed (emitter cannot lower; #128-sibling) ;)`;

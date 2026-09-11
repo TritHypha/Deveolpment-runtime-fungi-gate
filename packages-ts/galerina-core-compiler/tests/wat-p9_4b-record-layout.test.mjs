@@ -122,4 +122,46 @@ describe("P9.4b: record construction lowers to a linear-memory struct", () => {
     assert.equal(inst.exports.readCount(base), 9007199254740991n);
     assert.equal(inst.exports.readTail(base), 11);
   });
+
+  it("follows nested record layouts without losing wide field types", async () => {
+    const src = `
+record Leaf { tag: Int, score: Float64, count: Int64 }
+record Branch { padding: Int, leaf: Leaf }
+record Root { branch: Branch }
+pure flow makeRoot(score: Float64, count: Int64) -> Root {
+  let leaf: Leaf = Leaf { tag: 3, score: score, count: count }
+  let branch: Branch = Branch { padding: 9, leaf: leaf }
+  return Root { branch: branch }
+}
+pure flow score(root: Root) -> Float64 { return root.branch.leaf.score }
+pure flow count(root: Root) -> Int64 { return root.branch.leaf.count }
+pure flow fromCall(score: Float64, count: Int64) -> Float64 {
+  return makeRoot(score, count).branch.leaf.score
+}
+`;
+    const wat = await compileToWAT(src);
+    assert.equal((wat.match(/\(call \$makeRoot\s/g) ?? []).length, 1,
+      "the record-producing receiver is evaluated once for the whole chain");
+    const inst = await instantiate(wat);
+    const root = inst.exports.makeRoot(-0.5, 9007199254740991n);
+    assert.equal(inst.exports.score(root), -0.5);
+    assert.equal(inst.exports.count(root), 9007199254740991n);
+    assert.equal(inst.exports.fromCall(3.25, 17n), 3.25);
+  });
+
+  it("unknown nested fields trap instead of reading a default field offset", async () => {
+    const src = `
+record Leaf { value: Int }
+record Root { leaf: Leaf }
+pure flow missing() -> Int {
+  let leaf: Leaf = Leaf { value: 77 }
+  let root: Root = Root { leaf: leaf }
+  return root.leaf.missing
+}
+`;
+    const wat = await compileToWAT(src);
+    assert.match(wat, /unresolved member: missing/);
+    const inst = await instantiate(wat);
+    assert.throws(() => inst.exports.missing(), WebAssembly.RuntimeError);
+  });
 });

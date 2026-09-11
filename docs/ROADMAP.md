@@ -3,6 +3,15 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Selective conversion progress - 2026-09-12
+
+The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)
+keeps all six AI-agent and seven core-vector exports in the runtime target while
+retaining declarations and development tools separately. Nested-field lowering
+and optional numeric payload repairs have focused WASM evidence for two existing
+validator twins. Other runtime/border obligations remain open; there is no full
+chapter closure, consumer switch or production-authority change.
+
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 
 The [current conversion policy](plans/2026-09-11-selective-fungi-conversion-scope.md)

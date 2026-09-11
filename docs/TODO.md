@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Selective conversion: first chapter repairs - 2026-09-12
+
+- [x] Classify the six AI-agent and seven core-vector exports as runtime targets;
+  retain declarations and development tooling separately. See the
+  [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md).
+- [x] Repair nested WAT record access and bare Option absence. Preserve unknown
+  field refusal, wide field types and single receiver evaluation.
+- [x] Repair the two agent-limit twins' optional numeric representation; focused
+  WASM comparisons now cover absent, negative and fractional values with exact
+  ordered diagnostics. These are bounded checks, not a physical admission claim.
+- [ ] Complete the remaining Wave 01 behavior/border coverage, reconcile other
+  Wave 02 package roles, and manually implement the Wave 03 runtime cores.
+- [ ] Retain generic scalar-Option payload support, non-finite input mapping,
+  active-object/alias semantics and the custom limits path as explicit remaining
+  obligations. No chapter or full conversion completion is claimed.
+- [ ] Repair negative Float64 literal lowering in record initializers; current
+  finite-value differential probes pass typed parameters and do not cover that
+  separate expression-lowering defect.
+
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 
 - [x] Record the [selective conversion policy](plans/2026-09-11-selective-fungi-conversion-scope.md):

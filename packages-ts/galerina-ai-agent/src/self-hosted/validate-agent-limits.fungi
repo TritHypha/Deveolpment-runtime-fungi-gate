@@ -5,14 +5,19 @@
 /// The optional TypeScript path override is represented by the source default
 /// path in this scalar artifact; no caller authority is introduced.
 
+// A record payload keeps presence separate from the signed/fractional value.
+// The current WASM Option lane uses negative handles for absence, so a bare
+// Option<Int> cannot faithfully carry a negative optional resource limit.
+record AgentLimitValue {
+  value: Float64
+}
+
 record AgentLimits {
   timeoutMs: Float64
   memoryBytes: Float64
   maxToolCalls: Float64
-  // Token and rate-limit counts use the admitted integral Option payload in
-  // this wave; fractional JavaScript numbers remain outside this profile.
-  maxTokens: Option<Int>
-  rateLimitPerMinute: Option<Int>
+  maxTokens: Option<AgentLimitValue>
+  rateLimitPerMinute: Option<AgentLimitValue>
 }
 
 record AgentDiagnostic {
@@ -56,7 +61,7 @@ contract { intent { "Require every present agent resource limit to be positive a
 
   match limits.maxTokens {
     Some(value) => {
-      if !(value > 0.0) {
+      if !(value.value > 0.0) {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_MAX_TOKENS_INVALID"
           severity: "error"
@@ -71,7 +76,7 @@ contract { intent { "Require every present agent resource limit to be positive a
 
   match limits.rateLimitPerMinute {
     Some(value) => {
-      if !(value > 0.0) {
+      if !(value.value > 0.0) {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_RATE_LIMIT_INVALID"
           severity: "error"

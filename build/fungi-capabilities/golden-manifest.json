@@ -295,7 +295,7 @@
     "notExecutedExamples": 3
   },
   "toolchain": {
-    "runtimeClosureFileCount": 304,
-    "runtimeClosureSha256": "sha256:f40f97dea11116c0347d2c99e55b6b6ed94c31f57475b127a785410e710eed5f"
+    "runtimeClosureFileCount": 320,
+    "runtimeClosureSha256": "sha256:c78ff74d42326a4c504106d816ba3dfaf762228732e5e077ee91be1ce793576c"
   }
 }
