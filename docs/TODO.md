@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-photonic - 2026-09-11
+
+- [x] Assessed the single TypeScript source file under
+  packages-ts/galerina-core-photonic/src from exact main HEAD
+  7d032fbf75f837d0cefcc4ef427f4043645ebba4 / tree
+  582fbc00131f1e5aa4fa0e93de46b0356832e105 through the package boundary graph
+  and focused photonic contract suite.
+- [x] Recorded the five exported runtime validators/report helpers and the
+  package example in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-photonic-source-dossier.json.
+  No package-local .fungi twin exists.
+- [x] Typecheck, build and the package suite pass 4/4. The package boundary
+  reports PASS with one source node, no internal edges and no dependencies.
+- [x] The assessment records the unresolved v0.1/v0.2 photonic documentation
+  conflict and the finite-number, bounds, Set/array, mutation, diagnostic and
+  plan-authority obligations for any future translation.
+- [!] Both package rows remain BLOCKED:DOSSIER_REQUIRED; the conserved queue
+  remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep photonic translation closed until the documentation conflict is
+  resolved and a separate exact non-empty owner admission names a bounded
+  scope with independent differential, physical SLIDE/VOK, execution and
+  receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-network - 2026-09-11
 
 - [x] Assessed the seven TypeScript source files under

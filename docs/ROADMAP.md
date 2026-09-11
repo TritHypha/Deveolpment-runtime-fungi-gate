@@ -3,6 +3,31 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-photonic - 2026-09-11
+
+The next bounded package assessment is recorded at exact main HEAD
+7d032fbf75f837d0cefcc4ef427f4043645ebba4 with tree
+582fbc00131f1e5aa4fa0e93de46b0356832e105 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-photonic-source-dossier.json.
+The package boundary graph covers one TypeScript source node with no internal
+or external edges. It contains five exported runtime validators/report helpers,
+one example and no Fungi assets or twin.
+
+Typecheck, build and the focused suite pass **4/4**. The source and built oracle
+are recorded with exact hashes. The package is a pure photonic model and
+validation layer; it has no optical hardware, simulation kernel, scheduling,
+transport or authority path. The README and KB retain unresolved v0.1/v0.2
+transport and diagnostic meanings, so Astra's same-head review keeps conversion
+on HOLD pending that reconciliation and proof of finite-number, bounds,
+diagnostic ordering, mutation and plan-authority semantics.
+
+Both queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. No new Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. Any future
+translation requires exact non-empty owner admission, bounded differential and
+physical proof, SLIDE/VOK receipt, bounded execution evidence and independent
+review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-network - 2026-09-11
 
 The next bounded package assessment is recorded at exact main HEAD

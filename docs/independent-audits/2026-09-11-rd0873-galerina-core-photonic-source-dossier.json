@@ -1,0 +1,244 @@
+{
+  "schema": "galerina.rd0873.galerina-core-photonic-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "7d032fbf75f837d0cefcc4ef427f4043645ebba4",
+    "tree": "582fbc00131f1e5aa4fa0e93de46b0356832e105"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-photonic/src/index.ts",
+        "package": "galerina-core-photonic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-photonic/tests/photonic-contracts.test.mjs",
+        "package": "galerina-core-photonic",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-photonic",
+    "packageJsonSha256": "sha256:8329b638bd9bea8501bd9b1530dafaddd2c19ba002b452b3c7656f51ec400ced",
+    "packageLockSha256": "sha256:cd2e7643e50bb5b0b0269b67bf2c7aa4af85cef232d0b82f873a4a0fae6619b0",
+    "readmeSha256": "sha256:4cdd323d415ef1f2948ab4cc3c38e5260ff4aa3dd29bd69ddfdf3f91eb913097",
+    "packageTodoSha256": null,
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-photonic/examples/tri-optical-mapping-plan.json",
+        "sha256": "sha256:c7ba79d89c7bceb0b5b68b94df43b40315e31001ad401ede8b3e1379ccf54de2",
+        "utf8Bytes": 1927
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-photonic/.graph/BOUNDARY.md",
+      "sha256": "sha256:9a330529d6a84a246295010d508cc36b1b1f30961329a8763dccc43828b7c14d",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssetCount": 0,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-photonic/src/index.ts",
+        "sha256": "sha256:8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d",
+        "utf8Bytes": 6350
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "defineOpticalSignal",
+        "source": "packages-ts/galerina-core-photonic/src/index.ts",
+        "span": {
+          "start": 64,
+          "end": 81
+        },
+        "sourceSha256": "sha256:8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d"
+      },
+      {
+        "symbol": "validateOpticalSignal",
+        "source": "packages-ts/galerina-core-photonic/src/index.ts",
+        "span": {
+          "start": 83,
+          "end": 124
+        },
+        "sourceSha256": "sha256:8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d"
+      },
+      {
+        "symbol": "validatePhotonicMapping",
+        "source": "packages-ts/galerina-core-photonic/src/index.ts",
+        "span": {
+          "start": 126,
+          "end": 178
+        },
+        "sourceSha256": "sha256:8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d"
+      },
+      {
+        "symbol": "createPhotonicReport",
+        "source": "packages-ts/galerina-core-photonic/src/index.ts",
+        "span": {
+          "start": 180,
+          "end": 191
+        },
+        "sourceSha256": "sha256:8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d"
+      },
+      {
+        "symbol": "validatePhotonicPlan",
+        "source": "packages-ts/galerina-core-photonic/src/index.ts",
+        "span": {
+          "start": 193,
+          "end": 229
+        },
+        "sourceSha256": "sha256:8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "Wavelength",
+        "Phase",
+        "Amplitude",
+        "OpticalSignal",
+        "OpticalChannel",
+        "PhotonicMapping",
+        "PhotonicMode",
+        "PhotonicDiagnosticSeverity",
+        "PhotonicDiagnostic",
+        "PhotonicPlan",
+        "PhotonicReport"
+      ],
+      "disposition": "type contracts remain evidence; exported validation/report functions are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-photonic/dist/index.js",
+    "sha256": "sha256:26a207703a9b439d57bb049fcac7cb654fc2607a1ba0bc9c464924425717ccd0",
+    "declarationPath": "packages-ts/galerina-core-photonic/dist/index.d.ts",
+    "declarationSha256": "sha256:585058da617b78d4b18bb38ad027c352fef226ad9ae29b3728fcfa9a371d6c90",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-photonic",
+    "nodes": 1,
+    "edges": 0,
+    "functions": 5,
+    "edgeTypes": {
+      "DEFINES": 1
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "validateOpticalSignal",
+      "validatePhotonicMapping",
+      "validatePhotonicPlan"
+    ],
+    "note": "Boundary graph reports one source node and no dependencies; not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-photonic/tests/photonic-contracts.test.mjs"
+    ],
+    "testSha256": {
+      "photonic-contracts.test.mjs": "sha256:d53215e7c12d5aaa32cb20fe85a2910be3dc1405b1554e46fdfda6315a1f3a86"
+    },
+    "command": "npm test",
+    "result": "PASS 4/4",
+    "coveredBehavior": [
+      "finite wavelength and bounded amplitude checks",
+      "mapping name/state/duplicate diagnostics",
+      "photonic report and channel count",
+      "Tri optical mapping example"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-photonic/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion admission",
+    "snapshot": {
+      "head": "7d032fbf75f837d0cefcc4ef427f4043645ebba4",
+      "tree": "582fbc00131f1e5aa4fa0e93de46b0356832e105"
+    },
+    "findings": [
+      "Pure model/validation layer; no hardware, simulation kernel, scheduling, transport, I/O or authority path.",
+      "README and KB retain unresolved v0.1/v0.2 transport and diagnostic meanings; documentation conflicts must be resolved before stable translation contracts.",
+      "Finite-number checks, positive wavelength, amplitude [0,1], trim, Set duplicate detection, array order, nested paths and joined Error text are observable.",
+      "Plan validation does not enforce report literal, mode support, optical topology, logicPackage identity or physical feasibility.",
+      "Report construction preserves plan references and declared channel count; diagnostics do not execute or authorize.",
+      "Caller objects and arrays remain mutable; sparse arrays, getters, proxies, nonfinite values and post-call mutation need differential treatment.",
+      "No Fungi twin or consumer authority exists; any translation would be new authoring."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-photonic",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous photonic signal, mapping and plan validation/report helpers over typed objects, arrays, sets, strings and JavaScript numbers",
+    "authorityBoundary": "Models and validates photonic plans only; no hardware, scheduling, transport, simulation execution or governance authority.",
+    "runtimeObligations": [
+      "Preserve finite checks, bounds, trim, Set duplicate detection, array traversal, diagnostic ordering, nested paths and Error joining.",
+      "Resolve v0.1/v0.2 naming and diagnostic conflicts before admission.",
+      "Treat mutable caller objects and sparse/getter/proxy/nonfinite inputs as observable until constrained.",
+      "Keep TypeScript shadow until separately authorized replacement and physical proof."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits",
+      "documentation-conflict resolution",
+      "source-to-Fungi artifact and exact twin hash",
+      "independent differential and host substitution proof",
+      "bounded physical optical ABI/profile and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep both galerina-core-photonic rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until conflicts are resolved and separate exact non-empty owner admission and independent gates authorize a named scope."
+}
