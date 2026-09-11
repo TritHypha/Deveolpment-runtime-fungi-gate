@@ -46,6 +46,14 @@ counts or open items that a newer section explicitly supersedes.
 - [!] `channelIdentityVerdict` remains an authority-adjacent
   `BLOCKED:DOSSIER_REQUIRED` surface. Its callbacks, structured input and
   delegated boundary decision require a separate exact-head review.
+- [x] Added the bearer-factor dossier
+  `docs/independent-audits/2026-09-11-rd0873-bearer-token-source-dossier.json`.
+  Its native-crypto-focused tests pass `26/26`; the dossier records the
+  algorithm, key-object, timing-safe and JWT claim obligations.
+- [!] `bearerTokenVerdict` remains a host-floor
+  `BLOCKED:DOSSIER_REQUIRED` surface. No cryptographic implementation is to be
+  moved into Fungi; only a separately authorized host-boundary contract could
+  reopen it.
 
 ### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 

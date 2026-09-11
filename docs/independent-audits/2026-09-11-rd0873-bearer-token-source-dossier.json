@@ -1,0 +1,147 @@
+{
+  "schema": "galerina.rd0873.bearer-token-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING_HOST_FLOOR_HOLD",
+  "authorizing": false,
+  "purpose": "Record the JWT/bearer factor's native cryptographic boundary for future owner review without attempting to translate cryptography into Fungi.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "2a9ec0bc6fca9d0ced6d7ebbe7e19abaf447803c",
+    "tree": "a8d2c5370541c681c205fbd572a6d8e5d3e97c3f"
+  },
+  "queueEntry": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "sourceDigest": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "decisionsDigest": "sha256:4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "projectCorpusReceiptDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
+    "entry": {
+      "path": "packages-ts/galerina-auth/src/bearer.ts",
+      "package": "galerina-auth",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    "queueCounts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "source": {
+    "path": "packages-ts/galerina-auth/src/bearer.ts",
+    "symbol": "bearerTokenVerdict",
+    "span": { "start": 165, "end": 244 },
+    "signature": "export function bearerTokenVerdict(headers: Readonly<Record<string, string>>, opts: BearerVerifyOptions): Verdict",
+    "sourceSha256": "sha256:63d66654572a12d339efbacc66f0773296b5623f76f25b11b82da9a8d8fe0605",
+    "bodySha256": "sha256:2186616c4496ecd5d317cc812a3b2b5316dd4e9201ef14b77c69ad990b055ec1",
+    "sourceUtf8Bytes": 11593,
+    "bodyUtf8Bytes": 3254,
+    "existingTwin": null,
+    "classification": "exported K3 authentication factor with native crypto, key-object and JWT parsing obligations"
+  },
+  "nativeDependencies": {
+    "module": "node:crypto",
+    "operations": [
+      "createHmac",
+      "timingSafeEqual",
+      "createPublicKey",
+      "cryptoVerify",
+      "KeyObject asymmetricKeyType"
+    ],
+    "hostBoundary": "Cryptographic verification remains in the native host; Fungi may consume an independently verified result only when an exact boundary contract authorizes that shape.",
+    "architectureEvidence": "docs/architecture/roadmap-2026-07-11.md describes core-security and cryptographic primitives as the frozen host/compute floor rather than Fungi twin candidates"
+  },
+  "graphEvidence": {
+    "qualifiedName": "Galerina.packages-ts.galerina-auth.src.bearer.bearerTokenVerdict",
+    "label": "Function",
+    "startLine": 165,
+    "endLine": 244,
+    "complexity": 23,
+    "cognitive": 30,
+    "loopCount": 0,
+    "loopDepth": 0,
+    "callers": ["packages-ts/galerina-auth/tests/bearer.test.mjs"],
+    "callees": ["header", "b64urlToBuf", "parseJsonSegment", "verifySignature", "RegExp.exec", "now"]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-auth/dist/bearer.js",
+    "sha256": "sha256:77d949e424239c8f1d3f7d0e43cc027ea24b3028067375fb07ced7aa7e1d184e",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; native crypto remains the execution authority"
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-auth/tests/bearer.test.mjs",
+    "testSha256": "sha256:7e55936ab27486e9bee9b3024ba3b40f3d16e88def9652eb41c20a8a519e4ff1",
+    "command": "node --test tests/bearer.test.mjs",
+    "result": "PASS 26/26",
+    "coveredBehavior": [
+      "HS256, RS256 and EdDSA valid tokens",
+      "absent/empty/non-Bearer input -> INDETERMINATE",
+      "algorithm pinning, alg:none refusal and key-family mismatch",
+      "required expiry, clock tolerance and invalid clock handling",
+      "signature tampering, wrong secret and malformed JWT refusal",
+      "nbf, issuer and audience constraints",
+      "unsupported ES algorithms and empty algorithm configuration fail closed",
+      "composition with auth factors"
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "dependencyTranche": "T3-package-graph",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "legacyShadowAuthority": false,
+    "declaredFloor": null,
+    "replacementOwner": "galerina-auth",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "JWT compact parsing and claims policy around native HMAC/RSA/EdDSA verification; this is a host-floor boundary rather than a pure Fungi decision fold",
+    "inputStateContract": "Readonly header records, algorithm arrays, key strings/bytes/KeyObjects, optional clock/issuer/audience and signed token bytes all have observable runtime and failure behavior",
+    "operationLedger": [
+      "validate the caller's algorithm pin",
+      "locate and classify the bearer header",
+      "split and base64url-decode the compact token",
+      "parse JOSE header and enforce caller-pinned algorithm",
+      "delegate signature verification to node:crypto with key-family checks",
+      "parse and validate temporal, issuer and audience claims",
+      "return ALLOW, DENY or INDETERMINATE without making kernel admission"
+    ],
+    "reusableEvidence": [
+      "graph-resolved complexity and native call dependencies",
+      "bearer-focused test matrix passes 26/26",
+      "native crypto module and built-oracle identities are recorded",
+      "architecture guidance keeps cryptographic primitives in the host/compute floor",
+      "retirement register has no Fungi replacement or execution authority"
+    ],
+    "missingProofs": [
+      "exact owner-authorized scope decision distinguishing host adapter work from Fungi translation",
+      "cryptographic ABI and provenance contract for any Fungi-consumed verification result",
+      "differential vectors for every parser, claim, key-object and crypto failure order",
+      "constant-time and key-type security review outside the Fungi interpreter",
+      "bounded physical SLIDE/VOK evidence for the chosen host boundary",
+      "proof that no host-precomputed Verdict becomes a hidden admission authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Treat this as non-authorizing host-floor evidence. Keep bearerTokenVerdict BLOCKED:DOSSIER_REQUIRED and do not translate native cryptography into Fungi unless a fresh exact-head owner admission defines an explicit host-boundary scope and all cryptographic and authority gates pass."
+}

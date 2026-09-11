@@ -49,6 +49,14 @@ and delegated boundary decision. Slice 94 and Slice 98 remain the relevant
 Array and option-record ABI blockers. This surface remains
 `BLOCKED:DOSSIER_REQUIRED`; no Fungi source was created.
 
+The bearer factor is now recorded in
+`docs/independent-audits/2026-09-11-rd0873-bearer-token-source-dossier.json`.
+Its native-crypto-focused tests pass `26/26`. The dossier records the
+algorithm-pin, key-object, timing-safe comparison, JWT parsing and claim
+validation obligations, and preserves the architecture boundary that
+cryptographic verification remains host/compute work. This entry remains
+`BLOCKED:DOSSIER_REQUIRED`; no cryptography was moved into Fungi.
+
 ## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 The owner supplied a fresh exact, non-empty authorization for one bounded
