@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-sentinel-io - 2026-09-11
+
+- [x] Assessed the six TypeScript source files under
+  packages-ts/galerina-core-sentinel-io/src from exact main HEAD
+  f34df0688f14a2faab348b926f249c5221b671a9 / tree
+  f642913dc738ecc2412cac47b9174cbaae69b256 through the package boundary graph,
+  six focused test files and two registered Fungi assets.
+- [x] Recorded one exported function, eight runtime classes, the type surface,
+  existing hardened-border/manifest-validator assets and exact source/test/build
+  hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-io-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 25/25. The package boundary
+  reports PASS with eight nodes, 11 internal edges and one allowed Node core
+  dependency.
+- [x] Astra's same-head advisory records manifest coverage/hex/version/bounds
+  limits, injected-key and digest-mode custody, integrity-before-copy ordering,
+  mutable shared views, alignment/allocation failures, bus aliasing and the
+  stronger negative/range checks in the Fungi folds.
+- [!] All 12 package rows remain BLOCKED:DOSSIER_REQUIRED; the conserved queue
+  remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep I/O translation closed until manifest/key custody, immutable-byte or
+  concurrency assumptions, allocation bounds and physical bus boundaries are
+  resolved under a separate exact non-empty owner admission with independent
+  differential, physical SLIDE/VOK, execution and receipt gates. Git remains
+  provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-sentinel-egress - 2026-09-11
 
 - [x] Assessed the four TypeScript source files under

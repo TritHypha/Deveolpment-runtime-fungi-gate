@@ -3,6 +3,33 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-sentinel-io - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+f34df0688f14a2faab348b926f249c5221b671a9 with tree
+f642913dc738ecc2412cac47b9174cbaae69b256 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-io-source-dossier.json.
+The package boundary graph covers eight nodes and 11 internal edges, with only
+the allowed `node:crypto` dependency. It contains six TypeScript source files,
+one exported function, eight runtime classes and two existing Fungi assets.
+
+Typecheck, build and the six focused suites pass **25/25**, including manifest
+and hardened-border differentials, HMAC/SHA checks, zero-copy/shared mapping and
+future bus refusal. The Fungi assets fold host-computed decisions and include
+stronger negative/range checks than the direct TypeScript mapper; they do not
+implement JSON parsing, cryptography, copying, typed-array views or physical
+transport. Astra's same-head review keeps translation on HOLD because manifests
+allow gaps, zero-length blocks, arbitrary hex length and unsupported versions;
+injected keys and mutable/shared views need custody, and mapping/bus failure and
+alignment semantics remain observable.
+
+All 12 queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. No new Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. Any future
+translation requires exact non-empty owner admission, bounded differential and
+physical proof, SLIDE/VOK receipt, bounded execution evidence and independent
+review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-sentinel-egress - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

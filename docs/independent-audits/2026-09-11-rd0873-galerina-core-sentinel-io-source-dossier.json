@@ -1,0 +1,443 @@
+{
+  "schema": "galerina.rd0873.galerina-core-sentinel-io-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for manifest-driven integrity-gated I/O without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "f34df0688f14a2faab348b926f249c5221b671a9",
+    "tree": "f642913dc738ecc2412cac47b9174cbaae69b256"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/errors.ts",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/index.ts",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/integrity-monitor.ts",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/manifest.ts",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/photonic-bus-interface.ts",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/zero-copy-mapper.ts",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/tests/integrity.test.mjs",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/tests/manifest.test.mjs",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/tests/pbi.test.mjs",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/tests/rd0361-hardened-border-execution.test.mjs",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/tests/rd0361-manifest-validator-execution.test.mjs",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/tests/zero-copy-mapper.test.mjs",
+        "package": "galerina-core-sentinel-io",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-sentinel-io",
+    "packageJsonSha256": "sha256:36df67cf59de4990f58693caa948dcb8fc621621b9ad9aa00af4fca12b9dd4a5",
+    "packageLockSha256": "sha256:b45221586752a56b7e0a08f0c6ccaa85f5468f969101b779c13c798a4b353f6b",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-sentinel-io/.graph/BOUNDARY.md",
+      "sha256": "sha256:677af424b3ea70ecda8e658b3abe1616c3d86a09ec426bce65307b29349a9a13",
+      "status": "PASS",
+      "externalDependencies": [
+        "node:crypto"
+      ]
+    },
+    "sourceFileCount": 6,
+    "testFileCount": 6,
+    "loadedFungiAssetCount": 2,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/self-hosted/hardened-border.fungi",
+        "sha256": "sha256:c5526e95f88be96b5d9a4607f0bab869afdc7f7ed195430d8ed220b5073cbf8c",
+        "kind": "existing non-authorizing hardened-border/manifest decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/self-hosted/manifest-validator.fungi",
+        "sha256": "sha256:1832183ca2765a825278f86e72804dc924548e6e0e98ed7e8642ead605f8fcfe",
+        "kind": "existing non-authorizing hardened-border/manifest decision asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-io/src/integrity-monitor.ts#IntegrityMonitor",
+        "fungi": "packages-ts/galerina-core-sentinel-io/src/self-hosted/hardened-border.fungi",
+        "status": "existing bounded decision twin; host computes crypto/copy/view facts and TypeScript remains authority shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-io/src/manifest.ts#ManifestLoader",
+        "fungi": "packages-ts/galerina-core-sentinel-io/src/self-hosted/manifest-validator.fungi",
+        "status": "existing bounded structural decision twin; host parses JSON/regex/number facts and TypeScript remains authority shadow"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/errors.ts",
+        "sha256": "sha256:e0470f8a2b10ed36e97bab2c6aa4cd9623bfe4dba32c58c78169937df984b0e9",
+        "utf8Bytes": 1518
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/index.ts",
+        "sha256": "sha256:fe5004c22ba2d376dd2777028da0ecc1e8a283c32456d2f5d5cf876d1f395053",
+        "utf8Bytes": 1018
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/integrity-monitor.ts",
+        "sha256": "sha256:9d0731e75935238eb15b9a45ed1d7118c2d1aaf224a41fc4e50f0cd93318021f",
+        "utf8Bytes": 2791
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/manifest.ts",
+        "sha256": "sha256:045e593e09e148cec06b787110b3c796dcf07185b9626413b475933b741bc329",
+        "utf8Bytes": 5472
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/photonic-bus-interface.ts",
+        "sha256": "sha256:368fe928575cec112a2c2960659ed00d83d59f365a06e21def59832789375815",
+        "utf8Bytes": 3086
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-io/src/zero-copy-mapper.ts",
+        "sha256": "sha256:244cd4920e7a60aa0beae4df1d949ca06e6127f2f50e9c33fbd385b2e9545be8",
+        "utf8Bytes": 4417
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [
+      {
+        "symbol": "buildManifest",
+        "source": "packages-ts/galerina-core-sentinel-io/src/manifest.ts",
+        "span": {
+          "start": 146,
+          "end": 163
+        },
+        "sourceSha256": "sha256:045e593e09e148cec06b787110b3c796dcf07185b9626413b475933b741bc329",
+        "bodySha256": "sha256:85ca37b6c5fc89843a6fd9eef925aa77fde79ef5cb6f6bc03a50e25c104803fe",
+        "bodyUtf8Bytes": 482
+      }
+    ],
+    "exportedClasses": [
+      {
+        "symbol": "HardenedBorderViolation",
+        "source": "packages-ts/galerina-core-sentinel-io/src/errors.ts",
+        "span": {
+          "start": 20,
+          "end": 30
+        },
+        "sourceSha256": "sha256:e0470f8a2b10ed36e97bab2c6aa4cd9623bfe4dba32c58c78169937df984b0e9",
+        "bodySha256": "sha256:61b9131c368a981fc149f583544d88f26023e9771f3f6e758457e9be299c5a99",
+        "bodyUtf8Bytes": 374
+      },
+      {
+        "symbol": "SecurityTrap",
+        "source": "packages-ts/galerina-core-sentinel-io/src/errors.ts",
+        "span": {
+          "start": 32,
+          "end": 41
+        },
+        "sourceSha256": "sha256:e0470f8a2b10ed36e97bab2c6aa4cd9623bfe4dba32c58c78169937df984b0e9",
+        "bodySha256": "sha256:efeec17d4e5526486ec0edbff9dff03ca6a0147313b26f9344b5eeed5bad2007",
+        "bodyUtf8Bytes": 260
+      },
+      {
+        "symbol": "IntegrityMonitor",
+        "source": "packages-ts/galerina-core-sentinel-io/src/integrity-monitor.ts",
+        "span": {
+          "start": 29,
+          "end": 84
+        },
+        "sourceSha256": "sha256:9d0731e75935238eb15b9a45ed1d7118c2d1aaf224a41fc4e50f0cd93318021f",
+        "bodySha256": "sha256:d0569b57370c133b3721529eaf42e93aed421bdaa4a3ed7897808b3eafd5042b",
+        "bodyUtf8Bytes": 1668
+      },
+      {
+        "symbol": "ManifestLoader",
+        "source": "packages-ts/galerina-core-sentinel-io/src/manifest.ts",
+        "span": {
+          "start": 41,
+          "end": 138
+        },
+        "sourceSha256": "sha256:045e593e09e148cec06b787110b3c796dcf07185b9626413b475933b741bc329",
+        "bodySha256": "sha256:a1ccbc375e3c2c1654f44f47309cafe6acdad1967edc0f66898aae106744545e",
+        "bodyUtf8Bytes": 3356
+      },
+      {
+        "symbol": "PhotonicBusInterface",
+        "source": "packages-ts/galerina-core-sentinel-io/src/photonic-bus-interface.ts",
+        "span": {
+          "start": 16,
+          "end": 21
+        },
+        "sourceSha256": "sha256:368fe928575cec112a2c2960659ed00d83d59f365a06e21def59832789375815",
+        "bodySha256": "sha256:7f509c58e3fb08b0730ebb11a8403adcd31f9c3bfbcadbc0a6256a0c291bba71",
+        "bodyUtf8Bytes": 230
+      },
+      {
+        "symbol": "LocalDiskBus",
+        "source": "packages-ts/galerina-core-sentinel-io/src/photonic-bus-interface.ts",
+        "span": {
+          "start": 27,
+          "end": 69
+        },
+        "sourceSha256": "sha256:368fe928575cec112a2c2960659ed00d83d59f365a06e21def59832789375815",
+        "bodySha256": "sha256:2fad8633cbc0b28ae1dbbdaf8158bfafb6ba117520417dcca3088aa1a26357be",
+        "bodyUtf8Bytes": 1201
+      },
+      {
+        "symbol": "PhotonicBus",
+        "source": "packages-ts/galerina-core-sentinel-io/src/photonic-bus-interface.ts",
+        "span": {
+          "start": 77,
+          "end": 97
+        },
+        "sourceSha256": "sha256:368fe928575cec112a2c2960659ed00d83d59f365a06e21def59832789375815",
+        "bodySha256": "sha256:455fd229dc90b5165fada215224508a4826d7bb802a6175d714da67becb00a5b",
+        "bodyUtf8Bytes": 517
+      },
+      {
+        "symbol": "ZeroCopyMapper",
+        "source": "packages-ts/galerina-core-sentinel-io/src/zero-copy-mapper.ts",
+        "span": {
+          "start": 34,
+          "end": 114
+        },
+        "sourceSha256": "sha256:244cd4920e7a60aa0beae4df1d949ca06e6127f2f50e9c33fbd385b2e9545be8",
+        "bodySha256": "sha256:6a569d1dd3c7590cf9b8dfdf3e39dfe4235c91ebfd94e5a23aa2b184cd93acc8",
+        "bodyUtf8Bytes": 2974
+      }
+    ],
+    "exportedConstants": [],
+    "typeOnlySurface": {
+      "types": [
+        "IngestSourceKind"
+      ],
+      "interfaces": [
+        "IntegrityResult",
+        "IoBlock",
+        "IoManifest",
+        "MappedBlock"
+      ],
+      "disposition": "type contracts remain evidence; manifest loading, crypto/HMAC integrity, zero-copy mapping, bus transport and error classes are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-sentinel-io/dist/index.js",
+    "sha256": "sha256:48b9180aef4c978ebb58ff67f5f44cbf9ce64c3454ca1eae26f842e5b5e4ab78",
+    "declarationPath": "packages-ts/galerina-core-sentinel-io/dist/index.d.ts",
+    "declarationSha256": "sha256:e097041d1cd92a2e20c0e4f0a48181910c295a8417cc53671a99e2a8a6c577b3",
+    "buildCommand": "npm test (includes build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-sentinel-io",
+    "nodes": 8,
+    "edges": 11,
+    "functions": 1,
+    "exportedClassCount": 8,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 11,
+      "EXTERNAL_IMPORTS": 1
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "ManifestLoader.fromObject",
+      "IntegrityMonitor.enforceBlock",
+      "ZeroCopyMapper.map",
+      "ZeroCopyMapper.i32",
+      "LocalDiskBus.stream",
+      "PhotonicBus.connect"
+    ],
+    "note": "Boundary graph reports eight nodes, eleven internal edges and one allowed Node core dependency. Function/class surfaces are AST-derived and not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-sentinel-io/tests/integrity.test.mjs",
+      "packages-ts/galerina-core-sentinel-io/tests/manifest.test.mjs",
+      "packages-ts/galerina-core-sentinel-io/tests/pbi.test.mjs",
+      "packages-ts/galerina-core-sentinel-io/tests/rd0361-hardened-border-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-io/tests/rd0361-manifest-validator-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-io/tests/zero-copy-mapper.test.mjs"
+    ],
+    "testSha256": {
+      "integrity.test.mjs": "sha256:1b917b8acdf0ec5914d4d74305d22aefbffbddcbedde3db4d8d13b4decfd0a51",
+      "manifest.test.mjs": "sha256:31b6e055de4efddf3abb1e8617f495b3b584bbe388fafe84ac5ad329eae292cd",
+      "pbi.test.mjs": "sha256:699c04002f8b58cf9be9f76b43230731a7576f999cca476fc1a3c782f79699b7",
+      "rd0361-hardened-border-execution.test.mjs": "sha256:6a20aa659bd440e5d610beaf1c8bf86f391fdafb7b598baaba5c9d1bb5c490e0",
+      "rd0361-manifest-validator-execution.test.mjs": "sha256:99e5f3affbdaee02cbcdf64dcd76ffcbb354252ffc0a67d4c125dc8d8a6db2e1",
+      "zero-copy-mapper.test.mjs": "sha256:a43e6175965f20a09659899f63f0918ce546e2cc4ab151ad1926a6cdf520a594"
+    },
+    "command": "npm test",
+    "result": "PASS 25/25",
+    "coveredBehavior": [
+      "plain SHA-256 and keyed HMAC digest/verification",
+      "manifest construction and strict structural validation",
+      "LocalDiskBus connection/range/zero-copy behavior",
+      "future PhotonicBus fail-closed seam",
+      "manifest-gated integrity-before-staging and zero-copy/shared backing views",
+      "RD-0361 hardened-border and manifest-validator bounded differentials"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-sentinel-io/.graph/BOUNDARY.md reports PASS with node:crypto allowed"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "f34df0688f14a2faab348b926f249c5221b671a9",
+      "tree": "f642913dc738ecc2412cac47b9174cbaae69b256"
+    },
+    "findings": [
+      "ManifestLoader checks nonempty strings, nonnegative integers, nonempty lowercase hex, range and non-overlap, but does not enforce contiguous coverage, 64-character SHA-256 digests, unique IDs, supported versions or safe resource bounds; gaps, zero-length blocks and incomplete coverage pass. buildManifest constructs contiguous SHA-256 entries but does not validate empty source/IDs despite its guarantee comment.",
+      "IntegrityMonitor selects plain SHA-256 or HMAC-SHA256 by presence of an injected key, retains the key reference and exposes digest/verify/enforce modes; preserve key custody, wrong-mode refusal and error prototypes.",
+      "ZeroCopyMapper allocates the full backing buffer, hashes each source subarray and then copies it, relying on an already validated manifest and trusted monitor; it does not invoke ManifestLoader. Mutable source bytes require ownership or synchronization between verification and copying, and returned views/buffer remain writable after release. Alignment traps, allocation failures and old-buffer retention on a later-block failure are observable.",
+      "LocalDiskBus retains caller-owned bytes and returns aliased subarray views; validateBusIntegrity always returns true without checking data. PhotonicBus connect/stream throw while validateBusIntegrity returns false, so the future seam is fail-closed but not uniformly throwing.",
+      "The two Fungi assets fold host-computed integrity, map, manifest-shape/layout and release booleans; their explicit negative/range checks are stronger than the direct TypeScript mapper and they do not implement crypto, JSON parsing, copying, typed-array views or a physical bus."
+    ],
+    "materialObligations": [
+      "Preserve manifest JSON/shape/hex/contiguity semantics and fail-closed error codes.",
+      "Preserve crypto/HMAC selection, injected-key aliasing and integrity-before-copy ordering.",
+      "Preserve ArrayBuffer/SharedArrayBuffer allocation, source/backing aliasing, alignment/range failures and partial-failure publication behavior.",
+      "Preserve LocalDiskBus zero-copy aliasing and PhotonicBus refusal; do not infer physical photonic execution.",
+      "Keep existing Fungi assets non-authorizing and retain TypeScript as the consumer shadow.",
+      "Preserve manifest gaps/zero-length/hex-length behavior or resolve it before authority claims; bind manifest provenance, IDs, versions and resource bounds explicitly."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-sentinel-io",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "manifest parsing/validation, SHA/HMAC integrity gates, zero-copy/shared mapping and local/future bus seams",
+    "authorityBoundary": "This package crosses a data-ingest boundary and performs cryptographic checks, memory staging and transport effects. Existing Fungi folds are decision evidence only; they are not an I/O or authority replacement.",
+    "runtimeObligations": [
+      "Preserve JSON/manifest validation, digest mode, key custody, fail-closed errors and integrity-before-release ordering.",
+      "Preserve typed-array/shared-memory aliasing, offsets/alignment, allocation and partial-failure behavior.",
+      "Preserve local bus connection/range semantics and future photonic refusal without claiming hardware execution.",
+      "Keep Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this I/O scope",
+      "source-to-Fungi artifacts and exact twin hashes for manifest/crypto/memory/bus behavior",
+      "independent differential vectors for malformed hex, key mutation, block bounds/alignment, partial failure, shared buffers and aliasing",
+      "host substitution proof for node:crypto, typed arrays, SharedArrayBuffer and physical bus/resource boundaries",
+      "bounded physical ingest/ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core-sentinel-io rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}
