@@ -1,0 +1,131 @@
+{
+  "schema": "galerina.rd0873.scope-verdict-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED decision surface for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "472f71913bfd3a79c7ddc370db80d44b7e3c302d",
+    "tree": "f277f92b8567f82d831414f4ae4262ee32afdedf"
+  },
+  "queueEntry": {
+    "path": "build/conversion-queue/queue.json",
+    "sha256": "60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entry": {
+      "path": "packages-ts/galerina-auth/src/authorization.ts",
+      "package": "galerina-auth",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    "queueCounts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "source": {
+    "path": "packages-ts/galerina-auth/src/authorization.ts",
+    "symbol": "scopeVerdict",
+    "span": { "start": 37, "end": 47 },
+    "signature": "export function scopeVerdict(required: readonly string[], granted: readonly string[]): Verdict",
+    "sourceSha256": "sha256:4e070880884cb146dd3d37440027aee356bf70a81a6ae0980c50c0fbfe8397d7",
+    "bodySha256": "sha256:f88c7013216527cade76b0435392e4177f06f5741e292a0edc35a88aae0c226a",
+    "sourceUtf8Bytes": 2334,
+    "bodyUtf8Bytes": 381,
+    "existingTwin": null,
+    "classification": "exported pure K3 factor; not an admission decision"
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-auth/dist/authorization.js",
+    "sha256": "sha256:6418fc73626fd0ac96bcd6f831102fccaa6bbc14662037ba292a138c506552e8",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "qualifiedName": "Galerina.packages-ts.galerina-auth.src.authorization.scopeVerdict",
+    "label": "Function",
+    "startLine": 37,
+    "endLine": 47,
+    "complexity": 3,
+    "cognitive": 4,
+    "loopCount": 1,
+    "loopDepth": 1,
+    "callers": [
+      "packages-ts/galerina-auth/tests/authorization.test.mjs",
+      "packages-ts/galerina-auth/tests/kernel-integration.test.mjs"
+    ],
+    "callees": ["Set.has"]
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-auth/tests/authorization.test.mjs",
+    "testSha256": "sha256:36303d023f5aa1bf32c208fa057a294e5489dc4b5611f45501a0fa183c8d776b",
+    "command": "npm run typecheck && npm run build && node --test tests/authorization.test.mjs",
+    "result": "PASS 5/5",
+    "coveredBehavior": [
+      "all required scopes present -> ALLOW",
+      "missing required scope -> DENY",
+      "empty required scope list -> INDETERMINATE",
+      "empty granted scope list -> DENY",
+      "exact case-sensitive matching with no prefix expansion"
+    ],
+    "packageBoundary": "packages-ts/galerina-auth/.graph/BOUNDARY.md reports PASS; external workspace dependencies are core-network and tower-citizen"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-auth",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded loop over required scopes with a Set.has host call and K3 verdict constants",
+    "inputStateContract": "Two readonly String arrays at the TypeScript type boundary; readonly annotations do not establish immutable runtime inputs. A future differential set must cover aliases, sparse arrays, getters, custom iterators, mutation and failure behavior.",
+    "operationLedger": [
+      "read required.length",
+      "construct Set from granted",
+      "iterate required",
+      "invoke Set.has for each required scope",
+      "early-return DENY on the first missing scope",
+      "return imported Verdict constants"
+    ],
+    "authorityBoundary": "The factor consumes granted scopes from an already authenticated identity and returns a Verdict; the App Kernel remains the admission decision-maker.",
+    "reusableEvidence": [
+      "focused TypeScript tests pass 5/5",
+      "graph-resolved callers and callee are recorded",
+      "package boundary report passes",
+      "existing auth package documentation states factor-versus-kernel decision boundary"
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming this symbol and scope",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "built-oracle hash and exact dependency build identity",
+      "independent differential vectors including empty, duplicate, ordering, aliases, sparse arrays, getters, custom iterators, mutation and adversarial inputs",
+      "host substitution or equivalent proof for Set.has behavior",
+      "bounded physical profile for array/String ABI, membership behavior, iteration, work limits and typed failures without host-precomputed authorization",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep scopeVerdict BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact-head authorizing admission and the bounded physical and differential gates pass."
+}
