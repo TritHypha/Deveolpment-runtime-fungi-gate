@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-vector - 2026-09-11
+
+- [x] Assessed the single TypeScript source file under
+  packages-ts/galerina-core-vector/src from exact main HEAD
+  0ec4eb2836a7dec22bf718cf11cdec9ca03c3eaa / tree
+  9f9a9fe2b1f253aecbb6678c74da86473bc8b764 through the package boundary graph,
+  one focused test file, README/TODO/example and no Fungi asset.
+- [x] Recorded the seven exported runtime helpers, type surface and exact
+  source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-vector-source-dossier.json.
+  No Fungi twin or consumer authority exists.
+- [x] Typecheck, build and the package suite pass 5/5. The package boundary
+  reports PASS with one node, no internal edges and no external dependencies.
+- [x] Astra's same-head advisory records safe-integer dimension checks,
+  vector/matrix/tensor validation asymmetry, sparse-array/native-throw behavior,
+  zero-input and tensor-compatibility gaps, report aliasing/staleness and the
+  absence of numerical/backend execution evidence.
+- [!] Both package rows remain BLOCKED:DOSSIER_REQUIRED. The conserved queue
+  remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep vector translation closed until structural and aggregate resource
+  bounds, tensor compatibility, runtime object guards, backend semantics and a
+  separately admitted implementation are proven under exact owner admission
+  with independent differential and physical SLIDE/VOK gates. Git remains
+  provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-tasks - 2026-09-11
 
 - [x] Assessed the nine queued source/declaration files under

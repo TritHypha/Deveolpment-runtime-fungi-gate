@@ -3,6 +3,33 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-vector - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+0ec4eb2836a7dec22bf718cf11cdec9ca03c3eaa with tree
+9f9a9fe2b1f253aecbb6678c74da86473bc8b764 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-vector-source-dossier.json.
+The package boundary graph covers one source node with no internal edges or
+external dependencies. It contains seven exported validator/report helpers,
+structural vector/matrix/tensor contracts, one Float32 example and no `.fungi`
+twin.
+
+Typecheck, build and the focused suite pass **5/5**, covering positive lane
+construction, selected matrix/tensor dimensions, vector operation mismatch
+diagnostics, report construction and example loading. Astra's same-head review
+keeps translation on HOLD: vector element types are checked differently from
+matrix/tensor types, tensor operations lack compatibility checks, sparse arrays
+and malformed objects expose native behavior, reports retain mutable references,
+and aggregate memory/backend/numerical semantics are absent. The package has no
+Fungi implementation or execution evidence.
+
+Both queue rows remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains
+`CANDIDATE: 0`. No new Fungi source, queue relabel, consumer switch, TypeScript
+retirement, topology change or corpus assurance rerun occurred. Any future
+translation requires exact non-empty owner admission, bounded structural and
+numerical differential proof, SLIDE/VOK receipt, bounded execution evidence and
+independent review. Git remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-tasks - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

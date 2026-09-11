@@ -1,0 +1,293 @@
+{
+  "schema": "galerina.rd0873.galerina-core-vector-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for vector, matrix and tensor shape contracts without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "0ec4eb2836a7dec22bf718cf11cdec9ca03c3eaa",
+    "tree": "9f9a9fe2b1f253aecbb6678c74da86473bc8b764"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-vector/src/index.ts",
+        "package": "galerina-core-vector",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-vector/tests/vector-contracts.test.mjs",
+        "package": "galerina-core-vector",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-vector",
+    "packageJsonSha256": "sha256:600b00c855003114cca1ec4e9fc20c9f454faa4f731899634391f945bdc92ecd",
+    "packageLockSha256": "sha256:923f216d24dce28885ab0304397aa86bc208cc9f51e06cc8dd554e6bae1fc551",
+    "readmeSha256": "sha256:644a06c79750e29b70139097a1399c95d9d8daa4feb472c9d3844f09439fdb96",
+    "packageTodoSha256": "sha256:fb336c27975c907e85e71a5b1e592175cab138f4a6ae9eb02107c48b6902e36d",
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-vector/examples/float32-vector-operation.json",
+        "sha256": "sha256:c92101a00edfe650bea8fe64b2fc11b90ee9850de81984be7cc7133f6d510121",
+        "utf8Bytes": 258
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-vector/.graph/BOUNDARY.md",
+      "sha256": "sha256:8fb73c13f557a8a2eacdecdc2964df2b256e9ab341a39542214b2ee24d363a28",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssetCount": 0,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-vector/src/index.ts",
+        "sha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "utf8Bytes": 7225
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [
+      {
+        "symbol": "defineVectorType",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 75,
+          "end": 87
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:e72cda229c65bea9e9cdbc5aa91e95dfa1d7f178920ee12fbbc70f4323401e0d",
+        "bodyUtf8Bytes": 412
+      },
+      {
+        "symbol": "validateVectorType",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 89,
+          "end": 114
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:96919bc28665696fb714e8953e10bcdd1b103880ad92bc23f09e4c0b3fe5c4a6",
+        "bodyUtf8Bytes": 705
+      },
+      {
+        "symbol": "validateMatrixType",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 116,
+          "end": 141
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:8000ee848989d76bd7a47d11c4af616b4ecd362946d62370de4d5844562fdae0",
+        "bodyUtf8Bytes": 705
+      },
+      {
+        "symbol": "validateTensorType",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 143,
+          "end": 170
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:abf6206c422d3f039d915b0f8b4f463f95c66a5b757cea53fcd5d2dc356bcfa6",
+        "bodyUtf8Bytes": 773
+      },
+      {
+        "symbol": "validateVectorOperation",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 172,
+          "end": 207
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:d73798781e5d153461e7561cc4c13ceccc424755d77031dd1f5790c06a6b0b75",
+        "bodyUtf8Bytes": 1126
+      },
+      {
+        "symbol": "validateTensorOperation",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 209,
+          "end": 229
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:6f539cdc18bc79703f6e824bac75fdcce5dd5e590ec2e21de28b552d57a00696",
+        "bodyUtf8Bytes": 643
+      },
+      {
+        "symbol": "createVectorReport",
+        "source": "packages-ts/galerina-core-vector/src/index.ts",
+        "span": {
+          "start": 231,
+          "end": 252
+        },
+        "sourceSha256": "sha256:2ef743547cce9a3ab2a39dbc7a4a18ac26b4abcdb0c69bc70369e4e455f62037",
+        "bodySha256": "sha256:20a075dd02a28a46f9606441f28f8bc9219af084cedaa5e18215382b36613697",
+        "bodyUtf8Bytes": 716
+      }
+    ],
+    "exportedClasses": [],
+    "exportedConstants": [],
+    "typeOnlySurface": {
+      "types": [
+        "NumericElementType",
+        "VectorDiagnosticSeverity"
+      ],
+      "interfaces": [
+        "MatrixShape",
+        "MatrixType",
+        "QuantizedType",
+        "TensorOperation",
+        "TensorShape",
+        "TensorType",
+        "VectorDiagnostic",
+        "VectorDimension",
+        "VectorOperation",
+        "VectorReport",
+        "VectorType"
+      ],
+      "disposition": "type contracts remain evidence; vector/matrix/tensor validators and report construction are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-vector/dist/index.js",
+    "sha256": "sha256:f5178af2dd9dd3c2a7fa8c828945129fab3326c96a4c9d2be54810f07fee4553",
+    "declarationPath": "packages-ts/galerina-core-vector/dist/index.d.ts",
+    "declarationSha256": "sha256:df4faed20010f3ae9586945b7df064a4205b823f2625911437a536b8ece5e08b",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt contract oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-vector",
+    "nodes": 1,
+    "edges": 0,
+    "functions": 7,
+    "exportedClassCount": 0,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 0,
+      "EXTERNAL_IMPORTS": 0
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "defineVectorType",
+      "validateVectorType",
+      "validateMatrixType",
+      "validateTensorType",
+      "validateVectorOperation",
+      "validateTensorOperation",
+      "createVectorReport"
+    ],
+    "note": "Boundary graph reports one source node, no internal edges and no external dependencies. Function surfaces are AST-derived and are not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-vector/tests/vector-contracts.test.mjs"
+    ],
+    "testSha256": {
+      "vector-contracts.test.mjs": "sha256:0acf86c1c3aa3bc7af1890ee751dc821654c38503b876679647ea128a4a1fbcb"
+    },
+    "command": "npm test",
+    "result": "PASS 5/5",
+    "coveredBehavior": [
+      "positive lane validation and vector construction",
+      "matrix and tensor shape validation",
+      "operation shape/type mismatch diagnostics",
+      "vector report construction and example loading"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-vector/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion/admission expansion",
+    "snapshot": {
+      "head": "0ec4eb2836a7dec22bf718cf11cdec9ca03c3eaa",
+      "tree": "9f9a9fe2b1f253aecbb6678c74da86473bc8b764"
+    },
+    "findings": [
+      "The package has no Fungi twin and exports structural contracts plus seven validators/report helpers. It performs no vector arithmetic, allocation, hardware selection or lowering.",
+      "Dimensions require Number.isSafeInteger(value) && value > 0; zero, negative zero, fractions, non-finite values and unsafe integers are rejected. Aggregate matrix/tensor element counts and memory requirements are not bounded.",
+      "Vector element types must be nonblank strings but are not restricted to NumericElementType; matrix and tensor types do not validate element types at all. QuantizedType has no runtime validator.",
+      "Vector operations validate name, inputs and output, then append at most one mismatch diagnostic using exact element-type/lane equality; empty input lists are accepted. Tensor operations validate names and individual shapes but do not check input/output compatibility, element types or pure.",
+      "Sparse tensor dimension arrays can skip holes under flatMap, and missing objects or non-string names can throw native exceptions. Preserve traversal, diagnostic ordering/paths, strict comparisons and omitted optional properties.",
+      "Reports retain supplied operation arrays and objects by reference; diagnostics are computed once and can become stale after mutation. tensorOperations is always returned despite its optional field, current errors produce no warnings, and defineVectorType throws a generic Error joining messages.",
+      "The Float32 example is data only. Five tests cover selected construction, dimensions, one vector mismatch and report/example success; they do not establish numerical correctness, SIMD/low-bit semantics, resource bounds or translation equivalence."
+    ],
+    "materialObligations": [
+      "Preserve structural validation, native throw behavior, diagnostic ordering, arbitrary element-type acceptance, tensor asymmetry and zero-input operations or explicitly narrow the contract.",
+      "Bind tensor rank/size, aggregate memory requirements, layout/stride, numeric domains, backend support and sparse-array behavior before authority claims.",
+      "Preserve report reference/mutability, warning/error separation, optional-field output and generic Error construction semantics.",
+      "Keep TypeScript as the sole implementation shadow; no Fungi twin or consumer authority exists."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-vector",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "vector/matrix/tensor shape validators and diagnostic report construction",
+    "authorityBoundary": "This package defines structural numeric-shape contracts but performs no vector computation. There is no Fungi replacement or execution authority.",
+    "runtimeObligations": [
+      "Preserve runtime dereference/throw behavior, safe-integer shape checks and diagnostic ordering.",
+      "Preserve arbitrary element-type strings, zero-input operations, report references and generic Error construction.",
+      "Bind resource/layout/backend semantics before any computational authority claim.",
+      "Retain TypeScript shadow until a separately admitted Fungi or backend implementation exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this vector scope",
+      "source-to-Fungi artifacts or a separately authored admitted implementation",
+      "independent differential vectors for malformed objects, rank/size overflow, element-type domains, zero-input operations and report mutability",
+      "numerical/backend/SIMD/low-bit correctness and physical SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep galerina-core-vector rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent structural/numerical/backend gates authorize a named scope."
+}
