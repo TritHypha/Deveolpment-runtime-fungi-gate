@@ -30,6 +30,14 @@ counts or open items that a newer section explicitly supersedes.
 - [!] `composeAuthVerdict` also remains `BLOCKED:DOSSIER_REQUIRED` with no
   existing Fungi twin. No queue entry was relabeled and no source authoring was
   started.
+- [x] Added the credential-factor dossier
+  `docs/independent-audits/2026-09-11-rd0873-header-presence-source-dossier.json`.
+  Its focused tests pass `7/7`; the default fail-closed path, explicit legacy
+  fallback, record lookup helper and missing physical/differential proofs are
+  recorded. No Fungi source was created.
+- [!] `headerPresenceVerdict` remains `BLOCKED:DOSSIER_REQUIRED`; its
+  presence-only opt-in requires a separate security review before any
+  authorizing admission.
 
 ### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 

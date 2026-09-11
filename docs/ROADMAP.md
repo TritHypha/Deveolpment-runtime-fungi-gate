@@ -32,6 +32,14 @@ outside this dossier because it crosses the authority-adjacent boundary
 interpreter. The compose entry remains `BLOCKED:DOSSIER_REQUIRED`; no queue
 entry changed and no new Fungi source was authored.
 
+The credential factor is now recorded in
+`docs/independent-audits/2026-09-11-rd0873-header-presence-source-dossier.json`.
+`headerPresenceVerdict` passes its focused tests `7/7`, while the dossier keeps
+the default fail-closed behavior distinct from the explicit legacy
+presence-only opt-in and records the missing record/String physical ABI,
+differential, security and SLIDE/VOK proofs. It remains
+`BLOCKED:DOSSIER_REQUIRED`; no Fungi source was created.
+
 ## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 The owner supplied a fresh exact, non-empty authorization for one bounded

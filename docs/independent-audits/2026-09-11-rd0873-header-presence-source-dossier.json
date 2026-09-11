@@ -1,0 +1,141 @@
+{
+  "schema": "galerina.rd0873.header-presence-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record the header-presence factor and its explicit legacy fallback for a future owner admission without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "5034fb5fcd0047820fad5dbb2ba7394b2f04e376",
+    "tree": "2f70383f940554dab6109dbd6dca865616d241d4"
+  },
+  "queueEntry": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "sourceDigest": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "decisionsDigest": "sha256:4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "projectCorpusReceiptDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
+    "entry": {
+      "path": "packages-ts/galerina-auth/src/credential.ts",
+      "package": "galerina-auth",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    "queueCounts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "source": {
+    "path": "packages-ts/galerina-auth/src/credential.ts",
+    "symbol": "headerPresenceVerdict",
+    "span": { "start": 68, "end": 83 },
+    "signature": "export function headerPresenceVerdict(headers: Readonly<Record<string, string>>, opts: HeaderPresenceOptions = {}): Verdict",
+    "sourceSha256": "sha256:7f3f50360da90d361c04f815ec899d4af5c05f50707027e7672fcf66c204ffac",
+    "bodySha256": "sha256:669e6dbc9d3738ad3eb9e2010c8241c56f890b088e68ac646bec5cfb75b63e5b",
+    "sourceUtf8Bytes": 4135,
+    "bodyUtf8Bytes": 599,
+    "existingTwin": null,
+    "classification": "exported K3 posture factor; default is fail-closed and legacy presence-only behavior requires an explicit opt-in"
+  },
+  "helper": {
+    "symbol": "header",
+    "span": { "start": 53, "end": 59 },
+    "bodySha256": "sha256:6f66279d4333050efc617a14dcab4a6d68c36a49c169213030d04889590fd865",
+    "contract": "case-insensitive lookup over Object.keys(headers); returns the first matching value or undefined"
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-auth/dist/credential.js",
+    "sha256": "sha256:7f2230706d65d943b07e64be8995b6be5963296c475eeb7844e6fbffba4602b0",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not Fungi or production authority"
+  },
+  "graphEvidence": {
+    "qualifiedName": "Galerina.packages-ts.galerina-auth.src.credential.headerPresenceVerdict",
+    "label": "Function",
+    "startLine": 68,
+    "endLine": 83,
+    "complexity": 1,
+    "cognitive": 1,
+    "loopCount": 0,
+    "loopDepth": 0,
+    "callers": ["packages-ts/galerina-auth/tests/credential.test.mjs"],
+    "callees": ["header"]
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-auth/tests/credential.test.mjs",
+    "testSha256": "sha256:ac92cd52adf1051331f5a03ccf1ad11f5afa2accd7f4eeb68b59dae94359572e",
+    "command": "node --test tests/credential.test.mjs",
+    "result": "PASS 7/7",
+    "coveredBehavior": [
+      "default present header -> INDETERMINATE",
+      "default absent header -> INDETERMINATE",
+      "explicit fallback plus non-empty header -> ALLOW",
+      "fallback plus absent header -> INDETERMINATE",
+      "empty and whitespace-only values -> INDETERMINATE",
+      "case-insensitive header matching",
+      "custom header name selection"
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "dependencyTranche": "T3-package-graph",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "legacyShadowAuthority": false,
+    "declaredFloor": null,
+    "replacementOwner": "galerina-auth",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "case-insensitive record lookup, String trimming and an explicit boolean opt-in that changes a factor from INDETERMINATE to presence-only ALLOW",
+    "inputStateContract": "Readonly Record<string,string> and optional readonly options; runtime proxies, getters, key order, non-string values, custom header names and mutation are not constrained by TypeScript readonly types",
+    "operationLedger": [
+      "resolve opts.header or the authorization default",
+      "enumerate Object.keys(headers) and lower-case each key",
+      "read the first matching header value",
+      "test undefined and trim().length > 0",
+      "if allowHeaderPresenceFallback is exactly true, return ALLOW for a non-empty value or INDETERMINATE otherwise",
+      "otherwise always return INDETERMINATE"
+    ],
+    "authorityBoundary": "The factor returns a Verdict; real credential verification remains upstream and the App Kernel remains the admission decision-maker. The explicit fallback is a security-sensitive legacy escape hatch.",
+    "reusableEvidence": [
+      "graph-resolved caller and header helper",
+      "credential-focused behavior passes 7/7",
+      "locally rebuilt credential oracle hash is recorded",
+      "package boundary report passes",
+      "retirement register shows no Fungi replacement or execution authority"
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming this symbol and scope",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "differential vectors for key casing/order, duplicate matches, empty/whitespace values, custom names, aliases, proxies, getters, mutation, non-string values and thrown operations",
+      "explicit proof that the default can never authorize on presence and that the true-only legacy opt-in boundary is preserved",
+      "bounded physical record/String ABI, work limits and typed-failure profile",
+      "independent SLIDE/VOK re-admission and complete exact-head receipt",
+      "security review of the legacy presence-only branch before any consumer use"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep headerPresenceVerdict BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until an exact-head owner admission names a non-empty scope and the default, opt-in, input-shape and physical gates pass."
+}
