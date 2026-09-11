@@ -3,6 +3,37 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-config - 2026-09-11
+
+The next bounded package assessment is recorded at exact `main` HEAD
+`ae097a1c2beb2ea3e5df2d4810205505d6eca5f5` with tree
+`6b30b9a31cfabfa6c460b973119ffe1ff22c5fb1` in
+`docs/independent-audits/2026-09-11-rd0873-galerina-core-config-package-dossier.json`.
+The package graph scopes three TypeScript source files to 190 nodes and 364
+edges, with 40 extracted function nodes, 84 call edges and six imports. The
+package has six loaded `.fungi` assets: one scalar classifier twin and five
+constant-return twins. Their hashes and the prior `isEnvironmentMode` evidence
+are retained in the dossier; they remain non-authorizing and do not replace the
+three TypeScript files.
+
+The package's typecheck, build and six focused suites pass **54/54**. The
+assessment covers governance defaults, posture and import profiles, force-HTTPS
+and loopback settings, project/environment parsers, runtime handoffs, host
+manifest boundaries and vault/report diagnostics. Astra's same-head advisory
+review records mutable shared controls, host-time dependence, unchecked
+coercion/type assertions, explicit production relaxations, carried-but-unused
+expiry, whitespace secret acceptance and the distinction between private Set
+snapshots and mutable exported arrays. The package describes policy and reports;
+consumer enforcement and production authority remain outside it.
+
+The governance and posture rows remain `BLOCKED:DOSSIER_REQUIRED`; the index row
+remains `BLOCKED:SCOPED_CANDIDATES_ONLY` with its existing evidence digest. The
+queue remains `CANDIDATE: 0`. This is review evidence only: no new Fungi source,
+queue relabel, consumer switch, TypeScript retirement, topology change or corpus
+assurance rerun occurred. Any new translation still needs a separate exact
+non-empty owner admission, bounded differential and physical proof,
+SLIDE/VOK receipt and independent review.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-compute - 2026-09-11
 
 The next bounded package assessment is recorded at exact `main` HEAD

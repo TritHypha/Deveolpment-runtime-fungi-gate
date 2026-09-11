@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-config - 2026-09-11
+
+- [x] Assessed the three TypeScript source files in
+  `packages-ts/galerina-core-config/src` from exact `main` HEAD
+  `ae097a1c2beb2ea3e5df2d4810205505d6eca5f5` / tree
+  `6b30b9a31cfabfa6c460b973119ffe1ff22c5fb1` through the code graph and the
+  package's six focused test files.
+- [x] Recorded the full exported configuration, governance, posture, egress,
+  vault and report surface plus private parser helpers in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-core-config-package-dossier.json`.
+  Four small constant twins and the `isEnvironmentMode` scalar twin already
+  exist; their prior non-authorizing evidence is retained rather than reopened.
+- [x] Typecheck, build and the package suites pass `54/54`. The package boundary
+  report is PASS with no external dependencies. Six loaded `.fungi` assets are
+  hashed in the dossier, and no new Fungi source was written.
+- [x] The dossier records exact source, test, package, example, boundary, twin,
+  built oracle and retirement hashes, graph closure, Astra's advisory review,
+  and the obligations for mutable policy state, host time, parser ordering,
+  egress/import enforcement, secret diagnostics and reference identity.
+- [!] Governance and posture rows remain `BLOCKED:DOSSIER_REQUIRED`; the index
+  row remains `BLOCKED:SCOPED_CANDIDATES_ONLY` with its existing evidence digest.
+  The conserved queue is unchanged at `CANDIDATE: 0`. No Fungi source, queue
+  relabel, consumer switch, TypeScript retirement or corpus assurance rerun
+  occurred.
+- [!] Keep broader config translation closed until a separate exact non-empty
+  owner admission names a scope and wave limits, and independent differential,
+  consumer-enforcement, physical SLIDE/VOK, bounded execution and receipt gates
+  pass. Existing twins remain non-authorizing.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-compute - 2026-09-11
 
 - [x] Assessed `packages-ts/galerina-core-compute/src/index.ts` from exact

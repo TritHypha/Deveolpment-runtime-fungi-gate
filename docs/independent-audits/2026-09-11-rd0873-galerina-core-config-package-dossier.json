@@ -1,0 +1,386 @@
+{
+  "schema": "galerina.rd0873.galerina-core-config-package-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record a bounded package assessment, existing Fungi-twin disposition and unresolved runtime obligations without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "ae097a1c2beb2ea3e5df2d4810205505d6eca5f5",
+    "tree": "6b30b9a31cfabfa6c460b973119ffe1ff22c5fb1"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-config/src/governance.ts",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/src/index.ts",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "SCOPED_CANDIDATES_ONLY",
+        "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+      },
+      {
+        "path": "packages-ts/galerina-core-config/src/posture.ts",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/tests/config-contracts.test.mjs",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/tests/egress-tls.test.mjs",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/tests/governance.test.mjs",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/tests/posture.test.mjs",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-config/tests/secret-report-invariant.test.mjs",
+        "package": "galerina-core-config",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-config",
+    "packageJsonSha256": "sha256:cad7bd22f99084f9401a472659511c3a51f3d8be732663aeb43c90ba3dfb07c7",
+    "packageLockSha256": "sha256:df0ecb8c9b2f7274094bb093124a50f51d628a581541060ceda0a0655a65c96b",
+    "readmeSha256": "sha256:85888a46a2080343681248d23820c99c1faefb655b95e86d12033e37a039b1c3",
+    "packageTodoSha256": "sha256:079e8bdd60ffde71530a3a7bd07c9314070794b2438478e7699515f036fdf0a2",
+    "example": {
+      "path": "packages-ts/galerina-core-config/examples/project-config.json",
+      "sha256": "sha256:db59c09f9b2a382e6344b38d2c633169f3265ee6db9015a91da5a33b9b694740"
+    },
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-config/.graph/BOUNDARY.md",
+      "sha256": "sha256:545e9549b5ad4b26f1ff5e51b8aa23333b0b9a37fca4876a1c3e5815811f57a6",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 3,
+    "testFileCount": 6,
+    "loadedFungiAssetCount": 6,
+    "loadedFungiAssets": [
+      { "path": "packages-ts/galerina-core-config/src/self-hosted/allow-localhost-env.fungi", "sha256": "sha256:18b6f60cc19bc90808ef566cffa2f9b9fd4a410c27348d7db6ffd6ef6c587579", "kind": "constant-return sandbox twin" },
+      { "path": "packages-ts/galerina-core-config/src/self-hosted/allow-plaintext-egress-env.fungi", "sha256": "sha256:2f17acaa6151959fac51c725376306693b6a058a31a7deb9ed1eba57a058ae9b", "kind": "constant-return sandbox twin" },
+      { "path": "packages-ts/galerina-core-config/src/self-hosted/default-governance-mode.fungi", "sha256": "sha256:6394a6788084e5c29ad0fa162f521396a8522e10a37a6e26cac91820c9166365", "kind": "constant-return sandbox twin" },
+      { "path": "packages-ts/galerina-core-config/src/self-hosted/default-security-posture.fungi", "sha256": "sha256:9068c971d152f03cd502d90d5af200fd592d3a5346e5aae2b8aceb503bd99aa0", "kind": "constant-return sandbox twin" },
+      { "path": "packages-ts/galerina-core-config/src/self-hosted/egress-allowed-hosts-env.fungi", "sha256": "sha256:7253b68f11200c7223bc514d39c0160fd124532a4fd33abd2b598d8f4d2f37b3", "kind": "constant-return sandbox twin" },
+      { "path": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi", "sha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba", "kind": "scalar classifier twin" }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-config/src/index.ts#isEnvironmentMode",
+        "fungi": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+        "priorEvidence": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-source-dossiers.json",
+        "status": "existing non-authorizing twin; prior scalar proof retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-config/src/governance.ts#DEFAULT_GOVERNANCE_MODE",
+        "fungi": "packages-ts/galerina-core-config/src/self-hosted/default-governance-mode.fungi",
+        "status": "constant twin; no file replacement or consumer authority"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-config/src/posture.ts#DEFAULT_SECURITY_POSTURE",
+        "fungi": "packages-ts/galerina-core-config/src/self-hosted/default-security-posture.fungi",
+        "status": "constant twin; no file replacement or consumer authority"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-config/src/posture.ts#ALLOW_LOCALHOST_ENV",
+        "fungi": "packages-ts/galerina-core-config/src/self-hosted/allow-localhost-env.fungi",
+        "status": "constant twin; no file replacement or consumer authority"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-config/src/posture.ts#ALLOW_PLAINTEXT_EGRESS_ENV",
+        "fungi": "packages-ts/galerina-core-config/src/self-hosted/allow-plaintext-egress-env.fungi",
+        "status": "constant twin; no file replacement or consumer authority"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-config/src/posture.ts#EGRESS_ALLOWED_HOSTS_ENV",
+        "fungi": "packages-ts/galerina-core-config/src/self-hosted/egress-allowed-hosts-env.fungi",
+        "status": "constant twin; no file replacement or consumer authority"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-config/src/governance.ts",
+        "sha256": "sha256:bc5083d7922f9a5c4b37476ad11b82dfb11d1f2c9f220939a415e6603ef72c1e",
+        "utf8Bytes": 3580,
+        "exportedRuntimeSurface": ["GOVERNANCE_MODES", "DEFAULT_GOVERNANCE_MODE", "isGovernanceMode", "resolveProjectGovernance"],
+        "typeSurface": ["GovernanceMode", "ResolvedProjectGovernance"]
+      },
+      {
+        "path": "packages-ts/galerina-core-config/src/index.ts",
+        "sha256": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+        "utf8Bytes": 43875,
+        "exportedRuntimeSurface": [
+          "GALERINA_ENVIRONMENT_MODES",
+          "DEFAULT_HOST_PACKAGE_MANIFEST_BOUNDARY_POLICY",
+          "DEFAULT_PRODUCTION_STRICTNESS_POLICY",
+          "isEnvironmentMode",
+          "createConfigDiagnostic",
+          "resolveEnvironmentMode",
+          "defineProductionStrictnessPolicy",
+          "parseProjectConfig",
+          "defineEnvironmentVariableReference",
+          "parseEnvironmentConfig",
+          "validateRuntimeEnvironment",
+          "createRuntimeConfigHandoff",
+          "loadConfigFromObjects",
+          "validateHostPackageManifestBoundary",
+          "SECRET_CONFIG_SOURCE_KINDS",
+          "isSecretConfigSourceKind",
+          "DEFAULT_SECRET_REDACTION_POLICY",
+          "SECRET_REPORT_MODE",
+          "defaultEnvironmentPolicy",
+          "getVaultEntry",
+          "FUNGI_VAULT_001",
+          "FUNGI_VAULT_002",
+          "FUNGI_VAULT_003",
+          "FUNGI_VAULT_004",
+          "FUNGI_VAULT_005",
+          "vaultDiagnosticSecretInVault",
+          "vaultDiagnosticKeyInvalid",
+          "vaultDiagnosticTypeMismatch",
+          "vaultDiagnosticKeyMissing",
+          "vaultDiagnosticMutationDenied"
+        ],
+        "privateRuntimeSurface": [
+          "validateProductionStrictness",
+          "readProductionPackageOverrides",
+          "readEnvironmentVariableReferences",
+          "parseEnvironmentVariableReference",
+          "checkedEnvironmentVariableReference",
+          "readRequiredString",
+          "readOptionalString",
+          "readOptionalBoolean",
+          "readStringArray",
+          "readPackageReferences",
+          "readStringMap",
+          "isRecord",
+          "isLoPackageGraphAlias"
+        ],
+        "typeSurface": "configuration, environment, policy, vault and report aliases/interfaces remain type-contract evidence"
+      },
+      {
+        "path": "packages-ts/galerina-core-config/src/posture.ts",
+        "sha256": "sha256:dd1f7cb0e933d122969e415ca51c7965a03fde82b95f344b633181e7e8696750",
+        "utf8Bytes": 12250,
+        "exportedRuntimeSurface": ["SECURITY_POSTURES", "DEFAULT_SECURITY_POSTURE", "isSecurityPosture", "resolvePosture", "deriveImportProfile", "ALLOW_PLAINTEXT_EGRESS_ENV", "ALLOW_LOCALHOST_ENV", "EGRESS_ALLOWED_HOSTS_ENV", "parseAllowedHosts", "resolveEgressTls"],
+        "typeSurface": ["SecurityPosture", "PostureControls", "ResolvedPosture", "ImportProfile", "EgressTlsSetting", "EgressTlsInput"]
+      }
+    ],
+    "priorScalarScope": {
+      "symbol": "isEnvironmentMode",
+      "sourceSpan": { "start": 196, "end": 198 },
+      "sourceSha256": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "bodySha256": "sha256:56dc0f016997e147fa2eafae921884e506c0e2ab493cdd59eb7206a29e709787",
+      "status": "previously assessed scalar twin; not reopened as a new candidate in this package dossier"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-config/dist/index.js",
+    "sha256": "sha256:bd903c4525719e15c7316e106060075070a70075c41d2a15f58344268d4ae494",
+    "declarationPath": "packages-ts/galerina-core-config/dist/index.d.ts",
+    "declarationSha256": "sha256:6367fee24eea388479cc749b0f8394abb090e4f796a8b25f25799781990eccc0",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-config",
+    "nodes": 190,
+    "edges": 364,
+    "functions": 40,
+    "edgeTypes": { "DEFINES": 176, "USAGE": 98, "CALLS": 84, "IMPORTS": 6 },
+    "entryPoints": [
+      "isGovernanceMode",
+      "resolveProjectGovernance",
+      "isEnvironmentMode",
+      "createConfigDiagnostic",
+      "resolveEnvironmentMode",
+      "defineProductionStrictnessPolicy",
+      "parseProjectConfig",
+      "defineEnvironmentVariableReference",
+      "parseEnvironmentConfig",
+      "validateRuntimeEnvironment",
+      "createRuntimeConfigHandoff",
+      "loadConfigFromObjects",
+      "validateHostPackageManifestBoundary",
+      "isSecretConfigSourceKind",
+      "defaultEnvironmentPolicy",
+      "getVaultEntry",
+      "vaultDiagnosticSecretInVault",
+      "vaultDiagnosticKeyInvalid",
+      "vaultDiagnosticTypeMismatch",
+      "vaultDiagnosticKeyMissing",
+      "vaultDiagnosticMutationDenied",
+      "isSecurityPosture",
+      "resolvePosture",
+      "deriveImportProfile",
+      "parseAllowedHosts",
+      "resolveEgressTls"
+    ],
+    "hotspots": [
+      { "symbol": "createConfigDiagnostic", "fanIn": 19 },
+      { "symbol": "isRecord", "fanIn": 7 },
+      { "symbol": "readOptionalString", "fanIn": 4 },
+      { "symbol": "readRequiredString", "fanIn": 4 },
+      { "symbol": "validateHostPackageManifestBoundary", "complexity": 8, "cognitive": 14, "loopDepth": 2 },
+      { "symbol": "validateProductionStrictness", "complexity": 9, "cognitive": 15, "linearScanInLoop": 2 }
+    ],
+    "note": "Graph discovery identifies package structure and call/import relationships; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-config/tests/config-contracts.test.mjs",
+      "packages-ts/galerina-core-config/tests/egress-tls.test.mjs",
+      "packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "packages-ts/galerina-core-config/tests/governance.test.mjs",
+      "packages-ts/galerina-core-config/tests/posture.test.mjs",
+      "packages-ts/galerina-core-config/tests/secret-report-invariant.test.mjs"
+    ],
+    "testSha256": {
+      "config-contracts.test.mjs": "sha256:04d308ae5510842a3fdf3f38a9d16d57a96922b50c894ad8fac60fbd4d8a9e66",
+      "egress-tls.test.mjs": "sha256:835a18e3ade91506aa892f3258d269a6ea581ee5de8a4bdef81bafc65fea157a",
+      "environment-mode-fungi-conversion.test.mjs": "sha256:ce7911ffa010e93cb8df445e9413aeb6f81442f7b37f59245efc9b78db829ed4",
+      "governance.test.mjs": "sha256:808f41e4948446796e517b57d6a0ad9cce78ab86b0aa28ce259d0194335e8a57",
+      "posture.test.mjs": "sha256:ca901b7c344bcad0b6a417a9a71ecce48c7bb82ee81d471684ae60dda91bb0b8",
+      "secret-report-invariant.test.mjs": "sha256:d75c2dedbf7e8b8187e0bb6e4c43dd697a1edfd0c7c109e706a8463ec8f930e2"
+    },
+    "command": "npm test",
+    "result": "PASS 54/54",
+    "coveredBehavior": [
+      "project and environment parsing with runtime handoff",
+      "secret presence diagnostics without exposing values",
+      "production strictness and package override policy",
+      "environment variable reference normalization",
+      "host manifest boundary checks",
+      "four-mode environment classifier and existing Fungi twin",
+      "governance default and invalid-value behavior",
+      "fail-secure posture resolution and import profiles",
+      "force-HTTPS, loopback and host allow-list policy",
+      "vault diagnostic code/shape invariants and redaction policy behavior"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-config/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for the package dossier; HOLD broader admission",
+    "snapshot": { "head": "ae097a1c2beb2ea3e5df2d4810205505d6eca5f5", "tree": "6b30b9a31cfabfa6c460b973119ffe1ff22c5fb1" },
+    "findings": [
+      "The six loaded Fungi assets are non-authorizing sandboxes; the five constant twins retain historical packages-galerina oracle paths that need provenance reconciliation.",
+      "Null and undefined governance values default to full; invalid values also default to full, but String(requested) can invoke user coercion or throw.",
+      "Explicit posture off remains off in production. CONTROLS_ON and CONTROLS_OFF are shared unfrozen objects, so returned controls alias mutable module state.",
+      "deriveImportProfile requires signatures only for exact effective on; malformed runtime values can otherwise permit file paths.",
+      "Egress relaxation recognizes exact true/1; production blocks loopback but does not block explicit plaintext relaxation, and allowed-host parsing lacks hostname validation.",
+      "Handoffs use host time when generatedAt is absent, accept supplied timestamps without validation, carry override expiry without evaluating it, and retain configuration references.",
+      "Secret presence rejects undefined and empty strings but accepts whitespace; defaults are not applied. Vault diagnostics interpolate key/type names, DEFAULT_SECRET_REDACTION_POLICY is inert, and getVaultEntry is an unchecked lookup/type assertion.",
+      "isEnvironmentMode uses a private Set snapshot while isSecretConfigSourceKind reads a mutable exported array; preserve that distinction or obtain a separately authorized correction."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-config",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "scalar classifiers and constant values already have small sandbox twins; remaining package logic is configuration parsing, governance/posture resolution, egress policy, handoff construction, manifest validation and vault/report diagnostics over records, arrays, sets, strings, numbers and host time",
+    "authorityBoundary": "The package labels configuration and policy and constructs reports. It does not enforce network egress, verify signatures, prove effect freedom, read a vault backend, execute a runtime, or grant production authority.",
+    "runtimeObligations": [
+      "Preserve own/inherited property behavior, property-read order, enumeration order, Unicode trim and regex behavior in parser helpers.",
+      "Preserve null-versus-undefined defaults, exact string comparisons, Set/Array membership, array ordering, duplicate handling, reference identity and thrown coercion/accessor behavior.",
+      "Preserve the exact fail-secure/defaulted flags and rationale text for governance and posture resolution, including explicit off in production.",
+      "Preserve shared mutable control objects, exported mutable policy arrays/objects and private Set snapshots unless a separately authorized semantic change is admitted.",
+      "Preserve host-time dependency and supplied generatedAt behavior in runtime handoff creation.",
+      "Preserve that override expiry is carried but not evaluated and that configuration/default references may remain aliased.",
+      "Preserve secret presence checks, non-application of defaults, redaction/report field behavior and interpolated diagnostic messages without claiming universal redaction.",
+      "Preserve the six existing assets as non-authorizing artifacts and their historical oracle-path provenance until independently reconciled."
+    ],
+    "missingProofs": [
+      "fresh exact non-empty owner admission naming any new runtime or constant scope and per-wave limits; the prior isEnvironmentMode scope is not reopened here",
+      "source-to-Fungi translation artifact and exact twin hash for any newly admitted scope",
+      "independent differential vectors for hostile getters/coercion, proxies, sparse arrays, custom iterators, mutation, aliasing, exceptions and time",
+      "physical proof for record/array/set/string/number/time ABI, bounded collections, allocation and typed failures",
+      "consumer-level proof for egress, import signature, secret and production-policy enforcement",
+      "reconciliation of historical packages-galerina oracle paths in five constant twins",
+      "physical SLIDE/VOK re-admission and a bounded execution receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Preserve the six existing non-authorizing twins, keep the governance and posture rows BLOCKED:DOSSIER_REQUIRED, keep the index row BLOCKED:SCOPED_CANDIDATES_ONLY with its existing evidence digest, and keep CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}
