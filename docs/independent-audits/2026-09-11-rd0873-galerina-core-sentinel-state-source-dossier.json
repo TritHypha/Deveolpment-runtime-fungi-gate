@@ -1,0 +1,466 @@
+{
+  "schema": "galerina.rd0873.galerina-core-sentinel-state-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for authenticated state snapshots, atomic persistence and cold-boot restore decisions without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "c60d10e8f4fdcb75bb0b50d4603c70f1eea4e590",
+    "tree": "9496ec20b93dd68a0dbfc3961e27fac32af9e6ed"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/atomic-writer.ts",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/errors.ts",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/index.ts",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/state-serializer.ts",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/_tmp.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/atomic-writer.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/cold-boot.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/epoch-serializer.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/errors.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/rd0361-cold-boot-execution.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/restore-authority.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/serializer.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/tests/strict-key.test.mjs",
+        "package": "galerina-core-sentinel-state",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-sentinel-state",
+    "packageJsonSha256": "sha256:a889b7ecfb1a0d12f98d62c58b83c7f5be7a10113b7c58aa42ad002c0ec2ffd3",
+    "packageLockSha256": "sha256:ab75d7336af19eb869838edb1e3a521a91749bcba042ea1ae54e73946fe52af0",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-sentinel-state/.graph/BOUNDARY.md",
+      "sha256": "sha256:84ca69f18b1331e72099e6e3246dcf94bdc03ed7eb9161b4d1d42d6f7f67c59e",
+      "status": "PASS",
+      "externalDependencies": [
+        "node:crypto",
+        "node:fs",
+        "node:path"
+      ]
+    },
+    "sourceFileCount": 5,
+    "testFileCount": 9,
+    "loadedFungiAssetCount": 5,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+        "sha256": "sha256:5040e0b1ff890f602b8629f6205cee95f4236c502a446579f9184f27d22cf996",
+        "kind": "existing non-authorizing checkpoint/restore decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/self-hosted/local-key-id.fungi",
+        "sha256": "sha256:6f70a3af70b03e05f32b373bfcb2d5de58919957bc4f4b34e3a96fd9f61d9af1",
+        "kind": "existing non-authorizing checkpoint/restore decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/self-hosted/restore-verdict-export-name.fungi",
+        "sha256": "sha256:2091a9d180e44c4ba9ae10882acd0c4f5453627db4fb21253d0bae452a05835f",
+        "kind": "existing non-authorizing checkpoint/restore decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/self-hosted/restore-verdict-package-identity.fungi",
+        "sha256": "sha256:98f4fe61617f4cdc67cd322f4c107ce36a91b2a154b27cd151b01321ed0d7cdf",
+        "kind": "existing non-authorizing checkpoint/restore decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/self-hosted/snapshot-version.fungi",
+        "sha256": "sha256:9d010c23205947ff970c25756f7124e5d1bcff1fe2a4c1c5d99ed0be1a285349",
+        "kind": "existing non-authorizing checkpoint/restore decision asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts#ColdBootOrchestrator",
+        "fungi": "packages-ts/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+        "status": "existing bounded restore decision twin; filesystem, serializer and TypeScript remain authority shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts#RESTORE_VERDICT_PACKAGE_IDENTITY",
+        "fungi": "packages-ts/galerina-core-sentinel-state/src/self-hosted/restore-verdict-package-identity.fungi",
+        "status": "existing identity scalar twin; host owns package loading"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts#RESTORE_VERDICT_EXPORT_NAME",
+        "fungi": "packages-ts/galerina-core-sentinel-state/src/self-hosted/restore-verdict-export-name.fungi",
+        "status": "existing export-name scalar twin; host owns dispatch"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-state/src/state-serializer.ts#SNAPSHOT_VERSION",
+        "fungi": "packages-ts/galerina-core-sentinel-state/src/self-hosted/snapshot-version.fungi",
+        "status": "existing version scalar twin; crypto/serialization remain TypeScript shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-state/src/state-serializer.ts#LOCAL_KEY_ID",
+        "fungi": "packages-ts/galerina-core-sentinel-state/src/self-hosted/local-key-id.fungi",
+        "status": "existing key-id scalar twin; key custody remains host shadow"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/atomic-writer.ts",
+        "sha256": "sha256:e41c06853a87a105896db9b1001dc228e8005fa52e6862fa3c36d552e80574c2",
+        "utf8Bytes": 2211
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts",
+        "sha256": "sha256:2bfba4f956548c218aa11ce1197f6f035526a9f108685a672bbbfdf16422209e",
+        "utf8Bytes": 5117
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/errors.ts",
+        "sha256": "sha256:826304a5c82e8bd14cd50a3abfe54714c66d71988b177afa04ad440c708dad8a",
+        "utf8Bytes": 1640
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/index.ts",
+        "sha256": "sha256:99471c8109e5fcf4aaecccfcad0499172420f67cc69bb7ae7afd14f6a88e99bc",
+        "utf8Bytes": 712
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-state/src/state-serializer.ts",
+        "sha256": "sha256:157520349bdf2af4025fcb4b4378e5a467cfbe4b583d1e5626547617422b97de",
+        "utf8Bytes": 8038
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [],
+    "exportedClasses": [
+      {
+        "symbol": "AtomicWriter",
+        "source": "packages-ts/galerina-core-sentinel-state/src/atomic-writer.ts",
+        "span": {
+          "start": 17,
+          "end": 62
+        },
+        "sourceSha256": "sha256:e41c06853a87a105896db9b1001dc228e8005fa52e6862fa3c36d552e80574c2",
+        "bodySha256": "sha256:792aac8df0786f5bc26ab3e03144ea1046e1df14a52fd8953fe951c7be1d1e44",
+        "bodyUtf8Bytes": 1377
+      },
+      {
+        "symbol": "ColdBootOrchestrator",
+        "source": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts",
+        "span": {
+          "start": 33,
+          "end": 126
+        },
+        "sourceSha256": "sha256:2bfba4f956548c218aa11ce1197f6f035526a9f108685a672bbbfdf16422209e",
+        "bodySha256": "sha256:b9e29401c68a51d69036adea9fcc1a977b87b9efdb467950e3e3d95909bd6e5e",
+        "bodyUtf8Bytes": 3649
+      },
+      {
+        "symbol": "HardenedBorderViolation",
+        "source": "packages-ts/galerina-core-sentinel-state/src/errors.ts",
+        "span": {
+          "start": 27,
+          "end": 37
+        },
+        "sourceSha256": "sha256:826304a5c82e8bd14cd50a3abfe54714c66d71988b177afa04ad440c708dad8a",
+        "bodySha256": "sha256:05a2cc2a4a2eea573c86880a9bc7149f2a3bbc58dc632341ea1c035aa96f9671",
+        "bodyUtf8Bytes": 439
+      },
+      {
+        "symbol": "SecurityTrap",
+        "source": "packages-ts/galerina-core-sentinel-state/src/errors.ts",
+        "span": {
+          "start": 14,
+          "end": 24
+        },
+        "sourceSha256": "sha256:826304a5c82e8bd14cd50a3abfe54714c66d71988b177afa04ad440c708dad8a",
+        "bodySha256": "sha256:f5a6fe88c37ec374e71e485d3369f0de0b5aa87c80c604f7cc1b733f4bac6bfc",
+        "bodyUtf8Bytes": 406
+      },
+      {
+        "symbol": "StateSerializer",
+        "source": "packages-ts/galerina-core-sentinel-state/src/state-serializer.ts",
+        "span": {
+          "start": 85,
+          "end": 272
+        },
+        "sourceSha256": "sha256:157520349bdf2af4025fcb4b4378e5a467cfbe4b583d1e5626547617422b97de",
+        "bodySha256": "sha256:37f46e54b0549d5720d186732449aa8740ea2cec0a72a1bc5fb40595735c19c4",
+        "bodyUtf8Bytes": 5456
+      }
+    ],
+    "exportedConstants": [
+      {
+        "symbol": "RESTORE_VERDICT_EXPORT_NAME",
+        "source": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts",
+        "span": {
+          "start": 18,
+          "end": 18
+        },
+        "sourceSha256": "sha256:2bfba4f956548c218aa11ce1197f6f035526a9f108685a672bbbfdf16422209e"
+      },
+      {
+        "symbol": "RESTORE_VERDICT_PACKAGE_IDENTITY",
+        "source": "packages-ts/galerina-core-sentinel-state/src/cold-boot.ts",
+        "span": {
+          "start": 17,
+          "end": 17
+        },
+        "sourceSha256": "sha256:2bfba4f956548c218aa11ce1197f6f035526a9f108685a672bbbfdf16422209e"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [],
+      "interfaces": [
+        "RestoreVerdictAuthority",
+        "Snapshot",
+        "SnapshotKeyHandle",
+        "SnapshotKeyProvider",
+        "StateSerializerOptions"
+      ],
+      "disposition": "type contracts remain evidence; serializer, atomic writer and cold-boot orchestration are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-sentinel-state/dist/index.js",
+    "sha256": "sha256:bcd8394bc84e9c382c5c3182aa3be9329f46ad0800efcabf8ed8b98575399268",
+    "declarationPath": "packages-ts/galerina-core-sentinel-state/dist/index.d.ts",
+    "declarationSha256": "sha256:b716c6faa9fe0d5e5ef25285b8b9b226f4d6760ffeb21b9c13d873f000e27098",
+    "buildCommand": "npm test (includes build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-sentinel-state",
+    "nodes": 10,
+    "edges": 10,
+    "functions": 0,
+    "exportedClassCount": 5,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 10,
+      "EXTERNAL_IMPORTS": 3
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "StateSerializer.serialize",
+      "StateSerializer.verify",
+      "StateSerializer.deserialize",
+      "AtomicWriter.write",
+      "AtomicWriter.read",
+      "ColdBootOrchestrator.restore",
+      "ColdBootOrchestrator.scrub"
+    ],
+    "note": "Boundary graph reports ten nodes, ten internal edges and three allowed Node core dependencies. Function/class surfaces are AST-derived and are not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-sentinel-state/tests/_tmp.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/atomic-writer.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/cold-boot.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/epoch-serializer.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/errors.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/rd0361-cold-boot-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/restore-authority.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/serializer.test.mjs",
+      "packages-ts/galerina-core-sentinel-state/tests/strict-key.test.mjs"
+    ],
+    "testSha256": {
+      "_tmp.mjs": "sha256:ad94b8c784e89b5c2b4c2872b49fa74cbb90ff7eb187ad40b032ed2803de6a63",
+      "atomic-writer.test.mjs": "sha256:0c8864d1327a45f2d9891888dc4783943e2850e67edc7ae83c785b057bf2a644",
+      "cold-boot.test.mjs": "sha256:c51d4e0964ca45f9b6a9264c4bcf8bd5228a938a55ce010eb778799ba6338db1",
+      "epoch-serializer.test.mjs": "sha256:781be8cee4c83b5620b7d8a9f14ee4f32d2919f4e117c4cf7b899498e615df9d",
+      "errors.test.mjs": "sha256:4fe4b829a4deafce32b5bd7be621d14341f7879f99c7c5fa4df0d1e70d01e8d1",
+      "rd0361-cold-boot-execution.test.mjs": "sha256:c8d3760e33e870d434e3d2e1f426b785d6636666c4d4bb6762a4251cf0ca32b7",
+      "restore-authority.test.mjs": "sha256:058d726ab3929aad26e4104357fdc326e70305d9b7947409b764659ee8bc6e28",
+      "serializer.test.mjs": "sha256:fe391ccfc751237934477596e51316fe573afd0f728c0a462e954626e1dd3899",
+      "strict-key.test.mjs": "sha256:70ea270c6f11fe2188f4f60ce755ca1d5cc5b8291363486f343687f3fe763afb"
+    },
+    "command": "npm test",
+    "result": "PASS 26/26",
+    "coveredBehavior": [
+      "atomic snapshot write/read and missing/corrupt-file behavior",
+      "epoch-aware HMAC key custody, rotation and strict-key refusal",
+      "cold-boot restore authority identity, exact verdicts and local integrity agreement",
+      "scrub zero-overwrite/unlink behavior",
+      "serializer checksum/HMAC verification, tamper refusal and round trips",
+      "PowerFault-style error prototypes and RD-0361 bounded cold-boot differential"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-sentinel-state/.graph/BOUNDARY.md reports PASS with node:crypto, node:fs and node:path allowed"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "c60d10e8f4fdcb75bb0b50d4603c70f1eea4e590",
+      "tree": "9496ec20b93dd68a0dbfc3961e27fac32af9e6ed"
+    },
+    "findings": [
+      "The restore authority constructor checks package/export labels and callable shape, but that does not establish executable provenance. Every restore decision must return exact numeric 1 or -1 and agree with locally established presence/integrity; exceptions, unknown values and disagreement refuse. Successful restoration still re-verifies integrity in deserialize, so preserve ordering and provider-call count.",
+      "StateSerializer must preserve UTF-8 encoding, unsigned 32-bit XOR folding, exact delimiter-separated HMAC input, SHA-256, lowercase 64-character hexadecimal validation, safe-integer bounds, keyId restrictions and constant-time MAC comparison. JSON behavior is material: toJSON/getters can execute, unsupported top-level values receive the explicit snapshot error, cycles/BigInt can throw native exceptions, and verification authenticates payloadJson without establishing valid JSON.",
+      "Key custody: default mode accepts the development zero key; strict mode rejects weak supplied keys. A provider with no active key can construct successfully but serialization refuses. Historical snapshots remain valid while their epoch resolves; no logical-tick monotonicity or replay-prevention gate exists. Provider effects, revocation between the two verification calls and mutable key handles require explicit assumptions.",
+      "AtomicWriter joins names directly into paths without containment validation; traversal and symlink custody are unresolved. Writes reuse a predictable .tmp name without locking or exclusive creation and do not fsync file or directory, so power-loss durability is unproven.",
+      "scrub zero-writes and unlinks one live path, without durable flush or proof of physical-media erasure; snapshots, journaling, flash wear-leveling, permissions and failures remain host seams.",
+      "Existing Fungi assets fold the two-Boolean restore verdict and four String constants only. They do not replace JSON, HMAC, key custody, atomic storage, scrub guarantees or orchestration. The four constant assets cite an obsolete packages-galerina oracle prefix. RD-0361 proves bounded decision folds and selected restore vectors, not complete persistence/crypto parity.",
+      "ARCHITECTURE_ISSUES.md understates the implementation by describing only a fixed key and deferred key-ID stamping; source now implements epoch providers and authenticates epoch identity. Encryption-at-rest and actual engine-state extraction remain external obligations."
+    ],
+    "materialObligations": [
+      "Preserve authority identity/provenance, exact numeric verdicts, local-fact agreement, verify-before-deserialize, double-verification and error ordering.",
+      "Preserve UTF-8, XOR/HMAC framing, key/epoch custody, JSON side effects, strict-key defaults and provider mutation/rotation behavior.",
+      "Preserve path containment, atomic write/rename, concurrency, durability, scrub and host filesystem failure semantics or explicitly narrow the host contract.",
+      "Keep all five Fungi assets non-authorizing, correct obsolete oracle provenance under a separate documentation scope, and retain TypeScript shadow until separately admitted replacement proof exists."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-sentinel-state",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded snapshot version/key identity, serializer verification, atomic writer and cold-boot restore verdict decisions",
+    "authorityBoundary": "This package performs cryptography, filesystem writes and state restoration. Existing Fungi folds are decision evidence only; they are not a persistence, crypto or authority replacement.",
+    "runtimeObligations": [
+      "Preserve serializer key/epoch/checksum/HMAC and JSON behavior with fail-closed errors.",
+      "Preserve filesystem atomicity, durability, path and scrub boundaries and failure ordering.",
+      "Preserve exact restore authority identity, verdict validation, verify-before-deserialize and disagreement behavior.",
+      "Keep Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this persistence scope",
+      "source-to-Fungi artifacts and exact twin hashes for crypto, filesystem and restore behavior",
+      "independent differential vectors for provider mutation/rotation, JSON accessors, path traversal, rename/fsync failure, concurrent readers/writers, scrub residue and error ordering",
+      "host substitution proof for node:crypto/node:fs/node:path and durable storage",
+      "physical SLIDE/VOK receipt and bounded execution evidence",
+      "consumer enforcement and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep galerina-core-sentinel-state rows BLOCKED with existing reasons and CANDIDATE at zero until a separate exact non-empty owner admission and independent persistence/crypto differential and physical gates authorize a named scope."
+}

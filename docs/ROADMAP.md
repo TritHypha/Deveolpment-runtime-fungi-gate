@@ -3,6 +3,36 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-sentinel-state - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+c60d10e8f4fdcb75bb0b50d4603c70f1eea4e590 with tree
+9496ec20b93dd68a0dbfc3961e27fac32af9e6ed in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-state-source-dossier.json.
+The package boundary graph covers ten nodes and ten internal edges with the
+allowed `node:crypto`, `node:fs` and `node:path` dependencies. It contains five
+TypeScript source files, five registered Fungi assets and runtime surfaces for
+epoch-aware serialization, atomic persistence and cold-boot restore.
+
+Typecheck, build and the nine focused suites pass **26/26**, including HMAC
+epoch rotation, strict-key refusal, atomic snapshot behavior, exact restore
+authority verdicts, scrub and RD-0361 cold-boot checks. Existing Fungi assets
+fold only restore decisions and identity/version strings; they do not implement
+JSON, cryptography, key custody, durable filesystem operations, scrub guarantees
+or orchestration. Astra's same-head review keeps translation on HOLD because
+authority provenance, provider mutation/revocation, JSON side effects, path
+containment, locking/fsync durability, scrub residue and stale Fungi oracle
+prefixes remain open obligations. The package's architecture note also
+understates the implemented epoch-provider behavior.
+
+One queue row remains `BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY` and 13
+remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains `CANDIDATE: 0`. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires exact
+non-empty owner admission, bounded crypto/persistence differential and physical
+proof, SLIDE/VOK receipt, bounded execution evidence and independent review. Git
+remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-sentinel-power - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD
