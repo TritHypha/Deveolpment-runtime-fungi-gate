@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-sentinel-memory - 2026-09-11
+
+- [x] Assessed the seven TypeScript source files under
+  packages-ts/galerina-core-sentinel-memory/src from exact main HEAD
+  0bf7883af75c36028aee6f44cdfb8deb680b979f / tree
+  bfe1765f5339a54a839deab1eddf24e5135a0b00 through the package boundary graph,
+  12 focused test files and six registered Fungi assets.
+- [x] Recorded the exported runtime classes/constants, type surface, existing
+  memory-validator/pool/segmentation/trit/channel assets and exact
+  source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-memory-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 39/39. The package boundary
+  reports PASS with 13 nodes, 17 internal edges and no external dependencies.
+- [x] Astra's same-head advisory records unbounded pool ratios and dynamic
+  allocator state, unauthenticated block size/segment/ownership, pointer-only
+  segmentation, stale typed-array views, TPL index/partial-mutation behavior,
+  bus whole-pool/negative-offset ranges, and the alignUp/scrubFillByte Fungi
+  fidelity gaps.
+- [!] One package row remains BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY;
+  the other 18 remain BLOCKED:DOSSIER_REQUIRED. The conserved queue remains
+  CANDIDATE: 0. No Fungi source, queue relabel, consumer switch, TypeScript
+  retirement or corpus assurance rerun occurred.
+- [!] Keep memory translation closed until handle ownership/generation, range
+  and view lifetime, numeric domains, synchronization, channel bounds and
+  exact Fungi parity are resolved under a separate exact non-empty owner
+  admission with independent differential, physical SLIDE/VOK, execution and
+  receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-sentinel-io - 2026-09-11
 
 - [x] Assessed the six TypeScript source files under

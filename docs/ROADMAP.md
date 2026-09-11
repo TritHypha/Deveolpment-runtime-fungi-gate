@@ -3,6 +3,38 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-sentinel-memory - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+0bf7883af75c36028aee6f44cdfb8deb680b979f with tree
+bfe1765f5339a54a839deab1eddf24e5135a0b00 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-memory-source-dossier.json.
+The package boundary graph covers 13 nodes and 17 internal edges with no
+external dependencies. It contains seven TypeScript source files, six
+registered Fungi assets and the runtime classes for fixed-block allocation,
+segment checks, packed ternary state and the local SRAM seam.
+
+Typecheck, build and the twelve focused suites pass **39/39**, including
+use-after-free generation checks, segmentation and channel behavior, packed
+trit corruption handling and RD-0361 bounded differentials. Existing Fungi
+assets cover only host-computed stride, validation, allocation/policy,
+segmentation and trit decisions; they do not implement allocator state,
+typed-array lifetime, memory ownership or bus effects. Astra's same-head review
+keeps translation on HOLD because pool ratios and dynamic state are not bounded,
+handles do not authenticate size/segment/owner, pointer-only checks miss ranges
+and view lifetime, TPL state can retain stale views and partially mutate, and
+local bus checks permit whole-pool or negative-offset edge cases. The review also
+records that `memory-validator.fungi::alignUp` omits TypeScript invalid-input and
+safe-integer guards, while `scrubFillByte` needs an exact segment-union proof.
+
+One queue row remains `BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY` and 18
+remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains `CANDIDATE: 0`. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires exact
+non-empty owner admission, bounded stateful differential and physical proof,
+SLIDE/VOK receipt, bounded execution evidence and independent review. Git remains
+provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-sentinel-io - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

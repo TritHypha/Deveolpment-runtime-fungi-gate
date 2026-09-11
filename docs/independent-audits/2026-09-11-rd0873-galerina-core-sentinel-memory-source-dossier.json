@@ -1,0 +1,548 @@
+{
+  "schema": "galerina.rd0873.galerina-core-sentinel-memory-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for bounded memory allocation, segmentation, ternary state and local bus behavior without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "0bf7883af75c36028aee6f44cdfb8deb680b979f",
+    "tree": "bfe1765f5339a54a839deab1eddf24e5135a0b00"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/errors.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/index.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/memory-validator.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/photonic-bridge-interface.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/segmentation-controller.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/static-memory-pool.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/tpl-state-buffer.ts",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/_helpers.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/errors.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/pbi.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/pool.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/rd0361-memory-validator-execution.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/rd0361-pool-allocation-guard-execution.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/rd0361-pool-policy-execution.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/rd0361-segmentation-guard-execution.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/rd0361-trit-buffer-guard-execution.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/segmentation.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/tpl.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/tests/validator.test.mjs",
+        "package": "galerina-core-sentinel-memory",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 0,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-sentinel-memory",
+    "packageJsonSha256": "sha256:b9c7cc2c0a6e13667afa26c1cfa8e6951f6d8e48880b3f98303fa3527134bb4a",
+    "packageLockSha256": "sha256:d96b959aeddfb2367970b93d49199fc448430e87ddcc481e2f0a9991454963f0",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-sentinel-memory/.graph/BOUNDARY.md",
+      "sha256": "sha256:9c4a9839992e055866ea8040d3be52b78ac48da9584271ef8d447c451e4e7804",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 7,
+    "testFileCount": 12,
+    "loadedFungiAssetCount": 6,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/channel-stride.fungi",
+        "sha256": "sha256:a7ed14cef160bbef5af78c0a0b3321cb55b8fb41cf95230525dfb829871a800c",
+        "kind": "existing non-authorizing bounded memory decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/memory-validator.fungi",
+        "sha256": "sha256:e0d7d5b344035d638a0da6e79019ce124d319ac44f41dcc6e5a541d656cc659a",
+        "kind": "existing non-authorizing bounded memory decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/pool-allocation-guard.fungi",
+        "sha256": "sha256:5e722227580563db3c36759009488dc28a4b4c18affce309bcb01db755a223ad",
+        "kind": "existing non-authorizing bounded memory decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/pool-policy.fungi",
+        "sha256": "sha256:4712a08b14b14a91cb05b8be9c5717042e62161ebc68a7779de22f47e29165ee",
+        "kind": "existing non-authorizing bounded memory decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/segmentation-guard.fungi",
+        "sha256": "sha256:e2ac53b5e0a903b65f1d7589b208a6b6137ebbdfa447564d6bc7542bc50ea616",
+        "kind": "existing non-authorizing bounded memory decision asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/trit-buffer-guard.fungi",
+        "sha256": "sha256:a64ef0f1b943a4c3c99e56efff2bfe1afa44b3313d510b6d5023a6e8aaa327bf",
+        "kind": "existing non-authorizing bounded memory decision asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-memory/src/memory-validator.ts#MemoryValidator",
+        "fungi": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/memory-validator.fungi",
+        "status": "existing bounded validation twin; host performs numeric checks and TypeScript remains authority shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-memory/src/static-memory-pool.ts#StaticMemoryPool",
+        "fungi": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/pool-allocation-guard.fungi + pool-policy.fungi",
+        "status": "existing bounded allocation/policy decision twins; allocator state remains TypeScript shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-memory/src/segmentation-controller.ts#SegmentationController",
+        "fungi": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/segmentation-guard.fungi",
+        "status": "existing segment decision twin; host owns pointer/range and pool state"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-memory/src/tpl-state-buffer.ts#TPLStateBuffer",
+        "fungi": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/trit-buffer-guard.fungi",
+        "status": "existing bounded trit decision twin; typed-array packing and lifetime remain TypeScript shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-memory/src/photonic-bridge-interface.ts#LocalSramBus",
+        "fungi": "packages-ts/galerina-core-sentinel-memory/src/self-hosted/channel-stride.fungi",
+        "status": "existing stride decision asset; bus transport and buffer aliasing remain TypeScript shadow"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/errors.ts",
+        "sha256": "sha256:9d6f05c53164b502592e0d9f9291ae0f411c54af287d5f4d1d038a9efc71244c",
+        "utf8Bytes": 1458
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/index.ts",
+        "sha256": "sha256:309e48179d0337d3d35e1f5ba5f23689292d4297f55c5d18f0bbadd10ecb302a",
+        "utf8Bytes": 751
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/memory-validator.ts",
+        "sha256": "sha256:37ff96e1e8e8a0fbed59c02e384cce35ddf63c969b7f3cf3a9b052efc65501ee",
+        "utf8Bytes": 2564
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/photonic-bridge-interface.ts",
+        "sha256": "sha256:26969888d8526864b2642536deaab2b7287f289b9efe2f1d4f707884dd9838f3",
+        "utf8Bytes": 2703
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/segmentation-controller.ts",
+        "sha256": "sha256:5d31ac4a3773c22ca7a1a51a5c00eace396afd9ebb67f4b2f33c4616410fe0de",
+        "utf8Bytes": 1341
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/static-memory-pool.ts",
+        "sha256": "sha256:ba6e0cbcba6cb6a2a736db0b62128417955b839cb707af4bd9aef7e4f86c18e4",
+        "utf8Bytes": 8961
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-memory/src/tpl-state-buffer.ts",
+        "sha256": "sha256:e24eeca374178de8379117b6d5e250847cf338f999e517587280d3fbb859a2a9",
+        "utf8Bytes": 3634
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [],
+    "exportedClasses": [
+      {
+        "symbol": "HardenedBorderViolation",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/errors.ts",
+        "span": {
+          "start": 24,
+          "end": 34
+        },
+        "sourceSha256": "sha256:9d6f05c53164b502592e0d9f9291ae0f411c54af287d5f4d1d038a9efc71244c",
+        "bodySha256": "sha256:05a2cc2a4a2eea573c86880a9bc7149f2a3bbc58dc632341ea1c035aa96f9671",
+        "bodyUtf8Bytes": 439
+      },
+      {
+        "symbol": "LocalSramBus",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/photonic-bridge-interface.ts",
+        "span": {
+          "start": 29,
+          "end": 74
+        },
+        "sourceSha256": "sha256:26969888d8526864b2642536deaab2b7287f289b9efe2f1d4f707884dd9838f3",
+        "bodySha256": "sha256:879527a809c629af7f512291a304523325a3e89f6651cff3746a69398c8deef3",
+        "bodyUtf8Bytes": 1546
+      },
+      {
+        "symbol": "MemoryValidator",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/memory-validator.ts",
+        "span": {
+          "start": 21,
+          "end": 75
+        },
+        "sourceSha256": "sha256:37ff96e1e8e8a0fbed59c02e384cce35ddf63c969b7f3cf3a9b052efc65501ee",
+        "bodySha256": "sha256:224a67368551b7eee067a9fe78c3183cbd35cc628378362f36c44250238b800c",
+        "bodyUtf8Bytes": 1846
+      },
+      {
+        "symbol": "PhotonicBridgeInterface",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/photonic-bridge-interface.ts",
+        "span": {
+          "start": 20,
+          "end": 24
+        },
+        "sourceSha256": "sha256:26969888d8526864b2642536deaab2b7287f289b9efe2f1d4f707884dd9838f3",
+        "bodySha256": "sha256:dad8e8abc2f83715bd40ee05cfcd1ea4685834ec541760f1e969b87084fc14f0",
+        "bodyUtf8Bytes": 195
+      },
+      {
+        "symbol": "SecurityTrap",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/errors.ts",
+        "span": {
+          "start": 11,
+          "end": 21
+        },
+        "sourceSha256": "sha256:9d6f05c53164b502592e0d9f9291ae0f411c54af287d5f4d1d038a9efc71244c",
+        "bodySha256": "sha256:f5a6fe88c37ec374e71e485d3369f0de0b5aa87c80c604f7cc1b733f4bac6bfc",
+        "bodyUtf8Bytes": 406
+      },
+      {
+        "symbol": "SegmentationController",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/segmentation-controller.ts",
+        "span": {
+          "start": 12,
+          "end": 34
+        },
+        "sourceSha256": "sha256:5d31ac4a3773c22ca7a1a51a5c00eace396afd9ebb67f4b2f33c4616410fe0de",
+        "bodySha256": "sha256:edd372dab3a317a635ea59f88f56910017a4b844f1a52845c9b59fda8f697561",
+        "bodyUtf8Bytes": 763
+      },
+      {
+        "symbol": "StaticMemoryPool",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/static-memory-pool.ts",
+        "span": {
+          "start": 45,
+          "end": 229
+        },
+        "sourceSha256": "sha256:ba6e0cbcba6cb6a2a736db0b62128417955b839cb707af4bd9aef7e4f86c18e4",
+        "bodySha256": "sha256:ab89230c1876f91991f67fe72bdbf4a361da4eadb7d8b1a4b4b0c718303241da",
+        "bodyUtf8Bytes": 7216
+      },
+      {
+        "symbol": "TPLStateBuffer",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/tpl-state-buffer.ts",
+        "span": {
+          "start": 27,
+          "end": 100
+        },
+        "sourceSha256": "sha256:e24eeca374178de8379117b6d5e250847cf338f999e517587280d3fbb859a2a9",
+        "bodySha256": "sha256:826b154e3a02ed14db308d12097050625c9e24d1e1e51aa89a9f4cb7b5b91665",
+        "bodyUtf8Bytes": 2456
+      }
+    ],
+    "exportedConstants": [
+      {
+        "symbol": "ALIGN_BYTES",
+        "source": "packages-ts/galerina-core-sentinel-memory/src/memory-validator.ts",
+        "span": {
+          "start": 11,
+          "end": 11
+        },
+        "sourceSha256": "sha256:37ff96e1e8e8a0fbed59c02e384cce35ddf63c969b7f3cf3a9b052efc65501ee"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "Segment"
+      ],
+      "interfaces": [
+        "Block",
+        "MemoryChannel",
+        "PoolConfig"
+      ],
+      "disposition": "type contracts remain evidence; memory validation, allocation, segmentation, typed-trit state and local bus are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-sentinel-memory/dist/index.js",
+    "sha256": "sha256:8a0a67daeff1b2bebbfa475ce2abd41942d6a8ea7cbd79dbe76a2ec7136dec70",
+    "declarationPath": "packages-ts/galerina-core-sentinel-memory/dist/index.d.ts",
+    "declarationSha256": "sha256:9480d431515dc0ffabedc16ad91b00acc2d688f978939579824f915e96c66235",
+    "buildCommand": "npm test (includes build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-sentinel-memory",
+    "nodes": 13,
+    "edges": 17,
+    "functions": 0,
+    "exportedClassCount": 8,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 17,
+      "EXTERNAL_IMPORTS": 0
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "StaticMemoryPool.allocate",
+      "StaticMemoryPool.free",
+      "StaticMemoryPool.assertLive",
+      "TPLStateBuffer.setTrit",
+      "TPLStateBuffer.loadTrits",
+      "SegmentationController.assertAccess",
+      "LocalSramBus.channel"
+    ],
+    "note": "Boundary graph reports thirteen nodes and seventeen internal edges with no external dependencies. Function/class surfaces are AST-derived and are not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-sentinel-memory/tests/_helpers.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/errors.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/pbi.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/pool.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/rd0361-memory-validator-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/rd0361-pool-allocation-guard-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/rd0361-pool-policy-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/rd0361-segmentation-guard-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/rd0361-trit-buffer-guard-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/segmentation.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/tpl.test.mjs",
+      "packages-ts/galerina-core-sentinel-memory/tests/validator.test.mjs"
+    ],
+    "testSha256": {
+      "_helpers.mjs": "sha256:6ec4a92a2385a025ce450f088bdbfdd2f967ab837e32e252cd99e7a1241c8087",
+      "errors.test.mjs": "sha256:7e7ada3df3d9ff2a6d019ba3aa881a2962e1023d9e052d636fd64ab046ea2e1a",
+      "pbi.test.mjs": "sha256:04d4fb0c7f9649f2043668821f9b7817a3d042645cfeb3e037b1f0d70829091a",
+      "pool.test.mjs": "sha256:56661b5a662657993b93b72ac6f547cbba0e4adb686065f68e652a6bbe8be80c",
+      "rd0361-memory-validator-execution.test.mjs": "sha256:88b0a788fa3b6135999afbf564539a653a424db881622bff5f226c00f3a9fb43",
+      "rd0361-pool-allocation-guard-execution.test.mjs": "sha256:fb6984f0ca9f9531689495844f9d95a8902909f2d3d7262f2e6f48f129867136",
+      "rd0361-pool-policy-execution.test.mjs": "sha256:1b0f4e06b8b486b3d2dfec83166115ae63e308b9b6c11d0a9bc3953677deae04",
+      "rd0361-segmentation-guard-execution.test.mjs": "sha256:21150129fed662a3d046daef66b0a098f9eb38fd2b8bd77f80dbd211abc2302c",
+      "rd0361-trit-buffer-guard-execution.test.mjs": "sha256:ebd24e77d513d50cd63454137c97e8dba36c49688e03f935a27bbddd5af926f1",
+      "segmentation.test.mjs": "sha256:e3d7b60e583f7f46fc287113924d5def24ae4077e3c1a6f88a87fbac00e0b0c7",
+      "tpl.test.mjs": "sha256:67d9c77e32d50fdb5f14016cc07645823183b20bc6afe5c2495780eab8f00632",
+      "validator.test.mjs": "sha256:9e8117852975ca06390a10f758ef3c322843f4628358e83473a11d4d028447e2"
+    },
+    "command": "npm test",
+    "result": "PASS 39/39",
+    "coveredBehavior": [
+      "error prototypes and stable trap codes",
+      "fixed-block allocation, free-list reuse, accounting, flight lock and use-after-free generation checks",
+      "alignment and subtraction-based bounds checks",
+      "compute/governance segmentation decisions",
+      "SharedArrayBuffer selection and local SRAM channel stride/range behavior",
+      "packed ternary round trips, range/index checks, corruption sentinel and RD-0361 bounded differentials"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-sentinel-memory/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "0bf7883af75c36028aee6f44cdfb8deb680b979f",
+      "tree": "bfe1765f5339a54a839deab1eddf24e5135a0b00"
+    },
+    "findings": [
+      "MemoryValidator uses safe-integer checks, positive alignment and subtraction-based bounds checking; custom alignment need not be a power of two. Zero-length access at capacity passes.",
+      "StaticMemoryPool.computeRatio is not range/finite validated. Allocation rounds fractional requests upward and zero bytes consumes one block. The fixed backing buffer is bounded, but free-lists, Maps, Sets and returned handles allocate dynamically; search/sort cost depends on pool state. Flight lock blocks allocation but not freeing or existing-memory writes.",
+      "assertLive checks only pointer and generation, then i32/u8 trust caller-supplied Block.bytes. Block size/segment and pool ownership are not authenticated. free(ptr) accepts no generation, so stale pointer possession is not distinguished from the current allocation.",
+      "SegmentationController.assertAccess checks one pointer segment, not the accessed range, allocation lifetime or permission for the exposed writable buffer. TypeScript private fields are not JavaScript private custody.",
+      "TPLStateBuffer caches an Int32Array view and does not recheck allocation generation after construction; views survive free/reallocation. It allocates from compute, whose free fill is 0xff and therefore decodes as corruption. Index guards omit integer/NaN checks; loadTrits can partially mutate before a later invalid value/index throws.",
+      "LocalSramBus reads return copies, but bounds are checked against the whole pool rather than channel-local capacity. Negative channel-relative offsets can pass when the resulting global address is valid. Bus access has no segmentation/liveness check; external photonic attachment is refused and local integrity is a constant true.",
+      "Existing Fungi assets cover stride, bounded validation, allocation/policy, segmentation and trit decisions only. memory-validator.fungi::alignUp lacks TypeScript invalid-input/MAX_SAFE_INTEGER guards, and scrubFillByte returns zero for unknown segments while TypeScript frees every non-governance segment with 0xff; equivalence requires the exact admitted segment union."
+    ],
+    "materialObligations": [
+      "Bind safe numeric domains, ratio bounds, allocation rounding, pool ownership and handle generation before authority claims.",
+      "Preserve full-range segmentation and liveness checks, view revocation/aliasing behavior, writable buffer semantics and failure ordering.",
+      "Preserve ternary packing, signedness, corruption sentinel, index validation and partial mutation behavior, or explicitly narrow the admitted domain.",
+      "Preserve local bus stride/range/negative-offset semantics and fail-closed external photonic refusal without claiming hardware execution.",
+      "Keep all six Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-sentinel-memory",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded memory validation, fixed-block allocation/free, segment checks, packed ternary state and local SRAM channel decisions",
+    "authorityBoundary": "This package owns mutable memory, typed-array views, allocation state and bus effects. Existing Fungi folds are decision evidence only; they are not a memory or authority replacement.",
+    "runtimeObligations": [
+      "Preserve numeric validation, allocation/free-list and generation behavior, pool ownership and fail-closed errors.",
+      "Preserve typed-array/shared-memory aliasing, offsets, alignment, liveness, view lifetime and partial-failure behavior.",
+      "Preserve segment and channel range semantics, signedness and external photonic refusal without claiming physical execution.",
+      "Keep Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this memory scope",
+      "source-to-Fungi artifacts and exact twin hashes for stateful allocation, views, segmentation and bus behavior",
+      "independent differential vectors for ratio/domain errors, stale handles/views, range crossing, negative offsets, shared buffers, partial mutation and corruption",
+      "host substitution proof for typed arrays, SharedArrayBuffer, synchronization and physical bus/resource boundaries",
+      "bounded physical memory/ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep galerina-core-sentinel-memory rows BLOCKED with existing reasons and CANDIDATE at zero until a separate exact non-empty owner admission and independent stateful memory/differential gates authorize a named scope."
+}
