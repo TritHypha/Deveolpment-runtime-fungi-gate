@@ -1,0 +1,147 @@
+{
+  "schema": "galerina.rd0873.compose-auth-verdict-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one small T3-package-graph decision-factor wrapper for a future owner admission without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "5cc2204cd68e747b739dd19f1ba5d3068d2d647e",
+    "tree": "0f205f38cf08351254ff1422f4848ee3aa37c7a0"
+  },
+  "queueEntry": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "sourceDigest": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "decisionsDigest": "sha256:4ee98bad929a76aaa600ae473449c6291b85cc21c97200ac7ba3ab465a0291df",
+    "projectCorpusReceiptDigest": "sha256:18673dd3aff305700324b3e38172051c55c46757c219bd241570ce1dfbacc150",
+    "entry": {
+      "path": "packages-ts/galerina-auth/src/compose.ts",
+      "package": "galerina-auth",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    "queueCounts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "source": {
+    "path": "packages-ts/galerina-auth/src/compose.ts",
+    "symbol": "composeAuthVerdict",
+    "span": { "start": 41, "end": 43 },
+    "signature": "export function composeAuthVerdict(factors: readonly Verdict[]): Verdict",
+    "sourceSha256": "sha256:5088ebd6941883a0a6d6de11491f7acbff5bab0d5c8c2b5311b7a8a4f217a231",
+    "bodySha256": "sha256:d5d52b67ce3cbdb2494e5f9a797b6d629d04fcb10807ff2841e61a6aa2e011d0",
+    "sourceUtf8Bytes": 2500,
+    "bodyUtf8Bytes": 102,
+    "existingTwin": null,
+    "classification": "exported pure factor composition wrapper; returns a Verdict and does not make an admission decision"
+  },
+  "dependency": {
+    "symbol": "allOf",
+    "path": "packages-ts/galerina-tower-citizen/src/three-valued-governance.ts",
+    "span": { "start": 90, "end": 93 },
+    "sourceSha256": "sha256:801f3aa1366bee32aa2015b76a5f457677193d621fe0d425780c90dd6b5c37a1",
+    "bodySha256": "sha256:4cbd6aaf3c0f41c820728884a28267f9a9e00e6d79474ecd7878c32d7eb427cb",
+    "builtOracle": {
+      "path": "packages-ts/galerina-tower-citizen/dist/three-valued-governance.js",
+      "sha256": "sha256:504215b7b95ffaba37d26c3f7d17cb7f2d111b4ca92ef9f8b4766866714b9761"
+    },
+    "contract": "allOf returns INDETERMINATE for an empty list and otherwise reduces with vAnd; the imported implementation remains the semantic dependency"
+  },
+  "historicalBlocker": {
+    "record": "docs/reports/slice-94-allof-fungi-conversion-2026-08-13.md",
+    "status": "BLOCKED_BY_VERDICT_ARRAY_FOLD_ABI",
+    "finding": "The physical profile had no admitted Array<Verdict> parameter, bounded length/index operations or fold profile; binary K3-minimum evidence did not prove the array container, empty case or malformed-element boundary.",
+    "requiredExit": "Reviewed physical Array<Verdict> ABI, exact bounds and element access, malformed/surplus refusal, empty-to-INDETERMINATE parity, differential parity and independent VOK re-admission"
+  },
+  "graphEvidence": {
+    "qualifiedName": "Galerina.packages-ts.galerina-auth.src.compose.composeAuthVerdict",
+    "label": "Function",
+    "startLine": 41,
+    "endLine": 43,
+    "complexity": 0,
+    "cognitive": 0,
+    "loopCount": 0,
+    "loopDepth": 0,
+    "callers": [
+      "packages-ts/galerina-auth/tests/bearer.test.mjs",
+      "packages-ts/galerina-auth/tests/compose.test.mjs",
+      "packages-ts/galerina-auth/tests/kernel-integration.test.mjs"
+    ],
+    "callees": ["allOf"]
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-auth/tests/compose.test.mjs",
+    "testSha256": "sha256:9a445b0b17cdef0f462a9f45c74f426e5f17c2d0914465e8c2255722ed30915a",
+    "command": "node --test tests/compose.test.mjs",
+    "result": "PASS 8/8",
+    "subjectCoverage": {
+      "composeAuthVerdict": "PASS 5/5",
+      "previewAdmission": "PASS 3/3; recorded as excluded authority-adjacent context"
+    },
+    "coveredBehavior": [
+      "all factors ALLOW -> ALLOW",
+      "INDETERMINATE factor pulls composite to INDETERMINATE",
+      "DENY annihilates",
+      "empty factor list -> INDETERMINATE",
+      "single ALLOW is preserved"
+    ]
+  },
+  "authorityBoundary": {
+    "factorOnly": true,
+    "consumer": "App Kernel consumes the composed Verdict as channelVerdict and owns the binding admission decision",
+    "excludedSymbol": {
+      "symbol": "previewAdmission",
+      "span": { "start": 54, "end": 59 },
+      "bodySha256": "sha256:05162018302b210862cfaa094bf75444406f71daff641affa10fa1b8febbf6cf",
+      "reason": "wrapper around decideAtBoundary; keep outside a Fungi factor dossier until authority and consumer boundaries are separately admitted"
+    }
+  },
+  "translationAssessment": {
+    "candidateShape": "zero-loop wrapper delegating to imported allOf over a readonly Verdict array",
+    "inputStateContract": "One readonly Verdict array; runtime mutation and array iteration behavior remain part of the differential contract",
+    "operationLedger": [
+      "receive factors",
+      "invoke imported allOf",
+      "return the imported Verdict result"
+    ],
+    "boundedPhysicalProfile": "The future profile must admit a bounded Array<Verdict> input, deterministic ordered reduction, explicit length/iteration limits and typed failures without precomputing the authorization result in the host.",
+    "reusableEvidence": [
+      "graph-resolved three test callers and allOf dependency",
+      "compose-focused behavior passes 5/5 within an 8/8 package test",
+      "tower-citizen allOf source and built-oracle hashes are recorded",
+      "package boundary report passes",
+      "historical Slice 94 blocker identifies the missing Array<Verdict> physical ABI"
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming this symbol and scope",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "differential vectors for empty, duplicate, ordering, aliases, sparse arrays, getters, custom iterators, mutation and failures",
+      "independent proof that imported allOf/vAnd semantics and Verdict identity are preserved",
+      "bounded physical SLIDE/VOK re-admission and complete exact-head receipt",
+      "authority review confirming factor-only use without consumer switching"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep composeAuthVerdict BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until an exact-head owner admission names a non-empty scope and the imported allOf dependency, differential and physical gates pass."
+}

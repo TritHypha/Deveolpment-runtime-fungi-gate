@@ -21,6 +21,15 @@ counts or open items that a newer section explicitly supersedes.
   Fungi twin and the conserved queue remains `CANDIDATE: 0`. Keep bulk source
   authoring closed until a separate exact-head authorizing admission names a
   non-empty scope and bounded limits.
+- [x] Added the companion `composeAuthVerdict` dossier at
+  `docs/independent-audits/2026-09-11-rd0873-compose-auth-verdict-source-dossier.json`.
+  Its five direct composition cases pass within the `8/8` compose suite; the
+  imported Tower-Citizen `allOf` dependency and historical Slice 94
+  `Array<Verdict>` ABI blocker are recorded. `previewAdmission` remains
+  excluded as an authority-adjacent boundary wrapper.
+- [!] `composeAuthVerdict` also remains `BLOCKED:DOSSIER_REQUIRED` with no
+  existing Fungi twin. No queue entry was relabeled and no source authoring was
+  started.
 
 ### RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 

@@ -22,6 +22,16 @@ retirement or corpus assurance rerun occurred. Bulk authoring remains closed
 until a separate exact-head owner admission names a non-empty scope and its
 bounded limits.
 
+The same exact-head review adds the companion
+`docs/independent-audits/2026-09-11-rd0873-compose-auth-verdict-source-dossier.json`.
+`composeAuthVerdict` is a three-line factor wrapper over Tower-Citizen `allOf`;
+its five direct composition cases pass within the `8/8` compose suite. The
+historical Slice 94 `Array<Verdict>` ABI blocker, imported dependency identity
+and missing physical/differential proofs are recorded. `previewAdmission` stays
+outside this dossier because it crosses the authority-adjacent boundary
+interpreter. The compose entry remains `BLOCKED:DOSSIER_REQUIRED`; no queue
+entry changed and no new Fungi source was authored.
+
 ## RD-0873 authorized four-symbol wave revalidation - 2026-09-11
 
 The owner supplied a fresh exact, non-empty authorization for one bounded
