@@ -1,0 +1,921 @@
+{
+  "schema": "galerina.rd0873.galerina-core-network-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "b0defa3f11d66bcc7fc40d92bfda9592ba641318",
+    "tree": "776a49344687e68f96ec40c2fda1c2ee91b9cae7"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-network/scripts/prove-egress-guard.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/scripts/prove-inbound-guard.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/admission-feedback.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/cors-policy.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/inbound-guard.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/index.ts",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/admission-feedback.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/cert-gate.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/cors-policy.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/defensive-controls.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/egress-guard.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/inbound-guard.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/network-contracts.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-admission-feedback-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-b8-admission-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-cert-gate-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-cors-policy-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-defensive-controls-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-egress-guard-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/rd0361-inbound-guard-execution.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-network/tests/revocation-cadence.test.mjs",
+        "package": "galerina-core-network",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-network",
+    "packageJsonSha256": "sha256:c5ba024daba3244eea4b38e6260c77d8d797f9443bbe66a3095031fc20721cd2",
+    "packageLockSha256": "sha256:891a8653bd02675d4d4e5a2e44e060f47629cc9e1a2f6d0c05b194df5e405682",
+    "readmeSha256": "sha256:44b6a167370eec97f3677b254a9d5ec5dc4ec379ac5185d704887f7e9dccfc35",
+    "packageTodoSha256": null,
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-network/examples/secure-api-network-policy.json",
+        "sha256": "sha256:442f302626755d0fe090e3901cf1d03a29138fc2e7b932033c49c50286dffb58",
+        "utf8Bytes": 1040
+      }
+    ],
+    "scripts": [
+      {
+        "path": "packages-ts/galerina-core-network/scripts/prove-egress-guard.mjs",
+        "sha256": "sha256:d247f2a7ea565233b69c81f7c2db81db8854a2f3118c257ff1e8fd53c54617c5",
+        "utf8Bytes": 7212
+      },
+      {
+        "path": "packages-ts/galerina-core-network/scripts/prove-inbound-guard.mjs",
+        "sha256": "sha256:1b16954b5d20f5429d3d0054103c5d358a3423ef553f5e4bbca1de2da4ceb2d0",
+        "utf8Bytes": 6595
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-network/.graph/BOUNDARY.md",
+      "sha256": "sha256:c32c404e14bca2460058f59524c395457b71115a832708bd2c6dcbf2778eeacc",
+      "status": "PASS",
+      "externalDependencies": [
+        "@galerina/tower-citizen"
+      ]
+    },
+    "sourceFileCount": 7,
+    "testFileCount": 15,
+    "loadedFungiAssetCount": 7,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/admission-feedback.fungi",
+        "sha256": "sha256:6afb8a0101322fe4a1e8cb5007f2bf5105e2476f839c3ede92699526ae11149d",
+        "kind": "package-owned Fungi twin or validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/b8-admission.fungi",
+        "sha256": "sha256:12dc7ed4eeaf05afd21de58d3f04247af357d9118a54c5bbaf4c3ecb15eb5504",
+        "kind": "bounded K3 admission asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/cert-gate.fungi",
+        "sha256": "sha256:a5a0eeaa01b5e9e89d681f4401b14ff1f7ac7cc035e03ded7773ba1819ee6e1d",
+        "kind": "package-owned Fungi twin or validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/cors-policy.fungi",
+        "sha256": "sha256:bdfc10475647cf7824d95dd1c250a7e37cc26bf25a0b87b8a4fc23aaa62f3794",
+        "kind": "package-owned Fungi twin or validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/defensive-controls.fungi",
+        "sha256": "sha256:e0d6067f6d32ee278227e256a25366af21139cf3d4dc3ef4f83686c425bd4a6a",
+        "kind": "package-owned Fungi twin or validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/egress-guard.fungi",
+        "sha256": "sha256:1db5b398c82810aeb46eed5b24bb5dd62e5bef379d87494aa4e7f7989cb20e02",
+        "kind": "package-owned Fungi twin or validation asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/self-hosted/inbound-guard.fungi",
+        "sha256": "sha256:8c80c5c60568c1f6e34fe071cf01c0ea2bce58c9b0c9041909485899b3c02457",
+        "kind": "package-owned Fungi twin or validation asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-network/src/admission-feedback.ts",
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/admission-feedback.fungi",
+        "status": "existing non-authorizing execution twin; package test retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/cert-gate.fungi",
+        "status": "existing non-authorizing execution twin; package test retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-network/src/cors-policy.ts",
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/cors-policy.fungi",
+        "status": "existing non-authorizing execution twin; package test retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/defensive-controls.fungi",
+        "status": "existing non-authorizing execution twin; package test retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/egress-guard.fungi",
+        "status": "existing non-authorizing execution twin; package test retained"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-network/src/inbound-guard.ts",
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/inbound-guard.fungi",
+        "status": "existing non-authorizing execution twin; package test retained"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-network/src/self-hosted/b8-admission.fungi",
+        "status": "existing package-owned K3 admission asset; source mapping remains bounded and non-authorizing"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-network/src/admission-feedback.ts",
+        "sha256": "sha256:54557e957b11863b56c29906dba927df2219b9c579c7aeda5c55f66ebeef81f4",
+        "utf8Bytes": 7598,
+        "exportedFunctions": [
+          "telemetryToSideSignal",
+          "withTelemetryFeedback",
+          "certGateWithTelemetry"
+        ]
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "sha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+        "utf8Bytes": 14593,
+        "exportedFunctions": [
+          "toSubVerdicts",
+          "certVerdict",
+          "withSideSignal",
+          "certGate",
+          "revocationRecheckDue"
+        ]
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/cors-policy.ts",
+        "sha256": "sha256:a41249ef64bef558b1aa9b7b9afbc1309aef0b10b99546ad68600abbd1e3b826",
+        "utf8Bytes": 7311,
+        "exportedFunctions": [
+          "guardCorsRequest"
+        ]
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "sha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "utf8Bytes": 8833,
+        "exportedFunctions": [
+          "proxyIsTrusted",
+          "resolveClientAddress",
+          "uniformResourceResponse",
+          "uniformAuthResponse",
+          "boundPageLimit",
+          "isOpaqueId"
+        ]
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "sha256": "sha256:632774424de2cb1bbd6675c212ff30dc7230325970426fce2440ca0da112dc80",
+        "utf8Bytes": 25322,
+        "exportedFunctions": [
+          "classifyHost",
+          "guardOutboundHost",
+          "guardOutboundUrl",
+          "validateWebhookTarget",
+          "guardResolvedAddresses"
+        ]
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/inbound-guard.ts",
+        "sha256": "sha256:566f8b42cad75f60df30d81c133ddca4b9ab7c26b2ca386b00f649b20b05ed67",
+        "utf8Bytes": 7886,
+        "exportedFunctions": [
+          "parseRateLimit",
+          "guardInboundRequest",
+          "rateLimitKey"
+        ]
+      },
+      {
+        "path": "packages-ts/galerina-core-network/src/index.ts",
+        "sha256": "sha256:8ca463c776685b6f72873c63469b2fd629c4b39e593a25805596cb4b4b56f89e",
+        "utf8Bytes": 16653,
+        "exportedFunctions": [
+          "defineNetworkPolicy",
+          "validateNetworkPolicy",
+          "selectNetworkBackend",
+          "createNetworkReport"
+        ]
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "telemetryToSideSignal",
+        "source": "packages-ts/galerina-core-network/src/admission-feedback.ts",
+        "span": {
+          "start": 91,
+          "end": 123
+        },
+        "sourceSha256": "sha256:54557e957b11863b56c29906dba927df2219b9c579c7aeda5c55f66ebeef81f4",
+        "bodySha256": "sha256:ea7f03e2017ab27b4c2bbc2deecff036f6d48bfbd641323b32b65ec3a77f3be1",
+        "bodyUtf8Bytes": 1321
+      },
+      {
+        "symbol": "withTelemetryFeedback",
+        "source": "packages-ts/galerina-core-network/src/admission-feedback.ts",
+        "span": {
+          "start": 133,
+          "end": 135
+        },
+        "sourceSha256": "sha256:54557e957b11863b56c29906dba927df2219b9c579c7aeda5c55f66ebeef81f4",
+        "bodySha256": "sha256:c3d29dd9ddf245884e338676b5c12a875cefa611484746a424ada98df971ecaa",
+        "bodyUtf8Bytes": 155
+      },
+      {
+        "symbol": "certGateWithTelemetry",
+        "source": "packages-ts/galerina-core-network/src/admission-feedback.ts",
+        "span": {
+          "start": 148,
+          "end": 158
+        },
+        "sourceSha256": "sha256:54557e957b11863b56c29906dba927df2219b9c579c7aeda5c55f66ebeef81f4",
+        "bodySha256": "sha256:891a18d19cdb0509bd94a0f921aef1970964121dd7fe7940589301359f9c9800",
+        "bodyUtf8Bytes": 345
+      },
+      {
+        "symbol": "toSubVerdicts",
+        "source": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "span": {
+          "start": 201,
+          "end": 214
+        },
+        "sourceSha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+        "bodySha256": "sha256:7fdc90b4baf1e41448fdd0a647d76ba658067ae7ee5baee6a24b22119ec6a236",
+        "bodyUtf8Bytes": 496
+      },
+      {
+        "symbol": "certVerdict",
+        "source": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "span": {
+          "start": 226,
+          "end": 228
+        },
+        "sourceSha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+        "bodySha256": "sha256:49037c26f0ace888c19c48c3bac0c2858f60706448f3c105d55c3bb4f183f6b1",
+        "bodyUtf8Bytes": 154
+      },
+      {
+        "symbol": "withSideSignal",
+        "source": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "span": {
+          "start": 236,
+          "end": 238
+        },
+        "sourceSha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+        "bodySha256": "sha256:67ab64ed67274788fbd97ee4db4fc1437749e9f1361e83f74a4c475507320d42",
+        "bodyUtf8Bytes": 120
+      },
+      {
+        "symbol": "certGate",
+        "source": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "span": {
+          "start": 250,
+          "end": 257
+        },
+        "sourceSha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+        "bodySha256": "sha256:012de70da1eabecc85bf477bbbb128e0915c8af70a5691a987060e110a6db64e",
+        "bodyUtf8Bytes": 323
+      },
+      {
+        "symbol": "revocationRecheckDue",
+        "source": "packages-ts/galerina-core-network/src/cert-gate.ts",
+        "span": {
+          "start": 303,
+          "end": 320
+        },
+        "sourceSha256": "sha256:3f2feb6e552d9ccdd7200fb1571dc43c29d9b1353e0806755e8c9939210efc49",
+        "bodySha256": "sha256:e7288c297cff1965e0749b65620d6ecfeceaa17ae81815c6023e62ef196a314e",
+        "bodyUtf8Bytes": 715
+      },
+      {
+        "symbol": "guardCorsRequest",
+        "source": "packages-ts/galerina-core-network/src/cors-policy.ts",
+        "span": {
+          "start": 64,
+          "end": 147
+        },
+        "sourceSha256": "sha256:a41249ef64bef558b1aa9b7b9afbc1309aef0b10b99546ad68600abbd1e3b826",
+        "bodySha256": "sha256:96b35c3e319bcecaa269fed728f13876b99d3b0f96366d4d62c7fff531d74428",
+        "bodyUtf8Bytes": 3738
+      },
+      {
+        "symbol": "proxyIsTrusted",
+        "source": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "span": {
+          "start": 47,
+          "end": 55
+        },
+        "sourceSha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "bodySha256": "sha256:5e3c0c5c3a3763d52428cdcc0b068b06e891233f3869382cf7f0fe50780a66c1",
+        "bodyUtf8Bytes": 329
+      },
+      {
+        "symbol": "resolveClientAddress",
+        "source": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "span": {
+          "start": 77,
+          "end": 84
+        },
+        "sourceSha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "bodySha256": "sha256:bedcfa97b5d1834f6418329a4c0bd8b0eaa1d490377409b73b5e099309667062",
+        "bodyUtf8Bytes": 408
+      },
+      {
+        "symbol": "uniformResourceResponse",
+        "source": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "span": {
+          "start": 110,
+          "end": 116
+        },
+        "sourceSha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "bodySha256": "sha256:8d9c4032e745757cb3fdc18f725e85f41e6bc7fdf376a47a3a49f564a9540dc8",
+        "bodyUtf8Bytes": 367
+      },
+      {
+        "symbol": "uniformAuthResponse",
+        "source": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "span": {
+          "start": 122,
+          "end": 127
+        },
+        "sourceSha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "bodySha256": "sha256:762b748f746b0727813983abcf35091be475681f85b858cd5e4cd101a946a2c1",
+        "bodyUtf8Bytes": 255
+      },
+      {
+        "symbol": "boundPageLimit",
+        "source": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "span": {
+          "start": 150,
+          "end": 161
+        },
+        "sourceSha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "bodySha256": "sha256:1fc03111fffb735d6dedcbb639535d70812523326821d349ec9e4a58eb26b7e2",
+        "bodyUtf8Bytes": 548
+      },
+      {
+        "symbol": "isOpaqueId",
+        "source": "packages-ts/galerina-core-network/src/defensive-controls.ts",
+        "span": {
+          "start": 175,
+          "end": 181
+        },
+        "sourceSha256": "sha256:eecd85744a9012164d6d31ed4e5f2dc4a34b71209d605c60a64cc75c78f60143",
+        "bodySha256": "sha256:ab07925c61f58f8d0e394a7d65bd31d65c048050c73df4c49637508b3ee25779",
+        "bodyUtf8Bytes": 297
+      },
+      {
+        "symbol": "classifyHost",
+        "source": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "span": {
+          "start": 208,
+          "end": 221
+        },
+        "sourceSha256": "sha256:632774424de2cb1bbd6675c212ff30dc7230325970426fce2440ca0da112dc80",
+        "bodySha256": "sha256:21d2390a614883cf6a16b4195179fbfda916c7316f5cdd2f2a9030a6bb832f2a",
+        "bodyUtf8Bytes": 686
+      },
+      {
+        "symbol": "guardOutboundHost",
+        "source": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "span": {
+          "start": 273,
+          "end": 298
+        },
+        "sourceSha256": "sha256:632774424de2cb1bbd6675c212ff30dc7230325970426fce2440ca0da112dc80",
+        "bodySha256": "sha256:288ac26f9dc7a59f86eef744612d01c4e1ffa6dbece7a0f7be235b6b4f71dac6",
+        "bodyUtf8Bytes": 2339
+      },
+      {
+        "symbol": "guardOutboundUrl",
+        "source": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "span": {
+          "start": 301,
+          "end": 337
+        },
+        "sourceSha256": "sha256:632774424de2cb1bbd6675c212ff30dc7230325970426fce2440ca0da112dc80",
+        "bodySha256": "sha256:0e870eb9b9f4d3c079548cd6adc1168b9bda713102276d6cd9f9ab0b55fe8f5c",
+        "bodyUtf8Bytes": 3203
+      },
+      {
+        "symbol": "validateWebhookTarget",
+        "source": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "span": {
+          "start": 340,
+          "end": 351
+        },
+        "sourceSha256": "sha256:632774424de2cb1bbd6675c212ff30dc7230325970426fce2440ca0da112dc80",
+        "bodySha256": "sha256:7bee7326486db8680e136d83eca004f27f8d90edf23af1948ef7e5032c6b6617",
+        "bodyUtf8Bytes": 602
+      },
+      {
+        "symbol": "guardResolvedAddresses",
+        "source": "packages-ts/galerina-core-network/src/egress-guard.ts",
+        "span": {
+          "start": 362,
+          "end": 380
+        },
+        "sourceSha256": "sha256:632774424de2cb1bbd6675c212ff30dc7230325970426fce2440ca0da112dc80",
+        "bodySha256": "sha256:97e629f4e28238594b542b70cc14a84d02e4d45ed0acb8e80734b41df9eeb182",
+        "bodyUtf8Bytes": 1429
+      },
+      {
+        "symbol": "parseRateLimit",
+        "source": "packages-ts/galerina-core-network/src/inbound-guard.ts",
+        "span": {
+          "start": 45,
+          "end": 59
+        },
+        "sourceSha256": "sha256:566f8b42cad75f60df30d81c133ddca4b9ab7c26b2ca386b00f649b20b05ed67",
+        "bodySha256": "sha256:731181931f5ad133df13a8ede8d6bce29b19dc803b60cdd0807ab0aa3bd1ccc3",
+        "bodyUtf8Bytes": 1022
+      },
+      {
+        "symbol": "guardInboundRequest",
+        "source": "packages-ts/galerina-core-network/src/inbound-guard.ts",
+        "span": {
+          "start": 68,
+          "end": 89
+        },
+        "sourceSha256": "sha256:566f8b42cad75f60df30d81c133ddca4b9ab7c26b2ca386b00f649b20b05ed67",
+        "bodySha256": "sha256:f17007994fd6f3e560ac5e10579eddae1ac7f0e42383e43e77cde123eee50f6b",
+        "bodyUtf8Bytes": 1460
+      },
+      {
+        "symbol": "rateLimitKey",
+        "source": "packages-ts/galerina-core-network/src/inbound-guard.ts",
+        "span": {
+          "start": 106,
+          "end": 120
+        },
+        "sourceSha256": "sha256:566f8b42cad75f60df30d81c133ddca4b9ab7c26b2ca386b00f649b20b05ed67",
+        "bodySha256": "sha256:fcfb57aa7472aee3814133ba0cba6932e06f08b2b8c366c812f5923386cbdc8f",
+        "bodyUtf8Bytes": 714
+      },
+      {
+        "symbol": "defineNetworkPolicy",
+        "source": "packages-ts/galerina-core-network/src/index.ts",
+        "span": {
+          "start": 133,
+          "end": 149
+        },
+        "sourceSha256": "sha256:8ca463c776685b6f72873c63469b2fd629c4b39e593a25805596cb4b4b56f89e",
+        "bodySha256": "sha256:8240b4bd17044e200fef6d2c4b067bdb88b885bdd9e602dc5d8d7f7a03461b71",
+        "bodyUtf8Bytes": 630
+      },
+      {
+        "symbol": "validateNetworkPolicy",
+        "source": "packages-ts/galerina-core-network/src/index.ts",
+        "span": {
+          "start": 151,
+          "end": 215
+        },
+        "sourceSha256": "sha256:8ca463c776685b6f72873c63469b2fd629c4b39e593a25805596cb4b4b56f89e",
+        "bodySha256": "sha256:58e7a701aa38e4bf445b4c5c6a8f644533d13785bda57befe80f69de43303919",
+        "bodyUtf8Bytes": 1875
+      },
+      {
+        "symbol": "selectNetworkBackend",
+        "source": "packages-ts/galerina-core-network/src/index.ts",
+        "span": {
+          "start": 217,
+          "end": 252
+        },
+        "sourceSha256": "sha256:8ca463c776685b6f72873c63469b2fd629c4b39e593a25805596cb4b4b56f89e",
+        "bodySha256": "sha256:eb47395ab5499bc222ce3ba41fb04bcf27f899b056d9938b977a92b9d020b6a0",
+        "bodyUtf8Bytes": 1380
+      },
+      {
+        "symbol": "createNetworkReport",
+        "source": "packages-ts/galerina-core-network/src/index.ts",
+        "span": {
+          "start": 254,
+          "end": 290
+        },
+        "sourceSha256": "sha256:8ca463c776685b6f72873c63469b2fd629c4b39e593a25805596cb4b4b56f89e",
+        "bodySha256": "sha256:ab88e7f90df230966e82404cbbfface99edaa9f6ada0cf0932fb973440695093",
+        "bodyUtf8Bytes": 1311
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "NetworkDirection",
+        "NetworkProtocol",
+        "NetworkEffect",
+        "TlsVersion",
+        "NetworkBackend",
+        "NetworkDiagnosticSeverity",
+        "NetworkDiagnostic",
+        "TlsPolicy",
+        "NetworkEndpointRule",
+        "RateLimitRule",
+        "NetworkPrivacyPolicy",
+        "NetworkPolicy",
+        "NetworkBackendCapability",
+        "NetworkAutoPolicy",
+        "NetworkBackendSelection",
+        "NetworkReport",
+        "HostCategory",
+        "HostKind",
+        "HostClassification",
+        "EgressPolicy",
+        "EgressDecision",
+        "InboundProtocol",
+        "InboundGuardPolicy",
+        "InboundRequest",
+        "InboundDecision",
+        "RateLimitRuleLike",
+        "RateLimitResult",
+        "Verdict",
+        "BoundaryDecision",
+        "GovernanceDiagnostic",
+        "ChainValidationOutcome",
+        "RevocationOutcome",
+        "CertSubVerdicts",
+        "CertGateInput",
+        "RevocationCadence",
+        "RecheckState",
+        "AdmissionHealth",
+        "AdmissionTelemetry",
+        "CorsPolicy",
+        "CorsRequest",
+        "CorsDecision",
+        "ProxyAuthMethod",
+        "ProxyTrustEvidence",
+        "ClientAddressInput",
+        "ClientAddressDecision",
+        "ResourceOutcome",
+        "AuthOutcome",
+        "UniformResourceDecision",
+        "UniformAuthDecision",
+        "PaginationPolicy",
+        "PageLimitDecision"
+      ],
+      "interfaces": [
+        "same exported structural interfaces above"
+      ],
+      "disposition": "type contracts remain evidence; constants, classes and exported functions are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-network/dist/index.js",
+    "sha256": "sha256:a1695d5514c614eeb1d207753fb90b75cb4ee79dfef3b54680c78230f6b1622a",
+    "declarationPath": "packages-ts/galerina-core-network/dist/index.d.ts",
+    "declarationSha256": "sha256:65d0215c25321ff708ab574452e0ab621d8ee147dacfd14cc01a0665d75e82fd",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-network",
+    "nodes": 14,
+    "edges": 7,
+    "functions": 27,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 7,
+      "EXTERNAL_IMPORTS": 1
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "classifyHost",
+      "guardOutboundUrl",
+      "guardResolvedAddresses",
+      "certGate",
+      "validateBoolBoundary",
+      "guardCorsRequest",
+      "guardInboundRequest",
+      "validateNetworkPolicy"
+    ],
+    "note": "Package boundary graph reports 14 nodes and 7 internal edges plus one allowed tower-citizen workspace dependency. Function list is AST-derived; this graph is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-network/tests/admission-feedback.test.mjs",
+      "packages-ts/galerina-core-network/tests/cert-gate.test.mjs",
+      "packages-ts/galerina-core-network/tests/cors-policy.test.mjs",
+      "packages-ts/galerina-core-network/tests/defensive-controls.test.mjs",
+      "packages-ts/galerina-core-network/tests/egress-guard.test.mjs",
+      "packages-ts/galerina-core-network/tests/inbound-guard.test.mjs",
+      "packages-ts/galerina-core-network/tests/network-contracts.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-admission-feedback-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-b8-admission-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-cert-gate-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-cors-policy-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-defensive-controls-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-egress-guard-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/rd0361-inbound-guard-execution.test.mjs",
+      "packages-ts/galerina-core-network/tests/revocation-cadence.test.mjs"
+    ],
+    "testSha256": {
+      "admission-feedback.test.mjs": "sha256:2777e68ac9b5c292c379498ec25a2a6c6d84bf061b48e954485bbe7c0181d3a4",
+      "cert-gate.test.mjs": "sha256:74112cd641ef67666a6ae77cb75b079eb3a93017bb6b2360c156af85f3e60a26",
+      "cors-policy.test.mjs": "sha256:e5db73181a51315cf934b04ca1a0f3cdd1a93d4ab4bb5e5448c4c0b9a72707b0",
+      "defensive-controls.test.mjs": "sha256:37a8ee7000e9d340b9213d5c6b63f461766eb2b2aa7edd8a43e6d988d90c36c7",
+      "egress-guard.test.mjs": "sha256:f542a5ff27b7aa193112bce3579b8cf7eaebd37b5dffc04b817ae4d2aae86ebf",
+      "inbound-guard.test.mjs": "sha256:c1cef52475ae55c969c009245ab7cf4cb8f88445fc39644092f6bfe708a7da3f",
+      "network-contracts.test.mjs": "sha256:e4a0e1726e455afdcaabb3d81682601bae575a5c00d36bdc40e419cfa3054ed2",
+      "rd0361-admission-feedback-execution.test.mjs": "sha256:d1718ac4e955e97cc56dc35bf096fd5f0c4473c1f7380c689a8e5149bd78b53f",
+      "rd0361-b8-admission-execution.test.mjs": "sha256:1dceb74a69dad94584b98312a560aa914fc2a873830ed23b9b8a8ea2b2905063",
+      "rd0361-cert-gate-execution.test.mjs": "sha256:c63440082a8edbf1611c78f45ad4601c1bd6c15c0ccd25f5a9fe5f45ab6ba1ba",
+      "rd0361-cors-policy-execution.test.mjs": "sha256:b859a19fa6cfea71f37a8856b2821632badc68e7ff90ad2fb6d5374095381bac",
+      "rd0361-defensive-controls-execution.test.mjs": "sha256:58a31faf6143d6f2db147ca2b5476a773ee8f671130e0a39dbc6d994dc100dd1",
+      "rd0361-egress-guard-execution.test.mjs": "sha256:e4763c0835a8eb9df0650e2491eb4120d95edac30ebeee8172f1d31d87724ac2",
+      "rd0361-inbound-guard-execution.test.mjs": "sha256:4f8e809d45156565716a063fdfc066f07570d289dbc3dfcccc4338e3f8232ea6",
+      "revocation-cadence.test.mjs": "sha256:389b7cb3075ee1c3e6a6f2161bdfe77eec9219ee8f275afbbcca51e7dace3f96"
+    },
+    "command": "npm test",
+    "result": "PASS 192/192",
+    "coveredBehavior": [
+      "network policy defaults, TLS and backend selection",
+      "telemetry degrade-only admission feedback",
+      "K3 certificate, revocation and side-signal folding",
+      "CORS exact-origin, wildcard and preflight controls",
+      "defensive proxy trust, uniform denials, pagination and opaque IDs",
+      "numeric and IPv6 SSRF classification and outbound URL/host guards",
+      "DNS-rebinding resolution checks and webhook target restrictions",
+      "inbound admission and bounded rate limiting",
+      "revocation cadence fail-closed floor",
+      "seven existing Fungi execution assets under RD-0361 checks"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-network/.graph/BOUNDARY.md reports PASS with one allowed @galerina/tower-citizen dependency"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD conversion admission",
+    "snapshot": {
+      "head": "b0defa3f11d66bcc7fc40d92bfda9592ba641318",
+      "tree": "776a49344687e68f96ec40c2fda1c2ee91b9cae7"
+    },
+    "findings": [
+      "The package is a policy and validation surface; it performs no network I/O, TLS handshake, DNS resolution or backend execution. The @galerina/tower-citizen workspace dependency is an explicit boundary and must remain provenance-visible.",
+      "Seven loaded Fungi assets cover admission feedback, B8 admission, cert gates, CORS, defensive controls, egress and inbound decisions; their RD-0361 execution tests are bounded comparisons and do not establish replacement or authority.",
+      "Policy/report helpers use unfrozen shared TLS/privacy defaults and caller-provided collections. Backend selection trusts supplied capabilities, first duplicate wins, and requireSafeFallback:false can report satisfied for an unavailable or unsafe fallback.",
+      "Network policy validation is deny-by-default and TLS-first, but minimum TLS, self-signed policy and privacy flags are not all runtime-enforced by the validator; exact diagnostic order, trim, includes, Set and numeric port semantics are observable.",
+      "Host classification canonicalizes decimal, hex, octal and mapped IPv6 forms, treats hostnames as requiring DNS re-check, and guardResolvedAddresses consumes supplied addresses rather than resolving or pinning connections. Allow-list exceptions and URL credentials are security boundaries.",
+      "Production egress policy distinguishes metadata, non-public, plaintext and credential relaxations; policy diagnostics do not enforce a dial, and validateWebhookTarget intentionally ignores caller relaxations.",
+      "Inbound admission accepts port 0 unlike declarative validation, missing protocol can match any protocol, empty rule ports match all ports, and explicit deny wins. RateLimiter mutates a persistent Map and trusts supplied time; pruning, rule changes and window boundaries need proof.",
+      "CORS uses exact origin matching, null denial, wildcard/credential incompatibility and case-insensitive preflight checks; header and method array mutation/order affect outputs.",
+      "CertGate folds K3 factors with revocation freshness and fail-closed unknown handling; supplied revocation outcomes, timestamps and callbacks are not independently verified. Callback order and thrown-error propagation are observable.",
+      "Telemetry feedback is degrade-only; empty telemetry is the identity, and revocation cadence degrades to chunk-boundary checks with no never mode.",
+      "Backend and host decisions remain metadata/decision outputs. No helper grants production authority, switches consumers, retires TypeScript or enforces a seal.",
+      "The external tower-citizen import path and built artifact identity need separate source and module-boundary proof before any translation wave."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-network",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "multi-module synchronous network policy, SSRF, K3 certificate, CORS, inbound and defensive decision helpers over strings, arrays, sets, URL parsing, numbers, callbacks and bounded state",
+    "authorityBoundary": "The package validates and describes network decisions but does not dial, resolve, handshake, schedule, transfer data or grant production authority. Caller/kernel enforcement remains outside the package.",
+    "runtimeObligations": [
+      "Preserve exact deny-by-default ordering, diagnostic codes/messages, trim/case normalization, array traversal and nullish defaults.",
+      "Preserve URL and host canonicalization including decimal/hex/octal IPv4, mapped IPv6, hostname DNS-recheck markers, credential rejection and allow-list exceptions.",
+      "Preserve K3 verdict ordering, revocation freshness and callback/error handling, telemetry degrade-only folding and cadence floor behavior.",
+      "Preserve CORS exact matching, wildcard/credentials rules, preflight method/header ordering and response header construction.",
+      "Preserve inbound rule precedence, rate-limit parsing/window behavior, proxy proof requirements, uniform denial shapes, pagination clamps and opaque-ID format checks.",
+      "Preserve backend preference/fallback semantics without implying hardware availability or execution.",
+      "Keep all existing Fungi assets non-authorizing and retain TypeScript shadows until separately admitted replacements are proven."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming a bounded network scope and wave limits",
+      "source-to-Fungi translation artifacts and exact twin hashes for any newly admitted scope",
+      "independent differential vectors for URL/host coercion, proxies, getters, mutation, callbacks, clocks, sparse arrays and malformed Unicode",
+      "host substitution proof for WHATWG URL, Set/Array methods, timers and numeric parsing",
+      "bounded physical profile for URLs, hosts, arrays, callback and rate-limit state",
+      "physical SLIDE/VOK re-admission, bounded execution manifest and exact-head receipt",
+      "consumer enforcement and explicit TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep all galerina-core-network rows blocked, retain existing Fungi assets as non-authorizing evidence, and keep CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}

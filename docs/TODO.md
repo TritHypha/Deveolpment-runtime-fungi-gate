@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-network - 2026-09-11
+
+- [x] Assessed the seven TypeScript source files under
+  packages-ts/galerina-core-network/src from exact main HEAD
+  b0defa3f11d66bcc7fc40d92bfda9592ba641318 / tree
+  776a49344687e68f96ec40c2fda1c2ee91b9cae7 through the package boundary graph,
+  fifteen tests and two proof scripts.
+- [x] Recorded 27 exported runtime functions, the @galerina/tower-citizen
+  boundary, seven loaded Fungi assets and their existing package-owned twin
+  relationships in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-network-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 192/192. The package
+  boundary reports PASS with 14 nodes, 7 internal edges, one allowed workspace
+  dependency and no third-party dependencies.
+- [x] Astra's same-head advisory records the URL/IP canonicalization, DNS
+  re-check, K3/revocation, callback, CORS, inbound/rate-limit, backend,
+  telemetry and external-module obligations for any future translation.
+- [!] The 24 package rows remain blocked (18 DOSSIER_REQUIRED and six
+  EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY); the conserved queue remains
+  CANDIDATE: 0. No Fungi source, queue relabel, consumer switch, TypeScript
+  retirement or corpus assurance rerun occurred.
+- [!] Keep network translation closed until a separate exact non-empty owner
+  admission names a bounded scope and independent differential, physical
+  SLIDE/VOK, execution and receipt gates pass. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-logic - 2026-09-11
 
 - [x] Assessed the 21 TypeScript source files under

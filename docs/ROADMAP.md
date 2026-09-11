@@ -3,6 +3,33 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-network - 2026-09-11
+
+The next bounded package assessment is recorded at exact main HEAD
+b0defa3f11d66bcc7fc40d92bfda9592ba641318 with tree
+776a49344687e68f96ec40c2fda1c2ee91b9cae7 in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-network-source-dossier.json.
+The package boundary graph covers 14 nodes and 7 internal edges plus one
+allowed @galerina/tower-citizen workspace dependency. It contains seven
+TypeScript source files, seven loaded Fungi assets and 27 exported runtime
+functions spanning policy, SSRF, CORS, inbound, K3 certificates, telemetry and
+defensive controls.
+
+Typecheck, build and the fifteen focused suites pass **192/192**. Existing
+Fungi assets have exact hashes and bounded RD-0361 execution comparisons, but
+remain non-authorizing and do not replace TypeScript or grant consumer
+authority. Astra's same-head advisory keeps conversion on HOLD pending proof
+of URL/IP canonicalization, DNS re-check and allow-list boundaries, supplied
+clock/callback behavior, K3/revocation ordering, mutable rate-limit state,
+CORS and backend semantics, and the tower-citizen module boundary.
+
+The 24 queue rows remain blocked and the queue remains CANDIDATE: 0. No new
+Fungi source, queue relabel, consumer switch, TypeScript retirement, topology
+change or corpus assurance rerun occurred. Any future translation requires
+exact non-empty owner admission, bounded differential and physical proof,
+SLIDE/VOK receipt, bounded execution evidence and independent review. Git
+remains provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-logic - 2026-09-11
 
 The next bounded package assessment is recorded at exact main HEAD
