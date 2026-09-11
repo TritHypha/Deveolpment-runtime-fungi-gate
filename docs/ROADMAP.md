@@ -3,6 +3,39 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-security - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+f1088e9a3f47be33f937e061caf3a186dec346df with tree
+e58241fd08806b8497b5dd7538c8c7161177dfd in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-security-source-dossier.json.
+The package boundary graph covers 14 nodes and 22 internal edges with no
+external dependencies. It contains one TypeScript source file, 12 exported
+runtime functions, three exported constants, and 13 package `.fungi` files, of
+which six are registered loaded assets.
+
+Typecheck, build and the four focused suites pass **28/28**. The TypeScript
+surface provides secure references, redaction transforms, permission decisions,
+cryptographic-policy validation and security reports; it does not perform
+cryptography or secret release. Existing DSS/Fungi assets are bounded evidence,
+not replacements or consumer authority. Astra's same-head review keeps the
+package on its bootstrap floor pending preservation of regex/Unicode and
+failure-mode semantics, mutable reference and wildcard-deny behavior,
+validation-versus-enforcement, report defaults, and secret custody.
+
+The DSS review also records that `capability-map.fungi::isCapabilityPermitted`
+accepts zero/unknown effect masks while `dss-supervisor.fungi::checkCapabilityBefore`
+does not enforce its computed `dagBit`; `interim.fungi::scan` remains a clean
+stub. Existing differential tests do not prove deny-by-default for that wrapper.
+
+All five queue rows remain `BOOTSTRAP_FLOOR:FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED`
+and the queue remains `CANDIDATE: 0`. No new Fungi source, queue relabel,
+consumer switch, TypeScript retirement, topology change or corpus assurance
+rerun occurred. Any future translation requires exact non-empty owner
+admission, bounded differential and fixpoint/platform proof, physical SLIDE/VOK
+receipt, bounded execution evidence and independent review. Git remains
+provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-runtime - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

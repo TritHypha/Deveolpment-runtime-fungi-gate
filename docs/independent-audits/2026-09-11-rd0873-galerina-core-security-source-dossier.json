@@ -1,0 +1,552 @@
+{
+  "schema": "galerina.rd0873.galerina-core-security-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped bootstrap-floor package assessment for security primitives and DSS assets without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "f1088e9a3f47be33f937e061caf3a186dec346df",
+    "tree": "e58241fd08806b8497b5dd7538c8c7161177dfd0"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-security/src/index.ts",
+        "package": "galerina-core-security",
+        "tranche": "T1-trust-root",
+        "classification": "BOOTSTRAP_FLOOR",
+        "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-security/tests/dss-audit-effects.test.mjs",
+        "package": "galerina-core-security",
+        "tranche": "T1-trust-root",
+        "classification": "BOOTSTRAP_FLOOR",
+        "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-security/tests/dss-supervisor-wasm-differential.test.mjs",
+        "package": "galerina-core-security",
+        "tranche": "T1-trust-root",
+        "classification": "BOOTSTRAP_FLOOR",
+        "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-security/tests/repository-security-policy.test.mjs",
+        "package": "galerina-core-security",
+        "tranche": "T1-trust-root",
+        "classification": "BOOTSTRAP_FLOOR",
+        "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-security/tests/security-contracts.test.mjs",
+        "package": "galerina-core-security",
+        "tranche": "T1-trust-root",
+        "classification": "BOOTSTRAP_FLOOR",
+        "reason": "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-security",
+    "packageJsonSha256": "sha256:330e90370f207bda9ae13f1dbd26e38bf7cb1795ab3192c09b6c674764fb5833",
+    "packageLockSha256": "sha256:cd5277203e2401186ff467323613f20140914c4c6278bcc8586e64184196f4df",
+    "readmeSha256": "sha256:1aad535726d630f5367abd83d647984084d667c3e20008d7a3aac0cbfcd7a982",
+    "packageTodoSha256": null,
+    "examples": [
+      {
+        "path": "packages-ts/galerina-core-security/examples/security-report.json",
+        "sha256": "sha256:0766f6f6b53a8a98ef92109d7a9eba079925fe3f0a91b7fbe4b75755d004fd91",
+        "utf8Bytes": 1205
+      }
+    ],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-security/.graph/BOUNDARY.md",
+      "sha256": "sha256:f30a3efdaef1eae07054dd6c31d73acc3ee8879f964cd53bf2d3735391a070bc",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 4,
+    "allFungiFileCount": 13,
+    "allFungiFiles": [
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/capability-map.fungi",
+        "sha256": "sha256:e1325753b299282ca698fb8a2822c45d4f5f2de3fb28b81c47b73ee1b1d55557",
+        "utf8Bytes": 2389,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/dag-validator.fungi",
+        "sha256": "sha256:5e8eacc051a7882b5d93197c26b62a7a758542857ceba46ff5b02da935ee4508",
+        "utf8Bytes": 2210,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi",
+        "sha256": "sha256:5bb13e96f49c5349472d18253ff552637a196d757601c58094794510aaa53661",
+        "utf8Bytes": 4293,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/dwi-allocator.fungi",
+        "sha256": "sha256:83347a0a1e3cbf8abd9fbd031b32db336f282d9a9e849981dfd77667094c4a2c",
+        "utf8Bytes": 1926,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/emergency-sm.fungi",
+        "sha256": "sha256:78a676d43a69f2122e1e8d867a182de5257e14a0ae832f5a3efe81a762eb8de2",
+        "utf8Bytes": 3729,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/epilogue-receipt.fungi",
+        "sha256": "sha256:6d12d51d4e8ce998712a063bc40d9be60b1faf0e59a8144e222e546fbe472c78",
+        "utf8Bytes": 3305,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/index.fungi",
+        "sha256": "sha256:a56826a9cd3d8218157fcca4e98e70179a54bb4d9964adf87a80e2b793e00555",
+        "utf8Bytes": 922,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/mmcp-registry.fungi",
+        "sha256": "sha256:3912ac9fe7852c41d1ead1f0e0465ad65f54a0a1a9b0bc9d5caecde5c46cc721",
+        "utf8Bytes": 2505,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/trap-handler.fungi",
+        "sha256": "sha256:5c0e6a9bbcd02b6bb96e0da2a4a93d8d3bea3b0b14999b0dacc1d8cb5deaaca5",
+        "utf8Bytes": 2634,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/types/audit-event.fungi",
+        "sha256": "sha256:bc50640c145d00e202ffee39b3db0bea1fe8db6fc0238b71a55acc6b0707be7f",
+        "utf8Bytes": 1651,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/types/trap-signal.fungi",
+        "sha256": "sha256:389749b68ee4ba38ab43e03fb232f0c000e4c3839c2b314f6c2e340ca7ecfe0d",
+        "utf8Bytes": 1061,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/vdpm.fungi",
+        "sha256": "sha256:978c02039676ea1fbd5f827a07534e5ea186a03099161d5d0d014ae6dbff83fb",
+        "utf8Bytes": 9965,
+        "loaded": false
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/interim.fungi",
+        "sha256": "sha256:876a33e5d328f144a19a1e4b9f40b43cd28ddd297c68b3ae9e0fc2a0c3f98a98",
+        "utf8Bytes": 7622,
+        "loaded": true
+      }
+    ],
+    "loadedFungiAssetCount": 6,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/dag-validator.fungi",
+        "sha256": "sha256:5e8eacc051a7882b5d93197c26b62a7a758542857ceba46ff5b02da935ee4508",
+        "utf8Bytes": 2210,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi",
+        "sha256": "sha256:5bb13e96f49c5349472d18253ff552637a196d757601c58094794510aaa53661",
+        "utf8Bytes": 4293,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/epilogue-receipt.fungi",
+        "sha256": "sha256:6d12d51d4e8ce998712a063bc40d9be60b1faf0e59a8144e222e546fbe472c78",
+        "utf8Bytes": 3305,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/index.fungi",
+        "sha256": "sha256:a56826a9cd3d8218157fcca4e98e70179a54bb4d9964adf87a80e2b793e00555",
+        "utf8Bytes": 922,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/dss/mmcp-registry.fungi",
+        "sha256": "sha256:3912ac9fe7852c41d1ead1f0e0465ad65f54a0a1a9b0bc9d5caecde5c46cc721",
+        "utf8Bytes": 2505,
+        "loaded": true
+      },
+      {
+        "path": "packages-ts/galerina-core-security/src/interim.fungi",
+        "sha256": "sha256:876a33e5d328f144a19a1e4b9f40b43cd28ddd297c68b3ae9e0fc2a0c3f98a98",
+        "utf8Bytes": 7622,
+        "loaded": true
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-security/src/dss/dag-validator.fungi",
+        "status": "existing package-owned DSS/security asset; no complete TypeScript twin or consumer authority admitted"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-security/src/dss/dss-supervisor.fungi",
+        "status": "existing package-owned DSS/security asset; no complete TypeScript twin or consumer authority admitted"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-security/src/dss/epilogue-receipt.fungi",
+        "status": "existing package-owned DSS/security asset; no complete TypeScript twin or consumer authority admitted"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-security/src/dss/index.fungi",
+        "status": "existing package-owned DSS/security asset; no complete TypeScript twin or consumer authority admitted"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-security/src/dss/mmcp-registry.fungi",
+        "status": "existing package-owned DSS/security asset; no complete TypeScript twin or consumer authority admitted"
+      },
+      {
+        "typescript": null,
+        "fungi": "packages-ts/galerina-core-security/src/interim.fungi",
+        "status": "existing package-owned DSS/security asset; no complete TypeScript twin or consumer authority admitted"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-security/src/index.ts",
+        "sha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "utf8Bytes": 18321
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function span",
+    "runtimeSymbols": [
+      {
+        "symbol": "createSecureStringReference",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 194,
+          "end": 210
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:2f87e32667fbabbbb3256b52109648fea6e5071b87dda571d007c4ebbd66c0ae",
+        "bodyUtf8Bytes": 445
+      },
+      {
+        "symbol": "createSecurityDiagnostic",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 212,
+          "end": 233
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:8fa8086faf962343363c6d5c3c42afb66a3249219b7b0c211c1db8c00d22cdc1",
+        "bodyUtf8Bytes": 594
+      },
+      {
+        "symbol": "redactText",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 235,
+          "end": 342
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:c492729e3daabfb91ed48e3915969b1da850c042ea2e71b9c782222c7df956af",
+        "bodyUtf8Bytes": 2761
+      },
+      {
+        "symbol": "definePermissionModel",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 344,
+          "end": 352
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:6525420fe179a74f5daa5037e9fa696d5738f89ad1b985fda7fc5c840eb5dab9",
+        "bodyUtf8Bytes": 203
+      },
+      {
+        "symbol": "decidePermission",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 354,
+          "end": 394
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:32232eccae0714b7f89757983f47cd114276bb204e51f886c36fa05ab2d27af7",
+        "bodyUtf8Bytes": 1244
+      },
+      {
+        "symbol": "validatePermissionModel",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 396,
+          "end": 454
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:734b3e6a44b4208382bba82dab38445991b8d3bbd17dc41c95e069de786e2d93",
+        "bodyUtf8Bytes": 1865
+      },
+      {
+        "symbol": "createSafeTokenReference",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 456,
+          "end": 466
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:96aecf89a81ad866fd33d07eb189229bf3cd904c8adde2fe7a3c44087af1c63d",
+        "bodyUtf8Bytes": 259
+      },
+      {
+        "symbol": "createSafeCookieReference",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 468,
+          "end": 484
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:033d9d0e90ddb795080da071a4c52928a650b53741c7d6eaab329891d5f0477c",
+        "bodyUtf8Bytes": 484
+      },
+      {
+        "symbol": "createSafeHeaderReference",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 486,
+          "end": 499
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:06216b196a0a3a250af79aafbf53ec67d32fa4d37728463340c961b644e783a4",
+        "bodyUtf8Bytes": 379
+      },
+      {
+        "symbol": "validateCryptographicPolicy",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 501,
+          "end": 542
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:74e9bb70ca869d45e1bad28d9cd614bc7488642a737cb353b83ef99c9114ec35",
+        "bodyUtf8Bytes": 1276
+      },
+      {
+        "symbol": "validateRedactionRule",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 544,
+          "end": 585
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:887cd4f2886825cf2ceb8cb48d54749f3edca08c6791894d81928e6a095d5f2f",
+        "bodyUtf8Bytes": 1183
+      },
+      {
+        "symbol": "createSecurityReport",
+        "source": "packages-ts/galerina-core-security/src/index.ts",
+        "span": {
+          "start": 587,
+          "end": 609
+        },
+        "sourceSha256": "sha256:330cd412ccfcbda2de3a618aafb34f931afc959ce67b1f067e8693e7ab2ca54c",
+        "bodySha256": "sha256:4f6dcb06b4db2b10ac8d0632f02bae876954dcbb8651c1c164e359bc9d1ec9e5",
+        "bodyUtf8Bytes": 926
+      }
+    ],
+    "exportedConstants": [
+      {
+        "symbol": "DEFAULT_REDACTION_RULES",
+        "source": "packages-ts/galerina-core-security/src/index.ts"
+      },
+      {
+        "symbol": "DEFAULT_PERMISSION_MODEL",
+        "source": "packages-ts/galerina-core-security/src/index.ts"
+      },
+      {
+        "symbol": "DEFAULT_CRYPTOGRAPHIC_POLICY",
+        "source": "packages-ts/galerina-core-security/src/index.ts"
+      }
+    ],
+    "typeOnlySurface": {
+      "types": [
+        "SecuritySeverity",
+        "SecretClassification",
+        "PermissionEffect",
+        "PermissionAction",
+        "CryptoAlgorithm",
+        "WeakCryptoAlgorithm",
+        "RedactionFailureMode"
+      ],
+      "interfaces": [
+        "SecureStringReference",
+        "SecurityDiagnostic",
+        "RedactionRule",
+        "RedactionMatch",
+        "RedactionOptions",
+        "RedactionResult",
+        "PermissionGrant",
+        "PermissionModel",
+        "PermissionDecision",
+        "SafeTokenReference",
+        "SafeCookieReference",
+        "SafeHeaderReference",
+        "CryptographicPolicy",
+        "SecurityReport"
+      ],
+      "disposition": "type contracts remain evidence; security primitives, redaction, permission, cryptographic policy and report helpers are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-security/dist/index.js",
+    "sha256": "sha256:33c4cd1da6a0276a234a3855a968f11bd602a18e8ee38a80dc043fb77aa55a48",
+    "declarationPath": "packages-ts/galerina-core-security/dist/index.d.ts",
+    "declarationSha256": "sha256:2d6b4f073e0c8159d9f06b33dedd3298f2830e14e42c7a37ed45fdbe2a718738",
+    "buildCommand": "npm test (includes typecheck and build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-security",
+    "nodes": 14,
+    "edges": 22,
+    "functions": 12,
+    "exportedValueCount": 15,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 22
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "redactText",
+      "validateRedactionRule",
+      "decidePermission",
+      "validatePermissionModel",
+      "validateCryptographicPolicy",
+      "createSecurityReport"
+    ],
+    "note": "Boundary graph reports fourteen nodes and twenty-two internal edges with no external dependencies. Function and constant surfaces are AST-derived; this graph is not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-security/tests/dss-audit-effects.test.mjs",
+      "packages-ts/galerina-core-security/tests/dss-supervisor-wasm-differential.test.mjs",
+      "packages-ts/galerina-core-security/tests/repository-security-policy.test.mjs",
+      "packages-ts/galerina-core-security/tests/security-contracts.test.mjs"
+    ],
+    "testSha256": {
+      "dss-audit-effects.test.mjs": "sha256:6a20ba8555b88ac826b4af3b80330f3d32add37e82efb3f4ed3fb05616ce972e",
+      "dss-supervisor-wasm-differential.test.mjs": "sha256:d4c80853f2403268dd3973774fb72fcf42eb2b300e3361cee1514ae0f2360153",
+      "repository-security-policy.test.mjs": "sha256:c51e5bcb413edcb444a2b211d3fb55c2737c6728fb1f8843caf7054905c334f2",
+      "security-contracts.test.mjs": "sha256:3cf649ff16699db2439de1706789e1589223c33025c2efa9f395b9d97c38b025"
+    },
+    "command": "npm test",
+    "result": "PASS 28/28",
+    "coveredBehavior": [
+      "SecureString references and redacted token/cookie/header representations",
+      "redaction matching, malformed-rule fail-closed behavior and unsafe replacement refusal",
+      "deny-by-default permissions, explicit-deny precedence, wildcard handling and duplicate/empty-resource diagnostics",
+      "cryptographic policy checks and security report status",
+      "DSS audit-effect contracts and controlled mutants",
+      "DSS supervisor decision differential under interpreter and Wasm",
+      "repository security policy refusal of incomplete/forged evidence"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-security/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "f1088e9a3f47be33f937e061caf3a186dec346df",
+      "tree": "e58241fd08806b8497b5dd7538c8c7161177dfd0"
+    },
+    "findings": [
+      "SecureString references expose metadata only, but raw-value custody is outside this package and must not be inferred from redacted flags or report fields.",
+      "redactText applies caller-supplied regular expressions sequentially, enforces a length ceiling and offers fail-closed/skip/throw modes; preserve regex flags normalization, replacement-token refusal, ordering, counts, Unicode and error behavior.",
+      "Permission decisions use exact or wildcard resources with explicit and wildcard deny precedence; mutable caller-owned grants and a default-allow model can materially change outcomes, while validation emits risk diagnostics rather than enforcing policy itself.",
+      "Cryptographic policy validation checks selected minimums and weak-algorithm overlap but does not perform cryptography, key-size measurement or authenticated-encryption enforcement.",
+      "Security report generatedAt uses host Date and report fields, diagnostics, redactions, blocked operations and warnings are caller-supplied or derived; redacted:true is a claim in the data model, not proof that a sink was safe.",
+      "The loaded DSS/Fungi assets cover bounded audit effects, supervisor decisions, receipts, registry and interim contracts; they do not replace the TypeScript security primitives or grant consumer authority.",
+      "Material DSS limitation: capability-map.fungi::isCapabilityPermitted returns true when effectToBitmask returns zero, including unknown effects; dss-supervisor.fungi::checkCapabilityBefore computes dagBit but does not enforce it before calling that helper. The differential suite does not establish deny-by-default for this supervisor path.",
+      "Loaded interim.fungi::scan remains an explicit clean-result stub; audit-effect and supervisor differential tests are not production isolation or authority-flip evidence."
+    ],
+    "materialObligations": [
+      "Preserve secret/reference custody, redaction markers, replacement semantics, regex normalization, input limits, sequential rule application and invalid-rule mode.",
+      "Preserve permission wildcard/deny ordering, mutable references, default-effect diagnostics and exact resource matching.",
+      "Preserve cryptographic-policy diagnostics without claiming cryptographic execution or key enforcement.",
+      "Preserve Date/default and report field ordering, caller-supplied redaction claims and warning/status derivation.",
+      "Keep all existing Fungi assets non-authorizing and retain TypeScript as the consumer shadow.",
+      "Preserve DSS import closure, bitfield signedness, explicit audit effects and the capability-map/supervisor unknown-effect discrepancy as a fail-closed HOLD."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": "bounded-bootstrap-floor",
+    "replacementOwner": "galerina-core-security",
+    "evidenceStatus": "replacement-partial-existing-DSS-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "security references, redaction transforms, permission decisions, cryptographic policy validation and security-report construction alongside loaded DSS decision assets",
+    "authorityBoundary": "The package describes and partially enforces security policy but does not perform cryptography, secret release, network authorization or sink enforcement. Existing DSS assets are bounded evidence, not a replacement surface.",
+    "runtimeObligations": [
+      "Preserve redaction regex, replacement, length and failure-mode semantics including caller mutation and Unicode behavior.",
+      "Preserve deny-first permission ordering, wildcard matching and validation-versus-enforcement distinction.",
+      "Preserve cryptographic policy diagnostics without implying crypto execution or key custody.",
+      "Preserve report Date/default, field ordering, redacted claims and status derivation; retain DSS asset boundaries."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this security scope",
+      "source-to-Fungi artifacts and exact twin hashes for security primitives and DSS contracts",
+      "independent differential vectors for regex/Unicode/proxies/mutation, wildcard grants, default effects, Date and report serialization",
+      "host substitution proof for RegExp, Date and sensitive-value custody boundaries",
+      "bounded physical security/report ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep all galerina-core-security rows BOOTSTRAP_FLOOR with FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}

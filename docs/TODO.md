@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-security - 2026-09-11
+
+- [x] Assessed the single TypeScript source file under
+  packages-ts/galerina-core-security/src from exact main HEAD
+  f1088e9a3f47be33f937e061caf3a186dec346df / tree
+  e58241fd08806b8497b5dd7538c8c7161177dfd0 through the package boundary graph,
+  four focused test files and the registered DSS/Fungi assets.
+- [x] Recorded 12 exported runtime functions, three exported runtime constants,
+  the type surface, all 13 package `.fungi` files (six registered assets), and
+  exact source/test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-security-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 28/28. The package boundary
+  reports PASS with 14 nodes, 22 internal edges and no external dependencies.
+- [x] Astra's same-head advisory records secret/reference custody, sequential
+  regex redaction and limits, deny-first permission ordering, validation versus
+  enforcement, cryptographic-policy limits, Date/default report behavior, and
+  the DSS unknown-effect discrepancy.
+- [!] All five package rows remain
+  BOOTSTRAP_FLOOR:FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED; the conserved queue
+  remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep security and DSS translation closed until a separate exact
+  non-empty owner admission names a bounded scope with independent differential,
+  fixpoint/platform, physical SLIDE/VOK, execution and receipt gates. Git
+  remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-runtime - 2026-09-11
 
 - [x] Assessed the two TypeScript source files under
