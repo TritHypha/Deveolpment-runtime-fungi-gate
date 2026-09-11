@@ -1,0 +1,92 @@
+{
+  "schema": "galerina.rd0873-current-head-admission-owner-approval.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "OWNER_APPROVED_CURRENT_HEAD_PROJECT_REOPEN_AND_SCOPED_ADMISSION",
+  "authorizing": false,
+  "approvalBasis": "EXPLICIT_OWNER_APPROVAL_IN_CURRENT_SESSION",
+  "ownerInstruction": "approved, if you need to use grok go for it",
+  "decision": "REOPEN_CURRENT_HEAD_PROJECT_ASSURANCE_AND_ADMIT_ONE_BOUNDED_REVERSIBLE_SYMBOL_WAVE",
+  "purpose": "Produce a fresh exact-head PROJECT receipt, refresh the generated queue under its current identity, and permit review-only reversible translation work for the named eligible symbols.",
+  "scope": {
+    "profile": "PROJECT",
+    "productId": "galerina",
+    "admittedPathRule": "tracked .fungi excluding docs/examples/** and build/**",
+    "expectedAdmittedFileCount": 2722,
+    "shardCount": 4,
+    "concurrency": 2
+  },
+  "limits": {
+    "maxFilesPerShard": 1360,
+    "maxBytesPerShard": 67108864,
+    "maxOutputBytesPerShard": 67108864,
+    "timeoutMsPerShard": 3400000
+  },
+  "admissionWave": {
+    "scope": "SYMBOLS",
+    "classification": "CANDIDATE",
+    "symbols": [
+      {
+        "symbol": "isEnvironmentMode",
+        "path": "packages-ts/galerina-core-config/src/index.ts"
+      },
+      {
+        "symbol": "isOmniUncertain",
+        "path": "packages-ts/galerina-core-logic/src/omni/omni-state.ts"
+      },
+      {
+        "symbol": "isTerminalScope",
+        "path": "packages-ts/galerina-core-runtime/src/structured-await.ts"
+      },
+      {
+        "symbol": "isTaskEffect",
+        "path": "packages-ts/galerina-core-tasks/src/load-tasks.ts"
+      },
+      {
+        "symbol": "isResponseSafeClassification",
+        "path": "packages-ts/galerina-data-model/src/index.ts"
+      }
+    ],
+    "physicalHoldExcluded": [
+      {
+        "symbol": "isBuiltin",
+        "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+        "reason": "physical profile remains held"
+      },
+      {
+        "symbol": "validateTransition",
+        "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+        "reason": "two-input physical shape remains held"
+      }
+    ],
+    "reversibleWave": true,
+    "typescriptShadowsRetained": true
+  },
+  "custody": {
+    "preserveProtectedDirtyPaths": true,
+    "queueMutation": true,
+    "newFungiAuthoring": true,
+    "bulkFungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChange": false,
+    "remotePublication": "NOT_REQUESTED"
+  },
+  "acceptance": {
+    "requireFreshExactHeadTree": true,
+    "requireCompleteNonOverlappingShards": true,
+    "requireCanonicalDigest": true,
+    "requireQueueOutputBoundToFreshReceipt": true,
+    "requireIndependentAdjudication": true,
+    "requireEligibleWaveTests": true,
+    "heldSymbolsRemainExcluded": true,
+    "staleOrPartial": "HOLD"
+  },
+  "notes": [
+    "This is a bounded non-production gate; it does not release authority or switch consumers.",
+    "The fresh receipt must be captured at the current committed HEAD/tree without committing this decision during the run.",
+    "Queue outputs may be refreshed after the receipt while protected dirty overlays remain explicitly listed.",
+    "No further Grok attempt is required unless local evidence exposes a new unresolved question."
+  ]
+}
