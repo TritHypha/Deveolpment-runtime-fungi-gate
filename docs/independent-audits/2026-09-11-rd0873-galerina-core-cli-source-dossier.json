@@ -174,12 +174,12 @@
     "loadedFungiAssetCount": 2,
     "loadedFungiAssets": [
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\self-hosted\\fungi-cli-redact-001.fungi",
+        "path": "packages-ts/galerina-core-cli/src/self-hosted/fungi-cli-redact-001.fungi",
         "sha256": "sha256:a1e02e9c950975769273cbf2e58b8c42fb947ab6184a1bdbac6fb99ee50ffe87",
         "kind": "existing non-authorizing redaction/scaffold asset"
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\self-hosted\\redaction.fungi",
+        "path": "packages-ts/galerina-core-cli/src/self-hosted/redaction.fungi",
         "sha256": "sha256:fa45e4de02ba2cca73b711b081742c8da72a0fcc8f129ae32dfcc746c1d3d247",
         "kind": "existing non-authorizing redaction/scaffold asset"
       }
@@ -200,52 +200,52 @@
   "source": {
     "files": [
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\cli.ts",
+        "path": "packages-ts/galerina-core-cli/src/cli.ts",
         "sha256": "sha256:e4559aa1ffbf8204994a257a092e788d76649b05b0542e6d4fa3a722e43b7a21",
         "utf8Bytes": 1377
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\commands.ts",
+        "path": "packages-ts/galerina-core-cli/src/commands.ts",
         "sha256": "sha256:6a4997d57ff760abaabec28c4bde33ad220adb6bb31bf6331d23b4d9fbcce2a8",
         "utf8Bytes": 1632
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\core-command.ts",
+        "path": "packages-ts/galerina-core-cli/src/core-command.ts",
         "sha256": "sha256:08b5d9babd24de90446b74904780bad5f6639037979ea0753add45f5dfc77bc7",
         "utf8Bytes": 3882
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\graph-command.ts",
+        "path": "packages-ts/galerina-core-cli/src/graph-command.ts",
         "sha256": "sha256:b7e737c1d4f5a6584d4bccd19e1dddf3655d39faa41cec399e76a6d911cbb274",
         "utf8Bytes": 13059
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\index.ts",
+        "path": "packages-ts/galerina-core-cli/src/index.ts",
         "sha256": "sha256:d6482ac55578603aabac0a3dc72f55c55cc10a79761d2f206613b74283d488f6",
         "utf8Bytes": 755
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\node-globals.d.ts",
+        "path": "packages-ts/galerina-core-cli/src/node-globals.d.ts",
         "sha256": "sha256:92e7a9330416c70947399dd39fc83547b963d6eec04406a014ac0d84fee4f73b",
         "utf8Bytes": 1975
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\output.ts",
+        "path": "packages-ts/galerina-core-cli/src/output.ts",
         "sha256": "sha256:b49bb4bf8e6cfbaa96a631786cde2dc8468d714c43ae6ab4d9d58427041e03f9",
         "utf8Bytes": 760
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\security.ts",
+        "path": "packages-ts/galerina-core-cli/src/security.ts",
         "sha256": "sha256:3224a07de23302b2ea01b2e5199d29c5eb33bd4387b4b8f4931a0fa01117f107",
         "utf8Bytes": 4183
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\task-command.ts",
+        "path": "packages-ts/galerina-core-cli/src/task-command.ts",
         "sha256": "sha256:563a3b0d46a6d8fb6243d1e73bae57746f7b7243f2835764e070f9e82f13d100",
         "utf8Bytes": 4714
       },
       {
-        "path": "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\src\\types.ts",
+        "path": "packages-ts/galerina-core-cli/src/types.ts",
         "sha256": "sha256:446a9dc3063044c22be9fe0fe7c6ce1634cc59de35e3946dbc9c637103cde059",
         "utf8Bytes": 512
       }
@@ -369,11 +369,11 @@
   },
   "focusedEvidence": {
     "tests": [
-      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\app-scaffold.test.mjs",
-      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\core-command.test.mjs",
-      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\graph-command.test.mjs",
-      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\security.test.mjs",
-      "C:\\Users\\phill\\Documents\\GitHub\\Galerina\\.worktrees\\rd-0873-native-fungi-bootstrap-implementation\\packages-ts\\galerina-core-cli\\tests\\task-command.test.mjs"
+      "packages-ts/galerina-core-cli/tests/app-scaffold.test.mjs",
+      "packages-ts/galerina-core-cli/tests/core-command.test.mjs",
+      "packages-ts/galerina-core-cli/tests/graph-command.test.mjs",
+      "packages-ts/galerina-core-cli/tests/security.test.mjs",
+      "packages-ts/galerina-core-cli/tests/task-command.test.mjs"
     ],
     "testSha256": {
       "app-scaffold.test.mjs": "sha256:f430027646bd9480052a0624312ae526dd3a79186d6cf5f2f8b8d47f7fe522d2",

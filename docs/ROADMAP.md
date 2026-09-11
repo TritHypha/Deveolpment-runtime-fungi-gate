@@ -3,6 +3,22 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 current-head translation gate - 2026-09-11
+
+The proposed first wave is rebound to exact `main` HEAD
+`3159d098eef99ddde3563aa8548f9f7e302500b3` with tree
+`7d6bc7bf18cd18fb176dba2a48fdc631be7eced6` in
+`docs/independent-audits/2026-09-11-rd0873-current-head-bulk-translation-gate.json`.
+It retains the four eligible existing scalar twins, excludes the semantic and
+physical holds, and records singleton steps with concurrency 1 and the
+proposed byte/time ceilings as unexecuted limits.
+
+The gate remains `HOLD_NON_AUTHORIZING`: the previous exact-head owner
+authorization allowed revalidation of existing twins only, while the earlier
+bulk proposal is bound to an older head. A fresh owner admission must explicitly
+permit source creation and name a non-empty scope before actual translation can
+start. Queue state remains `CANDIDATE: 0`.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-cli - 2026-09-11
 
 The bounded CLI assessment is recorded at exact main HEAD

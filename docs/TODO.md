@@ -4,6 +4,20 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 current-head translation gate - 2026-09-11
+
+- [x] Rebound the proposed first wave to exact `main` HEAD
+  `3159d098eef99ddde3563aa8548f9f7e302500b3` / tree
+  `7d6bc7bf18cd18fb176dba2a48fdc631be7eced6` in
+  `docs/independent-audits/2026-09-11-rd0873-current-head-bulk-translation-gate.json`.
+- [x] Preserve the four eligible existing scalar twins and the three held
+  symbols; retain singleton steps, concurrency 1 and the proposed byte/time
+  ceilings as unexecuted limits.
+- [!] The gate is `HOLD_NON_AUTHORIZING`: the prior exact-head authorization
+  covered revalidation only, and the earlier bulk proposal is stale at this
+  head. A fresh owner admission must explicitly permit source creation and
+  name the non-empty scope before actual translation starts.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-cli - 2026-09-11
 
 - [x] Assessed the 15 queued CLI source/declaration and test files from exact

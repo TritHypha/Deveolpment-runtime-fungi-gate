@@ -1,0 +1,109 @@
+{
+  "schema": "galerina.rd0873.current-head-bulk-translation-gate.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "HOLD_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Bind the proposed first translation wave to the current exact main head without silently converting review approval into source-writing authority.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "3159d098eef99ddde3563aa8548f9f7e302500b3",
+    "tree": "7d6bc7bf18cd18fb176dba2a48fdc631be7eced6"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "counts": {
+      "total": 1605,
+      "CANDIDATE": 0,
+      "BLOCKED": 921,
+      "BOOTSTRAP_FLOOR": 684,
+      "NO_RUNTIME_BEHAVIOR": 0,
+      "SUPERSEDED_BY_EXISTING_FUNGI": 0
+    },
+    "scopedCandidateCount": 7,
+    "classificationEffect": "The seven named symbol scopes remain blocked/scoped evidence; none is an authorizing CANDIDATE row."
+  },
+  "proposedReviewScope": {
+    "scopeType": "SYMBOLS",
+    "wholeFileReplacement": false,
+    "eligibleExistingTwins": [
+      {
+        "package": "galerina-core-config",
+        "source": "packages-ts/galerina-core-config/src/index.ts",
+        "symbol": "isEnvironmentMode",
+        "existingTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+        "sourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b"
+      },
+      {
+        "package": "galerina-core-runtime",
+        "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "symbol": "isTerminalScope",
+        "existingTwin": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+        "sourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9"
+      },
+      {
+        "package": "galerina-core-tasks",
+        "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "symbol": "isTaskEffect",
+        "existingTwin": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+        "sourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d"
+      },
+      {
+        "package": "galerina-data-model",
+        "source": "packages-ts/galerina-data-model/src/index.ts",
+        "symbol": "isResponseSafeClassification",
+        "existingTwin": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+        "sourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e"
+      }
+    ],
+    "heldSymbols": [
+      { "symbol": "isOmniUncertain", "reason": "exported runtime-mutable set remains a semantic HOLD" },
+      { "symbol": "isBuiltin", "reason": "physical profile remains a HOLD" },
+      { "symbol": "validateTransition", "reason": "two-input physical profile remains a HOLD" }
+    ],
+    "reviewOnlyReason": "These four existing twins have bounded revalidation evidence, but no current-head owner authorization permits new Fungi source creation or consumer use."
+  },
+  "proposedContinuousWaveLimits": {
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "maxStepsPerWave": 4,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "chapterAggregation": "after package chapter completes",
+    "status": "PROPOSAL_ONLY_UNEXECUTED"
+  },
+  "priorEvidence": {
+    "proposal": "docs/independent-audits/2026-09-11-rd0873-bulk-wave-admission-proposal.json",
+    "proposalHead": "357c689a691fa7982730e486dd1035601623457e",
+    "ownerRevalidation": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-authorization-v2.json",
+    "ownerRevalidationWasAuthorizing": true,
+    "ownerRevalidationOperation": "REVALIDATE_EXISTING_TWINS",
+    "sourceCreationInPriorWave": false
+  },
+  "requiredFreshAdmission": [
+    "exact current head and tree",
+    "explicit non-empty symbol/file list",
+    "explicit statement whether source creation is allowed",
+    "per-step and aggregate input/output limits",
+    "held-symbol exclusions",
+    "differential, physical SLIDE/VOK and independent-review receipts"
+  ],
+  "controls": {
+    "newFungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "queueRelabeled": false,
+    "consumerSwitch": false,
+    "typescriptShadowRetained": true,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "ownerActionRequired": "Issue a fresh exact-head authorizing admission that names the non-empty translation scope and limits. The existing four-symbol authorization is for revalidation only, and the earlier bulk proposal is stale at this head.",
+  "decision": "Keep bulk authoring closed and leave all queue candidates at zero until the fresh exact-head admission is recorded."
+}
