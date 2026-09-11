@@ -6,8 +6,8 @@ Branch: `main`
 ## RD-0873 current-head translation gate - 2026-09-11
 
 The proposed first wave is rebound to exact `main` HEAD
-`3159d098eef99ddde3563aa8548f9f7e302500b3` with tree
-`7d6bc7bf18cd18fb176dba2a48fdc631be7eced6` in
+`65c1b3a5ec7cb10c7662236f984e275b0ce5114e` with tree
+`3c8635bbd8a2cd9dc1f29f6f905f370995518a82` in
 `docs/independent-audits/2026-09-11-rd0873-current-head-bulk-translation-gate.json`.
 It retains the four eligible existing scalar twins, excludes the semantic and
 physical holds, and records singleton steps with concurrency 1 and the

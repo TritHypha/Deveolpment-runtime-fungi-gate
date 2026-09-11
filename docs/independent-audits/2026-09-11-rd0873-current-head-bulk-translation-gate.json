@@ -8,8 +8,8 @@
   "auditedBuildIdentity": {
     "repository": "Galerina",
     "branch": "main",
-    "head": "3159d098eef99ddde3563aa8548f9f7e302500b3",
-    "tree": "7d6bc7bf18cd18fb176dba2a48fdc631be7eced6"
+    "head": "65c1b3a5ec7cb10c7662236f984e275b0ce5114e",
+    "tree": "3c8635bbd8a2cd9dc1f29f6f905f370995518a82"
   },
   "queue": {
     "path": "build/conversion-queue/queue.json",
