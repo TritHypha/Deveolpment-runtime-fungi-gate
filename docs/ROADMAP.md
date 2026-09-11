@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-core-sentinel-egress - 2026-09-11
+
+The bounded package assessment is recorded at exact main HEAD
+816786b5c3847a12aedfd777d1213c3fc21f745d with tree
+1ea15df591ff132f9d9af6fa35543ff0a246c51d in
+docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-egress-source-dossier.json.
+The package boundary graph covers six nodes and six internal edges with the
+allowed `node:crypto`, `node:fs` and `node:path` dependencies. It contains four
+TypeScript source files, one exported egress function, four runtime classes and
+two existing Fungi assets.
+
+Typecheck, build and the six focused suites pass **34/34**, including epoch
+rotation, tamper verification and RD-0361 bounded differential checks. The
+existing Fungi assets cover only a ledger filename and host-computed chain,
+epoch and configuration folds; they do not implement cryptography, durable
+writes, ring state or consumer authority. Astra's same-head review keeps the
+package on HOLD because `flush()` can lose drained records on failure, newline
+framing is not authenticated, and reopening a ledger resets genesis/sequence;
+key custody, JSONL errors, ring memory and crash/recovery semantics also remain
+open obligations.
+
+One queue row remains `BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY` and nine
+remain `BLOCKED:DOSSIER_REQUIRED`; the queue remains `CANDIDATE: 0`. No new Fungi
+source, queue relabel, consumer switch, TypeScript retirement, topology change
+or corpus assurance rerun occurred. Any future translation requires exact
+non-empty owner admission, bounded differential and physical proof, SLIDE/VOK
+receipt, bounded execution evidence and independent review. Git remains
+provenance-only.
+
 ## RD-0873 next source dossier checkpoint - galerina-core-security - 2026-09-11
 
 The bounded package assessment is recorded at exact main HEAD

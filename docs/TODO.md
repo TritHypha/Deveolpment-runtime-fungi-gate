@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-core-sentinel-egress - 2026-09-11
+
+- [x] Assessed the four TypeScript source files under
+  packages-ts/galerina-core-sentinel-egress/src from exact main HEAD
+  816786b5c3847a12aedfd777d1213c3fc21f745d / tree
+  1ea15df591ff132f9d9af6fa35543ff0a246c51d through the package boundary graph,
+  six focused test files and two registered Fungi assets.
+- [x] Recorded the exported egress function and four runtime classes, source
+  hashes, existing audit-egress/ledger-file assets and test/build hashes in
+  docs/independent-audits/2026-09-11-rd0873-galerina-core-sentinel-egress-source-dossier.json.
+  Existing assets remain non-authorizing evidence.
+- [x] Typecheck, build and the package suites pass 34/34. The package boundary
+  reports PASS with six nodes, six internal edges and three allowed Node core
+  dependencies.
+- [x] Astra's same-head advisory records the drain-before-append loss path,
+  ambiguous newline MAC framing, restart/completeness behavior, key custody and
+  rotation limits, parsing/error behavior, ring memory bounds and the limited
+  Fungi decision folds.
+- [!] The audit-egress row remains BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY;
+  the other nine rows remain BLOCKED:DOSSIER_REQUIRED. The conserved queue
+  remains CANDIDATE: 0. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep egress translation closed until the record-loss/framing/restart
+  findings are resolved and a separate exact non-empty owner admission names a
+  bounded scope with independent differential, physical SLIDE/VOK, execution
+  and receipt gates. Git remains provenance-only.
+
 ### RD-0873 next source dossier checkpoint - galerina-core-security - 2026-09-11
 
 - [x] Assessed the single TypeScript source file under

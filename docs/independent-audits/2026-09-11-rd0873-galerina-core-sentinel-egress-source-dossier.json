@@ -1,0 +1,374 @@
+{
+  "schema": "galerina.rd0873.galerina-core-sentinel-egress-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED package assessment for governed audit-ledger egress without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "816786b5c3847a12aedfd777d1213c3fc21f745d",
+    "tree": "1ea15df591ff132f9d9af6fa35543ff0a246c51d"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/errors.ts",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/index.ts",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/ring-buffer.ts",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/tests/audit-egress.test.mjs",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/tests/epoch-rotation.test.mjs",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/tests/hmac-chain.test.mjs",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/tests/never-drop.test.mjs",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/tests/rd0361-audit-egress-execution.test.mjs",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/tests/ring-buffer.test.mjs",
+        "package": "galerina-core-sentinel-egress",
+        "tranche": "T2-runtime-core",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-core-sentinel-egress",
+    "packageJsonSha256": "sha256:88b56cad22f5fa9a76325c8bbf335bf2dd440879fcf2307e540b1161eee1e109",
+    "packageLockSha256": "sha256:7c0bde432d9a76c232fcacc3407897571bb850e8eaf5b5c83acf0ff2f4eaab3c",
+    "readmeSha256": null,
+    "packageTodoSha256": null,
+    "examples": [],
+    "boundaryReport": {
+      "path": "packages-ts/galerina-core-sentinel-egress/.graph/BOUNDARY.md",
+      "sha256": "sha256:0afb762d8f04020d5277145550baf8fd4a654583f0910a4d431a6d377847d0f6",
+      "status": "PASS",
+      "externalDependencies": [
+        "node:crypto",
+        "node:fs",
+        "node:path"
+      ]
+    },
+    "sourceFileCount": 4,
+    "testFileCount": 6,
+    "loadedFungiAssetCount": 2,
+    "loadedFungiAssets": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/self-hosted/audit-egress.fungi",
+        "sha256": "sha256:d600b5d81ba27f9fe476034ed889f466feb5030b4726f3f30a785cc8fea20392",
+        "kind": "existing non-authorizing audit-egress/ledger asset"
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/self-hosted/ledger-file.fungi",
+        "sha256": "sha256:eb767250eae4b4b60ae165994b8b6eca738e0438430246dde43e96f3d810cff0",
+        "kind": "existing non-authorizing audit-egress/ledger asset"
+      }
+    ],
+    "twinnedPairs": [
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts#verifyChain",
+        "fungi": "packages-ts/galerina-core-sentinel-egress/src/self-hosted/audit-egress.fungi",
+        "status": "existing bounded decision twin; host computes HMAC/fs/ring facts and TypeScript remains authority shadow"
+      },
+      {
+        "typescript": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts#LEDGER_FILE",
+        "fungi": "packages-ts/galerina-core-sentinel-egress/src/self-hosted/ledger-file.fungi",
+        "status": "existing non-authorizing filename constant asset"
+      }
+    ]
+  },
+  "source": {
+    "files": [
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts",
+        "sha256": "sha256:e50f92a68dbadab39c09ab1f88d5102256111876db8ef3d5cac1fc7f214e90d8",
+        "utf8Bytes": 13471
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/errors.ts",
+        "sha256": "sha256:7ce32625944dbb734b1719be80f37136621b951fcdd9259ba85080b4f503f2b8",
+        "utf8Bytes": 1544
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/index.ts",
+        "sha256": "sha256:c3d0c36fe60a12cd6aab0e898f4b81b03faa8701f7076b01ad69a03527ae40b2",
+        "utf8Bytes": 575
+      },
+      {
+        "path": "packages-ts/galerina-core-sentinel-egress/src/ring-buffer.ts",
+        "sha256": "sha256:adb90ad64df3bc04d9c6ca591ce33295ef8be9cf6bde95330dbc38c0ad7f76bf",
+        "utf8Bytes": 2357
+      }
+    ],
+    "bodyHashMethod": "SHA-256 of raw UTF-8 bytes for each inclusive AST function/class span",
+    "runtimeSymbols": [
+      {
+        "symbol": "readEgressLedger",
+        "source": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts",
+        "span": {
+          "start": 339,
+          "end": 359
+        },
+        "sourceSha256": "sha256:e50f92a68dbadab39c09ab1f88d5102256111876db8ef3d5cac1fc7f214e90d8",
+        "bodySha256": "sha256:20897439090d8a364f80979c132b2269947bed11ccb30fb718873bf8c7c1c9f2",
+        "bodyUtf8Bytes": 654
+      }
+    ],
+    "exportedClasses": [
+      {
+        "symbol": "AuditEgress",
+        "source": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts",
+        "span": {
+          "start": 102,
+          "end": 331
+        },
+        "sourceSha256": "sha256:e50f92a68dbadab39c09ab1f88d5102256111876db8ef3d5cac1fc7f214e90d8",
+        "bodySha256": "sha256:bea90f8b7bf7c9ea59eba598de551f1f061c71f80d7afeb0adae351ae3da4fe4",
+        "bodyUtf8Bytes": 8560
+      },
+      {
+        "symbol": "HardenedBorderViolation",
+        "source": "packages-ts/galerina-core-sentinel-egress/src/errors.ts",
+        "span": {
+          "start": 20,
+          "end": 30
+        },
+        "sourceSha256": "sha256:7ce32625944dbb734b1719be80f37136621b951fcdd9259ba85080b4f503f2b8",
+        "bodySha256": "sha256:61b9131c368a981fc149f583544d88f26023e9771f3f6e758457e9be299c5a99",
+        "bodyUtf8Bytes": 374
+      },
+      {
+        "symbol": "SecurityTrap",
+        "source": "packages-ts/galerina-core-sentinel-egress/src/errors.ts",
+        "span": {
+          "start": 32,
+          "end": 41
+        },
+        "sourceSha256": "sha256:7ce32625944dbb734b1719be80f37136621b951fcdd9259ba85080b4f503f2b8",
+        "bodySha256": "sha256:efeec17d4e5526486ec0edbff9dff03ca6a0147313b26f9344b5eeed5bad2007",
+        "bodyUtf8Bytes": 260
+      },
+      {
+        "symbol": "RingBuffer",
+        "source": "packages-ts/galerina-core-sentinel-egress/src/ring-buffer.ts",
+        "span": {
+          "start": 15,
+          "end": 76
+        },
+        "sourceSha256": "sha256:adb90ad64df3bc04d9c6ca591ce33295ef8be9cf6bde95330dbc38c0ad7f76bf",
+        "bodySha256": "sha256:0e51312fcade826630424397b3ca8ab2d23cf3249b25ffc19f0149059e19a4e0",
+        "bodyUtf8Bytes": 1690
+      }
+    ],
+    "exportedConstants": [],
+    "typeOnlySurface": {
+      "types": [],
+      "interfaces": [
+        "AuditBatch",
+        "AuditEgressOptions"
+      ],
+      "disposition": "type contracts remain evidence; ring-buffer, filesystem, HMAC-chain, epoch and error classes are runtime surfaces"
+    }
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-core-sentinel-egress/dist/index.js",
+    "sha256": "sha256:2451627c7898e12d4dd653b701f0f744a19509b8bc304aa8736fc76379b4f7ef",
+    "declarationPath": "packages-ts/galerina-core-sentinel-egress/dist/index.d.ts",
+    "declarationSha256": "sha256:bc8ec523cbd6d172abc1dafc66547d55d9b21b5f83fc07ab9a9fcd512a9e2305",
+    "buildCommand": "npm test (includes build)",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-core-sentinel-egress",
+    "nodes": 6,
+    "edges": 6,
+    "functions": 1,
+    "exportedClassCount": 4,
+    "edgeTypes": {
+      "INTERNAL_IMPORTS": 6,
+      "EXTERNAL_IMPORTS": 3
+    },
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "hotspots": [
+      "AuditEgress.flush",
+      "AuditEgress.verifyChain",
+      "AuditEgress.verifyChainEpochAware",
+      "AuditEgress.adoptEpoch",
+      "RingBuffer.push",
+      "RingBuffer.drain",
+      "readEgressLedger"
+    ],
+    "note": "Boundary graph reports six nodes, six internal edges and three allowed Node core dependencies. Function/class surfaces are AST-derived and not an authorizing admission or parity proof."
+  },
+  "focusedEvidence": {
+    "tests": [
+      "packages-ts/galerina-core-sentinel-egress/tests/audit-egress.test.mjs",
+      "packages-ts/galerina-core-sentinel-egress/tests/epoch-rotation.test.mjs",
+      "packages-ts/galerina-core-sentinel-egress/tests/hmac-chain.test.mjs",
+      "packages-ts/galerina-core-sentinel-egress/tests/never-drop.test.mjs",
+      "packages-ts/galerina-core-sentinel-egress/tests/rd0361-audit-egress-execution.test.mjs",
+      "packages-ts/galerina-core-sentinel-egress/tests/ring-buffer.test.mjs"
+    ],
+    "testSha256": {
+      "audit-egress.test.mjs": "sha256:87c1a5a5e5653c431de404e4cae0e6be6ef2c19eace8962b75e8664c4f50dcb2",
+      "epoch-rotation.test.mjs": "sha256:34909ded9ae22dda03b3e9a2a5dd6121abf7cc28bd9fca657bd5ba02ef956297",
+      "hmac-chain.test.mjs": "sha256:3d55a2132f610564a52e31131fcf7cb12aa649cb3dbf12d8b6a422c8c7c56cbe",
+      "never-drop.test.mjs": "sha256:c59e5559a6e5444363995aee7968bd5a3fef803b2c1b0b21ddfc174b44fee86a",
+      "rd0361-audit-egress-execution.test.mjs": "sha256:8aa701d63713981eeede3c16d4296e40362f3803129525acf2ed48b089fa37b9",
+      "ring-buffer.test.mjs": "sha256:a3e2c4ad16674d1c949c0d2cd499e0b0906bb3eef45008f60d44c47b83db0f73"
+    },
+    "command": "npm test",
+    "result": "PASS 34/34",
+    "coveredBehavior": [
+      "fixed ring backpressure/FIFO/drain and capacity checks",
+      "batched JSONL HMAC chain writing and tamper verification",
+      "epoch rotation, MAC-bound epoch, rollback and revocation refusal",
+      "weak-key, batch-size and epoch configuration traps",
+      "read/replay behavior and legacy compatibility",
+      "RD-0361 bounded Fungi chain-verification differential"
+    ],
+    "packageBoundary": "packages-ts/galerina-core-sentinel-egress/.graph/BOUNDARY.md reports PASS with node:crypto, node:fs and node:path allowed"
+  },
+  "advisoryReview": {
+    "reviewer": "GPT-6 Astra",
+    "result": "PASS_NON_AUTHORIZING for a bounded dossier; HOLD translation/admission expansion",
+    "snapshot": {
+      "head": "816786b5c3847a12aedfd777d1213c3fc21f745d",
+      "tree": "1ea15df591ff132f9d9af6fa35543ff0a246c51d"
+    },
+    "findings": [
+      "This package is an active synchronous filesystem/HMAC audit-ledger sink with mutable private state and injected key custody, not outbound network filtering.",
+      "flush drains the ring before HMAC, JSON serialization and append; failures after drain lose staged records despite the never-drop claim.",
+      "records.join(\"\\n\") does not authenticate record boundaries; [\"a\",\"b\"] and [\"a\\nb\"] share a MAC preimage, while unsigned count adjustment can satisfy length checks.",
+      "Construction resets sequence and genesis even when appending an existing ledger; verification accepts empty chains and valid prefixes without a trusted expected head/count.",
+      "Non-strict mode permits the public zero key; nonzero short/predictable keys are accepted and injected key arrays are retained without copying. Epoch adoption flushes under the old key before switching and does not authorize rotation.",
+      "readEgressLedger propagates malformed JSON and non-ENOENT I/O errors, parsed batches are not structurally validated, and HardenedBorderViolation is not used to wrap filesystem failures.",
+      "RingBuffer bounds slots rather than record bytes, does not zeroize payloads and allocates a new drain array; preserve FIFO/backpressure, identity, allocation and error behavior.",
+      "The two Fungi assets cover only the ledger filename and host-computed chain/epoch/config decision folds; they do not implement crypto, durable writes, ring state or end-to-end authority."
+    ],
+    "materialObligations": [
+      "Preserve failure/recovery semantics and resolve drain-before-append record loss before any authority claim.",
+      "Bind record boundaries/count into the authenticated framing and preserve exact UTF-8/HMAC/JSONL behavior.",
+      "Preserve restart/completeness policy, expected-head/count checks, key custody/rotation and legacy/epoch verification rules.",
+      "Preserve ring capacity/backpressure, object identity, allocation limits, error prototypes/codes and filesystem error behavior.",
+      "Keep existing Fungi assets non-authorizing and retain TypeScript as the consumer shadow."
+    ]
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-core-sentinel-egress",
+    "evidenceStatus": "replacement-partial-existing-assets",
+    "retirementState": "replacement-absent"
+  },
+  "translationAssessment": {
+    "candidateShape": "bounded ring buffer, batched JSONL filesystem egress, HMAC chain, epoch rotation/verification and error classes",
+    "authorityBoundary": "This package writes durable audit data and verifies cryptographic chains. It is an active effectful sink; Fungi decision folds do not replace the write path or grant authority.",
+    "runtimeObligations": [
+      "Preserve ring state, backpressure, record identity, drain/append failure behavior and memory bounds.",
+      "Preserve exact HMAC framing, record boundaries/count, key custody, epoch binding, restart and completeness semantics.",
+      "Preserve JSONL parsing/errors, filesystem effects, error classes and observer/rotation ownership.",
+      "Keep Fungi assets non-authorizing and retain TypeScript shadow until separately admitted replacement proof exists."
+    ],
+    "missingProofs": [
+      "exact non-empty owner admission and wave limits for this egress scope",
+      "source-to-Fungi artifacts and exact twin hashes for ring/fs/HMAC/epoch behavior",
+      "independent differential vectors for embedded newlines, append failures, restart/truncation, key mutation, malformed JSON and allocation limits",
+      "host substitution proof for crypto/fs/path, crash recovery, concurrency and resource bounds",
+      "bounded physical ledger/receipt ABI and SLIDE/VOK receipt",
+      "consumer enforcement, execution evidence and TypeScript retirement authority"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "existingFungiAssetsReclassified": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Review evidence only. Keep audit-egress.ts BLOCKED:EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY, all other package rows BLOCKED:DOSSIER_REQUIRED and CANDIDATE at zero until a separate exact non-empty owner admission and independent physical/differential gates authorize a named scope."
+}
