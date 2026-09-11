@@ -1,0 +1,218 @@
+{
+  "schema": "galerina.rd0873.galerina-ai-neural-source-dossier.v1",
+  "version": 1,
+  "date": "2026-09-11",
+  "status": "DOSSIER_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record one narrowly scoped BLOCKED:DOSSIER_REQUIRED package assessment for a future owner admission decision without creating or rewriting Fungi source.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "8db182b8f3ae2d6d2fe317979594ab9ffbbe3f21",
+    "tree": "b5cb8fdaa7167a23e495536f45dff478e0dd6f5c"
+  },
+  "queue": {
+    "path": "build/conversion-queue/queue.json",
+    "schemaVersion": 3,
+    "sha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "entries": [
+      {
+        "path": "packages-ts/galerina-ai-neural/src/index.ts",
+        "package": "galerina-ai-neural",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      },
+      {
+        "path": "packages-ts/galerina-ai-neural/tests/neural-contracts.test.mjs",
+        "package": "galerina-ai-neural",
+        "tranche": "T3-package-graph",
+        "classification": "BLOCKED",
+        "reason": "DOSSIER_REQUIRED",
+        "evidenceDigest": null
+      }
+    ],
+    "counts": {
+      "total": 1605,
+      "candidate": 0,
+      "blocked": 921,
+      "bootstrapFloor": 684,
+      "noRuntimeBehavior": 0,
+      "supersededByExistingFungi": 0
+    }
+  },
+  "package": {
+    "name": "galerina-ai-neural",
+    "packageJsonSha256": "sha256:c8682e327605b656c0f57d2f51f22b437535ab45e7ab63fbe07bf2517f7335d4",
+    "readmeSha256": "sha256:2730c593750d73612f32d66c0e3bff46f27e51d6a05434481fd6aab52716e3ef",
+    "boundaryReport": {
+      "path": "packages-ts/galerina-ai-neural/.graph/BOUNDARY.md",
+      "sha256": "sha256:bcb565120dbaac3390ca6d2672454bd3a4d8f0843f6ff41c9f1af889f5c81752",
+      "status": "PASS",
+      "externalDependencies": []
+    },
+    "sourceFileCount": 1,
+    "testFileCount": 1,
+    "loadedFungiAssets": [],
+    "twinnedPairs": []
+  },
+  "source": {
+    "path": "packages-ts/galerina-ai-neural/src/index.ts",
+    "sourceSha256": "sha256:8acf72f1fe16452cfbcf561ab237aadd7807bc78d966ee66f35513d263e9f5cf",
+    "sourceUtf8Bytes": 5410,
+    "existingTwin": null,
+    "typeOnlySurface": {
+      "interfacesAndTypes": [
+        "NeuralTask",
+        "ActivationFunction",
+        "LossFunction",
+        "OptimizerName",
+        "TensorShapeRef",
+        "NeuralTensorRef",
+        "NeuralLayer",
+        "NeuralModelDefinition",
+        "NeuralInferencePlan",
+        "NeuralTrainingPlan",
+        "NeuralReport",
+        "NeuralDiagnosticSeverity",
+        "NeuralDiagnostic"
+      ],
+      "disposition": "type-contract-only; no independent runtime translation unit"
+    },
+    "runtimeSymbols": [
+      {
+        "symbol": "validateNeuralTensor",
+        "span": { "start": 98, "end": 134 },
+        "signature": "export function validateNeuralTensor(tensor: NeuralTensorRef, path?: string): readonly NeuralDiagnostic[]",
+        "sourceSha256": "sha256:8acf72f1fe16452cfbcf561ab237aadd7807bc78d966ee66f35513d263e9f5cf",
+        "bodySha256": "sha256:bf39cba864a3fdf33e89ab4d0daff7c14d084115e9470a548ea824259d0a35c3",
+        "bodyUtf8Bytes": 1075,
+        "disposition": "tensor element-type and shape-dimension validator"
+      },
+      {
+        "symbol": "validateNeuralModel",
+        "span": { "start": 136, "end": 158 },
+        "signature": "export function validateNeuralModel(model: NeuralModelDefinition): readonly NeuralDiagnostic[]",
+        "sourceSha256": "sha256:8acf72f1fe16452cfbcf561ab237aadd7807bc78d966ee66f35513d263e9f5cf",
+        "bodySha256": "sha256:991f15cb9402f305dc64b0f6a2767e6a5d41eab1b6cad5597a7eaf00d4a44e31",
+        "bodyUtf8Bytes": 653,
+        "disposition": "model name plus input/output tensor validation; does not validate task or layers"
+      },
+      {
+        "symbol": "isSameTensorShape",
+        "span": { "start": 160, "end": 171 },
+        "signature": "export function isSameTensorShape(left: NeuralTensorRef, right: NeuralTensorRef): boolean",
+        "sourceSha256": "sha256:8acf72f1fe16452cfbcf561ab237aadd7807bc78d966ee66f35513d263e9f5cf",
+        "bodySha256": "sha256:6f32a48879fdf58210bea851df9d7a0f004735368068b02db4e8a0d705da3062",
+        "bodyUtf8Bytes": 345,
+        "disposition": "strict element-type and ordered dimension equality check"
+      },
+      {
+        "symbol": "createNeuralReport",
+        "span": { "start": 173, "end": 190 },
+        "signature": "export function createNeuralReport(input: NeuralReportInput): NeuralReport",
+        "sourceSha256": "sha256:8acf72f1fe16452cfbcf561ab237aadd7807bc78d966ee66f35513d263e9f5cf",
+        "bodySha256": "sha256:cdc07767a0577c4913358ab9edea49b0152a991fc128ea0967abcbcb49a8f468",
+        "bodyUtf8Bytes": 604,
+        "disposition": "report projection with nullish plan defaults and warning extraction"
+      },
+      {
+        "symbol": "createNeuralDiagnostic",
+        "span": { "start": 192, "end": 204 },
+        "signature": "function createNeuralDiagnostic(code: string, severity: NeuralDiagnosticSeverity, message: string, path?: string): NeuralDiagnostic",
+        "sourceSha256": "sha256:8acf72f1fe16452cfbcf561ab237aadd7807bc78d966ee66f35513d263e9f5cf",
+        "bodySha256": "sha256:bcec3acfbd0a5a9595bcbb39e0c962e4243570d0baf75d1c747367344229b974",
+        "bodyUtf8Bytes": 245,
+        "exported": false,
+        "disposition": "dependency obligation for diagnostic record construction"
+      }
+    ]
+  },
+  "builtOracle": {
+    "path": "packages-ts/galerina-ai-neural/dist/index.js",
+    "sha256": "sha256:a0a14ef78581be1cb1b7d436b14c92463cb5addea51f8e9a2204fc426048f6dc",
+    "declarationPath": "packages-ts/galerina-ai-neural/dist/index.d.ts",
+    "declarationSha256": "sha256:64e006edc22e6d90a9130e43ca2dac16410e03f179c5284148130ab5e8207551",
+    "buildCommand": "npm run build",
+    "role": "locally rebuilt differential oracle only; not a Fungi or production authority"
+  },
+  "graphEvidence": {
+    "scope": "packages-ts/galerina-ai-neural",
+    "nodes": 49,
+    "edges": 72,
+    "functions": 5,
+    "edgeTypes": { "DEFINES": 43, "USAGE": 22, "CALLS": 7 },
+    "entryPoints": [
+      "validateNeuralTensor",
+      "validateNeuralModel",
+      "isSameTensorShape",
+      "createNeuralReport"
+    ],
+    "callersAndCallees": {
+      "validateNeuralTensor": { "callers": ["validateNeuralModel", "neural-contracts.test.mjs"], "callees": ["createNeuralDiagnostic", "Array.forEach", "Array.push", "String.trim", "Number.isSafeInteger"] },
+      "validateNeuralModel": { "callers": ["createNeuralReport", "neural-contracts.test.mjs"], "callees": ["validateNeuralTensor", "createNeuralDiagnostic", "Array.forEach", "Array.push", "String.trim"] },
+      "isSameTensorShape": { "callers": ["neural-contracts.test.mjs"], "callees": ["Array.every"] },
+      "createNeuralReport": { "callers": ["neural-contracts.test.mjs"], "callees": ["validateNeuralModel", "Array.filter", "Array.map"] },
+      "createNeuralDiagnostic": { "callers": ["validateNeuralTensor", "validateNeuralModel"], "callees": [] }
+    },
+    "note": "Graph discovery identifies local bodies and collection/string/number-operation edges; it is not an authorizing admission or proof of Fungi parity."
+  },
+  "focusedEvidence": {
+    "test": "packages-ts/galerina-ai-neural/tests/neural-contracts.test.mjs",
+    "testSha256": "sha256:feb86c4c1654d9009738086d3dcdcd9055542053a6d9cd78cec4036d2efb8f1b",
+    "command": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
+    "result": "PASS 4/4",
+    "coveredBehavior": [
+      "valid static tensor shape for NPU planning",
+      "invalid tensor dimension rejection",
+      "tensor shape compatibility comparison",
+      "neural report construction"
+    ],
+    "packageBoundary": "packages-ts/galerina-ai-neural/.graph/BOUNDARY.md reports PASS with no external dependencies"
+  },
+  "retirementRegister": {
+    "path": "build/ts-retirement/ts-retirement.json",
+    "sha256": "sha256:b3ce8fbe827b8152ff32eb77d80d000477a24c37ce0dca1cb8bf267561889271",
+    "fungiReplacement": null,
+    "executionAuthority": "none",
+    "declaredFloor": null,
+    "replacementOwner": "galerina-ai-neural",
+    "evidenceStatus": "replacement-absent",
+    "retirementState": "physical-executable-family-present"
+  },
+  "translationAssessment": {
+    "candidateShape": "synchronous tensor/model validators, shape equality and report projection over typed records, arrays, strings and safe-integer numbers",
+    "authorityBoundary": "The package describes neural model metadata and plan/report contracts; it does not execute inference, training, NPU/GPU kernels, model files or runtime scheduling.",
+    "runtimeObligations": [
+      "Preserve Unicode trim, property-read order, empty-dimension behavior and ordered diagnostic emission in validateNeuralTensor.",
+      "Preserve Number.isSafeInteger plus positive-number checks, including NaN, Infinity, fractions and signed-zero behavior.",
+      "Preserve validateNeuralModel's model-name check and input-then-output traversal; task, layers and layer compatibility are not validated by this function.",
+      "Preserve strict element-type equality, dimension length comparison and Array.every short-circuit behavior in isSameTensorShape, including NaN dimensions.",
+      "Preserve createNeuralReport's delegated validation, nullish defaults, direct plan-array aliases and warning filter/map order.",
+      "Preserve absent-versus-present path handling in createNeuralDiagnostic."
+    ],
+    "missingProofs": [
+      "exact owner-authorized admission naming the five exported and one private runtime scopes and bounded wave limits",
+      "source-to-Fungi translation artifact and exact twin hash",
+      "independent differential vectors for plain records and hostile getters, proxies, sparse arrays, custom iterators, mutation and thrown accessors",
+      "host substitution or equivalent proof for Array.forEach/every/filter/map, String.trim and Number.isSafeInteger",
+      "bounded physical profile for record/array/string/number ABI, allocation, aliasing, work limits and typed failures",
+      "explicit treatment of malformed model/tensor records, missing shape fields and fields intentionally outside validation scope",
+      "physical SLIDE/VOK re-admission and platform receipt",
+      "bounded execution manifest and complete receipt bound to the authorizing exact head"
+    ]
+  },
+  "controls": {
+    "fungiSourceCreatedOrRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRelabeled": false,
+    "corpusAssuranceRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "topologyChanged": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "This dossier is review evidence only. Keep both galerina-ai-neural queue rows BLOCKED:DOSSIER_REQUIRED and keep CANDIDATE at zero until the owner supplies a separate exact non-empty authorizing admission, resolves the recorded runtime semantics and bounded physical/differential gates, and obtains independent review."
+}

@@ -3,6 +3,35 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 next source dossier checkpoint - galerina-ai-neural - 2026-09-11
+
+The next bounded package assessment is recorded at exact `main` HEAD
+`8db182b8f3ae2d6d2fe317979594ab9ffbbe3f21` with tree
+`b5cb8fdaa7167a23e495536f45dff478e0dd6f5c` in
+`docs/independent-audits/2026-09-11-rd0873-galerina-ai-neural-source-dossier.json`.
+The graph scopes the package to 49 nodes and 72 edges, with five exported
+runtime helpers and one private diagnostic constructor. The package has one
+TypeScript source file, one test file, no external imports, no loaded Fungi
+assets and no existing `.fungi` twin. Type-only interfaces and aliases remain
+contract evidence rather than translation units.
+
+The package's typecheck, build and focused suite pass `4/4`. The dossier records
+the exact source and oracle hashes and the semantics a future bounded
+translation would have to preserve: safe-integer and positive-number checks,
+NaN/Infinity/fraction behavior, Unicode trim and property-read order, input then
+output traversal, strict shape equality, Array.every short-circuiting, nullish
+plan defaults, report aliases and warning extraction. It also records that
+`validateNeuralModel` intentionally does not validate task or layer semantics.
+The package describes metadata only; it performs no inference, training, model
+file access, kernel execution or runtime scheduling.
+
+Both queue rows remain `BLOCKED:DOSSIER_REQUIRED` and the queue remains
+`CANDIDATE: 0`. This is review evidence only: no Fungi source, queue relabel,
+consumer switch, TypeScript retirement, topology change or corpus assurance
+rerun occurred. A future wave still needs a separate exact non-empty owner
+admission, bounded physical and differential proof, SLIDE/VOK receipt and
+independent review.
+
 ## RD-0873 next source dossier checkpoint - galerina-ai-lowbit - 2026-09-11
 
 The next bounded package assessment is recorded at exact `main` HEAD

@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 next source dossier checkpoint - galerina-ai-neural - 2026-09-11
+
+- [x] Assessed `packages-ts/galerina-ai-neural/src/index.ts` from exact `main`
+  HEAD `8db182b8f3ae2d6d2fe317979594ab9ffbbe3f21` / tree
+  `b5cb8fdaa7167a23e495536f45dff478e0dd6f5c` through the code graph and the
+  package's focused tests.
+- [x] Recorded the five exported runtime scopes (`validateNeuralTensor`,
+  `validateNeuralModel`, `isSameTensorShape`, `createNeuralReport`) plus the
+  private `createNeuralDiagnostic` dependency in
+  `docs/independent-audits/2026-09-11-rd0873-galerina-ai-neural-source-dossier.json`.
+  Interfaces and aliases remain type-contract evidence only.
+- [x] Typecheck, build and the package suite pass `4/4`. The package boundary
+  report is PASS with no external dependencies, and no existing `.fungi` twin or
+  loaded Fungi asset exists.
+- [x] The dossier records exact source, test, package, boundary, built oracle and
+  retirement hashes, graph closure, and the runtime obligations for safe-integer
+  numbers, string trimming, tensor-array traversal, strict shape equality,
+  nullish defaults, warning extraction and deliberate validation omissions.
+- [!] Both package rows remain `BLOCKED:DOSSIER_REQUIRED`; the conserved queue is
+  unchanged at `CANDIDATE: 0`. No Fungi source, queue relabel, consumer switch,
+  TypeScript retirement or corpus assurance rerun occurred.
+- [!] Keep this package closed until a separate exact non-empty owner admission
+  names the symbol scope and wave limits, and independent differential,
+  physical SLIDE/VOK, bounded execution and receipt gates pass.
+
 ### RD-0873 next source dossier checkpoint - galerina-ai-lowbit - 2026-09-11
 
 - [x] Assessed `packages-ts/galerina-ai-lowbit/src/index.ts` from exact `main`
