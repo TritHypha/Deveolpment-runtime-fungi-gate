@@ -1,9 +1,8 @@
 name: platform-smoke
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  # Hosted resource observations are advisory. Keep them manual so ordinary
+  # provenance commits do not produce a hosted-smoke failure notification.
   workflow_dispatch:
     inputs:
       mode:
