@@ -4,6 +4,13 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 current-head role reconciliation refresh - 2026-09-12
+
+- [x] Rebind the role-routing record to committed `main` head `f61312b9f919d2e7e8ad3be1f57310ce5b0910a4` / tree `19a64592445eb8ffa9f21dc6a15c1da11eda5e46`; runtime, compiler/bootstrap, development-tooling and native/host distinctions remain unchanged.
+- [x] Confirm 20 product `.fungi` assets, 100 project-graph packages and 11,612 relationships, plus a fresh external navigation index at 78,124 nodes and 203,363 edges.
+- [x] Confirm the conserved queue remains 1,605 rows with `CANDIDATE: 0`, `BLOCKED: 921` and `BOOTSTRAP_FLOOR: 684`; Waves 3-4 and `isBuiltin`/`validateTransition` remain held.
+- [!] This receipt is non-authorizing. A fresh exact-head owner admission naming a non-empty new source scope and limits is still required before authoring. Receipt: `docs/independent-audits/2026-09-12-rd0873-current-head-role-reconciliation-v1.json`.
+
 ### Selective conversion: Float64 Option ABI repair - 2026-09-12
 
 - [x] Repair the bounded Float/Float64/Double Option lane in the compiler and

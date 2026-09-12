@@ -1,0 +1,96 @@
+{
+  "schema": "galerina.rd0873-current-head-role-reconciliation.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "CURRENT_HEAD_ROLE_RECONCILIATION_NON_AUTHORIZING",
+  "authorizing": false,
+  "reviewedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "f61312b9f919d2e7e8ad3be1f57310ce5b0910a4",
+    "tree": "19a64592445eb8ffa9f21dc6a15c1da11eda5e46"
+  },
+  "sourceEvidence": {
+    "queuePath": "build/conversion-queue/queue.json",
+    "queueSha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "roleReportPath": "docs/reports/2026-09-12-selective-conversion-role-reconciliation.md",
+    "priorRoleReportSourceHead": "27500bf8186040dcfc1c32104384fe13c3b463be"
+  },
+  "generatedOwners": {
+    "projectGraph": {
+      "reportPath": "build/graph/Galerina_GRAPH_REPORT.md",
+      "reportSha256": "sha256:eee1f2fd53c9f43ccbc4eb8cfe79de3e85490c320afefbf1c99326c132a988e3",
+      "packages": 100,
+      "documents": 6954,
+      "typesAndInterfaces": 3188,
+      "functions": 1462,
+      "relationships": 11612,
+      "provenanceCommit": "b44621bc4af406395b7f85cbec98102daaf004e2"
+    },
+    "externalNavigationIndex": {
+      "head": "f61312b9f919d2e7e8ad3be1f57310ce5b0910a4",
+      "nodes": 78124,
+      "edges": 203363,
+      "persistence": false,
+      "authority": "navigation-only"
+    }
+  },
+  "productTree": {
+    "root": "packages/fungi/products/galerina",
+    "fungiFileCount": 20,
+    "strictCheckEvidence": "20/20 from relocation verification"
+  },
+  "roleDecisions": {
+    "runtimeCandidates": [
+      "galerina-ai-agent",
+      "galerina-core-config",
+      "galerina-core-logic",
+      "galerina-core-runtime",
+      "galerina-core-tasks",
+      "galerina-core-vector",
+      "galerina-data-model"
+    ],
+    "retainedCompilerBootstrap": [
+      "galerina-core-compiler",
+      "galerina-core",
+      "target-*",
+      "galerina-core-runtime-wasm"
+    ],
+    "retainedDevelopmentTooling": [
+      "galerina-devtools-*",
+      "galerina-tools-*",
+      "galerina-test",
+      "benchmark, graph, index, audit and documentation scripts"
+    ],
+    "retainedNativeHost": [
+      "ext-*",
+      "hardware-tier",
+      "database, filesystem, process, network, browser and external-service adapters"
+    ],
+    "heldSymbols": [
+      {
+        "symbol": "isBuiltin",
+        "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+        "reason": "physical profile remains held"
+      },
+      {
+        "symbol": "validateTransition",
+        "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+        "reason": "two-input physical shape remains held"
+      }
+    ]
+  },
+  "queue": {
+    "total": 1605,
+    "CANDIDATE": 0,
+    "BLOCKED": 921,
+    "BOOTSTRAP_FLOOR": 684
+  },
+  "conclusions": [
+    "The product/runtime versus compiler/tooling/native split is unchanged by the five scalar twin path moves.",
+    "The five eligible Wave 1-4 scalar twins are present under the product tree; their TypeScript shadows and tests remain under packages-ts.",
+    "Waves 3-4 mutable, Map/Set, callback, getter/proxy, sparse, alias, numeric and malformed-object semantics remain HOLD.",
+    "This record does not authorize new Fungi source, queue relabeling, consumer switching, TypeScript retirement, production authority or corpus assurance rerun."
+  ],
+  "requiredNextGate": "Fresh exact-head owner admission naming a non-empty new source scope and per-step limits."
+}
