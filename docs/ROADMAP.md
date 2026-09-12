@@ -32,6 +32,12 @@ AI-agent and core-vector package suites are 22/22 and 5/5. This is recorded by
 the non-authorizing receipt
 `docs/independent-audits/2026-09-12-rd0873-current-head-product-proof.json`.
 
+The role routing record now binds to this head and records that all 13
+AI-agent/core-vector runtime exports already have candidate twins. The remaining
+work is host marshalling, sparse or hostile behavior, physical admission and
+the intentionally retained compiler/tooling boundaries; no duplicate vector
+translation is planned.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)

@@ -8,12 +8,13 @@ for the governed conversion queue.
 | --- | --- | --- |
 | AI-agent: `validateAgentLimits`, `validateAgentToolPermissions`, `validateAgentDefinition`, `validateAgentTaskGroupPlan` | Runtime validation; convert and retain TS differential shadows. | Existing candidates. Limits and definition now have focused WASM checks; complete other behavior/border obligations before chapter closure. |
 | AI-agent: `applyAgentMergePolicy`, `createAgentReport` | Runtime policy/report construction; convert decision logic. | Both now have bounded Fungi cores and focused WASM differential checks. Retain the TypeScript compatibility adapter while active-object/alias behavior, malformed-object handling and host admission remain separate obligations. |
-| Core-vector: `validateVectorType`, `validateMatrixType`, `validateTensorType`, `validateVectorOperation`, `validateTensorOperation` | Runtime shape/operation validation; convert. | Manual implementation with numeric and sparse-input compatibility. Do not add checks that TS does not perform. |
+| Core-vector: `validateVectorType`, `validateMatrixType`, `validateTensorType`, `validateVectorOperation`, `validateTensorOperation` | Runtime shape/operation validation; existing candidate twins retain the TS differential shadows. | Focused numeric and dense-input parity is covered. Host marshalling, sparse/hostile arrays and physical admission remain open; do not add checks that TS does not perform. |
 | Core-vector: `defineVectorType`, `createVectorReport` | Runtime construction/reporting; convert decision logic. | `defineVectorType` has a typed Result candidate; exception projection, returned aliases and non-finite host mapping remain separate. |
 | Both packages: interfaces and generated `.d.ts` | Declaration surface; retain or generate from its owner. | Not executable translations. |
 | Both packages: `tests/*.test.mjs` and build/test orchestration | Development verification/build tooling; retain JS/TS. | Keep checks and output integrity; no claim that release packaging excludes these files. |
 
-The six AI-agent and seven core-vector exports remain in the runtime target.
+The six AI-agent and seven core-vector exports remain in the runtime target, and
+each has an existing candidate file under the native product tree.
 This covers two chapter entrypoints, not all 1,605 inventory rows. No new global
 conversion percentage or denominator is claimed; the governed queue is unchanged.
 Wave 02's other package roles remain to be reconciled. Wave 04 supplies profile

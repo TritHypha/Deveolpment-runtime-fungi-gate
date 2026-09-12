@@ -30,6 +30,11 @@ counts or open items that a newer section explicitly supersedes.
   the AI-agent and core-vector package suites pass 22/22 and 5/5. The
   non-authorizing receipt is
   `docs/independent-audits/2026-09-12-rd0873-current-head-product-proof.json`.
+- [x] Refresh the role routing record at the current `main` head: all 13
+  AI-agent/core-vector runtime exports already have candidate twins; the
+  first-chapter table no longer labels those existing vector candidates as
+  future manual implementation. Host marshalling, sparse/hostile behavior,
+  physical admission and the retained tooling boundary remain open.
 - [ ] Keep wider Option work open: Float64 array producers, contextual numeric
   widening, expression-position match typing, Int64, nested, String, record,
   active-object/alias, hostile or sparse container semantics and production

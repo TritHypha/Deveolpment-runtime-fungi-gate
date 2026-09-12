@@ -2,7 +2,7 @@
 
 Date: 2026-09-12
 Repository: Galerina
-Source-tree evidence: `main` commit `82447afa3d3472a778951fc8ac34c5faca13d35d`
+Source-tree evidence: `main` commit `27500bf8186040dcfc1c32104384fe13c3b463be`
 
 This is a routing record for the next translation waves. It separates the
 language of a file from the role it performs. It does not authorize source
@@ -11,8 +11,8 @@ creation, a consumer switch, TypeScript retirement, or release authority.
 ## Evidence used
 
 - The earlier full code graph receipt remains historical evidence for its
-  recorded source tree. A later navigation refresh was run at the source-tree
-  commit above and reports 77,635 nodes and 202,823 edges. The graph remains
+  recorded source tree. A current full navigation refresh at the source-tree
+  commit above reports 77,782 nodes and 201,137 edges. The graph remains
   navigation-only: its generated/dependency exclusions and truncated exclusion
   list do not prove Fungi coverage or corpus assurance.
 - Package manifests were enumerated from `packages-ts/*/package.json`, then
@@ -25,9 +25,9 @@ creation, a consumer switch, TypeScript retirement, or release authority.
 
 ## Current symbol graph snapshot
 
-The exact-head navigation index at `878e4c69a` resolves all seven scoped
-symbols. The local in/out counts below are routing evidence only; they do not
-prove deployment, external consumers or Fungi admission.
+The exact-head navigation index at `27500bf81` reports the current indexed
+source tree. The local in/out counts below are retained routing evidence only;
+they do not prove deployment, external consumers or Fungi admission.
 
 | Symbol | Package role | Local in/out | Observed local links |
 | --- | --- | ---: | --- |
@@ -39,7 +39,7 @@ prove deployment, external consumers or Fungi admission.
 | `isBuiltin` | development-context tooling; physical-profile hold | 1/2 | `walk`, `has` |
 | `validateTransition` | project-graph tooling; two-input physical hold | 3/4 | `advanceState`, two package tests, `get`, `has` |
 
-The index reports 77,679 nodes and 202,866 edges with a truncated exclusion
+The index reports 77,782 nodes and 201,137 edges with a truncated exclusion
 list. It remains a navigation aid and is not a corpus or admission proof.
 
 ## Working role map
