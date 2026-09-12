@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "7b14661d0cee8b07a86a3007d79f06c5ec6a1a4255cc0aa28d15958150fc55a6",
+  "authoritativeInputsDigest": "79b54a3ed5b943666ce4c2b1e7f72a8fd344e248578fdd47c238234b1fc176b2",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -3661,6 +3661,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-b9e4fc4b78d79a4f56906362",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/string-match-snapshot-gir-v2.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-2ecaca027cd2544c6ccea0a1",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/string-ordering-runtime-parity.test.mjs",
@@ -4067,6 +4074,34 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-763093bca47f4439acf0fb61",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-agent-definition-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b6e293b0b3b199c4b1da8039",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-agent-merge-policy-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-9cc011afc762a735ebb5d38d",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-agent-report-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-e5ced2ab3d58ccee0f0daf24",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-agent-task-group-plan-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-4b721121bc9f32675bbda53f",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-arena-intrusion-wipe-g5b.test.mjs",
@@ -4172,6 +4207,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-9ba43d38f14aae2d1b52a2d6",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-float-finite-classifier.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-60871c1e363c87c9f9dafbc2",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-float-record-refusal.test.mjs",
@@ -4252,6 +4294,13 @@
       "id": "test:auto-99219452bd52176c2079dae7",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-match-wildcard-fallback.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0c0998d776f39e5c12da0ed6",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-matrix-type-parity.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -4466,6 +4515,20 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-ed9a72079533e5b6ddbccf96",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-tensor-operation-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-ebf98d3e68702722c80db7af",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-tensor-type-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-e8d0788b834a3214cc36a8bb",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-tri-fuse-a-elision.test.mjs",
@@ -4483,6 +4546,34 @@
       "id": "test:auto-02b8bd65a0a1f9eb7609d671",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-try-propagation.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-812bc67f805f157f84527cc9",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-vector-definition-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-2b039d1b4226ed4e90350333",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-vector-operation-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-a1ab2c4c086d37029d8f7d4a",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-vector-report-parity.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-b2737d45e974862c61d834fa",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-vector-type-parity.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -11031,6 +11122,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-b9e4fc4b78d79a4f56906362",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-2ecaca027cd2544c6ccea0a1",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -11321,6 +11417,26 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-763093bca47f4439acf0fb61",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b6e293b0b3b199c4b1da8039",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-9cc011afc762a735ebb5d38d",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-e5ced2ab3d58ccee0f0daf24",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-4b721121bc9f32675bbda53f",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -11396,6 +11512,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-9ba43d38f14aae2d1b52a2d6",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-60871c1e363c87c9f9dafbc2",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -11452,6 +11573,11 @@
     },
     {
       "from": "test:auto-99219452bd52176c2079dae7",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0c0998d776f39e5c12da0ed6",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11606,6 +11732,16 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-ed9a72079533e5b6ddbccf96",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-ebf98d3e68702722c80db7af",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-e8d0788b834a3214cc36a8bb",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -11617,6 +11753,26 @@
     },
     {
       "from": "test:auto-02b8bd65a0a1f9eb7609d671",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-812bc67f805f157f84527cc9",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-2b039d1b4226ed4e90350333",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-a1ab2c4c086d37029d8f7d4a",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-b2737d45e974862c61d834fa",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -14906,9 +15062,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1157,
+    "tests": 1170,
     "detectors": 6,
-    "executableFamily": 1605,
+    "executableFamily": 1620,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,

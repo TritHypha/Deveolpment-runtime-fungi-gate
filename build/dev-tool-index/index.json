@@ -77,7 +77,7 @@
       "tests": 17,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 2,
+      "files": 1,
       "deps": []
     },
     {
@@ -300,7 +300,7 @@
       "tests": 6382,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 285,
+      "files": 287,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -327,7 +327,7 @@
       "tests": 52,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 9,
+      "files": 8,
       "deps": []
     },
     {
@@ -347,7 +347,7 @@
       "tests": 55,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 43,
+      "files": 42,
       "deps": []
     },
     {
@@ -389,7 +389,7 @@
       "tests": 51,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 7,
+      "files": 6,
       "deps": []
     },
     {
@@ -481,7 +481,7 @@
       "tests": 7,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 9,
+      "files": 8,
       "deps": [
         "@galerina/devtools-project-graph"
       ]
