@@ -65,6 +65,12 @@ this source point: typecheck and build are green, and the focused suites pass
 `docs/independent-audits/2026-09-12-rd0873-wave1-4-package-proof-v1.json`;
 it remains package evidence only and does not promote the blocked queue.
 
+The overlay coverage is now explicit: all 2,200 assets are bound by 55
+decision tests; 1,690 cases execute directly, while 510 are covered by binding
+and duplicate/template checks. The coverage receipt is
+`docs/independent-audits/2026-09-12-rd0873-overlay-coverage-v1.json`; this is
+retained test evidence, not full execution or product admission.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)

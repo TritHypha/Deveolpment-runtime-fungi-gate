@@ -60,6 +60,10 @@ counts or open items that a newer section explicitly supersedes.
   point: typecheck/build pass and the focused suites pass 192/192 across 20
   suites. The bounded, non-authorizing receipt is
   `docs/independent-audits/2026-09-12-rd0873-wave1-4-package-proof-v1.json`.
+- [x] Reconcile retained overlay coverage: all 2,200 assets are bound by the
+  55 overlay decision tests, while 1,690 cases execute directly and 510 are
+  covered by binding plus duplicate/template checks. The coverage receipt is
+  `docs/independent-audits/2026-09-12-rd0873-overlay-coverage-v1.json`.
 
 ### Selective conversion: first chapter repairs - 2026-09-12
 

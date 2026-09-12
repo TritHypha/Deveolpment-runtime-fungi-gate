@@ -1,0 +1,42 @@
+{
+  "schema": "galerina.rd0873-overlay-coverage.v1",
+  "generatedAt": "2026-09-12T04:45:00Z",
+  "status": "PASS_BINDING_PARTIAL_EXECUTION_COVERAGE",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "c74f32a4eabb9a827fdef7c12325fadf1fc0e68d",
+    "tree": "d9a1fbd8149a6c977e3d4df5b2468d0a9bca03d1"
+  },
+  "scope": {
+    "package": "packages-ts/galerina-test",
+    "overlayRoot": "packages-ts/galerina-test/src/self-hosted/conversion-overlays",
+    "loadedOverlayAssets": 2200,
+    "overlayDecisionTestFiles": 55,
+    "candidateBindings": 2200,
+    "directExecutionCases": 1690,
+    "sampledExecutionCases": 170,
+    "coverageShape": "40 candidates per test file; initial/early waves execute all 40, later waves execute a deterministic 10-file sample",
+    "notDirectlyExecutedCases": 510
+  },
+  "checks": {
+    "binding": "PASS for all 2200 assets",
+    "duplicateAndTemplateChecks": "PASS in package test suite",
+    "directExecution": "PASS for 1690 cases",
+    "sampledLaterWaves": "17 wave files x 10 cases = 170 cases",
+    "fullWaveExecution": "38 test files x 40 cases = 1520 cases",
+    "packageSuite": "211/211 tests passed across 58 suites"
+  },
+  "boundaries": {
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "queueRelabeled": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "corpusAssuranceRerun": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "All 2200 retained overlay assets are bound by package checks, while 1690 are directly executed and 510 are covered by binding and duplicate/template checks only. This refines the bounded test evidence; it is not a full execution or corpus assurance claim and does not authorize product source admission."
+}
