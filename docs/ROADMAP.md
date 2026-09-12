@@ -27,6 +27,8 @@ It now covers `validateTensorType` for dense dimension arrays, including the
 empty-shape rule and ordered invalid-dimension diagnostics. Typed dimension
 records carry Float64 values across the array handle ABI; sparse and hostile
 JavaScript-array behavior remains a separate host-ABI obligation.
+The vector operation candidate also preserves per-input validation order and a
+single final shape-mismatch diagnostic, with safe-integer boundary coverage.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 

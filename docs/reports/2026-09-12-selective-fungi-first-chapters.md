@@ -143,6 +143,15 @@ dimensions. The TypeScript package and test harness remain retained under
 `packages-ts`; this is candidate evidence without a consumer switch or checked
 admission artifact.
 
+The vector operation core is stored at
+`packages/fungi/products/galerina/rd0873-core-vector/validate-vector-operation.fungi`.
+It validates each dense input, then the output, and emits one final mismatch
+diagnostic when an input's element type or lane count differs. Seven WASM
+vectors preserve the TypeScript order across name, operand, output and
+mismatch cases, including fractional and safe-integer boundaries. It remains
+candidate evidence; host object, alias and sparse-array behavior and consumer
+admission are still separate obligations.
+
 The tensor validator is also stored at
 `packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi`.
 It requires a non-empty dense dimension array and preserves source-order

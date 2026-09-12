@@ -38,6 +38,9 @@ counts or open items that a newer section explicitly supersedes.
   dimensions; typed dimension records preserve Float64 values across the array
   handle ABI, while sparse or hostile JavaScript arrays remain an explicit ABI
   item.
+- [x] Translate `validateVectorOperation` as a bounded native product core.
+  Seven WASM differential vectors preserve operand-validation order and the
+  final shape-mismatch diagnostic, including safe-integer boundaries.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

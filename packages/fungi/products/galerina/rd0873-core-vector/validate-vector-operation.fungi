@@ -1,0 +1,117 @@
+@version 1
+
+/// Bounded translation of validateVectorOperation from galerina-core-vector/src/index.ts.
+///
+/// Inputs are dense typed vector records.  The TypeScript operation validator
+/// remains the compatibility oracle; host object, alias and sparse-array
+/// behavior stays outside this pure candidate.
+
+record VectorDimension {
+  lanes: Float64
+}
+
+record VectorType {
+  elementType: String
+  dimension: VectorDimension
+}
+
+record VectorOperation {
+  name: String
+  inputs: Array<VectorType>
+  output: VectorType
+}
+
+record VectorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if value != value { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateVectorOperation(operation: VectorOperation) -> Array<VectorDiagnostic>
+contract { intent { "Validate vector operation name and operands in source diagnostic order." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = Array.empty()
+
+  if operation.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_OPERATION_NAME_REQUIRED",
+      severity: "error",
+      message: "Vector operation requires a name.",
+      path: "operation.name"
+    })
+  }
+
+  mut hasShapeMismatch: Bool = false
+  mut index: Int = 0
+  while index < operation.inputs.count() {
+    let inputOpt: Option<VectorType> = operation.inputs.get(index)
+    match inputOpt {
+      Some(input) => {
+        let inputPath: String = "operation.inputs." + index.toString()
+        if input.elementType.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_VECTOR_ELEMENT_TYPE_REQUIRED",
+            severity: "error",
+            message: "Vector element type is required.",
+            path: inputPath + ".elementType"
+          })
+        }
+        if isPositiveSafeInteger(input.dimension.lanes) == false {
+          diagnostics = diagnostics.append({
+            code: "Galerina_VECTOR_LANES_INVALID",
+            severity: "error",
+            message: "Vector lane count must be a positive safe integer.",
+            path: inputPath + ".dimension.lanes"
+          })
+        }
+        if input.dimension.lanes != operation.output.dimension.lanes or input.elementType != operation.output.elementType {
+          hasShapeMismatch = true
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  if operation.output.elementType.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_ELEMENT_TYPE_REQUIRED",
+      severity: "error",
+      message: "Vector element type is required.",
+      path: "operation.output.elementType"
+    })
+  }
+  if isPositiveSafeInteger(operation.output.dimension.lanes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_LANES_INVALID",
+      severity: "error",
+      message: "Vector lane count must be a positive safe integer.",
+      path: "operation.output.dimension.lanes"
+    })
+  }
+
+  if hasShapeMismatch {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_OPERATION_SHAPE_MISMATCH",
+      severity: "error",
+      message: "Vector operation inputs must match the output element type and lane count.",
+      path: "operation.inputs"
+    })
+  }
+
+  return diagnostics
+}

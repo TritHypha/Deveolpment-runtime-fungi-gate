@@ -1,0 +1,131 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { test } from "node:test";
+import * as L from "../dist/index.js";
+import { validateVectorOperation } from "../../galerina-core-vector/dist/index.js";
+
+// The native operation validator is tested as a pure typed core.  The retained
+// TypeScript validator remains the oracle for diagnostic order and exact paths.
+const vectors = [
+  {
+    name: "matching operation",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: 4 }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "blank operation name",
+    operationName: "   ",
+    inputs: [{ elementType: "Float32", lanes: 4 }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "invalid input diagnostics precede mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "", lanes: 0 }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "lane mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: 8 }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "element mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float64", lanes: 4 }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "multiple inputs retain order",
+    operationName: "add",
+    inputs: [
+      { elementType: "Float32", lanes: 4 },
+      { elementType: "Float32", lanes: 1.5 },
+      { elementType: "", lanes: 0 },
+    ],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "safe integer boundaries",
+    operationName: "wide",
+    inputs: [{ elementType: "Float64", lanes: 9007199254740991 }],
+    output: { elementType: "Float64", lanes: 9007199254740992 },
+  },
+];
+
+const str = JSON.stringify;
+
+function literal(value) {
+  return Number.isInteger(value) ? `${value}.0` : `${value}`;
+}
+
+function vectorExpression(vector) {
+  return `VectorType { elementType: ${str(vector.elementType)}, dimension: VectorDimension { lanes: ${literal(vector.lanes)} } }`;
+}
+
+function probe(index, vector) {
+  const expected = validateVectorOperation({
+    name: vector.operationName,
+    inputs: vector.inputs.map((input) => ({
+      elementType: input.elementType,
+      dimension: { lanes: input.lanes },
+    })),
+    output: {
+      elementType: vector.output.elementType,
+      dimension: { lanes: vector.output.lanes },
+    },
+  });
+  const checks = expected.map((diagnostic, diagnosticIndex) => `
+  match diagnostics.get(${diagnosticIndex}) {
+    Some(item) => {
+      if item.code != ${str(diagnostic.code)} { return false }
+      if item.severity != ${str(diagnostic.severity)} { return false }
+      if item.message != ${str(diagnostic.message)} { return false }
+      if item.path != ${str(diagnostic.path)} { return false }
+    }
+    None => { return false }
+    _ => { return false }
+  }`).join("\n");
+  const inputs = vector.inputs.reduce(
+    (expression, input) => `${expression}.append(${vectorExpression(input)})`,
+    "Array.empty()",
+  );
+  return `
+pure flow probe${index}() -> Bool
+contract { intent { "Compare the vector operation twin with its retained TypeScript oracle." } }
+{
+  let inputs: Array<VectorType> = ${inputs}
+  let operation: VectorOperation = VectorOperation {
+    name: ${str(vector.operationName)},
+    inputs: inputs,
+    output: ${vectorExpression(vector.output)}
+  }
+  let diagnostics: Array<VectorDiagnostic> = validateVectorOperation(operation)
+  if diagnostics.count() != ${expected.length} { return false }
+  ${checks}
+  return true
+}
+`;
+}
+
+test("Wave 02 vector operation twin preserves operand diagnostics and mismatch routing in WASM", { timeout: 60_000 }, async (t) => {
+  const twin = readFileSync(new URL(
+    "../../../packages/fungi/products/galerina/rd0873-core-vector/validate-vector-operation.fungi", import.meta.url,
+  ), "utf8");
+  const program = L.parseProgram(twin + vectors.map((vector, i) => probe(i, vector)).join("\n"), "vector-operation-parity.fungi");
+  const errors = program.diagnostics.filter((d) => d.severity === "error");
+  assert.deepEqual(errors, [], "candidate and vector operation probes parse/check");
+  const effects = L.checkEffects(program.flows, program.ast);
+  const { gir } = L.emitGIR(program.ast, program.flows, effects);
+  const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "wasm-standalone", program.ast, true));
+  const assembled = await L.assembleWAT(wat);
+  assert.equal(assembled.valid, true, JSON.stringify(assembled.diagnostics));
+  const host = L.createHostRuntime();
+  for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
+  const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
+  for (let i = 0; i < vectors.length; i++) {
+    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+  }
+});
