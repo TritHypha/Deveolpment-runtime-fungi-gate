@@ -1,0 +1,101 @@
+{
+  "schema": "galerina.rd0873-product-path-relocation.v1",
+  "generatedAt": "2026-09-12T05:10:00.000Z",
+  "status": "PASS_PRODUCT_PATH_RELOCATION_NON_AUTHORING",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "5dc5d0d8ecad6313549a13b8433dd236ee54e5d4",
+    "tree": "286714a20a00c67ce1e5645ba6ae47f516f85b1a"
+  },
+  "scope": {
+    "reason": "Place existing product Fungi assets under the product tree while retaining TypeScript package oracles and tests under packages-ts.",
+    "fullCorpusAssurance": false,
+    "queueMutation": false
+  },
+  "relocations": [
+    {
+      "source": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "target": "packages/fungi/products/galerina/rd0873-core-config/environment-mode.fungi",
+      "sourceSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "targetSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "byteLength": 385,
+      "byteIdentical": true
+    },
+    {
+      "source": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+      "target": "packages/fungi/products/galerina/rd0873-core-logic/omni-uncertain.fungi",
+      "sourceSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "targetSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "byteLength": 416,
+      "byteIdentical": true
+    },
+    {
+      "source": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "target": "packages/fungi/products/galerina/rd0873-core-runtime/terminal-scope.fungi",
+      "sourceSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "targetSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "byteLength": 379,
+      "byteIdentical": true
+    },
+    {
+      "source": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "target": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+      "sourceSha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "targetSha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "byteLength": 1032,
+      "byteIdentical": true
+    },
+    {
+      "source": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "target": "packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi",
+      "sourceSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "targetSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "byteLength": 327,
+      "byteIdentical": true
+    }
+  ],
+  "checks": {
+    "productStrictGovernance": {
+      "files": 20,
+      "passed": 20,
+      "failed": 0
+    },
+    "runtimePackageSuites": {
+      "packages": 5,
+      "suites": 20,
+      "tests": 192,
+      "passed": 192,
+      "failed": 0
+    },
+    "stagedGrowth": {
+      "stagedFiles": 16,
+      "addedBytes": 3525,
+      "decision": "CLEAN"
+    },
+    "generatedOwners": [
+      "build/ts-retirement",
+      "build/fungi-source-capabilities",
+      "build/package-graphs/provenance.json",
+      "packages-ts/*/.graph/BOUNDARY.md",
+      "build/graph"
+    ],
+    "projectGraph": {
+      "packages": 100,
+      "edges": 11612,
+      "status": "PASS"
+    }
+  },
+  "boundaries": {
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "queueRelabeled": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Existing Fungi bytes are now stored in the product tree, package manifests and boundary reports no longer claim the moved assets, and retained package tests resolve the product paths. This is a layout correction and bounded verification only; it does not admit new authoring, promote the queue, switch consumers or retire TypeScript."
+}

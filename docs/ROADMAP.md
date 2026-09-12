@@ -3,6 +3,23 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 existing scalar-twin product-path relocation - 2026-09-12
+
+The five existing Wave 1-4 scalar Fungi twins now live under the native
+product tree: `packages/fungi/products/galerina/rd0873-core-config/`,
+`rd0873-core-logic/`, `rd0873-core-runtime/`, `rd0873-core-tasks/` and
+`rd0873-data-model/`. Their bytes are unchanged from the package-owned copies;
+the TypeScript shadows, tests and compatibility oracles remain in
+`packages-ts`. Package manifests and boundary reports no longer claim the old
+`src/self-hosted` paths, and the focused package suites pass `192/192` with a
+`20/20` strict product-tree check.
+
+This is a storage/layout correction, not a new authoring wave. It leaves the
+queue at `CANDIDATE: 0`, keeps consumer switching, TypeScript retirement and
+production authority closed, and does not rerun PROJECT corpus assurance. The
+non-authorizing receipt is
+`docs/independent-audits/2026-09-12-rd0873-product-path-relocation-v1.json`.
+
 ## Selective conversion: Float64 Option ABI repair - 2026-09-12
 
 The compiler and WASM host now have a bounded, versioned Float/Float64/Double

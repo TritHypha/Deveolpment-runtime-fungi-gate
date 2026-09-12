@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 9 |
+| Files | 8 |
 | Internal edges | 3 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -45,7 +45,6 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/default-governance-mode.fungi`
 - `src/self-hosted/default-security-posture.fungi`
 - `src/self-hosted/egress-allowed-hosts-env.fungi`
-- `src/self-hosted/environment-mode.fungi`
 
 ## Allowed Orphans
 _none declared_

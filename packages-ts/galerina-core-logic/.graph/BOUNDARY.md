@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 43 |
+| Files | 42 |
 | Internal edges | 43 |
 | External dependencies | 0 |
 | ├─ Node core | 0 |
@@ -64,7 +64,6 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/fungi-tri-003-invalid-operand.fungi`
 - `src/self-hosted/fungi-tri-004-unknown-leaked.fungi`
 - `src/self-hosted/fungi-tri-005-malformed-unknown-reason.fungi`
-- `src/self-hosted/omni-uncertain.fungi`
 - `src/self-hosted/tri-ops.fungi`
 
 ## Allowed Orphans

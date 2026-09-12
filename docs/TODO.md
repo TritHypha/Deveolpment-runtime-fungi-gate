@@ -240,6 +240,21 @@ counts or open items that a newer section explicitly supersedes.
   package suites pass 21/21 and 5/5. The non-authorizing path receipt is
   `docs/independent-audits/2026-09-12-rd0873-product-tree-path-check.json`.
 
+### RD-0873 existing scalar-twin product-path relocation - 2026-09-12
+
+- [x] Move the five existing Wave 1-4 scalar Fungi twins from package
+  `src/self-hosted` directories into `packages/fungi/products/galerina/`,
+  preserving every byte and retaining their TypeScript shadows and tests in
+  `packages-ts`.
+- [x] Update the five package manifests, boundary reports and focused test
+  harness so package tests resolve the product-owned paths. The five package
+  suites pass `192/192`, and the product tree strict check passes `20/20`.
+- [x] Refresh the retirement graph, source-capability inventory and package
+  graph provenance outputs. This is a layout correction only: the queue stays
+  `CANDIDATE: 0`, no new source was authored, and no consumer or authority
+  switch is opened. Receipt:
+  `docs/independent-audits/2026-09-12-rd0873-product-path-relocation-v1.json`.
+
 ### RD-0873 current-head translation gate - 2026-09-11
 
 - [x] Rebound the proposed first wave to exact `main` HEAD

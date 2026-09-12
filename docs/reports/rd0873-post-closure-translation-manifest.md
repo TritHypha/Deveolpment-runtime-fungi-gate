@@ -4,6 +4,26 @@ Date: 2026-09-10
 Status: **HOLD_NON_AUTHORIZING**
 Authorizing: **false**
 
+## Product-tree path correction addendum - 2026-09-12
+
+The five existing scalar twins referenced by the earlier bounded-wave records
+are now stored under `packages/fungi/products/galerina/`:
+
+- `rd0873-core-config/environment-mode.fungi`
+- `rd0873-core-logic/omni-uncertain.fungi`
+- `rd0873-core-runtime/terminal-scope.fungi`
+- `rd0873-core-tasks/task-effect.fungi`
+- `rd0873-data-model/response-safe-classification.fungi`
+
+Their bytes are unchanged; the package TypeScript shadows, tests and
+compatibility harness remain in `packages-ts`. The five package suites pass
+`192/192`, and the product tree strict check passes `20/20`. Existing paths
+shown in older exact-head receipts remain historical references to their
+recorded build points. The relocation is a non-authorizing layout correction
+and does not create source, promote the queue, switch a consumer, retire
+TypeScript or rerun corpus assurance. Receipt:
+`docs/independent-audits/2026-09-12-rd0873-product-path-relocation-v1.json`.
+
 ## Authorized four-symbol revalidation addendum - 2026-09-11
 
 One bounded exact-head wave was authorized for the existing package-owned Fungi
