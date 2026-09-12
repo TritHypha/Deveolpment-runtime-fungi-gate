@@ -1,0 +1,43 @@
+{
+  "schema": "galerina.rd0873-overlay-harness-package-proof.v1",
+  "generatedAt": "2026-09-12T04:35:44.0254637Z",
+  "status": "PASS_BOUNDED_OVERLAY_HARNESS",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "ae1bb66029e94abc03ef0da5003166f4ef18abf4",
+    "tree": "bf613e5fb33aeb800a4f8d65aaaa95f65240ecc1"
+  },
+  "scope": {
+    "package": "packages-ts/galerina-test",
+    "overlayRoot": "packages-ts/galerina-test/src/self-hosted/conversion-overlays",
+    "overlayFileCount": 2200,
+    "waveTestFileCount": 53,
+    "testFileCount": 61,
+    "role": "retained test and decision-core overlays; not product consumer admission"
+  },
+  "checks": {
+    "command": "npm test",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "tests": 211,
+    "passed": 211,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 58,
+    "waveChecks": "53/53",
+    "durationMs": 14475.9981
+  },
+  "boundaries": {
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "queueRelabeled": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "corpusAssuranceRerun": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "The package-owned overlay stream and its wave checks are green at this exact main source point. This is bounded test evidence only; it does not admit source creation, replace the historical PROJECT receipt, or close the selective conversion gates."
+}
