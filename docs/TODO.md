@@ -45,6 +45,13 @@ counts or open items that a newer section explicitly supersedes.
   ordered diagnostics and optional-value behavior. It remains non-authorizing
   pending a fresh exact-head admission; see
   `docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-proposal.json`.
+- [x] Validate the proposed `validateAgentLimits` helper/wrapper shape with a
+  disposable strict-governance compiler probe: 0 errors and 0 warnings. The
+  probe changed no repository source and created no admission authority.
+- [x] Reconfirm the four existing Wave 1-4 source/twin pairs at current `main`:
+  all recorded hashes match and focused differential checks pass 8/8. The
+  non-authorizing exact-head receipt is
+  `docs/independent-audits/2026-09-12-rd0873-four-symbol-current-head-freshness-v2.json`.
 
 ### Selective conversion: first chapter repairs - 2026-09-12
 

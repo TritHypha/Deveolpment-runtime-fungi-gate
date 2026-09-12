@@ -45,6 +45,14 @@ non-authorizing evidence in
 `docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-proposal.json`
 and still needs fresh exact-head owner admission before the candidate is edited.
 
+The proposed helper/wrapper shape has also passed a disposable strict-governance
+compiler probe with 0 errors and 0 warnings; no repository source or admission
+authority was created. The four existing Wave 1-4 source/twin pairs were
+rechecked at the current head with matching hashes and 8/8 focused checks. This
+freshness evidence is recorded in
+`docs/independent-audits/2026-09-12-rd0873-four-symbol-current-head-freshness-v2.json`;
+the exact-head owner admission remains a separate gate.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)
