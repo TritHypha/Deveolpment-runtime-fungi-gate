@@ -8,6 +8,7 @@ Branch: `main`
 The selective conversion role map was rechecked at `main` head `f61312b9f919d2e7e8ad3be1f57310ce5b0910a4` / tree `19a64592445eb8ffa9f21dc6a15c1da11eda5e46`. Product/runtime candidates, retained compiler/bootstrap and development-tooling JS/TS, and native/host boundaries remain separated by role. The product tree has 20 `.fungi` assets; the queue remains `CANDIDATE: 0` with 921 blocked and 684 bootstrap-floor entries. The project graph reports 100 packages and 11,612 relationships, and the external navigation index is fresh at 78,124 nodes and 203,363 edges.
 
 This is routing evidence only. Waves 3-4 and the two held dev-tools symbols remain closed, and no new source, queue promotion, consumer switch, TypeScript retirement, production authority or corpus rerun is claimed. Receipt: `docs/independent-audits/2026-09-12-rd0873-current-head-role-reconciliation-v1.json`.
+The owner-ready exact-head request is recorded in `docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v2.json`; it remains non-authorizing until explicitly admitted.
 
 ## RD-0873 existing scalar-twin product-path relocation - 2026-09-12
 

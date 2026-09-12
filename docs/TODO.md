@@ -10,6 +10,7 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Confirm 20 product `.fungi` assets, 100 project-graph packages and 11,612 relationships, plus a fresh external navigation index at 78,124 nodes and 203,363 edges.
 - [x] Confirm the conserved queue remains 1,605 rows with `CANDIDATE: 0`, `BLOCKED: 921` and `BOOTSTRAP_FLOOR: 684`; Waves 3-4 and `isBuiltin`/`validateTransition` remain held.
 - [!] This receipt is non-authorizing. A fresh exact-head owner admission naming a non-empty new source scope and limits is still required before authoring. Receipt: `docs/independent-audits/2026-09-12-rd0873-current-head-role-reconciliation-v1.json`.
+- [!] The owner-ready exact-head request is `docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v2.json`; it remains non-authorizing until explicitly admitted.
 
 ### Selective conversion: Float64 Option ABI repair - 2026-09-12
 

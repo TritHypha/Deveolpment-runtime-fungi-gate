@@ -1,0 +1,182 @@
+{
+  "schema": "galerina.rd0873-current-head-authoring-release-request.v1",
+  "version": 2,
+  "date": "2026-09-12",
+  "status": "PROPOSAL_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Present a concrete exact-head release request for the already scoped five-symbol reversible review wave.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "f820626154fb085f3670b6cef6d2c2fae02aa824",
+    "tree": "aa988327506cf9b72ff1267292d4d3566e02ec71"
+  },
+  "currentGate": {
+    "queuePath": "build/conversion-queue/queue.json",
+    "wholeFileCandidates": 0,
+    "blocked": 921,
+    "bootstrapFloor": 684,
+    "existingOwnerApproval": "REVIEW_ONLY",
+    "bulkFungiAuthoring": false
+  },
+  "proposedWave": {
+    "classification": "CANDIDATE",
+    "symbols": [
+      {
+        "package": "galerina-core-config",
+        "symbol": "isEnvironmentMode",
+        "sourcePath": "packages-ts/galerina-core-config/src/index.ts",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-config/environment-mode.fungi",
+        "sourceSha256": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+        "sourceBytes": 43875,
+        "existingFungiSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+        "existingFungiBytes": 385
+      },
+      {
+        "package": "galerina-core-logic",
+        "symbol": "isOmniUncertain",
+        "sourcePath": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-logic/omni-uncertain.fungi",
+        "sourceSha256": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+        "sourceBytes": 3176,
+        "existingFungiSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+        "existingFungiBytes": 416
+      },
+      {
+        "package": "galerina-core-runtime",
+        "symbol": "isTerminalScope",
+        "sourcePath": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-runtime/terminal-scope.fungi",
+        "sourceSha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "sourceBytes": 21802,
+        "existingFungiSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+        "existingFungiBytes": 379
+      },
+      {
+        "package": "galerina-core-tasks",
+        "symbol": "isTaskEffect",
+        "sourcePath": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+        "sourceSha256": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+        "sourceBytes": 5642,
+        "existingFungiSha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+        "existingFungiBytes": 1032
+      },
+      {
+        "package": "galerina-data-model",
+        "symbol": "isResponseSafeClassification",
+        "sourcePath": "packages-ts/galerina-data-model/src/index.ts",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi",
+        "sourceSha256": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+        "sourceBytes": 10375,
+        "existingFungiSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+        "existingFungiBytes": 327
+      }
+    ],
+    "heldOut": [
+      {
+        "package": "galerina-devtools-context",
+        "symbol": "isBuiltin",
+        "sourcePath": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+        "reason": "physical profile remains held"
+      },
+      {
+        "package": "galerina-devtools-project-graph",
+        "symbol": "validateTransition",
+        "sourcePath": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+        "reason": "two-input physical shape remains held"
+      }
+    ]
+  },
+  "waveLimits": {
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "maxSymbolsPerWave": 5,
+    "maxSourceFilesPerWave": 5,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "aggregateInputBytes": 84870,
+    "proposedAggregateOutputBytes": 327680
+  },
+  "custody": {
+    "typescriptShadowsRetained": true,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "branchOrWorktreeCreation": false,
+    "remotePublication": false
+  },
+  "requiredOwnerAction": "Authorize this exact current-head five-symbol scope and limits, or provide a narrower exact scope. Until then this packet remains non-authorizing and no new Fungi source may be written.",
+  "sourceEvidence": {
+    "queuePath": "build/conversion-queue/queue.json",
+    "queueSha256": "sha256:60e7118a4fede9eb80b0e6008fedad0f86894fc47be04955b676a287a016a784",
+    "ownerApprovalPath": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-approval.json",
+    "ownerApprovalSha256": "sha256:5b7849b2a4c6de06d3f7c70b2fcbd6354b46e31fadd3f542066884c591e81536",
+    "independentAdjudicationPath": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-independent-adjudication-v5.json",
+    "independentAdjudicationSha256": "sha256:d2d23df8dc0e1d734dae507d40de3b21c07b85724b59b1fc714cb9c63745cca3"
+  },
+  "identityChecks": {
+    "sourceAndTwinBytesObserved": true,
+    "sourceDigests": [
+      {
+        "symbol": "isEnvironmentMode",
+        "sourcePath": "packages-ts/galerina-core-config/src/index.ts",
+        "sourceSha256": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-config/environment-mode.fungi",
+        "existingFungiSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba"
+      },
+      {
+        "symbol": "isOmniUncertain",
+        "sourcePath": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+        "sourceSha256": "sha256:df9072d6bcc35a50b70e0a78f8fafae36bae6f956efb8e8e827ca4b35b68e138",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-logic/omni-uncertain.fungi",
+        "existingFungiSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be"
+      },
+      {
+        "symbol": "isTerminalScope",
+        "sourcePath": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+        "sourceSha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-runtime/terminal-scope.fungi",
+        "existingFungiSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e"
+      },
+      {
+        "symbol": "isTaskEffect",
+        "sourcePath": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+        "sourceSha256": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+        "existingFungiSha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b"
+      },
+      {
+        "symbol": "isResponseSafeClassification",
+        "sourcePath": "packages-ts/galerina-data-model/src/index.ts",
+        "sourceSha256": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi",
+        "existingFungiSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8"
+      }
+    ]
+  },
+  "requiredReceiptsPerStep": [
+    "exact source and TypeScript-shadow digest",
+    "compiler, toolchain and semantic-profile identity",
+    "canonical checked artifact and GIR digest",
+    "differential and negative-control results",
+    "independent SLIDE re-derivation and VOK admission",
+    "independent review at the same build point",
+    "reversible output with no consumer switch or TypeScript retirement"
+  ],
+  "ownerDecision": {
+    "required": true,
+    "status": "PENDING_EXPLICIT_EXACT_HEAD_ADMISSION",
+    "acceptedReplyShape": "Authorize the exact five-symbol packet at head f820626154fb085f3670b6cef6d2c2fae02aa824, with the listed one-symbol sequential limits; keep isBuiltin and validateTransition excluded."
+  },
+  "supersedes": "rd0873-current-head-authoring-release-request-2026-09-12.json (external v1)",
+  "successorContext": {
+    "previousReceiptHead": "f61312b9f919d2e7e8ad3be1f57310ce5b0910a4",
+    "currentHeadIsGraphAndDocumentationSuccessor": true,
+    "roleAndQueueInputsUnchanged": true
+  }
+}
