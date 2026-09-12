@@ -79,6 +79,26 @@ counts or open items that a newer section explicitly supersedes.
   `docs/independent-audits/2026-09-12-rd0873-is-tri-admission-v1.json` and
   `docs/independent-audits/2026-09-12-rd0873-is-tri-receipt-v1.json`.
 
+### RD-0873 canonical Omni uncertainty membership - 2026-09-12
+
+- [x] Resolve the `isOmniUncertain` semantic HOLD with the approved canonical
+  membership contract. The TypeScript classifier now compares the six
+  documented uncertain states directly; it no longer consults the mutable
+  exported `OMNI_UNCERTAIN_STATES` collection or any replaceable array method.
+- [x] Retain `OMNI_UNCERTAIN_STATES` as a deprecated enumeration-only
+  compatibility export. Mutating or overriding its `add`, `delete`, `clear` or
+  `has` behavior cannot change classification or downstream review reason text.
+- [x] Extend the Fungi proof to compare every vector with the live TypeScript
+  predicate and add mutation, method-override, downstream-reason and mutant
+  controls. The focused proof passes `5/5`; the complete core-logic package
+  suite passes `65/65` with typecheck and build green. Astra's independent
+  review passes after the direct-equality and live-oracle fixes.
+- [!] Physical SLIDE/VOK admission remains a separate HOLD. This semantic
+  repair creates no new Fungi source, does not promote the queue, switch a
+  consumer or retire the TypeScript shadow, and does not rerun PROJECT corpus
+  assurance. Receipt:
+  `docs/independent-audits/2026-09-12-rd0873-omni-uncertain-canonical-membership-v1.json`.
+
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
 - [x] Record the implementation point used for this checkpoint: local and

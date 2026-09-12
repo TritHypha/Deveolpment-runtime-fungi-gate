@@ -68,6 +68,27 @@ SLIDE pure-scalar profile refuses the Float64 ABI before bundle creation, so
 VOK re-derivation cannot run. This does not promote the queue, rerun PROJECT
 assurance, or grant production authority.
 
+## RD-0873 canonical Omni uncertainty membership - 2026-09-12
+
+The `isOmniUncertain` semantic HOLD is resolved by making its six documented
+uncertain states a direct literal-membership contract in the TypeScript
+classifier. The retained `OMNI_UNCERTAIN_STATES` export remains available for
+enumeration compatibility, but it is deprecated and no longer controls
+classification. Set mutation, a replaced `has` method, and a replaced
+`Array.prototype.includes` cannot alter the result or the downstream
+`omniToDecision` review reason.
+
+The existing Fungi twin is checked against the live TypeScript predicate across
+all recorded vectors. The focused interpreter/Wasm and mutation suite passes
+`5/5`; the complete `galerina-core-logic` package suite passes `65/65`, with
+typecheck and build green. GPT-6 Astra independently reviewed the corrected
+implementation. The exact-head non-authorizing receipt is
+`docs/independent-audits/2026-09-12-rd0873-omni-uncertain-canonical-membership-v1.json`.
+
+Physical SLIDE/VOK admission remains a separate HOLD. This repair does not
+promote the queue, rerun PROJECT assurance, switch a consumer, retire the
+TypeScript shadow or grant production authority.
+
 ## Active selective conversion - 2026-09-12
 
 Continue approved product/runtime translation and repair under the

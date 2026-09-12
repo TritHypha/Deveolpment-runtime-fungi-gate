@@ -1,0 +1,75 @@
+{
+  "schema": "galerina.rd0873.omni-uncertain-canonical-membership.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_SEMANTIC_CANONICAL_PHYSICAL_HOLD",
+  "authorizing": false,
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "dc64c2573cbf5f2d5aef6062ba38f6ca685c57dd",
+    "tree": "a7c13511873b10c2b817996cc5afa077d365d580"
+  },
+  "scope": {
+    "package": "galerina-core-logic",
+    "symbol": "isOmniUncertain",
+    "sourcePath": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+    "sourceSha256": "sha256:c6e101e4debca8bd5f9b2f6a3385373f3ac4837933d5e63d3258d5df4a10909e",
+    "candidatePath": "packages/fungi/products/galerina/rd0873-core-logic/omni-uncertain.fungi",
+    "candidateSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+    "focusedTestPaths": [
+      "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "packages-ts/galerina-core-logic/tests/omni-uncertain-mutation-contract.test.mjs"
+    ],
+    "focusedTestSha256": [
+      "sha256:b0a705cf1d4143a90fb42849232c7062dcf1bbceec00f9cc92bfec612edd364",
+      "sha256:4d5960c3624bc28384e21758ec90371544201c0a84709b05043d659b67bdd0b3"
+    ]
+  },
+  "contract": {
+    "canonicalMembership": [
+      "unknown",
+      "partial_true",
+      "partial_false",
+      "conflicted",
+      "deferred",
+      "inconsistent"
+    ],
+    "legacyExport": "OMNI_UNCERTAIN_STATES remains an enumeration-only compatibility export and does not control classification.",
+    "downstream": "Uncertain states continue to produce review with the canonical state label; true and false routes are unchanged.",
+    "failClosedBoundary": "No caller-controlled Set or array membership method can change the classifier result."
+  },
+  "verification": {
+    "focusedCommand": "node --test packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs packages-ts/galerina-core-logic/tests/omni-uncertain-mutation-contract.test.mjs",
+    "focusedTests": 5,
+    "focusedPassed": 5,
+    "focusedFailed": 0,
+    "packageCommand": "npm test",
+    "packageTests": 65,
+    "packagePassed": 65,
+    "packageFailed": 0,
+    "typecheck": "PASS",
+    "sourceToFungiDifferential": "PASS",
+    "interpreter": "PASS",
+    "signedWasm": "PASS",
+    "mutationIndependence": "PASS",
+    "downstreamReasonText": "PASS",
+    "review": "GPT-6 Astra PASS after direct-equality and live-TypeScript-parity fixes"
+  },
+  "physicalStage": {
+    "status": "HOLD",
+    "reason": "The current SLIDE pure-scalar profile remains unable to provide the separately required physical admission evidence for the broader Float64 lane; this canonical string classifier does not reopen that stage."
+  },
+  "custody": {
+    "existingFungiRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRead": false,
+    "queuePromotion": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "projectCorpusRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Canonical membership is semantically verified and intentionally independent of mutable compatibility data. The existing Fungi twin remains candidate evidence; physical admission and production consumer switching remain separate."
+}
