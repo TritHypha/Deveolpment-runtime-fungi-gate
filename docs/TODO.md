@@ -121,6 +121,11 @@ counts or open items that a newer section explicitly supersedes.
   runtime consumer import was changed: TypeScript remains the compatibility
   oracle until host marshalling, checked artifacts and admission evidence are
   separately complete.
+- [x] Rechecked the canonical product tree at `main` HEAD
+  `1b7c16292b46baaccf404184a395dbdee0a242d2`: all 15 product `.fungi` files
+  pass strict type/governance checks, and the retained AI-agent and core-vector
+  package suites pass 21/21 and 5/5. The non-authorizing path receipt is
+  `docs/independent-audits/2026-09-12-rd0873-product-tree-path-check.json`.
 
 ### RD-0873 current-head translation gate - 2026-09-11
 

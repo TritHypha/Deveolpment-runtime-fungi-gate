@@ -23,6 +23,10 @@ candidates are under `packages/fungi/products/galerina/rd0873-core-vector/`.
 Their retained TypeScript oracles and differential tests remain in
 `packages-ts`; the path move does not imply consumer admission or TypeScript
 retirement.
+The current-head path check finds all 15 product sources in that tree; strict
+Fungi checks are 15/15 and the retained AI-agent and core-vector package suites
+are 21/21 and 5/5. Its non-authorizing receipt is
+`docs/independent-audits/2026-09-12-rd0873-product-tree-path-check.json`.
 The core-vector product candidate now also covers `validateMatrixType`, with
 rows-then-columns diagnostic parity at the safe-integer boundary.
 It now covers `validateTensorType` for dense dimension arrays, including the
