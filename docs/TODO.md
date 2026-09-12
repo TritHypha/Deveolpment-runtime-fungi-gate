@@ -35,7 +35,7 @@ counts or open items that a newer section explicitly supersedes.
   observation. A 5,483-byte compact closure reference is now recorded at
   `docs/independent-audits/2026-09-12-rd0873-trinot-compiler-closure-reference-v1.json`,
   but it does not close the authoritative toolchain gate.
-- [ ] Next bounded step: name the exact host boundary or an owner-approved
+- [ ] If the owner confirms this lane remains needed, next bounded step: name the exact host boundary or an owner-approved
   boundary exclusion, bind the complete compiler/profile closure in bounded
   evidence, and obtain a fresh non-empty owner admission naming `triNot`, its
   target and limits. No
