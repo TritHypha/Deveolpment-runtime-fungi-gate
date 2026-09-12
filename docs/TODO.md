@@ -52,6 +52,10 @@ counts or open items that a newer section explicitly supersedes.
   all recorded hashes match and focused differential checks pass 8/8. The
   non-authorizing exact-head receipt is
   `docs/independent-audits/2026-09-12-rd0873-four-symbol-current-head-freshness-v2.json`.
+- [x] Recheck the retained `galerina-test` overlay stream at this exact `main`
+  point: typecheck and build pass, all 53 wave checks pass, and the package
+  suite is 211/211 across 58 suites. The bounded, non-authorizing receipt is
+  `docs/independent-audits/2026-09-12-rd0873-overlay-harness-package-proof-v1.json`.
 
 ### Selective conversion: first chapter repairs - 2026-09-12
 

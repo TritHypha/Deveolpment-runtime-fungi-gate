@@ -53,6 +53,12 @@ freshness evidence is recorded in
 `docs/independent-audits/2026-09-12-rd0873-four-symbol-current-head-freshness-v2.json`;
 the exact-head owner admission remains a separate gate.
 
+The retained `galerina-test` overlay stream also passes its bounded package
+check at this source point: typecheck and build are green, all 53 wave checks
+pass, and the suite is 211/211 across 58 suites. The receipt is
+`docs/independent-audits/2026-09-12-rd0873-overlay-harness-package-proof-v1.json`;
+it remains test evidence only and does not admit product source creation.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)
