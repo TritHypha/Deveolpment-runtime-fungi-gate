@@ -188,6 +188,8 @@ export interface HostRuntime {
   readArray(handle: number): readonly number[] | undefined;
   /** Resolve a Result handle (from `__result_ok`/`__result_err`) to its tag + value. */
   readResult(handle: number): { tag: "ok" | "err"; value: number } | undefined;
+  /** Resolve an Option handle. `-1` is the sole None value; all other values are registry handles. */
+  readOption(handle: number): { tag: "none" } | { tag: "some"; value: number };
   /** Resolve a Money handle (from a `__money_*` currency constructor) to its currency + amount. */
   readMoney(handle: number): { currency: string; amountStr: string } | undefined;
   /** Bind the instance's exported memory after instantiation (for record reads). */
@@ -256,6 +258,11 @@ export function createHostRuntime(
   const strings: string[] = [];
   const arrays: number[][] = [];
   const results: { tag: "ok" | "err"; value: number }[] = [];
+  // Option values need their own registry. A raw i32 payload cannot carry presence: -1 is a
+  // perfectly valid Int, so the old `Some(v) = v / None = -1` convention made Some(-1) absent.
+  // `-1` remains the wire-level None value for compatibility; every Some is a non-negative
+  // handle whose payload is stored here. Raw array access stays separate for counted loops.
+  const options: { value: number }[] = [];
   const moneys: { currency: string; amountStr: string }[] = [];
   let memory: WebAssembly.Memory | null = null;
   // RD-0389: host bump pointer for records STAGED to pass in (allocRecord), based at the same
@@ -281,6 +288,15 @@ export function createHostRuntime(
       throw new Error(`unknown string handle ${handle} (fail-closed)`);
     }
     return value;
+  };
+
+  const optionEntry = (handle: number): { value: number } => {
+    if (handle === -1) throw new Error("cannot read Option payload from None (fail-closed)");
+    const entry = options[handle];
+    if (entry === undefined || !Number.isInteger(handle) || handle < 0) {
+      throw new Error(`unknown Option handle ${handle} (fail-closed)`);
+    }
+    return entry;
   };
 
   const host: Record<string, (...a: number[]) => number | void> = {
@@ -329,8 +345,9 @@ export function createHostRuntime(
     __result_value: (h: number) => tap("__result_value", [h], results[h]?.value ?? 0) as number,
 
     // ── #145 host stdlib completion (matches src/stdlib.ts + interpreter semantics) ──
-    // Option/Result sentinel convention at the WASM boundary: None / empty / not-found
-    // is encoded as -1; Some(v) is v itself (string/array/char handles are all >= 0).
+    // Option/Result boundary: None is encoded as -1; Some is a handle into the option registry.
+    // Raw array access remains a separate bridge because for-in lowering needs element values,
+    // including negative integers, rather than an Option wrapper.
     __str_concat: (a: number, b: number) => {
       const id = strings.length; strings.push((strings[a] ?? "") + (strings[b] ?? ""));
       return tap("__str_concat", [a, b], id) as number;
@@ -362,6 +379,11 @@ export function createHostRuntime(
     __str_to_int: (h: number) => {
       const n = parseInt(strings[h] ?? "", 10);
       return tap("__str_to_int", [h], Number.isNaN(n) ? -1 : n) as number; // Option<Int>: -1 = None
+    },
+    __str_to_int_option_v2: (h: number) => {
+      const n = parseInt(strings[h] ?? "", 10);
+      const option = Number.isNaN(n) ? -1 : options.push({ value: n | 0 }) - 1;
+      return tap("__str_to_int_option_v2", [h], option) as number;
     },
     // Char.fromCode (RD-0528 step 1) — Int -> Char. A Char IS its code point i32, so the VALUE is
     // the argument unchanged; this exists for the REFUSAL, not the conversion. stdlib.ts:1961-1963
@@ -396,7 +418,7 @@ export function createHostRuntime(
       const id = strings.length; strings.push(code >= 0 ? String.fromCodePoint(code) : "");
       return tap("__char_to_string", [code], id) as number;
     },
-    // Array ops — handles index `arrays`. Out-of-range / empty ⇒ -1 (None sentinel).
+    // Array ops — raw handles/indexing. Out-of-range / empty ⇒ -1 for the legacy raw bridge.
     __array_get: (id: number, i: number) => {
       const a = arrays[id] ?? [];
       return tap("__array_get", [id, i], i >= 0 && i < a.length ? a[i]! : -1) as number;
@@ -412,10 +434,43 @@ export function createHostRuntime(
     },
     __array_first: (id: number) => { const a = arrays[id] ?? []; return tap("__array_first", [id], a.length > 0 ? a[0]! : -1) as number; },
     __array_last: (id: number) => { const a = arrays[id] ?? []; return tap("__array_last", [id], a.length > 0 ? a[a.length - 1]! : -1) as number; },
-    // Option/Result helpers.
+    // Option-producing array accessors keep a present negative element distinct from absence.
+    __array_get_option_v2: (id: number, i: number) => {
+      const a = arrays[id] ?? [];
+      const option = i >= 0 && i < a.length ? options.push({ value: a[i]! | 0 }) - 1 : -1;
+      return tap("__array_get_option_v2", [id, i], option) as number;
+    },
+    __array_first_option_v2: (id: number) => {
+      const a = arrays[id] ?? [];
+      const option = a.length > 0 ? options.push({ value: a[0]! | 0 }) - 1 : -1;
+      return tap("__array_first_option_v2", [id], option) as number;
+    },
+    __array_last_option_v2: (id: number) => {
+      const a = arrays[id] ?? [];
+      const option = a.length > 0 ? options.push({ value: a[a.length - 1]! | 0 }) - 1 : -1;
+      return tap("__array_last_option_v2", [id], option) as number;
+    },
+    __str_char_at_option_v2: (strHandle: number, idx: number) => {
+      const cps = [...(strings[strHandle] ?? "")];
+      const code = idx >= 0 && idx < cps.length ? (cps[idx]!.codePointAt(0) ?? -1) : -1;
+      const option = code >= 0 ? options.push({ value: code | 0 }) - 1 : -1;
+      return tap("__str_char_at_option_v2", [strHandle, idx], option) as number;
+    },
+    // Legacy Option helpers retain the original raw-sentinel ABI for already-built modules.
     __unwrap_or: (opt: number, def: number) => tap("__unwrap_or", [opt, def], opt >= 0 ? opt : def) as number,
     __option_some: (x: number) => tap("__option_some", [x], x) as number,
     __option_none: () => tap("__option_none", [], -1) as number,
+    // Versioned registry helpers separate presence from payload for new compiler output. The distinct
+    // import names are an ABI binding: a pre-repair module cannot accidentally run against this layout.
+    __unwrap_or_v2: (opt: number, def: number) => tap("__unwrap_or_v2", [opt, def], opt === -1 ? def : optionEntry(opt).value) as number,
+    __option_some_v2: (x: number) => {
+      const handle = options.push({ value: x | 0 }) - 1;
+      return tap("__option_some_v2", [x], handle) as number;
+    },
+    __option_none_v2: () => tap("__option_none_v2", [], -1) as number,
+    __option_is_some_v2: (opt: number) => tap("__option_is_some_v2", [opt], opt === -1 ? 0 : (optionEntry(opt), 1)) as number,
+    __option_is_none_v2: (opt: number) => tap("__option_is_none_v2", [opt], opt === -1 ? 1 : (optionEntry(opt), 0)) as number,
+    __option_value_v2: (opt: number) => tap("__option_value_v2", [opt], optionEntry(opt).value) as number,
 
     // ── Money currency constructors (ISO 4217) ───────────────────────────────
     // Each accepts a string handle (the amount) and returns a Money handle (i32
@@ -473,6 +528,7 @@ export function createHostRuntime(
     readString(handle: number) { return strings[handle]; },
     readArray(handle: number) { return arrays[handle]; },
     readResult(handle: number) { return results[handle]; },
+    readOption(handle: number) { return handle === -1 ? { tag: "none" } : { tag: "some", value: optionEntry(handle).value }; },
     readMoney(handle: number) { return moneys[handle]; },
     bindMemory(m: WebAssembly.Memory) { memory = m; },
     readRecordField(ptr: number, slot: number): number {

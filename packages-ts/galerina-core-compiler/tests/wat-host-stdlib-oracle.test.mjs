@@ -28,12 +28,47 @@ describe("#185 host stdlib oracle: string equality (__str_eq)", () => {
   });
 });
 
-describe("#185 host stdlib oracle: Option unwrap (__unwrap_or)", () => {
-  it("Some(v>=0) → v; None(-1) → default", () => {
+describe("#185 host stdlib oracle: versioned Option ABI (__unwrap_or_v2)", () => {
+  it("preserves every i32 payload, including negative values, separately from None", () => {
     const { fn } = host();
-    assert.equal(fn.__unwrap_or(5, 99), 5, "Some keeps the value");
-    assert.equal(fn.__unwrap_or(0, 99), 0, "Some(0) is still Some");
-    assert.equal(fn.__unwrap_or(-1, 99), 99, "None falls back to the default");
+    const none = fn.__option_none_v2();
+    assert.equal(fn.__option_is_none_v2(none), 1, "None is absent");
+    assert.equal(fn.__unwrap_or_v2(none, 99), 99, "None falls back to the default");
+    for (const value of [-7, -1, 0, 5, 2_147_483_647, -2_147_483_648]) {
+      const some = fn.__option_some_v2(value);
+      assert.equal(fn.__option_is_some_v2(some), 1, `Some(${value}) is present`);
+      assert.equal(fn.__option_value_v2(some), value, `Some(${value}) keeps its payload`);
+      assert.equal(fn.__unwrap_or_v2(some, 99), value, `unwrapOr preserves Some(${value})`);
+    }
+  });
+
+  it("distinguishes a present negative array element from an out-of-range absence", () => {
+    const { fn } = host();
+    const arr = fn.__array_create();
+    fn.__array_append(arr, -1);
+    const present = fn.__array_get_option_v2(arr, 0);
+    const absent = fn.__array_get_option_v2(arr, 1);
+    assert.equal(fn.__option_is_some_v2(present), 1);
+    assert.equal(fn.__unwrap_or_v2(present, 99), -1);
+    assert.equal(fn.__option_is_none_v2(absent), 1);
+    assert.equal(fn.__unwrap_or_v2(absent, 99), 99);
+  });
+
+  it("rejects malformed handles instead of treating them as absence", () => {
+    const { fn } = host();
+    assert.throws(() => fn.__option_value_v2(-2), /unknown Option handle -2/);
+    assert.throws(() => fn.__option_value_v2(0), /unknown Option handle 0/);
+    assert.throws(() => fn.__option_is_some_v2(0), /unknown Option handle 0/);
+    assert.throws(() => fn.__unwrap_or_v2(Number.NaN, 99), /unknown Option handle NaN/);
+    assert.throws(() => fn.__option_value_v2(fn.__option_none_v2()), /cannot read Option payload from None/);
+  });
+
+  it("keeps legacy raw helpers stable for already-built modules", () => {
+    const { fn } = host();
+    assert.equal(fn.__option_some(5), 5);
+    assert.equal(fn.__unwrap_or(5, 99), 5);
+    assert.equal(fn.__option_none(), -1);
+    assert.equal(fn.__unwrap_or(-1, 99), 99);
   });
 });
 

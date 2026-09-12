@@ -53,6 +53,15 @@ pure flow optSomeWildcard(i: Int) -> Int {
   }
   return out
 }
+
+pure flow optNegative() -> Int {
+  let xs = [0 - 1]
+  let v = xs.get(0)
+  match v {
+    Some(x) => { return x }
+    _ => { return 99 }
+  }
+}
 `;
 
 async function instantiate() {
@@ -94,5 +103,11 @@ describe("RD-0240 Option `Some(x) + _`: the wildcard supplies the None branch", 
     assert.equal(inst.exports.optSomeWildcard(9), -9,
       "xs.get(9)=None → `_` arm → out=-9 (pre-fix bug: None branch empty → out kept init 7)");
     assert.notEqual(inst.exports.optSomeWildcard(9), 7, "must not fall through to the init value");
+  });
+
+  it("preserves a present negative payload through the versioned Option ABI", async () => {
+    const inst = await instantiate();
+    assert.equal(inst.exports.optNegative(), -1,
+      "xs.get(0)=Some(-1) must bind -1, rather than collide with None");
   });
 });

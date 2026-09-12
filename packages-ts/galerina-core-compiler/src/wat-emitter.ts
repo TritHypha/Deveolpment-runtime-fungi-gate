@@ -1214,10 +1214,10 @@ const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_H
  *   - `Array.empty()` is handled specially in emitWATExpr (zero-arg host call).
  */
 const STDLIB_HOST_MAP: Record<string, string> = {
-  charAt:   "$host___str_char_at",
+  charAt:   "$host___str_char_at_option_v2",
   charCount: "$host___str_count",   // String.charCount() → length (#145 lexer link)
   length:   "$host___str_length",   // String.length / Array.length (shared sig)
-  toInt:    "$host___str_to_int",
+  toInt:    "$host___str_to_int_option_v2",
   toStr:    "$host___int_to_str",
   toString: "$host___int_to_str",   // Int.toString (Char.toString → P9.4)
   concat:   "$host___str_concat",
@@ -1236,17 +1236,19 @@ const STDLIB_HOST_MAP: Record<string, string> = {
   isLower:  "$host___char_is_lower",
   isWhitespace: "$host___char_is_whitespace",
   append:   "$host___array_append",
-  get:      "$host___array_get",
+  get:      "$host___array_get_option_v2",
   count:    "$host___array_length",  // #161: Array.count() → length (reuses the array_length import)
   contains: "$host___array_contains",
-  first:    "$host___array_first",
-  last:     "$host___array_last",
-  unwrapOr: "$host___unwrap_or",
+  first:    "$host___array_first_option_v2",
+  last:     "$host___array_last_option_v2",
+  unwrapOr: "$host___unwrap_or_v2",
+  isSome:   "$host___option_is_some_v2",
+  isNone:   "$host___option_is_none_v2",
 };
 
 /** Plain (non-method) stdlib calls — constructors mapped to host imports. */
 const STDLIB_HOST_CALL_MAP: Record<string, string> = {
-  Some: "$host___option_some",
+  Some: "$host___option_some_v2",
   Ok:   "$host___result_ok",   // Result.Ok(x)  (#145 lexer link)
   Err:  "$host___result_err",  // Result.Err(x) (#145 lexer link)
   // None is an identifier (no call); resolves via the host_none import at link time.
@@ -1416,8 +1418,9 @@ function inferExprType(node: AstNode | undefined): string | undefined {
           return inferExprType(node.children?.[0]) === "Char" ? "Char" : "String";
         }
         if (name === "codePoint" || name === "length" || name === "charCount" ||
-            name === "indexOf" || name === "lastIndexOf" || name === "toInt" ||
+            name === "indexOf" || name === "lastIndexOf" ||
             name === "bitAnd" || name === "bitOr") return "Int";
+        if (name === "toInt") return "Option<Int>";
         if (name === "isFinite" || name === "isLetter" || name === "isDigit" || name === "isUpper" || name === "isLower" ||
             name === "isWhitespace" || name === "contains" || name === "startsWith" || name === "endsWith") return "Bool";
         if (name === "charAt") return "Option<Char>";
@@ -1468,10 +1471,10 @@ export function emitWATExpr(
       // the enclosing `)` — exactly the rule the enum-variant path below (1037+) states.
       // Use an inline-safe block comment to keep the diagnostic without the hazard.
       if (constVal !== undefined) return `(i32.const ${constVal}) (; static ${name} ;)`;
-      // None is a value, not a constructor call. Use the existing Option ABI's
+      // None is a value, not a constructor call. Use the versioned Option ABI's
       // absence producer; otherwise a valid missing optional field traps as an
       // unresolved identifier before the validator can examine the record.
-      if (name === "None") return `(call $host___option_none)`;
+      if (name === "None") return `(call $host___option_none_v2)`;
       // Unknown identifier — emit with comment for diagnostics.
       return `(unreachable) (; unresolved: ${name} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
@@ -2202,14 +2205,16 @@ export function emitWATExpr(
       const armBodyExpr = (arm: AstNode): AstNode | undefined =>
         arm.children?.[arm.children.length - 1];
 
-      // ── Option<T> match-as-value: None / Some(x) sentinel dispatch (#160) ──
-      // Mirrors the statement path: None ⇒ subject < 0, Some(x) ⇒ subject >= 0 with
-      // x bound to the value. Evaluate the subject once into a scratch local.
+      // ── Option<T> match-as-value: registry-handle dispatch ──
+      // None is the sole -1 wire value; Some is a handle whose payload is read through the
+      // host registry. This keeps a present negative i32 payload distinct from absence.
       const noneArm = arms.find(a => a.value === "None");
       const someArm = arms.find(a => a.value === "Some");
       if ((noneArm !== undefined || someArm !== undefined) && recordCtx !== null) {
         const scratch = `$__fungi_match_${recordCtx.counter.n++}`;
+        const valueLocal = `$__fungi_match_${recordCtx.counter.n++}`;
         recordCtx.localDecls.push(`(local ${scratch} i32)`);
+        recordCtx.localDecls.push(`(local ${valueLocal} i32)`);
         const someBind = ((): string | undefined => {
           const ch = someArm?.children ?? [];
           return ch.length >= 2 && ch[0]?.kind === "identifier" ? ch[0]!.value : undefined;
@@ -2229,7 +2234,7 @@ export function emitWATExpr(
         const noneWat = noneBody !== undefined ? emitWATExpr(noneBody, vars, staticConsts)
           : "(unreachable) (; RD-0240: Option match missing None arm and wildcard — fail-closed ;)";
         const someVars: ReadonlyMap<string, string> = someBind !== undefined
-          ? new Map([...vars, [someBind, scratch]]) : vars;
+          ? new Map([...vars, [someBind, valueLocal]]) : vars;
         // #160: scope the Some binding's type (Option<T> inner) while emitting the arm.
         const someBindType = optionInnerType(inferExprType(subject));
         const hadType = someBind !== undefined && recordVarTypes !== null && recordVarTypes.has(someBind);
@@ -2246,9 +2251,9 @@ export function emitWATExpr(
         return [
           `(block (result i32)`,
           `  (local.set ${scratch} ${subjectWat})`,
-          `  (if (result i32) (i32.lt_s (local.get ${scratch}) (i32.const 0))`,
+          `  (if (result i32) (call $host___option_is_none_v2 (local.get ${scratch}))`,
           `    (then ${noneWat})`,
-          `    (else ${someWat})`,
+          `    (else (block (result i32) (local.set ${valueLocal} (call $host___option_value_v2 (local.get ${scratch}))) ${someWat}))`,
           `  )`,
           `)`,
         ].join("\n");
@@ -2337,14 +2342,14 @@ export function emitWATExpr(
         ].join("\n");
       }
       if (innerType === "Option" || innerType?.startsWith("Option<")) {
-        // Sentinel ABI (wasm-runtime.ts): None = negative, Some(v) = v (>= 0). None ⇒
-        // (return -1) [the None sentinel]; Some ⇒ the scratch value itself.
+        // Registry ABI: None = -1; Some is a handle. None propagates unchanged; Some unwraps
+        // through the host registry so negative payloads remain valid values.
         return [
           `(block (result i32)`,
           `  (local.set ${scratch} ${innerWat})`,
-          `  (if (i32.lt_s (local.get ${scratch}) (i32.const 0))`,
-          `    (then (return (i32.const -1))))`,
-          `  (local.get ${scratch})`,
+          `  (if (call $host___option_is_none_v2 (local.get ${scratch}))`,
+          `    (then (return (local.get ${scratch}))))`,
+          `  (call $host___option_value_v2 (local.get ${scratch}))`,
           `)`,
         ].join("\n");
       }
@@ -2815,12 +2820,9 @@ function emitBlockStatements(
           return p === "_" || p === "else" || p === "default";
         });
 
-        // ── Option<T> match: None / Some(x) sentinel dispatch (#160) ──────────
-        // Host convention (P9): None is encoded as a negative i32 sentinel (-1);
-        // Some(v) as the value itself (v >= 0). String.charAt() returns this
-        // directly. So `match opt { None => …, Some(c) => … }` lowers to:
-        //   (local.set $scratch <subject>)
-        //   (if (i32.lt_s $scratch 0) (then <None body>) (else <Some body, c=$scratch>))
+        // ── Option<T> match: registry-handle dispatch ────────────────────────
+        // None is the sole -1 wire value; Some is a handle whose payload is read
+        // through the host registry. Raw array iteration remains on __array_get.
         // Previously `None` was mis-treated as an unconditional default arm, so the
         // None body fired every iteration (tokenize emitted a lone Eof). The `Some`
         // binding is the arm's leading identifier child; the body is the LAST child.
@@ -2839,9 +2841,11 @@ function emitBlockStatements(
           const someBindType = optionInnerType(inferExprType(matchSubject));
 
           // Evaluate the subject once into a scratch local so it can be both tested
-          // (sign check) and bound (Some value). Negative ⇒ None, else ⇒ Some.
+          // and bound. Presence is explicit; a negative payload is still Some.
           const scratch = `$__fungi_match_${labelCounter.n++}`;
+          const valueLocal = `$__fungi_match_${labelCounter.n++}`;
           localDecls.push(`(local ${scratch} i32)`);
+          localDecls.push(`(local ${valueLocal} i32)`);
           bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
 
           const emitArm = (arm: AstNode | undefined, bind?: string): string[] => {
@@ -2854,7 +2858,7 @@ function emitBlockStatements(
             const hadType = bind !== undefined && recordVarTypes !== null && recordVarTypes.has(bind);
             const prevType = bind !== undefined ? recordVarTypes?.get(bind) : undefined;
             if (bind !== undefined) {
-              vars.set(bind, scratch);
+              vars.set(bind, valueLocal);
               if (recordVarTypes !== null && someBindType !== undefined) recordVarTypes.set(bind, someBindType);
             }
             emitBlockStatements(body, vars, localDecls, lines, labelCounter, true, staticConsts);
@@ -2876,11 +2880,12 @@ function emitBlockStatements(
           const someLines = someSrc !== undefined ? emitArm(someSrc, someBind)
             : ["(unreachable) (; RD-0240: Option match missing Some arm and wildcard — fail-closed ;)"];
 
-          bodyLines.push(`(if (i32.lt_s (local.get ${scratch}) (i32.const 0))`);
+          bodyLines.push(`(if (call $host___option_is_none_v2 (local.get ${scratch}))`);
           bodyLines.push(`  (then`);
           for (const line of noneLines) bodyLines.push(`    ${line}`);
           bodyLines.push(`  )`);
           bodyLines.push(`  (else`);
+          bodyLines.push(`    (local.set ${valueLocal} (call $host___option_value_v2 (local.get ${scratch})))`);
           for (const line of someLines) bodyLines.push(`    ${line}`);
           bodyLines.push(`  )`);
           bodyLines.push(`)`);
@@ -4027,11 +4032,14 @@ export function buildWATModule(
     { module: "host", name: "__array_create",   effect: "stdlib.array", type: { params: [],                results: ["i32"] } },
     { module: "host", name: "__array_append",   effect: "stdlib.array", type: { params: ["i32", "i32"],   results: ["i32"] } }, // returns the array handle (#145a: `arr = arr.append(x)`)
     { module: "host", name: "__array_get",      effect: "stdlib.array", type: { params: ["i32", "i32"],   results: ["i32"] } },
+    { module: "host", name: "__array_get_option_v2", effect: "stdlib.array", type: { params: ["i32", "i32"], results: ["i32"] } },
     { module: "host", name: "__array_length",   effect: "stdlib.array", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__array_contains", effect: "stdlib.array", type: { params: ["i32", "i32"],   results: ["i32"] } },
     { module: "host", name: "__array_contains_str", effect: "stdlib.array", type: { params: ["i32", "i32"], results: ["i32"] } }, // value-based Array<String> membership (#160)
     { module: "host", name: "__array_first",    effect: "stdlib.array", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__array_last",     effect: "stdlib.array", type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__array_first_option_v2", effect: "stdlib.array", type: { params: ["i32"], results: ["i32"] } },
+    { module: "host", name: "__array_last_option_v2", effect: "stdlib.array", type: { params: ["i32"], results: ["i32"] } },
     // String operations
     { module: "host", name: "__str_concat",     effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
     { module: "host", name: "__str_length",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
@@ -4042,7 +4050,9 @@ export function buildWATModule(
     { module: "host", name: "__result_tag",     effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } }, // #164: Ok→0 / Err→1
     { module: "host", name: "__result_value",   effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } }, // #164: unwrap payload
     { module: "host", name: "__str_char_at",    effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
+    { module: "host", name: "__str_char_at_option_v2", effect: "stdlib.string", type: { params: ["i32", "i32"], results: ["i32"] } },
     { module: "host", name: "__str_to_int",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__str_to_int_option_v2", effect: "stdlib.string", type: { params: ["i32"], results: ["i32"] } },
     { module: "host", name: "__int_to_str",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__float_to_str",   effect: "stdlib.string", type: { params: ["f64"],          results: ["i32"] } },
     { module: "host", name: "__str_eq",         effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
@@ -4070,6 +4080,12 @@ export function buildWATModule(
     { module: "host", name: "__unwrap_or",      effect: "stdlib.result", type: { params: ["i32", "i32"],  results: ["i32"] } },
     { module: "host", name: "__option_some",    effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__option_none",    effect: "stdlib.result", type: { params: [],               results: ["i32"] } },
+    { module: "host", name: "__unwrap_or_v2",   effect: "stdlib.result", type: { params: ["i32", "i32"],  results: ["i32"] } },
+    { module: "host", name: "__option_some_v2", effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__option_none_v2", effect: "stdlib.result", type: { params: [],               results: ["i32"] } },
+    { module: "host", name: "__option_is_some_v2", effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__option_is_none_v2", effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__option_value_v2",   effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
   ];
   // NOTE: HOST_RUNTIME_IMPORTS are merged AFTER function bodies are built (below),
   // and only the bridge functions actually referenced by a body are added. Pure
