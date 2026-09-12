@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 role inventory completion - 2026-09-12
+
+- [x] Finish the package-role inventory at exact `main` HEAD
+  `19195609b3fcf72c835eca7c5ebb48e401870144` / tree
+  `a2f29d30a38d7e9ab98d46a58c39358e956b8a4b`. All 100 `packages-ts` manifests
+  are assigned exactly once across product/runtime Fungi candidates (20),
+  compiler/bootstrap retained TypeScript (11), development/build/test/CI
+  retained TypeScript (20), mixed symbol/path scope (14), and host,
+  extension, research or compatibility retained (35).
+- [x] Record the non-authorizing role map and native boundary inventory in
+  [`docs/reports/2026-09-12-selective-conversion-role-inventory.md`](reports/2026-09-12-selective-conversion-role-inventory.md)
+  with the machine-readable receipt
+  `docs/independent-audits/2026-09-12-rd0873-role-inventory-v1.json`.
+- [!] Treat package labels as routing defaults only. Mixed packages require
+  named file/symbol scope; TypeScript shadows, compiler/tooling/CI code and
+  Rust/VOK/native owners remain retained. This step did not read the queue,
+  rerun PROJECT assurance, author `.fungi`, switch consumers or grant
+  SLIDE/VOK authority.
+
 ### RD-0873 housekeeping owner disposition - 2026-09-12
 
 - [x] Resolve the missing owner-decision prerequisite for the prior

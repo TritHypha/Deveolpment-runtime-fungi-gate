@@ -1,0 +1,199 @@
+{
+  "schema": "galerina.role-inventory.v1",
+  "status": "ROLE_INVENTORY_NON_AUTHORING",
+  "authorizing": false,
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "19195609b3fcf72c835eca7c5ebb48e401870144",
+    "tree": "a2f29d30a38d7e9ab98d46a58c39358e956b8a4b"
+  },
+  "method": {
+    "packageManifestCount": 100,
+    "inputs": [
+      "packages-ts/*/package.json",
+      "packages-ts package descriptions, entry points and declared scripts",
+      "docs/plans/2026-09-11-selective-fungi-conversion-scope.md",
+      "bounded native/VOK path inventory",
+      "root scripts, tests, examples and .github/workflows path roles"
+    ],
+    "queueRead": false,
+    "projectCorpusAssurance": false,
+    "sourceAuthoring": false,
+    "packageCoverage": "exactly once"
+  },
+  "roleDecisions": {
+    "productRuntimeFungiCandidates": {
+      "count": 20,
+      "packages": [
+        "ai",
+        "ai-agent",
+        "ai-neural",
+        "core-compute",
+        "core-config",
+        "core-economics",
+        "core-logic",
+        "core-reports",
+        "core-security",
+        "core-tasks",
+        "core-vector",
+        "data",
+        "data-json",
+        "data-model",
+        "data-response",
+        "data-reports",
+        "inference-bridge-contract",
+        "substrate-math",
+        "tower-citizen",
+        "tri-regex"
+      ],
+      "disposition": "symbol-scoped candidate; retain TypeScript shadow"
+    },
+    "compilerBootstrapRetainedTypeScript": {
+      "count": 11,
+      "packages": [
+        "core",
+        "core-cli",
+        "core-compiler",
+        "core-runtime-wasm",
+        "target-ai-accelerator",
+        "target-cpu",
+        "target-gpu",
+        "target-js",
+        "target-native",
+        "target-photonic",
+        "target-wasm"
+      ],
+      "disposition": "retain compiler, lowering, target and bootstrap implementation"
+    },
+    "developmentBuildTestCiRetainedTypeScript": {
+      "count": 20,
+      "packages": [
+        "devtools-context",
+        "devtools-flowgraph",
+        "devtools-fungi-scan",
+        "devtools-graph-algorithms",
+        "devtools-graph-project",
+        "devtools-hypha",
+        "devtools-impact",
+        "devtools-intelligence",
+        "devtools-kb-graph",
+        "devtools-naming",
+        "devtools-package-graph",
+        "devtools-pci",
+        "devtools-project-graph",
+        "devtools-provenance",
+        "devtools-security",
+        "docs",
+        "registry",
+        "test",
+        "tools-benchmark",
+        "tools-myco"
+      ],
+      "disposition": "retain JS/TS orchestration and assurance role"
+    },
+    "mixedProductRuntimeAndHostBoundary": {
+      "count": 14,
+      "packages": [
+        "ai-lowbit",
+        "auth",
+        "core-network",
+        "core-photonic",
+        "core-runtime",
+        "core-sentinel-egress",
+        "core-sentinel-io",
+        "core-sentinel-memory",
+        "core-sentinel-power",
+        "core-sentinel-state",
+        "core-sentinel-time",
+        "framework-app-kernel",
+        "governance-telemetry",
+        "observability"
+      ],
+      "disposition": "split at symbol/path scope; host effects and authority remain retained"
+    },
+    "hostExtensionResearchCompatibilityRetained": {
+      "count": 35,
+      "packages": [
+        "api-protocol-rest",
+        "ai-neuromorphic",
+        "cpu-kernels",
+        "data-archive",
+        "data-database",
+        "data-db",
+        "data-html",
+        "data-pipeline",
+        "data-query",
+        "data-search",
+        "db-firestore",
+        "db-mysql",
+        "db-opensearch",
+        "db-postgres",
+        "db-sqlite",
+        "devtools-benchmarks",
+        "devtools-wasmtime-oracle",
+        "ext-bridge-bitnet",
+        "ext-bridge-cpp",
+        "ext-photonic-emulator",
+        "ext-proof-snarkjs",
+        "ext-secrets-spore",
+        "ext-secrets-vault",
+        "ext-spore",
+        "ext-tritsocket",
+        "framework-api-server",
+        "framework-example-app",
+        "hardware-tier",
+        "tri-pipe",
+        "web",
+        "web-components",
+        "web-events",
+        "web-render",
+        "web-router",
+        "web-state"
+      ],
+      "disposition": "retain owning adapter, research, compatibility or host-facing implementation"
+    }
+  },
+  "nativeBoundaries": [
+    {
+      "path": "packages-ts/galerina-core-runtime/native/vok-authority/",
+      "observed": "7 Rust files",
+      "disposition": "retain VOK authority"
+    },
+    {
+      "path": "packages-ts/galerina-framework-app-kernel/native/registry-durability/",
+      "observed": "19 Rust files",
+      "disposition": "retain native registry durability"
+    },
+    {
+      "path": "packages-ts/galerina-devtools-benchmarks/",
+      "observed": "21 Rust and 7 C++ files",
+      "disposition": "retain benchmark/native fixtures"
+    },
+    {
+      "path": "packages-ts/galerina-devtools-wasmtime-oracle/",
+      "observed": "55 Rust, 2 C, 4 headers and 32 WASM fixtures",
+      "disposition": "retain oracle and fixtures"
+    },
+    {
+      "path": "scripts/native/requirement-launcher/",
+      "observed": "4 Rust files",
+      "disposition": "retain host launcher"
+    },
+    {
+      "path": "scripts/native/process-warden/",
+      "observed": "1 Rust file",
+      "disposition": "retain host warden"
+    },
+    {
+      "path": "scripts/native/process-tree-observer/",
+      "observed": "4 Rust files",
+      "disposition": "retain host observer"
+    }
+  ],
+  "retentionRules": [
+    "Every TypeScript source remains a differential shadow.",
+    "Root scripts, .github/workflows, tests, examples, build recipes and generated/index surfaces remain JS/TS tooling.",
+    "Native/Rust/VOK, browser, database, process, network, secret and external-service effects stay at their owning boundary.",
+    "A later admission must name exact files/symbols, twin, profile and limits; this receipt cannot authorize it."
+  ]
+}

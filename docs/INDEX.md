@@ -26,7 +26,7 @@
 | [`plans/`](plans/INDEX.md) | 1 |
 | [`platform-handover/`](platform-handover/INDEX.md) | 13 |
 | [`reference/`](reference/INDEX.md) | 10 |
-| [`reports/`](reports/INDEX.md) | 1130 |
+| [`reports/`](reports/INDEX.md) | 1131 |
 | [`research/`](research/INDEX.md) | 1 |
 | [`research-prompts/`](research-prompts/INDEX.md) | 15 |
 | [`rules/`](rules/INDEX.md) | 11 |

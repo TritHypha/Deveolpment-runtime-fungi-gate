@@ -3,6 +3,27 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 selective conversion role inventory - 2026-09-12
+
+The package-role map is complete at exact `main` HEAD
+`19195609b3fcf72c835eca7c5ebb48e401870144` / tree
+`a2f29d30a38d7e9ab98d46a58c39358e956b8a4b`. All 100 `packages-ts` manifests
+are assigned exactly once: 20 product/runtime Fungi candidates, 11 compiler
+and bootstrap packages retained in TypeScript, 20 development/build/test/CI
+packages retained in TypeScript, 14 mixed packages requiring symbol/path
+review, and 35 host, extension, research or compatibility packages retained
+with their owners.
+
+The detailed non-authorizing map is
+[`docs/reports/2026-09-12-selective-conversion-role-inventory.md`](reports/2026-09-12-selective-conversion-role-inventory.md)
+and its receipt is
+`docs/independent-audits/2026-09-12-rd0873-role-inventory-v1.json`. Native
+Rust/VOK paths, root scripts, workflows, tests, examples and generated/index
+surfaces are explicitly retained. Every TypeScript source remains a
+differential shadow. The inventory guides future bounded admissions; it does
+not authorize package-wide replacement, queue promotion, consumer switching,
+corpus assurance or production authority.
+
 ## RD-0873 housekeeping owner disposition - 2026-09-12
 
 The prior read-only housekeeping refusal now has an explicit owner
