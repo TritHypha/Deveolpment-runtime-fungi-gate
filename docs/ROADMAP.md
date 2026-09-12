@@ -13,8 +13,10 @@ complete machine-readable scanner result instead of the former 60-finding
 human display. Retention contract tests pass 5/5 and component-health readiness
 tests pass 2/2; the real gate passes 19/19
 bounded-cache regressions and scans 138 source files with zero new findings.
-The dynamic cross-platform nightly/release stage remains separate and
-unscheduled. This item does not authorize translation, PROJECT reruns,
+The governed closure build completes for 15 packages, and hosted run
+`34688917949` passes for implementation commit
+`7b4006db8ce77af39e7a9840a9e184699233b868`. The dynamic cross-platform
+nightly/release stage remains separate and unscheduled. This item does not authorize translation, PROJECT reruns,
 consumer switching, TypeScript retirement or `.gate` work.
 
 ## Active selective conversion - 2026-09-12
