@@ -12,6 +12,18 @@ counts or open items that a newer section explicitly supersedes.
 - [!] This receipt is non-authorizing. A fresh exact-head owner admission naming a non-empty new source scope and limits is still required before authoring. Receipt: `docs/independent-audits/2026-09-12-rd0873-current-head-role-reconciliation-v1.json`.
 - [!] The owner-ready exact-head request is `docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v2.json`; it remains non-authorizing until explicitly admitted.
 
+### RD-0873 exact-head packet successor - 2026-09-12
+
+- [x] Rebind the five-symbol request to committed `main` head
+  `0510aed4f4cb8a72c6820b28ee976d7bd4288404` / tree
+  `b747b04baa6b3a86257a5a9cc45f7fd6fae68060` after the graph-only successor.
+- [x] Confirm the external navigation index is fresh at that exact head:
+  78,251 nodes and 203,590 edges. This remains navigation evidence only.
+- [!] Keep the packet non-authorizing until the owner explicitly admits this
+  exact five-symbol scope and its one-symbol sequential limits; keep
+  `isBuiltin` and `validateTransition` excluded. Packet:
+  `docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v3.json`.
+
 ### Selective conversion: Float64 Option ABI repair - 2026-09-12
 
 - [x] Repair the bounded Float/Float64/Double Option lane in the compiler and

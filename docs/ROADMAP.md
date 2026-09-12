@@ -10,6 +10,19 @@ The selective conversion role map was rechecked at `main` head `f61312b9f919d2e7
 This is routing evidence only. Waves 3-4 and the two held dev-tools symbols remain closed, and no new source, queue promotion, consumer switch, TypeScript retirement, production authority or corpus rerun is claimed. Receipt: `docs/independent-audits/2026-09-12-rd0873-current-head-role-reconciliation-v1.json`.
 The owner-ready exact-head request is recorded in `docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v2.json`; it remains non-authorizing until explicitly admitted.
 
+### RD-0873 exact-head packet successor - 2026-09-12
+
+The graph-refresh successor is committed at `main` head
+`0510aed4f4cb8a72c6820b28ee976d7bd4288404` / tree
+`b747b04baa6b3a86257a5a9cc45f7fd6fae68060`. It changes evidence identity only;
+the role map, queue counts and five-symbol scope are unchanged. The external
+navigation index is fresh at this head with 78,251 nodes and 203,590 edges.
+The exact five-symbol request is rebound in
+`docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v3.json`.
+It remains non-authorizing pending an exact owner admission; no new source,
+queue promotion, consumer switch, TypeScript retirement or corpus rerun is
+claimed.
+
 ## RD-0873 existing scalar-twin product-path relocation - 2026-09-12
 
 The five existing Wave 1-4 scalar Fungi twins now live under the native

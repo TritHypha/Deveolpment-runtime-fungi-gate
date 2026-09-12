@@ -16,6 +16,17 @@ The product tree contains 20 `.fungi` assets, the queue remains 1,605 rows with 
 
 The current-head receipt is `docs/independent-audits/2026-09-12-rd0873-current-head-role-reconciliation-v1.json`.
 
+### Graph-refresh successor
+
+After the graph-only documentation refresh, the current committed head is
+`0510aed4f4cb8a72c6820b28ee976d7bd4288404` / tree
+`b747b04baa6b3a86257a5a9cc45f7fd6fae68060`. The role decisions, product count,
+queue state and held symbols are unchanged. The external navigation index is
+fresh at this exact head with 78,251 nodes and 203,590 edges. The five-symbol
+request is rebound by
+`docs/independent-audits/2026-09-12-rd0873-current-head-authoring-release-request-v3.json`;
+it remains non-authorizing and does not begin source authoring.
+
 ## Evidence used
 
 - The earlier full code graph receipt remains historical evidence for its
