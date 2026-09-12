@@ -40,6 +40,11 @@ counts or open items that a newer section explicitly supersedes.
   active-object/alias, hostile or sparse container semantics and production
   admission. This bounded repair does not close the generic Option ABI or
   authorize a consumer switch.
+- [ ] Repair proposal prepared for the existing `validateAgentLimits` candidate:
+  add a path-taking helper plus the default-path wrapper, preserving all five
+  ordered diagnostics and optional-value behavior. It remains non-authorizing
+  pending a fresh exact-head admission; see
+  `docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-proposal.json`.
 
 ### Selective conversion: first chapter repairs - 2026-09-12
 

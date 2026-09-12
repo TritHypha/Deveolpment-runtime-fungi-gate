@@ -38,6 +38,13 @@ work is host marshalling, sparse or hostile behavior, physical admission and
 the intentionally retained compiler/tooling boundaries; no duplicate vector
 translation is planned.
 
+The next bounded repair proposal targets the existing `validateAgentLimits`
+candidate only: a path-taking helper with a default-path wrapper, preserving
+the five ordered diagnostics and optional values. It is recorded as
+non-authorizing evidence in
+`docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-proposal.json`
+and still needs fresh exact-head owner admission before the candidate is edited.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)

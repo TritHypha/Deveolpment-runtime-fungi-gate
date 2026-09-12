@@ -1,0 +1,75 @@
+{
+  "schema": "galerina.rd0873-agent-limits-custom-path-proposal.v2",
+  "generatedAt": "2026-09-12T03:58:34.114Z",
+  "status": "PROPOSAL_NON_AUTHORIZING_EXISTING_CANDIDATE_REPAIR",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "fea1616abc1b4fde3feb8eaad90e903d6f6c03e7",
+    "tree": "a38472d68db1d7a0f7c6e35781a56be8f71d089c"
+  },
+  "scope": {
+    "product": "galerina-ai-agent",
+    "sourceSymbol": "validateAgentLimits",
+    "candidate": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+    "operation": "REPAIR_EXISTING_CANDIDATE_CUSTOM_PATH_PARITY",
+    "proposedShape": [
+      "add a path-taking pure helper for the existing five ordered checks",
+      "retain validateAgentLimits(limits) as a default-path wrapper using limits",
+      "preserve Option<AgentLimitValue> payload representation and all diagnostic codes/messages/order",
+      "do not change the TypeScript oracle or any consumer"
+    ]
+  },
+  "sourceEvidence": [
+    {
+      "path": "packages-ts/galerina-ai-agent/src/index.ts",
+      "sha256": "sha256:4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+      "bytes": 12166
+    },
+    {
+      "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+      "sha256": "sha256:07f3ed4a3c46ac70282fe22b1f4f883933681df2a80717dfccf472a7ec0f4563",
+      "bytes": 2674
+    },
+    {
+      "path": "packages-ts/galerina-core-compiler/tests/wat-agent-definition-parity.test.mjs",
+      "sha256": "sha256:9117886785ad75cf2459773a4578084226d743fcc1c21179f80a53c7f52a2193",
+      "bytes": 6034
+    }
+  ],
+  "evidence": {
+    "retainedOracle": "validateAgentLimits(limits, path = limits) interpolates the supplied path in all five diagnostic paths; explicit empty paths are preserved.",
+    "existingCandidate": "The Fungi twin hardcodes limits.* paths and currently proves only the default path.",
+    "existingChecks": "The retained AI-agent package suite passes 22/22, including the custom-path oracle check; existing candidate parity vectors cover the default path."
+  },
+  "requiredVectors": [
+    "omitted/default path",
+    "explicit default path",
+    "definition.limits path prefix",
+    "explicit empty path",
+    "all five diagnostics in source order for each prefix",
+    "absent and present optional values, including negative and fractional values"
+  ],
+  "limits": {
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "chapterAggregation": "after AI-agent package chapter completes"
+  },
+  "boundaries": {
+    "newFungiSource": false,
+    "existingFungiRewrite": "proposed only; requires fresh exact-head owner admission",
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "physicalSlideVokAdmission": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Keep the repair proposal non-authorizing until the owner supplies a fresh exact-head admission naming this candidate and its limits. The generic Option ABI, host object behavior and production admission remain separate gates."
+}
