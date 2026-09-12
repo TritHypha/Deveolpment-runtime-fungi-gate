@@ -28,7 +28,9 @@ record VectorDiagnostic {
 pure flow isPositiveSafeInteger(value: Float64) -> Bool
 contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
 {
-  if value != value { return false }
+  // Classify raw ingress before ordering; ±Infinity must become the same typed
+  // validation failure as NaN instead of tripping the global ordering guard.
+  if Float64.isFinite(value) == false { return false }
   if value <= 0.0 { return false }
   if value >= 9007199254740992.0 { return false }
   let rendered: String = value.toString()

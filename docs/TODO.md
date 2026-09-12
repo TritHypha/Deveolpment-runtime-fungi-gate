@@ -51,14 +51,16 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Translate `createVectorReport` as a bounded native product core. Six WASM
   differential vectors preserve explicit optional-list defaults, operation then
   tensor diagnostic order, and the warning projection.
-- [x] Translate `defineVectorType` as a bounded native product core. Eight WASM
+- [x] Translate `defineVectorType` as a bounded native product core. Ten WASM
   differential vectors preserve successful construction, exact joined throw text,
-  diagnostic order, and safe-integer boundaries. The typed Result is candidate-only;
-  the retained TypeScript adapter still owns Error projection and non-finite host mapping.
-- [!] Astra independent review holds `defineVectorType` on the non-finite boundary:
-  `±Infinity` traps in the compiled Fungi path while the TypeScript oracle returns
-  the lane validation Error. Repair the execution/adapter mapping before parity or
-  consumer admission is claimed; the review receipt is in `docs/independent-audits/`.
+  diagnostic order, safe-integer boundaries and `±Infinity` lane failures. The
+  typed Result is candidate-only; the retained TypeScript adapter still owns Error
+  projection and public object/alias behavior.
+- [x] Repair the non-finite ingress boundary with a raw `Float64.isFinite`
+  classifier. Interpreter and WASM agree on finite, signed-zero, max-finite, NaN
+  and both infinities; runtime errors propagate and malformed classifier inputs
+  refuse. Astra's scoped receipt records 25 focused, 39 independent and 220
+  constructor checks under `docs/independent-audits/`.
 - [!] The post-commit external graph refresh reports `indexed` but remains bound to
   `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current `8b65d9b96`; the new
   Fungi symbol is absent from graph search. Treat the graph as navigation-only

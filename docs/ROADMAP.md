@@ -39,11 +39,13 @@ dimension records.
 The vector report candidate makes optional lists explicit, aggregates vector
 diagnostics before tensor diagnostics, and preserves warning projection order.
 The vector construction candidate now returns a typed `Result<VectorType, String>`
-with eight WASM vectors preserving successful values and exact joined constructor
-failure text. Error projection, aliases and non-finite host mapping remain open.
-Astra's independent review is retained as HOLD because `±Infinity` traps in the
-compiled path instead of reaching the typed failure; the review receipt is under
-`docs/independent-audits/` and must be resolved before semantic parity is claimed.
+with ten WASM vectors preserving successful values, exact joined constructor
+failure text and `±Infinity` lane failures. A raw `Float64.isFinite` ingress
+classifier repairs the prior non-finite boundary while preserving the global
+arithmetic and ordering guards. Astra's scoped review passes 25 focused checks,
+39 independent checks and 220 constructor cases; the review receipt is under
+`docs/independent-audits/`. Error projection, aliases and consumer admission
+remain separate obligations.
 The same post-commit refresh reported `indexed` at the older build point
 `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, while `main` is `8b65d9b96`; graph
 search does not find the new symbol. It remains navigation-only pending owner

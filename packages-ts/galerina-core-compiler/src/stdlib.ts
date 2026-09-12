@@ -1140,6 +1140,16 @@ function numericStatic(receiver: string, method: string, args: readonly Galerina
       const n = parseFloat(strVal(args[0] ?? FUNGI_VOID));
       return !Number.isFinite(n) ? err("ParseError: not a valid finite float") : ok({ __tag: "float", value: n });
     }
+    case "Float.isFinite":
+    case "Float64.isFinite":
+    case "Double.isFinite": {
+      const value = args[0];
+      if (value?.__tag === "runtimeError") return value;
+      if (value === undefined || (value.__tag !== "int" && value.__tag !== "float")) {
+        return { __tag: "runtimeError", message: "InvalidFloatClassifierInput" };
+      }
+      return { __tag: "bool", value: Number.isFinite(value.value) };
+    }
     case "Decimal.parse": {
       const s = strVal(args[0] ?? FUNGI_VOID);
       const n = parseFloat(s);

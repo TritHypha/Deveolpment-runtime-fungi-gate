@@ -181,16 +181,16 @@ candidate core without a consumer switch or checked admission artifact.
 `packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi`.
 The candidate keeps the JavaScript Number lane contract as `Float64`, validates
 the same element-type and lane rules, and returns `Result<VectorType, String>`.
-Eight WASM vectors compare successful construction and exact joined diagnostic
-messages against the retained TypeScript constructor, including both-invalid and
-safe-integer-boundary inputs. The typed result is an internal candidate boundary:
-a future host adapter must project `Err` to the source `Error`, preserve object
-alias behavior, and define non-finite input mapping before consumer admission.
-No checked admission artifact or runtime consumer switch is claimed.
-Astra's independent matrix returned HOLD: 200/220 cases passed, while both `±Infinity`
-cases trapped before the typed failure could be returned. The receipt and probe are
-stored under `docs/independent-audits/`; non-finite execution mapping remains a
-required repair before this constructor can be called semantically complete.
+Ten WASM vectors compare successful construction and exact joined diagnostic
+messages against the retained TypeScript constructor, including both-invalid,
+safe-integer-boundary and `±Infinity` inputs. A raw `Float64.isFinite` ingress
+classifier now runs before ordering and leaves the global non-finite guards intact.
+The typed result is an internal candidate boundary: a future host adapter must
+project `Err` to the source `Error` and preserve object alias behavior before
+consumer admission. Astra's scoped repair review passes 25 focused checks, 39
+independent checks and 220 constructor cases; its receipt and probe are stored
+under `docs/independent-audits/`. No checked admission artifact or runtime
+consumer switch is claimed.
 
 The tensor validator is also stored at
 `packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi`.

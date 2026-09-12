@@ -16,12 +16,17 @@ const vectors = [
   { name: "both constructor inputs invalid", elementType: "", lanes: 1.5 },
   { name: "largest safe integer", elementType: "Float64", lanes: 9007199254740991 },
   { name: "one past largest safe integer", elementType: "Float64", lanes: 9007199254740992 },
+  { name: "positive infinity", elementType: "Float64", lanes: Number.POSITIVE_INFINITY },
+  { name: "negative infinity", elementType: "Float64", lanes: Number.NEGATIVE_INFINITY },
 ];
 
 const str = JSON.stringify;
 
 function sourceFor(vector, index) {
-  const laneLiteral = Number.isInteger(vector.lanes) ? `${vector.lanes}.0` : `${vector.lanes}`;
+  const parameterized = !Number.isFinite(vector.lanes);
+  const laneLiteral = Number.isFinite(vector.lanes)
+    ? (Number.isInteger(vector.lanes) ? `${vector.lanes}.0` : `${vector.lanes}`)
+    : "lanes";
   const expected = (() => {
     try {
       const value = defineVectorType(vector.elementType, vector.lanes);
@@ -42,7 +47,7 @@ function sourceFor(vector, index) {
       return true`;
 
   return `
-pure flow probe${index}() -> Bool
+pure flow probe${index}(${parameterized ? "lanes: Float64" : ""}) -> Bool
 contract { intent { "Compare typed vector construction with the retained TypeScript throw oracle." } }
 {
   let result: Result<VectorType, String> = defineVectorType(${str(vector.elementType)}, ${laneLiteral})
@@ -73,6 +78,7 @@ test("defineVectorType Fungi core preserves construction and throw outcomes", { 
   for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
   const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
   for (let i = 0; i < vectors.length; i++) {
-    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+    const args = Number.isFinite(vectors[i].lanes) ? [] : [vectors[i].lanes];
+    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](...args), 1));
   }
 });

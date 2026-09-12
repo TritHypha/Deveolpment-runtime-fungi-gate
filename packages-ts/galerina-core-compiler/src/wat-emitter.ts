@@ -1127,6 +1127,24 @@ const FLOAT_CHECKED_HELPERS: Readonly<Record<string, string>> = {
   ].join("\n"),
 };
 
+/**
+ * Raw Float64 ingress classifier. Unlike the checked arithmetic/comparison
+ * helper above, this deliberately does not trap: it reports whether one
+ * already-received f64 is finite before ordinary Fungi validation performs an
+ * ordering operation. The argument is evaluated once by the call site and no
+ * non-finite value is constructed as an ordinary language value.
+ */
+const FLOAT_CLASSIFIER_HELPERS: Readonly<Record<string, string>> = {
+  $fungi_is_finite_f64: [
+    "(func $fungi_is_finite_f64 (param $v f64) (result i32)",
+    "  ;; NaN fails equality with itself; abs(±Inf) is greater than the largest finite f64.",
+    "  (i32.and",
+    "    (f64.eq (local.get $v) (local.get $v))",
+    "    (f64.le (f64.abs (local.get $v)) (f64.const 1.7976931348623157e+308)))",
+    ")",
+  ].join("\n"),
+};
+
 // W5a K3 verdict helpers (2026-07-08): lattice min/max over i32 trits.
 // Lattice: DENY(-1) < UNKNOWN(0) < ALLOW(+1).
 //
@@ -1161,7 +1179,7 @@ const K3_HELPERS: Readonly<Record<string, string>> = {
 
 // All strict-trapping checked helpers (i32 + i64 overflow, f64 non-finite), injected on-demand when a flow
 // body references one.
-const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_HELPERS, ...INT64_CHECKED_HELPERS, ...UINT64_CHECKED_HELPERS, ...FLOAT_CHECKED_HELPERS, ...K3_HELPERS };
+const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_HELPERS, ...INT64_CHECKED_HELPERS, ...UINT64_CHECKED_HELPERS, ...FLOAT_CHECKED_HELPERS, ...FLOAT_CLASSIFIER_HELPERS, ...K3_HELPERS };
 
 // ---------------------------------------------------------------------------
 // P9.3 — Stdlib method → host import bridge
@@ -1400,7 +1418,7 @@ function inferExprType(node: AstNode | undefined): string | undefined {
         if (name === "codePoint" || name === "length" || name === "charCount" ||
             name === "indexOf" || name === "lastIndexOf" || name === "toInt" ||
             name === "bitAnd" || name === "bitOr") return "Int";
-        if (name === "isLetter" || name === "isDigit" || name === "isUpper" || name === "isLower" ||
+        if (name === "isFinite" || name === "isLetter" || name === "isDigit" || name === "isUpper" || name === "isLower" ||
             name === "isWhitespace" || name === "contains" || name === "startsWith" || name === "endsWith") return "Bool";
         if (name === "charAt") return "Option<Char>";
         // unwrapOr(default) yields the default's type — the cleanest way to thread the
@@ -1910,8 +1928,18 @@ export function emitWATExpr(
         // Resolve the *real* receiver: static-form calls (Char.toString(c)) name the
         // type as the receiver, so the actual value is the first argument.
         const recvName0 = receiverNode?.kind === "identifier" ? (receiverNode.value ?? "") : "";
-        const isTypeRecv0 = recvName0 === "String" || recvName0 === "Int" || recvName0 === "Char" || recvName0 === "Array";
+        const isTypeRecv0 = recvName0 === "String" || recvName0 === "Int" || recvName0 === "Char" || recvName0 === "Array" ||
+          recvName0 === "Float" || recvName0 === "Float64" || recvName0 === "Double";
         const realReceiver = isTypeRecv0 ? argNodes[0] : receiverNode;
+
+        // A raw Float64 ingress may be non-finite even though ordinary Fungi
+        // float construction and ordering are fail-closed. Classify it before
+        // any guarded comparison so validators can project a typed diagnostic.
+        if (name === "isFinite" &&
+            (recvName0 === "Float" || recvName0 === "Float64" || recvName0 === "Double") &&
+            argNodes.length === 1) {
+          return `(call $fungi_is_finite_f64 ${emitWATExpr(argNodes[0]!, vars, staticConsts, "Float64")})`;
+        }
 
         // U1/DSS: Int.bitAnd / Int.bitOr → native i32.and / i32.or. The interpreter's BigInt fold
         // (stdlib.ts numericStatic) equals the sign-extended 32-bit bitwise op for EVERY
@@ -2010,7 +2038,8 @@ export function emitWATExpr(
           // receiver (String / Int / Char / Array) and drop it.
           const recvName = receiverNode?.kind === "identifier" ? (receiverNode.value ?? "") : "";
           const isTypeReceiver =
-            recvName === "String" || recvName === "Int" || recvName === "Char" || recvName === "Array";
+            recvName === "String" || recvName === "Int" || recvName === "Char" || recvName === "Array" ||
+            recvName === "Float" || recvName === "Float64" || recvName === "Double";
           const operandNodes = isTypeReceiver ? argNodes : children;
           const operandWats = operandNodes.map((c) => emitWATExpr(c, vars, staticConsts));
           return `(call ${hostFn} ${operandWats.join(" ")})`.trimEnd();
