@@ -38,8 +38,13 @@ export type OmniState =
   | "deferred"
   | "inconsistent";
 
-/** All states that are considered uncertain and map to review(). */
-export const OMNI_UNCERTAIN_STATES: ReadonlySet<OmniState> = new Set([
+/**
+ * Canonical uncertainty membership used by the classifier.
+ *
+ * Keep this table private so an exported compatibility collection cannot
+ * change the security-relevant classification or its downstream reason text.
+ */
+const OMNI_UNCERTAIN_VALUES: readonly OmniState[] = Object.freeze([
   "unknown",
   "partial_true",
   "partial_false",
@@ -47,6 +52,16 @@ export const OMNI_UNCERTAIN_STATES: ReadonlySet<OmniState> = new Set([
   "deferred",
   "inconsistent",
 ]);
+
+/**
+ * Legacy data export for callers that enumerate the uncertain states.
+ *
+ * @deprecated This collection is retained for compatibility only. Mutating it
+ * no longer changes `isOmniUncertain`; use the classifier for decisions.
+ */
+export const OMNI_UNCERTAIN_STATES: ReadonlySet<OmniState> = new Set(
+  OMNI_UNCERTAIN_VALUES,
+);
 
 /** All valid OmniState values. */
 export const OMNI_STATES: readonly OmniState[] = [
@@ -68,7 +83,7 @@ export function isOmniState(value: unknown): value is OmniState {
 }
 
 export function isOmniUncertain(state: OmniState): boolean {
-  return OMNI_UNCERTAIN_STATES.has(state);
+  return OMNI_UNCERTAIN_VALUES.includes(state);
 }
 
 export interface OmniEvidence {

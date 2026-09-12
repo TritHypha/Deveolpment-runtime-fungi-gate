@@ -45,7 +45,7 @@ describe("core-logic package-owned Fungi Omni uncertainty decision", () => {
         );
         assert.match(
           reference,
-          /export function isOmniUncertain\(state: OmniState\): boolean \{\s*return OMNI_UNCERTAIN_STATES\.has\(state\);\s*\}/u,
+          /export function isOmniUncertain\(state: OmniState\): boolean \{\s*return OMNI_UNCERTAIN_VALUES\.includes\(state\);\s*\}/u,
         );
       },
     });
