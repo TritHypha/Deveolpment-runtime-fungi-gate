@@ -48,6 +48,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Translate `validateTensorOperation` as a bounded native product core.
   Six WASM differential vectors preserve name, dense-input and output
   diagnostics, including empty, fractional and safe-integer dimensions.
+- [x] Translate `createVectorReport` as a bounded native product core. Six WASM
+  differential vectors preserve explicit optional-list defaults, operation then
+  tensor diagnostic order, and the warning projection.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

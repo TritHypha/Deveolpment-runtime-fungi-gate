@@ -1,0 +1,285 @@
+@version 1
+
+/// Bounded translation of createVectorReport from galerina-core-vector/src/index.ts.
+///
+/// Optional operation lists are explicit Option values at this pure core. Dense
+/// typed vector/tensor records are used for differential verification; the
+/// retained TypeScript function remains the compatibility oracle.
+
+record VectorDimension {
+  lanes: Float64
+}
+
+record VectorType {
+  elementType: String
+  dimension: VectorDimension
+}
+
+record TensorDimension {
+  value: Float64
+}
+
+record TensorShape {
+  dimensions: Array<TensorDimension>
+}
+
+record TensorType {
+  elementType: String
+  shape: TensorShape
+}
+
+record VectorOperation {
+  name: String
+  inputs: Array<VectorType>
+  output: VectorType
+}
+
+record TensorOperation {
+  name: String
+  inputs: Array<TensorType>
+  output: TensorType
+  pure: Bool
+}
+
+record VectorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+record VectorReport {
+  operations: Array<VectorOperation>
+  tensorOperations: Array<TensorOperation>
+  diagnostics: Array<VectorDiagnostic>
+  warnings: Array<String>
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if value != value { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow appendVectorTypeDiagnostics(
+  vector: VectorType,
+  path_: String,
+  diagnostics_: Array<VectorDiagnostic>,
+) -> Array<VectorDiagnostic>
+contract { intent { "Append vector shape diagnostics in source order." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = diagnostics_
+  if vector.elementType.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_ELEMENT_TYPE_REQUIRED",
+      severity: "error",
+      message: "Vector element type is required.",
+      path: path_ + ".elementType"
+    })
+  }
+  if isPositiveSafeInteger(vector.dimension.lanes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_LANES_INVALID",
+      severity: "error",
+      message: "Vector lane count must be a positive safe integer.",
+      path: path_ + ".dimension.lanes"
+    })
+  }
+  return diagnostics
+}
+
+pure flow appendTensorTypeDiagnostics(
+  tensor: TensorType,
+  path_: String,
+  diagnostics_: Array<VectorDiagnostic>,
+) -> Array<VectorDiagnostic>
+contract { intent { "Append tensor shape diagnostics in source order for a dense typed shape." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = diagnostics_
+  if tensor.shape.dimensions.count() == 0 {
+    return diagnostics.append({
+      code: "Galerina_TENSOR_DIMENSIONS_REQUIRED",
+      severity: "error",
+      message: "Tensor shape requires at least one dimension.",
+      path: path_ + ".shape.dimensions"
+    })
+  }
+
+  mut index: Int = 0
+  while index < tensor.shape.dimensions.count() {
+    let dimensionOpt: Option<TensorDimension> = tensor.shape.dimensions.get(index)
+    match dimensionOpt {
+      Some(dimension) => {
+        if isPositiveSafeInteger(dimension.value) == false {
+          diagnostics = diagnostics.append({
+            code: "Galerina_TENSOR_DIMENSION_INVALID",
+            severity: "error",
+            message: "Tensor dimensions must be positive safe integers.",
+            path: path_ + ".shape.dimensions." + index.toString()
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return diagnostics
+}
+
+pure flow appendVectorOperationDiagnostics(
+  operation: VectorOperation,
+  diagnostics_: Array<VectorDiagnostic>,
+) -> Array<VectorDiagnostic>
+contract { intent { "Append vector-operation diagnostics before the next operation or tensor report." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = diagnostics_
+  if operation.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_OPERATION_NAME_REQUIRED",
+      severity: "error",
+      message: "Vector operation requires a name.",
+      path: "operation.name"
+    })
+  }
+
+  mut hasShapeMismatch: Bool = false
+  mut index: Int = 0
+  while index < operation.inputs.count() {
+    let inputOpt: Option<VectorType> = operation.inputs.get(index)
+    match inputOpt {
+      Some(input) => {
+        let inputPath: String = "operation.inputs." + index.toString()
+        diagnostics = appendVectorTypeDiagnostics(input, inputPath, diagnostics)
+        if input.dimension.lanes != operation.output.dimension.lanes or input.elementType != operation.output.elementType {
+          hasShapeMismatch = true
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  diagnostics = appendVectorTypeDiagnostics(operation.output, "operation.output", diagnostics)
+  if hasShapeMismatch {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_OPERATION_SHAPE_MISMATCH",
+      severity: "error",
+      message: "Vector operation inputs must match the output element type and lane count.",
+      path: "operation.inputs"
+    })
+  }
+  return diagnostics
+}
+
+pure flow appendTensorOperationDiagnostics(
+  operation: TensorOperation,
+  diagnostics_: Array<VectorDiagnostic>,
+) -> Array<VectorDiagnostic>
+contract { intent { "Append tensor-operation diagnostics after vector operations in source order." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = diagnostics_
+  if operation.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_TENSOR_OPERATION_NAME_REQUIRED",
+      severity: "error",
+      message: "Tensor operation requires a name.",
+      path: "operation.name"
+    })
+  }
+
+  mut index: Int = 0
+  while index < operation.inputs.count() {
+    let inputOpt: Option<TensorType> = operation.inputs.get(index)
+    match inputOpt {
+      Some(input) => {
+        diagnostics = appendTensorTypeDiagnostics(
+          input,
+          "operation.inputs." + index.toString(),
+          diagnostics,
+        )
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return appendTensorTypeDiagnostics(operation.output, "operation.output", diagnostics)
+}
+
+pure flow createVectorReport(
+  operations_: Option<Array<VectorOperation>>,
+  tensorOperations_: Option<Array<TensorOperation>>,
+) -> VectorReport
+contract { intent { "Construct a deterministic vector report with explicit optional-list defaults and ordered diagnostics." } }
+{
+  mut operations: Array<VectorOperation> = Array.empty()
+  mut tensorOperations: Array<TensorOperation> = Array.empty()
+  match operations_ {
+    Some(rows) => { operations = rows }
+    None => {}
+    _ => {}
+  }
+  match tensorOperations_ {
+    Some(rows) => { tensorOperations = rows }
+    None => {}
+    _ => {}
+  }
+
+  mut diagnostics: Array<VectorDiagnostic> = Array.empty()
+  mut operationIndex: Int = 0
+  while operationIndex < operations.count() {
+    let operationOpt: Option<VectorOperation> = operations.get(operationIndex)
+    match operationOpt {
+      Some(operation) => {
+        diagnostics = appendVectorOperationDiagnostics(operation, diagnostics)
+      }
+      None => {}
+      _ => {}
+    }
+    operationIndex = operationIndex + 1
+  }
+
+  mut tensorOperationIndex: Int = 0
+  while tensorOperationIndex < tensorOperations.count() {
+    let operationOpt: Option<TensorOperation> = tensorOperations.get(tensorOperationIndex)
+    match operationOpt {
+      Some(operation) => {
+        diagnostics = appendTensorOperationDiagnostics(operation, diagnostics)
+      }
+      None => {}
+      _ => {}
+    }
+    tensorOperationIndex = tensorOperationIndex + 1
+  }
+
+  mut warnings: Array<String> = Array.empty()
+  mut diagnosticIndex: Int = 0
+  while diagnosticIndex < diagnostics.count() {
+    let diagnosticOpt: Option<VectorDiagnostic> = diagnostics.get(diagnosticIndex)
+    match diagnosticOpt {
+      Some(diagnostic) => {
+        if diagnostic.severity == "warning" {
+          warnings = warnings.append(diagnostic.message)
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    diagnosticIndex = diagnosticIndex + 1
+  }
+
+  return {
+    operations: operations,
+    tensorOperations: tensorOperations,
+    diagnostics: diagnostics,
+    warnings: warnings
+  }
+}

@@ -167,6 +167,14 @@ name, positive timeout and non-empty member list, including diagnostic order.
 The TypeScript implementation remains the oracle and no consumer switch or
 checked admission artifact is implied.
 
+The vector report core is stored at
+`packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi`.
+It makes the two JavaScript default lists explicit as `Option`, aggregates
+vector-operation diagnostics before tensor-operation diagnostics, and projects
+warning messages in source order. Six WASM vectors cover defaults, valid and
+invalid operations, mixed ordering and safe-integer boundaries. This remains a
+candidate core without a consumer switch or checked admission artifact.
+
 The tensor validator is also stored at
 `packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi`.
 It requires a non-empty dense dimension array and preserves source-order

@@ -36,6 +36,8 @@ the three structural diagnostics checked in source order.
 The core-vector candidates now include `validateTensorOperation`, preserving
 operation-name, input-order and output-order diagnostics over typed Float64
 dimension records.
+The vector report candidate makes optional lists explicit, aggregates vector
+diagnostics before tensor diagnostics, and preserves warning projection order.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 
