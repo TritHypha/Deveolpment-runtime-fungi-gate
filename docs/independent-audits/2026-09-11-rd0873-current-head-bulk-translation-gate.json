@@ -1,15 +1,15 @@
 {
   "schema": "galerina.rd0873.current-head-bulk-translation-gate.v1",
   "version": 1,
-  "date": "2026-09-11",
+  "date": "2026-09-12",
   "status": "HOLD_NON_AUTHORIZING",
   "authorizing": false,
   "purpose": "Bind the proposed first translation wave to the current exact main head without silently converting review approval into source-writing authority.",
   "auditedBuildIdentity": {
     "repository": "Galerina",
     "branch": "main",
-    "head": "65c1b3a5ec7cb10c7662236f984e275b0ce5114e",
-    "tree": "3c8635bbd8a2cd9dc1f29f6f905f370995518a82"
+    "head": "5873b8768ad2305b45e64a0ab25967ac574b5edb",
+    "tree": "241bbc2e4af3277d7ee3a7b7854a0612c5db03f4"
   },
   "queue": {
     "path": "build/conversion-queue/queue.json",
@@ -59,9 +59,18 @@
       }
     ],
     "heldSymbols": [
-      { "symbol": "isOmniUncertain", "reason": "exported runtime-mutable set remains a semantic HOLD" },
-      { "symbol": "isBuiltin", "reason": "physical profile remains a HOLD" },
-      { "symbol": "validateTransition", "reason": "two-input physical profile remains a HOLD" }
+      {
+        "symbol": "isOmniUncertain",
+        "reason": "exported runtime-mutable set remains a semantic HOLD"
+      },
+      {
+        "symbol": "isBuiltin",
+        "reason": "physical profile remains a HOLD"
+      },
+      {
+        "symbol": "validateTransition",
+        "reason": "two-input physical profile remains a HOLD"
+      }
     ],
     "reviewOnlyReason": "These four existing twins have bounded revalidation evidence, but no current-head owner authorization permits new Fungi source creation or consumer use."
   },

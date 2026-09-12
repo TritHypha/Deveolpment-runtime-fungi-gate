@@ -51,9 +51,20 @@ arithmetic and ordering guards. Astra's scoped review passes 25 focused checks,
 `docs/independent-audits/`. Error projection, aliases and consumer admission
 remain separate obligations.
 The same post-commit refresh reported `indexed` at the older build point
-`02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, while `main` is `8b65d9b96`; graph
-search does not find the new symbol. It remains navigation-only pending owner
-repair of the index build point.
+`02bdd12c2a7da713dfdbcd3b45dd885527c0423b`; `main` has since advanced to
+`5873b8768ad2305b45e64a0ab25967ac574b5edb`, and graph search still does not
+find the new symbol. It remains navigation-only pending owner repair of the
+index build point.
+
+## RD-0873 current-head gate refresh - 2026-09-12
+
+The non-authorizing bulk gate is rebound to exact `main` HEAD
+`5873b8768ad2305b45e64a0ab25967ac574b5edb` with tree
+`241bbc2e4af3277d7ee3a7b7854a0612c5db03f4`. Its four eligible existing scalar
+twins, three held symbols, singleton limits and concurrency 1 are unchanged.
+The queue remains `CANDIDATE: 0`; this identity refresh does not rerun corpus
+assurance or authorize new source creation. A fresh owner admission naming a
+non-empty scope is still required before another translation wave.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 

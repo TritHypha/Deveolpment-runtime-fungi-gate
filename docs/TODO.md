@@ -62,9 +62,23 @@ counts or open items that a newer section explicitly supersedes.
   refuse. Astra's scoped receipt records 25 focused, 39 independent and 220
   constructor checks under `docs/independent-audits/`.
 - [!] The post-commit external graph refresh reports `indexed` but remains bound to
-  `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current `8b65d9b96`; the new
+  `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current
+  `5873b8768ad2305b45e64a0ab25967ac574b5edb`; the new
   Fungi symbol is absent from graph search. Treat the graph as navigation-only
   until its owner repairs the build-point refresh.
+
+### RD-0873 current-head gate refresh - 2026-09-12
+
+- [x] Rebound the non-authorizing bulk gate to exact `main` HEAD
+  `5873b8768ad2305b45e64a0ab25967ac574b5edb` / tree
+  `241bbc2e4af3277d7ee3a7b7854a0612c5db03f4` in
+  `docs/independent-audits/2026-09-11-rd0873-current-head-bulk-translation-gate.json`.
+- [x] Kept the four eligible existing scalar twins, three held symbols,
+  singleton limits and concurrency 1 unchanged; this refresh records identity
+  only and does not rerun the corpus or alter the queue.
+- [!] The gate remains `HOLD_NON_AUTHORIZING`: a fresh owner admission must
+  explicitly permit source creation and name a non-empty scope before a new
+  translation wave starts.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 
