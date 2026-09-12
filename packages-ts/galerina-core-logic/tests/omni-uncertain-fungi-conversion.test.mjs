@@ -9,7 +9,8 @@ import {
 } from "../../../scripts/lib/scalar-classifier-fungi-proof.mjs";
 
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ASSET = "src/self-hosted/omni-uncertain.fungi";
+const PRODUCT_ROOT = join(PACKAGE_ROOT, "..", "..", "packages", "fungi", "products", "galerina", "rd0873-core-logic");
+const ASSET = "omni-uncertain.fungi";
 const CASES = Object.freeze([
   { value: "unknown", expected: true },
   { value: "partial_true", expected: true },
@@ -34,6 +35,7 @@ describe("core-logic package-owned Fungi Omni uncertainty decision", () => {
   it("requires the exact governed Fungi asset and live source state set", () => {
     assertScalarClassifierAsset({
       packageRoot: PACKAGE_ROOT,
+      assetRoot: PRODUCT_ROOT,
       assetRelative: ASSET,
       referenceRelative: "src/omni/omni-state.ts",
       assertReference(reference) {
@@ -52,6 +54,7 @@ describe("core-logic package-owned Fungi Omni uncertainty decision", () => {
   it("matches every Omni state and denies hostile surplus text", async () => {
     await proveScalarClassifier({
       packageRoot: PACKAGE_ROOT,
+      assetRoot: PRODUCT_ROOT,
       assetRelative: ASSET,
       flowName: "isOmniUncertain",
       parameterName: "state",

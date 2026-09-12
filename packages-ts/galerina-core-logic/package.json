@@ -33,7 +33,6 @@
       "src/self-hosted/fungi-tri-003-invalid-operand.fungi",
       "src/self-hosted/fungi-tri-004-unknown-leaked.fungi",
       "src/self-hosted/fungi-tri-005-malformed-unknown-reason.fungi",
-      "src/self-hosted/omni-uncertain.fungi",
       "src/self-hosted/tri-ops.fungi"
     ]
   },

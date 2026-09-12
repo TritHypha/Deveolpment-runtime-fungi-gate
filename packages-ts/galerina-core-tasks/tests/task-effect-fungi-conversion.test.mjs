@@ -6,7 +6,8 @@ import { describe, it } from "node:test";
 import { assertScalarClassifierAsset, proveScalarClassifier } from "../../../scripts/lib/scalar-classifier-fungi-proof.mjs";
 
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ASSET = "src/self-hosted/task-effect.fungi";
+const PRODUCT_ROOT = join(PACKAGE_ROOT, "..", "..", "packages", "fungi", "products", "galerina", "rd0873-core-tasks");
+const ASSET = "task-effect.fungi";
 const ACCEPTED = Object.freeze(["filesystem", "network", "database", "environment", "shell", "compiler", "reports", "crypto"]);
 const CASES = Object.freeze([
   ...ACCEPTED.map((value) => ({ value, expected: true })),
@@ -17,6 +18,7 @@ describe("core-tasks package-owned task effect decision", () => {
   it("requires the exact governed Fungi asset and live source table", () => {
     assertScalarClassifierAsset({
       packageRoot: PACKAGE_ROOT,
+      assetRoot: PRODUCT_ROOT,
       assetRelative: ASSET,
       referenceRelative: "src/load-tasks.ts",
       assertReference(reference) {
@@ -27,6 +29,6 @@ describe("core-tasks package-owned task effect decision", () => {
   });
 
   it("matches every task effect and hostile surplus text", async () => {
-    await proveScalarClassifier({ packageRoot: PACKAGE_ROOT, assetRelative: ASSET, flowName: "isTaskEffect", parameterName: "value", cases: CASES });
+    await proveScalarClassifier({ packageRoot: PACKAGE_ROOT, assetRoot: PRODUCT_ROOT, assetRelative: ASSET, flowName: "isTaskEffect", parameterName: "value", cases: CASES });
   });
 });

@@ -26,16 +26,20 @@ export function assertScalarClassifierAsset({
   assetRelative,
   referenceRelative,
   assertReference,
+  assetRoot = packageRoot,
+  packageAssetRequired = assetRoot === packageRoot,
 }) {
-  const sourcePath = join(packageRoot, ...assetRelative.split("/"));
+  const sourcePath = join(assetRoot, ...assetRelative.split("/"));
   assert.ok(existsSync(sourcePath), `missing governed Fungi asset: ${assetRelative}`);
 
   const packageJson = JSON.parse(readUtf8(join(packageRoot, "package.json")));
-  assert.ok(
-    Array.isArray(packageJson.packageGraph?.loadedAssets),
-    "packageGraph.loadedAssets must be an explicit array",
-  );
-  assert.ok(packageJson.packageGraph.loadedAssets.includes(assetRelative));
+  if (packageAssetRequired) {
+    assert.ok(
+      Array.isArray(packageJson.packageGraph?.loadedAssets),
+      "packageGraph.loadedAssets must be an explicit array",
+    );
+    assert.ok(packageJson.packageGraph.loadedAssets.includes(assetRelative));
+  }
 
   const source = readUtf8(sourcePath);
   assert.doesNotMatch(source, /^\s*(?:for|while|loop)\b/mu);
@@ -48,8 +52,8 @@ export function assertScalarClassifierAsset({
   assertReference(reference);
 }
 
-async function compileCandidate({ packageRoot, assetRelative, flowName }) {
-  const source = readUtf8(join(packageRoot, ...assetRelative.split("/")));
+async function compileCandidate({ packageRoot, assetRoot = packageRoot, assetRelative, flowName }) {
+  const source = readUtf8(join(assetRoot, ...assetRelative.split("/")));
   const program = parseProgram(source, assetRelative);
   assert.deepEqual(
     (program.diagnostics ?? []).filter((diagnostic) => diagnostic.severity === "error"),
@@ -90,12 +94,13 @@ async function compileCandidate({ packageRoot, assetRelative, flowName }) {
 
 export async function proveScalarClassifier({
   packageRoot,
+  assetRoot = packageRoot,
   assetRelative,
   flowName,
   parameterName,
   cases,
 }) {
-  const compiled = await compileCandidate({ packageRoot, assetRelative, flowName });
+  const compiled = await compileCandidate({ packageRoot, assetRoot, assetRelative, flowName });
   for (const { value, expected } of cases) {
     const interpreted = await executeFlow(
       flowName,

@@ -11,8 +11,7 @@
       "src/self-hosted/default-security-posture.fungi",
       "src/self-hosted/allow-localhost-env.fungi",
       "src/self-hosted/allow-plaintext-egress-env.fungi",
-      "src/self-hosted/egress-allowed-hosts-env.fungi",
-      "src/self-hosted/environment-mode.fungi"
+      "src/self-hosted/egress-allowed-hosts-env.fungi"
     ]
   },
   "main": "./dist/index.js",
