@@ -23,6 +23,25 @@ creation, a consumer switch, TypeScript retirement, or release authority.
   commits. They are locators for package boundaries and existing twins, not
   current-head admission evidence.
 
+## Current symbol graph snapshot
+
+The exact-head navigation index at `878e4c69a` resolves all seven scoped
+symbols. The local in/out counts below are routing evidence only; they do not
+prove deployment, external consumers or Fungi admission.
+
+| Symbol | Package role | Local in/out | Observed local links |
+| --- | --- | ---: | --- |
+| `isEnvironmentMode` | core configuration runtime | 2/3 | `resolveEnvironmentMode`, package contract test |
+| `isOmniUncertain` | core logic runtime; mutable profile hold | 2/3 | `omniToDecision`, package contract test |
+| `isTerminalScope` | core runtime | 1/2 | `advanceStructuredAwait` |
+| `isTaskEffect` | core task runtime | 0/2 | no in-repo caller resolved |
+| `isResponseSafeClassification` | data-model runtime | 2/2 | `listResponseSafeFields`, package contract test |
+| `isBuiltin` | development-context tooling; physical-profile hold | 1/2 | `walk`, `has` |
+| `validateTransition` | project-graph tooling; two-input physical hold | 3/4 | `advanceState`, two package tests, `get`, `has` |
+
+The index reports 77,679 nodes and 202,866 edges with a truncated exclusion
+list. It remains a navigation aid and is not a corpus or admission proof.
+
 ## Working role map
 
 ### Product/runtime logic — primary Fungi candidates
