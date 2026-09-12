@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 exact next translation scope - 2026-09-12
+
+- [x] Select the next singleton product-runtime scope at exact `main` HEAD
+  `5180110132f5893d5ce30a88139b8ec405ac5db3` / tree
+  `0d14f8f1d8c8e3bf6bf1fecbb8295a7af20003d6`: `triNot` in
+  `packages-ts/galerina-core-logic/src/index.ts` (lines 83-85).
+- [x] Name the product target
+  `packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi`, the
+  focused `tri-ops-fungi-conversion.test.mjs` harness, compiler
+  `@galerina/core-compiler@1.0.0-beta.2`, profile
+  `slide.pure-scalar.v1` / `scalar-1`, and the singleton limits in
+  `docs/reports/2026-09-12-rd0873-next-translation-scope.md` and
+  `docs/independent-audits/2026-09-12-rd0873-next-translation-scope-v1.json`.
+- [!] This is a scope selection only. The target does not yet exist; authoring
+  and focused-test retargeting remain the next bounded execution step.
+  `assertTri`, `triAnd`, `triOr`, `triNor`, the held symbols, all compiler and
+  tooling code, TypeScript shadows, and native/VOK paths remain outside scope.
+
 ### RD-0873 role inventory completion - 2026-09-12
 
 - [x] Finish the package-role inventory at exact `main` HEAD

@@ -3,6 +3,30 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 exact next translation scope - 2026-09-12
+
+The next bounded product-runtime scope is the single pure K3 operation
+`triNot`, from `packages-ts/galerina-core-logic/src/index.ts` lines 83-85, at
+exact `main` HEAD
+`5180110132f5893d5ce30a88139b8ec405ac5db3` / tree
+`0d14f8f1d8c8e3bf6bf1fecbb8295a7af20003d6`. Its product target is
+`packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi`.
+
+The focused harness is
+`packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs`,
+which will be narrowed to this flow and retargeted to the product asset. The
+compiler is `@galerina/core-compiler@1.0.0-beta.2` using
+`slide.pure-scalar.v1` (`scalar-1`). The singleton limits are one symbol and
+one source file, 16,384 input bytes, 65,536 output/evidence bytes, 600,000 ms,
+concurrency 1 and zero automatic retries; overflow is HOLD and abort.
+
+The scope manifest is
+[`docs/reports/2026-09-12-rd0873-next-translation-scope.md`](reports/2026-09-12-rd0873-next-translation-scope.md)
+with receipt
+`docs/independent-audits/2026-09-12-rd0873-next-translation-scope-v1.json`.
+This selects work only: no target, consumer switch, TypeScript retirement,
+queue promotion, corpus assurance or SLIDE/VOK authority follows yet.
+
 ## RD-0873 selective conversion role inventory - 2026-09-12
 
 The package-role map is complete at exact `main` HEAD

@@ -1,0 +1,79 @@
+{
+  "schema": "galerina.rd0873.next-translation-scope.v1",
+  "status": "TRANSLATION_SCOPE_SELECTED_NON_AUTHORING",
+  "authorizing": false,
+  "reviewedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "5180110132f5893d5ce30a88139b8ec405ac5db3",
+    "tree": "0d14f8f1d8c8e3bf6bf1fecbb8295a7af20003d6"
+  },
+  "scope": {
+    "package": "galerina-core-logic",
+    "sourcePath": "packages-ts/galerina-core-logic/src/index.ts",
+    "symbol": "triNot",
+    "span": { "start": 83, "end": 85 },
+    "signature": "export function triNot(value: Tri): Tri",
+    "sourceBytes": 13409,
+    "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+    "targetPath": "packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi",
+    "targetExists": false,
+    "operation": "CREATE_ONE_PRODUCT_RUNTIME_TWIN",
+    "semanticShape": "Deny -> Allow; Unknown -> Unknown; Allow -> Deny",
+    "excludedSymbols": ["assertTri", "triAnd", "triOr", "triNor"]
+  },
+  "focusedTest": {
+    "path": "packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
+    "bytes": 2990,
+    "sha256": "sha256:d4a24950cf3c2a8d62e53b2e6b573e3873dc2fe82055cdfaf5c6919d14e02166",
+    "plannedChange": "narrow to triNot and retarget the product-tree asset"
+  },
+  "compiler": {
+    "package": "@galerina/core-compiler@1.0.0-beta.2",
+    "launcher": "galerina.mjs",
+    "launcherSha256": "sha256:0bb5afde26f3514da4d75a965b5464419146a4c5ac27532f1f5f8591f59a5a41",
+    "packageManifestSha256": "sha256:23dbe762398e975d81b6ac3d5aaf06330872d486307f4d238c767ec076fa6285",
+    "checkCommand": "node galerina.mjs check packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi --strict-types --strict-governance"
+  },
+  "profile": {
+    "id": "slide.pure-scalar.v1",
+    "name": "scalar-1",
+    "digest": "sha256:bcaff64aa174de78063e7bcad46ee91ee56264a14bbdc882c4f5247fa146f3bf",
+    "admittedShape": "Tri/Verdict scalar only"
+  },
+  "waveLimits": {
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxSymbolsPerWave": 1,
+    "maxSourceFilesPerWave": 1,
+    "maxInputBytesPerStep": 16384,
+    "maxOutputBytesPerStep": 65536,
+    "maxEvidenceBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+  },
+  "requiredEvidence": [
+    "exact current head and tree",
+    "source and target hashes",
+    "strict compiler and governance check",
+    "interpreter and WASM parity for -1, 0 and 1",
+    "invalid-input host-boundary refusal without coercion",
+    "focused test result",
+    "independent same-head review"
+  ],
+  "custody": {
+    "newFungiSourceCreated": false,
+    "testChanged": false,
+    "typescriptShadowRetained": true,
+    "queueRead": false,
+    "projectCorpusRerun": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "branchOrWorktreeCreation": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "Select triNot as the next singleton product-runtime Fungi scope. Authoring and acceptance remain a separate bounded execution step; stale, missing or partial evidence is HOLD."
+}
