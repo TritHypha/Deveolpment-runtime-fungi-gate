@@ -7,7 +7,7 @@ counts or open items that a newer section explicitly supersedes.
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
 - [x] Reconcile the current implementation point: local and remote `main`
-  are `f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, with the compiler repair,
+  are `fd54e6cdeaee526875598fe9e9ed959e7a37191c`, with the compiler repair,
   documentation and required Golden manifest committed and pushed.
 - [x] Record the NASM 3.02 prerequisite check. The executable matches the
   pinned static-host recipe and the Windows probe returns `CANDIDATE`;

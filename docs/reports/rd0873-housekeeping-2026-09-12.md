@@ -8,7 +8,7 @@ or a translation receipt.
 
 - Repository role: Galerina native-Fungi bootstrap implementation checkout.
 - Branch: `main`.
-- HEAD and `origin/main`: `f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`.
+- HEAD and `origin/main`: `fd54e6cdeaee526875598fe9e9ed959e7a37191c`.
 - Worktree status at the pass: clean.
 - Existing sibling worktrees, branches and protected dirty paths were left
   untouched.
@@ -26,6 +26,15 @@ Its three bounded steps produced:
 
 The refusal is preserved. No file was deleted, moved, quarantined, restored or
 rewritten by the housekeeping run.
+
+## Navigation index receipt
+
+After the documentation commit, the owning external index was refreshed in
+full mode and returned `indexed` at the same head, with 78,371 nodes and
+203,892 edges (78,371/78,371 and 203,892/203,892 expected). A probe for
+`BINARY_FLOAT_TYPES` resolves to
+`packages-ts/galerina-core-compiler/src/type-checker.ts`. The index is
+navigation evidence only.
 
 ## Memory result
 

@@ -10,7 +10,7 @@ production-authorized.
 ## Housekeeping and pause checkpoint - 2026-09-12
 
 The implementation point is `main` at
-`f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, also present on
+`fd54e6cdeaee526875598fe9e9ed959e7a37191c`, also present on
 `origin/main`. The read-only session housekeeping pass returned
 `HOUSEKEEPING REFUSED`/HOLD after 716 existing bounded-execution findings
 and a hard-linked release executable were reported. No cleanup, quarantine,

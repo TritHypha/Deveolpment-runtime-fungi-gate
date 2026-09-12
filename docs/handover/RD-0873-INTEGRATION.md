@@ -3,7 +3,7 @@
 ## Paused housekeeping checkpoint - 2026-09-12
 
 The active implementation point is `main` at
-`f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, also verified at
+`fd54e6cdeaee526875598fe9e9ed959e7a37191c`, also verified at
 `origin/main`. The latest compiler/agent repair, NASM prerequisite record,
 documentation and Golden manifest are committed. No new translation wave has
 started after the owner requested a pause.
