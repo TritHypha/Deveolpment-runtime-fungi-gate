@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-09-10T11:37:20.000Z",
-  "sha": "6325a782c",
-  "contracts": 3944,
-  "parsed": 2978,
+  "generatedAt": "2026-09-12T05:48:42.000Z",
+  "sha": "72d5eed4b",
+  "contracts": 3973,
+  "parsed": 2991,
   "rows": [
     {
       "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
@@ -10256,14 +10256,6 @@
       "intent": ""
     },
     {
-      "file": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
-      "name": "isEnvironmentMode",
-      "qualifier": "pure",
-      "signature": "pure flow isEnvironmentMode(value: String) -> Bool",
-      "effects": [],
-      "intent": "Recognize only a canonical Galerina environment mode."
-    },
-    {
       "file": "packages-ts/galerina-core-logic/examples/compute-mix-throughput-benchmark.fungi",
       "name": "computeMixRequestAllowed",
       "qualifier": "pure",
@@ -10430,14 +10422,6 @@
       "signature": "pure flow fungiTri005MalformedUnknownReason() -> String",
       "effects": [],
       "intent": ""
-    },
-    {
-      "file": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
-      "name": "isOmniUncertain",
-      "qualifier": "pure",
-      "signature": "pure flow isOmniUncertain(state: String) -> Bool",
-      "effects": [],
-      "intent": "Recognize only an uncertain Omni state."
     },
     {
       "file": "packages-ts/galerina-core-logic/src/self-hosted/tri-ops.fungi",
@@ -10846,14 +10830,6 @@
       "signature": "pure flow structuredAwaitPlanVersion() -> String",
       "effects": [],
       "intent": ""
-    },
-    {
-      "file": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
-      "name": "isTerminalScope",
-      "qualifier": "pure",
-      "signature": "pure flow isTerminalScope(status: String) -> Bool",
-      "effects": [],
-      "intent": "Recognize only a terminal structured-await scope state."
     },
     {
       "file": "packages-ts/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
@@ -11464,30 +11440,6 @@
       "intent": ""
     },
     {
-      "file": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
-      "name": "isTaskEffectCore",
-      "qualifier": "pure",
-      "signature": "pure flow isTaskEffectCore(value: String) -> Bool",
-      "effects": [],
-      "intent": "Recognize a canonical core task effect name."
-    },
-    {
-      "file": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
-      "name": "isTaskEffectExtended",
-      "qualifier": "pure",
-      "signature": "pure flow isTaskEffectExtended(value: String) -> Bool",
-      "effects": [],
-      "intent": "Recognize a canonical extended task effect name."
-    },
-    {
-      "file": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
-      "name": "isTaskEffect",
-      "qualifier": "pure",
-      "signature": "pure flow isTaskEffect(value: String) -> Bool",
-      "effects": [],
-      "intent": "Recognize only a canonical task effect name."
-    },
-    {
       "file": "packages-ts/galerina-core/examples/ai-context.fungi",
       "name": "main",
       "qualifier": "secure",
@@ -11822,14 +11774,6 @@
       "signature": "pure flow requiresLowBitKernel(inputType: String, operation: String) -> Bool",
       "effects": [],
       "intent": ""
-    },
-    {
-      "file": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
-      "name": "isResponseSafeClassification",
-      "qualifier": "pure",
-      "signature": "pure flow isResponseSafeClassification(classification: String) -> Bool",
-      "effects": [],
-      "intent": "Admit only the public model-field classification for responses."
     },
     {
       "file": "packages-ts/galerina-devtools-benchmarks/benchmarks/arithmetic-threshold/benchmark.fungi",
@@ -31548,6 +31492,294 @@
       "signature": "pure flow scalarOracle(subject: Verdict) -> String",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent-report/create-agent-report.fungi",
+      "name": "applyReportMergePolicy",
+      "qualifier": "pure",
+      "signature": "pure flow applyReportMergePolicy(findings: Array<AgentReportFinding>, policy_: AgentReportMergePolicy) -> AgentReportOutcome",
+      "effects": [],
+      "intent": "Apply evidence and confidence policy before report aggregation while preserving source order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent-report/create-agent-report.fungi",
+      "name": "createAgentReport",
+      "qualifier": "pure",
+      "signature": "pure flow createAgentReport(flow_: String, parallel: Bool, timeoutMs: Float64, runs: Array<AgentReportRunStat>, findings: Option<Array<AgentReportFinding>>, mergePolicy: Option<AgentReportMergePolicy>, unsafeToolsUsed: Option<Array<String>>) -> AgentReportResult",
+      "effects": [],
+      "intent": "Construct a deterministic supervised-run report with fail-closed review flags and ordered warnings."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent/apply-agent-merge-policy.fungi",
+      "name": "applyAgentMergePolicy",
+      "qualifier": "pure",
+      "signature": "pure flow applyAgentMergePolicy(findings: Array<AgentFinding>, mergePolicy: AgentMergePolicy) -> AgentMergeOutcome",
+      "effects": [],
+      "intent": "Apply fail-closed evidence and confidence policy while retaining finding order and actionable warnings."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-definition.fungi",
+      "name": "validateAgentDefinition",
+      "qualifier": "pure",
+      "signature": "pure flow validateAgentDefinition(definition: AgentDefinition) -> Array<AgentDiagnostic>",
+      "effects": [],
+      "intent": "Require the agent's structural names and append delegated tool and resource-limit diagnostics in source order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+      "name": "validateAgentLimits",
+      "qualifier": "pure",
+      "signature": "pure flow validateAgentLimits(limits: AgentLimits) -> Array<AgentDiagnostic>",
+      "effects": [],
+      "intent": "Require every present agent resource limit to be positive and return ordered typed diagnostics."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-task-group-plan.fungi",
+      "name": "validateAgentTaskGroupPlan",
+      "qualifier": "pure",
+      "signature": "pure flow validateAgentTaskGroupPlan(plan: AgentTaskGroupPlan) -> Array<AgentDiagnostic>",
+      "effects": [],
+      "intent": "Require a named, positively bounded task group with at least one member agent."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-tool-permissions.fungi",
+      "name": "validateAgentToolPermissions",
+      "qualifier": "pure",
+      "signature": "pure flow validateAgentToolPermissions(tools: Array<AgentToolPermission>) -> Array<AgentDiagnostic>",
+      "effects": [],
+      "intent": "Reject empty tool names and report contradictory decisions while retaining input order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-config/environment-mode.fungi",
+      "name": "isEnvironmentMode",
+      "qualifier": "pure",
+      "signature": "pure flow isEnvironmentMode(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only a canonical Galerina environment mode."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-logic/omni-uncertain.fungi",
+      "name": "isOmniUncertain",
+      "qualifier": "pure",
+      "signature": "pure flow isOmniUncertain(state: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only an uncertain Omni state."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-runtime/terminal-scope.fungi",
+      "name": "isTerminalScope",
+      "qualifier": "pure",
+      "signature": "pure flow isTerminalScope(status: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only a terminal structured-await scope state."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+      "name": "isTaskEffectCore",
+      "qualifier": "pure",
+      "signature": "pure flow isTaskEffectCore(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize a canonical core task effect name."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+      "name": "isTaskEffectExtended",
+      "qualifier": "pure",
+      "signature": "pure flow isTaskEffectExtended(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize a canonical extended task effect name."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+      "name": "isTaskEffect",
+      "qualifier": "pure",
+      "signature": "pure flow isTaskEffect(value: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize only a canonical task effect name."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+      "name": "appendVectorTypeDiagnostics",
+      "qualifier": "pure",
+      "signature": "pure flow appendVectorTypeDiagnostics(vector: VectorType, path_: String, diagnostics_: Array<VectorDiagnostic>) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Append vector shape diagnostics in source order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+      "name": "appendTensorTypeDiagnostics",
+      "qualifier": "pure",
+      "signature": "pure flow appendTensorTypeDiagnostics(tensor: TensorType, path_: String, diagnostics_: Array<VectorDiagnostic>) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Append tensor shape diagnostics in source order for a dense typed shape."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+      "name": "appendVectorOperationDiagnostics",
+      "qualifier": "pure",
+      "signature": "pure flow appendVectorOperationDiagnostics(operation: VectorOperation, diagnostics_: Array<VectorDiagnostic>) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Append vector-operation diagnostics before the next operation or tensor report."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+      "name": "appendTensorOperationDiagnostics",
+      "qualifier": "pure",
+      "signature": "pure flow appendTensorOperationDiagnostics(operation: TensorOperation, diagnostics_: Array<VectorDiagnostic>) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Append tensor-operation diagnostics after vector operations in source order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+      "name": "createVectorReport",
+      "qualifier": "pure",
+      "signature": "pure flow createVectorReport(operations_: Option<Array<VectorOperation>>, tensorOperations_: Option<Array<TensorOperation>>) -> VectorReport",
+      "effects": [],
+      "intent": "Construct a deterministic vector report with explicit optional-list defaults and ordered diagnostics."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+      "name": "validateVectorType",
+      "qualifier": "pure",
+      "signature": "pure flow validateVectorType(vector: VectorType, path_: String) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Validate constructor input in the source diagnostic order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+      "name": "hasError",
+      "qualifier": "pure",
+      "signature": "pure flow hasError(diagnostics: Array<VectorDiagnostic>) -> Bool",
+      "effects": [],
+      "intent": "Detect any error diagnostic before projecting the constructor failure."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+      "name": "joinDiagnosticMessages",
+      "qualifier": "pure",
+      "signature": "pure flow joinDiagnosticMessages(diagnostics: Array<VectorDiagnostic>) -> String",
+      "effects": [],
+      "intent": "Join all constructor diagnostic messages with the source separator."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+      "name": "defineVectorType",
+      "qualifier": "pure",
+      "signature": "pure flow defineVectorType(elementType: String, lanes: Float64) -> Result<VectorType,String>",
+      "effects": [],
+      "intent": "Construct a validated vector type while preserving the source throw message as a typed failure."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-matrix-type.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-matrix-type.fungi",
+      "name": "validateMatrixType",
+      "qualifier": "pure",
+      "signature": "pure flow validateMatrixType(matrix: MatrixType, path_: String) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Validate positive safe matrix dimensions in source diagnostic order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-operation.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-operation.fungi",
+      "name": "appendTensorDiagnostics",
+      "qualifier": "pure",
+      "signature": "pure flow appendTensorDiagnostics(tensor: TensorType, path_: String, diagnostics_: Array<VectorDiagnostic>) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Append tensor dimension diagnostics in source order for a dense typed shape."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-operation.fungi",
+      "name": "validateTensorOperation",
+      "qualifier": "pure",
+      "signature": "pure flow validateTensorOperation(operation: TensorOperation) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Validate tensor operation name and operands in source diagnostic order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi",
+      "name": "validateTensorType",
+      "qualifier": "pure",
+      "signature": "pure flow validateTensorType(tensor: TensorType, path_: String) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Validate tensor dimensions in source order and require at least one dimension."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-operation.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-operation.fungi",
+      "name": "validateVectorOperation",
+      "qualifier": "pure",
+      "signature": "pure flow validateVectorOperation(operation: VectorOperation) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Validate vector operation name and operands in source diagnostic order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-type.fungi",
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "signature": "pure flow isPositiveSafeInteger(value: Float64) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly positive finite integer values representable as JavaScript safe integers."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-type.fungi",
+      "name": "validateVectorType",
+      "qualifier": "pure",
+      "signature": "pure flow validateVectorType(vector: VectorType, path_: String) -> Array<VectorDiagnostic>",
+      "effects": [],
+      "intent": "Validate a vector element label and positive safe lane count in source diagnostic order."
+    },
+    {
+      "file": "packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi",
+      "name": "isResponseSafeClassification",
+      "qualifier": "pure",
+      "signature": "pure flow isResponseSafeClassification(classification: String) -> Bool",
+      "effects": [],
+      "intent": "Admit only the public model-field classification for responses."
     },
     {
       "file": "packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi",
