@@ -1,13 +1,13 @@
 {
   "schema": "galerina.rd0873-agent-limits-custom-path-proposal.v2",
-  "generatedAt": "2026-09-12T03:58:34.114Z",
+  "generatedAt": "2026-09-12T04:04:20.9610549Z",
   "status": "PROPOSAL_NON_AUTHORIZING_EXISTING_CANDIDATE_REPAIR",
   "authorizing": false,
   "repository": "Galerina",
   "reviewedBuildIdentity": {
     "branch": "main",
-    "head": "fea1616abc1b4fde3feb8eaad90e903d6f6c03e7",
-    "tree": "a38472d68db1d7a0f7c6e35781a56be8f71d089c"
+    "head": "caa360c5acb258634fdcbc518766519653896da5",
+    "tree": "efb263fb3b2494be5789950a1d790789e89e77f4"
   },
   "scope": {
     "product": "galerina-ai-agent",
@@ -71,5 +71,15 @@
     "physicalSlideVokAdmission": false,
     "gitRole": "provenance-only"
   },
-  "decision": "Keep the repair proposal non-authorizing until the owner supplies a fresh exact-head admission naming this candidate and its limits. The generic Option ABI, host object behavior and production admission remain separate gates."
+  "decision": "Keep the repair proposal non-authorizing until the owner supplies a fresh exact-head admission naming this candidate and its limits. The generic Option ABI, host object behavior and production admission remain separate gates.",
+  "designProbe": {
+    "kind": "DISPOSABLE_COMPILER_GOVERNANCE_PROBE",
+    "authorizing": false,
+    "derivedFromCandidate": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+    "transformedShape": "path-taking helper plus validateAgentLimits default wrapper",
+    "compilerInvocation": "galerina.mjs check <disposable-temp-probe> --strict-governance",
+    "exitCode": 0,
+    "result": "0 errors, 0 governance warnings (2 flow(s), 5 top-level declaration(s))",
+    "interpretation": "Compiler syntax and strict-governance acceptance only; no repository source was changed and no admission authority was created."
+  }
 }
