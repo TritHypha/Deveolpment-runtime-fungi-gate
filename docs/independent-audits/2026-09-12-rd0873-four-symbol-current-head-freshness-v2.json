@@ -1,0 +1,77 @@
+{
+  "schema": "galerina.rd0873-four-symbol-current-head-freshness.v2",
+  "date": "2026-09-12",
+  "status": "CURRENT_HEAD_FRESHNESS_NON_AUTHORIZING",
+  "authorizing": false,
+  "repository": "Galerina",
+  "branch": "main",
+  "currentBuildIdentity": {
+    "head": "b4ea0eddb4517a445bd90fcb6f77ff3f33ae636c",
+    "tree": "742a70eca6e9f63b8c4c7d177b1220c63090d89b"
+  },
+  "priorAuthorization": {
+    "path": "docs/independent-audits/2026-09-11-rd0873-current-head-admission-owner-authorization-v2.json",
+    "head": "357c689a691fa7982730e486dd1035601623457e",
+    "scopeType": "SYMBOLS",
+    "maxSymbolsPerWave": 4,
+    "maxSourceFilesPerWave": 4,
+    "maxInputBytesPerStep": 65536,
+    "maxOutputBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "concurrency": 1,
+    "automaticRetries": 0
+  },
+  "scope": [
+    {
+      "wave": 1,
+      "package": "galerina-core-config",
+      "source": "packages-ts/galerina-core-config/src/index.ts",
+      "symbol": "isEnvironmentMode",
+      "existingTwin": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "authorizedSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "currentSourceDigest": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "authorizedTwinDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "currentTwinDigest": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba"
+    },
+    {
+      "wave": 2,
+      "package": "galerina-core-runtime",
+      "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+      "symbol": "isTerminalScope",
+      "existingTwin": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "authorizedSourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+      "currentSourceDigest": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+      "authorizedTwinDigest": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "currentTwinDigest": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e"
+    },
+    {
+      "wave": 3,
+      "package": "galerina-core-tasks",
+      "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+      "symbol": "isTaskEffect",
+      "existingTwin": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "authorizedSourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+      "currentSourceDigest": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+      "authorizedTwinDigest": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "currentTwinDigest": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b"
+    },
+    {
+      "wave": 4,
+      "package": "galerina-data-model",
+      "source": "packages-ts/galerina-data-model/src/index.ts",
+      "symbol": "isResponseSafeClassification",
+      "existingTwin": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "authorizedSourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+      "currentSourceDigest": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+      "authorizedTwinDigest": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "currentTwinDigest": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8"
+    }
+  ],
+  "focusedChecks": {
+    "command": "node --test packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "decision": "Current source and existing twin bytes match the prior four-symbol authorization and all focused checks pass at this exact build point. This receipt is freshness evidence only; it does not renew owner authorization, change the queue, create Fungi source, rewrite twins, switch consumers, retire TypeScript, or grant production authority. A fresh exact-head non-empty owner admission remains required."
+}
