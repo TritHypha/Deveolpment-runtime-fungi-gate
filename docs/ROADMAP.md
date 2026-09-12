@@ -20,6 +20,31 @@ The remaining work is runtime-scope reconciliation and the unresolved host,
 alias/container and physical-admission obligations. Unary Float64 negation is
 already in `main`.
 
+## RD-0873 GPT-6 Astra architecture review and R&D cross-check - 2026-09-12
+
+The pre-translation architecture was reviewed read-only by GPT-6 Astra at
+`main` head `f4b4b24d9be5ef1522423eff43286fe800ef66b5` / tree
+`5c99fd20ba78e21b607b860eab60ca5d14ec7721`. The advisory record is
+`docs/independent-audits/2026-09-12-rd0873-astra-pretranslation-architecture-review.md`.
+It keeps work authority, scheduling, semantic verification, physical admission
+and production activation separate; requires one immutable manifest with
+durable stage-qualified receipts; and places scalar profile 1 before packed 64
+and high-throughput 256. Profile 32 remains a compatibility fallback only.
+
+The KB R&D gold control passed `12/12`. The range query for `RD-0858..RD-0873`
+was refused because tracked RD source paths in the KB checkout are dirty, so
+the refusal is retained and no current decision is inferred from the private
+metadata index. Its locators continue to mark RD-0858 as
+`SOURCE-CHECKED`/`HOLD` for compiler implementation and language admission and
+RD-0873 as `SOURCE-CHECKED`/`HOLD` until corpus, conversion-receipt and queue
+foundations are green.
+
+This review is architecture guidance, not an authorizing admission. The next
+work is the bounded pre-translation checklist and owner-visible disposition of
+the existing housekeeping/memory holds. No new `.fungi` source, queue
+promotion, PROJECT rerun, consumer switch, TypeScript retirement or production
+authority follows from this entry.
+
 Candidate implementation, bounded semantic verification and production
 admission remain distinct stages. The existing queue is retained as historical
 inventory/evidence pending role reconciliation; its zero whole-file candidate
@@ -30,7 +55,8 @@ Older dated checkpoints below retain their original evidence scope.
 ## RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
 The current implementation checkout is on `main` at
-`fd54e6cdeaee526875598fe9e9ed959e7a37191c`, and the same commit is present
+`f4b4b24d9be5ef1522423eff43286fe800ef66b5` (tree
+`5c99fd20ba78e21b607b860eab60ca5d14ec7721`), and the same commit is present
 on `origin/main`. The NASM 3.02 static-host prerequisite matches the pinned
 recipe and reports `CANDIDATE`. The typed positive-float repair and its
 documentation are complete at this point; the broader conversion goal remains

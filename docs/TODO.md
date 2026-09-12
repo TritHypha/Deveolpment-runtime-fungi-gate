@@ -7,7 +7,8 @@ counts or open items that a newer section explicitly supersedes.
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
 - [x] Reconcile the current implementation point: local and remote `main`
-  are `fd54e6cdeaee526875598fe9e9ed959e7a37191c`, with the compiler repair,
+  are `f4b4b24d9be5ef1522423eff43286fe800ef66b5` (tree
+  `5c99fd20ba78e21b607b860eab60ca5d14ec7721`), with the compiler repair,
   documentation and required Golden manifest committed and pushed.
 - [x] Record the NASM 3.02 prerequisite check. The executable matches the
   pinned static-host recipe and the Windows probe returns `CANDIDATE`;
@@ -28,6 +29,33 @@ counts or open items that a newer section explicitly supersedes.
   an owner-visible disposition. On resume, continue the remaining runtime
   inventory under the standing approval with fixed manifests and focused
   per-change checks; do not rerun the full corpus for an individual file.
+
+### RD-0873 GPT-6 Astra architecture review and R&D cross-check - 2026-09-12
+
+- [x] Obtain a bounded, read-only GPT-6 Astra architecture review at the exact
+  current `main` head `f4b4b24d9be5ef1522423eff43286fe800ef66b5` / tree
+  `5c99fd20ba78e21b607b860eab60ca5d14ec7721`. Record:
+  `docs/independent-audits/2026-09-12-rd0873-astra-pretranslation-architecture-review.md`.
+- [x] Run the KB R&D adapter gold control (`12/12`). The requested
+  `RD-0858..RD-0873` range query was refused because tracked RD source paths
+  in the KB checkout are dirty. Preserve that refusal; do not upgrade the
+  private metadata index into a current decision.
+- [x] Confirm the KB metadata locators: RD-0858 remains private and
+  `SOURCE-CHECKED`/`HOLD` for compiler implementation and language admission;
+  RD-0873 remains private and `SOURCE-CHECKED`/`HOLD` until corpus,
+  conversion-receipt and queue foundations are green.
+- [x] Adopt the review's pre-translation order: role and deployment
+  reconciliation; immutable manifest and checkpoint binding; hostile
+  snapshot/GIR/SLIDE/VOK refusal checks; profile-1 semantic/host parity;
+  durable ready/checking/repair/accepted processing; then independently
+  justified profiles 64 and 256. Profile 32 remains compatibility-only.
+- [!] Keep this review advisory. It does not start `.fungi` authoring, promote
+  the queue, reopen PROJECT assurance, switch a consumer, retire TypeScript or
+  grant production authority.
+- [ ] Before the first new source item, complete the owner-visible disposition
+  of the housekeeping/memory holds, bind a non-empty exact-head manifest with
+  per-wave limits, and close the missing semantic/physical evidence. Do not
+  run a full corpus check for an individual translation.
 
 ### RD-0873 active selective-conversion work - 2026-09-12
 

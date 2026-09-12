@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "kind": "architecture-review",
+  "rd": "RD-0873",
+  "status": "ADVISORY_NON_AUTHORIZING",
+  "provider": "GPT-6 Astra",
+  "reviewedCommit": "f4b4b24d9be5ef1522423eff43286fe800ef66b5",
+  "reviewedTree": "5c99fd20ba78e21b607b860eab60ca5d14ec7721",
+  "scope": "pre-translation architecture, role routing, profile order and continuous bounded processing",
+  "prompt": {
+    "sessionBridgeFile": "astra-rd0873-architecture-review-prompt.md",
+    "sha256": "C599CE3072B15CE50D1217BD8F862CD453262DE160C1E0E139C5AC2D3680143D"
+  },
+  "reply": {
+    "embeddedIn": "docs/independent-audits/2026-09-12-rd0873-astra-pretranslation-architecture-review.md",
+    "sha256": "2801589425DBE9F74963855FE32951737D3B12369C703F9EC1E623BF01629F59"
+  },
+  "adjudication": {
+    "separateAuthorityGates": "UPHELD",
+    "profileOrder": "UPHELD",
+    "queueNonAuthorizing": "UPHELD",
+    "devtoolsRole": "PARTIAL",
+    "proposalLimitsUnexecuted": "UPHELD",
+    "snapshotGirSlideVokBinding": "NOT_VERIFIABLE",
+    "crashSafeResume": "NOT_VERIFIABLE",
+    "profile1SemanticClosure": "NOT_VERIFIABLE"
+  },
+  "kbCrossCheck": {
+    "gold": "12/12",
+    "range": "RD-0858..RD-0873",
+    "status": "REFUSED_DIRTY_TRACKED_RD_SOURCE_PATHS",
+    "metadataObservedHead": "1baff11943c6286fab376ebdbfef5a48300e4db7",
+    "rd0858": "PRIVATE_SOURCE_CHECKED_HOLD",
+    "rd0873": "PRIVATE_SOURCE_CHECKED_HOLD"
+  },
+  "authorizing": false,
+  "actionsTaken": [
+    "updated TODO and ROADMAP with the advisory review and KB refusal",
+    "did not create Fungi source",
+    "did not promote the queue or rerun PROJECT assurance",
+    "did not switch a consumer or retire TypeScript"
+  ]
+}
