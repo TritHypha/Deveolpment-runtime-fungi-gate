@@ -7,6 +7,31 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## Current RD-0873 housekeeping and scope checkpoint - 2026-09-12
+
+At the start of this housekeeping pass, the Galerina implementation line was
+`main` at `20912999b041bbd409515101809a80320a010d67`, present on `origin/main`,
+with a clean worktree. This housekeeping commit adds documentation only. The
+latest documentation commit records the completed role
+inventory and the Grok plus independent GPT-6 Astra review of the next
+translation scope.
+
+The next candidate remains the single `triNot` symbol in
+`packages-ts/galerina-core-logic/src/index.ts`. Its target is still absent.
+The scope is **REVISE-SCOPE / NON-AUTHORING**: the existing four-operation
+differential suite must remain unchanged; a separate additive product-target
+test is required; exact host validation must precede coercive WASM ingress; the
+compiler/profile closure and input accounting must be recorded; and any
+16,384-byte cap overflow is `HOLD`. No consumer switch, TypeScript retirement,
+corpus assurance or SLIDE/VOK admission follows from the reviews.
+
+Grok's private review is advisory and non-authorizing; GPT-6 Astra independently
+reached `REVISE-SCOPE`. Their records are linked from the current scope report.
+The housekeeping refusal, 716 findings and retained hard-linked executable
+remain historical/manual-review holds. Memory preflight remains a separate
+owner-visible hold: `MEMORY.md` is an index, while stale historical locators
+and the missing Galerina working-set owner are not silently rewritten here.
+
 ## Housekeeping owner disposition - 2026-09-12
 
 The owner has dispositioned the prior housekeeping report at exact `main`

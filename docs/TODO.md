@@ -6,9 +6,10 @@ counts or open items that a newer section explicitly supersedes.
 
 ### RD-0873 exact next translation scope - 2026-09-12 (review revision)
 
-- [x] Rebind the next singleton product-runtime scope to exact current `main`
-  HEAD `30c5c8be8d94db3b47bade0f7024371f8b9588c6` / tree
-  `d222695b9505206530ce9da3a70196ce774c79e5`: `triNot` in
+- [x] Rebind the next singleton product-runtime scope to the reviewed source
+  snapshot at `main` HEAD `30c5c8be8d94db3b47bade0f7024371f8b9588c6` / tree
+  `d222695b9505206530ce9da3a70196ce774c79e5`; later commits in this checkpoint
+  are documentation-only. The symbol is `triNot` in
   `packages-ts/galerina-core-logic/src/index.ts` (lines 83-85).
 - [x] Name the product target
   `packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi`, a new

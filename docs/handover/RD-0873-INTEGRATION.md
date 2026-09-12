@@ -1,5 +1,27 @@
 # RD-0873 integration checkpoint
 
+## Current compact checkpoint - 2026-09-12
+
+At the start of this compact checkpoint, the active implementation checkout
+was Galerina `main` at `20912999b041bbd409515101809a80320a010d67`, matching
+`origin/main`, and clean. This checkpoint adds documentation only. The role
+inventory, revised `triNot` scope, Grok advisory, and
+independent GPT-6 Astra review are committed and pushed. The scope remains
+`REVISE-SCOPE / NON-AUTHORING`; no `.fungi` target or test was created.
+
+The next bounded action is to close the four pre-authoring corrections recorded
+in the scope report: additive product-target test, named exact-membership host
+adapter before WASM ingress, compiler/profile closure identity, and explicit
+input-cap accounting. Preserve the existing four-operation suite, TypeScript
+shadow, native/VOK boundaries and all unrelated protected dirt. Do not rerun
+PROJECT assurance or read the conversion queue for this singleton.
+
+Housekeeping is paused with the prior refusal preserved: retain the 716
+findings and hard-linked executable for manual review. Memory preflight is also
+still an owner-visible hold; `MEMORY.md` remains a locator index rather than a
+content store. This checkpoint is a compact routing record, not an execution
+or production-authority receipt.
+
 ## Housekeeping owner disposition - 2026-09-12
 
 At current `main`/`origin/main` head

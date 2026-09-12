@@ -7,9 +7,10 @@ Branch: `main`
 
 The next bounded product-runtime scope is the single pure K3 operation
 `triNot`, from `packages-ts/galerina-core-logic/src/index.ts` lines 83-85, at
-exact current `main` HEAD
+the reviewed source snapshot at `main` HEAD
 `30c5c8be8d94db3b47bade0f7024371f8b9588c6` / tree
-`d222695b9505206530ce9da3a70196ce774c79e5`. Its product target is
+`d222695b9505206530ce9da3a70196ce774c79e5`; later commits in this checkpoint
+are documentation-only. Its product target is
 `packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi`.
 
 The focused harness will be a new additive
