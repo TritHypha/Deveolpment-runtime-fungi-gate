@@ -38,6 +38,7 @@
     "focusedFloat64AndHostOracle": "26/26 passed; 0 failed; 0 skipped",
     "adjacentCompilerRegression": "72/72 passed; 0 failed; 0 skipped",
     "runtimePackage": "27/27 passed; 0 failed; 0 skipped",
+    "fullCompilerSuite": "6997/6997 passed; 0 failed; 0 skipped",
     "typechecks": "compiler and runtime passed",
     "builds": [
       "packages-ts/galerina-core-compiler: npm run build",

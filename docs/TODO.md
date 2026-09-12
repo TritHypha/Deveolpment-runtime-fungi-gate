@@ -14,8 +14,9 @@ counts or open items that a newer section explicitly supersedes.
   `?` propagation to the f64 payload lane while retaining the i32 handle ABI.
   Decimal remains excluded from this binary-float path.
 - [x] Verify the repair with 26/26 focused Float64/host-oracle checks, 72/72
-  adjacent compiler regressions, 27/27 runtime tests, compiler/runtime
-  typechecks and a clean compiler build. Astra's independent scoped review
+  adjacent compiler regressions, 27/27 runtime tests, the full compiler package
+  suite (6997/6997), compiler/runtime typechecks and a clean compiler build.
+  Astra's independent scoped review
   returned PASS against the pre-repair source head; the exact committed repair
   receipt is recorded under `docs/independent-audits/` after integration.
 - [ ] Keep wider Option work open: Float64 array producers, contextual numeric

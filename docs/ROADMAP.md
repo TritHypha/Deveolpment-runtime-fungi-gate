@@ -13,8 +13,9 @@ statement `match` and valid Option-returning `?` propagation select the f64
 bridges, while Decimal stays out of this binary-float path.
 
 Evidence is 26/26 focused Float64/host-oracle checks, 72/72 adjacent compiler
-regressions, 27/27 runtime tests, passing compiler/runtime typechecks and a
-clean compiler build. Astra's independent scoped review returned PASS; the
+regressions, 27/27 runtime tests, the full compiler package suite (6997/6997),
+passing compiler/runtime typechecks and a clean compiler build. Astra's
+independent scoped review returned PASS; the
 exact committed repair receipt is recorded under `docs/independent-audits/`.
 This is a bounded ABI repair, not closure of generic Option or a production
 consumer switch. Float64 array producers, contextual widening, expression
