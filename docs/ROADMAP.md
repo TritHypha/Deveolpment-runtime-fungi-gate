@@ -17,6 +17,9 @@ regressions, 27/27 runtime tests, the full compiler package suite (6997/6997),
 passing compiler/runtime typechecks and a clean compiler build. Astra's
 independent scoped review returned PASS; the
 exact committed repair receipt is recorded under `docs/independent-audits/`.
+The full navigation graph at this checkpoint reports 77,737/77,737 nodes and
+203,041/203,041 edges and resolves `__option_some_f64_v2`; its truncated
+exclusion list keeps it navigation-only for admission and corpus claims.
 This is a bounded ABI repair, not closure of generic Option or a production
 consumer switch. Float64 array producers, contextual widening, expression
 match typing, Int64, nested, String, record, active-object/alias, hostile or

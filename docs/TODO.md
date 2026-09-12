@@ -19,6 +19,11 @@ counts or open items that a newer section explicitly supersedes.
   Astra's independent scoped review
   returned PASS against the pre-repair source head; the exact committed repair
   receipt is recorded under `docs/independent-audits/` after integration.
+- [x] Refresh the navigation graph at current `main` HEAD
+  `7643445af8ead91dc70323c04a8c96d416e159f6`: full mode reports
+  77,737/77,737 nodes and 203,041/203,041 edges, and resolves the new
+  `__option_some_f64_v2` bridge. The graph remains navigation-only; its
+  truncated exclusion list does not authorize Fungi admission or corpus claims.
 - [ ] Keep wider Option work open: Float64 array producers, contextual numeric
   widening, expression-position match typing, Int64, nested, String, record,
   active-object/alias, hostile or sparse container semantics and production
