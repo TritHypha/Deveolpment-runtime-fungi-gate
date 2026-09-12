@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 
 import { assertScalarClassifierAsset, proveScalarClassifier } from "../../../scripts/lib/scalar-classifier-fungi-proof.mjs";
+import { parseProgram } from "@galerina/core-compiler";
 import { generateReceipts } from "../dist/index.js";
 
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,14 +28,14 @@ pure flow probe() -> Int
     let h: Int = Session()
     let i: Int = validate()
     let j: Int = redact()
-    let k: Int = emit()
-    let l: Int = return()
+    let k: Int = receiver.emit()
+    let l: Int = receiver.return()
     let m: Int = Ok()
     let n: Int = Err()
     let o: Int = Some()
     let p: Int = None()
-    let q: Int = true()
-    let r: Int = false()
+    let q: Int = receiver.true()
+    let r: Int = receiver.false()
     let kept: Int = customHelper()
     return kept
   }
@@ -62,6 +63,22 @@ describe("devtools-context package-owned builtin name decision", () => {
   });
 
   it("keeps every builtin out of the public receipt callee list", () => {
+    const parsed = parseProgram(PUBLIC_BEHAVIOR_SOURCE, "builtin-filter.fungi");
+    assert.deepEqual(parsed.diagnostics, [], "the public behavior fixture must parse cleanly");
+
+    const callNames = new Set();
+    const collectCallNames = (node) => {
+      if (node.kind === "callExpr") {
+        const name = node.value ?? node.children?.[0]?.value;
+        if (typeof name === "string") callNames.add(name);
+      }
+      for (const child of node.children ?? []) collectCallNames(child);
+    };
+    collectCallNames(parsed.ast);
+    for (const name of ACCEPTED) {
+      assert.ok(callNames.has(name), `fixture must route ${name} through a call expression`);
+    }
+
     const receipts = generateReceipts(PUBLIC_BEHAVIOR_SOURCE, { fileName: "builtin-filter.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
