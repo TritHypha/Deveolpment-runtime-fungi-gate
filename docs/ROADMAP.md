@@ -16,11 +16,13 @@ Float64 metrics and fail-closed review routing. Other runtime/border obligations
 remain open; there is no full
 chapter closure, consumer switch or production-authority change.
 
-The two newly authored native product candidates are stored under
-`packages/fungi/products/galerina/rd0873-ai-agent-report/` and
-`packages/fungi/products/galerina/rd0873-core-vector/`. Their retained
-TypeScript oracles and differential tests remain in `packages-ts`; the path
-move does not imply consumer admission or TypeScript retirement.
+The AI-agent native product candidates are stored under
+`packages/fungi/products/galerina/rd0873-ai-agent/` and
+`packages/fungi/products/galerina/rd0873-ai-agent-report/`; core-vector
+candidates are under `packages/fungi/products/galerina/rd0873-core-vector/`.
+Their retained TypeScript oracles and differential tests remain in
+`packages-ts`; the path move does not imply consumer admission or TypeScript
+retirement.
 The core-vector product candidate now also covers `validateMatrixType`, with
 rows-then-columns diagnostic parity at the safe-integer boundary.
 It now covers `validateTensorType` for dense dimension arrays, including the
