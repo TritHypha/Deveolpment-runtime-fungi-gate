@@ -71,6 +71,13 @@ and duplicate/template checks. The coverage receipt is
 `docs/independent-audits/2026-09-12-rd0873-overlay-coverage-v1.json`; this is
 retained test evidence, not full execution or product admission.
 
+Role reconciliation also confirms that the `vectorTierSelectionCore` overlay
+is a test decision core rather than a product twin: it adds profile admission
+and an unknown-tier fallback that `selectVectorTier` does not perform. It stays
+under `packages-ts/galerina-test` pending typed profile lowering, exact
+differential vectors and fresh admission. The audit is recorded in
+`docs/independent-audits/2026-09-12-rd0873-overlay-role-audit-v1.json`.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)

@@ -1,0 +1,50 @@
+{
+  "schema": "galerina.rd0873-overlay-role-audit.v1",
+  "generatedAt": "2026-09-12T04:50:00.0000000Z",
+  "status": "ROLE_RECONCILED_NON_AUTHORING",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "f60239702cf42e1dbc0106b693c83b27a3a5eaa7",
+    "tree": "34e9b234da32ebda0b392250c06cae29d7a3c579"
+  },
+  "asset": {
+    "source": {
+      "path": "packages-ts/galerina-core-economics/src/index.ts",
+      "symbol": "selectVectorTier",
+      "sha256": "sha256:1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+      "contract": "HardwareProfile -> scalar | avx2 | avx512; returns hw.vectorTier unchanged"
+    },
+    "overlay": {
+      "path": "packages-ts/galerina-test/src/self-hosted/conversion-overlays/vector-tier-selection.fungi",
+      "flow": "vectorTierSelectionCore",
+      "sha256": "sha256:655f865ded94b7073a7190461232ced511daa176abe6d94dc412140f9d12523b",
+      "contract": "Bool + String -> String; denies unadmitted profiles to scalar and admits only avx2/avx512 strings"
+    }
+  },
+  "roleDecision": {
+    "overlayRole": "retained test decision-core overlay",
+    "productTwin": false,
+    "exactSemanticTwin": false,
+    "reason": "The overlay adds a profile-admission guard and an unknown-tier fallback that the TypeScript getter does not perform; it is a safety-policy probe, not a replacement for the source symbol.",
+    "nextAction": "Keep the overlay in the test package. Do not copy it into packages/fungi/products/galerina or promote the economics queue row until a typed HardwareProfile lowering, exact differential vectors and a fresh owner admission exist."
+  },
+  "coverageContext": {
+    "overlayAssets": 2200,
+    "candidateBindings": 2200,
+    "directExecutionCases": 1690,
+    "notDirectlyExecutedCases": 510
+  },
+  "boundaries": {
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "queueRelabeled": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "corpusAssuranceRerun": false,
+    "productionAuthority": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "The overlay inventory is now distinguished from product twins. Existing test overlays provide advisory decision probes; they do not satisfy product conversion, exact parity or admission."
+}

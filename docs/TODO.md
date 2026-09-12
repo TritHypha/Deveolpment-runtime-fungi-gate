@@ -64,6 +64,12 @@ counts or open items that a newer section explicitly supersedes.
   55 overlay decision tests, while 1,690 cases execute directly and 510 are
   covered by binding plus duplicate/template checks. The coverage receipt is
   `docs/independent-audits/2026-09-12-rd0873-overlay-coverage-v1.json`.
+- [x] Distinguish test overlays from product twins: the
+  `vectorTierSelectionCore` overlay intentionally adds profile admission and
+  unknown-tier fallback, so it is not an exact twin of
+  `selectVectorTier`. Keep it test-only pending typed profile lowering and
+  explicit admission; see
+  `docs/independent-audits/2026-09-12-rd0873-overlay-role-audit-v1.json`.
 
 ### Selective conversion: first chapter repairs - 2026-09-12
 
