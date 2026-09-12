@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Selective conversion: Float64 Option ABI repair - 2026-09-12
+
+- [x] Repair the bounded Float/Float64/Double Option lane in the compiler and
+  WASM host. Versioned f64 bridges preserve finite payloads, signed zero and
+  explicit None handles; the i32 and f64 readers reject wrong-kind and
+  malformed handles, and non-finite payloads/defaults refuse fail-closed.
+- [x] Wire typed `Some`, `unwrapOr`, statement `match` and valid Option-returning
+  `?` propagation to the f64 payload lane while retaining the i32 handle ABI.
+  Decimal remains excluded from this binary-float path.
+- [x] Verify the repair with 26/26 focused Float64/host-oracle checks, 72/72
+  adjacent compiler regressions, 27/27 runtime tests, compiler/runtime
+  typechecks and a clean compiler build. Astra's independent scoped review
+  returned PASS against the pre-repair source head; the exact committed repair
+  receipt is recorded under `docs/independent-audits/` after integration.
+- [ ] Keep wider Option work open: Float64 array producers, contextual numeric
+  widening, expression-position match typing, Int64, nested, String, record,
+  active-object/alias, hostile or sparse container semantics and production
+  admission. This bounded repair does not close the generic Option ABI or
+  authorize a consumer switch.
+
 ### Selective conversion: first chapter repairs - 2026-09-12
 
 - [x] Classify the six AI-agent and seven core-vector exports as runtime targets;

@@ -3,6 +3,24 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Selective conversion: Float64 Option ABI repair - 2026-09-12
+
+The compiler and WASM host now have a bounded, versioned Float/Float64/Double
+Option payload lane. Option handles remain i32; finite f64 payloads, signed zero
+and explicit None are preserved, wrong-kind and malformed handles are refused,
+and non-finite payloads or defaults fail closed. Typed `Some`, `unwrapOr`,
+statement `match` and valid Option-returning `?` propagation select the f64
+bridges, while Decimal stays out of this binary-float path.
+
+Evidence is 26/26 focused Float64/host-oracle checks, 72/72 adjacent compiler
+regressions, 27/27 runtime tests, passing compiler/runtime typechecks and a
+clean compiler build. Astra's independent scoped review returned PASS; the
+exact committed repair receipt is recorded under `docs/independent-audits/`.
+This is a bounded ABI repair, not closure of generic Option or a production
+consumer switch. Float64 array producers, contextual widening, expression
+match typing, Int64, nested, String, record, active-object/alias, hostile or
+sparse container semantics and admission remain open.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)

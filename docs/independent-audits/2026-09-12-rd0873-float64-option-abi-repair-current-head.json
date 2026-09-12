@@ -1,0 +1,67 @@
+{
+  "schema": "galerina.rd0873-float64-option-abi-repair.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_BOUNDED_FLOAT64_OPTION_ABI_REPAIR",
+  "authorizing": false,
+  "reviewer": {
+    "provider": "GPT-6 Astra",
+    "mode": "independent read-only review",
+    "advisory": true
+  },
+  "reviewedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "59082bc840fcc9054c2e44d91119df7133c64c86",
+    "tree": "f49d2d0aaabf336f59589d95fac94e1085d91f81",
+    "parent": "244f4838ab416c8b0361816445e04d7547b2927f"
+  },
+  "scope": [
+    "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+    "packages-ts/galerina-core-compiler/src/wat-emitter.ts",
+    "packages-ts/galerina-core-compiler/tests/wat-host-stdlib-oracle.test.mjs",
+    "packages-ts/galerina-core-compiler/tests/wat-f64-followups-165.test.mjs"
+  ],
+  "sourceSha256": {
+    "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts": "09f59a0a9162275c8ecfbfc85fdafa11e96127598ecf3137fdd40240c9e3cf5b",
+    "packages-ts/galerina-core-compiler/src/wat-emitter.ts": "0b968dedaca79068307ba33dee1d96001a87077fb041784f617ce9e467db29c8",
+    "packages-ts/galerina-core-compiler/tests/wat-host-stdlib-oracle.test.mjs": "aa49a5882e9ea1ebbbbd4dfae861f1f568afc1327e63efccc43ccc0aa2f3d6e5",
+    "packages-ts/galerina-core-compiler/tests/wat-f64-followups-165.test.mjs": "f5e66af92c7ad1f2938e8fc9d352a17a40f11d2d964b6ce296e5c96dd8082b7f"
+  },
+  "finding": {
+    "repair": "The WASM host stores typed i32 and f64 Option payloads behind the shared i32 handle. Versioned f64 producers, readers and unwrapOr bridges preserve finite Float/Float64/Double values and signed zero; wrong-kind and malformed handles refuse, and non-finite payloads or defaults refuse fail-closed.",
+    "compiler": "Typed Some, unwrapOr, statement match and valid Option-returning ? propagation select the f64 bridges from static Option payload types. Decimal remains excluded from this binary-float lane.",
+    "compatibility": "Existing i32 Option producers and readers remain on their established _v2 ABI and reject f64 handles; legacy raw helpers remain unchanged.",
+    "zeroTrust": "A Float64 Option ? in a non-Option-returning flow is emitted as an unreachable refusal rather than mixing an i32 None handle with an f64 result."
+  },
+  "checks": {
+    "focusedFloat64AndHostOracle": "26/26 passed; 0 failed; 0 skipped",
+    "adjacentCompilerRegression": "72/72 passed; 0 failed; 0 skipped",
+    "runtimePackage": "27/27 passed; 0 failed; 0 skipped",
+    "typechecks": "compiler and runtime passed",
+    "builds": [
+      "packages-ts/galerina-core-compiler: npm run build",
+      "packages-ts/galerina-core-runtime-wasm: npm run build"
+    ],
+    "diffCheck": "PASS",
+    "stagedGrowthGate": "CLEAN; 4 staged paths; no findings"
+  },
+  "boundaries": {
+    "fungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "remaining": [
+    "Float64 array producers",
+    "contextual integer-to-Float64 Option widening",
+    "expression-position match result typing",
+    "Int64, nested, String and record Option payloads",
+    "active-object and alias semantics",
+    "hostile or sparse container behavior",
+    "generic Option admission and consumer switching"
+  ],
+  "verdict": "Astra independently PASSed this exact committed bounded repair. The generic Option lane, conversion queue and product Fungi admission remain open and unchanged."
+}
