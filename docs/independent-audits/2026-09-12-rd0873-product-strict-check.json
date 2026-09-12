@@ -1,0 +1,114 @@
+{
+  "schema": "galerina.rd0873-product-strict-check.v1",
+  "generatedAt": "2026-09-12T01:57:36.763Z",
+  "status": "PASS_BOUNDED_PRODUCT_STRICT_CHECK",
+  "authorizing": false,
+  "reviewedCommit": "a7ac2ec2cac8b62026f03abc2372220df611e3b8",
+  "reviewedTree": "eff1d8b8bdadbc320096957485da1298492a3f4c",
+  "scope": {
+    "root": "packages/fungi/products/galerina",
+    "fileCount": 15,
+    "files": [
+      {
+        "path": "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi",
+        "sha256": "sha256:bd5993a9d28ef4073e3e4e80ad6fcb0cab3fcc75b6d65d0d220f7e7ba1043544",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent-report/create-agent-report.fungi",
+        "sha256": "sha256:493e7f433ad638f2b7c82e566223888a30e98eef9ae2613d52b8c944fd9d2417",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/apply-agent-merge-policy.fungi",
+        "sha256": "sha256:49ff894d4a46e7f483b5e2b6b214728f2e705151d1c853844a1b56c9edc189f7",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-definition.fungi",
+        "sha256": "sha256:092b0e6aeb30502dc6d27aff07d8deab0151e021b538b9642e41ec687fc4a697",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+        "sha256": "sha256:07f3ed4a3c46ac70282fe22b1f4f883933681df2a80717dfccf472a7ec0f4563",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-task-group-plan.fungi",
+        "sha256": "sha256:877dd1526b46a9167245aaf85efcb2a358eb00d417aed55395452f23972176c0",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-tool-permissions.fungi",
+        "sha256": "sha256:5a89659aa5d09eb3081c5adc08ef1f708d680ba818dbe35e0ad0d38e45ff6fcd",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+        "sha256": "sha256:6a2c226c3d9104b9239059bdcbabe4ab01c49b722fb90c01c6cc3ec064671698",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+        "sha256": "sha256:c63fbd928682adc4cf17d63459cd5a1472186ed9edee061396f52cf19230ee9f",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-matrix-type.fungi",
+        "sha256": "sha256:b7e991c60707c83c181a7c05f1a4605ba51709db2c121cc71faa7519777b1b76",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-operation.fungi",
+        "sha256": "sha256:04c61b941d13b34a174633f433f3029db0e40593a1c7f03bd82c35c08f0102a1",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi",
+        "sha256": "sha256:bd1f990ecf93194e4c43b3727e9c4bd80f9933fdebd18cbc0a4973707920e050",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-operation.fungi",
+        "sha256": "sha256:8b028c23bb8dc4bce0a4d9a529364581895074fc02958f81e206a792e11a9905",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-type.fungi",
+        "sha256": "sha256:0b7bb6521d19e08967e2334742b4b3445c4e99584b2c7531e5ef8fda0910e912",
+        "strictGovernance": "PASS"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi",
+        "sha256": "sha256:af00048f6794400fe6318a38fb0f96a1d828b75dbea66d918d830d09398bb571",
+        "strictGovernance": "PASS"
+      }
+    ]
+  },
+  "checks": {
+    "command": "node galerina.mjs check <path> --strict-governance",
+    "filesPassed": 15,
+    "filesFailed": 0,
+    "errors": 0,
+    "governanceWarnings": 0,
+    "differentialCommand": "node --test tests/wat-agent-definition-parity.test.mjs tests/wat-agent-report-parity.test.mjs tests/wat-agent-merge-policy-parity.test.mjs tests/wat-agent-task-group-plan-parity.test.mjs tests/wat-vector-type-parity.test.mjs tests/wat-matrix-type-parity.test.mjs tests/wat-tensor-type-parity.test.mjs tests/wat-vector-operation-parity.test.mjs tests/wat-tensor-operation-parity.test.mjs tests/wat-vector-report-parity.test.mjs tests/wat-vector-definition-parity.test.mjs tests/wat-float-record-refusal.test.mjs tests/wat-float-finite-classifier.test.mjs",
+    "differentialTests": 117,
+    "differentialPassed": 117,
+    "differentialFailed": 0
+  },
+  "limits": {
+    "corpusAssuranceRerun": false,
+    "fullCorpusClaim": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false
+  },
+  "remainingGates": [
+    "fresh exact-head owner admission naming a non-empty source scope before new authoring",
+    "custom limits path parity",
+    "generic scalar Option ABI repair",
+    "active-object, alias, sparse-array and hostile-accessor host profiles",
+    "physical SLIDE/VOK evidence and consumer admission"
+  ]
+}
