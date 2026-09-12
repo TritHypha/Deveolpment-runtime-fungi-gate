@@ -1,0 +1,285 @@
+{
+  "schema": "galerina.rd0873.trinot-preauthoring-evidence.v1",
+  "status": "HOLD_NON_AUTHORING",
+  "authorizing": false,
+  "capturedAt": "2026-09-12",
+  "scope": {
+    "package": "galerina-core-logic",
+    "sourcePath": "packages-ts/galerina-core-logic/src/index.ts",
+    "symbol": "triNot",
+    "sourceSpan": {
+      "startLine": 83,
+      "endLine": 85,
+      "canonicalization": "UTF8_NO_BOM_LF",
+      "bytes": 119,
+      "sha256": "sha256:cd8c868dd1534c935730a97590d82fdc5b7affa579e2ce10cb656f456e4e8706"
+    },
+    "sourceFileBytes": 13409,
+    "sourceFileSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+    "targetPath": "packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi",
+    "targetExists": false,
+    "focusedTestPath": "packages-ts/galerina-core-logic/tests/tri-not-fungi-conversion.test.mjs",
+    "focusedTestExists": false,
+    "existingSuitePath": "packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
+    "existingSuiteBytes": 2990,
+    "existingSuiteSha256": "sha256:d4a24950cf3c2a8d62e53b2e6b573e3873dc2fe82055cdfaf5c6919d14e02166"
+  },
+  "buildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "cd01e2f1300cbeb5a9d1f60f00a7a3b6a0058c78",
+    "tree": "69aae5442b03a4aaeb7f83fd16590e3235f1df97",
+    "gitRole": "provenance-only"
+  },
+  "compiler": {
+    "package": "@galerina/core-compiler@1.0.0-beta.2",
+    "launcherPath": "galerina.mjs",
+    "launcherBytes": 187603,
+    "launcherSha256": "sha256:0bb5afde26f3514da4d75a965b5464419146a4c5ac27532f1f5f8591f59a5a41",
+    "packageManifestPath": "packages-ts/galerina-core-compiler/package.json",
+    "packageManifestBytes": 10878,
+    "packageManifestSha256": "sha256:23dbe762398e975d81b6ac3d5aaf06330872d486307f4d238c767ec076fa6285",
+    "executedClosureReceipt": "PARTIAL_NON_AUTHORITATIVE",
+    "buildEvidence": {
+      "status": "MEASURED_NON_AUTHORITATIVE",
+      "path": "packages-ts/galerina-core-compiler/dist/build-evidence.json",
+      "bytes": 68510,
+      "sha256": "sha256:62544a088ffbdc8e607f1129d7b46f419f38c39427eacf2ac3c142480d62a954",
+      "trackedInputCount": 846,
+      "inputDigest": "sha256:907cdab375727e24f87e842c7fb2178c42aaa43b3751be4346f0900966d76c43",
+      "command": "npm --prefix packages-ts/galerina-core-compiler run build",
+      "result": "PASS",
+      "evidenceCapBytes": 65536,
+      "withinEvidenceCap": false,
+      "boundedEvidenceIncluded": false,
+      "referenceMode": "OUT_OF_BAND_DIGEST_ONLY",
+      "availability": "LOCAL_IGNORED_ARTIFACT",
+      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+    },
+    "focusedExecution": {
+      "status": "PASS_FOCUSED_NOT_CLOSURE",
+      "command": "node --test packages-ts/galerina-core-compiler/tests/rd0873-first-native-slice.test.mjs packages-ts/galerina-core-compiler/tests/wat-k3-constructs.test.mjs packages-ts/galerina-core-compiler/tests/wat-p9-typechecker-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-p9-giremit-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-assembler-isolation.test.mjs",
+      "tests": {
+        "passed": 64,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exercisedStages": [
+        "type-checker",
+        "GIR emitter",
+        "WAT assembler",
+        "interpreter/WASM parity"
+      ],
+      "testFiles": [
+        {
+          "path": "packages-ts/galerina-core-compiler/tests/rd0873-first-native-slice.test.mjs",
+          "bytes": 8262,
+          "sha256": "sha256:18ff7958d6979f08f501a76346aa50dd90b2c1a052a2cfe594e9c9b3bc0543fd"
+        },
+        {
+          "path": "packages-ts/galerina-core-compiler/tests/wat-k3-constructs.test.mjs",
+          "bytes": 11303,
+          "sha256": "sha256:b3888d0dda5e725b2a810d524d5f4c7355c3bbac5c4165f4d6e1a3d44b941d94"
+        },
+        {
+          "path": "packages-ts/galerina-core-compiler/tests/wat-p9-typechecker-parity.test.mjs",
+          "bytes": 12889,
+          "sha256": "sha256:bf44d81c76599a5ac06ce75d945e9dc88ba1c5978fc996f96e65a5c6af97d59a"
+        },
+        {
+          "path": "packages-ts/galerina-core-compiler/tests/wat-p9-giremit-parity.test.mjs",
+          "bytes": 11247,
+          "sha256": "sha256:01bb35acf957a7f9c87749c8f36c0c2c4979fbd6fbd8cb90ae3fcf362c40733b"
+        },
+        {
+          "path": "packages-ts/galerina-core-compiler/tests/wat-assembler-isolation.test.mjs",
+          "bytes": 6071,
+          "sha256": "sha256:c184b5cbbe78308a1327ab101b02239a7996cd32249c461f8102455f1745c754"
+        }
+      ]
+    }
+  },
+  "profile": {
+    "id": "slide.pure-scalar.v1",
+    "name": "scalar-1",
+    "digest": "sha256:bcaff64aa174de78063e7bcad46ee91ee56264a14bbdc882c4f5247fa146f3bf",
+    "ownerEvidence": {
+      "status": "PARTIAL_NOT_AUTHORITATIVE",
+      "slideHead": "2e8e41bffce69aca2f7e01b9208cf9711e4f0944",
+      "slideTree": "1b5319d6d85b59842b1ca6cbc8b6575053a065db",
+      "contractPath": "SLIDE/contracts/v2/39-CHECKED-FUNGI-PURE-SCALAR-MODULE.md",
+      "contractSha256": "sha256:cd840b6ac6b37303665f0cc763d2839117dfdd83aee2ade2c3cea2225d6d44c6",
+      "compilerPath": "SLIDE/src/checked-fungi-pure-scalar-compiler.mjs",
+      "compilerSha256": "sha256:71a886318ee85b368302a0da4791022ad6c12f233d592dac0ffbe4df3dc84a37",
+      "toolManifestPath": "SLIDE/governance/checked-fungi-package-tool-manifest.json",
+      "toolManifestSha256": "sha256:0ca4e9893983ecbc775b68b655917e444573f1cc25c6e18738e8e5cb45f2116c",
+      "namedOwnerDecision": "NOT_RECORDED",
+      "executedProfileReceipt": "NOT_RECORDED"
+    }
+  },
+  "hostBoundary": {
+    "typescriptValidation": "assertTri uses strict membership {-1,0,1} and throws TypeError otherwise",
+    "adapterPath": "NOT_FOUND_IN_SCOPED_PACKAGE",
+    "requiredRule": "validate exact primitive membership and canonicalize zero before coercive WASM ingress",
+    "status": "MISSING_BLOCKING",
+    "existingTestBoundaryReference": {
+      "path": "packages-ts/galerina-core-logic/tests/is-tri-fungi-conversion.test.mjs",
+      "symbol": "hostBoundary",
+      "lines": [
+        44,
+        48
+      ],
+      "behavior": "typeof value === number then Boolean(fungiNumericClassifier(value)); non-numbers return false",
+      "status": "INSUFFICIENT_FOR_TRINOT",
+      "deficiency": "test-only helper forwards NaN, infinities and fractional numbers; it does not enforce exact Tri membership {-1,0,1} before WASM ingress"
+    }
+  },
+  "dependencyClosure": {
+    "status": "MEASURED_NON_AUTHORITATIVE",
+    "digest": "sha256:889d65ae5ee3cd66f325054cbd7b5e2f0cba2bd382d6e9047b4cdc9cd415e47d",
+    "outboundDependencies": [],
+    "inFileDependencies": [
+      {
+        "name": "Tri",
+        "kind": "type",
+        "lines": [
+          16,
+          16
+        ]
+      },
+      {
+        "name": "TRI_FALSE",
+        "kind": "constant",
+        "lines": [
+          18,
+          18
+        ]
+      },
+      {
+        "name": "TRI_TRUE",
+        "kind": "constant",
+        "lines": [
+          20,
+          20
+        ]
+      },
+      {
+        "name": "TRI_UNKNOWN",
+        "kind": "constant",
+        "lines": [
+          19,
+          19
+        ]
+      },
+      {
+        "name": "isTri",
+        "kind": "function",
+        "lines": [
+          79,
+          81
+        ]
+      },
+      {
+        "name": "assertTri",
+        "kind": "function",
+        "lines": [
+          438,
+          444
+        ]
+      },
+      {
+        "name": "invertTri",
+        "kind": "function",
+        "lines": [
+          446,
+          448
+        ]
+      }
+    ],
+    "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+    "observation": "triNot has no module imports. Its local semantic references are listed separately from the host TypeError constructor used by assertTri; no adapter binding is claimed.",
+    "serialization": "UTF8 JSON.stringify canonical record with object insertion order; sha256 over those UTF8 bytes",
+    "spanBoundary": "Inclusive source line ranges; canonical symbol span joins lines 83-85 with LF and no trailing LF",
+    "hostDependencies": [
+      {
+        "name": "TypeError",
+        "kind": "constructor",
+        "lines": [
+          440,
+          440
+        ],
+        "status": "UNBOUND_HOST_SEMANTIC"
+      }
+    ]
+  },
+  "waveLimits": {
+    "maxSymbols": 1,
+    "maxSourceFiles": 1,
+    "maxPrimaryInputBytes": 16384,
+    "sourceBytes": 13409,
+    "sourcePlusExistingSuiteBytes": 16399,
+    "sourcePlusExistingSuiteWithinCap": false,
+    "maxOutputBytes": 65536,
+    "maxEvidenceBytes": 65536,
+    "timeoutMs": 600000,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE",
+    "inputAccounting": {
+      "policy": "PRIMARY_SOURCE_ONLY_WITH_SEPARATE_ANCILLARY_EVIDENCE",
+      "primaryPayload": "scope.sourcePath",
+      "primaryBytes": 13409,
+      "primaryWithinCap": true,
+      "ancillaryEvidence": [
+        "scope.existingSuitePath"
+      ],
+      "ancillaryEvidenceBytes": 2990,
+      "ancillaryWithinEvidenceCap": true,
+      "combinedAdvisoryBytes": 16399,
+      "combinedWithinPrimaryCap": false,
+      "aggregateRunnerRule": "If the runner combines primary and ancillary bytes into the primary cap, HOLD before authoring.",
+      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+    },
+    "evidenceAccounting": {
+      "focusedTestBytes": 49772,
+      "focusedTestsWithinEvidenceCap": true,
+      "compilerBuildEvidenceBytes": 68510,
+      "compilerBuildEvidenceWithinCap": false,
+      "compilerBuildEvidencePolicy": "Reference by digest only until a bounded closure receipt is produced; do not count it as admitted evidence.",
+      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+    }
+  },
+  "focusedChecks": {
+    "command": "npm --prefix packages-ts/galerina-core-logic test",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "tests": {
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "custody": {
+    "queueRead": false,
+    "projectCorpusRerun": false,
+    "newFungiSourceCreated": false,
+    "newFocusedTestCreated": false,
+    "typescriptShadowRetained": true,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "physicalSlideAdmission": false,
+    "vokAdmission": false,
+    "productionAuthority": false
+  },
+  "decision": {
+    "verdict": "HOLD",
+    "reason": "Exact source and focused checks are current, local source dependencies and the compiler build input set are measured, and primary versus ancillary input accounting is explicit. The host boundary and authoritative profile owner/executed closure receipt remain incomplete; the 68,510-byte build-evidence artifact also exceeds the 65,536-byte evidence ceiling and is reference-only. This receipt cannot authorize authoring or queue admission.",
+    "nextEvidence": [
+      "name and hash the exact host validation adapter or record an owner-approved boundary exclusion",
+      "record the authoritative profile owner and executed compiler/checker/emitter/assembler closure receipt",
+      "replace the over-cap build-evidence artifact with a bounded closure receipt or explicitly retain the out-of-band reference as HOLD",
+      "obtain a fresh non-empty owner admission naming this symbol, target and limits",
+      "after admission, run strict target checks and interpreter/WASM parity including invalid-input refusal"
+    ]
+  }
+}

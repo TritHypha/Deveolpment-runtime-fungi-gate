@@ -3,6 +3,41 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 triNot preauthoring evidence check - 2026-09-12
+
+- [x] Rebound the exact source snapshot to the pre-documentation `main` HEAD
+  `cd01e2f1300cbeb5a9d1f60f00a7a3b6a0058c78` / tree
+  `69aae5442b03a4aaeb7f83fd16590e3235f1df97`; later changes in this checkpoint
+  are documentation-only. The `triNot` source file and
+  lines 83-85 span hashes match the reviewed scope. The bounded evidence is
+  `docs/independent-audits/2026-09-12-rd0873-trinot-preauthoring-evidence-v1.json`.
+- [x] Run the existing `galerina-core-logic` typecheck, build and package suite:
+  65/65 tests passed. The product target and additive focused test were not
+  created, and the existing four-operation suite remains unchanged.
+- [x] Record the available SLIDE scalar contract, compiler and tool-manifest
+  identities at their own exact head/tree. These are profile-owner references,
+  not an executed closure receipt or physical admission.
+- [!] Keep authoring `HOLD_NON_AUTHORING`: no named host adapter is present in
+  the scoped package. The only nearby `hostBoundary` helper is test-only and is
+  insufficient for triNot because it forwards NaN, infinities and fractions; the
+  local source dependency closure has no module imports, and its local references
+  plus the unbound host `TypeError` constructor are listed in the receipt. The
+  compiler build input set is measured at 846 tracked inputs, with 64/64
+  focused cross-stage checks passing, but the authoritative
+  checker/emitter/assembler closure and profile owner receipt are still missing.
+  Primary source input is 13,409 bytes within the 16,384 cap; the 2,990-byte
+  existing suite is separate ancillary evidence, while a runner that aggregates
+  them to 16,399 bytes must hold. The 68,510-byte compiler build-evidence file
+  exceeds the 65,536 evidence cap and is retained as an out-of-band digest-only
+  observation, so it cannot close the gate.
+- [ ] Next bounded step: name the exact host boundary or an owner-approved
+  boundary exclusion, record the authoritative profile owner and executed
+  compiler/profile closure, resolve the over-cap evidence reference, and obtain
+  a fresh non-empty owner admission naming `triNot`, its target and limits. No
+  queue read, corpus rerun, consumer switch or TypeScript retirement is part of
+  this step.
+
+
 ## RD-0873 exact next translation scope - 2026-09-12 (review revision)
 
 The next bounded product-runtime scope is the single pure K3 operation
