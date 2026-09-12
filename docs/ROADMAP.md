@@ -38,6 +38,12 @@ operation-name, input-order and output-order diagnostics over typed Float64
 dimension records.
 The vector report candidate makes optional lists explicit, aggregates vector
 diagnostics before tensor diagnostics, and preserves warning projection order.
+The vector construction candidate now returns a typed `Result<VectorType, String>`
+with eight WASM vectors preserving successful values and exact joined constructor
+failure text. Error projection, aliases and non-finite host mapping remain open.
+Astra's independent review is retained as HOLD because `±Infinity` traps in the
+compiled path instead of reaching the typed failure; the review receipt is under
+`docs/independent-audits/` and must be resolved before semantic parity is claimed.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 

@@ -1,0 +1,123 @@
+@version 1
+
+/// Bounded translation of defineVectorType from
+/// packages-ts/galerina-core-vector/src/index.ts.
+///
+/// The source constructor throws when validation reports an error.  This pure
+/// Fungi core exposes that failure as Result<VectorType, String>; a future host
+/// adapter must map Err(message) back to the source Error contract before any
+/// consumer switch.  Lane values remain Float64 to preserve JavaScript Number
+/// semantics across the array/record ABI.
+
+record VectorDimension {
+  lanes: Float64
+}
+
+record VectorType {
+  elementType: String
+  dimension: VectorDimension
+}
+
+record VectorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if value != value { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateVectorType(vector: VectorType, path_: String) -> Array<VectorDiagnostic>
+contract { intent { "Validate constructor input in the source diagnostic order." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = Array.empty()
+
+  if vector.elementType.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_ELEMENT_TYPE_REQUIRED"
+      severity: "error"
+      message: "Vector element type is required."
+      path: path_ + ".elementType"
+    })
+  }
+
+  if isPositiveSafeInteger(vector.dimension.lanes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_VECTOR_LANES_INVALID"
+      severity: "error"
+      message: "Vector lane count must be a positive safe integer."
+      path: path_ + ".dimension.lanes"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow hasError(diagnostics: Array<VectorDiagnostic>) -> Bool
+contract { intent { "Detect any error diagnostic before projecting the constructor failure." } }
+{
+  mut index: Int = 0
+  while index < diagnostics.count() {
+    let diagnosticOpt: Option<VectorDiagnostic> = diagnostics.get(index)
+    match diagnosticOpt {
+      Some(diagnostic) => {
+        if diagnostic.severity == "error" { return true }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return false
+}
+
+pure flow joinDiagnosticMessages(diagnostics: Array<VectorDiagnostic>) -> String
+contract { intent { "Join all constructor diagnostic messages with the source separator." } }
+{
+  mut joined: String = ""
+  mut index: Int = 0
+  while index < diagnostics.count() {
+    let diagnosticOpt: Option<VectorDiagnostic> = diagnostics.get(index)
+    match diagnosticOpt {
+      Some(diagnostic) => {
+        if index == 0 {
+          joined = diagnostic.message
+        }
+        if index > 0 {
+          joined = joined + " " + diagnostic.message
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return joined
+}
+
+pure flow defineVectorType(
+  elementType: String,
+  lanes: Float64,
+) -> Result<VectorType, String>
+contract { intent { "Construct a validated vector type while preserving the source throw message as a typed failure." } }
+{
+  let vector: VectorType = {
+    elementType: elementType
+    dimension: { lanes: lanes }
+  }
+  let diagnostics: Array<VectorDiagnostic> = validateVectorType(vector, "vector")
+  if hasError(diagnostics) {
+    return Err(joinDiagnosticMessages(diagnostics))
+  }
+  return Ok(vector)
+}

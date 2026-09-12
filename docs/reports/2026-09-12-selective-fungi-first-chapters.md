@@ -9,7 +9,7 @@ for the governed conversion queue.
 | AI-agent: `validateAgentLimits`, `validateAgentToolPermissions`, `validateAgentDefinition`, `validateAgentTaskGroupPlan` | Runtime validation; convert and retain TS differential shadows. | Existing candidates. Limits and definition now have focused WASM checks; complete other behavior/border obligations before chapter closure. |
 | AI-agent: `applyAgentMergePolicy`, `createAgentReport` | Runtime policy/report construction; convert decision logic. | Both now have bounded Fungi cores and focused WASM differential checks. Retain the TypeScript compatibility adapter while active-object/alias behavior, malformed-object handling and host admission remain separate obligations. |
 | Core-vector: `validateVectorType`, `validateMatrixType`, `validateTensorType`, `validateVectorOperation`, `validateTensorOperation` | Runtime shape/operation validation; convert. | Manual implementation with numeric and sparse-input compatibility. Do not add checks that TS does not perform. |
-| Core-vector: `defineVectorType`, `createVectorReport` | Runtime construction/reporting; convert decision logic. | Exception messages, returned aliases and diagnostic order. |
+| Core-vector: `defineVectorType`, `createVectorReport` | Runtime construction/reporting; convert decision logic. | `defineVectorType` has a typed Result candidate; exception projection, returned aliases and non-finite host mapping remain separate. |
 | Both packages: interfaces and generated `.d.ts` | Declaration surface; retain or generate from its owner. | Not executable translations. |
 | Both packages: `tests/*.test.mjs` and build/test orchestration | Development verification/build tooling; retain JS/TS. | Keep checks and output integrity; no claim that release packaging excludes these files. |
 
@@ -174,6 +174,23 @@ vector-operation diagnostics before tensor-operation diagnostics, and projects
 warning messages in source order. Six WASM vectors cover defaults, valid and
 invalid operations, mixed ordering and safe-integer boundaries. This remains a
 candidate core without a consumer switch or checked admission artifact.
+
+## Vector construction translation
+
+`defineVectorType` is represented by
+`packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi`.
+The candidate keeps the JavaScript Number lane contract as `Float64`, validates
+the same element-type and lane rules, and returns `Result<VectorType, String>`.
+Eight WASM vectors compare successful construction and exact joined diagnostic
+messages against the retained TypeScript constructor, including both-invalid and
+safe-integer-boundary inputs. The typed result is an internal candidate boundary:
+a future host adapter must project `Err` to the source `Error`, preserve object
+alias behavior, and define non-finite input mapping before consumer admission.
+No checked admission artifact or runtime consumer switch is claimed.
+Astra's independent matrix returned HOLD: 200/220 cases passed, while both `±Infinity`
+cases trapped before the typed failure could be returned. The receipt and probe are
+stored under `docs/independent-audits/`; non-finite execution mapping remains a
+required repair before this constructor can be called semantically complete.
 
 The tensor validator is also stored at
 `packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi`.
