@@ -4,9 +4,10 @@
 /// The Fungi profile keeps the source's ordered checks and typed diagnostics.
 /// A path-taking helper preserves the TypeScript path override, while the
 /// original one-argument flow retains the source default. No caller authority
-/// is introduced. This WASM evidence remains bounded to admitted finite
-/// Float64 values; the source's positive-infinity behavior is a separate
-/// numeric-admission obligation and is not narrowed here.
+/// is introduced. An explicit raw-Float64 positive classifier preserves the
+/// source's +Infinity, -Infinity, and NaN predicate behavior. The evidence
+/// remains bounded to inert typed records; JavaScript getters/proxies, host
+/// marshalling, consumer cutover, and SLIDE/VOK remain outside this candidate.
 
 // A record payload keeps presence separate from the signed/fractional value.
 // The current WASM Option lane uses negative handles for absence, so a bare
@@ -38,7 +39,7 @@ contract { intent { "Require every present agent resource limit to be positive a
 {
   mut diagnostics: Array<AgentDiagnostic> = Array.empty()
 
-  if !(limits.timeoutMs > 0.0) {
+  if Float64.isPositive(limits.timeoutMs) == false {
     diagnostics = diagnostics.append({
       code: "Galerina_AGENT_TIMEOUT_REQUIRED"
       severity: "error"
@@ -47,7 +48,7 @@ contract { intent { "Require every present agent resource limit to be positive a
     })
   }
 
-  if !(limits.memoryBytes > 0.0) {
+  if Float64.isPositive(limits.memoryBytes) == false {
     diagnostics = diagnostics.append({
       code: "Galerina_AGENT_MEMORY_LIMIT_REQUIRED"
       severity: "error"
@@ -56,7 +57,7 @@ contract { intent { "Require every present agent resource limit to be positive a
     })
   }
 
-  if !(limits.maxToolCalls > 0.0) {
+  if Float64.isPositive(limits.maxToolCalls) == false {
     diagnostics = diagnostics.append({
       code: "Galerina_AGENT_TOOL_CALL_LIMIT_REQUIRED"
       severity: "error"
@@ -67,7 +68,7 @@ contract { intent { "Require every present agent resource limit to be positive a
 
   match limits.maxTokens {
     Some(value) => {
-      if !(value.value > 0.0) {
+      if Float64.isPositive(value.value) == false {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_MAX_TOKENS_INVALID"
           severity: "error"
@@ -82,7 +83,7 @@ contract { intent { "Require every present agent resource limit to be positive a
 
   match limits.rateLimitPerMinute {
     Some(value) => {
-      if !(value.value > 0.0) {
+      if Float64.isPositive(value.value) == false {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_RATE_LIMIT_INVALID"
           severity: "error"

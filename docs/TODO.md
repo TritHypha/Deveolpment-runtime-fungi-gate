@@ -21,11 +21,12 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Implement the agent-limits candidate's caller-supplied diagnostic path;
   27 focused checks pass and Astra accepted the scoped repair. Evidence:
   `docs/reports/rd0873-vector-and-agent-path-repairs-2026-09-12.md`.
-- [ ] Resolve agent-limit numeric parity: the retained TS oracle accepts
-  positive infinity, while current WASM ordering traps. Do not narrow the
-  source contract or treat the finite-path checks as full numeric coverage.
-  Evaluate an explicitly typed `Float64.isPositive` ingress classifier with
-  independent interpreter/WASM truth-table checks; preserve generic guards.
+- [x] Resolve the typed agent-limit numeric gap with the explicit
+  `Float64.isPositive` classifier and tested Float/Double aliases. Both agent
+  candidates preserve NaN/infinity behavior; generic guards remain unchanged.
+  Final classifier/agent checks pass 147/147, the full package build passes,
+  and Golden Pack is current at 11 checks plus 11 execution vectors. Astra
+  closed its two namespace-shadowing findings through focused delta reviews.
 - [ ] Continue the remaining runtime inventory through candidate, checking,
   repair and accepted work. Keep unresolved host/alias/sparse-input semantics
   visible; retained tooling and TS shadows are separate dispositions.

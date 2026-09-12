@@ -5,14 +5,37 @@ import * as L from "../dist/index.js";
 import { validateAgentDefinition, validateAgentLimits } from "../../galerina-ai-agent/dist/index.js";
 
 // This executes the actual Wave 01 twin on inert, typed records. It proves
-// diagnostic content/order for these vectors, not a JavaScript object border,
-// arbitrary getter/proxy behavior, non-finite input admission, or SLIDE/VOK.
+// diagnostic content/order and raw-f64 predicate behavior for these vectors,
+// not a JavaScript object border, arbitrary getter/proxy behavior, host
+// marshalling, consumer cutover, or SLIDE/VOK.
 const baseline = {
   name: "reviewer", inputType: "Request", outputType: "Response",
   tools: [], effects: [], permissions: [],
   limits: { timeoutMs: 0.5, memoryBytes: 1024, maxToolCalls: 1 },
   failureBehaviour: "return_typed_error",
 };
+
+function limitsWith(field, value) {
+  return { ...baseline.limits, [field]: value };
+}
+
+const nonFiniteLimitVectors = [
+  ["timeout positive infinity remains valid", "timeoutMs", Number.POSITIVE_INFINITY],
+  ["timeout negative infinity is invalid", "timeoutMs", Number.NEGATIVE_INFINITY],
+  ["timeout NaN is invalid", "timeoutMs", Number.NaN],
+  ["memory positive infinity remains valid", "memoryBytes", Number.POSITIVE_INFINITY],
+  ["memory negative infinity is invalid", "memoryBytes", Number.NEGATIVE_INFINITY],
+  ["memory NaN is invalid", "memoryBytes", Number.NaN],
+  ["tool calls positive infinity remains valid", "maxToolCalls", Number.POSITIVE_INFINITY],
+  ["tool calls negative infinity is invalid", "maxToolCalls", Number.NEGATIVE_INFINITY],
+  ["tool calls NaN is invalid", "maxToolCalls", Number.NaN],
+  ["tokens positive infinity remains valid", "maxTokens", Number.POSITIVE_INFINITY],
+  ["tokens negative infinity is invalid", "maxTokens", Number.NEGATIVE_INFINITY],
+  ["tokens NaN is invalid", "maxTokens", Number.NaN],
+  ["rate positive infinity remains valid", "rateLimitPerMinute", Number.POSITIVE_INFINITY],
+  ["rate negative infinity is invalid", "rateLimitPerMinute", Number.NEGATIVE_INFINITY],
+  ["rate NaN is invalid", "rateLimitPerMinute", Number.NaN],
+];
 const vectors = [
   ["valid required limits and absent optional limits", baseline],
   ["all structural and required limit errors in source order", {
@@ -48,6 +71,10 @@ const vectors = [
       { tool: "read", decision: "allow" },
     ], limits: { timeoutMs: -0.5, memoryBytes: 1, maxToolCalls: 0 },
   }],
+  ...nonFiniteLimitVectors.map(([name, field, value]) => [name, {
+    ...baseline,
+    limits: limitsWith(field, value),
+  }]),
 ];
 
 const str = JSON.stringify;
@@ -105,6 +132,11 @@ const customPathVectors = [
   ["definition limits path preserves all five failures", "definition.limits", allInvalidLimits],
   ["empty path preserves all five failures", "", allInvalidLimits],
   ["custom path preserves absent optional limits", "definition.limits", baseline.limits],
+  ...nonFiniteLimitVectors.map(([name, field, value], index) => [
+    `custom path ${name}`,
+    ["limits", "definition.limits", ""][index % 3],
+    limitsWith(field, value),
+  ]),
 ];
 
 function customPathProbe(index, path, limits) {

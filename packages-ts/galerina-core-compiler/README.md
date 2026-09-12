@@ -29,6 +29,26 @@ source maps
 AI context output
 ```
 
+## Positive Float64 classification
+
+`Float64.isPositive(value)` returns `Bool` for one explicitly typed binary-float
+argument. `Float.isPositive` and `Double.isPositive` are equivalent aliases.
+Positive finite values and positive infinity return `true`; NaN, negative
+infinity, negative values and both signed zeroes return `false`.
+
+This is an explicit classifier for an already supplied number. It does not
+construct a non-finite language value, prove finiteness, or admit an execution
+budget. Use `Float64.isFinite` separately when the application requires a finite
+value. A caller must supply a `Float`, `Float64` or `Double`; use a floating
+literal such as `1.0` instead of implicit integer widening.
+
+The argument is evaluated once. Invalid arithmetic still fails before
+classification, and ordinary arithmetic and comparison guards are unchanged.
+Wrong types, unsupported numeric call forms and wrong argument counts are
+rejected. A local binding that shadows the chosen type name is refused at that
+classifier call site. General JavaScript host-object admission remains a
+separate boundary.
+
 ## Early Safety Scan
 
 The current package includes a conservative compiler-facing syntax safety scan

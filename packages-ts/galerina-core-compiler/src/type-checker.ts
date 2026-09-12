@@ -450,6 +450,9 @@ const ORDERABLE_TYPES: ReadonlySet<string> = new Set([
   ...NUMERIC_TYPES, "Timestamp", "Duration", "String",
 ]);
 
+/** Binary-float spellings admitted by the raw Float64 classifier API. */
+const BINARY_FLOAT_TYPES: ReadonlySet<string> = new Set(["Float", "Float64", "Double"]);
+
 /**
  * Returns true when a value of `inferred` type can be used where `declared`
  * type is expected. Phase 8A: covers literals, numeric widening, and
@@ -1001,6 +1004,13 @@ class TypeChecker {
     return this.bindingScopes[this.bindingScopes.length - 1]?.has(name) ?? false;
   }
 
+  private hasLexicalBinding(name: string): boolean {
+    for (let i = this.bindingScopes.length - 1; i >= 0; i--) {
+      if (this.bindingScopes[i]!.has(name)) return true;
+    }
+    return false;
+  }
+
   private registerBinding(name: string): void {
     const scope = this.bindingScopes[this.bindingScopes.length - 1];
     if (scope !== undefined && name !== "") scope.add(name);
@@ -1174,6 +1184,10 @@ class TypeChecker {
 
         // Stdlib return type inference
         const receiverNode = node.children?.[0];
+        const receiverIsLexicallyBound = receiverNode?.kind === "identifier" &&
+          this.hasLexicalBinding(receiverNode.value ?? "");
+        if (method === "isPositive" && receiverNode?.kind === "identifier" &&
+            BINARY_FLOAT_TYPES.has(receiverNode.value ?? "") && !receiverIsLexicallyBound) return "Bool";
         const receiverType = receiverNode !== undefined ? this.inferType(receiverNode) : undefined;
 
         // Decimal partial-operator method forms (#53/#54): a.divide(b, scale, mode) / a.remainder(b) → Decimal.
@@ -1697,6 +1711,54 @@ class TypeChecker {
         // Skip arity/type checking for method calls (receiver.method(args)).
         // These are external library calls, not user-defined flow calls.
         if ((node as AstNode & { callStyle?: string }).callStyle === "method") {
+          if (flowName === "isPositive") {
+            const receiverNode = node.children?.[0];
+            const receiverName = receiverNode?.kind === "identifier" ? (receiverNode.value ?? "") : "";
+            const receiverType = receiverNode !== undefined ? this.inferType(receiverNode) : undefined;
+            const argNodes = node.children?.slice(1) ?? [];
+            const classifierAliasName = BINARY_FLOAT_TYPES.has(receiverName);
+            const receiverIsShadowed = classifierAliasName && this.hasLexicalBinding(receiverName);
+            const supportedStaticReceiver = classifierAliasName && !receiverIsShadowed;
+            const unsupportedNumericReceiver = NUMERIC_TYPES.has(receiverName) ||
+              (receiverType !== undefined && NUMERIC_TYPES.has(receiverType));
+            if (receiverIsShadowed) {
+              this.diagnostics.push(makeTCDiag(
+                "FUNGI-TYPE-005",
+                "INVALID_CALL_ARG_TYPE",
+                `Classifier namespace '${receiverName}' is shadowed by a lexical binding of type '${receiverType ?? "unknown"}'.`,
+                receiverNode?.location ?? node.location,
+                `Rename the binding or call the unshadowed ${receiverName}.isPositive classifier.`,
+              ));
+            } else if (!supportedStaticReceiver && unsupportedNumericReceiver) {
+              this.diagnostics.push(makeTCDiag(
+                "FUNGI-TYPE-005",
+                "INVALID_CALL_ARG_TYPE",
+                `Classifier 'isPositive' requires the static receiver Float, Float64, or Double.`,
+                receiverNode?.location ?? node.location,
+                `Call Float64.isPositive with one binary-float argument.`,
+              ));
+            } else if (supportedStaticReceiver && argNodes.length !== 1) {
+              this.diagnostics.push(makeTCDiag(
+                "FUNGI-TYPE-007",
+                "INVALID_ARGUMENT_COUNT",
+                `Classifier '${receiverName}.isPositive' expects 1 argument but received ${argNodes.length}.`,
+                node.location,
+                `Provide exactly 1 binary-float argument to '${receiverName}.isPositive'.`,
+              ));
+            } else if (supportedStaticReceiver) {
+              const argNode = argNodes[0]!;
+              const inferredArgType = this.inferType(argNode);
+              if (inferredArgType === undefined || !BINARY_FLOAT_TYPES.has(inferredArgType)) {
+                this.diagnostics.push(makeTCDiag(
+                  "FUNGI-TYPE-005",
+                  "INVALID_CALL_ARG_TYPE",
+                  `Argument 1 to '${receiverName}.isPositive' expects a binary float but received '${inferredArgType ?? "unknown"}'.`,
+                  argNode.location,
+                  `Pass a Float, Float64, or Double value as argument 1.`,
+                ));
+              }
+            }
+          }
           for (const child of node.children ?? []) this.walkNode(child);
           return;
         }

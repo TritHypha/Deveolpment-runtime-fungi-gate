@@ -20,6 +20,12 @@ execution. A repaired candidate may be committed as implementation work while
 SLIDE/VOK, platform and production obligations remain open. The production
 requirements in this ledger continue to apply to production claims.
 
+The subsequent typed positive-float classifier supplies a Boolean classification
+only. It preserves the retained agent validators' NaN/infinity semantics and
+rejects malformed or shadowed classifier calls; ordinary numeric guards remain
+unchanged. This is scoped implementation evidence, not approval of an infinite
+execution budget or a production consumer switch.
+
 ## RD-0873 housekeeping checkpoint - 2026-09-11
 
 This checkpoint is non-authorizing and binds the local working model at

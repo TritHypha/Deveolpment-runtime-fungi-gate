@@ -119,7 +119,7 @@ contract { intent { "Require the agent's structural names and append delegated t
     toolIndex = toolIndex + 1
   }
 
-  if !(definition.limits.timeoutMs > 0.0) {
+  if Float64.isPositive(definition.limits.timeoutMs) == false {
     diagnostics = diagnostics.append({
       code: "Galerina_AGENT_TIMEOUT_REQUIRED"
       severity: "error"
@@ -127,7 +127,7 @@ contract { intent { "Require the agent's structural names and append delegated t
       path: "limits.timeoutMs"
     })
   }
-  if !(definition.limits.memoryBytes > 0.0) {
+  if Float64.isPositive(definition.limits.memoryBytes) == false {
     diagnostics = diagnostics.append({
       code: "Galerina_AGENT_MEMORY_LIMIT_REQUIRED"
       severity: "error"
@@ -135,7 +135,7 @@ contract { intent { "Require the agent's structural names and append delegated t
       path: "limits.memoryBytes"
     })
   }
-  if !(definition.limits.maxToolCalls > 0.0) {
+  if Float64.isPositive(definition.limits.maxToolCalls) == false {
     diagnostics = diagnostics.append({
       code: "Galerina_AGENT_TOOL_CALL_LIMIT_REQUIRED"
       severity: "error"
@@ -145,7 +145,7 @@ contract { intent { "Require the agent's structural names and append delegated t
   }
   match definition.limits.maxTokens {
     Some(value) => {
-      if !(value.value > 0.0) {
+      if Float64.isPositive(value.value) == false {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_MAX_TOKENS_INVALID"
           severity: "error"
@@ -159,7 +159,7 @@ contract { intent { "Require the agent's structural names and append delegated t
   }
   match definition.limits.rateLimitPerMinute {
     Some(value) => {
-      if !(value.value > 0.0) {
+      if Float64.isPositive(value.value) == false {
         diagnostics = diagnostics.append({
           code: "Galerina_AGENT_RATE_LIMIT_INVALID"
           severity: "error"

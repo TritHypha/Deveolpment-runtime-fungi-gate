@@ -20,17 +20,21 @@ checks (89/89 with the unchanged adjacent definition check). Independent Astra
 review found no semantic regressions across 144 additional comparisons; its
 test-annotation finding was corrected with an 11/11 focused rerun. The
 agent-limits custom diagnostic path is implemented with 27/27 checks and accepted
-independent review. The next numeric gap is agent-limit positive
-infinity: TS accepts it, but the current WAT ordering guard traps. Preserve that
-obligation without narrowing the source contract. Unary Float64 negation is
-already repaired in the compiler; the earlier contrary chat statement was wrong.
+independent review. The subsequent explicit positive-value classifier closes
+the typed agent-limit NaN/infinity gap in both limit/definition candidates.
+The final classifier/agent suite passes 147/147, normal compiler build evidence
+passes over 846 inputs, and Golden Pack is current at 11/11 plus 11/11 vectors.
+Astra's namespace-shadowing findings were repaired and closed by focused delta
+reviews. Unary Float64 negation is already repaired in the compiler; the earlier
+contrary chat statement was wrong.
 
 Implementation evidence is summarized in
 `docs/reports/rd0873-vector-and-agent-path-repairs-2026-09-12.md`.
-The next bounded design is an explicitly typed positive-value Float64 classifier
-with separate interpreter/WASM truth-table evidence. The existing `isFinite`
-classifier cannot distinguish the sign of infinity; do not use string parsing
-or weaken global ordering guards. Continue under the standing source-work approval.
+Continue the remaining product/runtime inventory under the standing approval.
+Use the verified positive classifier where the source predicate is `x > 0`;
+use `isFinite` only when the source requires finiteness. Preserve the distinction
+between numerical classification and actual execution-budget admission. Generic
+guards, host-object boundaries and production admission remain unchanged.
 
 NASM 3.02 now matches the static-host recipe's executable hash and the small
 Windows prerequisite probe returns `CANDIDATE`. The historical RD audit's exact

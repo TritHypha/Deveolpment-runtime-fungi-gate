@@ -1147,6 +1147,12 @@ const FLOAT_CLASSIFIER_HELPERS: Readonly<Record<string, string>> = {
     "    (f64.le (f64.abs (local.get $v)) (f64.const 1.7976931348623157e+308)))",
     ")",
   ].join("\n"),
+  $fungi_is_positive_f64: [
+    "(func $fungi_is_positive_f64 (param $v f64) (result i32)",
+    "  ;; Raw IEEE-754 greater-than: +Inf is positive; NaN, -Inf, and both zeroes are not.",
+    "  (f64.gt (local.get $v) (f64.const 0))",
+    ")",
+  ].join("\n"),
 };
 
 // W5a K3 verdict helpers (2026-07-08): lattice min/max over i32 trits.
@@ -1969,6 +1975,16 @@ export function emitWATExpr(
             (recvName0 === "Float" || recvName0 === "Float64" || recvName0 === "Double") &&
             argNodes.length === 1) {
           return `(call $fungi_is_finite_f64 ${emitWATExpr(argNodes[0]!, vars, staticConsts, "Float64")})`;
+        }
+        if (name === "isPositive" &&
+            (recvName0 === "Float" || recvName0 === "Float64" || recvName0 === "Double") &&
+            (vars.has(recvName0) || staticConsts.has(recvName0))) {
+          return `(unreachable) (; isPositive namespace shadowed by lexical binding — fail closed ;)`;
+        }
+        if (name === "isPositive" &&
+            (recvName0 === "Float" || recvName0 === "Float64" || recvName0 === "Double") &&
+            argNodes.length === 1) {
+          return `(call $fungi_is_positive_f64 ${emitWATExpr(argNodes[0]!, vars, staticConsts, "Float64")})`;
         }
 
         // U1/DSS: Int.bitAnd / Int.bitOr → native i32.and / i32.or. The interpreter's BigInt fold

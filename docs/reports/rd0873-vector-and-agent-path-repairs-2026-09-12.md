@@ -33,6 +33,10 @@ findings were upheld against the changed owner files.
 
 ## Remaining work
 
+The following numeric gap describes the first repair checkpoint. The follow-up
+below closes that gap on the declared typed surface; the general host and
+production limits remain open.
+
 This proves the tested typed-record behavior with scalar Float64 ingress.
 General JavaScript object/list marshalling, getters, proxies, sparse arrays and
 aliasing are not covered. SLIDE/VOK admission and production cutover remain
@@ -58,3 +62,34 @@ not exclude the final temporary-clone fixture; it ran and cleaned up successfull
 Existing branches/worktrees were not changed. These results do not refresh
 current product corpus assurance. No global tool installation or PATH was changed
 by the agent.
+
+## Follow-up: typed positive-float classification
+
+Based on the preceding checkpoint at `1029a24ea5ef8c2f4dd3bc02be964ec2cc44023f`,
+the compiler now supplies `Float64.isPositive` and explicit Float/Double aliases.
+It returns true for positive finite values and positive infinity, and false
+for NaN, negative infinity, negative values and both zeroes. The interpreter
+rejects malformed payloads/arity without coercion; the checker requires an
+established binary-float argument and returns Bool. The WAT helper classifies
+one evaluated argument and leaves ordinary numeric guards unchanged.
+
+Both agent limit/definition candidates use it for their five ordered limit
+checks. This closes the known numeric mismatch without changing the retained TS
+oracle or silently imposing a finite-only source contract. It does not establish
+that an infinite value is acceptable to an execution-budget admission policy.
+
+Final focused evidence is 147/147: 75 classifier checks and 72 agent checks,
+including 45 raw non-finite field cases. Forty adjacent numeric-guard checks
+also passed before the later namespace-only repairs. The complete compiler
+package build passes, including build evidence over 846 source/test inputs.
+Golden Pack passes 11 checks and 11 execution vectors; regeneration changed only
+its runtime-closure digest, with no expected result or case-definition edits.
+
+Independent Astra review found an interpreter/WAT disagreement when a local
+name shadowed a primitive namespace, then a residual static-diagnostic gap for
+an uninferred local binding. Both were fixed. The checker now uses lexical name
+presence, and low-level WAT refuses shadowed classifier calls. The final delta
+review passed five focused checks plus an independent refusal/trap control,
+verified all seven frozen hashes and accepted the scoped repair. Earlier failed
+reviews are retained alongside the final result as `positive-classifier-*` in
+the session output folder. No full compiler suite or corpus assurance was rerun.

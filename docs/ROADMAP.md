@@ -13,8 +13,12 @@ proof, and they must not invent repeated permission gates for authorized work.
 The six vector/tensor non-finite dimension repairs pass 78 focused parity checks
 and independent semantic review. The agent-limits custom diagnostic path is
 implemented with 27 focused checks and has passed independent scoped review.
-Agent-limit positive-infinity parity remains the next numeric repair; the
-finite-path evidence does not cover it. Unary Float64 negation is already in `main`.
+The explicit positive-value Float64 classifier now closes the typed agent-limit
+NaN/infinity gap, with 147 focused checks, a successful package build and
+independent review of its namespace/type boundary. Golden Pack is current.
+The remaining work is runtime-scope reconciliation and the unresolved host,
+alias/container and physical-admission obligations. Unary Float64 negation is
+already in `main`.
 
 Candidate implementation, bounded semantic verification and production
 admission remain distinct stages. The existing queue is retained as historical

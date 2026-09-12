@@ -1150,6 +1150,21 @@ function numericStatic(receiver: string, method: string, args: readonly Galerina
       }
       return { __tag: "bool", value: Number.isFinite(value.value) };
     }
+    case "Float.isPositive":
+    case "Float64.isPositive":
+    case "Double.isPositive": {
+      const value = args[0];
+      if (value?.__tag === "runtimeError") return value;
+      if (args.length !== 1) {
+        return { __tag: "runtimeError", message: "InvalidFloatClassifierArgumentCount" };
+      }
+      if (value === undefined ||
+          (value.__tag !== "int" && value.__tag !== "float") ||
+          typeof value.value !== "number") {
+        return { __tag: "runtimeError", message: "InvalidFloatClassifierInput" };
+      }
+      return { __tag: "bool", value: value.value > 0 };
+    }
     case "Decimal.parse": {
       const s = strVal(args[0] ?? FUNGI_VOID);
       const n = parseFloat(s);
