@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 housekeeping owner disposition - 2026-09-12
+
+- [x] Resolve the missing owner-decision prerequisite for the prior
+  `HOUSEKEEPING REFUSED` result. The owner disposition retains all 716
+  bounded-execution findings for manual review and defers cleanup.
+- [x] Retain the hard-linked executable at
+  `build/rd0858-requirement-launcher/bad-ready-target/release/deps/galerina_requirement_launcher.exe`
+  and its second observed hard-link name in place for manual review. Its
+  measured 318,464 bytes and SHA-256 are recorded in the owner-disposition
+  report; it was not executed or changed.
+- [x] Record the detailed disposition in
+  `docs/reports/rd0873-housekeeping-owner-disposition-2026-09-12.md`.
+- [!] The earlier instrument result remains exactly `HOUSEKEEPING REFUSED` /
+  exit 2 and is not relabeled clean. Memory preflight remains a separate
+  owner-visible hold. Any deletion, quarantine, replacement or deduplication
+  still requires a new exact owner-authorized operation.
+
 ### RD-0873 isBuiltin and validateTransition canonical classifiers - 2026-09-12
 
 - [x] Replace the devtools-context `isBuiltin` Set lookup with exact literal

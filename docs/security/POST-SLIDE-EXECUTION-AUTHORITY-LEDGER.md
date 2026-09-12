@@ -7,6 +7,18 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## Housekeeping owner disposition - 2026-09-12
+
+The owner has dispositioned the prior housekeeping report at exact `main`
+head `35aae097acc4b4ccfe75a47927958dc471f7e51a`: retain the 716
+bounded-execution findings for manual review and retain the hard-linked release
+executable in place for manual review. No cleanup, quarantine, execution,
+replacement or production authority follows. The exact artifact identity is
+in `docs/reports/rd0873-housekeeping-owner-disposition-2026-09-12.md`.
+
+The earlier `HOUSEKEEPING REFUSED` / exit 2 result remains preserved and is
+not a clean or production-authority result. Memory preflight remains separate.
+
 ## Housekeeping and pause checkpoint - 2026-09-12
 
 The implementation point is `main` at

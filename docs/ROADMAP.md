@@ -3,6 +3,26 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 housekeeping owner disposition - 2026-09-12
+
+The prior read-only housekeeping refusal now has an explicit owner
+disposition at exact `main` head
+`35aae097acc4b4ccfe75a47927958dc471f7e51a`. All 716 bounded-execution
+findings are retained for manual review and deferred cleanup. The hard-linked
+release executable at
+`build/rd0858-requirement-launcher/bad-ready-target/release/deps/galerina_requirement_launcher.exe`
+and its second observed hard-link name are retained in place; the observed
+318,464-byte SHA-256 is recorded in
+`docs/reports/rd0873-housekeeping-owner-disposition-2026-09-12.md` and the
+executable was not run or changed.
+
+This resolves the missing owner-decision prerequisite without changing the
+instrument result: the earlier run remains `HOUSEKEEPING REFUSED` / exit 2 and
+is not relabeled `COMPLETE`. Memory preflight remains separate. No deletion,
+quarantine, move, replacement, queue change, branch/worktree change or source
+mutation follows from this disposition; any cleanup needs a new exact owner
+operation.
+
 ## RD-0873 isBuiltin and validateTransition canonical classifiers - 2026-09-12
 
 The two remaining devtools classifier shapes are now canonical and semantically

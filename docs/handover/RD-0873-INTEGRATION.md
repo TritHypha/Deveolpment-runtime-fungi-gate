@@ -1,5 +1,21 @@
 # RD-0873 integration checkpoint
 
+## Housekeeping owner disposition - 2026-09-12
+
+At current `main`/`origin/main` head
+`35aae097acc4b4ccfe75a47927958dc471f7e51a`, the owner has dispositioned the
+prior housekeeping holds: retain all 716 bounded-execution findings for
+manual review, and retain the named hard-linked release executable in place
+for manual review. No finding or executable byte was deleted, moved, edited,
+executed or quarantined. See
+`docs/reports/rd0873-housekeeping-owner-disposition-2026-09-12.md` for the
+measured artifact identity and exact boundary.
+
+The earlier `HOUSEKEEPING REFUSED` / exit 2 result remains preserved and is
+not relabeled clean. This resolves the missing owner-decision prerequisite so
+scoped work can resume; memory preflight remains a separate hold. Any cleanup
+or artifact replacement requires a new exact owner-authorized operation.
+
 ## Paused housekeeping checkpoint - 2026-09-12
 
 The active implementation point is `main` at

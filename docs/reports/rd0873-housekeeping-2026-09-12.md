@@ -27,6 +27,20 @@ Its three bounded steps produced:
 The refusal is preserved. No file was deleted, moved, quarantined, restored or
 rewritten by the housekeeping run.
 
+## Owner disposition - 2026-09-12
+
+The owner has now supplied a bounded disposition for both reported holds:
+retain all 716 bounded-execution findings for manual review, and retain the
+hard-linked release executable in place for manual review. No finding or byte
+was deleted, moved, edited, executed or quarantined. The detailed disposition
+is recorded in
+`docs/reports/rd0873-housekeeping-owner-disposition-2026-09-12.md`.
+
+The prior `HOUSEKEEPING REFUSED` / exit 2 result remains historical evidence;
+this disposition resolves the missing owner-decision prerequisite without
+turning the refused run into a clean result. Memory preflight remains a
+separate owner-visible hold.
+
 ## Navigation index receipt
 
 After the documentation commit, the owning external index was refreshed in
