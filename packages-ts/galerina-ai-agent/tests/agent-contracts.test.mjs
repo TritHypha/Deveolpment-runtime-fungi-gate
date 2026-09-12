@@ -53,6 +53,21 @@ describe("validateAgentLimits — unbounded is unsafe (fail-closed)", () => {
       [],
     );
   });
+
+  it("preserves a caller-supplied diagnostic path prefix", () => {
+    const diags = validateAgentLimits(
+      { timeoutMs: 0, memoryBytes: 0, maxToolCalls: 0 },
+      "definition.limits",
+    );
+    assert.deepEqual(
+      diags.map((diagnostic) => diagnostic.path),
+      [
+        "definition.limits.timeoutMs",
+        "definition.limits.memoryBytes",
+        "definition.limits.maxToolCalls",
+      ],
+    );
+  });
 });
 
 describe("validateAgentToolPermissions — allow+deny resolves to deny", () => {
