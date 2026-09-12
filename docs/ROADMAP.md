@@ -54,10 +54,10 @@ Older dated checkpoints below retain their original evidence scope.
 
 ## RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
-The current implementation checkout is on `main` at
+The implementation point used for this checkpoint was `main` at
 `f4b4b24d9be5ef1522423eff43286fe800ef66b5` (tree
-`5c99fd20ba78e21b607b860eab60ca5d14ec7721`), and the same commit is present
-on `origin/main`. The NASM 3.02 static-host prerequisite matches the pinned
+`5c99fd20ba78e21b607b860eab60ca5d14ec7721`) before this advisory
+documentation update. Re-read live Git before any later source action. The NASM 3.02 static-host prerequisite matches the pinned
 recipe and reports `CANDIDATE`. The typed positive-float repair and its
 documentation are complete at this point; the broader conversion goal remains
 open.

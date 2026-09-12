@@ -6,10 +6,10 @@ counts or open items that a newer section explicitly supersedes.
 
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
-- [x] Reconcile the current implementation point: local and remote `main`
-  are `f4b4b24d9be5ef1522423eff43286fe800ef66b5` (tree
-  `5c99fd20ba78e21b607b860eab60ca5d14ec7721`), with the compiler repair,
-  documentation and required Golden manifest committed and pushed.
+- [x] Record the implementation point used for this checkpoint: local and
+  remote `main` were `f4b4b24d9be5ef1522423eff43286fe800ef66b5` (tree
+  `5c99fd20ba78e21b607b860eab60ca5d14ec7721`) before this advisory
+  documentation update. Re-read live Git before any later source action.
 - [x] Record the NASM 3.02 prerequisite check. The executable matches the
   pinned static-host recipe and the Windows probe returns `CANDIDATE`;
   this is host-toolchain evidence, not Fungi or production admission.
