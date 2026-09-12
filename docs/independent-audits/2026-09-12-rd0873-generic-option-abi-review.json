@@ -1,0 +1,56 @@
+{
+  "schema": "galerina.rd0873-generic-option-abi-review.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "HOLD_NON_AUTHORIZING_SHARED_ABI_BOUNDARY",
+  "authorizing": false,
+  "purpose": "Record why generic scalar Option support cannot be closed by a sentinel-only patch and define the bounded evidence needed before source authoring.",
+  "reviewedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "55e9cbd954da8df52912b89840ead8d49c6011c7",
+    "tree": "c5891398d576dd4e36d18c500a952cb7b90efedf",
+    "graphEvidenceSourceTreeHead": "17a5a6c95d13859322b948f2e4b03a3eb951120a",
+    "graphEvidenceSourceTree": "c48296efd0d13e96ba9e8b45b7fb6858e2346909",
+    "note": "The intervening commits changed documentation/provenance only; no compiler or product source changed."
+  },
+  "evidenceRoutes": [
+    "packages-ts/galerina-core-compiler/src/wat-emitter.ts: Option and Result values lower to opaque i32 handles; match, try-propagation and unwrap paths test the sentinel.",
+    "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts: __option_some returns the raw input and __option_none returns -1.",
+    "packages-ts/galerina-core-compiler/src/stdlib.ts: the interpreter keeps tagged some/none values and can carry arbitrary GalerinaValue payloads.",
+    "packages-ts/galerina-core-compiler/src/wat-emitter.ts: array get/first/last and String.charAt feed the same Option handle lane."
+  ],
+  "finding": {
+    "currentEncoding": "Some(x) is the raw i32 value; None is -1.",
+    "collision": "A legitimate negative Int payload collides with None.",
+    "affectedConsumers": [
+      "Option match and try-propagation sign tests",
+      "unwrapOr and Option value/get operations",
+      "Array.get/first/last producers",
+      "String.charAt and similar optional producers",
+      "for-in lowering that consumes array elements"
+    ],
+    "whySentinelOnlyFails": "Changing the producer sentinel without coordinating every producer, consumer, host import, loop path and numeric width would either misclassify values or break existing iteration semantics."
+  },
+  "requiredRepairShape": {
+    "scope": "shared compiler/runtime ABI",
+    "minimum": [
+      "Introduce receipt-bound option handles that preserve presence separately from payload.",
+      "Add typed host unwrap/access operations for every producer and consumer.",
+      "Preserve Int, Int64, Float64, String, record and nested payload widths.",
+      "Cover match, try-propagation, unwrapOr, get/first/last, charAt and for-in with differential interpreter/WASM vectors.",
+      "Prove invalid handles and malformed host inputs fail closed."
+    ],
+    "sourceAdmissionRequired": true
+  },
+  "roleBoundary": {
+    "compilerRepairOnly": false,
+    "fungiSourceChanged": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "verdict": "Generic scalar Option remains a shared ABI hold. Continue bounded product work that uses typed inert records; do not admit a new generic Option Fungi wave until the coordinated ABI repair has an exact scope and cross-producer/consumer evidence."
+}

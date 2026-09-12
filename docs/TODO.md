@@ -18,7 +18,9 @@ counts or open items that a newer section explicitly supersedes.
   Wave 02 package roles, and manually implement the Wave 03 runtime cores.
 - [ ] Retain generic scalar-Option payload support, non-finite input mapping,
   active-object/alias semantics and the custom limits path as explicit remaining
-  obligations. No chapter or full conversion completion is claimed.
+  obligations. The generic Option ABI review records its shared producer/consumer
+  boundary in `docs/independent-audits/2026-09-12-rd0873-generic-option-abi-review.json`.
+  No chapter or full conversion completion is claimed.
 - [x] Repair negative Float64 literal and parameter lowering; executable checks
   preserve signed zero and finite-value guards, retain Decimal refusal, and
   cover the separate expression defect beyond the validator parameter probes.

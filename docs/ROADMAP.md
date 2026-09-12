@@ -64,6 +64,11 @@ in the AI-agent package (22/22 tests pass). The existing Fungi twin still
 hardcodes its default `limits.*` paths, so custom-path parity remains HOLD; the
 non-authorizing exact-head review is recorded in
 `docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-review.json`.
+The generic scalar `Option` item is also a shared ABI HOLD: the current raw-value
+`Some` and `-1` `None` encoding is consumed by match, try-propagation,
+`unwrapOr`, array access, `charAt` and iteration. Its coordinated repair shape
+is recorded in
+`docs/independent-audits/2026-09-12-rd0873-generic-option-abi-review.json`.
 
 ## RD-0873 current-head gate refresh - 2026-09-12
 
