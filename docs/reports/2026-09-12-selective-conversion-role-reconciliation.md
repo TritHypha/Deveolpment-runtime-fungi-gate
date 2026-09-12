@@ -8,6 +8,21 @@ This is a routing record for the next translation waves. It separates the
 language of a file from the role it performs. It does not authorize source
 creation, a consumer switch, TypeScript retirement, or release authority.
 
+## Generated-surface checkpoint - 2026-09-12
+
+The repository-owned graph, semantic-assurance graph, KB graph, dev-tool index,
+retirement graph and roadmap were refreshed at committed `main` head
+`8bc1d9d9d0c4915d116caf0d422fe5256a845cec` / tree
+`883bb31c0c95cfc50e8ca2de8f2886a9ddbaf74e`. The graph orchestrator passes 9/9
+and the focused graph/index tests pass 34/34. The external navigation index
+reports 78,326 nodes and 203,562 edges and remains navigation-only.
+
+The queue remains 1,605 rows with `CANDIDATE: 0`, `BLOCKED: 921` and
+`BOOTSTRAP_FLOOR: 684`. The generated contract registry reports 3,973
+contracts across 2,991 parsed `.fungi` files. This checkpoint records no new
+Fungi authoring or consumer authority; the exact-head admission gate remains
+open for a future owner decision.
+
 ## Exact-head refresh - 2026-09-12
 
 This routing record was rechecked at committed `main` head `f61312b9f919d2e7e8ad3be1f57310ce5b0910a4` / tree `19a64592445eb8ffa9f21dc6a15c1da11eda5e46`. The product-tree path correction changed storage locations only; the runtime, compiler/bootstrap, retained-tooling and native/host role decisions above remain unchanged. The current project graph reports 100 packages, 6,954 documents, 3,188 type/interface nodes, 1,462 functions and 11,612 relationships. The external navigation index is fresh at this exact head with 78,124 nodes and 203,363 edges; both are navigation evidence only.

@@ -3,6 +3,24 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 generated graph/index refresh - 2026-09-12
+
+The repository-owned graph, semantic-assurance graph, KB graph, dev-tool
+index, retirement graph, package provenance and roadmap outputs were refreshed
+at committed `main` head
+`8bc1d9d9d0c4915d116caf0d422fe5256a845cec` / tree
+`883bb31c0c95cfc50e8ca2de8f2886a9ddbaf74e`. The graph orchestrator passes 9/9
+and its focused graph/index tests pass 34/34. The external navigation index is
+fresh at this head with 78,326 nodes and 203,562 edges; it remains
+navigation-only.
+
+The generated contract registry records 3,973 contracts across 2,991 parsed
+`.fungi` files, including the Galerina product tree. The selective conversion
+queue remains at 1,605 rows with `CANDIDATE: 0`, `BLOCKED: 921` and
+`BOOTSTRAP_FLOOR: 684`. Existing authorizing evidence is tied to an older head
+and review-only revalidation, so this checkpoint claims no new source,
+consumer switch, TypeScript retirement, production authority or corpus rerun.
+
 ## RD-0873 current-head role reconciliation refresh - 2026-09-12
 
 The selective conversion role map was rechecked at `main` head `f61312b9f919d2e7e8ad3be1f57310ce5b0910a4` / tree `19a64592445eb8ffa9f21dc6a15c1da11eda5e46`. Product/runtime candidates, retained compiler/bootstrap and development-tooling JS/TS, and native/host boundaries remain separated by role. The product tree has 20 `.fungi` assets; the queue remains `CANDIDATE: 0` with 921 blocked and 684 bootstrap-floor entries. The project graph reports 100 packages and 11,612 relationships, and the external navigation index is fresh at 78,124 nodes and 203,363 edges.

@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 generated graph/index refresh - 2026-09-12
+
+- [x] Refresh the repository-owned graph, semantic-assurance graph, KB graph,
+  dev-tool index, retirement graph, package provenance and roadmap outputs at
+  the committed `main` head `8bc1d9d9d0c4915d116caf0d422fe5256a845cec` /
+  tree `883bb31c0c95cfc50e8ca2de8f2886a9ddbaf74e`.
+- [x] Confirm the orchestrator check passes 9/9 and the focused graph/index
+  tests pass 34/34. The external navigation index is fresh at this head with
+  78,326 nodes and 203,562 edges; it remains navigation-only.
+- [x] Confirm the generated contract registry is current at 3,973 contracts
+  across 2,991 parsed `.fungi` files, with product assets recorded under
+  `packages/fungi/products/galerina`.
+- [!] Keep the selective translation gate closed: the queue remains 1,605
+  rows with `CANDIDATE: 0`, `BLOCKED: 921` and `BOOTSTRAP_FLOOR: 684`.
+  Existing authorizing evidence is tied to an older head and review-only
+  revalidation; no new source, queue promotion, consumer switch, TypeScript
+  retirement, production authority or corpus rerun is claimed.
+
 ### RD-0873 current-head role reconciliation refresh - 2026-09-12
 
 - [x] Rebind the role-routing record to committed `main` head `f61312b9f919d2e7e8ad3be1f57310ce5b0910a4` / tree `19a64592445eb8ffa9f21dc6a15c1da11eda5e46`; runtime, compiler/bootstrap, development-tooling and native/host distinctions remain unchanged.
