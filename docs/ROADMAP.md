@@ -44,6 +44,10 @@ failure text. Error projection, aliases and non-finite host mapping remain open.
 Astra's independent review is retained as HOLD because `±Infinity` traps in the
 compiled path instead of reaching the typed failure; the review receipt is under
 `docs/independent-audits/` and must be resolved before semantic parity is claimed.
+The same post-commit refresh reported `indexed` at the older build point
+`02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, while `main` is `8b65d9b96`; graph
+search does not find the new symbol. It remains navigation-only pending owner
+repair of the index build point.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 

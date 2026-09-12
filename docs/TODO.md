@@ -59,6 +59,10 @@ counts or open items that a newer section explicitly supersedes.
   `±Infinity` traps in the compiled Fungi path while the TypeScript oracle returns
   the lane validation Error. Repair the execution/adapter mapping before parity or
   consumer admission is claimed; the review receipt is in `docs/independent-audits/`.
+- [!] The post-commit external graph refresh reports `indexed` but remains bound to
+  `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current `8b65d9b96`; the new
+  Fungi symbol is absent from graph search. Treat the graph as navigation-only
+  until its owner repairs the build-point refresh.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 
