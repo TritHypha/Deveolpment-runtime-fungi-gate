@@ -33,6 +33,9 @@ The vector operation candidate also preserves per-input validation order and a
 single final shape-mismatch diagnostic, with safe-integer boundary coverage.
 The AI-agent product candidates also include `validateAgentTaskGroupPlan`, with
 the three structural diagnostics checked in source order.
+The core-vector candidates now include `validateTensorOperation`, preserving
+operation-name, input-order and output-order diagnostics over typed Float64
+dimension records.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 

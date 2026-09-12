@@ -152,6 +152,14 @@ mismatch cases, including fractional and safe-integer boundaries. It remains
 candidate evidence; host object, alias and sparse-array behavior and consumer
 admission are still separate obligations.
 
+The tensor operation core is stored at
+`packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-operation.fungi`.
+It preserves the operation-name diagnostic, validates each dense input in
+order, and validates the output last. Typed dimension records carry Float64
+values across the array handle ABI. Six WASM vectors cover valid, empty,
+fractional, invalid and safe-integer-boundary dimensions. Sparse or hostile
+JavaScript arrays and consumer admission remain separate obligations.
+
 The task-group validator is stored at
 `packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-task-group-plan.fungi`.
 Its six WASM vectors preserve the TypeScript structural checks for the group

@@ -1,0 +1,119 @@
+@version 1
+
+/// Bounded translation of validateTensorOperation from galerina-core-vector/src/index.ts.
+///
+/// Tensor dimensions are typed records carrying Float64 values so the existing
+/// array handle ABI does not narrow JavaScript Number inputs to i32. The
+/// TypeScript validator remains the compatibility oracle.
+
+record TensorDimension {
+  value: Float64
+}
+
+record TensorShape {
+  dimensions: Array<TensorDimension>
+}
+
+record TensorType {
+  elementType: String
+  shape: TensorShape
+}
+
+record TensorOperation {
+  name: String
+  inputs: Array<TensorType>
+  output: TensorType
+  pure: Bool
+}
+
+record VectorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if value != value { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow appendTensorDiagnostics(
+  tensor: TensorType,
+  path_: String,
+  diagnostics_: Array<VectorDiagnostic>,
+) -> Array<VectorDiagnostic>
+contract { intent { "Append tensor dimension diagnostics in source order for a dense typed shape." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = diagnostics_
+  if tensor.shape.dimensions.count() == 0 {
+    return diagnostics.append({
+      code: "Galerina_TENSOR_DIMENSIONS_REQUIRED",
+      severity: "error",
+      message: "Tensor shape requires at least one dimension.",
+      path: path_ + ".shape.dimensions"
+    })
+  }
+
+  mut index: Int = 0
+  while index < tensor.shape.dimensions.count() {
+    let dimensionOpt: Option<TensorDimension> = tensor.shape.dimensions.get(index)
+    match dimensionOpt {
+      Some(dimension) => {
+        if isPositiveSafeInteger(dimension.value) == false {
+          diagnostics = diagnostics.append({
+            code: "Galerina_TENSOR_DIMENSION_INVALID",
+            severity: "error",
+            message: "Tensor dimensions must be positive safe integers.",
+            path: path_ + ".shape.dimensions." + index.toString()
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return diagnostics
+}
+
+pure flow validateTensorOperation(operation: TensorOperation) -> Array<VectorDiagnostic>
+contract { intent { "Validate tensor operation name and operands in source diagnostic order." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = Array.empty()
+  if operation.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_TENSOR_OPERATION_NAME_REQUIRED",
+      severity: "error",
+      message: "Tensor operation requires a name.",
+      path: "operation.name"
+    })
+  }
+
+  mut index: Int = 0
+  while index < operation.inputs.count() {
+    let inputOpt: Option<TensorType> = operation.inputs.get(index)
+    match inputOpt {
+      Some(input) => {
+        diagnostics = appendTensorDiagnostics(
+          input,
+          "operation.inputs." + index.toString(),
+          diagnostics,
+        )
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  diagnostics = appendTensorDiagnostics(operation.output, "operation.output", diagnostics)
+  return diagnostics
+}

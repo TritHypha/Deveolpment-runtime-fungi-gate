@@ -45,6 +45,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Translate `validateVectorOperation` as a bounded native product core.
   Seven WASM differential vectors preserve operand-validation order and the
   final shape-mismatch diagnostic, including safe-integer boundaries.
+- [x] Translate `validateTensorOperation` as a bounded native product core.
+  Six WASM differential vectors preserve name, dense-input and output
+  diagnostics, including empty, fractional and safe-integer dimensions.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 
