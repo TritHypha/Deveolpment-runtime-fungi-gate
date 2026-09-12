@@ -32,6 +32,30 @@ counts or open items that a newer section explicitly supersedes.
   this change does not start translation, rerun PROJECT assurance, switch a
   consumer, retire TypeScript or alter `.gate`.
 
+### RD-0873 exact-head one-symbol admission packet - 2026-09-12
+
+- [x] Record the smallest defensible scope before any further Fungi work:
+  `galerina-data-model` symbol `isResponseSafeClassification` in
+  `packages-ts/galerina-data-model/src/index.ts`, paired with the existing
+  product twin at `packages/fungi/products/galerina/rd0873-data-model/`.
+  The packet is bound to `main` HEAD `a636ab44c020c5b5718d4d87b9d467765fcd7b2b`
+  and tree `d32873777de832a730543c053a996cfa584e1922`.
+- [x] Set conservative singleton limits: profile 1, one symbol and source
+  file, 16,384 input bytes, 32,768 evidence bytes, 600,000 ms, concurrency 1,
+  and zero automatic retries. The packet and its measured 2,474-byte semantic
+  revalidation receipt are
+  `docs/independent-audits/2026-09-12-rd0873-current-head-single-symbol-admission-v1.json`
+  and
+  `docs/independent-audits/2026-09-12-rd0873-current-head-single-symbol-revalidation-receipt-v1.json`.
+- [x] Re-run the focused data-model proof: 2/2 tests passed with the TypeScript
+  shadow and product twin unchanged. No new Fungi source, twin rewrite or queue
+  promotion occurred.
+- [!] The packet remains `PROPOSAL_NON_AUTHORIZING` for new source work. The
+  physical SLIDE/VOK stage is a separate HOLD, and the existing housekeeping
+  refusal plus stale memory working-set still need owner-visible disposition.
+  A prospective `isTri` wave is not admitted because its unknown-to-physical
+  marshalling contract is unresolved.
+
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
 - [x] Record the implementation point used for this checkpoint: local and

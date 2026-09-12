@@ -19,6 +19,28 @@ The governed closure build completes for 15 packages, and hosted run
 nightly/release stage remains separate and unscheduled. This item does not authorize translation, PROJECT reruns,
 consumer switching, TypeScript retirement or `.gate` work.
 
+## RD-0873 exact-head one-symbol admission packet - 2026-09-12
+
+The pre-translation scope is now explicit and deliberately narrow. The packet
+`docs/independent-audits/2026-09-12-rd0873-current-head-single-symbol-admission-v1.json`
+binds `isResponseSafeClassification` in
+`packages-ts/galerina-data-model/src/index.ts` to its existing product twin at
+`packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi`.
+It is tied to `main` HEAD
+`a636ab44c020c5b5718d4d87b9d467765fcd7b2b` / tree
+`d32873777de832a730543c053a996cfa584e1922` and permits one serial profile-1
+revalidation step only: one symbol and file, 16,384 input bytes, 32,768
+evidence bytes, 600,000 ms, concurrency 1 and zero retries. The focused proof
+passed 2/2 and its 2,474-byte receipt is
+`docs/independent-audits/2026-09-12-rd0873-current-head-single-symbol-revalidation-receipt-v1.json`.
+
+This is a `PROPOSAL_NON_AUTHORIZING` record for new source work. It creates no
+Fungi source, rewrites no twin, promotes no queue row and supplies no consumer
+or production authority. SLIDE/VOK evidence is still a stage-specific HOLD;
+the housekeeping refusal and stale memory working-set also remain visible.
+The separately suggested `isTri` candidate is not admitted because its
+unknown-to-physical marshalling contract is unresolved.
+
 ## Active selective conversion - 2026-09-12
 
 Continue approved product/runtime translation and repair under the

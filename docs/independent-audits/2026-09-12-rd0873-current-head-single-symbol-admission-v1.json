@@ -1,0 +1,111 @@
+{
+  "schema": "galerina.rd0873.current-head-single-symbol-admission.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PROPOSAL_NON_AUTHORIZING",
+  "authorizing": false,
+  "purpose": "Record the smallest exact-head, bounded scope requested before any further Fungi work.",
+  "approvalContext": "The owner directed that files/symbols and per-wave limits be made explicit first under standing full-auto approval. This record preserves zero-trust boundaries; it does not impersonate an exact source-writing admission.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "a636ab44c020c5b5718d4d87b9d467765fcd7b2b",
+    "tree": "d32873777de832a730543c053a996cfa584e1922"
+  },
+  "scope": {
+    "scopeType": "SYMBOL",
+    "operation": "REVALIDATE_EXISTING_PRODUCT_TWIN",
+    "wholeFileReplacement": false,
+    "symbols": [
+      {
+        "wave": 1,
+        "package": "galerina-data-model",
+        "sourcePath": "packages-ts/galerina-data-model/src/index.ts",
+        "symbol": "isResponseSafeClassification",
+        "span": { "start": 127, "end": 131 },
+        "signature": "export function isResponseSafeClassification(classification: ModelFieldClassification): boolean",
+        "sourceSha256": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+        "sourceBytes": 10375,
+        "existingFungiPath": "packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi",
+        "existingFungiSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+        "existingFungiBytes": 327,
+        "focusedTestPath": "packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+        "focusedTestSha256": "sha256:79924ebed03f543cff04e3eb102c25b5cc8ed2dc3b4015c8cb4600e4594a6485",
+        "behavior": "return classification === \"public\";",
+        "dependencyBoundary": "literal comparison only; no mutable state, I/O, scheduling, or host lookup"
+      }
+    ],
+    "excluded": [
+      { "symbol": "isOmniUncertain", "reason": "exported runtime-mutable set remains a semantic HOLD" },
+      { "symbol": "isBuiltin", "reason": "physical profile remains a HOLD" },
+      { "symbol": "validateTransition", "reason": "two-input physical profile remains a HOLD" },
+      { "symbol": "isEnvironmentMode", "reason": "existing twin is retained as evidence; no duplicate authoring" },
+      { "symbol": "isTerminalScope", "reason": "existing twin is retained as evidence; no duplicate authoring" },
+      { "symbol": "isTaskEffect", "reason": "existing twin is retained as evidence; no duplicate authoring" }
+    ]
+  },
+  "waveLimits": {
+    "profile": "1",
+    "profileName": "scalar",
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 16384,
+    "maxEvidenceBytesPerStep": 32768,
+    "timeoutMsPerStep": 600000,
+    "maxSymbolsPerWave": 1,
+    "maxSourceFilesPerWave": 1,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "aggregateInputBytes": 10375,
+    "maxAggregateEvidenceBytes": 32768,
+    "inputByteDefinition": "complete UTF-8 bytes of the selected TypeScript source file",
+    "evidenceByteDefinition": "serialized bounded verification receipt and any checked/GIR evidence; no new Fungi source is written",
+    "chapterAggregation": "after the package chapter completes",
+    "overflowAction": "HOLD and abort the current step before acceptance"
+  },
+  "outputManifest": {
+    "status": "PREDECLARED",
+    "paths": [
+      "docs/independent-audits/2026-09-12-rd0873-current-head-single-symbol-revalidation-receipt-v1.json"
+    ],
+    "sourceWriteAllowed": false,
+    "twinRewriteAllowed": false,
+    "evidenceOnly": true
+  },
+  "harnessIdentity": {
+    "testPath": "packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+    "testSha256": "sha256:79924ebed03f543cff04e3eb102c25b5cc8ed2dc3b4015c8cb4600e4594a6485",
+    "proofLibraryPath": "scripts/lib/scalar-classifier-fungi-proof.mjs",
+    "harnessBinding": "exact path and digest must be rechecked before execution"
+  },
+  "requiredReceiptsPerStep": [
+    "exact current head/tree and source/twin hashes",
+    "compiler, toolchain and semantic-profile identity",
+    "focused TypeScript/Fungi differential vectors",
+    "distinguishing negative and hostile-input controls",
+    "independent SLIDE re-derivation and VOK admission; missing physical evidence is a stage-specific HOLD and cannot be accepted as execution",
+    "independent same-head review",
+    "measured receipt size within the declared cap"
+  ],
+  "custody": {
+    "newFungiSourceCreation": false,
+    "existingFungiRewrite": false,
+    "typescriptShadowRetained": true,
+    "queuePromotion": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "projectCorpusRerun": false,
+    "branchOrWorktreeCreation": false,
+    "remotePublication": false,
+    "gitRole": "provenance-only"
+  },
+  "knowledgeGaps": [
+    "The housekeeping refusal (716 existing findings and a hard-linked release executable) still has no owner disposition.",
+    "The memory working-set manifest is stale at this head; supplying an owner root proves only that drift, and does not refresh it.",
+    "A genuinely new candidate such as isTri needs an admitted unknown-to-physical marshalling contract before source creation.",
+    "This packet has no authority to promote the conserved queue or start new source authoring."
+  ],
+  "ownerActionRequired": "This record does not create new-source authority. Existing-twin revalidation remains bounded by the standing scope once the current housekeeping/memory dispositions are visible; any new-source wave requires a separate exact manifest naming its symbol and target file.",
+  "gitRole": "provenance-only"
+}
