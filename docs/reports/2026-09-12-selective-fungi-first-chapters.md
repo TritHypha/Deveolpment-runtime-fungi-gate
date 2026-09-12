@@ -104,7 +104,7 @@ production admission follows.
 ## Report translation
 
 `createAgentReport` is represented by
-`packages-ts/galerina-ai-agent/src/self-hosted/create-agent-report.fungi`.
+`packages/fungi/products/galerina/rd0873-ai-agent-report/create-agent-report.fungi`.
 Its pure core makes the three JavaScript defaults explicit with `Option`,
 preserves the source order of policy, run-status and unsafe-tool warnings, maps
 run metrics as `Float64`, and sets human review whenever a run did not pass, an
@@ -120,6 +120,19 @@ the four probes, and the AI-agent package suite (21/21) pass. The twin remains
 candidate evidence: active JavaScript object/accessor behaviour, alias
 preservation, malformed-object handling, host marshalling and production
 consumer authority remain outside this bounded proof.
+
+## Vector validation translation
+
+`validateVectorType` is represented by
+`packages/fungi/products/galerina/rd0873-core-vector/validate-vector-type.fungi`.
+The native source keeps lane counts as `Float64`, preserves the exact
+element-type and lane diagnostics, and applies the JavaScript safe-integer
+boundary without changing the retained TypeScript oracle. Its seven WASM
+vectors cover valid, blank, zero, negative, fractional, largest-safe and
+one-past-safe lane counts. `wat-vector-type-parity.test.mjs` now reads this
+product path; the test and TypeScript oracle stay under `packages-ts` as
+development verification. This remains candidate evidence and does not switch
+the runtime consumer or create a checked admission artifact.
 
 ## Identity and change triggers
 

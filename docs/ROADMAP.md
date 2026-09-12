@@ -16,6 +16,12 @@ Float64 metrics and fail-closed review routing. Other runtime/border obligations
 remain open; there is no full
 chapter closure, consumer switch or production-authority change.
 
+The two newly authored native product candidates are stored under
+`packages/fungi/products/galerina/rd0873-ai-agent-report/` and
+`packages/fungi/products/galerina/rd0873-core-vector/`. Their retained
+TypeScript oracles and differential tests remain in `packages-ts`; the path
+move does not imply consumer admission or TypeScript retirement.
+
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 
 The [current conversion policy](plans/2026-09-11-selective-fungi-conversion-scope.md)

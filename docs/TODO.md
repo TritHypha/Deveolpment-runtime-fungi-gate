@@ -76,6 +76,17 @@ counts or open items that a newer section explicitly supersedes.
   may challenge the design; it cannot replace owner admission or physical
   evidence.
 
+### RD-0873 product-source path correction - 2026-09-12
+
+- [x] Move the new `createAgentReport` and `validateVectorType` candidate
+  sources to `packages/fungi/products/galerina/`, under their RD-0873 package
+  folders. These are the native product locations; the retained TypeScript
+  implementations and differential tests remain in `packages-ts`.
+- [x] Update both WASM parity tests to read the native product paths. No
+  runtime consumer import was changed: TypeScript remains the compatibility
+  oracle until host marshalling, checked artifacts and admission evidence are
+  separately complete.
+
 ### RD-0873 current-head translation gate - 2026-09-11
 
 - [x] Rebound the proposed first wave to exact `main` HEAD

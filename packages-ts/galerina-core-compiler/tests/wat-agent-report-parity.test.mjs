@@ -173,7 +173,7 @@ contract { intent { "Compare the report twin with its retained TypeScript oracle
 
 test("Wave 01 report twin preserves defaults, warning order, metrics and review routing in WASM", { timeout: 60_000 }, async (t) => {
   const twin = readFileSync(new URL(
-    "../../galerina-ai-agent/src/self-hosted/create-agent-report.fungi", import.meta.url,
+    "../../../packages/fungi/products/galerina/rd0873-ai-agent-report/create-agent-report.fungi", import.meta.url,
   ), "utf8");
   const program = L.parseProgram(twin + vectors.map((vector, i) => probe(i, vector)).join("\n"), "agent-report-parity.fungi");
   const errors = program.diagnostics.filter((d) => d.severity === "error");
