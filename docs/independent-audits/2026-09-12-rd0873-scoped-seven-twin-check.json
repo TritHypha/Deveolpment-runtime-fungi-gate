@@ -1,0 +1,75 @@
+{
+  "schema": "galerina.rd0873-scoped-seven-twin-check.v1",
+  "generatedAt": "2026-09-12T02:08:44.216Z",
+  "status": "PASS_BOUNDED_SCOPED_TWIN_CHECK",
+  "authorizing": false,
+  "reviewedCommit": "dada982dc83b0c1c1df5b95d28e2eba192c42712",
+  "reviewedTree": "c1bcfec58f8da7acd1a121e637a49cca5b47ed51",
+  "scope": [
+    {
+      "symbol": "isEnvironmentMode",
+      "fungi": "packages-ts/galerina-core-config/src/self-hosted/environment-mode.fungi",
+      "fungiSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "test": "packages-ts/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "testSha256": "sha256:ce7911ffa010e93cb8df445e9413aeb6f81442f7b37f59245efc9b78db829ed4"
+    },
+    {
+      "symbol": "isOmniUncertain",
+      "fungi": "packages-ts/galerina-core-logic/src/self-hosted/omni-uncertain.fungi",
+      "fungiSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "test": "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "testSha256": "sha256:1e34ff96dde2201e63927559b10e24eb14709c8f79b1aed36a50ed3af81eaae5"
+    },
+    {
+      "symbol": "isTerminalScope",
+      "fungi": "packages-ts/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
+      "fungiSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "test": "packages-ts/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
+      "testSha256": "sha256:842859c276c5153dffafc5d02d4a98ccd62ab34049fe488b6833c496b49b764b"
+    },
+    {
+      "symbol": "isTaskEffect",
+      "fungi": "packages-ts/galerina-core-tasks/src/self-hosted/task-effect.fungi",
+      "fungiSha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "test": "packages-ts/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+      "testSha256": "sha256:59a482f8cd1cc252483880d9668f73b1adbe9af288524308e2d6a305d6db9400"
+    },
+    {
+      "symbol": "isResponseSafeClassification",
+      "fungi": "packages-ts/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+      "fungiSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "test": "packages-ts/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
+      "testSha256": "sha256:af851a1d203f274dfa6bb04b94ad35aa5a8d5f7aa50e598c36fd2ce050c243a8"
+    },
+    {
+      "symbol": "isBuiltin",
+      "fungi": "packages-ts/galerina-devtools-context/src/self-hosted/builtin-name.fungi",
+      "fungiSha256": "sha256:fe6be087673df88b75c6eacb091ade8b2ed3f85718df72a4d542283422b44cc1",
+      "test": "packages-ts/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
+      "testSha256": "sha256:178a0e8cedad6e6bf1dd43fde6289a0a8122933ba0db76de883464553f359427"
+    },
+    {
+      "symbol": "validateTransition",
+      "fungi": "packages-ts/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi",
+      "fungiSha256": "sha256:2dbc316a00a190598f19b1244a76c6509116ab27ba40c8e35ecc495be63f5d0b",
+      "test": "packages-ts/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs",
+      "testSha256": "sha256:26a918d4bbff0315a36f57cada5bd1abc1105f7af2a8f38ef05c04987e10ff61"
+    }
+  ],
+  "checks": {
+    "command": "node --test <seven package conversion tests>",
+    "suites": 7,
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "hostileSurplusCasesIncluded": true
+  },
+  "limits": {
+    "sourceCreation": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "fullCorpusAssurance": false,
+    "productionAuthority": false
+  },
+  "interpretation": "The seven existing package-owned twins and their retained TypeScript oracles agree under their focused tests. This does not admit new authoring or change consumer authority."
+}
