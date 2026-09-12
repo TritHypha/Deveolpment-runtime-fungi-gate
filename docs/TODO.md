@@ -56,6 +56,10 @@ counts or open items that a newer section explicitly supersedes.
   point: typecheck and build pass, all 53 wave checks pass, and the package
   suite is 211/211 across 58 suites. The bounded, non-authorizing receipt is
   `docs/independent-audits/2026-09-12-rd0873-overlay-harness-package-proof-v1.json`.
+- [x] Recheck the five Wave 1-4 runtime package chapters at this exact `main`
+  point: typecheck/build pass and the focused suites pass 192/192 across 20
+  suites. The bounded, non-authorizing receipt is
+  `docs/independent-audits/2026-09-12-rd0873-wave1-4-package-proof-v1.json`.
 
 ### Selective conversion: first chapter repairs - 2026-09-12
 

@@ -1,0 +1,49 @@
+{
+  "schema": "galerina.rd0873-wave1-4-package-proof.v1",
+  "generatedAt": "2026-09-12T04:39:54.7982497Z",
+  "status": "PASS_BOUNDED_WAVE_PACKAGE_RECHECK",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "5c170183fa2e397adbaa8c967d5eec6e62bdc116",
+    "tree": "8ce0fb426ed4bfe8557822910056b926fe437f6b"
+  },
+  "scope": {
+    "packages": [
+      "packages-ts/galerina-core-config",
+      "packages-ts/galerina-core-logic",
+      "packages-ts/galerina-core-runtime",
+      "packages-ts/galerina-core-tasks",
+      "packages-ts/galerina-data-model"
+    ],
+    "role": "Wave 1-4 runtime source oracles, package contracts and existing Fungi decision cores",
+    "fullCorpusAssurance": false
+  },
+  "checks": {
+    "command": "npm test in each listed package",
+    "packages": [
+      { "package": "galerina-core-config", "tests": 54, "passed": 54, "failed": 0, "suites": 2 },
+      { "package": "galerina-core-logic", "tests": 57, "passed": 57, "failed": 0, "suites": 7 },
+      { "package": "galerina-core-runtime", "tests": 53, "passed": 53, "failed": 0, "suites": 5 },
+      { "package": "galerina-core-tasks", "tests": 9, "passed": 9, "failed": 0, "suites": 2 },
+      { "package": "galerina-data-model", "tests": 19, "passed": 19, "failed": 0, "suites": 4 }
+    ],
+    "totalTests": 192,
+    "totalPassed": 192,
+    "totalFailed": 0,
+    "totalSuites": 20,
+    "typecheckAndBuild": "PASS in every package"
+  },
+  "boundaries": {
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "queueRelabeled": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "All five Wave 1-4 runtime package suites pass at the exact main build point, including their existing Fungi decision-core checks. This is package evidence only; it does not admit a new translation wave or close the held mutable, host and physical obligations."
+}

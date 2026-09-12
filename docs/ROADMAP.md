@@ -59,6 +59,12 @@ pass, and the suite is 211/211 across 58 suites. The receipt is
 `docs/independent-audits/2026-09-12-rd0873-overlay-harness-package-proof-v1.json`;
 it remains test evidence only and does not admit product source creation.
 
+The five Wave 1-4 runtime package chapters also pass their bounded checks at
+this source point: typecheck and build are green, and the focused suites pass
+192/192 across 20 suites. The receipt is
+`docs/independent-audits/2026-09-12-rd0873-wave1-4-package-proof-v1.json`;
+it remains package evidence only and does not promote the blocked queue.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)
