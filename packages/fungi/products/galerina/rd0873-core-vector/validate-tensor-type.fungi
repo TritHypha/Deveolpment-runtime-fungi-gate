@@ -1,0 +1,76 @@
+@version 1
+
+/// Bounded translation of validateTensorType from galerina-core-vector/src/index.ts.
+///
+/// This core accepts the dense typed dimension array represented by Fungi. The
+/// retained TypeScript function remains the compatibility oracle; sparse and
+/// hostile JavaScript array behavior stays a separate ABI obligation.
+
+record TensorDimension {
+  value: Float64
+}
+
+record TensorShape {
+  dimensions: Array<TensorDimension>
+}
+
+record TensorType {
+  elementType: String
+  shape: TensorShape
+}
+
+record VectorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if value != value { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateTensorType(tensor: TensorType, path_: String) -> Array<VectorDiagnostic>
+contract { intent { "Validate tensor dimensions in source order and require at least one dimension." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = Array.empty()
+
+  if tensor.shape.dimensions.count() == 0 {
+    return diagnostics.append({
+      code: "Galerina_TENSOR_DIMENSIONS_REQUIRED",
+      severity: "error",
+      message: "Tensor shape requires at least one dimension.",
+      path: path_ + ".shape.dimensions"
+    })
+  }
+
+  mut index: Int = 0
+  while index < tensor.shape.dimensions.count() {
+    let dimensionOpt: Option<TensorDimension> = tensor.shape.dimensions.get(index)
+    match dimensionOpt {
+      Some(dimension) => {
+        if isPositiveSafeInteger(dimension.value) == false {
+          diagnostics = diagnostics.append({
+            code: "Galerina_TENSOR_DIMENSION_INVALID",
+            severity: "error",
+            message: "Tensor dimensions must be positive safe integers.",
+            path: path_ + ".shape.dimensions." + index.toString()
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return diagnostics
+}

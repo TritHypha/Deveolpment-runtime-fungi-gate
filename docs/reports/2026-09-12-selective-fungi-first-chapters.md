@@ -143,6 +143,16 @@ dimensions. The TypeScript package and test harness remain retained under
 `packages-ts`; this is candidate evidence without a consumer switch or checked
 admission artifact.
 
+The tensor validator is also stored at
+`packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi`.
+It requires a non-empty dense dimension array and preserves source-order
+diagnostics for invalid dimensions. `wat-tensor-type-parity.test.mjs` exercises
+six vectors, including empty, fractional and safe-integer-boundary values.
+Dimensions use typed records carrying `Float64` values so the existing array
+handle ABI cannot narrow them to i32. Sparse or hostile JavaScript array
+behavior remains an explicit host-ABI obligation; no input contract was
+silently narrowed for production use.
+
 ## Identity and change triggers
 
 Role decisions were checked against these SHA-256 values:

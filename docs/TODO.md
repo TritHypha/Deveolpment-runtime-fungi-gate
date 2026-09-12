@@ -33,6 +33,11 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Translate `validateMatrixType` as a bounded native product core. Seven
   WASM differential vectors cover valid, zero, negative, fractional and safe
   integer-boundary dimensions; the TypeScript validator remains the oracle.
+- [x] Translate `validateTensorType` as a bounded native product core. Six WASM
+  differential vectors cover empty, valid, invalid, fractional and safe integer
+  dimensions; typed dimension records preserve Float64 values across the array
+  handle ABI, while sparse or hostile JavaScript arrays remain an explicit ABI
+  item.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

@@ -23,6 +23,10 @@ TypeScript oracles and differential tests remain in `packages-ts`; the path
 move does not imply consumer admission or TypeScript retirement.
 The core-vector product candidate now also covers `validateMatrixType`, with
 rows-then-columns diagnostic parity at the safe-integer boundary.
+It now covers `validateTensorType` for dense dimension arrays, including the
+empty-shape rule and ordered invalid-dimension diagnostics. Typed dimension
+records carry Float64 values across the array handle ABI; sparse and hostile
+JavaScript-array behavior remains a separate host-ABI obligation.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 
