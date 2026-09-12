@@ -91,4 +91,33 @@ pure flow negativeZero() -> Float64 { return -0.0 }`);
     const { instance } = await WebAssembly.instantiate(asm.wasm, L.createHostRuntime().imports);
     assert.throws(() => instance.exports.negate(1.0), WebAssembly.RuntimeError);
   });
+
+  it("Option<Float64> keeps the handle on i32 and the payload on the f64 lane", async () => {
+    const { wat, exports } = await runWithWAT(`
+pure flow make(value: Float64) -> Option<Float64> { return Some(value) }
+pure flow read(option: Option<Float64>) -> Float64 { return option.unwrapOr(3.5) }
+pure flow propagate(option: Option<Float64>) -> Option<Float64> {
+  let value: Float64 = option?
+  return Some(value)
+}
+pure flow select(option: Option<Float64>) -> Float64 {
+  match option {
+    None => { return 0.5 }
+    Some(value) => { return value }
+    _ => { return 0.0 }
+  }
+}`);
+    assert.match(wat, /__option_some_f64_v2/);
+    assert.match(wat, /__unwrap_or_f64_v2/);
+    assert.match(wat, /__option_value_f64_v2/);
+    const some = exports.make(2.25);
+    assert.equal(exports.read(some), 2.25);
+    assert.equal(exports.read(-1), 3.5, "None uses the Float64 fallback");
+    assert.equal(exports.read(exports.propagate(some)), 2.25, "? unwraps the f64 payload before re-wrapping");
+    assert.equal(exports.propagate(-1), -1, "? propagates None as the Option handle");
+    assert.equal(exports.select(some), 2.25);
+    assert.equal(exports.select(-1), 0.5);
+    const negativeZero = exports.make(-0);
+    assert.equal(Object.is(exports.read(negativeZero), -0), true, "Float64 Option preserves signed zero");
+  });
 });

@@ -72,6 +72,33 @@ describe("#185 host stdlib oracle: versioned Option ABI (__unwrap_or_v2)", () =>
   });
 });
 
+describe("#185 host stdlib oracle: versioned Float64 Option ABI", () => {
+  it("preserves finite Float64 payloads, including signed zero, separately from None", () => {
+    const { fn } = host();
+    const none = fn.__option_none_v2();
+    assert.equal(fn.__unwrap_or_f64_v2(none, 3.5), 3.5);
+    for (const value of [-0, -3.25, 0, 3.5, Number.MAX_VALUE]) {
+      const some = fn.__option_some_f64_v2(value);
+      assert.equal(fn.__option_is_some_v2(some), 1, `Some(${value}) is present`);
+      assert.ok(Object.is(fn.__option_value_f64_v2(some), value), `Some(${value}) keeps its payload`);
+      assert.ok(Object.is(fn.__unwrap_or_f64_v2(some, 9.25), value), `unwrapOr preserves Some(${value})`);
+    }
+  });
+
+  it("rejects wrong-kind and malformed handles instead of coercing payloads", () => {
+    const { fn } = host();
+    const i32Some = fn.__option_some_v2(7);
+    const f64Some = fn.__option_some_f64_v2(7.25);
+    assert.throws(() => fn.__option_value_f64_v2(i32Some), /Float64 Option payload kind/);
+    assert.throws(() => fn.__option_value_v2(f64Some), /Float64 Option payload kind/);
+    assert.throws(() => fn.__unwrap_or_v2(f64Some, 1), /Float64 Option payload kind/);
+    assert.throws(() => fn.__option_value_f64_v2(-2), /unknown Option handle -2/);
+    assert.throws(() => fn.__unwrap_or_f64_v2(Number.NaN, 1.5), /unknown Option handle NaN/);
+    assert.throws(() => fn.__unwrap_or_f64_v2(-1, Number.NaN), /NonFiniteFloat/);
+    assert.throws(() => fn.__unwrap_or_f64_v2(-1, Number.POSITIVE_INFINITY), /NonFiniteFloat/);
+  });
+});
+
 describe("#185 host stdlib oracle: char→string (__char_to_string)", () => {
   it("code point → interned single-char string; negative → empty", () => {
     const { rt, fn } = host();

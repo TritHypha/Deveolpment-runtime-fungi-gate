@@ -951,6 +951,8 @@ const BINARY_OP_TO_WAT: ReadonlyMap<string, string> = new Map([
 // literal emission, wat-emitter §numberLiteral). Without these, a float `+ - * /`/comparison emitted an
 // i32 checked helper over f64 operands → an invalid module (WASM tier declined → walker fallback).
 const FLOAT_WAT_TYPES = new Set<string>(["Float", "Float64", "Double", "Decimal"]);
+// Decimal remains exact and is deliberately excluded from the Float64 Option ABI.
+const FLOAT_OPTION_WAT_TYPES = new Set<string>(["Float", "Float64", "Double"]);
 const FLOAT_ARITH_WAT: Readonly<Record<string, string>> = { "+": "f64.add", "-": "f64.sub", "*": "f64.mul", "/": "f64.div" };
 const FLOAT_CMP_WAT: Readonly<Record<string, string>> = { "==": "f64.eq", "!=": "f64.ne", "<": "f64.lt", ">": "f64.gt", "<=": "f64.le", ">=": "f64.ge" };
 
@@ -993,6 +995,8 @@ function watStackType(expr: string): WATValType {
   // #55: the float finiteness guard returns its f64 argument — a `let x = a / b` local declared from it
   // must be f64, not the i32 default (which would mistype the store).
   if (/^\(call \$fungi_assert_finite_f64\b/.test(t)) return "f64";
+  // Float64 Option payload bridges return an f64 value even though the Option itself is an i32 handle.
+  if (/^\(call \$host___(?:option_value_f64_v2|unwrap_or_f64_v2)\b/.test(t)) return "f64";
   const m = t.match(/^\(([a-z0-9]+)\.([a-z0-9_]+)/);
   if (m === null) return "i32";
   const prefix = m[1]!, op = m[2]!;
@@ -1336,6 +1340,20 @@ function optionInnerType(t: string | undefined): string | undefined {
   return m ? m[1] : undefined;
 }
 
+/** The payload lane for a typed Option/Result handle. Only binary floating-point
+ * options use the f64 registry ABI; exact Decimal and unsupported f32 lanes stay
+ * on the existing i32/opaque path and therefore cannot be silently narrowed. */
+function optionPayloadWatType(t: string | undefined): WATValType | undefined {
+  const inner = optionInnerType(t);
+  if (inner === undefined) return undefined;
+  if (FLOAT_OPTION_WAT_TYPES.has(inner)) return "f64";
+  return "i32";
+}
+
+function isFloatOptionType(t: string | undefined): boolean {
+  return optionPayloadWatType(t) === "f64";
+}
+
 /**
  * #160: best-effort scalar/builtin type inference for the WAT lowering. Used to pick
  * type-directed host bridges: String `+` → __str_concat (vs i32.add), Char.toString →
@@ -1424,9 +1442,14 @@ function inferExprType(node: AstNode | undefined): string | undefined {
         if (name === "isFinite" || name === "isLetter" || name === "isDigit" || name === "isUpper" || name === "isLower" ||
             name === "isWhitespace" || name === "contains" || name === "startsWith" || name === "endsWith") return "Bool";
         if (name === "charAt") return "Option<Char>";
-        // unwrapOr(default) yields the default's type — the cleanest way to thread the
-        // element type out of an Option (e.g. `xs.first().unwrapOr("")` ⇒ String).
-        if (name === "unwrapOr") return inferExprType(node.children?.[1]);
+        // unwrapOr(default) yields the default's type, except that a statically
+        // typed Float64 option owns the f64 lane even when its fallback is an
+        // integer literal (numeric widening is legal in the source language).
+        if (name === "unwrapOr") {
+          const inner = optionInnerType(inferExprType(node.children?.[0]));
+          if (inner !== undefined && FLOAT_OPTION_WAT_TYPES.has(inner)) return inner;
+          return inferExprType(node.children?.[1]);
+        }
         // first()/last() on an Array<T> → Option<T>; get(i) likewise.
         if (name === "first" || name === "last" || name === "get") {
           const inner = optionInnerType(inferExprType(node.children?.[0])?.replace(/^Array</, "Option<"));
@@ -1435,6 +1458,10 @@ function inferExprType(node: AstNode | undefined): string | undefined {
         return undefined;
       }
       // Non-method call = flow-to-flow call → the callee's declared return type.
+      if (name === "Some") {
+        const inner = inferExprType(node.children?.[0]);
+        return inner !== undefined ? `Option<${inner}>` : "Option";
+      }
       return flowReturnTypes?.get(name);
     }
     default: return undefined;
@@ -2033,6 +2060,17 @@ export function emitWATExpr(
           }
         }
 
+        // Typed Option<Float*>.unwrapOr must read the f64 payload from the
+        // matching registry lane. The handle itself remains i32; only the
+        // default and returned payload are f64. Integer/String/record options
+        // continue through the established i32 bridge below.
+        if (name === "unwrapOr" && realReceiver !== undefined && argNodes.length === 1 &&
+            isFloatOptionType(inferExprType(realReceiver))) {
+          const recvWat = emitWATExpr(realReceiver, vars, staticConsts);
+          const defaultWat = emitWATExpr(argNodes[0]!, vars, staticConsts, "Float64");
+          return `(call $host___unwrap_or_f64_v2 ${recvWat} ${defaultWat})`;
+        }
+
         const hostFn = STDLIB_HOST_MAP[name];
         if (hostFn !== undefined) {
           // Static-form stdlib calls — e.g. String.charAt(s, i) — name the type
@@ -2067,6 +2105,13 @@ export function emitWATExpr(
       // ── P9.3: plain stdlib constructor calls (Some(x)) ──────────────────────
       const hostCallFn = STDLIB_HOST_CALL_MAP[name];
       if (hostCallFn !== undefined) {
+        // Keep Float/Float64/Double payloads in the f64 Option registry. A
+        // distinct import name prevents an i32 option handle from being read
+        // through a floating-point ABI by accident.
+        if (name === "Some" && children.length === 1 &&
+            FLOAT_OPTION_WAT_TYPES.has(inferExprType(children[0]) ?? "")) {
+          return `(call $host___option_some_f64_v2 ${emitWATExpr(children[0]!, vars, staticConsts, "Float64")})`;
+        }
         const args = children.map((c) => emitWATExpr(c, vars, staticConsts));
         return `(call ${hostCallFn} ${args.join(" ")})`.trimEnd();
       }
@@ -2213,8 +2258,10 @@ export function emitWATExpr(
       if ((noneArm !== undefined || someArm !== undefined) && recordCtx !== null) {
         const scratch = `$__fungi_match_${recordCtx.counter.n++}`;
         const valueLocal = `$__fungi_match_${recordCtx.counter.n++}`;
+        const payloadWatType = optionPayloadWatType(inferExprType(subject)) ?? "i32";
+        const matchResultWatType: WATValType = FLOAT_WAT_TYPES.has(currentReturnBase) ? "f64" : "i32";
         recordCtx.localDecls.push(`(local ${scratch} i32)`);
-        recordCtx.localDecls.push(`(local ${valueLocal} i32)`);
+        recordCtx.localDecls.push(`(local ${valueLocal} ${payloadWatType})`);
         const someBind = ((): string | undefined => {
           const ch = someArm?.children ?? [];
           return ch.length >= 2 && ch[0]?.kind === "identifier" ? ch[0]!.value : undefined;
@@ -2249,11 +2296,11 @@ export function emitWATExpr(
           else recordVarTypes.delete(someBind);
         }
         return [
-          `(block (result i32)`,
+          `(block (result ${matchResultWatType})`,
           `  (local.set ${scratch} ${subjectWat})`,
-          `  (if (result i32) (call $host___option_is_none_v2 (local.get ${scratch}))`,
+          `  (if (result ${matchResultWatType}) (call $host___option_is_none_v2 (local.get ${scratch}))`,
           `    (then ${noneWat})`,
-          `    (else (block (result i32) (local.set ${valueLocal} (call $host___option_value_v2 (local.get ${scratch}))) ${someWat}))`,
+          `    (else (block (result ${matchResultWatType}) (local.set ${valueLocal} (call $host___option_${payloadWatType === "f64" ? "value_f64" : "value"}_v2 (local.get ${scratch}))) ${someWat}))`,
           `  )`,
           `)`,
         ].join("\n");
@@ -2344,12 +2391,23 @@ export function emitWATExpr(
       if (innerType === "Option" || innerType?.startsWith("Option<")) {
         // Registry ABI: None = -1; Some is a handle. None propagates unchanged; Some unwraps
         // through the host registry so negative payloads remain valid values.
+        // A Float64 option's successful branch is an f64 expression, while the
+        // early `return None` remains the enclosing Option-handle (i32) result.
+        // This is valid only for an Option-returning flow; a Float64-returning
+        // flow cannot propagate an i32 None and is left on the fail-closed path.
+        const payloadWatType = optionPayloadWatType(innerType) ?? "i32";
+        if (payloadWatType === "f64" && currentReturnBase !== "Option") {
+          return `(unreachable) (; RD-0240: Float64 Option '?' requires an Option-returning flow — fail-closed ;)`;
+        }
+        const canPropagateF64 = payloadWatType === "f64" && currentReturnBase === "Option";
+        const resultType: WATValType = canPropagateF64 ? "f64" : "i32";
+        const valueImport = canPropagateF64 ? "$host___option_value_f64_v2" : "$host___option_value_v2";
         return [
-          `(block (result i32)`,
+          `(block (result ${resultType})`,
           `  (local.set ${scratch} ${innerWat})`,
           `  (if (call $host___option_is_none_v2 (local.get ${scratch}))`,
           `    (then (return (local.get ${scratch}))))`,
-          `  (call $host___option_value_v2 (local.get ${scratch}))`,
+          `  (call ${valueImport} (local.get ${scratch}))`,
           `)`,
         ].join("\n");
       }
@@ -2844,8 +2902,9 @@ function emitBlockStatements(
           // and bound. Presence is explicit; a negative payload is still Some.
           const scratch = `$__fungi_match_${labelCounter.n++}`;
           const valueLocal = `$__fungi_match_${labelCounter.n++}`;
+          const payloadWatType = optionPayloadWatType(inferExprType(matchSubject)) ?? "i32";
           localDecls.push(`(local ${scratch} i32)`);
-          localDecls.push(`(local ${valueLocal} i32)`);
+          localDecls.push(`(local ${valueLocal} ${payloadWatType})`);
           bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
 
           const emitArm = (arm: AstNode | undefined, bind?: string): string[] => {
@@ -2885,7 +2944,7 @@ function emitBlockStatements(
           for (const line of noneLines) bodyLines.push(`    ${line}`);
           bodyLines.push(`  )`);
           bodyLines.push(`  (else`);
-          bodyLines.push(`    (local.set ${valueLocal} (call $host___option_value_v2 (local.get ${scratch})))`);
+          bodyLines.push(`    (local.set ${valueLocal} (call $host___option_${payloadWatType === "f64" ? "value_f64" : "value"}_v2 (local.get ${scratch})))`);
           for (const line of someLines) bodyLines.push(`    ${line}`);
           bodyLines.push(`  )`);
           bodyLines.push(`)`);
@@ -4086,6 +4145,12 @@ export function buildWATModule(
     { module: "host", name: "__option_is_some_v2", effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__option_is_none_v2", effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__option_value_v2",   effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },
+    // Float64 Option payloads use a versioned f64 lane while the option handle
+    // itself remains i32. Decimal is intentionally absent: it is exact and is
+    // never narrowed to binary floating point at this boundary.
+    { module: "host", name: "__option_some_f64_v2", effect: "stdlib.result", type: { params: ["f64"],         results: ["i32"] } },
+    { module: "host", name: "__option_value_f64_v2", effect: "stdlib.result", type: { params: ["i32"],         results: ["f64"] } },
+    { module: "host", name: "__unwrap_or_f64_v2",    effect: "stdlib.result", type: { params: ["i32", "f64"], results: ["f64"] } },
   ];
   // NOTE: HOST_RUNTIME_IMPORTS are merged AFTER function bodies are built (below),
   // and only the bridge functions actually referenced by a body are added. Pure

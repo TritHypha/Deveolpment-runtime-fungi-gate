@@ -218,6 +218,9 @@ export interface HostRuntime {
   snapshotMemory(): Uint8Array | null;
 }
 
+type OptionKind = "i32" | "f64";
+type OptionEntry = { readonly kind: OptionKind; readonly value: number };
+
 /**
  * Deterministic String ordering used by the interpreter and the WASM host.
  *
@@ -262,7 +265,7 @@ export function createHostRuntime(
   // perfectly valid Int, so the old `Some(v) = v / None = -1` convention made Some(-1) absent.
   // `-1` remains the wire-level None value for compatibility; every Some is a non-negative
   // handle whose payload is stored here. Raw array access stays separate for counted loops.
-  const options: { value: number }[] = [];
+  const options: OptionEntry[] = [];
   const moneys: { currency: string; amountStr: string }[] = [];
   let memory: WebAssembly.Memory | null = null;
   // RD-0389: host bump pointer for records STAGED to pass in (allocRecord), based at the same
@@ -290,11 +293,19 @@ export function createHostRuntime(
     return value;
   };
 
-  const optionEntry = (handle: number): { value: number } => {
+  const optionEntry = (handle: number): OptionEntry => {
     if (handle === -1) throw new Error("cannot read Option payload from None (fail-closed)");
     const entry = options[handle];
     if (entry === undefined || !Number.isInteger(handle) || handle < 0) {
       throw new Error(`unknown Option handle ${handle} (fail-closed)`);
+    }
+    return entry;
+  };
+
+  const typedOptionEntry = (handle: number, kind: OptionKind): OptionEntry => {
+    const entry = optionEntry(handle);
+    if (entry.kind !== kind) {
+      throw new Error(`Float64 Option payload kind mismatch: expected ${kind}, got ${entry.kind}`);
     }
     return entry;
   };
@@ -382,7 +393,7 @@ export function createHostRuntime(
     },
     __str_to_int_option_v2: (h: number) => {
       const n = parseInt(strings[h] ?? "", 10);
-      const option = Number.isNaN(n) ? -1 : options.push({ value: n | 0 }) - 1;
+      const option = Number.isNaN(n) ? -1 : options.push({ kind: "i32", value: n | 0 }) - 1;
       return tap("__str_to_int_option_v2", [h], option) as number;
     },
     // Char.fromCode (RD-0528 step 1) — Int -> Char. A Char IS its code point i32, so the VALUE is
@@ -437,23 +448,23 @@ export function createHostRuntime(
     // Option-producing array accessors keep a present negative element distinct from absence.
     __array_get_option_v2: (id: number, i: number) => {
       const a = arrays[id] ?? [];
-      const option = i >= 0 && i < a.length ? options.push({ value: a[i]! | 0 }) - 1 : -1;
+      const option = i >= 0 && i < a.length ? options.push({ kind: "i32", value: a[i]! | 0 }) - 1 : -1;
       return tap("__array_get_option_v2", [id, i], option) as number;
     },
     __array_first_option_v2: (id: number) => {
       const a = arrays[id] ?? [];
-      const option = a.length > 0 ? options.push({ value: a[0]! | 0 }) - 1 : -1;
+      const option = a.length > 0 ? options.push({ kind: "i32", value: a[0]! | 0 }) - 1 : -1;
       return tap("__array_first_option_v2", [id], option) as number;
     },
     __array_last_option_v2: (id: number) => {
       const a = arrays[id] ?? [];
-      const option = a.length > 0 ? options.push({ value: a[a.length - 1]! | 0 }) - 1 : -1;
+      const option = a.length > 0 ? options.push({ kind: "i32", value: a[a.length - 1]! | 0 }) - 1 : -1;
       return tap("__array_last_option_v2", [id], option) as number;
     },
     __str_char_at_option_v2: (strHandle: number, idx: number) => {
       const cps = [...(strings[strHandle] ?? "")];
       const code = idx >= 0 && idx < cps.length ? (cps[idx]!.codePointAt(0) ?? -1) : -1;
-      const option = code >= 0 ? options.push({ value: code | 0 }) - 1 : -1;
+      const option = code >= 0 ? options.push({ kind: "i32", value: code | 0 }) - 1 : -1;
       return tap("__str_char_at_option_v2", [strHandle, idx], option) as number;
     },
     // Legacy Option helpers retain the original raw-sentinel ABI for already-built modules.
@@ -462,15 +473,31 @@ export function createHostRuntime(
     __option_none: () => tap("__option_none", [], -1) as number,
     // Versioned registry helpers separate presence from payload for new compiler output. The distinct
     // import names are an ABI binding: a pre-repair module cannot accidentally run against this layout.
-    __unwrap_or_v2: (opt: number, def: number) => tap("__unwrap_or_v2", [opt, def], opt === -1 ? def : optionEntry(opt).value) as number,
+    __unwrap_or_v2: (opt: number, def: number) => tap("__unwrap_or_v2", [opt, def], opt === -1 ? def : typedOptionEntry(opt, "i32").value) as number,
     __option_some_v2: (x: number) => {
-      const handle = options.push({ value: x | 0 }) - 1;
+      const handle = options.push({ kind: "i32", value: x | 0 }) - 1;
       return tap("__option_some_v2", [x], handle) as number;
     },
     __option_none_v2: () => tap("__option_none_v2", [], -1) as number,
     __option_is_some_v2: (opt: number) => tap("__option_is_some_v2", [opt], opt === -1 ? 0 : (optionEntry(opt), 1)) as number,
     __option_is_none_v2: (opt: number) => tap("__option_is_none_v2", [opt], opt === -1 ? 1 : (optionEntry(opt), 0)) as number,
-    __option_value_v2: (opt: number) => tap("__option_value_v2", [opt], optionEntry(opt).value) as number,
+    __option_value_v2: (opt: number) => tap("__option_value_v2", [opt], typedOptionEntry(opt, "i32").value) as number,
+    // Float64 Option helpers keep the payload as f64. They use distinct import
+    // names so an i32 Option handle cannot be read through the wrong ABI lane.
+    __option_some_f64_v2: (x: number) => {
+      if (!Number.isFinite(x)) throw new Error("NonFiniteFloat");
+      const handle = options.push({ kind: "f64", value: x }) - 1;
+      return tap("__option_some_f64_v2", [x], handle) as number;
+    },
+    __option_value_f64_v2: (opt: number) => tap(
+      "__option_value_f64_v2", [opt], typedOptionEntry(opt, "f64").value,
+    ) as number,
+    __unwrap_or_f64_v2: (opt: number, def: number) => {
+      if (!Number.isFinite(def)) throw new Error("NonFiniteFloat");
+      return tap(
+        "__unwrap_or_f64_v2", [opt, def], opt === -1 ? def : typedOptionEntry(opt, "f64").value,
+      ) as number;
+    },
 
     // ── Money currency constructors (ISO 4217) ───────────────────────────────
     // Each accepts a string handle (the amount) and returns a Money handle (i32
