@@ -134,6 +134,15 @@ product path; the test and TypeScript oracle stay under `packages-ts` as
 development verification. This remains candidate evidence and does not switch
 the runtime consumer or create a checked admission artifact.
 
+The adjacent `validateMatrixType` core is now stored at
+`packages/fungi/products/galerina/rd0873-core-vector/validate-matrix-type.fungi`.
+It preserves the source's rows-then-columns diagnostic order and the same
+positive safe-integer boundary. `wat-matrix-type-parity.test.mjs` exercises
+seven vectors, including negative, fractional, largest-safe and one-past-safe
+dimensions. The TypeScript package and test harness remain retained under
+`packages-ts`; this is candidate evidence without a consumer switch or checked
+admission artifact.
+
 ## Identity and change triggers
 
 Role decisions were checked against these SHA-256 values:

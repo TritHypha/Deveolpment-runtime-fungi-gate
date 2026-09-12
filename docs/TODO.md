@@ -30,6 +30,9 @@ counts or open items that a newer section explicitly supersedes.
   unsafe-tool warnings, Float64 metrics and high-impact review routing. Keep
   the TypeScript adapter and active-object/alias obligations explicit; add no
   production consumer switch yet.
+- [x] Translate `validateMatrixType` as a bounded native product core. Seven
+  WASM differential vectors cover valid, zero, negative, fractional and safe
+  integer-boundary dimensions; the TypeScript validator remains the oracle.
 
 ### Selective runtime conversion scope - owner clarification 2026-09-11
 

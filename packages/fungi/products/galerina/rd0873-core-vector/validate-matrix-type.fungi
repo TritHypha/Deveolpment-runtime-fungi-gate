@@ -1,0 +1,62 @@
+@version 1
+
+/// Bounded translation of validateMatrixType from galerina-core-vector/src/index.ts.
+///
+/// Matrix dimensions remain Float64 so the JavaScript Number contract is not
+/// narrowed to Fungi Int/i32.  The TypeScript function remains the compatibility
+/// oracle; its default path is supplied by the parity adapter.
+
+record MatrixShape {
+  rows: Float64
+  columns: Float64
+}
+
+record MatrixType {
+  elementType: String
+  shape: MatrixShape
+}
+
+record VectorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if value != value { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateMatrixType(matrix: MatrixType, path_: String) -> Array<VectorDiagnostic>
+contract { intent { "Validate positive safe matrix dimensions in source diagnostic order." } }
+{
+  mut diagnostics: Array<VectorDiagnostic> = Array.empty()
+
+  if isPositiveSafeInteger(matrix.shape.rows) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_MATRIX_ROWS_INVALID",
+      severity: "error",
+      message: "Matrix rows must be a positive safe integer.",
+      path: path_ + ".shape.rows"
+    })
+  }
+
+  if isPositiveSafeInteger(matrix.shape.columns) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_MATRIX_COLUMNS_INVALID",
+      severity: "error",
+      message: "Matrix columns must be a positive safe integer.",
+      path: path_ + ".shape.columns"
+    })
+  }
+
+  return diagnostics
+}

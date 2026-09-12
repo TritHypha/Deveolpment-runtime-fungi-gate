@@ -21,6 +21,8 @@ The two newly authored native product candidates are stored under
 `packages/fungi/products/galerina/rd0873-core-vector/`. Their retained
 TypeScript oracles and differential tests remain in `packages-ts`; the path
 move does not imply consumer admission or TypeScript retirement.
+The core-vector product candidate now also covers `validateMatrixType`, with
+rows-then-columns diagnostic parity at the safe-integer boundary.
 
 ## Selective runtime conversion scope - owner clarification 2026-09-11
 
