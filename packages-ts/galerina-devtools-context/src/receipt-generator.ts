@@ -93,15 +93,27 @@ function collectCallees(bodyNode: AstNode): string[] {
   return [...callees];
 }
 
-// Common builtins we don't want polluting the callee list
-const BUILTINS = new Set([
-  "AuditLog", "Secrets", "Crypto", "Database", "Http", "File",
-  "Auth", "Session", "validate", "redact", "emit", "return",
-  "Ok", "Err", "Some", "None", "true", "false",
-]);
-
 function isBuiltin(name: string): boolean {
-  return BUILTINS.has(name);
+  return (
+    name === "AuditLog" ||
+    name === "Secrets" ||
+    name === "Crypto" ||
+    name === "Database" ||
+    name === "Http" ||
+    name === "File" ||
+    name === "Auth" ||
+    name === "Session" ||
+    name === "validate" ||
+    name === "redact" ||
+    name === "emit" ||
+    name === "return" ||
+    name === "Ok" ||
+    name === "Err" ||
+    name === "Some" ||
+    name === "None" ||
+    name === "true" ||
+    name === "false"
+  );
 }
 
 /**

@@ -6,7 +6,7 @@ import { describe, it } from "node:test";
 import { assertScalarClassifierAsset, proveScalarClassifier } from "../../../scripts/lib/scalar-classifier-fungi-proof.mjs";
 
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ASSET = "src/self-hosted/builtin-name.fungi";
+const ASSET = "../../packages/fungi/products/galerina/rd0873-devtools-context/builtin-name.fungi";
 const ACCEPTED = Object.freeze(["AuditLog", "Secrets", "Crypto", "Database", "Http", "File", "Auth", "Session", "validate", "redact", "emit", "return", "Ok", "Err", "Some", "None", "true", "false"]);
 const CASES = Object.freeze([
   ...ACCEPTED.map((value) => ({ value, expected: true })),
@@ -21,7 +21,11 @@ describe("devtools-context package-owned builtin name decision", () => {
       referenceRelative: "src/receipt-generator.ts",
       assertReference(reference) {
         for (const value of ACCEPTED) assert.match(reference, new RegExp(`"${value}"`, "u"));
-        assert.match(reference, /function isBuiltin\(name: string\): boolean \{\s*return BUILTINS\.has\(name\);\s*\}/u);
+        assert.match(
+          reference,
+          /function isBuiltin\(name: string\): boolean \{\s*return \([\s\S]*name === "AuditLog"[\s\S]*name === "false"[\s\S]*\);\s*\}/u,
+        );
+        assert.doesNotMatch(reference, /function isBuiltin[\s\S]*?BUILTINS\.has/u);
       },
     });
   });

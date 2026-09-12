@@ -42,22 +42,26 @@ export interface LifecycleTransitionData {
 
 export type ResourceLifecycleGraph = Graph<ResourceNodeData, LifecycleTransitionData>;
 
-// ---------------------------------------------------------------------------
-// Valid state machine transitions
-// ---------------------------------------------------------------------------
-
-const VALID_TRANSITIONS: ReadonlyMap<ResourceState, ReadonlySet<ResourceState>> = new Map([
-  ["declared",      new Set<ResourceState>(["planned", "failed"])],
-  ["planned",       new Set<ResourceState>(["initializing", "failed"])],
-  ["initializing",  new Set<ResourceState>(["ready", "failed"])],
-  ["ready",         new Set<ResourceState>(["shutting_down", "failed"])],
-  ["failed",        new Set<ResourceState>(["shutting_down"])],
-  ["shutting_down", new Set<ResourceState>(["closed", "failed"])],
-  ["closed",        new Set<ResourceState>()],
-]);
-
 export function validateTransition(from: ResourceState, to: ResourceState): boolean {
-  return VALID_TRANSITIONS.get(from)?.has(to) ?? false;
+  if (from === "declared") {
+    return to === "planned" || to === "failed";
+  }
+  if (from === "planned") {
+    return to === "initializing" || to === "failed";
+  }
+  if (from === "initializing") {
+    return to === "ready" || to === "failed";
+  }
+  if (from === "ready") {
+    return to === "shutting_down" || to === "failed";
+  }
+  if (from === "failed") {
+    return to === "shutting_down";
+  }
+  if (from === "shutting_down") {
+    return to === "closed" || to === "failed";
+  }
+  return false;
 }
 
 // ---------------------------------------------------------------------------

@@ -21,7 +21,7 @@ import {
 import { validateTransition } from "../dist/index.js";
 
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ASSET_RELATIVE = "src/self-hosted/resource-transition.fungi";
+const ASSET_RELATIVE = "../../packages/fungi/products/galerina/rd0873-devtools-project-graph/resource-transition.fungi";
 const ASSET = join(PACKAGE_ROOT, ...ASSET_RELATIVE.split("/"));
 const PACKAGE = join(PACKAGE_ROOT, "package.json");
 const STATES = Object.freeze([
@@ -103,8 +103,13 @@ describe("project-graph package-owned Fungi resource transition decision", () =>
       reference,
       /export function validateTransition\(from: ResourceState, to: ResourceState\): boolean/u,
     );
+    assert.doesNotMatch(reference, /VALID_TRANSITIONS/u);
+    assert.match(
+      reference,
+      /export function validateTransition[\s\S]*from === "declared"[\s\S]*to === "planned"[\s\S]*from === "shutting_down"[\s\S]*to === "closed"/u,
+    );
     for (const state of STATES) {
-      assert.ok(reference.includes(`["${state}"`), `missing source state: ${state}`);
+      assert.match(reference, new RegExp(`\\| "${state}"|from === "${state}"`, "u"), `missing source state: ${state}`);
     }
   });
 
@@ -114,9 +119,7 @@ describe("project-graph package-owned Fungi resource transition decision", () =>
     for (const from of values) {
       for (const to of values) {
         const expected = ALLOWED.has(`${from}\u0000${to}`);
-        if (STATES.includes(from) && STATES.includes(to)) {
-          assert.equal(validateTransition(from, to), expected, `TypeScript ${from}->${to}`);
-        }
+        assert.equal(validateTransition(from, to), expected, `TypeScript ${from}->${to}`);
         const interpreted = await executeFlow(
           "validateTransition",
           new Map([
