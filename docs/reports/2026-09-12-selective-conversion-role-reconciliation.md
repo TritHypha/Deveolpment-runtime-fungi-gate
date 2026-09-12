@@ -2,7 +2,7 @@
 
 Date: 2026-09-12
 Repository: Galerina
-Source-tree evidence: `main` commit `17a5a6c95d13859322b948f2e4b03a3eb951120a`
+Source-tree evidence: `main` commit `82447afa3d3472a778951fc8ac34c5faca13d35d`
 
 This is a routing record for the next translation waves. It separates the
 language of a file from the role it performs. It does not authorize source
@@ -10,10 +10,11 @@ creation, a consumer switch, TypeScript retirement, or release authority.
 
 ## Evidence used
 
-- The full code graph was indexed at the source-tree commit above: 77,364
-  nodes and 195,683 edges, with equal expected counts. Its scope and exclusions
-  are recorded in
-  `docs/independent-audits/2026-09-12-rd0873-graph-refresh-full.json`.
+- The earlier full code graph receipt remains historical evidence for its
+  recorded source tree. A later navigation refresh was run at the source-tree
+  commit above and reports 77,635 nodes and 202,823 edges. The graph remains
+  navigation-only: its generated/dependency exclusions and truncated exclusion
+  list do not prove Fungi coverage or corpus assurance.
 - Package manifests were enumerated from `packages-ts/*/package.json`, then
   grouped by their declared entrypoint, scripts and known host boundary. A
   package script is a routing signal, not proof that every file in that package
