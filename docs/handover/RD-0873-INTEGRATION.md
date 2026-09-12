@@ -1,5 +1,30 @@
 # RD-0873 integration checkpoint
 
+## Paused housekeeping checkpoint - 2026-09-12
+
+The active implementation point is `main` at
+`f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, also verified at
+`origin/main`. The latest compiler/agent repair, NASM prerequisite record,
+documentation and Golden manifest are committed. No new translation wave has
+started after the owner requested a pause.
+
+The session housekeeping contract ran in read-only mode and returned
+`HOUSEKEEPING REFUSED`/HOLD. Its bounded-execution pass reported 716 existing
+findings and inventory refused a hard-linked release executable at
+`build/rd0858-requirement-launcher/bad-ready-target/release/deps/galerina_requirement_launcher.exe`.
+No cleanup, quarantine, branch or worktree change was made.
+
+Memory preflight self-tests passed but remains non-green: two top-level memory
+files are unindexed and lack the frontmatter contract, four notes have mixed
+line endings, the Galerina working-set owner is missing, and case drift is
+report-only. Stale volatile facts were zero. The memory result is preserved in
+an ad-hoc locator note; `MEMORY.md` was not rewritten.
+
+Next safe action: obtain an owner-visible disposition for the refusal findings,
+then resume the remaining runtime inventory with fixed manifests and focused
+checks. Preserve existing worktree topology, protected sibling dirt and
+TypeScript shadows. The larger conversion goal remains active.
+
 ## Active restart route - 2026-09-12
 
 Resume the standing selective-conversion goal from the current source checkout.

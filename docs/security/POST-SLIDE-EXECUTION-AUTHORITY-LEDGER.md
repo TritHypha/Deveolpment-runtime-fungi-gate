@@ -7,6 +7,23 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## Housekeeping and pause checkpoint - 2026-09-12
+
+The implementation point is `main` at
+`f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, also present on
+`origin/main`. The read-only session housekeeping pass returned
+`HOUSEKEEPING REFUSED`/HOLD after 716 existing bounded-execution findings
+and a hard-linked release executable were reported. No cleanup, quarantine,
+consumer switch, production receipt or translation restart follows from that
+finding.
+
+Memory preflight self-tests passed, while the current store still has two
+unindexed top-level files lacking the memory-graph frontmatter contract, four
+mixed-EOL notes, a missing Galerina working-set owner and report-only case
+drift. Stale volatile facts were zero. These are custody and routing findings,
+not production-authority evidence. The positive-float classifier remains a
+scoped implementation result and does not authorize execution-budget widening.
+
 ## Selective-conversion authorization clarification - 2026-09-12
 
 The standing owner direction authorizes selective product/runtime candidate

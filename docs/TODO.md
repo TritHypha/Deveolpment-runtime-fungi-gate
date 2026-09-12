@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 housekeeping and compact checkpoint - 2026-09-12
+
+- [x] Reconcile the current implementation point: local and remote `main`
+  are `f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, with the compiler repair,
+  documentation and required Golden manifest committed and pushed.
+- [x] Record the NASM 3.02 prerequisite check. The executable matches the
+  pinned static-host recipe and the Windows probe returns `CANDIDATE`;
+  this is host-toolchain evidence, not Fungi or production admission.
+- [!] Run the bounded session housekeeping pass. It returned
+  `HOUSEKEEPING REFUSED`/HOLD: the bounded-execution audit reported 716
+  existing findings and inventory refused a hard-linked release executable at
+  `build/rd0858-requirement-launcher/bad-ready-target/release/deps/galerina_requirement_launcher.exe`.
+  No cleanup, quarantine or source change was attempted.
+- [!] Memory preflight self-tests passed, but the store remains non-green:
+  `memory_summary.md` and `raw_memories.md` are unindexed/missing the
+  memory-graph frontmatter contract, four notes have mixed line endings, the
+  Galerina working-set owner is missing, and case drift is report-only.
+  Stale volatile facts were zero. The top-level `MEMORY.md` remains an index,
+  not a body warehouse; the current result is recorded in the ad-hoc locator
+  note.
+- [ ] Keep translation paused until the refusal and memory-owner findings have
+  an owner-visible disposition. On resume, continue the remaining runtime
+  inventory under the standing approval with fixed manifests and focused
+  per-change checks; do not rerun the full corpus for an individual file.
+
 ### RD-0873 active selective-conversion work - 2026-09-12
 
 - [x] Reconcile the standing owner direction with the selective-conversion

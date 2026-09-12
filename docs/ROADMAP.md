@@ -27,6 +27,30 @@ count does not prohibit authorized symbol-level repairs. No production consumer
 switch, TS retirement, release authority or full-corpus rerun is inferred.
 Older dated checkpoints below retain their original evidence scope.
 
+## RD-0873 housekeeping and compact checkpoint - 2026-09-12
+
+The current implementation checkout is on `main` at
+`f05c2993a01bbc5594333fe43a8fa0d20e2dd8ea`, and the same commit is present
+on `origin/main`. The NASM 3.02 static-host prerequisite matches the pinned
+recipe and reports `CANDIDATE`. The typed positive-float repair and its
+documentation are complete at this point; the broader conversion goal remains
+open.
+
+The read-only session housekeeping pass is explicitly
+`HOUSEKEEPING REFUSED`/HOLD. It found 716 existing bounded-execution findings
+and a hard-linked release executable under
+`build/rd0858-requirement-launcher/bad-ready-target/release/deps/`.
+No cleanup or quarantine authority follows from the finding. Memory preflight
+also remains non-green because two top-level generated memory files are
+unindexed and lack the memory-graph frontmatter contract, four notes have
+mixed line endings, the Galerina working-set owner is absent, and case drift is
+report-only; stale volatile facts were zero.
+
+Translation is paused for this compact. The next safe action is an owner-visible
+disposition of those findings, followed by the existing runtime inventory route.
+This checkpoint does not promote the queue, rerun PROJECT assurance, switch a
+consumer, retire TypeScript, or grant production authority.
+
 ## RD-0873 generated graph/index refresh - 2026-09-12
 
 The repository-owned graph, semantic-assurance graph, KB graph, dev-tool
