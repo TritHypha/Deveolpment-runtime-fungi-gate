@@ -1,0 +1,60 @@
+{
+  "schema": "galerina.rd0873-graph-refresh.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_CURRENT_HEAD_NAVIGATION_INDEX",
+  "authorizing": false,
+  "purpose": "Record a current-head moderate code-graph refresh for structural navigation and role reconciliation without treating the index as corpus assurance or translation authority.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "539718705a6eda2f0e62d458a105ebc269d3b08b",
+    "tree": "90bf5405d5fb6d720c85db3cbc802acd0eac2c0b"
+  },
+  "index": {
+    "mode": "moderate",
+    "indexedAt": "2026-09-12T01:40:25Z",
+    "indexedHeadSha": "539718705a6eda2f0e62d458a105ebc269d3b08b",
+    "status": "indexed",
+    "nodes": 77075,
+    "expectedNodes": 77075,
+    "edges": 194921,
+    "expectedEdges": 194921,
+    "excludedDirectoryCount": 248,
+    "excludedDirectoryListTruncated": true,
+    "persistenceArtifact": false
+  },
+  "architectureSnapshot": {
+    "languages": {
+      "TypeScript": 546,
+      "Rust": 63,
+      "HTML": 32,
+      "Python": 28,
+      "TOML": 12,
+      "JavaScript": 12,
+      "YAML": 8,
+      "Bash": 3,
+      "C++": 1
+    },
+    "notableBoundaries": [
+      "galerina-framework-app-kernel -> galerina-core-compiler (121 calls)",
+      "galerina-framework-app-kernel -> galerina-tower-citizen (93 calls)",
+      "galerina-devtools-benchmarks -> galerina-core-compiler (83 calls)",
+      "galerina-devtools-benchmarks -> galerina-tower-citizen (67 calls)"
+    ]
+  },
+  "scopeLimits": [
+    "Moderate indexing excludes documentation, build outputs, scripts, tools and selected dependency/dist directories; the exclusion list is intentionally truncated by the tool.",
+    "A successful index proves current-head graph construction only for its indexed scope; it does not prove absence, full Fungi coverage, source admission, consumer switching, or corpus assurance.",
+    "Search for validateAgentLimits resolves the retained TypeScript oracle; no Fungi source-authority claim is inferred."
+  ],
+  "roleBoundary": {
+    "navigationOnly": true,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "verdict": "The graph is fresh and internally count-consistent at the recorded head. Use it for bounded structural navigation and package-role reconciliation; retain separate evidence for Fungi source coverage, physical SLIDE/VOK admission, and full-corpus claims."
+}

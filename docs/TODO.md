@@ -65,11 +65,15 @@ counts or open items that a newer section explicitly supersedes.
   and both infinities; runtime errors propagate and malformed classifier inputs
   refuse. Astra's scoped receipt records 25 focused, 39 independent and 220
   constructor checks under `docs/independent-audits/`.
-- [!] The post-commit external graph refresh reports `indexed` but remains bound to
-  `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current
-  `5b825ca3d38dbfa329c45bd9e4a50301b00f4b8a`; the new
-  Fungi symbol is absent from graph search. Treat the graph as navigation-only
-  until its owner repairs the build-point refresh.
+- [x] Refreshed the moderate code graph at current `main` HEAD
+  `539718705a6eda2f0e62d458a105ebc269d3b08b` / tree
+  `90bf5405d5fb6d720c85db3cbc802acd0eac2c0b`: 77,075/77,075 nodes and
+  194,921/194,921 edges. The exact-scope receipt is
+  `docs/independent-audits/2026-09-12-rd0873-graph-refresh.json`.
+- [!] The graph remains navigation-only for admission decisions: moderate mode
+  excludes documentation, build outputs, scripts, tools and selected generated
+  or dependency directories, and the tool truncated its exclusion list. It does
+  not prove full Fungi coverage, absence, consumer switching or corpus assurance.
 
 ### RD-0873 current-head gate refresh - 2026-09-12
 
