@@ -25,6 +25,13 @@ consumer switch. Float64 array producers, contextual widening, expression
 match typing, Int64, nested, String, record, active-object/alias, hostile or
 sparse container semantics and admission remain open.
 
+The current product candidate set was rechecked at exact `main` HEAD
+`a0445091b7756c0933515db256119f0469b6fce2`: strict governance passes for all
+15 product `.fungi` files, the retained differential set is 117/117, and the
+AI-agent and core-vector package suites are 22/22 and 5/5. This is recorded by
+the non-authorizing receipt
+`docs/independent-audits/2026-09-12-rd0873-current-head-product-proof.json`.
+
 ## Selective conversion progress - 2026-09-12
 
 The [first chapter inventory](reports/2026-09-12-selective-fungi-first-chapters.md)

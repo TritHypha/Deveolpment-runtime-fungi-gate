@@ -1,0 +1,127 @@
+{
+  "schema": "galerina.rd0873-current-head-product-proof.v1",
+  "generatedAt": "2026-09-12T03:50:14.683Z",
+  "status": "PASS_BOUNDED_PRODUCT_CURRENT_HEAD_RECHECK",
+  "authorizing": false,
+  "repository": "Galerina",
+  "reviewedBuildIdentity": {
+    "branch": "main",
+    "head": "a0445091b7756c0933515db256119f0469b6fce2",
+    "tree": "3235040cf9e7f89f80f33c6644d05aad5288076b"
+  },
+  "scope": {
+    "root": "packages/fungi/products/galerina",
+    "fileCount": 15,
+    "files": [
+      {
+        "path": "packages/fungi/products/galerina/rd0858-unit4-scalar-oracle/scalar-oracle.fungi",
+        "sha256": "sha256:bd5993a9d28ef4073e3e4e80ad6fcb0cab3fcc75b6d65d0d220f7e7ba1043544"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent-report/create-agent-report.fungi",
+        "sha256": "sha256:493e7f433ad638f2b7c82e566223888a30e98eef9ae2613d52b8c944fd9d2417"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/apply-agent-merge-policy.fungi",
+        "sha256": "sha256:49ff894d4a46e7f483b5e2b6b214728f2e705151d1c853844a1b56c9edc189f7"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-definition.fungi",
+        "sha256": "sha256:092b0e6aeb30502dc6d27aff07d8deab0151e021b538b9642e41ec687fc4a697"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+        "sha256": "sha256:07f3ed4a3c46ac70282fe22b1f4f883933681df2a80717dfccf472a7ec0f4563"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-task-group-plan.fungi",
+        "sha256": "sha256:877dd1526b46a9167245aaf85efcb2a358eb00d417aed55395452f23972176c0"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-tool-permissions.fungi",
+        "sha256": "sha256:5a89659aa5d09eb3081c5adc08ef1f708d680ba818dbe35e0ad0d38e45ff6fcd"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/create-vector-report.fungi",
+        "sha256": "sha256:6a2c226c3d9104b9239059bdcbabe4ab01c49b722fb90c01c6cc3ec064671698"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/define-vector-type.fungi",
+        "sha256": "sha256:c63fbd928682adc4cf17d63459cd5a1472186ed9edee061396f52cf19230ee9f"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-matrix-type.fungi",
+        "sha256": "sha256:b7e991c60707c83c181a7c05f1a4605ba51709db2c121cc71faa7519777b1b76"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-operation.fungi",
+        "sha256": "sha256:04c61b941d13b34a174633f433f3029db0e40593a1c7f03bd82c35c08f0102a1"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi",
+        "sha256": "sha256:bd1f990ecf93194e4c43b3727e9c4bd80f9933fdebd18cbc0a4973707920e050"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-operation.fungi",
+        "sha256": "sha256:8b028c23bb8dc4bce0a4d9a529364581895074fc02958f81e206a792e11a9905"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-core-vector/validate-vector-type.fungi",
+        "sha256": "sha256:0b7bb6521d19e08967e2334742b4b3445c4e99584b2c7531e5ef8fda0910e912"
+      },
+      {
+        "path": "packages/fungi/products/galerina/rd0873-first-native-slice/slice.fungi",
+        "sha256": "sha256:af00048f6794400fe6318a38fb0f96a1d828b75dbea66d918d830d09398bb571"
+      }
+    ],
+    "role": "candidate product/runtime cores; retained TypeScript oracles and test harnesses remain separate"
+  },
+  "checks": {
+    "strictGovernance": {
+      "command": "node galerina.mjs check <path> --strict-governance",
+      "filesPassed": 15,
+      "filesFailed": 0,
+      "errors": 0,
+      "governanceWarnings": 0
+    },
+    "retainedDifferential": {
+      "command": "node --test packages-ts/galerina-core-compiler/tests/wat-agent-definition-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-agent-report-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-agent-merge-policy-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-agent-task-group-plan-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-vector-type-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-matrix-type-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-tensor-type-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-vector-operation-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-tensor-operation-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-vector-report-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-vector-definition-parity.test.mjs packages-ts/galerina-core-compiler/tests/wat-float-record-refusal.test.mjs packages-ts/galerina-core-compiler/tests/wat-float-finite-classifier.test.mjs",
+      "passed": 117,
+      "failed": 0,
+      "skipped": 0
+    },
+    "packageSuites": [
+      {
+        "package": "galerina-ai-agent",
+        "command": "npm test",
+        "passed": 22,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "package": "galerina-core-vector",
+        "command": "npm test",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "boundaries": {
+    "queueRelabeled": false,
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "remainingGates": [
+    "fresh exact-head owner admission naming a non-empty authoring scope",
+    "generic Option and Float64 array ABI closure",
+    "custom limits path parity",
+    "active-object, alias, sparse-array and hostile-accessor profiles",
+    "physical SLIDE/VOK evidence and consumer admission"
+  ]
+}

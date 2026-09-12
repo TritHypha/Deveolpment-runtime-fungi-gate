@@ -24,6 +24,12 @@ counts or open items that a newer section explicitly supersedes.
   77,737/77,737 nodes and 203,041/203,041 edges, and resolves the new
   `__option_some_f64_v2` bridge. The graph remains navigation-only; its
   truncated exclusion list does not authorize Fungi admission or corpus claims.
+- [x] Recheck the current product candidate set at exact `main` HEAD
+  `a0445091b7756c0933515db256119f0469b6fce2`: all 15 product `.fungi` files
+  pass strict governance, the retained differential set passes 117/117, and
+  the AI-agent and core-vector package suites pass 22/22 and 5/5. The
+  non-authorizing receipt is
+  `docs/independent-audits/2026-09-12-rd0873-current-head-product-proof.json`.
 - [ ] Keep wider Option work open: Float64 array producers, contextual numeric
   widening, expression-position match typing, Int64, nested, String, record,
   active-object/alias, hostile or sparse container semantics and production
