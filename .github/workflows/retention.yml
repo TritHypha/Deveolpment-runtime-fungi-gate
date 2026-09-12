@@ -1,0 +1,35 @@
+# Per-commit memory-retention gate. The static detector and bounded-cache probes are
+# enforcing; cross-platform runtime measurements remain the separate nightly/release lane.
+name: retention
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: retention-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  retention:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4 (SHA-pinned, RD-0294w)
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4 (SHA-pinned, RD-0294w)
+        with:
+          node-version: "20"
+
+      # The retention probes load compiler dependencies. Derive and build the same
+      # governed file: dependency closure used by the existing build-dependent gates.
+      - name: Build compiler dependency closure
+        run: node scripts/build-core-chain.mjs --gate-subjects
+
+      - name: Per-commit retention gate (enforcing)
+        run: npm run audit:retention

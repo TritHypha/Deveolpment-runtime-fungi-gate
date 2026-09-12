@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "main",
-    "sha": "df5e8cbb5",
+    "sha": "15c8d7f1c",
     "detached": false,
     "dirty": true
   },
@@ -36,7 +36,7 @@
         {
           "label": "Packages",
           "pct": 98,
-          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 538 tracked package TypeScript paths, 2551 unexecuted .fungi sources, 57 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
+          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 546 tracked package TypeScript paths, 2546 unexecuted .fungi sources, 57 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
           "evidence": {
             "asserted": "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger"
           }
@@ -281,7 +281,7 @@
         {
           "item": "Contract Registry (RD-0359)",
           "state": "shipped",
-          "detail": "generated authority is current at 3,939 contracts across 2975 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
+          "detail": "generated authority is current at 3,973 contracts across 2991 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
         },
         {
           "item": "DSS decision core + optional Wasm oracle",
@@ -331,7 +331,7 @@
         {
           "item": "Execution-cutover (RD-0361)",
           "state": "building",
-          "detail": "104/104 governed twins checker-clean; 0 shadow · 75 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
+          "detail": "103/103 governed twins checker-clean; 0 shadow · 74 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
         },
         {
           "item": "Independent SLIDE backend",
@@ -341,7 +341,7 @@
         {
           "item": "Package retirement",
           "state": "building",
-          "detail": "538 tracked package TypeScript paths · 2551/2551 .fungi sources unexecuted · 0/57 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
+          "detail": "546 tracked package TypeScript paths · 2546/2546 .fungi sources unexecuted · 0/57 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
         },
         {
           "item": "Value-unit types (RD-0349)",
@@ -366,7 +366,7 @@
         {
           "item": "Memory retention audit and bounded caches",
           "state": "building",
-          "detail": "bounded compiler caches and the static/dynamic retention tools are implemented; the dedicated per-commit workflow and scheduled cross-platform nightly/release measurements remain open"
+          "detail": "bounded compiler caches, the complete-result static gate and its dedicated per-commit workflow are implemented; scheduled cross-platform nightly/release measurements remain open"
         },
         {
           "item": "General Fungi-to-SLIDE control-flow corpus",

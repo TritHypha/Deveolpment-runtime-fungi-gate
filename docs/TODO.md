@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 pre-translation retention gate hardening - 2026-09-12
+
+- [x] Implement the single Astra-reviewed pre-translation improvement: a
+  dedicated `.github/workflows/retention.yml` builds the governed compiler
+  dependency closure with `scripts/build-core-chain.mjs --gate-subjects`, then
+  runs the enforcing per-commit retention gate. The existing build-free
+  `conventions.yml` remains unchanged.
+- [x] Make retention child probes fail closed on spawn errors, timeouts,
+  signals, missing exit status and unaccepted exit codes. A pass-looking output
+  cannot override a failed process.
+- [x] Give `audit-leak-static.mjs --json` a complete machine-readable result
+  with explicit `complete`, `truncated`, `scanned`, `findings` and `exitCode`
+  fields. The gate validates the schema, every finding identity and agreement
+  between the declared and observed exit code; it no longer parses the
+  60-finding human display cap.
+- [x] Add focused contract coverage for child-result rejection, complete
+  scanner output beyond 60 findings, malformed identities and workflow order.
+  Retention contract tests pass 5/5 and component-health readiness tests pass
+  2/2; the real retention gate passes with 19/19
+  bounded-cache regressions, the production 2,048-entry ceiling enforced and
+  138 source files scanned with zero new findings. The governed closure build
+  completes for 15 packages.
+- [!] The dynamic nightly/release measurements remain separate and unscheduled;
+  this change does not start translation, rerun PROJECT assurance, switch a
+  consumer, retire TypeScript or alter `.gate`.
+
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 
 - [x] Record the implementation point used for this checkpoint: local and
@@ -5897,7 +5923,7 @@ approval and a genuinely clean-room verifier require owner or independent
 hands; they are not needed for the next general-backend increment and will be
 raised only when reached.
 
-### Memory-retention programme: bounded caches shipped, workflow host pending - 2026-08-08
+### Memory-retention programme: bounded caches shipped, per-commit workflow integrated - 2026-09-12
 
 Owner rulings Q2 (tools live in `scripts/`, no new package) and Q3 (staged CI)
 are implemented up to one open decision. The detailed audit is retained in the
@@ -5925,10 +5951,11 @@ outside this repository.
   evictions**, weight 6,144/65,536, item weight ~3.0. **`maxEntries` is the
   binding ceiling; `maxWeight` is never the constraint at this item weight** and
   must not be cited as an enforced limit.
-- [ ] **Engineering action selected under the resumed ownership:** add a
-  dedicated `retention.yml` that builds first and then runs the per-commit
-  retention gate. Do not make the deliberately build-free
-  `.github/workflows/conventions.yml` install or build dependencies.
+- [x] **Engineering action selected under the resumed ownership:** the
+  dedicated `retention.yml` builds first and then runs the per-commit retention
+  gate. The deliberately build-free `.github/workflows/conventions.yml` was
+  left unchanged. Child-process and complete-result checks are covered by
+  `scripts/tests/retention-gate-contract.test.mjs`.
 - [ ] The nightly/release dynamic stage exists and is wired as an npm script but
   no scheduler invokes it.
 

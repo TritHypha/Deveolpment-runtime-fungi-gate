@@ -29,6 +29,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import process from "node:process";
+import { checkedChildResult, parseRetentionScanJson } from "./lib/retention-process.mjs";
 
 function findGalerina() {
   const here = dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
@@ -66,11 +67,13 @@ P("== stage 0: detector self-test (fail-closed) ==");
 {
   const r = spawnSync(process.execPath, [SCRIPTS + "/audit-leak-static.mjs", "--self-test"],
     { encoding: "utf8", timeout: 300000, env: probeEnv() });
-  if (r.status !== 0) {
+  const checked = checkedChildResult(r, { name: "static detector self-test" });
+  if (!checked.ok) {
     console.error("  ❌ the static detector failed its own self-test.");
     console.error("     A scan from an unproven detector cannot distinguish 'nothing found' from");
     console.error("     'nothing looked'. Refusing to report a result.");
-    console.error((r.stdout || "") + (r.stderr || ""));
+    console.error("     " + checked.reason);
+    console.error(checked.output || ((r.stdout || "") + (r.stderr || "")));
     process.exit(2);
   }
   P("  * detector discriminates");
@@ -80,10 +83,12 @@ P("== stage 0: detector self-test (fail-closed) ==");
   // ceiling, so its assertion must first be shown to REJECT an unbounded container.
   const r = spawnSync(process.execPath, [SCRIPTS + "/kat-execution-graph-cache-bound.mjs", "--self-test"],
     { encoding: "utf8", timeout: 300000, env: probeEnv() });
-  if (r.status !== 0) {
+  const checked = checkedChildResult(r, { name: "execution-graph cache bound self-test" });
+  if (!checked.ok) {
     console.error("  ❌ the bound assertion failed its own self-test.");
     console.error("     An assertion that accepts an unbounded container proves nothing when it passes.");
-    console.error((r.stdout || "") + (r.stderr || ""));
+    console.error("     " + checked.reason);
+    console.error(checked.output || ((r.stdout || "") + (r.stderr || "")));
     process.exit(2);
   }
   P("  * bound assertion discriminates");
@@ -99,11 +104,19 @@ P("\n== stage 1: positive bounded-cache regressions ==");
   const r = spawnSync(process.execPath,
     ["--test", CORPUS_ROOT + "/tests/bounded-cache.test.mjs"],
     { encoding: "utf8", timeout: 600000, cwd: CORPUS_ROOT, env: probeEnv() });
-  const out = (r.stdout || "") + (r.stderr || "");
+  const checked = checkedChildResult(r, { name: "bounded-cache regressions" });
+  if (!checked.ok) {
+    console.error("  ❌ bounded-cache regressions did not produce an accepted result.");
+    console.error("     " + checked.reason);
+    console.error(checked.output || ((r.stdout || "") + (r.stderr || "")));
+    process.exit(2);
+  }
+  const out = checked.output;
   const pass = Number((out.match(/^.\s*pass (\d+)/m) ?? [])[1] ?? 0);
   const fl = Number((out.match(/^.\s*fail (\d+)/m) ?? [])[1] ?? -1);
   if (fl !== 0 || pass === 0) {
-    fail(`bounded-cache regressions: ${pass} passed, ${fl} failed. A bound that is never exercised is a bound nobody has tested.`);
+    console.error(`  ❌ bounded-cache regressions summary is incomplete: ${pass} passed, ${fl} failed.`);
+    process.exit(2);
   } else {
     P(`  * ${pass} positive regressions pass (bounds reached AND enforced)`);
   }
@@ -116,10 +129,14 @@ P("\n== stage 1: positive bounded-cache regressions ==");
   // "entries <= maxEntries" would pass on a cache that simply never filled.
   const r = spawnSync(process.execPath, [SCRIPTS + "/kat-execution-graph-cache-bound.mjs"],
     { encoding: "utf8", timeout: 600000, env: probeEnv() });
-  const out = (r.stdout || "") + (r.stderr || "");
-  if (r.status !== 0) {
-    fail("the execution-graph cache bound is not enforced under pressure:\n" + out);
+  const checked = checkedChildResult(r, { name: "execution-graph cache bound pressure KAT" });
+  if (!checked.ok) {
+    console.error("  ❌ the execution-graph cache bound did not produce an accepted result.");
+    console.error("     " + checked.reason);
+    console.error(checked.output || ((r.stdout || "") + (r.stderr || "")));
+    process.exit(2);
   } else {
+    const out = checked.output;
     const binds = (out.match(/which ceiling BINDS first: ([^\n]+)/) ?? [])[1] ?? "unreported";
     P(`  * production cache bound enforced under pressure — binding ceiling: ${binds}`);
   }
@@ -132,24 +149,32 @@ P("\n== stage 2: static retention scan vs baseline ==");
 const scan = spawnSync(process.execPath,
   [SCRIPTS + "/audit-leak-static.mjs", "--scan", SCAN_ROOT, "--corpus", CORPUS_ROOT, "--json"],
   { encoding: "utf8", timeout: 600000, env: probeEnv() });
-const scanOut = (scan.stdout || "") + (scan.stderr || "");
-
-/** Findings are parsed from the human report; `--json` is honoured if present. */
-function parseFindings(text) {
-  const out = [];
-  const re = /^\s{5}(UNBOUNDED|TEST-ONLY-CLEAR|CLEAR-NEVER-CALLED)\s+\S+\s+(\S+)\s+(\S+):(\d+)\s*$/mg;
-  for (const m of text.matchAll(re)) {
-    out.push({ verdict: m[1], symbol: m[2], file: m[3].replace(ROOT + "/", "").replace(/\\/g, "/"), line: Number(m[4]) });
-  }
-  return out;
-}
-const findings = parseFindings(scanOut);
-// A scan that finds NOTHING is suspicious until the scan is shown to have run.
-const scanned = Number((scanOut.match(/== scan: (\d+) file\(s\)/) ?? [])[1] ?? 0);
-if (scanned === 0) {
-  console.error("  ❌ the scan classified 0 files — the walker is dead, not the codebase clean.");
+const checkedScan = checkedChildResult(scan, {
+  name: "static retention scan",
+  acceptedStatuses: [0, 1],
+});
+if (!checkedScan.ok) {
+  console.error("  ❌ the static retention scan did not produce an accepted result.");
+  console.error("     " + checkedScan.reason);
+  console.error(checkedScan.output || ((scan.stdout || "") + (scan.stderr || "")));
   process.exit(2);
 }
+const parsedScan = parseRetentionScanJson(scan.stdout);
+if (!parsedScan.ok) {
+  console.error("  ❌ the static retention scan result is incomplete.");
+  console.error("     " + parsedScan.reason);
+  process.exit(2);
+}
+if (parsedScan.value.exitCode !== scan.status) {
+  console.error(`  ❌ scanner exit status ${scan.status} disagrees with its declared result ${parsedScan.value.exitCode}.`);
+  process.exit(2);
+}
+const findings = parsedScan.value.findings.map((finding) => ({
+  ...finding,
+  symbol: finding.id,
+  file: finding.file.replace(ROOT + "/", "").replace(/\\/g, "/"),
+}));
+const scanned = parsedScan.value.scanned;
 P(`  scanned ${scanned} file(s); ${findings.length} finding(s)`);
 
 // ---------------------------------------------------------------------------

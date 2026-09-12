@@ -3,6 +3,20 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Pre-translation retention gate hardening - 2026-09-12
+
+GPT-6 Astra reviewed this bounded change before implementation. A single
+per-commit workflow now builds the governed compiler dependency closure and
+runs the enforcing retention gate. The gate rejects child spawn failures,
+timeouts, signals, missing exit status and unaccepted codes, and consumes a
+complete machine-readable scanner result instead of the former 60-finding
+human display. Retention contract tests pass 5/5 and component-health readiness
+tests pass 2/2; the real gate passes 19/19
+bounded-cache regressions and scans 138 source files with zero new findings.
+The dynamic cross-platform nightly/release stage remains separate and
+unscheduled. This item does not authorize translation, PROJECT reruns,
+consumer switching, TypeScript retirement or `.gate` work.
+
 ## Active selective conversion - 2026-09-12
 
 Continue approved product/runtime translation and repair under the

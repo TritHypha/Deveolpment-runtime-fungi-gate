@@ -160,14 +160,15 @@ const FIXTURES = [
   ["function-scoped is NOT module state", `export function f(){\n  const local = new Map();\n  local.set(1,2);\n}\n`, null],
 ];
 
-function selfTest() {
-  console.log("== self-test: the classifier must separate unbounded from bounded, capped, weak and scoped ==");
+function selfTest({ quiet = false } = {}) {
+  const log = quiet ? () => {} : console.log;
+  log("== self-test: the classifier must separate unbounded from bounded, capped, weak and scoped ==");
   let ok = true;
   for (const [label, src, expect] of FIXTURES) {
     const got = scanSource(src);
     const verdict = got.length ? got[0].verdict : null;
     const pass = verdict === expect;
-    console.log(`   ${pass ? "*" : "❌"} ${label.padEnd(44)} expected ${String(expect).padEnd(16)} got ${String(verdict)}`);
+    log(`   ${pass ? "*" : "❌"} ${label.padEnd(44)} expected ${String(expect).padEnd(16)} got ${String(verdict)}`);
     if (!pass) ok = false;
   }
 
@@ -187,10 +188,10 @@ export function clearCache(){ cache.clear() }
     const hits = resolveReachability(scanSource(SRC), corpus);
     const v = hits.length ? hits[0].verdict : null;
     const pass = v === expect;
-    console.log(`   ${pass ? "*" : "❌"} ${label.padEnd(44)} expected ${expect.padEnd(16)} got ${String(v)}`);
+    log(`   ${pass ? "*" : "❌"} ${label.padEnd(44)} expected ${expect.padEnd(16)} got ${String(v)}`);
     if (!pass) ok = false;
   }
-  console.log("   " + (ok
+  log("   " + (ok
     ? "✅ self-test passed — the classifier discriminates."
     : "❌ self-test FAILED — a scan result would adjudicate nothing."));
   return ok;
@@ -211,17 +212,19 @@ function* walk(dir) {
 
 function main() {
   const argv = process.argv.slice(2);
+  const jsonMode = argv.includes("--json");
   if (argv.includes("--help") || argv.length === 0) {
     console.log(`audit-leak-static.mjs — grow-only module-level state
 
   --self-test        prove the classifier discriminates (run this first)
   --scan <dir>       scan a directory tree
+  --json              emit one complete machine-readable result (no human report)
   --all              show bounded/capped/weak/inert too, not just candidates
 
 exit: 0 clean · 1 candidates found · 2 usage/self-test failure`);
     process.exit(argv.length === 0 ? 2 : 0);
   }
-  if (!selfTest()) process.exit(2);
+  if (!selfTest({ quiet: jsonMode })) process.exit(2);
   if (argv.includes("--self-test")) process.exit(0);
 
   const si = argv.indexOf("--scan");
@@ -275,14 +278,29 @@ exit: 0 clean · 1 candidates found · 2 usage/self-test failure`);
   const REPORTABLE = new Set(["UNBOUNDED", "TEST-ONLY-CLEAR", "CLEAR-NEVER-CALLED"]);
   if (!showAll) hits = hits.filter((r) => REPORTABLE.has(r.verdict));
 
+  if (files === 0) { console.error("  ** no files scanned — the walker is dead, conclude nothing"); process.exit(2); }
+  const total = Object.values(tally).reduce((a, b) => a + b, 0);
+  const failing = tally.UNBOUNDED + tally["TEST-ONLY-CLEAR"] + tally["CLEAR-NEVER-CALLED"];
+  if (jsonMode) {
+    console.log(JSON.stringify({
+      schema: "galerina.audit-leak-static.v1",
+      complete: true,
+      truncated: false,
+      scanned: files,
+      corpusFiles: corpus.length,
+      tally,
+      findings: hits,
+      exitCode: failing > 0 ? 1 : 0,
+    }));
+    process.exit(failing > 0 ? 1 : 0);
+  }
+
   console.log(`\n== scan: ${files} file(s) classified under ${root} ==`);
   console.log(`   reachability corpus: ${corpus.length} file(s) under ${corpusRoot}`);
   if (corpusRoot === root) {
     console.log("   ⚠ the caller search is NO WIDER than the scan. If tests live outside this root,");
     console.log("     a TEST-ONLY-CLEAR will be misreported as CLEAR-NEVER-CALLED. Pass --corpus.");
   }
-  if (files === 0) { console.error("  ** no files scanned — the walker is dead, conclude nothing"); process.exit(2); }
-  const total = Object.values(tally).reduce((a, b) => a + b, 0);
   console.log(`   module-level collections found: ${total}`);
   for (const [k, v] of Object.entries(tally)) console.log(`     ${k.padEnd(11)} ${v}`);
   console.log("   CONTROL: a non-zero count in the bounded/weak rows shows the classifier is");
@@ -304,7 +322,6 @@ exit: 0 clean · 1 candidates found · 2 usage/self-test failure`);
   console.log("\n   Bound on the reachability pass: call sites are matched by NAME. An indirect call,");
   console.log("   a dispatch table or a re-export under another name defeats it — so `bounded` means");
   console.log("   'a production caller was found', never 'no test-only path exists'.");
-  const failing = tally.UNBOUNDED + tally["TEST-ONLY-CLEAR"] + tally["CLEAR-NEVER-CALLED"];
   process.exit(failing > 0 ? 1 : 0);
 }
 
