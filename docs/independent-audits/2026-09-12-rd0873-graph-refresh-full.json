@@ -1,0 +1,41 @@
+{
+  "schema": "galerina.rd0873-graph-refresh-full.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_CURRENT_HEAD_NAVIGATION_INDEX",
+  "authorizing": false,
+  "purpose": "Record the forced full code-graph refresh at the final current main head after the moderate refresh refused to advance past an excluded-documentation-only change.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "17a5a6c95d13859322b948f2e4b03a3eb951120a",
+    "tree": "c48296efd0d13e96ba9e8b45b7fb6858e2346909"
+  },
+  "index": {
+    "mode": "full",
+    "indexedAt": "2026-09-12T01:43:21Z",
+    "indexedHeadSha": "17a5a6c95d13859322b948f2e4b03a3eb951120a",
+    "status": "indexed",
+    "nodes": 77364,
+    "expectedNodes": 77364,
+    "edges": 195683,
+    "expectedEdges": 195683,
+    "excludedDirectoryCount": 219,
+    "excludedDirectoryListTruncated": true,
+    "persistenceArtifact": false
+  },
+  "scopeLimits": [
+    "The graph tool still excludes selected source-control metadata, build targets, dist and node_modules directories; its exclusion list is truncated by the tool.",
+    "A successful exact-head graph proves indexed structural coverage only; it does not prove absence, full Fungi coverage, source admission, consumer switching, or corpus assurance.",
+    "The moderate refresh remained at its prior build point because only excluded documentation/provenance files had changed; full mode was used to obtain an exact-head build point."
+  ],
+  "roleBoundary": {
+    "navigationOnly": true,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "verdict": "The full graph is fresh and count-consistent at exact main HEAD. Use it for structural navigation and package-role reconciliation; retain separate evidence for Fungi source coverage, physical SLIDE/VOK admission, and full-corpus claims."
+}

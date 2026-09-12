@@ -65,15 +65,15 @@ counts or open items that a newer section explicitly supersedes.
   and both infinities; runtime errors propagate and malformed classifier inputs
   refuse. Astra's scoped receipt records 25 focused, 39 independent and 220
   constructor checks under `docs/independent-audits/`.
-- [x] Refreshed the moderate code graph at current `main` HEAD
-  `539718705a6eda2f0e62d458a105ebc269d3b08b` / tree
-  `90bf5405d5fb6d720c85db3cbc802acd0eac2c0b`: 77,075/77,075 nodes and
-  194,921/194,921 edges. The exact-scope receipt is
-  `docs/independent-audits/2026-09-12-rd0873-graph-refresh.json`.
+- [x] Refreshed the full code graph at current `main` HEAD
+  `17a5a6c95d13859322b948f2e4b03a3eb951120a` / tree
+  `c48296efd0d13e96ba9e8b45b7fb6858e2346909`: 77,364/77,364 nodes and
+  195,683/195,683 edges. The exact-scope receipt is
+  `docs/independent-audits/2026-09-12-rd0873-graph-refresh-full.json`.
 - [!] The graph remains navigation-only for admission decisions: moderate mode
-  excludes documentation, build outputs, scripts, tools and selected generated
-  or dependency directories, and the tool truncated its exclusion list. It does
-  not prove full Fungi coverage, absence, consumer switching or corpus assurance.
+  and full modes exclude selected generated, target, dist and dependency
+  directories, and the tool truncates its exclusion list. It does not prove
+  full Fungi coverage, absence, consumer switching or corpus assurance.
 
 ### RD-0873 current-head gate refresh - 2026-09-12
 

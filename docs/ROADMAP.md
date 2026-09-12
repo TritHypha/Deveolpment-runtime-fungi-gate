@@ -50,14 +50,14 @@ arithmetic and ordering guards. Astra's scoped review passes 25 focused checks,
 39 independent checks and 220 constructor cases; the review receipt is under
 `docs/independent-audits/`. Error projection, aliases and consumer admission
 remain separate obligations.
-The moderate code graph is now refreshed at exact `main` HEAD
-`539718705a6eda2f0e62d458a105ebc269d3b08b` with tree
-`90bf5405d5fb6d720c85db3cbc802acd0eac2c0b`: 77,075/77,075 nodes and
-194,921/194,921 edges. The receipt is in
-`docs/independent-audits/2026-09-12-rd0873-graph-refresh.json`.
-Moderate mode excludes documentation, build outputs, scripts, tools and
-selected generated or dependency directories, with a truncated exclusion list;
-the graph is therefore navigation-only for Fungi admission and corpus claims.
+The full code graph is now refreshed at exact `main` HEAD
+`17a5a6c95d13859322b948f2e4b03a3eb951120a` with tree
+`c48296efd0d13e96ba9e8b45b7fb6858e2346909`: 77,364/77,364 nodes and
+195,683/195,683 edges. The receipt is in
+`docs/independent-audits/2026-09-12-rd0873-graph-refresh-full.json`.
+Full mode excludes selected generated, target, dist and dependency directories,
+with a truncated exclusion list; the graph is therefore navigation-only for
+Fungi admission and corpus claims.
 
 The retained `validateAgentLimits` oracle now has a focused custom-path check
 in the AI-agent package (22/22 tests pass). The existing Fungi twin still
