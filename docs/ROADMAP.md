@@ -64,11 +64,15 @@ in the AI-agent package (22/22 tests pass). The existing Fungi twin still
 hardcodes its default `limits.*` paths, so custom-path parity remains HOLD; the
 non-authorizing exact-head review is recorded in
 `docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-review.json`.
-The generic scalar `Option` item is also a shared ABI HOLD: the current raw-value
-`Some` and `-1` `None` encoding is consumed by match, try-propagation,
-`unwrapOr`, array access, `charAt` and iteration. Its coordinated repair shape
-is recorded in
-`docs/independent-audits/2026-09-12-rd0873-generic-option-abi-review.json`.
+The generic scalar `Option<Int>` i32 lane now has a bounded shared-ABI repair at
+`main` commit `ca2bc2fb515133d77ae33785d380603f6a693c6b`: legacy raw helper
+imports remain stable and new compiler output uses distinct `_v2` registry
+imports for presence and payload. Negative values, `None`, malformed handles,
+producers, matching, `?` and the raw loop bridge are covered by the independent
+review receipt
+`docs/independent-audits/2026-09-12-rd0873-option-abi-repair-v2-review.json`.
+Wider Float64/Int64/nested payloads, hostile or sparse containers,
+active-object/alias behavior, custom limits and product admission remain open.
 
 ## RD-0873 current-head gate refresh - 2026-09-12
 

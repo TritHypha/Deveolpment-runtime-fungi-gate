@@ -16,11 +16,16 @@ counts or open items that a newer section explicitly supersedes.
   ordered diagnostics. These are bounded checks, not a physical admission claim.
 - [ ] Complete the remaining Wave 01 behavior/border coverage, reconcile other
   Wave 02 package roles, and manually implement the Wave 03 runtime cores.
-- [ ] Retain generic scalar-Option payload support, non-finite input mapping,
-  active-object/alias semantics and the custom limits path as explicit remaining
-  obligations. The generic Option ABI review records its shared producer/consumer
-  boundary in `docs/independent-audits/2026-09-12-rd0873-generic-option-abi-review.json`.
-  No chapter or full conversion completion is claimed.
+- [x] Repair the generic scalar `Option<Int>` ABI for the i32 lane. Legacy raw
+  helpers remain stable, while new compiler output uses distinct `_v2` imports
+  with receipt-backed presence/value handles. Negative payloads, `None`,
+  malformed handles, producers, matching, `?` and raw loop access are covered;
+  the exact-head Astra review is
+  `docs/independent-audits/2026-09-12-rd0873-option-abi-repair-v2-review.json`.
+- [ ] Retain wider Option obligations as explicit remaining work: Float64,
+  Int64, nested payloads, active-object/alias semantics, hostile or sparse
+  containers and the custom limits path. No chapter or full conversion
+  completion is claimed.
 - [x] Repair negative Float64 literal and parameter lowering; executable checks
   preserve signed zero and finite-value guards, retain Decimal refusal, and
   cover the separate expression defect beyond the validator parameter probes.
