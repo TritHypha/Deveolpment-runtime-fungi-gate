@@ -83,7 +83,14 @@ export function isOmniState(value: unknown): value is OmniState {
 }
 
 export function isOmniUncertain(state: OmniState): boolean {
-  return OMNI_UNCERTAIN_VALUES.includes(state);
+  return (
+    state === "unknown" ||
+    state === "partial_true" ||
+    state === "partial_false" ||
+    state === "conflicted" ||
+    state === "deferred" ||
+    state === "inconsistent"
+  );
 }
 
 export interface OmniEvidence {

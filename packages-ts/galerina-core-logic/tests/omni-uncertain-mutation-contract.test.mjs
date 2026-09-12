@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   OMNI_UNCERTAIN_STATES,
   isOmniUncertain,
+  omniToDecision,
 } from "../dist/omni/index.js";
 
 describe("core-logic canonical Omni uncertainty membership", () => {
@@ -44,6 +45,34 @@ describe("core-logic canonical Omni uncertainty membership", () => {
       } else {
         delete OMNI_UNCERTAIN_STATES.has;
       }
+    }
+  });
+
+  it("does not read a replaced Array.prototype.includes", () => {
+    const originalIncludes = Array.prototype.includes;
+
+    try {
+      Array.prototype.includes = function replacedIncludes() {
+        throw new Error("canonical membership must not use Array.includes");
+      };
+
+      assert.equal(isOmniUncertain("inconsistent"), true);
+      assert.equal(isOmniUncertain("false"), false);
+
+      const result = omniToDecision({
+        state: "unknown",
+        confidence: 0.95,
+        reasons: [],
+        evidence: [],
+        advisoryOnly: true,
+      });
+      assert.equal(result.kind, "review");
+      assert.equal(
+        result.reason,
+        'OmniDecision has uncertain state "unknown". Escalating to review for deterministic resolution.',
+      );
+    } finally {
+      Array.prototype.includes = originalIncludes;
     }
   });
 });

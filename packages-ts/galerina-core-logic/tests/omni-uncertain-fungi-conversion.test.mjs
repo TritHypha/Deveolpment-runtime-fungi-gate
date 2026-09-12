@@ -7,6 +7,7 @@ import {
   assertScalarClassifierAsset,
   proveScalarClassifier,
 } from "../../../scripts/lib/scalar-classifier-fungi-proof.mjs";
+import { isOmniUncertain } from "../dist/omni/index.js";
 
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRODUCT_ROOT = join(PACKAGE_ROOT, "..", "..", "packages", "fungi", "products", "galerina", "rd0873-core-logic");
@@ -45,13 +46,21 @@ describe("core-logic package-owned Fungi Omni uncertainty decision", () => {
         );
         assert.match(
           reference,
-          /export function isOmniUncertain\(state: OmniState\): boolean \{\s*return OMNI_UNCERTAIN_VALUES\.includes\(state\);\s*\}/u,
+          /export function isOmniUncertain\(state: OmniState\): boolean \{\s*return \(\s*state === "unknown"[\s\S]*state === "inconsistent"\s*\);\s*\}/u,
         );
       },
     });
   });
 
   it("matches every Omni state and denies hostile surplus text", async () => {
+    for (const { value, expected } of CASES) {
+      assert.equal(
+        isOmniUncertain(value),
+        expected,
+        `TypeScript isOmniUncertain(${JSON.stringify(value)})`,
+      );
+    }
+
     await proveScalarClassifier({
       packageRoot: PACKAGE_ROOT,
       assetRoot: PRODUCT_ROOT,
