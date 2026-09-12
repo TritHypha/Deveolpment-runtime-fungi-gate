@@ -1,0 +1,136 @@
+{
+  "schema": "galerina.rd0873.is-tri-admission.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "CANDIDATE_SEMANTIC_PASS_PHYSICAL_HOLD",
+  "authorizing": false,
+  "purpose": "Record the bounded isTri repair without reading or changing the conversion queue.",
+  "approvalContext": "The owner authorized continued selective conversion. This record keeps the TypeScript unknown boundary, names the proposed adapter contract exercised by the focused test, and does not grant a consumer switch or production authority.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "c392f38df793e87ac3b1312c2a77abbfa345a905",
+    "tree": "dbbac6175aa3a025b614f4f1abd74d98e8e160e7"
+  },
+  "scope": {
+    "scopeType": "SYMBOL",
+    "operation": "CREATE_NUMERIC_PRODUCT_LEAF_WITH_RETAINED_HOST_ADAPTER",
+    "wholeFileReplacement": false,
+    "symbols": [
+      {
+        "wave": 3,
+        "package": "galerina-core-logic",
+        "sourcePath": "packages-ts/galerina-core-logic/src/index.ts",
+        "symbol": "isTri",
+        "span": {
+          "start": 79,
+          "end": 81
+        },
+        "signature": "export function isTri(value: unknown): value is Tri",
+        "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+        "sourceBytes": 13409,
+        "candidatePath": "packages/fungi/products/galerina/rd0873-core-logic/is-tri.fungi",
+        "candidateSha256": "sha256:66dccb3bfa9c0771cb5ad20f9e9d204444ece97f9636bbe72fdf7c257f6c4468",
+        "candidateBytes": 800,
+        "focusedTestPath": "packages-ts/galerina-core-logic/tests/is-tri-fungi-conversion.test.mjs",
+        "focusedTestSha256": "sha256:7f34bfdd15ffe085815aa44dd12ed625cbbbe5ee3c02cc10ac56b5da69e32ff1",
+        "focusedTestBytes": 6411,
+        "translationShape": "The retained TypeScript function performs typeof value === number and returns false for all other unknown values; the Fungi leaf is isTri(value: Float64) -> Bool and is invoked only for primitive numbers.",
+        "behavior": "strict equality with -1, 0 and 1; signed zero follows JavaScript equality; non-finite numeric values return false",
+        "dependencyBoundary": "pure numeric comparison only; no property access, coercion, serialization, mutable state, I/O or scheduling"
+      }
+    ],
+    "excluded": [
+      {
+        "symbol": "assertTri",
+        "reason": "private throw/Error identity path remains in the retained TypeScript shadow"
+      },
+      {
+        "symbol": "triNot",
+        "reason": "consumer switch and whole-file retirement are not authorized by this packet"
+      },
+      {
+        "symbol": "isOmniUncertain",
+        "reason": "existing mutable-set boundary remains a separate hold"
+      }
+    ]
+  },
+  "waveLimits": {
+    "profile": "1",
+    "profileName": "scalar",
+    "maxSymbolsPerStep": 1,
+    "maxSourceFilesPerStep": 1,
+    "maxInputBytesPerStep": 16384,
+    "maxEvidenceBytesPerStep": 65536,
+    "timeoutMsPerStep": 600000,
+    "maxSymbolsPerWave": 1,
+    "maxSourceFilesPerWave": 1,
+    "concurrency": 1,
+    "automaticRetries": 0,
+    "aggregateInputBytes": 13409,
+    "maxAggregateEvidenceBytes": 65536,
+    "inputByteDefinition": "complete UTF-8 bytes of the selected TypeScript source file",
+    "evidenceByteDefinition": "bounded source, candidate, test, compiler and physical-stage receipt metadata; no corpus queue data",
+    "chapterAggregation": "after the core-logic package chapter completes",
+    "overflowAction": "HOLD and abort the current step before acceptance"
+  },
+  "boundary": {
+    "publicTypeScriptInput": "unknown",
+    "hostDispatch": "Tested contract: typeof value === number ? invoke the Fungi Float64 leaf once : false; no production consumer dispatch is claimed",
+    "forbiddenOperations": [
+      "Number(value)",
+      "integer conversion",
+      "serialization",
+      "property inspection",
+      "Object.is",
+      "finite-only filtering"
+    ],
+    "falseVsRefusal": "normal non-number and out-of-set values return false; missing export, wrong signature or runtime failure remains a separate infrastructure refusal"
+  },
+  "verification": {
+    "command": "node --test packages-ts/galerina-core-logic/tests/is-tri-fungi-conversion.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "vectors": [
+      "numeric interpreter and Wasm parity for -1, 0, -0, 1, fractions, subnormal, largest finite, NaN and both infinities",
+      "non-number unknown values: undefined, null, booleans, string, BigInt, Symbol, boxed number, function, hostile proxy",
+      "zero property/coercion callbacks and zero Fungi calls for non-number values",
+      "numeric dispatch invokes the leaf once and preserves signed zero and non-finite payloads",
+      "Wasm export uses a Float64 parameter and canonical i32 Bool result without implicit i32 conversion"
+    ],
+    "interpreter": "PASS",
+    "wasm": "PASS",
+    "adapter": "PASS",
+    "diffCheck": "PASS"
+  },
+  "physicalStage": {
+    "status": "HOLD",
+    "slide": {
+      "status": "REFUSED",
+      "profile": "slide.checked-pure-scalar.v1",
+      "reason": "The current independent pure-scalar profile admits Int, Bool, String, Bytes and bounded Array<Int>; it does not admit the Float64 leaf ABI. The checked-Fungi compiler therefore returned a typed refusal before producing a bundle."
+    },
+    "vok": {
+      "status": "NOT_RUN",
+      "reason": "No SLIDE bundle exists to re-derive and admit."
+    }
+  },
+  "custody": {
+    "newFungiSourceCreated": true,
+    "existingFungiRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRead": false,
+    "queuePromotion": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "projectCorpusRerun": false,
+    "branchOrWorktreeCreation": false,
+    "remotePublication": false,
+    "gitRole": "provenance-only"
+  },
+  "decision": "The numeric leaf and retained unknown-input adapter are semantically demonstrated at the Galerina interpreter/Wasm boundary. Full physical admission remains held because the selected SLIDE profile has no Float64 ABI; no claim is made that the public TypeScript symbol has been retired or switched."
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "galerina.rd0873.is-tri-receipt.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_SEMANTIC_LEAF_PHYSICAL_HOLD",
+  "authorizing": false,
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "c392f38df793e87ac3b1312c2a77abbfa345a905",
+    "tree": "dbbac6175aa3a025b614f4f1abd74d98e8e160e7"
+  },
+  "admissionPacket": "docs/independent-audits/2026-09-12-rd0873-is-tri-admission-v1.json",
+  "profile": "1",
+  "operation": "CREATE_NUMERIC_PRODUCT_LEAF_WITH_RETAINED_HOST_ADAPTER",
+  "scope": {
+    "package": "galerina-core-logic",
+    "symbol": "isTri",
+    "sourcePath": "packages-ts/galerina-core-logic/src/index.ts",
+    "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+    "candidatePath": "packages/fungi/products/galerina/rd0873-core-logic/is-tri.fungi",
+    "candidateSha256": "sha256:66dccb3bfa9c0771cb5ad20f9e9d204444ece97f9636bbe72fdf7c257f6c4468",
+    "focusedTestPath": "packages-ts/galerina-core-logic/tests/is-tri-fungi-conversion.test.mjs",
+    "focusedTestSha256": "sha256:7f34bfdd15ffe085815aa44dd12ed625cbbbe5ee3c02cc10ac56b5da69e32ff1"
+  },
+  "verification": {
+    "command": "node --test packages-ts/galerina-core-logic/tests/is-tri-fungi-conversion.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "interpreter": "PASS",
+    "wasm": "PASS",
+    "adapter": "PASS",
+    "vectors": [
+      "-1, 0, signed zero and 1 return true",
+      "fractions, subnormal, largest finite and non-finite numeric values return false",
+      "all tested non-number values return false without property access, coercion or Fungi invocation",
+      "numeric dispatch preserves exact payload and invokes one leaf call",
+      "Float64 -> canonical i32 Bool ABI is explicit"
+    ],
+    "diffCheck": "PASS"
+  },
+  "physicalStage": {
+    "status": "HOLD",
+    "reason": "The current SLIDE pure-scalar profile refused the Float64 candidate before bundle creation; VOK re-derivation cannot run without a bundle."
+  },
+  "custody": {
+    "newFungiSourceCreated": true,
+    "existingFungiRewritten": false,
+    "typescriptShadowRetained": true,
+    "queueRead": false,
+    "queuePromotion": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "projectCorpusRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "measuredEvidenceBytes": 2752,
+  "evidenceSizeMeasurement": "filled after final serialization; must remain <= 65536 bytes",
+  "decision": "Semantic leaf parity is recorded for the named vectors. The retained TypeScript API remains authoritative until a Float64-capable SLIDE/VOK profile and a separate consumer-switch review exist."
+}

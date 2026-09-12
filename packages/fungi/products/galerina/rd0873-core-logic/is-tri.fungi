@@ -1,0 +1,24 @@
+@version 1
+
+/// Numeric leaf for the TypeScript isTri(value: unknown) predicate.
+///
+/// The public TypeScript function deliberately keeps its `unknown` input
+/// boundary. A proposed host adapter performs the exact primitive-kind test and
+/// returns false for every non-number value before calling this flow. This
+/// flow therefore receives only a JavaScript Number represented as Float64.
+/// Strict equality is intentional: signed zero equals zero, while non-finite
+/// values do not equal any admitted Tri state.
+pure flow isTri(value: Float64) -> Bool
+contract { intent { "Classify an already admitted numeric value as -1, 0 or 1 without coercion." } }
+{
+  if value == -1.0 {
+    return true
+  }
+  if value == 0.0 {
+    return true
+  }
+  if value == 1.0 {
+    return true
+  }
+  return false
+}

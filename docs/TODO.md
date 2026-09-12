@@ -53,8 +53,31 @@ counts or open items that a newer section explicitly supersedes.
 - [!] The packet remains `PROPOSAL_NON_AUTHORIZING` for new source work. The
   physical SLIDE/VOK stage is a separate HOLD, and the existing housekeeping
   refusal plus stale memory working-set still need owner-visible disposition.
-  A prospective `isTri` wave is not admitted because its unknown-to-physical
-  marshalling contract is unresolved.
+  The former prospective `isTri` item is now handled by its own bounded
+  numeric-leaf packet below; it does not inherit this existing-twin scope.
+
+### RD-0873 isTri numeric leaf and retained unknown boundary - 2026-09-12
+
+- [x] Resolve the open `isTri(value: unknown)` item without consulting the
+  conversion queue. The public TypeScript predicate remains the authoritative
+  synchronous boundary; the tested adapter contract returns false for every
+  non-number before invoking the product leaf
+  `packages/fungi/products/galerina/rd0873-core-logic/is-tri.fungi`.
+- [x] Add the smallest Fungi leaf, `isTri(value: Float64) -> Bool`, with exact
+  comparisons for `-1`, `0` and `1`. The leaf preserves signed-zero equality
+  and returns false for fractions, subnormal/large values and non-finite
+  numeric inputs without coercion or property reads. The TypeScript shadow is
+  retained and no consumer is switched.
+- [x] Run the focused interpreter, Wasm and composed-adapter proof: 5/5 tests
+  pass, including hostile proxies, boxed numbers, BigInt, Symbol, functions,
+  non-number false paths, one-call numeric dispatch, signed-zero preservation,
+  and the explicit Float64-to-Bool ABI. Astra reviewed the split and found it
+  semantically sound.
+- [!] Physical admission remains a stage-specific HOLD. The current SLIDE
+  pure-scalar profile refuses the Float64 ABI before producing a bundle, so
+  VOK re-derivation cannot run. The bounded packet and receipt are
+  `docs/independent-audits/2026-09-12-rd0873-is-tri-admission-v1.json` and
+  `docs/independent-audits/2026-09-12-rd0873-is-tri-receipt-v1.json`.
 
 ### RD-0873 housekeeping and compact checkpoint - 2026-09-12
 

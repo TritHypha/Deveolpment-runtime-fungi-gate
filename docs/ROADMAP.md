@@ -34,12 +34,39 @@ evidence bytes, 600,000 ms, concurrency 1 and zero retries. The focused proof
 passed 2/2 and its 2,474-byte receipt is
 `docs/independent-audits/2026-09-12-rd0873-current-head-single-symbol-revalidation-receipt-v1.json`.
 
-This is a `PROPOSAL_NON_AUTHORIZING` record for new source work. It creates no
-Fungi source, rewrites no twin, promotes no queue row and supplies no consumer
-or production authority. SLIDE/VOK evidence is still a stage-specific HOLD;
-the housekeeping refusal and stale memory working-set also remain visible.
-The separately suggested `isTri` candidate is not admitted because its
-unknown-to-physical marshalling contract is unresolved.
+This is a `PROPOSAL_NON_AUTHORIZING` record for the existing-twin scope. It
+creates no Fungi source, rewrites no twin, promotes no queue row and supplies
+no consumer or production authority. SLIDE/VOK evidence is still a
+stage-specific HOLD; the housekeeping refusal and stale memory working-set
+also remain visible. The separately scoped `isTri` repair is recorded below
+and does not inherit this packet.
+
+## RD-0873 isTri numeric leaf and retained unknown boundary - 2026-09-12
+
+The unresolved `isTri(value: unknown)` block is now reduced to an explicit
+host/Fungi split without reading the conversion queue. The retained synchronous
+TypeScript API remains the authoritative primitive-kind boundary and returns
+false for every non-number. The tested adapter contract invokes the product leaf
+`packages/fungi/products/galerina/rd0873-core-logic/is-tri.fungi` only for a
+primitive Number, preserving the exact payload on a `Float64` parameter; no
+production dispatch or consumer switch is claimed. The
+leaf compares only `-1`, `0` and `1`; signed zero follows JavaScript strict
+equality and non-finite numeric inputs return false without coercion or property
+access. The TypeScript shadow remains authoritative and no consumer switch or
+retirement is claimed.
+
+The focused interpreter, Wasm and composed-adapter proof passes 5/5, including
+hostile proxy and wrong-kind controls, zero non-number Fungi calls, one-call
+numeric dispatch, and an explicit Float64-to-canonical-Bool ABI check. GPT-6
+Astra reviewed the split as semantically sound. The exact bounded packet and
+receipt are
+`docs/independent-audits/2026-09-12-rd0873-is-tri-admission-v1.json` and
+`docs/independent-audits/2026-09-12-rd0873-is-tri-receipt-v1.json`.
+
+Physical admission remains a stage-specific HOLD: the current independent
+SLIDE pure-scalar profile refuses the Float64 ABI before bundle creation, so
+VOK re-derivation cannot run. This does not promote the queue, rerun PROJECT
+assurance, or grant production authority.
 
 ## Active selective conversion - 2026-09-12
 
