@@ -72,6 +72,11 @@ counts or open items that a newer section explicitly supersedes.
   `c48296efd0d13e96ba9e8b45b7fb6858e2346909`: 77,364/77,364 nodes and
   195,683/195,683 edges. The exact-scope receipt is
   `docs/independent-audits/2026-09-12-rd0873-graph-refresh-full.json`.
+- [x] Rebound the full graph after the generated roadmap provenance commit:
+  current `main` HEAD `eb03d044d96e1b4d4bde9c24c8854d682ae69303` / tree
+  `053bbfa1dd2a2305a42b22e30a2cf204cd527c07` indexes 77,512/77,512 nodes and
+  203,115/203,115 edges. The final navigation receipt is
+  `docs/independent-audits/2026-09-12-rd0873-graph-refresh-final.json`.
 - [x] Refreshed the full graph after the receipt commit at current `main` HEAD
   `e6ec842dfb3eaf91b1e410d95f1575703bd63689` / tree
   `6415e94c081b60a74fb6e85f3941ed67258316a7`: 77,485/77,485 nodes and
