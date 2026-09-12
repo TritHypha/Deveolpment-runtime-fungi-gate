@@ -5,8 +5,11 @@
   "reviewedBuildIdentity": {
     "repository": "Galerina",
     "branch": "main",
-    "head": "5180110132f5893d5ce30a88139b8ec405ac5db3",
-    "tree": "0d14f8f1d8c8e3bf6bf1fecbb8295a7af20003d6"
+    "head": "30c5c8be8d94db3b47bade0f7024371f8b9588c6",
+    "tree": "d222695b9505206530ce9da3a70196ce774c79e5",
+    "priorSelectionHead": "5180110132f5893d5ce30a88139b8ec405ac5db3",
+    "priorSelectionTree": "0d14f8f1d8c8e3bf6bf1fecbb8295a7af20003d6",
+    "headDelta": "DOCUMENTATION_ONLY"
   },
   "scope": {
     "package": "galerina-core-logic",
@@ -26,7 +29,9 @@
     "path": "packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
     "bytes": 2990,
     "sha256": "sha256:d4a24950cf3c2a8d62e53b2e6b573e3873dc2fe82055cdfaf5c6919d14e02166",
-    "plannedChange": "narrow to triNot and retarget the product-tree asset"
+    "plannedChange": "add a new product-target triNot test; preserve the existing four-operation suite unchanged",
+    "plannedNewPath": "packages-ts/galerina-core-logic/tests/tri-not-fungi-conversion.test.mjs",
+    "existingHarnessDisposition": "PRESERVE_UNCHANGED"
   },
   "compiler": {
     "package": "@galerina/core-compiler@1.0.0-beta.2",
@@ -39,7 +44,9 @@
     "id": "slide.pure-scalar.v1",
     "name": "scalar-1",
     "digest": "sha256:bcaff64aa174de78063e7bcad46ee91ee56264a14bbdc882c4f5247fa146f3bf",
-    "admittedShape": "Tri/Verdict scalar only"
+    "admittedShape": "validated Tri scalar only",
+    "ownerEvidence": "NOT_YET_RECORDED",
+    "compilerClosureEvidence": "NOT_YET_RECORDED"
   },
   "waveLimits": {
     "maxSymbolsPerStep": 1,
@@ -52,14 +59,21 @@
     "timeoutMsPerStep": 600000,
     "concurrency": 1,
     "automaticRetries": 0,
-    "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+    "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE",
+    "inputAccounting": "PRIMARY_SOURCE_ONLY; ANCILLARY_TEST_AND_TOOLCHAIN_CONTEXT_SEPARATELY_BOUNDED",
+    "sourceBytesWithinPrimaryCap": true,
+    "sourcePlusExistingTestBytes": 16399,
+    "sourcePlusExistingTestWithinCap": false
   },
   "requiredEvidence": [
     "exact current head and tree",
     "source and target hashes",
     "strict compiler and governance check",
     "interpreter and WASM parity for -1, 0 and 1",
-    "invalid-input host-boundary refusal without coercion",
+    "validated host-boundary refusal before coercive WASM ingress",
+    "positive-zero behavior and non-finite/surplus-value refusal where reachable",
+    "additive product-target focused test with existing four-operation suite preserved",
+    "executed compiler/checker/emitter/assembler closure identity",
     "focused test result",
     "independent same-head review"
   ],

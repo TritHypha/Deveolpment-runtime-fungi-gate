@@ -1,0 +1,57 @@
+{
+  "schema": "galerina.rd0873.astra-scope-review.v1",
+  "status": "REVISE_SCOPE_NON_AUTHORING",
+  "authorizing": false,
+  "provider": "GPT-6 Astra",
+  "reviewerRole": "independent architectural and semantic review worker",
+  "exchangeDigest": {
+    "promptSha256": "NOT_CAPTURED_BY_COLLABORATION_API",
+    "responseSha256": "NOT_CAPTURED_BY_COLLABORATION_API",
+    "digestStatus": "PROVENANCE_GAP_RECORDED"
+  },
+  "reviewedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "30c5c8be8d94db3b47bade0f7024371f8b9588c6",
+    "tree": "d222695b9505206530ce9da3a70196ce774c79e5"
+  },
+  "scope": {
+    "sourcePath": "packages-ts/galerina-core-logic/src/index.ts",
+    "symbol": "triNot",
+    "span": { "start": 83, "end": 85 },
+    "sourceBytes": 13409,
+    "sourceSha256": "sha256:2bdc2a8f8743da317fa769aebb056317622839da018c0a4897765bce8402e91a",
+    "targetPath": "packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi",
+    "targetExists": false,
+    "existingTwin": "packages-ts/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+    "existingFourOperationHarness": "packages-ts/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
+    "plannedTest": "packages-ts/galerina-core-logic/tests/tri-not-fungi-conversion.test.mjs",
+    "plannedTestDisposition": "ADD_ONLY; PRESERVE_EXISTING_HARNESS"
+  },
+  "findings": [
+    { "label": "CONFIRMED", "topic": "K3 mapping and positive-zero behavior" },
+    { "label": "BLOCKING", "topic": "Existing four-operation test must not be narrowed or retargeted" },
+    { "label": "BLOCKING", "topic": "Exact host validation before coercive WASM ingress is unspecified" },
+    { "label": "PARTIAL", "topic": "Compiler/profile closure and owner evidence incomplete" },
+    { "label": "BLOCKING", "topic": "Original head/tree binding is stale" },
+    { "label": "BLOCKING", "topic": "Input cap accounting is ambiguous (source plus test is 16399 bytes)" }
+  ],
+  "recommendation": "REVISE-SCOPE",
+  "requiredBeforeAuthoring": [
+    "additive product-target test with existing suite preserved",
+    "named exact-membership host adapter and Tri/Fungi scalar boundary",
+    "profile owner/path and executed compiler closure",
+    "explicit input accounting with fail-closed overflow",
+    "fresh same-head source/target/test/toolchain hashes",
+    "strict differential and controlled-red evidence"
+  ],
+  "custody": {
+    "sourceChanged": false,
+    "testChanged": false,
+    "queueRead": false,
+    "projectCorpusRerun": false,
+    "consumerSwitch": false,
+    "typescriptShadowRetained": true,
+    "gitRole": "provenance-only"
+  }
+}

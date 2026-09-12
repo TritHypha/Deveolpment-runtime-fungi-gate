@@ -4,21 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### RD-0873 exact next translation scope - 2026-09-12
+### RD-0873 exact next translation scope - 2026-09-12 (review revision)
 
-- [x] Select the next singleton product-runtime scope at exact `main` HEAD
-  `5180110132f5893d5ce30a88139b8ec405ac5db3` / tree
-  `0d14f8f1d8c8e3bf6bf1fecbb8295a7af20003d6`: `triNot` in
+- [x] Rebind the next singleton product-runtime scope to exact current `main`
+  HEAD `30c5c8be8d94db3b47bade0f7024371f8b9588c6` / tree
+  `d222695b9505206530ce9da3a70196ce774c79e5`: `triNot` in
   `packages-ts/galerina-core-logic/src/index.ts` (lines 83-85).
 - [x] Name the product target
-  `packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi`, the
-  focused `tri-ops-fungi-conversion.test.mjs` harness, compiler
+  `packages/fungi/products/galerina/rd0873-core-logic/tri-not.fungi`, a new
+  additive `tri-not-fungi-conversion.test.mjs` harness (preserving the existing
+  four-operation suite), compiler
   `@galerina/core-compiler@1.0.0-beta.2`, profile
   `slide.pure-scalar.v1` / `scalar-1`, and the singleton limits in
   `docs/reports/2026-09-12-rd0873-next-translation-scope.md` and
   `docs/independent-audits/2026-09-12-rd0873-next-translation-scope-v1.json`.
-- [!] This is a scope selection only. The target does not yet exist; authoring
-  and focused-test retargeting remain the next bounded execution step.
+- [x] Review the scope with Grok for advisory alternatives/knowledge gaps and
+  GPT-6 Astra for independent architecture and semantics. Both returned
+  `REVISE-SCOPE`; the required corrections are recorded in the scope report
+  and Astra receipt. No `.fungi` source was authored.
+- [!] This is a reviewed scope selection only. The target does not yet exist;
+  authoring and creation of the additive focused test remain the next bounded
+  execution step. Before authoring, record the host validation boundary,
+  profile owner and executed compiler closure, and confirm the runner's input
+  accounting. If source plus ancillary test bytes count toward the 16,384-byte
+  cap, the step is HOLD.
   `assertTri`, `triAnd`, `triOr`, `triNor`, the held symbols, all compiler and
   tooling code, TypeScript shadows, and native/VOK paths remain outside scope.
 
