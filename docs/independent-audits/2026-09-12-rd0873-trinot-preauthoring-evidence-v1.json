@@ -52,9 +52,13 @@
       "evidenceCapBytes": 65536,
       "withinEvidenceCap": false,
       "boundedEvidenceIncluded": false,
-      "referenceMode": "OUT_OF_BAND_DIGEST_ONLY",
+      "referenceMode": "COMPACT_RECEIPT_BOUND_TO_INPUT_DIGEST",
       "availability": "LOCAL_IGNORED_ARTIFACT",
-      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE",
+      "compactReceiptPath": "docs/independent-audits/2026-09-12-rd0873-trinot-compiler-closure-reference-v1.json",
+      "compactReceiptBytes": 5483,
+      "compactReceiptSha256": "sha256:5f42266cd1ea88ea1b9e2aff9fe74f037214805e2c02ce17158db8607a4f02c0",
+      "compactReceiptWithinEvidenceCap": true
     },
     "focusedExecution": {
       "status": "PASS_FOCUSED_NOT_CLOSURE",
@@ -97,6 +101,13 @@
           "sha256": "sha256:c184b5cbbe78308a1327ab101b02239a7996cd32249c461f8102455f1745c754"
         }
       ]
+    },
+    "compactClosureReceipt": {
+      "path": "docs/independent-audits/2026-09-12-rd0873-trinot-compiler-closure-reference-v1.json",
+      "status": "HOLD_NON_AUTHORITATIVE",
+      "bytes": 5483,
+      "sha256": "sha256:5f42266cd1ea88ea1b9e2aff9fe74f037214805e2c02ce17158db8607a4f02c0",
+      "withinEvidenceCap": true
     }
   },
   "profile": {
@@ -245,8 +256,10 @@
       "focusedTestsWithinEvidenceCap": true,
       "compilerBuildEvidenceBytes": 68510,
       "compilerBuildEvidenceWithinCap": false,
-      "compilerBuildEvidencePolicy": "Reference by digest only until a bounded closure receipt is produced; do not count it as admitted evidence.",
-      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE"
+      "compilerBuildEvidencePolicy": "Use the compact closure reference for bounded evidence; retain the 68,510-byte build artifact as an out-of-band digest-only observation.",
+      "overflowAction": "HOLD_AND_ABORT_BEFORE_ACCEPTANCE",
+      "compactClosureReceiptBytes": 5483,
+      "compactClosureReceiptWithinCap": true
     }
   },
   "focusedChecks": {
@@ -273,13 +286,20 @@
   },
   "decision": {
     "verdict": "HOLD",
-    "reason": "Exact source and focused checks are current, local source dependencies and the compiler build input set are measured, and primary versus ancillary input accounting is explicit. The host boundary and authoritative profile owner/executed closure receipt remain incomplete; the 68,510-byte build-evidence artifact also exceeds the 65,536-byte evidence ceiling and is reference-only. This receipt cannot authorize authoring or queue admission.",
+    "reason": "Exact source and focused checks are current, local source dependencies and the compiler build input set are measured, primary versus ancillary input accounting is explicit, and a compact closure reference now fits the evidence ceiling. The host boundary and authoritative profile owner/executed closure receipt remain incomplete; the 68,510-byte raw build-evidence artifact remains out-of-band. This receipt cannot authorize authoring or queue admission.",
     "nextEvidence": [
       "name and hash the exact host validation adapter or record an owner-approved boundary exclusion",
+      "bind build configuration, package dependencies, generator scripts, emitted distribution bytes and native assembler dependencies in an authoritative bounded closure receipt",
       "record the authoritative profile owner and executed compiler/checker/emitter/assembler closure receipt",
-      "replace the over-cap build-evidence artifact with a bounded closure receipt or explicitly retain the out-of-band reference as HOLD",
       "obtain a fresh non-empty owner admission naming this symbol, target and limits",
       "after admission, run strict target checks and interpreter/WASM parity including invalid-input refusal"
     ]
+  },
+  "supersessionReview": {
+    "ownerClaim": "Current triNot checkpoint is superseded by RD-1003.",
+    "checkedRecord": "ZTF-Knowledge-Bases/private/research/rd/RD-1003-interval-witness-defensive-admission-PRIVATE.md",
+    "checkedRecordScope": "Separate private interval-witness research construction; explicitly no Galerina, SLIDE, .fungi, physical experiment, signing, hosted run or push.",
+    "relationshipStatus": "UNCONFIRMED",
+    "effect": "Preserve this receipt as historical HOLD_NON_AUTHORING. Do not substitute RD-1003 for a Galerina exact-head admission or resume this authoring lane until the owner names a Galerina-related superseding record or confirms the hold is still needed."
   }
 }

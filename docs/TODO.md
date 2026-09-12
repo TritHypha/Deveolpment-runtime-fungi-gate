@@ -6,6 +6,8 @@ counts or open items that a newer section explicitly supersedes.
 
 ### RD-0873 triNot preauthoring evidence check - 2026-09-12
 
+- [!] The owner reports this checkpoint is superseded by `RD-1003`. The checked KB record `ZTF-Knowledge-Bases/private/research/rd/RD-1003-interval-witness-defensive-admission-PRIVATE.md` is a separate private interval-witness research construction and explicitly contains no Galerina, SLIDE, `.fungi`, physical experiment, signing, hosted run or push. The relationship is therefore unconfirmed: retain this triNot receipt as historical `HOLD_NON_AUTHORING`, do not substitute RD-1003 for a Galerina exact-head admission, and do not resume this authoring lane until the owner names a Galerina-related superseding record or confirms the hold is still needed.
+
 - [x] Rebound the exact source snapshot to the pre-documentation `main` HEAD
   `cd01e2f1300cbeb5a9d1f60f00a7a3b6a0058c78` / tree
   `69aae5442b03a4aaeb7f83fd16590e3235f1df97`; later changes in this checkpoint
@@ -28,13 +30,15 @@ counts or open items that a newer section explicitly supersedes.
   checker/emitter/assembler closure and profile owner receipt are still missing.
   Primary source input is 13,409 bytes within the 16,384 cap; the 2,990-byte
   existing suite is separate ancillary evidence, while a runner that aggregates
-  them to 16,399 bytes must hold. The 68,510-byte compiler build-evidence file
-  exceeds the 65,536 evidence cap and is retained as an out-of-band digest-only
-  observation, so it cannot close the gate.
+  them to 16,399 bytes must hold. The 68,510-byte raw compiler build-evidence
+  file exceeds the 65,536 evidence cap and remains an out-of-band digest-only
+  observation. A 5,483-byte compact closure reference is now recorded at
+  `docs/independent-audits/2026-09-12-rd0873-trinot-compiler-closure-reference-v1.json`,
+  but it does not close the authoritative toolchain gate.
 - [ ] Next bounded step: name the exact host boundary or an owner-approved
-  boundary exclusion, record the authoritative profile owner and executed
-  compiler/profile closure, resolve the over-cap evidence reference, and obtain
-  a fresh non-empty owner admission naming `triNot`, its target and limits. No
+  boundary exclusion, bind the complete compiler/profile closure in bounded
+  evidence, and obtain a fresh non-empty owner admission naming `triNot`, its
+  target and limits. No
   queue read, corpus rerun, consumer switch or TypeScript retirement is part of
   this step.
 
