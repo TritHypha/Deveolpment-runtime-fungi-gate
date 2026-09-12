@@ -67,15 +67,15 @@ counts or open items that a newer section explicitly supersedes.
   constructor checks under `docs/independent-audits/`.
 - [!] The post-commit external graph refresh reports `indexed` but remains bound to
   `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current
-  `b83ac4426845914ce1d9f2d3f09bcb6b7e49e1e7`; the new
+  `5b825ca3d38dbfa329c45bd9e4a50301b00f4b8a`; the new
   Fungi symbol is absent from graph search. Treat the graph as navigation-only
   until its owner repairs the build-point refresh.
 
 ### RD-0873 current-head gate refresh - 2026-09-12
 
 - [x] Rebound the non-authorizing bulk gate to exact `main` HEAD
-  `b83ac4426845914ce1d9f2d3f09bcb6b7e49e1e7` / tree
-  `67d7ed5e4d8bbef443c291785cf84ec131f00141` in
+  `5b825ca3d38dbfa329c45bd9e4a50301b00f4b8a` / tree
+  `db9e7f95f1dce54df4a99818b5db05199fcc954e` in
   `docs/independent-audits/2026-09-11-rd0873-current-head-bulk-translation-gate.json`.
 - [x] Kept the four eligible existing scalar twins, three held symbols,
   singleton limits and concurrency 1 unchanged; this refresh records identity
