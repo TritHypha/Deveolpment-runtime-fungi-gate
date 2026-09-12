@@ -32,7 +32,7 @@
     "focusedIndependentReview": "59/59 passed; 0 failed; 0 skipped",
     "focusedCompilerRegression": "89/89 passed; 0 failed; 0 skipped",
     "runtimePackage": "27/27 passed; 0 failed; 0 skipped",
-    "fullCompilerSuite": "6993/6993 passed; 0 failed; 0 skipped",
+    "fullCompilerSuite": "6994/6994 passed; 0 failed; 0 skipped (exact pushed tree)",
     "builds": [
       "npm run build --prefix packages-ts/galerina-core-runtime-wasm",
       "npm run build --prefix packages-ts/galerina-core-compiler"
