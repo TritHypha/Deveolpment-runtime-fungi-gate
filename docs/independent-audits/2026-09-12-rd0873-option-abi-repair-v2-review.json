@@ -1,0 +1,51 @@
+{
+  "schema": "galerina.rd0873-option-abi-repair-review.v2",
+  "version": 2,
+  "date": "2026-09-12",
+  "status": "PASS_BOUNDED_SHARED_ABI_REPAIR",
+  "authorizing": false,
+  "reviewer": {
+    "provider": "GPT-6 Astra",
+    "mode": "independent read-only review",
+    "advisory": true
+  },
+  "reviewedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "ca2bc2fb515133d77ae33785d380603f6a693c6b",
+    "tree": "f18ca96bfd52acd0b8f095c03ccfd1072d22397d",
+    "parent": "3e0d7c03be365a5eae8faace40ecf72d84e78f8c"
+  },
+  "scope": [
+    "packages-ts/galerina-core-runtime-wasm/src/wasm-runtime.ts",
+    "packages-ts/galerina-core-compiler/src/wat-emitter.ts",
+    "packages-ts/galerina-core-compiler/tests/wat-host-stdlib-oracle.test.mjs",
+    "packages-ts/galerina-core-compiler/tests/wat-match-wildcard-fallback.test.mjs"
+  ],
+  "finding": {
+    "priorIssue": "The prior repair reused legacy Option import names for registry handles, allowing an already-admitted parent-format module to be accepted and silently miscompute.",
+    "repair": "Legacy __option_some, __option_none and __unwrap_or retain raw-sentinel semantics. New compiler output uses distinct _v2 imports for registry-backed Option producers, presence checks, payload reads, unwrapOr and constructors.",
+    "compatibility": "A signed/hash-pinned parent-format WAT fixture matched the legacy baseline for -2147483648, -7, -1, 0, 5 and 2147483647. A module requesting the new _v2 imports is refused by a legacy host with LinkError.",
+    "zeroTrust": "Unknown and malformed _v2 handles refuse; None remains distinct; raw __array_get remains available for counted loops."
+  },
+  "checks": {
+    "focusedIndependentReview": "59/59 passed; 0 failed; 0 skipped",
+    "focusedCompilerRegression": "89/89 passed; 0 failed; 0 skipped",
+    "runtimePackage": "27/27 passed; 0 failed; 0 skipped",
+    "fullCompilerSuite": "6993/6993 passed; 0 failed; 0 skipped",
+    "builds": [
+      "npm run build --prefix packages-ts/galerina-core-runtime-wasm",
+      "npm run build --prefix packages-ts/galerina-core-compiler"
+    ],
+    "diffCheck": "PASS"
+  },
+  "boundaries": {
+    "fungiAuthoring": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "verdict": "The bounded compiler/runtime Option ABI repair is independently PASS at this exact commit. Product Fungi admission and the conversion queue remain unchanged."
+}
