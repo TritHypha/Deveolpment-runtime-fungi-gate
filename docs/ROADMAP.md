@@ -3,6 +3,26 @@
 Date: 2026-08-30
 Branch: `main`
 
+## Active selective conversion - 2026-09-12
+
+Continue approved product/runtime translation and repair under the
+[selective-conversion policy](plans/2026-09-11-selective-fungi-conversion-scope.md).
+Authorization to do this work is distinct from the evidence needed to claim
+correct execution. Historical stale receipts must not be promoted to current
+proof, and they must not invent repeated permission gates for authorized work.
+The six vector/tensor non-finite dimension repairs pass 78 focused parity checks
+and independent semantic review. The agent-limits custom diagnostic path is
+implemented with 27 focused checks and has passed independent scoped review.
+Agent-limit positive-infinity parity remains the next numeric repair; the
+finite-path evidence does not cover it. Unary Float64 negation is already in `main`.
+
+Candidate implementation, bounded semantic verification and production
+admission remain distinct stages. The existing queue is retained as historical
+inventory/evidence pending role reconciliation; its zero whole-file candidate
+count does not prohibit authorized symbol-level repairs. No production consumer
+switch, TS retirement, release authority or full-corpus rerun is inferred.
+Older dated checkpoints below retain their original evidence scope.
+
 ## RD-0873 generated graph/index refresh - 2026-09-12
 
 The repository-owned graph, semantic-assurance graph, KB graph, dev-tool

@@ -5,7 +5,10 @@ import * as L from "../dist/index.js";
 import { createVectorReport } from "../../galerina-core-vector/dist/index.js";
 
 // The native report core receives explicit Option lists. The retained TypeScript
-// createVectorReport function remains the oracle for defaults and order.
+// createVectorReport function remains the oracle for operation-list, operand,
+// and vector-before-tensor diagnostic order. Raw Float64 parameters keep
+// non-finite dimensions observable to this bounded WASM lane; host object/list
+// marshalling, getters, and proxies remain separate ABI obligations.
 const vectors = [
   { name: "explicit defaults", operations: undefined, tensorOperations: undefined },
   {
@@ -27,12 +30,60 @@ const vectors = [
     tensorOperations: undefined,
   },
   {
+    name: "non-finite vector operations retain operation and operand order",
+    operations: [
+      {
+        name: "first",
+        inputs: [{ elementType: "Float32", dimension: { lanes: Number.POSITIVE_INFINITY } }],
+        output: { elementType: "Float32", dimension: { lanes: 4 } },
+      },
+      {
+        name: "second",
+        inputs: [{ elementType: "Float32", dimension: { lanes: Number.NaN } }],
+        output: { elementType: "Float32", dimension: { lanes: Number.NEGATIVE_INFINITY } },
+      },
+    ],
+    tensorOperations: undefined,
+  },
+  {
     name: "invalid tensor operation diagnostics",
     operations: undefined,
     tensorOperations: [{
       name: "reshape",
       inputs: [{ elementType: "Float32", shape: { dimensions: [1, 0] } }],
       output: { elementType: "Float32", shape: { dimensions: [] } },
+      pure: true,
+    }],
+  },
+  {
+    name: "non-finite tensor operations retain operation operand and dimension order",
+    operations: undefined,
+    tensorOperations: [
+      {
+        name: "firstTensor",
+        inputs: [{ elementType: "Float32", shape: { dimensions: [Number.POSITIVE_INFINITY, Number.NaN] } }],
+        output: { elementType: "Float32", shape: { dimensions: [1] } },
+        pure: true,
+      },
+      {
+        name: "secondTensor",
+        inputs: [{ elementType: "Float32", shape: { dimensions: [1] } }],
+        output: { elementType: "Float32", shape: { dimensions: [Number.NEGATIVE_INFINITY] } },
+        pure: false,
+      },
+    ],
+  },
+  {
+    name: "non-finite vector diagnostics precede tensor diagnostics",
+    operations: [{
+      name: "vectorFirst",
+      inputs: [{ elementType: "Float32", dimension: { lanes: Number.NEGATIVE_INFINITY } }],
+      output: { elementType: "Float32", dimension: { lanes: Number.NEGATIVE_INFINITY } },
+    }],
+    tensorOperations: [{
+      name: "tensorSecond",
+      inputs: [{ elementType: "Float32", shape: { dimensions: [Number.NaN] } }],
+      output: { elementType: "Float32", shape: { dimensions: [Number.POSITIVE_INFINITY] } },
       pure: true,
     }],
   },
@@ -63,17 +114,13 @@ const vectors = [
 
 const str = JSON.stringify;
 
-function literal(value) {
-  return Number.isInteger(value) ? `${value}.0` : `${value}`;
+function vectorExpression(vector, lanesExpression) {
+  return `VectorType { elementType: ${str(vector.elementType)}, dimension: VectorDimension { lanes: ${lanesExpression} } }`;
 }
 
-function vectorExpression(vector) {
-  return `VectorType { elementType: ${str(vector.elementType)}, dimension: VectorDimension { lanes: ${literal(vector.dimension.lanes)} } }`;
-}
-
-function tensorExpression(tensor) {
-  const dimensions = tensor.shape.dimensions.reduce(
-    (expression, dimension) => `${expression}.append(TensorDimension { value: ${literal(dimension)} })`,
+function tensorExpression(tensor, dimensionExpressions) {
+  const dimensions = dimensionExpressions.reduce(
+    (expression, dimensionExpression) => `${expression}.append(TensorDimension { value: ${dimensionExpression} })`,
     "Array.empty()",
   );
   return `TensorType { elementType: ${str(tensor.elementType)}, shape: TensorShape { dimensions: ${dimensions} } }`;
@@ -95,26 +142,39 @@ function probe(index, vector) {
     None => { return false }
     _ => { return false }
   }`).join("\n");
+  const parameterNames = [];
+  const nextFloatParameter = () => {
+    const name = `dimension${parameterNames.length}`;
+    parameterNames.push(name);
+    return name;
+  };
   const operations = vector.operations === undefined
     ? "None"
     : `Some(${vector.operations.reduce(
       (expression, operation) => `${expression}.append(VectorOperation { name: ${str(operation.name)}, inputs: ${operation.inputs.reduce(
-        (inputExpression, input) => `${inputExpression}.append(${vectorExpression(input)})`,
+        (inputExpression, input) => `${inputExpression}.append(${vectorExpression(input, nextFloatParameter())})`,
         "Array.empty()",
-      )}, output: ${vectorExpression(operation.output)} })`,
+      )}, output: ${vectorExpression(operation.output, nextFloatParameter())} })`,
       "Array.empty()",
     )})`;
   const tensorOperations = vector.tensorOperations === undefined
     ? "None"
     : `Some(${vector.tensorOperations.reduce(
       (expression, operation) => `${expression}.append(TensorOperation { name: ${str(operation.name)}, inputs: ${operation.inputs.reduce(
-        (inputExpression, input) => `${inputExpression}.append(${tensorExpression(input)})`,
+        (inputExpression, input) => `${inputExpression}.append(${tensorExpression(
+          input,
+          input.shape.dimensions.map(() => nextFloatParameter()),
+        )})`,
         "Array.empty()",
-      )}, output: ${tensorExpression(operation.output)}, pure: ${operation.pure} })`,
+      )}, output: ${tensorExpression(
+        operation.output,
+        operation.output.shape.dimensions.map(() => nextFloatParameter()),
+      )}, pure: ${operation.pure} })`,
       "Array.empty()",
     )})`;
+  const parameters = parameterNames.map((name) => `${name}: Float64`).join(", ");
   return `
-pure flow probe${index}() -> Bool
+pure flow probe${index}(${parameters}) -> Bool
 contract { intent { "Compare the vector report twin with its retained TypeScript oracle." } }
 {
   let report: VectorReport = createVectorReport(${operations}, ${tensorOperations})
@@ -126,6 +186,19 @@ contract { intent { "Compare the vector report twin with its retained TypeScript
   return true
 }
 `;
+}
+
+function dimensionArguments(vector) {
+  const values = [];
+  for (const operation of vector.operations ?? []) {
+    for (const input of operation.inputs) values.push(input.dimension.lanes);
+    values.push(operation.output.dimension.lanes);
+  }
+  for (const operation of vector.tensorOperations ?? []) {
+    for (const input of operation.inputs) values.push(...input.shape.dimensions);
+    values.push(...operation.output.shape.dimensions);
+  }
+  return values;
 }
 
 test("Wave 02 vector report twin preserves defaults, diagnostics and order in WASM", { timeout: 60_000 }, async (t) => {
@@ -144,6 +217,9 @@ test("Wave 02 vector report twin preserves defaults, diagnostics and order in WA
   for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
   const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
   for (let i = 0; i < vectors.length; i++) {
-    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+    await t.test(vectors[i].name, () => assert.equal(
+      instance.exports[`probe${i}`](...dimensionArguments(vectors[i])),
+      1,
+    ));
   }
 });

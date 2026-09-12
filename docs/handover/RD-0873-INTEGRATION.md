@@ -1,5 +1,43 @@
 # RD-0873 integration checkpoint
 
+## Active restart route - 2026-09-12
+
+Resume the standing selective-conversion goal from the current source checkout.
+The owner has authorized scoped implementation, manual repairs, focused tests,
+commit/merge/push and use of existing execution tools. No new branch/worktree
+may be created without specific permission. Preserve the existing protected
+sibling changes and retain TypeScript compatibility shadows.
+
+Do not ask the owner to repeat source-work approval merely because an older
+receipt names a different commit. Revalidate the affected source/compiler/test
+identities and make a new bounded proof for each changed subject. A failed or
+missing proof limits that subject's acceptance; it does not prohibit independent
+authorized work. Production admission, consumer switching and retirement remain
+separate gates. The older HOLD entries below retain their historical proof scope.
+
+The six vector/tensor non-finite dimension repairs pass 78/78 focused parity
+checks (89/89 with the unchanged adjacent definition check). Independent Astra
+review found no semantic regressions across 144 additional comparisons; its
+test-annotation finding was corrected with an 11/11 focused rerun. The
+agent-limits custom diagnostic path is implemented with 27/27 checks and accepted
+independent review. The next numeric gap is agent-limit positive
+infinity: TS accepts it, but the current WAT ordering guard traps. Preserve that
+obligation without narrowing the source contract. Unary Float64 negation is
+already repaired in the compiler; the earlier contrary chat statement was wrong.
+
+Implementation evidence is summarized in
+`docs/reports/rd0873-vector-and-agent-path-repairs-2026-09-12.md`.
+The next bounded design is an explicitly typed positive-value Float64 classifier
+with separate interpreter/WASM truth-table evidence. The existing `isFinite`
+classifier cannot distinguish the sign of infinity; do not use string parsing
+or weaken global ordering guards. Continue under the standing source-work approval.
+
+NASM 3.02 now matches the static-host recipe's executable hash and the small
+Windows prerequisite probe returns `CANDIDATE`. The historical RD audit's exact
+Git executable was restored as a verified isolated portable tool; its controller
+tests pass 30/30. These observations do not refresh product corpus assurance or
+the old linked native host build.
+
 ## Current local model and housekeeping - 2026-09-11
 
 The active implementation worktree is on local `main` at

@@ -1,5 +1,19 @@
 # Windows static-host toolchain - current action
 
+## Installation recheck - 2026-09-12
+
+The owner's NASM installation is verified at version 3.02. Its SHA-256 is
+`04ec2385879f7e1c45dbe76c4020970555de48eeb97c23f59620ede061328f51`,
+exactly matching `host-build-recipe.json`. The local prerequisite probe returns
+`CANDIDATE` with Visual Studio 18.8.12023.21 and Clang 22.1.3. NASM was added
+to the probe process's PATH only; the global environment was not changed.
+
+This recheck establishes tool availability and NASM identity. It does not
+rebuild the host or refresh the historical linked-binary evidence below.
+Ordinary selective Fungi/WAT repairs can continue without a native host build.
+
+## Historical linked candidate
+
 Status: **local toolchain and linked candidate build verified; no owner action
 is required now; no production authority**.
 

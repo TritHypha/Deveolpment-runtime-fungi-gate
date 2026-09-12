@@ -2,8 +2,11 @@
 
 /// Wave 01 translation of validateAgentLimits from galerina-ai-agent/src/index.ts.
 /// The Fungi profile keeps the source's ordered checks and typed diagnostics.
-/// The optional TypeScript path override is represented by the source default
-/// path in this scalar artifact; no caller authority is introduced.
+/// A path-taking helper preserves the TypeScript path override, while the
+/// original one-argument flow retains the source default. No caller authority
+/// is introduced. This WASM evidence remains bounded to admitted finite
+/// Float64 values; the source's positive-infinity behavior is a separate
+/// numeric-admission obligation and is not narrowed here.
 
 // A record payload keeps presence separate from the signed/fractional value.
 // The current WASM Option lane uses negative handles for absence, so a bare
@@ -27,8 +30,11 @@ record AgentDiagnostic {
   path: String
 }
 
-pure flow validateAgentLimits(limits: AgentLimits) -> Array<AgentDiagnostic>
-contract { intent { "Require every present agent resource limit to be positive and return ordered typed diagnostics." } }
+pure flow validateAgentLimitsAtPath(
+  limits: AgentLimits,
+  path_: String,
+) -> Array<AgentDiagnostic>
+contract { intent { "Require every present agent resource limit to be positive and return ordered typed diagnostics at the caller-selected path." } }
 {
   mut diagnostics: Array<AgentDiagnostic> = Array.empty()
 
@@ -37,7 +43,7 @@ contract { intent { "Require every present agent resource limit to be positive a
       code: "Galerina_AGENT_TIMEOUT_REQUIRED"
       severity: "error"
       message: "Agent limits require a positive timeout."
-      path: "limits.timeoutMs"
+      path: path_ + ".timeoutMs"
     })
   }
 
@@ -46,7 +52,7 @@ contract { intent { "Require every present agent resource limit to be positive a
       code: "Galerina_AGENT_MEMORY_LIMIT_REQUIRED"
       severity: "error"
       message: "Agent limits require a positive memory budget."
-      path: "limits.memoryBytes"
+      path: path_ + ".memoryBytes"
     })
   }
 
@@ -55,7 +61,7 @@ contract { intent { "Require every present agent resource limit to be positive a
       code: "Galerina_AGENT_TOOL_CALL_LIMIT_REQUIRED"
       severity: "error"
       message: "Agent limits require a positive maximum tool-call count."
-      path: "limits.maxToolCalls"
+      path: path_ + ".maxToolCalls"
     })
   }
 
@@ -66,7 +72,7 @@ contract { intent { "Require every present agent resource limit to be positive a
           code: "Galerina_AGENT_MAX_TOKENS_INVALID"
           severity: "error"
           message: "Agent max token budget, when set, must be positive."
-          path: "limits.maxTokens"
+          path: path_ + ".maxTokens"
         })
       }
     }
@@ -81,7 +87,7 @@ contract { intent { "Require every present agent resource limit to be positive a
           code: "Galerina_AGENT_RATE_LIMIT_INVALID"
           severity: "error"
           message: "Agent rate limit, when set, must be positive."
-          path: "limits.rateLimitPerMinute"
+          path: path_ + ".rateLimitPerMinute"
         })
       }
     }
@@ -90,4 +96,10 @@ contract { intent { "Require every present agent resource limit to be positive a
   }
 
   return diagnostics
+}
+
+pure flow validateAgentLimits(limits: AgentLimits) -> Array<AgentDiagnostic>
+contract { intent { "Validate agent resource limits using the source default diagnostic path." } }
+{
+  return validateAgentLimitsAtPath(limits, "limits")
 }

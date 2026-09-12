@@ -93,6 +93,92 @@ contract { intent { "Compare the actual agent-definition twin's ordered diagnost
 `;
 }
 
+const allInvalidLimits = {
+  timeoutMs: 0,
+  memoryBytes: -1,
+  maxToolCalls: 0,
+  maxTokens: -0.5,
+  rateLimitPerMinute: -2.25,
+};
+const customPathVectors = [
+  ["explicit default path preserves all five failures", "limits", allInvalidLimits],
+  ["definition limits path preserves all five failures", "definition.limits", allInvalidLimits],
+  ["empty path preserves all five failures", "", allInvalidLimits],
+  ["custom path preserves absent optional limits", "definition.limits", baseline.limits],
+];
+
+function customPathProbe(index, path, limits) {
+  const expected = validateAgentLimits(limits, path);
+  const checks = expected.map((diagnostic, diagnosticIndex) => `
+  match diagnostics.get(${diagnosticIndex}) {
+    Some(diagnostic) => {
+      if diagnostic.code != ${str(diagnostic.code)} { return false }
+      if diagnostic.severity != ${str(diagnostic.severity)} { return false }
+      if diagnostic.message != ${str(diagnostic.message)} { return false }
+      if diagnostic.path != ${str(diagnostic.path)} { return false }
+    }
+    None => { return false }
+    _ => { return false }
+  }`).join("\n");
+  return `
+pure flow customPathProbe${index}(
+  timeoutMs: Float64,
+  memoryBytes: Float64,
+  maxToolCalls: Float64,
+  maxTokens: Float64,
+  rateLimit: Float64,
+) -> Bool
+contract { intent { "Compare caller-selected agent-limit diagnostic paths with the retained TypeScript oracle." } }
+{
+  let limits: AgentLimits = AgentLimits {
+    timeoutMs: timeoutMs,
+    memoryBytes: memoryBytes,
+    maxToolCalls: maxToolCalls,
+    maxTokens: ${optional(limits.maxTokens, "maxTokens")},
+    rateLimitPerMinute: ${optional(limits.rateLimitPerMinute, "rateLimit")}
+  }
+  let diagnostics: Array<AgentDiagnostic> = validateAgentLimitsAtPath(limits, ${str(path)})
+  if diagnostics.count() != ${expected.length} { return false }
+  ${checks}
+  return true
+}
+`;
+}
+
+test("Wave 01 agent-limits twin preserves caller-selected diagnostic paths in WASM", { timeout: 60_000 }, async (t) => {
+  const twin = readFileSync(new URL(
+    "../../../packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi", import.meta.url,
+  ), "utf8");
+  const program = L.parseProgram(
+    twin + customPathVectors.map(([, path, limits], index) => customPathProbe(index, path, limits)).join("\n"),
+    "agent-limits-custom-path-parity.fungi",
+  );
+  const errors = program.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+  assert.deepEqual(errors, [], "candidate and custom-path probes parse/check");
+  const effects = L.checkEffects(program.flows, program.ast);
+  const { gir } = L.emitGIR(program.ast, program.flows, effects);
+  const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "wasm-standalone", program.ast, true));
+  const strings = [...L.getInternedStrings()];
+  const assembled = await L.assembleWAT(wat);
+  assert.equal(assembled.valid, true, JSON.stringify(assembled.diagnostics));
+  const host = L.createHostRuntime();
+  for (const entry of strings) host.seedString(entry.handle, entry.value);
+  const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
+  for (let index = 0; index < customPathVectors.length; index++) {
+    const limits = customPathVectors[index][2];
+    await t.test(customPathVectors[index][0], () => assert.equal(
+      instance.exports[`customPathProbe${index}`](
+        limits.timeoutMs,
+        limits.memoryBytes,
+        limits.maxToolCalls,
+        limits.maxTokens ?? 0,
+        limits.rateLimitPerMinute ?? 0,
+      ),
+      1,
+    ));
+  }
+});
+
 for (const target of ["definition", "limits"]) {
 test(`Wave 01 ${target} twin preserves ordered diagnostics in WASM`, { timeout: 60_000 }, async (t) => {
   const twin = readFileSync(new URL(

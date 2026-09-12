@@ -5,7 +5,10 @@ import * as L from "../dist/index.js";
 import { validateTensorOperation } from "../../galerina-core-vector/dist/index.js";
 
 // The native tensor-operation validator is tested as a pure typed core. The
-// retained TypeScript validator remains the oracle for order and exact paths.
+// retained TypeScript validator remains the oracle for input-list, dimension,
+// and output order plus exact paths. Raw Float64 parameters keep non-finite
+// dimensions observable to this bounded WASM lane; host record/array
+// marshalling, getters, and proxies remain separate ABI obligations.
 const vectors = [
   {
     name: "matching operation",
@@ -22,6 +25,37 @@ const vectors = [
     operationName: "   ",
     inputs: [{ elementType: "Float32", dimensions: [2] }],
     output: { elementType: "Float32", dimensions: [2] },
+    pure: false,
+  },
+  {
+    name: "positive infinity input dimension",
+    operationName: "reshape",
+    inputs: [{ elementType: "Float32", dimensions: [Number.POSITIVE_INFINITY] }],
+    output: { elementType: "Float32", dimensions: [1] },
+    pure: true,
+  },
+  {
+    name: "negative infinity output dimension",
+    operationName: "reshape",
+    inputs: [{ elementType: "Float32", dimensions: [1] }],
+    output: { elementType: "Float32", dimensions: [Number.NEGATIVE_INFINITY] },
+    pure: true,
+  },
+  {
+    name: "NaN input dimension",
+    operationName: "reshape",
+    inputs: [{ elementType: "Float32", dimensions: [Number.NaN] }],
+    output: { elementType: "Float32", dimensions: [1] },
+    pure: true,
+  },
+  {
+    name: "non-finite operands retain input object and output order",
+    operationName: "join",
+    inputs: [
+      { elementType: "Float32", dimensions: [Number.POSITIVE_INFINITY, Number.NaN] },
+      { elementType: "Float32", dimensions: [Number.NEGATIVE_INFINITY] },
+    ],
+    output: { elementType: "Float32", dimensions: [Number.NaN] },
     pure: false,
   },
   {
@@ -59,13 +93,9 @@ const vectors = [
 
 const str = JSON.stringify;
 
-function literal(value) {
-  return Number.isInteger(value) ? `${value}.0` : `${value}`;
-}
-
-function tensorExpression(tensor) {
-  const dimensions = tensor.dimensions.reduce(
-    (expression, dimension) => `${expression}.append(TensorDimension { value: ${literal(dimension)} })`,
+function tensorExpression(tensor, parameterNames) {
+  const dimensions = parameterNames.reduce(
+    (expression, name) => `${expression}.append(TensorDimension { value: ${name} })`,
     "Array.empty()",
   );
   return `TensorType { elementType: ${str(tensor.elementType)}, shape: TensorShape { dimensions: ${dimensions} } }`;
@@ -95,19 +125,24 @@ function probe(index, vector) {
     None => { return false }
     _ => { return false }
   }`).join("\n");
+  const inputParameterNames = vector.inputs.map((input, inputIndex) =>
+    input.dimensions.map((_, dimensionIndex) => `input${inputIndex}Dimension${dimensionIndex}`));
+  const outputParameterNames = vector.output.dimensions.map((_, dimensionIndex) => `outputDimension${dimensionIndex}`);
+  const parameterNames = [...inputParameterNames.flat(), ...outputParameterNames];
+  const parameters = parameterNames.map((name) => `${name}: Float64`).join(", ");
   const inputs = vector.inputs.reduce(
-    (expression, input) => `${expression}.append(${tensorExpression(input)})`,
+    (expression, input, inputIndex) => `${expression}.append(${tensorExpression(input, inputParameterNames[inputIndex])})`,
     "Array.empty()",
   );
   return `
-pure flow probe${index}() -> Bool
+pure flow probe${index}(${parameters}) -> Bool
 contract { intent { "Compare the tensor operation twin with its retained TypeScript oracle." } }
 {
   let inputs: Array<TensorType> = ${inputs}
   let operation: TensorOperation = TensorOperation {
     name: ${str(vector.operationName)},
     inputs: inputs,
-    output: ${tensorExpression(vector.output)},
+    output: ${tensorExpression(vector.output, outputParameterNames)},
     pure: ${vector.pure}
   }
   let diagnostics: Array<VectorDiagnostic> = validateTensorOperation(operation)
@@ -134,6 +169,10 @@ test("Wave 02 tensor operation twin preserves operand diagnostics in WASM", { ti
   for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
   const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
   for (let i = 0; i < vectors.length; i++) {
-    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+    const dimensionArguments = [
+      ...vectors[i].inputs.flatMap((input) => input.dimensions),
+      ...vectors[i].output.dimensions,
+    ];
+    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](...dimensionArguments), 1));
   }
 });

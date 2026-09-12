@@ -7,6 +7,19 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## Selective-conversion authorization clarification - 2026-09-12
+
+The standing owner direction authorizes selective product/runtime candidate
+creation and repair with focused verification. Historical exact-head authoring
+proposals do not supersede that direction or create a new permission request
+for every source edit. This clarification changes no executable verifier,
+cryptographic policy, production receipt, queue classification or allow-list.
+
+Each proof still covers only its exact source, compiler, profile and observed
+execution. A repaired candidate may be committed as implementation work while
+SLIDE/VOK, platform and production obligations remain open. The production
+requirements in this ledger continue to apply to production claims.
+
 ## RD-0873 housekeeping checkpoint - 2026-09-11
 
 This checkpoint is non-authorizing and binds the local working model at

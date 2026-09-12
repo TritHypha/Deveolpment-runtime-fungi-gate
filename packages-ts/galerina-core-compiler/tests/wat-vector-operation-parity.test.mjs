@@ -5,7 +5,10 @@ import * as L from "../dist/index.js";
 import { validateVectorOperation } from "../../galerina-core-vector/dist/index.js";
 
 // The native operation validator is tested as a pure typed core.  The retained
-// TypeScript validator remains the oracle for diagnostic order and exact paths.
+// TypeScript validator remains the oracle for input-list/output diagnostic
+// order and exact paths.  Raw Float64 parameters keep non-finite lane values
+// observable to this bounded WASM lane; host record/array marshalling, getters,
+// and proxies remain separate ABI obligations.
 const vectors = [
   {
     name: "matching operation",
@@ -17,6 +20,52 @@ const vectors = [
     name: "blank operation name",
     operationName: "   ",
     inputs: [{ elementType: "Float32", lanes: 4 }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "positive infinity input precedes mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: Number.POSITIVE_INFINITY }],
+    output: { elementType: "Float32", lanes: 4 },
+  },
+  {
+    name: "negative infinity input and output retain caller order",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: Number.NEGATIVE_INFINITY }],
+    output: { elementType: "Float32", lanes: Number.NEGATIVE_INFINITY },
+  },
+  {
+    name: "NaN input and output retain caller order before mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: Number.NaN }],
+    output: { elementType: "Float32", lanes: Number.NaN },
+  },
+  {
+    name: "positive infinity output precedes mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: 4 }],
+    output: { elementType: "Float32", lanes: Number.POSITIVE_INFINITY },
+  },
+  {
+    name: "negative infinity output precedes mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: 4 }],
+    output: { elementType: "Float32", lanes: Number.NEGATIVE_INFINITY },
+  },
+  {
+    name: "NaN output precedes mismatch",
+    operationName: "add",
+    inputs: [{ elementType: "Float32", lanes: 4 }],
+    output: { elementType: "Float32", lanes: Number.NaN },
+  },
+  {
+    name: "non-finite input list retains object order before mismatch",
+    operationName: "add",
+    inputs: [
+      { elementType: "Float32", lanes: Number.POSITIVE_INFINITY },
+      { elementType: "Float32", lanes: Number.NaN },
+      { elementType: "Float32", lanes: Number.NEGATIVE_INFINITY },
+    ],
     output: { elementType: "Float32", lanes: 4 },
   },
   {
@@ -57,12 +106,8 @@ const vectors = [
 
 const str = JSON.stringify;
 
-function literal(value) {
-  return Number.isInteger(value) ? `${value}.0` : `${value}`;
-}
-
-function vectorExpression(vector) {
-  return `VectorType { elementType: ${str(vector.elementType)}, dimension: VectorDimension { lanes: ${literal(vector.lanes)} } }`;
+function vectorExpression(vector, lanesExpression) {
+  return `VectorType { elementType: ${str(vector.elementType)}, dimension: VectorDimension { lanes: ${lanesExpression} } }`;
 }
 
 function probe(index, vector) {
@@ -88,19 +133,22 @@ function probe(index, vector) {
     None => { return false }
     _ => { return false }
   }`).join("\n");
+  const inputParameters = vector.inputs.map((_, inputIndex) => `input${inputIndex}Lanes`);
+  const parameterNames = [...inputParameters, "outputLanes"];
+  const parameters = parameterNames.map((name) => `${name}: Float64`).join(", ");
   const inputs = vector.inputs.reduce(
-    (expression, input) => `${expression}.append(${vectorExpression(input)})`,
+    (expression, input, inputIndex) => `${expression}.append(${vectorExpression(input, inputParameters[inputIndex])})`,
     "Array.empty()",
   );
   return `
-pure flow probe${index}() -> Bool
+pure flow probe${index}(${parameters}) -> Bool
 contract { intent { "Compare the vector operation twin with its retained TypeScript oracle." } }
 {
   let inputs: Array<VectorType> = ${inputs}
   let operation: VectorOperation = VectorOperation {
     name: ${str(vector.operationName)},
     inputs: inputs,
-    output: ${vectorExpression(vector.output)}
+    output: ${vectorExpression(vector.output, "outputLanes")}
   }
   let diagnostics: Array<VectorDiagnostic> = validateVectorOperation(operation)
   if diagnostics.count() != ${expected.length} { return false }
@@ -126,6 +174,7 @@ test("Wave 02 vector operation twin preserves operand diagnostics and mismatch r
   for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
   const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
   for (let i = 0; i < vectors.length; i++) {
-    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+    const laneArguments = [...vectors[i].inputs.map((input) => input.lanes), vectors[i].output.lanes];
+    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](...laneArguments), 1));
   }
 });

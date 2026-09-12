@@ -5,11 +5,16 @@ import * as L from "../dist/index.js";
 import { validateVectorType } from "../../galerina-core-vector/dist/index.js";
 
 // The Fungi twin is tested as a typed pure core.  The retained TypeScript
-// validator remains the oracle for diagnostic order and exact message/path;
-// non-finite host values stay a separate ABI obligation.
+// validator remains the oracle for diagnostic order and exact message/path.
+// Raw Float64 parameters keep non-finite lane values observable to this bounded
+// WASM lane; host object marshalling, getters, and proxies remain separate ABI
+// obligations.
 const vectors = [
   { name: "valid lane count", elementType: "Float32", lanes: 4 },
   { name: "blank element type", elementType: "   ", lanes: 4 },
+  { name: "positive infinity lane count", elementType: "Float32", lanes: Number.POSITIVE_INFINITY },
+  { name: "negative infinity lane count", elementType: "Float32", lanes: Number.NEGATIVE_INFINITY },
+  { name: "NaN lane count", elementType: "Float32", lanes: Number.NaN },
   { name: "zero lane count", elementType: "Float32", lanes: 0 },
   { name: "negative lane count", elementType: "Float32", lanes: -2 },
   { name: "fractional lane count", elementType: "Float32", lanes: 1.5 },
@@ -35,14 +40,13 @@ function probe(index, vector) {
     None => { return false }
     _ => { return false }
   }`).join("\n");
-  const laneLiteral = Number.isInteger(vector.lanes) ? `${vector.lanes}.0` : `${vector.lanes}`;
   return `
-pure flow probe${index}() -> Bool
+pure flow probe${index}(lanes: Float64) -> Bool
 contract { intent { "Compare the vector validator twin with its retained TypeScript oracle." } }
 {
   let vector: VectorType = VectorType {
     elementType: ${str(vector.elementType)},
-    dimension: VectorDimension { lanes: ${laneLiteral} }
+    dimension: VectorDimension { lanes: lanes }
   }
   let diagnostics: Array<VectorDiagnostic> = validateVectorType(vector, "vector")
   if diagnostics.count() != ${expected.length} { return false }
@@ -68,6 +72,6 @@ test("Wave 02 vector validator twin preserves safe-integer diagnostics in WASM",
   for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
   const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
   for (let i = 0; i < vectors.length; i++) {
-    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](vectors[i].lanes), 1));
   }
 });

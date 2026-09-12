@@ -5,11 +5,17 @@ import * as L from "../dist/index.js";
 import { validateTensorType } from "../../galerina-core-vector/dist/index.js";
 
 // The native tensor validator is tested as a pure typed core.  The retained
-// TypeScript validator remains the oracle for dense dimension order and paths;
-// sparse/hostile JavaScript array behavior is a separate ABI obligation.
+// TypeScript validator remains the oracle for dense dimension order and paths.
+// Raw Float64 parameters keep non-finite dimension values observable to this
+// bounded WASM lane; sparse/hostile JavaScript arrays, getters, and proxies
+// remain separate ABI obligations.
 const vectors = [
   { name: "empty dimensions", elementType: "Float32", dimensions: [] },
   { name: "valid dimensions", elementType: "Float32", dimensions: [1, 3, 768] },
+  { name: "positive infinity dimension", elementType: "Float32", dimensions: [Number.POSITIVE_INFINITY] },
+  { name: "negative infinity dimension", elementType: "Float32", dimensions: [Number.NEGATIVE_INFINITY] },
+  { name: "NaN dimension", elementType: "Float32", dimensions: [Number.NaN] },
+  { name: "non-finite dimensions preserve index order", elementType: "Float32", dimensions: [Number.POSITIVE_INFINITY, Number.NaN, Number.NEGATIVE_INFINITY] },
   { name: "one invalid dimension", elementType: "Float32", dimensions: [1, 0, 3] },
   { name: "multiple invalid dimensions", elementType: "Float32", dimensions: [-1, 1.5, 3] },
   { name: "largest safe dimension", elementType: "Float64", dimensions: [9007199254740991] },
@@ -17,10 +23,6 @@ const vectors = [
 ];
 
 const str = JSON.stringify;
-
-function literal(value) {
-  return Number.isInteger(value) ? `${value}.0` : `${value}`;
-}
 
 function probe(index, vector) {
   const expected = validateTensorType({
@@ -38,15 +40,17 @@ function probe(index, vector) {
     None => { return false }
     _ => { return false }
   }`).join("\n");
-  const dimensions = vector.dimensions.reduce(
-    (expression, dimension) => `${expression}.append(TensorDimension { value: ${literal(dimension)} })`,
+  const parameterNames = vector.dimensions.map((_, dimensionIndex) => `dimension${dimensionIndex}`);
+  const parameters = parameterNames.map((name) => `${name}: Float64`).join(", ");
+  const dimensions = parameterNames.reduce(
+    (expression, name) => `${expression}.append(TensorDimension { value: ${name} })`,
     "Array.empty()",
   );
   return `
-pure flow probe${index}() -> Bool
+pure flow probe${index}(${parameters}) -> Bool
 contract { intent { "Compare the tensor validator twin with its retained TypeScript oracle." } }
 {
-  let dimensions: Array<Float64> = ${dimensions}
+  let dimensions: Array<TensorDimension> = ${dimensions}
   let tensor: TensorType = TensorType {
     elementType: ${str(vector.elementType)},
     shape: TensorShape { dimensions: dimensions }
@@ -75,6 +79,6 @@ test("Wave 02 tensor validator twin preserves dense dimension diagnostics in WAS
   for (const entry of L.getInternedStrings()) host.seedString(entry.handle, entry.value);
   const { instance } = await WebAssembly.instantiate(assembled.wasm, host.imports);
   for (let i = 0; i < vectors.length; i++) {
-    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](), 1));
+    await t.test(vectors[i].name, () => assert.equal(instance.exports[`probe${i}`](...vectors[i].dimensions), 1));
   }
 });

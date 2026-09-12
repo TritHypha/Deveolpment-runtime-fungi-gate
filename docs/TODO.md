@@ -4,6 +4,37 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 active selective-conversion work - 2026-09-12
+
+- [x] Reconcile the standing owner direction with the selective-conversion
+  policy: authorized candidate authoring, manual repairs and focused checks
+  continue. Historical exact-head proposals and HOLD records describe proof
+  limits; they do not require another approval for already authorized repairs.
+- [x] Confirm the unary Float64 negation repair is already present in the
+  compiler source on `main`; do not implement or re-integrate it again.
+- [x] Repair non-finite dimensions in the six affected vector/tensor product
+  candidates. Focused parity checks pass 78/78, or 89/89 including the unchanged
+  vector-definition regression. Astra accepted the scoped repair after 144
+  additional independent comparisons; its test-annotation finding is fixed.
+- [x] Verify the installed NASM 3.02 executable against the recorded recipe
+  hash and rerun the Windows static-host prerequisite probe (`CANDIDATE`).
+- [x] Implement the agent-limits candidate's caller-supplied diagnostic path;
+  27 focused checks pass and Astra accepted the scoped repair. Evidence:
+  `docs/reports/rd0873-vector-and-agent-path-repairs-2026-09-12.md`.
+- [ ] Resolve agent-limit numeric parity: the retained TS oracle accepts
+  positive infinity, while current WASM ordering traps. Do not narrow the
+  source contract or treat the finite-path checks as full numeric coverage.
+  Evaluate an explicitly typed `Float64.isPositive` ingress classifier with
+  independent interpreter/WASM truth-table checks; preserve generic guards.
+- [ ] Continue the remaining runtime inventory through candidate, checking,
+  repair and accepted work. Keep unresolved host/alias/sparse-input semantics
+  visible; retained tooling and TS shadows are separate dispositions.
+
+The following older sections are historical checkpoints. Their test receipts
+remain limited to their recorded subjects. Production admission, consumer
+switching, TypeScript retirement and release authority remain separate and
+unproved; no queue or production receipt is promoted by this clarification.
+
 ### RD-0873 generated graph/index refresh - 2026-09-12
 
 - [x] Refresh the repository-owned graph, semantic-assurance graph, KB graph,
