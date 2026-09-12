@@ -72,6 +72,12 @@ counts or open items that a newer section explicitly supersedes.
   `c48296efd0d13e96ba9e8b45b7fb6858e2346909`: 77,364/77,364 nodes and
   195,683/195,683 edges. The exact-scope receipt is
   `docs/independent-audits/2026-09-12-rd0873-graph-refresh-full.json`.
+- [x] Refreshed the full graph after the receipt commit at current `main` HEAD
+  `e6ec842dfb3eaf91b1e410d95f1575703bd63689` / tree
+  `6415e94c081b60a74fb6e85f3941ed67258316a7`: 77,485/77,485 nodes and
+  200,783/200,783 edges. The current-head navigation receipt is
+  `docs/independent-audits/2026-09-12-rd0873-graph-refresh-current-head.json`; exclusions remain
+  truncated and this does not authorize source creation or corpus assurance.
 - [x] Re-ran the bounded product strict check at current `main` HEAD:
   all 15 tracked product `.fungi` files passed with 0 errors and 0 governance
   warnings, alongside 117/117 focused differential checks. The non-authorizing

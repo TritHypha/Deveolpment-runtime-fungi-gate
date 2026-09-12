@@ -1,0 +1,42 @@
+{
+  "schema": "galerina.rd0873-graph-refresh.v2",
+  "generatedAt": "2026-09-12T02:01:28.364Z",
+  "status": "PASS_CURRENT_HEAD_NAVIGATION_INDEX",
+  "authorizing": false,
+  "project": "galerina",
+  "repoPathPolicy": "repository-relative only",
+  "reviewedCommit": "e6ec842dfb3eaf91b1e410d95f1575703bd63689",
+  "reviewedTree": "6415e94c081b60a74fb6e85f3941ed67258316a7",
+  "index": {
+    "mode": "full",
+    "indexedHeadSha": "e6ec842dfb3eaf91b1e410d95f1575703bd63689",
+    "indexedAt": "2026-09-12T02:00:53Z",
+    "nodes": 77485,
+    "expectedNodes": 77485,
+    "edges": 200783,
+    "expectedEdges": 200783,
+    "artifactPresent": true,
+    "persistence": true,
+    "excludedDirectoryCount": 219,
+    "exclusionsTruncated": true
+  },
+  "interpretation": {
+    "role": "navigation and structural lookup",
+    "proves": [
+      "exact-head graph identity",
+      "node and edge count parity for the indexed scope"
+    ],
+    "doesNotProve": [
+      "complete Fungi corpus coverage",
+      "absence of files or consumers",
+      "source admission",
+      "consumer switching",
+      "production authority",
+      "full corpus assurance"
+    ]
+  },
+  "remainingGates": [
+    "fresh exact-head owner admission with a non-empty authoring scope",
+    "focused semantic and host-boundary evidence before any new translation wave"
+  ]
+}
