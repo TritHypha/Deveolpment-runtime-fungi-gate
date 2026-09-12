@@ -4,6 +4,29 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 isBuiltin and validateTransition canonical classifiers - 2026-09-12
+
+- [x] Replace the devtools-context `isBuiltin` Set lookup with exact literal
+  equality for all 18 builtins. The existing Fungi twin is now stored at
+  `packages/fungi/products/galerina/rd0873-devtools-context/builtin-name.fungi`,
+  while its TypeScript shadow remains under `packages-ts`.
+- [x] Replace the project-graph `validateTransition` Map/Set lookup with
+  ordered literal branches for the 11 permitted transitions across the seven
+  lifecycle states. Its existing Fungi twin is now stored at
+  `packages/fungi/products/galerina/rd0873-devtools-project-graph/resource-transition.fungi`.
+- [x] Verify exact parity without a corpus rerun: the focused proofs pass 3/3
+  and 2/2; package suites pass 38/38 and 92/92 with typecheck and build green.
+  The builtin public-behavior fixture is parser-clean, routes all 18 names
+  through call expressions, and emits only `customHelper`; the transition
+  matrix covers 121 TypeScript/interpreter/signed-Wasm input pairs. GPT-6 Astra
+  independently reviewed the final head and found no material defect.
+- [!] The exact-head non-authorizing receipt is
+  `docs/independent-audits/2026-09-12-rd0873-is-builtin-validate-transition-v1.json`.
+  Product Fungi placement and semantic parity are recorded; SLIDE/VOK physical
+  admission, consumer switching, TypeScript retirement and production authority
+  remain separate holds. No queue read, queue promotion or PROJECT assurance
+  rerun was performed.
+
 ### RD-0873 pre-translation retention gate hardening - 2026-09-12
 
 - [x] Implement the single Astra-reviewed pre-translation improvement: a

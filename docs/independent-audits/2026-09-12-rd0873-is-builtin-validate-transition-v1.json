@@ -1,0 +1,131 @@
+{
+  "schema": "galerina.rd0873.is-builtin-validate-transition.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_SEMANTIC_CANONICAL_PHYSICAL_HOLD",
+  "authorizing": false,
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "39a51fcd8e47d61ca01c90263e548a6359dd8342",
+    "tree": "2020e84a4ff7367502ba2262e59d875ae0428625"
+  },
+  "scope": {
+    "packages": [
+      "galerina-devtools-context",
+      "galerina-devtools-project-graph"
+    ],
+    "symbols": [
+      "isBuiltin",
+      "validateTransition"
+    ],
+    "files": [
+      {
+        "role": "isBuiltin TypeScript shadow",
+        "path": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+        "bytes": 21260,
+        "sha256": "sha256:85e8a0cc690c4adbf48a5a5d533b24287a20763c5ff85ba5a4ec01df80d32d23"
+      },
+      {
+        "role": "isBuiltin product Fungi twin",
+        "path": "packages/fungi/products/galerina/rd0873-devtools-context/builtin-name.fungi",
+        "bytes": 750,
+        "sha256": "sha256:fe6be087673df88b75c6eacb091ade8b2ed3f85718df72a4d542283422b44cc1"
+      },
+      {
+        "role": "isBuiltin focused test",
+        "path": "packages-ts/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
+        "bytes": 3624,
+        "sha256": "sha256:057d0ef8af2edb433cf2aa86177753739cb6d4ccb53e031acb3c7f43c460ec34"
+      },
+      {
+        "role": "validateTransition TypeScript shadow",
+        "path": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+        "bytes": 4941,
+        "sha256": "sha256:db6b001a1c79cac9551a351a0e86a666e3a96e4f7c3ec72edc9a82ac533bf3df"
+      },
+      {
+        "role": "validateTransition product Fungi twin",
+        "path": "packages/fungi/products/galerina/rd0873-devtools-project-graph/resource-transition.fungi",
+        "bytes": 1037,
+        "sha256": "sha256:2dbc316a00a190598f19b1244a76c6509116ab27ba40c8e35ecc495be63f5d0b"
+      },
+      {
+        "role": "validateTransition focused test",
+        "path": "packages-ts/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs",
+        "bytes": 5351,
+        "sha256": "sha256:9117a2cb011220951a9c2dc5bd56d9a18d6a871861233bc69e8d5df86fd01088"
+      }
+    ]
+  },
+  "contracts": {
+    "isBuiltin": "Exact literal equality for all 18 named builtins; unknown names return false without mutable Set lookup or coercion.",
+    "validateTransition": "Exact ordered branches admit the 11 documented transitions across the seven lifecycle states; every other pair returns false.",
+    "productLayout": "Both existing Fungi twins are stored under packages/fungi/products/galerina while TypeScript shadows and tests remain in packages-ts.",
+    "forbiddenFungiTokens": [],
+    "publicReceiptBehavior": "A parser-clean fixture routes all 18 builtin names through call expressions; generated receipt callees contain only customHelper."
+  },
+  "verification": {
+    "builtinFocused": {
+      "command": "node --test packages-ts/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "parseDiagnostics": 0,
+      "classifierCases": 23,
+      "publicCallNames": 18,
+      "publicCallees": ["customHelper"]
+    },
+    "builtinPackage": {
+      "command": "npm test (packages-ts/galerina-devtools-context)",
+      "tests": 38,
+      "passed": 38,
+      "failed": 0,
+      "typecheck": "PASS",
+      "build": "PASS"
+    },
+    "transitionFocused": {
+      "command": "node --test packages-ts/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "domain": "121 input pairs: seven states plus four hostile strings on each side",
+      "typescript": "PASS",
+      "interpreter": "PASS",
+      "signedWasm": "PASS"
+    },
+    "transitionPackage": {
+      "command": "npm test (packages-ts/galerina-devtools-project-graph)",
+      "tests": 92,
+      "passed": 92,
+      "failed": 0,
+      "typecheck": "PASS",
+      "build": "PASS"
+    },
+    "sourceChecks": {
+      "builtinMutableSetLookup": "ABSENT",
+      "transitionMutableMapSetLookup": "ABSENT",
+      "productFungiForbiddenTokens": "PASS",
+      "gitDiffCheck": "PASS"
+    },
+    "independentReview": "GPT-6 Astra PASS at exact head 39a51fcd8; the public fixture is parser-clean, all 18 builtin names are call-expression values, and the receipt retains only customHelper."
+  },
+  "custody": {
+    "newFungiSourceCreated": false,
+    "existingFungiRewritten": false,
+    "productTwinsRelocated": true,
+    "typescriptShadowsRetained": true,
+    "queueRead": false,
+    "queuePromotion": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "projectCorpusRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "physicalStage": {
+    "status": "HOLD",
+    "reason": "These semantic and relocation checks do not provide the separately required SLIDE/VOK physical admission evidence or production loading authority."
+  },
+  "decision": "isBuiltin and validateTransition are semantically verified against their product Fungi twins at an exact committed head. The TypeScript shadows remain the executing differential layer; physical admission and production consumer switching remain separate decisions."
+}

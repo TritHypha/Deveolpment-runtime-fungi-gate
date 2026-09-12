@@ -3,6 +3,37 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 isBuiltin and validateTransition canonical classifiers - 2026-09-12
+
+The two remaining devtools classifier shapes are now canonical and semantically
+verified at exact committed head
+`39a51fcd8e47d61ca01c90263e548a6359dd8342` / tree
+`2020e84a4ff7367502ba2262e59d875ae0428625`. `isBuiltin` in
+`packages-ts/galerina-devtools-context/src/receipt-generator.ts` uses exact
+literal equality for its 18 names, removing dependence on a mutable Set. Its
+existing twin is stored at
+`packages/fungi/products/galerina/rd0873-devtools-context/builtin-name.fungi`.
+`validateTransition` in
+`packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts` uses
+ordered literal branches for the 11 permitted lifecycle transitions, removing
+the private Map/Set lookup. Its existing twin is stored at
+`packages/fungi/products/galerina/rd0873-devtools-project-graph/resource-transition.fungi`.
+
+The focused proofs pass `3/3` and `2/2`; the complete package suites pass
+`38/38` and `92/92` with typecheck and build green. The builtin public fixture
+parses with zero diagnostics, routes all 18 names through call-expression nodes,
+and leaves only `customHelper` in the generated receipt. The transition proof
+covers 121 pairs (seven states plus four hostile strings on each side) across
+the TypeScript shadow, interpreter and signed Wasm. GPT-6 Astra independently
+reviewed the final head and found no material defect.
+
+The exact-head, non-authorizing receipt is
+`docs/independent-audits/2026-09-12-rd0873-is-builtin-validate-transition-v1.json`.
+This closes semantic classifier and product-layout work only. TypeScript shadows
+remain the executing differential layer; SLIDE/VOK physical admission, consumer
+switching, TypeScript retirement and production authority remain separate holds.
+No conversion queue was read and PROJECT corpus assurance was not rerun.
+
 ## Pre-translation retention gate hardening - 2026-09-12
 
 GPT-6 Astra reviewed this bounded change before implementation. A single
