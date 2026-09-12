@@ -1,0 +1,58 @@
+{
+  "schema": "galerina.rd0873-agent-limits-custom-path-review.v1",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "PASS_NON_AUTHORIZING_ORACLE_PATH_TEST",
+  "authorizing": false,
+  "purpose": "Record the retained TypeScript validator's caller-supplied diagnostic path behavior and the exact parity gap in the existing Fungi twin without authoring a new source wave.",
+  "auditedBuildIdentity": {
+    "repository": "Galerina",
+    "branch": "main",
+    "head": "b83ac4426845914ce1d9f2d3f09bcb6b7e49e1e7",
+    "tree": "67d7ed5e4d8bbef443c291785cf84ec131f00141"
+  },
+  "reviewedSources": [
+    {
+      "path": "packages-ts/galerina-ai-agent/src/index.ts",
+      "sha256": "4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+      "bytes": 12166,
+      "behavior": "validateAgentLimits(limits, path = limits) interpolates the supplied path into all five diagnostic paths; omitted and undefined use limits, while an explicit empty string is preserved."
+    },
+    {
+      "path": "packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-limits.fungi",
+      "sha256": "07f3ed4a3c46ac70282fe22b1f4f883933681df2a80717dfccf472a7ec0f4563",
+      "bytes": 2674,
+      "behavior": "The existing candidate accepts only limits and hardcodes limits.* paths; it deliberately represents the default-path-only scope."
+    },
+    {
+      "path": "packages-ts/galerina-ai-agent/tests/agent-contracts.test.mjs",
+      "sha256": "9fe03f4ef416598b1cd2c39d106a45af37fb37755ad923f26546015687d5b989",
+      "bytes": 9183,
+      "behavior": "A focused test triggers three ordered diagnostics with a definition.limits prefix and asserts every resulting path."
+    }
+  ],
+  "verification": {
+    "command": "npm test",
+    "package": "@galerina/ai-agent",
+    "status": "PASS",
+    "tests": 22,
+    "passed": 22,
+    "failed": 0,
+    "customPathTest": "PASS"
+  },
+  "parityFinding": {
+    "defaultPath": "The existing twin agrees with the source's default diagnostic path strings.",
+    "customPath": "HOLD: no caller-supplied path can be represented by this exact twin; closing parity requires a path-taking helper plus a default-path wrapper.",
+    "requiredSourceAdmission": true
+  },
+  "roleBoundary": {
+    "retainedTypeScriptOracle": true,
+    "fungiSourceChanged": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false,
+    "productionAuthority": false,
+    "corpusAssuranceRerun": false,
+    "gitRole": "provenance-only"
+  },
+  "verdict": "The retained TypeScript custom-path contract is now executable evidence. The current Fungi twin remains a bounded default-path candidate; custom-path parity and any source repair remain separately gated."
+}

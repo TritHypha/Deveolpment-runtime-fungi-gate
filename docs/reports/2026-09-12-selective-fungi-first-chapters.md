@@ -77,6 +77,9 @@ The evidence is bounded to finite values and inert typed records. Non-finite
 input mapping, active JS objects, full alias behavior, the limits helper's custom
 path override, physical SLIDE/VOK evidence and production cutover remain separate
 unfinished work. Candidate source creation is not full conversion completion.
+The retained TypeScript custom-path contract now has a focused executable check;
+the exact-head non-authorizing review records the remaining twin mismatch at
+`docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-review.json`.
 The initial probe also exposed invalid WAT for a negative Float64 literal in a
 record initializer. That separate compiler defect now has a type-directed
 `f64.neg` repair using the existing finite-value guard. The focused regression

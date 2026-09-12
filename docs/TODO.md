@@ -22,6 +22,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Repair negative Float64 literal and parameter lowering; executable checks
   preserve signed zero and finite-value guards, retain Decimal refusal, and
   cover the separate expression defect beyond the validator parameter probes.
+- [x] Add a focused retained-oracle check for `validateAgentLimits` custom path
+  prefixes (22/22 package tests). The existing Fungi twin remains deliberately
+  default-path-only; the non-authorizing review and exact-head receipt are in
+  `docs/independent-audits/2026-09-12-rd0873-agent-limits-custom-path-review.json`.
 - [x] Translate `applyAgentMergePolicy` as a bounded Fungi policy core; six
   WASM differential vectors cover evidence precedence, confidence actions,
   warning text and result order. Add no production consumer switch yet.
@@ -63,15 +67,15 @@ counts or open items that a newer section explicitly supersedes.
   constructor checks under `docs/independent-audits/`.
 - [!] The post-commit external graph refresh reports `indexed` but remains bound to
   `02bdd12c2a7da713dfdbcd3b45dd885527c0423b`, not current
-  `5873b8768ad2305b45e64a0ab25967ac574b5edb`; the new
+  `b83ac4426845914ce1d9f2d3f09bcb6b7e49e1e7`; the new
   Fungi symbol is absent from graph search. Treat the graph as navigation-only
   until its owner repairs the build-point refresh.
 
 ### RD-0873 current-head gate refresh - 2026-09-12
 
 - [x] Rebound the non-authorizing bulk gate to exact `main` HEAD
-  `5873b8768ad2305b45e64a0ab25967ac574b5edb` / tree
-  `241bbc2e4af3277d7ee3a7b7854a0612c5db03f4` in
+  `b83ac4426845914ce1d9f2d3f09bcb6b7e49e1e7` / tree
+  `67d7ed5e4d8bbef443c291785cf84ec131f00141` in
   `docs/independent-audits/2026-09-11-rd0873-current-head-bulk-translation-gate.json`.
 - [x] Kept the four eligible existing scalar twins, three held symbols,
   singleton limits and concurrency 1 unchanged; this refresh records identity
