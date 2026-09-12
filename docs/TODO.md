@@ -100,6 +100,8 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Reconcile the existing queue by deployment profile and consumer evidence.
   Split mixed files, distinguish compiler product code from build wrappers, and
   report intentionally retained tooling separately from blocked runtime work.
+  The current routing record is
+  `docs/reports/2026-09-12-selective-conversion-role-reconciliation.md`.
 - [ ] Apply this classification to Waves 01-04 before widening translation.
   Continue independent ready work with focused checks and package-level closure.
   Retained tools are neither failed translations nor completed Fungi conversion.

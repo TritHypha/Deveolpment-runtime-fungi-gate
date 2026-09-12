@@ -86,7 +86,9 @@ Compiler product logic, mixed files and dynamic runtime helpers require explicit
 role classification. Progress will distinguish converted runtime, retained
 tooling/host boundaries and unresolved runtime work; it will not equate completion
 with removal of every JS/TS file. Queue role reconciliation is the next planning
-step, not an already completed migration or production-authority change.
+step, not an already completed migration or production-authority change. The
+current routing record is
+`docs/reports/2026-09-12-selective-conversion-role-reconciliation.md`.
 
 ## RD-0873 current housekeeping state - 2026-09-11
 
