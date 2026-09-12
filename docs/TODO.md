@@ -30,6 +30,10 @@ counts or open items that a newer section explicitly supersedes.
   unsafe-tool warnings, Float64 metrics and high-impact review routing. Keep
   the TypeScript adapter and active-object/alias obligations explicit; add no
   production consumer switch yet.
+- [x] Promote `validateAgentTaskGroupPlan` into the native product tree. Six
+  WASM differential vectors preserve the named, positive-timeout and non-empty
+  member checks and their source order; the TypeScript package remains the
+  compatibility oracle.
 - [x] Translate `validateMatrixType` as a bounded native product core. Seven
   WASM differential vectors cover valid, zero, negative, fractional and safe
   integer-boundary dimensions; the TypeScript validator remains the oracle.

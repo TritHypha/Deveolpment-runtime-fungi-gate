@@ -152,6 +152,13 @@ mismatch cases, including fractional and safe-integer boundaries. It remains
 candidate evidence; host object, alias and sparse-array behavior and consumer
 admission are still separate obligations.
 
+The task-group validator is stored at
+`packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-task-group-plan.fungi`.
+Its six WASM vectors preserve the TypeScript structural checks for the group
+name, positive timeout and non-empty member list, including diagnostic order.
+The TypeScript implementation remains the oracle and no consumer switch or
+checked admission artifact is implied.
+
 The tensor validator is also stored at
 `packages/fungi/products/galerina/rd0873-core-vector/validate-tensor-type.fungi`.
 It requires a non-empty dense dimension array and preserves source-order

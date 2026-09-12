@@ -1,0 +1,54 @@
+@version 1
+
+/// Bounded translation of validateAgentTaskGroupPlan from
+/// galerina-ai-agent/src/index.ts. The TypeScript validator remains the
+/// compatibility oracle; this source contains only its pure structural checks.
+
+record AgentTaskGroupPlan {
+  name: String
+  timeoutMs: Float64
+  agents: Array<String>
+  cancelOnFailure: Bool
+}
+
+record AgentDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateAgentTaskGroupPlan(plan: AgentTaskGroupPlan) -> Array<AgentDiagnostic>
+contract { intent { "Require a named, positively bounded task group with at least one member agent." } }
+{
+  mut diagnostics: Array<AgentDiagnostic> = Array.empty()
+
+  if plan.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TASK_GROUP_NAME_REQUIRED"
+      severity: "error"
+      message: "Agent task group requires a name."
+      path: "name"
+    })
+  }
+
+  if !(plan.timeoutMs > 0.0) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TASK_GROUP_TIMEOUT_REQUIRED"
+      severity: "error"
+      message: "Agent task group requires a positive timeout."
+      path: "timeoutMs"
+    })
+  }
+
+  if plan.agents.count() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TASK_GROUP_EMPTY"
+      severity: "error"
+      message: "Agent task group requires at least one member agent."
+      path: "agents"
+    })
+  }
+
+  return diagnostics
+}
