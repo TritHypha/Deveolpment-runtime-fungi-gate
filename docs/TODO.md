@@ -67,9 +67,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Rebound the working model to local `main` HEAD
   `560920cf4ce103722c6d8703f764c203ac8a7945` / tree
   `e29f2484685dd1f63e1da5265a3b20db6352c2a1`.
-- [x] Wave 01 source work is limited to four bounded AI-agent validator twins
-  in `packages-ts/galerina-ai-agent/src/self-hosted/`; TypeScript remains
-  retained.
+- [x] Wave 01 source work covers the bounded AI-agent validator, policy and
+  report cores under `packages/fungi/products/galerina/rd0873-ai-agent/`;
+  TypeScript and differential tests remain retained under `packages-ts`.
 - [x] Wave 02 verified seven existing twins without creating source or mutating
   the queue: `isEnvironmentMode`, `isOmniUncertain`, `isTerminalScope`,
   `isTaskEffect`, `isResponseSafeClassification`, `isBuiltin` and

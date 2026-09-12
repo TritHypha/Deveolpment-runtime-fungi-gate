@@ -109,7 +109,7 @@ contract { intent { "Compare the policy twin with its retained TypeScript oracle
 
 test("Wave 01 merge-policy twin preserves ordered outcomes and warnings in WASM", { timeout: 60_000 }, async (t) => {
   const twin = readFileSync(new URL(
-    "../../galerina-ai-agent/src/self-hosted/apply-agent-merge-policy.fungi", import.meta.url,
+    "../../../packages/fungi/products/galerina/rd0873-ai-agent/apply-agent-merge-policy.fungi", import.meta.url,
   ), "utf8");
   const program = L.parseProgram(twin + vectors.map((vector, i) => probe(i, vector)).join("\n"), "agent-merge-policy-parity.fungi");
   const errors = program.diagnostics.filter((d) => d.severity === "error");

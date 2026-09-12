@@ -96,7 +96,7 @@ contract { intent { "Compare the actual agent-definition twin's ordered diagnost
 for (const target of ["definition", "limits"]) {
 test(`Wave 01 ${target} twin preserves ordered diagnostics in WASM`, { timeout: 60_000 }, async (t) => {
   const twin = readFileSync(new URL(
-    `../../galerina-ai-agent/src/self-hosted/validate-agent-${target}.fungi`, import.meta.url,
+    `../../../packages/fungi/products/galerina/rd0873-ai-agent/validate-agent-${target}.fungi`, import.meta.url,
   ), "utf8");
   const program = L.parseProgram(twin + vectors.map(([, value], i) => probe(i, value, target)).join("\n"), `agent-${target}-parity.fungi`);
   const errors = program.diagnostics.filter((d) => d.severity === "error");

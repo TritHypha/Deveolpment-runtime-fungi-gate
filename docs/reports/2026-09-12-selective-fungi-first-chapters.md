@@ -90,7 +90,7 @@ checks complement the parameter-based validator comparisons above.
 ## Merge-policy translation
 
 `applyAgentMergePolicy` is now represented by
-`packages-ts/galerina-ai-agent/src/self-hosted/apply-agent-merge-policy.fungi`.
+`packages/fungi/products/galerina/rd0873-ai-agent/apply-agent-merge-policy.fungi`.
 The twin manually scans the required-severity list, drops findings without
 evidence, applies `drop`, `review` and `include_with_warning` confidence
 actions, and preserves included/dropped order and warning text. The retained
