@@ -1,0 +1,93 @@
+{
+  "project": null,
+  "compiler": "0.1.0-prototype",
+  "generatedFrom": {
+    "sourceMap": "app.source-map.json",
+    "apiReport": "app.api-report.json",
+    "mapManifest": "app.map-manifest.json",
+    "strictComments": 1
+  },
+  "documentationContract": {
+    "enabled": true,
+    "required": false,
+    "output": "./build/docs",
+    "formats": [
+      "markdown"
+    ],
+    "generate": [
+      "api_guide",
+      "webhook_guide",
+      "type_reference",
+      "global_registry_guide",
+      "security_guide",
+      "runtime_guide",
+      "memory_pressure_guide",
+      "run_compile_mode_guide",
+      "deployment_guide",
+      "ai_summary"
+    ],
+    "sources": [
+      "api_contracts",
+      "webhook_contracts",
+      "type_definitions",
+      "global_registry",
+      "strict_comments",
+      "security_rules",
+      "runtime_rules",
+      "memory_rules",
+      "execution_rules",
+      "target_reports",
+      "source_maps"
+    ],
+    "rules": {
+      "redact_secrets": true,
+      "include_internal": false
+    }
+  },
+  "outputs": [
+    {
+      "file": "docs/api-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/webhook-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/type-reference.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/global-registry-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/security-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/runtime-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/memory-pressure-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/run-compile-mode-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/deployment-guide.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/ai-summary.md",
+      "format": "markdown"
+    },
+    {
+      "file": "docs/docs-manifest.json",
+      "format": "json"
+    }
+  ]
+}

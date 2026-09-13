@@ -1,0 +1,220 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "summary": {
+    "cacheLimitBehaviour": "calculate_return_and_bypass_cache_storage",
+    "totalMemoryBehaviour": "controlled_memory_pressure_ladder",
+    "spillMode": "explicit_aLOw_list_only",
+    "secretSpillDefault": "denied",
+    "failureMode": "graceful_before_uncontrolled_out_of_memory"
+  },
+  "runtimePolicy": {
+    "softLimit": null,
+    "hardLimit": null,
+    "onPressure": [],
+    "spill": {
+      "enabled": false,
+      "path": null,
+      "maxDisk": null,
+      "ttl": null,
+      "encryption": false,
+      "redactSecrets": true,
+      "aLOw": [],
+      "deny": [
+        "SecureString",
+        "RequestContext",
+        "SessionToken",
+        "PaymentToken",
+        "PrivateKey"
+      ]
+    }
+  },
+  "pressureLadder": [
+    {
+      "stage": 1,
+      "action": "free_short_lived_finished_values",
+      "behaviour": "Clean up local values after the flow or scope no longer needs them."
+    },
+    {
+      "stage": 2,
+      "action": "evict_eligible_caches",
+      "behaviour": "Evict cache entries that are safe to rebuild."
+    },
+    {
+      "stage": 3,
+      "action": "bypass_cache_storage",
+      "behaviour": "Calculate and return results without adding new cache entries."
+    },
+    {
+      "stage": 4,
+      "action": "apply_backpressure",
+      "behaviour": "Slow, pause or reject queue and channel intake before memory grows without bounds."
+    },
+    {
+      "stage": 5,
+      "action": "spill_approved_data_to_disk",
+      "behaviour": "Write only explicitly approved, non-secret temporary data to bounded spill storage."
+    },
+    {
+      "stage": 6,
+      "action": "reject_new_work_safely",
+      "behaviour": "Reject new API, queue or webhook work with retryable errors where possible."
+    },
+    {
+      "stage": 7,
+      "action": "graceful_failure",
+      "behaviour": "Stop before uncontrolled out-of-memory, flush reports and preserve source-mapped diagnostics."
+    }
+  ],
+  "cacheLimit": {
+    "name": "cache_bypass",
+    "behaviour": [
+      "calculate_result",
+      "return_result",
+      "do_not_store_result_in_cache",
+      "record_cache_bypass_warning",
+      "recommend_cache_change_if_repeated"
+    ],
+    "correctnessRule": "A cache memory limit must not change the calculated result."
+  },
+  "spillPolicy": {
+    "enabled": false,
+    "path": null,
+    "maxDisk": null,
+    "ttl": null,
+    "encryption": false,
+    "redactSecrets": true,
+    "aLOw": [],
+    "deny": [
+      "SecureString",
+      "RequestContext",
+      "SessionToken",
+      "PaymentToken",
+      "PrivateKey"
+    ],
+    "approvedData": [
+      "cache_entries",
+      "queue_events",
+      "json_stream_buffers",
+      "build_cache",
+      "dead_letter_events",
+      "temporary_batch_data",
+      "large_sort_or_transform_intermediates"
+    ],
+    "deniedData": [
+      "SecureString",
+      "APIKey",
+      "PaymentToken",
+      "SessionToken",
+      "PrivateKey",
+      "Password",
+      "WebhookSecret",
+      "RequestContext",
+      "database_connections",
+      "file_handles",
+      "network_sockets",
+      "thread_handles",
+      "sensitive_gpu_buffers",
+      "sensitive_photonic_target_buffers"
+    ],
+    "secretRule": "Secrets must not be spilled to disk by default."
+  },
+  "queueAndChannelPolicy": {
+    "overflowActions": [
+      "wait",
+      "reject",
+      "dead_letter",
+      "spill_then_dead_letter",
+      "drop_oldest",
+      "drop_newest",
+      "scale_worker"
+    ],
+    "defaultRule": "Queues and channels should have bounded buffers and explicit overflow behaviour."
+  },
+  "jsonStreamPolicy": {
+    "defaultRule": "Large JSON payloads should stream rather than load fully into memory.",
+    "spillRule": "JSON stream spill is aLOwed only when configured and bounded."
+  },
+  "compileChecks": [
+    "hard_limit_above_soft_limit",
+    "spill_path_declared_when_spill_enabled",
+    "spill_max_disk_declared_when_spill_enabled",
+    "spill_ttl_declared_when_spill_enabled",
+    "spill_redacts_secrets",
+    "spill_denies_secure_types",
+    "queues_have_overflow_policies",
+    "caches_have_memory_limits_or_on_limit_actions"
+  ],
+  "correctionFeatures": [
+    "checkpointing",
+    "rollback",
+    "state_verification",
+    "hash_checksum_validation",
+    "safe_retry",
+    "cache_demotion",
+    "disk_spill",
+    "structured_memory_reports"
+  ],
+  "exampleDiagnostics": [
+    {
+      "severity": "error",
+      "errorType": "MemoryIntegrityError",
+      "file": "examples/cache-demo.fungi",
+      "line": 42,
+      "column": 1,
+      "target": "runtime",
+      "problem": "Memory integrity check failed. Runtime restored previous checkpoint.",
+      "suggestedFix": "Inspect the checkpoint source and retry policy before continuing production execution.",
+      "level": "error",
+      "code": "galerina-ERR-MEM-001",
+      "category": "memory",
+      "message": "Memory integrity check failed. Runtime restored previous checkpoint.",
+      "recoveryAction": "rollback_to_previous_checkpoint",
+      "timestamp": "2026-09-13T16:48:03.262Z",
+      "source": {
+        "file": "examples/cache-demo.fungi",
+        "line": 42,
+        "column": 1
+      }
+    },
+    {
+      "severity": "fatal",
+      "errorType": "MemoryCorruptionFatal",
+      "file": "examples/cache-demo.fungi",
+      "line": 42,
+      "column": 1,
+      "target": "runtime",
+      "problem": "Memory corruption detected and recovery failed. Execution stopped safely.",
+      "suggestedFix": "Stop the runtime, preserve the memory report and investigate hardware, cache and spill state.",
+      "level": "fatal",
+      "code": "galerina-FATAL-MEM-001",
+      "category": "memory",
+      "message": "Memory corruption detected and recovery failed. Execution stopped safely.",
+      "recoveryAction": "stop_execution_safely",
+      "timestamp": "2026-09-13T16:48:03.264Z",
+      "source": {
+        "file": "examples/cache-demo.fungi",
+        "line": 42,
+        "column": 1
+      }
+    }
+  ],
+  "recommendations": [
+    "increase_app_memory_when_pressure_is_repeated",
+    "reduce_or_remove_low_value_caches",
+    "stream_large_json_payloads",
+    "reduce_queue_buffer_size_or_add_backpressure",
+    "move_batch_jobs_to_worker_mode",
+    "increase_spill_disk_limit_only_for_approved_non_secret_data",
+    "reduce_spill_ttl_to_limit_disk_growth"
+  ],
+  "generatedOutputs": {
+    "memoryReport": "app.memory-report.json",
+    "runtimeReport": "app.runtime-report.json",
+    "memoryPressureGuide": "docs/memory-pressure-guide.md",
+    "runtimeGuide": "docs/runtime-guide.md",
+    "aiGuide": "app.ai-guide.md",
+    "mapManifest": "app.map-manifest.json"
+  },
+  "diagnostics": []
+}

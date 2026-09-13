@@ -1,0 +1,1231 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "entry": null,
+  "summary": {
+    "sourceFileCount": 1,
+    "typeCount": 0,
+    "enumCount": 0,
+    "flowCount": 1,
+    "routeCount": 0,
+    "webhookCount": 0,
+    "diagnosticCount": 0
+  },
+  "sourceFiles": [
+    {
+      "path": "max-rate-windows.fungi",
+      "lines": 16,
+      "sha256": "6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266"
+    }
+  ],
+  "changedFiles": {
+    "status": "dirty",
+    "files": [
+      {
+        "status": "M",
+        "path": "build/dev-tool-index/provenance.json"
+      },
+      {
+        "status": "M",
+        "path": "build/graph/Galerina_GRAPH_REPORT.md"
+      },
+      {
+        "status": "M",
+        "path": "build/graph/provenance.json"
+      },
+      {
+        "status": "M",
+        "path": "build/unit-registry/provenance.json"
+      },
+      {
+        "status": "M",
+        "path": "docs/INDEX.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/ROADMAP.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/TODO.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/handover/INDEX.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/reports/2026-09-13-rd0873-pretranslation-progress.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/reports/INDEX.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/security/rd0361-authoritative-twins.json"
+      },
+      {
+        "status": "M",
+        "path": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/superpowers/plans/2026-09-13-rd-0873-pretranslation-gate-closure.md"
+      },
+      {
+        "status": "M",
+        "path": "scripts/tests/ts-to-fungi-sandbox.test.mjs"
+      },
+      {
+        "status": "??",
+        "path": "build/debug/"
+      },
+      {
+        "status": "??",
+        "path": "docs/handover/COMPACT-HANDOFF-rd0361-housekeeping-2026-09-13.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-ledger-reconciliation.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-pilot-conversion.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave064-web-components.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave065-web-events.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave066-web-render.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave067-router.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave068-state.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave069-impact.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave070-docs.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave071-intelligence.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave072-snarkjs.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave073-emulator.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave074-spore.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave075-tritsocket.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave076-spore.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave077-vault.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave078-cpp.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave079-tier.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave080-telemetry.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave081-oracle.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave082-tri-regex.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave083-observability.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave084-test.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave085-core-compiler.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave086-devtools-benchmarks.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave087-devtools-graph-algorithms.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave088-devtools-kb-graph.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave089-devtools-package-graph.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave090-framework-api-server.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave091-devtools-hypha.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave092-devtools-security.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave093-tower-citizen.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave094-devtools-project-graph.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave095-tools-myco.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave096-framework-app-kernel.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave097-bitnet.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave098-tri-pipe.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave099-no-source.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave10-core-tasks.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave11-sentinel-state.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave12-sentinel-time.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave13-core-network.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave14-sentinel-io.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave15-sentinel-memory.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave16-ai.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave17-ai-agent.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave18-data-archive.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave19-ai-neural.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave2-conversion.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave20-data-db.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave21-data-json.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave22-core-photonic.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave23-cpu-kernels.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave24-data.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave25-core.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave26-data-database.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave27-runtime-wasm.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave28-core-logic.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave29-data-pipeline.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave3-direct-package-tree.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave30-ai-lowbit.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave31-ai-neuromorphic.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave32-data-html.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave33-sentinel-power.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave34-auth.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave35-data-reports.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave36-data-response.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave37-data-query-is-some.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave38-data-query-option-some.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave39-data-search.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave4-core-compute.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave40-db-firestore.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave41-db-mysql.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave42-db-postgres.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave43-db-opensearch.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave44-db-sqlite.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave45-substrate-math.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave46-target-wasm.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave47-tools-benchmark.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave48-web.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave49-core-cli.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave5-core-economics.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave50-sentinel-egress.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave51-devtools-graph.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave52-devtools-context.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave53-devtools-flowgraph.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave54-devtools-fungi-scan.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave55-devtools-naming.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave56-devtools-provenance.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave57-devtools-pci.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave58-target-cpu.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave59-target-native.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave6-core-reports.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave60-target-gpu.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave61-target-js.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave62-target-photonic.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/independent-audits/2026-09-13-rd0873-fungi-wave63-target-ai-accelerator.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-pilot-conversion.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-wave12-sentinel-time.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-wave2-conversion.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-wave3-direct-package-tree.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves10-11-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves13-15-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves16-18-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves19-21-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves22-24-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves25-27-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves28-30-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves31-33-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves34-36-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves37-39-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves4-6-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves40-45-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves46-48-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves49-51-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves52-54-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves55-57-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves58-60-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves64-66-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves67-69-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves7-9-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves70-72-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves73-75-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves76-78-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves79-81-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves82-84-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves85-87-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves88-90-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves91-93-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves94-96-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/2026-09-13-rd0873-fungi-waves97-99-luna-high.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/rd0361-housekeeping-2026-09-13.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/reports/rd0361-option-abi-drift-2026-09-13.md"
+      },
+      {
+        "status": "??",
+        "path": "gate-selftests-local.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/conversion-manifest.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ai-agent/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ai-lowbit/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ai-neural/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ai-neuromorphic/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ai/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-auth/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-cli/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-compiler/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-compute/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-config/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-economics/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-logic/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-network/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-photonic/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-reports/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-runtime-wasm/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-runtime/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-security/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-sentinel-egress/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-sentinel-io/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-sentinel-memory/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-sentinel-power/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-sentinel-state/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-sentinel-time/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-tasks/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core-vector/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-core/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-cpu-kernels/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-archive/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-database/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-db/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-html/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-json/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-model/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-pipeline/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-query/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-reports/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-response/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data-search/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-data/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-db-firestore/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-db-mysql/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-db-opensearch/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-db-postgres/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-db-sqlite/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-benchmarks/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-context/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-flowgraph/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-fungi-scan/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-graph-algorithms/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-graph-project/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-hypha/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-impact/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-intelligence/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-kb-graph/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-naming/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-package-graph/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-pci/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-project-graph/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-provenance/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-devtools-security/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-docs/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-bridge-cpp/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-photonic-emulator/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-proof-snarkjs/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-secrets-spore/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-secrets-vault/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-spore/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-ext-tritsocket/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-framework-api-server/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-framework-app-kernel/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-governance-telemetry/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-hardware-tier/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-inference-bridge-contract/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-observability/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-substrate-math/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-ai-accelerator/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-cpu/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-gpu/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-js/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-native/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-photonic/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-target-wasm/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-test/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-tools-benchmark/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-tools-myco/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-tower-citizen/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-tri-regex/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-web-components/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-web-events/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-web-render/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-web-router/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-web-state/"
+      },
+      {
+        "status": "??",
+        "path": "packages/fungi/products/galerina-web/"
+      },
+      {
+        "status": "??",
+        "path": "scripts/tests/rd0873-caller-route-shadow-bake.test.mjs"
+      }
+    ]
+  },
+  "routeSummary": [],
+  "webhookSummary": [],
+  "typeSummary": [],
+  "enumSummary": [],
+  "flowSummary": [
+    {
+      "name": "maxRateWindows",
+      "qualifier": "pure",
+      "async": false,
+      "params": [],
+      "returns": "Int",
+      "effects": [],
+      "file": "max-rate-windows.fungi",
+      "line": 3
+    }
+  ],
+  "strictCommentSummary": [
+    {
+      "file": "max-rate-windows.fungi",
+      "line": 3,
+      "subject": {
+        "kind": "flow",
+        "name": "maxRateWindows",
+        "line": 11
+      },
+      "tags": [],
+      "purpose": null,
+      "security": null,
+      "effects": [],
+      "aiNote": null,
+      "aiRisk": null,
+      "aiTodo": null
+    }
+  ],
+  "targets": [],
+  "targetSummary": {
+    "declaredTargets": 0,
+    "computeBlocks": 0,
+    "computeBlocksCompatible": 0,
+    "computeBlocksBlocked": 0,
+    "computeBlocksWithFallback": 0,
+    "cpuReferenceChecks": 0,
+    "unsupportedOperations": []
+  },
+  "runtimeSummary": {
+    "memory": {
+      "softLimit": null,
+      "hardLimit": null,
+      "onPressure": [],
+      "spill": {
+        "enabled": false,
+        "path": null,
+        "maxDisk": null,
+        "ttl": null,
+        "encryption": false,
+        "redactSecrets": true,
+        "aLOw": [],
+        "deny": [
+          "SecureString",
+          "RequestContext",
+          "SessionToken",
+          "PaymentToken",
+          "PrivateKey"
+        ]
+      }
+    },
+    "diagnostics": []
+  },
+  "memorySummary": {
+    "summary": {
+      "cacheLimitBehaviour": "calculate_return_and_bypass_cache_storage",
+      "totalMemoryBehaviour": "controlled_memory_pressure_ladder",
+      "spillMode": "explicit_aLOw_list_only",
+      "secretSpillDefault": "denied",
+      "failureMode": "graceful_before_uncontrolled_out_of_memory"
+    },
+    "pressureLadder": [
+      {
+        "stage": 1,
+        "action": "free_short_lived_finished_values",
+        "behaviour": "Clean up local values after the flow or scope no longer needs them."
+      },
+      {
+        "stage": 2,
+        "action": "evict_eligible_caches",
+        "behaviour": "Evict cache entries that are safe to rebuild."
+      },
+      {
+        "stage": 3,
+        "action": "bypass_cache_storage",
+        "behaviour": "Calculate and return results without adding new cache entries."
+      },
+      {
+        "stage": 4,
+        "action": "apply_backpressure",
+        "behaviour": "Slow, pause or reject queue and channel intake before memory grows without bounds."
+      },
+      {
+        "stage": 5,
+        "action": "spill_approved_data_to_disk",
+        "behaviour": "Write only explicitly approved, non-secret temporary data to bounded spill storage."
+      },
+      {
+        "stage": 6,
+        "action": "reject_new_work_safely",
+        "behaviour": "Reject new API, queue or webhook work with retryable errors where possible."
+      },
+      {
+        "stage": 7,
+        "action": "graceful_failure",
+        "behaviour": "Stop before uncontrolled out-of-memory, flush reports and preserve source-mapped diagnostics."
+      }
+    ],
+    "cacheLimit": {
+      "name": "cache_bypass",
+      "behaviour": [
+        "calculate_result",
+        "return_result",
+        "do_not_store_result_in_cache",
+        "record_cache_bypass_warning",
+        "recommend_cache_change_if_repeated"
+      ],
+      "correctnessRule": "A cache memory limit must not change the calculated result."
+    },
+    "spillPolicy": {
+      "enabled": false,
+      "path": null,
+      "maxDisk": null,
+      "ttl": null,
+      "encryption": false,
+      "redactSecrets": true,
+      "aLOw": [],
+      "deny": [
+        "SecureString",
+        "RequestContext",
+        "SessionToken",
+        "PaymentToken",
+        "PrivateKey"
+      ],
+      "approvedData": [
+        "cache_entries",
+        "queue_events",
+        "json_stream_buffers",
+        "build_cache",
+        "dead_letter_events",
+        "temporary_batch_data",
+        "large_sort_or_transform_intermediates"
+      ],
+      "deniedData": [
+        "SecureString",
+        "APIKey",
+        "PaymentToken",
+        "SessionToken",
+        "PrivateKey",
+        "Password",
+        "WebhookSecret",
+        "RequestContext",
+        "database_connections",
+        "file_handles",
+        "network_sockets",
+        "thread_handles",
+        "sensitive_gpu_buffers",
+        "sensitive_photonic_target_buffers"
+      ],
+      "secretRule": "Secrets must not be spilled to disk by default."
+    }
+  },
+  "executionSummary": {
+    "runtime": {
+      "runMode": "checked",
+      "cacheIr": false,
+      "hotReload": false
+    },
+    "compileMode": {
+      "mode": "debug",
+      "deterministic": false,
+      "sourceMaps": true,
+      "reports": true,
+      "mapManifest": true,
+      "documentation": false,
+      "aiContext": true,
+      "aiGuide": true
+    },
+    "productionRule": "Use Galerina run while developing, Galerina check before committing and Galerina build --mode release before production deployment.",
+    "aiGuideRule": "Only update the AI guide after a successful compile."
+  },
+  "globalSummary": {
+    "summary": {
+      "total": 0,
+      "constCount": 0,
+      "configCount": 0,
+      "secretCount": 0,
+      "stateCount": 0
+    },
+    "globals": [],
+    "requiredEnvironment": []
+  },
+  "securitySummary": {
+    "defaults": {
+      "strictTypes": true,
+      "undefined": "deny",
+      "silentNull": "deny",
+      "unsafe": "deny",
+      "secretLogging": "deny",
+      "sourceMaps": true
+    },
+    "permissions": {},
+    "webhookCount": 0,
+    "diagnosticCount": 0
+  },
+  "diagnostics": [],
+  "nextActions": [
+    "No diagnostics in the analysed source set.",
+    "Compute blocks in this context are target-plan compatible.",
+    "Keep photonic and GPU work as plan targets until a real backend is selected.",
+    "Preserve binary CPU fallback for every accelerated compute path."
+  ]
+}

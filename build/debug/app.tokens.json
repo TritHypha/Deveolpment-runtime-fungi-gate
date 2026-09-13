@@ -1,0 +1,388 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "files": [
+    "max-rate-windows.fungi"
+  ],
+  "tokenCount": 42,
+  "tokens": [
+    {
+      "type": "directive",
+      "value": "@version 1",
+      "file": "max-rate-windows.fungi",
+      "line": 1,
+      "column": 1,
+      "offset": 0,
+      "length": 10
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 1,
+      "column": 11,
+      "offset": 10,
+      "length": 1
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 2,
+      "column": 1,
+      "offset": 11,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "/// Bounded direct-package translation of the local maxRateWindows constant",
+      "file": "max-rate-windows.fungi",
+      "line": 3,
+      "column": 1,
+      "offset": 12,
+      "length": 75
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 3,
+      "column": 76,
+      "offset": 87,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "/// from packages-ts/galerina-framework-app-kernel/src/kernel.ts.",
+      "file": "max-rate-windows.fungi",
+      "line": 4,
+      "column": 1,
+      "offset": 88,
+      "length": 65
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 4,
+      "column": 66,
+      "offset": 153,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "///",
+      "file": "max-rate-windows.fungi",
+      "line": 5,
+      "column": 1,
+      "offset": 154,
+      "length": 3
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 5,
+      "column": 4,
+      "offset": 157,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "/// This leaf returns the exact 10,000-entry rate-window capacity bound.",
+      "file": "max-rate-windows.fungi",
+      "line": 6,
+      "column": 1,
+      "offset": 158,
+      "length": 72
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 6,
+      "column": 73,
+      "offset": 230,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "/// Request routing, timers, filesystem/network effects, rate-window state,",
+      "file": "max-rate-windows.fungi",
+      "line": 7,
+      "column": 1,
+      "offset": 231,
+      "length": 75
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 7,
+      "column": 76,
+      "offset": 306,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "/// and host authorization remain in the retained TypeScript shadow; this",
+      "file": "max-rate-windows.fungi",
+      "line": 8,
+      "column": 1,
+      "offset": 307,
+      "length": 73
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 8,
+      "column": 74,
+      "offset": 380,
+      "length": 1
+    },
+    {
+      "type": "docComment",
+      "value": "/// constant grants no production authority.",
+      "file": "max-rate-windows.fungi",
+      "line": 9,
+      "column": 1,
+      "offset": 381,
+      "length": 44
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 9,
+      "column": 45,
+      "offset": 425,
+      "length": 1
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 10,
+      "column": 1,
+      "offset": 426,
+      "length": 1
+    },
+    {
+      "type": "keyword",
+      "value": "pure",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 1,
+      "offset": 427,
+      "length": 4
+    },
+    {
+      "type": "keyword",
+      "value": "flow",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 6,
+      "offset": 432,
+      "length": 4
+    },
+    {
+      "type": "identifier",
+      "value": "maxRateWindows",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 11,
+      "offset": 437,
+      "length": 14
+    },
+    {
+      "type": "symbol",
+      "value": "(",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 25,
+      "offset": 451,
+      "length": 1
+    },
+    {
+      "type": "symbol",
+      "value": ")",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 26,
+      "offset": 452,
+      "length": 1
+    },
+    {
+      "type": "operator",
+      "value": "->",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 28,
+      "offset": 454,
+      "length": 2
+    },
+    {
+      "type": "typeIdentifier",
+      "value": "Int",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 31,
+      "offset": 457,
+      "length": 3
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 11,
+      "column": 34,
+      "offset": 460,
+      "length": 1
+    },
+    {
+      "type": "identifier",
+      "value": "contract",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 1,
+      "offset": 461,
+      "length": 8
+    },
+    {
+      "type": "symbol",
+      "value": "{",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 10,
+      "offset": 470,
+      "length": 1
+    },
+    {
+      "type": "identifier",
+      "value": "intent",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 12,
+      "offset": 472,
+      "length": 6
+    },
+    {
+      "type": "symbol",
+      "value": "{",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 19,
+      "offset": 479,
+      "length": 1
+    },
+    {
+      "type": "string",
+      "value": "\"Return the exact maximum number of live rate-limit windows.\"",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 21,
+      "offset": 481,
+      "length": 61
+    },
+    {
+      "type": "symbol",
+      "value": "}",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 83,
+      "offset": 543,
+      "length": 1
+    },
+    {
+      "type": "symbol",
+      "value": "}",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 85,
+      "offset": 545,
+      "length": 1
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 12,
+      "column": 86,
+      "offset": 546,
+      "length": 1
+    },
+    {
+      "type": "symbol",
+      "value": "{",
+      "file": "max-rate-windows.fungi",
+      "line": 13,
+      "column": 1,
+      "offset": 547,
+      "length": 1
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 13,
+      "column": 2,
+      "offset": 548,
+      "length": 1
+    },
+    {
+      "type": "keyword",
+      "value": "return",
+      "file": "max-rate-windows.fungi",
+      "line": 14,
+      "column": 3,
+      "offset": 551,
+      "length": 6
+    },
+    {
+      "type": "integer",
+      "value": "10000",
+      "file": "max-rate-windows.fungi",
+      "line": 14,
+      "column": 10,
+      "offset": 558,
+      "length": 5
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 14,
+      "column": 15,
+      "offset": 563,
+      "length": 1
+    },
+    {
+      "type": "symbol",
+      "value": "}",
+      "file": "max-rate-windows.fungi",
+      "line": 15,
+      "column": 1,
+      "offset": 564,
+      "length": 1
+    },
+    {
+      "type": "newline",
+      "value": "\\n",
+      "file": "max-rate-windows.fungi",
+      "line": 15,
+      "column": 2,
+      "offset": 565,
+      "length": 1
+    },
+    {
+      "type": "eof",
+      "value": "",
+      "file": "max-rate-windows.fungi",
+      "line": 16,
+      "column": 1,
+      "offset": 566,
+      "length": 0
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "runtime": {
+    "runMode": "checked",
+    "cacheIr": false,
+    "hotReload": false,
+    "memory": {
+      "softLimit": null,
+      "hardLimit": null,
+      "onPressure": [],
+      "spill": {
+        "enabled": false,
+        "path": null,
+        "maxDisk": null,
+        "ttl": null,
+        "encryption": false,
+        "redactSecrets": true,
+        "aLOw": [],
+        "deny": [
+          "SecureString",
+          "RequestContext",
+          "SessionToken",
+          "PaymentToken",
+          "PrivateKey"
+        ]
+      }
+    }
+  },
+  "execution": {
+    "runMode": "checked",
+    "cacheIr": false,
+    "hotReload": false,
+    "checkedRun": true
+  },
+  "memory": {
+    "softLimit": null,
+    "hardLimit": null,
+    "onPressure": [],
+    "spill": {
+      "enabled": false,
+      "path": null,
+      "maxDisk": null,
+      "ttl": null,
+      "encryption": false,
+      "redactSecrets": true,
+      "aLOw": [],
+      "deny": [
+        "SecureString",
+        "RequestContext",
+        "SessionToken",
+        "PaymentToken",
+        "PrivateKey"
+      ]
+    }
+  },
+  "policy": {
+    "spillIsALOwListOnly": true,
+    "denySecretsAndRequestContext": true,
+    "sourceMappedFailures": true,
+    "pressureActionsAreOrdered": true
+  },
+  "diagnostics": []
+}

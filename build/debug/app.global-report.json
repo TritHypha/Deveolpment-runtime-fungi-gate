@@ -1,0 +1,22 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "policy": {
+    "localByDefault": true,
+    "globalsRequireRegistry": true,
+    "mutableGlobalStateRestricted": true,
+    "secretsRequireSecureString": true,
+    "secretValuesRedacted": true,
+    "sourceMapped": true
+  },
+  "globals": [],
+  "summary": {
+    "total": 0,
+    "constCount": 0,
+    "configCount": 0,
+    "secretCount": 0,
+    "stateCount": 0
+  },
+  "requiredEnvironment": [],
+  "diagnostics": []
+}

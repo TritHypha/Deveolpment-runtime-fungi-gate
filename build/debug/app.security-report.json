@@ -1,0 +1,50 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "defaults": {
+    "strictTypes": true,
+    "undefined": "deny",
+    "silentNull": "deny",
+    "unsafe": "deny",
+    "secretLogging": "deny",
+    "sourceMaps": true
+  },
+  "permissions": {},
+  "webhooks": [],
+  "strictComments": {
+    "count": 1,
+    "securityTagged": 0,
+    "aiRiskTagged": 0,
+    "mismatches": []
+  },
+  "runtime": {
+    "memory": {
+      "softLimit": null,
+      "hardLimit": null,
+      "onPressure": [],
+      "spill": {
+        "enabled": false,
+        "path": null,
+        "maxDisk": null,
+        "ttl": null,
+        "encryption": false,
+        "redactSecrets": true,
+        "aLOw": [],
+        "deny": [
+          "SecureString",
+          "RequestContext",
+          "SessionToken",
+          "PaymentToken",
+          "PrivateKey"
+        ]
+      }
+    },
+    "diagnostics": []
+  },
+  "globals": {
+    "total": 0,
+    "secrets": [],
+    "diagnostics": []
+  },
+  "diagnostics": []
+}

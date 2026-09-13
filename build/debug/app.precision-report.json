@@ -1,0 +1,40 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "principle": "Galerina does not assume photonic, GPU, ternary or quantum targets produce mysterious external data.",
+  "rule": "Accelerator outputs must be treated as local computation results and validated through source maps, target reports, precision reports and optional CPU reference checks.",
+  "cpuReferenceRule": "Accelerator output must be verifiable against CPU reference output where practical.",
+  "errorCorrectionPolicy": {
+    "detection": [
+      "compare_against_cpu_reference_where_practical",
+      "track_precision_difference",
+      "track_confidence_level",
+      "record_fallback_reason",
+      "source_map_every_target_result"
+    ],
+    "correction": [
+      "retry_same_target_if_runtime_marks_error_transient",
+      "fallback_to_next_declared_target",
+      "fallback_to_cpu_reference_when_available",
+      "fail_closed_when_difference_exceeds_tolerance",
+      "route_security_or_business_decisions_to_review_when_confidence_is_low"
+    ],
+    "nonGoals": [
+      "do_not_claim_real_photonic_error_correction_without_backend_support",
+      "do_not_treat_accelerator_output_as_external_or_mysterious_data",
+      "do_not_silently_accept_precision_drift"
+    ]
+  },
+  "risks": [
+    "signal_noise",
+    "precision_loss",
+    "analogue_drift",
+    "calibration_error",
+    "thermal_effect",
+    "target_mismatch",
+    "wrong_fallback_target",
+    "rounding_difference",
+    "hardware_specific_behaviour"
+  ],
+  "computeBlocks": []
+}

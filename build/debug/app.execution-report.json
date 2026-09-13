@@ -1,0 +1,89 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "runtime": {
+    "runMode": "checked",
+    "cacheIr": false,
+    "hotReload": false
+  },
+  "compileMode": {
+    "mode": "debug",
+    "deterministic": false,
+    "sourceMaps": true,
+    "reports": true,
+    "mapManifest": true,
+    "documentation": false,
+    "aiContext": true,
+    "aiGuide": true
+  },
+  "modes": [
+    {
+      "mode": "run",
+      "purpose": "Run a single script or project directly after checks.",
+      "command": "Galerina run hello.fungi",
+      "productionRecommended": false
+    },
+    {
+      "mode": "generate",
+      "purpose": "Generate development reports and documentation from checked source without production artefacts.",
+      "command": "Galerina generate",
+      "productionRecommended": false
+    },
+    {
+      "mode": "dev",
+      "purpose": "Check, generate development outputs and run locally.",
+      "command": "Galerina dev",
+      "productionRecommended": false
+    },
+    {
+      "mode": "serve",
+      "purpose": "Run a local API or web app in development mode.",
+      "command": "Galerina serve --dev",
+      "productionRecommended": false
+    },
+    {
+      "mode": "check",
+      "purpose": "Validate source without writing build artefacts.",
+      "command": "Galerina check",
+      "productionRecommended": true
+    },
+    {
+      "mode": "build",
+      "purpose": "Compile and generate build artefacts, reports and documentation.",
+      "command": "Galerina build",
+      "productionRecommended": true
+    },
+    {
+      "mode": "release",
+      "purpose": "Compile a deterministic production build.",
+      "command": "Galerina build --mode release",
+      "productionRecommended": true
+    }
+  ],
+  "runModeChecks": [
+    "parse_source",
+    "type_check_source",
+    "security_check_source",
+    "validate_imports",
+    "validate_strict_comments_where_required",
+    "validate_api_and_webhook_contracts_where_relevant"
+  ],
+  "compileModeOutputs": [
+    "app.bin",
+    "app.wasm",
+    "app.gpu.plan",
+    "app.photonic.plan",
+    "app.ternary.sim",
+    "app.omni-logic.sim",
+    "app.source-map.json",
+    "app.map-manifest.json",
+    "app.security-report.json",
+    "app.target-report.json",
+    "app.api-report.json",
+    "app.ai-guide.md",
+    "app.ai-context.json",
+    "app.build-manifest.json"
+  ],
+  "productionRule": "Use Galerina run while developing, Galerina check before committing and Galerina build --mode release before production deployment.",
+  "aiGuideRule": "Only update the AI guide after a successful compile."
+}

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "files": [
+    {
+      "path": "max-rate-windows.fungi",
+      "sha256": "6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+      "lines": 16
+    }
+  ],
+  "symbols": [
+    {
+      "kind": "flow",
+      "name": "maxRateWindows",
+      "file": "max-rate-windows.fungi",
+      "line": 3,
+      "column": 9
+    },
+    {
+      "kind": "strictComment",
+      "name": "maxRateWindows",
+      "subjectKind": "flow",
+      "tags": [],
+      "file": "max-rate-windows.fungi",
+      "line": 3,
+      "column": 1
+    }
+  ]
+}

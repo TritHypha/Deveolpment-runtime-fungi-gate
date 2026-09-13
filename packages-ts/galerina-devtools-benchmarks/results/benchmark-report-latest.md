@@ -1,4 +1,4 @@
-# Benchmark report — interpreted views
+****# Benchmark report — interpreted views
 
 Current run: `results/latest.json`. Baseline (last distinct run): 2026-08-02_galerina-wasm-before-slide.
 
@@ -34,7 +34,7 @@ Current run: `results/latest.json`. Baseline (last distinct run): 2026-08-02_gal
 | json-parse | Node.js | 3.2M | 1.1M | -64.9% |
 | framework-pipeline | Node.js | 392.9K | 145.5K | -63.0% |
 | gpu-compute | Python | 8.0M | 12.7M | +59.2% |
-| call-chain | Python | 1.4M | 2.3M | +57.7% |
+| call-chain | Python | 1.4M | 2.3M | +**57**.7% |
 | low-memory | Python | 3.7M | 5.8M | +56.4% |
 | json-parse | Python | 504.5K | 760.5K | +50.7% |
 | framework-pipeline | Python | 114.4K | 168.5K | +47.3% |

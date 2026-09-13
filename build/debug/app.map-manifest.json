@@ -1,0 +1,121 @@
+{
+  "project": null,
+  "version": "0.1.0",
+  "compiler": "0.1.0-prototype",
+  "buildMode": "debug",
+  "entry": "boot.fungi",
+  "applicationEntry": null,
+  "outputs": {
+    "binary": "app.bin",
+    "wasm": "app.wasm",
+    "sourceMap": "app.source-map.json",
+    "buildManifest": "app.build-manifest.json",
+    "mapManifest": "app.map-manifest.json",
+    "globalReport": "app.global-report.json",
+    "runtimeReport": "app.runtime-report.json",
+    "memoryReport": "app.memory-report.json",
+    "executionReport": "app.execution-report.json",
+    "apiReport": "app.api-report.json",
+    "apiGuide": "docs/api-guide.md",
+    "webhookGuide": "docs/webhook-guide.md",
+    "typeReference": "docs/type-reference.md",
+    "docsManifest": "docs/docs-manifest.json"
+  },
+  "sourceFiles": [
+    {
+      "file": "max-rate-windows.fungi",
+      "hash": "sha256:6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+      "compiledInto": [
+        "app.bin",
+        "app.wasm",
+        "app.source-map.json",
+        "app.map-manifest.json"
+      ]
+    }
+  ],
+  "routes": [],
+  "webhooks": [],
+  "types": [],
+  "globals": [],
+  "flows": [
+    {
+      "name": "maxRateWindows",
+      "source": "max-rate-windows.fungi:3",
+      "async": false,
+      "returns": "Int",
+      "effects": []
+    }
+  ],
+  "computeBlocks": [],
+  "generatedDocumentation": [
+    "docs/api-guide.md",
+    "docs/webhook-guide.md",
+    "docs/type-reference.md",
+    "docs/global-registry-guide.md",
+    "docs/security-guide.md",
+    "docs/runtime-guide.md",
+    "docs/memory-pressure-guide.md",
+    "docs/run-compile-mode-guide.md",
+    "docs/deployment-guide.md",
+    "docs/ai-summary.md",
+    "docs/docs-manifest.json"
+  ],
+  "runtime": {
+    "softLimit": null,
+    "hardLimit": null,
+    "onPressure": [],
+    "spill": {
+      "enabled": false,
+      "path": null,
+      "maxDisk": null,
+      "ttl": null,
+      "encryption": false,
+      "redactSecrets": true,
+      "aLOw": [],
+      "deny": [
+        "SecureString",
+        "RequestContext",
+        "SessionToken",
+        "PaymentToken",
+        "PrivateKey"
+      ]
+    }
+  },
+  "memoryPolicy": {
+    "report": "app.memory-report.json",
+    "guide": "docs/memory-pressure-guide.md",
+    "ladder": [
+      "free_short_lived_finished_values",
+      "evict_eligible_caches",
+      "bypass_cache_storage",
+      "apply_backpressure",
+      "spill_approved_data_to_disk",
+      "reject_new_work_safely",
+      "graceful_failure"
+    ],
+    "cacheLimitBehaviour": "cache_bypass",
+    "spillRule": "aLOw_list_only_non_secret_data"
+  },
+  "executionPolicy": {
+    "report": "app.execution-report.json",
+    "guide": "docs/run-compile-mode-guide.md",
+    "runMode": "checked",
+    "compileMode": "debug",
+    "productionRule": "compile_fully_before_deploying"
+  },
+  "globalRegistry": {
+    "report": "app.global-report.json",
+    "guide": "docs/global-registry-guide.md",
+    "hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "requiredEnvironment": []
+  },
+  "aiGuide": {
+    "output": "app.ai-guide.md",
+    "updateOnSuccessfulCompile": true,
+    "jsonOutput": "app.ai-context.json"
+  },
+  "sourceMaps": [
+    "app.source-map.json"
+  ],
+  "sourceHash": "sha256:6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266"
+}

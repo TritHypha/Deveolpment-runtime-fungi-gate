@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-09-13T17:52:25.073Z",
+  "resultSha256": "864074784daf06549897bb221d1d8792fec818e927f2d2269cd8559b3f62e6af",
+  "galerinaCommit": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "slideCommit": "c33894d23a7b25e02bddaa6631225e0afcf8288c",
+  "toolchains": {
+    "go": "go version go1.26.5 windows/amd64",
+    "node": "v24.18.0",
+    "python": "Python 3.14.6",
+    "rust": "rustc 1.98.1 (48a229cea 2026-09-01)"
+  },
+  "publication": {
+    "generatedAt": "2026-09-13T17:52:26.150Z",
+    "galerinaCommit": "675e1048304b11e109b1de4f68af97ebc64f5949",
+    "slideCommit": "c33894d23a7b25e02bddaa6631225e0afcf8288c"
+  },
+  "wasmReference": {
+    "archiveDirectory": "2026-08-02_galerina-wasm-before-slide",
+    "archiveResultsSha256": "abc564389dd98e8da68a57afedcc57c6b4733e5b20d34ba3423e73f0acb77567",
+    "measuredGalerinaCommit": "54c15058988ab6a178ce014a2c1fed36f5a7fd63"
+  }
+}

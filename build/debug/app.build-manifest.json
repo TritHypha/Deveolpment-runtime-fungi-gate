@@ -1,0 +1,417 @@
+{
+  "project": null,
+  "version": "0.1.0",
+  "compiler": "0.1.0-prototype",
+  "mode": "debug",
+  "createdAt": "2026-09-13T16:48:03.695Z",
+  "deterministicInputs": {
+    "buildInputHashAlgorithm": "sha256",
+    "buildInputHash": "sha256:9723863da0b6b0afdc1332bb698557216c1738643880f76add6d3c48e903b8d7",
+    "sourceHashAlgorithm": "sha256",
+    "sourceHash": "sha256:6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+    "fileCount": 1,
+    "sourceFiles": [
+      {
+        "path": "max-rate-windows.fungi",
+        "hash": "sha256:6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+        "bytes": 566
+      }
+    ],
+    "dependencyHashAlgorithm": "sha256",
+    "dependencyHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dependencyCount": 0,
+    "dependencies": [],
+    "globalRegistryHash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "deterministicBuildRules": {
+    "hashAlgorithm": "sha256",
+    "pathSeparator": "/",
+    "stableInputs": [
+      "mode",
+      "sourceHash",
+      "dependencyHash",
+      "globalRegistryHash"
+    ],
+    "stableOutputs": [
+      "outputHashes",
+      "generatedOutputNaming",
+      "artifactStatus"
+    ],
+    "excludedMetadata": [
+      "createdAt",
+      "changedFiles"
+    ],
+    "outputHashNormalisation": "Output hashes are calculated after normalising each generated file to one trailing newline.",
+    "rule": "A build is reproducible when stable inputs and generated output hashes match; timestamp and local Git status metadata are excluded."
+  },
+  "diagnosticSummary": {
+    "total": 0,
+    "info": 0,
+    "warning": 0,
+    "error": 0,
+    "fatal": 0,
+    "categories": {},
+    "codes": {}
+  },
+  "requiredEnvironment": [],
+  "targetOutputs": {
+    "binary": "app.bin",
+    "wasm": "app.wasm",
+    "gpuPlan": "app.gpu.plan",
+    "photonicPlan": "app.photonic.plan",
+    "ternarySimulation": "app.ternary.sim",
+    "omniLogicSimulation": "app.omni-logic.sim"
+  },
+  "generatedOutputNaming": {
+    "owner": "Galerina compiler",
+    "pathSeparator": "/",
+    "rootFiles": "app.*",
+    "docsDirectory": "docs/",
+    "rule": "Generated output names are stable, root-relative and use forward slashes in manifests.",
+    "outputs": [
+      {
+        "path": "app.bin",
+        "kind": "target",
+        "format": "placeholder",
+        "cleanup": true
+      },
+      {
+        "path": "app.wasm",
+        "kind": "target",
+        "format": "placeholder",
+        "cleanup": true
+      },
+      {
+        "path": "app.browser.js",
+        "kind": "target",
+        "format": "javascript-placeholder",
+        "cleanup": true
+      },
+      {
+        "path": "app.gpu.plan",
+        "kind": "target-plan",
+        "format": "text",
+        "cleanup": true
+      },
+      {
+        "path": "app.photonic.plan",
+        "kind": "target-plan",
+        "format": "text",
+        "cleanup": true
+      },
+      {
+        "path": "app.ternary.sim",
+        "kind": "target-plan",
+        "format": "text",
+        "cleanup": true
+      },
+      {
+        "path": "app.omni-logic.sim",
+        "kind": "target-plan",
+        "format": "text",
+        "cleanup": true
+      },
+      {
+        "path": "app.precision-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.schemas.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.openapi.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.api-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.global-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.map-manifest.json",
+        "kind": "manifest",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.runtime-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.memory-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.execution-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.target-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.security-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.failure-report.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.source-map.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.tokens.json",
+        "kind": "report",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.ai-context.json",
+        "kind": "ai",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "app.ai-context.md",
+        "kind": "ai",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "app.ai-guide.md",
+        "kind": "ai",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "app.build-manifest.json",
+        "kind": "manifest",
+        "format": "json",
+        "cleanup": true
+      },
+      {
+        "path": "docs/api-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/webhook-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/type-reference.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/global-registry-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/security-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/runtime-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/memory-pressure-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/run-compile-mode-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/deployment-guide.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/ai-summary.md",
+        "kind": "documentation",
+        "format": "markdown",
+        "cleanup": true
+      },
+      {
+        "path": "docs/docs-manifest.json",
+        "kind": "manifest",
+        "format": "json",
+        "cleanup": true
+      }
+    ]
+  },
+  "artifactStatus": {
+    "app.bin": {
+      "kind": "cpu-compatible-placeholder",
+      "format": "text-placeholder",
+      "executable": false,
+      "platform": "not-windows-or-linux",
+      "runtimeStatus": "placeholder",
+      "runCommand": null,
+      "note": "This is not a Windows .exe, Linux ELF binary or macOS executable in the v0.1 prototype."
+    },
+    "app.wasm": {
+      "kind": "webassembly-placeholder",
+      "format": "text-placeholder",
+      "executable": false,
+      "platform": "wasm-planning-target",
+      "runtimeStatus": "placeholder",
+      "runCommand": null,
+      "note": "This is not a runnable WebAssembly module in the v0.1 prototype."
+    },
+    "app.gpu.plan": {
+      "kind": "target-plan",
+      "format": "text-report",
+      "executable": false,
+      "platform": "planning-only",
+      "runtimeStatus": "report"
+    },
+    "app.photonic.plan": {
+      "kind": "target-plan",
+      "format": "text-report",
+      "executable": false,
+      "platform": "planning-only",
+      "runtimeStatus": "report"
+    },
+    "app.ternary.sim": {
+      "kind": "logic-simulation-plan",
+      "format": "text-report",
+      "executable": false,
+      "platform": "simulation-only",
+      "runtimeStatus": "report"
+    },
+    "app.omni-logic.sim": {
+      "kind": "logic-simulation-plan",
+      "format": "text-report",
+      "executable": false,
+      "platform": "simulation-only",
+      "runtimeStatus": "report"
+    }
+  },
+  "reports": [
+    "app.api-report.json",
+    "app.global-report.json",
+    "app.map-manifest.json",
+    "app.precision-report.json",
+    "app.runtime-report.json",
+    "app.memory-report.json",
+    "app.execution-report.json",
+    "app.schemas.json",
+    "app.target-report.json",
+    "app.security-report.json",
+    "app.failure-report.json",
+    "app.source-map.json",
+    "app.tokens.json",
+    "app.ai-context.json",
+    "docs/docs-manifest.json"
+  ],
+  "documentation": {
+    "required": false,
+    "output": "./build/docs",
+    "outputs": [
+      "docs/api-guide.md",
+      "docs/webhook-guide.md",
+      "docs/type-reference.md",
+      "docs/global-registry-guide.md",
+      "docs/security-guide.md",
+      "docs/runtime-guide.md",
+      "docs/memory-pressure-guide.md",
+      "docs/run-compile-mode-guide.md",
+      "docs/deployment-guide.md",
+      "docs/ai-summary.md",
+      "docs/docs-manifest.json"
+    ]
+  },
+  "aiGuide": {
+    "enabled": true,
+    "updateOnSuccessfulCompile": true,
+    "included": true,
+    "output": "app.ai-guide.md",
+    "jsonOutput": "app.ai-context.json",
+    "stalePolicy": "do_not_overwrite_last_valid_ai_guide_on_failed_compile"
+  },
+  "requiredOutputs": [],
+  "outputHashes": {
+    "app.bin": "sha256:66fb2b3b011ae6f6b9bbffedaf5cde7cf011bbde5380f42b736bb57e154ef082",
+    "app.wasm": "sha256:5cf12332111bc54c180070410e7522267427404f8920b750eb2a7d91b13a3578",
+    "app.gpu.plan": "sha256:451d9244b1f795575d628f7dc6be040e211ff38f99775e3a72fea06ad641fe09",
+    "app.photonic.plan": "sha256:1cfc5b53a96b9d94119dca96ffb6925393eca375999e59ff3f8ce8d91ab9fdd0",
+    "app.ternary.sim": "sha256:4d0064b176f38e4cf4112302113b9d54316a04ceaa71da406ce90d025f2a21b4",
+    "app.omni-logic.sim": "sha256:a06898c8247221abd49dfc9fa0545b004017d1b1f115e4833c016093b9c48b3f",
+    "app.precision-report.json": "sha256:9ee70495fb6230b34e183f50e7e07645d7fa3d943aabf623372ca6b7acd72cb4",
+    "app.schemas.json": "sha256:5b3575d865da91a9ddf7cb2b6aa87380173d14614c25a3e95900f36536a78fcb",
+    "app.openapi.json": "sha256:65f267c342dccbdba8fe89bc5ad1543d0e936d0346dc3be4d6849f19591b9e94",
+    "app.api-report.json": "sha256:7dd3378d87587d704f00abb94575cd645ea54a42f09e1444d0caef933b23ad17",
+    "app.global-report.json": "sha256:35a3e23d606bb2d6a707b9978f0fd2b137f5090754e3fee5a9088752173af252",
+    "app.map-manifest.json": "sha256:de943892192e64daa5f294f38828bc5282c329fad0eba9d7ccf5394df774616c",
+    "app.runtime-report.json": "sha256:db77e9ba6aacdd99af937be1c1ff9af350fadf47742eff4b57069c88fe6f6d19",
+    "app.memory-report.json": "sha256:d82141f13bdc61878541c24c43cc7184bd4b2d2aa20b91fada3e1444511d108d",
+    "app.execution-report.json": "sha256:4cea62374604124d2c4f522cdaa697ecc70f257931fbffd3595f6bba9ccb261a",
+    "app.target-report.json": "sha256:bd8cf5c48ef9a62d20118961ae80c3a2159e50d32eadb4fd9d24153d6cf6c0e3",
+    "app.security-report.json": "sha256:85db787f8600e04620e5eb7d7d5fa4413ad7992af351e7b83df2f16f0d15b7ba",
+    "app.failure-report.json": "sha256:ec89ebee7fcc1b43c97705105982b6eb516de9ed5b1b56772cd2872cdd552314",
+    "app.source-map.json": "sha256:6202acc292a9b6748323027929bcfd187d897ba8226900610a6016a955861211",
+    "app.tokens.json": "sha256:480a4f48461aed7dc79cef95707728fd4abb8f87c05999bc9673f8d24d315b33",
+    "app.ai-context.json": "sha256:24666d991c59c655956c9f32c4e5c198dd981118f90ead5fb9e96aa867c1936d",
+    "app.ai-context.md": "sha256:21a78ce2a2a2681608c763c99a0b6a2d524bb3915b94cc7c5bf076f751f3a8db",
+    "docs/api-guide.md": "sha256:713f8cd3e36090b718d07d760c7f2f96e90546ba242a2d034ea3f4d6fddd3f5a",
+    "docs/webhook-guide.md": "sha256:6377801da35497dec8ff80e8470781232ecb26e2d905655eda706a3e7293ee73",
+    "docs/type-reference.md": "sha256:7e6a67dc96c1630f59f18563041bf0f7f85bf2cbbbf3f88d62bb0a1a8481b29b",
+    "docs/global-registry-guide.md": "sha256:6b85d3edbec7f6f3ea87c23e609c1150ea2e6adfe3e518697d9f59a1ad2dcb80",
+    "docs/security-guide.md": "sha256:0ef89800e48dc5e1a146798fd455f3237a0ccdaedca5f66271351bac8040f01e",
+    "docs/runtime-guide.md": "sha256:b363150ae186e79f2fecda54542f1bc653b51fddd134e9c61ac7b01f182eb964",
+    "docs/memory-pressure-guide.md": "sha256:13cdbe7150f1f527fddeaa1609c542a011b75207f8c1f370229c57d0741abc68",
+    "docs/run-compile-mode-guide.md": "sha256:8649f308fc4ededacfdba3daa8a9173ca085a1082cf2d3b43c49d57427b32682",
+    "docs/deployment-guide.md": "sha256:3f18a989d560b929c9ee452eed2b2776fc518d080631288b25b8168a4ac500a3",
+    "docs/ai-summary.md": "sha256:21a78ce2a2a2681608c763c99a0b6a2d524bb3915b94cc7c5bf076f751f3a8db",
+    "docs/docs-manifest.json": "sha256:df643f63f5cc8b02436c6ad67318fa1bde89ebaef6bf86b270f7cc452453c9c4",
+    "app.ai-guide.md": "sha256:6e5c61cd8bd711f8b7a6988aabaf63aecfb47bfde249fb916c22b7b782106582"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "compiler": "0.1.0-prototype",
+  "project": null,
+  "cpuCompatibility": "required",
+  "realPhotonicBackend": false,
+  "summary": {
+    "declaredTargets": 0,
+    "computeBlocks": 0,
+    "computeBlocksCompatible": 0,
+    "computeBlocksBlocked": 0,
+    "computeBlocksWithFallback": 0,
+    "cpuReferenceChecks": 0,
+    "unsupportedOperations": []
+  },
+  "acceleratorRiskModel": {
+    "externalDataAssumption": false,
+    "risks": [
+      "signal_noise",
+      "precision_loss",
+      "analogue_drift",
+      "calibration_error",
+      "thermal_effect",
+      "target_mismatch",
+      "wrong_fallback_target",
+      "rounding_difference",
+      "hardware_specific_behaviour"
+    ],
+    "rule": "Accelerator outputs are local computation results and must be validated through reports and optional CPU reference checks."
+  },
+  "precisionSummary": {
+    "cpuReferenceChecks": 0,
+    "precisionReportsRequired": 0,
+    "risksTracked": [
+      "signal_noise",
+      "precision_loss",
+      "analogue_drift",
+      "calibration_error",
+      "thermal_effect",
+      "target_mismatch",
+      "wrong_fallback_target",
+      "rounding_difference",
+      "hardware_specific_behaviour"
+    ]
+  },
+  "logicCapability": [],
+  "capabilityModel": {
+    "declared": {
+      "aLOw": [],
+      "block": []
+    },
+    "imports": [],
+    "browser": {
+      "enabled": false,
+      "serverOnlyImportsBlocked": []
+    }
+  },
+  "targets": [],
+  "computeBlocks": [],
+  "sourceMap": [],
+  "fallbackPolicy": "Photonic and GPU targets are planning targets in v0.1; binary CPU output remains the compatibility baseline.",
+  "diagnostics": []
+}
