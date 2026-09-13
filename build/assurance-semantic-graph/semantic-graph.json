@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "79b54a3ed5b943666ce4c2b1e7f72a8fd344e248578fdd47c238234b1fc176b2",
+  "authoritativeInputsDigest": "e7bd96d0ce12e050eb94e6873962e67d3ce6a1ef4f390fb59f3d873043458fd7",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -4137,6 +4137,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-77737a436568d7b6d060c3ea",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-array-includes-lowering.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-d5912b662ecf0246612a0b71",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-assembler-isolation.test.mjs",
@@ -4210,6 +4217,13 @@
       "id": "test:auto-9ba43d38f14aae2d1b52a2d6",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-float-finite-classifier.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-311378496b24b6305fa464d3",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-compiler/tests/wat-float-positive-classifier.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -4641,6 +4655,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-743848ead424de3a94e602d1",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-logic/tests/is-tri-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-c6b236d0cd053a91e077f166",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-logic/tests/logic-contracts.test.mjs",
@@ -4658,6 +4679,13 @@
       "id": "test:auto-73becdfcaae881981937e278",
       "kind": "test",
       "evidencePath": "packages-ts/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-c2905c2c16afdaeb82d88390",
+      "kind": "test",
+      "evidencePath": "packages-ts/galerina-core-logic/tests/omni-uncertain-mutation-contract.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -8736,6 +8764,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-f3444c4cf2bcf155b9eeda0c",
+      "kind": "test",
+      "evidencePath": "scripts/tests/rd0873-caller-route-shadow-bake.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-e344bd086dc541f568a84bee",
       "kind": "test",
       "evidencePath": "scripts/tests/rd0873-native-fungi-audit-map.test.mjs",
@@ -8837,6 +8872,13 @@
       "id": "test:auto-3cecdc72754408dcb6f36ab1",
       "kind": "test",
       "evidencePath": "scripts/tests/restore-verdict-slide-candidate.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0c27edf672587778c7bb98de",
+      "kind": "test",
+      "evidencePath": "scripts/tests/retention-gate-contract.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -11462,6 +11504,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-77737a436568d7b6d060c3ea",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-d5912b662ecf0246612a0b71",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
@@ -11513,6 +11560,11 @@
     },
     {
       "from": "test:auto-9ba43d38f14aae2d1b52a2d6",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-311378496b24b6305fa464d3",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11822,6 +11874,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-743848ead424de3a94e602d1",
+      "to": "package:galerina-core-logic",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-c6b236d0cd053a91e077f166",
       "to": "package:galerina-core-logic",
       "type": "CLASSIFIES"
@@ -11833,6 +11890,11 @@
     },
     {
       "from": "test:auto-73becdfcaae881981937e278",
+      "to": "package:galerina-core-logic",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-c2905c2c16afdaeb82d88390",
       "to": "package:galerina-core-logic",
       "type": "CLASSIFIES"
     },
@@ -14747,6 +14809,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-f3444c4cf2bcf155b9eeda0c",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-e344bd086dc541f568a84bee",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -14818,6 +14885,11 @@
     },
     {
       "from": "test:auto-3cecdc72754408dcb6f36ab1",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0c27edf672587778c7bb98de",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -15062,9 +15134,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 1170,
+    "tests": 1176,
     "detectors": 6,
-    "executableFamily": 1620,
+    "executableFamily": 1624,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
